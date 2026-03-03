@@ -18,7 +18,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 
 # Flext Type System
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-03-03 | **Scope**: AXIOMATIC type purity — `Any`/`object` absolute prohibition enforced
 
 ## Scope
 
@@ -38,10 +38,18 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 
 ## Rules
 
-- Add shared aliases in `typings.py` rather than re-declaring in feature modules.
+- Add shared aliases in `typings.py` rather than re-declaring in feature modules. Type aliases MUST be non-nullable — `| None` is added inline at usage sites only.
 - Keep recursive/general value aliases compatible with existing boundaries.
 - Preserve generic covariance/contravariance semantics where defined.
 - Keep exported short aliases (`t`, `r`) stable across refactors.
+- **AXIOMATIC**: `Any`, `object`, and `dict[str, Any]` are TOTALLY FORBIDDEN in type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. Inline composed types are FORBIDDEN in all 33 projects — use `t.*` references only.
+- **AXIOMATIC**: `| None` MUST NEVER appear in type alias definitions in `typings.py`. Type aliases are ALWAYS non-nullable. Consumers add `| None` inline at usage sites when business requires it (e.g., `field: t.ScalarValue | None`). No `NullableX` or `OptionalX` aliases.
+- **AXIOMATIC**: Duplicating type definitions from the MRO chain is FORBIDDEN — even inside subproject `FlextTypes` nested classes. One definition, one source of truth. Compatibility aliases (`X = t.Y`) are FORBIDDEN.
+- **AXIOMATIC**: `FlextResult` (`r`) is the SOLE mechanism for expressing fallibility. Functions that can fail MUST return `r[T]` — never `T | None`, never bare exceptions, never ad-hoc error dicts. The `r` alias (`from flext_core import r`) is MANDATORY at all usage sites. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace `if result is None` / `try/except` chains. `FlextResult` eliminates `| None` return types from the business layer.
+- **AXIOMATIC**: Compatibility wrappers (`def old(): return new()`), non-business validation fallbacks, legacy code maintenance, and `OldName = NewName` aliases are TOTALLY FORBIDDEN. Legacy code is deleted and replaced with canonical patterns. No grace period, no deprecation path.
+- **AXIOMATIC**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
+- **AXIOMATIC**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE Pydantic v2 features to their fullest. `Field()` with `description`/`title`/`examples`/`json_schema_extra` for ALL declarations. Minimize custom validators — prefer built-in constraints. `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, simple getters/setters, wrappers. USE: `@computed_field`, `model_post_init`, `PrivateAttr`. Enums/Literals from `c.*`, config from `s.*`. Internal state via `PrivateAttr`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for models ONLY.
+- **AXIOMATIC**: Every type change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. ALL impacted references across ALL 33 projects MUST be updated via ast-grep (`sg`) search-and-replace immediately. Linter suppressions (`# type: ignore`, `# noqa`, etc.) are FORBIDDEN without real internet citations, business necessity in comments, and per-line only scope. Global suppressions are TOTALLY FORBIDDEN.
 - **Cross-project namespace inheritance**: downstream projects MUST inherit parent facade classes (e.g., `FlextMeltanoModels`, not `FlextModels`) so namespaces cascade via MRO. This applies to `m`, `c`, `t`, `u`, `p`.
 
 ## Cross-Project Namespace Inheritance (m, c, t, u, p)
@@ -110,10 +118,10 @@ Why good: focused alias with clear semantic purpose.
 Bad:
 
 ```python
-JsonPrimitive = object
+JsonPrimitive = object  # ← FORBIDDEN: `object` erases all type constraints
 ```
 
-Why bad: overly broad type erases constraints and degrades static analysis.
+Why bad: `object` is AXIOMATIC FORBIDDEN — it erases constraints and degrades static analysis. Use `t.JsonPrimitive` or the explicit union type.
 
 ## Verification
 

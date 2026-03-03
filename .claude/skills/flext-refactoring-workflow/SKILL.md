@@ -166,9 +166,9 @@ make validate FIX=1
 ### Pattern A: Replacing dict with ConfigMap
 
 ```python
-# Before
-from typing import Any
-def configure(self, config: dict[str, Any]) -> None: ...
+# Before (FORBIDDEN — `Any` and `dict[str, Any]` are axiomatic violations)
+from typing import Any  # ← FORBIDDEN import
+def configure(self, config: dict[str, Any]) -> None: ...  # ← FORBIDDEN type
 
 # After
 from flext_core import t

@@ -236,7 +236,7 @@ Why bad: Agent 1 does not own result.py. This violates Commandment 6 (Stay in la
 # Agent 4 appending to their Result section (lines 299-512)
 # Agent 4 adds new protocol at END of section
 class VariadicCallable(Protocol):
-    def __call__(self, *args: Any, **kwargs: Any) -> Any: ...
+    def __call__(self, *args: t.GeneralValueType, **kwargs: t.GeneralValueType) -> t.GeneralValueType: ...
 ```
 
 Why good: Agent 4 appends at END of their section, never reorders.
@@ -247,7 +247,7 @@ Why good: Agent 4 appends at END of their section, never reorders.
 # Agent 4 reordering sections globally
 # This breaks other agents' section boundaries
 class Handler(Protocol):  # This is Agent 5's section!
-    def handle(self, cmd: Any) -> Any: ...
+    def handle(self, cmd: t.GeneralValueType) -> t.GeneralValueType: ...  # FORBIDDEN: Any was here
 
 class Result(Protocol[T]):  # Agent 4's section
     @property

@@ -81,6 +81,9 @@ description: Deep-dive patterns companion to lib-pydantic-v2 for advanced Pydant
 - Use TypeAdapter for non-model types and dynamic/runtime payload validation.
 - Keep error messages stable enough for tests and operations.
 - Avoid repeating v1 migration anti-pattern content already documented in `lib-pydantic-v2`.
+- **AXIOMATIC**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features to their fullest across ALL 33 projects (`src/`, `tests/`, `examples/`). Every class extends `BaseModel` (or FLEXT base models) via MRO. `Field()` for ALL declarations with `description`, `title`, `examples`, `json_schema_extra` documenting business rules — fields are self-documenting contracts. `SecretStr`/`SecretBytes` for secrets. `ConfigDict(...)` for config — standalone `*Config` classes TOTALLY FORBIDDEN (use `BaseSettings`/`ConfigDict`). Minimize custom `@field_validator`/`@model_validator` — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`, `constr`, `conint`). FORBIDDEN in models: initialization helpers, unnecessary `@property`, simple getters/setters, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@computed_field`, `model_post_init`, `PrivateAttr`). Enums/Mappings/Literals from `constants.py` (`c.*`), config from `settings.py` (`s.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter`. Internal state via `PrivateAttr` — never bare `self._x`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for model definitions ONLY. If not using a Pydantic v2 feature, REVIEW and USE it; if not needed, use a simpler base and USE it fully.
+- **AXIOMATIC**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance from Pydantic v2 `BaseModel` (or FLEXT base models like `FlextModels.ArbitraryTypesModel`, `FlextModels.FrozenModel`). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
+- **AXIOMATIC**: Compatibility wrappers, non-business validation fallbacks, legacy code of ANY kind, and compatibility aliases are TOTALLY FORBIDDEN. Legacy code is DELETED on contact.
 
 ## Instructions
 
@@ -103,7 +106,7 @@ def validate_non_empty(v: str) -> str:
         raise ValueError("String cannot be empty or whitespace")
     return cleaned
 
-def normalize_to_list(v: object) -> list[object]:
+def normalize_to_list(v: t.GeneralValueType) -> list[t.GeneralValueType]:
     if isinstance(v, list):
         return v
     if isinstance(v, (tuple, set)):
@@ -143,11 +146,11 @@ from collections.abc import Mapping
 from pydantic import BaseModel, Field, field_validator
 
 class Metadata(BaseModel):
-    attributes: dict[str, object] = Field(default_factory=dict)
+    attributes: dict[str, t.GeneralValueType] = Field(default_factory=dict)
 
     @field_validator("attributes", mode="before")
     @classmethod
-    def normalize_attributes(cls, value: object) -> dict[str, object]:
+    def normalize_attributes(cls, value: t.GeneralValueType) -> dict[str, t.GeneralValueType]:
         if value is None:
             return {}
         if isinstance(value, BaseModel):
@@ -294,10 +297,10 @@ Expose internal runtime composition as a stable read-only surface.
 from pydantic import computed_field
 
 class ServiceRuntimeHolder:
-    _runtime: object
+    _runtime: t.GeneralValueType
 
     @computed_field
-    def runtime(self) -> object:
+    def runtime(self) -> t.GeneralValueType:
         return self._runtime
 ```
 
@@ -432,7 +435,7 @@ class EnvelopeModel(BaseModel):
     include_metadata: bool = True
 
     @field_serializer("*", when_used="json")
-    def serialize_with_metadata(self, value: object, _info: FieldSerializationInfo) -> object:
+    def serialize_with_metadata(self, value: t.GeneralValueType, _info: FieldSerializationInfo) -> t.GeneralValueType:
         if not self.include_metadata:
             return value
         if isinstance(value, dict):
@@ -492,7 +495,7 @@ Guidance:
 ```python
 from pydantic import TypeAdapter, ValidationError
 
-def validate_runtime(data: object, type_: type[object]) -> tuple[bool, object | str]:
+def validate_runtime(data: t.GeneralValueType, type_: type[t.GeneralValueType]) -> tuple[bool, t.GeneralValueType | str]:
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_python(data)
@@ -510,7 +513,7 @@ Repository anchor:
 ```python
 from pydantic import TypeAdapter
 
-def serialize_runtime(value: object, type_: type[object]) -> dict[str, object]:
+def serialize_runtime(value: t.GeneralValueType, type_: type[t.GeneralValueType]) -> dict[str, t.GeneralValueType]:
     adapter = TypeAdapter(type_)
     dumped = adapter.dump_python(value, mode="json")
     if isinstance(dumped, dict):
@@ -591,7 +594,7 @@ class Window(BaseModel):
 
     @field_validator("label", mode="before")
     @classmethod
-    def normalize_label(cls, value: object) -> str:
+    def normalize_label(cls, value: t.GeneralValueType) -> str:
         if not isinstance(value, str):
             raise TypeError("label must be str")
         cleaned = value.strip()

@@ -36,7 +36,7 @@ description: Rules for typing support assets in `typings/` (stubs, compatibility
 ## Rules
 
 - Keep stubs synchronized with runtime/public API signatures.
-- Prefer precise types over broad fallback annotations.
+- Prefer precise types over broad fallback annotations. `Any` and `object` are TOTALLY FORBIDDEN — use `t.*` contracts from `typings.py`.
 - Keep package-specific typing shims isolated under their own stub namespace.
 - Do not introduce broken/incomplete stubs without clear compatibility intent.
 
@@ -63,10 +63,10 @@ Good:
 
 ```python
 # factory.pyi
-def create(name: str) -> object: ...
+def create(name: str) -> t.GeneralValueType: ...
 ```
 
-Why good: explicit callable contract for static tools.
+Why good: explicit callable contract using `t.*` types for static tools.
 
 Bad:
 

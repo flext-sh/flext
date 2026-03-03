@@ -46,6 +46,10 @@ description: Testing patterns, anti-patterns, and guidelines for Python/pytest i
 - Mock external dependencies (DB, network, filesystem) — never real services in unit tests.
 - Test FlextResult operations by asserting `.is_success`/`.is_failure` and `.value`/`.error`.
 - Never delete failing tests to make CI pass — fix the code instead.
+- **AXIOMATIC**: Tests MUST demonstrate the EXACT SAME strict typing, Pydantic v2, FlextResult, and architectural discipline as production code. Test files are NOT exempt from ANY rule. Test fixtures MUST use `Field()`, typed models, and `r[T]` returns. Test data MUST use `t.*` types from `typings.py`. Test assertions on FlextResult MUST use `.is_success`/`.is_failure` and `.value`/`.error`. There is NO "test-only" relaxation of any typing, structural, or Pydantic v2 rule. Tests that violate these rules are themselves violations.
+- **AXIOMATIC**: ALL code in tests MUST follow "Pydantic v2 way": `Field()` for field declarations, `ConfigDict(...)` for config, validation centralized in models via `@field_validator`/`@model_validator`/`@computed_field`. Enums/Mappings/Literals from `constants.py` (`c.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`. Test models MUST inherit via MRO from FLEXT base models.
+- **AXIOMATIC**: Compatibility wrappers, non-business validation fallbacks, legacy test code, and `OldName = NewName` compatibility aliases are TOTALLY FORBIDDEN in test code. Legacy test patterns are DELETED and replaced with canonical patterns.
+- **AXIOMATIC**: Every test change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. Linter suppression comments are FORBIDDEN without real internet citations, business necessity, and per-line scope. Global suppressions are TOTALLY FORBIDDEN.
 
 ## Instructions
 

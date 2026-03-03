@@ -47,7 +47,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 
 # FLEXT Strict Typing Rules
 
-**Reviewed**: 2026-02-21 | **Scope**: Added Rules 14-16 (str|None ban, helper class policy, is_success protocol)
+**Reviewed**: 2026-03-03 | **Scope**: AXIOMATIC — `Any`/`object` absolute prohibition, `None` only for business semantics, type narrowing only when business-required
 
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
 > and cross-referenced with `models.py`, `protocols.py`, and `ruff-shared.toml`.
@@ -71,7 +71,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 
 ---
 
-## Rule 1: NEVER Use `Any` or `object`
+## Rule 1: NEVER Use `Any` or `object` (AXIOMATIC — Zero Tolerance)
 
 ### Replace with the appropriate type from the `FlextTypes` hierarchy
 
@@ -210,8 +210,23 @@ class MyModel(BaseModel):
 
 ---
 
-## Rule 5: Pydantic v2 Model Typing
+## Rule 5: Pydantic v2 Model Typing (AXIOMATIC)
 
+ALL code MUST follow "Pydantic v2 way" EXTENSIVELY across ALL 33 projects (`src/`, `tests/`, `examples/`). Every class MUST extend Pydantic v2 `BaseModel` (or FLEXT base models) via MRO — USE, USE, USE Pydantic v2 features to their fullest; if not using a feature, REVIEW and USE it; if not needed, use a simpler base and USE it fully.
+
+**Field Declarations**: `Field()` for ALL field declarations with `description`, `title`, `examples`, `json_schema_extra` documenting business rules. Fields are self-documenting contracts, not bare attributes. `SecretStr`/`SecretBytes` for ALL sensitive values. Internal/private state MUST use `PrivateAttr()` — never bare `self._x = ...` assignments.
+
+**Model Configuration**: `model_config = ConfigDict(...)` for ALL model configuration. Standalone `*Config` classes are TOTALLY FORBIDDEN — use `BaseSettings` or `ConfigDict` instead. Configuration values from `settings.py` (`s.*`).
+
+**Validation**: Custom `@field_validator`/`@model_validator` MUST be minimized — prefer Pydantic v2 built-in constraints (`Field(ge=0, le=100)`, `Annotated[str, StringConstraints()]`, `Literal`, `constr`, `conint`, pattern constraints) before writing custom validators. Ad-hoc validation functions outside models are FORBIDDEN.
+
+**FORBIDDEN Inside Model Classes**: Initialization helpers (`def setup()`, `def initialize()`), unnecessary `@property`, simple getters/setters, line-reduction wrappers, pass-through methods. If Pydantic v2 has a built-in mechanism (`@computed_field`, `model_post_init`, `__init_subclass__`, `PrivateAttr`), USE IT.
+
+**Centralization**: `Enum`, `Mapping`, and `Literal` values MUST come from `constants.py` (`c.*`) — never defined inline. JSON via `model_dump_json()`, `model_validate_json()`, `model_dump()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`.
+
+**Scope**: Nested facade classes in modules MAY contain business logic methods beyond validation, but ALL their internal properties MUST use `Field()` and `PrivateAttr`. `models.py`/`_models/` directories are for model definitions ONLY — remove business logic, utility functions, and orchestration code. Compatibility wrappers, legacy code, and non-business validation fallbacks are TOTALLY FORBIDDEN. Tests follow these exact same rules.
+
+**AXIOMATIC — Integral Validation**: Every typing or model change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. ALL impacted references across ALL 33 projects MUST be immediately updated via ast-grep (`sg`) search-and-replace. Linter suppression comments (`# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore`) are FORBIDDEN without: (1) real, verifiable internet citations, (2) explicit business necessity in the comment, (3) per-line only — never global. Fix the code, never silence the linter.
 ### ConfigDict (not inner `class Config`)
 
 ```python
@@ -408,7 +423,7 @@ Key rules in `[lint.ignore]`:
 
 - `ANN101` — Missing `self` annotation (ignored, obvious)
 - `ANN102` — Missing `cls` annotation (ignored, obvious)
-- `ANN401` — `Any` usage (currently ignored but SHOULD be enforced)
+- `ANN401` — `Any` usage (**AXIOMATIC**: MUST be enforced — `Any` is totally forbidden; use `t.*` contracts from `typings.py`)
 
 ## Zero Tolerance for Hacks (Mandatory)
 
@@ -419,11 +434,17 @@ Key rules in `[lint.ignore]`:
 
 ---
 
-## Rule 14: NEVER Use `str | None` When Default Is `""`
+## Rule 14: NEVER Use `str | None` When Default Is `""` — `| None` is INLINE-ONLY
 
 If a Pydantic field has a string default (including `""`), `None` MUST NOT be in
 the type unless `None` carries **distinct domain semantics** (e.g., "not yet configured"
 vs "explicitly empty").
+
+**AXIOMATIC**: `| None` MUST NEVER be baked into type alias definitions in `typings.py`.
+Type aliases are ALWAYS non-nullable. Consumers add `| None` inline at the usage site
+when business requires it. If a type needs nullable semantics, the developer writes
+`t.ScalarValue | None` at the field/parameter declaration, NOT by defining a
+`NullableScalarValue` alias in `typings.py`.
 
 ```python
 # ❌ WRONG — None is semantically meaningless when default is ""
@@ -444,6 +465,10 @@ config_file: str | None = Field(default=None, description="Optional config overr
 2. Is the field always a string, just sometimes empty? → Use `str = Field(default="")`
 3. Is the field required? → Use `str` (no default)
 
+**`typings.py` definition rule**:
+
+4. Does the type alias definition in `typings.py` include `| None`? → VIOLATION. Remove `| None` from the alias. Consumers add `| None` inline at usage sites.
+5. Need a nullable variant? → Write `field: t.ScalarValue | None = Field(default=None)` at the usage site. NEVER create `NullableScalarValue` or `OptionalScalar` aliases.
 ---
 
 ## Rule 15: Pydantic Models Over Plain Helper Classes
@@ -569,9 +594,9 @@ Agents MUST apply the following when editing FLEXT code. No exceptions without e
 
 ---
 
-## Rule 12: FlextResult Factory Method Typing
+## Rule 12: FlextResult — The Sole Fallibility Mechanism (AXIOMATIC)
 
-This section keeps detailed generic behavior and edge cases; normative enforcement lives in `CLAUDE.md` §3 Code Law.
+`FlextResult` (`r`) is the **MANDATORY** mechanism for expressing fallibility across ALL 33 projects. Any function that can fail, raise, or return "not found" MUST return `r[T]` — never `T | None`, never a bare exception, never an ad-hoc error dict. `FlextResult` exists to **ELIMINATE** `| None` return types and manual `try/except` in the business layer. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace imperative `if result is None` / `try/except` chains. The `r` alias is MANDATORY at all usage sites — never spell out `FlextResult`. Only pure predicates (`-> bool`), `__init__` constructors, and trivially infallible getters may deviate — each MUST be justified in a code comment. Detailed generic behavior and edge cases follow; normative enforcement lives in `CLAUDE.md` §3 Code Law.
 
 ### `r` Alias — Universal Import Pattern
 
