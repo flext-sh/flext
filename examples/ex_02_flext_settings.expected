@@ -1,0 +1,55 @@
+[singleton_pattern]
+singleton.identity: True
+get_global_instance.identity: True
+reset_instance.new_identity: True
+
+[materialize]
+materialize.clone.app_name_matches: True
+materialize.override.app_name: 'flext-materialized'
+materialize.override.timeout: 45.0
+materialize.none.app_name: 'flext-materialized'
+
+[configuration_fields]
+field.app_name: 'flext-demo'
+field.version: '1.2.3'
+field.debug: True
+field.api_key: 'example-key'
+field.timeout_seconds: 25.0
+field.max_workers: 8
+field.max_batch_size: 200
+field.dispatcher_timeout: 7.5
+model_validate.app_name: 'flext-demo'
+invalid_db_scheme_raises: True
+trace_without_debug_raises: True
+
+[effective_log_level]
+effective.base: <LogLevel.INFO: 'INFO'>
+effective.debug: <LogLevel.INFO: 'INFO'>
+effective.trace: <LogLevel.DEBUG: 'DEBUG'>
+
+[namespace_registry]
+get_ns_config.decorated: True
+get_ns_config.programmatic: True
+get_ns_config.missing: None
+get_namespace.decorated.enabled: True
+get_namespace.programmatic.retries: 2
+
+[context_overrides]
+for_context.registered.timeout: 12.5
+for_context.registered.max_workers: 3
+for_context.registered.log_level: <LogLevel.INFO: 'INFO'>
+for_context.missing.is_global: True
+
+[override_methods]
+validate_override.valid: True
+validate_override.invalid: False
+apply_override.app_name: 'override-name'
+apply_override.invalid.unchanged: True
+
+[auto_config]
+resolve_env_file.exists: True
+auto_config.type: 'LocalAutoConfig'
+auto_config.name: 'auto'
+
+[di_config_provider]
+get_di_config_provider.type: 'Singleton'
