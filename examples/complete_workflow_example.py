@@ -63,7 +63,7 @@ class CompleteWorkflowExample:
                 "aggregation",
             ],
         )
-        metadata: dict[str, str | int | float | bool] = field(default_factory=dict)
+        metadata: dict[str, t.JsonPrimitive] = field(default_factory=dict)
         performance_metrics: dict[str, float | int | dict[str, float | int]] = field(
             default_factory=dict,
         )
@@ -283,7 +283,7 @@ class CompleteWorkflowExample:
             sleep_time: float,
             add_field: str,
             value: str | float | bool,
-            extra_logic: Callable[[ItemType], dict[str, str | int | float | bool]]
+            extra_logic: Callable[[ItemType], dict[str, t.JsonPrimitive]]
             | None = None,
         ) -> ItemType:
             """Generic stage processing helper."""
