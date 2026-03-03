@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from flext_core import FlextExceptions, FlextResult, r
-from flext_core.result import is_failure_result, is_success_result
 from pydantic import BaseModel
 from returns.io import IOFailure, IOSuccess
 from returns.maybe import Nothing, Some
@@ -362,15 +361,15 @@ def demo_module_helpers() -> None:
     _section("module_helpers")
 
     success = r[int].ok(1)
-    failure = r.fail("x", expected_type=int)
+    failure = r.fail("x")
     not_result = "plain"
 
-    _check("is_success_result.success", is_success_result(success))
-    _check("is_success_result.failure", is_success_result(failure))
-    _check("is_success_result.non_result", is_success_result(not_result))
-    _check("is_failure_result.failure", is_failure_result(failure))
-    _check("is_failure_result.success", is_failure_result(success))
-    _check("is_failure_result.non_result", is_failure_result(not_result))
+    _check("is_success_result.success", r.is_success_result(success))
+    _check("is_success_result.failure", r.is_success_result(failure))
+    _check("is_success_result.non_result", r.is_success_result(not_result))
+    _check("is_failure_result.failure", r.is_failure_result(failure))
+    _check("is_failure_result.success", r.is_failure_result(success))
+    _check("is_failure_result.non_result", r.is_failure_result(not_result))
 
 
 def main() -> None:
