@@ -25,6 +25,7 @@ from enum import StrEnum
 from flext_core import (
     FlextService,
     r,
+    t,
 )
 
 ItemType = dict[str, object]
@@ -283,8 +284,7 @@ class CompleteWorkflowExample:
             sleep_time: float,
             add_field: str,
             value: str | float | bool,
-            extra_logic: Callable[[ItemType], dict[str, t.JsonPrimitive]]
-            | None = None,
+            extra_logic: Callable[[ItemType], dict[str, t.JsonPrimitive]] | None = None,
         ) -> ItemType:
             """Generic stage processing helper."""
             time.sleep(sleep_time)

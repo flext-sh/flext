@@ -23,13 +23,11 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import ClassVar, cast, override
 
-from flext_core import r, s
+from flext_core import r, s, t
 
 EntryDict = dict[
     str,
-    t.JsonPrimitive
-    | list[str]
-    | dict[str, t.JsonPrimitive | list[str]],
+    t.JsonPrimitive | list[str] | dict[str, t.JsonPrimitive | list[str]],
 ]
 ContextDict = dict[str, object]
 EntryWithServer = tuple[EntryDict, str]
