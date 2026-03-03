@@ -47,7 +47,7 @@ description: Comprehensive Python 3.13 typing PEPs reference — PEP 696 (type d
 - Use `@deprecated` (PEP 702) instead of docstring-only deprecation notices.
 - Use `ReadOnly` (PEP 705) for immutable TypedDict fields — not for all fields.
 - Prefer `TypeIs` (PEP 742) over `TypeGuard` — it narrows both branches.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. `Any` and `object` are TOTALLY FORBIDDEN in type annotations — use `t.*` contracts from `typings.py`.
 
 ## Instructions
 
@@ -150,14 +150,14 @@ class Extended(Base):
 ```python
 from typing import TypeIs
 
-def is_str_list(val: list[object]) -> TypeIs[list[str]]:
+def is_str_list(val: list[str | int]) -> TypeIs[list[str]]:
     return all(isinstance(x, str) for x in val)
 
-def process(data: list[object]) -> None:
+def process(data: list[str | int]) -> None:
     if is_str_list(data):
         print(data[0].upper())  # narrowed: list[str]
     else:
-        print(len(data))  # narrowed: list[object] (BOTH branches!)
+        print(len(data))  # narrowed: list[str | int] (BOTH branches!)
 ```
 
 **TypeIs vs TypeGuard**:

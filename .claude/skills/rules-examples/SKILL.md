@@ -39,6 +39,7 @@ description: Rules for runnable examples in `examples/` so they stay aligned wit
 - Use current public APIs; avoid stale/internal imports.
 - Include realistic input/output flow, not placeholder pseudo-code.
 - Keep example naming and README references synchronized.
+- **AXIOMATIC**: `Any`, `object`, and `dict[str, Any]` are TOTALLY FORBIDDEN in example code — use `t.*` contracts from `typings.py` exclusively. `None` in type unions only when business-required. Examples must demonstrate the same strict typing discipline as production code.
 
 ## Instructions
 

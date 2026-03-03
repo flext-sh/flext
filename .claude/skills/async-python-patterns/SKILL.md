@@ -97,7 +97,7 @@ class AsyncDBConnection:
         self.conn = await asyncpg.connect(DSN)
         return self
 
-    async def __aexit__(self, *exc: object) -> None:
+    async def __aexit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: TracebackType | None) -> None:
         await self.conn.close()
 ```
 

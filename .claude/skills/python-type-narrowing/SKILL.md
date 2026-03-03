@@ -45,7 +45,7 @@ description: Type narrowing techniques including isinstance, TypeIs, TypeGuard, 
 - Prefer `TypeIs` (PEP 742, 3.13+) over `TypeGuard` — it narrows both branches.
 - Use `isinstance` checks for simple type narrowing — no need for custom guards.
 - Use `assert_never` for exhaustiveness checking in match/if-else chains.
-- Never use `type()` comparison for narrowing — use `isinstance()` for type checks. (Except for AST identity where narrowing is not intended).
+- Never use `type()` comparison for narrowing — use `isinstance()` for type checks. (Except for AST identity where narrowing is not intended). `Any` and `object` are TOTALLY FORBIDDEN in type annotations — use `t.*` contracts from `typings.py`.
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, and architectural `getattr()`.
 
 ## Instructions
@@ -73,14 +73,14 @@ def get_name(user: User | None) -> str:
 ```python
 from typing import TypeIs
 
-def is_str_list(val: list[object]) -> TypeIs[list[str]]:
+def is_str_list(val: list[str | int]) -> TypeIs[list[str]]:
     return all(isinstance(x, str) for x in val)
 
-def process(data: list[object]) -> None:
+def process(data: list[str | int]) -> None:
     if is_str_list(data):
         print(data[0].upper())  # narrowed: list[str]
     else:
-        pass  # narrowed: list[object] (both branches!)
+        pass  # narrowed: list[str | int] (both branches!)
 ```
 
 ### TypeGuard (Python 3.10+)
@@ -88,7 +88,7 @@ def process(data: list[object]) -> None:
 ```python
 from typing import TypeGuard
 
-def is_valid_user(obj: object) -> TypeGuard[User]:
+def is_valid_user(obj: t.GeneralValueType) -> TypeGuard[User]:
     return isinstance(obj, dict) and "id" in obj
 
 # Only narrows the positive branch (less precise than TypeIs)

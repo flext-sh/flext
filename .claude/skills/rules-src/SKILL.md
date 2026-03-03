@@ -38,6 +38,11 @@ description: Rules for shared source modules under top-level `src/`. Use when ed
 - Keep typing explicit for public/module-level APIs.
 - Preserve deterministic behavior and avoid hidden side effects.
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `inline imports`, and `cast()`.
+- **AXIOMATIC**: `Any`, `object`, and `dict[str, Any]` are TOTALLY FORBIDDEN in ALL type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. `None` in type unions only when business-required. Every change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. Linter suppressions are FORBIDDEN without real internet citations, business necessity, and per-line scope.
+- **AXIOMATIC**: Compatibility wrappers (`def old(): return new()`), non-business validation fallbacks, legacy code maintenance, and `OldName = NewName` compatibility aliases are TOTALLY FORBIDDEN. Legacy code is DELETED and replaced with canonical patterns on contact. No grace period.
+- **AXIOMATIC**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions and standalone classes without MRO lineage are FORBIDDEN.
+- **AXIOMATIC**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY. `Field()` with `description`/`title`/`examples`/`json_schema_extra` for ALL declarations. Minimize custom validators — prefer built-in constraints. `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, simple getters/setters, wrappers. USE: `@computed_field`, `model_post_init`, `PrivateAttr`. Enums/Literals from `c.*`, config from `s.*`. Internal state via `PrivateAttr`. `models.py`/`_models/` for models ONLY.
+- **AXIOMATIC**: Tests MUST follow the EXACT SAME rules as production code — no "test-only" relaxation.
 
 ## Instructions
 
