@@ -26,7 +26,7 @@ from flext_core import (
     t,
 )
 
-ItemDict = dict[str, t.JsonPrimitive]
+ItemDict = dict[str, t.Scalar]
 
 
 class AdvancedProcessingExample:
@@ -49,7 +49,7 @@ class AdvancedProcessingExample:
         items_failed: int
         processing_time: float
         errors: list[str] = field(default_factory=list)
-        metadata: dict[str, t.JsonPrimitive] = field(default_factory=dict)
+        metadata: dict[str, t.Scalar] = field(default_factory=dict)
 
     @dataclass
     class ValidationResult:

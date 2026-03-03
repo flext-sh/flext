@@ -27,7 +27,7 @@ from flext_core import r, s, t
 
 EntryDict = dict[
     str,
-    t.JsonPrimitive | list[str] | dict[str, t.JsonPrimitive | list[str]],
+    t.Scalar | list[str] | dict[str, t.Scalar | list[str]],
 ]
 ContextDict = dict[str, object]
 EntryWithServer = tuple[EntryDict, str]
