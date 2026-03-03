@@ -196,7 +196,7 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help setup upgrade modernize build check security format docs test validate typings clean release pr commit tag push codegen
+.PHONY: help setup upgrade modernize build check security format docs test validate typings clean release pr commit tag push codegen status
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -624,14 +624,14 @@ security: ## Run all security checks in all projects
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb security $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
 
-format: ## Run all formatting in all projects
+format: ## Run all formatting in ALL workspace projects (ignores PROJECT=/PROJECTS= filters)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
-	$(Q)$(ORCHESTRATOR) --verb format $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
+	$(Q)$(ORCHESTRATOR) --verb format $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(ALL_PROJECTS)
 
 docs: ## Run docs pipeline (DOCS_PHASE=audit|fix|build|generate|validate|all)
 	$(Q)$(REQUIRE_VENV)
@@ -774,6 +774,26 @@ commit: ## Commit all changes in selected projects (MESSAGE=)
 		fi; \
 	fi; \
 	echo "Commit: $$committed committed, $$skipped clean, $$failed failed"
+
+status: ## Show git status for all workspace projects (submodules + external + root)
+	$(Q)for proj in $(ALL_PROJECTS); do \
+		if [ -e "$$proj/.git" ]; then \
+			changes=$$(cd "$$proj" && git status --porcelain 2>/dev/null); \
+			if [ -n "$$changes" ]; then \
+				echo "── $$proj ──"; \
+				(cd "$$proj" && git status --short); \
+			else \
+				echo "  ✓ $$proj (clean)"; \
+			fi; \
+		fi; \
+	done; \
+	root_changes=$$(git status --porcelain 2>/dev/null); \
+	if [ -n "$$root_changes" ]; then \
+		echo "── root ──"; \
+		git status --short; \
+	else \
+		echo "  ✓ root (clean)"; \
+	fi
 
 tag: ## Create git tags for selected projects (TAG= optional, DRY_RUN=1)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
