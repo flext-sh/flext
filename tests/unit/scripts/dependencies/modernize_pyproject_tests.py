@@ -151,6 +151,7 @@ search-path = ["."]
 project-excludes = ["**/_pb2.py", "**/_pb2_grpc.py", "**/*_pb2*.py", "**/*_pb2_grpc*.py"]
 
 [tool.pyrefly.errors]
+bad-override = false
 deprecated = true
 redundant-cast = true
 implicit-abstract-class = true
@@ -164,6 +165,24 @@ protocol-implicitly-defined-attribute = true
 unannotated-attribute = true
 unannotated-parameter = true
 unannotated-return = true
+
+[tool.mypy]
+python_version = "3.13"
+plugins = ["pydantic.mypy"]
+disable_error_code = ["prop-decorator"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[tool.ruff]
+extend = "../ruff-shared.toml"
+
+[tool.pyright]
+pythonVersion = "3.13"
+pythonPlatform = "Linux"
+typeCheckingMode = "strict"
 """.strip()
         + "\n",
     )
