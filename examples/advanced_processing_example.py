@@ -29,6 +29,14 @@ from flext_core import (
 ItemDict = dict[str, t.Scalar]
 
 
+def _new_str_list() -> list[str]:
+    return []
+
+
+def _new_scalar_dict() -> dict[str, t.Scalar]:
+    return {}
+
+
 class AdvancedProcessingExample:
     """Advanced processing example demonstrating FLEXT parallel capabilities."""
 
@@ -48,8 +56,8 @@ class AdvancedProcessingExample:
         items_succeeded: int
         items_failed: int
         processing_time: float
-        errors: list[str] = field(default_factory=list)
-        metadata: dict[str, t.Scalar] = field(default_factory=dict)
+        errors: list[str] = field(default_factory=_new_str_list)
+        metadata: dict[str, t.Scalar] = field(default_factory=_new_scalar_dict)
 
     @dataclass
     class ValidationResult:
@@ -57,8 +65,8 @@ class AdvancedProcessingExample:
 
         item_id: str
         is_valid: bool
-        violations: list[str] = field(default_factory=list)
-        warnings: list[str] = field(default_factory=list)
+        violations: list[str] = field(default_factory=_new_str_list)
+        warnings: list[str] = field(default_factory=_new_str_list)
         validation_time: float = 0.0
 
     class ProcessingPipeline(

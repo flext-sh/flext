@@ -21,6 +21,7 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
+from typing import override
 
 from flext_core import (
     FlextService,
@@ -29,6 +30,30 @@ from flext_core import (
 )
 
 ItemType = dict[str, object]
+
+
+def _new_str_list() -> list[str]:
+    return []
+
+
+def _new_scalar_dict() -> dict[str, t.Scalar]:
+    return {}
+
+
+def _new_stage_metadata_dict() -> dict[str, float | int | bool]:
+    return {}
+
+
+def _new_performance_metrics_dict() -> dict[str, float | int | dict[str, float | int]]:
+    return {}
+
+
+def _new_stage_result_list() -> list[CompleteWorkflowExample.WorkflowStageResult]:
+    return []
+
+
+def _new_aggregated_metrics_dict() -> dict[str, float | int]:
+    return {}
 
 
 def _to_float(value: object) -> float:
@@ -64,9 +89,9 @@ class CompleteWorkflowExample:
                 "aggregation",
             ],
         )
-        metadata: dict[str, t.Scalar] = field(default_factory=dict)
+        metadata: dict[str, t.Scalar] = field(default_factory=_new_scalar_dict)
         performance_metrics: dict[str, float | int | dict[str, float | int]] = field(
-            default_factory=dict,
+            default_factory=_new_performance_metrics_dict,
         )
 
     @dataclass
@@ -81,9 +106,11 @@ class CompleteWorkflowExample:
         items_succeeded: int
         items_failed: int
         processing_time: float
-        errors: list[str] = field(default_factory=list)
-        warnings: list[str] = field(default_factory=list)
-        stage_metadata: dict[str, float | int | bool] = field(default_factory=dict)
+        errors: list[str] = field(default_factory=_new_str_list)
+        warnings: list[str] = field(default_factory=_new_str_list)
+        stage_metadata: dict[str, float | int | bool] = field(
+            default_factory=_new_stage_metadata_dict,
+        )
 
     @dataclass
     class CompleteWorkflowResult:
@@ -96,9 +123,11 @@ class CompleteWorkflowExample:
         failed_stages: int
         total_processing_time: float
         stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = field(
-            default_factory=list,
+            default_factory=_new_stage_result_list,
         )
-        aggregated_metrics: dict[str, float | int] = field(default_factory=dict)
+        aggregated_metrics: dict[str, float | int] = field(
+            default_factory=_new_aggregated_metrics_dict,
+        )
         workflow_status: str = "unknown"
 
     class WorkflowOrchestrator(FlextService[dict[str, object]]):
@@ -115,6 +144,7 @@ class CompleteWorkflowExample:
             self.data = []
             self.workflow_config = {}
 
+        @override
         def execute(self) -> r[dict[str, object]]:
             """Execute complete workflow with automatic resource management."""
             context = self._setup_context()
@@ -238,7 +268,12 @@ class CompleteWorkflowExample:
         ) -> r[CompleteWorkflowExample.WorkflowStageResult]:
             """Execute a workflow stage in parallel."""
             stage_start = time.time()
-            max_workers = int(context.metadata.get("max_workers", 4))
+            max_workers_raw = context.metadata.get("max_workers", 4)
+            max_workers = (
+                int(max_workers_raw)
+                if isinstance(max_workers_raw, (bool, int, float, str))
+                else 4
+            )
 
             def process_single_item(item: ItemType) -> ItemType | None:
                 try:
