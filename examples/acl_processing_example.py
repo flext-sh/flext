@@ -21,7 +21,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import ClassVar, cast, override
+from typing import ClassVar, TypedDict, TypeGuard, override
 
 from flext_core import r, s, t
 
@@ -30,7 +30,32 @@ EntryDict = dict[
     t.Scalar | list[str] | dict[str, t.Scalar | list[str]],
 ]
 ContextDict = dict[str, object]
-EntryWithServer = tuple[EntryDict, str]
+
+
+class ValidationRules(TypedDict):
+    """Validation rule contract per server type."""
+
+    required_permissions: list[str]
+    forbidden_combinations: list[tuple[str, str]]
+
+
+class EntryWithServer(TypedDict):
+    """Detected server information paired with raw entry."""
+
+    entry: EntryDict
+    server_type: str
+
+
+def _new_str_list() -> list[str]:
+    return []
+
+
+def _is_object_list(value: object) -> TypeGuard[list[object]]:
+    return isinstance(value, list)
+
+
+def _is_str_object_dict(value: object) -> TypeGuard[dict[str, object]]:
+    return isinstance(value, dict)
 
 
 class AclProcessingExample:
@@ -73,8 +98,8 @@ class AclProcessingExample:
 
         entry_dn: str
         is_valid: bool
-        violations: list[str] = field(default_factory=list)
-        warnings: list[str] = field(default_factory=list)
+        violations: list[str] = field(default_factory=_new_str_list)
+        warnings: list[str] = field(default_factory=_new_str_list)
         processing_time: float = 0.0
 
     class Constants:
@@ -96,7 +121,7 @@ class AclProcessingExample:
             "apache_ds": ["accessControlSubentry"],
         }
 
-        VALIDATION_RULES: ClassVar[dict[str, dict[str, object]]] = {
+        VALIDATION_RULES: ClassVar[dict[str, ValidationRules]] = {
             "openldap": {
                 "required_permissions": ["read", "write", "search"],
                 "forbidden_combinations": [("read", "delete")],
@@ -148,13 +173,13 @@ class AclProcessingExample:
 
         for attr_name in acl_attrs:
             if attr_name in attributes:
-                acl_values: str | list[str] = cast(
-                    "str | list[str]",
-                    attributes[attr_name],
-                )
-                values_list: list[str] = (
-                    acl_values if isinstance(acl_values, list) else [acl_values]
-                )
+                acl_values = attributes[attr_name]
+                if isinstance(acl_values, str):
+                    values_list = [acl_values]
+                elif isinstance(acl_values, list):
+                    values_list = acl_values
+                else:
+                    continue
 
                 for i, acl_value in enumerate(values_list):
                     acl_entry = AclProcessingExample.AclEntry(
@@ -199,35 +224,21 @@ class AclProcessingExample:
 
         rules = AclProcessingExample.Constants.VALIDATION_RULES.get(
             acl_entry.server_type,
-            {},
         )
-        if "required_permissions" in rules:
-            required_perms_raw: list[str] | object = rules["required_permissions"]
-            if isinstance(required_perms_raw, list):
-                required_list: list[str] = [
-                    str(p) for p in required_perms_raw if isinstance(p, str)
-                ]
-                missing_perms: set[str] = set(required_list) - set(
-                    acl_entry.permissions,
+        if rules is not None:
+            missing_perms: set[str] = set(rules["required_permissions"]) - set(
+                acl_entry.permissions,
+            )
+            if missing_perms:
+                violations.append(
+                    f"Missing required permissions: {list(missing_perms)}",
                 )
-                if missing_perms:
-                    violations.append(
-                        f"Missing required permissions: {list(missing_perms)}",
-                    )
 
-        if "forbidden_combinations" in rules:
-            forbidden_combos_raw: list[tuple[str, ...]] | object = rules[
-                "forbidden_combinations"
-            ]
-            if isinstance(forbidden_combos_raw, list):
-                forbidden_list: list[tuple[str, ...]] = [
-                    tuple(c) for c in forbidden_combos_raw if isinstance(c, tuple)
-                ]
-                violations.extend(
-                    f"Forbidden permission combination: {combo}"
-                    for combo in forbidden_list
-                    if all(perm in acl_entry.permissions for perm in combo)
-                )
+            violations.extend(
+                f"Forbidden permission combination: {combo}"
+                for combo in rules["forbidden_combinations"]
+                if all(permission in acl_entry.permissions for permission in combo)
+            )
 
         if (
             _context.get("strict_mode")
@@ -296,11 +307,16 @@ class AclProcessingExample:
             for entry in entries:
                 result = AclProcessingExample.detect_server_type(entry)
                 if result.is_success:
-                    detected_entries.append((entry, result.value))
+                    detected_entries.append({
+                        "entry": entry,
+                        "server_type": result.value,
+                    })
                 else:
                     return r.fail(f"Server detection failed: {result.error}")
 
-            server_types_set: set[str] = {s for _, s in detected_entries}
+            server_types_set: set[str] = {
+                detected_entry["server_type"] for detected_entry in detected_entries
+            }
             return r.ok({
                 "entries": detected_entries,
                 "server_types": sorted(server_types_set),
@@ -311,33 +327,40 @@ class AclProcessingExample:
             data: dict[str, object],
         ) -> r[dict[str, object]]:
             """Extract ACLs in parallel."""
-            entries_data_raw = data.get("entries", [])
-            if not isinstance(entries_data_raw, list):
+            entries_data_raw = data.get("entries")
+            if not _is_object_list(entries_data_raw):
                 return r.fail("Invalid entries format")
 
-            entries_data: list[object] = entries_data_raw
-
-            entries_with_servers: list[EntryWithServer] = [
-                entry
-                for entry in entries_data
-                if isinstance(entry, tuple) and len(entry) == 2
-            ]
+            entries_with_servers: list[EntryWithServer] = []
+            for entry_with_server_raw in entries_data_raw:
+                if not _is_str_object_dict(entry_with_server_raw):
+                    continue
+                entry_raw = entry_with_server_raw.get("entry")
+                server_type_raw = entry_with_server_raw.get("server_type")
+                if not isinstance(entry_raw, dict) or not isinstance(
+                    server_type_raw, str
+                ):
+                    continue
+                entries_with_servers.append({
+                    "entry": entry_raw,
+                    "server_type": server_type_raw,
+                })
 
             with ThreadPoolExecutor(max_workers=4) as executor:
                 futures = [
                     executor.submit(
                         AclProcessingExample.extract_acls_from_entry,
-                        entry,
-                        server_type,
+                        entry_with_server["entry"],
+                        entry_with_server["server_type"],
                     )
-                    for entry, server_type in entries_with_servers
+                    for entry_with_server in entries_with_servers
                 ]
 
                 all_acls: list[AclProcessingExample.AclEntry] = []
                 for future in as_completed(futures):
                     result = future.result()
                     if result.is_success:
-                        all_acls.extend(result.value)  # type: ignore[arg-type]
+                        all_acls.extend(result.value)
                     else:
                         return r.fail(
                             f"ACL extraction failed: {result.error}",
@@ -351,23 +374,30 @@ class AclProcessingExample:
             data: dict[str, object],
         ) -> r[dict[str, object]]:
             """Extract ACLs sequentially."""
-            entries_data_raw = data.get("entries", [])
-            if not isinstance(entries_data_raw, list):
+            entries_data_raw = data.get("entries")
+            if not _is_object_list(entries_data_raw):
                 return r.fail("Invalid entries format")
 
-            entries_data: list[object] = entries_data_raw
-
-            entries_with_servers: list[EntryWithServer] = [
-                entry
-                for entry in entries_data
-                if isinstance(entry, tuple) and len(entry) == 2
-            ]
+            entries_with_servers: list[EntryWithServer] = []
+            for entry_with_server_raw in entries_data_raw:
+                if not _is_str_object_dict(entry_with_server_raw):
+                    continue
+                entry_raw = entry_with_server_raw.get("entry")
+                server_type_raw = entry_with_server_raw.get("server_type")
+                if not isinstance(entry_raw, dict) or not isinstance(
+                    server_type_raw, str
+                ):
+                    continue
+                entries_with_servers.append({
+                    "entry": entry_raw,
+                    "server_type": server_type_raw,
+                })
 
             all_acls: list[AclProcessingExample.AclEntry] = []
-            for entry, server_type in entries_with_servers:
+            for entry_with_server in entries_with_servers:
                 result = AclProcessingExample.extract_acls_from_entry(
-                    entry,
-                    server_type,
+                    entry_with_server["entry"],
+                    entry_with_server["server_type"],
                 )
                 if result.is_success:
                     all_acls.extend(result.value)
@@ -382,15 +412,13 @@ class AclProcessingExample:
             data: dict[str, object],
         ) -> r[dict[str, object]]:
             """Validate all extracted ACLs."""
-            acls_data_raw = data.get("acls", [])
-            if not isinstance(acls_data_raw, list):
+            acls_data_raw = data.get("acls")
+            if not _is_object_list(acls_data_raw):
                 return r.fail("Invalid ACLs format")
-
-            acls_data: list[object] = acls_data_raw
             validation_results: list[AclProcessingExample.AclValidationResult] = []
             acl_entries: list[AclProcessingExample.AclEntry] = [
                 acl_item
-                for acl_item in acls_data
+                for acl_item in acls_data_raw
                 if isinstance(acl_item, AclProcessingExample.AclEntry)
             ]
             for acl in acl_entries:
