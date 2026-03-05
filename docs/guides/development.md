@@ -463,7 +463,7 @@ config = FlextNewlibSettings(new_setting="value")
    make clean && make setup
    ```
 
-````
+```
 
 2. **Test Failures**
 
@@ -473,7 +473,7 @@ config = FlextNewlibSettings(new_setting="value")
 
    # Check specific test
    pytest tests/unit/test_specific.py::test_function -v
-````
+```
 
 3. **Build Issues**
 

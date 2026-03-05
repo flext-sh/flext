@@ -178,7 +178,7 @@ It can take the following values (and is `False`, by default):
 `'trailing-strings'` mode allows for trailing incomplete strings at the end of partial JSON to be included in the output.
 For example, if you're validating against the following model:
 
-````python
+```python
 from typing import TypedDict
 
 
@@ -256,7 +256,7 @@ v = ta.validate_json(
 )
 print(v)
 #> [{'a': 1, 'b': 1.0, 'c': 'abcdefg'}]
-````
+```
 
 1. The TypedDict `Foobar` has three field, but only `a` is required, that means that a valid instance of `Foobar` can be created even if the `b` and `c` fields are missing.
 2. Parsing JSON, the input is valid JSON up to the point where the string is truncated.

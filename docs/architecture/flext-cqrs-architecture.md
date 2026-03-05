@@ -1765,7 +1765,7 @@ dispatcher = create_dispatcher()
     else:
         print(f"Error: {result.error}")
 
-````
+```
 
 ### Exemplo 2: Custom Circuit Breaker
 
@@ -1879,7 +1879,7 @@ container.register("circuit_breaker", CustomCircuitBreaker(
     failure_threshold=10,
     recovery_timeout=60.0,
 ))
-````
+```
 
 ### Exemplo 3: Handler com Full Observability
 
@@ -2090,7 +2090,7 @@ self.logger.warning(f"Failed to process {file_path}: {result.error}")
         finally:
             self.cqrs_context.pop()
 
-````
+```
 
 ### Estudo de Caso: flext-api
 
@@ -2146,7 +2146,7 @@ async def get_user(user_id: str) -> UserResponse:
         name=user.name,
         email=user.email,
     )
-````
+```
 
 ### Estudo de Caso: flext-oud-mig
 
