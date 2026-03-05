@@ -133,6 +133,18 @@ class AclProcessingExample:
         }
 
     @staticmethod
+    def _parse_acl_permissions(acl_value: str) -> list[str]:
+        """Parse ACL permissions from raw ACL value."""
+        acl_lower = acl_value.lower()
+        permissions = [
+            perm.value
+            for perm in AclProcessingExample.Permission.__members__.values()
+            if perm != AclProcessingExample.Permission.UNKNOWN
+            and perm.value in acl_lower
+        ]
+        return permissions or [AclProcessingExample.Permission.UNKNOWN.value]
+
+    @staticmethod
     def detect_server_type(entry: EntryDict) -> r[str]:
         """Auto-detect server type from entry attributes."""
         attributes = entry.get("attributes", {})
@@ -199,18 +211,6 @@ class AclProcessingExample:
                     extracted_acls.append(acl_entry)
 
         return r.ok(extracted_acls)
-
-    @staticmethod
-    def _parse_acl_permissions(acl_value: str) -> list[str]:
-        """Parse ACL permissions from raw ACL value."""
-        acl_lower = acl_value.lower()
-        permissions = [
-            perm.value
-            for perm in AclProcessingExample.Permission.__members__.values()
-            if perm != AclProcessingExample.Permission.UNKNOWN
-            and perm.value in acl_lower
-        ]
-        return permissions or [AclProcessingExample.Permission.UNKNOWN.value]
 
     @staticmethod
     def validate_acl_entry(
@@ -297,6 +297,39 @@ class AclProcessingExample:
 
             data = validate_result.value
             return self._analyze_performance(data)
+
+        def _analyze_performance(
+            self,
+            data: dict[str, object],
+        ) -> r[dict[str, object]]:
+            """Analyze processing performance."""
+            total_entries = len(self.entries)
+            total_acls_data = data.get("total_acls", 0)
+            total_acls = total_acls_data if isinstance(total_acls_data, int) else 0
+            start_time = data.get("start_time", time.time())
+            processing_time = (
+                time.time() - start_time if isinstance(start_time, float) else 1.0
+            )
+
+            analytics = {
+                "throughput_entries_per_second": total_entries / processing_time
+                if processing_time > 0
+                else 0,
+                "throughput_acls_per_second": total_acls / processing_time
+                if processing_time > 0
+                else 0,
+                "efficiency_ratio": total_acls / total_entries
+                if total_entries > 0
+                else 0,
+                "parallel_processing": self.parallel,
+            }
+
+            result_data = {
+                **data,
+                "performance_analytics": analytics,
+                "processing_time_seconds": processing_time,
+            }
+            return r.ok(result_data)
 
         def _detect_servers(
             self,
@@ -438,39 +471,6 @@ class AclProcessingExample:
                 "invalid_acls": sum(1 for r in validation_results if not r.is_valid),
                 "total_violations": sum(len(r.violations) for r in validation_results),
                 "total_warnings": sum(len(r.warnings) for r in validation_results),
-            }
-            return r.ok(result_data)
-
-        def _analyze_performance(
-            self,
-            data: dict[str, object],
-        ) -> r[dict[str, object]]:
-            """Analyze processing performance."""
-            total_entries = len(self.entries)
-            total_acls_data = data.get("total_acls", 0)
-            total_acls = total_acls_data if isinstance(total_acls_data, int) else 0
-            start_time = data.get("start_time", time.time())
-            processing_time = (
-                time.time() - start_time if isinstance(start_time, float) else 1.0
-            )
-
-            analytics = {
-                "throughput_entries_per_second": total_entries / processing_time
-                if processing_time > 0
-                else 0,
-                "throughput_acls_per_second": total_acls / processing_time
-                if processing_time > 0
-                else 0,
-                "efficiency_ratio": total_acls / total_entries
-                if total_entries > 0
-                else 0,
-                "parallel_processing": self.parallel,
-            }
-
-            result_data = {
-                **data,
-                "performance_analytics": analytics,
-                "processing_time_seconds": processing_time,
             }
             return r.ok(result_data)
 

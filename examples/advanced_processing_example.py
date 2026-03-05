@@ -217,155 +217,6 @@ class AdvancedProcessingExample:
 
             return r.ok(current_data)
 
-        def _validate_batch(
-            self,
-            data: dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ],
-        ) -> r[
-            dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ]
-        ]:
-            """Validate batch of items."""
-            items_data = data.get("items", [])
-            if not isinstance(items_data, list):
-                return r.fail("Invalid items data")
-
-            validation_results: list[AdvancedProcessingExample.ValidationResult] = []
-            items_to_validate: list[ItemDict] = [
-                item
-                for item in items_data
-                if isinstance(item, dict)
-                and not isinstance(item, AdvancedProcessingExample.ValidationResult)
-            ]
-
-            for item in items_to_validate:
-                result = self._validate_single_item(item)
-                if result.is_success:
-                    validation_results.append(result.value)
-                else:
-                    return r.fail(f"Validation failed: {result.error}")
-
-            result_data: dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ] = {
-                **data,
-                "validation_results": validation_results,
-                "valid_count": sum(1 for r in validation_results if r.is_valid),
-                "invalid_count": sum(1 for r in validation_results if not r.is_valid),
-            }
-            return r.ok(result_data)
-
-        def _process_parallel(
-            self,
-            data: dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ],
-        ) -> r[
-            dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ]
-        ]:
-            """Process items in parallel."""
-            items_data = data.get("items", [])
-            if not isinstance(items_data, list):
-                return r.fail("Invalid items data")
-
-            start_time = time.time()
-
-            def process_single_item(item: ItemDict) -> ItemDict | None:
-                """Process a single item."""
-                try:
-                    time.sleep(0.01)
-                    result = item.copy()
-                    result["processed"] = True
-                    result["processing_timestamp"] = time.time()
-                    return result
-                except Exception:
-                    return None
-
-            processed_items: list[ItemDict] = []
-            items_to_process: list[ItemDict] = [
-                item
-                for item in items_data
-                if isinstance(item, dict)
-                and not isinstance(item, AdvancedProcessingExample.ValidationResult)
-            ]
-
-            with ThreadPoolExecutor(max_workers=4) as executor:
-                future_to_item = {
-                    executor.submit(process_single_item, item): item
-                    for item in items_to_process
-                }
-
-                for future in as_completed(future_to_item):
-                    result = future.result()
-                    if result is not None:
-                        processed_items.append(result)
-
-            processing_time = time.time() - start_time
-
-            result_data: dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ] = {
-                **data,
-                "processed_items": processed_items,
-                "processing_time": processing_time,
-                "success_rate": len(processed_items) / len(items_data)
-                if items_data
-                else 0,
-            }
-            return r.ok(result_data)
-
         def _analyze_results(
             self,
             data: dict[
@@ -471,6 +322,155 @@ class AdvancedProcessingExample:
             ] = {
                 **data,
                 "analysis": analysis,
+            }
+            return r.ok(result_data)
+
+        def _process_parallel(
+            self,
+            data: dict[
+                str,
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
+                ],
+            ],
+        ) -> r[
+            dict[
+                str,
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
+                ],
+            ]
+        ]:
+            """Process items in parallel."""
+            items_data = data.get("items", [])
+            if not isinstance(items_data, list):
+                return r.fail("Invalid items data")
+
+            start_time = time.time()
+
+            def process_single_item(item: ItemDict) -> ItemDict | None:
+                """Process a single item."""
+                try:
+                    time.sleep(0.01)
+                    result = item.copy()
+                    result["processed"] = True
+                    result["processing_timestamp"] = time.time()
+                    return result
+                except Exception:
+                    return None
+
+            processed_items: list[ItemDict] = []
+            items_to_process: list[ItemDict] = [
+                item
+                for item in items_data
+                if isinstance(item, dict)
+                and not isinstance(item, AdvancedProcessingExample.ValidationResult)
+            ]
+
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                future_to_item = {
+                    executor.submit(process_single_item, item): item
+                    for item in items_to_process
+                }
+
+                for future in as_completed(future_to_item):
+                    result = future.result()
+                    if result is not None:
+                        processed_items.append(result)
+
+            processing_time = time.time() - start_time
+
+            result_data: dict[
+                str,
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
+                ],
+            ] = {
+                **data,
+                "processed_items": processed_items,
+                "processing_time": processing_time,
+                "success_rate": len(processed_items) / len(items_data)
+                if items_data
+                else 0,
+            }
+            return r.ok(result_data)
+
+        def _validate_batch(
+            self,
+            data: dict[
+                str,
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
+                ],
+            ],
+        ) -> r[
+            dict[
+                str,
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
+                ],
+            ]
+        ]:
+            """Validate batch of items."""
+            items_data = data.get("items", [])
+            if not isinstance(items_data, list):
+                return r.fail("Invalid items data")
+
+            validation_results: list[AdvancedProcessingExample.ValidationResult] = []
+            items_to_validate: list[ItemDict] = [
+                item
+                for item in items_data
+                if isinstance(item, dict)
+                and not isinstance(item, AdvancedProcessingExample.ValidationResult)
+            ]
+
+            for item in items_to_validate:
+                result = self._validate_single_item(item)
+                if result.is_success:
+                    validation_results.append(result.value)
+                else:
+                    return r.fail(f"Validation failed: {result.error}")
+
+            result_data: dict[
+                str,
+                list[ItemDict]
+                | list[AdvancedProcessingExample.ValidationResult]
+                | int
+                | float
+                | dict[
+                    str,
+                    int | float | dict[int, int] | list[float] | dict[str, int | float],
+                ],
+            ] = {
+                **data,
+                "validation_results": validation_results,
+                "valid_count": sum(1 for r in validation_results if r.is_valid),
+                "invalid_count": sum(1 for r in validation_results if not r.is_valid),
             }
             return r.ok(result_data)
 
