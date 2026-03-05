@@ -10,9 +10,9 @@ services:
     environment:
       # Core LDAP Configuration
       LDAP_ORGANISATION: "FLEXT Shared Test Organization"
-      LDAP_DOMAIN: "internal.invalid"
+      LDAP_DOMAIN: "flext.local"
       LDAP_BASE_DN: "dc=flext,dc=local"
-      LDAP_ADMIN_PASSWORD: "REDACTED_LDAP_BIND_PASSWORD123"
+      LDAP_ADMIN_PASSWORD: "admin123"
       LDAP_CONFIG_PASSWORD: "config123"
 
       # User Configuration
@@ -56,7 +56,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "ldapsearch -x -H ldap://localhost -b dc=flext,dc=local -D 'cn=REDACTED_LDAP_BIND_PASSWORD,dc=flext,dc=local' -w REDACTED_LDAP_BIND_PASSWORD123 -s base '(objectClass=*)'",
+          "ldapsearch -x -H ldap://localhost -b dc=flext,dc=local -D 'cn=admin,dc=flext,dc=local' -w admin123 -s base '(objectClass=*)'",
         ]
       interval: 30s
       timeout: 10s
