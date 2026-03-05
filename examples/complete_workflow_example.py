@@ -153,25 +153,135 @@ class CompleteWorkflowExample:
             finally:
                 self._cleanup_context(context)
 
-        def _setup_context(self) -> CompleteWorkflowExample.WorkflowContext:
-            """Setup workflow context with correlation tracking."""
-            workflow_id = str(
-                self.workflow_config.get("workflow_id", f"workflow_{int(time.time())}"),
+        def _aggregate_results(
+            self,
+            item: ItemType,
+            _context: CompleteWorkflowExample.WorkflowContext,
+        ) -> r[ItemType]:
+            """Aggregate results."""
+            return r.ok(
+                self._process_stage(
+                    item,
+                    0,
+                    "aggregated",
+                    True,
+                    lambda _i: {
+                        "final_score": _to_float(item.get("complexity_score", 0))
+                        + (1 if bool(item.get("is_valid", False)) else 0),
+                    },
+                ),
             )
-            correlation_id = f"{workflow_id}_{int(time.time() * 1000)}"
 
-            return CompleteWorkflowExample.WorkflowContext(
-                workflow_id=workflow_id,
-                correlation_id=correlation_id,
-                start_time=time.time(),
-                metadata={
-                    "parallel_enabled": bool(
-                        self.workflow_config.get("parallel", True),
-                    ),
-                    "max_workers": int(self.workflow_config.get("max_workers", 4)),
-                    "strict_mode": bool(self.workflow_config.get("strict_mode", False)),
+        def _aggregate_workflow_metrics(
+            self,
+            stage_results: list[CompleteWorkflowExample.WorkflowStageResult],
+            total_time: float,
+        ) -> dict[str, float | int]:
+            """Aggregate metrics across all workflow stages."""
+            if not stage_results:
+                return {}
+            total_items_processed = sum(r.items_processed for r in stage_results)
+            total_items_succeeded = sum(r.items_succeeded for r in stage_results)
+            total_processing_time = sum(r.processing_time for r in stage_results)
+            return {
+                "total_items_processed": total_items_processed,
+                "total_items_succeeded": total_items_succeeded,
+                "total_items_failed": total_items_processed - total_items_succeeded,
+                "workflow_efficiency": total_items_succeeded / total_items_processed
+                if total_items_processed > 0
+                else 0,
+                "average_stage_time": total_processing_time / len(stage_results)
+                if stage_results
+                else 0,
+                "workflow_throughput": total_items_processed / total_time
+                if total_time > 0
+                else 0,
+                "parallel_utilization": total_processing_time / total_time
+                if total_time > 0
+                else 0,
+            }
+
+        def _analyze_items(
+            self,
+            item: ItemType,
+            _context: CompleteWorkflowExample.WorkflowContext,
+        ) -> r[ItemType]:
+            """Analyze single item."""
+            return r.ok(
+                self._process_stage(
+                    item,
+                    0.005,
+                    "analyzed",
+                    True,
+                    lambda _i: {"complexity_score": len(str(item)) * 0.1},
+                ),
+            )
+
+        def _cleanup_context(
+            self,
+            context: CompleteWorkflowExample.WorkflowContext,
+        ) -> None:
+            """Cleanup workflow context and log completion."""
+            total_time = time.time() - context.start_time
+            context.performance_metrics["total_workflow_time"] = total_time
+            print(f"Workflow {context.workflow_id} completed in {total_time:.3f}s")
+
+        def _execute_stage_parallel(
+            self,
+            stage_name: str,
+            items: list[ItemType],
+            stage_func: Callable[
+                [ItemType, CompleteWorkflowExample.WorkflowContext],
+                r[ItemType],
+            ],
+            context: CompleteWorkflowExample.WorkflowContext,
+        ) -> r[CompleteWorkflowExample.WorkflowStageResult]:
+            """Execute a workflow stage in parallel."""
+            stage_start = time.time()
+            max_workers_raw = context.metadata.get("max_workers", 4)
+            max_workers = (
+                int(max_workers_raw)
+                if isinstance(max_workers_raw, (bool, int, float, str))
+                else 4
+            )
+
+            def process_single_item(item: ItemType) -> ItemType | None:
+                try:
+                    result = stage_func(item, context)
+                    return result.map_or(None)
+                except Exception as e:
+                    return {"error": str(e), "item": item}
+
+            processed_results: list[ItemType] = []
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                future_to_item = {
+                    executor.submit(process_single_item, item): item for item in items
+                }
+                for future in as_completed(future_to_item):
+                    result = future.result()
+                    if result is not None:
+                        processed_results.append(result)
+
+            processing_time = time.time() - stage_start
+            stage_result = CompleteWorkflowExample.WorkflowStageResult(
+                stage_name=stage_name,
+                workflow_id=context.workflow_id,
+                correlation_id=context.correlation_id,
+                success=len(processed_results) > 0,
+                items_processed=len(items),
+                items_succeeded=len(processed_results),
+                items_failed=len(items) - len(processed_results),
+                processing_time=processing_time,
+                stage_metadata={
+                    "parallel_execution": True,
+                    "max_workers": max_workers,
+                    "throughput": len(items) / processing_time
+                    if processing_time > 0
+                    else 0,
+                    "success_rate": len(processed_results) / len(items) if items else 0,
                 },
             )
+            return r.ok(stage_result)
 
         def _execute_workflow(
             self,
@@ -247,71 +357,21 @@ class CompleteWorkflowExample:
                 "performance_summary": aggregated_metrics,
             })
 
-        def _cleanup_context(
+        def _process_items(
             self,
-            context: CompleteWorkflowExample.WorkflowContext,
-        ) -> None:
-            """Cleanup workflow context and log completion."""
-            total_time = time.time() - context.start_time
-            context.performance_metrics["total_workflow_time"] = total_time
-            print(f"Workflow {context.workflow_id} completed in {total_time:.3f}s")
-
-        def _execute_stage_parallel(
-            self,
-            stage_name: str,
-            items: list[ItemType],
-            stage_func: Callable[
-                [ItemType, CompleteWorkflowExample.WorkflowContext],
-                r[ItemType],
-            ],
-            context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[CompleteWorkflowExample.WorkflowStageResult]:
-            """Execute a workflow stage in parallel."""
-            stage_start = time.time()
-            max_workers_raw = context.metadata.get("max_workers", 4)
-            max_workers = (
-                int(max_workers_raw)
-                if isinstance(max_workers_raw, (bool, int, float, str))
-                else 4
+            item: ItemType,
+            _context: CompleteWorkflowExample.WorkflowContext,
+        ) -> r[ItemType]:
+            """Process single item."""
+            return r.ok(
+                self._process_stage(
+                    item,
+                    0.01,
+                    "processed",
+                    True,
+                    lambda _i: {"processed_at": time.time()},
+                ),
             )
-
-            def process_single_item(item: ItemType) -> ItemType | None:
-                try:
-                    result = stage_func(item, context)
-                    return result.map_or(None)
-                except Exception as e:
-                    return {"error": str(e), "item": item}
-
-            processed_results: list[ItemType] = []
-            with ThreadPoolExecutor(max_workers=max_workers) as executor:
-                future_to_item = {
-                    executor.submit(process_single_item, item): item for item in items
-                }
-                for future in as_completed(future_to_item):
-                    result = future.result()
-                    if result is not None:
-                        processed_results.append(result)
-
-            processing_time = time.time() - stage_start
-            stage_result = CompleteWorkflowExample.WorkflowStageResult(
-                stage_name=stage_name,
-                workflow_id=context.workflow_id,
-                correlation_id=context.correlation_id,
-                success=len(processed_results) > 0,
-                items_processed=len(items),
-                items_succeeded=len(processed_results),
-                items_failed=len(items) - len(processed_results),
-                processing_time=processing_time,
-                stage_metadata={
-                    "parallel_execution": True,
-                    "max_workers": max_workers,
-                    "throughput": len(items) / processing_time
-                    if processing_time > 0
-                    else 0,
-                    "success_rate": len(processed_results) / len(items) if items else 0,
-                },
-            )
-            return r.ok(stage_result)
 
         def _process_stage(
             self,
@@ -329,6 +389,26 @@ class CompleteWorkflowExample:
                 result.update(extra_logic(item))
             return result
 
+        def _setup_context(self) -> CompleteWorkflowExample.WorkflowContext:
+            """Setup workflow context with correlation tracking."""
+            workflow_id = str(
+                self.workflow_config.get("workflow_id", f"workflow_{int(time.time())}"),
+            )
+            correlation_id = f"{workflow_id}_{int(time.time() * 1000)}"
+
+            return CompleteWorkflowExample.WorkflowContext(
+                workflow_id=workflow_id,
+                correlation_id=correlation_id,
+                start_time=time.time(),
+                metadata={
+                    "parallel_enabled": bool(
+                        self.workflow_config.get("parallel", True),
+                    ),
+                    "max_workers": int(self.workflow_config.get("max_workers", 4)),
+                    "strict_mode": bool(self.workflow_config.get("strict_mode", False)),
+                },
+            )
+
         def _validate_items(
             self,
             item: ItemType,
@@ -344,86 +424,6 @@ class CompleteWorkflowExample:
                     lambda _i: {"is_valid": bool(item.get("id") and item.get("name"))},
                 ),
             )
-
-        def _process_items(
-            self,
-            item: ItemType,
-            _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[ItemType]:
-            """Process single item."""
-            return r.ok(
-                self._process_stage(
-                    item,
-                    0.01,
-                    "processed",
-                    True,
-                    lambda _i: {"processed_at": time.time()},
-                ),
-            )
-
-        def _analyze_items(
-            self,
-            item: ItemType,
-            _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[ItemType]:
-            """Analyze single item."""
-            return r.ok(
-                self._process_stage(
-                    item,
-                    0.005,
-                    "analyzed",
-                    True,
-                    lambda _i: {"complexity_score": len(str(item)) * 0.1},
-                ),
-            )
-
-        def _aggregate_results(
-            self,
-            item: ItemType,
-            _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[ItemType]:
-            """Aggregate results."""
-            return r.ok(
-                self._process_stage(
-                    item,
-                    0,
-                    "aggregated",
-                    True,
-                    lambda _i: {
-                        "final_score": _to_float(item.get("complexity_score", 0))
-                        + (1 if bool(item.get("is_valid", False)) else 0),
-                    },
-                ),
-            )
-
-        def _aggregate_workflow_metrics(
-            self,
-            stage_results: list[CompleteWorkflowExample.WorkflowStageResult],
-            total_time: float,
-        ) -> dict[str, float | int]:
-            """Aggregate metrics across all workflow stages."""
-            if not stage_results:
-                return {}
-            total_items_processed = sum(r.items_processed for r in stage_results)
-            total_items_succeeded = sum(r.items_succeeded for r in stage_results)
-            total_processing_time = sum(r.processing_time for r in stage_results)
-            return {
-                "total_items_processed": total_items_processed,
-                "total_items_succeeded": total_items_succeeded,
-                "total_items_failed": total_items_processed - total_items_succeeded,
-                "workflow_efficiency": total_items_succeeded / total_items_processed
-                if total_items_processed > 0
-                else 0,
-                "average_stage_time": total_processing_time / len(stage_results)
-                if stage_results
-                else 0,
-                "workflow_throughput": total_items_processed / total_time
-                if total_time > 0
-                else 0,
-                "parallel_utilization": total_processing_time / total_time
-                if total_time > 0
-                else 0,
-            }
 
     @staticmethod
     def create_sample_workflow_data(count: int = 100) -> list[ItemType]:
