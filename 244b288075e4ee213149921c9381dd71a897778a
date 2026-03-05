@@ -1,0 +1,44 @@
+docs/guides/development.md
+  a0bad2f50fb25561 466,476
+docs/references/pydantic2/concepts/experimental.md
+  a0bad2f50fb25561 181,259
+docs/architecture/flext-cqrs-architecture.md
+  a0bad2f50fb25561 1768,1882,2093,2149
+.gitmodules
+  fe29985f4d6e0f06 14,18,22,26,30,34,38,42,47,51,55,59,63,67,71,75,80,84,88,92,96,101,105,109,113,117,122,126,130,134
+.claude/skills/flext-strict-typing/SKILL.md
+  a0bad2f50fb25561 94,102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "244b288075e4ee213149921c9381dd71a897778a",
+  "prompts": {
+    "a0bad2f50fb25561": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_34454187effeSOWS1WKLcbqWN2-819927a8-8a31-4f24-bf46-07a22faadf20",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 10,
+      "total_deletions": 10,
+      "accepted_lines": 10,
+      "overriden_lines": 0
+    },
+    "fe29985f4d6e0f06": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_34454187effeSOWS1WKLcbqWN2-46dd270a-a48e-44ad-baae-8390c4ef4762",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 30,
+      "total_deletions": 31,
+      "accepted_lines": 30,
+      "overriden_lines": 0
+    }
+  }
+}
