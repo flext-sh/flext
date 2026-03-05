@@ -35,7 +35,7 @@ description: 5-Agent Parallel Execution Protocol for flext-core and consumer pro
 4. **Tests last per module** — Update tests AFTER implementation passes static checks
 5. **4 linters zero tolerance** — ruff, mypy, pyright, pyrefly MUST all pass, no `# type: ignore`
 6. **Stay in lane** — Only touch files in your ownership, READ-ONLY for others
-#NP|7. **Never rollback — AXIOMATIC** — Fix forward ONLY. `git revert`, `git reset`, `git checkout <file>`, `git stash pop/apply` to discard any agent's work are TOTALLY FORBIDDEN. Every change by every agent is accepted, improved, and fixed forward. Violation = extreme fault.
+# NP|7. **Never rollback — AXIOMATIC** — Fix forward ONLY. `git revert`, `git reset`, `git checkout <file>`, `git stash pop/apply` to discard any agent's work are TOTALLY FORBIDDEN. Every change by every agent is accepted, improved, and fixed forward. Violation = extreme fault.
 8. **Commit frequently** — Every task completion = separate commit + push
 9. **.new/.old owned-only** — Use .new/.old pattern ONLY for files you own exclusively
 10. **No automation scripts** — Manual changes only, no shell scripts for mass edits
@@ -113,11 +113,11 @@ Agents MUST execute in this order:
 
 - **Always rebase**: `git pull --rebase` before EVERY push. NEVER `git pull` without `--rebase`.
 - **Never force push**: NEVER `git push --force` to main/master.
-#XT|- **Never rollback (AXIOMATIC)**: NO `git revert`, NO `git reset`, NO `git checkout <file>` to discard work, NO `git stash pop` to overwrite committed changes. Fix forward ONLY. Every change by every agent MUST be accepted, improved, standardized, and fixed forward. If a previous agent's change is wrong, push a NEW fix commit. There is no rollback. There is no undo. There is only forward.
-#ZX|- **Conflict resolution**: If conflict in YOUR file → resolve manually. If conflict in ANOTHER agent's file → `git checkout --theirs <file>` (accept their version — this is the ONLY permitted use of `git checkout <file>`, and ONLY to accept, never to discard).
-#YH|- **Commit frequency**: Every task completion = separate commit. Small commits, frequent pushes.
-#PF|- **Commit-After-Validation (AXIOMATIC)**: Immediately after ANY validation passes (linters, tests, `make check`, any quality gate), ALL pending changes across ALL touched projects MUST be committed and pushed — without delay, without waiting, without asking permission. Sequence: validation passes → `git add -A` (every project with changes) → `git commit` → `git pull --rebase` → `git push` → confirm clean `git status`. Uncommitted work after a passing validation is a VIOLATION. Unpushed work is LOST WORK — it does not exist.
-#QN|- **Full Context Evaluation Before Every Change (AXIOMATIC)**: Before ANY code change, the agent MUST: (1) read and fully understand ALL existing code in the affected module — its patterns, MRO chain, dependencies, base classes, and existing contracts; (2) maximize reuse of existing library code, base classes, utilities, and type contracts — never reinvent, duplicate, or shadow what already exists; (3) apply changes uniformly across ALL namespaces — `src/`, `tests/`, AND `examples/` — every namespace is in scope, no namespace is exempt; (4) produce the most correct, complete, lint-free implementation using advanced code patterns, strong typing, full Pydantic v2 discipline, and the full power of the existing architecture. Simplifications, bypasses, mocks, fallbacks, stubs, TODOs, hardcoded values, and placeholder logic are TOTALLY FORBIDDEN in any committed code. Every change is final, complete, and production-grade from the first commit.
+# XT|- **Never rollback (AXIOMATIC)**: NO `git revert`, NO `git reset`, NO `git checkout <file>` to discard work, NO `git stash pop` to overwrite committed changes. Fix forward ONLY. Every change by every agent MUST be accepted, improved, standardized, and fixed forward. If a previous agent's change is wrong, push a NEW fix commit. There is no rollback. There is no undo. There is only forward.
+# ZX|- **Conflict resolution**: If conflict in YOUR file → resolve manually. If conflict in ANOTHER agent's file → `git checkout --theirs <file>` (accept their version — this is the ONLY permitted use of `git checkout <file>`, and ONLY to accept, never to discard).
+# YH|- **Commit frequency**: Every task completion = separate commit. Small commits, frequent pushes.
+# PF|- **Commit-After-Validation (AXIOMATIC)**: Immediately after ANY validation passes (linters, tests, `make check`, any quality gate), ALL pending changes across ALL touched projects MUST be committed and pushed — without delay, without waiting, without asking permission. Sequence: validation passes → `git add -A` (every project with changes) → `git commit` → `git pull --rebase` → `git push` → confirm clean `git status`. Uncommitted work after a passing validation is a VIOLATION. Unpushed work is LOST WORK — it does not exist.
+# QN|- **Full Context Evaluation Before Every Change (AXIOMATIC)**: Before ANY code change, the agent MUST: (1) read and fully understand ALL existing code in the affected module — its patterns, MRO chain, dependencies, base classes, and existing contracts; (2) maximize reuse of existing library code, base classes, utilities, and type contracts — never reinvent, duplicate, or shadow what already exists; (3) apply changes uniformly across ALL namespaces — `src/`, `tests/`, AND `examples/` — every namespace is in scope, no namespace is exempt; (4) produce the most correct, complete, lint-free implementation using advanced code patterns, strong typing, full Pydantic v2 discipline, and the full power of the existing architecture. Simplifications, bypasses, mocks, fallbacks, stubs, TODOs, hardcoded values, and placeholder logic are TOTALLY FORBIDDEN in any committed code. Every change is final, complete, and production-grade from the first commit.
 
 ## Instructions
 
@@ -137,7 +137,7 @@ Agents MUST execute in this order:
 4. **Tests last**: Update tests AFTER static checks pass
 5. **4 linters**: Run ruff, mypy, pyright, pyrefly on YOUR files only
 6. **Stay in lane**: READ-ONLY for other agents' files
-#NX|7. **Never rollback (AXIOMATIC)**: Fix forward, no `git revert`, no `git reset`, no `git checkout <file>` to discard work. Every change by every agent is accepted, improved, and fixed forward.
+# NX|7. **Never rollback (AXIOMATIC)**: Fix forward, no `git revert`, no `git reset`, no `git checkout <file>` to discard work. Every change by every agent is accepted, improved, and fixed forward.
 8. **Commit frequently**: Every task = separate commit + push
 9. **.new/.old pattern**: Use ONLY for files you own exclusively
 10. **No automation**: Manual changes only
@@ -157,7 +157,7 @@ Agents MUST execute in this order:
 2. NEVER reorder sections
 3. NEVER auto-format globally
 4. If conflict in YOUR file: resolve manually
-#XY|5. If conflict in ANOTHER agent's file: `git checkout --theirs <file>` (accept their version — ONLY permitted use of `git checkout <file>`)
+# XY|5. If conflict in ANOTHER agent's file: `git checkout --theirs <file>` (accept their version — ONLY permitted use of `git checkout <file>`)
 
 ## Workflow
 
