@@ -6960,7 +6960,7 @@ from pathlib import Path
 def complex_migration(
     source_file: Path,
     target_file: Path
-) -> MigrationResult:
+) -> m.Infra.Workspace.MigrationResult:
     """Complex LDIF migration with error recovery."""
 
     def fallback_on_parse(error: str) -> FlextResult[list[Entry]]:
@@ -7004,7 +7004,7 @@ def complex_migration(
         .or_else(fallback_on_write)
     )
 
-    return MigrationResult(
+    return m.Infra.Workspace.MigrationResult(
         success=result.is_success,
         entries_processed=len(cached_entries),
         output_path=target_file if result.is_success else target_file.with_suffix(".backup.ldif"),
