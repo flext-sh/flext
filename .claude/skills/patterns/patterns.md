@@ -543,21 +543,21 @@ For each migration from cast-heavy to model-boundary code:
 ## Quick Reference
 
 ### Pydantic v2.12 Official Documentation
-- **Unions**: https://docs.pydantic.dev/2.12/concepts/unions/
-- **Strict Mode**: https://docs.pydantic.dev/2.12/concepts/strict_mode/
-- **Fields**: https://docs.pydantic.dev/2.12/concepts/fields/
-- **Type Adapter**: https://docs.pydantic.dev/2.12/concepts/type_adapter/
-- **Models**: https://docs.pydantic.dev/2.12/concepts/models/
+- **Unions**: <https://docs.pydantic.dev/2.12/concepts/unions/>
+- **Strict Mode**: <https://docs.pydantic.dev/2.12/concepts/strict_mode/>
+- **Fields**: <https://docs.pydantic.dev/2.12/concepts/fields/>
+- **Type Adapter**: <https://docs.pydantic.dev/2.12/concepts/type_adapter/>
+- **Models**: <https://docs.pydantic.dev/2.12/concepts/models/>
 
 ### Pydantic GitHub Repository
-- **Main repo**: https://github.com/pydantic/pydantic
-- **Deprecated parse_obj_as**: https://github.com/pydantic/pydantic/blob/main/pydantic/deprecated/tools.py#L22-L30
-- **Test examples**: https://github.com/pydantic/pydantic/blob/main/tests/test_construction.py
+- **Main repo**: <https://github.com/pydantic/pydantic>
+- **Deprecated parse_obj_as**: <https://github.com/pydantic/pydantic/blob/main/pydantic/deprecated/tools.py#L22-L30>
+- **Test examples**: <https://github.com/pydantic/pydantic/blob/main/tests/test_construction.py>
 
 ### Real-world Examples
-- **TypeAdapter for MAC addresses**: https://github.com/TracecatHQ/tracecat/blob/main/tracecat/expressions/ioc_extractors/mac.py#L11-L15
-- **Discriminated unions**: https://github.com/ethereum/execution-specs/blob/forks/amsterdam/packages/testing/src/execution_testing/base_types/composite_types.py#L164-L169
-- **TypeAdapter validation**: https://github.com/invoke-ai/InvokeAI/blob/main/invokeai/app/services/style_preset_records/style_preset_records_common.py#L116-L123
+- **TypeAdapter for MAC addresses**: <https://github.com/TracecatHQ/tracecat/blob/main/tracecat/expressions/ioc_extractors/mac.py#L11-L15>
+- **Discriminated unions**: <https://github.com/ethereum/execution-specs/blob/forks/amsterdam/packages/testing/src/execution_testing/base_types/composite_types.py#L164-L169>
+- **TypeAdapter validation**: <https://github.com/invoke-ai/InvokeAI/blob/main/invokeai/app/services/style_preset_records/style_preset_records_common.py#L116-L123>
 
 ---
 

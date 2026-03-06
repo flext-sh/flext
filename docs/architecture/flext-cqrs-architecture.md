@@ -2160,8 +2160,8 @@ async def get_user(user_id: str) -> UserResponse:
 
 ```python
 # flext-oud-mig: Migration pipeline handler
-class MigrateEntryHandler(h[MigrateEntryCommand, MigrationResult]):
-    def handle(self, command: MigrateEntryCommand) -> FlextResult[MigrationResult]:
+class MigrateEntryHandler(h[MigrateEntryCommand, m.Infra.Workspace.MigrationResult]):
+    def handle(self, command: MigrateEntryCommand) -> FlextResult[m.Infra.Workspace.MigrationResult]:
         self.cqrs_context.push({
             "migration_id": command.migration_id,
             "entry_dn": command.entry.dn,
@@ -2208,7 +2208,7 @@ class MigrateEntryHandler(h[MigrateEntryCommand, MigrationResult]):
                 },
             )
 
-            return FlextResult.ok(MigrationResult(
+            return FlextResult.ok(m.Infra.Workspace.MigrationResult(
                 entry_dn=command.entry.dn,
                 status="migrated",
                 verification_passed=True,
