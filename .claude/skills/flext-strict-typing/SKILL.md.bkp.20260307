@@ -54,50 +54,6 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 >
 > **Rule**: See `AGENTS.md` §3 Code Law for canonical `FlextResult` and typing requirements.
 
-## Scope
-
-- Strict typing law across all projects, including `src/`, `tests/`, and `examples/`.
-- Type contracts, narrowing discipline, alias safety, and Pydantic v2 typing patterns.
-
-## References
-
-- `AGENTS.md`
-- `flext-core/src/flext_core/typings.py`
-- `flext-core/src/flext_core/result.py`
-- `flext-core/src/flext_core/protocols.py`
-
-## Rules
-
-- Use `t.*` contracts from `typings.py` instead of ad-hoc inline unions.
-- Use `r[T]` for fallible returns and avoid nullable fallibility patterns.
-- Use `isinstance`/TypeGuard for narrowing; avoid `type(...) is ...` narrowing.
-- Keep typing changes integral: verify ruff, mypy, pyright, and pyrefly.
-
-## Instructions
-
-- Start by classifying each type issue (annotation, alias, narrowing, result flow).
-- Apply minimally invasive, architecture-safe fixes that preserve MRO contracts.
-- Re-run targeted and project gates after each fix group.
-
-## Workflow
-
-1. Detect typing violations from gates and structural search.
-2. Map each violation to canonical `t.*` and `r` patterns.
-3. Apply fixes in shared-core-first order when contracts are reused.
-4. Validate and confirm no regression in dependent projects.
-
-## Examples
-
-```python
-# Preferred fallible contract
-from flext_core import r, t
-
-def parse_payload(payload: t.ConfigMap) -> r[str]:
-    if "name" not in payload:
-        return r.fail("Missing name")
-    return r[str].ok("ok")
-```
-
 ## Python Version & Core Requirements
 
 - **Python 3.13+** — Verified in `pyproject.toml` (`requires-python = ">=3.13"`)
@@ -122,9 +78,9 @@ def parse_payload(payload: t.ConfigMap) -> r[str]:
 | Instead of       | Use                        | When                                                          |
 | ---------------- | -------------------------- | ------------------------------------------------------------- |
 | `Any`            | `t.GeneralValueType`       | General-purpose value containers                              |
-| `Any`            | `t.Scalar`            | Primitives: `str \| int \| float \| bool \| datetime` |
-| `Any`            | `t.MetadataValue`     | Metadata values with canonical contract semantics                 |
-| `Any`            | `t.JsonValue`         | JSON-compatible values                                            |
+| `Any`            | `t.Scalar`            | Primitives: `str \| int \| float \| bool \| datetime \| None` |
+| `Any`            | `t.Metadat.Scalar`    | Metadata: `str \| int \| float \| bool \| None`               |
+| `Any`            | `t.Scalar`          | JSON primitives: `str \| int \| float \| bool \| None`        |
 | `Any`            | `t.JsonValue`              | Full JSON values                                              |
 | `object`         | `t.GeneralValueType`       | Method params that accept "anything"                          |
 | `dict[str, Any]` | `t.ConfigMap`              | Configuration dictionaries                                    |
@@ -135,11 +91,6 @@ def parse_payload(payload: t.ConfigMap) -> r[str]:
 
 ### The Type Hierarchy (from `typings.py` lines 153-176)
 
-```text
-Scalar-like contracts -> `t.Scalar`, `t.GeneralValueType`
-Mapping contracts     -> `t.ConfigMap`, `t.Dict`, `t.ServiceMap`
-Container contracts   -> `t.ObjectList`, `t.ResourceMap`, `t.FactoryMap`
-Fallibility contract  -> `r[T]`
 ```
 
 ## Verification
@@ -250,11 +201,10 @@ Scalar: TypeAlias = str | int | float | bool | datetime
 # ✅ CORRECT — recursive aliases use type statement
 type Serializable = (Scalar | list[FlextTypes.Serializable] | dict[str, FlextTypes.Serializable])
 
-# ✅ CORRECT — runtime narrowing via public utilities alias
-from flext_core import u
-
-if u.Guards.is_primitive(val): ...
-if u.Guards.is_scalar(val): ...
+# ✅ CORRECT — runtime narrowing via guards.py
+from flext_core._utilities.guards import FlextUtilitiesGuards as Guards
+if Guards.is_primitive(val): ...
+if Guards.is_scalar(val): ...
 
 # ✅ CORRECT — subclassing uses concrete base
 class Foo(Mapping[str, t.FlextTypes.Container]): ...
@@ -309,17 +259,17 @@ type GeneralValueType = (
 
 ### TypeGuard functions for runtime type checking
 
-When you need runtime type checks on types that are `TypeAliasType` (or any complex union), use the public guards exposed by `u.Guards`:
+When you need runtime type checks on types that are `TypeAliasType` (or any complex union), use the `TypeGuard` functions in `_utilities/guards.py`:
 
 ```python
-from flext_core import u
+from flext_core._utilities.guards import is_primitive, is_scalar, is_flexible_value
 
 # ✅ CORRECT — TypeGuard narrows the type safely
-if u.Guards.is_primitive(val):   # TypeGuard[str | int | float | bool]
+if is_primitive(val):   # TypeGuard[str | int | float | bool]
     ...
-if u.Guards.is_scalar(val):     # TypeGuard[str | int | float | bool | datetime]
+if is_scalar(val):     # TypeGuard[str | int | float | bool | datetime]
     ...
-if u.Guards.is_flexible_value(val):  # TypeGuard for general values
+if is_flexible_value(val):  # TypeGuard for general values
     ...
 ```
 
@@ -549,14 +499,14 @@ When a typing rule is violated, prefer architecture-aware fixes over mechanical 
 
 ```python
 # ✅ Every function/method MUST have explicit return type
-def process(self, data: t.GeneralValueType) -> r[bool]:
+def process(self, data: t.GeneralValueType) -> FlextResult[bool]:
     ...
 
 def validate(self, value: str) -> str:
     ...
 
-# ✅ Use r[T] for operations that can fail
-def load_config(self) -> r[t.ConfigMap]:
+# ✅ Use FlextResult[T] for operations that can fail
+def load_config(self) -> FlextResult[t.ConfigMap]:
     ...
 
 # ❌ WRONG — Missing return type
@@ -723,22 +673,24 @@ if isinstance(obj, str):
     use(obj)  # str
 
 # ✅ CORRECT — TypeGuard for custom predicates
-def is_config_map(val: t.GeneralValueType) -> TypeGuard[t.ConfigMap]:
-    return u.Guards.is_config_map(val)
+def is_config_map(val: t.ConfigMapValue) -> TypeGuard[t.ConfigMap]:
+    return isinstance(val, t.ConfigMap)
 ```
 
 **Polymorphic code → centralized Pydantic models**  
 Dismantle polymorphic functions: replace multiple branches on type/union with a single contract. Use centralized Pydantic v2 models with validation (discriminated unions, `Field`, `model_validator`, `field_validator`). Prefer overloads or discriminated unions over loose `Union` handling in function bodies.
 
 ```python
-# ❌ AVOID — many branches on polymorphic input in one function
-def process(data: t.GeneralValueType) -> r[str]:
-    ...
+# ❌ AVOID — many branches on type in one function
+def process(data: str | dict | list | BaseModel) -> Result:
+    if isinstance(data, str): ...
+    elif isinstance(data, dict): ...
+    elif isinstance(data, list): ...
 
 # ✅ PREFER — single model with validation
 class ProcessInput(BaseModel):
     kind: Literal["str", "dict", "list"]
-    value: t.GeneralValueType
+    value: str | dict[str, t.ConfigMapValue] | list[t.ConfigMapValue]
     @model_validator(mode="after")
     def check_kind_match(self): ...
 

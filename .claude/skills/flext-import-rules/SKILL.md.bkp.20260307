@@ -42,48 +42,6 @@ description: Exact import rules and patterns verified from the actual FLEXT code
 > projects (`flext-auth`, `flext-cli`, `flext-ldap`) on 2026-02-17.
 > **Rule**: See `AGENTS.md` §4 Import Law for canonical aliases, import order, and prohibited import forms.
 
-## Scope
-
-- Import architecture and conventions for `flext-core` and all consuming projects.
-- Canonical alias usage, tier-safe dependencies, and MRO-safe namespace composition.
-
-## References
-
-- `AGENTS.md`
-- `.claude/skills/flext-architecture-layers/SKILL.md`
-- `ruff-shared.toml`
-- `flext-core/src/flext_core/`
-
-## Rules
-
-- Enforce import order: future, stdlib, third-party, first-party, local.
-- Enforce architecture directionality and private-module boundaries.
-- Use canonical aliases (`c`, `m`, `p`, `t`, `u`, `r`, `d`, `e`, `h`, `s`, `x`) at usage sites.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, and `inline imports`. `cast()` is forbidden outside `flext-core` result internals.
-
-## Instructions
-
-- Apply import changes in dependency-tier order when refactoring shared modules.
-- Validate both syntax and architectural intent after every import migration batch.
-- Prefer public facades; avoid direct imports from private `_` modules in subprojects.
-
-## Workflow
-
-1. Inventory current import style and violations.
-2. Apply canonical import form aligned with module tier.
-3. Fix cross-project inheritance/import boundaries.
-4. Re-run quality gates and targeted searches.
-
-## Examples
-
-```python
-# Correct subproject usage
-from flext_core import m, p, t
-
-# Correct inheritance import by class name
-from flext_core.protocols import FlextProtocols
-```
-
 ## Rule 1: Always Use `from __future__ import annotations`
 
 This section provides concrete repository examples for the `from __future__ import annotations` requirement defined in `AGENTS.md` §3 and §4.
@@ -129,15 +87,15 @@ Within each group:
 ### WITHIN flext-core, import via ABSOLUTE paths to submodules
 
 ```python
-# ✅ CORRECT — Direct absolute import from concrete submodules
-from flext_core.constants import c
-from flext_core.typings import t
-from flext_core.protocols import p
-from flext_core.runtime import FlextRuntime
-from flext_core.models import m
-from flext_core.result import r
-from flext_core.utilities import u
-from flext_core.exceptions import e
+# ✅ CORRECT — Direct absolute import from the specific module
+from flext_core import c
+from flext_core import t
+from flext_core import p
+from flext_core import FlextRuntime
+from flext_core import m
+from flext_core import r
+from flext_core import u
+from flext_core import e
 
 # ✅ CORRECT — Import from _models/ or _utilities/ (inside their own facades)
 from flext_core._models.base import FlextModelsBase
@@ -212,8 +170,8 @@ class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):  # NOT F
 m = FlextTargetOracleModels
 # m.Meltano.* inherited, m.TargetOracle.* local
 
-# In runtime code — import from package facade/module path, not relative import:
-from flext_target_oracle.models import m
+# In runtime code — ONLY import m:
+from .models import m
 schema = m.Meltano.SingerSchemaMessage.model_validate(data)
 ```
 
