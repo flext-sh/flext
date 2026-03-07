@@ -2507,8 +2507,8 @@ class TestDispatcherLatency:
 ~~### Documentos Relacionados~~
 
 ~~- [FLEXT_SERVICE_ARCHITECTURE.md](./FLEXT_SERVICE_ARCHITECTURE.md) - Arquitetura de serviços (Tier 2.5)~~
-~~- [flext-core/AGENTS.md](../flext-core/AGENTS.md) - Guidelines do projeto core~~
-~~- [README.md](../flext-core/README.md) - Visão geral do flext-core~~
+~~- [flext-core/AGENTS.md](../../flext-core/AGENTS.md) - Guidelines do projeto core~~
+~~- [README.md](../../flext-core/README.md) - Visão geral do flext-core~~
 
 ~~### Padrões CQRS~~
 

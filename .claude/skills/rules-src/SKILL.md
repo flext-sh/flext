@@ -27,6 +27,7 @@ description: Rules for shared source modules under top-level `src/`. Use when ed
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `src/flext/`
 - `flext-core/docs/architecture/clean-architecture.md`
 - `Makefile`

@@ -44,6 +44,7 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://docs.pydantic.dev/latest/> — official Pydantic v2 docs
 - `flext-core/pyproject.toml` — pins `pydantic>=2.12.3`, `pydantic-core>=2.41.4`
 

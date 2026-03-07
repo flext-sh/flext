@@ -30,6 +30,7 @@ description: Rules for Docker assets in `docker/`, including compose files and i
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `docker/README.md`
 - `docker/docker-compose.flext.yml`
 - `docker/docker-compose.oracle-db.yml`

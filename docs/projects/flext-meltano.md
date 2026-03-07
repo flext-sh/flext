@@ -44,7 +44,7 @@ dbt docs serve --port 8080
 - **Layered stack**: Plugin Layer (scaffolding + lifecycle helpers) → Protocol Layer (Singer tap/target frameworks) → Orchestration Layer (workflow engine, executor) → Integration Layer (Meltano/Meltano projects). Foundation services (`flext-core`, `flext-cli`, `flext-quality`) underpin every layer.
 - **Core services**: `FlextMeltanoService` (plugin discovery, lifecycle), `FlextMeltanoAdapter` (Singer tap/target execution), `FlextMeltanoExecutor` (pipeline orchestration with conditional logic, parallelism, state, retries).
 - **Configuration**: `meltano.yml` templates plus Flext-specific YAML bridging (pipelines, quality thresholds). `FlextMeltanoService.discover_plugins` and `FlextMeltanoAdapter.run_pipeline` weave Singer taps and targets into production flows.
-- **Integration**: Works with `flext-core`, `flext-cli`, `flext-meltano` plugin registry, and Singer-based `flext-tap-*`/`flext-target-*` packages; zero custom Singer/DBT code outside of this project per CLAUDE.
+- **Integration**: Works with `flext-core`, `flext-cli`, `flext-meltano` plugin registry, and Singer-based `flext-tap-*`/`flext-target-*` packages; zero custom Singer/DBT code outside of this project per AGENTS.
 
 ## Key features
 
@@ -57,7 +57,7 @@ dbt docs serve --port 8080
 ## Resources
 
 - [Project README](../../flext-meltano/README.md)
-- [Project CLAUDE](../../flext-meltano/AGENTS.md) for zero-tolerance rules (no custom Singer/DBT code, registry-driven flows)
+- [Project AGENTS.md](../../flext-meltano/AGENTS.md) for zero-tolerance rules (no custom Singer/DBT code, registry-driven flows)
 - `flext-meltano/docs/` for architecture, configuration, development, integration, troubleshooting, and guides
 - Related `reports/` artifacts: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
 - Related projects: `flext-core`, `flext-cli`, `flext-quality`, `flext-dbt-*`, `flext-plugin`, and Singer-based taps/targets

@@ -79,7 +79,7 @@ FLEXT Core follows strict layering so that lower tiers never import higher tiers
 ## Resources
 
 - [Project README](../../flext-core/README.md)
-- [CLAUDE guidelines](../../flext-core/AGENTS.md)
+- [AGENTS guidelines](../../flext-core/AGENTS.md)
 - `docs/QUICK_START.md`, `docs/architecture/overview.md`, `docs/api-reference/` inside `flext-core`
 - `examples/` demonstrating dispatchers, processors, and DTOs
 - Reports: `reports/coverage-scan-20260202_144808`, `reports/lint-output/*`, `reports/pytest/*`

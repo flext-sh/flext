@@ -39,6 +39,7 @@ description: FlextLogger structured logging with context propagation, DI factori
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://www.structlog.org/en/stable/> — structlog official docs
 - `flext-core/pyproject.toml` — pins `structlog>=25.4.0`
 - `flext-core/tests/unit/test_runtime.py` — runtime/logger tests

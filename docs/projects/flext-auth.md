@@ -65,7 +65,7 @@ For provider registration, import `FlextAuthRegistry` + `FlextAuthJwtProvider` o
 ## Resources
 
 - [Project README](../../flext-auth/README.md)
-- [CLAUDE instructions](../../flext-auth/AGENTS.md) (registry rules, zero tolerance constraints)
+- [AGENTS instructions](../../AGENTS.md) (registry rules, zero tolerance constraints)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for evidencing the mentioned gates
 - `docs/getting-started.md`, `docs/api-reference.md`, and the project’s `docs/` folder for boarding guides and extension notes
 - Related integration libraries: `flext-core`, `flext-api`, `flext-grpc`, `flext-ldap`, `flext-web`
@@ -74,4 +74,4 @@ For provider registration, import `FlextAuthRegistry` + `FlextAuthJwtProvider` o
 
 - GitHub issues: <https://github.com/flext-sh/flext-auth/issues>
 - Discussions: <https://github.com/flext-sh/flext-auth/discussions>
-- Follow `docs/standards/README.md` and the project’s `CLAUDE` zero-tolerance checklist before editing source or docs to keep alignment with the portal.
+- Follow `docs/standards/README.md` and the workspace `AGENTS.md` zero-tolerance checklist before editing source or docs to keep alignment with the portal.

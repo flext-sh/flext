@@ -47,6 +47,7 @@ description: Maintenance services — health checks, workspace status, git clean
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `flext-core/src/flext_infra/maintenance/` — Module source
 - `.claude/skills/rules-scripts/SKILL.md`
 - `docs/architecture/adr/README.md`

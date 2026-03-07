@@ -29,6 +29,7 @@ description: Rules for runnable examples in `examples/` so they stay aligned wit
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `examples/README.md`
 - `flext-core/src/flext_core/__init__.py`
 - `flext-core/src/flext_core/result.py`

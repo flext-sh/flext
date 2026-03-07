@@ -43,6 +43,61 @@ description: Verified development workflow including toolchain, testing, and CI/
 > **Source of truth**: Verified from `base.mk`, `pyproject.toml`, `.pre-commit-config.yaml`,
 > and actual project structure on 2026-02-19.
 
+- `AGENTS.md` — canonical governance source
+
+## Scope
+
+- Workspace-level developer workflow for setup, check, test, validate, and cross-project impact handling.
+- Applies to all projects orchestrated by root `Makefile` and project `base.mk` contracts.
+
+## References
+
+- `AGENTS.md`
+- `base.mk`
+- `Makefile`
+- `ruff-shared.toml`
+- `pyproject.toml`
+
+## Rules
+
+- Use the shared workspace `.venv` as the primary execution environment.
+- Run standardized make verbs (`setup`, `check`, `test`, `validate`) instead of ad-hoc command mixes.
+- Treat `pyproject.toml` `[tool.coverage.report] fail_under` as the only coverage threshold source.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`.
+
+## Instructions
+
+- Start from workspace root and prefer `PROJECT=` or `PROJECTS=` selectors for focused runs.
+- Keep architecture/import/typing aligned with `flext-architecture-layers`, `flext-import-rules`, and `flext-strict-typing`.
+- Re-run quality gates immediately after edits and before commit actions.
+
+## Workflow
+
+1. Bootstrap workspace and dependencies.
+2. Edit code with skill/rule alignment.
+3. Run fast feedback (`make check`, `make test`).
+4. Run extended validation (`make validate`, optional `FIX=1`).
+5. Run scoped cross-project checks when touching shared modules.
+
+## Examples
+
+```bash
+# Focus one project during active implementation
+make PROJECT=flext-core check
+make PROJECT=flext-core test PYTEST_ARGS="-k unit"
+
+# Then validate broader impact
+make PROJECTS="flext-core flext-api" validate
+```
+
+## Verification
+
+- `make check`
+- `make test`
+- `make validate`
+- `make PROJECT=<name> check`
+- `make PROJECTS="proj-a proj-b" validate`
+
 ## Workspace Setup
 
 ### Prerequisites

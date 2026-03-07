@@ -33,6 +33,7 @@ description: Validation services — policy gates, automated checks, ast-grep en
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `flext-core/src/flext_infra/check/` — Module source
 - `.claude/skills/flext-automation-skill-pattern/SKILL.md`
 - `.claude/skills/flext-quality-gates/SKILL.md`

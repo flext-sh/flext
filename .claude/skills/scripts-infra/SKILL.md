@@ -66,6 +66,7 @@ description: Core infrastructure services — validation, inventory, scanning, a
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `flext-core/src/flext_infra/core/` — Module source
 - `.claude/skills/rules-scripts/SKILL.md`
 - `.claude/skills/flext-automation-skill-pattern/SKILL.md`

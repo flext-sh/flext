@@ -34,6 +34,7 @@ description: REST API design and database query patterns — endpoint design, st
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://restfulapi.net/>
 - `.claude/skills/lib-pydantic-v2/SKILL.md` — request/response validation
 - `.claude/skills/flext-patterns/SKILL.md` — FlextResult for API responses

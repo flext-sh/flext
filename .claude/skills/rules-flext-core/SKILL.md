@@ -28,6 +28,7 @@ description: Authoritative rules for `flext-core` architecture, typing, result f
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `flext-core/docs/architecture/overview.md`
 - `flext-core/docs/architecture/clean-architecture.md`
 - `flext-core/src/flext_core/result.py`

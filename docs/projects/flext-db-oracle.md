@@ -66,7 +66,7 @@ if result.is_success:
 ## References & resources
 
 - [Project README](../../flext-db-oracle/README.md) for the full narrative
-- [CLAUDE governance](../../flext-db-oracle/AGENTS.md) for zero-tolerance rules (SQLAlchemy only in `api.py`)
+- [AGENTS governance](../../AGENTS.md) for zero-tolerance rules (SQLAlchemy only in `api.py`)
 - Reports: `reports/pytest/*`, `reports/coverage-scan-*`, `reports/lint-output/*`
 - Related docs: `docs/getting-started.md`, `docs/architecture.md`, `docs/development.md`, `docs/troubleshooting.md` inside the project
 - Related projects: `flext-core`, `flext-cli`, `flext-tap-oracle`, `flext-target-oracle`, `flext-dbt-oracle`

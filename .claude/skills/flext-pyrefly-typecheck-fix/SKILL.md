@@ -25,6 +25,50 @@ description: Pyrefly type-check error detection and safe auto-fix rules for recu
 > **Source of truth**: Error patterns extracted from `make check` and `make validate` output across FLEXT projects.
 > Cross-referenced with `flext-core/src/flext_core/typings.py`, `protocols.py`, and `result.py`.
 
+- `AGENTS.md` — canonical governance source
+
+## Scope
+
+- Recurring pyrefly error families across FLEXT projects.
+- Detection and fix workflows for type-check remediation using standardized automation.
+
+## References
+
+- `AGENTS.md`
+- `flext-core/src/flext_core/typings.py`
+- `flext-core/src/flext_core/protocols.py`
+- `flext-core/src/flext_core/result.py`
+
+## Rules
+
+- Express recurring failures as explicit rule families with deterministic detection.
+- Keep fix logic safe and reversible for mechanical rewrites.
+- Never use suppression comments as default resolution path.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`.
+
+## Instructions
+
+- Run standardized quality gates before and after each fix batch.
+- Prefer ast-grep rules for structural changes; keep custom scripts minimal and auditable.
+- Keep rule metadata in flat-key format for `skill_validate.py`/`skill_fix.py` consumption.
+
+## Workflow
+
+1. Detect failing cluster type from gate output.
+2. Apply mechanical rewrite when safe.
+3. Apply manual semantic fix when required.
+4. Re-run validation gates and confirm non-regression.
+
+## Examples
+
+```bash
+# Focus one project first
+make validate PROJECT=flext-core
+
+# Apply approved auto-fix path and re-validate
+make validate PROJECT=flext-core FIX=1
+```
+
 ## Purpose
 
 Encodes each recurring pyrefly error family into:

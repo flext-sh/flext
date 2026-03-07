@@ -56,7 +56,7 @@ dbt docs generate --target dev
 ## Resources & references
 
 - [Project README](../../flext-dbt-oracle/README.md)
-- [Project CLAUDE](../../flext-dbt-oracle/AGENTS.md) for dependency and command rules
+- [Project AGENTS.md](../../flext-dbt-oracle/AGENTS.md) for dependency and command rules
 - `docs/` (architecture, configuration, API reference, debugging guides)
 - Related artifacts: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` once blocked gates finish
 - Related projects: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, `flext-tap-oracle`, `flext-target-oracle`, `flext-dbt-oracle-wms`
@@ -65,4 +65,4 @@ dbt docs generate --target dev
 
 - GitHub issues: <https://github.com/flext-sh/flext-dbt-oracle/issues>
 - Discussions: <https://github.com/flext-sh/flext-dbt-oracle/discussions>
-- Follow `docs/standards/README.md` and this project’s `CLAUDE` before making doc or code changes so the portal stays accurate.
+- Follow `docs/standards/README.md` and this project’s `AGENTS.md` before making doc or code changes so the portal stays accurate.

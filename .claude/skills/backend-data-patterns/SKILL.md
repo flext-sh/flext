@@ -34,6 +34,7 @@ description: Database model design and migration patterns — naming, constraint
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://docs.sqlalchemy.org/en/20/>
 - <https://alembic.sqlalchemy.org/en/latest/>
 - `.claude/skills/lib-pydantic-v2/SKILL.md` — model validation patterns

@@ -63,7 +63,7 @@ dbt docs serve --port 8080
 ## Resources & references
 
 - [Project README](../../flext-dbt-ldap/README.md)
-- [CLAUDE governance](../../flext-dbt-ldap/AGENTS.md) – zero tolerance rules and workflow commands
+- [AGENTS governance](../../flext-dbt-ldap/AGENTS.md) – zero tolerance rules and workflow commands
 - `flext-dbt-ldap/docs/` – quick start, configuration, architecture, troubleshooting, and integration guides
 - Related artifacts: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
 - Related projects: `flext-core`, `flext-ldap`, `flext-meltano`, `flext-tap-ldap`, `flext-target-ldap`
@@ -72,4 +72,4 @@ dbt docs serve --port 8080
 
 - GitHub issues: <https://github.com/flext-sh/flext-dbt-ldap/issues>
 - Discussions: <https://github.com/flext-sh/flext-dbt-ldap/discussions>
-- Follow `docs/standards/README.md` and workspace CLAUDE instructions before editing docs or code to keep the portal trustworthy.
+- Follow `docs/standards/README.md` and workspace AGENTS.md instructions before editing docs or code to keep the portal trustworthy.

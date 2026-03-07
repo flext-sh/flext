@@ -29,6 +29,7 @@ description: Rules for typing support assets in `typings/` (stubs, compatibility
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `flext-core/src/flext_core/typings.py`
 - `pyproject.toml`
 - `typings/`

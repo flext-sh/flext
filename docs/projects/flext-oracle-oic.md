@@ -18,7 +18,7 @@ FLEXT Oracle OIC v0.9.9 is the Oracle Integration Cloud (OIC) client library for
 - **Python support**: 3.13+
 - **Tests**: 21% unit coverage today; integration/contract suites pending completion once FlextService refactor lands
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstrings) is blocked until FlextCore imports are refactored; lint/type/security currently green
-- **Type safety**: Pyrefly strict mode + MyPy strict mode with zero `Any`/`cast`/`# type: ignore` enforced via the project CLAUDE
+- **Type safety**: Pyrefly strict mode + MyPy strict mode with zero `Any`/`cast`/`# type: ignore` enforced via the project AGENTS.md
 - **Security**: SaaS credential management, token lifecycle, circuit breaker/ retry patterns requiring completion
 
 ## Quick start
@@ -61,14 +61,14 @@ settings = OracleOicExtensionSettings(
 ## Quality & compliance
 
 - `make lint`, `make type-check`, `make security` pass; `make validate` currently blocked by the outstanding FlextCore refactor.
-- Project CLAUDE enforces zero `Any`, zero `cast`, zero `TYPE_CHECKING`, pure FlextResult flows, and forbids direct `httpx`/`typer` usage outside the designated adapters.
+- Project AGENTS.md enforces zero `Any`, zero `cast`, zero `TYPE_CHECKING`, pure FlextResult flows, and forbids direct `httpx`/`typer` usage outside the designated adapters.
 - Coverage target is 70%+ with contract/integration suites; currently at 21% while the team adds tests for OAuth2 flows, circuit breakers, and service helpers.
 - Security posture highlights OAuth2 Gen3 compliance, encrypted secrets storage, and safe token lifecycle helpers.
 
 ## Resources & references
 
 - [Project README](../../flext-oracle-oic/README.md)
-- [Project CLAUDE](../../flext-oracle-oic/AGENTS.md) for zero-tolerance rules and quality checkpoints
+- [Project AGENTS.md](../../flext-oracle-oic/AGENTS.md) for zero-tolerance rules and quality checkpoints
 - `docs/` folder for getting-started, architecture, API reference, configuration, and roadmap notes
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` (once `make validate` finishes)
 - Related projects: `flext-core`, `flext-api`, `flext-cli`, `flext-tap-oracle-oic`, `flext-target-oracle-oic`
@@ -77,4 +77,4 @@ settings = OracleOicExtensionSettings(
 
 - GitHub issues: <https://github.com/flext-sh/flext-oracle-oic/issues>
 - Discussions: <https://github.com/flext-sh/flext-oracle-oic/discussions>
-- Follow `docs/standards/README.md` and this project’s CLAUDE before editing code or docs so the portal entry stays accurate.
+- Follow `docs/standards/README.md` and this project’s AGENTS before editing code or docs so the portal entry stays accurate.

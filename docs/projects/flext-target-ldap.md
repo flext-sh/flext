@@ -51,7 +51,7 @@ target-ldap --config config.json --state state.json --catalog catalog.json
 ## Resources & references
 
 - [Project README](../../flext-target-ldap/README.md)
-- [Project CLAUDE](../../flext-target-ldap/AGENTS.md) for zero-tolerance rules, quality gating, and command checklists
+- [Project AGENTS.md](../../flext-target-ldap/AGENTS.md) for zero-tolerance rules, quality gating, and command checklists
 - `docs/` (getting started, architecture, API reference, design patterns, development, testing, troubleshooting)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for QA evidence
 - Related projects: `flext-ldif`, `flext-tap-ldap`, `flext-dbt-ldif`, `flext-core`, `flext-meltano`, `flext-observability`
@@ -60,4 +60,4 @@ target-ldap --config config.json --state state.json --catalog catalog.json
 
 - GitHub issues: <https://github.com/flext-sh/flext-target-ldap/issues>
 - Discussions: <https://github.com/flext-sh/flext-target-ldap/discussions>
-- Follow `docs/standards/README.md` and this project’s `CLAUDE` before editing docs or code so the portal stays accurate.
+- Follow `docs/standards/README.md` and this project’s `AGENTS.md` before editing docs or code so the portal stays accurate.

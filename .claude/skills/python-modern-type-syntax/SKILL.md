@@ -37,6 +37,7 @@ description: Modern Python type annotation patterns for 3.10+ including union sy
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://docs.python.org/3.13/library/typing.html>
 - `.claude/skills/flext-strict-typing/SKILL.md` — FLEXT-specific type rules
 - `.claude/skills/python-313-typing/SKILL.md` — Python 3.13 typing PEPs

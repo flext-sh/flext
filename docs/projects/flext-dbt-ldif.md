@@ -57,7 +57,7 @@ dbt docs serve --port 8080
 ## Resources & references
 
 - [Project README](../../flext-dbt-ldif/README.md)
-- [CLAUDE governance](../../flext-dbt-ldif/AGENTS.md) covering zero-tolerance dependencies and commands
+- [AGENTS governance](../../flext-dbt-ldif/AGENTS.md) covering zero-tolerance dependencies and commands
 - `docs/` (getting started, architecture, configuration, troubleshooting, testing plays)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for the quality evidence referenced above
 - Related projects: `flext-core`, `flext-ldif`, `flext-meltano`, `flext-tap-ldif`, `flext-target-ldif`, `flext-dbt-oracle`, `flext-dbt-oracle-wms`
@@ -66,4 +66,4 @@ dbt docs serve --port 8080
 
 - GitHub issues: <https://github.com/flext-sh/flext-dbt-ldif/issues>
 - Discussions: <https://github.com/flext-sh/flext-dbt-ldif/discussions>
-- Follow `docs/standards/README.md` and this project’s `CLAUDE` before editing docs or code so the portal remains accurate.
+- Follow `docs/standards/README.md` and this project’s `AGENTS.md` before editing docs or code so the portal remains accurate.

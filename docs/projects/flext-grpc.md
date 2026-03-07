@@ -56,7 +56,7 @@ poetry run ruff check src/
 ## Resources & references
 
 - [Project README](../../flext-grpc/README.md)
-- [Project CLAUDE](../../flext-grpc/AGENTS.md) for zero tolerance (FlextResult-only, 75%+ coverage, no `Any`)
+- [Project AGENTS.md](../../flext-grpc/AGENTS.md) for zero tolerance (FlextResult-only, 75%+ coverage, no `Any`)
 - `docs/` (getting started, architecture, API reference, configuration, integration guides)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for QA evidence
 - Related projects: `flext-core`, `flext-cli`, `flext-observability`, `flext-api`, `flext-grpc` clients/servers across FLEXT services
@@ -65,4 +65,4 @@ poetry run ruff check src/
 
 - GitHub issues: <https://github.com/flext-sh/flext-grpc/issues>
 - Discussions: <https://github.com/flext-sh/flext-grpc/discussions>
-- Follow `docs/standards/README.md` and the project CLAUDE before touching code or docs so the portal remains consistent.
+- Follow `docs/standards/README.md` and the project AGENTS.md before touching code or docs so the portal remains consistent.

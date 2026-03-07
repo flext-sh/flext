@@ -89,5 +89,5 @@ Make gates:
 File checks:
 
 - `ls -la docs`
-- `rg -n "flext-core/src/flext_core|AGENTS.md|AGENTS.md" docs`
+- `rg -n "flext-core/src/flext_core|AGENTS.md" docs`
 - `rg -n "TODO|FIXME" docs || true`

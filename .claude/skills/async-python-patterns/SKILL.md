@@ -34,6 +34,7 @@ description: Python asyncio patterns for FLEXT integrations — LDAP, Oracle, gR
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://docs.python.org/3.13/library/asyncio.html>
 - `.claude/skills/lib-returns/SKILL.md` — FlextResult composition (async-compatible)
 - `.claude/skills/flext-patterns/SKILL.md` — core patterns

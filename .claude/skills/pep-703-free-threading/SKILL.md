@@ -33,6 +33,7 @@ description: Experimental GIL-free CPython for true parallelism. Use when evalua
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://docs.python.org/3.13/whatsnew/3.13.html#free-threaded-cpython>
 - <https://peps.python.org/pep-0703/>
 - `.claude/skills/async-python-patterns/SKILL.md` — async I/O patterns (complementary)
