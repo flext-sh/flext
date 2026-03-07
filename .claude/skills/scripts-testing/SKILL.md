@@ -70,7 +70,7 @@ make test PROJECT=flext-core PYTEST_ARGS="-k unit"
 make test FAIL_FAST=1
 ```
 
-Why good: Canonical Make contract, consistent with CLAUDE.md.
+Why good: Canonical Make contract, consistent with AGENTS.md.
 
 Good (internal — scripts behind Make):
 

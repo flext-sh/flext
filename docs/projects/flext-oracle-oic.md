@@ -68,7 +68,7 @@ settings = OracleOicExtensionSettings(
 ## Resources & references
 
 - [Project README](../../flext-oracle-oic/README.md)
-- [Project CLAUDE](../../flext-oracle-oic/CLAUDE.md) for zero-tolerance rules and quality checkpoints
+- [Project CLAUDE](../../flext-oracle-oic/AGENTS.md) for zero-tolerance rules and quality checkpoints
 - `docs/` folder for getting-started, architecture, API reference, configuration, and roadmap notes
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` (once `make validate` finishes)
 - Related projects: `flext-core`, `flext-api`, `flext-cli`, `flext-tap-oracle-oic`, `flext-target-oracle-oic`

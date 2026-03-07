@@ -345,7 +345,7 @@ ls ~/flext/docker/images/Dockerfile.* | wc -l
 
 - **FlextTestsDocker API**: See `flext-core/src/flext_tests/docker.py` (1649 lines)
 - **Centralized Fixtures**: See `flext-core/src/flext_tests/fixtures/docker_fixtures.py`
-- **FLEXT Standards**: See `~/flext/CLAUDE.md` for ecosystem standards
+- **FLEXT Standards**: See `~/flext/AGENTS.md` for ecosystem standards
 - **Project Docs**: See individual project README files for specific usage
 
 ---

@@ -52,7 +52,7 @@ For provider registration, import `FlextAuthRegistry` + `FlextAuthJwtProvider` o
 - **Facade & registry**: `api.py` provides the sole `FlextAuth` entry point and delegates to `FlextAuthRegistry`/`FlextAuthBaseProvider` for every authentication flow.
 - **Protocols**: `providers/base.py` defines `BaseProvider` mixin/protocol, and every transport resolves through the registry (JWT provider already production-ready, OAuth2/OIDC/SAML pending in later phases).
 - **Transports**: `transports/http.py`, `transports/grpc.py`, `transports/websocket.py` layer the project on top of `flext-api`, `flext-grpc`, and websockets; new transports follow the same registry path.
-- **Phased modules**: `providers/`, `protocol_handlers/`, `credentials/`, `tokens/`, and `sessions/` each implement one slice of the multi-phase roadmap while honoring the zero-tolerance rules from `CLAUDE.md` (no direct provider imports, registry-only orchestration, FlextResult for failures).
+- **Phased modules**: `providers/`, `protocol_handlers/`, `credentials/`, `tokens/`, and `sessions/` each implement one slice of the multi-phase roadmap while honoring the zero-tolerance rules from `AGENTS.md` (no direct provider imports, registry-only orchestration, FlextResult for failures).
 
 ## Key features & challenges
 
@@ -65,7 +65,7 @@ For provider registration, import `FlextAuthRegistry` + `FlextAuthJwtProvider` o
 ## Resources
 
 - [Project README](../../flext-auth/README.md)
-- [CLAUDE instructions](../../flext-auth/CLAUDE.md) (registry rules, zero tolerance constraints)
+- [CLAUDE instructions](../../flext-auth/AGENTS.md) (registry rules, zero tolerance constraints)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for evidencing the mentioned gates
 - `docs/getting-started.md`, `docs/api-reference.md`, and the project’s `docs/` folder for boarding guides and extension notes
 - Related integration libraries: `flext-core`, `flext-api`, `flext-grpc`, `flext-ldap`, `flext-web`

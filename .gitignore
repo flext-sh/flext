@@ -64,7 +64,7 @@
 # Documentation
 !README.md
 !AGENTS.md
-!CLAUDE.md
+!AGENTS.md
 !codex.md
 !.markdownlint.json
 
@@ -253,6 +253,8 @@ vendor/
 
 # Backup files inside allowed directories
 **/*.bak
+**/*.bkp
+**/*.bkp?
 **/*.backup
 **/*.orig
 **/*_backup

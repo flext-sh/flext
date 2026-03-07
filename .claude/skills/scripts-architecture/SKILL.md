@@ -94,7 +94,7 @@ make validate PROJECT=flext-core VALIDATE_GATES=complexity
 make test PROJECT=flext-core FAIL_FAST=1
 ```
 
-Why good: Canonical Make contract, consistent with CLAUDE.md.
+Why good: Canonical Make contract, consistent with AGENTS.md.
 
 Good (internal — architecture analysis scripts behind Make):
 

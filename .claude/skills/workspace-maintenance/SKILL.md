@@ -98,7 +98,7 @@ Make gates (primary):
 - `make validate VALIDATE_SCOPE=workspace` — workspace-level inventory + wiring validation
 - `make clean` — verify clean targets
 - `make setup` — verify dependency installation
-- `make upgrade` / `make typings` — dependency and typing reports under `.reports/dependencies/` (see CLAUDE.md Maintenance and standard places)
+- `make upgrade` / `make typings` — dependency and typing reports under `.reports/dependencies/` (see AGENTS.md Maintenance and standard places)
 
 Script-level checks (internal):
 

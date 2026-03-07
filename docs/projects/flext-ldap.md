@@ -67,7 +67,7 @@ Use `FlextLdapEntryAdapter` when converting between `ldap3` and `flext-ldif`, an
 - **FlextXxx namespaces**: every module exposes a single namespace class (`FlextLdapClients`, `FlextLdapModels`, `FlextLdapServices`, etc.) with nested helpers for authentication, search, ACLs, schema, and conversions.
 - **Server implementations**: production-ready adapters for OpenLDAP 2.x/1.x, Oracle OID/OUD, Active Directory, plus a generic fallback and detector; operation facades live under `servers/` and are wired through `api.py`.
 - **Integration points**: `flext-core` (FlextResult, container, logger, short aliases), `flext-ldif` (entry models, quirks, adapters), `flext-auth` (LDAP authentication provider), `flext-meltano`/Singer taps for data export, `flext-oud-mig` for Oracle migrations.
-- **Clean architecture**: application → domain → infrastructure → protocol layers enforced by documentation, with zero duplication and architecture-specific best practices in `CLAUDE.md`.
+- **Clean architecture**: application → domain → infrastructure → protocol layers enforced by documentation, with zero duplication and architecture-specific best practices in `AGENTS.md`.
 
 ## Quality & operations
 
@@ -79,7 +79,7 @@ Use `FlextLdapEntryAdapter` when converting between `ldap3` and `flext-ldif`, an
 ## Resources & references
 
 - [Project README](../../flext-ldap/README.md)
-- [CLAUDE instructions](../../flext-ldap/CLAUDE.md) detailing layering, import rules, and zero-tolerance policies
+- [CLAUDE instructions](../../flext-ldap/AGENTS.md) detailing layering, import rules, and zero-tolerance policies
 - `flext-ldap/docs/` (architecture, API reference, development, configuration, testing, troubleshooting, guides) for deep dives
 - Reports: `reports/pytest/*`, `reports/lint-output/*`, `reports/coverage-scan-*`
 - Related projects: `flext-core`, `flext-ldif`, `flext-auth`, `flext-meltano`, `flext-oud-mig`

@@ -1,6 +1,6 @@
 ---
 name: multi-agent-coordination
-description: Quick reference for 5 agents executing parallel work on flext codebase with zero conflicts. Authoritative source CLAUDE.md §10.
+description: Quick reference for 5 agents executing parallel work on flext codebase with zero conflicts. Authoritative source AGENTS.md §10.
 ---
 
 # Multi-Agent Coordination
@@ -8,7 +8,7 @@ description: Quick reference for 5 agents executing parallel work on flext codeb
 **Category**: Governance  
 **Status**: Active  
 **Agent Scope**: All 5 parallel agents  
-**Authoritative Source**: CLAUDE.md §10 Multi-Agent Parallel Execution Law
+**Authoritative Source**: AGENTS.md §10 Multi-Agent Parallel Execution Law
 
 ## Purpose
 
@@ -123,4 +123,4 @@ Load this skill when working on flext-core or consumer projects in parallel with
 task(category="...", load_skills=["multi-agent-coordination"], ...)
 ```
 
-For full details, always reference **CLAUDE.md §10 Multi-Agent Parallel Execution Law**.
+For full details, always reference **AGENTS.md §10 Multi-Agent Parallel Execution Law**.

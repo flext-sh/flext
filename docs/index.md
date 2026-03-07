@@ -68,11 +68,11 @@ All documentation changes are cross-checked against the generated artifacts in `
 
 ## Projects by Category
 
-- **Core Foundation** – `docs/projects/flext-core.md` and `flext-core/CLAUDE.md` describe the shared patterns and the container that wires the platform.
-- **LDAP & Directory Services** – `docs/projects/flext-ldif.md` plus `flext-ldap/CLAUDE.md` cover bulk LDIF processing and LDAP-specific integrations.
-- **API & CLI** – `docs/projects/flext-api/README.md` together with `flext-cli/CLAUDE.md` explain how the REST and CLI surfaces unify around flext-core abstractions.
-- **Infrastructure & Observability** – `flext-grpc/CLAUDE.md` and `flext-observability/CLAUDE.md` detail the RPC, monitoring, and telemetry projects that sit beside event buses and workflow runners.
-- **Plugins & Data Integrations** – `flext-plugin/CLAUDE.md` and `flext-meltano/CLAUDE.md` narrate the plugin system, Singer taps/targets, and the Meltano workflows that orchestrate cross-project transforms.
+- **Core Foundation** – `docs/projects/flext-core.md` and `flext-core/AGENTS.md` describe the shared patterns and the container that wires the platform.
+- **LDAP & Directory Services** – `docs/projects/flext-ldif.md` plus `flext-ldap/AGENTS.md` cover bulk LDIF processing and LDAP-specific integrations.
+- **API & CLI** – `docs/projects/flext-api/README.md` together with `flext-cli/AGENTS.md` explain how the REST and CLI surfaces unify around flext-core abstractions.
+- **Infrastructure & Observability** – `flext-grpc/AGENTS.md` and `flext-observability/AGENTS.md` detail the RPC, monitoring, and telemetry projects that sit beside event buses and workflow runners.
+- **Plugins & Data Integrations** – `flext-plugin/AGENTS.md` and `flext-meltano/AGENTS.md` narrate the plugin system, Singer taps/targets, and the Meltano workflows that orchestrate cross-project transforms.
 
 ## Key Features
 

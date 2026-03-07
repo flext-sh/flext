@@ -45,7 +45,7 @@ Configuration reference and example JSON live under `docs/` and the README (host
 - **Clean Architecture**: Domain (`domain/`), application (`application/`), infrastructure (`infrastructure/`), and protocol (`streams.py`, `ldif_stream.py`) layers; only lower tiers import via short aliases (`m`, `u`, `r`).
 - **Singer streams**: Users, Groups, OrganizationalUnits, Schema, Custom, LDIF, and LDIFAnalysis streams all implement Singer tap contracts while converting LDAP/LDIF entries through `FlextResult` orchestrators.
 - **Configuration models**: `config.py` exposes Pydantic `FlextTapLdapConfig` with strict validation, including LDAP connection settings, LDIF toggles, Melro (Meltano) integration, and security tokens.
-- **Zero tolerance governance**: `CLAUDE.md` enforces mandatory usage of `flext-ldap`, `flext-meltano`, `flext-core`, and `flext-cli`; forbids direct `ldap3`, `singer-sdk`, `click`, `rich`, `Any`, `cast`, or `TYPE_CHECKING`.
+- **Zero tolerance governance**: `AGENTS.md` enforces mandatory usage of `flext-ldap`, `flext-meltano`, `flext-core`, and `flext-cli`; forbids direct `ldap3`, `singer-sdk`, `click`, `rich`, `Any`, `cast`, or `TYPE_CHECKING`.
 
 ## Quality & operations
 
@@ -57,7 +57,7 @@ Configuration reference and example JSON live under `docs/` and the README (host
 ## Resources & references
 
 - [Project README](../../flext-tap-ldap/README.md) for narrative, features, and configuration
-- [Project CLAUDE](../../flext-tap-ldap/CLAUDE.md) for zero-tolerance policies and command conventions
+- [Project CLAUDE](../../flext-tap-ldap/AGENTS.md) for zero-tolerance policies and command conventions
 - `flext-tap-ldap/docs/` (getting started, configuration, architecture, API reference, testing, troubleshooting, examples)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` (alignment with make validate when unblocked)
 - Related projects: `flext-ldap`, `flext-ldif`, `flext-meltano`, `flext-core`, `flext-cli`, `flext-observability`, plus matching targets like `flext-target-ldap`

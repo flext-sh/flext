@@ -56,7 +56,7 @@ poetry run ruff check src/
 ## Resources & references
 
 - [Project README](../../flext-grpc/README.md)
-- [Project CLAUDE](../../flext-grpc/CLAUDE.md) for zero tolerance (FlextResult-only, 75%+ coverage, no `Any`)
+- [Project CLAUDE](../../flext-grpc/AGENTS.md) for zero tolerance (FlextResult-only, 75%+ coverage, no `Any`)
 - `docs/` (getting started, architecture, API reference, configuration, integration guides)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for QA evidence
 - Related projects: `flext-core`, `flext-cli`, `flext-observability`, `flext-api`, `flext-grpc` clients/servers across FLEXT services

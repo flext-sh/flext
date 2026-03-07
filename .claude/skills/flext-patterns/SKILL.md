@@ -50,7 +50,7 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 
 ## Rules
 
-> **Rule**: See `CLAUDE.md` §2 Architecture Law and §4 Import Law for canonical namespace alias and inheritance requirements.
+> **Rule**: See `AGENTS.md` §2 Architecture Law and §4 Import Law for canonical namespace alias and inheritance requirements.
 
 - This skill focuses on implementation-level patterns, anti-patterns, and concrete examples.
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
@@ -89,7 +89,7 @@ m = FlextRuntime.Aliases.models()
 
 ## Namespace Inheritance Pattern
 
-> **Rule**: See `CLAUDE.md` §2 Architecture Law and §4 Import Law for normative alias and MRO composition requirements.
+> **Rule**: See `AGENTS.md` §2 Architecture Law and §4 Import Law for normative alias and MRO composition requirements.
 
 Downstream projects inherit parent facade classes to compose namespaces. This avoids duplicate aliases, assignment-based type errors, and invariance issues.
 

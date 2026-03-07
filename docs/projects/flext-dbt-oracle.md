@@ -42,7 +42,7 @@ dbt docs generate --target dev
 
 ## Architecture & integration
 
-- **Layers**: Clean Architecture (foundation constants/typings, domain models, services/orchestrators, adapters); layering enforces one-way imports per `CLAUDE.md`.
+- **Layers**: Clean Architecture (foundation constants/typings, domain models, services/orchestrators, adapters); layering enforces one-way imports per `AGENTS.md`.
 - **Adapter stack**: `flext_dbt_oracle.adapters.oracle` implements the Oracle adapter plus connection manager, loader, and SQL optimizer; `FlextDbtOracle` façade orchestrates runs with the FlextContainer + FlextResult pipeline.
 - **Integration points**: relies on `flext-db-oracle` for connections, `flext-meltano` for Singer orchestration, `flext-core` for logging/dependency injection, and `flext-observability` for instrumentation.
 - **Security and compliance**: connection pooling, transaction management, dual-phase commit plan, and explicit guardrails for SQL hints, timeouts, and error mapping.
@@ -56,7 +56,7 @@ dbt docs generate --target dev
 ## Resources & references
 
 - [Project README](../../flext-dbt-oracle/README.md)
-- [Project CLAUDE](../../flext-dbt-oracle/CLAUDE.md) for dependency and command rules
+- [Project CLAUDE](../../flext-dbt-oracle/AGENTS.md) for dependency and command rules
 - `docs/` (architecture, configuration, API reference, debugging guides)
 - Related artifacts: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` once blocked gates finish
 - Related projects: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, `flext-tap-oracle`, `flext-target-oracle`, `flext-dbt-oracle-wms`

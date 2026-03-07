@@ -24,7 +24,7 @@ description: Strict cleanup rules for removing duplication, stale policy text, a
 ## Scope
 
 - Documentation governance files:
-  - `CLAUDE.md`
+  - `AGENTS.md`
   - `AGENTS.md`
   - `.claude/skills/*/SKILL.md`
 - Agent pointer files:
@@ -35,7 +35,7 @@ description: Strict cleanup rules for removing duplication, stale policy text, a
 ## References
 
 - `AGENTS.md` (no-duplication maintenance rule)
-- `CLAUDE.md` (canonical policy)
+- `AGENTS.md` (canonical policy)
 - `.claude/skills/skill-format-universal/SKILL.md`
 
 ## Rules
@@ -53,7 +53,7 @@ description: Strict cleanup rules for removing duplication, stale policy text, a
 - Keep each skill focused on domain-specific action, not global boilerplate.
 
 ```bash
-rg -n "single source of truth|Canonical source|CLAUDE.md" AGENTS.md .claude/skills/*/SKILL.md
+rg -n "single source of truth|Canonical source|AGENTS.md" AGENTS.md .claude/skills/*/SKILL.md
 ```
 
 ## Workflow
@@ -68,7 +68,7 @@ rg -n "single source of truth|Canonical source|CLAUDE.md" AGENTS.md .claude/skil
 Good:
 
 ```markdown
-Canonical source: `CLAUDE.md`.
+Canonical source: `AGENTS.md`.
 ```
 
 Why good: one source reduces drift and conflict.
@@ -78,7 +78,7 @@ Bad:
 ```markdown
 ## Global Rules
 
-[copy of 150 lines from CLAUDE.md]
+[copy of 150 lines from AGENTS.md]
 ```
 
 Why bad: duplicated policy rapidly becomes inconsistent.
@@ -96,4 +96,4 @@ Policy checks:
 
 - `rg -n "TODO|TBD|placeholder" .claude/skills/*/SKILL.md || true`
 - `rg -n "(^|[\"'`])/(Users|home)/" .claude/skills/\*/SKILL.md || true`
-- `rg -n "Canonical source:`CLAUDE.md`|single source of truth" AGENTS.md codex.md .github/copilot-instructions.md .gemini/styleguide.md`
+- `rg -n "Canonical source:`AGENTS.md`|single source of truth" AGENTS.md codex.md .github/copilot-instructions.md .gemini/styleguide.md`

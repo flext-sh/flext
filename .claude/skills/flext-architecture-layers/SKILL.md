@@ -32,11 +32,11 @@ description: Layer map and dependency-direction contract for flext-core. Use whe
 - `flext-core/src/flext_core/runtime.py` is the bridge for `structlog` and `dependency_injector`.
 - `flext-core/src/flext_core/container.py` encapsulates provider registration and resolution.
 - `flext-core/src/flext_core/__init__.py` exposes the stable public API aliases.
-- `CLAUDE.md` section "Workspace Project Dependency Map" is the canonical cross-project reference.
+- `AGENTS.md` section "Workspace Project Dependency Map" is the canonical cross-project reference.
 
 ## Rules
 
-> **Rule**: See `CLAUDE.md` §2 Architecture Law for canonical tier system and dependency flow.
+> **Rule**: See `AGENTS.md` §2 Architecture Law for canonical tier system and dependency flow.
 
 Layer map (source-aligned reference for implementation work):
 

@@ -58,7 +58,7 @@ dbt docs serve --port 8080
 ## Resources & references
 
 - [Project README](../../flext-dbt-oracle-wms/README.md)
-- [Project CLAUDE](../../flext-dbt-oracle-wms/CLAUDE.md) for zero-tolerance rules and command checklists
+- [Project CLAUDE](../../flext-dbt-oracle-wms/AGENTS.md) for zero-tolerance rules and command checklists
 - `docs/` subfolders for getting started, architecture, models, integration, development, and troubleshooting
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for the QA claims
 - Related projects: `flext-core`, `flext-db-oracle`, `flext-oracle-wms`, `flext-meltano`, `flext-tap-oracle-wms`, `flext-target-oracle-wms`, `flext-observability`

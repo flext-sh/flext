@@ -6,7 +6,7 @@ description: Mandatory rules for all coding agents — simple runtime aliases on
 # Flext Agent Strict Rules (Mandatory)
 
 **Scope**: All coding agents working in this repository.  
-**Authority**: CLAUDE.md §3 Code Law, §9 Agent Instructions. This skill expands and enforces them.
+**Authority**: AGENTS.md §3 Code Law, §9 Agent Instructions. This skill expands and enforces them.
 
 
 ## 0. AXIOMATIC Type Purity (Absolute — No Exception — No Negotiation)
@@ -110,9 +110,9 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 
 ## 5. Scale and Parallelism (all projects, strict)
 
-- **Scope**: Apply these rules across **all projects** (flext-core, flext-cli, flext-api, flext-ldif, flext-ldap, flext-meltano, tap/target/dbt variants, etc.). Follow each project's standards (CLAUDE.md, per-project CLAUDE.md).
+- **Scope**: Apply these rules across **all projects** (flext-core, flext-cli, flext-api, flext-ldif, flext-ldap, flext-meltano, tap/target/dbt variants, etc.). Follow each project's standards (AGENTS.md, per-project AGENTS.md).
 - **Parallelism**: Use multiple agents in parallel at maximum scale (e.g. one agent per project or per report section) to complete refactors as fast as possible. Each agent: one project or one report section; minimal, verifiable changes; run `make check` and `make test` for touched project.
-- **Quality**: Lint-clean with no warnings or errors; stability; remove all unnecessary code. Do not defer violations without explicit operator approval (CLAUDE.md §8).
+- **Quality**: Lint-clean with no warnings or errors; stability; remove all unnecessary code. Do not defer violations without explicit operator approval (AGENTS.md §8).
 - **Checklist**: `.reports/EXECUTION-CHECKLIST-aliases-typing-polymorphic.md` — apply in order; validate after each batch.
 
 ---
@@ -148,7 +148,7 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 3. **Aliases**: **ONLY** simple runtime aliases (e.g., `c = FlextConstants`, `m = FlextModels`, `x = FlextMixins`). **NEVER** use `FlextRuntime.Aliases` or any alias registry; remove all such usage completely. Facades expose **staticmethod aliases of external subclasses** into a single flat namespace; subprojects: access **ONLY** within the project namespace.
 4. **Removal**: Remove all non-runtime aliases and loose pass-through methods; use only direct methods and canonical names. Enforce runtime alias usage.
 5. **Scale**: Use **multiple agents in parallel at scale** (one agent per project or per report section) to apply refactors as fast as possible across all 33 projects. Each agent: one project or one section; minimal and verifiable changes; run `make check` and `make test` on the touched project.
-6. **Quality**: Code MUST be free of ruff and pyright warnings/errors; stable; remove unnecessary code. Do NOT alter established patterns from SKILLS and CLAUDE.md; surgical changes only; never break business functionality.
+6. **Quality**: Code MUST be free of ruff and pyright warnings/errors; stable; remove unnecessary code. Do NOT alter established patterns from SKILLS and AGENTS.md; surgical changes only; never break business functionality.
 7. **Hacks (Zero Tolerance)**: **NEVER** use `model_rebuild()`, `inline imports`, `cast()` (except in core `result.py`), `eval`/`exec`, or `try-except ImportError`. Everything MUST be resolved via architecture, MRO, protocols, and correct top-level declaration order.
 8. **Legacy/Compatibility (Zero Tolerance — ABOMINABLE)**: Simple compatibility wrappers, non-business validation fallbacks, legacy code of ANY kind, and `OldName = NewName` compatibility aliases are TOTALLY FORBIDDEN. Legacy code is DELETED and replaced with the canonical pattern immediately. No grace period, no deprecation path.
 9. **Module Structure (AXIOMATIC)**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions and standalone classes without MRO lineage are FORBIDDEN. Subprojects MUST inherit from the parent project's facade class.

@@ -335,8 +335,8 @@ split-on-trailing-comma = true
   "S603", # subprocess calls for Singer CLI commands with validated input
 ]
 "**/subprocess.py" = [
-  "S404", # Command runner abstraction: only place subprocess is allowed (CLAUDE.md §3).
-  "S603", # Command runner abstraction: only place subprocess is allowed (CLAUDE.md §3).
+  "S404", # Command runner abstraction: only place subprocess is allowed (AGENTS.md §3).
+  "S603", # Command runner abstraction: only place subprocess is allowed (AGENTS.md §3).
 ]
 "**/tools/*.py" = [
   "FBT001", # boolean-type-hint-positional-argument - CLI tools use boolean flags

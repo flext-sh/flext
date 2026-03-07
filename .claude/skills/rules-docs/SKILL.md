@@ -34,7 +34,7 @@ description: Rules for documentation under `docs/` to keep architecture and proj
 - `docs/architecture/overview.md`
 - `docs/architecture/clean-architecture.md`
 - `docs/architecture/adr/README.md`
-- `CLAUDE.md`
+- `AGENTS.md`
 
 ## Rules
 
@@ -89,5 +89,5 @@ Make gates:
 File checks:
 
 - `ls -la docs`
-- `rg -n "flext-core/src/flext_core|CLAUDE.md|AGENTS.md" docs`
+- `rg -n "flext-core/src/flext_core|AGENTS.md|AGENTS.md" docs`
 - `rg -n "TODO|FIXME" docs || true`

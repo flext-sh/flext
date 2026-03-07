@@ -88,5 +88,5 @@ File checks:
 
 - `ls -la .github/workflows`
 - `rg -n "^name:|^on:|^jobs:" .github/workflows/*.yml`
-- `rg -n "Canonical source|CLAUDE.md" .github/copilot-instructions.md`
+- `rg -n "Canonical source|AGENTS.md" .github/copilot-instructions.md`
 - `rg -n "TODO|FIXME" .github || true`

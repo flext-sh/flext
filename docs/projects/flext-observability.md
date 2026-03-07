@@ -62,7 +62,7 @@ work("payload")
 ## Resources & references
 
 - [Project README](../../flext-observability/README.md)
-- [CLAUDE guidance](../../flext-observability/CLAUDE.md) with zero-tolerance rules and quality gate steps
+- [CLAUDE guidance](../../flext-observability/AGENTS.md) with zero-tolerance rules and quality gate steps
 - `flext-observability/docs/` for docs, architecture, guides, and troubleshooting
 - Reports: `reports/pytest/*`, `reports/lint-output/*`, `reports/coverage-scan/*` (when the pipeline unblocks)
 - Related projects: `flext-core`, `flext-cli`, `flext-api`, `flext-auth`, `flext-ldap`, `flext-ldif`, `flext-quality`

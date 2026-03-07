@@ -54,7 +54,7 @@ tap-oracle-wms --config config.json --catalog catalog.json --state state.json
 ## Resources & references
 
 - [Project README](../../flext-tap-oracle-wms/docs/README.md)
-- [Project CLAUDE](../../flext-tap-oracle-wms/CLAUDE.md) for zero tolerance policies and commands
+- [Project CLAUDE](../../flext-tap-oracle-wms/AGENTS.md) for zero tolerance policies and commands
 - `docs/` (architecture, TODO/refactor plan, standards, quality checklists)
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
 - Related projects: `flext-oracle-wms`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, `flext-tap-oracle`, `flext-target-oracle-wms`, `flext-dbt-oracle-wms`

@@ -54,7 +54,7 @@ tap-ldif --config config.json --catalog catalog.json --state state.json
 ## Resources & references
 
 - [Project README](../../flext-tap-ldif/README.md)
-- [CLAUDE guide](../../flext-tap-ldif/CLAUDE.md) with zero tolerance rules and command checklists
+- [CLAUDE guide](../../flext-tap-ldif/AGENTS.md) with zero tolerance rules and command checklists
 - `docs/` (architecture, API reference, configuration, testing, troubleshooting, examples)
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
 - Related projects: `flext-ldif`, `flext-dbt-ldif`, `flext-target-ldif`, `flext-meltano`, `flext-core`, `flext-observability`

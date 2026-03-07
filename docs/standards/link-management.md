@@ -100,7 +100,7 @@ This document defines the standards and procedures for managing links and cross-
 ✅ CORRECT - Relative from root
 
 - [Workspace Documentation](../../docs/index.md)
-- [FLEXT Standards](../../CLAUDE.md)
+- [FLEXT Standards](../../AGENTS.md)
 
 ❌ WRONG - GitHub URLs for workspace docs
 
