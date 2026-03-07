@@ -30,6 +30,7 @@ description: Rules for package metadata and package-layer structure under `pkg/`
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `pyproject.toml`
 - `pkg/`
 - `Makefile`

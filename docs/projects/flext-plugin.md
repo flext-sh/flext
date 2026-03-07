@@ -19,7 +19,7 @@ FLEXT Plugin (v0.9.0) is the production-grade plugin management platform for the
 - **Tests**: 339 test methods across unit, integration, and e2e suites; coverage target 90% (currently met per README)
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is required before merges
 - **Type safety**: MyPy strict mode, zero `Any`, `cast`, or `# type: ignore`; every public surface returns `FlextResult[T]`
-- **Security**: Sandbox validation, hot reload monitoring, and watchdog-backed file discovery run inside isolation layers defined by the project’s zero-tolerance CLAUDE rules
+- **Security**: Sandbox validation, hot reload monitoring, and watchdog-backed file discovery run inside isolation layers defined by the project’s zero-tolerance AGENTS rules
 
 ## Quick start
 
@@ -50,7 +50,7 @@ Use the CLI helpers (currently disabled in `__init__.py`) once the command layer
 - **Service layer**: `FlextPluginService`, `FlextPluginDiscoveryService` encapsulate lifecycle transitions."# TODO".
 - **Model layer**: `FlextPluginModels` hosts entity/config/metadata Pydantic models and scoped FlextResult helpers.
 - **Infrastructure**: `PluginDiscovery`, `HotReload`, `RealAdapters`, `watchdog` watchers, and sandboxing guardrails; direct imports to `flext-core` (FlextResult, FlextContainer, FlextModels, FlextLogger, FlextDispatcher) ensure consistent design.
-- **Clean architecture**: 19 classes, 20 modules, single-class-per-module discipline, 9,767 lines of code respecting layering rules; zero-tolerance `CLAUDE` enforces FlextResult always.
+- **Clean architecture**: 19 classes, 20 modules, single-class-per-module discipline, 9,767 lines of code respecting layering rules; zero-tolerance `AGENTS.md` enforces FlextResult always.
 
 ## Quality & compliance
 
@@ -62,7 +62,7 @@ Use the CLI helpers (currently disabled in `__init__.py`) once the command layer
 ## Resources
 
 - [Project README](../../flext-plugin/README.md)
-- [Project CLAUDE](../../flext-plugin/AGENTS.md) for zero tolerance policies and command gating
+- [Project AGENTS.md](../../flext-plugin/AGENTS.md) for zero tolerance policies and command gating
 - `docs/getting-started.md`, `docs/architecture.md`, `docs/api-reference.md`, `docs/development.md`, `TODO.md` inside the project for deeper guidance
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` (aligned with the mentioned quality commands)
 - Related projects: `flext-core`, `flext-cli`, `flext-observability`, Singer taps/targets in the `flext-tap-*` / `flext-target-*` families
@@ -71,4 +71,4 @@ Use the CLI helpers (currently disabled in `__init__.py`) once the command layer
 
 - GitHub issues: <https://github.com/flext-sh/flext-plugin/issues>
 - Discussions: <https://github.com/flext-sh/flext-plugin/discussions>
-- Follow `docs/standards/README.md` and the per-project `CLAUDE` before making doc or code changes so the portal stays accurate.
+- Follow `docs/standards/README.md` and the per-project `AGENTS.md` before making doc or code changes so the portal stays accurate.

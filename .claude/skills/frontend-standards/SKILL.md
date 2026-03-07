@@ -32,6 +32,7 @@ description: Frontend development standards — accessibility, component design,
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://www.w3.org/WAI/WCAG21/quickref/>
 - <https://developer.mozilla.org/en-US/docs/Learn/Accessibility>
 

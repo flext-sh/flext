@@ -57,7 +57,7 @@ Configuration reference and example JSON live under `docs/` and the README (host
 ## Resources & references
 
 - [Project README](../../flext-tap-ldap/README.md) for narrative, features, and configuration
-- [Project CLAUDE](../../flext-tap-ldap/AGENTS.md) for zero-tolerance policies and command conventions
+- [Project AGENTS.md](../../flext-tap-ldap/AGENTS.md) for zero-tolerance policies and command conventions
 - `flext-tap-ldap/docs/` (getting started, configuration, architecture, API reference, testing, troubleshooting, examples)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` (alignment with make validate when unblocked)
 - Related projects: `flext-ldap`, `flext-ldif`, `flext-meltano`, `flext-core`, `flext-cli`, `flext-observability`, plus matching targets like `flext-target-ldap`
@@ -66,4 +66,4 @@ Configuration reference and example JSON live under `docs/` and the README (host
 
 - GitHub issues: <https://github.com/flext-sh/flext-tap-ldap/issues>
 - Discussions: <https://github.com/flext-sh/flext-tap-ldap/discussions>
-- Follow `docs/standards/README.md`, this project’s `CLAUDE`, and the portal index checklist before editing docs or code to keep the ecosystem synchronized.
+- Follow `docs/standards/README.md`, this project’s `AGENTS.md`, and the portal index checklist before editing docs or code to keep the ecosystem synchronized.

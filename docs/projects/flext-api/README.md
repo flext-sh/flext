@@ -82,10 +82,10 @@ The package applies Clean Architecture: core client/server code sits in `client.
 
 ## Resources
 
-- [Project README](../../flext-api/README.md)
+- [Project README](../../../flext-api/README.md)
 - `docs/guides/getting-started.md`, `docs/guides/configuration.md`, `docs/guides/http-client.md`, `docs/guides/testing.md`, `docs/guides/troubleshooting.md`
 - `docs/architecture/overview.md` and `docs/api-reference/` inside the project repository
-- [AGENTS.md](../../flext-api/AGENTS.md) for per-project governance and multi-agent coordination
+- [AGENTS.md](../../../AGENTS.md) for workspace governance and multi-agent coordination
 
 ## Support & contribution
 

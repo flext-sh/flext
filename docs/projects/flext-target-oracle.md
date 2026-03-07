@@ -70,7 +70,7 @@ if result.is_failure:
 ## Resources & references
 
 - [Project README](../../flext-target-oracle/README.md)
-- [Project CLAUDE](../../flext-target-oracle/AGENTS.md) (zero-tolerance rules, command checklist)
+- [Project AGENTS.md](../../flext-target-oracle/AGENTS.md) (zero-tolerance rules, command checklist)
 - `docs/` folder (architecture, development, Singer integration guides, TODO/security tracker)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` once the blocked gates finish
 - Related projects: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-target-ldap`, `flext-dbt-oracle`, `flext-web`, `flext-quality`
@@ -79,4 +79,4 @@ if result.is_failure:
 
 - GitHub issues: <https://github.com/flext-sh/flext-target-oracle/issues>
 - Discussions: <https://github.com/flext-sh/flext-target-oracle/discussions>
-- Follow `docs/standards/README.md`, this project’s `CLAUDE`, and the portal checklist before editing so the updates stay accurate.
+- Follow `docs/standards/README.md`, this project’s `AGENTS.md`, and the portal checklist before editing so the updates stay accurate.

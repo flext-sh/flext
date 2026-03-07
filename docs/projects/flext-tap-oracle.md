@@ -56,7 +56,7 @@ flext-tap-oracle --config config.json --catalog catalog.json --state state.json
 ## Resources & references
 
 - [Project README](../../flext-tap-oracle/README.md)
-- [Project CLAUDE](../../flext-tap-oracle/AGENTS.md) for zero-tolerance policies and command guidance
+- [Project AGENTS.md](../../flext-tap-oracle/AGENTS.md) for zero-tolerance policies and command guidance
 - `docs/` folder (getting started, architecture, configuration, testing, troubleshooting)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for validation evidence
 - Related projects: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, `flext-target-oracle`, `flext-dbt-oracle`
@@ -65,4 +65,4 @@ flext-tap-oracle --config config.json --catalog catalog.json --state state.json
 
 - GitHub issues: <https://github.com/flext-sh/flext-tap-oracle/issues>
 - Discussions: <https://github.com/flext-sh/flext-tap-oracle/discussions>
-- Follow `docs/standards/README.md` and the project CLAUDE before editing docs or code so the portal remains aligned.
+- Follow `docs/standards/README.md` and the project AGENTS.md before editing docs or code so the portal remains aligned.

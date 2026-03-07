@@ -6,7 +6,6 @@
 - [Instructions](#instructions)
 - [Workflow](#workflow)
 - [Examples](#examples)
-- [Full Policy](#full-policy)
 - [Verification](#verification)
 <!-- TOC END -->
 

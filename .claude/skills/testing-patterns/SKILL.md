@@ -35,6 +35,7 @@ description: Testing patterns, anti-patterns, and guidelines for Python/pytest i
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://docs.pytest.org/en/stable/>
 - `.claude/skills/scripts-testing/SKILL.md` — test infrastructure (complementary)
 - `.claude/skills/lib-returns/SKILL.md` — FlextResult testing patterns

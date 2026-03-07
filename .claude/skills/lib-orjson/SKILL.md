@@ -31,6 +31,7 @@ description: Deterministic high-performance JSON serialization with orjson in fl
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `flext-core/src/flext_core/_utilities/validation.py`: `FlextUtilitiesValidation.sort_key`
 - `flext-core/pyproject.toml`: `orjson (>=3.11.3)`
 - `pyproject.toml`: workspace dependency metadata where applicable

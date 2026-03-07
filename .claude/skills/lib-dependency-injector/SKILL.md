@@ -32,6 +32,7 @@ description: dependency_injector bridge patterns for FLEXT runtime and container
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `flext-core/src/flext_core/runtime.py`: `class DependencyIntegration`, `class BridgeContainer`, `Provide`, `inject`
 - `flext-core/src/flext_core/container.py`: `class FlextContainer`, `_services/_factories/_resources`, `scoped()`
 - `flext-core/src/flext_core/protocols.py`: `class DI(Protocol)` signatures (`register`, `get_typed`, `wire_modules`)

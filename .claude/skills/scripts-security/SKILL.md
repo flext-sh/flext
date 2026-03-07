@@ -30,6 +30,7 @@ description: Security scripts — secrets management, vault operations, and secu
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `.claude/skills/rules-scripts/SKILL.md`
 - `docs/guides/security.md`
 

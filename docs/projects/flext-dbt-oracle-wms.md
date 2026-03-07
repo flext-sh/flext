@@ -43,7 +43,7 @@ dbt docs serve --port 8080
 ## Architecture & integration
 
 - **Layered data flow**: Oracle WMS → Singer tap (flext-tap-oracle-wms) → raw tables → dbt staging/intermediate/marts → analytics dashboards.
-- **Clean architecture enforcement**: foundation modules (`constants.py`, `typings.py`, `protocols.py`) feed into domain, service, and adapter layers; each layer only imports lower tiers per CLAUDE guidance.
+- **Clean architecture enforcement**: foundation modules (`constants.py`, `typings.py`, `protocols.py`) feed into domain, service, and adapter layers; each layer only imports lower tiers per AGENTS guidance.
 - **Model organization**: staging models handle cleansing (`stg_wms__*`), marts produce operational, analytical, and metrics tables (`marts/operational`, `marts/analytical`, `marts/metrics`), and `analyses/` houses ad-hoc queries.
 - **Integration contracts**: depends on `flext-oracle-wms` for WMS definitions, `flext-db-oracle` for loader/pooling, `flext-meltano` for dbt orchestration, and `flext-core` for DI/logging.
 
@@ -58,7 +58,7 @@ dbt docs serve --port 8080
 ## Resources & references
 
 - [Project README](../../flext-dbt-oracle-wms/README.md)
-- [Project CLAUDE](../../flext-dbt-oracle-wms/AGENTS.md) for zero-tolerance rules and command checklists
+- [Project AGENTS.md](../../flext-dbt-oracle-wms/AGENTS.md) for zero-tolerance rules and command checklists
 - `docs/` subfolders for getting started, architecture, models, integration, development, and troubleshooting
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for the QA claims
 - Related projects: `flext-core`, `flext-db-oracle`, `flext-oracle-wms`, `flext-meltano`, `flext-tap-oracle-wms`, `flext-target-oracle-wms`, `flext-observability`
@@ -67,4 +67,4 @@ dbt docs serve --port 8080
 
 - GitHub issues: <https://github.com/flext-sh/flext-dbt-oracle-wms/issues>
 - Discussions: <https://github.com/flext-sh/flext-dbt-oracle-wms/discussions>
-- Follow `docs/standards/README.md`, this project’s CLAUDE, and the portal checklist before editing docs or code to keep the ecosystem synchronized.
+- Follow `docs/standards/README.md`, this project’s AGENTS, and the portal checklist before editing docs or code to keep the ecosystem synchronized.

@@ -35,6 +35,7 @@ description: Type narrowing techniques including isinstance, TypeIs, TypeGuard, 
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://docs.python.org/3.13/library/typing.html#typing.TypeIs>
 - <https://docs.python.org/3.13/library/typing.html#typing.TypeGuard>
 - `.claude/skills/python-313-typing/SKILL.md` — PEP 742 TypeIs details

@@ -28,6 +28,7 @@ description: Canonical pattern for creating reusable automation skills with scri
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `.claude/skills/skill-format-universal/SKILL.md`
 - `.claude/skills/flext-quality-gates/SKILL.md`
 - `docs/guides/skill-automation-pattern.md`

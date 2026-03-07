@@ -35,6 +35,7 @@ description: Dependency management — analysis, consolidation, discovery, cachi
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `flext-core/src/flext_infra/deps/` — Module source
 - `.claude/skills/rules-scripts/SKILL.md`
 - `Makefile` (upgrade, typings)

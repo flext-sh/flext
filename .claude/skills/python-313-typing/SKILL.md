@@ -33,6 +33,7 @@ description: Comprehensive Python 3.13 typing PEPs reference — PEP 696 (type d
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://docs.python.org/3.13/whatsnew/3.13.html>
 - <https://peps.python.org/pep-0696/> — Type Parameter Defaults
 - <https://peps.python.org/pep-0702/> — @deprecated

@@ -50,6 +50,7 @@ description: Deep-dive patterns companion to lib-pydantic-v2 for advanced Pydant
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `.claude/skills/lib-pydantic-v2/SKILL.md`
 - `.claude/skills/skill-format-universal/SKILL.md`
 - `flext-core/src/flext_core/_models/base.py`

@@ -37,6 +37,61 @@ description: Step-by-step refactoring process with verified quality gates and Ma
 > **Source of truth**: Verified from `base.mk` (shared Makefile), `ruff-shared.toml`,
 > and actual `pyproject.toml` configurations across the monorepo on 2026-02-19.
 
+- `AGENTS.md` — canonical governance source
+
+## Scope
+
+- End-to-end refactoring execution flow for FLEXT projects.
+- Tier-ordered change sequencing, gate discipline, and cross-project impact handling.
+
+## References
+
+- `AGENTS.md`
+- `base.mk`
+- `Makefile`
+- `ruff-shared.toml`
+- `pyproject.toml`
+
+## Rules
+
+- Refactor in dependency-tier order; never break architecture directionality.
+- Validate continuously with standardized make gates.
+- Use structural search/replace tooling for code-pattern migrations.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`.
+
+## Instructions
+
+- Baseline current state before edits with `make check` and `make test`.
+- Apply smallest safe batch per file/tier and verify immediately.
+- Expand validation scope whenever shared contracts/types are touched.
+
+## Workflow
+
+1. Baseline and dependency map.
+2. Refactor bottom-up by tier.
+3. Validate after each edited file.
+4. Run tests and extended validation.
+5. Execute cross-project verification for shared changes.
+
+## Examples
+
+```bash
+# Baseline + focused refactor cycle
+make PROJECT=flext-core check
+make PROJECT=flext-core test
+
+# Validate dependent projects when shared APIs change
+make PROJECTS="flext-core flext-auth flext-cli" check
+```
+
+## Verification
+
+- `make check`
+- `make test`
+- `make validate`
+- `make PROJECT=<name> check`
+- `make PROJECTS="proj-a proj-b" check`
+
 ## Pre-Refactoring Checklist
 
 Before touching any code:

@@ -27,7 +27,6 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 ## References
 
 - `AGENTS.md`
-- `AGENTS.md`
 - `https://code.claude.com/docs/en/skills`
 - `https://github.com/anthropics/skills`
 - `.claude/skills/lib-returns/SKILL.md`
@@ -64,7 +63,7 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 
 ## Workflow
 
-- Start from `AGENTS.md` and `AGENTS.md`.
+- Start from `AGENTS.md` and the relevant `rules-*` skill for the touched path.
 - For each skill, gather at least one internal source file and one verification command.
 - Remove vague claims that cannot be proven from repository files.
 - Validate section presence and frontmatter consistency across all skills before finalizing.

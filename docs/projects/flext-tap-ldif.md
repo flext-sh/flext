@@ -54,7 +54,7 @@ tap-ldif --config config.json --catalog catalog.json --state state.json
 ## Resources & references
 
 - [Project README](../../flext-tap-ldif/README.md)
-- [CLAUDE guide](../../flext-tap-ldif/AGENTS.md) with zero tolerance rules and command checklists
+- [AGENTS guide](../../flext-tap-ldif/AGENTS.md) with zero tolerance rules and command checklists
 - `docs/` (architecture, API reference, configuration, testing, troubleshooting, examples)
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
 - Related projects: `flext-ldif`, `flext-dbt-ldif`, `flext-target-ldif`, `flext-meltano`, `flext-core`, `flext-observability`
@@ -63,4 +63,4 @@ tap-ldif --config config.json --catalog catalog.json --state state.json
 
 - GitHub issues: <https://github.com/flext-sh/flext-tap-ldif/issues>
 - Discussions: <https://github.com/flext-sh/flext-tap-ldif/discussions>
-- Follow `docs/standards/README.md`, workspace `CLAUDE`, and the portal checklist before editing docs or code so the ecosystem stays synchronized.
+- Follow `docs/standards/README.md`, workspace `AGENTS.md`, and the portal checklist before editing docs or code so the ecosystem stays synchronized.

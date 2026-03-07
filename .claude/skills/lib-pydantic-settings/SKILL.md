@@ -40,6 +40,7 @@ description: Pydantic SettingsConfigDict and singleton config patterns across FL
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `flext-core/src/flext_core/settings.py`: `class FlextSettings`, `model_config`, `_instances`, `_lock`, `validate_configuration`, `AutoConfig`
 - `flext-core/src/flext_core/_utilities/configuration.py`: env-file compatibility notes for `SettingsConfigDict`
 - `flext-cli/src/flext_cli/settings.py`: real namespaced settings extension

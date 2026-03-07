@@ -48,6 +48,7 @@ description: FlextResult railway composition built on dry-python/returns. Use wh
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://returns.readthedocs.io/en/latest/> — dry-python/returns official docs
 - `flext-core/pyproject.toml` — pins `returns>=0.26.0`
 - `flext-core/src/flext_core/protocols.py` — `p.ResultLike` protocol that FlextResult satisfies

@@ -44,6 +44,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `flext-quality/docs/maintenance/core/config_manager.py`: `_load_config_file`, `save_config`
 - `flext-quality/src/flext_quality/utilities.py`: `load_yaml_rules`
 - `flext-cli/src/flext_cli/file_tools.py`: `read_yaml_file`, `write_yaml_file`

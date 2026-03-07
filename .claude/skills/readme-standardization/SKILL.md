@@ -24,6 +24,53 @@ description: Comprehensive guide and tooling for creating, maintaining, and upda
 
 This skill provides a standardized workflow for maintaining `README.md` files, ensuring consistency, improved SEO, and architectural alignment across all FLEXT projects.
 
+## Scope
+
+- Standardization of `README.md` files across workspace projects.
+- Preamble consistency, section structure, and link hygiene.
+
+## References
+
+- `AGENTS.md`
+- `docs/architecture/adr/README.md`
+- `docs/README.md`
+
+## Rules
+
+- Keep README metadata and version lines current and factual.
+- Enforce consistent section order and stable relative links.
+- Prefer workspace governance pointers over duplicated policy text.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`.
+
+## Instructions
+
+- Use `make docs` for documentation automation flows.
+- Run validation after each remediation batch.
+- Keep project-specific README updates aligned with corresponding docs index entries.
+
+## Workflow
+
+1. Discover README drift from expected structure.
+2. Apply safe automatic fixes, then manual content adjustments.
+3. Re-validate links and structure.
+4. Record outcomes in docs-oriented validation outputs.
+
+## Examples
+
+```markdown
+# Project Name
+
+**Reviewed**: 2026-03-07 | **Version**: 0.10.0-dev
+
+Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
+```
+
+## Verification
+
+- `make docs`
+- `make docs DOCS_PHASE=validate`
+- `make validate VALIDATE_SCOPE=workspace`
+
 ## 🎯 Objectives
 
 1. **Uniform Preamble**: Ensure all READMEs start with a standardized header, version info, and ecosystem link.
@@ -38,6 +85,7 @@ The primary entrypoint for this skill is `make docs`.
 
 ## 🔗 ADR Reference
 
+- `AGENTS.md` — canonical governance source
 - `docs/architecture/adr/README.md`
 
 ### Installation

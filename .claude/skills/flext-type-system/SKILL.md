@@ -31,6 +31,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - `flext-core/src/flext_core/typings.py` (type vars + aliases + `FlextTypes`)
 - `flext-core/src/flext_core/result.py` (`FlextResult[T_co]` and alias `r`)
 - `flext-core/src/flext_core/settings.py` (`T_Settings` bound usage)

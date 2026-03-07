@@ -34,6 +34,7 @@ description: Profile and optimize Python code using cProfile, memory profilers, 
 
 ## References
 
+- `AGENTS.md` — canonical governance source
 - <https://docs.python.org/3.13/library/profile.html>
 - <https://github.com/benfred/py-spy>
 - `.claude/skills/flext-patterns/SKILL.md`

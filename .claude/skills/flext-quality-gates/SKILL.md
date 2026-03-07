@@ -20,10 +20,51 @@ description: Mandatory verification gates with exact tool commands, thresholds, 
 > **Source of truth**: Verified from `base.mk` (`check`, `test`, and `validate` targets), `ruff-shared.toml`,
 > and individual `pyproject.toml` files on 2026-02-19.
 
+## Scope
+
+- Mandatory quality-gate execution for workspace and project-level changes.
+- Verification semantics for `make check`, `make test`, `make validate`, and related selectors.
+
+## References
+
+- `AGENTS.md` — canonical governance source
+
 ## Rules
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 - **AXIOMATIC**: Every change MUST be INTEGRAL and pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors, ZERO warnings. No partial fixes. ALL impacted references across the ENTIRE codeset MUST be immediately updated using ast-grep (`sg`) search-and-replace. After any type/model/signature change: (1) `sg` find-and-replace ALL references across all 33 projects, (2) `make check` on every affected project, (3) verify ZERO errors from all 4 linters. A change that breaks ANY linter in ANY project is REJECTED — the portfolio is ONE unit.
 - **AXIOMATIC**: Linter suppression comments (`# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore`, `typing.cast()`) are FORBIDDEN without ALL of: (1) well-founded technical explanation with REAL, verifiable internet citations (official docs, GitHub issues, PEPs), (2) explicit business necessity in the same comment, (3) per-line ONLY — never per-file, never per-module, never in config. Global suppression rules in `pyproject.toml`, `ruff.toml`, or any config are TOTALLY FORBIDDEN. Fix the code, never silence the linter.
+
+## Instructions
+
+- Select scope intentionally with `PROJECT=` or `PROJECTS=` before running gates.
+- Apply fast gate first (`make check`), then deeper validation (`make test`, `make validate`).
+- Keep verification evidence tied to actual executed commands.
+
+## Workflow
+
+1. Run `make check` for immediate lint/type/security feedback.
+2. Run `make test` for behavior and coverage.
+3. Run `make validate` for extended non-lint checks.
+4. Re-run scoped gates for every touched project when shared contracts change.
+
+## Examples
+
+```bash
+# Focus a single project
+make PROJECT=flext-core check
+make PROJECT=flext-core test
+
+# Validate a multi-project slice
+make PROJECTS="flext-core flext-api" validate
+```
+
+## Verification
+
+- `make check`
+- `make test`
+- `make validate`
+- `make PROJECT=<name> check`
+- `make PROJECTS="proj-a proj-b" validate`
 
 ## Standardized Make Gate Surface
 
