@@ -8,56 +8,6 @@ description: Mandatory rules for all coding agents — simple runtime aliases on
 **Scope**: All coding agents working in this repository.  
 **Authority**: AGENTS.md §3 Code Law, §9 Agent Instructions. This skill expands and enforces them.
 
-## Scope
-
-- Mandatory guardrails for coding agents across all FLEXT projects.
-- Runtime alias discipline, strict typing, polymorphic-model centralization, and validation integrity.
-
-## References
-
-- `AGENTS.md`
-- `.claude/skills/flext-strict-typing/SKILL.md`
-- `.claude/skills/flext-import-rules/SKILL.md`
-- `.claude/skills/flext-patterns/SKILL.md`
-
-## Rules
-
-- Apply axiomatic typing and fallibility contracts uniformly to all namespaces.
-- Use simple runtime aliases only; remove non-runtime alias indirection.
-- Dismantle polymorphic branching into centralized Pydantic v2 contracts.
-- Enforce fix-forward git discipline and structural search/replace policy.
-
-## Instructions
-
-- Read impacted modules fully before changes and reuse existing contracts via MRO.
-- Prefer ast-grep structural operations for broad migrations.
-- Verify with required quality gates before claiming completion.
-
-## Workflow
-
-1. Identify which strict-rule cluster applies to the change.
-2. Apply canonical pattern without introducing compatibility layers.
-3. Update all impacted call sites/contracts.
-4. Validate and record evidence.
-
-## Examples
-
-```python
-# Correct narrowing
-if isinstance(value, str):
-    normalized = value.strip()
-
-# Correct fallible return
-from flext_core import r
-return r[str].ok(normalized)
-```
-
-## Verification
-
-- `make check`
-- `make test`
-- `rg -n "type\(.*\) is|type\(.*\) ==" --glob "**/*.py"`
-
 
 ## 0. AXIOMATIC Type Purity (Absolute — No Exception — No Negotiation)
 
@@ -160,7 +110,7 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 
 ## 5. Scale and Parallelism (all projects, strict)
 
-- **Scope**: Apply these rules across **all projects** (flext-core, flext-cli, flext-api, flext-ldif, flext-ldap, flext-meltano, tap/target/dbt variants, etc.). Follow workspace governance in `AGENTS.md` plus project-local governance files when present.
+- **Scope**: Apply these rules across **all projects** (flext-core, flext-cli, flext-api, flext-ldif, flext-ldap, flext-meltano, tap/target/dbt variants, etc.). Follow each project's standards (AGENTS.md, per-project AGENTS.md).
 - **Parallelism**: Use multiple agents in parallel at maximum scale (e.g. one agent per project or per report section) to complete refactors as fast as possible. Each agent: one project or one report section; minimal, verifiable changes; run `make check` and `make test` for touched project.
 - **Quality**: Lint-clean with no warnings or errors; stability; remove all unnecessary code. Do not defer violations without explicit operator approval (AGENTS.md §8).
 - **Checklist**: `.reports/EXECUTION-CHECKLIST-aliases-typing-polymorphic.md` — apply in order; validate after each batch.
@@ -175,7 +125,7 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
   - `.reports/typing-violations-report.md` — replace `type()` / `__class__` with `isinstance` or TypeGuard.
   - `.reports/polymorphic-refactor-targets.md` — refactor polymorphic functions to centralized Pydantic v2 models.
 - **Checklist**: `.reports/EXECUTION-CHECKLIST-aliases-typing-polymorphic.md`.
-- **Zero Tolerance**: No `model_rebuild()`, no `inline imports`, no `try-except ImportError`, and no `cast()` outside `flext-core` result internals.
+- **Zero Tolerance**: No `model_rebuild()`, no `inline imports`, no `cast()`, no `try-except ImportError`.
 
 ---
 

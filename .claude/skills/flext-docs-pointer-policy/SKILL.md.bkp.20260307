@@ -30,11 +30,6 @@ description: Canonical documentation-governance policy for agent configs: one ro
 - `AGENTS.md` states a single source of truth: root `AGENTS.md`.
 - Pointer/index files must never diverge from `AGENTS.md` policy.
 - `docs/architecture/adr/README.md` tracks architecture decisions for governance changes.
-- External governance patterns:
-  - IETF process model (`https://www.ietf.org/about/process/`) for canonical source discipline.
-  - Linux `MAINTAINERS` structure (`https://www.kernel.org/doc/html/latest/maintainer/`) for ownership pointers.
-  - Python Developer Guide (`https://devguide.python.org/`) for hierarchical docs navigation.
-  - Rust governance (`https://www.rust-lang.org/governance`) for role-based documentation ownership.
 - Pointer files reference root policy:
   - `.github/copilot-instructions.md`
   - `.gemini/styleguide.md`
@@ -51,7 +46,7 @@ description: Canonical documentation-governance policy for agent configs: one ro
 - Agent-specific files remain pointers, not policy mirrors.
 - Never duplicate governance rules across multiple agent files.
 - Pointer files must remain concise and reference scoped skills instead of restating them.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, and `inline imports`. `cast()` is forbidden outside `flext-core` result internals.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 
@@ -63,10 +58,10 @@ description: Canonical documentation-governance policy for agent configs: one ro
 
 ## Workflow
 
-1. **Pre-scan**: inventory pointer files and identify drift from canonical wording.
-2. **Remediation**: update references and remove duplicated policy content.
-3. **Verification**: run scanner checks for `AGENTS.md` presence and legacy reference absence.
-4. **Drift prevention**: keep checks in CI/automation and re-run after every governance edit.
+1. Update `AGENTS.md` when governance changes.
+2. Check `AGENTS.md` mapping for impacted pointers.
+3. Update only references or short tool-specific usage hints in pointer files.
+4. Remove duplicated rule text from pointers.
 
 ## Examples
 
@@ -107,5 +102,3 @@ Policy checks:
 - `rg -n "Canonical source|AGENTS.md" .github/copilot-instructions.md .gemini/styleguide.md .cursor/rules/flext.mdc .clinerules .windsurfrules .continue/rules/flext.md CONVENTIONS.md codex.md`
 - `rg -n "full policy|single source" AGENTS.md`
 - `wc -l .github/copilot-instructions.md .gemini/styleguide.md .cursor/rules/flext.mdc .clinerules .windsurfrules .continue/rules/flext.md CONVENTIONS.md codex.md`
-- `python3 scripts/core/text_pattern_scanner.py --pattern "AGENTS\.md" --match present --include .github/copilot-instructions.md --include .gemini/styleguide.md --include .cursor/rules/flext.mdc --include .clinerules --include .windsurfrules --include .continue/rules/flext.md --include CONVENTIONS.md --include codex.md`
-- `python3 scripts/core/text_pattern_scanner.py --pattern "[Cc]LAUDE\.md" --match absent --include .github/copilot-instructions.md --include .gemini/styleguide.md --include .cursor/rules/flext.mdc --include .clinerules --include .windsurfrules --include .continue/rules/flext.md --include CONVENTIONS.md --include codex.md`

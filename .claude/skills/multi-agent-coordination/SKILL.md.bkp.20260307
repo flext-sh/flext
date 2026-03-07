@@ -10,50 +10,6 @@ description: Quick reference for 5 agents executing parallel work on flext codeb
 **Agent Scope**: All 5 parallel agents  
 **Authoritative Source**: AGENTS.md §10 Multi-Agent Parallel Execution Law
 
-## Scope
-
-- Parallel-execution guardrails for coordinated work across flext-core and consumer projects.
-- Ownership boundaries, sequencing, and quality-gate discipline.
-
-## References
-
-- `AGENTS.md`
-- `.claude/skills/flext-5agent-coordination/SKILL.md`
-- `.claude/skills/flext-agent-strict-rules/SKILL.md`
-
-## Rules
-
-- Respect phase ordering and file ownership strictly.
-- Fix forward only; never discard another agent's work.
-- Run required validation at phase boundaries.
-
-## Instructions
-
-- Confirm your lane before editing.
-- Keep changes local to owned files/sections.
-- Rebase before push and resolve conflicts by ownership protocol.
-
-## Workflow
-
-1. Identify phase and task lane.
-2. Execute lane-scoped work.
-3. Validate and resolve conflicts per policy.
-4. Hand off to next phase with clean state.
-
-## Examples
-
-```bash
-git pull --rebase
-make check
-make test
-```
-
-## Verification
-
-- `make check`
-- `make test`
-- `git status`
-
 ## Purpose
 
 Quick reference for 5 agents executing parallel work on flext codebase with zero conflicts. Load this skill when working on flext-core or consumer projects in parallel with other agents.
