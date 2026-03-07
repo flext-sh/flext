@@ -83,13 +83,13 @@ Use `FlextCli.create_table`, `file_tools`, and `prompts` for the ready-made help
 - **Ruff**: all linting violations addressed (QA table allows 5 test-specific exceptions).
 - **Pyrefly / MyPy**: strict mode with zero reported errors.
 - **Bandit**: no high/medium findings in `reports/lint-output/`.
-- **Zero tolerance rules**: no `Any`, no `cast()`, no `TYPE_CHECKING`, no metaclasses, no root aliases; honored by architecture guidelines in `flext-cli/CLAUDE.md`.
+- **Zero tolerance rules**: no `Any`, no `cast()`, no `TYPE_CHECKING`, no metaclasses, no root aliases; honored by architecture guidelines in `flext-cli/AGENTS.md`.
 - **Testing**: 1 016 tests, organized by feature, all passing in `reports/pytest/`.
 
 ## Resources & references
 
 - [Project README](../../flext-cli/README.md)
-- [CLAUDE governance](../../flext-cli/CLAUDE.md) for architecture layering & zero-tolerance rules
+- [CLAUDE governance](../../flext-cli/AGENTS.md) for architecture layering & zero-tolerance rules
 - `docs/getting-started.md`, `docs/api-reference.md`, `docs/architecture.md` inside `flext-cli/docs/`
 - `examples/` folder for ready-made use cases
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for the QA evidence mentioned above
@@ -98,4 +98,4 @@ Use `FlextCli.create_table`, `file_tools`, and `prompts` for the ready-made help
 
 - GitHub issues: <https://github.com/flext-sh/flext-cli/issues>
 - Discussions: <https://github.com/flext-sh/flext-cli/discussions>
-- Follow `docs/standards/README.md` and the workspace `CLAUDE.md` before proposing doc or code changes so this brief stays aligned with the global portal.
+- Follow `docs/standards/README.md` and the workspace `AGENTS.md` before proposing doc or code changes so this brief stays aligned with the global portal.

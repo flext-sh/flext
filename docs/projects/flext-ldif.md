@@ -79,7 +79,7 @@ Input LDIF → RFC parser → Quirk adapters → Target writer/migration pipelin
 ## Resources
 
 - [Project README](../../flext-ldif/README.md)
-- [CLAUDE guidance](../../flext-ldif/CLAUDE.md)
+- [CLAUDE guidance](../../flext-ldif/AGENTS.md)
 - `docs/getting-started.md`, `docs/api-reference.md`, `docs/architecture.md`, `docs/guides/integration.md`, `docs/migration/v0.9-to-v1.0-migration.md`, `docs/troubleshooting.md`
 - Known limitations and memory note live in the README (files larger than 100 MB may exhaust memory).
 - Related reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`.

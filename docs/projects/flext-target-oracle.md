@@ -70,7 +70,7 @@ if result.is_failure:
 ## Resources & references
 
 - [Project README](../../flext-target-oracle/README.md)
-- [Project CLAUDE](../../flext-target-oracle/CLAUDE.md) (zero-tolerance rules, command checklist)
+- [Project CLAUDE](../../flext-target-oracle/AGENTS.md) (zero-tolerance rules, command checklist)
 - `docs/` folder (architecture, development, Singer integration guides, TODO/security tracker)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` once the blocked gates finish
 - Related projects: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-target-ldap`, `flext-dbt-oracle`, `flext-web`, `flext-quality`

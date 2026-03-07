@@ -1,6 +1,6 @@
 ---
 name: flext-5agent-coordination
-description: 5-Agent Parallel Execution Protocol for flext-core and consumer projects. Authoritative source CLAUDE.md §10.
+description: 5-Agent Parallel Execution Protocol for flext-core and consumer projects. Authoritative source AGENTS.md §10.
 ---
 
 # 5-Agent Parallel Execution Protocol
@@ -8,7 +8,7 @@ description: 5-Agent Parallel Execution Protocol for flext-core and consumer pro
 **Category**: Governance  
 **Status**: Active  
 **Agent Scope**: All 5 parallel agents  
-**Authoritative Source**: CLAUDE.md §10 Multi-Agent Parallel Execution Law
+**Authoritative Source**: AGENTS.md §10 Multi-Agent Parallel Execution Law
 
 ## Scope
 
@@ -20,7 +20,7 @@ description: 5-Agent Parallel Execution Protocol for flext-core and consumer pro
 
 ## References
 
-- `CLAUDE.md` §10 (canonical law)
+- `AGENTS.md` §10 (canonical law)
 - `AGENTS.md` (agent roster and delegation)
 - `flext-core/src/flext_core/protocols.py` (section ownership matrix)
 - `.claude/skills/multi-agent-coordination/SKILL.md` (quick reference)
@@ -123,7 +123,7 @@ Agents MUST execute in this order:
 
 ### Before Starting Any Phase
 
-1. Read CLAUDE.md §10 in full
+1. Read AGENTS.md §10 in full
 2. Identify your agent number (1-5) and assigned files/projects
 3. Verify file ownership: you own ONLY the files listed in your row
 4. For protocols.py: identify your section lines and NEVER touch other sections
@@ -264,7 +264,7 @@ Why bad: Reordering breaks section ownership. Each agent appends at END only.
 
 ```bash
 # Verify you own the files you're about to modify
-grep -A 20 "File Ownership Table" CLAUDE.md | grep "Agent X"
+grep -A 20 "File Ownership Table" AGENTS.md | grep "Agent X"
 
 # Verify your protocols.py section lines
 grep -n "^class Result\|^class CommandBus\|^class Registry" flext-core/src/flext_core/protocols.py

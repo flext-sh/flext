@@ -5,8 +5,8 @@
 - No sections found
 <!-- TOC END -->
 
-OpenAI Codex instructions for this repository are defined in `CLAUDE.md`.
+OpenAI Codex instructions for this repository are defined in `AGENTS.md`.
 
-- Read `CLAUDE.md` first.
+- Read `AGENTS.md` first.
 - Use `.claude/skills/` for path-scoped, evidence-backed guidance.
-- Do not duplicate rules here; update `CLAUDE.md` as the source of truth.
+- Do not duplicate rules here; update `AGENTS.md` as the source of truth.

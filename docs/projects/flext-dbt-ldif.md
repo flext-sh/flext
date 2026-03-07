@@ -57,7 +57,7 @@ dbt docs serve --port 8080
 ## Resources & references
 
 - [Project README](../../flext-dbt-ldif/README.md)
-- [CLAUDE governance](../../flext-dbt-ldif/CLAUDE.md) covering zero-tolerance dependencies and commands
+- [CLAUDE governance](../../flext-dbt-ldif/AGENTS.md) covering zero-tolerance dependencies and commands
 - `docs/` (getting started, architecture, configuration, troubleshooting, testing plays)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for the quality evidence referenced above
 - Related projects: `flext-core`, `flext-ldif`, `flext-meltano`, `flext-tap-ldif`, `flext-target-ldif`, `flext-dbt-oracle`, `flext-dbt-oracle-wms`

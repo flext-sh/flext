@@ -26,7 +26,7 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 
 ## References
 
-- `CLAUDE.md`
+- `AGENTS.md`
 - `AGENTS.md`
 - `https://code.claude.com/docs/en/skills`
 - `https://github.com/anthropics/skills`
@@ -39,7 +39,7 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 - Put trigger guidance in `description`, not in a body section called "When to use".
 - Keep body operational and evidence-backed with repository paths and runnable checks.
 - Keep names aligned with directory names under `.claude/skills/<name>/SKILL.md`.
-- Keep policy text aligned with `CLAUDE.md` (canonical), do not invent parallel policy.
+- Keep policy text aligned with `AGENTS.md` (canonical), do not invent parallel policy.
 - Use exactly these body sections for project consistency:
   - `## Scope`
   - `## References`
@@ -64,7 +64,7 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 
 ## Workflow
 
-- Start from `CLAUDE.md` and `AGENTS.md`.
+- Start from `AGENTS.md` and `AGENTS.md`.
 - For each skill, gather at least one internal source file and one verification command.
 - Remove vague claims that cannot be proven from repository files.
 - Validate section presence and frontmatter consistency across all skills before finalizing.

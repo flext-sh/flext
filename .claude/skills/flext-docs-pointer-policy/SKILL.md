@@ -23,13 +23,13 @@ description: Canonical documentation-governance policy for agent configs: one ro
 
 ## Scope
 
-- Root governance docs (`CLAUDE.md`, `AGENTS.md`)
+- Root governance docs (`AGENTS.md` canonical)
 - Agent pointer files under root and tool directories
 
 ## References
 
-- `AGENTS.md` states a single source of truth: root `CLAUDE.md`.
-- `AGENTS.md` maps all agent config entrypoints and enforces pointer-file limits.
+- `AGENTS.md` states a single source of truth: root `AGENTS.md`.
+- Pointer/index files must never diverge from `AGENTS.md` policy.
 - `docs/architecture/adr/README.md` tracks architecture decisions for governance changes.
 - Pointer files reference root policy:
   - `.github/copilot-instructions.md`
@@ -43,7 +43,7 @@ description: Canonical documentation-governance policy for agent configs: one ro
 
 ## Rules
 
-- All normative rule updates happen in `CLAUDE.md` first.
+- All normative rule updates happen in `AGENTS.md` first.
 - Agent-specific files remain pointers, not policy mirrors.
 - Never duplicate governance rules across multiple agent files.
 - Pointer files must remain concise and reference scoped skills instead of restating them.
@@ -59,7 +59,7 @@ description: Canonical documentation-governance policy for agent configs: one ro
 
 ## Workflow
 
-1. Update `CLAUDE.md` when governance changes.
+1. Update `AGENTS.md` when governance changes.
 2. Check `AGENTS.md` mapping for impacted pointers.
 3. Update only references or short tool-specific usage hints in pointer files.
 4. Remove duplicated rule text from pointers.
@@ -69,7 +69,7 @@ description: Canonical documentation-governance policy for agent configs: one ro
 ```md
 <!-- Good: concise pointer -->
 
-Canonical source: `CLAUDE.md` at repository root.
+Canonical source: `AGENTS.md` at repository root.
 Use `.claude/skills/` for scoped behavior.
 ```
 
@@ -78,7 +78,7 @@ Use `.claude/skills/` for scoped behavior.
 
 ## Full Policy
 
-<hundreds of lines copied from CLAUDE.md>
+<hundreds of lines copied from AGENTS.md>
 ```
 
 Why bad: duplicated policy drifts over time and breaks the single-source governance model.
@@ -86,7 +86,7 @@ Why bad: duplicated policy drifts over time and breaks the single-source governa
 ```md
 <!-- Bad: agent-specific contradiction -->
 
-Use local rules in this file as priority over CLAUDE.md.
+Use local rules in this file as priority over AGENTS.md.
 ```
 
 Why bad: inverts repository governance and creates conflicting behavior between tools.
@@ -99,7 +99,7 @@ Make gates:
 
 Policy checks:
 
-- `rg -n "single source of truth|CLAUDE.md|Never duplicate rules|under 50 lines" AGENTS.md`
-- `rg -n "Canonical source|CLAUDE.md" .github/copilot-instructions.md .gemini/styleguide.md .cursor/rules/flext.mdc .clinerules .windsurfrules .continue/rules/flext.md CONVENTIONS.md codex.md`
-- `rg -n "full policy|single source" CLAUDE.md AGENTS.md`
+- `rg -n "single source of truth|AGENTS.md|Never duplicate rules|under 50 lines" AGENTS.md`
+- `rg -n "Canonical source|AGENTS.md" .github/copilot-instructions.md .gemini/styleguide.md .cursor/rules/flext.mdc .clinerules .windsurfrules .continue/rules/flext.md CONVENTIONS.md codex.md`
+- `rg -n "full policy|single source" AGENTS.md`
 - `wc -l .github/copilot-instructions.md .gemini/styleguide.md .cursor/rules/flext.mdc .clinerules .windsurfrules .continue/rules/flext.md CONVENTIONS.md codex.md`

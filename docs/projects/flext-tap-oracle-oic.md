@@ -55,7 +55,7 @@ tap-oracle-oic --config config.json --catalog catalog.json --state state.json
 ## Resources & references
 
 - [Project README](../../flext-tap-oracle-oic/README.md)
-- [Project CLAUDE](../../flext-tap-oracle-oic/CLAUDE.md) for zero-tolerance policies and commands
+- [Project CLAUDE](../../flext-tap-oracle-oic/AGENTS.md) for zero-tolerance policies and commands
 - `docs/` (getting started, architecture, configuration, testing, troubleshooting)
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
 - Related projects: `flext-oracle-oic`, `flext-meltano`, `flext-dbt-oracle-wms`, `flext-target-oracle-oic`, `flext-observability`

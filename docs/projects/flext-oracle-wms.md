@@ -61,7 +61,7 @@ Replace the `for_testing()` helpers with real Oracle WMS Cloud credentials once 
 ## Resources & references
 
 - [Project README](../../flext-oracle-wms/README.md)
-- [Project CLAUDE](../../flext-oracle-wms/CLAUDE.md) for zero-tolerance error handling, FlextResult promises, and command guidance
+- [Project CLAUDE](../../flext-oracle-wms/AGENTS.md) for zero-tolerance error handling, FlextResult promises, and command guidance
 - `docs/` folder inside the project for architectural overviews, guides, and roadmap notes
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` once `make validate` finishes
 - Related projects: `flext-core`, `flext-api`, `flext-auth`, `flext-cli`, `flext-db-oracle`, `flext-tap-oracle-wms`, `flext-target-oracle-wms`, `flext-dbt-oracle-wms`

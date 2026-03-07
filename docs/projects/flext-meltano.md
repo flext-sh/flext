@@ -57,7 +57,7 @@ dbt docs serve --port 8080
 ## Resources
 
 - [Project README](../../flext-meltano/README.md)
-- [Project CLAUDE](../../flext-meltano/CLAUDE.md) for zero-tolerance rules (no custom Singer/DBT code, registry-driven flows)
+- [Project CLAUDE](../../flext-meltano/AGENTS.md) for zero-tolerance rules (no custom Singer/DBT code, registry-driven flows)
 - `flext-meltano/docs/` for architecture, configuration, development, integration, troubleshooting, and guides
 - Related `reports/` artifacts: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
 - Related projects: `flext-core`, `flext-cli`, `flext-quality`, `flext-dbt-*`, `flext-plugin`, and Singer-based taps/targets
@@ -66,4 +66,4 @@ dbt docs serve --port 8080
 
 - GitHub issues: <https://github.com/flext-sh/flext-meltano/issues>
 - Discussions: <https://github.com/flext-sh/flext-meltano/discussions>
-- Follow `docs/standards/README.md` and `CLAUDE.md` before changing code or docs so this entry stays aligned with the portal.
+- Follow `docs/standards/README.md` and `AGENTS.md` before changing code or docs so this entry stays aligned with the portal.

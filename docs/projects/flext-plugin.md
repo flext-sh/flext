@@ -62,7 +62,7 @@ Use the CLI helpers (currently disabled in `__init__.py`) once the command layer
 ## Resources
 
 - [Project README](../../flext-plugin/README.md)
-- [Project CLAUDE](../../flext-plugin/CLAUDE.md) for zero tolerance policies and command gating
+- [Project CLAUDE](../../flext-plugin/AGENTS.md) for zero tolerance policies and command gating
 - `docs/getting-started.md`, `docs/architecture.md`, `docs/api-reference.md`, `docs/development.md`, `TODO.md` inside the project for deeper guidance
 - Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` (aligned with the mentioned quality commands)
 - Related projects: `flext-core`, `flext-cli`, `flext-observability`, Singer taps/targets in the `flext-tap-*` / `flext-target-*` families

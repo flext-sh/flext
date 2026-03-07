@@ -25,7 +25,7 @@ This directory keeps one-page summaries that mirror the authoritative README/CLA
   Bandit, and pytest; document links live under the project’s `README`, `CLAUDE`, and `docs/` tree.
 - **[FLEXT Core](./flext-core.md)** – version 0.10.0, Python 3.13+, 2 820 tests, 81.41% coverage, production-ready foundation for FlextResult, DI,
   and CQRS dispatchers. Quick start: `pip install flext-core`, import `FlextContainer`, `FlextDispatcher`, `FlextResult`. Quality gate: `make validate`.
-  Link to `README.md`, `CLAUDE.md`, and core documentation under `docs/`.
+  Link to `README.md`, `AGENTS.md`, and core documentation under `docs/`.
 - **[FLEXT DB Oracle](./flext-db-oracle.md)** – version 0.9.9, Oracle connectivity + schema introspection built on SQLAlchemy 2 + python-oracledb,
   30 integration test suites (8,633+ lines), and a production-ready FlextDbOracleApi facade. Quick start: clone `flext-db-oracle`, run `poetry install`,
   and use `FlextDbOracleApi` with `FlextDbOracleModels.OracleConfig`. Quality gate: `make validate` (ruff + pyrefly + bandit + pytest + coverage);
@@ -49,7 +49,7 @@ This directory keeps one-page summaries that mirror the authoritative README/CLA
 - **[FLEXT LDAP](./flext-ldap.md)** – version 0.10.3, the universal LDAP services foundation covering OpenLDAP 1.x/2.x, Oracle OID/OUD, AD, and
   generic LDAP with FlextResult-driven services, entry adapters, and server-specific implementations. Quick start: `poetry add flext-ldap`, run
   `make setup`+ `make validate`, and use `FlextLdap` + `FlextLdapEntryAdapter` for production flows. Quality gate: `make validate` (ruff, pyrefly,
-  Bandit, pytest, coverage) with zero tolerance import/alias rules documented in `CLAUDE.md`.
+  Bandit, pytest, coverage) with zero tolerance import/alias rules documented in `AGENTS.md`.
 - **[FLEXT LDIF](./flext-ldif.md)** – version 1.0.0, 1 766 tests, 78% coverage, RFC 2849/4512-compliant parser, quirk registry, and migration
   pipelines for LDAP directories. Quick start: `pip install flext-ldif`, use `FlextLdif.parse`/`migrate`. Quality gate: `make validate`. This brief also
   references the `README`, `CLAUDE`, and the `docs/` folder inside the project.
@@ -99,7 +99,7 @@ validate`, and `tap-ldap --discover/run`; docs live inside the project README/CL
 
 ## Projects without a dedicated brief
 
-- Every other repository (e.g., flext-ldap, flext-grpc, flext-auth, flext-observability, flext-plugin, flext-meltano, Singer taps/targets, etc.) publishes its documentation inside the project root (`README.md`, `CLAUDE.md`, `docs/`). Until a `docs/projects/<project>.md` file is added here, treat those files as the source of truth for architecture, quick starts, quality gates, and release status.
+- Every other repository (e.g., flext-ldap, flext-grpc, flext-auth, flext-observability, flext-plugin, flext-meltano, Singer taps/targets, etc.) publishes its documentation inside the project root (`README.md`, `AGENTS.md`, `docs/`). Until a `docs/projects/<project>.md` file is added here, treat those files as the source of truth for architecture, quick starts, quality gates, and release status.
 
 ## Keeping the briefs accurate
 

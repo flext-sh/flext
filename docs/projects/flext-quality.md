@@ -69,7 +69,7 @@ analyzer.analyze_project()
 ## Resources & references
 
 - [Project README](../../flext-quality/README.md) for status, architecture, and roadmap
-- [Project CLAUDE](../../flext-quality/CLAUDE.md) for zero-tolerance directives and command guidance
+- [Project CLAUDE](../../flext-quality/AGENTS.md) for zero-tolerance directives and command guidance
 - `flext-quality/docs/` for getting started, architecture, guides, and troubleshooting (mirrors doc comments in README)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` once blocked gates reopen
 - Related projects: `flext-core`, `flext-cli`, `flext-web`, `flext-observability`, `flext-quality/rules`, Singer-based `flext-tap-*` / `flext-target-*`

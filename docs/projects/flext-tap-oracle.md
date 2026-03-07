@@ -56,7 +56,7 @@ flext-tap-oracle --config config.json --catalog catalog.json --state state.json
 ## Resources & references
 
 - [Project README](../../flext-tap-oracle/README.md)
-- [Project CLAUDE](../../flext-tap-oracle/CLAUDE.md) for zero-tolerance policies and command guidance
+- [Project CLAUDE](../../flext-tap-oracle/AGENTS.md) for zero-tolerance policies and command guidance
 - `docs/` folder (getting started, architecture, configuration, testing, troubleshooting)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for validation evidence
 - Related projects: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, `flext-target-oracle`, `flext-dbt-oracle`
