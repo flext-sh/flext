@@ -3141,16 +3141,16 @@ class FlextLdif(Flext[dict[str, object]]):
 
         # ✅ BOM: Register quirk registry singleton
         quirk_registry = FlextLdifServer()
-        container.register("quirk_registry", quirk_registry)
+        _ = container.register("quirk_registry", quirk_registry)
 
         # ✅ BOM: Register stateless writer
         unified_writer = FlextLdifWriter()
-        container.register("writer", unified_writer)
+        _ = container.register("writer", unified_writer)
 
         # ✅ BOM: Register other services
-        container.register("filters", FlextLdifFilters())
-        container.register("statistics", FlextLdifStatistics())
-        container.register("validation", FlextLdifValidation())
+        _ = container.register("filters", FlextLdifFilters())
+        _ = container.register("statistics", FlextLdifStatistics())
+        _ = container.register("validation", FlextLdifValidation())
 
         # ✅ BOM: Register factory for parameterized service
         def migration_pipeline_factory(params: dict[str, object] | None) -> object:
@@ -3162,7 +3162,7 @@ class FlextLdif(Flext[dict[str, object]]):
                 source_server=str(params.get("source_server", "rfc")),
                 target_server=str(params.get("target_server", "rfc")),
             )
-        container.register("migration_pipeline", migration_pipeline_factory)
+        _ = container.register("migration_pipeline", migration_pipeline_factory)
 
     def _get_service_typed(
         self,
