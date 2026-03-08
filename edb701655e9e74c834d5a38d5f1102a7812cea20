@@ -1,0 +1,36 @@
+tests/unit/scripts/dependencies/modernize_pyproject_tests.py
+  747a6a1531c13c77 1,7,26,55,75,94,120
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "edb701655e9e74c834d5a38d5f1102a7812cea20",
+  "prompts": {
+    "01b77826b5c29a65": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4b7a6556-273d-49da-8edb-d1ecb9bde501",
+        "model": "default"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "747a6a1531c13c77": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fec8b6d3-2fc3-461a-85d6-bd7ca787c067",
+        "model": "default"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 9,
+      "total_deletions": 9,
+      "accepted_lines": 7,
+      "overriden_lines": 0
+    }
+  }
+}
