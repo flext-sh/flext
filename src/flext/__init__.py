@@ -31,8 +31,6 @@ if TYPE_CHECKING:
         FlextTypes,
         FlextUtilities,
     )
-
-# Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextCliCommonParams": ("flext_cli", "FlextCliCommonParams"),
     "FlextCliSettings": ("flext_cli", "FlextCliSettings"),
@@ -52,7 +50,6 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextTypes": ("flext_core", "FlextTypes"),
     "FlextUtilities": ("flext_core", "FlextUtilities"),
 }
-
 __all__ = [
     "FlextCliCommonParams",
     "FlextCliSettings",

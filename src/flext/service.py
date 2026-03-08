@@ -17,16 +17,10 @@ from flext_core import c, m, t, u
 class FlextServiceBase:
     """Base service class for flext-core package."""
 
-    # =========================================================================
-    # NAMESPACE: .Core - All core domain service base
-    # =========================================================================
-
-    # Use local domain types/models/constants/utilities
     Constants: ClassVar[type] = c
     Models: ClassVar[type] = m
     Types: ClassVar[type] = t
     Utilities: ClassVar[type] = u
 
 
-# Alias for convenience
 s = FlextServiceBase
