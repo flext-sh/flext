@@ -303,7 +303,7 @@ class CompleteWorkflowExample:
             for stage_name in context.stages:
                 stage_func = stage_functions.get(stage_name)
                 if not stage_func:
-                    return r.fail(f"Unknown stage: {stage_name}")
+                    return r[dict[str, object]].fail(f"Unknown stage: {stage_name}")
 
                 result = self._execute_stage_parallel(
                     stage_name,
@@ -312,7 +312,7 @@ class CompleteWorkflowExample:
                     context,
                 )
                 if result.is_failure:
-                    return r.fail(
+                    return r[dict[str, object]].fail(
                         f"Stage {stage_name} failed: {result.error}",
                     )
 

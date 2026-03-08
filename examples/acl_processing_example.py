@@ -149,7 +149,7 @@ class AclProcessingExample:
         """Auto-detect server type from entry attributes."""
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, dict):
-            return r.fail("Invalid entry attributes format")
+            return r[str].fail("Invalid entry attributes format")
         attr_keys: set[str] = set(attributes.keys())
 
         for (
@@ -157,9 +157,9 @@ class AclProcessingExample:
             signatures,
         ) in AclProcessingExample.Constants.SERVER_SIGNATURES.items():
             if any(sig in attr_keys for sig in signatures):
-                return r.ok(server_type)
+                return r[str].ok(server_type)
 
-        return r.fail("Unable to detect server type from entry attributes")
+        return r[str].fail("Unable to detect server type from entry attributes")
 
     @staticmethod
     def extract_acls_from_entry(
@@ -174,14 +174,16 @@ class AclProcessingExample:
         )
 
         if not acl_attrs:
-            return r.fail(
+            return r[list[AclProcessingExample.AclEntry]].fail(
                 f"No ACL attributes defined for server type: {server_type}",
             )
 
         extracted_acls: list[AclProcessingExample.AclEntry] = []
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, dict):
-            return r.fail("Invalid attributes format")
+            return r[list[AclProcessingExample.AclEntry]].fail(
+                "Invalid attributes format"
+            )
 
         for attr_name in acl_attrs:
             if attr_name in attributes:
@@ -210,7 +212,7 @@ class AclProcessingExample:
                     )
                     extracted_acls.append(acl_entry)
 
-        return r.ok(extracted_acls)
+        return r[list[AclProcessingExample.AclEntry]].ok(extracted_acls)
 
     @staticmethod
     def validate_acl_entry(
@@ -254,7 +256,7 @@ class AclProcessingExample:
         if not acl_entry.dn:
             warnings.append("Empty DN may indicate configuration issue")
 
-        return r.ok(
+        return r[AclProcessingExample.AclValidationResult].ok(
             AclProcessingExample.AclValidationResult(
                 entry_dn=acl_entry.dn,
                 is_valid=len(violations) == 0,
@@ -278,7 +280,7 @@ class AclProcessingExample:
             start_time = time.time()
             detect_result = self._detect_servers(self.entries)
             if detect_result.is_failure:
-                return detect_result
+                return r[dict[str, object]].fail(detect_result.error)
 
             data = detect_result.value
             data["start_time"] = start_time
@@ -288,12 +290,12 @@ class AclProcessingExample:
                 else self._extract_sequential(data)
             )
             if extract_result.is_failure:
-                return extract_result
+                return r[dict[str, object]].fail(extract_result.error)
 
             data = extract_result.value
             validate_result = self._validate_batch(data)
             if validate_result.is_failure:
-                return validate_result
+                return r[dict[str, object]].fail(validate_result.error)
 
             data = validate_result.value
             return self._analyze_performance(data)
@@ -329,7 +331,7 @@ class AclProcessingExample:
                 "performance_analytics": analytics,
                 "processing_time_seconds": processing_time,
             }
-            return r.ok(result_data)
+            return r[dict[str, object]].ok(result_data)
 
         def _detect_servers(
             self,
@@ -345,7 +347,9 @@ class AclProcessingExample:
                         "server_type": result.value,
                     })
                 else:
-                    return r.fail(f"Server detection failed: {result.error}")
+                    return r[dict[str, object]].fail(
+                        f"Server detection failed: {result.error}"
+                    )
 
             server_types_set: set[str] = {
                 detected_entry["server_type"] for detected_entry in detected_entries
@@ -362,7 +366,7 @@ class AclProcessingExample:
             """Extract ACLs in parallel."""
             entries_data_raw = data.get("entries")
             if not _is_object_list(entries_data_raw):
-                return r.fail("Invalid entries format")
+                return r[dict[str, object]].fail("Invalid entries format")
 
             entries_with_servers: list[EntryWithServer] = []
             for entry_with_server_raw in entries_data_raw:
@@ -395,7 +399,7 @@ class AclProcessingExample:
                     if result.is_success:
                         all_acls.extend(result.value)
                     else:
-                        return r.fail(
+                        return r[dict[str, object]].fail(
                             f"ACL extraction failed: {result.error}",
                         )
 
@@ -409,7 +413,7 @@ class AclProcessingExample:
             """Extract ACLs sequentially."""
             entries_data_raw = data.get("entries")
             if not _is_object_list(entries_data_raw):
-                return r.fail("Invalid entries format")
+                return r[dict[str, object]].fail("Invalid entries format")
 
             entries_with_servers: list[EntryWithServer] = []
             for entry_with_server_raw in entries_data_raw:
@@ -435,7 +439,9 @@ class AclProcessingExample:
                 if result.is_success:
                     all_acls.extend(result.value)
                 else:
-                    return r.fail(f"ACL extraction failed: {result.error}")
+                    return r[dict[str, object]].fail(
+                        f"ACL extraction failed: {result.error}"
+                    )
 
             result_data = {**data, "acls": all_acls, "total_acls": len(all_acls)}
             return r.ok(result_data)
@@ -447,7 +453,7 @@ class AclProcessingExample:
             """Validate all extracted ACLs."""
             acls_data_raw = data.get("acls")
             if not _is_object_list(acls_data_raw):
-                return r.fail("Invalid ACLs format")
+                return r[dict[str, object]].fail("Invalid ACLs format")
             validation_results: list[AclProcessingExample.AclValidationResult] = []
             acl_entries: list[AclProcessingExample.AclEntry] = [
                 acl_item
@@ -462,7 +468,9 @@ class AclProcessingExample:
                 if result.is_success:
                     validation_results.append(result.value)
                 else:
-                    return r.fail(f"ACL validation failed: {result.error}")
+                    return r[dict[str, object]].fail(
+                        f"ACL validation failed: {result.error}"
+                    )
 
             result_data = {
                 **data,
