@@ -1,10 +1,10 @@
-"""Unit tests for flext_infra.deps.modernizer.PyprojectModernizer."""
+"""Unit tests for flext_infra.deps.modernizer.FlextInfraPyprojectModernizer."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from flext_infra.deps.modernizer import PyprojectModernizer
+from flext_infra.deps.modernizer import FlextInfraPyprojectModernizer
 
 
 def write_pyproject(project_dir: Path, content: str) -> Path:
@@ -23,7 +23,7 @@ def test_process_file_is_idempotent_with_array_of_tables(tmp_path: Path) -> None
         '\n[build-system]\nrequires = ["poetry-core>=2"]\n\n[project]\nname = "demo"\nversion = "0.1.0"\nlicense = "MIT"\n\n[tool.pyrefly]\nsearch-path = ["src"]\n\n[tool.pytest.ini_options]\naddopts = ["-q"]\n'.strip()
         + "\n",
     )
-    modernizer = PyprojectModernizer(root=tmp_path)
+    modernizer = FlextInfraPyprojectModernizer(root=tmp_path)
     canonical_dev: list[str] = []
     first_fixes = modernizer.process_file(
         pyproject, canonical_dev=canonical_dev, dry_run=False, skip_comments=False
@@ -52,7 +52,7 @@ def test_audit_exit_codes_reflect_violations(tmp_path: Path) -> None:
         '\n[project]\nname = "workspace"\nversion = "0.1.0"\n\n[tool.pytest.ini_options]\naddopts = ["--strict-config", "--strict-markers", "--tb=short", "-p no:sugar", "-q", "-ra"]\n\n[tool.bandit]\nskips = ["B404", "B603", "B607", "B105", "B608"]\n'.strip()
         + "\n",
     )
-    modernizer = PyprojectModernizer(root=tmp_path)
+    modernizer = FlextInfraPyprojectModernizer(root=tmp_path)
     canonical_dev: list[str] = []
     changes = modernizer.process_file(
         project_dir / "pyproject.toml",
@@ -72,7 +72,7 @@ def test_audit_exit_codes_reflect_violations(tmp_path: Path) -> None:
         '\n[project]\nname = "workspace"\nversion = "0.1.0"\n\n[tool.bandit]\nskips = ["B404", "B603", "B607", "B105", "B608"]\n\n[tool.pytest.ini_options]\naddopts = ["--strict-config", "--strict-markers", "--tb=short", "-p no:sugar", "-q", "-ra"]\n'.strip()
         + "\n",
     )
-    modernizer = PyprojectModernizer(root=tmp_path)
+    modernizer = FlextInfraPyprojectModernizer(root=tmp_path)
     changes = modernizer.process_file(
         project_dir / "pyproject.toml",
         canonical_dev=canonical_dev,
@@ -91,7 +91,7 @@ def test_array_of_tables_survives_regex_fallback(tmp_path: Path) -> None:
         '\n[build-system]\nrequires = ["poetry-core>=1.9.0"]\n\n[project]\nname = "safe"\nversion = "0.1.0"\n\n[tool.pyrefly]\nsearch-path = ["src"]\n\n[[tool.pyrefly.sub-config]]\nroot = "src"\n\n[[tool.pyrefly.sub-config]]\nroot = "tests"\n\n[tool.coverage.report]\nfail_under = 100\n'.strip()
         + "\n",
     )
-    modernizer = PyprojectModernizer(root=tmp_path)
+    modernizer = FlextInfraPyprojectModernizer(root=tmp_path)
     canonical_dev: list[str] = []
     _ = modernizer.process_file(
         pyproject, canonical_dev=canonical_dev, dry_run=False, skip_comments=False
@@ -117,7 +117,7 @@ def test_bandit_skips_are_loaded_from_root_ssot(tmp_path: Path) -> None:
         '\n[build-system]\nrequires = ["poetry-core>=2"]\n\n[project]\nname = "pkg"\nversion = "0.1.0"\n\n[tool.pyrefly]\nsearch-path = ["src"]\n\n[[tool.pyrefly.sub-config]]\nroot = "src"\n'.strip()
         + "\n",
     )
-    modernizer = PyprojectModernizer(root=root_dir)
+    modernizer = FlextInfraPyprojectModernizer(root=root_dir)
     canonical_dev: list[str] = []
     changes = modernizer.process_file(
         pyproject, canonical_dev=canonical_dev, dry_run=False, skip_comments=False
