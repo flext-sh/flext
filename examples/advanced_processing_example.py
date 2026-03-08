@@ -195,7 +195,23 @@ class AdvancedProcessingExample:
                 if stage_func:
                     operations.append(stage_func)
                 else:
-                    return r.fail(f"Unknown stage: {stage}")
+                    return r[
+                        dict[
+                            str,
+                            list[ItemDict]
+                            | list[AdvancedProcessingExample.ValidationResult]
+                            | int
+                            | float
+                            | dict[
+                                str,
+                                int
+                                | float
+                                | dict[int, int]
+                                | list[float]
+                                | dict[str, int | float],
+                            ],
+                        ]
+                    ].fail(f"Unknown stage: {stage}")
 
             current_data: dict[
                 str,
@@ -354,7 +370,23 @@ class AdvancedProcessingExample:
             """Process items in parallel."""
             items_data = data.get("items", [])
             if not isinstance(items_data, list):
-                return r.fail("Invalid items data")
+                return r[
+                    dict[
+                        str,
+                        list[ItemDict]
+                        | list[AdvancedProcessingExample.ValidationResult]
+                        | int
+                        | float
+                        | dict[
+                            str,
+                            int
+                            | float
+                            | dict[int, int]
+                            | list[float]
+                            | dict[str, int | float],
+                        ],
+                    ]
+                ].fail("Invalid items data")
 
             start_time = time.time()
 
@@ -439,7 +471,23 @@ class AdvancedProcessingExample:
             """Validate batch of items."""
             items_data = data.get("items", [])
             if not isinstance(items_data, list):
-                return r.fail("Invalid items data")
+                return r[
+                    dict[
+                        str,
+                        list[ItemDict]
+                        | list[AdvancedProcessingExample.ValidationResult]
+                        | int
+                        | float
+                        | dict[
+                            str,
+                            int
+                            | float
+                            | dict[int, int]
+                            | list[float]
+                            | dict[str, int | float],
+                        ],
+                    ]
+                ].fail("Invalid items data")
 
             validation_results: list[AdvancedProcessingExample.ValidationResult] = []
             items_to_validate: list[ItemDict] = [
@@ -454,7 +502,23 @@ class AdvancedProcessingExample:
                 if result.is_success:
                     validation_results.append(result.value)
                 else:
-                    return r.fail(f"Validation failed: {result.error}")
+                    return r[
+                        dict[
+                            str,
+                            list[ItemDict]
+                            | list[AdvancedProcessingExample.ValidationResult]
+                            | int
+                            | float
+                            | dict[
+                                str,
+                                int
+                                | float
+                                | dict[int, int]
+                                | list[float]
+                                | dict[str, int | float],
+                            ],
+                        ]
+                    ].fail(f"Validation failed: {result.error}")
 
             result_data: dict[
                 str,

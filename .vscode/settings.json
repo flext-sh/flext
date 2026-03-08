@@ -186,6 +186,5 @@
   "pyrefly.lsp.indexingMode": "lazy-non-blocking-background",
   "pyrefly.lspPath": ".venv/bin/pyrefly",
   "shellcheck.useWorkspaceRootAsCwd": true,
-  "python.pyrefly.streamDiagnostics": false,
   "python.pyrefly.syncNotebooks": false
 }
