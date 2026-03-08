@@ -1,0 +1,21 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "8db064a7dda25aadecda680e9a24686f16523421",
+  "prompts": {
+    "0ff4ef9f5788c5b1": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "95776218-6bdb-43f0-b8d9-e7d11cf0dc23",
+        "model": "default"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 1,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
