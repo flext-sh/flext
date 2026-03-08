@@ -2383,7 +2383,7 @@ class TestDispatcherDI:
         # Setup
         container = FlextContainer()
         mock_cb = MockCircuitBreaker()
-        container.register("circuit_breaker", mock_cb)
+        _ = container.register("circuit_breaker", mock_cb)
 
         dispatcher = FlextDispatcher(container=container)
 
@@ -2406,7 +2406,7 @@ class TestDispatcherDI:
         container = FlextContainer()
         mock_cb = MockCircuitBreaker()
         mock_cb.force_open("str")  # Force circuit open
-        container.register("circuit_breaker", mock_cb)
+        _ = container.register("circuit_breaker", mock_cb)
 
         dispatcher = FlextDispatcher(container=container)
 

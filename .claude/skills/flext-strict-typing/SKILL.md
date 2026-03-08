@@ -656,7 +656,7 @@ domain state. Use Pydantic models instead, even for mutable processing helpers.
 # ❌ WRONG — plain class with dict storage
 class PhaseResults:
     def __init__(self) -> None:
-        self.results: MutableMapping[int, OperationStats] = {}
+        _ = self.results: MutableMapping[int, OperationStats] = {}
 
 # ✅ CORRECT — Pydantic model with proper typing
 class PhaseResults(BaseModel):
