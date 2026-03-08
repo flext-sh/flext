@@ -23,11 +23,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import override
 
-from flext_core import (
-    FlextService,
-    r,
-    t,
-)
+from flext_core import FlextService, r, t
 
 ItemType = dict[str, object]
 
@@ -87,11 +83,11 @@ class CompleteWorkflowExample:
                 "processing",
                 "analysis",
                 "aggregation",
-            ],
+            ]
         )
         metadata: dict[str, t.Scalar] = field(default_factory=_new_scalar_dict)
         performance_metrics: dict[str, float | int | dict[str, float | int]] = field(
-            default_factory=_new_performance_metrics_dict,
+            default_factory=_new_performance_metrics_dict
         )
 
     @dataclass
@@ -109,7 +105,7 @@ class CompleteWorkflowExample:
         errors: list[str] = field(default_factory=_new_str_list)
         warnings: list[str] = field(default_factory=_new_str_list)
         stage_metadata: dict[str, float | int | bool] = field(
-            default_factory=_new_stage_metadata_dict,
+            default_factory=_new_stage_metadata_dict
         )
 
     @dataclass
@@ -123,10 +119,10 @@ class CompleteWorkflowExample:
         failed_stages: int
         total_processing_time: float
         stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = field(
-            default_factory=_new_stage_result_list,
+            default_factory=_new_stage_result_list
         )
         aggregated_metrics: dict[str, float | int] = field(
-            default_factory=_new_aggregated_metrics_dict,
+            default_factory=_new_aggregated_metrics_dict
         )
         workflow_status: str = "unknown"
 
@@ -134,7 +130,6 @@ class CompleteWorkflowExample:
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
-
         data: list[ItemType]
         workflow_config: dict[str, str | int | bool | float]
 
@@ -154,9 +149,7 @@ class CompleteWorkflowExample:
                 self._cleanup_context(context)
 
         def _aggregate_results(
-            self,
-            item: ItemType,
-            _context: CompleteWorkflowExample.WorkflowContext,
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
         ) -> r[ItemType]:
             """Aggregate results."""
             return r.ok(
@@ -167,9 +160,9 @@ class CompleteWorkflowExample:
                     True,
                     lambda _i: {
                         "final_score": _to_float(item.get("complexity_score", 0))
-                        + (1 if bool(item.get("is_valid", False)) else 0),
+                        + (1 if bool(item.get("is_valid", False)) else 0)
                     },
-                ),
+                )
             )
 
         def _aggregate_workflow_metrics(
@@ -202,9 +195,7 @@ class CompleteWorkflowExample:
             }
 
         def _analyze_items(
-            self,
-            item: ItemType,
-            _context: CompleteWorkflowExample.WorkflowContext,
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
         ) -> r[ItemType]:
             """Analyze single item."""
             return r.ok(
@@ -214,12 +205,11 @@ class CompleteWorkflowExample:
                     "analyzed",
                     True,
                     lambda _i: {"complexity_score": len(str(item)) * 0.1},
-                ),
+                )
             )
 
         def _cleanup_context(
-            self,
-            context: CompleteWorkflowExample.WorkflowContext,
+            self, context: CompleteWorkflowExample.WorkflowContext
         ) -> None:
             """Cleanup workflow context and log completion."""
             total_time = time.time() - context.start_time
@@ -231,8 +221,7 @@ class CompleteWorkflowExample:
             stage_name: str,
             items: list[ItemType],
             stage_func: Callable[
-                [ItemType, CompleteWorkflowExample.WorkflowContext],
-                r[ItemType],
+                [ItemType, CompleteWorkflowExample.WorkflowContext], r[ItemType]
             ],
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> r[CompleteWorkflowExample.WorkflowStageResult]:
@@ -261,7 +250,6 @@ class CompleteWorkflowExample:
                     result = future.result()
                     if result is not None:
                         processed_results.append(result)
-
             processing_time = time.time() - stage_start
             stage_result = CompleteWorkflowExample.WorkflowStageResult(
                 stage_name=stage_name,
@@ -284,41 +272,31 @@ class CompleteWorkflowExample:
             return r.ok(stage_result)
 
         def _execute_workflow(
-            self,
-            data: list[ItemType],
-            context: CompleteWorkflowExample.WorkflowContext,
+            self, data: list[ItemType], context: CompleteWorkflowExample.WorkflowContext
         ) -> r[dict[str, object]]:
             """Execute workflow stages with parallel processing."""
             items = data
             stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = []
             current_data = items
-
             stage_functions = {
                 "validation": self._validate_items,
                 "processing": self._process_items,
                 "analysis": self._analyze_items,
                 "aggregation": self._aggregate_results,
             }
-
             for stage_name in context.stages:
                 stage_func = stage_functions.get(stage_name)
                 if not stage_func:
                     return r[dict[str, object]].fail(f"Unknown stage: {stage_name}")
-
                 result = self._execute_stage_parallel(
-                    stage_name,
-                    current_data,
-                    stage_func,
-                    context,
+                    stage_name, current_data, stage_func, context
                 )
                 if result.is_failure:
                     return r[dict[str, object]].fail(
-                        f"Stage {stage_name} failed: {result.error}",
+                        f"Stage {stage_name} failed: {result.error}"
                     )
-
                 stage_result = result.value
                 stage_results.append(stage_result)
-
                 context.performance_metrics[stage_name] = {
                     "processing_time": stage_result.processing_time,
                     "success_rate": stage_result.items_succeeded
@@ -330,15 +308,11 @@ class CompleteWorkflowExample:
                     if stage_result.processing_time > 0
                     else 0,
                 }
-
                 current_data = current_data[: stage_result.items_succeeded]
-
             total_time = time.time() - context.start_time
             aggregated_metrics = self._aggregate_workflow_metrics(
-                stage_results,
-                total_time,
+                stage_results, total_time
             )
-
             workflow_result = CompleteWorkflowExample.CompleteWorkflowResult(
                 workflow_id=context.workflow_id,
                 correlation_id=context.correlation_id,
@@ -350,7 +324,6 @@ class CompleteWorkflowExample:
                 aggregated_metrics=aggregated_metrics,
                 workflow_status="completed",
             )
-
             return r.ok({
                 "workflow_result": workflow_result,
                 "final_data": current_data,
@@ -358,9 +331,7 @@ class CompleteWorkflowExample:
             })
 
         def _process_items(
-            self,
-            item: ItemType,
-            _context: CompleteWorkflowExample.WorkflowContext,
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
         ) -> r[ItemType]:
             """Process single item."""
             return r.ok(
@@ -370,7 +341,7 @@ class CompleteWorkflowExample:
                     "processed",
                     True,
                     lambda _i: {"processed_at": time.time()},
-                ),
+                )
             )
 
         def _process_stage(
@@ -392,17 +363,16 @@ class CompleteWorkflowExample:
         def _setup_context(self) -> CompleteWorkflowExample.WorkflowContext:
             """Setup workflow context with correlation tracking."""
             workflow_id = str(
-                self.workflow_config.get("workflow_id", f"workflow_{int(time.time())}"),
+                self.workflow_config.get("workflow_id", f"workflow_{int(time.time())}")
             )
             correlation_id = f"{workflow_id}_{int(time.time() * 1000)}"
-
             return CompleteWorkflowExample.WorkflowContext(
                 workflow_id=workflow_id,
                 correlation_id=correlation_id,
                 start_time=time.time(),
                 metadata={
                     "parallel_enabled": bool(
-                        self.workflow_config.get("parallel", True),
+                        self.workflow_config.get("parallel", True)
                     ),
                     "max_workers": int(self.workflow_config.get("max_workers", 4)),
                     "strict_mode": bool(self.workflow_config.get("strict_mode", False)),
@@ -410,9 +380,7 @@ class CompleteWorkflowExample:
             )
 
         def _validate_items(
-            self,
-            item: ItemType,
-            _context: CompleteWorkflowExample.WorkflowContext,
+            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
         ) -> r[ItemType]:
             """Validate single item."""
             return r.ok(
@@ -422,7 +390,7 @@ class CompleteWorkflowExample:
                     "validated",
                     True,
                     lambda _i: {"is_valid": bool(item.get("id") and item.get("name"))},
-                ),
+                )
             )
 
     @staticmethod
@@ -463,7 +431,3 @@ class CompleteWorkflowExample:
             print("Workflow completed successfully")
         else:
             print(f"Workflow failed: {result.error}")
-
-
-# Example usage (commented out - no main blocks or print statements as per requirements)
-# CompleteWorkflowExample.run_example()

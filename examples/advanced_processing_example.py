@@ -20,11 +20,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import override
 
-from flext_core import (
-    FlextService,
-    r,
-    t,
-)
+from flext_core import FlextService, r, t
 
 ItemDict = dict[str, t.Scalar]
 
@@ -82,12 +78,11 @@ class AdvancedProcessingExample:
                     int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ]
-        ],
+        ]
     ):
         """Declarative processing pipeline with automatic parallel execution."""
 
         auto_execute: bool = True
-
         items: list[ItemDict]
         stages: list[str]
 
@@ -126,7 +121,7 @@ class AdvancedProcessingExample:
                                 | list[float]
                                 | dict[str, int | float],
                             ],
-                        ],
+                        ]
                     ],
                     r[
                         dict[
@@ -151,7 +146,6 @@ class AdvancedProcessingExample:
                 "process": self._process_parallel,
                 "analyze": self._analyze_results,
             }
-
             operations: list[
                 Callable[
                     [
@@ -169,7 +163,7 @@ class AdvancedProcessingExample:
                                 | list[float]
                                 | dict[str, int | float],
                             ],
-                        ],
+                        ]
                     ],
                     r[
                         dict[
@@ -212,7 +206,6 @@ class AdvancedProcessingExample:
                             ],
                         ]
                     ].fail(f"Unknown stage: {stage}")
-
             current_data: dict[
                 str,
                 list[ItemDict]
@@ -224,13 +217,11 @@ class AdvancedProcessingExample:
                     int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
             ] = {"items": self.items}
-
             for operation in operations:
                 result = operation(current_data)
                 if result.is_failure:
                     return result
                 current_data = result.value
-
             return r.ok(current_data)
 
         def _analyze_results(
@@ -264,35 +255,30 @@ class AdvancedProcessingExample:
             processed_items = (
                 processed_items_data if isinstance(processed_items_data, list) else []
             )
-
             validation_results_data = data.get("validation_results", [])
             validation_results = (
                 validation_results_data
                 if isinstance(validation_results_data, list)
                 else []
             )
-
             field_counts: dict[int, int] = {}
             complexity_scores: list[float] = []
             items_to_analyze: list[ItemDict] = [
                 item
                 for item in processed_items
                 if isinstance(item, dict)
-                and not isinstance(item, AdvancedProcessingExample.ValidationResult)
+                and (not isinstance(item, AdvancedProcessingExample.ValidationResult))
             ]
-
             for item in items_to_analyze:
                 field_count = len(item)
                 field_counts[field_count] = field_counts.get(field_count, 0) + 1
                 complexity_scores.append(field_count * 0.1)
-
             success_rate_data = data.get("success_rate", 0)
             processing_efficiency = (
                 float(success_rate_data)
                 if isinstance(success_rate_data, (int, float))
                 else 0.0
             )
-
             validation_summary: dict[str, int | float] = {
                 "total_validated": len(validation_results),
                 "valid_items": sum(
@@ -313,8 +299,7 @@ class AdvancedProcessingExample:
                 ),
             }
             analysis: dict[
-                str,
-                int | float | dict[int, int] | list[float] | dict[str, int | float],
+                str, int | float | dict[int, int] | list[float] | dict[str, int | float]
             ] = {
                 "total_processed": len(items_to_analyze),
                 "field_distribution": field_counts,
@@ -324,7 +309,6 @@ class AdvancedProcessingExample:
                 "validation_summary": validation_summary,
                 "processing_efficiency": processing_efficiency * 100,
             }
-
             result_data: dict[
                 str,
                 list[ItemDict]
@@ -335,10 +319,7 @@ class AdvancedProcessingExample:
                     str,
                     int | float | dict[int, int] | list[float] | dict[str, int | float],
                 ],
-            ] = {
-                **data,
-                "analysis": analysis,
-            }
+            ] = {**data, "analysis": analysis}
             return r.ok(result_data)
 
         def _process_parallel(
@@ -387,7 +368,6 @@ class AdvancedProcessingExample:
                         ],
                     ]
                 ].fail("Invalid items data")
-
             start_time = time.time()
 
             def process_single_item(item: ItemDict) -> ItemDict | None:
@@ -406,22 +386,18 @@ class AdvancedProcessingExample:
                 item
                 for item in items_data
                 if isinstance(item, dict)
-                and not isinstance(item, AdvancedProcessingExample.ValidationResult)
+                and (not isinstance(item, AdvancedProcessingExample.ValidationResult))
             ]
-
             with ThreadPoolExecutor(max_workers=4) as executor:
                 future_to_item = {
                     executor.submit(process_single_item, item): item
                     for item in items_to_process
                 }
-
                 for future in as_completed(future_to_item):
                     result = future.result()
                     if result is not None:
                         processed_items.append(result)
-
             processing_time = time.time() - start_time
-
             result_data: dict[
                 str,
                 list[ItemDict]
@@ -488,15 +464,13 @@ class AdvancedProcessingExample:
                         ],
                     ]
                 ].fail("Invalid items data")
-
             validation_results: list[AdvancedProcessingExample.ValidationResult] = []
             items_to_validate: list[ItemDict] = [
                 item
                 for item in items_data
                 if isinstance(item, dict)
-                and not isinstance(item, AdvancedProcessingExample.ValidationResult)
+                and (not isinstance(item, AdvancedProcessingExample.ValidationResult))
             ]
-
             for item in items_to_validate:
                 result = self._validate_single_item(item)
                 if result.is_success:
@@ -519,7 +493,6 @@ class AdvancedProcessingExample:
                             ],
                         ]
                     ].fail(f"Validation failed: {result.error}")
-
             result_data: dict[
                 str,
                 list[ItemDict]
@@ -539,26 +512,21 @@ class AdvancedProcessingExample:
             return r.ok(result_data)
 
         def _validate_single_item(
-            self,
-            item: ItemDict,
+            self, item: ItemDict
         ) -> r[AdvancedProcessingExample.ValidationResult]:
             """Validate a single item."""
             start_time = time.time()
             violations: list[str] = []
             warnings: list[str] = []
-
             item_id = item.get("id")
             if not item_id or not isinstance(item_id, str):
                 violations.append("Missing or invalid id field")
-
             name = item.get("name")
             if not name or not isinstance(name, str):
                 violations.append("Missing or invalid name field")
-
             value = item.get("value", "")
             if isinstance(value, str) and len(value) > 100:
                 warnings.append("Value field is very long")
-
             return r.ok(
                 AdvancedProcessingExample.ValidationResult(
                     item_id=str(item_id) if item_id else "unknown",
@@ -566,7 +534,7 @@ class AdvancedProcessingExample:
                     violations=violations,
                     warnings=warnings,
                     validation_time=time.time() - start_time,
-                ),
+                )
             )
 
     @staticmethod
@@ -582,9 +550,3 @@ class AdvancedProcessingExample:
             }
             for i in range(count)
         ]
-
-
-# Example usage (commented out - no main blocks or print statements as per requirements)
-# sample_items = AdvancedProcessingExample.create_sample_items(100)
-# result = AdvancedProcessingExample.ProcessingPipeline(sample_items, ["validate", "process", "analyze"])
-# Result is dict directly - pipeline executed automatically!
