@@ -16,11 +16,11 @@ from __future__ import annotations
 import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import override
 
 from flext_core import FlextService, r, t
+from pydantic import BaseModel, ConfigDict, Field
 
 ItemDict = dict[str, t.Scalar]
 
@@ -43,27 +43,44 @@ class AdvancedProcessingExample:
         PROCESS = "process"
         ANALYZE = "analyze"
 
-    @dataclass
-    class ProcessingResult:
+    class ProcessingResult(BaseModel):
         """Result of processing operation with metrics."""
 
-        operation_id: str
-        items_processed: int
-        items_succeeded: int
-        items_failed: int
-        processing_time: float
-        errors: list[str] = field(default_factory=_new_str_list)
-        metadata: dict[str, t.Scalar] = field(default_factory=_new_scalar_dict)
+        model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    @dataclass
-    class ValidationResult:
+        operation_id: str = Field(description="Unique operation identifier")
+        items_processed: int = Field(description="Total items processed")
+        items_succeeded: int = Field(description="Items that succeeded")
+        items_failed: int = Field(description="Items that failed")
+        processing_time: float = Field(description="Time taken for processing")
+        errors: list[str] = Field(
+            default_factory=_new_str_list,
+            description="List of errors encountered",
+        )
+        metadata: dict[str, t.Scalar] = Field(
+            default_factory=_new_scalar_dict,
+            description="Operation metadata",
+        )
+
+    class ValidationResult(BaseModel):
         """Result of validation operation."""
 
-        item_id: str
-        is_valid: bool
-        violations: list[str] = field(default_factory=_new_str_list)
-        warnings: list[str] = field(default_factory=_new_str_list)
-        validation_time: float = 0.0
+        model_config = ConfigDict(arbitrary_types_allowed=True)
+
+        item_id: str = Field(description="Unique item identifier")
+        is_valid: bool = Field(description="Whether the item is valid")
+        violations: list[str] = Field(
+            default_factory=_new_str_list,
+            description="List of validation violations",
+        )
+        warnings: list[str] = Field(
+            default_factory=_new_str_list,
+            description="List of validation warnings",
+        )
+        validation_time: float = Field(
+            default=0.0,
+            description="Time taken for validation",
+        )
 
     class ProcessingPipeline(
         FlextService[
