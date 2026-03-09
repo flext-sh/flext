@@ -43,14 +43,18 @@ class SkillInfraError(Exception):
     """SkillInfraError class."""
 
 
-@dataclass(frozen=True)
-class ScriptCheckResult:
+class ScriptCheckResult(BaseModel):
     """ScriptCheckResult class."""
 
-    script: str
-    status: str
-    details: str
-    owner_skill: str | None
+    model_config = ConfigDict(frozen=True)
+
+    script: str = Field(description="Script file path")
+    status: str = Field(description="Validation status (OK, UNOWNED, VIOLATION)")
+    details: str = Field(description="Detailed status message")
+    owner_skill: str | None = Field(
+        default=None,
+        description="Owner skill identifier if applicable",
+    )
 
 
 def eprint(message: str) -> None:
