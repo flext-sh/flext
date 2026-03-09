@@ -543,6 +543,31 @@ modernize: ## Modernize pyproject.toml files (standardize configs without lock/i
 	$(Q)echo "Syncing dependency paths to workspace mode..."; \
 	$(PY) -m flext_infra deps path-sync --mode auto 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
 	echo ""
+	$(Q)echo "Formatting pyproject.toml files with taplo..."; \
+	taplo format pyproject.toml */pyproject.toml 2>&1 | grep -vE '^\s*$$' || true; \
+	echo ""
+	$(Q)echo "Re-locking poetry for $(words $(SELECTED_PROJECTS)) project(s) + root..."; \
+	failed=0; step=0; total=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
+	for proj in $(SELECTED_PROJECTS); do \
+		step=$$((step + 1)); \
+		if [ -f "$$proj/pyproject.toml" ]; then \
+			printf "  [%2d/%2d] lock %s ... " $$step $$total "$$proj"; \
+			if $(POETRY_ENV) $(POETRY_BIN) -C "$$proj" lock --quiet 2>/dev/null; then \
+				echo "ok"; \
+			else \
+				echo "failed"; failed=$$((failed + 1)); \
+			fi; \
+		fi; \
+	done; \
+	step=$$((step + 1)); \
+	printf "  [%2d/%2d] lock %s ... " $$step $$total "root"; \
+	if $(POETRY_ENV) $(POETRY_BIN) lock --quiet 2>/dev/null; then \
+		echo "ok"; \
+	else \
+		echo "failed"; failed=$$((failed + 1)); \
+	fi; \
+	if [ $$failed -ne 0 ]; then echo "WARNING: $$failed lock(s) failed"; fi; \
+	echo ""
 	$(Q)echo "Modernization complete."
 
 check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security)
