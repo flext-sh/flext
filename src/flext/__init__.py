@@ -1,3 +1,6 @@
+# AUTO-GENERATED FILE — DO NOT EDIT MANUALLY.
+# Regenerate with: make codegen
+#
 """Flext workspace package.
 
 This module provides the main entry point and shared components for the flext package.
@@ -13,68 +16,24 @@ from typing import TYPE_CHECKING, Any
 from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
-    from flext_cli import FlextCliCommonParams, FlextCliSettings
-    from flext_core import (
-        FlextConstants,
-        FlextContainer,
-        FlextContext,
-        FlextDecorators,
-        FlextDispatcher,
-        FlextExceptions,
-        FlextHandlers,
-        FlextModels,
-        FlextProtocols,
-        FlextResult,
-        FlextRuntime,
-        FlextService,
-        FlextSettings,
-        FlextTypes,
-        FlextUtilities,
-    )
+    from flext.service import FlextServiceBase, s
+    from flext.workspace import main
 
 # Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
-    "FlextCliCommonParams": ("flext_cli", "FlextCliCommonParams"),
-    "FlextCliSettings": ("flext_cli", "FlextCliSettings"),
-    "FlextConstants": ("flext_core", "FlextConstants"),
-    "FlextContainer": ("flext_core", "FlextContainer"),
-    "FlextContext": ("flext_core", "FlextContext"),
-    "FlextDecorators": ("flext_core", "FlextDecorators"),
-    "FlextDispatcher": ("flext_core", "FlextDispatcher"),
-    "FlextExceptions": ("flext_core", "FlextExceptions"),
-    "FlextHandlers": ("flext_core", "FlextHandlers"),
-    "FlextModels": ("flext_core", "FlextModels"),
-    "FlextProtocols": ("flext_core", "FlextProtocols"),
-    "FlextResult": ("flext_core", "FlextResult"),
-    "FlextRuntime": ("flext_core", "FlextRuntime"),
-    "FlextService": ("flext_core", "FlextService"),
-    "FlextSettings": ("flext_core", "FlextSettings"),
-    "FlextTypes": ("flext_core", "FlextTypes"),
-    "FlextUtilities": ("flext_core", "FlextUtilities"),
+    "FlextServiceBase": ("flext.service", "FlextServiceBase"),
+    "main": ("flext.workspace", "main"),
+    "s": ("flext.service", "s"),
 }
 
 __all__ = [
-    "FlextCliCommonParams",
-    "FlextCliSettings",
-    "FlextConstants",
-    "FlextContainer",
-    "FlextContext",
-    "FlextDecorators",
-    "FlextDispatcher",
-    "FlextExceptions",
-    "FlextHandlers",
-    "FlextModels",
-    "FlextProtocols",
-    "FlextResult",
-    "FlextRuntime",
-    "FlextService",
-    "FlextSettings",
-    "FlextTypes",
-    "FlextUtilities",
+    "FlextServiceBase",
+    "main",
+    "s",
 ]
 
 
-def __getattr__(name: str) -> Any:  # noqa: ANN401  # JUSTIFIED: Ruff (any-type) with PEP 562 dynamic module exports — https://docs.astral.sh/ruff/rules/any-type/
+def __getattr__(name: str) -> Any:
     """Lazy-load module attributes on first access (PEP 562)."""
     return lazy_getattr(name, _LAZY_IMPORTS, globals(), __name__)
 

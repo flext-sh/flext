@@ -458,7 +458,7 @@ Max Concurrent: 8 (Waves 3A, 3B)
 
   **References**:
   - `pyproject.toml` (workspace root) — `[tool.mypy]` section, `mypy_path` setting
-  - mypy docs: https://mypy.readthedocs.io/en/stable/config_file.html#confval-mypy_path
+  - mypy docs: <https://mypy.readthedocs.io/en/stable/config_file.html#confval-mypy_path>
   - T1 baseline — Projects showing "source file found twice" warnings
 
   **Acceptance Criteria**:
@@ -741,8 +741,8 @@ Max Concurrent: 8 (Waves 3A, 3B)
   - `flext-core/src/flext_core/protocols.py` — `ProtocolModelMeta` definition
   - `flext-core/src/flext_core/settings.py` — `FlextSettings` base class (if it exists)
   - `flext-core/src/flext_core/typings.py` — Type aliases that reference settings types
-  - Pydantic v2 docs: `BaseSettings` metaclass behavior — https://docs.pydantic.dev/latest/concepts/pydantic_settings/
-  - Python MRO docs: https://docs.python.org/3/reference/datamodel.html#determining-the-appropriate-metaclass
+  - Pydantic v2 docs: `BaseSettings` metaclass behavior — <https://docs.pydantic.dev/latest/concepts/pydantic_settings/>
+  - Python MRO docs: <https://docs.python.org/3/reference/datamodel.html#determining-the-appropriate-metaclass>
   - Consumer projects with MetaclassConflict: `grep -rn 'MetaclassConflict\|metaclass conflict' */src/`
 
   **Acceptance Criteria**:
@@ -809,7 +809,7 @@ Max Concurrent: 8 (Waves 3A, 3B)
   - `flext-core/src/flext_core/models.py` — `DomainEvent` definition (check if class or instance)
   - `flext-core/src/flext_core/typings.py` — Any type aliases referencing DomainEvent
   - Consumer usage: `grep -rn 'm\.DomainEvent\|: DomainEvent' */src/ */tests/`
-  - mypy docs on `valid-type`: https://mypy.readthedocs.io/en/stable/error_codes.html#check-that-type-is-valid-valid-type
+  - mypy docs on `valid-type`: <https://mypy.readthedocs.io/en/stable/error_codes.html#check-that-type-is-valid-valid-type>
 
   **Acceptance Criteria**:
   - [ ] Oracle agent approved the proposed change

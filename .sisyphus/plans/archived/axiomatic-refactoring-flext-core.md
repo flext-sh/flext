@@ -5,7 +5,7 @@
 ## TL;DR
 
 > **Quick Summary**: Apply ALL 15+ AXIOMATIC rules from CLAUDE.md §3 Code Law to flext-core codebase. Rule-by-rule sweeps across all files, not file-by-file. Annotation/type changes ONLY — zero behavioral changes.
-> 
+>
 > **Deliverables**:
 > - flext-core src/ passing ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors
 > - ZERO `Any`/`object`/`dict[str,Any]` in type annotations
@@ -13,7 +13,7 @@
 > - ALL internal state using `PrivateAttr`
 > - ALL suppression comments audited (justified or removed)
 > - ALL consumer projects passing `make check` after changes
-> 
+>
 > **Estimated Effort**: XL (100+ files, ~50k lines)
 > **Parallel Execution**: YES — 8 waves
 > **Critical Path**: Wave 0 → Wave 1 → Wave 2 → Wave 3 → Wave 4 → Wave 5 → Wave 6 → Wave 7 → Wave FINAL
@@ -702,7 +702,7 @@ If a session is interrupted mid-wave:
 
   **Commit**: YES (group with Wave 1)
 
-- [ ] 7. Replace Any/object in _decorators/ + _dispatcher/
+- [ ] 7. Replace Any/object in _decorators/ +_dispatcher/
 
   **What to do**:
   - Target `flext-core/src/flext_core/_decorators/` (2 files) and `flext-core/src/flext_core/_dispatcher/` (4 files)
@@ -947,7 +947,7 @@ If a session is interrupted mid-wave:
 
 ### Wave 3: Pydantic v2 Internal State (Parallel — 3 tasks)
 
-- [ ] 13. Migrate Bare self._x to PrivateAttr in _models/
+- [ ] 13. Migrate Bare self._x to PrivateAttr in_models/
 
   **What to do**:
   - Find all bare `self._x = value` assignments in BaseModel subclasses under `_models/`

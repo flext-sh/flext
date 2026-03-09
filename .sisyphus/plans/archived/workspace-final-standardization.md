@@ -119,7 +119,7 @@ Evidence saved to `.sisyphus/evidence/task-{N}-<project>.txt`.
 
 ### Template: Integration Project (tap/target/dbt)
 
-**Scope**: Dual inheritance (FlextMeltano* + FlextDomain*) for ALL 5 facades.
+**Scope**: Dual inheritance (FlextMeltano*+ FlextDomain*) for ALL 5 facades.
 
 **Steps**:
 1. **Pre-flight**: Check for broken base class references (`_t`, `_FlextTypes`, alias-based). Fix immediately.
@@ -540,7 +540,7 @@ workspace-green-gates-dedupe, workspace-ssot-libs-refactor
   - **Pydantic v2**: Fix remaining 3 test files with `class Config:` → `model_config = ConfigDict(...)`
   - **Typing**: Address `: Any` (6 files) and `: object` (assess scope in flext-core specifically)
   - **Nuclear**: Remove any fake/dead classes, unused validation methods
-  - **__init__.py**: Verify all exports, lazy loaders, __all__ match actual class names
+  - ****init**.py**: Verify all exports, lazy loaders, **all** match actual class names
   - **Make**: `make check PROJECT=flext-core` and `make test PROJECT=flext-core` must pass
 
   **Must NOT do**: Change public API contracts, rename FlextModels/FlextTypes/etc. (they ARE the base)
@@ -715,7 +715,7 @@ workspace-green-gates-dedupe, workspace-ssot-libs-refactor
 - Follow Template: Integration Project (Steps 1-9)
 - Expected MRO per facade: see Per-Tier Inheritance Lookup Table
 - Use `lsp_rename` for ALL class renames — NEVER raw search-replace
-- After rename: update `__init__.py` (_LAZY_IMPORTS strings, __getattr__, __all__)
+- After rename: update `__init__.py` (_LAZY_IMPORTS strings, **getattr**, **all**)
 - After Types dual-inheritance: verify no inner class name collisions via MRO inspection
 - Commit message: `refactor(<project>): full standardization — facades, naming, typing, pydantic, make`
 
@@ -742,10 +742,10 @@ workspace-green-gates-dedupe, workspace-ssot-libs-refactor
   **What to do**:
   - Verify ALL imports from integration projects use RENAMED class names (FlextTapOracle*, FlextTargetOracleWms* — not FlextMeltano* prefixes)
   - Fix any broken imports from class renames in Wave 3
-  - Standard facade audit: MRO, naming, imports, aliases, __all__, __init__.py
+  - Standard facade audit: MRO, naming, imports, aliases, **all**, **init**.py
   - Pydantic v2, typing, Make alignment checks
 
-  **Known Issues**: Depends on FlextTapOracle* + FlextTargetOracleWms* which were renamed in T23 + T30
+  **Known Issues**: Depends on FlextTapOracle*+ FlextTargetOracleWms* which were renamed in T23 + T30
   **Category**: `quick` | **Skills**: `[flext-architecture-layers]`
   **Blocked By**: T23 (tap-oracle) + T30 (target-oracle-wms) | **Blocks**: F1-F4
   **Commit**: `refactor(gruponos): fix imports for renamed integration classes`
@@ -800,7 +800,7 @@ workspace-green-gates-dedupe, workspace-ssot-libs-refactor
   1. Import all 5 facade aliases (m, c, t, u, p)
   2. Print MRO for each: `[c.__name__ for c in alias.__mro__]`
   3. Verify chain matches Per-Tier Inheritance Lookup Table in this plan
-  4. For integration projects: verify BOTH FlextMeltano* AND FlextDomain* appear in chain
+  4. For integration projects: verify BOTH FlextMeltano*AND FlextDomain* appear in chain
   5. Verify NO `FlextMeltanoTap*` or `FlextMeltanoTarget*` or `FlextMeltanoDbt*` class names remain
   6. Verify NO broken references (`_t`, `_FlextTypes`, `ft`, or alias-based base classes)
   Save full MRO dump to `.sisyphus/evidence/final-mro-audit.txt`.
