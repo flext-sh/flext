@@ -19,11 +19,11 @@ from __future__ import annotations
 import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import override
 
 from flext_core import FlextService, r, t
+from pydantic import BaseModel, ConfigDict, Field
 
 ItemType = dict[str, object]
 
@@ -70,61 +70,83 @@ class CompleteWorkflowExample:
         ANALYSIS = "analysis"
         AGGREGATION = "aggregation"
 
-    @dataclass
-    class WorkflowContext:
+    class WorkflowContext(BaseModel):
         """Complete workflow context with correlation and metadata."""
 
-        workflow_id: str
-        correlation_id: str
-        start_time: float
-        stages: list[str] = field(
+        model_config = ConfigDict(arbitrary_types_allowed=True)
+
+        workflow_id: str = Field(description="Unique workflow identifier")
+        correlation_id: str = Field(description="Correlation ID for tracking")
+        start_time: float = Field(description="Workflow start timestamp")
+        stages: list[str] = Field(
             default_factory=lambda: [
                 "validation",
                 "processing",
                 "analysis",
                 "aggregation",
-            ]
+            ],
+            description="List of workflow stages to execute",
         )
-        metadata: dict[str, t.Scalar] = field(default_factory=_new_scalar_dict)
-        performance_metrics: dict[str, float | int | dict[str, float | int]] = field(
-            default_factory=_new_performance_metrics_dict
+        metadata: dict[str, t.Scalar] = Field(
+            default_factory=_new_scalar_dict,
+            description="Workflow metadata key-value pairs",
+        )
+        performance_metrics: dict[str, float | int | dict[str, float | int]] = Field(
+            default_factory=_new_performance_metrics_dict,
+            description="Performance metrics collected during workflow execution",
         )
 
-    @dataclass
-    class WorkflowStageResult:
+    class WorkflowStageResult(BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
-        stage_name: str
-        workflow_id: str
-        correlation_id: str
-        success: bool
-        items_processed: int
-        items_succeeded: int
-        items_failed: int
-        processing_time: float
-        errors: list[str] = field(default_factory=_new_str_list)
-        warnings: list[str] = field(default_factory=_new_str_list)
-        stage_metadata: dict[str, float | int | bool] = field(
-            default_factory=_new_stage_metadata_dict
+        model_config = ConfigDict(arbitrary_types_allowed=True)
+
+        stage_name: str = Field(description="Name of the workflow stage")
+        workflow_id: str = Field(description="Associated workflow ID")
+        correlation_id: str = Field(description="Correlation ID for tracking")
+        success: bool = Field(description="Whether the stage succeeded")
+        items_processed: int = Field(description="Total items processed in stage")
+        items_succeeded: int = Field(description="Items that succeeded")
+        items_failed: int = Field(description="Items that failed")
+        processing_time: float = Field(description="Time taken to process stage")
+        errors: list[str] = Field(
+            default_factory=_new_str_list,
+            description="List of errors encountered",
+        )
+        warnings: list[str] = Field(
+            default_factory=_new_str_list,
+            description="List of warnings encountered",
+        )
+        stage_metadata: dict[str, float | int | bool] = Field(
+            default_factory=_new_stage_metadata_dict,
+            description="Stage-specific metadata",
         )
 
-    @dataclass
-    class CompleteWorkflowResult:
+    class CompleteWorkflowResult(BaseModel):
         """Complete workflow result with all stages aggregated."""
 
-        workflow_id: str
-        correlation_id: str
-        total_stages: int
-        completed_stages: int
-        failed_stages: int
-        total_processing_time: float
-        stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = field(
-            default_factory=_new_stage_result_list
+        model_config = ConfigDict(arbitrary_types_allowed=True)
+
+        workflow_id: str = Field(description="Unique workflow identifier")
+        correlation_id: str = Field(description="Correlation ID for tracking")
+        total_stages: int = Field(description="Total number of stages")
+        completed_stages: int = Field(description="Number of completed stages")
+        failed_stages: int = Field(description="Number of failed stages")
+        total_processing_time: float = Field(
+            description="Total workflow processing time"
         )
-        aggregated_metrics: dict[str, float | int] = field(
-            default_factory=_new_aggregated_metrics_dict
+        stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = Field(
+            default_factory=_new_stage_result_list,
+            description="Results from each workflow stage",
         )
-        workflow_status: str = "unknown"
+        aggregated_metrics: dict[str, float | int] = Field(
+            default_factory=_new_aggregated_metrics_dict,
+            description="Aggregated metrics across all stages",
+        )
+        workflow_status: str = Field(
+            default="unknown",
+            description="Overall workflow status",
+        )
 
     class WorkflowOrchestrator(FlextService[dict[str, object]]):
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
