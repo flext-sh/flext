@@ -42,12 +42,13 @@ from pydantic import BaseModel, Field, AliasPath
 
 
 class User(BaseModel):
-    first_name: str = Field(validation_alias=AliasPath('names', 0))
-    last_name: str = Field(validation_alias=AliasPath('names', 1))
+    first_name: str = Field(validation_alias=AliasPath("names", 0))
+    last_name: str = Field(validation_alias=AliasPath("names", 1))
 
-user = User.model_validate({'names': ['John', 'Doe']})  # (1)!
+
+user = User.model_validate({"names": ["John", "Doe"]})  # (1)!
 print(user)
-#> first_name='John' last_name='Doe'
+# > first_name='John' last_name='Doe'
 ```
 
 1. We are using `model_validate` to validate a dictionary using the field aliases.
@@ -64,15 +65,16 @@ from pydantic import BaseModel, Field, AliasChoices
 
 
 class User(BaseModel):
-    first_name: str = Field(validation_alias=AliasChoices('first_name', 'fname'))
-    last_name: str = Field(validation_alias=AliasChoices('last_name', 'lname'))
+    first_name: str = Field(validation_alias=AliasChoices("first_name", "fname"))
+    last_name: str = Field(validation_alias=AliasChoices("last_name", "lname"))
 
-user = User.model_validate({'fname': 'John', 'lname': 'Doe'})  # (1)!
+
+user = User.model_validate({"fname": "John", "lname": "Doe"})  # (1)!
 print(user)
-#> first_name='John' last_name='Doe'
-user = User.model_validate({'first_name': 'John', 'lname': 'Doe'})  # (2)!
+# > first_name='John' last_name='Doe'
+user = User.model_validate({"first_name": "John", "lname": "Doe"})  # (2)!
 print(user)
-#> first_name='John' last_name='Doe'
+# > first_name='John' last_name='Doe'
 ```
 
 1. We are using the second alias choice for both fields.
@@ -86,19 +88,23 @@ from pydantic import BaseModel, Field, AliasPath, AliasChoices
 
 
 class User(BaseModel):
-    first_name: str = Field(validation_alias=AliasChoices('first_name', AliasPath('names', 0)))
-    last_name: str = Field(validation_alias=AliasChoices('last_name', AliasPath('names', 1)))
+    first_name: str = Field(
+        validation_alias=AliasChoices("first_name", AliasPath("names", 0))
+    )
+    last_name: str = Field(
+        validation_alias=AliasChoices("last_name", AliasPath("names", 1))
+    )
 
 
-user = User.model_validate({'first_name': 'John', 'last_name': 'Doe'})
+user = User.model_validate({"first_name": "John", "last_name": "Doe"})
 print(user)
-#> first_name='John' last_name='Doe'
-user = User.model_validate({'names': ['John', 'Doe']})
+# > first_name='John' last_name='Doe'
+user = User.model_validate({"names": ["John", "Doe"]})
 print(user)
-#> first_name='John' last_name='Doe'
-user = User.model_validate({'names': ['John'], 'last_name': 'Doe'})
+# > first_name='John' last_name='Doe'
+user = User.model_validate({"names": ["John"], "last_name": "Doe"})
 print(user)
-#> first_name='John' last_name='Doe'
+# > first_name='John' last_name='Doe'
 ```
 
 ## Using alias generators
@@ -124,18 +130,16 @@ from pydantic import BaseModel, ConfigDict
 
 
 class Tree(BaseModel):
-    model_config = ConfigDict(
-        alias_generator=lambda field_name: field_name.upper()
-    )
+    model_config = ConfigDict(alias_generator=lambda field_name: field_name.upper())
 
     age: int
     height: float
     kind: str
 
 
-t = Tree.model_validate({'AGE': 12, 'HEIGHT': 1.2, 'KIND': 'oak'})
+t = Tree.model_validate({"AGE": 12, "HEIGHT": 1.2, "KIND": "oak"})
 print(t.model_dump(by_alias=True))
-#> {'AGE': 12, 'HEIGHT': 1.2, 'KIND': 'oak'}
+# > {'AGE': 12, 'HEIGHT': 1.2, 'KIND': 'oak'}
 ```
 
 ### Using an `AliasGenerator`
@@ -169,9 +173,9 @@ class Tree(BaseModel):
     kind: str
 
 
-t = Tree.model_validate({'AGE': 12, 'HEIGHT': 1.2, 'KIND': 'oak'})
+t = Tree.model_validate({"AGE": 12, "HEIGHT": 1.2, "KIND": "oak"})
 print(t.model_dump(by_alias=True))
-#> {'Age': 12, 'Height': 1.2, 'Kind': 'oak'}
+# > {'Age': 12, 'Height': 1.2, 'Kind': 'oak'}
 ```
 
 ## Alias Precedence
@@ -183,21 +187,21 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 def to_camel(string: str) -> str:
-    return ''.join(word.capitalize() for word in string.split('_'))
+    return "".join(word.capitalize() for word in string.split("_"))
 
 
 class Voice(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel)
 
     name: str
-    language_code: str = Field(alias='lang')
+    language_code: str = Field(alias="lang")
 
 
-voice = Voice(Name='Filiz', lang='tr-TR')
+voice = Voice(Name="Filiz", lang="tr-TR")
 print(voice.language_code)
-#> tr-TR
+# > tr-TR
 print(voice.model_dump(by_alias=True))
-#> {'Name': 'Filiz', 'lang': 'tr-TR'}
+# > {'Name': 'Filiz', 'lang': 'tr-TR'}
 ```
 
 ### Alias Priority
@@ -239,13 +243,13 @@ When validating data, you can enable population of attributes by attribute name,
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = Field(validation_alias="my_alias")
 
         model_config = ConfigDict(validate_by_alias=True, validate_by_name=False)
 
 
-    print(repr(Model(my_alias='foo')))  # (1)!
-    #> Model(my_field='foo')
+    print(repr(Model(my_alias="foo")))  # (1)!
+    # > Model(my_field='foo')
     ```
 
     1. The alias `my_alias` is used for validation.
@@ -257,13 +261,13 @@ When validating data, you can enable population of attributes by attribute name,
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = Field(validation_alias="my_alias")
 
         model_config = ConfigDict(validate_by_alias=False, validate_by_name=True)
 
 
-    print(repr(Model(my_field='foo')))  # (1)!
-    #> Model(my_field='foo')
+    print(repr(Model(my_field="foo")))  # (1)!
+    # > Model(my_field='foo')
     ```
 
     1. the attribute identifier `my_field` is used for validation.
@@ -275,16 +279,16 @@ When validating data, you can enable population of attributes by attribute name,
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = Field(validation_alias="my_alias")
 
         model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
 
-    print(repr(Model(my_alias='foo')))  # (1)!
-    #> Model(my_field='foo')
+    print(repr(Model(my_alias="foo")))  # (1)!
+    # > Model(my_field='foo')
 
-    print(repr(Model(my_field='foo')))  # (2)!
-    #> Model(my_field='foo')
+    print(repr(Model(my_field="foo")))  # (2)!
+    # > Model(my_field='foo')
     ```
 
     1. The alias `my_alias` is used for validation.
@@ -305,14 +309,14 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class Model(BaseModel):
-    my_field: str = Field(serialization_alias='my_alias')
+    my_field: str = Field(serialization_alias="my_alias")
 
     model_config = ConfigDict(serialize_by_alias=True)
 
 
-m = Model(my_field='foo')
+m = Model(my_field="foo")
 print(m.model_dump())  # (1)!
-#> {'my_alias': 'foo'}
+# > {'my_alias': 'foo'}
 ```
 
 1. The alias `my_alias` is used for serialization.
@@ -346,16 +350,16 @@ By default:
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = Field(validation_alias="my_alias")
 
 
     m = Model.model_validate(
-        {'my_alias': 'foo'},  # (1)!
+        {"my_alias": "foo"},  # (1)!
         by_alias=True,
         by_name=False,
     )
     print(repr(m))
-    #> Model(my_field='foo')
+    # > Model(my_field='foo')
     ```
 
     1. The alias `my_alias` is used for validation.
@@ -367,14 +371,16 @@ By default:
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = Field(validation_alias="my_alias")
 
 
     m = Model.model_validate(
-        {'my_field': 'foo'}, by_alias=False, by_name=True  # (1)!
+        {"my_field": "foo"},
+        by_alias=False,
+        by_name=True,  # (1)!
     )
     print(repr(m))
-    #> Model(my_field='foo')
+    # > Model(my_field='foo')
     ```
 
     1. The attribute name `my_field` is used for validation.
@@ -386,20 +392,24 @@ By default:
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = Field(validation_alias="my_alias")
 
 
     m = Model.model_validate(
-        {'my_alias': 'foo'}, by_alias=True, by_name=True  # (1)!
+        {"my_alias": "foo"},
+        by_alias=True,
+        by_name=True,  # (1)!
     )
     print(repr(m))
-    #> Model(my_field='foo')
+    # > Model(my_field='foo')
 
     m = Model.model_validate(
-        {'my_field': 'foo'}, by_alias=True, by_name=True  # (2)!
+        {"my_field": "foo"},
+        by_alias=True,
+        by_name=True,  # (2)!
     )
     print(repr(m))
-    #> Model(my_field='foo')
+    # > Model(my_field='foo')
     ```
 
     1. The alias `my_alias` is used for validation.
@@ -423,12 +433,12 @@ from pydantic import BaseModel, Field
 
 
 class Model(BaseModel):
-    my_field: str = Field(serialization_alias='my_alias')
+    my_field: str = Field(serialization_alias="my_alias")
 
 
-m = Model(my_field='foo')
+m = Model(my_field="foo")
 print(m.model_dump(by_alias=True))  # (1)!
-#> {'my_alias': 'foo'}
+# > {'my_alias': 'foo'}
 ```
 
 1. The alias `my_alias` is used for serialization.

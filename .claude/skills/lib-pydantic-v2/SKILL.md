@@ -68,11 +68,12 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 ```python
 from pydantic import BaseModel, ConfigDict, Field
 
+
 class ProcessingRequest(BaseModel):
     model_config = ConfigDict(
         validate_assignment=True,
         use_enum_values=True,
-        extra="forbid",            # strict at boundaries
+        extra="forbid",  # strict at boundaries
     )
     name: str = Field(..., description="Request name")
     timeout: int = Field(default=30, ge=1, le=300)
@@ -82,6 +83,7 @@ class ProcessingRequest(BaseModel):
 
 ```python
 from pydantic import field_validator
+
 
 class RetryConfiguration(BaseModel):
     retry_on_status_codes: list[int] = Field(default_factory=list)
@@ -96,6 +98,7 @@ class RetryConfiguration(BaseModel):
 
 ```python
 from pydantic import model_validator
+
 
 class BatchProcessingConfig(BaseModel):
     batch_size: int = Field(default=100)
@@ -113,6 +116,7 @@ class BatchProcessingConfig(BaseModel):
 
 ```python
 from pydantic import computed_field
+
 
 class GrpcModel(BaseModel):
     host: str
@@ -148,8 +152,10 @@ The `FlextUtilitiesValidation` class centralizes TypeAdapter usage for:
 class Dict(RootModel[dict[str, GeneralValueType]]):
     root: dict[str, GeneralValueType]
 
+
 class ConfigMap(RootModel[dict[str, GeneralValueType]]):
     root: dict[str, GeneralValueType]
+
 
 class ServiceMap(RootModel[dict[str, GeneralValueType]]):
     root: dict[str, GeneralValueType]
@@ -170,13 +176,13 @@ Used via `t.ConfigMap`, `t.ServiceMap`, `t.ErrorMap`, `t.FactoryMap`, `t.Resourc
 
 ```python
 # ✓ v2 serialization
-data = model.model_dump()                        # → dict
-json_str = model.model_dump_json()               # → JSON string
-schema = Model.model_json_schema()               # → JSON Schema dict
+data = model.model_dump()  # → dict
+json_str = model.model_dump_json()  # → JSON string
+schema = Model.model_json_schema()  # → JSON Schema dict
 
 # ✓ v2 deserialization
-instance = Model.model_validate(raw_dict)        # from dict
-instance = Model.model_validate_json(json_bytes) # from JSON
+instance = Model.model_validate(raw_dict)  # from dict
+instance = Model.model_validate_json(json_bytes)  # from JSON
 ```
 
 ## Workflow
@@ -201,7 +207,7 @@ make validate PROJECT=<name> FIX=1
 
 ```python
 model_config = SettingsConfigDict(
-    env_prefix=c.Platform.ENV_PREFIX,          # "FLEXT_"
+    env_prefix=c.Platform.ENV_PREFIX,  # "FLEXT_"
     env_nested_delimiter=c.Platform.ENV_NESTED_DELIMITER,
     env_file=u.resolve_env_file(),
     env_file_encoding=c.Utilities.DEFAULT_ENCODING,
@@ -233,8 +239,8 @@ def validate_name(cls, v):
 
 ```python
 # ✗ WRONG — v1 serialization
-data = model.dict()     # → use model.model_dump()
-text = model.json()     # → use model.model_dump_json()
+data = model.dict()  # → use model.model_dump()
+text = model.json()  # → use model.model_dump_json()
 ```
 
 ### Bad: class Config instead of ConfigDict
@@ -252,7 +258,9 @@ class MyModel(BaseModel):
 
 ```python
 _types_namespace = {"t": t}
-MyModel.model_rebuild(_types_namespace=_types_namespace)  # ❌ CRITICAL VIOLATION - BANNED
+MyModel.model_rebuild(
+    _types_namespace=_types_namespace
+)  # ❌ CRITICAL VIOLATION - BANNED
 ```
 
 **Why banned**: `model_rebuild()` hides invalid declaration order and unresolved annotations. It is forbidden in all production, test, and script code. Fix the model graph so all referenced symbols exist at definition time or use structural typing (Protocols).
@@ -263,6 +271,7 @@ MyModel.model_rebuild(_types_namespace=_types_namespace)  # ❌ CRITICAL VIOLATI
 from __future__ import annotations
 
 from flext_core import t
+
 
 class QueryModel(m.Query):
     filters: t.Dict

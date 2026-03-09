@@ -52,6 +52,7 @@ the function is called. Instead, instantiate it once, and reuse it.
 
     adapter = TypeAdapter(list[int])
 
+
     def my_func():
         ...
         # do something with adapter
@@ -116,32 +117,32 @@ from pydantic import BaseModel, Field
 
 
 class DivModel(BaseModel):
-    el_type: Literal['div'] = 'div'
+    el_type: Literal["div"] = "div"
     class_name: str | None = None
     children: list[Any] | None = None
 
 
 class SpanModel(BaseModel):
-    el_type: Literal['span'] = 'span'
+    el_type: Literal["span"] = "span"
     class_name: str | None = None
     contents: str | None = None
 
 
 class ButtonModel(BaseModel):
-    el_type: Literal['button'] = 'button'
+    el_type: Literal["button"] = "button"
     class_name: str | None = None
     contents: str | None = None
 
 
 class InputModel(BaseModel):
-    el_type: Literal['input'] = 'input'
+    el_type: Literal["input"] = "input"
     class_name: str | None = None
     value: str | None = None
 
 
 class Html(BaseModel):
     contents: DivModel | SpanModel | ButtonModel | InputModel = Field(
-        discriminator='el_type'
+        discriminator="el_type"
     )
 ```
 
@@ -181,12 +182,8 @@ With a simple benchmark, `TypedDict` is about ~2.5x faster than nested models:
 
 
     ta = TypeAdapter(TypedModel)
-    result1 = timeit(
-        lambda: ta.validate_python({'a': {'a': 'a', 'b': 2}}), number=10000
-    )
-    result2 = timeit(
-        lambda: Model.model_validate({'b': {'a': 'a', 'b': 2}}), number=10000
-    )
+    result1 = timeit(lambda: ta.validate_python({"a": {"a": "a", "b": 2}}), number=10000)
+    result2 = timeit(lambda: Model.model_validate({"b": {"a": "a", "b": 2}}), number=10000)
     print(result2 / result1)
     ```
 
@@ -209,7 +206,7 @@ from pydantic import FailFast, TypeAdapter, ValidationError
 
 ta = TypeAdapter(Annotated[list[bool], FailFast()])
 try:
-    ta.validate_python([True, 'invalid', False, 'also invalid'])
+    ta.validate_python([True, "invalid", False, "also invalid"])
 except ValidationError as exc:
     print(exc)
     """

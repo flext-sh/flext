@@ -221,6 +221,7 @@ info = info_result.unwrap()
 ```python
 # ❌ ERRADO
 from flext_tests import FlextTestsMatchers
+
 tm = FlextTestsMatchers()
 
 # ✅ CORRETO
@@ -515,6 +516,7 @@ Todos os testes devem ser marcados explicitamente:
 def test_user_creation():
     pass
 
+
 # ✅ CORRETO - Integration test
 @pytest.mark.integration
 def test_database_connection():
@@ -550,8 +552,10 @@ def test_database_connection():
    # ~/flext/constants.py
    from flext_tests import FlextTestsConstants
 
+
    class FlextConstants(FlextTestsConstants):
        """Constants base que estende flext_tests."""
+
        pass
    ```
 
@@ -578,21 +582,25 @@ def test_database_connection():
 # ~/flext/models.py
 from flext_tests import FlextTestsModels
 
+
 class FlextModels(FlextTestsModels):
     """Models base que estende flext_tests."""
 
     class TestsLdap:
         """Domínio de testes para flext-ldap."""
+
         class User:
             pass
 
     class TestsCli:
         """Domínio de testes para flext-cli."""
+
         class Command:
             pass
 
     class TestsCore:
         """Domínio de testes para flext-core."""
+
         class Service:
             pass
 ```
@@ -678,16 +686,21 @@ find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
 # tests/unit/test_user.py
 class TestsLdapUser:
     """Testes de unidade para User do flext-ldap."""
+
     pass
+
 
 # tests/unit/services/test_entry.py
 class TestsLdapServicesEntry:
     """Testes de unidade para Entry service do flext-ldap."""
+
     pass
+
 
 # tests/integration/test_sync.py
 class TestsLdapSync:
     """Testes de integração para Sync do flext-ldap."""
+
     pass
 ```
 
@@ -748,7 +761,9 @@ class TestsLdapSync:
 # tests/fixtures/users.py
 def generate_user_data(count: int = 1) -> list[dict]:
     """Gera dados de usuário para testes."""
-    return [{"name": f"User {i}", "email": f"user{i}@example.com"} for i in range(count)]
+    return [
+        {"name": f"User {i}", "email": f"user{i}@example.com"} for i in range(count)
+    ]
 ```
 
 #### 8. Conftest Centralizado
@@ -771,11 +786,13 @@ def generate_user_data(count: int = 1) -> list[dict]:
 import pytest
 from flext_tests import tm, tt, tf, tv, tb
 
+
 @pytest.fixture(scope="session")
 def test_container():
     """Container de dependências para testes."""
     # Automação completa
     pass
+
 
 @pytest.fixture(autouse=True)
 def setup_test_environment():

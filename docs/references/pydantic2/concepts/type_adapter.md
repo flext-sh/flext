@@ -32,14 +32,12 @@ class User(TypedDict):
 
 
 user_list_adapter = TypeAdapter(list[User])
-user_list = user_list_adapter.validate_python([{'name': 'Fred', 'id': '3'}])
+user_list = user_list_adapter.validate_python([{"name": "Fred", "id": "3"}])
 print(repr(user_list))
-#> [{'name': 'Fred', 'id': 3}]
+# > [{'name': 'Fred', 'id': 3}]
 
 try:
-    user_list_adapter.validate_python(
-        [{'name': 'Fred', 'id': 'wrong', 'other': 'no'}]
-    )
+    user_list_adapter.validate_python([{"name": "Fred", "id": "wrong", "other": "no"}])
 except ValidationError as e:
     print(e)
     """
@@ -49,7 +47,7 @@ except ValidationError as e:
     """
 
 print(repr(user_list_adapter.dump_json(user_list)))
-#> b'[{"name":"Fred","id":3}]'
+# > b'[{"name":"Fred","id":3}]'
 ```
 
 !!! info "`dump_json` returns `bytes`"
@@ -84,11 +82,11 @@ class Item(BaseModel):
 
 # `item_data` could come from an API call, eg., via something like:
 # item_data = requests.get('https://my-api.com/items').json()
-item_data = [{'id': 1, 'name': 'My Item'}]
+item_data = [{"id": 1, "name": "My Item"}]
 
 items = TypeAdapter(list[Item]).validate_python(item_data)
 print(items)
-#> [Item(id=1, name='My Item')]
+# > [Item(id=1, name='My Item')]
 ```
 
 [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] is capable of parsing data into any of the types Pydantic can
@@ -119,7 +117,7 @@ In order to manually trigger the building of the core schema, you can call the
 ```python
 from pydantic import ConfigDict, TypeAdapter
 
-ta = TypeAdapter('MyInt', config=ConfigDict(defer_build=True))
+ta = TypeAdapter("MyInt", config=ConfigDict(defer_build=True))
 
 # some time later, the forward reference is defined
 MyInt = int

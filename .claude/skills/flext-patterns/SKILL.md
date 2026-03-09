@@ -101,6 +101,7 @@ Access through **project runtime alias only**; no subdivision. Subprojects: nest
 # models.py — inherit parent, define nested namespace, then alias at root
 from flext_meltano import FlextMeltanoModels
 
+
 class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
     class TargetOracle:
         class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
@@ -108,6 +109,7 @@ class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
 
     # Class-level alias at root: flat namespace (m.ExecuteResult, not m.TargetOracle.ExecuteResult)
     ExecuteResult = TargetOracle.ExecuteResult
+
 
 m = FlextTargetOracleModels
 ```
@@ -140,6 +142,7 @@ Example:
 
 ```python
 from .models import m
+
 print([c.__name__ for c in m.__mro__])
 # Output: ['FlextTargetOracleModels', 'FlextMeltanoModels', 'FlextDbOracleModels', 'FlextModels', 'object']
 ```
@@ -165,6 +168,7 @@ class FlextDbOracleConstants(FlextConstants):
         class Platform(FlextConstants.Platform):  # WRONG!
             LOOPBACK_IP: Final[str] = "127.0.0.1"
 
+
 # ✅ CORRECT — new namespace class, no MRO shadowing
 class FlextDbOracleConstants(FlextConstants):
     class DbOracle:
@@ -188,6 +192,7 @@ from them creates confusing duplicates and breaks type identity.
 
 ```python
 from flext_core import r
+
 
 def transform(value: str):
     return r[str].ok(value).map(str.strip).flat_map(lambda v: r[str].ok(v.lower()))
@@ -246,6 +251,8 @@ Bad:
 ```python
 # duplicate operation wrappers that are never consumed
 class DomainAPIOperationsA: ...
+
+
 class DomainAPIOperationsB: ...
 ```
 

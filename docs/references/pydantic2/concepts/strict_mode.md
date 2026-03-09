@@ -37,11 +37,11 @@ class MyModel(BaseModel):
     x: int
 
 
-print(MyModel.model_validate({'x': '123'}))  # lax mode
-#> x=123
+print(MyModel.model_validate({"x": "123"}))  # lax mode
+# > x=123
 
 try:
-    MyModel.model_validate({'x': '123'}, strict=True)  # strict mode
+    MyModel.model_validate({"x": "123"}, strict=True)  # strict mode
 except ValidationError as exc:
     print(exc)
     """
@@ -73,12 +73,12 @@ from datetime import date
 
 from pydantic import TypeAdapter, ValidationError
 
-print(TypeAdapter(date).validate_python('2000-01-01'))  # OK: lax
-#> 2000-01-01
+print(TypeAdapter(date).validate_python("2000-01-01"))  # OK: lax
+# > 2000-01-01
 
 try:
     # Not OK: strict:
-    TypeAdapter(date).validate_python('2000-01-01', strict=True)
+    TypeAdapter(date).validate_python("2000-01-01", strict=True)
 except ValidationError as exc:
     print(exc)
     """
@@ -87,7 +87,7 @@ except ValidationError as exc:
     """
 
 TypeAdapter(date).validate_json('"2000-01-01"', strict=True)  # (1)!
-#> 2000-01-01
+# > 2000-01-01
 ```
 
 1. As mentioned, strict mode is looser when validating from JSON.
@@ -112,13 +112,13 @@ class User(BaseModel):
     age: int = Field(strict=True)  # (1)!
 
 
-user = User(name='John', age=42)
+user = User(name="John", age=42)
 print(user)
-#> name='John' age=42
+# > name='John' age=42
 
 
 try:
-    another_user = User(name='John', age='42')
+    another_user = User(name="John", age="42")
 except ValidationError as e:
     print(e)
     """
@@ -183,6 +183,6 @@ class User(BaseModel):
     age: int = Field(strict=False)
 
 
-print(User(name='John', age='18'))
-#> name='John' age=18
+print(User(name="John", age="18"))
+# > name='John' age=18
 ```

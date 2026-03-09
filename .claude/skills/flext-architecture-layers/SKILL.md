@@ -143,9 +143,11 @@ Every `flext-(tap|target|dbt)-*` project MUST:
 from flext_meltano import FlextMeltanoModels
 from flext_ldap import FlextLdapModels
 
+
 class FlextTargetLdapModels(FlextMeltanoModels, FlextLdapModels):
     class TargetLdap:
         class MyModel(FlextMeltanoModels.ArbitraryTypesModel): ...
+
 
 m = FlextTargetLdapModels
 # m.Meltano.* → Singer protocol models (inherited)
@@ -158,9 +160,11 @@ m = FlextTargetLdapModels
 class FlextTapLdifModels(FlextMeltanoModels):  # Where is FlextLdifModels?
     ...
 
+
 # ❌ WRONG — missing FlextMeltanoModels
 class FlextTargetOracleModels(FlextModels):  # loses m.Meltano.*
     ...
+
 
 # ❌ WRONG — redefining Singer models locally
 class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):

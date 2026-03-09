@@ -61,7 +61,7 @@ To illustrate what a core schema looks like, we will take the example of the
 
 ```python {lint="skip" test="skip"}
 class BoolSchema(TypedDict, total=False):
-    type: Required[Literal['bool']]
+    type: Required[Literal["bool"]]
     strict: bool
     ref: str
     metadata: Any
@@ -82,8 +82,8 @@ The core schema for the `foo` field will look like:
 
 ```python
 {
-    'type': 'bool',
-    'strict': True,
+    "type": "bool",
+    "strict": True,
 }
 ```
 
@@ -98,9 +98,8 @@ If we were to define a custom serialization function for `foo` (1), the `seriali
    class Model(BaseModel):
        foo: bool = Field(strict=True)
 
-       @field_serializer('foo', mode='plain')
-       def serialize_foo(self, value: bool) -> Any:
-           ...
+       @field_serializer("foo", mode="plain")
+       def serialize_foo(self, value: bool) -> Any: ...
    ```
 
 ```python {lint="skip" test="skip"}
@@ -169,7 +168,7 @@ class MyStrict:
         cls, source: Any, handler: GetCoreSchemaHandler
     ) -> CoreSchema:
         schema = handler(source)  # (1)!
-        schema['strict'] = True
+        schema["strict"] = True
         return schema
 
 
@@ -179,7 +178,7 @@ class MyGt:
         cls, source: Any, handler: GetCoreSchemaHandler
     ) -> CoreSchema:
         schema = handler(source)  # (2)!
-        schema['gt'] = 1
+        schema["gt"] = 1
         return schema
 
 
@@ -218,7 +217,7 @@ class Model(BaseModel):
     foo: int
 
 
-model = Model.model_validate({'foo': 1})  # (1)!
+model = Model.model_validate({"foo": 1})  # (1)!
 dumped = model.model_dump()  # (2)!
 ```
 

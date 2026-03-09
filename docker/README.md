@@ -67,13 +67,14 @@ All tests MUST use centralized fixtures from `flext_tests.fixtures`:
 
 ```python
 from flext_tests import (
-    flext_docker,          # Main Docker management fixture
-    flext_oud_container,   # FLEXT OUD container (port 3389)
-    ldap_container,        # Generic OpenLDAP (port 3390)
-    oracle_container,      # Oracle Database (port 1522)
-    postgres_container,    # PostgreSQL fixture
-    redis_container,       # Redis fixture
+    flext_docker,  # Main Docker management fixture
+    flext_oud_container,  # FLEXT OUD container (port 3389)
+    ldap_container,  # Generic OpenLDAP (port 3390)
+    oracle_container,  # Oracle Database (port 1522)
+    postgres_container,  # PostgreSQL fixture
+    redis_container,  # Redis fixture
 )
+
 
 # Example 1: Using Generic OpenLDAP for LDAP/LDIF projects
 def test_with_ldap(ldap_container):
@@ -83,12 +84,14 @@ def test_with_ldap(ldap_container):
     connection_string = ldap_container  # ldap://localhost:3390
     # Use for flext-ldap, flext-ldif, flext-(dbt|tap|target)-(ldap|ldif)
 
+
 # Example 2: Using FLEXT OUD for FLEXT migration
 def test_flext_migration(flext_oud_container):
     """Test using FLEXT OUD container (port 3389)."""
     # FLEXT-specific OpenLDAP with dc=invaliddc, cn=invalid_user
     connection_string = flext_oud_container  # ldap://localhost:3389
     # Use for flext-oud-mig project exclusively
+
 
 # Example 3: Using Oracle Database for Oracle projects
 def test_with_oracle(oracle_container):
@@ -264,6 +267,7 @@ Dirty state tracked in: `~/.flext/docker_state.json`
 ```python
 # ❌ OLD - Direct docker-compose in project directory
 import docker
+
 client = docker.from_env()
 container = client.containers.run("postgres:13", detach=True)
 ```

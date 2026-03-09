@@ -190,16 +190,18 @@ from flext_core import FlextService
 from flext_core import t
 from flext_core import u
 
+
 def divide(a: float, b: float) -> FlextResult[float, str]:
     if b == 0:
         return FlextResult.failure("Cannot divide by zero")
 
     return FlextResult.success(a / b)
 
+
 # Compose operations
-result = (FlextResult.success(10)
-          .bind(lambda x: divide(x, 2))
-          .bind(lambda x: divide(x, 3)))
+result = (
+    FlextResult.success(10).bind(lambda x: divide(x, 2)).bind(lambda x: divide(x, 3))
+)
 
 if result.is_success:
     print(f"Result: {result.unwrap()}")

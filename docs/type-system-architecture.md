@@ -159,10 +159,12 @@ class FlextCliTypes:
 # In typings.py (Tier 0)
 FlextFlextOudMigEntryT = TypeVar("FlextFlextOudMigEntryT", bound=object)
 
+
 # In protocols.py (Tier 0) - declare actual protocol
 @runtime_checkable
 class EntryServiceProtocol[T: "fldif.Ldif.EntryProtocol"](Protocol):
     """Service for entry operations with generic type parameter."""
+
     def get(self, dn: str) -> "FlextOudMigProtocols.FlextOudMig.Result[T]": ...
 ```
 
@@ -173,17 +175,19 @@ class EntryServiceProtocol[T: "fldif.Ldif.EntryProtocol"](Protocol):
 ```python
 # ❌ BEFORE: 5 union variants (complex, less extensible)
 type ProgressCallback = (
-    Callable[[int], None] |
-    Callable[[int, int], None] |
-    Callable[[int, int, str], None] |
-    Callable[[dict[str, object]], None] |
-    Callable[[Exception], None]
+    Callable[[int], None]
+    | Callable[[int, int], None]
+    | Callable[[int, int, str], None]
+    | Callable[[dict[str, object]], None]
+    | Callable[[Exception], None]
 )
+
 
 # ✅ AFTER: Protocol-based (extensible, maintainable)
 @runtime_checkable
 class ProgressCallbackProtocol(Protocol):
     """Flexible callback protocol for progress tracking."""
+
     def __call__(self, *args: object, **kwargs: object) -> None:
         """Accept any arguments for maximum flexibility."""
         ...
@@ -196,13 +200,13 @@ class ProgressCallbackProtocol(Protocol):
 ```python
 # ❌ WRONG: Invariant dict (rejects dict[str, int] for dict[str, object])
 class DataProvider(Protocol):
-    def get_data(self) -> dict[str, object]:
-        ...
+    def get_data(self) -> dict[str, object]: ...
+
 
 # ✅ CORRECT: Covariant Mapping (accepts dict[str, int] as Mapping[str, object])
 class DataProvider(Protocol):
-    def get_data(self) -> Mapping[str, object]:
-        ...
+    def get_data(self) -> Mapping[str, object]: ...
+
 
 # Usage: Works with any dict subtype
 def process_data(provider: DataProvider) -> None:
@@ -219,11 +223,11 @@ def process_data(provider: DataProvider) -> None:
 # ✅ CORRECT: Use centralized TypeVars from flext-core
 from flext_core import t
 
-T = t.T            # Generic type variable
-M = t.M            # Generic mapping type
-S = t.S            # Generic sequence type
-R = t.R            # Generic result type
-E = t.E            # Generic exception type
+T = t.T  # Generic type variable
+M = t.M  # Generic mapping type
+S = t.S  # Generic sequence type
+R = t.R  # Generic result type
+E = t.E  # Generic exception type
 
 # ❌ WRONG: Creating redundant domain-specific TypeVars
 FlextCliCommandT = TypeVar("FlextCliCommandT", bound="CliCommand")  # NO - use generic T
@@ -245,9 +249,11 @@ class FlextTypes:
     class Utilities:
         type JsonValue = dict[str, object]
 
+
 # Usage
 result: t.Core.Result[bool] = ok_result
 data: t.Utilities.JsonValue = {"key": "value"}
+
 
 # ❌ WRONG: Over-nesting (3+ levels)
 class FlextTypes:
@@ -315,26 +321,26 @@ t.FlextOudMig               # Migration tool
 
 ```python
 # ✅ CORRECT: 2-level namespace (flext-cli examples)
-m.Cli.SystemInfo                    # CLI-specific system info model
-m.Cli.SessionStatistics             # CLI session statistics
-m.Cli.CommandStatistics             # CLI command statistics
-m.Cli.CliCommand                    # CLI command model
-m.Cli.CliSession                    # CLI session model
+m.Cli.SystemInfo  # CLI-specific system info model
+m.Cli.SessionStatistics  # CLI session statistics
+m.Cli.CommandStatistics  # CLI command statistics
+m.Cli.CliCommand  # CLI command model
+m.Cli.CliSession  # CLI session model
 
 # ✅ CORRECT: Module-level aliases for common classes
 from flext_cli import (
-    SystemInfo,                     # alias for m.Cli.SystemInfo
-    SessionStatistics,              # alias for m.Cli.SessionStatistics
-    CommandStatistics,              # alias for m.Cli.CommandStatistics
+    SystemInfo,  # alias for m.Cli.SystemInfo
+    SessionStatistics,  # alias for m.Cli.SessionStatistics
+    CommandStatistics,  # alias for m.Cli.CommandStatistics
 )
 
 # ❌ WRONG: Over-nesting (3+ levels - PROHIBITED)
-m.Cli.Value.SystemInfo              # TOO DEEP - violates 2-level rule
-m.Cli.Data.Command.Execution        # TOO DEEP - nested sub-concerns
+m.Cli.Value.SystemInfo  # TOO DEEP - violates 2-level rule
+m.Cli.Data.Command.Execution  # TOO DEEP - nested sub-concerns
 
 # ❌ WRONG: Root-level aliases without domain
-m.SystemInfo                        # Missing domain context (m.Cli.*)
-m.Statistics                        # Ambiguous - which domain?
+m.SystemInfo  # Missing domain context (m.Cli.*)
+m.Statistics  # Ambiguous - which domain?
 ```
 
 **Models Organization by Project**:
@@ -400,8 +406,8 @@ m.FlextOudMig               # Migration tool domain
 # Example: dict[str, bool] should be compatible with Mapping[str, object]
 
 # ❌ INVARIANT - WRONG
-def process_dict(data: dict[str, object]) -> None:
-    ...
+def process_dict(data: dict[str, object]) -> None: ...
+
 
 result: dict[str, bool] = {"ok": True}
 process_dict(result)  # Type error: dict is invariant
@@ -409,8 +415,9 @@ process_dict(result)  # Type error: dict is invariant
 # ✅ COVARIANT - CORRECT
 from collections.abc import Mapping
 
-def process_mapping(data: Mapping[str, object]) -> None:
-    ...
+
+def process_mapping(data: Mapping[str, object]) -> None: ...
+
 
 result: dict[str, bool] = {"ok": True}
 process_mapping(result)  # OK: Mapping is covariant
@@ -426,10 +433,12 @@ class DataProvider(Protocol):
         """Returns read-only attributes - covariant."""
         ...
 
+
 # Implementation can return more specific dict type
 class MyProvider:
     def get_attributes(self) -> dict[str, list[str]]:
         return {"cn": ["test"], "mail": ["user@example.com"]}
+
 
 provider: DataProvider = MyProvider()  # OK: dict is assignable to Mapping
 ```
@@ -443,6 +452,7 @@ class ItemProcessor(Protocol):
     def process_items(self, items: Iterable[str]) -> None:
         """Accepts any iterable source."""
         ...
+
 
 # ❌ WRONG: Sequence is invariant
 @runtime_checkable
@@ -464,13 +474,16 @@ class ItemProcessor(Protocol):
 # ✅ CORRECT: Protocols only import other Protocols
 from typing import Protocol
 
+
 @runtime_checkable
 class EntryProtocol(Protocol):
     dn: str
     attributes: Mapping[str, Sequence[str]]
 
+
 # ❌ WRONG: Don't import concrete classes
 from flext_ldif import Entry  # NO
+
 
 @runtime_checkable
 class EntryProtocol(Protocol):
@@ -484,12 +497,15 @@ class EntryProtocol(Protocol):
 @runtime_checkable
 class ReadableEntry(Protocol):
     """Read-only entry access."""
+
     @property
     def dn(self) -> str: ...
+
 
 @runtime_checkable
 class MutableEntry(ReadableEntry, Protocol):
     """Mutable entry with write operations."""
+
     def set_attribute(self, name: str, values: Sequence[str]) -> Self: ...
 ```
 
@@ -499,10 +515,12 @@ class MutableEntry(ReadableEntry, Protocol):
 # ✅ CORRECT: Use @runtime_checkable for runtime validation
 from typing import Protocol, runtime_checkable
 
+
 @runtime_checkable
 class EntryProtocol(Protocol):
     dn: str
     attributes: Mapping[str, Sequence[str]]
+
 
 # Can now use isinstance() at runtime
 if isinstance(obj, EntryProtocol):
@@ -515,11 +533,13 @@ if isinstance(obj, EntryProtocol):
 # ✅ CORRECT: Use Self for fluent interface
 from typing import Self
 
+
 @runtime_checkable
 class MutableEntry(Protocol):
     def set_attribute(self, name: str, values: Sequence[str]) -> Self:
         """Returns self for method chaining."""
         ...
+
 
 # Usage: Fluent interface
 entry.set_attribute("mail", ["new@example.com"]).add_attribute("cn", ["User"])
@@ -535,13 +555,13 @@ entry.set_attribute("mail", ["new@example.com"]).add_attribute("cn", ["User"])
 # flext-core/src/flext_core/typings.py
 
 # Generic type variables (reuse in all projects)
-T = TypeVar("T")                              # Generic type
-M = TypeVar("M")                              # Generic mapping/model
-S = TypeVar("S")                              # Generic sequence
-R = TypeVar("R")                              # Generic result
-E = TypeVar("E", bound=BaseException)         # Generic exception
-P = TypeVar("P")                              # Generic protocol
-U = TypeVar("U")                              # Generic utility
+T = TypeVar("T")  # Generic type
+M = TypeVar("M")  # Generic mapping/model
+S = TypeVar("S")  # Generic sequence
+R = TypeVar("R")  # Generic result
+E = TypeVar("E", bound=BaseException)  # Generic exception
+P = TypeVar("P")  # Generic protocol
+U = TypeVar("U")  # Generic utility
 
 # Bound TypeVars
 FlextModelT = TypeVar("FlextModelT", bound="FlextModels.Model")
@@ -556,13 +576,13 @@ FlextServiceT = TypeVar("FlextServiceT", bound="FlextService")
 
 FlextFlextOudMigEntryT = TypeVar(
     "FlextFlextOudMigEntryT",
-    bound=object  # Bounded to object to avoid circular imports
+    bound=object,  # Bounded to object to avoid circular imports
     # Actual constraint: p.FlextOudMig.EntryProtocol (enforced at runtime)
 )
 
 # ❌ DON'T create redundant TypeVars
 FlextCliCommandT = TypeVar("FlextCliCommandT")  # NO - use T
-FlextCliOutputT = TypeVar("FlextCliOutputT")   # NO - use R
+FlextCliOutputT = TypeVar("FlextCliOutputT")  # NO - use R
 ```
 
 ---
@@ -577,10 +597,9 @@ FlextCliOutputT = TypeVar("FlextCliOutputT")   # NO - use R
 
 ```python
 type ProgressCallback = (
-    Callable[[int], None] |
-    Callable[[int, int], None] |
-    Callable[[int, int, str], None]
+    Callable[[int], None] | Callable[[int, int], None] | Callable[[int, int, str], None]
 )
+
 
 def track_progress(callback: ProgressCallback) -> None:
     callback(50)
@@ -593,8 +612,8 @@ def track_progress(callback: ProgressCallback) -> None:
 ```python
 @runtime_checkable
 class ProgressCallbackProtocol(Protocol):
-    def __call__(self, *args: object) -> None:
-        ...
+    def __call__(self, *args: object) -> None: ...
+
 
 def track_progress(callback: ProgressCallbackProtocol) -> None:
     callback(50)
@@ -613,8 +632,8 @@ def track_progress(callback: ProgressCallbackProtocol) -> None:
 ```python
 @runtime_checkable
 class AttributeProvider(Protocol):
-    def get_attributes(self) -> dict[str, list[str]]:
-        ...
+    def get_attributes(self) -> dict[str, list[str]]: ...
+
 
 # Can only accept exact dict[str, list[str]]
 result: dict[str, bool] = {"ok": True}
@@ -626,8 +645,8 @@ provider.get_attributes()  # May fail type check
 ```python
 @runtime_checkable
 class AttributeProvider(Protocol):
-    def get_attributes(self) -> Mapping[str, Sequence[str]]:
-        ...
+    def get_attributes(self) -> Mapping[str, Sequence[str]]: ...
+
 
 # Can accept any dict subtype or Mapping implementation
 result: dict[str, bool] = {"ok": True}
@@ -652,6 +671,7 @@ class FlextLdapTypes:
         class Operation:
             type ModifyChanges = dict[str, list[tuple[str, list[str]]]]  # DUPLICATE
 
+
 # Confusion: Which one to use?
 ```
 
@@ -667,6 +687,7 @@ class FlextLdapTypes:
         class Operation:
             ModifyChanges = Ldap.ModifyChanges
 
+
 # Clear: One source of truth
 ```
 
@@ -681,6 +702,7 @@ class FlextLdapTypes:
 ```python
 # ✅ CORRECT
 from flext_ldif import m
+
 entry = m.Ldif.Entry(dn="cn=test")
 attributes = m.Ldif.AttributeDict()
 
@@ -696,9 +718,11 @@ attributes = m.AttributeDict()  # NO
 def process_model(data: dict[str, object]) -> r[SomeModel]:
     return r.ok(SomeModel.model_validate(data))
 
+
 # ❌ WRONG: cast() hides type issues
 def process_model(data: dict[str, object]) -> r[SomeModel]:
     return r.ok(cast(SomeModel, data))
+
 
 # ❌ WRONG: TYPE_CHECKING (fix circular import instead)
 if TYPE_CHECKING:
@@ -713,6 +737,7 @@ def read_attributes(attrs: Mapping[str, Sequence[str]]) -> None:
     for key, values in attrs.items():
         print(f"{key}: {values}")
 
+
 # ❌ WRONG: dict for read-only (invariant)
 def read_attributes(attrs: dict[str, list[str]]) -> None:
     for key, values in attrs.items():
@@ -723,25 +748,25 @@ def read_attributes(attrs: dict[str, list[str]]) -> None:
 
 ```python
 # ✅ CORRECT: Clear bounds
-T = TypeVar("T")                                      # Generic any type
-M = TypeVar("M", bound="FlextModels.Model")          # Specific bound
-E = TypeVar("E", bound=BaseException)                # Exception bound
+T = TypeVar("T")  # Generic any type
+M = TypeVar("M", bound="FlextModels.Model")  # Specific bound
+E = TypeVar("E", bound=BaseException)  # Exception bound
 
 # ❌ WRONG: Unclear or missing bounds
-T = TypeVar("T", int, str, bool)                     # Limited union (use overloads)
-M = TypeVar("M", bound=object)                       # Too loose
+T = TypeVar("T", int, str, bool)  # Limited union (use overloads)
+M = TypeVar("M", bound=object)  # Too loose
 ```
 
 ### 5. Namespace Depth Management
 
 ```python
 # ✅ CORRECT: Max 2 levels
-t.Cli.Output                   # OK: 2 levels
-t.Ldif.Entry.Attribute         # ❌ 3 levels - flatten to t.Ldif.Attribute
+t.Cli.Output  # OK: 2 levels
+t.Ldif.Entry.Attribute  # ❌ 3 levels - flatten to t.Ldif.Attribute
 
 # ❌ WRONG: Over-nesting
-t.Cli.UI.Components.Display.Table    # NO: 5 levels!
-t.Ldif.Domain.Entry.Transformation   # NO: 4 levels!
+t.Cli.UI.Components.Display.Table  # NO: 5 levels!
+t.Ldif.Domain.Entry.Transformation  # NO: 4 levels!
 ```
 
 ---

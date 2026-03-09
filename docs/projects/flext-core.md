@@ -41,10 +41,12 @@ from flext_core import FlextContainer, FlextDispatcher, FlextResult
 container = FlextContainer.get_global()
 dispatcher = FlextDispatcher()
 
+
 def handler(value: str) -> FlextResult[str]:
     if "@" not in value:
         return FlextResult[str].fail("invalid email")
     return FlextResult[str].ok(value.upper())
+
 
 dispatcher.register_handler(str, handler)
 result = dispatcher.dispatch("user@example.com")

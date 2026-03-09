@@ -122,8 +122,12 @@ with FlextLogger.Context.scoped_context(operation="user_sync"):
 ### ClassVar State
 
 ```python
-_scoped_contexts: ClassVar[dict[str, dict[str, t.GeneralValueType]]]  # {scope: {key: value}}
-_level_contexts: ClassVar[dict[str, dict[str, t.GeneralValueType]]]   # {level: {key: value}}
+_scoped_contexts: ClassVar[
+    dict[str, dict[str, t.GeneralValueType]]
+]  # {scope: {key: value}}
+_level_contexts: ClassVar[
+    dict[str, dict[str, t.GeneralValueType]]
+]  # {level: {key: value}}
 ```
 
 ### FlextRuntime Structlog Integration
@@ -159,6 +163,7 @@ from flext_core import FlextLogger
 
 logger = FlextLogger.create_module_logger(__name__)
 
+
 async def handle_request(request_id: str):
     with FlextLogger.Context.scoped_context(request_id=request_id):
         logger.info("request_started")
@@ -183,6 +188,7 @@ logger.info("service_initialized")
 ```python
 # ✗ WRONG — bypasses FlextLogger context management
 import structlog
+
 logger = structlog.get_logger("my_module")
 ```
 

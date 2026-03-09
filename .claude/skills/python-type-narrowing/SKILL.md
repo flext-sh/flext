@@ -75,8 +75,10 @@ def get_name(user: User | None) -> str:
 ```python
 from typing import TypeIs
 
+
 def is_str_list(val: list[str | int]) -> TypeIs[list[str]]:
     return all(isinstance(x, str) for x in val)
+
 
 def process(data: list[str | int]) -> None:
     if is_str_list(data):
@@ -90,8 +92,10 @@ def process(data: list[str | int]) -> None:
 ```python
 from typing import TypeGuard
 
+
 def is_valid_user(obj: t.GeneralValueType) -> TypeGuard[User]:
     return isinstance(obj, dict) and "id" in obj
+
 
 # Only narrows the positive branch (less precise than TypeIs)
 ```
@@ -111,11 +115,15 @@ if isinstance(value, str):
 ```python
 from typing import assert_never
 
+
 def handle(status: Literal["ok", "error", "pending"]) -> str:
     match status:
-        case "ok": return "success"
-        case "error": return "failed"
-        case "pending": return "waiting"
+        case "ok":
+            return "success"
+        case "error":
+            return "failed"
+        case "pending":
+            return "waiting"
         case _ as unreachable:
             assert_never(unreachable)  # compile-time error if cases missed
 ```
@@ -125,15 +133,21 @@ def handle(status: Literal["ok", "error", "pending"]) -> str:
 ```python
 class Dog:
     kind: Literal["dog"] = "dog"
+
+
 class Cat:
     kind: Literal["cat"] = "cat"
 
+
 type Pet = Dog | Cat
+
 
 def feed(pet: Pet) -> str:
     match pet.kind:
-        case "dog": return "bone"
-        case "cat": return "fish"
+        case "dog":
+            return "bone"
+        case "cat":
+            return "fish"
 ```
 
 ## Workflow
@@ -150,6 +164,7 @@ Good:
 
 ```python
 from typing import TypeIs
+
 
 def is_success_result(r: FlextResult[T]) -> TypeIs[FlextResult[T]]:
     return r.is_success

@@ -78,9 +78,11 @@ Each downstream project inherits its parent project's facade, gaining all parent
 # flext-target-oracle/models.py
 from flext_meltano import FlextMeltanoModels
 
+
 class FlextTargetOracleModels(FlextMeltanoModels):  # NOT FlextModels
     class TargetOracle:
         class MyModel(FlextMeltanoModels.ArbitraryTypesModel): ...
+
 
 m = FlextTargetOracleModels
 # m.Meltano.*       → inherited from FlextMeltanoModels
@@ -113,7 +115,18 @@ m = FlextTargetOracleModels
 T = TypeVar("T")
 T_Settings = TypeVar("T_Settings", bound=BaseSettings)
 
-type GeneralValueType = str | int | float | bool | datetime | None | BaseModel | Path | Sequence[GeneralValueType] | Mapping[str, GeneralValueType]
+type GeneralValueType = (
+    str
+    | int
+    | float
+    | bool
+    | datetime
+    | None
+    | BaseModel
+    | Path
+    | Sequence[GeneralValueType]
+    | Mapping[str, GeneralValueType]
+)
 ```
 
 ## Workflow

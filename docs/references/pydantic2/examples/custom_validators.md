@@ -48,21 +48,21 @@ class MyDatetimeValidator:
         """Validate tz_constraint and tz_info."""
         # handle naive datetimes
         if self.tz_constraint is None:
-            assert (
-                value.tzinfo is None
-            ), 'tz_constraint is None, but provided value is tz-aware.'
+            assert value.tzinfo is None, (
+                "tz_constraint is None, but provided value is tz-aware."
+            )
             return handler(value)
 
         # validate tz_constraint and tz-aware tzinfo
         if self.tz_constraint not in pytz.all_timezones:
             raise PydanticUserError(
-                f'Invalid tz_constraint: {self.tz_constraint}',
-                code='unevaluable-type-annotation',
+                f"Invalid tz_constraint: {self.tz_constraint}",
+                code="unevaluable-type-annotation",
             )
         result = handler(value)  # (2)!
-        assert self.tz_constraint == str(
-            result.tzinfo
-        ), f'Invalid tzinfo: {str(result.tzinfo)}, expected: {self.tz_constraint}'
+        assert self.tz_constraint == str(result.tzinfo), (
+            f"Invalid tzinfo: {str(result.tzinfo)}, expected: {self.tz_constraint}"
+        )
 
         return result
 
@@ -77,18 +77,14 @@ class MyDatetimeValidator:
         )
 
 
-LA = 'America/Los_Angeles'
+LA = "America/Los_Angeles"
 ta = TypeAdapter(Annotated[dt.datetime, MyDatetimeValidator(LA)])
-print(
-    ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA)))
-)
-#> 2023-01-01 00:00:00-07:53
+print(ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA))))
+# > 2023-01-01 00:00:00-07:53
 
-LONDON = 'Europe/London'
+LONDON = "Europe/London"
 try:
-    ta.validate_python(
-        dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LONDON))
-    )
+    ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LONDON)))
 except ValidationError as ve:
     pprint(ve.errors(), width=100)
     """
@@ -125,15 +121,15 @@ class MyDatetimeValidator:
 
     def validate_tz_bounds(self, value: dt.datetime, handler: Callable):
         """Validate and test bounds"""
-        assert value.utcoffset() is not None, 'UTC offset must exist'
-        assert self.lower_bound <= self.upper_bound, 'Invalid bounds'
+        assert value.utcoffset() is not None, "UTC offset must exist"
+        assert self.lower_bound <= self.upper_bound, "Invalid bounds"
 
         result = handler(value)
 
         hours_offset = value.utcoffset().total_seconds() / 3600
-        assert (
-            self.lower_bound <= hours_offset <= self.upper_bound
-        ), 'Value out of bounds'
+        assert self.lower_bound <= hours_offset <= self.upper_bound, (
+            "Value out of bounds"
+        )
 
         return result
 
@@ -148,19 +144,15 @@ class MyDatetimeValidator:
         )
 
 
-LA = 'America/Los_Angeles'  # UTC-7 or UTC-8
+LA = "America/Los_Angeles"  # UTC-7 or UTC-8
 ta = TypeAdapter(Annotated[dt.datetime, MyDatetimeValidator(-10, -5)])
-print(
-    ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA)))
-)
-#> 2023-01-01 00:00:00-07:53
+print(ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA))))
+# > 2023-01-01 00:00:00-07:53
 
-LONDON = 'Europe/London'
+LONDON = "Europe/London"
 try:
     print(
-        ta.validate_python(
-            dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LONDON))
-        )
+        ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LONDON)))
     )
 except ValidationError as e:
     pprint(e.errors(), width=100)
@@ -197,23 +189,23 @@ class Organization(BaseModel):
     forbidden_passwords: list[str]
     users: list[User]
 
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def validate_user_passwords(self) -> Self:
         """Check that user password is not in forbidden list. Raise a validation error if a forbidden password is encountered."""
         for user in self.users:
             current_pw = user.password
             if current_pw in self.forbidden_passwords:
                 raise ValueError(
-                    f'Password {current_pw} is forbidden. Please choose another password for user {user.username}.'
+                    f"Password {current_pw} is forbidden. Please choose another password for user {user.username}."
                 )
         return self
 
 
 data = {
-    'forbidden_passwords': ['123'],
-    'users': [
-        {'username': 'Spartacat', 'password': '123'},
-        {'username': 'Iceburgh', 'password': '87'},
+    "forbidden_passwords": ["123"],
+    "users": [
+        {"username": "Spartacat", "password": "123"},
+        {"username": "Iceburgh", "password": "87"},
     ],
 }
 try:
@@ -239,17 +231,15 @@ class User(BaseModel):
     username: str
     password: str
 
-    @field_validator('password', mode='after')
+    @field_validator("password", mode="after")
     @classmethod
-    def validate_user_passwords(
-        cls, password: str, info: ValidationInfo
-    ) -> str:
+    def validate_user_passwords(cls, password: str, info: ValidationInfo) -> str:
         """Check that user password is not in forbidden list."""
         forbidden_passwords = (
-            info.context.get('forbidden_passwords', []) if info.context else []
+            info.context.get("forbidden_passwords", []) if info.context else []
         )
         if password in forbidden_passwords:
-            raise ValueError(f'Password {password} is forbidden.')
+            raise ValueError(f"Password {password} is forbidden.")
         return password
 
 
@@ -257,19 +247,19 @@ class Organization(BaseModel):
     forbidden_passwords: list[str]
     users: list[User]
 
-    @field_validator('forbidden_passwords', mode='after')
+    @field_validator("forbidden_passwords", mode="after")
     @classmethod
     def add_context(cls, v: list[str], info: ValidationInfo) -> list[str]:
         if info.context is not None:
-            info.context.update({'forbidden_passwords': v})
+            info.context.update({"forbidden_passwords": v})
         return v
 
 
 data = {
-    'forbidden_passwords': ['123'],
-    'users': [
-        {'username': 'Spartacat', 'password': '123'},
-        {'username': 'Iceburgh', 'password': '87'},
+    "forbidden_passwords": ["123"],
+    "users": [
+        {"username": "Spartacat", "password": "123"},
+        {"username": "Iceburgh", "password": "87"},
     ],
 }
 

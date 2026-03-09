@@ -45,7 +45,7 @@ class Foo(BaseModel):
 type MyType = int
 
 print(Foo.__annotations__)
-#> {'f': 'MyType'}
+# > {'f': 'MyType'}
 ```
 
 ## The challenges of runtime evaluation
@@ -79,8 +79,10 @@ The following example will be used as a reference throughout this section:
 # module1.py:
 type MyType = int
 
+
 class Base:
-    f1: 'MyType'
+    f1: "MyType"
+
 
 # module2.py:
 from pydantic import BaseModel
@@ -96,10 +98,10 @@ def inner() -> None:
     class Model(BaseModel, Base):
         type LocalType = bytes
 
-        f2: 'MyType'
-        f3: 'InnerType'
-        f4: 'LocalType'
-        f5: 'UnknownType'
+        f2: "MyType"
+        f3: "InnerType"
+        f4: "LocalType"
+        f5: "UnknownType"
 
     type InnerType2 = complex
 ```
@@ -160,14 +162,14 @@ While the namespace fetching logic is trying to be as accurate as possible, we s
        A = int
 
        class Model(BaseModel):
-           f: 'A | Forward'
+           f: "A | Forward"
 
        return Model
 
 
    Model = func()
 
-   Model.model_rebuild(_types_namespace={'Forward': str})
+   Model.model_rebuild(_types_namespace={"Forward": str})
    # pydantic.errors.PydanticUndefinedAnnotation: name 'A' is not defined
    ```
 
@@ -183,7 +185,7 @@ from pydantic import BaseModel
 
 @dataclass
 class Foo:
-    a: 'Bar | None' = None
+    a: "Bar | None" = None
 
 
 class Bar(BaseModel):
@@ -213,8 +215,8 @@ and the `{Bar.__name__: Bar}` namespace are included in the locals during annota
    @dataclass
    class Foo:
        # `a` and `b` shouldn't resolve:
-       a: 'Model'
-       b: 'Inner'
+       a: "Model"
+       b: "Inner"
 
 
    def func():
@@ -224,7 +226,7 @@ and the `{Bar.__name__: Bar}` namespace are included in the locals during annota
            foo: Foo
 
        Model.__pydantic_complete__
-       #> True, should be False.
+       # > True, should be False.
    ```
 
 ## Resolving annotations when rebuilding a model
@@ -237,11 +239,11 @@ from pydantic import BaseModel
 
 
 class Foo(BaseModel):
-    f: 'MyType'
+    f: "MyType"
 
 
 Foo.__pydantic_core_schema__
-#> <pydantic._internal._mock_val_ser.MockCoreSchema object at 0x73cd0d9e6d00>
+# > <pydantic._internal._mock_val_ser.MockCoreSchema object at 0x73cd0d9e6d00>
 ```
 
 If you then properly define `MyType`, you can rebuild the model:
@@ -251,7 +253,7 @@ type MyType = int
 
 Foo.model_rebuild()
 Foo.__pydantic_core_schema__
-#> {'type': 'model', 'schema': {...}, ...}
+# > {'type': 'model', 'schema': {...}, ...}
 ```
 
 The [`model_rebuild()`][pydantic.BaseModel.model_rebuild] method uses a _rebuild namespace_, with the following semantics:

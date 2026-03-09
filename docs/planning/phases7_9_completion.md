@@ -64,6 +64,7 @@ Expand the test guards created in Phase 1 with project-specific guards:
 
 ```python
 """Comprehensive test TypeGuards for all projects."""
+
 from __future__ import annotations
 
 from typing import TypeGuard
@@ -75,20 +76,12 @@ class TestGuards:
     @staticmethod
     def is_user_response(obj: object) -> TypeGuard[dict]:
         """Check if object is a user response fixture."""
-        return (
-            isinstance(obj, dict)
-            and "user_id" in obj
-            and "email" in obj
-        )
+        return isinstance(obj, dict) and "user_id" in obj and "email" in obj
 
     @staticmethod
     def is_config_response(obj: object) -> TypeGuard[dict]:
         """Check if object is a config response fixture."""
-        return (
-            isinstance(obj, dict)
-            and "app_name" in obj
-            and "version" in obj
-        )
+        return isinstance(obj, dict) and "app_name" in obj and "version" in obj
 
 
 class LdifTestGuards:
@@ -97,11 +90,7 @@ class LdifTestGuards:
     @staticmethod
     def is_entry_fixture(obj: object) -> TypeGuard[dict]:
         """Check if object is an LDIF entry fixture."""
-        return (
-            isinstance(obj, dict)
-            and "dn" in obj
-            and "attributes" in obj
-        )
+        return isinstance(obj, dict) and "dn" in obj and "attributes" in obj
 
 
 class CliTestGuards:
@@ -110,11 +99,7 @@ class CliTestGuards:
     @staticmethod
     def is_command_fixture(obj: object) -> TypeGuard[dict]:
         """Check if object is a command fixture."""
-        return (
-            isinstance(obj, dict)
-            and "name" in obj
-            and "args" in obj
-        )
+        return isinstance(obj, dict) and "name" in obj and "args" in obj
 
 
 class WebTestGuards:
@@ -123,11 +108,7 @@ class WebTestGuards:
     @staticmethod
     def is_request_fixture(obj: object) -> TypeGuard[dict]:
         """Check if object is a request fixture."""
-        return (
-            isinstance(obj, dict)
-            and "method" in obj
-            and "endpoint" in obj
-        )
+        return isinstance(obj, dict) and "method" in obj and "endpoint" in obj
 ```
 
 #### Update conftest.py in Each Project
@@ -136,6 +117,7 @@ Add project-specific guards to `tests/conftest.py`:
 
 ```python
 """Test configuration and fixtures."""
+
 from flext_core.testing.guards import TestGuards, LdifTestGuards
 
 # Re-export for use in tests
@@ -174,13 +156,16 @@ test(flext-core): create comprehensive test TypeGuard library
 # BEFORE
 from typing import cast
 
+
 def test_process_config():
     data = {"app_name": "test", "version": "1.0"}
     config = cast(dict, data)
     assert config["app_name"] == "test"
 
+
 # AFTER
 from flext_core.testing.guards import TestGuards
+
 
 def test_process_config():
     data = {"app_name": "test", "version": "1.0"}
@@ -206,8 +191,7 @@ For each project:
    # In tests/conftest.py
    class ProjectTestGuards:
        @staticmethod
-       def is_specific_fixture(obj: object) -> TypeGuard[dict]:
-           ...
+       def is_specific_fixture(obj: object) -> TypeGuard[dict]: ...
    ```
 
 3. **Replace cast() with TypeGuards**

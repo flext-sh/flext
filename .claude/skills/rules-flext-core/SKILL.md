@@ -54,6 +54,7 @@ description: Authoritative rules for `flext-core` architecture, typing, result f
 ```python
 from flext_core import r
 
+
 def run(value: str):
     return r[str].ok(value).map(str.strip)
 ```

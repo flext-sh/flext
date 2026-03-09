@@ -223,10 +223,15 @@ make validate FIX=1
 ```python
 # Before (FORBIDDEN — `Any` and `dict[str, Any]` are axiomatic violations)
 from typing import Any  # ← FORBIDDEN import
+
+
 def configure(self, config: dict[str, Any]) -> None: ...  # ← FORBIDDEN type
+
 
 # After
 from flext_core import t
+
+
 def configure(self, config: t.ConfigMap) -> None: ...
 ```
 

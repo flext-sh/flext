@@ -87,26 +87,26 @@ class BarModel(BaseModel):
 
 class FooBarModel(BaseModel):
     banana: Optional[float] = 1.1
-    foo: str = Field(serialization_alias='foo_alias')
+    foo: str = Field(serialization_alias="foo_alias")
     bar: BarModel
 
 
-m = FooBarModel(banana=3.14, foo='hello', bar={'whatever': (1, 2)})
+m = FooBarModel(banana=3.14, foo="hello", bar={"whatever": (1, 2)})
 
 # returns a dictionary:
 print(m.model_dump())
-#> {'banana': 3.14, 'foo': 'hello', 'bar': {'whatever': (1, 2)}}
+# > {'banana': 3.14, 'foo': 'hello', 'bar': {'whatever': (1, 2)}}
 
 print(m.model_dump(by_alias=True))
-#> {'banana': 3.14, 'foo_alias': 'hello', 'bar': {'whatever': (1, 2)}}
+# > {'banana': 3.14, 'foo_alias': 'hello', 'bar': {'whatever': (1, 2)}}
 ```
 
 Notice that the value of `whatever` was dumped as tuple, which isn't a known JSON type. The `mode` argument can be set to `'json'`
 to ensure JSON-compatible types are used:
 
 ```python {group="python-dump"}
-print(m.model_dump(mode='json'))
-#> {'banana': 3.14, 'foo': 'hello', 'bar': {'whatever': [1, 2]}}
+print(m.model_dump(mode="json"))
+# > {'banana': 3.14, 'foo': 'hello', 'bar': {'whatever': [1, 2]}}
 ```
 
 !!! info "See also"
@@ -137,7 +137,7 @@ class FooBarModel(BaseModel):
     bar: BarModel
 
 
-m = FooBarModel(foo=datetime(2032, 6, 1, 12, 13, 14), bar={'whatever': (1, 2)})
+m = FooBarModel(foo=datetime(2032, 6, 1, 12, 13, 14), bar={"whatever": (1, 2)})
 
 print(m.model_dump_json(indent=2))
 """
@@ -185,20 +185,20 @@ class FooBarModel(BaseModel):
     bar: BarModel
 
 
-m = FooBarModel(banana=3.14, foo='hello', bar={'whatever': 123})
+m = FooBarModel(banana=3.14, foo="hello", bar={"whatever": 123})
 
 for name, value in m:
-    print(f'{name}: {value}')
-    #> banana: 3.14
-    #> foo: hello
-    #> bar: whatever=123
+    print(f"{name}: {value}")
+    # > banana: 3.14
+    # > foo: hello
+    # > bar: whatever=123
 ```
 
 This means that calling [`dict()`][dict] on a model can be used to construct a dictionary of the model:
 
 ```python {group="iterating-model"}
 print(dict(m))
-#> {'banana': 3.14, 'foo': 'hello', 'bar': BarModel(whatever=123)}
+# > {'banana': 3.14, 'foo': 'hello', 'bar': BarModel(whatever=123)}
 ```
 
 !!! note
@@ -226,15 +226,15 @@ class FooBarModel(BaseModel):
     b: int
 
 
-m = FooBarModel(a='hello', b=123)
+m = FooBarModel(a="hello", b=123)
 print(m)
-#> a='hello' b=123
+# > a='hello' b=123
 data = pickle.dumps(m)
 print(data[:20])
-#> b'\x80\x04\x95\x95\x00\x00\x00\x00\x00\x00\x00\x8c\x08__main_'
+# > b'\x80\x04\x95\x95\x00\x00\x00\x00\x00\x00\x00\x8c\x08__main_'
 m2 = pickle.loads(data)
 print(m2)
-#> a='hello' b=123
+# > a='hello' b=123
 ```
 
 <!-- old anchor added for backwards compatibility -->
@@ -292,11 +292,11 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
 
 
         print(Model(number=4).model_dump())
-        #> {'number': 8}
+        # > {'number': 8}
         m = Model(number=1)
-        m.number = 'invalid'
+        m.number = "invalid"
         print(m.model_dump())  # (1)!
-        #> {'number': 'invalid'}
+        # > {'number': 'invalid'}
         ```
 
         1. Pydantic will *not* validate that the serialized value complies with the `int` type.
@@ -312,7 +312,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
         class Model(BaseModel):
             number: int
 
-            @field_serializer('number', mode='plain')  # (1)!
+            @field_serializer("number", mode="plain")  # (1)!
             def ser_number(self, value: Any) -> Any:
                 if isinstance(value, int):
                     return value * 2
@@ -321,11 +321,11 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
 
 
         print(Model(number=4).model_dump())
-        #> {'number': 8}
+        # > {'number': 8}
         m = Model(number=1)
-        m.number = 'invalid'
+        m.number = "invalid"
         print(m.model_dump())  # (2)!
-        #> {'number': 'invalid'}
+        # > {'number': 'invalid'}
         ```
 
         1. `'plain'` is the default mode for the decorator, and can be omitted.
@@ -356,7 +356,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
 
 
         print(Model(number=4).model_dump())
-        #> {'number': 5}
+        # > {'number': 5}
         ```
 
   === "Decorator"
@@ -370,15 +370,13 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
         class Model(BaseModel):
             number: int
 
-            @field_serializer('number', mode='wrap')
-            def ser_number(
-                self, value: Any, handler: SerializerFunctionWrapHandler
-            ) -> int:
+            @field_serializer("number", mode="wrap")
+            def ser_number(self, value: Any, handler: SerializerFunctionWrapHandler) -> int:
                 return handler(value) + 1
 
 
         print(Model(number=4).model_dump())
-        #> {'number': 5}
+        # > {'number': 5}
         ```
 
 <!-- Note: keep this section updated with [the validator one](./validators.md#which-validator-pattern-to-use) -->
@@ -405,7 +403,7 @@ class Model1(BaseModel):
 
 
 class Model2(BaseModel):
-    other_number: Annotated[DoubleNumber, Field(description='My other number')]
+    other_number: Annotated[DoubleNumber, Field(description="My other number")]
 
 
 class Model3(BaseModel):
@@ -431,7 +429,7 @@ class Model(BaseModel):
     f1: str
     f2: str
 
-    @field_serializer('f1', 'f2', mode='plain')
+    @field_serializer("f1", "f2", mode="plain")
     def capitalize(self, value: str) -> str:
         return value.capitalize()
 ```
@@ -470,13 +468,13 @@ As with [field serializers](#field-serializers), **two** different types of mode
       username: str
       password: str
 
-      @model_serializer(mode='plain')  # (1)!
+      @model_serializer(mode="plain")  # (1)!
       def serialize_model(self) -> str:  # (2)!
-          return f'{self.username} - {self.password}'
+          return f"{self.username} - {self.password}"
 
 
-  print(UserModel(username='foo', password='bar').model_dump())
-  #> foo - bar
+  print(UserModel(username="foo", password="bar").model_dump())
+  # > foo - bar
   ```
 
       1. `'plain'` is the default mode for the decorator, and can be omitted.
@@ -498,17 +496,17 @@ As with [field serializers](#field-serializers), **two** different types of mode
           username: str
           password: str
 
-          @model_serializer(mode='wrap')
+          @model_serializer(mode="wrap")
           def serialize_model(
               self, handler: SerializerFunctionWrapHandler
           ) -> dict[str, object]:
               serialized = handler(self)
-              serialized['fields'] = list(serialized)
+              serialized["fields"] = list(serialized)
               return serialized
 
 
-      print(UserModel(username='foo', password='bar').model_dump())
-      #> {'username': 'foo', 'password': 'bar', 'fields': ['username', 'password']}
+      print(UserModel(username="foo", password="bar").model_dump())
+      # > {'username': 'foo', 'password': 'bar', 'fields': ['username', 'password']}
       ```
 
 ## Serialization info
@@ -535,20 +533,20 @@ from pydantic import BaseModel, FieldSerializationInfo, field_serializer
 class Model(BaseModel):
     text: str
 
-    @field_serializer('text', mode='plain')
+    @field_serializer("text", mode="plain")
     @classmethod
     def remove_stopwords(cls, v: str, info: FieldSerializationInfo) -> str:
         if isinstance(info.context, dict):
-            stopwords = info.context.get('stopwords', set())
-            v = ' '.join(w for w in v.split() if w.lower() not in stopwords)
+            stopwords = info.context.get("stopwords", set())
+            v = " ".join(w for w in v.split() if w.lower() not in stopwords)
         return v
 
 
-model = Model(text='This is an example document')
+model = Model(text="This is an example document")
 print(model.model_dump())  # no context
-#> {'text': 'This is an example document'}
-print(model.model_dump(context={'stopwords': ['this', 'is', 'an']}))
-#> {'text': 'example document'}
+# > {'text': 'This is an example document'}
+print(model.model_dump(context={"stopwords": ["this", "is", "an"]}))
+# > {'text': 'example document'}
 ```
 
 Similarly, you can [use a context for validation](../concepts/validators.md#validation-context).
@@ -573,7 +571,7 @@ from pydantic import BaseModel
 class MyDate(date):
     @property
     def my_date_format(self) -> str:
-        return self.strftime('%d/%m/%Y')
+        return self.strftime("%d/%m/%Y")
 
 
 class FooModel(BaseModel):
@@ -582,7 +580,7 @@ class FooModel(BaseModel):
 
 m = FooModel(date=MyDate(2023, 1, 1))
 print(m.model_dump_json())
-#> {"date":"2023-01-01"}
+# > {"date":"2023-01-01"}
 ```
 
 <!-- old anchor added for backwards compatibility -->
@@ -612,13 +610,13 @@ class OuterModel(BaseModel):
     user: User
 
 
-user = UserLogin(name='pydantic', password='hunter2')
+user = UserLogin(name="pydantic", password="hunter2")
 
 m = OuterModel(user=user)
 print(m)
-#> user=UserLogin(name='pydantic', password='hunter2')
+# > user=UserLogin(name='pydantic', password='hunter2')
 print(m.model_dump())  # (1)!
-#> {'user': {'name': 'pydantic'}}
+# > {'user': {'name': 'pydantic'}}
 ```
 
 1. Note: the password field is not included
@@ -674,7 +672,7 @@ class OuterModel(BaseModel):
     as_user: User
 
 
-user = UserLogin(name='pydantic', password='password')
+user = UserLogin(name="pydantic", password="password")
 
 print(OuterModel(as_any=user, as_user=user).model_dump())
 """
@@ -713,7 +711,7 @@ class OuterModel(BaseModel):
     user2: User
 
 
-user = UserLogin(name='pydantic', password='password')
+user = UserLogin(name="pydantic", password="password")
 
 outer_model = OuterModel(user1=user, user2=user)
 print(outer_model.model_dump(serialize_as_any=True))  # (1)!
@@ -725,7 +723,7 @@ print(outer_model.model_dump(serialize_as_any=True))  # (1)!
 """
 
 print(outer_model.model_dump(serialize_as_any=False))  # (2)!
-#> {'user1': {'name': 'pydantic'}, 'user2': {'name': 'pydantic'}}
+# > {'user1': {'name': 'pydantic'}, 'user2': {'name': 'pydantic'}}
 ```
 
 1. With `serialize_as_any` set to `True`, the result matches that of V1.
@@ -766,7 +764,7 @@ class Transaction(BaseModel):
 
 
 print(Transaction(id=1, private_id=2, value=0).model_dump())
-#> {'id': 1}
+# > {'id': 1}
 ```
 
 Exclusion at the field level takes priority over the `include` serialization parameter described below.
@@ -798,9 +796,9 @@ class Transaction(BaseModel):
 
 
 t = Transaction(
-    id='1234567890',
-    private_id='123',
-    user=User(id=42, username='JohnDoe', password='hashedpassword'),
+    id="1234567890",
+    private_id="123",
+    user=User(id=42, username="JohnDoe", password="hashedpassword"),
     value=9876543210,
 )
 ```
@@ -810,16 +808,16 @@ using the `include` parameter.
 
 ```python {group="simple-exclude-include"}
 # using a set:
-print(t.model_dump(exclude={'user', 'value'}))
-#> {'id': '1234567890'}
+print(t.model_dump(exclude={"user", "value"}))
+# > {'id': '1234567890'}
 
 # using a dictionary:
-print(t.model_dump(exclude={'user': {'username', 'password'}, 'value': True}))
-#> {'id': '1234567890', 'user': {'id': 42}}
+print(t.model_dump(exclude={"user": {"username", "password"}, "value": True}))
+# > {'id': '1234567890', 'user': {'id': 42}}
 
 # same configuration using `include`:
-print(t.model_dump(include={'id': True, 'user': {'id'}}))
-#> {'id': '1234567890', 'user': {'id': 42}}
+print(t.model_dump(include={"id": True, "user": {"id"}}))
+# > {'id': '1234567890', 'user': {'id': 42}}
 ```
 
 Note that using `False` to _include_ a field in `exclude` (or to _exclude_ a field in `include`) is not supported.
@@ -841,12 +839,12 @@ class User(BaseModel):
 
 user = User(
     hobbies=[
-        Hobby(name='Programming', info='Writing code and stuff'),
-        Hobby(name='Gaming', info='Hell Yeah!!!'),
+        Hobby(name="Programming", info="Writing code and stuff"),
+        Hobby(name="Gaming", info="Hell Yeah!!!"),
     ],
 )
 
-print(user.model_dump(exclude={'hobbies': {-1: {'info'}}}))  # (1)!
+print(user.model_dump(exclude={"hobbies": {-1: {"info"}}}))  # (1)!
 """
 {
     'hobbies': [
@@ -860,16 +858,14 @@ print(user.model_dump(exclude={'hobbies': {-1: {'info'}}}))  # (1)!
 1. The equivalent call with `include` would be:
 
    ```python {lint="skip" group="advanced-include-exclude"}
-   user.model_dump(
-      include={'hobbies': {0: True, -1: {'name'}}}
-   )
+   user.model_dump(include={"hobbies": {0: True, -1: {"name"}}})
    ```
 
 The special key `'__all__'` can be used to apply an exclusion/inclusion pattern to all members:
 
 ```python {group="advanced-include-exclude"}
-print(user.model_dump(exclude={'hobbies': {'__all__': {'info'}}}))
-#> {'hobbies': [{'name': 'Programming'}, {'name': 'Gaming'}]}
+print(user.model_dump(exclude={"hobbies": {"__all__": {"info"}}}))
+# > {'hobbies': [{'name': 'Programming'}, {'name': 'Gaming'}]}
 ```
 
 #### Excluding and including fields based on their value
@@ -893,12 +889,12 @@ using the following parameters:
       age: int = 18
 
 
-  user = UserModel(name='John')
+  user = UserModel(name="John")
   print(user.model_fields_set)
-  #> {'name'}
+  # > {'name'}
 
   print(user.model_dump(exclude_unset=True))
-  #> {'name': 'John'}
+  # > {'name': 'John'}
   ```
 
   Note that altering a field _after_ the instance has been created will remove it from the unset fields:
@@ -907,7 +903,7 @@ using the following parameters:
   user.age = 21
 
   print(user.model_dump(exclude_unset=True))
-  #> {'name': 'John', 'age': 21}
+  # > {'name': 'John', 'age': 21}
   ```
 
   !!! tip

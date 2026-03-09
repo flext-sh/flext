@@ -34,24 +34,24 @@ class User(BaseModel):
     email: EmailStr
 
 
-r = redis.Redis(host='localhost', port=6379, db=0)
-QUEUE_NAME = 'user_queue'
+r = redis.Redis(host="localhost", port=6379, db=0)
+QUEUE_NAME = "user_queue"
 
 
 def push_to_queue(user_data: User) -> None:
     serialized_data = user_data.model_dump_json()
     r.rpush(QUEUE_NAME, serialized_data)
-    print(f'Added to queue: {serialized_data}')
+    print(f"Added to queue: {serialized_data}")
 
 
-user1 = User(id=1, name='John Doe', email='john@example.com')
-user2 = User(id=2, name='Jane Doe', email='jane@example.com')
+user1 = User(id=1, name="John Doe", email="john@example.com")
+user2 = User(id=2, name="Jane Doe", email="jane@example.com")
 
 push_to_queue(user1)
-#> Added to queue: {"id":1,"name":"John Doe","email":"john@example.com"}
+# > Added to queue: {"id":1,"name":"John Doe","email":"john@example.com"}
 
 push_to_queue(user2)
-#> Added to queue: {"id":2,"name":"Jane Doe","email":"jane@example.com"}
+# > Added to queue: {"id":2,"name":"Jane Doe","email":"jane@example.com"}
 
 
 def pop_from_queue() -> None:
@@ -59,19 +59,19 @@ def pop_from_queue() -> None:
 
     if data:
         user = User.model_validate_json(data)
-        print(f'Validated user: {repr(user)}')
+        print(f"Validated user: {repr(user)}")
     else:
-        print('Queue is empty')
+        print("Queue is empty")
 
 
 pop_from_queue()
-#> Validated user: User(id=1, name='John Doe', email='john@example.com')
+# > Validated user: User(id=1, name='John Doe', email='john@example.com')
 
 pop_from_queue()
-#> Validated user: User(id=2, name='Jane Doe', email='jane@example.com')
+# > Validated user: User(id=2, name='Jane Doe', email='jane@example.com')
 
 pop_from_queue()
-#> Queue is empty
+# > Queue is empty
 ```
 
 ## RabbitMQ
@@ -99,30 +99,30 @@ class User(BaseModel):
     email: EmailStr
 
 
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
 channel = connection.channel()
-QUEUE_NAME = 'user_queue'
+QUEUE_NAME = "user_queue"
 channel.queue_declare(queue=QUEUE_NAME)
 
 
 def push_to_queue(user_data: User) -> None:
     serialized_data = user_data.model_dump_json()
     channel.basic_publish(
-        exchange='',
+        exchange="",
         routing_key=QUEUE_NAME,
         body=serialized_data,
     )
-    print(f'Added to queue: {serialized_data}')
+    print(f"Added to queue: {serialized_data}")
 
 
-user1 = User(id=1, name='John Doe', email='john@example.com')
-user2 = User(id=2, name='Jane Doe', email='jane@example.com')
+user1 = User(id=1, name="John Doe", email="john@example.com")
+user2 = User(id=2, name="Jane Doe", email="jane@example.com")
 
 push_to_queue(user1)
-#> Added to queue: {"id":1,"name":"John Doe","email":"john@example.com"}
+# > Added to queue: {"id":1,"name":"John Doe","email":"john@example.com"}
 
 push_to_queue(user2)
-#> Added to queue: {"id":2,"name":"Jane Doe","email":"jane@example.com"}
+# > Added to queue: {"id":2,"name":"Jane Doe","email":"jane@example.com"}
 
 connection.close()
 ```
@@ -142,9 +142,9 @@ class User(BaseModel):
 
 
 def main():
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
     channel = connection.channel()
-    QUEUE_NAME = 'user_queue'
+    QUEUE_NAME = "user_queue"
     channel.queue_declare(queue=QUEUE_NAME)
 
     def process_message(
@@ -154,14 +154,14 @@ def main():
         body: bytes,
     ):
         user = User.model_validate_json(body)
-        print(f'Validated user: {repr(user)}')
+        print(f"Validated user: {repr(user)}")
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
     channel.basic_consume(queue=QUEUE_NAME, on_message_callback=process_message)
     channel.start_consuming()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
@@ -207,18 +207,18 @@ REDIS_SETTINGS = RedisSettings()
 
 async def process_user(ctx: dict[str, Any], user_data: dict[str, Any]) -> None:
     user = User.model_validate(user_data)
-    print(f'Processing user: {repr(user)}')
+    print(f"Processing user: {repr(user)}")
 
 
 async def enqueue_jobs(redis):
-    user1 = User(id=1, name='John Doe', email='john@example.com')
-    user2 = User(id=2, name='Jane Doe', email='jane@example.com')
+    user1 = User(id=1, name="John Doe", email="john@example.com")
+    user2 = User(id=2, name="Jane Doe", email="jane@example.com")
 
-    await redis.enqueue_job('process_user', user1.model_dump())
-    print(f'Enqueued user: {repr(user1)}')
+    await redis.enqueue_job("process_user", user1.model_dump())
+    print(f"Enqueued user: {repr(user1)}")
 
-    await redis.enqueue_job('process_user', user2.model_dump())
-    print(f'Enqueued user: {repr(user2)}')
+    await redis.enqueue_job("process_user", user2.model_dump())
+    print(f"Enqueued user: {repr(user2)}")
 
 
 class WorkerSettings:
@@ -231,7 +231,7 @@ async def main():
     await enqueue_jobs(redis)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main())
 ```
 

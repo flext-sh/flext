@@ -53,13 +53,13 @@ from pydantic import BaseModel, Field, ValidationError
 
 
 class User(BaseModel):
-    id: Union[str, int] = Field(union_mode='left_to_right')
+    id: Union[str, int] = Field(union_mode="left_to_right")
 
 
 print(User(id=123))
-#> id=123
-print(User(id='hello'))
-#> id='hello'
+# > id=123
+print(User(id="hello"))
+# > id='hello'
 
 try:
     User(id=[])
@@ -83,13 +83,13 @@ from pydantic import BaseModel, Field
 
 
 class User(BaseModel):
-    id: Union[int, str] = Field(union_mode='left_to_right')
+    id: Union[int, str] = Field(union_mode="left_to_right")
 
 
 print(User(id=123))  # (1)
-#> id=123
-print(User(id='456'))  # (2)
-#> id=456
+# > id=123
+print(User(id="456"))  # (2)
+# > id=456
 ```
 
 1. As expected the input is validated against the `int` member and the result is as expected.
@@ -166,24 +166,24 @@ class User(BaseModel):
     name: str
 
 
-user_01 = User(id=123, name='John Doe')
+user_01 = User(id=123, name="John Doe")
 print(user_01)
-#> id=123 name='John Doe'
+# > id=123 name='John Doe'
 print(user_01.id)
-#> 123
-user_02 = User(id='1234', name='John Doe')
+# > 123
+user_02 = User(id="1234", name="John Doe")
 print(user_02)
-#> id='1234' name='John Doe'
+# > id='1234' name='John Doe'
 print(user_02.id)
-#> 1234
-user_03_uuid = UUID('cf57432e-809e-4353-adbd-9d5c0d733868')
-user_03 = User(id=user_03_uuid, name='John Doe')
+# > 1234
+user_03_uuid = UUID("cf57432e-809e-4353-adbd-9d5c0d733868")
+user_03 = User(id=user_03_uuid, name="John Doe")
 print(user_03)
-#> id=UUID('cf57432e-809e-4353-adbd-9d5c0d733868') name='John Doe'
+# > id=UUID('cf57432e-809e-4353-adbd-9d5c0d733868') name='John Doe'
 print(user_03.id)
-#> cf57432e-809e-4353-adbd-9d5c0d733868
+# > cf57432e-809e-4353-adbd-9d5c0d733868
 print(user_03_uuid.int)
-#> 275603287559914445491632874575877060712
+# > 275603287559914445491632874575877060712
 ```
 
 ## Discriminated Unions
@@ -214,29 +214,29 @@ from pydantic import BaseModel, Field, ValidationError
 
 
 class Cat(BaseModel):
-    pet_type: Literal['cat']
+    pet_type: Literal["cat"]
     meows: int
 
 
 class Dog(BaseModel):
-    pet_type: Literal['dog']
+    pet_type: Literal["dog"]
     barks: float
 
 
 class Lizard(BaseModel):
-    pet_type: Literal['reptile', 'lizard']
+    pet_type: Literal["reptile", "lizard"]
     scales: bool
 
 
 class Model(BaseModel):
-    pet: Union[Cat, Dog, Lizard] = Field(discriminator='pet_type')
+    pet: Union[Cat, Dog, Lizard] = Field(discriminator="pet_type")
     n: int
 
 
-print(Model(pet={'pet_type': 'dog', 'barks': 3.14}, n=1))
-#> pet=Dog(pet_type='dog', barks=3.14) n=1
+print(Model(pet={"pet_type": "dog", "barks": 3.14}, n=1))
+# > pet=Dog(pet_type='dog', barks=3.14) n=1
 try:
-    Model(pet={'pet_type': 'dog'}, n=1)
+    Model(pet={"pet_type": "dog"}, n=1)
 except ValidationError as e:
     print(e)
     """
@@ -280,46 +280,44 @@ class Pie(BaseModel):
 
 
 class ApplePie(Pie):
-    fruit: Literal['apple'] = 'apple'
+    fruit: Literal["apple"] = "apple"
 
 
 class PumpkinPie(Pie):
-    filling: Literal['pumpkin'] = 'pumpkin'
+    filling: Literal["pumpkin"] = "pumpkin"
 
 
 def get_discriminator_value(v: Any) -> str:
     if isinstance(v, dict):
-        return v.get('fruit', v.get('filling'))
-    return getattr(v, 'fruit', getattr(v, 'filling', None))
+        return v.get("fruit", v.get("filling"))
+    return getattr(v, "fruit", getattr(v, "filling", None))
 
 
 class ThanksgivingDinner(BaseModel):
     dessert: Annotated[
         Union[
-            Annotated[ApplePie, Tag('apple')],
-            Annotated[PumpkinPie, Tag('pumpkin')],
+            Annotated[ApplePie, Tag("apple")],
+            Annotated[PumpkinPie, Tag("pumpkin")],
         ],
         Discriminator(get_discriminator_value),
     ]
 
 
-apple_variation = ThanksgivingDinner.model_validate(
-    {'dessert': {'fruit': 'apple', 'time_to_cook': 60, 'num_ingredients': 8}}
-)
+apple_variation = ThanksgivingDinner.model_validate({
+    "dessert": {"fruit": "apple", "time_to_cook": 60, "num_ingredients": 8}
+})
 print(repr(apple_variation))
 """
 ThanksgivingDinner(dessert=ApplePie(time_to_cook=60, num_ingredients=8, fruit='apple'))
 """
 
-pumpkin_variation = ThanksgivingDinner.model_validate(
-    {
-        'dessert': {
-            'filling': 'pumpkin',
-            'time_to_cook': 40,
-            'num_ingredients': 6,
-        }
+pumpkin_variation = ThanksgivingDinner.model_validate({
+    "dessert": {
+        "filling": "pumpkin",
+        "time_to_cook": 40,
+        "num_ingredients": 6,
     }
-)
+})
 print(repr(pumpkin_variation))
 """
 ThanksgivingDinner(dessert=PumpkinPie(time_to_cook=40, num_ingredients=6, filling='pumpkin'))
@@ -338,9 +336,9 @@ from pydantic import BaseModel, Discriminator, Tag, ValidationError
 
 def model_x_discriminator(v: Any) -> str:
     if isinstance(v, int):
-        return 'int'
+        return "int"
     if isinstance(v, (dict, BaseModel)):
-        return 'model'
+        return "model"
     else:
         # return None if the discriminator value isn't found
         return None
@@ -353,25 +351,25 @@ class SpecialValue(BaseModel):
 class DiscriminatedModel(BaseModel):
     value: Annotated[
         Union[
-            Annotated[int, Tag('int')],
-            Annotated['SpecialValue', Tag('model')],
+            Annotated[int, Tag("int")],
+            Annotated["SpecialValue", Tag("model")],
         ],
         Discriminator(model_x_discriminator),
     ]
 
 
-model_data = {'value': {'value': 1}}
+model_data = {"value": {"value": 1}}
 m = DiscriminatedModel.model_validate(model_data)
 print(m)
-#> value=SpecialValue(value=1)
+# > value=SpecialValue(value=1)
 
-int_data = {'value': 123}
+int_data = {"value": 123}
 m = DiscriminatedModel.model_validate(int_data)
 print(m)
-#> value=123
+# > value=123
 
 try:
-    DiscriminatedModel.model_validate({'value': 'not an int or a model'})
+    DiscriminatedModel.model_validate({"value": "not an int or a model"})
 except ValidationError as e:
     print(e)  # (1)!
     """
@@ -393,8 +391,8 @@ the `Union` and `discriminator` information. See the next example for more detai
     For `str` discriminators:
 
     ```python {lint="skip" test="skip"}
-    some_field: Union[...] = Field(discriminator='my_discriminator')
-    some_field: Annotated[Union[...], Field(discriminator='my_discriminator')]
+    some_field: Union[...] = Field(discriminator="my_discriminator")
+    some_field: Annotated[Union[...], Field(discriminator="my_discriminator")]
     ```
 
     For callable `Discriminator`s:
@@ -423,26 +421,26 @@ from pydantic import BaseModel, Field, ValidationError
 
 
 class BlackCat(BaseModel):
-    pet_type: Literal['cat']
-    color: Literal['black']
+    pet_type: Literal["cat"]
+    color: Literal["black"]
     black_name: str
 
 
 class WhiteCat(BaseModel):
-    pet_type: Literal['cat']
-    color: Literal['white']
+    pet_type: Literal["cat"]
+    color: Literal["white"]
     white_name: str
 
 
-Cat = Annotated[Union[BlackCat, WhiteCat], Field(discriminator='color')]
+Cat = Annotated[Union[BlackCat, WhiteCat], Field(discriminator="color")]
 
 
 class Dog(BaseModel):
-    pet_type: Literal['dog']
+    pet_type: Literal["dog"]
     name: str
 
 
-Pet = Annotated[Union[Cat, Dog], Field(discriminator='pet_type')]
+Pet = Annotated[Union[Cat, Dog], Field(discriminator="pet_type")]
 
 
 class Model(BaseModel):
@@ -450,11 +448,11 @@ class Model(BaseModel):
     n: int
 
 
-m = Model(pet={'pet_type': 'cat', 'color': 'black', 'black_name': 'felix'}, n=1)
+m = Model(pet={"pet_type": "cat", "color": "black", "black_name": "felix"}, n=1)
 print(m)
-#> pet=BlackCat(pet_type='cat', color='black', black_name='felix') n=1
+# > pet=BlackCat(pet_type='cat', color='black', black_name='felix') n=1
 try:
-    Model(pet={'pet_type': 'cat', 'color': 'red'}, n='1')
+    Model(pet={"pet_type": "cat", "color": "red"}, n="1")
 except ValidationError as e:
     print(e)
     """
@@ -463,7 +461,7 @@ except ValidationError as e:
       Input tag 'red' found using 'color' does not match any of the expected tags: 'black', 'white' [type=union_tag_invalid, input_value={'pet_type': 'cat', 'color': 'red'}, input_type=dict]
     """
 try:
-    Model(pet={'pet_type': 'cat', 'color': 'black'}, n='1')
+    Model(pet={"pet_type": "cat", "color": "black"}, n="1")
 except ValidationError as e:
     print(e)
     """
@@ -481,11 +479,13 @@ If you want to validate data against a union, and solely a union, you can use py
     ```python {lint="skip" test="skip"}
     type_adapter = TypeAdapter(Pet)
 
-    pet = type_adapter.validate_python(
-        {'pet_type': 'cat', 'color': 'black', 'black_name': 'felix'}
-    )
+    pet = type_adapter.validate_python({
+        "pet_type": "cat",
+        "color": "black",
+        "black_name": "felix",
+    })
     print(repr(pet))
-    #> BlackCat(pet_type='cat', color='black', black_name='felix')
+    # > BlackCat(pet_type='cat', color='black', black_name='felix')
     ```
 
 ## Union Validation Errors
@@ -508,11 +508,11 @@ from pydantic import BaseModel, Discriminator, Tag, ValidationError
 
 # Errors are quite verbose with a normal Union:
 class Model(BaseModel):
-    x: Union[str, 'Model']
+    x: Union[str, "Model"]
 
 
 try:
-    Model.model_validate({'x': {'x': {'x': 1}}})
+    Model.model_validate({"x": {"x": {"x": 1}}})
 except ValidationError as e:
     print(e)
     """
@@ -528,7 +528,7 @@ except ValidationError as e:
     """
 
 try:
-    Model.model_validate({'x': {'x': {'x': {}}}})
+    Model.model_validate({"x": {"x": {"x": {}}}})
 except ValidationError as e:
     print(e)
     """
@@ -547,28 +547,28 @@ except ValidationError as e:
 # Errors are much simpler with a discriminated union:
 def model_x_discriminator(v):
     if isinstance(v, str):
-        return 'str'
+        return "str"
     if isinstance(v, (dict, BaseModel)):
-        return 'model'
+        return "model"
 
 
 class DiscriminatedModel(BaseModel):
     x: Annotated[
         Union[
-            Annotated[str, Tag('str')],
-            Annotated['DiscriminatedModel', Tag('model')],
+            Annotated[str, Tag("str")],
+            Annotated["DiscriminatedModel", Tag("model")],
         ],
         Discriminator(
             model_x_discriminator,
-            custom_error_type='invalid_union_member',  # (1)!
-            custom_error_message='Invalid union member',  # (2)!
-            custom_error_context={'discriminator': 'str_or_model'},  # (3)!
+            custom_error_type="invalid_union_member",  # (1)!
+            custom_error_message="Invalid union member",  # (2)!
+            custom_error_context={"discriminator": "str_or_model"},  # (3)!
         ),
     ]
 
 
 try:
-    DiscriminatedModel.model_validate({'x': {'x': {'x': 1}}})
+    DiscriminatedModel.model_validate({"x": {"x": {"x": 1}}})
 except ValidationError as e:
     print(e)
     """
@@ -578,7 +578,7 @@ except ValidationError as e:
     """
 
 try:
-    DiscriminatedModel.model_validate({'x': {'x': {'x': {}}}})
+    DiscriminatedModel.model_validate({"x": {"x": {"x": {}}}})
 except ValidationError as e:
     print(e)
     """
@@ -588,10 +588,10 @@ except ValidationError as e:
     """
 
 # The data is still handled properly when valid:
-data = {'x': {'x': {'x': 'a'}}}
+data = {"x": {"x": {"x": "a"}}}
 m = DiscriminatedModel.model_validate(data)
 print(m.model_dump())
-#> {'x': {'x': {'x': 'a'}}}
+# > {'x': {'x': {'x': 'a'}}}
 ```
 
 1. `custom_error_type` is the `type` attribute of the `ValidationError` raised when validation fails.
@@ -614,7 +614,7 @@ StringsMap = dict[str, str]
 adapter = TypeAdapter(Union[DoubledList, StringsMap])
 
 try:
-    adapter.validate_python(['a'])
+    adapter.validate_python(["a"])
 except ValidationError as exc_info:
     print(exc_info)
     """
@@ -627,13 +627,13 @@ except ValidationError as exc_info:
 
 tag_adapter = TypeAdapter(
     Union[
-        Annotated[DoubledList, Tag('DoubledList')],
-        Annotated[StringsMap, Tag('StringsMap')],
+        Annotated[DoubledList, Tag("DoubledList")],
+        Annotated[StringsMap, Tag("StringsMap")],
     ]
 )
 
 try:
-    tag_adapter.validate_python(['a'])
+    tag_adapter.validate_python(["a"])
 except ValidationError as exc_info:
     print(exc_info)
     """

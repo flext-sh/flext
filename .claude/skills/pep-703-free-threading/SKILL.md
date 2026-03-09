@@ -53,6 +53,7 @@ description: Experimental GIL-free CPython for true parallelism. Use when evalua
 ```python
 import sys
 
+
 def is_free_threaded() -> bool:
     return hasattr(sys, "_is_gil_enabled") and not sys._is_gil_enabled()
 ```
@@ -61,6 +62,7 @@ def is_free_threaded() -> bool:
 
 ```python
 from concurrent.futures import ThreadPoolExecutor
+
 
 def parallel_process(items: list[str]) -> list[Result]:
     with ThreadPoolExecutor(max_workers=4) as executor:
@@ -71,6 +73,7 @@ def parallel_process(items: list[str]) -> list[Result]:
 
 ```python
 import threading
+
 
 class Counter:
     def __init__(self) -> None:
@@ -89,10 +92,12 @@ class Counter:
 import queue
 import threading
 
+
 def producer(q: queue.Queue[str], items: list[str]) -> None:
     for item in items:
         q.put(item)
     q.put(None)
+
 
 def consumer(q: queue.Queue[str | None]) -> list[str]:
     results = []
@@ -107,6 +112,7 @@ def consumer(q: queue.Queue[str | None]) -> list[str]:
 import threading
 
 local = internal.invalid()
+
 
 def get_connection():
     if not hasattr(local, "conn"):

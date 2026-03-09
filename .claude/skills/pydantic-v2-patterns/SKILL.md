@@ -98,8 +98,10 @@ Use `Annotated` aliases to avoid duplicating validation logic across models.
 from typing import Annotated
 from pydantic import AfterValidator, BeforeValidator, PlainValidator
 
+
 def strip_whitespace(v: str) -> str:
     return v.strip()
+
 
 def validate_non_empty(v: str) -> str:
     cleaned = v.strip()
@@ -107,12 +109,14 @@ def validate_non_empty(v: str) -> str:
         raise ValueError("String cannot be empty or whitespace")
     return cleaned
 
+
 def normalize_to_list(v: t.GeneralValueType) -> list[t.GeneralValueType]:
     if isinstance(v, list):
         return v
     if isinstance(v, (tuple, set)):
         return list(v)
     return [v]
+
 
 def validate_uuid_string(v: str) -> str:
     import uuid
@@ -122,6 +126,7 @@ def validate_uuid_string(v: str) -> str:
         return v
     except Exception as exc:
         raise ValueError("Invalid UUID format") from exc
+
 
 StrippedString = Annotated[str, AfterValidator(strip_whitespace)]
 ValidatedString = Annotated[str, AfterValidator(validate_non_empty)]
@@ -146,12 +151,15 @@ Normalize broad input forms before typed validation.
 from collections.abc import Mapping
 from pydantic import BaseModel, Field, field_validator
 
+
 class Metadata(BaseModel):
     attributes: dict[str, t.GeneralValueType] = Field(default_factory=dict)
 
     @field_validator("attributes", mode="before")
     @classmethod
-    def normalize_attributes(cls, value: t.GeneralValueType) -> dict[str, t.GeneralValueType]:
+    def normalize_attributes(
+        cls, value: t.GeneralValueType
+    ) -> dict[str, t.GeneralValueType]:
         if value is None:
             return {}
         if isinstance(value, BaseModel):
@@ -178,6 +186,7 @@ Validate business semantics after Pydantic has typed the field.
 
 ```python
 from pydantic import BaseModel, Field, field_validator
+
 
 class RetryConfiguration(BaseModel):
     retry_on_status_codes: list[int] = Field(default_factory=list)
@@ -206,6 +215,7 @@ Enforce invariants involving more than one field.
 ```python
 from typing import Self
 from pydantic import BaseModel, Field, model_validator
+
 
 class RetryWindow(BaseModel):
     initial_delay_seconds: float = Field(gt=0)
@@ -239,6 +249,7 @@ Use computed fields for values derived from stored fields.
 from datetime import UTC, datetime
 from pydantic import BaseModel, Field, computed_field
 
+
 class TimestampedModel(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     updated_at: datetime | None = None
@@ -269,6 +280,7 @@ Use multiple small computed fields to keep state reporting explicit.
 ```python
 from pydantic import BaseModel, Field, computed_field
 
+
 class RegistrationSummary(BaseModel):
     registered: list[str] = Field(default_factory=list)
     errors: list[str] = Field(default_factory=list)
@@ -296,6 +308,7 @@ Expose internal runtime composition as a stable read-only surface.
 
 ```python
 from pydantic import computed_field
+
 
 class ServiceRuntimeHolder:
     _runtime: t.GeneralValueType
@@ -325,17 +338,21 @@ Guidance:
 from typing import Annotated, Literal
 from pydantic import BaseModel, Discriminator
 
+
 class CommandMessage(BaseModel):
     message_type: Literal["command"] = "command"
     command_type: str
+
 
 class QueryMessage(BaseModel):
     message_type: Literal["query"] = "query"
     query_type: str
 
+
 class EventMessage(BaseModel):
     message_type: Literal["event"] = "event"
     event_type: str
+
 
 MessageUnion = Annotated[
     CommandMessage | QueryMessage | EventMessage,
@@ -354,18 +371,22 @@ Repository anchors:
 from typing import Annotated, Literal
 from pydantic import BaseModel, Discriminator
 
+
 class SuccessResult(BaseModel):
     result_type: Literal["success"] = "success"
     value: object
+
 
 class FailureResult(BaseModel):
     result_type: Literal["failure"] = "failure"
     error: str
 
+
 class PartialResult(BaseModel):
     result_type: Literal["partial"] = "partial"
     value: object
     warnings: list[str]
+
 
 OperationResult = Annotated[
     SuccessResult | FailureResult | PartialResult,
@@ -393,6 +414,7 @@ Guidance:
 from datetime import datetime
 from pydantic import BaseModel, field_serializer
 
+
 class AuditModel(BaseModel):
     created_at: datetime
 
@@ -411,6 +433,7 @@ Repository anchors:
 ```python
 from datetime import datetime
 from pydantic import BaseModel, field_serializer
+
 
 class TimestampPair(BaseModel):
     created_at: datetime | None
@@ -432,11 +455,14 @@ from datetime import UTC, datetime
 from pydantic import BaseModel, field_serializer
 from pydantic_core.core_schema import FieldSerializationInfo
 
+
 class EnvelopeModel(BaseModel):
     include_metadata: bool = True
 
     @field_serializer("*", when_used="json")
-    def serialize_with_metadata(self, value: t.GeneralValueType, _info: FieldSerializationInfo) -> t.GeneralValueType:
+    def serialize_with_metadata(
+        self, value: t.GeneralValueType, _info: FieldSerializationInfo
+    ) -> t.GeneralValueType:
         if not self.include_metadata:
             return value
         if isinstance(value, dict):
@@ -465,6 +491,7 @@ Guidance:
 
 ```python
 from pydantic import BaseModel, ConfigDict
+
 
 class FrozenStrictModel(BaseModel):
     model_config = ConfigDict(
@@ -496,7 +523,10 @@ Guidance:
 ```python
 from pydantic import TypeAdapter, ValidationError
 
-def validate_runtime(data: t.GeneralValueType, type_: type[t.GeneralValueType]) -> tuple[bool, t.GeneralValueType | str]:
+
+def validate_runtime(
+    data: t.GeneralValueType, type_: type[t.GeneralValueType]
+) -> tuple[bool, t.GeneralValueType | str]:
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_python(data)
@@ -514,7 +544,10 @@ Repository anchor:
 ```python
 from pydantic import TypeAdapter
 
-def serialize_runtime(value: t.GeneralValueType, type_: type[t.GeneralValueType]) -> dict[str, t.GeneralValueType]:
+
+def serialize_runtime(
+    value: t.GeneralValueType, type_: type[t.GeneralValueType]
+) -> dict[str, t.GeneralValueType]:
     adapter = TypeAdapter(type_)
     dumped = adapter.dump_python(value, mode="json")
     if isinstance(dumped, dict):
@@ -530,6 +563,7 @@ Repository anchor:
 
 ```python
 from pydantic import TypeAdapter, ValidationError
+
 
 def parse_json_runtime(json_str: str, type_: type[object]) -> tuple[bool, object | str]:
     adapter = TypeAdapter(type_)
@@ -550,6 +584,7 @@ Repository anchor:
 import json
 from pathlib import Path
 from pydantic import TypeAdapter
+
 
 def load_fixture(path: Path) -> dict[str, object]:
     with path.open(encoding="utf-8") as f:
@@ -588,6 +623,7 @@ Good:
 from typing import Self
 from pydantic import BaseModel, Field, field_validator, model_validator
 
+
 class Window(BaseModel):
     start: int = Field(ge=0)
     end: int = Field(ge=0)
@@ -617,6 +653,7 @@ Bad:
 ```python
 from pydantic import BaseModel, field_validator
 
+
 class Window(BaseModel):
     start: int
     end: int
@@ -636,13 +673,16 @@ Good:
 from typing import Annotated, Literal
 from pydantic import BaseModel, Discriminator
 
+
 class Ok(BaseModel):
     kind: Literal["ok"] = "ok"
     value: int
 
+
 class Err(BaseModel):
     kind: Literal["err"] = "err"
     error: str
+
 
 Response = Annotated[Ok | Err, Discriminator("kind")]
 ```
@@ -653,6 +693,7 @@ Bad:
 
 ```python
 from pydantic import BaseModel
+
 
 class MaybeResult(BaseModel):
     value: int | None = None

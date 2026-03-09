@@ -79,6 +79,7 @@ Create comprehensive TypeGuard utilities that will replace all 627 cast() usages
 
 ```python
 """Type guards for runtime type narrowing (replaces cast())."""
+
 from __future__ import annotations
 
 from typing import TypeGuard
@@ -117,13 +118,16 @@ class Guards:
     @staticmethod
     def is_list_of(obj: object, item_type: type) -> TypeGuard[list]:
         """Check if object is a list of specific type."""
-        return isinstance(obj, list) and all(isinstance(item, item_type) for item in obj)
+        return isinstance(obj, list) and all(
+            isinstance(item, item_type) for item in obj
+        )
 ```
 
 #### New File: `flext-core/src/flext_core/testing/guards.py`
 
 ```python
 """Test-specific type guards for fixtures and test data."""
+
 from __future__ import annotations
 
 from typing import TypeGuard
@@ -145,20 +149,12 @@ class TestGuards:
     @staticmethod
     def is_config_response(obj: object) -> TypeGuard[dict]:
         """Check if object is a config response fixture."""
-        return (
-            isinstance(obj, dict)
-            and "app_name" in obj
-            and "version" in obj
-        )
+        return isinstance(obj, dict) and "app_name" in obj and "version" in obj
 
     @staticmethod
     def is_error_response(obj: object) -> TypeGuard[dict]:
         """Check if object is an error response fixture."""
-        return (
-            isinstance(obj, dict)
-            and "error_code" in obj
-            and "message" in obj
-        )
+        return isinstance(obj, dict) and "error_code" in obj and "message" in obj
 ```
 
 ### Validation Checklist
@@ -222,11 +218,13 @@ In `flext-core/src/flext_core/models.py`:
 ```python
 from pydantic import BaseModel, ConfigDict, Field
 
+
 class FlextModels:
     """Hierarchical namespace for all Flext models."""
 
     class Base(BaseModel):
         """Base model with standard Flext configuration."""
+
         model_config = ConfigDict(
             validate_assignment=True,
             use_enum_values=True,
@@ -239,12 +237,14 @@ class FlextModels:
 
         class Config(FlextModels.Base):
             """Configuration models."""
+
             app_name: str = Field(description="Application name")
             version: str = Field(description="Version string")
             # ... other config fields
 
         class Context(FlextModels.Base):
             """Context models."""
+
             request_id: str = Field(description="Request ID")
             user_id: str | None = Field(None, description="User ID")
             # ... other context fields
@@ -254,11 +254,13 @@ class FlextModels:
 
         class Success(FlextModels.Base):
             """Successful result."""
+
             data: dict = Field(description="Result data")
             timestamp: str = Field(description="Timestamp")
 
         class Failure(FlextModels.Base):
             """Failed result."""
+
             error_code: str = Field(description="Error code")
             message: str = Field(description="Error message")
 ```
@@ -284,7 +286,6 @@ Remove all TypedDict definitions, keep only type aliases:
 ```python
 # flext-core/src/flext_core/typings.py
 """Type aliases and protocols (no TypedDict)."""
-
 
 # Type aliases for convenience
 ConfigType = m.Core.Config
@@ -374,12 +375,15 @@ grep -r "cast(" flext-core/src/ | grep -v test
 # BEFORE
 from typing import cast
 
+
 def process_config(data: dict) -> str:
     config = cast(m.Core.Config, data)
     return config.app_name
 
+
 # AFTER
 from flext_core.utilities.guards import Guards
+
 
 def process_config(data: dict) -> str:
     if Guards.is_config(data):
@@ -430,11 +434,11 @@ Ensure all 127+ Pydantic models across flext-core use consistent ConfigDict sett
 
 ```python
 model_config = ConfigDict(
-    validate_assignment=True,      # Validate on attribute assignment
-    use_enum_values=True,          # Serialize enums to values
-    extra="forbid",                # Reject unknown fields
-    str_strip_whitespace=True,     # Clean string inputs
-    frozen=False,                  # Mutable by default
+    validate_assignment=True,  # Validate on attribute assignment
+    use_enum_values=True,  # Serialize enums to values
+    extra="forbid",  # Reject unknown fields
+    str_strip_whitespace=True,  # Clean string inputs
+    frozen=False,  # Mutable by default
 )
 ```
 
@@ -442,7 +446,7 @@ model_config = ConfigDict(
 
 ```python
 model_config = ConfigDict(
-    frozen=True,                   # Immutable
+    frozen=True,  # Immutable
     validate_assignment=True,
     extra="forbid",
 )
@@ -452,7 +456,7 @@ model_config = ConfigDict(
 
 ```python
 model_config = ConfigDict(
-    extra="ignore",                # Ignore unknown fields from API
+    extra="ignore",  # Ignore unknown fields from API
     validate_assignment=True,
     use_enum_values=True,
 )

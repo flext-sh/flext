@@ -93,8 +93,9 @@ We will implement Railway-Oriented Programming (ROP) using the `FlextResult[T]` 
 from typing import TypeVar, Generic, Callable, Union
 from dataclasses import dataclass
 
-T = TypeVar('T')
-E = TypeVar('E', bound=Exception)
+T = TypeVar("T")
+E = TypeVar("E", bound=Exception)
+
 
 @dataclass(frozen=True)
 class FlextResult(Generic[T]):
@@ -106,12 +107,12 @@ class FlextResult(Generic[T]):
     is_failure: bool
 
     @classmethod
-    def ok(cls, value: T) -> 'FlextResult[T]':
+    def ok(cls, value: T) -> "FlextResult[T]":
         """Create a successful result."""
         return cls(value=value, error=None, is_success=True, is_failure=False)
 
     @classmethod
-    def fail(cls, error: Exception) -> 'FlextResult[T]':
+    def fail(cls, error: Exception) -> "FlextResult[T]":
         """Create a failed result."""
         return cls(value=None, error=error, is_success=False, is_failure=True)
 
@@ -127,7 +128,7 @@ class FlextResult(Generic[T]):
             return self.error
         raise ValueError("Cannot unwrap failure from successful result")
 
-    def map(self, func: Callable[[T], U]) -> 'FlextResult[U]':
+    def map(self, func: Callable[[T], U]) -> "FlextResult[U]":
         """Transform successful value, pass through failures."""
         if self.is_success:
             try:
@@ -136,29 +137,31 @@ class FlextResult(Generic[T]):
                 return FlextResult.fail(e)
         return FlextResult.fail(self.error)
 
-    def flat_map(self, func: Callable[[T], 'FlextResult[U]']) -> 'FlextResult[U]':
+    def flat_map(self, func: Callable[[T], "FlextResult[U]"]) -> "FlextResult[U]":
         """Chain operations that return FlextResult."""
         if self.is_success:
             return func(self.value)
         return FlextResult.fail(self.error)
 
-    def and_then(self, func: Callable[[T], 'FlextResult[U]']) -> 'FlextResult[U]':
+    def and_then(self, func: Callable[[T], "FlextResult[U]"]) -> "FlextResult[U]":
         """Alias for flat_map for better readability."""
         return self.flat_map(func)
 
-    def or_else(self, func: Callable[[Exception], 'FlextResult[T]']) -> 'FlextResult[T]':
+    def or_else(
+        self, func: Callable[[Exception], "FlextResult[T]"]
+    ) -> "FlextResult[T]":
         """Handle failures by providing alternative result."""
         if self.is_failure:
             return func(self.error)
         return self
 
-    def on_success(self, action: Callable[[T], None]) -> 'FlextResult[T]':
+    def on_success(self, action: Callable[[T], None]) -> "FlextResult[T]":
         """Execute action on successful result."""
         if self.is_success:
             action(self.value)
         return self
 
-    def on_failure(self, action: Callable[[Exception], None]) -> 'FlextResult[T]':
+    def on_failure(self, action: Callable[[Exception], None]) -> "FlextResult[T]":
         """Execute action on failed result."""
         if self.is_failure:
             action(self.error)
@@ -175,6 +178,7 @@ def validate_email(email: str) -> FlextResult[str]:
         return FlextResult.fail(ValueError("Invalid email format"))
     return FlextResult.ok(email)
 
+
 def save_user(user: User) -> FlextResult[User]:
     try:
         # Save to database
@@ -182,6 +186,7 @@ def save_user(user: User) -> FlextResult[User]:
         return FlextResult.ok(saved_user)
     except DatabaseError as e:
         return FlextResult.fail(e)
+
 
 # Railway composition
 result = (

@@ -63,7 +63,7 @@ from pydantic import BaseModel, Field, WithJsonSchema
 
 
 class Model(BaseModel):
-    name: Annotated[str, Field(strict=True), WithJsonSchema({'extra': 'data'})]
+    name: Annotated[str, Field(strict=True), WithJsonSchema({"extra": "data"})]
 ```
 
 As far as static type checkers are concerned, `name` is still typed as `str`, but Pydantic leverages
@@ -133,17 +133,17 @@ from pydantic import BaseModel, Field, WithJsonSchema
 
 class Model(BaseModel):
     a: Annotated[
-        int, Field(gt=1), WithJsonSchema({'extra': 'data'}), Field(alias='b')
+        int, Field(gt=1), WithJsonSchema({"extra": "data"}), Field(alias="b")
     ] = 1
 
 
-field_info = Model.model_fields['a']
+field_info = Model.model_fields["a"]
 print(field_info.annotation)
-#> <class 'int'>
+# > <class 'int'>
 print(field_info.alias)
-#> b
+# > b
 print(field_info.metadata)
-#> [Gt(gt=1), WithJsonSchema(json_schema={'extra': 'data'}, mode=None)]
+# > [Gt(gt=1), WithJsonSchema(json_schema={'extra': 'data'}, mode=None)]
 ```
 
 ## Default values
@@ -157,7 +157,7 @@ from pydantic import BaseModel, Field
 
 class User(BaseModel):
     # Both fields aren't required:
-    name: str = 'John Doe'
+    name: str = "John Doe"
     age: int = Field(default=20)
 ```
 
@@ -190,12 +190,12 @@ from pydantic import BaseModel, EmailStr, Field
 
 class User(BaseModel):
     email: EmailStr
-    username: str = Field(default_factory=lambda data: data['email'])
+    username: str = Field(default_factory=lambda data: data["email"])
 
 
-user = User(email='user@example.com')
+user = User(email="user@example.com")
 print(user.username)
-#> user@example.com
+# > user@example.com
 ```
 
 The `data` argument will _only_ contain the already validated data, based on the [order of model fields](./models.md#field-ordering)
@@ -212,7 +212,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 
 class User(BaseModel):
-    age: int = Field(default='twelve', validate_default=True)
+    age: int = Field(default="twelve", validate_default=True)
 
 
 try:
@@ -246,13 +246,13 @@ class Model(BaseModel):
 
 
 m1 = Model()
-m1.item_counts[0]['a'] = 1
+m1.item_counts[0]["a"] = 1
 print(m1.item_counts)
-#> [{'a': 1}]
+# > [{'a': 1}]
 
 m2 = Model()
 print(m2.item_counts)
-#> [{}]
+# > [{}]
 ```
 
 ## Field aliases
@@ -279,14 +279,14 @@ from pydantic import BaseModel, Field
 
 
 class User(BaseModel):
-    name: str = Field(alias='username')
+    name: str = Field(alias="username")
 
 
-user = User(username='johndoe')  # (1)!
+user = User(username="johndoe")  # (1)!
 print(user)
-#> name='johndoe'
+# > name='johndoe'
 print(user.model_dump(by_alias=True))  # (2)!
-#> {'username': 'johndoe'}
+# > {'username': 'johndoe'}
 ```
 
 1. The alias `'username'` is used for instance creation and validation.
@@ -307,14 +307,14 @@ from pydantic import BaseModel, Field
 
 
 class User(BaseModel):
-    name: str = Field(validation_alias='username')
+    name: str = Field(validation_alias="username")
 
 
-user = User(username='johndoe')  # (1)!
+user = User(username="johndoe")  # (1)!
 print(user)
-#> name='johndoe'
+# > name='johndoe'
 print(user.model_dump(by_alias=True))  # (2)!
-#> {'name': 'johndoe'}
+# > {'name': 'johndoe'}
 ```
 
 1. The validation alias `'username'` is used during validation.
@@ -327,14 +327,14 @@ from pydantic import BaseModel, Field
 
 
 class User(BaseModel):
-    name: str = Field(serialization_alias='username')
+    name: str = Field(serialization_alias="username")
 
 
-user = User(name='johndoe')  # (1)!
+user = User(name="johndoe")  # (1)!
 print(user)
-#> name='johndoe'
+# > name='johndoe'
 print(user.model_dump(by_alias=True))  # (2)!
-#> {'username': 'johndoe'}
+# > {'username': 'johndoe'}
 ```
 
 1. The field name `'name'` is used for validation.
@@ -356,10 +356,10 @@ of the actual field name to synthesize the `__init__` method:
 
 
     class User(BaseModel):
-        name: str = Field(alias='username')
+        name: str = Field(alias="username")
 
 
-    user = User(username='johndoe')  # (1)!
+    user = User(username="johndoe")  # (1)!
     ```
 
     1. Accepted by type checkers.
@@ -373,10 +373,10 @@ of the actual field name to synthesize the `__init__` method:
     class User(BaseModel):
         model_config = ConfigDict(validate_by_name=True)
 
-        name: str = Field(alias='username')
+        name: str = Field(alias="username")
 
 
-    user = User(name='johndoe')  # (1)!
+    user = User(name="johndoe")  # (1)!
     ```
 
     1. *Not* accepted by type checkers.
@@ -393,11 +393,11 @@ of the actual field name to synthesize the `__init__` method:
     class User(BaseModel):
         model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
 
-        name: Annotated[str, Field(alias='username')]
+        name: Annotated[str, Field(alias="username")]
 
 
-    user = User(name='johndoe')  # (1)!
-    user = User(username='johndoe')  # (2)!
+    user = User(name="johndoe")  # (1)!
+    user = User(username="johndoe")  # (2)!
     ```
 
     1. Accepted by type checkers.
@@ -415,7 +415,7 @@ of the actual field name to synthesize the `__init__` method:
 
 
     class MyModel(BaseModel):
-        my_field: int = Field(validation_alias='myValidationAlias')
+        my_field: int = Field(validation_alias="myValidationAlias")
     ```
 
     with:
@@ -426,14 +426,14 @@ of the actual field name to synthesize the `__init__` method:
 
     class MyModel(BaseModel):
         my_field: int = Field(
-            alias='myValidationAlias',
-            serialization_alias='my_field',
+            alias="myValidationAlias",
+            serialization_alias="my_field",
         )
 
 
     m = MyModel(myValidationAlias=1)
     print(m.model_dump(by_alias=True))
-    #> {'my_field': 1}
+    # > {'my_field': 1}
     ```
 
 <!-- old anchor added for backwards compatibility -->
@@ -487,9 +487,9 @@ class User(BaseModel):
     age: int = Field(strict=False)  # (1)!
 
 
-user = User(name='John', age='42')  # (2)!
+user = User(name="John", age="42")  # (2)!
 print(user)
-#> name='John' age=42
+# > name='John' age=42
 ```
 
 1. This is the default value.
@@ -528,9 +528,9 @@ class Model(BaseModel):
     foo: Foo
 
 
-model = Model(foo=Foo('bar', baz='baz', qux='qux'))
+model = Model(foo=Foo("bar", baz="baz", qux="qux"))
 print(model.model_dump())  # (1)!
-#> {'foo': {'bar': 'bar', 'qux': 'qux'}}
+# > {'foo': {'bar': 'bar', 'qux': 'qux'}}
 ```
 
 1. The `baz` field is not included in the serialized output, since it is an init-only field.
@@ -549,9 +549,9 @@ class User(BaseModel):
     age: int = Field(repr=False)
 
 
-user = User(name='John', age=42)
+user = User(name="John", age=42)
 print(user)
-#> name='John'
+# > name='John'
 ```
 
 1. This is the default value.
@@ -571,21 +571,21 @@ from pydantic import BaseModel, Field
 
 
 class Cat(BaseModel):
-    pet_type: Literal['cat']
+    pet_type: Literal["cat"]
     age: int
 
 
 class Dog(BaseModel):
-    pet_type: Literal['dog']
+    pet_type: Literal["dog"]
     age: int
 
 
 class Model(BaseModel):
-    pet: Union[Cat, Dog] = Field(discriminator='pet_type')
+    pet: Union[Cat, Dog] = Field(discriminator="pet_type")
 
 
-print(Model.model_validate({'pet': {'pet_type': 'cat', 'age': 12}}))  # (1)!
-#> pet=Cat(pet_type='cat', age=12)
+print(Model.model_validate({"pet": {"pet_type": "cat", "age": 12}}))  # (1)!
+# > pet=Cat(pet_type='cat', age=12)
 ```
 
 1. See more about [Validating data] in the [Models] page.
@@ -599,32 +599,32 @@ from pydantic import BaseModel, Discriminator, Field, Tag
 
 
 class Cat(BaseModel):
-    pet_type: Literal['cat']
+    pet_type: Literal["cat"]
     age: int
 
 
 class Dog(BaseModel):
-    pet_kind: Literal['dog']
+    pet_kind: Literal["dog"]
     age: int
 
 
 def pet_discriminator(v):
     if isinstance(v, dict):
-        return v.get('pet_type', v.get('pet_kind'))
-    return getattr(v, 'pet_type', getattr(v, 'pet_kind', None))
+        return v.get("pet_type", v.get("pet_kind"))
+    return getattr(v, "pet_type", getattr(v, "pet_kind", None))
 
 
 class Model(BaseModel):
-    pet: Union[Annotated[Cat, Tag('cat')], Annotated[Dog, Tag('dog')]] = Field(
+    pet: Union[Annotated[Cat, Tag("cat")], Annotated[Dog, Tag("dog")]] = Field(
         discriminator=Discriminator(pet_discriminator)
     )
 
 
-print(repr(Model.model_validate({'pet': {'pet_type': 'cat', 'age': 12}})))
-#> Model(pet=Cat(pet_type='cat', age=12))
+print(repr(Model.model_validate({"pet": {"pet_type": "cat", "age": 12}})))
+# > Model(pet=Cat(pet_type='cat', age=12))
 
-print(repr(Model.model_validate({'pet': {'pet_kind': 'dog', 'age': 12}})))
-#> Model(pet=Dog(pet_kind='dog', age=12))
+print(repr(Model.model_validate({"pet": {"pet_kind": "dog", "age": 12}})))
+# > Model(pet=Dog(pet_kind='dog', age=12))
 ```
 
 You can also take advantage of `Annotated` to define your discriminated unions.
@@ -646,10 +646,10 @@ class User(BaseModel):
     age: int
 
 
-user = User(name='John', age=42)
+user = User(name="John", age=42)
 
 try:
-    user.name = 'Jane'  # (1)!
+    user.name = "Jane"  # (1)!
 except ValidationError as e:
     print(e)
     """
@@ -682,9 +682,9 @@ class User(BaseModel):
     age: int = Field(exclude=True)
 
 
-user = User(name='John', age=42)
+user = User(name="John", age=42)
 print(user.model_dump())  # (1)!
-#> {'name': 'John'}
+# > {'name': 'John'}
 ```
 
 1. The `age` field is not included in the [`model_dump()`][pydantic.BaseModel.model_dump] output, since it is excluded.
@@ -712,11 +712,11 @@ from pydantic import BaseModel, Field
 
 
 class Model(BaseModel):
-    deprecated_field: Annotated[int, Field(deprecated='This is deprecated')]
+    deprecated_field: Annotated[int, Field(deprecated="This is deprecated")]
 
 
-print(Model.model_json_schema()['properties']['deprecated_field'])
-#> {'deprecated': True, 'title': 'Deprecated Field', 'type': 'integer'}
+print(Model.model_json_schema()["properties"]["deprecated_field"])
+# > {'deprecated': True, 'title': 'Deprecated Field', 'type': 'integer'}
 ```
 
 ### `deprecated` via the `@warnings.deprecated` decorator
@@ -738,10 +738,10 @@ The [`@warnings.deprecated`][warnings.deprecated] decorator (or the
 
 
     class Model(BaseModel):
-        deprecated_field: Annotated[int, deprecated('This is deprecated')]
+        deprecated_field: Annotated[int, deprecated("This is deprecated")]
 
         # Or explicitly using `Field`:
-        alt_form: Annotated[int, Field(deprecated=deprecated('This is deprecated'))]
+        alt_form: Annotated[int, Field(deprecated=deprecated("This is deprecated"))]
     ```
 
 === "Python 3.13 and above"
@@ -754,10 +754,10 @@ The [`@warnings.deprecated`][warnings.deprecated] decorator (or the
 
 
     class Model(BaseModel):
-        deprecated_field: Annotated[int, deprecated('This is deprecated')]
+        deprecated_field: Annotated[int, deprecated("This is deprecated")]
 
         # Or explicitly using `Field`:
-        alt_form: Annotated[int, Field(deprecated=deprecated('This is deprecated'))]
+        alt_form: Annotated[int, Field(deprecated=deprecated("This is deprecated"))]
     ```
 
 !!! note "Support for `category` and `stacklevel`"
@@ -776,8 +776,8 @@ class Model(BaseModel):
     deprecated_field: Annotated[int, Field(deprecated=True)]
 
 
-print(Model.model_json_schema()['properties']['deprecated_field'])
-#> {'deprecated': True, 'title': 'Deprecated Field', 'type': 'integer'}
+print(Model.model_json_schema()["properties"]["deprecated_field"])
+# > {'deprecated': True, 'title': 'Deprecated Field', 'type': 'integer'}
 ```
 
 !!! warning "Accessing a deprecated field in validators"
@@ -793,12 +793,12 @@ When accessing a deprecated field inside a validator, the deprecation warning wi
 
 
     class Model(BaseModel):
-        deprecated_field: int = Field(deprecated='This is deprecated')
+        deprecated_field: int = Field(deprecated="This is deprecated")
 
-        @model_validator(mode='after')
+        @model_validator(mode="after")
         def validate_model(self) -> Self:
             with warnings.catch_warnings():
-                warnings.simplefilter('ignore', DeprecationWarning)
+                warnings.simplefilter("ignore", DeprecationWarning)
                 self.deprecated_field = self.deprecated_field * 2
     ```
 
@@ -846,7 +846,7 @@ class Box(BaseModel):
         return self.width * self.height * self.depth
 
 
-print(Box.model_json_schema(mode='serialization'))
+print(Box.model_json_schema(mode="serialization"))
 """
 {
     'properties': {
@@ -885,7 +885,7 @@ class Box(BaseModel):
 
 b = Box(width=1, height=2, depth=3)
 print(b.model_dump())
-#> {'width': 1.0, 'height': 2.0, 'depth': 3.0, 'volume': 6.0}
+# > {'width': 1.0, 'height': 2.0, 'depth': 3.0, 'volume': 6.0}
 ```
 
 As with regular fields, computed fields can be marked as being deprecated:
