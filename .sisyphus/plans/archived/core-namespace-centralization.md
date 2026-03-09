@@ -5,14 +5,14 @@
 ## TL;DR
 
 > **Quick Summary**: Move all scattered type aliases, Protocol classes, Pydantic models, and utility functions in `flext_core` to their proper namespace homes (`t.*`, `p.*`, `m.*`, `u.*`). Same MRO pattern established for constants (`c.Infra.*`).
-> 
+>
 > **Deliverables**:
 > - All type aliases centralized in `typings.py` → `t.*`
 > - All Protocol classes centralized in `protocols.py` → `p.*`
 > - All Pydantic models centralized in `_models/` → `m.*`
 > - All utility functions centralized in `_utilities/` → `u.*`
 > - flext-ldif updated from private `_models` imports to public `m.*` facade
-> 
+>
 > **Estimated Effort**: Medium
 > **Parallel Execution**: YES — 4 waves
 > **Critical Path**: Phase 0 → Phase 1 (Types) → Phase 2 (Protocols) → Phase 3 (Models) → Phase 4 (Utilities) → Phase 5 (Cross-project) → FINAL
@@ -502,7 +502,7 @@ Max Concurrent: 4 (Wave 2 tasks can overlap if they don't touch same files)
   **Commit**: YES (groups with T8)
   - Message: `refactor(core): centralize scattered models into FlextModels`
 
-- [ ] 8. Move _StrictJsonScalarModel + _RuntimeMetadata → _models/
+- [ ] 8. Move _StrictJsonScalarModel +_RuntimeMetadata → _models/
 
   **What to do**:
   - Move `_StrictJsonScalarModel` from `_utilities/conversion.py` → `_models/containers.py` (created in T7)
@@ -544,7 +544,7 @@ Max Concurrent: 4 (Wave 2 tasks can overlap if they don't touch same files)
   **Commit**: YES (groups with T7)
   - Message: `refactor(core): centralize scattered models into FlextModels`
 
-- [ ] 9. Move Utility Functions from _models/ → _utilities/
+- [ ] 9. Move Utility Functions from _models/ →_utilities/
 
   **What to do**:
   - Move `_is_metadata_instance` (TypeGuard) and `_normalize_metadata` from `_models/container.py` → `_utilities/model.py` (add to `FlextUtilitiesModel`)
@@ -890,7 +890,7 @@ Max Concurrent: 4 (Wave 2 tasks can overlap if they don't touch same files)
 - **T1**: no commit (verification only)
 - **T2-T4**: `refactor(core): centralize scattered type aliases into FlextTypes` — typings.py, _utilities/*.py, context.py
 - **T5-T6**: `refactor(core): centralize scattered protocols into FlextProtocols` — protocols.py, dispatcher.py, _utilities/collection.py, typings.py
-- **T7-T8**: `refactor(core): centralize scattered models into FlextModels` — _models/*.py, typings.py, _runtime_metadata.py, _utilities/conversion.py
+- **T7-T8**: `refactor(core): centralize scattered models into FlextModels` — _models/*.py, typings.py,_runtime_metadata.py,_utilities/conversion.py
 - **T9-T11**: `refactor(core): centralize scattered utilities into FlextUtilities` — _utilities/*.py, _models/*.py, result.py, handlers.py
 - **T12**: `refactor(ldif): use m.* facade instead of private _models imports` — flext-ldif
 - **T13**: no commit (verification only)

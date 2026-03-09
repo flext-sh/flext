@@ -619,10 +619,10 @@ Max Concurrent: 11 (Wave 2)
   - Message: `refactor(settings): replace Any with specific types`
   - Files: `settings.py`
 
-- [ ] 9. Fix Any in __init__.py + lazy.py + _decorators/__init__ + _dispatcher/__init__ (PEP 562 pattern)
+- [ ] 9. Fix Any in **init**.py + lazy.py + _decorators/**init** +_dispatcher/**init** (PEP 562 pattern)
 
   **What to do**:
-  - Replace `-> Any` with `-> t.LazyExportType` in ALL __getattr__ PEP 562 functions:
+  - Replace `-> Any` with `-> t.LazyExportType` in ALL **getattr** PEP 562 functions:
     - `flext-core/src/flext_core/__init__.py:153`
     - `flext-core/src/flext_core/_utilities/lazy.py:22`
     - `flext-core/src/flext_core/_decorators/__init__.py:35`
@@ -641,7 +641,7 @@ Max Concurrent: 11 (Wave 2)
   - **Blocked By**: Task 1
 
   **References**:
-  - `flext-core/src/flext_core/__init__.py:153` — main __getattr__
+  - `flext-core/src/flext_core/__init__.py:153` — main **getattr**
   - `flext-core/src/flext_core/_utilities/lazy.py:14,20,22` — lazy_getattr helper
   - `flext-core/src/flext_core/_decorators/__init__.py:12,35`
   - `flext-core/src/flext_core/_dispatcher/__init__.py:13,51`
@@ -665,10 +665,10 @@ Max Concurrent: 11 (Wave 2)
   - Message: `refactor(init): replace Any with t.LazyExportType in PEP 562 lazy loading`
   - Files: `__init__.py`, `_utilities/lazy.py`, `_decorators/__init__.py`, `_dispatcher/__init__.py`
 
-- [ ] 10. Fix Any in flext_tests __init__ files
+- [ ] 10. Fix Any in flext_tests **init** files
 
   **What to do**:
-  - `flext-core/src/flext_tests/__init__.py` — replace `Any` with `t.LazyExportType` in __getattr__
+  - `flext-core/src/flext_tests/__init__.py` — replace `Any` with `t.LazyExportType` in **getattr**
   - `flext-core/src/flext_tests/_validator/__init__.py` — same pattern
 
   **Recommended Agent Profile**:
@@ -752,7 +752,7 @@ Max Concurrent: 11 (Wave 2)
 
   **References**:
   - 8 source files listed above with instance counts
-  - `flext-strict-typing` Rule 17 — isinstance for narrowing, NOT type()/__class__
+  - `flext-strict-typing` Rule 17 — isinstance for narrowing, NOT type()/**class**
 
   **Acceptance Criteria**:
   - [ ] `grep -rn '__class__.*in {\|__class__.*not in {\|__class__ is \|__class__ ==' flext-core/src/flext_core/ --include='*.py'` returns ZERO lines
@@ -1247,7 +1247,7 @@ Max Concurrent: 11 (Wave 2)
 ## Commit Strategy
 
 - **Wave 1**: `refactor(typings): add LazyExportType + AnnotationMap, remove dead TypeVars` — typings.py, registry.py, context.py
-- **Wave 2a**: `refactor(flext-core): eliminate cast/Any/type-narrowing violations` — container.py, mixins.py, _models/context.py, protocols.py, settings.py, __init__.py files, _validator/tests.py
+- **Wave 2a**: `refactor(flext-core): eliminate cast/Any/type-narrowing violations` — container.py, mixins.py, _models/context.py, protocols.py, settings.py, **init**.py files,_validator/tests.py
 - **Wave 2b**: `refactor(mapper): eliminate custom JSON functions, use Pydantic v2 native JSON` — mapper.py
 - **Wave 2c**: `refactor(conversion+parser): eliminate custom JSON types, use pydantic.JsonValue` — conversion.py, parser.py
 - **Wave 2d**: `refactor(core): eliminate custom JSON from context/runtime/utilities, use Pydantic v2` — _models/context.py, runtime.py, utilities.py

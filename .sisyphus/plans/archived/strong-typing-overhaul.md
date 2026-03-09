@@ -633,7 +633,7 @@ Wave FINAL (Verification — 4 parallel):
   **Category A: settings.py (3 errors — structural)**
   - Line 27: metaclass conflict → This is a known Pydantic + Protocol metaclass issue. Use `ProtocolModelMeta` from protocols.py, OR suppress if truly unfixable.
   - Line 75: `resolve_env_file` has-type → Add explicit type annotation
-  - Line 302: `_di_provider` no-redef → Restructure to avoid double definition (move to __init__ or use conditional)
+  - Line 302: `_di_provider` no-redef → Restructure to avoid double definition (move to **init** or use conditional)
 
   **Category B: protocols.py (4 errors — runtime-injected attrs)**
   - Lines 1611, 1767, 1776, 1782: `__protocols__`, `implements_protocol`, `get_protocols` → These are injected by ProtocolModelMeta at runtime. Fix with:

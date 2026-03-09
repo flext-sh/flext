@@ -5,16 +5,16 @@
 ## TL;DR
 
 > **Objetivo**: Resolver TODOS os problemas de lint em 33 projetos FLEXT (~4,200+ violações) seguindo CLAUDE.md e skills do flext-core
-> 
+>
 > **Escopo**: Todos os projetos (`src/`, `tests/`, `examples/`) - 4 linters com ZERO tolerância
-> 
+>
 > **Abordagem**: Multi-agente paralelo (5 agentes) em 5 fases sequenciais
-> 
-> **Estado Atual**: 
+>
+> **Estado Atual**:
 > - flext-core: 953 violações (49% dos 176 arquivos afetados)
 > - Maiores problemas: `Any`/`object` (45 arquivos), retornos `T | None` (52 arquivos)
 > - 21 arquivos com supressões de linter (`# type: ignore`, `# noqa`)
-> 
+>
 > **Estimativa de Esforço**: XL (6-8 semanas com 5 agentes em paralelo)
 > **Execução Paralela**: SIM - 5 ondas de agentes
 > **Caminho Crítico**: Fase 0 (flext-core Wave 0) → Fase 1 → Fase 2 → Fase 3 → Fase 4 (31 projetos)
