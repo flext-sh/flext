@@ -1,0 +1,37 @@
+Makefile
+  2ad7ff7d70bd70a0 546-548
+  6e15e18d9bb5d870 549-570
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "97fcdc5b68fb749b656b4de12c391a8aef38c25f",
+  "prompts": {
+    "2ad7ff7d70bd70a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_32d1c5b7cffe4SvQN8kro63aaQ-4c70260d-dfbb-4a27-92b5-af229fe7158e",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 0,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    },
+    "6e15e18d9bb5d870": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_32d1c5b7cffe4SvQN8kro63aaQ-c99ec6f7-d960-4576-8717-f518ffe0dc18",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 22,
+      "total_deletions": 0,
+      "accepted_lines": 22,
+      "overriden_lines": 0
+    }
+  }
+}
