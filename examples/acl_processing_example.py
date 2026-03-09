@@ -19,9 +19,10 @@ from __future__ import annotations
 
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import ClassVar, TypeGuard, override
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from _models import ValidationRules
 from flext_core import r, s, t
@@ -70,25 +71,36 @@ class AclProcessingExample:
         MODIFY = "modify"
         UNKNOWN = "unknown"
 
-    @dataclass
-    class AclEntry:
+    class AclEntry(BaseModel):
         """Represents an ACL entry with context and permissions."""
 
-        dn: str
-        acl_attribute: str
-        permissions: list[str]
-        context: ContextDict
-        server_type: str
+        model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    @dataclass
-    class AclValidationResult:
+        dn: str = Field(description="Distinguished name of the ACL entry")
+        acl_attribute: str = Field(description="ACL attribute name")
+        permissions: list[str] = Field(description="List of permissions")
+        context: ContextDict = Field(description="Context information")
+        server_type: str = Field(description="Type of LDAP server")
+
+    class AclValidationResult(BaseModel):
         """Result of ACL validation with detailed context."""
 
-        entry_dn: str
-        is_valid: bool
-        violations: list[str] = field(default_factory=_new_str_list)
-        warnings: list[str] = field(default_factory=_new_str_list)
-        processing_time: float = 0.0
+        model_config = ConfigDict(arbitrary_types_allowed=True)
+
+        entry_dn: str = Field(description="Distinguished name of the entry")
+        is_valid: bool = Field(description="Whether the ACL entry is valid")
+        violations: list[str] = Field(
+            default_factory=_new_str_list,
+            description="List of validation violations",
+        )
+        warnings: list[str] = Field(
+            default_factory=_new_str_list,
+            description="List of validation warnings",
+        )
+        processing_time: float = Field(
+            default=0.0,
+            description="Time taken for validation",
+        )
 
     class Constants:
         """Constants for ACL processing."""
