@@ -27,7 +27,7 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
 ]
-dependencies = [ "importlib-resources (>=6.5.2,<7.0.0)", "pydantic (>=2.12.5,<3.0.0)" ]
+dependencies = ["importlib-resources (>=6.5.2,<7.0.0)", "pydantic (>=2.12.5,<3.0.0)", "flext-core @ ../flext-core"]
 # [MANAGED] consolidated development dependencies
 # [AUTO] merged from dev/docs/security/test/typings
 optional-dependencies.dev = [
