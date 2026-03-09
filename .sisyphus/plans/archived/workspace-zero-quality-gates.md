@@ -1,6 +1,6 @@
 # ARCHIVED — Subsumed by modernization-reorg-execution.md
 
-# Workspace Zero Quality Gates — All 32 Projects
+## Workspace Zero Quality Gates — All 32 Projects
 
 ## TL;DR
 
