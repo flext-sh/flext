@@ -117,26 +117,6 @@ done
 endef
 
 define AUTO_ADJUST_SELECTED_PROJECTS
-for proj in $(SELECTED_PROJECTS); do \
-	if [ -d "$$proj" ]; then \
-		md_files=$$(find "$$proj" -type f -name '*.md' ! -path "$$proj/.git/*" ! -path "$$proj/.reports/*" ! -path "$$proj/reports/*" ! -path "$$proj/.venv/*" ! -path "$$proj/node_modules/*" ! -path "$$proj/.flext-deps/*" ! -path "$$proj/.mypy_cache/*" ! -path "$$proj/.pytest_cache/*" ! -path "$$proj/.ruff_cache/*" ! -path "$$proj/dist/*" ! -path "$$proj/build/*"); \
-		md_config=""; \
-		if [ -f ".markdownlint.json" ]; then md_config="--config .markdownlint.json"; fi; \
-		if [ -n "$$md_files" ] && [ -x "$(WORKSPACE_VENV)/bin/mdformat" ]; then \
-			mkdir -p .reports/workspace/preflight; \
-			printf '%s\n' "$$md_files" | xargs -r $(WORKSPACE_VENV)/bin/mdformat 2>>.reports/workspace/preflight/mdformat.log || true; \
-		fi; \
-		if [ -n "$$md_files" ] && command -v markdownlint >/dev/null 2>&1; then \
-			markdownlint --fix $$md_config $$md_files || true; \
-		fi; \
-		if [ -f "$$proj/go.mod" ] && command -v gofmt >/dev/null 2>&1; then \
-			go_files=$$(find "$$proj" -type f -name '*.go' ! -path "$$proj/.git/*"); \
-			if [ -n "$$go_files" ]; then \
-				printf '%s\n' "$$go_files" | xargs -r gofmt -w; \
-			fi; \
-		fi; \
-	fi; \
-done
 endef
 
 define ENFORCE_WORKSPACE_VENV
@@ -627,14 +607,29 @@ security: ## Run all security checks in all projects
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb security $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
 
-format: ## Run all formatting in ALL workspace projects (ignores PROJECT=/PROJECTS= filters)
+format: ## Run code formatting across all workspace projects (ruff/gofmt + markdownlint)
 	$(Q)$(REQUIRE_VENV)
-	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
-	$(Q)$(ENSURE_SELECTED_PROJECTS)
-	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
-	$(Q)$(ORCHESTRATOR) --verb format $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(ALL_PROJECTS)
+	$(Q)echo "Formatting Python files (ruff)..."
+	$(Q)$(POETRY_ENV) ruff format . --quiet
+	$(Q)go_files=$$(find . -type f -name '*.go' ! -path '*/.git/*' ! -path '*/vendor/*' ! -path '*/.venv/*'); \
+	if [ -n "$$go_files" ]; then \
+		echo "Formatting Go files (gofmt)..."; \
+		printf '%s\n' "$$go_files" | xargs gofmt -w; \
+		if command -v goimports >/dev/null 2>&1; then \
+			printf '%s\n' "$$go_files" | xargs goimports -w; \
+		fi; \
+	fi
+	$(Q)md_files=$$(git ls-files -- '*.md' ':!vendor/' && git ls-files --others --exclude-standard -- '*.md' ':!vendor/'); \
+	if [ -n "$$md_files" ]; then \
+		echo "Formatting Markdown files (markdownlint)..."; \
+		md_config=""; \
+		if [ -f ".markdownlint.json" ]; then \
+			md_config="--config .markdownlint.json"; \
+		fi; \
+		echo "$$md_files" | xargs markdownlint --fix $$md_config 2>/dev/null || true; \
+	fi
+	$(Q)echo "Format complete."
 
 docs: ## Run docs pipeline (DOCS_PHASE=audit|fix|build|generate|validate|all)
 	$(Q)$(REQUIRE_VENV)

@@ -142,28 +142,6 @@ fi
 endef
 
 define AUTO_ADJUST_PROJECT
-if [ "$(AUTO_ADJUST)" = "1" ]; then \
-	md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './reports/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
-	if [ -n "$$md_files" ] && command -v mdformat >/dev/null 2>&1; then \
-		mkdir -p .reports/preflight; \
-		printf '%s\n' "$$md_files" | xargs -r mdformat 2>>.reports/preflight/mdformat.log || true; \
-	fi; \
-	if [ -n "$$md_files" ] && command -v markdownlint >/dev/null 2>&1; then \
-		md_config=""; \
-		if [ -f "$(WORKSPACE_ROOT)/.markdownlint.json" ]; then \
-			md_config="--config $(WORKSPACE_ROOT)/.markdownlint.json"; \
-		elif [ -f ".markdownlint.json" ]; then \
-			md_config="--config .markdownlint.json"; \
-		fi; \
-		markdownlint --fix $$md_config $$md_files || true; \
-	fi; \
-	if [ -f go.mod ] && command -v gofmt >/dev/null 2>&1; then \
-		go_files=$$(find . -type f -name '*.go' ! -path './.git/*'); \
-		if [ -n "$$go_files" ]; then \
-			printf '%s\n' "$$go_files" | xargs -r gofmt -w; \
-		fi; \
-	fi; \
-fi
 endef
 
 define AUTO_SYNC_BASE_AND_SCRIPTS
@@ -242,79 +220,6 @@ build: ## Build distributable artifacts
 	$(POETRY) build; \
 	echo "Build complete: $(PROJECT_NAME) ($$(($$(date +%s) - $$build_start))s)"
 
-daemon-start-mypy: ## Start dmypy daemon for this project
-	$(Q)mkdir -p .dmypy
-	$(Q)if $(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status >/dev/null 2>&1; then \
-		echo "dmypy already running for $(PROJECT_NAME) at $(DMPY_SOCKET)"; \
-	else \
-		$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" start -- --config-file "$(WORKSPACE_ROOT)/pyproject.toml"; \
-	fi
-
-daemon-stop-mypy: ## Stop dmypy daemon for this project
-	$(Q)$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" stop >/dev/null 2>&1 || true
-	$(Q)rm -f "$(DMPY_SOCKET)"
-
-daemon-status-mypy: ## Show dmypy daemon status for this project
-	$(Q)if $(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status 2>/dev/null; then \
-		: ; \
-	else \
-		echo "dmypy daemon is not running"; \
-	fi
-
-daemon-start-pyright: ## Start pyright daemon in watch mode
-	$(Q)mkdir -p .pyright
-	$(Q)if [ -f "$(PYRIGHT_PIDFILE)" ]; then \
-		pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
-		if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
-			echo "Pyright daemon already running (PID $$pid)"; \
-			exit 0; \
-		fi; \
-		rm -f "$(PYRIGHT_PIDFILE)"; \
-	fi
-	$(Q)nohup pyright --watch --threads > "$(PYRIGHT_LOG)" 2>&1 & \
-		pid=$$!; \
-		echo "$$pid" > "$(PYRIGHT_PIDFILE)"; \
-		echo "Pyright daemon started (PID $$pid), log: $(PYRIGHT_LOG)"
-
-daemon-stop-pyright: ## Stop pyright daemon
-	$(Q)if [ ! -f "$(PYRIGHT_PIDFILE)" ]; then \
-		echo "Pyright daemon is not running"; \
-		exit 0; \
-	fi
-	$(Q)pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
-	if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
-		kill "$$pid" >/dev/null 2>&1 || true; \
-		echo "Stopped pyright daemon (PID $$pid)"; \
-	else \
-		echo "Pyright daemon PID file was stale"; \
-	fi; \
-	rm -f "$(PYRIGHT_PIDFILE)"
-
-daemon-status-pyright: ## Show pyright daemon status
-	$(Q)if [ ! -f "$(PYRIGHT_PIDFILE)" ]; then \
-		echo "Pyright daemon is not running"; \
-	else \
-		pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
-		if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
-			echo "Pyright daemon running (PID $$pid), log: $(PYRIGHT_LOG)"; \
-		else \
-			echo "Pyright daemon not running (stale PID file cleaned)"; \
-			rm -f "$(PYRIGHT_PIDFILE)"; \
-		fi; \
-	fi
-
-daemon-start: daemon-start-mypy daemon-start-pyright ## Start all daemons
-
-daemon-stop: daemon-stop-mypy daemon-stop-pyright ## Stop all daemons
-
-daemon-status: ## Show status of all daemons
-	$(Q)echo "== dmypy =="; \
-	$(MAKE) daemon-status-mypy; \
-	echo "== pyright =="; \
-	$(MAKE) daemon-status-pyright
-
-daemon-restart: daemon-stop daemon-start ## Restart all daemons
-
 check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type to select)
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
 		gates="$(CHECK_GATES)"; \
@@ -333,8 +238,8 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 			golangci-lint run || { echo "FAIL: lint"; exit 1; }; \
 		fi; \
 		if echo "$$gates" | grep -qw format; then \
-			if [ -n "$$(find . -type f -name '*.go' ! -path './.git/*')" ]; then \
-				gofmt_diff=$$(find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -l); \
+			if [ -n "$$(find . -type f -name '*.go' ! -path './.git/*' ! -path './vendor/*')" ]; then \
+				gofmt_diff=$$(find . -type f -name '*.go' ! -path './.git/*' ! -path './vendor/*' -print0 | xargs -0 gofmt -l); \
 				if [ -n "$$gofmt_diff" ]; then \
 					echo "FAIL: gofmt"; \
 					printf '%s\n' "$$gofmt_diff"; \
@@ -346,14 +251,18 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 			gosec ./... || { echo "FAIL: security"; exit 1; }; \
 		fi; \
 		if echo "$$gates" | grep -qw markdown; then \
-			md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './reports/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
+			if git rev-parse --git-dir >/dev/null 2>&1; then \
+				md_files=$$(git ls-files -- '*.md' ':!vendor/'); \
+			else \
+				md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './reports/*' ! -path './.venv/*' ! -path './vendor/*' ! -path './node_modules/*' ! -path './dist/*' ! -path './build/*'); \
+			fi; \
 			md_config=""; \
 			if [ -f "$(WORKSPACE_ROOT)/.markdownlint.json" ]; then \
 				md_config="--config $(WORKSPACE_ROOT)/.markdownlint.json"; \
 			elif [ -f ".markdownlint.json" ]; then \
 				md_config="--config .markdownlint.json"; \
 			fi; \
-			if [ -n "$$md_files" ]; then markdownlint $$md_config $$md_files || { echo "FAIL: markdown"; exit 1; }; fi; \
+			if [ -n "$$md_files" ]; then echo "$$md_files" | xargs markdownlint $$md_config || { echo "FAIL: markdown"; exit 1; }; fi; \
 		fi; \
 		if echo "$$gates" | grep -qw go; then \
 			go vet ./... || { echo "FAIL: go"; exit 1; }; \
@@ -373,12 +282,61 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 	fi; \
 	gates=$$(echo "$$gates" | tr ',' ' ' | sed 's/\btype\b/pyrefly/g' | tr ' ' ','); \
 	project_key="$(PROJECT_NAME)"; \
-	if [ "$(CURDIR)" != "$(WORKSPACE_ROOT)" ]; then \
+	if [ "$(CURDIR)" = "$(WORKSPACE_ROOT)" ]; then \
 		project_key="."; \
 	fi; \
 	$(POETRY) run python -m flext_infra check fix-pyrefly-config "$$project_key"; \
 	$(POETRY) run python -m flext_infra check run --gates "$$gates" --reports-dir "$(CURDIR)/.reports/check" --project "$$project_key"; \
-	exit $$?
+	exit $$?; \
+	if echo "$$gates" | grep -qw lint; then \
+		$(POETRY) run ruff check . --quiet || { echo "FAIL: lint"; exit 1; }; \
+	fi; \
+	if echo "$$gates" | grep -qw format; then \
+		$(POETRY) run ruff format --check . --quiet || { echo "FAIL: format"; exit 1; }; \
+	fi; \
+	check_dirs=""; \
+	for d in src tests examples scripts; do \
+		if [ -d "$$d" ]; then check_dirs="$$check_dirs $$d"; fi; \
+	done; \
+	check_dirs=$${check_dirs:-$(SRC_DIR)}; \
+	if echo "$$gates" | grep -qw pyrefly; then \
+		$(POETRY) run pyrefly check $$check_dirs --config pyproject.toml \
+			--count-errors=0 --summarize-errors=1 --summary full || { echo "FAIL: pyrefly"; exit 1; }; \
+	fi; \
+	if echo "$$gates" | grep -qw mypy; then \
+		$(POETRY) run mypy $$check_dirs --config-file "$(WORKSPACE_ROOT)/pyproject.toml" || { echo "FAIL: mypy"; exit 1; }; \
+	fi; \
+	if echo "$$gates" | grep -qw pyright; then \
+		$(POETRY) run pyright $$check_dirs || { echo "FAIL: pyright"; exit 1; }; \
+	fi; \
+	if echo "$$gates" | grep -qw security; then \
+		$(POETRY) run bandit -r $(SRC_DIR) -q -ll || { echo "FAIL: security"; exit 1; }; \
+	fi; \
+	if echo "$$gates" | grep -qw markdown; then \
+		md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './reports/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
+		md_config=""; \
+		if [ -f "$(WORKSPACE_ROOT)/.markdownlint.json" ]; then \
+			md_config="--config $(WORKSPACE_ROOT)/.markdownlint.json"; \
+		elif [ -f ".markdownlint.json" ]; then \
+			md_config="--config .markdownlint.json"; \
+		fi; \
+		if [ -n "$$md_files" ]; then \
+			markdownlint $$md_config $$md_files || { echo "FAIL: markdown"; exit 1; }; \
+		fi; \
+	fi; \
+	if echo "$$gates" | grep -qw go; then \
+		if [ -f go.mod ]; then \
+			go vet ./... || { echo "FAIL: go"; exit 1; }; \
+			if [ -n "$$(find . -type f -name '*.go' ! -path './.git/*')" ]; then \
+				gofmt_diff=$$(find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -l); \
+				if [ -n "$$gofmt_diff" ]; then \
+					echo "FAIL: gofmt"; \
+					printf '%s\n' "$$gofmt_diff"; \
+					exit 1; \
+				fi; \
+			fi; \
+		fi; \
+	fi
 
 security: ## Run all security checks
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
@@ -387,30 +345,37 @@ security: ## Run all security checks
 	fi
 	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll
 
-format: ## Run all formatting
+format: ## Run code formatting (ruff/gofmt + markdownlint on tracked files)
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
-		if [ -n "$$(find . -type f -name '*.go' ! -path './.git/*')" ]; then \
-			find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -w; \
+		go_files=$$(find . -type f -name '*.go' ! -path './.git/*' ! -path './vendor/*'); \
+		if [ -n "$$go_files" ]; then \
+			printf '%s\n' "$$go_files" | xargs gofmt -w; \
 			if command -v goimports >/dev/null 2>&1; then \
-				find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 goimports -w; \
+				printf '%s\n' "$$go_files" | xargs goimports -w; \
+			fi; \
+		fi; \
+	else \
+		$(POETRY) run ruff format . --quiet; \
+		if [ -f go.mod ]; then \
+			go_files=$$(find . -type f -name '*.go' ! -path './.git/*' ! -path './vendor/*'); \
+			if [ -n "$$go_files" ]; then \
+				printf '%s\n' "$$go_files" | xargs gofmt -w; \
 			fi; \
 		fi; \
 	fi
-	$(Q)if [ "$(CORE_STACK)" != "go" ]; then $(POETRY) run ruff format . --quiet; fi
-	$(Q)md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './reports/*' ! -path './.venv/*' ! -path './node_modules/*' ! -path './.flext-deps/*' ! -path './.mypy_cache/*' ! -path './.pytest_cache/*' ! -path './.ruff_cache/*' ! -path './dist/*' ! -path './build/*'); \
-	md_config=""; \
-	if [ -f "$(WORKSPACE_ROOT)/.markdownlint.json" ]; then \
-		md_config="--config $(WORKSPACE_ROOT)/.markdownlint.json"; \
-	elif [ -f ".markdownlint.json" ]; then \
-		md_config="--config .markdownlint.json"; \
+	$(Q)if git rev-parse --git-dir >/dev/null 2>&1; then \
+		md_files=$$(git ls-files -- '*.md' ':!vendor/' && git ls-files --others --exclude-standard -- '*.md' ':!vendor/'); \
+	else \
+		md_files=$$(find . -type f -name '*.md' ! -path './.git/*' ! -path './.reports/*' ! -path './.venv/*' ! -path './vendor/*' ! -path './node_modules/*' ! -path './dist/*' ! -path './build/*'); \
 	fi; \
 	if [ -n "$$md_files" ]; then \
-		mkdir -p .reports/preflight; \
-		printf '%s\n' "$$md_files" | xargs -r mdformat 2>>.reports/preflight/mdformat.log || true; \
-		markdownlint --fix $$md_config $$md_files || true; \
-	fi
-	$(Q)if [ -f go.mod ] && [ -n "$$(find . -type f -name '*.go' ! -path './.git/*')" ]; then \
-		find . -type f -name '*.go' ! -path './.git/*' -print0 | xargs -0 gofmt -w; \
+		md_config=""; \
+		if [ -f "$(WORKSPACE_ROOT)/.markdownlint.json" ]; then \
+			md_config="--config $(WORKSPACE_ROOT)/.markdownlint.json"; \
+		elif [ -f ".markdownlint.json" ]; then \
+			md_config="--config .markdownlint.json"; \
+		fi; \
+		echo "$$md_files" | xargs markdownlint --fix $$md_config 2>/dev/null || true; \
 	fi
 	$(Q)echo "Format complete: $(PROJECT_NAME)"
 
@@ -546,6 +511,79 @@ validate: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, 
 	if echo "$$gates" | grep -qw docstring; then \
 		$(POETRY) run interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q; \
 	fi
+
+daemon-start-mypy: ## Start dmypy daemon for this project
+	$(Q)mkdir -p .dmypy
+	$(Q)if $(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status >/dev/null 2>&1; then \
+		echo "dmypy already running for $(PROJECT_NAME) at $(DMPY_SOCKET)"; \
+	else \
+		$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" start -- --config-file "$(WORKSPACE_ROOT)/pyproject.toml"; \
+	fi
+
+daemon-stop-mypy: ## Stop dmypy daemon for this project
+	$(Q)$(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" stop >/dev/null 2>&1 || true
+	$(Q)rm -f "$(DMPY_SOCKET)"
+
+daemon-status-mypy: ## Show dmypy daemon status for this project
+	$(Q)if $(VENV_PYTHON) -m mypy.dmypy --status-file "$(DMPY_SOCKET)" status 2>/dev/null; then \
+		: ; \
+	else \
+		echo "dmypy daemon is not running"; \
+	fi
+
+daemon-start-pyright: ## Start pyright daemon in watch mode
+	$(Q)mkdir -p .pyright
+	$(Q)if [ -f "$(PYRIGHT_PIDFILE)" ]; then \
+		pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
+		if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
+			echo "Pyright daemon already running (PID $$pid)"; \
+			exit 0; \
+		fi; \
+		rm -f "$(PYRIGHT_PIDFILE)"; \
+	fi
+	$(Q)nohup pyright --watch --threads > "$(PYRIGHT_LOG)" 2>&1 & \
+		pid=$$!; \
+		echo "$$pid" > "$(PYRIGHT_PIDFILE)"; \
+		echo "Pyright daemon started (PID $$pid), log: $(PYRIGHT_LOG)"
+
+daemon-stop-pyright: ## Stop pyright daemon
+	$(Q)if [ ! -f "$(PYRIGHT_PIDFILE)" ]; then \
+		echo "Pyright daemon is not running"; \
+		exit 0; \
+	fi
+	$(Q)pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
+	if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
+		kill "$$pid" >/dev/null 2>&1 || true; \
+		echo "Stopped pyright daemon (PID $$pid)"; \
+	else \
+		echo "Pyright daemon PID file was stale"; \
+	fi; \
+	rm -f "$(PYRIGHT_PIDFILE)"
+
+daemon-status-pyright: ## Show pyright daemon status
+	$(Q)if [ ! -f "$(PYRIGHT_PIDFILE)" ]; then \
+		echo "Pyright daemon is not running"; \
+	else \
+		pid=$$(cat "$(PYRIGHT_PIDFILE)"); \
+		if [ -n "$$pid" ] && kill -0 "$$pid" >/dev/null 2>&1; then \
+			echo "Pyright daemon running (PID $$pid), log: $(PYRIGHT_LOG)"; \
+		else \
+			echo "Pyright daemon not running (stale PID file cleaned)"; \
+			rm -f "$(PYRIGHT_PIDFILE)"; \
+		fi; \
+	fi
+
+daemon-start: daemon-start-mypy daemon-start-pyright ## Start all daemons
+
+daemon-stop: daemon-stop-mypy daemon-stop-pyright ## Stop all daemons
+
+daemon-status: ## Show status of all daemons
+	$(Q)echo "== dmypy =="; \
+	$(MAKE) daemon-status-mypy; \
+	echo "== pyright =="; \
+	$(MAKE) daemon-status-pyright
+
+daemon-restart: daemon-stop daemon-start ## Restart all daemons
 
 pr: ## Manage pull requests for this repository
 	$(Q)python3 -m flext_infra github pr \
