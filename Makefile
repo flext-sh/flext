@@ -535,7 +535,6 @@ check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,p
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
-	$(Q)$(POETRY_ENV) $(PY) -m flext_infra check fix-pyrefly-config $(SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb check \
 		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
 		$(if $(CHECK_GATES),--make-arg "CHECK_GATES=$(CHECK_GATES)") \
