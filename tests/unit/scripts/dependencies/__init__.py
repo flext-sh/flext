@@ -18,11 +18,26 @@ if TYPE_CHECKING:
 
 # Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
-    "test_array_of_tables_survives_regex_fallback": ("tests.unit.scripts.dependencies.modernize_pyproject_tests", "test_array_of_tables_survives_regex_fallback"),
-    "test_audit_exit_codes_reflect_violations": ("tests.unit.scripts.dependencies.modernize_pyproject_tests", "test_audit_exit_codes_reflect_violations"),
-    "test_bandit_skips_are_loaded_from_root_ssot": ("tests.unit.scripts.dependencies.modernize_pyproject_tests", "test_bandit_skips_are_loaded_from_root_ssot"),
-    "test_process_file_is_idempotent_with_array_of_tables": ("tests.unit.scripts.dependencies.modernize_pyproject_tests", "test_process_file_is_idempotent_with_array_of_tables"),
-    "write_pyproject": ("tests.unit.scripts.dependencies.modernize_pyproject_tests", "write_pyproject"),
+    "test_array_of_tables_survives_regex_fallback": (
+        "tests.unit.scripts.dependencies.modernize_pyproject_tests",
+        "test_array_of_tables_survives_regex_fallback",
+    ),
+    "test_audit_exit_codes_reflect_violations": (
+        "tests.unit.scripts.dependencies.modernize_pyproject_tests",
+        "test_audit_exit_codes_reflect_violations",
+    ),
+    "test_bandit_skips_are_loaded_from_root_ssot": (
+        "tests.unit.scripts.dependencies.modernize_pyproject_tests",
+        "test_bandit_skips_are_loaded_from_root_ssot",
+    ),
+    "test_process_file_is_idempotent_with_array_of_tables": (
+        "tests.unit.scripts.dependencies.modernize_pyproject_tests",
+        "test_process_file_is_idempotent_with_array_of_tables",
+    ),
+    "write_pyproject": (
+        "tests.unit.scripts.dependencies.modernize_pyproject_tests",
+        "write_pyproject",
+    ),
 }
 
 __all__ = [

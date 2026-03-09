@@ -1,6 +1,6 @@
 # ARCHIVED — Subsumed by modernization-reorg-execution.md
 
-# Workspace Final Standardization — Per-Project Complete Fix
+## Workspace Final Standardization — Per-Project Complete Fix
 
 ## TL;DR
 

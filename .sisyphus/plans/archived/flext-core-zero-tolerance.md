@@ -1,6 +1,6 @@
 # ARCHIVED — Subsumed by modernization-reorg-execution.md
 
-# flext-core Zero Tolerance Compliance Fix
+## flext-core Zero Tolerance Compliance Fix
 
 ## TL;DR
 

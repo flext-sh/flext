@@ -1,6 +1,6 @@
 # ARCHIVED — Subsumed by modernization-reorg-execution.md
 
-# Axiomatic Rules Refactoring — flext-core
+## Axiomatic Rules Refactoring — flext-core
 
 ## TL;DR
 
