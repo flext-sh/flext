@@ -1,8 +1,9 @@
 package container
 
 import (
-	"github.com/flext-sh/flext/pkg/infrastructure/logging"
 	"sync"
+
+	"github.com/flext-sh/flext/pkg/infrastructure/logging"
 )
 
 // UnifiedContainer provides basic dependency injection

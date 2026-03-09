@@ -45,10 +45,10 @@ type Config struct {
 	} `mapstructure:"python"`
 
 	Logging struct {
-		Level           string `mapstructure:"level"`
-		Format          string `mapstructure:"format"`
-		Output          string `mapstructure:"output"`
-		CorrelationIDs  bool   `mapstructure:"correlation_ids"`
+		Level          string `mapstructure:"level"`
+		Format         string `mapstructure:"format"`
+		Output         string `mapstructure:"output"`
+		CorrelationIDs bool   `mapstructure:"correlation_ids"`
 	} `mapstructure:"logging"`
 }
 
@@ -59,7 +59,7 @@ func LoadConfig(configPath string) (*Config, error) {
 	// Set configuration sources
 	v.SetConfigName("config")
 	v.SetConfigType("yaml")
-	
+
 	if configPath != "" {
 		// Use specific config file if provided
 		v.SetConfigFile(configPath)
