@@ -10,8 +10,9 @@ import operator
 import re
 import subprocess
 import sys
-from dataclasses import dataclass
 from pathlib import Path
+
+from pydantic import BaseModel, ConfigDict, Field
 
 OWNER_MARKER_RE = re.compile(
     r"^# Owner-Skill:\s+(.claude/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md)\s*$",
