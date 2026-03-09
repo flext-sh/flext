@@ -9,8 +9,9 @@ import json
 import re
 import subprocess
 import sys
-from dataclasses import dataclass, field
 from pathlib import Path
+
+from pydantic import BaseModel, ConfigDict, Field
 
 EXIT_PASS = 0
 EXIT_FAIL = 1
@@ -58,24 +59,32 @@ class Ansi:
     RESET = "\033[0m"
 
 
-@dataclass(frozen=True)
-class Violation:
+class Violation(BaseModel):
     """Violation class."""
 
-    script: str
-    check: str
-    message: str
-    severity: str = "error"
+    model_config = ConfigDict(frozen=True)
+
+    script: str = Field(description="Script file path")
+    check: str = Field(description="Check type that failed")
+    message: str = Field(description="Violation message")
+    severity: str = Field(
+        default="error",
+        description="Severity level (error or warning)",
+    )
 
 
-@dataclass
-class ScriptInfo:
+class ScriptInfo(BaseModel):
     """ScriptInfo class."""
 
-    path: str
-    extension: str
-    role: str
-    violations: list[Violation] = field(default_factory=list)
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    path: str = Field(description="Script file path")
+    extension: str = Field(description="File extension (.py or .sh)")
+    role: str = Field(description="Script role (validator, fixer, or other)")
+    violations: list[Violation] = Field(
+        default_factory=list,
+        description="List of validation violations",
+    )
 
 
 def eprint(message: str) -> None:
