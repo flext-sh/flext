@@ -1,0 +1,23 @@
+.claude/skills/scripts-infra/validate_ownership.py
+  bfb85d0d984b5d88 46,49-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "ca74c5f513b1f282dffd3fb746acfa245a3d1c32",
+  "prompts": {
+    "bfb85d0d984b5d88": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_32ddd2facffernJpVk4hXZNQmv-b6a76338-6a1c-4d7b-8a3d-67e77ed63cb5",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 10,
+      "total_deletions": 6,
+      "accepted_lines": 10,
+      "overriden_lines": 0
+    }
+  }
+}
