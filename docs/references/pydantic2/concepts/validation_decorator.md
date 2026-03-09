@@ -30,21 +30,21 @@ from pydantic import ValidationError, validate_call
 
 
 @validate_call
-def repeat(s: str, count: int, *, separator: bytes = b'') -> bytes:
+def repeat(s: str, count: int, *, separator: bytes = b"") -> bytes:
     b = s.encode()
     return separator.join(b for _ in range(count))
 
 
-a = repeat('hello', 3)
+a = repeat("hello", 3)
 print(a)
-#> b'hellohellohello'
+# > b'hellohellohello'
 
-b = repeat('x', '4', separator=b' ')
+b = repeat("x", "4", separator=b" ")
 print(b)
-#> b'x x x x'
+# > b'x x x x'
 
 try:
-    c = repeat('hello', 'wrong')
+    c = repeat("hello", "wrong")
 except ValidationError as exc:
     print(exc)
     """
@@ -73,7 +73,7 @@ def greater_than(d1: date, d2: date, *, include_equal=False) -> date:  # (1)!
         return d1 > d2
 
 
-d1 = '2000-01-01'  # (2)!
+d1 = "2000-01-01"  # (2)!
 d2 = date(2001, 1, 1)
 greater_than(d1, d2, include_equal=True)
 ```
@@ -107,31 +107,31 @@ using all possible [parameter configurations][parameter] and all possible combin
 
     @validate_call
     def pos_or_kw(a: int, b: int = 2) -> str:
-        return f'a={a} b={b}'
+        return f"a={a} b={b}"
 
 
     print(pos_or_kw(1, b=3))
-    #> a=1 b=3
+    # > a=1 b=3
 
 
     @validate_call
     def kw_only(*, a: int, b: int = 2) -> str:
-        return f'a={a} b={b}'
+        return f"a={a} b={b}"
 
 
     print(kw_only(a=1))
-    #> a=1 b=2
+    # > a=1 b=2
     print(kw_only(a=1, b=3))
-    #> a=1 b=3
+    # > a=1 b=3
 
 
     @validate_call
     def pos_only(a: int, b: int = 2, /) -> str:
-        return f'a={a} b={b}'
+        return f"a={a} b={b}"
 
 
     print(pos_only(1))
-    #> a=1 b=2
+    # > a=1 b=2
 
 
     @validate_call
@@ -140,9 +140,9 @@ using all possible [parameter configurations][parameter] and all possible combin
 
 
     print(var_args(1))
-    #> (1,)
+    # > (1,)
     print(var_args(1, 2, 3))
-    #> (1, 2, 3)
+    # > (1, 2, 3)
 
 
     @validate_call
@@ -151,9 +151,9 @@ using all possible [parameter configurations][parameter] and all possible combin
 
 
     print(var_kwargs(a=1))
-    #> {'a': 1}
+    # > {'a': 1}
     print(var_kwargs(a=1, b=2))
-    #> {'a': 1, 'b': 2}
+    # > {'a': 1, 'b': 2}
 
 
     @validate_call
@@ -166,13 +166,13 @@ using all possible [parameter configurations][parameter] and all possible combin
         e: int = None,
         **f: int,
     ) -> str:
-        return f'a={a} b={b} c={c} d={d} e={e} f={f}'
+        return f"a={a} b={b} c={c} d={d} e={e} f={f}"
 
 
     print(armageddon(1, 2, d=3))
-    #> a=1 b=2 c=() d=3 e=None f={}
+    # > a=1 b=2 c=() d=3 e=None f={}
     print(armageddon(1, 2, 3, 4, 5, 6, d=8, e=9, f=10, spam=11))
-    #> a=1 b=2 c=(3, 4, 5, 6) d=8 e=9 f={'f': 10, 'spam': 11}
+    # > a=1 b=2 c=(3, 4, 5, 6) d=8 e=9 f={'f': 10, 'spam': 11}
     ```
 
 !!! note "[`Unpack`][typing.Unpack] for keyword parameters"
@@ -192,7 +192,7 @@ keyword parameters of a function:
 
     @validate_call
     def add_coords(**kwargs: Unpack[Point]) -> int:
-        return kwargs['x'] + kwargs['y']
+        return kwargs["x"] + kwargs["y"]
 
 
     add_coords(x=1, y=2)
@@ -234,12 +234,12 @@ except ValidationError as e:
 
 
 @validate_call
-def return_value(value: str = Field(default='default value')):
+def return_value(value: str = Field(default="default value")):
     return value
 
 
 print(return_value())
-#> default value
+# > default value
 ```
 
 [Aliases](fields.md#field-aliases) can be used with the decorator as normal:
@@ -251,7 +251,7 @@ from pydantic import Field, validate_call
 
 
 @validate_call
-def how_many(num: Annotated[int, Field(gt=10, alias='number')]):
+def how_many(num: Annotated[int, Field(gt=10, alias="number")]):
     return num
 
 
@@ -268,18 +268,18 @@ from pydantic import validate_call
 
 
 @validate_call
-def repeat(s: str, count: int, *, separator: bytes = b'') -> bytes:
+def repeat(s: str, count: int, *, separator: bytes = b"") -> bytes:
     b = s.encode()
     return separator.join(b for _ in range(count))
 
 
-a = repeat('hello', 3)
+a = repeat("hello", 3)
 print(a)
-#> b'hellohellohello'
+# > b'hellohellohello'
 
-b = repeat.raw_function('good bye', 2, separator=b', ')
+b = repeat.raw_function("good bye", 2, separator=b", ")
 print(b)
-#> b'good bye, good bye'
+# > b'good bye, good bye'
 ```
 
 ## Async functions
@@ -289,7 +289,7 @@ print(b)
 ```python
 class Connection:
     async def execute(self, sql, *args):
-        return 'testing@example.com'
+        return "testing@example.com"
 
 
 conn = Connection()
@@ -302,9 +302,9 @@ from pydantic import PositiveInt, ValidationError, validate_call
 @validate_call
 async def get_user_email(user_id: PositiveInt):
     # `conn` is some fictional connection to a database
-    email = await conn.execute('select email from users where id=$1', user_id)
+    email = await conn.execute("select email from users where id=$1", user_id)
     if email is None:
-        raise RuntimeError('user not found')
+        raise RuntimeError("user not found")
     else:
         return email
 
@@ -312,7 +312,7 @@ async def get_user_email(user_id: PositiveInt):
 async def main():
     email = await get_user_email(123)
     print(email)
-    #> testing@example.com
+    # > testing@example.com
     try:
         await get_user_email(-4)
     except ValidationError as exc:
@@ -354,11 +354,11 @@ class Foobar:
     def __init__(self, v: str):
         self.v = v
 
-    def __add__(self, other: 'Foobar') -> str:
-        return f'{self} + {other}'
+    def __add__(self, other: "Foobar") -> str:
+        return f"{self} + {other}"
 
     def __str__(self) -> str:
-        return f'Foobar({self.v})'
+        return f"Foobar({self.v})"
 
 
 @validate_call(config=ConfigDict(arbitrary_types_allowed=True))
@@ -366,9 +366,9 @@ def add_foobars(a: Foobar, b: Foobar):
     return a + b
 
 
-c = add_foobars(Foobar('a'), Foobar('b'))
+c = add_foobars(Foobar("a"), Foobar("b"))
 print(c)
-#> Foobar(a) + Foobar(b)
+# > Foobar(a) + Foobar(b)
 
 try:
     add_foobars(1, 2)
@@ -404,7 +404,7 @@ def validate_foo(a: int, b: int):
 
 foo = validate_foo(a=1, b=2)
 print(foo())
-#> 3
+# > 3
 ```
 
 ## Limitations

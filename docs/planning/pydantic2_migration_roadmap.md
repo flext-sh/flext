@@ -80,6 +80,7 @@
 ```python
 # BEFORE: Using cast() - FORBIDDEN
 from typing import cast
+
 config = cast(ConfigDict, data)
 
 # AFTER: Using TypeGuard
@@ -88,6 +89,7 @@ from flext_core import u
 if u.Guards.is_config(data):
     config = data  # Type narrowed automatically
     config.app_name  # Safe access
+
 
 # For tests, create test-specific TypeGuards in conftest.py
 def is_user_response(obj: object) -> TypeGuard[UserResponse]:
@@ -103,9 +105,11 @@ class DispatcherConfig(TypedDict):
     retries: int
     batch_size: int
 
+
 class BatchResultDict(TypedDict):
     success_count: int
     failure_count: int
+
 
 # AFTER: Structural Pydantic models with inheritance
 class FlextModels:
@@ -113,6 +117,7 @@ class FlextModels:
 
     class Base(BaseModel):
         """Base for all Flext models."""
+
         model_config = ConfigDict(
             validate_assignment=True,
             use_enum_values=True,
@@ -146,23 +151,23 @@ class FlextModels:
 ```python
 # Standard production model
 model_config = ConfigDict(
-    validate_assignment=True,      # Validate on attribute assignment
-    use_enum_values=True,          # Serialize enums to values
-    extra="forbid",                # Reject unknown fields
-    str_strip_whitespace=True,     # Clean string inputs
-    frozen=False,                  # Mutable by default
+    validate_assignment=True,  # Validate on attribute assignment
+    use_enum_values=True,  # Serialize enums to values
+    extra="forbid",  # Reject unknown fields
+    str_strip_whitespace=True,  # Clean string inputs
+    frozen=False,  # Mutable by default
 )
 
 # Immutable value object
 model_config = ConfigDict(
-    frozen=True,                   # Immutable
+    frozen=True,  # Immutable
     validate_assignment=True,
     extra="forbid",
 )
 
 # API response model (allows extra for forward compatibility)
 model_config = ConfigDict(
-    extra="ignore",                # Ignore unknown fields from API
+    extra="ignore",  # Ignore unknown fields from API
     validate_assignment=True,
 )
 ```
@@ -171,6 +176,7 @@ model_config = ConfigDict(
 
 ```python
 from pydantic import BaseModel, field_validator, model_validator, computed_field
+
 
 class User(BaseModel):
     email: str
@@ -203,15 +209,21 @@ class User(BaseModel):
 class FlextModels:
     class Core:
         class Config(BaseModel): ...
+
         class Context(BaseModel): ...
+
     class Result:
         class Success(BaseModel): ...
+
         class Failure(BaseModel): ...
+
 
 # flext-ldif/src/flext_ldif/models.py
 class FlextLdifModels:
-    class Entry(BaseModel): ...      # m.Ldif.Entry
+    class Entry(BaseModel): ...  # m.Ldif.Entry
+
     class Attribute(BaseModel): ...  # m.Ldif.Attribute
+
 
 # Usage with short aliases
 from flext_ldif import m as ldif_m

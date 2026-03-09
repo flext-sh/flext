@@ -49,6 +49,7 @@ if isinstance(value, str):
 
 # Correct fallible return
 from flext_core import r
+
 return r[str].ok(normalized)
 ```
 
@@ -107,10 +108,12 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 
   **FORBIDDEN patterns (will crash the runtime):**
   ```python
-  type Primitives = str | int | float | bool   # FORBIDDEN — crashes isinstance()
+  type Primitives = str | int | float | bool  # FORBIDDEN — crashes isinstance()
   type Scalar = str | int | float | bool | datetime  # FORBIDDEN
   type ConfigurationMapping = Mapping[str, Container]  # FORBIDDEN
   isinstance(val, t.Serializable)  # FORBIDDEN — recursive alias, always crashes
+
+
   class Foo(t.ConfigurationMapping): ...  # FORBIDDEN — use Mapping[str, t.Container]
   ```
 - **Every module MUST use a single nested class with MRO inheritance**: All domain logic MUST be organized into a nested class hierarchy. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models like `FlextModels.ArbitraryTypesModel`, `FlextModels.FrozenModel`). Loose functions, standalone classes without MRO lineage, and modules without a nested class facade are FORBIDDEN. Subprojects MUST inherit from the parent project's facade class to cascade namespaces via MRO.

@@ -130,10 +130,10 @@ class MyModel(BaseModel):
 
 
 try:
-    MyModel.model_validate({'field': 'invalid'})
+    MyModel.model_validate({"field": "invalid"})
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'arguments_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'arguments_type'
 ```
 
 ## `assertion_error`
@@ -147,7 +147,7 @@ from pydantic import BaseModel, ValidationError, field_validator
 class Model(BaseModel):
     x: int
 
-    @field_validator('x')
+    @field_validator("x")
     @classmethod
     def force_x_positive(cls, v):
         assert v > 0
@@ -157,8 +157,8 @@ class Model(BaseModel):
 try:
     Model(x=-1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'assertion_error'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'assertion_error'
 ```
 
 ## `bool_parsing`
@@ -173,13 +173,13 @@ class Model(BaseModel):
     x: bool
 
 
-Model(x='true')  # OK
+Model(x="true")  # OK
 
 try:
-    Model(x='test')
+    Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'bool_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'bool_parsing'
 ```
 
 ## `bool_type`
@@ -197,8 +197,8 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'bool_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'bool_type'
 ```
 
 This error is also raised for strict fields when the input value is not an instance of `bool`.
@@ -214,14 +214,14 @@ from pydantic import BaseModel, ValidationError
 
 class Model(BaseModel):
     x: bytes
-    model_config = {'val_json_bytes': 'hex'}
+    model_config = {"val_json_bytes": "hex"}
 
 
 try:
-    Model(x=b'a')
+    Model(x=b"a")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'bytes_invalid_encoding'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'bytes_invalid_encoding'
 ```
 
 ## `bytes_too_long`
@@ -237,10 +237,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x=b'test')
+    Model(x=b"test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'bytes_too_long'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'bytes_too_long'
 ```
 
 ## `bytes_too_short`
@@ -256,10 +256,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x=b't')
+    Model(x=b"t")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'bytes_too_short'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'bytes_too_short'
 ```
 
 ## `bytes_type`
@@ -277,8 +277,8 @@ class Model(BaseModel):
 try:
     Model(x=123)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'bytes_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'bytes_type'
 ```
 
 This error is also raised for strict fields when the input value is not an instance of `bytes`.
@@ -297,13 +297,13 @@ class Model(BaseModel):
     x: ImportString[Callable[[Any], Any]]
 
 
-Model(x='math:cos')  # OK
+Model(x="math:cos")  # OK
 
 try:
-    Model(x='os.path')
+    Model(x="os.path")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'callable_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'callable_type'
 ```
 
 ## `complex_str_parsing`
@@ -324,8 +324,8 @@ try:
     # This value `abc` is not a valid complex string.
     Model.model_validate_json('{"num": "abc"}')
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'complex_str_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'complex_str_parsing'
 ```
 
 ## `complex_type`
@@ -343,8 +343,8 @@ class Model(BaseModel):
 try:
     Model(num=False)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'complex_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'complex_type'
 ```
 
 ## `dataclass_exact_type`
@@ -363,16 +363,16 @@ class MyDataclass:
 
 adapter = TypeAdapter(MyDataclass)
 
-print(adapter.validate_python(MyDataclass(x='test'), strict=True))
-#> MyDataclass(x='test')
-print(adapter.validate_python({'x': 'test'}))
-#> MyDataclass(x='test')
+print(adapter.validate_python(MyDataclass(x="test"), strict=True))
+# > MyDataclass(x='test')
+print(adapter.validate_python({"x": "test"}))
+# > MyDataclass(x='test')
 
 try:
-    adapter.validate_python({'x': 'test'}, strict=True)
+    adapter.validate_python({"x": "test"}, strict=True)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'dataclass_exact_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'dataclass_exact_type'
 ```
 
 ## `dataclass_type`
@@ -398,8 +398,8 @@ Outer(y=Inner(x=1))  # OK
 try:
     Outer(y=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'dataclass_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'dataclass_type'
 ```
 
 ## `date_from_datetime_inexact`
@@ -417,14 +417,14 @@ class Model(BaseModel):
     x: date
 
 
-Model(x='2023-01-01')  # OK
+Model(x="2023-01-01")  # OK
 Model(x=datetime(2023, 1, 1))  # OK
 
 try:
     Model(x=datetime(2023, 1, 1, 12))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'date_from_datetime_inexact'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'date_from_datetime_inexact'
 ```
 
 ## `date_from_datetime_parsing`
@@ -442,10 +442,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='XX1494012000')
+    Model(x="XX1494012000")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'date_from_datetime_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'date_from_datetime_parsing'
 ```
 
 ## `date_future`
@@ -465,8 +465,8 @@ class Model(BaseModel):
 try:
     Model(x=date(2000, 1, 1))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'date_future'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'date_future'
 ```
 
 ## `date_parsing`
@@ -485,10 +485,10 @@ class Model(BaseModel):
 
 
 try:
-    Model.model_validate_json(json.dumps({'x': '1'}))
+    Model.model_validate_json(json.dumps({"x": "1"}))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'date_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'date_parsing'
 ```
 
 ## `date_past`
@@ -508,8 +508,8 @@ class Model(BaseModel):
 try:
     Model(x=date.today() + timedelta(1))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'date_past'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'date_past'
 ```
 
 ## `date_type`
@@ -529,8 +529,8 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'date_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'date_type'
 ```
 
 This error is also raised for strict fields when the input value is not an instance of `date`.
@@ -551,10 +551,10 @@ class Model(BaseModel):
 
 try:
     # there is no 13th month
-    Model(x='2023-13-01')
+    Model(x="2023-13-01")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'datetime_from_date_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'datetime_from_date_parsing'
 ```
 
 ## `datetime_future`
@@ -574,8 +574,8 @@ class Model(BaseModel):
 try:
     Model(x=datetime(2000, 1, 1))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'datetime_future'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'datetime_future'
 ```
 
 ## `datetime_object_invalid`
@@ -592,7 +592,7 @@ class CustomTz(tzinfo):
     # utcoffset is not implemented!
 
     def tzname(self, _dt):
-        return 'CustomTZ'
+        return "CustomTZ"
 
 
 class Model(BaseModel):
@@ -602,8 +602,8 @@ class Model(BaseModel):
 try:
     Model(x=datetime(2023, 1, 1, tzinfo=CustomTz()))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'datetime_object_invalid'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'datetime_object_invalid'
 ```
 
 ## `datetime_parsing`
@@ -622,10 +622,10 @@ class Model(BaseModel):
 
 
 try:
-    Model.model_validate_json(json.dumps({'x': 'not a datetime'}))
+    Model.model_validate_json(json.dumps({"x": "not a datetime"}))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'datetime_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'datetime_parsing'
 ```
 
 ## `datetime_past`
@@ -645,8 +645,8 @@ class Model(BaseModel):
 try:
     Model(x=datetime.now() + timedelta(100))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'datetime_past'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'datetime_past'
 ```
 
 ## `datetime_type`
@@ -666,8 +666,8 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'datetime_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'datetime_type'
 ```
 
 This error is also raised for strict fields when the input value is not an instance of `datetime`.
@@ -687,10 +687,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='42.1234')
+    Model(x="42.1234")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'decimal_max_digits'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'decimal_max_digits'
 ```
 
 ## `decimal_max_places`
@@ -708,10 +708,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='42.1234')
+    Model(x="42.1234")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'decimal_max_places'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'decimal_max_places'
 ```
 
 ## `decimal_parsing`
@@ -729,10 +729,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='test')
+    Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'decimal_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'decimal_parsing'
 ```
 
 ## `decimal_type`
@@ -752,8 +752,8 @@ class Model(BaseModel):
 try:
     Model(x=[1, 2, 3])
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'decimal_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'decimal_type'
 ```
 
 This error is also raised for strict fields when the input value is not an instance of `Decimal`.
@@ -773,10 +773,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='12345.6')
+    Model(x="12345.6")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'decimal_whole_digits'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'decimal_whole_digits'
 ```
 
 ## `default_factory_not_called`
@@ -790,7 +790,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 class Model(BaseModel):
     a: int = Field(gt=10)
-    b: int = Field(default_factory=lambda data: data['a'])
+    b: int = Field(default_factory=lambda data: data["a"])
 
 
 try:
@@ -804,8 +804,8 @@ except ValidationError as exc:
     b
       The default factory uses validated data, but at least one validation error occurred [type=default_factory_not_called]
     """
-    print(repr(exc.errors()[1]['type']))
-    #> 'default_factory_not_called'
+    print(repr(exc.errors()[1]["type"]))
+    # > 'default_factory_not_called'
 ```
 
 ## `dict_type`
@@ -821,10 +821,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x=['1', '2'])
+    Model(x=["1", "2"])
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'dict_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'dict_type'
 ```
 
 ## `enum`
@@ -838,7 +838,7 @@ from pydantic import BaseModel, ValidationError
 
 
 class MyEnum(str, Enum):
-    option = 'option'
+    option = "option"
 
 
 class Model(BaseModel):
@@ -846,10 +846,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='other_option')
+    Model(x="other_option")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'enum'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'enum'
 ```
 
 ## `extra_forbidden`
@@ -863,14 +863,14 @@ from pydantic import BaseModel, ConfigDict, ValidationError
 class Model(BaseModel):
     x: str
 
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra="forbid")
 
 
 try:
-    Model(x='test', y='test')
+    Model(x="test", y="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'extra_forbidden'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'extra_forbidden'
 ```
 
 You can read more about the `extra` configuration in the [Extra Attributes][pydantic.config.ConfigDict.extra] section.
@@ -891,8 +891,8 @@ class Model(BaseModel):
 try:
     Model(x=2.2250738585072011e308)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'finite_number'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'finite_number'
 ```
 
 ## `float_parsing`
@@ -908,10 +908,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='test')
+    Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'float_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'float_parsing'
 ```
 
 ## `float_type`
@@ -929,8 +929,8 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'float_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'float_type'
 ```
 
 ## `frozen_field`
@@ -942,22 +942,22 @@ from pydantic import BaseModel, Field, ValidationError
 
 
 class Model(BaseModel):
-    x: str = Field('test', frozen=True)
+    x: str = Field("test", frozen=True)
 
 
 model = Model()
 
 try:
-    model.x = 'test1'
+    model.x = "test1"
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'frozen_field'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'frozen_field'
 
 try:
     del model.x
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'frozen_field'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'frozen_field'
 ```
 
 ## `frozen_instance`
@@ -980,14 +980,14 @@ m = Model(x=1)
 try:
     m.x = 2
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'frozen_instance'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'frozen_instance'
 
 try:
     del m.x
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'frozen_instance'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'frozen_instance'
 ```
 
 ## `frozen_set_type`
@@ -1003,10 +1003,10 @@ class Model(BaseModel):
 
 
 try:
-    model = Model(x='test')
+    model = Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'frozen_set_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'frozen_set_type'
 ```
 
 ## `get_attribute_error`
@@ -1023,7 +1023,7 @@ class Foobar:
 
     @property
     def y(self):
-        raise RuntimeError('intentional error')
+        raise RuntimeError("intentional error")
 
 
 class Model(BaseModel):
@@ -1036,8 +1036,8 @@ class Model(BaseModel):
 try:
     Model.model_validate(Foobar())
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'get_attribute_error'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'get_attribute_error'
 ```
 
 ## `greater_than`
@@ -1055,8 +1055,8 @@ class Model(BaseModel):
 try:
     Model(x=10)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'greater_than'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'greater_than'
 ```
 
 ## `greater_than_equal`
@@ -1074,8 +1074,8 @@ class Model(BaseModel):
 try:
     Model(x=9)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'greater_than_equal'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'greater_than_equal'
 ```
 
 ## `int_from_float`
@@ -1093,8 +1093,8 @@ class Model(BaseModel):
 try:
     Model(x=0.5)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'int_from_float'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'int_from_float'
 ```
 
 ## `int_parsing`
@@ -1110,10 +1110,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='test')
+    Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'int_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'int_parsing'
 ```
 
 ## `int_parsing_size`
@@ -1132,21 +1132,21 @@ class Model(BaseModel):
 
 
 # from Python
-assert Model(x='1' * 4_300).x == int('1' * 4_300)  # OK
+assert Model(x="1" * 4_300).x == int("1" * 4_300)  # OK
 
-too_long = '1' * 4_301
+too_long = "1" * 4_301
 try:
     Model(x=too_long)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'int_parsing_size'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'int_parsing_size'
 
 # from JSON
 try:
-    Model.model_validate_json(json.dumps({'x': too_long}))
+    Model.model_validate_json(json.dumps({"x": too_long}))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'int_parsing_size'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'int_parsing_size'
 ```
 
 ## `int_type`
@@ -1164,8 +1164,8 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'int_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'int_type'
 ```
 
 ## `invalid_key`
@@ -1179,14 +1179,14 @@ from pydantic import BaseModel, ConfigDict, ValidationError
 class Model(BaseModel):
     x: int
 
-    model_config = ConfigDict(extra='allow')
+    model_config = ConfigDict(extra="allow")
 
 
 try:
-    Model.model_validate({'x': 1, b'y': 2})
+    Model.model_validate({"x": 1, b"y": 2})
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'invalid_key'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'invalid_key'
 ```
 
 ## `is_instance_of`
@@ -1208,10 +1208,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(y='test')
+    Model(y="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'is_instance_of'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'is_instance_of'
 ```
 
 ## `is_subclass_of`
@@ -1231,10 +1231,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(y='test')
+    Model(y="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'is_subclass_of'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'is_subclass_of'
 ```
 
 ## `iterable_type`
@@ -1254,8 +1254,8 @@ class Model(BaseModel):
 try:
     Model(y=123)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'iterable_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'iterable_type'
 ```
 
 ## `iteration_error`
@@ -1268,7 +1268,7 @@ from pydantic import BaseModel, ValidationError
 
 def gen():
     yield 1
-    raise RuntimeError('error')
+    raise RuntimeError("error")
 
 
 class Model(BaseModel):
@@ -1278,8 +1278,8 @@ class Model(BaseModel):
 try:
     Model(x=gen())
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'iteration_error'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'iteration_error'
 ```
 
 ## `json_invalid`
@@ -1295,10 +1295,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='test')
+    Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'json_invalid'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'json_invalid'
 ```
 
 ## `json_type`
@@ -1316,8 +1316,8 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'json_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'json_type'
 ```
 
 ## `less_than`
@@ -1335,8 +1335,8 @@ class Model(BaseModel):
 try:
     Model(x=10)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'less_than'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'less_than'
 ```
 
 ## `less_than_equal`
@@ -1354,8 +1354,8 @@ class Model(BaseModel):
 try:
     Model(x=11)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'less_than_equal'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'less_than_equal'
 ```
 
 ## `list_type`
@@ -1373,8 +1373,8 @@ class Model(BaseModel):
 try:
     Model(x=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'list_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'list_type'
 ```
 
 ## `literal_error`
@@ -1388,16 +1388,16 @@ from pydantic import BaseModel, ValidationError
 
 
 class Model(BaseModel):
-    x: Literal['a', 'b']
+    x: Literal["a", "b"]
 
 
-Model(x='a')  # OK
+Model(x="a")  # OK
 
 try:
-    Model(x='c')
+    Model(x="c")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'literal_error'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'literal_error'
 ```
 
 ## `mapping_type`
@@ -1432,8 +1432,8 @@ class Model(BaseModel):
 try:
     Model(x=BadMapping())
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'mapping_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'mapping_type'
 ```
 
 ## `missing`
@@ -1451,8 +1451,8 @@ class Model(BaseModel):
 try:
     Model()
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'missing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'missing'
 ```
 
 ## `missing_argument`
@@ -1472,8 +1472,8 @@ def foo(a: int):
 try:
     foo()
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'missing_argument'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'missing_argument'
 ```
 
 ## `missing_keyword_only_argument`
@@ -1492,8 +1492,8 @@ def foo(*, a: int):
 try:
     foo()
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'missing_keyword_only_argument'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'missing_keyword_only_argument'
 ```
 
 ## `missing_positional_only_argument`
@@ -1513,8 +1513,8 @@ def foo(a: int, /):
 try:
     foo()
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'missing_positional_only_argument'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'missing_positional_only_argument'
 ```
 
 ## `missing_sentinel_error`
@@ -1534,8 +1534,8 @@ class Model(BaseModel):
 try:
     Model(f=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'missing_sentinel_error'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'missing_sentinel_error'
 ```
 
 ## `model_attributes_type`
@@ -1552,8 +1552,8 @@ class Model(BaseModel):
 
 
 # simply validating a dict
-print(Model.model_validate({'a': 1, 'b': 2}))
-#> a=1 b=2
+print(Model.model_validate({"a": 1, "b": 2}))
+# > a=1 b=2
 
 
 class CustomObj:
@@ -1564,13 +1564,13 @@ class CustomObj:
 
 # using from attributes to extract fields from an objects
 print(Model.model_validate(CustomObj(3, 4), from_attributes=True))
-#> a=3 b=4
+# > a=3 b=4
 
 try:
-    Model.model_validate('not an object', from_attributes=True)
+    Model.model_validate("not an object", from_attributes=True)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'model_attributes_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'model_attributes_type'
 ```
 
 ## `model_type`
@@ -1587,19 +1587,19 @@ class Model(BaseModel):
 
 
 # simply validating a dict
-m = Model.model_validate({'a': 1, 'b': 2})
+m = Model.model_validate({"a": 1, "b": 2})
 print(m)
-#> a=1 b=2
+# > a=1 b=2
 
 # validating an existing model instance
 print(Model.model_validate(m))
-#> a=1 b=2
+# > a=1 b=2
 
 try:
-    Model.model_validate('not an object')
+    Model.model_validate("not an object")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'model_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'model_type'
 ```
 
 ## `multiple_argument_values`
@@ -1619,8 +1619,8 @@ def foo(a: int):
 try:
     foo(1, a=2)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'multiple_argument_values'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'multiple_argument_values'
 ```
 
 ## `multiple_of`
@@ -1638,8 +1638,8 @@ class Model(BaseModel):
 try:
     Model(x=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'multiple_of'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'multiple_of'
 ```
 
 ## `needs_python_object`
@@ -1658,10 +1658,10 @@ class Model(BaseModel):
 
 
 try:
-    Model.model_validate_json(json.dumps({'bm': 'not a basemodel class'}))
+    Model.model_validate_json(json.dumps({"bm": "not a basemodel class"}))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'needs_python_object'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'needs_python_object'
 ```
 
 ## `no_such_attribute`
@@ -1682,8 +1682,8 @@ m = MyDataclass(x=1)
 try:
     m.y = 10
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'no_such_attribute'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'no_such_attribute'
 ```
 
 ## `none_required`
@@ -1701,8 +1701,8 @@ class Model(BaseModel):
 try:
     Model(x=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'none_required'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'none_required'
 ```
 
 !!! note
@@ -1732,16 +1732,16 @@ from pydantic import BaseModel, ValidationError
 
 
 class Model(BaseModel):
-    x: list['Model']
+    x: list["Model"]
 
 
-d = {'x': []}
-d['x'].append(d)
+d = {"x": []}
+d["x"].append(d)
 try:
     Model(**d)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'recursion_loop'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'recursion_loop'
 ```
 
 ## `set_item_not_hashable`
@@ -1761,12 +1761,12 @@ class Unhashable:
 
 
 try:
-    Model(x=[{'a': 'b'}, Unhashable()])
+    Model(x=[{"a": "b"}, Unhashable()])
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'set_item_not_hashable'
-    print(repr(exc.errors()[1]['type']))
-    #> 'set_item_not_hashable'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'set_item_not_hashable'
+    print(repr(exc.errors()[1]["type"]))
+    # > 'set_item_not_hashable'
 ```
 
 ## `set_type`
@@ -1782,10 +1782,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='test')
+    Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'set_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'set_type'
 ```
 
 ## `string_pattern_mismatch`
@@ -1797,14 +1797,14 @@ from pydantic import BaseModel, Field, ValidationError
 
 
 class Model(BaseModel):
-    x: str = Field(pattern='test')
+    x: str = Field(pattern="test")
 
 
 try:
-    Model(x='1')
+    Model(x="1")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'string_pattern_mismatch'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'string_pattern_mismatch'
 ```
 
 ## `string_sub_type`
@@ -1818,7 +1818,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 
 class MyEnum(str, Enum):
-    foo = 'foo'
+    foo = "foo"
 
 
 class Model(BaseModel):
@@ -1828,8 +1828,8 @@ class Model(BaseModel):
 try:
     Model(x=MyEnum.foo)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'string_sub_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'string_sub_type'
 ```
 
 ## `string_too_long`
@@ -1845,10 +1845,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='test')
+    Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'string_too_long'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'string_too_long'
 ```
 
 ## `string_too_short`
@@ -1864,10 +1864,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='t')
+    Model(x="t")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'string_too_short'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'string_too_short'
 ```
 
 ## `string_type`
@@ -1885,8 +1885,8 @@ class Model(BaseModel):
 try:
     Model(x=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'string_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'string_type'
 ```
 
 This error is also raised for strict fields when the input value is not an instance of `str`.
@@ -1904,10 +1904,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x=b'\x81')
+    Model(x=b"\x81")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'string_unicode'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'string_unicode'
 ```
 
 ## `time_delta_parsing`
@@ -1925,10 +1925,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='t')
+    Model(x="t")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'time_delta_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'time_delta_parsing'
 ```
 
 ## `time_delta_type`
@@ -1948,8 +1948,8 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'time_delta_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'time_delta_type'
 ```
 
 This error is also raised for strict fields when the input value is not an instance of `timedelta`.
@@ -1969,10 +1969,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='25:20:30.400')
+    Model(x="25:20:30.400")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'time_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'time_parsing'
 ```
 
 ## `time_type`
@@ -1992,8 +1992,8 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'time_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'time_type'
 ```
 
 This error is also raised for strict fields when the input value is not an instance of `time`.
@@ -2016,8 +2016,8 @@ class Model(BaseModel):
 try:
     Model(x=datetime.now())
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'timezone_aware'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'timezone_aware'
 ```
 
 ## `timezone_naive`
@@ -2038,8 +2038,8 @@ class Model(BaseModel):
 try:
     Model(x=datetime.now(tz=timezone.utc))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'timezone_naive'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'timezone_naive'
 ```
 
 ## `too_long`
@@ -2057,8 +2057,8 @@ class Model(BaseModel):
 try:
     Model(x=[1, 2, 3, 4])
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'too_long'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'too_long'
 ```
 
 ## `too_short`
@@ -2076,8 +2076,8 @@ class Model(BaseModel):
 try:
     Model(x=[1, 2])
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'too_short'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'too_short'
 ```
 
 ## `tuple_type`
@@ -2095,8 +2095,8 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'tuple_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'tuple_type'
 ```
 
 This error is also raised for strict fields when the input value is not an instance of `tuple`.
@@ -2118,8 +2118,8 @@ def foo(a: int, /):
 try:
     foo(a=2)
 except ValidationError as exc:
-    print(repr(exc.errors()[1]['type']))
-    #> 'unexpected_keyword_argument'
+    print(repr(exc.errors()[1]["type"]))
+    # > 'unexpected_keyword_argument'
 ```
 
 It is also raised when using pydantic.dataclasses and `extra=forbid`:
@@ -2129,16 +2129,16 @@ from pydantic import TypeAdapter, ValidationError
 from pydantic.dataclasses import dataclass
 
 
-@dataclass(config={'extra': 'forbid'})
+@dataclass(config={"extra": "forbid"})
 class Foo:
     bar: int
 
 
 try:
-    TypeAdapter(Foo).validate_python({'bar': 1, 'foobar': 2})
+    TypeAdapter(Foo).validate_python({"bar": 1, "foobar": 2})
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'unexpected_keyword_argument'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'unexpected_keyword_argument'
 ```
 
 ## `unexpected_positional_argument`
@@ -2158,8 +2158,8 @@ def foo(*, a: int):
 try:
     foo(2)
 except ValidationError as exc:
-    print(repr(exc.errors()[1]['type']))
-    #> 'unexpected_positional_argument'
+    print(repr(exc.errors()[1]["type"]))
+    # > 'unexpected_positional_argument'
 ```
 
 ## `union_tag_invalid`
@@ -2173,22 +2173,22 @@ from pydantic import BaseModel, Field, ValidationError
 
 
 class BlackCat(BaseModel):
-    pet_type: Literal['blackcat']
+    pet_type: Literal["blackcat"]
 
 
 class WhiteCat(BaseModel):
-    pet_type: Literal['whitecat']
+    pet_type: Literal["whitecat"]
 
 
 class Model(BaseModel):
-    cat: Union[BlackCat, WhiteCat] = Field(discriminator='pet_type')
+    cat: Union[BlackCat, WhiteCat] = Field(discriminator="pet_type")
 
 
 try:
-    Model(cat={'pet_type': 'dog'})
+    Model(cat={"pet_type": "dog"})
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'union_tag_invalid'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'union_tag_invalid'
 ```
 
 ## `union_tag_not_found`
@@ -2202,22 +2202,22 @@ from pydantic import BaseModel, Field, ValidationError
 
 
 class BlackCat(BaseModel):
-    pet_type: Literal['blackcat']
+    pet_type: Literal["blackcat"]
 
 
 class WhiteCat(BaseModel):
-    pet_type: Literal['whitecat']
+    pet_type: Literal["whitecat"]
 
 
 class Model(BaseModel):
-    cat: Union[BlackCat, WhiteCat] = Field(discriminator='pet_type')
+    cat: Union[BlackCat, WhiteCat] = Field(discriminator="pet_type")
 
 
 try:
-    Model(cat={'name': 'blackcat'})
+    Model(cat={"name": "blackcat"})
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'union_tag_not_found'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'union_tag_not_found'
 ```
 
 ## `url_parsing`
@@ -2233,10 +2233,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='test')
+    Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'url_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'url_parsing'
 ```
 
 ## `url_scheme`
@@ -2252,10 +2252,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='ftp://example.com')
+    Model(x="ftp://example.com")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'url_scheme'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'url_scheme'
 ```
 
 ## `url_syntax_violation`
@@ -2271,10 +2271,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='http:////example.com')
+    Model(x="http:////example.com")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'url_syntax_violation'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'url_syntax_violation'
 ```
 
 ## `url_too_long`
@@ -2290,10 +2290,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(x='x' * 2084)
+    Model(x="x" * 2084)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'url_too_long'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'url_too_long'
 ```
 
 ## `url_type`
@@ -2311,8 +2311,8 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'url_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'url_type'
 ```
 
 ## `uuid_parsing`
@@ -2330,10 +2330,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(u='12345678-124-1234-1234-567812345678')
+    Model(u="12345678-124-1234-1234-567812345678")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'uuid_parsing'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'uuid_parsing'
 ```
 
 ## `uuid_type`
@@ -2353,8 +2353,8 @@ class Model(BaseModel):
 try:
     Model(u=1234567812412341234567812345678)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'uuid_type'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'uuid_type'
 ```
 
 ## `uuid_version`
@@ -2370,10 +2370,10 @@ class Model(BaseModel):
 
 
 try:
-    Model(u='a6cc5730-2261-11ee-9c43-2eb5a363657c')
+    Model(u="a6cc5730-2261-11ee-9c43-2eb5a363657c")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'uuid_version'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'uuid_version'
 ```
 
 ## `value_error`
@@ -2387,15 +2387,15 @@ from pydantic import BaseModel, ValidationError, field_validator
 class Model(BaseModel):
     x: str
 
-    @field_validator('x')
+    @field_validator("x")
     @classmethod
     def repeat_b(cls, v):
         raise ValueError()
 
 
 try:
-    Model(x='test')
+    Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]['type']))
-    #> 'value_error'
+    print(repr(exc.errors()[0]["type"]))
+    # > 'value_error'
 ```

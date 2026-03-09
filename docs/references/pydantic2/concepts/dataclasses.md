@@ -26,11 +26,11 @@ from pydantic.dataclasses import dataclass
 @dataclass
 class User:
     id: int
-    name: str = 'John Doe'
+    name: str = "John Doe"
     signup_ts: Optional[datetime] = None
 
 
-user = User(id='42', signup_ts='2032-06-21T12:00')
+user = User(id="42", signup_ts="2032-06-21T12:00")
 print(user)
 """
 User(id=42, name='John Doe', signup_ts=datetime.datetime(2032, 6, 21, 12, 0))
@@ -75,20 +75,18 @@ from pydantic.dataclasses import dataclass
 @dataclass
 class User:
     id: int
-    name: str = 'John Doe'
+    name: str = "John Doe"
     friends: list[int] = dataclasses.field(default_factory=lambda: [0])
     age: Optional[int] = dataclasses.field(
         default=None,
-        metadata={'title': 'The age of the user', 'description': 'do not lie!'},
+        metadata={"title": "The age of the user", "description": "do not lie!"},
     )
-    height: Optional[int] = Field(
-        default=None, title='The height in cm', ge=50, le=300
-    )
+    height: Optional[int] = Field(default=None, title="The height in cm", ge=50, le=300)
 
 
-user = User(id='42', height='250')
+user = User(id="42", height="250")
 print(user)
-#> User(id=42, name='John Doe', friends=[0], age=None, height=250)
+# > User(id=42, name='John Doe', friends=[0], age=None, height=250)
 ```
 
 The Pydantic [`@dataclass`][pydantic.dataclasses.dataclass] decorator accepts the same arguments as the standard decorator,
@@ -161,12 +159,12 @@ class X(Y):
     x: int = 0
 
 
-foo = X(x=b'1', y='2', z='3')
+foo = X(x=b"1", y="2", z="3")
 print(foo)
-#> X(z=3, y=2, x=1)
+# > X(z=3, y=2, x=1)
 
 try:
-    X(z='pika')
+    X(z="pika")
 except pydantic.ValidationError as e:
     print(e)
     """
@@ -190,8 +188,8 @@ class A:
 
 
 PydanticA = pydantic.dataclasses.dataclass(A)
-print(PydanticA(a='1'))
-#> A(a=1)
+print(PydanticA(a="1"))
+# > A(a=1)
 ```
 
 ### Usage of stdlib dataclasses with `BaseModel`
@@ -214,15 +212,15 @@ class User:
 
 class Foo(BaseModel):
     # Required so that pydantic revalidates the model attributes:
-    model_config = ConfigDict(revalidate_instances='always')
+    model_config = ConfigDict(revalidate_instances="always")
 
     user: Optional[User] = None
 
 
 # nothing is validated as expected:
-user = User(name=['not', 'a', 'string'])
+user = User(name=["not", "a", "string"])
 print(user)
-#> User(name=['not', 'a', 'string'])
+# > User(name=['not', 'a', 'string'])
 
 
 try:
@@ -235,12 +233,12 @@ except ValidationError as e:
       Input should be a valid string [type=string_type, input_value=['not', 'a', 'string'], input_type=list]
     """
 
-foo = Foo(user=User(name='pika'))
+foo = Foo(user=User(name="pika"))
 try:
-    foo.user.name = 'bulbi'
+    foo.user.name = "bulbi"
 except dataclasses.FrozenInstanceError as e:
     print(e)
-    #> cannot assign to field 'name'
+    # > cannot assign to field 'name'
 ```
 
 ### Using custom types
@@ -262,7 +260,7 @@ class ArbitraryType:
         self.value = value
 
     def __repr__(self):
-        return f'ArbitraryType(value={self.value!r})'
+        return f"ArbitraryType(value={self.value!r})"
 
 
 @dataclasses.dataclass
@@ -272,7 +270,7 @@ class DC:
 
 
 # valid as it is a stdlib dataclass without validation:
-my_dc = DC(a=ArbitraryType(value=3), b='qwe')
+my_dc = DC(a=ArbitraryType(value=3), b="qwe")
 
 try:
 
@@ -281,7 +279,7 @@ try:
         other: str
 
     # invalid as dc is now validated with pydantic, and ArbitraryType is not a known type
-    Model(dc=my_dc, other='other')
+    Model(dc=my_dc, other="other")
 
 except PydanticSchemaGenerationError as e:
     print(e.message)
@@ -300,9 +298,9 @@ class Model(BaseModel):
     other: str
 
 
-m = Model(dc=my_dc, other='other')
+m = Model(dc=my_dc, other="other")
 print(repr(m))
-#> Model(dc=DC(a=ArbitraryType(value=3), b='qwe'), other='other')
+# > Model(dc=DC(a=ArbitraryType(value=3), b='qwe'), other='other')
 ```
 
 ### Checking if a dataclass is a Pydantic dataclass
@@ -325,14 +323,14 @@ class StdLibDataclass:
 PydanticDataclass = pydantic.dataclasses.dataclass(StdLibDataclass)
 
 print(dataclasses.is_dataclass(StdLibDataclass))
-#> True
+# > True
 print(pydantic.dataclasses.is_pydantic_dataclass(StdLibDataclass))
-#> False
+# > False
 
 print(dataclasses.is_dataclass(PydanticDataclass))
-#> True
+# > True
 print(pydantic.dataclasses.is_pydantic_dataclass(PydanticDataclass))
-#> True
+# > True
 ```
 
 ## Validators and initialization hooks
@@ -348,7 +346,7 @@ from pydantic.dataclasses import dataclass
 class DemoDataclass:
     product_id: str  # should be a five-digit string, may have leading zeros
 
-    @field_validator('product_id', mode='before')
+    @field_validator("product_id", mode="before")
     @classmethod
     def convert_int_serial(cls, v):
         if isinstance(v, int):
@@ -356,10 +354,10 @@ class DemoDataclass:
         return v
 
 
-print(DemoDataclass(product_id='01234'))
-#> DemoDataclass(product_id='01234')
+print(DemoDataclass(product_id="01234"))
+# > DemoDataclass(product_id='01234')
 print(DemoDataclass(product_id=2468))
-#> DemoDataclass(product_id='02468')
+# > DemoDataclass(product_id='02468')
 ```
 
 <!-- markdownlint-disable-next-line strong-style -->
@@ -388,27 +386,27 @@ be called between the calls to _before_ and _after_ model validators.
     class User:
         birth: Birth
 
-        @model_validator(mode='before')
+        @model_validator(mode="before")
         @classmethod
         def before(cls, values: ArgsKwargs) -> ArgsKwargs:
-            print(f'First: {values}')  # (1)!
+            print(f"First: {values}")  # (1)!
             """
             First: ArgsKwargs((), {'birth': {'year': 1995, 'month': 3, 'day': 2}})
             """
             return values
 
-        @model_validator(mode='after')
+        @model_validator(mode="after")
         def after(self) -> Self:
-            print(f'Third: {self}')
-            #> Third: User(birth=Birth(year=1995, month=3, day=2))
+            print(f"Third: {self}")
+            # > Third: User(birth=Birth(year=1995, month=3, day=2))
             return self
 
         def __post_init__(self):
-            print(f'Second: {self.birth}')
-            #> Second: Birth(year=1995, month=3, day=2)
+            print(f"Second: {self.birth}")
+            # > Second: Birth(year=1995, month=3, day=2)
 
 
-    user = User(**{'birth': {'year': 1995, 'month': 3, 'day': 2}})
+    user = User(**{"birth": {"year": 1995, "month": 3, "day": 2}})
     ```
 
     1. Unlike Pydantic models, the `values` parameter is of type [`ArgsKwargs`][pydantic_core.ArgsKwargs]

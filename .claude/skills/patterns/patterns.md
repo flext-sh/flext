@@ -26,11 +26,11 @@ Replacing manual `type()`/`isinstance()` casts with Pydantic model boundaries (`
 ```python
 # BAD: Manual runtime type checking
 def process_user(data: dict) -> User:
-    if isinstance(data.get('age'), int):
-        age = data['age']
+    if isinstance(data.get("age"), int):
+        age = data["age"]
     else:
-        age = int(data['age'])  # Manual cast
-    return User(name=data['name'], age=age)
+        age = int(data["age"])  # Manual cast
+    return User(name=data["name"], age=age)
 ```
 
 **✅ CORRECT PATTERN**:
@@ -38,9 +38,11 @@ def process_user(data: dict) -> User:
 # GOOD: Validate at boundary
 from pydantic import BaseModel
 
+
 class User(BaseModel):
     name: str
     age: int
+
 
 def process_user(data: dict) -> User:
     return User.model_validate(data)  # Single validation point
@@ -52,12 +54,12 @@ def process_user(data: dict) -> User:
 **Evidence** ([source](https://github.com/pydantic/pydantic/blob/main/pydantic/deprecated/tools.py#L22-L30)):
 ```python
 @deprecated(
-    '`parse_obj_as` is deprecated. Use `pydantic.TypeAdapter.validate_python` instead.',
+    "`parse_obj_as` is deprecated. Use `pydantic.TypeAdapter.validate_python` instead.",
     category=None,
 )
 def parse_obj_as(type_: type[T], obj: Any, type_name: NameFactory | None = None) -> T:
     warnings.warn(
-        '`parse_obj_as` is deprecated. Use `pydantic.TypeAdapter.validate_python` instead.',
+        "`parse_obj_as` is deprecated. Use `pydantic.TypeAdapter.validate_python` instead.",
         category=PydanticDeprecatedSince20,
         stacklevel=2,
     )
@@ -80,8 +82,8 @@ def parse_obj_as(type_: type[T], obj: Any, type_name: NameFactory | None = None)
 # BAD: Bypass validation for "performance"
 raw_data = api_call()  # Untrusted!
 user = User.model_construct(
-    id=raw_data.get('id'),
-    name=raw_data.get('name'),
+    id=raw_data.get("id"),
+    name=raw_data.get("name"),
     # No validation!
 )
 ```
@@ -99,8 +101,8 @@ def test_simple_construct():
     m = Model.model_construct(a=3.14)
     assert m.a == 3.14
     assert m.b == 10
-    assert m.model_fields_set == {'a'}
-    assert m.model_dump() == {'a': 3.14, 'b': 10}
+    assert m.model_fields_set == {"a"}
+    assert m.model_dump() == {"a": 3.14, "b": 10}
 ```
 
 **Evidence** ([source](https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGTymN9x_s67ku8s-fyWqrb6CgtER4nMBD0_76FdAQc0PyRdrddlVpPPcQ1K4MTZk4Nx6JMlxVDZH9ytaEXZU5-5m-qjHspNXQVwX0mPiA2TDoUbzo_ebvtIsqGAZJ0S6GMw=)):
@@ -126,7 +128,8 @@ def test_simple_construct():
 # BAD: Untagged union - tries all variants
 class Response(BaseModel):
     result: Union[Cat, Dog, Lizard]  # No discriminator
-    
+
+
 # Pydantic tries Cat, then Dog, then Lizard
 # Multiple validation errors if all fail
 ```
@@ -135,19 +138,22 @@ class Response(BaseModel):
 ```python
 # GOOD: Discriminated union - direct selection
 class Cat(BaseModel):
-    pet_type: Literal['cat']
+    pet_type: Literal["cat"]
     meows: int
 
+
 class Dog(BaseModel):
-    pet_type: Literal['dog']
+    pet_type: Literal["dog"]
     barks: float
 
+
 class Lizard(BaseModel):
-    pet_type: Literal['reptile', 'lizard']
+    pet_type: Literal["reptile", "lizard"]
     scales: bool
 
+
 class Response(BaseModel):
-    result: Union[Cat, Dog, Lizard] = Field(discriminator='pet_type')
+    result: Union[Cat, Dog, Lizard] = Field(discriminator="pet_type")
     # Pydantic checks discriminator, validates only one variant
 ```
 
@@ -178,8 +184,8 @@ class Response(BaseModel):
 # BAD: Validation does too much
 class Order(BaseModel):
     items: list[Item]
-    
-    @field_validator('items')
+
+    @field_validator("items")
     @classmethod
     def validate_items(cls, v):
         # Business logic in validator!
@@ -188,7 +194,7 @@ class Order(BaseModel):
         # Heavy computation
         total = sum(item.price * item.quantity for item in v)
         if total > 10000:
-            raise ValueError('Order too large')
+            raise ValueError("Order too large")
         return v
 ```
 
@@ -198,10 +204,11 @@ class Order(BaseModel):
 class Order(BaseModel):
     items: list[Item]
 
+
 # Business logic in service layer
 def validate_order_limit(order: Order) -> Order:
     if sum(item.price * item.quantity for item in order.items) > 10000:
-        raise ValueError('Order too large')
+        raise ValueError("Order too large")
     return order
 ```
 
@@ -228,10 +235,10 @@ def validate_order_limit(order: Order) -> Order:
 # BAD: Lax mode everywhere
 class Config(BaseModel):
     model_config = ConfigDict()
-    
+
     api_key: str  # String "123" accepted, coerced silently
-    port: int    # String "8080" accepted, coerced silently
-    debug: bool   # String "true" accepted, coerced silently
+    port: int  # String "8080" accepted, coerced silently
+    debug: bool  # String "true" accepted, coerced silently
 ```
 
 **✅ CORRECT PATTERN**:
@@ -291,6 +298,7 @@ for item in large_list:
 ```python
 MacAddressTypeAdapter = TypeAdapter(pydantic.networks.MacAddress)
 
+
 def is_mac(mac: str) -> bool:
     """Check if a string is a valid MAC address."""
     try:
@@ -326,23 +334,26 @@ def is_mac(mac: str) -> bool:
 from pydantic import BaseModel, ValidationError
 from fastapi import FastAPI, HTTPException
 
+
 class CreateUserRequest(BaseModel):
     username: str = Field(min_length=3, max_length=20)
     email: EmailStr
 
+
 app = FastAPI()
+
 
 @app.post("/users")
 def create_user(data: dict):
     # BAD: Direct dict access
     # username = data.get('username')
-    
+
     # GOOD: Validate at boundary
     try:
         request = CreateUserRequest.model_validate(data)
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=e.errors())
-    
+
     # Business logic with validated, trusted model
     return create_user_service(request.username, request.email)
 ```
@@ -365,32 +376,37 @@ def create_user(data: dict):
 from typing import Literal, Union
 from pydantic import BaseModel, Field
 
+
 class UserCreatedEvent(BaseModel):
-    event_type: Literal['user_created']
+    event_type: Literal["user_created"]
     user_id: int
     timestamp: datetime
 
+
 class OrderPlacedEvent(BaseModel):
-    event_type: Literal['order_placed']
+    event_type: Literal["order_placed"]
     order_id: str
     total: Decimal
+
 
 # Discriminated union
 Event = Union[UserCreatedEvent, OrderPlacedEvent]
 
+
 class WebhookPayload(BaseModel):
-    event: Event = Field(discriminator='event_type')
+    event: Event = Field(discriminator="event_type")
     webhook_id: str
     signature: str
+
 
 # Processing
 def process_webhook(data: dict):
     # BAD: Untagged union - tries all variants
     # payload = WebhookPayload(event=data)
-    
+
     # GOOD: Discriminated union - direct validation
     payload = WebhookPayload.model_validate(data)
-    
+
     if isinstance(payload.event, UserCreatedEvent):
         handle_user_created(payload.event)
     elif isinstance(payload.event, OrderPlacedEvent):
@@ -415,24 +431,26 @@ def process_webhook(data: dict):
 # Strict mode for configuration
 from pydantic import BaseModel, Field, ConfigDict, StrictInt, ValidationError
 
+
 class AppConfig(BaseModel):
     model_config = ConfigDict(strict=True)
-    
+
     # Strict types for critical fields
     max_workers: StrictInt = Field(ge=1, le=100)
     timeout_seconds: int = Field(strict=True, gt=0)
     debug: bool = Field(strict=True)
-    
+
     # Optional: can use relaxed mode for internal configs
-    log_level: str = Field(default='INFO')
+    log_level: str = Field(default="INFO")
+
 
 # Loading config
 def load_config(path: str) -> AppConfig:
     import json
-    
+
     with open(path) as f:
         data = json.load(f)
-    
+
     # GOOD: Validate with strict mode
     try:
         return AppConfig.model_validate(data)
@@ -457,20 +475,21 @@ def load_config(path: str) -> AppConfig:
 # TypeAdapter reuse for validation service
 from pydantic import TypeAdapter, ValidationError
 
+
 class ValidationService:
     def __init__(self):
         # GOOD: Create adapters once
         self._user_adapter = TypeAdapter(User)
         self._order_adapter = TypeAdapter(Order)
         self._item_adapter = TypeAdapter(Item)
-    
+
     def validate_batch(self, data_list: list[dict]) -> list[User | Order | Item]:
         results = []
         for data in data_list:
             # Determine adapter by discriminator
-            if data.get('type') == 'user':
+            if data.get("type") == "user":
                 results.append(self._user_adapter.validate_python(data))
-            elif data.get('type') == 'order':
+            elif data.get("type") == "order":
                 results.append(self._order_adapter.validate_python(data))
             else:
                 results.append(self._item_adapter.validate_python(data))
@@ -494,25 +513,27 @@ class ValidationService:
 # Trust validated models
 from pydantic import BaseModel
 
+
 class User(BaseModel):
     id: int
     name: str
-    role: Literal['admin', 'user', 'guest']
+    role: Literal["admin", "user", "guest"]
+
 
 def process_user(data: dict):
     # GOOD: Validate once, trust everywhere
     user = User.model_validate(data)
-    
+
     # GOOD: Direct access - no type checks needed
     user_id = user.id  # Type is int, guaranteed
     display_name = user.name.upper()  # Type is str, guaranteed
-    
+
     # Business logic without type paranoia
-    if user.role == 'admin':
+    if user.role == "admin":
         grant_admin_access(user_id)
     else:
         grant_user_access(user_id)
-    
+
     # BAD: Don't do this after validation
     # if not isinstance(user.id, int):
     #     raise TypeError("Invalid user ID")

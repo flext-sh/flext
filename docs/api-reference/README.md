@@ -82,7 +82,7 @@ migration_result = ldif.migrate(
     input_dir=Path("data/oid"),
     output_dir=Path("data/oud"),
     from_server="oid",
-    to_server="oud"
+    to_server="oud",
 )
 ```
 
@@ -165,6 +165,7 @@ from flext_core import FlextService
 from flext_core import t
 from flext_core import u
 
+
 def process_data(data: str) -> FlextResult[List[Entry], Exception]:
     try:
         # Processing logic
@@ -211,9 +212,7 @@ All FLEXT libraries support configuration through Pydantic models:
 from flext_ldif import FlextLdifSettings
 
 config = FlextLdifSettings(
-    default_encoding="utf-8",
-    strict_validation=True,
-    servers_enabled=True
+    default_encoding="utf-8", strict_validation=True, servers_enabled=True
 )
 ```
 

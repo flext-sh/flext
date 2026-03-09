@@ -30,13 +30,13 @@ from pydantic import BaseModel
 
 class Model(BaseModel):
     age: int
-    first_name = 'John'
+    first_name = "John"
     last_name: Optional[str] = None
     signup_ts: Optional[datetime] = None
     list_of_ints: list[int]
 
 
-m = Model(age=42, list_of_ints=[1, '2', b'3'])
+m = Model(age=42, list_of_ints=[1, "2", b"3"])
 print(m.middle_name)  # not a model field!
 Model()  # will raise a validation error for age and list_of_ints
 ```
@@ -185,7 +185,7 @@ class Model(BaseModel):
     a: int
 
 
-Model(a='1')
+Model(a="1")
 ```
 
 For this reason, the plugin will use [`Any`][typing.Any] for field annotations when synthesizing the `__init__` method,

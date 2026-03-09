@@ -162,9 +162,7 @@ pipeline = AclProcessingPipeline(max_workers=8)
 
 # Process ACL entries
 result = pipeline.process_acls_with_pipeline(
-    raw_entries=ldap_entries,
-    server_context={"strict_mode": True},
-    parallel=True
+    raw_entries=ldap_entries, server_context={"strict_mode": True}, parallel=True
 )
 
 if result.is_success:
@@ -187,7 +185,7 @@ result = pipeline.execute_integrated_pipeline(
     processing_func=process_function,
     validation_func=validate_function,
     analysis_func=analyze_function,
-    use_parallel=True
+    use_parallel=True,
 )
 ```
 
@@ -196,13 +194,12 @@ result = pipeline.execute_integrated_pipeline(
 ```python
 from examples.complete_workflow_example import (
     ComprehensiveRailwayPattern,
-    CompleteWorkflowBuilder
+    CompleteWorkflowBuilder,
 )
 
 # Build workflow configuration
 config = CompleteWorkflowBuilder.build_comprehensive_workflow(
-    workflow_type="ldap_processing",
-    requirements={"max_workers": 8, "parallel": True}
+    workflow_type="ldap_processing", requirements={"max_workers": 8, "parallel": True}
 )
 
 # Execute complete workflow
@@ -211,7 +208,7 @@ result = railway.execute_workflow_railway(
     workflow_id="enterprise_workflow",
     input_data=input_data,
     stage_definitions=config["stage_definitions"],
-    workflow_requirements=config
+    workflow_requirements=config,
 )
 ```
 

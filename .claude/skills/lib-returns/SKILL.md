@@ -71,6 +71,7 @@ description: FlextResult railway composition built on dry-python/returns. Use wh
 
 ```python
 from flext_core import FlextResult, r
+
 # or via short alias:
 from flext_core import r
 ```
@@ -169,9 +170,11 @@ if is_success_result(result):
 ```python
 from flext_core import r
 
+
 def process_user(user_id: str) -> r[UserResponse]:
     return (
-        r[User].from_validation({"id": user_id}, User)
+        r[User]
+        .from_validation({"id": user_id}, User)
         .flat_map(lambda user: fetch_permissions(user))
         .map(lambda perms: UserResponse(permissions=perms))
         .tap(lambda resp: logger.info("processed", user_id=user_id))

@@ -113,6 +113,7 @@ poetry install
 ```python
 # Debug import issues
 import sys
+
 print("Python path:")
 for path in sys.path:
     print(f"  {path}")
@@ -120,6 +121,7 @@ for path in sys.path:
 print("\nTrying to import flext_core...")
 try:
     import flext_core
+
     print(f"Success: {flext_core.__file__}")
 except ImportError as e:
     print(f"Failed: {e}")
@@ -142,6 +144,7 @@ error: Argument 1 to "process" has incompatible type "str"; expected "dict[str, 
 # ❌ WRONG
 def process(data):
     return data
+
 
 # ✅ CORRECT
 def process(data: dict[str, object]) -> FlextResult[ProcessedData]:
@@ -270,7 +273,7 @@ from flext_core import u
 
 # Print all FLEXT environment variables
 for key, value in os.environ.items():
-    if key.startswith('FLEXT_'):
+    if key.startswith("FLEXT_"):
         print(f"{key}={value}")
 
 # Load and print configuration
@@ -309,6 +312,7 @@ if result.is_failure:
 
 ```python
 import logging
+
 logging.basicConfig(level=logging.DEBUG)
 
 # Your LDIF processing code
@@ -327,10 +331,10 @@ def validate_ldif_content(content: str) -> t.StringList:
     if not content.startswith("dn:"):
         issues.append("Missing DN line")
 
-    lines = content.split('\n')
+    lines = content.split("\n")
     for i, line in enumerate(lines):
-        if line and not line.startswith(('dn:', ' ', '\t')) and ':' not in line:
-            issues.append(f"Invalid line {i+1}: {line}")
+        if line and not line.startswith(("dn:", " ", "\t")) and ":" not in line:
+            issues.append(f"Invalid line {i + 1}: {line}")
 
     return issues
 ```
@@ -355,7 +359,7 @@ config = FlextLdifSettings(
     source_server="oid",
     target_server="oud",
     preserve_oid_modifiers=True,
-    handle_schema_extensions=True
+    handle_schema_extensions=True,
 )
 
 print(f"Config: {config.dict()}")
@@ -365,9 +369,7 @@ print(f"Config: {config.dict()}")
 
 ```python
 config = FlextLdifSettings(
-    servers_enabled=True,
-    source_server="oid",
-    target_server="oud"
+    servers_enabled=True, source_server="oid", target_server="oud"
 )
 ```
 
@@ -405,6 +407,7 @@ else:
 import psutil
 import os
 
+
 def profile_memory():
     process = psutil.Process(os.getpid())
     initial_memory = process.memory_info().rss
@@ -415,6 +418,7 @@ def profile_memory():
     memory_used = final_memory - initial_memory
 
     print(f"Memory used: {memory_used / 1024 / 1024:.2f} MB")
+
 
 profile_memory()
 ```
@@ -427,7 +431,7 @@ from flext_ldif import FlextLdifSettings
 # Reduce batch size for memory-constrained environments
 config = FlextLdifSettings(
     batch_size=100,  # Instead of default 1000
-    parallel_processing=False  # Disable for memory issues
+    parallel_processing=False,  # Disable for memory issues
 )
 ```
 
@@ -436,7 +440,7 @@ config = FlextLdifSettings(
 ```python
 config = FlextLdifSettings(
     parallel_processing=True,
-    max_workers=4  # Adjust based on CPU cores
+    max_workers=4,  # Adjust based on CPU cores
 )
 ```
 
@@ -469,8 +473,7 @@ from flext_core import u
 
 # Configure logging
 logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
 # Use FLEXT logger
@@ -504,6 +507,7 @@ from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
 from flext_core import u
+
 
 def safe_operation(data: dict) -> FlextResult[dict]:
     try:
@@ -564,7 +568,7 @@ def debug_ldif_processing(content: str):
         return
 
     # Step 2: Check DN format
-    lines = content.split('\n')
+    lines = content.split("\n")
     dn_line = lines[0] if lines else ""
     print(f"DN line: {repr(dn_line)}")
 
@@ -574,6 +578,7 @@ def debug_ldif_processing(content: str):
 
     # Step 3: Try parsing
     from flext_ldif import FlextLdif
+
     ldif = FlextLdif()
 
     result = ldif.parse(content)
@@ -619,6 +624,7 @@ def debug_ldif_processing(content: str):
 import psutil
 import os
 
+
 def monitor_memory():
     process = psutil.Process(os.getpid())
     memory_info = process.memory_info()
@@ -630,6 +636,7 @@ def monitor_memory():
     if memory_info.rss > 500 * 1024 * 1024:  # 500MB
         print("WARNING: High memory usage detected")
 
+
 monitor_memory()
 ```
 
@@ -640,6 +647,7 @@ monitor_memory()
 import psutil
 import time
 
+
 def monitor_cpu():
     process = psutil.Process(os.getpid())
 
@@ -648,6 +656,7 @@ def monitor_cpu():
         cpu_percent = process.cpu_percent()
         print(f"CPU usage: {cpu_percent}%")
         time.sleep(1)
+
 
 monitor_cpu()
 ```
@@ -764,6 +773,7 @@ from flext_core import u
 def process(data: dict) -> FlextResult[ProcessedData]:
     return FlextResult.ok(ProcessedData(**data))
 
+
 # ❌ BAD
 def process(data: dict) -> ProcessedData:
     return ProcessedData(**data)
@@ -786,6 +796,7 @@ def process(data: dict) -> ProcessedData:
    # ✅ GOOD
    def process(items: list[Item]) -> FlextResult[list[ProcessedItem]]:
        pass
+
 
    # ❌ BAD
    def process(items):

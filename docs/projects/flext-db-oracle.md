@@ -35,14 +35,22 @@ make setup
 from flext_db_oracle.api import FlextDbOracleApi
 from flext_db_oracle.models import FlextDbOracleModels
 
-config = FlextDbOracleModels.OracleConfig(host="localhost", port=1521, service_name="XEPDB1", username="system", password="Oracle123")
+config = FlextDbOracleModels.OracleConfig(
+    host="localhost",
+    port=1521,
+    service_name="XEPDB1",
+    username="system",
+    password="Oracle123",
+)
 api = FlextDbOracleApi(config)
 
 connection_result = api.test_connection()
 if connection_result.is_success:
     print("✅ Connected to Oracle")
 
-result = api.query("SELECT table_name FROM user_tables WHERE rownum <= :limit", {"limit": 5})
+result = api.query(
+    "SELECT table_name FROM user_tables WHERE rownum <= :limit", {"limit": 5}
+)
 if result.is_success:
     tables = result.unwrap()
     print(f"Found {len(tables)} tables")

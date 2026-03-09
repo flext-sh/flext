@@ -90,6 +90,7 @@ class FlextSettings(p.ProtocolSettings, p.Config, FlextRuntime):
 @model_validator(mode="after")
 def validate_configuration(self) -> Self: ...
 
+
 class AutoConfig(BaseModel):
     model_config = ConfigDict(
         validate_assignment=True,

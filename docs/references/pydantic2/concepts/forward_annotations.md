@@ -23,8 +23,8 @@ class Model(BaseModel):
     # a: 'MyInt'
 
 
-print(Model(a='1'))
-#> a=1
+print(Model(a="1"))
+# > a=1
 ```
 
 As shown in the following sections, forward annotations are useful when you want to reference
@@ -47,13 +47,13 @@ from pydantic import BaseModel
 
 class Foo(BaseModel):
     a: int = 123
-    sibling: 'Optional[Foo]' = None
+    sibling: "Optional[Foo]" = None
 
 
 print(Foo())
-#> a=123 sibling=None
-print(Foo(sibling={'a': '321'}))
-#> a=123 sibling=Foo(a=321, sibling=None)
+# > a=123 sibling=None
+print(Foo(sibling={"a": "321"}))
+# > a=123 sibling=Foo(a=321, sibling=None)
 ```
 
 ### Cyclic references
@@ -72,7 +72,7 @@ from pydantic import BaseModel, ValidationError
 
 
 class ModelA(BaseModel):
-    b: 'Optional[ModelB]' = None
+    b: "Optional[ModelB]" = None
 
 
 class ModelB(BaseModel):
@@ -80,9 +80,9 @@ class ModelB(BaseModel):
 
 
 cyclic_data = {}
-cyclic_data['a'] = {'b': cyclic_data}
+cyclic_data["a"] = {"b": cyclic_data}
 print(cyclic_data)
-#> {'a': {'b': {...}}}
+# > {'a': {'b': {...}}}
 
 try:
     ModelB.model_validate(cyclic_data)
@@ -111,7 +111,7 @@ from pydantic import BaseModel, ValidationError, field_validator
 
 def is_recursion_validation_error(exc: ValidationError) -> bool:
     errors = exc.errors()
-    return len(errors) == 1 and errors[0]['type'] == 'recursion_loop'
+    return len(errors) == 1 and errors[0]["type"] == "recursion_loop"
 
 
 @contextmanager
@@ -127,16 +127,13 @@ class Node(BaseModel):
     id: int
     children: list[Node] = field(default_factory=list)
 
-    @field_validator('children', mode='wrap')
+    @field_validator("children", mode="wrap")
     @classmethod
     def drop_cyclic_references(cls, children, h):
         try:
             return h(children)
         except ValidationError as exc:
-            if not (
-                is_recursion_validation_error(exc)
-                and isinstance(children, list)
-            ):
+            if not (is_recursion_validation_error(exc) and isinstance(children, list)):
                 raise exc
 
             value_without_cyclic_refs = []
@@ -147,11 +144,11 @@ class Node(BaseModel):
 
 
 # Create data with cyclic references representing the graph 1 -> 2 -> 3 -> 1
-node_data = {'id': 1, 'children': [{'id': 2, 'children': [{'id': 3}]}]}
-node_data['children'][0]['children'][0]['children'] = [node_data]
+node_data = {"id": 1, "children": [{"id": 2, "children": [{"id": 3}]}]}
+node_data["children"][0]["children"][0]["children"] = [node_data]
 
 print(Node.model_validate(node_data))
-#> id=1 children=[Node(id=2, children=[Node(id=3, children=[])])]
+# > id=1 children=[Node(id=2, children=[Node(id=3, children=[])])]
 ```
 
 Similarly, if Pydantic encounters a recursive reference during _serialization_, rather than waiting
@@ -161,8 +158,8 @@ for the maximum recursion depth to be exceeded, a [`ValueError`][] is raised imm
 from pydantic import TypeAdapter
 
 # Create data with cyclic references representing the graph 1 -> 2 -> 3 -> 1
-node_data = {'id': 1, 'children': [{'id': 2, 'children': [{'id': 3}]}]}
-node_data['children'][0]['children'][0]['children'] = [node_data]
+node_data = {"id": 1, "children": [{"id": 2, "children": [{"id": 3}]}]}
+node_data["children"][0]["children"][0]["children"] = [node_data]
 
 try:
     # Try serializing the circular reference as JSON
@@ -195,11 +192,11 @@ class NodeReference:
 
 @dataclass
 class Node(NodeReference):
-    children: list['Node'] = field(default_factory=list)
+    children: list["Node"] = field(default_factory=list)
 
-    @field_serializer('children', mode='wrap')
+    @field_serializer("children", mode="wrap")
     def serialize(
-        self, children: list['Node'], handler: SerializerFunctionWrapHandler
+        self, children: list["Node"], handler: SerializerFunctionWrapHandler
     ) -> Any:
         """
         Serialize a list of nodes, handling circular references by excluding the children.
@@ -207,7 +204,7 @@ class Node(NodeReference):
         try:
             return handler(children)
         except ValueError as exc:
-            if not str(exc).startswith('Circular reference'):
+            if not str(exc).startswith("Circular reference"):
                 raise exc
 
             result = []
@@ -215,9 +212,9 @@ class Node(NodeReference):
                 try:
                     serialized = handler([node])
                 except ValueError as exc:
-                    if not str(exc).startswith('Circular reference'):
+                    if not str(exc).startswith("Circular reference"):
                         raise exc
-                    result.append({'id': node.id})
+                    result.append({"id": node.id})
                 else:
                     result.append(serialized)
             return result
@@ -230,7 +227,7 @@ nodes[1].children.append(nodes[2])
 nodes[2].children.append(nodes[0])
 
 print(nodes[0])
-#> Node(id=1, children=[Node(id=2, children=[Node(id=3, children=[...])])])
+# > Node(id=1, children=[Node(id=2, children=[Node(id=3, children=[...])])])
 
 # Serialize the cyclic graph:
 print(TypeAdapter(Node).dump_python(nodes[0]))

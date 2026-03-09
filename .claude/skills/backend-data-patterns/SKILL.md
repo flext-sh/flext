@@ -55,8 +55,10 @@ description: Database model design and migration patterns — naming, constraint
 from sqlalchemy import Column, Integer, String, DateTime, func
 from sqlalchemy.orm import DeclarativeBase
 
+
 class Base(DeclarativeBase):
     pass
+
 
 class User(Base):
     __tablename__ = "user"
@@ -75,11 +77,13 @@ class User(Base):
 from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKey
 
+
 class Post(Base):
     __tablename__ = "post"
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     user = relationship("User", back_populates="posts")
+
 
 class User(Base):
     # ...
@@ -90,6 +94,7 @@ class User(Base):
 
 ```python
 from sqlalchemy import Index
+
 
 class User(Base):
     __tablename__ = "user"
@@ -107,6 +112,7 @@ def upgrade() -> None:
     op.add_column("user", sa.Column("phone", sa.String(20), nullable=True))
     op.create_index("ix_user_phone", "user", ["phone"])
 
+
 def downgrade() -> None:
     op.drop_index("ix_user_phone", table_name="user")
     op.drop_column("user", "phone")
@@ -119,9 +125,11 @@ def downgrade() -> None:
 def upgrade() -> None:
     op.add_column("user", sa.Column("new_field", sa.String(50), nullable=True))
 
+
 # Step 2: Backfill data (separate migration)
 def upgrade() -> None:
     op.execute("UPDATE user SET new_field = 'default' WHERE new_field IS NULL")
+
 
 # Step 3: Add constraint (separate migration)
 def upgrade() -> None:
@@ -152,7 +160,9 @@ def upgrade() -> None:
 Good:
 
 ```python
-op.add_column("user", sa.Column("role", sa.String(20), server_default="viewer", nullable=False))
+op.add_column(
+    "user", sa.Column("role", sa.String(20), server_default="viewer", nullable=False)
+)
 ```
 
 Why good: uses `server_default` to avoid table lock on existing rows.

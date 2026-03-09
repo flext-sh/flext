@@ -35,9 +35,7 @@ from flext_auth import FlextAuth, FlextAuthModels
 auth = FlextAuth.quick_start(create_REDACTED_LDAP_BIND_PASSWORD=False)
 
 result = auth.register_user(
-    username="demo",
-    email="demo@example.com",
-    password="secure123"
+    username="demo", email="demo@example.com", password="secure123"
 )
 
 if result.is_success:

@@ -25,12 +25,18 @@ to any use case where you need to derive a new model from another (remove defaul
         for f_name, f_info in model_cls.model_fields.items():
             f_dct = f_info.asdict()
             new_fields[f_name] = (
-                Annotated[(Union[f_dct['annotation'], None], *f_dct['metadata'], Field(**f_dct['attributes']))],
+                Annotated[
+                    (
+                        Union[f_dct["annotation"], None],
+                        *f_dct["metadata"],
+                        Field(**f_dct["attributes"]),
+                    )
+                ],
                 None,
             )
 
         return create_model(
-            f'{type.__name__}Optional',
+            f"{type.__name__}Optional",
             __base__=model_cls,  # (1)!
             **new_fields,
         )
@@ -53,12 +59,18 @@ to any use case where you need to derive a new model from another (remove defaul
         for f_name, f_info in model_cls.model_fields.items():
             f_dct = f_info.asdict()
             new_fields[f_name] = (
-                Annotated[(f_dct['annotation'] | None, *f_dct['metadata'], Field(**f_dct['attributes']))],
+                Annotated[
+                    (
+                        f_dct["annotation"] | None,
+                        *f_dct["metadata"],
+                        Field(**f_dct["attributes"]),
+                    )
+                ],
                 None,
             )
 
         return create_model(
-            f'{type.__name__}Optional',
+            f"{type.__name__}Optional",
             __base__=model_cls,  # (1)!
             **new_fields,
         )
@@ -81,12 +93,16 @@ to any use case where you need to derive a new model from another (remove defaul
         for f_name, f_info in model_cls.model_fields.items():
             f_dct = f_info.asdict()
             new_fields[f_name] = (
-                Annotated[f_dct['annotation'] | None, *f_dct['metadata'], Field(**f_dct['attributes'])],
+                Annotated[
+                    f_dct["annotation"] | None,
+                    *f_dct["metadata"],
+                    Field(**f_dct["attributes"]),
+                ],
                 None,
             )
 
         return create_model(
-            f'{type.__name__}Optional',
+            f"{type.__name__}Optional",
             __base__=model_cls,  # (1)!
             **new_fields,
         )
@@ -102,7 +118,9 @@ With the following model:
 
 ```python {lint="skip" test="skip"}
 class Model(BaseModel):
-    f: Annotated[int, Field(gt=1), WithJsonSchema({'extra': 'data'}), Field(title='F')] = 1
+    f: Annotated[
+        int, Field(gt=1), WithJsonSchema({"extra": "data"}), Field(title="F")
+    ] = 1
 ```
 
 The [`FieldInfo`][pydantic.fields.FieldInfo] instance of `f` will have three items in its dictionary representation:
@@ -116,11 +134,13 @@ With that in mind, we can recreate an annotation that "simulates" the one from t
 === "Python 3.9 and above"
 
     ```python {lint="skip" test="skip"}
-    new_annotation = Annotated[(
-        f_dct['annotation'] | None,  # (1)!
-        *f_dct['metadata'],  # (2)!
-        Field(**f_dct['attributes']),  # (3)!
-    )]
+    new_annotation = Annotated[
+        (
+            f_dct["annotation"] | None,  # (1)!
+            *f_dct["metadata"],  # (2)!
+            Field(**f_dct["attributes"]),  # (3)!
+        )
+    ]
     ```
 
     1. We create a new annotation from the existing one, but adding `None` as an allowed value
@@ -137,9 +157,9 @@ With that in mind, we can recreate an annotation that "simulates" the one from t
 
     ```python {lint="skip" test="skip"}
     new_annotation = Annotated[
-        f_dct['annotation'] | None,  # (1)!
-        *f_dct['metadata'],  # (2)!
-        Field(**f_dct['attributes']),  # (3)!
+        f_dct["annotation"] | None,  # (1)!
+        *f_dct["metadata"],  # (2)!
+        Field(**f_dct["attributes"]),  # (3)!
     ]
     ```
 
@@ -169,7 +189,7 @@ ModelOptional = make_fields_optional(Model)
 
 m = ModelOptional()
 print(m.a)
-#> None
+# > None
 ```
 
 A couple notes on the implementation:
@@ -180,17 +200,18 @@ A couple notes on the implementation:
   === "Python 3.9 and above"
 
         ```python {lint="skip" test="skip"}
-        ModelTypeT = TypeVar('ModelTypeT', bound=type[BaseModel])
+        ModelTypeT = TypeVar("ModelTypeT", bound=type[BaseModel])
 
-        def make_fields_optional(model_cls: ModelTypeT) -> ModelTypeT:
-            ...
+
+        def make_fields_optional(model_cls: ModelTypeT) -> ModelTypeT: ...
         ```
 
   === "Python 3.12 and above"
 
         ```python {lint="skip" test="skip"}
-        def make_fields_optional[ModelTypeT: type[BaseModel]](model_cls: ModelTypeT) -> ModelTypeT:
-            ...
+        def make_fields_optional[ModelTypeT: type[BaseModel]](
+            model_cls: ModelTypeT,
+        ) -> ModelTypeT: ...
         ```
 
   However, note that static type checkers _won't_ be able to understand that all fields are now optional.

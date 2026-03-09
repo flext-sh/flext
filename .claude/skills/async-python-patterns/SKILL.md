@@ -54,6 +54,7 @@ description: Python asyncio patterns for FLEXT integrations — LDAP, Oracle, gR
 ```python
 from flext_core import r
 
+
 async def fetch_user(user_id: str) -> r[User]:
     try:
         user = await db.get_user(user_id)
@@ -82,6 +83,7 @@ async def fetch_all_users(ids: list[str]) -> r[list[User]]:
 ```python
 semaphore = asyncio.Semaphore(10)
 
+
 async def rate_limited_call(url: str) -> r[dict]:
     async with semaphore:
         async with aiohttp.ClientSession() as session:
@@ -98,7 +100,12 @@ class AsyncDBConnection:
         self.conn = await asyncpg.connect(DSN)
         return self
 
-    async def __aexit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: TracebackType | None) -> None:
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         await self.conn.close()
 ```
 
@@ -109,6 +116,7 @@ async def producer(queue: asyncio.Queue[str], items: list[str]) -> None:
     for item in items:
         await queue.put(item)
     await queue.put(None)
+
 
 async def consumer(queue: asyncio.Queue[str | None]) -> list[str]:
     results = []

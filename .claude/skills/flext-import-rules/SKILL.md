@@ -100,20 +100,20 @@ from __future__ import annotations
 This section provides the concrete ordering template; canonical policy remains in `AGENTS.md` §4 Import Law.
 
 ```python
-from __future__ import annotations          # 1. FUTURE (always first)
+from __future__ import annotations  # 1. FUTURE (always first)
 
-import json                                 # 2. STDLIB (bare imports)
+import json  # 2. STDLIB (bare imports)
 import uuid
-from collections.abc import Callable        # 2. STDLIB (from imports)
+from collections.abc import Callable  # 2. STDLIB (from imports)
 from datetime import UTC, datetime
 from typing import Annotated, Final, Self
 
-from pydantic import BaseModel, Field       # 3. THIRD-PARTY
+from pydantic import BaseModel, Field  # 3. THIRD-PARTY
 from structlog.typing import BindableLogger
 
-from flext_core import c, t                 # 4. FIRST-PARTY (flext_core.*)
+from flext_core import c, t  # 4. FIRST-PARTY (flext_core.*)
 
-from flext_auth import AuthModels    # 5. LOCAL (same project, if applicable)
+from flext_auth import AuthModels  # 5. LOCAL (same project, if applicable)
 ```
 
 Within each group:
@@ -183,18 +183,20 @@ from flext_core import FlextContext
 ```python
 from flext_core import FlextConstants
 
-class FlextAuthConstants(FlextConstants):
-    ...
+
+class FlextAuthConstants(FlextConstants): ...
+
 
 from flext_core import FlextService
 
-class FlextAuthAdminService(FlextService.Admin):
-    ...
+
+class FlextAuthAdminService(FlextService.Admin): ...
+
 
 from flext_core import FlextProtocols
 
-class FlextAuthProtocols(FlextProtocols):
-    ...
+
+class FlextAuthProtocols(FlextProtocols): ...
 ```
 
 ### Pattern D: Cross-project namespace inheritance (CRITICAL for m, c, t, u, p)
@@ -205,15 +207,20 @@ When a project depends on another FLEXT project's namespaced types, it MUST inhe
 # ✅ CORRECT — inherit parent facade, namespaces cascade via MRO
 from flext_meltano import FlextMeltanoModels
 
-class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):  # NOT FlextModels!
+
+class FlextTargetOracleModels(
+    FlextMeltanoModels, FlextDbOracleModels
+):  # NOT FlextModels!
     class TargetOracle:
         class MyModel(FlextMeltanoModels.ArbitraryTypesModel): ...
+
 
 m = FlextTargetOracleModels
 # m.Meltano.* inherited, m.TargetOracle.* local
 
 # In runtime code — import from package facade/module path, not relative import:
 from flext_target_oracle.models import m
+
 schema = m.Meltano.SingerSchemaMessage.model_validate(data)
 ```
 
@@ -255,10 +262,12 @@ All `flext-(tap|target|dbt)-*` projects MUST follow an **EXACT** naming pattern 
 ```python
 from flext_meltano import FlextMeltanoModels
 
+
 class FlextTargetOracleModels(FlextMeltanoModels):
     class TargetOracle:
         class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
             name: str
+
 
 m = FlextTargetOracleModels
 # m.Meltano.* available, but m.DbOracle.* NOT available
@@ -270,10 +279,12 @@ m = FlextTargetOracleModels
 from flext_meltano import FlextMeltanoModels
 from flext_db_oracle import FlextDbOracleModels
 
+
 class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
     class TargetOracle:
         class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
             name: str
+
 
 m = FlextTargetOracleModels
 # m.Meltano.* available (from FlextMeltanoModels)
@@ -334,14 +345,22 @@ Each facade module creates a lowercase alias:
 ```python
 # constants.py
 class FlextConstants: ...
+
+
 c = FlextConstants
+
 
 # typings.py
 class FlextTypes: ...
+
+
 t = FlextTypes
+
 
 # result.py
 class FlextResult: ...
+
+
 r = FlextResult
 ```
 
@@ -354,8 +373,8 @@ from flext_core import m
 from flext_core import r
 from flext_core import h
 
-class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]):
-    ...
+
+class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]): ...
 ```
 
 ---
@@ -381,6 +400,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from flext_core import FlextContainer
 
+
 def get_container() -> FlextContainer:  # Annotation works, no runtime import
     ...
 ```
@@ -397,8 +417,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from flext_core import FlextModels
 
+
 class MyModel(FlextModels.Base):  # CRASHES — FlextModels not available at runtime
     name: str
+
 
 # ❌ FORBIDDEN — hiding circular import instead of fixing architecture
 if TYPE_CHECKING:
@@ -426,15 +448,18 @@ if TYPE_CHECKING:
 # 2. Strict mapping
 __all__ = ["FlextModels", "FlextProtocols"]
 
+
 # 3. Native module-level lazy load strategy
 def __getattr__(name: str) -> t.GeneralValueType:
     if name == "FlextModels":
         from .models import FlextModels
+
         return FlextModels
     if name == "FlextProtocols":
         from .protocols import FlextProtocols
+
         return FlextProtocols
-    
+
     msg = f"module {__name__!r} has no attribute {name!r}"
     raise AttributeError(msg)
 ```
@@ -500,22 +525,26 @@ bottom of the module. Never import the parent alias and then reassign it.
 
 ```python
 # ❌ ANTI-PATTERN — double-assignment creates confusing scope
-from flext_core import c                   # c = FlextConstants at import time
+from flext_core import c  # c = FlextConstants at import time
 
-class FlextProjectConstants(c):            # uses c as FlextConstants
+
+class FlextProjectConstants(c):  # uses c as FlextConstants
     class Foo:
-        BAR = c.Something.VALUE            # c is still FlextConstants here
+        BAR = c.Something.VALUE  # c is still FlextConstants here
 
-c = FlextProjectConstants                  # REASSIGNS c — scope confusion!
+
+c = FlextProjectConstants  # REASSIGNS c — scope confusion!
 
 # ✅ CORRECT — import parent class by name, alias only at bottom
 from flext_core import FlextConstants
+
 
 class FlextProjectConstants(FlextConstants):
     class Foo:
         BAR = FlextConstants.Something.VALUE  # explicit parent reference
 
-c = FlextProjectConstants                  # single, clear assignment
+
+c = FlextProjectConstants  # single, clear assignment
 ```
 
 This applies to ALL facade pairs:
@@ -620,6 +649,7 @@ Integrations MUST compose exactly ONE platform and ONE domain. Because `FlextMel
 class FlextTapOracleProtocols(FlextMeltanoProtocols, FlextDbOracleProtocols):
     class TapOracle:
         class DataExtractionProtocol(Protocol): ...
+
 
 p = FlextTapOracleProtocols
 # Gives access to: p.TapOracle.*, p.Meltano.*, p.Cli.*, p.DbOracle.*, and core root

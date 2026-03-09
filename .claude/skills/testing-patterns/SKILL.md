@@ -74,19 +74,23 @@ def test_user_creation_with_valid_data_returns_success():
 ```python
 from flext_core import r
 
+
 def test_ok_result_contains_value():
     result = r[int].ok(42)
     assert result.is_success
     assert result.value == 42
+
 
 def test_fail_result_contains_error():
     result = r[int].fail("not found")
     assert result.is_failure
     assert "not found" in result.error
 
+
 def test_map_transforms_success_value():
     result = r[int].ok(5).map(lambda x: x * 2)
     assert result.value == 10
+
 
 def test_flat_map_chains_results():
     result = r[int].ok(5).flat_map(lambda x: r[str].ok(str(x)))
@@ -98,9 +102,11 @@ def test_flat_map_chains_results():
 ```python
 import pytest
 
+
 @pytest.fixture
 def sample_user() -> User:
     return User(name="Test", email="test@example.com")
+
 
 @pytest.fixture
 def db_session(tmp_path):
@@ -112,11 +118,14 @@ def db_session(tmp_path):
 ### Parameterized Tests
 
 ```python
-@pytest.mark.parametrize("input_val,expected", [
-    ("hello", "HELLO"),
-    ("world", "WORLD"),
-    ("", ""),
-])
+@pytest.mark.parametrize(
+    "input_val,expected",
+    [
+        ("hello", "HELLO"),
+        ("world", "WORLD"),
+        ("", ""),
+    ],
+)
 def test_uppercase_transforms_correctly(input_val: str, expected: str):
     assert input_val.upper() == expected
 ```
@@ -125,6 +134,7 @@ def test_uppercase_transforms_correctly(input_val: str, expected: str):
 
 ```python
 from unittest.mock import Mock, patch
+
 
 def test_service_calls_repository():
     mock_repo = Mock()

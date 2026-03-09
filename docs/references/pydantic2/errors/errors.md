@@ -59,19 +59,19 @@ class Model(BaseModel):
     a_float: float
     recursive_model: Location
 
-    @field_validator('a_float', mode='after')
+    @field_validator("a_float", mode="after")
     @classmethod
     def validate_float(cls, value: float) -> float:
         if value > 2.0:
-            raise ValueError('Invalid float value')
+            raise ValueError("Invalid float value")
         return value
 
 
 data = {
-    'list_of_ints': ['1', 2, 'bad'],
-    'a_float': 3.0,
-    'recursive_model': {'lat': 4.2, 'lng': 'New York'},
-    'gt_int': 21,
+    "list_of_ints": ["1", 2, "bad"],
+    "a_float": 3.0,
+    "recursive_model": {"lat": 4.2, "lng": "New York"},
+    "gt_int": 21,
 }
 
 try:
@@ -161,8 +161,8 @@ from pydantic_core import ErrorDetails
 from pydantic import BaseModel, HttpUrl, ValidationError
 
 CUSTOM_MESSAGES = {
-    'int_parsing': 'This is not an integer! 🤦',
-    'url_scheme': 'Hey, use the right URL scheme! I wanted {expected_schemes}.',
+    "int_parsing": "This is not an integer! 🤦",
+    "url_scheme": "Hey, use the right URL scheme! I wanted {expected_schemes}.",
 }
 
 
@@ -171,12 +171,10 @@ def convert_errors(
 ) -> list[ErrorDetails]:
     new_errors: list[ErrorDetails] = []
     for error in e.errors():
-        custom_message = custom_messages.get(error['type'])
+        custom_message = custom_messages.get(error["type"])
         if custom_message:
-            ctx = error.get('ctx')
-            error['msg'] = (
-                custom_message.format(**ctx) if ctx else custom_message
-            )
+            ctx = error.get("ctx")
+            error["msg"] = custom_message.format(**ctx) if ctx else custom_message
         new_errors.append(error)
     return new_errors
 
@@ -187,7 +185,7 @@ class Model(BaseModel):
 
 
 try:
-    Model(a='wrong', b='ftp://example.com')
+    Model(a="wrong", b="ftp://example.com")
 except ValidationError as e:
     errors = convert_errors(e, CUSTOM_MESSAGES)
     print(errors)
@@ -225,23 +223,23 @@ from pydantic import BaseModel, ValidationError
 
 
 def loc_to_dot_sep(loc: tuple[Union[str, int], ...]) -> str:
-    path = ''
+    path = ""
     for i, x in enumerate(loc):
         if isinstance(x, str):
             if i > 0:
-                path += '.'
+                path += "."
             path += x
         elif isinstance(x, int):
-            path += f'[{x}]'
+            path += f"[{x}]"
         else:
-            raise TypeError('Unexpected type')
+            raise TypeError("Unexpected type")
     return path
 
 
 def convert_errors(e: ValidationError) -> list[dict[str, Any]]:
     new_errors: list[dict[str, Any]] = e.errors()
     for error in new_errors:
-        error['loc'] = loc_to_dot_sep(error['loc'])
+        error["loc"] = loc_to_dot_sep(error["loc"])
     return new_errors
 
 
@@ -254,7 +252,7 @@ class TestModel(BaseModel):
     items: list[TestNestedModel]
 
 
-data = {'items': [{'key': 'foo', 'value': 'bar'}, {'key': 'baz'}]}
+data = {"items": [{"key": "foo", "value": "bar"}, {"key": "baz"}]}
 
 try:
     TestModel.model_validate(data)

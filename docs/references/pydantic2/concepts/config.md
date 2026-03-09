@@ -32,7 +32,7 @@ On Pydantic models, configuration can be specified in two ways:
 
 
   try:
-      m = Model(v='abcdef')
+      m = Model(v="abcdef")
   except ValidationError as e:
       print(e)
       """
@@ -76,9 +76,9 @@ class User:
     name: str
 
 
-user = User(name='John Doe')
+user = User(name="John Doe")
 try:
-    user.name = 'x' * 20
+    user.name = "x" * 20
 except ValidationError as e:
     print(e)
     """
@@ -99,7 +99,7 @@ from pydantic import ConfigDict, TypeAdapter
 ta = TypeAdapter(list[str], config=ConfigDict(coerce_numbers_to_str=True))
 
 print(ta.validate_python([1, 2]))
-#> ['1', '2']
+# > ['1', '2']
 ```
 
 Configuration can't be provided if the type adapter directly wraps a type that support it, and a
@@ -124,7 +124,7 @@ the configuration can be set in two ways:
       __pydantic_config__ = ConfigDict(strict=True)
 
       id: int
-      name: str = 'John Doe'
+      name: str = "John Doe"
   ```
 
 - Using the [`@with_config`][pydantic.config.with_config] decorator (this avoids static type checking errors with
@@ -156,16 +156,16 @@ from pydantic import BaseModel, ConfigDict
 
 
 class Parent(BaseModel):
-    model_config = ConfigDict(extra='allow')
+    model_config = ConfigDict(extra="allow")
 
 
 class Model(Parent):
     x: str
 
 
-m = Model(x='foo', y='bar')
+m = Model(x="foo", y="bar")
 print(m.model_dump())
-#> {'x': 'foo', 'y': 'bar'}
+# > {'x': 'foo', 'y': 'bar'}
 ```
 
 If you provide configuration to the subclasses, it will be _merged_ with the parent configuration:
@@ -175,7 +175,7 @@ from pydantic import BaseModel, ConfigDict
 
 
 class Parent(BaseModel):
-    model_config = ConfigDict(extra='allow', str_to_lower=False)
+    model_config = ConfigDict(extra="allow", str_to_lower=False)
 
 
 class Model(Parent):
@@ -184,11 +184,11 @@ class Model(Parent):
     x: str
 
 
-m = Model(x='FOO', y='bar')
+m = Model(x="FOO", y="bar")
 print(m.model_dump())
-#> {'x': 'foo', 'y': 'bar'}
+# > {'x': 'foo', 'y': 'bar'}
 print(Model.model_config)
-#> {'extra': 'allow', 'str_to_lower': True}
+# > {'extra': 'allow', 'str_to_lower': True}
 ```
 
 !!! warning
@@ -218,8 +218,8 @@ When using types that support configuration as field annotations, configuration 
       model_config = ConfigDict(str_to_lower=True)
 
 
-  print(Parent(user={'name': 'JOHN'}))
-  #> user=User(name='JOHN')
+  print(Parent(user={"name": "JOHN"}))
+  # > user=User(name='JOHN')
   ```
 
 - For stdlib types (dataclasses and typed dictionaries), configuration will be propagated, unless
@@ -249,6 +249,6 @@ When using types that support configuration as field annotations, configuration 
       model_config = ConfigDict(str_to_lower=True)
 
 
-  print(Parent(user_1={'name': 'JOHN'}, user_2={'name': 'JOHN'}))
-  #> user_1=UserWithoutConfig(name='john') user_2=UserWithConfig(name='JOHN')
+  print(Parent(user_1={"name": "JOHN"}, user_2={"name": "JOHN"}))
+  # > user_1=UserWithoutConfig(name='john') user_2=UserWithConfig(name='JOHN')
   ```

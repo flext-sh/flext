@@ -116,7 +116,7 @@ from pydantic import BaseModel
 class Knight(BaseModel):
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 
 
 class Quest(BaseModel):
@@ -125,7 +125,7 @@ class Quest(BaseModel):
 
 
 quest = Quest(
-    title='To seek the Holy Grail', knight={'title': 'Sir Lancelot', 'age': 23}
+    title="To seek the Holy Grail", knight={"title": "Sir Lancelot", "age": 23}
 )
 ```
 
@@ -150,10 +150,10 @@ from pydantic import BaseModel
 class Knight(BaseModel):
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 
 
-lancelot = Knight(title='Sir Lancelot', age='23')
+lancelot = Knight(title="Sir Lancelot", age="23")
 ```
 
 that way Pylance and mypy will ignore errors in that line.
@@ -175,11 +175,11 @@ from pydantic import BaseModel
 class Knight(BaseModel):
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 
 
-age_str: Any = '23'
-lancelot = Knight(title='Sir Lancelot', age=age_str)
+age_str: Any = "23"
+lancelot = Knight(title="Sir Lancelot", age=age_str)
 ```
 
 that way Pylance and mypy will interpret the variable `age_str` as if they didn't know its type, instead of knowing it has a type of `str` when an `int` was expected (and then showing the corresponding error).
@@ -203,10 +203,10 @@ from pydantic import BaseModel
 class Knight(BaseModel):
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 
 
-lancelot = Knight(title='Sir Lancelot', age=cast(Any, '23'))
+lancelot = Knight(title="Sir Lancelot", age=cast(Any, "23"))
 ```
 
 `cast(Any, '23')` doesn't affect the value, it's still just `'23'`, but now Pylance and mypy will assume it is of type `Any`, which means, they will act as if they didn't know the type of the value.
@@ -231,7 +231,7 @@ class Knight(BaseModel):
     model_config = dict(frozen=True)
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 ```
 
 or passed as keyword arguments when defining the model class:
@@ -243,7 +243,7 @@ from pydantic import BaseModel
 class Knight(BaseModel, frozen=True):
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 ```
 
 The specific configuration **`frozen`** (in beta) has a special meaning.
@@ -265,7 +265,7 @@ from pydantic import BaseModel, Field
 
 
 class Knight(BaseModel):
-    title: str = Field(default='Sir Lancelot')  # this is okay
+    title: str = Field(default="Sir Lancelot")  # this is okay
     age: int = Field(
         23
     )  # this works fine at runtime but will case an error for pyright

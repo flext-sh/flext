@@ -41,7 +41,8 @@ from flext_core import FlextResult
 cli = FlextCli()
 
 result = (
-    cli.file_tools.read_json_file("config.json")
+    cli.file_tools
+    .read_json_file("config.json")
     .flat_map(lambda cfg: cli.config.validate(cfg))
     .map(lambda cfg: cli.formatters.print("Config loaded", style="green"))
 )

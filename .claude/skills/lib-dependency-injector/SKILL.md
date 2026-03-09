@@ -72,7 +72,9 @@ class FlextRuntime:
         inject = staticmethod(wiring.inject)
 
         @classmethod
-        def create_layered_bridge(cls, config: ConfigMap | None = None) -> tuple[
+        def create_layered_bridge(
+            cls, config: ConfigMap | None = None
+        ) -> tuple[
             containers.DeclarativeContainer,
             containers.DynamicContainer,
             containers.DynamicContainer,
@@ -128,6 +130,7 @@ from flext_core import FlextContainer
 container = FlextContainer.get_global()
 _ = container.register_factory("token_factory", lambda: {"token": "abc123"})
 
+
 @container.inject
 def consume(token=container.provide["token_factory"]):
     return token
@@ -139,6 +142,7 @@ Bad:
 
 ```python
 from dependency_injector import containers, providers
+
 
 class AppContainer(containers.DynamicContainer):
     token_factory = providers.Factory(lambda: {"token": "abc123"})

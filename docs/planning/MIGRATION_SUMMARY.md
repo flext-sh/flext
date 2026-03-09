@@ -294,7 +294,6 @@ if Guards.is_config(obj):
 ### 2. Hierarchical Model Organization
 
 ```python
-
 config: m.Core.Config = ...
 context: m.Core.Context = ...
 result: m.Result.Success = ...
@@ -317,10 +316,12 @@ model_config = ConfigDict(
 ```python
 from pydantic import field_validator, model_validator, computed_field
 
+
 @field_validator("email")
 @classmethod
 def validate_email(cls, v: str) -> str:
     return v.lower()
+
 
 @computed_field
 @property

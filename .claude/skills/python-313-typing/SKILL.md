@@ -59,11 +59,13 @@ class Container[T = str]:
     def __init__(self, value: T) -> None:
         self.value = value
 
-c1 = Container("hello")     # Container[str] — default
-c2 = Container[int](42)     # Container[int] — explicit
 
-class Result[T, E = str]:
-    ...  # E defaults to str if not specified
+c1 = Container("hello")  # Container[str] — default
+c2 = Container[int](42)  # Container[int] — explicit
+
+
+class Result[T, E = str]: ...  # E defaults to str if not specified
+
 
 type Callback[T = None] = Callable[[T], None]
 ```
@@ -71,14 +73,14 @@ type Callback[T = None] = Callable[[T], None]
 **Multiple defaults** — defaults must trail non-defaulted params:
 
 ```python
-class Map[K, V = str, M = dict[K, V]]:
-    ...
+class Map[K, V = str, M = dict[K, V]]: ...
 ```
 
 **NoDefault sentinel**:
 
 ```python
 from typing import TypeVar, NoDefault
+
 T = TypeVar("T")
 print(T.__default__ is NoDefault)  # True — no default set
 ```
@@ -88,13 +90,13 @@ print(T.__default__ is NoDefault)  # True — no default set
 ```python
 from warnings import deprecated
 
+
 @deprecated("Use new_function() instead")
-def old_function() -> None:
-    ...
+def old_function() -> None: ...
+
 
 @deprecated("Use NewClass instead, removed in 4.0")
-class OldClass:
-    ...
+class OldClass: ...
 ```
 
 Type checkers emit warnings at call sites. Runtime emits `DeprecationWarning`.
@@ -105,9 +107,11 @@ Type checkers emit warnings at call sites. Runtime emits `DeprecationWarning`.
 from typing import overload
 from warnings import deprecated
 
+
 @overload
 @deprecated("Pass keyword args instead")
 def connect(host: str, port: int) -> Connection: ...
+
 
 @overload
 def connect(*, url: str) -> Connection: ...
@@ -118,13 +122,15 @@ def connect(*, url: str) -> Connection: ...
 ```python
 from typing import ReadOnly, TypedDict
 
+
 class Config(TypedDict):
-    name: ReadOnly[str]       # immutable after creation
-    debug: bool               # mutable
+    name: ReadOnly[str]  # immutable after creation
+    debug: bool  # mutable
+
 
 cfg: Config = {"name": "app", "debug": True}
 cfg["debug"] = False  # OK
-cfg["name"] = "new"   # type error: ReadOnly
+cfg["name"] = "new"  # type error: ReadOnly
 ```
 
 **With Required/NotRequired**:
@@ -142,6 +148,7 @@ class Settings(TypedDict):
 class Base(TypedDict):
     version: ReadOnly[str]
 
+
 class Extended(Base):
     extra: str  # version remains ReadOnly
 ```
@@ -151,8 +158,10 @@ class Extended(Base):
 ```python
 from typing import TypeIs
 
+
 def is_str_list(val: list[str | int]) -> TypeIs[list[str]]:
     return all(isinstance(x, str) for x in val)
+
 
 def process(data: list[str | int]) -> None:
     if is_str_list(data):
@@ -175,6 +184,7 @@ def process(data: list[str | int]) -> None:
 ```python
 from typing import TypeIs
 from flext_core import FlextResult
+
 
 def is_success[T](result: FlextResult[T]) -> TypeIs[FlextResult[T]]:
     return result.is_success
@@ -209,8 +219,9 @@ Good:
 class Cache[K = str, V = bytes]:
     def get(self, key: K) -> V | None: ...
 
-cache = Cache()          # Cache[str, bytes]
-cache = Cache[int, str]() # Cache[int, str]
+
+cache = Cache()  # Cache[str, bytes]
+cache = Cache[int, str]()  # Cache[int, str]
 ```
 
 Why good: PEP 696 defaults reduce boilerplate — callers don't need to specify common type args.

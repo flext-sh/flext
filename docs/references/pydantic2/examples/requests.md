@@ -25,14 +25,14 @@ class User(BaseModel):
     email: EmailStr
 
 
-url = 'https://jsonplaceholder.typicode.com/users/1'
+url = "https://jsonplaceholder.typicode.com/users/1"
 
 response = httpx.get(url)
 response.raise_for_status()
 
 user = User.model_validate(response.json())
 print(repr(user))
-#> User(id=1, name='Leanne Graham', email='Sincere@april.biz')
+# > User(id=1, name='Leanne Graham', email='Sincere@april.biz')
 ```
 
 The [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] tool from Pydantic often comes in quite
@@ -52,7 +52,7 @@ class User(BaseModel):
     email: EmailStr
 
 
-url = 'https://jsonplaceholder.typicode.com/users/'  # (1)!
+url = "https://jsonplaceholder.typicode.com/users/"  # (1)!
 
 response = httpx.get(url)
 response.raise_for_status()

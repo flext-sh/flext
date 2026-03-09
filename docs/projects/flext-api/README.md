@@ -42,7 +42,7 @@ result = client.get("/users")
 if result.is_success():
     print(f"Found {len(result.unwrap())} users")
 else:
-    print(f"HTTP error: {result.unwrap_failure()}" )
+    print(f"HTTP error: {result.unwrap_failure()}")
 ```
 
 Use `FlextApi().create_fastapi_app(...)` to bootstrap FastAPI servers with the same configuration patterns.

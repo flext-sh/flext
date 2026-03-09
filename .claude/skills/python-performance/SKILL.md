@@ -56,6 +56,7 @@ description: Profile and optimize Python code using cProfile, memory profilers, 
 import cProfile
 import pstats
 
+
 def profile_function(func, *args, **kwargs):
     profiler = cProfile.Profile()
     profiler.enable()
@@ -82,9 +83,10 @@ kernprof -l -v script.py
 ```python
 from memory_profiler import profile
 
+
 @profile
 def memory_intensive():
-    data = [i ** 2 for i in range(1_000_000)]
+    data = [i**2 for i in range(1_000_000)]
     return sum(data)
 ```
 
@@ -107,16 +109,20 @@ total = sum(x**2 for x in range(1_000_000))  # no intermediate list
 # Cache expensive computations
 from functools import lru_cache
 
+
 @lru_cache(maxsize=256)
 def expensive_lookup(key: str) -> dict:
     return db.query(key)
 
+
 # Use __slots__ for memory-intensive classes
 class Point:
     __slots__ = ("x", "y")
+
     def __init__(self, x: float, y: float) -> None:
         self.x = x
         self.y = y
+
 
 # Batch I/O operations
 def process_batch(items: list[str]) -> list[Result]:
@@ -148,6 +154,7 @@ Good:
 
 ```python
 from functools import lru_cache
+
 
 @lru_cache(maxsize=128)
 def parse_entry(raw: str) -> dict:

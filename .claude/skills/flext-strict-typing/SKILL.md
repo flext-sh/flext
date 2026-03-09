@@ -92,6 +92,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 # Preferred fallible contract
 from flext_core import r, t
 
+
 def parse_payload(payload: t.ConfigMap) -> r[str]:
     if "name" not in payload:
         return r.fail("Missing name")
@@ -155,13 +156,13 @@ Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` 
 ### Special RootModel Containers (from `typings.py` lines 357-462)
 
 ```python
-t.Dict              # RootModel[dict[str, GeneralValueType]] — general dict
-t.ConfigMap          # RootModel[dict[str, GeneralValueType]] — config dicts
-t.ServiceMap         # RootModel[dict[str, GeneralValueType]] — service registry
-t.ErrorMap           # RootModel[dict[str, int | str | dict[str, int]]] — error types
-t.ObjectList         # RootModel[list[GeneralValueType]] — batch operations
-t.FactoryMap         # RootModel[dict[str, FactoryRegistrationCallable]]
-t.ResourceMap        # RootModel[dict[str, ResourceCallable]]
+t.Dict  # RootModel[dict[str, GeneralValueType]] — general dict
+t.ConfigMap  # RootModel[dict[str, GeneralValueType]] — config dicts
+t.ServiceMap  # RootModel[dict[str, GeneralValueType]] — service registry
+t.ErrorMap  # RootModel[dict[str, int | str | dict[str, int]]] — error types
+t.ObjectList  # RootModel[list[GeneralValueType]] — batch operations
+t.FactoryMap  # RootModel[dict[str, FactoryRegistrationCallable]]
+t.ResourceMap  # RootModel[dict[str, ResourceCallable]]
 t.FieldValidatorMap  # RootModel[dict[str, Callable[[GVT], GVT]]]
 ```
 
@@ -177,7 +178,7 @@ PEP 695 `type X = str | int` creates a `TypeAliasType` object, **NOT** a `UnionT
 
 ```python
 # PROOF — verified live on this codebase:
-type X = str | int        # → TypeAliasType  → isinstance(val, X) CRASHES ❌
+type X = str | int  # → TypeAliasType  → isinstance(val, X) CRASHES ❌
 X: TypeAlias = str | int  # → UnionType      → isinstance(val, X) WORKS   ✅
 ```
 
@@ -236,8 +237,11 @@ type Scalar = str | int | float | bool | datetime  # CRASHES isinstance() calls
 isinstance(val, t.FlextTypes.Serializable)  # CRASHES at runtime
 isinstance(val, t.FlextTypes.ContainerValue)  # CRASHES at runtime
 
+
 # ❌ FORBIDDEN — subclassing a TypeAlias
-class Foo(t.FlextTypes.ConfigurationMapping): ...  # Use Mapping[str, t.FlextTypes.Container]
+class Foo(
+    t.FlextTypes.ConfigurationMapping
+): ...  # Use Mapping[str, t.FlextTypes.Container]
 ```
 
 ### CORRECT PATTERNS
@@ -248,13 +252,18 @@ Primitives: TypeAlias = str | int | float | bool
 Scalar: TypeAlias = str | int | float | bool | datetime
 
 # ✅ CORRECT — recursive aliases use type statement
-type Serializable = (Scalar | list[FlextTypes.Serializable] | dict[str, FlextTypes.Serializable])
+type Serializable = (
+    Scalar | list[FlextTypes.Serializable] | dict[str, FlextTypes.Serializable]
+)
 
 # ✅ CORRECT — runtime narrowing via public utilities alias
 from flext_core import u
 
-if u.Guards.is_primitive(val): ...
-if u.Guards.is_scalar(val): ...
+if u.Guards.is_primitive(val):
+    ...
+if u.Guards.is_scalar(val):
+    ...
+
 
 # ✅ CORRECT — subclassing uses concrete base
 class Foo(Mapping[str, t.FlextTypes.Container]): ...
@@ -297,8 +306,14 @@ ConfigurationMapping: TypeAlias = Mapping[str, Scalar | Sequence[Scalar]]
 ```python
 # ✅ CORRECT — Recursive type (PEP 695 required — ONLY syntax that supports self-reference)
 type GeneralValueType = (
-    str | int | float | bool | datetime | None
-    | BaseModel | Path
+    str
+    | int
+    | float
+    | bool
+    | datetime
+    | None
+    | BaseModel
+    | Path
     | Sequence[GeneralValueType]
     | Mapping[str, GeneralValueType]
 )
@@ -315,9 +330,9 @@ When you need runtime type checks on types that are `TypeAliasType` (or any comp
 from flext_core import u
 
 # ✅ CORRECT — TypeGuard narrows the type safely
-if u.Guards.is_primitive(val):   # TypeGuard[str | int | float | bool]
+if u.Guards.is_primitive(val):  # TypeGuard[str | int | float | bool]
     ...
-if u.Guards.is_scalar(val):     # TypeGuard[str | int | float | bool | datetime]
+if u.Guards.is_scalar(val):  # TypeGuard[str | int | float | bool | datetime]
     ...
 if u.Guards.is_flexible_value(val):  # TypeGuard for general values
     ...
@@ -331,13 +346,13 @@ All TypeVars are declared at module level in `typings.py`, not inside classes:
 
 ```python
 # Module-level TypeVars (from typings.py lines 44-93)
-T = TypeVar("T")                                    # Generic
-T_co = TypeVar("T_co", covariant=True)               # Read-only
-T_contra = TypeVar("T_contra", contravariant=True)    # Write-only
-E = TypeVar("E")                                     # Element type
-U = TypeVar("U")                                     # Utility type
-R = TypeVar("R")                                     # Return type
-P = ParamSpec("P")                                   # Decorator patterns
+T = TypeVar("T")  # Generic
+T_co = TypeVar("T_co", covariant=True)  # Read-only
+T_contra = TypeVar("T_contra", contravariant=True)  # Write-only
+E = TypeVar("E")  # Element type
+U = TypeVar("U")  # Utility type
+R = TypeVar("R")  # Return type
+P = ParamSpec("P")  # Decorator patterns
 
 # Handler TypeVars
 MessageT_contra = TypeVar("MessageT_contra", contravariant=True)
@@ -378,6 +393,7 @@ from flext_core import T, T_co, U, P, R, T_Model, T_Settings
 ```python
 from typing import Self
 
+
 class MyModel(BaseModel):
     def configure(self, x: int) -> Self:
         ...
@@ -414,6 +430,7 @@ class MyModel(BaseModel):
         frozen=True,
     )
 
+
 # ❌ WRONG — Pydantic v1 style
 class MyModel(BaseModel):
     class Config:
@@ -436,6 +453,7 @@ items: list[str] = []  # Mutable default, use Field(default_factory=list)
 
 ```python
 from pydantic import field_validator, model_validator
+
 
 class MyModel(BaseModel):
     name: str
@@ -462,11 +480,12 @@ Use `t.Validation.*` for constrained scalar fields:
 ```python
 from flext_core import t
 
+
 class ServerConfig(BaseModel):
-    port: t.Validation.PortNumber         # Annotated[int, Field(ge=1, le=65535)]
+    port: t.Validation.PortNumber  # Annotated[int, Field(ge=1, le=65535)]
     timeout: t.Validation.PositiveTimeout  # Annotated[float, Field(gt=0.0, le=300.0)]
-    retries: t.Validation.RetryCount      # Annotated[int, Field(ge=0, le=10)]
-    workers: t.Validation.WorkerCount     # Annotated[int, Field(ge=1, le=100)]
+    retries: t.Validation.RetryCount  # Annotated[int, Field(ge=0, le=10)]
+    workers: t.Validation.WorkerCount  # Annotated[int, Field(ge=1, le=100)]
 ```
 
 ---
@@ -478,6 +497,7 @@ typing (duck typing — no inheritance required for compliance):
 
 ```python
 from typing import Protocol, runtime_checkable
+
 
 @runtime_checkable
 class Serializable(Protocol):
@@ -496,6 +516,7 @@ All enums use `StrEnum` (never `Enum`, `IntEnum`, or raw strings):
 
 ```python
 from enum import StrEnum
+
 
 class TokenTypes(StrEnum):
     ACCESS = "access"
@@ -518,6 +539,7 @@ Benefits:
 from typing import Final
 from types import MappingProxyType
 from collections.abc import Mapping, Set as AbstractSet
+
 
 class FlextConstants:
     # Scalar constants: use Final
@@ -549,19 +571,18 @@ When a typing rule is violated, prefer architecture-aware fixes over mechanical 
 
 ```python
 # ✅ Every function/method MUST have explicit return type
-def process(self, data: t.GeneralValueType) -> r[bool]:
-    ...
+def process(self, data: t.GeneralValueType) -> r[bool]: ...
 
-def validate(self, value: str) -> str:
-    ...
+
+def validate(self, value: str) -> str: ...
+
 
 # ✅ Use r[T] for operations that can fail
-def load_config(self) -> r[t.ConfigMap]:
-    ...
+def load_config(self) -> r[t.ConfigMap]: ...
+
 
 # ❌ WRONG — Missing return type
-def process(self, data):
-    ...
+def process(self, data): ...
 ```
 
 ---
@@ -572,14 +593,15 @@ Use specific callable types from `FlextTypes`:
 
 ```python
 # Specific callable types from typings.py
-t.HandlerCallable      # Callable[[GeneralValueType], GeneralValueType]
-t.ConditionCallable     # Callable[[GeneralValueType], bool]
-t.FactoryCallable       # Callable[[], GeneralValueType]
-t.ResourceCallable      # Callable[[], GeneralValueType]
-t.DecoratorType         # Callable[[HandlerCallable], HandlerCallable]
+t.HandlerCallable  # Callable[[GeneralValueType], GeneralValueType]
+t.ConditionCallable  # Callable[[GeneralValueType], bool]
+t.FactoryCallable  # Callable[[], GeneralValueType]
+t.ResourceCallable  # Callable[[], GeneralValueType]
+t.DecoratorType  # Callable[[HandlerCallable], HandlerCallable]
 
 # For custom signatures, use import from collections.abc:
 from collections.abc import Callable
+
 callback: Callable[[str, int], bool]
 ```
 
@@ -692,9 +714,11 @@ class SuccessCheckable(Protocol):
     @property
     def is_success(self) -> bool: ...
 
+
 # In models.py — base for all result models:
 class ResultBase(BaseModel):
     """Base for result models with success tracking."""
+
     success: bool = Field(default=False, description="Operation succeeded.")
     message: str = Field(default="", description="Human-readable result.")
 
@@ -722,6 +746,7 @@ if type(obj) is str:
 if isinstance(obj, str):
     use(obj)  # str
 
+
 # ✅ CORRECT — TypeGuard for custom predicates
 def is_config_map(val: t.GeneralValueType) -> TypeGuard[t.ConfigMap]:
     return u.Guards.is_config_map(val)
@@ -732,15 +757,17 @@ Dismantle polymorphic functions: replace multiple branches on type/union with a 
 
 ```python
 # ❌ AVOID — many branches on polymorphic input in one function
-def process(data: t.GeneralValueType) -> r[str]:
-    ...
+def process(data: t.GeneralValueType) -> r[str]: ...
+
 
 # ✅ PREFER — single model with validation
 class ProcessInput(BaseModel):
     kind: Literal["str", "dict", "list"]
     value: t.GeneralValueType
+
     @model_validator(mode="after")
     def check_kind_match(self): ...
+
 
 def process(data: ProcessInput) -> Result: ...
 ```
@@ -793,6 +820,7 @@ from flext_core import FlextResult, r
 ```python
 from typing import cast
 
+
 class FlextResult[T_co](FlextRuntime.RuntimeResult[T_co]):
     @classmethod
     def ok[T](cls, value: T) -> FlextResult[T]:
@@ -830,13 +858,13 @@ generic subscript (ruff RUF046).
 # Return-type annotation drives U inference for fail():
 def load(self) -> r[float]:
     if not self._ready:
-        return r.fail("Not ready")      # U inferred as float ✓
-    return r[float].ok(self._value)      # T inferred from value ✓
+        return r.fail("Not ready")  # U inferred as float ✓
+    return r[float].ok(self._value)  # T inferred from value ✓
+
 
 # Chain composition:
 def process(self) -> r[str]:
     return (
-        self.load()
-        .map(lambda v: f"Value: {v}")    # FlextResult[str]
+        self.load().map(lambda v: f"Value: {v}")  # FlextResult[str]
     )
 ```

@@ -39,8 +39,7 @@ from flext_oracle_oic import (
 
 settings = OracleOicExtensionSettings(
     connection=FlextOracleOicConnectionSettings(
-        base_url="https://instance.integration.ocp.oraclecloud.com",
-        api_version="v1"
+        base_url="https://instance.integration.ocp.oraclecloud.com", api_version="v1"
     ),
     auth=FlextOracleOicAuthSettings(
         oauth_client_id="id",

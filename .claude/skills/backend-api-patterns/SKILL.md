@@ -107,21 +107,21 @@ users = session.query(User).options(selectinload(User.posts)).all()
 ```python
 from sqlalchemy import Index
 
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     email = Column(String, unique=True, index=True)
     status = Column(String, index=True)
 
-    __table_args__ = (
-        Index("ix_users_status_created", "status", "created_at"),
-    )
+    __table_args__ = (Index("ix_users_status_created", "status", "created_at"),)
 ```
 
 ### Transactions
 
 ```python
 from contextlib import contextmanager
+
 
 @contextmanager
 def transaction(session):
@@ -131,6 +131,7 @@ def transaction(session):
     except Exception:
         session.rollback()
         raise
+
 
 with transaction(session) as s:
     s.add(user)

@@ -2110,6 +2110,7 @@ from flext_core import FlextDispatcher
 router = APIRouter()
 dispatcher = FlextDispatcher()
 
+
 @router.post("/users")
 async def create_user(request: CreateUserRequest) -> UserResponse:
     """Create user via CQRS command."""
@@ -2129,6 +2130,7 @@ async def create_user(request: CreateUserRequest) -> UserResponse:
         name=user.name,
         email=user.email,
     )
+
 
 @router.get("/users/{user_id}")
 async def get_user(user_id: str) -> UserResponse:
@@ -2161,7 +2163,9 @@ async def get_user(user_id: str) -> UserResponse:
 ```python
 # flext-oud-mig: Migration pipeline handler
 class MigrateEntryHandler(h[MigrateEntryCommand, m.Infra.Workspace.MigrationResult]):
-    def handle(self, command: MigrateEntryCommand) -> FlextResult[m.Infra.Workspace.MigrationResult]:
+    def handle(
+        self, command: MigrateEntryCommand
+    ) -> FlextResult[m.Infra.Workspace.MigrationResult]:
         self.cqrs_context.push({
             "migration_id": command.migration_id,
             "entry_dn": command.entry.dn,
@@ -2208,11 +2212,13 @@ class MigrateEntryHandler(h[MigrateEntryCommand, m.Infra.Workspace.MigrationResu
                 },
             )
 
-            return FlextResult.ok(m.Infra.Workspace.MigrationResult(
-                entry_dn=command.entry.dn,
-                status="migrated",
-                verification_passed=True,
-            ))
+            return FlextResult.ok(
+                m.Infra.Workspace.MigrationResult(
+                    entry_dn=command.entry.dn,
+                    status="migrated",
+                    verification_passed=True,
+                )
+            )
 
         except Exception as e:
             self.cqrs_metrics.record("migration_errors", 1)

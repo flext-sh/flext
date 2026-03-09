@@ -58,8 +58,11 @@ description: Modern Python type annotation patterns for 3.10+ including union sy
 # Modern
 def process(value: str | int | None) -> str: ...
 
+
 # Avoid
 from typing import Union, Optional
+
+
 def process(value: Union[str, int, Optional[str]]) -> str: ...
 ```
 
@@ -72,6 +75,7 @@ type Callback[T] = Callable[[T], None]
 
 # Avoid
 from typing import TypeAlias
+
 UserID: TypeAlias = str | int
 ```
 
@@ -83,14 +87,15 @@ class Container[T]:
     def __init__(self, value: T) -> None:
         self.value = value
 
+
 # With bounds
 class NumberBox[T: (int, float)]:
     def __init__(self, value: T) -> None:
         self.value = value
 
+
 # With defaults (3.13+, PEP 696)
-class Result[T, E = str]:
-    ...
+class Result[T, E = str]: ...
 ```
 
 ### Generic Function Syntax (3.12+)
@@ -99,6 +104,7 @@ class Result[T, E = str]:
 # Modern
 def first[T](items: Sequence[T]) -> T:
     return items[0]
+
 
 # Multiple type parameters
 def zip_with[T, U, V](a: T, b: U, func: Callable[[T, U], V]) -> V:
@@ -109,6 +115,7 @@ def zip_with[T, U, V](a: T, b: U, func: Callable[[T, U], V]) -> V:
 
 ```python
 from typing import Self
+
 
 class Builder:
     def set_name(self, name: str) -> Self:
@@ -123,9 +130,11 @@ from typing import ParamSpec, Callable
 
 type P = ParamSpec("P")
 
+
 def decorator[**P, R](func: Callable[P, R]) -> Callable[P, R]:
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         return func(*args, **kwargs)
+
     return wrapper
 ```
 
@@ -141,6 +150,7 @@ def apply[*Ts](funcs: tuple[Callable[[], *Ts]]) -> tuple[*Ts]:
 ```python
 from typing import Never, NoReturn, assert_never
 
+
 def handle_status(status: str) -> Never:
     raise ValueError(f"unexpected: {status}")
 ```
@@ -149,6 +159,7 @@ def handle_status(status: str) -> Never:
 
 ```python
 from typing import TypedDict, Required, NotRequired
+
 
 class Config(TypedDict):
     host: Required[str]
@@ -167,8 +178,7 @@ class Config(TypedDict):
 Good:
 
 ```python
-def fetch(id: str | int) -> User | None:
-    ...
+def fetch(id: str | int) -> User | None: ...
 ```
 
 Why good: uses 3.10+ union syntax — concise and readable.
@@ -177,8 +187,9 @@ Bad:
 
 ```python
 from typing import Union, Optional
-def fetch(id: Union[str, int]) -> Optional[User]:
-    ...
+
+
+def fetch(id: Union[str, int]) -> Optional[User]: ...
 ```
 
 Why bad: verbose legacy syntax — `Union` and `Optional` are unnecessary with `|`.

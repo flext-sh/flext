@@ -45,7 +45,7 @@ PositiveInt = Annotated[int, Field(gt=0)]  # (1)!
 ta = TypeAdapter(PositiveInt)
 
 print(ta.validate_python(1))
-#> 1
+# > 1
 
 try:
     ta.validate_python(-1)
@@ -84,8 +84,8 @@ from pydantic import (
 TruncatedFloat = Annotated[
     float,
     AfterValidator(lambda x: round(x, 1)),
-    PlainSerializer(lambda x: f'{x:.1e}', return_type=str),
-    WithJsonSchema({'type': 'string'}, mode='serialization'),
+    PlainSerializer(lambda x: f"{x:.1e}", return_type=str),
+    WithJsonSchema({"type": "string"}, mode="serialization"),
 ]
 
 
@@ -98,8 +98,8 @@ assert ta.validate_python(input) == 1.0
 
 assert ta.dump_json(input) == b'"1.0e+00"'
 
-assert ta.json_schema(mode='validation') == {'type': 'number'}
-assert ta.json_schema(mode='serialization') == {'type': 'string'}
+assert ta.json_schema(mode="validation") == {"type": "number"}
+assert ta.json_schema(mode="serialization") == {"type": "string"}
 ```
 
 #### Generics
@@ -113,7 +113,7 @@ from annotated_types import Gt, Len
 
 from pydantic import TypeAdapter, ValidationError
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 ShortList = Annotated[list[T], Len(max_length=4)]
@@ -177,7 +177,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
 
     from pydantic import BaseModel
 
-    PositiveIntList = TypeAliasType('PositiveIntList', list[Annotated[int, Gt(0)]])
+    PositiveIntList = TypeAliasType("PositiveIntList", list[Annotated[int, Gt(0)]])
 
 
     class Model(BaseModel):
@@ -267,7 +267,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
 
         from pydantic import BaseModel, Field
 
-        MyAlias = TypeAliasType('MyAlias', Annotated[int, Field(default=1)])
+        MyAlias = TypeAliasType("MyAlias", Annotated[int, Field(default=1)])
 
 
         class Model(BaseModel):
@@ -305,10 +305,10 @@ As with implicit type aliases, [type variables][typing.TypeVar] can also be used
         from annotated_types import Len
         from typing_extensions import TypeAliasType
 
-        T = TypeVar('T')
+        T = TypeVar("T")
 
         ShortList = TypeAliasType(
-            'ShortList', Annotated[list[T], Len(max_length=4)], type_params=(T,)
+            "ShortList", Annotated[list[T], Len(max_length=4)], type_params=(T,)
         )
         ```
 
@@ -343,8 +343,8 @@ For instance, here is an example definition of a JSON type:
     from pydantic import TypeAdapter
 
     Json = TypeAliasType(
-        'Json',
-        'Union[dict[str, Json], list[Json], str, int, float, bool, None]',  # (1)!
+        "Json",
+        "Union[dict[str, Json], list[Json], str, int, float, bool, None]",  # (1)!
     )
 
     ta = TypeAdapter(Json)
@@ -453,9 +453,9 @@ class Username(str):
 
 
 ta = TypeAdapter(Username)
-res = ta.validate_python('abc')
+res = ta.validate_python("abc")
 assert isinstance(res, Username)
-assert res == 'abc'
+assert res == "abc"
 ```
 
 See [JSON Schema](../concepts/json_schema.md) for more details on how to customize JSON schemas for custom types.
@@ -494,7 +494,7 @@ class Model(BaseModel):
     name: Username
 
 
-assert Model(name='ABC').name == 'abc'  # (2)!
+assert Model(name="ABC").name == "abc"  # (2)!
 ```
 
 1. The `frozen=True` specification makes `MyAfterValidator` hashable. Without this, a union such as `Username | None` will raise an error.
@@ -551,22 +551,18 @@ class _ThirdPartyTypePydanticAnnotation:
             result.x = value
             return result
 
-        from_int_schema = core_schema.chain_schema(
-            [
-                core_schema.int_schema(),
-                core_schema.no_info_plain_validator_function(validate_from_int),
-            ]
-        )
+        from_int_schema = core_schema.chain_schema([
+            core_schema.int_schema(),
+            core_schema.no_info_plain_validator_function(validate_from_int),
+        ])
 
         return core_schema.json_or_python_schema(
             json_schema=from_int_schema,
-            python_schema=core_schema.union_schema(
-                [
-                    # check if it's an instance first before doing any further work
-                    core_schema.is_instance_schema(ThirdPartyType),
-                    from_int_schema,
-                ]
-            ),
+            python_schema=core_schema.union_schema([
+                # check if it's an instance first before doing any further work
+                core_schema.is_instance_schema(ThirdPartyType),
+                from_int_schema,
+            ]),
             serialization=core_schema.plain_serializer_function_ser_schema(
                 lambda instance: instance.x
             ),
@@ -581,9 +577,7 @@ class _ThirdPartyTypePydanticAnnotation:
 
 
 # We now create an `Annotated` wrapper that we'll use as the annotation for fields on `BaseModel`s, etc.
-PydanticThirdPartyType = Annotated[
-    ThirdPartyType, _ThirdPartyTypePydanticAnnotation
-]
+PydanticThirdPartyType = Annotated[ThirdPartyType, _ThirdPartyTypePydanticAnnotation]
 
 
 # Create a model class that uses this annotation as a field
@@ -596,7 +590,7 @@ class Model(BaseModel):
 m_int = Model(third_party_type=1)
 assert isinstance(m_int.third_party_type, ThirdPartyType)
 assert m_int.third_party_type.x == 1
-assert m_int.model_dump() == {'third_party_type': 1}
+assert m_int.model_dump() == {"third_party_type": 1}
 
 # Do the same thing where an instance of ThirdPartyType is passed in
 instance = ThirdPartyType()
@@ -606,11 +600,11 @@ instance.x = 10
 m_instance = Model(third_party_type=instance)
 assert isinstance(m_instance.third_party_type, ThirdPartyType)
 assert m_instance.third_party_type.x == 10
-assert m_instance.model_dump() == {'third_party_type': 10}
+assert m_instance.model_dump() == {"third_party_type": 10}
 
 # Demonstrate that validation errors are raised as expected for invalid inputs
 try:
-    Model(third_party_type='a')
+    Model(third_party_type="a")
 except ValidationError as e:
     print(e)
     """
@@ -623,12 +617,12 @@ except ValidationError as e:
 
 
 assert Model.model_json_schema() == {
-    'properties': {
-        'third_party_type': {'title': 'Third Party Type', 'type': 'integer'}
+    "properties": {
+        "third_party_type": {"title": "Third Party Type", "type": "integer"}
     },
-    'required': ['third_party_type'],
-    'title': 'Model',
-    'type': 'object',
+    "required": ["third_party_type"],
+    "title": "Model",
+    "type": "object",
 }
 ```
 
@@ -661,7 +655,7 @@ class Model(BaseModel):
     ]
 
 
-assert Model(y='ab').y == 'abab'
+assert Model(y="ab").y == "abab"
 ```
 
 #### Summary
@@ -707,7 +701,7 @@ from pydantic import (
     ValidatorFunctionWrapHandler,
 )
 
-ItemType = TypeVar('ItemType')
+ItemType = TypeVar("ItemType")
 
 
 # This is not a pydantic model, it's an arbitrary generic class
@@ -742,34 +736,24 @@ class Owner(Generic[ItemType]):
                 # Ensure the value is an instance of Owner
                 core_schema.is_instance_schema(cls),
                 # Use the item_schema to validate `items`
-                core_schema.no_info_wrap_validator_function(
-                    val_item, item_schema
-                ),
+                core_schema.no_info_wrap_validator_function(val_item, item_schema),
             ]
         )
 
         return core_schema.json_or_python_schema(
             # for JSON accept an object with name and item keys
-            json_schema=core_schema.chain_schema(
-                [
-                    core_schema.typed_dict_schema(
-                        {
-                            'name': core_schema.typed_dict_field(
-                                core_schema.str_schema()
-                            ),
-                            'item': core_schema.typed_dict_field(item_schema),
-                        }
-                    ),
-                    # after validating the json data convert it to python
-                    core_schema.no_info_before_validator_function(
-                        lambda data: Owner(
-                            name=data['name'], item=data['item']
-                        ),
-                        # note that we reuse the same schema here as below
-                        python_schema,
-                    ),
-                ]
-            ),
+            json_schema=core_schema.chain_schema([
+                core_schema.typed_dict_schema({
+                    "name": core_schema.typed_dict_field(core_schema.str_schema()),
+                    "item": core_schema.typed_dict_field(item_schema),
+                }),
+                # after validating the json data convert it to python
+                core_schema.no_info_before_validator_function(
+                    lambda data: Owner(name=data["name"], item=data["item"]),
+                    # note that we reuse the same schema here as below
+                    python_schema,
+                ),
+            ]),
             python_schema=python_schema,
         )
 
@@ -788,8 +772,8 @@ class Model(BaseModel):
 
 
 model = Model(
-    car_owner=Owner(name='John', item=Car(color='black')),
-    home_owner=Owner(name='James', item=House(rooms=3)),
+    car_owner=Owner(name="John", item=Car(color="black")),
+    home_owner=Owner(name="James", item=House(rooms=3)),
 )
 print(model)
 """
@@ -799,8 +783,8 @@ car_owner=Owner(name='John', item=Car(color='black')) home_owner=Owner(name='Jam
 try:
     # If the values of the sub-types are invalid, we get an error
     Model(
-        car_owner=Owner(name='John', item=House(rooms=3)),
-        home_owner=Owner(name='James', item=Car(color='black')),
+        car_owner=Owner(name="John", item=House(rooms=3)),
+        home_owner=Owner(name="James", item=Car(color="black")),
     )
 except ValidationError as e:
     print(e)
@@ -849,7 +833,7 @@ from typing_extensions import get_args
 
 from pydantic import BaseModel, GetCoreSchemaHandler
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class MySequence(Sequence[T]):
@@ -890,9 +874,9 @@ class M(BaseModel):
 
 m = M()
 print(m)
-#> s1=<__main__.MySequence object at 0x0123456789ab>
+# > s1=<__main__.MySequence object at 0x0123456789ab>
 print(m.s1.v)
-#> [3]
+# > [3]
 
 
 class M(BaseModel):
@@ -901,7 +885,7 @@ class M(BaseModel):
 
 M(s1=[1])
 try:
-    M(s1=['a'])
+    M(s1=["a"])
 except ValidationError as exc:
     print(exc)
     """
@@ -937,7 +921,7 @@ class CustomType:
         self.field_name = field_name
 
     def __repr__(self):
-        return f'CustomType<{self.value} {self.field_name!r}>'
+        return f"CustomType<{self.value} {self.field_name!r}>"
 
     @classmethod
     def validate(cls, value: int, info: ValidationInfo):
@@ -958,7 +942,7 @@ class MyModel(BaseModel):
 
 m = MyModel(my_field=1)
 print(m.my_field)
-#> CustomType<1 'my_field'>
+# > CustomType<1 'my_field'>
 ```
 
 You can also access `field_name` from the markers used with `Annotated`, like [`AfterValidator`][pydantic.functional_validators.AfterValidator].
@@ -970,7 +954,7 @@ from pydantic import AfterValidator, BaseModel, ValidationInfo
 
 
 def my_validators(value: int, info: ValidationInfo):
-    return f'<{value} {info.field_name!r}>'
+    return f"<{value} {info.field_name!r}>"
 
 
 class MyModel(BaseModel):
@@ -979,5 +963,5 @@ class MyModel(BaseModel):
 
 m = MyModel(my_field=1)
 print(m.my_field)
-#> <1 'my_field'>
+# > <1 'my_field'>
 ```

@@ -38,10 +38,10 @@ class Event(BaseModel):
 
 json_data = '{"when": "1987-01-28", "where": [51, -1]}'
 print(Event.model_validate_json(json_data))  # (1)!
-#> when=datetime.date(1987, 1, 28) where=(51, -1)
+# > when=datetime.date(1987, 1, 28) where=(51, -1)
 
 try:
-    Event.model_validate({'when': '1987-01-28', 'where': [51, -1]})  # (2)!
+    Event.model_validate({"when": "1987-01-28", "where": [51, -1]})  # (2)!
 except ValidationError as e:
     print(e)
     """
@@ -77,11 +77,11 @@ try:
     result = from_json(partial_json_data, allow_partial=False)
 except ValueError as e:
     print(e)  # (2)!
-    #> EOF while parsing a string at line 1 column 15
+    # > EOF while parsing a string at line 1 column 15
 
 result = from_json(partial_json_data, allow_partial=True)
 print(result)  # (3)!
-#> ['aa', 'bb']
+# > ['aa', 'bb']
 ```
 
 1. The JSON list is incomplete - it's missing a closing `"]`
@@ -93,10 +93,12 @@ This also works for deserializing partial dictionaries. For example:
 ```python
 from pydantic_core import from_json
 
-partial_dog_json = '{"breed": "lab", "name": "fluffy", "friends": ["buddy", "spot", "rufus"], "age'
+partial_dog_json = (
+    '{"breed": "lab", "name": "fluffy", "friends": ["buddy", "spot", "rufus"], "age'
+)
 dog_dict = from_json(partial_dog_json, allow_partial=True)
 print(dog_dict)
-#> {'breed': 'lab', 'name': 'fluffy', 'friends': ['buddy', 'spot', 'rufus']}
+# > {'breed': 'lab', 'name': 'fluffy', 'friends': ['buddy', 'spot', 'rufus']}
 ```
 
 !!! tip "Validating LLM Output"
@@ -121,10 +123,12 @@ class Dog(BaseModel):
     friends: list
 
 
-partial_dog_json = '{"breed": "lab", "name": "fluffy", "friends": ["buddy", "spot", "rufus"], "age'
+partial_dog_json = (
+    '{"breed": "lab", "name": "fluffy", "friends": ["buddy", "spot", "rufus"], "age'
+)
 dog = Dog.model_validate(from_json(partial_dog_json, allow_partial=True))
 print(repr(dog))
-#> Dog(breed='lab', name='fluffy', friends=['buddy', 'spot', 'rufus'])
+# > Dog(breed='lab', name='fluffy', friends=['buddy', 'spot', 'rufus'])
 ```
 
 !!! tip
@@ -154,7 +158,7 @@ Check out the following example for a more in-depth look at how to use default v
         except ValidationError as exc:
             # there might be other types of errors resulting from partial JSON parsing
             # that you allow here, feel free to customize as needed
-            if all(e['type'] == 'missing' for e in exc.errors()):
+            if all(e["type"] == "missing" for e in exc.errors()):
                 raise pydantic_core.PydanticUseDefault()
             else:
                 raise
@@ -167,19 +171,15 @@ Check out the following example for a more in-depth look at how to use default v
 
     class MyModel(BaseModel):
         foo: Optional[str] = None
-        bar: Annotated[
-            Optional[tuple[str, int]], WrapValidator(default_on_error)
-        ] = None
-        nested: Annotated[
-            Optional[NestedModel], WrapValidator(default_on_error)
-        ] = None
+        bar: Annotated[Optional[tuple[str, int]], WrapValidator(default_on_error)] = None
+        nested: Annotated[Optional[NestedModel], WrapValidator(default_on_error)] = None
 
 
     m = MyModel.model_validate(
         pydantic_core.from_json('{"foo": "x", "bar": ["world",', allow_partial=True)
     )
     print(repr(m))
-    #> MyModel(foo='x', bar=None, nested=None)
+    # > MyModel(foo='x', bar=None, nested=None)
 
 
     m = MyModel.model_validate(
@@ -188,7 +188,7 @@ Check out the following example for a more in-depth look at how to use default v
         )
     )
     print(repr(m))
-    #> MyModel(foo='x', bar=('world', 1), nested=None)
+    # > MyModel(foo='x', bar=('world', 1), nested=None)
     ```
 
 ### Caching Strings

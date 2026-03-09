@@ -32,14 +32,20 @@ make check
 ```
 
 ```python
-from flext_observability import flext_create_metric, flext_create_trace, flext_monitor_function
+from flext_observability import (
+    flext_create_metric,
+    flext_create_trace,
+    flext_monitor_function,
+)
 
 metric = flext_create_metric("cpu_usage", 42.0, "percent")
 trace = flext_create_trace("order.process", "processing")
 
+
 @flext_monitor_function("data.work")
 def work(data):
     return data
+
 
 work("payload")
 ```
