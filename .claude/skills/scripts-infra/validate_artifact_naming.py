@@ -8,8 +8,9 @@ import argparse
 import json
 import re
 import sys
-from dataclasses import dataclass
 from pathlib import Path
+
+from pydantic import BaseModel, ConfigDict, Field
 
 EXIT_PASS = 0
 EXIT_FAIL = 1
@@ -30,14 +31,15 @@ class InfraError(Exception):
     """InfraError class."""
 
 
-@dataclass(frozen=True)
-class NamingViolation:
+class NamingViolation(BaseModel):
     """NamingViolation class."""
 
-    path: str
-    filename: str
-    reason: str
-    suggestion: str
+    model_config = ConfigDict(frozen=True)
+
+    path: str = Field(description="Relative path to the artifact")
+    filename: str = Field(description="Artifact filename")
+    reason: str = Field(description="Reason for the violation")
+    suggestion: str = Field(description="Suggested correct filename")
 
 
 def eprint(message: str) -> None:
