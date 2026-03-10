@@ -62,7 +62,7 @@ description: 5-Agent Parallel Execution Protocol for flext-core and consumer pro
 | `mixins.py` | Agent 5 | READ only |
 | `protocols.py` | SECTION-OWNED (see matrix below) | Each agent: own section ONLY, append at END, NEVER reorder, NEVER auto-format globally |
 | `__init__.py` | ❄️ FROZEN | Each agent appends own new exports only |
-| `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `_runtime_metadata.py`, `__version__.py` | ❄️ FROZEN | No agent modifies |
+| `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `__version__.py` | ❄️ FROZEN | No agent modifies |
 
 ### protocols.py Section Ownership Matrix
 
