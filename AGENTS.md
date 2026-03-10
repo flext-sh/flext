@@ -227,7 +227,7 @@ Use EXACTLY this ownership matrix:
 | `mixins.py` | Agent 5 | READ only |
 | `protocols.py` | SECTION-OWNED (see matrix below) | Each agent: own section ONLY, append at END, NEVER reorder, NEVER auto-format globally |
 | `__init__.py` | ❄️ FROZEN | Each agent appends own new exports only |
-| `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `_runtime_metadata.py`, `__version__.py` | ❄️ FROZEN | No agent modifies |
+| `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `__version__.py` | ❄️ FROZEN | No agent modifies |
 
 **AXIOMATIC Exception**: FROZEN files are unfrozen for annotation-only changes required by AXIOMATIC rules (§3 Code Law). Type annotations, Field() metadata, PrivateAttr declarations, and import additions are permitted. Behavioral changes (logic, algorithms, control flow) remain FROZEN.
 

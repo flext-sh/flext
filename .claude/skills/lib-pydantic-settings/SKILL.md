@@ -127,7 +127,7 @@ Good:
 ```python
 model_config = SettingsConfigDict(
     env_prefix="FLEXT_CLI_",
-    env_file=FlextSettings.resolve_env_file(),
+    env_file=u.resolve_env_file(),
     env_file_encoding="utf-8",
     extra="ignore",
 )
