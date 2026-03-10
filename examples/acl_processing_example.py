@@ -22,7 +22,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum
 from typing import ClassVar, TypeGuard, override
 
-from _models import ValidationRules
+from _models import ValidationRules  # noqa: PLC2701
 from flext_core import r, s, t
 from pydantic import BaseModel, ConfigDict, Field
 
