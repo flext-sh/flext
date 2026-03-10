@@ -27,7 +27,11 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
 ]
-dependencies = ["importlib-resources (>=6.5.2,<7.0.0)", "pydantic (>=2.12.5,<3.0.0)", "flext-core @ ../flext-core"]
+dependencies = [
+  "flext-core @ file:////${PWD}/flext-core",
+  "importlib-resources (>=6.5.2,<7.0.0)",
+  "pydantic (>=2.12.5,<3.0.0)",
+]
 # [MANAGED] consolidated development dependencies
 # [AUTO] merged from dev/docs/security/test/typings
 optional-dependencies.dev = [
@@ -386,8 +390,13 @@ split-on-trailing-comma = true
   "S603",
 ]
 "**/*tests*" = [
+  "ANN001",
+  "ANN002",
+  "ANN003",
+  "ANN401",
   "ARG001",
   "ARG002",
+  "ARG003",
   "ARG004",
   "ARG005",
   "B009",
@@ -395,11 +404,16 @@ split-on-trailing-comma = true
   "B018",
   "B903",
   "C901",
+  "D100",
+  "D101",
   "D102",
   "D103",
+  "D104",
+  "D107",
   "EM102",
   "F822",
   "FBT001",
+  "FBT002",
   "FBT003",
   "FURB118",
   "INP001",
@@ -423,6 +437,8 @@ split-on-trailing-comma = true
   "PT011",
   "PT018",
   "PT019",
+  "PYI063",
+  "RUF012",
   "RUF029",
   "S101",
   "S103",
@@ -436,6 +452,7 @@ split-on-trailing-comma = true
   "S311",
   "S404",
   "S603",
+  "S607",
   "S608",
   "SIM105",
   "SIM117",
@@ -456,6 +473,7 @@ split-on-trailing-comma = true
   "S603",
 ]
 "**/__init__.py" = [
+  "ANN401",
   "D107",
   "F822",
   "N999",
