@@ -1,6 +1,8 @@
 # AUTO-GENERATED FILE — DO NOT EDIT MANUALLY.
 # Regenerate with: make codegen
 #
+"""Dependencies package."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
