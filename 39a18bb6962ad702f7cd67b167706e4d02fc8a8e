@@ -1,0 +1,44 @@
+.claude/skills/multi-agent-coordination/SKILL.md.bkp.20260307
+  69268be2308892ff 52
+.claude/skills/multi-agent-coordination/SKILL.md
+  69268be2308892ff 96
+.claude/skills/flext-5agent-coordination/SKILL.md
+  69268be2308892ff 65
+.claude/skills/lib-pydantic-settings/SKILL.md
+  69268be2308892ff 130
+AGENTS.md
+  2ddde481a45268a7 230
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.10",
+  "base_commit_sha": "39a18bb6962ad702f7cd67b167706e4d02fc8a8e",
+  "prompts": {
+    "2ddde481a45268a7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_32b93086affe4NCtph0WfSOLV7-e1946680-0501-44eb-91b3-4e0a97c14f11",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 291,
+      "total_deletions": 0,
+      "accepted_lines": 291,
+      "overriden_lines": 0
+    },
+    "69268be2308892ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_32b93086affe4NCtph0WfSOLV7-fcc1b1c7-4f4c-49bc-8a38-0c0dcc8625a3",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 5,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    }
+  }
+}
