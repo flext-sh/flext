@@ -55,7 +55,7 @@ The foundation framework providing core patterns and utilities.
 - `FlextContainer` - Dependency injection container
 - `FlextDispatcher` - CQRS command/query dispatcher
 - `FlextRegistry` - Service registration system
-- `FlextResult` - Railway-oriented error handling
+- `r` - Railway-oriented error handling
 - `FlextBus` - Domain event system
 
 ### 📄 flext-ldif
@@ -129,7 +129,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
@@ -159,19 +159,19 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
 from flext_core import u
 
 
-def process_data(data: str) -> FlextResult[List[Entry], Exception]:
+def process_data(data: str) -> r[List[Entry], Exception]:
     try:
         # Processing logic
-        return FlextResult.success(entries)
+        return r.success(entries)
     except Exception as e:
-        return FlextResult.failure(e)
+        return r.failure(e)
 ```
 
 ### CQRS Pattern
@@ -192,7 +192,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
@@ -236,7 +236,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
@@ -270,7 +270,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t

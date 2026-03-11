@@ -116,7 +116,7 @@ from pathlib import Path
 
 # Mock flext_core
 mock_flext_core = ModuleType('flext_core')
-mock_flext_core.FlextResult = object
+mock_flext_core.r = object
 mock_flext_core.FlextLogger = lambda x: type('Logger', (), {'info': print, 'warning': print, 'error': print})()
 sys.modules['flext_core'] = mock_flext_core
 

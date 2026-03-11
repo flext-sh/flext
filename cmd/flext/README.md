@@ -94,7 +94,7 @@ FLEXT Service coordinates the entire ecosystem as the central integration engine
 ├─────────────────────────────────────────────────────────────────┤
 │ Singer Ecosystem: Taps(5) | Targets(5) | DBT(4) | Extensions(1) │
 ├─────────────────────────────────────────────────────────────────┤
-│ Foundation: FLEXT-CORE (FlextResult | DI | Domain Patterns)     │
+│ Foundation: FLEXT-CORE (r | DI | Domain Patterns)     │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -359,7 +359,7 @@ curl -X POST http://localhost:8081/api/v1/meltano/run \
 
 ### **Ecosystem Position**
 
-- **Foundation**: Built on flext-core patterns (FlextResult, DI Container)
+- **Foundation**: Built on flext-core patterns (r, DI Container)
 - **Coordination**: Primary service orchestrating all 32 ecosystem projects
 - **Integration**: Python bridge for Singer taps/targets, Meltano, and DBT
 - **Monitoring**: Integrated with flext-observability for comprehensive metrics
@@ -428,7 +428,7 @@ MIT License - See project root for license details.
 
 - **[FLEXT Hub](../../docs/README.md)**: Complete ecosystem navigation
 - **[FlexCore](../../flexcore/)**: Go runtime service (port 8080)
-- **[FLEXT Core](https://github.com/organization/flext/tree/main/flext-core/)**: Foundation library with FlextResult patterns
+- **[FLEXT Core](https://github.com/organization/flext/tree/main/flext-core/)**: Foundation library with r patterns
 - **[Complete Documentation](../../docs/README.md)**: Architecture and integration guides
 
 ---

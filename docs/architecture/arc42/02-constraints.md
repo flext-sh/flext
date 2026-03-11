@@ -139,7 +139,7 @@
 
 #### Railway-Oriented Programming Constraints
 
-- **FlextResult[T]**: All operations that can fail must return FlextResult[T]
+- **r[T]**: All operations that can fail must return r[T]
   - **Constraint**: No exceptions for business logic errors
   - **Impact**: Requires functional programming patterns throughout
 

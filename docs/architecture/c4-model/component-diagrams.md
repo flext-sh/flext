@@ -137,7 +137,7 @@ graph TB
         BusManager[Bus Manager<br/>Event Bus]
 
         %% Domain Layer
-        ResultTypes[Result Types<br/>FlextResult[T]]
+        ResultTypes[Result Types<br/>r[T]]
         ContainerTypes[Container Types<br/>FlextContainer]
         ModelTypes[Model Types<br/>FlextModels]
         LoggerTypes[Logger Types<br/>FlextLogger]
@@ -450,7 +450,7 @@ graph TB
 
 ### 5. Railway Pattern
 
-- **FlextResult[T]** → **Error Handling** → **Recovery Logic**
+- **r[T]** → **Error Handling** → **Recovery Logic**
 - Functional error handling with composition
 - Used throughout the system for robust error management
 
@@ -474,7 +474,7 @@ graph TB
 ### Common Patterns
 
 - **Dependency Injection**: FlextContainer for service management
-- **Error Handling**: FlextResult[T] for railway-oriented programming
+- **Error Handling**: r[T] for railway-oriented programming
 - **Logging**: Structured logging with correlation IDs
 - **Configuration**: Environment-based configuration management
 - **Testing**: Comprehensive test coverage with quality gates

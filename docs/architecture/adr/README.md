@@ -102,7 +102,7 @@ This directory contains Architecture Decision Records (ADRs) for the FLEXT Enter
 
 ### Foundation Decisions
 
-- [ADR-001: Railway-Oriented Programming with FlextResult[T]](./001-railway-oriented-programming.md)
+- [ADR-001: Railway-Oriented Programming with r[T]](./001-railway-oriented-programming.md)
 - ADR-002: Dependency Injection with FlextContainer (_Documentation coming soon_)
 - ADR-003: Domain-Driven Design with FlextModels (_Documentation coming soon_)
 - ADR-004: Clean Architecture Layer Separation (_Documentation coming soon_)

@@ -808,7 +808,6 @@ split-on-trailing-comma = true
   "RUF036",
 ]
 
-
 [tool.pytest.ini_options]
 addopts = [
   "--strict-markers",
@@ -838,9 +837,9 @@ python_files = [
 
 [tool.coverage.report]
 fail_under = 45
+precision = 2
 show_missing = true
 skip_covered = false
-precision = 2
 [dependency-groups]
 dev = [
   "types-flask (>=1.1.6,<2.0.0)",

@@ -124,7 +124,7 @@ FLEXT is built using modern architectural patterns:
 
 ### Foundation Layer (flext-core)
 
-- **FlextResult[T]** - Railway pattern for error handling
+- **r[T]** - Railway pattern for error handling
 - **FlextContainer** - Dependency injection container
 - **FlextModels** - DDD patterns (Entity, Value, AggregateRoot)
 - **FlextLogger** - Structured logging with context propagation

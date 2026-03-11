@@ -1,4 +1,4 @@
-# ADR-001: Railway-Oriented Programming with FlextResult[T]
+# ADR-001: Railway-Oriented Programming with r[T]
 
 <!-- TOC START -->
 
@@ -29,7 +29,7 @@
 
 ## Table of Contents
 
-- [ADR-001: Railway-Oriented Programming with FlextResult[T]](#adr-001-railway-oriented-programming-with-flextresultt)
+- [ADR-001: Railway-Oriented Programming with r[T]](#adr-001-railway-oriented-programming-with-flextresultt)
   - [Status](#status)
   - [Context](#context)
   - [Decision](#decision)
@@ -85,7 +85,7 @@ Traditional exception-based error handling in Python has several limitations:
 
 ## Decision
 
-We will implement Railway-Oriented Programming (ROP) using the `FlextResult[T]` monadic type throughout the FLEXT platform.
+We will implement Railway-Oriented Programming (ROP) using the `r[T]` monadic type throughout the FLEXT platform.
 
 ### Core Implementation
 
@@ -98,7 +98,7 @@ E = TypeVar("E", bound=Exception)
 
 
 @dataclass(frozen=True)
-class FlextResult(Generic[T]):
+class r(Generic[T]):
     """Railway-oriented programming result type."""
 
     value: T | None
@@ -107,12 +107,12 @@ class FlextResult(Generic[T]):
     is_failure: bool
 
     @classmethod
-    def ok(cls, value: T) -> "FlextResult[T]":
+    def ok(cls, value: T) -> "r[T]":
         """Create a successful result."""
         return cls(value=value, error=None, is_success=True, is_failure=False)
 
     @classmethod
-    def fail(cls, error: Exception) -> "FlextResult[T]":
+    def fail(cls, error: Exception) -> "r[T]":
         """Create a failed result."""
         return cls(value=None, error=error, is_success=False, is_failure=True)
 
@@ -128,40 +128,38 @@ class FlextResult(Generic[T]):
             return self.error
         raise ValueError("Cannot unwrap failure from successful result")
 
-    def map(self, func: Callable[[T], U]) -> "FlextResult[U]":
+    def map(self, func: Callable[[T], U]) -> "r[U]":
         """Transform successful value, pass through failures."""
         if self.is_success:
             try:
-                return FlextResult.ok(func(self.value))
+                return r.ok(func(self.value))
             except Exception as e:
-                return FlextResult.fail(e)
-        return FlextResult.fail(self.error)
+                return r.fail(e)
+        return r.fail(self.error)
 
-    def flat_map(self, func: Callable[[T], "FlextResult[U]"]) -> "FlextResult[U]":
-        """Chain operations that return FlextResult."""
+    def flat_map(self, func: Callable[[T], "r[U]"]) -> "r[U]":
+        """Chain operations that return r."""
         if self.is_success:
             return func(self.value)
-        return FlextResult.fail(self.error)
+        return r.fail(self.error)
 
-    def and_then(self, func: Callable[[T], "FlextResult[U]"]) -> "FlextResult[U]":
+    def and_then(self, func: Callable[[T], "r[U]"]) -> "r[U]":
         """Alias for flat_map for better readability."""
         return self.flat_map(func)
 
-    def or_else(
-        self, func: Callable[[Exception], "FlextResult[T]"]
-    ) -> "FlextResult[T]":
+    def or_else(self, func: Callable[[Exception], "r[T]"]) -> "r[T]":
         """Handle failures by providing alternative result."""
         if self.is_failure:
             return func(self.error)
         return self
 
-    def on_success(self, action: Callable[[T], None]) -> "FlextResult[T]":
+    def on_success(self, action: Callable[[T], None]) -> "r[T]":
         """Execute action on successful result."""
         if self.is_success:
             action(self.value)
         return self
 
-    def on_failure(self, action: Callable[[Exception], None]) -> "FlextResult[T]":
+    def on_failure(self, action: Callable[[Exception], None]) -> "r[T]":
         """Execute action on failed result."""
         if self.is_failure:
             action(self.error)
@@ -173,19 +171,19 @@ class FlextResult(Generic[T]):
 #### Basic Usage
 
 ```python
-def validate_email(email: str) -> FlextResult[str]:
+def validate_email(email: str) -> r[str]:
     if "@" not in email:
-        return FlextResult.fail(ValueError("Invalid email format"))
-    return FlextResult.ok(email)
+        return r.fail(ValueError("Invalid email format"))
+    return r.ok(email)
 
 
-def save_user(user: User) -> FlextResult[User]:
+def save_user(user: User) -> r[User]:
     try:
         # Save to database
         saved_user = database.save(user)
-        return FlextResult.ok(saved_user)
+        return r.ok(saved_user)
     except DatabaseError as e:
-        return FlextResult.fail(e)
+        return r.fail(e)
 
 
 # Railway composition
@@ -200,7 +198,7 @@ result = (
 #### Error Handling
 
 ```python
-def process_payment(amount: float) -> FlextResult[Payment]:
+def process_payment(amount: float) -> r[Payment]:
     return (
         validate_amount(amount)
         .and_then(process_payment_logic)
@@ -257,12 +255,12 @@ def process_payment(amount: float) -> FlextResult[Payment]:
 #### 3. Integration Challenges
 
 - **Third-Party Libraries**: Some libraries don't follow the pattern
-- **Exception Conversion**: Need to convert exceptions to FlextResult
-- **API Design**: All public APIs must return FlextResult
+- **Exception Conversion**: Need to convert exceptions to r
+- **API Design**: All public APIs must return r
 
 #### 4. Performance Considerations
 
-- **Memory Overhead**: FlextResult objects have memory overhead
+- **Memory Overhead**: r objects have memory overhead
 - **Function Call Overhead**: More function calls for composition
 - **Type Checking**: More complex type checking at runtime
 
@@ -299,9 +297,9 @@ def process_payment(amount: float) -> FlextResult[Payment]:
 
 ### 2. Integration with Existing Code
 
-- **Exception Conversion**: Convert exceptions to FlextResult at boundaries
+- **Exception Conversion**: Convert exceptions to r at boundaries
 - **Legacy Wrappers**: Create wrappers for legacy code that throws exceptions
-- **API Boundaries**: Ensure all public APIs return FlextResult
+- **API Boundaries**: Ensure all public APIs return r
 
 ### 3. Testing Strategy
 
