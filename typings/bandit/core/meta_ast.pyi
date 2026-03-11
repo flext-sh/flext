@@ -1,7 +1,5 @@
 """Type stubs for bandit.core.meta_ast module."""
 
-from __future__ import annotations
-
 import ast
 import collections
 import logging
@@ -18,4 +16,3 @@ class BanditMetaAst:
         :param parent_id: The ID of the node's parent
         :param depth: The depth of the node
         """
-    def __str__(self) -> str: ...

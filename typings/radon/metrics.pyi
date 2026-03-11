@@ -1,4 +1,3 @@
-from __future__ import annotations
 
 import ast
 from typing import NamedTuple
@@ -67,9 +66,9 @@ def halstead_visitor_report(visitor: HalsteadVisitor) -> HalsteadReport:
 
 def mi_compute(
     halstead_volume: float,
-    complexity: int | float,
-    sloc: int | float,
-    comments: int | float,
+    complexity: float,
+    sloc: float,
+    comments: float,
 ) -> float:
     """Compute the Maintainability Index (MI) given the Halstead Volume, the
     Cyclomatic Complexity, the SLOC number and the number of comment lines.
@@ -97,7 +96,7 @@ def mi_visit(code: str, multi: bool) -> float:
     """Visit the code and compute the Maintainability Index (MI) from it."""
     ...
 
-def mi_rank(score: int | float) -> str:
+def mi_rank(score: float) -> str:
     r"""Rank the score with a letter:
 
     * A if :math:`\text{score} > 19`;
