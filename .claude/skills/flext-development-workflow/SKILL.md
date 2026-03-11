@@ -347,7 +347,7 @@ def process_command(
     command: m.Cqrs.Command,
     *,
     timeout: float = 30.0,
-) -> FlextResult[bool]:
+) -> r[bool]:
     """Process a CQRS command through the dispatcher.
 
     Args:
@@ -355,7 +355,7 @@ def process_command(
         timeout: Maximum execution time in seconds.
 
     Returns:
-        FlextResult[bool]: Success result or error details.
+        r[bool]: Success result or error details.
 
     Raises:
         e.DispatchError: If command routing fails.

@@ -358,10 +358,10 @@ t = FlextTypes
 
 
 # result.py
-class FlextResult: ...
+class r: ...
 
 
-r = FlextResult
+r = r
 ```
 
 These aliases (`c`, `t`, `p`, `m`, `u`, `r`, `e`, `d`, `h`, `s`, `x`) are

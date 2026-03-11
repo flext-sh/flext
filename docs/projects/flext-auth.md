@@ -50,14 +50,14 @@ For provider registration, import `FlextAuthRegistry` + `FlextAuthJwtProvider` o
 - **Facade & registry**: `api.py` provides the sole `FlextAuth` entry point and delegates to `FlextAuthRegistry`/`FlextAuthBaseProvider` for every authentication flow.
 - **Protocols**: `providers/base.py` defines `BaseProvider` mixin/protocol, and every transport resolves through the registry (JWT provider already production-ready, OAuth2/OIDC/SAML pending in later phases).
 - **Transports**: `transports/http.py`, `transports/grpc.py`, `transports/websocket.py` layer the project on top of `flext-api`, `flext-grpc`, and websockets; new transports follow the same registry path.
-- **Phased modules**: `providers/`, `protocol_handlers/`, `credentials/`, `tokens/`, and `sessions/` each implement one slice of the multi-phase roadmap while honoring the zero-tolerance rules from `AGENTS.md` (no direct provider imports, registry-only orchestration, FlextResult for failures).
+- **Phased modules**: `providers/`, `protocol_handlers/`, `credentials/`, `tokens/`, and `sessions/` each implement one slice of the multi-phase roadmap while honoring the zero-tolerance rules from `AGENTS.md` (no direct provider imports, registry-only orchestration, r for failures).
 
 ## Key features & challenges
 
 - **Provider extensibility**: register new providers and query their capabilities at runtime via `FlextAuthRegistry`.
 - **Protocol handlers**: REST, SOAP, and GraphQL handlers live under `protocol_handlers/` with consistent error/result handling.
 - **Multi-transport support**: HTTP (mandatory), gRPC (mandatory), WebSocket, plus future transports all reuse the same `FlextAuth` facade.
-- **Railway discipline**: every public surface returns `FlextResult[T]` and chains via `.flat_map`/`.map`.
+- **Railway discipline**: every public surface returns `r[T]` and chains via `.flat_map`/`.map`.
 - **Quality signal**: currently ~40% tests passing, so every release cycle must prioritize the failing suites before expanding provider coverage.
 
 ## Resources

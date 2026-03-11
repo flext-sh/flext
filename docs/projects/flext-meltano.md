@@ -18,7 +18,7 @@ FLEXT Meltano is the enterprise Meltano integration and orchestration foundation
 - **Python**: 3.13+ only
 - **Quality gates**: `make lint` (Ruff), `make type-check` (Pyrefly), `make security` (Bandit) pass; `make test` and coverage remain blocked as noted in the README
 - **Coverage**: in-flight; the README currently marks the coverage gate as blocked while other signals run green
-- **Type discipline**: 100% MyPy compliance, zero `Any`, `cast`, or `# type` ignores; all flows rely on `FlextResult[T]` and strict typing
+- **Type discipline**: 100% MyPy compliance, zero `Any`, `cast`, or `# type` ignores; all flows rely on `r[T]` and strict typing
 - **Documentation**: full docs live under `flext-meltano/docs/` (architecture, config, guides, troubleshooting)
 
 ## Quick start

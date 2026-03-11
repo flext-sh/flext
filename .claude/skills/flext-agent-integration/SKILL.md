@@ -99,7 +99,7 @@ Good:
 ```
 # Before modifying flext-core result.py:
 Load skills: rules-flext-core, lib-returns, flext-strict-typing
-Search memory: "FlextResult recent changes"
+Search memory: "r recent changes"
 ```
 
 Why good: loads relevant skills and checks prior context before making changes.

@@ -43,7 +43,7 @@ dbt docs serve --port 8080
 
 - **Facade**: `src/flext_dbt_ldap/simple_api.py` and `api.py` expose `FlextDbtLdap` with methods to run models, tests, and macros while keeping SQLAlchemy/dbt internals isolated.
 - **Model tiers**: `models/` follows staging → intermediate → marts (dims/facts) → snapshots; macros handle LDAP DN parsing and attribute normalization.
-- **Python domain**: `src/flext_dbt_ldap/ldap_integration.py`, `models.py`, and `dbt_services.py` provide FlextResult-friendly services that orchestrate macro rendering, dbt invocation, and metadata reporting.
+- **Python domain**: `src/flext_dbt_ldap/ldap_integration.py`, `models.py`, and `dbt_services.py` provide r-friendly services that orchestrate macro rendering, dbt invocation, and metadata reporting.
 - **Zero tolerance**: registry of `flext-meltano` for all dbt operations and `flext-ldap` for all LDAP transports; direct imports of dbt/ldap3 are forbidden (see `AGENTS.md`).
 
 ## Key features

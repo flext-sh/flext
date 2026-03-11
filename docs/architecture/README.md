@@ -34,7 +34,7 @@
     - [Core Components](#core-components)
       - [FlextContainer (Dependency Injection)](#flextcontainer-dependency-injection)
       - [FlextDispatcher (CQRS)](#flextdispatcher-cqrs)
-- [Dispatch commands and queries](#dispatch-commands-and-queries) - [FlextResult (Railway-Oriented Programming)](#flextresult-railway-oriented-programming)
+- [Dispatch commands and queries](#dispatch-commands-and-queries) - [r (Railway-Oriented Programming)](#flextresult-railway-oriented-programming)
 - [Compose operations](#compose-operations) - [FlextBus (Domain Events)](#flextbus-domain-events)
 - [Emit events](#emit-events)
   - [Project Structure](#project-structure)
@@ -120,7 +120,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
@@ -151,7 +151,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
@@ -166,7 +166,7 @@ result = dispatcher.dispatch(CreateUserCommand(user_data))
 user = dispatcher.dispatch(GetUserQuery(user_id))
 ```
 
-#### FlextResult (Railway-Oriented Programming)
+#### r (Railway-Oriented Programming)
 
 ```python
 from flext_core import FlextBus
@@ -184,23 +184,23 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
 from flext_core import u
 
 
-def divide(a: float, b: float) -> FlextResult[float, str]:
+def divide(a: float, b: float) -> r[float, str]:
     if b == 0:
-        return FlextResult.failure("Cannot divide by zero")
+        return r.failure("Cannot divide by zero")
 
-    return FlextResult.success(a / b)
+    return r.success(a / b)
 
 
 # Compose operations
 result = (
-    FlextResult.success(10).bind(lambda x: divide(x, 2)).bind(lambda x: divide(x, 3))
+    r.success(10).bind(lambda x: divide(x, 2)).bind(lambda x: divide(x, 3))
 )
 
 if result.is_success:
@@ -227,7 +227,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
@@ -307,7 +307,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
@@ -329,7 +329,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t

@@ -9,7 +9,7 @@ severity: error
 id: fix-ok-none-result
 language: python
 rule:
-  pattern: FlextResult[$T].ok(None)
-fix: FlextResult[$T].ok(True)
-message: "Rewrite FlextResult[T].ok(None) -> FlextResult[T].ok(True)"
+  pattern: r[$T].ok(None)
+fix: r[$T].ok(True)
+message: "Rewrite r[T].ok(None) -> r[T].ok(True)"
 severity: error

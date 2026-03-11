@@ -1,6 +1,6 @@
 id: fix-result-object
 valid:
-  - "FlextResult[str]"
-  - "FlextResult[int]"
+  - "r[str]"
+  - "r[int]"
 invalid:
-  - "FlextResult[object]"
+  - "r[object]"

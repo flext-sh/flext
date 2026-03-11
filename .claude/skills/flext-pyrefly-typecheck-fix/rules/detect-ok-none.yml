@@ -3,4 +3,4 @@ language: python
 rule:
   any:
     - pattern: r[$T].ok(None)
-    - pattern: FlextResult[$T].ok(None)
+    - pattern: r[$T].ok(None)

@@ -30,7 +30,7 @@
 - [Rule 15: Pydantic Models Over Plain Helper Classes](#rule-15-pydantic-models-over-plain-helper-classes)
 - [Rule 16: Result Protocol for `is_success` Pattern](#rule-16-result-protocol-for-is_success-pattern)
 - [Rule 17: Type Narrowing and Polymorphic Contracts (Mandatory)](#rule-17-type-narrowing-and-polymorphic-contracts-mandatory)
-- [Rule 12: FlextResult Factory Method Typing](#rule-12-flextresult-factory-method-typing)
+- [Rule 12: r Factory Method Typing](#rule-12-flextresult-factory-method-typing)
   - [`r` Alias — Universal Import Pattern](#r-alias-universal-import-pattern)
   - [`ok()` vs `fail()` — Asymmetric Generics](#ok-vs-fail-asymmetric-generics)
   - [Internal Implementation Pattern (in `result.py`)](#internal-implementation-pattern-in-resultpy)
@@ -52,7 +52,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
 > and cross-referenced with `models.py`, `protocols.py`, and `ruff-shared.toml`.
 >
-> **Rule**: See `AGENTS.md` §3 Code Law for canonical `FlextResult` and typing requirements.
+> **Rule**: See `AGENTS.md` §3 Code Law for canonical `r` and typing requirements.
 
 ## Python Version & Core Requirements
 
@@ -499,14 +499,14 @@ When a typing rule is violated, prefer architecture-aware fixes over mechanical 
 
 ```python
 # ✅ Every function/method MUST have explicit return type
-def process(self, data: t.GeneralValueType) -> FlextResult[bool]:
+def process(self, data: t.GeneralValueType) -> r[bool]:
     ...
 
 def validate(self, value: str) -> str:
     ...
 
-# ✅ Use FlextResult[T] for operations that can fail
-def load_config(self) -> FlextResult[t.ConfigMap]:
+# ✅ Use r[T] for operations that can fail
+def load_config(self) -> r[t.ConfigMap]:
     ...
 
 # ❌ WRONG — Missing return type
@@ -720,14 +720,14 @@ Agents MUST apply the following when editing FLEXT code. No exceptions without e
 
 ---
 
-## Rule 12: FlextResult — The Sole Fallibility Mechanism (AXIOMATIC)
+## Rule 12: r — The Sole Fallibility Mechanism (AXIOMATIC)
 
-`FlextResult` (`r`) is the **MANDATORY** mechanism for expressing fallibility across ALL 33 projects. Any function that can fail, raise, or return "not found" MUST return `r[T]` — never `T | None`, never a bare exception, never an ad-hoc error dict. `FlextResult` exists to **ELIMINATE** `| None` return types and manual `try/except` in the business layer. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace imperative `if result is None` / `try/except` chains. The `r` alias is MANDATORY at all usage sites — never spell out `FlextResult`. Only pure predicates (`-> bool`), `__init__` constructors, and trivially infallible getters may deviate — each MUST be justified in a code comment. Detailed generic behavior and edge cases follow; normative enforcement lives in `AGENTS.md` §3 Code Law.
+`r` (`r`) is the **MANDATORY** mechanism for expressing fallibility across ALL 33 projects. Any function that can fail, raise, or return "not found" MUST return `r[T]` — never `T | None`, never a bare exception, never an ad-hoc error dict. `r` exists to **ELIMINATE** `| None` return types and manual `try/except` in the business layer. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace imperative `if result is None` / `try/except` chains. The `r` alias is MANDATORY at all usage sites — never spell out `r`. Only pure predicates (`-> bool`), `__init__` constructors, and trivially infallible getters may deviate — each MUST be justified in a code comment. Detailed generic behavior and edge cases follow; normative enforcement lives in `AGENTS.md` §3 Code Law.
 
 ### `r` Alias — Universal Import Pattern
 
 ```python
-from flext_core import FlextResult, r
+from flext_core import r, r
 # Use `r` everywhere:
 #   r[T].ok(value)  — success (subscript sets T from value)
 #   r.fail("msg")   — failure (no subscript, U inferred from return context)
@@ -745,11 +745,11 @@ from flext_core import FlextResult, r
 ```python
 from typing import cast
 
-class FlextResult[T_co](FlextRuntime.RuntimeResult[T_co]):
+class r[T_co](FlextRuntime.RuntimeResult[T_co]):
     @classmethod
-    def ok[T](cls, value: T) -> FlextResult[T]:
+    def ok[T](cls, value: T) -> r[T]:
         # T inferred from value — no cast needed
-        return FlextResult[T](Success(value))
+        return r[T](Success(value))
 
     @classmethod
     def fail[U](
@@ -757,23 +757,23 @@ class FlextResult[T_co](FlextRuntime.RuntimeResult[T_co]):
         error: str | None,
         error_code: str | None = None,
         error_data: t.ConfigMap | None = None,
-    ) -> FlextResult[U]:
+    ) -> r[U]:
         error_msg = error if error is not None else ""
         result = Failure(error_msg)
         # cast() required: Failure → Result[Never, str] is invariant,
-        # cannot widen to FlextResult[U] without explicit bridge
+        # cannot widen to r[U] without explicit bridge
         return cast(
-            "FlextResult[U]",
-            FlextResult(result, error_code=error_code, error_data=error_data),
+            "r[U]",
+            r(result, error_code=error_code, error_data=error_data),
         )
 ```
 
 ### Why `cast` Is Required
 
-`Failure(msg)` produces `Result[Never, str]`. Since `FlextResult` is **invariant** in
-`T_co`, the type checker cannot widen `FlextResult[Never]` to `FlextResult[U]`.
-`cast("FlextResult[U]", ...)` explicitly tells the checker the intended type without
-any runtime cost. The quoted form `"FlextResult[U]"` avoids runtime evaluation of the
+`Failure(msg)` produces `Result[Never, str]`. Since `r` is **invariant** in
+`T_co`, the type checker cannot widen `r[Never]` to `r[U]`.
+`cast("r[U]", ...)` explicitly tells the checker the intended type without
+any runtime cost. The quoted form `"r[U]"` avoids runtime evaluation of the
 generic subscript (ruff RUF046).
 
 ### Usage Examples
@@ -789,6 +789,6 @@ def load(self) -> r[float]:
 def process(self) -> r[str]:
     return (
         self.load()
-        .map(lambda v: f"Value: {v}")    # FlextResult[str]
+        .map(lambda v: f"Value: {v}")    # r[str]
     )
 ```

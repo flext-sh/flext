@@ -20,7 +20,7 @@ FLEXT dbt LDIF (v1.0.0 release prep) is the dbt project that turns LDAP/LDIF dat
 - **Coverage**: 90%+ (See `reports/coverage-scan-*` for snapshots)
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + dbt tests + coverage + docstring checks); `make check`, `make lint`, `make type-check`, and `make security` are green.
 - **Dependencies**: `flext-core`, `flext-ldap`, `flext-meltano`, `dbt-core`, `dbt-postgres`, `flext-dbt-ldif` macros built on the Singer tap/target ecosystem.
-- **Zero tolerance**: no direct dbt/ldif/click/rich imports; use flext-meltano/flext-ldif/flext-cli; all flows return `FlextResult[T]`, no `Any`, `cast`, or `TYPE_CHECKING`.
+- **Zero tolerance**: no direct dbt/ldif/click/rich imports; use flext-meltano/flext-ldif/flext-cli; all flows return `r[T]`, no `Any`, `cast`, or `TYPE_CHECKING`.
 
 ## Quick start
 
@@ -46,7 +46,7 @@ dbt docs serve --port 8080
 - **Layers**: Clean architecture (Domain → Application → Infrastructure → Protocol); tiers enforce one-way imports and rely on flext-core short aliases (`r`, `t`, `m`).
 - **Model generation**: `DBTModelGenerator` and `LDIFAnalytics` classes inside `src/flext_dbt_ldif` programmatically produce staging/intermediate/mart models, macros, and metrics for LDAP analytics.
 - **Data modeling**: staging (`stg_ldif_entries`), intermediate, and mart layers (e.g., `analytics_ldif_insights`) plus macros for DN validation, depth calculation, anomaly detection, and risk scoring.
-- **Integration**: relies on `flext-meltano` (Singer orchestration), `flext-ldif` (LDIF parsing), and `flext-core` (FlextResult, DI, logging) for consistent behavior.
+- **Integration**: relies on `flext-meltano` (Singer orchestration), `flext-ldif` (LDIF parsing), and `flext-core` (r, DI, logging) for consistent behavior.
 
 ## Quality & operations
 

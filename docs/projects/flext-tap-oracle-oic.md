@@ -20,7 +20,7 @@ FLEXT Tap Oracle OIC (v1.0.0 release prep) is the Singer tap that extracts metad
 - **Coverage**: 90%+ (see `reports/coverage-scan-*`)
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring + Singer tests) is enforced before merges; `make lint`, `make type-check`, `make security`, `make test`, and Singer helper commands operate cleanly.
 - **Dependencies**: `flext-core`, `flext-oracle-oic`, `flext-meltano`, `flext-observability`, Singer SDK, Oracle OIC OAuth2 endpoints
-- **Zero tolerance**: no direct Singer SDK, httpx, or Oracle OIC imports; rely on flext-oracle-oic for connectors, flext-meltano for orchestration, and `FlextResult[T]` for flow control.
+- **Zero tolerance**: no direct Singer SDK, httpx, or Oracle OIC imports; rely on flext-oracle-oic for connectors, flext-meltano for orchestration, and `r[T]` for flow control.
 
 ## Quick start
 
@@ -42,7 +42,7 @@ tap-oracle-oic --config config.json --catalog catalog.json --state state.json
 
 - **Clean layers**: Tier 0 (`constants`, `typings`, `protocols`), Tier 1 (`models`, `utilities`), Tier 2 (`client`, `auth`, `streams`), Tier 3 (`api`, `tap`, CLI). Each tier only imports lower-level functionality.
 - **Auth & streaming**: `OicAuth` handles OAuth2/IDCS flows, `OicBaseStream` powers OIC entity streams, `TapOracleOic` implements the Singer tap entry point, and `settings.py` centralizes config.
-- **Integration**: uses `flext-oracle-oic` for API calls, `flext-core` for FlextResult DI, and `flext-meltano` to integrate with Singer orchestration; instrumentation reuses `flext-observability` helpers.
+- **Integration**: uses `flext-oracle-oic` for API calls, `flext-core` for r DI, and `flext-meltano` to integrate with Singer orchestration; instrumentation reuses `flext-observability` helpers.
 - **Stream coverage**: 12+ entity types (integrations, connections, packages, etc.) with built-in pagination, retry, rate-limit awareness, and backoff.
 
 ## Quality & operations

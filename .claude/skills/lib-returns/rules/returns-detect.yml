@@ -2,7 +2,7 @@ id: ban-unwrap-call
 language: python
 rule:
   pattern: $OBJ.unwrap()
-message: ".unwrap() is banned — use .value_or() or pattern match on FlextResult"
+message: ".unwrap() is banned — use .value_or() or pattern match on r"
 severity: error
 ---
 id: ban-direct-success-constructor
@@ -15,7 +15,7 @@ rule:
       has:
         pattern: from flext_core import $$$
       stopBy: end
-message: "Direct Success() constructor — use FlextResult[T].ok() factory"
+message: "Direct Success() constructor — use r[T].ok() factory"
 severity: error
 ---
 id: ban-direct-failure-constructor
@@ -28,5 +28,5 @@ rule:
       has:
         pattern: from flext_core import $$$
       stopBy: end
-message: "Direct Failure() constructor — use FlextResult.fail() factory"
+message: "Direct Failure() constructor — use r.fail() factory"
 severity: error

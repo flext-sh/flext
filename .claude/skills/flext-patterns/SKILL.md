@@ -60,7 +60,7 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 
 ## Pattern Catalog
 
-- ROP (`FlextResult` monadic chains)
+- ROP (`r` monadic chains)
 - DI (`FlextContainer` singleton + scoped instances)
 - DDD (entity/value/service models)
 - CQRS (handler command/query separation)
@@ -72,7 +72,7 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 
 ## Simple Runtime Aliases Only (Mandatory)
 
-**Never** use `FlextRuntime.Aliases.*()` to define package-level runtime aliases. Use **simple runtime aliases only**: direct assignment to the facade class (e.g. `c = FlextConstants`, `m = FlextModels`, `r = FlextResult`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`). No alias registry or staticmethod layer for defining these; MRO protocol only. Runtime helpers come from **x** (FlextMixins) via MRO.
+**Never** use `FlextRuntime.Aliases.*()` to define package-level runtime aliases. Use **simple runtime aliases only**: direct assignment to the facade class (e.g. `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`). No alias registry or staticmethod layer for defining these; MRO protocol only. Runtime helpers come from **x** (FlextMixins) via MRO.
 
 ```python
 # ✅ CORRECT
@@ -149,7 +149,7 @@ print([c.__name__ for c in m.__mro__])
 
 Anti-patterns:
 
-- **Defining runtime aliases via `FlextRuntime.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = FlextResult`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`. No separate alias registry or staticmethod layer for package **init**.
+- **Defining runtime aliases via `FlextRuntime.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`. No separate alias registry or staticmethod layer for package **init**.
 - Prefer `m.ExecuteResult` when a class-level alias exists; `m.TargetOracle.Foo` is allowed in subprojects
 - `from flext_meltano import FlextMeltanoModels as m_meltano` — duplicate alias surface
 - `class Meltano: X = Parent.Meltano.X` — assignment not valid as type

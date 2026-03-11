@@ -20,7 +20,7 @@ FLEXT dbt Oracle (v1.0.0 release prep) is the dbt integration for Oracle Databas
 - **Coverage**: 90%+ (see `reports/coverage-scan-*` snapshots)
 - **Quality gate**: `make validate` (lint + type + security + tests + docstring + dbt validations) - other commands (`make lint`, `make type-check`, `make security`, `make test`) already run successfully.
 - **Dependencies**: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flr` (Singer), Oracle Instant Client, `dbt-core`, `dbt-oracle`
-- **Zero tolerance**: no direct dbt/Singer imports (use flext-meltano), no direct SQLAlchemy/oracledb usage (use flext-db-oracle), no direct Click/Rich (use flext-cli), and every API returns `FlextResult[T]` without `Any` or `cast`.
+- **Zero tolerance**: no direct dbt/Singer imports (use flext-meltano), no direct SQLAlchemy/oracledb usage (use flext-db-oracle), no direct Click/Rich (use flext-cli), and every API returns `r[T]` without `Any` or `cast`.
 
 ## Quick start
 
@@ -43,7 +43,7 @@ dbt docs generate --target dev
 ## Architecture & integration
 
 - **Layers**: Clean Architecture (foundation constants/typings, domain models, services/orchestrators, adapters); layering enforces one-way imports per `AGENTS.md`.
-- **Adapter stack**: `flext_dbt_oracle.adapters.oracle` implements the Oracle adapter plus connection manager, loader, and SQL optimizer; `FlextDbtOracle` façade orchestrates runs with the FlextContainer + FlextResult pipeline.
+- **Adapter stack**: `flext_dbt_oracle.adapters.oracle` implements the Oracle adapter plus connection manager, loader, and SQL optimizer; `FlextDbtOracle` façade orchestrates runs with the FlextContainer + r pipeline.
 - **Integration points**: relies on `flext-db-oracle` for connections, `flext-meltano` for Singer orchestration, `flext-core` for logging/dependency injection, and `flext-observability` for instrumentation.
 - **Security and compliance**: connection pooling, transaction management, dual-phase commit plan, and explicit guardrails for SQL hints, timeouts, and error mapping.
 

@@ -40,7 +40,7 @@ description: Authoritative rules for `flext-core` architecture, typing, result f
 ## Rules
 
 - Keep dependency direction inward only (L3 -> L2 -> L1 -> L0).
-- Keep failure/success boundaries on `FlextResult` (`r`) and compose with `map/flat_map/lash`.
+- Keep failure/success boundaries on `r` (`r`) and compose with `map/flat_map/lash`.
 - Keep dependency-injector usage routed through runtime/container bridges.
 - Keep shared type contracts centralized in `typings.py`. **AXIOMATIC**: `Any`, `object`, and `dict[str, Any]` are TOTALLY FORBIDDEN — use `t.*` contracts exclusively. `None` in type unions only when business-required.
 - Consume public API from `flext_core` exports in non-internal modules.
@@ -95,7 +95,7 @@ Make gates (run after any flext-core change):
 
 Pattern checks:
 
-- `rg -n "class FlextResult|\.flat_map\(|\.lash\(" flext-core/src/flext_core/result.py`
+- `rg -n "class r|\.flat_map\(|\.lash\(" flext-core/src/flext_core/result.py`
 - `rg -n "class FlextContainer|def register\(|def get_typed\(" flext-core/src/flext_core/container.py`
 - `rg -n "class FlextRuntime|class DependencyIntegration" flext-core/src/flext_core/runtime.py`
 - `rg -n "TypeVar\(|TypeAlias|class FlextTypes" flext-core/src/flext_core/typings.py`

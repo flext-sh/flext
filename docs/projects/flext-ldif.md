@@ -48,7 +48,7 @@ Use `ldif.migrate(...)` for server-to-server conversions, `parse_with_auto_detec
 - **RFC-first parsing**: all processing flows through RFC 2849/4512 parsers before quirks are applied.
 - **Quirk registry**: auto-discovers Oracle, OpenLDAP, AD, 389DS, and custom quirks and applies them via priority-based dispatch.
 - **Conversion matrix**: N×N server conversions with DN case registry, ACL transformation, and relaxed mode for broken LDIF.
-- **Railway-oriented errors**: every operation returns `FlextResult[T]` so callers can compose validation, migration, and filtering.
+- **Railway-oriented errors**: every operation returns `r[T]` so callers can compose validation, migration, and filtering.
 - **Batch & parallel processors**: configurable batch or thread pool processors for large datasets (subject to memory limits, see Known Limitations in the project README).
 
 ## Architecture overview

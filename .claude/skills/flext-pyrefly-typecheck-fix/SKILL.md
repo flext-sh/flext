@@ -3,8 +3,8 @@
 - [Purpose](#purpose)
 - [Error Clusters Covered](#error-clusters-covered)
   - [1. Logger Typing Drift](#1-logger-typing-drift)
-  - [2. `FlextResult.ok(None)` — Real Bug](#2-flextresultoknone-real-bug)
-  - [3. `FlextResult[object]` Type Erasure](#3-flextresultobject-type-erasure)
+  - [2. `r.ok(None)` — Real Bug](#2-flextresultoknone-real-bug)
+  - [3. `r[object]` Type Erasure](#3-flextresultobject-type-erasure)
   - [4. RootModel Container Coercion](#4-rootmodel-container-coercion)
   - [5. Mapping Mutation](#5-mapping-mutation)
 - [Verification](#verification)
@@ -86,15 +86,15 @@ Use `make validate` as the primary execution entrypoint. Internal script orchest
 - **Symptom**: `BindableLogger` missing `.debug/.info/.warning/.error/.exception`; `BindableLogger` not assignable to `p.Log.StructlogLogger`
 - **Fix**: Annotate loggers as `p.Log.StructlogLogger` where logger originates from `FlextRuntime.get_logger` or `FlextLogger.get_logger`
 
-### 2. `FlextResult.ok(None)` — Real Bug
+### 2. `r.ok(None)` — Real Bug
 
 - **Symptom**: `Argument None is not assignable to parameter value with type T`
-- **Fix**: Replace `.ok(None)` with `.ok(True)` for `FlextResult[bool]` return types; review other types per call-site intent
+- **Fix**: Replace `.ok(None)` with `.ok(True)` for `r[bool]` return types; review other types per call-site intent
 
-### 3. `FlextResult[object]` Type Erasure
+### 3. `r[object]` Type Erasure
 
-- **Symptom**: Invariance prevents safe widening of `FlextResult[object]`
-- **Fix**: Rewrite to `FlextResult[t.GeneralValueType]` at boundaries, or make local functions generic
+- **Symptom**: Invariance prevents safe widening of `r[object]`
+- **Fix**: Rewrite to `r[t.GeneralValueType]` at boundaries, or make local functions generic
 
 ### 4. RootModel Container Coercion
 

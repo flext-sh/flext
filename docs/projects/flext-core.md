@@ -36,16 +36,16 @@ pip install flext-core
 ```
 
 ```python
-from flext_core import FlextContainer, FlextDispatcher, FlextResult
+from flext_core import FlextContainer, FlextDispatcher, r
 
 container = FlextContainer.get_global()
 dispatcher = FlextDispatcher()
 
 
-def handler(value: str) -> FlextResult[str]:
+def handler(value: str) -> r[str]:
     if "@" not in value:
-        return FlextResult[str].fail("invalid email")
-    return FlextResult[str].ok(value.upper())
+        return r[str].fail("invalid email")
+    return r[str].ok(value.upper())
 
 
 dispatcher.register_handler(str, handler)
@@ -66,7 +66,7 @@ FLEXT Core follows strict layering so that lower tiers never import higher tiers
 
 ### Key architectural patterns
 
-- **FlextResult[T]**: the railway result for success/failure chaining (`r[T]` alias) and monadic helpers.
+- **r[T]**: the railway result for success/failure chaining (`r[T]` alias) and monadic helpers.
 - **Dependency injection bridge**: `FlextRuntime` + `FlextContainer` re-export `Provide`/`inject`, auto-register the core services (`config`, `logger`, `context`), and shield projects from `dependency-injector` details.
 - **Protocol-first**: all interfaces accept `flext_core.protocols` namespaced types, zero `TYPE_CHECKING`, zero circular imports.
 - **Short-alias discipline**: `r`, `t`, `c`, `m`, `p`, `u`, `e`, `x`, `d`, `h` for succinct runtime code.

@@ -108,7 +108,7 @@ Demonstrates the complete FLEXT enterprise workflow with all capabilities integr
 
 All examples implement the railway pattern for robust error handling:
 
-- Operations return `FlextResult[T]` for type-safe error handling
+- Operations return `r[T]` for type-safe error handling
 - Pipeline stops on first failure (no exception propagation)
 - Comprehensive error reporting and context tracking
 

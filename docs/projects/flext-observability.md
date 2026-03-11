@@ -54,13 +54,13 @@ work("payload")
 
 - **Layers**: clean architecture stack (Domain → Application → Infrastructure) with tiered modules that never import upward. `constants.py`, `typings.py`, `protocols.py` stay isolated from higher tiers.
 - **Modules**: `entities/` (FlextMetric, FlextTrace, FlextAlert, FlextHealthCheck, FlextLogEntry), `services/`, `decorators/`, `api.py` (factory functions), and `integration/` modules for Prometheus/Grafana/OTLP planning.
-- **Integration**: The project integrates with `flext-core` (FlextResult, container, context, decorators, logger), `flext-cli` (command helpers), and downstream services (API, Auth, Web) via shared instrumentation helpers.
+- **Integration**: The project integrates with `flext-core` (r, container, context, decorators, logger), `flext-cli` (command helpers), and downstream services (API, Auth, Web) via shared instrumentation helpers.
 - **Decorators**: `flext_monitor_function` automatically instruments functions for metrics/traces/log entries, and the pattern is ready to extend to distributed tracing (Jaeger/OTLP) once the blocking issue is resolved.
 
 ## Key features
 
 - Domain models for every observability signal (metrics, traces, alerts, health checks, log entries) with Pydantic v2 validation.
-- Services that record metrics, traces, alerts, and health checks through FlextResult-based APIs.
+- Services that record metrics, traces, alerts, and health checks through r-based APIs.
 - Monitoring decorators, instrumentation utilities, and configuration hints for OpenTelemetry and Prometheus.
 - Pre-built test suite (481 functions) organized by unit/integration/monitoring, currently unable to run due to `flext-core` import compatibility.
 - Clear next steps: instrumentation stack integration, correlation IDs, distributed tracing, and SLA/SLO dashboards.

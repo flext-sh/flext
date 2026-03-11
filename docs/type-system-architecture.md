@@ -244,7 +244,7 @@ FlextCliOutputT = TypeVar("FlextCliOutputT")  # NO - use generic R
 # CORRECT: 2-level maximum nesting
 class FlextTypes:
     class Core:
-        type Result[T] = "FlextResult[T]"
+        type Result[T] = "r[T]"
 
     class Utilities:
         type JsonValue = dict[str, object]

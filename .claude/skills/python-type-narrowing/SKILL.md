@@ -166,7 +166,7 @@ Good:
 from typing import TypeIs
 
 
-def is_success_result(r: FlextResult[T]) -> TypeIs[FlextResult[T]]:
+def is_success_result(r: r[T]) -> TypeIs[r[T]]:
     return r.is_success
 ```
 

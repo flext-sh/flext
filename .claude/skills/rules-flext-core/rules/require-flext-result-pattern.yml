@@ -5,12 +5,12 @@ rule:
     - kind: import_from_statement
       has:
         kind: identifier
-        regex: "^FlextResult$"
+        regex: "^r$"
         stopBy: end
     - kind: function_definition
       has:
         field: return_type
-        regex: "FlextResult"
+        regex: "r"
         stopBy: end
-message: "FlextResult pattern found (tracking)"
+message: "r pattern found (tracking)"
 severity: warning

@@ -67,8 +67,8 @@ The package applies Clean Architecture: core client/server code sits in `client.
 
 ## Key features
 
-- **Unified HTTP client**: FlextResult-friendly client that wraps `httpx` and automatically logs, retries, and validates responses.
-- **FastAPI integration**: `FlextApi.create_fastapi_app` builds a server that wires configuration, middlewares, routers, and error handling with `FlextResult`.
+- **Unified HTTP client**: r-friendly client that wraps `httpx` and automatically logs, retries, and validates responses.
+- **FastAPI integration**: `FlextApi.create_fastapi_app` builds a server that wires configuration, middlewares, routers, and error handling with `r`.
 - **Protocol support**: Built-in GraphQL, SSE, and WebSocket helpers plus plugin hooks for other transports.
 - **Configuration-driven**: `FlextApiSettings` extends Pydantic v2 models with environment validation and feature flags.
 - **Documentation-first**: `docs/api-reference/`, `docs/guides`, and OpenAPI/AsyncAPI helpers keep the surface documented and consistent.
