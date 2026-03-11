@@ -1,48 +1,81 @@
-"""Type stubs for msgpack.
+"""Type stubs for msgpack package."""
 
-Consolidated from flext-api/src/msgpack.pyi into workspace typings.
-"""
+from __future__ import annotations
 
-import os
+from collections.abc import Callable
+from datetime import datetime
+from typing import IO
 
-from flext_core import t
+from msgpack.exceptions import *  # noqa: F403
+from msgpack.ext import ExtType, Timestamp
+from msgpack.fallback import Packer as Packer
+from msgpack.fallback import Unpacker as Unpacker
 
-from .exceptions import *
+version: tuple[int, int, int]
+__version__: str
 
-version = ...
-__version__ = ...
-if os.environ.get("MSGPACK_PUREPYTHON"): ...
+# Msgpack return type: all possible values that unpack can produce
+_UnpackedValue = (
+    int
+    | float
+    | str
+    | bool
+    | bytes
+    | bytearray
+    | datetime
+    | Timestamp
+    | ExtType
+    | dict[str, object]
+    | list[object]
+    | tuple[object, ...]
+    | None
+)
 
-def pack(o: object, stream: object, **kwargs: object) -> None:
-    """Pack object `o` and write it to `stream`.
-
-    See :class:`Packer` for options.
-    """
-
-def packb(o: object, **kwargs: object) -> bytes:
-    """Pack object `o` and return packed bytes.
-
-    See :class:`Packer` for options.
-    """
-
+def pack(
+    o: object,
+    stream: IO[bytes],
+    *,
+    default: Callable[..., object] | None = None,
+    use_single_float: bool = False,
+    autoreset: bool = True,
+    use_bin_type: bool = True,
+    strict_types: bool = False,
+) -> None: ...
+def packb(
+    o: object,
+    *,
+    default: Callable[..., object] | None = None,
+    use_single_float: bool = False,
+    autoreset: bool = True,
+    use_bin_type: bool = True,
+    strict_types: bool = False,
+) -> bytes: ...
 def unpack(
-    stream: object, **kwargs: object
-) -> t.Scalar | dict[str, object] | list[object] | None:
-    """Unpack an object from `stream`.
-
-    Raises `ExtraData` when `stream` contains extra bytes.
-    See :class:`Unpacker` for options.
-    """
-
+    stream: IO[bytes],
+    *,
+    raw: bool = False,
+    use_list: bool = True,
+    timestamp: int = 0,
+    strict_map_key: bool = True,
+    object_hook: Callable[..., object] | None = None,
+    object_pairs_hook: Callable[..., object] | None = None,
+    unicode_errors: str = "strict",
+    ext_hook: Callable[[int, bytes], object] = ...,
+) -> _UnpackedValue: ...
 def unpackb(
-    data: bytes, **kwargs: object
-) -> t.Scalar | dict[str, object] | list[object] | None:
-    """Unpack an object from `data` bytes.
+    packed: bytes,
+    *,
+    raw: bool = False,
+    use_list: bool = True,
+    timestamp: int = 0,
+    strict_map_key: bool = True,
+    object_hook: Callable[..., object] | None = None,
+    object_pairs_hook: Callable[..., object] | None = None,
+    unicode_errors: str = "strict",
+    ext_hook: Callable[[int, bytes], object] = ...,
+) -> _UnpackedValue: ...
 
-    See :class:`Unpacker` for options.
-    """
-
-load = ...
-loads = ...
-dump = ...
-dumps = ...
+load = unpack
+loads = unpackb
+dump = pack
+dumps = packb
