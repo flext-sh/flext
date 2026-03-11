@@ -174,7 +174,7 @@ class CompleteWorkflowExample:
             self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
         ) -> r[ItemType]:
             """Aggregate results."""
-            return r.ok(
+            return r[ItemType].ok(
                 self._process_stage(
                     item,
                     0,
@@ -220,7 +220,7 @@ class CompleteWorkflowExample:
             self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
         ) -> r[ItemType]:
             """Analyze single item."""
-            return r.ok(
+            return r[ItemType].ok(
                 self._process_stage(
                     item,
                     0.005,
@@ -291,7 +291,7 @@ class CompleteWorkflowExample:
                     "success_rate": len(processed_results) / len(items) if items else 0,
                 },
             )
-            return r.ok(stage_result)
+            return r[CompleteWorkflowExample.WorkflowStageResult].ok(stage_result)
 
         def _execute_workflow(
             self, data: list[ItemType], context: CompleteWorkflowExample.WorkflowContext
@@ -346,7 +346,7 @@ class CompleteWorkflowExample:
                 aggregated_metrics=aggregated_metrics,
                 workflow_status="completed",
             )
-            return r.ok({
+            return r[dict[str, object]].ok({
                 "workflow_result": workflow_result,
                 "final_data": current_data,
                 "performance_summary": aggregated_metrics,
@@ -356,7 +356,7 @@ class CompleteWorkflowExample:
             self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
         ) -> r[ItemType]:
             """Process single item."""
-            return r.ok(
+            return r[ItemType].ok(
                 self._process_stage(
                     item,
                     0.01,
@@ -405,7 +405,7 @@ class CompleteWorkflowExample:
             self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
         ) -> r[ItemType]:
             """Validate single item."""
-            return r.ok(
+            return r[ItemType].ok(
                 self._process_stage(
                     item,
                     0.005,
