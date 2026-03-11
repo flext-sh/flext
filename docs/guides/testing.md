@@ -85,7 +85,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
@@ -140,7 +140,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
@@ -370,7 +370,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
@@ -381,7 +381,7 @@ def test_with_mocked_dependency():
     """Test with mocked external dependency."""
     with patch("flext_ldif.external_service") as mock_service:
         # Configure mock
-        mock_service.process.return_value = FlextResult.ok("processed")
+        mock_service.process.return_value = r.ok("processed")
 
         # Test function that uses mock
         result = my_function()
@@ -410,7 +410,7 @@ from flext_core import FlextModels
 from flext_core import FlextProcessors
 from flext_core import p
 from flext_core import FlextRegistry
-from flext_core import FlextResult
+from flext_core import r
 from flext_core import FlextRuntime
 from flext_core import FlextService
 from flext_core import t
@@ -423,7 +423,7 @@ def test_with_stubbed_service():
 
     # Create stub service
     stub_service = Mock()
-    stub_service.process.return_value = FlextResult.ok("stubbed")
+    stub_service.process.return_value = r.ok("stubbed")
 
     # Register stub
     _ = container.register("external_service", stub_service)

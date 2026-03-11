@@ -86,7 +86,7 @@ description: 5-Agent Parallel Execution Protocol for flext-core and consumer pro
 
 Agents MUST execute in this order:
 
-- **Phase 0 (SOLO)**: Agent 4 completes Wave 0 (RuntimeResult.**slots** + r.fail() + p.Result) and PUSHES. ALL other agents BLOCKED until Phase 0 complete.
+- **Phase 0 (SOLO)**: Agent 4 completes Wave 0 (RuntimeResult.**slots** + `r[T].fail()` + `p.Result`) and PUSHES. ALL other agents BLOCKED until Phase 0 complete.
 - **Phase 1**: Agent 4 continues (exception propagation, safe(), chaining) + Agent 5 starts (containers/decorators/handlers/mixins). Agent 5 must `git pull --rebase` before starting.
 - **Phase 2**: Agent 1 (Dispatcher) + Agent 3 (Service) start. Both must `git pull --rebase` before starting.
 - **Phase 3**: Agent 2 (Registry) starts. Must `git pull --rebase` before starting.
@@ -163,7 +163,7 @@ Agents MUST execute in this order:
 
 ### Phase 0 (Agent 4 Solo)
 
-1. Agent 4 implements Wave 0: RuntimeResult.**slots**, r.fail(), p.Result
+1. Agent 4 implements Wave 0: RuntimeResult.**slots**, `r[T].fail()`, p.Result
 2. Agent 4 runs full lint: `cd flext-core && make check`
 3. Agent 4 commits and pushes
 4. All other agents BLOCKED until Phase 0 complete
@@ -208,8 +208,9 @@ Agents MUST execute in this order:
 # Agent 4 working on result.py (owned file)
 # Agent 4 can modify result.py freely
 class r(Generic[T]):
-    def fail(self, error: Exception) -> "r[T]":
-        return r(error=error)
+    @classmethod
+    def fail(cls, error: Exception) -> "r[T]":
+        return r[T](error=error)
 
 
 # Agent 4 appends to protocols.py Result section (lines 299-512)

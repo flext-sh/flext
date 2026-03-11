@@ -81,7 +81,7 @@ from flext_core import r
 | Method                 | Signature                                                                                                                    | Purpose                                                 |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | `r[T].ok(value)`       | `ok[T](cls, value: T) -> r[T]`                                                                                     | Wrap success value (raises `ValueError` if `None`)      |
-| `r.fail(error)`        | `fail[U](cls, error: str \| None, error_code: str \| None = None, error_data: t.ConfigMap \| None = None) -> r[U]` | Create failure with message, optional code and metadata |
+| `r[U].fail(error)`        | `fail[U](cls, error: str \| None, error_code: str \| None = None, error_data: t.ConfigMap \| None = None) -> r[U]` | Create failure with message, optional code and metadata |
 | `r.safe`     | `safe[T](func: p.VariadicCallable[T]) -> p.VariadicCallable[r[T]]`                                                 | Decorator — catches exceptions, returns `.fail()`       |
 | `create_from_callable` | `create_from_callable(cls, func: Callable[[], T_co], error_code: str \| None = None) -> r[T_co]`                   | Execute callable, wrap result or exception              |
 
@@ -157,7 +157,7 @@ if is_success_result(result):
 ## Workflow
 
 1. Import `r` from `flext_core`
-2. Create results via `r[T].ok(value)` or `r.fail("error")`
+2. Create results via `r[T].ok(value)` or `r[T].fail("error")`
 3. Compose with `.map()` → `.flat_map()` → `.lash()` chains
 4. Extract at boundaries with `.fold()`, `.unwrap_or()`, or `.map_or()`
 5. For batch operations use `r.traverse()` or `.accumulate_errors()`

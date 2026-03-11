@@ -1004,7 +1004,7 @@ servir como referência futura para implementação:
 ~~ return r.ok(order)~~
 ~~ except OrderProcessingError as e:~~
 ~~ self.cqrs_metrics.record("orders_failed", 1)~~
-~~ return FlextResult.fail(str(e))~~
+~~ return r.fail(str(e))~~
 ~~ finally:~~
 ~~ self.cqrs_context.pop()~~
 ~~```~~
@@ -1054,7 +1054,7 @@ servir como referência futura para implementação:
 ~~ │~~
 ~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│ FlextResult[T] │~~
+~~│ r[T] │~~
 ~~└─────────────────────────────────────────────────────────────────┘~~
 ~~```~~
 
@@ -1070,7 +1070,7 @@ servir como referência futura para implementação:
 ~~│ Rate Limiter Check │~~
 ~~│ ┌─────────────────────────────────────────────────────────┐ │~~
 ~~│ │ if not rate_limiter.acquire(handler_key): │ │~~
-~~│ │ return FlextResult.fail("Rate limit exceeded") │ │~~
+~~│ │ return r.fail("Rate limit exceeded") │ │~~
 ~~│ └─────────────────────────────────────────────────────────┘ │~~
 ~~└─────────────────────────┬───────────────────────────────────────┘~~
 │
@@ -1079,7 +1079,7 @@ servir como referência futura para implementação:
 ~~│ Circuit Breaker Check │~~
 ~~│ ┌─────────────────────────────────────────────────────────┐ │~~
 ~~│ │ if circuit_breaker.is_open(handler_key): │ │~~
-~~│ │ return FlextResult.fail("Circuit open") │ │~~
+~~│ │ return r.fail("Circuit open") │ │~~
 ~~│ └─────────────────────────────────────────────────────────┘ │~~
 ~~└─────────────────────────┬───────────────────────────────────────┘~~
 ~~ │~~
@@ -1111,7 +1111,7 @@ servir como referência futura para implementação:
 ~~ │~~
 ~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│ FlextResult[T] │~~
+~~│ r[T] │~~
 ~~└─────────────────────────────────────────────────────────────────┘~~
 ~~```~~
 
@@ -1171,12 +1171,12 @@ servir como referência futura para implementação:
 ### ~~Setup Básico de Handler (V2)~~ ✅
 
 ~~```Python~~
-~~from flext_core import FlextHandlers, FlextResult~~
+~~from flext_core import FlextHandlers, r~~
 
 ~~class MyCommandHandler(FlextHandlers[MyCommand, MyResult]):~~
 ~~ """Handler com setup mínimo."""~~
 
-~~ def handle(self, command: MyCommand) -> FlextResult[MyResult]:~~
+~~ def handle(self, command: MyCommand) -> r[MyResult]:~~
 ~~ # Infraestrutura automática via FlextMixins:~~
 ~~ # - self.logger: FlextLogger~~
 ~~ # - self.config: FlextSettings~~
@@ -1193,7 +1193,7 @@ servir como referência futura para implementação:
 
 ~~ self.cqrs_metrics.record("commands_processed", 1)~~
 
-~~ return FlextResult.ok(result)~~
+~~ return r.ok(result)~~
 ~~```~~
 
 ### ~~Setup de Dispatcher com DI (V2)~~ 📋 SPEC PENDENTE
@@ -1226,7 +1226,7 @@ servir como referência futura para implementação:
 > **STATUS:** Especificação de implementação futura (Phase 2)
 
 ~~```Python~~
-~~from flext_core import FlextProtocols, FlextResult~~
+~~from flext_core import FlextProtocols, r~~
 
 ~~class CustomCircuitBreaker:~~
 ~~ """Custom circuit breaker implementation."""~~
@@ -1282,7 +1282,7 @@ servir como referência futura para implementação:
 
 ~~```Python~~
 ~~from dataclasses import dataclass~~
-~~from flext_core import FlextHandlers, FlextResult, FlextDispatcher~~
+~~from flext_core import FlextHandlers, r, FlextDispatcher~~
 
 ~~@dataclass~~
 ~~class CreateUserCommand:~~
@@ -1296,7 +1296,7 @@ servir como referência futura para implementação:
 ~~ email: str~~
 
 ~~class CreateUserHandler(FlextHandlers[CreateUserCommand, User]):~~
-~~ def handle(self, command: CreateUserCommand) -> FlextResult[User]:~~
+~~ def handle(self, command: CreateUserCommand) -> r[User]:~~
 ~~ self.logger.info(f"Creating user: {command.name}")~~
 
 ~~ # Business logic~~
@@ -1308,7 +1308,7 @@ servir como referência futura para implementação:
 
 ~~ self.cqrs_metrics.record("users_created", 1)~~
 
-~~ return FlextResult.ok(user)~~
+~~ return r.ok(user)~~
 
 ~~# Usage~~
 ~~dispatcher = FlextDispatcher()~~
@@ -1330,11 +1330,11 @@ servir como referência futura para implementação:
 ~~class GetUserHandler(FlextHandlers[GetUserQuery, User]):~~
 ~~ \_cache: dict[str, User] = {}~~
 
-~~ def handle(self, query: GetUserQuery) -> FlextResult[User]:~~
+~~ def handle(self, query: GetUserQuery) -> r[User]:~~
 ~~ # Check cache first~~
 ~~ if query.user_id in self.\_cache:~~
 ~~ self.cqrs_metrics.record("cache_hits", 1)~~
-~~ return FlextResult.ok(self.\_cache[query.user_id])~~
+~~ return r.ok(self.\_cache[query.user_id])~~
 
 ~~ self.cqrs_metrics.record("cache_misses", 1)~~
 
@@ -1343,12 +1343,12 @@ servir como referência futura para implementação:
 ~~ user = self.\_fetch_user(query.user_id)~~
 
 ~~ if user is None:~~
-~~ return FlextResult.fail(f"User not found: {query.user_id}")~~
+~~ return r.fail(f"User not found: {query.user_id}")~~
 
 ~~ # Cache result~~
 ~~ self.\_cache[query.user_id] = user~~
 
-~~ return FlextResult.ok(user)~~
+~~ return r.ok(user)~~
 ~~```~~
 
 ### ~~Event Processing with Audit~~ ✅
@@ -1362,7 +1362,7 @@ servir como referência futura para implementação:
 ~~ created_at: datetime~~
 
 ~~class UserCreatedHandler(FlextHandlers[UserCreatedEvent, None]):~~
-~~ def handle(self, event: UserCreatedEvent) -> FlextResult[bool]:~~
+~~ def handle(self, event: UserCreatedEvent) -> r[bool]:~~
 ~~ self.cqrs_context.push({~~
 ~~ "event_type": "UserCreated",~~
 ~~ "user_id": event.user_id,~~
@@ -1383,10 +1383,10 @@ servir como referência futura para implementação:
 ~~ extra=self.cqrs_context.current(),~~
 ~~ )~~
 
-~~ return FlextResult.| ok(value=True)~~
+~~ return r.| ok(value=True)~~
 ~~ except Exception as e:~~
 ~~ self.cqrs_metrics.record("event_processing_errors", 1)~~
-~~ return FlextResult.fail(str(e))~~
+~~ return r.fail(str(e))~~
 ~~ finally:~~
 ~~ self.cqrs_context.pop()~~
 ~~```~~
@@ -1401,7 +1401,7 @@ servir como referência futura para implementação:
 ~~ items: list[OrderItem]~~
 
 ~~class ProcessOrderHandler(FlextHandlers[ProcessOrderCommand, Order]):~~
-~~ def handle(self, command: ProcessOrderCommand) -> FlextResult[Order]:~~
+~~ def handle(self, command: ProcessOrderCommand) -> r[Order]:~~
 ~~ self.cqrs_context.push({~~
 ~~ "order_id": command.order_id,~~
 ~~ "customer_id": command.customer_id,~~
@@ -1413,7 +1413,7 @@ servir como referência futura para implementação:
 ~~ with self.track("validate_inventory"):~~
 ~~ for item in command.items:~~
 ~~ if not self.\_check_inventory(item):~~
-~~ return FlextResult.fail(f"Item out of stock: {item.product_id}")~~
+~~ return r.fail(f"Item out of stock: {item.product_id}")~~
 
 ~~ # Step 2: Reserve inventory~~
 ~~ with self.track("reserve_inventory"):~~
@@ -1436,12 +1436,12 @@ servir como referência futura para implementação:
 ~~ self.cqrs_metrics.record("items_processed", len(command.items))~~
 ~~ self.cqrs_metrics.record("order_total", order.total)~~
 
-~~ return FlextResult.ok(order)~~
+~~ return r.ok(order)~~
 
 ~~ except Exception as e:~~
 ~~ self.cqrs_metrics.record("orders_failed", 1)~~
 ~~ self.logger.error(f"Order processing failed: {e}")~~
-~~ return FlextResult.fail(str(e))~~
+~~ return r.fail(str(e))~~
 ~~ finally:~~
 ~~ self.cqrs_context.pop()~~
 ~~```~~
@@ -1458,7 +1458,7 @@ servir como referência futura para implementação:
 
 ~~```Python~~
 ~~class MyHandler(FlextHandlers[MyCommand, MyResult]):~~
-~~ def handle(self, command: MyCommand) -> FlextResult[MyResult]:~~
+~~ def handle(self, command: MyCommand) -> r[MyResult]:~~
 ~~ # ❌ V1: Métricas manuais~~
 ~~ self.record_metric("commands_processed", 1)~~
 
@@ -1474,7 +1474,7 @@ servir como referência futura para implementação:
 
 ~~```Python~~
 ~~class MyHandler(FlextHandlers[MyCommand, MyResult]):~~
-~~ def handle(self, command: MyCommand) -> FlextResult[MyResult]:~~
+~~ def handle(self, command: MyCommand) -> r[MyResult]:~~
 ~~ # ✅ V2: Métricas via FlextMixins.CQRS~~
 ~~ self.cqrs_metrics.record("commands_processed", 1)~~
 
@@ -1571,7 +1571,7 @@ servir como referência futura para implementação:
 ~~ FlextContainer,~~
 ~~ FlextDispatcher,~~
 ~~ FlextHandlers,~~
-~~ FlextResult,~~
+~~ r,~~
 ~~)~~
 
 ~~# Domain Models~~
@@ -1631,7 +1631,7 @@ servir como referência futura para implementação:
 
 ~~# Command Handlers~~
 ~~class CreateUserHandler(FlextHandlers[CreateUserCommand, User]):~~
-~~ def handle(self, command: CreateUserCommand) -> FlextResult[User]:~~
+~~ def handle(self, command: CreateUserCommand) -> r[User]:~~
 ~~ self.logger.info(f"Creating user: {command.name}")~~
 
 ~~ with self.track("create_user"):~~
@@ -1648,15 +1648,15 @@ UserRepository.save(user)
         # Publish event (in real app, use event bus)
         self.logger.info(f"User created: {user.id}")
 
-        return FlextResult.ok(user)
+        return r.ok(user)
 
 class UpdateUserHandler(h[UpdateUserCommand, User]):
-def handle(self, command: UpdateUserCommand) -> FlextResult[User]:
+def handle(self, command: UpdateUserCommand) -> r[User]:
 self.logger.info(f"Updating user: {command.user_id}")
 
         user = UserRepository.get(command.user_id)
         if user is None:
-            return FlextResult.fail(f"User not found: {command.user_id}")
+            return r.fail(f"User not found: {command.user_id}")
 
         with self.track("update_user"):
             if command.name is not None:
@@ -1667,12 +1667,12 @@ self.logger.info(f"Updating user: {command.user_id}")
 
         self.cqrs_metrics.record("users_updated", 1)
 
-        return FlextResult.ok(user)
+        return r.ok(user)
 
 # Query Handlers
 
 class GetUserHandler(h[GetUserQuery, User]):
-def handle(self, query: GetUserQuery) -> FlextResult[User]:
+def handle(self, query: GetUserQuery) -> r[User]:
 self.logger.debug(f"Getting user: {query.user_id}")
 
         with self.track("get_user"):
@@ -1680,25 +1680,25 @@ self.logger.debug(f"Getting user: {query.user_id}")
 
         if user is None:
             self.cqrs_metrics.record("users_not_found", 1)
-            return FlextResult.fail(f"User not found: {query.user_id}")
+            return r.fail(f"User not found: {query.user_id}")
 
         self.cqrs_metrics.record("users_found", 1)
-        return FlextResult.ok(user)
+        return r.ok(user)
 
 class ListUsersHandler(h[ListUsersQuery, list[User]]):
-def handle(self, query: ListUsersQuery) -> FlextResult[list[User]]:
+def handle(self, query: ListUsersQuery) -> r[list[User]]:
 self.logger.debug(f"Listing users: limit={query.limit}, offset={query.offset}")
 
         with self.track("list_users"):
             users = UserRepository.list(query.limit, query.offset)
 
         self.cqrs_metrics.record("users_listed", len(users))
-        return FlextResult.ok(users)
+        return r.ok(users)
 
 # Event Handlers
 
 class UserCreatedHandler(h[UserCreatedEvent, None]):
-def handle(self, event: UserCreatedEvent) -> FlextResult[bool]:
+def handle(self, event: UserCreatedEvent) -> r[bool]:
 self.logger.info(f"Processing UserCreatedEvent: {event.user_id}")
 
         self.cqrs_context.push({
@@ -1712,7 +1712,7 @@ self.logger.info(f"Processing UserCreatedEvent: {event.user_id}")
                 self.logger.info(f"Sending welcome email to {event.email}")
 
             self.cqrs_metrics.record("welcome_emails_sent", 1)
-            return FlextResult.| ok(value=True)
+            return r.| ok(value=True)
         finally:
             self.cqrs_context.pop()
 
@@ -1776,7 +1776,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Callable
 
-from flext_core import FlextLogger, FlextResult
+from flext_core import FlextLogger, r
 
 
 @dataclass
@@ -1890,7 +1890,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
-from flext_core import h, FlextResult
+from flext_core import h, r
 
 
 @dataclass
@@ -1914,7 +1914,7 @@ class PaymentResult:
 class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
     """Payment handler with full observability."""
 
-    def handle(self, command: ProcessPaymentCommand) -> FlextResult[PaymentResult]:
+    def handle(self, command: ProcessPaymentCommand) -> r[PaymentResult]:
         # Setup context for tracing
         self.cqrs_context.push({
             "operation": "process_payment",
@@ -1985,7 +1985,7 @@ class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
                 },
             )
 
-            return FlextResult.ok(result)
+            return r.ok(result)
 
         except Exception as e:
             # Record failure metrics
@@ -2000,39 +2000,39 @@ class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
                 },
             )
 
-            return FlextResult.fail(str(e))
+            return r.fail(str(e))
         finally:
             self.cqrs_context.pop()
 
     def _validate_payment_method(
         self,
         command: ProcessPaymentCommand,
-    ) -> FlextResult[bool]:
+    ) -> r[bool]:
         """Validate payment method is supported."""
         supported = ["credit_card", "debit_card", "pix", "boleto"]
         if command.payment_method not in supported:
-            return FlextResult.fail(f"Unsupported payment method: {command.payment_method}")
-        return FlextResult.| ok(value=True)
+            return r.fail(f"Unsupported payment method: {command.payment_method}")
+        return r.| ok(value=True)
 
     def _check_fraud(
         self,
         command: ProcessPaymentCommand,
-    ) -> FlextResult[bool]:
+    ) -> r[bool]:
         """Check for potential fraud."""
         # Simplified fraud check
         if command.amount > 10000:
-            return FlextResult.fail("Amount exceeds fraud threshold")
-        return FlextResult.| ok(value=True)
+            return r.fail("Amount exceeds fraud threshold")
+        return r.| ok(value=True)
 
     def _process_with_gateway(
         self,
         command: ProcessPaymentCommand,
-    ) -> FlextResult[str]:
+    ) -> r[str]:
         """Process payment with external gateway."""
         # Simulated gateway call
         import uuid
         transaction_id = str(uuid.uuid4())
-        return FlextResult.ok(transaction_id)
+        return r.ok(transaction_id)
 ```
 
 ---
@@ -2063,7 +2063,7 @@ class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
 ~~```Python~~
 ~~# flext-ldif: Batch processing handler V2~~
 ~~class ProcessLdifBatchHandler(FlextHandlers[ProcessLdifBatchCommand, BatchResult]):~~
-~~ def handle(self, command: ProcessLdifBatchCommand) -> FlextResult[BatchResult]:~~
+~~ def handle(self, command: ProcessLdifBatchCommand) -> r[BatchResult]:~~
 ~~ self.cqrs_context.push({~~
 ~~ "batch_id": command.batch_id,~~
 ~~ "file_count": len(command.files),~~
@@ -2086,7 +2086,7 @@ self.logger.warning(f"Failed to process {file_path}: {result.error}")
             self.cqrs_metrics.record("files_failed", errors)
             self.cqrs_metrics.record("batches_completed", 1)
 
-            return FlextResult.ok(BatchResult(processed=processed, errors=errors))
+            return r.ok(BatchResult(processed=processed, errors=errors))
         finally:
             self.cqrs_context.pop()
 
@@ -2165,7 +2165,7 @@ async def get_user(user_id: str) -> UserResponse:
 class MigrateEntryHandler(h[MigrateEntryCommand, m.Infra.Workspace.MigrationResult]):
     def handle(
         self, command: MigrateEntryCommand
-    ) -> FlextResult[m.Infra.Workspace.MigrationResult]:
+    ) -> r[m.Infra.Workspace.MigrationResult]:
         self.cqrs_context.push({
             "migration_id": command.migration_id,
             "entry_dn": command.entry.dn,
@@ -2212,7 +2212,7 @@ class MigrateEntryHandler(h[MigrateEntryCommand, m.Infra.Workspace.MigrationResu
                 },
             )
 
-            return FlextResult.ok(
+            return r.ok(
                 m.Infra.Workspace.MigrationResult(
                     entry_dn=command.entry.dn,
                     status="migrated",
@@ -2229,7 +2229,7 @@ class MigrateEntryHandler(h[MigrateEntryCommand, m.Infra.Workspace.MigrationResu
                     "error": str(e),
                 },
             )
-            return FlextResult.fail(str(e))
+            return r.fail(str(e))
         finally:
             self.cqrs_context.pop()
 ```
@@ -2355,7 +2355,7 @@ class TestContextStack:
 """Tests for FlextDispatcher dependency injection."""
 
 import pytest
-from flext_core import FlextContainer, FlextDispatcher, h, FlextResult
+from flext_core import FlextContainer, FlextDispatcher, h, r
 
 
 class MockCircuitBreaker:
@@ -2395,8 +2395,8 @@ class TestDispatcherDI:
 
         # Register a simple handler
         class TestHandler(h[str, str]):
-            def handle(self, message: str) -> FlextResult[str]:
-                return FlextResult.ok(f"processed: {message}")
+            def handle(self, message: str) -> r[str]:
+                return r.ok(f"processed: {message}")
 
         dispatcher.register_command(str, TestHandler())
 
@@ -2417,8 +2417,8 @@ class TestDispatcherDI:
         dispatcher = FlextDispatcher(container=container)
 
         class TestHandler(h[str, str]):
-            def handle(self, message: str) -> FlextResult[str]:
-                return FlextResult.ok(f"processed: {message}")
+            def handle(self, message: str) -> r[str]:
+                return r.ok(f"processed: {message}")
 
         dispatcher.register_command(str, TestHandler())
 
@@ -2438,7 +2438,7 @@ import time
 from dataclasses import dataclass
 
 import pytest
-from flext_core import FlextDispatcher, h, FlextResult
+from flext_core import FlextDispatcher, h, r
 
 
 @dataclass
@@ -2447,8 +2447,8 @@ class BenchmarkCommand:
 
 
 class BenchmarkHandler(h[BenchmarkCommand, int]):
-    def handle(self, command: BenchmarkCommand) -> FlextResult[int]:
-        return FlextResult.ok(command.value * 2)
+    def handle(self, command: BenchmarkCommand) -> r[int]:
+        return r.ok(command.value * 2)
 
 
 class TestHandlerThroughput:
@@ -2550,10 +2550,10 @@ class CreateUserHandler(h[CreateUserCommand, User]):
     @FlextDecorators.track_performance("create_user")  # Performance automático
     @FlextDecorators.with_context(handler="CreateUserHandler")  # Context automático
     @FlextDecorators.retry(max_attempts=3)  # Retry automático
-    def handle(self, command: CreateUserCommand) -> FlextResult[User]:
+    def handle(self, command: CreateUserCommand) -> r[User]:
         # Lógica focada - infraestrutura via decorators
         self.logger.info(f"Creating user: {command.name}")
-        return FlextResult.ok(self._create(command))
+        return r.ok(self._create(command))
 ```
 
 **Benefício:** Separação de concerns - handler foca na lógica, decorators adicionam infraestrutura.

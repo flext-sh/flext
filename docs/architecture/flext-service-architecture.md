@@ -21,7 +21,7 @@
   - [🔑 Conceitos Fundamentais (Imutáveis)](#conceitos-fundamentais-imutveis)
   - [🔄 O Que Muda de V1 para V2](#o-que-muda-de-v1-para-v2)
   - [⚠️ Consistência de Exemplos](#consistncia-de-exemplos)
-- [### 🎯 Eliminando `.value`, `.result` E `FlextResult[]` Declaration](#eliminando-value-result-e-flextresult-declaration)
+- [### 🎯 Eliminando `.value`, `.result` E `r[]` Declaration](#eliminando-value-result-e-flextresult-declaration)
 - [## ~~🗺️ Roadmap de Evolução~~ ✅ MIGRADO](#roadmap-de-evoluo-migrado)
   - [~~📊 Visão Geral: Status Atual dos Padrões do FlextService (2025-11-25)~~](#viso-geral-status-atual-dos-padres-do-flextservice-2025-11-25)
 - [### ~~📌 Versão 1: Explícito (Código Existente)~~](#verso-1-explcito-cdigo-existente)
@@ -54,7 +54,7 @@
   - [~~Padrão 1: Pydantic + DI + Config Singleton~~](#padro-1-pydantic-di-config-singleton)
   - [Padrão 2: Auto-Registro no Container](#padro-2-auto-registro-no-container)
   - [Padrão 3: Conformidade de Protocol via Tipagem Estrutural](#padro-3-conformidade-de-protocol-via-tipagem-estrutural)
-  - [Padrão 4: Integração FlextResult Railway Pattern](#padro-4-integrao-flextresult-railway-pattern)
+  - [Padrão 4: Integração r Railway Pattern](#padro-4-integrao-flextresult-railway-pattern)
   - [Padrão 5: Integração Repository (Quando Precisa de Persistência)](#padro-5-integrao-repository-quando-precisa-de-persistncia)
   - [Padrão 6: Services Multi-Operação (Quando Necessário)](#padro-6-services-multi-operao-quando-necessrio)
   - [Padrão 7: Resolução de Hierarquia de Config](#padro-7-resoluo-de-hierarquia-de-config)
@@ -214,7 +214,7 @@ para implementações futuras. A documentação oficial está nos links acima.
 
 > Migrado para: `flext-core/docs/guides/service-patterns.md#overview`
 
-~~Services são apenas **Pydantic models com um método `execute()`** que retornam `FlextResult[T]`.~~
+~~Services são apenas **Pydantic models com um método `execute()`** que retornam `r[T]`.~~
 ~~Todo o resto é **syntactic sugar** para eliminar boilerplate.~~
 
 ~~**⚠️ STATUS REAL - Validação de 2025-11-25 (atualizado 2025-12-03):**~~
@@ -294,7 +294,7 @@ class MyService(FlextService[Result]):
         self._logger = FlextLogger(__name__)  # ❌ Desnecessário!
         self._context = FlextContext()  # ❌ Desnecessário!
 
-    def execute(self) -> FlextResult[Result]:
+    def execute(self) -> r[Result]:
         config = FlextSettings.get_global_instance()  # ❌ Desnecessário!
         logger = FlextLogger(__name__)  # ❌ Desnecessário!
 ```
@@ -314,13 +314,13 @@ class MyService(FlextService[Result]):
     user_id: str
     action: str
 
-    def execute(self) -> FlextResult[Result]:
+    def execute(self) -> r[Result]:
         """
         Infraestrutura AUTOMATICAMENTE disponível via properties:
 
         - self.config: FlextSettings      ← Global singleton
         - self.logger: FlextLogger      ← Structured logging com cache
-        - self.container: FlextContainer ← DI container (retorna FlextResult!)
+        - self.container: FlextContainer ← DI container (retorna r!)
         - self.context: FlextContext    ← Correlation IDs, tracing
         - self.track(): ContextManager  ← Performance monitoring
 
@@ -331,10 +331,10 @@ class MyService(FlextService[Result]):
         if self.config.debug:
             self.logger.debug(f"Processing {self.action} for user {self.user_id}")
 
-        # ✅ Acesso ao container para DI (retorna FlextResult[T]!)
+        # ✅ Acesso ao container para DI (retorna r[T]!)
         user_repo_result = self.container.get("UserRepository")
         if user_repo_result.is_failure:
-            return FlextResult.fail(user_repo_result.error)
+            return r.fail(user_repo_result.error)
         user_repo = user_repo_result.unwrap()
 
         # ✅ Performance tracking automático
@@ -346,7 +346,7 @@ class MyService(FlextService[Result]):
             f"Action completed", extra={"user_id": self.user_id, "action": self.action}
         )
 
-        return FlextResult.ok(result)
+        return r.ok(result)
 
 
 # ✅ USO PADRÃO (auto_execute = False):
@@ -384,7 +384,7 @@ class MyService(FlextService[Result]):
     user_id: str
     action: str
 
-    def execute(self) -> FlextResult[Result]:
+    def execute(self) -> r[Result]:
         # Mesma lógica, mas infraestrutura também automática!
         if self.config.debug:
             self.logger.debug(f"Processing {self.action}")
@@ -394,7 +394,7 @@ class MyService(FlextService[Result]):
             user_repo = user_repo_result.unwrap()
             result = user_repo.process(self.user_id, self.action)
 
-        return FlextResult.ok(result)
+        return r.ok(result)
 
 
 # ❌ V1: Precisa .execute().unwrap()
@@ -509,7 +509,7 @@ Este documento descreve **2 estados** do FlextService:
 │ • Service(params).result retorna valor direto          │
 │ • Property com cache interno (service.py:122-140)      │
 │ • Redução 68% código (7 chars vs 19)                  │
-│ • FlextResult obrigatório em execute() (type-safe)     │
+│ • r obrigatório em execute() (type-safe)     │
 │ • Error handling via try/except                        │
 │ • Infraestrutura automática (mesma de V1)              │
 │                                                         │
@@ -525,7 +525,7 @@ Este documento descreve **2 estados** do FlextService:
 │ • Service(params) retorna valor direto (sem .result)   │
 │ • __new__ override + auto_execute = True               │
 │ • Redução 95% código (4 chars vs 19)                  │
-│ • FlextResult obrigatório em execute() (type-safe)     │
+│ • r obrigatório em execute() (type-safe)     │
 │ • Error handling via try/except                        │
 │ • Infraestrutura automática (mesma de V1)              │
 │                                                         │
@@ -564,7 +564,7 @@ result = AutoService(params)  # auto_execute = True
 Estes conceitos são **iguais em V1 e V2**:
 
 Conceito: **FlextService[T]** - Descrição: Base class com execute() - Versão: V1 ✅ V2 ✅
-Conceito: **FlextResult[T]** - Descrição: Railway pattern monad - Versão: V1 ✅ V2 ✅
+Conceito: **r[T]** - Descrição: Railway pattern monad - Versão: V1 ✅ V2 ✅
 Conceito: **Pydantic fields** - Descrição: Domain data via fields - Versão: V1 ✅ V2 ✅
 Conceito: **x** - Descrição: Infraestrutura automática - Versão: V1 ✅ V2 ✅
 Conceito: **self.config** - Descrição: Config singleton - Versão: V1 ✅ V2 ✅
@@ -595,7 +595,7 @@ Tipo de Exemplo: **Definição de Service** - Tag: `Conceitual` - Quando Usar: E
 Tipo de Exemplo: **Uso/Instanciação** - Tag: `V1` ou `V2` - Quando Usar: Como executar o service
 Tipo de Exemplo: **Definição de execute()** - Tag: `Conceitual` - Quando Usar: Lógica interna (mesma em V1 e V2)
 Tipo de Exemplo: **x/Config/Logger** - Tag: `Conceitual` - Quando Usar: Infraestrutura (mesma em V1 e V2)
-Tipo de Exemplo: **FlextResult/Railway** - Tag: `Conceitual` - Quando Usar: Padrões fundamentais (mesmos em V1 e V2)
+Tipo de Exemplo: **r/Railway** - Tag: `Conceitual` - Quando Usar: Padrões fundamentais (mesmos em V1 e V2)
 **Se não tem tag explícita:** Assuma que é **conceitual** (funciona em ambas versões)
 
 **Foco das tags:**
@@ -605,7 +605,7 @@ Tipo de Exemplo: **FlextResult/Railway** - Tag: `Conceitual` - Quando Usar: Padr
 
 ##
 
-### 🎯 Eliminando `.value`, `.result` E `FlextResult[]` Declaration
+### 🎯 Eliminando `.value`, `.result` E `r[]` Declaration
 
 **O Problema V1:**
 
@@ -614,8 +614,8 @@ Tipo de Exemplo: **FlextResult/Railway** - Tag: `Conceitual` - Quando Usar: Padr
 class UserService(FlextService[User]):
     user_id: str
 
-    def execute(self) -> FlextResult[User]:  # ← Declarar FlextResult[User]
-        return FlextResult.ok(User(id=self.user_id))
+    def execute(self) -> r[User]:  # ← Declarar r[User]
+        return r.ok(User(id=self.user_id))
 
 
 result = service.execute().unwrap()  # ← .execute().unwrap()
@@ -629,7 +629,7 @@ class UserService(FlextService[User]):  # ← TDomainResult = User
     user_id: str
 
     def execute(self):  # ← Retorno inferido automaticamente!
-        return FlextResult.ok(User(id=self.user_id))
+        return r.ok(User(id=self.user_id))
 
 
 # Instanciar retorna User direto
@@ -639,7 +639,7 @@ user = UserService(user_id="123")  # ← Tipo: User
 **Type Inference (Python 3.13):**
 
 - ✅ `FlextService[User]` → `TDomainResult = User`
-- ✅ `execute()` retorno inferido como `FlextResult[User]`
+- ✅ `execute()` retorno inferido como `r[User]`
 - ✅ Mypy valida automaticamente
 - ✅ IDE autocomplete funciona
 
@@ -685,7 +685,7 @@ class FlextService[TDomainResult](
         return instance
 
     @abstractmethod
-    def execute(self) -> FlextResult[TDomainResult]:
+    def execute(self) -> r[TDomainResult]:
         """Execute domain service logic - abstract method to be implemented by subclasses."""
 ```
 
@@ -703,9 +703,9 @@ class FlextService[TDomainResult](
 class UserService(FlextService[User]):
     user_id: str
 
-    def execute(self) -> FlextResult[User]:
+    def execute(self) -> r[User]:
         user = self.container.get("UserRepo").unwrap().find(self.user_id)
-        return FlextResult.ok(user)
+        return r.ok(user)
 
 
 # ═══════════════════════════════════════════════════════
@@ -792,7 +792,7 @@ user_value = result.value if result.is_success else None
 
 **Por Que Este Design:**
 
-1. **FlextResult obrigatório** - `execute()` SEMPRE retorna `FlextResult[T]`
+1. **r obrigatório** - `execute()` SEMPRE retorna `r[T]`
    - Railway pattern é **core** do FlextService
    - Type-safe error handling garantido
    - Validação em tempo de compilação (mypy)
@@ -838,9 +838,9 @@ user_value = result.value if result.is_success else None
 class UserService(FlextService[User]):
     user_id: str
 
-    def execute(self) -> FlextResult[User]:
+    def execute(self) -> r[User]:
         # Lógica aqui
-        return FlextResult.ok(user)
+        return r.ok(user)
 
 
 # V1: Explícito - 3 calls necessários (19 chars)
@@ -853,7 +853,7 @@ if result.is_success:
 **Características:**
 
 - ✅ **Railway pattern explícito** - Controle total de errors
-- ✅ **Type-safe** - FlextResult[T] tipado
+- ✅ **Type-safe** - r[T] tipado
 - ✅ **100% backward compatible** - Sempre funcionará
 - ⚠️ **Verbose** - `.execute().unwrap()` em todo lugar
 - ⚠️ **Boilerplate** - 3 método calls por uso (19 chars)
@@ -967,9 +967,9 @@ def __new__(cls, **data: object) -> Self:
 
 #
 
-#     def execute(self) -> FlextResult[User]:
+#     def execute(self) -> r[User]:
 
-#         return FlextResult.ok(User(id=self.user_id, name="Alice"))
+#         return r.ok(User(id=self.user_id, name="Alice"))
 
 #
 
@@ -1093,7 +1093,7 @@ user = UserService(user_id="123").execute().unwrap()
 ~~1. **V1 Explícito** - Railway nativo (backward compatible) ✅~~
 
 ```python
-result = Service(params).execute()  # FlextResult[T]
+result = Service(params).execute()  # r[T]
 result.map(...).flat_map(...)  # Railway pattern com .flat_map() (não .and_then()!)
 ```
 
@@ -1106,7 +1106,7 @@ result.map(...).flat_map(...)  # Railway pattern com .flat_map() (não .and_then
 
 
 # Use V1 padrão:
-result = Service(params).execute()  # FlextResult[T]
+result = Service(params).execute()  # r[T]
 result.map(...).flat_map(...)  # Railway pattern
 ```
 
@@ -1123,7 +1123,7 @@ result.map(...).flat_map(...)  # Railway pattern
 
 
 # Use V1 padrão:
-result = Service(params).execute()  # FlextResult[T]
+result = Service(params).execute()  # r[T]
 ```
 
 **Padrão confiável (apenas V1):**
@@ -1168,7 +1168,7 @@ pipeline = (
 
 ```
 ✅ FlextService[T]           → Simples, direto, todos usam
-✅ FlextResult[T]            → Railway pattern, valor claro
+✅ r[T]            → Railway pattern, valor claro
 ✅ FlextSettings (singleton)   → Acesso a config, funciona ótimo
 ✅ FlextContainer (DI básico) → Resolução de dependências simples
 ✅ Validação Pydantic        → Validação de campos, natural
@@ -1183,7 +1183,7 @@ pipeline = (
 
 **Mudanças Mínimas (3 adições):**
 
-> TODO(flext_core/result.py::FlextResult): implementar helper `.and_then()` para suportar o fluxo descrito abaixo. Enquanto isso, utilize `.flat_map()` para encadear services.
+> TODO(flext_core/result.py::r): implementar helper `.and_then()` para suportar o fluxo descrito abaixo. Enquanto isso, utilize `.flat_map()` para encadear services.
 
 1. **Smart Resolution** - `.and_then()` detecta automaticamente _(pendente de implementação; usar `.flat_map()` por enquanto)_
 
@@ -1265,7 +1265,7 @@ pipeline = (
 │  └─ p.ExecutableService                            │
 │                                                                  │
 │  Layer 1: Foundation (Building Blocks)                          │
-│  ├─ FlextResult[T]          → Railway pattern monad             │
+│  ├─ r[T]          → Railway pattern monad             │
 │  ├─ FlextSettings             → Singleton configuration           │
 │  ├─ FlextContainer          → DI container (singleton)          │
 │  └─ x             → Infrastructure access             │
@@ -1373,22 +1373,20 @@ class FlextContainer:
         ...
 
     # Service registration
-    def register[T](self, name: str, service: T) -> FlextResult[bool]:
+    def register[T](self, name: str, service: T) -> r[bool]:
         """Register service instance."""
         ...
 
-    def register_factory[T](
-        self, name: str, factory: Callable[[], T]
-    ) -> FlextResult[bool]:
+    def register_factory[T](self, name: str, factory: Callable[[], T]) -> r[bool]:
         """Register factory for lazy instantiation."""
         ...
 
     # Service resolution
-    def get(self, name: str) -> FlextResult[object]:
+    def get(self, name: str) -> r[object]:
         """Resolve service (untyped)."""
         ...
 
-    def get_typed[T](self, name: str, type_cls: type[T]) -> FlextResult[T]:
+    def get_typed[T](self, name: str, type_cls: type[T]) -> r[T]:
         """Resolve service (type-safe)."""
         ...
 ```
@@ -1414,8 +1412,8 @@ class p:
 
         def execute(self) -> object: ...
         def is_valid(self) -> bool: ...
-        def validate_business_rules(self) -> FlextResult[bool]: ...
-        def validate_config(self) -> FlextResult[bool]: ...
+        def validate_business_rules(self) -> r[bool]: ...
+        def validate_config(self) -> r[bool]: ...
         def get_service_info(self) -> dict[str, object]: ...
 
     @runtime_checkable
@@ -1431,15 +1429,15 @@ class p:
     class Configurable(Protocol):
         """Configuration protocol."""
 
-        def configure(self, config: dict[str, object]) -> FlextResult[bool]: ...
+        def configure(self, config: dict[str, object]) -> r[bool]: ...
         def get_config(self) -> dict[str, object]: ...
 
     @runtime_checkable
     class ExecutableService(Protocol):
         """Enhanced execution protocol."""
 
-        def execute_operation(self) -> FlextResult[object]: ...
-        def execute_with_validation(self) -> FlextResult[object]: ...
+        def execute_operation(self) -> r[object]: ...
+        def execute_with_validation(self) -> r[object]: ...
 ```
 
 **Pontos de Integração:**
@@ -1496,13 +1494,13 @@ class x:
 
 # ✅ Você apenas usa as properties automaticamente!
 class MyService(FlextService[Result]):
-    def execute(self) -> FlextResult[Result]:
+    def execute(self) -> r[Result]:
         # Tudo disponível automaticamente:
         self.config  # ✅ FlextSettings singleton
         self.logger  # ✅ Logger com cache
         self.container  # ✅ DI container
         self.context  # ✅ Correlation IDs
-        return FlextResult.ok(Result())
+        return r.ok(Result())
 ```
 
 **Pontos de Integração:**
@@ -1523,7 +1521,7 @@ FlextService[T]
 ~~    ├─ Implements: p.Service (Protocol)~~
 ~~    ├─ Uses: FlextContainer (DI)~~
 ~~    ├─ Uses: FlextSettings (Config singleton)~~
-~~    ├─ Returns: FlextResult[T] (Railway pattern)~~
+~~    ├─ Returns: r[T] (Railway pattern)~~
 ~~    └─ Registers: In FlextContainer (Auto-registration)~~
 ```
 
@@ -1541,7 +1539,7 @@ flext-core/src/flext_core/
 ├── handlers.py         → h (CQRS)
 ├── dispatcher.py       → FlextDispatcher (command bus)
 ├── config.py           → FlextSettings (singleton)
-├── result.py           → FlextResult (monad)
+├── result.py           → r (monad)
 ├── container.py        → FlextContainer (DI)
 └── mixins.py           → x (logger, context, etc)
 ```
@@ -1554,7 +1552,7 @@ flext-core/src/flext_core/
 # Atual (problemático)
 class FlextService[T](ABC):
     @abstractmethod
-    def execute(self) -> FlextResult[T]:
+    def execute(self) -> r[T]:
         """Execute without parameters - how to pass data?"""
         ...
 ```
@@ -1643,7 +1641,7 @@ result = service.execute()  # Direto, simples, funciona
 ```python
 # Separate handler from service logic
 class CreateUserHandler(h[CreateUserCommand, User]):
-    def handle(self, command: CreateUserCommand) -> FlextResult[User]:
+    def handle(self, command: CreateUserCommand) -> r[User]:
         # Now call the actual service...
         service = UserService(command=command)
         return service.result
@@ -1659,9 +1657,9 @@ class UserService(FlextService[User]):
     name: str
     email: str
 
-    def execute(self) -> FlextResult[User]:
+    def execute(self) -> r[User]:
         # Apenas faça o trabalho!
-        return FlextResult.ok(User(name=self.name, email=self.email))
+        return r.ok(User(name=self.name, email=self.email))
 ```
 
 **Por Que Falhou:**
@@ -1689,7 +1687,7 @@ class CreateUserCommand(FlextModels.Command):
 
 
 class CreateUserHandler(h[CreateUserCommand, User]):
-    def handle(self, command: CreateUserCommand) -> FlextResult[User]:
+    def handle(self, command: CreateUserCommand) -> r[User]:
         # Dispatch to service...
         pass
 
@@ -1709,10 +1707,10 @@ class CreateUser(FlextService[User]):
     name: str
     email: str
 
-    def execute(self) -> FlextResult[User]:
+    def execute(self) -> r[User]:
         user = User(name=self.name, email=self.email)
         self._save(user)
-        return FlextResult.ok(user)
+        return r.ok(user)
 ```
 
 **Por Que Falhou:**
@@ -1737,7 +1735,7 @@ class CreateUser(FlextService[User]):
 Layer 4: Integration (FlextBus, FlextLogger, FlextContext)
 Layer 3: Service Layer (FlextService, h, FlextDispatcher)
 Layer 2: Domain Models (FlextModels with DDD)
-Layer 1: Foundation (FlextResult, FlextSettings, FlextContainer)
+Layer 1: Foundation (r, FlextSettings, FlextContainer)
 Layer 0: Protocols (p)
 ```
 
@@ -1761,12 +1759,12 @@ Layer 0: Protocols (p)
 │  - Direct execution via .value                          │
 │  - Monadic operations (map, and_then)                   │
 │  - Auto-config resolution                               │
-│  - FlextResult[T] wrapping                              │
+│  - r[T] wrapping                              │
 └─────────────────────────────────────────────────────────┘
                         ↓
 ┌─────────────────────────────────────────────────────────┐
 │  LAYER 1: Foundation (INFRASTRUCTURE)                   │
-│  - FlextResult[T]     (Railway pattern)                 │
+│  - r[T]     (Railway pattern)                 │
 │  - FlextSettings        (Singleton config)                │
 │  - FlextContainer     (Basic DI)                        │
 │  - x        (Property access)                 │
@@ -1840,7 +1838,7 @@ class MyService(FlextService[ResultType]):
     # ════════════════════════════════════════════════════════════
     # CONFIG: Singleton access (from x)
     # ════════════════════════════════════════════════════════════
-    def execute(self) -> FlextResult[ResultType]:
+    def execute(self) -> r[ResultType]:
         """Execute with all integrations."""
         # Config singleton - NO constructor parameter!
         timeout = self.project_config.timeout_seconds
@@ -1932,11 +1930,11 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 
 # Define service
 class UserService(FlextService[User]):
-    def execute(self) -> FlextResult[User]:
-        return FlextResult[User].ok(User(name="John"))
+    def execute(self) -> r[User]:
+        return r[User].ok(User(name="John"))
 
-    def validate_business_rules(self) -> FlextResult[bool]:
-        return FlextResult[bool].| ok(value=True)
+    def validate_business_rules(self) -> r[bool]:
+        return r[bool].| ok(value=True)
 
     def is_valid(self) -> bool:
         return True
@@ -1972,9 +1970,9 @@ assert isinstance(service, p.Service)  # ✅ True!
 - ✅ Flexible implementation
 - ✅ Runtime checking with isinstance()
 
-### Padrão 4: Integração FlextResult Railway Pattern
+### Padrão 4: Integração r Railway Pattern
 
-**Every operation returns FlextResult:**
+**Every operation returns r:**
 
 ```python
 class DataPipelineService(FlextService[DataFrame]):
@@ -1983,7 +1981,7 @@ class DataPipelineService(FlextService[DataFrame]):
     source_file: Path
     transformations: list[str] = Field(default_factory=list)
 
-    def execute(self) -> FlextResult[DataFrame]:
+    def execute(self) -> r[DataFrame]:
         """Execute pipeline with railway pattern."""
         return (
             self
@@ -1993,41 +1991,41 @@ class DataPipelineService(FlextService[DataFrame]):
             .and_then(self._validate_results)
         )
 
-    def _load_data(self) -> FlextResult[DataFrame]:
+    def _load_data(self) -> r[DataFrame]:
         """Load data from source."""
         try:
             df = pd.read_csv(self.source_file)
-            return FlextResult.ok(df)
+            return r.ok(df)
         except Exception as e:
-            return FlextResult.fail(f"Load failed: {e}")
+            return r.fail(f"Load failed: {e}")
 
-    def _validate_schema(self, df: DataFrame) -> FlextResult[DataFrame]:
+    def _validate_schema(self, df: DataFrame) -> r[DataFrame]:
         """Validate schema."""
         required_cols = ["id", "name", "value"]
         missing = set(required_cols) - set(df.columns)
 
         if missing:
-            return FlextResult.fail(f"Missing columns: {missing}")
+            return r.fail(f"Missing columns: {missing}")
 
-        return FlextResult.ok(df)
+        return r.ok(df)
 
-    def _apply_transformations(self, df: DataFrame) -> FlextResult[DataFrame]:
+    def _apply_transformations(self, df: DataFrame) -> r[DataFrame]:
         """Apply transformations."""
         try:
             for transform in self.transformations:
                 df = self._apply_transform(df, transform)
-            return FlextResult.ok(df)
+            return r.ok(df)
         except Exception as e:
-            return FlextResult.fail(f"Transform failed: {e}")
+            return r.fail(f"Transform failed: {e}")
 
-    def _validate_results(self, df: DataFrame) -> FlextResult[DataFrame]:
+    def _validate_results(self, df: DataFrame) -> r[DataFrame]:
         """Validate results."""
         if df.empty:
-            return FlextResult.fail("Result is empty")
+            return r.fail("Result is empty")
         if df.isnull().any().any():
-            return FlextResult.fail("Result contains nulls")
+            return r.fail("Result contains nulls")
 
-        return FlextResult.ok(df)
+        return r.ok(df)
 
 
 # Usage with monadic operations
@@ -2061,7 +2059,7 @@ class CreateUser(FlextService[User]):
     email: str
     role: str = "user"
 
-    def execute(self) -> FlextResult[User]:
+    def execute(self) -> r[User]:
         """Execute with repository from DI."""
         # Create user object
         user = User(name=self.name, email=self.email, role=self.role)
@@ -2071,12 +2069,12 @@ class CreateUser(FlextService[User]):
         if repo:
             save_result = repo.save(user)
             if save_result.is_failure:
-                return FlextResult.fail(f"Save failed: {save_result.error}")
+                return r.fail(f"Save failed: {save_result.error}")
 
         # Log success
         self.logger.info(f"User created: {user.id}")
 
-        return FlextResult.ok(user)
+        return r.ok(user)
 
     def _get_repository(self) -> UserRepository | None:
         """Get repository from DI (optional)."""
@@ -2124,9 +2122,9 @@ class CreateUser(FlextService[User]):
     name: str  # ← Direct field, not wrapped in Command
     email: str
 
-    def execute(self) -> FlextResult[User]:
+    def execute(self) -> r[User]:
         # Just do it!
-        return FlextResult.ok(User(name=self.name, email=self.email))
+        return r.ok(User(name=self.name, email=self.email))
 ```
 
 ### Padrão 6: Services Multi-Operação (Quando Necessário)
@@ -2143,7 +2141,7 @@ class FlextApi(FlextService[dict[str, Any]]):
     body: Any = None
     timeout: int = 30
 
-    def execute(self) -> FlextResult[dict[str, Any]]:
+    def execute(self) -> r[dict[str, Any]]:
         """Dispatch based on operation."""
         match self.operation:
             case "get":
@@ -2157,16 +2155,16 @@ class FlextApi(FlextService[dict[str, Any]]):
             case "patch":
                 return self._http_patch()
             case _:
-                return FlextResult.fail(f"Unknown operation: {self.operation}")
+                return r.fail(f"Unknown operation: {self.operation}")
 
-    def _http_get(self) -> FlextResult[dict[str, Any]]:
+    def _http_get(self) -> r[dict[str, Any]]:
         """GET implementation."""
         try:
             response = httpx.get(self.url, headers=self.headers, timeout=self.timeout)
             response.raise_for_status()
-            return FlextResult.ok(response.json())
+            return r.ok(response.json())
         except Exception as e:
-            return FlextResult.fail(f"GET failed: {e}")
+            return r.fail(f"GET failed: {e}")
 
     # ... other methods
 
@@ -2249,11 +2247,11 @@ class FlextService[T]:
 class FlextService[T]:
     """Service with lazy execution."""
 
-    _result: FlextResult[T] | None = None
+    _result: r[T] | None = None
     _executed: bool = False
 
     @property
-    def result(self) -> FlextResult[T]:
+    def result(self) -> r[T]:
         """Get result (executes if not executed yet)."""
         if not self._executed:
             self._result = self.execute()
@@ -2569,7 +2567,7 @@ result = registry.register_function_map(mapping)
 
 ✅ **Idempotency** - Re-registro retorna sucesso sem duplicação
 ✅ **Summary Reporting** - `FlextRegistry.Summary` com registered/skipped/errors
-✅ **Railway Pattern** - Todas as operações retornam `FlextResult[T]`
+✅ **Railway Pattern** - Todas as operações retornam `r[T]`
 ✅ **Tracking** - `_registered_keys` set para deduplicação
 
 #### ⚠️ O Que NÃO Está Sendo Usado
@@ -2603,7 +2601,7 @@ from .validator import ValidateHandler
 
 def register_all_handlers(
     registry: FlextRegistry,
-) -> FlextResult[FlextRegistry.Summary]:
+) -> r[FlextRegistry.Summary]:
     handlers = [ParseHandler(), WriteHandler(), ValidateHandler()]
     return registry.register_handlers(handlers)
 
@@ -2790,15 +2788,15 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
        param1: str
        param2: int
 
-       def execute(self) -> FlextResult[ReturnType]:
+       def execute(self) -> r[ReturnType]:
            # Your logic here
-           return FlextResult.ok(result)
+           return r.ok(result)
    ```
 
-2. **FlextResult[T]** - For all operations that can fail
+2. **r[T]** - For all operations that can fail
 
    ```python
-   result = service.result  # FlextResult[T]
+   result = service.result  # r[T]
    value = service.value  # T (auto-unwrap)
 
    # Or monadic
@@ -2818,7 +2816,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 4. **FlextSettings singleton** - Via `self.project_config`
 
    ```python
-   def execute(self) -> FlextResult[T]:
+   def execute(self) -> r[T]:
        timeout = self.project_config.timeout_seconds
        # NO config parameter in __init__!
    ```
@@ -2826,7 +2824,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 5. **x properties** - For infrastructure
 
    ```python
-   def execute(self) -> FlextResult[T]:
+   def execute(self) -> r[T]:
        self.logger.info("Starting")  # ← From mixin
        self.context.set_correlation_id(...)  # ← From mixin
        repo = self.container.get("repo")  # ← From mixin
@@ -2909,15 +2907,15 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 │      source: str | Path                                         │
 │      encoding: str = "utf-8"                                    │
 │                                                                  │
-│      def execute(self) -> FlextResult[list[Entry]]:             │
+│      def execute(self) -> r[list[Entry]]:             │
 │          # Business logic with:                                 │
 │          # - self.logger (from x)                     │
 │          # - self.project_config (auto-resolved)                │
 │          # - self.container (DI access)                         │
-│          return FlextResult.ok(entries)                         │
+│          return r.ok(entries)                         │
 │                                                                  │
 │  Properties available:                                          │
-│  - service.result → FlextResult[T] (lazy execution)             │
+│  - service.result → r[T] (lazy execution)             │
 │  - service.value → T (execute + unwrap)                         │
 │  - service.map(...) → monadic operations                        │
 └─────────────────────────────────────────────────────────────────┘
@@ -2925,7 +2923,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 ┌─────────────────────────────────────────────────────────────────┐
 │  LAYER 1: Foundation (Infrastructure)                           │
 │  ─────────────────────────────────────────────────────────────  │
-│  ✅ FlextResult[T]     → Railway pattern monad                  │
+│  ✅ r[T]     → Railway pattern monad                  │
 │  ✅ FlextSettings        → Singleton configuration                │
 │  ✅ FlextContainer     → Basic DI (service registry)            │
 │  ✅ x        → Property-based infrastructure access   │
@@ -2960,7 +2958,7 @@ Caso de Uso: Precisa logging/context - Solução: Usar `self.logger`, `self.cont
 Caso de Uso: Precisa configuração - Solução: Usar `self.project_config` - Motivo: Singleton auto-resolvido
 Caso de Uso: Precisa dependências - Solução: Obter de `self.container` - Motivo: DI básico, sem mágica
 Caso de Uso: API pública - Solução: Factory function envolvendo service - Motivo: Parece função, funciona como service
-Caso de Uso: Tratamento de erros - Solução: Retornar FlextResult[T] - Motivo: Railway pattern
+Caso de Uso: Tratamento de erros - Solução: Retornar r[T] - Motivo: Railway pattern
 Caso de Uso: Event sourcing - Solução: FlextModels.DomainEvent + persistência - Motivo: APENAS se replay de eventos
 Caso de Uso: Comandos async - Solução: FlextModels.Command + fila - Motivo: APENAS se processamento em background
 Caso de Uso: Workflows complexos - Solução: FlextDispatcher + handlers - Motivo: APENAS se routing/retry necessário
@@ -2973,7 +2971,7 @@ Caso de Uso: Workflows complexos - Solução: FlextDispatcher + handlers - Motiv
 class ParseLdif(FlextService[list[Entry]]):
     source: str | Path
 
-    def execute(self) -> FlextResult[list[Entry]]:
+    def execute(self) -> r[list[Entry]]:
         return self._parse()
 
 
@@ -2988,7 +2986,7 @@ class HttpClient(FlextService[dict]):
     operation: Literal["get", "post"]
     url: str
 
-    def execute(self) -> FlextResult[dict]:
+    def execute(self) -> r[dict]:
         match self.operation:
             case "get":
                 return self._get()
@@ -3007,7 +3005,7 @@ class CreateUser(FlextService[User]):
     name: str
     email: str
 
-    def execute(self) -> FlextResult[User]:
+    def execute(self) -> r[User]:
         user = User(name=self.name, email=self.email)
 
         # Optional repository from DI
@@ -3015,7 +3013,7 @@ class CreateUser(FlextService[User]):
         if repo.is_success:
             repo.unwrap().save(user)
 
-        return FlextResult.ok(user)
+        return r.ok(user)
 ```
 
 ##
@@ -3050,15 +3048,15 @@ class FlextContainer:
     _global_lock: threading.RLock = threading.RLock()
 
     # Core operations
-    def register(self, name: str, service: object) -> FlextResult[bool]
-    def register_factory(self, name: str, factory: Callable[[], T]) -> FlextResult[bool]
-    def get(self, name: str) -> FlextResult[object]
-    def get_typed(self, name: str, expected_type: type[T]) -> FlextResult[T]
+    def register(self, name: str, service: object) -> r[bool]
+    def register_factory(self, name: str, factory: Callable[[], T]) -> r[bool]
+    def get(self, name: str) -> r[object]
+    def get_typed(self, name: str, expected_type: type[T]) -> r[T]
 
     # Advanced features
-    def auto_wire(self, service_class: type[T]) -> FlextResult[object]
-    def create_service(self, service_class: type[T], service_name: str | None) -> FlextResult[object]
-    def batch_register(self, services: dict[str, object]) -> FlextResult[bool]
+    def auto_wire(self, service_class: type[T]) -> r[object]
+    def create_service(self, service_class: type[T], service_name: str | None) -> r[object]
+    def batch_register(self, services: dict[str, object]) -> r[bool]
 
     # Integration com dependency-injector
     _di_container: DynamicContainer  # Internal DI wrapper
@@ -3176,7 +3174,7 @@ class FlextLdifWriter(Flext[Any]):
 
    ```python
    # ✅ Funciona perfeitamente
-   result: FlextResult[FlextLogger] = container.get_typed("logger", FlextLogger)
+   result: r[FlextLogger] = container.get_typed("logger", FlextLogger)
    if result.is_success:
        logger: FlextLogger = result.unwrap()  # Type preserved
    ```
@@ -3259,7 +3257,7 @@ class FlextLdifWriter:
 ```python
 # ❌ ANTI-PATTERN: Usar service sem registrar
 class FlextLdif:
-    def parse(self, source: str) -> FlextResult:
+    def parse(self, source: str) -> r:
         # ❌ MAL: Cria service direto
         parser = FlextLdifParser(config=self.config)
         return parser.parse(source)
@@ -3272,7 +3270,7 @@ class FlextLdif:
         parser = FlextLdifParser(config=self.config)
         self.container.register("parser", parser)
 
-    def parse(self, source: str) -> FlextResult:
+    def parse(self, source: str) -> r:
         # ✅ BOM: Resolver via container
         parser = self.container.get_typed("parser", FlextLdifParser).unwrap()
         return parser.parse(source)
@@ -3438,7 +3436,7 @@ config = FlextLdifSettings()  # ← Carrega .env, valida, singleton
 
 # ✅ AUTOMÁTICO: Access via property (FlextService)
 class MyService(FlextService[T]):
-    def execute(self) -> FlextResult[T]:
+    def execute(self) -> r[T]:
         # ✅ Zero ceremony - property já existe
         encoding = self.project_config.ldif_encoding
         debug = self.project_config.debug
@@ -3608,7 +3606,7 @@ class MyService(FlextService[list[Entry]]):
 
     source: str  # Pydantic field (input)
 
-    def execute(self) -> FlextResult[list[Entry]]:
+    def execute(self) -> r[list[Entry]]:
         # ✅ Zero ceremony - property access
         encoding = self.project_config.ldif_encoding
         debug = self.project_config.is_debug_enabled
@@ -3699,7 +3697,7 @@ config = FlextSettings(debug=True, log_level="DEBUG", log_format="json")
 
 # ✅ Auto: Logger reads config automatically
 class MyService(FlextService[T]):
-    def execute(self) -> FlextResult[T]:
+    def execute(self) -> r[T]:
         # ✅ Auto: logger uses config.log_config
         self.logger.info("Processing", extra={"count": 10})
         # ← Automatically uses DEBUG level from config
@@ -3722,7 +3720,7 @@ class MyService(FlextService[T]):
 
 # ✅ CORRETO: Property automática
 class MyService(FlextService[T]):
-    def execute(self) -> FlextResult[T]:
+    def execute(self) -> r[T]:
         # ✅ Auto: self.project_config já existe
         encoding = self.project_config.ldif_encoding
 ```
@@ -3798,7 +3796,7 @@ class MyProjectConfig(FlextSettings):
 class MyService(FlextService[T]):
     """Zero ceremony - property já existe."""
 
-    def execute(self) -> FlextResult[T]:
+    def execute(self) -> r[T]:
         # ✅ Auto: self.project_config (x property)
         url = self.project_config.api_endpoint
         workers = self.project_config.max_workers
@@ -4310,21 +4308,21 @@ class p:
     class Service(Protocol):
         """Service protocol."""
 
-        def execute(self) -> FlextResult[object]: ...
+        def execute(self) -> r[object]: ...
 
     @runtime_checkable
     class Repository(Protocol):
         """Repository protocol."""
 
-        def get(self, id: str) -> FlextResult[object]: ...
-        def save(self, entity: object) -> FlextResult[bool]: ...
-        def delete(self, id: str) -> FlextResult[bool]: ...
+        def get(self, id: str) -> r[object]: ...
+        def save(self, entity: object) -> r[bool]: ...
+        def delete(self, id: str) -> r[bool]: ...
 
     @runtime_checkable
     class Configurable(Protocol):
         """Configurable protocol."""
 
-        def configure(self, config: dict[str, object]) -> FlextResult[bool]: ...
+        def configure(self, config: dict[str, object]) -> r[bool]: ...
         def get_config(self) -> dict[str, object]: ...
 ```
 
@@ -4363,7 +4361,7 @@ class FlextLdifProtocols:
     class QuirksPort(Protocol):
         """Quirks port protocol."""
 
-        def normalize_entry(self, entry: dict) -> FlextResult[dict]: ...
+        def normalize_entry(self, entry: dict) -> r[dict]: ...
 
     class Entry:
         class EntryWithDnProtocol(Protocol):
@@ -4381,12 +4379,12 @@ class FlextLdifProtocols:
    # ✅ Funciona perfeitamente
    @runtime_checkable
    class Service(Protocol):
-       def execute(self) -> FlextResult: ...
+       def execute(self) -> r: ...
 
 
    class MyService:
-       def execute(self) -> FlextResult:
-           return FlextResult.ok("done")
+       def execute(self) -> r:
+           return r.ok("done")
 
 
    service = MyService()
@@ -4397,7 +4395,7 @@ class FlextLdifProtocols:
 
    ```python
    # ✅ Funciona perfeitamente
-   def process_service(service: p.Service) -> FlextResult:
+   def process_service(service: p.Service) -> r:
        return service.execute()
 
 
@@ -4500,7 +4498,7 @@ class FlextService(x, BaseModel, Generic[TDomainResult]):
 class FlextLdif(Flext[dict[str, object]]):
     """API facade with mixins."""
 
-    def parse(self, source: str) -> FlextResult:
+    def parse(self, source: str) -> r:
         # ✅ BOM: self.logger via mixin
         self.logger.info("Parsing LDIF", extra={"source_type": "string"})
 
@@ -4520,7 +4518,7 @@ class FlextLdif(Flext[dict[str, object]]):
    ```python
    # ✅ Funciona perfeitamente
    class MyService(FlextService[T]):
-       def execute(self) -> FlextResult[T]:
+       def execute(self) -> r[T]:
            self.logger.info("Starting execution")
            # Auto-nomeado com class name
    ```
@@ -4530,7 +4528,7 @@ class FlextLdif(Flext[dict[str, object]]):
    ```python
    # ✅ Funciona perfeitamente
    class MyService(FlextService[T]):
-       def execute(self) -> FlextResult[T]:
+       def execute(self) -> r[T]:
            repo = self.container.get_typed("repo", MyRepo).unwrap()
    ```
 
@@ -4539,7 +4537,7 @@ class FlextLdif(Flext[dict[str, object]]):
    ```python
    # ✅ Funciona perfeitamente (mas use project_config)
    class MyService(FlextService[T]):
-       def execute(self) -> FlextResult[T]:
+       def execute(self) -> r[T]:
            debug = self.project_config.debug  # Melhor que self.config
    ```
 
@@ -4550,7 +4548,7 @@ class FlextLdif(Flext[dict[str, object]]):
    ```python
    # ❌ RARAMENTE USADO:
    class MyService(FlextService[T]):
-       def execute(self) -> FlextResult[T]:
+       def execute(self) -> r[T]:
            ctx = self.context  # FlextContext - pouco usado
            correlation_id = ctx.correlation_id
    ```
@@ -4584,7 +4582,7 @@ config = FlextSettings(debug=True, log_level="DEBUG", log_format="json")
 
 # 2️⃣ Logger auto-configura baseado em config
 class MyService(FlextService[T]):
-    def execute(self) -> FlextResult[T]:
+    def execute(self) -> r[T]:
         # ✅ Auto: self.logger configured from self.project_config
         self.logger.info("Processing", extra={"count": 10})
         # ↑ Automatically uses:
@@ -4660,7 +4658,7 @@ class MyService(FlextService[list[Entry]]):
 
     source: str
 
-    def execute(self) -> FlextResult[list[Entry]]:
+    def execute(self) -> r[list[Entry]]:
         # ✅ Auto: self.logger exists (x property)
         # ✅ Auto: Level from config.effective_log_level
         # ✅ Auto: Name = "MyService"
@@ -4677,7 +4675,7 @@ class MyService(FlextService[list[Entry]]):
             "Parse complete", extra={"entry_count": len(result), "duration_ms": 123}
         )
 
-        return FlextResult.ok(result)
+        return r.ok(result)
 ```
 
 **Por que é automático:**
@@ -4705,7 +4703,7 @@ config = FlextSettings()
 
 # ✅ Auto: Logger configured from config
 class MyService(FlextService[T]):
-    def execute(self) -> FlextResult[T]:
+    def execute(self) -> r[T]:
         # ✅ Auto: Uses DEBUG level (from env)
         self.logger.debug("This will show!")
 
@@ -4720,7 +4718,7 @@ class MyService(FlextService[T]):
 
 ```python
 class MyService(FlextService[T]):
-    def execute(self) -> FlextResult[T]:
+    def execute(self) -> r[T]:
         # ✅ Auto: self.logger available
         self.logger.info("Ready")
 ```
@@ -4755,7 +4753,7 @@ class MyService(FlextService[T]):
 # ✅ CORRETO: Property automática
 class MyService(FlextService[T]):
     # ✅ Auto: self.logger já existe
-    def execute(self) -> FlextResult[T]:
+    def execute(self) -> r[T]:
         self.logger.info("Works!")
 ```
 
@@ -4855,7 +4853,7 @@ class FlextService[TResult](
     """Service base atual."""
 
     @abstractmethod
-    def execute(self) -> FlextResult[TResult]:
+    def execute(self) -> r[TResult]:
         """Subclasses implementam isso."""
         ...
 
@@ -4913,14 +4911,14 @@ class FlextService[TResult](
     # ═══════════════════════════════════════════════════════════════
     # CACHE (Pydantic v2 PrivateAttr)
     # ═══════════════════════════════════════════════════════════════
-    _cached_result: FlextResult[TResult] | None = PrivateAttr(default=None)
+    _cached_result: r[TResult] | None = PrivateAttr(default=None)
     _is_executed: bool = PrivateAttr(default=False)
 
     # ═══════════════════════════════════════════════════════════════
     # ABSTRACT METHOD (como antes)
     # ═══════════════════════════════════════════════════════════════
     @abstractmethod
-    def execute(self) -> FlextResult[TResult]:
+    def execute(self) -> r[TResult]:
         """Subclasses implementam - sem mudanças aqui!"""
         ...
 
@@ -4929,7 +4927,7 @@ class FlextService[TResult](
     # ═══════════════════════════════════════════════════════════════
     @computed_field
     @property
-    def result(self) -> FlextResult[TResult]:
+    def result(self) -> r[TResult]:
         """Lazy execution - executa automaticamente.
 
         Executa execute() na primeira vez que é acessado,
@@ -4984,12 +4982,12 @@ class FlextService[TResult](
     # ADDITION 2: Smart Resolution em Métodos Monádicos
     # ═══════════════════════════════════════════════════════════════
     def and_then[U](
-        self, func: callable[[TResult], Union[FlextResult[U], "FlextService[U]"]]
-    ) -> FlextResult[U]:
+        self, func: callable[[TResult], Union[r[U], "FlextService[U]"]]
+    ) -> r[U]:
         """Chain operations com SMART RESOLUTION.
 
         Aceita func que retorna:
-        - FlextResult[U] (tradicional)
+        - r[U] (tradicional)
         - FlextService[U] (novo - auto-resolve!)
 
         Se func retorna um service, automaticamente chama .result!
@@ -5001,7 +4999,7 @@ class FlextService[TResult](
         """
         current = self.result
         if not current.is_success:
-            return FlextResult.fail(current.error)
+            return r.fail(current.error)
 
         next_value = func(current.value)
 
@@ -5013,8 +5011,8 @@ class FlextService[TResult](
 
     def or_else(
         self,
-        func: callable[[str], Union[FlextResult[TResult], "FlextService[TResult]"]],
-    ) -> FlextResult[TResult]:
+        func: callable[[str], Union[r[TResult], "FlextService[TResult]"]],
+    ) -> r[TResult]:
         """Fallback com smart resolution.
 
         Example:
@@ -5034,7 +5032,7 @@ class FlextService[TResult](
 
         return fallback
 
-    def map[U](self, func: callable[[TResult], U]) -> FlextResult[U]:
+    def map[U](self, func: callable[[TResult], U]) -> r[U]:
         """Transform result value (sem mudanças)."""
         return self.result.map(func)
 
@@ -5100,9 +5098,9 @@ entries = (
 │                                                          │
 │  ┌────────────────────────────────────────────────┐    │
 │  │ Execution (Lazy + Auto)                        │    │
-│  │  • execute() → FlextResult[T]                  │    │
+│  │  • execute() → r[T]                  │    │
 │  │  • .value → T (auto-executes)                  │    │
-│  │  • .result → FlextResult[T] (lazy)             │    │
+│  │  • .result → r[T] (lazy)             │    │
 │  └────────────────────────────────────────────────┘    │
 │                                                          │
 │  ┌────────────────────────────────────────────────┐    │
@@ -5127,17 +5125,17 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
     operation: str | None = Field(default=None)
 
     # Lazy execution state
-    _result: FlextResult[TResult] | None = None
+    _result: r[TResult] | None = None
     _executed: bool = False
 
     @abstractmethod
-    def execute(self) -> FlextResult[TResult]:
+    def execute(self) -> r[TResult]:
         """Execute operation - implement in subclass."""
         ...
 
     # Auto-execution properties
     @property
-    def result(self) -> FlextResult[TResult]:
+    def result(self) -> r[TResult]:
         """Get result (executes if needed)."""
         if not self._executed:
             self._result = self.execute()
@@ -5154,9 +5152,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
         """Transform result value."""
         return FlextServiceResult(self.result.map(func))
 
-    def and_then(
-        self, func: Callable[[TResult], FlextResult[U]]
-    ) -> FlextServiceResult[U]:
+    def and_then(self, func: Callable[[TResult], r[U]]) -> FlextServiceResult[U]:
         """Chain another operation."""
         return FlextServiceResult(self.result.and_then(func))
 
@@ -5176,7 +5172,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 
 
 class MyService(FlextService[T]):
-    def execute(self) -> FlextResult[T]:
+    def execute(self) -> r[T]:
         # Access config singleton automatically
         timeout = self.project_config.timeout
         encoding = self.project_config.encoding
@@ -5197,7 +5193,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
 
     # No 'operation' field needed!
 
-    def execute(self) -> FlextResult[WriteResponse]:
+    def execute(self) -> r[WriteResponse]:
         """Execute write - direct implementation."""
         # Config via property
         encoding = self.project_config.ldif_encoding
@@ -5222,7 +5218,7 @@ class FlextApi(FlextService[dict[str, Any]]):
     # Operation-specific parameters
     body: Any | None = None
 
-    def execute(self) -> FlextResult[dict[str, Any]]:
+    def execute(self) -> r[dict[str, Any]]:
         """Execute based on operation."""
         # Config via property
         timeout = self.project_config.api_timeout
@@ -5234,7 +5230,7 @@ class FlextApi(FlextService[dict[str, Any]]):
             case "post":
                 return self._do_post(timeout)
             case _:
-                return FlextResult.fail(f"Unknown: {self.operation}")
+                return r.fail(f"Unknown: {self.operation}")
 ```
 
 ##
@@ -5275,16 +5271,16 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
     )
 
     # Lazy execution state
-    _result: FlextResult[TResult] | None = None
+    _result: r[TResult] | None = None
     _executed: bool = False
 
     @abstractmethod
-    def execute(self) -> FlextResult[TResult]:
+    def execute(self) -> r[TResult]:
         """Execute operation and return Result."""
         ...
 
     @property
-    def result(self) -> FlextResult[TResult]:
+    def result(self) -> r[TResult]:
         """Get result (executes if not executed yet)."""
         if not self._executed:
             self._result = self.execute()
@@ -5312,13 +5308,13 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
         return FlextServiceResult(self.result.map(func))
 
     def and_then(
-        self, func: Callable[[TResult], FlextResult[UResult]]
+        self, func: Callable[[TResult], r[UResult]]
     ) -> "FlextServiceResult[UResult]":
         """Chain another operation."""
         return FlextServiceResult(self.result.and_then(func))
 
     def or_else(
-        self, func: Callable[[str], FlextResult[TResult]]
+        self, func: Callable[[str], r[TResult]]
     ) -> "FlextServiceResult[TResult]":
         """Provide alternative on failure."""
         return FlextServiceResult(self.result.or_else(func))
@@ -5332,7 +5328,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
             return FlextServiceResult(r)
         if predicate(r.value):
             return FlextServiceResult(r)
-        return FlextServiceResult(FlextResult[TResult].fail(error_message))
+        return FlextServiceResult(r[TResult].fail(error_message))
 
     def tap(self, func: Callable[[TResult], None]) -> "FlextService[TResult]":
         """Execute side effect without changing value."""
@@ -5368,7 +5364,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
         return instance.value
 
     @classmethod
-    def try_run(cls, **kwargs: Any) -> FlextResult[TResult]:
+    def try_run(cls, **kwargs: Any) -> r[TResult]:
         """Execute and return Result."""
         instance = cls(**kwargs)
         return instance.result
@@ -5377,11 +5373,11 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 class FlextServiceResult[T]:
     """Wrapper for monadic operation results."""
 
-    def __init__(self, result: FlextResult[T]):
+    def __init__(self, result: r[T]):
         self._result = result
 
     @property
-    def result(self) -> FlextResult[T]:
+    def result(self) -> r[T]:
         return self._result
 
     @property
@@ -5398,7 +5394,7 @@ class FlextServiceResult[T]:
     def map(self, func: Callable[[T], Any]) -> "FlextServiceResult":
         return FlextServiceResult(self._result.map(func))
 
-    def and_then(self, func: Callable[[T], FlextResult]) -> "FlextServiceResult":
+    def and_then(self, func: Callable[[T], r]) -> "FlextServiceResult":
         return FlextServiceResult(self._result.and_then(func))
 
     @property
@@ -5427,13 +5423,13 @@ class FlextLdifWriter(Flext[Any]):
         target_server_type: str,
         output_target: str,
         output_path: Path | None = None,
-    ) -> FlextResult[WriteResponse]:
+    ) -> r[WriteResponse]:
         # Implementation
         ...
 
-    def execute(self) -> FlextResult[Any]:
+    def execute(self) -> r[Any]:
         # Stub
-        return FlextResult.ok({})
+        return r.ok({})
 ```
 
 **After:**
@@ -5456,7 +5452,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
             raise ValueError("output_path required for file target")
         return self
 
-    def execute(self) -> FlextResult[WriteResponse]:
+    def execute(self) -> r[WriteResponse]:
         """Execute write operation."""
         # Config singleton via property
         encoding = self.project_config.ldif_encoding
@@ -5472,7 +5468,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
             case "string":
                 return self._write_to_string(denormalized, encoding)
             case _:
-                return FlextResult.fail(f"Unknown target: {self.output_target}")
+                return r.fail(f"Unknown target: {self.output_target}")
 ```
 
 #### Exemplo de Service de Múltiplas Operações
@@ -5485,17 +5481,17 @@ class FlextApi(FlextService[dict]):
         super().__init__()
         self._config = config
 
-    def get(self, url: str, **kwargs) -> FlextResult[dict]:
+    def get(self, url: str, **kwargs) -> r[dict]:
         # Implementation
         ...
 
-    def post(self, url: str, data: Any, **kwargs) -> FlextResult[dict]:
+    def post(self, url: str, data: Any, **kwargs) -> r[dict]:
         # Implementation
         ...
 
-    def execute(self) -> FlextResult[dict]:
+    def execute(self) -> r[dict]:
         # Stub
-        return FlextResult.ok(self._config.model_dump())
+        return r.ok(self._config.model_dump())
 ```
 
 **After:**
@@ -5516,7 +5512,7 @@ class FlextApi(FlextService[dict[str, Any]]):
     body: Any | None = None
     auth: tuple[str, str] | None = None
 
-    def execute(self) -> FlextResult[dict[str, Any]]:
+    def execute(self) -> r[dict[str, Any]]:
         """Execute HTTP request based on operation."""
         # Config singleton via property
         timeout = self.project_config.api_timeout
@@ -5533,10 +5529,10 @@ class FlextApi(FlextService[dict[str, Any]]):
             case "delete":
                 return self._do_delete(timeout, verify_ssl)
             case _:
-                return FlextResult.fail(f"Unknown operation: {self.operation}")
+                return r.fail(f"Unknown operation: {self.operation}")
 
     # Convenience methods (optional)
-    def get(self, url: str, **kwargs: Any) -> FlextResult[dict[str, Any]]:
+    def get(self, url: str, **kwargs: Any) -> r[dict[str, Any]]:
         """Convenience: HTTP GET."""
         self.operation = "get"
         self.url = url
@@ -5559,7 +5555,7 @@ from pathlib import Path
 from typing import Annotated
 from pydantic import Field, field_validator
 from flext_core import FlextService
-from flext_core import FlextResult
+from flext_core import r
 from flext_ldif import Entry
 
 
@@ -5606,7 +5602,7 @@ class FlextLdifParser(Flext[list[Entry]]):
     # ═══════════════════════════════════════════════════════════════
     # EXECUTION (FlextService contract)
     # ═══════════════════════════════════════════════════════════════
-    def execute(self) -> FlextResult[list[Entry]]:
+    def execute(self) -> r[list[Entry]]:
         """Execute parsing - called automatically by .value property."""
         try:
             # ✅ Infrastructure automatic from x
@@ -5623,16 +5619,14 @@ class FlextLdifParser(Flext[list[Entry]]):
 
             # Validate
             if len(entries) > max_entries:
-                return FlextResult.fail(
-                    f"Too many entries: {len(entries)} > {max_entries}"
-                )
+                return r.fail(f"Too many entries: {len(entries)} > {max_entries}")
 
             self.logger.info(f"Successfully parsed {len(entries)} entries")
-            return FlextResult.ok(entries)
+            return r.ok(entries)
 
         except Exception as e:
             self.logger.error(f"Parse failed: {e}")
-            return FlextResult.fail(str(e))
+            return r.fail(str(e))
 
     # ═══════════════════════════════════════════════════════════════
     # PRIVATE HELPERS
@@ -5799,10 +5793,10 @@ else:
 **Handle errors gracefully:**
 
 ```python
-def create_fallback_entries(error: str) -> FlextResult[list[Entry]]:
+def create_fallback_entries(error: str) -> r[list[Entry]]:
     """Provide fallback on parse error."""
     logger.warning(f"Parse failed: {error}, using defaults")
-    return FlextResult.ok([create_default_entry()])
+    return r.ok([create_default_entry()])
 
 
 result = (
@@ -5854,7 +5848,7 @@ entries = FlextLdifParser.run(source=Path("data.ldif"), source_server_type="oud"
 # Or with Result for error handling
 result = FlextLdifParser.try_run(source=Path("data.ldif"))
 
-# ← Returns FlextResult[list[Entry]]
+# ← Returns r[list[Entry]]
 
 if result.is_success:
     entries = result.value
@@ -5925,7 +5919,7 @@ Handlers orquestram, services executam lógica de domínio:
 class CreateUserCommandHandler(h[CreateUserCommand, User]):
     """Handler que orquestra, service que executa."""
 
-    def handle(self, command: CreateUserCommand) -> FlextResult[User]:
+    def handle(self, command: CreateUserCommand) -> r[User]:
         # Handler orquestra, service executa lógica de domínio
         validation_service = ValidateEmailService(email=command.email)
         if validation_service.result.is_failure:
@@ -5973,7 +5967,7 @@ class OrderProcessingService(FlextService[Order]):
     order_id: str
     items: list[OrderItem]
 
-    def execute(self) -> FlextResult[Order]:
+    def execute(self) -> r[Order]:
         # Delegar para dispatcher para reliability patterns
         dispatcher = FlextDispatcher(container=self.container)
 
@@ -6013,7 +6007,7 @@ class OrderProcessingService(FlextService[Order]):
 Decorator: `@inject` - Linhas: 301-361 - Função: Dependency injection via FlextContainer - Uso: Service/Handler
 Decorator: `@log_operation` - Linhas: 363-535 - Função: Structured logging com context - Uso: Service/Handler
 Decorator: `@track_performance` - Linhas: 537-644 - Função: Performance metrics automático - Uso: Service/Handler
-Decorator: `@railway` - Linhas: 646-721 - Função: Wrap função em FlextResult - Uso: Any function
+Decorator: `@railway` - Linhas: 646-721 - Função: Wrap função em r - Uso: Any function
 Decorator: `@retry` - Linhas: 723-820 - Função: Retry com exponential backoff - Uso: Service/Handler
 Decorator: `@timeout` - Linhas: 1068-1172 - Função: Timeout enforcement - Uso: Service/Handler
 Decorator: `@combined` - Linhas: 1174-1253 - Função: Reliability combinado - Uso: Handler/Dispatcher
@@ -6099,11 +6093,11 @@ Método: `Summary` (nested) - Linhas: 181-315 - Função: Tracking de registros
 class MyService(FlextService[Result]):
     """Service usa x que provê context, logger, etc."""
 
-    def execute(self) -> FlextResult[Result]:
+    def execute(self) -> r[Result]:
         # ✅ Via x (IMPLEMENTADO)
         self.logger.info("Executing service")
         with self.track("operation"):
-            return FlextResult.ok(self._process())
+            return r.ok(self._process())
 ```
 
 **Uso com FlextDecorators:**
@@ -6114,8 +6108,8 @@ class MyService(FlextService[Result]):
 
     @FlextDecorators.track_performance("my_operation")
     @FlextDecorators.retry(max_attempts=3)
-    def execute(self) -> FlextResult[Result]:
-        return FlextResult.ok(self._process())
+    def execute(self) -> r[Result]:
+        return r.ok(self._process())
 ```
 
 ### 🔴 Code Duplication Identificada (25 Nov 2025)
@@ -6235,9 +6229,9 @@ Componente: Testes - Mudanças: Nenhuma mudança necessária - Esforço: **Zero*
 ```python
 # Modificar métodos existentes:
 
-# 1. .and_then() - detectar FlextService vs FlextResult
+# 1. .and_then() - detectar FlextService vs r
 
-# 2. .or_else() - detectar FlextService vs FlextResult
+# 2. .or_else() - detectar FlextService vs r
 
 # 3. .map() - manter como está
 ```
@@ -6285,14 +6279,14 @@ class FlextLdifWriter(Flext[WriteResponse]):
         target_server_type: str = "rfc4512",
         output_target: Literal["string", "file"] = "string",
         output_path: Path | None = None,
-    ) -> FlextResult[WriteResponse]:
+    ) -> r[WriteResponse]:
         # Implementation
         encoding = self._config.ldif_encoding
         return self._do_write(entries, encoding)
 
-    def execute(self) -> FlextResult[WriteResponse]:
+    def execute(self) -> r[WriteResponse]:
         # Stub
-        return FlextResult.ok(WriteResponse())
+        return r.ok(WriteResponse())
 
 
 # Uso:
@@ -6337,7 +6331,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
             raise ValueError("output_path required when target is 'file'")
         return self
 
-    def execute(self) -> FlextResult[WriteResponse]:
+    def execute(self) -> r[WriteResponse]:
         """Execute write - config auto-resolved!"""
         # ✅ Config singleton (não precisa passar no __init__)
         encoding = self.project_config.ldif_encoding
@@ -6438,7 +6432,7 @@ class FlextLdifParser(Flext[list[Entry]]):
     encoding: str = "utf-8"
     strict_mode: bool = True
 
-    def execute(self) -> FlextResult[list[Entry]]:
+    def execute(self) -> r[list[Entry]]:
         # Implementation
         ...
 
@@ -6586,7 +6580,7 @@ def process_ldif(input_file: Path, output_file: Path) -> WriteResponse:
         )
         # Add error recovery
         .or_else(
-            lambda error: FlextResult.ok(
+            lambda error: r.ok(
                 WriteResponse(
                     content="",
                     statistics=WriteStatistics(entries_written=0, errors=[error]),
@@ -6609,7 +6603,7 @@ print(f"Processed {response.statistics.entries_written} users")
 from typing import Annotated, Any, Literal
 from pydantic import Field, model_validator
 from flext_core import FlextService
-from flext_core import FlextResult
+from flext_core import r
 import httpx
 
 
@@ -6672,7 +6666,7 @@ class FlextApi(FlextService[dict[str, Any]]):
     # ═══════════════════════════════════════════════════════════════
     # EXECUTION - Dispatch por operation
     # ═══════════════════════════════════════════════════════════════
-    def execute(self) -> FlextResult[dict[str, Any]]:
+    def execute(self) -> r[dict[str, Any]]:
         """Execute HTTP request based on operation."""
         # Config singleton
         verify_ssl = self.project_config.api_verify_ssl
@@ -6693,12 +6687,12 @@ class FlextApi(FlextService[dict[str, Any]]):
             case "patch":
                 return self._http_patch(timeout, verify_ssl)
             case _:
-                return FlextResult.fail(f"Unknown operation: {self.operation}")
+                return r.fail(f"Unknown operation: {self.operation}")
 
     # ═══════════════════════════════════════════════════════════════
     # PRIVATE IMPLEMENTATIONS
     # ═══════════════════════════════════════════════════════════════
-    def _http_get(self, timeout: int, verify: bool) -> FlextResult[dict[str, Any]]:
+    def _http_get(self, timeout: int, verify: bool) -> r[dict[str, Any]]:
         """Execute GET request."""
         try:
             self.logger.info(f"GET {self.url}")
@@ -6710,11 +6704,11 @@ class FlextApi(FlextService[dict[str, Any]]):
                 verify=verify,
             )
             response.raise_for_status()
-            return FlextResult.ok(response.json())
+            return r.ok(response.json())
         except Exception as e:
-            return FlextResult.fail(f"GET failed: {e}")
+            return r.fail(f"GET failed: {e}")
 
-    def _http_post(self, timeout: int, verify: bool) -> FlextResult[dict[str, Any]]:
+    def _http_post(self, timeout: int, verify: bool) -> r[dict[str, Any]]:
         """Execute POST request."""
         try:
             self.logger.info(f"POST {self.url}")
@@ -6727,9 +6721,9 @@ class FlextApi(FlextService[dict[str, Any]]):
                 verify=verify,
             )
             response.raise_for_status()
-            return FlextResult.ok(response.json())
+            return r.ok(response.json())
         except Exception as e:
-            return FlextResult.fail(f"POST failed: {e}")
+            return r.fail(f"POST failed: {e}")
 
     # ... outras implementações
 
@@ -6841,12 +6835,12 @@ def complex_migration(
 ) -> m.Infra.Workspace.MigrationResult:
     """Complex LDIF migration with error recovery."""
 
-    def fallback_on_parse(error: str) -> FlextResult[list[Entry]]:
+    def fallback_on_parse(error: str) -> r[list[Entry]]:
         """Fallback: try lenient parsing."""
         logger.warning(f"Strict parse failed: {error}, trying lenient mode")
         return FlextLdifParser.try_run(source=source_file, parse_mode="lenient")
 
-    def fallback_on_write(error: str) -> FlextResult[WriteResponse]:
+    def fallback_on_write(error: str) -> r[WriteResponse]:
         """Fallback: write to alternative location."""
         logger.error(f"Primary write failed: {error}, using backup location")
         backup_path = target_file.with_suffix(".backup.ldif")
@@ -6942,13 +6936,13 @@ class FlextLdifParser(Flext[Any]):
 
     def parse(
         self, source: str | Path, source_server_type: str = "rfc4512"
-    ) -> FlextResult[list[Entry]]:
+    ) -> r[list[Entry]]:
         # Implementation
         encoding = self._config.ldif_encoding
         return self._do_parse(source, encoding)
 
-    def execute(self) -> FlextResult[Any]:
-        return FlextResult.ok({})  # stub!
+    def execute(self) -> r[Any]:
+        return r.ok({})  # stub!
 
 
 # 2. Factory functions (duplicação!)
@@ -7016,7 +7010,7 @@ class FlextLdifParser(Flext[list[Entry]]):
             raise ValueError(f"File not found: {v}")
         return v
 
-    def execute(self) -> FlextResult[list[Entry]]:
+    def execute(self) -> r[list[Entry]]:
         """Real implementation here!"""
         # Config singleton (auto-resolved!)
         max_entries = self.project_config.max_ldif_entries
@@ -7100,7 +7094,7 @@ Métrica: **Documentação duplicada** - Antes: Service + factories - Depois: Ap
 ~~- ✅ **Unified pattern**: Um padrão para single/multiple operations~~
 ~~- ✅ **Pydantic-native**: Services são apenas Pydantic models~~
 ~~- ✅ **Config singleton**: Não passar config em todo lugar~~
-~~- ✅ **Railway-oriented**: FlextResult para error handling natural~~
+~~- ✅ **Railway-oriented**: r para error handling natural~~
 ~~- ✅ **Testable**: Fácil de mockar e testar~~
 
 ### ~~For Maintainability~~
@@ -7330,7 +7324,7 @@ Semana 2+:
 
 **Mantivemos:**
 
-- ✅ `FlextResult[T]` (Railway pattern)
+- ✅ `r[T]` (Railway pattern)
 - ✅ `FlextSettings` (Singleton)
 - ✅ `FlextContainer` (DI básico)
 - ✅ `x` (Infrastructure properties)
@@ -7387,7 +7381,7 @@ A solução está clara, o caminho está mapeado, o esforço é baixo.
 - Styled console output (Rich integration)
 - Table formatting (Rich + Tabulate)
 - File I/O (JSON, YAML, CSV)
-- Error handling (FlextResult pattern)
+- Error handling (r pattern)
 - Configuration management
 - Interactive prompts
 
@@ -7424,20 +7418,20 @@ class FlextCli:
 ✅ **Thread-safe** com lock
 ✅ **Zero Ceremony** - `FlextCli.get_instance()` é simples
 
-**2. FlextResult Railway Pattern**
+**2. r Railway Pattern**
 
 ```python
 
 # Exemplo real de flext-cli
-def save_auth_token(self, token: str) -> FlextResult[bool]:
+def save_auth_token(self, token: str) -> r[bool]:
     if not token.strip():
-        return FlextResult[bool].fail(FlextCliConstants.ErrorMessages.TOKEN_EMPTY)
+        return r[bool].fail(FlextCliConstants.ErrorMessages.TOKEN_EMPTY)
 
     write_result = self.file_tools.write_json_file(str(token_path), json_data)
     if write_result.is_failure:
-        return FlextResult[bool].fail(...)
+        return r[bool].fail(...)
 
-    return FlextResult[bool].| ok(value=True)
+    return r[bool].| ok(value=True)
 ```
 
 ✅ **Railway Pattern** usado consistentemente
@@ -7479,8 +7473,8 @@ class FlextCliCore(FlextService[FlextCliTypes.Data.CliDataDict]):
         self._commands: dict[str, FlextCliModels.CliCommand] = {}
 
     @override
-    def execute(self) -> FlextResult[FlextCliTypes.Data.CliDataDict]:
-        return FlextResult[FlextCliTypes.Data.CliDataDict].ok({
+    def execute(self) -> r[FlextCliTypes.Data.CliDataDict]:
+        return r[FlextCliTypes.Data.CliDataDict].ok({
             "status": "operational",
             "commands": len(self._commands),
         })
@@ -7519,10 +7513,10 @@ class FlextCli:
         # ...
 
     # ❌ Convenience methods que duplicam domain libraries
-    def print(self, message: str, style: str | None = None) -> FlextResult[bool]:
+    def print(self, message: str, style: str | None = None) -> r[bool]:
         return self.formatters.print(message, style)
 
-    def create_table(self, data: object | None = None, ...) -> FlextResult[str]:
+    def create_table(self, data: object | None = None, ...) -> r[str]:
         return self.output.format_data(...)
 ```
 
@@ -7563,15 +7557,15 @@ FlextCliPrompts  # prompts.py - Interactive prompts
 ```python
 class FlextCliCore(FlextService[CliDataDict]):
     @override
-    def execute(self) -> FlextResult[CliDataDict]:
+    def execute(self) -> r[CliDataDict]:
         # ❌ Apenas retorna status - não faz nada útil!
-        return FlextResult[CliDataDict].ok({
+        return r[CliDataDict].ok({
             "status": "operational",
             "service": "flext-cli",
         })
 
     # ✅ Lógica real está em outros métodos
-    def execute_command(self, name: str, context: ...) -> FlextResult[CommandResult]:
+    def execute_command(self, name: str, context: ...) -> r[CommandResult]:
         # Real command execution logic
         pass
 ```
@@ -7595,7 +7589,7 @@ class FlextCli:
         self._session_permissions: dict[str, set[str]] = {}
         self._users: dict[str, dict[str, object]] = {}
 
-    def authenticate(self, credentials: ...) -> FlextResult[str]:
+    def authenticate(self, credentials: ...) -> r[str]:
         # Auth logic directly in FlextCli
         pass
 ```
@@ -7614,7 +7608,7 @@ class FlextCli:
 
 ```python
 # flext-cli/src/flext_cli/api.py (REFATORADO)
-from flext_core import FlextService, FlextResult
+from flext_core import FlextService, r
 from flext_cli import FlextCliSettings
 from pathlib import Path
 from typing import Literal
@@ -7638,7 +7632,7 @@ class FlextCliService(FlextService[dict[str, object]]):
     prompt_text: str | None = None
 
     @override
-    def execute(self) -> FlextResult[dict[str, object]]:
+    def execute(self) -> r[dict[str, object]]:
         """Execute CLI operation based on operation field."""
         match self.operation:
             case "print":
@@ -7652,20 +7646,20 @@ class FlextCliService(FlextService[dict[str, object]]):
             case "prompt":
                 return self._execute_prompt()
 
-    def _execute_print(self) -> FlextResult[dict[str, object]]:
+    def _execute_print(self) -> r[dict[str, object]]:
         """Print with Rich styling."""
         from rich.console import Console
 
         console = Console()
         console.print(self.message, style=self.style)
-        return FlextResult.ok({"printed": self.message})
+        return r.ok({"printed": self.message})
 
-    def _execute_table(self) -> FlextResult[dict[str, object]]:
+    def _execute_table(self) -> r[dict[str, object]]:
         """Create table from data."""
         from rich.table import Table
 
         # Table creation logic
-        return FlextResult.ok({"table": "rendered"})
+        return r.ok({"table": "rendered"})
 
     # ... other operation methods
 
@@ -7707,12 +7701,12 @@ class CliOutputService(FlextService[str]):
     data: dict[str, object]
     format: Literal["json", "yaml", "table", "csv"] = "json"
 
-    def execute(self) -> FlextResult[str]:
+    def execute(self) -> r[str]:
         match self.format:
             case "json":
-                return FlextResult.ok(json.dumps(self.data))
+                return r.ok(json.dumps(self.data))
             case "yaml":
-                return FlextResult.ok(yaml.dump(self.data))
+                return r.ok(yaml.dump(self.data))
             case "table":
                 return self._format_table()
             case "csv":
@@ -7727,7 +7721,7 @@ class CliFileService(FlextService[dict[str, object]]):
     filepath: Path
     data: dict[str, object] | None = None
 
-    def execute(self) -> FlextResult[dict[str, object]]:
+    def execute(self) -> r[dict[str, object]]:
         match self.operation:
             case "read":
                 return self._read_json()
@@ -7744,7 +7738,7 @@ class CliAuthService(FlextService[str]):
     password: str | None = None
     token: str | None = None
 
-    def execute(self) -> FlextResult[str]:
+    def execute(self) -> r[str]:
         match self.operation:
             case "login":
                 return self._authenticate()
@@ -7823,7 +7817,7 @@ class FlextCliService(FlextService[dict[str, object]]):
     operation: Literal["print", "table", "file_read", "file_write"] = "print"
     # ... fields
 
-    def execute(self) -> FlextResult[dict[str, object]]:
+    def execute(self) -> r[dict[str, object]]:
         match self.operation:
             # ... dispatch
 ```
@@ -7861,7 +7855,7 @@ class CliOutputService(FlextService[str]):
     data: dict[str, object]
     format: Literal["json", "yaml", "table"] = "json"
 
-    def execute(self) -> FlextResult[str]:
+    def execute(self) -> r[str]:
         # Move formatting logic here
 ```
 
@@ -7874,7 +7868,7 @@ class CliFileService(FlextService[dict[str, object]]):
     operation: Literal["read", "write"] = "read"
     filepath: Path
 
-    def execute(self) -> FlextResult[dict[str, object]]:
+    def execute(self) -> r[dict[str, object]]:
         # Move file I/O logic here
 ```
 
@@ -7887,7 +7881,7 @@ class CliAuthService(FlextService[str]):
     operation: Literal["login", "logout", "validate"] = "login"
     username: str | None = None
 
-    def execute(self) -> FlextResult[str]:
+    def execute(self) -> r[str]:
         # Move auth logic here
 ```
 
@@ -8005,7 +7999,7 @@ Métrica: **Type safety** - Antes: Parcial - Depois: 100% Pydantic - Melhoria: *
 #### **O Que Fazer AGORA**
 
 1. ✅ **Manter** - FlextCliSettings extends FlextSettings (já correto)
-2. ✅ **Manter** - FlextResult railway pattern (já correto)
+2. ✅ **Manter** - r railway pattern (já correto)
 3. ✅ **Manter** - Singleton pattern (mas simplificar acesso)
 4. ❌ **Refatorar** - FlextCli → FlextCliService (seguir padrão)
 5. ❌ **Simplificar** - Eliminar domain libraries intermediárias
@@ -8054,7 +8048,7 @@ Métrica: **Type safety** - Antes: Parcial - Depois: 100% Pydantic - Melhoria: *
 **flext-core** é o **coração arquitetural** do ecossistema FLEXT, fornecendo:
 
 - Base classes para domain services (FlextService[T])
-- Railway pattern (FlextResult[T])
+- Railway pattern (r[T])
 - Dependency injection (FlextContainer)
 - Configuration management (FlextSettings)
 - Structured logging (FlextLogger)
@@ -8065,32 +8059,32 @@ Métrica: **Type safety** - Antes: Parcial - Depois: 100% Pydantic - Melhoria: *
 **Arquitetura Atual:**
 
 - **22 módulos** em `flext-core/src/flext_core/`
-- **7 classes principais**: FlextService, FlextSettings, FlextContainer, FlextModels, x, FlextResult, FlextLogger
+- **7 classes principais**: FlextService, FlextSettings, FlextContainer, FlextModels, x, r, FlextLogger
 - **Usado por 32+ projetos** do ecossistema FLEXT
 
 ### 🔍 Análise do Estado Atual
 
 #### ✅ O Que Está Funcionando EXCEPCIONALMENTE Bem
 
-**1. FlextResult[T] - Railway Pattern Perfeito**
+**1. r[T] - Railway Pattern Perfeito**
 
 ```python
 # flext-core/src/flext_core/result.py
-class FlextResult[T_co]:
+class r[T_co]:
     """Railway-oriented programming pattern."""
 
     @staticmethod
-    def ok(value: T_co) -> FlextResult[T_co]:
-        return FlextResult(value=value, error=None, _is_success=True)
+    def ok(value: T_co) -> r[T_co]:
+        return r(value=value, error=None, _is_success=True)
 
     @staticmethod
-    def fail(error: str) -> FlextResult[T_co]:
-        return FlextResult(value=None, error=error, _is_success=False)
+    def fail(error: str) -> r[T_co]:
+        return r(value=None, error=error, _is_success=False)
 
     # Monadic operations
-    def map[U](self, func: Callable[[T_co], U]) -> FlextResult[U]: ...
-    def flat_map[U](self, func: Callable[[T_co], FlextResult[U]]) -> FlextResult[U]: ...
-    def and_then[U](self, func: Callable[[T_co], FlextResult[U]]) -> FlextResult[U]: ...
+    def map[U](self, func: Callable[[T_co], U]) -> r[U]: ...
+    def flat_map[U](self, func: Callable[[T_co], r[U]]) -> r[U]: ...
+    def and_then[U](self, func: Callable[[T_co], r[U]]) -> r[U]: ...
 ```
 
 **Por Que É Excelente:**
@@ -8145,7 +8139,7 @@ class FlextService[TDomainResult](
     # Infrastructure via x (container, logger, context, config)
 
     @abstractmethod
-    def execute(self) -> FlextResult[TDomainResult]:
+    def execute(self) -> r[TDomainResult]:
         """Execute domain operation."""
 
     @computed_field
@@ -8216,7 +8210,7 @@ class EmailService(FlextService[EmailResult]):
     subject: str
     body: str
 
-    def execute(self) -> FlextResult[EmailResult]:
+    def execute(self) -> r[EmailResult]:
         # ✅ Infraestrutura automática!
         if self.config.debug:
             self.logger.debug(f"Sending email to {self.recipient}")
@@ -8236,7 +8230,7 @@ class EmailService(FlextService[EmailResult]):
             },
         )
 
-        return FlextResult.ok(result)
+        return r.ok(result)
 
 
 # ✅ Uso direto - zero setup!
@@ -8263,17 +8257,17 @@ result = EmailService(
 class FlextService[TDomainResult]:
     # Abstract method - OK
     @abstractmethod
-    def execute(self) -> FlextResult[TDomainResult]: ...
+    def execute(self) -> r[TDomainResult]: ...
 
     # ❌ Métodos adicionais que confundem
-    def execute_with_context_cleanup(self) -> FlextResult[TDomainResult]: ...
+    def execute_with_context_cleanup(self) -> r[TDomainResult]: ...
     def execute_operation(
         self, request: OperationExecutionRequest
-    ) -> FlextResult[TDomainResult]: ...
+    ) -> r[TDomainResult]: ...
 
     # ❌ Validation methods raramente usados
-    def validate_business_rules(self) -> FlextResult[bool]: ...
-    def validate_config(self) -> FlextResult[bool]: ...
+    def validate_business_rules(self) -> r[bool]: ...
+    def validate_config(self) -> r[bool]: ...
     def is_valid(self) -> bool: ...
 
     # ❌ Service info raramente usado
@@ -8384,15 +8378,15 @@ class FlextCliCore(FlextService[CliDataDict]):
         self._config = config or {}  # ❌ Private attr, não Pydantic field
         self._commands: dict[str, CliCommand] = {}  # ❌ Private attr
 
-    def execute(self) -> FlextResult[CliDataDict]:
+    def execute(self) -> r[CliDataDict]:
         # ❌ Apenas retorna status - não usa Pydantic fields!
-        return FlextResult[CliDataDict].ok({
+        return r[CliDataDict].ok({
             "status": "operational",
             "commands": len(self._commands),
         })
 
     # ✅ Lógica real em métodos públicos
-    def execute_command(self, name: str, context: dict) -> FlextResult[CommandResult]:
+    def execute_command(self, name: str, context: dict) -> r[CommandResult]:
         # Real logic here
         pass
 ```
@@ -8420,7 +8414,7 @@ class FlextService[TDomainResult](
 
     # ============ ABSTRACT METHOD (REQUIRED) ============
     @abstractmethod
-    def execute(self) -> FlextResult[TDomainResult]:
+    def execute(self) -> r[TDomainResult]:
         """Execute domain operation - ONLY method services must implement."""
 
     # ============ PROPERTIES (AUTO-RESOLVED) ============
@@ -8455,9 +8449,9 @@ class FlextService[TDomainResult](
 ```python
 # ANTES - Multiple methods
 class MyService(FlextService[Result]):
-    def execute(self) -> FlextResult[Result]: ...
-    def execute_with_context_cleanup(self) -> FlextResult[Result]: ...  # ❌ Boilerplate
-    def validate_business_rules(self) -> FlextResult[bool]: ...  # ❌ Raramente usado
+    def execute(self) -> r[Result]: ...
+    def execute_with_context_cleanup(self) -> r[Result]: ...  # ❌ Boilerplate
+    def validate_business_rules(self) -> r[bool]: ...  # ❌ Raramente usado
 
 
 # DEPOIS - Only execute + Pydantic validators
@@ -8472,9 +8466,9 @@ class MyService(FlextService[Result]):
             raise ValueError("data cannot be empty")
         return self
 
-    def execute(self) -> FlextResult[Result]:
+    def execute(self) -> r[Result]:
         """Only method to implement."""
-        return FlextResult.ok(Result(data=self.data))
+        return r.ok(Result(data=self.data))
 ```
 
 #### **Solução 2: Quebrar FlextModels em Módulos**
@@ -8568,11 +8562,11 @@ class FlextService[TDomainResult, TConfig: FlextSettings = FlextSettings]:
 
 # Usage - Type-safe!
 class FlextCliCore(FlextService[CliDataDict, FlextCliSettings]):
-    def execute(self) -> FlextResult[CliDataDict]:
+    def execute(self) -> r[CliDataDict]:
         # ✅ Type-safe! IDE autocomplete works
         debug = self.project_config.debug  # FlextCliSettings.debug
         profile = self.project_config.profile  # FlextCliSettings.profile
-        return FlextResult.ok({})
+        return r.ok({})
 ```
 
 **Benefícios:**
@@ -8593,8 +8587,8 @@ class FlextCliCore(FlextService[CliDataDict]):
         self._config = config or {}
         self._commands: dict[str, CliCommand] = {}
 
-    def execute(self) -> FlextResult[CliDataDict]:
-        return FlextResult.ok({"status": "operational"})  # ❌ Inútil
+    def execute(self) -> r[CliDataDict]:
+        return r.ok({"status": "operational"})  # ❌ Inútil
 
 
 # DEPOIS - Pydantic fields + execute() com lógica
@@ -8609,7 +8603,7 @@ class FlextCliCore(FlextService[CliDataDict]):
     # Commands stored in class-level registry
     _commands: ClassVar[dict[str, CliCommand]] = {}
 
-    def execute(self) -> FlextResult[CliDataDict]:
+    def execute(self) -> r[CliDataDict]:
         """Execute based on operation field."""
         match self.operation:
             case "execute_command":
@@ -8619,13 +8613,13 @@ class FlextCliCore(FlextService[CliDataDict]):
             case "list_commands":
                 return self._list_commands()
 
-    def _execute_command(self) -> FlextResult[CliDataDict]:
+    def _execute_command(self) -> r[CliDataDict]:
         if self.command_name not in self._commands:
-            return FlextResult.fail(f"Command not found: {self.command_name}")
+            return r.fail(f"Command not found: {self.command_name}")
 
         command = self._commands[self.command_name]
         # Real execution logic
-        return FlextResult.ok({"result": "executed"})
+        return r.ok({"result": "executed"})
 ```
 
 **Benefícios:**
@@ -8643,11 +8637,11 @@ class FlextCliCore(FlextService[CliDataDict]):
 
 ```python
 @deprecated("Use execute() directly or @with_context_cleanup decorator")
-def execute_with_context_cleanup(self) -> FlextResult[TDomainResult]: ...
+def execute_with_context_cleanup(self) -> r[TDomainResult]: ...
 
 
 @deprecated("Use Pydantic @model_validator instead")
-def validate_business_rules(self) -> FlextResult[bool]: ...
+def validate_business_rules(self) -> r[bool]: ...
 ```
 
 **1.2: Criar decorators para funcionalidade avançada**
@@ -8670,8 +8664,8 @@ def with_context_cleanup(func: Callable) -> Callable:
 # Usage
 class MyService(FlextService[Result]):
     @with_context_cleanup
-    def execute(self) -> FlextResult[Result]:
-        return FlextResult.ok(Result())
+    def execute(self) -> r[Result]:
+        return r.ok(Result())
 ```
 
 **1.3: Documentar migration guide**
@@ -8759,7 +8753,7 @@ Métrica: **Backward Compat** - Antes: N/A - Depois: 100% - Melhoria: **Zero bre
 
 #### **O Que Está PERFEITO (Não Tocar!)**
 
-1. ✅ **FlextResult[T]** - Railway pattern impecável
+1. ✅ **r[T]** - Railway pattern impecável
 2. ✅ **FlextSettings** - Singleton + Pydantic perfeito
 3. ✅ **FlextContainer** - DI singleton sólido
 4. ✅ **x** - Infrastructure access transparente
@@ -8775,7 +8769,7 @@ Métrica: **Backward Compat** - Antes: N/A - Depois: 100% - Melhoria: **Zero bre
 
 #### **O Que NÃO Fazer**
 
-- ❌ **Não quebrar** FlextResult, FlextSettings, FlextContainer (perfeitos como estão)
+- ❌ **Não quebrar** r, FlextSettings, FlextContainer (perfeitos como estão)
 - ❌ **Não remover** backward compatibility
 - ❌ **Não forçar** migration (gradual, opt-in)
 - ❌ **Não tocar** em FlextLogger, FlextContext (funcionam bem)
@@ -8859,7 +8853,7 @@ Este documento foi estruturado para **máxima coesão e clareza**:
 **Conceitos Fundamentais:**
 
 - [x] FlextService[T] explicado claramente
-- [x] FlextResult[T] railway pattern
+- [x] r[T] railway pattern
 - [x] Pydantic fields como domain data
 - [x] x infraestrutura automática
 - [x] Versões V1 vs V2 bem definidas
@@ -9038,8 +9032,8 @@ class AutoUserService(FlextService[User]):
     auto_execute = True  # ← Enable auto-execution
     user_id: str
 
-    def execute(self) -> FlextResult[User]:
-        return FlextResult.ok(User(id=self.user_id, name="Alice"))
+    def execute(self) -> r[User]:
+        return r.ok(User(id=self.user_id, name="Alice"))
 
 
 # ✅ V2 Auto - 4 chars (95% redução!)
@@ -9275,8 +9269,8 @@ class AutoUserService(FlextService[User]):
     auto_execute = True  # ← Enable auto-execution
     user_id: str
 
-    def execute(self) -> FlextResult[User]:
-        return FlextResult.ok(User(id=self.user_id, name="Alice"))
+    def execute(self) -> r[User]:
+        return r.ok(User(id=self.user_id, name="Alice"))
 
 
 # Just instantiate - returns User directly!
@@ -9295,8 +9289,8 @@ class UserService(FlextService[User]):
     # auto_execute defaults to False
     user_id: str
 
-    def execute(self) -> FlextResult[User]:
-        return FlextResult.ok(User(id=self.user_id, name="Bob"))
+    def execute(self) -> r[User]:
+        return r.ok(User(id=self.user_id, name="Bob"))
 
 
 # Access .result property
@@ -9310,7 +9304,7 @@ print(user.name)  # ✅ Type-safe!
 #### Pattern 3: V1 Explicit (Still Supported - 19 chars)
 
 ```python
-# V1: Explicit FlextResult handling
+# V1: Explicit r handling
 result = UserService(user_id="123").execute()
 if result.is_success:
     user = result.unwrap()
@@ -9383,7 +9377,7 @@ if result.is_success:
 
 ```python
 # V1: Railway é o padrão
-result = UserService(user_id="123").execute()  # FlextResult[User]
+result = UserService(user_id="123").execute()  # r[User]
 result.map(lambda u: u.name).and_then(lambda name: ...)
 ```
 
@@ -9395,7 +9389,7 @@ user = UserService(user_id="123").result  # User direto
 
 
 # Quando quiser railway pattern
-result = UserService(user_id="123").execute()  # FlextResult[User]
+result = UserService(user_id="123").execute()  # r[User]
 result.map(...).and_then(...)  # ✅ Railway funciona!
 
 
@@ -9419,8 +9413,8 @@ class SimpleService(FlextService[User]):
     auto_execute = True  # Retorna User direto
     user_id: str
 
-    def execute(self) -> FlextResult[User]:
-        return FlextResult.ok(User(id=self.user_id))
+    def execute(self) -> r[User]:
+        return r.ok(User(id=self.user_id))
 
 
 user = SimpleService(user_id="123")  # User direto
@@ -9431,11 +9425,11 @@ class RailwayService(FlextService[User]):
     auto_execute = False  # Default - retorna service instance
     user_id: str
 
-    def execute(self) -> FlextResult[User]:
-        return FlextResult.ok(User(id=self.user_id))
+    def execute(self) -> r[User]:
+        return r.ok(User(id=self.user_id))
 
 
-result = RailwayService(user_id="123").execute()  # FlextResult[User]
+result = RailwayService(user_id="123").execute()  # r[User]
 result.map(...).and_then(...)  # ✅ Railway funciona!
 ```
 
@@ -9444,7 +9438,7 @@ result.map(...).and_then(...)  # ✅ Railway funciona!
 ~~**SEMPRE disponível:**~~
 
 ```python
-service.execute()  # ← Retorna FlextResult[T] para railway
+service.execute()  # ← Retorna r[T] para railway
 ```
 
 ~~**V2 adiciona shortcuts:**~~
