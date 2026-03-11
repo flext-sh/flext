@@ -1,3 +1,4 @@
+from h11._abnf import method
 import _abc
 import collections.abc
 from collections.abc import Callable

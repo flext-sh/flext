@@ -1,3 +1,5 @@
+from sqlalchemy.schema import DropIndex
+from sqlalchemy.sql.ddl import DropIndex
 import datetime
 import re
 from typing import Any, ClassVar

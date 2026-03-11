@@ -1,3 +1,18 @@
+from sqlalchemy.orm.decl_base import _MapperConfig
+from typings.generated.sqlalchemy.orm.decl_api import _RegistryType
+from sqlalchemy.orm._typing import _RegistryType
+from sqlalchemy.orm import Mapper
+from typings.generated.sqlalchemy.orm.mapper import Mapper
+from sqlalchemy.orm.mapper import Mapper
+from sqlalchemy.orm.attributes import AttributeImpl
+from typings.generated.sqlalchemy.orm.collections import _AdaptedCollectionProtocol
+from sqlalchemy.orm.collections import _AdaptedCollectionProtocol
+from sqlalchemy.orm import InstanceState
+from sqlalchemy.orm.state import InstanceState
+from typings.generated.sqlalchemy.orm.state import InstanceState
+from sqlalchemy.orm.collections import _CollectionFactoryType
+from sqlalchemy.orm import QueryableAttribute
+from sqlalchemy.orm.attributes import QueryableAttribute
 import _abc
 import collections as collections
 import typing

@@ -1,3 +1,4 @@
+from flask.sansio.app import App
 import jinja2.environment
 import jinja2.loaders
 import t

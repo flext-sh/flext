@@ -1,3 +1,23 @@
+from sqlalchemy.engine import Dialect
+from sqlalchemy import Dialect
+from csv import Dialect
+from _csv import Dialect
+from typings.generated.sqlalchemy.engine.interfaces import Dialect
+from sqlalchemy.engine.interfaces import Dialect
+from sqlalchemy.engine.interfaces import _AnyExecuteParams
+from sqlalchemy.sql import ClauseElement
+from sqlalchemy import ClauseElement
+from typings.generated.sqlalchemy.sql.elements import ClauseElement
+from sqlalchemy.sql.expression import ClauseElement
+from sqlalchemy.sql.elements import ClauseElement
+from sqlalchemy.engine import TypeCompiler
+from sqlalchemy import TypeCompiler
+from sqlalchemy.engine.interfaces import TypeCompiler
+from sqlalchemy.sql.compiler import TypeCompiler
+from sqlalchemy.engine import Compiled
+from sqlalchemy import Compiled
+from sqlalchemy.engine.interfaces import Compiled
+from sqlalchemy.sql.compiler import Compiled
 from typing import Any, ClassVar
 
 __conditional_annotations__: set

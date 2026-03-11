@@ -16,6 +16,7 @@
 # Allow all FLEXT ecosystem project directories
 !flext-*/
 !flexcore/
+!gruponos-meltano-native/
 
 # ============================================================================
 # WHITELIST: Workspace Directories

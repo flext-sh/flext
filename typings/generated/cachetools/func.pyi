@@ -1,3 +1,4 @@
+from h11._abnf import method
 import _abc
 from typing import ClassVar
 

@@ -1,3 +1,4 @@
+from sqlalchemy.log import _IT
 from typing import Any, ClassVar, _EchoFlagType
 
 from _typeshed import Incomplete

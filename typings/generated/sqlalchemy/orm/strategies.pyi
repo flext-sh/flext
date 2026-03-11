@@ -1,3 +1,6 @@
+from sqlalchemy.orm import RelationshipProperty
+from typings.generated.sqlalchemy.orm.properties import RelationshipProperty
+from sqlalchemy.orm.relationships import RelationshipProperty
 import logging
 from typing import Any, ClassVar
 

@@ -1,3 +1,10 @@
+from sqlalchemy.sql import ClauseElement
+from sqlalchemy import ClauseElement
+from typings.generated.sqlalchemy.sql.elements import ClauseElement
+from sqlalchemy.sql.expression import ClauseElement
+from sqlalchemy.sql.elements import ClauseElement
+from sqlalchemy.sql.roles import SQLRole
+from typings.generated.sqlalchemy.sql.roles import SQLRole
 import _thread
 import weakref
 from typing import (

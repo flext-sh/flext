@@ -1,3 +1,10 @@
+from sqlalchemy.sql.visitors import _ExtT
+from numpy.testing._private.utils import _ET
+from lxml.objectify._misc import _ET
+from sqlalchemy.sql.visitors import _ET
+from typings.ldif3.numpy.testing._private import _ET
+from lxml._types import _ET
+from sqlalchemy.event.registry import _ET
 import _abc
 import enum
 import typing

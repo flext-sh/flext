@@ -1,3 +1,5 @@
+from sqlalchemy.engine.interfaces import DBAPICursor
+from typings.generated.sqlalchemy.engine.interfaces import DBAPICursor
 from typing import Any, ClassVar
 
 import sqlalchemy.connectors.asyncio

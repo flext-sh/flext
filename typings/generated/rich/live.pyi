@@ -1,3 +1,8 @@
+from dependency_injector.providers import Self
+from _typeshed import Self
+from sqlalchemy.util.typing import Self
+from beartype.typing import Self
+from typing import Self
 import _abc
 import threading
 from builtins import TracebackType

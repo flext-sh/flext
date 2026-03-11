@@ -1,3 +1,11 @@
+from typings.generated.sqlalchemy.sql.type_api import _ResultProcessorType
+from sqlalchemy.sql.type_api import _ResultProcessorType
+from sqlalchemy.engine import Dialect
+from sqlalchemy import Dialect
+from csv import Dialect
+from _csv import Dialect
+from typings.generated.sqlalchemy.engine.interfaces import Dialect
+from sqlalchemy.engine.interfaces import Dialect
 from typing import ClassVar
 
 import sqlalchemy.dialects.postgresql.array

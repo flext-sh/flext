@@ -1,3 +1,7 @@
+from pydantic.fields import PropertyT
+from pydantic._internal._repr import ReprArgs
+from pydantic.v1.typing import ReprArgs
+from pydantic._internal._namespace_utils import GlobalsNamespace
 import dataclasses
 import re
 import types

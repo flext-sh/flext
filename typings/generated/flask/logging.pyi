@@ -1,3 +1,4 @@
+from flask.sansio.app import App
 import logging
 
 def has_level_handler(logger: logging.Logger) -> bool: ...

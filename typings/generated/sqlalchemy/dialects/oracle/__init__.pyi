@@ -1,3 +1,8 @@
+from tests.test_imports import module
+from alembic.script.write_hooks import module
+from multipart import module
+from PIL.Image import module
+from werkzeug import module
 from typing import ClassVar
 
 from sqlalchemy.dialects.oracle.cx_oracle import dialect as dialect

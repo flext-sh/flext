@@ -1,3 +1,10 @@
+from sqlalchemy.engine.result import _TupleGetterType
+from sqlalchemy.engine.result import _RawRowType
+from starlette.datastructures import _KeyType
+from sqlalchemy.engine.result import _KeyType
+from sqlalchemy.engine.result import _ProcessorsType
+from typings.generated.sqlalchemy.engine.result import ResultMetaData
+from sqlalchemy.engine.result import ResultMetaData
 from collections.abc import Callable, Iterator, Mapping
 from typing import Any
 

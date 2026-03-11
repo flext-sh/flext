@@ -1,3 +1,8 @@
+from psycopg import IsolationLevel
+from sqlalchemy.engine.interfaces import IsolationLevel
+from psycopg._enums import IsolationLevel
+from sqlalchemy.engine.interfaces import DBAPIModule
+from typings.generated.sqlalchemy.engine.interfaces import DBAPIModule
 from typing import Any, ClassVar, ConnectArgsType
 
 import interfaces as interfaces

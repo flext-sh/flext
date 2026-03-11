@@ -1,3 +1,4 @@
+from sqlalchemy.sql._typing import _DMLTableArgument
 from sqlalchemy.sql.dml import Delete, Insert, Update
 
 TYPE_CHECKING: bool
