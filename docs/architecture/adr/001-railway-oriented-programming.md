@@ -132,16 +132,16 @@ class r(Generic[T]):
         """Transform successful value, pass through failures."""
         if self.is_success:
             try:
-                return r.ok(func(self.value))
+                return r[U].ok(func(self.value))
             except Exception as e:
-                return r.fail(e)
-        return r.fail(self.error)
+                return r[U].fail(e)
+        return r[U].fail(self.error)
 
     def flat_map(self, func: Callable[[T], "r[U]"]) -> "r[U]":
         """Chain operations that return r."""
         if self.is_success:
             return func(self.value)
-        return r.fail(self.error)
+        return r[U].fail(self.error)
 
     def and_then(self, func: Callable[[T], "r[U]"]) -> "r[U]":
         """Alias for flat_map for better readability."""
@@ -173,17 +173,17 @@ class r(Generic[T]):
 ```python
 def validate_email(email: str) -> r[str]:
     if "@" not in email:
-        return r.fail(ValueError("Invalid email format"))
-    return r.ok(email)
+        return r[str].fail(ValueError("Invalid email format"))
+    return r[str].ok(email)
 
 
 def save_user(user: User) -> r[User]:
     try:
         # Save to database
         saved_user = database.save(user)
-        return r.ok(saved_user)
+        return r[User].ok(saved_user)
     except DatabaseError as e:
-        return r.fail(e)
+        return r[User].fail(e)
 
 
 # Railway composition
