@@ -2,8 +2,8 @@ from click import Parameter
 from click import Context
 from typing import ClassVar
 
-import cabc
-import t
+from click import cabc
+from click import t
 from _typeshed import Incomplete
 
 class ClickException(Exception):

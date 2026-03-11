@@ -185,264 +185,264 @@ extraPaths = [
 typeCheckingMode = "strict"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "algar-oud-mig/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "algar-oud-mig/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flexcore/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flexcore/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-api/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-api/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-auth/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-auth/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-cli/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-cli/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-core/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-core/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-db-oracle/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-db-oracle/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-dbt-ldap/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-dbt-ldap/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-dbt-ldif/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-dbt-ldif/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-dbt-oracle/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-dbt-oracle/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-dbt-oracle-wms/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-dbt-oracle-wms/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-grpc/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-grpc/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-ldap/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-ldap/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-ldif/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-ldif/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-meltano/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-meltano/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-observability/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-observability/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-oracle-oic/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-oracle-oic/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-oracle-wms/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-oracle-wms/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-plugin/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-plugin/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-quality/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-quality/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-tap-ldap/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-tap-ldap/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-tap-ldif/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-tap-ldif/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-tap-oracle/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-tap-oracle/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-tap-oracle-oic/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-tap-oracle-oic/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-tap-oracle-wms/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-tap-oracle-wms/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-target-ldap/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-target-ldap/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-target-ldif/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-target-ldif/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-target-oracle/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-target-oracle/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-target-oracle-oic/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-target-oracle-oic/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-target-oracle-wms/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-target-oracle-wms/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
 root = "flext-web/src"
-reportPrivateUsage = "error"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
 root = "flext-web/tests"
-reportPrivateUsage = "none"
 
 [[tool.pyright.executionEnvironments]]
-root = "gruponos-meltano-native/src"
 reportPrivateUsage = "error"
+root = "gruponos-meltano-native/src"
 
 [[tool.pyright.executionEnvironments]]
-root = "gruponos-meltano-native/tests"
 reportPrivateUsage = "none"
+root = "gruponos-meltano-native/tests"
 # [MANAGED] ruff
 [tool.ruff]
 exclude = [
@@ -807,7 +807,6 @@ split-on-trailing-comma = true
 "**/typings.py" = [
   "RUF036",
 ]
-
 
 [tool.pytest.ini_options]
 addopts = [
