@@ -696,13 +696,25 @@ typings: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency r
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)echo "Regenerating typings/generated/ via stubgen..."
+	$(Q)echo "Regenerating typings/generated/ via stubgen (PEP 561 pre-check)..."
 	$(Q)gen_dir="$(CURDIR)/typings/generated"; \
 	tmp_dir=$$(mktemp -d); \
 	packages=$$(find "$$gen_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort); \
-	ok=0; fail=0; \
+	ok=0; fail=0; skip=0; \
 	if [ -n "$$packages" ]; then \
 		for pkg in $$packages; do \
+			pkg_mod=$$(echo "$$pkg" | tr '-' '_'); \
+			if $(POETRY_ENV) $(PY) -c "import importlib.util,pathlib;s=importlib.util.find_spec('$$pkg_mod');exit(0 if s and s.origin and (pathlib.Path(s.origin).parent/'py.typed').exists() else 1)" 2>/dev/null; then \
+				echo "  skip: $$pkg (ships py.typed)"; \
+				skip=$$((skip + 1)); \
+				continue; \
+			fi; \
+			types_dash=$$(echo "$$pkg_mod" | tr '_' '-'); \
+			if $(POETRY_ENV) $(PY) -c "import importlib.metadata;importlib.metadata.version('types-$$types_dash')" 2>/dev/null; then \
+				echo "  skip: $$pkg (types-$$types_dash installed)"; \
+				skip=$$((skip + 1)); \
+				continue; \
+			fi; \
 			if $(POETRY_ENV) $(PY) -m mypy.stubgen -p "$$pkg" -o "$$tmp_dir" --include-private --export-less -q 2>/dev/null; then \
 				if [ -d "$$tmp_dir/$$pkg" ]; then \
 					rm -rf "$$gen_dir/$$pkg"; \
@@ -714,7 +726,7 @@ typings: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency r
 				echo "  warning: stubgen failed for $$pkg (keeping existing)"; \
 			fi; \
 		done; \
-		echo "  stubgen: $$ok regenerated, $$fail failed"; \
+		echo "  stubgen: $$ok regenerated, $$skip skipped (typed), $$fail failed"; \
 	else \
 		echo "  no packages to regenerate"; \
 	fi; \

@@ -1,7 +1,7 @@
-from __future__ import annotations
 
 import ast
 from collections.abc import Callable, Sequence
+from typing import TypeAlias
 
 from radon.visitors import Class, Function
 
@@ -9,14 +9,14 @@ from radon.visitors import Class, Function
 Cyclomatic Complexity
 """
 
-Block = Function | Class
-SortKey = int | float | str
+Block: TypeAlias = Function | Class
+SortKey: TypeAlias = int | float | str
 
 SCORE: Callable[[Block], SortKey]
 LINES: Callable[[Block], SortKey]
 ALPHA: Callable[[Block], SortKey]
 
-def cc_rank(cc: int | float) -> str:
+def cc_rank(cc: float) -> str:
     r"""Rank the complexity score from A to F, where A stands for the simplest
     and best score and F the most complex and worst one:
 

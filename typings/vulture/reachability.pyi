@@ -1,7 +1,5 @@
 """Type stubs for vulture.reachability module."""
 
-from __future__ import annotations
-
 import ast
 from collections.abc import Callable
 

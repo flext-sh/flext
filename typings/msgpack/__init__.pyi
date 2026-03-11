@@ -4,18 +4,28 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from datetime import datetime
-from typing import IO
+from typing import IO, TypeAlias
 
-from msgpack.exceptions import *  # noqa: F403
+from msgpack.exceptions import (
+    BufferFull as BufferFull,
+    ExtraData as ExtraData,
+    FormatError as FormatError,
+    OutOfData as OutOfData,
+    PackException as PackException,
+    PackOverflowError as PackOverflowError,
+    PackValueError as PackValueError,
+    StackError as StackError,
+    UnpackException as UnpackException,
+    UnpackValueError as UnpackValueError,
+)
 from msgpack.ext import ExtType, Timestamp
-from msgpack.fallback import Packer as Packer
-from msgpack.fallback import Unpacker as Unpacker
+from msgpack.fallback import Packer as Packer, Unpacker as Unpacker
 
 version: tuple[int, int, int]
 __version__: str
 
 # Msgpack return type: all possible values that unpack can produce
-_UnpackedValue = (
+_UnpackedValue: TypeAlias = (
     int
     | float
     | str
