@@ -1,6 +1,0 @@
-import typing
-
-import google.protobuf.message
-
-def serialize(message: google.protobuf.message.Message, as_utf8: bool = ..., as_one_line: bool = ..., use_short_repeated_primitives: bool = ..., pointy_brackets: bool = ..., use_index_order: bool = ..., float_format=..., double_format=..., use_field_number: bool = ..., descriptor_pool=..., indent: int = ..., message_formatter=..., print_unknown_fields: bool = ..., force_colon: bool = ...) -> str: ...
-def parse(message_class: type, text: typing.AnyStr, allow_unknown_extension: bool = ..., allow_field_number: bool = ..., descriptor_pool=..., allow_unknown_field: bool = ...) -> google.protobuf.message.Message: ...

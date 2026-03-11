@@ -1,2 +1,0 @@
-
-MESSAGE_CLASS_CACHE: dict

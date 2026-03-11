@@ -1,3 +1,0 @@
-from _typeshed import Incomplete
-
-def MakeSimpleProtoClass(fields, full_name: Incomplete | None = ..., pool: Incomplete | None = ...): ...
