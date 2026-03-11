@@ -199,9 +199,7 @@ def divide(a: float, b: float) -> r[float, str]:
 
 
 # Compose operations
-result = (
-    r.success(10).bind(lambda x: divide(x, 2)).bind(lambda x: divide(x, 3))
-)
+result = r.success(10).bind(lambda x: divide(x, 2)).bind(lambda x: divide(x, 3))
 
 if result.is_success:
     print(f"Result: {result.unwrap()}")
