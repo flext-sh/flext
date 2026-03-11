@@ -3,44 +3,68 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from collections.abc import Mapping, Sequence
 
 
-class r:  # noqa: N801
+class FlextTypes:
+    """Mock types for the FLEXT ecosystem."""
+
+    Primitives = str | int | float | bool
+    Scalar = Primitives
+    ContainerValue = (
+        Scalar
+        | Sequence["FlextTypes.ContainerValue"]
+        | Mapping[str, "FlextTypes.ContainerValue"]
+        | None
+    )
+    RegisterableService = ContainerValue | logging.Logger
+    Dict = Mapping[str, ContainerValue]
+
+
+t = FlextTypes
+
+
+class Result[T]:
     """Railway result pattern mock."""
-
-    def __class_getitem__(cls, _item: Any) -> Any:
-        """Support r[T] syntax."""
-        return cls
 
     def __init__(
         self,
         success: bool,  # noqa: FBT001
-        data: Any | None = None,
+        value: T | None = None,
         error: str | None = None,
     ) -> None:
         """Initialize result."""
         self.success = success
         self.is_failure = not success
-        self.data = data
-        self.error = error
+        self.value = value
+        self.error_message = error
+
+    @property
+    def is_success(self) -> bool:
+        """Return True if successful."""
+        return self.success
 
     @classmethod
-    def ok(cls, data: Any | None = None) -> r:
+    def ok(cls, value: T | None = None) -> Result[T]:
         """Return successful result."""
-        return cls(True, data=data)
+        return cls(True, value=value)
 
     @classmethod
-    def fail(cls, error: str) -> r:
+    def fail(cls, error: str) -> Result[T]:
         """Return failed result."""
         return cls(False, error=error)
 
 
-def FlextLogger(  # noqa: N802
-    name: str,
-) -> logging.Logger:
+# Alias for compatibility
+r = Result
+
+
+def logger_factory(name: str) -> logging.Logger:
     """Return mock logger."""
     return logging.getLogger(name)
+
+
+FlextLogger = logger_factory
 
 
 class FlextContainer:
@@ -48,18 +72,18 @@ class FlextContainer:
 
     def __init__(self) -> None:
         """Initialize container."""
-        self._services: dict[str, Any] = {}
+        self._services: dict[str, t.RegisterableService] = {}
 
-    def register(self, name: str, service: Any) -> r:
+    def register(self, name: str, service: t.RegisterableService) -> Result[None]:
         """Register service."""
         self._services[name] = service
-        return r.ok(None)
+        return Result.ok(None)
 
-    def get(self, name: str) -> r:
+    def get(self, name: str) -> Result[t.RegisterableService]:
         """Get service."""
         if name in self._services:
-            return r.ok(self._services[name])
-        return r.fail(f"Service {name} not found")
+            return Result.ok(self._services[name])
+        return Result.fail(f"Service {name} not found")
 
 
 class FlextModels:
@@ -72,12 +96,12 @@ class FlextModels:
             """Initialize entity."""
             self.id = id_val
 
-        def validate_domain_rules(self) -> r:
+        def validate_domain_rules(self) -> Result[None]:
             """Validate mock rules."""
-            return r.ok(None)
+            return Result.ok(None)
 
 
-TAnyDict = dict[str, Any]
+TAnyDict = t.Dict
 
 
 # Placeholder for other imports used in validation
@@ -92,10 +116,10 @@ FlextContext = MockAttr
 FlextDecorators = MockAttr
 FlextDispatcher = MockAttr
 FlextExceptions = MockAttr
-h: Any = None
+h: t.RegisterableService | None = None
 x = MockAttr
 FlextProcessors = MockAttr
-p: Any = None
+p: t.RegisterableService | None = None
 FlextRegistry = MockAttr
 FlextRuntime = MockAttr
 FlextService = MockAttr
