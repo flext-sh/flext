@@ -1,0 +1,27 @@
+## L741 — All logging-only branches converted to .tap_error()
+Date: 2026-03-11
+
+Scan performed on: flext-api/src/, flext-auth/src/, flext-meltano/src/
+Pattern: if.*\.is_failure: followed by logger.* without return/raise
+
+Candidates found:
+  1. flext-auth/src/flext_auth/api.py:209
+     REAL logging-only branch:
+       if session_result.is_failure:
+           self.logger.warning(f"Failed to create session...")
+     → CONVERTED to .tap_error() in commit a6b95d5
+     → session_result.tap_error(lambda err: self.logger.warning(...))
+
+  2. flext-auth/src/flext_auth/token_service.py:76,93,114
+     NOT logging-only: each has a `return r[str].fail(...)` after the log
+     → NOT eligible for tap_error (they log AND return failure)
+
+  3. flext-meltano/src/flext_meltano/singer/translator.py:88
+     IN DOCSTRING: the `if result.is_failure:` is inside a markdown code block
+     → NOT real code, NOT eligible
+
+Verification after fix:
+  python -m ruff check flext-auth/src/ → All checks passed! ✓
+  python -m pytest flext-auth/tests/unit/ -q → 154 passed ✓
+
+Criterion: [x] All logging-only branches converted to .tap()/.tap_error()
