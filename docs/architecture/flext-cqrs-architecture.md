@@ -123,7 +123,7 @@ servir como referência futura para implementação:
 
 ### ~~Handler lifecycle~~
 
-~~1. Handlers derive from `h[TMessage, TResult]` and implement `handle(self, message) -> FlextResult[TResult]`.~~
+~~1. Handlers derive from `h[TMessage, TResult]` and implement `handle(self, message) -> r[TResult]`.~~
 ~~2. The `_run_pipeline` helper wraps execution with validation, hooks, and error handling.~~
 ~~3. Manual bookkeeping for metrics/context (`self._metrics`, `self._context_stack`) remains common across projects.~~
 
@@ -151,7 +151,7 @@ servir como referência futura para implementação:
 ~~| **Phase 1** | Document current stack and migrate docs to English | ✅ Nov 2025 | Complete with this merge |~~
 ~~| **Phase 2** | Make dispatcher managers injectable through `FlextContainer` | 🟡 In progress | Constructors accept `container=...`; update remaining call sites |~~
 ~~| **Phase 3** | Promote `mixins.x.CQRS` helpers (metrics, tracking, logging) to default usage | 🔜 Jan 2026 | Remove manual stacks from handlers |~~
-~~| **Phase 4** | Align reliability policies with upcoming `FlextResult.and_then` helper | 🔜 Feb 2026 | Depends on service-level TODO |~~
+~~| **Phase 4** | Align reliability policies with upcoming `r.and_then` helper | 🔜 Feb 2026 | Depends on service-level TODO |~~
 ~~| **Phase 5** | Deliver zero-ceremony handler scaffolding/templates | 🔜 Mar 2026 | Finalise cross-repo generators |~~
 
 ---
@@ -186,7 +186,7 @@ servir como referência futura para implementação:
 
 ~~- Migrate handlers to use `self.logger`, `self.track`, and `self.cqrs_metrics` (Phase 3).~~
 ~~- Enforce container-based dispatcher construction once all call sites are migrated (Phase 2).~~
-~~- Update `_dispatcher.reliability` to consume the forthcoming `FlextResult.and_then` helper for naming parity (Phase 4).~~
+~~- Update `_dispatcher.reliability` to consume the forthcoming `r.and_then` helper for naming parity (Phase 4).~~
 ~~- Draft CLI scaffolding that generates zero-ceremony handlers (Phase 5).~~
 
 ---
@@ -327,7 +327,7 @@ servir como referência futura para implementação:
 ~~│ └── Structured logging with context │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
 ~~│ Tier 1: Core Abstractions │~~
-~~│ ├── FlextResult - Railway pattern │~~
+~~│ ├── r - Railway pattern │~~
 ~~│ └── FlextExceptions - Error handling │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
 ~~│ Tier 0.5: FlextRuntime │~~
@@ -365,8 +365,8 @@ servir como referência futura para implementação:
 ~~\_context_stack: list[dict[str, object]]~~
 
 ~~ # ✅ Pipeline methods~~
-~~ def handle(self, message: TCommand_contra) -> FlextResult[TResult_co]: ...~~
-~~ def \_run_pipeline(self, message: TCommand_contra) -> FlextResult[TResult_co]: ...~~
+~~ def handle(self, message: TCommand_contra) -> r[TResult_co]: ...~~
+~~ def \_run_pipeline(self, message: TCommand_contra) -> r[TResult_co]: ...~~
 
 ~~ # ⚠️ Métodos manuais (serão deprecated em V2)~~
 ~~ def record_metric(self, key: str, value: int | float) -> None: ...~~
@@ -407,7 +407,7 @@ servir como referência futura para implementação:
 ~~\_cache: dict[str, object] # ~100 linhas~~
 
 ~~ # ✅ Core methods~~
-~~ def dispatch(self, message: object) -> FlextResult[object]: ...~~
+~~ def dispatch(self, message: object) -> r[object]: ...~~
 ~~ def register_command(self, cmd_type: type, handler: h) -> None: ...~~
 ~~ def register_query(self, query_type: type, handler: h) -> None: ...~~
 ~~ def register_event(self, event_type: type, handler: h) -> None: ...~~
@@ -420,7 +420,7 @@ servir como referência futura para implementação:
 ~~- `h` → registered handlers~~
 ~~- `x` → logging (pouco usado)~~
 ~~- `FlextModels` → message models~~
-~~- `FlextResult` → return type~~
+~~- `r` → return type~~
 ~~- `u` → helper functions~~
 
 ### ~~Integração com FlextContainer (Target)~~ ✅
@@ -536,7 +536,7 @@ servir como referência futura para implementação:
 ~~ # - self.config → 0 chamadas em \_run_pipeline~~
 ~~ # - self.container → 0 chamadas em \_run_pipeline~~
 
-~~ def \_run_pipeline(self, message: TCommand) -> FlextResult[TResult]:~~
+~~ def \_run_pipeline(self, message: TCommand) -> r[TResult]:~~
 ~~ # Manual em vez de usar infraestrutura!~~
 ~~ self.\_metrics["processed"] += 1 # Em vez de self.track()~~
 ~~```~~
@@ -708,7 +708,7 @@ servir como referência futura para implementação:
 ~~ self,~~
 ~~ func: Callable[[], T],~~
 ~~ timeout_seconds: float,~~
-~~ ) -> FlextResult[T]:~~
+~~ ) -> r[T]:~~
 ~~ """Execute function with timeout."""~~
 ~~ ...~~
 
@@ -717,10 +717,10 @@ servir como referência futura para implementação:
 
 ~~ def execute_with_retry(~~
 ~~ self,~~
-~~ func: Callable[[], FlextResult[T]],~~
+~~ func: Callable[[], r[T]],~~
 ~~ max_attempts: int,~~
 ~~ backoff_factor: float,~~
-~~ ) -> FlextResult[T]:~~
+~~ ) -> r[T]:~~
 ~~ """Execute function with retry logic."""~~
 ~~ ...~~
 ~~```~~
@@ -857,7 +857,7 @@ servir como referência futura para implementação:
 ~~ def \_run_pipeline(~~
 ~~ self,~~
 ~~ message: TCommand_contra,~~
-~~ ) -> FlextResult[TResult_co]:~~
+~~ ) -> r[TResult_co]:~~
 ~~ """Run handler pipeline with automatic observability.~~
 
 ~~ V2 Enhancement: Automatically uses FlextMixins infrastructure.~~
@@ -942,7 +942,7 @@ servir como referência futura para implementação:
 ~~class CreateUserCommandHandler(FlextHandlers[CreateUserCommand, User]):~~
 ~~ """Handler que orquestra, service que executa."""~~
 
-~~ def handle(self, command: CreateUserCommand) -> FlextResult[User]:~~
+~~ def handle(self, command: CreateUserCommand) -> r[User]:~~
 ~~ # Handler orquestra, service executa lógica de domínio~~
 ~~ validation_service = ValidateEmailService(email=command.email)~~
 ~~ if validation_service.result.is_failure:~~
@@ -981,7 +981,7 @@ servir como referência futura para implementação:
 ~~class ProcessOrderCommandHandler(FlextHandlers[ProcessOrderCommand, Order]):~~
 ~~ """Handler com observabilidade completa via FlextMixins."""~~
 
-~~ def handle(self, command: ProcessOrderCommand) -> FlextResult[Order]:~~
+~~ def handle(self, command: ProcessOrderCommand) -> r[Order]:~~
 ~~ # ✅ Logging automático via FlextMixins~~
 ~~ self.logger.info(f"Processing order {command.order_id}")~~
 
@@ -1001,7 +1001,7 @@ servir como referência futura para implementação:
 ~~ self.cqrs_metrics.record("orders_processed", 1)~~
 ~~ self.cqrs_metrics.record("order_total", order.total)~~
 
-~~ return FlextResult.ok(order)~~
+~~ return r.ok(order)~~
 ~~ except OrderProcessingError as e:~~
 ~~ self.cqrs_metrics.record("orders_failed", 1)~~
 ~~ return FlextResult.fail(str(e))~~

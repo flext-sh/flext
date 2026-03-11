@@ -20,7 +20,7 @@ FLEXT Tap LDIF (v1.0.0 release prep) is the Singer tap responsible for extractin
 - **Coverage**: 90%+ (see `reports/coverage-scan-*` & README badges)
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + dbt/test + coverage + docstring checks) is the enforced pre-merge command; `make lint`, `make type-check`, `make security`, `make test`, and other quality scripts all report clean results.
 - **Dependencies**: `flext-core`, `flext-ldif`, `flext-meltano`, Singer SDK, `dbt`, `dbt-core`, `dbt-postgres`, instrumentation via `flext-observability`
-- **Zero tolerance**: Forbidden direct imports of singer-sdk, ldap3, or flext-ldif internals; use the standard flext adapters, always return `FlextResult[T]`, never rely on exception-based flows, and keep config in Pydantic models.
+- **Zero tolerance**: Forbidden direct imports of singer-sdk, ldap3, or flext-ldif internals; use the standard flext adapters, always return `r[T]`, never rely on exception-based flows, and keep config in Pydantic models.
 
 ## Quick start
 
@@ -42,7 +42,7 @@ tap-ldif --config config.json --catalog catalog.json --state state.json
 
 - **Clean Architecture**: domain, application, infrastructure, and protocol layers enforce one-way dependencies with short alias imports (`r`, `t`, `m`).
 - **Core components**: `FlextTapLdif` (Singer tap), `LDIFEntriesStream` (Singer stream), `TapLdifConfig` (Pydantic config), `FlextLdifProcessorWrapper`, `exception` hierarchy, watchers, and CLI/hot reload helpers.
-- **Infrastructure reuse**: reuses `flext-ldif` for LDIF parsing/validation, `flext-meltano` for Singer orchestration, and `flext-core` for FlextResult, container, and logging patterns.
+- **Infrastructure reuse**: reuses `flext-ldif` for LDIF parsing/validation, `flext-meltano` for Singer orchestration, and `flext-core` for r, container, and logging patterns.
 - **Configuration**: rich config options (file/directory/batch/perf settings, filters, encoding, strict parsing) defined in docs and enforced through typed Pydantic models.
 
 ## Quality & operations

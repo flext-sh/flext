@@ -19,7 +19,7 @@ FLEXT dbt Oracle WMS (v2.1.0) is the enterprise dbt project for Oracle Warehouse
 - **Tests**: ~339+ unit/integration/e2e methods; `make validate` (ruff + pyrefly + bandit + pytest + dbt tests + coverage) is the QA gate before merging.
 - **Coverage**: 90%+ per README + coverage reports (`reports/coverage-scan-*`).
 - **Dependencies**: `flext-core`, `flext-db-oracle`, `flext-oracle-wms`, `flext-meltano`, `flext-cli`, `flext-observability`, `dbt-core`, `dbt-oracle`, `Singer SDK`.
-- **Zero tolerance**: no direct dbt/oracle/Singer imports; always route through flext-\* adapters, return `FlextResult[T]`, avoid `Any`/`cast`/`TYPE_CHECKING`, and keep CLI logic in flext-cli.
+- **Zero tolerance**: no direct dbt/oracle/Singer imports; always route through flext-\* adapters, return `r[T]`, avoid `Any`/`cast`/`TYPE_CHECKING`, and keep CLI logic in flext-cli.
 
 ## Quick start
 

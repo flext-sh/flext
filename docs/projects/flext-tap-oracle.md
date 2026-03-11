@@ -20,7 +20,7 @@ FLEXT Tap Oracle (v1.0.0 release prep) is the Singer tap for Oracle Database ext
 - **Coverage**: 90%+ (see `reports/coverage-scan-*`, README badges)
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + dbt/test + docstring checks) is required before merging; `make lint`, `make type-check`, `make security`, and `make test` all run clean individually.
 - **Dependencies**: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, Singer SDK, `dbt-core`, `dbt-oracle`
-- **Zero tolerance**: no direct Singer SDK, SQLAlchemy, or native Oracle imports; every public API returns `FlextResult[T]`, no `Any`, no `cast`, no `TYPE_CHECKING`.
+- **Zero tolerance**: no direct Singer SDK, SQLAlchemy, or native Oracle imports; every public API returns `r[T]`, no `Any`, no `cast`, no `TYPE_CHECKING`.
 
 ## Quick start
 
@@ -43,7 +43,7 @@ flext-tap-oracle --config config.json --catalog catalog.json --state state.json
 
 - **Layered stack**: foundation modules (`constants`, `typings`, `protocols`), domain models/utilities, infrastructure services (`oracle_stream`, `tap`, `config`), and application/CLI entry points.
 - **Core components**: `FlextTapOracle`, `OracleStream`, `TapOracleConfig`, `tap.py`, `cli.py`, `integration/` modules for telemetry.
-- **Integration**: uses `flext-db-oracle` for Oracle connectivity, `flext-meltano` for Singer tap scaffolding, `flext-core` for FlextResult/DI, and `flext-observability` for instrumentation.
+- **Integration**: uses `flext-db-oracle` for Oracle connectivity, `flext-meltano` for Singer tap scaffolding, `flext-core` for r/DI, and `flext-observability` for instrumentation.
 - **Performance**: Oracle-specific query hints, pagination, connection pooling, and streaming results minimize memory usage.
 
 ## Features & quality

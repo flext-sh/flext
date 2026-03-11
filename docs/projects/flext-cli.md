@@ -13,7 +13,7 @@
 - [Support & contributions](#support-contributions)
 <!-- TOC END -->
 
-FLEXT CLI is the production-ready command-line foundation that wires Click, Rich, and Tabulate behind the FlextResult/Railway discipline so every downstream project shares the same CLI contracts, configuration patterns, and output helpers.
+FLEXT CLI is the production-ready command-line foundation that wires Click, Rich, and Tabulate behind the r/Railway discipline so every downstream project shares the same CLI contracts, configuration patterns, and output helpers.
 
 ## Status & health
 
@@ -36,7 +36,7 @@ pip install flext-cli
 
 ```python
 from flext_cli import FlextCli
-from flext_core import FlextResult
+from flext_core import r
 
 cli = FlextCli()
 
@@ -77,7 +77,7 @@ Use `FlextCli.create_table`, `file_tools`, and `prompts` for the ready-made help
 - Direct access API (`cli.formatters`, `cli.file_tools`, `cli.prompts`) so projects avoid low-level dependencies.
 - Authentication helpers, configuration validation, and reusable command registration.
 - Comprehensive examples (`examples/01_getting_started.py`, etc.) plus migration guidance from v0.9.x (`docs/refactoring/MIGRATION_GUIDE_V0.9_TO_V0.10.md`).
-- Railway-oriented error handling (`FlextResult[T]`) in every module.
+- Railway-oriented error handling (`r[T]`) in every module.
 
 ## Quality & compliance
 

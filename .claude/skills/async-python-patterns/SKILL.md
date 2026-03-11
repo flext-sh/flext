@@ -4,7 +4,7 @@
 - [References](#references)
 - [Rules](#rules)
 - [Instructions](#instructions)
-  - [Basic Async with FlextResult](#basic-async-with-flextresult)
+  - [Basic Async with r](#basic-async-with-flextresult)
   - [Concurrent Execution with gather](#concurrent-execution-with-gather)
   - [Rate-Limited API Calls](#rate-limited-api-calls)
   - [Async Context Manager](#async-context-manager)
@@ -36,12 +36,12 @@ description: Python asyncio patterns for FLEXT integrations — LDAP, Oracle, gR
 
 - `AGENTS.md` — canonical governance source
 - <https://docs.python.org/3.13/library/asyncio.html>
-- `.claude/skills/lib-returns/SKILL.md` — FlextResult composition (async-compatible)
+- `.claude/skills/lib-returns/SKILL.md` — r composition (async-compatible)
 - `.claude/skills/flext-patterns/SKILL.md` — core patterns
 
 ## Rules
 
-- Always combine async operations with `FlextResult` for error handling.
+- Always combine async operations with `r` for error handling.
 - Use `asyncio.gather()` for concurrent I/O — never sequential awaits for independent operations.
 - Use `asyncio.Semaphore` for rate-limiting external API calls.
 - Use `async with` context managers for resource cleanup (connections, sessions).
@@ -49,7 +49,7 @@ description: Python asyncio patterns for FLEXT integrations — LDAP, Oracle, gR
 
 ## Instructions
 
-### Basic Async with FlextResult
+### Basic Async with r
 
 ```python
 from flext_core import r
@@ -139,7 +139,7 @@ async def with_timeout(coro: Awaitable[T], seconds: float) -> r[T]:
 ## Workflow
 
 1. Identify I/O-bound operations suitable for async (network, disk, DB).
-2. Wrap each async operation in a `FlextResult`-returning coroutine.
+2. Wrap each async operation in a `r`-returning coroutine.
 3. Use `asyncio.gather()` for concurrent independent operations.
 4. Apply rate limiting via `Semaphore` for external APIs.
 5. Use `async with` for resource lifecycle management.

@@ -18,7 +18,7 @@ FLEXT Plugin (v0.9.0) is the production-grade plugin management platform for the
 - **Python**: 3.13+
 - **Tests**: 339 test methods across unit, integration, and e2e suites; coverage target 90% (currently met per README)
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is required before merges
-- **Type safety**: MyPy strict mode, zero `Any`, `cast`, or `# type: ignore`; every public surface returns `FlextResult[T]`
+- **Type safety**: MyPy strict mode, zero `Any`, `cast`, or `# type: ignore`; every public surface returns `r[T]`
 - **Security**: Sandbox validation, hot reload monitoring, and watchdog-backed file discovery run inside isolation layers defined by the project’s zero-tolerance AGENTS rules
 
 ## Quick start
@@ -48,16 +48,16 @@ Use the CLI helpers (currently disabled in `__init__.py`) once the command layer
 
 - **Facade layer**: `FlextPluginPlatform` exposes discovery, load/unload, install, enable/disable, and hot-reload commands plus security validation hooks.
 - **Service layer**: `FlextPluginService`, `FlextPluginDiscoveryService` encapsulate lifecycle transitions."# TODO".
-- **Model layer**: `FlextPluginModels` hosts entity/config/metadata Pydantic models and scoped FlextResult helpers.
-- **Infrastructure**: `PluginDiscovery`, `HotReload`, `RealAdapters`, `watchdog` watchers, and sandboxing guardrails; direct imports to `flext-core` (FlextResult, FlextContainer, FlextModels, FlextLogger, FlextDispatcher) ensure consistent design.
-- **Clean architecture**: 19 classes, 20 modules, single-class-per-module discipline, 9,767 lines of code respecting layering rules; zero-tolerance `AGENTS.md` enforces FlextResult always.
+- **Model layer**: `FlextPluginModels` hosts entity/config/metadata Pydantic models and scoped r helpers.
+- **Infrastructure**: `PluginDiscovery`, `HotReload`, `RealAdapters`, `watchdog` watchers, and sandboxing guardrails; direct imports to `flext-core` (r, FlextContainer, FlextModels, FlextLogger, FlextDispatcher) ensure consistent design.
+- **Clean architecture**: 19 classes, 20 modules, single-class-per-module discipline, 9,767 lines of code respecting layering rules; zero-tolerance `AGENTS.md` enforces r always.
 
 ## Quality & compliance
 
 - **Validation commands**: `make lint`, `make type-check`, `make test`, `make coverage`, `make security`, `make validate`, `make check`, `make format`.
 - **Coverage goal**: 90% minimum across the plugin stack; tests run via `pytest tests/`, `pytest --cov=flext_plugin`, `pytest -m "not slow"`, etc.
 - **Security**: plugin sandboxing, entry point validation, and hot reload watchers all validated by the quality pipeline; zero Ruff/Pyrefly errors allowed.
-- **Architecture compliance**: single class per module, no `TYPE_CHECKING`, no `Any`, all operations return `FlextResult`, instrumentation built into `flext-observability` and `flext-cli` once CLI integration finalizes.
+- **Architecture compliance**: single class per module, no `TYPE_CHECKING`, no `Any`, all operations return `r`, instrumentation built into `flext-observability` and `flext-cli` once CLI integration finalizes.
 
 ## Resources
 

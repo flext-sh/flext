@@ -19,7 +19,7 @@ FLEXT Tap Oracle WMS (v1.0.0 release preparation) is the Singer tap that continu
 - **Status**: Production-ready core features (10 working streams) while refactoring (26 files → 6‑8 target) and reopening disabled tests (27% of tests currently disabled)
 - **Coverage goal**: 90%+ target; reporting shows coverage is limited while refactor completes
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring + Singer checks) is required before merges; `make lint`, `make type-check`, `make security`, `make test`, and Singer discovery/run commands currently run as part of `make check`
-- **Zero tolerance**: No direct Singer SDK, Oracle WMS SDK, or SQLAlchemy imports; rely on flext-core/flext-oracle-wms/flext-db-oracle; everything returns `FlextResult[T]`
+- **Zero tolerance**: No direct Singer SDK, Oracle WMS SDK, or SQLAlchemy imports; rely on flext-core/flext-oracle-wms/flext-db-oracle; everything returns `r[T]`
 
 ## Quick start
 
@@ -42,7 +42,7 @@ tap-oracle-wms --config config.json --catalog catalog.json --state state.json
 - **Clean architecture**: 6‑8 simplified modules (target) replacing 26 current files; modules include API, CLI, services, connectors, models, and utilities.
 - **Singer compliance**: Singer-spec discovery, state, catalog, and run helpers integrate with `flext-meltano` and Singer pipelines.
 - **Oracle WMS focus**: 10 streams covering inventory, orders, shipments, tasks, and locations plus Singer instrumentation, retry/backoff, and dynamic pagination.
-- **Integration**: depends on `flext-oracle-wms` for WMS API, `flext-db-oracle` for Oracle connections, `flext-core` for FlextResult/DI patterns, and `flext-observability` for telemetry.
+- **Integration**: depends on `flext-oracle-wms` for WMS API, `flext-db-oracle` for Oracle connections, `flext-core` for r/DI patterns, and `flext-observability` for telemetry.
 
 ## Quality & operations
 

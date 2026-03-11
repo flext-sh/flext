@@ -2,7 +2,7 @@ id: ban-direct-constructor
 language: python
 rule:
   any:
-    - pattern: FlextResult(Success($$$))
-    - pattern: FlextResult(Failure($$$))
-message: "Direct FlextResult constructor with Success/Failure is banned. Use r[T].ok() or r.fail()."
+    - pattern: r(Success($$$))
+    - pattern: r(Failure($$$))
+message: "Direct r constructor with Success/Failure is banned. Use r[T].ok() or r.fail()."
 severity: error

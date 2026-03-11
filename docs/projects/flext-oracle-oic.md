@@ -53,14 +53,14 @@ settings = OracleOicExtensionSettings(
 
 ## Architecture snapshot
 
-- **FlextService compliance**: currently partial (`FlextResult` 65% coverage, `FlextService` and `FlextContainer` still pending). Refactor plan enforces single-service-per-module discipline and removes direct `httpx`/`typer` dependencies.
+- **FlextService compliance**: currently partial (`r` 65% coverage, `FlextService` and `FlextContainer` still pending). Refactor plan enforces single-service-per-module discipline and removes direct `httpx`/`typer` dependencies.
 - **Modules**: `services/` (integration patterns, retries), `auth/` (OAuth2/IDCS flows), `cli/` (pending `flext-cli` wiring), `api.py` facade, `constants/`, `typings/`, `protocols/` for short alias discipline.
 - **Integration points**: depends on `flext-core`, `flext-api`, `flext-cli`, and supplies functionality to `flext-tap-oracle-oic`/`flext-target-oracle-oic` and other Oracle flavor packages.
 
 ## Quality & compliance
 
 - `make lint`, `make type-check`, `make security` pass; `make validate` currently blocked by the outstanding FlextCore refactor.
-- Project AGENTS.md enforces zero `Any`, zero `cast`, zero `TYPE_CHECKING`, pure FlextResult flows, and forbids direct `httpx`/`typer` usage outside the designated adapters.
+- Project AGENTS.md enforces zero `Any`, zero `cast`, zero `TYPE_CHECKING`, pure r flows, and forbids direct `httpx`/`typer` usage outside the designated adapters.
 - Coverage target is 70%+ with contract/integration suites; currently at 21% while the team adds tests for OAuth2 flows, circuit breakers, and service helpers.
 - Security posture highlights OAuth2 Gen3 compliance, encrypted secrets storage, and safe token lifecycle helpers.
 

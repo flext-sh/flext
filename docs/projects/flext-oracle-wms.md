@@ -19,7 +19,7 @@ FLEXT Oracle WMS (v0.9.9 RC) is the Oracle Warehouse Management System integrati
 - **Tests**: ~481 functions across ~40 files; they currently rely on fake URLs and expect connectivity failures, so the Pryfly/pytest pipeline is noted as blocked until FlextCore integration happens
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is marked as blocked because of structural compliance issues (HTTPX imports, class architecture, lack of flext-auth/flext-cli integration)
 - **Coverage**: Architecture target is 90%+, but the current reporting reflects the blocking issues described in the README
-- **Type safety**: Pyrefly/MyPy strict modes run clean; zero `Any`, no `cast`, no `# type: ignore`; FlextResult flows saturate every layer
+- **Type safety**: Pyrefly/MyPy strict modes run clean; zero `Any`, no `cast`, no `# type: ignore`; r flows saturate every layer
 - **Security**: Bandit/pip-audit gates are defined but deferred until the FlextCore import cleanup completes
 
 ## Quick start
@@ -49,7 +49,7 @@ Replace the `for_testing()` helpers with real Oracle WMS Cloud credentials once 
 - **Layered modules**: `constants.py`, `typings.py`, `protocols.py` define the foundation; `api.py` exposes `FlextOracleWms` services; `services/`, `integration/`, `auth/`, and `cli/` map to the Flext tiers.
 - **API catalog**: 25+ endpoints (setup, automation, data extract, entity management) already defined, including the 2025 LGF v10 APIs for entity extracts, bulk updates, and object store exports.
 - **Compliance gaps**: README calls out httpx -> flext-api migration needs, consolidation from 133 classes to unified classes per module, flext-auth/flext-cli integration, and OAuth2 authentication coverage.
-- **FlextResult discipline**: every operation returns `FlextResult`, and the README explicitly forbids exception-based error handling, `Any`, or type ignores.
+- **r discipline**: every operation returns `r`, and the README explicitly forbids exception-based error handling, `Any`, or type ignores.
 
 ## Key features & blockers
 
@@ -61,7 +61,7 @@ Replace the `for_testing()` helpers with real Oracle WMS Cloud credentials once 
 ## Resources & references
 
 - [Project README](../../flext-oracle-wms/README.md)
-- [Project AGENTS.md](../../flext-oracle-wms/AGENTS.md) for zero-tolerance error handling, FlextResult promises, and command guidance
+- [Project AGENTS.md](../../flext-oracle-wms/AGENTS.md) for zero-tolerance error handling, r promises, and command guidance
 - `docs/` folder inside the project for architectural overviews, guides, and roadmap notes
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` once `make validate` finishes
 - Related projects: `flext-core`, `flext-api`, `flext-auth`, `flext-cli`, `flext-db-oracle`, `flext-tap-oracle-wms`, `flext-target-oracle-wms`, `flext-dbt-oracle-wms`

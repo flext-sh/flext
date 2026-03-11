@@ -183,10 +183,10 @@ def process(data: list[str | int]) -> None:
 
 ```python
 from typing import TypeIs
-from flext_core import FlextResult
+from flext_core import r
 
 
-def is_success[T](result: FlextResult[T]) -> TypeIs[FlextResult[T]]:
+def is_success[T](result: r[T]) -> TypeIs[r[T]]:
     return result.is_success
 ```
 

@@ -354,7 +354,7 @@ All utilities must meet:
 - ✅ **Type Safety**: Full type annotations, no `Any` or `cast()`
 - ✅ **Testing**: 100% test coverage with real implementations
 - ✅ **Documentation**: Clear docstrings with examples
-- ✅ **Error Handling**: FlextResult pattern for fallible operations
+- ✅ **Error Handling**: r pattern for fallible operations
 - ✅ **Performance**: No unnecessary complexity or allocations
 - ✅ **Code Quality**: MyPy strict, Ruff lint, zero violations
 

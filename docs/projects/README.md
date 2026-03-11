@@ -23,8 +23,8 @@ This directory keeps one-page summaries that mirror the authoritative `README.md
   foundation that abstracts Click, Rich, and Tabulate for 32+ projects. Quick start: `poetry add flext-cli`/`pip install flext-cli`, import
   `FlextCli`, and use the direct-access helpers (`formatters`, `file_tools`, `prompts`, `output`). Quality gate: `make validate` with Ruff, Pyrefly,
   Bandit, and pytest; document links live under the project’s `README.md`, `AGENTS.md`, and `docs/` tree.
-- **[FLEXT Core](./flext-core.md)** – version 0.10.0, Python 3.13+, 2 820 tests, 81.41% coverage, production-ready foundation for FlextResult, DI,
-  and CQRS dispatchers. Quick start: `pip install flext-core`, import `FlextContainer`, `FlextDispatcher`, `FlextResult`. Quality gate: `make validate`.
+- **[FLEXT Core](./flext-core.md)** – version 0.10.0, Python 3.13+, 2 820 tests, 81.41% coverage, production-ready foundation for r, DI,
+  and CQRS dispatchers. Quick start: `pip install flext-core`, import `FlextContainer`, `FlextDispatcher`, `r`. Quality gate: `make validate`.
   Link to `README.md`, `AGENTS.md`, and core documentation under `docs/`.
 - **[FLEXT DB Oracle](./flext-db-oracle.md)** – version 0.9.9, Oracle connectivity + schema introspection built on SQLAlchemy 2 + python-oracledb,
   30 integration test suites (8,633+ lines), and a production-ready FlextDbOracleApi facade. Quick start: clone `flext-db-oracle`, run `poetry install`,
@@ -42,12 +42,12 @@ This directory keeps one-page summaries that mirror the authoritative `README.md
 - **[FLEXT dbt Oracle WMS](./flext-dbt-oracle-wms.md)** – version 2.1.0, Oracle WMS-focused dbt project with staged/mart models, macros, data
   quality tests, and the mandatory flext-db-oracle/flext-oracle-wms/flext-meltano stack; quick start runs `poetry install`, `make validate`, `dbt run`,
   `dbt test`, and `dbt docs serve`. Docs live inside the project `README.md` + `AGENTS.md` and `docs/` directories.
-- **[FLEXT gRPC](./flext-grpc.md)** – version 0.9.0, gRPC communication foundation with FlextResult services, Clean Architecture layering, and
+- **[FLEXT gRPC](./flext-grpc.md)** – version 0.9.0, gRPC communication foundation with r services, Clean Architecture layering, and
   grpcio/protobuf integrations; quality gate `make validate` (ruff + pyrefly + bandit + pytest + coverage) is blocked while coverage/test gaps remain
   (current coverage 39%). Quick start: `poetry install`, `make setup`, `make check`, `make validate`, and use `create_server`/`create_client`; docs live
   inside the project `README.md` + `AGENTS.md` and `docs/` tree.
 - **[FLEXT LDAP](./flext-ldap.md)** – version 0.10.3, the universal LDAP services foundation covering OpenLDAP 1.x/2.x, Oracle OID/OUD, AD, and
-  generic LDAP with FlextResult-driven services, entry adapters, and server-specific implementations. Quick start: `poetry add flext-ldap`, run
+  generic LDAP with r-driven services, entry adapters, and server-specific implementations. Quick start: `poetry add flext-ldap`, run
   `make setup`+ `make validate`, and use `FlextLdap` + `FlextLdapEntryAdapter` for production flows. Quality gate: `make validate` (ruff, pyrefly,
   Bandit, pytest, coverage) with zero tolerance import/alias rules documented in `AGENTS.md`.
 - **[FLEXT LDIF](./flext-ldif.md)** – version 1.0.0, 1 766 tests, 78% coverage, RFC 2849/4512-compliant parser, quirk registry, and migration
@@ -64,7 +64,7 @@ setup`, `make validate`, run dbt/deploy commands; docs live inside `flext-meltan
   refactors. Quick start: `poetry install`, `make setup`, configure `OracleOicExtensionSettings`, and use the OAuth2 helpers; docs live inside the
   project `README.md` + `AGENTS.md` and `docs/` tree.
 - **[FLEXT Oracle WMS](./flext-oracle-wms.md)** – version 0.9.9 RC, Oracle Warehouse Management System integration framework with 25+ LGF v10
-  endpoints, FlextResult operations, and architecture-level compliance to migrate httpx → flext-api, integrate flext-auth, and prove connectivity;
+  endpoints, r operations, and architecture-level compliance to migrate httpx → flext-api, integrate flext-auth, and prove connectivity;
   quality gate + tests remain blocked pending the FlextCore refactor. Quick start: `poetry install`, `make setup`, install credentials, and use the
   structured client/test flows; docs live inside the project `README.md` + `AGENTS.md` and `docs/` tree.
 - **[FLEXT Plugin](./flext-plugin.md)** – version 0.9.0, production-grade plugin management system with discovery, lifecycle, hot reload, security

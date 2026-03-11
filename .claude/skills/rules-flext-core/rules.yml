@@ -22,9 +22,9 @@ rules:
     match: absent
     severity: warning
     group: flext_core_result
-    description: Service boundaries should prefer FlextResult-based result flow.
+    description: Service boundaries should prefer r-based result flow.
     fix_auto: false
-    fix_instruction: Use FlextResult typing (for example '-> r[...]') on boundary methods where applicable.
+    fix_instruction: Use r typing (for example '-> r[...]') on boundary methods where applicable.
     file: rules/require-flext-result-pattern.yml
   - id: standardize-test-aliases
     type: ast-grep

@@ -12,7 +12,7 @@
 - [Workflow](#workflow)
 - [Examples](#examples)
   - [Good: FlextSettings model_config](#good-flextsettings-modelconfig)
-  - [Good: FlextResult.from_validation integration](#good-flextresultfromvalidation-integration)
+  - [Good: r.from_validation integration](#good-flextresultfromvalidation-integration)
   - [Bad: v1-style validator](#bad-v1-style-validator)
   - [Bad: .dict() / .json()](#bad-dict-json)
   - [Bad: class Config instead of ConfigDict](#bad-class-config-instead-of-configdict)
@@ -217,10 +217,10 @@ model_config = SettingsConfigDict(
 )
 ```
 
-### Good: FlextResult.from_validation integration
+### Good: r.from_validation integration
 
 ```python
-result = FlextResult.from_validation(raw_data, UserModel)
+result = r.from_validation(raw_data, UserModel)
 # Uses model.model_validate(data) internally → r[UserModel]
 ```
 

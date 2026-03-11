@@ -66,7 +66,7 @@ ls -la docs
 Good:
 
 ```markdown
-See `flext-core/src/flext_core/result.py` for `FlextResult` behavior.
+See `flext-core/src/flext_core/result.py` for `r` behavior.
 ```
 
 Why good: links documentation to a concrete source file and symbol.

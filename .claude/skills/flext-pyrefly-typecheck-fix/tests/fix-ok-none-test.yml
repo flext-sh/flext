@@ -6,6 +6,6 @@ invalid:
 ---
 id: fix-ok-none-result
 valid:
-  - "FlextResult[str].ok(True)"
+  - "r[str].ok(True)"
 invalid:
-  - "FlextResult[str].ok(None)"
+  - "r[str].ok(None)"

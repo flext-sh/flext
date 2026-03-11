@@ -10,7 +10,7 @@
 - [Support & contributions](#support-contributions)
 <!-- TOC END -->
 
-FLEXT gRPC (v0.9.0) is the gRPC communication foundation for the FLEXT platform. It abstracts grpcio/protobuf concerns, delivers FlextResult-based services, and enforces Clean Architecture across server/client lifecycles while the team ramps coverage toward 90%.
+FLEXT gRPC (v0.9.0) is the gRPC communication foundation for the FLEXT platform. It abstracts grpcio/protobuf concerns, delivers r-based services, and enforces Clean Architecture across server/client lifecycles while the team ramps coverage toward 90%.
 
 ## Status & metrics
 
@@ -19,7 +19,7 @@ FLEXT gRPC (v0.9.0) is the gRPC communication foundation for the FLEXT platform.
 - **Tests**: 18 018 lines in multiple suites; the README reports 28 failing tests that block full validation.
 - **Coverage**: 39% actual (target 90%); coverage gates flagged in `pyproject.toml` and README.
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) remains blocked until coverage/test issues are resolved; `make lint`, `make type-check`, `make security`, `make test`, `poetry run pytest` commands currently pass individually.
-- **Type discipline**: MyPy strict, zero `Any`/`cast`/`TYPE_CHECKING`; every public API returns `FlextResult[T]` with consistent error handling.
+- **Type discipline**: MyPy strict, zero `Any`/`cast`/`TYPE_CHECKING`; every public API returns `r[T]` with consistent error handling.
 
 ## Quick start
 
@@ -43,7 +43,7 @@ poetry run ruff check src/
 
 - **Core layers**: Tier-0 (`constants.py`, `typings.py`, `protocols.py`), Tier-1 (`models`, `utilities`), Tier-2 (`services`, `platform`, `settings`), Tier-3 (`api.py`, `service_impls`, `streaming`). Each tier only imports lower layers.
 - **Responsibilities**: gRPC abstraction (unary/bidirectional streams), service management (FlextGrpcService, FlextGrpcPlatform), client/server lifecycle, configuration (FlextGrpcSettings), instrumentation (FlextLogger, FlextObservability).
-- **Integration**: Depends on `flext-core` for FlextResult/FlextContainer/FlextLogger, plugs into `flext-cli` for CLI flows, aligned with `flext-observability` for telemetry, and provides gRPC wiring for other FLEXT services.
+- **Integration**: Depends on `flext-core` for r/FlextContainer/FlextLogger, plugs into `flext-cli` for CLI flows, aligned with `flext-observability` for telemetry, and provides gRPC wiring for other FLEXT services.
 - **Code status**: 4,923 source lines + 18 018 test lines; core imports (protobuf) verified after the latest fixes.
 
 ## Quality & operations
@@ -56,7 +56,7 @@ poetry run ruff check src/
 ## Resources & references
 
 - [Project README](../../flext-grpc/README.md)
-- [Project AGENTS.md](../../flext-grpc/AGENTS.md) for zero tolerance (FlextResult-only, 75%+ coverage, no `Any`)
+- [Project AGENTS.md](../../flext-grpc/AGENTS.md) for zero tolerance (r-only, 75%+ coverage, no `Any`)
 - `docs/` (getting started, architecture, API reference, configuration, integration guides)
 - `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for QA evidence
 - Related projects: `flext-core`, `flext-cli`, `flext-observability`, `flext-api`, `flext-grpc` clients/servers across FLEXT services

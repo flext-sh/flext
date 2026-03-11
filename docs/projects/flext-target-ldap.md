@@ -10,7 +10,7 @@
 - [Support & contributions](#support-contributions)
 <!-- TOC END -->
 
-FLEXT Target LDAP (v1.0.0 release preparation) is the Singer target that loads LDAP/LDIF data into authoritative LDAP directories. It provides real-time loading, comprehensive authentication, retries, and performance tuning while absorbing the FlextResult and Clean Architecture practices.
+FLEXT Target LDAP (v1.0.0 release preparation) is the Singer target that loads LDAP/LDIF data into authoritative LDAP directories. It provides real-time loading, comprehensive authentication, retries, and performance tuning while absorbing the r and Clean Architecture practices.
 
 ## Status & health
 
@@ -40,7 +40,7 @@ target-ldap --config config.json --state state.json --catalog catalog.json
 - **Layered architecture**: architecture docs show Clean Architecture breakdown (overview, API reference, patterns) with one-way dependencies prominently enforced.
 - **Core components**: target loader, authentication modules, Singer-compatible services, configuration models, and instrumentation hooking into flext-observability.
 - **Design patterns**: documented patterns include command handlers, strategy/factory for connectors, and data transformers for LDAP attribute normalization.
-- **Integration**: reuses flext-ldif for parsing/validation, flext-cli for CLI flows, flext-core for DI/FlextResult, and Singer protocols for compatibility with Meltano.
+- **Integration**: reuses flext-ldif for parsing/validation, flext-cli for CLI flows, flext-core for DI/r, and Singer protocols for compatibility with Meltano.
 
 ## Quality & operations
 

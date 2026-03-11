@@ -1,4 +1,4 @@
 id: detect-result-object
 language: python
 rule:
-  pattern: FlextResult[object]
+  pattern: r[object]

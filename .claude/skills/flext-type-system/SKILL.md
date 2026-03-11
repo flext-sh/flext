@@ -33,7 +33,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 
 - `AGENTS.md` — canonical governance source
 - `flext-core/src/flext_core/typings.py` (type vars + aliases + `FlextTypes`)
-- `flext-core/src/flext_core/result.py` (`FlextResult[T_co]` and alias `r`)
+- `flext-core/src/flext_core/result.py` (`r[T_co]` and alias `r`)
 - `flext-core/src/flext_core/settings.py` (`T_Settings` bound usage)
 - `flext-core/src/flext_core/__init__.py` (exported aliases)
 
@@ -46,7 +46,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 - **AXIOMATIC**: `Any`, `object`, and `dict[str, Any]` are TOTALLY FORBIDDEN in type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. Inline composed types are FORBIDDEN in all 33 projects — use `t.*` references only.
 - **AXIOMATIC**: `| None` MUST NEVER appear in type alias definitions in `typings.py`. Type aliases are ALWAYS non-nullable. Consumers add `| None` inline at usage sites when business requires it (e.g., `field: t.Scalar | None`). No `NullableX` or `OptionalX` aliases.
 - **AXIOMATIC**: Duplicating type definitions from the MRO chain is FORBIDDEN — even inside subproject `FlextTypes` nested classes. One definition, one source of truth. Compatibility aliases (`X = t.Y`) are FORBIDDEN.
-- **AXIOMATIC**: `FlextResult` (`r`) is the SOLE mechanism for expressing fallibility. Functions that can fail MUST return `r[T]` — never `T | None`, never bare exceptions, never ad-hoc error dicts. The `r` alias (`from flext_core import r`) is MANDATORY at all usage sites. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace `if result is None` / `try/except` chains. `FlextResult` eliminates `| None` return types from the business layer.
+- **AXIOMATIC**: `r` (`r`) is the SOLE mechanism for expressing fallibility. Functions that can fail MUST return `r[T]` — never `T | None`, never bare exceptions, never ad-hoc error dicts. The `r` alias (`from flext_core import r`) is MANDATORY at all usage sites. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace `if result is None` / `try/except` chains. `r` eliminates `| None` return types from the business layer.
 - **AXIOMATIC**: Compatibility wrappers (`def old(): return new()`), non-business validation fallbacks, legacy code maintenance, and `OldName = NewName` aliases are TOTALLY FORBIDDEN. Legacy code is deleted and replaced with canonical patterns. No grace period, no deprecation path.
 - **AXIOMATIC**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
 - **AXIOMATIC**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE Pydantic v2 features to their fullest. `Field()` with `description`/`title`/`examples`/`json_schema_extra` for ALL declarations. Minimize custom validators — prefer built-in constraints. `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, simple getters/setters, wrappers. USE: `@computed_field`, `model_post_init`, `PrivateAttr`. Enums/Literals from `c.*`, config from `s.*`. Internal state via `PrivateAttr`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for models ONLY.
@@ -165,5 +165,5 @@ Make gates:
 Pattern checks:
 
 - `rg -n "TypeVar\(|type GeneralValueType|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
-- `rg -n "class FlextResult|type .*=" flext-core/src/flext_core/result.py`
+- `rg -n "class r|type .*=" flext-core/src/flext_core/result.py`
 - `rg -n "T_Settings|BaseSettings" flext-core/src/flext_core/settings.py flext-core/src/flext_core/typings.py`

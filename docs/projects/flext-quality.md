@@ -58,12 +58,12 @@ analyzer.analyze_project()
 - **Facade**: `FlextQualityService`/`FlextQualityCliService` expose CLI status/check/validate commands balanced with the registry-based rules engine.
 - **Core layers**: Tier 0 (`constants`, `typings`, `protocols`); Tier 1 (`models`, `utilities`); Tier 2 (`integrations`, `rules`, `hooks`, `rules.engine`); Tier 3 (`api`, `services`, `cli`, `mcp`). Import discipline ensures lower tiers never depend on higher ones.
 - **Rules engine**: YAML-driven ACA (Architecture/command Analysis) registry with 11 categories, providing consistent patterns for dangerous commands, type verification, and code quality violations plus hooks for Claude integrations.
-- **Integration**: depends on `flext-core` (FlextResult, FlextContainer, FlextModels), connects to `flext-cli` for consistent output, and feeds `flext-web` dashboards once the CLI stabilizes.
+- **Integration**: depends on `flext-core` (r, FlextContainer, FlextModels), connects to `flext-cli` for consistent output, and feeds `flext-web` dashboards once the CLI stabilizes.
 
 ## Quality & compliance
 
 - **Validation commands**: `make lint`, `make type-check`, `make security`, `make check`, `make validate`, `make quality-analysis`, `make report`, `make diagnose`.
-- **Zero-tolerance policy**: No `Any`, no `cast`, no `TYPE_CHECKING`, no exception-based results anywhere; all APIs return `FlextResult[T]` (FlextResult alias `r`).
+- **Zero-tolerance policy**: No `Any`, no `cast`, no `TYPE_CHECKING`, no exception-based results anywhere; all APIs return `r[T]` (r alias `r`).
 - **Testing**: Unit + integration + CLI tests exist, but `pytest` runs fail because FlextModels.BaseModel isn’t accessible; these failures are noted in the README and block `make validate`.
 - **Security**: Bandit + pip-audit configured, plus `flext-quality` supplies hooks/validators to enforce dangerous-command detection, type rules, and architecture compliance in other workspaces.
 

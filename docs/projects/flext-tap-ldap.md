@@ -19,7 +19,7 @@ FLEXT Tap LDAP v1.0.0 (release preparation) is the Singer tap that streams LDAP 
 - **Tests**: ~339+ unit/integration/e2e methods; the README reports 90%+ coverage and all suites pass in the blocked validation pipeline
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is the gating command before merges; `make check`/`make lint`/`make type-check` all currently succeed
 - **Dependencies**: `flext-core`, `flext-cli`, `flext-ldap`, `flext-meltano`, Singer SDK, `dbt`/Meltano workflows
-- **Zero tolerance**: no direct `singer-sdk`, `ldap3`, or Click/Rich imports; everything flows through the mandated projects and returns `FlextResult[T]`
+- **Zero tolerance**: no direct `singer-sdk`, `ldap3`, or Click/Rich imports; everything flows through the mandated projects and returns `r[T]`
 
 ## Quick start
 
@@ -43,7 +43,7 @@ Configuration reference and example JSON live under `docs/` and the README (host
 ## Architecture & patterns
 
 - **Clean Architecture**: Domain (`domain/`), application (`application/`), infrastructure (`infrastructure/`), and protocol (`streams.py`, `ldif_stream.py`) layers; only lower tiers import via short aliases (`m`, `u`, `r`).
-- **Singer streams**: Users, Groups, OrganizationalUnits, Schema, Custom, LDIF, and LDIFAnalysis streams all implement Singer tap contracts while converting LDAP/LDIF entries through `FlextResult` orchestrators.
+- **Singer streams**: Users, Groups, OrganizationalUnits, Schema, Custom, LDIF, and LDIFAnalysis streams all implement Singer tap contracts while converting LDAP/LDIF entries through `r` orchestrators.
 - **Configuration models**: `config.py` exposes Pydantic `FlextTapLdapConfig` with strict validation, including LDAP connection settings, LDIF toggles, Melro (Meltano) integration, and security tokens.
 - **Zero tolerance governance**: `AGENTS.md` enforces mandatory usage of `flext-ldap`, `flext-meltano`, `flext-core`, and `flext-cli`; forbids direct `ldap3`, `singer-sdk`, `click`, `rich`, `Any`, `cast`, or `TYPE_CHECKING`.
 

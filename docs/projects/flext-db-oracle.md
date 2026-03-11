@@ -10,7 +10,7 @@
 - [Support & contributions](#support-contributions)
 <!-- TOC END -->
 
-FLEXT DB Oracle (v0.9.9) is the enterprise Oracle database integration foundation for the FLEXT ecosystem. It wraps SQLAlchemy 2.0 + python-oracledb behind FlextResult-driven services, connection pooling, schema introspection, and CLI helpers so every Oracle-focused project reuses identical patterns.
+FLEXT DB Oracle (v0.9.9) is the enterprise Oracle database integration foundation for the FLEXT ecosystem. It wraps SQLAlchemy 2.0 + python-oracledb behind r-driven services, connection pooling, schema introspection, and CLI helpers so every Oracle-focused project reuses identical patterns.
 
 ## Status & metrics
 
@@ -59,7 +59,7 @@ if result.is_success:
 ## Architecture overview
 
 - **FlextDbOracleApi** (`api.py`) - single facade that exposes query, schema, connection, and CLI operations; the only file permitted to import SQLAlchemy/Oracle directly.
-- **Service layer** (`services/`, `providers/`) - orchestrates connection pooling, schema introspection, and migration helpers atop FlextResult.
+- **Service layer** (`services/`, `providers/`) - orchestrates connection pooling, schema introspection, and migration helpers atop r.
 - **Protocols & models** - `models.py`, `constants.py`, `typings.py`, `protocols.py` share the same short alias discipline (`r`, `c`, `t`, `p`).
 - **CLI integration** - uses `flext-cli` conventions; Phase 2 replaces SimpleNamespace placeholders with Rich formatters and progress indicators while keeping the same `make oracle-connect` commands.
 
@@ -67,7 +67,7 @@ if result.is_success:
 
 - Enterprise-grade Oracle connectivity with failover-aware connection pooling, metadata extraction, and parameterized query execution.
 - Schema introspection helpers (tables, columns, constraints) and migration-ready builders for Oracle-specific quirks.
-- Railway error handling (`FlextResult[T]`) and compliance with flext-core patterns (no `TYPE_CHECKING`, no `Any`, zero-cast policy).
+- Railway error handling (`r[T]`) and compliance with flext-core patterns (no `TYPE_CHECKING`, no `Any`, zero-cast policy).
 - Integration with `flext-tap-oracle`, `flext-target-oracle`, and `flext-dbt-oracle` so downstream ETL flows re-use workloads.
 - Quality gates: `make lint`, `make type-check`, `make security`, `make test`, `make validate`, plus Oracle integration tests (Pytest markers `unit`, `integration`).
 
