@@ -20,8 +20,20 @@ COPY --chown=appuser:appuser . .
 
 # Install essential Python packages directly
 RUN pip install --no-cache-dir \
-    click pydantic rich typer httpx jinja2 pathspec tomli \
-    pytest pytest-cov pytest-ruff pyrefly bandit pip-audit
+    bandit \
+    click \
+    httpx \
+    jinja2 \
+    pathspec \
+    pip-audit \
+    pydantic \
+    pyrefly \
+    pytest \
+    pytest-cov \
+    pytest-ruff \
+    rich \
+    tomli \
+    typer
 
 # Create necessary directories
 RUN mkdir -p /app/logs /app/outputs /app/test_results /app/example_results && \
