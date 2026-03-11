@@ -3,7 +3,13 @@ FROM python:3.13-slim
 WORKDIR /app
 
 # Install only essential dependencies
-RUN pip install --no-cache-dir pydantic pytest pytest-cov ruff mypy click
+RUN pip install --no-cache-dir \
+    click \
+    mypy \
+    pydantic \
+    pytest \
+    pytest-cov \
+    ruff
 
 # Copy source code
 COPY . .
@@ -20,12 +26,12 @@ RUN pip install -e . --no-deps
 RUN echo "🧪 Testing imports..." && \
     python -c "from flext_quality import CodeAnalyzer; print('✅ CodeAnalyzer')" && \
     python -c "from flext_quality import FlextQualityError; print('✅ Exceptions')" && \
-    python -c "from flext_core import FlextBus, FlextSettings, FlextConstants, FlextContainer, FlextContext, FlextDecorators, FlextDispatcher, FlextExceptions, h, FlextLogger, x, FlextModels, FlextProcessors, p, FlextRegistry, r, FlextRuntime, FlextService, t, u; print('✅ Flext')" && \
-    echo "✅ All imports successful\!"
+    python -c "from flext_core import FlextBus, FlextSettings, FlextConstants, FlextContainer, FlextContext, FlextDecorators, FlextDispatcher, FlextExceptions, h, FlextLogger, x, FlextModels, FlextProcessors, p, FlextRegistry, r, FlextRuntime, FlextService, u; print('✅ Flext')" && \
+    echo "✅ All imports successful!"
 
 # Run critical tests
 RUN echo "🧪 Running validation..." && \
     python -m pytest tests/test_exceptions.py --tb=short -q --maxfail=3 && \
-    echo "✅ Validation passed\!"
+    echo "✅ Validation passed!"
 
-CMD ["echo", "🎉 FLEXT Quality Docker ready\!"]
+CMD ["echo", "🎉 FLEXT Quality Docker ready!"]

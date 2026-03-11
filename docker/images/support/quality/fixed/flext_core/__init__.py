@@ -1,27 +1,41 @@
-# Complete Mock flext_core for FLEXT Quality - ALL IMPORTS
-from typing import Dict, Optional, Union, List, Any
+"""Complete Mock flext_core for FLEXT Quality - Fixed version."""
+
+from __future__ import annotations
+
 import logging
-import typing as t
+from typing import Any
 
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
 
-class r:
-    """Mock r for enterprise compatibility."""
+class r:  # noqa: N801
+    """Railway result pattern mock."""
 
-    def __init__(self, success: bool, data: Any = None, error: Optional[str] = None):
+    def __class_getitem__(cls, _item: Any) -> Any:
+        """Support r[T] syntax."""
+        return cls
+
+    def __init__(
+        self,
+        success: bool,  # noqa: FBT001
+        data: Any | None = None,
+        error: str | None = None,
+    ) -> None:
+        """Initialize result."""
         self.success = success
         self.is_failure = not success
         self.data = data
         self.error = error
 
     @classmethod
-    def ok(cls, data: Any = None):
+    def ok(cls, data: Any | None = None) -> r:
+        """Return successful result."""
         return cls(True, data=data)
 
     @classmethod
-    def fail(cls, error: str):
+    def fail(cls, error: str) -> r:
+        """Return failed result."""
         return cls(False, error=error)
 
 
@@ -31,62 +45,56 @@ class FlextExceptions:
     class Error(Exception):
         """Base flext exception."""
 
-        def __init__(self, message: str, context: Optional[dict[str, Any]] = None):
+        def __init__(self, message: str, context: dict[str, Any] | None = None) -> None:
+            """Initialize error."""
             super().__init__(message)
             self.context = context or {}
 
     class ValidationError(Error):
         """Validation error."""
 
-        pass
-
     class ConfigurationError(Error):
         """Configuration error."""
 
-        pass
-
-    class ConnectionError(Error):
+    class ConnectionError(Error):  # noqa: A001
         """Connection error."""
-
-        pass
 
     class ProcessingError(Error):
         """Processing error."""
 
-        pass
-
     class AuthenticationError(Error):
         """Authentication error."""
 
-        pass
-
-    class TimeoutError(Error):
-        """Timeout error."""
-
-        pass
+    class TimeoutError(Error):  # noqa: A001
+        """Timeout error mock."""
 
 
-def FlextLogger(name: str):
-    """Mock logger factory."""
+def FlextLogger(  # noqa: N802
+    name: str,
+) -> logging.Logger:
+    """Return mock logger."""
     return logging.getLogger(name)
 
 
 class FlextContainer:
     """Mock dependency injection container."""
 
-    def __init__(self):
-        self._services = {}
+    def __init__(self) -> None:
+        """Initialize container."""
+        self._services: dict[str, Any] = {}
 
-    def register(self, name: str, service: Any):
+    def register(self, name: str, service: Any) -> r:
+        """Register service."""
         self._services[name] = service
         return r.ok(None)
 
-    def get(self, name: str):
+    def get(self, name: str) -> r:
+        """Get service."""
         if name in self._services:
             return r.ok(self._services[name])
         return r.fail(f"Service {name} not found")
 
-    def get_typed(self, service_type: type):
+    def get_typed(self, service_type: type[Any]) -> r:
         """Get service by type."""
         for service in self._services.values():
             if isinstance(service, service_type):
@@ -94,7 +102,7 @@ class FlextContainer:
         return r.fail(f"Service of type {service_type} not found")
 
     @staticmethod
-    def get_global():
+    def get_global() -> FlextContainer:
         """Get global container instance."""
         return _global_container
 
@@ -103,63 +111,66 @@ class FlextContainer:
 _global_container = FlextContainer()
 
 
-def get_flext_container():
+def get_flext_container() -> FlextContainer:
     """Get global container instance."""
     return _global_container
 
 
 class FlextModels:
+    """Mock models container."""
+
     class Entity(BaseModel):
         """Mock FlextModels.Entity base class."""
 
         id: str = "mock_id"
 
-        def validate_domain_rules(self):
+        def validate_domain_rules(self) -> r:
+            """Validate mock rules."""
             return r.ok(None)
 
 
-class m:
+class m:  # noqa: N801
+    """Mock m namespace."""
+
     class Value(BaseModel):
         """Mock m.Value base class."""
-
-        pass
 
 
 class FlextSettings(BaseSettings):
     """Mock FlextSettings for configuration."""
 
-    pass
-
 
 class FlextConstants:
-    """Mock constants class to fix import errors."""
+    """Mock constants class."""
 
-    VERSION = "0.9.0"
-    DEFAULT_TIMEOUT = 30
-    MAX_RETRIES = 3
+    VERSION: str = "0.9.0"
+    DEFAULT_TIMEOUT: int = 30
+    MAX_RETRIES: int = 3
 
 
 # Type aliases for compatibility
-TAnyDict = Dict[str, Any]
-TConfigDict = Dict[str, Any]
+TAnyDict = dict[str, Any]
+TConfigDict = dict[str, Any]
 
-# Additional helpers for imports
-h = t  # Just a mock
-x = t  # Just a mock
+# Additional helpers for mock imports
+h: Any = None
+x: Any = None
+e = FlextExceptions
 
 # Export all required symbols
 __all__ = [
-    "r",
-    "FlextLogger",
-    "FlextContainer",
-    "get_flext_container",
-    "FlextModels",
-    "m",
-    "FlextSettings",
     "FlextConstants",
+    "FlextContainer",
+    "FlextExceptions",
+    "FlextLogger",
+    "FlextModels",
+    "FlextSettings",
     "TAnyDict",
     "TConfigDict",
-    "FlextExceptions",
+    "e",
+    "get_flext_container",
     "h",
+    "m",
+    "r",
     "x",
 ]

@@ -1,11 +1,15 @@
-# Mock flext_core.exceptions module
-"""Mock exceptions module for enterprise compatibility."""
+"""Mock flext_core.exceptions module."""
+
+from __future__ import annotations
+
+from typing import Any
 
 
 class Error(Exception):
     """Base flext exception."""
 
-    def __init__(self, message: str, context: dict[str, object] = None):
+    def __init__(self, message: str, context: dict[str, Any] | None = None) -> None:
+        """Initialize error."""
         super().__init__(message)
         self.context = context or {}
 
@@ -13,45 +17,33 @@ class Error(Exception):
 class ValidationError(Error):
     """Validation error."""
 
-    pass
-
 
 class ConfigurationError(Error):
     """Configuration error."""
-
-    pass
 
 
 class ConnectionError(Error):
     """Connection error."""
 
-    pass
-
 
 class ProcessingError(Error):
     """Processing error."""
-
-    pass
 
 
 class AuthenticationError(Error):
     """Authentication error."""
 
-    pass
-
 
 class TimeoutError(Error):
-    """Timeout error."""
-
-    pass
+    """Timeout error mock."""
 
 
 __all__ = [
-    "Error",
-    "ValidationError",
+    "AuthenticationError",
     "ConfigurationError",
     "ConnectionError",
+    "Error",
     "ProcessingError",
-    "AuthenticationError",
     "TimeoutError",
+    "ValidationError",
 ]
