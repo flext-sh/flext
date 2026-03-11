@@ -1,3 +1,9 @@
+from sqlalchemy.engine.result import _KeyIndexType
+from sqlalchemy.engine.result import _UniqueFilterType
+from sqlalchemy.engine.result import _TP
+from sqlalchemy.ext.asyncio.result import _TP
+from sqlalchemy.engine.row import _TP
+from sqlalchemy.sql._typing import _TP
 import operator
 from collections.abc import AsyncIterator, Sequence
 from typing import Any, ClassVar, Self

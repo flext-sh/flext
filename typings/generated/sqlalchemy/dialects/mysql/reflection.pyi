@@ -1,3 +1,5 @@
+from sqlalchemy.dialects.mysql.base import MySQLIdentifierPreparer
+from sqlalchemy.dialects.mysql.base import MySQLDialect
 from typing import ClassVar
 
 TYPE_CHECKING: bool

@@ -1,3 +1,10 @@
+from rich.console import RenderResult
+from rich.console import ConsoleOptions
+from typings.generated.rich.console import ConsoleOptions
+from rich import Console
+from typings.generated.rich.console import Console
+from rich.console import Console
+from rich.console import RenderableType
 import typing
 
 import rich.box

@@ -1,3 +1,5 @@
+from typings.generated.grpc import AuthMetadataContext
+from grpc import AuthMetadataContext
 import _abc
 import typing
 from typing import ClassVar

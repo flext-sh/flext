@@ -1,3 +1,25 @@
+from django.test.utils import _C
+from alembic.ddl._autogen import _C
+from alembic.util.langhelpers import _C
+from django.template.library import _C
+from attr import _C
+from attrs import _C
+from _weakref import _C
+from typings.ldif3.attrs import _C
+from alembic.op import _C
+from django.core.checks.registry import _C
+from typings.ldif3.django-stubs.utils import _C
+from joblib.externals.loky.backend.reduction import _C
+from alembic.autogenerate.compare.constraints import _C
+from django.db.transaction import _C
+from alembic.operations.base import _C
+from concurrent.futures.thread import _C
+from sqlalchemy.engine.util import _C
+from django.utils.functional import _C
+from typings.ldif3.django-stubs.db import _C
+from fastmcp.server.providers.local_provider.local_provider import _C
+from django.utils.safestring import _C
+from singer_sdk.sql.sink import _C
 import _abc
 import typing
 from collections.abc import Callable

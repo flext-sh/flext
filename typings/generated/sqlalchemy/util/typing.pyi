@@ -1,3 +1,36 @@
+from _typeshed import _VT_co
+from collections import _VT_co
+from rpds import _VT_co
+from fontTools.ttLib.ttFont import _VT_co
+from _collections_abc import _VT_co
+from lxml._types import _VT_co
+from typing import _VT_co
+from sqlalchemy.util.typing import _VT_co
+from setuptools import _VT_co
+from types import _VT_co
+from _typeshed import _KT
+from scipy.optimize._zeros_py import _KT
+from collections import _KT
+from multiprocessing.managers import _KT
+from sqlalchemy.orm.events import _KT
+from sqlalchemy.util._py_collections import _KT
+from optype._core._do import _KT
+from importlib.metadata import _KT
+from typing import _KT
+from sqlalchemy.ext.mutable import _KT
+from urllib3._collections import _KT
+from openpyxl.utils.bound_dictionary import _KT
+from sqlalchemy.orm.mapped_collection import _KT
+from setuptools import _KT
+from weakref import _KT
+from sqlalchemy.util._collections import _KT
+from scipy.sparse.linalg._eigen.arpack.arpack import _KT
+from sqlalchemy.util.typing import _KT
+from numpy.f2py.f2py2e import _KT
+from cachetools import _KT
+from builtins import _KT
+from sqlalchemy.orm.collections import _KT
+from concurrent.futures.thread import _KT
 import _abc
 import typing
 from collections.abc import Callable, Iterable, Mapping

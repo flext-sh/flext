@@ -1,3 +1,5 @@
+from typings.generated.sqlalchemy.engine.interfaces import DBAPIConnection
+from sqlalchemy.engine.interfaces import DBAPIConnection
 from typing import ClassVar
 
 import sqlalchemy.event.base

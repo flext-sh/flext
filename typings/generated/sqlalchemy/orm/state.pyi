@@ -1,3 +1,22 @@
+from sqlalchemy.orm.attributes import AttributeImpl
+from sqlalchemy.orm.attributes import History
+from sqlalchemy.orm import PassiveFlag
+from typings.generated.sqlalchemy.orm.base import PassiveFlag
+from sqlalchemy.orm.base import PassiveFlag
+from sqlalchemy.orm import ClassManager
+from sqlalchemy.orm.instrumentation import ClassManager
+from typings.generated.sqlalchemy.orm.instrumentation import ClassManager
+from sqlalchemy.engine import Row
+from typings.generated.sqlalchemy.engine.row import Row
+from sqlalchemy import Row
+from rich.table import Row
+from sqlite3 import Row
+from sqlalchemy.engine.row import Row
+from psycopg.rows import Row
+from sqlalchemy.orm._typing import _InstanceDict
+from sqlalchemy.orm import IdentityMap
+from typings.generated.sqlalchemy.orm.identity import IdentityMap
+from sqlalchemy.orm.identity import IdentityMap
 import _abc
 import typing
 from collections.abc import Iterable

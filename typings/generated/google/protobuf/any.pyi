@@ -1,3 +1,6 @@
+from email import _MessageT
+from email._policybase import _MessageT
+from email.generator import _MessageT
 import google.protobuf.any_pb2
 import google.protobuf.descriptor
 import google.protobuf.message

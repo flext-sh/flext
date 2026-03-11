@@ -1,3 +1,8 @@
+from sqlalchemy.orm import Mapper
+from typings.generated.sqlalchemy.orm.mapper import Mapper
+from sqlalchemy.orm.mapper import Mapper
+from sqlalchemy.orm.interfaces import StrategizedProperty
+from sqlalchemy.orm._typing import _InternalEntityType
 import typing
 from builtins import _StrPathToken
 from collections.abc import Iterator

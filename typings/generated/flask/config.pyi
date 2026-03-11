@@ -1,3 +1,4 @@
+from flask.sansio.app import App
 import os
 import typing
 from typing import ClassVar

@@ -1,3 +1,12 @@
+from typings.generated.sqlalchemy.event.attr import RefCollection
+from sqlalchemy.event import RefCollection
+from sqlalchemy.event.attr import RefCollection
+from numpy.testing._private.utils import _ET
+from lxml.objectify._misc import _ET
+from lxml._types import _ET
+from sqlalchemy.event.registry import _ET
+from sqlalchemy.sql.visitors import _ET
+from typings.ldif3.numpy.testing._private import _ET
 import typing
 from collections import deque
 from typing import Any, ClassVar, _ListenerFnType

@@ -1,3 +1,35 @@
+from typings.generated.sqlalchemy.sql.visitors import ExternalTraversal
+from sqlalchemy.sql.visitors import ExternalTraversal
+from typings.generated.sqlalchemy.sql.visitors import ExternallyTraversible
+from sqlalchemy.sql.visitors import ExternallyTraversible
+from sqlalchemy.sql._typing import _EquivalentColumnMap
+from sqlalchemy.sql import Selectable
+from sqlalchemy.sql.expression import Selectable
+from sqlalchemy import Selectable
+from sqlalchemy.sql.selectable import Selectable
+from sqlalchemy import TextClause
+from typings.generated.sqlalchemy.sql.elements import TextClause
+from sqlalchemy.sql.expression import TextClause
+from sqlalchemy.sql.elements import TextClause
+from sqlalchemy.sql.selectable import _SelectIterable
+from alembic.util.sqla_compat import _CE
+from sqlalchemy.orm.relationships import _CE
+from sqlalchemy.sql.util import _CE
+from sqlalchemy.sql.visitors import _CE
+from sqlalchemy.sql._typing import _CE
+from sqlalchemy.engine.interfaces import _AnyExecuteParams
+from sqlalchemy.engine import Row
+from sqlalchemy import Row
+from typings.generated.sqlalchemy.engine.row import Row
+from sqlite3 import Row
+from rich.table import Row
+from sqlalchemy.engine.row import Row
+from psycopg.rows import Row
+from sqlalchemy import BinaryExpression
+from sqlalchemy.sql.expression import BinaryExpression
+from typings.generated.sqlalchemy.sql.elements import BinaryExpression
+from sqlalchemy.sql.elements import BinaryExpression
+from sqlalchemy.sql.selectable import _JoinTargetElement
 import _abc
 import typing
 from collections.abc import Callable, Collection, Iterator, Sequence

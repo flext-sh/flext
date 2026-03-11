@@ -1,3 +1,16 @@
+from sqlalchemy.util.typing import _FN
+from sqlalchemy.sql.operators import _FN
+from sqlalchemy.orm.collections import _FN
+from sqlalchemy.orm.strategy_options import _FN
+from sqlalchemy.util.preloaded import _FN
+from sqlalchemy.orm.interfaces import _StrategyKey
+from sqlalchemy.orm._typing import _EntityType
+from typings.generated.sqlalchemy.orm.context import _MapperEntity
+from sqlalchemy.orm.context import _MapperEntity
+from typings.generated.sqlalchemy.orm.context import ORMCompileState
+from sqlalchemy.orm.context import ORMCompileState
+from sqlalchemy.sql._typing import _ColumnExpressionArgument
+from sqlalchemy.sql._typing import _FromClauseArgument
 from builtins import _StrPathToken
 from collections.abc import Iterable, Sequence
 from typing import (

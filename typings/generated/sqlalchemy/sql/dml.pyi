@@ -1,3 +1,16 @@
+from sqlalchemy.sql._typing import _ColumnExpressionArgument
+from sqlalchemy import Selectable
+from sqlalchemy.sql import Selectable
+from sqlalchemy.sql.expression import Selectable
+from sqlalchemy.sql.selectable import Selectable
+from sqlalchemy.sql._typing import _DMLColumnKeyMapping
+from sqlalchemy.sql._typing import _DMLTableArgument
+from typings.generated.sqlalchemy.sql.elements import KeyedColumnElement
+from sqlalchemy.sql.elements import KeyedColumnElement
+from sqlalchemy.sql._typing import _ColumnsClauseArgument
+from sqlalchemy.sql._typing import _DMLColumnArgument
+from django.db.models.sql.compiler import SQLCompiler
+from sqlalchemy.sql.compiler import SQLCompiler
 from collections.abc import Iterable, Sequence
 from typing import Any, ClassVar, NoReturn, Self
 

@@ -1,3 +1,5 @@
+from joblib.parallel import method
+from h11._abnf import method
 from typing import ClassVar
 
 import _cython_3_2_4

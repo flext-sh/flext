@@ -1,3 +1,6 @@
+from flask import Flask
+from flask.app import Flask
+from typings.generated.flask.app import Flask
 import os
 import typing
 from builtins import ModuleType

@@ -1,3 +1,14 @@
+from sqlalchemy.orm.loading import _O
+from sqlalchemy.orm.base import _O
+from sqlalchemy.orm.identity import _O
+from sqlalchemy.orm.bulk_persistence import _O
+from sqlalchemy.orm.scoping import _O
+from sqlalchemy.sql.type_api import _O
+from sqlalchemy.orm._typing import _O
+from sqlalchemy.orm._typing import _IdentityKeyType
+from sqlalchemy.orm import InstanceState
+from typings.generated.sqlalchemy.orm.state import InstanceState
+from sqlalchemy.orm.state import InstanceState
 from collections.abc import Iterable, Iterator
 from typing import Any
 
