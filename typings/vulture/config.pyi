@@ -1,5 +1,7 @@
 """Type stubs for vulture.config module."""
 
+from __future__ import annotations
+
 from typing import BinaryIO
 
 DEFAULTS: dict[str, str | int | bool | list[str]]

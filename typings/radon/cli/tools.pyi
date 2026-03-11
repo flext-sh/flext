@@ -1,7 +1,8 @@
 """Type stubs for radon.cli.tools module."""
 
+from __future__ import annotations
+
 from collections.abc import Generator, Iterable
-from contextlib import contextmanager
 
 from radon.visitors import Class, Function
 
@@ -12,18 +13,12 @@ Attributes:
 """
 
 SUPPORTS_IPYNB: bool
-_encoding: str
-
-@contextmanager
-def _open(path: str) -> Generator[object]:
-    """Mock of the built-in `open()` function. If `path` is `-` then
-    `sys.stdin` is returned.
-    """
-    ...
-
-def _is_python_file(filename: str) -> bool:
-    """Check if a file is a Python source file."""
-    ...
+BRIGHT: str
+LETTERS_COLORS: dict[str, str]
+RANKS_COLORS: dict[str, str]
+RESET: str
+TEMPLATE: str
+default_encoding: str
 
 def iter_filenames(
     paths: Iterable[str],
@@ -49,9 +44,7 @@ def explore_directories(
     """
     ...
 
-def filter_out(
-    strings: Iterable[str], patterns: Iterable[str]
-) -> Generator[str]:
+def filter_out(strings: Iterable[str], patterns: Iterable[str]) -> Generator[str]:
     """Filter out any string that matches any of the specified patterns."""
     ...
 

@@ -1,5 +1,7 @@
 """Type stubs for bandit.core.blacklisting module."""
 
+from __future__ import annotations
+
 from bandit.core.issue import Issue
 
 def report_issue(check: dict[str, object], name: str) -> Issue: ...

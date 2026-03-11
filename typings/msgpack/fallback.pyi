@@ -1,5 +1,7 @@
 """Type stubs for msgpack.fallback module."""
 
+from __future__ import annotations
+
 from collections.abc import Callable, Iterable, Iterator
 from datetime import datetime
 from io import IOBase
@@ -8,7 +10,19 @@ from typing import Self, TypeAlias
 from msgpack.ext import ExtType, Timestamp
 
 _UnpackedValue: TypeAlias = (
-    int | float | str | bytes | bytearray | bool | list[object] | tuple[object, ...] | dict[object, object] | datetime | Timestamp | ExtType | None
+    int
+    | float
+    | str
+    | bytes
+    | bytearray
+    | bool
+    | list[object]
+    | tuple[object, ...]
+    | dict[object, object]
+    | datetime
+    | Timestamp
+    | ExtType
+    | None
 )
 
 _USING_STRINGBUILDER: bool

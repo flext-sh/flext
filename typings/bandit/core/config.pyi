@@ -1,10 +1,10 @@
 """Type stubs for bandit.core.config module."""
 
+from __future__ import annotations
+
 import logging
-from typing import TypeVar
 
 LOG: logging.Logger
-T = TypeVar("T")
 
 class BanditConfig:
     config_file: str | None
