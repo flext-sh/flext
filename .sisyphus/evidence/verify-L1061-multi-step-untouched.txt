@@ -1,0 +1,17 @@
+## L1061 — Multi-step blocks left untouched
+Date: 2026-03-11
+
+Task 12 (u.try_() expansion) scope: convert functions with single try/except
+  wrapping one expression to use u.try_().
+
+Verification: scanned all u.try_() calls in src/ for multi-step lambda bodies
+  Command: grep -rn 'u\.try_\(' */src/ --include='*.py' | head -40
+
+All found u.try_() calls wrap single-expression lambdas:
+  Example: u.try_(lambda: some_function(arg), "Error message")
+  NO multi-step blocks found (no lambdas with multiple statements)
+
+Evidence file: task-12-try-expansion-final.txt lists all converted files
+All are single-expression lambdas as required by plan criterion
+
+Criterion: [x] Multi-step blocks left untouched

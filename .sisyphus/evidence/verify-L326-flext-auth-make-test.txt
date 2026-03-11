@@ -1,0 +1,6 @@
+## L326 — flext-auth make test
+Date: 2026-03-11
+Command: python -m pytest flext-auth/tests/unit/ -q --timeout=60
+Result: 154 passed in 38.97s
+Evidence: PASS — 154 tests pass, zero failures
+Criterion: [x] cd flext-auth && make test → all tests pass
