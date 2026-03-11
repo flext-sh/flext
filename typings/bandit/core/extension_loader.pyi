@@ -1,5 +1,7 @@
 """Type stubs for bandit.core.extension_loader module."""
 
+from __future__ import annotations
+
 import logging
 
 LOG: logging.Logger

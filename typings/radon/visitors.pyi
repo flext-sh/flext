@@ -1,5 +1,7 @@
 """Type stubs for radon.visitors module."""
 
+from __future__ import annotations
+
 import ast
 from collections.abc import Callable, Iterable
 from typing import NamedTuple, Self
@@ -109,6 +111,8 @@ class CodeVisitor(ast.NodeVisitor):
         """
         ...
 
+    def visit_Constant(self, node: ast.Constant) -> None: ...
+
 class ComplexityVisitor(CodeVisitor):
     """A visitor that keeps track of the cyclomatic complexity of
     the elements.
@@ -186,6 +190,7 @@ class ComplexityVisitor(CodeVisitor):
         """
         ...
 
+    def visit_Constant(self, node: ast.Constant) -> None: ...
     def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
         """Async function definition is the same thing as the synchronous
         one.
@@ -281,6 +286,7 @@ class HalsteadVisitor(CodeVisitor):
         """A comparison."""
         ...
 
+    def visit_Constant(self, node: ast.Constant) -> None: ...
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
         """When visiting functions, another visitor is created to recursively
         analyze the function's body. We also track information on the function

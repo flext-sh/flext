@@ -1,5 +1,7 @@
 """Type stubs for bandit.core.metrics module."""
 
+from __future__ import annotations
+
 class Metrics:
     """Bandit metric gathering.
 

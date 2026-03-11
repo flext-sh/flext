@@ -1,5 +1,7 @@
 """Type stubs for vulture.noqa module."""
 
+from __future__ import annotations
+
 import re
 from collections import defaultdict
 

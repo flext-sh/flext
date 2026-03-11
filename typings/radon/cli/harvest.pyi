@@ -1,5 +1,7 @@
 """Type stubs for radon.cli.harvest module."""
 
+from __future__ import annotations
+
 from collections.abc import Generator, Iterable, Sequence
 
 from radon.metrics import Halstead, HalsteadReport
@@ -8,6 +10,9 @@ from radon.visitors import Class, Function
 """This module holds the base Harvester class and all its subclassess."""
 
 SUPPORTS_IPYNB: bool
+MI_RANKS: dict[str, str]
+RANKS_COLORS: dict[str, str]
+RESET: str
 
 type HarvesterResult = tuple[str, object]
 type TerminalLine = tuple[str | list[str], tuple[object, ...], dict[str, object]]

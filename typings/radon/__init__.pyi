@@ -1,4 +1,7 @@
 """Type stubs for radon."""
 
+from __future__ import annotations
+
 __version__: str
+
 def main() -> None: ...
