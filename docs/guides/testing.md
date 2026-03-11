@@ -381,7 +381,7 @@ def test_with_mocked_dependency():
     """Test with mocked external dependency."""
     with patch("flext_ldif.external_service") as mock_service:
         # Configure mock
-        mock_service.process.return_value = r.ok("processed")
+        mock_service.process.return_value = r[str].ok("processed")
 
         # Test function that uses mock
         result = my_function()
@@ -423,7 +423,7 @@ def test_with_stubbed_service():
 
     # Create stub service
     stub_service = Mock()
-    stub_service.process.return_value = r.ok("stubbed")
+    stub_service.process.return_value = r[str].ok("stubbed")
 
     # Register stub
     _ = container.register("external_service", stub_service)

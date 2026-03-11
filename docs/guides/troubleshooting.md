@@ -148,7 +148,7 @@ def process(data):
 
 # ✅ CORRECT
 def process(data: dict[str, object]) -> r[ProcessedData]:
-    return r.ok(ProcessedData(**data))
+    return r[ProcessedData].ok(ProcessedData(**data))
 ```
 
 **Run MyPy with details:**
@@ -513,13 +513,13 @@ def safe_operation(data: dict) -> r[dict]:
     try:
         # Your operation here
         result = process_data(data)
-        return r.ok(result)
+        return r[dict].ok(result)
     except ValidationError as e:
         logger.error(f"Validation error: {e}")
-        return r.fail(f"Validation failed: {e}")
+        return r[dict].fail(f"Validation failed: {e}")
     except Exception as e:
         logger.error(f"Unexpected error: {e}", exc_info=True)
-        return r.fail(f"Operation failed: {e}")
+        return r[dict].fail(f"Operation failed: {e}")
 ```
 
 ### 3. Debug Mode
@@ -771,7 +771,7 @@ from flext_core import u
 ```python
 # ✅ GOOD
 def process(data: dict) -> r[ProcessedData]:
-    return r.ok(ProcessedData(**data))
+    return r[ProcessedData].ok(ProcessedData(**data))
 
 
 # ❌ BAD
@@ -784,10 +784,10 @@ def process(data: dict) -> ProcessedData:
    ```python
    def process_data(data: dict) -> r[dict]:
        if not data:
-           return r.fail("Data required")
+           return r[dict].fail("Data required")
 
        # Process data
-       return r.ok(processed_data)
+       return r[dict].ok(processed_data)
    ```
 
 3. **Use Type Hints**
