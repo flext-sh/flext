@@ -229,10 +229,10 @@ def configure(self, config: dict[str, Any]) -> None: ...  # ← FORBIDDEN type
 
 
 # After
-from flext_core import t
+from flext_core import m
 
 
-def configure(self, config: t.ConfigMap) -> None: ...
+def configure(self, config: m.Domain.ConfigurationModel) -> None: ...
 ```
 
 ### Pattern B: Removing Legacy Aliases

@@ -81,7 +81,7 @@ from flext_core import r
 | Method                 | Signature                                                                                                                    | Purpose                                                 |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | `r[T].ok(value)`       | `ok[T](cls, value: T) -> r[T]`                                                                                     | Wrap success value (raises `ValueError` if `None`)      |
-| `r[U].fail(error)`        | `fail[U](cls, error: str \| None, error_code: str \| None = None, error_data: t.ConfigMap \| None = None) -> r[U]` | Create failure with message, optional code and metadata |
+| `r[U].fail(error)`        | `fail[U](cls, error: str \| None, error_code: str \| None = None, error_data: m.Core.ResultErrorDataModel \| None = None) -> r[U]` | Create failure with message, optional code and metadata |
 | `r.safe`     | `safe[T](func: p.VariadicCallable[T]) -> p.VariadicCallable[r[T]]`                                                 | Decorator — catches exceptions, returns `.fail()`       |
 | `create_from_callable` | `create_from_callable(cls, func: Callable[[], T_co], error_code: str \| None = None) -> r[T_co]`                   | Execute callable, wrap result or exception              |
 
