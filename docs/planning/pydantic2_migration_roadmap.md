@@ -86,7 +86,7 @@ config = cast(ConfigDict, data)
 # AFTER: Using TypeGuard
 from flext_core import u
 
-if u.Guards.is_config(data):
+if u.is_config(data):
     config = data  # Type narrowed automatically
     config.app_name  # Safe access
 

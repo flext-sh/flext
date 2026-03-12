@@ -171,7 +171,7 @@ X: TypeAlias = str | int  # → UnionType      → isinstance(val, X) WORKS   �
 Does the alias reference itself in its own definition?
   YES → MUST use `type X = ...`
         NEVER use with isinstance(). NEVER subclass it.
-        Use u.Guards.is_*() for runtime narrowing.
+        Use u.is_*() for runtime narrowing.
   NO  → MUST use `X: TypeAlias = ...`
         Safe for isinstance(), subclassing, TypeAdapter.
 ```
@@ -230,7 +230,7 @@ for n in ['Primitives','Scalar','Container','MetadataValue','RegisterableService
 However `Mapping[str, Container]` is a parameterized generic — Python cannot use it with `isinstance()`
 for a DIFFERENT reason (parameterized generics are not allowed as isinstance args).
 This is NOT a TypeAliasType problem. The fix: never use `isinstance(val, object)`.
-Use `isinstance(val, Mapping)` (unparameterized) or `u.Guards.is_config_map(val)` instead.
+Use `isinstance(val, Mapping)` (unparameterized) or `u.is_config_map(val)` instead.
 
 ### At module level — non-recursive types use `TypeAlias`
 

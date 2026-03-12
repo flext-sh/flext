@@ -193,12 +193,12 @@ Since ALL `t.*` aliases are `TypeAliasType`, runtime narrowing MUST use one of:
    - `t.SCALAR_TYPES: tuple[type, ...] = (str, int, float, bool, datetime)`
    - `t.CONTAINER_TYPES: tuple[type, ...] = (str, int, float, bool, datetime, BaseModel, Path)`
 
-2. **TypeGuard functions** (exposed via `u.Guards`):
-   - `u.Guards.is_primitive(val)` → `TypeGuard[str | int | float | bool]`
-   - `u.Guards.is_scalar(val)` → `TypeGuard[str | int | float | bool | datetime]`
-   - `u.Guards.is_flexible_value(val)` → TypeGuard for general values
-   - `u.Guards.is_dict_like(val)` → TypeGuard for dict-like structures
-   - `u.Guards.is_list_like(val)` → TypeGuard for list-like structures
+2. **TypeGuard functions** (exposed via `u`):
+   - `u.is_primitive(val)` → `TypeGuard[str | int | float | bool]`
+   - `u.is_scalar(val)` → `TypeGuard[str | int | float | bool | datetime]`
+   - `u.is_flexible_value(val)` → TypeGuard for general values
+   - `u.is_dict_like(val)` → TypeGuard for dict-like structures
+   - `u.is_list_like(val)` → TypeGuard for list-like structures
 
 ### Recursive Aliases — Transitional, Prefer Pydantic Models
 
@@ -240,9 +240,9 @@ isinstance(val, t.PRIMITIVES_TYPES)  # Uses tuple, not alias
 # ✅ CORRECT — runtime narrowing via TypeGuard functions
 from flext_core import u
 
-if u.Guards.is_primitive(val):
+if u.is_primitive(val):
     ...
-if u.Guards.is_scalar(val):
+if u.is_scalar(val):
     ...
 
 # ✅ CORRECT — subclassing uses concrete base
@@ -660,7 +660,7 @@ if isinstance(obj, str):
 
 # ✅ CORRECT — TypeGuard for custom predicates
 def is_config_map(val: m.Domain.UnknownInputModel) -> TypeGuard[m.Domain.ConfigModel]:
-    return u.Guards.is_config_map(val)
+    return u.is_config_map(val)
 ```
 
 **Polymorphic code → centralized Pydantic models**  
