@@ -180,7 +180,13 @@ type Scalar = str | int | float | bool | datetime
 type Container = Scalar | BaseModel | Path
 
 # Recursive aliases also use PEP 695 (same syntax):
-type GeneralValueType = Scalar | BaseModel | Path | list[FlextTypes.GeneralValueType] | dict[str, FlextTypes.GeneralValueType]
+type GeneralValueType = (
+    Scalar
+    | BaseModel
+    | Path
+    | list[FlextTypes.GeneralValueType]
+    | dict[str, FlextTypes.GeneralValueType]
+)
 ```
 
 ### Runtime isinstance() — Use Tuple Constants or TypeGuard Functions
@@ -218,7 +224,9 @@ isinstance(val, t.GeneralValueType)  # CRASHES at runtime
 
 # ❌ FORBIDDEN — introducing old TypeAlias syntax
 from typing import TypeAlias
+
 Primitives: TypeAlias = str | int | float | bool  # DEPRECATED, do NOT use
+
 
 # ❌ FORBIDDEN — subclassing a type alias
 class Foo(t.Container): ...  # TypeAliasType cannot be subclassed
@@ -243,6 +251,7 @@ if u.is_primitive(val):
     ...
 if u.is_scalar(val):
     ...
+
 
 # ✅ CORRECT — subclassing uses concrete base
 class Foo(Mapping[str, t.Container]): ...  # Annotation OK, not isinstance
