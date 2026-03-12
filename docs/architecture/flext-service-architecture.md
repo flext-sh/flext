@@ -6753,9 +6753,7 @@ __all__ = ["FlextApi"]
 # ═══════════════════════════════════════════════════════════════════════
 
 
-def sync_users(
-    source_api: str, target_api: str, token: str
-) -> m.Api.ResponseModel:
+def sync_users(source_api: str, target_api: str, token: str) -> m.Api.ResponseModel:
     """Sync users between APIs - zero ceremony!"""
 
     headers = {"Authorization": f"Bearer {token}"}
