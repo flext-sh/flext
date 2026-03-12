@@ -92,7 +92,7 @@ from flext_core._utilities.conversion import FlextUtilitiesConversion
 | **FlextUtilitiesReliability**   | `u`   | Retry/circuit breaker               | 8+      |
 | **FlextUtilitiesValidation**    | `u.Validation`    | Data validation                     | 15+     |
 | **FlextUtilitiesChecker**       | `u`       | Type/value checking                 | 12+     |
-| **FlextUtilitiesArgs**          | `u.Args`          | CLI argument handling               | 8+      |
+| **FlextUtilitiesArgs**          | `u`          | CLI argument handling               | 8+      |
 
 **Total**: 548+ centralized utility methods in flext-core
 
