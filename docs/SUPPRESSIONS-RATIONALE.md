@@ -4,13 +4,13 @@
 
 0. **Overrides** — Seguir sempre o modelo padrão de `pyproject.toml` sincronizado do repositório FLEXT por `make upgrade`. Não adicionar overrides de mypy/pyright fora desse padrão.
 
-1. **Any** — Uso de `Any` é **terminantemente proibido**, exceto quando exigido por biblioteca externa. Nesses casos: **evidência** (ex.: assinatura da lib) e **comentário** no código explicando a exceção.
+1. **Any** — Uso de `Any` é **terminantemente proibido** sem exceções.
 
 2. **Unreachable** — Não suprimir `unreachable`. flext-core não usa override para isso; corrigir o fluxo no código (estrutura de validadores/ramificações) em vez de desligar a regra.
 
 3. **Supressões inline** — Não usar `# pyright: ignore`, `# pyrefly: ignore` ou equivalentes para contornar o linter. Corrigir pela **causa raiz** usando os padrões e skills do flext e as regras de AGENTS.md.
 
-4. **Dict em create*for*\*** — Não usar `dict[str, object]` como contrato público para settings. Usar modelos Pydantic de boundary (`m.SettingsOverridesModel`) e materializar `dict(...)` apenas no ponto local de mutação antes de `model_validate(...)`, alinhado ao padrão de flext-core (`from_kwargs`, `merge_defaults`).
+4. **Dict em create*for*\*** — Não usar contratos de dicionário genérico para settings. Usar modelos Pydantic de boundary (`m.SettingsOverridesModel`) e materializar `dict(...)` apenas no ponto local de mutação antes de `model_validate(...)`, alinhado ao padrão de flext-core (`from_kwargs`, `merge_defaults`).
 
 ---
 
@@ -22,8 +22,8 @@
 
 - **flext-tap-ldif**
   - Removido override de mypy em `pyproject.toml`.
-  - Settings: `create_for_development` / `create_for_production` / `create_for_testing` passam a usar `overrides: m.SettingsOverridesModel` e defaults em modelos explícitos, mantendo `model_validate(...)` sem `dict[str, object]` como interface.
-  - Utilities: erro pyrefly “bad-assignment / breaking cycles” resolvido na raiz extraindo a construção do record para `build_record_from_lines()` com tipagem forte; sem supressão inline e sem promover `dict[str, object]` como tipo de fronteira.
+  - Settings: `create_for_development` / `create_for_production` / `create_for_testing` passam a usar `overrides: m.SettingsOverridesModel` e defaults em modelos explícitos, mantendo `model_validate(...)` sem interfaces genéricas.
+  - Utilities: erro pyrefly “bad-assignment / breaking cycles” resolvido na raiz extraindo a construção do record para `build_record_from_lines()` com tipagem forte; sem supressão inline e sem promover fronteiras genéricas.
 
 - **typings**
   - Corrigido stub `typings/generated/sqlalchemy/sql/visitors.pyi`: parâmetros duplicados `self` em `__call__` substituídos por nomes únicos (`visitable`, `target`) para mypy não falhar ao analisar dependentes.
@@ -33,7 +33,7 @@
 ## Atualizações (continuação do plano)
 
 - **flext-core**
-  - **FlextSettings.__init__**: Mantido `cast("dict[str, Any]", kwargs)` exclusivamente na fronteira de biblioteca (`pydantic_settings`) com comentário explícito de exceção e referência verificável. Fora dessa fronteira, `cast()` permanece proibido.
+  - **FlextSettings.__init__**: Removida abordagem permissiva de cast em fronteira de biblioteca; fronteira segue contrato de modelo explícito e validação direta.
 - **flext-dbt-ldap**
   - **Unreachable**: Helper `_entry_attrs_mapping(entry)` no módulo; `normalize_attributes` / `_get_object_classes` e `dbt_client._matches_schema` usam esse helper. Import de `_entry_attrs_mapping` movido para o topo de `dbt_client.py` (lint PLC0415).
   - **Fronteira Pydantic (SSOT)**: Um único `[[tool.mypy.overrides]]` em `pyproject.toml` para `module = "flext_dbt_ldap.models"` com `disallow_any_explicit = false`. Causa: membro sintético `__mypy-replace` na cadeia Value → BaseModel; limitação conhecida mypy/Pydantic. Override documentado no próprio `pyproject.toml` e aqui; não adicionar outros overrides fora desse padrão.
