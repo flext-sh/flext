@@ -8,9 +8,9 @@
   - [Project Dependency Order](#project-dependency-order)
   - [Architecture Layering within Projects](#architecture-layering-within-projects)
 - [Canonical Type Patterns](#canonical-type-patterns)
-  - [Pattern 1: Simple Type Alias (No Namespace Needed)](#pattern-1-simple-type-alias-no-namespace-needed)
+  - [Pattern 1: Simple Type Contract (No Namespace Needed)](#pattern-1-simple-type-contract-no-namespace-needed)
   - [Pattern 2: Domain Collection Type (Nested Namespace)](#pattern-2-domain-collection-type-nested-namespace)
-  - [Pattern 3: TypeVar Bounded to Object (Avoiding Circular Imports)](#pattern-3-typevar-bounded-to-object-avoiding-circular-imports)
+  - [Pattern 3: TypeVar Bounded to Protocol (Avoiding Circular Imports)](#pattern-3-typevar-bounded-to-protocol-avoiding-circular-imports)
   - [Pattern 4: Union → Protocol (Complexity Reduction)](#pattern-4-union-protocol-complexity-reduction)
   - [Pattern 5: Covariance in Protocols](#pattern-5-covariance-in-protocols)
   - [Pattern 6: TypeVar Reuse (Centralized)](#pattern-6-typevar-reuse-centralized)
@@ -131,7 +131,7 @@ flext-oud-mig (depends on flext-core, flext-cli, flext-ldif, flext-ldap)
 **When**: Single-purpose type, used rarely, clearly scoped
 
 ```python
-# Use canonical contracts from t.* (never bare object)
+# Use canonical contracts from runtime facades (never bare generic types)
 type ScalarLike = t.Scalar
 
 # Usage: keep values in strict canonical contracts

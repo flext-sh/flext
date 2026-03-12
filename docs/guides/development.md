@@ -335,7 +335,7 @@ class FlextNewlib:
     def __init__(self, config: FlextNewlibSettings):
         self.config = config
 
-    def process(self, data: dict) -> r[dict]:
+    def process(self, data: NewlibProcessInputModel) -> r[NewlibProcessResultModel]:
         """Process data using r pattern."""
         # Implementation here
         pass
@@ -347,10 +347,10 @@ class FlextNewlibModels:
         setting: str = "default"
 
     class Request(BaseModel):
-        data: dict[str, object]
+        data: NewlibProcessInputModel
 
     class Response(BaseModel):
-        result: r[object]
+        result: r[NewlibProcessResultModel]
 ```
 
 ### 3. Add to Workspace
@@ -399,7 +399,7 @@ poetry env info
 ### Code Documentation
 
 ```python
-def process_data(data: dict[str, object]) -> r[ProcessedData]:
+def process_data(data: ProcessInputModel) -> r[ProcessedData]:
     """
     Process data using the FLEXT pipeline.
 

@@ -1830,7 +1830,7 @@ class MyService(FlextService[ResultType]):
     # ════════════════════════════════════════════════════════════
     # DI: Container access (from x)
     # ════════════════════════════════════════════════════════════
-def _get_dependency(self, name: str) -> t.Container:
+def _get_dependency(self, name: str) -> m.Service.DependencyModel:
         """Resolve dependency from DI container."""
         result = self.container.get(name)
         return result.unwrap() if result.is_success else None
@@ -2132,16 +2132,16 @@ class CreateUser(FlextService[User]):
 **Sometimes one class does multiple things:**
 
 ```python
-class FlextApi(FlextService[Mapping[str, t.Container]]):
+class FlextApi(FlextService[m.Api.ResponseModel]):
     """HTTP client - multiple operations via 'operation' field."""
 
     operation: Literal["get", "post", "put", "delete", "patch"]
     url: str
     headers: dict[str, str] = Field(default_factory=dict)
-    body: t.Container | None = None
+    body: m.Api.RequestBodyModel | None = None
     timeout: int = 30
 
-    def execute(self) -> r[Mapping[str, t.Container]]:
+    def execute(self) -> r[m.Api.ResponseModel]:
         """Dispatch based on operation."""
         match self.operation:
             case "get":
@@ -2157,7 +2157,7 @@ class FlextApi(FlextService[Mapping[str, t.Container]]):
             case _:
                 return r.fail(f"Unknown operation: {self.operation}")
 
-    def _http_get(self) -> r[Mapping[str, t.Container]]:
+    def _http_get(self) -> r[m.Api.ResponseModel]:
         """GET implementation."""
         try:
             response = httpx.get(self.url, headers=self.headers, timeout=self.timeout)
@@ -2170,12 +2170,12 @@ class FlextApi(FlextService[Mapping[str, t.Container]]):
 
 
 # But wrap in factory functions for usability:
-def HttpGet(url: str, **kwargs) -> Mapping[str, t.Container]:
+def HttpGet(url: str, **kwargs) -> m.Api.ResponseModel:
     """GET request - looks like a function!"""
     return FlextApi(operation="get", url=url, **kwargs).value
 
 
-def HttpPost(url: str, data: t.Container, **kwargs) -> Mapping[str, t.Container]:
+def HttpPost(url: str, data: m.Api.RequestBodyModel, **kwargs) -> m.Api.ResponseModel:
     """POST request - looks like a function!"""
     return FlextApi(operation="post", url=url, body=data, **kwargs).value
 
@@ -3150,7 +3150,7 @@ class FlextLdif(Flext[dict[str, object]]):
 # flext-ldif/src/flext_ldif/services/writer.py (linha 36-42)
 
 
-class FlextLdifWriter(Flext[Mapping[str, t.Container]]):
+class FlextLdifWriter(Flext[m.Ldif.WriteResultModel]):
     """Unified LDIF Writer Service."""
 
     def __init__(self) -> None:
@@ -3520,7 +3520,7 @@ class FlextSettings(BaseSettings):
 
     @computed_field
     @property
-def log_config(self) -> Mapping[str, t.Container]:
+def log_config(self) -> m.Logging.ConfigSnapshotModel:
         """Auto: complete logging config for FlextLogger."""
         return {
             "level": self.effective_log_level,
@@ -3947,7 +3947,7 @@ class FlextApiModels:
         )
         url: str = Field(..., min_length=1, max_length=2048)
         headers: dict[str, str] = Field(default_factory=dict)
-body: t.Container | None = Field(default=None)
+body: m.Api.RequestBodyModel | None = Field(default=None)
         timeout: float = Field(default=30.0, ge=0.1, le=300.0)
 
         # ✅ BOM: Computed field para derived values
@@ -3962,7 +3962,7 @@ body: t.Container | None = Field(default=None)
 
         status_code: int = Field(..., ge=100, le=599)
         headers: dict[str, str] = Field(default_factory=dict)
-body: t.Container | None = Field(default=None)
+body: m.Api.RequestBodyModel | None = Field(default=None)
         request_id: str | None = Field(default=None)
 
         # ✅ BOM: Computed properties para business logic
@@ -4224,7 +4224,7 @@ class User(FlextModels.Entity, AuditableMixin):
 class Order(FlextModels.Entity):
     """Order with computed totals."""
 
-items: list[Mapping[str, t.Container]]
+items: list[m.Domain.ItemModel]
     tax_rate: float = Field(default=0.08)
 
     @computed_field
@@ -4370,7 +4370,7 @@ class FlextLdifProtocols:
             dn: str | DN
 
 
-attributes: Mapping[str, t.Container]
+attributes: m.Ldif.AttributeSetModel
 ```
 
 #### ✅ O Que Funciona Bem
@@ -4633,7 +4633,7 @@ class FlextLogger:
     # ═══════════════════════════════════════════════════════════════
 
 
-def info(self, msg: str, extra: Mapping[str, t.Container] | None = None):
+def info(self, msg: str, extra: m.Logging.ExtraContextModel | None = None):
     """Auto: Add context from config."""
     enhanced_extra = {
         **(extra or {}),
@@ -5209,7 +5209,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
 #### 4. **Multiple Operations Pattern**
 
 ```python
-class FlextApi(FlextService[Mapping[str, t.Container]]):
+class FlextApi(FlextService[m.Api.ResponseModel]):
     """Multiple operations: HTTP methods."""
 
     # Operation selector
@@ -5220,9 +5220,9 @@ class FlextApi(FlextService[Mapping[str, t.Container]]):
     headers: dict[str, str] = Field(default_factory=dict)
 
     # Operation-specific parameters
-    body: t.Container | None = None
+    body: m.Api.RequestBodyModel | None = None
 
-    def execute(self) -> r[Mapping[str, t.Container]]:
+    def execute(self) -> r[m.Api.ResponseModel]:
         """Execute based on operation."""
         # Config via property
         timeout = self.project_config.api_timeout
@@ -5362,13 +5362,13 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
         return self.is_success
 
     @classmethod
-def run(cls, **kwargs: t.Container) -> TResult:
+def run(cls, **kwargs: m.Service.RunOptionsModel) -> TResult:
         """Execute and return value directly (raises on failure)."""
         instance = cls(**kwargs)
         return instance.value
 
     @classmethod
-def try_run(cls, **kwargs: t.Container) -> r[TResult]:
+def try_run(cls, **kwargs: m.Service.RunOptionsModel) -> r[TResult]:
         """Execute and return Result."""
         instance = cls(**kwargs)
         return instance.result
@@ -5395,7 +5395,7 @@ class FlextServiceResult[T]:
     def value_or(self, default: T) -> T:
         return self._result.value if self._result.is_success else default
 
-def map(self, func: Callable[[T], t.Container]) -> "FlextServiceResult":
+def map(self, func: Callable[[T], m.Service.MappedValueModel]) -> "FlextServiceResult":
         return FlextServiceResult(self._result.map(func))
 
     def and_then(self, func: Callable[[T], r]) -> "FlextServiceResult":
@@ -5416,7 +5416,7 @@ def map(self, func: Callable[[T], t.Container]) -> "FlextServiceResult":
 **Before:**
 
 ```python
-class FlextLdifWriter(Flext[Mapping[str, t.Container]]):
+class FlextLdifWriter(Flext[m.Ldif.WriteResultModel]):
     def __init__(self, config: FlextLdifSettings | None = None):
         super().__init__()
         self._config = config or FlextLdifSettings()
@@ -5432,7 +5432,7 @@ class FlextLdifWriter(Flext[Mapping[str, t.Container]]):
         ...
 
 
-def execute(self) -> r[Mapping[str, t.Container]]:
+def execute(self) -> r[m.Ldif.WriteResultModel]:
     # Stub
     return r.ok({})
 ```
@@ -5490,7 +5490,7 @@ class FlextApi(FlextService[dict]):
         # Implementation
         ...
 
-def post(self, url: str, data: t.Container, **kwargs) -> r[Mapping[str, t.Container]]:
+def post(self, url: str, data: m.Api.RequestBodyModel, **kwargs) -> r[m.Api.ResponseModel]:
         # Implementation
         ...
 
@@ -5502,7 +5502,7 @@ def post(self, url: str, data: t.Container, **kwargs) -> r[Mapping[str, t.Contai
 **After:**
 
 ```python
-class FlextApi(FlextService[Mapping[str, t.Container]]):
+class FlextApi(FlextService[m.Api.ResponseModel]):
     """HTTP API client - multiple operations service."""
 
     # Operation selector
@@ -5514,10 +5514,10 @@ class FlextApi(FlextService[Mapping[str, t.Container]]):
     params: dict[str, str] = Field(default_factory=dict)
 
     # Operation-specific parameters
-body: t.Container | None = None
+body: m.Api.RequestBodyModel | None = None
     auth: tuple[str, str] | None = None
 
-def execute(self) -> r[Mapping[str, t.Container]]:
+def execute(self) -> r[m.Api.ResponseModel]:
         """Execute HTTP request based on operation."""
         # Config singleton via property
         timeout = self.project_config.api_timeout
@@ -5537,7 +5537,7 @@ def execute(self) -> r[Mapping[str, t.Container]]:
                 return r.fail(f"Unknown operation: {self.operation}")
 
     # Convenience methods (optional)
-def get(self, url: str, **kwargs: t.Container) -> r[Mapping[str, t.Container]]:
+def get(self, url: str, **kwargs: m.Api.RequestOptionsModel) -> r[m.Api.ResponseModel]:
         """Convenience: HTTP GET."""
         self.operation = "get"
         self.url = url
@@ -6612,7 +6612,7 @@ from flext_core import r
 import httpx
 
 
-class FlextApi(FlextService[Mapping[str, t.Container]]):
+class FlextApi(FlextService[m.Api.ResponseModel]):
     """HTTP API client - multiple operations.
 
     Usa `operation` field para dispatch interno.
@@ -6649,7 +6649,7 @@ class FlextApi(FlextService[Mapping[str, t.Container]]):
     ] = {}
 
     body: Annotated[
-        t.Container | None,
+        m.Api.RequestBodyModel | None,
         Field(default=None, description="Request body (for POST/PUT/PATCH)"),
     ] = None
 
@@ -6674,7 +6674,7 @@ class FlextApi(FlextService[Mapping[str, t.Container]]):
     # ═══════════════════════════════════════════════════════════════
 
 
-def execute(self) -> r[Mapping[str, t.Container]]:
+def execute(self) -> r[m.Api.ResponseModel]:
     """Execute HTTP request based on operation."""
     # Config singleton
     verify_ssl = self.project_config.api_verify_ssl
@@ -6701,7 +6701,7 @@ def execute(self) -> r[Mapping[str, t.Container]]:
 # ═══════════════════════════════════════════════════════════════
 # PRIVATE IMPLEMENTATIONS
 # ═══════════════════════════════════════════════════════════════
-def _http_get(self, timeout: int, verify: bool) -> r[Mapping[str, t.Container]]:
+def _http_get(self, timeout: int, verify: bool) -> r[m.Api.ResponseModel]:
     """Execute GET request."""
     try:
         self.logger.info(f"GET {self.url}")
@@ -6718,7 +6718,7 @@ def _http_get(self, timeout: int, verify: bool) -> r[Mapping[str, t.Container]]:
         return r.fail(f"GET failed: {e}")
 
 
-def _http_post(self, timeout: int, verify: bool) -> r[Mapping[str, t.Container]]:
+def _http_post(self, timeout: int, verify: bool) -> r[m.Api.ResponseModel]:
     """Execute POST request."""
     try:
         self.logger.info(f"POST {self.url}")
@@ -6755,7 +6755,7 @@ __all__ = ["FlextApi"]
 
 def sync_users(
     source_api: str, target_api: str, token: str
-) -> Mapping[str, t.Container]:
+) -> m.Api.ResponseModel:
     """Sync users between APIs - zero ceremony!"""
 
     headers = {"Authorization": f"Bearer {token}"}
@@ -6942,7 +6942,7 @@ def complex_migration(
 
 
 # 1. Service definition (com stub execute)
-class FlextLdifParser(Flext[Mapping[str, t.Container]]):
+class FlextLdifParser(Flext[m.Ldif.ParseResultModel]):
     def __init__(self, config: FlextLdifSettings | None = None):
         super().__init__()
         self._config = config or FlextLdifSettings()
@@ -6955,7 +6955,7 @@ class FlextLdifParser(Flext[Mapping[str, t.Container]]):
         return self._do_parse(source, encoding)
 
 
-def execute(self) -> r[Mapping[str, t.Container]]:
+def execute(self) -> r[m.Ldif.ParseResultModel]:
     return r.ok({})  # stub!
 
 

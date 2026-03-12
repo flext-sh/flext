@@ -111,7 +111,7 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
   type Primitives = str | int | float | bool  # FORBIDDEN — crashes isinstance()
   type Scalar = str | int | float | bool | datetime  # FORBIDDEN
   type ConfigurationMapping = Mapping[str, Container]  # FORBIDDEN
-  isinstance(val, t.JsonValue)  # FORBIDDEN — recursive alias, always crashes
+  isinstance(val, t.GeneralValueType)  # FORBIDDEN — recursive alias, always crashes
 
 
   class Foo(dict): ...  # FORBIDDEN — use explicit model contracts (m.*)

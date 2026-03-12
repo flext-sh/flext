@@ -93,7 +93,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 from flext_core import r, t
 
 
-def parse_payload(payload: t.ConfigMap) -> r[str]:
+def parse_payload(payload: m.Domain.PayloadModel) -> r[str]:
     if "name" not in payload:
         return r.fail("Missing name")
     return r[str].ok("ok")
@@ -126,7 +126,7 @@ def parse_payload(payload: t.ConfigMap) -> r[str]:
 | `Any` / `object` | `t.Scalar`                 | Primitives: `str \| int \| float \| bool \| datetime`         |
 | `dict[*, *]`      | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
 | `Mapping[*, *]`   | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
-| `t.Container`     | `m.<Domain>.*Model` / `p.<Domain>.*Protocol` | Replace broad containers with explicit contracts              |
+| Broad container aliases | `m.<Domain>.*Model` / `p.<Domain>.*Protocol` | Replace permissive contracts with explicit models/protocols  |
 | `t.Dict`          | `FlextModels.Dict`         | **Transitioning**: Prefer specialized models over generic dict |
 | `list[Any]`      | `list[SpecificModel]`      | Generic lists are forbidden                                   |
 | `Sequence[Any]`  | `Sequence[SpecificModel]`  | Read-only batch contracts                                     |
@@ -154,7 +154,7 @@ Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` 
 
 ```python
 t.Dict  # Transitional only — migrate to explicit domain dict models
-t.ConfigMap  # Transitional only — migrate to explicit config models
+m.Domain.ConfigModel  # Canonical strict config contract
 t.ServiceMap  # Transitional only — migrate to explicit service registry models
 t.ErrorMap  # RootModel[dict[str, int | str | dict[str, int]]] — error types
 t.ObjectList  # Transitional only — migrate to Sequence[m.<Domain>.ItemModel]
@@ -497,7 +497,7 @@ from typing import Protocol, runtime_checkable
 
 @runtime_checkable
 class SerializableRecord(Protocol):
-    def to_dict(self) -> Mapping[str, t.Container]: ...
+    def to_dict(self) -> m.Domain.SerializedModel: ...
     def to_json(self) -> str: ...
 ```
 
