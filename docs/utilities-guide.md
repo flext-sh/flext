@@ -55,9 +55,9 @@ FlextCliUtilities (flext-cli) - Extends with CLI-specific utilities
 from flext_core import u
 
 # Access centralized utilities
-result = u.Conversion.to_str("value")
-result = u.Mapper.get(data, "key")
-matches = u.Mapper.find_callable(predicates, value)
+result = u.to_str("value")
+result = u.get(data, "key")
+matches = u.find_callable(predicates, value)
 
 # ❌ FORBIDDEN - Direct internal imports
 from flext_core._utilities.conversion import FlextUtilitiesConversion
@@ -71,27 +71,27 @@ from flext_core._utilities.conversion import FlextUtilitiesConversion
 
 | Class                           | Namespace         | Purpose                             | Count   |
 | ------------------------------- | ----------------- | ----------------------------------- | ------- |
-| **FlextUtilitiesConversion**    | `u.Conversion`    | Value type conversion (3 methods)   | NEW     |
-| **FlextUtilitiesMapper**        | `u.Mapper`        | Data structure mapping (91 methods) | UPDATED |
-| **FlextUtilitiesCollection**    | `u.Collection`    | List/dict/set operations            | 40+     |
+| **FlextUtilitiesConversion**    | `u`    | Value type conversion (3 methods)   | NEW     |
+| **FlextUtilitiesMapper**        | `u`        | Data structure mapping (91 methods) | UPDATED |
+| **FlextUtilitiesCollection**    | `u`    | List/dict/set operations            | 40+     |
 | **FlextUtilitiesValidator**     | `u.Validator`     | Value validation                    | 30+     |
-| **FlextUtilitiesParser**        | `u.Parser`        | String/data parsing                 | 25+     |
+| **FlextUtilitiesParser**        | `u`        | String/data parsing                 | 25+     |
 | **FlextUtilitiesPattern**       | `u.Pattern`       | Regex pattern matching              | 20+     |
-| **FlextUtilitiesGuards**        | `u.Guards`        | Type guards and narrowing           | 20+     |
+| **FlextUtilitiesGuards**        | `u`        | Type guards and narrowing           | 20+     |
 | **FlextUtilitiesCast**          | `u.Cast`          | Type casting utilities              | 15+     |
 | **FlextUtilitiesText**          | `u.Text`          | String manipulation                 | 20+     |
 | **FlextUtilitiesEnum**          | `u.Enum`          | Enum utilities                      | 10+     |
 | **FlextUtilitiesContext**       | `u.Context`       | Context/state management            | 8+      |
 | **FlextUtilitiesCache**         | `u.Cache`         | Caching utilities                   | 5+      |
-| **FlextUtilitiesConfiguration** | `u.Configuration` | Config handling                     | 8+      |
-| **FlextUtilitiesDomain**        | `u.Domain`        | Domain model utilities              | 10+     |
+| **FlextUtilitiesConfiguration** | `u` | Config handling                     | 8+      |
+| **FlextUtilitiesDomain**        | `u`        | Domain model utilities              | 10+     |
 | **FlextUtilitiesDeprecation**   | `u.Deprecation`   | Deprecation handling                | 4       |
-| **FlextUtilitiesGenerators**    | `u.Generators`    | Data generators                     | 10+     |
-| **FlextUtilitiesModel**         | `u.Model`         | Pydantic model utilities            | 12+     |
-| **FlextUtilitiesPagination**    | `u.Pagination`    | Pagination utilities                | 5+      |
+| **FlextUtilitiesGenerators**    | `u`    | Data generators                     | 10+     |
+| **FlextUtilitiesModel**         | `u`         | Pydantic model utilities            | 12+     |
+| **FlextUtilitiesPagination**    | `u`    | Pagination utilities                | 5+      |
 | **FlextUtilitiesReliability**   | `u.Reliability`   | Retry/circuit breaker               | 8+      |
 | **FlextUtilitiesValidation**    | `u.Validation`    | Data validation                     | 15+     |
-| **FlextUtilitiesChecker**       | `u.Checker`       | Type/value checking                 | 12+     |
+| **FlextUtilitiesChecker**       | `u`       | Type/value checking                 | 12+     |
 | **FlextUtilitiesArgs**          | `u.Args`          | CLI argument handling               | 8+      |
 
 **Total**: 548+ centralized utility methods in flext-core
@@ -120,15 +120,15 @@ def to_str_list_safe(
 from flext_core import u
 
 # Simple values
-result = u.Conversion.to_str_list_safe("hello")
+result = u.to_str_list_safe("hello")
 # → ["hello"]
 
 # Lists with nested structures
-result = u.Conversion.to_str_list_safe(["a", "b", ["nested"]], filter_list_like=True)
+result = u.to_str_list_safe(["a", "b", ["nested"]], filter_list_like=True)
 # → ["a", "b"]  # Nested list filtered out
 
 # Disable filtering
-result = u.Conversion.to_str_list_safe(["a", ["b"]], filter_list_like=False)
+result = u.to_str_list_safe(["a", ["b"]], filter_list_like=False)
 # → ["a", "[b]"]  # Nested list converted to string
 ```
 
@@ -158,15 +158,15 @@ def to_str_list_truthy(
 from flext_core import u
 
 # Filter falsy values
-result = u.Conversion.to_str_list_truthy(["a", "", "b", None])
+result = u.to_str_list_truthy(["a", "", "b", None])
 # → ["a", "b"]  # Empty strings and None removed
 
 # Single value
-result = u.Conversion.to_str_list_truthy("test")
+result = u.to_str_list_truthy("test")
 # → ["test"]
 
 # Empty/falsy input
-result = u.Conversion.to_str_list_truthy(None)
+result = u.to_str_list_truthy(None)
 # → []
 ```
 
@@ -204,13 +204,13 @@ predicates = {
 }
 
 # Find matching predicate
-result = u.Mapper.find_callable(predicates, [1, 2])
+result = u.find_callable(predicates, [1, 2])
 # → "is_multiple"
 
-result = u.Mapper.find_callable(predicates, [])
+result = u.find_callable(predicates, [])
 # → "is_empty"
 
-result = u.Mapper.find_callable(predicates, "no_match")
+result = u.find_callable(predicates, "no_match")
 # → None  # No predicate matched
 ```
 
@@ -243,7 +243,7 @@ result = u.Mapper.find_callable(predicates, "no_match")
 from flext_ldif import u
 
 # Use inherited methods from flext-core
-result = u.Conversion.to_str_list(values)  # Inherited
+result = u.to_str_list(values)  # Inherited
 
 # Use LDIF-specific methods
 entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
@@ -291,16 +291,16 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 ### DO's ✅
 
 1. **Use short aliases**: `from flext_core import u`
-2. **Access via namespace**: `u.Conversion.method()`, `u.Mapper.method()`
-3. **Chain operations**: `u.Collection.filter(...).map(...)`
+2. **Access via namespace**: `u.method()`, `u.method()`
+3. **Chain operations**: `u.filter(...).map(...)`
 4. **Inherit for domain extensions**: Extend `FlextUtilities` for project-specific utilities
 5. **Reuse existing methods**: Check if method already exists before adding
-6. **Use full namespaces in type hints**: `u.Conversion.to_str()`
+6. **Use full namespaces in type hints**: `u.to_str()`
 
 ### DON'Ts ❌
 
 1. **Don't import internal modules**: ❌ `from flext_core._utilities.conversion import ...`
-2. **Don't re-implement**: ❌ Create your own string conversion if `u.Conversion.*` exists
+2. **Don't re-implement**: ❌ Create your own string conversion if `u.*` exists
 3. **Don't mix namespaces**: ❌ `from flext_core import FlextUtilities`
 4. **Don't use module imports**: ❌ `from flext_core import utilities as util`
 5. **Don't create new utility classes at same level**: ❌ Extend in your project, not flext-core root
