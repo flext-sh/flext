@@ -55,7 +55,7 @@ description: Deterministic high-performance JSON serialization with orjson in fl
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
 
 @staticmethod
-def sort_key(value: t.GeneralValueType) -> tuple[str, str]:
+def sort_key(value: object) -> tuple[str, str]:
     ...
     try:
         json_bytes = orjson.dumps(value, option=orjson.OPT_SORT_KEYS)

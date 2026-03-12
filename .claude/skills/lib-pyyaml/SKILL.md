@@ -73,15 +73,15 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
 
 @staticmethod
-def load_yaml_rules(path: Path) -> r[list[dict[str, t.GeneralValueType]]]:
+def load_yaml_rules(path: Path) -> r[list[dict[str, object]]]:
     with path.open(encoding="utf-8") as f:
-        parsed: t.GeneralValueType = yaml.safe_load(f)
+        parsed: object = yaml.safe_load(f)
 ```
 
 ```python
 # flext-cli/src/flext_cli/file_tools.py
 @staticmethod
-def read_yaml_file(file_path: str | Path) -> r[t.GeneralValueType]:
+def read_yaml_file(file_path: str | Path) -> r[object]:
     return FlextCliFileTools._execute_file_operation(
         lambda: FlextCliFileTools._load_structured_file(str(file_path), yaml.safe_load),
         c.Cli.FileErrorMessages.YAML_LOAD_FAILED,
@@ -154,9 +154,9 @@ Why bad: implicit defaults can change formatting and create noisy diffs across e
 Good:
 
 ```python
-parsed: t.GeneralValueType = yaml.safe_load(f)
+parsed: object = yaml.safe_load(f)
 if not isinstance(parsed, dict):
-    return r[list[dict[str, t.GeneralValueType]]].fail("Expected YAML dict")
+    return r[list[dict[str, object]]].fail("Expected YAML dict")
 ```
 
 Why good: validates structure before typed access.
