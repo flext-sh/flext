@@ -24,7 +24,7 @@ class Result[T]:
 
     def __init__(
         self,
-        success: bool,  # noqa: FBT001
+        success: bool,
         value: T | None = None,
         error: str | None = None,
     ) -> None:

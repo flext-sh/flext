@@ -27,7 +27,7 @@ class Result[T]:
 
     def __init__(
         self,
-        success: bool,  # noqa: FBT001
+        success: bool,
         value: T | None = None,
         error: str | None = None,
     ) -> None:
@@ -74,7 +74,7 @@ class FlextExceptions:
     class ConfigurationError(Error):
         """Configuration error."""
 
-    class ConnectionError(Error):  # noqa: A001
+    class ConnectionError(Error):
         """Connection error."""
 
     class ProcessingError(Error):
@@ -83,7 +83,7 @@ class FlextExceptions:
     class AuthenticationError(Error):
         """Authentication error."""
 
-    class TimeoutError(Error):  # noqa: A001
+    class TimeoutError(Error):
         """Timeout error mock."""
 
 

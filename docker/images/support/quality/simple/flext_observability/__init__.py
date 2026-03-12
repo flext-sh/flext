@@ -10,7 +10,7 @@ from flext_core import t
 def flext_create_metric(name: str, value: float, tags: t.Dict | None = None) -> None:
     """Create mock metric."""
     if not os.environ.get("FLEXT_OBSERVABILITY_QUIET"):
-        print(f"📊 Metric: {name}={value} {tags or {}}")  # noqa: T201
+        pass
 
 
 def flext_create_trace(
@@ -18,7 +18,7 @@ def flext_create_trace(
 ) -> None:
     """Create mock trace."""
     if not os.environ.get("FLEXT_OBSERVABILITY_QUIET"):
-        print(f"🔍 Trace: {trace_id} {operation} {config or {}}")  # noqa: T201
+        pass
 
 
 def flext_create_log_entry(
@@ -26,4 +26,4 @@ def flext_create_log_entry(
 ) -> None:
     """Create mock log entry."""
     if not os.environ.get("FLEXT_OBSERVABILITY_QUIET"):
-        print(f"📝 Log[{level.upper()}]: {message} {context or {}}")  # noqa: T201
+        pass
