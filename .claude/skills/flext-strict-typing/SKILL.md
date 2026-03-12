@@ -165,94 +165,79 @@ t.FieldValidatorMap  # RootModel[dict[str, Callable[[GVT], GVT]]]
 
 ---
 
-## Rule 2: TypeAlias Declaration Format — NAMED ALIAS TABLE (AXIOMATIC)
+## Rule 2: TypeAlias Declaration — PEP 695 CANONICAL (Python 3.13+)
 
-### CRITICAL: isinstance Incompatibility with PEP 695 `type` Statement
+### ALL Type Aliases Use PEP 695 `type X = ...` Syntax
 
-PEP 695 `type X = str | int` creates a `TypeAliasType` object, **NOT** a `UnionType`. This means `isinstance(val, X)` **FAILS at runtime** with `TypeError`. This is a fundamental Python 3.12+ behavior that CANNOT be worked around.
+This is the Python 3.13 recommended and canonical way. The old `X: TypeAlias = ...` syntax is DEPRECATED and MUST NOT be introduced into the codebase.
 
-**`type X = ...` and `X: TypeAlias = ...` are NOT interchangeable. They produce different runtime objects.**
-
-```python
-# PROOF — verified live on this codebase:
-type X = str | int  # → TypeAliasType  → isinstance(val, X) CRASHES ❌
-X: TypeAlias = str | int  # → UnionType      → isinstance(val, X) WORKS   ✅
-```
-
-### AUTHORITATIVE NAMED ALIAS TABLE — `flext-core/src/flext_core/typings.py`
-
-**This table is the law. Do NOT change any alias's syntax without updating this table.**
-
-| Alias | Self-referential? | MUST use | isinstance-safe? | Notes |
-|---|---|---|---|---|
-| `Primitives` | No | `X: TypeAlias = ...` | ✅ YES | Used in 8+ isinstance call sites |
-| `Scalar` | No | `X: TypeAlias = ...` | ✅ YES | Used in 3+ isinstance call sites |
-| `Container` | No | `X: TypeAlias = ...` | ✅ YES | Used as type annotation + isinstance |
-| `ConfigurationMapping` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation; subclassing uses `Mapping[str, Container]` |
-| `MetadataValue` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `RegisterableService` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `JsonDict` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `FactoryCallable` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `HandlerCallable` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `HandlerLike` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `ResourceCallable` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `RegistrablePlugin` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `ConstantValue` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `FileContent` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `SortableObjectType` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `ConversionMode` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `TypeHintSpecifier` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `GenericTypeArgument` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `MessageTypeSpecifier` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `IncEx` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| `TYPE_CHECKING` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| **`GeneralValueType`** | **YES** | **`type X = ...`** | ❌ NO | **DEPRECATED**: Replace with Pydantic models |
-| **`Serializable`**     | **YES** | **`type X = ...`** | ❌ NO | **DEPRECATED**: Replace with Pydantic models |
-| **`JsonValue`**       | **YES** | **`type X = ...`** | ❌ NO | **DEPRECATED**: Replace with Pydantic models |
-| **`ContainerValue`**  | **YES** | **`type X = ...`** | ❌ NO | **DEPRECATED**: Replace with Pydantic models |
-
-**`Validation.*` inner aliases** (`PortNumber`, `PositiveTimeout`, etc.) are `Annotated[...]` wrappers declared with `type` statement — they are annotation-only and NEVER used with isinstance. Correct as-is.
-
-### Decision Tree (apply to EVERY alias change)
-
-```
-Does the alias reference itself in its own definition?
-  YES → MUST use `type X = ...`
-        NEVER use with isinstance(). NEVER subclass it.
-        Use u.Guards.is_*() for runtime narrowing.
-  NO  → MUST use `X: TypeAlias = ...`
-        Safe for isinstance(), subclassing, TypeAdapter.
-```
-
-### FORBIDDEN PATTERNS (will crash at runtime)
+PEP 695 `type X = ...` creates `TypeAliasType` objects — these are **annotation-only** and are TOTALLY FORBIDDEN as `isinstance()` args, base classes, or in any runtime type-checking context. `isinstance(val, t.SomeAlias)` will CRASH at runtime for **ALL** `t.*` aliases.
 
 ```python
-# ❌ FORBIDDEN — changing non-recursive TypeAlias to type statement
-type Primitives = str | int | float | bool  # CRASHES isinstance() calls
-type Scalar = str | int | float | bool | datetime  # CRASHES isinstance() calls
+# ALL aliases in typings.py use this syntax:
+type Primitives = str | int | float | bool
+type Scalar = str | int | float | bool | datetime
+type Container = Scalar | BaseModel | Path
 
-# ❌ FORBIDDEN — raw isinstance against recursive aliases
-isinstance(val, t.FlextTypes.GeneralValueType)  # CRASHES at runtime
-isinstance(val, t.FlextTypes.JsonValue)  # CRASHES at runtime
+# Recursive aliases also use PEP 695 (same syntax):
+type JsonValue = Scalar | list[FlextTypes.JsonValue] | dict[str, FlextTypes.JsonValue]
+type GeneralValueType = Scalar | BaseModel | Path | list[FlextTypes.GeneralValueType] | dict[str, FlextTypes.GeneralValueType]
+```
 
+### Runtime isinstance() — Use Tuple Constants or TypeGuard Functions
 
-# ❌ FORBIDDEN — subclassing a TypeAlias
-class Foo(t.object): ...  # Use Mapping[str, t.FlextTypes.Container]
+Since ALL `t.*` aliases are `TypeAliasType`, runtime narrowing MUST use one of:
+
+1. **Tuple constants** (defined in `FlextTypes`):
+   - `t.PRIMITIVES_TYPES: tuple[type, ...] = (str, int, float, bool)`
+   - `t.SCALAR_TYPES: tuple[type, ...] = (str, int, float, bool, datetime)`
+   - `t.CONTAINER_TYPES: tuple[type, ...] = (str, int, float, bool, datetime, BaseModel, Path)`
+
+2. **TypeGuard functions** (exposed via `u.Guards`):
+   - `u.Guards.is_primitive(val)` → `TypeGuard[str | int | float | bool]`
+   - `u.Guards.is_scalar(val)` → `TypeGuard[str | int | float | bool | datetime]`
+   - `u.Guards.is_flexible_value(val)` → TypeGuard for general values
+   - `u.Guards.is_dict_like(val)` → TypeGuard for dict-like structures
+   - `u.Guards.is_list_like(val)` → TypeGuard for list-like structures
+
+### Recursive Aliases — Transitional, Prefer Pydantic Models
+
+Self-referential aliases (`GeneralValueType`, `Serializable`, `JsonValue`, `ContainerValue`) are transitional. Business/application code MUST prefer Pydantic v2 models + protocols and MUST NOT propagate these aliases through service boundaries.
+
+### `Validation.*` Inner Aliases
+
+`Validation.*` aliases (`PortNumber`, `PositiveTimeout`, etc.) use `type X = Annotated[...]` — annotation-only, never with isinstance, correct as-is.
+
+### FORBIDDEN PATTERNS
+
+```python
+# ❌ FORBIDDEN — isinstance on ANY t.* alias (ALL are TypeAliasType now)
+isinstance(val, t.Primitives)  # CRASHES at runtime
+isinstance(val, t.Scalar)  # CRASHES at runtime
+isinstance(val, t.Container)  # CRASHES at runtime
+isinstance(val, t.GeneralValueType)  # CRASHES at runtime
+
+# ❌ FORBIDDEN — introducing old TypeAlias syntax
+from typing import TypeAlias
+Primitives: TypeAlias = str | int | float | bool  # DEPRECATED, do NOT use
+
+# ❌ FORBIDDEN — subclassing a type alias
+class Foo(t.Container): ...  # TypeAliasType cannot be subclassed
 ```
 
 ### CORRECT PATTERNS
 
 ```python
-# ✅ CORRECT — non-recursive aliases use TypeAlias
-Primitives: TypeAlias = str | int | float | bool
-Scalar: TypeAlias = str | int | float | bool | datetime
+# ✅ CORRECT — ALL aliases use PEP 695
+type Primitives = str | int | float | bool
+type Scalar = str | int | float | bool | datetime
+type Container = Scalar | BaseModel | Path
 
-# ✅ CORRECT — recursive aliases use type statement
-type GeneralValueType = (
-    Scalar | list[FlextTypes.GeneralValueType] | dict[str, FlextTypes.GeneralValueType]
-)
+# ✅ CORRECT — runtime narrowing via tuple constants
+isinstance(val, t.SCALAR_TYPES)  # Uses tuple, not alias
+isinstance(val, t.PRIMITIVES_TYPES)  # Uses tuple, not alias
 
-# ✅ CORRECT — runtime narrowing via public utilities alias
+# ✅ CORRECT — runtime narrowing via TypeGuard functions
 from flext_core import u
 
 if u.Guards.is_primitive(val):
@@ -260,78 +245,8 @@ if u.Guards.is_primitive(val):
 if u.Guards.is_scalar(val):
     ...
 
-
 # ✅ CORRECT — subclassing uses concrete base
-class Foo(Mapping[str, t.FlextTypes.Container]): ...
-```
-
-### MANDATORY CRASH TEST — Run Before AND After ANY Edit to typings.py
-
-```bash
-python3 -c "
-import sys; [sys.modules.pop(k) for k in list(sys.modules) if 'flext' in k]
-import flext_core; t = flext_core.t
-for n in ['Primitives','Scalar','Container','MetadataValue','RegisterableService']:
-    try: isinstance('x', getattr(t,n)); print('PASS', n)
-    except TypeError as e: print('FAIL', n, '—', e)
-"
-```
-
-**Expected output: 5 lines all starting with PASS.**
-**Any FAIL line = typings.py is broken. STOP. Do not commit. Fix the broken alias first.**
-
-### Note on ConfigurationMapping
-`ConfigurationMapping: TypeAlias = Mapping[str, Container]` is correct as TypeAlias.
-However `Mapping[str, Container]` is a parameterized generic — Python cannot use it with `isinstance()`
-for a DIFFERENT reason (parameterized generics are not allowed as isinstance args).
-This is NOT a TypeAliasType problem. The fix: never use `isinstance(val, object)`.
-Use `isinstance(val, Mapping)` (unparameterized) or `u.Guards.is_config_map(val)` instead.
-
-### At module level — non-recursive types use `TypeAlias`
-
-```python
-# ✅ CORRECT — Non-recursive, isinstance-safe
-Primitives: TypeAlias = str | int | float | bool
-Scalar: TypeAlias = Primitives | datetime
-Container: TypeAlias = Sequence[Scalar] | Mapping[str, Scalar]
-ConfigurationMapping: TypeAlias = Mapping[str, Scalar | Sequence[Scalar]]
-```
-
-### At module level — recursive types MUST use PEP 695 `type` statement
-
-```python
-# ✅ CORRECT — Recursive type (PEP 695 required — ONLY syntax that supports self-reference)
-type GeneralValueType = (
-    str
-    | int
-    | float
-    | bool
-    | datetime
-    | None
-    | BaseModel
-    | Path
-    | Sequence[GeneralValueType]
-    | Mapping[str, GeneralValueType]
-)
-
-# ⚠️ WARNING — NEVER use isinstance() on these! Use TypeGuard functions instead.
-# isinstance(val, GeneralValueType)  # CRASHES at runtime!
-```
-
-### TypeGuard functions for runtime type checking
-
-When you need runtime type checks on types that are `TypeAliasType` (or any complex union), use the public guards exposed by `u.Guards`:
-
-```python
-from flext_core import u
-
-# ✅ CORRECT — TypeGuard narrows the type safely
-if u.Guards.is_primitive(val):  # TypeGuard[str | int | float | bool]
-    ...
-if u.Guards.is_scalar(val):  # TypeGuard[str | int | float | bool | datetime]
-    ...
-if u.Guards.is_flexible_value(val):  # TypeGuard for general values
-    ...
+class Foo(Mapping[str, t.Container]): ...  # Annotation OK, not isinstance
 ```
 
 ---
