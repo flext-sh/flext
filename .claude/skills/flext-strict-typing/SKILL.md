@@ -180,7 +180,6 @@ type Scalar = str | int | float | bool | datetime
 type Container = Scalar | BaseModel | Path
 
 # Recursive aliases also use PEP 695 (same syntax):
-type JsonValue = Scalar | list[FlextTypes.JsonValue] | dict[str, FlextTypes.JsonValue]
 type GeneralValueType = Scalar | BaseModel | Path | list[FlextTypes.GeneralValueType] | dict[str, FlextTypes.GeneralValueType]
 ```
 
@@ -202,7 +201,7 @@ Since ALL `t.*` aliases are `TypeAliasType`, runtime narrowing MUST use one of:
 
 ### Recursive Aliases — Transitional, Prefer Pydantic Models
 
-Self-referential aliases (`GeneralValueType`, `Serializable`, `JsonValue`, `ContainerValue`) are transitional. Business/application code MUST prefer Pydantic v2 models + protocols and MUST NOT propagate these aliases through service boundaries.
+Self-referential aliases (`GeneralValueType`, `Serializable`, `ContainerValue`) are transitional. Business/application code MUST prefer Pydantic v2 models + protocols and MUST NOT propagate these aliases through service boundaries.
 
 ### `Validation.*` Inner Aliases
 
