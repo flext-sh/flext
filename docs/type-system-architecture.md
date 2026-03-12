@@ -31,7 +31,7 @@
   - [Migrating from Old Patterns to New](#migrating-from-old-patterns-to-new)
 - [Best Practices](#best-practices)
   - [1. Use Complete Namespace Always](#1-use-complete-namespace-always)
-  - [2. No cast(), Any, or TYPE_CHECKING](#2-no-cast-any-or-typechecking)
+- [2. No cast(), tipagem frouxa, ou TYPE_CHECKING](#2-no-cast-tipagem-frouxa-ou-typechecking)
   - [3. Covariant Protocols for Read-Only](#3-covariant-protocols-for-read-only)
   - [4. TypeVar with Proper Bounds](#4-typevar-with-proper-bounds)
   - [5. Namespace Depth Management](#5-namespace-depth-management)
@@ -132,10 +132,10 @@ flext-oud-mig (depends on flext-core, flext-cli, flext-ldif, flext-ldap)
 
 ```python
 # Only for truly simple, module-level constants
-type JsonValue = str | int | float | bool | None | dict | list
+type object = str | int | float | bool | None | dict | list
 
 # Usage: Don't create namespace wrapper for single types
-result: JsonValue = json_value
+result: object = json_value
 ```
 
 ### Pattern 2: Domain Collection Type (Nested Namespace)
@@ -178,7 +178,7 @@ type ProgressCallback = (
     Callable[[int], None]
     | Callable[[int, int], None]
     | Callable[[int, int, str], None]
-    | Callable[[dict[str, object]], None]
+    | Callable[[Mapping[str, t.Container]], None]
     | Callable[[Exception], None]
 )
 
@@ -198,14 +198,14 @@ class ProgressCallbackProtocol(Protocol):
 **Rule**: Read-only protocols use `Mapping`/`Iterable`, not `dict`/`Sequence`
 
 ```python
-# ❌ WRONG: Invariant dict (rejects dict[str, int] for dict[str, object])
+# ❌ WRONG: Invariant dict (rejects Mapping-compatible inputs)
 class DataProvider(Protocol):
-    def get_data(self) -> dict[str, object]: ...
+    def get_data(self) -> dict[str, t.Container]: ...
 
 
-# ✅ CORRECT: Covariant Mapping (accepts dict[str, int] as Mapping[str, object])
+# ✅ CORRECT: Covariant Mapping (accepts multiple mapping implementations)
 class DataProvider(Protocol):
-    def get_data(self) -> Mapping[str, object]: ...
+    def get_data(self) -> Mapping[str, t.Container]: ...
 
 
 # Usage: Works with any dict subtype
@@ -247,12 +247,12 @@ class FlextTypes:
         type Result[T] = "r[T]"
 
     class Utilities:
-        type JsonValue = dict[str, object]
+        type object = dict[str, object]
 
 
 # Usage
 result: t.Core.Result[bool] = ok_result
-data: t.Utilities.JsonValue = {"key": "value"}
+data: t.Utilities.object = {"key": "value"}
 
 
 # ❌ WRONG: Over-nesting (3+ levels)
@@ -711,16 +711,16 @@ entry = m.Entry(dn="cn=test")  # NO
 attributes = m.AttributeDict()  # NO
 ```
 
-### 2. No cast(), Any, or TYPE_CHECKING
+### 2. No cast(), tipagem frouxa, ou TYPE_CHECKING
 
 ```python
 # ✅ CORRECT: Use Models and Protocols
-def process_model(data: dict[str, object]) -> r[SomeModel]:
+def process_model(data: Mapping[str, t.Container]) -> r[SomeModel]:
     return r.ok(SomeModel.model_validate(data))
 
 
 # ❌ WRONG: cast() hides type issues
-def process_model(data: dict[str, object]) -> r[SomeModel]:
+def process_model(data: Mapping[str, t.Container]) -> r[SomeModel]:
     return r.ok(cast(SomeModel, data))
 
 
@@ -814,7 +814,7 @@ The FLEXT type system provides a **unified, composable, and extensible** archite
 3. **Single source of truth** - No duplicate aliases
 4. **Extensible design** - Protocols instead of complex unions
 5. **Zero architectural violations** - Tier 0 modules have no internal imports
-6. **Complete type safety** - No `cast()`, `Any`, or `TYPE_CHECKING` blocks
+6. **Complete type safety** - No `cast()`, tipagem frouxa, ou blocos `TYPE_CHECKING`
 7. **Comprehensive validation** - All projects pass type checking and linting
 
 This architecture enables maintainable, type-safe code across the entire FLEXT ecosystem while supporting future extensions and domain-specific requirements.
