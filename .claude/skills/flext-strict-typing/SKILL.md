@@ -122,17 +122,14 @@ def parse_payload(payload: t.ConfigMap) -> r[str]:
 
 | Instead of       | Use                        | When                                                          |
 | ---------------- | -------------------------- | ------------------------------------------------------------- |
-| `Any`            | `t.Container`       | General-purpose value containers                              |
-| `Any`            | `t.Scalar`            | Primitives: `str \| int \| float \| bool \| datetime` |
-| `Any`            | `t.MetadataValue`     | Metadata values with canonical contract semantics                 |
-| `Any`            | `t.Dict`         | JSON-compatible values                                            |
-| `Any`            | `t.Container`              | Full container values                                              |
-| `object`         | `t.Container`       | Method params that accept broad but typed FLEXT values                          |
-| `dict[str, Any]` | `t.ConfigMap`              | Configuration dictionaries                                    |
-| `dict[str, Any]` | `t.Dict`                   | General dictionaries                                          |
-| `dict[str, Any]` | `t.ServiceMap`             | Service registry mappings                                     |
-| `list[Any]`      | `list[t.Container]` | Generic lists                                                 |
-| `Sequence[Any]`  | `Sequence[t.Container]`             | Read-only batch contracts                                |
+| `Any` / `object` | Specific Pydantic Model    | **MANDATORY**: For ALL domain entities and value objects      |
+| `Any` / `object` | `t.Scalar`                 | Primitives: `str \| int \| float \| bool \| datetime`         |
+| `dict[*, *]`      | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
+| `Mapping[*, *]`   | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
+| `t.Container`     | Specific Model / Protocol | Phasing out generic containers for strict models              |
+| `t.Dict`          | `FlextModels.Dict`         | **Transitioning**: Prefer specialized models over generic dict |
+| `list[Any]`      | `list[SpecificModel]`      | Generic lists are forbidden                                   |
+| `Sequence[Any]`  | `Sequence[SpecificModel]`  | Read-only batch contracts                                     |
 
 ### The Type Hierarchy (from `typings.py` lines 153-176)
 
@@ -209,10 +206,10 @@ X: TypeAlias = str | int  # → UnionType      → isinstance(val, X) WORKS   �
 | `MessageTypeSpecifier` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
 | `IncEx` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
 | `TYPE_CHECKING` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| **`GeneralValueType`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
-| **`Serializable`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
-| **`JsonValue`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
-| **`ContainerValue`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
+| **`GeneralValueType`** | **YES** | **`type X = ...`** | ❌ NO | **DEPRECATED**: Replace with Pydantic models |
+| **`Serializable`**     | **YES** | **`type X = ...`** | ❌ NO | **DEPRECATED**: Replace with Pydantic models |
+| **`JsonValue`**       | **YES** | **`type X = ...`** | ❌ NO | **DEPRECATED**: Replace with Pydantic models |
+| **`ContainerValue`**  | **YES** | **`type X = ...`** | ❌ NO | **DEPRECATED**: Replace with Pydantic models |
 
 **`Validation.*` inner aliases** (`PortNumber`, `PositiveTimeout`, etc.) are `Annotated[...]` wrappers declared with `type` statement — they are annotation-only and NEVER used with isinstance. Correct as-is.
 
@@ -240,9 +237,7 @@ isinstance(val, t.FlextTypes.JsonValue)  # CRASHES at runtime
 
 
 # ❌ FORBIDDEN — subclassing a TypeAlias
-class Foo(
-    t.FlextTypes.ConfigurationMapping
-): ...  # Use Mapping[str, t.FlextTypes.Container]
+class Foo(t.object): ...  # Use Mapping[str, t.FlextTypes.Container]
 ```
 
 ### CORRECT PATTERNS

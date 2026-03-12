@@ -188,7 +188,7 @@ isinstance(val, t.object)  # CRASHES at runtime
 isinstance(val, t.object)  # CRASHES at runtime
 
 # ❌ FORBIDDEN — subclassing a TypeAlias
-class Foo(t.FlextTypes.ConfigurationMapping): ...  # Use Mapping[str, t.FlextTypes.Container]
+class Foo(t.object): ...  # Use Mapping[str, t.FlextTypes.Container]
 ```
 
 ### CORRECT PATTERNS

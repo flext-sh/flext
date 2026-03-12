@@ -10,7 +10,7 @@
 
 3. **Supressões inline** — Não usar `# pyright: ignore`, `# pyrefly: ignore` ou equivalentes para contornar o linter. Corrigir pela **causa raiz** usando os padrões e skills do flext e as regras de AGENTS.md.
 
-4. **Dict em create*for*\*** — Não usar `dict[str, object]` como contrato público para settings. Usar `Mapping[str, t.Container]` no boundary e materializar `dict(...)` apenas no ponto local de mutação antes de `model_validate(...)`, alinhado ao padrão de flext-core (`from_kwargs`, `merge_defaults`).
+4. **Dict em create*for*\*** — Não usar `dict[str, object]` como contrato público para settings. Usar modelos Pydantic de boundary (`m.SettingsOverridesModel`) e materializar `dict(...)` apenas no ponto local de mutação antes de `model_validate(...)`, alinhado ao padrão de flext-core (`from_kwargs`, `merge_defaults`).
 
 ---
 
@@ -22,7 +22,7 @@
 
 - **flext-tap-ldif**
   - Removido override de mypy em `pyproject.toml`.
-  - Settings: `create_for_development` / `create_for_production` / `create_for_testing` passam a usar `**overrides: t.Container` e defaults com contrato `Mapping[str, t.Container]`, mantendo `model_validate(...)` sem `dict[str, object]` como interface.
+  - Settings: `create_for_development` / `create_for_production` / `create_for_testing` passam a usar `overrides: m.SettingsOverridesModel` e defaults em modelos explícitos, mantendo `model_validate(...)` sem `dict[str, object]` como interface.
   - Utilities: erro pyrefly “bad-assignment / breaking cycles” resolvido na raiz extraindo a construção do record para `build_record_from_lines()` com tipagem forte; sem supressão inline e sem promover `dict[str, object]` como tipo de fronteira.
 
 - **typings**
