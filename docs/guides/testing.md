@@ -519,9 +519,8 @@ tests/
 
 ```python
 import json
-from collections.abc import Mapping
 from pathlib import Path
-from flext_core import t
+from project_name import m
 
 
 def load_test_fixture(fixture_name: str) -> str:
