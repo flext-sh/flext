@@ -4368,6 +4368,8 @@ class FlextLdifProtocols:
             """Entry protocol with DN."""
 
             dn: str | DN
+
+
 attributes: Mapping[str, t.Container]
 ```
 
@@ -4629,14 +4631,16 @@ class FlextLogger:
     # ═══════════════════════════════════════════════════════════════
     # STRUCTURED LOGGING - Auto extra fields
     # ═══════════════════════════════════════════════════════════════
+
+
 def info(self, msg: str, extra: Mapping[str, t.Container] | None = None):
-        """Auto: Add context from config."""
-        enhanced_extra = {
-            **(extra or {}),
-            "debug_mode": self._config.is_debug_enabled,
-            "app": self._config.app_name,
-        }
-        self._logger.info(msg, extra=enhanced_extra)
+    """Auto: Add context from config."""
+    enhanced_extra = {
+        **(extra or {}),
+        "debug_mode": self._config.is_debug_enabled,
+        "app": self._config.app_name,
+    }
+    self._logger.info(msg, extra=enhanced_extra)
 ```
 
 **Capabilities (Todas Automáticas):**
@@ -5427,9 +5431,10 @@ class FlextLdifWriter(Flext[Mapping[str, t.Container]]):
         # Implementation
         ...
 
+
 def execute(self) -> r[Mapping[str, t.Container]]:
-        # Stub
-        return r.ok({})
+    # Stub
+    return r.ok({})
 ```
 
 **After:**
@@ -6644,7 +6649,8 @@ class FlextApi(FlextService[Mapping[str, t.Container]]):
     ] = {}
 
     body: Annotated[
-t.Container | None, Field(default=None, description="Request body (for POST/PUT/PATCH)")
+        t.Container | None,
+        Field(default=None, description="Request body (for POST/PUT/PATCH)"),
     ] = None
 
     timeout: Annotated[
@@ -6666,66 +6672,71 @@ t.Container | None, Field(default=None, description="Request body (for POST/PUT/
     # ═══════════════════════════════════════════════════════════════
     # EXECUTION - Dispatch por operation
     # ═══════════════════════════════════════════════════════════════
+
+
 def execute(self) -> r[Mapping[str, t.Container]]:
-        """Execute HTTP request based on operation."""
-        # Config singleton
-        verify_ssl = self.project_config.api_verify_ssl
-        default_timeout = self.project_config.api_default_timeout
+    """Execute HTTP request based on operation."""
+    # Config singleton
+    verify_ssl = self.project_config.api_verify_ssl
+    default_timeout = self.project_config.api_default_timeout
 
-        timeout = self.timeout or default_timeout
+    timeout = self.timeout or default_timeout
 
-        # Python 3.13 match statement
-        match self.operation:
-            case "get":
-                return self._http_get(timeout, verify_ssl)
-            case "post":
-                return self._http_post(timeout, verify_ssl)
-            case "put":
-                return self._http_put(timeout, verify_ssl)
-            case "delete":
-                return self._http_delete(timeout, verify_ssl)
-            case "patch":
-                return self._http_patch(timeout, verify_ssl)
-            case _:
-                return r.fail(f"Unknown operation: {self.operation}")
+    # Python 3.13 match statement
+    match self.operation:
+        case "get":
+            return self._http_get(timeout, verify_ssl)
+        case "post":
+            return self._http_post(timeout, verify_ssl)
+        case "put":
+            return self._http_put(timeout, verify_ssl)
+        case "delete":
+            return self._http_delete(timeout, verify_ssl)
+        case "patch":
+            return self._http_patch(timeout, verify_ssl)
+        case _:
+            return r.fail(f"Unknown operation: {self.operation}")
 
-    # ═══════════════════════════════════════════════════════════════
-    # PRIVATE IMPLEMENTATIONS
-    # ═══════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════
+# PRIVATE IMPLEMENTATIONS
+# ═══════════════════════════════════════════════════════════════
 def _http_get(self, timeout: int, verify: bool) -> r[Mapping[str, t.Container]]:
-        """Execute GET request."""
-        try:
-            self.logger.info(f"GET {self.url}")
-            response = httpx.get(
-                self.url,
-                headers=self.headers,
-                params=self.params,
-                timeout=timeout,
-                verify=verify,
-            )
-            response.raise_for_status()
-            return r.ok(response.json())
-        except Exception as e:
-            return r.fail(f"GET failed: {e}")
+    """Execute GET request."""
+    try:
+        self.logger.info(f"GET {self.url}")
+        response = httpx.get(
+            self.url,
+            headers=self.headers,
+            params=self.params,
+            timeout=timeout,
+            verify=verify,
+        )
+        response.raise_for_status()
+        return r.ok(response.json())
+    except Exception as e:
+        return r.fail(f"GET failed: {e}")
+
 
 def _http_post(self, timeout: int, verify: bool) -> r[Mapping[str, t.Container]]:
-        """Execute POST request."""
-        try:
-            self.logger.info(f"POST {self.url}")
-            response = httpx.post(
-                self.url,
-                headers=self.headers,
-                params=self.params,
-                json=self.body,
-                timeout=timeout,
-                verify=verify,
-            )
-            response.raise_for_status()
-            return r.ok(response.json())
-        except Exception as e:
-            return r.fail(f"POST failed: {e}")
+    """Execute POST request."""
+    try:
+        self.logger.info(f"POST {self.url}")
+        response = httpx.post(
+            self.url,
+            headers=self.headers,
+            params=self.params,
+            json=self.body,
+            timeout=timeout,
+            verify=verify,
+        )
+        response.raise_for_status()
+        return r.ok(response.json())
+    except Exception as e:
+        return r.fail(f"POST failed: {e}")
 
-    # ... outras implementações
+
+# ... outras implementações
 
 
 # Export only the service
@@ -6742,7 +6753,9 @@ __all__ = ["FlextApi"]
 # ═══════════════════════════════════════════════════════════════════════
 
 
-def sync_users(source_api: str, target_api: str, token: str) -> Mapping[str, t.Container]:
+def sync_users(
+    source_api: str, target_api: str, token: str
+) -> Mapping[str, t.Container]:
     """Sync users between APIs - zero ceremony!"""
 
     headers = {"Authorization": f"Bearer {token}"}
@@ -6941,8 +6954,9 @@ class FlextLdifParser(Flext[Mapping[str, t.Container]]):
         encoding = self._config.ldif_encoding
         return self._do_parse(source, encoding)
 
+
 def execute(self) -> r[Mapping[str, t.Container]]:
-        return r.ok({})  # stub!
+    return r.ok({})  # stub!
 
 
 # 2. Factory functions (duplicação!)
