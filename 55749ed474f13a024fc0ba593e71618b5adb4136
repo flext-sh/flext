@@ -1,0 +1,63 @@
+.claude/skills/lib-pyyaml/SKILL.md
+  0ee7a6795fb93780 76,78,84,157,159
+.claude/skills/lib-returns/SKILL.md
+  0ee7a6795fb93780 134
+.claude/skills/flext-pyrefly-typecheck-fix/rules/fix-result-object.yml
+  0ee7a6795fb93780 5
+AGENTS.md
+  0ee7a6795fb93780 66,69,71
+.claude/skills/flext-agent-strict-rules/SKILL.md.bkp.20260307
+  0ee7a6795fb93780 16-18,22,24
+.claude/skills/flext-pyrefly-typecheck-fix/SKILL.md
+  0ee7a6795fb93780 97
+.claude/skills/flext-strict-typing/SKILL.md.bkp.20260307
+  0ee7a6795fb93780 80,85,89,434,502
+.claude/skills/flext-pyrefly-typecheck-fix/rules.yml
+  0ee7a6795fb93780 35,39
+.claude/skills/flext-import-rules/SKILL.md.bkp.20260307
+  0ee7a6795fb93780 388
+.claude/skills/lib-dependency-injector/SKILL.md
+  0ee7a6795fb93780 94
+.claude/skills/lib-orjson/SKILL.md
+  0ee7a6795fb93780 58
+.claude/skills/lib-structlog/SKILL.md
+  0ee7a6795fb93780 125-126
+.claude/skills/pydantic-v2-patterns/SKILL.md
+  0ee7a6795fb93780 113,156,160,312,315,462-463,525,544,628
+.claude/skills/rules-typings/SKILL.md
+  0ee7a6795fb93780 67
+.claude/skills/flext-agent-strict-rules/SKILL.md
+  0ee7a6795fb93780 67-69,73,75
+docs/SUPPRESSIONS-RATIONALE.md
+  0ee7a6795fb93780 13,26
+.claude/skills/flext-import-rules/SKILL.md
+  0ee7a6795fb93780 453
+.claude/skills/flext-strict-typing/SKILL.md
+  0ee7a6795fb93780 125,130,134,140,504,574,751,760,766
+.claude/skills/python-type-narrowing/SKILL.md
+  0ee7a6795fb93780 96
+.claude/skills/flext-5agent-coordination/SKILL.md
+  0ee7a6795fb93780 243,254
+docs/utilities-guide.md
+  0ee7a6795fb93780 110,150,337
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.10",
+  "base_commit_sha": "55749ed474f13a024fc0ba593e71618b5adb4136",
+  "prompts": {
+    "0ee7a6795fb93780": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_326b3085effe81VUAq2rTBVhr7-9c50e2a0-0892-4e54-95f9-32ef5fb9fc9a",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 63,
+      "total_deletions": 77,
+      "accepted_lines": 62,
+      "overriden_lines": 0
+    }
+  }
+}
