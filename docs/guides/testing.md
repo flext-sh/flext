@@ -519,7 +519,9 @@ tests/
 
 ```python
 import json
+from collections.abc import Mapping
 from pathlib import Path
+from flext_core import t
 
 
 def load_test_fixture(fixture_name: str) -> str:
@@ -528,7 +530,7 @@ def load_test_fixture(fixture_name: str) -> str:
     return fixture_path.read_text()
 
 
-def load_json_fixture(fixture_name: str) -> dict[str, object]:
+def load_json_fixture(fixture_name: str) -> m.Tests.JsonFixtureModel:
     """Load JSON test fixture."""
     fixture_path = Path(__file__).parent / "fixtures" / fixture_name
     return json.loads(fixture_path.read_text())

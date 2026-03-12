@@ -126,16 +126,16 @@ flext-oud-mig (depends on flext-core, flext-cli, flext-ldif, flext-ldap)
 
 ## Canonical Type Patterns
 
-### Pattern 1: Simple Type Alias (No Namespace Needed)
+### Pattern 1: Simple Type Contract (No Namespace Needed)
 
 **When**: Single-purpose type, used rarely, clearly scoped
 
 ```python
-# Only for truly simple, module-level constants
-type object = str | int | float | bool | None | dict | list
+# Use canonical contracts from t.* (never bare object)
+type ScalarLike = t.Scalar
 
-# Usage: Don't create namespace wrapper for single types
-result: object = json_value
+# Usage: keep values in strict canonical contracts
+result: m.Domain.ValueModel = json_value
 ```
 
 ### Pattern 2: Domain Collection Type (Nested Namespace)
@@ -147,17 +147,20 @@ class FlextCliTypes:
     class Cli:
         class Data:
             # Collection types grouped by domain
-            type RowData = Mapping[str, object]
+            type RowData = Mapping[str, m.Cli.RowModel]
             type CellContent = str | int | float | bool | None
 ```
 
-### Pattern 3: TypeVar Bounded to Object (Avoiding Circular Imports)
+### Pattern 3: TypeVar Bounded to Protocol (Avoiding Circular Imports)
 
 **When**: Need generic type but importing Protocol causes circular dependency
 
 ```python
 # In typings.py (Tier 0)
-FlextFlextOudMigEntryT = TypeVar("FlextFlextOudMigEntryT", bound=object)
+FlextFlextOudMigEntryT = TypeVar(
+    "FlextFlextOudMigEntryT",
+    bound="fldif.Ldif.EntryProtocol",
+)
 
 
 # In protocols.py (Tier 0) - declare actual protocol
@@ -178,7 +181,7 @@ type ProgressCallback = (
     Callable[[int], None]
     | Callable[[int, int], None]
     | Callable[[int, int, str], None]
-    | Callable[[Mapping[str, t.Container]], None]
+    | Callable[[m.Cli.ProgressEventModel], None]
     | Callable[[Exception], None]
 )
 
@@ -188,7 +191,7 @@ type ProgressCallback = (
 class ProgressCallbackProtocol(Protocol):
     """Flexible callback protocol for progress tracking."""
 
-    def __call__(self, *args: object, **kwargs: object) -> None:
+    def __call__(self, event: m.Cli.ProgressEventModel) -> None:
         """Accept any arguments for maximum flexibility."""
         ...
 ```
@@ -200,12 +203,12 @@ class ProgressCallbackProtocol(Protocol):
 ```python
 # ❌ WRONG: Invariant dict (rejects Mapping-compatible inputs)
 class DataProvider(Protocol):
-    def get_data(self) -> dict[str, t.Container]: ...
+    def get_data(self) -> dict[str, m.Core.ValueModel]: ...
 
 
 # ✅ CORRECT: Covariant Mapping (accepts multiple mapping implementations)
 class DataProvider(Protocol):
-    def get_data(self) -> Mapping[str, t.Container]: ...
+    def get_data(self) -> Mapping[str, m.Core.ValueModel]: ...
 
 
 # Usage: Works with any dict subtype
@@ -247,12 +250,12 @@ class FlextTypes:
         type Result[T] = "r[T]"
 
     class Utilities:
-        type object = dict[str, object]
+        type ConfigData = Mapping[str, m.Core.ConfigEntryModel]
 
 
 # Usage
 result: t.Core.Result[bool] = ok_result
-data: t.Utilities.object = {"key": "value"}
+data: t.Utilities.ConfigData = {"key": m.Core.ConfigEntryModel(value="value")}
 
 
 # ❌ WRONG: Over-nesting (3+ levels)
@@ -403,10 +406,10 @@ m.FlextOudMig               # Migration tool domain
 ### Covariance (Subtype Compatibility)
 
 ```python
-# Example: dict[str, bool] should be compatible with Mapping[str, object]
+# Example: dict[str, bool] should be compatible with Mapping[str, m.Core.ValueModel]
 
 # ❌ INVARIANT - WRONG
-def process_dict(data: dict[str, object]) -> None: ...
+def process_dict(data: dict[str, m.Core.ValueModel]) -> None: ...
 
 
 result: dict[str, bool] = {"ok": True}
@@ -416,7 +419,7 @@ process_dict(result)  # Type error: dict is invariant
 from collections.abc import Mapping
 
 
-def process_mapping(data: Mapping[str, object]) -> None: ...
+def process_mapping(data: Mapping[str, m.Core.ValueModel]) -> None: ...
 
 
 result: dict[str, bool] = {"ok": True}
@@ -576,8 +579,7 @@ FlextServiceT = TypeVar("FlextServiceT", bound="FlextService")
 
 FlextFlextOudMigEntryT = TypeVar(
     "FlextFlextOudMigEntryT",
-    bound=object,  # Bounded to object to avoid circular imports
-    # Actual constraint: p.FlextOudMig.EntryProtocol (enforced at runtime)
+    bound="fldif.Ldif.EntryProtocol",  # Protocol-bound to avoid circular imports
 )
 
 # ❌ DON'T create redundant TypeVars
@@ -612,7 +614,7 @@ def track_progress(callback: ProgressCallback) -> None:
 ```python
 @runtime_checkable
 class ProgressCallbackProtocol(Protocol):
-    def __call__(self, *args: object) -> None: ...
+    def __call__(self, event: m.Cli.ProgressEventModel) -> None: ...
 
 
 def track_progress(callback: ProgressCallbackProtocol) -> None:
@@ -715,12 +717,12 @@ attributes = m.AttributeDict()  # NO
 
 ```python
 # ✅ CORRECT: Use Models and Protocols
-def process_model(data: Mapping[str, t.Container]) -> r[SomeModel]:
+def process_model(data: Mapping[str, m.Domain.InputModel]) -> r[m.Domain.OutputModel]:
     return r.ok(SomeModel.model_validate(data))
 
 
 # ❌ WRONG: cast() hides type issues
-def process_model(data: Mapping[str, t.Container]) -> r[SomeModel]:
+def process_model(data: Mapping[str, m.Domain.InputModel]) -> r[m.Domain.OutputModel]:
     return r.ok(cast(SomeModel, data))
 
 
@@ -754,7 +756,7 @@ E = TypeVar("E", bound=BaseException)  # Exception bound
 
 # ❌ WRONG: Unclear or missing bounds
 T = TypeVar("T", int, str, bool)  # Limited union (use overloads)
-M = TypeVar("M", bound=object)  # Too loose
+M = TypeVar("M")  # Missing bound
 ```
 
 ### 5. Namespace Depth Management
