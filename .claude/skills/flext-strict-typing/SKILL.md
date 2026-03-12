@@ -126,7 +126,7 @@ def parse_payload(payload: t.ConfigMap) -> r[str]:
 | `Any` / `object` | `t.Scalar`                 | Primitives: `str \| int \| float \| bool \| datetime`         |
 | `dict[*, *]`      | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
 | `Mapping[*, *]`   | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
-| `t.Container`     | Specific Model / Protocol | Phasing out generic containers for strict models              |
+| `t.Container`     | `m.<Domain>.*Model` / `p.<Domain>.*Protocol` | Replace broad containers with explicit contracts              |
 | `t.Dict`          | `FlextModels.Dict`         | **Transitioning**: Prefer specialized models over generic dict |
 | `list[Any]`      | `list[SpecificModel]`      | Generic lists are forbidden                                   |
 | `Sequence[Any]`  | `Sequence[SpecificModel]`  | Read-only batch contracts                                     |
@@ -134,9 +134,9 @@ def parse_payload(payload: t.ConfigMap) -> r[str]:
 ### The Type Hierarchy (from `typings.py` lines 153-176)
 
 ```text
-Scalar-like contracts -> `t.Scalar`, `t.Container`
-Mapping contracts     -> `t.ConfigMap`, `t.Dict`, `t.ServiceMap`
-Container contracts   -> `t.ObjectList`, `t.ResourceMap`, `t.FactoryMap`
+Scalar-like contracts -> `t.Scalar` + domain value models (`m.<Domain>.ValueModel`)
+Mapping contracts     -> domain mapping models (`m.<Domain>.ConfigModel`, `m.<Domain>.ServiceRegistryModel`)
+Container contracts   -> explicit sequence/resource models (`m.<Domain>.BatchModel`, `m.<Domain>.ResourceModel`)
 Fallibility contract  -> `r[T]`
 ```
 
@@ -153,11 +153,11 @@ Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` 
 ### Special RootModel Containers (from `typings.py` lines 357-462)
 
 ```python
-t.Dict  # Mapping[str, t.Container] — general dict contract
-t.ConfigMap  # Mapping[str, t.Container] — config dicts
-t.ServiceMap  # Mapping[str, t.Container] — service registry
+t.Dict  # Transitional only — migrate to explicit domain dict models
+t.ConfigMap  # Transitional only — migrate to explicit config models
+t.ServiceMap  # Transitional only — migrate to explicit service registry models
 t.ErrorMap  # RootModel[dict[str, int | str | dict[str, int]]] — error types
-t.ObjectList  # Sequence[t.Container] — batch operations
+t.ObjectList  # Transitional only — migrate to Sequence[m.<Domain>.ItemModel]
 t.FactoryMap  # RootModel[dict[str, FactoryRegistrationCallable]]
 t.ResourceMap  # RootModel[dict[str, ResourceCallable]]
 t.FieldValidatorMap  # RootModel[dict[str, Callable[[GVT], GVT]]]
@@ -567,14 +567,14 @@ When a typing rule is violated, prefer architecture-aware fixes over mechanical 
 
 ```python
 # ✅ Every function/method MUST have explicit return type
-def process(self, data: t.Container) -> r[bool]: ...
+def process(self, data: m.Domain.ProcessInputModel) -> r[bool]: ...
 
 
 def validate(self, value: str) -> str: ...
 
 
 # ✅ Use r[T] for operations that can fail
-def load_config(self) -> r[t.ConfigMap]: ...
+def load_config(self) -> r[m.Domain.ConfigModel]: ...
 
 
 # ❌ WRONG — Missing return type
@@ -589,10 +589,10 @@ Use specific callable types from `FlextTypes`:
 
 ```python
 # Specific callable types from typings.py
-t.HandlerCallable  # Callable[[t.Container], t.Container]
-t.ConditionCallable  # Callable[[t.Container], bool]
+t.HandlerCallable  # Prefer Callable[[m.<Domain>.InputModel], m.<Domain>.OutputModel]
+t.ConditionCallable  # Prefer Callable[[m.<Domain>.InputModel], bool]
 t.FactoryCallable  # Callable[[], t.RegisterableService]
-t.ResourceCallable  # Callable[[], t.Container]
+t.ResourceCallable  # Prefer Callable[[], m.<Domain>.ResourceModel]
 t.DecoratorType  # Callable[[HandlerCallable], HandlerCallable]
 
 # For custom signatures, use import from collections.abc:
@@ -744,7 +744,7 @@ if isinstance(obj, str):
 
 
 # ✅ CORRECT — TypeGuard for custom predicates
-def is_config_map(val: t.Container) -> TypeGuard[t.ConfigMap]:
+def is_config_map(val: m.Domain.UnknownInputModel) -> TypeGuard[m.Domain.ConfigModel]:
     return u.Guards.is_config_map(val)
 ```
 
@@ -753,13 +753,13 @@ Dismantle polymorphic functions: replace multiple branches on type/union with a 
 
 ```python
 # ❌ AVOID — many branches on polymorphic input in one function
-def process(data: t.Container) -> r[str]: ...
+def process(data: m.Domain.ProcessInputModel) -> r[str]: ...
 
 
 # ✅ PREFER — single model with validation
 class ProcessInput(BaseModel):
     kind: Literal["str", "dict", "list"]
-    value: t.Container
+    value: m.Domain.ProcessValueModel
 
     @model_validator(mode="after")
     def check_kind_match(self): ...
@@ -828,7 +828,7 @@ class r[T_co](FlextRuntime.RuntimeResult[T_co]):
         cls,
         error: str | None,
         error_code: str | None = None,
-        error_data: t.ConfigMap | None = None,
+        error_data: m.Core.ResultErrorDataModel | None = None,
     ) -> r[U]:
         error_msg = error if error is not None else ""
         result = Failure(error_msg)

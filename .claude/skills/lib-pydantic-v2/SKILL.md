@@ -149,22 +149,22 @@ The `FlextUtilitiesValidation` class centralizes TypeAdapter usage for:
 ### RootModel Containers (from `typings.py`)
 
 ```python
-from flext_core import t
+from flext_core import m
 
 
-class Dict(RootModel[dict[str, t.Container]]):
-    root: dict[str, t.Container]
+class Dict(RootModel[dict[str, m.Core.ValueModel]]):
+    root: dict[str, m.Core.ValueModel]
 
 
-class ConfigMap(RootModel[dict[str, t.Container]]):
-    root: dict[str, t.Container]
+class ConfigMap(RootModel[dict[str, m.Core.ConfigEntryModel]]):
+    root: dict[str, m.Core.ConfigEntryModel]
 
 
-class ServiceMap(RootModel[dict[str, t.Container]]):
-    root: dict[str, t.Container]
+class ServiceMap(RootModel[dict[str, m.Core.ServiceEntryModel]]):
+    root: dict[str, m.Core.ServiceEntryModel]
 ```
 
-Used via `t.ConfigMap`, `t.ServiceMap`, `t.ErrorMap`, `t.FactoryMap`, `t.ResourceMap`.
+Used via explicit domain models and facade exports (`m.*`) rather than broad container aliases.
 
 ### Forward Reference Discipline (no model_rebuild)
 
