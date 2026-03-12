@@ -1,4 +1,4 @@
 id: detect-jsondict-legacy
 language: python
 rule:
-  pattern: dict[str, t.JsonValue]
+  pattern: dict[str, object]

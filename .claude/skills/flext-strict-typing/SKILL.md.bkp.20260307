@@ -81,7 +81,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 | `Any`            | `t.Scalar`            | Primitives: `str \| int \| float \| bool \| datetime \| None` |
 | `Any`            | `t.Metadat.Scalar`    | Metadata: `str \| int \| float \| bool \| None`               |
 | `Any`            | `t.Scalar`          | JSON primitives: `str \| int \| float \| bool \| None`        |
-| `Any`            | `t.JsonValue`              | Full JSON values                                              |
+| `Any`            | `object`              | Full JSON values                                              |
 | `object`         | `object`       | Method params that accept "anything"                          |
 | `dict[str, Any]` | `t.ConfigMap`              | Configuration dictionaries                                    |
 | `dict[str, Any]` | `t.Dict`                   | General dictionaries                                          |
@@ -106,11 +106,11 @@ Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` 
 ### Special RootModel Containers (from `typings.py` lines 357-462)
 
 ```python
-t.Dict              # RootModel[dict[str, GeneralValueType]] — general dict
-t.ConfigMap          # RootModel[dict[str, GeneralValueType]] — config dicts
-t.ServiceMap         # RootModel[dict[str, GeneralValueType]] — service registry
+t.Dict              # RootModel[dict[str, object]] — general dict
+t.ConfigMap          # RootModel[dict[str, object]] — config dicts
+t.ServiceMap         # RootModel[dict[str, object]] — service registry
 t.ErrorMap           # RootModel[dict[str, int | str | dict[str, int]]] — error types
-t.ObjectList         # RootModel[list[GeneralValueType]] — batch operations
+t.ObjectList         # RootModel[lisobject]] — batch operations
 t.FactoryMap         # RootModel[dict[str, FactoryRegistrationCallable]]
 t.ResourceMap        # RootModel[dict[str, ResourceCallable]]
 t.FieldValidatorMap  # RootModel[dict[str, Callable[[GVT], GVT]]]
@@ -159,9 +159,9 @@ X: TypeAlias = str | int  # → UnionType      → isinstance(val, X) WORKS   �
 | `MessageTypeSpecifier` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
 | `IncEx` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
 | `TYPE_CHECKING` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
-| **`Serializable`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
-| **`ContainerValue`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
-| **`JsonValue`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
+| **`object`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
+| **`object`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
+| **`object`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
 
 **`Validation.*` inner aliases** (`PortNumber`, `PositiveTimeout`, etc.) are `Annotated[...]` wrappers declared with `type` statement — they are annotation-only and NEVER used with isinstance. Correct as-is.
 
@@ -184,8 +184,8 @@ type Primitives = str | int | float | bool  # CRASHES isinstance() calls
 type Scalar = str | int | float | bool | datetime  # CRASHES isinstance() calls
 
 # ❌ FORBIDDEN — raw isinstance against recursive aliases
-isinstance(val, t.FlextTypes.Serializable)  # CRASHES at runtime
-isinstance(val, t.FlextTypes.ContainerValue)  # CRASHES at runtime
+isinstance(val, t.object)  # CRASHES at runtime
+isinstance(val, t.object)  # CRASHES at runtime
 
 # ❌ FORBIDDEN — subclassing a TypeAlias
 class Foo(t.FlextTypes.ConfigurationMapping): ...  # Use Mapping[str, t.FlextTypes.Container]
@@ -199,7 +199,7 @@ Primitives: TypeAlias = str | int | float | bool
 Scalar: TypeAlias = str | int | float | bool | datetime
 
 # ✅ CORRECT — recursive aliases use type statement
-type Serializable = (Scalar | list[FlextTypes.Serializable] | dict[str, FlextTypes.Serializable])
+type object = (Scalar | list[object] | dict[str, object])
 
 # ✅ CORRECT — runtime narrowing via guards.py
 from flext_core._utilities.guards import FlextUtilitiesGuards as Guards
@@ -229,7 +229,7 @@ for n in ['Primitives','Scalar','Container','MetadataValue','RegisterableService
 `ConfigurationMapping: TypeAlias = Mapping[str, Container]` is correct as TypeAlias.
 However `Mapping[str, Container]` is a parameterized generic — Python cannot use it with `isinstance()`
 for a DIFFERENT reason (parameterized generics are not allowed as isinstance args).
-This is NOT a TypeAliasType problem. The fix: never use `isinstance(val, t.ConfigurationMapping)`.
+This is NOT a TypeAliasType problem. The fix: never use `isinstance(val, object)`.
 Use `isinstance(val, Mapping)` (unparameterized) or `u.Guards.is_config_map(val)` instead.
 
 ### At module level — non-recursive types use `TypeAlias`
@@ -246,15 +246,15 @@ ConfigurationMapping: TypeAlias = Mapping[str, Scalar | Sequence[Scalar]]
 
 ```python
 # ✅ CORRECT — Recursive type (PEP 695 required — ONLY syntax that supports self-reference)
-type GeneralValueType = (
+type object = (
     str | int | float | bool | datetime | None
     | BaseModel | Path
-    | Sequence[GeneralValueType]
-    | Mapping[str, GeneralValueType]
+    | Sequence[object]
+    | Mapping[str, object]
 )
 
 # ⚠️ WARNING — NEVER use isinstance() on these! Use TypeGuard functions instead.
-# isinstance(val, GeneralValueType)  # CRASHES at runtime!
+# isinstance(val, object)  # CRASHES at runtime!
 ```
 
 ### TypeGuard functions for runtime type checking
@@ -430,7 +430,7 @@ typing (duck typing — no inheritance required for compliance):
 from typing import Protocol, runtime_checkable
 
 @runtime_checkable
-class Serializable(Protocol):
+class object(Protocol):
     def to_dict(self) -> dict[str, object]: ...
     def to_json(self) -> str: ...
 ```
@@ -522,10 +522,10 @@ Use specific callable types from `FlextTypes`:
 
 ```python
 # Specific callable types from typings.py
-t.HandlerCallable      # Callable[[GeneralValueType], GeneralValueType]
-t.ConditionCallable     # Callable[[GeneralValueType], bool]
-t.FactoryCallable       # Callable[[], GeneralValueType]
-t.ResourceCallable      # Callable[[], GeneralValueType]
+t.HandlerCallable      # Callable[[object], object]
+t.ConditionCallable     # Callable[[object], bool]
+t.FactoryCallable       # Callable[[], object]
+t.ResourceCallable      # Callable[[], object]
 t.DecoratorType         # Callable[[HandlerCallable], HandlerCallable]
 
 # For custom signatures, use import from collections.abc:

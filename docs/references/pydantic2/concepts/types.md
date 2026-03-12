@@ -410,7 +410,7 @@ For instance, here is an example definition of a JSON type:
     1. The value of a named type alias is lazily evaluated, so there's no need to use forward annotations.
 
 !!! tip
-Pydantic defines a [`JsonValue`][pydantic.types.JsonValue] type as a convenience.
+Pydantic defines a [`object`][pydantic.types.object] type as a convenience.
 
 ### Customizing validation with `__get_pydantic_core_schema__` <a name="customizing_validation_with_get_pydantic_core_schema"></a>
 

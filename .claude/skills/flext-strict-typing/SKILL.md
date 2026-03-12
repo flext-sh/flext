@@ -122,22 +122,22 @@ def parse_payload(payload: t.ConfigMap) -> r[str]:
 
 | Instead of       | Use                        | When                                                          |
 | ---------------- | -------------------------- | ------------------------------------------------------------- |
-| `Any`            | `object`       | General-purpose value containers                              |
+| `Any`            | `t.Container`       | General-purpose value containers                              |
 | `Any`            | `t.Scalar`            | Primitives: `str \| int \| float \| bool \| datetime` |
 | `Any`            | `t.MetadataValue`     | Metadata values with canonical contract semantics                 |
-| `Any`            | `t.JsonValue`         | JSON-compatible values                                            |
-| `Any`            | `t.JsonValue`              | Full JSON values                                              |
-| `object`         | `object`       | Method params that accept "anything"                          |
+| `Any`            | `t.Dict`         | JSON-compatible values                                            |
+| `Any`            | `t.Container`              | Full container values                                              |
+| `object`         | `t.Container`       | Method params that accept broad but typed FLEXT values                          |
 | `dict[str, Any]` | `t.ConfigMap`              | Configuration dictionaries                                    |
 | `dict[str, Any]` | `t.Dict`                   | General dictionaries                                          |
 | `dict[str, Any]` | `t.ServiceMap`             | Service registry mappings                                     |
-| `list[Any]`      | `list[object]` | Generic lists                                                 |
-| `Sequence[Any]`  | `t.ObjectList`             | RootModel for batch operations                                |
+| `list[Any]`      | `list[t.Container]` | Generic lists                                                 |
+| `Sequence[Any]`  | `Sequence[t.Container]`             | Read-only batch contracts                                |
 
 ### The Type Hierarchy (from `typings.py` lines 153-176)
 
 ```text
-Scalar-like contracts -> `t.Scalar`, `object`
+Scalar-like contracts -> `t.Scalar`, `t.Container`
 Mapping contracts     -> `t.ConfigMap`, `t.Dict`, `t.ServiceMap`
 Container contracts   -> `t.ObjectList`, `t.ResourceMap`, `t.FactoryMap`
 Fallibility contract  -> `r[T]`
@@ -156,11 +156,11 @@ Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` 
 ### Special RootModel Containers (from `typings.py` lines 357-462)
 
 ```python
-t.Dict  # RootModel[dict[str, GeneralValueType]] — general dict
-t.ConfigMap  # RootModel[dict[str, GeneralValueType]] — config dicts
-t.ServiceMap  # RootModel[dict[str, GeneralValueType]] — service registry
+t.Dict  # Mapping[str, t.Container] — general dict contract
+t.ConfigMap  # Mapping[str, t.Container] — config dicts
+t.ServiceMap  # Mapping[str, t.Container] — service registry
 t.ErrorMap  # RootModel[dict[str, int | str | dict[str, int]]] — error types
-t.ObjectList  # RootModel[list[GeneralValueType]] — batch operations
+t.ObjectList  # Sequence[t.Container] — batch operations
 t.FactoryMap  # RootModel[dict[str, FactoryRegistrationCallable]]
 t.ResourceMap  # RootModel[dict[str, ResourceCallable]]
 t.FieldValidatorMap  # RootModel[dict[str, Callable[[GVT], GVT]]]
@@ -209,9 +209,10 @@ X: TypeAlias = str | int  # → UnionType      → isinstance(val, X) WORKS   �
 | `MessageTypeSpecifier` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
 | `IncEx` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
 | `TYPE_CHECKING` | No | `X: TypeAlias = ...` | ✅ YES | Used as annotation |
+| **`GeneralValueType`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
 | **`Serializable`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
-| **`ContainerValue`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
 | **`JsonValue`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
+| **`ContainerValue`** | **YES** | **`type X = ...`** | ❌ NO | Recursive — NEVER use with isinstance |
 
 **`Validation.*` inner aliases** (`PortNumber`, `PositiveTimeout`, etc.) are `Annotated[...]` wrappers declared with `type` statement — they are annotation-only and NEVER used with isinstance. Correct as-is.
 
@@ -234,8 +235,8 @@ type Primitives = str | int | float | bool  # CRASHES isinstance() calls
 type Scalar = str | int | float | bool | datetime  # CRASHES isinstance() calls
 
 # ❌ FORBIDDEN — raw isinstance against recursive aliases
-isinstance(val, t.FlextTypes.Serializable)  # CRASHES at runtime
-isinstance(val, t.FlextTypes.ContainerValue)  # CRASHES at runtime
+isinstance(val, t.FlextTypes.GeneralValueType)  # CRASHES at runtime
+isinstance(val, t.FlextTypes.JsonValue)  # CRASHES at runtime
 
 
 # ❌ FORBIDDEN — subclassing a TypeAlias
@@ -252,8 +253,8 @@ Primitives: TypeAlias = str | int | float | bool
 Scalar: TypeAlias = str | int | float | bool | datetime
 
 # ✅ CORRECT — recursive aliases use type statement
-type Serializable = (
-    Scalar | list[FlextTypes.Serializable] | dict[str, FlextTypes.Serializable]
+type GeneralValueType = (
+    Scalar | list[FlextTypes.GeneralValueType] | dict[str, FlextTypes.GeneralValueType]
 )
 
 # ✅ CORRECT — runtime narrowing via public utilities alias
@@ -288,7 +289,7 @@ for n in ['Primitives','Scalar','Container','MetadataValue','RegisterableService
 `ConfigurationMapping: TypeAlias = Mapping[str, Container]` is correct as TypeAlias.
 However `Mapping[str, Container]` is a parameterized generic — Python cannot use it with `isinstance()`
 for a DIFFERENT reason (parameterized generics are not allowed as isinstance args).
-This is NOT a TypeAliasType problem. The fix: never use `isinstance(val, t.ConfigurationMapping)`.
+This is NOT a TypeAliasType problem. The fix: never use `isinstance(val, object)`.
 Use `isinstance(val, Mapping)` (unparameterized) or `u.Guards.is_config_map(val)` instead.
 
 ### At module level — non-recursive types use `TypeAlias`
@@ -500,8 +501,8 @@ from typing import Protocol, runtime_checkable
 
 
 @runtime_checkable
-class Serializable(Protocol):
-    def to_dict(self) -> dict[str, object]: ...
+class SerializableRecord(Protocol):
+    def to_dict(self) -> Mapping[str, t.Container]: ...
     def to_json(self) -> str: ...
 ```
 
@@ -571,7 +572,7 @@ When a typing rule is violated, prefer architecture-aware fixes over mechanical 
 
 ```python
 # ✅ Every function/method MUST have explicit return type
-def process(self, data: object) -> r[bool]: ...
+def process(self, data: t.Container) -> r[bool]: ...
 
 
 def validate(self, value: str) -> str: ...
@@ -593,10 +594,10 @@ Use specific callable types from `FlextTypes`:
 
 ```python
 # Specific callable types from typings.py
-t.HandlerCallable  # Callable[[GeneralValueType], GeneralValueType]
-t.ConditionCallable  # Callable[[GeneralValueType], bool]
-t.FactoryCallable  # Callable[[], GeneralValueType]
-t.ResourceCallable  # Callable[[], GeneralValueType]
+t.HandlerCallable  # Callable[[t.Container], t.Container]
+t.ConditionCallable  # Callable[[t.Container], bool]
+t.FactoryCallable  # Callable[[], t.RegisterableService]
+t.ResourceCallable  # Callable[[], t.Container]
 t.DecoratorType  # Callable[[HandlerCallable], HandlerCallable]
 
 # For custom signatures, use import from collections.abc:
@@ -748,7 +749,7 @@ if isinstance(obj, str):
 
 
 # ✅ CORRECT — TypeGuard for custom predicates
-def is_config_map(val: object) -> TypeGuard[t.ConfigMap]:
+def is_config_map(val: t.Container) -> TypeGuard[t.ConfigMap]:
     return u.Guards.is_config_map(val)
 ```
 
@@ -757,13 +758,13 @@ Dismantle polymorphic functions: replace multiple branches on type/union with a 
 
 ```python
 # ❌ AVOID — many branches on polymorphic input in one function
-def process(data: object) -> r[str]: ...
+def process(data: t.Container) -> r[str]: ...
 
 
 # ✅ PREFER — single model with validation
 class ProcessInput(BaseModel):
     kind: Literal["str", "dict", "list"]
-    value: object
+    value: t.Container
 
     @model_validator(mode="after")
     def check_kind_match(self): ...

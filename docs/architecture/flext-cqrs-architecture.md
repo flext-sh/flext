@@ -1669,7 +1669,7 @@ self.logger.info(f"Updating user: {command.user_id}")
 
         return r.ok(user)
 
-# Query Handlers
+## Query Handlers
 
 class GetUserHandler(h[GetUserQuery, User]):
 def handle(self, query: GetUserQuery) -> r[User]:
@@ -1695,7 +1695,7 @@ self.logger.debug(f"Listing users: limit={query.limit}, offset={query.offset}")
         self.cqrs_metrics.record("users_listed", len(users))
         return r.ok(users)
 
-# Event Handlers
+## Event Handlers
 
 class UserCreatedHandler(h[UserCreatedEvent, None]):
 def handle(self, event: UserCreatedEvent) -> r[bool]:
@@ -1716,7 +1716,7 @@ self.logger.info(f"Processing UserCreatedEvent: {event.user_id}")
         finally:
             self.cqrs_context.pop()
 
-# Application Setup
+## Application Setup
 
 def create_dispatcher() -> FlextDispatcher:
 """Create and configure dispatcher."""
@@ -1736,7 +1736,7 @@ dispatcher = FlextDispatcher(container=container)
 
     return dispatcher
 
-# Usage
+## Usage
 
 if **name** == "**main**":
 dispatcher = create_dispatcher()

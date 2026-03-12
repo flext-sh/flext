@@ -149,16 +149,16 @@ The `FlextUtilitiesValidation` class centralizes TypeAdapter usage for:
 ### RootModel Containers (from `typings.py`)
 
 ```python
-class Dict(RootModel[dict[str, GeneralValueType]]):
-    root: dict[str, GeneralValueType]
+class Dict(RootModel[dict[str, object]]):
+    root: dict[str, object]
 
 
-class ConfigMap(RootModel[dict[str, GeneralValueType]]):
-    root: dict[str, GeneralValueType]
+class ConfigMap(RootModel[dict[str, object]]):
+    root: dict[str, object]
 
 
-class ServiceMap(RootModel[dict[str, GeneralValueType]]):
-    root: dict[str, GeneralValueType]
+class ServiceMap(RootModel[dict[str, object]]):
+    root: dict[str, object]
 ```
 
 Used via `t.ConfigMap`, `t.ServiceMap`, `t.ErrorMap`, `t.FactoryMap`, `t.ResourceMap`.

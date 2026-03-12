@@ -10,7 +10,7 @@
 
 3. **Supressões inline** — Não usar `# pyright: ignore`, `# pyrefly: ignore` ou equivalentes para contornar o linter. Corrigir pela **causa raiz** usando os padrões e skills do flext e as regras de AGENTS.md.
 
-4. **Dict em create*for*\*** — Não usar `dict[str, object]` para construir settings. Usar `**overrides: object` e `dict[str, object]` com `model_validate(...)`, alinhado ao padrão de flext-core (`from_kwargs`, `merge_defaults`).
+4. **Dict em create*for*\*** — Não usar `dict[str, object]` como contrato público para settings. Usar `Mapping[str, t.Container]` no boundary e materializar `dict(...)` apenas no ponto local de mutação antes de `model_validate(...)`, alinhado ao padrão de flext-core (`from_kwargs`, `merge_defaults`).
 
 ---
 
@@ -22,8 +22,8 @@
 
 - **flext-tap-ldif**
   - Removido override de mypy em `pyproject.toml`.
-  - Settings: `create_for_development` / `create_for_production` / `create_for_testing` passam a usar `**overrides: object` e `defaults: dict[str, object]` com `model_validate(defaults)` (sem dict genérico de GeneralValueType).
-  - Utilities: erro pyrefly “bad-assignment / breaking cycles” resolvido na raiz extraindo a construção do record para `build_record_from_lines()` (tipo de retorno concreto `dict[str, str | list[str]]`), sem supressão inline; conversão para `dict[str, object]` só no retorno de `convert_ldif_entry_to_record`.
+  - Settings: `create_for_development` / `create_for_production` / `create_for_testing` passam a usar `**overrides: t.Container` e defaults com contrato `Mapping[str, t.Container]`, mantendo `model_validate(...)` sem `dict[str, object]` como interface.
+  - Utilities: erro pyrefly “bad-assignment / breaking cycles” resolvido na raiz extraindo a construção do record para `build_record_from_lines()` com tipagem forte; sem supressão inline e sem promover `dict[str, object]` como tipo de fronteira.
 
 - **typings**
   - Corrigido stub `typings/generated/sqlalchemy/sql/visitors.pyi`: parâmetros duplicados `self` em `__call__` substituídos por nomes únicos (`visitable`, `target`) para mypy não falhar ao analisar dependentes.
@@ -33,7 +33,7 @@
 ## Atualizações (continuação do plano)
 
 - **flext-core**
-  - **FlextSettings.**init\*\*\*\*: Mantido `cast("dict[str, Any]", kwargs)` para `BaseSettings.__init__` com comentário de exceção de política (AGENTS.md): fronteira de biblioteca; pydantic_settings espera kwargs dinâmicos.
+  - **FlextSettings.__init__**: Mantido `cast("dict[str, Any]", kwargs)` exclusivamente na fronteira de biblioteca (`pydantic_settings`) com comentário explícito de exceção e referência verificável. Fora dessa fronteira, `cast()` permanece proibido.
 - **flext-dbt-ldap**
   - **Unreachable**: Helper `_entry_attrs_mapping(entry)` no módulo; `normalize_attributes` / `_get_object_classes` e `dbt_client._matches_schema` usam esse helper. Import de `_entry_attrs_mapping` movido para o topo de `dbt_client.py` (lint PLC0415).
   - **Fronteira Pydantic (SSOT)**: Um único `[[tool.mypy.overrides]]` em `pyproject.toml` para `module = "flext_dbt_ldap.models"` com `disallow_any_explicit = false`. Causa: membro sintético `__mypy-replace` na cadeia Value → BaseModel; limitação conhecida mypy/Pydantic. Override documentado no próprio `pyproject.toml` e aqui; não adicionar outros overrides fora desse padrão.

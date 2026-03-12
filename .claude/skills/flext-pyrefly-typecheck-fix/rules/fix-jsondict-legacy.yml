@@ -1,5 +1,5 @@
 id: fix-jsondict-legacy
 language: python
 rule:
-  pattern: dict[str, t.JsonValue]
-fix: t.JsonDict
+  pattern: dict[str, object]
+fix: object

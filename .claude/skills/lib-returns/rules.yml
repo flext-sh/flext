@@ -36,7 +36,7 @@ rules:
     fix_type: ast-grep
     fix_file: rules/unwrap-to-value-fix.yml
     fix_instruction:
-      "MANUAL ONLY \u2014 do NOT auto-apply. The .unwrap() \u2192 .value rewrite is ONLY valid on\nFlextResult\
+      "MANUAL ONLY \u2014 do NOT auto-apply. The .unwrap() \u2192 .value rewrite is ONLY valid on\nr\
       \ (aliased as r[T]) objects after an is_success guard. NEVER rewrite\n.unwrap() on returns library types (Success, Some,\
       \ IOSuccess, Failure, Nothing,\nIOFailure) \u2014 they use .unwrap() as their public API and do NOT have a .value\nattribute.\
       \ When rewriting, prefer .value_or(default) over bare .value to avoid\nUnwrapFailedError on failure paths. Excluded files:\

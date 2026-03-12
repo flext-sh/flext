@@ -59,7 +59,7 @@ PEP 695 `type X = ...` creates `TypeAliasType`, NOT `UnionType`. `isinstance(val
 
 **Rules:**
 1. Non-recursive aliases (`Primitives`, `Scalar`, `Container`, `ConfigurationMapping`) → `X: TypeAlias = ...` (isinstance-safe)
-2. Recursive aliases (`GeneralValueType`, `ContainerValue`, `JsonValue`, `Serializable`) → `type X = ...` (NEVER use with isinstance)
+2. Recursive aliases (`object`, `object`, `object`, `object`) → `type X = ...` (NEVER use with isinstance)
 3. `TypeAliasType.__value__` is transitively poisoned — do NOT use as isinstance workaround
 4. `TypeAdapter` is 4x slower than isinstance — do NOT use for type checking
 5. Use `TypeGuard` functions from `_utilities/guards.py`: `is_primitive()`, `is_scalar()`, `is_flexible_value()`
@@ -107,7 +107,7 @@ m = FlextTargetOracleModels
 ## Instructions
 
 - Use existing type var definitions before introducing new generic parameters.
-- Prefer `FlextTypes` aliases (`GeneralValueType`, maps, scalar groups) for public contracts.
+- Prefer `FlextTypes` aliases (`object`, maps, scalar groups) for public contracts.
 - Ensure downstream users (`result.py`, `settings.py`, `protocols.py`) still type-check.
 - When creating a new project that depends on another FLEXT project's types, ALWAYS inherit the parent facade class in your models/protocols/etc.
 
@@ -115,7 +115,7 @@ m = FlextTargetOracleModels
 T = TypeVar("T")
 T_Settings = TypeVar("T_Settings", bound=BaseSettings)
 
-type GeneralValueType = (
+type object = (
     str
     | int
     | float
@@ -124,8 +124,8 @@ type GeneralValueType = (
     | None
     | BaseModel
     | Path
-    | Sequence[GeneralValueType]
-    | Mapping[str, GeneralValueType]
+    | Sequence[object]
+    | Mapping[str, object]
 )
 ```
 
@@ -164,6 +164,6 @@ Make gates:
 
 Pattern checks:
 
-- `rg -n "TypeVar\(|type GeneralValueType|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
+- `rg -n "TypeVar\(|type object|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
 - `rg -n "class r|type .*=" flext-core/src/flext_core/result.py`
 - `rg -n "T_Settings|BaseSettings" flext-core/src/flext_core/settings.py flext-core/src/flext_core/typings.py`
