@@ -64,7 +64,7 @@ Good:
 
 ```python
 # factory.pyi
-def create(name: str) -> t.GeneralValueType: ...
+def create(name: str) -> object: ...
 ```
 
 Why good: explicit callable contract using `t.*` types for static tools.

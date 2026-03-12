@@ -2,4 +2,4 @@ id: fix-result-object
 language: python
 rule:
   pattern: r[object]
-fix: r[t.GeneralValueType]
+fix: r[object]

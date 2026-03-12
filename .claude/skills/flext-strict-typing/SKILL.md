@@ -122,22 +122,22 @@ def parse_payload(payload: t.ConfigMap) -> r[str]:
 
 | Instead of       | Use                        | When                                                          |
 | ---------------- | -------------------------- | ------------------------------------------------------------- |
-| `Any`            | `t.GeneralValueType`       | General-purpose value containers                              |
+| `Any`            | `object`       | General-purpose value containers                              |
 | `Any`            | `t.Scalar`            | Primitives: `str \| int \| float \| bool \| datetime` |
 | `Any`            | `t.MetadataValue`     | Metadata values with canonical contract semantics                 |
 | `Any`            | `t.JsonValue`         | JSON-compatible values                                            |
 | `Any`            | `t.JsonValue`              | Full JSON values                                              |
-| `object`         | `t.GeneralValueType`       | Method params that accept "anything"                          |
+| `object`         | `object`       | Method params that accept "anything"                          |
 | `dict[str, Any]` | `t.ConfigMap`              | Configuration dictionaries                                    |
 | `dict[str, Any]` | `t.Dict`                   | General dictionaries                                          |
 | `dict[str, Any]` | `t.ServiceMap`             | Service registry mappings                                     |
-| `list[Any]`      | `list[t.GeneralValueType]` | Generic lists                                                 |
+| `list[Any]`      | `list[object]` | Generic lists                                                 |
 | `Sequence[Any]`  | `t.ObjectList`             | RootModel for batch operations                                |
 
 ### The Type Hierarchy (from `typings.py` lines 153-176)
 
 ```text
-Scalar-like contracts -> `t.Scalar`, `t.GeneralValueType`
+Scalar-like contracts -> `t.Scalar`, `object`
 Mapping contracts     -> `t.ConfigMap`, `t.Dict`, `t.ServiceMap`
 Container contracts   -> `t.ObjectList`, `t.ResourceMap`, `t.FactoryMap`
 Fallibility contract  -> `r[T]`
@@ -501,7 +501,7 @@ from typing import Protocol, runtime_checkable
 
 @runtime_checkable
 class Serializable(Protocol):
-    def to_dict(self) -> dict[str, t.GeneralValueType]: ...
+    def to_dict(self) -> dict[str, object]: ...
     def to_json(self) -> str: ...
 ```
 
@@ -571,7 +571,7 @@ When a typing rule is violated, prefer architecture-aware fixes over mechanical 
 
 ```python
 # ✅ Every function/method MUST have explicit return type
-def process(self, data: t.GeneralValueType) -> r[bool]: ...
+def process(self, data: object) -> r[bool]: ...
 
 
 def validate(self, value: str) -> str: ...
@@ -748,7 +748,7 @@ if isinstance(obj, str):
 
 
 # ✅ CORRECT — TypeGuard for custom predicates
-def is_config_map(val: t.GeneralValueType) -> TypeGuard[t.ConfigMap]:
+def is_config_map(val: object) -> TypeGuard[t.ConfigMap]:
     return u.Guards.is_config_map(val)
 ```
 
@@ -757,13 +757,13 @@ Dismantle polymorphic functions: replace multiple branches on type/union with a 
 
 ```python
 # ❌ AVOID — many branches on polymorphic input in one function
-def process(data: t.GeneralValueType) -> r[str]: ...
+def process(data: object) -> r[str]: ...
 
 
 # ✅ PREFER — single model with validation
 class ProcessInput(BaseModel):
     kind: Literal["str", "dict", "list"]
-    value: t.GeneralValueType
+    value: object
 
     @model_validator(mode="after")
     def check_kind_match(self): ...

@@ -77,16 +77,16 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 
 | Instead of       | Use                        | When                                                          |
 | ---------------- | -------------------------- | ------------------------------------------------------------- |
-| `Any`            | `t.GeneralValueType`       | General-purpose value containers                              |
+| `Any`            | `object`       | General-purpose value containers                              |
 | `Any`            | `t.Scalar`            | Primitives: `str \| int \| float \| bool \| datetime \| None` |
 | `Any`            | `t.Metadat.Scalar`    | Metadata: `str \| int \| float \| bool \| None`               |
 | `Any`            | `t.Scalar`          | JSON primitives: `str \| int \| float \| bool \| None`        |
 | `Any`            | `t.JsonValue`              | Full JSON values                                              |
-| `object`         | `t.GeneralValueType`       | Method params that accept "anything"                          |
+| `object`         | `object`       | Method params that accept "anything"                          |
 | `dict[str, Any]` | `t.ConfigMap`              | Configuration dictionaries                                    |
 | `dict[str, Any]` | `t.Dict`                   | General dictionaries                                          |
 | `dict[str, Any]` | `t.ServiceMap`             | Service registry mappings                                     |
-| `list[Any]`      | `list[t.GeneralValueType]` | Generic lists                                                 |
+| `list[Any]`      | `list[object]` | Generic lists                                                 |
 | `Sequence[Any]`  | `t.ObjectList`             | RootModel for batch operations                                |
 
 ### The Type Hierarchy (from `typings.py` lines 153-176)
@@ -431,7 +431,7 @@ from typing import Protocol, runtime_checkable
 
 @runtime_checkable
 class Serializable(Protocol):
-    def to_dict(self) -> dict[str, t.GeneralValueType]: ...
+    def to_dict(self) -> dict[str, object]: ...
     def to_json(self) -> str: ...
 ```
 
@@ -499,7 +499,7 @@ When a typing rule is violated, prefer architecture-aware fixes over mechanical 
 
 ```python
 # ✅ Every function/method MUST have explicit return type
-def process(self, data: t.GeneralValueType) -> r[bool]:
+def process(self, data: object) -> r[bool]:
     ...
 
 def validate(self, value: str) -> str:

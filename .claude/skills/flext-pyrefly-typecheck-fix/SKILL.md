@@ -94,7 +94,7 @@ Use `make validate` as the primary execution entrypoint. Internal script orchest
 ### 3. `r[object]` Type Erasure
 
 - **Symptom**: Invariance prevents safe widening of `r[object]`
-- **Fix**: Rewrite to `r[t.GeneralValueType]` at boundaries, or make local functions generic
+- **Fix**: Rewrite to `r[object]` at boundaries, or make local functions generic
 
 ### 4. RootModel Container Coercion
 

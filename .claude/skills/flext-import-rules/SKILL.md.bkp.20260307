@@ -385,7 +385,7 @@ if TYPE_CHECKING:
 __all__ = ["FlextModels", "FlextProtocols"]
 
 # 3. Native module-level lazy load strategy
-def __getattr__(name: str) -> t.GeneralValueType:
+def __getattr__(name: str) -> object:
     if name == "FlextModels":
         from .models import FlextModels
         return FlextModels

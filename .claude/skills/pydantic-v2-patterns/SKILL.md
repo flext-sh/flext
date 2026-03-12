@@ -110,7 +110,7 @@ def validate_non_empty(v: str) -> str:
     return cleaned
 
 
-def normalize_to_list(v: t.GeneralValueType) -> list[t.GeneralValueType]:
+def normalize_to_list(v: object) -> list[object]:
     if isinstance(v, list):
         return v
     if isinstance(v, (tuple, set)):
@@ -153,13 +153,11 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class Metadata(BaseModel):
-    attributes: dict[str, t.GeneralValueType] = Field(default_factory=dict)
+    attributes: dict[str, object] = Field(default_factory=dict)
 
     @field_validator("attributes", mode="before")
     @classmethod
-    def normalize_attributes(
-        cls, value: t.GeneralValueType
-    ) -> dict[str, t.GeneralValueType]:
+    def normalize_attributes(cls, value: object) -> dict[str, object]:
         if value is None:
             return {}
         if isinstance(value, BaseModel):
@@ -311,10 +309,10 @@ from pydantic import computed_field
 
 
 class ServiceRuntimeHolder:
-    _runtime: t.GeneralValueType
+    _runtime: object
 
     @computed_field
-    def runtime(self) -> t.GeneralValueType:
+    def runtime(self) -> object:
         return self._runtime
 ```
 
@@ -461,8 +459,8 @@ class EnvelopeModel(BaseModel):
 
     @field_serializer("*", when_used="json")
     def serialize_with_metadata(
-        self, value: t.GeneralValueType, _info: FieldSerializationInfo
-    ) -> t.GeneralValueType:
+        self, value: object, _info: FieldSerializationInfo
+    ) -> object:
         if not self.include_metadata:
             return value
         if isinstance(value, dict):
@@ -524,9 +522,7 @@ Guidance:
 from pydantic import TypeAdapter, ValidationError
 
 
-def validate_runtime(
-    data: t.GeneralValueType, type_: type[t.GeneralValueType]
-) -> tuple[bool, t.GeneralValueType | str]:
+def validate_runtime(data: object, type_: type[object]) -> tuple[bool, object | str]:
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_python(data)
@@ -545,9 +541,7 @@ Repository anchor:
 from pydantic import TypeAdapter
 
 
-def serialize_runtime(
-    value: t.GeneralValueType, type_: type[t.GeneralValueType]
-) -> dict[str, t.GeneralValueType]:
+def serialize_runtime(value: object, type_: type[object]) -> dict[str, object]:
     adapter = TypeAdapter(type_)
     dumped = adapter.dump_python(value, mode="json")
     if isinstance(dumped, dict):
@@ -631,7 +625,7 @@ class Window(BaseModel):
 
     @field_validator("label", mode="before")
     @classmethod
-    def normalize_label(cls, value: t.GeneralValueType) -> str:
+    def normalize_label(cls, value: object) -> str:
         if not isinstance(value, str):
             raise TypeError("label must be str")
         cleaned = value.strip()
