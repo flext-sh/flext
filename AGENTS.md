@@ -224,7 +224,7 @@ UNBREAKABLE LAW for all parallel agent work:
 | **Agent 5** | `container.py`, `decorators.py`, `handlers.py`, `mixins.py` | All other agents |
 | **FROZEN** | `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `__version__.py` | NO AGENT MODIFIES |
 
-*Exception*: FROZEN files may be unfrozen ONLY for annotation additions (typing, `Field()`, imports). Behavioral logic changes remain frozen.
+*Exception*: FROZEN files may be unfrozen ONLY for: (a) annotation additions (typing, `Field()`, imports), or (b) **performance-only caching changes** — adding `ClassVar` cache fields, wrapping instantiations in lazy-load patterns, and adding env-variable configuration toggles — provided the change is isomorphic (same inputs → same outputs), passes all linters and tests, and runs as single-agent work (not parallel). Behavioral logic changes beyond (a) and (b) remain frozen.
 
 **`protocols.py` Section Split**:
 - Sections must be appended strictly at the end of their respective ownership blocks.
@@ -233,7 +233,7 @@ UNBREAKABLE LAW for all parallel agent work:
 - **A3**: Model, Config, Service, Validation, ValidatorSpec
 - **A4**: Result, ResultLike, VariadicCallable, ResourceFactory, Log, StructlogLogger, Metadata
 - **A5**: Context, RuntimeBootstrapOptions, DI, Handler, RegisterableService, ServiceFactory
-- *Lines 1-236 & 1289+ are strictly FROZEN.*
+- *Lines 1-236 & 1289+ are strictly FROZEN for behavioral changes. Performance-only caching additions (ClassVar cache fields, lazy-load wrappers) are permitted per the FROZEN file exception above, limited to method bodies — function/method signatures and class declarations within the frozen range MUST NOT be altered.*
 
 ### 10.3 Execution Phases
 - **Phase 0 (SOLO)**: Agent 4 completes Wave 0 (`RuntimeResult.__slots__` + `r.fail()` + `p.Result`) and PUSHES. All others BLOCKED.
