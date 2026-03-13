@@ -4401,7 +4401,7 @@ attributes: m.Ldif.AttributeSetModel
        return service.execute()
 
 
-# Qualquer objeto compatível com execute() funciona
+#### Qualquer objeto compatível com execute() funciona
    process_service(MyService())  # ✅ OK
    ```
 
