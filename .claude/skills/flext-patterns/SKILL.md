@@ -119,7 +119,7 @@ m = FlextTargetOracleModels
 from .models import m
 from flext_core import r
 
-schema = m.Meltano.SingerSchemaMessage.model_validate(data)
+schema = m.Meltano.SingerSchemaMessage(data)
 result = r[m.ExecuteResult].ok(m.ExecuteResult(name="x"))
 ```
 

@@ -10,8 +10,8 @@ id: fix-pydantic-v1-parse-obj
 language: python
 rule:
   pattern: $MODEL.parse_obj($ARG)
-fix: $MODEL.model_validate($ARG)
-message: "Rewrite .parse_obj() -> .model_validate()"
+fix: $MODEL($ARG)
+message: "Rewrite .parse_obj() -> ()"
 severity: error
 ---
 id: fix-pydantic-v1-parse-raw

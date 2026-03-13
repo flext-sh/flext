@@ -718,7 +718,7 @@ attributes = m.AttributeDict()  # NO
 ```python
 # ✅ CORRECT: Use Models and Protocols
 def process_model(data: Mapping[str, m.Domain.InputModel]) -> r[m.Domain.OutputModel]:
-    return r.ok(SomeModel.model_validate(data))
+    return r.ok(SomeModel(data))
 
 
 # ❌ WRONG: cast() hides type issues

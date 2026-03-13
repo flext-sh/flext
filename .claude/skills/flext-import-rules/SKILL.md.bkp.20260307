@@ -172,7 +172,7 @@ m = FlextTargetOracleModels
 
 # In runtime code — ONLY import m:
 from .models import m
-schema = m.Meltano.SingerSchemaMessage.model_validate(data)
+schema = m.Meltano.SingerSchemaMessage(data)
 ```
 
 ```python
