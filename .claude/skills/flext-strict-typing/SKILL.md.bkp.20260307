@@ -85,7 +85,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 | `object`         | `object`       | Method params that accept "anything"                          |
 | `dict[str, Any]` | `t.ConfigMap`              | Configuration dictionaries                                    |
 | `dict[str, Any]` | `t.Dict`                   | General dictionaries                                          |
-| `dict[str, Any]` | `t.ServiceMap`             | Service registry mappings                                     |
+| `dict[str, Any]` | `p.ServiceMap`             | Service registry mappings                                     |
 | `list[Any]`      | `list[object]` | Generic lists                                                 |
 | `Sequence[Any]`  | `t.ObjectList`             | RootModel for batch operations                                |
 
@@ -108,7 +108,7 @@ Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` 
 ```python
 t.Dict              # RootModel[dict[str, object]] — general dict
 t.ConfigMap          # RootModel[dict[str, object]] — config dicts
-t.ServiceMap         # RootModel[dict[str, object]] — service registry
+p.ServiceMap         # RootModel[dict[str, object]] — service registry
 t.ErrorMap           # RootModel[dict[str, int | str | dict[str, int]]] — error types
 t.ObjectList         # RootModel[lisobject]] — batch operations
 t.FactoryMap         # RootModel[dict[str, FactoryRegistrationCallable]]
@@ -522,10 +522,10 @@ Use specific callable types from `FlextTypes`:
 
 ```python
 # Specific callable types from typings.py
-t.HandlerCallable      # Callable[[object], object]
+p.HandlerCallable      # Callable[[object], object]
 t.ConditionCallable     # Callable[[object], bool]
-t.FactoryCallable       # Callable[[], object]
-t.ResourceCallable      # Callable[[], object]
+p.FactoryCallable       # Callable[[], object]
+p.ResourceCallable      # Callable[[], object]
 t.DecoratorType         # Callable[[HandlerCallable], HandlerCallable]
 
 # For custom signatures, use import from collections.abc:

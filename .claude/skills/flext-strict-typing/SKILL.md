@@ -155,7 +155,7 @@ Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` 
 ```python
 t.Dict  # Transitional only — migrate to explicit domain dict models
 m.Domain.ConfigModel  # Canonical strict config contract
-t.ServiceMap  # Transitional only — migrate to explicit service registry models
+p.ServiceMap  # Transitional only — migrate to explicit service registry models
 t.ErrorMap  # RootModel[dict[str, int | str | dict[str, int]]] — error types
 t.ObjectList  # Transitional only — migrate to Sequence[m.<Domain>.ItemModel]
 t.FactoryMap  # RootModel[dict[str, FactoryRegistrationCallable]]
@@ -512,10 +512,10 @@ Use specific callable types from `FlextTypes`:
 
 ```python
 # Specific callable types from typings.py
-t.HandlerCallable  # Prefer Callable[[m.<Domain>.InputModel], m.<Domain>.OutputModel]
+p.HandlerCallable  # Prefer Callable[[m.<Domain>.InputModel], m.<Domain>.OutputModel]
 t.ConditionCallable  # Prefer Callable[[m.<Domain>.InputModel], bool]
-t.FactoryCallable  # Callable[[], t.RegisterableService]
-t.ResourceCallable  # Prefer Callable[[], m.<Domain>.ResourceModel]
+p.FactoryCallable  # Callable[[], t.RegisterableService]
+p.ResourceCallable  # Prefer Callable[[], m.<Domain>.ResourceModel]
 t.DecoratorType  # Callable[[HandlerCallable], HandlerCallable]
 
 # For custom signatures, use import from collections.abc:
