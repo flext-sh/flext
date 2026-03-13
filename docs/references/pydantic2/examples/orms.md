@@ -43,7 +43,7 @@ class MyTableModel(Base):
 
 
 sql_model = MyTableModel(metadata_={"key": "val"}, id=1)
-pydantic_model = MyModel.model_validate(sql_model)
+pydantic_model = MyModel(sql_model)
 
 print(pydantic_model.model_dump())
 # > {'metadata': {'key': 'val'}}

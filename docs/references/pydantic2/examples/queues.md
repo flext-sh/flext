@@ -206,7 +206,7 @@ REDIS_SETTINGS = RedisSettings()
 
 
 async def process_user(ctx: dict[str, Any], user_data: dict[str, Any]) -> None:
-    user = User.model_validate(user_data)
+    user = User(user_data)
     print(f"Processing user: {repr(user)}")
 
 

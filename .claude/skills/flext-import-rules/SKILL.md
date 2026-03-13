@@ -221,7 +221,7 @@ m = FlextTargetOracleModels
 # In runtime code — import from package facade/module path, not relative import:
 from flext_target_oracle.models import m
 
-schema = m.Meltano.SingerSchemaMessage.model_validate(data)
+schema = m.Meltano.SingerSchemaMessage(data)
 ```
 
 ```python
@@ -670,8 +670,8 @@ Business-specific projects use structural composition combining Domains and Plat
 > Every namespace mapped as "Full Access" is available transparently on the project's alias.
 > If `p = AlgarOudMigProtocols`:
 > - `p.AlgarOudMig.MutableEntryamespace)
-> - `p.Ldap.LdapEntryited from `FlextLdapProtocols`)
-> - `p.Ldif.Entryited transitively from `FlextLdifProtocols` -> `FlextLdapProtocols`)
+> - `p.Ldap.LdapEntryited from`FlextLdapProtocols`)
+> - `p.Ldif.Entryited transitively from`FlextLdifProtocols` -> `FlextLdapProtocols`)
 > - `p.Cli.Command` (Inherited from `FlextCliProtocols`)
 > - `p.Service` (Inherited transitively from `FlextProtocols` -> core root)
 >

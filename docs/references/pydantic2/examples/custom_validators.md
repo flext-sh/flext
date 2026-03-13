@@ -264,7 +264,7 @@ data = {
 }
 
 try:
-    org = Organization.model_validate(data, context={})
+    org = Organization(data, context={})
 except ValidationError as e:
     print(e)
     """

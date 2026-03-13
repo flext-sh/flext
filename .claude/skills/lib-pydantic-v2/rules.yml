@@ -36,7 +36,7 @@ rules:
     group: pydantic_v1_violations
     description: Pydantic v1 from_orm() is banned.
     fix_auto: false
-    fix_instruction: Replace .from_orm(obj) with .model_validate(obj) and set model_config = ConfigDict(from_attributes=True).
+    fix_instruction: Replace .from_orm(obj) with (obj) and set model_config = ConfigDict(from_attributes=True).
     file: rules/pydantic-v1-from-orm.yml
   - id: pydantic-v1-validator-decorator
     type: ast-grep

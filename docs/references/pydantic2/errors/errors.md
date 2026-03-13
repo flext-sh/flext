@@ -255,7 +255,7 @@ class TestModel(BaseModel):
 data = {"items": [{"key": "foo", "value": "bar"}, {"key": "baz"}]}
 
 try:
-    TestModel.model_validate(data)
+    TestModel(data)
 except ValidationError as e:
     print(e.errors())  # (1)!
     """
