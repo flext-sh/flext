@@ -33,7 +33,7 @@
 ## Atualizações (continuação do plano)
 
 - **flext-core**
-  - **FlextSettings.__init__**: Removida abordagem permissiva de cast em fronteira de biblioteca; fronteira segue contrato de modelo explícito e validação direta.
+  - **FlextSettings.**init****: Removida abordagem permissiva de cast em fronteira de biblioteca; fronteira segue contrato de modelo explícito e validação direta.
 - **flext-dbt-ldap**
   - **Unreachable**: Helper `_entry_attrs_mapping(entry)` no módulo; `normalize_attributes` / `_get_object_classes` e `dbt_client._matches_schema` usam esse helper. Import de `_entry_attrs_mapping` movido para o topo de `dbt_client.py` (lint PLC0415).
   - **Fronteira Pydantic (SSOT)**: Um único `[[tool.mypy.overrides]]` em `pyproject.toml` para `module = "flext_dbt_ldap.models"` com `disallow_any_explicit = false`. Causa: membro sintético `__mypy-replace` na cadeia Value → BaseModel; limitação conhecida mypy/Pydantic. Override documentado no próprio `pyproject.toml` e aqui; não adicionar outros overrides fora desse padrão.
