@@ -20,10 +20,10 @@
   - [Models Namespace Architecture (m.\*)](#models-namespace-architecture-m)
 - [Covariance and Variance Rules](#covariance-and-variance-rules)
   - [Covariance (Subtype Compatibility)](#covariance-subtype-compatibility)
-  - [Protocol Return Types (Always Covariant)](#protocol-return-types-always-covariant)
+  - [Return Types (Always Covariant)](#protocol-return-types-always-covariant)
   - [Type Parameter Bounds (Always Covariant)](#type-parameter-bounds-always-covariant)
-- [Protocol Design](#protocol-design)
-  - [Protocol Organization Rules](#protocol-organization-rules)
+- [Design](#protocol-design)
+  - [Organization Rules](#protocol-organization-rules)
 - [TypeVar Organization](#typevar-organization)
   - [Centralized TypeVars (flext-core)](#centralized-typevars-flext-core)
   - [Domain-Specific TypeVars (When Necessary)](#domain-specific-typevars-when-necessary)
@@ -56,7 +56,7 @@
 3. [Canonical Type Patterns](#canonical-type-patterns)
 4. [Namespace Architecture](#namespace-architecture)
 5. [Covariance and Variance Rules](#covariance-and-variance-rules)
-6. [Protocol Design](#protocol-design)
+6. [Design](#protocol-design)
 7. [TypeVar Organization](#typevar-organization)
 8. [Migration Guide](#migration-guide)
 9. [Best Practices](#best-practices)
@@ -159,13 +159,13 @@ class FlextCliTypes:
 # In typings.py (Tier 0)
 FlextFlextOudMigEntryT = TypeVar(
     "FlextFlextOudMigEntryT",
-    bound="fldif.Ldif.EntryProtocol",
+    bound="fldif.Ldif.Entry",
 )
 
 
 # In protocols.py (Tier 0) - declare actual protocol
 @runtime_checkable
-class EntryServiceProtocol[T: "fldif.Ldif.EntryProtocol"](Protocol):
+class EntryService[T: "fldif.Ldif.Entry"](Protocol):
     """Service for entry operations with generic type parameter."""
 
     def get(self, dn: str) -> "FlextOudMigProtocols.FlextOudMig.Result[T]": ...
@@ -188,7 +188,7 @@ type ProgressCallback = (
 
 # ✅ AFTER: Protocol-based (extensible, maintainable)
 @runtime_checkable
-class ProgressCallbackProtocol(Protocol):
+class ProgressCallback(Protocol):
     """Flexible callback protocol for progress tracking."""
 
     def __call__(self, event: m.Cli.ProgressEventModel) -> None:
@@ -479,7 +479,7 @@ from typing import Protocol
 
 
 @runtime_checkable
-class EntryProtocol(Protocol):
+class Entry(Protocol):
     dn: str
     attributes: Mapping[str, Sequence[str]]
 
@@ -489,7 +489,7 @@ from flext_ldif import Entry  # NO
 
 
 @runtime_checkable
-class EntryProtocol(Protocol):
+class Entry(Protocol):
     entry: Entry  # NO - creates circular dependency
 ```
 
@@ -520,13 +520,13 @@ from typing import Protocol, runtime_checkable
 
 
 @runtime_checkable
-class EntryProtocol(Protocol):
+class Entry(Protocol):
     dn: str
     attributes: Mapping[str, Sequence[str]]
 
 
 # Can now use isinstance() at runtime
-if isinstance(obj, EntryProtocol):
+if isinstance(obj, Entry):
     print(f"DN: {obj.dn}")
 ```
 
@@ -579,7 +579,7 @@ FlextServiceT = TypeVar("FlextServiceT", bound="FlextService")
 
 FlextFlextOudMigEntryT = TypeVar(
     "FlextFlextOudMigEntryT",
-    bound="fldif.Ldif.EntryProtocol",  # Protocol-bound to avoid circular imports
+    bound="fldif.Ldif.Entry",  # Protocol-bound to avoid circular imports
 )
 
 # ❌ DON'T create redundant TypeVars
@@ -613,11 +613,11 @@ def track_progress(callback: ProgressCallback) -> None:
 
 ```python
 @runtime_checkable
-class ProgressCallbackProtocol(Protocol):
+class ProgressCallback(Protocol):
     def __call__(self, event: m.Cli.ProgressEventModel) -> None: ...
 
 
-def track_progress(callback: ProgressCallbackProtocol) -> None:
+def track_progress(callback: ProgressCallback) -> None:
     callback(50)
     callback(50, 100)
     callback(50, 100, "processing")

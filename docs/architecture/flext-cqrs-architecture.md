@@ -671,7 +671,7 @@ servir como referência futura para implementação:
 ~~class FlextProtocols:~~
 ~~ """Protocol definitions for flext-core."""~~
 
-~~ class CircuitBreakerProtocol(Protocol):~~
+~~ class CircuitBreaker(Protocol):~~
 ~~ """Protocol for circuit breaker managers."""~~
 
 ~~ def is_open(self, key: str) -> bool:~~
@@ -690,7 +690,7 @@ servir como referência futura para implementação:
 ~~ """Reset circuit state."""~~
 ~~ ...~~
 
-~~ class RateLimiterProtocol(Protocol):~~
+~~ class RateLimiter(Protocol):~~
 ~~ """Protocol for rate limiter managers."""~~
 
 ~~ def acquire(self, key: str, permits: int = 1) -> bool:~~
@@ -701,7 +701,7 @@ servir como referência futura para implementação:
 ~~ """Get remaining permits."""~~
 ~~ ...~~
 
-~~ class TimeoutEnforcerProtocol(Protocol):~~
+~~ class TimeoutEnforcer(Protocol):~~
 ~~ """Protocol for timeout enforcement."""~~
 
 ~~ def execute_with_timeout(~~
@@ -712,7 +712,7 @@ servir como referência futura para implementação:
 ~~ """Execute function with timeout."""~~
 ~~ ...~~
 
-~~ class RetryPolicyProtocol(Protocol):~~
+~~ class RetryPolicy(Protocol):~~
 ~~ """Protocol for retry policies."""~~
 
 ~~ def execute_with_retry(~~
@@ -738,10 +738,10 @@ servir como referência futura para implementação:
 ~~ container: FlextContainer | None = None,~~
 ~~ \*,~~
 ~~ # Legacy support - deprecated, use container instead~~
-~~ circuit_breaker: FlextProtocols.CircuitBreakerProtocol | None = None,~~
-~~ rate_limiter: FlextProtocols.RateLimiterProtocol | None = None,~~
-~~ timeout_enforcer: FlextProtocols.TimeoutEnforcerProtocol | None = None,~~
-~~ retry_policy: FlextProtocols.RetryPolicyProtocol | None = None,~~
+~~ circuit_breaker: FlextProtocols.CircuitBreaker | None = None,~~
+~~ rate_limiter: FlextProtocols.RateLimiter | None = None,~~
+~~ timeout_enforcer: FlextProtocols.TimeoutEnforcer | None = None,~~
+~~ retry_policy: FlextProtocols.RetryPolicy | None = None,~~
 ~~ ) -> None:~~
 ~~ """Initialize dispatcher with optional container.~~
 
@@ -2665,10 +2665,10 @@ class x:
 
 | Item                           | Status      | Arquivo             | Linhas | Descrição              |
 | ------------------------------ | ----------- | ------------------- | ------ | ---------------------- |
-| CircuitBreakerProtocol         | 🔴 Pendente | protocols.py        | +30    | Interface manager      |
-| RateLimiterProtocol            | 🔴 Pendente | protocols.py        | +25    | Interface manager      |
-| RetryPolicyProtocol            | 🔴 Pendente | protocols.py        | +25    | Interface manager      |
-| TimeoutEnforcerProtocol        | 🔴 Pendente | protocols.py        | +20    | Interface manager      |
+| CircuitBreaker         | 🔴 Pendente | protocols.py        | +30    | Interface manager      |
+| RateLimiter            | 🔴 Pendente | protocols.py        | +25    | Interface manager      |
+| RetryPolicy            | 🔴 Pendente | protocols.py        | +25    | Interface manager      |
+| TimeoutEnforcer        | 🔴 Pendente | protocols.py        | +20    | Interface manager      |
 | \_managers/circuit_breaker.py  | 🔴 Pendente | \_managers/         | +150   | Manager extraído       |
 | \_managers/rate_limiter.py     | 🔴 Pendente | \_managers/         | +120   | Manager extraído       |
 | \_managers/retry_policy.py     | 🔴 Pendente | \_managers/         | +100   | Manager extraído       |
