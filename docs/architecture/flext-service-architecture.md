@@ -4364,7 +4364,7 @@ class FlextLdifProtocols:
         def normalize_entry(self, entry: dict) -> r[dict]: ...
 
     class Entry:
-        class EntryWithDnProtocol(Protocol):
+        class EntryWithDn(Protocol):
             """Entry protocol with DN."""
 
             dn: str | DN

@@ -648,7 +648,7 @@ Integrations MUST compose exactly ONE platform and ONE domain. Because `FlextMel
 # flext-tap-oracle/src/flext_tap_oracle/protocols.py
 class FlextTapOracleProtocols(FlextMeltanoProtocols, FlextDbOracleProtocols):
     class TapOracle:
-        class DataExtractionProtocol(Protocol): ...
+        class DataExtraction(Protocol): ...
 
 
 p = FlextTapOracleProtocols
@@ -669,9 +669,9 @@ Business-specific projects use structural composition combining Domains and Plat
 >
 > Every namespace mapped as "Full Access" is available transparently on the project's alias.
 > If `p = AlgarOudMigProtocols`:
-> - `p.AlgarOudMig.MutableEntryProtocol` (Own namespace)
-> - `p.Ldap.LdapEntryProtocol` (Inherited from `FlextLdapProtocols`)
-> - `p.Ldif.EntryProtocol` (Inherited transitively from `FlextLdifProtocols` -> `FlextLdapProtocols`)
+> - `p.AlgarOudMig.MutableEntryamespace)
+> - `p.Ldap.LdapEntryited from `FlextLdapProtocols`)
+> - `p.Ldif.Entryited transitively from `FlextLdifProtocols` -> `FlextLdapProtocols`)
 > - `p.Cli.Command` (Inherited from `FlextCliProtocols`)
 > - `p.Service` (Inherited transitively from `FlextProtocols` -> core root)
 >
