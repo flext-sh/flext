@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
+from flext_core import FlextTypes, cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from tests.unit.scripts.github.test_pr_workspace import (
@@ -23,30 +23,12 @@ if TYPE_CHECKING:
 
 # Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
-    "test_main_respects_fail_fast": (
-        "tests.unit.scripts.github.test_pr_workspace",
-        "test_main_respects_fail_fast",
-    ),
-    "test_main_runs_projects_and_root": (
-        "tests.unit.scripts.github.test_pr_workspace",
-        "test_main_runs_projects_and_root",
-    ),
-    "test_main_syncs_scripts_and_libs": (
-        "tests.unit.scripts.sync_tests",
-        "test_main_syncs_scripts_and_libs",
-    ),
-    "test_run_pr_uses_make_for_non_root_repo": (
-        "tests.unit.scripts.github.test_pr_workspace",
-        "test_run_pr_uses_make_for_non_root_repo",
-    ),
-    "test_run_pr_uses_pr_manager_for_workspace_root": (
-        "tests.unit.scripts.github.test_pr_workspace",
-        "test_run_pr_uses_pr_manager_for_workspace_root",
-    ),
-    "test_sync_tree_ignores_pycache_and_dot_paths": (
-        "tests.unit.scripts.sync_tests",
-        "test_sync_tree_ignores_pycache_and_dot_paths",
-    ),
+    "test_main_respects_fail_fast": ("tests.unit.scripts.github.test_pr_workspace", "test_main_respects_fail_fast"),
+    "test_main_runs_projects_and_root": ("tests.unit.scripts.github.test_pr_workspace", "test_main_runs_projects_and_root"),
+    "test_main_syncs_scripts_and_libs": ("tests.unit.scripts.sync_tests", "test_main_syncs_scripts_and_libs"),
+    "test_run_pr_uses_make_for_non_root_repo": ("tests.unit.scripts.github.test_pr_workspace", "test_run_pr_uses_make_for_non_root_repo"),
+    "test_run_pr_uses_pr_manager_for_workspace_root": ("tests.unit.scripts.github.test_pr_workspace", "test_run_pr_uses_pr_manager_for_workspace_root"),
+    "test_sync_tree_ignores_pycache_and_dot_paths": ("tests.unit.scripts.sync_tests", "test_sync_tree_ignores_pycache_and_dot_paths"),
 }
 
 __all__ = [
@@ -59,7 +41,7 @@ __all__ = [
 ]
 
 
-def __getattr__(name: str) -> t.ModuleExport:
+def __getattr__(name: str) -> FlextTypes.ModuleExport:
     """Lazy-load module attributes on first access (PEP 562)."""
     return lazy_getattr(name, _LAZY_IMPORTS, globals(), __name__)
 
