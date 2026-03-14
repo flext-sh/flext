@@ -1,0 +1,31 @@
+scripts/github/pr_workspace.py
+  f97f21ce08785bea 1-213
+tests/unit/libs/versioning_tests.py
+  f97f21ce08785bea 1-63
+tests/unit/scripts/sync_tests.py
+  f97f21ce08785bea 1-70
+libs/versioning.py
+  f97f21ce08785bea 1-73
+tests/unit/scripts/github/test_pr_workspace.py
+  f97f21ce08785bea 1-230
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "c3e6a3b4435d52c6a443e476016ba6b0ad1877e9",
+  "prompts": {
+    "f97f21ce08785bea": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_312a03d8effelFGK6qXUMThe25-47cbdda3-7a30-4824-8c58-d1cc544c0e9d",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 649,
+      "total_deletions": 0,
+      "accepted_lines": 649,
+      "overriden_lines": 0
+    }
+  }
+}
