@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Semantic versioning utilities for FLEXT workspace releases."""
+
+from __future__ import annotations
 
 import re
 import tomllib
@@ -54,30 +54,39 @@ def release_tag_from_branch(branch: str) -> str | None:
 def current_workspace_version(root: Path) -> str:
     """Read current workspace version from root pyproject.toml."""
     pyproject = root / "pyproject.toml"
-    data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
-    project = data.get("project")
-    if not isinstance(project, dict):
+    raw_data: object = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    if not isinstance(raw_data, dict):
         msg = "unable to detect [project] section from pyproject.toml"
         raise TypeError(msg)
-    version = project.get("version")
-    if not isinstance(version, str) or not version:
+    data_map = {str(key): value for key, value in raw_data.items()}
+    project_value: object = data_map.get("project")
+    if not isinstance(project_value, dict):
+        msg = "unable to detect [project] section from pyproject.toml"
+        raise TypeError(msg)
+    project_map = {str(key): value for key, value in project_value.items()}
+    version_value: object = project_map.get("version")
+    if not isinstance(version_value, str) or not version_value:
         msg = "unable to detect version from pyproject.toml"
         raise RuntimeError(msg)
-    return version.removesuffix("-dev")
+    return version_value.removesuffix("-dev")
 
 
 def replace_project_version(content: str, version: str) -> tuple[str, bool]:
     """Replace project version in TOML content string."""
-    document = tomlkit.parse(content)
-    project = document.get("project")
-    if not isinstance(project, Table):
+    raw_document: object = tomlkit.parse(content)
+    if not isinstance(raw_document, Table):
         return content, False
-    current = project.get("version")
-    if not isinstance(current, str) or not current:
+    document = raw_document
+    project_value: object = document.get("project")
+    if not isinstance(project_value, Table):
         return content, False
-    _ = parse_semver(current.removesuffix("-dev"))
-    if current == version:
+    project_map = {str(key): value for key, value in project_value.items()}
+    current_value: object = project_map.get("version")
+    if not isinstance(current_value, str) or not current_value:
         return content, False
-    project["version"] = version
-    updated = tomlkit.dumps(document)
+    _ = parse_semver(current_value.removesuffix("-dev"))
+    if current_value == version:
+        return content, False
+    project_value["version"] = version
+    updated = str(tomlkit.dumps(document))
     return updated, updated != content

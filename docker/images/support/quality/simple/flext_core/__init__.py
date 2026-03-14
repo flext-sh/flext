@@ -11,7 +11,12 @@ class FlextTypes:
 
     Primitives = str | int | float | bool
     Scalar = Primitives
-    Container = Scalar | Sequence["Container"] | Mapping[str, "Container"] | None
+    Container = (
+        Scalar
+        | Sequence["FlextTypes.Container"]
+        | Mapping[str, "FlextTypes.Container"]
+        | None
+    )
     RegisterableService = Container | logging.Logger
     Dict = Mapping[str, Container]
 
