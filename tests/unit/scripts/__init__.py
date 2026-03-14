@@ -22,7 +22,6 @@ if TYPE_CHECKING:
         test_sync_tree_ignores_pycache_and_dot_paths,
     )
 
-# Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "test_main_respects_fail_fast": (
         "tests.unit.scripts.github.test_pr_workspace",

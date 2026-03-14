@@ -77,11 +77,11 @@ description: Exact import rules and patterns verified from the actual FLEXT code
 ## Examples
 
 ```python
-# Correct subproject usage
+# Correct usage — always from root namespace
 from flext_core import m, p, t
 
-# Correct inheritance import by class name
-from flext_core.protocols import FlextProtocols
+# Correct inheritance import by class name — also from root namespace
+from flext_core import FlextProtocols
 ```
 
 ## Rule 1: Always Use `from __future__ import annotations`
@@ -124,37 +124,28 @@ Within each group:
 
 ---
 
-## Rule 3: How to Import from flext-core (Inside flext-core)
+## Rule 3: How to Import from flext-core (Inside AND Outside flext-core)
 
-### WITHIN flext-core, import via ABSOLUTE paths to submodules
+### ALL imports use root namespace `from flext_core import ...`
+
+Both inside flext-core and from subprojects, always import via the root namespace.
+There is **no** distinction between internal and external import style.
 
 ```python
-# ✅ CORRECT — Direct absolute import from concrete submodules
-from flext_core.constants import c
-from flext_core.typings import t
-from flext_core.protocols import p
-from flext_core.runtime import FlextRuntime
-from flext_core.models import m
-from flext_core.result import r
-from flext_core.utilities import u
-from flext_core.exceptions import e
+# ✅ CORRECT — Always import from root namespace
+from flext_core import FlextConstants, FlextModels, FlextRuntime, c, e, m, p, r, t, u
 
-# ✅ CORRECT — Import from _models/ or _utilities/ (inside their own facades)
+
+# ✅ CORRECT — Import from _models/ or _utilities/ (inside their own facades only)
 from flext_core._models.base import FlextModelsBase
 from flext_core._utilities.validation import FlextUtilitiesValidation
-
-# ❌ WRONG — Never import from __init__.py inside the package itself
-from flext_core import FlextConstants  # Don't do this within flext-core
 ```
 
-### Exception: Docstrings use `from flext_core import ...` style for user-facing examples
-
 ```python
-class FlextModels:
-    """Usage:
-    >>> from flext_core import m, r
-    >>> result = m.Base.create(...)
-    """
+# ❌ WRONG — submodule imports are not the canonical pattern
+from flext_core.constants import c
+from flext_core.models import m
+from flext_core.typings import t
 ```
 
 ---

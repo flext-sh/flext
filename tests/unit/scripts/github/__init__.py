@@ -18,7 +18,6 @@ if TYPE_CHECKING:
         test_run_pr_uses_pr_manager_for_workspace_root,
     )
 
-# Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "test_main_respects_fail_fast": (
         "tests.unit.scripts.github.test_pr_workspace",

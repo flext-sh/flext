@@ -21,7 +21,6 @@ if TYPE_CHECKING:
     from flext.service import FlextServiceBase, s
     from flext.workspace import main
 
-# Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextServiceBase": ("flext.service", "FlextServiceBase"),
     "main": ("flext.workspace", "main"),
