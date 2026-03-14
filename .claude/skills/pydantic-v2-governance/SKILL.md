@@ -74,6 +74,7 @@ description: Internal Pydantic v2 governance patterns for FLEXT 33-project monor
 from typing import Annotated
 from pydantic import BaseModel, ConfigDict, Field
 
+
 class Pagination(BaseModel):
     model_config = ConfigDict(
         json_schema_extra={
@@ -121,6 +122,7 @@ field: Annotated[str | None, Field(min_length=1)] = None
 ```python
 from pydantic import BaseModel, Field
 
+
 class RetryConfiguration(BaseModel):
     retry_on_status_codes: list[int] = Field(default_factory=list)
     metadata: dict[str, str] = Field(default_factory=dict)
@@ -159,6 +161,7 @@ class Config(BaseModel):
 from typing import Annotated, ClassVar
 from pydantic import BaseModel, Field, TypeAdapter
 
+
 class ValidationHelpers(BaseModel):
     _tags_adapter: ClassVar[TypeAdapter[list[str]] | None] = None
     _list_adapter: ClassVar[TypeAdapter[list[t.Container]] | None] = None
@@ -169,20 +172,18 @@ class ValidationHelpers(BaseModel):
         TypeAdapter[Mapping[str, t.MetadataValue]] | None
     ] = None
     _config_adapter: ClassVar[TypeAdapter[Mapping[str, t.Container]] | None] = None
-    _dict_container_adapter: ClassVar[
-        TypeAdapter[dict[str, t.Container]] | None
-    ] = None
+    _dict_container_adapter: ClassVar[TypeAdapter[dict[str, t.Container]] | None] = None
     _list_container_adapter: ClassVar[TypeAdapter[list[t.Container]] | None] = None
-    _tuple_container_adapter: ClassVar[
-        TypeAdapter[tuple[t.Container, ...]] | None
-    ] = None
+    _tuple_container_adapter: ClassVar[TypeAdapter[tuple[t.Container, ...]] | None] = (
+        None
+    )
     _primitives_adapter: ClassVar[TypeAdapter[t.Primitives] | None] = None
     _dict_str_metadata_adapter: ClassVar[
         TypeAdapter[dict[str, t.MetadataValue | None]] | None
     ] = None
-    _list_serializable_adapter: ClassVar[
-        TypeAdapter[list[t.Serializable]] | None
-    ] = None
+    _list_serializable_adapter: ClassVar[TypeAdapter[list[t.Serializable]] | None] = (
+        None
+    )
     _tuple_serializable_adapter: ClassVar[
         TypeAdapter[tuple[t.Serializable, ...]] | None
     ] = None
@@ -192,9 +193,7 @@ class ValidationHelpers(BaseModel):
     _sortable_dict_adapter: ClassVar[
         TypeAdapter[dict[t.SortableObjectType, t.Serializable | None]] | None
     ] = None
-    _strict_json_list_adapter: ClassVar[TypeAdapter[list[t.StrictValue]] | None] = (
-        None
-    )
+    _strict_json_list_adapter: ClassVar[TypeAdapter[list[t.StrictValue]] | None] = None
     _strict_json_scalar_adapter: ClassVar[TypeAdapter[t.Scalar] | None] = None
     _scalar_adapter: ClassVar[TypeAdapter[t.Scalar] | None] = None
     _float_adapter: ClassVar[TypeAdapter[float] | None] = None
@@ -234,11 +233,13 @@ def validate_tags(self, tags: object) -> list[str]:
 # ✓ CORRECT — Cached TypeAdapter
 _tags_adapter: ClassVar[TypeAdapter[list[str]] | None] = None
 
+
 @classmethod
 def get_tags_adapter(cls) -> TypeAdapter[list[str]]:
     if cls._tags_adapter is None:
         cls._tags_adapter = TypeAdapter(list[str])
     return cls._tags_adapter
+
 
 def validate_tags(self, tags: object) -> list[str]:
     return self.get_tags_adapter().validate_python(tags)
@@ -270,22 +271,24 @@ def validate_tags(self, tags: object) -> list[str]:
 from typing import Protocol, runtime_checkable
 from abc import ABC, abstractmethod
 
+
 # Protocol — structural typing
 @runtime_checkable
 class CommandBus(Protocol):
     """Structural interface for command dispatching."""
-    def dispatch(self, command: BaseModel) -> r[BaseModel]:
-        ...
+
+    def dispatch(self, command: BaseModel) -> r[BaseModel]: ...
+
 
 # ABC — inheritance contract
 class BaseHandler(ABC):
     """Abstract base for handlers with shared implementation."""
-    
+
     @abstractmethod
     def handle(self, message: BaseModel) -> r[BaseModel]:
         """Subclasses MUST implement."""
         ...
-    
+
     def validate(self, message: BaseModel) -> r[bool]:
         """Shared implementation."""
         return r[bool].ok(True)
@@ -305,6 +308,7 @@ class BaseHandler(ABC):
 
 ```python
 from typing import Protocol, runtime_checkable
+
 
 class _ProtocolIntrospection:
     """Internal helpers for protocol detection and compliance checks."""
@@ -363,10 +367,11 @@ if issubclass(MyClass, SomeProtocol):  # UNSAFE
 if _ProtocolIntrospection.check_implements_protocol(instance, SomeProtocol):
     ...
 
+
 # ✓ CORRECT — isinstance with @runtime_checkable
 @runtime_checkable
-class SomeProtocol(Protocol):
-    ...
+class SomeProtocol(Protocol): ...
+
 
 if isinstance(instance, SomeProtocol):
     ...
@@ -383,6 +388,7 @@ if isinstance(instance, SomeProtocol):
 
 ```python
 from pydantic import BaseModel, ConfigDict, Field
+
 
 class StrictBoundaryModel(BaseModel):
     model_config = ConfigDict(
@@ -446,6 +452,7 @@ from pydantic import BaseModel, ConfigDict
 # Read from environment
 STRICT_MODE = os.getenv("FLEXT_METACLASS_STRICT", "false").lower() == "true"
 
+
 class BoundaryModel(BaseModel):
     model_config = ConfigDict(
         strict=STRICT_MODE,
@@ -472,6 +479,7 @@ class BoundaryModel(BaseModel):
 ```python
 # ✗ WRONG — cast() is forbidden outside flext-core result internals
 from typing import cast
+
 value = cast(str, some_value)  # FORBIDDEN
 ```
 
@@ -480,11 +488,13 @@ value = cast(str, some_value)  # FORBIDDEN
 ```python
 # ✓ CORRECT — Pydantic validation
 from pydantic import TypeAdapter
+
 adapter = TypeAdapter(str)
 value = adapter.validate_python(some_value)
 
 # ✓ CORRECT — TypeGuard
 from flext_core import u
+
 if u.Guards.is_scalar(some_value):
     # some_value is now TypeGuard[Scalar]
     ...
@@ -495,6 +505,7 @@ if u.Guards.is_scalar(some_value):
 ```python
 # ✗ WRONG — Any is forbidden
 from typing import Any
+
 data: Any = ...  # FORBIDDEN
 ```
 
@@ -503,6 +514,7 @@ data: Any = ...  # FORBIDDEN
 ```python
 # ✓ CORRECT — Use t.* contracts
 from flext_core import t
+
 data: t.Container = ...
 metadata: t.MetadataValue = ...
 config: t.ConfigMap = ...
@@ -520,6 +532,7 @@ data: object = ...  # FORBIDDEN
 ```python
 # ✓ CORRECT — Use t.* contracts
 from flext_core import t
+
 data: t.Container = ...
 ```
 
@@ -542,6 +555,7 @@ if isinstance(value, str):
 
 # ✓ CORRECT — TypeGuard
 from flext_core import u
+
 if u.Guards.is_scalar(value):
     ...
 ```
@@ -553,6 +567,7 @@ if u.Guards.is_scalar(value):
 from typing import Annotated
 from pydantic import BaseModel, Field
 
+
 class Model(BaseModel):
     x: Annotated[str, Field(min_length=1)] = Field(default="")  # REDUNDANT
 ```
@@ -563,6 +578,7 @@ class Model(BaseModel):
 # ✓ CORRECT — Field() in Annotated
 class Model(BaseModel):
     x: Annotated[str, Field(min_length=1, default="")] = ""
+
 
 # ✓ CORRECT — Field() as default
 class Model(BaseModel):
@@ -606,6 +622,7 @@ Good:
 from typing import Annotated
 from pydantic import BaseModel, ConfigDict, Field
 
+
 class User(BaseModel):
     model_config = ConfigDict(
         validate_assignment=True,
@@ -615,7 +632,7 @@ class User(BaseModel):
             "description": "User entity with strict validation",
         },
     )
-    
+
     name: Annotated[
         str,
         Field(
@@ -646,10 +663,11 @@ Bad:
 ```python
 from pydantic import BaseModel
 
+
 class User(BaseModel):
     class Config:  # ✗ v1 style
         extra = "forbid"
-    
+
     name: str  # ✗ No Field() metadata
     email: str  # ✗ No validation
     tags: list[str] = []  # ✗ Mutable default bug
