@@ -18,7 +18,6 @@ if TYPE_CHECKING:
         test_replace_project_version_updates_only_project_table,
     )
 
-# Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "test_current_workspace_version_reads_project_version": (
         "tests.unit.libs.versioning_tests",

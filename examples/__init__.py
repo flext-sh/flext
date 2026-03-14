@@ -24,7 +24,6 @@ if TYPE_CHECKING:
         ProcessingDict,
     )
 
-# Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "AclProcessingExample": ("examples.acl_processing_example", "AclProcessingExample"),
     "AdvancedProcessingExample": (
