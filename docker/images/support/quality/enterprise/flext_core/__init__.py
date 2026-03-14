@@ -3,7 +3,16 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Mapping, Sequence
+from collections.abc import Container, Mapping, Sequence
+
+from beartype.typing import Container
+from dependency_injector.containers import Container
+from dependency_injector.providers import Container
+from docker.models.containers import Container
+from matplotlib.container import Container
+from python_on_whales import Container
+from python_on_whales.components.container.cli_wrapper import Container
+from tomlkit.container import Container
 
 
 class FlextTypes:

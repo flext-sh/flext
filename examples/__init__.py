@@ -5,7 +5,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
@@ -25,8 +25,14 @@ if TYPE_CHECKING:
 # Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "AclProcessingExample": ("examples.acl_processing_example", "AclProcessingExample"),
-    "AdvancedProcessingExample": ("examples.advanced_processing_example", "AdvancedProcessingExample"),
-    "CompleteWorkflowExample": ("examples.complete_workflow_example", "CompleteWorkflowExample"),
+    "AdvancedProcessingExample": (
+        "examples.advanced_processing_example",
+        "AdvancedProcessingExample",
+    ),
+    "CompleteWorkflowExample": (
+        "examples.complete_workflow_example",
+        "CompleteWorkflowExample",
+    ),
     "ContextDict": ("examples.acl_processing_example", "ContextDict"),
     "EntryDict": ("examples.acl_processing_example", "EntryDict"),
     "ItemDict": ("examples.advanced_processing_example", "ItemDict"),
