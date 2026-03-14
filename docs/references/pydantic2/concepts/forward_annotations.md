@@ -85,7 +85,7 @@ print(cyclic_data)
 # > {'a': {'b': {...}}}
 
 try:
-    ModelB.model_validate(cyclic_data)
+    ModelB(cyclic_data)
 except ValidationError as exc:
     print(exc)
     """
@@ -147,7 +147,7 @@ class Node(BaseModel):
 node_data = {"id": 1, "children": [{"id": 2, "children": [{"id": 3}]}]}
 node_data["children"][0]["children"][0]["children"] = [node_data]
 
-print(Node.model_validate(node_data))
+print(Node(
 # > id=1 children=[Node(id=2, children=[Node(id=3, children=[])])]
 ```
 

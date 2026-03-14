@@ -687,9 +687,9 @@ class Model(BaseModel):
 
 
 data = {"text": "This is an example document"}
-print(Model.model_validate(data))  # no context
+print(Model(data))  # no context
 # > text='This is an example document'
-print(Model.model_validate(data, context={"stopwords": ["this", "is", "an"]}))
+print(Model("stopwords": ["this", "is", "an"]}))
 # > text='example document'
 ```
 
