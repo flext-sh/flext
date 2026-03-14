@@ -966,15 +966,11 @@ def ser_x(
 # a static method or function with `mode='wrap'`
 @field_serializer("x", mode="wrap")
 @staticmethod
-def ser_x(
-    value, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo
-): ...
+def ser_x(value, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo): ...
 
 
 # equivalent to
-def ser_x(
-    value, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo
-): ...
+def ser_x(value, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo): ...
 
 
 serializer("x")(ser_x)

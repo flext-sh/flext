@@ -3,13 +3,13 @@ from __future__ import annotations
 import importlib.util
 import sys
 from pathlib import Path
-from types import SimpleNamespace
-from typing import Any
+from types import ModuleType, SimpleNamespace
 
 import pytest
+from beartype._cave._cavefast import ModuleType
 
 
-def _load_module(module_name: str, relative_path: str):
+def _load_module(module_name: str, relative_path: str) -> ModuleType:
     module_path = Path(__file__).resolve().parents[3] / relative_path
     spec = importlib.util.spec_from_file_location(module_name, module_path)
     assert spec is not None
@@ -160,7 +160,7 @@ def test_run_pr_uses_pr_manager_for_workspace_root(
 
     commands: list[list[str]] = []
 
-    def _fake_run(command: list[str], **_kwargs):
+    def _fake_run(command: list[str], **_kwargs) -> SimpleNamespace:
         commands.append(command)
         return SimpleNamespace(returncode=0)
 
@@ -203,7 +203,7 @@ def test_run_pr_uses_make_for_non_root_repo(
 
     commands: list[list[str]] = []
 
-    def _fake_run(command: list[str], **_kwargs):
+    def _fake_run(command: list[str], **_kwargs) -> SimpleNamespace:
         commands.append(command)
         return SimpleNamespace(returncode=0)
 

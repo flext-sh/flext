@@ -458,9 +458,7 @@ class EnvelopeModel(BaseModel):
     include_metadata: bool = True
 
     @field_serializer("*", when_used="json")
-    def serialize_with_metadata(
-        self, value, _info: FieldSerializationInfo
-    ):
+    def serialize_with_metadata(self, value, _info: FieldSerializationInfo):
         if not self.include_metadata:
             return value
         if isinstance(value, dict):
