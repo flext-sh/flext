@@ -22,9 +22,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum
 from typing import ClassVar, TypeGuard, override
 
-from _models import ValidationRules
 from flext_core import r, s, t
 from pydantic import BaseModel, ConfigDict, Field
+
+from examples._models import ValidationRules
 
 EntryDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar | list[str]]]
 ProcessingDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar]]

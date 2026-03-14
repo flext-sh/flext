@@ -24,6 +24,7 @@ class Result[T]:
 
     def __init__(
         self,
+        *,
         success: bool,
         value: T | None = None,
         error: str | None = None,
@@ -42,12 +43,12 @@ class Result[T]:
     @classmethod
     def ok(cls, value: T | None = None) -> Result[T]:
         """Return successful result."""
-        return cls(True, value=value)
+        return cls(success=True, value=value)
 
     @classmethod
     def fail(cls, error: str) -> Result[T]:
         """Return failed result."""
-        return cls(False, error=error)
+        return cls(success=False, error=error)
 
 
 # Alias for compatibility
