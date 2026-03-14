@@ -27,22 +27,25 @@ from flext_core import r, s, t
 from pydantic import BaseModel, ConfigDict, Field
 
 EntryDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar | list[str]]]
-ContextDict = dict[str, object]
+ProcessingDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar]]
+ContextDict = dict[str, t.Scalar | bool | str | int | float | None]
 
 
 def _new_str_list() -> list[str]:
     return []
 
 
-def _is_object_list(value: object) -> TypeGuard[list[object]]:
+def _is_object_list(value: t.Scalar | None) -> TypeGuard[list[t.Scalar | None]]:
     return isinstance(value, list)
 
 
-def _is_str_object_dict(value: object) -> TypeGuard[dict[str, object]]:
+def _is_str_object_dict(
+    value: t.Scalar | None,
+) -> TypeGuard[dict[str, t.Scalar | None]]:
     return isinstance(value, dict)
 
 
-def _is_entry_dict(value: object) -> TypeGuard[EntryDict]:
+def _is_entry_dict(value: t.Scalar | None) -> TypeGuard[EntryDict]:
     return isinstance(value, dict)
 
 
@@ -247,7 +250,7 @@ class AclProcessingExample:
             )
         )
 
-    class AclProcessor(s[dict[str, object]]):
+    class AclProcessor(s[ProcessingDict]):
         """Monadic ACL processor with zero-ceremony execution."""
 
         auto_execute: bool = True
@@ -255,12 +258,12 @@ class AclProcessingExample:
         parallel: bool = True
 
         @override
-        def execute(self) -> r[dict[str, object]]:
+        def execute(self) -> r[ProcessingDict]:
             """Execute ACL processing pipeline using monadic flow."""
             start_time = time.time()
             detect_result = self._detect_servers(self.entries)
             if detect_result.is_failure:
-                return r[dict[str, object]].fail(detect_result.error)
+                return r[ProcessingDict].fail(detect_result.error)
             data = detect_result.value
             data["start_time"] = start_time
             extract_result = (
@@ -269,15 +272,15 @@ class AclProcessingExample:
                 else self._extract_sequential(data)
             )
             if extract_result.is_failure:
-                return r[dict[str, object]].fail(extract_result.error)
+                return r[ProcessingDict].fail(extract_result.error)
             data = extract_result.value
             validate_result = self._validate_batch(data)
             if validate_result.is_failure:
-                return r[dict[str, object]].fail(validate_result.error)
+                return r[ProcessingDict].fail(validate_result.error)
             data = validate_result.value
             return self._analyze_performance(data)
 
-        def _analyze_performance(self, data: dict[str, object]) -> r[dict[str, object]]:
+        def _analyze_performance(self, data: ProcessingDict) -> r[ProcessingDict]:
             """Analyze processing performance."""
             total_entries = len(self.entries)
             total_acls_data = data.get("total_acls", 0)
@@ -303,9 +306,9 @@ class AclProcessingExample:
                 "performance_analytics": analytics,
                 "processing_time_seconds": processing_time,
             }
-            return r[dict[str, object]].ok(result_data)
+            return r[ProcessingDict].ok(result_data)
 
-        def _detect_servers(self, entries: list[EntryDict]) -> r[dict[str, object]]:
+        def _detect_servers(self, entries: list[EntryDict]) -> r[ProcessingDict]:
             """Auto-detect server types for all entries."""
             detected_entries: list[tuple[EntryDict, str]] = []
             for entry in entries:
@@ -313,7 +316,7 @@ class AclProcessingExample:
                 if result.is_success:
                     detected_entries.append((entry, result.value))
                 else:
-                    return r[dict[str, object]].fail(
+                    return r[ProcessingDict].fail(
                         f"Server detection failed: {result.error}"
                     )
             server_types_set: set[str] = {item[1] for item in detected_entries}
@@ -322,11 +325,11 @@ class AclProcessingExample:
                 "server_types": sorted(server_types_set),
             })
 
-        def _extract_acls(self, data: dict[str, object]) -> r[dict[str, object]]:
+        def _extract_acls(self, data: ProcessingDict) -> r[ProcessingDict]:
             """Extract ACLs in parallel."""
             entries_data_raw = data.get("entries")
             if not _is_object_list(entries_data_raw):
-                return r[dict[str, object]].fail("Invalid entries format")
+                return r[ProcessingDict].fail("Invalid entries format")
             entries_with_servers: list[tuple[EntryDict, str]] = []
             for entry_with_server_raw in entries_data_raw:
                 if not _is_str_object_dict(entry_with_server_raw):
@@ -353,17 +356,17 @@ class AclProcessingExample:
                     if result.is_success:
                         all_acls.extend(result.value)
                     else:
-                        return r[dict[str, object]].fail(
+                        return r[ProcessingDict].fail(
                             f"ACL extraction failed: {result.error}"
                         )
             result_data = {**data, "acls": all_acls, "total_acls": len(all_acls)}
             return r.ok(result_data)
 
-        def _extract_sequential(self, data: dict[str, object]) -> r[dict[str, object]]:
+        def _extract_sequential(self, data: ProcessingDict) -> r[ProcessingDict]:
             """Extract ACLs sequentially."""
             entries_data_raw = data.get("entries")
             if not _is_object_list(entries_data_raw):
-                return r[dict[str, object]].fail("Invalid entries format")
+                return r[ProcessingDict].fail("Invalid entries format")
             entries_with_servers: list[tuple[EntryDict, str]] = []
             for entry_with_server_raw in entries_data_raw:
                 if not _is_str_object_dict(entry_with_server_raw):
@@ -384,17 +387,17 @@ class AclProcessingExample:
                 if result.is_success:
                     all_acls.extend(result.value)
                 else:
-                    return r[dict[str, object]].fail(
+                    return r[ProcessingDict].fail(
                         f"ACL extraction failed: {result.error}"
                     )
             result_data = {**data, "acls": all_acls, "total_acls": len(all_acls)}
             return r.ok(result_data)
 
-        def _validate_batch(self, data: dict[str, object]) -> r[dict[str, object]]:
+        def _validate_batch(self, data: ProcessingDict) -> r[ProcessingDict]:
             """Validate all extracted ACLs."""
             acls_data_raw = data.get("acls")
             if not _is_object_list(acls_data_raw):
-                return r[dict[str, object]].fail("Invalid ACLs format")
+                return r[ProcessingDict].fail("Invalid ACLs format")
             validation_results: list[AclProcessingExample.AclValidationResult] = []
             acl_entries: list[AclProcessingExample.AclEntry] = [
                 acl_item
@@ -408,7 +411,7 @@ class AclProcessingExample:
                 if result.is_success:
                     validation_results.append(result.value)
                 else:
-                    return r[dict[str, object]].fail(
+                    return r[ProcessingDict].fail(
                         f"ACL validation failed: {result.error}"
                     )
             result_data = {

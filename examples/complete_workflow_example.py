@@ -25,7 +25,8 @@ from typing import override
 from flext_core import FlextService, r, t
 from pydantic import BaseModel, ConfigDict, Field
 
-ItemType = dict[str, object]
+ProcessingDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar]]
+ItemType = ProcessingDict
 
 
 def _new_str_list() -> list[str]:
@@ -52,8 +53,8 @@ def _new_aggregated_metrics_dict() -> dict[str, float | int]:
     return {}
 
 
-def _to_float(value: object) -> float:
-    """Coerce object to float; return 0.0 for non-numeric."""
+def _to_float(value: t.Scalar) -> float:
+    """Coerce scalar to float; return 0.0 for non-numeric."""
     if isinstance(value, (int, float)):
         return float(value)
     return 0.0
@@ -148,7 +149,7 @@ class CompleteWorkflowExample:
             description="Overall workflow status",
         )
 
-    class WorkflowOrchestrator(FlextService[dict[str, object]]):
+    class WorkflowOrchestrator(FlextService[ProcessingDict]):
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
@@ -162,7 +163,7 @@ class CompleteWorkflowExample:
             self.workflow_config = {}
 
         @override
-        def execute(self) -> r[dict[str, object]]:
+        def execute(self) -> r[ProcessingDict]:
             """Execute complete workflow with automatic resource management."""
             context = self._setup_context()
             try:
@@ -295,7 +296,7 @@ class CompleteWorkflowExample:
 
         def _execute_workflow(
             self, data: list[ItemType], context: CompleteWorkflowExample.WorkflowContext
-        ) -> r[dict[str, object]]:
+        ) -> r[ProcessingDict]:
             """Execute workflow stages with parallel processing."""
             items = data
             stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = []
@@ -309,12 +310,12 @@ class CompleteWorkflowExample:
             for stage_name in context.stages:
                 stage_func = stage_functions.get(stage_name)
                 if not stage_func:
-                    return r[dict[str, object]].fail(f"Unknown stage: {stage_name}")
+                    return r[ProcessingDict].fail(f"Unknown stage: {stage_name}")
                 result = self._execute_stage_parallel(
                     stage_name, current_data, stage_func, context
                 )
                 if result.is_failure:
-                    return r[dict[str, object]].fail(
+                    return r[ProcessingDict].fail(
                         f"Stage {stage_name} failed: {result.error}"
                     )
                 stage_result = result.value
@@ -346,7 +347,7 @@ class CompleteWorkflowExample:
                 aggregated_metrics=aggregated_metrics,
                 workflow_status="completed",
             )
-            return r[dict[str, object]].ok({
+            return r[ProcessingDict].ok({
                 "workflow_result": workflow_result,
                 "final_data": current_data,
                 "performance_summary": aggregated_metrics,
