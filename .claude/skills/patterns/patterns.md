@@ -45,7 +45,7 @@ class User(BaseModel):
 
 
 def process_user(data: dict) -> User:
-    return User.model_validate(data)  # Single validation point
+    return User(data)  # Single validation point
 ```
 
 **Evidence** ([source](https://pydantic.dev/docs/concepts/strict_mode)):
@@ -92,7 +92,7 @@ user = User.model_construct(
 ```python
 # GOOD: Validate first
 raw_data = api_call()  # Untrusted
-user = User.model_validate(raw_data)  # Validates and coerces
+user = User(lidates and coerces
 ```
 
 **Evidence** ([source](https://github.com/pydantic/pydantic/blob/main/tests/test_construction.py#L11-L19)):
@@ -350,7 +350,7 @@ def create_user(data: dict):
 
     # GOOD: Validate at boundary
     try:
-        request = CreateUserRequest.model_validate(data)
+        request = CreateUserRequest(
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=e.errors())
 
@@ -405,7 +405,7 @@ def process_webhook(data: dict):
     # payload = WebhookPayload(event=data)
 
     # GOOD: Discriminated union - direct validation
-    payload = WebhookPayload.model_validate(data)
+    payload = WebhookPayload(
 
     if isinstance(payload.event, UserCreatedEvent):
         handle_user_created(payload.event)
@@ -453,7 +453,7 @@ def load_config(path: str) -> AppConfig:
 
     # GOOD: Validate with strict mode
     try:
-        return AppConfig.model_validate(data)
+        return AppConfig(
     except ValidationError as e:
         raise ConfigurationError(f"Invalid config: {e}")
 ```
@@ -522,7 +522,7 @@ class User(BaseModel):
 
 def process_user(data: dict):
     # GOOD: Validate once, trust everywhere
-    user = User.model_validate(data)
+    user = User(
 
     # GOOD: Direct access - no type checks needed
     user_id = user.id  # Type is int, guaranteed

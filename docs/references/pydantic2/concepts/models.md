@@ -458,7 +458,7 @@ co_orm = CompanyOrm(
 )
 print(co_orm)
 # > <__main__.CompanyOrm object at 0x0123456789ab>
-co_model = CompanyModel.model_validate(co_orm)
+co_model = CompanyModel(co_orm)
 print(co_model)
 # > id=123 public_key='foobar' domains=['example.com', 'foobar.com']
 ```
@@ -505,7 +505,7 @@ class Person(BaseModel):
 bones = PetCls(name="Bones", species="dog")
 orion = PetCls(name="Orion", species="cat")
 anna = PersonCls(name="Anna", age=20, pets=[bones, orion])
-anna_model = Person.model_validate(anna)
+anna_model = Person(
 print(anna_model)
 """
 name='Anna' age=20.0 pets=[Pet(name='Bones', species='dog'), Pet(name='Orion', species='cat')]
@@ -575,12 +575,12 @@ class User(BaseModel):
     signup_ts: Optional[datetime] = None
 
 
-m = User.model_validate({"id": 123, "name": "James"})
+m = User(me": "James"})
 print(m)
 # > id=123 name='James' signup_ts=None
 
 try:
-    User.model_validate(["not", "a", "dict"])
+    User(ict"])
 except ValidationError as e:
     print(e)
     """
@@ -665,7 +665,7 @@ If you don't set this value, then validation will be skipped on model instances.
         m.a = "not an int"
 
         # doesn't raise a validation error even though m is invalid
-        m2 = Model.model_validate(m)
+        m2 = Model(
         ```
 
     === ":white_check_mark: `revalidate_instances='always'`"
@@ -684,7 +684,7 @@ If you don't set this value, then validation will be skipped on model instances.
         m.a = "not an int"
 
         try:
-            m2 = Model.model_validate(m)
+            m2 = Model(
         except ValidationError as e:
             print(e)
             """
@@ -1064,7 +1064,7 @@ we will inspect the data, recognize that the input data is sort of a "loose" sub
         inner: GenericModel[Any]
 
 
-    print(repr(Model.model_validate(Model(inner=GenericModel[int](a=1)))))
+    print(repr(Model(ericModel[int](a=1)))))
     # > Model(inner=GenericModel[Any](a=1))
     ```
 
@@ -1096,7 +1096,7 @@ we will inspect the data, recognize that the input data is sort of a "loose" sub
         inner: GenericModel[Any]
 
 
-    m = Model.model_validate(Model(inner=GenericModel[int](a=1)))
+    m = Model(ericModel[int](a=1)))
     # > after validator running custom validation...
     # > after validator running custom validation...
     print(repr(m))
@@ -1474,7 +1474,7 @@ print(Pets(["dog", "cat"]))
 # > root=['dog', 'cat']
 print(Pets(["dog", "cat"]).model_dump_json())
 # > ["dog","cat"]
-print(Pets.model_validate(["dog", "cat"]))
+print(Pets()
 # > root=['dog', 'cat']
 print(Pets.model_json_schema())
 """
@@ -1485,7 +1485,7 @@ print(PetsByName({"Otis": "dog", "Milo": "cat"}))
 # > root={'Otis': 'dog', 'Milo': 'cat'}
 print(PetsByName({"Otis": "dog", "Milo": "cat"}).model_dump_json())
 # > {"Otis":"dog","Milo":"cat"}
-print(PetsByName.model_validate({"Otis": "dog", "Milo": "cat"}))
+print(PetsByName( "Milo": "cat"}))
 # > root={'Otis': 'dog', 'Milo': 'cat'}
 ```
 
@@ -1506,7 +1506,7 @@ class Pets(RootModel):
         return self.root[item]
 
 
-pets = Pets.model_validate(["dog", "cat"])
+pets = Pets(
 print(pets[0])
 # > dog
 print([pet for pet in pets])
@@ -1524,7 +1524,7 @@ class Pets(RootModel[list[str]]):
         return f"Pets: {', '.join(self.root)}"
 
 
-my_pets = Pets.model_validate(["dog", "cat"])
+my_pets = Pets(
 
 print(my_pets.describe())
 # > Pets: dog, cat

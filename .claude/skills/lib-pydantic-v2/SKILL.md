@@ -184,7 +184,7 @@ json_str = model.model_dump_json()  # → JSON string
 schema = Model.model_json_schema()  # → JSON Schema dict
 
 # ✓ v2 deserialization
-instance = Model.model_validate(raw_dict)  # from dict
+instance = Model(raw_dict)  # from dict
 instance = Model.model_validate_json(json_bytes)  # from JSON
 ```
 
@@ -224,7 +224,7 @@ model_config = SettingsConfigDict(
 
 ```python
 result = r.from_validation(raw_data, UserModel)
-# Uses model.model_validate(data) internally → r[UserModel]
+# Uses model(y → r[UserModel]
 ```
 
 ### Bad: v1-style validator

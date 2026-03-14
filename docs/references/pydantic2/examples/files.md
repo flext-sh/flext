@@ -206,7 +206,7 @@ class Person(BaseModel):
 
 with open("people.csv") as f:
     reader = csv.DictReader(f)
-    people = [Person.model_validate(row) for row in reader]
+    people = [Person(row) for row in reader]
 
 print(people)
 # > [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
@@ -241,7 +241,7 @@ class Person(BaseModel):
 with open("person.toml", "rb") as f:
     data = tomllib.load(f)
 
-person = Person.model_validate(data)
+person = Person(
 print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```
@@ -275,7 +275,7 @@ class Person(BaseModel):
 with open("person.yaml") as f:
     data = yaml.safe_load(f)
 
-person = Person.model_validate(data)
+person = Person(
 print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```
@@ -311,7 +311,7 @@ class Person(BaseModel):
 
 tree = ET.parse("person.xml").getroot()
 data = {child.tag: child.text for child in tree}
-person = Person.model_validate(data)
+person = Person(
 print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```
@@ -345,7 +345,7 @@ class Person(BaseModel):
 
 config = configparser.ConfigParser()
 config.read("person.ini")
-person = Person.model_validate(config["PERSON"])
+person = Person(])
 print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```

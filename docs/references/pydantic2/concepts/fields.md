@@ -584,7 +584,7 @@ class Model(BaseModel):
     pet: Union[Cat, Dog] = Field(discriminator="pet_type")
 
 
-print(Model.model_validate({"pet": {"pet_type": "cat", "age": 12}}))  # (1)!
+print(Model({"pet": {"pet_type": "cat", "age": 12}}))  # (1)!
 # > pet=Cat(pet_type='cat', age=12)
 ```
 
@@ -620,10 +620,10 @@ class Model(BaseModel):
     )
 
 
-print(repr(Model.model_validate({"pet": {"pet_type": "cat", "age": 12}})))
+print(repr(Model(ype": "cat", "age": 12}})))
 # > Model(pet=Cat(pet_type='cat', age=12))
 
-print(repr(Model.model_validate({"pet": {"pet_kind": "dog", "age": 12}})))
+print(repr(Model(ind": "dog", "age": 12}})))
 # > Model(pet=Dog(pet_kind='dog', age=12))
 ```
 

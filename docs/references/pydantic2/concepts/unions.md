@@ -303,7 +303,7 @@ class ThanksgivingDinner(BaseModel):
     ]
 
 
-apple_variation = ThanksgivingDinner.model_validate({
+apple_variation = ThanksgivingDinner({
     "dessert": {"fruit": "apple", "time_to_cook": 60, "num_ingredients": 8}
 })
 print(repr(apple_variation))
@@ -311,7 +311,7 @@ print(repr(apple_variation))
 ThanksgivingDinner(dessert=ApplePie(time_to_cook=60, num_ingredients=8, fruit='apple'))
 """
 
-pumpkin_variation = ThanksgivingDinner.model_validate({
+pumpkin_variation = ThanksgivingDinner(
     "dessert": {
         "filling": "pumpkin",
         "time_to_cook": 40,
@@ -359,17 +359,17 @@ class DiscriminatedModel(BaseModel):
 
 
 model_data = {"value": {"value": 1}}
-m = DiscriminatedModel.model_validate(model_data)
+m = DiscriminatedModel(
 print(m)
 # > value=SpecialValue(value=1)
 
 int_data = {"value": 123}
-m = DiscriminatedModel.model_validate(int_data)
+m = DiscriminatedModel(
 print(m)
 # > value=123
 
 try:
-    DiscriminatedModel.model_validate({"value": "not an int or a model"})
+    DiscriminatedModel(an int or a model"})
 except ValidationError as e:
     print(e)  # (1)!
     """
@@ -512,7 +512,7 @@ class Model(BaseModel):
 
 
 try:
-    Model.model_validate({"x": {"x": {"x": 1}}})
+    Model(": 1}}})
 except ValidationError as e:
     print(e)
     """
@@ -528,7 +528,7 @@ except ValidationError as e:
     """
 
 try:
-    Model.model_validate({"x": {"x": {"x": {}}}})
+    Model(": {}}}})
 except ValidationError as e:
     print(e)
     """
@@ -568,7 +568,7 @@ class DiscriminatedModel(BaseModel):
 
 
 try:
-    DiscriminatedModel.model_validate({"x": {"x": {"x": 1}}})
+    DiscriminatedModel(": 1}}})
 except ValidationError as e:
     print(e)
     """
@@ -578,7 +578,7 @@ except ValidationError as e:
     """
 
 try:
-    DiscriminatedModel.model_validate({"x": {"x": {"x": {}}}})
+    DiscriminatedModel(": {}}}})
 except ValidationError as e:
     print(e)
     """
@@ -589,7 +589,7 @@ except ValidationError as e:
 
 # The data is still handled properly when valid:
 data = {"x": {"x": {"x": "a"}}}
-m = DiscriminatedModel.model_validate(data)
+m = DiscriminatedModel(
 print(m.model_dump())
 # > {'x': {'x': {'x': 'a'}}}
 ```

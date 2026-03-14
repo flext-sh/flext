@@ -130,7 +130,7 @@ class MyModel(BaseModel):
 
 
 try:
-    MyModel.model_validate({"field": "invalid"})
+    MyModel({"field": "invalid"})
 except ValidationError as exc:
     print(repr(exc.errors()[0]["type"]))
     # > 'arguments_type'
@@ -1034,7 +1034,7 @@ class Model(BaseModel):
 
 
 try:
-    Model.model_validate(Foobar())
+    Model(
 except ValidationError as exc:
     print(repr(exc.errors()[0]["type"]))
     # > 'get_attribute_error'
@@ -1183,7 +1183,7 @@ class Model(BaseModel):
 
 
 try:
-    Model.model_validate({"x": 1, b"y": 2})
+    Model(2})
 except ValidationError as exc:
     print(repr(exc.errors()[0]["type"]))
     # > 'invalid_key'
@@ -1552,7 +1552,7 @@ class Model(BaseModel):
 
 
 # simply validating a dict
-print(Model.model_validate({"a": 1, "b": 2}))
+print(Model(}))
 # > a=1 b=2
 
 
@@ -1563,11 +1563,11 @@ class CustomObj:
 
 
 # using from attributes to extract fields from an objects
-print(Model.model_validate(CustomObj(3, 4), from_attributes=True))
+print(Model(, from_attributes=True))
 # > a=3 b=4
 
 try:
-    Model.model_validate("not an object", from_attributes=True)
+    Model(, from_attributes=True)
 except ValidationError as exc:
     print(repr(exc.errors()[0]["type"]))
     # > 'model_attributes_type'
@@ -1587,16 +1587,16 @@ class Model(BaseModel):
 
 
 # simply validating a dict
-m = Model.model_validate({"a": 1, "b": 2})
+m = Model(})
 print(m)
 # > a=1 b=2
 
 # validating an existing model instance
-print(Model.model_validate(m))
+print(Model(
 # > a=1 b=2
 
 try:
-    Model.model_validate("not an object")
+    Model()
 except ValidationError as exc:
     print(repr(exc.errors()[0]["type"]))
     # > 'model_type'

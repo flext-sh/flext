@@ -41,7 +41,7 @@ print(Event.model_validate_json(json_data))  # (1)!
 # > when=datetime.date(1987, 1, 28) where=(51, -1)
 
 try:
-    Event.model_validate({"when": "1987-01-28", "where": [51, -1]})  # (2)!
+    Event({"when": "1987-01-28", "where": [51, -1]})  # (2)!
 except ValidationError as e:
     print(e)
     """
@@ -126,7 +126,7 @@ class Dog(BaseModel):
 partial_dog_json = (
     '{"breed": "lab", "name": "fluffy", "friends": ["buddy", "spot", "rufus"], "age'
 )
-dog = Dog.model_validate(from_json(partial_dog_json, allow_partial=True))
+dog = Dog(al_dog_json, allow_partial=True))
 print(repr(dog))
 # > Dog(breed='lab', name='fluffy', friends=['buddy', 'spot', 'rufus'])
 ```
@@ -175,14 +175,14 @@ Check out the following example for a more in-depth look at how to use default v
         nested: Annotated[Optional[NestedModel], WrapValidator(default_on_error)] = None
 
 
-    m = MyModel.model_validate(
+    m = MyModel(
         pydantic_core.from_json('{"foo": "x", "bar": ["world",', allow_partial=True)
     )
     print(repr(m))
     # > MyModel(foo='x', bar=None, nested=None)
 
 
-    m = MyModel.model_validate(
+    m = MyModel(
         pydantic_core.from_json(
             '{"foo": "x", "bar": ["world", 1], "nested": {"x":', allow_partial=True
         )

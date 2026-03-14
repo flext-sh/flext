@@ -46,7 +46,7 @@ class User(BaseModel):
     last_name: str = Field(validation_alias=AliasPath("names", 1))
 
 
-user = User.model_validate({"names": ["John", "Doe"]})  # (1)!
+user = User({"names": ["John", "Doe"]})  # (1)!
 print(user)
 # > first_name='John' last_name='Doe'
 ```
@@ -69,10 +69,10 @@ class User(BaseModel):
     last_name: str = Field(validation_alias=AliasChoices("last_name", "lname"))
 
 
-user = User.model_validate({"fname": "John", "lname": "Doe"})  # (1)!
+user = User(", "lname": "Doe"})  # (1)!
 print(user)
 # > first_name='John' last_name='Doe'
-user = User.model_validate({"first_name": "John", "lname": "Doe"})  # (2)!
+user = User("John", "lname": "Doe"})  # (2)!
 print(user)
 # > first_name='John' last_name='Doe'
 ```
@@ -96,13 +96,13 @@ class User(BaseModel):
     )
 
 
-user = User.model_validate({"first_name": "John", "last_name": "Doe"})
+user = User("John", "last_name": "Doe"})
 print(user)
 # > first_name='John' last_name='Doe'
-user = User.model_validate({"names": ["John", "Doe"]})
+user = User(n", "Doe"]})
 print(user)
 # > first_name='John' last_name='Doe'
-user = User.model_validate({"names": ["John"], "last_name": "Doe"})
+user = User(n"], "last_name": "Doe"})
 print(user)
 # > first_name='John' last_name='Doe'
 ```
@@ -137,7 +137,7 @@ class Tree(BaseModel):
     kind: str
 
 
-t = Tree.model_validate({"AGE": 12, "HEIGHT": 1.2, "KIND": "oak"})
+t = Tree(IGHT": 1.2, "KIND": "oak"})
 print(t.model_dump(by_alias=True))
 # > {'AGE': 12, 'HEIGHT': 1.2, 'KIND': 'oak'}
 ```
@@ -173,7 +173,7 @@ class Tree(BaseModel):
     kind: str
 
 
-t = Tree.model_validate({"AGE": 12, "HEIGHT": 1.2, "KIND": "oak"})
+t = Tree(IGHT": 1.2, "KIND": "oak"})
 print(t.model_dump(by_alias=True))
 # > {'Age': 12, 'Height': 1.2, 'Kind': 'oak'}
 ```
@@ -353,7 +353,7 @@ By default:
         my_field: str = Field(validation_alias="my_alias")
 
 
-    m = Model.model_validate(
+    m = Model(
         {"my_alias": "foo"},  # (1)!
         by_alias=True,
         by_name=False,
@@ -374,7 +374,7 @@ By default:
         my_field: str = Field(validation_alias="my_alias")
 
 
-    m = Model.model_validate(
+    m = Model(
         {"my_field": "foo"},
         by_alias=False,
         by_name=True,  # (1)!
@@ -395,7 +395,7 @@ By default:
         my_field: str = Field(validation_alias="my_alias")
 
 
-    m = Model.model_validate(
+    m = Model(
         {"my_alias": "foo"},
         by_alias=True,
         by_name=True,  # (1)!
@@ -403,7 +403,7 @@ By default:
     print(repr(m))
     # > Model(my_field='foo')
 
-    m = Model.model_validate(
+    m = Model(
         {"my_field": "foo"},
         by_alias=True,
         by_name=True,  # (2)!
