@@ -178,7 +178,7 @@ class Knight(BaseModel):
     color: str = "blue"
 
 
-age_str: Any = "23"
+age_str = "23"
 lancelot = Knight(title="Sir Lancelot", age=age_str)
 ```
 

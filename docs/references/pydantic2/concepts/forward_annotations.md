@@ -197,7 +197,7 @@ class Node(NodeReference):
     @field_serializer("children", mode="wrap")
     def serialize(
         self, children: list["Node"], handler: SerializerFunctionWrapHandler
-    ) -> Any:
+    ):
         """
         Serialize a list of nodes, handling circular references by excluding the children.
         """

@@ -2,4 +2,4 @@ id: fix-jsondict-legacy
 language: python
 rule:
   pattern: dict[str, object]
-fix: object
+fix

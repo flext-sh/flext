@@ -74,12 +74,12 @@ class TestGuards:
     """Base test guards."""
 
     @staticmethod
-    def is_user_response(obj: object) -> TypeGuard[dict]:
+    def is_user_response(obj) -> TypeGuard[dict]:
         """Check if object is a user response fixture."""
         return isinstance(obj, dict) and "user_id" in obj and "email" in obj
 
     @staticmethod
-    def is_config_response(obj: object) -> TypeGuard[dict]:
+    def is_config_response(obj) -> TypeGuard[dict]:
         """Check if object is a config response fixture."""
         return isinstance(obj, dict) and "app_name" in obj and "version" in obj
 
@@ -88,7 +88,7 @@ class LdifTestGuards:
     """LDIF-specific test guards."""
 
     @staticmethod
-    def is_entry_fixture(obj: object) -> TypeGuard[dict]:
+    def is_entry_fixture(obj) -> TypeGuard[dict]:
         """Check if object is an LDIF entry fixture."""
         return isinstance(obj, dict) and "dn" in obj and "attributes" in obj
 
@@ -97,7 +97,7 @@ class CliTestGuards:
     """CLI-specific test guards."""
 
     @staticmethod
-    def is_command_fixture(obj: object) -> TypeGuard[dict]:
+    def is_command_fixture(obj) -> TypeGuard[dict]:
         """Check if object is a command fixture."""
         return isinstance(obj, dict) and "name" in obj and "args" in obj
 
@@ -106,7 +106,7 @@ class WebTestGuards:
     """Web-specific test guards."""
 
     @staticmethod
-    def is_request_fixture(obj: object) -> TypeGuard[dict]:
+    def is_request_fixture(obj) -> TypeGuard[dict]:
         """Check if object is a request fixture."""
         return isinstance(obj, dict) and "method" in obj and "endpoint" in obj
 ```
@@ -191,7 +191,7 @@ For each project:
    # In tests/conftest.py
    class ProjectTestGuards:
        @staticmethod
-       def is_specific_fixture(obj: object) -> TypeGuard[dict]: ...
+       def is_specific_fixture(obj) -> TypeGuard[dict]: ...
    ```
 
 3. **Replace cast() with TypeGuards**

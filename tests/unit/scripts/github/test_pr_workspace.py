@@ -9,7 +9,7 @@ from typing import Any
 import pytest
 
 
-def _load_module(module_name: str, relative_path: str) -> Any:
+def _load_module(module_name: str, relative_path: str):
     module_path = Path(__file__).resolve().parents[3] / relative_path
     spec = importlib.util.spec_from_file_location(module_name, module_path)
     assert spec is not None
@@ -48,7 +48,7 @@ def test_main_runs_projects_and_root(
     def _checkpoint(repo: Path, _branch: str) -> None:
         calls.append(("cp", repo))
 
-    def _run_pr(_repo: Path, _root: Path, _args: Any) -> int:
+    def _run_pr(_repo: Path, _root: Path, _args) -> int:
         return 0
 
     monkeypatch.setattr(mod, "resolve_projects", _resolve_projects)
@@ -116,7 +116,7 @@ def test_main_respects_fail_fast(
     monkeypatch.setattr(mod, "_checkout_branch", _checkout_branch)
     monkeypatch.setattr(mod, "_checkpoint", _checkpoint)
 
-    def _run_pr(repo: Path, _root: Path, _args: Any) -> int:
+    def _run_pr(repo: Path, _root: Path, _args) -> int:
         seen.append(repo)
         return 2
 
@@ -160,7 +160,7 @@ def test_run_pr_uses_pr_manager_for_workspace_root(
 
     commands: list[list[str]] = []
 
-    def _fake_run(command: list[str], **_kwargs: Any) -> Any:
+    def _fake_run(command: list[str], **_kwargs):
         commands.append(command)
         return SimpleNamespace(returncode=0)
 
@@ -203,7 +203,7 @@ def test_run_pr_uses_make_for_non_root_repo(
 
     commands: list[list[str]] = []
 
-    def _fake_run(command: list[str], **_kwargs: Any) -> Any:
+    def _fake_run(command: list[str], **_kwargs):
         commands.append(command)
         return SimpleNamespace(returncode=0)
 

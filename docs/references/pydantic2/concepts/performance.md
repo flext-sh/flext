@@ -78,7 +78,7 @@ from pydantic import BaseModel
 
 
 class Model(BaseModel):
-    a: Any
+    a
 
 
 model = Model(a=1)

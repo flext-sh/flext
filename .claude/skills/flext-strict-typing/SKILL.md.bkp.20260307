@@ -499,7 +499,7 @@ When a typing rule is violated, prefer architecture-aware fixes over mechanical 
 
 ```python
 # ✅ Every function/method MUST have explicit return type
-def process(self, data: object) -> r[bool]:
+def process(self, data) -> r[bool]:
     ...
 
 def validate(self, value: str) -> str:

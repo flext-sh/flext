@@ -447,7 +447,7 @@ from pydantic import GetCoreSchemaHandler, TypeAdapter
 class Username(str):
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source_type: Any, handler: GetCoreSchemaHandler
+        cls, source_type, handler: GetCoreSchemaHandler
     ) -> CoreSchema:
         return core_schema.no_info_after_validator_function(cls, handler(str))
 
@@ -480,7 +480,7 @@ class MyAfterValidator:
     func: Callable[[Any], Any]
 
     def __get_pydantic_core_schema__(
-        self, source_type: Any, handler: GetCoreSchemaHandler
+        self, source_type, handler: GetCoreSchemaHandler
     ) -> CoreSchema:
         return core_schema.no_info_after_validator_function(
             self.func, handler(source_type)
@@ -534,7 +534,7 @@ class _ThirdPartyTypePydanticAnnotation:
     @classmethod
     def __get_pydantic_core_schema__(
         cls,
-        _source_type: Any,
+        _source_type,
         _handler: GetCoreSchemaHandler,
     ) -> core_schema.CoreSchema:
         """
@@ -712,7 +712,7 @@ class Owner(Generic[ItemType]):
 
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source_type: Any, handler: GetCoreSchemaHandler
+        cls, source_type, handler: GetCoreSchemaHandler
     ) -> CoreSchema:
         origin = get_origin(source_type)
         if origin is None:  # used as `x: Owner` without params
@@ -848,7 +848,7 @@ class MySequence(Sequence[T]):
 
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source: Any, handler: GetCoreSchemaHandler
+        cls, source, handler: GetCoreSchemaHandler
     ) -> core_schema.CoreSchema:
         instance_schema = core_schema.is_instance_schema(cls)
 
@@ -929,7 +929,7 @@ class CustomType:
 
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source_type: Any, handler: GetCoreSchemaHandler
+        cls, source_type, handler: GetCoreSchemaHandler
     ) -> core_schema.CoreSchema:
         return core_schema.with_info_after_validator_function(
             cls.validate, handler(int)

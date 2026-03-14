@@ -54,17 +54,17 @@ def release_tag_from_branch(branch: str) -> str | None:
 def current_workspace_version(root: Path) -> str:
     """Read current workspace version from root pyproject.toml."""
     pyproject = root / "pyproject.toml"
-    raw_data: object = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    raw_data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
     if not isinstance(raw_data, dict):
         msg = "unable to detect [project] section from pyproject.toml"
         raise TypeError(msg)
     data_map = {str(key): value for key, value in raw_data.items()}
-    project_value: object = data_map.get("project")
+    project_value = data_map.get("project")
     if not isinstance(project_value, dict):
         msg = "unable to detect [project] section from pyproject.toml"
         raise TypeError(msg)
     project_map = {str(key): value for key, value in project_value.items()}
-    version_value: object = project_map.get("version")
+    version_value = project_map.get("version")
     if not isinstance(version_value, str) or not version_value:
         msg = "unable to detect version from pyproject.toml"
         raise RuntimeError(msg)
@@ -73,15 +73,15 @@ def current_workspace_version(root: Path) -> str:
 
 def replace_project_version(content: str, version: str) -> tuple[str, bool]:
     """Replace project version in TOML content string."""
-    raw_document: object = tomlkit.parse(content)
+    raw_document = tomlkit.parse(content)
     if not isinstance(raw_document, Table):
         return content, False
     document = raw_document
-    project_value: object = document.get("project")
+    project_value = document.get("project")
     if not isinstance(project_value, Table):
         return content, False
     project_map = {str(key): value for key, value in project_value.items()}
-    current_value: object = project_map.get("version")
+    current_value = project_map.get("version")
     if not isinstance(current_value, str) or not current_value:
         return content, False
     _ = parse_semver(current_value.removesuffix("-dev"))

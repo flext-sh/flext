@@ -110,7 +110,7 @@ def validate_non_empty(v: str) -> str:
     return cleaned
 
 
-def normalize_to_list(v: object) -> list[object]:
+def normalize_to_list(v) -> list[object]:
     if isinstance(v, list):
         return v
     if isinstance(v, (tuple, set)):
@@ -157,7 +157,7 @@ class Metadata(BaseModel):
 
     @field_validator("attributes", mode="before")
     @classmethod
-    def normalize_attributes(cls, value: object) -> dict[str, object]:
+    def normalize_attributes(cls, value) -> dict[str, object]:
         if value is None:
             return {}
         if isinstance(value, BaseModel):
@@ -309,10 +309,10 @@ from pydantic import computed_field
 
 
 class ServiceRuntimeHolder:
-    _runtime: object
+    _runtime
 
     @computed_field
-    def runtime(self) -> object:
+    def runtime(self):
         return self._runtime
 ```
 
@@ -372,7 +372,7 @@ from pydantic import BaseModel, Discriminator
 
 class SuccessResult(BaseModel):
     result_type: Literal["success"] = "success"
-    value: object
+    value
 
 
 class FailureResult(BaseModel):
@@ -382,7 +382,7 @@ class FailureResult(BaseModel):
 
 class PartialResult(BaseModel):
     result_type: Literal["partial"] = "partial"
-    value: object
+    value
     warnings: list[str]
 
 
@@ -459,8 +459,8 @@ class EnvelopeModel(BaseModel):
 
     @field_serializer("*", when_used="json")
     def serialize_with_metadata(
-        self, value: object, _info: FieldSerializationInfo
-    ) -> object:
+        self, value, _info: FieldSerializationInfo
+    ):
         if not self.include_metadata:
             return value
         if isinstance(value, dict):
@@ -522,7 +522,7 @@ Guidance:
 from pydantic import TypeAdapter, ValidationError
 
 
-def validate_runtime(data: object, type_: type[object]) -> tuple[bool, object | str]:
+def validate_runtime(data, type_: type[object]) -> tuple[bool, object | str]:
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_python(data)
@@ -541,7 +541,7 @@ Repository anchor:
 from pydantic import TypeAdapter
 
 
-def serialize_runtime(value: object, type_: type[object]) -> dict[str, object]:
+def serialize_runtime(value, type_: type[object]) -> dict[str, object]:
     adapter = TypeAdapter(type_)
     dumped = adapter.dump_python(value, mode="json")
     if isinstance(dumped, dict):
@@ -625,7 +625,7 @@ class Window(BaseModel):
 
     @field_validator("label", mode="before")
     @classmethod
-    def normalize_label(cls, value: object) -> str:
+    def normalize_label(cls, value) -> str:
         if not isinstance(value, str):
             raise TypeError("label must be str")
         cleaned = value.strip()

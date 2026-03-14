@@ -1681,7 +1681,7 @@ class TimeAwareModel(BaseModel):
     _processed_at: datetime = PrivateAttr(default_factory=datetime.now)
     _secret_value: str
 
-    def model_post_init(self, context: Any) -> None:
+    def model_post_init(self, context) -> None:
         # this could also be done with `default_factory`:
         self._secret_value = randint(1, 5)
 

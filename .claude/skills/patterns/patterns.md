@@ -57,7 +57,7 @@ def process_user(data: dict) -> User:
     "`parse_obj_as` is deprecated. Use `pydantic.TypeAdapter.validate_python` instead.",
     category=None,
 )
-def parse_obj_as(type_: type[T], obj: Any, type_name: NameFactory | None = None) -> T:
+def parse_obj_as(type_: type[T], obj, type_name: NameFactory | None = None) -> T:
     warnings.warn(
         "`parse_obj_as` is deprecated. Use `pydantic.TypeAdapter.validate_python` instead.",
         category=PydanticDeprecatedSince20,

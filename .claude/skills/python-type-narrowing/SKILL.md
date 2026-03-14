@@ -93,7 +93,7 @@ def process(data: list[str | int]) -> None:
 from typing import TypeGuard
 
 
-def is_valid_user(obj: object) -> TypeGuard[User]:
+def is_valid_user(obj) -> TypeGuard[User]:
     return isinstance(obj, dict) and "id" in obj
 
 

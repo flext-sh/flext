@@ -146,7 +146,7 @@ Check out the following example for a more in-depth look at how to use default v
     from pydantic import BaseModel, ValidationError, WrapValidator
 
 
-    def default_on_error(v, handler) -> Any:
+    def default_on_error(v, handler):
         """
         Raise a PydanticUseDefault exception if the value is missing.
 

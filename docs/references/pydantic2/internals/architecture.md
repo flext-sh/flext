@@ -64,7 +64,7 @@ class BoolSchema(TypedDict, total=False):
     type: Required[Literal["bool"]]
     strict: bool
     ref: str
-    metadata: Any
+    metadata
     serialization: SerSchema
 ```
 
@@ -99,7 +99,7 @@ If we were to define a custom serialization function for `foo` (1), the `seriali
        foo: bool = Field(strict=True)
 
        @field_serializer("foo", mode="plain")
-       def serialize_foo(self, value: bool) -> Any: ...
+       def serialize_foo(self, value: bool): ...
    ```
 
 ```python {lint="skip" test="skip"}
@@ -165,7 +165,7 @@ from pydantic import GetCoreSchemaHandler, TypeAdapter
 class MyStrict:
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source: Any, handler: GetCoreSchemaHandler
+        cls, source, handler: GetCoreSchemaHandler
     ) -> CoreSchema:
         schema = handler(source)  # (1)!
         schema["strict"] = True
@@ -175,7 +175,7 @@ class MyStrict:
 class MyGt:
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source: Any, handler: GetCoreSchemaHandler
+        cls, source, handler: GetCoreSchemaHandler
     ) -> CoreSchema:
         schema = handler(source)  # (2)!
         schema["gt"] = 1

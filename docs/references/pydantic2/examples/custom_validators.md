@@ -68,7 +68,7 @@ class MyDatetimeValidator:
 
     def __get_pydantic_core_schema__(
         self,
-        source_type: Any,
+        source_type,
         handler: GetCoreSchemaHandler,
     ) -> CoreSchema:
         return core_schema.no_info_wrap_validator_function(
@@ -135,7 +135,7 @@ class MyDatetimeValidator:
 
     def __get_pydantic_core_schema__(
         self,
-        source_type: Any,
+        source_type,
         handler: GetCoreSchemaHandler,
     ) -> CoreSchema:
         return core_schema.no_info_wrap_validator_function(
