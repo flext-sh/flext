@@ -321,7 +321,7 @@ class AclProcessingExample:
                         f"Server detection failed: {result.error}"
                     )
             server_types_set: set[str] = {item[1] for item in detected_entries}
-            return r.ok({
+            return r[ProcessingDict].ok({
                 "entries": detected_entries,
                 "server_types": sorted(server_types_set),
             })

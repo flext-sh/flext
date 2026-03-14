@@ -189,6 +189,10 @@ reportPrivateUsage = "error"
 root = "src"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "tests"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "algar-oud-mig/src"
 

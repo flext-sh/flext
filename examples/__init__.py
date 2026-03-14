@@ -5,9 +5,8 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from flext_core import t
 from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
@@ -17,23 +16,22 @@ if TYPE_CHECKING:
         EntryDict,
     )
     from examples.advanced_processing_example import AdvancedProcessingExample, ItemDict
-    from examples.complete_workflow_example import CompleteWorkflowExample, ItemType
+    from examples.complete_workflow_example import (
+        CompleteWorkflowExample,
+        ItemType,
+        ProcessingDict,
+    )
 
 # Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "AclProcessingExample": ("examples.acl_processing_example", "AclProcessingExample"),
-    "AdvancedProcessingExample": (
-        "examples.advanced_processing_example",
-        "AdvancedProcessingExample",
-    ),
-    "CompleteWorkflowExample": (
-        "examples.complete_workflow_example",
-        "CompleteWorkflowExample",
-    ),
+    "AdvancedProcessingExample": ("examples.advanced_processing_example", "AdvancedProcessingExample"),
+    "CompleteWorkflowExample": ("examples.complete_workflow_example", "CompleteWorkflowExample"),
     "ContextDict": ("examples.acl_processing_example", "ContextDict"),
     "EntryDict": ("examples.acl_processing_example", "EntryDict"),
     "ItemDict": ("examples.advanced_processing_example", "ItemDict"),
     "ItemType": ("examples.complete_workflow_example", "ItemType"),
+    "ProcessingDict": ("examples.complete_workflow_example", "ProcessingDict"),
 }
 
 __all__ = [
@@ -44,10 +42,11 @@ __all__ = [
     "EntryDict",
     "ItemDict",
     "ItemType",
+    "ProcessingDict",
 ]
 
 
-def __getattr__(name: str) -> t.ModuleExport:
+def __getattr__(name: str) -> Any:
     """Lazy-load module attributes on first access (PEP 562)."""
     return lazy_getattr(name, _LAZY_IMPORTS, globals(), __name__)
 
