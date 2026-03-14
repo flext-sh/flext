@@ -7,9 +7,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flext_core import FlextTypes, cleanup_submodule_namespace, lazy_getattr
+from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
+    from flext_core.typings import FlextTypes
     from tests.unit.libs.versioning_tests import (
         test_current_workspace_version_reads_project_version,
         test_parse_and_bump_semver,
@@ -19,10 +20,22 @@ if TYPE_CHECKING:
 
 # Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
-    "test_current_workspace_version_reads_project_version": ("tests.unit.libs.versioning_tests", "test_current_workspace_version_reads_project_version"),
-    "test_parse_and_bump_semver": ("tests.unit.libs.versioning_tests", "test_parse_and_bump_semver"),
-    "test_release_tag_from_branch_patterns": ("tests.unit.libs.versioning_tests", "test_release_tag_from_branch_patterns"),
-    "test_replace_project_version_updates_only_project_table": ("tests.unit.libs.versioning_tests", "test_replace_project_version_updates_only_project_table"),
+    "test_current_workspace_version_reads_project_version": (
+        "tests.unit.libs.versioning_tests",
+        "test_current_workspace_version_reads_project_version",
+    ),
+    "test_parse_and_bump_semver": (
+        "tests.unit.libs.versioning_tests",
+        "test_parse_and_bump_semver",
+    ),
+    "test_release_tag_from_branch_patterns": (
+        "tests.unit.libs.versioning_tests",
+        "test_release_tag_from_branch_patterns",
+    ),
+    "test_replace_project_version_updates_only_project_table": (
+        "tests.unit.libs.versioning_tests",
+        "test_replace_project_version_updates_only_project_table",
+    ),
 }
 
 __all__ = [
