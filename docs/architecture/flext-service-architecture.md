@@ -661,7 +661,7 @@ class FlextService[TDomainResult](
     # Auto-execute desativado por padrão (False)
     auto_execute: ClassVar[bool] = False
 
-    def __new__(cls, **data: object) -> Self:
+    def __new__(cls, **data) -> Self:
         """Handle auto-execution pattern and instance creation.
 
         When auto_execute is False: Returns normal service instance
@@ -943,7 +943,7 @@ auto_execute: ClassVar[bool] = False  # Default: manual (False)
 
 
 # flext-core/src/flext_core/service.py - LINHAS 108-142
-def __new__(cls, **data: object) -> Self:
+def __new__(cls, **data) -> Self:
     """Handle auto-execution pattern and instance creation."""
     instance = super().__new__(cls)
     if cls.auto_execute:
@@ -1410,7 +1410,7 @@ class p:
     class Service(Protocol):
         """Base service protocol."""
 
-        def execute(self) -> object: ...
+        def execute(self): ...
         def is_valid(self) -> bool: ...
         def validate_business_rules(self) -> r[bool]: ...
         def validate_config(self) -> r[bool]: ...
@@ -1420,10 +1420,10 @@ class p:
     class Repository[T](Protocol):
         """Repository protocol."""
 
-        def get_by_id(self, entity_id: str) -> object: ...
-        def save(self, entity: T) -> object: ...
-        def delete(self, entity_id: str) -> object: ...
-        def find_all(self) -> object: ...
+        def get_by_id(self, entity_id: str): ...
+        def save(self, entity: T): ...
+        def delete(self, entity_id: str): ...
+        def find_all(self): ...
 
     @runtime_checkable
     class Configurable(Protocol):
@@ -1893,7 +1893,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
             # Create factory with dependency injection
             if dependencies:
 
-                def smart_factory(deps=dependencies) -> object:
+                def smart_factory(deps=dependencies):
                     """Factory with auto-injection."""
                     resolved_deps: dict[str, object] = {}
 
@@ -3048,7 +3048,7 @@ class FlextContainer:
     _global_lock: threading.RLock = threading.RLock()
 
     # Core operations
-    def register(self, name: str, service: object) -> r[bool]
+    def register(self, name: str, service) -> r[bool]
     def register_factory(self, name: str, factory: Callable[[], T]) -> r[bool]
     def get(self, name: str) -> r[object]
     def get_typed(self, name: str, expected_type: type[T]) -> r[T]
@@ -3106,7 +3106,7 @@ class FlextLdif(Flext[dict[str, object]]):
         _ = container.register("validation", FlextLdifValidation())
 
         # ✅ BOM: Register factory for parameterized service
-        def migration_pipeline_factory(params: dict[str, object] | None) -> object:
+        def migration_pipeline_factory(params: dict[str, object] | None):
             if params is None:
                 params = {}
             return FlextLdifMigrationPipeline(
@@ -3466,7 +3466,7 @@ class FlextSettings(BaseSettings):
     _instances: ClassVar[dict[type, Self]] = {}
     _lock: ClassVar[threading.RLock] = threading.RLock()
 
-    def __new__(cls, **_kwargs: object) -> Self:
+    def __new__(cls, **_kwargs) -> Self:
         """Singleton automático - each subclass = one instance."""
         if cls not in cls._instances:
             with cls._lock:
@@ -4315,7 +4315,7 @@ class p:
         """Repository protocol."""
 
         def get(self, id: str) -> r[object]: ...
-        def save(self, entity: object) -> r[bool]: ...
+        def save(self, entity) -> r[bool]: ...
         def delete(self, id: str) -> r[bool]: ...
 
     @runtime_checkable
@@ -7528,7 +7528,7 @@ class FlextCli:
     def print(self, message: str, style: str | None = None) -> r[bool]:
         return self.formatters.print(message, style)
 
-    def create_table(self, data: object | None = None, ...) -> r[str]:
+    def create_table(self, data = None, ...) -> r[str]:
         return self.output.format_data(...)
 ```
 
@@ -9022,7 +9022,7 @@ user = UserService(user_id="123").execute().unwrap()
 auto_execute: ClassVar[bool] = False  # Default: manual execution
 
 
-def __new__(cls, **kwargs: object) -> Self:
+def __new__(cls, **kwargs) -> Self:
     """Control execution flow based on auto_execute class attribute.
 
     If auto_execute=True: Returns unwrapped domain result
@@ -9242,7 +9242,7 @@ Métrica: **Total testes** - Meta: - - Alcançado: **2238** - Status: ✅
 # type(instance).__init__ (evita "unsound access" warning)
 
 
-def __new__(cls, **kwargs: object) -> Self:
+def __new__(cls, **kwargs) -> Self:
     instance = cast("Self", super().__new__(cls))
     type(instance).__init__(instance, **kwargs)
 

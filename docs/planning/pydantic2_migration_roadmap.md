@@ -92,7 +92,7 @@ if u.is_config(data):
 
 
 # For tests, create test-specific TypeGuards in conftest.py
-def is_user_response(obj: object) -> TypeGuard[UserResponse]:
+def is_user_response(obj) -> TypeGuard[UserResponse]:
     return isinstance(obj, dict) and "user_id" in obj and "email" in obj
 ```
 

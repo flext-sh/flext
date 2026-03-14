@@ -83,7 +83,7 @@ alwaysApply: true
 ## §3 Code Law
 
 ### 3.1 Architecture & Code Structure
-- **MVI 200-LINE CAP (SUPREME LAW)**: Any module, class, method, or function >200 lines is a violation. Refactor immediately using strict OO composition and canonical MRO architecture. Decompose into explicit contracts and reusable domain components—never use compression hacks.
+- **MVI 200-LINE CAP (SUPREME LAW)** module, class, method, or function >200 lines is a violation. Refactor immediately using strict OO composition and canonical MRO architecture. Decompose into explicit contracts and reusable domain components—never use compression hacks.
 - **Pydantic v2 Mastery**: Every class MUST extend Pydantic v2 `BaseModel` (or FLEXT base models) via MRO. Fully utilize `Field()`, `model_config = ConfigDict(...)`, `PrivateAttr()`, and built-in constraints. Standalone `*Config` classes, unnecessary `@property`, manual `self._x` assignments, and line-reduction wrappers are FORBIDDEN.
 - **MRO Inheritance Hierarchy**: Domain logic must reside in a single nested class hierarchy. Subprojects inherit from the parent project's facade class to cascade namespaces. Loose functions or standalone classes without MRO lineage are FORBIDDEN. They MUST be absorbed into the namespace classes or used via existing base classes.
 - **Utility & Helper Generalization (`u.*`)**: All shared helpers MUST strictly flow through the `u.*` utilities namespace. Do not duplicate logic. Use and enhance the lowest-level function available, systematically generalizing existing code rather than creating new redundant functions.
@@ -99,7 +99,7 @@ alwaysApply: true
 - **`t.Container` Exclusivity**: `type Container = Scalar | Path`. `BaseModel` is TOTALLY FORBIDDEN inside `t.Container`. If both are needed, use explicit `t.Container | BaseModel`.
 
 ### 3.3 Failures & Error Handling
-- **`r[T]` for Fallible Operations**: Any function that can fail MUST return `r[T]`. `T | None`, bare exceptions, and ad-hoc error dicts are FORBIDDEN. The `r` alias is mandatory.
+- **`r[T]` for Fallible Operations** function that can fail MUST return `r[T]`. `T | None`, bare exceptions, and ad-hoc error dicts are FORBIDDEN. The `r` alias is mandatory.
 - **No Exceptions as Control Flow**: Bare `try/except` in business logic is FORBIDDEN when `r` composition (`map`/`flat_map`/`lash`) can handle the flow. Bare `except:` is universally forbidden. Catch explicit exceptions.
 
 ### 3.4 Tools, Modules & Environment

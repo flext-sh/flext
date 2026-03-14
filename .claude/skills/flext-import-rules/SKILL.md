@@ -450,7 +450,7 @@ __all__ = ["FlextModels", "FlextProtocols"]
 
 
 # 3. Native module-level lazy load strategy
-def __getattr__(name: str) -> object:
+def __getattr__(name: str):
     if name == "FlextModels":
         from .models import FlextModels
 

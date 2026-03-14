@@ -954,7 +954,7 @@ class AllowAnySubclass:
         self, source: type[Any], handler: GetCoreSchemaHandler
     ) -> core_schema.CoreSchema:
         # we can't call handler since it will fail for arbitrary types
-        def validate(value: Any) -> Any:
+        def validate(value):
             if not isinstance(value, source):
                 raise ValueError(
                     f"Expected an instance of {source}, got an instance of {type(value)}"
@@ -1017,7 +1017,7 @@ class Person:
 
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source_type: Any, handler: GetCoreSchemaHandler
+        cls, source_type, handler: GetCoreSchemaHandler
     ) -> cs.CoreSchema:
         return cs.typed_dict_schema(
             {

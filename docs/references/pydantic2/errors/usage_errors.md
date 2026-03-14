@@ -195,7 +195,7 @@ try:
         a: str
 
         @field_validator("b")
-        def check_b(cls, v: Any):
+        def check_b(cls, v):
             return v
 
 except PydanticUserError as exc_info:
@@ -212,7 +212,7 @@ from pydantic import BaseModel, create_model, field_validator
 
 class Model(BaseModel):
     @field_validator("a", check_fields=False)
-    def check_a(cls, v: Any):
+    def check_a(cls, v):
         return v
 
 
@@ -940,17 +940,17 @@ from pydantic import (
 
 # an instance method with the default mode or `mode='plain'`
 @field_serializer("x")  # or @field_serializer('x', mode='plain')
-def ser_x(self, value: Any, info: FieldSerializationInfo): ...
+def ser_x(self, value, info: FieldSerializationInfo): ...
 
 
 # a static method or function with the default mode or `mode='plain'`
 @field_serializer("x")  # or @field_serializer('x', mode='plain')
 @staticmethod
-def ser_x(value: Any, info: FieldSerializationInfo): ...
+def ser_x(value, info: FieldSerializationInfo): ...
 
 
 # equivalent to
-def ser_x(value: Any, info: FieldSerializationInfo): ...
+def ser_x(value, info: FieldSerializationInfo): ...
 
 
 serializer("x")(ser_x)
@@ -959,7 +959,7 @@ serializer("x")(ser_x)
 # an instance method with `mode='wrap'`
 @field_serializer("x", mode="wrap")
 def ser_x(
-    self, value: Any, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo
+    self, value, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo
 ): ...
 
 
@@ -967,13 +967,13 @@ def ser_x(
 @field_serializer("x", mode="wrap")
 @staticmethod
 def ser_x(
-    value: Any, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo
+    value, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo
 ): ...
 
 
 # equivalent to
 def ser_x(
-    value: Any, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo
+    value, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo
 ): ...
 
 
@@ -982,11 +982,11 @@ serializer("x")(ser_x)
 
 # For all of these, you can also choose to omit the `info` argument, for example:
 @field_serializer("x")
-def ser_x(self, value: Any): ...
+def ser_x(self, value): ...
 
 
 @field_serializer("x", mode="wrap")
-def ser_x(self, value: Any, handler: SerializerFunctionWrapHandler): ...
+def ser_x(self, value, handler: SerializerFunctionWrapHandler): ...
 ```
 
 ## Unrecognized `model_serializer` signature {#model-serializer-signature}

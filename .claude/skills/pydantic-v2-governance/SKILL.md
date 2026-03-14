@@ -222,7 +222,7 @@ class ValidationHelpers(BaseModel):
 
 ```python
 # ✗ WRONG — Creates new TypeAdapter on every call
-def validate_tags(self, tags: object) -> list[str]:
+def validate_tags(self, tags) -> list[str]:
     adapter = TypeAdapter(list[str])  # EXPENSIVE
     return adapter.validate_python(tags)
 ```
@@ -241,7 +241,7 @@ def get_tags_adapter(cls) -> TypeAdapter[list[str]]:
     return cls._tags_adapter
 
 
-def validate_tags(self, tags: object) -> list[str]:
+def validate_tags(self, tags) -> list[str]:
     return self.get_tags_adapter().validate_python(tags)
 ```
 
@@ -506,7 +506,7 @@ if u.Guards.is_scalar(some_value):
 # ✗ WRONG — Any is forbidden
 from typing import Any
 
-data: Any = ...  # FORBIDDEN
+data = ...  # FORBIDDEN
 ```
 
 **Correct**: Use `t.*` contracts:
@@ -524,7 +524,7 @@ config: t.ConfigMap = ...
 
 ```python
 # ✗ WRONG — bare object is forbidden
-data: object = ...  # FORBIDDEN
+data = ...  # FORBIDDEN
 ```
 
 **Correct**: Use `t.*` contracts:

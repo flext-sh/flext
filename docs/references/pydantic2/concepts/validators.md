@@ -188,7 +188,7 @@ In its simplest form, a field validator is a callable taking the value to be val
         from pydantic import BaseModel, BeforeValidator, ValidationError
 
 
-        def ensure_list(value: Any) -> Any:  # (1)!
+        def ensure_list(value):  # (1)!
             if not isinstance(value, list):  # (2)!
                 return [value]
             else:
@@ -235,7 +235,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
             @field_validator("numbers", mode="before")
             @classmethod
-            def ensure_list(cls, value: Any) -> Any:  # (1)!
+            def ensure_list(cls, value):  # (1)!
                 if not isinstance(value, list):  # (2)!
                     return [value]
                 else:
@@ -277,7 +277,7 @@ In its simplest form, a field validator is a callable taking the value to be val
         from pydantic import BaseModel, PlainValidator
 
 
-        def val_number(value: Any) -> Any:
+        def val_number(value):
             if isinstance(value, int):
                 return value * 2
             else:
@@ -309,7 +309,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
             @field_validator("number", mode="plain")
             @classmethod
-            def val_number(cls, value: Any) -> Any:
+            def val_number(cls, value):
                 if isinstance(value, int):
                     return value * 2
                 else:
@@ -351,7 +351,7 @@ In its simplest form, a field validator is a callable taking the value to be val
         )
 
 
-        def truncate(value: Any, handler: ValidatorFunctionWrapHandler) -> str:
+        def truncate(value, handler: ValidatorFunctionWrapHandler) -> str:
             try:
                 return handler(value)
             except ValidationError as err:
@@ -392,7 +392,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
             @field_validator("my_string", mode="wrap")
             @classmethod
-            def truncate(cls, value: Any, handler: ValidatorFunctionWrapHandler) -> str:
+            def truncate(cls, value, handler: ValidatorFunctionWrapHandler) -> str:
                 try:
                     return handler(value)
                 except ValidationError as err:
@@ -532,7 +532,7 @@ decorator.
 
       @model_validator(mode="before")
       @classmethod
-      def check_card_number_not_present(cls, data: Any) -> Any:  # (1)!
+      def check_card_number_not_present(cls, data):  # (1)!
           if isinstance(data, dict):  # (2)!
               if "card_number" in data:
                   raise ValueError("'card_number' should not be included")
@@ -570,7 +570,7 @@ decorator.
       @model_validator(mode="wrap")
       @classmethod
       def log_failed_validation(
-          cls, data: Any, handler: ModelWrapValidatorHandler[Self]
+          cls, data, handler: ModelWrapValidatorHandler[Self]
       ) -> Self:
           try:
               return handler(data)
@@ -725,7 +725,7 @@ It is currently not possible to provide a context when directly instantiating a 
     class Model(BaseModel):
         my_number: int
 
-        def __init__(self, /, **data: Any) -> None:
+        def __init__(self, /, **data) -> None:
             self.__pydantic_validator__.validate_python(
                 data,
                 self_instance=self,
@@ -874,7 +874,7 @@ Pydantic provides a few special utilities that can be used to customize validati
   from pydantic import BaseModel, BeforeValidator
 
 
-  def default_if_none(value: Any) -> Any:
+  def default_if_none(value):
       if value is None:
           raise PydanticUseDefault()
       return value
@@ -906,7 +906,7 @@ class Model(BaseModel):
 
     @field_validator("value", mode="before")
     @classmethod
-    def cast_ints(cls, value: Any) -> Any:
+    def cast_ints(cls, value):
         if isinstance(value, int):
             return str(value)
         else:
@@ -933,7 +933,7 @@ class Model(BaseModel):
 
     @field_validator("value", mode="before", json_schema_input_type=Union[int, str])
     @classmethod
-    def cast_ints(cls, value: Any) -> Any:
+    def cast_ints(cls, value):
         if isinstance(value, int):
             return str(value)
         else:

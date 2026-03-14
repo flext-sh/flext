@@ -75,7 +75,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 @staticmethod
 def load_yaml_rules(path: Path) -> r[list[dict[str, object]]]:
     with path.open(encoding="utf-8") as f:
-        parsed: object = yaml.safe_load(f)
+        parsed = yaml.safe_load(f)
 ```
 
 ```python
@@ -154,7 +154,7 @@ Why bad: implicit defaults can change formatting and create noisy diffs across e
 Good:
 
 ```python
-parsed: object = yaml.safe_load(f)
+parsed = yaml.safe_load(f)
 if not isinstance(parsed, dict):
     return r[list[dict[str, object]]].fail("Expected YAML dict")
 ```

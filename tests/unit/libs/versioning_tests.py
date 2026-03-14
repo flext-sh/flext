@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 
-def _load_module(module_name: str, relative_path: str) -> Any:
+def _load_module(module_name: str, relative_path: str):
     module_path = Path(__file__).resolve().parents[3] / relative_path
     spec = importlib.util.spec_from_file_location(module_name, module_path)
     assert spec is not None

@@ -203,7 +203,7 @@ class Model(BaseModel):
 Model(unrelated=2)
 ```
 
-For this reason, the plugin will add an extra `**kwargs: Any` parameter when synthesizing the `__init__` method, unless
+For this reason, the plugin will add an extra `**kwargs` parameter when synthesizing the `__init__` method, unless
 `init_forbid_extra` is set or the [`extra`][pydantic.ConfigDict.extra] is set to `'forbid'`.
 
 ### `warn_required_dynamic_aliases`

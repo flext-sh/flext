@@ -287,7 +287,7 @@ class PumpkinPie(Pie):
     filling: Literal["pumpkin"] = "pumpkin"
 
 
-def get_discriminator_value(v: Any) -> str:
+def get_discriminator_value(v) -> str:
     if isinstance(v, dict):
         return v.get("fruit", v.get("filling"))
     return getattr(v, "fruit", getattr(v, "filling", None))
@@ -334,7 +334,7 @@ from typing import Annotated, Any, Union
 from pydantic import BaseModel, Discriminator, Tag, ValidationError
 
 
-def model_x_discriminator(v: Any) -> str:
+def model_x_discriminator(v) -> str:
     if isinstance(v, int):
         return "int"
     if isinstance(v, (dict, BaseModel)):

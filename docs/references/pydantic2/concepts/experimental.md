@@ -487,7 +487,7 @@ from pydantic.experimental.arguments_schema import generate_arguments_schema
 def func(p: bool, *args: str, **kwargs: int) -> None: ...
 
 
-def skip_first_parameter(index: int, name: str, annotation: Any) -> Any:
+def skip_first_parameter(index: int, name: str, annotation):
     if index == 0:
         return "skip"
 

@@ -131,7 +131,7 @@ from flext_core import r
 
 | Method                          | Signature                                                                                      | When to use                             |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------- |
-| `.from_validation(data, model)` | `from_validation(cls, data: object, model: type[T_Model]) -> r[T_Model]` | Validate data against Pydantic model    |
+| `.from_validation(data, model)` | `from_validation(cls, data, model: type[T_Model]) -> r[T_Model]` | Validate data against Pydantic model    |
 | `.to_model(model)`              | `to_model[U: BaseModel](self, model: type[U]) -> r[U]`                               | Convert success value to Pydantic model |
 
 ### Resource Management

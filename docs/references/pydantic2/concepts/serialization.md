@@ -280,7 +280,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
         from pydantic import BaseModel, PlainSerializer
 
 
-        def ser_number(value: Any) -> Any:
+        def ser_number(value):
             if isinstance(value, int):
                 return value * 2
             else:
@@ -313,7 +313,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
             number: int
 
             @field_serializer("number", mode="plain")  # (1)!
-            def ser_number(self, value: Any) -> Any:
+            def ser_number(self, value):
                 if isinstance(value, int):
                     return value * 2
                 else:
@@ -347,7 +347,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
         from pydantic import BaseModel, SerializerFunctionWrapHandler, WrapSerializer
 
 
-        def ser_number(value: Any, handler: SerializerFunctionWrapHandler) -> int:
+        def ser_number(value, handler: SerializerFunctionWrapHandler) -> int:
             return handler(value) + 1
 
 
@@ -371,7 +371,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
             number: int
 
             @field_serializer("number", mode="wrap")
-            def ser_number(self, value: Any, handler: SerializerFunctionWrapHandler) -> int:
+            def ser_number(self, value, handler: SerializerFunctionWrapHandler) -> int:
                 return handler(value) + 1
 
 

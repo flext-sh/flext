@@ -407,7 +407,7 @@ servir como referência futura para implementação:
 ~~\_cache: dict[str, object] # ~100 linhas~~
 
 ~~ # ✅ Core methods~~
-~~ def dispatch(self, message: object) -> r[object]: ...~~
+~~ def dispatch(self, message) -> r[object]: ...~~
 ~~ def register_command(self, cmd_type: type, handler: h) -> None: ...~~
 ~~ def register_query(self, query_type: type, handler: h) -> None: ...~~
 ~~ def register_event(self, event_type: type, handler: h) -> None: ...~~
