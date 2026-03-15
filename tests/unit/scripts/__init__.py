@@ -11,6 +11,7 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
+    from tests.unit.scripts import github
     from tests.unit.scripts.github.test_pr_workspace import (
         test_main_respects_fail_fast,
         test_main_runs_projects_and_root,
@@ -23,6 +24,7 @@ if TYPE_CHECKING:
     )
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
+    "github": ("tests.unit.scripts.github", ""),
     "test_main_respects_fail_fast": (
         "tests.unit.scripts.github.test_pr_workspace",
         "test_main_respects_fail_fast",
@@ -50,6 +52,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
 }
 
 __all__ = [
+    "github",
     "test_main_respects_fail_fast",
     "test_main_runs_projects_and_root",
     "test_main_syncs_scripts_and_libs",
