@@ -112,7 +112,7 @@ endef
 
 define AUTO_SYNC_ALL_PROJECTS
 for proj in $(ALL_PROJECTS); do \
-	$(PY) -m flext_infra workspace sync --project-root "$$proj" --canonical-root "$(CURDIR)" >/dev/null || exit 1; \
+	$(PY) -m flext_infra workspace sync --workspace "$$proj" --canonical-root "$(CURDIR)" >/dev/null || exit 1; \
 done
 endef
 
@@ -305,7 +305,7 @@ setup: ## Install all projects into workspace .venv
 			log_file="/tmp/flext-setup-$$proj.log"; \
 			start_ts=$$(date +%s); \
 			printf "[%2d/%2d] setup %s\n" $$step $$total_steps "$$proj"; \
-			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --project-root "$$proj" >>"$$log_file" 2>&1; then \
+			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --workspace "$$proj" >>"$$log_file" 2>&1; then \
 				:; \
 			else \
 				echo "     sync  ... failed"; \
@@ -345,7 +345,7 @@ setup: ## Install all projects into workspace .venv
 	start_ts=$$(date +%s); \
 	root_lock_ok=0; \
 	printf "[%2d/%2d] setup %s\n" $$step $$total_steps "root"; \
-	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --project-root . >"$$log_file" 2>&1; then \
+	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --workspace . >"$$log_file" 2>&1; then \
 		echo "     sync  ... failed"; \
 		cat "$$log_file"; \
 		failed=$$((failed + 1)); \
@@ -407,7 +407,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 			log_file="/tmp/flext-upgrade-$$proj.log"; \
 			start_ts=$$(date +%s); \
 			printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "$$proj"; \
-			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --project-root "$$proj" >>"$$log_file" 2>&1; then \
+			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --workspace "$$proj" >>"$$log_file" 2>&1; then \
 				:; \
 			else \
 				echo "     sync  ... failed"; \
@@ -458,7 +458,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	start_ts=$$(date +%s); \
 	root_update_ok=0; \
 	printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "root"; \
-	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --project-root . >"$$log_file" 2>&1; then \
+	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --workspace . >"$$log_file" 2>&1; then \
 		echo "     sync  ... failed"; \
 		cat "$$log_file"; \
 		failed=$$((failed + 1)); \
@@ -526,6 +526,8 @@ modernize: ## Modernize pyproject.toml files (standardize configs without lock/i
 	$(Q)echo "Formatting pyproject.toml files with taplo..."; \
 	taplo format pyproject.toml */pyproject.toml 2>&1 | grep -vE '^\s*$$' || true; \
 	echo ""
+	$(Q)echo "Formatting Python files (ruff)..."
+	$(Q)$(POETRY_ENV) ruff format . --quiet
 	$(Q)echo "Modernization complete."
 
 check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security)
@@ -558,7 +560,7 @@ release: ## Interactive workspace release orchestration
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)$(PY) -m flext_infra release \
-		--root "$(CURDIR)" \
+		--workspace "$(CURDIR)" \
 		--phase "$(RELEASE_PHASE)" \
 		--interactive "$(INTERACTIVE)" \
 		--next-bump "$(RELEASE_NEXT_BUMP)" \
@@ -663,9 +665,9 @@ ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)mkdir -p .reports
 	$(Q)echo "Running workspace validation (inventory + strict anti-drift gates)..."
 	$(Q)$(PY) -m flext_infra maintenance --check || exit 1
-	$(Q)$(PY) -m flext_infra core inventory --root .
+	$(Q)$(PY) -m flext_infra core inventory --workspace .
 	$(Q)$(PY) -m flext_infra core basemk-validate
-	$(Q)$(PY) -m flext_infra github lint --root . --report .reports/workflows/actionlint.json
+	$(Q)$(PY) -m flext_infra github lint --workspace . --report .reports/workflows/actionlint.json
 	$(Q)$(PY) -m flext_infra core skill-validate --skill scripts-validation --mode strict
 	$(Q)$(PY) -m flext_infra core skill-validate --skill rules-github --mode strict
 	$(Q)$(PY) -m flext_infra core skill-validate --skill rules-docker --mode strict
@@ -894,4 +896,6 @@ codegen: ## Standardize __init__.py lazy imports (PEP 562)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "Standardizing __init__.py lazy imports..."
-	$(Q)$(PY) -m flext_infra codegen lazy-init --root "$(CURDIR)"
+	$(Q)$(PY) -m flext_infra codegen lazy-init --workspace "$(CURDIR)"
+	$(Q)echo "Formatting generated files (ruff)..."
+	$(Q)$(POETRY_ENV) ruff format . --quiet
