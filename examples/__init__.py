@@ -26,14 +26,8 @@ if TYPE_CHECKING:
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "AclProcessingExample": ("examples.acl_processing_example", "AclProcessingExample"),
-    "AdvancedProcessingExample": (
-        "examples.advanced_processing_example",
-        "AdvancedProcessingExample",
-    ),
-    "CompleteWorkflowExample": (
-        "examples.complete_workflow_example",
-        "CompleteWorkflowExample",
-    ),
+    "AdvancedProcessingExample": ("examples.advanced_processing_example", "AdvancedProcessingExample"),
+    "CompleteWorkflowExample": ("examples.complete_workflow_example", "CompleteWorkflowExample"),
     "ContextDict": ("examples.acl_processing_example", "ContextDict"),
     "EntryDict": ("examples.acl_processing_example", "EntryDict"),
     "ItemDict": ("examples.advanced_processing_example", "ItemDict"),
