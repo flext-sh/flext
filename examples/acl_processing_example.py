@@ -20,7 +20,7 @@ from __future__ import annotations
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
-from typing import ClassVar, TypeIs, override
+from typing import Any, ClassVar, TypeIs, override
 
 from flext_core import r, s, t
 from pydantic import BaseModel, ConfigDict, Field
@@ -28,7 +28,11 @@ from pydantic import BaseModel, ConfigDict, Field
 from examples._models import ValidationRules
 
 EntryDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar | list[str]]]
-ProcessingDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar]]
+
+# ProcessingDict carries heterogeneous pipeline state (scalars, models, lists,
+# nested dicts, tuples).  Using ``Any`` for values keeps the pipeline ergonomic
+# while the individual methods narrow types via guards.
+ProcessingDict = dict[str, Any]
 ContextDict = dict[str, t.Scalar | bool | str | int | float | None]
 
 
@@ -36,17 +40,17 @@ def _new_str_list() -> list[str]:
     return []
 
 
-def _is_object_list(value: t.Scalar | None) -> TypeIs[list[t.Scalar | None]]:
+def _is_object_list(value: object) -> TypeIs[list[object]]:
     return isinstance(value, list)
 
 
 def _is_str_object_dict(
-    value: t.Scalar | None,
-) -> TypeIs[dict[str, t.Scalar | None]]:
+    value: object,
+) -> TypeIs[dict[str, object]]:
     return isinstance(value, dict)
 
 
-def _is_entry_dict(value: t.Scalar | None) -> TypeIs[EntryDict]:
+def _is_entry_dict(value: object) -> TypeIs[EntryDict]:
     return isinstance(value, dict)
 
 

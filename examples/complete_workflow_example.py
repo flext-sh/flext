@@ -22,10 +22,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
 from typing import override
 
-from flext_core import FlextService, r
+from flext_core import FlextService, r, t
 from pydantic import BaseModel, ConfigDict, Field
-
-from examples import t
 
 ProcessingDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar]]
 
