@@ -3,8 +3,8 @@ from __future__ import annotations
 import importlib.util
 import sys
 from pathlib import Path
-from types import ModuleType
 
+import pytest
 from beartype._cave._cavefast import ModuleType
 
 
@@ -38,7 +38,9 @@ def test_sync_tree_ignores_pycache_and_dot_paths(tmp_path: Path) -> None:
     assert not (target / ".hidden" / "keep.txt").exists()
 
 
-def test_main_syncs_scripts_and_libs(tmp_path: Path, monkeypatch) -> None:
+def test_main_syncs_scripts_and_libs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     mod = _load_module("scripts_sync_main", "scripts/sync.py")
 
     canonical = tmp_path / "canonical"
