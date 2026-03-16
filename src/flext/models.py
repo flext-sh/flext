@@ -6,6 +6,8 @@ from flext_core import FlextModels
 
 
 class FlextModels(FlextModels):
+    """Flext models namespace."""
+
     pass
 
 

@@ -6,6 +6,8 @@ from flext_core import FlextProtocols
 
 
 class FlextProtocols(FlextProtocols):
+    """Flext protocols namespace."""
+
     pass
 
 

@@ -6,6 +6,8 @@ from flext_core import FlextConstants
 
 
 class FlextConstants(FlextConstants):
+    """Flext constants namespace."""
+
     pass
 
 

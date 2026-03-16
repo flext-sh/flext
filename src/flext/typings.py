@@ -6,6 +6,8 @@ from flext_core import FlextTypes
 
 
 class FlextTypes(FlextTypes):
+    """Flext types namespace."""
+
     pass
 
 
