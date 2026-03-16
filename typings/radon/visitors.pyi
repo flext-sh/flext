@@ -1,5 +1,4 @@
 
-
 import ast
 from collections.abc import Callable, Iterable
 from typing import NamedTuple, Self
@@ -45,7 +44,6 @@ def code2ast(source: str) -> ast.Module:
 
 class Function(BaseFunc):
     
-
     @property
     def letter(self) -> str:
         
@@ -58,7 +56,6 @@ class Function(BaseFunc):
 
 class Class(BaseClass):
     
-
     letter: str
 
     @property
@@ -73,7 +70,6 @@ class Class(BaseClass):
 
 class CodeVisitor(ast.NodeVisitor):
     
-
     @staticmethod
     def get_name(obj: object) -> str:
         
@@ -93,7 +89,6 @@ class CodeVisitor(ast.NodeVisitor):
 
 class ComplexityVisitor(CodeVisitor):
     
-
     off: bool
     complexity: int
     functions: list[Function]
@@ -162,7 +157,6 @@ class ComplexityVisitor(CodeVisitor):
 
 class HalsteadVisitor(CodeVisitor):
     
-
     types: dict[str, str]
     operators_seen: set[tuple[str | None, str]]
     operands_seen: set[tuple[str | None, object]]

@@ -1,5 +1,4 @@
 
-
 class UnpackException(Exception):
     ...
 
@@ -16,7 +15,6 @@ UnpackValueError = ValueError
 
 class ExtraData(UnpackValueError):
     
-
     def __init__(self, unpacked: object, extra: bytes) -> None: ...
 
 PackException = Exception

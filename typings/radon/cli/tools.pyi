@@ -1,5 +1,4 @@
 
-
 from collections.abc import Generator, Iterable
 
 from radon.visitors import Class, Function

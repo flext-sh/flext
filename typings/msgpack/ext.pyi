@@ -1,17 +1,14 @@
 
-
 from datetime import datetime
 from typing import NamedTuple
 
 class ExtType(NamedTuple):
     
-
     code: int
     data: bytes
 
 class Timestamp:
     
-
     __slots__: tuple[str, str]
     seconds: int
     nanoseconds: int

@@ -1,5 +1,4 @@
 
-
 import configparser
 from collections.abc import Callable, Generator, Iterable, Sequence
 from contextlib import contextmanager
@@ -16,7 +15,6 @@ T = TypeVar("T")
 
 class FileConfig:
     
-
     file_cfg: configparser.ConfigParser
 
     def __init__(self) -> None: ...
@@ -99,7 +97,6 @@ def hal(
 
 class Config:
     
-
     config_values: dict[str, object]
 
     def __init__(self, **kwargs: object) -> None:

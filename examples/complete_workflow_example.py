@@ -22,11 +22,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum
 from typing import override
 
-from flext_core import FlextService, r, t
+from flext_core import FlextService, r
 from pydantic import BaseModel, ConfigDict, Field
 
+from examples import t
+
 ProcessingDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar]]
-ItemType = ProcessingDict
 
 
 def _new_str_list() -> list[str]:
@@ -153,7 +154,7 @@ class CompleteWorkflowExample:
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
-        data: list[ItemType]
+        data: list[ProcessingDict]
         workflow_config: dict[str, str | int | bool | float]
 
         def __init__(self) -> None:
@@ -172,10 +173,12 @@ class CompleteWorkflowExample:
                 self._cleanup_context(context)
 
         def _aggregate_results(
-            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
-        ) -> r[ItemType]:
+            self,
+            item: ProcessingDict,
+            _context: CompleteWorkflowExample.WorkflowContext,
+        ) -> r[ProcessingDict]:
             """Aggregate results."""
-            return r[ItemType].ok(
+            return r[ProcessingDict].ok(
                 self._process_stage(
                     item,
                     0,
@@ -218,10 +221,12 @@ class CompleteWorkflowExample:
             }
 
         def _analyze_items(
-            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
-        ) -> r[ItemType]:
+            self,
+            item: ProcessingDict,
+            _context: CompleteWorkflowExample.WorkflowContext,
+        ) -> r[ProcessingDict]:
             """Analyze single item."""
-            return r[ItemType].ok(
+            return r[ProcessingDict].ok(
                 self._process_stage(
                     item,
                     0.005,
@@ -242,9 +247,10 @@ class CompleteWorkflowExample:
         def _execute_stage_parallel(
             self,
             stage_name: str,
-            items: list[ItemType],
+            items: list[ProcessingDict],
             stage_func: Callable[
-                [ItemType, CompleteWorkflowExample.WorkflowContext], r[ItemType]
+                [ProcessingDict, CompleteWorkflowExample.WorkflowContext],
+                r[ProcessingDict],
             ],
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> r[CompleteWorkflowExample.WorkflowStageResult]:
@@ -257,14 +263,14 @@ class CompleteWorkflowExample:
                 else 4
             )
 
-            def process_single_item(item: ItemType) -> ItemType | None:
+            def process_single_item(item: ProcessingDict) -> ProcessingDict | None:
                 try:
                     result = stage_func(item, context)
                     return result.map_or(None)
                 except Exception as e:
                     return {"error": str(e), "item": item}
 
-            processed_results: list[ItemType] = []
+            processed_results: list[ProcessingDict] = []
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 future_to_item = {
                     executor.submit(process_single_item, item): item for item in items
@@ -295,7 +301,9 @@ class CompleteWorkflowExample:
             return r[CompleteWorkflowExample.WorkflowStageResult].ok(stage_result)
 
         def _execute_workflow(
-            self, data: list[ItemType], context: CompleteWorkflowExample.WorkflowContext
+            self,
+            data: list[ProcessingDict],
+            context: CompleteWorkflowExample.WorkflowContext,
         ) -> r[ProcessingDict]:
             """Execute workflow stages with parallel processing."""
             items = data
@@ -354,10 +362,12 @@ class CompleteWorkflowExample:
             })
 
         def _process_items(
-            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
-        ) -> r[ItemType]:
+            self,
+            item: ProcessingDict,
+            _context: CompleteWorkflowExample.WorkflowContext,
+        ) -> r[ProcessingDict]:
             """Process single item."""
-            return r[ItemType].ok(
+            return r[ProcessingDict].ok(
                 self._process_stage(
                     item,
                     0.01,
@@ -369,12 +379,12 @@ class CompleteWorkflowExample:
 
         def _process_stage(
             self,
-            item: ItemType,
+            item: ProcessingDict,
             sleep_time: float,
             add_field: str,
             value: str | float | bool,
-            extra_logic: Callable[[ItemType], dict[str, t.Scalar]] | None = None,
-        ) -> ItemType:
+            extra_logic: Callable[[ProcessingDict], dict[str, t.Scalar]] | None = None,
+        ) -> ProcessingDict:
             """Generic stage processing helper."""
             time.sleep(sleep_time)
             result = item.copy()
@@ -403,10 +413,12 @@ class CompleteWorkflowExample:
             )
 
         def _validate_items(
-            self, item: ItemType, _context: CompleteWorkflowExample.WorkflowContext
-        ) -> r[ItemType]:
+            self,
+            item: ProcessingDict,
+            _context: CompleteWorkflowExample.WorkflowContext,
+        ) -> r[ProcessingDict]:
             """Validate single item."""
-            return r[ItemType].ok(
+            return r[ProcessingDict].ok(
                 self._process_stage(
                     item,
                     0.005,
@@ -417,7 +429,7 @@ class CompleteWorkflowExample:
             )
 
     @staticmethod
-    def create_sample_workflow_data(count: int = 100) -> list[ItemType]:
+    def create_sample_workflow_data(count: int = 100) -> list[ProcessingDict]:
         """Create sample data for workflow testing."""
         return [
             {
@@ -437,7 +449,7 @@ class CompleteWorkflowExample:
     @staticmethod
     def run_example() -> None:
         """Run the complete workflow example."""
-        sample_data: list[ItemType] = (
+        sample_data: list[ProcessingDict] = (
             CompleteWorkflowExample.create_sample_workflow_data(50)
         )
         workflow_config: dict[str, str | int | bool | float] = {

@@ -19,8 +19,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum
 from typing import override
 
-from flext_core import FlextService, r, t
+from flext_core import FlextService, r
 from pydantic import BaseModel, ConfigDict, Field
+
+from examples import t
 
 ItemDict = dict[str, t.Scalar]
 
