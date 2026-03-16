@@ -19,7 +19,7 @@ from __future__ import annotations
 import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from enum import StrEnum
+from enum import StrEnum, unique
 from typing import override
 
 from flext_core import FlextService, r
@@ -64,13 +64,9 @@ def _to_float(value: t.Scalar) -> float:
 class CompleteWorkflowExample:
     """Complete workflow example demonstrating FLEXT enterprise data integration capabilities."""
 
+    @unique
     class Stage(StrEnum):
-        """Workflow stages enumeration."""
-
-        VALIDATION = "validation"
-        PROCESSING = "processing"
-        ANALYSIS = "analysis"
-        AGGREGATION = "aggregation"
+        $$$
 
     class WorkflowContext(BaseModel):
         """Complete workflow context with correlation and metadata."""
