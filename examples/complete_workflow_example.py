@@ -66,7 +66,12 @@ class CompleteWorkflowExample:
 
     @unique
     class Stage(StrEnum):
-        $$$
+        """Processing stage enumeration."""
+
+        VALIDATION = "validation"
+        PROCESSING = "processing"
+        ANALYSIS = "analysis"
+        AGGREGATION = "aggregation"
 
     class WorkflowContext(BaseModel):
         """Complete workflow context with correlation and metadata."""

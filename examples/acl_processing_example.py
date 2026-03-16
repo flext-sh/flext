@@ -22,10 +22,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
 from typing import ClassVar, TypeIs, override
 
-from flext_core import r, s
+from flext_core import r, s, t
 from pydantic import BaseModel, ConfigDict, Field
 
-from examples import t
 from examples._models import ValidationRules
 
 EntryDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar | list[str]]]
@@ -37,13 +36,18 @@ def _new_str_list() -> list[str]:
     return []
 
 
-def _is_object_list(value: t.Scalar | None) -> TypeIs[list[t.Scalar | None]]: return isinstance(value, list)
+def _is_object_list(value: t.Scalar | None) -> TypeIs[list[t.Scalar | None]]:
+    return isinstance(value, list)
 
 
-def _is_str_object_dict(value: t.Scalar | None,) -> TypeIs[dict[str, t.Scalar | None]]: return isinstance(value, dict)
+def _is_str_object_dict(
+    value: t.Scalar | None,
+) -> TypeIs[dict[str, t.Scalar | None]]:
+    return isinstance(value, dict)
 
 
-def _is_entry_dict(value: t.Scalar | None) -> TypeIs[EntryDict]: return isinstance(value, dict)
+def _is_entry_dict(value: t.Scalar | None) -> TypeIs[EntryDict]:
+    return isinstance(value, dict)
 
 
 class AclProcessingExample:
@@ -51,11 +55,24 @@ class AclProcessingExample:
 
     @unique
     class ServerType(StrEnum):
-        $$$
+        """Server type enumeration."""
+
+        OPENLDAP = "openldap"
+        ORACLE_OID = "oracle_oid"
+        ORACLE_UNIFIED_DIRECTORY = "oracle_unified_directory"
+        ACTIVE_DIRECTORY = "active_directory"
+        APACHE_DS = "apache_ds"
+        UNKNOWN = "unknown"
 
     @unique
     class Permission(StrEnum):
-        $$$
+        """Permission enumeration."""
+
+        READ = "read"
+        WRITE = "write"
+        DELETE = "delete"
+        SEARCH = "search"
+        UNKNOWN = "unknown"
 
     class AclEntry(BaseModel):
         """Represents an ACL entry with context and permissions."""
