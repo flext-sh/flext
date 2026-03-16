@@ -3,10 +3,11 @@ from __future__ import annotations
 import importlib.util
 import sys
 from pathlib import Path
-from types import ModuleType, SimpleNamespace
+from types import SimpleNamespace
 
 import pytest
 from beartype._cave._cavefast import ModuleType
+from flext_core import t
 
 
 def _load_module(module_name: str, relative_path: str) -> ModuleType:
@@ -48,7 +49,7 @@ def test_main_runs_projects_and_root(
     def _checkpoint(repo: Path, _branch: str) -> None:
         calls.append(("cp", repo))
 
-    def _run_pr(_repo: Path, _root: Path, _args) -> int:
+    def _run_pr(_repo: Path, _root: Path, _args: t.NormalizedValue) -> int:
         return 0
 
     monkeypatch.setattr(mod, "resolve_projects", _resolve_projects)
@@ -116,7 +117,7 @@ def test_main_respects_fail_fast(
     monkeypatch.setattr(mod, "_checkout_branch", _checkout_branch)
     monkeypatch.setattr(mod, "_checkpoint", _checkpoint)
 
-    def _run_pr(repo: Path, _root: Path, _args) -> int:
+    def _run_pr(repo: Path, _root: Path, _args: t.NormalizedValue) -> int:
         seen.append(repo)
         return 2
 
@@ -160,7 +161,7 @@ def test_run_pr_uses_pr_manager_for_workspace_root(
 
     commands: list[list[str]] = []
 
-    def _fake_run(command: list[str], **_kwargs) -> SimpleNamespace:
+    def _fake_run(command: list[str], **_kwargs: t.NormalizedValue) -> SimpleNamespace:
         commands.append(command)
         return SimpleNamespace(returncode=0)
 
@@ -203,7 +204,7 @@ def test_run_pr_uses_make_for_non_root_repo(
 
     commands: list[list[str]] = []
 
-    def _fake_run(command: list[str], **_kwargs) -> SimpleNamespace:
+    def _fake_run(command: list[str], **_kwargs: t.NormalizedValue) -> SimpleNamespace:
         commands.append(command)
         return SimpleNamespace(returncode=0)
 
