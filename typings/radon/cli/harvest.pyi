@@ -1,7 +1,5 @@
 """Type stubs for radon.cli.harvest module."""
 
-from __future__ import annotations
-
 from collections.abc import Generator, Iterable, Sequence
 
 from radon.metrics import Halstead, HalsteadReport

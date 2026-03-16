@@ -1,7 +1,5 @@
 """Type stubs for bandit.core.config module."""
 
-from __future__ import annotations
-
 import logging
 
 LOG: logging.Logger

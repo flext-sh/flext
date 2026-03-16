@@ -1,15 +1,15 @@
 """Type stubs for bandit.core package."""
 
-from __future__ import annotations
-
-from bandit.core import config as config
-from bandit.core import context as context
-from bandit.core import manager as manager
-from bandit.core import meta_ast as meta_ast
-from bandit.core import node_visitor as node_visitor
-from bandit.core import test_set as test_set
-from bandit.core import tester as tester
-from bandit.core import utils as utils
+from bandit.core import (
+    config as config,
+    context as context,
+    manager as manager,
+    meta_ast as meta_ast,
+    node_visitor as node_visitor,
+    test_set as test_set,
+    tester as tester,
+    utils as utils,
+)
 from bandit.core.constants import (
     CONFIDENCE_DEFAULT as CONFIDENCE_DEFAULT,
     CRITERIA as CRITERIA,

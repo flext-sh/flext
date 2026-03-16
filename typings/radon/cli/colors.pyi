@@ -1,7 +1,5 @@
 """Type stubs for radon.cli.colors module."""
 
-from __future__ import annotations
-
 """Module holding constants used to format lines that are printed to the
 terminal.
 """

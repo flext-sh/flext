@@ -1,7 +1,5 @@
 """Type stubs for msgpack package."""
 
-from __future__ import annotations
-
 from collections.abc import Callable
 from datetime import datetime
 from typing import IO, TypeAlias

@@ -1,7 +1,5 @@
 """Type stubs for msgpack.fallback module."""
 
-from __future__ import annotations
-
 from collections.abc import Callable, Iterable, Iterator
 from datetime import datetime
 from io import IOBase

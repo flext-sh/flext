@@ -1,7 +1,5 @@
 """Type stubs for msgpack.ext module."""
 
-from __future__ import annotations
-
 from datetime import datetime
 from typing import NamedTuple
 

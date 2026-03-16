@@ -1,7 +1,5 @@
 """Type stubs for msgpack.exceptions."""
 
-from __future__ import annotations
-
 class UnpackException(Exception):
     """Base class for some exceptions raised while unpacking.
 
