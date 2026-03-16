@@ -82,7 +82,7 @@ class FlextRuntime:
 ```
 
 ```python
-class FlextContainer(FlextRuntime, p.DI):
+class FlextContainer(FlextRuntime, p.Container):
     def initialize_di_components(self) -> None: ...
     def register(self, name: str, service: t.RegisterableService) -> r[bool]: ...
     def register_factory(
@@ -116,7 +116,7 @@ class FlextContainer(FlextRuntime, p.DI):
 
 1. Inspect `runtime.py` and `container.py` signatures before editing behavior.
 2. Keep direct framework calls in `DependencyIntegration` and `FlextContainer` only.
-3. If adding provider types, mirror updates in `p.DI` protocol signatures.
+3. If adding provider types, mirror updates in `p.Container` protocol signatures.
 4. Validate scoped behavior by checking `scoped()` cloning semantics (`services/factories/resources`).
 5. Verify no new `dependency_injector` imports appear outside `flext-core` bridge files.
 

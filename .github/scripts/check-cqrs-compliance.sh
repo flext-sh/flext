@@ -6,7 +6,7 @@
 #   1. Command classes inheriting from BaseModel instead of m.Command
 #   2. Event classes inheriting from BaseModel instead of m.DomainEvent/m.Event
 #   3. setattr hacks for message_type (handlers must be self-describing)
-#   4. Direct FlextDispatcher() instantiation (must use p.CommandBus via DI)
+#   4. Direct FlextDispatcher() instantiation (must use p.Dispatcher via DI)
 #   5. Query classes inheriting from BaseModel instead of m.Query
 #
 # Exclusions:
@@ -60,7 +60,7 @@ _check() {
 			line_num=$(echo "$match" | cut -d: -f2)
 			line_content=$(echo "$match" | cut -d: -f3-)
 			_fail "$check" "$line_content" "$file" "$line_num"
-		done <<< "$matches"
+		done <<<"$matches"
 	else
 		_log "  PASS: $description"
 	fi
@@ -91,7 +91,7 @@ if [[ -n "$matches" ]]; then
 		line_num=$(echo "$match" | cut -d: -f2)
 		line_content=$(echo "$match" | cut -d: -f3-)
 		_fail "SETATTR-HACK" "$line_content" "$file" "$line_num"
-	done <<< "$matches"
+	done <<<"$matches"
 else
 	_log "  PASS: No setattr message_type hacks"
 fi
@@ -106,7 +106,7 @@ if [[ -n "$matches" ]]; then
 		line_num=$(echo "$match" | cut -d: -f2)
 		line_content=$(echo "$match" | cut -d: -f3-)
 		_fail "DIRECT-DISPATCHER" "$line_content" "$file" "$line_num"
-	done <<< "$matches"
+	done <<<"$matches"
 else
 	_log "  PASS: No direct FlextDispatcher() instantiation"
 fi
@@ -128,7 +128,7 @@ else
 	echo "  CMD-BASEMODEL     → Change class MyCommand(BaseModel) to class MyCommand(m.Command)"
 	echo "  EVT-BASEMODEL     → Change class MyEvent(BaseModel) to class MyEvent(m.DomainEvent)"
 	echo "  SETATTR-HACK      → Remove setattr(obj, 'message_type', ...) — use self-describing handler"
-	echo "  DIRECT-DISPATCHER → Use p.CommandBus via DI, not FlextDispatcher() directly"
+	echo "  DIRECT-DISPATCHER → Use p.Dispatcher via DI, not FlextDispatcher() directly"
 	echo "  QRY-BASEMODEL     → Change class MyQuery(BaseModel) to class MyQuery(m.Query)"
 	exit 1
 fi

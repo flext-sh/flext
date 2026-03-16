@@ -231,7 +231,7 @@ UNBREAKABLE LAW for all parallel agent work:
 - **A1**: CommandBus, Middleware, Processor
 - **A2**: Registry
 - **A3**: Model, Config, Service, Validation, ValidatorSpec
-- **A4**: Result, ResultLike, VariadicCallable, ResourceFactory, Log, StructlogLogger, Metadata
+- **A4**: Result, ResultLike, VariadicCallable, ResourceFactory, Log, Logger, Metadata
 - **A5**: Context, RuntimeBootstrapOptions, DI, Handler, RegisterableService, ServiceFactory
 - *Lines 1-236 & 1289+ are strictly FROZEN for behavioral changes. Performance-only caching additions (ClassVar cache fields, lazy-load wrappers) are permitted per the FROZEN file exception above, limited to method bodies — function/method signatures and class declarations within the frozen range MUST NOT be altered.*
 

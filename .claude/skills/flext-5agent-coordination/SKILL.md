@@ -77,7 +77,7 @@ description: 5-Agent Parallel Execution Protocol for flext-core and consumer pro
 | Registry | — | ✅ | — | — | — |
 | VariadicCallable, ResourceFactory | — | — | — | ✅ | — |
 | RegisterableService, ServiceFactory | — | — | — | — | ✅ |
-| Log, StructlogLogger, Metadata | — | — | — | ✅ | — |
+| Log, Logger, Metadata | — | — | — | ✅ | — |
 | ValidatorSpec | — | — | ✅ | — | — |
 | L1289+ (metaclass infra) | ❄️ | ❄️ | ❄️ | ❄️ | ❄️ |
 | ALL other sections | ❄️ | ❄️ | ❄️ | ❄️ | ❄️ |

@@ -62,7 +62,7 @@ description: FlextLogger structured logging with context propagation, DI factori
 
 ### FlextLogger Class Hierarchy
 
-`FlextLogger` inherits from `FlextRuntime` and implements `p.Log.StructlogLogger` protocol.
+`FlextLogger` inherits from `FlextRuntime` and implements `p.Logger` protocol.
 
 **Nested Operation Groups** (composition pattern):
 
