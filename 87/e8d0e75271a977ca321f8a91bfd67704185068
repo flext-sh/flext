@@ -1,0 +1,97 @@
+typings/vulture/config.pyi
+  ff7143a60e15a7bf 1
+typings/bandit/core/config.pyi
+  ff7143a60e15a7bf 1
+typings/bandit/core/docs_utils.pyi
+  ff7143a60e15a7bf 1
+typings/radon/tests/__init__.pyi
+  ff7143a60e15a7bf 1
+typings/radon/__main__.pyi
+  ff7143a60e15a7bf 2-3
+typings/radon/raw.pyi
+  ff7143a60e15a7bf 31,35
+typings/vulture/__init__.pyi
+  ff7143a60e15a7bf 1
+typings/vulture/version.pyi
+  ff7143a60e15a7bf 1
+typings/bandit/core/extension_loader.pyi
+  ff7143a60e15a7bf 20
+typings/msgpack/exceptions.pyi
+  ff7143a60e15a7bf 3-4,10,13,18
+typings/bandit/core/blacklisting.pyi
+  ff7143a60e15a7bf 9
+typings/vulture/utils.pyi
+  ff7143a60e15a7bf 1
+typings/msgpack/fallback.pyi
+  ff7143a60e15a7bf 48,54,89,111,113,115
+typings/radon/cli/harvest.pyi
+  ff7143a60e15a7bf 19,26,30,34,38,45,49,53,57,61,65,69,72,76,80,84,88,92,96,100,105,109,113,117,120,125,133,137,141,145,151,155,159,163,170
+typings/bandit/core/constants.pyi
+  ff7143a60e15a7bf 1
+typings/vulture/lines.pyi
+  ff7143a60e15a7bf 1
+typings/radon/cli/__init__.pyi
+  ff7143a60e15a7bf 18,28,54,67,84,97,101,106,110,114,119,123,127,131,135,140
+typings/bandit/core/metrics.pyi
+  ff7143a60e15a7bf 3-4,9,11,13,15,18
+typings/vulture/noqa.pyi
+  ff7143a60e15a7bf 1
+typings/radon/metrics.pyi
+  ff7143a60e15a7bf 30,34,38,47,51,55,59
+typings/radon/__init__.pyi
+  ff7143a60e15a7bf 1
+typings/ruff/__main__.pyi
+  ff7143a60e15a7bf 1
+typings/bandit/core/__init__.pyi
+  ff7143a60e15a7bf 1
+typings/radon/complexity.pyi
+  ff7143a60e15a7bf 20,24,31,35,39,46
+typings/radon/visitors.pyi
+  ff7143a60e15a7bf 43,47,51,56,60,66,71,75,79,84,89,95,114,119,124,129,134,139,143,147,152,156,160,164,175,180,185,192,199,206,213,220,227,232,236
+typings/radon/cli/tools.pyi
+  ff7143a60e15a7bf 26,34,38,42,46,50,58,68,74,87,91,95,99
+typings/ruff/_find_ruff.pyi
+  ff7143a60e15a7bf 1
+typings/radon/contrib/__init__.pyi
+  ff7143a60e15a7bf 1
+typings/vulture/__main__.pyi
+  ff7143a60e15a7bf 1
+typings/vulture/core.pyi
+  ff7143a60e15a7bf 17,46
+typings/vulture/reachability.pyi
+  ff7143a60e15a7bf 1
+typings/radon/cli/colors.pyi
+  ff7143a60e15a7bf 2-3
+typings/bandit/__init__.pyi
+  ff7143a60e15a7bf 1
+typings/bandit/core/meta_ast.pyi
+  ff7143a60e15a7bf 13
+typings/ruff/__init__.pyi
+  ff7143a60e15a7bf 1
+typings/bandit/core/test_set.pyi
+  ff7143a60e15a7bf 1
+typings/msgpack/__init__.pyi
+  ff7143a60e15a7bf 1
+typings/msgpack/ext.pyi
+  ff7143a60e15a7bf 7,13,19,21,23,27,29,32,34,37,39,41,44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "87e8d0e75271a977ca321f8a91bfd67704185068",
+  "prompts": {
+    "ff7143a60e15a7bf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_30856b5cfffeuEvYRPHW7W0CUS-d68fa716-b1ec-4c40-a363-7744582d2020",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 187,
+      "total_deletions": 809,
+      "accepted_lines": 187,
+      "overriden_lines": 0
+    }
+  }
+}
