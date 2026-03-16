@@ -19,10 +19,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
 from typing import override
 
-from flext_core import FlextService, r
+from flext_core import FlextService, r, t
 from pydantic import BaseModel, ConfigDict, Field
-
-from examples import t
 
 ItemDict = dict[str, t.Scalar]
 
@@ -40,7 +38,11 @@ class AdvancedProcessingExample:
 
     @unique
     class Stage(StrEnum):
-        $$$
+        """Processing stage enumeration."""
+
+        VALIDATE = "validate"
+        PROCESS = "process"
+        ANALYZE = "analyze"
 
     class ProcessingResult(BaseModel):
         """Result of processing operation with metrics."""

@@ -434,7 +434,7 @@ class SerializableRecord(Protocol):
 All enums use `StrEnum` (never `Enum`, `IntEnum`, or raw strings):
 
 ```python
-from enum import StrEnum
+from enum import StrEnum, unique
 
 
 class TokenTypes(StrEnum):
