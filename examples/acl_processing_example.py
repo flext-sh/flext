@@ -19,8 +19,8 @@ from __future__ import annotations
 
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from enum import StrEnum
-from typing import ClassVar, TypeGuard, override
+from enum import StrEnum, unique
+from typing import ClassVar, TypeIs, override
 
 from flext_core import r, s
 from pydantic import BaseModel, ConfigDict, Field
@@ -37,43 +37,25 @@ def _new_str_list() -> list[str]:
     return []
 
 
-def _is_object_list(value: t.Scalar | None) -> TypeGuard[list[t.Scalar | None]]:
-    return isinstance(value, list)
+def _is_object_list(value: t.Scalar | None) -> TypeIs[list[t.Scalar | None]]: return isinstance(value, list)
 
 
-def _is_str_object_dict(
-    value: t.Scalar | None,
-) -> TypeGuard[dict[str, t.Scalar | None]]:
-    return isinstance(value, dict)
+def _is_str_object_dict(value: t.Scalar | None,) -> TypeIs[dict[str, t.Scalar | None]]: return isinstance(value, dict)
 
 
-def _is_entry_dict(value: t.Scalar | None) -> TypeGuard[EntryDict]:
-    return isinstance(value, dict)
+def _is_entry_dict(value: t.Scalar | None) -> TypeIs[EntryDict]: return isinstance(value, dict)
 
 
 class AclProcessingExample:
     """Advanced ACL processing example demonstrating enterprise-grade ACL capabilities."""
 
+    @unique
     class ServerType(StrEnum):
-        """Server type enumeration."""
+        $$$
 
-        OPENLDAP = "openldap"
-        ORACLE_OID = "oracle_oid"
-        ORACLE_UNIFIED_DIRECTORY = "oracle_unified_directory"
-        ACTIVE_DIRECTORY = "active_directory"
-        APACHE_DS = "apache_ds"
-
+    @unique
     class Permission(StrEnum):
-        """ACL permission enumeration."""
-
-        READ = "read"
-        WRITE = "write"
-        SEARCH = "search"
-        COMPARE = "compare"
-        ADD = "add"
-        DELETE = "delete"
-        MODIFY = "modify"
-        UNKNOWN = "unknown"
+        $$$
 
     class AclEntry(BaseModel):
         """Represents an ACL entry with context and permissions."""

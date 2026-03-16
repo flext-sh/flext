@@ -16,7 +16,7 @@ from __future__ import annotations
 import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from enum import StrEnum
+from enum import StrEnum, unique
 from typing import override
 
 from flext_core import FlextService, r
@@ -38,12 +38,9 @@ def _new_scalar_dict() -> dict[str, t.Scalar]:
 class AdvancedProcessingExample:
     """Advanced processing example demonstrating FLEXT parallel capabilities."""
 
+    @unique
     class Stage(StrEnum):
-        """Processing stage enumeration."""
-
-        VALIDATE = "validate"
-        PROCESS = "process"
-        ANALYZE = "analyze"
+        $$$
 
     class ProcessingResult(BaseModel):
         """Result of processing operation with metrics."""
