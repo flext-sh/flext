@@ -1,6 +1,6 @@
 id: detect-bindable-logger
 valid:
-  - "logger: StructlogLogger"
+  - "logger: Logger"
   - "logger: FlextLogger = get_logger()"
 invalid:
   - "logger: BindableLogger"

@@ -108,7 +108,7 @@ Quick reference for 5 agents executing parallel work on flext codebase with zero
 | Registry | — | ✅ | — | — | — |
 | VariadicCallable, ResourceFactory | — | — | — | ✅ | — |
 | RegisterableService, ServiceFactory | — | — | — | — | ✅ |
-| Log, StructlogLogger, Metadata | — | — | — | ✅ | — |
+| Log, Logger, Metadata | — | — | — | ✅ | — |
 | ValidatorSpec | — | — | ✅ | — | — |
 | L1289+ (metaclass infra) | ❄️ | ❄️ | ❄️ | ❄️ | ❄️ |
 | ALL other sections | ❄️ | ❄️ | ❄️ | ❄️ | ❄️ |

@@ -55,7 +55,7 @@ rules:
       - from flext_core import t
 
   # =========================================================================
-  # Cluster 3: Logger annotation drift (BindableLogger vs StructlogLogger)
+  # Cluster 3: Logger annotation drift (BindableLogger vs Logger)
   # =========================================================================
   - id: detect-bindable-logger-annotation
     type: ast-grep
@@ -63,11 +63,11 @@ rules:
     severity: error
     group: logger_typing
     count_by: rule_id
-    description: "BindableLogger annotation lacks logging method signatures — use p.Log.StructlogLogger."
+    description: "BindableLogger annotation lacks logging method signatures — use p.Logger."
     fix_auto: true
     fix_type: ast-grep
     fix_file: rules/fix-bindable-logger.yml
-    fix_instruction: "Rewrite BindableLogger type annotations to p.Log.StructlogLogger."
+    fix_instruction: "Rewrite BindableLogger type annotations to p.Logger."
     fix_imports:
       - from flext_core import p
 

@@ -83,8 +83,8 @@ Use `make validate` as the primary execution entrypoint. Internal script orchest
 
 ### 1. Logger Typing Drift
 
-- **Symptom**: `BindableLogger` missing `.debug/.info/.warning/.error/.exception`; `BindableLogger` not assignable to `p.Log.StructlogLogger`
-- **Fix**: Annotate loggers as `p.Log.StructlogLogger` where logger originates from `FlextRuntime.get_logger` or `FlextLogger.get_logger`
+- **Symptom**: `BindableLogger` missing `.debug/.info/.warning/.error/.exception`; `BindableLogger` not assignable to `p.Logger`
+- **Fix**: Annotate loggers as `p.Logger` where logger originates from `FlextRuntime.get_logger` or `FlextLogger.get_logger`
 
 ### 2. `r[T].ok(None)` — Real Bug
 
