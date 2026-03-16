@@ -1,7 +1,5 @@
 """Type stubs for radon.cli.__init__ module."""
 
-from __future__ import annotations
-
 import configparser
 from collections.abc import Callable, Generator, Iterable, Sequence
 from contextlib import contextmanager

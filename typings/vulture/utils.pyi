@@ -1,7 +1,5 @@
 """Type stubs for vulture.utils module."""
 
-from __future__ import annotations
-
 import ast
 from enum import IntEnum
 from pathlib import Path

@@ -1,7 +1,5 @@
 """Type stubs for radon.visitors module."""
 
-from __future__ import annotations
-
 import ast
 from collections.abc import Callable, Iterable
 from typing import NamedTuple, Self

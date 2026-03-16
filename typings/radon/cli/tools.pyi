@@ -1,7 +1,5 @@
 """Type stubs for radon.cli.tools module."""
 
-from __future__ import annotations
-
 from collections.abc import Generator, Iterable
 
 from radon.visitors import Class, Function

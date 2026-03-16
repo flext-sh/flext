@@ -1,7 +1,5 @@
 """Type stubs for bandit.core.constants module."""
 
-from __future__ import annotations
-
 plugin_name_pattern: str
 RANKING: list[str]
 RANKING_VALUES: dict[str, int]
