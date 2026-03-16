@@ -132,3 +132,9 @@
 [submodule "flext-dbt-oracle-wms"]
 	path = flext-dbt-oracle-wms
 	url = https://github.com/flext-sh/flext-dbt-oracle-wms.git
+[submodule "flext-infra"]
+	path = flext-infra
+	url = https://github.com/flext-sh/flext-infra.git
+[submodule "flext-tests"]
+	path = flext-tests
+	url = https://github.com/flext-sh/flext-tests.git
