@@ -1,3 +1,3 @@
-"""Type stubs for ruff.__main__ module."""
+
 
 def _run() -> None: ...

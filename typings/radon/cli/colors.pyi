@@ -1,8 +1,6 @@
-"""Type stubs for radon.cli.colors module."""
 
-"""Module holding constants used to format lines that are printed to the
-terminal.
-"""
+
+
 
 def color_enabled() -> bool: ...
 

@@ -1,4 +1,4 @@
-"""Type stubs for bandit.core.extension_loader module."""
+
 
 import logging
 
@@ -17,7 +17,7 @@ class Manager:
     def get_test_id(self, test_name: str) -> str | None: ...
     def load_blacklists(self, blacklist_namespace: str) -> None: ...
     def validate_profile(self, profile: dict[str, list[str]]) -> None:
-        """Validate that everything in the configured profiles looks good."""
+        ...
     def check_id(self, test: str) -> bool: ...
 
 MANAGER: Manager

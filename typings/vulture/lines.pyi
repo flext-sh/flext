@@ -1,4 +1,4 @@
-"""Type stubs for vulture.lines module."""
+
 
 import ast
 

@@ -1,4 +1,4 @@
-"""Type stubs for vulture.reachability module."""
+
 
 import ast
 from collections.abc import Callable

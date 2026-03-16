@@ -1,4 +1,4 @@
-"""Type stubs for msgpack package."""
+
 
 from collections.abc import Callable
 from datetime import datetime

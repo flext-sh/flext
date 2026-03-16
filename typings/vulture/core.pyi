@@ -1,4 +1,4 @@
-"""Type stubs for vulture.core module."""
+
 
 import ast
 from collections import defaultdict
@@ -14,7 +14,7 @@ PYTEST_METHOD_NAMES: set[str]
 ERROR_CODES: dict[str, str]
 
 class Item:
-    """Hold the name, type and location of defined code."""
+    
 
     __slots__: tuple[str, ...]
     name: str
@@ -43,7 +43,7 @@ class Item:
     def __hash__(self) -> int: ...
 
 class Vulture(ast.NodeVisitor):
-    """Find dead code."""
+    
 
     verbose: bool
     defined_attrs: LoggingList

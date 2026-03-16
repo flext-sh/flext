@@ -1,4 +1,4 @@
-"""Type stubs for bandit.core.config module."""
+
 
 import logging
 

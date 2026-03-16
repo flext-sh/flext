@@ -1,4 +1,4 @@
-"""Type stubs for ruff._find_ruff module."""
+
 
 class RuffNotFound(FileNotFoundError): ...
 

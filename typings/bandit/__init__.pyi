@@ -1,4 +1,4 @@
-"""Type stubs for bandit."""
+
 
 from bandit.core import config as config, manager as manager
 
