@@ -1,4 +1,4 @@
-"""Type stubs for vulture.noqa module."""
+
 
 import re
 from collections import defaultdict

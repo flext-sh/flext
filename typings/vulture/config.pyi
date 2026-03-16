@@ -1,4 +1,4 @@
-"""Type stubs for vulture.config module."""
+
 
 from typing import BinaryIO
 

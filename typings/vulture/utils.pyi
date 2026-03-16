@@ -1,4 +1,4 @@
-"""Type stubs for vulture.utils module."""
+
 
 import ast
 from enum import IntEnum

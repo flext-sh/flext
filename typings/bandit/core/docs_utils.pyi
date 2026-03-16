@@ -1,3 +1,3 @@
-"""Type stubs for bandit.core.docs_utils module."""
+
 
 def get_url(bid: str) -> str: ...

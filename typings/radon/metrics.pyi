@@ -27,41 +27,15 @@ class Halstead(NamedTuple):
     functions: list[tuple[str, HalsteadReport]]
 
 def h_visit(code: str) -> Halstead:
-    """Compile the code into an AST tree and then pass it to
-    :func:`~radon.metrics.h_visit_ast`.
-    """
+    
     ...
 
 def h_visit_ast(ast_node: ast.AST) -> Halstead:
-    """Visit the AST node using the :class:`~radon.visitors.HalsteadVisitor`
-    visitor. The results are `HalsteadReport` namedtuples with the following
-    fields:
-
-        * h1: the number of distinct operators
-        * h2: the number of distinct operands
-        * N1: the total number of operators
-        * N2: the total number of operands
-        * h: the vocabulary, i.e. h1 + h2
-        * N: the length, i.e. N1 + N2
-        * calculated_length: h1 * log2(h1) + h2 * log2(h2)
-        * volume: V = N * log2(h)
-        * difficulty: D = h1 / 2 * N2 / h2
-        * effort: E = D * V
-        * time: T = E / 18 seconds
-        * bugs: B = V / 3000 - an estimate of the errors in the implementation
-
-    The actual return of this function is a namedtuple with the following
-    fields:
-
-        * total: a `HalsteadReport` namedtuple for the entire scanned file
-        * functions: a list of `HalsteadReport`s for each toplevel function
-
-    Nested functions are not tracked.
-    """
+    
     ...
 
 def halstead_visitor_report(visitor: HalsteadVisitor) -> HalsteadReport:
-    """Return a HalsteadReport from a HalsteadVisitor instance."""
+    
     ...
 
 def mi_compute(
@@ -70,37 +44,17 @@ def mi_compute(
     sloc: float,
     comments: float,
 ) -> float:
-    """Compute the Maintainability Index (MI) given the Halstead Volume, the
-    Cyclomatic Complexity, the SLOC number and the number of comment lines.
-    Usually it is not used directly but instead :func:`~radon.metrics.mi_visit`
-    is preferred.
-    """
+    
     ...
 
 def mi_parameters(code: str, count_multi: bool = ...) -> tuple[float, int, int, float]:
-    """Given a source code snippet, compute the necessary parameters to
-    compute the Maintainability Index metric. These include:
-
-        * the Halstead Volume
-        * the Cyclomatic Complexity
-        * the number of LLOC (Logical Lines of Code)
-        * the percent of lines of comment
-
-    :param multi: If True, then count multiline strings as comment lines as
-        well. This is not always safe because Python multiline strings are not
-        always docstrings.
-    """
+    
     ...
 
 def mi_visit(code: str, multi: bool) -> float:
-    """Visit the code and compute the Maintainability Index (MI) from it."""
+    
     ...
 
 def mi_rank(score: float) -> str:
-    r"""Rank the score with a letter:
-
-    * A if :math:`\text{score} > 19`;
-    * B if :math:`9 < \text{score} \le 19`;
-    * C if :math:`\text{score} \le 9`.
-    """
+    
     ...

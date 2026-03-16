@@ -1,4 +1,4 @@
-"""Type stubs for bandit.core package."""
+
 
 from bandit.core import (
     config as config,

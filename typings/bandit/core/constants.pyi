@@ -1,4 +1,4 @@
-"""Type stubs for bandit.core.constants module."""
+
 
 plugin_name_pattern: str
 RANKING: list[str]
