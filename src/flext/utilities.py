@@ -6,6 +6,8 @@ from flext_core import FlextUtilities
 
 
 class FlextUtilities(FlextUtilities):
+    """Flext utilities namespace."""
+
     pass
 
 
