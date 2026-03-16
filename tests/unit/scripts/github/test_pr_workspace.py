@@ -7,7 +7,7 @@ from types import SimpleNamespace
 
 import pytest
 from beartype._cave._cavefast import ModuleType
-from flext_core import t
+from tests import t
 
 
 def _load_module(module_name: str, relative_path: str) -> ModuleType:

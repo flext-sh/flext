@@ -1,8 +1,6 @@
 
-
 class Metrics:
     
-
     data: dict[str, dict[str, int]]
     def __init__(self) -> None: ...
     def begin(self, fname: str) -> None:

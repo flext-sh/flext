@@ -1,5 +1,4 @@
 
-
 import ast
 from collections import defaultdict
 from pathlib import Path
@@ -15,7 +14,6 @@ ERROR_CODES: dict[str, str]
 
 class Item:
     
-
     __slots__: tuple[str, ...]
     name: str
     typ: str
@@ -44,7 +42,6 @@ class Item:
 
 class Vulture(ast.NodeVisitor):
     
-
     verbose: bool
     defined_attrs: LoggingList
     defined_classes: LoggingList

@@ -1,5 +1,4 @@
 
-
 from collections.abc import Callable, Iterable, Iterator
 from datetime import datetime
 from io import IOBase
@@ -52,7 +51,6 @@ _MSGPACK_HEADERS: dict[int, tuple[int, str] | tuple[int, str, int]]
 
 class Unpacker(Iterator[_UnpackedValue]):
     
-
     def __init__(
         self,
         file_like: IOBase | None = ...,
@@ -87,7 +85,6 @@ class Unpacker(Iterator[_UnpackedValue]):
 
 class Packer:
     
-
     def __init__(
         self,
         *,

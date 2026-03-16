@@ -1,5 +1,4 @@
 
-
 from collections.abc import Generator, Iterable, Sequence
 
 from radon.metrics import Halstead, HalsteadReport
@@ -17,7 +16,6 @@ type TerminalLine = tuple[str | list[str], tuple[object, ...], dict[str, object]
 
 class Harvester:
     
-
     paths: Sequence[str]
     config: object
     _results: list[HarvesterResult]
@@ -67,7 +65,6 @@ class Harvester:
 
 class CCHarvester(Harvester):
     
-
     def gobble(self, fobj: object) -> list[Function | Class]:
         
         ...
@@ -98,7 +95,6 @@ class CCHarvester(Harvester):
 
 class RawHarvester(Harvester):
     
-
     headers: list[str]
 
     def gobble(self, fobj: object) -> dict[str, int]:
@@ -115,7 +111,6 @@ class RawHarvester(Harvester):
 
 class MIHarvester(Harvester):
     
-
     def gobble(self, fobj: object) -> dict[str, float | str]:
         
         ...
@@ -143,7 +138,6 @@ class MIHarvester(Harvester):
 
 class HCHarvester(Harvester):
     
-
     by_function: bool
 
     def __init__(self, paths: Sequence[str], config: object) -> None: ...

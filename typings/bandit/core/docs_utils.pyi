@@ -1,3 +1,2 @@
 
-
 def get_url(bid: str) -> str: ...

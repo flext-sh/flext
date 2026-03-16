@@ -1,5 +1,4 @@
 
-
 from typing import BinaryIO
 
 DEFAULTS: dict[str, str | int | bool | list[str]]
