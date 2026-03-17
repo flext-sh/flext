@@ -646,7 +646,7 @@ class ResultBase(BaseModel):
         return self.success
 ```
 
-This eliminates duplication across `m.Infra.Workspace.MigrationResult`, `SyncResult`,
+This eliminates duplication across `m.Infra.MigrationResult`, `SyncResult`,
 `CleanResult`, `AclResult`, `ValidationResult`, etc.
 
 ---
