@@ -175,8 +175,8 @@ PEP 695 `type X = ...` creates `TypeAliasType` objects — these are **annotatio
 
 ```python
 # ALL aliases in typings.py use this syntax:
-type Primitives = str | int | float | bool
-type Scalar = str | int | float | bool | datetime
+type Primitives = t.Primitives
+type Scalar = t.Scalar
 type Container = Scalar | BaseModel | Path
 
 # Recursive aliases also use PEP 695 (same syntax):
@@ -195,12 +195,12 @@ Since ALL `t.*` aliases are `TypeAliasType`, runtime narrowing MUST use one of:
 
 1. **Tuple constants** (defined in `FlextTypes`):
    - `t.PRIMITIVES_TYPES: tuple[type, ...] = (str, int, float, bool)`
-   - `t.SCALAR_TYPES: tuple[type, ...] = (str, int, float, bool, datetime)`
+   - `t.SCALAR_TYPES: tuple[type, ...] = t.SCALAR_TYPES`
    - `t.CONTAINER_TYPES: tuple[type, ...] = (str, int, float, bool, datetime, BaseModel, Path)`
 
 2. **TypeGuard functions** (exposed via `u`):
-   - `u.is_primitive(val)` → `TypeGuard[str | int | float | bool]`
-   - `u.is_scalar(val)` → `TypeGuard[str | int | float | bool | datetime]`
+   - `u.is_primitive(val)` → `TypeGuard[t.Primitives]`
+   - `u.is_scalar(val)` → `TypeGuard[t.Scalar]`
    - `u.is_flexible_value(val)` → TypeGuard for general values
    - `u.is_dict_like(val)` → TypeGuard for dict-like structures
    - `u.is_list_like(val)` → TypeGuard for list-like structures
@@ -225,7 +225,7 @@ isinstance(val, t.GeneralValueType)  # CRASHES at runtime
 # ❌ FORBIDDEN — introducing old TypeAlias syntax
 from typing import TypeAlias
 
-Primitives: TypeAlias = str | int | float | bool  # DEPRECATED, do NOT use
+Primitives: TypeAlias = t.Primitives  # DEPRECATED, do NOT use
 
 
 # ❌ FORBIDDEN — subclassing a type alias
@@ -236,8 +236,8 @@ class Foo(t.Container): ...  # TypeAliasType cannot be subclassed
 
 ```python
 # ✅ CORRECT — ALL aliases use PEP 695
-type Primitives = str | int | float | bool
-type Scalar = str | int | float | bool | datetime
+type Primitives = t.Primitives
+type Scalar = t.Scalar
 type Container = Scalar | BaseModel | Path
 
 # ✅ CORRECT — runtime narrowing via tuple constants

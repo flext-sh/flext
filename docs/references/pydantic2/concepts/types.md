@@ -380,7 +380,7 @@ For instance, here is an example definition of a JSON type:
     ```python {requires="3.12" upgrade="skip" lint="skip"}
     from pydantic import TypeAdapter
 
-    type Json = dict[str, Json] | list[Json] | str | int | float | bool | None  # (1)!
+    type Json = dict[str, Json] | list[Json] | t.Primitives | None  # (1)!
 
     ta = TypeAdapter(Json)
     print(ta.json_schema())

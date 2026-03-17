@@ -18,7 +18,7 @@ from tomlkit.container import Container
 class FlextTypes:
     """Mock types for the FLEXT ecosystem."""
 
-    Primitives = str | int | float | bool
+    Primitives = t.Primitives
     Scalar = Primitives
     Container = Scalar | Sequence["Container"] | Mapping[str, "Container"] | None
     RegisterableService = Container | logging.Logger

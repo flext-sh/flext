@@ -203,10 +203,10 @@ class ValidationHelpers(BaseModel):
     _enum_type_adapter: ClassVar[TypeAdapter[type[StrEnum]] | None] = None
     _serializable_adapter: ClassVar[TypeAdapter[t.Serializable] | None] = None
     _metadata_json_dict_adapter: ClassVar[
-        TypeAdapter[dict[str, str | int | float | bool]] | None
+        TypeAdapter[dict[str, t.Primitives]] | None
     ] = None
     _flat_metadata_dict_adapter: ClassVar[
-        TypeAdapter[dict[str, str | int | float | bool]] | None
+        TypeAdapter[dict[str, t.Primitives]] | None
     ] = None
 
     @classmethod

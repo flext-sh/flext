@@ -12,6 +12,6 @@ invalid:
 ---
 id: no-union-annotation-fix-4
 valid:
-  - "x: str | int | float | bool = 1"
+  - "x: t.Primitives = 1"
 invalid:
   - "x: Union[str, int, float, bool] = 1"
