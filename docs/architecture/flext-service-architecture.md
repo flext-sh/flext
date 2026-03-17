@@ -6841,9 +6841,7 @@ print(f"Marked {count} users as inactive")
 from pathlib import Path
 
 
-def complex_migration(
-    source_file: Path, target_file: Path
-) -> m.Infra.MigrationResult:
+def complex_migration(source_file: Path, target_file: Path) -> m.Infra.MigrationResult:
     """Complex LDIF migration with error recovery."""
 
     def fallback_on_parse(error: str) -> r[list[Entry]]:
