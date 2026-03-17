@@ -59,6 +59,15 @@ def _to_float(value: t.Scalar) -> float:
     return 0.0
 
 
+def _to_float_safe(
+    value: t.Scalar | list[str] | dict[str, t.Scalar] | None,
+) -> float:
+    """Coerce ProcessingDict value to float; return 0.0 for non-scalar."""
+    if isinstance(value, (int, float)):
+        return float(value)
+    return 0.0
+
+
 class CompleteWorkflowExample:
     """Complete workflow example demonstrating FLEXT enterprise data integration capabilities."""
 
@@ -184,7 +193,7 @@ class CompleteWorkflowExample:
                     "aggregated",
                     True,
                     lambda _i: {
-                        "final_score": _to_float(item.get("complexity_score", 0))
+                        "final_score": _to_float_safe(item.get("complexity_score", 0))
                         + (1 if bool(item.get("is_valid", False)) else 0)
                     },
                 )
@@ -267,7 +276,8 @@ class CompleteWorkflowExample:
                     result = stage_func(item, context)
                     return result.map_or(None)
                 except Exception as e:
-                    return {"error": str(e), "item": item}
+                    err: ProcessingDict = {"error": str(e), "item": str(item)}
+                    return err
 
             processed_results: list[ProcessingDict] = []
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -354,11 +364,16 @@ class CompleteWorkflowExample:
                 aggregated_metrics=aggregated_metrics,
                 workflow_status="completed",
             )
-            return r[ProcessingDict].ok({
-                "workflow_result": workflow_result,
-                "final_data": current_data,
-                "performance_summary": aggregated_metrics,
-            })
+            perf_summary: dict[str, t.Scalar] = dict(aggregated_metrics.items())
+            summary: ProcessingDict = {
+                "workflow_id": workflow_result.workflow_id,
+                "workflow_status": workflow_result.workflow_status,
+                "total_stages": workflow_result.total_stages,
+                "completed_stages": workflow_result.completed_stages,
+                "total_processing_time": workflow_result.total_processing_time,
+                "performance_summary": perf_summary,
+            }
+            return r[ProcessingDict].ok(summary)
 
         def _process_items(
             self,
@@ -430,20 +445,22 @@ class CompleteWorkflowExample:
     @staticmethod
     def create_sample_workflow_data(count: int = 100) -> list[ProcessingDict]:
         """Create sample data for workflow testing."""
-        return [
-            {
+        result: list[ProcessingDict] = []
+        for i in range(count):
+            attrs: dict[str, t.Scalar] = {
+                "objectClass": "person,organizationalPerson",
+                "cn": f"user{i}",
+                "sn": f"User{i}",
+            }
+            item: ProcessingDict = {
                 "id": f"item_{i}",
                 "dn": f"cn=user{i},ou=users,dc=example,dc=com",
                 "name": f"User {i}",
-                "attributes": {
-                    "objectClass": ["person", "organizationalPerson"],
-                    "cn": f"user{i}",
-                    "sn": f"User{i}",
-                },
+                "attributes": attrs,
                 "timestamp": time.time() + i,
             }
-            for i in range(count)
-        ]
+            result.append(item)
+        return result
 
     @staticmethod
     def run_example() -> None:
