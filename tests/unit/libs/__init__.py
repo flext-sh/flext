@@ -11,7 +11,8 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
-    from tests.unit.libs.versioning_tests import (
+
+    from .versioning_tests import (
         test_current_workspace_version_reads_project_version,
         test_parse_and_bump_semver,
         test_release_tag_from_branch_patterns,

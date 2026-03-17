@@ -11,7 +11,8 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
-    from tests.unit.scripts.github.test_pr_workspace import (
+
+    from .test_pr_workspace import (
         test_main_respects_fail_fast,
         test_main_runs_projects_and_root,
         test_run_pr_uses_make_for_non_root_repo,

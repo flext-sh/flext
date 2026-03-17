@@ -91,6 +91,12 @@ alwaysApply: true
 
 ### 3.2 Types & Contracts
 - **Strict Contracts Only**: `Any`, bare `object`, and `dict[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
+  - **Exception: Intentional Generic Types** - `dict[str, object]` and `Mapping[str, object]` ARE permitted ONLY in these contexts:
+    1. **Type aliases** (in `typings.py`): `type ProjectConfig = dict[str, object]` with docstring explaining intent
+    2. **Test fixtures** (in `conftest.py` and test support): Dynamic test data with unknown structure
+    3. **Validation/Rule engines**: Return types for unstructured violations (e.g., `r[list[Mapping[str, object]]]`)
+    4. **Configuration transformers**: Methods that accept/return dynamic configuration from external sources (YAML, JSON)
+    - **All other uses are FORBIDDEN**. Use `t.NormalizedValue` or specific Pydantic models instead.
 - **PEP 695 Canonical (Python 3.13+)**: ALL type aliases in `typings.py` must use `type X = ...` syntax. These create `TypeAliasType` objects—using them in `isinstance()` crashes at runtime and is FORBIDDEN. Runtime narrowing MUST use `u.is_*()` functions instead.
 - **Type Narrowing**: NEVER use `type(x) is T` or `type(x) == T` to narrow types. Use `isinstance(x, T)` or `TypeGuard`. Avoid gratuitous narrowings for types that shouldn't exist. `cast()` is completely forbidden outside `flext-core` result internals.
 - **Nullability and Unions**:
