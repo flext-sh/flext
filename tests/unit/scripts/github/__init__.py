@@ -19,22 +19,10 @@ if TYPE_CHECKING:
     )
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
-    "test_main_respects_fail_fast": (
-        "tests.unit.scripts.github.test_pr_workspace",
-        "test_main_respects_fail_fast",
-    ),
-    "test_main_runs_projects_and_root": (
-        "tests.unit.scripts.github.test_pr_workspace",
-        "test_main_runs_projects_and_root",
-    ),
-    "test_run_pr_uses_make_for_non_root_repo": (
-        "tests.unit.scripts.github.test_pr_workspace",
-        "test_run_pr_uses_make_for_non_root_repo",
-    ),
-    "test_run_pr_uses_pr_manager_for_workspace_root": (
-        "tests.unit.scripts.github.test_pr_workspace",
-        "test_run_pr_uses_pr_manager_for_workspace_root",
-    ),
+    "test_main_respects_fail_fast": ("tests.unit.scripts.github.test_pr_workspace", "test_main_respects_fail_fast"),
+    "test_main_runs_projects_and_root": ("tests.unit.scripts.github.test_pr_workspace", "test_main_runs_projects_and_root"),
+    "test_run_pr_uses_make_for_non_root_repo": ("tests.unit.scripts.github.test_pr_workspace", "test_run_pr_uses_make_for_non_root_repo"),
+    "test_run_pr_uses_pr_manager_for_workspace_root": ("tests.unit.scripts.github.test_pr_workspace", "test_run_pr_uses_pr_manager_for_workspace_root"),
 }
 
 __all__ = [
