@@ -6843,7 +6843,7 @@ from pathlib import Path
 
 def complex_migration(
     source_file: Path, target_file: Path
-) -> m.Infra.Workspace.MigrationResult:
+) -> m.Infra.MigrationResult:
     """Complex LDIF migration with error recovery."""
 
     def fallback_on_parse(error: str) -> r[list[Entry]]:
@@ -6886,7 +6886,7 @@ def complex_migration(
         .or_else(fallback_on_write)
     )
 
-    return m.Infra.Workspace.MigrationResult(
+    return m.Infra.MigrationResult(
         success=result.is_success,
         entries_processed=len(cached_entries),
         output_path=target_file

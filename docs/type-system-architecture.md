@@ -396,7 +396,7 @@ m.Ldap                      # LDAP domain
 m.FlextOudMig               # Migration tool domain
   .MigrationTask            # Migration task
   .MigrationStatus          # Migration status
-  .m.Infra.Workspace.MigrationResult          # Migration result
+  .m.Infra.MigrationResult          # Migration result
 ```
 
 ---
