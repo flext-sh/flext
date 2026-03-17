@@ -3,22 +3,24 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Container, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 
-from beartype.typing import Container
-from dependency_injector.containers import Container
-from dependency_injector.providers import Container
-from docker.models.containers import Container
-from matplotlib.container import Container
-from python_on_whales import Container
-from python_on_whales.components.container.cli_wrapper import Container
-from tomlkit.container import Container
+from beartype.typing import Container as BeartypeContainer
+from dependency_injector.containers import Container as DIContainersContainer
+from dependency_injector.providers import Container as DIProvidersContainer
+from docker.models.containers import Container as DockerContainerModel
+from matplotlib.container import Container as MatplotlibContainer
+from python_on_whales import Container as WhalesContainer
+from python_on_whales.components.container.cli_wrapper import (
+    Container as WhalesCliContainer,
+)
+from tomlkit.container import Container as TomlkitContainer
 
 
 class FlextTypes:
     """Mock types for the FLEXT ecosystem."""
 
-    Primitives = t.Primitives
+    Primitives = str | int | float | bool
     Scalar = Primitives
     Container = Scalar | Sequence["Container"] | Mapping[str, "Container"] | None
     RegisterableService = Container | logging.Logger
@@ -73,6 +75,17 @@ def logger_factory(name: str) -> logging.Logger:
 
 
 FlextLogger = logger_factory
+
+_CONTAINER_TYPES = (
+    BeartypeContainer,
+    DIContainersContainer,
+    DIProvidersContainer,
+    DockerContainerModel,
+    MatplotlibContainer,
+    WhalesContainer,
+    WhalesCliContainer,
+    TomlkitContainer,
+)
 
 
 class FlextContainer:
