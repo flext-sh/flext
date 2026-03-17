@@ -141,7 +141,7 @@ type object = (
 Good:
 
 ```python
-type JsonPrimitive = str | int | float | bool | None
+type JsonPrimitive = t.Primitives | None
 ```
 
 Why good: focused alias with clear semantic purpose.

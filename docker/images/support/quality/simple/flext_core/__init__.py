@@ -9,7 +9,7 @@ from collections.abc import Mapping, Sequence
 class FlextTypes:
     """Mock types for the FLEXT ecosystem."""
 
-    Primitives = str | int | float | bool
+    Primitives = t.Primitives
     Scalar = Primitives
     Container = (
         Scalar

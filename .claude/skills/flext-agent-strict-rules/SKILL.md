@@ -70,7 +70,7 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 - **`| None` is INLINE-ONLY — NEVER in type definitions**: `| None` is ONLY permitted INLINE at usage sites when `None` carries **distinct business/domain semantics** (e.g., "not configured" vs "empty string"). Gratuitous `| None` when a non-None default exists is FORBIDDEN. When default is `""`, type is `str`, NOT `str | None`. `| None` MUST NEVER appear in type alias definitions in `typings.py` — type aliases are ALWAYS non-nullable. Consumers add `| None` inline when business requires it (e.g., `field: t.Scalar | None = Field(default=None)`). If a type alias bakes in `| None`, it is a violation.
 - **Type narrowing is RESTRICTED**: `isinstance`, `TypeGuard`, `TypeIs` are ONLY permitted when required by actual business logic. Never introduce type narrowing gratuitously to handle `None`/union types that should not exist in the first place.
 - **ALL types come from `typings.py`**: Every type annotation in the codebase must use types defined in or imported through `FlextTypes` (`t.*`). Do not invent ad-hoc type annotations that duplicate what `typings.py` already provides.
-- **Inline composed types are TOTALLY FORBIDDEN in ALL code**: Raw unions like `str | int | float | bool`, `dict[str, str | int | None]`, `list[str | int]` written inline in `src/`, `tests/`, or `examples/` of ANY project are FORBIDDEN. Define composition inside centralized model contracts and reference them via `m.*`/`p.*`.
+- **Inline composed types are TOTALLY FORBIDDEN in ALL code**: Raw unions like `t.Primitives`, `dict[str, str | int | None]`, `list[str | int]` written inline in `src/`, `tests/`, or `examples/` of ANY project are FORBIDDEN. Define composition inside centralized model contracts and reference them via `m.*`/`p.*`.
 - **Duplicating type definitions is TOTALLY FORBIDDEN**: Re-declaring `ScalarValue`, `ConfigMap`, `ContainerValue`, or any type alias that already exists in the MRO chain is FORBIDDEN. Every subproject must reuse inherited contracts and explicit model/protocol definitions.
 - **Compatibility aliases for types are TOTALLY FORBIDDEN**: No `MyModel = m.Domain.InputModel`, no `ConfigAlias = m.Settings.ConfigModel`, no `OutputAlias = m.Domain.OutputModel`, no `X = Y` renaming of any type contract.
 - **Scope: ALL 33 projects, ALL directories, NO exceptions**: These rules apply uniformly to `src/`, `tests/`, and `examples/` across every project in the portfolio. No project, no directory, no file is exempt. Tests and examples MUST demonstrate the exact same strict typing discipline as production code. There is no "test-only" or "example-only" relaxation.
@@ -108,8 +108,8 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 
   **FORBIDDEN patterns (will crash the runtime):**
   ```python
-  type Primitives = str | int | float | bool  # FORBIDDEN — crashes isinstance()
-  type Scalar = str | int | float | bool | datetime  # FORBIDDEN
+  type Primitives = t.Primitives  # FORBIDDEN — crashes isinstance()
+  type Scalar = t.Scalar  # FORBIDDEN
   type ConfigurationMapping = Mapping[str, Container]  # FORBIDDEN
   isinstance(val, t.GeneralValueType)  # FORBIDDEN — recursive alias, always crashes
 

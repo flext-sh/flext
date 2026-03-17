@@ -148,7 +148,7 @@ class FlextCliTypes:
         class Data:
             # Collection types grouped by domain
             type RowData = Mapping[str, m.Cli.RowModel]
-            type CellContent = str | int | float | bool | None
+            type CellContent = t.Primitives | None
 ```
 
 ### Pattern 3: TypeVar Bounded to Protocol (Avoiding Circular Imports)

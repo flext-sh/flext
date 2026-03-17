@@ -180,8 +180,8 @@ Does the alias reference itself in its own definition?
 
 ```python
 # ❌ FORBIDDEN — changing non-recursive TypeAlias to type statement
-type Primitives = str | int | float | bool  # CRASHES isinstance() calls
-type Scalar = str | int | float | bool | datetime  # CRASHES isinstance() calls
+type Primitives = t.Primitives  # CRASHES isinstance() calls
+type Scalar = t.Scalar  # CRASHES isinstance() calls
 
 # ❌ FORBIDDEN — raw isinstance against recursive aliases
 isinstance(val, t.object)  # CRASHES at runtime
@@ -195,8 +195,8 @@ class Foo(t.object): ...  # Use Mapping[str, t.FlextTypes.Container]
 
 ```python
 # ✅ CORRECT — non-recursive aliases use TypeAlias
-Primitives: TypeAlias = str | int | float | bool
-Scalar: TypeAlias = str | int | float | bool | datetime
+Primitives: TypeAlias = t.Primitives
+Scalar: TypeAlias = t.Scalar
 
 # ✅ CORRECT — recursive aliases use type statement
 type object = (Scalar | list[object] | dict[str, object])
@@ -236,7 +236,7 @@ Use `isinstance(val, Mapping)` (unparameterized) or `u.is_config_map(val)` inste
 
 ```python
 # ✅ CORRECT — Non-recursive, isinstance-safe
-Primitives: TypeAlias = str | int | float | bool
+Primitives: TypeAlias = t.Primitives
 Scalar: TypeAlias = Primitives | datetime
 Container: TypeAlias = Sequence[Scalar] | Mapping[str, Scalar]
 ConfigurationMapping: TypeAlias = Mapping[str, Scalar | Sequence[Scalar]]
@@ -247,7 +247,7 @@ ConfigurationMapping: TypeAlias = Mapping[str, Scalar | Sequence[Scalar]]
 ```python
 # ✅ CORRECT — Recursive type (PEP 695 required — ONLY syntax that supports self-reference)
 type object = (
-    str | int | float | bool | datetime | None
+    t.Scalar | None
     | BaseModel | Path
     | Sequence[object]
     | Mapping[str, object]
@@ -265,9 +265,9 @@ When you need runtime type checks on types that are `TypeAliasType` (or any comp
 from flext_core._utilities.guards import is_primitive, is_scalar, is_flexible_value
 
 # ✅ CORRECT — TypeGuard narrows the type safely
-if is_primitive(val):   # TypeGuard[str | int | float | bool]
+if is_primitive(val):   # TypeGuard[t.Primitives]
     ...
-if is_scalar(val):     # TypeGuard[str | int | float | bool | datetime]
+if is_scalar(val):     # TypeGuard[t.Scalar]
     ...
 if is_flexible_value(val):  # TypeGuard for general values
     ...
