@@ -4,7 +4,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from tests.infra import c, t, tm, u
+from flext_tests import tm
+
+from ....infra import c, t, u
 
 
 class TestPrWorkspace:
@@ -17,7 +19,7 @@ class TestPrWorkspace:
         checkpoint: int,
         pr_action: str,
         pr_checks_strict: str,
-    ) -> object:
+    ) -> t.Workspace.Tests.ProjectRef:
         mod = u.Workspace.Tests.load_module(
             "pr_workspace_args",
             c.Workspace.Tests.MODULE_PR_WORKSPACE,
@@ -141,9 +143,15 @@ class TestPrWorkspace:
             seen.append(repo)
             return 2
 
+        def _noop_checkout(_repo: Path, _branch: str) -> None:
+            return None
+
+        def _noop_checkpoint(_repo: Path, _branch: str) -> None:
+            return None
+
         monkeypatch.setattr(mod, "resolve_projects", _resolve_projects)
-        monkeypatch.setattr(mod, "_checkout_branch", lambda _repo, _branch: None)
-        monkeypatch.setattr(mod, "_checkpoint", lambda _repo, _branch: None)
+        monkeypatch.setattr(mod, "_checkout_branch", _noop_checkout)
+        monkeypatch.setattr(mod, "_checkpoint", _noop_checkpoint)
         monkeypatch.setattr(mod, "_run_pr", _run_pr)
         monkeypatch.setattr(
             mod,

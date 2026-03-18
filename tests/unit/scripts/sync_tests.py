@@ -3,7 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from tests.infra import c, tm, u
+
+from ...infra import c, tm, u
 
 
 class TestSyncScripts:
