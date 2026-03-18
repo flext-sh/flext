@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Mapping, Sequence
 
 from beartype.typing import Container as BeartypeContainer
 from dependency_injector.containers import Container as DIContainersContainer
@@ -22,8 +21,8 @@ class FlextTypes:
 
     Primitives = str | int | float | bool
     Scalar = Primitives
-    type Container = Scalar | Sequence[Container] | Mapping[str, Container] | None
-    type RegisterableService = Container | logging.Logger
+    Container = Scalar | None
+    RegisterableService = Container | logging.Logger
 
 
 t = FlextTypes
