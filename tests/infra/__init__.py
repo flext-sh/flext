@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from .constants import FlextWorkspaceTestConstants, c
     from .models import FlextWorkspaceTestModels, m
     from .protocols import FlextWorkspaceTestProtocols, p
+    from .result import r
     from .typings import FlextWorkspaceTestTypes, t
     from .utilities import FlextWorkspaceTestUtilities, u
 
