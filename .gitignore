@@ -329,3 +329,6 @@ secrets.yml
 # --- workspace-sync: required ignores (auto-managed) ---
 .venv/
 __pycache__/
+
+# --- workspace-migrate: required ignores (auto-managed) ---
+base.mk
