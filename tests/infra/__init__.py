@@ -36,6 +36,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "c": ("tests.infra.constants", "c"),
     "m": ("tests.infra.models", "m"),
     "p": ("tests.infra.protocols", "p"),
+    "r": ("tests.infra.result", "r"),
     "t": ("tests.infra.typings", "t"),
     "u": ("tests.infra.utilities", "u"),
 }
@@ -49,6 +50,7 @@ __all__ = [
     "c",
     "m",
     "p",
+    "r",
     "t",
     "u",
 ]
