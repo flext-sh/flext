@@ -18,7 +18,7 @@ class FlextWorkspaceTestProtocols(FlextTestsProtocols):
             @runtime_checkable
             class ModuleSpecProtocol(Protocol):
                 name: str | None
-                loader: object | None
+                loader: FlextWorkspaceTestProtocols.Workspace.Tests.SpecLoader | None
 
             @runtime_checkable
             class ModuleResolver(Protocol):

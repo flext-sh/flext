@@ -665,12 +665,12 @@ ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)mkdir -p .reports
 	$(Q)echo "Running workspace validation (inventory + strict anti-drift gates)..."
 	$(Q)$(PY) -m flext_infra maintenance --check || exit 1
-	$(Q)$(PY) -m flext_infra core inventory --workspace .
-	$(Q)$(PY) -m flext_infra core basemk-validate
+	$(Q)$(PY) -m flext_infra validate inventory --workspace .
+	$(Q)$(PY) -m flext_infra validate basemk-validate
 	$(Q)$(PY) -m flext_infra github lint --workspace . --report .reports/workflows/actionlint.json
-	$(Q)$(PY) -m flext_infra core skill-validate --skill scripts-validation --mode strict
-	$(Q)$(PY) -m flext_infra core skill-validate --skill rules-github --mode strict
-	$(Q)$(PY) -m flext_infra core skill-validate --skill rules-docker --mode strict
+	$(Q)$(PY) -m flext_infra validate skill-validate --skill scripts-validation --mode strict
+	$(Q)$(PY) -m flext_infra validate skill-validate --skill rules-github --mode strict
+	$(Q)$(PY) -m flext_infra validate skill-validate --skill rules-docker --mode strict
 	$(Q)$(PY) -m flext_infra deps modernize --audit
 	$(Q)if git grep -nE '/home/.*/flext|file:///home/.*/flext' -- . ':!Makefile'; then \
 		echo "ERROR: absolute workspace paths detected in tracked sources/config"; \
@@ -733,7 +733,7 @@ typings: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency r
 		echo "  no packages to regenerate"; \
 	fi; \
 	rm -rf "$$tmp_dir"
-	$(Q)$(POETRY_ENV) $(PY) -m flext_infra core stub-validate \
+	$(Q)$(POETRY_ENV) $(PY) -m flext_infra validate stub-validate \
 		$(if $(PROJECT),--project $(PROJECT),$(if $(PROJECTS),$(addprefix --project ,$(PROJECTS)),--all))
 	$(Q)if [ "$(DEPS_REPORT)" != "0" ]; then \
 		$(POETRY_ENV) $(PY) -m flext_infra deps detect --typings -q --no-fail || true; \
