@@ -119,9 +119,9 @@ ignore-errors-in-generated-code = true
 project-excludes = [
   "**/*_pb2*.py",
   "**/*_pb2_grpc*.py",
-  "vendor/**/*.py",
-  "typings/**/*.py",
-  "docker/images/**/*.py",
+  "vendor/**",
+  "typings/**",
+  "docker/images/**",
 ]
 python-version = "3.13"
 search-path = [
