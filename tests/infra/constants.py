@@ -7,7 +7,11 @@ from flext_tests.constants import FlextTestsConstants
 
 class FlextWorkspaceTestConstants(FlextTestsConstants):
     class Workspace:
+        """Workspace-level test constants."""
+
         class Tests:
+            """Infrastructure test path constants."""
+
             MODULE_VERSIONING: Final[str] = "libs/versioning.py"
             MODULE_SYNC: Final[str] = "flext-infra/src/flext_infra/workspace/sync.py"
             MODULE_PR_WORKSPACE: Final[str] = (
