@@ -8,7 +8,11 @@ from flext_tests.typings import FlextTestsTypes
 
 class FlextWorkspaceTestTypes(FlextTestsTypes):
     class Workspace:
+        """Workspace-level test type aliases."""
+
         class Tests:
+            """Test infrastructure type definitions."""
+
             type Command = list[str]
             type LoadedModule = ModuleType
             type ProjectRef = SimpleNamespace
