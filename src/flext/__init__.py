@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from flext.models import FlextModels, m
     from flext.protocols import FlextProtocols, p
     from flext.service import FlextServiceBase, s
-    from flext.typings import FlextTypes, t
+    from flext.typings import t
     from flext.utilities import FlextUtilities, u
     from flext.workspace import main
 
