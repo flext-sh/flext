@@ -1,0 +1,36 @@
+AGENTS.md
+  e4f3a23bd1348563 132
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "f2ff22b40749c46e4ce1cc27c5f3724e0c702740",
+  "prompts": {
+    "a416dd5f54046eb7": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "8dfc6754-fa8b-4d1c-871c-9bff8505eb51",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "e4f3a23bd1348563": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2febe79e4ffeDXNStRSxM8Kvcu-c6731a16-00ba-4936-b103-e9cc29f69970",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
