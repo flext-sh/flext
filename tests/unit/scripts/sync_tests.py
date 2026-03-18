@@ -21,12 +21,12 @@ class TestSyncScripts:
         _ = project.mkdir(parents=True)
         _ = (canonical / "base.mk").write_text("BASE = 1\n", encoding="utf-8")
 
-         service = mod.FlextInfraSyncService(canonical_root=canonical)
-         result = service.sync(workspace_root=project)
-         tm.ok(result)
-         sync_result = result.value
+        service = mod.FlextInfraSyncService(canonical_root=canonical)
+        result = service.sync(workspace_root=project)
+        tm.ok(result)
+        sync_result = result.value
 
-         tm.that(sync_result.files_changed, gte=1)
+        tm.that(sync_result.files_changed, gte=1)
         tm.that((project / "base.mk").exists(), eq=True)
         tm.that((project / ".gitignore").exists(), eq=True)
 
@@ -44,7 +44,9 @@ class TestSyncScripts:
         _ = (canonical / "base.mk").write_text("BASE = 1\n", encoding="utf-8")
 
         service = mod.FlextInfraSyncService(canonical_root=canonical)
-        _ = tm.ok(service.sync(workspace_root=project))
-        second = tm.ok(service.sync(workspace_root=project))
+        _ = service.sync(workspace_root=project)
+        second_result = service.sync(workspace_root=project)
+        tm.ok(second_result)
+        second = second_result.value
 
         tm.that(second.files_changed, eq=0)
