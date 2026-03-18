@@ -129,7 +129,7 @@ alwaysApply: true
 
 ### 3.6 Test Standardization
 - **Unified Test Namespace**: Tests MUST strictly consume utilities, constants, types, and models from the central test infrastructure (`tests.infra`). Direct imports from `flext_core` or `flext_infra` into `tests/unit` codebase are FORBIDDEN if an equivalent exists in `tests.infra`.
-- **Alias Usage**: Use the same canonical aliases for test infrastructure components: `from tests.infra import c, t, p, m, u, h, s`.
+- **Alias Usage**: Use the same canonical aliases for test infrastructure components: `from tests import c, t, p, m, u`.
 - **Test Namespaced Classes & MRO**: Test infrastructure MUST follow the single namespaced class structure using MRO. Test namespaces must compose with `FlextTests` and the project's own namespace (e.g., `class FlextTestInfraConstants(FlextCoreConstants, FlextTestsConstants)`), defining specific Test namespaces per project.
 - **Centralized Fixtures & Conftests**: All fixtures and `conftest.py` configurations MUST be centralized within the `tests.infra` MRO structure. Ad-hoc loose mocks or fixtures spread around test scripts are STRICTLY FORBIDDEN. Rely on canonical helpers (`h`) and shared centralized fixtures over recreating isolated objects.
 - **Absolute Strictness**: Tests MUST demonstrate the exact same strict typing (`r[T]`), Pydantic v2 execution, and architectural discipline as production code. "Test-only" relaxation or bypassing validators is FORBIDDEN.
