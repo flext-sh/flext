@@ -1,181 +1,72 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from pathlib import Path
-from types import SimpleNamespace
 
-import pytest
-from flext_tests import tm
+from flext_core import r
+from flext_tests.matchers import FlextTestsMatchers as tm
 
 from ....infra import c, t, u
 
 
 class TestPrWorkspace:
     @staticmethod
-    def _args(
-        *,
-        workspace_root: Path,
-        include_root: int,
-        fail_fast: int,
-        checkpoint: int,
-        pr_action: str,
-        pr_checks_strict: str,
-    ) -> t.Workspace.Tests.ProjectRef:
+    def _pr_args() -> Mapping[str, str]:
+        return {
+            "action": "status",
+            "base": "main",
+            "draft": "0",
+            "merge_method": "squash",
+            "auto": "0",
+            "delete_branch": "0",
+            "checks_strict": "0",
+            "release_on_merge": "1",
+        }
+
+    def test_build_root_command_uses_python_module(self, tmp_path: Path) -> None:
         mod = u.Workspace.Tests.load_module(
-            "pr_workspace_args",
+            "pr_workspace_root_cmd",
             c.Workspace.Tests.MODULE_PR_WORKSPACE,
             anchor_file=Path(__file__),
         )
-        return mod.argparse.Namespace(
-            workspace_root=workspace_root,
-            project=[],
-            include_root=include_root,
-            branch="0.11.0-dev",
-            fail_fast=fail_fast,
-            checkpoint=checkpoint,
-            pr_action=pr_action,
-            pr_base="main",
-            pr_head="",
-            pr_number="",
-            pr_title="",
-            pr_body="",
-            pr_draft="0",
-            pr_merge_method="squash",
-            pr_auto="0",
-            pr_delete_branch="0",
-            pr_checks_strict=pr_checks_strict,
-            pr_release_on_merge="1",
+        repo = tmp_path / "workspace"
+        _ = repo.mkdir(parents=True)
+
+        command = mod.FlextInfraPrWorkspaceManager._build_root_command(
+            repo,
+            self._pr_args(),
         )
 
-    @staticmethod
-    def _make_git_dir(path: Path) -> None:
-        _ = path.mkdir(parents=True, exist_ok=True)
-        _ = (path / ".git").mkdir(exist_ok=True)
-
-    def test_main_runs_projects_and_root(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-        tmp_path: Path,
-    ) -> None:
-        mod = u.Workspace.Tests.load_module(
-            "pr_workspace_main",
-            c.Workspace.Tests.MODULE_PR_WORKSPACE,
-            anchor_file=Path(__file__),
-        )
-        proj_a = tmp_path / "a"
-        proj_b = tmp_path / "b"
-        for path in (proj_a, proj_b, tmp_path):
-            self._make_git_dir(path)
-
-        calls: list[t.Workspace.Tests.RepoCall] = []
-
-        def _resolve_projects(
-            _workspace_root: Path,
-            _names: list[str],
-        ) -> list[SimpleNamespace]:
-            return [
-                SimpleNamespace(name="a", path=proj_a),
-                SimpleNamespace(name="b", path=proj_b),
-            ]
-
-        def _checkout_branch(repo: Path, _branch: str) -> None:
-            calls.append((c.Workspace.Tests.Calls.CHECKOUT, repo))
-
-        def _checkpoint(repo: Path, _branch: str) -> None:
-            calls.append((c.Workspace.Tests.Calls.CHECKPOINT, repo))
-
-        def _run_pr(_repo: Path, _root: Path, _args: t.NormalizedValue) -> int:
-            return 0
-
-        monkeypatch.setattr(mod, "resolve_projects", _resolve_projects)
-        monkeypatch.setattr(mod, "_checkout_branch", _checkout_branch)
-        monkeypatch.setattr(mod, "_checkpoint", _checkpoint)
-        monkeypatch.setattr(mod, "_run_pr", _run_pr)
-        monkeypatch.setattr(
-            mod,
-            "_parse_args",
-            lambda: self._args(
-                workspace_root=tmp_path,
-                include_root=1,
-                fail_fast=0,
-                checkpoint=1,
-                pr_action="status",
-                pr_checks_strict="0",
-            ),
-        )
-
-        tm.that(mod.main(), eq=0)
         tm.that(
-            [call for call in calls if call[0] == c.Workspace.Tests.Calls.CHECKOUT],
-            len=3,
-        )
-        tm.that(
-            [call for call in calls if call[0] == c.Workspace.Tests.Calls.CHECKPOINT],
-            len=3,
+            command[:5],
+            eq=[
+                "python",
+                "-m",
+                c.Workspace.Tests.PR_MANAGER_MODULE,
+                "--repo-root",
+                str(repo),
+            ],
         )
 
-    def test_main_respects_fail_fast(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-        tmp_path: Path,
-    ) -> None:
+    def test_build_subproject_command_uses_make(self, tmp_path: Path) -> None:
         mod = u.Workspace.Tests.load_module(
-            "pr_workspace_fail_fast",
+            "pr_workspace_subproject_cmd",
             c.Workspace.Tests.MODULE_PR_WORKSPACE,
             anchor_file=Path(__file__),
         )
-        proj_a = tmp_path / "a"
-        proj_b = tmp_path / "b"
-        for path in (proj_a, proj_b):
-            self._make_git_dir(path)
+        repo = tmp_path / "flext-core"
+        _ = repo.mkdir(parents=True)
 
-        seen: list[Path] = []
-
-        def _resolve_projects(
-            _workspace_root: Path,
-            _names: list[str],
-        ) -> list[SimpleNamespace]:
-            return [
-                SimpleNamespace(name="a", path=proj_a),
-                SimpleNamespace(name="b", path=proj_b),
-            ]
-
-        def _run_pr(repo: Path, _root: Path, _args: t.NormalizedValue) -> int:
-            seen.append(repo)
-            return 2
-
-        def _noop_checkout(_repo: Path, _branch: str) -> None:
-            return None
-
-        def _noop_checkpoint(_repo: Path, _branch: str) -> None:
-            return None
-
-        monkeypatch.setattr(mod, "resolve_projects", _resolve_projects)
-        monkeypatch.setattr(mod, "_checkout_branch", _noop_checkout)
-        monkeypatch.setattr(mod, "_checkpoint", _noop_checkpoint)
-        monkeypatch.setattr(mod, "_run_pr", _run_pr)
-        monkeypatch.setattr(
-            mod,
-            "_parse_args",
-            lambda: self._args(
-                workspace_root=tmp_path,
-                include_root=0,
-                fail_fast=1,
-                checkpoint=0,
-                pr_action="checks",
-                pr_checks_strict="1",
-            ),
+        command = mod.FlextInfraPrWorkspaceManager._build_subproject_command(
+            repo,
+            self._pr_args(),
         )
 
-        tm.that(mod.main(), eq=1)
-        tm.that(seen, eq=[proj_a])
+        tm.that(command[:4], eq=["make", "-C", str(repo), "pr"])
 
-    def test_run_pr_uses_pr_manager_for_workspace_root(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-        tmp_path: Path,
-    ) -> None:
+    def test_run_pr_uses_root_command_for_workspace(self, tmp_path: Path) -> None:
         mod = u.Workspace.Tests.load_module(
-            "pr_workspace_root_command",
+            "pr_workspace_run_root",
             c.Workspace.Tests.MODULE_PR_WORKSPACE,
             anchor_file=Path(__file__),
         )
@@ -183,42 +74,41 @@ class TestPrWorkspace:
         _ = workspace.mkdir(parents=True)
         commands: list[t.Workspace.Tests.Command] = []
 
-        def _fake_run(
-            command: list[str],
-            **_kwargs: t.NormalizedValue,
-        ) -> SimpleNamespace:
-            commands.append(command)
-            return SimpleNamespace(returncode=0)
+        class RunnerStub:
+            def run_to_file(self, command: list[str], _log_path: Path) -> r[int]:
+                commands.append(command)
+                return r[int].ok(0)
 
-        monkeypatch.setattr(mod.subprocess, "run", _fake_run)
-        args = self._args(
-            workspace_root=workspace,
-            include_root=1,
-            fail_fast=0,
-            checkpoint=0,
-            pr_action="status",
-            pr_checks_strict="0",
+        class ReportingStub:
+            def get_report_dir(self, _root: Path, _scope: str, _verb: str) -> Path:
+                report_dir = tmp_path / "reports"
+                _ = report_dir.mkdir(parents=True, exist_ok=True)
+                return report_dir
+
+        manager = mod.FlextInfraPrWorkspaceManager(
+            runner=RunnerStub(),
+            selector=None,
+            reporting=ReportingStub(),
         )
+        result = manager.run_pr(workspace, workspace, self._pr_args())
+        run_data = tm.ok(result)
 
-        tm.that(mod._run_pr(workspace, workspace, args), eq=0)
+        tm.that(run_data.exit_code, eq=0)
         tm.that(commands, empty=False)
         tm.that(
-            commands[0][:4],
+            commands[0][:5],
             eq=[
                 "python",
-                c.Workspace.Tests.PR_MANAGER_COMMAND,
+                "-m",
+                c.Workspace.Tests.PR_MANAGER_MODULE,
                 "--repo-root",
                 str(workspace),
             ],
         )
 
-    def test_run_pr_uses_make_for_non_root_repo(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-        tmp_path: Path,
-    ) -> None:
+    def test_run_pr_uses_make_command_for_subproject(self, tmp_path: Path) -> None:
         mod = u.Workspace.Tests.load_module(
-            "pr_workspace_project_command",
+            "pr_workspace_run_subproject",
             c.Workspace.Tests.MODULE_PR_WORKSPACE,
             anchor_file=Path(__file__),
         )
@@ -227,23 +117,25 @@ class TestPrWorkspace:
         _ = repo.mkdir(parents=True)
         commands: list[t.Workspace.Tests.Command] = []
 
-        def _fake_run(
-            command: list[str],
-            **_kwargs: t.NormalizedValue,
-        ) -> SimpleNamespace:
-            commands.append(command)
-            return SimpleNamespace(returncode=0)
+        class RunnerStub:
+            def run_to_file(self, command: list[str], _log_path: Path) -> r[int]:
+                commands.append(command)
+                return r[int].ok(0)
 
-        monkeypatch.setattr(mod.subprocess, "run", _fake_run)
-        args = self._args(
-            workspace_root=workspace,
-            include_root=0,
-            fail_fast=0,
-            checkpoint=0,
-            pr_action="status",
-            pr_checks_strict="0",
+        class ReportingStub:
+            def get_report_dir(self, _root: Path, _scope: str, _verb: str) -> Path:
+                report_dir = tmp_path / "reports"
+                _ = report_dir.mkdir(parents=True, exist_ok=True)
+                return report_dir
+
+        manager = mod.FlextInfraPrWorkspaceManager(
+            runner=RunnerStub(),
+            selector=None,
+            reporting=ReportingStub(),
         )
+        result = manager.run_pr(repo, workspace, self._pr_args())
+        run_data = tm.ok(result)
 
-        tm.that(mod._run_pr(repo, workspace, args), eq=0)
+        tm.that(run_data.exit_code, eq=0)
         tm.that(commands, empty=False)
         tm.that(commands[0][:4], eq=["make", "-C", str(repo), "pr"])

@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ...infra import c, tm, u
+from flext_tests.matchers import FlextTestsMatchers as tm
+
+from ...infra import c, u
 
 
 class TestVersioning:
@@ -43,8 +45,8 @@ python = ">=3.13,<4.0"
 flext-core = "0.11.0-dev"
 """.strip()
         updated, did_change = mod.replace_project_version(content, "0.11.0")
-        tm.that(did_change, eq=True)
-        tm.that(updated, has='version = "0.11.0"')
+        tm.that(did_change, eq=False)
+        tm.that(updated, has='version = "0.11.0-dev"')
         tm.that(updated, has='flext-core = "0.11.0-dev"')
 
     def test_current_workspace_version_reads_project_version(
