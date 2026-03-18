@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from .infra.constants import FlextWorkspaceTestConstants, c
     from .infra.models import FlextWorkspaceTestModels, m
     from .infra.protocols import FlextWorkspaceTestProtocols, p
+    from .infra.result import r
     from .infra.typings import FlextWorkspaceTestTypes, t
     from .infra.utilities import FlextWorkspaceTestUtilities, u
     from .tf import tf
@@ -39,8 +40,8 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "c": ("tests.infra.constants", "c"),
     "infra": ("tests.infra", ""),
     "m": ("tests.infra.models", "m"),
-    "r": ("tests.infra.result", "r"),
     "p": ("tests.infra.protocols", "p"),
+    "r": ("tests.infra.result", "r"),
     "t": ("tests.infra.typings", "t"),
     "tf": ("tests.tf", "tf"),
     "tm": ("tests.tm", "tm"),
@@ -56,8 +57,8 @@ __all__ = [
     "c",
     "infra",
     "m",
-    "r",
     "p",
+    "r",
     "t",
     "tf",
     "tm",
