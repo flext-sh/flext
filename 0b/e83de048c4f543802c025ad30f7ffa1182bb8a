@@ -1,0 +1,233 @@
+typings/radon/visitors.pyi
+  9f37488639f10338 3
+  4839abc1e8543b48 140,145
+  253c07b68d298d8a 96,98,100,102,104,150,152,154
+typings/vulture/utils.pyi
+  7f1e377c0d0efa46 25,31
+  1ed1d1fa402963fc 4
+typings/vulture/core.pyi
+  cb0f80f683855651 4
+  db7aa9ddf0a7e96e 100
+  37756cf56ea58702 39,99,102,104,106
+  6eae72ca6129abe6 108,110,112,114,116,118,120,122,124,126,128
+typings/radon/cli/harvest.pyi
+  92748d39d8facf80 37,40,42,44,46,48,54,56,58,62,70,72,74,81,83,85
+  7145c84f5dcb8499 2,38-39,41,43,45,47,49
+typings/radon/cli/__init__.pyi
+  cb65f2204a16186c 4,86-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "0be83de048c4f543802c025ad30f7ffa1182bb8a",
+  "prompts": {
+    "04ed1d0a4fe36ba7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdcebe6fffeKK6kzEKfhogTH3-c38aa65a-b035-4602-a330-baae9cc4387b",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 31,
+      "total_deletions": 16,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "1ed1d1fa402963fc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdcebe6fffeKK6kzEKfhogTH3-be2cb499-0eb0-4cf9-ab5a-15208c95544d",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "253c07b68d298d8a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdda5704ffetdWKA5R07R3uYX-decd4819-6d73-4697-879f-7d9013b1d307",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 8,
+      "total_deletions": 0,
+      "accepted_lines": 8,
+      "overriden_lines": 0
+    },
+    "37756cf56ea58702": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdca4d4affe53hqF7OI0VvMfx-b845c93b-7780-43e9-83d4-dbadcd9e13a3",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 0,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    },
+    "4839abc1e8543b48": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdcebe6fffeKK6kzEKfhogTH3-b491161b-2a5e-4380-abdc-5da736681414",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 0,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    },
+    "6eae72ca6129abe6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdcebe6fffeKK6kzEKfhogTH3-f110d290-1119-46ac-8406-6f464592b5f7",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 11,
+      "total_deletions": 0,
+      "accepted_lines": 11,
+      "overriden_lines": 0
+    },
+    "7145c84f5dcb8499": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdcebe6fffeKK6kzEKfhogTH3-809d145b-9d69-4559-88e4-e09e9dc4035d",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 33,
+      "total_deletions": 122,
+      "accepted_lines": 8,
+      "overriden_lines": 0
+    },
+    "7536b2306759f75c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdcebe6fffeKK6kzEKfhogTH3-1d45f4af-6241-4c7c-91ae-c1058a577d99",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 31,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "7f1e377c0d0efa46": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdc92b12ffelvD8zSvF1iqKMa-dc55fd2c-495d-46c4-b6eb-d62643f1580a",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 0,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    },
+    "8b71908002965750": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdcebe6fffeKK6kzEKfhogTH3-1e8d45f0-eb8c-4294-87a1-6e8889dcd4fc",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 16,
+      "total_deletions": 32,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "92748d39d8facf80": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdd67a46ffezeekXgdUnmjDX1-e1a165de-78e0-4d43-9ed9-633d8609ab07",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 16,
+      "total_deletions": 0,
+      "accepted_lines": 16,
+      "overriden_lines": 0
+    },
+    "9f37488639f10338": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdcebe6fffeKK6kzEKfhogTH3-9ed65a79-161f-48bd-8c89-467171d29c84",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 31,
+      "total_deletions": 122,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "ba9e9848fb4a1dee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdd67a46ffezeekXgdUnmjDX1-7dc3849f-d39d-48da-b457-025a6b9218ae",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 0,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "cb0f80f683855651": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdcebe6fffeKK6kzEKfhogTH3-5bf2e167-d0c8-426b-8991-2ae5f9e5230c",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 3,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "cb65f2204a16186c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdcebe6fffeKK6kzEKfhogTH3-8e2f3e67-105b-48f9-85ff-eb9241113470",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 16,
+      "total_deletions": 57,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    },
+    "db7aa9ddf0a7e96e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fdda5704ffetdWKA5R07R3uYX-946d9147-146d-4f80-9e55-6996a1857f7f",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 0,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
