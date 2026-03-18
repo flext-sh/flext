@@ -1,0 +1,34 @@
+[tool.pyrefly]
+ignore-errors-in-generated-code = true
+non-convergent-recursion = false
+project-excludes = [
+  "**/*_pb2*.py",
+  "**/*_pb2_grpc*.py",
+  "vendor/**/*.py",
+  "typings/**/*.pyi",
+  "typings/**/*.py",
+  "docker/images/**/*.py",
+  "flext-ldap/tests/**/*.py",
+  "flext-cli/tests/unit/test_cli.py",
+  "flext-cli/tests/unit/test_config_model_integration.py",
+]
+python-version = "3.13"
+search-path = [
+  ".",
+]
+
+[tool.pyrefly.errors]
+bad-override = false
+deprecated = true
+implicit-abstract-class = true
+implicit-any = true
+implicitly-defined-attribute = true
+missing-override-decorator = true
+missing-source = true
+not-required-key-access = true
+open-unpacking = true
+protocol-implicitly-defined-attribute = true
+redundant-cast = true
+unannotated-attribute = true
+unannotated-parameter = true
+unannotated-return = true

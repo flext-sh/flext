@@ -47,6 +47,7 @@
 
 # Python configuration
 !pyproject.toml
+!pyrefly.toml
 !poetry.lock
 !ruff-shared.toml
 
