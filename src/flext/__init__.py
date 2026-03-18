@@ -16,13 +16,11 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
-    from flext_core.typings import FlextTypes
-
     from flext.constants import FlextConstants, c
     from flext.models import FlextModels, m
     from flext.protocols import FlextProtocols, p
     from flext.service import FlextServiceBase, s
-    from flext.typings import t
+    from flext.typings import FlextTypes, t
     from flext.utilities import FlextUtilities, u
     from flext.workspace import main
 
