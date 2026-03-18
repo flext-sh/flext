@@ -11,6 +11,9 @@ project-excludes = [
   "flext-ldap/tests/**/*.py",
   "flext-cli/tests/unit/test_cli.py",
   "flext-cli/tests/unit/test_config_model_integration.py",
+  "**/tests/__init__.py",
+  "**/tests/infra/__init__.py",
+  "**/tests/unit/__init__.py",
 ]
 python-version = "3.13"
 search-path = [
