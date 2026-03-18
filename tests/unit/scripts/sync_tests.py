@@ -21,11 +21,12 @@ class TestSyncScripts:
         _ = project.mkdir(parents=True)
         _ = (canonical / "base.mk").write_text("BASE = 1\n", encoding="utf-8")
 
-        service = mod.FlextInfraSyncService(canonical_root=canonical)
-        result = service.sync(workspace_root=project)
-        sync_result = tm.ok(result)
+         service = mod.FlextInfraSyncService(canonical_root=canonical)
+         result = service.sync(workspace_root=project)
+         tm.ok(result)
+         sync_result = result.value
 
-        tm.that(sync_result.files_changed, gte=1)
+         tm.that(sync_result.files_changed, gte=1)
         tm.that((project / "base.mk").exists(), eq=True)
         tm.that((project / ".gitignore").exists(), eq=True)
 
