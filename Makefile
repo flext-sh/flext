@@ -112,7 +112,7 @@ endef
 
 define AUTO_SYNC_ALL_PROJECTS
 for proj in $(ALL_PROJECTS); do \
-	$(PY) -m flext_infra workspace sync --workspace "$$proj" --canonical-root "$(CURDIR)" >/dev/null || exit 1; \
+	$(PY) -m flext_infra workspace sync --workspace "$$proj" --canonical-root "$(CURDIR)" --apply >/dev/null || exit 1; \
 done
 endef
 
@@ -292,10 +292,10 @@ setup: ## Install all projects into workspace .venv
 	$(Q)echo "Enforcing Python version guards..."; $(PY) -m flext_infra maintenance || exit 1
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
-	$(POETRY_ENV) $(PY) -m flext_infra deps modernize --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	$(POETRY_ENV) $(PY) -m flext_infra deps modernize --skip-check --apply 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
 	$(Q)echo "Syncing dependency paths to workspace mode..."; \
-	$(PY) -m flext_infra deps path-sync --mode auto 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
+	$(PY) -m flext_infra deps path-sync --mode auto --apply 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
 	echo ""
 	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
 	echo "Starting workspace setup for $$total_steps item(s) ($(words $(SELECTED_PROJECTS)) projects + root)"; \
@@ -394,10 +394,10 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)echo "Enforcing Python version guards..."; $(PY) -m flext_infra maintenance || exit 1
 	$(Q)echo "Modernizing pyproject.toml files..."; \
-	$(POETRY_ENV) $(PY) -m flext_infra deps modernize --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	$(POETRY_ENV) $(PY) -m flext_infra deps modernize --skip-check --apply 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
 	$(Q)echo "Syncing dependency paths to workspace mode..."; \
-	$(PY) -m flext_infra deps path-sync --mode auto 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
+	$(PY) -m flext_infra deps path-sync --mode auto --apply 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
 	echo ""
 	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
 	echo "Upgrading Python dependencies for $(words $(SELECTED_PROJECTS)) project(s) + root"; \
@@ -518,10 +518,10 @@ modernize: ## Modernize pyproject.toml files (standardize configs without lock/i
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
-	$(POETRY_ENV) $(PY) -m flext_infra deps modernize --skip-check 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	$(POETRY_ENV) $(PY) -m flext_infra deps modernize --skip-check --apply 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
 	$(Q)echo "Syncing dependency paths to workspace mode..."; \
-	$(PY) -m flext_infra deps path-sync --mode auto 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
+	$(PY) -m flext_infra deps path-sync --mode auto --apply 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
 	echo ""
 	$(Q)echo "Formatting pyproject.toml files with taplo..."; \
 	taplo format pyproject.toml */pyproject.toml 2>&1 | grep -vE '^\s*$$' || true; \
