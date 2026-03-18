@@ -1,0 +1,23 @@
+docker/images/support/quality/enterprise/flext_core/__init__.py
+  3758a5882ce7a7f3 25-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "0343b62393d7123b6bb0d1d6f451f557d0fd5445",
+  "prompts": {
+    "3758a5882ce7a7f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2fe4f524cffe2P0ZrkPayKFWfS-7bbd07b3-c85f-4673-8811-cb92c8c9ad00",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
