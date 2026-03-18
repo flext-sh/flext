@@ -20,6 +20,8 @@ class FlextWorkspaceTestConstants(FlextTestsConstants):
             PR_MANAGER_MODULE: Final[str] = "flext_infra.github.pr"
 
             class Calls:
+                """Git command aliases for workspace operations."""
+
                 CHECKOUT: Final[str] = "co"
                 CHECKPOINT: Final[str] = "cp"
 
