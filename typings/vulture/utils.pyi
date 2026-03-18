@@ -1,7 +1,7 @@
-
 import ast
 from enum import IntEnum
 from pathlib import Path
+from typing import override
 
 class VultureInputException(Exception): ...
 
@@ -22,9 +22,11 @@ def read_file(filename: str | Path) -> str: ...
 class LoggingList(list[object]):
     typ: str
     def __init__(self, typ: str, verbose: bool) -> None: ...
+    @override
     def append(self, item: object) -> None: ...
 
 class LoggingSet(set[str]):
     typ: str
     def __init__(self, typ: str, verbose: bool) -> None: ...
+    @override
     def add(self, name: str) -> None: ...

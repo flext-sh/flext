@@ -1,8 +1,7 @@
-
 import configparser
 from collections.abc import Callable, Generator, Iterable, Sequence
 from contextlib import contextmanager
-from typing import TypeVar
+from typing import TypeVar, override
 
 from radon.cli.harvest import Harvester
 
@@ -14,7 +13,6 @@ CONFIG_SECTION_NAME: str
 T = TypeVar("T")
 
 class FileConfig:
-    
     file_cfg: configparser.ConfigParser
 
     def __init__(self) -> None: ...
@@ -22,9 +20,7 @@ class FileConfig:
     @staticmethod
     def toml_config() -> dict[str, object]: ...
     @staticmethod
-    def file_config() -> configparser.ConfigParser:
-        
-        ...
+    def file_config() -> configparser.ConfigParser: ...
 
 _cfg: FileConfig
 program: object
@@ -48,10 +44,7 @@ def cc(
     output_file: str | None = ...,
     include_ipynb: bool = ...,
     ipynb_cells: bool = ...,
-) -> None:
-    
-    ...
-
+) -> None: ...
 def raw(
     paths: Sequence[str],
     exclude: str | None = ...,
@@ -61,10 +54,7 @@ def raw(
     output_file: str | None = ...,
     include_ipynb: bool = ...,
     ipynb_cells: bool = ...,
-) -> None:
-    
-    ...
-
+) -> None: ...
 def mi(
     paths: Sequence[str],
     min: str = ...,
@@ -78,10 +68,7 @@ def mi(
     output_file: str | None = ...,
     include_ipynb: bool = ...,
     ipynb_cells: bool = ...,
-) -> None:
-    
-    ...
-
+) -> None: ...
 def hal(
     paths: Sequence[str],
     exclude: str | None = ...,
@@ -91,48 +78,21 @@ def hal(
     output_file: str | None = ...,
     include_ipynb: bool = ...,
     ipynb_cells: bool = ...,
-) -> None:
-    
-    ...
+) -> None: ...
 
 class Config:
-    
     config_values: dict[str, object]
 
-    def __init__(self, **kwargs: object) -> None:
-        
-        ...
-
-    def __getattr__(self, attr: str) -> object:
-        
-        ...
-
-    def __eq__(self, other: object) -> bool:
-        
-        ...
-
+    def __init__(self, **kwargs: object) -> None: ...
+    def __getattr__(self, attr: str) -> object: ...
+    @override
+    def __eq__(self, other: object) -> bool: ...
     @classmethod
-    def from_function(cls, func: Callable[..., object]) -> Config:
-        
-        ...
+    def from_function(cls, func: Callable[..., object]) -> Config: ...
 
-def log_result(harvester: Harvester, **kwargs: object) -> None:
-    
-    ...
-
-def log(msg: str, *args: object, **kwargs: object) -> None:
-    
-    ...
-
-def log_list(lst: Iterable[str], *args: object, **kwargs: object) -> None:
-    
-    ...
-
-def log_error(msg: str, *args: object, **kwargs: object) -> None:
-    
-    ...
-
+def log_result(harvester: Harvester, **kwargs: object) -> None: ...
+def log(msg: str, *args: object, **kwargs: object) -> None: ...
+def log_list(lst: Iterable[str], *args: object, **kwargs: object) -> None: ...
+def log_error(msg: str, *args: object, **kwargs: object) -> None: ...
 @contextmanager
-def outstream(outfile: str | None = ...) -> Generator[object]:
-    
-    ...
+def outstream(outfile: str | None = ...) -> Generator[object]: ...
