@@ -11,7 +11,11 @@ from .typings import t
 
 class FlextWorkspaceTestUtilities(FlextTestsUtilities):
     class Workspace:
+        """Workspace-level test utilities."""
+
         class Tests:
+            """Test infrastructure utility functions."""
+
             @staticmethod
             def resolve_module_path(*, anchor_file: Path, relative_path: str) -> Path:
                 for parent in anchor_file.resolve().parents:
