@@ -87,14 +87,15 @@ class TestPrWorkspace:
 
         manager = mod.FlextInfraPrWorkspaceManager(
             runner=RunnerStub(),
-            selector=None,
-            reporting=ReportingStub(),
-        )
-        result = manager.run_pr(workspace, workspace, self._pr_args())
-        run_data = tm.ok(result)
+             selector=None,
+             reporting=ReportingStub(),
+         )
+         result = manager.run_pr(workspace, workspace, self._pr_args())
+         tm.ok(result)
+         run_data = result.value
 
-        tm.that(run_data.exit_code, eq=0)
-        tm.that(commands, empty=False)
+         tm.that(run_data.exit_code, eq=0)
+         tm.that(commands, empty=False)
         tm.that(
             commands[0][:5],
             eq=[
