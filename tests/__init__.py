@@ -11,11 +11,7 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
-    from flext_tests.decorators import d
-    from flext_tests.exceptions import e
-    from flext_tests.handlers import h
-    from flext_tests.mixins import x
-    from flext_tests.service import s
+    from flext_tests import d, e, h, s, x
 
     from . import infra as infra
     from .infra.constants import FlextWorkspaceTestConstants, c
@@ -43,19 +39,19 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
         "FlextWorkspaceTestUtilities",
     ),
     "c": ("tests.infra.constants", "c"),
-    "d": ("flext_tests.decorators", "d"),
-    "e": ("flext_tests.exceptions", "e"),
-    "h": ("flext_tests.handlers", "h"),
+    "d": ("flext_tests", "d"),
+    "e": ("flext_tests", "e"),
+    "h": ("flext_tests", "h"),
     "infra": ("tests.infra", ""),
     "m": ("tests.infra.models", "m"),
     "p": ("tests.infra.protocols", "p"),
     "r": ("tests.infra.result", "r"),
-    "s": ("flext_tests.service", "s"),
+    "s": ("flext_tests", "s"),
     "t": ("tests.infra.typings", "t"),
     "tf": ("tests.tf", "tf"),
     "tm": ("tests.tm", "tm"),
     "u": ("tests.infra.utilities", "u"),
-    "x": ("flext_tests.mixins", "x"),
+    "x": ("flext_tests", "x"),
 }
 
 __all__ = [
