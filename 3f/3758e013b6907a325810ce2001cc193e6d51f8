@@ -1,0 +1,23 @@
+Makefile
+  b6306429276b6627 899,906
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "3f3758e013b6907a325810ce2001cc193e6d51f8",
+  "prompts": {
+    "b6306429276b6627": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6e763e2b-70ce-4f27-84de-9d3ebd2be259",
+        "model": "claude-haiku-4-5-20251001"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
