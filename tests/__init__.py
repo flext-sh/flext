@@ -42,7 +42,11 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "m": ("tests.infra.models", "m"),
     "p": ("tests.infra.protocols", "p"),
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "r": ("tests.infra.result", "r"),
+=======
+    "r": ("tests.infra", "r"),
+>>>>>>> Stashed changes
 =======
     "r": ("tests.infra", "r"),
 >>>>>>> Stashed changes
