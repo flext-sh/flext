@@ -896,13 +896,13 @@ codegen: ## Standardize __init__.py lazy imports (PEP 562)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "Standardizing __init__.py lazy imports..."
-	$(Q)PYTHONPATH="$(CURDIR)/flext-infra/src:$$PYTHONPATH" $(PY) -m flext_infra codegen lazy-init --workspace "$(CURDIR)"
+	$(Q)PYTHONPATH="$(CURDIR)/flext-infra/src:$(CURDIR)/flext-core/src:$$PYTHONPATH" $(PY) -m flext_infra codegen lazy-init --workspace "$(CURDIR)"
 	$(Q)echo "Formatting generated files (ruff)..."
 	$(Q)$(POETRY_ENV) ruff format . --quiet
 
 imports: ## Detect and fix import violations across workspace (CST-based)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
-	$(Q)PYTHONPATH="$(CURDIR)/flext-infra/src:$$PYTHONPATH" \
+	$(Q)PYTHONPATH="$(CURDIR)/flext-infra/src:$(CURDIR)/flext-core/src:$$PYTHONPATH" \
 		$(PY) -m flext_infra refactor imports \
 		--workspace "$(CURDIR)" $(if $(APPLY),--apply,)
