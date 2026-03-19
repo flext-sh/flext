@@ -11,6 +11,11 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
+    from flext_tests.decorators import d
+    from flext_tests.exceptions import e
+    from flext_tests.handlers import h
+    from flext_tests.mixins import x
+    from flext_tests.service import s
 
     from .constants import FlextWorkspaceTestConstants, c
     from .models import FlextWorkspaceTestModels, m
@@ -35,11 +40,16 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
         "FlextWorkspaceTestUtilities",
     ),
     "c": ("tests.infra.constants", "c"),
+    "d": ("flext_tests.decorators", "d"),
+    "e": ("flext_tests.exceptions", "e"),
+    "h": ("flext_tests.handlers", "h"),
     "m": ("tests.infra.models", "m"),
     "p": ("tests.infra.protocols", "p"),
     "r": ("tests.infra.result", "r"),
+    "s": ("flext_tests.service", "s"),
     "t": ("tests.infra.typings", "t"),
     "u": ("tests.infra.utilities", "u"),
+    "x": ("flext_tests.mixins", "x"),
 }
 
 __all__ = [
@@ -49,11 +59,16 @@ __all__ = [
     "FlextWorkspaceTestTypes",
     "FlextWorkspaceTestUtilities",
     "c",
+    "d",
+    "e",
+    "h",
     "m",
     "p",
     "r",
+    "s",
     "t",
     "u",
+    "x",
 ]
 
 
