@@ -11,14 +11,13 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
-    from flext_tests import d, e, h, s, x
+    from flext_tests import c, d, e, h, m, p, r, s, t, u, x
 
-    from .constants import FlextWorkspaceTestConstants, c
-    from .models import FlextWorkspaceTestModels, m
-    from .protocols import FlextWorkspaceTestProtocols, p
-    from .result import r
-    from .typings import FlextWorkspaceTestTypes, t
-    from .utilities import FlextWorkspaceTestUtilities, u
+    from .constants import FlextWorkspaceTestConstants
+    from .models import FlextWorkspaceTestModels
+    from .protocols import FlextWorkspaceTestProtocols
+    from .typings import FlextWorkspaceTestTypes
+    from .utilities import FlextWorkspaceTestUtilities
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextWorkspaceTestConstants": (
@@ -35,16 +34,16 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
         "tests.infra.utilities",
         "FlextWorkspaceTestUtilities",
     ),
-    "c": ("tests.infra.constants", "c"),
+    "c": ("flext_tests", "c"),
     "d": ("flext_tests", "d"),
     "e": ("flext_tests", "e"),
     "h": ("flext_tests", "h"),
-    "m": ("tests.infra.models", "m"),
-    "p": ("tests.infra.protocols", "p"),
-    "r": ("tests.infra.result", "r"),
+    "m": ("flext_tests", "m"),
+    "p": ("flext_tests", "p"),
+    "r": ("flext_tests", "r"),
     "s": ("flext_tests", "s"),
-    "t": ("tests.infra.typings", "t"),
-    "u": ("tests.infra.utilities", "u"),
+    "t": ("flext_tests", "t"),
+    "u": ("flext_tests", "u"),
     "x": ("flext_tests", "x"),
 }
 

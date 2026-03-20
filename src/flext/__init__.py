@@ -16,15 +16,15 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
-    from flext_core import d, e, h, r, x
+    from flext_core import d, e, h, r, s, x
     from flext_core.typings import FlextTypes
 
-    from flext.constants import FlextConstants, c
-    from flext.models import FlextModels, m
-    from flext.protocols import FlextProtocols, p
-    from flext.service import FlextServiceBase, s
-    from flext.typings import FlextTypes, t
-    from flext.utilities import FlextUtilities, u
+    from flext.constants import FlextConstants, FlextConstants as c
+    from flext.models import FlextModels, FlextModels as m
+    from flext.protocols import FlextProtocols, FlextProtocols as p
+    from flext.service import FlextServiceBase
+    from flext.typings import FlextTypes, FlextTypes as t
+    from flext.utilities import FlextUtilities, FlextUtilities as u
     from flext.workspace import main
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
@@ -34,17 +34,17 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextServiceBase": ("flext.service", "FlextServiceBase"),
     "FlextTypes": ("flext.typings", "FlextTypes"),
     "FlextUtilities": ("flext.utilities", "FlextUtilities"),
-    "c": ("flext.constants", "c"),
+    "c": ("flext.constants", "FlextConstants"),
     "d": ("flext_core", "d"),
     "e": ("flext_core", "e"),
     "h": ("flext_core", "h"),
-    "m": ("flext.models", "m"),
+    "m": ("flext.models", "FlextModels"),
     "main": ("flext.workspace", "main"),
-    "p": ("flext.protocols", "p"),
+    "p": ("flext.protocols", "FlextProtocols"),
     "r": ("flext_core", "r"),
-    "s": ("flext.service", "s"),
-    "t": ("flext.typings", "t"),
-    "u": ("flext.utilities", "u"),
+    "s": ("flext_core", "s"),
+    "t": ("flext.typings", "FlextTypes"),
+    "u": ("flext.utilities", "FlextUtilities"),
     "x": ("flext_core", "x"),
 }
 
