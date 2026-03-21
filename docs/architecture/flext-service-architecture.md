@@ -9203,7 +9203,7 @@ class TestBackwardCompatibility:
 - `User(id=...)` → `User(unique_id=...)`
 - `assert "id" in dumped` → `assert "unique_id" in dumped`
 - `hasattr(obj, "id")` → `hasattr(obj, "unique_id")`
-- `FlextConstants.Mixins.FIELD_ID == "id"` → `== "unique_id"`
+- `FlextConstants.FIELD_ID == "id"` → `== "unique_id"`
 
 ### 📈 Métricas de Sucesso
 

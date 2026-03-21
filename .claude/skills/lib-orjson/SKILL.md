@@ -43,7 +43,7 @@ description: Deterministic high-performance JSON serialization with orjson in fl
 - Always keep deterministic ordering: pass `option=orjson.OPT_SORT_KEYS`.
 - Preserve fallback path to stdlib JSON for unsupported types or serialization failures.
 - Catch and handle serialization boundary errors where utility currently protects callers.
-- Keep encoded string format consistent with `c.Utilities.DEFAULT_ENCODING`.
+- Keep encoded string format consistent with `c.DEFAULT_ENCODING`.
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 ## Instructions
 
@@ -59,7 +59,7 @@ def sort_key(value) -> tuple[str, str]:
     ...
     try:
         json_bytes = orjson.dumps(value, option=orjson.OPT_SORT_KEYS)
-        serialized = json_bytes.decode(c.Utilities.DEFAULT_ENCODING)
+        serialized = json_bytes.decode(c.DEFAULT_ENCODING)
     except (AttributeError, TypeError, ValueError, RuntimeError, KeyError):
         serialized = json.dumps(value, sort_keys=True, default=str)
     return (type_cat, serialized)
@@ -85,7 +85,7 @@ Good:
 
 ```python
 json_bytes = orjson.dumps(value, option=orjson.OPT_SORT_KEYS)
-serialized = json_bytes.decode(c.Utilities.DEFAULT_ENCODING)
+serialized = json_bytes.decode(c.DEFAULT_ENCODING)
 return (type_cat, serialized)
 ```
 
@@ -105,7 +105,7 @@ Good:
 ```python
 try:
     json_bytes = orjson.dumps(value, option=orjson.OPT_SORT_KEYS)
-    serialized = json_bytes.decode(c.Utilities.DEFAULT_ENCODING)
+    serialized = json_bytes.decode(c.DEFAULT_ENCODING)
 except (AttributeError, TypeError, ValueError, RuntimeError, KeyError):
     serialized = json.dumps(value, sort_keys=True, default=str)
 ```

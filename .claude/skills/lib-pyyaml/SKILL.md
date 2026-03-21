@@ -100,7 +100,7 @@ def write_yaml_file(...) -> r[bool]:
 # flext-meltano/src/flext_meltano/file_managers.py
 @classmethod
 def validate_yaml_file(cls, file_path: Path) -> r[bool]:
-    with file_path.open("r", encoding=c.Utilities.DEFAULT_ENCODING) as f:
+    with file_path.open("r", encoding=c.DEFAULT_ENCODING) as f:
         yaml.safe_load(f)
 ```
 
