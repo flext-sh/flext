@@ -1,13 +1,7 @@
 # AUTO-GENERATED FILE — DO NOT EDIT MANUALLY.
 # Regenerate with: make codegen
 #
-"""Flext workspace package.
-
-This module provides the main entry point and shared components for the flext package.
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-"""
+"""Flext package."""
 
 from __future__ import annotations
 
@@ -17,7 +11,6 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core import d, e, h, r, s, x
-    from flext_core.typings import FlextTypes
 
     from flext.constants import FlextConstants, FlextConstants as c
     from flext.models import FlextModels, FlextModels as m
@@ -70,7 +63,7 @@ __all__ = [
 ]
 
 
-_LAZY_CACHE: dict[str, object] = {}
+_LAZY_CACHE: dict[str, FlextTypes.ModuleExport] = {}
 
 
 def __getattr__(name: str) -> FlextTypes.ModuleExport:
