@@ -11,6 +11,9 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
+
+
+if TYPE_CHECKING:
     from flext_tests import d, e, h, s, x
 
     from . import infra as infra
@@ -27,24 +30,12 @@ if TYPE_CHECKING:
     from .unit.scripts.sync_tests import TestSyncScripts
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
-    "FlextWorkspaceTestConstants": (
-        "tests.infra.constants",
-        "FlextWorkspaceTestConstants",
-    ),
+    "FlextWorkspaceTestConstants": ("tests.infra.constants", "FlextWorkspaceTestConstants"),
     "FlextWorkspaceTestModels": ("tests.infra.models", "FlextWorkspaceTestModels"),
-    "FlextWorkspaceTestProtocols": (
-        "tests.infra.protocols",
-        "FlextWorkspaceTestProtocols",
-    ),
+    "FlextWorkspaceTestProtocols": ("tests.infra.protocols", "FlextWorkspaceTestProtocols"),
     "FlextWorkspaceTestTypes": ("tests.infra.typings", "FlextWorkspaceTestTypes"),
-    "FlextWorkspaceTestUtilities": (
-        "tests.infra.utilities",
-        "FlextWorkspaceTestUtilities",
-    ),
-    "TestPrWorkspace": (
-        "tests.unit.scripts.github.test_pr_workspace",
-        "TestPrWorkspace",
-    ),
+    "FlextWorkspaceTestUtilities": ("tests.infra.utilities", "FlextWorkspaceTestUtilities"),
+    "TestPrWorkspace": ("tests.unit.scripts.github.test_pr_workspace", "TestPrWorkspace"),
     "TestSyncScripts": ("tests.unit.scripts.sync_tests", "TestSyncScripts"),
     "TestVersioning": ("tests.unit.libs.versioning_tests", "TestVersioning"),
     "c": ("tests.infra.constants", "c"),
@@ -89,7 +80,7 @@ __all__ = [
 ]
 
 
-_LAZY_CACHE: dict[str, object] = {}
+_LAZY_CACHE: dict[str, FlextTypes.ModuleExport] = {}
 
 
 def __getattr__(name: str) -> FlextTypes.ModuleExport:

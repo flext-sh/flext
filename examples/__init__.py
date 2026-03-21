@@ -12,6 +12,8 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
 
+
+if TYPE_CHECKING:
     from examples.acl_processing_example import (
         AclProcessingExample,
         ContextDict,
@@ -25,14 +27,8 @@ if TYPE_CHECKING:
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "AclProcessingExample": ("examples.acl_processing_example", "AclProcessingExample"),
-    "AdvancedProcessingExample": (
-        "examples.advanced_processing_example",
-        "AdvancedProcessingExample",
-    ),
-    "CompleteWorkflowExample": (
-        "examples.complete_workflow_example",
-        "CompleteWorkflowExample",
-    ),
+    "AdvancedProcessingExample": ("examples.advanced_processing_example", "AdvancedProcessingExample"),
+    "CompleteWorkflowExample": ("examples.complete_workflow_example", "CompleteWorkflowExample"),
     "ContextDict": ("examples.acl_processing_example", "ContextDict"),
     "EntryDict": ("examples.acl_processing_example", "EntryDict"),
     "ItemDict": ("examples.advanced_processing_example", "ItemDict"),
@@ -50,7 +46,7 @@ __all__ = [
 ]
 
 
-_LAZY_CACHE: dict[str, object] = {}
+_LAZY_CACHE: dict[str, FlextTypes.ModuleExport] = {}
 
 
 def __getattr__(name: str) -> FlextTypes.ModuleExport:
