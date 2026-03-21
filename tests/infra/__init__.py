@@ -11,6 +11,9 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
+
+
+if TYPE_CHECKING:
     from flext_tests import c, d, e, h, m, p, r, s, t, u, x
 
     from .constants import FlextWorkspaceTestConstants
@@ -20,20 +23,11 @@ if TYPE_CHECKING:
     from .utilities import FlextWorkspaceTestUtilities
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
-    "FlextWorkspaceTestConstants": (
-        "tests.infra.constants",
-        "FlextWorkspaceTestConstants",
-    ),
+    "FlextWorkspaceTestConstants": ("tests.infra.constants", "FlextWorkspaceTestConstants"),
     "FlextWorkspaceTestModels": ("tests.infra.models", "FlextWorkspaceTestModels"),
-    "FlextWorkspaceTestProtocols": (
-        "tests.infra.protocols",
-        "FlextWorkspaceTestProtocols",
-    ),
+    "FlextWorkspaceTestProtocols": ("tests.infra.protocols", "FlextWorkspaceTestProtocols"),
     "FlextWorkspaceTestTypes": ("tests.infra.typings", "FlextWorkspaceTestTypes"),
-    "FlextWorkspaceTestUtilities": (
-        "tests.infra.utilities",
-        "FlextWorkspaceTestUtilities",
-    ),
+    "FlextWorkspaceTestUtilities": ("tests.infra.utilities", "FlextWorkspaceTestUtilities"),
     "c": ("flext_tests", "c"),
     "d": ("flext_tests", "d"),
     "e": ("flext_tests", "e"),
@@ -67,7 +61,7 @@ __all__ = [
 ]
 
 
-_LAZY_CACHE: dict[str, object] = {}
+_LAZY_CACHE: dict[str, FlextTypes.ModuleExport] = {}
 
 
 def __getattr__(name: str) -> FlextTypes.ModuleExport:
