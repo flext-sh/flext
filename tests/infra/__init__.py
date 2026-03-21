@@ -23,11 +23,20 @@ if TYPE_CHECKING:
     from .utilities import FlextWorkspaceTestUtilities
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
-    "FlextWorkspaceTestConstants": ("tests.infra.constants", "FlextWorkspaceTestConstants"),
+    "FlextWorkspaceTestConstants": (
+        "tests.infra.constants",
+        "FlextWorkspaceTestConstants",
+    ),
     "FlextWorkspaceTestModels": ("tests.infra.models", "FlextWorkspaceTestModels"),
-    "FlextWorkspaceTestProtocols": ("tests.infra.protocols", "FlextWorkspaceTestProtocols"),
+    "FlextWorkspaceTestProtocols": (
+        "tests.infra.protocols",
+        "FlextWorkspaceTestProtocols",
+    ),
     "FlextWorkspaceTestTypes": ("tests.infra.typings", "FlextWorkspaceTestTypes"),
-    "FlextWorkspaceTestUtilities": ("tests.infra.utilities", "FlextWorkspaceTestUtilities"),
+    "FlextWorkspaceTestUtilities": (
+        "tests.infra.utilities",
+        "FlextWorkspaceTestUtilities",
+    ),
     "c": ("flext_tests", "c"),
     "d": ("flext_tests", "d"),
     "e": ("flext_tests", "e"),
