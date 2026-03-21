@@ -1,0 +1,36 @@
+.claude/skills/flext-strict-typing/SKILL.md
+  9a31f3b890f00fda 397,404-407
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "78c0ee8c7dbc80b00bfc2dbbf515b6b106063a61",
+  "prompts": {
+    "063cc88dc0dddb0e": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "82146a98-ca7d-497c-8a7e-05b7f75d6a99",
+        "model": "copilot/oswe-vscode-prime"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 191,
+      "total_deletions": 6,
+      "accepted_lines": 191,
+      "overriden_lines": 0
+    },
+    "9a31f3b890f00fda": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8baac876-0fac-4945-ade4-a7a013891fd3",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 5,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
