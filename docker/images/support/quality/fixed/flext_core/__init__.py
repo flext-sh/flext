@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Mapping, Sequence
+from collections.abc import Container as BeartypeContainer, Mapping, Sequence
 
-from beartype.typing import Container as BeartypeContainer
 from dependency_injector.containers import Container as DIContainersContainer
 from dependency_injector.providers import Container as DIProvidersContainer
 from docker.models.containers import Container as DockerContainerModel
