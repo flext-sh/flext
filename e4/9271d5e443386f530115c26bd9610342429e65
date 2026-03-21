@@ -1,0 +1,51 @@
+docker/images/support/quality/enterprise/flext_core/__init__.py
+  bd2c4693add227d7 6
+docker/images/support/quality/fixed/flext_core/__init__.py
+  749b8bf3240583eb 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "e49271d5e443386f530115c26bd9610342429e65",
+  "prompts": {
+    "063cc88dc0dddb0e": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "82146a98-ca7d-497c-8a7e-05b7f75d6a99",
+        "model": "copilot/oswe-vscode-prime"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 8,
+      "total_deletions": 36,
+      "accepted_lines": 782,
+      "overriden_lines": 0
+    },
+    "749b8bf3240583eb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2ef162a8affeCJh0x30UVhVjRT-83726f2c-3ca1-473f-a101-4dd93e9dd311",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 3,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "bd2c4693add227d7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2ef162a8affeCJh0x30UVhVjRT-e443c12d-08ca-443a-bb2a-9777f420bc68",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 2,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
