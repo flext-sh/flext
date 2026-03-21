@@ -56,6 +56,10 @@
     "/^cd /home/marlonsc/flext && python3 -m py_compile flext-ldif/tests/constants\\.py$/": {
       "approve": true,
       "matchCommandLine": true
+    },
+    "/^python scripts/validate-docstrings\\.py flext-api/src \\| head -n 220$/": {
+      "approve": true,
+      "matchCommandLine": true
     }
   }
 }
