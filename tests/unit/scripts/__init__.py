@@ -19,7 +19,10 @@ if TYPE_CHECKING:
     from .sync_tests import TestSyncScripts
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
-    "TestPrWorkspace": ("tests.unit.scripts.github.test_pr_workspace", "TestPrWorkspace"),
+    "TestPrWorkspace": (
+        "tests.unit.scripts.github.test_pr_workspace",
+        "TestPrWorkspace",
+    ),
     "TestSyncScripts": ("tests.unit.scripts.sync_tests", "TestSyncScripts"),
     "github": ("tests.unit.scripts.github", ""),
 }
