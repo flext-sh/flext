@@ -296,35 +296,35 @@ func (c *CleanArchitectureConfig) Validate() error {
 	}
 
 	// Performance validation
-	if c.MetricsInterval <= 0 {
+	if c.Performance.MetricsInterval <= 0 {
 		return fmt.Errorf("performance metrics_interval must be > 0")
 	}
 
-	if c.TracingSampleRate < 0 || c.TracingSampleRate > 1 {
+	if c.Performance.TracingSampleRate < 0 || c.Performance.TracingSampleRate > 1 {
 		return fmt.Errorf("performance tracing_sample_rate must be between 0 and 1")
 	}
 
-	if c.ProfilingPort <= 0 || c.ProfilingPort > 65535 {
+	if c.Performance.ProfilingPort <= 0 || c.Performance.ProfilingPort > 65535 {
 		return fmt.Errorf("performance profiling_port must be between 1 and 65535")
 	}
 
-	if c.CircuitBreakerThreshold <= 0 {
+	if c.Performance.CircuitBreakerThreshold <= 0 {
 		return fmt.Errorf("performance circuit_breaker_threshold must be > 0")
 	}
 
-	if c.CircuitBreakerTimeout <= 0 {
+	if c.Performance.CircuitBreakerTimeout <= 0 {
 		return fmt.Errorf("performance circuit_breaker_timeout must be > 0")
 	}
 
-	if c.GCPercent < 0 {
+	if c.Performance.GCPercent < 0 {
 		return fmt.Errorf("performance gc_percent must be >= 0")
 	}
 
-	if c.MaxMemoryMB <= 0 {
+	if c.Performance.MaxMemoryMB <= 0 {
 		return fmt.Errorf("performance max_memory_mb must be > 0")
 	}
 
-	if c.MemoryThresholdPercent <= 0 || c.MemoryThresholdPercent > 100 {
+	if c.Performance.MemoryThresholdPercent <= 0 || c.Performance.MemoryThresholdPercent > 100 {
 		return fmt.Errorf("performance memory_threshold_percent must be between 1 and 100")
 	}
 
@@ -358,5 +358,5 @@ func (c *CleanArchitectureConfig) GetAPIConfig() APIConfig {
 
 // GetPerformanceConfig returns performance configuration
 func (c *CleanArchitectureConfig) GetPerformanceConfig() PerformanceConfig {
-	return c
+	return c.Performance
 }
