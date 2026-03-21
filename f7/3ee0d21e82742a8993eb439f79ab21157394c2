@@ -1,0 +1,23 @@
+AGENTS.md
+  466889b76c1a5dad 151-158,160-161,163-182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "f73ee0d21e82742a8993eb439f79ab21157394c2",
+  "prompts": {
+    "466889b76c1a5dad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7fc88e61-9de0-4c0c-935d-a8fe5360cb79",
+        "model": "claude-haiku-4-5-20251001"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 30,
+      "total_deletions": 0,
+      "accepted_lines": 30,
+      "overriden_lines": 0
+    }
+  }
+}
