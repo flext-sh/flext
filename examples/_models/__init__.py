@@ -43,4 +43,4 @@ except (ImportError, AttributeError):
             if hasattr(_core_models, "__all__"):
                 __all__ = _core_models.__all__
     else:
-        __all__ = []
+        __all__: list[str] = []
