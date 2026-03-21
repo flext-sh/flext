@@ -150,8 +150,8 @@ def process_data(
         TimeoutError: If operation exceeds timeout seconds.
 
     Example:
-        >>> result = process_data(Path('data.json'))
-        >>> if result['errors']:
+        >>> result = process_data(Path("data.json"))
+        >>> if result["errors"]:
         ...     print(f"Found {len(result['errors'])} errors")
     """
 ```
@@ -382,6 +382,7 @@ def _internal_helper(x: int) -> int:
     # Skip if obvious from name + type
     return x * 2
 
+
 def _validate_email(addr: str) -> bool:
     # Skip if implementation self-documenting
     return "@" in addr and "." in addr.split("@")[1]
@@ -391,6 +392,7 @@ def _validate_email(addr: str) -> bool:
 ```python
 def search(query: str, limit: int = 10) -> list[Result]:
     """Search index with query, return up to limit results."""
+
 
 def validate_config(cfg: dict) -> bool:
     """Validate configuration against schema."""

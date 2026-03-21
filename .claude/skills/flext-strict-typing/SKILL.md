@@ -394,17 +394,17 @@ class MyModel(BaseModel):
 
 ## Rule 6: Annotated Validation Types
 
-Use `t.Validation.*` for constrained scalar fields:
+Use `t.*` validation types for constrained scalar fields:
 
 ```python
 from flext_core import t
 
 
 class ServerConfig(BaseModel):
-    port: t.Validation.PortNumber  # Annotated[int, Field(ge=1, le=65535)]
-    timeout: t.Validation.PositiveTimeout  # Annotated[float, Field(gt=0.0, le=300.0)]
-    retries: t.Validation.RetryCount  # Annotated[int, Field(ge=0, le=10)]
-    workers: t.Validation.WorkerCount  # Annotated[int, Field(ge=1, le=100)]
+    port: t.PortNumber  # Annotated[int, Ge(1), Le(65535)]
+    timeout: t.PositiveTimeout  # Annotated[float, Gt(0.0), Le(300.0)]
+    retries: t.RetryCount  # Annotated[int, Ge(0), Le(10)]
+    workers: t.WorkerCount  # Annotated[int, Ge(1), Le(100)]
 ```
 
 ---
