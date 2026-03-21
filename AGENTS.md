@@ -148,6 +148,38 @@ alwaysApply: true
 - **Forced Patterns**: Wildcard imports and relative imports are FORBIDDEN in governed code.
 - **Aliases**: No double-assignment of facade aliases (`c/m/p/t/u` are assigned once at module bottom).
 - **Direction**: Cross-tier imports violating architecture direction are FORBIDDEN.
+- **Circular Import Resolution (CRITICAL)**:
+  - **Root Cause**: Circular imports arise when modules at the same tier (e.g., `_protocols/base.py` and `_protocols/result.py`) reference each other, or when TIER 0.5 modules need types from TIER 1+.
+  - **Correct Solution** (NO workarounds):
+    1. **Use `from __future__ import annotations`** — Converts ALL type hints to forward references (strings). This allows type hints to reference types not yet imported.
+    2. **Use `TYPE_CHECKING` ONLY for type-only imports** — When a module needs a type in annotations but importing it would create a cycle, use `TYPE_CHECKING`:
+       ```python
+       from __future__ import annotations
+       from typing import TYPE_CHECKING
+
+       if TYPE_CHECKING:
+           from flext_core._protocols.result import FlextProtocolsResult
+
+
+       def validate(self) -> FlextProtocolsResult.Result[bool]:  # Works! String at runtime
+           ...
+       ```
+    3. **Import concrete submodules, NOT `flext_core`** — In internal modules (`_protocols/`, `_models/`, `_typings/`), import from sibling submodules or foundation modules directly:
+       ```python
+       # ✓ CORRECT
+       from flext_core._protocols.base import FlextProtocolsBase
+       from flext_core.typings import FlextTypes as t
+
+       # ✗ WRONG — causes lazy-load cycles
+       from flext_core import FlextProtocolsBase, t
+       ```
+    4. **Trust lazy loading in `__init__.py`** — The `__init__.py` lazy-load system (via `lazy_getattr`) properly sequences module initialization to break cycles. Do NOT use workarounds like `model_rebuild()`, string annotations, or `object`/`Any` types.
+  - **FORBIDDEN Workarounds**:
+    - ✗ Using `model_rebuild()` — indicates root-cause unresolved
+    - ✗ Using string type hints like `"FlextProtocolsResult.Result[bool]"` — use TYPE_CHECKING instead
+    - ✗ Using `object` or `Any` as catch-all types — use precise `t.*` contracts
+    - ✗ Reordering `__init__.py` imports or relying on "order of initialization" — architecture must NOT depend on load order
+  - **Verification**: Run `make codegen` without timeout or errors. Imports should resolve cleanly via `python -c "from flext_core._protocols.* import *"`.
 - *Detailed matrix & exceptions*: See skill `flext-import-rules`.
 
 ## §5 Make Contract
