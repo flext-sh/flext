@@ -75,12 +75,12 @@ class FlextSettings(p.ProtocolSettings, p.Settings, FlextRuntime):
     _lock: ClassVar[threading.RLock] = threading.RLock()
 
     model_config = SettingsConfigDict(
-        env_prefix=c.Platform.ENV_PREFIX,
-        env_nested_delimiter=c.Platform.ENV_NESTED_DELIMITER,
+        env_prefix=c.ENV_PREFIX,
+        env_nested_delimiter=c.ENV_NESTED_DELIMITER,
         env_file=u.resolve_env_file(),
-        env_file_encoding=c.Utilities.DEFAULT_ENCODING,
+        env_file_encoding=c.DEFAULT_ENCODING,
         case_sensitive=False,
-        extra=c.ModelConfig.EXTRA_IGNORE,
+        extra=c.EXTRA_IGNORE,
         validate_assignment=True,
     )
 ```
@@ -104,7 +104,7 @@ class AutoConfig(BaseModel):
   - `version: str`
   - `debug: bool`
   - `trace: bool`
-  - `log_level: c.Settings.LogLevel`
+  - `log_level: c.LogLevel`
   - `database_url: str`
   - `database_pool_size: int`
 - Import pattern to prefer in settings files:

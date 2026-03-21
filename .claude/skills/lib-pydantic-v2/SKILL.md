@@ -210,12 +210,12 @@ make validate PROJECT=<name> FIX=1
 
 ```python
 model_config = SettingsConfigDict(
-    env_prefix=c.Platform.ENV_PREFIX,  # "FLEXT_"
-    env_nested_delimiter=c.Platform.ENV_NESTED_DELIMITER,
+    env_prefix=c.ENV_PREFIX,  # "FLEXT_"
+    env_nested_delimiter=c.ENV_NESTED_DELIMITER,
     env_file=u.resolve_env_file(),
-    env_file_encoding=c.Utilities.DEFAULT_ENCODING,
+    env_file_encoding=c.DEFAULT_ENCODING,
     case_sensitive=False,
-    extra=c.ModelConfig.EXTRA_IGNORE,
+    extra=c.EXTRA_IGNORE,
     validate_assignment=True,
 )
 ```

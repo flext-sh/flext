@@ -85,12 +85,12 @@ class Pagination(BaseModel):
     page: Annotated[
         int,
         Field(
-            default=c.Pagination.DEFAULT_PAGE_NUMBER,
-            ge=c.Reliability.RETRY_COUNT_MIN,
+            default=c.DEFAULT_PAGE_NUMBER,
+            ge=c.RETRY_COUNT_MIN,
             description="Page number (1-based indexing)",
             examples=[1, 2, 10, 100],
         ),
-    ] = c.Pagination.DEFAULT_PAGE_NUMBER
+    ] = c.DEFAULT_PAGE_NUMBER
 ```
 
 **Why**: The union MUST be inside `Annotated[]`, not outside. This ensures Field constraints apply to the entire union.

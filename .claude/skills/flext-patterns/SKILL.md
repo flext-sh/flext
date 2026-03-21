@@ -165,7 +165,7 @@ do NOT create a subclass of it anywhere in the child hierarchy.
 # ❌ FORBIDDEN — redeclares Platform received via MRO
 class FlextDbOracleConstants(FlextConstants):
     class DbOracle:
-        class Platform(FlextConstants.Platform):  # WRONG!
+        class Platform(FlextConstants):  # WRONG!
             LOOPBACK_IP: Final[str] = "127.0.0.1"
 
 
