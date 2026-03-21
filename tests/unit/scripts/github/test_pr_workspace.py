@@ -4,9 +4,11 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from flext_core import r
-from flext_tests.matchers import FlextTestsMatchers as tm
+from flext_tests import tm
 
-from ....infra import c, t, u
+from ....infra.constants import c
+from ....infra.typings import t
+from ....infra.utilities import u
 
 
 class TestPrWorkspace:

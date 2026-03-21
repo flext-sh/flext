@@ -176,7 +176,7 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help setup upgrade modernize build check security format docs test validate typings clean release pr commit tag push codegen status
+.PHONY: help setup upgrade modernize build check security format docs test validate typings pyrefly-repo stub-validate-repo type-policy clean release pr commit tag push codegen status
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -198,6 +198,9 @@ help: ## Show simple workspace verbs
 	$(Q)echo " release  Interactive workspace release orchestration"
 	$(Q)echo " pr     Manage PRs for selected projects"
 	$(Q)echo " typings  Stub supply-chain + typing report (PROJECT/PROJECTS to scope)"
+	$(Q)echo " pyrefly-repo  Run authoritative repo-wide pyrefly report"
+	$(Q)echo " stub-validate-repo  Validate typing stub supply-chain (repo-wide)"
+	$(Q)echo " type-policy  Enforce no Any/object/type: ignore (repo-wide)"
 	$(Q)echo " clean   Clean all projects"
 	$(Q)echo ""
 	$(Q)echo "Git workflow:"
@@ -240,6 +243,8 @@ help: ## Show simple workspace verbs
 	$(Q)echo " make check PROJECT=flext-core"
 	$(Q)echo " make build"
 	$(Q)echo " make typings PROJECT=flext-api"
+	$(Q)echo " make pyrefly-repo"
+	$(Q)echo " make stub-validate-repo"
 	$(Q)echo " make check CHECK_GATES=lint,type"
 	$(Q)echo " make validate PROJECTS=\"flext-core flext-api\" FIX=1"
 	$(Q)echo " make test PROJECT=flext-api PYTEST_ARGS=\"-k unit\" FAIL_FAST=1"
@@ -738,6 +743,84 @@ typings: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency r
 	$(Q)if [ "$(DEPS_REPORT)" != "0" ]; then \
 		$(POETRY_ENV) $(PY) -m flext_infra deps detect --typings -q --no-fail || true; \
 	fi
+
+pyrefly-repo: ## Authoritative repo-wide pyrefly report -> .reports/pyrefly + evidence
+	$(Q)$(REQUIRE_VENV)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)mkdir -p .sisyphus/evidence .reports/pyrefly
+	$(Q){ \
+		echo "sys.executable: $$($(PY) -c 'import sys; print(sys.executable)')"; \
+		echo "PYTHONPATH: $$PYTHONPATH"; \
+		echo "python: $$($(PY) --version 2>&1)"; \
+		echo "pyrefly: $$(env -u PYTHONPATH $(POETRY_ENV) $(PY) -m pyrefly --version 2>&1)"; \
+	} > .sisyphus/evidence/pyrefly-toolchain.txt
+	$(Q)set -o pipefail; \
+	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m pyrefly check src tests examples docs benchmarks scripts \
+		--config "$(CURDIR)/pyproject.toml" \
+		--output-format json \
+		-o "$(CURDIR)/.reports/pyrefly/repo-pyrefly.json" \
+		--summary=none \
+		2>&1 | tee .sisyphus/evidence/pyrefly-repo-before.txt; \
+	pyrefly_status=$${PIPESTATUS[0]}; \
+	printf "exit_code: %s\n" "$$pyrefly_status" >> .sisyphus/evidence/pyrefly-repo-before.txt; \
+	$(PY) -c 'import json; from collections import Counter; from pathlib import Path; report = Path("$(CURDIR)/.reports/pyrefly/repo-pyrefly.json"); summary = Path("$(CURDIR)/.reports/pyrefly/repo-pyrefly-summary.txt"); raw = json.loads(report.read_text(encoding="utf-8")) if report.exists() else []; issues = raw.get("errors", []) if isinstance(raw, dict) else raw if isinstance(raw, list) else []; file_counts = Counter((i.get("path") if isinstance(i, dict) else "?") or "?" for i in issues); msg_counts = Counter((i.get("description") if isinstance(i, dict) else "") or "" for i in issues); lines = ["FLEXT Repo-Wide Pyrefly Summary", f"workspace: $(CURDIR)", "targets: src, tests, examples, docs, benchmarks, scripts", f"total_issues: {len(issues)}", "", "Top files:"]; lines.extend([f"- {p}: {c}" for p, c in file_counts.most_common(20)] or ["- none"]); lines.extend(["", "Top messages:"]); lines.extend([f"- {m}: {c}" for m, c in msg_counts.most_common(20)] or ["- none"]); summary.write_text("\n".join(lines) + "\n", encoding="utf-8")'; \
+	printf "\n--- repo-pyrefly-summary.txt ---\n" >> .sisyphus/evidence/pyrefly-repo-before.txt; \
+	cat "$(CURDIR)/.reports/pyrefly/repo-pyrefly-summary.txt" >> .sisyphus/evidence/pyrefly-repo-before.txt; \
+	exit $$pyrefly_status
+
+stub-validate-repo: ## Repo-wide stub supply-chain validation -> .sisyphus/evidence
+	$(Q)$(REQUIRE_VENV)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)mkdir -p .sisyphus/evidence
+	$(Q)set -o pipefail; \
+	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate stub-validate --all \
+		2>&1 | tee .sisyphus/evidence/pyrefly-stub-validate.txt; \
+	stub_status=$${PIPESTATUS[0]}; \
+	printf "exit_code: %s\n" "$$stub_status" >> .sisyphus/evidence/pyrefly-stub-validate.txt; \
+	exit $$stub_status
+
+type-policy: ## Repo-wide typing policy gate (no Any/object/# type: ignore)
+	$(Q)$(REQUIRE_VENV)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)mkdir -p .sisyphus/evidence .reports/pyrefly
+	$(Q)set -o pipefail; \
+	status=0; \
+	: > .reports/pyrefly/type-policy.txt; \
+	echo "FLEXT Repo-Wide Type Policy" >> .reports/pyrefly/type-policy.txt; \
+	echo "workspace: $(CURDIR)" >> .reports/pyrefly/type-policy.txt; \
+	echo "" >> .reports/pyrefly/type-policy.txt; \
+	echo "--- # type: ignore ---" >> .reports/pyrefly/type-policy.txt; \
+	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+		--pattern "#\\s*type:\\s*ignore" \
+		--include "**/*.py*" \
+		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
+		--exclude "**/*.pyc" --exclude "**/*.pyo" \
+		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--match absent \
+		2>&1 | tee -a .reports/pyrefly/type-policy.txt || status=$$?; \
+	echo "" >> .reports/pyrefly/type-policy.txt; \
+	echo "--- Any (typing) ---" >> .reports/pyrefly/type-policy.txt; \
+	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+		--pattern "\\bAny\\b" \
+		--include "**/*.py*" \
+		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
+		--exclude "**/*.pyc" --exclude "**/*.pyo" \
+		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--match absent \
+		2>&1 | tee -a .reports/pyrefly/type-policy.txt || status=$$?; \
+	echo "" >> .reports/pyrefly/type-policy.txt; \
+	echo "--- object (typing contexts) ---" >> .reports/pyrefly/type-policy.txt; \
+	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+		--pattern "(?:\\:\\s*|->\\s*|=\\s*|\\|\\s*|\\[\\s*|,\\s*)object\\b" \
+		--include "**/*.py*" \
+		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
+		--exclude "**/*.pyc" --exclude "**/*.pyo" \
+		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--match absent \
+		2>&1 | tee -a .reports/pyrefly/type-policy.txt || status=$$?; \
+	printf "\nexit_code: %s\n" "$$status" >> .reports/pyrefly/type-policy.txt; \
+	cp .reports/pyrefly/type-policy.txt .sisyphus/evidence/type-policy-before.txt; \
+	exit $$status
 
 clean: ## Clean all projects
 	$(Q)$(REQUIRE_VENV)

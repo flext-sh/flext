@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_tests.matchers import FlextTestsMatchers as tm
+from flext_tests import tm
 
-from ...infra import c, u
+from ...infra.constants import c
+from ...infra.utilities import u
 
 
 class TestVersioning:
