@@ -5,10 +5,10 @@ from __future__ import annotations
 from flext_core import FlextConstants
 
 
-class FlextConstants(FlextConstants):
+class FlextRootConstants(FlextConstants):
     """Flext constants namespace."""
 
     pass
 
 
-c = FlextConstants
+c = FlextRootConstants

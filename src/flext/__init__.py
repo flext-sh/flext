@@ -13,42 +13,42 @@ if TYPE_CHECKING:
     from flext_core import d, e, h, r, s, x
     from flext_core.typings import FlextTypes
 
-    from flext.constants import FlextConstants, FlextConstants as c
-    from flext.models import FlextModels, FlextModels as m
-    from flext.protocols import FlextProtocols, FlextProtocols as p
-    from flext.service import FlextServiceBase
-    from flext.typings import FlextTypes, FlextTypes as t
-    from flext.utilities import FlextUtilities, FlextUtilities as u
+    from flext.constants import FlextRootConstants, FlextRootConstants as c
+    from flext.models import FlextRootModels, FlextRootModels as m
+    from flext.protocols import FlextRootProtocols, FlextRootProtocols as p
+    from flext.service import FlextRootServiceBase
+    from flext.typings import FlexRootTypes, FlexRootTypes as t
+    from flext.utilities import FlextRootUtilities, FlextRootUtilities as u
     from flext.workspace import main
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
-    "FlextConstants": ("flext.constants", "FlextConstants"),
-    "FlextModels": ("flext.models", "FlextModels"),
-    "FlextProtocols": ("flext.protocols", "FlextProtocols"),
-    "FlextServiceBase": ("flext.service", "FlextServiceBase"),
-    "FlextTypes": ("flext.typings", "FlextTypes"),
-    "FlextUtilities": ("flext.utilities", "FlextUtilities"),
-    "c": ("flext.constants", "FlextConstants"),
+    "FlexRootTypes": ("flext.typings", "FlexRootTypes"),
+    "FlextRootConstants": ("flext.constants", "FlextRootConstants"),
+    "FlextRootModels": ("flext.models", "FlextRootModels"),
+    "FlextRootProtocols": ("flext.protocols", "FlextRootProtocols"),
+    "FlextRootServiceBase": ("flext.service", "FlextRootServiceBase"),
+    "FlextRootUtilities": ("flext.utilities", "FlextRootUtilities"),
+    "c": ("flext.constants", "FlextRootConstants"),
     "d": ("flext_core", "d"),
     "e": ("flext_core", "e"),
     "h": ("flext_core", "h"),
-    "m": ("flext.models", "FlextModels"),
+    "m": ("flext.models", "FlextRootModels"),
     "main": ("flext.workspace", "main"),
-    "p": ("flext.protocols", "FlextProtocols"),
+    "p": ("flext.protocols", "FlextRootProtocols"),
     "r": ("flext_core", "r"),
     "s": ("flext_core", "s"),
-    "t": ("flext.typings", "FlextTypes"),
-    "u": ("flext.utilities", "FlextUtilities"),
+    "t": ("flext.typings", "FlexRootTypes"),
+    "u": ("flext.utilities", "FlextRootUtilities"),
     "x": ("flext_core", "x"),
 }
 
 __all__ = [
-    "FlextConstants",
-    "FlextModels",
-    "FlextProtocols",
-    "FlextServiceBase",
-    "FlextTypes",
-    "FlextUtilities",
+    "FlexRootTypes",
+    "FlextRootConstants",
+    "FlextRootModels",
+    "FlextRootProtocols",
+    "FlextRootServiceBase",
+    "FlextRootUtilities",
     "c",
     "d",
     "e",
