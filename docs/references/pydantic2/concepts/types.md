@@ -200,7 +200,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
         },
         'required': ['x', 'y'],
         'title': 'Model',
-        'type': 'object',
+        'type': 't.NormalizedValue',
     }
     """
     ```
@@ -240,7 +240,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
         },
         'required': ['x', 'y'],
         'title': 'Model',
-        'type': 'object',
+        'type': 't.NormalizedValue',
     }
     """
     ```
@@ -356,7 +356,7 @@ For instance, here is an example definition of a JSON type:
                 'anyOf': [
                     {
                         'additionalProperties': {'$ref': '#/$defs/Json'},
-                        'type': 'object',
+                        'type': 't.NormalizedValue',
                     },
                     {'items': {'$ref': '#/$defs/Json'}, 'type': 'array'},
                     {'type': 'string'},
@@ -391,7 +391,7 @@ For instance, here is an example definition of a JSON type:
                 'anyOf': [
                     {
                         'additionalProperties': {'$ref': '#/$defs/Json'},
-                        'type': 'object',
+                        'type': 't.NormalizedValue',
                     },
                     {'items': {'$ref': '#/$defs/Json'}, 'type': 'array'},
                     {'type': 'string'},
@@ -410,7 +410,7 @@ For instance, here is an example definition of a JSON type:
     1. The value of a named type alias is lazily evaluated, so there's no need to use forward annotations.
 
 !!! tip
-Pydantic defines a [`object`][pydantic.types.object] type as a convenience.
+Pydantic defines a [`t.NormalizedValue`][pydantic.types.t.NormalizedValue] type as a convenience.
 
 ### Customizing validation with `__get_pydantic_core_schema__` <a name="customizing_validation_with_get_pydantic_core_schema"></a>
 
@@ -622,7 +622,7 @@ assert Model.model_json_schema() == {
     },
     "required": ["third_party_type"],
     "title": "Model",
-    "type": "object",
+    "type": "t.NormalizedValue",
 }
 ```
 
@@ -741,7 +741,7 @@ class Owner(Generic[ItemType]):
         )
 
         return core_schema.json_or_python_schema(
-            # for JSON accept an object with name and item keys
+            # for JSON accept an t.NormalizedValue with name and item keys
             json_schema=core_schema.chain_schema([
                 core_schema.typed_dict_schema({
                     "name": core_schema.typed_dict_field(core_schema.str_schema()),
@@ -874,7 +874,7 @@ class M(BaseModel):
 
 m = M()
 print(m)
-# > s1=<__main__.MySequence object at 0x0123456789ab>
+# > s1=<__main__.MySequence t.NormalizedValue at 0x0123456789ab>
 print(m.s1.v)
 # > [3]
 

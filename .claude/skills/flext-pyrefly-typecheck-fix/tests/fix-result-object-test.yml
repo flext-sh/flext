@@ -1,6 +1,6 @@
-id: fix-result-object
+id: fix-result-t.NormalizedValue
 valid:
   - "r[str]"
   - "r[int]"
 invalid:
-  - "r[object]"
+  - "r[t.NormalizedValue]"

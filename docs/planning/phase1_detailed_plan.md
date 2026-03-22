@@ -92,32 +92,32 @@ class Guards:
 
     @staticmethod
     def is_config(obj) -> TypeGuard[m.Core.Config]:
-        """Check if object is a Config model."""
+        """Check if t.NormalizedValue is a Config model."""
         return isinstance(obj, m.Core.Config)
 
     @staticmethod
     def is_context(obj) -> TypeGuard[m.Core.Context]:
-        """Check if object is a Context model."""
+        """Check if t.NormalizedValue is a Context model."""
         return isinstance(obj, m.Core.Context)
 
     @staticmethod
     def is_result_success(obj) -> TypeGuard[m.Result.Success]:
-        """Check if object is a successful Result."""
+        """Check if t.NormalizedValue is a successful Result."""
         return isinstance(obj, m.Result.Success)
 
     @staticmethod
     def is_result_failure(obj) -> TypeGuard[m.Result.Failure]:
-        """Check if object is a failed Result."""
+        """Check if t.NormalizedValue is a failed Result."""
         return isinstance(obj, m.Result.Failure)
 
     @staticmethod
     def is_dict_with_keys(obj, *keys: str) -> TypeGuard[dict]:
-        """Check if object is a dict with specific keys."""
+        """Check if t.NormalizedValue is a dict with specific keys."""
         return isinstance(obj, dict) and all(k in obj for k in keys)
 
     @staticmethod
     def is_list_of(obj, item_type: type) -> TypeGuard[list]:
-        """Check if object is a list of specific type."""
+        """Check if t.NormalizedValue is a list of specific type."""
         return isinstance(obj, list) and all(
             isinstance(item, item_type) for item in obj
         )
@@ -138,7 +138,7 @@ class TestGuards:
 
     @staticmethod
     def is_user_response(obj) -> TypeGuard[dict]:
-        """Check if object is a user response fixture."""
+        """Check if t.NormalizedValue is a user response fixture."""
         return (
             isinstance(obj, dict)
             and "user_id" in obj
@@ -148,12 +148,12 @@ class TestGuards:
 
     @staticmethod
     def is_config_response(obj) -> TypeGuard[dict]:
-        """Check if object is a config response fixture."""
+        """Check if t.NormalizedValue is a config response fixture."""
         return isinstance(obj, dict) and "app_name" in obj and "version" in obj
 
     @staticmethod
     def is_error_response(obj) -> TypeGuard[dict]:
-        """Check if object is an error response fixture."""
+        """Check if t.NormalizedValue is an error response fixture."""
         return isinstance(obj, dict) and "error_code" in obj and "message" in obj
 ```
 

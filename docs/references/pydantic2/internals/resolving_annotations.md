@@ -243,7 +243,7 @@ class Foo(BaseModel):
 
 
 Foo.__pydantic_core_schema__
-# > <pydantic._internal._mock_val_ser.MockCoreSchema object at 0x73cd0d9e6d00>
+# > <pydantic._internal._mock_val_ser.MockCoreSchema t.NormalizedValue at 0x73cd0d9e6d00>
 ```
 
 If you then properly define `MyType`, you can rebuild the model:

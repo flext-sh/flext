@@ -40,17 +40,17 @@ def _new_str_list() -> list[str]:
     return []
 
 
-def _is_object_list(value: object) -> TypeIs[list[object]]:
+def _is_object_list(value: t.NormalizedValue) -> TypeIs[list[t.NormalizedValue]]:
     return isinstance(value, list)
 
 
 def _is_str_object_dict(
-    value: object,
-) -> TypeIs[dict[str, object]]:
+    value: t.NormalizedValue,
+) -> TypeIs[dict[str, t.NormalizedValue]]:
     return isinstance(value, dict)
 
 
-def _is_entry_dict(value: object) -> TypeIs[EntryDict]:
+def _is_entry_dict(value: t.NormalizedValue) -> TypeIs[EntryDict]:
     return isinstance(value, dict)
 
 
@@ -81,7 +81,7 @@ class AclProcessingExample:
     class AclEntry(BaseModel):
         """Represents an ACL entry with context and permissions."""
 
-        model_config = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         dn: str = Field(description="Distinguished name of the ACL entry")
         acl_attribute: str = Field(description="ACL attribute name")
@@ -92,7 +92,7 @@ class AclProcessingExample:
     class AclValidationResult(BaseModel):
         """Result of ACL validation with detailed context."""
 
-        model_config = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         entry_dn: str = Field(description="Distinguished name of the entry")
         is_valid: bool = Field(description="Whether the ACL entry is valid")

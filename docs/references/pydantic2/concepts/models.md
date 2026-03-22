@@ -121,11 +121,11 @@ The model can then be instantiated:
 user = User(id="123")
 ```
 
-`user` is an instance of `User`. Initialization of the object will perform all parsing and validation.
+`user` is an instance of `User`. Initialization of the t.NormalizedValue will perform all parsing and validation.
 If no [`ValidationError`][pydantic_core.ValidationError] exception is raised,
 you know the resulting model instance is valid.
 
-Fields of a model can be accessed as normal attributes of the `user` object:
+Fields of a model can be accessed as normal attributes of the `user` t.NormalizedValue:
 
 ```python {group="basic-model"}
 assert user.name == "Jane Doe"  # (1)!
@@ -182,7 +182,7 @@ When defining your models, watch out for naming collisions between your field na
 The example above only shows the tip of the iceberg of what models can do.
 Models possess the following methods and attributes:
 
-- [`model_validate()`][pydantic.main.BaseModel.model_validate]: Validates the given object against the Pydantic model. See [Validating data](#validating-data).
+- [`model_validate()`][pydantic.main.BaseModel.model_validate]: Validates the given t.NormalizedValue against the Pydantic model. See [Validating data](#validating-data).
 - [`model_validate_json()`][pydantic.main.BaseModel.model_validate_JSON]: Validates the given JSON data against the Pydantic model. See
   [Validating data](#validating-data).
 - [`model_construct()`][pydantic.main.BaseModel.model_construct]: Creates models without running validation. See
@@ -388,11 +388,11 @@ Foo.model_rebuild()
 print(Foo.model_json_schema())
 """
 {
-    '$defs': {'Bar': {'properties': {}, 'title': 'Bar', 'type': 'object'}},
+    '$defs': {'Bar': {'properties': {}, 'title': 'Bar', 'type': 't.NormalizedValue'}},
     'properties': {'x': {'$ref': '#/$defs/Bar'}},
     'required': ['x'],
     'title': 'Foo',
-    'type': 'object',
+    'type': 't.NormalizedValue',
 }
 """
 ```
@@ -412,7 +412,7 @@ whole model (nested models and all), so all types at all levels need to be ready
 (Formerly known as "ORM Mode"/`from_orm`).
 
 Pydantic models can also be created from arbitrary class instances by reading the instance attributes corresponding
-to the model field names. One common application of this functionality is integration with object-relational mappings
+to the model field names. One common application of this functionality is integration with t.NormalizedValue-relational mappings
 (ORMs).
 
 To do this, set the [`from_attributes`][pydantic.config.ConfigDict.from_attributes] config value to `True`
@@ -457,7 +457,7 @@ co_orm = CompanyOrm(
     domains=["example.com", "foobar.com"],
 )
 print(co_orm)
-# > <__main__.CompanyOrm object at 0x0123456789ab>
+# > <__main__.CompanyOrm t.NormalizedValue at 0x0123456789ab>
 co_model = CompanyModel(co_orm)
 print(co_model)
 # > id=123 public_key='foobar' domains=['example.com', 'foobar.com']
@@ -555,9 +555,9 @@ except ValidationError as e:
 Pydantic provides three methods on models classes for parsing data:
 
 - [`model_validate()`][pydantic.main.BaseModel.model_validate]: this is very similar to the `__init__` method of the model,
-  except it takes a dictionary or an object rather than keyword arguments. If the object passed cannot be validated,
+  except it takes a dictionary or an t.NormalizedValue rather than keyword arguments. If the t.NormalizedValue passed cannot be validated,
   or if it's not a dictionary or instance of the model in question, a [`ValidationError`][pydantic_core.ValidationError] will be raised.
-- [`model_validate_json()`][pydantic.main.BaseModel.model_validate_JSON]: this validates the provided data as a JSON string or `bytes` object.
+- [`model_validate_json()`][pydantic.main.BaseModel.model_validate_JSON]: this validates the provided data as a JSON string or `bytes` t.NormalizedValue.
   If your incoming data is a JSON payload, this is generally considered faster (instead of manually parsing the data as a dictionary).
   Learn more about JSON parsing in the [JSON](../concepts/json.md) section of the docs.
 - [`model_validate_strings()`][pydantic.main.BaseModel.model_validate_strings]: this takes a dictionary (can be nested) with string keys and values and validates the data in JSON mode so that said strings can be coerced into the correct types.
@@ -761,10 +761,10 @@ m = FooBarModel(banana=3.14, foo="hello", bar={"whatever": 123})
 print(m.model_copy(update={"banana": 0}))
 # > banana=0 foo='hello' bar=BarModel(whatever=123)
 
-# normal copy gives the same object reference for bar:
+# normal copy gives the same t.NormalizedValue reference for bar:
 print(id(m.bar) == id(m.model_copy().bar))
 # > True
-# deep copy gives a new object reference for `bar`:
+# deep copy gives a new t.NormalizedValue reference for `bar`:
 print(id(m.bar) == id(m.model_copy(deep=True).bar))
 # > False
 ```

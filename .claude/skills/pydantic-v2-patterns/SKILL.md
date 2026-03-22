@@ -110,7 +110,7 @@ def validate_non_empty(v: str) -> str:
     return cleaned
 
 
-def normalize_to_list(v) -> list[object]:
+def normalize_to_list(v) -> list[t.NormalizedValue]:
     if isinstance(v, list):
         return v
     if isinstance(v, (tuple, set)):
@@ -130,7 +130,7 @@ def validate_uuid_string(v: str) -> str:
 
 StrippedString = Annotated[str, AfterValidator(strip_whitespace)]
 ValidatedString = Annotated[str, AfterValidator(validate_non_empty)]
-NormalizedList = Annotated[list[object], BeforeValidator(normalize_to_list)]
+NormalizedList = Annotated[list[t.NormalizedValue], BeforeValidator(normalize_to_list)]
 UUIDStr = Annotated[str, PlainValidator(validate_uuid_string)]
 ```
 
@@ -153,11 +153,11 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class Metadata(BaseModel):
-    attributes: dict[str, object] = Field(default_factory=dict)
+    attributes: dict[str, t.NormalizedValue] = Field(default_factory=dict)
 
     @field_validator("attributes", mode="before")
     @classmethod
-    def normalize_attributes(cls, value) -> dict[str, object]:
+    def normalize_attributes(cls, value) -> dict[str, t.NormalizedValue]:
         if value is None:
             return {}
         if isinstance(value, BaseModel):
@@ -520,7 +520,9 @@ Guidance:
 from pydantic import TypeAdapter, ValidationError
 
 
-def validate_runtime(data, type_: type[object]) -> tuple[bool, object | str]:
+def validate_runtime(
+    data, type_: type[t.NormalizedValue]
+) -> tuple[bool, t.NormalizedValue | str]:
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_python(data)
@@ -539,7 +541,9 @@ Repository anchor:
 from pydantic import TypeAdapter
 
 
-def serialize_runtime(value, type_: type[object]) -> dict[str, object]:
+def serialize_runtime(
+    value, type_: type[t.NormalizedValue]
+) -> dict[str, t.NormalizedValue]:
     adapter = TypeAdapter(type_)
     dumped = adapter.dump_python(value, mode="json")
     if isinstance(dumped, dict):
@@ -557,7 +561,9 @@ Repository anchor:
 from pydantic import TypeAdapter, ValidationError
 
 
-def parse_json_runtime(json_str: str, type_: type[object]) -> tuple[bool, object | str]:
+def parse_json_runtime(
+    json_str: str, type_: type[t.NormalizedValue]
+) -> tuple[bool, t.NormalizedValue | str]:
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_json(json_str)
@@ -578,10 +584,10 @@ from pathlib import Path
 from pydantic import TypeAdapter
 
 
-def load_fixture(path: Path) -> dict[str, object]:
+def load_fixture(path: Path) -> dict[str, t.NormalizedValue]:
     with path.open(encoding="utf-8") as f:
         payload = json.load(f)
-    adapter = TypeAdapter(dict[str, object])
+    adapter = TypeAdapter(dict[str, t.NormalizedValue])
     return adapter.validate_python(payload)
 ```
 

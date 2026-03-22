@@ -173,7 +173,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
 - **_Before_ validators**: run before Pydantic's internal parsing and validation (e.g. coercion of a `str` to an `int`).
   These are more flexible than [_after_ validators](#field-after-validator), but they also have to deal with the raw input, which
-  in theory could be any arbitrary object. You should also avoid mutating the value directly if you are raising a
+  in theory could be any arbitrary t.NormalizedValue. You should also avoid mutating the value directly if you are raising a
   [validation error](#raising-validation-errors) later in your validator function, as the mutated value may be passed to other
   validators if using [unions](./unions.md).
   {#field-before-validator}
@@ -516,7 +516,7 @@ decorator.
   ```
 
 - **_Before_ validators**: are run before the model is instantiated. These are more flexible than _after_ validators,
-  but they also have to deal with the raw input, which in theory could be any arbitrary object. You should also avoid
+  but they also have to deal with the raw input, which in theory could be any arbitrary t.NormalizedValue. You should also avoid
   mutating the value directly if you are raising a [validation error](#raising-validation-errors) later in your validator
   function, as the mutated value may be passed to other validators if using [unions](./unions.md).
   {#model-before-validator}
@@ -667,7 +667,7 @@ The [`data`][pydantic.ValidationInfo.data] property is `None` for [model validat
 
 ### Validation context
 
-You can pass a context object to the [validation methods](./models.md#validating-data), which can be accessed
+You can pass a context t.NormalizedValue to the [validation methods](./models.md#validating-data), which can be accessed
 inside the validator functions using the [`context`][pydantic.ValidationInfo.context] property:
 
 ```python

@@ -46,7 +46,7 @@ class SkillInfraError(Exception):
 class ScriptCheckResult(BaseModel):
     """ScriptCheckResult class."""
 
-    model_config = ConfigDict(frozen=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
 
     script: str = Field(description="Script file path")
     status: str = Field(description="Validation status (OK, UNOWNED, VIOLATION)")

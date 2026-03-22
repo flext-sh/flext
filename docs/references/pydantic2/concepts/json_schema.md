@@ -131,7 +131,7 @@ print(json.dumps(main_model_schema, indent=2))  # (2)!
         "count"
       ],
       "title": "FooBar",
-      "type": "object"
+      "type": "t.NormalizedValue"
     },
     "Gender": {
       "enum": [
@@ -173,7 +173,7 @@ print(json.dumps(main_model_schema, indent=2))  # (2)!
     "foo_bar"
   ],
   "title": "Main",
-  "type": "object"
+  "type": "t.NormalizedValue"
 }
 """
 ```
@@ -181,7 +181,7 @@ print(json.dumps(main_model_schema, indent=2))  # (2)!
 1. This produces a "jsonable" dict of `MainModel`'s schema.
 2. Calling `json.dumps` on the schema dict produces a JSON string.
 
-The [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] class lets you create an object with methods for validating, serializing,
+The [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] class lets you create an t.NormalizedValue with methods for validating, serializing,
 and producing JSON schemas for arbitrary types. This serves as a complete replacement for `schema_of` in
 Pydantic V1 (which is now deprecated).
 
@@ -237,7 +237,7 @@ print(json.dumps(ta_schema, indent=2))
         "color"
       ],
       "title": "Cat",
-      "type": "object"
+      "type": "t.NormalizedValue"
     },
     "Dog": {
       "properties": {
@@ -255,7 +255,7 @@ print(json.dumps(ta_schema, indent=2))
         "breed"
       ],
       "title": "Dog",
-      "type": "object"
+      "type": "t.NormalizedValue"
     }
   },
   "anyOf": [
@@ -311,7 +311,7 @@ print(Model.model_json_schema(mode="validation"))
         }
     },
     'title': 'Model',
-    'type': 'object',
+    'type': 't.NormalizedValue',
 }
 """
 
@@ -327,7 +327,7 @@ print(Model.model_json_schema(mode="serialization"))
         }
     },
     'title': 'Model',
-    'type': 'object',
+    'type': 't.NormalizedValue',
 }
 """
 ```
@@ -422,7 +422,7 @@ print(json.dumps(User.model_json_schema(), indent=2))
     "password"
   ],
   "title": "User",
-  "type": "object"
+  "type": "t.NormalizedValue"
 }
 """
 ```
@@ -468,7 +468,7 @@ print(ModelB.model_json_schema())
     },
     'required': ['foo'],
     'title': 'ModelB',
-    'type': 'object',
+    'type': 't.NormalizedValue',
 }
 """
 ```
@@ -504,7 +504,7 @@ print(json.dumps(Foo.model_json_schema(), indent=2))
     }
   },
   "title": "Foo",
-  "type": "object"
+  "type": "t.NormalizedValue"
 }
 """
 ```
@@ -549,7 +549,7 @@ print(json.dumps(Person.model_json_schema(), indent=2))
     "age"
   ],
   "title": "Person",
-  "type": "object"
+  "type": "t.NormalizedValue"
 }
 """
 ```
@@ -605,7 +605,7 @@ print(json.dumps(Model.model_json_schema(), indent=2))
     "a"
   ],
   "title": "Model",
-  "type": "object"
+  "type": "t.NormalizedValue"
 }
 """
 ```
@@ -638,7 +638,7 @@ print(json.dumps(Model.model_json_schema(), indent=2))
     }
   },
   "title": "Model",
-  "type": "object"
+  "type": "t.NormalizedValue"
 }
 """
 ```
@@ -727,7 +727,7 @@ print(json.dumps(Model.model_json_schema(), indent=2))
     "a"
   ],
   "title": "Model",
-  "type": "object"
+  "type": "t.NormalizedValue"
 }
 """
 ```
@@ -817,7 +817,7 @@ print(MyModel.model_json_schema())
     'properties': {'value': {'title': 'Value', 'type': 'string'}},
     'required': ['value'],
     'title': 'MyModel',
-    'type': 'object',
+    'type': 't.NormalizedValue',
 }
 """
 print(MyModel(value="fox fox fox dog fox"))
@@ -879,7 +879,7 @@ print(MyModel.model_json_schema())
     'properties': {'value': {'title': 'Value', 'type': 'string'}},
     'required': ['value'],
     'title': 'MyModel',
-    'type': 'object',
+    'type': 't.NormalizedValue',
 }
 """
 print(MyModel(value="CBA"))
@@ -986,7 +986,7 @@ except ValidationError as e:
     """
     1 validation error for Model
     f
-      Value error, Expected an instance of <class '__main__.Foo'>, got an instance of <class '__main__.NotFoo'> [type=value_error, input_value=<__main__.NotFoo object at 0x0123456789ab>, input_type=NotFoo]
+      Value error, Expected an instance of <class '__main__.Foo'>, got an instance of <class '__main__.NotFoo'> [type=value_error, input_value=<__main__.NotFoo t.NormalizedValue at 0x0123456789ab>, input_type=NotFoo]
     """
 ```
 
@@ -1066,7 +1066,7 @@ print(json.dumps(TypeAdapter(Person).json_schema(), indent=2))
     "age"
   ],
   "title": "Person",
-  "type": "object"
+  "type": "t.NormalizedValue"
 }
 """
 ```
@@ -1110,7 +1110,7 @@ print(json.dumps(Person.model_json_schema(), indent=2))
     "age"
   ],
   "title": "Person",
-  "type": "object"
+  "type": "t.NormalizedValue"
 }
 """
 ```
@@ -1156,7 +1156,7 @@ print(json.dumps(Person.model_json_schema(), indent=2))
     "age"
   ],
   "title": "Title-Person",
-  "type": "object"
+  "type": "t.NormalizedValue"
 }
 """
 ```
@@ -1217,7 +1217,7 @@ print(json.dumps(top_level_schema, indent=2))
         "c"
       ],
       "title": "Bar",
-      "type": "object"
+      "type": "t.NormalizedValue"
     },
     "Foo": {
       "properties": {
@@ -1228,7 +1228,7 @@ print(json.dumps(top_level_schema, indent=2))
         }
       },
       "title": "Foo",
-      "type": "object"
+      "type": "t.NormalizedValue"
     },
     "Model": {
       "properties": {
@@ -1240,7 +1240,7 @@ print(json.dumps(top_level_schema, indent=2))
         "b"
       ],
       "title": "Model",
-      "type": "object"
+      "type": "t.NormalizedValue"
     }
   },
   "title": "My Schema"
@@ -1285,7 +1285,7 @@ print(MyModel.model_json_schema(schema_generator=MyGenerateJsonSchema))
     'properties': {'x': {'title': 'X', 'type': 'integer'}},
     'required': ['x'],
     'title': 'Customize title',
-    'type': 'object',
+    'type': 't.NormalizedValue',
     '$schema': 'https://json-schema.org/draft/2020-12/schema',
 }
 """
@@ -1330,7 +1330,7 @@ print(validation_schema)
         'name': {'default': 'example', 'title': 'Name', 'type': 'string'}
     },
     'title': 'Example',
-    'type': 'object',
+    'type': 't.NormalizedValue',
 }
 """
 ```
@@ -1369,7 +1369,7 @@ json_schema = Bar.model_json_schema(schema_generator=MyGenerateJsonSchema)
 print(json.dumps(json_schema, indent=2))
 """
 {
-  "type": "object",
+  "type": "t.NormalizedValue",
   "properties": {
     "c": {
       "type": "string",
@@ -1442,7 +1442,7 @@ print(
         "a"
       ],
       "title": "Foo",
-      "type": "object"
+      "type": "t.NormalizedValue"
     }
   },
   "properties": {
@@ -1454,7 +1454,7 @@ print(
     "a"
   ],
   "title": "Model",
-  "type": "object"
+  "type": "t.NormalizedValue"
 }
 """
 ```

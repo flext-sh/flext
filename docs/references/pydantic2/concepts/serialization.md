@@ -28,7 +28,7 @@ Pydantic uses the terms "serialize" and "dump" interchangeably. Both refer to th
 dictionary or JSON-encoded string.
 
     Outside of Pydantic, the word "serialize" usually refers to converting in-memory data into a string or bytes.
-    However, in the context of Pydantic, there is a very close relationship between converting an object from a more
+    However, in the context of Pydantic, there is a very close relationship between converting an t.NormalizedValue from a more
     structured form &mdash; such as a Pydantic model, a dataclass, etc. &mdash; into a less structured form comprised of
     Python built-ins such as dict.
 
@@ -499,7 +499,7 @@ As with [field serializers](#field-serializers), **two** different types of mode
           @model_serializer(mode="wrap")
           def serialize_model(
               self, handler: SerializerFunctionWrapHandler
-          ) -> dict[str, object]:
+          ) -> dict[str, t.NormalizedValue]:
               serialized = handler(self)
               serialized["fields"] = list(serialized)
               return serialized
@@ -523,7 +523,7 @@ providing useful extra information, such as:
 
 ### Serialization context
 
-You can pass a context object to the [serialization methods](#serializing-data), which can be accessed
+You can pass a context t.NormalizedValue to the [serialization methods](#serializing-data), which can be accessed
 inside the serializer functions using the [`context`][pydantic.SerializationInfo.context] property:
 
 ```python
@@ -625,7 +625,7 @@ print(m.model_dump())  # (1)!
 This behavior is different from how things worked in Pydantic V1, where we would always include
 all (subclass) fields when recursively serializing models to dictionaries. The motivation behind this change
 in behavior is that it helps ensure that you know precisely which fields could be included when serializing,
-even if subclasses get passed when instantiating the object. In particular, this can help prevent surprises
+even if subclasses get passed when instantiating the t.NormalizedValue. In particular, this can help prevent surprises
 when adding sensitive information like secrets as fields of subclasses. To enable the old V1 behavior, refer
 to the next section.
 

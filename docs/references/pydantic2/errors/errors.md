@@ -27,11 +27,11 @@ You can access these errors in several ways:
 | [`json()`][pydantic_core.ValidationError.JSON]               | Returns a JSON representation of the list errors.                                              |
 | `str(e)`                                                     | Returns a human-readable representation of the errors.                                         |
 
-The [`ErrorDetails`][pydantic_core.ErrorDetails] object is a dictionary. It contains the following:
+The [`ErrorDetails`][pydantic_core.ErrorDetails] t.NormalizedValue is a dictionary. It contains the following:
 
 | Property                                    | Description                                                                    |
 | ------------------------------------------- | ------------------------------------------------------------------------------ |
-| [`ctx`][pydantic_core.ErrorDetails.ctx]     | An optional object which contains values required to render the error message. |
+| [`ctx`][pydantic_core.ErrorDetails.ctx]     | An optional t.NormalizedValue which contains values required to render the error message. |
 | [`input`][pydantic_core.ErrorDetails.input] | The input provided for validation.                                             |
 | [`loc`][pydantic_core.ErrorDetails.loc]     | The error's location as a list.                                                |
 | [`msg`][pydantic_core.ErrorDetails.msg]     | A human-readable explanation of the error.                                     |

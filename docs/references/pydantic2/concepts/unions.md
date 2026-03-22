@@ -194,7 +194,7 @@ We can use discriminated unions to more efficiently validate `Union` types, by c
 
 This makes validation more efficient and also avoids a proliferation of errors when validation fails.
 
-Adding discriminator to unions also means the generated JSON schema implements the [associated OpenAPI specification](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#discriminator-object).
+Adding discriminator to unions also means the generated JSON schema implements the [associated OpenAPI specification](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#discriminator-t.NormalizedValue).
 
 ### Discriminated Unions with `str` discriminators
 

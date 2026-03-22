@@ -29,7 +29,7 @@ StageOperation = Callable[[dict[str, t.NormalizedValue]], r["PipelineStageData"]
 class PipelineStageData(BaseModel):
     """Data container for pipeline stage processing."""
 
-    model_config = ConfigDict(arbitrary_types_allowed=True, extra="allow")
+    model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True, extra="allow")
     data: dict[str, t.NormalizedValue] = Field(default_factory=dict)
 
 
@@ -55,7 +55,7 @@ class AdvancedProcessingExample:
     class ProcessingResult(BaseModel):
         """Result of processing operation with metrics."""
 
-        model_config = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         operation_id: str = Field(description="Unique operation identifier")
         items_processed: int = Field(description="Total items processed")
@@ -74,7 +74,7 @@ class AdvancedProcessingExample:
     class ValidationResult(BaseModel):
         """Result of validation operation."""
 
-        model_config = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         item_id: str = Field(description="Unique item identifier")
         is_valid: bool = Field(description="Whether the item is valid")

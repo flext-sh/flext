@@ -79,7 +79,7 @@ greater_than(d1, d2, include_equal=True)
 ```
 
 1. Because `include_equal` has no type annotation, it will be inferred as [`Any`][typing.Any].
-2. Although `d1` is a string, it will be converted to a [`date`][datetime.date] object.
+2. Although `d1` is a string, it will be converted to a [`date`][datetime.date] t.NormalizedValue.
 
 Type coercion like this can be extremely helpful, but also confusing or not desired (see [model data conversion](models.md#data-conversion)). [Strict mode](strict_mode.md)
 can be enabled by using a [custom configuration](#custom-configuration).

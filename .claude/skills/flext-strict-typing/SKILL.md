@@ -2,7 +2,7 @@
 
 - [Python Version & Core Requirements](#python-version-core-requirements)
 - [FLEXT Mapping-First Policy (Contract Layer)](#flext-mapping-first-policy-contract-layer)
-- [Rule 1: NEVER Use `Any` or `object`](#rule-1-never-use-any-or-object)
+- [Rule 1: NEVER Use `Any` or `t.NormalizedValue`](#rule-1-never-use-any-or-t.NormalizedValue)
   - [Replace with the appropriate type from the `FlextTypes` hierarchy](#replace-with-the-appropriate-type-from-the-flexttypes-hierarchy)
   - [The Type Hierarchy (from `typings.py` lines 153-176)](#the-type-hierarchy-from-typingspy-lines-153-176)
 - [Verification](#verification)
@@ -47,7 +47,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 
 # FLEXT Strict Typing Rules
 
-**Reviewed**: 2026-03-03 | **Scope**: AXIOMATIC — `Any`/`object` absolute prohibition, `None` only for business semantics, type narrowing only when business-required
+**Reviewed**: 2026-03-03 | **Scope**: AXIOMATIC — `Any`/`t.NormalizedValue` absolute prohibition, `None` only for business semantics, type narrowing only when business-required
 
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
 > and cross-referenced with `models.py`, `protocols.py`, and `ruff-shared.toml`.
@@ -116,14 +116,14 @@ def parse_payload(payload: m.Domain.PayloadModel) -> r[str]:
 
 ---
 
-## Rule 1: NEVER Use `Any` or `object` (AXIOMATIC — Zero Tolerance)
+## Rule 1: NEVER Use `Any` or `t.NormalizedValue` (AXIOMATIC — Zero Tolerance)
 
 ### Replace with the appropriate type from the `FlextTypes` hierarchy
 
 | Instead of       | Use                        | When                                                          |
 | ---------------- | -------------------------- | ------------------------------------------------------------- |
-| `Any` / `object` | Specific Pydantic Model    | **MANDATORY**: For ALL domain entities and value objects      |
-| `Any` / `object` | `t.Scalar`                 | Primitives: `str \| int \| float \| bool \| datetime`         |
+| `Any` / `t.NormalizedValue` | Specific Pydantic Model    | **MANDATORY**: For ALL domain entities and value objects      |
+| `Any` / `t.NormalizedValue` | `t.Scalar`                 | Primitives: `str \| int \| float \| bool \| datetime`         |
 | `dict[*, *]`      | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
 | `Mapping[*, *]`   | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
 | Broad container aliases | `m.<Domain>.*Model` / `p.<Domain>.*Protocol` | Replace permissive contracts with explicit models/protocols  |

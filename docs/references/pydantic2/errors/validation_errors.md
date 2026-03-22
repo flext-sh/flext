@@ -111,7 +111,7 @@ may encounter when working with pydantic, together with some suggestions on how 
 
 ## `arguments_type`
 
-This error is raised when an object that would be passed as arguments to a function during validation is not
+This error is raised when an t.NormalizedValue that would be passed as arguments to a function during validation is not
 a `tuple`, `list`, or `dict`. Because `NamedTuple` uses function calls in its implementation, that is one way to
 produce this error:
 
@@ -580,7 +580,7 @@ except ValidationError as exc:
 
 ## `datetime_object_invalid`
 
-This error is raised when something about the `datetime` object is not valid:
+This error is raised when something about the `datetime` t.NormalizedValue is not valid:
 
 ```python
 from datetime import datetime, tzinfo
@@ -1644,7 +1644,7 @@ except ValidationError as exc:
 
 ## `needs_python_object`
 
-This type of error is raised when validation is attempted from a format that cannot be converted to a Python object.
+This type of error is raised when validation is attempted from a format that cannot be converted to a Python t.NormalizedValue.
 For example, we cannot check `isinstance` or `issubclass` from JSON:
 
 ```python
@@ -1753,7 +1753,7 @@ from pydantic import BaseModel, ValidationError
 
 
 class Model(BaseModel):
-    x: set[object]
+    x: set[t.NormalizedValue]
 
 
 class Unhashable:

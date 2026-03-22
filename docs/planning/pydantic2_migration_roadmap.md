@@ -158,7 +158,7 @@ model_config = ConfigDict(
     frozen=False,  # Mutable by default
 )
 
-# Immutable value object
+# Immutable value t.NormalizedValue
 model_config = ConfigDict(
     frozen=True,  # Immutable
     validate_assignment=True,

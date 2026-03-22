@@ -31,7 +31,7 @@ ProcessingDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar]]
 class WorkflowData(BaseModel):
     """Data container for workflow processing."""
 
-    model_config = ConfigDict(arbitrary_types_allowed=True, extra="allow")
+    model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True, extra="allow")
     content: ProcessingDict = Field(default_factory=dict)
 
 
@@ -83,7 +83,7 @@ class CompleteWorkflowExample:
     class WorkflowContext(BaseModel):
         """Complete workflow context with correlation and metadata."""
 
-        model_config = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         workflow_id: str = Field(description="Unique workflow identifier")
         correlation_id: str = Field(description="Correlation ID for tracking")
@@ -109,7 +109,7 @@ class CompleteWorkflowExample:
     class WorkflowStageResult(BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
-        model_config = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         stage_name: str = Field(description="Name of the workflow stage")
         workflow_id: str = Field(description="Associated workflow ID")
@@ -135,7 +135,7 @@ class CompleteWorkflowExample:
     class CompleteWorkflowResult(BaseModel):
         """Complete workflow result with all stages aggregated."""
 
-        model_config = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         workflow_id: str = Field(description="Unique workflow identifier")
         correlation_id: str = Field(description="Correlation ID for tracking")

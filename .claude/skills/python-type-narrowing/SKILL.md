@@ -46,7 +46,7 @@ description: Type narrowing techniques including isinstance, TypeIs, TypeGuard, 
 - Prefer `TypeIs` (PEP 742, 3.13+) over `TypeGuard` — it narrows both branches.
 - Use `isinstance` checks for simple type narrowing — no need for custom guards.
 - Use `assert_never` for exhaustiveness checking in match/if-else chains.
-- Never use `type()` comparison for narrowing — use `isinstance()` for type checks. (Except for AST identity where narrowing is not intended). `Any` and `object` are TOTALLY FORBIDDEN in type annotations — use `t.*` contracts from `typings.py`.
+- Never use `type()` comparison for narrowing — use `isinstance()` for type checks. (Except for AST identity where narrowing is not intended). `Any` and `t.NormalizedValue` are TOTALLY FORBIDDEN in type annotations — use `t.*` contracts from `typings.py`.
 - **CRITICAL: TypeAliasType isinstance trap**: PEP 695 `type X = str | int` creates `TypeAliasType` — `isinstance(val, X)` FAILS at runtime. Non-recursive aliases MUST use `X: TypeAlias = str | int`. For recursive types, use `TypeGuard` functions from `_utilities/guards.py` (`is_primitive()`, `is_scalar()`, `is_flexible_value()`). See `flext-strict-typing` Rule 2 for full decision matrix.
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, and architectural `getattr()`.
 

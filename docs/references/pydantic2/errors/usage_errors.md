@@ -176,7 +176,7 @@ class Model(BaseModel):
 
 print(Model.model_json_schema())
 """
-{'examples': ['example'], 'properties': {}, 'title': 'Model', 'type': 'object'}
+{'examples': ['example'], 'properties': {}, 'title': 'Model', 'type': 't.NormalizedValue'}
 """
 ```
 
@@ -666,7 +666,7 @@ except PydanticUserError as exc_info:
 
 ## Import error {#import-error}
 
-This error is raised when you try to import an object that was available in Pydantic V1, but has been removed in
+This error is raised when you try to import an t.NormalizedValue that was available in Pydantic V1, but has been removed in
 Pydantic V2.
 
 See the [Migration Guide](../migration.md) for more information.
@@ -859,7 +859,7 @@ The `field` and `config` parameters are not available in Pydantic V2.
 Please use the `info` parameter instead.
 
 You can access the configuration via `info.config`,
-but it is a dictionary instead of an object like it was in Pydantic V1.
+but it is a dictionary instead of an t.NormalizedValue like it was in Pydantic V1.
 
 The `field` argument is no longer available.
 
@@ -1352,7 +1352,7 @@ except PydanticUserError as exc_info:
 ## [`Unpack`][typing.Unpack] used without a [`TypedDict`][typing.TypedDict] {#unpack-typed-dict}
 
 This error is raised when [`Unpack`][typing.Unpack] is used with something other than
-a [`TypedDict`][typing.TypedDict] class object to type hint variadic keyword parameters.
+a [`TypedDict`][typing.TypedDict] class t.NormalizedValue to type hint variadic keyword parameters.
 
 For reference, see the [related specification section] and [PEP 692].
 

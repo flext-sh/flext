@@ -200,7 +200,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo " typings  Stub supply-chain + typing report (PROJECT/PROJECTS to scope)"
 	$(Q)echo " pyrefly-repo  Run authoritative repo-wide pyrefly report"
 	$(Q)echo " stub-validate-repo  Validate typing stub supply-chain (repo-wide)"
-	$(Q)echo " type-policy  Enforce no Any/object/type: ignore (repo-wide)"
+	$(Q)echo " type-policy  Enforce no Any/t.NormalizedValue/type: ignore (repo-wide)"
 	$(Q)echo " clean   Clean all projects"
 	$(Q)echo ""
 	$(Q)echo "Git workflow:"
@@ -779,7 +779,7 @@ stub-validate-repo: ## Repo-wide stub supply-chain validation -> .sisyphus/evide
 	printf "exit_code: %s\n" "$$stub_status" >> .sisyphus/evidence/pyrefly-stub-validate.txt; \
 	exit $$stub_status
 
-type-policy: ## Repo-wide typing policy gate (no Any/object/# type: ignore)
+type-policy: ## Repo-wide typing policy gate (no Any/t.NormalizedValue/# type: ignore)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)mkdir -p .sisyphus/evidence .reports/pyrefly
@@ -809,9 +809,9 @@ type-policy: ## Repo-wide typing policy gate (no Any/object/# type: ignore)
 		--match absent \
 		2>&1 | tee -a .reports/pyrefly/type-policy.txt || status=$$?; \
 	echo "" >> .reports/pyrefly/type-policy.txt; \
-	echo "--- object (typing contexts) ---" >> .reports/pyrefly/type-policy.txt; \
+	echo "--- t.NormalizedValue (typing contexts) ---" >> .reports/pyrefly/type-policy.txt; \
 	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
-		--pattern "(?:\\:\\s*|->\\s*|=\\s*|\\|\\s*|\\[\\s*|,\\s*)object\\b" \
+		--pattern "(?:\\:\\s*|->\\s*|=\\s*|\\|\\s*|\\[\\s*|,\\s*)t.NormalizedValue\\b" \
 		--include "**/*.py*" \
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
 		--exclude "**/*.pyc" --exclude "**/*.pyo" \
