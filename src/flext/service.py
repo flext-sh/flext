@@ -14,7 +14,7 @@ from typing import ClassVar
 from flext_core import c, m, t, u
 
 
-class FlextServiceBase:
+class FlextRootServiceBase:
     """Base service class for flext-core package."""
 
     Constants: ClassVar[type] = c
@@ -23,4 +23,4 @@ class FlextServiceBase:
     Utilities: ClassVar[type] = u
 
 
-s = FlextServiceBase
+s = FlextRootServiceBase
