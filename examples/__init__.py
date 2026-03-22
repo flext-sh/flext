@@ -20,11 +20,13 @@ if TYPE_CHECKING:
     from examples.advanced_processing_example import (
         AdvancedProcessingExample,
         ItemDict,
-        StageData,
+        PipelineStageData,
+        StageOperation,
     )
     from examples.complete_workflow_example import (
         CompleteWorkflowExample,
         ProcessingDict,
+        WorkflowData,
     )
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
@@ -40,8 +42,10 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "ContextDict": ("examples.acl_processing_example", "ContextDict"),
     "EntryDict": ("examples.acl_processing_example", "EntryDict"),
     "ItemDict": ("examples.advanced_processing_example", "ItemDict"),
+    "PipelineStageData": ("examples.advanced_processing_example", "PipelineStageData"),
     "ProcessingDict": ("examples.complete_workflow_example", "ProcessingDict"),
-    "StageData": ("examples.advanced_processing_example", "StageData"),
+    "StageOperation": ("examples.advanced_processing_example", "StageOperation"),
+    "WorkflowData": ("examples.complete_workflow_example", "WorkflowData"),
 }
 
 __all__ = [
@@ -51,8 +55,10 @@ __all__ = [
     "ContextDict",
     "EntryDict",
     "ItemDict",
+    "PipelineStageData",
     "ProcessingDict",
-    "StageData",
+    "StageOperation",
+    "WorkflowData",
 ]
 
 

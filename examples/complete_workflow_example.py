@@ -28,6 +28,13 @@ from pydantic import BaseModel, ConfigDict, Field
 ProcessingDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar]]
 
 
+class WorkflowData(BaseModel):
+    """Data container for workflow processing."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True, extra="allow")
+    content: ProcessingDict = Field(default_factory=dict)
+
+
 def _new_str_list() -> list[str]:
     return []
 
@@ -50,13 +57,6 @@ def _new_stage_result_list() -> list[CompleteWorkflowExample.WorkflowStageResult
 
 def _new_aggregated_metrics_dict() -> dict[str, float | int]:
     return {}
-
-
-def _to_float(value: t.Scalar) -> float:
-    """Coerce scalar to float; return 0.0 for non-numeric."""
-    if isinstance(value, (int, float)):
-        return float(value)
-    return 0.0
 
 
 def _to_float_safe(
@@ -158,7 +158,7 @@ class CompleteWorkflowExample:
             description="Overall workflow status",
         )
 
-    class WorkflowOrchestrator(FlextService[ProcessingDict]):
+    class WorkflowOrchestrator(FlextService[WorkflowData]):
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
@@ -172,7 +172,7 @@ class CompleteWorkflowExample:
             self.workflow_config = {}
 
         @override
-        def execute(self) -> r[ProcessingDict]:
+        def execute(self) -> r[WorkflowData]:
             """Execute complete workflow with automatic resource management."""
             context = self._setup_context()
             try:
@@ -184,18 +184,22 @@ class CompleteWorkflowExample:
             self,
             item: ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[ProcessingDict]:
+        ) -> r[WorkflowData]:
             """Aggregate results."""
-            return r[ProcessingDict].ok(
-                self._process_stage(
-                    item,
-                    0,
-                    "aggregated",
-                    True,
-                    lambda _i: {
-                        "final_score": _to_float_safe(item.get("complexity_score", 0))
-                        + (1 if bool(item.get("is_valid", False)) else 0)
-                    },
+            return r.ok(
+                WorkflowData(
+                    content=self._process_stage(
+                        item,
+                        0,
+                        "aggregated",
+                        True,
+                        lambda _i: {
+                            "final_score": _to_float_safe(
+                                item.get("complexity_score", 0)
+                            )
+                            + (1 if bool(item.get("is_valid", False)) else 0)
+                        },
+                    )
                 )
             )
 
@@ -232,15 +236,17 @@ class CompleteWorkflowExample:
             self,
             item: ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[ProcessingDict]:
+        ) -> r[WorkflowData]:
             """Analyze single item."""
-            return r[ProcessingDict].ok(
-                self._process_stage(
-                    item,
-                    0.005,
-                    "analyzed",
-                    True,
-                    lambda _i: {"complexity_score": len(str(item)) * 0.1},
+            return r.ok(
+                WorkflowData(
+                    content=self._process_stage(
+                        item,
+                        0.005,
+                        "analyzed",
+                        True,
+                        lambda _i: {"complexity_score": len(str(item)) * 0.1},
+                    )
                 )
             )
 
@@ -258,7 +264,7 @@ class CompleteWorkflowExample:
             items: list[ProcessingDict],
             stage_func: Callable[
                 [ProcessingDict, CompleteWorkflowExample.WorkflowContext],
-                r[ProcessingDict],
+                r[WorkflowData],
             ],
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> r[CompleteWorkflowExample.WorkflowStageResult]:
@@ -274,7 +280,12 @@ class CompleteWorkflowExample:
             def process_single_item(item: ProcessingDict) -> ProcessingDict | None:
                 try:
                     result = stage_func(item, context)
-                    return result.map_or(None)
+                    workflow_data = result.map_or(None)
+                    return (
+                        workflow_data.content
+                        if isinstance(workflow_data, WorkflowData)
+                        else workflow_data
+                    )
                 except Exception as e:
                     err: ProcessingDict = {"error": str(e), "item": str(item)}
                     return err
@@ -313,7 +324,7 @@ class CompleteWorkflowExample:
             self,
             data: list[ProcessingDict],
             context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[ProcessingDict]:
+        ) -> r[WorkflowData]:
             """Execute workflow stages with parallel processing."""
             items = data
             stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = []
@@ -327,12 +338,12 @@ class CompleteWorkflowExample:
             for stage_name in context.stages:
                 stage_func = stage_functions.get(stage_name)
                 if not stage_func:
-                    return r[ProcessingDict].fail(f"Unknown stage: {stage_name}")
+                    return r[WorkflowData].fail(f"Unknown stage: {stage_name}")
                 result = self._execute_stage_parallel(
                     stage_name, current_data, stage_func, context
                 )
                 if result.is_failure:
-                    return r[ProcessingDict].fail(
+                    return r[WorkflowData].fail(
                         f"Stage {stage_name} failed: {result.error}"
                     )
                 stage_result = result.value
@@ -373,21 +384,23 @@ class CompleteWorkflowExample:
                 "total_processing_time": workflow_result.total_processing_time,
                 "performance_summary": perf_summary,
             }
-            return r[ProcessingDict].ok(summary)
+            return r.ok(WorkflowData(content=summary))
 
         def _process_items(
             self,
             item: ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[ProcessingDict]:
+        ) -> r[WorkflowData]:
             """Process single item."""
-            return r[ProcessingDict].ok(
-                self._process_stage(
-                    item,
-                    0.01,
-                    "processed",
-                    True,
-                    lambda _i: {"processed_at": time.time()},
+            return r.ok(
+                WorkflowData(
+                    content=self._process_stage(
+                        item,
+                        0.01,
+                        "processed",
+                        True,
+                        lambda _i: {"processed_at": time.time()},
+                    )
                 )
             )
 
@@ -430,15 +443,19 @@ class CompleteWorkflowExample:
             self,
             item: ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[ProcessingDict]:
+        ) -> r[WorkflowData]:
             """Validate single item."""
-            return r[ProcessingDict].ok(
-                self._process_stage(
-                    item,
-                    0.005,
-                    "validated",
-                    True,
-                    lambda _i: {"is_valid": bool(item.get("id") and item.get("name"))},
+            return r.ok(
+                WorkflowData(
+                    content=self._process_stage(
+                        item,
+                        0.005,
+                        "validated",
+                        True,
+                        lambda _i: {
+                            "is_valid": bool(item.get("id") and item.get("name"))
+                        },
+                    )
                 )
             )
 
