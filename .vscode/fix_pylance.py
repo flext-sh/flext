@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Script para diagnosticar e corrigir problemas do Pylance/VS Code.
 
 Uso: python .vscode/fix_pylance.py
@@ -5,7 +6,7 @@ Uso: python .vscode/fix_pylance.py
 
 import os
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 import sys
 from pathlib import Path
 
@@ -48,7 +49,7 @@ def main() -> None:
         mt5linux_dir = workspace_root / "mt5linux"
         if mt5linux_dir.exists():
             target_file = mt5linux_dir / "mt5linux" / "mt5_pb2_grpc.py"
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 [
                     sys.executable,
                     "-m",
