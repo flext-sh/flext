@@ -17,7 +17,11 @@ if TYPE_CHECKING:
         ContextDict,
         EntryDict,
     )
-    from examples.advanced_processing_example import AdvancedProcessingExample, ItemDict
+    from examples.advanced_processing_example import (
+        AdvancedProcessingExample,
+        ItemDict,
+        StageData,
+    )
     from examples.complete_workflow_example import (
         CompleteWorkflowExample,
         ProcessingDict,
@@ -37,6 +41,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "EntryDict": ("examples.acl_processing_example", "EntryDict"),
     "ItemDict": ("examples.advanced_processing_example", "ItemDict"),
     "ProcessingDict": ("examples.complete_workflow_example", "ProcessingDict"),
+    "StageData": ("examples.advanced_processing_example", "StageData"),
 }
 
 __all__ = [
@@ -47,6 +52,7 @@ __all__ = [
     "EntryDict",
     "ItemDict",
     "ProcessingDict",
+    "StageData",
 ]
 
 

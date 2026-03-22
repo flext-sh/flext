@@ -17,12 +17,19 @@ import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
-from typing import Any, override
+from typing import override
 
 from flext_core import FlextService, r, t
 from pydantic import BaseModel, ConfigDict, Field
 
 ItemDict = dict[str, t.Scalar]
+
+
+class PipelineStageData(BaseModel):
+    """Data container for pipeline stage processing."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True, extra="allow")
+    data: dict[str, t.NormalizedValue] = Field(default_factory=dict)
 
 
 def _new_str_list() -> list[str]:
@@ -83,21 +90,7 @@ class AdvancedProcessingExample:
             description="Time taken for validation",
         )
 
-    class ProcessingPipeline(
-        FlextService[
-            dict[
-                str,
-                list[ItemDict]
-                | list["AdvancedProcessingExample.ValidationResult"]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ]
-        ]
-    ):
+    class ProcessingPipeline(FlextService[PipelineStageData]):
         """Declarative processing pipeline with automatic parallel execution."""
 
         auto_execute: bool = True
