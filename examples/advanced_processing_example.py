@@ -17,7 +17,7 @@ import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
-from typing import override
+from typing import Any, override
 
 from flext_core import FlextService, r, t
 from pydantic import BaseModel, ConfigDict, Field
@@ -270,11 +270,11 @@ class AdvancedProcessingExample:
         ]:
             """Analyze processing results."""
             processed_items_data = data.get("processed_items", [])
-            processed_items = (
+            processed_items: list[Any] = (
                 processed_items_data if isinstance(processed_items_data, list) else []
             )
             validation_results_data = data.get("validation_results", [])
-            validation_results = (
+            validation_results: list[Any] = (
                 validation_results_data
                 if isinstance(validation_results_data, list)
                 else []
