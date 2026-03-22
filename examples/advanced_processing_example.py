@@ -23,6 +23,7 @@ from flext_core import FlextService, r, t
 from pydantic import BaseModel, ConfigDict, Field
 
 ItemDict = dict[str, t.Scalar]
+StageOperation = Callable[[dict[str, t.NormalizedValue]], r[PipelineStageData]]
 
 
 class PipelineStageData(BaseModel):
@@ -98,169 +99,40 @@ class AdvancedProcessingExample:
         stages: list[str]
 
         @override
-        def execute(
-            self,
-        ) -> r[
-            dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ]
-        ]:
+        def execute(self) -> r[PipelineStageData]:
             """Execute processing pipeline using declarative stages."""
             stage_functions: dict[
-                str,
-                Callable[
-                    [
-                        dict[
-                            str,
-                            list[ItemDict]
-                            | list[AdvancedProcessingExample.ValidationResult]
-                            | int
-                            | float
-                            | dict[
-                                str,
-                                int
-                                | float
-                                | dict[int, int]
-                                | list[float]
-                                | dict[str, int | float],
-                            ],
-                        ]
-                    ],
-                    r[
-                        dict[
-                            str,
-                            list[ItemDict]
-                            | list[AdvancedProcessingExample.ValidationResult]
-                            | int
-                            | float
-                            | dict[
-                                str,
-                                int
-                                | float
-                                | dict[int, int]
-                                | list[float]
-                                | dict[str, int | float],
-                            ],
-                        ]
-                    ],
-                ],
+                str, Callable[[dict[str, t.NormalizedValue]], r[PipelineStageData]]
             ] = {
                 "validate": self._validate_batch,
                 "process": self._process_parallel,
                 "analyze": self._analyze_results,
             }
             operations: list[
-                Callable[
-                    [
-                        dict[
-                            str,
-                            list[ItemDict]
-                            | list[AdvancedProcessingExample.ValidationResult]
-                            | int
-                            | float
-                            | dict[
-                                str,
-                                int
-                                | float
-                                | dict[int, int]
-                                | list[float]
-                                | dict[str, int | float],
-                            ],
-                        ]
-                    ],
-                    r[
-                        dict[
-                            str,
-                            list[ItemDict]
-                            | list[AdvancedProcessingExample.ValidationResult]
-                            | int
-                            | float
-                            | dict[
-                                str,
-                                int
-                                | float
-                                | dict[int, int]
-                                | list[float]
-                                | dict[str, int | float],
-                            ],
-                        ]
-                    ],
-                ]
+                Callable[[dict[str, t.NormalizedValue]], r[PipelineStageData]]
             ] = []
             for stage in self.stages:
                 stage_func = stage_functions.get(stage)
                 if stage_func:
                     operations.append(stage_func)
                 else:
-                    return r[
-                        dict[
-                            str,
-                            list[ItemDict]
-                            | list[AdvancedProcessingExample.ValidationResult]
-                            | int
-                            | float
-                            | dict[
-                                str,
-                                int
-                                | float
-                                | dict[int, int]
-                                | list[float]
-                                | dict[str, int | float],
-                            ],
-                        ]
-                    ].fail(f"Unknown stage: {stage}")
-            current_data: dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ] = {"items": self.items}
+                    return r.fail(f"Unknown stage: {stage}")
+            current_data: dict[str, t.NormalizedValue] = {"items": self.items}
             for operation in operations:
                 result = operation(current_data)
                 if result.is_failure:
                     return result
-                current_data = result.value
-            return r.ok(current_data)
+                current_data = (
+                    result.value.data
+                    if isinstance(result.value, PipelineStageData)
+                    else current_data
+                )
+            return r.ok(PipelineStageData(data=current_data))
 
         def _analyze_results(
             self,
-            data: dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ],
-        ) -> r[
-            dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ]
-        ]:
+            data: dict[str, t.NormalizedValue],
+        ) -> r[PipelineStageData]:
             """Analyze processing results."""
             processed_items_data = data.get("processed_items", [])
             processed_items: list[Any] = (
@@ -309,9 +181,7 @@ class AdvancedProcessingExample:
                     if isinstance(r, AdvancedProcessingExample.ValidationResult)
                 ),
             }
-            analysis: dict[
-                str, int | float | dict[int, int] | list[float] | dict[str, int | float]
-            ] = {
+            analysis: dict[str, t.NormalizedValue] = {
                 "total_processed": len(items_to_analyze),
                 "field_distribution": field_counts,
                 "avg_complexity": sum(complexity_scores) / len(complexity_scores)
@@ -320,65 +190,17 @@ class AdvancedProcessingExample:
                 "validation_summary": validation_summary,
                 "processing_efficiency": processing_efficiency * 100,
             }
-            result_data: dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ] = {**data, "analysis": analysis}
-            return r.ok(result_data)
+            result_data: dict[str, t.NormalizedValue] = {**data, "analysis": analysis}
+            return r.ok(PipelineStageData(data=result_data))
 
         def _process_parallel(
             self,
-            data: dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ],
-        ) -> r[
-            dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ]
-        ]:
+            data: dict[str, t.NormalizedValue],
+        ) -> r[PipelineStageData]:
             """Process items in parallel."""
             items_data = data.get("items", [])
             if not isinstance(items_data, list):
-                return r[
-                    dict[
-                        str,
-                        list[ItemDict]
-                        | list[AdvancedProcessingExample.ValidationResult]
-                        | int
-                        | float
-                        | dict[
-                            str,
-                            int
-                            | float
-                            | dict[int, int]
-                            | list[float]
-                            | dict[str, int | float],
-                        ],
-                    ]
-                ].fail("Invalid items data")
+                return r.fail("Invalid items data")
             start_time = time.time()
 
             def process_single_item(item: ItemDict) -> ItemDict | None:
@@ -409,17 +231,7 @@ class AdvancedProcessingExample:
                     if result is not None:
                         processed_items.append(result)
             processing_time = time.time() - start_time
-            result_data: dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ] = {
+            result_data: dict[str, t.NormalizedValue] = {
                 **data,
                 "processed_items": processed_items,
                 "processing_time": processing_time,
@@ -427,54 +239,16 @@ class AdvancedProcessingExample:
                 if items_data
                 else 0,
             }
-            return r.ok(result_data)
+            return r.ok(PipelineStageData(data=result_data))
 
         def _validate_batch(
             self,
-            data: dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ],
-        ) -> r[
-            dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ]
-        ]:
+            data: dict[str, t.NormalizedValue],
+        ) -> r[PipelineStageData]:
             """Validate batch of items."""
             items_data = data.get("items", [])
             if not isinstance(items_data, list):
-                return r[
-                    dict[
-                        str,
-                        list[ItemDict]
-                        | list[AdvancedProcessingExample.ValidationResult]
-                        | int
-                        | float
-                        | dict[
-                            str,
-                            int
-                            | float
-                            | dict[int, int]
-                            | list[float]
-                            | dict[str, int | float],
-                        ],
-                    ]
-                ].fail("Invalid items data")
+                return r.fail("Invalid items data")
             validation_results: list[AdvancedProcessingExample.ValidationResult] = []
             items_to_validate: list[ItemDict] = [
                 item
@@ -487,40 +261,14 @@ class AdvancedProcessingExample:
                 if result.is_success:
                     validation_results.append(result.value)
                 else:
-                    return r[
-                        dict[
-                            str,
-                            list[ItemDict]
-                            | list[AdvancedProcessingExample.ValidationResult]
-                            | int
-                            | float
-                            | dict[
-                                str,
-                                int
-                                | float
-                                | dict[int, int]
-                                | list[float]
-                                | dict[str, int | float],
-                            ],
-                        ]
-                    ].fail(f"Validation failed: {result.error}")
-            result_data: dict[
-                str,
-                list[ItemDict]
-                | list[AdvancedProcessingExample.ValidationResult]
-                | int
-                | float
-                | dict[
-                    str,
-                    int | float | dict[int, int] | list[float] | dict[str, int | float],
-                ],
-            ] = {
+                    return r.fail(f"Validation failed: {result.error}")
+            result_data: dict[str, t.NormalizedValue] = {
                 **data,
                 "validation_results": validation_results,
                 "valid_count": sum(1 for r in validation_results if r.is_valid),
                 "invalid_count": sum(1 for r in validation_results if not r.is_valid),
             }
-            return r.ok(result_data)
+            return r.ok(PipelineStageData(data=result_data))
 
         def _validate_single_item(
             self, item: ItemDict
