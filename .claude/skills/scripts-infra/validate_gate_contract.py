@@ -10,6 +10,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import ClassVar
 
 from flext_core import t
 from pydantic import BaseModel, ConfigDict, Field

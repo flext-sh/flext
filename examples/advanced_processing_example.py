@@ -17,7 +17,7 @@ import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
-from typing import override
+from typing import ClassVar, override
 
 from flext_core import FlextService, r, t
 from pydantic import BaseModel, ConfigDict, Field
@@ -29,7 +29,9 @@ StageOperation = Callable[[dict[str, t.NormalizedValue]], r["PipelineStageData"]
 class PipelineStageData(BaseModel):
     """Data container for pipeline stage processing."""
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True, extra="allow")
+    model_config: ClassVar[ConfigDict] = ConfigDict(
+        arbitrary_types_allowed=True, extra="allow"
+    )
     data: dict[str, t.NormalizedValue] = Field(default_factory=dict)
 
 
