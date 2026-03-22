@@ -11,6 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from flext_core import t
 from pydantic import BaseModel, ConfigDict, Field
 
 EXIT_PASS = 0
@@ -62,7 +63,7 @@ class Ansi:
 class Violation(BaseModel):
     """Violation class."""
 
-    model_config = ConfigDict(frozen=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
 
     script: str = Field(description="Script file path")
     check: str = Field(description="Check type that failed")
@@ -76,7 +77,7 @@ class Violation(BaseModel):
 class ScriptInfo(BaseModel):
     """ScriptInfo class."""
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
     path: str = Field(description="Script file path")
     extension: str = Field(description="File extension (.py or .sh)")
@@ -482,7 +483,7 @@ def write_report(root: Path, scripts: list[ScriptInfo], mode: str) -> Path:
         1 for s in scripts for v in s.violations if v.severity == "warning"
     )
 
-    payload: dict[str, object] = {
+    payload: dict[str, t.NormalizedValue] = {
         "checked": checked_count,
         "errors": error_count,
         "mode": mode,

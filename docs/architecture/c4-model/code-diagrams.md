@@ -96,7 +96,7 @@ classDiagram
     class FlextContainer {
         <<Singleton>>
         -Dict~str, ServiceRegistration~ registrations
-        -Dict~str, object~ instances
+        -Dict~str, t.NormalizedValue~ instances
         +register_singleton~T~(str key, Type~T~ service_type) None
         +register_transient~T~(str key, Type~T~ service_type) None
         +register_factory~T~(str key, Callable~T~ factory) None
@@ -112,8 +112,8 @@ classDiagram
         +ServiceLifetime lifetime
         +Type service_type
         +Callable factory
-        +object instance
-        +create_instance() object
+        +t.NormalizedValue instance
+        +create_instance() t.NormalizedValue
     }
 
     class ServiceLifetime {
@@ -464,7 +464,7 @@ classDiagram
 classDiagram
     class FlextSettings {
         <<Singleton>>
-        -Dict~str, object~ settings
+        -Dict~str, t.NormalizedValue~ settings
         -ConfigSource source
         +get~T~(key, default_value) T
         +set(key, value) None
@@ -476,26 +476,26 @@ classDiagram
 
     class ConfigSource {
         <<Abstract Base Class>>
-        +load_settings() Dict~str, object~
+        +load_settings() Dict~str, t.NormalizedValue~
         +save_settings(settings) None
         +validate_settings(settings) bool
     }
 
     class EnvironmentConfigSource {
-        +load_settings() Dict~str, object~
+        +load_settings() Dict~str, t.NormalizedValue~
         +get_env_var(key, default_value) str
     }
 
     class FileConfigSource {
         +str file_path
         +ConfigFormat format
-        +load_settings() Dict~str, object~
+        +load_settings() Dict~str, t.NormalizedValue~
         +save_settings(settings) None
     }
 
     class DatabaseConfigSource {
         +str connection_string
-        +load_settings() Dict~str, object~
+        +load_settings() Dict~str, t.NormalizedValue~
         +save_settings(settings) None
     }
 

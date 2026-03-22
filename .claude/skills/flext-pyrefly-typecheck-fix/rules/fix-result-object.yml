@@ -1,5 +1,5 @@
-id: fix-result-object
+id: fix-result-t.NormalizedValue
 language: python
 rule:
-  pattern: r[object]
-fix: r[object]
+  pattern: r[t.NormalizedValue]
+fix: r[t.NormalizedValue]

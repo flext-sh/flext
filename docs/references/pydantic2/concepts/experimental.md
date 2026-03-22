@@ -146,7 +146,7 @@ Just be mindful of abusing advanced patterns like the pipeline API just because 
 
 Pydantic v2.10.0 introduces experimental support for "partial validation".
 
-This allows you to validate an incomplete JSON string, or a Python object representing incomplete input data.
+This allows you to validate an incomplete JSON string, or a Python t.NormalizedValue representing incomplete input data.
 
 Partial validation is particularly helpful when processing the output of an LLM, where the model streams structured responses, and you may wish to begin validating the stream while you're still receiving data (e.g. to show partial data to users).
 
@@ -258,8 +258,8 @@ print(v)
 2. Parsing JSON, the input is valid JSON up to the point where the string is truncated.
 3. In this case truncation of the input means the value of `c` (`abcd`) is invalid as input to `c` field, hence it's omitted.
 4. The `a` field is required, so validation on the only item in the list fails and is dropped.
-5. Partial validation also works with Python objects, it should have the same semantics as with JSON except of course you can't have a genuinely "incomplete" Python object.
-6. The same as above but with a Python object, `c` is dropped as it's not required and failed validation.
+5. Partial validation also works with Python objects, it should have the same semantics as with JSON except of course you can't have a genuinely "incomplete" Python t.NormalizedValue.
+6. The same as above but with a Python t.NormalizedValue, `c` is dropped as it's not required and failed validation.
 7. The `trailing-strings` mode allows for incomplete strings at the end of partial JSON to be included in the output, in this case the input is valid JSON up to the point where the string is truncated, so the last string is included.
 
 ### How Partial Validation Works

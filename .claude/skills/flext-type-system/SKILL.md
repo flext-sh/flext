@@ -18,7 +18,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 
 # Flext Type System
 
-**Reviewed**: 2026-03-03 | **Scope**: AXIOMATIC type purity — `Any`/`object` absolute prohibition enforced
+**Reviewed**: 2026-03-03 | **Scope**: AXIOMATIC type purity — `Any`/`t.NormalizedValue` absolute prohibition enforced
 
 ## Scope
 
@@ -43,7 +43,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 - Keep recursive/general value aliases compatible with existing boundaries.
 - Preserve generic covariance/contravariance semantics where defined.
 - Keep exported short aliases (`t`, `r`) stable across refactors.
-- **AXIOMATIC**: `Any`, `object`, and `dict[str, Any]` are TOTALLY FORBIDDEN in type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. Inline composed types are FORBIDDEN in all 33 projects — use `t.*` references only.
+- **AXIOMATIC**: `Any`, `t.NormalizedValue`, and `dict[str, Any]` are TOTALLY FORBIDDEN in type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. Inline composed types are FORBIDDEN in all 33 projects — use `t.*` references only.
 - **AXIOMATIC**: `| None` MUST NEVER appear in type alias definitions in `typings.py`. Type aliases are ALWAYS non-nullable. Consumers add `| None` inline at usage sites when business requires it (e.g., `field: t.Scalar | None`). No `NullableX` or `OptionalX` aliases.
 - **AXIOMATIC**: Duplicating type definitions from the MRO chain is FORBIDDEN — even inside subproject `FlextTypes` nested classes. One definition, one source of truth. Compatibility aliases (`X = t.Y`) are FORBIDDEN.
 - **AXIOMATIC**: `r` (`r`) is the SOLE mechanism for expressing fallibility. Functions that can fail MUST return `r[T]` — never `T | None`, never bare exceptions, never ad-hoc error dicts. The `r` alias (`from flext_core import r`) is MANDATORY at all usage sites. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace `if result is None` / `try/except` chains. `r` eliminates `| None` return types from the business layer.
@@ -59,7 +59,7 @@ PEP 695 `type X = ...` creates `TypeAliasType`, NOT `UnionType`. `isinstance(val
 
 **Rules:**
 1. Non-recursive aliases (`Primitives`, `Scalar`, `Container`, `ConfigurationMapping`) → `X: TypeAlias = ...` (isinstance-safe)
-2. Recursive aliases (`object`, `object`, `object`, `object`) → `type X = ...` (NEVER use with isinstance)
+2. Recursive aliases (`t.NormalizedValue`, `t.NormalizedValue`, `t.NormalizedValue`, `t.NormalizedValue`) → `type X = ...` (NEVER use with isinstance)
 3. `TypeAliasType.__value__` is transitively poisoned — do NOT use as isinstance workaround
 4. `TypeAdapter` is 4x slower than isinstance — do NOT use for type checking
 5. Use `TypeGuard` functions from `_utilities/guards.py`: `is_primitive()`, `is_scalar()`, `is_flexible_value()`
@@ -107,7 +107,7 @@ m = FlextTargetOracleModels
 ## Instructions
 
 - Use existing type var definitions before introducing new generic parameters.
-- Prefer `FlextTypes` aliases (`object`, maps, scalar groups) for public contracts.
+- Prefer `FlextTypes` aliases (`t.NormalizedValue`, maps, scalar groups) for public contracts.
 - Ensure downstream users (`result.py`, `settings.py`, `protocols.py`) still type-check.
 - When creating a new project that depends on another FLEXT project's types, ALWAYS inherit the parent facade class in your models/protocols/etc.
 
@@ -115,7 +115,7 @@ m = FlextTargetOracleModels
 T = TypeVar("T")
 T_Settings = TypeVar("T_Settings", bound=BaseSettings)
 
-type object = (
+type t.NormalizedValue = (
     str
     | int
     | float
@@ -124,8 +124,8 @@ type object = (
     | None
     | BaseModel
     | Path
-    | Sequence[object]
-    | Mapping[str, object]
+    | Sequence[t.NormalizedValue]
+    | Mapping[str, t.NormalizedValue]
 )
 ```
 
@@ -149,10 +149,12 @@ Why good: focused alias with clear semantic purpose.
 Bad:
 
 ```python
-JsonPrimitive = object  # ← FORBIDDEN: `object` erases all type constraints
+JsonPrimitive = (
+    t.NormalizedValue
+)  # ← FORBIDDEN: `t.NormalizedValue` erases all type constraints
 ```
 
-Why bad: `object` is AXIOMATIC FORBIDDEN — it erases constraints and degrades static analysis. Use `t.Scalar` or the explicit union type.
+Why bad: `t.NormalizedValue` is AXIOMATIC FORBIDDEN — it erases constraints and degrades static analysis. Use `t.Scalar` or the explicit union type.
 
 ## Verification
 
@@ -164,6 +166,6 @@ Make gates:
 
 Pattern checks:
 
-- `rg -n "TypeVar\(|type object|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
+- `rg -n "TypeVar\(|type t.NormalizedValue|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
 - `rg -n "class r|type .*=" flext-core/src/flext_core/result.py`
 - `rg -n "T_Settings|BaseSettings" flext-core/src/flext_core/settings.py flext-core/src/flext_core/typings.py`

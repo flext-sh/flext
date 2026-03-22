@@ -47,7 +47,7 @@ Replace the `for_testing()` helpers with real Oracle WMS Cloud credentials once 
 ## Architecture & compliance snapshot
 
 - **Layered modules**: `constants.py`, `typings.py`, `protocols.py` define the foundation; `api.py` exposes `FlextOracleWms` services; `services/`, `integration/`, `auth/`, and `cli/` map to the Flext tiers.
-- **API catalog**: 25+ endpoints (setup, automation, data extract, entity management) already defined, including the 2025 LGF v10 APIs for entity extracts, bulk updates, and object store exports.
+- **API catalog**: 25+ endpoints (setup, automation, data extract, entity management) already defined, including the 2025 LGF v10 APIs for entity extracts, bulk updates, and t.NormalizedValue store exports.
 - **Compliance gaps**: README calls out httpx -> flext-api migration needs, consolidation from 133 classes to unified classes per module, flext-auth/flext-cli integration, and OAuth2 authentication coverage.
 - **r discipline**: every operation returns `r`, and the README explicitly forbids exception-based error handling, `Any`, or type ignores.
 

@@ -91,11 +91,11 @@ alwaysApply: true
 - **Centralize Polymorphic Code**: Dismantle polymorphic functions branching on type unions. Use centralized Pydantic v2 models with discriminated unions and validation.
 
 ### 3.2 Types & Contracts
-- **Strict Contracts Only**: `Any`, bare `object`, and `dict[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
-  - **Exception: Intentional Generic Types** - `dict[str, object]` and `Mapping[str, object]` ARE permitted ONLY in these contexts:
-    1. **Type aliases** (in `typings.py`): `type ProjectConfig = dict[str, object]` with docstring explaining intent
+- **Strict Contracts Only**: `Any`, bare `t.NormalizedValue`, and `dict[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
+  - **Exception: Intentional Generic Types** - `dict[str, t.NormalizedValue]` and `Mapping[str, t.NormalizedValue]` ARE permitted ONLY in these contexts:
+    1. **Type aliases** (in `typings.py`): `type ProjectConfig = dict[str, t.NormalizedValue]` with docstring explaining intent
     2. **Test fixtures** (in `conftest.py` and test support): Dynamic test data with unknown structure
-    3. **Validation/Rule engines**: Return types for unstructured violations (e.g., `r[list[Mapping[str, object]]]`)
+    3. **Validation/Rule engines**: Return types for unstructured violations (e.g., `r[list[Mapping[str, t.NormalizedValue]]]`)
     4. **Configuration transformers**: Methods that accept/return dynamic configuration from external sources (YAML, JSON)
     - **All other uses are FORBIDDEN**. Use `t.NormalizedValue` or specific Pydantic models instead.
 - **PEP 695 Canonical (Python 3.13+)**: ALL type aliases in `typings.py` must use `type X = ...` syntax. These create `TypeAliasType` objects—using them in `isinstance()` crashes at runtime and is FORBIDDEN. Runtime narrowing MUST use `u.is_*()` functions instead.
@@ -173,11 +173,11 @@ alwaysApply: true
        # ✗ WRONG — causes lazy-load cycles
        from flext_core import FlextProtocolsBase, t
        ```
-    4. **Trust lazy loading in `__init__.py`** — The `__init__.py` lazy-load system (via `lazy_getattr`) properly sequences module initialization to break cycles. Do NOT use workarounds like `model_rebuild()`, string annotations, or `object`/`Any` types.
+    4. **Trust lazy loading in `__init__.py`** — The `__init__.py` lazy-load system (via `lazy_getattr`) properly sequences module initialization to break cycles. Do NOT use workarounds like `model_rebuild()`, string annotations, or `t.NormalizedValue`/`Any` types.
   - **FORBIDDEN Workarounds**:
     - ✗ Using `model_rebuild()` — indicates root-cause unresolved
     - ✗ Using string type hints like `"FlextProtocolsResult.Result[bool]"` — use TYPE_CHECKING instead
-    - ✗ Using `object` or `Any` as catch-all types — use precise `t.*` contracts
+    - ✗ Using `t.NormalizedValue` or `Any` as catch-all types — use precise `t.*` contracts
     - ✗ Reordering `__init__.py` imports or relying on "order of initialization" — architecture must NOT depend on load order
   - **Verification**: Run `make codegen` without timeout or errors. Imports should resolve cleanly via `python -c "from flext_core._protocols.* import *"`.
 - *Detailed matrix & exceptions*: See skill `flext-import-rules`.

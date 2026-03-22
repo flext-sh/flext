@@ -1,6 +1,6 @@
-id: detect-result-object
+id: detect-result-t.NormalizedValue
 valid:
   - "r[str]"
   - "r[int]"
 invalid:
-  - "r[object]"
+  - "r[t.NormalizedValue]"

@@ -67,7 +67,7 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 - Event-Driven patterns in service/dispatcher flows
 - Hexagonal ports/adapters boundaries
 - Validation/middleware pipeline composition
-- Factory/Adapter object-creation integration patterns
+- Factory/Adapter t.NormalizedValue-creation integration patterns
 - **Namespace Inheritance** (cross-project `m`, `c`, `t`, `u`, `p` composition via MRO)
 
 ## Simple Runtime Aliases Only (Mandatory)
@@ -144,7 +144,7 @@ Example:
 from .models import m
 
 print([c.__name__ for c in m.__mro__])
-# Output: ['FlextTargetOracleModels', 'FlextMeltanoModels', 'FlextDbOracleModels', 'FlextModels', 'object']
+# Output: ['FlextTargetOracleModels', 'FlextMeltanoModels', 'FlextDbOracleModels', 'FlextModels', 't.NormalizedValue']
 ```
 
 Anti-patterns:

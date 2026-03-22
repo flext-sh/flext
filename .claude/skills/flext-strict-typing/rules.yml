@@ -72,7 +72,7 @@ rules:
     group: strict_typing
     description: Direct usage of typing.Any is banned.
     fix_auto: false
-    fix_instruction: Replace Any with specific type or object.
+    fix_instruction: Replace Any with specific type or t.NormalizedValue.
     file: rules/grep-typing-any.yml
   - id: grep-any-import
     type: ast-grep

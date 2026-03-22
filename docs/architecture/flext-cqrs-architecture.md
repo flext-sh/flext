@@ -362,7 +362,7 @@ servir como referência futura para implementação:
 
 ~~ # ⚠️ Infraestrutura manual (será deprecated)~~
 ~~ \_metrics: dict[str, int | float]~~
-~~\_context_stack: list[dict[str, object]]~~
+~~\_context_stack: list[dict[str, t.NormalizedValue]]~~
 
 ~~ # ✅ Pipeline methods~~
 ~~ def handle(self, message: TCommand_contra) -> r[TResult_co]: ...~~
@@ -371,8 +371,8 @@ servir como referência futura para implementação:
 ~~ # ⚠️ Métodos manuais (serão deprecated em V2)~~
 ~~ def record_metric(self, key: str, value: int | float) -> None: ...~~
 ~~ def get_metrics(self) -> dict[str, int | float]: ...~~
-~~ def push_context(self, ctx: dict[str, object]) -> None: ...~~
-~~ def pop_context(self) -> dict[str, object] | None: ...~~
+~~ def push_context(self, ctx: dict[str, t.NormalizedValue]) -> None: ...~~
+~~ def pop_context(self) -> dict[str, t.NormalizedValue] | None: ...~~
 ~~```~~
 
 ~~**Dependências:**~~
@@ -404,10 +404,10 @@ servir como referência futura para implementação:
 ~~\_rate_limiter_manager: RateLimiterManager # ~150 linhas~~
 ~~ \_timeout_enforcer: TimeoutEnforcer # ~100 linhas~~
 ~~ \_retry_policy_manager: RetryPolicyManager # ~150 linhas~~
-~~\_cache: dict[str, object] # ~100 linhas~~
+~~\_cache: dict[str, t.NormalizedValue] # ~100 linhas~~
 
 ~~ # ✅ Core methods~~
-~~ def dispatch(self, message) -> r[object]: ...~~
+~~ def dispatch(self, message) -> r[t.NormalizedValue]: ...~~
 ~~ def register_command(self, cmd_type: type, handler: h) -> None: ...~~
 ~~ def register_query(self, query_type: type, handler: h) -> None: ...~~
 ~~ def register_event(self, event_type: type, handler: h) -> None: ...~~
@@ -640,19 +640,19 @@ servir como referência futura para implementação:
 ~~ """Thread-safe context stack for handlers."""~~
 
 ~~ def **init**(self) -> None:~~
-~~ self.\_stack: list[dict[str, object]] = []~~
+~~ self.\_stack: list[dict[str, t.NormalizedValue]] = []~~
 
-~~ def push(self, ctx: dict[str, object]) -> None:~~
+~~ def push(self, ctx: dict[str, t.NormalizedValue]) -> None:~~
 ~~ """Push context onto stack."""~~
 ~~ self.\_stack.append(ctx)~~
 
-~~ def pop(self) -> dict[str, object] | None:~~
+~~ def pop(self) -> dict[str, t.NormalizedValue] | None:~~
 ~~ """Pop context from stack."""~~
 ~~ return self.\_stack.pop() if self.\_stack else None~~
 
-~~ def current(self) -> dict[str, object]:~~
+~~ def current(self) -> dict[str, t.NormalizedValue]:~~
 ~~ """Get current context (merged stack)."""~~
-~~ result: dict[str, object] = {}~~
+~~ result: dict[str, t.NormalizedValue] = {}~~
 ~~ for ctx in self.\_stack:~~
 ~~ result.update(ctx)~~
 ~~ return result~~

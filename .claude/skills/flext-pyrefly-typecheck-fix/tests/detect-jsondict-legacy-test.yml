@@ -1,6 +1,6 @@
 id: detect-jsondict-legacy
 valid:
-  - "x = object"
+  - "x = t.NormalizedValue"
   - "x = dict[str, str]"
 invalid:
-  - "dict[str, object]"
+  - "dict[str, t.NormalizedValue]"

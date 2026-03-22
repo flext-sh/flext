@@ -175,7 +175,7 @@ Each ADR follows this standard template:
 
 ## Implementation Notes
 
-[object specific implementation details or considerations]
+[t.NormalizedValue specific implementation details or considerations]
 
 ## References
 

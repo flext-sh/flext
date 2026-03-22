@@ -1,6 +1,6 @@
 id: fix-jsondict-legacy
 valid:
-  - "object"
+  - "t.NormalizedValue"
   - "dict[str, str]"
 invalid:
-  - "dict[str, object]"
+  - "dict[str, t.NormalizedValue]"

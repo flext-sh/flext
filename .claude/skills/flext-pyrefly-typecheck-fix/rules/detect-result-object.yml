@@ -1,4 +1,4 @@
-id: detect-result-object
+id: detect-result-t.NormalizedValue
 language: python
 rule:
-  pattern: r[object]
+  pattern: r[t.NormalizedValue]

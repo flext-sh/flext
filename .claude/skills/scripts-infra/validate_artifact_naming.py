@@ -34,7 +34,7 @@ class InfraError(Exception):
 class NamingViolation(BaseModel):
     """NamingViolation class."""
 
-    model_config = ConfigDict(frozen=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
 
     path: str = Field(description="Relative path to the artifact")
     filename: str = Field(description="Artifact filename")

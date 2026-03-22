@@ -228,7 +228,7 @@ except ValidationError as e:
 
 ### Mutable default values
 
-A common source of bugs in Python is to use a mutable object as a default value for a function or method argument,
+A common source of bugs in Python is to use a mutable t.NormalizedValue as a default value for a function or method argument,
 as the same instance ends up being reused in each call.
 
 The [`dataclasses`][dataclasses] module actually raises an error in this case, indicating that you should use
@@ -857,7 +857,7 @@ print(Box.model_json_schema(mode="serialization"))
     },
     'required': ['width', 'height', 'depth', 'volume'],
     'title': 'Box',
-    'type': 'object',
+    'type': 't.NormalizedValue',
 }
 """
 ```

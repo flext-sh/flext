@@ -673,10 +673,10 @@ class FlextService[TDomainResult](
         instance = super().__new__(cls)
         if cls.auto_execute:
             # Auto-execution pattern: create, initialize, execute, return result
-            object.__init__(instance)
+            t.NormalizedValue.__init__(instance)
             cls.__init__(instance, **data)
-            # Call execute via object.__getattribute__ to bypass abstract method check
-            execute_fn = object.__getattribute__(instance, "execute")
+            # Call execute via t.NormalizedValue.__getattribute__ to bypass abstract method check
+            execute_fn = t.NormalizedValue.__getattribute__(instance, "execute")
             result = execute_fn()
             if result.is_success:
                 # Return result directly instead of service instance
@@ -916,7 +916,7 @@ if result.is_success:
 - ✅ **Pydantic-native** - @computed_field (zero hacks)
 - ⚠️ **Type-safe** - Type checkers inferem TDomainResult (mas testes falhando)
 - ✅ **Lazy evaluation** - Só executa quando acessado
-- ⚠️ **object** - Precisa validação (testes falhando)
+- ⚠️ **t.NormalizedValue** - Precisa validação (testes falhando)
 - ✅ **100% backward compatible** - V1 continua funcionando
 - ✅ **Zero type ignores** - 100% type-safe
 
@@ -947,9 +947,9 @@ def __new__(cls, **data) -> Self:
     """Handle auto-execution pattern and instance creation."""
     instance = super().__new__(cls)
     if cls.auto_execute:
-        object.__init__(instance)
+        t.NormalizedValue.__init__(instance)
         cls.__init__(instance, **data)
-        execute_fn = object.__getattribute__(instance, "execute")
+        execute_fn = t.NormalizedValue.__getattribute__(instance, "execute")
         result = execute_fn()
         if result.is_success:
             return cast("Self", result.value)
@@ -1324,7 +1324,7 @@ class FlextModels:
         ...
 
     class Value(BaseModel):
-        """Immutable value object (frozen=True)."""
+        """Immutable value t.NormalizedValue (frozen=True)."""
 
         model_config = ConfigDict(frozen=True)
 
@@ -1382,7 +1382,7 @@ class FlextContainer:
         ...
 
     # Service resolution
-    def get(self, name: str) -> r[object]:
+    def get(self, name: str) -> r[t.NormalizedValue]:
         """Resolve service (untyped)."""
         ...
 
@@ -1414,7 +1414,7 @@ class p:
         def is_valid(self) -> bool: ...
         def validate_business_rules(self) -> r[bool]: ...
         def validate_config(self) -> r[bool]: ...
-        def get_service_info(self) -> dict[str, object]: ...
+        def get_service_info(self) -> dict[str, t.NormalizedValue]: ...
 
     @runtime_checkable
     class Repository[T](Protocol):
@@ -1429,15 +1429,15 @@ class p:
     class Configurable(Protocol):
         """Configuration protocol."""
 
-        def configure(self, config: dict[str, object]) -> r[bool]: ...
-        def get_config(self) -> dict[str, object]: ...
+        def configure(self, config: dict[str, t.NormalizedValue]) -> r[bool]: ...
+        def get_config(self) -> dict[str, t.NormalizedValue]: ...
 
     @runtime_checkable
     class ExecutableService(Protocol):
         """Enhanced execution protocol."""
 
-        def execute_operation(self) -> r[object]: ...
-        def execute_with_validation(self) -> r[object]: ...
+        def execute_operation(self) -> r[t.NormalizedValue]: ...
+        def execute_with_validation(self) -> r[t.NormalizedValue]: ...
 ```
 
 **Pontos de Integração:**
@@ -1883,7 +1883,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
         # Detect dependencies from __init__ signature
         try:
             init_signature = inspect.signature(cls.__init__)
-            dependencies: dict[str, object] = {}
+            dependencies: dict[str, t.NormalizedValue] = {}
 
             for param_name, param in init_signature.parameters.items():
                 if param_name not in ("self", "config", "data"):
@@ -1895,7 +1895,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 
                 def smart_factory(deps=dependencies):
                     """Factory with auto-injection."""
-                    resolved_deps: dict[str, object] = {}
+                    resolved_deps: dict[str, t.NormalizedValue] = {}
 
                     for dep_name, dep_type in deps.items():
                         # Try resolve from container
@@ -1939,7 +1939,7 @@ class UserService(FlextService[User]):
     def is_valid(self) -> bool:
         return True
 
-    def get_service_info(self) -> dict[str, object]:
+    def get_service_info(self) -> dict[str, t.NormalizedValue]:
         return {"service": "UserService"}
 
 
@@ -2061,7 +2061,7 @@ class CreateUser(FlextService[User]):
 
     def execute(self) -> r[User]:
         """Execute with repository from DI."""
-        # Create user object
+        # Create user t.NormalizedValue
         user = User(name=self.name, email=self.email, role=self.role)
 
         # Get repository from DI (if registered)
@@ -3050,13 +3050,13 @@ class FlextContainer:
     # Core operations
     def register(self, name: str, service) -> r[bool]
     def register_factory(self, name: str, factory: Callable[[], T]) -> r[bool]
-    def get(self, name: str) -> r[object]
+    def get(self, name: str) -> r[t.NormalizedValue]
     def get_typed(self, name: str, expected_type: type[T]) -> r[T]
 
     # Advanced features
-    def auto_wire(self, service_class: type[T]) -> r[object]
-    def create_service(self, service_class: type[T], service_name: str | None) -> r[object]
-    def batch_register(self, services: dict[str, object]) -> r[bool]
+    def auto_wire(self, service_class: type[T]) -> r[t.NormalizedValue]
+    def create_service(self, service_class: type[T], service_name: str | None) -> r[t.NormalizedValue]
+    def batch_register(self, services: dict[str, t.NormalizedValue]) -> r[bool]
 
     # Integration com dependency-injector
     _di_container: DynamicContainer  # Internal DI wrapper
@@ -3080,7 +3080,7 @@ class FlextContainer:
 # flext-ldif/src/flext_ldif/api.py (linha 128-129, 239-278)
 
 
-class FlextLdif(Flext[dict[str, object]]):
+class FlextLdif(Flext[dict[str, t.NormalizedValue]]):
     """Main API facade."""
 
     # ✅ BOM: Container como PrivateAttr
@@ -3106,7 +3106,7 @@ class FlextLdif(Flext[dict[str, object]]):
         _ = container.register("validation", FlextLdifValidation())
 
         # ✅ BOM: Register factory for parameterized service
-        def migration_pipeline_factory(params: dict[str, object] | None):
+        def migration_pipeline_factory(params: dict[str, t.NormalizedValue] | None):
             if params is None:
                 params = {}
             return FlextLdifMigrationPipeline(
@@ -3281,12 +3281,12 @@ class FlextLdif:
 **Pattern 1: Registrar Services na Inicialização**
 
 ```python
-class MyFacade(FlextService[dict[str, object]]):
+class MyFacade(FlextService[dict[str, t.NormalizedValue]]):
     """Facade with proper DI setup."""
 
     _container: FlextContainer = PrivateAttr(default_factory=FlextContainer.get_global)
 
-    def model_post_init(self, _context: dict[str, object] | None, /) -> None:
+    def model_post_init(self, _context: dict[str, t.NormalizedValue] | None, /) -> None:
         """Setup services in DI container."""
         # Registrar todos os services necessários
         self._setup_services()
@@ -3872,9 +3872,9 @@ Situação: Multiple envs - Solução Automática: `.env` files - ❌ Não Fazer
 class FlextModels:
     """Namespace for all domain models - DDD patterns."""
 
-    # Base value object (imutável)
+    # Base value t.NormalizedValue (imutável)
     class Value(BaseModel):
-        """Immutable value object."""
+        """Immutable value t.NormalizedValue."""
 
         model_config = ConfigDict(frozen=True)
 
@@ -3939,7 +3939,7 @@ class FlextApiModels:
 
     # ✅ BOM: Herda de m.Value (immutable)
     class HttpRequest(m.Value):
-        """Immutable HTTP request value object."""
+        """Immutable HTTP request value t.NormalizedValue."""
 
         method: str = Field(
             default="GET",
@@ -3958,7 +3958,7 @@ body: m.Api.RequestBodyModel | None = Field(default=None)
 
     # ✅ BOM: Herda de m.Value (immutable)
     class HttpResponse(m.Value):
-        """Immutable HTTP response value object."""
+        """Immutable HTTP response value t.NormalizedValue."""
 
         status_code: int = Field(..., ge=100, le=599)
         headers: dict[str, str] = Field(default_factory=dict)
@@ -4161,7 +4161,7 @@ class HttpResponse(m.Value):
 - Cached automaticamente (Pydantic v2)
 - Included in `model_dump()`
 - Type-safe
-- object
+- t.NormalizedValue
 
 #### ✅ Padrões Recomendados
 
@@ -4308,13 +4308,13 @@ class p:
     class Service(Protocol):
         """Service protocol."""
 
-        def execute(self) -> r[object]: ...
+        def execute(self) -> r[t.NormalizedValue]: ...
 
     @runtime_checkable
     class Repository(Protocol):
         """Repository protocol."""
 
-        def get(self, id: str) -> r[object]: ...
+        def get(self, id: str) -> r[t.NormalizedValue]: ...
         def save(self, entity) -> r[bool]: ...
         def delete(self, id: str) -> r[bool]: ...
 
@@ -4322,8 +4322,8 @@ class p:
     class Configurable(Protocol):
         """Configurable protocol."""
 
-        def configure(self, config: dict[str, object]) -> r[bool]: ...
-        def get_config(self) -> dict[str, object]: ...
+        def configure(self, config: dict[str, t.NormalizedValue]) -> r[bool]: ...
+        def get_config(self) -> dict[str, t.NormalizedValue]: ...
 ```
 
 **Capabilities:**
@@ -4497,7 +4497,7 @@ class FlextService(x, BaseModel, Generic[TDomainResult]):
 
 ```python
 # flext-ldif/src/flext_ldif/api.py
-class FlextLdif(Flext[dict[str, object]]):
+class FlextLdif(Flext[dict[str, t.NormalizedValue]]):
     """API facade with mixins."""
 
     def parse(self, source: str) -> r:
@@ -6126,8 +6126,10 @@ class MyService(FlextService[Result]):
 class h[MessageT_contra, ResultT](x, ABC):
     ...
     # handlers.py:119-120 - MAS USA INFRAESTRUTURA MANUAL!
-    self._context_stack: list[dict[str, object]] = []  # ❌ deveria usar self.context
-    self._metrics: dict[str, object] = {}  # ❌ deveria usar self.track()
+    self._context_stack: list[
+        dict[str, t.NormalizedValue]
+    ] = []  # ❌ deveria usar self.context
+    self._metrics: dict[str, t.NormalizedValue] = {}  # ❌ deveria usar self.track()
 ```
 
 **Duplicação em \_run_pipeline (handlers.py:495-584):**
@@ -7597,7 +7599,7 @@ class FlextCli:
         self._valid_tokens: set[str] = set()
         self._valid_sessions: set[str] = set()
         self._session_permissions: dict[str, set[str]] = {}
-        self._users: dict[str, dict[str, object]] = {}
+        self._users: dict[str, dict[str, t.NormalizedValue]] = {}
 
     def authenticate(self, credentials: ...) -> r[str]:
         # Auth logic directly in FlextCli
@@ -7624,7 +7626,7 @@ from pathlib import Path
 from typing import Literal
 
 
-class FlextCliService(FlextService[dict[str, object]]):
+class FlextCliService(FlextService[dict[str, t.NormalizedValue]]):
     """CLI service following FlextService pattern.
 
     Single service class para TODAS as operações CLI.
@@ -7637,12 +7639,12 @@ class FlextCliService(FlextService[dict[str, object]]):
     # Operation-specific fields
     message: str = ""
     style: str | None = None
-    data: dict[str, object] | None = None
+    data: dict[str, t.NormalizedValue] | None = None
     filepath: Path | None = None
     prompt_text: str | None = None
 
     @override
-    def execute(self) -> r[dict[str, object]]:
+    def execute(self) -> r[dict[str, t.NormalizedValue]]:
         """Execute CLI operation based on operation field."""
         match self.operation:
             case "print":
@@ -7656,7 +7658,7 @@ class FlextCliService(FlextService[dict[str, object]]):
             case "prompt":
                 return self._execute_prompt()
 
-    def _execute_print(self) -> r[dict[str, object]]:
+    def _execute_print(self) -> r[dict[str, t.NormalizedValue]]:
         """Print with Rich styling."""
         from rich.console import Console
 
@@ -7664,7 +7666,7 @@ class FlextCliService(FlextService[dict[str, object]]):
         console.print(self.message, style=self.style)
         return r.ok({"printed": self.message})
 
-    def _execute_table(self) -> r[dict[str, object]]:
+    def _execute_table(self) -> r[dict[str, t.NormalizedValue]]:
         """Create table from data."""
         from rich.table import Table
 
@@ -7677,17 +7679,17 @@ class FlextCliService(FlextService[dict[str, object]]):
 # ============ PUBLIC API - Zero Ceremony ============
 
 
-def print_cli(message: str, style: str | None = None) -> dict[str, object]:
+def print_cli(message: str, style: str | None = None) -> dict[str, t.NormalizedValue]:
     """Factory function - Zero ceremony CLI print."""
     return FlextCliService(operation="print", message=message, style=style).value
 
 
-def create_table(data: dict[str, object]) -> dict[str, object]:
+def create_table(data: dict[str, t.NormalizedValue]) -> dict[str, t.NormalizedValue]:
     """Factory function - Zero ceremony table creation."""
     return FlextCliService(operation="table", data=data).value
 
 
-def read_json(filepath: Path) -> dict[str, object]:
+def read_json(filepath: Path) -> dict[str, t.NormalizedValue]:
     """Factory function - Zero ceremony JSON read."""
     return FlextCliService(operation="read_file", filepath=filepath).value
 ```
@@ -7708,7 +7710,7 @@ def read_json(filepath: Path) -> dict[str, object]:
 class CliOutputService(FlextService[str]):
     """Output formatting service."""
 
-    data: dict[str, object]
+    data: dict[str, t.NormalizedValue]
     format: Literal["json", "yaml", "table", "csv"] = "json"
 
     def execute(self) -> r[str]:
@@ -7724,14 +7726,14 @@ class CliOutputService(FlextService[str]):
 
 
 # flext-cli/src/flext_cli/services/file_tools.py
-class CliFileService(FlextService[dict[str, object]]):
+class CliFileService(FlextService[dict[str, t.NormalizedValue]]):
     """File I/O service."""
 
     operation: Literal["read", "write"] = "read"
     filepath: Path
-    data: dict[str, object] | None = None
+    data: dict[str, t.NormalizedValue] | None = None
 
-    def execute(self) -> r[dict[str, object]]:
+    def execute(self) -> r[dict[str, t.NormalizedValue]]:
         match self.operation:
             case "read":
                 return self._read_json()
@@ -7823,11 +7825,11 @@ class FlextCliSettings(FlextSettings):
 ```python
 
 # flext-cli/src/flext_cli/services/cli.py (NOVO)
-class FlextCliService(FlextService[dict[str, object]]):
+class FlextCliService(FlextService[dict[str, t.NormalizedValue]]):
     operation: Literal["print", "table", "file_read", "file_write"] = "print"
     # ... fields
 
-    def execute(self) -> r[dict[str, object]]:
+    def execute(self) -> r[dict[str, t.NormalizedValue]]:
         match self.operation:
             # ... dispatch
 ```
@@ -7840,7 +7842,7 @@ def print_cli(message: str, style: str | None = None):
     return FlextCliService(operation="print", message=message, style=style).value
 
 
-def create_table(data: dict[str, object]):
+def create_table(data: dict[str, t.NormalizedValue]):
     return FlextCliService(operation="table", data=data).value
 ```
 
@@ -7862,7 +7864,7 @@ class FlextCli:
 
 # flext-cli/src/flext_cli/services/output.py
 class CliOutputService(FlextService[str]):
-    data: dict[str, object]
+    data: dict[str, t.NormalizedValue]
     format: Literal["json", "yaml", "table"] = "json"
 
     def execute(self) -> r[str]:
@@ -7874,11 +7876,11 @@ class CliOutputService(FlextService[str]):
 ```python
 
 # flext-cli/src/flext_cli/services/file.py
-class CliFileService(FlextService[dict[str, object]]):
+class CliFileService(FlextService[dict[str, t.NormalizedValue]]):
     operation: Literal["read", "write"] = "read"
     filepath: Path
 
-    def execute(self) -> r[dict[str, object]]:
+    def execute(self) -> r[dict[str, t.NormalizedValue]]:
         # Move file I/O logic here
 ```
 
@@ -8205,7 +8207,7 @@ class x:
         return FlextSettings.get_global_instance()
 
     @contextmanager
-    def track(self, operation_name: str) -> Iterator[dict[str, object]]:
+    def track(self, operation_name: str) -> Iterator[dict[str, t.NormalizedValue]]:
         """Performance monitoring context manager."""
         with FlextContext.Performance.timed_operation(operation_name) as metrics:
             yield metrics
@@ -8281,7 +8283,7 @@ class FlextService[TDomainResult]:
     def is_valid(self) -> bool: ...
 
     # ❌ Service info raramente usado
-    def get_service_info(self) -> dict[str, object]: ...
+    def get_service_info(self) -> dict[str, t.NormalizedValue]: ...
 
     # ✅ Properties - ÓTIMOS
     @computed_field
@@ -8467,7 +8469,7 @@ class MyService(FlextService[Result]):
 # DEPOIS - Only execute + Pydantic validators
 class MyService(FlextService[Result]):
     # Pydantic fields
-    data: dict[str, object]
+    data: dict[str, t.NormalizedValue]
 
     @model_validator(mode="after")
     def validate_data(self) -> Self:
@@ -8608,7 +8610,7 @@ class FlextCliCore(FlextService[CliDataDict]):
         "execute_command"
     )
     command_name: str = ""
-    command_context: dict[str, object] = {}
+    command_context: dict[str, t.NormalizedValue] = {}
 
     # Commands stored in class-level registry
     _commands: ClassVar[dict[str, CliCommand]] = {}
@@ -9009,7 +9011,7 @@ user = UserService(user_id="123").execute().unwrap()
 - ✅ Pydantic-native (zero hacks)
 - ✅ Lazy evaluation (só executa quando acessado)
 - ✅ Type-safe (type checkers inferem TDomainResult)
-- ✅ object (incluído em model_dump se configurado)
+- ✅ t.NormalizedValue (incluído em model_dump se configurado)
 
 #### 2. ✅ V2 Auto Pattern: `auto_execute`
 

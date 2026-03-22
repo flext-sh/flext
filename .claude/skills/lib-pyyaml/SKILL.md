@@ -59,7 +59,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 - Always prefer `yaml.safe_load(...)` when reading YAML from files or user-controlled content.
 - Never use `yaml.load(...)` without an explicit safe loader policy (current repo evidence shows zero `yaml.load(` occurrences).
 - Use explicit dump options for stable output (`default_flow_style=False`, and set `sort_keys` intentionally).
-- Validate loaded object shape (`dict`, `list`) before passing to typed models.
+- Validate loaded t.NormalizedValue shape (`dict`, `list`) before passing to typed models.
 - Keep encoding explicit (`encoding="utf-8"` or project constant) when opening files.
 - For CLI output serialization, keep YAML formatting deterministic and user-readable.
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
@@ -73,7 +73,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
 
 @staticmethod
-def load_yaml_rules(path: Path) -> r[list[dict[str, object]]]:
+def load_yaml_rules(path: Path) -> r[list[dict[str, t.NormalizedValue]]]:
     with path.open(encoding="utf-8") as f:
         parsed = yaml.safe_load(f)
 ```
@@ -81,7 +81,7 @@ def load_yaml_rules(path: Path) -> r[list[dict[str, object]]]:
 ```python
 # flext-cli/src/flext_cli/file_tools.py
 @staticmethod
-def read_yaml_file(file_path: str | Path) -> r[object]:
+def read_yaml_file(file_path: str | Path) -> r[t.NormalizedValue]:
     return FlextCliFileTools._execute_file_operation(
         lambda: FlextCliFileTools._load_structured_file(str(file_path), yaml.safe_load),
         c.Cli.FileErrorMessages.YAML_LOAD_FAILED,
@@ -156,7 +156,7 @@ Good:
 ```python
 parsed = yaml.safe_load(f)
 if not isinstance(parsed, dict):
-    return r[list[dict[str, object]]].fail("Expected YAML dict")
+    return r[list[dict[str, t.NormalizedValue]]].fail("Expected YAML dict")
 ```
 
 Why good: validates structure before typed access.

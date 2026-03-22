@@ -75,12 +75,12 @@ class TestGuards:
 
     @staticmethod
     def is_user_response(obj) -> TypeGuard[dict]:
-        """Check if object is a user response fixture."""
+        """Check if t.NormalizedValue is a user response fixture."""
         return isinstance(obj, dict) and "user_id" in obj and "email" in obj
 
     @staticmethod
     def is_config_response(obj) -> TypeGuard[dict]:
-        """Check if object is a config response fixture."""
+        """Check if t.NormalizedValue is a config response fixture."""
         return isinstance(obj, dict) and "app_name" in obj and "version" in obj
 
 
@@ -89,7 +89,7 @@ class LdifTestGuards:
 
     @staticmethod
     def is_entry_fixture(obj) -> TypeGuard[dict]:
-        """Check if object is an LDIF entry fixture."""
+        """Check if t.NormalizedValue is an LDIF entry fixture."""
         return isinstance(obj, dict) and "dn" in obj and "attributes" in obj
 
 
@@ -98,7 +98,7 @@ class CliTestGuards:
 
     @staticmethod
     def is_command_fixture(obj) -> TypeGuard[dict]:
-        """Check if object is a command fixture."""
+        """Check if t.NormalizedValue is a command fixture."""
         return isinstance(obj, dict) and "name" in obj and "args" in obj
 
 
@@ -107,7 +107,7 @@ class WebTestGuards:
 
     @staticmethod
     def is_request_fixture(obj) -> TypeGuard[dict]:
-        """Check if object is a request fixture."""
+        """Check if t.NormalizedValue is a request fixture."""
         return isinstance(obj, dict) and "method" in obj and "endpoint" in obj
 ```
 

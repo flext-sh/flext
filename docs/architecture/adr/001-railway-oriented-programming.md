@@ -311,7 +311,7 @@ def process_payment(amount: float) -> r[Payment]:
 ### 4. Performance Optimization
 
 - **Lazy Evaluation**: Implement lazy evaluation where appropriate
-- **Memory Pooling**: Consider object pooling for high-frequency operations
+- **Memory Pooling**: Consider t.NormalizedValue pooling for high-frequency operations
 - **Profiling**: Regular profiling to identify performance bottlenecks
 
 ## References

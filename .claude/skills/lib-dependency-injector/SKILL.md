@@ -91,7 +91,7 @@ class FlextContainer(FlextRuntime, p.Container):
         factory: p.ResourceFactory[t.RegisterableService],
     ) -> r[bool]: ...
     def register_resource(self, name: str, factory: p.ResourceCallable) -> r[bool]: ...
-    def get(self, name: str) -> r[object]: ...
+    def get(self, name: str) -> r[t.NormalizedValue]: ...
     def get_typed[T](self, name: str, type_cls: type[T]) -> r[T]: ...
     def wire_modules(
         self,
@@ -108,7 +108,7 @@ class FlextContainer(FlextRuntime, p.Container):
   - `from flext_core import FlextRuntime`
   - `from flext_core import inject` only where exported by package API.
 - Registration intent:
-  - `register` -> concrete object provider (`providers.Object`)
+  - `register` -> concrete t.NormalizedValue provider (`providers.Object`)
   - `register_factory` -> `providers.Singleton` or `providers.Factory` via `cache`
   - `register_resource` -> `providers.Resource`
 
