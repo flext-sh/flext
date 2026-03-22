@@ -98,7 +98,7 @@ class MyClass(BaseClass):
 - Extended description starts on next line
 - Blank line before `Attributes:` section
 - Attributes format: `name (type): description.`
-- Raises section if class __init__ can raise exceptions
+- Raises section if class **init** can raise exceptions
 - Example section for complex public APIs
 
 ### Real Example from Project

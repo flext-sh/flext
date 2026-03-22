@@ -23,7 +23,7 @@ from flext_core import FlextService, r, t
 from pydantic import BaseModel, ConfigDict, Field
 
 ItemDict = dict[str, t.Scalar]
-StageOperation = Callable[[dict[str, t.NormalizedValue]], r[PipelineStageData]]
+StageOperation = Callable[[dict[str, t.NormalizedValue]], r["PipelineStageData"]]
 
 
 class PipelineStageData(BaseModel):
