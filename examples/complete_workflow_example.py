@@ -20,7 +20,7 @@ import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
-from typing import override
+from typing import ClassVar, override
 
 from flext_core import FlextService, r, t
 from pydantic import BaseModel, ConfigDict, Field
@@ -31,7 +31,9 @@ ProcessingDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar]]
 class WorkflowData(BaseModel):
     """Data container for workflow processing."""
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True, extra="allow")
+    model_config: ClassVar[ConfigDict] = ConfigDict(
+        arbitrary_types_allowed=True, extra="allow"
+    )
     content: ProcessingDict = Field(default_factory=dict)
 
 
