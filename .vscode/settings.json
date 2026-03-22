@@ -61,5 +61,6 @@
       "approve": true,
       "matchCommandLine": true
     }
-  }
+  },
+  "pyrefly.lspPath": ".venv/bin/pyrefly"
 }
