@@ -135,11 +135,11 @@ class AdvancedProcessingExample:
         ) -> r[PipelineStageData]:
             """Analyze processing results."""
             processed_items_data = data.get("processed_items", [])
-            processed_items: list[Any] = (
+            processed_items: list[ItemDict] = (
                 processed_items_data if isinstance(processed_items_data, list) else []
             )
             validation_results_data = data.get("validation_results", [])
-            validation_results: list[Any] = (
+            validation_results: list[AdvancedProcessingExample.ValidationResult] = (
                 validation_results_data
                 if isinstance(validation_results_data, list)
                 else []
