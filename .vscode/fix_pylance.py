@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Script para diagnosticar e corrigir problemas do Pylance/VS Code.
 
 Uso: python .vscode/fix_pylance.py
