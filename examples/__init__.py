@@ -26,6 +26,7 @@ if TYPE_CHECKING:
     from examples.complete_workflow_example import (
         CompleteWorkflowExample,
         ProcessingDict,
+        WorkflowContent,
         WorkflowData,
     )
 
@@ -45,6 +46,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "PipelineStageData": ("examples.advanced_processing_example", "PipelineStageData"),
     "ProcessingDict": ("examples.complete_workflow_example", "ProcessingDict"),
     "StageOperation": ("examples.advanced_processing_example", "StageOperation"),
+    "WorkflowContent": ("examples.complete_workflow_example", "WorkflowContent"),
     "WorkflowData": ("examples.complete_workflow_example", "WorkflowData"),
 }
 
@@ -58,6 +60,7 @@ __all__ = [
     "PipelineStageData",
     "ProcessingDict",
     "StageOperation",
+    "WorkflowContent",
     "WorkflowData",
 ]
 

@@ -14,16 +14,30 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import (
+    Callable,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from decimal import Decimal
 from enum import StrEnum, unique
-from typing import ClassVar, override
+from typing import ClassVar
 
-from flext_core import FlextService, r, t
+from flext_core import r
 from pydantic import BaseModel, ConfigDict, Field
 
-ItemDict = Mapping[str, t.Scalar]
-StageOperation = Callable[[Mapping[str, t.NormalizedValue]], r["PipelineStageData"]]
+type DataPrimitive = str | int | float | bool | bytes | Decimal
+type DataValue = DataPrimitive | Sequence[DataValue] | Mapping[str, DataValue]
+
+ItemDict = Mapping[str, DataValue]
+StageOperation = Callable[[Mapping[str, DataValue]], r["PipelineStageData"]]
+
+
+def _new_data_value_map() -> Mapping[str, DataValue]:
+    return {}
 
 
 class PipelineStageData(BaseModel):
@@ -32,14 +46,26 @@ class PipelineStageData(BaseModel):
     model_config: ClassVar[ConfigDict] = ConfigDict(
         arbitrary_types_allowed=True, extra="allow"
     )
-    data: Mapping[str, t.NormalizedValue] = Field(default_factory=dict)
+
+    class PipelinePayload(BaseModel):
+        """Pipeline payload container."""
+
+        model_config: ClassVar[ConfigDict] = ConfigDict(
+            arbitrary_types_allowed=True, extra="allow"
+        )
+
+        values: Mapping[str, DataValue] = Field(default_factory=_new_data_value_map)
+
+    data: PipelinePayload = Field(
+        default_factory=lambda: PipelineStageData.PipelinePayload(values={})
+    )
 
 
-def _new_str_list() -> Sequence[str]:
+def _new_str_list() -> MutableSequence[str]:
     return []
 
 
-def _new_scalar_dict() -> Mapping[str, t.Scalar]:
+def _new_scalar_dict() -> MutableMapping[str, DataPrimitive]:
     return {}
 
 
@@ -68,7 +94,7 @@ class AdvancedProcessingExample:
             default_factory=_new_str_list,
             description="List of errors encountered",
         )
-        metadata: Mapping[str, t.Scalar] = Field(
+        metadata: Mapping[str, DataPrimitive] = Field(
             default_factory=_new_scalar_dict,
             description="Operation metadata",
         )
@@ -93,67 +119,64 @@ class AdvancedProcessingExample:
             description="Time taken for validation",
         )
 
-    class FlextLdifProcessingPipeline(FlextService[PipelineStageData]):
+    class FlextLdifProcessingPipeline(BaseModel):
         """Declarative processing pipeline with automatic parallel execution."""
 
         auto_execute: bool = True
         items: Sequence[ItemDict]
         stages: Sequence[str]
 
-        @override
         def execute(self) -> r[PipelineStageData]:
             """Execute processing pipeline using declarative stages."""
             stage_functions: Mapping[
-                str, Callable[[Mapping[str, t.NormalizedValue]], r[PipelineStageData]]
+                str, Callable[[Mapping[str, DataValue]], r[PipelineStageData]]
             ] = {
                 "validate": self._validate_batch,
                 "process": self._process_parallel,
                 "analyze": self._analyze_results,
             }
-            operations: Sequence[
-                Callable[[Mapping[str, t.NormalizedValue]], r[PipelineStageData]]
+            operations: MutableSequence[
+                Callable[[Mapping[str, DataValue]], r[PipelineStageData]]
             ] = []
             for stage in self.stages:
                 stage_func = stage_functions.get(stage)
                 if stage_func:
                     operations.append(stage_func)
                 else:
-                    return r.fail(f"Unknown stage: {stage}")
-            current_data: Mapping[str, t.NormalizedValue] = {"items": self.items}
+                    return r[PipelineStageData].fail(f"Unknown stage: {stage}")
+            current_data: Mapping[str, DataValue] = {"items": self.items}
             for operation in operations:
                 result = operation(current_data)
                 if result.is_failure:
                     return result
-                current_data = (
-                    result.value.data
-                    if isinstance(result.value, PipelineStageData)
-                    else current_data
-                )
-            return r.ok(PipelineStageData(data=current_data))
+                current_data = result.value.data.values
+            payload = PipelineStageData.PipelinePayload.model_validate({
+                "values": current_data
+            })
+            return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
         def _analyze_results(
             self,
-            data: Mapping[str, t.NormalizedValue],
+            data: Mapping[str, DataValue],
         ) -> r[PipelineStageData]:
             """Analyze processing results."""
             processed_items_data = data.get("processed_items", [])
-            processed_items: Sequence[ItemDict] = (
-                processed_items_data if isinstance(processed_items_data, list) else []
-            )
-            validation_results_data = data.get("validation_results", [])
-            validation_results: Sequence[AdvancedProcessingExample.ValidationResult] = (
-                validation_results_data
-                if isinstance(validation_results_data, list)
+            processed_items: MutableSequence[ItemDict] = (
+                [{**item} for item in processed_items_data if isinstance(item, Mapping)]
+                if isinstance(processed_items_data, Sequence)
+                and not isinstance(processed_items_data, (str, bytes, bytearray))
                 else []
             )
-            field_counts: Mapping[int, int] = {}
-            complexity_scores: Sequence[float] = []
-            items_to_analyze: Sequence[ItemDict] = [
-                item
-                for item in processed_items
-                if isinstance(item, dict)
-                and (not isinstance(item, AdvancedProcessingExample.ValidationResult))
-            ]
+            validation_results_data = data.get("validation_results", [])
+            validation_results: MutableSequence[Mapping[str, DataValue]] = (
+                [item for item in validation_results_data if isinstance(item, Mapping)]
+                if isinstance(validation_results_data, Sequence)
+                and not isinstance(validation_results_data, (str, bytes, bytearray))
+                else []
+            )
+            field_counts: MutableMapping[int, int] = {}
+            complexity_scores: MutableSequence[float] = []
+            items_to_analyze: Sequence[ItemDict] = processed_items
             for item in items_to_analyze:
                 field_count = len(item)
                 field_counts[field_count] = field_counts.get(field_count, 0) + 1
@@ -167,63 +190,70 @@ class AdvancedProcessingExample:
             validation_summary: Mapping[str, int | float] = {
                 "total_validated": len(validation_results),
                 "valid_items": sum(
-                    1
-                    for r in validation_results
-                    if isinstance(r, AdvancedProcessingExample.ValidationResult)
-                    and r.is_valid
+                    1 for r in validation_results if r.get("is_valid") is True
                 ),
                 "total_violations": sum(
-                    len(r.violations)
+                    len(violations)
                     for r in validation_results
-                    if isinstance(r, AdvancedProcessingExample.ValidationResult)
+                    for violations in [r.get("violations")]
+                    if isinstance(violations, Sequence)
                 ),
                 "total_warnings": sum(
-                    len(r.warnings)
+                    len(warnings)
                     for r in validation_results
-                    if isinstance(r, AdvancedProcessingExample.ValidationResult)
+                    for warnings in [r.get("warnings")]
+                    if isinstance(warnings, Sequence)
                 ),
             }
-            analysis: Mapping[str, t.NormalizedValue] = {
+            field_distribution: Mapping[str, DataValue] = {
+                str(key): value for key, value in field_counts.items()
+            }
+            analysis: Mapping[str, DataValue] = {
                 "total_processed": len(items_to_analyze),
-                "field_distribution": field_counts,
+                "field_distribution": field_distribution,
                 "avg_complexity": sum(complexity_scores) / len(complexity_scores)
                 if complexity_scores
                 else 0,
                 "validation_summary": validation_summary,
                 "processing_efficiency": processing_efficiency * 100,
             }
-            result_data: Mapping[str, t.NormalizedValue] = {
+            result_data: Mapping[str, DataValue] = {
                 **data,
                 "analysis": analysis,
             }
-            return r.ok(PipelineStageData(data=result_data))
+            payload = PipelineStageData.PipelinePayload.model_validate({
+                "values": result_data
+            })
+            return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
         def _process_parallel(
             self,
-            data: Mapping[str, t.NormalizedValue],
+            data: Mapping[str, DataValue],
         ) -> r[PipelineStageData]:
             """Process items in parallel."""
             items_data = data.get("items", [])
-            if not isinstance(items_data, list):
-                return r.fail("Invalid items data")
+            if not isinstance(items_data, Sequence) or isinstance(
+                items_data, (str, bytes, bytearray)
+            ):
+                return r[PipelineStageData].fail("Invalid items data")
             start_time = time.time()
 
             def process_single_item(item: ItemDict) -> ItemDict | None:
                 """Process a single item."""
                 try:
                     time.sleep(0.01)
-                    result = item.copy()
+                    result: MutableMapping[str, DataValue] = {**item}
                     result["processed"] = True
                     result["processing_timestamp"] = time.time()
                     return result
                 except Exception:
                     return None
 
-            processed_items: Sequence[ItemDict] = []
+            processed_items: MutableSequence[ItemDict] = []
             items_to_process: Sequence[ItemDict] = [
-                item
+                {**item}
                 for item in items_data
-                if isinstance(item, dict)
+                if isinstance(item, Mapping)
                 and (not isinstance(item, AdvancedProcessingExample.ValidationResult))
             ]
             with ThreadPoolExecutor(max_workers=4) as executor:
@@ -236,7 +266,7 @@ class AdvancedProcessingExample:
                     if result is not None:
                         processed_items.append(result)
             processing_time = time.time() - start_time
-            result_data: Mapping[str, t.NormalizedValue] = {
+            result_data: Mapping[str, DataValue] = {
                 **data,
                 "processed_items": processed_items,
                 "processing_time": processing_time,
@@ -244,23 +274,28 @@ class AdvancedProcessingExample:
                 if items_data
                 else 0,
             }
-            return r.ok(PipelineStageData(data=result_data))
+            payload = PipelineStageData.PipelinePayload.model_validate({
+                "values": result_data
+            })
+            return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
         def _validate_batch(
             self,
-            data: Mapping[str, t.NormalizedValue],
+            data: Mapping[str, DataValue],
         ) -> r[PipelineStageData]:
             """Validate batch of items."""
             items_data = data.get("items", [])
-            if not isinstance(items_data, list):
-                return r.fail("Invalid items data")
-            validation_results: Sequence[
+            if not isinstance(items_data, Sequence) or isinstance(
+                items_data, (str, bytes, bytearray)
+            ):
+                return r[PipelineStageData].fail("Invalid items data")
+            validation_results: MutableSequence[
                 AdvancedProcessingExample.ValidationResult
             ] = []
             items_to_validate: Sequence[ItemDict] = [
-                item
+                {**item}
                 for item in items_data
-                if isinstance(item, dict)
+                if isinstance(item, Mapping)
                 and (not isinstance(item, AdvancedProcessingExample.ValidationResult))
             ]
             for item in items_to_validate:
@@ -268,22 +303,36 @@ class AdvancedProcessingExample:
                 if result.is_success:
                     validation_results.append(result.value)
                 else:
-                    return r.fail(f"Validation failed: {result.error}")
-            result_data: Mapping[str, t.NormalizedValue] = {
+                    return r[PipelineStageData].fail(
+                        f"Validation failed: {result.error}"
+                    )
+            result_data: Mapping[str, DataValue] = {
                 **data,
-                "validation_results": validation_results,
+                "validation_results": [
+                    {
+                        "item_id": validation.item_id,
+                        "is_valid": validation.is_valid,
+                        "violations": tuple(validation.violations),
+                        "warnings": tuple(validation.warnings),
+                        "validation_time": validation.validation_time,
+                    }
+                    for validation in validation_results
+                ],
                 "valid_count": sum(1 for r in validation_results if r.is_valid),
                 "invalid_count": sum(1 for r in validation_results if not r.is_valid),
             }
-            return r.ok(PipelineStageData(data=result_data))
+            payload = PipelineStageData.PipelinePayload.model_validate({
+                "values": result_data
+            })
+            return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
         def _validate_single_item(
             self, item: ItemDict
         ) -> r[AdvancedProcessingExample.ValidationResult]:
             """Validate a single item."""
             start_time = time.time()
-            violations: Sequence[str] = []
-            warnings: Sequence[str] = []
+            violations: MutableSequence[str] = []
+            warnings: MutableSequence[str] = []
             item_id = item.get("id")
             if not item_id or not isinstance(item_id, str):
                 violations.append("Missing or invalid id field")
@@ -293,7 +342,7 @@ class AdvancedProcessingExample:
             value = item.get("value", "")
             if isinstance(value, str) and len(value) > 100:
                 warnings.append("Value field is very long")
-            return r.ok(
+            return r[AdvancedProcessingExample.ValidationResult].ok(
                 AdvancedProcessingExample.ValidationResult(
                     item_id=str(item_id) if item_id else "unknown",
                     is_valid=len(violations) == 0,
