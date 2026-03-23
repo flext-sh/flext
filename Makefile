@@ -85,6 +85,9 @@ EXTERNAL_PROJECTS := $(shell \
 ALL_PROJECTS := $(FLEXT_PROJECTS) $(EXTERNAL_PROJECTS)
 SELECTED_PROJECTS := $(strip $(if $(PROJECT),$(PROJECT),$(if $(PROJECTS),$(PROJECTS),$(ALL_PROJECTS))))
 
+# Auto-detect PYTHONPATH from all project src/ directories (no hardcoded names)
+WORKSPACE_PYTHONPATH := $(shell for d in $(ALL_PROJECTS); do [ -d "$(CURDIR)/$$d/src" ] && printf "$(CURDIR)/$$d/src:"; done)$(CURDIR)/src
+
 define ENSURE_NO_PROJECT_CONFLICT
 if [ -n "$(PROJECT)" ] && [ -n "$(PROJECTS)" ]; then \
 	echo "ERROR: Cannot use PROJECT and PROJECTS together"; \
@@ -1025,7 +1028,7 @@ gen: ## Standardize __init__.py lazy imports (PEP 562)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "Standardizing __init__.py lazy imports..."
-	$(Q)PYTHONPATH="$(CURDIR)/flext-infra/src:$(CURDIR)/flext-core/src:$$PYTHONPATH" $(PY) -m flext_infra codegen lazy-init --workspace "$(CURDIR)"
+	$(Q)PYTHONPATH="$(WORKSPACE_PYTHONPATH):$$PYTHONPATH" $(PY) -m flext_infra codegen lazy-init --workspace "$(CURDIR)"
 	$(Q)echo "Formatting generated files (ruff)..."
 	$(Q)$(POETRY_ENV) ruff format . --quiet
 
@@ -1034,19 +1037,19 @@ sync: ## Sync project Makefiles from pyproject.toml + refresh __init__.py lazy i
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "==> Syncing project Makefiles..."
 	$(Q)for proj in $(SELECTED_PROJECTS); do \
-		PYTHONPATH="$(CURDIR)/flext-infra/src:$(CURDIR)/flext-core/src:$$PYTHONPATH" \
+		PYTHONPATH="$(WORKSPACE_PYTHONPATH):$$PYTHONPATH" \
 		$(PY) -m flext_infra workspace sync \
 			--workspace "$$proj" \
 			--canonical-root "$(CURDIR)"; \
 	done
 	$(Q)echo "==> Regenerating __init__.py lazy imports..."
-	$(Q)PYTHONPATH="$(CURDIR)/flext-infra/src:$(CURDIR)/flext-core/src:$$PYTHONPATH" \
+	$(Q)PYTHONPATH="$(WORKSPACE_PYTHONPATH):$$PYTHONPATH" \
 		$(PY) -m flext_infra codegen lazy-init --workspace "$(CURDIR)"
 	$(Q)echo "==> Sync complete."
 
 imp: ## Detect and fix import violations across workspace (CST-based)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
-	$(Q)PYTHONPATH="$(CURDIR)/flext-infra/src:$(CURDIR)/flext-core/src:$$PYTHONPATH" \
+	$(Q)PYTHONPATH="$(WORKSPACE_PYTHONPATH):$$PYTHONPATH" \
 		$(PY) -m flext_infra refactor imports \
 		--workspace "$(CURDIR)" $(if $(APPLY),--apply,)
