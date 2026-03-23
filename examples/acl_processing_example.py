@@ -18,43 +18,42 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping, MutableSequence, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
-from typing import Any, ClassVar, TypeIs, override
+from typing import ClassVar, TypeIs
 
-from flext_core import r, s, t
+from flext_core import r, t
 from pydantic import BaseModel, ConfigDict, Field
-
-from examples import ValidationRules
 
 EntryDict = Mapping[
     str, t.Scalar | Sequence[str] | Mapping[str, t.Scalar | Sequence[str]]
 ]
 
-# ProcessingDict carries heterogeneous pipeline state (scalars, models, lists,
-# nested dicts, tuples).  Using ``Any`` for values keeps the pipeline ergonomic
-# while the individual methods narrow types via guards.
-ProcessingDict = Mapping[str, Any]
-ContextDict = Mapping[str, t.Scalar | bool | str | int | float | None]
+ProcessingDict = Mapping[str, t.NormalizedValue]
+ContextDict = Mapping[str, t.ContainerValue]
 
 
-def _new_str_list() -> Sequence[str]:
+def _new_str_list() -> MutableSequence[str]:
     return []
 
 
-def _is_object_list(value: t.NormalizedValue) -> TypeIs[Sequence[t.NormalizedValue]]:
-    return isinstance(value, list)
+def _is_object_list(
+    value: t.NormalizedValue,
+) -> TypeIs[Sequence[t.NormalizedValue]]:
+    return isinstance(value, Sequence) and not isinstance(
+        value, (str, bytes, bytearray)
+    )
 
 
 def _is_str_object_dict(
     value: t.NormalizedValue,
 ) -> TypeIs[Mapping[str, t.NormalizedValue]]:
-    return isinstance(value, dict)
+    return isinstance(value, Mapping)
 
 
 def _is_entry_dict(value: t.NormalizedValue) -> TypeIs[EntryDict]:
-    return isinstance(value, dict)
+    return isinstance(value, Mapping)
 
 
 class AclProcessingExample:
@@ -129,19 +128,9 @@ class AclProcessingExample:
             "active_directory": ["ntSecurityDescriptor"],
             "apache_ds": ["accessControlSubentry"],
         }
-        VALIDATION_RULES: ClassVar[Mapping[str, ValidationRules]] = {
-            "openldap": ValidationRules(
-                required_permissions=["read", "write", "search"],
-                forbidden_combinations=[("read", "delete")],
-            ),
-            "oracle_oid": ValidationRules(
-                required_permissions=["search", "read"],
-                forbidden_combinations=[("write", "delete")],
-            ),
-        }
 
     @staticmethod
-    def _parse_acl_permissions(acl_value: str) -> Sequence[str]:
+    def _parse_acl_permissions(acl_value: str) -> MutableSequence[str]:
         """Parse ACL permissions from raw ACL value."""
         acl_lower = acl_value.lower()
         permissions = [
@@ -156,7 +145,7 @@ class AclProcessingExample:
     def detect_server_type(entry: EntryDict) -> r[str]:
         """Auto-detect server type from entry attributes."""
         attributes = entry.get("attributes", {})
-        if not isinstance(attributes, dict):
+        if not isinstance(attributes, Mapping):
             return r[str].fail("Invalid entry attributes format")
         attr_keys: set[str] = set(attributes.keys())
         for (
@@ -180,9 +169,9 @@ class AclProcessingExample:
             return r[Sequence[AclProcessingExample.AclEntry]].fail(
                 f"No ACL attributes defined for server type: {server_type}"
             )
-        extracted_acls: Sequence[AclProcessingExample.AclEntry] = []
+        extracted_acls: MutableSequence[AclProcessingExample.AclEntry] = []
         attributes = entry.get("attributes", {})
-        if not isinstance(attributes, dict):
+        if not isinstance(attributes, Mapping):
             return r[Sequence[AclProcessingExample.AclEntry]].fail(
                 "Invalid attributes format"
             )
@@ -191,7 +180,9 @@ class AclProcessingExample:
                 acl_values = attributes[attr_name]
                 if isinstance(acl_values, str):
                     values_list = [acl_values]
-                elif isinstance(acl_values, list):
+                elif isinstance(acl_values, Sequence) and not isinstance(
+                    acl_values, (str, bytes, bytearray)
+                ):
                     values_list = acl_values
                 else:
                     continue
@@ -215,42 +206,61 @@ class AclProcessingExample:
 
     @staticmethod
     def validate_acl_entry(
-        acl_entry: AclProcessingExample.AclEntry, _context: ContextDict
+        acl_entry: Mapping[str, t.NormalizedValue], _context: ContextDict
     ) -> r[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
-        violations: Sequence[str] = []
-        warnings: Sequence[str] = []
-        rules = AclProcessingExample.Constants.VALIDATION_RULES.get(
-            acl_entry.server_type
+        violations: MutableSequence[str] = []
+        warnings: MutableSequence[str] = []
+        server_type = acl_entry.get("server_type")
+        permissions_raw = acl_entry.get("permissions")
+        permissions: Sequence[str] = (
+            tuple(
+                permission
+                for permission in permissions_raw
+                if isinstance(permission, str)
+            )
+            if isinstance(permissions_raw, Sequence)
+            and not isinstance(permissions_raw, (str, bytes, bytearray))
+            else ()
         )
-        if rules is not None:
-            missing_perms: set[str] = set(rules.required_permissions) - set(
-                acl_entry.permissions,
+        dn = str(acl_entry.get("dn", ""))
+        required_permissions: Sequence[str] = []
+        forbidden_combinations: Sequence[str] = []
+        if server_type == "openldap":
+            required_permissions = ["read", "write", "search"]
+            forbidden_combinations = ["read|delete"]
+        elif server_type == "oracle_oid":
+            required_permissions = ["search", "read"]
+            forbidden_combinations = ["write|delete"]
+
+        if required_permissions:
+            missing_perms: set[str] = set(required_permissions) - set(
+                permissions,
             )
             if missing_perms:
                 violations.append(
-                    f"Missing required permissions: {list(missing_perms)}"
+                    f"Missing required permissions: {tuple(missing_perms)}"
                 )
             violations.extend(
                 f"Forbidden permission combination: {combo}"
-                for combo in rules.forbidden_combinations
-                if all(permission in acl_entry.permissions for permission in combo)
+                for combo in forbidden_combinations
+                if all(permission in permissions for permission in combo.split("|"))
             )
         if (
             _context.get("strict_mode")
-            and AclProcessingExample.Permission.UNKNOWN.value in acl_entry.permissions
+            and AclProcessingExample.Permission.UNKNOWN.value in permissions
         ):
             violations.append("Unknown permissions not allowed in strict mode")
-        if len(acl_entry.permissions) > 10:
+        if len(permissions) > 10:
             warnings.append(
                 "Excessive permissions - consider principle of least privilege"
             )
-        if not acl_entry.dn:
+        if not dn:
             warnings.append("Empty DN may indicate configuration issue")
         return r[AclProcessingExample.AclValidationResult].ok(
             AclProcessingExample.AclValidationResult(
-                entry_dn=acl_entry.dn,
+                entry_dn=dn,
                 is_valid=len(violations) == 0,
                 violations=violations,
                 warnings=warnings,
@@ -258,35 +268,36 @@ class AclProcessingExample:
             )
         )
 
-    class AclProcessor(s[ProcessingDict]):
+    class AclProcessor(BaseModel):
         """Monadic ACL processor with zero-ceremony execution."""
 
         auto_execute: bool = True
         entries: Sequence[EntryDict]
         parallel: bool = True
 
-        @override
         def execute(self) -> r[ProcessingDict]:
             """Execute ACL processing pipeline using monadic flow."""
             start_time = time.time()
             detect_result = self._detect_servers(self.entries)
             if detect_result.is_failure:
                 return r[ProcessingDict].fail(detect_result.error)
-            data = detect_result.value
-            data["start_time"] = start_time
+            initial_data: ProcessingDict = {
+                **detect_result.value,
+                "start_time": start_time,
+            }
             extract_result = (
-                self._extract_acls(data)
+                self._extract_acls(initial_data)
                 if self.parallel
-                else self._extract_sequential(data)
+                else self._extract_sequential(initial_data)
             )
             if extract_result.is_failure:
                 return r[ProcessingDict].fail(extract_result.error)
-            data = extract_result.value
-            validate_result = self._validate_batch(data)
+            extracted_data = extract_result.value
+            validate_result = self._validate_batch(extracted_data)
             if validate_result.is_failure:
                 return r[ProcessingDict].fail(validate_result.error)
-            data = validate_result.value
-            return self._analyze_performance(data)
+            validated_data = validate_result.value
+            return self._analyze_performance(validated_data)
 
         def _analyze_performance(self, data: ProcessingDict) -> r[ProcessingDict]:
             """Analyze processing performance."""
@@ -318,16 +329,21 @@ class AclProcessingExample:
 
         def _detect_servers(self, entries: Sequence[EntryDict]) -> r[ProcessingDict]:
             """Auto-detect server types for all entries."""
-            detected_entries: Sequence[tuple[EntryDict, str]] = []
+            detected_entries: MutableSequence[Mapping[str, t.NormalizedValue]] = []
             for entry in entries:
                 result = AclProcessingExample.detect_server_type(entry)
                 if result.is_success:
-                    detected_entries.append((entry, result.value))
+                    detected_entries.append({
+                        "entry": entry,
+                        "server_type": result.value,
+                    })
                 else:
                     return r[ProcessingDict].fail(
                         f"Server detection failed: {result.error}"
                     )
-            server_types_set: set[str] = {item[1] for item in detected_entries}
+            server_types_set: set[str] = {
+                str(item.get("server_type", "")) for item in detected_entries
+            }
             return r[ProcessingDict].ok({
                 "entries": detected_entries,
                 "server_types": sorted(server_types_set),
@@ -338,7 +354,7 @@ class AclProcessingExample:
             entries_data_raw = data.get("entries")
             if not _is_object_list(entries_data_raw):
                 return r[ProcessingDict].fail("Invalid entries format")
-            entries_with_servers: Sequence[tuple[EntryDict, str]] = []
+            entries_with_servers: MutableSequence[tuple[EntryDict, str]] = []
             for entry_with_server_raw in entries_data_raw:
                 if not _is_str_object_dict(entry_with_server_raw):
                     continue
@@ -358,7 +374,7 @@ class AclProcessingExample:
                     )
                     for entry_with_server in entries_with_servers
                 ]
-                all_acls: Sequence[AclProcessingExample.AclEntry] = []
+                all_acls: MutableSequence[AclProcessingExample.AclEntry] = []
                 for future in as_completed(futures):
                     result = future.result()
                     if result.is_success:
@@ -367,15 +383,34 @@ class AclProcessingExample:
                         return r[ProcessingDict].fail(
                             f"ACL extraction failed: {result.error}"
                         )
-            result_data = {**data, "acls": all_acls, "total_acls": len(all_acls)}
-            return r.ok(result_data)
+            result_data: ProcessingDict = {
+                **data,
+                "acls": [
+                    {
+                        "dn": acl.dn,
+                        "acl_attribute": acl.acl_attribute,
+                        "permissions": tuple(
+                            permission for permission in acl.permissions
+                        ),
+                        "context": {
+                            key: value
+                            for key, value in acl.context.items()
+                            if isinstance(value, (str, int, float, bool))
+                        },
+                        "server_type": acl.server_type,
+                    }
+                    for acl in all_acls
+                ],
+                "total_acls": len(all_acls),
+            }
+            return r[ProcessingDict].ok(result_data)
 
         def _extract_sequential(self, data: ProcessingDict) -> r[ProcessingDict]:
             """Extract ACLs sequentially."""
             entries_data_raw = data.get("entries")
             if not _is_object_list(entries_data_raw):
                 return r[ProcessingDict].fail("Invalid entries format")
-            entries_with_servers: Sequence[tuple[EntryDict, str]] = []
+            entries_with_servers: MutableSequence[tuple[EntryDict, str]] = []
             for entry_with_server_raw in entries_data_raw:
                 if not _is_str_object_dict(entry_with_server_raw):
                     continue
@@ -386,7 +421,7 @@ class AclProcessingExample:
                 ):
                     continue
                 entries_with_servers.append((entry_raw, server_type_raw))
-            all_acls: Sequence[AclProcessingExample.AclEntry] = []
+            all_acls: MutableSequence[AclProcessingExample.AclEntry] = []
             for entry_with_server in entries_with_servers:
                 result = AclProcessingExample.extract_acls_from_entry(
                     entry_with_server[0],
@@ -398,19 +433,38 @@ class AclProcessingExample:
                     return r[ProcessingDict].fail(
                         f"ACL extraction failed: {result.error}"
                     )
-            result_data = {**data, "acls": all_acls, "total_acls": len(all_acls)}
-            return r.ok(result_data)
+            result_data: ProcessingDict = {
+                **data,
+                "acls": [
+                    {
+                        "dn": acl.dn,
+                        "acl_attribute": acl.acl_attribute,
+                        "permissions": tuple(
+                            permission for permission in acl.permissions
+                        ),
+                        "context": {
+                            key: value
+                            for key, value in acl.context.items()
+                            if isinstance(value, (str, int, float, bool))
+                        },
+                        "server_type": acl.server_type,
+                    }
+                    for acl in all_acls
+                ],
+                "total_acls": len(all_acls),
+            }
+            return r[ProcessingDict].ok(result_data)
 
         def _validate_batch(self, data: ProcessingDict) -> r[ProcessingDict]:
             """Validate all extracted ACLs."""
             acls_data_raw = data.get("acls")
             if not _is_object_list(acls_data_raw):
                 return r[ProcessingDict].fail("Invalid ACLs format")
-            validation_results: Sequence[AclProcessingExample.AclValidationResult] = []
-            acl_entries: Sequence[AclProcessingExample.AclEntry] = [
-                acl_item
-                for acl_item in acls_data_raw
-                if isinstance(acl_item, AclProcessingExample.AclEntry)
+            validation_results: MutableSequence[
+                AclProcessingExample.AclValidationResult
+            ] = []
+            acl_entries: Sequence[Mapping[str, t.NormalizedValue]] = [
+                acl_item for acl_item in acls_data_raw if isinstance(acl_item, Mapping)
             ]
             for acl in acl_entries:
                 result = AclProcessingExample.validate_acl_entry(
@@ -422,15 +476,26 @@ class AclProcessingExample:
                     return r[ProcessingDict].fail(
                         f"ACL validation failed: {result.error}"
                     )
-            result_data = {
+            result_data: ProcessingDict = {
                 **data,
-                "validation_results": validation_results,
+                "validation_results": [
+                    {
+                        "entry_dn": result.entry_dn,
+                        "is_valid": result.is_valid,
+                        "violations": tuple(
+                            violation for violation in result.violations
+                        ),
+                        "warnings": tuple(warning for warning in result.warnings),
+                        "processing_time": result.processing_time,
+                    }
+                    for result in validation_results
+                ],
                 "valid_acls": sum(1 for r in validation_results if r.is_valid),
                 "invalid_acls": sum(1 for r in validation_results if not r.is_valid),
                 "total_violations": sum(len(r.violations) for r in validation_results),
                 "total_warnings": sum(len(r.warnings) for r in validation_results),
             }
-            return r.ok(result_data)
+            return r[ProcessingDict].ok(result_data)
 
     @staticmethod
     def create_sample_acl_entries() -> Sequence[EntryDict]:

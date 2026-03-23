@@ -17,15 +17,35 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import (
+    Callable,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import date, datetime
+from decimal import Decimal
 from enum import StrEnum, unique
-from typing import ClassVar, override
+from typing import ClassVar
 
-from flext_core import FlextService, r, t
+from flext_core import r
 from pydantic import BaseModel, ConfigDict, Field
 
-ProcessingDict = Mapping[str, t.Scalar | Sequence[str] | Mapping[str, t.Scalar]]
+type WorkflowScalar = Decimal | bool | bytes | date | datetime | float | int | str
+type WorkflowValue = WorkflowScalar | Sequence[str] | Mapping[str, WorkflowScalar]
+
+ProcessingDict = Mapping[str, WorkflowValue]
+WorkflowContent = Mapping[str, WorkflowValue]
+
+
+def _new_workflow_content() -> WorkflowContent:
+    return {}
+
+
+def _new_workflow_config() -> Mapping[str, str | int | bool | float]:
+    return {}
 
 
 class WorkflowData(BaseModel):
@@ -34,42 +54,37 @@ class WorkflowData(BaseModel):
     model_config: ClassVar[ConfigDict] = ConfigDict(
         arbitrary_types_allowed=True, extra="allow"
     )
-    content: ProcessingDict = Field(default_factory=dict)
+    content: WorkflowContent = Field(default_factory=_new_workflow_content)
 
 
-def _new_str_list() -> Sequence[str]:
+def _new_str_list() -> MutableSequence[str]:
     return []
 
 
-def _new_scalar_dict() -> Mapping[str, t.Scalar]:
+def _new_scalar_dict() -> MutableMapping[str, WorkflowScalar]:
     return {}
 
 
-def _new_stage_metadata_dict() -> Mapping[str, float | int | bool]:
+def _new_stage_metadata_dict() -> MutableMapping[str, float | int | bool]:
     return {}
 
 
-def _new_performance_metrics_dict() -> Mapping[
+def _new_performance_metrics_dict() -> MutableMapping[
     str, float | int | Mapping[str, float | int]
 ]:
     return {}
 
 
-def _new_stage_result_list() -> Sequence[CompleteWorkflowExample.WorkflowStageResult]:
+def _new_stage_result_list() -> MutableSequence[
+    CompleteWorkflowExample.WorkflowStageResult
+]:
     return []
 
 
-def _new_aggregated_metrics_dict() -> Mapping[str, float | int]:
+def _new_aggregated_metrics_dict() -> MutableMapping[
+    str, Decimal | bool | bytes | float | int | str
+]:
     return {}
-
-
-def _to_float_safe(
-    value: t.Scalar | Sequence[str] | Mapping[str, t.Scalar] | None,
-) -> float:
-    """Coerce ProcessingDict value to float; return 0.0 for non-scalar."""
-    if isinstance(value, (int, float)):
-        return float(value)
-    return 0.0
 
 
 class CompleteWorkflowExample:
@@ -101,15 +116,15 @@ class CompleteWorkflowExample:
             ],
             description="List of workflow stages to execute",
         )
-        metadata: Mapping[str, t.Scalar] = Field(
+        metadata: Mapping[str, WorkflowScalar] = Field(
             default_factory=_new_scalar_dict,
             description="Workflow metadata key-value pairs",
         )
-        performance_metrics: Mapping[str, float | int | Mapping[str, float | int]] = (
-            Field(
-                default_factory=_new_performance_metrics_dict,
-                description="Performance metrics collected during workflow execution",
-            )
+        performance_metrics: MutableMapping[
+            str, float | int | Mapping[str, float | int]
+        ] = Field(
+            default_factory=_new_performance_metrics_dict,
+            description="Performance metrics collected during workflow execution",
         )
 
     class WorkflowStageResult(BaseModel):
@@ -155,29 +170,26 @@ class CompleteWorkflowExample:
             default_factory=_new_stage_result_list,
             description="Results from each workflow stage",
         )
-        aggregated_metrics: Mapping[str, float | int] = Field(
-            default_factory=_new_aggregated_metrics_dict,
-            description="Aggregated metrics across all stages",
+        aggregated_metrics: Mapping[str, Decimal | bool | bytes | float | int | str] = (
+            Field(
+                default_factory=_new_aggregated_metrics_dict,
+                description="Aggregated metrics across all stages",
+            )
         )
         workflow_status: str = Field(
             default="unknown",
             description="Overall workflow status",
         )
 
-    class WorkflowOrchestrator(FlextService[WorkflowData]):
+    class WorkflowOrchestrator(BaseModel):
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
-        data: Sequence[ProcessingDict]
-        workflow_config: Mapping[str, str | int | bool | float]
+        data: Sequence[ProcessingDict] = Field(default_factory=tuple)
+        workflow_config: Mapping[str, str | int | bool | float] = Field(
+            default_factory=_new_workflow_config
+        )
 
-        def __init__(self) -> None:
-            """Initialize the workflow orchestrator."""
-            super().__init__()
-            self.data = []
-            self.workflow_config = {}
-
-        @override
         def execute(self) -> r[WorkflowData]:
             """Execute complete workflow with automatic resource management."""
             context = self._setup_context()
@@ -192,22 +204,26 @@ class CompleteWorkflowExample:
             _context: CompleteWorkflowExample.WorkflowContext,
         ) -> r[WorkflowData]:
             """Aggregate results."""
-            return r.ok(
-                WorkflowData(
-                    content=self._process_stage(
-                        item,
-                        0,
-                        "aggregated",
-                        True,
-                        lambda _i: {
-                            "final_score": _to_float_safe(
-                                item.get("complexity_score", 0)
-                            )
-                            + (1 if bool(item.get("is_valid", False)) else 0)
-                        },
-                    )
-                )
+            complexity_score_raw = item.get("complexity_score", 0)
+            complexity_score = (
+                float(complexity_score_raw)
+                if isinstance(complexity_score_raw, (int, float))
+                else 0.0
             )
+            final_score = complexity_score + (
+                1 if bool(item.get("is_valid", False)) else 0
+            )
+            content_payload: WorkflowContent = {
+                **self._process_stage(
+                    item,
+                    0,
+                    "aggregated",
+                    True,
+                    lambda _i: {"final_score": final_score},
+                )
+            }
+            workflow_data = WorkflowData.model_validate({"content": content_payload})
+            return r.ok(workflow_data)
 
         def _aggregate_workflow_metrics(
             self,
@@ -244,17 +260,17 @@ class CompleteWorkflowExample:
             _context: CompleteWorkflowExample.WorkflowContext,
         ) -> r[WorkflowData]:
             """Analyze single item."""
-            return r.ok(
-                WorkflowData(
-                    content=self._process_stage(
-                        item,
-                        0.005,
-                        "analyzed",
-                        True,
-                        lambda _i: {"complexity_score": len(str(item)) * 0.1},
-                    )
+            content_payload: WorkflowContent = {
+                **self._process_stage(
+                    item,
+                    0.005,
+                    "analyzed",
+                    True,
+                    lambda _i: {"complexity_score": len(str(item)) * 0.1},
                 )
-            )
+            }
+            workflow_data = WorkflowData.model_validate({"content": content_payload})
+            return r.ok(workflow_data)
 
         def _cleanup_context(
             self, context: CompleteWorkflowExample.WorkflowContext
@@ -288,7 +304,7 @@ class CompleteWorkflowExample:
                     result = stage_func(item, context)
                     workflow_data = result.map_or(None)
                     return (
-                        workflow_data.content
+                        {**workflow_data.content}
                         if isinstance(workflow_data, WorkflowData)
                         else workflow_data
                     )
@@ -296,7 +312,7 @@ class CompleteWorkflowExample:
                     err: ProcessingDict = {"error": str(e), "item": str(item)}
                     return err
 
-            processed_results: Sequence[ProcessingDict] = []
+            processed_results: MutableSequence[ProcessingDict] = []
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 future_to_item = {
                     executor.submit(process_single_item, item): item for item in items
@@ -333,7 +349,9 @@ class CompleteWorkflowExample:
         ) -> r[WorkflowData]:
             """Execute workflow stages with parallel processing."""
             items = data
-            stage_results: Sequence[CompleteWorkflowExample.WorkflowStageResult] = []
+            stage_results: MutableSequence[
+                CompleteWorkflowExample.WorkflowStageResult
+            ] = []
             current_data = items
             stage_functions = {
                 "validation": self._validate_items,
@@ -370,27 +388,39 @@ class CompleteWorkflowExample:
             aggregated_metrics = self._aggregate_workflow_metrics(
                 stage_results, total_time
             )
-            workflow_result = CompleteWorkflowExample.CompleteWorkflowResult(
-                workflow_id=context.workflow_id,
-                correlation_id=context.correlation_id,
-                total_stages=len(context.stages),
-                completed_stages=len(stage_results),
-                failed_stages=0,
-                total_processing_time=total_time,
-                stage_results=stage_results,
-                aggregated_metrics=aggregated_metrics,
-                workflow_status="completed",
+            aggregated_metrics_payload: MutableMapping[
+                str, Decimal | bool | bytes | float | int | str
+            ] = {}
+            for key, value in aggregated_metrics.items():
+                aggregated_metrics_payload[key] = value
+
+            workflow_result = (
+                CompleteWorkflowExample.CompleteWorkflowResult.model_validate({
+                    "workflow_id": context.workflow_id,
+                    "correlation_id": context.correlation_id,
+                    "total_stages": len(context.stages),
+                    "completed_stages": len(stage_results),
+                    "failed_stages": 0,
+                    "total_processing_time": total_time,
+                    "stage_results": stage_results,
+                    "aggregated_metrics": aggregated_metrics_payload,
+                    "workflow_status": "completed",
+                })
             )
-            perf_summary: Mapping[str, t.Scalar] = dict(aggregated_metrics.items())
+            perf_summary_raw: MutableMapping[str, WorkflowScalar] = {}
+            for key, value in aggregated_metrics.items():
+                perf_summary_raw[key] = value
             summary: ProcessingDict = {
                 "workflow_id": workflow_result.workflow_id,
                 "workflow_status": workflow_result.workflow_status,
                 "total_stages": workflow_result.total_stages,
                 "completed_stages": workflow_result.completed_stages,
                 "total_processing_time": workflow_result.total_processing_time,
-                "performance_summary": perf_summary,
+                "performance_summary": perf_summary_raw,
             }
-            return r.ok(WorkflowData(content=summary))
+            summary_content: WorkflowContent = {**summary}
+            workflow_data = WorkflowData.model_validate({"content": summary_content})
+            return r.ok(workflow_data)
 
         def _process_items(
             self,
@@ -398,17 +428,17 @@ class CompleteWorkflowExample:
             _context: CompleteWorkflowExample.WorkflowContext,
         ) -> r[WorkflowData]:
             """Process single item."""
-            return r.ok(
-                WorkflowData(
-                    content=self._process_stage(
-                        item,
-                        0.01,
-                        "processed",
-                        True,
-                        lambda _i: {"processed_at": time.time()},
-                    )
+            content_payload: WorkflowContent = {
+                **self._process_stage(
+                    item,
+                    0.01,
+                    "processed",
+                    True,
+                    lambda _i: {"processed_at": time.time()},
                 )
-            )
+            }
+            workflow_data = WorkflowData.model_validate({"content": content_payload})
+            return r.ok(workflow_data)
 
         def _process_stage(
             self,
@@ -416,12 +446,15 @@ class CompleteWorkflowExample:
             sleep_time: float,
             add_field: str,
             value: str | float | bool,
-            extra_logic: Callable[[ProcessingDict], Mapping[str, t.Scalar]]
+            extra_logic: Callable[[ProcessingDict], Mapping[str, WorkflowScalar]]
             | None = None,
         ) -> ProcessingDict:
             """Generic stage processing helper."""
             time.sleep(sleep_time)
-            result = item.copy()
+            result: MutableMapping[
+                str,
+                WorkflowScalar | Sequence[str] | Mapping[str, WorkflowScalar],
+            ] = {**item}
             result[add_field] = value
             if extra_logic:
                 result.update(extra_logic(item))
@@ -452,26 +485,24 @@ class CompleteWorkflowExample:
             _context: CompleteWorkflowExample.WorkflowContext,
         ) -> r[WorkflowData]:
             """Validate single item."""
-            return r.ok(
-                WorkflowData(
-                    content=self._process_stage(
-                        item,
-                        0.005,
-                        "validated",
-                        True,
-                        lambda _i: {
-                            "is_valid": bool(item.get("id") and item.get("name"))
-                        },
-                    )
+            content_payload: WorkflowContent = {
+                **self._process_stage(
+                    item,
+                    0.005,
+                    "validated",
+                    True,
+                    lambda _i: {"is_valid": bool(item.get("id") and item.get("name"))},
                 )
-            )
+            }
+            workflow_data = WorkflowData.model_validate({"content": content_payload})
+            return r.ok(workflow_data)
 
     @staticmethod
     def create_sample_workflow_data(count: int = 100) -> Sequence[ProcessingDict]:
         """Create sample data for workflow testing."""
-        result: Sequence[ProcessingDict] = []
+        result: MutableSequence[ProcessingDict] = []
         for i in range(count):
-            attrs: Mapping[str, t.Scalar] = {
+            attrs: MutableMapping[str, WorkflowScalar] = {
                 "objectClass": "person,organizationalPerson",
                 "cn": f"user{i}",
                 "sn": f"User{i}",
