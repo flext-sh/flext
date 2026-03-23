@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Executing Phase 01
-stopped_at: Phase 1 planned (5 plans ready) — context limit hit before execution
-last_updated: "2026-03-23T19:50:56.635Z"
+status: Ready to execute
+stopped_at: Completed 01-01-PLAN.md — flext-core type cleanup done
+last_updated: "2026-03-23T20:15:20.196Z"
 progress:
   total_phases: 5
   completed_phases: 0
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 ## Current Position
 
 Phase: 01 (type-system-hardening) — EXECUTING
-Plan: 1 of 5
+Plan: 2 of 5
 
 ## Performance Metrics
 
@@ -46,6 +46,7 @@ Plan: 1 of 5
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01 P01 | 21 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -58,6 +59,8 @@ Recent decisions affecting current work:
 - Sequential execution: Typing changes cascade across projects — parallel causes merge conflicts
 - Unfreeze `_utilities/*` for §3 compliance: Operator authorized 2026-03-12 — `__class__` + `cast()` are behavioral
 - Poetry → uv migration last: Biggest blast radius — do type/arch cleanup first
+- [Phase 01]: cast() in decorators.py eliminated by widening _resolve_logger() param to tuple[object,...] — no cast needed when method uses isinstance() internally
+- [Phase 01]: Fresh baseline 29 pyre issues (0 in flext-core) — Wave 0 did far more than documented; historical 4385 figure obsolete
 
 ### Pending Todos
 
@@ -70,6 +73,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T19:49:20.952Z
-Stopped at: Phase 1 planned (5 plans ready) — context limit hit before execution
-Resume file: .planning/phases/01-type-system-hardening/01-01-PLAN.md
+Last session: 2026-03-23T20:15:20.193Z
+Stopped at: Completed 01-01-PLAN.md — flext-core type cleanup done
+Resume file: None

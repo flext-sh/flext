@@ -8,12 +8,12 @@
 
 ### TYPE — Type System Hardening
 
-- [ ] **TYPE-01**: Repo-wide `make pyrefly-repo` returns exit code 0 with 0 errors (from 4,385 baseline)
-- [ ] **TYPE-02**: Zero `# type: ignore` annotations in any `.py` file across all 33 projects
-- [ ] **TYPE-03**: Zero `typing.Any` imports or annotations across all 33 projects
-- [ ] **TYPE-04**: Zero `object` used as a type annotation (parameter, return, field, alias)
-- [ ] **TYPE-05**: Zero `cast()` calls outside `flext-core/result.py`
-- [ ] **TYPE-06**: Zero `__class__ is` / `__class__ not in` comparisons — all replaced with `isinstance()` or `TypeGuard`/`TypeIs`
+- [x] **TYPE-01**: Repo-wide `make pyrefly-repo` returns exit code 0 with 0 errors (from 4,385 baseline)
+- [x] **TYPE-02**: Zero `# type: ignore` annotations in any `.py` file across all 33 projects
+- [x] **TYPE-03**: Zero `typing.Any` imports or annotations across all 33 projects
+- [x] **TYPE-04**: Zero `object` used as a type annotation (parameter, return, field, alias)
+- [x] **TYPE-05**: Zero `cast()` calls outside `flext-core/result.py`
+- [x] **TYPE-06**: Zero `__class__ is` / `__class__ not in` comparisons — all replaced with `isinstance()` or `TypeGuard`/`TypeIs`
 - [ ] **TYPE-07**: `TypeGuard` → `TypeIs` (PEP 742) migration in all 12 type-guard functions
 - [ ] **TYPE-08**: All empty container literals annotated at their assignment sites
 
@@ -90,12 +90,12 @@
 
 | Requirement | Phase | Status | .sisyphus Plan(s) |
 |-------------|-------|--------|-------------------|
-| TYPE-01 | Phase 1 | Pending | pyrefly-repo-hardening, pyright-zero-errors |
-| TYPE-02 | Phase 1 | Pending | strict-typing-execution-plan, bare-object-elimination |
-| TYPE-03 | Phase 1 | Pending | strict-typing-execution-plan, bare-object-elimination |
-| TYPE-04 | Phase 1 | Pending | bare-object-elimination |
-| TYPE-05 | Phase 1 | Pending | strict-typing-execution-plan |
-| TYPE-06 | Phase 1 | Pending | strict-typing-execution-plan |
+| TYPE-01 | Phase 1 | Complete | pyrefly-repo-hardening, pyright-zero-errors |
+| TYPE-02 | Phase 1 | Complete | strict-typing-execution-plan, bare-object-elimination |
+| TYPE-03 | Phase 1 | Complete | strict-typing-execution-plan, bare-object-elimination |
+| TYPE-04 | Phase 1 | Complete | bare-object-elimination |
+| TYPE-05 | Phase 1 | Complete | strict-typing-execution-plan |
+| TYPE-06 | Phase 1 | Complete | strict-typing-execution-plan |
 | TYPE-07 | Phase 1 | Pending | strict-typing-execution-plan |
 | TYPE-08 | Phase 1 | Pending | strict-typing-execution-plan |
 | ARCH-01 | Phase 2 | Pending | protocol-solid-standardization |
