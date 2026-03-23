@@ -1,0 +1,59 @@
+Vulture Dead Code Analysis Report
+Date: 2026-03-23
+Tool: vulture 2.15
+Confidence: min 80%
+
+=== Configuration ===
+Scope: */src/ (all 34 projects)
+Excluded: *_pb2*, __pycache__, .venv, node_modules, migrations
+Ignored decorators: @app.route, @router.*, @handler, @field_validator, @model_validator,
+  @computed_field, @override, @abstractmethod, @property, @classmethod, @staticmethod,
+  @pytest.fixture, @pytest.mark.*
+Ignored names: model_config, model_fields, __all__, __getattr__, _LAZY_IMPORTS, visit_*,
+  test_*, setup_*, teardown_*, conftest, pytest_*
+
+=== Summary ===
+Total findings: 108
+Actionable: 0 (all are false positives or policy-blocked)
+
+=== Classification ===
+
+1. Protocol Method Parameters — 105 findings (FALSE POSITIVE)
+   All in protocols.py files across 15 projects.
+   Protocol methods define interface contracts; parameters are required
+   even if the defining body is `...` (ellipsis).
+   Projects: algar-oud-mig, flext-auth, flext-cli, flext-core, flext-db-oracle,
+   flext-dbt-ldap, flext-dbt-oracle, flext-dbt-oracle-wms, flext-grpc,
+   flext-ldif, flext-observability, flext-oracle-oic, flext-tap-ldif,
+   flext-web, gruponos-meltano-native
+
+2. Re-export Module — 1 finding (FALSE POSITIVE)
+   flext-target-oracle-oic/src/flext_target_oracle_oic/client.py:14
+   `OICClient` is imported and listed in __all__ — this is a re-export module.
+
+3. FROZEN File — 1 finding (SKIP per policy)
+   flext-core/src/flext_core/_utilities/parser.py:916 — unused parameter `coerce`
+   Located in _utilities/ which is FROZEN per AGENTS.md section 10.2.
+   The parameter is declared but never used in the function body.
+   However, removing it would change the public API signature.
+   Deferred to operator decision.
+
+4. Stub File Parameters — 1 finding (FALSE POSITIVE)
+   flext-grpc/src/flext_grpc/proto/stubs.py:46 — `servicer` parameter
+   Stub file matching gRPC generated code interface.
+
+=== Cross-workspace Verification ===
+For each non-protocol finding, verified using ast-grep and Grep tool:
+- OICClient: exported in __all__, used as public API
+- coerce: no callers pass this parameter, but file is FROZEN
+- servicer: gRPC stub interface, required by framework
+
+=== Prioritized Removal List ===
+Empty — no confirmed dead code to remove at min-confidence 80%.
+
+=== Additional Scans ===
+- `if False:` / `if 0:` patterns: 0 found
+- Code after return/raise: 0 unreachable blocks found
+- # pragma: no cover: 5 instances (all in flext-web error handling, defensive)
+- Vulture at 60% confidence: ~300+ findings, mostly StrEnum members and
+  namespace class methods — public API surface, not dead code

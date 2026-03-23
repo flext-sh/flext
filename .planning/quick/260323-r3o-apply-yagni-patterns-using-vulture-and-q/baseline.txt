@@ -1,0 +1,33 @@
+YAGNI Dead Code Analysis - Baseline
+Date: 2026-03-23T22:33:34Z
+
+=== Quality Gate Baseline ===
+make check PROJECT=flext-core CHECK_GATES=lint: PASS (0 errors)
+make check PROJECT=flext-core CHECK_GATES=pyrefly: PASS (0 errors)
+
+=== Vulture Findings (min-confidence 80) ===
+Total findings: 108
+- Protocol method parameters (false positive): 105
+- Pytest fixture DI parameters (false positive): 3
+- Re-export module (false positive): 1
+- FROZEN _utilities file (skip per policy): 1
+- Actionable dead code: 0
+
+=== Vulture Findings (min-confidence 60) ===
+Total findings: ~300+ (mostly StrEnum members, constants, namespace class methods)
+- 60% confidence is too noisy for reliable dead code detection
+- Most findings are public API surface (enums, constants, typed dicts)
+- These are consumed externally or via MRO composition — not dead code
+
+=== qlty Smells Summary ===
+Total lines: 7025
+Categories found:
+- Duplicated code blocks (mostly in docker/examples/test __init__.py files)
+- High complexity functions (in .claude/skills scripts, examples, Go main)
+- Functions with many parameters (API/app factory patterns)
+- Functions with many returns (CLI/validation logic)
+
+Actionable under YAGNI: None
+- Duplication is cross-project or in docker support/example files
+- Complexity is in CLI/validation which requires many branches
+- No dead branches, unreachable code, or dead code patterns found
