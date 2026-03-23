@@ -328,6 +328,22 @@ extraPaths = [
   "typings",
   "typings/generated",
 ]
+reportCallIssue = "none"
+reportConstantRedefinition = "error"
+reportIncompatibleMethodOverride = "error"
+reportIncompatibleVariableOverride = "error"
+reportInconsistentConstructor = "error"
+reportMissingImports = "error"
+reportMissingModuleSource = "error"
+reportMissingTypeStubs = "warning"
+reportPrivateUsage = "warning"
+reportUnnecessaryCast = "error"
+reportUnnecessaryComparison = "warning"
+reportUnnecessaryIsInstance = "warning"
+reportUnusedClass = "error"
+reportUnusedFunction = "error"
+reportUnusedImport = "error"
+reportUnusedVariable = "error"
 typeCheckingMode = "strict"
 
 [[tool.pyright.executionEnvironments]]
