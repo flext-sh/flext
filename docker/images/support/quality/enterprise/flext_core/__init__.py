@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Container as BeartypeContainer
+from collections.abc import Container as BeartypeContainer, MutableMapping
 
 from dependency_injector.containers import Container as DIContainersContainer
 from dependency_injector.providers import Container as DIProvidersContainer
@@ -92,7 +92,7 @@ class FlextContainer:
 
     def __init__(self) -> None:
         """Initialize container."""
-        self._services: dict[str, t.RegisterableService] = {}
+        self._services: MutableMapping[str, t.RegisterableService] = {}
 
     def register(self, name: str, service: t.RegisterableService) -> Result[None]:
         """Register service."""

@@ -105,13 +105,36 @@ make PROJECTS="flext-core flext-api" check
 
 # Scoped test execution with pytest args
 make PROJECT=flext-api test PYTEST_ARGS="-k unit"
+
+# File-scoped fast-path (bypasses flext_infra check run, calls tools directly)
+make check PROJECT=flext-core FILE=src/flext_core/foo.py CHECK_GATES=pyright
+make check PROJECT=flext-core FILES="src/a.py src/b.py" CHECK_GATES=lint,pyright
+make check PROJECT=flext-core CHANGED_ONLY=1          # lint only git-modified .py files
+make check CHECK_GATES=lint FIX=1 CHANGED_ONLY=1       # auto-fix modified files across all projects
+
+# Test shortcuts (no PYTEST_ARGS needed)
+make test PROJECT=flext-core MATCH=test_container      # pytest -k test_container
+make test PROJECT=flext-core FILE=tests/unit/test_foo.py FAIL_FAST=1
+make test PROJECT=flext-core VERBOSE=1                 # adds -vv -s
+
+# Lint customization
+make check PROJECT=flext-core CHECK_GATES=lint RUFF_ARGS="--select E501,E231"
+make check PROJECT=flext-core CHECK_GATES=pyright PYRIGHT_ARGS="--level basic"
+
+# Format dry-run
+make format FILE=src/flext_core/foo.py CHECK_ONLY=1    # check without writing
 ```
 
 Selector contract:
 
-- `PROJECT=<name>` selects one project.
-- `PROJECTS="a b c"` selects multiple projects.
-- `PYTEST_ARGS="..."` is forwarded to project `make test`.
+- `PROJECT=<name>` selects one project. `PROJECTS="a b c"` selects multiple.
+- `FILE=<path>` / `FILES="a.py b.py"` — scope to specific files (paths relative to project root).
+- `CHANGED_ONLY=1` — auto-resolves to `git diff --name-only HEAD` `.py` files.
+- `CHECK_GATES=lint,pyright` — run only named gates (file-path fast-path skips `flext_infra check run`).
+- `MATCH=<expr>` — pytest `-k` shortcut. `FAIL_FAST=1` — adds `-x`. `VERBOSE=1` — adds `-vv -s`.
+- `RUFF_ARGS="..."` / `PYRIGHT_ARGS="..."` — extra CLI args forwarded to respective tools.
+- `CHECK_ONLY=1` — format/check without modifying files.
+- `PYTEST_ARGS="..."` is forwarded to project `make test` (full pytest expression).
 
 ## Thresholds Summary
 

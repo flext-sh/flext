@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping, MutableMapping, Sequence
 
 
 class FlextTypes:
@@ -73,7 +73,7 @@ class FlextContainer:
 
     def __init__(self) -> None:
         """Initialize container."""
-        self._services: dict[str, t.RegisterableService] = {}
+        self._services: MutableMapping[str, t.RegisterableService] = {}
 
     def register(self, name: str, service: t.RegisterableService) -> Result[None]:
         """Register service."""
