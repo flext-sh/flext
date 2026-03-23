@@ -158,7 +158,7 @@ alwaysApply: true
        from typing import TYPE_CHECKING
 
        if TYPE_CHECKING:
-           from flext_core._protocols.result import FlextProtocolsResult
+           from flext_core import FlextProtocolsResult
 
 
        def validate(self) -> FlextProtocolsResult.Result[bool]:  # Works! String at runtime
@@ -167,8 +167,8 @@ alwaysApply: true
     3. **Import concrete submodules, NOT `flext_core`** — In internal modules (`_protocols/`, `_models/`, `_typings/`), import from sibling submodules or foundation modules directly:
        ```python
        # ✓ CORRECT
-       from flext_core._protocols.base import FlextProtocolsBase
-       from flext_core.typings import FlextTypes as t
+       from flext_core import FlextProtocolsBase
+       from flext_core import t
 
        # ✗ WRONG — causes lazy-load cycles
        from flext_core import FlextProtocolsBase, t

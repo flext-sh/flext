@@ -4,7 +4,7 @@ import importlib.util
 import sys
 from pathlib import Path
 
-from flext_tests.utilities import FlextTestsUtilities
+from flext_tests import FlextTestsUtilities
 
 from .typings import t
 

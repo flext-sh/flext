@@ -284,7 +284,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
 ### 1. TypeGuard Pattern (Replaces cast())
 
 ```python
-from flext_core.utilities.guards import Guards
+from flext_core import Guards
 
 # Type-safe narrowing without cast()
 if Guards.is_config(obj):

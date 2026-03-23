@@ -60,7 +60,7 @@ result = u.get(data, "key")
 matches = u.find_callable(predicates, value)
 
 # ❌ FORBIDDEN - Direct internal imports
-from flext_core._utilities.conversion import FlextUtilitiesConversion
+from flext_core import FlextUtilitiesConversion
 ```
 
 ---
@@ -299,7 +299,7 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 
 ### DON'Ts ❌
 
-1. **Don't import internal modules**: ❌ `from flext_core._utilities.conversion import ...`
+1. **Don't import internal modules**: ❌ `from flext_core import ...`
 2. **Don't re-implement**: ❌ Create your own string conversion if `u.*` exists
 3. **Don't mix namespaces**: ❌ `from flext_core import FlextUtilities`
 4. **Don't use module imports**: ❌ `from flext_core import utilities as util`
