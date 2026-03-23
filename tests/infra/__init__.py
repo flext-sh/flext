@@ -13,11 +13,11 @@ if TYPE_CHECKING:
     from flext_core import FlextTypes
     from flext_tests import c, d, e, h, m, p, r, s, t, u, x
 
-    from .constants import FlextWorkspaceTestConstants
-    from .models import FlextWorkspaceTestModels
-    from .protocols import FlextWorkspaceTestProtocols
-    from .typings import FlextWorkspaceTestTypes
-    from .utilities import FlextWorkspaceTestUtilities
+    from tests.infra.constants import FlextWorkspaceTestConstants
+    from tests.infra.models import FlextWorkspaceTestModels
+    from tests.infra.protocols import FlextWorkspaceTestProtocols
+    from tests.infra.typings import FlextWorkspaceTestTypes
+    from tests.infra.utilities import FlextWorkspaceTestUtilities
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextWorkspaceTestConstants": (

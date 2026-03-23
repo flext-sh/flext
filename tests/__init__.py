@@ -13,18 +13,18 @@ if TYPE_CHECKING:
     from flext_core import FlextTypes
     from flext_tests import d, e, h, s, x
 
-    from . import infra as infra
-    from .infra.constants import FlextWorkspaceTestConstants, c
-    from .infra.models import FlextWorkspaceTestModels, m
-    from .infra.protocols import FlextWorkspaceTestProtocols, p
-    from .infra.result import r
-    from .infra.typings import FlextWorkspaceTestTypes, t
-    from .infra.utilities import FlextWorkspaceTestUtilities, u
-    from .tf import tf
-    from .tm import tm
-    from .unit.libs.versioning_tests import TestVersioning
-    from .unit.scripts.github.test_pr_workspace import TestPrWorkspace
-    from .unit.scripts.sync_tests import TestSyncScripts
+    from tests import infra
+    from tests.infra.constants import FlextWorkspaceTestConstants, c
+    from tests.infra.models import FlextWorkspaceTestModels, m
+    from tests.infra.protocols import FlextWorkspaceTestProtocols, p
+    from tests.infra.result import r
+    from tests.infra.typings import FlextWorkspaceTestTypes, t
+    from tests.infra.utilities import FlextWorkspaceTestUtilities, u
+    from tests.tf import tf
+    from tests.tm import tm
+    from tests.unit.libs.versioning_tests import TestVersioning
+    from tests.unit.scripts.github.test_pr_workspace import TestPrWorkspace
+    from tests.unit.scripts.sync_tests import TestSyncScripts
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextWorkspaceTestConstants": (
