@@ -12,7 +12,7 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 if TYPE_CHECKING:
     from flext_core import FlextTypes
 
-    from .test_pr_workspace import TestPrWorkspace
+    from tests.unit.scripts.github.test_pr_workspace import TestPrWorkspace
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "TestPrWorkspace": (
