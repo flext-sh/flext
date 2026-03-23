@@ -387,6 +387,7 @@ def same_type(a: object, b: object) -> bool:
     """Exact-type identity comparison (no MRO traversal, equivalent to __class__ is)."""
     return type(a) is type(b)  # noqa: E721 — intentional identity check
 
+
 # Usage replaces: entity_b.__class__ is not entity_a.__class__
 if not same_type(entity_b, entity_a):
     ...
@@ -398,11 +399,16 @@ if not same_type(entity_b, entity_a):
 # Source: PEP 742, Python 3.13 typing module
 # BEFORE (TypeGuard — bidirectional narrowing only in True branch):
 from typing import TypeGuard
+
+
 def is_str(value: object) -> TypeGuard[str]:
     return isinstance(value, str)
 
+
 # AFTER (TypeIs — narrows in both branches):
 from typing import TypeIs
+
+
 def is_str(value: object) -> TypeIs[str]:
     return isinstance(value, str)
 ```
