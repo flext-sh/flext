@@ -49,7 +49,7 @@ completed: 2026-03-23
 - Verified `make check PROJECT=flext-tests CHECK_GATES=pyrefly` exits 0
 - Verified `make check PROJECT=flext-infra CHECK_GATES=pyright` exits 0
 - Verified `make check PROJECT=flext-tests CHECK_GATES=pyright` exits 0
-- Confirmed zero cast(), zero __class__ is, zero bare object/Any annotations in both projects
+- Confirmed zero cast(), zero **class** is, zero bare object/Any annotations in both projects
 - flext-tests: all tests pass (1943+ tests)
 
 ## Task Commits

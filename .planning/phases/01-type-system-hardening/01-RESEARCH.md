@@ -325,7 +325,7 @@ fix: not isinstance($X, ($$$Y))
 
 ## Code Examples
 
-### __class__ rewrite (Rule A1) — verified pattern
+### **class** rewrite (Rule A1) — verified pattern
 
 ```python
 # Source: .sisyphus/plans/strict-typing-execution-plan.md Wave 1.0
@@ -450,10 +450,10 @@ From STATE.md error hotspots and NARROWING-SCAN-SUMMARY.md:
 
 1. flext-quality (298 errors, 15 cast violations)
 2. flext-observability (280 errors)
-3. flext-ldif (high __class__ count: 28 violations, 6 cast)
+3. flext-ldif (high **class** count: 28 violations, 6 cast)
 4. flext-meltano (18 cast violations)
-5. gruponos-meltano-native (21 __class__, 3 cast)
-6. flext-api (3 cast, 2 __class__, isinstance alias misuse)
+5. gruponos-meltano-native (21 **class**, 3 cast)
+6. flext-api (3 cast, 2 **class**, isinstance alias misuse)
 7. flext-auth, flext-web, flext-ldap (moderate)
 8. flext-db-oracle, flext-dbt-* (moderate)
 9. All remaining projects in parallel (independent consumers with low counts)

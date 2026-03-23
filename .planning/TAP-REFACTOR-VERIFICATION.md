@@ -64,7 +64,7 @@ All conversions maintain semantic equivalence:
 - [x] File syntax valid (no Python errors introduced)
 - [x] All class definitions intact
 - [x] All method definitions intact
-- [x] File ends properly with __all__ export
+- [x] File ends properly with **all** export
 - [x] No lines truncated or corrupted
 
 ### ✅ Consistency Across Projects

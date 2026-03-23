@@ -39,7 +39,7 @@
 | Option | Description | Selected |
 |--------|-------------|----------|
 | Keep existing D-01 through D-06 | Wave-based: core → infra+tests → cli solo → consumers | ✓ |
-| Reorganize by error category | Separate passes for __class__, cast(), Any, object | |
+| Reorganize by error category | Separate passes for **class**, cast(), Any, object | |
 
 **Auto-selected:** Keep existing decisions (already well-reasoned in prior context)
 **Notes:** Added D-07 (pyre entrypoint fix) and D-08 (fresh baseline) as new locked decisions
