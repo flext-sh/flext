@@ -35,8 +35,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Wave 1: Fix make pyre entrypoint + clean flext-core (foundation)
 - [x] 01-02-PLAN.md — Wave 2: Clean flext-infra + flext-tests (infrastructure)
-- [ ] 01-03-PLAN.md — Wave 3: Clean flext-cli (largest consumer, solo)
-- [ ] 01-04-PLAN.md — Wave 4: Clean remaining ~27 consumer projects
+- [x] 01-03-PLAN.md — Wave 3: Clean flext-cli (largest consumer, solo)
+- [x] 01-04-PLAN.md — Wave 4: Clean remaining ~27 consumer projects
 - [ ] 01-05-PLAN.md — Micro-plan: TypeGuard->TypeIs migration + empty container annotation
 
 ### Phase 2: Architecture & SOLID
