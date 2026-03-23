@@ -37,7 +37,7 @@ Plans:
 - [x] 01-02-PLAN.md — Wave 2: Clean flext-infra + flext-tests (infrastructure)
 - [x] 01-03-PLAN.md — Wave 3: Clean flext-cli (largest consumer, solo)
 - [x] 01-04-PLAN.md — Wave 4: Clean remaining ~27 consumer projects
-- [ ] 01-05-PLAN.md — Micro-plan: TypeGuard->TypeIs migration + empty container annotation
+- [x] 01-05-PLAN.md — Micro-plan: TypeGuard->TypeIs migration + empty container annotation
 
 ### Phase 2: Architecture & SOLID
 **Goal**: Public APIs speak in protocols, Pydantic fields use canonical form, and type aliases follow PEP 695 — DIP enforced across all 33 projects
