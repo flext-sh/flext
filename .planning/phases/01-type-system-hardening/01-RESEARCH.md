@@ -385,7 +385,7 @@ if isinstance(value, t.PRIMITIVES_TYPES):
 # Create utility in flext-core/_utilities/domain.py:
 def same_type(a: object, b: object) -> bool:
     """Exact-type identity comparison (no MRO traversal, equivalent to __class__ is)."""
-    return type(a) is type(b)  # noqa: E721 — intentional identity check
+    return type(a) is type(b)
 
 
 # Usage replaces: entity_b.__class__ is not entity_a.__class__
