@@ -88,13 +88,44 @@
 
 ## Traceability
 
-| Requirement | Phase | .sisyphus Plan(s) |
-|-------------|-------|-------------------|
-| TYPE-01..08 | Phase 1 | pyrefly-repo-hardening, strict-typing-execution-plan, bare-object-elimination, pyright-zero-errors |
-| ARCH-01 | Phase 2 | protocol-solid-standardization |
-| ARCH-02 | Phase 2 | namespace-source-enforcement |
-| ARCH-03..08 | Phase 2 | pydantic-v2-advanced-modernization |
-| INFRA-01..05 | Phase 3 | infra-runtime-centralization, namespace-source-enforcement, infra-type-alias-unification, utilities-mro-dedup, centralize-u-utilities, constants-dedup-infra, cli-infra-standardization, flext-core-typing-simplification, flext-core-violations-remediation, flext-infra-mro-base-order-command, flext-infra-typing-census-engine, import-normalization-infra, infra-tier-reorg, typing-protocol-simplification |
-| WA-01..06 | Phase 3 | workaround-eradication |
-| MOD-01..06 | Phase 4 | python313-datatypes, python313-stdlib-modernization |
-| MIG-01..06 | Phase 5 | split-core-packages, polylith-uv-migration |
+| Requirement | Phase | Status | .sisyphus Plan(s) |
+|-------------|-------|--------|-------------------|
+| TYPE-01 | Phase 1 | Pending | pyrefly-repo-hardening, pyright-zero-errors |
+| TYPE-02 | Phase 1 | Pending | strict-typing-execution-plan, bare-object-elimination |
+| TYPE-03 | Phase 1 | Pending | strict-typing-execution-plan, bare-object-elimination |
+| TYPE-04 | Phase 1 | Pending | bare-object-elimination |
+| TYPE-05 | Phase 1 | Pending | strict-typing-execution-plan |
+| TYPE-06 | Phase 1 | Pending | strict-typing-execution-plan |
+| TYPE-07 | Phase 1 | Pending | strict-typing-execution-plan |
+| TYPE-08 | Phase 1 | Pending | strict-typing-execution-plan |
+| ARCH-01 | Phase 2 | Pending | protocol-solid-standardization |
+| ARCH-02 | Phase 2 | Pending | namespace-source-enforcement |
+| ARCH-03 | Phase 2 | Pending | pydantic-v2-advanced-modernization |
+| ARCH-04 | Phase 2 | Pending | protocol-solid-standardization |
+| ARCH-05 | Phase 2 | Pending | protocol-solid-standardization |
+| ARCH-06 | Phase 2 | Pending | pydantic-v2-advanced-modernization |
+| ARCH-07 | Phase 2 | Pending | pydantic-v2-advanced-modernization |
+| ARCH-08 | Phase 2 | Pending | flext-core-typing-simplification |
+| INFRA-01 | Phase 3 | Pending | infra-runtime-centralization, cli-infra-standardization |
+| INFRA-02 | Phase 3 | Pending | infra-runtime-centralization, utilities-mro-dedup, centralize-u-utilities |
+| INFRA-03 | Phase 3 | Pending | import-normalization-infra, infra-tier-reorg |
+| INFRA-04 | Phase 3 | Pending | namespace-source-enforcement, flext-infra-typing-census-engine |
+| INFRA-05 | Phase 3 | Pending | infra-type-alias-unification, constants-dedup-infra |
+| WA-01 | Phase 3 | Pending | workaround-eradication |
+| WA-02 | Phase 3 | Pending | workaround-eradication |
+| WA-03 | Phase 3 | Pending | workaround-eradication |
+| WA-04 | Phase 3 | Pending | workaround-eradication |
+| WA-05 | Phase 3 | Pending | workaround-eradication |
+| WA-06 | Phase 3 | Pending | workaround-eradication |
+| MOD-01 | Phase 4 | Pending | python313-stdlib-modernization |
+| MOD-02 | Phase 4 | Pending | python313-stdlib-modernization |
+| MOD-03 | Phase 4 | Pending | python313-datatypes |
+| MOD-04 | Phase 4 | Pending | python313-datatypes |
+| MOD-05 | Phase 4 | Pending | python313-stdlib-modernization |
+| MOD-06 | Phase 4 | Pending | python313-datatypes |
+| MIG-01 | Phase 5 | Pending | split-core-packages |
+| MIG-02 | Phase 5 | Pending | split-core-packages |
+| MIG-03 | Phase 5 | Pending | split-core-packages |
+| MIG-04 | Phase 5 | Pending | polylith-uv-migration |
+| MIG-05 | Phase 5 | Pending | polylith-uv-migration |
+| MIG-06 | Phase 5 | Pending | polylith-uv-migration |
