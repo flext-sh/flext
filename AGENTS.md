@@ -64,7 +64,7 @@ alwaysApply: true
   - `s` = Services (`Flext*Services`)
 - **Alias Import Sources**: In `src/` code, `c`, `p`, `t`, `m`, `u` come from `flext_core` or the project's own package (MRO-extended). In `tests/`, `examples/`, and `scripts/`, these aliases MUST be imported from the local MRO package: `from tests import c, m, p, t, u`, `from examples import c, m, t`, etc. NEVER import `c`, `p`, `t`, `u` from a sibling project (e.g., `from flext_target_oracle import t` in test code is FORBIDDEN). Operational aliases (`r`, `e`, `h`, `d`, `s`, `x`) come from `flext_core` or the project's extended package.
 - **Strict Boundaries**: Domain boundaries are strict (e.g. `oracle-wms != db-oracle`, `ldap != ldif`).
-- **Export Discipline**: `__init__.py` files are exports-only. They must ONLY contain type hints, `__all__`, and the native `__getattr__` module-level lazy load strategy. **These files are AUTO-GENERATED**. You must NEVER edit them manually. Run `make codegen` to regenerate lazy initialization exports.
+- **Export Discipline**: `__init__.py` files are exports-only. They must ONLY contain type hints, `__all__`, and the native `__getattr__` module-level lazy load strategy. **These files are AUTO-GENERATED**. You must NEVER edit them manually. Run `make gen` to regenerate lazy initialization exports.
 
 ### 2.3 MRO Inheritance & Namespace Composition
 - **Single Namespaced Classes (Production & Tests)**: For both production and test infrastructure, you must create exactly ONE local namespaced class per tier (models, constants, helpers, etc.). All domain logic, constants, and methods MUST reside inside this single class.
@@ -186,15 +186,15 @@ from collections.abc import Mapping, Sequence
     - ✗ Using string type hints like `"FlextProtocolsResult.Result[bool]"` — use TYPE_CHECKING instead
     - ✗ Using `t.NormalizedValue` or `Any` as catch-all types — use precise `t.*` contracts
     - ✗ Reordering `__init__.py` imports or relying on "order of initialization" — architecture must NOT depend on load order
-  - **Verification**: Run `make codegen` without timeout or errors. Imports should resolve cleanly via `python -c "from flext_core._protocols.* import *"`.
+  - **Verification**: Run `make gen` without timeout or errors. Imports should resolve cleanly via `python -c "from flext_core._protocols.* import *"`.
 - *Detailed matrix & exceptions*: See skill `flext-import-rules`.
 
 ## §5 Make Contract
 
 - **Primary Entrypoint**: Automation entrypoint is always `make`. Raw scripts or direct tool commands (e.g., `pytest`, `ruff check`, `mypy`) are FORBIDDEN. You must exclusively use `make` targets to run tooling.
-- **Workspace Verbs**: `setup check security format docs test validate typings clean codegen modernize upgrade sync`.
-- **Project Verbs** (`base.mk`): `setup check security format docs test validate clean`.
-- **Git Verbs**: Use `make` for Git operations: `make status`, `make commit MESSAGE="..."`, `make push`, `make tag`, `make pr`.
+- **Workspace Verbs**: `boot check scan fmt docs test val types clean gen mod up sync`.
+- **Project Verbs** (`base.mk`): `boot check scan fmt docs test val clean`.
+- **Git Verbs**: Use `make` for Git operations: `make stat`, `make save MESSAGE="..."`, `make push`, `make tag`, `make pr`.
 - **Advanced Make Options**: Use the provided selectors to target scenarios directly instead of writing custom bash loops. Examples: `make check PROJECT=flext-core FILE=src/foo.py CHECK_GATES=pyright`, `make test MATCH=test_container FAIL_FAST=1`, `make check CHANGED_ONLY=1`.
 - **Selectors**: `PROJECT`, `PROJECTS`, `CHECK_GATES`, `VALIDATE_GATES`, `PYTEST_ARGS`, `FIX`, `JOBS`, `FAIL_FAST`, `FILE`, `FILES`, `CHANGED_ONLY`, `MATCH`, `RUFF_ARGS`, `PYRIGHT_ARGS`, `CHECK_ONLY`, `VERBOSE`.
 - **File Targeting** (`check`/`test`/`format`): `FILE=<path>` or `FILES="a.py b.py"` runs only on those files (fast-path, bypasses `flext_infra check run`). `CHANGED_ONLY=1` auto-discovers git-modified `.py` files.
@@ -203,15 +203,15 @@ from collections.abc import Mapping, Sequence
 - **Scope Controls** (Workspace): `VALIDATE_SCOPE=project|workspace`, optional `DEPS_REPORT=0`.
 - **No Bypasses**: Strictness is mandatory. `SKIP_*` bypass toggles in the contract are FORBIDDEN.
 - **Exit Codes**: `0` pass, `1` policy failure, `2` usage/config error, `3` infra/runtime error.
-- **Validation**: Policy/automation edits MUST run `make validate VALIDATE_SCOPE=workspace` before claiming completion.
+- **Validation**: Policy/automation edits MUST run `make val VALIDATE_SCOPE=workspace` before claiming completion.
 - **Reports**: Must be factual, machine-readable when produced, and include explicit executable next actions.
 - *Verb semantics & thresholds*: See skill `flext-quality-gates`.
 
 ## §6 Quality Gates
 
 - **Environments**: Workspace `.venv` is mandatory. System Python/pip usage is FORBIDDEN. Project-local `.venv` is fallback-only when workspace `.venv` is missing.
-- **Preflight**: Before workspace loops, ensure root `.venv` exists and remove project `.venv` drift. In fallback mode, run `make setup` before loops.
-- **`pyproject.toml` Generation**: Files must follow Poetry 2.x + PEP 621/639 constraints. New packages MUST be managed via `poetry add` and `poetry remove`. Furthermore, you must run `make modernize` and `make upgrade` to regenerate, consolidate dependencies, and format the toml files before lock/install. Manually hacking dependency tables is FORBIDDEN.
+- **Preflight**: Before workspace loops, ensure root `.venv` exists and remove project `.venv` drift. In fallback mode, run `make boot` before loops.
+- **`pyproject.toml` Generation**: Files must follow Poetry 2.x + PEP 621/639 constraints. New packages MUST be managed via `poetry add` and `poetry remove`. Furthermore, you must run `make mod` and `make up` to regenerate, consolidate dependencies, and format the toml files before lock/install. Manually hacking dependency tables is FORBIDDEN.
 - **Coverage**: Source of truth is purely `[tool.coverage.report] fail_under` in each project's `pyproject.toml`. No Makefile constants, no `--cov-fail-under` flags.
 - **No Silent Failures**: Constructs like `2>/dev/null` or `|| true` on mandatory gates are FORBIDDEN.
 - *Gate details & matrix*: See skill `flext-quality-gates`.

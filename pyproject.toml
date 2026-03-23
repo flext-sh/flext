@@ -125,9 +125,9 @@ project-excludes = [
 ]
 python-version = "3.13"
 search-path = [
-  "${PWD}/flext-core/src",
-  "${PWD}/flext-infra/src",
-  "${PWD}/flext-tests/src",
+  "flext-core/src",
+  "flext-infra/src",
+  "flext-tests/src",
   "algar-oud-mig",
   "docker",
   "docs",

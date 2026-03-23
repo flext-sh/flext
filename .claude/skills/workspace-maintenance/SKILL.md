@@ -50,7 +50,7 @@ description: Workspace-wide maintenance automation — hygiene checks, dependabo
 ## Workflow
 
 1. Identify the maintenance concern (hygiene, dependabot, poetry, security).
-2. Run standard gates first: `make check` and `make validate`.
+2. Run standard gates first: `make check` and `make val`.
 3. Run specific maintenance checker with `--help` first, then default (dry-run) mode.
 4. Review the JSON report in `.reports/` or the ANSI terminal output.
 5. If fixes are needed, re-run with `--apply` to mutate state.
@@ -61,13 +61,13 @@ description: Workspace-wide maintenance automation — hygiene checks, dependabo
 Good (primary — Make verbs for standard gates):
 
 ```bash
-make check                                  # all 4 lint gates across all projects
-make validate                               # complexity + docstring gates
-make validate VALIDATE_SCOPE=workspace      # workspace-level inventory validation
+make check                                  # all lint gates across all projects
+make val                                    # complexity + docstring gates
+make val VALIDATE_SCOPE=workspace           # workspace-level inventory validation
 make clean                                  # clean all projects
-make setup                                  # reinstall dependencies
-make upgrade                                # upgrade deps + dependency report (.reports/dependencies/)
-make typings                                # stub supply-chain + typing report (DEPS_REPORT=0 to skip report)
+make boot                                   # reinstall dependencies
+make up                                     # upgrade deps + dependency report (.reports/dependencies/)
+make types                                  # stub supply-chain + typing report (DEPS_REPORT=0 to skip report)
 make sync                                   # sync all project Makefiles from pyproject.toml + refresh __init__.py
 make sync PROJECT=flext-api                 # sync a single project Makefile
 
@@ -75,7 +75,7 @@ make sync PROJECT=flext-api                 # sync a single project Makefile
 make check PROJECT=flext-core CHANGED_ONLY=1            # lint only git-modified .py files
 make check PROJECT=flext-core FILE=src/foo.py CHECK_GATES=lint,pyright
 make check CHECK_GATES=lint FIX=1 CHANGED_ONLY=1        # auto-fix modified files across workspace
-make format FILE=src/flext_core/foo.py CHECK_ONLY=1     # dry-run format check on single file
+make fmt FILE=src/flext_core/foo.py CHECK_ONLY=1        # dry-run format check on single file
 ```
 
 Good (internal — maintenance checkers for specific concerns):
@@ -102,11 +102,11 @@ Why bad: Destructive without confirmation, no per-project isolation or reporting
 Make gates (primary):
 
 - `make check` — all lint gates across all projects
-- `make validate` — complexity + docstring gates across all projects
-- `make validate VALIDATE_SCOPE=workspace` — workspace-level inventory + wiring validation
+- `make val` — complexity + docstring gates across all projects
+- `make val VALIDATE_SCOPE=workspace` — workspace-level inventory + wiring validation
 - `make clean` — verify clean targets
-- `make setup` — verify dependency installation
-- `make upgrade` / `make typings` — dependency and typing reports under `.reports/dependencies/` (see AGENTS.md Maintenance and standard places)
+- `make boot` — verify dependency installation
+- `make up` / `make types` — dependency and typing reports under `.reports/dependencies/` (see AGENTS.md Maintenance and standard places)
 
 Script-level checks (internal):
 
