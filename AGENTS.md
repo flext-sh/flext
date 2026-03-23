@@ -192,7 +192,7 @@ from collections.abc import Mapping, Sequence
 ## §5 Make Contract
 
 - **Primary Entrypoint**: Automation entrypoint is always `make`. Raw scripts or direct tool commands (e.g., `pytest`, `ruff check`, `mypy`) are FORBIDDEN. You must exclusively use `make` targets to run tooling.
-- **Workspace Verbs**: `setup check security format docs test validate typings clean codegen modernize upgrade`.
+- **Workspace Verbs**: `setup check security format docs test validate typings clean codegen modernize upgrade sync`.
 - **Project Verbs** (`base.mk`): `setup check security format docs test validate clean`.
 - **Git Verbs**: Use `make` for Git operations: `make status`, `make commit MESSAGE="..."`, `make push`, `make tag`, `make pr`.
 - **Advanced Make Options**: Use the provided selectors to target scenarios directly instead of writing custom bash loops. Examples: `make check PROJECT=flext-core FILE=src/foo.py CHECK_GATES=pyright`, `make test MATCH=test_container FAIL_FAST=1`, `make check CHANGED_ONLY=1`.

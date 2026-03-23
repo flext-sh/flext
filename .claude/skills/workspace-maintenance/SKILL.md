@@ -68,6 +68,8 @@ make clean                                  # clean all projects
 make setup                                  # reinstall dependencies
 make upgrade                                # upgrade deps + dependency report (.reports/dependencies/)
 make typings                                # stub supply-chain + typing report (DEPS_REPORT=0 to skip report)
+make sync                                   # sync all project Makefiles from pyproject.toml + refresh __init__.py
+make sync PROJECT=flext-api                 # sync a single project Makefile
 
 # File-scoped (fast feedback — bypasses orchestrator):
 make check PROJECT=flext-core CHANGED_ONLY=1            # lint only git-modified .py files

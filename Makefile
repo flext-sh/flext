@@ -183,7 +183,7 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help setup upgrade modernize build check security format docs test validate typings pyrefly-repo stub-validate-repo type-policy clean release pr commit tag push codegen status
+.PHONY: help setup upgrade modernize build check security format docs test validate typings pyrefly-repo stub-validate-repo type-policy clean release pr commit tag push codegen sync imports status
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -1027,6 +1027,21 @@ codegen: ## Standardize __init__.py lazy imports (PEP 562)
 	$(Q)PYTHONPATH="$(CURDIR)/flext-infra/src:$(CURDIR)/flext-core/src:$$PYTHONPATH" $(PY) -m flext_infra codegen lazy-init --workspace "$(CURDIR)"
 	$(Q)echo "Formatting generated files (ruff)..."
 	$(Q)$(POETRY_ENV) ruff format . --quiet
+
+sync: ## Sync project Makefiles from pyproject.toml + refresh __init__.py lazy imports
+	$(Q)$(REQUIRE_VENV)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)echo "==> Syncing project Makefiles..."
+	$(Q)for proj in $(SELECTED_PROJECTS); do \
+		PYTHONPATH="$(CURDIR)/flext-infra/src:$(CURDIR)/flext-core/src:$$PYTHONPATH" \
+		$(PY) -m flext_infra workspace sync \
+			--workspace "$$proj" \
+			--canonical-root "$(CURDIR)"; \
+	done
+	$(Q)echo "==> Regenerating __init__.py lazy imports..."
+	$(Q)PYTHONPATH="$(CURDIR)/flext-infra/src:$(CURDIR)/flext-core/src:$$PYTHONPATH" \
+		$(PY) -m flext_infra codegen lazy-init --workspace "$(CURDIR)"
+	$(Q)echo "==> Sync complete."
 
 imports: ## Detect and fix import violations across workspace (CST-based)
 	$(Q)$(REQUIRE_VENV)
