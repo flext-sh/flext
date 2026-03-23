@@ -68,8 +68,9 @@ None yet.
 
 ### Blockers/Concerns
 
-- Active boulder: `pyrefly-repo-hardening` (Waves 1–5 pending, Wave 0 done)
-- Top error offenders to watch: flext-cli (1,419), algar-oud-mig (370, excluded), flext-quality (298), flext-observability (280), flext-core (170)
+- Active boulder: `pyrefly-repo-hardening` (Wave 1 complete, Waves 2–5 pending)
+- Fresh baseline (2026-03-23): 29 pyre issues total, 0 in flext-core
+- Top error offenders to watch (estimates): flext-cli, flext-quality, flext-observability (see BASELINE.md for current state)
 
 ## Session Continuity
 
