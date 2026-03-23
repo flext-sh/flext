@@ -803,18 +803,18 @@ pyre: ## Authoritative repo-wide pyrefly report -> .reports/pyrefly + evidence
 		echo "python: $$($(PY) --version 2>&1)"; \
 		echo "pyrefly: $$(env -u PYTHONPATH $(POETRY_ENV) $(PY) -m pyrefly --version 2>&1)"; \
 	} > .sisyphus/evidence/pyrefly-toolchain.txt
-	$(Q)set -o pipefail; \
-	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m pyrefly check $$(for d in src tests examples docs benchmarks scripts; do [ -d "$$d" ] && printf "%s " "$$d"; done) \
+	$(Q)env -u PYTHONPATH $(POETRY_ENV) $(PY) -m pyrefly check $$(for d in src tests examples docs benchmarks scripts; do [ -d "$$d" ] && printf "%s " "$$d"; done) \
 		--config "$(CURDIR)/pyproject.toml" \
 		--output-format json \
 		-o "$(CURDIR)/.reports/pyrefly/repo-pyrefly.json" \
 		--summary=none \
-		2>&1 | tee .sisyphus/evidence/pyrefly-repo-before.txt; \
-	pyrefly_status=$${PIPESTATUS[0]}; \
+		> .sisyphus/evidence/pyrefly-repo-before.txt 2>&1; \
+	pyrefly_status=$$?; \
 	printf "exit_code: %s\n" "$$pyrefly_status" >> .sisyphus/evidence/pyrefly-repo-before.txt; \
 	$(PY) -c 'import json; from collections import Counter; from pathlib import Path; report = Path("$(CURDIR)/.reports/pyrefly/repo-pyrefly.json"); summary = Path("$(CURDIR)/.reports/pyrefly/repo-pyrefly-summary.txt"); raw = json.loads(report.read_text(encoding="utf-8")) if report.exists() else []; issues = raw.get("errors", []) if isinstance(raw, dict) else raw if isinstance(raw, list) else []; file_counts = Counter((i.get("path") if isinstance(i, dict) else "?") or "?" for i in issues); msg_counts = Counter((i.get("description") if isinstance(i, dict) else "") or "" for i in issues); lines = ["FLEXT Repo-Wide Pyrefly Summary", f"workspace: $(CURDIR)", "targets: src, tests, examples, docs, benchmarks, scripts", f"total_issues: {len(issues)}", "", "Top files:"]; lines.extend([f"- {p}: {c}" for p, c in file_counts.most_common(20)] or ["- none"]); lines.extend(["", "Top messages:"]); lines.extend([f"- {m}: {c}" for m, c in msg_counts.most_common(20)] or ["- none"]); summary.write_text("\n".join(lines) + "\n", encoding="utf-8")'; \
 	printf "\n--- repo-pyrefly-summary.txt ---\n" >> .sisyphus/evidence/pyrefly-repo-before.txt; \
 	cat "$(CURDIR)/.reports/pyrefly/repo-pyrefly-summary.txt" >> .sisyphus/evidence/pyrefly-repo-before.txt; \
+	cat "$(CURDIR)/.reports/pyrefly/repo-pyrefly-summary.txt"; \
 	exit $$pyrefly_status
 
 stubs: ## Repo-wide stub supply-chain validation -> .sisyphus/evidence
