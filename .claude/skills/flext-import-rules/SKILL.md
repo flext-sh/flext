@@ -137,15 +137,15 @@ from flext_core import FlextConstants, FlextModels, FlextRuntime, c, e, m, p, r,
 
 
 # ✅ CORRECT — Import from _models/ or _utilities/ (inside their own facades only)
-from flext_core._models.base import FlextModelsBase
-from flext_core._utilities.validation import FlextUtilitiesValidation
+from flext_core import FlextModelsBase
+from flext_core import FlextUtilitiesValidation
 ```
 
 ```python
 # ❌ WRONG — submodule imports are not the canonical pattern
-from flext_core.constants import c
-from flext_core.models import m
-from flext_core.typings import t
+from flext_core import c
+from flext_core import m
+from flext_core import t
 ```
 
 ---
@@ -217,7 +217,7 @@ schema = m.Meltano.SingerSchemaMessage(data)
 
 ```python
 # ❌ WRONG — duplicate alias, extra import surface
-from flext_meltano import FlextMeltanoModels as m_meltano  # NEVER
+from flext_meltano import m  # NEVER
 
 # ❌ WRONG — loses parent namespaces
 class FlextTargetOracleModels(FlextModels):  # loses m.Meltano.*
@@ -286,9 +286,9 @@ m = FlextTargetOracleModels
 
 ```python
 # ❌ NEVER import from _models/ or _utilities/ in subprojects
-from flext_core._models.base import FlextModelsBase  # Private API!
-from flext_core._utilities.guards import FlextUtilitiesGuards  # Private API!
-from flext_ldif._models.results import FlextLdifModelsResults  # Private API!
+from flext_core import FlextModelsBase  # Private API!
+from flext_core import FlextUtilitiesGuards  # Private API!
+from flext_ldif import FlextLdifModelsResults  # Private API!
 
 # ✅ CORRECT — use public facade
 from flext_ldif import FlextLdifModels

@@ -95,12 +95,12 @@ m = FlextTargetOracleModels
 | --------------------------------------------------- | -------------------------------------------------------------------- |
 | `Meltano = FlextMeltanoModels.Meltano` (assignment) | mypy `name-defined` error with `from __future__ import annotations`  |
 | Per-type subclasses inside `class Meltano:`         | Invariance errors: `list[SubType]` ≠ `list[ParentType]`              |
-| `from flext_meltano import m as m_meltano`          | Anti-pattern: duplicates namespace surface, adds unnecessary aliases |
+| `from flext_meltano import m as m`          | Anti-pattern: duplicates namespace surface, adds unnecessary aliases |
 | Top-level inheritance (`class Models(Parent):`)     | ✅ Clean MRO, zero duplication, exact same types                     |
 
 **Anti-patterns (NEVER):**
 
-- `from flext_meltano import FlextMeltanoModels as m_meltano` — duplicate alias
+- `from flext_meltano import m` — duplicate alias
 - `class Meltano: SingerSchemaMessage = FlextMeltanoModels.Meltano.SingerSchemaMessage` — not valid as type
 - Inheriting `FlextModels` directly when parent project namespaces are needed
 

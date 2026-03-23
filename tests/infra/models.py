@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_tests.models import FlextTestsModels
+from flext_tests import FlextTestsModels
 
 
 class FlextWorkspaceTestModels(FlextTestsModels):

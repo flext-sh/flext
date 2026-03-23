@@ -5,7 +5,7 @@ from pathlib import Path
 from types import ModuleType
 from typing import Protocol, runtime_checkable
 
-from flext_tests.protocols import FlextTestsProtocols
+from flext_tests import FlextTestsProtocols
 
 
 class FlextWorkspaceTestProtocols(FlextTestsProtocols):

@@ -118,7 +118,7 @@ Add project-specific guards to `tests/conftest.py`:
 ```python
 """Test configuration and fixtures."""
 
-from flext_core.testing.guards import TestGuards, LdifTestGuards
+from flext_core import TestGuards, LdifTestGuards
 
 # Re-export for use in tests
 __all__ = ["TestGuards", "LdifTestGuards"]
@@ -164,7 +164,7 @@ def test_process_config():
 
 
 # AFTER
-from flext_core.testing.guards import TestGuards
+from flext_core import TestGuards
 
 
 def test_process_config():
@@ -505,7 +505,7 @@ test: verify 80%+ coverage across all projects
 Use TypeGuards for type narrowing instead of cast():
 
 \`\`\`python
-from flext_core.utilities.guards import Guards
+from flext_core import Guards
 
 if Guards.is_config(obj):
 obj.app_name # Type narrowed, no cast() needed

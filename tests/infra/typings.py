@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
-from flext_tests.typings import FlextTestsTypes
+from flext_tests import FlextTestsTypes
 
 
 class FlextWorkspaceTestTypes(FlextTestsTypes):

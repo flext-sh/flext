@@ -8489,20 +8489,20 @@ class MyService(FlextService[Result]):
 
 ```python
 # flext-core/src/flext_core/models/__init__.py
-from flext_core.models.base import ArbitraryTypesModel, Value
-from flext_core.models.ddd import Entity, AggregateRoot
-from flext_core.models.cqrs import Command, Query, DomainEvent
-from flext_core.models.context import ContextData, ContextMetadata
-from flext_core.models.execution import OperationExecutionRequest, RetryConfig
+from flext_core import ArbitraryTypesModel, Value
+from flext_core import Entity, AggregateRoot
+from flext_core import Command, Query, DomainEvent
+from flext_core import ContextData, ContextMetadata
+from flext_core import OperationExecutionRequest, RetryConfig
 
 
 # Backward compatibility
 class FlextModels:
     """Facade for backward compatibility."""
 
-    from flext_core.models.base import ArbitraryTypesModel, Value
-    from flext_core.models.ddd import Entity, AggregateRoot
-    from flext_core.models.cqrs import Command, Query, DomainEvent
+    from flext_core import ArbitraryTypesModel, Value
+    from flext_core import Entity, AggregateRoot
+    from flext_core import Command, Query, DomainEvent
     # ...
 
 
@@ -8707,8 +8707,8 @@ FlextModels.Command  # ✅ Still works
 
 
 # New imports (recommended)
-from flext_core.models.ddd import Entity
-from flext_core.models.cqrs import Command
+from flext_core import Entity
+from flext_core import Command
 ```
 
 **2.3: Update documentation**

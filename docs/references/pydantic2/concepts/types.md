@@ -589,8 +589,8 @@ class Model(BaseModel):
 # these instances are also "dumped" directly into ints as expected.
 m_int = Model(third_party_type=1)
 assert isinstance(m_int.third_party_type, ThirdPartyType)
-assert m_int.third_party_type.x == 1
-assert m_int.model_dump() == {"third_party_type": 1}
+assert m.third_party_type.x == 1
+assert m.model_dump() == {"third_party_type": 1}
 
 # Do the same thing where an instance of ThirdPartyType is passed in
 instance = ThirdPartyType()
@@ -599,8 +599,8 @@ instance.x = 10
 
 m_instance = Model(third_party_type=instance)
 assert isinstance(m_instance.third_party_type, ThirdPartyType)
-assert m_instance.third_party_type.x == 10
-assert m_instance.model_dump() == {"third_party_type": 10}
+assert m.third_party_type.x == 10
+assert m.model_dump() == {"third_party_type": 10}
 
 # Demonstrate that validation errors are raised as expected for invalid inputs
 try:

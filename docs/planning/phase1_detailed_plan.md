@@ -382,7 +382,7 @@ def process_config(data: dict) -> str:
 
 
 # AFTER
-from flext_core.utilities.guards import Guards
+from flext_core import Guards
 
 
 def process_config(data: dict) -> str:
@@ -539,7 +539,7 @@ Add new sections:
 Use TypeGuards for type narrowing instead of cast():
 
 \`\`\`python
-from flext_core.utilities.guards import Guards
+from flext_core import Guards
 
 if Guards.is_config(obj):
 obj.app_name # Type narrowed, no cast() needed

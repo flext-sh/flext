@@ -151,7 +151,7 @@ Anti-patterns:
 
 - **Defining runtime aliases via `FlextRuntime.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`. No separate alias registry or staticmethod layer for package **init**.
 - Prefer `m.ExecuteResult` when a class-level alias exists; `m.TargetOracle.Foo` is allowed in subprojects
-- `from flext_meltano import FlextMeltanoModels as m_meltano` — duplicate alias surface
+- `from flext_meltano import m` — duplicate alias surface
 - `class Meltano: X = Parent.Meltano.X` — assignment not valid as type
 - Inheriting `FlextModels` when parent namespaces are needed — loses `m.Meltano.*`
 

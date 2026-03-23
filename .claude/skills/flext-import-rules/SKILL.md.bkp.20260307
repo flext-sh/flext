@@ -98,8 +98,8 @@ from flext_core import u
 from flext_core import e
 
 # ✅ CORRECT — Import from _models/ or _utilities/ (inside their own facades)
-from flext_core._models.base import FlextModelsBase
-from flext_core._utilities.validation import FlextUtilitiesValidation
+from flext_core import FlextModelsBase
+from flext_core import FlextUtilitiesValidation
 
 # ❌ WRONG — Never import from __init__.py inside the package itself
 from flext_core import FlextConstants  # Don't do this within flext-core
@@ -177,7 +177,7 @@ schema = m.Meltano.SingerSchemaMessage(data)
 
 ```python
 # ❌ WRONG — duplicate alias, extra import surface
-from flext_meltano import FlextMeltanoModels as m_meltano  # NEVER
+from flext_meltano import m  # NEVER
 
 # ❌ WRONG — loses parent namespaces
 class FlextTargetOracleModels(FlextModels):  # loses m.Meltano.*
@@ -242,9 +242,9 @@ m = FlextTargetOracleModels
 
 ```python
 # ❌ NEVER import from _models/ or _utilities/ in subprojects
-from flext_core._models.base import FlextModelsBase  # Private API!
-from flext_core._utilities.guards import FlextUtilitiesGuards  # Private API!
-from flext_ldif._models.results import FlextLdifModelsResults  # Private API!
+from flext_core import FlextModelsBase  # Private API!
+from flext_core import FlextUtilitiesGuards  # Private API!
+from flext_ldif import FlextLdifModelsResults  # Private API!
 
 # ✅ CORRECT — use public facade
 from flext_ldif import FlextLdifModels
