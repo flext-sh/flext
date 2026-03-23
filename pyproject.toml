@@ -919,6 +919,10 @@ known-first-party = [
 split-on-trailing-comma = true
 
 [tool.ruff.lint.per-file-ignores]
+".vscode/*.py" = [
+  "S404",
+  "S603",
+]
 "**/.vulture_whitelist.py" = [
   "ALL",
 ]
@@ -1101,6 +1105,7 @@ split-on-trailing-comma = true
   "D107",
   "F822",
   "N999",
+  "PLC2701",  # __init__.py re-exports from private submodules within own package
   "RUF067",
 ]
 "**/_utilities/parser.py" = [
@@ -1179,6 +1184,39 @@ split-on-trailing-comma = true
 ]
 "**/typings.py" = [
   "RUF036",
+]
+
+[tool.vulture]
+exclude = [
+    ".venv/",
+    "pkg/controlpanel/management/container/venv/",
+    "__pycache__/",
+    "*_pb2*.py",
+]
+ignore_decorators = [
+    "@pytest.fixture",
+    "@pytest.mark.*",
+    "@override",
+    "@abstractmethod",
+    "@handler",
+    "@field_validator",
+    "@model_validator",
+    "@app.route",
+    "@router.*",
+]
+ignore_names = [
+    "test_*",
+    "conftest",
+]
+min_confidence = 80
+paths = [
+    "vulture_whitelist.py",
+    "src/",
+    "tests/",
+    "examples/",
+    "docker/",
+    "scripts/",
+    ".claude/skills/",
 ]
 
 [tool.pytest.ini_options]
