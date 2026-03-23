@@ -1037,6 +1037,7 @@ split-on-trailing-comma = true
   "D102",
   "D103",
   "D104",
+  "D106",
   "D107",
   "EM102",
   "F822",
@@ -1096,6 +1097,8 @@ split-on-trailing-comma = true
 ]
 "**/*utilities*" = [
   "C901",
+  "E402",
+  "PLC2801",
   "PLW1510",
   "S404",
   "S603",
@@ -1131,8 +1134,10 @@ split-on-trailing-comma = true
   "S105",
 ]
 "**/models.py" = [
+  "PLC0415",
   "PLC2801",
   "S102",
+  "S105",
 ]
 "**/output.py" = [
   "FBT001",
@@ -1155,6 +1160,8 @@ split-on-trailing-comma = true
 ]
 "**/settings.py" = [
   "ANN401",
+  "PLC0415",
+  "S105",
 ]
 "**/singer/*.py" = [
   "S404",
@@ -1182,8 +1189,28 @@ split-on-trailing-comma = true
   "S607",
   "T201",
 ]
+"**/alert_manager*.py" = [
+  "S310",
+]
+"**/external_command*.py" = [
+  "S404",
+  "S603",
+]
+"**/orchestrator*.py" = [
+  "S404",
+  "S603",
+]
+"**/protocol_impls/*.py" = [
+  "SLF001",
+]
 "**/typings.py" = [
   "RUF036",
+]
+"**/workspace/*.py" = [
+  "PLC0415",
+  "S404",
+  "S603",
+  "S607",
 ]
 
 [tool.vulture]
