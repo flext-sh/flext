@@ -155,7 +155,7 @@ pip install flext-core flext-ldif flext-api
 ### Basic ACL Processing
 
 ```python
-from examples.acl_processing_example import AclProcessingPipeline
+from examples import AclProcessingPipeline
 
 # Create pipeline with 8 worker threads
 pipeline = AclProcessingPipeline(max_workers=8)
@@ -174,7 +174,7 @@ if result.is_success:
 ### Advanced Processing Pipeline
 
 ```python
-from examples.advanced_processing_example import IntegratedProcessingPipeline
+from examples import IntegratedProcessingPipeline
 
 # Create integrated pipeline
 pipeline = IntegratedProcessingPipeline(max_workers=8, batch_size=200)
@@ -192,7 +192,7 @@ result = pipeline.execute_integrated_pipeline(
 ### Complete Workflow
 
 ```python
-from examples.complete_workflow_example import (
+from examples import (
     ComprehensiveRailwayPattern,
     CompleteWorkflowBuilder,
 )

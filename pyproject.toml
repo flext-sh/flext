@@ -125,7 +125,51 @@ project-excludes = [
 ]
 python-version = "3.13"
 search-path = [
-  ".",
+  "${PWD}/flext-core/src",
+  "${PWD}/flext-infra/src",
+  "${PWD}/flext-tests/src",
+  "algar-oud-mig",
+  "docker",
+  "docs",
+  "examples",
+  "flexcore",
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
+  "gruponos-meltano-native",
+  "libs",
+  "pkg",
+  "scripts",
+  "src",
+  "tests",
   "typings",
 ]
 
@@ -159,6 +203,56 @@ plugins = [
 python_version = "3.13"
 
 # [MANAGED] pydantic-mypy
+mypy_path = [
+  "${PWD}/flext-core/src",
+  "${PWD}/flext-infra/src",
+  "${PWD}/flext-tests/src",
+  "algar-oud-mig",
+  "docker",
+  "docs",
+  "examples",
+  "flexcore",
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
+  "gruponos-meltano-native",
+  "libs",
+  "pkg",
+  "scripts",
+  "src",
+  "tests",
+  "typings",
+  "typings/generated",
+]
+
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
@@ -186,7 +280,53 @@ whitelines = 1
 # [MANAGED] pyright
 [tool.pyright]
 extraPaths = [
+  "${PWD}/flext-core/src",
+  "${PWD}/flext-infra/src",
+  "${PWD}/flext-tests/src",
+  "algar-oud-mig",
+  "docker",
+  "docs",
+  "examples",
+  "flexcore",
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
+  "gruponos-meltano-native",
+  "libs",
+  "pkg",
+  "scripts",
   "src",
+  "tests",
+  "typings",
+  "typings/generated",
 ]
 typeCheckingMode = "strict"
 
@@ -199,12 +339,28 @@ reportPrivateUsage = "none"
 root = "tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "examples"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "scripts"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "algar-oud-mig/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "algar-oud-mig/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "algar-oud-mig/examples"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "algar-oud-mig/scripts"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -215,12 +371,20 @@ reportPrivateUsage = "none"
 root = "flexcore/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flexcore/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-api/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-api/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-api/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -231,12 +395,20 @@ reportPrivateUsage = "none"
 root = "flext-auth/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-auth/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-cli/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-cli/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-cli/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -247,12 +419,24 @@ reportPrivateUsage = "none"
 root = "flext-core/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-core/examples"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-core/scripts"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-db-oracle/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-db-oracle/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-db-oracle/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -263,12 +447,24 @@ reportPrivateUsage = "none"
 root = "flext-dbt-ldap/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-dbt-ldap/examples"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-dbt-ldap/scripts"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-dbt-ldif/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-dbt-ldif/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-dbt-ldif/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -279,12 +475,20 @@ reportPrivateUsage = "none"
 root = "flext-dbt-oracle/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-dbt-oracle/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-dbt-oracle-wms/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-dbt-oracle-wms/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-dbt-oracle-wms/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -295,12 +499,28 @@ reportPrivateUsage = "none"
 root = "flext-grpc/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-grpc/examples"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
+root = "flext-infra/src"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-infra/tests"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-ldap/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-ldap/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-ldap/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -311,12 +531,20 @@ reportPrivateUsage = "none"
 root = "flext-ldif/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-ldif/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-meltano/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-meltano/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-meltano/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -327,12 +555,20 @@ reportPrivateUsage = "none"
 root = "flext-observability/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-observability/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-oracle-oic/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-oracle-oic/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-oracle-oic/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -343,12 +579,20 @@ reportPrivateUsage = "none"
 root = "flext-oracle-wms/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-oracle-wms/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-plugin/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-plugin/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-plugin/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -367,12 +611,20 @@ reportPrivateUsage = "none"
 root = "flext-tap-ldap/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-tap-ldap/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-tap-ldif/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-tap-ldif/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-tap-ldif/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -383,12 +635,20 @@ reportPrivateUsage = "none"
 root = "flext-tap-oracle/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-tap-oracle/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-tap-oracle-oic/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-tap-oracle-oic/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-tap-oracle-oic/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -399,12 +659,20 @@ reportPrivateUsage = "none"
 root = "flext-tap-oracle-wms/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-tap-oracle-wms/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-target-ldap/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-target-ldap/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-target-ldap/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -415,12 +683,20 @@ reportPrivateUsage = "none"
 root = "flext-target-ldif/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-target-ldif/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-target-oracle/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-target-oracle/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-target-oracle/examples"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -431,12 +707,28 @@ reportPrivateUsage = "none"
 root = "flext-target-oracle-oic/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-target-oracle-oic/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "flext-target-oracle-wms/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-target-oracle-wms/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-target-oracle-wms/examples"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "error"
+root = "flext-tests/src"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-tests/tests"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -447,12 +739,25 @@ reportPrivateUsage = "none"
 root = "flext-web/tests"
 
 [[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "flext-web/examples"
+
+[[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
 root = "gruponos-meltano-native/src"
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "gruponos-meltano-native/tests"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "gruponos-meltano-native/examples"
+
+[[tool.pyright.executionEnvironments]]
+reportPrivateUsage = "none"
+root = "gruponos-meltano-native/scripts"
+
 # [MANAGED] ruff
 [tool.ruff]
 exclude = [
@@ -478,7 +783,48 @@ preview = true
 respect-gitignore = true
 show-fixes = true
 src = [
+  "algar-oud-mig",
+  "docker",
+  "docs",
+  "examples",
+  "flexcore",
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
+  "gruponos-meltano-native",
+  "libs",
+  "pkg",
+  "scripts",
   "src",
+  "tests",
 ]
 target-version = "py313"
 
@@ -738,7 +1084,6 @@ split-on-trailing-comma = true
   "D107",
   "F822",
   "N999",
-  "PLC2701",
   "RUF067",
 ]
 "**/_utilities/parser.py" = [
@@ -851,6 +1196,7 @@ fail_under = 45
 precision = 2
 show_missing = true
 skip_covered = false
+
 [dependency-groups]
 dev = [
   "types-flask (>=1.1.6,<2.0.0)",
