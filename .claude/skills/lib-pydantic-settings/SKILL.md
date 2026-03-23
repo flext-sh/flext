@@ -71,7 +71,7 @@ description: Pydantic SettingsConfigDict and singleton config patterns across FL
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
 
 class FlextSettings(p.ProtocolSettings, p.Settings, FlextRuntime):
-    _instances: ClassVar[dict[type[BaseSettings], BaseSettings]] = {}
+    _instances: ClassVar[Mapping[type[BaseSettings], BaseSettings]] = {}
     _lock: ClassVar[threading.RLock] = threading.RLock()
 
     model_config = SettingsConfigDict(
@@ -169,7 +169,7 @@ Why bad: allows invalid state mutation when assignment validation/invariants are
 Good:
 
 ```python
-_instances: ClassVar[dict[type[BaseSettings], BaseSettings]] = {}
+_instances: ClassVar[Mapping[type[BaseSettings], BaseSettings]] = {}
 _lock: ClassVar[threading.RLock] = threading.RLock()
 ```
 

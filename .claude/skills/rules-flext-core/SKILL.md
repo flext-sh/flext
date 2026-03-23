@@ -42,7 +42,7 @@ description: Authoritative rules for `flext-core` architecture, typing, result f
 - Keep dependency direction inward only (L3 -> L2 -> L1 -> L0).
 - Keep failure/success boundaries on `r` (`r`) and compose with `map/flat_map/lash`.
 - Keep dependency-injector usage routed through runtime/container bridges.
-- Keep shared type contracts centralized in `typings.py`. **AXIOMATIC**: `Any`, `t.NormalizedValue`, and `dict[str, Any]` are TOTALLY FORBIDDEN — use `t.*` contracts exclusively. `None` in type unions only when business-required.
+- Keep shared type contracts centralized in `typings.py`. **AXIOMATIC**: `Any`, `t.NormalizedValue`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN — use `t.*` contracts exclusively. `None` in type unions only when business-required.
 - Consume public API from `flext_core` exports in non-internal modules.
 
 ## Instructions

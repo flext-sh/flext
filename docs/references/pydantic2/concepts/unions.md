@@ -606,8 +606,8 @@ from typing import Annotated, Union
 
 from pydantic import AfterValidator, Tag, TypeAdapter, ValidationError
 
-DoubledList = Annotated[list[int], AfterValidator(lambda x: x * 2)]
-StringsMap = dict[str, str]
+DoubledList = Annotated[Sequence[int], AfterValidator(lambda x: x * 2)]
+StringsMap = Mapping[str, str]
 
 
 # Not using any `Tag`s for each union case, the errors are not so nice to look at
@@ -618,10 +618,10 @@ try:
 except ValidationError as exc_info:
     print(exc_info)
     """
-    2 validation errors for union[function-after[<lambda>(), list[int]],dict[str,str]]
-    function-after[<lambda>(), list[int]].0
+    2 validation errors for union[function-after[<lambda>(), Sequence[int]],Mapping[str,str]]
+    function-after[<lambda>(), Sequence[int]].0
       Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='a', input_type=str]
-    dict[str,str]
+    Mapping[str,str]
       Input should be a valid dictionary [type=dict_type, input_value=['a'], input_type=list]
     """
 

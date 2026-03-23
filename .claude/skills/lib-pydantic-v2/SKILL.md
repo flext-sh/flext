@@ -86,11 +86,11 @@ from pydantic import field_validator
 
 
 class RetryConfiguration(BaseModel):
-    retry_on_status_codes: list[int] = Field(default_factory=list)
+    retry_on_status_codes: Sequence[int] = Field(default_factory=list)
 
     @field_validator("retry_on_status_codes", mode="after")
     @classmethod
-    def validate_status_codes(cls, v: list[int]) -> list[int]:
+    def validate_status_codes(cls, v: Sequence[int]) -> Sequence[int]:
         return [c for c in v if 400 <= c < 600]
 ```
 
@@ -136,7 +136,7 @@ From `flext-core/src/flext_core/_utilities/validation.py`:
 from pydantic import TypeAdapter as PydanticTypeAdapter
 
 # Validate arbitrary values at runtime without a full model
-adapter = PydanticTypeAdapter(list[int])
+adapter = PydanticTypeAdapter(Sequence[int])
 validated = adapter.validate_python([1, 2, 3])
 ```
 
@@ -152,16 +152,16 @@ The `FlextUtilitiesValidation` class centralizes TypeAdapter usage for:
 from flext_core import m
 
 
-class Dict(RootModel[dict[str, m.Core.ValueModel]]):
-    root: dict[str, m.Core.ValueModel]
+class Dict(RootModel[Mapping[str, m.Core.ValueModel]]):
+    root: Mapping[str, m.Core.ValueModel]
 
 
-class ConfigMap(RootModel[dict[str, m.Core.ConfigEntryModel]]):
-    root: dict[str, m.Core.ConfigEntryModel]
+class ConfigMap(RootModel[Mapping[str, m.Core.ConfigEntryModel]]):
+    root: Mapping[str, m.Core.ConfigEntryModel]
 
 
-class ServiceMap(RootModel[dict[str, m.Core.ServiceEntryModel]]):
-    root: dict[str, m.Core.ServiceEntryModel]
+class ServiceMap(RootModel[Mapping[str, m.Core.ServiceEntryModel]]):
+    root: Mapping[str, m.Core.ServiceEntryModel]
 ```
 
 Used via explicit domain models and facade exports (`m.*`) rather than broad container aliases.
@@ -171,7 +171,9 @@ Used via explicit domain models and facade exports (`m.*`) rather than broad con
 - **ABSOLUTELY FORBIDDEN**: `model_rebuild()` is a critical architecture violation.
 - Import referenced symbols before model declaration.
 - Keep type aliases and model dependencies declared before use.
-- Use postponed annotations (`from __future__ import annotations`) and real symbols in scope.
+- Use postponed annotations (`from **future** import annotations
+
+from collections.abc import Mapping, Sequence`) and real symbols in scope.
 - Do not rely on `_types_namespace` patching or post-definition rebuild.
 - If a circular dependency seems to require `model_rebuild`, you MUST use **Protocol-based decoupling** or move the models to a lower foundation tier.
 
@@ -272,6 +274,8 @@ MyModel.model_rebuild(
 
 ```python
 from __future__ import annotations
+
+from collections.abc import Mapping, Sequence
 
 from flext_core import t
 

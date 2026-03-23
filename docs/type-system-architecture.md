@@ -203,7 +203,7 @@ class ProgressCallback(Protocol):
 ```python
 # ❌ WRONG: Invariant dict (rejects Mapping-compatible inputs)
 class DataProvider(Protocol):
-    def get_data(self) -> dict[str, m.Core.ValueModel]: ...
+    def get_data(self) -> Mapping[str, m.Core.ValueModel]: ...
 
 
 # ✅ CORRECT: Covariant Mapping (accepts multiple mapping implementations)
@@ -213,7 +213,7 @@ class DataProvider(Protocol):
 
 # Usage: Works with any dict subtype
 def process_data(provider: DataProvider) -> None:
-    # Provider can return dict[str, int], dict[str, str], etc.
+    # Provider can return Mapping[str, int], Mapping[str, str], etc.
     data = provider.get_data()
     ...
 ```
@@ -406,13 +406,13 @@ m.FlextOudMig               # Migration tool domain
 ### Covariance (Subtype Compatibility)
 
 ```python
-# Example: dict[str, bool] should be compatible with Mapping[str, m.Core.ValueModel]
+# Example: Mapping[str, bool] should be compatible with Mapping[str, m.Core.ValueModel]
 
 # ❌ INVARIANT - WRONG
-def process_dict(data: dict[str, m.Core.ValueModel]) -> None: ...
+def process_dict(data: Mapping[str, m.Core.ValueModel]) -> None: ...
 
 
-result: dict[str, bool] = {"ok": True}
+result: Mapping[str, bool] = {"ok": True}
 process_dict(result)  # Type error: dict is invariant
 
 # ✅ COVARIANT - CORRECT
@@ -422,7 +422,7 @@ from collections.abc import Mapping
 def process_mapping(data: Mapping[str, m.Core.ValueModel]) -> None: ...
 
 
-result: dict[str, bool] = {"ok": True}
+result: Mapping[str, bool] = {"ok": True}
 process_mapping(result)  # OK: Mapping is covariant
 ```
 
@@ -432,14 +432,14 @@ process_mapping(result)  # OK: Mapping is covariant
 # ✅ CORRECT: Return type uses covariant Mapping
 @runtime_checkable
 class DataProvider(Protocol):
-    def get_attributes(self) -> Mapping[str, list[str]]:
+    def get_attributes(self) -> Mapping[str, Sequence[str]]:
         """Returns read-only attributes - covariant."""
         ...
 
 
 # Implementation can return more specific dict type
 class MyProvider:
-    def get_attributes(self) -> dict[str, list[str]]:
+    def get_attributes(self) -> Mapping[str, Sequence[str]]:
         return {"cn": ["test"], "mail": ["user@example.com"]}
 
 
@@ -634,11 +634,11 @@ def track_progress(callback: ProgressCallback) -> None:
 ```python
 @runtime_checkable
 class AttributeProvider(Protocol):
-    def get_attributes(self) -> dict[str, list[str]]: ...
+    def get_attributes(self) -> Mapping[str, Sequence[str]]: ...
 
 
-# Can only accept exact dict[str, list[str]]
-result: dict[str, bool] = {"ok": True}
+# Can only accept exact Mapping[str, Sequence[str]]
+result: Mapping[str, bool] = {"ok": True}
 provider.get_attributes()  # May fail type check
 ```
 
@@ -651,7 +651,7 @@ class AttributeProvider(Protocol):
 
 
 # Can accept any dict subtype or Mapping implementation
-result: dict[str, bool] = {"ok": True}
+result: Mapping[str, bool] = {"ok": True}
 provider.get_attributes()  # Works with covariance
 ```
 
@@ -667,11 +667,13 @@ provider.get_attributes()  # Works with covariance
 # typings.py (Tier 0)
 class FlextLdapTypes:
     class Ldap:
-        type ModifyChanges = dict[str, list[tuple[str, list[str]]]]
+        type ModifyChanges = Mapping[str, Sequence[tuple[str, Sequence[str]]]]
 
     class Ldap:
         class Operation:
-            type ModifyChanges = dict[str, list[tuple[str, list[str]]]]  # DUPLICATE
+            type ModifyChanges = Mapping[
+                str, Sequence[tuple[str, Sequence[str]]]
+            ]  # DUPLICATE
 
 
 # Confusion: Which one to use?
@@ -683,7 +685,7 @@ class FlextLdapTypes:
 # typings.py (Tier 0) - Single definition
 class FlextLdapTypes:
     class Ldap:
-        type ModifyChanges = dict[str, list[tuple[str, list[str]]]]
+        type ModifyChanges = Mapping[str, Sequence[tuple[str, Sequence[str]]]]
 
         # Backward compatibility (remove after 2-3 releases)
         class Operation:
@@ -741,7 +743,7 @@ def read_attributes(attrs: Mapping[str, Sequence[str]]) -> None:
 
 
 # ❌ WRONG: dict for read-only (invariant)
-def read_attributes(attrs: dict[str, list[str]]) -> None:
+def read_attributes(attrs: Mapping[str, Sequence[str]]) -> None:
     for key, values in attrs.items():
         print(f"{key}: {values}")
 ```

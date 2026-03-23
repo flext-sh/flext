@@ -39,6 +39,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
+
 # Rest of file follows
 ```
 
@@ -128,7 +130,7 @@ def process_data(
     *,
     validate: bool = True,
     timeout: int | None = None,
-) -> dict[str, Any]:
+) -> Mapping[str, Any]:
     """Process data from input file and return structured result.
 
     Longer description explaining what this function does,
@@ -179,7 +181,7 @@ def iter_directory_python_files(
     *,
     pattern: str | None = None,
     skip_pycache: bool = True,
-) -> list[Path]:
+) -> Sequence[Path]:
     """Iterate Python files in a single directory tree.
 
     Scoped to one directory (project src, subdirectory, etc.) — unlike
@@ -333,7 +335,7 @@ async def fetch_data(url: str, timeout: int = 30) -> bytes:
 ```python
 def configure(
     mode: str,
-    options: dict[str, Any] | None = None,
+    options: Mapping[str, Any] | None = None,
     verbosity: int = 1,
 ) -> None:
     """Configure processor behavior.
@@ -390,7 +392,7 @@ def _validate_email(addr: str) -> bool:
 
 ### Document (public):
 ```python
-def search(query: str, limit: int = 10) -> list[Result]:
+def search(query: str, limit: int = 10) -> Sequence[Result]:
     """Search index with query, return up to limit results."""
 
 

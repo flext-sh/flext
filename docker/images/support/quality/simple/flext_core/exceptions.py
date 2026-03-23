@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Any
 
 
 class Error(Exception):
     """Base flext exception."""
 
-    def __init__(self, message: str, context: dict[str, Any] | None = None) -> None:
+    def __init__(self, message: str, context: Mapping[str, Any] | None = None) -> None:
         """Initialize error."""
         super().__init__(message)
         self.context = context or {}

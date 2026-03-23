@@ -41,7 +41,7 @@ the function is called. Instead, instantiate it once, and reuse it.
 
 
     def my_func():
-        adapter = TypeAdapter(list[int])
+        adapter = TypeAdapter(Sequence[int])
         # do something with adapter
     ```
 
@@ -50,7 +50,7 @@ the function is called. Instead, instantiate it once, and reuse it.
     ```python {lint="skip"}
     from pydantic import TypeAdapter
 
-    adapter = TypeAdapter(list[int])
+    adapter = TypeAdapter(Sequence[int])
 
 
     def my_func():
@@ -119,7 +119,7 @@ from pydantic import BaseModel, Field
 class DivModel(BaseModel):
     el_type: Literal["div"] = "div"
     class_name: str | None = None
-    children: list[Any] | None = None
+    children: Sequence[Any] | None = None
 
 
 class SpanModel(BaseModel):
@@ -204,13 +204,13 @@ from typing import Annotated
 
 from pydantic import FailFast, TypeAdapter, ValidationError
 
-ta = TypeAdapter(Annotated[list[bool], FailFast()])
+ta = TypeAdapter(Annotated[Sequence[bool], FailFast()])
 try:
     ta.validate_python([True, "invalid", False, "also invalid"])
 except ValidationError as exc:
     print(exc)
     """
-    1 validation error for list[bool]
+    1 validation error for Sequence[bool]
     1
       Input should be a valid boolean, unable to interpret input [type=bool_parsing, input_value='invalid', input_type=str]
     """

@@ -221,11 +221,11 @@ make validate FIX=1
 ### Pattern A: Replacing dict with ConfigMap
 
 ```python
-# Before (FORBIDDEN — `Any` and `dict[str, Any]` are axiomatic violations)
+# Before (FORBIDDEN — `Any` and `Mapping[str, Any]` are axiomatic violations)
 from typing import Any  # ← FORBIDDEN import
 
 
-def configure(self, config: dict[str, Any]) -> None: ...  # ← FORBIDDEN type
+def configure(self, config: Mapping[str, Any]) -> None: ...  # ← FORBIDDEN type
 
 
 # After

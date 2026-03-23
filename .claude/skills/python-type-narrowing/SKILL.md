@@ -76,15 +76,15 @@ def get_name(user: User | None) -> str:
 from typing import TypeIs
 
 
-def is_str_list(val: list[str | int]) -> TypeIs[list[str]]:
+def is_str_list(val: Sequence[str | int]) -> TypeIs[Sequence[str]]:
     return all(isinstance(x, str) for x in val)
 
 
-def process(data: list[str | int]) -> None:
+def process(data: Sequence[str | int]) -> None:
     if is_str_list(data):
-        print(data[0].upper())  # narrowed: list[str]
+        print(data[0].upper())  # narrowed: Sequence[str]
     else:
-        pass  # narrowed: list[str | int] (both branches!)
+        pass  # narrowed: Sequence[str | int] (both branches!)
 ```
 
 ### TypeGuard (Python 3.10+)

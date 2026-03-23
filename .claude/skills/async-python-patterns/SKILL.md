@@ -66,16 +66,16 @@ async def fetch_user(user_id: str) -> r[User]:
 ### Concurrent Execution with gather
 
 ```python
-async def fetch_all_users(ids: list[str]) -> r[list[User]]:
+async def fetch_all_users(ids: Sequence[str]) -> r[Sequence[User]]:
     tasks = [fetch_user(uid) for uid in ids]
     results = await asyncio.gather(*tasks, return_exceptions=True)
     users = []
     for res in results:
         if isinstance(res, Exception):
-            return r[list[User]].fail(str(res))
+            return r[Sequence[User]].fail(str(res))
         if res.is_success:
             users.append(res.value)
-    return r[list[User]].ok(users)
+    return r[Sequence[User]].ok(users)
 ```
 
 ### Rate-Limited API Calls
@@ -112,13 +112,13 @@ class AsyncDBConnection:
 ### Producer-Consumer with Queue
 
 ```python
-async def producer(queue: asyncio.Queue[str], items: list[str]) -> None:
+async def producer(queue: asyncio.Queue[str], items: Sequence[str]) -> None:
     for item in items:
         await queue.put(item)
     await queue.put(None)
 
 
-async def consumer(queue: asyncio.Queue[str | None]) -> list[str]:
+async def consumer(queue: asyncio.Queue[str | None]) -> Sequence[str]:
     results = []
     while (item := await queue.get()) is not None:
         results.append(await process(item))
@@ -150,7 +150,7 @@ async def with_timeout(coro: Awaitable[T], seconds: float) -> r[T]:
 Good:
 
 ```python
-async def process_batch(ids: list[str]) -> r[list[Result]]:
+async def process_batch(ids: Sequence[str]) -> r[Sequence[Result]]:
     tasks = [process_one(i) for i in ids]
     return await asyncio.gather(*tasks)
 ```
@@ -160,7 +160,7 @@ Why good: concurrent execution of independent I/O operations.
 Bad:
 
 ```python
-async def process_batch(ids: list[str]) -> list[Result]:
+async def process_batch(ids: Sequence[str]) -> Sequence[Result]:
     results = []
     for i in ids:
         results.append(await process_one(i))

@@ -57,7 +57,7 @@ url = "https://jsonplaceholder.typicode.com/users/"  # (1)!
 response = httpx.get(url)
 response.raise_for_status()
 
-users_list_adapter = TypeAdapter(list[User])
+users_list_adapter = TypeAdapter(Sequence[User])
 
 users = users_list_adapter.validate_python(response.json())
 pprint([u.name for u in users])

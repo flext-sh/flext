@@ -123,10 +123,10 @@ with FlextLogger.Context.scoped_context(operation="user_sync"):
 
 ```python
 _scoped_contexts: ClassVar[
-    dict[str, dict[str, t.NormalizedValue]]
+    Mapping[str, Mapping[str, t.NormalizedValue]]
 ]  # {scope: {key: value}}
 _level_contexts: ClassVar[
-    dict[str, dict[str, t.NormalizedValue]]
+    Mapping[str, Mapping[str, t.NormalizedValue]]
 ]  # {level: {key: value}}
 ```
 

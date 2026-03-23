@@ -1272,7 +1272,7 @@ def gen():
 
 
 class Model(BaseModel):
-    x: list[int]
+    x: Sequence[int]
 
 
 try:
@@ -1367,7 +1367,7 @@ from pydantic import BaseModel, ValidationError
 
 
 class Model(BaseModel):
-    x: list[int]
+    x: Sequence[int]
 
 
 try:
@@ -1426,7 +1426,7 @@ class BadMapping(Mapping):
 
 
 class Model(BaseModel):
-    x: dict[str, str]
+    x: Mapping[str, str]
 
 
 try:
@@ -1732,7 +1732,7 @@ from pydantic import BaseModel, ValidationError
 
 
 class Model(BaseModel):
-    x: list["Model"]
+    x: Sequence["Model"]
 
 
 d = {"x": []}
@@ -2051,7 +2051,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 
 class Model(BaseModel):
-    x: list[int] = Field(max_length=3)
+    x: Sequence[int] = Field(max_length=3)
 
 
 try:
@@ -2070,7 +2070,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 
 class Model(BaseModel):
-    x: list[int] = Field(min_length=3)
+    x: Sequence[int] = Field(min_length=3)
 
 
 try:

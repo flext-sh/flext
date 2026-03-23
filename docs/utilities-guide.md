@@ -110,8 +110,8 @@ def to_str_list_safe(
     value: m.Core.ListInputModel,
     *,
     filter_list_like: bool = True,
-) -> list[str]:
-    """Convert value to list[str] with safe nested list handling."""
+) -> Sequence[str]:
+    """Convert value to Sequence[str] with safe nested list handling."""
 ```
 
 **Usage**:
@@ -148,8 +148,8 @@ result = u.to_str_list_safe(["a", ["b"]], filter_list_like=False)
 @staticmethod
 def to_str_list_truthy(
     value: m.Core.ListInputModel,
-) -> list[str]:
-    """Convert value to list[str] filtering out falsy values."""
+) -> Sequence[str]:
+    """Convert value to Sequence[str] filtering out falsy values."""
 ```
 
 **Usage**:

@@ -124,8 +124,8 @@ from pydantic import BaseModel, Field
 
 
 class RetryConfiguration(BaseModel):
-    retry_on_status_codes: list[int] = Field(default_factory=list)
-    metadata: dict[str, str] = Field(default_factory=dict)
+    retry_on_status_codes: Sequence[int] = Field(default_factory=list)
+    metadata: Mapping[str, str] = Field(default_factory=dict)
     tags: set[str] = Field(default_factory=set)
 ```
 
@@ -136,7 +136,7 @@ class RetryConfiguration(BaseModel):
 ```python
 # ✗ WRONG — Shared mutable default
 class Config(BaseModel):
-    items: list[str] = Field(default=[])  # BUG: all instances share same list
+    items: Sequence[str] = Field(default=[])  # BUG: all instances share same list
 ```
 
 **Correct**:
@@ -144,7 +144,7 @@ class Config(BaseModel):
 ```python
 # ✓ CORRECT — New list per instance
 class Config(BaseModel):
-    items: list[str] = Field(default_factory=list)
+    items: Sequence[str] = Field(default_factory=list)
 ```
 
 **Repository anchors**:
@@ -163,8 +163,8 @@ from pydantic import BaseModel, Field, TypeAdapter
 
 
 class ValidationHelpers(BaseModel):
-    _tags_adapter: ClassVar[TypeAdapter[list[str]] | None] = None
-    _list_adapter: ClassVar[TypeAdapter[list[t.Container]] | None] = None
+    _tags_adapter: ClassVar[TypeAdapter[Sequence[str]] | None] = None
+    _list_adapter: ClassVar[TypeAdapter[Sequence[t.Container]] | None] = None
     _strict_string_adapter: ClassVar[
         TypeAdapter[Annotated[str, Field(strict=True)]] | None
     ] = None
@@ -172,18 +172,20 @@ class ValidationHelpers(BaseModel):
         TypeAdapter[Mapping[str, t.MetadataValue]] | None
     ] = None
     _config_adapter: ClassVar[TypeAdapter[Mapping[str, t.Container]] | None] = None
-    _dict_container_adapter: ClassVar[TypeAdapter[dict[str, t.Container]] | None] = None
-    _list_container_adapter: ClassVar[TypeAdapter[list[t.Container]] | None] = None
+    _dict_container_adapter: ClassVar[TypeAdapter[Mapping[str, t.Container]] | None] = (
+        None
+    )
+    _list_container_adapter: ClassVar[TypeAdapter[Sequence[t.Container]] | None] = None
     _tuple_container_adapter: ClassVar[TypeAdapter[tuple[t.Container, ...]] | None] = (
         None
     )
     _primitives_adapter: ClassVar[TypeAdapter[t.Primitives] | None] = None
     _dict_str_metadata_adapter: ClassVar[
-        TypeAdapter[dict[str, t.MetadataValue | None]] | None
+        TypeAdapter[Mapping[str, t.MetadataValue | None]] | None
     ] = None
-    _list_serializable_adapter: ClassVar[TypeAdapter[list[t.Serializable]] | None] = (
-        None
-    )
+    _list_serializable_adapter: ClassVar[
+        TypeAdapter[Sequence[t.Serializable]] | None
+    ] = None
     _tuple_serializable_adapter: ClassVar[
         TypeAdapter[tuple[t.Serializable, ...]] | None
     ] = None
@@ -191,28 +193,30 @@ class ValidationHelpers(BaseModel):
     _set_str_adapter: ClassVar[TypeAdapter[set[str]] | None] = None
     _set_scalar_adapter: ClassVar[TypeAdapter[set[t.Scalar]] | None] = None
     _sortable_dict_adapter: ClassVar[
-        TypeAdapter[dict[t.SortableObjectType, t.Serializable | None]] | None
+        TypeAdapter[Mapping[t.SortableObjectType, t.Serializable | None]] | None
     ] = None
-    _strict_json_list_adapter: ClassVar[TypeAdapter[list[t.StrictValue]] | None] = None
+    _strict_json_list_adapter: ClassVar[TypeAdapter[Sequence[t.StrictValue]] | None] = (
+        None
+    )
     _strict_json_scalar_adapter: ClassVar[TypeAdapter[t.Scalar] | None] = None
     _scalar_adapter: ClassVar[TypeAdapter[t.Scalar] | None] = None
     _float_adapter: ClassVar[TypeAdapter[float] | None] = None
     _str_adapter: ClassVar[TypeAdapter[str] | None] = None
-    _str_list_adapter: ClassVar[TypeAdapter[list[str]] | None] = None
+    _str_list_adapter: ClassVar[TypeAdapter[Sequence[str]] | None] = None
     _str_or_bytes_adapter: ClassVar[TypeAdapter[str | bytes] | None] = None
     _enum_type_adapter: ClassVar[TypeAdapter[type[StrEnum]] | None] = None
     _serializable_adapter: ClassVar[TypeAdapter[t.Serializable] | None] = None
     _metadata_json_dict_adapter: ClassVar[
-        TypeAdapter[dict[str, t.Primitives]] | None
+        TypeAdapter[Mapping[str, t.Primitives]] | None
     ] = None
     _flat_metadata_dict_adapter: ClassVar[
-        TypeAdapter[dict[str, t.Primitives]] | None
+        TypeAdapter[Mapping[str, t.Primitives]] | None
     ] = None
 
     @classmethod
-    def get_tags_adapter(cls) -> TypeAdapter[list[str]]:
+    def get_tags_adapter(cls) -> TypeAdapter[Sequence[str]]:
         if cls._tags_adapter is None:
-            cls._tags_adapter = TypeAdapter(list[str])
+            cls._tags_adapter = TypeAdapter(Sequence[str])
         return cls._tags_adapter
 ```
 
@@ -222,8 +226,8 @@ class ValidationHelpers(BaseModel):
 
 ```python
 # ✗ WRONG — Creates new TypeAdapter on every call
-def validate_tags(self, tags) -> list[str]:
-    adapter = TypeAdapter(list[str])  # EXPENSIVE
+def validate_tags(self, tags) -> Sequence[str]:
+    adapter = TypeAdapter(Sequence[str])  # EXPENSIVE
     return adapter.validate_python(tags)
 ```
 
@@ -231,17 +235,17 @@ def validate_tags(self, tags) -> list[str]:
 
 ```python
 # ✓ CORRECT — Cached TypeAdapter
-_tags_adapter: ClassVar[TypeAdapter[list[str]] | None] = None
+_tags_adapter: ClassVar[TypeAdapter[Sequence[str]] | None] = None
 
 
 @classmethod
-def get_tags_adapter(cls) -> TypeAdapter[list[str]]:
+def get_tags_adapter(cls) -> TypeAdapter[Sequence[str]]:
     if cls._tags_adapter is None:
-        cls._tags_adapter = TypeAdapter(list[str])
+        cls._tags_adapter = TypeAdapter(Sequence[str])
     return cls._tags_adapter
 
 
-def validate_tags(self, tags) -> list[str]:
+def validate_tags(self, tags) -> Sequence[str]:
     return self.get_tags_adapter().validate_python(tags)
 ```
 
@@ -650,7 +654,7 @@ class User(BaseModel):
             examples=["alice@example.com"],
         ),
     ]
-    tags: list[str] = Field(
+    tags: Sequence[str] = Field(
         default_factory=list,
         description="User tags",
     )
@@ -670,7 +674,7 @@ class User(BaseModel):
 
     name: str  # ✗ No Field() metadata
     email: str  # ✗ No validation
-    tags: list[str] = []  # ✗ Mutable default bug
+    tags: Sequence[str] = []  # ✗ Mutable default bug
 ```
 
 Why bad: v1 `Config` class, no `Field()` metadata, mutable default bug.

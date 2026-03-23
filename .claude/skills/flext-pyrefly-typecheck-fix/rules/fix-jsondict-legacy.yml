@@ -1,5 +1,5 @@
 id: fix-jsondict-legacy
 language: python
 rule:
-  pattern: dict[str, t.NormalizedValue]
+  pattern: Mapping[str, t.NormalizedValue]
 fix

@@ -110,7 +110,7 @@ def validate_non_empty(v: str) -> str:
     return cleaned
 
 
-def normalize_to_list(v) -> list[t.NormalizedValue]:
+def normalize_to_list(v) -> Sequence[t.NormalizedValue]:
     if isinstance(v, list):
         return v
     if isinstance(v, (tuple, set)):
@@ -130,7 +130,9 @@ def validate_uuid_string(v: str) -> str:
 
 StrippedString = Annotated[str, AfterValidator(strip_whitespace)]
 ValidatedString = Annotated[str, AfterValidator(validate_non_empty)]
-NormalizedList = Annotated[list[t.NormalizedValue], BeforeValidator(normalize_to_list)]
+NormalizedList = Annotated[
+    Sequence[t.NormalizedValue], BeforeValidator(normalize_to_list)
+]
 UUIDStr = Annotated[str, PlainValidator(validate_uuid_string)]
 ```
 
@@ -153,11 +155,11 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class Metadata(BaseModel):
-    attributes: dict[str, t.NormalizedValue] = Field(default_factory=dict)
+    attributes: Mapping[str, t.NormalizedValue] = Field(default_factory=dict)
 
     @field_validator("attributes", mode="before")
     @classmethod
-    def normalize_attributes(cls, value) -> dict[str, t.NormalizedValue]:
+    def normalize_attributes(cls, value) -> Mapping[str, t.NormalizedValue]:
         if value is None:
             return {}
         if isinstance(value, BaseModel):
@@ -187,11 +189,11 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class RetryConfiguration(BaseModel):
-    retry_on_status_codes: list[int] = Field(default_factory=list)
+    retry_on_status_codes: Sequence[int] = Field(default_factory=list)
 
     @field_validator("retry_on_status_codes", mode="after")
     @classmethod
-    def validate_status_codes(cls, values: list[int]) -> list[int]:
+    def validate_status_codes(cls, values: Sequence[int]) -> Sequence[int]:
         for code in values:
             if code < 100 or code > 599:
                 raise ValueError(f"Invalid HTTP status code: {code}")
@@ -280,8 +282,8 @@ from pydantic import BaseModel, Field, computed_field
 
 
 class RegistrationSummary(BaseModel):
-    registered: list[str] = Field(default_factory=list)
-    errors: list[str] = Field(default_factory=list)
+    registered: Sequence[str] = Field(default_factory=list)
+    errors: Sequence[str] = Field(default_factory=list)
 
     @computed_field
     def is_success(self) -> bool:
@@ -383,7 +385,7 @@ class FailureResult(BaseModel):
 class PartialResult(BaseModel):
     result_type: Literal["partial"] = "partial"
     value
-    warnings: list[str]
+    warnings: Sequence[str]
 
 
 OperationResult = Annotated[
@@ -543,7 +545,7 @@ from pydantic import TypeAdapter
 
 def serialize_runtime(
     value, type_: type[t.NormalizedValue]
-) -> dict[str, t.NormalizedValue]:
+) -> Mapping[str, t.NormalizedValue]:
     adapter = TypeAdapter(type_)
     dumped = adapter.dump_python(value, mode="json")
     if isinstance(dumped, dict):
@@ -584,10 +586,10 @@ from pathlib import Path
 from pydantic import TypeAdapter
 
 
-def load_fixture(path: Path) -> dict[str, t.NormalizedValue]:
+def load_fixture(path: Path) -> Mapping[str, t.NormalizedValue]:
     with path.open(encoding="utf-8") as f:
         payload = json.load(f)
-    adapter = TypeAdapter(dict[str, t.NormalizedValue])
+    adapter = TypeAdapter(Mapping[str, t.NormalizedValue])
     return adapter.validate_python(payload)
 ```
 

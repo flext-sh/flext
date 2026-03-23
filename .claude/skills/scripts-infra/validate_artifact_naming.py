@@ -8,6 +8,7 @@ import argparse
 import json
 import re
 import sys
+from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar
 
@@ -58,7 +59,7 @@ def validate_artifact_name(filename: str) -> bool:
     return bool(ARTIFACT_PATTERN.match(filename))
 
 
-def parse_args(argv: list[str]) -> argparse.Namespace:
+def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     """parse_args function."""
     parser = argparse.ArgumentParser(
         description=(
@@ -106,7 +107,7 @@ def should_validate(path: Path, reports_root: Path) -> bool:
     return top_dir in VALIDATED_TOP_DIRS
 
 
-def collect_artifacts(reports_root: Path) -> list[Path]:
+def collect_artifacts(reports_root: Path) -> Sequence[Path]:
     """collect_artifacts function."""
     if not reports_root.exists():
         return []
@@ -144,10 +145,10 @@ def validate(
     *,
     repo_root: Path,
     reports_root: Path,
-) -> list[NamingViolation]:
+) -> Sequence[NamingViolation]:
     """Validate function."""
     artifacts = collect_artifacts(reports_root)
-    violations: list[NamingViolation] = []
+    violations: Sequence[NamingViolation] = []
 
     eprint("Artifact Naming Validation")
     eprint(f"Scanned artifacts: {len(artifacts)}")
@@ -178,7 +179,7 @@ def validate(
     return violations
 
 
-def write_report(report_path: Path, violations: list[NamingViolation]) -> None:
+def write_report(report_path: Path, violations: Sequence[NamingViolation]) -> None:
     """write_report function."""
     payload = {
         "total_violations": len(violations),
@@ -204,7 +205,7 @@ def write_report(report_path: Path, violations: list[NamingViolation]) -> None:
         raise InfraError(msg) from exc
 
 
-def run_main(argv: list[str]) -> int:
+def run_main(argv: Sequence[str]) -> int:
     """run_main function."""
     violation_count = 0
     try:

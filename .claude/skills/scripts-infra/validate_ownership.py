@@ -10,6 +10,7 @@ import operator
 import re
 import subprocess
 import sys
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import ClassVar
 
@@ -63,7 +64,7 @@ def eprint(message: str) -> None:
     print(message, file=sys.stderr)
 
 
-def parse_args(argv: list[str]) -> argparse.Namespace:
+def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     """parse_args function."""
     parser = argparse.ArgumentParser(
         description=(
@@ -85,7 +86,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def tracked_scripts(repo_root: Path) -> list[Path]:
+def tracked_scripts(repo_root: Path) -> Sequence[Path]:
     """tracked_scripts function."""
     result = subprocess.run(
         [
@@ -105,7 +106,7 @@ def tracked_scripts(repo_root: Path) -> list[Path]:
     if result.returncode != 0:
         raise SkillInfraError(result.stderr.strip() or "git ls-files failed")
 
-    scripts: list[Path] = []
+    scripts: Sequence[Path] = []
     for line in sorted(set(result.stdout.splitlines())):
         if not line.strip():
             continue
@@ -118,7 +119,7 @@ def tracked_scripts(repo_root: Path) -> list[Path]:
     return scripts
 
 
-def read_header(repo_root: Path, script_path: Path) -> list[str]:
+def read_header(repo_root: Path, script_path: Path) -> Sequence[str]:
     """read_header function."""
     full_path = repo_root / script_path
     try:
@@ -145,7 +146,7 @@ def scripts_section(skill_file: Path) -> str:
 
     lines = content.splitlines()
     in_section = False
-    section_lines: list[str] = []
+    section_lines: Sequence[str] = []
 
     for line in lines:
         if line.startswith("## "):
@@ -205,7 +206,7 @@ def candidate_skill(script_path: Path) -> str:
 def validate_script(
     repo_root: Path,
     script_path: Path,
-) -> tuple[ScriptCheckResult, dict[str, str] | None]:
+) -> tuple[ScriptCheckResult, Mapping[str, str] | None]:
     """validate_script function."""
     header = read_header(repo_root, script_path)
     markers = [match for line in header if (match := OWNER_MARKER_RE.match(line))]
@@ -285,7 +286,7 @@ def status_color(status: str) -> str:
     return Ansi.RED
 
 
-def print_table(results: list[ScriptCheckResult]) -> None:
+def print_table(results: Sequence[ScriptCheckResult]) -> None:
     """print_table function."""
     eprint(f"{Ansi.CYAN}Script Ownership Validation{Ansi.RESET}")
     eprint(f"{Ansi.CYAN}{'SCRIPT':<55} {'STATUS':<10} DETAILS{Ansi.RESET}")
@@ -298,7 +299,7 @@ def print_table(results: list[ScriptCheckResult]) -> None:
 
 def write_candidates(
     repo_root: Path,
-    candidates: list[dict[str, str]],
+    candidates: Sequence[Mapping[str, str]],
 ) -> Path:
     """write_candidates function."""
     report_path = repo_root / ".claude" / "skills" / "scripts-infra" / "report.json"
@@ -318,7 +319,7 @@ def write_candidates(
     return report_path
 
 
-def run_main(argv: list[str]) -> int:
+def run_main(argv: Sequence[str]) -> int:
     """run_main function."""
     try:
         args = parse_args(argv)
@@ -338,8 +339,8 @@ def run_main(argv: list[str]) -> int:
     try:
         scripts = tracked_scripts(repo_root)
 
-        results: list[ScriptCheckResult] = []
-        candidates: list[dict[str, str]] = []
+        results: Sequence[ScriptCheckResult] = []
+        candidates: Sequence[Mapping[str, str]] = []
         for script in scripts:
             result, candidate = validate_script(repo_root, script)
             results.append(result)

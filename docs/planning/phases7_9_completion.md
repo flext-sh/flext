@@ -67,6 +67,8 @@ Expand the test guards created in Phase 1 with project-specific guards:
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
+
 from typing import TypeGuard
 
 

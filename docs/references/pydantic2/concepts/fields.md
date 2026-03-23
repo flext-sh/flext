@@ -96,7 +96,7 @@ The annotated pattern can also be used to add metadata to specific parts of the 
 
 
     class Model(BaseModel):
-        int_list: list[Annotated[int, Field(gt=0)]]
+        int_list: Sequence[Annotated[int, Field(gt=0)]]
         # Valid: [1, 3]
         # Invalid: [-1, 2]
     ```
@@ -242,7 +242,7 @@ from pydantic import BaseModel
 
 
 class Model(BaseModel):
-    item_counts: list[dict[str, int]] = [{}]
+    item_counts: Sequence[Mapping[str, int]] = [{}]
 
 
 m1 = Model()

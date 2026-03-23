@@ -43,7 +43,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 - Keep recursive/general value aliases compatible with existing boundaries.
 - Preserve generic covariance/contravariance semantics where defined.
 - Keep exported short aliases (`t`, `r`) stable across refactors.
-- **AXIOMATIC**: `Any`, `t.NormalizedValue`, and `dict[str, Any]` are TOTALLY FORBIDDEN in type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. Inline composed types are FORBIDDEN in all 33 projects — use `t.*` references only.
+- **AXIOMATIC**: `Any`, `t.NormalizedValue`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN in type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. Inline composed types are FORBIDDEN in all 33 projects — use `t.*` references only.
 - **AXIOMATIC**: `| None` MUST NEVER appear in type alias definitions in `typings.py`. Type aliases are ALWAYS non-nullable. Consumers add `| None` inline at usage sites when business requires it (e.g., `field: t.Scalar | None`). No `NullableX` or `OptionalX` aliases.
 - **AXIOMATIC**: Duplicating type definitions from the MRO chain is FORBIDDEN — even inside subproject `FlextTypes` nested classes. One definition, one source of truth. Compatibility aliases (`X = t.Y`) are FORBIDDEN.
 - **AXIOMATIC**: `r` (`r`) is the SOLE mechanism for expressing fallibility. Functions that can fail MUST return `r[T]` — never `T | None`, never bare exceptions, never ad-hoc error dicts. The `r` alias (`from flext_core import r`) is MANDATORY at all usage sites. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace `if result is None` / `try/except` chains. `r` eliminates `| None` return types from the business layer.
@@ -93,9 +93,11 @@ m = FlextTargetOracleModels
 
 | Approach                                            | Problem                                                              |
 | --------------------------------------------------- | -------------------------------------------------------------------- |
-| `Meltano = FlextMeltanoModels.Meltano` (assignment) | mypy `name-defined` error with `from __future__ import annotations`  |
-| Per-type subclasses inside `class Meltano:`         | Invariance errors: `list[SubType]` ≠ `list[ParentType]`              |
-| `from flext_meltano import m as m`          | Anti-pattern: duplicates namespace surface, adds unnecessary aliases |
+| `Meltano = FlextMeltanoModels.Meltano` (assignment) | mypy `name-defined` error with `from **future** import annotations
+
+from collections.abc import Mapping, Sequence` |
+| Per-type subclasses inside `class Meltano:` | Invariance errors: `Sequence[SubType]` ≠ `Sequence[ParentType]` |
+| `from flext_meltano import m as m`| Anti-pattern: duplicates namespace surface, adds unnecessary aliases |
 | Top-level inheritance (`class Models(Parent):`)     | ✅ Clean MRO, zero duplication, exact same types                     |
 
 **Anti-patterns (NEVER):**

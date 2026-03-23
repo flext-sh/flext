@@ -9,6 +9,7 @@ import json
 import re
 import subprocess
 import sys
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import ClassVar
 
@@ -83,7 +84,7 @@ class ScriptInfo(BaseModel):
     path: str = Field(description="Script file path")
     extension: str = Field(description="File extension (.py or .sh)")
     role: str = Field(description="Script role (validator, fixer, or other)")
-    violations: list[Violation] = Field(
+    violations: Sequence[Violation] = Field(
         default_factory=list,
         description="List of validation violations",
     )
@@ -94,7 +95,7 @@ def eprint(message: str) -> None:
     print(message, file=sys.stderr)
 
 
-def parse_args(argv: list[str]) -> argparse.Namespace:
+def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     """parse_args function."""
     parser = argparse.ArgumentParser(
         description="Validate gate contract conformance for validator/fixer scripts.",
@@ -117,7 +118,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def tracked_scripts(root: Path) -> list[Path]:
+def tracked_scripts(root: Path) -> Sequence[Path]:
     """tracked_scripts function."""
     scripts_root = root / "scripts"
     if not scripts_root.exists() or not scripts_root.is_dir():
@@ -142,7 +143,7 @@ def tracked_scripts(root: Path) -> list[Path]:
         stderr = (result.stderr or "").strip()
         raise InfraError(stderr or "git ls-files failed")
 
-    scripts: list[Path] = []
+    scripts: Sequence[Path] = []
     for line in sorted(set(result.stdout.splitlines())):
         rel = line.strip()
         if not rel:
@@ -181,7 +182,7 @@ def read_content(root: Path, script_path: Path) -> str:
         return ""
 
 
-def read_header(content: str) -> list[str]:
+def read_header(content: str) -> Sequence[str]:
     """read_header function."""
     return content.splitlines()[:MAX_HEADER_LINES]
 
@@ -201,7 +202,7 @@ def count_code_lines(content: str, extension: str) -> int:
     return count
 
 
-def check_shebang(header: list[str], extension: str) -> Violation | None:
+def check_shebang(header: Sequence[str], extension: str) -> Violation | None:
     """check_shebang function."""
     if not header:
         return Violation(
@@ -230,7 +231,7 @@ def check_shebang(header: list[str], extension: str) -> Violation | None:
     return None
 
 
-def check_owner_marker(header: list[str]) -> Violation | None:
+def check_owner_marker(header: Sequence[str]) -> Violation | None:
     """check_owner_marker function."""
     for line in header:
         if OWNER_MARKER_RE.match(line):
@@ -242,12 +243,12 @@ def check_owner_marker(header: list[str]) -> Violation | None:
     )
 
 
-def check_exit_codes(content: str, extension: str) -> list[Violation]:
+def check_exit_codes(content: str, extension: str) -> Sequence[Violation]:
     """check_exit_codes function."""
     if extension != ".sh":
         return []
 
-    violations: list[Violation] = []
+    violations: Sequence[Violation] = []
     for i, line in enumerate(content.splitlines(), 1):
         match = BASH_EXIT_RE.match(line)
         if not match:
@@ -268,13 +269,13 @@ def check_interactive(
     content: str,
     extension: str,
     script_path: str,
-) -> list[Violation]:
+) -> Sequence[Violation]:
     """check_interactive function."""
     _ = script_path
     if INTERACTIVE_GATE_RE.search(content):
         return []
 
-    violations: list[Violation] = []
+    violations: Sequence[Violation] = []
     pattern = INTERACTIVE_PY_RE if extension == ".py" else INTERACTIVE_SH_RE
 
     for i, line in enumerate(content.splitlines(), 1):
@@ -295,9 +296,9 @@ def check_interactive(
     return violations
 
 
-def check_artifact_naming(content: str) -> list[Violation]:
+def check_artifact_naming(content: str) -> Sequence[Violation]:
     """check_artifact_naming function."""
-    violations: list[Violation] = []
+    violations: Sequence[Violation] = []
     for i, line in enumerate(content.splitlines(), 1):
         for match in REPORTS_PATH_RE.finditer(line):
             filename = Path(match.group(1)).name
@@ -423,7 +424,7 @@ def validate_script(root: Path, script_path: Path, *, check_all: bool) -> Script
     return info
 
 
-def print_results(scripts: list[ScriptInfo]) -> None:
+def print_results(scripts: Sequence[ScriptInfo]) -> None:
     """print_results function."""
     eprint(f"{Ansi.CYAN}Gate Contract Validation{Ansi.RESET}")
     eprint(f"{Ansi.CYAN}{'SCRIPT':<60} {'ROLE':<10} {'STATUS':<10} DETAILS{Ansi.RESET}")
@@ -442,7 +443,7 @@ def print_results(scripts: list[ScriptInfo]) -> None:
         else:
             status = f"{Ansi.GREEN}OK{Ansi.RESET}"
 
-        detail_parts: list[str] = []
+        detail_parts: Sequence[str] = []
         if errors:
             detail_parts.append(f"{len(errors)} error(s)")
         if warnings:
@@ -461,12 +462,12 @@ def report_path_for(root: Path) -> Path:
     return root / ".claude" / "skills" / "scripts-infra" / "report.json"
 
 
-def write_report(root: Path, scripts: list[ScriptInfo], mode: str) -> Path:
+def write_report(root: Path, scripts: Sequence[ScriptInfo], mode: str) -> Path:
     """write_report function."""
     report_path = report_path_for(root)
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
-    all_violations: list[dict[str, str]] = []
+    all_violations: Sequence[Mapping[str, str]] = []
     for script in scripts:
         all_violations.extend(
             {
@@ -484,7 +485,7 @@ def write_report(root: Path, scripts: list[ScriptInfo], mode: str) -> Path:
         1 for s in scripts for v in s.violations if v.severity == "warning"
     )
 
-    payload: dict[str, t.NormalizedValue] = {
+    payload: Mapping[str, t.NormalizedValue] = {
         "checked": checked_count,
         "errors": error_count,
         "mode": mode,
@@ -502,7 +503,7 @@ def write_report(root: Path, scripts: list[ScriptInfo], mode: str) -> Path:
     return report_path
 
 
-def run_main(argv: list[str]) -> tuple[int, int]:
+def run_main(argv: Sequence[str]) -> tuple[int, int]:
     """run_main function."""
     try:
         args = parse_args(argv)

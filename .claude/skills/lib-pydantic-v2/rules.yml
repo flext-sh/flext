@@ -28,6 +28,8 @@ rules:
     fix_auto: false
     fix_instruction:
       Remove model_rebuild() call entirely. Resolve forward references with from __future__ import annotations
+
+from collections.abc import Mapping, Sequence
       or protocol-based decoupling.
     file: rules/pydantic-model-rebuild-critical.yml
   - id: pydantic-v1-from-orm

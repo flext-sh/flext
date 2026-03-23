@@ -407,7 +407,7 @@ class Model2(BaseModel):
 
 
 class Model3(BaseModel):
-    list_of_even_numbers: list[DoubleNumber]  # (1)!
+    list_of_even_numbers: Sequence[DoubleNumber]  # (1)!
 ```
 
 1. As mentioned in the [annotated pattern](./fields.md#the-annotated-pattern) documentation,
@@ -499,7 +499,7 @@ As with [field serializers](#field-serializers), **two** different types of mode
           @model_serializer(mode="wrap")
           def serialize_model(
               self, handler: SerializerFunctionWrapHandler
-          ) -> dict[str, t.NormalizedValue]:
+          ) -> Mapping[str, t.NormalizedValue]:
               serialized = handler(self)
               serialized["fields"] = list(serialized)
               return serialized
@@ -834,7 +834,7 @@ class Hobby(BaseModel):
 
 
 class User(BaseModel):
-    hobbies: list[Hobby]
+    hobbies: Sequence[Hobby]
 
 
 user = User(

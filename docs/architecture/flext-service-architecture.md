@@ -1209,7 +1209,7 @@ pipeline = (
 
    ```python
    # ❌ NÃO CRIAR: factory é só duplicação
-   def parse_ldif(source: str) -> list[Entry]:
+   def parse_ldif(source: str) -> Sequence[Entry]:
        return ParseLdif(source=source).value
 
 
@@ -1414,7 +1414,7 @@ class p:
         def is_valid(self) -> bool: ...
         def validate_business_rules(self) -> r[bool]: ...
         def validate_config(self) -> r[bool]: ...
-        def get_service_info(self) -> dict[str, t.NormalizedValue]: ...
+        def get_service_info(self) -> Mapping[str, t.NormalizedValue]: ...
 
     @runtime_checkable
     class Repository[T](Protocol):
@@ -1429,8 +1429,8 @@ class p:
     class Configurable(Protocol):
         """Configuration protocol."""
 
-        def configure(self, config: dict[str, t.NormalizedValue]) -> r[bool]: ...
-        def get_config(self) -> dict[str, t.NormalizedValue]: ...
+        def configure(self, config: Mapping[str, t.NormalizedValue]) -> r[bool]: ...
+        def get_config(self) -> Mapping[str, t.NormalizedValue]: ...
 
     @runtime_checkable
     class ExecutableService(Protocol):
@@ -1811,7 +1811,7 @@ class MyService(FlextService[ResultType]):
     # ════════════════════════════════════════════════════════════
     param1: str = Field(min_length=1, description="Required parameter")
     param2: int = Field(gt=0, le=100, description="Range 1-100")
-    param3: list[str] = Field(default_factory=list)
+    param3: Sequence[str] = Field(default_factory=list)
 
     # Pydantic validators
     @field_validator("param1")
@@ -1883,7 +1883,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
         # Detect dependencies from __init__ signature
         try:
             init_signature = inspect.signature(cls.__init__)
-            dependencies: dict[str, t.NormalizedValue] = {}
+            dependencies: Mapping[str, t.NormalizedValue] = {}
 
             for param_name, param in init_signature.parameters.items():
                 if param_name not in ("self", "config", "data"):
@@ -1895,7 +1895,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 
                 def smart_factory(deps=dependencies):
                     """Factory with auto-injection."""
-                    resolved_deps: dict[str, t.NormalizedValue] = {}
+                    resolved_deps: Mapping[str, t.NormalizedValue] = {}
 
                     for dep_name, dep_type in deps.items():
                         # Try resolve from container
@@ -1939,7 +1939,7 @@ class UserService(FlextService[User]):
     def is_valid(self) -> bool:
         return True
 
-    def get_service_info(self) -> dict[str, t.NormalizedValue]:
+    def get_service_info(self) -> Mapping[str, t.NormalizedValue]:
         return {"service": "UserService"}
 
 
@@ -1979,7 +1979,7 @@ class DataPipelineService(FlextService[DataFrame]):
     """Data pipeline with railway pattern."""
 
     source_file: Path
-    transformations: list[str] = Field(default_factory=list)
+    transformations: Sequence[str] = Field(default_factory=list)
 
     def execute(self) -> r[DataFrame]:
         """Execute pipeline with railway pattern."""
@@ -2137,7 +2137,7 @@ class FlextApi(FlextService[m.Api.ResponseModel]):
 
     operation: Literal["get", "post", "put", "delete", "patch"]
     url: str
-    headers: dict[str, str] = Field(default_factory=dict)
+    headers: Mapping[str, str] = Field(default_factory=dict)
     body: m.Api.RequestBodyModel | None = None
     timeout: int = 30
 
@@ -2810,7 +2810,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
    class MyService(FlextService[T]):
        email: str = Field(pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$")
        age: int = Field(gt=0, le=150)
-       tags: list[str] = Field(default_factory=list)
+       tags: Sequence[str] = Field(default_factory=list)
    ```
 
 4. **FlextSettings singleton** - Via `self.project_config`
@@ -2833,7 +2833,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 6. **Factory Functions** - For public API
 
    ```python
-   def ParseLdif(source: str | Path) -> list[Entry]:
+   def ParseLdif(source: str | Path) -> Sequence[Entry]:
        """Simple function interface."""
        return FlextLdifParser(source=source).value
    ```
@@ -2894,7 +2894,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 ┌─────────────────────────────────────────────────────────────────┐
 │  USER CODE: Factory Functions (Public API)                      │
 │  ─────────────────────────────────────────────────────────────  │
-│  def ParseLdif(source: str) -> list[Entry]:                     │
+│  def ParseLdif(source: str) -> Sequence[Entry]:                     │
 │      return FlextLdifParser(source=source).value         │
 │                                                                  │
 │  users = ParseLdif("file.ldif")  # Direct, simple!              │
@@ -2903,11 +2903,11 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 ┌─────────────────────────────────────────────────────────────────┐
 │  LAYER 2: Service Layer (CORE)                                  │
 │  ─────────────────────────────────────────────────────────────  │
-│  class FlextLdifParser(Flext[list[Entry]]):       │
+│  class FlextLdifParser(Flext[Sequence[Entry]]):       │
 │      source: str | Path                                         │
 │      encoding: str = "utf-8"                                    │
 │                                                                  │
-│      def execute(self) -> r[list[Entry]]:             │
+│      def execute(self) -> r[Sequence[Entry]]:             │
 │          # Business logic with:                                 │
 │          # - self.logger (from x)                     │
 │          # - self.project_config (auto-resolved)                │
@@ -2968,10 +2968,10 @@ Caso de Uso: Workflows complexos - Solução: FlextDispatcher + handlers - Motiv
 **1. Simple Service (90% of cases):**
 
 ```python
-class ParseLdif(FlextService[list[Entry]]):
+class ParseLdif(FlextService[Sequence[Entry]]):
     source: str | Path
 
-    def execute(self) -> r[list[Entry]]:
+    def execute(self) -> r[Sequence[Entry]]:
         return self._parse()
 
 
@@ -3056,7 +3056,7 @@ class FlextContainer:
     # Advanced features
     def auto_wire(self, service_class: type[T]) -> r[t.NormalizedValue]
     def create_service(self, service_class: type[T], service_name: str | None) -> r[t.NormalizedValue]
-    def batch_register(self, services: dict[str, t.NormalizedValue]) -> r[bool]
+    def batch_register(self, services: Mapping[str, t.NormalizedValue]) -> r[bool]
 
     # Integration com dependency-injector
     _di_container: DynamicContainer  # Internal DI wrapper
@@ -3080,7 +3080,7 @@ class FlextContainer:
 # flext-ldif/src/flext_ldif/api.py (linha 128-129, 239-278)
 
 
-class FlextLdif(Flext[dict[str, t.NormalizedValue]]):
+class FlextLdif(Flext[Mapping[str, t.NormalizedValue]]):
     """Main API facade."""
 
     # ✅ BOM: Container como PrivateAttr
@@ -3106,7 +3106,7 @@ class FlextLdif(Flext[dict[str, t.NormalizedValue]]):
         _ = container.register("validation", FlextLdifValidation())
 
         # ✅ BOM: Register factory for parameterized service
-        def migration_pipeline_factory(params: dict[str, t.NormalizedValue] | None):
+        def migration_pipeline_factory(params: Mapping[str, t.NormalizedValue] | None):
             if params is None:
                 params = {}
             return FlextLdifMigrationPipeline(
@@ -3281,12 +3281,14 @@ class FlextLdif:
 **Pattern 1: Registrar Services na Inicialização**
 
 ```python
-class MyFacade(FlextService[dict[str, t.NormalizedValue]]):
+class MyFacade(FlextService[Mapping[str, t.NormalizedValue]]):
     """Facade with proper DI setup."""
 
     _container: FlextContainer = PrivateAttr(default_factory=FlextContainer.get_global)
 
-    def model_post_init(self, _context: dict[str, t.NormalizedValue] | None, /) -> None:
+    def model_post_init(
+        self, _context: Mapping[str, t.NormalizedValue] | None, /
+    ) -> None:
         """Setup services in DI container."""
         # Registrar todos os services necessários
         self._setup_services()
@@ -3463,7 +3465,7 @@ class FlextSettings(BaseSettings):
     # ═══════════════════════════════════════════════════════════════
     # SINGLETON PATTERN (Thread-safe, Per-Class)
     # ═══════════════════════════════════════════════════════════════
-    _instances: ClassVar[dict[type, Self]] = {}
+    _instances: ClassVar[Mapping[type, Self]] = {}
     _lock: ClassVar[threading.RLock] = threading.RLock()
 
     def __new__(cls, **_kwargs) -> Self:
@@ -3599,14 +3601,14 @@ class FlextLdifSettings(FlextSettings):
 **Exemplo 2: Usando Config em Services (FlextService)** ✅
 
 ```python
-class MyService(FlextService[list[Entry]]):
+class MyService(FlextService[Sequence[Entry]]):
     """Service com config automático."""
 
     # ✅ AUTOMÁTICO: self.project_config já existe (x)
 
     source: str  # Pydantic field (input)
 
-    def execute(self) -> r[list[Entry]]:
+    def execute(self) -> r[Sequence[Entry]]:
         # ✅ Zero ceremony - property access
         encoding = self.project_config.ldif_encoding
         debug = self.project_config.is_debug_enabled
@@ -3946,7 +3948,7 @@ class FlextApiModels:
             pattern=r"^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE)$",
         )
         url: str = Field(..., min_length=1, max_length=2048)
-        headers: dict[str, str] = Field(default_factory=dict)
+        headers: Mapping[str, str] = Field(default_factory=dict)
 body: m.Api.RequestBodyModel | None = Field(default=None)
         timeout: float = Field(default=30.0, ge=0.1, le=300.0)
 
@@ -3961,7 +3963,7 @@ body: m.Api.RequestBodyModel | None = Field(default=None)
         """Immutable HTTP response value t.NormalizedValue."""
 
         status_code: int = Field(..., ge=100, le=599)
-        headers: dict[str, str] = Field(default_factory=dict)
+        headers: Mapping[str, str] = Field(default_factory=dict)
 body: m.Api.RequestBodyModel | None = Field(default=None)
         request_id: str | None = Field(default=None)
 
@@ -3999,7 +4001,7 @@ class FlextLdifModels:
 
         dn: DN  # Identidade única
         attributes: Attributes
-        objectclasses: list[str] | None = None
+        objectclasses: Sequence[str] | None = None
 
         # ❌ Falta: created_at, updated_at (se fosse Entity)
         # ❌ Falta: frozen=True (se fosse Value)
@@ -4224,7 +4226,7 @@ class User(FlextModels.Entity, AuditableMixin):
 class Order(FlextModels.Entity):
     """Order with computed totals."""
 
-items: list[m.Domain.ItemModel]
+items: Sequence[m.Domain.ItemModel]
     tax_rate: float = Field(default=0.08)
 
     @computed_field
@@ -4322,8 +4324,8 @@ class p:
     class Configurable(Protocol):
         """Configurable protocol."""
 
-        def configure(self, config: dict[str, t.NormalizedValue]) -> r[bool]: ...
-        def get_config(self) -> dict[str, t.NormalizedValue]: ...
+        def configure(self, config: Mapping[str, t.NormalizedValue]) -> r[bool]: ...
+        def get_config(self) -> Mapping[str, t.NormalizedValue]: ...
 ```
 
 **Capabilities:**
@@ -4497,7 +4499,7 @@ class FlextService(x, BaseModel, Generic[TDomainResult]):
 
 ```python
 # flext-ldif/src/flext_ldif/api.py
-class FlextLdif(Flext[dict[str, t.NormalizedValue]]):
+class FlextLdif(Flext[Mapping[str, t.NormalizedValue]]):
     """API facade with mixins."""
 
     def parse(self, source: str) -> r:
@@ -4657,12 +4659,12 @@ def info(self, msg: str, extra: m.Logging.ExtraContextModel | None = None):
 **Exemplo 1: Basic Logging (Zero Setup)**
 
 ```python
-class MyService(FlextService[list[Entry]]):
+class MyService(FlextService[Sequence[Entry]]):
     """Logger automático via property."""
 
     source: str
 
-    def execute(self) -> r[list[Entry]]:
+    def execute(self) -> r[Sequence[Entry]]:
         # ✅ Auto: self.logger exists (x property)
         # ✅ Auto: Level from config.effective_log_level
         # ✅ Auto: Name = "MyService"
@@ -5217,7 +5219,7 @@ class FlextApi(FlextService[m.Api.ResponseModel]):
 
     # Shared parameters
     url: str
-    headers: dict[str, str] = Field(default_factory=dict)
+    headers: Mapping[str, str] = Field(default_factory=dict)
 
     # Operation-specific parameters
     body: m.Api.RequestBodyModel | None = None
@@ -5510,8 +5512,8 @@ class FlextApi(FlextService[m.Api.ResponseModel]):
 
     # Shared parameters
     url: str
-    headers: dict[str, str] = Field(default_factory=dict)
-    params: dict[str, str] = Field(default_factory=dict)
+    headers: Mapping[str, str] = Field(default_factory=dict)
+    params: Mapping[str, str] = Field(default_factory=dict)
 
     # Operation-specific parameters
 body: m.Api.RequestBodyModel | None = None
@@ -5564,7 +5566,7 @@ from flext_core import r
 from flext_ldif import Entry
 
 
-class FlextLdifParser(Flext[list[Entry]]):
+class FlextLdifParser(Flext[Sequence[Entry]]):
     """Parse LDIF files - Python 3.13 + Pydantic v2.
 
     Zero ceremony - use directly without factory functions!
@@ -5607,7 +5609,7 @@ class FlextLdifParser(Flext[list[Entry]]):
     # ═══════════════════════════════════════════════════════════════
     # EXECUTION (FlextService contract)
     # ═══════════════════════════════════════════════════════════════
-    def execute(self) -> r[list[Entry]]:
+    def execute(self) -> r[Sequence[Entry]]:
         """Execute parsing - called automatically by .value property."""
         try:
             # ✅ Infrastructure automatic from x
@@ -5644,7 +5646,7 @@ class FlextLdifParser(Flext[list[Entry]]):
             case str() as content:
                 return content
 
-    def _parse_ldif_content(self, content: str) -> list[Entry]:
+    def _parse_ldif_content(self, content: str) -> Sequence[Entry]:
         """Parse LDIF content."""
         # Implementation...
         return parse_ldif_impl(content, strict=self.strict_mode)
@@ -5798,7 +5800,7 @@ else:
 **Handle errors gracefully:**
 
 ```python
-def create_fallback_entries(error: str) -> r[list[Entry]]:
+def create_fallback_entries(error: str) -> r[Sequence[Entry]]:
     """Provide fallback on parse error."""
     logger.warning(f"Parse failed: {error}, using defaults")
     return r.ok([create_default_entry()])
@@ -5847,13 +5849,13 @@ response = (
 # Execute without creating instance variable
 entries = FlextLdifParser.run(source=Path("data.ldif"), source_server_type="oud")
 
-# ← Returns list[Entry] directly (raises on failure)
+# ← Returns Sequence[Entry] directly (raises on failure)
 
 
 # Or with Result for error handling
 result = FlextLdifParser.try_run(source=Path("data.ldif"))
 
-# ← Returns r[list[Entry]]
+# ← Returns r[Sequence[Entry]]
 
 if result.is_success:
     entries = result.value
@@ -5970,7 +5972,7 @@ class OrderProcessingService(FlextService[Order]):
     """Service que delega para dispatcher para reliability."""
 
     order_id: str
-    items: list[OrderItem]
+    items: Sequence[OrderItem]
 
     def execute(self) -> r[Order]:
         # Delegar para dispatcher para reliability patterns
@@ -6126,10 +6128,10 @@ class MyService(FlextService[Result]):
 class h[MessageT_contra, ResultT](x, ABC):
     ...
     # handlers.py:119-120 - MAS USA INFRAESTRUTURA MANUAL!
-    self._context_stack: list[
-        dict[str, t.NormalizedValue]
+    self._context_stack: Sequence[
+        Mapping[str, t.NormalizedValue]
     ] = []  # ❌ deveria usar self.context
-    self._metrics: dict[str, t.NormalizedValue] = {}  # ❌ deveria usar self.track()
+    self._metrics: Mapping[str, t.NormalizedValue] = {}  # ❌ deveria usar self.track()
 ```
 
 **Duplicação em \_run_pipeline (handlers.py:495-584):**
@@ -6392,14 +6394,14 @@ if result.is_success:
 # ═══════════════════════════════════════════════════════════════
 def parse_ldif(
     source: str | Path, *, encoding: str = "utf-8", strict_mode: bool = True
-) -> list[Entry]:
+) -> Sequence[Entry]:
     """Parse LDIF file."""
     return FlextLdifParser(
         source=source, encoding=encoding, strict_mode=strict_mode
     ).value
 
 
-def parse_ldif_safe(source: str | Path, **kwargs) -> list[Entry] | None:
+def parse_ldif_safe(source: str | Path, **kwargs) -> Sequence[Entry] | None:
     """Parse LDIF file (safe)."""
     return FlextLdifParser(source=source, **kwargs).value_or_none
 
@@ -6421,7 +6423,7 @@ def parse_ldif_safe(source: str | Path, **kwargs) -> list[Entry] | None:
 
 
 # ═══════════════════════════════════════════════════════════════
-class FlextLdifParser(Flext[list[Entry]]):
+class FlextLdifParser(Flext[Sequence[Entry]]):
     """Parse LDIF files.
 
     Usage:
@@ -6439,7 +6441,7 @@ class FlextLdifParser(Flext[list[Entry]]):
     encoding: str = "utf-8"
     strict_mode: bool = True
 
-    def execute(self) -> r[list[Entry]]:
+    def execute(self) -> r[Sequence[Entry]]:
         # Implementation
         ...
 
@@ -6643,11 +6645,11 @@ class FlextApi(FlextService[m.Api.ResponseModel]):
     url: Annotated[str, Field(description="Target URL")]
 
     headers: Annotated[
-        dict[str, str], Field(default_factory=dict, description="HTTP headers")
+        Mapping[str, str], Field(default_factory=dict, description="HTTP headers")
     ] = {}
 
     params: Annotated[
-        dict[str, str], Field(default_factory=dict, description="Query parameters")
+        Mapping[str, str], Field(default_factory=dict, description="Query parameters")
     ] = {}
 
     body: Annotated[
@@ -6846,7 +6848,7 @@ from pathlib import Path
 def complex_migration(source_file: Path, target_file: Path) -> m.Infra.MigrationResult:
     """Complex LDIF migration with error recovery."""
 
-    def fallback_on_parse(error: str) -> r[list[Entry]]:
+    def fallback_on_parse(error: str) -> r[Sequence[Entry]]:
         """Fallback: try lenient parsing."""
         logger.warning(f"Strict parse failed: {error}, trying lenient mode")
         return FlextLdifParser.try_run(source=source_file, parse_mode="lenient")
@@ -6947,7 +6949,7 @@ class FlextLdifParser(Flext[m.Ldif.ParseResultModel]):
 
     def parse(
         self, source: str | Path, source_server_type: str = "rfc4512"
-    ) -> r[list[Entry]]:
+    ) -> r[Sequence[Entry]]:
         # Implementation
         encoding = self._config.ldif_encoding
         return self._do_parse(source, encoding)
@@ -6958,13 +6960,13 @@ def execute(self) -> r[m.Ldif.ParseResultModel]:
 
 
 # 2. Factory functions (duplicação!)
-def parse_ldif(source: str | Path, **kwargs) -> list[Entry]:
+def parse_ldif(source: str | Path, **kwargs) -> Sequence[Entry]:
     service = FlextLdifParser(config=cfg)
     result = service.parse(source=source, **kwargs)
     return result.unwrap()
 
 
-def parse_ldif_safe(source: str | Path, **kwargs) -> list[Entry] | None:
+def parse_ldif_safe(source: str | Path, **kwargs) -> Sequence[Entry] | None:
     service = FlextLdifParser(config=cfg)
     result = service.parse(source=source, **kwargs)
     return result.value if result.is_success else None
@@ -7002,7 +7004,7 @@ result = (
 
 
 # 1. Service definition (Pydantic-native)
-class FlextLdifParser(Flext[list[Entry]]):
+class FlextLdifParser(Flext[Sequence[Entry]]):
     """Parse LDIF files.
 
     Usage:
@@ -7022,7 +7024,7 @@ class FlextLdifParser(Flext[list[Entry]]):
             raise ValueError(f"File not found: {v}")
         return v
 
-    def execute(self) -> r[list[Entry]]:
+    def execute(self) -> r[Sequence[Entry]]:
         """Real implementation here!"""
         # Config singleton (auto-resolved!)
         max_entries = self.project_config.max_ldif_entries
@@ -7482,7 +7484,7 @@ class FlextCliCore(FlextService[FlextCliTypes.Data.CliDataDict]):
     ):
         super().__init__()
         self._config = config or {}
-        self._commands: dict[str, FlextCliModels.CliCommand] = {}
+        self._commands: Mapping[str, FlextCliModels.CliCommand] = {}
 
     @override
     def execute(self) -> r[FlextCliTypes.Data.CliDataDict]:
@@ -7598,8 +7600,8 @@ class FlextCli:
         # ❌ Auth state embedded in FlextCli
         self._valid_tokens: set[str] = set()
         self._valid_sessions: set[str] = set()
-        self._session_permissions: dict[str, set[str]] = {}
-        self._users: dict[str, dict[str, t.NormalizedValue]] = {}
+        self._session_permissions: Mapping[str, set[str]] = {}
+        self._users: Mapping[str, Mapping[str, t.NormalizedValue]] = {}
 
     def authenticate(self, credentials: ...) -> r[str]:
         # Auth logic directly in FlextCli
@@ -7626,7 +7628,7 @@ from pathlib import Path
 from typing import Literal
 
 
-class FlextCliService(FlextService[dict[str, t.NormalizedValue]]):
+class FlextCliService(FlextService[Mapping[str, t.NormalizedValue]]):
     """CLI service following FlextService pattern.
 
     Single service class para TODAS as operações CLI.
@@ -7639,12 +7641,12 @@ class FlextCliService(FlextService[dict[str, t.NormalizedValue]]):
     # Operation-specific fields
     message: str = ""
     style: str | None = None
-    data: dict[str, t.NormalizedValue] | None = None
+    data: Mapping[str, t.NormalizedValue] | None = None
     filepath: Path | None = None
     prompt_text: str | None = None
 
     @override
-    def execute(self) -> r[dict[str, t.NormalizedValue]]:
+    def execute(self) -> r[Mapping[str, t.NormalizedValue]]:
         """Execute CLI operation based on operation field."""
         match self.operation:
             case "print":
@@ -7658,7 +7660,7 @@ class FlextCliService(FlextService[dict[str, t.NormalizedValue]]):
             case "prompt":
                 return self._execute_prompt()
 
-    def _execute_print(self) -> r[dict[str, t.NormalizedValue]]:
+    def _execute_print(self) -> r[Mapping[str, t.NormalizedValue]]:
         """Print with Rich styling."""
         from rich.console import Console
 
@@ -7666,7 +7668,7 @@ class FlextCliService(FlextService[dict[str, t.NormalizedValue]]):
         console.print(self.message, style=self.style)
         return r.ok({"printed": self.message})
 
-    def _execute_table(self) -> r[dict[str, t.NormalizedValue]]:
+    def _execute_table(self) -> r[Mapping[str, t.NormalizedValue]]:
         """Create table from data."""
         from rich.table import Table
 
@@ -7679,17 +7681,21 @@ class FlextCliService(FlextService[dict[str, t.NormalizedValue]]):
 # ============ PUBLIC API - Zero Ceremony ============
 
 
-def print_cli(message: str, style: str | None = None) -> dict[str, t.NormalizedValue]:
+def print_cli(
+    message: str, style: str | None = None
+) -> Mapping[str, t.NormalizedValue]:
     """Factory function - Zero ceremony CLI print."""
     return FlextCliService(operation="print", message=message, style=style).value
 
 
-def create_table(data: dict[str, t.NormalizedValue]) -> dict[str, t.NormalizedValue]:
+def create_table(
+    data: Mapping[str, t.NormalizedValue],
+) -> Mapping[str, t.NormalizedValue]:
     """Factory function - Zero ceremony table creation."""
     return FlextCliService(operation="table", data=data).value
 
 
-def read_json(filepath: Path) -> dict[str, t.NormalizedValue]:
+def read_json(filepath: Path) -> Mapping[str, t.NormalizedValue]:
     """Factory function - Zero ceremony JSON read."""
     return FlextCliService(operation="read_file", filepath=filepath).value
 ```
@@ -7710,7 +7716,7 @@ def read_json(filepath: Path) -> dict[str, t.NormalizedValue]:
 class CliOutputService(FlextService[str]):
     """Output formatting service."""
 
-    data: dict[str, t.NormalizedValue]
+    data: Mapping[str, t.NormalizedValue]
     format: Literal["json", "yaml", "table", "csv"] = "json"
 
     def execute(self) -> r[str]:
@@ -7726,14 +7732,14 @@ class CliOutputService(FlextService[str]):
 
 
 # flext-cli/src/flext_cli/services/file_tools.py
-class CliFileService(FlextService[dict[str, t.NormalizedValue]]):
+class CliFileService(FlextService[Mapping[str, t.NormalizedValue]]):
     """File I/O service."""
 
     operation: Literal["read", "write"] = "read"
     filepath: Path
-    data: dict[str, t.NormalizedValue] | None = None
+    data: Mapping[str, t.NormalizedValue] | None = None
 
-    def execute(self) -> r[dict[str, t.NormalizedValue]]:
+    def execute(self) -> r[Mapping[str, t.NormalizedValue]]:
         match self.operation:
             case "read":
                 return self._read_json()
@@ -7825,11 +7831,11 @@ class FlextCliSettings(FlextSettings):
 ```python
 
 # flext-cli/src/flext_cli/services/cli.py (NOVO)
-class FlextCliService(FlextService[dict[str, t.NormalizedValue]]):
+class FlextCliService(FlextService[Mapping[str, t.NormalizedValue]]):
     operation: Literal["print", "table", "file_read", "file_write"] = "print"
     # ... fields
 
-    def execute(self) -> r[dict[str, t.NormalizedValue]]:
+    def execute(self) -> r[Mapping[str, t.NormalizedValue]]:
         match self.operation:
             # ... dispatch
 ```
@@ -7842,7 +7848,7 @@ def print_cli(message: str, style: str | None = None):
     return FlextCliService(operation="print", message=message, style=style).value
 
 
-def create_table(data: dict[str, t.NormalizedValue]):
+def create_table(data: Mapping[str, t.NormalizedValue]):
     return FlextCliService(operation="table", data=data).value
 ```
 
@@ -7864,7 +7870,7 @@ class FlextCli:
 
 # flext-cli/src/flext_cli/services/output.py
 class CliOutputService(FlextService[str]):
-    data: dict[str, t.NormalizedValue]
+    data: Mapping[str, t.NormalizedValue]
     format: Literal["json", "yaml", "table"] = "json"
 
     def execute(self) -> r[str]:
@@ -7876,11 +7882,11 @@ class CliOutputService(FlextService[str]):
 ```python
 
 # flext-cli/src/flext_cli/services/file.py
-class CliFileService(FlextService[dict[str, t.NormalizedValue]]):
+class CliFileService(FlextService[Mapping[str, t.NormalizedValue]]):
     operation: Literal["read", "write"] = "read"
     filepath: Path
 
-    def execute(self) -> r[dict[str, t.NormalizedValue]]:
+    def execute(self) -> r[Mapping[str, t.NormalizedValue]]:
         # Move file I/O logic here
 ```
 
@@ -8207,7 +8213,7 @@ class x:
         return FlextSettings.get_global_instance()
 
     @contextmanager
-    def track(self, operation_name: str) -> Iterator[dict[str, t.NormalizedValue]]:
+    def track(self, operation_name: str) -> Iterator[Mapping[str, t.NormalizedValue]]:
         """Performance monitoring context manager."""
         with FlextContext.Performance.timed_operation(operation_name) as metrics:
             yield metrics
@@ -8283,7 +8289,7 @@ class FlextService[TDomainResult]:
     def is_valid(self) -> bool: ...
 
     # ❌ Service info raramente usado
-    def get_service_info(self) -> dict[str, t.NormalizedValue]: ...
+    def get_service_info(self) -> Mapping[str, t.NormalizedValue]: ...
 
     # ✅ Properties - ÓTIMOS
     @computed_field
@@ -8388,7 +8394,7 @@ class FlextCliCore(FlextService[CliDataDict]):
     def __init__(self, config: CliConfigSchema | None = None):
         super().__init__()
         self._config = config or {}  # ❌ Private attr, não Pydantic field
-        self._commands: dict[str, CliCommand] = {}  # ❌ Private attr
+        self._commands: Mapping[str, CliCommand] = {}  # ❌ Private attr
 
     def execute(self) -> r[CliDataDict]:
         # ❌ Apenas retorna status - não usa Pydantic fields!
@@ -8469,7 +8475,7 @@ class MyService(FlextService[Result]):
 # DEPOIS - Only execute + Pydantic validators
 class MyService(FlextService[Result]):
     # Pydantic fields
-    data: dict[str, t.NormalizedValue]
+    data: Mapping[str, t.NormalizedValue]
 
     @model_validator(mode="after")
     def validate_data(self) -> Self:
@@ -8529,7 +8535,7 @@ class Entity(ArbitraryTypesModel):
 
 
 class AggregateRoot(Entity):
-    _domain_events: list[DomainEvent] = PrivateAttr(default_factory=list)
+    _domain_events: Sequence[DomainEvent] = PrivateAttr(default_factory=list)
 
 
 # flext-core/src/flext_core/models/cqrs.py
@@ -8597,7 +8603,7 @@ class FlextCliCore(FlextService[CliDataDict]):
     def __init__(self, config: CliConfigSchema | None = None):
         super().__init__()
         self._config = config or {}
-        self._commands: dict[str, CliCommand] = {}
+        self._commands: Mapping[str, CliCommand] = {}
 
     def execute(self) -> r[CliDataDict]:
         return r.ok({"status": "operational"})  # ❌ Inútil
@@ -8610,10 +8616,10 @@ class FlextCliCore(FlextService[CliDataDict]):
         "execute_command"
     )
     command_name: str = ""
-    command_context: dict[str, t.NormalizedValue] = {}
+    command_context: Mapping[str, t.NormalizedValue] = {}
 
     # Commands stored in class-level registry
-    _commands: ClassVar[dict[str, CliCommand]] = {}
+    _commands: ClassVar[Mapping[str, CliCommand]] = {}
 
     def execute(self) -> r[CliDataDict]:
         """Execute based on operation field."""

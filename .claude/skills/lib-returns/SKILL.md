@@ -123,9 +123,9 @@ from flext_core import r
 
 | Method                                    | Signature                                                                                                     | When to use                                |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| `r.traverse(items, func)`       | `traverse[T, U](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> r[list[U]]`       | Map over sequence, fail-fast or accumulate |
-| `r.accumulate_errors(*results)` | `accumulate_errors(cls, *results: r[U]) -> r[list[U]]`                                    | Collect all successes, combine all errors  |
-| `r.parallel_map(items, func)`   | `parallel_map[T, U2](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> r[list[U2]]` | Same semantics as traverse                 |
+| `r.traverse(items, func)`       | `traverse[T, U](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> r[Sequence[U]]`       | Map over sequence, fail-fast or accumulate |
+| `r.accumulate_errors(*results)` | `accumulate_errors(cls, *results: r[U]) -> r[Sequence[U]]`                                    | Collect all successes, combine all errors  |
+| `r.parallel_map(items, func)`   | `parallel_map[T, U2](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> r[Sequence[U2]]` | Same semantics as traverse                 |
 
 ### Pydantic Integration
 

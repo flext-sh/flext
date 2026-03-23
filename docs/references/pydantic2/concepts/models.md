@@ -243,7 +243,7 @@ from pydantic import BaseModel
 
 
 class Model(BaseModel):
-    items: list[int]  # (1)!
+    items: Sequence[int]  # (1)!
 
 
 print(Model(items=(1, 2, 3)))
@@ -333,7 +333,7 @@ class Bar(BaseModel):
 
 class Spam(BaseModel):
     foo: Foo
-    bars: list[Bar]
+    bars: Sequence[Bar]
 
 
 m = Spam(foo={"count": 4}, bars=[{"apple": "x1"}, {"apple": "x2"}])
@@ -440,7 +440,7 @@ class CompanyOrm(Base):
     public_key: Mapped[str] = mapped_column(
         String(20), index=True, nullable=False, unique=True
     )
-    domains: Mapped[list[str]] = mapped_column(ARRAY(String(255)))
+    domains: Mapped[Sequence[str]] = mapped_column(ARRAY(String(255)))
 
 
 class CompanyModel(BaseModel):
@@ -448,7 +448,7 @@ class CompanyModel(BaseModel):
 
     id: int
     public_key: Annotated[str, StringConstraints(max_length=20)]
-    domains: list[Annotated[str, StringConstraints(max_length=255)]]
+    domains: Sequence[Annotated[str, StringConstraints(max_length=255)]]
 
 
 co_orm = CompanyOrm(
@@ -481,7 +481,7 @@ class PetCls:
 
 
 class PersonCls:
-    def __init__(self, *, name: str, age: float = None, pets: list[PetCls]):
+    def __init__(self, *, name: str, age: float = None, pets: Sequence[PetCls]):
         self.name = name
         self.age = age
         self.pets = pets
@@ -499,7 +499,7 @@ class Person(BaseModel):
 
     name: str
     age: float = None
-    pets: list[Pet]
+    pets: Sequence[Pet]
 
 
 bones = PetCls(name="Bones", species="dog")
@@ -528,7 +528,7 @@ from pydantic import BaseModel, ValidationError
 
 
 class Model(BaseModel):
-    list_of_ints: list[int]
+    list_of_ints: Sequence[int]
     a_float: float
 
 
@@ -1466,8 +1466,8 @@ Here's an example of how this works:
 ```python
 from pydantic import RootModel
 
-Pets = RootModel[list[str]]
-PetsByName = RootModel[dict[str, str]]
+Pets = RootModel[Sequence[str]]
+PetsByName = RootModel[Mapping[str, str]]
 
 
 print(Pets(["dog", "cat"]))
@@ -1478,7 +1478,7 @@ print(Pets()
 # > root=['dog', 'cat']
 print(Pets.model_json_schema())
 """
-{'items': {'type': 'string'}, 'title': 'RootModel[list[str]]', 'type': 'array'}
+{'items': {'type': 'string'}, 'title': 'RootModel[Sequence[str]]', 'type': 'array'}
 """
 
 print(PetsByName({"Otis": "dog", "Milo": "cat"}))
@@ -1497,7 +1497,7 @@ from pydantic import RootModel
 
 
 class Pets(RootModel):
-    root: list[str]
+    root: Sequence[str]
 
     def __iter__(self):
         return iter(self.root)
@@ -1519,7 +1519,7 @@ You can also create subclasses of the parametrized root model directly:
 from pydantic import RootModel
 
 
-class Pets(RootModel[list[str]]):
+class Pets(RootModel[Sequence[str]]):
     def describe(self) -> str:
         return f"Pets: {', '.join(self.root)}"
 
@@ -1797,7 +1797,7 @@ class C1:
 
 
 class C2(BaseModel):
-    arr: list[int]
+    arr: Sequence[int]
 
 
 arr_orig = [1, 9, 10, 3]
