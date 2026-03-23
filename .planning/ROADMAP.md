@@ -21,16 +21,23 @@ Decimal phases appear between their surrounding integers in numeric order.
 ## Phase Details
 
 ### Phase 1: Type System Hardening
-**Goal**: The monorepo type-checks clean — `make pyrefly-repo` returns 0 errors and no typing shortcuts remain anywhere
+**Goal**: The monorepo type-checks clean — `make pyre` returns 0 errors and no typing shortcuts remain anywhere
 **Depends on**: Nothing (Wave 0 already complete: pyrefly entrypoint, legacy artifacts, 27 test fixes)
 **Requirements**: TYPE-01, TYPE-02, TYPE-03, TYPE-04, TYPE-05, TYPE-06, TYPE-07, TYPE-08
 **Success Criteria** (what must be TRUE):
-  1. `make pyrefly-repo` exits 0 with 0 errors across all 33 projects (down from 4,385 baseline)
+  1. `make pyre` exits 0 with 0 errors across all 33 projects (down from 4,385 baseline)
   2. Zero `# type: ignore`, `typing.Any`, or `object` in any annotation position across all `.py` files
   3. Zero `cast()` calls outside `flext-core/result.py`
   4. Zero `__class__ is` / `__class__ not in` comparisons — all replaced with `isinstance()` or `TypeIs`
   5. All `TypeGuard` usages (12 functions) migrated to `TypeIs` (PEP 742) and all empty container literals annotated
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Wave 1: Fix make pyre entrypoint + clean flext-core (foundation)
+- [ ] 01-02-PLAN.md — Wave 2: Clean flext-infra + flext-tests (infrastructure)
+- [ ] 01-03-PLAN.md — Wave 3: Clean flext-cli (largest consumer, solo)
+- [ ] 01-04-PLAN.md — Wave 4: Clean remaining ~27 consumer projects
+- [ ] 01-05-PLAN.md — Micro-plan: TypeGuard->TypeIs migration + empty container annotation
 
 ### Phase 2: Architecture & SOLID
 **Goal**: Public APIs speak in protocols, Pydantic fields use canonical form, and type aliases follow PEP 695 — DIP enforced across all 33 projects
@@ -52,7 +59,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. `u.Infra.run_cli()` and `u.Infra.iter_projects()` are the single implementations — 18 duplicate CLI bootstrap patterns and 13 `discover_projects()` clones are gone
   2. `workspace_root` is the canonical parameter name across all `flext_infra` signatures — no `root` or `project_root` variants remain
   3. `NamespaceSourceDetector` is live in `flext_infra` and passes its own test suite
-  4. `make pyrefly-repo` policy gate enforces 0 `Any`/`object`/`ignore` violations with file+line output on failure
+  4. `make pyre` policy gate enforces 0 `Any`/`object`/`ignore` violations with file+line output on failure
   5. Zero `try/except ImportError`, `model_rebuild()`, bare `except Exception:`, `sys.exit()` outside `__main__.py`, `print()` in production, and `subprocess.run()` outside the designated wrapper — across all 33 projects
 **Plans**: TBD
 
@@ -85,7 +92,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Type System Hardening | 0/TBD | In progress | - |
+| 1. Type System Hardening | 0/5 | In progress | - |
 | 2. Architecture & SOLID | 0/TBD | Not started | - |
 | 3. Infrastructure Centralization | 0/TBD | Not started | - |
 | 4. Python 3.13 Modernization | 0/TBD | Not started | - |
