@@ -88,6 +88,8 @@ model.py:
 #   timestamp: 2020-05-19T15:07:31+00:00
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
+
 from typing import Any
 
 from pydantic import BaseModel, Field, conint
@@ -102,7 +104,7 @@ class Person(BaseModel):
     first_name: str = Field(description="The person's first name.")
     last_name: str = Field(description="The person's last name.")
     age: conint(ge=0) | None = Field(None, description="Age in years.")
-    pets: list[Pet] | None = None
+    pets: Sequence[Pet] | None = None
     comment | None = None
 ```
 

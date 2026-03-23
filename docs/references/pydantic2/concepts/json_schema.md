@@ -190,7 +190,7 @@ Here's an example of generating JSON schema from a [`TypeAdapter`][pydantic.type
 ```python
 from pydantic import TypeAdapter
 
-adapter = TypeAdapter(list[int])
+adapter = TypeAdapter(Sequence[int])
 print(adapter.json_schema())
 # > {'items': {'type': 'integer'}, 'type': 'array'}
 ```
@@ -771,8 +771,8 @@ from pydantic import BaseModel, GetCoreSchemaHandler
 
 @dataclass
 class CompressedString:
-    dictionary: dict[int, str]
-    text: list[int]
+    dictionary: Mapping[int, str]
+    text: Sequence[int]
 
     def build(self) -> str:
         return " ".join([self.dictionary[key] for key in self.text])
@@ -794,8 +794,8 @@ class CompressedString:
 
     @staticmethod
     def _validate(value: str) -> "CompressedString":
-        inverse_dictionary: dict[str, int] = {}
-        text: list[int] = []
+        inverse_dictionary: Mapping[str, int] = {}
+        text: Sequence[int] = []
         for word in value.split(" "):
             if word not in inverse_dictionary:
                 inverse_dictionary[word] = len(inverse_dictionary)

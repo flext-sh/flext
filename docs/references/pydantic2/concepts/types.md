@@ -116,7 +116,7 @@ from pydantic import TypeAdapter, ValidationError
 T = TypeVar("T")
 
 
-ShortList = Annotated[list[T], Len(max_length=4)]
+ShortList = Annotated[Sequence[T], Len(max_length=4)]
 
 
 ta = TypeAdapter(ShortList[int])
@@ -129,12 +129,12 @@ try:
 except ValidationError as exc:
     print(exc)
     """
-    1 validation error for list[int]
+    1 validation error for Sequence[int]
       List should have at most 4 items after validation, not 5 [type=too_long, input_value=[1, 2, 3, 4, 5], input_type=list]
     """
 
 
-PositiveList = list[Annotated[T, Gt(0)]]
+PositiveList = Sequence[Annotated[T, Gt(0)]]
 
 ta = TypeAdapter(PositiveList[float])
 
@@ -147,7 +147,7 @@ try:
 except ValidationError as exc:
     print(exc)
     """
-    1 validation error for list[constrained-float]
+    1 validation error for Sequence[constrained-float]
     0
       Input should be greater than 0 [type=greater_than, input_value=-1.0, input_type=float]
     """
@@ -177,7 +177,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
 
     from pydantic import BaseModel
 
-    PositiveIntList = TypeAliasType("PositiveIntList", list[Annotated[int, Gt(0)]])
+    PositiveIntList = TypeAliasType("PositiveIntList", Sequence[Annotated[int, Gt(0)]])
 
 
     class Model(BaseModel):
@@ -217,7 +217,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
 
     from pydantic import BaseModel
 
-    type PositiveIntList = list[Annotated[int, Gt(0)]]
+    type PositiveIntList = Sequence[Annotated[int, Gt(0)]]
 
 
     class Model(BaseModel):
@@ -308,7 +308,7 @@ As with implicit type aliases, [type variables][typing.TypeVar] can also be used
         T = TypeVar("T")
 
         ShortList = TypeAliasType(
-            "ShortList", Annotated[list[T], Len(max_length=4)], type_params=(T,)
+            "ShortList", Annotated[Sequence[T], Len(max_length=4)], type_params=(T,)
         )
         ```
 
@@ -319,7 +319,7 @@ As with implicit type aliases, [type variables][typing.TypeVar] can also be used
 
         from annotated_types import Len
 
-        type ShortList[T] = Annotated[list[T], Len(max_length=4)]
+        type ShortList[T] = Annotated[Sequence[T], Len(max_length=4)]
         ```
 
 #### Named recursive types
@@ -344,7 +344,7 @@ For instance, here is an example definition of a JSON type:
 
     Json = TypeAliasType(
         "Json",
-        "Union[dict[str, Json], list[Json], str, int, float, bool, None]",  # (1)!
+        "Union[Mapping[str, Json], Sequence[Json], str, int, float, bool, None]",  # (1)!
     )
 
     ta = TypeAdapter(Json)
@@ -380,7 +380,7 @@ For instance, here is an example definition of a JSON type:
     ```python {requires="3.12" upgrade="skip" lint="skip"}
     from pydantic import TypeAdapter
 
-    type Json = dict[str, Json] | list[Json] | t.Primitives | None  # (1)!
+    type Json = Mapping[str, Json] | Sequence[Json] | t.Primitives | None  # (1)!
 
     ta = TypeAdapter(Json)
     print(ta.json_schema())
@@ -892,7 +892,7 @@ except ValidationError as exc:
     2 validation errors for M
     s1.is-instance[MySequence]
       Input should be an instance of MySequence [type=is_instance_of, input_value=['a'], input_type=list]
-    s1.function-after[MySequence(), json-or-python[json=list[int],python=chain[is-instance[Sequence],function-wrap[sequence_validator()]]]].0
+    s1.function-after[MySequence(), json-or-python[json=Sequence[int],python=chain[is-instance[Sequence],function-wrap[sequence_validator()]]]].0
       Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='a', input_type=str]
     """
 ```

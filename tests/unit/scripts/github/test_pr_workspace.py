@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import r
@@ -74,10 +74,10 @@ class TestPrWorkspace:
         )
         workspace = tmp_path / "workspace"
         _ = workspace.mkdir(parents=True)
-        commands: list[t.Workspace.Tests.Command] = []
+        commands: Sequence[t.Workspace.Tests.Command] = []
 
         class RunnerStub:
-            def run_to_file(self, command: list[str], _log_path: Path) -> r[int]:
+            def run_to_file(self, command: Sequence[str], _log_path: Path) -> r[int]:
                 commands.append(command)
                 return r[int].ok(0)
 
@@ -118,10 +118,10 @@ class TestPrWorkspace:
         workspace = tmp_path / "workspace"
         repo = workspace / "flext-core"
         _ = repo.mkdir(parents=True)
-        commands: list[t.Workspace.Tests.Command] = []
+        commands: Sequence[t.Workspace.Tests.Command] = []
 
         class RunnerStub:
-            def run_to_file(self, command: list[str], _log_path: Path) -> r[int]:
+            def run_to_file(self, command: Sequence[str], _log_path: Path) -> r[int]:
                 commands.append(command)
                 return r[int].ok(0)
 

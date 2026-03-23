@@ -119,7 +119,7 @@ For example, you might have a list of people:
 ]
 ```
 
-In this case, you can validate the data against a `list[Person]` model:
+In this case, you can validate the data against a `Sequence[Person]` model:
 
 ```python {test="skip"}
 import pathlib
@@ -133,7 +133,7 @@ class Person(BaseModel):
     email: EmailStr
 
 
-person_list_adapter = TypeAdapter(list[Person])  # (1)!
+person_list_adapter = TypeAdapter(Sequence[Person])  # (1)!
 
 json_string = pathlib.Path("people.json").read_text()
 people = person_list_adapter.validate_json(json_string)

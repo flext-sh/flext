@@ -186,8 +186,8 @@ class User(BaseModel):
 
 
 class Organization(BaseModel):
-    forbidden_passwords: list[str]
-    users: list[User]
+    forbidden_passwords: Sequence[str]
+    users: Sequence[User]
 
     @model_validator(mode="after")
     def validate_user_passwords(self) -> Self:
@@ -244,12 +244,12 @@ class User(BaseModel):
 
 
 class Organization(BaseModel):
-    forbidden_passwords: list[str]
-    users: list[User]
+    forbidden_passwords: Sequence[str]
+    users: Sequence[User]
 
     @field_validator("forbidden_passwords", mode="after")
     @classmethod
-    def add_context(cls, v: list[str], info: ValidationInfo) -> list[str]:
+    def add_context(cls, v: Sequence[str], info: ValidationInfo) -> Sequence[str]:
         if info.context is not None:
             info.context.update({"forbidden_passwords": v})
         return v

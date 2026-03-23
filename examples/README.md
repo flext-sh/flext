@@ -125,7 +125,9 @@ Extensive use of parallel processing throughout:
 
 Full type safety with modern Python features:
 
-- `from __future__ import annotations` for forward references
+- `from **future** import annotations
+
+from collections.abc import Mapping, Sequence` for forward references
 - Comprehensive type hints throughout
 - Generic types with proper variance
 - Protocol-based design where appropriate

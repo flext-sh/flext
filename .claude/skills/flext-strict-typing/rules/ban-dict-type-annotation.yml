@@ -6,7 +6,7 @@ rule:
         context: "a: Dict[$$$ARGS]"
         selector: generic_type
     - pattern:
-        context: "a: dict[$$$ARGS]"
+        context: "a: Mapping[$$$ARGS]"
         selector: generic_type
 message: dict in type annotations is banned for contracts
 severity: error

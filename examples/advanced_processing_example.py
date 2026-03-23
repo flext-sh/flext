@@ -14,7 +14,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
 from typing import ClassVar, override
@@ -22,8 +22,8 @@ from typing import ClassVar, override
 from flext_core import FlextService, r, t
 from pydantic import BaseModel, ConfigDict, Field
 
-ItemDict = dict[str, t.Scalar]
-StageOperation = Callable[[dict[str, t.NormalizedValue]], r["PipelineStageData"]]
+ItemDict = Mapping[str, t.Scalar]
+StageOperation = Callable[[Mapping[str, t.NormalizedValue]], r["PipelineStageData"]]
 
 
 class PipelineStageData(BaseModel):
@@ -32,14 +32,14 @@ class PipelineStageData(BaseModel):
     model_config: ClassVar[ConfigDict] = ConfigDict(
         arbitrary_types_allowed=True, extra="allow"
     )
-    data: dict[str, t.NormalizedValue] = Field(default_factory=dict)
+    data: Mapping[str, t.NormalizedValue] = Field(default_factory=dict)
 
 
-def _new_str_list() -> list[str]:
+def _new_str_list() -> Sequence[str]:
     return []
 
 
-def _new_scalar_dict() -> dict[str, t.Scalar]:
+def _new_scalar_dict() -> Mapping[str, t.Scalar]:
     return {}
 
 
@@ -64,11 +64,11 @@ class AdvancedProcessingExample:
         items_succeeded: int = Field(description="Items that succeeded")
         items_failed: int = Field(description="Items that failed")
         processing_time: float = Field(description="Time taken for processing")
-        errors: list[str] = Field(
+        errors: Sequence[str] = Field(
             default_factory=_new_str_list,
             description="List of errors encountered",
         )
-        metadata: dict[str, t.Scalar] = Field(
+        metadata: Mapping[str, t.Scalar] = Field(
             default_factory=_new_scalar_dict,
             description="Operation metadata",
         )
@@ -80,11 +80,11 @@ class AdvancedProcessingExample:
 
         item_id: str = Field(description="Unique item identifier")
         is_valid: bool = Field(description="Whether the item is valid")
-        violations: list[str] = Field(
+        violations: Sequence[str] = Field(
             default_factory=_new_str_list,
             description="List of validation violations",
         )
-        warnings: list[str] = Field(
+        warnings: Sequence[str] = Field(
             default_factory=_new_str_list,
             description="List of validation warnings",
         )
@@ -97,21 +97,21 @@ class AdvancedProcessingExample:
         """Declarative processing pipeline with automatic parallel execution."""
 
         auto_execute: bool = True
-        items: list[ItemDict]
-        stages: list[str]
+        items: Sequence[ItemDict]
+        stages: Sequence[str]
 
         @override
         def execute(self) -> r[PipelineStageData]:
             """Execute processing pipeline using declarative stages."""
-            stage_functions: dict[
-                str, Callable[[dict[str, t.NormalizedValue]], r[PipelineStageData]]
+            stage_functions: Mapping[
+                str, Callable[[Mapping[str, t.NormalizedValue]], r[PipelineStageData]]
             ] = {
                 "validate": self._validate_batch,
                 "process": self._process_parallel,
                 "analyze": self._analyze_results,
             }
-            operations: list[
-                Callable[[dict[str, t.NormalizedValue]], r[PipelineStageData]]
+            operations: Sequence[
+                Callable[[Mapping[str, t.NormalizedValue]], r[PipelineStageData]]
             ] = []
             for stage in self.stages:
                 stage_func = stage_functions.get(stage)
@@ -119,7 +119,7 @@ class AdvancedProcessingExample:
                     operations.append(stage_func)
                 else:
                     return r.fail(f"Unknown stage: {stage}")
-            current_data: dict[str, t.NormalizedValue] = {"items": self.items}
+            current_data: Mapping[str, t.NormalizedValue] = {"items": self.items}
             for operation in operations:
                 result = operation(current_data)
                 if result.is_failure:
@@ -133,22 +133,22 @@ class AdvancedProcessingExample:
 
         def _analyze_results(
             self,
-            data: dict[str, t.NormalizedValue],
+            data: Mapping[str, t.NormalizedValue],
         ) -> r[PipelineStageData]:
             """Analyze processing results."""
             processed_items_data = data.get("processed_items", [])
-            processed_items: list[ItemDict] = (
+            processed_items: Sequence[ItemDict] = (
                 processed_items_data if isinstance(processed_items_data, list) else []
             )
             validation_results_data = data.get("validation_results", [])
-            validation_results: list[AdvancedProcessingExample.ValidationResult] = (
+            validation_results: Sequence[AdvancedProcessingExample.ValidationResult] = (
                 validation_results_data
                 if isinstance(validation_results_data, list)
                 else []
             )
-            field_counts: dict[int, int] = {}
-            complexity_scores: list[float] = []
-            items_to_analyze: list[ItemDict] = [
+            field_counts: Mapping[int, int] = {}
+            complexity_scores: Sequence[float] = []
+            items_to_analyze: Sequence[ItemDict] = [
                 item
                 for item in processed_items
                 if isinstance(item, dict)
@@ -164,7 +164,7 @@ class AdvancedProcessingExample:
                 if isinstance(success_rate_data, (int, float))
                 else 0.0
             )
-            validation_summary: dict[str, int | float] = {
+            validation_summary: Mapping[str, int | float] = {
                 "total_validated": len(validation_results),
                 "valid_items": sum(
                     1
@@ -183,7 +183,7 @@ class AdvancedProcessingExample:
                     if isinstance(r, AdvancedProcessingExample.ValidationResult)
                 ),
             }
-            analysis: dict[str, t.NormalizedValue] = {
+            analysis: Mapping[str, t.NormalizedValue] = {
                 "total_processed": len(items_to_analyze),
                 "field_distribution": field_counts,
                 "avg_complexity": sum(complexity_scores) / len(complexity_scores)
@@ -192,12 +192,15 @@ class AdvancedProcessingExample:
                 "validation_summary": validation_summary,
                 "processing_efficiency": processing_efficiency * 100,
             }
-            result_data: dict[str, t.NormalizedValue] = {**data, "analysis": analysis}
+            result_data: Mapping[str, t.NormalizedValue] = {
+                **data,
+                "analysis": analysis,
+            }
             return r.ok(PipelineStageData(data=result_data))
 
         def _process_parallel(
             self,
-            data: dict[str, t.NormalizedValue],
+            data: Mapping[str, t.NormalizedValue],
         ) -> r[PipelineStageData]:
             """Process items in parallel."""
             items_data = data.get("items", [])
@@ -216,8 +219,8 @@ class AdvancedProcessingExample:
                 except Exception:
                     return None
 
-            processed_items: list[ItemDict] = []
-            items_to_process: list[ItemDict] = [
+            processed_items: Sequence[ItemDict] = []
+            items_to_process: Sequence[ItemDict] = [
                 item
                 for item in items_data
                 if isinstance(item, dict)
@@ -233,7 +236,7 @@ class AdvancedProcessingExample:
                     if result is not None:
                         processed_items.append(result)
             processing_time = time.time() - start_time
-            result_data: dict[str, t.NormalizedValue] = {
+            result_data: Mapping[str, t.NormalizedValue] = {
                 **data,
                 "processed_items": processed_items,
                 "processing_time": processing_time,
@@ -245,14 +248,16 @@ class AdvancedProcessingExample:
 
         def _validate_batch(
             self,
-            data: dict[str, t.NormalizedValue],
+            data: Mapping[str, t.NormalizedValue],
         ) -> r[PipelineStageData]:
             """Validate batch of items."""
             items_data = data.get("items", [])
             if not isinstance(items_data, list):
                 return r.fail("Invalid items data")
-            validation_results: list[AdvancedProcessingExample.ValidationResult] = []
-            items_to_validate: list[ItemDict] = [
+            validation_results: Sequence[
+                AdvancedProcessingExample.ValidationResult
+            ] = []
+            items_to_validate: Sequence[ItemDict] = [
                 item
                 for item in items_data
                 if isinstance(item, dict)
@@ -264,7 +269,7 @@ class AdvancedProcessingExample:
                     validation_results.append(result.value)
                 else:
                     return r.fail(f"Validation failed: {result.error}")
-            result_data: dict[str, t.NormalizedValue] = {
+            result_data: Mapping[str, t.NormalizedValue] = {
                 **data,
                 "validation_results": validation_results,
                 "valid_count": sum(1 for r in validation_results if r.is_valid),
@@ -277,8 +282,8 @@ class AdvancedProcessingExample:
         ) -> r[AdvancedProcessingExample.ValidationResult]:
             """Validate a single item."""
             start_time = time.time()
-            violations: list[str] = []
-            warnings: list[str] = []
+            violations: Sequence[str] = []
+            warnings: Sequence[str] = []
             item_id = item.get("id")
             if not item_id or not isinstance(item_id, str):
                 violations.append("Missing or invalid id field")
@@ -299,7 +304,7 @@ class AdvancedProcessingExample:
             )
 
     @staticmethod
-    def create_sample_items(count: int = 100) -> list[ItemDict]:
+    def create_sample_items(count: int = 100) -> Sequence[ItemDict]:
         """Create sample items for testing."""
         return [
             {

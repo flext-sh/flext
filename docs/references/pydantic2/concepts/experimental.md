@@ -47,6 +47,8 @@ These APIs are meant for situations where the code savings are significant and t
 ```python
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
+
 from datetime import datetime
 from typing import Annotated
 
@@ -68,7 +70,7 @@ class User(BaseModel):
         int,
         (validate_as(int) | validate_as(str).str_strip().validate_as(int)).gt(0),
     ]
-    friends: Annotated[list[User], validate_as(...).len(0, 100)]  # (6)!
+    friends: Annotated[Sequence[User], validate_as(...).len(0, 100)]  # (6)!
     bio: Annotated[
         datetime,
         validate_as(int).transform(lambda x: x / 1_000_000).validate_as(...),  # (8)!
@@ -114,6 +116,8 @@ Just as an example, consider the `UserIn` and `UserOut` pattern mentioned above:
 
 ```python
 from __future__ import annotations
+
+from collections.abc import Mapping, Sequence
 
 from pydantic import BaseModel
 
@@ -209,7 +213,7 @@ class Foobar(TypedDict):  # (1)!
     c: NotRequired[Annotated[str, MinLen(5)]]
 
 
-ta = TypeAdapter(list[Foobar])
+ta = TypeAdapter(Sequence[Foobar])
 
 v = ta.validate_json('[{"a": 1, "b"', experimental_allow_partial=True)  # (2)!
 print(v)
@@ -304,7 +308,7 @@ class MyModel(BaseModel):
     b: Annotated[str, MinLen(5)]
 
 
-ta = TypeAdapter(list[MyModel])
+ta = TypeAdapter(Sequence[MyModel])
 v = ta.validate_json(
     '[{"a": 1, "b": "12345"}, {"a": 1,',
     experimental_allow_partial=True,
@@ -326,7 +330,7 @@ Right now only a subset of collection validators know how to handle partial vali
 - `list`
 - `set`
 - `frozenset`
-- `dict` (as in `dict[X, Y]`)
+- `dict` (as in `Mapping[X, Y]`)
 - `TypedDict` — only non-required fields may be missing, e.g. via [`NotRequired`][typing.NotRequired] or [`total=False`][typing.TypedDict.**total**])
 
 While you can use `experimental_allow_partial` while validating against types that include other collection validators, those types will be validated "all or nothing", and partial validation will not work on more nested types.
@@ -345,7 +349,7 @@ from pydantic import BaseModel, TypeAdapter, ValidationError
 
 class MyModel(BaseModel):
     a: int = 1
-    b: list[Annotated[str, MinLen(5)]] = []  # (1)!
+    b: Sequence[Annotated[str, MinLen(5)]] = []  # (1)!
 
 
 ta = TypeAdapter(MyModel)
@@ -415,12 +419,12 @@ from annotated_types import Ge
 
 from pydantic import TypeAdapter
 
-ta = TypeAdapter(list[Annotated[int, Ge(10)]])
+ta = TypeAdapter(Sequence[Annotated[int, Ge(10)]])
 v = ta.validate_python([20, 30, 4], experimental_allow_partial=True)  # (1)!
 print(v)
 # > [20, 30]
 
-ta = TypeAdapter(list[int])
+ta = TypeAdapter(Sequence[int])
 
 v = ta.validate_python([1, 2, "wrong"], experimental_allow_partial=True)  # (2)!
 print(v)

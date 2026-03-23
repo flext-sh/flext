@@ -167,7 +167,7 @@ class Model(BaseModel):
     @classmethod
     def __get_pydantic_json_schema__(
         cls, core_schema: CoreSchema, handler: GetJsonSchemaHandler
-    ) -> dict[str, Any]:
+    ) -> Mapping[str, Any]:
         json_schema = super().__get_pydantic_json_schema__(core_schema, handler)
         json_schema = handler.resolve_ref_schema(json_schema)
         json_schema.update(examples=["example"])
@@ -582,7 +582,7 @@ This error is raised when a circular reference is found that would otherwise res
 For example, this is a valid type alias:
 
 ```python {test="skip" lint="skip" upgrade="skip"}
-type A = list[A] | None
+type A = Sequence[A] | None
 ```
 
 while these are not:

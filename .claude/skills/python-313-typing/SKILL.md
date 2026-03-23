@@ -73,7 +73,7 @@ type Callback[T = None] = Callable[[T], None]
 **Multiple defaults** — defaults must trail non-defaulted params:
 
 ```python
-class Map[K, V = str, M = dict[K, V]]: ...
+class Map[K, V = str, M = Mapping[K, V]]: ...
 ```
 
 **NoDefault sentinel**:
@@ -159,15 +159,15 @@ class Extended(Base):
 from typing import TypeIs
 
 
-def is_str_list(val: list[str | int]) -> TypeIs[list[str]]:
+def is_str_list(val: Sequence[str | int]) -> TypeIs[Sequence[str]]:
     return all(isinstance(x, str) for x in val)
 
 
-def process(data: list[str | int]) -> None:
+def process(data: Sequence[str | int]) -> None:
     if is_str_list(data):
-        print(data[0].upper())  # narrowed: list[str]
+        print(data[0].upper())  # narrowed: Sequence[str]
     else:
-        print(len(data))  # narrowed: list[str | int] (BOTH branches!)
+        print(len(data))  # narrowed: Sequence[str | int] (BOTH branches!)
 ```
 
 **TypeIs vs TypeGuard**:

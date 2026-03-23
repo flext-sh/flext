@@ -18,6 +18,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
+from collections.abc import Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
 from typing import Any, ClassVar, TypeIs, override
@@ -27,26 +28,28 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from examples import ValidationRules
 
-EntryDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar | list[str]]]
+EntryDict = Mapping[
+    str, t.Scalar | Sequence[str] | Mapping[str, t.Scalar | Sequence[str]]
+]
 
 # ProcessingDict carries heterogeneous pipeline state (scalars, models, lists,
 # nested dicts, tuples).  Using ``Any`` for values keeps the pipeline ergonomic
 # while the individual methods narrow types via guards.
-ProcessingDict = dict[str, Any]
-ContextDict = dict[str, t.Scalar | bool | str | int | float | None]
+ProcessingDict = Mapping[str, Any]
+ContextDict = Mapping[str, t.Scalar | bool | str | int | float | None]
 
 
-def _new_str_list() -> list[str]:
+def _new_str_list() -> Sequence[str]:
     return []
 
 
-def _is_object_list(value: t.NormalizedValue) -> TypeIs[list[t.NormalizedValue]]:
+def _is_object_list(value: t.NormalizedValue) -> TypeIs[Sequence[t.NormalizedValue]]:
     return isinstance(value, list)
 
 
 def _is_str_object_dict(
     value: t.NormalizedValue,
-) -> TypeIs[dict[str, t.NormalizedValue]]:
+) -> TypeIs[Mapping[str, t.NormalizedValue]]:
     return isinstance(value, dict)
 
 
@@ -85,7 +88,7 @@ class AclProcessingExample:
 
         dn: str = Field(description="Distinguished name of the ACL entry")
         acl_attribute: str = Field(description="ACL attribute name")
-        permissions: list[str] = Field(description="List of permissions")
+        permissions: Sequence[str] = Field(description="List of permissions")
         context: ContextDict = Field(description="Context information")
         server_type: str = Field(description="Type of LDAP server")
 
@@ -96,11 +99,11 @@ class AclProcessingExample:
 
         entry_dn: str = Field(description="Distinguished name of the entry")
         is_valid: bool = Field(description="Whether the ACL entry is valid")
-        violations: list[str] = Field(
+        violations: Sequence[str] = Field(
             default_factory=_new_str_list,
             description="List of validation violations",
         )
-        warnings: list[str] = Field(
+        warnings: Sequence[str] = Field(
             default_factory=_new_str_list,
             description="List of validation warnings",
         )
@@ -112,21 +115,21 @@ class AclProcessingExample:
     class Constants:
         """Constants for ACL processing."""
 
-        SERVER_SIGNATURES: ClassVar[dict[str, list[str]]] = {
+        SERVER_SIGNATURES: ClassVar[Mapping[str, Sequence[str]]] = {
             "openldap": ["olcAccess", "olcACL"],
             "oracle_oid": ["orclACI", "orclACL"],
             "oracle_unified_directory": ["ds-cfg-global-aci", "aci"],
             "active_directory": ["ntSecurityDescriptor"],
             "apache_ds": ["accessControlSubentry"],
         }
-        SERVER_ACL_ATTRIBUTES: ClassVar[dict[str, list[str]]] = {
+        SERVER_ACL_ATTRIBUTES: ClassVar[Mapping[str, Sequence[str]]] = {
             "openldap": ["olcAccess"],
             "oracle_oid": ["orclACI"],
             "oracle_unified_directory": ["aci", "ds-cfg-global-aci"],
             "active_directory": ["ntSecurityDescriptor"],
             "apache_ds": ["accessControlSubentry"],
         }
-        VALIDATION_RULES: ClassVar[dict[str, ValidationRules]] = {
+        VALIDATION_RULES: ClassVar[Mapping[str, ValidationRules]] = {
             "openldap": ValidationRules(
                 required_permissions=["read", "write", "search"],
                 forbidden_combinations=[("read", "delete")],
@@ -138,7 +141,7 @@ class AclProcessingExample:
         }
 
     @staticmethod
-    def _parse_acl_permissions(acl_value: str) -> list[str]:
+    def _parse_acl_permissions(acl_value: str) -> Sequence[str]:
         """Parse ACL permissions from raw ACL value."""
         acl_lower = acl_value.lower()
         permissions = [
@@ -167,20 +170,20 @@ class AclProcessingExample:
     @staticmethod
     def extract_acls_from_entry(
         entry: EntryDict, server_type: str
-    ) -> r[list[AclProcessingExample.AclEntry]]:
+    ) -> r[Sequence[AclProcessingExample.AclEntry]]:
         """Extract ACLs using server-specific attribute detection."""
         start_time = time.time()
         acl_attrs = AclProcessingExample.Constants.SERVER_ACL_ATTRIBUTES.get(
             server_type, []
         )
         if not acl_attrs:
-            return r[list[AclProcessingExample.AclEntry]].fail(
+            return r[Sequence[AclProcessingExample.AclEntry]].fail(
                 f"No ACL attributes defined for server type: {server_type}"
             )
-        extracted_acls: list[AclProcessingExample.AclEntry] = []
+        extracted_acls: Sequence[AclProcessingExample.AclEntry] = []
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, dict):
-            return r[list[AclProcessingExample.AclEntry]].fail(
+            return r[Sequence[AclProcessingExample.AclEntry]].fail(
                 "Invalid attributes format"
             )
         for attr_name in acl_attrs:
@@ -208,7 +211,7 @@ class AclProcessingExample:
                         server_type=server_type,
                     )
                     extracted_acls.append(acl_entry)
-        return r[list[AclProcessingExample.AclEntry]].ok(extracted_acls)
+        return r[Sequence[AclProcessingExample.AclEntry]].ok(extracted_acls)
 
     @staticmethod
     def validate_acl_entry(
@@ -216,8 +219,8 @@ class AclProcessingExample:
     ) -> r[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
-        violations: list[str] = []
-        warnings: list[str] = []
+        violations: Sequence[str] = []
+        warnings: Sequence[str] = []
         rules = AclProcessingExample.Constants.VALIDATION_RULES.get(
             acl_entry.server_type
         )
@@ -259,7 +262,7 @@ class AclProcessingExample:
         """Monadic ACL processor with zero-ceremony execution."""
 
         auto_execute: bool = True
-        entries: list[EntryDict]
+        entries: Sequence[EntryDict]
         parallel: bool = True
 
         @override
@@ -313,9 +316,9 @@ class AclProcessingExample:
             }
             return r[ProcessingDict].ok(result_data)
 
-        def _detect_servers(self, entries: list[EntryDict]) -> r[ProcessingDict]:
+        def _detect_servers(self, entries: Sequence[EntryDict]) -> r[ProcessingDict]:
             """Auto-detect server types for all entries."""
-            detected_entries: list[tuple[EntryDict, str]] = []
+            detected_entries: Sequence[tuple[EntryDict, str]] = []
             for entry in entries:
                 result = AclProcessingExample.detect_server_type(entry)
                 if result.is_success:
@@ -335,7 +338,7 @@ class AclProcessingExample:
             entries_data_raw = data.get("entries")
             if not _is_object_list(entries_data_raw):
                 return r[ProcessingDict].fail("Invalid entries format")
-            entries_with_servers: list[tuple[EntryDict, str]] = []
+            entries_with_servers: Sequence[tuple[EntryDict, str]] = []
             for entry_with_server_raw in entries_data_raw:
                 if not _is_str_object_dict(entry_with_server_raw):
                     continue
@@ -355,7 +358,7 @@ class AclProcessingExample:
                     )
                     for entry_with_server in entries_with_servers
                 ]
-                all_acls: list[AclProcessingExample.AclEntry] = []
+                all_acls: Sequence[AclProcessingExample.AclEntry] = []
                 for future in as_completed(futures):
                     result = future.result()
                     if result.is_success:
@@ -372,7 +375,7 @@ class AclProcessingExample:
             entries_data_raw = data.get("entries")
             if not _is_object_list(entries_data_raw):
                 return r[ProcessingDict].fail("Invalid entries format")
-            entries_with_servers: list[tuple[EntryDict, str]] = []
+            entries_with_servers: Sequence[tuple[EntryDict, str]] = []
             for entry_with_server_raw in entries_data_raw:
                 if not _is_str_object_dict(entry_with_server_raw):
                     continue
@@ -383,7 +386,7 @@ class AclProcessingExample:
                 ):
                     continue
                 entries_with_servers.append((entry_raw, server_type_raw))
-            all_acls: list[AclProcessingExample.AclEntry] = []
+            all_acls: Sequence[AclProcessingExample.AclEntry] = []
             for entry_with_server in entries_with_servers:
                 result = AclProcessingExample.extract_acls_from_entry(
                     entry_with_server[0],
@@ -403,8 +406,8 @@ class AclProcessingExample:
             acls_data_raw = data.get("acls")
             if not _is_object_list(acls_data_raw):
                 return r[ProcessingDict].fail("Invalid ACLs format")
-            validation_results: list[AclProcessingExample.AclValidationResult] = []
-            acl_entries: list[AclProcessingExample.AclEntry] = [
+            validation_results: Sequence[AclProcessingExample.AclValidationResult] = []
+            acl_entries: Sequence[AclProcessingExample.AclEntry] = [
                 acl_item
                 for acl_item in acls_data_raw
                 if isinstance(acl_item, AclProcessingExample.AclEntry)
@@ -430,7 +433,7 @@ class AclProcessingExample:
             return r.ok(result_data)
 
     @staticmethod
-    def create_sample_acl_entries() -> list[EntryDict]:
+    def create_sample_acl_entries() -> Sequence[EntryDict]:
         """Create sample LDAP entries with ACL attributes for testing."""
         return [
             {

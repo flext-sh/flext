@@ -6,11 +6,15 @@
   - [Cyclic references](#cyclic-references)
   <!-- TOC END -->
 
-Forward annotations (wrapped in quotes) or using the `from __future__ import annotations` [future statement]
+Forward annotations (wrapped in quotes) or using the `from **future** import annotations
+
+from collections.abc import Mapping, Sequence` [future statement]
 (as introduced in [PEP563](https://www.python.org/dev/peps/pep-0563/)) are supported:
 
 ```python
 from __future__ import annotations
+
+from collections.abc import Mapping, Sequence
 
 from pydantic import BaseModel
 
@@ -36,7 +40,9 @@ The internal logic to resolve forward annotations is described in detail in [thi
 
 Models with self-referencing fields are also supported. These annotations will be resolved during model creation.
 
-Within the model, you can either add the `from __future__ import annotations` import or wrap the annotation
+Within the model, you can either add the `from **future** import annotations
+
+from collections.abc import Mapping, Sequence` import or wrap the annotation
 in a string:
 
 ```python
@@ -102,6 +108,8 @@ remaining recursion depth:
 ```python
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
+
 from collections.abc import Generator
 from contextlib import contextmanager
 from dataclasses import field
@@ -125,7 +133,7 @@ def suppress_recursion_validation_error() -> Generator[None]:
 
 class Node(BaseModel):
     id: int
-    children: list[Node] = field(default_factory=list)
+    children: Sequence[Node] = field(default_factory=list)
 
     @field_validator("children", mode="wrap")
     @classmethod
@@ -192,10 +200,12 @@ class NodeReference:
 
 @dataclass
 class Node(NodeReference):
-    children: list["Node"] = field(default_factory=list)
+    children: Sequence["Node"] = field(default_factory=list)
 
     @field_serializer("children", mode="wrap")
-    def serialize(self, children: list["Node"], handler: SerializerFunctionWrapHandler):
+    def serialize(
+        self, children: Sequence["Node"], handler: SerializerFunctionWrapHandler
+    ):
         """
         Serialize a list of nodes, handling circular references by excluding the children.
         """

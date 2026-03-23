@@ -183,7 +183,7 @@ class Response(BaseModel):
 ```python
 # BAD: Validation does too much
 class Order(BaseModel):
-    items: list[Item]
+    items: Sequence[Item]
 
     @field_validator("items")
     @classmethod
@@ -202,7 +202,7 @@ class Order(BaseModel):
 ```python
 # GOOD: Separation of concerns
 class Order(BaseModel):
-    items: list[Item]
+    items: Sequence[Item]
 
 
 # Business logic in service layer
@@ -483,7 +483,9 @@ class ValidationService:
         self._order_adapter = TypeAdapter(Order)
         self._item_adapter = TypeAdapter(Item)
 
-    def validate_batch(self, data_list: list[dict]) -> list[User | Order | Item]:
+    def validate_batch(
+        self, data_list: Sequence[dict]
+    ) -> Sequence[User | Order | Item]:
         results = []
         for data in data_list:
             # Determine adapter by discriminator

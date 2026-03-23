@@ -17,7 +17,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
 from typing import ClassVar, override
@@ -25,7 +25,7 @@ from typing import ClassVar, override
 from flext_core import FlextService, r, t
 from pydantic import BaseModel, ConfigDict, Field
 
-ProcessingDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar]]
+ProcessingDict = Mapping[str, t.Scalar | Sequence[str] | Mapping[str, t.Scalar]]
 
 
 class WorkflowData(BaseModel):
@@ -37,32 +37,34 @@ class WorkflowData(BaseModel):
     content: ProcessingDict = Field(default_factory=dict)
 
 
-def _new_str_list() -> list[str]:
+def _new_str_list() -> Sequence[str]:
     return []
 
 
-def _new_scalar_dict() -> dict[str, t.Scalar]:
+def _new_scalar_dict() -> Mapping[str, t.Scalar]:
     return {}
 
 
-def _new_stage_metadata_dict() -> dict[str, float | int | bool]:
+def _new_stage_metadata_dict() -> Mapping[str, float | int | bool]:
     return {}
 
 
-def _new_performance_metrics_dict() -> dict[str, float | int | dict[str, float | int]]:
+def _new_performance_metrics_dict() -> Mapping[
+    str, float | int | Mapping[str, float | int]
+]:
     return {}
 
 
-def _new_stage_result_list() -> list[CompleteWorkflowExample.WorkflowStageResult]:
+def _new_stage_result_list() -> Sequence[CompleteWorkflowExample.WorkflowStageResult]:
     return []
 
 
-def _new_aggregated_metrics_dict() -> dict[str, float | int]:
+def _new_aggregated_metrics_dict() -> Mapping[str, float | int]:
     return {}
 
 
 def _to_float_safe(
-    value: t.Scalar | list[str] | dict[str, t.Scalar] | None,
+    value: t.Scalar | Sequence[str] | Mapping[str, t.Scalar] | None,
 ) -> float:
     """Coerce ProcessingDict value to float; return 0.0 for non-scalar."""
     if isinstance(value, (int, float)):
@@ -90,7 +92,7 @@ class CompleteWorkflowExample:
         workflow_id: str = Field(description="Unique workflow identifier")
         correlation_id: str = Field(description="Correlation ID for tracking")
         start_time: float = Field(description="Workflow start timestamp")
-        stages: list[str] = Field(
+        stages: Sequence[str] = Field(
             default_factory=lambda: [
                 "validation",
                 "processing",
@@ -99,13 +101,15 @@ class CompleteWorkflowExample:
             ],
             description="List of workflow stages to execute",
         )
-        metadata: dict[str, t.Scalar] = Field(
+        metadata: Mapping[str, t.Scalar] = Field(
             default_factory=_new_scalar_dict,
             description="Workflow metadata key-value pairs",
         )
-        performance_metrics: dict[str, float | int | dict[str, float | int]] = Field(
-            default_factory=_new_performance_metrics_dict,
-            description="Performance metrics collected during workflow execution",
+        performance_metrics: Mapping[str, float | int | Mapping[str, float | int]] = (
+            Field(
+                default_factory=_new_performance_metrics_dict,
+                description="Performance metrics collected during workflow execution",
+            )
         )
 
     class WorkflowStageResult(BaseModel):
@@ -121,15 +125,15 @@ class CompleteWorkflowExample:
         items_succeeded: int = Field(description="Items that succeeded")
         items_failed: int = Field(description="Items that failed")
         processing_time: float = Field(description="Time taken to process stage")
-        errors: list[str] = Field(
+        errors: Sequence[str] = Field(
             default_factory=_new_str_list,
             description="List of errors encountered",
         )
-        warnings: list[str] = Field(
+        warnings: Sequence[str] = Field(
             default_factory=_new_str_list,
             description="List of warnings encountered",
         )
-        stage_metadata: dict[str, float | int | bool] = Field(
+        stage_metadata: Mapping[str, float | int | bool] = Field(
             default_factory=_new_stage_metadata_dict,
             description="Stage-specific metadata",
         )
@@ -147,11 +151,11 @@ class CompleteWorkflowExample:
         total_processing_time: float = Field(
             description="Total workflow processing time"
         )
-        stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = Field(
+        stage_results: Sequence[CompleteWorkflowExample.WorkflowStageResult] = Field(
             default_factory=_new_stage_result_list,
             description="Results from each workflow stage",
         )
-        aggregated_metrics: dict[str, float | int] = Field(
+        aggregated_metrics: Mapping[str, float | int] = Field(
             default_factory=_new_aggregated_metrics_dict,
             description="Aggregated metrics across all stages",
         )
@@ -164,8 +168,8 @@ class CompleteWorkflowExample:
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
-        data: list[ProcessingDict]
-        workflow_config: dict[str, str | int | bool | float]
+        data: Sequence[ProcessingDict]
+        workflow_config: Mapping[str, str | int | bool | float]
 
         def __init__(self) -> None:
             """Initialize the workflow orchestrator."""
@@ -207,9 +211,9 @@ class CompleteWorkflowExample:
 
         def _aggregate_workflow_metrics(
             self,
-            stage_results: list[CompleteWorkflowExample.WorkflowStageResult],
+            stage_results: Sequence[CompleteWorkflowExample.WorkflowStageResult],
             total_time: float,
-        ) -> dict[str, float | int]:
+        ) -> Mapping[str, float | int]:
             """Aggregate metrics across all workflow stages."""
             if not stage_results:
                 return {}
@@ -263,7 +267,7 @@ class CompleteWorkflowExample:
         def _execute_stage_parallel(
             self,
             stage_name: str,
-            items: list[ProcessingDict],
+            items: Sequence[ProcessingDict],
             stage_func: Callable[
                 [ProcessingDict, CompleteWorkflowExample.WorkflowContext],
                 r[WorkflowData],
@@ -292,7 +296,7 @@ class CompleteWorkflowExample:
                     err: ProcessingDict = {"error": str(e), "item": str(item)}
                     return err
 
-            processed_results: list[ProcessingDict] = []
+            processed_results: Sequence[ProcessingDict] = []
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 future_to_item = {
                     executor.submit(process_single_item, item): item for item in items
@@ -324,12 +328,12 @@ class CompleteWorkflowExample:
 
         def _execute_workflow(
             self,
-            data: list[ProcessingDict],
+            data: Sequence[ProcessingDict],
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> r[WorkflowData]:
             """Execute workflow stages with parallel processing."""
             items = data
-            stage_results: list[CompleteWorkflowExample.WorkflowStageResult] = []
+            stage_results: Sequence[CompleteWorkflowExample.WorkflowStageResult] = []
             current_data = items
             stage_functions = {
                 "validation": self._validate_items,
@@ -377,7 +381,7 @@ class CompleteWorkflowExample:
                 aggregated_metrics=aggregated_metrics,
                 workflow_status="completed",
             )
-            perf_summary: dict[str, t.Scalar] = dict(aggregated_metrics.items())
+            perf_summary: Mapping[str, t.Scalar] = dict(aggregated_metrics.items())
             summary: ProcessingDict = {
                 "workflow_id": workflow_result.workflow_id,
                 "workflow_status": workflow_result.workflow_status,
@@ -412,7 +416,8 @@ class CompleteWorkflowExample:
             sleep_time: float,
             add_field: str,
             value: str | float | bool,
-            extra_logic: Callable[[ProcessingDict], dict[str, t.Scalar]] | None = None,
+            extra_logic: Callable[[ProcessingDict], Mapping[str, t.Scalar]]
+            | None = None,
         ) -> ProcessingDict:
             """Generic stage processing helper."""
             time.sleep(sleep_time)
@@ -462,11 +467,11 @@ class CompleteWorkflowExample:
             )
 
     @staticmethod
-    def create_sample_workflow_data(count: int = 100) -> list[ProcessingDict]:
+    def create_sample_workflow_data(count: int = 100) -> Sequence[ProcessingDict]:
         """Create sample data for workflow testing."""
-        result: list[ProcessingDict] = []
+        result: Sequence[ProcessingDict] = []
         for i in range(count):
-            attrs: dict[str, t.Scalar] = {
+            attrs: Mapping[str, t.Scalar] = {
                 "objectClass": "person,organizationalPerson",
                 "cn": f"user{i}",
                 "sn": f"User{i}",
@@ -484,10 +489,10 @@ class CompleteWorkflowExample:
     @staticmethod
     def run_example() -> None:
         """Run the complete workflow example."""
-        sample_data: list[ProcessingDict] = (
+        sample_data: Sequence[ProcessingDict] = (
             CompleteWorkflowExample.create_sample_workflow_data(50)
         )
-        workflow_config: dict[str, str | int | bool | float] = {
+        workflow_config: Mapping[str, str | int | bool | float] = {
             "workflow_id": "comprehensive_workflow",
             "parallel": True,
             "max_workers": 4,

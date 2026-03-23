@@ -1,6 +1,8 @@
 <!-- TOC START -->
 
-- [Rule 1: Always Use `from __future__ import annotations`](#rule-1-always-use-from-future-import-annotations)
+- [Rule 1: Always Use `from **future** import annotations
+
+from collections.abc import Mapping, Sequence`](#rule-1-always-use-from-future-import-annotations)
 - [Rule 2: Import Order (enforced by ruff `I` rules)](#rule-2-import-order-enforced-by-ruff-i-rules)
 - [Rule 3: How to Import from flext-core (Inside flext-core)](#rule-3-how-to-import-from-flext-core-inside-flext-core)
   - [WITHIN flext-core, import via ABSOLUTE paths to submodules](#within-flext-core-import-via-absolute-paths-to-submodules)
@@ -84,13 +86,19 @@ from flext_core import m, p, t
 from flext_core import FlextProtocols
 ```
 
-## Rule 1: Always Use `from __future__ import annotations`
+## Rule 1: Always Use `from **future** import annotations
 
-This section provides concrete repository examples for the `from __future__ import annotations` requirement defined in `AGENTS.md` §3 and §4.
+from collections.abc import Mapping, Sequence`
+
+This section provides concrete repository examples for the `from **future** import annotations
+
+from collections.abc import Mapping, Sequence` requirement defined in `AGENTS.md` §3 and §4.
 
 ```python
 # FIRST non-docstring import in EVERY file
 from __future__ import annotations
+
+from collections.abc import Mapping, Sequence
 ```
 
 ---
@@ -100,7 +108,9 @@ from __future__ import annotations
 This section provides the concrete ordering template; canonical policy remains in `AGENTS.md` §4 Import Law.
 
 ```python
-from __future__ import annotations  # 1. FUTURE (always first)
+from __future__ import annotations
+
+from collections.abc import Mapping, Sequence  # 1. FUTURE (always first)
 
 import json  # 2. STDLIB (bare imports)
 import uuid
@@ -223,6 +233,8 @@ from flext_meltano import m  # NEVER
 class FlextTargetOracleModels(FlextModels):  # loses m.Meltano.*
 
 # ❌ WRONG — assignment not valid as type with from __future__ import annotations
+
+from collections.abc import Mapping, Sequence
 class Meltano:
     SingerSchemaMessage = FlextMeltanoModels.Meltano.SingerSchemaMessage
 ```
@@ -474,14 +486,18 @@ known-third-party = ["pydantic", "structlog", "dependency_injector", ...]
 lines-after-imports = 2
 lines-between-types = 1
 order-by-type = true
-required-imports = ["from __future__ import annotations"]
+required-imports = ["from __future__ import annotations
+
+from collections.abc import Mapping, Sequence"]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 ```
 
 Key enforced rules:
 
 - `I001` — Import sorting
-- `I002` — Required `from __future__ import annotations`
+- `I002` — Required `from **future** import annotations
+
+from collections.abc import Mapping, Sequence`
 - `TCH001/TCH002/TCH003` — Type-checking imports (IGNORED in ruff-shared.toml lines 79-81 for Pydantic compatibility)
 
 ---

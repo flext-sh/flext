@@ -361,8 +361,8 @@ servir como referência futura para implementação:
 ~~ """Base class for CQRS message handlers."""~~
 
 ~~ # ⚠️ Infraestrutura manual (será deprecated)~~
-~~ \_metrics: dict[str, int | float]~~
-~~\_context_stack: list[dict[str, t.NormalizedValue]]~~
+~~ \_metrics: Mapping[str, int | float]~~
+~~\_context_stack: Sequence[Mapping[str, t.NormalizedValue]]~~
 
 ~~ # ✅ Pipeline methods~~
 ~~ def handle(self, message: TCommand_contra) -> r[TResult_co]: ...~~
@@ -370,9 +370,9 @@ servir como referência futura para implementação:
 
 ~~ # ⚠️ Métodos manuais (serão deprecated em V2)~~
 ~~ def record_metric(self, key: str, value: int | float) -> None: ...~~
-~~ def get_metrics(self) -> dict[str, int | float]: ...~~
-~~ def push_context(self, ctx: dict[str, t.NormalizedValue]) -> None: ...~~
-~~ def pop_context(self) -> dict[str, t.NormalizedValue] | None: ...~~
+~~ def get_metrics(self) -> Mapping[str, int | float]: ...~~
+~~ def push_context(self, ctx: Mapping[str, t.NormalizedValue]) -> None: ...~~
+~~ def pop_context(self) -> Mapping[str, t.NormalizedValue] | None: ...~~
 ~~```~~
 
 ~~**Dependências:**~~
@@ -404,7 +404,7 @@ servir como referência futura para implementação:
 ~~\_rate_limiter_manager: RateLimiterManager # ~150 linhas~~
 ~~ \_timeout_enforcer: TimeoutEnforcer # ~100 linhas~~
 ~~ \_retry_policy_manager: RetryPolicyManager # ~150 linhas~~
-~~\_cache: dict[str, t.NormalizedValue] # ~100 linhas~~
+~~\_cache: Mapping[str, t.NormalizedValue] # ~100 linhas~~
 
 ~~ # ✅ Core methods~~
 ~~ def dispatch(self, message) -> r[t.NormalizedValue]: ...~~
@@ -515,8 +515,8 @@ servir como referência futura para implementação:
 ~~# ❌ Anti-pattern: Estado gerenciado manualmente~~
 ~~class FlextHandlers:~~
 ~~ def **init**(self):~~
-~~ self.\_metrics: dict[str, int | float] = {} # Manual!~~
-~~ self.\_context_stack: list[dict] = [] # Manual!~~
+~~ self.\_metrics: Mapping[str, int | float] = {} # Manual!~~
+~~ self.\_context_stack: Sequence[dict] = [] # Manual!~~
 
     def record_metric(self, key: str, value: int | float) -> None:
         self._metrics[key] = self._metrics.get(key, 0) + value
@@ -614,7 +614,7 @@ servir como referência futura para implementação:
 ~~ """Thread-safe metrics tracking for handlers."""~~
 
 ~~ def **init**(self) -> None:~~
-~~ self.\_metrics: dict[str, int | float] = {}~~
+~~ self.\_metrics: Mapping[str, int | float] = {}~~
 ~~ self.\_lock = threading.Lock()~~
 
 ~~ def record(self, key: str, value: int | float) -> None:~~
@@ -627,7 +627,7 @@ servir como referência futura para implementação:
 ~~ """Get metric value."""~~
 ~~ return self.\_metrics.get(key, 0)~~
 
-~~ def all(self) -> dict[str, int | float]:~~
+~~ def all(self) -> Mapping[str, int | float]:~~
 ~~ """Get all metrics."""~~
 ~~ return dict(self.\_metrics)~~
 
@@ -640,19 +640,19 @@ servir como referência futura para implementação:
 ~~ """Thread-safe context stack for handlers."""~~
 
 ~~ def **init**(self) -> None:~~
-~~ self.\_stack: list[dict[str, t.NormalizedValue]] = []~~
+~~ self.\_stack: Sequence[Mapping[str, t.NormalizedValue]] = []~~
 
-~~ def push(self, ctx: dict[str, t.NormalizedValue]) -> None:~~
+~~ def push(self, ctx: Mapping[str, t.NormalizedValue]) -> None:~~
 ~~ """Push context onto stack."""~~
 ~~ self.\_stack.append(ctx)~~
 
-~~ def pop(self) -> dict[str, t.NormalizedValue] | None:~~
+~~ def pop(self) -> Mapping[str, t.NormalizedValue] | None:~~
 ~~ """Pop context from stack."""~~
 ~~ return self.\_stack.pop() if self.\_stack else None~~
 
-~~ def current(self) -> dict[str, t.NormalizedValue]:~~
+~~ def current(self) -> Mapping[str, t.NormalizedValue]:~~
 ~~ """Get current context (merged stack)."""~~
-~~ result: dict[str, t.NormalizedValue] = {}~~
+~~ result: Mapping[str, t.NormalizedValue] = {}~~
 ~~ for ctx in self.\_stack:~~
 ~~ result.update(ctx)~~
 ~~ return result~~
@@ -838,7 +838,7 @@ servir como referência futura para implementação:
 ~~ )~~
 ~~ self.cqrs_metrics.record(key, value)~~
 
-~~ def get_metrics(self) -> dict[str, int | float]:~~
+~~ def get_metrics(self) -> Mapping[str, int | float]:~~
 ~~ """Get all recorded metrics.~~
 
 ~~ .. deprecated:: 1.0~~
@@ -1238,8 +1238,8 @@ servir como referência futura para implementação:
 ~~ ) -> None:~~
 ~~ self.\_failure_threshold = failure_threshold~~
 ~~ self.\_recovery_timeout = recovery_timeout~~
-~~ self.\_failures: dict[str, int] = {}~~
-~~ self.\_last_failure: dict[str, float] = {}~~
+~~ self.\_failures: Mapping[str, int] = {}~~
+~~ self.\_last_failure: Mapping[str, float] = {}~~
 
 ~~ def is_open(self, key: str) -> bool:~~
 ~~ """Check if circuit is open."""~~
@@ -1328,7 +1328,7 @@ servir como referência futura para implementação:
 ~~ user_id: str~~
 
 ~~class GetUserHandler(FlextHandlers[GetUserQuery, User]):~~
-~~ \_cache: dict[str, User] = {}~~
+~~ \_cache: Mapping[str, User] = {}~~
 
 ~~ def handle(self, query: GetUserQuery) -> r[User]:~~
 ~~ # Check cache first~~
@@ -1398,7 +1398,7 @@ servir como referência futura para implementação:
 ~~class ProcessOrderCommand:~~
 ~~ order_id: str~~
 ~~ customer_id: str~~
-~~ items: list[OrderItem]~~
+~~ items: Sequence[OrderItem]~~
 
 ~~class ProcessOrderHandler(FlextHandlers[ProcessOrderCommand, Order]):~~
 ~~ def handle(self, command: ProcessOrderCommand) -> r[Order]:~~
@@ -1614,7 +1614,7 @@ servir como referência futura para implementação:
 
 ~~# In-memory repository (for demo)~~
 ~~class UserRepository:~~
-~~ \_users: ClassVar[dict[str, User]] = {}~~
+~~ \_users: ClassVar[Mapping[str, User]] = {}~~
 
 ~~ @classmethod~~
 ~~ def save(cls, user: User) -> None:~~
@@ -1625,7 +1625,7 @@ servir como referência futura para implementação:
 ~~ return cls.\_users.get(user_id)~~
 
 ~~ @classmethod~~
-~~ def list(cls, limit: int, offset: int) -> list[User]:~~
+~~ def list(cls, limit: int, offset: int) -> Sequence[User]:~~
 ~~ users = list(cls.\_users.values())~~
 ~~ return users[offset:offset + limit]~~
 
@@ -1685,8 +1685,8 @@ self.logger.debug(f"Getting user: {query.user_id}")
         self.cqrs_metrics.record("users_found", 1)
         return r.ok(user)
 
-class ListUsersHandler(h[ListUsersQuery, list[User]]):
-def handle(self, query: ListUsersQuery) -> r[list[User]]:
+class ListUsersHandler(h[ListUsersQuery, Sequence[User]]):
+def handle(self, query: ListUsersQuery) -> r[Sequence[User]]:
 self.logger.debug(f"Listing users: limit={query.limit}, offset={query.offset}")
 
         with self.track("list_users"):
@@ -1801,7 +1801,7 @@ class CustomCircuitBreaker:
         self._failure_threshold = failure_threshold
         self._success_threshold = success_threshold
         self._recovery_timeout = recovery_timeout
-        self._circuits: dict[str, CircuitState] = {}
+        self._circuits: Mapping[str, CircuitState] = {}
         self._logger = logger or FlextLogger(__name__)
 
     def _get_circuit(self, key: str) -> CircuitState:
@@ -1861,7 +1861,7 @@ class CustomCircuitBreaker:
     def get_state(self, key: str) -> str:
         return self._get_circuit(key).state
 
-    def get_metrics(self, key: str) -> dict[str, int | float | str]:
+    def get_metrics(self, key: str) -> Mapping[str, int | float | str]:
         circuit = self._get_circuit(key)
         return {
             "state": circuit.state,
@@ -2360,9 +2360,9 @@ class MockCircuitBreaker:
     """Mock circuit breaker for testing."""
 
     def __init__(self) -> None:
-        self.is_open_calls: list[str] = []
-        self.record_success_calls: list[str] = []
-        self.record_failure_calls: list[str] = []
+        self.is_open_calls: Sequence[str] = []
+        self.record_success_calls: Sequence[str] = []
+        self.record_failure_calls: Sequence[str] = []
         self._open_circuits: set[str] = set()
 
     def is_open(self, key: str) -> bool:

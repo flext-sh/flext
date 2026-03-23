@@ -196,7 +196,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
 
         class Model(BaseModel):
-            numbers: Annotated[list[int], BeforeValidator(ensure_list)]
+            numbers: Annotated[Sequence[int], BeforeValidator(ensure_list)]
 
 
         print(Model(numbers=2))
@@ -231,7 +231,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
 
         class Model(BaseModel):
-            numbers: list[int]
+            numbers: Sequence[int]
 
             @field_validator("numbers", mode="before")
             @classmethod
@@ -445,7 +445,7 @@ class Model2(BaseModel):
 
 
 class Model3(BaseModel):
-    list_of_even_numbers: list[EvenNumber]  # (1)!
+    list_of_even_numbers: Sequence[EvenNumber]  # (1)!
 ```
 
 1. As mentioned in the [annotated pattern](./fields.md#the-annotated-pattern) documentation,
@@ -703,6 +703,8 @@ It is currently not possible to provide a context when directly instantiating a 
     ```python
     from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
+
     from collections.abc import Generator
     from contextlib import contextmanager
     from contextvars import ContextVar
@@ -714,7 +716,7 @@ It is currently not possible to provide a context when directly instantiating a 
 
 
     @contextmanager
-    def init_context(value: dict[str, Any]) -> Generator[None]:
+    def init_context(value: Mapping[str, Any]) -> Generator[None]:
         token = _init_context_var.set(value)
         try:
             yield
@@ -798,7 +800,7 @@ Pydantic provides a few special utilities that can be used to customize validati
 
 
   class Basket(BaseModel):
-      fruits: list[InstanceOf[Fruit]]
+      fruits: Sequence[InstanceOf[Fruit]]
 
 
   print(Basket(fruits=[Banana(), Apple()]))
@@ -821,7 +823,7 @@ Pydantic provides a few special utilities that can be used to customize validati
 
 
   class Model(BaseModel):
-      names: list[SkipValidation[str]]
+      names: Sequence[SkipValidation[str]]
 
 
   m = Model(names=["foo", "bar"])

@@ -7,7 +7,7 @@
 <!-- TOC END -->
 
 You may have types that are not `BaseModel`s that you want to validate data against.
-Or you may want to validate a `list[SomeModel]`, or dump it to JSON.
+Or you may want to validate a `Sequence[SomeModel]`, or dump it to JSON.
 
 ??? api "API Documentation"
 [`pydantic.type_adapter.TypeAdapter`][pydantic.type_adapter.TypeAdapter]<br>
@@ -31,7 +31,7 @@ class User(TypedDict):
     id: int
 
 
-user_list_adapter = TypeAdapter(list[User])
+user_list_adapter = TypeAdapter(Sequence[User])
 user_list = user_list_adapter.validate_python([{"name": "Fred", "id": "3"}])
 print(repr(user_list))
 # > [{'name': 'Fred', 'id': 3}]
@@ -41,7 +41,7 @@ try:
 except ValidationError as e:
     print(e)
     """
-    1 validation error for list[User]
+    1 validation error for Sequence[User]
     0.id
       Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='wrong', input_type=str]
     """
@@ -84,7 +84,7 @@ class Item(BaseModel):
 # item_data = requests.get('https://my-api.com/items').json()
 item_data = [{"id": 1, "name": "My Item"}]
 
-items = TypeAdapter(list[Item]).validate_python(item_data)
+items = TypeAdapter(Sequence[Item]).validate_python(item_data)
 print(items)
 # > [Item(id=1, name='My Item')]
 ```

@@ -82,6 +82,8 @@ Create comprehensive TypeGuard utilities that will replace all 627 cast() usages
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
+
 from typing import TypeGuard
 
 from flext_core import t
@@ -129,6 +131,8 @@ class Guards:
 """Test-specific type guards for fixtures and test data."""
 
 from __future__ import annotations
+
+from collections.abc import Mapping, Sequence
 
 from typing import TypeGuard
 

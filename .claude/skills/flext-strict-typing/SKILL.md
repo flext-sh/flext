@@ -104,13 +104,15 @@ def parse_payload(payload: m.Domain.PayloadModel) -> r[str]:
 - **Python 3.13+** — Verified in `pyproject.toml` (`requires-python = ">=3.13"`)
   and `ruff-shared.toml` (`target-version = "py313"`)
 - **Pydantic v2** — Required for all models (`pydantic>=2.0`)
-- **`from __future__ import annotations`** in every file
+- **`from **future** import annotations
+
+from collections.abc import Mapping, Sequence`** in every file
 
 ## FLEXT Mapping-First Policy (Contract Layer)
 
 - **Default contract type**: `Mapping[K, V]` for read-only boundaries.
 - **Explicit mutable contract**: `MutableMapping[K, V]` only when mutation is part of the contract.
-- **`dict[K, V]` is almost-banned in annotations**: keep `dict` primarily for local mutation hotspots and short-lived intermediate states.
+- **`Mapping[K, V]` is almost-banned in annotations**: keep `dict` primarily for local mutation hotspots and short-lived intermediate states.
 - **Schema-bearing payloads**: prefer `TypedDict` or Pydantic models instead of plain map contracts.
 - **Runtime checks**: prefer protocol/Mapping checks over `isinstance(x, dict)` unless dict-only behavior is required.
 
@@ -124,11 +126,11 @@ def parse_payload(payload: m.Domain.PayloadModel) -> r[str]:
 | ---------------- | -------------------------- | ------------------------------------------------------------- |
 | `Any` / `t.NormalizedValue` | Specific Pydantic Model    | **MANDATORY**: For ALL domain entities and value objects      |
 | `Any` / `t.NormalizedValue` | `t.Scalar`                 | Primitives: `str \| int \| float \| bool \| datetime`         |
-| `dict[*, *]`      | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
+| `Mapping[*, *]`      | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
 | `Mapping[*, *]`   | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
 | Broad container aliases | `m.<Domain>.*Model` / `p.<Domain>.*Protocol` | Replace permissive contracts with explicit models/protocols  |
 | `t.Dict`          | `FlextModels.Dict`         | **Transitioning**: Prefer specialized models over generic dict |
-| `list[Any]`      | `list[SpecificModel]`      | Generic lists are forbidden                                   |
+| `Sequence[Any]`      | `Sequence[SpecificModel]`      | Generic lists are forbidden                                   |
 | `Sequence[Any]`  | `Sequence[SpecificModel]`  | Read-only batch contracts                                     |
 
 ### The Type Hierarchy (from `typings.py` lines 153-176)
@@ -156,11 +158,11 @@ Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` 
 t.Dict  # Transitional only — migrate to explicit domain dict models
 m.Domain.ConfigModel  # Canonical strict config contract
 p.ServiceMap  # Transitional only — migrate to explicit service registry models
-t.ErrorMap  # RootModel[dict[str, int | str | dict[str, int]]] — error types
+t.ErrorMap  # RootModel[Mapping[str, int | str | Mapping[str, int]]] — error types
 t.ObjectList  # Transitional only — migrate to Sequence[m.<Domain>.ItemModel]
-t.FactoryMap  # RootModel[dict[str, FactoryRegistrationCallable]]
-t.ResourceMap  # RootModel[dict[str, ResourceCallable]]
-t.FieldValidatorMap  # RootModel[dict[str, Callable[[GVT], GVT]]]
+t.FactoryMap  # RootModel[Mapping[str, FactoryRegistrationCallable]]
+t.ResourceMap  # RootModel[Mapping[str, ResourceCallable]]
+t.FieldValidatorMap  # RootModel[Mapping[str, Callable[[GVT], GVT]]]
 ```
 
 ---
@@ -184,8 +186,8 @@ type GeneralValueType = (
     Scalar
     | BaseModel
     | Path
-    | list[FlextTypes.GeneralValueType]
-    | dict[str, FlextTypes.GeneralValueType]
+    | Sequence[FlextTypes.GeneralValueType]
+    | Mapping[str, FlextTypes.GeneralValueType]
 )
 ```
 
@@ -297,8 +299,8 @@ from flext_core import T, T_co, U, P, R, T_Model, T_Settings
 
 | Old (FORBIDDEN)         | New (REQUIRED)                                                 | Ruff Rule            |
 | ----------------------- | -------------------------------------------------------------- | -------------------- |
-| `typing.List[X]`        | `list[X]`                                                      | UP006                |
-| `typing.Dict[str, X]`   | `Mapping[str, X]` (contract) / `dict[str, X]` (local mutation) | UP006 + FLEXT policy |
+| `typing.List[X]`        | `Sequence[X]`                                                      | UP006                |
+| `typing.Dict[str, X]`   | `Mapping[str, X]` (contract) / `Mapping[str, X]` (local mutation) | UP006 + FLEXT policy |
 | `typing.Tuple[X, ...]`  | `tuple[X, ...]`                                                | UP006                |
 | `typing.Optional[X]`    | `X \| None`                                                    | UP007                |
 | `typing.Union[X, Y]`    | `X \| Y`                                                       | UP007                |
@@ -361,11 +363,11 @@ class MyModel(BaseModel):
 ```python
 # ✅ CORRECT — Annotated with Field
 name: str = Field(default="", description="Name")
-items: list[str] = Field(default_factory=list)
+items: Sequence[str] = Field(default_factory=list)
 created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 # ❌ WRONG — No default_factory for mutable defaults
-items: list[str] = []  # Mutable default, use Field(default_factory=list)
+items: Sequence[str] = []  # Mutable default, use Field(default_factory=list)
 ```
 
 ### Validators use `@field_validator` and `@model_validator`

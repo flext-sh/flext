@@ -76,7 +76,7 @@ from pydantic.dataclasses import dataclass
 class User:
     id: int
     name: str = "John Doe"
-    friends: list[int] = dataclasses.field(default_factory=lambda: [0])
+    friends: Sequence[int] = dataclasses.field(default_factory=lambda: [0])
     age: Optional[int] = dataclasses.field(
         default=None,
         metadata={"title": "The age of the user", "description": "do not lie!"},

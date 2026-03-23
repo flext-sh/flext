@@ -125,7 +125,7 @@ class Point:
 
 
 # Batch I/O operations
-def process_batch(items: list[str]) -> list[Result]:
+def process_batch(items: Sequence[str]) -> Sequence[Result]:
     return db.bulk_query(items)  # 1 query, not N queries
 ```
 
