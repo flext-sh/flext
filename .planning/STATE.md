@@ -53,7 +53,6 @@ None yet.
 
 ### Blockers/Concerns
 
-- `flext-api` and `flext-oracle-wms` have uncommitted changes in `__init__.py` (likely import normalization session artifact) — should be committed or verified before Phase 1 plans begin
 - Active boulder: `pyrefly-repo-hardening` (Waves 1–5 pending, Wave 0 done)
 - Top error offenders to watch: flext-cli (1,419), algar-oud-mig (370, excluded), flext-quality (298), flext-observability (280), flext-core (170)
 

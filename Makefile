@@ -183,7 +183,7 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help setup upgrade modernize build check security format docs test validate typings pyrefly-repo stub-validate-repo type-policy clean release pr commit tag push codegen sync imports status
+.PHONY: help boot up mod build check cqrs scan fmt docs test val types pyre stubs pol clean rel pr save tag push gen sync imp stat
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -192,29 +192,30 @@ help: ## Show simple workspace verbs
 	$(Q)echo "Selection: $(words $(SELECTED_PROJECTS)) selected"
 	$(Q)echo ""
 	$(Q)echo "Core verbs:"
-	$(Q)echo " setup   Install all projects into workspace .venv, then run validate VALIDATE_SCOPE=workspace"
-	$(Q)echo " upgrade  Upgrade deps + modernize + dependency report (.reports/dependencies/)"
-	$(Q)echo " modernize Modernize pyproject.toml configs only (no lock/install)"
+	$(Q)echo " boot    Install all projects into workspace .venv, then run val VALIDATE_SCOPE=workspace"
+	$(Q)echo " up     Upgrade deps + modernize + dependency report (.reports/dependencies/)"
+	$(Q)echo " mod    Modernize pyproject.toml configs only (no lock/install)"
 	$(Q)echo " build   Build/package all selected projects"
-	$(Q)echo " check   Run the 6 lint gates in all projects"
-	$(Q)echo " security  Run all security checks in all projects"
-	$(Q)echo " format   Run all formatting in all projects"
+	$(Q)echo " check   Run the lint gates in all projects"
+	$(Q)echo " scan    Run all security checks in all projects"
+	$(Q)echo " fmt    Run all formatting in all projects"
 	$(Q)echo " docs    Build docs in all projects"
 	$(Q)echo " test    Run tests only in all projects"
-	$(Q)echo " validate  Run validate gates (FIX=1 auto-fix, VALIDATE_SCOPE=workspace for repo-level)"
-	$(Q)echo " release  Interactive workspace release orchestration"
+	$(Q)echo " val    Run validate gates (FIX=1 auto-fix, VALIDATE_SCOPE=workspace for repo-level)"
+	$(Q)echo " rel    Interactive workspace release orchestration"
 	$(Q)echo " pr     Manage PRs for selected projects"
-	$(Q)echo " typings  Stub supply-chain + typing report (PROJECT/PROJECTS to scope)"
-	$(Q)echo " pyrefly-repo  Run authoritative repo-wide pyrefly report"
-	$(Q)echo " stub-validate-repo  Validate typing stub supply-chain (repo-wide)"
-	$(Q)echo " type-policy  Enforce no Any/t.NormalizedValue/type: ignore (repo-wide)"
+	$(Q)echo " types   Stub supply-chain + typing report (PROJECT/PROJECTS to scope)"
+	$(Q)echo " pyre    Run authoritative repo-wide pyrefly report"
+	$(Q)echo " stubs   Validate typing stub supply-chain (repo-wide)"
+	$(Q)echo " pol    Enforce no Any/t.NormalizedValue/type: ignore (repo-wide)"
+	$(Q)echo " cqrs    Enforce strict CQRS/FlextModels patterns across ecosystem"
 	$(Q)echo " clean   Clean all projects"
 	$(Q)echo ""
 	$(Q)echo "Git workflow:"
-	$(Q)echo " commit  Commit all changes in selected projects (MESSAGE=)"
+	$(Q)echo " save    Commit all changes in selected projects (MESSAGE=)"
 	$(Q)echo " tag    Create git tags for selected projects (TAG=, DRY_RUN=1)"
 	$(Q)echo " push   Push branches and tags for selected projects"
-	$(Q)echo " codegen  Standardize __init__.py lazy imports (PEP 562)"
+	$(Q)echo " gen    Standardize __init__.py lazy imports (PEP 562)"
 	$(Q)echo ""
 	$(Q)echo "Selectors:"
 	$(Q)echo " PROJECT=<name>             Single project"
@@ -261,27 +262,27 @@ help: ## Show simple workspace verbs
 	$(Q)echo " make check CHECK_GATES=lint FIX=1 CHANGED_ONLY=1"
 	$(Q)echo " make test PROJECT=flext-core MATCH=test_container FAIL_FAST=1"
 	$(Q)echo " make test PROJECT=flext-core FILE=tests/unit/test_foo.py"
-	$(Q)echo " make format FILE=src/flext_core/foo.py CHECK_ONLY=1"
+	$(Q)echo " make fmt FILE=src/flext_core/foo.py CHECK_ONLY=1"
 	$(Q)echo " make check PROJECT=flext-core CHECK_GATES=lint RUFF_ARGS=\"--select E501\""
 	$(Q)echo " make build"
-	$(Q)echo " make typings PROJECT=flext-api"
-	$(Q)echo " make pyrefly-repo"
-	$(Q)echo " make stub-validate-repo"
+	$(Q)echo " make types PROJECT=flext-api"
+	$(Q)echo " make pyre"
+	$(Q)echo " make stubs"
 	$(Q)echo " make check CHECK_GATES=lint,type"
-	$(Q)echo " make validate PROJECTS=\"flext-core flext-api\" FIX=1"
+	$(Q)echo " make val PROJECTS=\"flext-core flext-api\" FIX=1"
 	$(Q)echo " make test PROJECT=flext-api PYTEST_ARGS=\"-k unit\" FAIL_FAST=1"
-	$(Q)echo " make validate VALIDATE_SCOPE=workspace"
-	$(Q)echo " make release BUMP=minor"
-	$(Q)echo " make commit MESSAGE='chore: upgrade deps'"
+	$(Q)echo " make val VALIDATE_SCOPE=workspace"
+	$(Q)echo " make rel BUMP=minor"
+	$(Q)echo " make save MESSAGE='chore: upgrade deps'"
 	$(Q)echo " make tag"
 	$(Q)echo " make tag TAG=v1.0.0"
 	$(Q)echo " make push"
-	$(Q)echo " make codegen PROJECT=flext-core"
+	$(Q)echo " make gen PROJECT=flext-core"
 	$(Q)echo " make pr PROJECT=flext-core PR_ACTION=status"
 	$(Q)echo " make pr PROJECT=flext-core PR_ACTION=create PR_TITLE='release: 0.11.0-dev'"
 	$(Q)echo " NOTE: External projects (not in .gitmodules) require manual clone."
 
-setup: ## Install all projects into workspace .venv
+boot: ## Install all projects into workspace .venv
 	$(Q)$(PREFLIGHT_CHECK)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)if [ -f .gitmodules ]; then \
@@ -331,7 +332,7 @@ setup: ## Install all projects into workspace .venv
 		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
 			log_file="/tmp/flext-setup-$$proj.log"; \
 			start_ts=$$(date +%s); \
-			printf "[%2d/%2d] setup %s\n" $$step $$total_steps "$$proj"; \
+			printf "[%2d/%2d] boot %s\n" $$step $$total_steps "$$proj"; \
 			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --workspace "$$proj" >>"$$log_file" 2>&1; then \
 				:; \
 			else \
@@ -371,7 +372,7 @@ setup: ## Install all projects into workspace .venv
 	log_file="/tmp/flext-setup-root.log"; \
 	start_ts=$$(date +%s); \
 	root_lock_ok=0; \
-	printf "[%2d/%2d] setup %s\n" $$step $$total_steps "root"; \
+	printf "[%2d/%2d] boot %s\n" $$step $$total_steps "root"; \
 	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --workspace . >"$$log_file" 2>&1; then \
 		echo "     sync  ... failed"; \
 		cat "$$log_file"; \
@@ -407,13 +408,13 @@ setup: ## Install all projects into workspace .venv
 	echo "Setup summary: Installed=$$installed Failed=$$failed Total=$$total_steps"; \
 	if [ $$failed -ne 0 ]; then \
 		echo "Failed projects:$$failed_projects"; \
-		echo "FAIL: setup ($$failed projects)"; \
+		echo "FAIL: boot ($$failed projects)"; \
 		exit 1; \
 	fi; \
 	echo "Validating workspace (validate VALIDATE_SCOPE=workspace)..."; \
-	$(MAKE) validate VALIDATE_SCOPE=workspace || { echo "FAIL: setup validation"; exit 1; }
+	$(MAKE) val VALIDATE_SCOPE=workspace || { echo "FAIL: boot validation"; exit 1; }
 
-upgrade: ## Upgrade Python dependencies to latest via Poetry
+up: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
@@ -433,7 +434,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
 			log_file="/tmp/flext-upgrade-$$proj.log"; \
 			start_ts=$$(date +%s); \
-			printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "$$proj"; \
+			printf "[%2d/%2d] up %s\n" $$step $$total_steps "$$proj"; \
 			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --workspace "$$proj" >>"$$log_file" 2>&1; then \
 				:; \
 			else \
@@ -484,7 +485,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	log_file="/tmp/flext-upgrade-root.log"; \
 	start_ts=$$(date +%s); \
 	root_update_ok=0; \
-	printf "[%2d/%2d] upgrade %s\n" $$step $$total_steps "root"; \
+	printf "[%2d/%2d] up %s\n" $$step $$total_steps "root"; \
 	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --workspace . >"$$log_file" 2>&1; then \
 		echo "     sync  ... failed"; \
 		cat "$$log_file"; \
@@ -539,7 +540,7 @@ upgrade: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)echo "Syncing GitHub workflow templates..."
 	$(Q)$(PY) -m flext_infra github workflows --workspace-root "$(CURDIR)" --apply --prune --report .reports/workflows/sync.json
 
-modernize: ## Modernize pyproject.toml files (standardize configs without lock/install)
+mod: ## Modernize pyproject.toml files (standardize configs without lock/install)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
@@ -576,7 +577,7 @@ check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,p
 		$(if $(filter 1,$(CHECK_ONLY)),--make-arg "CHECK_ONLY=$(CHECK_ONLY)") \
 		$(SELECTED_PROJECTS)
 
-check-cqrs-compliance: ## Enforce strict CQRS/FlextModels patterns across ecosystem
+cqrs: ## Enforce strict CQRS/FlextModels patterns across ecosystem
 	$(Q).github/scripts/check-cqrs-compliance.sh
 
 build: ## Build/package all selected projects
@@ -587,7 +588,7 @@ build: ## Build/package all selected projects
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)$(ORCHESTRATOR) --verb build $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
 
-release: ## Interactive workspace release orchestration
+rel: ## Interactive workspace release orchestration
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
@@ -633,16 +634,16 @@ pr: ## Manage pull requests for selected projects
 		--pr-checks-strict "$(PR_CHECKS_STRICT)" \
 		--pr-release-on-merge "$(PR_RELEASE_ON_MERGE)"
 
-security: ## Run all security checks in all projects
+scan: ## Run all security checks in all projects
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
-	$(Q)$(ORCHESTRATOR) --verb security $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
+	$(Q)$(ORCHESTRATOR) --verb scan $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
 
-format: ## Run code formatting across all workspace projects (ruff/gofmt + markdownlint)
+fmt: ## Run code formatting across all workspace projects (ruff/gofmt + markdownlint)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "Formatting Python files (ruff)..."
@@ -706,7 +707,7 @@ test: ## Run tests only in all projects
 		$(if $(VERBOSE),--make-arg "VERBOSE=$(VERBOSE)") \
 		$(SELECTED_PROJECTS)
 
-validate: ## Run validate gates (VALIDATE_SCOPE=project|workspace, FIX=1)
+val: ## Run validate gates (VALIDATE_SCOPE=project|workspace, FIX=1)
 ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
@@ -735,14 +736,14 @@ else
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)if [ -z "$(FIX)" ]; then echo "INFO: run 'make validate FIX=1' to auto-fix before validate"; fi
-	$(Q)$(ORCHESTRATOR) --verb validate \
+	$(Q)$(ORCHESTRATOR) --verb val \
 		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
 		$(if $(FIX),--make-arg "FIX=$(FIX)") \
 		$(if $(VALIDATE_GATES),--make-arg "VALIDATE_GATES=$(VALIDATE_GATES)") \
 		$(SELECTED_PROJECTS)
 endif
 
-typings: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency report). Use PROJECT= or PROJECTS= to scope.
+types: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency report). Use PROJECT= or PROJECTS= to scope.
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
@@ -789,7 +790,7 @@ typings: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency r
 		$(POETRY_ENV) $(PY) -m flext_infra deps detect --typings -q --no-fail || true; \
 	fi
 
-pyrefly-repo: ## Authoritative repo-wide pyrefly report -> .reports/pyrefly + evidence
+pyre: ## Authoritative repo-wide pyrefly report -> .reports/pyrefly + evidence
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)mkdir -p .sisyphus/evidence .reports/pyrefly
@@ -813,7 +814,7 @@ pyrefly-repo: ## Authoritative repo-wide pyrefly report -> .reports/pyrefly + ev
 	cat "$(CURDIR)/.reports/pyrefly/repo-pyrefly-summary.txt" >> .sisyphus/evidence/pyrefly-repo-before.txt; \
 	exit $$pyrefly_status
 
-stub-validate-repo: ## Repo-wide stub supply-chain validation -> .sisyphus/evidence
+stubs: ## Repo-wide stub supply-chain validation -> .sisyphus/evidence
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)mkdir -p .sisyphus/evidence
@@ -824,7 +825,7 @@ stub-validate-repo: ## Repo-wide stub supply-chain validation -> .sisyphus/evide
 	printf "exit_code: %s\n" "$$stub_status" >> .sisyphus/evidence/pyrefly-stub-validate.txt; \
 	exit $$stub_status
 
-type-policy: ## Repo-wide typing policy gate (no Any/t.NormalizedValue/# type: ignore)
+pol: ## Repo-wide typing policy gate (no Any/t.NormalizedValue/# type: ignore)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)mkdir -p .sisyphus/evidence .reports/pyrefly
@@ -877,7 +878,7 @@ clean: ## Clean all projects
 	$(Q)$(ORCHESTRATOR) --verb clean $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(SELECTED_PROJECTS)
 	$(Q)rm -rf .pytest_cache/ htmlcov/ .coverage* .mypy_cache/ .ruff_cache/
 
-commit: ## Commit all changes in selected projects (MESSAGE=)
+save: ## Commit all changes in selected projects (MESSAGE=)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
@@ -914,7 +915,7 @@ commit: ## Commit all changes in selected projects (MESSAGE=)
 	fi; \
 	echo "Commit: $$committed committed, $$skipped clean, $$failed failed"
 
-status: ## Show git status for all workspace projects (submodules + external + root)
+stat: ## Show git status for all workspace projects (submodules + external + root)
 	$(Q)for proj in $(ALL_PROJECTS); do \
 		if [ -e "$$proj/.git" ]; then \
 			changes=$$(cd "$$proj" && git status --porcelain 2>/dev/null); \
@@ -1020,7 +1021,7 @@ push: ## Push branches and tags for selected projects
 	fi; \
 	echo "Push: $$pushed pushed, $$failed failed"
 
-codegen: ## Standardize __init__.py lazy imports (PEP 562)
+gen: ## Standardize __init__.py lazy imports (PEP 562)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "Standardizing __init__.py lazy imports..."
@@ -1043,7 +1044,7 @@ sync: ## Sync project Makefiles from pyproject.toml + refresh __init__.py lazy i
 		$(PY) -m flext_infra codegen lazy-init --workspace "$(CURDIR)"
 	$(Q)echo "==> Sync complete."
 
-imports: ## Detect and fix import violations across workspace (CST-based)
+imp: ## Detect and fix import violations across workspace (CST-based)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)PYTHONPATH="$(CURDIR)/flext-infra/src:$(CURDIR)/flext-core/src:$$PYTHONPATH" \
