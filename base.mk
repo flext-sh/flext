@@ -6,7 +6,7 @@
 # =============================================================================
 
 # === CONFIGURATION (override before include) ===
-PROJECT_NAME ?= unnamed
+PROJECT_NAME ?= flext-workspace
 PYTHON_VERSION ?= 3.13
 SRC_DIR ?= src
 TESTS_DIR ?= tests
@@ -172,14 +172,14 @@ help: ## Show commands
 	$(Q)echo "================================================"
 	$(Q)echo ""
 	$(Q)echo "Core verbs:"
-	$(Q)printf "  %-14s %s\n" "setup"     "Install dependencies and hooks"
+	$(Q)printf "  %-14s %s\n" "boot"      "Install dependencies and hooks"
 	$(Q)printf "  %-14s %s\n" "build"     "Build distributable artifacts"
 	$(Q)printf "  %-14s %s\n" "check"     "Run lint gates (CHECK_GATES= to select)"
-	$(Q)printf "  %-14s %s\n" "security"  "Run all security checks"
-	$(Q)printf "  %-14s %s\n" "format"    "Run all formatting"
+	$(Q)printf "  %-14s %s\n" "scan"      "Run all security checks"
+	$(Q)printf "  %-14s %s\n" "fmt"       "Run all formatting"
 	$(Q)printf "  %-14s %s\n" "docs"      "Build docs (DOCS_PHASE= to select)"
 	$(Q)printf "  %-14s %s\n" "test"      "Run pytest (PYTEST_ARGS= for options)"
-	$(Q)printf "  %-14s %s\n" "validate"  "Run validate gates (FIX=1 to auto-fix)"
+	$(Q)printf "  %-14s %s\n" "val"       "Run validate gates (FIX=1 to auto-fix)"
 	$(Q)printf "  %-14s %s\n" "clean"     "Clean build/test/type artifacts"
 	$(Q)echo ""
 	$(Q)echo "Daemon management:"
@@ -201,7 +201,7 @@ help: ## Show commands
 	$(Q)echo "  PR_DELETE_BRANCH=0|1  PR_CHECKS_STRICT=0|1"
 	$(Q)echo "  PR_RELEASE_ON_MERGE=0|1"
 
-setup: ## Complete setup
+boot: ## Complete setup
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
 		go mod download; \
 		go mod tidy; \
@@ -288,7 +288,7 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 	else \
 		gates="lint,format,pyrefly,mypy,pyright,security,markdown,go"; \
 	fi; \
-	gates=$$(echo "$$gates" | tr ',' ' ' | sed 's/\btype\b/pyrefly/g' | tr ' ' ','); \
+	gates=$$(echo "$$gates" | tr ',' ' ' | sed 's/\btype\b/pyrefly/g; s/\bfmt\b/format/g; s/\bscan\b/security/g' | tr ' ' ','); \
 	_files=""; \
 	if [ -n "$(FILES)" ]; then _files="$(FILES)"; fi; \
 	if [ -n "$(FILE)" ]; then \
@@ -322,14 +322,14 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 	FLEXT_WORKSPACE_ROOT="$(WORKSPACE_ROOT)" $(POETRY) run python -m flext_infra check run --gates "$$gates" --reports-dir "$(CURDIR)/.reports/check" --project "$$project_key"; \
 	exit $$?
 
-security: ## Run all security checks
+scan: ## Run all security checks
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
 		gosec ./...; \
 		exit 0; \
 	fi
 	$(Q)$(POETRY) run bandit -r $(SRC_DIR) -q -ll
 
-format: ## Run code formatting (ruff/gofmt + markdownlint on tracked files)
+fmt: ## Run code formatting (ruff/gofmt + markdownlint on tracked files)
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
 		go_files=$$(find . -type f -name '*.go' ! -path './.git/*' ! -path './vendor/*'); \
 		if [ -n "$$go_files" ]; then \
@@ -488,10 +488,10 @@ test: ## Run pytest only
 	exit $$rc; \
 	fi
 
-validate: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, FIX=1)
+val: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, FIX=1)
 	$(Q)if [ "$(CORE_STACK)" = "go" ]; then \
 		if [ "$(FIX)" = "1" ]; then \
-			$(MAKE) format; \
+			$(MAKE) fmt; \
 		fi; \
 		go mod verify; \
 		exit 0; \

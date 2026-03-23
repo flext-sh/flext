@@ -530,7 +530,7 @@ up: ## Upgrade Python dependencies to latest via Poetry
 	echo "Upgrade summary: Upgraded=$$upgraded Failed=$$failed Total=$$total_steps"; \
 	if [ $$failed -ne 0 ]; then \
 		echo "Failed projects:$$failed_projects"; \
-		echo "FAIL: upgrade ($$failed projects)"; \
+		echo "FAIL: up ($$failed projects)"; \
 		exit 1; \
 	fi; \
 	if [ "$(DEPS_REPORT)" != "0" ]; then \
