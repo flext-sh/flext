@@ -74,7 +74,7 @@ class TestPrWorkspace:
         )
         workspace = tmp_path / "workspace"
         _ = workspace.mkdir(parents=True)
-        commands: Sequence[t.Workspace.Tests.Command] = []
+        commands: list[t.Workspace.Tests.Command] = []
 
         class RunnerStub:
             def run_to_file(self, command: Sequence[str], _log_path: Path) -> r[int]:
@@ -118,7 +118,7 @@ class TestPrWorkspace:
         workspace = tmp_path / "workspace"
         repo = workspace / "flext-core"
         _ = repo.mkdir(parents=True)
-        commands: Sequence[t.Workspace.Tests.Command] = []
+        commands: list[t.Workspace.Tests.Command] = []
 
         class RunnerStub:
             def run_to_file(self, command: Sequence[str], _log_path: Path) -> r[int]:
