@@ -86,6 +86,14 @@ description: Verified development workflow including toolchain, testing, and CI/
 make PROJECT=flext-core check
 make PROJECT=flext-core test PYTEST_ARGS="-k unit"
 
+# File-scoped feedback (fastest — bypasses orchestrator for tools)
+make check PROJECT=flext-core FILE=src/flext_core/foo.py CHECK_GATES=pyright,lint
+make check PROJECT=flext-core CHANGED_ONLY=1            # only git-modified files
+make test PROJECT=flext-core MATCH=test_container FAIL_FAST=1
+
+# Auto-fix modified files
+make check CHECK_GATES=lint FIX=1 CHANGED_ONLY=1
+
 # Then validate broader impact
 make PROJECTS="flext-core flext-api" validate
 ```
@@ -96,6 +104,7 @@ make PROJECTS="flext-core flext-api" validate
 - `make test`
 - `make validate`
 - `make PROJECT=<name> check`
+- `make PROJECT=<name> check FILE=src/foo.py CHECK_GATES=pyright`
 - `make PROJECTS="proj-a proj-b" validate`
 
 ## Workspace Setup
@@ -275,14 +284,14 @@ flext-core/
 # All tests
 make test
 
-# Focused selection through pytest arguments
+# Focused selection — convenience shortcuts
+make test PROJECT=flext-core MATCH=test_entity_creation   # pytest -k test_entity_creation
+make test PROJECT=flext-core FILE=tests/unit/test_models.py
+make test PROJECT=flext-core FILE=tests/unit/test_models.py FAIL_FAST=1 VERBOSE=1
+
+# Full pytest expression (when MATCH is insufficient)
 make test PYTEST_ARGS="-k unit"
-
-# Specific file (scoped project)
 make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_models.py -v --timeout=120"
-
-# Specific test selector (scoped project)
-make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_models.py -k test_entity_creation -v"
 ```
 
 ---

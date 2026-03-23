@@ -24,6 +24,13 @@ FAIL_FAST ?=
 JOBS ?=
 CHECK_GATES ?=
 VALIDATE_GATES ?=
+FILE ?=
+FILES ?=
+CHANGED_ONLY ?=
+MATCH ?=
+RUFF_ARGS ?=
+PYRIGHT_ARGS ?=
+CHECK_ONLY ?=
 RELEASE_PHASE ?= all
 INTERACTIVE ?= 1
 DRY_RUN ?=
@@ -213,10 +220,18 @@ help: ## Show simple workspace verbs
 	$(Q)echo " PROJECT=<name>             Single project"
 	$(Q)echo " PROJECTS=\"proj-a proj-b\"        Multi-project"
 	$(Q)echo " FAIL_FAST=1               Stop on first project failure"
-	$(Q)echo " FIX=1                  Auto-fix before validate"
+	$(Q)echo " FIX=1                  Auto-fix (validate + check)"
 	$(Q)echo " PYTEST_ARGS=\"-k expr -x\"        Extra pytest args for test"
 	$(Q)echo " CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,type  Select check gates (default: all)"
 	$(Q)echo " VALIDATE_GATES=complexity,docstring   Select validate gates (default: all)"
+	$(Q)echo " FILE=src/foo.py             Single file for check/test/format"
+	$(Q)echo " FILES=\"a.py b.py\"           Multiple files for check/test/format"
+	$(Q)echo " CHANGED_ONLY=1             check only git-modified .py files"
+	$(Q)echo " MATCH=test_name            Filter tests by name (pytest -k)"
+	$(Q)echo " VERBOSE=1                Verbose test output (-vv -s)"
+	$(Q)echo " RUFF_ARGS=\"--select E501\"    Extra ruff args for check"
+	$(Q)echo " PYRIGHT_ARGS=\"--level basic\"  Extra pyright args for check"
+	$(Q)echo " CHECK_ONLY=1             Format check only (dry-run, no writes)"
 	$(Q)echo " VALIDATE_SCOPE=project|workspace     Validate scope (default: project)"
 	$(Q)echo " DOCS_PHASE=audit|fix|build|generate|validate|all"
 	$(Q)echo " RELEASE_PHASE=validate,version,build,publish|all"
@@ -241,6 +256,13 @@ help: ## Show simple workspace verbs
 	$(Q)echo ""
 	$(Q)echo "Examples:"
 	$(Q)echo " make check PROJECT=flext-core"
+	$(Q)echo " make check PROJECT=flext-core FILE=src/flext_core/foo.py CHECK_GATES=pyright"
+	$(Q)echo " make check PROJECT=flext-core CHANGED_ONLY=1"
+	$(Q)echo " make check CHECK_GATES=lint FIX=1 CHANGED_ONLY=1"
+	$(Q)echo " make test PROJECT=flext-core MATCH=test_container FAIL_FAST=1"
+	$(Q)echo " make test PROJECT=flext-core FILE=tests/unit/test_foo.py"
+	$(Q)echo " make format FILE=src/flext_core/foo.py CHECK_ONLY=1"
+	$(Q)echo " make check PROJECT=flext-core CHECK_GATES=lint RUFF_ARGS=\"--select E501\""
 	$(Q)echo " make build"
 	$(Q)echo " make typings PROJECT=flext-api"
 	$(Q)echo " make pyrefly-repo"
@@ -545,6 +567,13 @@ check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,p
 	$(Q)$(ORCHESTRATOR) --verb check \
 		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
 		$(if $(CHECK_GATES),--make-arg "CHECK_GATES=$(CHECK_GATES)") \
+		$(if $(FILE),--make-arg "FILE=$(FILE)") \
+		$(if $(FILES),--make-arg "FILES=$(FILES)") \
+		$(if $(filter 1,$(CHANGED_ONLY)),--make-arg "CHANGED_ONLY=$(CHANGED_ONLY)") \
+		$(if $(filter 1,$(FIX)),--make-arg "FIX=$(FIX)") \
+		$(if $(RUFF_ARGS),--make-arg "RUFF_ARGS=$(RUFF_ARGS)") \
+		$(if $(PYRIGHT_ARGS),--make-arg "PYRIGHT_ARGS=$(PYRIGHT_ARGS)") \
+		$(if $(filter 1,$(CHECK_ONLY)),--make-arg "CHECK_ONLY=$(CHECK_ONLY)") \
 		$(SELECTED_PROJECTS)
 
 check-cqrs-compliance: ## Enforce strict CQRS/FlextModels patterns across ecosystem
@@ -617,7 +646,19 @@ format: ## Run code formatting across all workspace projects (ruff/gofmt + markd
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "Formatting Python files (ruff)..."
-	$(Q)$(POETRY_ENV) ruff format . --quiet
+	$(Q)_fmt_target="."; \
+	_fmt_files=""; \
+	if [ -n "$(FILES)" ]; then _fmt_files="$(FILES)"; fi; \
+	if [ -n "$(FILE)" ]; then \
+		if [ -n "$$_fmt_files" ]; then _fmt_files="$$_fmt_files $(FILE)"; \
+		else _fmt_files="$(FILE)"; fi; \
+	fi; \
+	if [ -n "$$_fmt_files" ]; then _fmt_target="$$_fmt_files"; fi; \
+	if [ "$(CHECK_ONLY)" = "1" ]; then \
+		$(POETRY_ENV) ruff format $$_fmt_target --check; \
+	else \
+		$(POETRY_ENV) ruff format $$_fmt_target --quiet; \
+	fi
 	$(Q)go_files=$$(find . -type f -name '*.go' ! -path '*/.git/*' ! -path '*/vendor/*' ! -path '*/.venv/*'); \
 	if [ -n "$$go_files" ]; then \
 		echo "Formatting Go files (gofmt)..."; \
@@ -659,6 +700,10 @@ test: ## Run tests only in all projects
 	$(Q)$(ORCHESTRATOR) --verb test \
 		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
 		$(if $(PYTEST_ARGS),--make-arg "PYTEST_ARGS=$(PYTEST_ARGS)") \
+		$(if $(FILE),--make-arg "FILE=$(FILE)") \
+		$(if $(FILES),--make-arg "FILES=$(FILES)") \
+		$(if $(MATCH),--make-arg "MATCH=$(MATCH)") \
+		$(if $(VERBOSE),--make-arg "VERBOSE=$(VERBOSE)") \
 		$(SELECTED_PROJECTS)
 
 validate: ## Run validate gates (VALIDATE_SCOPE=project|workspace, FIX=1)

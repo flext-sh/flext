@@ -68,6 +68,12 @@ make clean                                  # clean all projects
 make setup                                  # reinstall dependencies
 make upgrade                                # upgrade deps + dependency report (.reports/dependencies/)
 make typings                                # stub supply-chain + typing report (DEPS_REPORT=0 to skip report)
+
+# File-scoped (fast feedback — bypasses orchestrator):
+make check PROJECT=flext-core CHANGED_ONLY=1            # lint only git-modified .py files
+make check PROJECT=flext-core FILE=src/foo.py CHECK_GATES=lint,pyright
+make check CHECK_GATES=lint FIX=1 CHANGED_ONLY=1        # auto-fix modified files across workspace
+make format FILE=src/flext_core/foo.py CHECK_ONLY=1     # dry-run format check on single file
 ```
 
 Good (internal — maintenance checkers for specific concerns):

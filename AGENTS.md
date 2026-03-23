@@ -62,6 +62,7 @@ alwaysApply: true
   - `p` = Protocols (`Flext*Protocols`)
   - `h` = Helpers (`Flext*Helpers` - mostly test/infra)
   - `s` = Services (`Flext*Services`)
+- **Alias Import Sources**: In `src/` code, `c`, `p`, `t`, `m`, `u` come from `flext_core` or the project's own package (MRO-extended). In `tests/`, `examples/`, and `scripts/`, these aliases MUST be imported from the local MRO package: `from tests import c, m, p, t, u`, `from examples import c, m, t`, etc. NEVER import `c`, `p`, `t`, `u` from a sibling project (e.g., `from flext_target_oracle import t` in test code is FORBIDDEN). Operational aliases (`r`, `e`, `h`, `d`, `s`, `x`) come from `flext_core` or the project's extended package.
 - **Strict Boundaries**: Domain boundaries are strict (e.g. `oracle-wms != db-oracle`, `ldap != ldif`).
 - **Export Discipline**: `__init__.py` files are exports-only. They must ONLY contain type hints, `__all__`, and the native `__getattr__` module-level lazy load strategy. **These files are AUTO-GENERATED**. You must NEVER edit them manually. Run `make codegen` to regenerate lazy initialization exports.
 
@@ -194,8 +195,11 @@ from collections.abc import Mapping, Sequence
 - **Workspace Verbs**: `setup check security format docs test validate typings clean codegen modernize upgrade`.
 - **Project Verbs** (`base.mk`): `setup check security format docs test validate clean`.
 - **Git Verbs**: Use `make` for Git operations: `make status`, `make commit MESSAGE="..."`, `make push`, `make tag`, `make pr`.
-- **Advanced Make Options**: Use the provided selectors to target scenarios directly instead of writing custom bash loops. Examples: `make check PROJECT=flext-core`, `make test PYTEST_ARGS="-k my_test"`, `make validate VALIDATE_SCOPE=workspace`.
-- **Selectors**: `PROJECT`, `PROJECTS`, `CHECK_GATES`, `VALIDATE_GATES`, `PYTEST_ARGS`, `FIX`, `JOBS`, `FAIL_FAST`.
+- **Advanced Make Options**: Use the provided selectors to target scenarios directly instead of writing custom bash loops. Examples: `make check PROJECT=flext-core FILE=src/foo.py CHECK_GATES=pyright`, `make test MATCH=test_container FAIL_FAST=1`, `make check CHANGED_ONLY=1`.
+- **Selectors**: `PROJECT`, `PROJECTS`, `CHECK_GATES`, `VALIDATE_GATES`, `PYTEST_ARGS`, `FIX`, `JOBS`, `FAIL_FAST`, `FILE`, `FILES`, `CHANGED_ONLY`, `MATCH`, `RUFF_ARGS`, `PYRIGHT_ARGS`, `CHECK_ONLY`, `VERBOSE`.
+- **File Targeting** (`check`/`test`/`format`): `FILE=<path>` or `FILES="a.py b.py"` runs only on those files (fast-path, bypasses `flext_infra check run`). `CHANGED_ONLY=1` auto-discovers git-modified `.py` files.
+- **Test Shortcuts**: `MATCH=<expr>` is an alias for pytest `-k <expr>`. `FAIL_FAST=1` adds `-x`. `VERBOSE=1` adds `-vv -s`.
+- **Lint Shortcuts**: `RUFF_ARGS="--select E501"` passes extra args to ruff. `PYRIGHT_ARGS="--level basic"` passes extra args to pyright. `CHECK_ONLY=1` on format/check runs without writing (dry-run).
 - **Scope Controls** (Workspace): `VALIDATE_SCOPE=project|workspace`, optional `DEPS_REPORT=0`.
 - **No Bypasses**: Strictness is mandatory. `SKIP_*` bypass toggles in the contract are FORBIDDEN.
 - **Exit Codes**: `0` pass, `1` policy failure, `2` usage/config error, `3` infra/runtime error.
@@ -237,8 +241,8 @@ from collections.abc import Mapping, Sequence
 - **`.new/.old` Swap Protocol**: For massive file modifications (>50 lines changed), create a `.new` file, verify changes, then execute `mv file.py file.py.old && mv file.py.new file.py`. Commit both in one transaction.
 
 ### 9.1 Coding Directives for Agents
-- **Runtime Aliases**: Subprojects MUST use their own namespace aliases ONLY (e.g., `x` for FlextMixins / runtime helpers: `x.ok`, `x.is_base_model`, etc.). Do NOT subdivide namespaces or introduce extra wrapper layers.
-- **No Loose Aliases**: Remove compatibility aliases entirely.
+- **Runtime Aliases**: `c`, `p`, `t`, `m`, `u` are declared via MRO in each layer (`src/`, `tests/`, `examples/`, `scripts/`). In test code: `from tests import c, m, p, t, u`. In examples: `from examples import ...`. NEVER import aliases across project boundaries (e.g., `from flext_target_oracle import t` in tests is FORBIDDEN). Operational aliases (`r`, `e`, `h`, `d`, `s`, `x`) come from `flext_core` or the project's extended package.
+- **No Loose Aliases**: Remove compatibility aliases entirely. Constants belong in `c`, protocols in `p`, typings in `t`, models in `m`, utilities/helpers in `u`. Never maintain these concerns outside their canonical namespace.
 - **Narrowing Enforced**: No `type(x) == T`. Use `isinstance(x, T)` or `TypeGuard` properly. Prefer Pydantic validation functions where structured data is involved.
 - **Evidence Requirement**: "Tests pass", "linters clean" claims MUST include command output proof (with exit code and UTC timestamp) so the audit logic can replay the claim. Store evidence in `.sisyphus/evidence/`.
 
