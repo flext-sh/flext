@@ -93,7 +93,7 @@ class AdvancedProcessingExample:
             description="Time taken for validation",
         )
 
-    class ProcessingPipeline(FlextService[PipelineStageData]):
+    class FlextLdifProcessingPipeline(FlextService[PipelineStageData]):
         """Declarative processing pipeline with automatic parallel execution."""
 
         auto_execute: bool = True

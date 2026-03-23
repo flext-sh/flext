@@ -25,7 +25,7 @@ from typing import Any, ClassVar, TypeIs, override
 from flext_core import r, s, t
 from pydantic import BaseModel, ConfigDict, Field
 
-from examples._models import ValidationRules
+from examples import ValidationRules
 
 EntryDict = dict[str, t.Scalar | list[str] | dict[str, t.Scalar | list[str]]]
 
