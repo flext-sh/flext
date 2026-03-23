@@ -801,7 +801,7 @@ pyre: ## Authoritative repo-wide pyrefly report -> .reports/pyrefly + evidence
 		echo "pyrefly: $$(env -u PYTHONPATH $(POETRY_ENV) $(PY) -m pyrefly --version 2>&1)"; \
 	} > .sisyphus/evidence/pyrefly-toolchain.txt
 	$(Q)set -o pipefail; \
-	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m pyrefly check src tests examples docs benchmarks scripts \
+	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m pyrefly check $$(for d in src tests examples docs benchmarks scripts; do [ -d "$$d" ] && printf "%s " "$$d"; done) \
 		--config "$(CURDIR)/pyproject.toml" \
 		--output-format json \
 		-o "$(CURDIR)/.reports/pyrefly/repo-pyrefly.json" \
