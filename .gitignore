@@ -116,6 +116,8 @@
 
 # NOTE: .planning/ is NOW TRACKED (commit_docs: true in config.json)
 # Archive directories within .planning are still local
+!.planning/
+!.planning/**
 .planning/archive/
 
 # AI Plans in docs
