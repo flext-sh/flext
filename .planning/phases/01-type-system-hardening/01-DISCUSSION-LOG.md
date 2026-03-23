@@ -3,73 +3,77 @@
 > **Audit trail only.** Do not use as input to planning, research, or execution agents.
 > Decisions are captured in 01-CONTEXT.md — this log preserves the alternatives considered.
 
-**Session:** 2026-03-23
-**Mode:** Interactive (discuss)
-**Areas discussed:** Plan decomposition, flext-cli sequencing, pyright scope, TypeGuard→TypeIs + empty containers
+**Date:** 2026-03-23
+**Phase:** 01-type-system-hardening
+**Mode:** --auto (Claude-selected recommended defaults)
+**Areas discussed:** Pyrefly entrypoint health, Error baseline strategy, Wave plan structure, TypeGuard migration, Scope exclusions
 
 ---
 
-## Area 1: Plan Decomposition
+## Pyrefly Entrypoint Health
 
-**Q: How should GSD plans for Phase 1 be structured?**
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Fix as first task in Wave 1 | Before any error measurement, fix `${PWD}` expansion in pyrefly search paths | ✓ |
+| Defer to later wave | Attempt to measure errors with broken entrypoint | |
 
-Options presented:
-- Follow sisyphus waves — one GSD plan per sisyphus wave, researcher reads existing plans directly
-- **By project batch** ← SELECTED
-- By error category — one plan per error type, maximizes intra-category parallelism
-
-**Q: How granular should 'project batch' be? (33 projects total)**
-
-Options presented:
-- One plan per project — 33 plans, clear atomic units
-- Small groups (3-5 projects/plan) — ~10 plans
-- **Big waves (foundation / mid / consumers)** ← SELECTED — 3-4 plans total
-
-**Captured decision:**
-- D-01: Big wave organization: flext-core → flext-infra+tests → flext-cli (solo) → remaining consumers
-- D-02: Each wave covers all error categories in one pass
-- D-03: Researchers reference existing sisyphus plans as input
+**Auto-selected:** Fix as first task in Wave 1 (prerequisite — can't measure progress without working tool)
+**Notes:** Discovered via `make pyre` returning exit 1 with "Invalid search-path: /home/marlonsc/flext/${PWD}/flext-core/src does not exist"
 
 ---
 
-## Area 2: flext-cli Sequencing
+## Error Baseline Strategy
 
-**Q: When should flext-cli be tackled?**
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Use historical 4,385 figure | Proceed with pre-Wave 0 sisyphus analysis numbers | |
+| Establish fresh baseline first | Run `make pyre` (after fix) + per-project checks to get current counts | ✓ |
 
-Options presented:
-- Last big-wave plan — natural dependency order
-- **Dedicated solo plan before consumers** ← SELECTED — focused attention, after infra
-- First, standalone plan — fastest metric wins but riskier
-
-**Captured decision:**
-- D-04: flext-cli gets its own dedicated plan between infra+tests wave and remaining consumers
+**Auto-selected:** Fresh baseline (historical numbers are stale; Wave 0 may have reduced the count)
+**Notes:** Wave 0 completed "pyrefly entrypoint, legacy artifacts, 27 test fixes" — actual current count unknown
 
 ---
 
-## Area 3: Pyright Scope
+## Wave Plan Structure
 
-**Q: Should Phase 1 require pyright 0 errors, or just pyrefly?**
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Keep existing D-01 through D-06 | Wave-based: core → infra+tests → cli solo → consumers | ✓ |
+| Reorganize by error category | Separate passes for __class__, cast(), Any, object | |
 
-Options presented:
-- Pyrefly only — keep Phase 1 tight, pyright deferred
-- **Both — pyright 0 errors is Phase 1** ← SELECTED — avoid two type-checker cleanup rounds
-
-**Captured decision:**
-- D-05: Phase 1 success = pyrefly 0 AND pyright 0. Both tools must pass per wave.
-
----
-
-## Area 4: TypeGuard→TypeIs + Empty Containers
-
-**Q: How to handle TypeGuard→TypeIs and empty container annotation?**
-
-Options presented:
-- Bundle into each project wave — one pass per project
-- **Separate final micro-plan** ← SELECTED — main waves focus on error mass, micro-plan sweeps TYPE-07/08
-
-**Captured decision:**
-- D-06: Final separate micro-plan for all 12 TypeGuard→TypeIs rewrites + empty container annotations
+**Auto-selected:** Keep existing decisions (already well-reasoned in prior context)
+**Notes:** Added D-07 (pyre entrypoint fix) and D-08 (fresh baseline) as new locked decisions
 
 ---
 
-*Generated: 2026-03-23*
+## TypeGuard → TypeIs (TYPE-07)
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Separate final micro-plan | After main waves, sweep all 12 functions | ✓ |
+| Fold into each wave | Handle TypeGuard functions in-situ per project | |
+
+**Auto-selected:** Separate final micro-plan (keeps wave complexity manageable)
+
+---
+
+## Scope Exclusions
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Exclude algar-oud-mig | 370 errors but not in flext-sh org scope | ✓ |
+| Include algar-oud-mig | Fix all projects | |
+
+**Auto-selected:** Exclude (explicitly out of scope per project charter)
+
+---
+
+## Claude's Discretion
+
+- Per-project sequencing within each wave (within dependency constraints)
+- Boundary between "small consumers" and "remaining consumers" in final wave
+- Exact fix approach for `${PWD}` pyrefly search-path issue (use relative paths or absolute with resolved root)
+
+## Deferred Ideas
+
+None captured during this session.
