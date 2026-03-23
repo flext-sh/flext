@@ -768,7 +768,7 @@ t.Ldif.Entry.Attribute  # ❌ 3 levels - flatten to t.Ldif.Attribute
 
 # ❌ WRONG: Over-nesting
 t.Cli.UI.Components.Display.Table  # NO: 5 levels!
-t.Ldif.Domain.Entry.Transformation  # NO: 4 levels!
+t.Ldif.Entry.Transformation  # NO: 4 levels!
 ```
 
 ---
