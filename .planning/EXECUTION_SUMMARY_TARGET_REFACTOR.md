@@ -1,6 +1,6 @@
 # Target-* Validation Type Refactor - Execution Summary
 
-**Task:** Convert all target-* projects (target-postgres, target-mysql, target-snowflake, target-bigquery, target-s3) to use t.* validation types
+**Task:** Convert all target-*projects (target-postgres, target-mysql, target-snowflake, target-bigquery, target-s3) to use t.* validation types
 
 **Actual Projects Found:** flext-target-ldap, flext-target-ldif, flext-target-oracle, flext-target-oracle-oic, flext-target-oracle-wms
 

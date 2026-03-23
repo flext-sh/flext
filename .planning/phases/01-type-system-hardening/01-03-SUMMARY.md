@@ -44,7 +44,7 @@ completed: 2026-03-23
 ## Accomplishments
 - Verified `make check PROJECT=flext-cli CHECK_GATES=pyrefly` exits 0
 - Verified `make check PROJECT=flext-cli CHECK_GATES=pyright` exits 0
-- Confirmed zero cast(), zero __class__ is, zero Any, zero object annotations, zero type:ignore
+- Confirmed zero cast(), zero **class** is, zero Any, zero object annotations, zero type:ignore
 
 ## Task Commits
 

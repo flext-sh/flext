@@ -53,7 +53,7 @@ Pre-authorized decisions already in place:
 - `.sisyphus/evidence/NARROWING-SCAN-SUMMARY.md` — Narrowing patterns by project
 
 ### Sisyphus Plans (reference, not prescriptive — use as input to GSD planning)
-- `.sisyphus/plans/strict-typing-execution-plan.md` — Phase 1: __class__ rewrites (82 violations, ast-grep rules), Phase 2: JSON migration (103 matches), Phase 3: return None→r[T] triage. Includes operator decisions and rewrite rules.
+- `.sisyphus/plans/strict-typing-execution-plan.md` — Phase 1: **class** rewrites (82 violations, ast-grep rules), Phase 2: JSON migration (103 matches), Phase 3: return None→r[T] triage. Includes operator decisions and rewrite rules.
 - `.sisyphus/plans/bare-object-elimination.md` — Bare `object`/`dict`/`list` annotation strategy: new type aliases to create (`t.JsonValue`, `t.LoggerFactory`, etc.), ~350 annotation fixes, 7-wave execution plan.
 - `.sisyphus/plans/pyright-zero-errors.md` — Pyright error distribution (~2,098 issues), root causes (`_operation_stats` PrivateAttr pattern = 121+ cascade, `_GuardInput` too narrow), wave plan.
 - `.sisyphus/plans/pyrefly-repo-hardening.md` — Pyrefly entrypoint setup: root-cause analysis of measurement drift, `${PWD}` search-path issue, authoritative make target design.

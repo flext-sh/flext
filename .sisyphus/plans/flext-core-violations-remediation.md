@@ -3,7 +3,7 @@
 ## TL;DR
 
 > **Quick Summary**: Fix ALL violations to AGENTS.md governance standards in `flext-core/src/flext_core/` — eliminate forbidden constructs, standardize type patterns, audit and triage 400+ dynamic dispatch calls, convert fallible returns to `r[T]`.
-> 
+>
 > **Deliverables**:
 > - 0 `model_rebuild()` calls (from 6)
 > - 0 `type()` narrowing (from 1)
@@ -14,7 +14,7 @@
 > - 0 loose module-level functions (from 11)
 > - Classified audit of 186 getattr + 52 setattr + 192 try/except
 > - Converted fallible `T | None` returns to `r[T]` (~42 return sites)
-> 
+>
 > **Estimated Effort**: Large
 > **Parallel Execution**: YES — 4 waves + FINAL
 > **Critical Path**: T1 (baseline) → T3 (model_rebuild) → T11 (protocols) → FINAL
@@ -38,7 +38,7 @@ Fix ALL violations to AGENTS.md and skills in flext-core to standardize patterns
 - ~39 distinct violation types across 8 categories
 - 6 `__eq__(other: object)` are FALSE POSITIVES (Python dunder mandate)
 - `make check` is BROKEN (CliArgs validation error) — use direct `ruff check`/`pytest`
-- FROZEN files per §10.2: context.py, settings.py, models.py, utilities.py, __version__.py
+- FROZEN files per §10.2: context.py, settings.py, models.py, utilities.py, **version**.py
 - Baseline: 3197 passed, 4 failed tests; ruff clean
 
 ### Metis Review
@@ -86,7 +86,7 @@ Bring flext-core/src/flext_core/ into FULL compliance with AGENTS.md §2-§4 and
 - **DO NOT** change `__eq__(self, other: object)` or `model_post_init(__context: object)` — Python/Pydantic mandate
 - **DO NOT** change setattr in container.py (14 calls) or result.py (12 calls) — these ARE the mechanism
 - **DO NOT** change try/except in loggings.py defensive guards unless classified as BUSINESS_LOGIC per audit
-- **DO NOT** touch FROZEN files behaviorally (context.py, settings.py, models.py, utilities.py, __version__.py)
+- **DO NOT** touch FROZEN files behaviorally (context.py, settings.py, models.py, utilities.py, **version**.py)
 - **DO NOT** enforce 200-line cap (separate plan)
 - **DO NOT** touch `__init__.py` files (auto-generated — use `make codegen`)
 - **DO NOT** fix pre-existing 4 test failures
@@ -709,7 +709,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   **References**:
   - All 13 files with setattr calls
   - `container.py` (14 calls) — DI mechanism, PRE-EXCLUDED as LEGITIMATE
-  - `result.py` (12 calls) — __slots__ bypass, PRE-EXCLUDED as LEGITIMATE
+  - `result.py` (12 calls) — **slots** bypass, PRE-EXCLUDED as LEGITIMATE
   - **AGENTS.md §3.4**: "setattr() for architecture or dynamic logic are PROHIBITED"
 
   **Acceptance Criteria**:
@@ -1265,7 +1265,7 @@ print('ALL 16 IMPORTS OK')
     Tool: Bash
     Steps:
       1. git log --oneline -30 | head -25  (review commit history)
-      2. git diff --stat HEAD~30 -- flext-core/src/flext_core/context.py flext-core/src/flext_core/settings.py flext-core/src/flext_core/models.py flext-core/src/flext_core/utilities.py flext-core/src/flext_core/__version__.py
+      2. git diff --stat HEAD~30 -- flext-core/src/flext_core/context.py flext-core/src/flext_core/settings.py flext-core/src/flext_core/models.py flext-core/src/flext_core/utilities.py flext-core/src/flext_core/**version**.py
       3. For each changed FROZEN file: git diff HEAD~30 -- <file> | grep "^[+-]" | grep -v "^[+-][+-][+-]\|^[+-]#\|^[+-]$\|import\|Field(\|: " | wc -l
     Expected Result: Step 2: 0 behavioral changes in FROZEN files (annotation additions acceptable). Step 3: 0 non-annotation lines changed.
     Failure Indicators: Any FROZEN file showing behavioral (non-annotation) diff lines.
