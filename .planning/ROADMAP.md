@@ -107,7 +107,7 @@ Plans:
 Plans:
 - [x] 05-01-PLAN.md — Validate submodule extraction + convert foundation projects to hatchling
 - [x] 05-02-PLAN.md — Convert 30 consumer projects + wire uv workspace + unified lock
-- [ ] 05-03-PLAN.md — Replace Poetry in Makefiles, CI, and .envrc
+- [x] 05-03-PLAN.md — Replace Poetry in Makefiles, CI, and .envrc
 
 ## Progress
 

@@ -61,7 +61,7 @@
 - [x] **MIG-03**: `flext-core/pyproject.toml` ships only `flext_core` namespace
 - [x] **MIG-04**: 33 `pyproject.toml` files converted from Poetry to PEP 621 + uv workspace format
 - [x] **MIG-05**: Root `uv.lock` unified (replaces 33 `poetry.lock` files)
-- [ ] **MIG-06**: All `make` targets updated from `poetry run` to `uv run`
+- [x] **MIG-06**: All `make` targets updated from `poetry run` to `uv run`
 
 ---
 
@@ -128,4 +128,4 @@
 | MIG-03 | Phase 5 | Complete | split-core-packages |
 | MIG-04 | Phase 5 | Complete | polylith-uv-migration |
 | MIG-05 | Phase 5 | Complete | polylith-uv-migration |
-| MIG-06 | Phase 5 | Pending | polylith-uv-migration |
+| MIG-06 | Phase 5 | Complete | polylith-uv-migration |
