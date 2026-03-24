@@ -1,0 +1,36 @@
+.planning/phases/07-modernization-integration-fixes/07-02-SUMMARY.md
+  7d62ea1a5a181830 1-96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "915e4e2069b68c67fa310cd262bc930ce56f2d9c",
+  "prompts": {
+    "4c0a52ec7c0e9a7c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "118e174b-51ab-4a7e-8854-091180d8674f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 58,
+      "total_deletions": 1,
+      "accepted_lines": 58,
+      "overriden_lines": 0
+    },
+    "7d62ea1a5a181830": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dc186f16-afe7-4333-a948-07dfeb2d2e04",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 96,
+      "total_deletions": 0,
+      "accepted_lines": 96,
+      "overriden_lines": 0
+    }
+  }
+}
