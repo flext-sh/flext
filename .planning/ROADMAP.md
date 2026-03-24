@@ -122,7 +122,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — TypeGuard→TypeIs migration (1 remaining function in flext-cli)
+- [x] 06-01-PLAN.md — TypeGuard→TypeIs migration (1 remaining function in flext-cli)
 - [ ] 06-02-PLAN.md — Annotate 745 empty container literals across all src/
 
 ### Phase 7: Modernization & Integration Fixes
