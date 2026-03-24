@@ -126,8 +126,8 @@ type t.NormalizedValue = (
     | None
     | BaseModel
     | Path
-    | Sequence[t.NormalizedValue]
-    | Mapping[str, t.NormalizedValue]
+    | t.ContainerList
+    | t.ContainerMapping
 )
 ```
 

@@ -175,7 +175,7 @@ class TestService:
 ```python
 # fixture in conftest.py
 @pytest.fixture
-def sample_data() -> Mapping[str, t.NormalizedValue]:
+def sample_data() -> t.ContainerMapping:
     """Provide sample test data."""
     return {
         "string": "test_value",

@@ -1,4 +1,4 @@
 id: detect-jsondict-legacy
 language: python
 rule:
-  pattern: Mapping[str, t.NormalizedValue]
+  pattern: t.ContainerMapping

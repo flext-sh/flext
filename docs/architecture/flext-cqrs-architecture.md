@@ -362,7 +362,7 @@ servir como referência futura para implementação:
 
 ~~ # ⚠️ Infraestrutura manual (será deprecated)~~
 ~~ \_metrics: Mapping[str, int | float]~~
-~~\_context_stack: Sequence[Mapping[str, t.NormalizedValue]]~~
+~~\_context_stack: Sequence[t.ContainerMapping]~~
 
 ~~ # ✅ Pipeline methods~~
 ~~ def handle(self, message: TCommand_contra) -> r[TResult_co]: ...~~
@@ -371,8 +371,8 @@ servir como referência futura para implementação:
 ~~ # ⚠️ Métodos manuais (serão deprecated em V2)~~
 ~~ def record_metric(self, key: str, value: int | float) -> None: ...~~
 ~~ def get_metrics(self) -> Mapping[str, int | float]: ...~~
-~~ def push_context(self, ctx: Mapping[str, t.NormalizedValue]) -> None: ...~~
-~~ def pop_context(self) -> Mapping[str, t.NormalizedValue] | None: ...~~
+~~ def push_context(self, ctx: t.ContainerMapping) -> None: ...~~
+~~ def pop_context(self) -> t.ContainerMapping | None: ...~~
 ~~```~~
 
 ~~**Dependências:**~~
@@ -404,7 +404,7 @@ servir como referência futura para implementação:
 ~~\_rate_limiter_manager: RateLimiterManager # ~150 linhas~~
 ~~ \_timeout_enforcer: TimeoutEnforcer # ~100 linhas~~
 ~~ \_retry_policy_manager: RetryPolicyManager # ~150 linhas~~
-~~\_cache: Mapping[str, t.NormalizedValue] # ~100 linhas~~
+~~\_cache: t.ContainerMapping # ~100 linhas~~
 
 ~~ # ✅ Core methods~~
 ~~ def dispatch(self, message) -> r[t.NormalizedValue]: ...~~
@@ -640,19 +640,19 @@ servir como referência futura para implementação:
 ~~ """Thread-safe context stack for handlers."""~~
 
 ~~ def **init**(self) -> None:~~
-~~ self.\_stack: Sequence[Mapping[str, t.NormalizedValue]] = []~~
+~~ self.\_stack: Sequence[t.ContainerMapping] = []~~
 
-~~ def push(self, ctx: Mapping[str, t.NormalizedValue]) -> None:~~
+~~ def push(self, ctx: t.ContainerMapping) -> None:~~
 ~~ """Push context onto stack."""~~
 ~~ self.\_stack.append(ctx)~~
 
-~~ def pop(self) -> Mapping[str, t.NormalizedValue] | None:~~
+~~ def pop(self) -> t.ContainerMapping | None:~~
 ~~ """Pop context from stack."""~~
 ~~ return self.\_stack.pop() if self.\_stack else None~~
 
-~~ def current(self) -> Mapping[str, t.NormalizedValue]:~~
+~~ def current(self) -> t.ContainerMapping:~~
 ~~ """Get current context (merged stack)."""~~
-~~ result: Mapping[str, t.NormalizedValue] = {}~~
+~~ result: t.ContainerMapping = {}~~
 ~~ for ctx in self.\_stack:~~
 ~~ result.update(ctx)~~
 ~~ return result~~

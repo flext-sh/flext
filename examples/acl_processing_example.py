@@ -30,7 +30,7 @@ EntryDict = Mapping[
     str, t.Scalar | Sequence[str] | Mapping[str, t.Scalar | Sequence[str]]
 ]
 
-ProcessingDict = Mapping[str, t.NormalizedValue]
+ProcessingDict = t.ContainerMapping
 ContextDict = Mapping[str, t.ContainerValue]
 
 
@@ -40,7 +40,7 @@ def _new_str_list() -> MutableSequence[str]:
 
 def _is_object_list(
     value: t.NormalizedValue,
-) -> TypeIs[Sequence[t.NormalizedValue]]:
+) -> TypeIs[t.ContainerList]:
     return isinstance(value, Sequence) and not isinstance(
         value, (str, bytes, bytearray)
     )
@@ -48,7 +48,7 @@ def _is_object_list(
 
 def _is_str_object_dict(
     value: t.NormalizedValue,
-) -> TypeIs[Mapping[str, t.NormalizedValue]]:
+) -> TypeIs[t.ContainerMapping]:
     return isinstance(value, Mapping)
 
 
@@ -206,7 +206,7 @@ class AclProcessingExample:
 
     @staticmethod
     def validate_acl_entry(
-        acl_entry: Mapping[str, t.NormalizedValue], _context: ContextDict
+        acl_entry: t.ContainerMapping, _context: ContextDict
     ) -> r[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
@@ -329,7 +329,7 @@ class AclProcessingExample:
 
         def _detect_servers(self, entries: Sequence[EntryDict]) -> r[ProcessingDict]:
             """Auto-detect server types for all entries."""
-            detected_entries: MutableSequence[Mapping[str, t.NormalizedValue]] = []
+            detected_entries: MutableSequence[t.ContainerMapping] = []
             for entry in entries:
                 result = AclProcessingExample.detect_server_type(entry)
                 if result.is_success:
@@ -463,7 +463,7 @@ class AclProcessingExample:
             validation_results: MutableSequence[
                 AclProcessingExample.AclValidationResult
             ] = []
-            acl_entries: Sequence[Mapping[str, t.NormalizedValue]] = [
+            acl_entries: Sequence[t.ContainerMapping] = [
                 acl_item for acl_item in acls_data_raw if isinstance(acl_item, Mapping)
             ]
             for acl in acl_entries:

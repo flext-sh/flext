@@ -46,7 +46,7 @@ python = ">=3.13,<4.0"
 flext-core = "0.11.0-dev"
 """.strip()
         updated, did_change = mod.replace_project_version(content, "0.11.0")
-        tm.that(did_change, eq=False)
+        tm.that(not did_change, eq=True)
         tm.that(updated, has='version = "0.11.0-dev"')
         tm.that(updated, has='flext-core = "0.11.0-dev"')
 

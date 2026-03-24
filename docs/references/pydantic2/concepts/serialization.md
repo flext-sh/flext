@@ -499,7 +499,7 @@ As with [field serializers](#field-serializers), **two** different types of mode
           @model_serializer(mode="wrap")
           def serialize_model(
               self, handler: SerializerFunctionWrapHandler
-          ) -> Mapping[str, t.NormalizedValue]:
+          ) -> t.ContainerMapping:
               serialized = handler(self)
               serialized["fields"] = list(serialized)
               return serialized

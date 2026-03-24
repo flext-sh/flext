@@ -485,7 +485,7 @@ def write_report(root: Path, scripts: Sequence[ScriptInfo], mode: str) -> Path:
         1 for s in scripts for v in s.violations if v.severity == "warning"
     )
 
-    payload: Mapping[str, t.NormalizedValue] = {
+    payload: t.ContainerMapping = {
         "checked": checked_count,
         "errors": error_count,
         "mode": mode,
