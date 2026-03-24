@@ -74,7 +74,7 @@ Plans:
 - [x] 03-01-PLAN.md — INFRA utilities (iter_projects, emit) + workspace_root normalization
 - [x] 03-02-PLAN.md — NamespaceSourceDetector test suite + workspace-wide application
 - [ ] 03-03-PLAN.md — Workaround eradication: WA-01, WA-02, WA-03, WA-04, WA-06
-- [ ] 03-04-PLAN.md — Workaround eradication: WA-05 (print() triage + fix)
+- [x] 03-04-PLAN.md — Workaround eradication: WA-05 (print() triage + fix)
 - [ ] 03-05-PLAN.md — Policy gate enhancement + final verification sweep
 
 ### Phase 4: Python 3.13 Modernization
@@ -108,6 +108,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Type System Hardening | 5/5 | Complete    |  |
 | 2. Architecture & SOLID | 0/5 | Planned | - |
-| 3. Infrastructure Centralization | 0/5 | Planned | - |
+| 3. Infrastructure Centralization | 3/5 | In Progress|  |
 | 4. Python 3.13 Modernization | 0/TBD | Not started | - |
 | 5. Package Migration | 0/TBD | Not started | - |
