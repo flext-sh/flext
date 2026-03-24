@@ -10,10 +10,11 @@ import operator
 import re
 import subprocess
 import sys
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar
 
+from flext_infra import t
 from pydantic import BaseModel, ConfigDict, Field
 
 OWNER_MARKER_RE = re.compile(

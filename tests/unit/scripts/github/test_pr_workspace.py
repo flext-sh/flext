@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Sequence, Mapping
 from pathlib import Path
 
 from flext_core import r

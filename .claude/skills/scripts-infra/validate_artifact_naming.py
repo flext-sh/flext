@@ -12,6 +12,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar
 
+from flext_infra import t
 from pydantic import BaseModel, ConfigDict, Field
 
 EXIT_PASS = 0

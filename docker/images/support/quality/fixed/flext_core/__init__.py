@@ -132,20 +132,20 @@ class FlextContainer:
     def register(self, name: str, service: t.RegisterableService) -> Result[None]:
         """Register service."""
         self._services[name] = service
-        return Result.ok(None)
+        return Result[None].ok(None)
 
     def get(self, name: str) -> Result[t.RegisterableService]:
         """Get service."""
         if name in self._services:
-            return Result.ok(self._services[name])
-        return Result.fail(f"Service {name} not found")
+            return Result[t.RegisterableService].ok(self._services[name])
+        return Result[t.RegisterableService].fail(f"Service {name} not found")
 
     def get_typed[U](self, service_type: type[U]) -> Result[U]:
         """Get service by type."""
         for service in self._services.values():
             if isinstance(service, service_type):
-                return Result.ok(service)
-        return Result.fail(f"Service of type {service_type} not found")
+                return Result[U].ok(service)
+        return Result[U].fail(f"Service of type {service_type} not found")
 
     @staticmethod
     def get_global() -> FlextContainer:
@@ -172,7 +172,7 @@ class FlextModels:
 
         def validate_domain_rules(self) -> Result[None]:
             """Validate mock rules."""
-            return Result.ok(None)
+            return Result[None].ok(None)
 
 
 class MNamespace:
