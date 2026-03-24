@@ -49,7 +49,14 @@ Plans:
   3. All ~1,551 `Field(...)` usages use `Annotated[X, Field(...)]` canonical Pydantic v2 form
   4. 6 pure ABCs converted to `@runtime_checkable` Protocol; 8 template ABCs have Protocol interface extracted
   5. `TypeAdapter()` instantiations cached as `ClassVar`/module constants; mutable `Field(default=[])` replaced with `default_factory=list`; type aliases use PEP 695 `type X = ...`
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — issubclass() prereq + ABC-to-Protocol conversion in flext-core
+- [ ] 02-02-PLAN.md — DIP enforcement: concrete->protocol type substitution across all projects
+- [ ] 02-03-PLAN.md — Field()->Annotated migration + mutable defaults fix (all 33 projects)
+- [ ] 02-04-PLAN.md — TypeAdapter caching (~100 inline instances)
+- [ ] 02-05-PLAN.md — PEP 695 type aliases + import normalization
 
 ### Phase 3: Infrastructure Centralization
 **Goal**: Runtime helpers are centralized with zero duplication, and every antipattern (`try/except ImportError`, `model_rebuild()`, bare `except`, `sys.exit`, `print`, subprocess sprawl) is eradicated from production code
@@ -92,8 +99,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Type System Hardening | 0/5 | Planned    |  |
-| 2. Architecture & SOLID | 0/TBD | Not started | - |
+| 1. Type System Hardening | 5/5 | Complete    |  |
+| 2. Architecture & SOLID | 0/5 | Planned | - |
 | 3. Infrastructure Centralization | 0/TBD | Not started | - |
 | 4. Python 3.13 Modernization | 0/TBD | Not started | - |
 | 5. Package Migration | 0/TBD | Not started | - |
