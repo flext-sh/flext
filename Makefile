@@ -14,6 +14,10 @@ PYTHON_CMD := $(shell if command -v python$(PYTHON_REQ_VERSION) >/dev/null 2>&1;
 PY := $(WORKSPACE_VENV)/bin/python
 PIPX_BIN := $(WORKSPACE_VENV)/bin/pipx
 UV_BIN := $(WORKSPACE_VENV)/bin/uv
+UV_CACHE_DIR ?= /tmp/uv-cache
+UV_PROJECT_ENVIRONMENT ?= $(WORKSPACE_VENV)
+export UV_CACHE_DIR
+export UV_PROJECT_ENVIRONMENT
 ORCHESTRATOR := $(PY) -m flext_infra workspace orchestrate
 PYTEST_ARGS ?=
 VALIDATE_SCOPE ?= project
@@ -160,6 +164,25 @@ if [ ! -x "$(PY)" ]; then \
 	echo ""; \
 	exit 1; \
 fi
+mkdir -p "$(UV_CACHE_DIR)"
+endef
+
+define ENSURE_WORKSPACE_RUNTIME
+echo "Ensuring workspace runtime dependencies in .venv..."; \
+log_file="/tmp/flext-workspace-runtime-sync.log"; \
+if uv lock >"$$log_file" 2>&1; then \
+	:; \
+else \
+	cat "$$log_file"; \
+	exit 1; \
+fi; \
+if uv sync --all-packages --all-groups >>"$$log_file" 2>&1; then \
+	:; \
+else \
+	cat "$$log_file"; \
+	exit 1; \
+fi; \
+rm -f "$$log_file"
 endef
 
 # Preflight: validate required tools before any destructive step
@@ -316,6 +339,7 @@ boot: ## Install all projects into workspace .venv
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "Bootstrapping flext-core runtime dependencies..."; \
 	uv sync --directory flext-core --no-dev || exit 1
+	$(Q)$(ENSURE_WORKSPACE_RUNTIME)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)echo "Enforcing Python version guards..."; $(PY) -m flext_infra maintenance || exit 1
@@ -418,6 +442,7 @@ boot: ## Install all projects into workspace .venv
 up: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENSURE_WORKSPACE_RUNTIME)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
@@ -428,118 +453,42 @@ up: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)echo "Syncing dependency paths to workspace mode..."; \
 	$(PY) -m flext_infra deps path-sync --mode auto --apply 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
 	echo ""
-	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
-	echo "Upgrading Python dependencies for $(words $(SELECTED_PROJECTS)) project(s) + root"; \
-	failed=0; upgraded=0; step=1; failed_projects=""; \
-	for proj in $(SELECTED_PROJECTS); do \
-		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
-			log_file="/tmp/flext-upgrade-$$proj.log"; \
-			start_ts=$$(date +%s); \
-			printf "[%2d/%2d] up %s\n" $$step $$total_steps "$$proj"; \
-			if FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --workspace "$$proj" >>"$$log_file" 2>&1; then \
-				:; \
-			else \
-				echo "     sync  ... failed"; \
-				cat "$$log_file"; \
-				failed=$$((failed + 1)); \
-				failed_projects="$$failed_projects $$proj"; \
-				step=$$((step + 1)); \
-				continue; \
-			fi; \
-			printf "     lock  ... "; \
-			if uv lock --directory "$$proj" >"$$log_file" 2>&1; then \
-				echo "ok"; \
-			else \
-				echo "failed"; \
-				cat "$$log_file"; \
-				failed=$$((failed + 1)); \
-				failed_projects="$$failed_projects $$proj"; \
-				step=$$((step + 1)); \
-				continue; \
-			fi; \
-			printf "     update ... "; \
-			if uv lock --directory "$$proj" --upgrade >"$$log_file" 2>&1; then \
-				echo "ok"; \
-			else \
-				echo "failed"; \
-				cat "$$log_file"; \
-				failed=$$((failed + 1)); \
-				failed_projects="$$failed_projects $$proj"; \
-				step=$$((step + 1)); \
-				continue; \
-			fi; \
-			printf "     install ... "; \
-			if uv sync --directory "$$proj" --all-groups >>"$$log_file" 2>&1; then \
-				elapsed=$$(( $$(date +%s) - start_ts )); \
-				echo "ok ($${elapsed}s)"; \
-				upgraded=$$((upgraded + 1)); \
-			else \
-				echo "failed"; \
-				cat "$$log_file"; \
-				failed=$$((failed + 1)); \
-				failed_projects="$$failed_projects $$proj"; \
-			fi; \
-			rm -f "$$log_file"; \
-			step=$$((step + 1)); \
-		fi; \
-	done; \
-	log_file="/tmp/flext-upgrade-root.log"; \
+	$(Q)echo "Upgrading workspace dependencies (uv workspace mode)..."; \
+	log_file="/tmp/flext-upgrade-workspace.log"; \
 	start_ts=$$(date +%s); \
-	root_update_ok=0; \
-	printf "[%2d/%2d] up %s\n" $$step $$total_steps "root"; \
-	if ! FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(PY) -m flext_infra deps internal-sync --workspace . >"$$log_file" 2>&1; then \
-		echo "     sync  ... failed"; \
-		cat "$$log_file"; \
-		failed=$$((failed + 1)); \
-		failed_projects="$$failed_projects root"; \
-	fi; \
-	printf "     lock  ... "; \
+	printf " lock    ... "; \
 	if uv lock >"$$log_file" 2>&1; then \
 		echo "ok"; \
 	else \
 		echo "failed"; \
 		cat "$$log_file"; \
-		failed=$$((failed + 1)); \
-		failed_projects="$$failed_projects root"; \
+		exit 1; \
 	fi; \
-	printf "     update ... "; \
+	printf " update  ... "; \
 	if uv lock --upgrade >"$$log_file" 2>&1; then \
 		echo "ok"; \
-		root_update_ok=1; \
 	else \
 		echo "failed"; \
 		cat "$$log_file"; \
-		failed=$$((failed + 1)); \
-		failed_projects="$$failed_projects root"; \
-	fi; \
-	if [ $$root_update_ok -eq 1 ]; then \
-		printf "     install ... "; \
-		if uv sync --all-groups >>"$$log_file" 2>&1; then \
-			elapsed=$$(( $$(date +%s) - start_ts )); \
-			echo "ok ($${elapsed}s)"; \
-			upgraded=$$((upgraded + 1)); \
-		else \
-			echo "failed"; \
-			cat "$$log_file"; \
-			failed=$$((failed + 1)); \
-			failed_projects="$$failed_projects root"; \
-		fi; \
-	else \
-		printf "     install ... skipped\n"; \
-	fi; \
-	rm -f "$$log_file"; \
-	echo "Upgrade summary: Upgraded=$$upgraded Failed=$$failed Total=$$total_steps"; \
-	if [ $$failed -ne 0 ]; then \
-		echo "Failed projects:$$failed_projects"; \
-		echo "FAIL: up ($$failed projects)"; \
 		exit 1; \
 	fi; \
+	printf " install ... "; \
+	if uv sync --all-packages --all-groups >>"$$log_file" 2>&1; then \
+		elapsed=$$(( $$(date +%s) - start_ts )); \
+		echo "ok ($${elapsed}s)"; \
+	else \
+		echo "failed"; \
+		cat "$$log_file"; \
+		exit 1; \
+	fi; \
+	rm -f "$$log_file"; \
+	echo "Upgrade summary: Upgraded=workspace Failed=0 Total=workspace"; \
 	if [ "$(DEPS_REPORT)" != "0" ]; then \
 		echo "Dependency report (deptry + pip check)..."; \
 		$(PY) -m flext_infra deps detect -q --no-fail || true; \
 	fi
 	$(Q)echo "Syncing GitHub workflow templates..."
-	$(Q)$(PY) -m flext_infra github workflows --workspace-root "$(CURDIR)" --apply --prune --report .reports/workflows/sync.json
+	$(Q)$(PY) -m flext_infra github workflows --workspace "$(CURDIR)" --apply --prune --report .reports/workflows/sync.json
 
 mod: ## Modernize pyproject.toml files (standardize configs without lock/install)
 	$(Q)$(REQUIRE_VENV)
@@ -616,7 +565,7 @@ pr: ## Manage pull requests for selected projects
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)$(PY) -m flext_infra github pr-workspace \
-		--workspace-root "$(CURDIR)" \
+		--workspace "$(CURDIR)" \
 		$(foreach proj,$(SELECTED_PROJECTS),--project "$(proj)") \
 		--include-root "$(PR_INCLUDE_ROOT)" \
 		--branch "$(PR_BRANCH)" \

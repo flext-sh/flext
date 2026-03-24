@@ -4,6 +4,7 @@
 # Sections with [CUSTOM] are project-specific extension points.
 
 # [MANAGED] build system
+
 [build-system]
 build-backend = "hatchling.build"
 requires = [ "hatchling" ]
@@ -11,12 +12,9 @@ requires = [ "hatchling" ]
 [dependency-groups]
 dev = [ "types-flask (>=1.1.6,<2.0.0)" ]
 
-[tool.hatch.build.targets.wheel]
-packages = [ "src/flext" ]
-
-# [CUSTOM] project metadata
 [project]
 
+# [MANAGED] consolidated development dependencies
 authors = [ {email = "team@flext.sh", name = "FLEXT Team"} ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -43,7 +41,6 @@ readme = "README.md"
 requires-python = ">=3.13,<3.14"
 version = "0.12.0-dev"
 
-# [MANAGED] consolidated development dependencies
 [project.optional-dependencies]
 dev = [
   "autoflake>=2.3.1",
@@ -116,111 +113,43 @@ Documentation = "https://docs.flext.sh"
 Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 
-[tool.uv]
-dev-dependencies = [  ]
-
-[tool.uv.workspace]
-members = [
-  "algar-oud-mig",
-  "flexcore",
-  "flext-api",
-  "flext-auth",
-  "flext-cli",
-  "flext-core",
-  "flext-db-oracle",
-  "flext-dbt-ldap",
-  "flext-dbt-ldif",
-  "flext-dbt-oracle",
-  "flext-dbt-oracle-wms",
-  "flext-grpc",
-  "flext-infra",
-  "flext-ldap",
-  "flext-ldif",
-  "flext-meltano",
-  "flext-observability",
-  "flext-oracle-oic",
-  "flext-oracle-wms",
-  "flext-plugin",
-  "flext-quality",
-  "flext-tap-ldap",
-  "flext-tap-ldif",
-  "flext-tap-oracle",
-  "flext-tap-oracle-oic",
-  "flext-tap-oracle-wms",
-  "flext-target-ldap",
-  "flext-target-ldif",
-  "flext-target-oracle",
-  "flext-target-oracle-oic",
-  "flext-target-oracle-wms",
-  "flext-tests",
-  "flext-web",
-  "gruponos-meltano-native",
-]
-
-[tool.uv.sources]
-algar-oud-mig = {workspace = true}
-flext-api = {workspace = true}
-flext-auth = {workspace = true}
-flext-cli = {workspace = true}
-flext-core = {workspace = true}
-flext-db-oracle = {workspace = true}
-flext-dbt-ldap = {workspace = true}
-flext-dbt-ldif = {workspace = true}
-flext-dbt-oracle = {workspace = true}
-flext-dbt-oracle-wms = {workspace = true}
-flext-grpc = {workspace = true}
-flext-infra = {workspace = true}
-flext-ldap = {workspace = true}
-flext-ldif = {workspace = true}
-flext-meltano = {workspace = true}
-flext-observability = {workspace = true}
-flext-oracle-oic = {workspace = true}
-flext-oracle-wms = {workspace = true}
-flext-plugin = {workspace = true}
-flext-quality = {workspace = true}
-flext-tap-ldap = {workspace = true}
-flext-tap-ldif = {workspace = true}
-flext-tap-oracle = {workspace = true}
-flext-tap-oracle-oic = {workspace = true}
-flext-tap-oracle-wms = {workspace = true}
-flext-target-ldap = {workspace = true}
-flext-target-ldif = {workspace = true}
-flext-target-oracle = {workspace = true}
-flext-target-oracle-oic = {workspace = true}
-flext-target-oracle-wms = {workspace = true}
-flext-tests = {workspace = true}
-flext-web = {workspace = true}
-
-# [MANAGED] coverage
 [tool.coverage.report]
 fail_under = 45
 precision = 2
 show_missing = true
 skip_covered = false
 
-# [MANAGED] deptry
 [tool.deptry]
-known_first_party = [ "flext" ]
-pep621_dev_dependency_groups = [ "dev" ]
+known_first_party = [
+  "flext",
+]
+pep621_dev_dependency_groups = [
+  "dev",
+]
 
-# [MANAGED] mypy
+[tool.hatch.metadata]
+allow-direct-references = true
+
 [tool.mypy]
-
-disable_error_code = [ "prop-decorator" ]
+disable_error_code = [
+  "prop-decorator",
+]
 explicit_package_bases = true
 ignore_missing_imports = true
 mypy_path = [ ".", "src", "typings", "typings/generated" ]
 namespace_packages = true
-plugins = [ "pydantic.mypy" ]
+plugins = [
+  "pydantic.mypy",
+]
 python_version = "3.13"
 
-# [MANAGED] pydantic-mypy
+[tool.poetry]
+
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 
-# [MANAGED] pyrefly
 [tool.pyrefly]
 disable-project-excludes-heuristics = true
 ignore-errors-in-generated-code = true
@@ -268,7 +197,6 @@ unannotated-attribute = true
 unannotated-parameter = true
 unannotated-return = true
 
-# [MANAGED] pyright
 [tool.pyright]
 exclude = [
   "**/.*",
@@ -288,7 +216,10 @@ extraPaths = [
   "typings",
   "typings/generated",
 ]
-ignore = [ "typings", "typings/generated" ]
+ignore = [
+  "typings",
+  "typings/generated",
+]
 reportCallIssue = "none"
 reportConstantRedefinition = "error"
 reportIncompatibleMethodOverride = "error"
@@ -306,8 +237,6 @@ reportUnusedFunction = "error"
 reportUnusedImport = "error"
 reportUnusedVariable = "error"
 typeCheckingMode = "strict"
-venv = ".venv"
-venvPath = "."
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = [ "src" ]
@@ -844,9 +773,10 @@ extraPaths = [ "gruponos-meltano-native", "gruponos-meltano-native/src" ]
 reportPrivateUsage = "none"
 root = "gruponos-meltano-native/scripts"
 
-# [MANAGED] pytest
 [tool.pytest.ini_options]
-addopts = [ "--strict-markers" ]
+addopts = [
+  "--strict-markers",
+]
 markers = [
   "docker: tests requiring Docker",
   "e2e: end-to-end integration tests",
@@ -859,10 +789,15 @@ markers = [
   "unit: unit tests",
 ]
 minversion = "8.0"
-python_classes = [ "Test*" ]
-python_files = [ "*_test.py", "*_tests.py", "test_*.py" ]
+python_classes = [
+  "Test*",
+]
+python_files = [
+  "*_test.py",
+  "*_tests.py",
+  "test_*.py",
+]
 
-# [MANAGED] ruff
 [tool.ruff]
 exclude = [
   ".git",
@@ -993,19 +928,31 @@ ignore = [
   "UP040",
   "W293",
 ]
-select = [ "ALL" ]
+select = [
+  "ALL",
+]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
 force-single-line = false
-known-first-party = [ "flext" ]
+known-first-party = [
+  "flext",
+]
 split-on-trailing-comma = true
 
 [tool.ruff.lint.per-file-ignores]
-
-"**/.vulture_whitelist.py" = [ "ALL" ]
-"**/*_pb2*.py" = [ "ALL" ]
-"**/*docs*" = [ "INP001", "S404", "S603", "T201" ]
+"**/.vulture_whitelist.py" = [
+  "ALL",
+]
+"**/*_pb2*.py" = [
+  "ALL",
+]
+"**/*docs*" = [
+  "INP001",
+  "S404",
+  "S603",
+  "T201",
+]
 "**/*examples*" = [
   "ANN401",
   "C901",
@@ -1025,13 +972,41 @@ split-on-trailing-comma = true
   "T201",
   "TID252",
 ]
-"**/*exceptions*" = [ "A001", "S105", "SLF001" ]
-"**/*instrumentation*" = [ "C901", "FBT001", "SLF001" ]
-"**/*loggings*" = [ "PLR0904", "PLW0603" ]
-"**/*middleware*" = [ "ANN401", "FBT001", "FBT002", "PLC2801", "S107" ]
-"**/*models*" = [ "ANN401", "F821", "FBT001", "PLC2701", "PLR0206", "PLW0603" ]
-"**/*oracle*" = [ "DTZ007" ]
-"**/*result*" = [ "PLC2701", "SLF001" ]
+"**/*exceptions*" = [
+  "A001",
+  "S105",
+  "SLF001",
+]
+"**/*instrumentation*" = [
+  "C901",
+  "FBT001",
+  "SLF001",
+]
+"**/*loggings*" = [
+  "PLR0904",
+  "PLW0603",
+]
+"**/*middleware*" = [
+  "ANN401",
+  "FBT001",
+  "FBT002",
+  "PLC2801",
+  "S107",
+]
+"**/*models*" = [
+  "ANN401",
+  "FBT001",
+  "PLC2701",
+  "PLR0206",
+  "PLW0603",
+]
+"**/*oracle*" = [
+  "DTZ007",
+]
+"**/*result*" = [
+  "PLC2701",
+  "SLF001",
+]
 "**/*scripts*" = [
   "EXE001",
   "FIX002",
@@ -1048,8 +1023,17 @@ split-on-trailing-comma = true
   "T201",
   "TID252",
 ]
-"**/*service*" = [ "N815", "PLC2801", "S404", "S603", "SLF001" ]
-"**/*subprocess_utils*" = [ "S404", "S603" ]
+"**/*service*" = [
+  "N815",
+  "PLC2801",
+  "S404",
+  "S603",
+  "SLF001",
+]
+"**/*subprocess_utils*" = [
+  "S404",
+  "S603",
+]
 "**/*tests*" = [
   "ANN001",
   "ANN002",
@@ -1125,37 +1109,108 @@ split-on-trailing-comma = true
   "TRY003",
   "TRY004",
 ]
-"**/*typings*" = [ "ANN401", "F821" ]
-"**/*utilities*" = [ "C901", "E402", "PLC2801", "PLW1510", "S404", "S603" ]
+"**/*typings*" = [
+  "ANN401",
+]
+"**/*utilities*" = [
+  "C901",
+  "E402",
+  "PLC2801",
+  "PLW1510",
+  "S404",
+  "S603",
+]
 "**/__init__.py" = [
   "ANN401",
   "D107",
   "F822",
   "N999",
-  "PLC2701", # __init__.py re-exports from private submodules within own package
+  "PLC2701",
   "RUF067",
 ]
-"**/_constants/**" = [ "S105" ]
-"**/_protocols/**" = [ "F821" ]
-"**/_utilities/parser.py" = [ "ARG004", "FBT001" ]
-"**/alert_manager*.py" = [ "S310" ]
-"**/config.py" = [ "ANN401", "FBT001", "SLF001" ]
-"**/constants.py" = [ "S105" ]
-"**/container.py" = [ "ANN401", "SLF001" ]
-"**/external_command*.py" = [ "S404", "S603" ]
-"**/file_tools.py" = [ "D102" ]
-"**/managers.py" = [ "S105" ]
-"**/models.py" = [ "PLC0415", "PLC2801", "S102", "S105" ]
-"**/orchestrator*.py" = [ "S404", "S603" ]
-"**/output.py" = [ "FBT001" ]
-"**/plugins/*.py" = [ "FBT001", "FBT002", "S404", "S603", "S607", "TID252" ]
-"**/protocol_impls/*.py" = [ "SLF001" ]
-"**/providers/*.py" = [ "S106", "S107" ]
-"**/services/prompts.py" = [ "D102", "D107" ]
-"**/settings.py" = [ "ANN401", "PLC0415", "S105" ]
-"**/singer/*.py" = [ "S404", "S603" ]
-"**/subprocess.py" = [ "S404", "S603" ]
-"**/tools/*.py" = [ "FBT001", "FBT002", "N802", "S404", "S603", "S607", "T201" ]
+"**/_utilities/parser.py" = [
+  "ARG004",
+  "FBT001",
+]
+"**/alert_manager*.py" = [
+  "S310",
+]
+"**/config.py" = [
+  "ANN401",
+  "FBT001",
+  "SLF001",
+]
+"**/constants.py" = [
+  "S105",
+]
+"**/container.py" = [
+  "ANN401",
+  "SLF001",
+]
+"**/external_command*.py" = [
+  "S404",
+  "S603",
+]
+"**/file_tools.py" = [
+  "D102",
+]
+"**/managers.py" = [
+  "S105",
+]
+"**/models.py" = [
+  "PLC0415",
+  "PLC2801",
+  "S102",
+  "S105",
+]
+"**/orchestrator*.py" = [
+  "S404",
+  "S603",
+]
+"**/output.py" = [
+  "FBT001",
+]
+"**/plugins/*.py" = [
+  "FBT001",
+  "FBT002",
+  "S404",
+  "S603",
+  "S607",
+  "TID252",
+]
+"**/protocol_impls/*.py" = [
+  "SLF001",
+]
+"**/providers/*.py" = [
+  "S106",
+  "S107",
+]
+"**/services/prompts.py" = [
+  "D102",
+  "D107",
+]
+"**/settings.py" = [
+  "ANN401",
+  "PLC0415",
+  "S105",
+]
+"**/singer/*.py" = [
+  "S404",
+  "S603",
+]
+"**/subprocess.py" = [
+  "S404",
+  "S603",
+]
+"**/tools/*.py" = [
+  "FBT001",
+  "FBT002",
+  "N802",
+  "S404",
+  "S603",
+  "S607",
+  "T201",
+]
 "**/tools/**/*.py" = [
   "FBT001",
   "FBT002",
@@ -1165,49 +1220,76 @@ split-on-trailing-comma = true
   "S607",
   "T201",
 ]
-"**/typings.py" = [ "RUF036" ]
-"**/workspace/*.py" = [ "PLC0415", "S404", "S603", "S607" ]
+"**/typings.py" = [
+  "RUF036",
+]
+"**/workspace/*.py" = [
+  "PLC0415",
+  "S404",
+  "S603",
+  "S607",
+]
 
-# [MANAGED] tomlsort
 [tool.tomlsort]
 all = true
 in_place = true
-sort_first = [ "build-system", "dependency-groups", "project", "tool" ]
-
-[tool.vulture]
-exclude = [
-  "*_pb2*.py",
-  ".venv/",
-  "__pycache__/",
-  "pkg/controlpanel/management/container/venv/",
-]
-ignore_decorators = [
-  "@abstractmethod",
-  "@app.route",
-  "@field_validator",
-  "@handler",
-  "@model_validator",
-  "@override",
-  "@pytest.fixture",
-  "@pytest.mark.*",
-  "@router.*",
-]
-ignore_names = [ "conftest", "test_*" ]
-min_confidence = 80
-paths = [
-  ".claude/skills/",
-  "docker/",
-  "examples/",
-  "scripts/",
-  "src/",
-  "tests/",
-  "vulture_whitelist.py",
+sort_first = [
+  "build-system",
+  "dependency-groups",
+  "project",
+  "tool",
 ]
 
-# [MANAGED] yamlfix
 [tool.yamlfix]
 explicit_start = false
 line_length = 88
 preserve_quotes = true
 section_whitelines = 1
 whitelines = 1
+
+[tool.uv.sources.flext-core]
+workspace = true
+
+[tool.uv.sources.flext-infra]
+workspace = true
+
+[tool.uv.sources.flext-tests]
+workspace = true
+
+[tool.uv.workspace]
+members = [
+  "algar-oud-mig",
+  "flexcore",
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
+  "gruponos-meltano-native",
+]
