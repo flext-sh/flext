@@ -18,10 +18,7 @@ if TYPE_CHECKING:
     from tests.unit.scripts.sync_tests import TestSyncScripts
 
 _LAZY_IMPORTS: Mapping[str, tuple[str, str]] = {
-    "TestPrWorkspace": (
-        "tests.unit.scripts.github.test_pr_workspace",
-        "TestPrWorkspace",
-    ),
+    "TestPrWorkspace": ("tests.unit.scripts.github.test_pr_workspace", "TestPrWorkspace"),
     "TestSyncScripts": ("tests.unit.scripts.sync_tests", "TestSyncScripts"),
     "github": ("tests.unit.scripts.github", ""),
 }

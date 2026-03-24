@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-03-24T05:00:32.282Z",
+  "phase": "01",
+  "phase_name": "type-system-hardening",
+  "phase_dir": ".planning/phases/01-type-system-hardening",
+  "plan": 2,
+  "task": 2,
+  "total_tasks": 2,
+  "status": "in_progress",
+  "summary": "Plan 01-02 (Wave 2) completed by executor. Fixing workspace pyright extraPaths that leak tests/ packages across projects.",
+  "completed": [
+    "Plan 01-02 Wave 2 executed — flext-infra and flext-tests type-clean (pyrefly/pyright 0 errors)",
+    "main_entry_tests.py: identified root cause — workspace pyright extraPaths includes project root dirs which leak tests/ packages",
+    "extra_paths.py: added 'tests' to get_dep_paths exclusion set",
+    "extra_paths.py: added dep_names filtering to exclude project root dirs from root local_dirs (both sync_one and sync_doc)"
+  ],
+  "remaining": [
+    "Verify regenerated pyproject.toml extraPaths no longer contains project root dirs (algar-oud-mig, flext-core, etc.)",
+    "If extraPaths still wrong, check u.Infra.discover_python_dirs — it may need skip_dirs update for root context",
+    "Run pyright on main_entry_tests.py to confirm m.Infra.DocsPhaseReport resolves correctly",
+    "Run make check PROJECT=flext-infra CHECK_GATES=pyrefly,pyright to verify no regression",
+    "Commit extra_paths.py fix and regenerated pyproject.toml",
+    "matchers.py: 20 pyright errors from recursive _Testobject PEP 695 type — pass project-level make check but fail workspace-level pyright. Needs investigation."
+  ],
+  "decisions": [
+    "AGENTS.md §3.6 mandates 'from tests import m, t' — never import FlextInfraModels directly in tests",
+    "Root cause is extraPaths leaking project root dirs (which contain tests/) into workspace pyright config",
+    "Fix is in extra_paths.py generator, not hand-editing pyproject.toml (it's [MANAGED])"
+  ],
+  "blockers": [
+    "extraPaths regeneration may still include project root dirs via _discover_local_python_dirs — needs verification"
+  ],
+  "files_modified": [
+    "flext-infra/src/flext_infra/deps/extra_paths.py (tests exclusion + dep_names filtering)",
+    "flext-infra/tests/unit/docs/main_entry_tests.py (reverted to canonical from tests import m, t)",
+    "flext-tests/src/flext_tests/typings.py (reverted to original PEP 695)",
+    "pyproject.toml (regenerated extraPaths — needs verification)"
+  ],
+  "human_actions": [],
+  "resume_command": "/gsd:resume-work"
+}
