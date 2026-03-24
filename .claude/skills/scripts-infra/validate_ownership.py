@@ -10,7 +10,7 @@ import operator
 import re
 import subprocess
 import sys
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import ClassVar
 
@@ -64,7 +64,7 @@ def eprint(message: str) -> None:
     print(message, file=sys.stderr)
 
 
-def parse_args(argv: t.StrSequence) -> argparse.Namespace:
+def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     """parse_args function."""
     parser = argparse.ArgumentParser(
         description=(
@@ -119,7 +119,7 @@ def tracked_scripts(repo_root: Path) -> Sequence[Path]:
     return scripts
 
 
-def read_header(repo_root: Path, script_path: Path) -> t.StrSequence:
+def read_header(repo_root: Path, script_path: Path) -> Sequence[str]:
     """read_header function."""
     full_path = repo_root / script_path
     try:
@@ -146,7 +146,7 @@ def scripts_section(skill_file: Path) -> str:
 
     lines = content.splitlines()
     in_section = False
-    section_lines: t.StrSequence = []
+    section_lines: Sequence[str] = []
 
     for line in lines:
         if line.startswith("## "):
@@ -206,7 +206,7 @@ def candidate_skill(script_path: Path) -> str:
 def validate_script(
     repo_root: Path,
     script_path: Path,
-) -> tuple[ScriptCheckResult, t.StrMapping | None]:
+) -> tuple[ScriptCheckResult, Mapping[str, str] | None]:
     """validate_script function."""
     header = read_header(repo_root, script_path)
     markers = [match for line in header if (match := OWNER_MARKER_RE.match(line))]
@@ -299,7 +299,7 @@ def print_table(results: Sequence[ScriptCheckResult]) -> None:
 
 def write_candidates(
     repo_root: Path,
-    candidates: Sequence[t.StrMapping],
+    candidates: Sequence[Mapping[str, str]],
 ) -> Path:
     """write_candidates function."""
     report_path = repo_root / ".claude" / "skills" / "scripts-infra" / "report.json"
@@ -319,7 +319,7 @@ def write_candidates(
     return report_path
 
 
-def run_main(argv: t.StrSequence) -> int:
+def run_main(argv: Sequence[str]) -> int:
     """run_main function."""
     try:
         args = parse_args(argv)
@@ -340,7 +340,7 @@ def run_main(argv: t.StrSequence) -> int:
         scripts = tracked_scripts(repo_root)
 
         results: Sequence[ScriptCheckResult] = []
-        candidates: Sequence[t.StrMapping] = []
+        candidates: Sequence[Mapping[str, str]] = []
         for script in scripts:
             result, candidate = validate_script(repo_root, script)
             results.append(result)

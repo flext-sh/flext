@@ -36,7 +36,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from flext import t
 
 type WorkflowScalar = Decimal | bool | bytes | date | datetime | float | int | str
-type WorkflowValue = WorkflowScalar | t.StrSequence | Mapping[str, WorkflowScalar]
+type WorkflowValue = WorkflowScalar | Sequence[str] | Mapping[str, WorkflowScalar]
 
 ProcessingDict = Mapping[str, WorkflowValue]
 WorkflowContent = Mapping[str, WorkflowValue]
@@ -109,7 +109,7 @@ class CompleteWorkflowExample:
         workflow_id: str = Field(description="Unique workflow identifier")
         correlation_id: str = Field(description="Correlation ID for tracking")
         start_time: float = Field(description="Workflow start timestamp")
-        stages: t.StrSequence = Field(
+        stages: Sequence[str] = Field(
             default_factory=lambda: [
                 "validation",
                 "processing",
@@ -142,11 +142,11 @@ class CompleteWorkflowExample:
         items_succeeded: int = Field(description="Items that succeeded")
         items_failed: int = Field(description="Items that failed")
         processing_time: float = Field(description="Time taken to process stage")
-        errors: t.StrSequence = Field(
+        errors: Sequence[str] = Field(
             default_factory=_new_str_list,
             description="List of errors encountered",
         )
-        warnings: t.StrSequence = Field(
+        warnings: Sequence[str] = Field(
             default_factory=_new_str_list,
             description="List of warnings encountered",
         )
@@ -455,7 +455,7 @@ class CompleteWorkflowExample:
             time.sleep(sleep_time)
             result: MutableMapping[
                 str,
-                WorkflowScalar | t.StrSequence | Mapping[str, WorkflowScalar],
+                WorkflowScalar | Sequence[str] | Mapping[str, WorkflowScalar],
             ] = {**item}
             result[add_field] = value
             if extra_logic:

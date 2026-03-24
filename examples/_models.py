@@ -23,7 +23,7 @@ class ValidationRules(BaseModel):
     for validating ACL entries across different server types.
     """
 
-    required_permissions: t.StrSequence = Field(
+    required_permissions: Sequence[str] = Field(
         description="List of permissions that must be present in valid ACL entries",
     )
     forbidden_combinations: Sequence[tuple[str, ...]] = Field(
