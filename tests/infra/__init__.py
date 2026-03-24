@@ -20,32 +20,32 @@ if TYPE_CHECKING:
     from tests.infra.typings import FlextWorkspaceTestTypes
     from tests.infra.utilities import FlextWorkspaceTestUtilities
 
-_LAZY_IMPORTS: Mapping[str, tuple[str, str]] = {
-    "FlextWorkspaceTestConstants": (
+_LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
+    "FlextWorkspaceTestConstants": [
         "tests.infra.constants",
         "FlextWorkspaceTestConstants",
-    ),
-    "FlextWorkspaceTestModels": ("tests.infra.models", "FlextWorkspaceTestModels"),
-    "FlextWorkspaceTestProtocols": (
+    ],
+    "FlextWorkspaceTestModels": ["tests.infra.models", "FlextWorkspaceTestModels"],
+    "FlextWorkspaceTestProtocols": [
         "tests.infra.protocols",
         "FlextWorkspaceTestProtocols",
-    ),
-    "FlextWorkspaceTestTypes": ("tests.infra.typings", "FlextWorkspaceTestTypes"),
-    "FlextWorkspaceTestUtilities": (
+    ],
+    "FlextWorkspaceTestTypes": ["tests.infra.typings", "FlextWorkspaceTestTypes"],
+    "FlextWorkspaceTestUtilities": [
         "tests.infra.utilities",
         "FlextWorkspaceTestUtilities",
-    ),
-    "c": ("flext_tests", "c"),
-    "d": ("flext_tests", "d"),
-    "e": ("flext_tests", "e"),
-    "h": ("flext_tests", "h"),
-    "m": ("flext_tests", "m"),
-    "p": ("flext_tests", "p"),
-    "r": ("flext_tests", "r"),
-    "s": ("flext_tests", "s"),
-    "t": ("flext_tests", "t"),
-    "u": ("flext_tests", "u"),
-    "x": ("flext_tests", "x"),
+    ],
+    "c": ["flext_tests", "c"],
+    "d": ["flext_tests", "d"],
+    "e": ["flext_tests", "e"],
+    "h": ["flext_tests", "h"],
+    "m": ["flext_tests", "m"],
+    "p": ["flext_tests", "p"],
+    "r": ["flext_tests", "r"],
+    "s": ["flext_tests", "s"],
+    "t": ["flext_tests", "t"],
+    "u": ["flext_tests", "u"],
+    "x": ["flext_tests", "x"],
 }
 
 __all__ = [

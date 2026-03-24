@@ -1031,6 +1031,8 @@ split-on-trailing-comma = true
 "**/*middleware*" = [ "ANN401", "FBT001", "FBT002", "PLC2801", "S107" ]
 "**/*models*" = [ "ANN401", "F821", "FBT001", "PLC2701", "PLR0206", "PLW0603" ]
 "**/*oracle*" = [ "DTZ007" ]
+"**/_protocols/**" = [ "F821" ]
+"**/_constants/**" = [ "S105" ]
 "**/*result*" = [ "PLC2701", "SLF001" ]
 "**/*scripts*" = [
   "EXE001",
@@ -1125,7 +1127,7 @@ split-on-trailing-comma = true
   "TRY003",
   "TRY004",
 ]
-"**/*typings*" = [ "ANN401" ]
+"**/*typings*" = [ "ANN401", "F821" ]
 "**/*utilities*" = [ "C901", "E402", "PLC2801", "PLW1510", "S404", "S603" ]
 "**/__init__.py" = [
   "ANN401",

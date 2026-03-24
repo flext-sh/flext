@@ -31,24 +31,24 @@ if TYPE_CHECKING:
         WorkflowData,
     )
 
-_LAZY_IMPORTS: Mapping[str, tuple[str, str]] = {
-    "AclProcessingExample": ("examples.acl_processing_example", "AclProcessingExample"),
-    "AdvancedProcessingExample": (
+_LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
+    "AclProcessingExample": ["examples.acl_processing_example", "AclProcessingExample"],
+    "AdvancedProcessingExample": [
         "examples.advanced_processing_example",
         "AdvancedProcessingExample",
-    ),
-    "CompleteWorkflowExample": (
+    ],
+    "CompleteWorkflowExample": [
         "examples.complete_workflow_example",
         "CompleteWorkflowExample",
-    ),
-    "ContextDict": ("examples.acl_processing_example", "ContextDict"),
-    "EntryDict": ("examples.acl_processing_example", "EntryDict"),
-    "ItemDict": ("examples.advanced_processing_example", "ItemDict"),
-    "PipelineStageData": ("examples.advanced_processing_example", "PipelineStageData"),
-    "ProcessingDict": ("examples.complete_workflow_example", "ProcessingDict"),
-    "StageOperation": ("examples.advanced_processing_example", "StageOperation"),
-    "WorkflowContent": ("examples.complete_workflow_example", "WorkflowContent"),
-    "WorkflowData": ("examples.complete_workflow_example", "WorkflowData"),
+    ],
+    "ContextDict": ["examples.acl_processing_example", "ContextDict"],
+    "EntryDict": ["examples.acl_processing_example", "EntryDict"],
+    "ItemDict": ["examples.advanced_processing_example", "ItemDict"],
+    "PipelineStageData": ["examples.advanced_processing_example", "PipelineStageData"],
+    "ProcessingDict": ["examples.complete_workflow_example", "ProcessingDict"],
+    "StageOperation": ["examples.advanced_processing_example", "StageOperation"],
+    "WorkflowContent": ["examples.complete_workflow_example", "WorkflowContent"],
+    "WorkflowData": ["examples.complete_workflow_example", "WorkflowData"],
 }
 
 __all__ = [

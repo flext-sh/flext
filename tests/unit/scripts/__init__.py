@@ -17,13 +17,13 @@ if TYPE_CHECKING:
     from tests.unit.scripts.github.test_pr_workspace import TestPrWorkspace
     from tests.unit.scripts.sync_tests import TestSyncScripts
 
-_LAZY_IMPORTS: Mapping[str, tuple[str, str]] = {
-    "TestPrWorkspace": (
+_LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
+    "TestPrWorkspace": [
         "tests.unit.scripts.github.test_pr_workspace",
         "TestPrWorkspace",
-    ),
-    "TestSyncScripts": ("tests.unit.scripts.sync_tests", "TestSyncScripts"),
-    "github": ("tests.unit.scripts.github", ""),
+    ],
+    "TestSyncScripts": ["tests.unit.scripts.sync_tests", "TestSyncScripts"],
+    "github": ["tests.unit.scripts.github", ""],
 }
 
 __all__ = [

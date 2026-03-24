@@ -27,41 +27,41 @@ if TYPE_CHECKING:
     from tests.unit.scripts.github.test_pr_workspace import TestPrWorkspace
     from tests.unit.scripts.sync_tests import TestSyncScripts
 
-_LAZY_IMPORTS: Mapping[str, tuple[str, str]] = {
-    "FlextWorkspaceTestConstants": (
+_LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
+    "FlextWorkspaceTestConstants": [
         "tests.infra.constants",
         "FlextWorkspaceTestConstants",
-    ),
-    "FlextWorkspaceTestModels": ("tests.infra.models", "FlextWorkspaceTestModels"),
-    "FlextWorkspaceTestProtocols": (
+    ],
+    "FlextWorkspaceTestModels": ["tests.infra.models", "FlextWorkspaceTestModels"],
+    "FlextWorkspaceTestProtocols": [
         "tests.infra.protocols",
         "FlextWorkspaceTestProtocols",
-    ),
-    "FlextWorkspaceTestTypes": ("tests.infra.typings", "FlextWorkspaceTestTypes"),
-    "FlextWorkspaceTestUtilities": (
+    ],
+    "FlextWorkspaceTestTypes": ["tests.infra.typings", "FlextWorkspaceTestTypes"],
+    "FlextWorkspaceTestUtilities": [
         "tests.infra.utilities",
         "FlextWorkspaceTestUtilities",
-    ),
-    "TestPrWorkspace": (
+    ],
+    "TestPrWorkspace": [
         "tests.unit.scripts.github.test_pr_workspace",
         "TestPrWorkspace",
-    ),
-    "TestSyncScripts": ("tests.unit.scripts.sync_tests", "TestSyncScripts"),
-    "TestVersioning": ("tests.unit.libs.versioning_tests", "TestVersioning"),
-    "c": ("tests.infra.constants", "c"),
-    "d": ("flext_tests", "d"),
-    "e": ("flext_tests", "e"),
-    "h": ("flext_tests", "h"),
-    "infra": ("tests.infra", ""),
-    "m": ("tests.infra.models", "m"),
-    "p": ("tests.infra.protocols", "p"),
-    "r": ("tests.infra.result", "r"),
-    "s": ("flext_tests", "s"),
-    "t": ("tests.infra.typings", "t"),
-    "tf": ("tests.tf", "tf"),
-    "tm": ("tests.tm", "tm"),
-    "u": ("tests.infra.utilities", "u"),
-    "x": ("flext_tests", "x"),
+    ],
+    "TestSyncScripts": ["tests.unit.scripts.sync_tests", "TestSyncScripts"],
+    "TestVersioning": ["tests.unit.libs.versioning_tests", "TestVersioning"],
+    "c": ["tests.infra.constants", "c"],
+    "d": ["flext_tests", "d"],
+    "e": ["flext_tests", "e"],
+    "h": ["flext_tests", "h"],
+    "infra": ["tests.infra", ""],
+    "m": ["tests.infra.models", "m"],
+    "p": ["tests.infra.protocols", "p"],
+    "r": ["tests.infra.result", "r"],
+    "s": ["flext_tests", "s"],
+    "t": ["tests.infra.typings", "t"],
+    "tf": ["tests.tf", "tf"],
+    "tm": ["tests.tm", "tm"],
+    "u": ["tests.infra.utilities", "u"],
+    "x": ["flext_tests", "x"],
 }
 
 __all__ = [
