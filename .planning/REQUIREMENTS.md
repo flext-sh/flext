@@ -30,9 +30,9 @@
 
 ### INFRA — Infrastructure Centralization
 
-- [ ] **INFRA-01**: `u.Infra.run_cli()` helper centralizes bootstrap + dispatch + error-to-exit (eliminates 18 duplicate patterns)
-- [ ] **INFRA-02**: `u.Infra.iter_projects()` centralizes project iteration (eliminates 13 duplicate `discover_projects()` calls)
-- [ ] **INFRA-03**: `workspace_root` is the canonical parameter name across all `flext_infra` signatures (replaces `root`, `project_root`)
+- [x] **INFRA-01**: `u.Infra.run_cli()` helper centralizes bootstrap + dispatch + error-to-exit (eliminates 18 duplicate patterns)
+- [x] **INFRA-02**: `u.Infra.iter_projects()` centralizes project iteration (eliminates 13 duplicate `discover_projects()` calls)
+- [x] **INFRA-03**: `workspace_root` is the canonical parameter name across all `flext_infra` signatures (replaces `root`, `project_root`)
 - [ ] **INFRA-04**: `NamespaceSourceDetector` + auto-fixer in `flext_infra` — detects and rewrites namespace source violations
 - [ ] **INFRA-05**: `make pyrefly-repo` policy gate enforces 0 `Any`/`object`/`ignore` violations (with file+line output)
 
@@ -106,9 +106,9 @@
 | ARCH-06 | Phase 2 | Complete | pydantic-v2-advanced-modernization |
 | ARCH-07 | Phase 2 | Complete | pydantic-v2-advanced-modernization |
 | ARCH-08 | Phase 2 | Complete | flext-core-typing-simplification |
-| INFRA-01 | Phase 3 | Pending | infra-runtime-centralization, cli-infra-standardization |
-| INFRA-02 | Phase 3 | Pending | infra-runtime-centralization, utilities-mro-dedup, centralize-u-utilities |
-| INFRA-03 | Phase 3 | Pending | import-normalization-infra, infra-tier-reorg |
+| INFRA-01 | Phase 3 | Complete | infra-runtime-centralization, cli-infra-standardization |
+| INFRA-02 | Phase 3 | Complete | infra-runtime-centralization, utilities-mro-dedup, centralize-u-utilities |
+| INFRA-03 | Phase 3 | Complete | import-normalization-infra, infra-tier-reorg |
 | INFRA-04 | Phase 3 | Pending | namespace-source-enforcement, flext-infra-typing-census-engine |
 | INFRA-05 | Phase 3 | Pending | infra-type-alias-unification, constants-dedup-infra |
 | WA-01 | Phase 3 | Pending | workaround-eradication |
