@@ -90,3 +90,9 @@ Added `input_data: bytes | None` parameter to `run_raw()` to support Singer tran
 ## Known Stubs
 
 None.
+
+## Self-Check: PASSED
+
+- SUMMARY.md: FOUND
+- All 8 modified files exist on disk
+- All commits completed via `make save`

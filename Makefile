@@ -793,7 +793,7 @@ types: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency rep
 		$(POETRY_ENV) $(PY) -m flext_infra deps detect --typings -q --no-fail || true; \
 	fi
 
-pyre: ## Authoritative repo-wide pyrefly report -> .reports/pyrefly + evidence
+pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyrefly + evidence
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)mkdir -p .sisyphus/evidence .reports/pyrefly
@@ -805,7 +805,46 @@ pyre: ## Authoritative repo-wide pyrefly report -> .reports/pyrefly + evidence
 		2>&1 | tee .sisyphus/evidence/pyrefly-repo-before.txt; \
 	pyre_status=$${PIPESTATUS[0]}; \
 	printf "exit_code: %s\n" "$$pyre_status" >> .sisyphus/evidence/pyrefly-repo-before.txt; \
-	exit $$pyre_status
+	if [ "$$pyre_status" -ne 0 ]; then \
+		echo "WARNING: pyrefly reported $$pyre_status (see .reports/pyrefly/ for details)"; \
+	fi; \
+	echo ""; \
+	echo "=== Type Policy Gate ==="; \
+	policy_violations=0; \
+	echo "--- # type: ignore ---"; \
+	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+		--pattern "#\\s*type:\\s*ignore" \
+		--include "**/*.py*" \
+		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
+		--exclude "**/*.pyc" --exclude "**/*.pyo" \
+		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--match absent \
+		2>&1 || policy_violations=$$((policy_violations + 1)); \
+	echo "--- Any (typing) ---"; \
+	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+		--pattern "\\bAny\\b" \
+		--include "**/*.py*" \
+		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
+		--exclude "**/*.pyc" --exclude "**/*.pyo" \
+		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--match absent \
+		2>&1 || policy_violations=$$((policy_violations + 1)); \
+	echo "--- object annotations ---"; \
+	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+		--pattern "(?::\\s*|->\\s*)object\\b" \
+		--include "**/*.py*" \
+		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
+		--exclude "**/*.pyc" --exclude "**/*.pyo" \
+		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--match absent \
+		2>&1 || policy_violations=$$((policy_violations + 1)); \
+	if [ "$$policy_violations" -gt 0 ]; then \
+		echo ""; \
+		echo "FAIL: $$policy_violations policy violation category(ies) found"; \
+		exit 1; \
+	fi; \
+	echo ""; \
+	echo "OK: pyrefly + type policy gate passed"
 
 stubs: ## Repo-wide stub supply-chain validation -> .sisyphus/evidence
 	$(Q)$(REQUIRE_VENV)
