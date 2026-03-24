@@ -42,7 +42,7 @@
 - [ ] **WA-02**: Zero `model_rebuild()` calls anywhere in the monorepo
 - [ ] **WA-03**: Zero bare `except Exception:` — all exception handlers catch specific exception types
 - [ ] **WA-04**: Zero `sys.exit()` calls outside `__main__.py` files
-- [ ] **WA-05**: Zero `print()` calls in production code (except documented CLI output services)
+- [x] **WA-05**: Zero `print()` calls in production code (except documented CLI output services)
 - [ ] **WA-06**: Zero `subprocess.run()` calls outside the designated subprocess wrapper
 
 ### MOD — Python 3.13 Modernization
@@ -115,7 +115,7 @@
 | WA-02 | Phase 3 | Pending | workaround-eradication |
 | WA-03 | Phase 3 | Pending | workaround-eradication |
 | WA-04 | Phase 3 | Pending | workaround-eradication |
-| WA-05 | Phase 3 | Pending | workaround-eradication |
+| WA-05 | Phase 3 | Complete | workaround-eradication |
 | WA-06 | Phase 3 | Pending | workaround-eradication |
 | MOD-01 | Phase 4 | Pending | python313-stdlib-modernization |
 | MOD-02 | Phase 4 | Pending | python313-stdlib-modernization |
