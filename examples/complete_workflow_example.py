@@ -326,7 +326,7 @@ class CompleteWorkflowExample:
                 stage_name=stage_name,
                 workflow_id=context.workflow_id,
                 correlation_id=context.correlation_id,
-                success=len(processed_results) > 0,
+                success=processed_results,
                 items_processed=len(items),
                 items_succeeded=len(processed_results),
                 items_failed=len(items) - len(processed_results),

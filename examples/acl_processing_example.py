@@ -261,7 +261,7 @@ class AclProcessingExample:
         return r[AclProcessingExample.AclValidationResult].ok(
             AclProcessingExample.AclValidationResult(
                 entry_dn=dn,
-                is_valid=len(violations) == 0,
+                is_valid=not violations,
                 violations=violations,
                 warnings=warnings,
                 processing_time=time.time() - start_time,
