@@ -54,7 +54,8 @@ class WorkflowData(BaseModel):
     """Data container for workflow processing."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(
-        arbitrary_types_allowed=True, extra="allow"
+        arbitrary_types_allowed=True,
+        extra="allow",
     )
     content: WorkflowContent = Field(default_factory=_new_workflow_content)
 
@@ -72,7 +73,8 @@ def _new_stage_metadata_dict() -> MutableMapping[str, float | int | bool]:
 
 
 def _new_performance_metrics_dict() -> MutableMapping[
-    str, float | int | Mapping[str, float | int]
+    str,
+    float | int | Mapping[str, float | int],
 ]:
     return {}
 
@@ -84,7 +86,8 @@ def _new_stage_result_list() -> MutableSequence[
 
 
 def _new_aggregated_metrics_dict() -> MutableMapping[
-    str, Decimal | bool | bytes | float | int | str
+    str,
+    Decimal | bool | bytes | float | int | str,
 ]:
     return {}
 
@@ -123,7 +126,8 @@ class CompleteWorkflowExample:
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: MutableMapping[
-            str, float | int | Mapping[str, float | int]
+            str,
+            float | int | Mapping[str, float | int],
         ] = Field(
             default_factory=_new_performance_metrics_dict,
             description="Performance metrics collected during workflow execution",
@@ -166,7 +170,7 @@ class CompleteWorkflowExample:
         completed_stages: int = Field(description="Number of completed stages")
         failed_stages: int = Field(description="Number of failed stages")
         total_processing_time: float = Field(
-            description="Total workflow processing time"
+            description="Total workflow processing time",
         )
         stage_results: Sequence[CompleteWorkflowExample.WorkflowStageResult] = Field(
             default_factory=_new_stage_result_list,
@@ -189,7 +193,7 @@ class CompleteWorkflowExample:
         auto_execute: bool = True
         data: Sequence[ProcessingDict] = Field(default_factory=tuple)
         workflow_config: Mapping[str, t.Scalar | float] = Field(
-            default_factory=_new_workflow_config
+            default_factory=_new_workflow_config,
         )
 
         def execute(self) -> r[WorkflowData]:
@@ -222,7 +226,7 @@ class CompleteWorkflowExample:
                     "aggregated",
                     True,
                     lambda _i: {"final_score": final_score},
-                )
+                ),
             }
             workflow_data = WorkflowData.model_validate({"content": content_payload})
             return r.ok(workflow_data)
@@ -269,13 +273,14 @@ class CompleteWorkflowExample:
                     "analyzed",
                     True,
                     lambda _i: {"complexity_score": len(str(item)) * 0.1},
-                )
+                ),
             }
             workflow_data = WorkflowData.model_validate({"content": content_payload})
             return r.ok(workflow_data)
 
         def _cleanup_context(
-            self, context: CompleteWorkflowExample.WorkflowContext
+            self,
+            context: CompleteWorkflowExample.WorkflowContext,
         ) -> None:
             """Cleanup workflow context and log completion."""
             total_time = time.time() - context.start_time
@@ -366,11 +371,14 @@ class CompleteWorkflowExample:
                 if not stage_func:
                     return r[WorkflowData].fail(f"Unknown stage: {stage_name}")
                 result = self._execute_stage_parallel(
-                    stage_name, current_data, stage_func, context
+                    stage_name,
+                    current_data,
+                    stage_func,
+                    context,
                 )
                 if result.is_failure:
                     return r[WorkflowData].fail(
-                        f"Stage {stage_name} failed: {result.error}"
+                        f"Stage {stage_name} failed: {result.error}",
                     )
                 stage_result = result.value
                 stage_results.append(stage_result)
@@ -388,10 +396,12 @@ class CompleteWorkflowExample:
                 current_data = current_data[: stage_result.items_succeeded]
             total_time = time.time() - context.start_time
             aggregated_metrics = self._aggregate_workflow_metrics(
-                stage_results, total_time
+                stage_results,
+                total_time,
             )
             aggregated_metrics_payload: MutableMapping[
-                str, Decimal | bool | bytes | float | int | str
+                str,
+                Decimal | bool | bytes | float | int | str,
             ] = {}
             for key, value in aggregated_metrics.items():
                 aggregated_metrics_payload[key] = value
@@ -437,7 +447,7 @@ class CompleteWorkflowExample:
                     "processed",
                     True,
                     lambda _i: {"processed_at": time.time()},
-                )
+                ),
             }
             workflow_data = WorkflowData.model_validate({"content": content_payload})
             return r.ok(workflow_data)
@@ -465,7 +475,7 @@ class CompleteWorkflowExample:
         def _setup_context(self) -> CompleteWorkflowExample.WorkflowContext:
             """Setup workflow context with correlation tracking."""
             workflow_id = str(
-                self.workflow_config.get("workflow_id", f"workflow_{int(time.time())}")
+                self.workflow_config.get("workflow_id", f"workflow_{int(time.time())}"),
             )
             correlation_id = f"{workflow_id}_{int(time.time() * 1000)}"
             return CompleteWorkflowExample.WorkflowContext(
@@ -474,7 +484,7 @@ class CompleteWorkflowExample:
                 start_time=time.time(),
                 metadata={
                     "parallel_enabled": bool(
-                        self.workflow_config.get("parallel", True)
+                        self.workflow_config.get("parallel", True),
                     ),
                     "max_workers": int(str(self.workflow_config.get("max_workers", 4))),
                     "strict_mode": bool(self.workflow_config.get("strict_mode", False)),
@@ -494,7 +504,7 @@ class CompleteWorkflowExample:
                     "validated",
                     True,
                     lambda _i: {"is_valid": bool(item.get("id") and item.get("name"))},
-                )
+                ),
             }
             workflow_data = WorkflowData.model_validate({"content": content_payload})
             return r.ok(workflow_data)

@@ -44,20 +44,22 @@ class PipelineStageData(BaseModel):
     """Data container for pipeline stage processing."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(
-        arbitrary_types_allowed=True, extra="allow"
+        arbitrary_types_allowed=True,
+        extra="allow",
     )
 
     class PipelinePayload(BaseModel):
         """Pipeline payload container."""
 
         model_config: ClassVar[ConfigDict] = ConfigDict(
-            arbitrary_types_allowed=True, extra="allow"
+            arbitrary_types_allowed=True,
+            extra="allow",
         )
 
         values: Mapping[str, DataValue] = Field(default_factory=_new_data_value_map)
 
     data: PipelinePayload = Field(
-        default_factory=lambda: PipelineStageData.PipelinePayload(values={})
+        default_factory=lambda: PipelineStageData.PipelinePayload(values={}),
     )
 
 
@@ -129,7 +131,8 @@ class AdvancedProcessingExample:
         def execute(self) -> r[PipelineStageData]:
             """Execute processing pipeline using declarative stages."""
             stage_functions: Mapping[
-                str, Callable[[Mapping[str, DataValue]], r[PipelineStageData]]
+                str,
+                Callable[[Mapping[str, DataValue]], r[PipelineStageData]],
             ] = {
                 "validate": self._validate_batch,
                 "process": self._process_parallel,
@@ -151,7 +154,7 @@ class AdvancedProcessingExample:
                     return result
                 current_data = result.value.data.values
             payload = PipelineStageData.PipelinePayload.model_validate({
-                "values": current_data
+                "values": current_data,
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
@@ -222,7 +225,7 @@ class AdvancedProcessingExample:
                 "analysis": analysis,
             }
             payload = PipelineStageData.PipelinePayload.model_validate({
-                "values": result_data
+                "values": result_data,
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
@@ -233,7 +236,8 @@ class AdvancedProcessingExample:
             """Process items in parallel."""
             items_data = data.get("items", [])
             if not isinstance(items_data, Sequence) or isinstance(
-                items_data, (str, bytes, bytearray)
+                items_data,
+                (str, bytes, bytearray),
             ):
                 return r[PipelineStageData].fail("Invalid items data")
             start_time = time.time()
@@ -275,7 +279,7 @@ class AdvancedProcessingExample:
                 else 0,
             }
             payload = PipelineStageData.PipelinePayload.model_validate({
-                "values": result_data
+                "values": result_data,
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
@@ -286,7 +290,8 @@ class AdvancedProcessingExample:
             """Validate batch of items."""
             items_data = data.get("items", [])
             if not isinstance(items_data, Sequence) or isinstance(
-                items_data, (str, bytes, bytearray)
+                items_data,
+                (str, bytes, bytearray),
             ):
                 return r[PipelineStageData].fail("Invalid items data")
             validation_results: MutableSequence[
@@ -304,7 +309,7 @@ class AdvancedProcessingExample:
                     validation_results.append(result.value)
                 else:
                     return r[PipelineStageData].fail(
-                        f"Validation failed: {result.error}"
+                        f"Validation failed: {result.error}",
                     )
             result_data: Mapping[str, DataValue] = {
                 **data,
@@ -322,12 +327,13 @@ class AdvancedProcessingExample:
                 "invalid_count": sum(1 for r in validation_results if not r.is_valid),
             }
             payload = PipelineStageData.PipelinePayload.model_validate({
-                "values": result_data
+                "values": result_data,
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
         def _validate_single_item(
-            self, item: ItemDict
+            self,
+            item: ItemDict,
         ) -> r[AdvancedProcessingExample.ValidationResult]:
             """Validate a single item."""
             start_time = time.time()
@@ -349,7 +355,7 @@ class AdvancedProcessingExample:
                     violations=violations,
                     warnings=warnings,
                     validation_time=time.time() - start_time,
-                )
+                ),
             )
 
     @staticmethod

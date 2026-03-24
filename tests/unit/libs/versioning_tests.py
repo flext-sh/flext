@@ -51,7 +51,8 @@ flext-core = "0.11.0-dev"
         tm.that(updated, has='flext-core = "0.11.0-dev"')
 
     def test_current_workspace_version_reads_project_version(
-        self, tmp_path: Path
+        self,
+        tmp_path: Path,
     ) -> None:
         mod = u.Workspace.Tests.load_module(
             "libs_versioning_current",

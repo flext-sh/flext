@@ -8,7 +8,5 @@ from flext_core import FlextUtilities
 class FlextRootUtilities(FlextUtilities):
     """Flext utilities namespace."""
 
-    pass
-
 
 u = FlextRootUtilities

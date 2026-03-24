@@ -8,7 +8,5 @@ from flext_core import FlextTypes
 class FlexRootTypes(FlextTypes):
     """Flext types namespace."""
 
-    pass
-
 
 t = FlexRootTypes

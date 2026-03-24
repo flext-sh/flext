@@ -8,7 +8,5 @@ from flext_core import FlextModels
 class FlextRootModels(FlextModels):
     """Flext models namespace."""
 
-    pass
-
 
 m = FlextRootModels

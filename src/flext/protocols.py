@@ -8,7 +8,5 @@ from flext_core import FlextProtocols
 class FlextRootProtocols(FlextProtocols):
     """Flext protocols namespace."""
 
-    pass
-
 
 p = FlextRootProtocols

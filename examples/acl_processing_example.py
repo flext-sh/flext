@@ -27,7 +27,8 @@ from flext_core import r, t
 from pydantic import BaseModel, ConfigDict, Field
 
 EntryDict = Mapping[
-    str, t.Scalar | t.StrSequence | Mapping[str, t.Scalar | t.StrSequence]
+    str,
+    t.Scalar | t.StrSequence | Mapping[str, t.Scalar | t.StrSequence],
 ]
 
 ProcessingDict = t.ContainerMapping
@@ -42,7 +43,8 @@ def _is_object_list(
     value: t.NormalizedValue,
 ) -> TypeIs[t.ContainerList]:
     return isinstance(value, Sequence) and not isinstance(
-        value, (str, bytes, bytearray)
+        value,
+        (str, bytes, bytearray),
     )
 
 
@@ -158,22 +160,24 @@ class AclProcessingExample:
 
     @staticmethod
     def extract_acls_from_entry(
-        entry: EntryDict, server_type: str
+        entry: EntryDict,
+        server_type: str,
     ) -> r[Sequence[AclProcessingExample.AclEntry]]:
         """Extract ACLs using server-specific attribute detection."""
         start_time = time.time()
         acl_attrs = AclProcessingExample.Constants.SERVER_ACL_ATTRIBUTES.get(
-            server_type, []
+            server_type,
+            [],
         )
         if not acl_attrs:
             return r[Sequence[AclProcessingExample.AclEntry]].fail(
-                f"No ACL attributes defined for server type: {server_type}"
+                f"No ACL attributes defined for server type: {server_type}",
             )
         extracted_acls: MutableSequence[AclProcessingExample.AclEntry] = []
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, Mapping):
             return r[Sequence[AclProcessingExample.AclEntry]].fail(
-                "Invalid attributes format"
+                "Invalid attributes format",
             )
         for attr_name in acl_attrs:
             if attr_name in attributes:
@@ -181,7 +185,8 @@ class AclProcessingExample:
                 if isinstance(acl_values, str):
                     values_list = [acl_values]
                 elif isinstance(acl_values, Sequence) and not isinstance(
-                    acl_values, (str, bytes, bytearray)
+                    acl_values,
+                    (str, bytes, bytearray),
                 ):
                     values_list = acl_values
                 else:
@@ -191,7 +196,7 @@ class AclProcessingExample:
                         dn=str(entry.get("dn", "")),
                         acl_attribute=attr_name,
                         permissions=AclProcessingExample._parse_acl_permissions(
-                            str(acl_value)
+                            str(acl_value),
                         ),
                         context={
                             "index": i,
@@ -206,7 +211,8 @@ class AclProcessingExample:
 
     @staticmethod
     def validate_acl_entry(
-        acl_entry: t.ContainerMapping, _context: ContextDict
+        acl_entry: t.ContainerMapping,
+        _context: ContextDict,
     ) -> r[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
@@ -240,7 +246,7 @@ class AclProcessingExample:
             )
             if missing_perms:
                 violations.append(
-                    f"Missing required permissions: {tuple(missing_perms)}"
+                    f"Missing required permissions: {tuple(missing_perms)}",
                 )
             violations.extend(
                 f"Forbidden permission combination: {combo}"
@@ -254,7 +260,7 @@ class AclProcessingExample:
             violations.append("Unknown permissions not allowed in strict mode")
         if len(permissions) > 10:
             warnings.append(
-                "Excessive permissions - consider principle of least privilege"
+                "Excessive permissions - consider principle of least privilege",
             )
         if not dn:
             warnings.append("Empty DN may indicate configuration issue")
@@ -265,7 +271,7 @@ class AclProcessingExample:
                 violations=violations,
                 warnings=warnings,
                 processing_time=time.time() - start_time,
-            )
+            ),
         )
 
     class AclProcessor(BaseModel):
@@ -339,7 +345,7 @@ class AclProcessingExample:
                     })
                 else:
                     return r[ProcessingDict].fail(
-                        f"Server detection failed: {result.error}"
+                        f"Server detection failed: {result.error}",
                     )
             server_types_set: set[str] = {
                 str(item.get("server_type", "")) for item in detected_entries
@@ -361,7 +367,8 @@ class AclProcessingExample:
                 entry_raw = entry_with_server_raw.get("entry")
                 server_type_raw = entry_with_server_raw.get("server_type")
                 if not _is_entry_dict(entry_raw) or not isinstance(
-                    server_type_raw, str
+                    server_type_raw,
+                    str,
                 ):
                     continue
                 entries_with_servers.append((entry_raw, server_type_raw))
@@ -381,7 +388,7 @@ class AclProcessingExample:
                         all_acls.extend(result.value)
                     else:
                         return r[ProcessingDict].fail(
-                            f"ACL extraction failed: {result.error}"
+                            f"ACL extraction failed: {result.error}",
                         )
             result_data: ProcessingDict = {
                 **data,
@@ -417,7 +424,8 @@ class AclProcessingExample:
                 entry_raw = entry_with_server_raw.get("entry")
                 server_type_raw = entry_with_server_raw.get("server_type")
                 if not _is_entry_dict(entry_raw) or not isinstance(
-                    server_type_raw, str
+                    server_type_raw,
+                    str,
                 ):
                     continue
                 entries_with_servers.append((entry_raw, server_type_raw))
@@ -431,7 +439,7 @@ class AclProcessingExample:
                     all_acls.extend(result.value)
                 else:
                     return r[ProcessingDict].fail(
-                        f"ACL extraction failed: {result.error}"
+                        f"ACL extraction failed: {result.error}",
                     )
             result_data: ProcessingDict = {
                 **data,
@@ -468,13 +476,14 @@ class AclProcessingExample:
             ]
             for acl in acl_entries:
                 result = AclProcessingExample.validate_acl_entry(
-                    acl, {"strict_mode": True}
+                    acl,
+                    {"strict_mode": True},
                 )
                 if result.is_success:
                     validation_results.append(result.value)
                 else:
                     return r[ProcessingDict].fail(
-                        f"ACL validation failed: {result.error}"
+                        f"ACL validation failed: {result.error}",
                     )
             result_data: ProcessingDict = {
                 **data,
@@ -507,19 +516,19 @@ class AclProcessingExample:
                     "olcAccess": [
                         '{0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" read',
                         "{1}to attrs=userPassword by self write",
-                    ]
+                    ],
                 },
             },
             {
                 "dn": "ou=users,dc=example,dc=com",
                 "attributes": {
-                    "aci": '(target="ldap:///ou=users,dc=example,dc=com")(targetattr="*")(version 3.0; acl "Allow read access"; allow (read,search,compare)(userdn="ldap:///cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com");)'
+                    "aci": '(target="ldap:///ou=users,dc=example,dc=com")(targetattr="*")(version 3.0; acl "Allow read access"; allow (read,search,compare)(userdn="ldap:///cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com");)',
                 },
             },
             {
                 "dn": "cn=config",
                 "attributes": {
-                    "orclACI": 'orclACI: access to attr=(userPassword) by dn="cn=Directory Manager" (read,write)'
+                    "orclACI": 'orclACI: access to attr=(userPassword) by dn="cn=Directory Manager" (read,write)',
                 },
             },
         ]
