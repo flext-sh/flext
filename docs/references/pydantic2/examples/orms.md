@@ -29,7 +29,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class MyModel(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    metadata: Mapping[str, str] = Field(alias="metadata_")
+    metadata: t.StrMapping = Field(alias="metadata_")
 
 
 Base = declarative_base()

@@ -100,7 +100,7 @@ import re
 root = pathlib.Path('.')
 docs = root / 'docs'
 pattern = re.compile(r'\[[^\]]+\]\(([^)\s]+)\)')
-broken: Sequence[str] = []
+broken: t.StrSequence = []
 
 for file_path in docs.rglob('*.md'):
     text = file_path.read_text(encoding='utf-8', errors='ignore')

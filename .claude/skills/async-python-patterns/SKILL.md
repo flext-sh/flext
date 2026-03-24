@@ -66,7 +66,7 @@ async def fetch_user(user_id: str) -> r[User]:
 ### Concurrent Execution with gather
 
 ```python
-async def fetch_all_users(ids: Sequence[str]) -> r[Sequence[User]]:
+async def fetch_all_users(ids: t.StrSequence) -> r[Sequence[User]]:
     tasks = [fetch_user(uid) for uid in ids]
     results = await asyncio.gather(*tasks, return_exceptions=True)
     users = []
@@ -112,13 +112,13 @@ class AsyncDBConnection:
 ### Producer-Consumer with Queue
 
 ```python
-async def producer(queue: asyncio.Queue[str], items: Sequence[str]) -> None:
+async def producer(queue: asyncio.Queue[str], items: t.StrSequence) -> None:
     for item in items:
         await queue.put(item)
     await queue.put(None)
 
 
-async def consumer(queue: asyncio.Queue[str | None]) -> Sequence[str]:
+async def consumer(queue: asyncio.Queue[str | None]) -> t.StrSequence:
     results = []
     while (item := await queue.get()) is not None:
         results.append(await process(item))
@@ -150,7 +150,7 @@ async def with_timeout(coro: Awaitable[T], seconds: float) -> r[T]:
 Good:
 
 ```python
-async def process_batch(ids: Sequence[str]) -> r[Sequence[Result]]:
+async def process_batch(ids: t.StrSequence) -> r[Sequence[Result]]:
     tasks = [process_one(i) for i in ids]
     return await asyncio.gather(*tasks)
 ```
@@ -160,7 +160,7 @@ Why good: concurrent execution of independent I/O operations.
 Bad:
 
 ```python
-async def process_batch(ids: Sequence[str]) -> Sequence[Result]:
+async def process_batch(ids: t.StrSequence) -> Sequence[Result]:
     results = []
     for i in ids:
         results.append(await process_one(i))

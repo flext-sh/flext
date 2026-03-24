@@ -280,8 +280,8 @@ from pydantic import BaseModel, Field, computed_field
 
 
 class RegistrationSummary(BaseModel):
-    registered: Sequence[str] = Field(default_factory=list)
-    errors: Sequence[str] = Field(default_factory=list)
+    registered: t.StrSequence = Field(default_factory=list)
+    errors: t.StrSequence = Field(default_factory=list)
 
     @computed_field
     def is_success(self) -> bool:
@@ -383,7 +383,7 @@ class FailureResult(BaseModel):
 class PartialResult(BaseModel):
     result_type: Literal["partial"] = "partial"
     value
-    warnings: Sequence[str]
+    warnings: t.StrSequence
 
 
 OperationResult = Annotated[

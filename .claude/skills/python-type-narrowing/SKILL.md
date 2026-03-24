@@ -76,13 +76,13 @@ def get_name(user: User | None) -> str:
 from typing import TypeIs
 
 
-def is_str_list(val: Sequence[str | int]) -> TypeIs[Sequence[str]]:
+def is_str_list(val: Sequence[str | int]) -> TypeIs[t.StrSequence]:
     return all(isinstance(x, str) for x in val)
 
 
 def process(data: Sequence[str | int]) -> None:
     if is_str_list(data):
-        print(data[0].upper())  # narrowed: Sequence[str]
+        print(data[0].upper())  # narrowed: t.StrSequence
     else:
         pass  # narrowed: Sequence[str | int] (both branches!)
 ```

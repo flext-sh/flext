@@ -64,7 +64,7 @@ def is_free_threaded() -> bool:
 from concurrent.futures import ThreadPoolExecutor
 
 
-def parallel_process(items: Sequence[str]) -> Sequence[Result]:
+def parallel_process(items: t.StrSequence) -> Sequence[Result]:
     with ThreadPoolExecutor(max_workers=4) as executor:
         return list(executor.map(cpu_heavy_transform, items))
 ```
@@ -93,13 +93,13 @@ import queue
 import threading
 
 
-def producer(q: queue.Queue[str], items: Sequence[str]) -> None:
+def producer(q: queue.Queue[str], items: t.StrSequence) -> None:
     for item in items:
         q.put(item)
     q.put(None)
 
 
-def consumer(q: queue.Queue[str | None]) -> Sequence[str]:
+def consumer(q: queue.Queue[str | None]) -> t.StrSequence:
     results = []
     while (item := q.get()) is not None:
         results.append(process(item))

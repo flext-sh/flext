@@ -1811,7 +1811,7 @@ class MyService(FlextService[ResultType]):
     # ════════════════════════════════════════════════════════════
     param1: str = Field(min_length=1, description="Required parameter")
     param2: int = Field(gt=0, le=100, description="Range 1-100")
-    param3: Sequence[str] = Field(default_factory=list)
+    param3: t.StrSequence = Field(default_factory=list)
 
     # Pydantic validators
     @field_validator("param1")
@@ -1979,7 +1979,7 @@ class DataPipelineService(FlextService[DataFrame]):
     """Data pipeline with railway pattern."""
 
     source_file: Path
-    transformations: Sequence[str] = Field(default_factory=list)
+    transformations: t.StrSequence = Field(default_factory=list)
 
     def execute(self) -> r[DataFrame]:
         """Execute pipeline with railway pattern."""
@@ -2137,7 +2137,7 @@ class FlextApi(FlextService[m.Api.ResponseModel]):
 
     operation: Literal["get", "post", "put", "delete", "patch"]
     url: str
-    headers: Mapping[str, str] = Field(default_factory=dict)
+    headers: t.StrMapping = Field(default_factory=dict)
     body: m.Api.RequestBodyModel | None = None
     timeout: int = 30
 
@@ -2810,7 +2810,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
    class MyService(FlextService[T]):
        email: str = Field(pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$")
        age: int = Field(gt=0, le=150)
-       tags: Sequence[str] = Field(default_factory=list)
+       tags: t.StrSequence = Field(default_factory=list)
    ```
 
 4. **FlextSettings singleton** - Via `self.project_config`
@@ -3946,7 +3946,7 @@ class FlextApiModels:
             pattern=r"^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE)$",
         )
         url: str = Field(..., min_length=1, max_length=2048)
-        headers: Mapping[str, str] = Field(default_factory=dict)
+        headers: t.StrMapping = Field(default_factory=dict)
 body: m.Api.RequestBodyModel | None = Field(default=None)
         timeout: float = Field(default=30.0, ge=0.1, le=300.0)
 
@@ -3961,7 +3961,7 @@ body: m.Api.RequestBodyModel | None = Field(default=None)
         """Immutable HTTP response value t.NormalizedValue."""
 
         status_code: int = Field(..., ge=100, le=599)
-        headers: Mapping[str, str] = Field(default_factory=dict)
+        headers: t.StrMapping = Field(default_factory=dict)
 body: m.Api.RequestBodyModel | None = Field(default=None)
         request_id: str | None = Field(default=None)
 
@@ -3999,7 +3999,7 @@ class FlextLdifModels:
 
         dn: DN  # Identidade única
         attributes: Attributes
-        objectclasses: Sequence[str] | None = None
+        objectclasses: t.StrSequence | None = None
 
         # ❌ Falta: created_at, updated_at (se fosse Entity)
         # ❌ Falta: frozen=True (se fosse Value)
@@ -5217,7 +5217,7 @@ class FlextApi(FlextService[m.Api.ResponseModel]):
 
     # Shared parameters
     url: str
-    headers: Mapping[str, str] = Field(default_factory=dict)
+    headers: t.StrMapping = Field(default_factory=dict)
 
     # Operation-specific parameters
     body: m.Api.RequestBodyModel | None = None
@@ -5510,8 +5510,8 @@ class FlextApi(FlextService[m.Api.ResponseModel]):
 
     # Shared parameters
     url: str
-    headers: Mapping[str, str] = Field(default_factory=dict)
-    params: Mapping[str, str] = Field(default_factory=dict)
+    headers: t.StrMapping = Field(default_factory=dict)
+    params: t.StrMapping = Field(default_factory=dict)
 
     # Operation-specific parameters
 body: m.Api.RequestBodyModel | None = None
@@ -6643,11 +6643,11 @@ class FlextApi(FlextService[m.Api.ResponseModel]):
     url: Annotated[str, Field(description="Target URL")]
 
     headers: Annotated[
-        Mapping[str, str], Field(default_factory=dict, description="HTTP headers")
+        t.StrMapping, Field(default_factory=dict, description="HTTP headers")
     ] = {}
 
     params: Annotated[
-        Mapping[str, str], Field(default_factory=dict, description="Query parameters")
+        t.StrMapping, Field(default_factory=dict, description="Query parameters")
     ] = {}
 
     body: Annotated[

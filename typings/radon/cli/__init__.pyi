@@ -26,7 +26,7 @@ _cfg: FileConfig
 program: object
 
 def cc(
-    paths: Sequence[str],
+    paths: t.StrSequence,
     min: str = ...,
     max: str = ...,
     show_complexity: bool = ...,
@@ -46,7 +46,7 @@ def cc(
     ipynb_cells: bool = ...,
 ) -> None: ...
 def raw(
-    paths: Sequence[str],
+    paths: t.StrSequence,
     exclude: str | None = ...,
     ignore: str | None = ...,
     summary: bool = ...,
@@ -56,7 +56,7 @@ def raw(
     ipynb_cells: bool = ...,
 ) -> None: ...
 def mi(
-    paths: Sequence[str],
+    paths: t.StrSequence,
     min: str = ...,
     max: str = ...,
     multi: bool = ...,
@@ -70,7 +70,7 @@ def mi(
     ipynb_cells: bool = ...,
 ) -> None: ...
 def hal(
-    paths: Sequence[str],
+    paths: t.StrSequence,
     exclude: str | None = ...,
     ignore: str | None = ...,
     json: bool = ...,

@@ -1426,7 +1426,7 @@ class BadMapping(Mapping):
 
 
 class Model(BaseModel):
-    x: Mapping[str, str]
+    x: t.StrMapping
 
 
 try:

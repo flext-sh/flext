@@ -206,11 +206,11 @@ refactor(flext-plugin): fix ARG002 and add missing docstrings
 
        class Entry(FlextLdifModels.Base):
            dn: str
-           attributes: Mapping[str, Sequence[str]]
+           attributes: Mapping[str, t.StrSequence]
 
        class Attribute(FlextLdifModels.Base):
            name: str
-           values: Sequence[str]
+           values: t.StrSequence
 
        class Result:
            class Success(FlextLdifModels.Base):

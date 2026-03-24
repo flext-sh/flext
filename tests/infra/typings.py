@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
@@ -14,7 +13,7 @@ class FlextWorkspaceTestTypes(FlextTestsTypes):
         class Tests:
             """Test infrastructure type definitions."""
 
-            type Command = Sequence[str]
+            type Command = t.StrSequence
             type LoadedModule = ModuleType
             type ProjectRef = SimpleNamespace
             type RepoCall = tuple[str, Path]
