@@ -21,25 +21,25 @@ if TYPE_CHECKING:
     from flext.utilities import FlextRootUtilities, FlextRootUtilities as u
     from flext.workspace import main
 
-_LAZY_IMPORTS: Mapping[str, tuple[str, str]] = {
-    "FlexRootTypes": ("flext.typings", "FlexRootTypes"),
-    "FlextRootConstants": ("flext.constants", "FlextRootConstants"),
-    "FlextRootModels": ("flext.models", "FlextRootModels"),
-    "FlextRootProtocols": ("flext.protocols", "FlextRootProtocols"),
-    "FlextRootServiceBase": ("flext.service", "FlextRootServiceBase"),
-    "FlextRootUtilities": ("flext.utilities", "FlextRootUtilities"),
-    "c": ("flext.constants", "FlextRootConstants"),
-    "d": ("flext_core", "d"),
-    "e": ("flext_core", "e"),
-    "h": ("flext_core", "h"),
-    "m": ("flext.models", "FlextRootModels"),
-    "main": ("flext.workspace", "main"),
-    "p": ("flext.protocols", "FlextRootProtocols"),
-    "r": ("flext_core", "r"),
-    "s": ("flext_core", "s"),
-    "t": ("flext.typings", "FlexRootTypes"),
-    "u": ("flext.utilities", "FlextRootUtilities"),
-    "x": ("flext_core", "x"),
+_LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
+    "FlexRootTypes": ["flext.typings", "FlexRootTypes"],
+    "FlextRootConstants": ["flext.constants", "FlextRootConstants"],
+    "FlextRootModels": ["flext.models", "FlextRootModels"],
+    "FlextRootProtocols": ["flext.protocols", "FlextRootProtocols"],
+    "FlextRootServiceBase": ["flext.service", "FlextRootServiceBase"],
+    "FlextRootUtilities": ["flext.utilities", "FlextRootUtilities"],
+    "c": ["flext.constants", "FlextRootConstants"],
+    "d": ["flext_core", "d"],
+    "e": ["flext_core", "e"],
+    "h": ["flext_core", "h"],
+    "m": ["flext.models", "FlextRootModels"],
+    "main": ["flext.workspace", "main"],
+    "p": ["flext.protocols", "FlextRootProtocols"],
+    "r": ["flext_core", "r"],
+    "s": ["flext_core", "s"],
+    "t": ["flext.typings", "FlexRootTypes"],
+    "u": ["flext.utilities", "FlextRootUtilities"],
+    "x": ["flext_core", "x"],
 }
 
 __all__ = [

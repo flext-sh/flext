@@ -15,8 +15,8 @@ if TYPE_CHECKING:
 
     from tests.unit.libs.versioning_tests import TestVersioning
 
-_LAZY_IMPORTS: Mapping[str, tuple[str, str]] = {
-    "TestVersioning": ("tests.unit.libs.versioning_tests", "TestVersioning"),
+_LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
+    "TestVersioning": ["tests.unit.libs.versioning_tests", "TestVersioning"],
 }
 
 __all__ = [
