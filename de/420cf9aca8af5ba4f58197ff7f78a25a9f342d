@@ -1,0 +1,27 @@
+.planning/quick/260323-r3o-apply-yagni-patterns-using-vulture-and-q/qlty-report-raw.txt
+  17572c7a1dfd1bde 2324,2331,2334-2336,2338,2341-2343,2345,2351,2355,2357-2359,2361,2364,2372,2374-2376,2378,2381,2388,2391,2396,4311,6536,6539
+.planning/phases/03-infrastructure-centralization/03-02-SUMMARY.md
+  17572c7a1dfd1bde 16
+.planning/HANDOFF.json
+  17572c7a1dfd1bde 38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "de420cf9aca8af5ba4f58197ff7f78a25a9f342d",
+  "prompts": {
+    "17572c7a1dfd1bde": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d203c-442a-7a50-94af-ed273e8ed603",
+        "model": "gpt-5.3-codex"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 35,
+      "total_deletions": 35,
+      "accepted_lines": 31,
+      "overriden_lines": 0
+    }
+  }
+}
