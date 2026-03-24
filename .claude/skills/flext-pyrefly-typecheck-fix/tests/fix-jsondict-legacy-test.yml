@@ -3,4 +3,4 @@ valid:
   - "t.NormalizedValue"
   - "Mapping[str, str]"
 invalid:
-  - "t.ContainerMapping"
+  - "Mapping[str, t.NormalizedValue]"

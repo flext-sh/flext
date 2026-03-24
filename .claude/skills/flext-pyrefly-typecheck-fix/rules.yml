@@ -46,11 +46,11 @@ rules:
     severity: error
     group: jsondict_legacy
     count_by: rule_id
-    description: "Legacy t.ContainerMapping annotation — normalize to t.NormalizedValue alias."
+    description: "Legacy Mapping[str, t.NormalizedValue] annotation — normalize to t.NormalizedValue alias."
     fix_auto: true
     fix_type: ast-grep
     fix_file: rules/fix-jsondict-legacy.yml
-    fix_instruction: "Rewrite t.ContainerMapping to t.NormalizedValue."
+    fix_instruction: "Rewrite Mapping[str, t.NormalizedValue] to t.NormalizedValue."
     fix_imports:
       - from flext_core import t
 
