@@ -38,12 +38,12 @@
 
 ### WORKAROUND — Workaround Eradication
 
-- [ ] **WA-01**: Zero `try/except ImportError` in production code (`.*/src/**/*.py`)
-- [ ] **WA-02**: Zero `model_rebuild()` calls anywhere in the monorepo
-- [ ] **WA-03**: Zero bare `except Exception:` — all exception handlers catch specific exception types
-- [ ] **WA-04**: Zero `sys.exit()` calls outside `__main__.py` files
+- [x] **WA-01**: Zero `try/except ImportError` in production code (`.*/src/**/*.py`)
+- [x] **WA-02**: Zero `model_rebuild()` calls anywhere in the monorepo
+- [x] **WA-03**: Zero bare `except Exception:` — all exception handlers catch specific exception types
+- [x] **WA-04**: Zero `sys.exit()` calls outside `__main__.py` files
 - [x] **WA-05**: Zero `print()` calls in production code (except documented CLI output services)
-- [ ] **WA-06**: Zero `subprocess.run()` calls outside the designated subprocess wrapper
+- [x] **WA-06**: Zero `subprocess.run()` calls outside the designated subprocess wrapper
 
 ### MOD — Python 3.13 Modernization
 
@@ -111,12 +111,12 @@
 | INFRA-03 | Phase 3 | Complete | import-normalization-infra, infra-tier-reorg |
 | INFRA-04 | Phase 3 | Complete | namespace-source-enforcement, flext-infra-typing-census-engine |
 | INFRA-05 | Phase 3 | Pending | infra-type-alias-unification, constants-dedup-infra |
-| WA-01 | Phase 3 | Pending | workaround-eradication |
-| WA-02 | Phase 3 | Pending | workaround-eradication |
-| WA-03 | Phase 3 | Pending | workaround-eradication |
-| WA-04 | Phase 3 | Pending | workaround-eradication |
+| WA-01 | Phase 3 | Complete | workaround-eradication |
+| WA-02 | Phase 3 | Complete | workaround-eradication |
+| WA-03 | Phase 3 | Complete | workaround-eradication |
+| WA-04 | Phase 3 | Complete | workaround-eradication |
 | WA-05 | Phase 3 | Complete | workaround-eradication |
-| WA-06 | Phase 3 | Pending | workaround-eradication |
+| WA-06 | Phase 3 | Complete | workaround-eradication |
 | MOD-01 | Phase 4 | Pending | python313-stdlib-modernization |
 | MOD-02 | Phase 4 | Pending | python313-stdlib-modernization |
 | MOD-03 | Phase 4 | Pending | python313-datatypes |
