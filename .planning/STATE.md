@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Phase complete — ready for verification
-stopped_at: Completed 03-05-PLAN.md — Phase 03 complete
-last_updated: "2026-03-24T18:20:28.462Z"
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-24T18:20:34.434Z"
 last_activity: 2026-03-24
 progress:
   total_phases: 5
@@ -85,6 +85,7 @@ Recent decisions affecting current work:
 - [Phase 03]: Only 2 bare print() in production code; replaced 1 with structlog, exempted 1 CLI output
 - [Phase 03]: Added input_data param to run_raw() for Singer translator stdin support
 - [Phase 03]: make pyre enhanced: pyrefly warnings + policy gate (Any/object/ignore) as pass/fail
+- [Phase 04]: u.chunk() only in frozen _utilities — no itertools.batched changes needed
 
 ### Pending Todos
 
@@ -105,7 +106,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T18:08:04.839Z
-Stopped at: Completed 03-05-PLAN.md — Phase 03 complete
+Last session: 2026-03-24T18:20:34.431Z
+Stopped at: Completed 04-01-PLAN.md
 Last activity: 2026-03-24
 Resume file: None
