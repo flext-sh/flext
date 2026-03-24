@@ -59,7 +59,7 @@ def validate_artifact_name(filename: str) -> bool:
     return bool(ARTIFACT_PATTERN.match(filename))
 
 
-def parse_args(argv: t.StrSequence) -> argparse.Namespace:
+def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     """parse_args function."""
     parser = argparse.ArgumentParser(
         description=(
@@ -205,7 +205,7 @@ def write_report(report_path: Path, violations: Sequence[NamingViolation]) -> No
         raise InfraError(msg) from exc
 
 
-def run_main(argv: t.StrSequence) -> int:
+def run_main(argv: Sequence[str]) -> int:
     """run_main function."""
     violation_count = 0
     try:
