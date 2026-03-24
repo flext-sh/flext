@@ -119,7 +119,11 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. All 12 TypeGuard functions use TypeIs (PEP 742) instead
   2. All empty container literals (`[]`, `{}`, `set()`) have explicit type annotations at assignment sites
-**Plans**: 0 plans (pending `/gsd:plan-phase 6`)
+**Plans**: 2 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — TypeGuard→TypeIs migration (1 remaining function in flext-cli)
+- [ ] 06-02-PLAN.md — Annotate 745 empty container literals across all src/
 
 ### Phase 7: Modernization & Integration Fixes
 **Goal**: Fix cross-phase integration breakage (circular import, StrEnum coercion) and complete deferred modernization (deprecation framework, UserDict)
@@ -145,5 +149,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 3. Infrastructure Centralization | 5/5 | Complete   | 2026-03-24 |
 | 4. Python 3.13 Modernization | 0/3 | Planned | - |
 | 5. Package Migration | 0/3 | Planned | - |
-| 6. Typing Gap Closure | 0/0 | Planned | - |
+| 6. Typing Gap Closure | 0/2 | Planned | - |
 | 7. Modernization & Integration Fixes | 0/0 | Planned | - |
