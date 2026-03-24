@@ -20,13 +20,13 @@
 ### ARCH — Architecture & SOLID
 
 - [x] **ARCH-01**: All public API type annotations use protocol types (`p.Context`, `p.DI`, `p.Config`, `p.StructlogLogger`) not concrete types (`FlextContext`, `FlextContainer`, etc.)
-- [ ] **ARCH-02**: `c,m,t,u,p` always imported from local namespace root in `tests/`, `examples/`, `scripts/` — never from `flext_core` directly
+- [x] **ARCH-02**: `c,m,t,u,p` always imported from local namespace root in `tests/`, `examples/`, `scripts/` — never from `flext_core` directly
 - [x] **ARCH-03**: All ~1,551 `Field(...)` usages migrated to `Annotated[X, Field(...)]` canonical Pydantic v2 form
 - [x] **ARCH-04**: 6 pure ABCs converted to `@runtime_checkable` Protocol
 - [x] **ARCH-05**: 8 template ABCs have Protocol interface extracted (keep concrete base)
 - [x] **ARCH-06**: ~100 inline `TypeAdapter()` instantiations cached as `ClassVar`/module constants
 - [x] **ARCH-07**: 13 mutable `Field(default=[])` replaced with `default_factory=list`
-- [ ] **ARCH-08**: Type aliases use PEP 695 `type X = ...` form, not `TypeAlias` assignments
+- [x] **ARCH-08**: Type aliases use PEP 695 `type X = ...` form, not `TypeAlias` assignments
 
 ### INFRA — Infrastructure Centralization
 
@@ -99,13 +99,13 @@
 | TYPE-07 | Phase 1 | Pending | strict-typing-execution-plan |
 | TYPE-08 | Phase 1 | Pending | strict-typing-execution-plan |
 | ARCH-01 | Phase 2 | Complete | protocol-solid-standardization |
-| ARCH-02 | Phase 2 | Pending | namespace-source-enforcement |
+| ARCH-02 | Phase 2 | Complete | namespace-source-enforcement |
 | ARCH-03 | Phase 2 | Complete | pydantic-v2-advanced-modernization |
 | ARCH-04 | Phase 2 | Complete | protocol-solid-standardization |
 | ARCH-05 | Phase 2 | Complete | protocol-solid-standardization |
 | ARCH-06 | Phase 2 | Complete | pydantic-v2-advanced-modernization |
 | ARCH-07 | Phase 2 | Complete | pydantic-v2-advanced-modernization |
-| ARCH-08 | Phase 2 | Pending | flext-core-typing-simplification |
+| ARCH-08 | Phase 2 | Complete | flext-core-typing-simplification |
 | INFRA-01 | Phase 3 | Pending | infra-runtime-centralization, cli-infra-standardization |
 | INFRA-02 | Phase 3 | Pending | infra-runtime-centralization, utilities-mro-dedup, centralize-u-utilities |
 | INFRA-03 | Phase 3 | Pending | import-normalization-infra, infra-tier-reorg |

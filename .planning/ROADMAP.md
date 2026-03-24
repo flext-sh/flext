@@ -56,7 +56,7 @@ Plans:
 - [x] 02-02-PLAN.md — DIP enforcement: concrete->protocol type substitution across all projects
 - [x] 02-03-PLAN.md — Field()->Annotated migration + mutable defaults fix (all 33 projects)
 - [x] 02-04-PLAN.md — TypeAdapter caching (~100 inline instances)
-- [ ] 02-05-PLAN.md — PEP 695 type aliases + import normalization
+- [x] 02-05-PLAN.md — PEP 695 type aliases + import normalization
 
 ### Phase 3: Infrastructure Centralization
 **Goal**: Runtime helpers are centralized with zero duplication, and every antipattern (`try/except ImportError`, `model_rebuild()`, bare `except`, `sys.exit`, `print`, subprocess sprawl) is eradicated from production code
