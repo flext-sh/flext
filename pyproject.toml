@@ -204,55 +204,7 @@ plugins = [
 python_version = "3.13"
 
 # [MANAGED] pydantic-mypy
-mypy_path = [
-  "flext-core/src",
-  "flext-infra/src",
-  "flext-tests/src",
-  "algar-oud-mig",
-  "docker",
-  "docs",
-  "examples",
-  "flexcore",
-  "flext-api",
-  "flext-auth",
-  "flext-cli",
-  "flext-core",
-  "flext-db-oracle",
-  "flext-dbt-ldap",
-  "flext-dbt-ldif",
-  "flext-dbt-oracle",
-  "flext-dbt-oracle-wms",
-  "flext-grpc",
-  "flext-infra",
-  "flext-ldap",
-  "flext-ldif",
-  "flext-meltano",
-  "flext-observability",
-  "flext-oracle-oic",
-  "flext-oracle-wms",
-  "flext-plugin",
-  "flext-quality",
-  "flext-tap-ldap",
-  "flext-tap-ldif",
-  "flext-tap-oracle",
-  "flext-tap-oracle-oic",
-  "flext-tap-oracle-wms",
-  "flext-target-ldap",
-  "flext-target-ldif",
-  "flext-target-oracle",
-  "flext-target-oracle-oic",
-  "flext-target-oracle-wms",
-  "flext-tests",
-  "flext-web",
-  "gruponos-meltano-native",
-  "libs",
-  "pkg",
-  "scripts",
-  "src",
-  "tests",
-  "typings",
-  "typings/generated",
-]
+mypy_path = ["algar-oud-mig", "docker", "docs", "examples", "flexcore", "flext-api", "flext-auth", "flext-cli", "flext-core/examples", "flext-core/src", "flext-db-oracle", "flext-dbt-ldap", "flext-dbt-ldif", "flext-dbt-oracle", "flext-dbt-oracle-wms", "flext-grpc", "flext-infra/src", "flext-ldap", "flext-ldif", "flext-meltano", "flext-observability", "flext-oracle-oic", "flext-oracle-wms", "flext-plugin", "flext-quality", "flext-tap-ldap", "flext-tap-ldif", "flext-tap-oracle", "flext-tap-oracle-oic", "flext-tap-oracle-wms", "flext-target-ldap", "flext-target-ldif", "flext-target-oracle", "flext-target-oracle-oic", "flext-target-oracle-wms", "flext-tests/src", "flext-web", "gruponos-meltano-native", "libs", "pkg", "scripts", "src", "tests", "typings", "typings/generated"]
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
@@ -280,86 +232,9 @@ whitelines = 1
 
 # [MANAGED] pyright
 [tool.pyright]
-extraPaths = [
-  "algar-oud-mig",
-  "algar-oud-mig/src",
-  "flexcore",
-  "flexcore/src",
-  "flext-api",
-  "flext-api/src",
-  "flext-auth",
-  "flext-auth/src",
-  "flext-cli",
-  "flext-cli/src",
-  "flext-core",
-  "flext-core/src",
-  "flext-db-oracle",
-  "flext-db-oracle/src",
-  "flext-dbt-ldap",
-  "flext-dbt-ldap/src",
-  "flext-dbt-ldif",
-  "flext-dbt-ldif/src",
-  "flext-dbt-oracle",
-  "flext-dbt-oracle/src",
-  "flext-dbt-oracle-wms",
-  "flext-dbt-oracle-wms/src",
-  "flext-grpc",
-  "flext-grpc/src",
-  "flext-infra",
-  "flext-infra/src",
-  "flext-ldap",
-  "flext-ldap/src",
-  "flext-ldif",
-  "flext-ldif/src",
-  "flext-meltano",
-  "flext-meltano/src",
-  "flext-observability",
-  "flext-observability/src",
-  "flext-oracle-oic",
-  "flext-oracle-oic/src",
-  "flext-oracle-wms",
-  "flext-oracle-wms/src",
-  "flext-plugin",
-  "flext-plugin/src",
-  "flext-quality",
-  "flext-quality/src",
-  "flext-tap-ldap",
-  "flext-tap-ldap/src",
-  "flext-tap-ldif",
-  "flext-tap-ldif/src",
-  "flext-tap-oracle",
-  "flext-tap-oracle/src",
-  "flext-tap-oracle-oic",
-  "flext-tap-oracle-oic/src",
-  "flext-tap-oracle-wms",
-  "flext-tap-oracle-wms/src",
-  "flext-target-ldap",
-  "flext-target-ldap/src",
-  "flext-target-ldif",
-  "flext-target-ldif/src",
-  "flext-target-oracle",
-  "flext-target-oracle/src",
-  "flext-target-oracle-oic",
-  "flext-target-oracle-oic/src",
-  "flext-target-oracle-wms",
-  "flext-target-oracle-wms/src",
-  "flext-tests",
-  "flext-tests/src",
-  "flext-web",
-  "flext-web/src",
-  "gruponos-meltano-native",
-  "gruponos-meltano-native/src",
-  "docker",
-  "docs",
-  "examples",
-  "libs",
-  "pkg",
-  "scripts",
-  "src",
-  "tests",
-  "typings",
-  "typings/generated",
-]
+venvPath = "."
+venv = ".venv"
+extraPaths = ["algar-oud-mig", "docker", "docs", "examples", "flexcore", "flext-api", "flext-auth", "flext-cli", "flext-core/examples", "flext-core/src", "flext-db-oracle", "flext-dbt-ldap", "flext-dbt-ldif", "flext-dbt-oracle", "flext-dbt-oracle-wms", "flext-grpc", "flext-infra/src", "flext-ldap", "flext-ldif", "flext-meltano", "flext-observability", "flext-oracle-oic", "flext-oracle-wms", "flext-plugin", "flext-quality", "flext-tap-ldap", "flext-tap-ldif", "flext-tap-oracle", "flext-tap-oracle-oic", "flext-tap-oracle-wms", "flext-target-ldap", "flext-target-ldif", "flext-target-oracle", "flext-target-oracle-oic", "flext-target-oracle-wms", "flext-tests/src", "flext-web", "gruponos-meltano-native", "libs", "pkg", "scripts", "src", "tests", "typings", "typings/generated"]
 reportCallIssue = "none"
 reportConstantRedefinition = "error"
 reportIncompatibleMethodOverride = "error"
@@ -807,6 +682,8 @@ reportPrivateUsage = "none"
 root = "gruponos-meltano-native/scripts"
 
 # [MANAGED] ruff
+
+
 [tool.ruff]
 exclude = [
   ".git",
@@ -1309,6 +1186,8 @@ fail_under = 45
 precision = 2
 show_missing = true
 skip_covered = false
+
+
 
 [dependency-groups]
 dev = [
