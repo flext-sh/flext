@@ -8,7 +8,5 @@ from flext_core import FlextConstants
 class FlextRootConstants(FlextConstants):
     """Flext constants namespace."""
 
-    pass
-
 
 c = FlextRootConstants
