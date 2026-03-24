@@ -17,6 +17,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Infrastructure Centralization** - Centralize runtime helpers, eradicate all workarounds and antipatterns (completed 2026-03-24)
 - [ ] **Phase 4: Python 3.13 Modernization** - Replace custom code with stdlib (`TypeIs`, `StrEnum`, `batched`, etc.)
 - [ ] **Phase 5: Package Migration** - Extract submodules, convert 33 projects from Poetry to uv workspaces
+- [ ] **Phase 6: Typing Gap Closure** - TypeGuard→TypeIs migration + empty container annotations (gap closure)
+- [ ] **Phase 7: Modernization & Integration Fixes** - Fix circular import, StrEnum coercion, deprecation framework, UserDict (gap closure)
 
 ## Phase Details
 
@@ -109,6 +111,28 @@ Plans:
 - [x] 05-02-PLAN.md — Convert 30 consumer projects + wire uv workspace + unified lock
 - [x] 05-03-PLAN.md — Replace Poetry in Makefiles, CI, and .envrc
 
+### Phase 6: Typing Gap Closure
+**Goal**: All TypeGuard functions migrated to TypeIs (PEP 742) and all empty container literals annotated at assignment sites
+**Depends on**: Phase 1
+**Requirements**: TYPE-07, TYPE-08
+**Gap Closure**: Closes unsatisfied requirements from v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. All 12 TypeGuard functions use TypeIs (PEP 742) instead
+  2. All empty container literals (`[]`, `{}`, `set()`) have explicit type annotations at assignment sites
+**Plans**: 0 plans (pending `/gsd:plan-phase 6`)
+
+### Phase 7: Modernization & Integration Fixes
+**Goal**: Fix cross-phase integration breakage (circular import, StrEnum coercion) and complete deferred modernization (deprecation framework, UserDict)
+**Depends on**: Phase 4, Phase 5
+**Requirements**: MOD-02, MOD-06, INFRA-05
+**Gap Closure**: Closes integration issues and unsatisfied requirements from v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. `_utilities_loader.py` circular import resolved — 12 test collections pass, `make pyre` clean
+  2. StrEnum + strict Pydantic coercion fixed — 85 `flext-tests` tests pass
+  3. Custom `FlextUtilitiesDeprecation` replaced with `warnings.deprecated` (PEP 702)
+  4. All `UserDict`/`UserString` usages replaced with Pydantic `BaseModel`
+**Plans**: 0 plans (pending `/gsd:plan-phase 7`)
+
 ## Progress
 
 **Execution Order:**
@@ -121,3 +145,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 3. Infrastructure Centralization | 5/5 | Complete   | 2026-03-24 |
 | 4. Python 3.13 Modernization | 0/3 | Planned | - |
 | 5. Package Migration | 0/3 | Planned | - |
+| 6. Typing Gap Closure | 0/0 | Planned | - |
+| 7. Modernization & Integration Fixes | 0/0 | Planned | - |
