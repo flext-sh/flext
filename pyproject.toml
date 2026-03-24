@@ -17,6 +17,7 @@ dev = [ "types-flask (>=1.1.6,<2.0.0)" ]
 
 
 
+
 authors = [ {email = "team@flext.sh", name = "FLEXT Team"} ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -119,6 +120,7 @@ Repository = "https://github.com/flext-sh/flext"
 
 
 
+
 # [MANAGED] coverage
 [tool.coverage.report]
 fail_under = 45
@@ -129,10 +131,12 @@ skip_covered = false
 
 
 
+
 # [MANAGED] deptry
 [tool.deptry]
 known_first_party = [ "flext" ]
 pep621_dev_dependency_groups = [ "dev" ]
+
 
 
 
@@ -153,11 +157,13 @@ python_version = "3.13"
 
 
 
+
 # [MANAGED] pydantic-mypy
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
+
 
 
 
@@ -274,9 +280,9 @@ project-includes = [
 ]
 python-version = "3.13"
 search-path = [
-    ".",
     "algar-oud-mig",
     "algar-oud-mig/src",
+    "examples",
     "flexcore",
     "flexcore/src",
     "flext-api",
@@ -343,7 +349,9 @@ search-path = [
     "flext-web/src",
     "gruponos-meltano-native",
     "gruponos-meltano-native/src",
+    "scripts",
     "src",
+    "tests",
 ]
 use-ignore-files = false
 
@@ -362,6 +370,7 @@ redundant-cast = true
 unannotated-attribute = true
 unannotated-parameter = true
 unannotated-return = true
+
 
 
 
@@ -963,6 +972,7 @@ python_files = [ "*_test.py", "*_tests.py", "test_*.py" ]
 
 
 
+
 # [MANAGED] ruff
 [tool.ruff]
 exclude = [
@@ -1270,6 +1280,7 @@ split-on-trailing-comma = true
 
 
 
+
 # [MANAGED] tomlsort
 [tool.tomlsort]
 all = true
@@ -1305,6 +1316,7 @@ paths = [
   "tests/",
   "vulture_whitelist.py",
 ]
+
 
 
 
