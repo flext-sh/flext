@@ -95,7 +95,7 @@ def eprint(message: str) -> None:
     print(message, file=sys.stderr)
 
 
-def parse_args(argv: Sequence[str]) -> argparse.Namespace:
+def parse_args(argv: t.StrSequence) -> argparse.Namespace:
     """parse_args function."""
     parser = argparse.ArgumentParser(
         description="Validate gate contract conformance for validator/fixer scripts.",
@@ -182,7 +182,7 @@ def read_content(root: Path, script_path: Path) -> str:
         return ""
 
 
-def read_header(content: str) -> Sequence[str]:
+def read_header(content: str) -> t.StrSequence:
     """read_header function."""
     return content.splitlines()[:MAX_HEADER_LINES]
 
@@ -202,7 +202,7 @@ def count_code_lines(content: str, extension: str) -> int:
     return count
 
 
-def check_shebang(header: Sequence[str], extension: str) -> Violation | None:
+def check_shebang(header: t.StrSequence, extension: str) -> Violation | None:
     """check_shebang function."""
     if not header:
         return Violation(
@@ -231,7 +231,7 @@ def check_shebang(header: Sequence[str], extension: str) -> Violation | None:
     return None
 
 
-def check_owner_marker(header: Sequence[str]) -> Violation | None:
+def check_owner_marker(header: t.StrSequence) -> Violation | None:
     """check_owner_marker function."""
     for line in header:
         if OWNER_MARKER_RE.match(line):
@@ -443,7 +443,7 @@ def print_results(scripts: Sequence[ScriptInfo]) -> None:
         else:
             status = f"{Ansi.GREEN}OK{Ansi.RESET}"
 
-        detail_parts: Sequence[str] = []
+        detail_parts: t.StrSequence = []
         if errors:
             detail_parts.append(f"{len(errors)} error(s)")
         if warnings:
@@ -467,7 +467,7 @@ def write_report(root: Path, scripts: Sequence[ScriptInfo], mode: str) -> Path:
     report_path = report_path_for(root)
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
-    all_violations: Sequence[Mapping[str, str]] = []
+    all_violations: Sequence[t.StrMapping] = []
     for script in scripts:
         all_violations.extend(
             {
@@ -503,7 +503,7 @@ def write_report(root: Path, scripts: Sequence[ScriptInfo], mode: str) -> Path:
     return report_path
 
 
-def run_main(argv: Sequence[str]) -> tuple[int, int]:
+def run_main(argv: t.StrSequence) -> tuple[int, int]:
     """run_main function."""
     try:
         args = parse_args(argv)
