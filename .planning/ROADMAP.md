@@ -53,7 +53,7 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md — issubclass() prereq + ABC-to-Protocol conversion in flext-core
-- [ ] 02-02-PLAN.md — DIP enforcement: concrete->protocol type substitution across all projects
+- [x] 02-02-PLAN.md — DIP enforcement: concrete->protocol type substitution across all projects
 - [ ] 02-03-PLAN.md — Field()->Annotated migration + mutable defaults fix (all 33 projects)
 - [ ] 02-04-PLAN.md — TypeAdapter caching (~100 inline instances)
 - [ ] 02-05-PLAN.md — PEP 695 type aliases + import normalization
