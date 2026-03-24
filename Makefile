@@ -555,7 +555,7 @@ mod: ## Modernize pyproject.toml files (standardize configs without lock/install
 	$(PY) -m flext_infra deps path-sync --mode auto --apply 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
 	echo ""
 	$(Q)echo "Formatting pyproject.toml files with taplo..."; \
-	taplo format pyproject.toml */pyproject.toml 2>&1 | grep -vE '^\s*$$' || true; \
+	taplo format --config "$(CURDIR)/.taplo.toml" pyproject.toml */pyproject.toml 2>&1 | grep -vE '^\s*$$' || true; \
 	echo ""
 	$(Q)echo "Formatting Python files (ruff)..."
 	$(Q)$(POETRY_ENV) ruff format . --quiet
