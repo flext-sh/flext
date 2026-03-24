@@ -56,11 +56,10 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          virtualenvs-create: false
-          installer-parallel: true
+          enable-cache: true
 
       - name: Install system dependencies
         shell: bash
