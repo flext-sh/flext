@@ -1,0 +1,25 @@
+tests/unit/scripts/github/test_pr_workspace.py
+  17572c7a1dfd1bde 76,120
+tests/infra/typings.py
+  17572c7a1dfd1bde 3,18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "fd42c4c071eedf3c9e760edf1595e6820533022d",
+  "prompts": {
+    "17572c7a1dfd1bde": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d203c-442a-7a50-94af-ed273e8ed603",
+        "model": "gpt-5.3-codex"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 2,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    }
+  }
+}
