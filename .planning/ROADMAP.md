@@ -85,7 +85,12 @@ Plans:
   1. All custom chunking/batching utilities replaced with `itertools.batched`; all custom deprecation framework replaced with `warnings.deprecated` (PEP 702)
   2. All 147+ `StrEnum` subclasses are decorated with `@unique`; all 70 convertible `Literal[str, ...]` unions are `StrEnum`
   3. All hand-rolled grouping patterns use `defaultdict`; all `UserDict`/`UserString` usages replaced with Pydantic `BaseModel`
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — itertools.batched + defaultdict replacements (MOD-01, MOD-05)
+- [ ] 04-02-PLAN.md — StrEnum @unique + Literal-to-StrEnum conversion (MOD-03, MOD-04)
+- [ ] 04-03-PLAN.md — Deprecation framework + UserDict elimination (MOD-02, MOD-06)
 
 ### Phase 5: Package Migration
 **Goal**: `flext_infra` and `flext_tests` live in independent repos as submodules, `flext-core` ships only `flext_core`, and all 33 projects run on a unified `uv.lock`
@@ -109,5 +114,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Type System Hardening | 5/5 | Complete    |  |
 | 2. Architecture & SOLID | 0/5 | Planned | - |
 | 3. Infrastructure Centralization | 5/5 | Complete   | 2026-03-24 |
-| 4. Python 3.13 Modernization | 0/TBD | Not started | - |
+| 4. Python 3.13 Modernization | 0/3 | Planned | - |
 | 5. Package Migration | 0/TBD | Not started | - |
