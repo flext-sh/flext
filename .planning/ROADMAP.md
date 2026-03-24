@@ -102,7 +102,12 @@ Plans:
   3. All 33 `pyproject.toml` files use PEP 621 + uv workspace format — no `poetry` sections remain
   4. A single root `uv.lock` replaces all 33 individual `poetry.lock` files
   5. All `make` targets invoke `uv run` instead of `poetry run` — CI passes without Poetry installed
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Validate submodule extraction + convert foundation projects to hatchling
+- [ ] 05-02-PLAN.md — Convert 30 consumer projects + wire uv workspace + unified lock
+- [ ] 05-03-PLAN.md — Replace Poetry in Makefiles, CI, and .envrc
 
 ## Progress
 
@@ -115,4 +120,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Architecture & SOLID | 0/5 | Planned | - |
 | 3. Infrastructure Centralization | 5/5 | Complete   | 2026-03-24 |
 | 4. Python 3.13 Modernization | 0/3 | Planned | - |
-| 5. Package Migration | 0/TBD | Not started | - |
+| 5. Package Migration | 0/3 | Planned | - |
