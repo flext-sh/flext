@@ -72,7 +72,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md — INFRA utilities (iter_projects, emit) + workspace_root normalization
-- [ ] 03-02-PLAN.md — NamespaceSourceDetector test suite + workspace-wide application
+- [x] 03-02-PLAN.md — NamespaceSourceDetector test suite + workspace-wide application
 - [ ] 03-03-PLAN.md — Workaround eradication: WA-01, WA-02, WA-03, WA-04, WA-06
 - [ ] 03-04-PLAN.md — Workaround eradication: WA-05 (print() triage + fix)
 - [ ] 03-05-PLAN.md — Policy gate enhancement + final verification sweep
