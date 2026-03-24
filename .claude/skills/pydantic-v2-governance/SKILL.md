@@ -164,7 +164,7 @@ from pydantic import BaseModel, Field, TypeAdapter
 
 class ValidationHelpers(BaseModel):
     _tags_adapter: ClassVar[TypeAdapter[t.StrSequence] | None] = None
-    _list_adapter: ClassVar[TypeAdapter[Sequence[t.Container]] | None] = None
+    _list_adapter: ClassVar[TypeAdapter[t.FlatContainerList] | None] = None
     _strict_string_adapter: ClassVar[
         TypeAdapter[Annotated[str, Field(strict=True)]] | None
     ] = None
@@ -175,7 +175,7 @@ class ValidationHelpers(BaseModel):
     _dict_container_adapter: ClassVar[TypeAdapter[Mapping[str, t.Container]] | None] = (
         None
     )
-    _list_container_adapter: ClassVar[TypeAdapter[Sequence[t.Container]] | None] = None
+    _list_container_adapter: ClassVar[TypeAdapter[t.FlatContainerList] | None] = None
     _tuple_container_adapter: ClassVar[TypeAdapter[tuple[t.Container, ...]] | None] = (
         None
     )

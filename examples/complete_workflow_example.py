@@ -328,7 +328,7 @@ class CompleteWorkflowExample:
                 stage_name=stage_name,
                 workflow_id=context.workflow_id,
                 correlation_id=context.correlation_id,
-                success=processed_results,
+                success=len(processed_results) > 0,
                 items_processed=len(items),
                 items_succeeded=len(processed_results),
                 items_failed=len(items) - len(processed_results),
@@ -476,7 +476,7 @@ class CompleteWorkflowExample:
                     "parallel_enabled": bool(
                         self.workflow_config.get("parallel", True)
                     ),
-                    "max_workers": int(self.workflow_config.get("max_workers", 4)),
+                    "max_workers": int(str(self.workflow_config.get("max_workers", 4))),
                     "strict_mode": bool(self.workflow_config.get("strict_mode", False)),
                 },
             )
