@@ -106,6 +106,36 @@ from collections.abc import Mapping, Sequence` |
 - `class Meltano: SingerSchemaMessage = FlextMeltanoModels.Meltano.SingerSchemaMessage` — not valid as type
 - Inheriting `FlextModels` directly when parent project namespaces are needed
 
+## r[T] Container Invariance Rules
+
+`r[T]` is **INVARIANT** — the type parameter `T` does not vary with subtyping.
+
+**Rule:** Inside `r[T]`, use the **concrete** container type that matches the actual runtime value. Do NOT substitute abstract `Sequence`, `Mapping`, etc. as the type parameter — invariance makes that a type error.
+
+| Return value | Correct annotation | FORBIDDEN |
+|---|---|---|
+| `[1, 2, 3]` | `r[list[int]]` | `r[Sequence[int]]` |
+| `{"a": 1}` | `r[dict[str, int]]` | `r[Mapping[str, int]]` |
+| `{1, 2}` | `r[set[int]]` | `r[AbstractSet[int]]` |
+| `(1, "x")` | `r[tuple[int, str]]` | `r[Sequence[int \| str]]` |
+
+**Why:** `r[Sequence[int]]` and `r[list[int]]` are distinct types under invariance. Returning `r[list[int]]` where `r[Sequence[int]]` is declared is a type error.
+
+**Parameter types** (function inputs) still use abstract covariant types (`Sequence`, `Mapping`) — invariance only applies inside `r[T]`.
+
+```python
+# CORRECT
+def get_items() -> r[list[str]]: ...
+def get_config() -> r[dict[str, int]]: ...
+
+# FORBIDDEN
+def get_items() -> r[Sequence[str]]: ...   # invariance violation
+def get_config() -> r[Mapping[str, int]]: ...  # invariance violation
+
+# Parameters: abstract types OK (covariant position)
+def process(items: Sequence[str]) -> r[list[str]]: ...
+```
+
 ## Instructions
 
 - Use existing type var definitions before introducing new generic parameters.

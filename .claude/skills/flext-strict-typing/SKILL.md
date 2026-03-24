@@ -112,9 +112,66 @@ from collections.abc import Mapping, Sequence`** in every file
 
 - **Default contract type**: `Mapping[K, V]` for read-only boundaries.
 - **Explicit mutable contract**: `MutableMapping[K, V]` only when mutation is part of the contract.
-- **`Mapping[K, V]` is almost-banned in annotations**: keep `dict` primarily for local mutation hotspots and short-lived intermediate states.
+- **Bare `dict`, `list`, `set`, `tuple` are FORBIDDEN as type annotations** — use `collections.abc` abstractions exclusively.
 - **Schema-bearing payloads**: prefer `TypedDict` or Pydantic models instead of plain map contracts.
 - **Runtime checks**: prefer protocol/Mapping checks over `isinstance(x, dict)` unless dict-only behavior is required.
+
+### Collections.abc Migration Rules
+
+| Bare Type | Read-Only | Mutated |
+|-----------|-----------|---------|
+| `dict[K, V]` | `Mapping[K, V]` | `MutableMapping[K, V]` |
+| `list[X]` | `Sequence[X]` | `MutableSequence[X]` |
+| `set[X]` | `AbstractSet[X]` | Keep `set[X]` (see exceptions) |
+| `tuple[X, ...]` | Keep `tuple[X, ...]` | N/A (immutable) |
+
+### Keep Concrete — Exceptions (CRITICAL)
+
+These patterns MUST keep concrete `dict`/`list`/`set` types:
+
+| Pattern | Reason |
+|---------|--------|
+| `r[list[X]]`, `r[dict[K,V]]` | **r[T] is INVARIANT** — `r[Sequence[X]]` ≠ `r[list[X]]` |
+| `dict[str, list[X]]` from PrivateAttr | **Nested invariance** — return type must match concrete backing |
+| `__all__: list[str]` | Python convention |
+| `Field(default_factory=list)` | Pydantic internals require concrete |
+| `PrivateAttr(default_factory=dict)` | Pydantic internals require concrete |
+| `ClassVar[list[...]]` | Class variable convention |
+| PEP 695 `type X = dict[...]` | Type alias definitions |
+| Singer SDK method overrides | Framework requires concrete `dict`/`list` |
+| `isinstance(x, dict)` | Runtime check requires concrete type |
+| `TypeAdapter(dict[...])` | Pydantic validation requires concrete |
+| `set[X]` with `.update()`/`.discard()` | `MutableSet` lacks these methods |
+
+### Simplification Patterns
+
+```python
+# ❌ Unnecessary intermediate variable with append loop
+results: MutableSequence[str] = []
+for item in items:
+    if item.is_valid:
+        results.append(item.name)
+return results
+
+# ✅ Comprehension with Sequence (when not mutated after)
+results: Sequence[str] = [item.name for item in items if item.is_valid]
+return results
+
+# ✅ match/case instead of isinstance chains (Python 3.13)
+match value:
+    case str():
+        return value.upper()
+    case int():
+        return str(value)
+    case _:
+        return repr(value)
+```
+
+### Validation Command
+
+```bash
+ruff check --select=F821,F401,F811  # Verify no undefined names or unused imports
+```
 
 ---
 
