@@ -123,7 +123,7 @@ Plans:
 
 Plans:
 - [x] 06-01-PLAN.md — TypeGuard→TypeIs migration (1 remaining function in flext-cli)
-- [ ] 06-02-PLAN.md — Annotate 745 empty container literals across all src/
+- [x] 06-02-PLAN.md — Annotate 745 empty container literals across all src/
 
 ### Phase 7: Modernization & Integration Fixes
 **Goal**: Fix cross-phase integration breakage (circular import, StrEnum coercion) and complete deferred modernization (deprecation framework, UserDict)
