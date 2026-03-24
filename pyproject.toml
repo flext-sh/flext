@@ -28,9 +28,9 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "flext-core @ file:////${PWD}/flext-core",
-  "flext-infra @ file:////${PWD}/flext-infra",
-  "flext-tests @ file:////${PWD}/flext-tests",
+  "flext-core @ file:////flext-core",
+  "flext-infra @ file:////flext-infra",
+  "flext-tests @ file:////flext-tests",
   "importlib-resources (>=6.5.2,<7.0.0)",
   "pydantic (>=2.12.5,<3.0.0)",
 ]
@@ -125,9 +125,9 @@ project-excludes = [
 ]
 python-version = "3.13"
 search-path = [
-  "${PWD}/flext-core/src",
-  "${PWD}/flext-infra/src",
-  "${PWD}/flext-tests/src",
+  "flext-core/src",
+  "flext-infra/src",
+  "flext-tests/src",
   ".",
   "algar-oud-mig",
   "docker",
@@ -205,9 +205,9 @@ python_version = "3.13"
 
 # [MANAGED] pydantic-mypy
 mypy_path = [
-  "${PWD}/flext-core/src",
-  "${PWD}/flext-infra/src",
-  "${PWD}/flext-tests/src",
+  "flext-core/src",
+  "flext-infra/src",
+  "flext-tests/src",
   "algar-oud-mig",
   "docker",
   "docs",
