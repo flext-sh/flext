@@ -65,21 +65,12 @@ WORKSPACE_ROOT := $(BASE_MK_DIR)
 WORKSPACE_VENV := $(WORKSPACE_ROOT)/.venv
 ifeq ($(wildcard $(WORKSPACE_VENV)),)
 ACTIVE_VENV := $(PROJECT_ROOT)/.venv
-export POETRY_VIRTUALENVS_PATH := $(PROJECT_ROOT)
-export POETRY_VIRTUALENVS_IN_PROJECT := true
-export POETRY_VIRTUALENVS_CREATE := true
 else
 ACTIVE_VENV := $(WORKSPACE_VENV)
-export POETRY_VIRTUALENVS_PATH := $(WORKSPACE_ROOT)
-export POETRY_VIRTUALENVS_IN_PROJECT := false
-export POETRY_VIRTUALENVS_CREATE := false
 endif
 else
 WORKSPACE_ROOT := $(PROJECT_ROOT)
 ACTIVE_VENV := $(PROJECT_ROOT)/.venv
-export POETRY_VIRTUALENVS_PATH := $(PROJECT_ROOT)
-export POETRY_VIRTUALENVS_IN_PROJECT := true
-export POETRY_VIRTUALENVS_CREATE := true
 endif
 
 export PYTHON_KEYRING_BACKEND := keyring.backends.null.Keyring
@@ -88,9 +79,6 @@ VENV_PYTHON := $(ACTIVE_VENV)/bin/python
 VENV_ACTIVATE := source $(ACTIVE_VENV)/bin/activate
 export VIRTUAL_ENV := $(ACTIVE_VENV)
 export PATH := $(ACTIVE_VENV)/bin:$(PATH)
-
-# Poetry command (uses workspace venv automatically)
-POETRY := poetry
 
 # Quality tool (flext-quality with fallback)
 QUALITY_CMD ?= flext-quality
@@ -208,10 +196,10 @@ boot: ## Complete setup
 		exit 0; \
 	fi
 	$(Q)python -m flext_infra deps internal-sync
-	$(Q)$(POETRY) lock
-	$(Q)$(POETRY) install --all-extras --all-groups
+	$(Q)uv lock
+	$(Q)uv sync --all-groups
 	$(Q)if git rev-parse --git-dir >/dev/null 2>&1; then \
-		$(POETRY) run pre-commit install; \
+		pre-commit install; \
 	else \
 		echo "INFO: skipping pre-commit install (no git repository)"; \
 	fi
@@ -225,7 +213,7 @@ build: ## Build distributable artifacts
 		exit 0; \
 	fi
 	$(Q)build_start=$$(date +%s); \
-	$(POETRY) build; \
+	uv build; \
 	echo "Build complete: $(PROJECT_NAME) ($$(($$(date +%s) - $$build_start))s)"
 
 check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type to select)
@@ -302,16 +290,16 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 		echo "Fast-path check: $$_files"; \
 		status=0; \
 		case ",$$gates," in \
-			*,lint,*) $(POETRY) run ruff check $$_files $(RUFF_ARGS) $(if $(filter 1,$(FIX)),--fix,) || status=$$?;; \
+			*,lint,*) ruff check $$_files $(RUFF_ARGS) $(if $(filter 1,$(FIX)),--fix,) || status=$$?;; \
 		esac; \
 		case ",$$gates," in \
-			*,format,*) $(POETRY) run ruff format $$_files $(if $(filter 1,$(CHECK_ONLY)),--check,--quiet) || status=$$?;; \
+			*,format,*) ruff format $$_files $(if $(filter 1,$(CHECK_ONLY)),--check,--quiet) || status=$$?;; \
 		esac; \
 		case ",$$gates," in \
-			*,pyright,*) $(POETRY) run pyright $$_files $(PYRIGHT_ARGS) || status=$$?;; \
+			*,pyright,*) pyright $$_files $(PYRIGHT_ARGS) || status=$$?;; \
 		esac; \
 		case ",$$gates," in \
-			*,pyrefly,*) $(POETRY) run pyrefly check $$_files || status=$$?;; \
+			*,pyrefly,*) pyrefly check $$_files || status=$$?;; \
 		esac; \
 		exit $$status; \
 	fi; \
@@ -319,7 +307,7 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 	if [ "$(CURDIR)" = "$(WORKSPACE_ROOT)" ]; then \
 		project_key="."; \
 	fi; \
-	FLEXT_WORKSPACE_ROOT="$(WORKSPACE_ROOT)" $(POETRY) run python -m flext_infra check run --gates "$$gates" --reports-dir "$(CURDIR)/.reports/check" --project "$$project_key"; \
+	FLEXT_WORKSPACE_ROOT="$(WORKSPACE_ROOT)" python -m flext_infra check run --gates "$$gates" --reports-dir "$(CURDIR)/.reports/check" --project "$$project_key"; \
 	exit $$?
 
 scan: ## Run all security checks
@@ -331,7 +319,7 @@ scan: ## Run all security checks
 	if [ "$(CURDIR)" = "$(WORKSPACE_ROOT)" ]; then \
 		project_key="."; \
 	fi; \
-	FLEXT_WORKSPACE_ROOT="$(WORKSPACE_ROOT)" $(POETRY) run python -m flext_infra check run \
+	FLEXT_WORKSPACE_ROOT="$(WORKSPACE_ROOT)" python -m flext_infra check run \
 		--workspace "$(WORKSPACE_ROOT)" \
 		--gates "security" \
 		--reports-dir "$(CURDIR)/.reports/scan" \
@@ -357,9 +345,9 @@ fmt: ## Run code formatting (ruff/gofmt + markdownlint on tracked files)
 		fi; \
 		if [ -n "$$_fmt_files" ]; then _fmt_target="$$_fmt_files"; fi; \
 		if [ "$(CHECK_ONLY)" = "1" ]; then \
-			$(POETRY) run ruff format $$_fmt_target --check; \
+			ruff format $$_fmt_target --check; \
 		else \
-			$(POETRY) run ruff format $$_fmt_target --quiet; \
+			ruff format $$_fmt_target --quiet; \
 		fi; \
 		if [ -f go.mod ]; then \
 			go_files=$$(find . -type f -name '*.go' ! -path './.git/*' ! -path './vendor/*'); \
@@ -444,9 +432,9 @@ test: ## Run pytest only
 	skips_file="$$report_dir/skipped-tests.txt"; \
 	command_file="$$report_dir/command.txt"; \
 	interrupted=0; \
-	echo "$(POETRY) run pytest $$_pytest_run $(PYTEST_REPORT_ARGS) $(if $(filter 1,$(DIAG)),$(PYTEST_DIAG_ARGS),) -p no:metadata --junitxml=$$junit_file --cov --cov-report=xml:$$coverage_file $(if $(filter 1,$(DIAG)),-vv,-q) $$_all_pytest_args" > "$$command_file"; \
+	echo "pytest $$_pytest_run $(PYTEST_REPORT_ARGS) $(if $(filter 1,$(DIAG)),$(PYTEST_DIAG_ARGS),) -p no:metadata --junitxml=$$junit_file --cov --cov-report=xml:$$coverage_file $(if $(filter 1,$(DIAG)),-vv,-q) $$_all_pytest_args" > "$$command_file"; \
 	trap 'interrupted=1; trap "" INT TERM' INT TERM; \
-	$(POETRY) run pytest $$_pytest_run \
+	pytest $$_pytest_run \
 		$(PYTEST_REPORT_ARGS) \
 		$(if $(filter 1,$(DIAG)),$(PYTEST_DIAG_ARGS),) \
 		-p no:metadata \
@@ -509,7 +497,7 @@ val: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, FIX=1
 		echo "ERROR: FIX must be empty or 1, got '$(FIX)'"; \
 		exit 1; \
 	fi
-	$(Q)if [ "$(FIX)" = "1" ]; then $(POETRY) run ruff check --fix . --quiet; fi
+	$(Q)if [ "$(FIX)" = "1" ]; then ruff check --fix . --quiet; fi
 	$(Q)gates="$(VALIDATE_GATES)"; \
 	if [ -n "$$gates" ]; then \
 		for g in $$(echo "$$gates" | tr ',' ' '); do \
@@ -522,11 +510,11 @@ val: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, FIX=1
 		gates="complexity,docstring"; \
 	fi; \
 	if echo "$$gates" | grep -qw complexity; then \
-		$(POETRY) run radon cc $(SRC_DIR) -n E -a --total-average; \
-		$(POETRY) run radon mi $(SRC_DIR) -n C -s --sort; \
+		radon cc $(SRC_DIR) -n E -a --total-average; \
+		radon mi $(SRC_DIR) -n C -s --sort; \
 	fi; \
 	if echo "$$gates" | grep -qw docstring; then \
-		$(POETRY) run interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q; \
+		interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q; \
 	fi
 
 daemon-start-mypy: ## Start dmypy daemon for this project

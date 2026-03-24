@@ -12,11 +12,9 @@ PYTHON_REQ_VERSION := $(shell awk -F'"' '/requires-python/ {match($$2, /3\.[0-9]
 PYTHON_CMD := $(shell if command -v python$(PYTHON_REQ_VERSION) >/dev/null 2>&1; then echo python$(PYTHON_REQ_VERSION); elif command -v python3 >/dev/null 2>&1; then echo python3; else echo python; fi)
 
 PY := $(WORKSPACE_VENV)/bin/python
-POETRY_BIN := $(WORKSPACE_VENV)/bin/poetry
 PIPX_BIN := $(WORKSPACE_VENV)/bin/pipx
 UV_BIN := $(WORKSPACE_VENV)/bin/uv
-POETRY_ENV := VIRTUAL_ENV=$(WORKSPACE_VENV) PATH=$(WORKSPACE_VENV)/bin:$$PATH POETRY_VIRTUALENVS_CREATE=false POETRY_VIRTUALENVS_IN_PROJECT=false
-ORCHESTRATOR := $(POETRY_ENV) $(PY) -m flext_infra workspace orchestrate
+ORCHESTRATOR := $(PY) -m flext_infra workspace orchestrate
 PYTEST_ARGS ?=
 VALIDATE_SCOPE ?= project
 DOCS_PHASE ?= all
@@ -312,18 +310,18 @@ boot: ## Install all projects into workspace .venv
 	$(Q)[ -d ".venv" ] || { \
 		echo "Creating .venv..."; \
 		$(PYTHON_CMD) -m venv .venv; \
-		echo "Installing poetry, pipx, and uv inside .venv..."; \
-		.venv/bin/pip install -U pip poetry pipx uv; \
+		echo "Installing pipx and uv inside .venv..."; \
+		.venv/bin/pip install -U pip pipx uv; \
 	}
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "Bootstrapping flext-core runtime dependencies..."; \
-	$(POETRY_ENV) $(POETRY_BIN) -C flext-core install --only main --no-interaction || exit 1
+	uv sync --directory flext-core --no-dev || exit 1
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)echo "Enforcing Python version guards..."; $(PY) -m flext_infra maintenance || exit 1
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
-	$(POETRY_ENV) $(PY) -m flext_infra deps modernize --skip-check --apply 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	$(PY) -m flext_infra deps modernize --skip-check --apply 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
 	$(Q)echo "Syncing dependency paths to workspace mode..."; \
 	$(PY) -m flext_infra deps path-sync --mode auto --apply 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
@@ -347,7 +345,7 @@ boot: ## Install all projects into workspace .venv
 				continue; \
 			fi; \
 			printf "     lock  ... "; \
-			if $(POETRY_ENV) $(POETRY_BIN) -C "$$proj" lock >"$$log_file" 2>&1; then \
+			if uv lock --directory "$$proj" >"$$log_file" 2>&1; then \
 				echo "ok"; \
 			else \
 				echo "failed"; \
@@ -358,7 +356,7 @@ boot: ## Install all projects into workspace .venv
 				continue; \
 			fi; \
 			printf "     install ... "; \
-			if $(POETRY_ENV) $(POETRY_BIN) -C "$$proj" install --all-extras --all-groups >>"$$log_file" 2>&1; then \
+			if uv sync --directory "$$proj" --all-groups >>"$$log_file" 2>&1; then \
 				elapsed=$$(( $$(date +%s) - start_ts )); \
 				echo "ok ($${elapsed}s)"; \
 				installed=$$((installed + 1)); \
@@ -383,7 +381,7 @@ boot: ## Install all projects into workspace .venv
 		failed_projects="$$failed_projects root"; \
 	fi; \
 	printf "     lock  ... "; \
-	if $(POETRY_ENV) $(POETRY_BIN) lock >"$$log_file" 2>&1; then \
+	if uv lock >"$$log_file" 2>&1; then \
 		echo "ok"; \
 		root_lock_ok=1; \
 	else \
@@ -394,7 +392,7 @@ boot: ## Install all projects into workspace .venv
 	fi; \
 	if [ $$root_lock_ok -eq 1 ]; then \
 		printf "     install ... "; \
-		if $(POETRY_ENV) $(POETRY_BIN) install --all-extras --all-groups >>"$$log_file" 2>&1; then \
+		if uv sync --all-groups >>"$$log_file" 2>&1; then \
 			elapsed=$$(( $$(date +%s) - start_ts )); \
 			echo "ok ($${elapsed}s)"; \
 			installed=$$((installed + 1)); \
@@ -425,7 +423,7 @@ up: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)echo "Enforcing Python version guards..."; $(PY) -m flext_infra maintenance || exit 1
 	$(Q)echo "Modernizing pyproject.toml files..."; \
-	$(POETRY_ENV) $(PY) -m flext_infra deps modernize --skip-check --apply 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	$(PY) -m flext_infra deps modernize --skip-check --apply 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
 	$(Q)echo "Syncing dependency paths to workspace mode..."; \
 	$(PY) -m flext_infra deps path-sync --mode auto --apply 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
@@ -449,7 +447,7 @@ up: ## Upgrade Python dependencies to latest via Poetry
 				continue; \
 			fi; \
 			printf "     lock  ... "; \
-			if $(POETRY_ENV) $(POETRY_BIN) -C "$$proj" lock >"$$log_file" 2>&1; then \
+			if uv lock --directory "$$proj" >"$$log_file" 2>&1; then \
 				echo "ok"; \
 			else \
 				echo "failed"; \
@@ -460,7 +458,7 @@ up: ## Upgrade Python dependencies to latest via Poetry
 				continue; \
 			fi; \
 			printf "     update ... "; \
-			if $(POETRY_ENV) $(POETRY_BIN) -C "$$proj" update >"$$log_file" 2>&1; then \
+			if uv lock --directory "$$proj" --upgrade >"$$log_file" 2>&1; then \
 				echo "ok"; \
 			else \
 				echo "failed"; \
@@ -471,7 +469,7 @@ up: ## Upgrade Python dependencies to latest via Poetry
 				continue; \
 			fi; \
 			printf "     install ... "; \
-			if $(POETRY_ENV) $(POETRY_BIN) -C "$$proj" install --all-extras --all-groups >>"$$log_file" 2>&1; then \
+			if uv sync --directory "$$proj" --all-groups >>"$$log_file" 2>&1; then \
 				elapsed=$$(( $$(date +%s) - start_ts )); \
 				echo "ok ($${elapsed}s)"; \
 				upgraded=$$((upgraded + 1)); \
@@ -496,7 +494,7 @@ up: ## Upgrade Python dependencies to latest via Poetry
 		failed_projects="$$failed_projects root"; \
 	fi; \
 	printf "     lock  ... "; \
-	if $(POETRY_ENV) $(POETRY_BIN) lock >"$$log_file" 2>&1; then \
+	if uv lock >"$$log_file" 2>&1; then \
 		echo "ok"; \
 	else \
 		echo "failed"; \
@@ -505,7 +503,7 @@ up: ## Upgrade Python dependencies to latest via Poetry
 		failed_projects="$$failed_projects root"; \
 	fi; \
 	printf "     update ... "; \
-	if $(POETRY_ENV) $(POETRY_BIN) update >"$$log_file" 2>&1; then \
+	if uv lock --upgrade >"$$log_file" 2>&1; then \
 		echo "ok"; \
 		root_update_ok=1; \
 	else \
@@ -516,7 +514,7 @@ up: ## Upgrade Python dependencies to latest via Poetry
 	fi; \
 	if [ $$root_update_ok -eq 1 ]; then \
 		printf "     install ... "; \
-		if $(POETRY_ENV) $(POETRY_BIN) install --all-extras --all-groups >>"$$log_file" 2>&1; then \
+		if uv sync --all-groups >>"$$log_file" 2>&1; then \
 			elapsed=$$(( $$(date +%s) - start_ts )); \
 			echo "ok ($${elapsed}s)"; \
 			upgraded=$$((upgraded + 1)); \
@@ -538,7 +536,7 @@ up: ## Upgrade Python dependencies to latest via Poetry
 	fi; \
 	if [ "$(DEPS_REPORT)" != "0" ]; then \
 		echo "Dependency report (deptry + pip check)..."; \
-		$(POETRY_ENV) $(PY) -m flext_infra deps detect -q --no-fail || true; \
+		$(PY) -m flext_infra deps detect -q --no-fail || true; \
 	fi
 	$(Q)echo "Syncing GitHub workflow templates..."
 	$(Q)$(PY) -m flext_infra github workflows --workspace-root "$(CURDIR)" --apply --prune --report .reports/workflows/sync.json
@@ -549,7 +547,7 @@ mod: ## Modernize pyproject.toml files (standardize configs without lock/install
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
-	$(POETRY_ENV) $(PY) -m flext_infra deps modernize --skip-check --apply 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
+	$(PY) -m flext_infra deps modernize --skip-check --apply 2>&1 | grep -E "^Phase|Total:|✓|No semantic" || true; \
 	echo ""
 	$(Q)echo "Syncing dependency paths to workspace mode..."; \
 	$(PY) -m flext_infra deps path-sync --mode auto --apply 2>&1 | grep -E "^\[sync|changed|No changes" || true; \
@@ -558,7 +556,7 @@ mod: ## Modernize pyproject.toml files (standardize configs without lock/install
 	taplo format --config "$(CURDIR)/.taplo.toml" pyproject.toml */pyproject.toml 2>&1 | grep -vE '^\s*$$' || true; \
 	echo ""
 	$(Q)echo "Formatting Python files (ruff)..."
-	$(Q)$(POETRY_ENV) ruff format . --quiet
+	$(Q)ruff format . --quiet
 	$(Q)echo "Modernization complete."
 
 check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security)
@@ -659,9 +657,9 @@ fmt: ## Run code formatting across all workspace projects (ruff/gofmt + markdown
 	fi; \
 	if [ -n "$$_fmt_files" ]; then _fmt_target="$$_fmt_files"; fi; \
 	if [ "$(CHECK_ONLY)" = "1" ]; then \
-		$(POETRY_ENV) ruff format $$_fmt_target --check; \
+		ruff format $$_fmt_target --check; \
 	else \
-		$(POETRY_ENV) ruff format $$_fmt_target --quiet; \
+		ruff format $$_fmt_target --quiet; \
 	fi
 	$(Q)go_files=$$(find . -type f -name '*.go' ! -path '*/.git/*' ! -path '*/vendor/*' ! -path '*/.venv/*'); \
 	if [ -n "$$go_files" ]; then \
@@ -760,18 +758,18 @@ types: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency rep
 	if [ -n "$$packages" ]; then \
 		for pkg in $$packages; do \
 			pkg_mod=$$(echo "$$pkg" | tr '-' '_'); \
-			if $(POETRY_ENV) $(PY) -c "import importlib.util,pathlib;s=importlib.util.find_spec('$$pkg_mod');exit(0 if s and s.origin and (pathlib.Path(s.origin).parent/'py.typed').exists() else 1)" 2>/dev/null; then \
+			if $(PY) -c "import importlib.util,pathlib;s=importlib.util.find_spec('$$pkg_mod');exit(0 if s and s.origin and (pathlib.Path(s.origin).parent/'py.typed').exists() else 1)" 2>/dev/null; then \
 				echo "  skip: $$pkg (ships py.typed)"; \
 				skip=$$((skip + 1)); \
 				continue; \
 			fi; \
 			types_dash=$$(echo "$$pkg_mod" | tr '_' '-'); \
-			if $(POETRY_ENV) $(PY) -c "import importlib.metadata;importlib.metadata.version('types-$$types_dash')" 2>/dev/null; then \
+			if $(PY) -c "import importlib.metadata;importlib.metadata.version('types-$$types_dash')" 2>/dev/null; then \
 				echo "  skip: $$pkg (types-$$types_dash installed)"; \
 				skip=$$((skip + 1)); \
 				continue; \
 			fi; \
-			if $(POETRY_ENV) $(PY) -m mypy.stubgen -p "$$pkg" -o "$$tmp_dir" --include-private --export-less -q 2>/dev/null; then \
+			if $(PY) -m mypy.stubgen -p "$$pkg" -o "$$tmp_dir" --include-private --export-less -q 2>/dev/null; then \
 				if [ -d "$$tmp_dir/$$pkg" ]; then \
 					rm -rf "$$gen_dir/$$pkg"; \
 					mv "$$tmp_dir/$$pkg" "$$gen_dir/$$pkg"; \
@@ -787,10 +785,10 @@ types: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency rep
 		echo "  no packages to regenerate"; \
 	fi; \
 	rm -rf "$$tmp_dir"
-	$(Q)$(POETRY_ENV) $(PY) -m flext_infra validate stub-validate \
+	$(Q)$(PY) -m flext_infra validate stub-validate \
 		$(if $(PROJECT),--project $(PROJECT),$(if $(PROJECTS),$(addprefix --project ,$(PROJECTS)),--all))
 	$(Q)if [ "$(DEPS_REPORT)" != "0" ]; then \
-		$(POETRY_ENV) $(PY) -m flext_infra deps detect --typings -q --no-fail || true; \
+		$(PY) -m flext_infra deps detect --typings -q --no-fail || true; \
 	fi
 
 pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyrefly + evidence
@@ -798,7 +796,7 @@ pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyrefl
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)mkdir -p .sisyphus/evidence .reports/pyrefly
 	$(Q)set -o pipefail; \
-	FLEXT_WORKSPACE_ROOT="$(CURDIR)" env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra check run \
+	FLEXT_WORKSPACE_ROOT="$(CURDIR)" env -u PYTHONPATH $(PY) -m flext_infra check run \
 		--gates pyrefly \
 		--reports-dir "$(CURDIR)/.reports/pyrefly" \
 		--project "." \
@@ -812,7 +810,7 @@ pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyrefl
 	echo "=== Type Policy Gate ==="; \
 	policy_violations=0; \
 	echo "--- # type: ignore ---"; \
-	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+	env -u PYTHONPATH $(PY) -m flext_infra validate scan --workspace . \
 		--pattern "#\\s*type:\\s*ignore" \
 		--include "**/*.py*" \
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
@@ -821,7 +819,7 @@ pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyrefl
 		--match absent \
 		2>&1 || policy_violations=$$((policy_violations + 1)); \
 	echo "--- Any (typing) ---"; \
-	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+	env -u PYTHONPATH $(PY) -m flext_infra validate scan --workspace . \
 		--pattern "\\bAny\\b" \
 		--include "**/*.py*" \
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
@@ -830,7 +828,7 @@ pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyrefl
 		--match absent \
 		2>&1 || policy_violations=$$((policy_violations + 1)); \
 	echo "--- object annotations ---"; \
-	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+	env -u PYTHONPATH $(PY) -m flext_infra validate scan --workspace . \
 		--pattern "(?::\\s*|->\\s*)object\\b" \
 		--include "**/*.py*" \
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
@@ -851,7 +849,7 @@ stubs: ## Repo-wide stub supply-chain validation -> .sisyphus/evidence
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)mkdir -p .sisyphus/evidence
 	$(Q)set -o pipefail; \
-	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate stub-validate --all \
+	env -u PYTHONPATH $(PY) -m flext_infra validate stub-validate --all \
 		2>&1 | tee .sisyphus/evidence/pyrefly-stub-validate.txt; \
 	stub_status=$${PIPESTATUS[0]}; \
 	printf "exit_code: %s\n" "$$stub_status" >> .sisyphus/evidence/pyrefly-stub-validate.txt; \
@@ -868,7 +866,7 @@ pol: ## Repo-wide typing policy gate (no Any/t.NormalizedValue/# type: ignore)
 	echo "workspace: $(CURDIR)" >> .reports/pyrefly/type-policy.txt; \
 	echo "" >> .reports/pyrefly/type-policy.txt; \
 	echo "--- # type: ignore ---" >> .reports/pyrefly/type-policy.txt; \
-	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+	env -u PYTHONPATH $(PY) -m flext_infra validate scan --workspace . \
 		--pattern "#\\s*type:\\s*ignore" \
 		--include "**/*.py*" \
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
@@ -878,7 +876,7 @@ pol: ## Repo-wide typing policy gate (no Any/t.NormalizedValue/# type: ignore)
 		2>&1 | tee -a .reports/pyrefly/type-policy.txt || status=$$?; \
 	echo "" >> .reports/pyrefly/type-policy.txt; \
 	echo "--- Any (typing) ---" >> .reports/pyrefly/type-policy.txt; \
-	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+	env -u PYTHONPATH $(PY) -m flext_infra validate scan --workspace . \
 		--pattern "\\bAny\\b" \
 		--include "**/*.py*" \
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
@@ -888,7 +886,7 @@ pol: ## Repo-wide typing policy gate (no Any/t.NormalizedValue/# type: ignore)
 		2>&1 | tee -a .reports/pyrefly/type-policy.txt || status=$$?; \
 	echo "" >> .reports/pyrefly/type-policy.txt; \
 	echo "--- t.NormalizedValue (typing contexts) ---" >> .reports/pyrefly/type-policy.txt; \
-	env -u PYTHONPATH $(POETRY_ENV) $(PY) -m flext_infra validate scan --workspace . \
+	env -u PYTHONPATH $(PY) -m flext_infra validate scan --workspace . \
 		--pattern "(?:\\:\\s*|->\\s*|=\\s*|\\|\\s*|\\[\\s*|,\\s*)t.NormalizedValue\\b" \
 		--include "**/*.py*" \
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
@@ -1059,7 +1057,7 @@ gen: ## Standardize __init__.py lazy imports (PEP 562)
 	$(Q)echo "Standardizing __init__.py lazy imports..."
 	$(Q)PYTHONPATH="$(WORKSPACE_PYTHONPATH):$$PYTHONPATH" $(PY) -m flext_infra codegen lazy-init --workspace "$(CURDIR)"
 	$(Q)echo "Formatting generated files (ruff)..."
-	$(Q)$(POETRY_ENV) ruff format . --quiet
+	$(Q)ruff format . --quiet
 
 sync: ## Sync project Makefiles from pyproject.toml + refresh __init__.py lazy imports
 	$(Q)$(REQUIRE_VENV)
