@@ -59,8 +59,8 @@
 - [x] **MIG-01**: `flext_infra` extracted to `https://github.com/flext-sh/flext-infra.git` as independent repo + git submodule
 - [x] **MIG-02**: `flext_tests` extracted to `https://github.com/flext-sh/flext-tests.git` as independent repo + git submodule
 - [x] **MIG-03**: `flext-core/pyproject.toml` ships only `flext_core` namespace
-- [ ] **MIG-04**: 33 `pyproject.toml` files converted from Poetry to PEP 621 + uv workspace format
-- [ ] **MIG-05**: Root `uv.lock` unified (replaces 33 `poetry.lock` files)
+- [x] **MIG-04**: 33 `pyproject.toml` files converted from Poetry to PEP 621 + uv workspace format
+- [x] **MIG-05**: Root `uv.lock` unified (replaces 33 `poetry.lock` files)
 - [ ] **MIG-06**: All `make` targets updated from `poetry run` to `uv run`
 
 ---
@@ -126,6 +126,6 @@
 | MIG-01 | Phase 5 | Complete | split-core-packages |
 | MIG-02 | Phase 5 | Complete | split-core-packages |
 | MIG-03 | Phase 5 | Complete | split-core-packages |
-| MIG-04 | Phase 5 | Pending | polylith-uv-migration |
-| MIG-05 | Phase 5 | Pending | polylith-uv-migration |
+| MIG-04 | Phase 5 | Complete | polylith-uv-migration |
+| MIG-05 | Phase 5 | Complete | polylith-uv-migration |
 | MIG-06 | Phase 5 | Pending | polylith-uv-migration |
