@@ -54,6 +54,7 @@ No new dependencies. All changes use Python 3.13 stdlib:
 ```python
 from enum import StrEnum, unique
 
+
 @unique
 class Status(StrEnum):
     ACTIVE = "active"
@@ -68,6 +69,7 @@ class Status(StrEnum):
 ```python
 # Before
 type OutputFormatLiteral = Literal["json", "yaml", "csv", "table", "plain"]
+
 
 # After
 @unique
@@ -87,8 +89,11 @@ class OutputFormat(StrEnum):
 @u.deprecated(replacement="new_func", version="0.14.0")
 def old_func(): ...
 
+
 # After
 from warnings import deprecated
+
+
 @deprecated("Use new_func instead. Removed in 0.14.0")
 def old_func(): ...
 ```
@@ -104,6 +109,7 @@ for item in items:
 
 # After
 from collections import defaultdict
+
 result: defaultdict[str, list[str]] = defaultdict(list)
 for item in items:
     result[item.key].append(item.value)
