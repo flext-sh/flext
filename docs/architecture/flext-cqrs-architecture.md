@@ -2360,9 +2360,9 @@ class MockCircuitBreaker:
     """Mock circuit breaker for testing."""
 
     def __init__(self) -> None:
-        self.is_open_calls: Sequence[str] = []
-        self.record_success_calls: Sequence[str] = []
-        self.record_failure_calls: Sequence[str] = []
+        self.is_open_calls: t.StrSequence = []
+        self.record_success_calls: t.StrSequence = []
+        self.record_failure_calls: t.StrSequence = []
         self._open_circuits: set[str] = set()
 
     def is_open(self, key: str) -> bool:

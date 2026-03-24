@@ -27,7 +27,7 @@ from flext_core import r, t
 from pydantic import BaseModel, ConfigDict, Field
 
 EntryDict = Mapping[
-    str, t.Scalar | Sequence[str] | Mapping[str, t.Scalar | Sequence[str]]
+    str, t.Scalar | t.StrSequence | Mapping[str, t.Scalar | t.StrSequence]
 ]
 
 ProcessingDict = t.ContainerMapping
@@ -87,7 +87,7 @@ class AclProcessingExample:
 
         dn: str = Field(description="Distinguished name of the ACL entry")
         acl_attribute: str = Field(description="ACL attribute name")
-        permissions: Sequence[str] = Field(description="List of permissions")
+        permissions: t.StrSequence = Field(description="List of permissions")
         context: ContextDict = Field(description="Context information")
         server_type: str = Field(description="Type of LDAP server")
 
@@ -98,11 +98,11 @@ class AclProcessingExample:
 
         entry_dn: str = Field(description="Distinguished name of the entry")
         is_valid: bool = Field(description="Whether the ACL entry is valid")
-        violations: Sequence[str] = Field(
+        violations: t.StrSequence = Field(
             default_factory=_new_str_list,
             description="List of validation violations",
         )
-        warnings: Sequence[str] = Field(
+        warnings: t.StrSequence = Field(
             default_factory=_new_str_list,
             description="List of validation warnings",
         )
@@ -114,14 +114,14 @@ class AclProcessingExample:
     class Constants:
         """Constants for ACL processing."""
 
-        SERVER_SIGNATURES: ClassVar[Mapping[str, Sequence[str]]] = {
+        SERVER_SIGNATURES: ClassVar[Mapping[str, t.StrSequence]] = {
             "openldap": ["olcAccess", "olcACL"],
             "oracle_oid": ["orclACI", "orclACL"],
             "oracle_unified_directory": ["ds-cfg-global-aci", "aci"],
             "active_directory": ["ntSecurityDescriptor"],
             "apache_ds": ["accessControlSubentry"],
         }
-        SERVER_ACL_ATTRIBUTES: ClassVar[Mapping[str, Sequence[str]]] = {
+        SERVER_ACL_ATTRIBUTES: ClassVar[Mapping[str, t.StrSequence]] = {
             "openldap": ["olcAccess"],
             "oracle_oid": ["orclACI"],
             "oracle_unified_directory": ["aci", "ds-cfg-global-aci"],
@@ -214,7 +214,7 @@ class AclProcessingExample:
         warnings: MutableSequence[str] = []
         server_type = acl_entry.get("server_type")
         permissions_raw = acl_entry.get("permissions")
-        permissions: Sequence[str] = (
+        permissions: t.StrSequence = (
             tuple(
                 permission
                 for permission in permissions_raw
@@ -225,8 +225,8 @@ class AclProcessingExample:
             else ()
         )
         dn = str(acl_entry.get("dn", ""))
-        required_permissions: Sequence[str] = []
-        forbidden_combinations: Sequence[str] = []
+        required_permissions: t.StrSequence = []
+        forbidden_combinations: t.StrSequence = []
         if server_type == "openldap":
             required_permissions = ["read", "write", "search"]
             forbidden_combinations = ["read|delete"]

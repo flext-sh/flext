@@ -363,11 +363,11 @@ class MyModel(BaseModel):
 ```python
 # ✅ CORRECT — Annotated with Field
 name: str = Field(default="", description="Name")
-items: Sequence[str] = Field(default_factory=list)
+items: t.StrSequence = Field(default_factory=list)
 created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 # ❌ WRONG — No default_factory for mutable defaults
-items: Sequence[str] = []  # Mutable default, use Field(default_factory=list)
+items: t.StrSequence = []  # Mutable default, use Field(default_factory=list)
 ```
 
 ### Validators use `@field_validator` and `@model_validator`

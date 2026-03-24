@@ -125,7 +125,7 @@ from pydantic import BaseModel, Field
 
 class RetryConfiguration(BaseModel):
     retry_on_status_codes: Sequence[int] = Field(default_factory=list)
-    metadata: Mapping[str, str] = Field(default_factory=dict)
+    metadata: t.StrMapping = Field(default_factory=dict)
     tags: set[str] = Field(default_factory=set)
 ```
 
@@ -136,7 +136,7 @@ class RetryConfiguration(BaseModel):
 ```python
 # ✗ WRONG — Shared mutable default
 class Config(BaseModel):
-    items: Sequence[str] = Field(default=[])  # BUG: all instances share same list
+    items: t.StrSequence = Field(default=[])  # BUG: all instances share same list
 ```
 
 **Correct**:
@@ -144,7 +144,7 @@ class Config(BaseModel):
 ```python
 # ✓ CORRECT — New list per instance
 class Config(BaseModel):
-    items: Sequence[str] = Field(default_factory=list)
+    items: t.StrSequence = Field(default_factory=list)
 ```
 
 **Repository anchors**:
@@ -163,7 +163,7 @@ from pydantic import BaseModel, Field, TypeAdapter
 
 
 class ValidationHelpers(BaseModel):
-    _tags_adapter: ClassVar[TypeAdapter[Sequence[str]] | None] = None
+    _tags_adapter: ClassVar[TypeAdapter[t.StrSequence] | None] = None
     _list_adapter: ClassVar[TypeAdapter[Sequence[t.Container]] | None] = None
     _strict_string_adapter: ClassVar[
         TypeAdapter[Annotated[str, Field(strict=True)]] | None
@@ -202,7 +202,7 @@ class ValidationHelpers(BaseModel):
     _scalar_adapter: ClassVar[TypeAdapter[t.Scalar] | None] = None
     _float_adapter: ClassVar[TypeAdapter[float] | None] = None
     _str_adapter: ClassVar[TypeAdapter[str] | None] = None
-    _str_list_adapter: ClassVar[TypeAdapter[Sequence[str]] | None] = None
+    _str_list_adapter: ClassVar[TypeAdapter[t.StrSequence] | None] = None
     _str_or_bytes_adapter: ClassVar[TypeAdapter[str | bytes] | None] = None
     _enum_type_adapter: ClassVar[TypeAdapter[type[StrEnum]] | None] = None
     _serializable_adapter: ClassVar[TypeAdapter[t.Serializable] | None] = None
@@ -214,9 +214,9 @@ class ValidationHelpers(BaseModel):
     ] = None
 
     @classmethod
-    def get_tags_adapter(cls) -> TypeAdapter[Sequence[str]]:
+    def get_tags_adapter(cls) -> TypeAdapter[t.StrSequence]:
         if cls._tags_adapter is None:
-            cls._tags_adapter = TypeAdapter(Sequence[str])
+            cls._tags_adapter = TypeAdapter(t.StrSequence)
         return cls._tags_adapter
 ```
 
@@ -226,8 +226,8 @@ class ValidationHelpers(BaseModel):
 
 ```python
 # ✗ WRONG — Creates new TypeAdapter on every call
-def validate_tags(self, tags) -> Sequence[str]:
-    adapter = TypeAdapter(Sequence[str])  # EXPENSIVE
+def validate_tags(self, tags) -> t.StrSequence:
+    adapter = TypeAdapter(t.StrSequence)  # EXPENSIVE
     return adapter.validate_python(tags)
 ```
 
@@ -235,17 +235,17 @@ def validate_tags(self, tags) -> Sequence[str]:
 
 ```python
 # ✓ CORRECT — Cached TypeAdapter
-_tags_adapter: ClassVar[TypeAdapter[Sequence[str]] | None] = None
+_tags_adapter: ClassVar[TypeAdapter[t.StrSequence] | None] = None
 
 
 @classmethod
-def get_tags_adapter(cls) -> TypeAdapter[Sequence[str]]:
+def get_tags_adapter(cls) -> TypeAdapter[t.StrSequence]:
     if cls._tags_adapter is None:
-        cls._tags_adapter = TypeAdapter(Sequence[str])
+        cls._tags_adapter = TypeAdapter(t.StrSequence)
     return cls._tags_adapter
 
 
-def validate_tags(self, tags) -> Sequence[str]:
+def validate_tags(self, tags) -> t.StrSequence:
     return self.get_tags_adapter().validate_python(tags)
 ```
 
@@ -332,7 +332,7 @@ class _ProtocolIntrospection:
         )
         raw_attrs_candidate = getattr(protocol, "__protocol_attrs__", ())
         raw_attrs: set[str] = set[str]()
-        iterable_attrs: Sequence[str] = ()
+        iterable_attrs: t.StrSequence = ()
         try:
             iterable_attrs = tuple(raw_attrs_candidate)
         except TypeError:
@@ -654,7 +654,7 @@ class User(BaseModel):
             examples=["alice@example.com"],
         ),
     ]
-    tags: Sequence[str] = Field(
+    tags: t.StrSequence = Field(
         default_factory=list,
         description="User tags",
     )
@@ -674,7 +674,7 @@ class User(BaseModel):
 
     name: str  # ✗ No Field() metadata
     email: str  # ✗ No validation
-    tags: Sequence[str] = []  # ✗ Mutable default bug
+    tags: t.StrSequence = []  # ✗ Mutable default bug
 ```
 
 Why bad: v1 `Config` class, no `Field()` metadata, mutable default bug.

@@ -848,7 +848,7 @@ from pydantic import BaseModel, GetCoreSchemaHandler, ValidationError
 
 @dataclass
 class RestrictCharacters:
-    alphabet: Sequence[str]
+    alphabet: t.StrSequence
 
     def __get_pydantic_core_schema__(
         self, source: type[Any], handler: GetCoreSchemaHandler

@@ -607,7 +607,7 @@ from typing import Annotated, Union
 from pydantic import AfterValidator, Tag, TypeAdapter, ValidationError
 
 DoubledList = Annotated[Sequence[int], AfterValidator(lambda x: x * 2)]
-StringsMap = Mapping[str, str]
+StringsMap = t.StrMapping
 
 
 # Not using any `Tag`s for each union case, the errors are not so nice to look at

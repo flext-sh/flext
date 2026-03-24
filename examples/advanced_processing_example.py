@@ -90,7 +90,7 @@ class AdvancedProcessingExample:
         items_succeeded: int = Field(description="Items that succeeded")
         items_failed: int = Field(description="Items that failed")
         processing_time: float = Field(description="Time taken for processing")
-        errors: Sequence[str] = Field(
+        errors: t.StrSequence = Field(
             default_factory=_new_str_list,
             description="List of errors encountered",
         )
@@ -106,11 +106,11 @@ class AdvancedProcessingExample:
 
         item_id: str = Field(description="Unique item identifier")
         is_valid: bool = Field(description="Whether the item is valid")
-        violations: Sequence[str] = Field(
+        violations: t.StrSequence = Field(
             default_factory=_new_str_list,
             description="List of validation violations",
         )
-        warnings: Sequence[str] = Field(
+        warnings: t.StrSequence = Field(
             default_factory=_new_str_list,
             description="List of validation warnings",
         )
@@ -124,7 +124,7 @@ class AdvancedProcessingExample:
 
         auto_execute: bool = True
         items: Sequence[ItemDict]
-        stages: Sequence[str]
+        stages: t.StrSequence
 
         def execute(self) -> r[PipelineStageData]:
             """Execute processing pipeline using declarative stages."""

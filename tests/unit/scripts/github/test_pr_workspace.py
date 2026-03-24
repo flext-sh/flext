@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import r
@@ -13,7 +12,7 @@ from ....infra.utilities import u
 
 class TestPrWorkspace:
     @staticmethod
-    def _pr_args() -> Mapping[str, str]:
+    def _pr_args() -> t.StrMapping:
         return {
             "action": "status",
             "base": "main",
@@ -77,7 +76,7 @@ class TestPrWorkspace:
         commands: list[t.Workspace.Tests.Command] = []
 
         class RunnerStub:
-            def run_to_file(self, command: Sequence[str], _log_path: Path) -> r[int]:
+            def run_to_file(self, command: t.StrSequence, _log_path: Path) -> r[int]:
                 commands.append(command)
                 return r[int].ok(0)
 
@@ -121,7 +120,7 @@ class TestPrWorkspace:
         commands: list[t.Workspace.Tests.Command] = []
 
         class RunnerStub:
-            def run_to_file(self, command: Sequence[str], _log_path: Path) -> r[int]:
+            def run_to_file(self, command: t.StrSequence, _log_path: Path) -> r[int]:
                 commands.append(command)
                 return r[int].ok(0)
 

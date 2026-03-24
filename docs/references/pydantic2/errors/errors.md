@@ -167,7 +167,7 @@ CUSTOM_MESSAGES = {
 
 
 def convert_errors(
-    e: ValidationError, custom_messages: Mapping[str, str]
+    e: ValidationError, custom_messages: t.StrMapping
 ) -> Sequence[ErrorDetails]:
     new_errors: Sequence[ErrorDetails] = []
     for error in e.errors():

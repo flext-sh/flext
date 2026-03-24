@@ -213,7 +213,7 @@ class DataProvider(Protocol):
 
 # Usage: Works with any dict subtype
 def process_data(provider: DataProvider) -> None:
-    # Provider can return Mapping[str, int], Mapping[str, str], etc.
+    # Provider can return Mapping[str, int], t.StrMapping, etc.
     data = provider.get_data()
     ...
 ```
@@ -432,14 +432,14 @@ process_mapping(result)  # OK: Mapping is covariant
 # ✅ CORRECT: Return type uses covariant Mapping
 @runtime_checkable
 class DataProvider(Protocol):
-    def get_attributes(self) -> Mapping[str, Sequence[str]]:
+    def get_attributes(self) -> Mapping[str, t.StrSequence]:
         """Returns read-only attributes - covariant."""
         ...
 
 
 # Implementation can return more specific dict type
 class MyProvider:
-    def get_attributes(self) -> Mapping[str, Sequence[str]]:
+    def get_attributes(self) -> Mapping[str, t.StrSequence]:
         return {"cn": ["test"], "mail": ["user@example.com"]}
 
 
@@ -460,7 +460,7 @@ class ItemProcessor(Protocol):
 # ❌ WRONG: Sequence is invariant
 @runtime_checkable
 class ItemProcessor(Protocol):
-    def process_items(self, items: Sequence[str]) -> None:
+    def process_items(self, items: t.StrSequence) -> None:
         """Too restrictive - can't accept list subclasses."""
         ...
 ```
@@ -481,7 +481,7 @@ from typing import Protocol
 @runtime_checkable
 class Entry(Protocol):
     dn: str
-    attributes: Mapping[str, Sequence[str]]
+    attributes: Mapping[str, t.StrSequence]
 
 
 # ❌ WRONG: Don't import concrete classes
@@ -509,7 +509,7 @@ class ReadableEntry(Protocol):
 class MutableEntry(ReadableEntry, Protocol):
     """Mutable entry with write operations."""
 
-    def set_attribute(self, name: str, values: Sequence[str]) -> Self: ...
+    def set_attribute(self, name: str, values: t.StrSequence) -> Self: ...
 ```
 
 **Rule 3**: @runtime_checkable for isinstance() Checks
@@ -522,7 +522,7 @@ from typing import Protocol, runtime_checkable
 @runtime_checkable
 class Entry(Protocol):
     dn: str
-    attributes: Mapping[str, Sequence[str]]
+    attributes: Mapping[str, t.StrSequence]
 
 
 # Can now use isinstance() at runtime
@@ -539,7 +539,7 @@ from typing import Self
 
 @runtime_checkable
 class MutableEntry(Protocol):
-    def set_attribute(self, name: str, values: Sequence[str]) -> Self:
+    def set_attribute(self, name: str, values: t.StrSequence) -> Self:
         """Returns self for method chaining."""
         ...
 
@@ -634,10 +634,10 @@ def track_progress(callback: ProgressCallback) -> None:
 ```python
 @runtime_checkable
 class AttributeProvider(Protocol):
-    def get_attributes(self) -> Mapping[str, Sequence[str]]: ...
+    def get_attributes(self) -> Mapping[str, t.StrSequence]: ...
 
 
-# Can only accept exact Mapping[str, Sequence[str]]
+# Can only accept exact Mapping[str, t.StrSequence]
 result: Mapping[str, bool] = {"ok": True}
 provider.get_attributes()  # May fail type check
 ```
@@ -647,7 +647,7 @@ provider.get_attributes()  # May fail type check
 ```python
 @runtime_checkable
 class AttributeProvider(Protocol):
-    def get_attributes(self) -> Mapping[str, Sequence[str]]: ...
+    def get_attributes(self) -> Mapping[str, t.StrSequence]: ...
 
 
 # Can accept any dict subtype or Mapping implementation
@@ -667,12 +667,12 @@ provider.get_attributes()  # Works with covariance
 # typings.py (Tier 0)
 class FlextLdapTypes:
     class Ldap:
-        type ModifyChanges = Mapping[str, Sequence[tuple[str, Sequence[str]]]]
+        type ModifyChanges = Mapping[str, Sequence[tuple[str, t.StrSequence]]]
 
     class Ldap:
         class Operation:
             type ModifyChanges = Mapping[
-                str, Sequence[tuple[str, Sequence[str]]]
+                str, Sequence[tuple[str, t.StrSequence]]
             ]  # DUPLICATE
 
 
@@ -685,7 +685,7 @@ class FlextLdapTypes:
 # typings.py (Tier 0) - Single definition
 class FlextLdapTypes:
     class Ldap:
-        type ModifyChanges = Mapping[str, Sequence[tuple[str, Sequence[str]]]]
+        type ModifyChanges = Mapping[str, Sequence[tuple[str, t.StrSequence]]]
 
         # Backward compatibility (remove after 2-3 releases)
         class Operation:
@@ -737,13 +737,13 @@ if TYPE_CHECKING:
 
 ```python
 # ✅ CORRECT: Mapping for read-only
-def read_attributes(attrs: Mapping[str, Sequence[str]]) -> None:
+def read_attributes(attrs: Mapping[str, t.StrSequence]) -> None:
     for key, values in attrs.items():
         print(f"{key}: {values}")
 
 
 # ❌ WRONG: dict for read-only (invariant)
-def read_attributes(attrs: Mapping[str, Sequence[str]]) -> None:
+def read_attributes(attrs: Mapping[str, t.StrSequence]) -> None:
     for key, values in attrs.items():
         print(f"{key}: {values}")
 ```

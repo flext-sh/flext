@@ -96,7 +96,7 @@ by providing the `config` argument.
 ```python
 from pydantic import ConfigDict, TypeAdapter
 
-ta = TypeAdapter(Sequence[str], config=ConfigDict(coerce_numbers_to_str=True))
+ta = TypeAdapter(t.StrSequence, config=ConfigDict(coerce_numbers_to_str=True))
 
 print(ta.validate_python([1, 2]))
 # > ['1', '2']

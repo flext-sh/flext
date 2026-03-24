@@ -97,7 +97,7 @@ class FlextContainer(FlextRuntime, p.Container):
         self,
         *,
         modules: Sequence[ModuleType] | None = None,
-        packages: Sequence[str] | None = None,
+        packages: t.StrSequence | None = None,
         classes: Sequence[type] | None = None,
     ) -> None: ...
     def scoped(...) -> FlextContainer: ...

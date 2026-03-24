@@ -440,7 +440,7 @@ class CompanyOrm(Base):
     public_key: Mapped[str] = mapped_column(
         String(20), index=True, nullable=False, unique=True
     )
-    domains: Mapped[Sequence[str]] = mapped_column(ARRAY(String(255)))
+    domains: Mapped[t.StrSequence] = mapped_column(ARRAY(String(255)))
 
 
 class CompanyModel(BaseModel):
@@ -1466,8 +1466,8 @@ Here's an example of how this works:
 ```python
 from pydantic import RootModel
 
-Pets = RootModel[Sequence[str]]
-PetsByName = RootModel[Mapping[str, str]]
+Pets = RootModel[t.StrSequence]
+PetsByName = RootModel[t.StrMapping]
 
 
 print(Pets(["dog", "cat"]))
@@ -1478,7 +1478,7 @@ print(Pets()
 # > root=['dog', 'cat']
 print(Pets.model_json_schema())
 """
-{'items': {'type': 'string'}, 'title': 'RootModel[Sequence[str]]', 'type': 'array'}
+{'items': {'type': 'string'}, 'title': 'RootModel[t.StrSequence]', 'type': 'array'}
 """
 
 print(PetsByName({"Otis": "dog", "Milo": "cat"}))
@@ -1497,7 +1497,7 @@ from pydantic import RootModel
 
 
 class Pets(RootModel):
-    root: Sequence[str]
+    root: t.StrSequence
 
     def __iter__(self):
         return iter(self.root)
@@ -1519,7 +1519,7 @@ You can also create subclasses of the parametrized root model directly:
 from pydantic import RootModel
 
 
-class Pets(RootModel[Sequence[str]]):
+class Pets(RootModel[t.StrSequence]):
     def describe(self) -> str:
         return f"Pets: {', '.join(self.root)}"
 
