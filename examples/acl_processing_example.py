@@ -31,7 +31,7 @@ EntryDict = Mapping[
 ]
 
 ProcessingDict = t.ContainerMapping
-ContextDict = Mapping[str, t.ContainerValue]
+ContextDict = t.ContainerValueMapping
 
 
 def _new_str_list() -> MutableSequence[str]:
