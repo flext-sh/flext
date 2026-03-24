@@ -28,24 +28,12 @@ if TYPE_CHECKING:
     from tests.unit.scripts.sync_tests import TestSyncScripts
 
 _LAZY_IMPORTS: Mapping[str, tuple[str, str]] = {
-    "FlextWorkspaceTestConstants": (
-        "tests.infra.constants",
-        "FlextWorkspaceTestConstants",
-    ),
+    "FlextWorkspaceTestConstants": ("tests.infra.constants", "FlextWorkspaceTestConstants"),
     "FlextWorkspaceTestModels": ("tests.infra.models", "FlextWorkspaceTestModels"),
-    "FlextWorkspaceTestProtocols": (
-        "tests.infra.protocols",
-        "FlextWorkspaceTestProtocols",
-    ),
+    "FlextWorkspaceTestProtocols": ("tests.infra.protocols", "FlextWorkspaceTestProtocols"),
     "FlextWorkspaceTestTypes": ("tests.infra.typings", "FlextWorkspaceTestTypes"),
-    "FlextWorkspaceTestUtilities": (
-        "tests.infra.utilities",
-        "FlextWorkspaceTestUtilities",
-    ),
-    "TestPrWorkspace": (
-        "tests.unit.scripts.github.test_pr_workspace",
-        "TestPrWorkspace",
-    ),
+    "FlextWorkspaceTestUtilities": ("tests.infra.utilities", "FlextWorkspaceTestUtilities"),
+    "TestPrWorkspace": ("tests.unit.scripts.github.test_pr_workspace", "TestPrWorkspace"),
     "TestSyncScripts": ("tests.unit.scripts.sync_tests", "TestSyncScripts"),
     "TestVersioning": ("tests.unit.libs.versioning_tests", "TestVersioning"),
     "c": ("tests.infra.constants", "c"),
