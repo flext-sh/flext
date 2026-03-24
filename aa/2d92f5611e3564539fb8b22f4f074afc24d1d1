@@ -1,0 +1,23 @@
+.planning/phases/07-modernization-integration-fixes/07-VALIDATION.md
+  7d62ea1a5a181830 1-71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "aa2d92f5611e3564539fb8b22f4f074afc24d1d1",
+  "prompts": {
+    "7d62ea1a5a181830": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dc186f16-afe7-4333-a948-07dfeb2d2e04",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 71,
+      "total_deletions": 0,
+      "accepted_lines": 71,
+      "overriden_lines": 0
+    }
+  }
+}
