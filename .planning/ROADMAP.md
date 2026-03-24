@@ -139,7 +139,7 @@ Plans:
 
 Plans:
 - [x] 07-01-PLAN.md — StrEnum coercion fix + deprecation framework removal + UserDict verification
-- [ ] 07-02-PLAN.md — Circular import verification/fix in _utilities_loader.py
+- [x] 07-02-PLAN.md — Circular import verification/fix in _utilities_loader.py
 
 ## Progress
 
