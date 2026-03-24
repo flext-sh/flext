@@ -13,7 +13,7 @@ tech_stack:
 key_files:
   existing:
     - flext-infra/tests/unit/refactor/test_infra_refactor_namespace_source.py
-    - flext-infra/src/flext_infra/refactor/_detectors/namespace_source_detector.py
+    - flext-infra/src/flext_infra/detectors/namespace_source_detector.py
 decisions:
   - No new tests needed — existing 15-test suite already covers all acceptance criteria
 metrics:

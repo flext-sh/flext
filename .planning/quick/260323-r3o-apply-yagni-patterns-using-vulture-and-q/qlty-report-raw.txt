@@ -2321,47 +2321,47 @@ flext-infra/src/flext_infra/refactor/__init__.py
 flext-infra/src/flext_infra/refactor/__main__.py
   18  Function with many returns (count = 7): run
 
-flext-infra/src/flext_infra/refactor/_detectors/__init__.py
+flext-infra/src/flext_infra/detectors/__init__.py
   78  Found 17 lines of similar code in 3 locations (mass = 64)
         also found at flext-web/tests/unit/__init__.py
         also found at flext-oracle-wms/src/flext_oracle_wms/wms_exceptions.py
   60  Found 17 lines of similar code in 2 locations (mass = 228)
         also found at flext-web/tests/unit/__init__.py
 
-flext-infra/src/flext_infra/refactor/_detectors/class_placement_detector.py
+flext-infra/src/flext_infra/detectors/class_placement_detector.py
  115  Function with many returns (count = 6): scan_file_impl
   66  Found 25 lines of similar code in 4 locations (mass = 95)
-        also found at flext-infra/src/flext_infra/refactor/_detectors/import_alias_detector.py
-        also found at flext-infra/src/flext_infra/refactor/_detectors/manual_protocol_detector.py
-        also found at flext-infra/src/flext_infra/refactor/_detectors/compatibility_alias_detector.py
+        also found at flext-infra/src/flext_infra/detectors/import_alias_detector.py
+        also found at flext-infra/src/flext_infra/detectors/manual_protocol_detector.py
+        also found at flext-infra/src/flext_infra/detectors/compatibility_alias_detector.py
 
-flext-infra/src/flext_infra/refactor/_detectors/compatibility_alias_detector.py
+flext-infra/src/flext_infra/detectors/compatibility_alias_detector.py
   99  Function with high complexity (count = 30): scan_file_impl
   50  Found 25 lines of similar code in 4 locations (mass = 95)
-        also found at flext-infra/src/flext_infra/refactor/_detectors/import_alias_detector.py
-        also found at flext-infra/src/flext_infra/refactor/_detectors/manual_protocol_detector.py
-        also found at flext-infra/src/flext_infra/refactor/_detectors/class_placement_detector.py
+        also found at flext-infra/src/flext_infra/detectors/import_alias_detector.py
+        also found at flext-infra/src/flext_infra/detectors/manual_protocol_detector.py
+        also found at flext-infra/src/flext_infra/detectors/class_placement_detector.py
 
-flext-infra/src/flext_infra/refactor/_detectors/cyclic_import_detector.py
+flext-infra/src/flext_infra/detectors/cyclic_import_detector.py
   84  Deeply nested control flow (level = 5)
   87  Deeply nested control flow (level = 5)
    1  High total complexity (count = 101)
   37  Function with high complexity (count = 80): scan_project
 
-flext-infra/src/flext_infra/refactor/_detectors/future_annotations_detector.py
+flext-infra/src/flext_infra/detectors/future_annotations_detector.py
   96  Function with many returns (count = 6): scan_file_impl
  138  Complex binary expression
 
-flext-infra/src/flext_infra/refactor/_detectors/import_alias_detector.py
+flext-infra/src/flext_infra/detectors/import_alias_detector.py
   70  Found 25 lines of similar code in 4 locations (mass = 95)
-        also found at flext-infra/src/flext_infra/refactor/_detectors/manual_protocol_detector.py
-        also found at flext-infra/src/flext_infra/refactor/_detectors/class_placement_detector.py
-        also found at flext-infra/src/flext_infra/refactor/_detectors/compatibility_alias_detector.py
+        also found at flext-infra/src/flext_infra/detectors/manual_protocol_detector.py
+        also found at flext-infra/src/flext_infra/detectors/class_placement_detector.py
+        also found at flext-infra/src/flext_infra/detectors/compatibility_alias_detector.py
 
-flext-infra/src/flext_infra/refactor/_detectors/internal_import_detector.py
+flext-infra/src/flext_infra/detectors/internal_import_detector.py
  102  Function with high complexity (count = 23): scan_file_impl
 
-flext-infra/src/flext_infra/refactor/_detectors/loose_object_detector.py
+flext-infra/src/flext_infra/detectors/loose_object_detector.py
  159  Function with many parameters (count = 7): _check_statement
  214  Function with many parameters (count = 6): _check_small_statement
  159  Function with many returns (count = 9): _check_statement
@@ -2369,31 +2369,31 @@ flext-infra/src/flext_infra/refactor/_detectors/loose_object_detector.py
    1  High total complexity (count = 62)
  214  Function with high complexity (count = 30): _check_small_statement
 
-flext-infra/src/flext_infra/refactor/_detectors/manual_protocol_detector.py
+flext-infra/src/flext_infra/detectors/manual_protocol_detector.py
   53  Found 25 lines of similar code in 4 locations (mass = 95)
-        also found at flext-infra/src/flext_infra/refactor/_detectors/import_alias_detector.py
-        also found at flext-infra/src/flext_infra/refactor/_detectors/class_placement_detector.py
-        also found at flext-infra/src/flext_infra/refactor/_detectors/compatibility_alias_detector.py
+        also found at flext-infra/src/flext_infra/detectors/import_alias_detector.py
+        also found at flext-infra/src/flext_infra/detectors/class_placement_detector.py
+        also found at flext-infra/src/flext_infra/detectors/compatibility_alias_detector.py
 
-flext-infra/src/flext_infra/refactor/_detectors/manual_typing_alias_detector.py
+flext-infra/src/flext_infra/detectors/manual_typing_alias_detector.py
  102  Function with high complexity (count = 18): scan_file_impl
 
-flext-infra/src/flext_infra/refactor/_detectors/mro_completeness_detector.py
+flext-infra/src/flext_infra/detectors/mro_completeness_detector.py
  273  Function with many parameters (count = 6): _collect_local_candidates
  400  Function with many parameters (count = 6): _append_parse_failure
  109  Function with many returns (count = 6): scan_file_impl
    1  High total complexity (count = 71)
  181  Function with high complexity (count = 26): _resolve_facade_class_name
 
-flext-infra/src/flext_infra/refactor/_detectors/namespace_facade_scanner.py
+flext-infra/src/flext_infra/detectors/namespace_facade_scanner.py
   73  Function with many parameters (count = 7): _find_facade_class
 
-flext-infra/src/flext_infra/refactor/_detectors/namespace_source_detector.py
+flext-infra/src/flext_infra/detectors/namespace_source_detector.py
   78  Function with many parameters (count = 6): detect_file
  106  Function with many parameters (count = 6): scan_file_impl
  106  Function with high complexity (count = 22): scan_file_impl
 
-flext-infra/src/flext_infra/refactor/_detectors/runtime_alias_detector.py
+flext-infra/src/flext_infra/detectors/runtime_alias_detector.py
  110  Function with high complexity (count = 20): scan_file_impl
 
 flext-infra/src/flext_infra/refactor/_models_namespace_enforcer.py
@@ -4308,7 +4308,7 @@ flext-oracle-wms/src/flext_oracle_wms/wms_client.py
 flext-oracle-wms/src/flext_oracle_wms/wms_exceptions.py
  155  Found 17 lines of similar code in 3 locations (mass = 64)
         also found at flext-web/tests/unit/__init__.py
-        also found at flext-infra/src/flext_infra/refactor/_detectors/__init__.py
+        also found at flext-infra/src/flext_infra/detectors/__init__.py
 
 flext-oracle-wms/tests/complete_mock_pipeline.py
    1  High total complexity (count = 72)
@@ -6533,10 +6533,10 @@ flext-web/tests/typings.py
 
 flext-web/tests/unit/__init__.py
   48  Found 17 lines of similar code in 3 locations (mass = 64)
-        also found at flext-infra/src/flext_infra/refactor/_detectors/__init__.py
+        also found at flext-infra/src/flext_infra/detectors/__init__.py
         also found at flext-oracle-wms/src/flext_oracle_wms/wms_exceptions.py
   30  Found 17 lines of similar code in 2 locations (mass = 228)
-        also found at flext-infra/src/flext_infra/refactor/_detectors/__init__.py
+        also found at flext-infra/src/flext_infra/detectors/__init__.py
 
 flext-web/tests/utilities.py
    1  Found 26 lines of similar code in 52 locations (mass = 66)

@@ -35,7 +35,7 @@
     "flext-infra/src/flext_infra/_utilities/output.py",
     "flext-infra/src/flext_infra/refactor/_utilities_namespace.py",
     "flext-infra/src/flext_infra/refactor/_constants.py",
-    "flext-infra/src/flext_infra/refactor/_detectors/mro_completeness_detector.py",
+    "flext-infra/src/flext_infra/detectors/mro_completeness_detector.py",
     "flext-infra/src/flext_infra/_constants/base.py"
   ],
   "next_action": "Fix missing imports in flext-infra/_protocols/base.py and _constants/base.py, then run pytest flext-infra/tests/unit/refactor/ to validate, then commit all waves",
