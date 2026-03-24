@@ -34,7 +34,7 @@
 - [x] **INFRA-02**: `u.Infra.iter_projects()` centralizes project iteration (eliminates 13 duplicate `discover_projects()` calls)
 - [x] **INFRA-03**: `workspace_root` is the canonical parameter name across all `flext_infra` signatures (replaces `root`, `project_root`)
 - [x] **INFRA-04**: `NamespaceSourceDetector` + auto-fixer in `flext_infra` — detects and rewrites namespace source violations
-- [ ] **INFRA-05**: `make pyrefly-repo` policy gate enforces 0 `Any`/`object`/`ignore` violations (with file+line output)
+- [x] **INFRA-05**: `make pyrefly-repo` policy gate enforces 0 `Any`/`object`/`ignore` violations (with file+line output)
 
 ### WORKAROUND — Workaround Eradication
 
@@ -110,7 +110,7 @@
 | INFRA-02 | Phase 3 | Complete | infra-runtime-centralization, utilities-mro-dedup, centralize-u-utilities |
 | INFRA-03 | Phase 3 | Complete | import-normalization-infra, infra-tier-reorg |
 | INFRA-04 | Phase 3 | Complete | namespace-source-enforcement, flext-infra-typing-census-engine |
-| INFRA-05 | Phase 3 | Pending | infra-type-alias-unification, constants-dedup-infra |
+| INFRA-05 | Phase 3 | Complete | infra-type-alias-unification, constants-dedup-infra |
 | WA-01 | Phase 3 | Complete | workaround-eradication |
 | WA-02 | Phase 3 | Complete | workaround-eradication |
 | WA-03 | Phase 3 | Complete | workaround-eradication |

@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Type System Hardening** - Eliminate all 4,385 pyrefly errors and every `Any`/`object`/`cast`/`ignore` shortcut
 - [ ] **Phase 2: Architecture & SOLID** - Enforce DIP via protocols, canonicalize Pydantic v2, adopt PEP 695 type aliases
-- [ ] **Phase 3: Infrastructure Centralization** - Centralize runtime helpers, eradicate all workarounds and antipatterns
+- [x] **Phase 3: Infrastructure Centralization** - Centralize runtime helpers, eradicate all workarounds and antipatterns (completed 2026-03-24)
 - [ ] **Phase 4: Python 3.13 Modernization** - Replace custom code with stdlib (`TypeIs`, `StrEnum`, `batched`, etc.)
 - [ ] **Phase 5: Package Migration** - Extract submodules, convert 33 projects from Poetry to uv workspaces
 
@@ -75,7 +75,7 @@ Plans:
 - [x] 03-02-PLAN.md — NamespaceSourceDetector test suite + workspace-wide application
 - [x] 03-03-PLAN.md — Workaround eradication: WA-01, WA-02, WA-03, WA-04, WA-06
 - [x] 03-04-PLAN.md — Workaround eradication: WA-05 (print() triage + fix)
-- [ ] 03-05-PLAN.md — Policy gate enhancement + final verification sweep
+- [x] 03-05-PLAN.md — Policy gate enhancement + final verification sweep
 
 ### Phase 4: Python 3.13 Modernization
 **Goal**: Custom implementations of stdlib capabilities are deleted and replaced with Python 3.13 builtins and standard library modules
@@ -108,6 +108,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Type System Hardening | 5/5 | Complete    |  |
 | 2. Architecture & SOLID | 0/5 | Planned | - |
-| 3. Infrastructure Centralization | 3/5 | In Progress|  |
+| 3. Infrastructure Centralization | 5/5 | Complete   | 2026-03-24 |
 | 4. Python 3.13 Modernization | 0/TBD | Not started | - |
 | 5. Package Migration | 0/TBD | Not started | - |
