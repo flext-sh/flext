@@ -84,6 +84,7 @@ For INFRA-03, use `findReferences` to trace each `root: Path` to call sites. Onl
 ```python
 # WA-01: try/except ImportError -> feature flag
 import importlib.util
+
 HAS_PYTEST = importlib.util.find_spec("pytest") is not None
 
 # WA-04: sys.exit() outside __main__ -> raise or return
