@@ -15,7 +15,7 @@
 - [x] **TYPE-05**: Zero `cast()` calls outside `flext-core/result.py`
 - [x] **TYPE-06**: Zero `__class__ is` / `__class__ not in` comparisons — all replaced with `isinstance()` or `TypeGuard`/`TypeIs`
 - [x] **TYPE-07**: `TypeGuard` → `TypeIs` (PEP 742) migration in all 12 type-guard functions
-- [ ] **TYPE-08**: All empty container literals annotated at their assignment sites
+- [x] **TYPE-08**: All empty container literals annotated at their assignment sites
 
 ### ARCH — Architecture & SOLID
 
@@ -97,7 +97,7 @@
 | TYPE-05 | Phase 1 | Complete | strict-typing-execution-plan |
 | TYPE-06 | Phase 1 | Complete | strict-typing-execution-plan |
 | TYPE-07 | Phase 6 | Complete | strict-typing-execution-plan |
-| TYPE-08 | Phase 6 | Pending | strict-typing-execution-plan |
+| TYPE-08 | Phase 6 | Complete | strict-typing-execution-plan |
 | ARCH-01 | Phase 2 | Complete | protocol-solid-standardization |
 | ARCH-02 | Phase 2 | Complete | namespace-source-enforcement |
 | ARCH-03 | Phase 2 | Complete | pydantic-v2-advanced-modernization |
