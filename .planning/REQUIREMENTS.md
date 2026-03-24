@@ -48,11 +48,11 @@
 ### MOD — Python 3.13 Modernization
 
 - [x] **MOD-01**: `itertools.batched` replaces all custom chunking/batching utility code
-- [ ] **MOD-02**: `warnings.deprecated` (PEP 702) replaces custom `FlextUtilitiesDeprecation` framework
+- [x] **MOD-02**: `warnings.deprecated` (PEP 702) replaces custom `FlextUtilitiesDeprecation` framework
 - [x] **MOD-03**: 147+ `StrEnum` classes decorated with `@unique`
 - [x] **MOD-04**: 70 `Literal[str, ...]` unions convertible to `StrEnum` converted
 - [x] **MOD-05**: `defaultdict` replaces hand-rolled grouping patterns
-- [ ] **MOD-06**: `UserDict`/`UserString` usages replaced with Pydantic `BaseModel`
+- [x] **MOD-06**: `UserDict`/`UserString` usages replaced with Pydantic `BaseModel`
 
 ### MIG — Package Migration
 
@@ -118,11 +118,11 @@
 | WA-05 | Phase 3 | Complete | workaround-eradication |
 | WA-06 | Phase 3 | Complete | workaround-eradication |
 | MOD-01 | Phase 4 | Complete | python313-stdlib-modernization |
-| MOD-02 | Phase 7 | Pending | python313-stdlib-modernization |
+| MOD-02 | Phase 7 | Complete | python313-stdlib-modernization |
 | MOD-03 | Phase 4 | Complete | python313-datatypes |
 | MOD-04 | Phase 4 | Complete | python313-datatypes |
 | MOD-05 | Phase 4 | Complete | python313-stdlib-modernization |
-| MOD-06 | Phase 7 | Pending | python313-datatypes |
+| MOD-06 | Phase 7 | Complete | python313-datatypes |
 | MIG-01 | Phase 5 | Complete | split-core-packages |
 | MIG-02 | Phase 5 | Complete | split-core-packages |
 | MIG-03 | Phase 5 | Complete | split-core-packages |
