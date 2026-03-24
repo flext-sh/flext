@@ -33,6 +33,8 @@ from typing import ClassVar
 from flext_core import r
 from pydantic import BaseModel, ConfigDict, Field
 
+from flext import t
+
 type WorkflowScalar = Decimal | bool | bytes | date | datetime | float | int | str
 type WorkflowValue = WorkflowScalar | Sequence[str] | Mapping[str, WorkflowScalar]
 
@@ -44,7 +46,7 @@ def _new_workflow_content() -> WorkflowContent:
     return {}
 
 
-def _new_workflow_config() -> Mapping[str, str | int | bool | float]:
+def _new_workflow_config() -> Mapping[str, t.Scalar | float]:
     return {}
 
 
@@ -186,7 +188,7 @@ class CompleteWorkflowExample:
 
         auto_execute: bool = True
         data: Sequence[ProcessingDict] = Field(default_factory=tuple)
-        workflow_config: Mapping[str, str | int | bool | float] = Field(
+        workflow_config: Mapping[str, t.Scalar | float] = Field(
             default_factory=_new_workflow_config
         )
 
@@ -523,7 +525,7 @@ class CompleteWorkflowExample:
         sample_data: Sequence[ProcessingDict] = (
             CompleteWorkflowExample.create_sample_workflow_data(50)
         )
-        workflow_config: Mapping[str, str | int | bool | float] = {
+        workflow_config: Mapping[str, t.Scalar | float] = {
             "workflow_id": "comprehensive_workflow",
             "parallel": True,
             "max_workers": 4,

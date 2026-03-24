@@ -1,7 +1,7 @@
 
 from typing import BinaryIO
 
-DEFAULTS: dict[str, str | int | bool | list[str]]
+DEFAULTS: dict[str, t.Scalar | list[str]]
 
 class InputError(Exception):
     message: str
@@ -10,4 +10,4 @@ class InputError(Exception):
 def make_config(
     argv: list[str] | None = None,
     tomlfile: BinaryIO | None = None,
-) -> dict[str, str | int | bool | list[str]]: ...
+) -> dict[str, t.Scalar | list[str]]: ...
