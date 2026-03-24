@@ -135,7 +135,11 @@ Plans:
   2. StrEnum + strict Pydantic coercion fixed — 85 `flext-tests` tests pass
   3. Custom `FlextUtilitiesDeprecation` replaced with `warnings.deprecated` (PEP 702)
   4. All `UserDict`/`UserString` usages replaced with Pydantic `BaseModel`
-**Plans**: 0 plans (pending `/gsd:plan-phase 7`)
+**Plans**: 2 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — StrEnum coercion fix + deprecation framework removal + UserDict verification
+- [ ] 07-02-PLAN.md — Circular import verification/fix in _utilities_loader.py
 
 ## Progress
 
@@ -150,4 +154,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 4. Python 3.13 Modernization | 0/3 | Planned | - |
 | 5. Package Migration | 0/3 | Planned | - |
 | 6. Typing Gap Closure | 0/2 | Planned | - |
-| 7. Modernization & Integration Fixes | 0/0 | Planned | - |
+| 7. Modernization & Integration Fixes | 0/2 | Planned | - |
