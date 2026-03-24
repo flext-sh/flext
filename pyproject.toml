@@ -204,7 +204,7 @@ plugins = [
 python_version = "3.13"
 
 # [MANAGED] pydantic-mypy
-mypy_path = ["algar-oud-mig", "docker", "docs", "examples", "flexcore", "flext-api", "flext-auth", "flext-cli", "flext-core/examples", "flext-core/src", "flext-db-oracle", "flext-dbt-ldap", "flext-dbt-ldif", "flext-dbt-oracle", "flext-dbt-oracle-wms", "flext-grpc", "flext-infra/src", "flext-ldap", "flext-ldif", "flext-meltano", "flext-observability", "flext-oracle-oic", "flext-oracle-wms", "flext-plugin", "flext-quality", "flext-tap-ldap", "flext-tap-ldif", "flext-tap-oracle", "flext-tap-oracle-oic", "flext-tap-oracle-wms", "flext-target-ldap", "flext-target-ldif", "flext-target-oracle", "flext-target-oracle-oic", "flext-target-oracle-wms", "flext-tests/src", "flext-web", "gruponos-meltano-native", "libs", "pkg", "scripts", "src", "tests", "typings", "typings/generated"]
+mypy_path = ["docker", "docs", "examples", "flext-core/examples", "flext-core/src", "flext-infra/src", "flext-tests/src", "libs", "pkg", "scripts", "src", "tests", "typings", "typings/generated"]
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
@@ -234,7 +234,7 @@ whitelines = 1
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
-extraPaths = ["algar-oud-mig", "docker", "docs", "examples", "flexcore", "flext-api", "flext-auth", "flext-cli", "flext-core/examples", "flext-core/src", "flext-db-oracle", "flext-dbt-ldap", "flext-dbt-ldif", "flext-dbt-oracle", "flext-dbt-oracle-wms", "flext-grpc", "flext-infra/src", "flext-ldap", "flext-ldif", "flext-meltano", "flext-observability", "flext-oracle-oic", "flext-oracle-wms", "flext-plugin", "flext-quality", "flext-tap-ldap", "flext-tap-ldif", "flext-tap-oracle", "flext-tap-oracle-oic", "flext-tap-oracle-wms", "flext-target-ldap", "flext-target-ldif", "flext-target-oracle", "flext-target-oracle-oic", "flext-target-oracle-wms", "flext-tests/src", "flext-web", "gruponos-meltano-native", "libs", "pkg", "scripts", "src", "tests", "typings", "typings/generated"]
+extraPaths = ["docker", "docs", "examples", "flext-core/examples", "flext-core/src", "flext-infra/src", "flext-tests/src", "libs", "pkg", "scripts", "src", "tests", "typings", "typings/generated"]
 reportCallIssue = "none"
 reportConstantRedefinition = "error"
 reportIncompatibleMethodOverride = "error"
@@ -682,6 +682,7 @@ reportPrivateUsage = "none"
 root = "gruponos-meltano-native/scripts"
 
 # [MANAGED] ruff
+
 
 
 [tool.ruff]
@@ -1186,6 +1187,7 @@ fail_under = 45
 precision = 2
 show_missing = true
 skip_covered = false
+
 
 
 
