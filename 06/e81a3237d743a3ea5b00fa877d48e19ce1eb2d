@@ -1,0 +1,23 @@
+.planning/phases/07-modernization-integration-fixes/07-RESEARCH.md
+  7d62ea1a5a181830 1-162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "06e81a3237d743a3ea5b00fa877d48e19ce1eb2d",
+  "prompts": {
+    "7d62ea1a5a181830": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dc186f16-afe7-4333-a948-07dfeb2d2e04",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 162,
+      "total_deletions": 0,
+      "accepted_lines": 162,
+      "overriden_lines": 0
+    }
+  }
+}
