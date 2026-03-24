@@ -176,7 +176,7 @@ else \
 	cat "$$log_file"; \
 	exit 1; \
 fi; \
-if uv sync --all-packages --all-groups >>"$$log_file" 2>&1; then \
+if uv sync --all-packages --all-groups --all-extras >>"$$log_file" 2>&1; then \
 	:; \
 else \
 	cat "$$log_file"; \
@@ -473,7 +473,7 @@ up: ## Upgrade Python dependencies to latest via Poetry
 		exit 1; \
 	fi; \
 	printf " install ... "; \
-	if uv sync --all-packages --all-groups >>"$$log_file" 2>&1; then \
+	if uv sync --all-packages --all-groups --all-extras >>"$$log_file" 2>&1; then \
 		elapsed=$$(( $$(date +%s) - start_ts )); \
 		echo "ok ($${elapsed}s)"; \
 	else \
