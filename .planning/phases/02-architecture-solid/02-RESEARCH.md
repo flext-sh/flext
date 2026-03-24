@@ -116,6 +116,7 @@ class MyABC(ABC):
     @abstractmethod
     def do_thing(self) -> str: ...
 
+
 # AFTER
 @runtime_checkable
 class MyProtocol(Protocol):
@@ -129,10 +130,12 @@ class MyProtocol(Protocol):
 class MyProtocol(Protocol):
     def do_thing(self) -> str: ...
 
+
 # Keep concrete base with implementation
 class MyBase:  # no longer ABC
     def do_thing(self) -> str:
         return self._implementation()
+
     def _implementation(self) -> str:
         raise NotImplementedError
 ```
@@ -145,9 +148,12 @@ def validate(self, data: Mapping[str, str]) -> bool:
     adapter = TypeAdapter(dict[str, str])
     return adapter.validate_python(data) is not None
 
+
 # AFTER (cached as ClassVar)
 class MyClass:
-    _str_dict_adapter: ClassVar[TypeAdapter[dict[str, str]]] = TypeAdapter(dict[str, str])
+    _str_dict_adapter: ClassVar[TypeAdapter[dict[str, str]]] = TypeAdapter(
+        dict[str, str]
+    )
 
     def validate(self, data: Mapping[str, str]) -> bool:
         return self._str_dict_adapter.validate_python(data) is not None
@@ -158,6 +164,7 @@ class MyClass:
 ```python
 # BEFORE
 from typing import TypeAlias
+
 MyType: TypeAlias = str | int
 
 # AFTER
