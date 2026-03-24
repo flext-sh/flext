@@ -89,8 +89,8 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — itertools.batched + defaultdict replacements (MOD-01, MOD-05)
-- [ ] 04-02-PLAN.md — StrEnum @unique + Literal-to-StrEnum conversion (MOD-03, MOD-04)
-- [ ] 04-03-PLAN.md — Deprecation framework + UserDict elimination (MOD-02, MOD-06)
+- [x] 04-02-PLAN.md — StrEnum @unique + Literal-to-StrEnum conversion (MOD-03, MOD-04)
+- [x] 04-03-PLAN.md — Deprecation framework + UserDict elimination (MOD-02, MOD-06)
 
 ### Phase 5: Package Migration
 **Goal**: `flext_infra` and `flext_tests` live in independent repos as submodules, `flext-core` ships only `flext_core`, and all 33 projects run on a unified `uv.lock`
