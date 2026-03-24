@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase 1 in progress — 2091 pyrefly errors remaining
-stopped_at: Reverted Phase 1 completion — plans 02-05 not actually done
-last_updated: "2026-03-23T22:04:31.583Z"
+status: Phase 1 in progress — 0 pyrefly errors (flext-core, flext-infra, flext-tests clean)
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-03-24T04:35:14.921Z"
 last_activity: 2026-03-23
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 ## Current Position
 
 Phase: 1
-Plan: 01-02 (Wave 2) — next to execute
+Plan: 01-03 (Wave 3) — next to execute
 
 ## Performance Metrics
 
@@ -62,6 +62,7 @@ Recent decisions affecting current work:
 - Poetry → uv migration last: Biggest blast radius — do type/arch cleanup first
 - [Phase 01]: cast() in decorators.py eliminated by widening _resolve_logger() param to tuple[object,...] — no cast needed when method uses isinstance() internally
 - [Phase 01]: Fresh baseline 29 pyre issues (0 in flext-core) — Wave 0 did far more than documented; historical 4385 figure obsolete
+- [Phase 01-02]: flext-infra and flext-tests already nearly clean — only 1 bare object annotation fixed in matchers.py
 
 ### Pending Todos
 
@@ -82,7 +83,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T22:40:41Z
-Stopped at: Completed quick-260323-r3o — YAGNI analysis done
+Last session: 2026-03-24T04:33:13.178Z
+Stopped at: Executing 01-02
 Last activity: 2026-03-23
 Resume file: None
