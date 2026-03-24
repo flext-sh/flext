@@ -345,7 +345,7 @@ class AdvancedProcessingExample:
             return r[AdvancedProcessingExample.ValidationResult].ok(
                 AdvancedProcessingExample.ValidationResult(
                     item_id=str(item_id) if item_id else "unknown",
-                    is_valid=len(violations) == 0,
+                    is_valid=not violations,
                     violations=violations,
                     warnings=warnings,
                     validation_time=time.time() - start_time,
