@@ -68,7 +68,14 @@ Plans:
   3. `NamespaceSourceDetector` is live in `flext_infra` and passes its own test suite
   4. `make pyre` policy gate enforces 0 `Any`/`object`/`ignore` violations with file+line output on failure
   5. Zero `try/except ImportError`, `model_rebuild()`, bare `except Exception:`, `sys.exit()` outside `__main__.py`, `print()` in production, and `subprocess.run()` outside the designated wrapper — across all 33 projects
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — INFRA utilities (iter_projects, emit) + workspace_root normalization
+- [ ] 03-02-PLAN.md — NamespaceSourceDetector test suite + workspace-wide application
+- [ ] 03-03-PLAN.md — Workaround eradication: WA-01, WA-02, WA-03, WA-04, WA-06
+- [ ] 03-04-PLAN.md — Workaround eradication: WA-05 (print() triage + fix)
+- [ ] 03-05-PLAN.md — Policy gate enhancement + final verification sweep
 
 ### Phase 4: Python 3.13 Modernization
 **Goal**: Custom implementations of stdlib capabilities are deleted and replaced with Python 3.13 builtins and standard library modules
@@ -101,6 +108,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Type System Hardening | 5/5 | Complete    |  |
 | 2. Architecture & SOLID | 0/5 | Planned | - |
-| 3. Infrastructure Centralization | 0/TBD | Not started | - |
+| 3. Infrastructure Centralization | 0/5 | Planned | - |
 | 4. Python 3.13 Modernization | 0/TBD | Not started | - |
 | 5. Package Migration | 0/TBD | Not started | - |
