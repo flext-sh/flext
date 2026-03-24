@@ -1,0 +1,23 @@
+Makefile
+  17572c7a1dfd1bde 179,476
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "7e3285b7fcaad0e109a6542ca9ee80a34683e1e7",
+  "prompts": {
+    "17572c7a1dfd1bde": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d203c-442a-7a50-94af-ed273e8ed603",
+        "model": "gpt-5.3-codex"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
