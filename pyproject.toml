@@ -260,6 +260,7 @@ root = "src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "tests"
+extraPaths = ["."]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -276,6 +277,7 @@ root = "algar-oud-mig/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "algar-oud-mig/tests"
+extraPaths = ["algar-oud-mig"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -292,6 +294,7 @@ root = "flexcore/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flexcore/tests"
+extraPaths = ["flexcore"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -304,6 +307,7 @@ root = "flext-api/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-api/tests"
+extraPaths = ["flext-api"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -316,6 +320,7 @@ root = "flext-auth/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-auth/tests"
+extraPaths = ["flext-auth"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -328,6 +333,7 @@ root = "flext-cli/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-cli/tests"
+extraPaths = ["flext-cli"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -340,6 +346,7 @@ root = "flext-core/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-core/tests"
+extraPaths = ["flext-core"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -356,6 +363,7 @@ root = "flext-db-oracle/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-db-oracle/tests"
+extraPaths = ["flext-db-oracle"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -368,6 +376,7 @@ root = "flext-dbt-ldap/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-dbt-ldap/tests"
+extraPaths = ["flext-dbt-ldap"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -384,6 +393,7 @@ root = "flext-dbt-ldif/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-dbt-ldif/tests"
+extraPaths = ["flext-dbt-ldif"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -396,6 +406,7 @@ root = "flext-dbt-oracle/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-dbt-oracle/tests"
+extraPaths = ["flext-dbt-oracle"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -408,6 +419,7 @@ root = "flext-dbt-oracle-wms/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-dbt-oracle-wms/tests"
+extraPaths = ["flext-dbt-oracle-wms"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -420,6 +432,7 @@ root = "flext-grpc/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-grpc/tests"
+extraPaths = ["flext-grpc"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -432,6 +445,7 @@ root = "flext-infra/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-infra/tests"
+extraPaths = ["flext-infra"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -440,6 +454,7 @@ root = "flext-ldap/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-ldap/tests"
+extraPaths = ["flext-ldap"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -452,6 +467,7 @@ root = "flext-ldif/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-ldif/tests"
+extraPaths = ["flext-ldif"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -464,6 +480,7 @@ root = "flext-meltano/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-meltano/tests"
+extraPaths = ["flext-meltano"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -476,6 +493,7 @@ root = "flext-observability/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-observability/tests"
+extraPaths = ["flext-observability"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -488,6 +506,7 @@ root = "flext-oracle-oic/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-oracle-oic/tests"
+extraPaths = ["flext-oracle-oic"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -500,6 +519,7 @@ root = "flext-oracle-wms/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-oracle-wms/tests"
+extraPaths = ["flext-oracle-wms"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -512,6 +532,7 @@ root = "flext-plugin/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-plugin/tests"
+extraPaths = ["flext-plugin"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -524,6 +545,7 @@ root = "flext-quality/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-quality/tests"
+extraPaths = ["flext-quality"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -532,6 +554,7 @@ root = "flext-tap-ldap/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-tap-ldap/tests"
+extraPaths = ["flext-tap-ldap"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -544,6 +567,7 @@ root = "flext-tap-ldif/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-tap-ldif/tests"
+extraPaths = ["flext-tap-ldif"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -556,6 +580,7 @@ root = "flext-tap-oracle/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-tap-oracle/tests"
+extraPaths = ["flext-tap-oracle"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -568,6 +593,7 @@ root = "flext-tap-oracle-oic/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-tap-oracle-oic/tests"
+extraPaths = ["flext-tap-oracle-oic"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -580,6 +606,7 @@ root = "flext-tap-oracle-wms/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-tap-oracle-wms/tests"
+extraPaths = ["flext-tap-oracle-wms"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -592,6 +619,7 @@ root = "flext-target-ldap/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-target-ldap/tests"
+extraPaths = ["flext-target-ldap"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -604,6 +632,7 @@ root = "flext-target-ldif/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-target-ldif/tests"
+extraPaths = ["flext-target-ldif"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -616,6 +645,7 @@ root = "flext-target-oracle/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-target-oracle/tests"
+extraPaths = ["flext-target-oracle"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -628,6 +658,7 @@ root = "flext-target-oracle-oic/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-target-oracle-oic/tests"
+extraPaths = ["flext-target-oracle-oic"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -640,6 +671,7 @@ root = "flext-target-oracle-wms/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-target-oracle-wms/tests"
+extraPaths = ["flext-target-oracle-wms"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -652,6 +684,7 @@ root = "flext-tests/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-tests/tests"
+extraPaths = ["flext-tests"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "error"
@@ -660,6 +693,7 @@ root = "flext-web/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "flext-web/tests"
+extraPaths = ["flext-web"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
@@ -672,6 +706,7 @@ root = "gruponos-meltano-native/src"
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
 root = "gruponos-meltano-native/tests"
+extraPaths = ["gruponos-meltano-native"]
 
 [[tool.pyright.executionEnvironments]]
 reportPrivateUsage = "none"
