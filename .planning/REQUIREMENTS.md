@@ -96,8 +96,8 @@
 | TYPE-04 | Phase 1 | Complete | bare-object-elimination |
 | TYPE-05 | Phase 1 | Complete | strict-typing-execution-plan |
 | TYPE-06 | Phase 1 | Complete | strict-typing-execution-plan |
-| TYPE-07 | Phase 1 | Pending | strict-typing-execution-plan |
-| TYPE-08 | Phase 1 | Pending | strict-typing-execution-plan |
+| TYPE-07 | Phase 6 | Pending | strict-typing-execution-plan |
+| TYPE-08 | Phase 6 | Pending | strict-typing-execution-plan |
 | ARCH-01 | Phase 2 | Complete | protocol-solid-standardization |
 | ARCH-02 | Phase 2 | Complete | namespace-source-enforcement |
 | ARCH-03 | Phase 2 | Complete | pydantic-v2-advanced-modernization |
@@ -118,11 +118,11 @@
 | WA-05 | Phase 3 | Complete | workaround-eradication |
 | WA-06 | Phase 3 | Complete | workaround-eradication |
 | MOD-01 | Phase 4 | Complete | python313-stdlib-modernization |
-| MOD-02 | Phase 4 | Pending | python313-stdlib-modernization |
+| MOD-02 | Phase 7 | Pending | python313-stdlib-modernization |
 | MOD-03 | Phase 4 | Complete | python313-datatypes |
 | MOD-04 | Phase 4 | Complete | python313-datatypes |
 | MOD-05 | Phase 4 | Complete | python313-stdlib-modernization |
-| MOD-06 | Phase 4 | Pending | python313-datatypes |
+| MOD-06 | Phase 7 | Pending | python313-datatypes |
 | MIG-01 | Phase 5 | Complete | split-core-packages |
 | MIG-02 | Phase 5 | Complete | split-core-packages |
 | MIG-03 | Phase 5 | Complete | split-core-packages |
