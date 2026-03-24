@@ -73,7 +73,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
 
 @staticmethod
-def load_yaml_rules(path: Path) -> r[Sequence[Mapping[str, t.NormalizedValue]]]:
+def load_yaml_rules(path: Path) -> r[Sequence[t.ContainerMapping]]:
     with path.open(encoding="utf-8") as f:
         parsed = yaml.safe_load(f)
 ```
@@ -156,7 +156,7 @@ Good:
 ```python
 parsed = yaml.safe_load(f)
 if not isinstance(parsed, dict):
-    return r[Sequence[Mapping[str, t.NormalizedValue]]].fail("Expected YAML dict")
+    return r[Sequence[t.ContainerMapping]].fail("Expected YAML dict")
 ```
 
 Why good: validates structure before typed access.

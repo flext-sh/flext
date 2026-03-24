@@ -122,12 +122,8 @@ with FlextLogger.Context.scoped_context(operation="user_sync"):
 ### ClassVar State
 
 ```python
-_scoped_contexts: ClassVar[
-    Mapping[str, Mapping[str, t.NormalizedValue]]
-]  # {scope: {key: value}}
-_level_contexts: ClassVar[
-    Mapping[str, Mapping[str, t.NormalizedValue]]
-]  # {level: {key: value}}
+_scoped_contexts: ClassVar[Mapping[str, t.ContainerMapping]]  # {scope: {key: value}}
+_level_contexts: ClassVar[Mapping[str, t.ContainerMapping]]  # {level: {key: value}}
 ```
 
 ### FlextRuntime Structlog Integration

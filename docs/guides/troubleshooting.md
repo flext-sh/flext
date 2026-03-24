@@ -133,7 +133,7 @@ except ImportError as e:
 
 ```python
 # Error
-error: Argument 1 to "process" has incompatible type "str"; expected "Mapping[str, t.NormalizedValue]"
+error: Argument 1 to "process" has incompatible type "str"; expected "t.ContainerMapping"
 ```
 
 #### Solutions
@@ -147,7 +147,7 @@ def process(data):
 
 
 # ✅ CORRECT
-def process(data: Mapping[str, t.NormalizedValue]) -> r[ProcessedData]:
+def process(data: t.ContainerMapping) -> r[ProcessedData]:
     return r[ProcessedData].ok(ProcessedData(**data))
 ```
 

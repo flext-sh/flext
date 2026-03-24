@@ -1414,7 +1414,7 @@ class p:
         def is_valid(self) -> bool: ...
         def validate_business_rules(self) -> r[bool]: ...
         def validate_config(self) -> r[bool]: ...
-        def get_service_info(self) -> Mapping[str, t.NormalizedValue]: ...
+        def get_service_info(self) -> t.ContainerMapping: ...
 
     @runtime_checkable
     class Repository[T](Protocol):
@@ -1429,8 +1429,8 @@ class p:
     class Configurable(Protocol):
         """Configuration protocol."""
 
-        def configure(self, config: Mapping[str, t.NormalizedValue]) -> r[bool]: ...
-        def get_config(self) -> Mapping[str, t.NormalizedValue]: ...
+        def configure(self, config: t.ContainerMapping) -> r[bool]: ...
+        def get_config(self) -> t.ContainerMapping: ...
 
     @runtime_checkable
     class ExecutableService(Protocol):
@@ -1883,7 +1883,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
         # Detect dependencies from __init__ signature
         try:
             init_signature = inspect.signature(cls.__init__)
-            dependencies: Mapping[str, t.NormalizedValue] = {}
+            dependencies: t.ContainerMapping = {}
 
             for param_name, param in init_signature.parameters.items():
                 if param_name not in ("self", "config", "data"):
@@ -1895,7 +1895,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 
                 def smart_factory(deps=dependencies):
                     """Factory with auto-injection."""
-                    resolved_deps: Mapping[str, t.NormalizedValue] = {}
+                    resolved_deps: t.ContainerMapping = {}
 
                     for dep_name, dep_type in deps.items():
                         # Try resolve from container
@@ -1939,7 +1939,7 @@ class UserService(FlextService[User]):
     def is_valid(self) -> bool:
         return True
 
-    def get_service_info(self) -> Mapping[str, t.NormalizedValue]:
+    def get_service_info(self) -> t.ContainerMapping:
         return {"service": "UserService"}
 
 
@@ -3056,7 +3056,7 @@ class FlextContainer:
     # Advanced features
     def auto_wire(self, service_class: type[T]) -> r[t.NormalizedValue]
     def create_service(self, service_class: type[T], service_name: str | None) -> r[t.NormalizedValue]
-    def batch_register(self, services: Mapping[str, t.NormalizedValue]) -> r[bool]
+    def batch_register(self, services: t.ContainerMapping) -> r[bool]
 
     # Integration com dependency-injector
     _di_container: DynamicContainer  # Internal DI wrapper
@@ -3080,7 +3080,7 @@ class FlextContainer:
 # flext-ldif/src/flext_ldif/api.py (linha 128-129, 239-278)
 
 
-class FlextLdif(Flext[Mapping[str, t.NormalizedValue]]):
+class FlextLdif(Flext[t.ContainerMapping]):
     """Main API facade."""
 
     # ✅ BOM: Container como PrivateAttr
@@ -3106,7 +3106,7 @@ class FlextLdif(Flext[Mapping[str, t.NormalizedValue]]):
         _ = container.register("validation", FlextLdifValidation())
 
         # ✅ BOM: Register factory for parameterized service
-        def migration_pipeline_factory(params: Mapping[str, t.NormalizedValue] | None):
+        def migration_pipeline_factory(params: t.ContainerMapping | None):
             if params is None:
                 params = {}
             return FlextLdifMigrationPipeline(
@@ -3281,14 +3281,12 @@ class FlextLdif:
 **Pattern 1: Registrar Services na Inicialização**
 
 ```python
-class MyFacade(FlextService[Mapping[str, t.NormalizedValue]]):
+class MyFacade(FlextService[t.ContainerMapping]):
     """Facade with proper DI setup."""
 
     _container: FlextContainer = PrivateAttr(default_factory=FlextContainer.get_global)
 
-    def model_post_init(
-        self, _context: Mapping[str, t.NormalizedValue] | None, /
-    ) -> None:
+    def model_post_init(self, _context: t.ContainerMapping | None, /) -> None:
         """Setup services in DI container."""
         # Registrar todos os services necessários
         self._setup_services()
@@ -4324,8 +4322,8 @@ class p:
     class Configurable(Protocol):
         """Configurable protocol."""
 
-        def configure(self, config: Mapping[str, t.NormalizedValue]) -> r[bool]: ...
-        def get_config(self) -> Mapping[str, t.NormalizedValue]: ...
+        def configure(self, config: t.ContainerMapping) -> r[bool]: ...
+        def get_config(self) -> t.ContainerMapping: ...
 ```
 
 **Capabilities:**
@@ -4499,7 +4497,7 @@ class FlextService(x, BaseModel, Generic[TDomainResult]):
 
 ```python
 # flext-ldif/src/flext_ldif/api.py
-class FlextLdif(Flext[Mapping[str, t.NormalizedValue]]):
+class FlextLdif(Flext[t.ContainerMapping]):
     """API facade with mixins."""
 
     def parse(self, source: str) -> r:
@@ -6129,9 +6127,9 @@ class h[MessageT_contra, ResultT](x, ABC):
     ...
     # handlers.py:119-120 - MAS USA INFRAESTRUTURA MANUAL!
     self._context_stack: Sequence[
-        Mapping[str, t.NormalizedValue]
+        t.ContainerMapping
     ] = []  # ❌ deveria usar self.context
-    self._metrics: Mapping[str, t.NormalizedValue] = {}  # ❌ deveria usar self.track()
+    self._metrics: t.ContainerMapping = {}  # ❌ deveria usar self.track()
 ```
 
 **Duplicação em \_run_pipeline (handlers.py:495-584):**
@@ -7601,7 +7599,7 @@ class FlextCli:
         self._valid_tokens: set[str] = set()
         self._valid_sessions: set[str] = set()
         self._session_permissions: Mapping[str, set[str]] = {}
-        self._users: Mapping[str, Mapping[str, t.NormalizedValue]] = {}
+        self._users: Mapping[str, t.ContainerMapping] = {}
 
     def authenticate(self, credentials: ...) -> r[str]:
         # Auth logic directly in FlextCli
@@ -7628,7 +7626,7 @@ from pathlib import Path
 from typing import Literal
 
 
-class FlextCliService(FlextService[Mapping[str, t.NormalizedValue]]):
+class FlextCliService(FlextService[t.ContainerMapping]):
     """CLI service following FlextService pattern.
 
     Single service class para TODAS as operações CLI.
@@ -7641,12 +7639,12 @@ class FlextCliService(FlextService[Mapping[str, t.NormalizedValue]]):
     # Operation-specific fields
     message: str = ""
     style: str | None = None
-    data: Mapping[str, t.NormalizedValue] | None = None
+    data: t.ContainerMapping | None = None
     filepath: Path | None = None
     prompt_text: str | None = None
 
     @override
-    def execute(self) -> r[Mapping[str, t.NormalizedValue]]:
+    def execute(self) -> r[t.ContainerMapping]:
         """Execute CLI operation based on operation field."""
         match self.operation:
             case "print":
@@ -7660,7 +7658,7 @@ class FlextCliService(FlextService[Mapping[str, t.NormalizedValue]]):
             case "prompt":
                 return self._execute_prompt()
 
-    def _execute_print(self) -> r[Mapping[str, t.NormalizedValue]]:
+    def _execute_print(self) -> r[t.ContainerMapping]:
         """Print with Rich styling."""
         from rich.console import Console
 
@@ -7668,7 +7666,7 @@ class FlextCliService(FlextService[Mapping[str, t.NormalizedValue]]):
         console.print(self.message, style=self.style)
         return r.ok({"printed": self.message})
 
-    def _execute_table(self) -> r[Mapping[str, t.NormalizedValue]]:
+    def _execute_table(self) -> r[t.ContainerMapping]:
         """Create table from data."""
         from rich.table import Table
 
@@ -7681,21 +7679,19 @@ class FlextCliService(FlextService[Mapping[str, t.NormalizedValue]]):
 # ============ PUBLIC API - Zero Ceremony ============
 
 
-def print_cli(
-    message: str, style: str | None = None
-) -> Mapping[str, t.NormalizedValue]:
+def print_cli(message: str, style: str | None = None) -> t.ContainerMapping:
     """Factory function - Zero ceremony CLI print."""
     return FlextCliService(operation="print", message=message, style=style).value
 
 
 def create_table(
-    data: Mapping[str, t.NormalizedValue],
-) -> Mapping[str, t.NormalizedValue]:
+    data: t.ContainerMapping,
+) -> t.ContainerMapping:
     """Factory function - Zero ceremony table creation."""
     return FlextCliService(operation="table", data=data).value
 
 
-def read_json(filepath: Path) -> Mapping[str, t.NormalizedValue]:
+def read_json(filepath: Path) -> t.ContainerMapping:
     """Factory function - Zero ceremony JSON read."""
     return FlextCliService(operation="read_file", filepath=filepath).value
 ```
@@ -7716,7 +7712,7 @@ def read_json(filepath: Path) -> Mapping[str, t.NormalizedValue]:
 class CliOutputService(FlextService[str]):
     """Output formatting service."""
 
-    data: Mapping[str, t.NormalizedValue]
+    data: t.ContainerMapping
     format: Literal["json", "yaml", "table", "csv"] = "json"
 
     def execute(self) -> r[str]:
@@ -7732,14 +7728,14 @@ class CliOutputService(FlextService[str]):
 
 
 # flext-cli/src/flext_cli/services/file_tools.py
-class CliFileService(FlextService[Mapping[str, t.NormalizedValue]]):
+class CliFileService(FlextService[t.ContainerMapping]):
     """File I/O service."""
 
     operation: Literal["read", "write"] = "read"
     filepath: Path
-    data: Mapping[str, t.NormalizedValue] | None = None
+    data: t.ContainerMapping | None = None
 
-    def execute(self) -> r[Mapping[str, t.NormalizedValue]]:
+    def execute(self) -> r[t.ContainerMapping]:
         match self.operation:
             case "read":
                 return self._read_json()
@@ -7831,11 +7827,11 @@ class FlextCliSettings(FlextSettings):
 ```python
 
 # flext-cli/src/flext_cli/services/cli.py (NOVO)
-class FlextCliService(FlextService[Mapping[str, t.NormalizedValue]]):
+class FlextCliService(FlextService[t.ContainerMapping]):
     operation: Literal["print", "table", "file_read", "file_write"] = "print"
     # ... fields
 
-    def execute(self) -> r[Mapping[str, t.NormalizedValue]]:
+    def execute(self) -> r[t.ContainerMapping]:
         match self.operation:
             # ... dispatch
 ```
@@ -7848,7 +7844,7 @@ def print_cli(message: str, style: str | None = None):
     return FlextCliService(operation="print", message=message, style=style).value
 
 
-def create_table(data: Mapping[str, t.NormalizedValue]):
+def create_table(data: t.ContainerMapping):
     return FlextCliService(operation="table", data=data).value
 ```
 
@@ -7870,7 +7866,7 @@ class FlextCli:
 
 # flext-cli/src/flext_cli/services/output.py
 class CliOutputService(FlextService[str]):
-    data: Mapping[str, t.NormalizedValue]
+    data: t.ContainerMapping
     format: Literal["json", "yaml", "table"] = "json"
 
     def execute(self) -> r[str]:
@@ -7882,11 +7878,11 @@ class CliOutputService(FlextService[str]):
 ```python
 
 # flext-cli/src/flext_cli/services/file.py
-class CliFileService(FlextService[Mapping[str, t.NormalizedValue]]):
+class CliFileService(FlextService[t.ContainerMapping]):
     operation: Literal["read", "write"] = "read"
     filepath: Path
 
-    def execute(self) -> r[Mapping[str, t.NormalizedValue]]:
+    def execute(self) -> r[t.ContainerMapping]:
         # Move file I/O logic here
 ```
 
@@ -8213,7 +8209,7 @@ class x:
         return FlextSettings.get_global_instance()
 
     @contextmanager
-    def track(self, operation_name: str) -> Iterator[Mapping[str, t.NormalizedValue]]:
+    def track(self, operation_name: str) -> Iterator[t.ContainerMapping]:
         """Performance monitoring context manager."""
         with FlextContext.Performance.timed_operation(operation_name) as metrics:
             yield metrics
@@ -8289,7 +8285,7 @@ class FlextService[TDomainResult]:
     def is_valid(self) -> bool: ...
 
     # ❌ Service info raramente usado
-    def get_service_info(self) -> Mapping[str, t.NormalizedValue]: ...
+    def get_service_info(self) -> t.ContainerMapping: ...
 
     # ✅ Properties - ÓTIMOS
     @computed_field
@@ -8475,7 +8471,7 @@ class MyService(FlextService[Result]):
 # DEPOIS - Only execute + Pydantic validators
 class MyService(FlextService[Result]):
     # Pydantic fields
-    data: Mapping[str, t.NormalizedValue]
+    data: t.ContainerMapping
 
     @model_validator(mode="after")
     def validate_data(self) -> Self:
@@ -8616,7 +8612,7 @@ class FlextCliCore(FlextService[CliDataDict]):
         "execute_command"
     )
     command_name: str = ""
-    command_context: Mapping[str, t.NormalizedValue] = {}
+    command_context: t.ContainerMapping = {}
 
     # Commands stored in class-level registry
     _commands: ClassVar[Mapping[str, CliCommand]] = {}

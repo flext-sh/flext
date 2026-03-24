@@ -93,10 +93,10 @@ alwaysApply: true
 
 ### 3.2 Types & Contracts
 - **Strict Contracts Only**: `Any`, bare `t.NormalizedValue`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
-  - **Exception: Intentional Generic Types** - `Mapping[str, t.NormalizedValue]` and `Mapping[str, t.NormalizedValue]` ARE permitted ONLY in these contexts:
-    1. **Type aliases** (in `typings.py`): `type ProjectConfig = Mapping[str, t.NormalizedValue]` with docstring explaining intent
+  - **Exception: Intentional Generic Types** - `t.ContainerMapping` and `t.ContainerMapping` ARE permitted ONLY in these contexts:
+    1. **Type aliases** (in `typings.py`): `type ProjectConfig = t.ContainerMapping` with docstring explaining intent
     2. **Test fixtures** (in `conftest.py` and test support): Dynamic test data with unknown structure
-    3. **Validation/Rule engines**: Return types for unstructured violations (e.g., `r[Sequence[Mapping[str, t.NormalizedValue]]]`)
+    3. **Validation/Rule engines**: Return types for unstructured violations (e.g., `r[Sequence[t.ContainerMapping]]`)
     4. **Configuration transformers**: Methods that accept/return dynamic configuration from external sources (YAML, JSON)
     - **All other uses are FORBIDDEN**. Use `t.NormalizedValue` or specific Pydantic models instead.
 - **PEP 695 Canonical (Python 3.13+)**: ALL type aliases in `typings.py` must use `type X = ...` syntax. These create `TypeAliasType` objects—using them in `isinstance()` crashes at runtime and is FORBIDDEN. Runtime narrowing MUST use `u.is_*()` functions instead.

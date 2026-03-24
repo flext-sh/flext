@@ -110,7 +110,7 @@ def validate_non_empty(v: str) -> str:
     return cleaned
 
 
-def normalize_to_list(v) -> Sequence[t.NormalizedValue]:
+def normalize_to_list(v) -> t.ContainerList:
     if isinstance(v, list):
         return v
     if isinstance(v, (tuple, set)):
@@ -130,9 +130,7 @@ def validate_uuid_string(v: str) -> str:
 
 StrippedString = Annotated[str, AfterValidator(strip_whitespace)]
 ValidatedString = Annotated[str, AfterValidator(validate_non_empty)]
-NormalizedList = Annotated[
-    Sequence[t.NormalizedValue], BeforeValidator(normalize_to_list)
-]
+NormalizedList = Annotated[t.ContainerList, BeforeValidator(normalize_to_list)]
 UUIDStr = Annotated[str, PlainValidator(validate_uuid_string)]
 ```
 
@@ -155,11 +153,11 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class Metadata(BaseModel):
-    attributes: Mapping[str, t.NormalizedValue] = Field(default_factory=dict)
+    attributes: t.ContainerMapping = Field(default_factory=dict)
 
     @field_validator("attributes", mode="before")
     @classmethod
-    def normalize_attributes(cls, value) -> Mapping[str, t.NormalizedValue]:
+    def normalize_attributes(cls, value) -> t.ContainerMapping:
         if value is None:
             return {}
         if isinstance(value, BaseModel):
@@ -543,9 +541,7 @@ Repository anchor:
 from pydantic import TypeAdapter
 
 
-def serialize_runtime(
-    value, type_: type[t.NormalizedValue]
-) -> Mapping[str, t.NormalizedValue]:
+def serialize_runtime(value, type_: type[t.NormalizedValue]) -> t.ContainerMapping:
     adapter = TypeAdapter(type_)
     dumped = adapter.dump_python(value, mode="json")
     if isinstance(dumped, dict):
@@ -586,10 +582,10 @@ from pathlib import Path
 from pydantic import TypeAdapter
 
 
-def load_fixture(path: Path) -> Mapping[str, t.NormalizedValue]:
+def load_fixture(path: Path) -> t.ContainerMapping:
     with path.open(encoding="utf-8") as f:
         payload = json.load(f)
-    adapter = TypeAdapter(Mapping[str, t.NormalizedValue])
+    adapter = TypeAdapter(t.ContainerMapping)
     return adapter.validate_python(payload)
 ```
 

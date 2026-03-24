@@ -2,4 +2,4 @@ id: fix-jsondict-legacy
 language: python
 rule:
   pattern: Mapping[str, t.NormalizedValue]
-fix
+fix: t.NormalizedValue
