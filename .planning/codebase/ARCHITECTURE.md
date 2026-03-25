@@ -114,7 +114,7 @@
 
 **Protocols (`p.*` / FlextProtocols):**
 - Purpose: Structural typing contracts (no inheritance required)
-- Examples: `p.Logger`, `p.Routable`, `p.ResultLike`, `p.DispatchMessage`
+- Examples: `p.Logger`, `p.Routable`, `p.Result`, `p.DispatchMessage`
 - Pattern: Python Protocols (PEP 544) for duck typing; no MRO inheritance needed
 - Used by: Handlers, middleware, external adapters for type narrowing
 

@@ -101,7 +101,7 @@ Quick reference for 5 agents executing parallel work on flext codebase with zero
 |---------|-----------------|---------------|--------------|------------------------|-----------------|
 | L1-236 (infra) | ❄️ | ❄️ | ❄️ | ❄️ | ❄️ |
 | Context, RuntimeBootstrapOptions, DI | — | — | — | — | ✅ |
-| Result, ResultLike | — | — | — | ✅ | — |
+| Result, Result | — | — | — | ✅ | — |
 | Model, Config, Service, Validation | — | — | ✅ | — | — |
 | CommandBus, Middleware, Processor | ✅ | — | — | — | — |
 | Handler | — | — | — | — | ✅ |

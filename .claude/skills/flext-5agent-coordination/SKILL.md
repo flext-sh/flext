@@ -70,7 +70,7 @@ description: 5-Agent Parallel Execution Protocol for flext-core and consumer pro
 |---------|-----------------|---------------|--------------|------------------------|-----------------|
 | L1-236 (infra) | ❄️ | ❄️ | ❄️ | ❄️ | ❄️ |
 | Context, RuntimeBootstrapOptions, DI | — | — | — | — | ✅ |
-| Result, ResultLike | — | — | — | ✅ | — |
+| Result, Result | — | — | — | ✅ | — |
 | Model, Config, Service, Validation | — | — | ✅ | — | — |
 | CommandBus, Middleware, Processor | ✅ | — | — | — | — |
 | Handler | — | — | — | — | ✅ |
