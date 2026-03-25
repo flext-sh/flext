@@ -155,7 +155,7 @@ Plans:
 
 Plans:
 - [x] 08-01-PLAN.md — Fix print() in production, verify WA-04, fix bare except in tests/examples
-- [ ] 08-02-PLAN.md — Remove Exception from catch tuples + bare catches in production src/ (gap closure)
+- [x] 08-02-PLAN.md — Remove Exception from catch tuples + bare catches in production src/ (gap closure)
 - [ ] 08-03-PLAN.md — Replace print() with structlog in flext-plugin (gap closure)
 
 ## Progress
