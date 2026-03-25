@@ -1,8 +1,5 @@
 {
-  "[toml]": {
-    "editor.defaultFormatter": "tamasfe.even-better-toml",
-    "editor.formatOnSave": true
-  },
+  "files.autoSave": "afterDelay",
   "files.watcherExclude": {
     "__pycache__": true,
     ".DS_Store": true,
@@ -45,9 +42,22 @@
     "vendor": true,
     "venv": true
   },
+  "mypy-type-checker.importStrategy": "fromEnvironment",
   "pyrefly.lspPath": ".venv/bin/pyrefly",
-  "python-envs.defaultEnvManager": "ms-python.python:poetry",
-  "python-envs.defaultPackageManager": "ms-python.python:poetry",
+  "pyrefly.commentFoldingRanges": true,
+  "python.pyrefly.diagnosticMode": "workspace",
+  "python.pyrefly.displayTypeErrors": "force-on",
+  "python.languageServer": "Pylsp",
+  "python.useEnvironmentsExtension": true,
+  "pylsp.plugins.pycodestyle.enabled": false,
+  "pylsp.plugins.pyflakes.enabled": false,
+  "pylsp.plugins.mccabe.enabled": false,
+  "pylsp.plugins.autopep8.enabled": false,
+  "pylsp.plugins.yapf.enabled": false,
+  "pylsp.plugins.pylint.enabled": false,
+  "pylsp.plugins.rope_autoimport.enabled": true,
+  "pylsp.plugins.rope_completion.enabled": true,
+  "pylsp.plugins.pylsp_rope.enabled": true,
   "shellcheck.useWorkspaceRootAsCwd": true,
-  "python.analysis.autoImportCompletions": true
+  "ruff.configurationPreference": "filesystemFirst"
 }
