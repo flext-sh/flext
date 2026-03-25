@@ -128,9 +128,11 @@ from collections.abc import Mapping, Sequence` |
 def get_items() -> r[list[str]]: ...
 def get_config() -> r[dict[str, int]]: ...
 
+
 # FORBIDDEN
-def get_items() -> r[Sequence[str]]: ...   # invariance violation
+def get_items() -> r[Sequence[str]]: ...  # invariance violation
 def get_config() -> r[Mapping[str, int]]: ...  # invariance violation
+
 
 # Parameters: abstract types OK (covariant position)
 def process(items: Sequence[str]) -> r[list[str]]: ...
