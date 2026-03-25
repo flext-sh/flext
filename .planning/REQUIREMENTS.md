@@ -70,9 +70,9 @@
 ### ROPE — Rope-native Refactor Engine (Phase 9)
 
 - [ ] **ROPE-01**: `FlextInfraRefactorEngine` initializes a single monorepo-rooted `rope.base.project.Project` with `save_objectdb=False`, `ropefolder=None`, and `.venv`/`__pycache__`/`.git` in `ignored_resources`
-- [ ] **ROPE-02**: `symbol_propagator.py` uses `rope.contrib.findit.find_occurrences` instead of `QualifiedNameProvider` for cross-file symbol lookup
-- [ ] **ROPE-03**: `mro_reference_rewriter.py` uses `rope.refactor.rename.Rename` instead of manual CST `leave_Name`/`leave_Attribute` visitors for cross-file renames
-- [ ] **ROPE-04**: `nested_class_propagation.py` uses rope for scope-aware name resolution instead of `ParentNodeProvider`
+- [x] **ROPE-02**: `symbol_propagator.py` uses `rope.contrib.findit.find_occurrences` instead of `QualifiedNameProvider` for cross-file symbol lookup
+- [x] **ROPE-03**: `mro_reference_rewriter.py` uses `rope.refactor.rename.Rename` instead of manual CST `leave_Name`/`leave_Attribute` visitors for cross-file renames
+- [x] **ROPE-04**: `nested_class_propagation.py` uses rope for scope-aware name resolution instead of `ParentNodeProvider`
 - [ ] **ROPE-05**: All remaining LibCST transformers reviewed for rope simplification opportunities (per D-05); each has a documented keep/simplify decision
 - [ ] **ROPE-06**: Rope operations run as pre/post hooks on `FlextInfraRefactorEngine`, not as new rule types (per D-10)
 - [ ] **ROPE-07**: Total LOC in `transformers/` directory does not exceed 4120 (pre-phase baseline); migrated 3 files total < 385 LOC

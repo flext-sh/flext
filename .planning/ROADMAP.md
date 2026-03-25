@@ -32,8 +32,8 @@ Full phase details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 **Requirements:** ROPE-01 through ROPE-07
 
 Plans:
-- [ ] 09-01-PLAN.md — Rope Project init + engine hook infrastructure
-- [ ] 09-02-PLAN.md — Migrate 3 transformers to rope (symbol_propagator, mro_reference_rewriter, nested_class_propagation)
+- [x] 09-01-PLAN.md — Rope Project init + engine hook infrastructure
+- [x] 09-02-PLAN.md — Migrate 3 transformers to rope (symbol_propagator, mro_reference_rewriter, nested_class_propagation)
 - [ ] 09-03-PLAN.md — Audit remaining transformers + LOC verification
 
 ## Progress
@@ -48,4 +48,4 @@ Plans:
 | 6. Typing Gap Closure | v1.0 | 2/2 | Complete | 2026-03-25 |
 | 7. Modernization & Integration Fixes | v1.0 | 2/2 | Complete | 2026-03-25 |
 | 8. Workaround Residual Cleanup | v1.0 | 3/3 | Complete | 2026-03-25 |
-| 9. Rope-native refactor engine rewrite | v2.0 | 0/3 | Not started | - |
+| 9. Rope-native refactor engine rewrite | v2.0 | 2/3 | In Progress|  |
