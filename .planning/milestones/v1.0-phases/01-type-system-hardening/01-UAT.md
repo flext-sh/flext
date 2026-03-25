@@ -34,7 +34,7 @@ result: issue
 reported: "4 TypeGuard return types remain: matchers.py:98, runtime.py:540, guards_type_protocol.py:95, guards_type_core.py:158"
 severity: major
 
-### 5. Zero __class__ is comparisons
+### 5. Zero **class** is comparisons
 expected: No `__class__ is` comparisons remain in src/ (replaced with isinstance/same_type)
 result: pass
 

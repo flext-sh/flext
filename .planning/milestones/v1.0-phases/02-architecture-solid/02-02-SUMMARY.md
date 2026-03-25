@@ -67,10 +67,10 @@ completed: 2026-03-24
 ## Files Created/Modified
 - `flext-core/src/flext_core/service.py` - config_type: type[FlextSettings] to type[p.Settings]
 - `flext-core/src/flext_core/mixins.py` - Parent class config_type field aligned to p.Settings
-- `flext-plugin/src/flext_plugin/api.py` - FlextContainer to p.Container in __init__
+- `flext-plugin/src/flext_plugin/api.py` - FlextContainer to p.Container in **init**
 - `flext-plugin/src/flext_plugin/discovery.py` - FlextLogger to p.Logger (3 occurrences)
 - `flext-plugin/src/flext_plugin/loader.py` - FlextLogger to p.Logger (2 occurrences)
-- `flext-plugin/src/flext_plugin/platform.py` - FlextContainer to p.Container in __init__
+- `flext-plugin/src/flext_plugin/platform.py` - FlextContainer to p.Container in **init**
 - `flext-quality/src/flext_quality/docs/dashboard.py` - FlextLogger to p.Logger (field + property return)
 
 ## Decisions Made

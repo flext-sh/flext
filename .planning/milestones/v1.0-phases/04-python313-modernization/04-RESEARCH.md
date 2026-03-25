@@ -118,7 +118,7 @@ for item in items:
 ### Anti-Patterns to Avoid
 - **Don't convert Literal used in function overloads** — `Literal["str", "bool"]` as param type discriminators must stay as Literal
 - **Don't convert setdefault used for config defaults** — `kwargs.setdefault("key", default_value)` is NOT a grouping pattern
-- **Don't break __init__.py exports** — if removing FlextUtilitiesDeprecation, update generators not hand-edit
+- **Don't break **init**.py exports** — if removing FlextUtilitiesDeprecation, update generators not hand-edit
 
 ## Don't Hand-Roll
 

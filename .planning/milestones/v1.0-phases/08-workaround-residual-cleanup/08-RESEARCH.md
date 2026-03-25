@@ -9,7 +9,7 @@
 Phase 8 closes three WA requirements left open by the v1.0 milestone audit. Fresh grep analysis reveals the actual violation count is significantly different from the audit's initial estimates:
 
 - **WA-03 (except Exception:):** Zero violations in `src/` production code. All 51 occurrences are in `tests/`, `examples/`, or `docs/` — covered by D-03/D-04 relaxed rules.
-- **WA-04 (sys.exit outside __main__):** Zero violations. All `sys.exit()` calls are inside `if __name__ == "__main__":` guards, which is compliant per D-08.
+- **WA-04 (sys.exit outside **main**):** Zero violations. All `sys.exit()` calls are inside `if __name__ == "__main__":` guards, which is compliant per D-08.
 - **WA-05 (print in production):** Exactly 2 violations: `scheduled_maintenance.py:590` (src) and `scheduled_maintenance.py:652` (docs copy).
 
 **Primary recommendation:** This phase is trivial — 1-2 print replacements in production, plus optional test/example cleanup. A single plan with 2-3 tasks covers everything.
@@ -95,7 +95,7 @@ None
 |------|-------|------------|
 | `fix_dollar.py` (root) | 2 | Script — fix if trivial |
 
-### WA-04: sys.exit() outside __main__.py
+### WA-04: sys.exit() outside **main**.py
 
 **Zero violations.** All `sys.exit()` calls are inside `if __name__ == "__main__":` guards:
 - `flext-infra/src/flext_infra/deps/extra_paths.py:580` — inside guard
@@ -184,7 +184,7 @@ For `scheduled_maintenance.py` specifically — this is an echo command handler 
 | Req ID | Behavior | Test Type | Automated Command | File Exists? |
 |--------|----------|-----------|-------------------|-------------|
 | WA-03 | No bare except Exception in src/ | smoke | `sg --pattern 'except Exception:' --lang py` across src/ dirs | N/A — grep/ast-grep scan |
-| WA-04 | No sys.exit outside __main__ guards | smoke | grep + manual verification | N/A — already passing |
+| WA-04 | No sys.exit outside **main** guards | smoke | grep + manual verification | N/A — already passing |
 | WA-05 | No bare print() in production | smoke | `sg --pattern 'print($$$)' --lang py` excluding docstrings | N/A — grep/ast-grep scan |
 
 ### Sampling Rate
