@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A 33-project Python monorepo built on MRO-based namespace composition, DDD/CQRS with a dispatcher-first message bus, and strict Pydantic v2 models. The monorepo is architecturally sound but carries accumulated technical debt: 4,385 pyrefly type errors, widespread `Any`/`object`/`type:ignore` usage, inconsistent runtime patterns, and legacy tooling (Poetry) that limits speed and scalability. This project sequences 25 existing `.sisyphus` plans into executable GSD phases to drive the codebase to production-grade quality.
+A 33-project Python monorepo built on MRO-based namespace composition, DDD/CQRS with a dispatcher-first message bus, and strict Pydantic v2 models. v1.0 shipped production-grade quality: zero type errors across all 33 projects, zero typing shortcuts, zero workarounds, Python 3.13 stdlib modernization, and full migration from Poetry to uv workspaces. The codebase enforces AGENTS.md governance at every layer.
 
 ## Core Value
 
@@ -16,47 +16,68 @@ Zero type errors, zero typing shortcuts, zero workarounds — a clean, strict, f
 - ✓ Pydantic v2 BaseModel validation across domain layers — established pattern
 - ✓ `t.*` validation types (290+ annotated-types constraints) — completed refactor
 - ✓ `r[T]` Result type for all fallible operations — established pattern
-- ✓ `make pyrefly-repo` authoritative repo-wide entrypoint — Wave 0 complete
-- ✓ Legacy pyrefly root artifacts removed — Wave 0 complete
-- ✓ 27 workspace test import fixes — Wave 0 complete
+- ✓ `make pyrefly-repo` authoritative repo-wide entrypoint — v1.0
+- ✓ **TYPE-01**: Repo-wide pyrefly returns 0 errors (from 4,385 baseline) — v1.0
+- ✓ **TYPE-02**: Zero `Any`, `object`, `# type: ignore` in type annotation positions — v1.0
+- ✓ **TYPE-03**: Zero `cast()` outside `flext-core/result.py` — v1.0
+- ✓ **TYPE-04**: All `__class__` comparisons replaced with `isinstance`/`TypeIs` — v1.0
+- ✓ **TYPE-07**: `TypeGuard` → `TypeIs` (PEP 742) across all 33 projects — v1.0
+- ✓ **TYPE-08**: All empty container literals annotated at assignment sites — v1.0
+- ✓ **ARCH-01**: All public APIs use protocol types (`p.*`) not concrete types — DIP enforced — v1.0
+- ✓ **ARCH-02**: `c,m,t,u,p` imported from local namespace root in tests/examples/scripts — v1.0
+- ✓ **ARCH-03**: Pydantic v2 `Field()` migrated to `Annotated[X, Field(...)]` canonical form — v1.0
+- ✓ **ARCH-04**: 6 pure ABCs converted to `@runtime_checkable` Protocol — v1.0
+- ✓ **ARCH-05**: 8 template ABCs have Protocol interface extracted — v1.0
+- ✓ **ARCH-06**: ~100 inline `TypeAdapter()` instantiations cached as ClassVar/module constants — v1.0
+- ✓ **ARCH-07**: 13 mutable `Field(default=[])` replaced with `default_factory=list` — v1.0
+- ✓ **ARCH-08**: Type aliases use PEP 695 `type X = ...` form — v1.0
+- ✓ **INFRA-01**: `u.Infra.run_cli()` centralizes bootstrap + dispatch + error-to-exit — v1.0
+- ✓ **INFRA-02**: `u.Infra.iter_projects()` centralizes project iteration — v1.0
+- ✓ **INFRA-03**: `workspace_root` canonical parameter name across all `flext_infra` signatures — v1.0
+- ✓ **INFRA-04**: `NamespaceSourceDetector` + auto-fixer in `flext_infra` — v1.0
+- ✓ **INFRA-05**: `make pyrefly-repo` policy gate enforces 0 `Any`/`object`/`ignore` violations — v1.0
+- ✓ **WA-01**: Zero `try/except ImportError` in production code — v1.0
+- ✓ **WA-02**: Zero `model_rebuild()` anywhere — v1.0
+- ✓ **WA-03**: Zero bare `except Exception:` — all handlers catch specific exceptions — v1.0
+- ✓ **WA-04**: Zero `sys.exit()` outside `__main__.py` files — v1.0
+- ✓ **WA-05**: Zero `print()` in production (except documented CLI output services) — v1.0
+- ✓ **WA-06**: Zero `subprocess.run()` outside designated subprocess wrapper — v1.0
+- ✓ **MOD-01**: `itertools.batched` replaces all custom chunking/batching code — v1.0
+- ✓ **MOD-02**: `warnings.deprecated` (PEP 702) replaces custom deprecation framework — v1.0
+- ✓ **MOD-03**: 147+ `StrEnum` classes decorated with `@unique` — v1.0
+- ✓ **MOD-04**: 70 `Literal[str, ...]` unions convertible to `StrEnum` converted — v1.0
+- ✓ **MOD-05**: `defaultdict` replaces hand-rolled grouping patterns — v1.0
+- ✓ **MOD-06**: `UserDict`/`UserString` usages replaced with Pydantic `BaseModel` — v1.0
+- ✓ **MIG-01**: `flext_infra` extracted as independent repo + git submodule — v1.0
+- ✓ **MIG-02**: `flext_tests` extracted as independent repo + git submodule — v1.0
+- ✓ **MIG-03**: `flext-core/pyproject.toml` ships only `flext_core` namespace — v1.0
+- ✓ **MIG-04**: 33 `pyproject.toml` files converted from Poetry to PEP 621 + uv workspace — v1.0
+- ✓ **MIG-05**: Root `uv.lock` unified (replaces 33 `poetry.lock` files) — v1.0
+- ✓ **MIG-06**: All `make` targets updated from `poetry run` to `uv run` — v1.0
 
 ### Active
 
-- [ ] **TYPE-01**: Repo-wide pyrefly returns 0 errors (from 4,385 current)
-- [ ] **TYPE-02**: Zero `Any`, `object`, `# type: ignore` in type annotation positions
-- [ ] **TYPE-03**: Zero `cast()` outside `flext-core/result.py`
-- [ ] **TYPE-04**: All `__class__` comparisons replaced with `isinstance`/`TypeGuard`
-- [ ] **ARCH-01**: All public APIs use protocol types (`p.*`) not concrete types — DIP enforced
-- [ ] **ARCH-02**: `c,m,t,u,p` imported from local namespace root in tests/examples/scripts
-- [ ] **ARCH-03**: Pydantic v2 `Field()` migrated to `Annotated[X, Field(...)]` canonical form
-- [ ] **ARCH-04**: `u.Infra.*` centralized runtime helpers — no duplication across 33 modules
-- [ ] **WORKAROUND-01**: Zero `try/except ImportError` in production code
-- [ ] **WORKAROUND-02**: Zero `model_rebuild()` anywhere
-- [ ] **WORKAROUND-03**: Zero `bare except Exception` — specific exceptions only
-- [ ] **WORKAROUND-04**: Zero `sys.exit()` outside `__main__.py`
-- [ ] **WORKAROUND-05**: Zero `print()` in production (except documented CLI output services)
-- [ ] **MOD-01**: Custom code replaced by Python 3.13 stdlib (`itertools.batched`, `TypeIs`, `StrEnum`, etc.)
-- [ ] **MOD-02**: `TypeGuard` → `TypeIs` (PEP 742) across all 33 projects
-- [ ] **MOD-03**: 147+ `StrEnum` classes decorated with `@unique`
-- [ ] **INFRA-01**: `flext_infra` and `flext_tests` extracted to separate GitHub repos as submodules
-- [ ] **INFRA-02**: 33 projects migrated from Poetry to uv workspaces (unified `uv.lock`)
+*(Next milestone requirements will be defined via `/gsd:new-milestone`)*
 
 ### Out of Scope
 
 - Backward compatibility shims — all consumers are internal, break-and-fix-forward
-- New feature development — this milestone is hardening only
+- New feature development — hardening milestone only
 - Frontend or UI changes — monorepo is backend/data-pipeline only
 - CI/CD changes beyond what Poetry→uv migration requires — separate milestone
+- PyPI publication automation — enabled by uv workspaces but post-v1.0
+- Polylith `workspace.toml` formal bases/components — deferred
 
 ## Context
 
-- **Active boulder**: `pyrefly-repo-hardening` (Wave 0 done, Waves 1–5 pending)
-- **25 `.sisyphus` plans** organized into three strategic pillars:
-  - **Type System**: pyrefly-repo-hardening, strict-typing-execution-plan, bare-object-elimination, workaround-eradication, pyright-zero-errors
-  - **Architecture**: protocol-solid-standardization, namespace-source-enforcement, pydantic-v2-advanced-modernization, infra-runtime-centralization, infra-type-alias-unification, utilities-mro-dedup, centralize-u-utilities, constants-dedup-infra, cli-infra-standardization, flext-core-typing-simplification, flext-core-violations-remediation, flext-infra-mro-base-order-command, flext-infra-typing-census-engine, import-normalization-infra, infra-tier-reorg, typing-protocol-simplification
-  - **Modernization/Migration**: python313-datatypes, python313-stdlib-modernization, split-core-packages, polylith-uv-migration
-- **Uncommitted changes**: `flext-api` and `flext-oracle-wms` have modified `__init__.py` files (likely from import normalization session)
-- **Codebase**: 34 projects, 4,385 pyrefly errors, top offenders: flext-cli (1,419), algar-oud-mig (370), flext-quality (298), flext-observability (280), flext-core (170)
+**Shipped v1.0** — 2026-03-25
+- 8 phases, 28 plans, 39 requirements delivered
+- 4,385 → 0 pyrefly errors
+- Poetry → uv: 33 `poetry.lock` files → 1 `uv.lock`
+- `flext_infra` and `flext_tests` extracted as independent submodules
+- Zero workarounds in production code
+
+**Next milestone**: Phase 9 — Rope-native refactor engine rewrite (planned)
 
 ## Constraints
 
@@ -71,28 +92,17 @@ Zero type errors, zero typing shortcuts, zero workarounds — a clean, strict, f
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Coarse granularity (5 phases) | 25 plans → 5 pillars reduces cognitive overhead | — Pending |
-| Sequential execution | Typing changes cascade across projects — parallel causes merge conflicts | — Pending |
+| Coarse granularity (5 phases → 8 phases) | 25 plans → 8 phases reduces cognitive overhead; 3 gap-closure phases inserted | ✓ Good |
+| Sequential execution | Typing changes cascade across projects — parallel causes merge conflicts | ✓ Good |
 | Unfreeze `_utilities/*` for §3 compliance | Operator authorized 2026-03-12 — `__class__` + `cast()` are behavioral, not annotation-only | ✓ Good |
-| Poetry → uv migration last | Biggest blast radius — do type/arch cleanup first so lock file churn is final | — Pending |
-| Extract flext-infra/tests before uv migration | Submodule structure must be stable before unified workspace lock | — Pending |
-
-## Evolution
-
-This document evolves at phase transitions and milestone boundaries.
-
-**After each phase transition** (via `/gsd:transition`):
-1. Requirements invalidated? → Move to Out of Scope with reason
-2. Requirements validated? → Move to Validated with phase reference
-3. New requirements emerged? → Add to Active
-4. Decisions to log? → Add to Key Decisions
-5. "What This Is" still accurate? → Update if drifted
-
-**After each milestone** (via `/gsd:complete-milestone`):
-1. Full review of all sections
-2. Core Value check — still the right priority?
-3. Audit Out of Scope — reasons still valid?
-4. Update Context with current state
+| Poetry → uv migration last | Biggest blast radius — do type/arch cleanup first so lock file churn is final | ✓ Good |
+| `flext_infra`/`flext_tests` submodule extraction before uv | Submodule structure must be stable before unified workspace lock | ✓ Good |
+| cast() in decorators.py eliminated | Widened `_resolve_logger()` param to `tuple[object,...]` — no cast needed when method uses isinstance() internally | ✓ Good |
+| Dynamic TypeAdapter accepted as uncacheable | ~7 instances in flext-core use runtime type params — accepted as uncacheable | ✓ Good |
+| PEP 695 type aliases mandatory | Test fixtures with old syntax preserved as validator test data only | ✓ Good |
+| ProviderConfiguration as BaseModel with extra=allow | Dict-like flexibility preserved without UserDict | ✓ Good |
+| BeforeValidator pattern for StrEnum coercion | Strict Pydantic models + StrEnum coercion at field level, not model level | ✓ Good |
+| Phase 8 gap closure | 30 bare except + 8 sys.exit() + print() residuals from Phase 3 audit — addressed in dedicated phase | ✓ Good |
 
 ---
-*Last updated: 2026-03-23 after initialization*
+*Last updated: 2026-03-25 after v1.0 milestone*
