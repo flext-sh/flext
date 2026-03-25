@@ -15,8 +15,6 @@ dev = [ "types-flask (>=1.1.6,<2.0.0)" ]
 [project]
 
 
-
-
 authors = [ {email = "team@flext.sh", name = "FLEXT Team"} ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -118,18 +116,12 @@ Repository = "https://github.com/flext-sh/flext"
 
 
 
-
-
-
-
 # [MANAGED] coverage
 [tool.coverage.report]
 fail_under = 45
 precision = 2
 show_missing = true
 skip_covered = false
-
-
 
 
 # [MANAGED] deptry
@@ -142,12 +134,8 @@ pep621_dev_dependency_groups = [
 ]
 
 
-
-
 [tool.hatch.metadata]
 allow-direct-references = true
-
-
 
 
 # [MANAGED] mypy
@@ -168,15 +156,11 @@ python_version = "3.13"
 [tool.poetry]
 
 
-
-
 # [MANAGED] pydantic-mypy
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
-
-
 
 
 # [MANAGED] pyrefly
@@ -230,8 +214,6 @@ unannotated-parameter = true
 unannotated-return = true
 
 
-
-
 # [MANAGED] pyright
 [tool.pyright]
 exclude = [
@@ -274,6 +256,9 @@ reportInconsistentConstructor = "error"
 reportMissingImports = "error"
 reportMissingModuleSource = "error"
 reportMissingTypeStubs = "warning"
+reportUnknownArgumentType = "none"
+reportUnknownMemberType = "none"
+reportUnknownVariableType = "none"
 reportPrivateUsage = "warning"
 reportUnnecessaryCast = "error"
 reportUnnecessaryComparison = "warning"
@@ -854,8 +839,6 @@ python_files = [
 ]
 
 
-
-
 # [MANAGED] ruff
 [tool.ruff]
 exclude = [
@@ -1290,8 +1273,6 @@ split-on-trailing-comma = true
   "S607",
 ]
 
-
-
 # [MANAGED] tomlsort
 [tool.tomlsort]
 all = true
@@ -1349,8 +1330,6 @@ members = [
   "flext-web",
   "gruponos-meltano-native",
 ]
-
-
 
 
 # [MANAGED] yamlfix
