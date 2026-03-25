@@ -1,0 +1,29 @@
+.planning/phases/09-rope-native-refactor-engine-rewrite/09-03-PLAN.md
+  ade56594904d6940 14,17,82-98,101-102,105,112-113,115,133,138-140,142,144,146-147,154,158,160,171,176
+.planning/phases/09-rope-native-refactor-engine-rewrite/09-01-PLAN.md
+  ade56594904d6940 11-12,28-30,81-103,121-122,124,151,154,165,170,176,184
+.planning/REQUIREMENTS.md
+  ade56594904d6940 68,70-80,144-150
+.planning/phases/09-rope-native-refactor-engine-rewrite/09-VALIDATION.md
+  ade56594904d6940 1-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "6832264b298e4df7d44f197f71c69c13eaba4d22",
+  "prompts": {
+    "ade56594904d6940": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "31066624-84c8-4541-8ea4-a35eb07efef5",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 112,
+      "total_deletions": 32,
+      "accepted_lines": 294,
+      "overriden_lines": 0
+    }
+  }
+}
