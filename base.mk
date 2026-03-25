@@ -6,7 +6,7 @@
 # =============================================================================
 
 # === CONFIGURATION (override before include) ===
-PROJECT_NAME ?= flext-workspace
+PROJECT_NAME ?= unnamed
 PYTHON_VERSION ?= 3.13
 SRC_DIR ?= src
 TESTS_DIR ?= tests
@@ -65,12 +65,21 @@ WORKSPACE_ROOT := $(BASE_MK_DIR)
 WORKSPACE_VENV := $(WORKSPACE_ROOT)/.venv
 ifeq ($(wildcard $(WORKSPACE_VENV)),)
 ACTIVE_VENV := $(PROJECT_ROOT)/.venv
+export POETRY_VIRTUALENVS_PATH := $(PROJECT_ROOT)
+export POETRY_VIRTUALENVS_IN_PROJECT := true
+export POETRY_VIRTUALENVS_CREATE := true
 else
 ACTIVE_VENV := $(WORKSPACE_VENV)
+export POETRY_VIRTUALENVS_PATH := $(WORKSPACE_ROOT)
+export POETRY_VIRTUALENVS_IN_PROJECT := false
+export POETRY_VIRTUALENVS_CREATE := false
 endif
 else
 WORKSPACE_ROOT := $(PROJECT_ROOT)
 ACTIVE_VENV := $(PROJECT_ROOT)/.venv
+export POETRY_VIRTUALENVS_PATH := $(PROJECT_ROOT)
+export POETRY_VIRTUALENVS_IN_PROJECT := true
+export POETRY_VIRTUALENVS_CREATE := true
 endif
 
 export PYTHON_KEYRING_BACKEND := keyring.backends.null.Keyring
@@ -78,7 +87,24 @@ export PYTHON_KEYRING_BACKEND := keyring.backends.null.Keyring
 VENV_PYTHON := $(ACTIVE_VENV)/bin/python
 VENV_ACTIVATE := source $(ACTIVE_VENV)/bin/activate
 export VIRTUAL_ENV := $(ACTIVE_VENV)
-export PATH := $(ACTIVE_VENV)/bin:$(PATH)
+
+# Go tooling/caches (zero-config defaults for make targets).
+GO_TOOLS_BIN ?= $(WORKSPACE_ROOT)/.tools/bin
+GO_CACHE_ROOT ?= /tmp/flext-go-cache
+GO_BUILD_CACHE ?= $(GO_CACHE_ROOT)/build
+GO_MOD_CACHE ?= $(GO_CACHE_ROOT)/mod
+GO_LINT_CACHE ?= $(GO_CACHE_ROOT)/golangci-lint
+GOLANGCI_LINT_CMD ?= golangci-lint
+GOLANGCI_LINT_INSTALL ?= go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+
+export GOBIN ?= $(GO_TOOLS_BIN)
+export GOCACHE ?= $(GO_BUILD_CACHE)
+export GOMODCACHE ?= $(GO_MOD_CACHE)
+export GOLANGCI_LINT_CACHE ?= $(GO_LINT_CACHE)
+export PATH := $(GO_TOOLS_BIN):$(ACTIVE_VENV)/bin:$(PATH)
+
+# Poetry command (uses workspace venv automatically)
+POETRY := poetry
 
 # Quality tool (flext-quality with fallback)
 QUALITY_CMD ?= flext-quality
@@ -196,10 +222,10 @@ boot: ## Complete setup
 		exit 0; \
 	fi
 	$(Q)python -m flext_infra deps internal-sync
-	$(Q)uv lock
-	$(Q)uv sync --all-groups
+	$(Q)$(POETRY) lock
+	$(Q)$(POETRY) install --all-extras --all-groups
 	$(Q)if git rev-parse --git-dir >/dev/null 2>&1; then \
-		pre-commit install; \
+		$(POETRY) run pre-commit install; \
 	else \
 		echo "INFO: skipping pre-commit install (no git repository)"; \
 	fi
@@ -213,7 +239,7 @@ build: ## Build distributable artifacts
 		exit 0; \
 	fi
 	$(Q)build_start=$$(date +%s); \
-	uv build; \
+	$(POETRY) build; \
 	echo "Build complete: $(PROJECT_NAME) ($$(($$(date +%s) - $$build_start))s)"
 
 check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type to select)
@@ -231,7 +257,22 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 		fi; \
 		gates=$$(echo "$$gates" | tr ',' ' ' | sed 's/\btype\b/go/g' | tr ' ' ','); \
 		if echo "$$gates" | grep -qw lint; then \
-			golangci-lint run || { echo "FAIL: lint"; exit 1; }; \
+			mkdir -p "$(GO_TOOLS_BIN)" "$(GO_BUILD_CACHE)" "$(GO_MOD_CACHE)" "$(GO_LINT_CACHE)"; \
+			if ! command -v $(GOLANGCI_LINT_CMD) >/dev/null 2>&1; then \
+				echo "INFO: installing golangci-lint into $(GO_TOOLS_BIN)"; \
+				$(GOLANGCI_LINT_INSTALL) || { echo "FAIL: lint (golangci-lint install)"; exit 1; }; \
+			fi; \
+			lint_log=$$(mktemp); \
+			if ! $(GOLANGCI_LINT_CMD) run >"$$lint_log" 2>&1; then \
+				if grep -q "used to build golangci-lint is lower than the targeted Go version" "$$lint_log"; then \
+					echo "INFO: refreshing golangci-lint for current Go toolchain"; \
+					$(GOLANGCI_LINT_INSTALL) || { cat "$$lint_log"; rm -f "$$lint_log"; echo "FAIL: lint"; exit 1; }; \
+					if ! $(GOLANGCI_LINT_CMD) run; then rm -f "$$lint_log"; echo "FAIL: lint"; exit 1; fi; \
+				else \
+					cat "$$lint_log"; rm -f "$$lint_log"; echo "FAIL: lint"; exit 1; \
+				fi; \
+			fi; \
+			rm -f "$$lint_log"; \
 		fi; \
 		if echo "$$gates" | grep -qw format; then \
 			if [ -n "$$(find . -type f -name '*.go' ! -path './.git/*' ! -path './vendor/*')" ]; then \
@@ -290,16 +331,16 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 		echo "Fast-path check: $$_files"; \
 		status=0; \
 		case ",$$gates," in \
-			*,lint,*) ruff check $$_files $(RUFF_ARGS) $(if $(filter 1,$(FIX)),--fix,) || status=$$?;; \
+			*,lint,*) $(POETRY) run ruff check $$_files $(RUFF_ARGS) $(if $(filter 1,$(FIX)),--fix,) || status=$$?;; \
 		esac; \
 		case ",$$gates," in \
-			*,format,*) ruff format $$_files $(if $(filter 1,$(CHECK_ONLY)),--check,--quiet) || status=$$?;; \
+			*,format,*) $(POETRY) run ruff format $$_files $(if $(filter 1,$(CHECK_ONLY)),--check,--quiet) || status=$$?;; \
 		esac; \
 		case ",$$gates," in \
-			*,pyright,*) pyright $$_files $(PYRIGHT_ARGS) || status=$$?;; \
+			*,pyright,*) $(POETRY) run pyright $$_files $(PYRIGHT_ARGS) || status=$$?;; \
 		esac; \
 		case ",$$gates," in \
-			*,pyrefly,*) pyrefly check $$_files || status=$$?;; \
+			*,pyrefly,*) $(POETRY) run pyrefly check $$_files || status=$$?;; \
 		esac; \
 		exit $$status; \
 	fi; \
@@ -307,7 +348,7 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 	if [ "$(CURDIR)" = "$(WORKSPACE_ROOT)" ]; then \
 		project_key="."; \
 	fi; \
-	FLEXT_WORKSPACE_ROOT="$(WORKSPACE_ROOT)" python -m flext_infra check run --gates "$$gates" --reports-dir "$(CURDIR)/.reports/check" --project "$$project_key"; \
+	FLEXT_WORKSPACE_ROOT="$(WORKSPACE_ROOT)" $(POETRY) run python -m flext_infra check run --gates "$$gates" --reports-dir "$(CURDIR)/.reports/check" --project "$$project_key"; \
 	exit $$?
 
 scan: ## Run all security checks
@@ -319,7 +360,7 @@ scan: ## Run all security checks
 	if [ "$(CURDIR)" = "$(WORKSPACE_ROOT)" ]; then \
 		project_key="."; \
 	fi; \
-	FLEXT_WORKSPACE_ROOT="$(WORKSPACE_ROOT)" python -m flext_infra check run \
+	FLEXT_WORKSPACE_ROOT="$(WORKSPACE_ROOT)" $(POETRY) run python -m flext_infra check run \
 		--workspace "$(WORKSPACE_ROOT)" \
 		--gates "security" \
 		--reports-dir "$(CURDIR)/.reports/scan" \
@@ -345,9 +386,9 @@ fmt: ## Run code formatting (ruff/gofmt + markdownlint on tracked files)
 		fi; \
 		if [ -n "$$_fmt_files" ]; then _fmt_target="$$_fmt_files"; fi; \
 		if [ "$(CHECK_ONLY)" = "1" ]; then \
-			ruff format $$_fmt_target --check; \
+			$(POETRY) run ruff format $$_fmt_target --check; \
 		else \
-			ruff format $$_fmt_target --quiet; \
+			$(POETRY) run ruff format $$_fmt_target --quiet; \
 		fi; \
 		if [ -f go.mod ]; then \
 			go_files=$$(find . -type f -name '*.go' ! -path './.git/*' ! -path './vendor/*'); \
@@ -432,9 +473,9 @@ test: ## Run pytest only
 	skips_file="$$report_dir/skipped-tests.txt"; \
 	command_file="$$report_dir/command.txt"; \
 	interrupted=0; \
-	echo "pytest $$_pytest_run $(PYTEST_REPORT_ARGS) $(if $(filter 1,$(DIAG)),$(PYTEST_DIAG_ARGS),) -p no:metadata --junitxml=$$junit_file --cov --cov-report=xml:$$coverage_file $(if $(filter 1,$(DIAG)),-vv,-q) $$_all_pytest_args" > "$$command_file"; \
+	echo "$(POETRY) run pytest $$_pytest_run $(PYTEST_REPORT_ARGS) $(if $(filter 1,$(DIAG)),$(PYTEST_DIAG_ARGS),) -p no:metadata --junitxml=$$junit_file --cov --cov-report=xml:$$coverage_file $(if $(filter 1,$(DIAG)),-vv,-q) $$_all_pytest_args" > "$$command_file"; \
 	trap 'interrupted=1; trap "" INT TERM' INT TERM; \
-	pytest $$_pytest_run \
+	$(POETRY) run pytest $$_pytest_run \
 		$(PYTEST_REPORT_ARGS) \
 		$(if $(filter 1,$(DIAG)),$(PYTEST_DIAG_ARGS),) \
 		-p no:metadata \
@@ -497,7 +538,7 @@ val: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, FIX=1
 		echo "ERROR: FIX must be empty or 1, got '$(FIX)'"; \
 		exit 1; \
 	fi
-	$(Q)if [ "$(FIX)" = "1" ]; then ruff check --fix . --quiet; fi
+	$(Q)if [ "$(FIX)" = "1" ]; then $(POETRY) run ruff check --fix . --quiet; fi
 	$(Q)gates="$(VALIDATE_GATES)"; \
 	if [ -n "$$gates" ]; then \
 		for g in $$(echo "$$gates" | tr ',' ' '); do \
@@ -510,11 +551,11 @@ val: ## Run validate gates (VALIDATE_GATES=complexity,docstring to select, FIX=1
 		gates="complexity,docstring"; \
 	fi; \
 	if echo "$$gates" | grep -qw complexity; then \
-		radon cc $(SRC_DIR) -n E -a --total-average; \
-		radon mi $(SRC_DIR) -n C -s --sort; \
+		$(POETRY) run radon cc $(SRC_DIR) -n E -a --total-average; \
+		$(POETRY) run radon mi $(SRC_DIR) -n C -s --sort; \
 	fi; \
 	if echo "$$gates" | grep -qw docstring; then \
-		interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q; \
+		$(POETRY) run interrogate $(SRC_DIR) --fail-under=$(DOCSTRING_MIN) --ignore-init-method --ignore-magic -q; \
 	fi
 
 daemon-start-mypy: ## Start dmypy daemon for this project

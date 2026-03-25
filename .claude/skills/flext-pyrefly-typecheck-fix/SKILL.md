@@ -124,7 +124,7 @@ When `type: custom` is necessary, keep script implementations inside `.claude/sk
 - **NO suppressions**: No `# pyrefly: ignore`, no baselines, no suppress commands
 - **Non-degrading**: All fixes must reduce or maintain error count; never increase
 - **Rollback safety**: skill_fix.py handles hash+backup+rewrite+verify+rollback per file
-- **Stub boundary**: `typings/generated/` is for third-party stubs only; never generate stubs for internal modules (`flext_*`, `flext_*`, `flext_*`)
+- **Stub boundary**: `typings/generated/` is for third-party stubs only; never generate stubs for internal modules (`flext_*`). Always prefer PyPI stub packages (`types-*`, `*-stubs`) over manual stubs in `typings/`. See `rules-typings` skill for the full coverage table.
 - **Root-cause only**: Internal missing imports must be fixed in source/type architecture, not patched with generated stubs
 - **AXIOMATIC — ALL 4 linters mandatory**: Every change MUST pass ruff, mypy, pyright, AND pyrefly with ZERO errors. ALL impacted references across ALL 33 projects MUST be updated via ast-grep (`sg`) search-and-replace immediately. No partial fixes.
 - **AXIOMATIC — No suppressions without triple justification**: `# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore` require: (1) real internet citations proving unavoidability, (2) business necessity documented in the same comment, (3) per-line only — never global. Global suppression rules are TOTALLY FORBIDDEN. Fix the code, never silence the linter.

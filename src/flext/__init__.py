@@ -11,12 +11,12 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
-    from flext_core import FlextTypes, d, e, h, r, s, x
+    from flext_core import FlextTypes, d, e, h, r, x
 
     from flext.constants import FlextRootConstants, FlextRootConstants as c
     from flext.models import FlextRootModels, FlextRootModels as m
     from flext.protocols import FlextRootProtocols, FlextRootProtocols as p
-    from flext.service import FlextRootServiceBase
+    from flext.service import FlextRootServiceBase, s
     from flext.typings import FlexRootTypes, FlexRootTypes as t
     from flext.utilities import FlextRootUtilities, FlextRootUtilities as u
     from flext.workspace import main
@@ -36,7 +36,7 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "main": ["flext.workspace", "main"],
     "p": ["flext.protocols", "FlextRootProtocols"],
     "r": ["flext_core", "r"],
-    "s": ["flext_core", "s"],
+    "s": ["flext.service", "s"],
     "t": ["flext.typings", "FlexRootTypes"],
     "u": ["flext.utilities", "FlextRootUtilities"],
     "x": ["flext_core", "x"],

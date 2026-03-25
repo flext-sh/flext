@@ -90,7 +90,7 @@ Each task was committed atomically:
 - `flext-infra/src/flext_infra/transformers/nested_class_propagation.py` — removed ParentNodeProvider, _skip_names pattern, 176 LOC
 - `flext-infra/src/flext_infra/rules/symbol_propagation.py` — removed MetadataWrapper wrapping (no longer needed)
 - `flext-infra/src/flext_infra/rules/class_reconstructor.py` — removed MetadataWrapper wrapping
-- `flext-infra/src/flext_infra/transformers/__init__.py` — regenerated via `make gen` after __all__ changes
+- `flext-infra/src/flext_infra/transformers/__init__.py` — regenerated via `make gen` after **all** changes
 - `flext-infra/tests/test_infra_refactor_rope_migrations.py` — 17 rope migration tests (NEW)
 - `pyproject.toml` — added 3 pyright suppressions for rope's missing type stubs
 
@@ -111,7 +111,7 @@ Each task was committed atomically:
 - **Files modified:** `symbol_propagator.py`
 - **Verification:** `wc -l symbol_propagator.py` = 94
 
-**2. [Rule 1 - Bug] Stale __init__.py after __all__ changes**
+**2. [Rule 1 - Bug] Stale **init**.py after **all** changes**
 - **Found during:** Task 1 (post-commit lint)
 - **Issue:** Auto-generated `__init__.py` still imported `rope_find_symbol_occurrences` and `rope_rename_symbol` from earlier iteration
 - **Fix:** `make gen PROJECT=flext-infra` regenerated based on current `__all__`

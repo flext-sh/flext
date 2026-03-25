@@ -12,13 +12,14 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core import FlextTypes
-    from flext_tests import c, d, e, h, m, p, r, s, t, u, x
+    from flext_tests import d, e, h, s, x
 
-    from tests.infra.constants import FlextWorkspaceTestConstants
-    from tests.infra.models import FlextWorkspaceTestModels
-    from tests.infra.protocols import FlextWorkspaceTestProtocols
-    from tests.infra.typings import FlextWorkspaceTestTypes
-    from tests.infra.utilities import FlextWorkspaceTestUtilities
+    from tests.infra.constants import FlextWorkspaceTestConstants, c
+    from tests.infra.models import FlextWorkspaceTestModels, m
+    from tests.infra.protocols import FlextWorkspaceTestProtocols, p
+    from tests.infra.result import r
+    from tests.infra.typings import FlextWorkspaceTestTypes, t
+    from tests.infra.utilities import FlextWorkspaceTestUtilities, u
 
 _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "FlextWorkspaceTestConstants": [
@@ -35,16 +36,16 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
         "tests.infra.utilities",
         "FlextWorkspaceTestUtilities",
     ],
-    "c": ["flext_tests", "c"],
+    "c": ["tests.infra.constants", "c"],
     "d": ["flext_tests", "d"],
     "e": ["flext_tests", "e"],
     "h": ["flext_tests", "h"],
-    "m": ["flext_tests", "m"],
-    "p": ["flext_tests", "p"],
-    "r": ["flext_tests", "r"],
+    "m": ["tests.infra.models", "m"],
+    "p": ["tests.infra.protocols", "p"],
+    "r": ["tests.infra.result", "r"],
     "s": ["flext_tests", "s"],
-    "t": ["flext_tests", "t"],
-    "u": ["flext_tests", "u"],
+    "t": ["tests.infra.typings", "t"],
+    "u": ["tests.infra.utilities", "u"],
     "x": ["flext_tests", "x"],
 }
 

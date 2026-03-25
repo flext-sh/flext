@@ -247,7 +247,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo " save    Commit all changes in selected projects (MESSAGE=)"
 	$(Q)echo " tag    Create git tags for selected projects (TAG=, DRY_RUN=1)"
 	$(Q)echo " push   Push branches and tags for selected projects"
-	$(Q)echo " gen    Standardize __init__.py lazy imports (PEP 562)"
+	$(Q)echo " gen    Recreate standardized pyproject.toml, base.mk, Makefile and __init__.py"
 	$(Q)echo ""
 	$(Q)echo "Selectors:"
 	$(Q)echo " PROJECT=<name>             Single project"
@@ -1008,17 +1008,22 @@ push: ## Push branches and tags for selected projects
 	fi; \
 	echo "Push: $$pushed pushed, $$failed failed"
 
-gen: ## Standardize __init__.py lazy imports (PEP 562)
+gen: ## Recreate standardized pyproject.toml, base.mk, Makefile and __init__.py
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
-	$(Q)echo "Standardizing __init__.py lazy imports..."
-	$(Q)PYTHONPATH="$(WORKSPACE_PYTHONPATH):$$PYTHONPATH" $(PY) -m flext_infra codegen lazy-init --workspace "$(CURDIR)"
-	$(Q)echo "Formatting generated files (ruff)..."
-	$(Q)ruff format . --quiet
+	$(Q)echo "Recreating standardized pyproject.toml..."
+	$(Q)$(MAKE) --no-print-directory mod
+	$(Q)echo "Recreating standardized base.mk/Makefile/__init__.py..."
+	$(Q)$(MAKE) --no-print-directory sync
+	$(Q)echo "Generation complete."
 
 sync: ## Sync project Makefiles from pyproject.toml + refresh __init__.py lazy imports
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)echo "==> Syncing workspace root base.mk..."
+	$(Q)PYTHONPATH="$(WORKSPACE_PYTHONPATH):$$PYTHONPATH" \
+		$(PY) -m flext_infra workspace sync \
+			--workspace "$(CURDIR)"
 	$(Q)echo "==> Syncing project Makefiles..."
 	$(Q)for proj in $(SELECTED_PROJECTS); do \
 		PYTHONPATH="$(WORKSPACE_PYTHONPATH):$$PYTHONPATH" \
