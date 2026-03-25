@@ -156,7 +156,7 @@ Plans:
 Plans:
 - [x] 08-01-PLAN.md — Fix print() in production, verify WA-04, fix bare except in tests/examples
 - [x] 08-02-PLAN.md — Remove Exception from catch tuples + bare catches in production src/ (gap closure)
-- [ ] 08-03-PLAN.md — Replace print() with structlog in flext-plugin (gap closure)
+- [x] 08-03-PLAN.md — Replace print() with structlog in flext-plugin (gap closure)
 
 ## Progress
 
@@ -172,4 +172,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 5. Package Migration | 0/3 | Planned | - |
 | 6. Typing Gap Closure | 0/2 | Planned | - |
 | 7. Modernization & Integration Fixes | 0/2 | Planned | - |
-| 8. Workaround Residual Cleanup | 1/3 | In Progress | - |
+| 8. Workaround Residual Cleanup | 3/3 | Complete | 2026-03-25 |
