@@ -250,7 +250,7 @@ class AdvancedProcessingExample:
                     result["processed"] = True
                     result["processing_timestamp"] = time.time()
                     return result
-                except Exception:
+                except (KeyError, ValueError, TypeError):
                     return None
 
             processed_items: MutableSequence[ItemDict] = []
