@@ -1,0 +1,23 @@
+.planning/phases/08-workaround-residual-cleanup/08-VERIFICATION.md
+  ff5fbbb57a39a510 3-13,20-22,30-32,36,42-50,56,66-68,77-79,83,87,91,93-94,98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "eb1fe7cf3e95bde90ee913299e079d77979ccd2a",
+  "prompts": {
+    "ff5fbbb57a39a510": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "75776da1-7f80-4ee2-9447-f0ba5d56de8f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 40,
+      "total_deletions": 72,
+      "accepted_lines": 40,
+      "overriden_lines": 0
+    }
+  }
+}
