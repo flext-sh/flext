@@ -1,0 +1,38 @@
+.planning/phases/08-workaround-residual-cleanup/08-02-PLAN.md
+  ff5fbbb57a39a510 14,21,37,39-40,88,117,127-149,156,162,170
+.planning/phases/08-workaround-residual-cleanup/08-03-PLAN.md
+  ff5fbbb57a39a510 83,99-100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "45df0cd76357406fca0b41278b203a77443e4897",
+  "prompts": {
+    "7e8db4c019ffde0c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43540578-28c7-4cf7-be06-257f0489925c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 131,
+      "overriden_lines": 0
+    },
+    "ff5fbbb57a39a510": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "75776da1-7f80-4ee2-9447-f0ba5d56de8f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 36,
+      "total_deletions": 11,
+      "accepted_lines": 36,
+      "overriden_lines": 0
+    }
+  }
+}
