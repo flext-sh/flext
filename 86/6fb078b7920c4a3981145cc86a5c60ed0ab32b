@@ -1,0 +1,23 @@
+examples/advanced_processing_example.py
+  7e8db4c019ffde0c 253
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "866fb078b7920c4a3981145cc86a5c60ed0ab32b",
+  "prompts": {
+    "7e8db4c019ffde0c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43540578-28c7-4cf7-be06-257f0489925c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
