@@ -79,18 +79,26 @@ No new dependencies needed.
 ```python
 from rope.base.project import Project
 
+
 def _create_rope_project(workspace_root: Path) -> Project:
     """Create a rope Project for the monorepo root, no disk state."""
     source_folders = [
-        str(p / "src") for p in workspace_root.iterdir()
+        str(p / "src")
+        for p in workspace_root.iterdir()
         if p.is_dir() and p.name.startswith("flext-") and (p / "src").exists()
     ]
     return Project(
         str(workspace_root),
         ropefolder=None,  # No .ropeproject directory
         ignored_resources=[
-            "*.pyc", ".venv", "dist/", "__pycache__",
-            ".mypy_cache", ".git", ".tox", "*.egg-info",
+            "*.pyc",
+            ".venv",
+            "dist/",
+            "__pycache__",
+            ".mypy_cache",
+            ".git",
+            ".tox",
+            "*.egg-info",
         ],
         source_folders=source_folders,
         save_objectdb=False,
@@ -104,6 +112,7 @@ def _create_rope_project(workspace_root: Path) -> Project:
 ```python
 from rope.refactor.rename import Rename
 from rope.base.project import Project
+
 
 def rope_rename_symbol(
     project: Project,
@@ -124,6 +133,7 @@ def rope_rename_symbol(
 
 ```python
 from rope.contrib.findit import find_occurrences, Location
+
 
 def rope_find_usages(
     project: Project,
@@ -211,12 +221,14 @@ New flow:
 # In FlextInfraRefactorEngine
 from rope.base.project import Project as RopeProject
 
+
 @property
 def rope_project(self) -> RopeProject | None:
     """Lazily create rope Project for workspace-level ops."""
     if not hasattr(self, "_rope_project"):
         self._rope_project: RopeProject | None = None
     return self._rope_project
+
 
 def _init_rope_project(self, workspace_root: Path) -> RopeProject:
     """Initialize rope project for the monorepo root."""
@@ -229,8 +241,14 @@ def _init_rope_project(self, workspace_root: Path) -> RopeProject:
         str(workspace_root),
         ropefolder=None,
         ignored_resources=[
-            "*.pyc", ".venv", "dist/", "__pycache__",
-            ".mypy_cache", ".git", ".tox", "*.egg-info",
+            "*.pyc",
+            ".venv",
+            "dist/",
+            "__pycache__",
+            ".mypy_cache",
+            ".git",
+            ".tox",
+            "*.egg-info",
         ],
         source_folders=source_folders,
         save_objectdb=False,
