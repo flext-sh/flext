@@ -1,0 +1,29 @@
+.planning/phases/09-rope-native-refactor-engine-rewrite/09-01-PLAN.md
+  ade56594904d6940 1-158
+.planning/phases/09-rope-native-refactor-engine-rewrite/09-03-PLAN.md
+  ade56594904d6940 1-153
+.planning/phases/09-rope-native-refactor-engine-rewrite/09-02-PLAN.md
+  ade56594904d6940 1-198
+.planning/ROADMAP.md
+  ade56594904d6940 28,30-37,51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "48e8555fc280ea533624c5cc8b9f042b84edca1f",
+  "prompts": {
+    "ade56594904d6940": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "31066624-84c8-4541-8ea4-a35eb07efef5",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 599,
+      "total_deletions": 2,
+      "accepted_lines": 717,
+      "overriden_lines": 0
+    }
+  }
+}
