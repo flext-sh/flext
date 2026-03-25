@@ -1,0 +1,23 @@
+pyproject.toml
+  455dc8c0e1addfaf 154
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "0babfd1b058833b718efccd60c8066392db62f17",
+  "prompts": {
+    "455dc8c0e1addfaf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46a48461-dac4-4c73-b9ab-5b0ecb67f4ba",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 4,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
