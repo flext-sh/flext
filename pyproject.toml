@@ -234,6 +234,8 @@ ignore = [
   "typings",
   "typings/generated",
 ]
+pythonPlatform = "Linux"
+pythonVersion = "3.13"
 reportCallIssue = "none"
 reportConstantRedefinition = "error"
 reportIncompatibleMethodOverride = "error"
@@ -252,6 +254,8 @@ reportUnusedFunction = "error"
 reportUnusedImport = "error"
 reportUnusedVariable = "error"
 typeCheckingMode = "strict"
+venv = ".venv"
+venvPath = "."
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = [ "src" ]
