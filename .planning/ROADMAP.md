@@ -173,3 +173,13 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 6. Typing Gap Closure | 0/2 | Planned | - |
 | 7. Modernization & Integration Fixes | 0/2 | Planned | - |
 | 8. Workaround Residual Cleanup | 3/3 | Complete | 2026-03-25 |
+
+### Phase 9: Rope-native refactor engine rewrite
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 8
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 9 to break down)

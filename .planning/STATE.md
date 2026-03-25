@@ -75,6 +75,10 @@ Plan: Not started
 
 ## Accumulated Context
 
+### Roadmap Evolution
+
+- Phase 9 added: Rope-native refactor engine rewrite
+
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
