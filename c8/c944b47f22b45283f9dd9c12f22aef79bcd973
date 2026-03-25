@@ -1,0 +1,27 @@
+.planning/ROADMAP.md
+  ff5fbbb57a39a510 159,175
+.planning/phases/08-workaround-residual-cleanup/08-03-SUMMARY.md
+  ff5fbbb57a39a510 1-50
+.planning/STATE.md
+  ff5fbbb57a39a510 5-7,11,13,27-28,74,114,135-136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "c8c944b47f22b45283f9dd9c12f22aef79bcd973",
+  "prompts": {
+    "ff5fbbb57a39a510": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "75776da1-7f80-4ee2-9447-f0ba5d56de8f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 63,
+      "total_deletions": 11,
+      "accepted_lines": 63,
+      "overriden_lines": 0
+    }
+  }
+}
