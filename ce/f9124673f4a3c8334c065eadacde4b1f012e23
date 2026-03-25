@@ -1,0 +1,55 @@
+.claude/skills/flext-pyrefly-typecheck-fix/SKILL.md
+  3b1afb5cd6e04222 127
+.planning/phases/09-rope-native-refactor-engine-rewrite/09-03-SUMMARY.md
+  ade56594904d6940 1-63
+.claude/skills/rules-typings/SKILL.md
+  3b1afb5cd6e04222 24-25,28-29,40-42,48-81
+pyproject.toml
+  3b1afb5cd6e04222 93-96,99,103-104,110
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "cef9124673f4a3c8334c065eadacde4b1f012e23",
+  "prompts": {
+    "3b1afb5cd6e04222": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65d0c999-2559-469e-b8da-6e7995f18df9",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 52,
+      "total_deletions": 4,
+      "accepted_lines": 51,
+      "overriden_lines": 0
+    },
+    "8138edf6bc0fab47": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "458a9205-8e72-4758-9c6d-2636f729252c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "ade56594904d6940": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "31066624-84c8-4541-8ea4-a35eb07efef5",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 63,
+      "total_deletions": 0,
+      "accepted_lines": 63,
+      "overriden_lines": 0
+    }
+  }
+}
