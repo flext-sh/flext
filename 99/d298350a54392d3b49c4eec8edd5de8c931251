@@ -1,0 +1,51 @@
+pyproject.toml
+  b9fb1ca94582faf8 148
+.vscode/settings.json
+  adaf6a9f709856ca 49-60,62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "99d298350a54392d3b49c4eec8edd5de8c931251",
+  "prompts": {
+    "adaf6a9f709856ca": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b31ccc79-edd5-4243-b974-42d8d3236130",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 14,
+      "total_deletions": 17,
+      "accepted_lines": 14,
+      "overriden_lines": 0
+    },
+    "b9fb1ca94582faf8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2013f8e8-a973-4b83-855a-4ea01c49a828",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "f57af31825b70f47": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "aa03ae85-26c5-44c0-8b62-1626d42c43a2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    }
+  }
+}
