@@ -243,7 +243,7 @@ fix: not isinstance($X, ($$$Y))
 | Root Cause | Issue Count | Primary Fix |
 |------------|------------:|-------------|
 | `_operation_stats` PrivateAttr pattern | 121+ cascade | Fix `Annotated[T, PrivateAttr()]` declaration |
-| `_GuardInput` union too narrow | widespread `reportArgumentType` | Widen to include `ResultLike`, `BaseModel`, `ConfigMap`, `HasModelDump` |
+| `_GuardInput` union too narrow | widespread `reportArgumentType` | Widen to include `Result`, `BaseModel`, `ConfigMap`, `HasModelDump` |
 | Unnecessary isinstance (type already resolved) | 79 | Remove redundant checks |
 | Incompatible method overrides | scattered | Fix `model_post_init`, `get`, `register` signatures |
 | Missing type annotations | 317 `reportUnknownVariableType` | Add explicit annotations |
