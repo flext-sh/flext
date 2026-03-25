@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 5: Package Migration** - Extract submodules, convert 33 projects from Poetry to uv workspaces
 - [ ] **Phase 6: Typing Gap Closure** - TypeGuard→TypeIs migration + empty container annotations (gap closure)
 - [ ] **Phase 7: Modernization & Integration Fixes** - Fix circular import, StrEnum coercion, deprecation framework, UserDict (gap closure)
-- [x] **Phase 8: Workaround Residual Cleanup** - Fix 30 bare except, 8 sys.exit(), 1 print() found by audit (gap closure) (completed 2026-03-25)
+- [ ] **Phase 8: Workaround Residual Cleanup** - Fix 30 bare except, 8 sys.exit(), 1 print() found by audit (gap closure)
 
 ## Phase Details
 
@@ -151,10 +151,12 @@ Plans:
   1. Zero bare `except Exception:` across all `.py` files — all handlers catch specific exception types
   2. Zero `sys.exit()` calls outside `__main__.py` files across all 33 projects
   3. Zero `print()` calls in production code (except documented CLI output services)
-**Plans**: 1 plan
+**Plans**: 3 plans
 
 Plans:
 - [x] 08-01-PLAN.md — Fix print() in production, verify WA-04, fix bare except in tests/examples
+- [ ] 08-02-PLAN.md — Remove Exception from catch tuples + bare catches in production src/ (gap closure)
+- [ ] 08-03-PLAN.md — Replace print() with structlog in flext-plugin (gap closure)
 
 ## Progress
 
@@ -170,4 +172,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 5. Package Migration | 0/3 | Planned | - |
 | 6. Typing Gap Closure | 0/2 | Planned | - |
 | 7. Modernization & Integration Fixes | 0/2 | Planned | - |
-| 8. Workaround Residual Cleanup | 1/1 | Complete   | 2026-03-25 |
+| 8. Workaround Residual Cleanup | 1/3 | In Progress | - |
