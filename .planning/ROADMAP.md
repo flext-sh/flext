@@ -151,10 +151,10 @@ Plans:
   1. Zero bare `except Exception:` across all `.py` files — all handlers catch specific exception types
   2. Zero `sys.exit()` calls outside `__main__.py` files across all 33 projects
   3. Zero `print()` calls in production code (except documented CLI output services)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 08-01-PLAN.md — Fix 30 bare except Exception: + 8 sys.exit() + 1 print()
+- [ ] 08-01-PLAN.md — Fix print() in production, verify WA-04, fix bare except in tests/examples
 
 ## Progress
 
