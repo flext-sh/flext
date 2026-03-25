@@ -21,11 +21,12 @@ description: Rules for typing support assets in `typings/` (stubs, compatibility
 ## Scope
 
 - `typings/__init__.pyi`
-- `typings/factory.pyi`
-- `typings/returns/`
+- `typings/bandit/`
+- `typings/msgpack/`
 - `typings/radon/`
 - `typings/ruff/`
-- `typings/ldif3/`
+- `typings/vulture/`
+- `typings/generated/`
 
 ## References
 
@@ -36,10 +37,48 @@ description: Rules for typing support assets in `typings/` (stubs, compatibility
 
 ## Rules
 
+- **PyPI stubs FIRST**: Always prefer installing a PyPI stub package (`types-*`, `*-stubs`) over writing manual stubs in `typings/`. Manual stubs are a last resort for libraries with NO PyPI stubs.
+- **Never shadow shipped types**: If a library ships `py.typed` (e.g., matplotlib, pydantic), custom stubs in `typings/` will CONFLICT — pyright prioritizes installed package types. Use PyPI stub packages or per-line `# pyright: ignore[specificCode]` instead.
+- **Per-line ignores only**: For third-party libs with incomplete types and no stubs, use per-line `# pyright: ignore[reportXxx]` with specific error codes. File-level `# pyright:` config comments are FORBIDDEN.
 - Keep stubs synchronized with runtime/public API signatures.
 - Prefer precise types over broad fallback annotations. `Any` and `t.NormalizedValue` are TOTALLY FORBIDDEN — use `t.*` contracts from `typings.py`.
 - Keep package-specific typing shims isolated under their own stub namespace.
 - Do not introduce broken/incomplete stubs without clear compatibility intent.
+
+## Third-Party Type Coverage
+
+Libraries with PyPI stubs (declare in `pyproject.toml` dev deps):
+
+| Library | Stub Package | Notes |
+|---|---|---|
+| matplotlib | `matplotlib-stubs` | Partial — some methods still need per-line ignores |
+| docker | `types-docker` | |
+| ldap3 | `types-ldap3` | |
+| protobuf | `types-protobuf` | |
+| psutil | `types-psutil` | |
+| PyYAML | `types-pyyaml` | |
+| requests | `types-requests` | |
+| cachetools | `types-cachetools` | |
+| paramiko | `types-paramiko` | |
+| setuptools | `types-setuptools` | |
+
+Libraries with NO PyPI stubs (manual `typings/` stubs kept):
+
+| Library | Manual Stubs | Notes |
+|---|---|---|
+| bandit | `typings/bandit/` | Quality tool — no upstream types |
+| msgpack | `typings/msgpack/` | Binary serialization |
+| radon | `typings/radon/` | Complexity metrics |
+| ruff | `typings/ruff/` | Linter Python API |
+| vulture | `typings/vulture/` | Dead code detection |
+
+Libraries with NO stubs at all (use per-line pyright ignores):
+
+| Library | Strategy |
+|---|---|
+| cairosvg | `# pyright: ignore[reportUnknownMemberType]` per line |
+| weasyprint | `# pyright: ignore[reportUnknownMemberType]` per line |
+| python-docx | `# pyright: ignore[reportUnknownMemberType]` per line |
 
 ## Instructions
 
