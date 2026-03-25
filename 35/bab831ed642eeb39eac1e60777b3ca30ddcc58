@@ -1,0 +1,23 @@
+.planning/v1.0-MILESTONE-AUDIT.md
+  7d62ea1a5a181830 3-4,6-9,12-16,18-23,25-30,32-33,36-38,41-49,51-53,55-59,62-64,67,70-79,81-83,85-118,124-130,132-134,136-139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "35bab831ed642eeb39eac1e60777b3ca30ddcc58",
+  "prompts": {
+    "7d62ea1a5a181830": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dc186f16-afe7-4333-a948-07dfeb2d2e04",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 113,
+      "total_deletions": 121,
+      "accepted_lines": 112,
+      "overriden_lines": 0
+    }
+  }
+}
