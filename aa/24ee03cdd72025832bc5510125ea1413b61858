@@ -1,0 +1,23 @@
+Makefile
+  8138edf6bc0fab47 91-99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "aa24ee03cdd72025832bc5510125ea1413b61858",
+  "prompts": {
+    "8138edf6bc0fab47": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "458a9205-8e72-4758-9c6d-2636f729252c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 9,
+      "total_deletions": 1,
+      "accepted_lines": 9,
+      "overriden_lines": 0
+    }
+  }
+}
