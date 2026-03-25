@@ -40,9 +40,9 @@
 
 - [x] **WA-01**: Zero `try/except ImportError` in production code (`.*/src/**/*.py`)
 - [x] **WA-02**: Zero `model_rebuild()` calls anywhere in the monorepo
-- [x] **WA-03**: Zero bare `except Exception:` — all exception handlers catch specific exception types
-- [x] **WA-04**: Zero `sys.exit()` calls outside `__main__.py` files
-- [x] **WA-05**: Zero `print()` calls in production code (except documented CLI output services)
+- [ ] **WA-03**: Zero bare `except Exception:` — all exception handlers catch specific exception types
+- [ ] **WA-04**: Zero `sys.exit()` calls outside `__main__.py` files
+- [ ] **WA-05**: Zero `print()` calls in production code (except documented CLI output services)
 - [x] **WA-06**: Zero `subprocess.run()` calls outside the designated subprocess wrapper
 
 ### MOD — Python 3.13 Modernization
@@ -113,9 +113,9 @@
 | INFRA-05 | Phase 3 | Complete | infra-type-alias-unification, constants-dedup-infra |
 | WA-01 | Phase 3 | Complete | workaround-eradication |
 | WA-02 | Phase 3 | Complete | workaround-eradication |
-| WA-03 | Phase 3 | Complete | workaround-eradication |
-| WA-04 | Phase 3 | Complete | workaround-eradication |
-| WA-05 | Phase 3 | Complete | workaround-eradication |
+| WA-03 | Phase 8 | Pending | workaround-eradication |
+| WA-04 | Phase 8 | Pending | workaround-eradication |
+| WA-05 | Phase 8 | Pending | workaround-eradication |
 | WA-06 | Phase 3 | Complete | workaround-eradication |
 | MOD-01 | Phase 4 | Complete | python313-stdlib-modernization |
 | MOD-02 | Phase 7 | Complete | python313-stdlib-modernization |
