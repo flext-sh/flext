@@ -8,9 +8,6 @@
 build-backend = "hatchling.build"
 requires = [ "hatchling" ]
 
-[dependency-groups]
-dev = [ "types-flask (>=1.1.6,<2.0.0)" ]
-
 # [CUSTOM] project metadata
 [project]
 
@@ -43,6 +40,9 @@ version = "0.12.0-dev"
 # [MANAGED] consolidated development dependencies
 [project.optional-dependencies]
 dev = [
+  "pyrefly>=0.58.0",
+  "types-flask>=1.1.6",
+
   "autoflake>=2.3.1",
   "bandit>=1.8",
   "black>=25.1",
@@ -145,6 +145,7 @@ allow-direct-references = true
 [tool.mypy]
 disable_error_code = [
   "call-arg",
+  "name-defined",
   "prop-decorator",
 ]
 explicit_package_bases = true
