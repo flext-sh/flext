@@ -66,10 +66,10 @@ Each task was committed atomically:
 - `flext-infra/pyproject.toml` - build-backend changed to hatchling, [tool.poetry] replaced with [tool.hatch.build.targets.wheel]
 - `flext-core/pyproject.toml` - same conversion as flext-infra
 - `flext-tests/pyproject.toml` - same conversion plus removed [tool.poetry.group.dev.dependencies]
-- `flext-infra/src/flext_infra/deps/modernizer.py` - _run_poetry_check replaced with _run_build_check validating hatchling
+- `flext-infra/src/flext_infra/deps/modernizer.py` - _run_poetry_check replaced with_run_build_check validating hatchling
 
 ## Decisions Made
-- Modernizer _run_poetry_check replaced with _run_build_check that validates hatchling presence instead of running poetry CLI
+- Modernizer _run_poetry_check replaced with_run_build_check that validates hatchling presence instead of running poetry CLI
 - flext-tests poetry dev group with path deps removed (will become workspace refs in Plan 02)
 - Poetry group cleanup code in modernizer kept as-is (handles legacy projects not yet converted)
 

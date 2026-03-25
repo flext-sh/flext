@@ -57,7 +57,7 @@ Eliminate all residual workaround violations found by v1.0 milestone audit: bare
 
 ### Current Violation Census
 - **except Exception:** ~80 occurrences across ~40 files (production src/ subset: ~17 in ~8 files including `flext_cli/services/output.py` (9), `flext_db_oracle/api.py` (4), `flext_meltano/singer/tap.py` (1), `flext_meltano/singer/target.py` (1), `flext_ldif/_utilities/collection_ldif.py` (1), `flext_api/schemas/jsonschema.py` (1))
-- **sys.exit outside __main__:** 5 files — `extra_paths.py`, `path_sync.py`, `target_refactored.py`, `flext-dbt-oracle-wms/cli.py`, `flext-dbt-ldif/cli.py`
+- **sys.exit outside **main**:** 5 files — `extra_paths.py`, `path_sync.py`, `target_refactored.py`, `flext-dbt-oracle-wms/cli.py`, `flext-dbt-ldif/cli.py`
 - **print in production:** 2 instances in `scheduled_maintenance.py` (src + docs copy)
 
 ### Established Patterns

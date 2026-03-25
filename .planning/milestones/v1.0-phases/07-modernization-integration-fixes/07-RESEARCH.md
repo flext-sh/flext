@@ -110,7 +110,7 @@ fmt: Annotated[
 **What goes wrong:** Deleting files from `_utilities/` violates AGENTS.md 10.2 freeze policy.
 **How to avoid:** Empty the file contents but keep the file. Or get explicit operator approval to delete. The Phase 4 decision already marked it as dead code.
 
-### Pitfall 3: Auto-generated __init__.py
+### Pitfall 3: Auto-generated **init**.py
 **What goes wrong:** Manually editing `__init__.py` to remove exports breaks on next `make codegen`.
 **How to avoid:** Remove the class from the source file, then run `make codegen` to regenerate exports.
 

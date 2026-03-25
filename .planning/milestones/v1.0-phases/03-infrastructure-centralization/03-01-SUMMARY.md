@@ -69,7 +69,7 @@ completed: 2026-03-24
 ## Task Commits
 
 1. **Task 1: Add iter_projects() and emit()** - `26a2ff9b` (feat)
-2. **Task 2: Migrate __main__.py to run_cli()** - SKIPPED (already done per research)
+2. **Task 2: Migrate **main**.py to run_cli()** - SKIPPED (already done per research)
 3. **Task 3: Normalize root: Path** - `16190e94` (refactor)
 
 ## Files Created/Modified
@@ -93,7 +93,7 @@ completed: 2026-03-24
 ### Task 2 Already Complete
 - **Found during:** Task 2 pre-read
 - **Issue:** Plan assumed run_cli() migration and D-07 dry_run bug were pending. Research (03-RESEARCH.md) confirmed both were already done.
-- **Evidence:** All 12 __main__.py files already use u.Infra.run_cli(); `dry_run=cli.apply` bug has 0 grep matches.
+- **Evidence:** All 12 **main**.py files already use u.Infra.run_cli(); `dry_run=cli.apply` bug has 0 grep matches.
 - **Action:** Skipped task 2 entirely. No commit needed.
 
 ### Parameter Naming (Rule 2 - Missing Critical)

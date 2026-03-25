@@ -68,7 +68,7 @@ completed: 2026-03-24
 ## Accomplishments
 - Cached 3 inline TypeAdapter instances in flext-core parser.py as ClassVar
 - Cached ~42 inline TypeAdapter instances across 14 consumer projects
-- ~25 already-cached instances in base.py __init_subclass__ left unchanged
+- ~25 already-cached instances in base.py **init_subclass** left unchanged
 - ~7 dynamic TypeAdapter(target) instances accepted (runtime type parameter)
 
 ## Task Commits

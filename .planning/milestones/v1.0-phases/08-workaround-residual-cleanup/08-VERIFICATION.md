@@ -28,7 +28,7 @@ human_verification: []
 | # | Truth | Status | Evidence |
 |---|-------|--------|----------|
 | 1 | Zero bare except Exception: in production src/ code (v1.0 audit scope) | VERIFIED | All 7 previously-failing files now clean: serializers.py, context.py (x2), conversion.py, writer.py, tap.py (x2) |
-| 2 | Zero sys.exit() outside __main__.py guards | VERIFIED | All sys.exit() confirmed inside `if __name__ == "__main__":` guards per 08-02 verification |
+| 2 | Zero sys.exit() outside **main**.py guards | VERIFIED | All sys.exit() confirmed inside `if __name__ == "__main__":` guards per 08-02 verification |
 | 3 | Zero print() in production code | VERIFIED | hot_reload.py:84 and loader.py:40 fixed; grep across */src/**/*.py returns 0 matches |
 | 4 | Test files use specific exception types (non-exempt) | VERIFIED | Only D-03 exempt files retain bare except Exception: |
 | 5 | Example files use specific exception types | VERIFIED | Zero bare except Exception: in any examples/ directory |

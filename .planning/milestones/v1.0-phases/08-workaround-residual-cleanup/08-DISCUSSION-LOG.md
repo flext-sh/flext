@@ -27,11 +27,11 @@
 
 | Option | Description | Selected |
 |--------|-------------|----------|
-| Return exit codes, wrap in __main__ | Callers return int, __main__.py does sys.exit() | ✓ |
-| Inline if __name__ guard | Add guard around sys.exit in same file | |
+| Return exit codes, wrap in **main** | Callers return int, **main**.py does sys.exit() | ✓ |
+| Inline if **name** guard | Add guard around sys.exit in same file | |
 | Exception-based exit | Raise SystemExit instead of sys.exit() | |
 
-**User's choice:** [auto] Return exit codes, wrap in __main__ (recommended default)
+**User's choice:** [auto] Return exit codes, wrap in **main** (recommended default)
 **Notes:** Follows existing u.Infra.run_cli() pattern already used in some files.
 
 ---
@@ -52,7 +52,7 @@
 ## Claude's Discretion
 
 - Exact exception types per call site
-- Whether cli.py files need separate __main__.py
+- Whether cli.py files need separate **main**.py
 
 ## Deferred Ideas
 

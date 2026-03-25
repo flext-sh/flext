@@ -57,8 +57,8 @@ completed: 2026-03-24
 ## Accomplishments
 - Fixed StrEnum coercion on 5 fields across 4 strict Pydantic model classes using BeforeValidator
 - Replaced string defaults with enum member defaults (Format.AUTO, Operation.CREATE, ErrorMode.COLLECT)
-- Stubbed deprecation.py (FROZEN file retained with empty __all__)
-- Removed FlextUtilitiesDeprecation from MRO facade and __init__.py exports via codegen
+- Stubbed deprecation.py (FROZEN file retained with empty **all**)
+- Removed FlextUtilitiesDeprecation from MRO facade and **init**.py exports via codegen
 - Verified zero UserDict/UserString in all src/ directories
 
 ## Task Commits

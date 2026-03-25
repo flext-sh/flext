@@ -205,7 +205,7 @@ def iter_projects(
 | WA-01 | Zero except ImportError | grep | Grep sweep | N/A (static check) |
 | WA-02 | Zero model_rebuild | grep | Grep sweep | N/A (static check) |
 | WA-03 | Zero bare except Exception | grep | Grep sweep | ALREADY DONE |
-| WA-04 | Zero sys.exit outside __main__ | grep | Grep sweep | N/A (static check) |
+| WA-04 | Zero sys.exit outside **main** | grep | Grep sweep | N/A (static check) |
 | WA-05 | Zero print in production | grep | Grep sweep | N/A (static check) |
 | WA-06 | Zero subprocess.run direct | grep | Grep sweep | N/A (static check) |
 
