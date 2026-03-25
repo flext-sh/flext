@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Rope Engine
-status: Executing Phase 09
-stopped_at: Completed 08-03-PLAN.md
-last_updated: "2026-03-25T16:26:35.364Z"
+status: Ready to execute
+stopped_at: Completed 09-02-PLAN.md
+last_updated: "2026-03-25T17:03:01.823Z"
 last_activity: 2026-03-25
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 3
-  completed_plans: 0
+  completed_plans: 2
 ---
 
 # Project State
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-03-25)
 ## Current Position
 
 Phase: 09 (rope-native-refactor-engine-rewrite) — EXECUTING
-Plan: 1 of 3
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -72,6 +72,7 @@ Plan: 1 of 3
 | Phase 08 P01 | 4 | 2 tasks | 27 files |
 | Phase 08 P02 | 2 | 3 tasks | 5 files |
 | Phase 08 P03 | 1 | 1 tasks | 2 files |
+| Phase 09-rope-native-refactor-engine-rewrite P02 | 90 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,9 @@ Recent decisions affecting current work:
 - [Phase 08]: structlog.get_logger() for print() replacement; D-03 exemptions preserved for test cleanup utilities
 - [Phase 08]: Pydantic ValidationError narrowed to ValueError/TypeError/KeyError for model_validate catches
 - [Phase 08]: print() calls in flext-plugin were docstring examples, not executable code; replaced for consistency
+- [Phase 09]: D-21 applied to mro_reference_rewriter: rope Rename is more complex than CST leave_Name/leave_Attribute; kept LibCST, just re-exported Rename
+- [Phase 09]: ParentNodeProvider replaced with _skip_names: set[int] using visit_ClassDef/FunctionDef/Param/AsName — pure LibCST, no external deps
+- [Phase 09]: Global pyright suppression (reportUnknownMemberType/VariableType/ArgumentType=none) for rope's missing stubs instead of per-call type: ignore
 
 ### Pending Todos
 
@@ -136,7 +140,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T01:00:00.000Z
-Stopped at: Completed 08-03-PLAN.md
+Last session: 2026-03-25T17:03:01.820Z
+Stopped at: Completed 09-02-PLAN.md
 Last activity: 2026-03-25
 Resume file: None
