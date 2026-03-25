@@ -1,0 +1,29 @@
+.planning/ROADMAP.md
+  e5cc7121064f48e0 3,5-6,10-11,13-20,22,24,26,28,32-42
+.planning/PROJECT.md
+  e5cc7121064f48e0 5,19-56,60,65,68-69,73-78,80,95-96,98-105,108
+.planning/STATE.md
+  e5cc7121064f48e0 20
+.planning/RETROSPECTIVE.md
+  e5cc7121064f48e0 1-71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "eea41e322f126f12551fc3e855949c34353b40fc",
+  "prompts": {
+    "e5cc7121064f48e0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e301a61b-ac18-4644-a3b0-c80450c15e54",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 162,
+      "total_deletions": 224,
+      "accepted_lines": 162,
+      "overriden_lines": 0
+    }
+  }
+}
