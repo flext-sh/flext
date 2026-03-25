@@ -88,7 +88,15 @@ ALL_PROJECTS := $(FLEXT_PROJECTS) $(EXTERNAL_PROJECTS)
 SELECTED_PROJECTS := $(strip $(if $(PROJECT),$(PROJECT),$(if $(PROJECTS),$(PROJECTS),$(ALL_PROJECTS))))
 
 # Auto-detect PYTHONPATH from all project src/ directories (no hardcoded names)
-WORKSPACE_PYTHONPATH := $(shell for d in $(ALL_PROJECTS); do [ -d "$(CURDIR)/$$d/src" ] && printf "$(CURDIR)/$$d/src:"; done)$(CURDIR)/src
+# Priority: flext-infra and flext-tests BEFORE flext-core (they split from flext-core
+# and their packages shadow the residual copies still tracked in flext-core/src/).
+PRIORITY_PROJECTS := flext-infra flext-tests
+WORKSPACE_PYTHONPATH := $(shell \
+	for d in $(PRIORITY_PROJECTS); do [ -d "$(CURDIR)/$$d/src" ] && printf "$(CURDIR)/$$d/src:"; done; \
+	for d in $(ALL_PROJECTS); do \
+		skip=0; for p in $(PRIORITY_PROJECTS); do [ "$$d" = "$$p" ] && skip=1; done; \
+		[ "$$skip" = "0" ] && [ -d "$(CURDIR)/$$d/src" ] && printf "$(CURDIR)/$$d/src:"; \
+	done)$(CURDIR)/src
 
 define ENSURE_NO_PROJECT_CONFLICT
 if [ -n "$(PROJECT)" ] && [ -n "$(PROJECTS)" ]; then \
