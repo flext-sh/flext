@@ -1,185 +1,42 @@
 # Roadmap: FLEXT Monorepo Hardening & Modernization
 
-## Overview
+## Milestones
 
-This roadmap sequences 39 requirements across 5 phases to drive a 33-project Python monorepo from 4,385 pyrefly type errors to zero — achieving production-grade quality through strict typing, clean architecture, infrastructure centralization, Python 3.13 modernization, and a final package migration to uv workspaces. Each phase clears the ground for the next: type safety first, then architecture, then runtime consistency, then stdlib modernization, then package restructuring.
+- ✅ **v1.0 Hardening** — Phases 1-8 (shipped 2026-03-25) → [archive](.planning/milestones/v1.0-ROADMAP.md)
+- 📋 **v2.0 Rope Engine** — Phase 9+ (planned)
 
 ## Phases
 
-**Phase Numbering:**
-- Integer phases (1, 2, 3): Planned milestone work
-- Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
+<details>
+<summary>✅ v1.0 Hardening (Phases 1-8) — SHIPPED 2026-03-25</summary>
 
-Decimal phases appear between their surrounding integers in numeric order.
+- [x] Phase 1: Type System Hardening (5/5 plans) — complete
+- [x] Phase 2: Architecture & SOLID (5/5 plans) — complete
+- [x] Phase 3: Infrastructure Centralization (5/5 plans) — complete 2026-03-24
+- [x] Phase 4: Python 3.13 Modernization (3/3 plans) — complete
+- [x] Phase 5: Package Migration (3/3 plans) — complete
+- [x] Phase 6: Typing Gap Closure (2/2 plans) — complete
+- [x] Phase 7: Modernization & Integration Fixes (2/2 plans) — complete
+- [x] Phase 8: Workaround Residual Cleanup (3/3 plans) — complete 2026-03-25
 
-- [ ] **Phase 1: Type System Hardening** - Eliminate all 4,385 pyrefly errors and every `Any`/`object`/`cast`/`ignore` shortcut
-- [ ] **Phase 2: Architecture & SOLID** - Enforce DIP via protocols, canonicalize Pydantic v2, adopt PEP 695 type aliases
-- [x] **Phase 3: Infrastructure Centralization** - Centralize runtime helpers, eradicate all workarounds and antipatterns (completed 2026-03-24)
-- [ ] **Phase 4: Python 3.13 Modernization** - Replace custom code with stdlib (`TypeIs`, `StrEnum`, `batched`, etc.)
-- [ ] **Phase 5: Package Migration** - Extract submodules, convert 33 projects from Poetry to uv workspaces
-- [ ] **Phase 6: Typing Gap Closure** - TypeGuard→TypeIs migration + empty container annotations (gap closure)
-- [ ] **Phase 7: Modernization & Integration Fixes** - Fix circular import, StrEnum coercion, deprecation framework, UserDict (gap closure)
-- [ ] **Phase 8: Workaround Residual Cleanup** - Fix 30 bare except, 8 sys.exit(), 1 print() found by audit (gap closure)
+Full phase details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
-## Phase Details
+</details>
 
-### Phase 1: Type System Hardening
-**Goal**: The monorepo type-checks clean — `make pyre` returns 0 errors and no typing shortcuts remain anywhere
-**Depends on**: Nothing (Wave 0 already complete: pyrefly entrypoint, legacy artifacts, 27 test fixes)
-**Requirements**: TYPE-01, TYPE-02, TYPE-03, TYPE-04, TYPE-05, TYPE-06, TYPE-07, TYPE-08
-**Success Criteria** (what must be TRUE):
-  1. `make pyre` exits 0 with 0 errors across all 33 projects (down from 4,385 baseline)
-  2. Zero `# type: ignore`, `typing.Any`, or `object` in any annotation position across all `.py` files
-  3. Zero `cast()` calls outside `flext-core/result.py`
-  4. Zero `__class__ is` / `__class__ not in` comparisons — all replaced with `isinstance()` or `TypeIs`
-  5. All `TypeGuard` usages (12 functions) migrated to `TypeIs` (PEP 742) and all empty container literals annotated
-**Plans**: 5 plans
+### 📋 v2.0 Rope Engine (Planned)
 
-Plans:
-- [x] 01-01-PLAN.md — Wave 1: Fix make pyre entrypoint + clean flext-core (foundation)
-- [x] 01-02-PLAN.md — Wave 2: Clean flext-infra + flext-tests (infrastructure)
-- [x] 01-03-PLAN.md — Wave 3: Clean flext-cli (largest consumer, solo)
-- [x] 01-04-PLAN.md — Wave 4: Clean remaining ~27 consumer projects
-- [x] 01-05-PLAN.md — Micro-plan: TypeGuard->TypeIs migration + empty container annotation
-
-### Phase 2: Architecture & SOLID
-**Goal**: Public APIs speak in protocols, Pydantic fields use canonical form, and type aliases follow PEP 695 — DIP enforced across all 33 projects
-**Depends on**: Phase 1
-**Requirements**: ARCH-01, ARCH-02, ARCH-03, ARCH-04, ARCH-05, ARCH-06, ARCH-07, ARCH-08
-**Success Criteria** (what must be TRUE):
-  1. All public API signatures reference `p.*` protocol types (`p.Context`, `p.DI`, `p.Config`, `p.StructlogLogger`) — no concrete class leakage
-  2. `c,m,t,u,p` are never imported from `flext_core` directly in `tests/`, `examples/`, or `scripts/` — always from local namespace root
-  3. All ~1,551 `Field(...)` usages use `Annotated[X, Field(...)]` canonical Pydantic v2 form
-  4. 6 pure ABCs converted to `@runtime_checkable` Protocol; 8 template ABCs have Protocol interface extracted
-  5. `TypeAdapter()` instantiations cached as `ClassVar`/module constants; mutable `Field(default=[])` replaced with `default_factory=list`; type aliases use PEP 695 `type X = ...`
-**Plans**: 5 plans
-
-Plans:
-- [x] 02-01-PLAN.md — issubclass() prereq + ABC-to-Protocol conversion in flext-core
-- [x] 02-02-PLAN.md — DIP enforcement: concrete->protocol type substitution across all projects
-- [x] 02-03-PLAN.md — Field()->Annotated migration + mutable defaults fix (all 33 projects)
-- [x] 02-04-PLAN.md — TypeAdapter caching (~100 inline instances)
-- [x] 02-05-PLAN.md — PEP 695 type aliases + import normalization
-
-### Phase 3: Infrastructure Centralization
-**Goal**: Runtime helpers are centralized with zero duplication, and every antipattern (`try/except ImportError`, `model_rebuild()`, bare `except`, `sys.exit`, `print`, subprocess sprawl) is eradicated from production code
-**Depends on**: Phase 1, Phase 2
-**Requirements**: INFRA-01, INFRA-02, INFRA-03, INFRA-04, INFRA-05, WA-01, WA-02, WA-03, WA-04, WA-05, WA-06
-**Success Criteria** (what must be TRUE):
-  1. `u.Infra.run_cli()` and `u.Infra.iter_projects()` are the single implementations — 18 duplicate CLI bootstrap patterns and 13 `discover_projects()` clones are gone
-  2. `workspace_root` is the canonical parameter name across all `flext_infra` signatures — no `root` or `project_root` variants remain
-  3. `NamespaceSourceDetector` is live in `flext_infra` and passes its own test suite
-  4. `make pyre` policy gate enforces 0 `Any`/`object`/`ignore` violations with file+line output on failure
-  5. Zero `try/except ImportError`, `model_rebuild()`, bare `except Exception:`, `sys.exit()` outside `__main__.py`, `print()` in production, and `subprocess.run()` outside the designated wrapper — across all 33 projects
-**Plans**: 5 plans
-
-Plans:
-- [x] 03-01-PLAN.md — INFRA utilities (iter_projects, emit) + workspace_root normalization
-- [x] 03-02-PLAN.md — NamespaceSourceDetector test suite + workspace-wide application
-- [x] 03-03-PLAN.md — Workaround eradication: WA-01, WA-02, WA-03, WA-04, WA-06
-- [x] 03-04-PLAN.md — Workaround eradication: WA-05 (print() triage + fix)
-- [x] 03-05-PLAN.md — Policy gate enhancement + final verification sweep
-
-### Phase 4: Python 3.13 Modernization
-**Goal**: Custom implementations of stdlib capabilities are deleted and replaced with Python 3.13 builtins and standard library modules
-**Depends on**: Phase 3
-**Requirements**: MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06
-**Success Criteria** (what must be TRUE):
-  1. All custom chunking/batching utilities replaced with `itertools.batched`; all custom deprecation framework replaced with `warnings.deprecated` (PEP 702)
-  2. All 147+ `StrEnum` subclasses are decorated with `@unique`; all 70 convertible `Literal[str, ...]` unions are `StrEnum`
-  3. All hand-rolled grouping patterns use `defaultdict`; all `UserDict`/`UserString` usages replaced with Pydantic `BaseModel`
-**Plans**: 3 plans
-
-Plans:
-- [x] 04-01-PLAN.md — itertools.batched + defaultdict replacements (MOD-01, MOD-05)
-- [x] 04-02-PLAN.md — StrEnum @unique + Literal-to-StrEnum conversion (MOD-03, MOD-04)
-- [x] 04-03-PLAN.md — Deprecation framework + UserDict elimination (MOD-02, MOD-06)
-
-### Phase 5: Package Migration
-**Goal**: `flext_infra` and `flext_tests` live in independent repos as submodules, `flext-core` ships only `flext_core`, and all 33 projects run on a unified `uv.lock`
-**Depends on**: Phase 4
-**Requirements**: MIG-01, MIG-02, MIG-03, MIG-04, MIG-05, MIG-06
-**Success Criteria** (what must be TRUE):
-  1. `flext_infra` and `flext_tests` each have their own GitHub repo and are consumed as git submodules — no source files remain in `flext-core/src/` for these namespaces
-  2. `flext-core/pyproject.toml` declares only the `flext_core` package (no `flext_infra`, `flext_tests`)
-  3. All 33 `pyproject.toml` files use PEP 621 + uv workspace format — no `poetry` sections remain
-  4. A single root `uv.lock` replaces all 33 individual `poetry.lock` files
-  5. All `make` targets invoke `uv run` instead of `poetry run` — CI passes without Poetry installed
-**Plans**: 3 plans
-
-Plans:
-- [x] 05-01-PLAN.md — Validate submodule extraction + convert foundation projects to hatchling
-- [x] 05-02-PLAN.md — Convert 30 consumer projects + wire uv workspace + unified lock
-- [x] 05-03-PLAN.md — Replace Poetry in Makefiles, CI, and .envrc
-
-### Phase 6: Typing Gap Closure
-**Goal**: All TypeGuard functions migrated to TypeIs (PEP 742) and all empty container literals annotated at assignment sites
-**Depends on**: Phase 1
-**Requirements**: TYPE-07, TYPE-08
-**Gap Closure**: Closes unsatisfied requirements from v1.0 audit
-**Success Criteria** (what must be TRUE):
-  1. All 12 TypeGuard functions use TypeIs (PEP 742) instead
-  2. All empty container literals (`[]`, `{}`, `set()`) have explicit type annotations at assignment sites
-**Plans**: 2 plans
-
-Plans:
-- [x] 06-01-PLAN.md — TypeGuard→TypeIs migration (1 remaining function in flext-cli)
-- [x] 06-02-PLAN.md — Annotate 745 empty container literals across all src/
-
-### Phase 7: Modernization & Integration Fixes
-**Goal**: Fix cross-phase integration breakage (circular import, StrEnum coercion) and complete deferred modernization (deprecation framework, UserDict)
-**Depends on**: Phase 4, Phase 5
-**Requirements**: MOD-02, MOD-06, INFRA-05
-**Gap Closure**: Closes integration issues and unsatisfied requirements from v1.0 audit
-**Success Criteria** (what must be TRUE):
-  1. `_utilities_loader.py` circular import resolved — 12 test collections pass, `make pyre` clean
-  2. StrEnum + strict Pydantic coercion fixed — 85 `flext-tests` tests pass
-  3. Custom `FlextUtilitiesDeprecation` replaced with `warnings.deprecated` (PEP 702)
-  4. All `UserDict`/`UserString` usages replaced with Pydantic `BaseModel`
-**Plans**: 2 plans
-
-Plans:
-- [x] 07-01-PLAN.md — StrEnum coercion fix + deprecation framework removal + UserDict verification
-- [x] 07-02-PLAN.md — Circular import verification/fix in _utilities_loader.py
-
-### Phase 8: Workaround Residual Cleanup
-**Goal**: Eliminate all residual workaround violations found by v1.0 milestone audit — 30 bare `except Exception:`, 8 `sys.exit()` outside `__main__.py`, 1 `print()` in production
-**Depends on**: Phase 3
-**Requirements**: WA-03, WA-04, WA-05
-**Gap Closure**: Closes 3 partial requirements from v1.0 audit
-**Success Criteria** (what must be TRUE):
-  1. Zero bare `except Exception:` across all `.py` files — all handlers catch specific exception types
-  2. Zero `sys.exit()` calls outside `__main__.py` files across all 33 projects
-  3. Zero `print()` calls in production code (except documented CLI output services)
-**Plans**: 3 plans
-
-Plans:
-- [x] 08-01-PLAN.md — Fix print() in production, verify WA-04, fix bare except in tests/examples
-- [x] 08-02-PLAN.md — Remove Exception from catch tuples + bare catches in production src/ (gap closure)
-- [x] 08-03-PLAN.md — Replace print() with structlog in flext-plugin (gap closure)
+- [ ] Phase 9: Rope-native refactor engine rewrite (0 plans — run `/gsd:plan-phase 9` to break down)
 
 ## Progress
 
-**Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
-
-| Phase | Plans Complete | Status | Completed |
-|-------|----------------|--------|-----------|
-| 1. Type System Hardening | 5/5 | Complete    |  |
-| 2. Architecture & SOLID | 0/5 | Planned | - |
-| 3. Infrastructure Centralization | 5/5 | Complete   | 2026-03-24 |
-| 4. Python 3.13 Modernization | 0/3 | Planned | - |
-| 5. Package Migration | 0/3 | Planned | - |
-| 6. Typing Gap Closure | 0/2 | Planned | - |
-| 7. Modernization & Integration Fixes | 0/2 | Planned | - |
-| 8. Workaround Residual Cleanup | 3/3 | Complete | 2026-03-25 |
-
-### Phase 9: Rope-native refactor engine rewrite
-
-**Goal:** [To be planned]
-**Requirements**: TBD
-**Depends on:** Phase 8
-**Plans:** 0 plans
-
-Plans:
-- [ ] TBD (run /gsd:plan-phase 9 to break down)
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 1. Type System Hardening | v1.0 | 5/5 | Complete | 2026-03-25 |
+| 2. Architecture & SOLID | v1.0 | 5/5 | Complete | 2026-03-25 |
+| 3. Infrastructure Centralization | v1.0 | 5/5 | Complete | 2026-03-24 |
+| 4. Python 3.13 Modernization | v1.0 | 3/3 | Complete | 2026-03-25 |
+| 5. Package Migration | v1.0 | 3/3 | Complete | 2026-03-25 |
+| 6. Typing Gap Closure | v1.0 | 2/2 | Complete | 2026-03-25 |
+| 7. Modernization & Integration Fixes | v1.0 | 2/2 | Complete | 2026-03-25 |
+| 8. Workaround Residual Cleanup | v1.0 | 3/3 | Complete | 2026-03-25 |
+| 9. Rope-native refactor engine rewrite | v2.0 | 0/? | Not started | - |
