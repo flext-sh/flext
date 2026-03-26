@@ -13,8 +13,7 @@ from flext_cli import cli
 
 def main() -> None:
     """Entry point for flext-dev."""
-    instance = cli()
-    _ = instance.execute()
+    _ = cli.execute()
 
 
 if __name__ == "__main__":

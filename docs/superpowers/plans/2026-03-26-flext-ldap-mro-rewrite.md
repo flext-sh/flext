@@ -56,13 +56,13 @@
 - [ ] **Step 2: Remove constructor injection (`__init__` with connection/operations args)**
 - [ ] **Step 3: Keep sync methods (sync_phase_entries, sync_multiple_phases) on ldap**
 - [ ] **Step 4: Keep FlextLdapSyncCallbacks helper class**
-- [ ] **Step 5: Keep context manager (__enter__/__exit__)**
+- [ ] **Step 5: Keep context manager (**enter**/**exit**)**
 - [ ] **Step 6: Override execute() → r[m.Ldap.SearchResult]**
 - [ ] **Step 7: Remove from_config() (no longer needed)**
 - [ ] **Step 8: Run ruff + pyrefly**
 - [ ] **Step 9: Commit**
 
-### Task 5: Update __init__.py exports
+### Task 5: Update **init**.py exports
 
 **Files:**
 - Modify: `flext-ldap/src/flext_ldap/__init__.py`
@@ -119,7 +119,7 @@
 
 - [ ] **Step 1: mv detection.py detection.py.bak (absorbed into connection)**
 - [ ] **Step 2: mv sync.py sync.py.bak (absorbed into api.py)**
-- [ ] **Step 3: Update services/__init__.py**
+- [ ] **Step 3: Update services/**init**.py**
 - [ ] **Step 4: Run ruff + pyrefly + pytest**
 - [ ] **Step 5: Commit**
 
