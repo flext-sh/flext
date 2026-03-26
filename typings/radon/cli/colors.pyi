@@ -1,4 +1,3 @@
-
 def color_enabled() -> bool: ...
 
 GREEN: str

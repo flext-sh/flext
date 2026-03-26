@@ -1,4 +1,3 @@
-
 plugin_name_pattern: str
 RANKING: list[str]
 RANKING_VALUES: dict[str, int]

@@ -1,4 +1,3 @@
-
 from bandit.core import (
     config as config,
     context as context,

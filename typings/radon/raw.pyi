@@ -1,4 +1,3 @@
-
 from collections.abc import Callable, Sequence
 from typing import NamedTuple
 
@@ -26,10 +25,5 @@ class Module(NamedTuple):
     blank: int
     single_comments: int
 
-def is_single_token(token_number: int, tokens: Sequence[TokenInfo]) -> bool:
-    
-    ...
-
-def analyze(source: str) -> Module:
-    
-    ...
+def is_single_token(token_number: int, tokens: Sequence[TokenInfo]) -> bool: ...
+def analyze(source: str) -> Module: ...
