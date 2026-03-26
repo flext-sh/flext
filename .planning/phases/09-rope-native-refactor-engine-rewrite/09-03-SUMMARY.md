@@ -33,7 +33,7 @@ affects: [flext-infra refactor engine, transformers/, u.Infra.*, c.Infra.*]
 | typing_unifier | keep-libcst | Union flattening via Subscript/BinaryOperation traversal | Yes | Yes |
 | class_reconstructor | keep-libcst | Method reordering by rule config + decorator analysis | Yes | Yes |
 | alias_remover | keep-libcst | Module-level Name=Name filtering with scope depth | Yes | Yes |
-| deprecated_remover | keep-libcst | Class removal by naming + __init__ warning detection | Yes | Yes |
+| deprecated_remover | keep-libcst | Class removal by naming + **init** warning detection | Yes | Yes |
 | unused_model_remover | keep-libcst | Known-unused ClassDef filtering — libcst sufficient | Yes | Yes |
 | mro_remover | keep-libcst | D-06: always keep-libcst | Yes | Yes |
 | mro_private_inline | keep-libcst | D-06: always keep-libcst | Yes | Yes |
