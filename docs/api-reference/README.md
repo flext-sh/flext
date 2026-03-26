@@ -65,9 +65,8 @@ RFC-compliant LDIF processing with enterprise patterns.
 **Main API:**
 
 ```python
-from flext_ldif import FlextLdif
+from flext_ldif import ldif
 
-ldif = FlextLdif()
 
 # Parse LDIF content
 result = ldif.parse("dn: cn=test,dc=example,dc=com\ncn: test\n")
@@ -88,7 +87,7 @@ migration_result = ldif.migrate(
 
 **Key Components:**
 
-- `FlextLdif` - Main facade API
+- `ldif` - Main facade API
 - `FlextLdifModels` - Pydantic models for LDIF entities
 - `FlextLdifSettings` - Configuration management
 - `FlextLdifMigrationPipeline` - Migration orchestration
@@ -136,9 +135,9 @@ from flext_core import t
 from flext_core import u
 
 container = FlextContainer()
-container.register(FlextLdif, FlextLdif())
+container.register(ldif, ldif())
 
-service = container.resolve(FlextLdif)
+service = container.resolve(ldif)
 ```
 
 ### Railway-Oriented Programming

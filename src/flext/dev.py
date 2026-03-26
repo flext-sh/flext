@@ -8,13 +8,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_cli import FlextCli
+from flext_cli import cli
 
 
 def main() -> None:
     """Entry point for flext-dev."""
-    cli = FlextCli()
-    _ = cli.execute()
+    instance = cli()
+    _ = instance.execute()
 
 
 if __name__ == "__main__":

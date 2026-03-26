@@ -21,7 +21,7 @@ This directory keeps one-page summaries that mirror the authoritative `README.md
   docs live inside the project `README.md` + `AGENTS.md` and `docs/` tree.
 - **[FLEXT CLI](./flext-cli.md)** – version 0.10.0, 1 016 tests (100% passing), 96%+ coverage per the coverage scan, and the zero-tolerance CLI
   foundation that abstracts Click, Rich, and Tabulate for 32+ projects. Quick start: `poetry add flext-cli`/`pip install flext-cli`, import
-  `FlextCli`, and use the direct-access helpers (`formatters`, `file_tools`, `prompts`, `output`). Quality gate: `make validate` with Ruff, Pyrefly,
+  `cli`, and use the direct-access helpers (`formatters`, `file_tools`, `prompts`, `output`). Quality gate: `make validate` with Ruff, Pyrefly,
   Bandit, and pytest; document links live under the project’s `README.md`, `AGENTS.md`, and `docs/` tree.
 - **[FLEXT Core](./flext-core.md)** – version 0.10.0, Python 3.13+, 2 820 tests, 81.41% coverage, production-ready foundation for r, DI,
   and CQRS dispatchers. Quick start: `pip install flext-core`, import `FlextContainer`, `FlextDispatcher`, `r`. Quality gate: `make validate`.
@@ -48,10 +48,10 @@ This directory keeps one-page summaries that mirror the authoritative `README.md
   inside the project `README.md` + `AGENTS.md` and `docs/` tree.
 - **[FLEXT LDAP](./flext-ldap.md)** – version 0.10.3, the universal LDAP services foundation covering OpenLDAP 1.x/2.x, Oracle OID/OUD, AD, and
   generic LDAP with r-driven services, entry adapters, and server-specific implementations. Quick start: `poetry add flext-ldap`, run
-  `make setup`+ `make validate`, and use `FlextLdap` + `FlextLdapEntryAdapter` for production flows. Quality gate: `make validate` (ruff, pyrefly,
+  `make setup`+ `make validate`, and use `ldap` + `FlextLdapEntryAdapter` for production flows. Quality gate: `make validate` (ruff, pyrefly,
   Bandit, pytest, coverage) with zero tolerance import/alias rules documented in `AGENTS.md`.
 - **[FLEXT LDIF](./flext-ldif.md)** – version 1.0.0, 1 766 tests, 78% coverage, RFC 2849/4512-compliant parser, quirk registry, and migration
-  pipelines for LDAP directories. Quick start: `pip install flext-ldif`, use `FlextLdif.parse`/`migrate`. Quality gate: `make validate`. This brief also
+  pipelines for LDAP directories. Quick start: `pip install flext-ldif`, use `ldif.parse`/`migrate`. Quality gate: `make validate`. This brief also
   references the `README`, `AGENTS.md`, and the `docs/` folder inside the project.
 - **[FLEXT Meltano](./flext-meltano.md)** – version 0.9.0, Singer/Meltano orchestration foundation with plugin scaffolding, pipeline execution, and
   orchestration features; MyPy/Ruff/Bandit pass while the blocked `make test`/coverage gates are noted in the README. Quick start: `poetry install`, `make

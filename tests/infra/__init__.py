@@ -22,11 +22,20 @@ if TYPE_CHECKING:
     from tests.infra.utilities import FlextWorkspaceTestUtilities, u
 
 _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
-    "FlextWorkspaceTestConstants": ["tests.infra.constants", "FlextWorkspaceTestConstants"],
+    "FlextWorkspaceTestConstants": [
+        "tests.infra.constants",
+        "FlextWorkspaceTestConstants",
+    ],
     "FlextWorkspaceTestModels": ["tests.infra.models", "FlextWorkspaceTestModels"],
-    "FlextWorkspaceTestProtocols": ["tests.infra.protocols", "FlextWorkspaceTestProtocols"],
+    "FlextWorkspaceTestProtocols": [
+        "tests.infra.protocols",
+        "FlextWorkspaceTestProtocols",
+    ],
     "FlextWorkspaceTestTypes": ["tests.infra.typings", "FlextWorkspaceTestTypes"],
-    "FlextWorkspaceTestUtilities": ["tests.infra.utilities", "FlextWorkspaceTestUtilities"],
+    "FlextWorkspaceTestUtilities": [
+        "tests.infra.utilities",
+        "FlextWorkspaceTestUtilities",
+    ],
     "c": ["tests.infra.constants", "c"],
     "d": ["flext_tests", "d"],
     "e": ["flext_tests", "e"],
