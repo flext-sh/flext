@@ -1,0 +1,23 @@
+docs/superpowers/plans/2026-03-26-flext-ldap-mro-rewrite.md
+  8024996819dd2ca6 59,65,122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "fa68cb3a4783b8f2ccbc73514c20750cb2f45035",
+  "prompts": {
+    "8024996819dd2ca6": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d2a5b-f716-7ff3-a334-6e8e107401d8",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 3,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}
