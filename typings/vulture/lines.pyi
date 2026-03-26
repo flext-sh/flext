@@ -1,4 +1,3 @@
-
 import ast
 
 def get_last_line_number(node: ast.AST) -> int: ...

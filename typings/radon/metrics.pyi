@@ -1,4 +1,3 @@
-
 import ast
 from typing import NamedTuple
 
@@ -26,35 +25,17 @@ class Halstead(NamedTuple):
     total: HalsteadReport
     functions: list[tuple[str, HalsteadReport]]
 
-def h_visit(code: str) -> Halstead:
-    
-    ...
-
-def h_visit_ast(ast_node: ast.AST) -> Halstead:
-    
-    ...
-
-def halstead_visitor_report(visitor: HalsteadVisitor) -> HalsteadReport:
-    
-    ...
-
+def h_visit(code: str) -> Halstead: ...
+def h_visit_ast(ast_node: ast.AST) -> Halstead: ...
+def halstead_visitor_report(visitor: HalsteadVisitor) -> HalsteadReport: ...
 def mi_compute(
     halstead_volume: float,
     complexity: float,
     sloc: float,
     comments: float,
-) -> float:
-    
-    ...
-
-def mi_parameters(code: str, count_multi: bool = ...) -> tuple[float, int, int, float]:
-    
-    ...
-
-def mi_visit(code: str, multi: bool) -> float:
-    
-    ...
-
-def mi_rank(score: float) -> str:
-    
-    ...
+) -> float: ...
+def mi_parameters(
+    code: str, count_multi: bool = ...
+) -> tuple[float, int, int, float]: ...
+def mi_visit(code: str, multi: bool) -> float: ...
+def mi_rank(score: float) -> str: ...

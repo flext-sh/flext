@@ -1,4 +1,3 @@
-
 from typing import BinaryIO
 
 DEFAULTS: dict[str, t.Scalar | list[str]]
