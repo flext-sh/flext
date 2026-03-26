@@ -1,0 +1,33 @@
+tests/__init__.py
+  2a00a9e35d2e73d6 31-34,36-39,41-48
+examples/__init__.py
+  2a00a9e35d2e73d6 36-43
+tests/infra/__init__.py
+  2a00a9e35d2e73d6 25-28,30-33,35-38
+tests/unit/scripts/github/__init__.py
+  2a00a9e35d2e73d6 19-22
+tests/unit/scripts/__init__.py
+  2a00a9e35d2e73d6 21-24
+.planning/phases/09-rope-native-refactor-engine-rewrite/09-03-SUMMARY.md
+  2a00a9e35d2e73d6 36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "1556df1d516b9c4a54f7c20ba3df5c7b860eb7f7",
+  "prompts": {
+    "2a00a9e35d2e73d6": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d2a0e-c11d-73c0-b3c0-960c8026c5c6",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 45,
+      "total_deletions": 12,
+      "accepted_lines": 45,
+      "overriden_lines": 0
+    }
+  }
+}
