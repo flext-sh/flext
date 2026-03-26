@@ -31,9 +31,8 @@ pip install flext-ldif
 
 ```python
 from pathlib import Path
-from flext_ldif import FlextLdif
+from flext_ldif import ldif
 
-ldif = FlextLdif()
 result = ldif.parse(Path("directory.ldif"))
 if result.is_success:
     print(f"Parsed {len(result.unwrap())} entries")

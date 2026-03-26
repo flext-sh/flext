@@ -35,10 +35,9 @@ pip install flext-cli
 ```
 
 ```python
-from flext_cli import FlextCli
+from flext_cli import cli
 from flext_core import r
 
-cli = FlextCli()
 
 result = (
     cli.file_tools
@@ -51,7 +50,7 @@ if result.is_failure:
     cli.formatters.print(f"Config error: {result.error}", style="red")
 ```
 
-Use `FlextCli.create_table`, `file_tools`, and `prompts` for the ready-made helpers described in `docs/getting-started.md`, `docs/api-reference.md`, and `docs/architecture.md` inside the project.
+Use `cli.create_table`, `file_tools`, and `prompts` for the ready-made helpers described in `docs/getting-started.md`, `docs/api-reference.md`, and `docs/architecture.md` inside the project.
 
 ## Architecture & modules
 
@@ -60,11 +59,11 @@ Use `FlextCli.create_table`, `file_tools`, and `prompts` for the ready-made help
 - **Tier 0**: `constants.py`, `typings.py`, `protocols.py` define the foundation constants, namespace aliases, and protocols imported only by lower tiers.
 - **Tier 1**: `models.py` and `utilities.py` expose Pydantic models and helper facades (`FlextCliModels`, `FlextCliUtilities`) that re-export flext-core short aliases (`m`, `u`).
 - **Tier 2**: `cli.py`, `formatters.py`, `file_tools.py`, `prompts.py`, and `tables.py` provide the Click/Rich/Tabulate abstractions (only `cli.py` imports Click, only `formatters.py`/`tables.py` import Rich/Tabulate).
-- **Tier 3**: `services/*.py` and `api.py` compose the CQRS services, command execution, authentication, and the `FlextCli` facade that downstream projects depend on.
+- **Tier 3**: `services/*.py` and `api.py` compose the CQRS services, command execution, authentication, and the `cli` facade that downstream projects depend on.
 
 ### Core modules & responsibilities
 
-- `FlextCli` (`api.py`): single facade exposing `formatters`, `file_tools`, `prompts`, `output`, `command` helpers and the authentication context.
+- `cli` (`api.py`): single facade exposing `formatters`, `file_tools`, `prompts`, `output`, `command` helpers and the authentication context.
 - `services/cmd.py`: command execution service with FlextService wiring.
 - `services/output.py`: output management with Rich + Tabulate wrappers.
 - `file_tools.py`: JSON/YAML/CSV helpers with railway-oriented builders.

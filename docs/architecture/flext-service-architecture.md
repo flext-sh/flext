@@ -3080,7 +3080,7 @@ class FlextContainer:
 # flext-ldif/src/flext_ldif/api.py (linha 128-129, 239-278)
 
 
-class FlextLdif(Flext[t.ContainerMapping]):
+class ldif(Flext[t.ContainerMapping]):
     """Main API facade."""
 
     # ✅ BOM: Container como PrivateAttr
@@ -3137,7 +3137,7 @@ class FlextLdif(Flext[t.ContainerMapping]):
         return None
 ```
 
-**Análise:** FlextLdif usa container corretamente:
+**Análise:** ldif usa container corretamente:
 
 - Container singleton via `get_global()`
 - Registra services na inicialização
@@ -3256,7 +3256,7 @@ class FlextLdifWriter:
 
 ```python
 # ❌ ANTI-PATTERN: Usar service sem registrar
-class FlextLdif:
+class ldif:
     def parse(self, source: str) -> r:
         # ❌ MAL: Cria service direto
         parser = FlextLdifParser(config=self.config)
@@ -3264,7 +3264,7 @@ class FlextLdif:
 
 
 # ✅ CORRETO: Registrar e resolver via container
-class FlextLdif:
+class ldif:
     def _setup_services(self) -> None:
         # ✅ BOM: Registrar no setup
         parser = FlextLdifParser(config=self.config)
@@ -4497,7 +4497,7 @@ class FlextService(x, BaseModel, Generic[TDomainResult]):
 
 ```python
 # flext-ldif/src/flext_ldif/api.py
-class FlextLdif(Flext[t.ContainerMapping]):
+class ldif(Flext[t.ContainerMapping]):
     """API facade with mixins."""
 
     def parse(self, source: str) -> r:
@@ -4797,7 +4797,7 @@ class MyService(FlextService[T]):
 
 ### ~~Alta Prioridade (Impacto Imediato)~~
 
-1. **Migrar FlextLdif s para DI Container**
+1. **Migrar ldif s para DI Container**
    - Refatorar `FlextLdifWriter.__init__()` para usar container
    - Remover `FlextLdifServer.get_global_instance()` direto
    - **Impacto:** Testabilidade, desacoplamento
@@ -7399,7 +7399,7 @@ A solução está clara, o caminho está mapeado, o esforço é baixo.
 
 **Arquitetura Atual:**
 
-- **FlextCli** (api.py) - Singleton coordinator com acesso direto a domain libraries
+- **cli** (api.py) - Singleton coordinator com acesso direto a domain libraries
 - **FlextCliCore** (core.py) - Extends `FlextService[CliDataDict]`
 - **FlextCliSettings** (config.py) - Extends `FlextSettings` com CLI-specific fields
 - **Domain Libraries**: FlextCliFormatters, FlextCliOutput, FlextCliFileTools, FlextCliPrompts, FlextCliCmd
@@ -7413,12 +7413,12 @@ A solução está clara, o caminho está mapeado, o esforço é baixo.
 
 ```python
 # flext-cli/src/flext_cli/api.py
-class FlextCli:
-    _instance: FlextCli | None = None
+class cli:
+    _instance: cli | None = None
     _lock = __import__("threading").Lock()
 
     @classmethod
-    def get_instance(cls) -> FlextCli:
+    def get_instance(cls) -> cli:
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
@@ -7428,7 +7428,7 @@ class FlextCli:
 
 ✅ **Double-check locking** correto
 ✅ **Thread-safe** com lock
-✅ **Zero Ceremony** - `FlextCli.get_instance()` é simples
+✅ **Zero Ceremony** - `cli.get_instance()` é simples
 
 **2. r Railway Pattern**
 
@@ -7498,12 +7498,12 @@ class FlextCliCore(FlextService[FlextCliTypes.Data.CliDataDict]):
 
 #### ⚠️ Problemas Identificados
 
-**Problema 1: FlextCli Como Facade Anti-Pattern**
+**Problema 1: cli Como Facade Anti-Pattern**
 
 **Estado Atual (api.py):**
 
 ```python
-class FlextCli:
+class cli:
     """Coordinator for CLI operations with direct domain library access."""
 
     # Public service instances
@@ -7534,9 +7534,9 @@ class FlextCli:
 
 **Problemas:**
 
-- ❌ **God Object** - FlextCli conhece TODAS as domain libraries
+- ❌ **God Object** - cli conhece TODAS as domain libraries
 - ❌ **Duplicação** - `print()`, `create_table()` só delegam para libraries
-- ❌ **Tight Coupling** - Mudança em domain library requer mudança em FlextCli
+- ❌ **Tight Coupling** - Mudança em domain library requer mudança em cli
 - ❌ **Não é um FlextService** - Deveria ser `FlextService[T]` para consistência
 
 **Problema 2: Múltiplas Classes para Mesma Funcionalidade**
@@ -7545,7 +7545,7 @@ class FlextCli:
 
 ```python
 # 8 classes diferentes em 8 arquivos diferentes!
-FlextCli  # api.py - Coordinator
+cli  # api.py - Coordinator
 FlextCliCore  # core.py - FlextService[CliDataDict]
 FlextCliCli  # cli.py - Typer abstraction
 FlextCliSettings  # config.py - Configuration
@@ -7558,7 +7558,7 @@ FlextCliPrompts  # prompts.py - Interactive prompts
 **Problemas:**
 
 - ❌ **Fragmentação** - Funcionalidade CLI espalhada em 8 classes
-- ❌ **Confusão** - Quando usar `FlextCli` vs `FlextCliCore`?
+- ❌ **Confusão** - Quando usar `cli` vs `FlextCliCore`?
 - ❌ **Overhead** - Instanciar 8 objetos para usar CLI
 - ❌ **Manutenção** - Mudança simples requer tocar múltiplos arquivos
 
@@ -7588,33 +7588,33 @@ class FlextCliCore(FlextService[CliDataDict]):
 - ❌ **Não segue o padrão** - `execute()` deveria conter lógica de negócio
 - ❌ **Métodos públicos demais** - 30+ métodos públicos em FlextCliCore
 
-**Problema 4: Auth State em FlextCli**
+**Problema 4: Auth State em cli**
 
 **Estado Atual (api.py):**
 
 ```python
-class FlextCli:
+class cli:
     def __init__(self):
-        # ❌ Auth state embedded in FlextCli
+        # ❌ Auth state embedded in cli
         self._valid_tokens: set[str] = set()
         self._valid_sessions: set[str] = set()
         self._session_permissions: Mapping[str, set[str]] = {}
         self._users: Mapping[str, t.ContainerMapping] = {}
 
     def authenticate(self, credentials: ...) -> r[str]:
-        # Auth logic directly in FlextCli
+        # Auth logic directly in cli
         pass
 ```
 
 **Problemas:**
 
-- ❌ **Single Responsibility Violation** - FlextCli gerencia auth + formatting + files + ...
+- ❌ **Single Responsibility Violation** - cli gerencia auth + formatting + files + ...
 - ❌ **Testability** - Auth state misturado com outras responsabilidades
-- ❌ **Reusability** - Auth logic não pode ser reutilizado sem trazer FlextCli inteiro
+- ❌ **Reusability** - Auth logic não pode ser reutilizado sem trazer cli inteiro
 
 ### 🎯 Arquitetura Proposta (Aplicando Padrões do Documento)
 
-#### **Solução 1: FlextCli Como FlextService[T]**
+#### **Solução 1: cli Como FlextService[T]**
 
 **Proposta:**
 
@@ -7820,7 +7820,7 @@ class FlextCliSettings(FlextSettings):
 
 ### 📋 Plano de Migração
 
-#### **Fase 1: Refatorar FlextCli → FlextCliService** (2-3 dias)
+#### **Fase 1: Refatorar cli → FlextCliService** (2-3 dias)
 
 **1.1: Criar novo FlextCliService**
 
@@ -7848,12 +7848,12 @@ def create_table(data: t.ContainerMapping):
     return FlextCliService(operation="table", data=data).value
 ```
 
-**1.3: Deprecar FlextCli.get_instance()**
+**1.3: Deprecar cli.get_instance()**
 
 ```python
 # flext-cli/src/flext_cli/api.py
 @deprecated("Use factory functions: print_cli(), create_table(), etc.")
-class FlextCli:
+class cli:
     # Keep for backward compatibility
     pass
 ```
@@ -7925,9 +7925,9 @@ def token_file(self) -> Path:
 
 ```python
 # ❌ ANTES - Multiple classes, complex init
-from flext_cli import FlextCli
+from flext_cli import cli
 
-cli = FlextCli.get_instance()  # Singleton with 8 domain libraries
+cli = cli.get_instance()  # Singleton with 8 domain libraries
 
 
 # Print
@@ -8015,21 +8015,21 @@ Métrica: **Type safety** - Antes: Parcial - Depois: 100% Pydantic - Melhoria: *
 1. ✅ **Manter** - FlextCliSettings extends FlextSettings (já correto)
 2. ✅ **Manter** - r railway pattern (já correto)
 3. ✅ **Manter** - Singleton pattern (mas simplificar acesso)
-4. ❌ **Refatorar** - FlextCli → FlextCliService (seguir padrão)
+4. ❌ **Refatorar** - cli → FlextCliService (seguir padrão)
 5. ❌ **Simplificar** - Eliminar domain libraries intermediárias
 6. ❌ **Consolidar** - 8 classes → 3 services focados
 
 #### **O Que EVITAR**
 
 - ❌ **Não criar** mais domain libraries (`FlextCliXXX` classes)
-- ❌ **Não adicionar** métodos públicos em FlextCli
-- ❌ **Não duplicar** lógica entre FlextCli e domain libraries
+- ❌ **Não adicionar** métodos públicos em cli
+- ❌ **Não duplicar** lógica entre cli e domain libraries
 - ❌ **Não usar** `execute()` como stub - deve ter lógica real
 
 #### **Quick Wins (1-2 dias)**
 
 1. **Adicionar factory functions** - `print_cli()`, `create_table()`, `read_json()`
-2. **Deprecar** `FlextCli.get_instance()` - sugerir factory functions
+2. **Deprecar** `cli.get_instance()` - sugerir factory functions
 3. **Documentar** migration guide - Antes/Depois com exemplos
 4. **Criar** `FlextCliService` prototype - validar com equipe
 
@@ -8040,7 +8040,7 @@ Métrica: **Type safety** - Antes: Parcial - Depois: 100% Pydantic - Melhoria: *
 **Semana 3:** Extrair CliAuthService, CliPromptService
 **Semana 4:** Simplificar FlextCliSettings (8 fields)
 **Semana 5:** Migration guide + Update examples
-**Semana 6:** Remover FlextCli deprecated code
+**Semana 6:** Remover cli deprecated code
 
 ### ~~🚀 Próximos Passos~~
 

@@ -144,6 +144,7 @@ allow-direct-references = true
 # [MANAGED] mypy
 [tool.mypy]
 disable_error_code = [
+  "attr-defined",
   "call-arg",
   "name-defined",
   "prop-decorator",

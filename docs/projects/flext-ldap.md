@@ -42,7 +42,7 @@ Python usage:
 ```python
 from flext_ldap import m
 
-api = FlextLdap()
+api = ldap()
 result = api.search_entries(
     m.SearchOptions(
         base_dn="dc=example,dc=com",
