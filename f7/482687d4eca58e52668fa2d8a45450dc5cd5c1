@@ -1,0 +1,44 @@
+src/flext/docs.py
+  692efb5021d42258 16-17
+docs/superpowers/plans/2026-03-26-flext-ldap-mro-rewrite.md
+  02cd650f3f45a1b1 2-4,6,8-49,51-54,56,58-70,72-79,82-95,97-108,110-132
+src/flext/dev.py
+  692efb5021d42258 16-17
+docs/superpowers/specs/2026-03-26-flext-ldap-mro-rewrite-design.md
+  02cd650f3f45a1b1 2-4,6-8,10-15,17-31,33-51,53,55-80,82-90,92-101,103
+src/flext/workspace.py
+  692efb5021d42258 16-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "f7482687d4eca58e52668fa2d8a45450dc5cd5c1",
+  "prompts": {
+    "02cd650f3f45a1b1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f97177f1-c4cb-434e-a8c3-952a392d7425",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 236,
+      "total_deletions": 0,
+      "accepted_lines": 214,
+      "overriden_lines": 22
+    },
+    "692efb5021d42258": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f769829f-6a4e-41ae-9104-340c9871a56d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 6,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}
