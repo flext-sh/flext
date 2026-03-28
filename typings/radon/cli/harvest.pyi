@@ -1,4 +1,4 @@
-from collections.abc import Generator, Iterable, Sequence
+from collections.abc import Generator, Iterable
 from typing import override
 
 from radon.metrics import Halstead, HalsteadReport

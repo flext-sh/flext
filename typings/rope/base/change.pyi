@@ -1,5 +1,5 @@
 from rope.base.resources import File, Resource
-from rope.base.taskhandle import NullJobSet, NullTaskHandle
+from rope.base.taskhandle import NullJobSet
 
 class Change:
     resource: Resource
