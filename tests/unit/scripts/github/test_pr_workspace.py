@@ -31,7 +31,7 @@ class TestPrWorkspace:
             anchor_file=Path(__file__),
         )
         repo = tmp_path / "workspace"
-        _ = repo.mkdir(parents=True)
+        repo.mkdir(parents=True)
 
         command = mod.FlextInfraPrWorkspaceManager._build_root_command(
             repo,
@@ -56,7 +56,7 @@ class TestPrWorkspace:
             anchor_file=Path(__file__),
         )
         repo = tmp_path / "flext-core"
-        _ = repo.mkdir(parents=True)
+        repo.mkdir(parents=True)
 
         command = mod.FlextInfraPrWorkspaceManager._build_subproject_command(
             repo,
@@ -72,7 +72,7 @@ class TestPrWorkspace:
             anchor_file=Path(__file__),
         )
         workspace = tmp_path / "workspace"
-        _ = workspace.mkdir(parents=True)
+        workspace.mkdir(parents=True)
         commands: t.Workspace.Tests.CommandBuffer = []
 
         class RunnerStub:
@@ -83,7 +83,7 @@ class TestPrWorkspace:
         class ReportingStub:
             def get_report_dir(self, _root: Path, _scope: str, _verb: str) -> Path:
                 report_dir = tmp_path / "reports"
-                _ = report_dir.mkdir(parents=True, exist_ok=True)
+                report_dir.mkdir(parents=True, exist_ok=True)
                 return report_dir
 
         manager = mod.FlextInfraPrWorkspaceManager(
@@ -116,7 +116,7 @@ class TestPrWorkspace:
         )
         workspace = tmp_path / "workspace"
         repo = workspace / "flext-core"
-        _ = repo.mkdir(parents=True)
+        repo.mkdir(parents=True)
         commands: t.Workspace.Tests.CommandBuffer = []
 
         class RunnerStub:
@@ -127,7 +127,7 @@ class TestPrWorkspace:
         class ReportingStub:
             def get_report_dir(self, _root: Path, _scope: str, _verb: str) -> Path:
                 report_dir = tmp_path / "reports"
-                _ = report_dir.mkdir(parents=True, exist_ok=True)
+                report_dir.mkdir(parents=True, exist_ok=True)
                 return report_dir
 
         manager = mod.FlextInfraPrWorkspaceManager(
