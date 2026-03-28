@@ -1,0 +1,25 @@
+tests/unit/scripts/github/test_pr_workspace.py
+  163779a08dc80215 34,59,75,86,119,130
+tests/unit/scripts/sync_tests.py
+  163779a08dc80215 21-22,43-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.22",
+  "base_commit_sha": "072ac2ac7564c7521a255a93ef777698f79edd08",
+  "prompts": {
+    "163779a08dc80215": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "476f592d-b040-4145-8fff-0c104b26ad9a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 10,
+      "total_deletions": 10,
+      "accepted_lines": 10,
+      "overriden_lines": 0
+    }
+  }
+}
