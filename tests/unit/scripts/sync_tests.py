@@ -18,8 +18,8 @@ class TestSyncScripts:
 
         canonical = tmp_path / "canonical"
         project = tmp_path / "project"
-        _ = canonical.mkdir(parents=True)
-        _ = project.mkdir(parents=True)
+        canonical.mkdir(parents=True)
+        project.mkdir(parents=True)
         _ = (canonical / "base.mk").write_text("BASE = 1\n", encoding="utf-8")
 
         service = mod.FlextInfraSyncService(canonical_root=canonical)
@@ -40,8 +40,8 @@ class TestSyncScripts:
 
         canonical = tmp_path / "canonical"
         project = tmp_path / "project"
-        _ = canonical.mkdir(parents=True)
-        _ = project.mkdir(parents=True)
+        canonical.mkdir(parents=True)
+        project.mkdir(parents=True)
         _ = (canonical / "base.mk").write_text("BASE = 1\n", encoding="utf-8")
 
         service = mod.FlextInfraSyncService(canonical_root=canonical)
