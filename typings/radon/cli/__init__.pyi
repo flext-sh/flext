@@ -1,5 +1,5 @@
 import configparser
-from collections.abc import Callable, Generator, Iterable, Sequence
+from collections.abc import Callable, Generator, Iterable
 from contextlib import contextmanager
 from typing import TypeVar, override
 
