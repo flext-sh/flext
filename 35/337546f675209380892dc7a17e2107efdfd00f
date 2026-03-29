@@ -1,0 +1,23 @@
+base.mk
+  6973d04e1f101b3b 509,520-521,523-524
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.22",
+  "base_commit_sha": "35337546f675209380892dc7a17e2107efdfd00f",
+  "prompts": {
+    "6973d04e1f101b3b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d352a-a1ee-7a12-9558-2ffd00ace0b7",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 3,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
