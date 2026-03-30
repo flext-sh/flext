@@ -43,11 +43,13 @@
     "venv": true
   },
   "mypy-type-checker.importStrategy": "fromEnvironment",
+  "mypy-type-checker.reportingScope": "workspace",
+  "mypy-type-checker.preferDaemon": true,
   "pyrefly.lspPath": ".venv/bin/pyrefly",
   "pyrefly.commentFoldingRanges": true,
   "python.pyrefly.diagnosticMode": "workspace",
   "python.pyrefly.displayTypeErrors": "force-on",
-  "python.languageServer": "Pylsp",
+  "python.languageServer": "None",
   "python.useEnvironmentsExtension": true,
   "pylsp.plugins.pycodestyle.enabled": false,
   "pylsp.plugins.pyflakes.enabled": false,
@@ -59,5 +61,6 @@
   "pylsp.plugins.rope_completion.enabled": true,
   "pylsp.plugins.pylsp_rope.enabled": true,
   "shellcheck.useWorkspaceRootAsCwd": true,
-  "ruff.configurationPreference": "filesystemFirst"
+  "ruff.configurationPreference": "filesystemFirst",
+  "python.analysis.completeFunctionParens": true,
 }
