@@ -1,0 +1,23 @@
+.vscode/settings.json
+  cbe03c2b31a6d762 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.22",
+  "base_commit_sha": "215a86a0f68af628af763268c93716844d90cf5e",
+  "prompts": {
+    "cbe03c2b31a6d762": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e15d9cb2-b1b1-44be-81cc-15da002006f6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 8,
+      "total_deletions": 6,
+      "accepted_lines": 1,
+      "overriden_lines": 2
+    }
+  }
+}
