@@ -6,11 +6,13 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING as _TYPE_CHECKING
 
 from flext_core.lazy import install_lazy_exports
 
-if TYPE_CHECKING:
+if _TYPE_CHECKING:
+    from flext_core import d, e, h, r, x
+
     from flext.constants import *
     from flext.models import *
     from flext.protocols import *
@@ -18,7 +20,6 @@ if TYPE_CHECKING:
     from flext.typings import *
     from flext.utilities import *
     from flext.workspace import *
-
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
     "FlexRootTypes": "flext.typings",
