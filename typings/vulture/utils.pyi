@@ -1,4 +1,5 @@
 import ast
+from collections import UserList
 from enum import IntEnum
 from pathlib import Path
 from typing import override
@@ -19,7 +20,7 @@ def get_decorator_name(decorator: ast.expr) -> str: ...
 def get_modules(paths: list[str] | list[Path]) -> list[Path]: ...
 def read_file(filename: str | Path) -> str: ...
 
-class LoggingList(list[object]):
+class LoggingList(UserList[object]):
     typ: str
     def __init__(self, typ: str, verbose: bool) -> None: ...
     @override

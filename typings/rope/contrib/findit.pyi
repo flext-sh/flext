@@ -18,7 +18,6 @@ def find_occurrences(
     in_hierarchy: bool = False,
     task_handle: NullTaskHandle = ...,
 ) -> list[Location]: ...
-
 def find_implementations(
     project: _Project,
     resource: Resource,
@@ -26,7 +25,6 @@ def find_implementations(
     resources: list[File] | None = None,
     task_handle: NullTaskHandle = ...,
 ) -> list[Location]: ...
-
 def find_definition(
     project: _Project,
     code: str,
