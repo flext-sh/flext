@@ -271,7 +271,7 @@ help: ## Show simple workspace verbs
 	$(Q)echo " VERBOSE=1                Verbose test output (-vv -s)"
 	$(Q)echo " RUFF_ARGS=\"--select E501\"    Extra ruff args for check"
 	$(Q)echo " PYRIGHT_ARGS=\"--level basic\"  Extra pyright args for check"
-	$(Q)echo " CHECK_ONLY=1             Format check only (dry-run, no writes)"
+	$(Q)echo " CHECK_ONLY=1             Dry-run format/check (no writes)"
 	$(Q)echo " VALIDATE_SCOPE=project|workspace     Validate scope (default: project)"
 	$(Q)echo " DOCS_PHASE=audit|fix|build|generate|validate|all"
 	$(Q)echo " RELEASE_PHASE=validate,version,build,publish|all"
@@ -700,7 +700,7 @@ else
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
-	$(Q)if [ -z "$(FIX)" ]; then echo "INFO: run 'make validate FIX=1' to auto-fix before validate"; fi
+	$(Q)if [ -z "$(FIX)" ]; then echo "INFO: run 'make val FIX=1' to auto-fix before validate"; fi
 	$(Q)$(ORCHESTRATOR) --verb val \
 		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
 		$(if $(FIX),--make-arg "FIX=$(FIX)") \
