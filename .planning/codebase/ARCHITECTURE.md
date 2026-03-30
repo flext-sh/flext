@@ -88,7 +88,7 @@
 - Pattern: Inherits from `FlextService` with generic config type; implements `__init__`, `execute()`, `shutdown()`
 - Lifecycle: Created → configured → wired → handlers registered → execute() → shutdown()
 
-**Result (`r[T]` / FlextModelsResult):**
+**Result (`r[T]` / FlextResult):**
 - Purpose: Type-safe error handling for fallible operations
 - Examples: `r[str].ok("success")`, `r[User].fail("not found")`, `result.map(transform)`, `result.flat_map(chain)`
 - Pattern: Encapsulates success value or failure message with error code; supports monadic composition
