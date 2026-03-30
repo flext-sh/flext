@@ -5,46 +5,57 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, MutableMapping, Sequence
+from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING
 
-from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
+from flext_core.lazy import install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_core import FlextTypes
     from flext_tests import d, e, h, s, x
 
-    from tests import infra, tf, tm
-    from tests.infra import constants, models, protocols, result, typings, utilities
-    from tests.infra.constants import FlextWorkspaceTestConstants, c
-    from tests.infra.models import FlextWorkspaceTestModels, m
-    from tests.infra.protocols import FlextWorkspaceTestProtocols, p
-    from tests.infra.result import r
-    from tests.infra.typings import FlextWorkspaceTestTypes, t
-    from tests.infra.utilities import FlextWorkspaceTestUtilities, u
-    from tests.unit.libs.versioning_tests import TestVersioning
-    from tests.unit.scripts.github.test_pr_workspace import TestPrWorkspace
-    from tests.unit.scripts.sync_tests import TestSyncScripts
+    from tests import infra as infra, tf as tf, tm as tm
+    from tests.infra import (
+        constants as constants,
+        models as models,
+        protocols as protocols,
+        result as result,
+        typings as typings,
+        utilities as utilities,
+    )
+    from tests.infra.constants import (
+        FlextWorkspaceTestConstants as FlextWorkspaceTestConstants,
+        c as c,
+    )
+    from tests.infra.models import (
+        FlextWorkspaceTestModels as FlextWorkspaceTestModels,
+        m as m,
+    )
+    from tests.infra.protocols import (
+        FlextWorkspaceTestProtocols as FlextWorkspaceTestProtocols,
+        p as p,
+    )
+    from tests.infra.result import r as r
+    from tests.infra.typings import (
+        FlextWorkspaceTestTypes as FlextWorkspaceTestTypes,
+        t as t,
+    )
+    from tests.infra.utilities import (
+        FlextWorkspaceTestUtilities as FlextWorkspaceTestUtilities,
+        u as u,
+    )
+    from tests.unit.libs.versioning_tests import TestVersioning as TestVersioning
+    from tests.unit.scripts.github.test_pr_workspace import (
+        TestPrWorkspace as TestPrWorkspace,
+    )
+    from tests.unit.scripts.sync_tests import TestSyncScripts as TestSyncScripts
 
 _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
-    "FlextWorkspaceTestConstants": [
-        "tests.infra.constants",
-        "FlextWorkspaceTestConstants",
-    ],
+    "FlextWorkspaceTestConstants": ["tests.infra.constants", "FlextWorkspaceTestConstants"],
     "FlextWorkspaceTestModels": ["tests.infra.models", "FlextWorkspaceTestModels"],
-    "FlextWorkspaceTestProtocols": [
-        "tests.infra.protocols",
-        "FlextWorkspaceTestProtocols",
-    ],
+    "FlextWorkspaceTestProtocols": ["tests.infra.protocols", "FlextWorkspaceTestProtocols"],
     "FlextWorkspaceTestTypes": ["tests.infra.typings", "FlextWorkspaceTestTypes"],
-    "FlextWorkspaceTestUtilities": [
-        "tests.infra.utilities",
-        "FlextWorkspaceTestUtilities",
-    ],
-    "TestPrWorkspace": [
-        "tests.unit.scripts.github.test_pr_workspace",
-        "TestPrWorkspace",
-    ],
+    "FlextWorkspaceTestUtilities": ["tests.infra.utilities", "FlextWorkspaceTestUtilities"],
+    "TestPrWorkspace": ["tests.unit.scripts.github.test_pr_workspace", "TestPrWorkspace"],
     "TestSyncScripts": ["tests.unit.scripts.sync_tests", "TestSyncScripts"],
     "TestVersioning": ["tests.unit.libs.versioning_tests", "TestVersioning"],
     "c": ["tests.infra.constants", "c"],
@@ -69,7 +80,7 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "x": ["flext_tests", "x"],
 }
 
-__all__ = [
+_EXPORTS: Sequence[str] = [
     "FlextWorkspaceTestConstants",
     "FlextWorkspaceTestModels",
     "FlextWorkspaceTestProtocols",
@@ -101,41 +112,4 @@ __all__ = [
 ]
 
 
-_LAZY_CACHE: MutableMapping[str, FlextTypes.ModuleExport] = {}
-
-
-def __getattr__(name: str) -> FlextTypes.ModuleExport:
-    """Lazy-load module attributes on first access (PEP 562).
-
-    A local cache ``_LAZY_CACHE`` persists resolved objects across repeated
-    accesses during process lifetime.
-
-    Args:
-        name: Attribute name requested by dir()/import.
-
-    Returns:
-        Lazy-loaded module export type.
-
-    Raises:
-        AttributeError: If attribute not registered.
-
-    """
-    if name in _LAZY_CACHE:
-        return _LAZY_CACHE[name]
-
-    value = lazy_getattr(name, _LAZY_IMPORTS, globals(), __name__)
-    _LAZY_CACHE[name] = value
-    return value
-
-
-def __dir__() -> Sequence[str]:
-    """Return list of available attributes for dir() and autocomplete.
-
-    Returns:
-        List of public names from module exports.
-
-    """
-    return sorted(__all__)
-
-
-cleanup_submodule_namespace(__name__, _LAZY_IMPORTS)
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, _EXPORTS)

@@ -5,35 +5,33 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, MutableMapping, Sequence
+from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING
 
-from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
+from flext_core.lazy import install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_core import FlextTypes
-
     from examples import (
-        acl_processing_example,
-        advanced_processing_example,
-        complete_workflow_example,
+        acl_processing_example as acl_processing_example,
+        advanced_processing_example as advanced_processing_example,
+        complete_workflow_example as complete_workflow_example,
     )
     from examples.acl_processing_example import (
-        AclProcessingExample,
-        ContextDict,
-        EntryDict,
+        AclProcessingExample as AclProcessingExample,
+        ContextDict as ContextDict,
+        EntryDict as EntryDict,
     )
     from examples.advanced_processing_example import (
-        AdvancedProcessingExample,
-        ItemDict,
-        PipelineStageData,
-        StageOperation,
+        AdvancedProcessingExample as AdvancedProcessingExample,
+        ItemDict as ItemDict,
+        PipelineStageData as PipelineStageData,
+        StageOperation as StageOperation,
     )
     from examples.complete_workflow_example import (
-        CompleteWorkflowExample,
-        ProcessingDict,
-        WorkflowContent,
-        WorkflowData,
+        CompleteWorkflowExample as CompleteWorkflowExample,
+        ProcessingDict as ProcessingDict,
+        WorkflowContent as WorkflowContent,
+        WorkflowData as WorkflowData,
     )
 
 _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
@@ -59,7 +57,7 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "complete_workflow_example": ["examples.complete_workflow_example", ""],
 }
 
-__all__ = [
+_EXPORTS: Sequence[str] = [
     "AclProcessingExample",
     "AdvancedProcessingExample",
     "CompleteWorkflowExample",
@@ -77,41 +75,4 @@ __all__ = [
 ]
 
 
-_LAZY_CACHE: MutableMapping[str, FlextTypes.ModuleExport] = {}
-
-
-def __getattr__(name: str) -> FlextTypes.ModuleExport:
-    """Lazy-load module attributes on first access (PEP 562).
-
-    A local cache ``_LAZY_CACHE`` persists resolved objects across repeated
-    accesses during process lifetime.
-
-    Args:
-        name: Attribute name requested by dir()/import.
-
-    Returns:
-        Lazy-loaded module export type.
-
-    Raises:
-        AttributeError: If attribute not registered.
-
-    """
-    if name in _LAZY_CACHE:
-        return _LAZY_CACHE[name]
-
-    value = lazy_getattr(name, _LAZY_IMPORTS, globals(), __name__)
-    _LAZY_CACHE[name] = value
-    return value
-
-
-def __dir__() -> Sequence[str]:
-    """Return list of available attributes for dir() and autocomplete.
-
-    Returns:
-        List of public names from module exports.
-
-    """
-    return sorted(__all__)
-
-
-cleanup_submodule_namespace(__name__, _LAZY_IMPORTS)
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, _EXPORTS)
