@@ -1,0 +1,71 @@
+.planning/TARGET_TYPES_QUICK_REFERENCE.md
+  9ea44718a8c2e74e 29,49
+.planning/milestones/v1.0-phases/07-modernization-integration-fixes/07-02-PLAN.md
+  9ea44718a8c2e74e 67,109
+.planning/TARGET_CONVERSION_SUMMARY.md
+  9ea44718a8c2e74e 75,82,101,107,122
+.planning/phases/09-rope-native-refactor-engine-rewrite/09-01-SUMMARY.md
+  9ea44718a8c2e74e 90
+.planning/tap-refactor-examples.md
+  9ea44718a8c2e74e 110
+.planning/EXECUTION-SUMMARY.md
+  9ea44718a8c2e74e 29
+.planning/phases/09-rope-native-refactor-engine-rewrite/09-03-SUMMARY.md
+  9ea44718a8c2e74e 59
+.planning/FLEXT-TAP-LDAP-CONVERSION-DETAILS.md
+  9ea44718a8c2e74e 9,13,278
+.planning/codebase/CONVENTIONS.md
+  9ea44718a8c2e74e 82-83
+.claude/skills/flext-import-rules/SKILL.md
+  9ea44718a8c2e74e 223
+.planning/EXECUTION_SUMMARY_TARGET_REFACTOR.md
+  9ea44718a8c2e74e 62,215
+.planning/FLEXTRESULT_COMPREHENSIVE_ANALYSIS.md
+  9ea44718a8c2e74e 409
+.planning/quick/260323-qh4-fix-69-remaining-lint-errors-across-work/260323-qh4-PLAN.md
+  9ea44718a8c2e74e 54
+.planning/tap-validation-refactor-SUMMARY.md
+  9ea44718a8c2e74e 25
+docs/projects/flext-db-oracle.md
+  9ea44718a8c2e74e 35-36
+.planning/plans/2026-03-30-flext-infra-cli-mro.md
+  9ea44718a8c2e74e 141,281-288,339
+docs/architecture/flext-cqrs-architecture.md
+  9ea44718a8c2e74e 1148,1152,1156,1160
+.planning/COMPLETION_REPORT.md
+  9ea44718a8c2e74e 43,129,133,137,141,184
+.planning/TAP_VALIDATION_REFACTOR_COMPLETE.md
+  9ea44718a8c2e74e 80,141
+.planning/milestones/v1.0-phases/07-modernization-integration-fixes/07-VERIFICATION.md
+  9ea44718a8c2e74e 27,57
+.planning/TAP-REFACTOR-VERIFICATION.md
+  9ea44718a8c2e74e 17,58
+.planning/milestones/v1.0-phases/03-infrastructure-centralization/03-05-PLAN.md
+  9ea44718a8c2e74e 118,141
+.planning/milestones/v1.0-phases/03-infrastructure-centralization/03-01-PLAN.md
+  9ea44718a8c2e74e 120,204
+.planning/RESULT_IMPLEMENTATION_HANDOFF.md
+  9ea44718a8c2e74e 71
+.planning/TARGET_VALIDATION_TYPES_REFACTOR.md
+  9ea44718a8c2e74e 87,117,211
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.22",
+  "base_commit_sha": "098311e8b28dedf52068c731fc713279f1eaa79d",
+  "prompts": {
+    "9ea44718a8c2e74e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d3cc8-bb6f-7bb1-9594-70a08815f559",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 60,
+      "total_deletions": 60,
+      "accepted_lines": 60,
+      "overriden_lines": 0
+    }
+  }
+}
