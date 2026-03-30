@@ -352,19 +352,19 @@ check: ## Run lint gates (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,
 		echo "Fast-path check: $$_files"; \
 		status=0; \
 		case ",$$gates," in \
-			*,lint,*) $(POETRY) run ruff check $$_files $(RUFF_ARGS) $(if $(filter 1,$(FIX)),--fix,) || status=$$?;; \
+			*,lint,*) env -u PYTHONPATH -u MYPYPATH $(POETRY) run ruff check $$_files $(RUFF_ARGS) $(if $(filter 1,$(FIX)),--fix,) || status=$$?;; \
 		esac; \
 		case ",$$gates," in \
-			*,format,*) $(POETRY) run ruff format $$_files $(if $(filter 1,$(CHECK_ONLY)),--check,--quiet) || status=$$?;; \
+			*,format,*) env -u PYTHONPATH -u MYPYPATH $(POETRY) run ruff format $$_files $(if $(filter 1,$(CHECK_ONLY)),--check,--quiet) || status=$$?;; \
 		esac; \
 		case ",$$gates," in \
-			*,pyright,*) $(POETRY) run pyright $$_files $(PYRIGHT_ARGS) || status=$$?;; \
+			*,pyright,*) env -u PYTHONPATH -u MYPYPATH $(POETRY) run pyright $$_files $(PYRIGHT_ARGS) || status=$$?;; \
 		esac; \
 		case ",$$gates," in \
-			*,pyrefly,*) $(POETRY) run pyrefly check $$_files || status=$$?;; \
+			*,pyrefly,*) env -u PYTHONPATH -u MYPYPATH $(POETRY) run pyrefly check $$_files || status=$$?;; \
 		esac; \
 		case ",$$gates," in \
-			*,mypy,*) $(POETRY) run mypy $$_files || status=$$?;; \
+			*,mypy,*) env -u PYTHONPATH -u MYPYPATH $(POETRY) run mypy $$_files || status=$$?;; \
 		esac; \
 		exit $$status; \
 	fi; \
