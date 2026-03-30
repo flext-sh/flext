@@ -14,7 +14,7 @@
 
 **flext-tap-ldap conversions:**
 
-- [x] Import statement added: `from flext_core.typings import t`
+- [x] Import statement added: `from flext_core import t`
 - [x] LdapConnectionParams.host → t.NonEmptyStr
 - [x] LdapConnectionParams.base_dn → t.NonEmptyStr
 - [x] LdapConnectionParams.port → Annotated[t.PortNumber, Field(default=...)]
@@ -55,7 +55,7 @@ All conversions maintain semantic equivalence:
 
 ### ✅ Imports Correct
 
-- [x] `from flext_core.typings import t` added to flext-tap-ldap/models.py
+- [x] `from flext_core import t` added to flext-tap-ldap/models.py
 - [x] Import placed in correct alphabetical position
 - [x] Import uses correct module path (flext_core.typings, not flext_core.typing)
 

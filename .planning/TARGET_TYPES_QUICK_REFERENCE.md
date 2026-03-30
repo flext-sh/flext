@@ -26,7 +26,7 @@ All 5 target-* projects converted from bare Pydantic Field constraints to `t.*` 
 
 ```python
 # Add this import to your file
-from flext_core.typings import t
+from flext_core import t
 
 # Or use local import if available
 from .typings import t
@@ -46,7 +46,7 @@ class Config(FlextModels.ArbitraryTypesModel):
 
 ### After
 ```python
-from flext_core.typings import t
+from flext_core import t
 
 
 class Config(FlextModels.ArbitraryTypesModel):

@@ -59,7 +59,7 @@ Applied conversions to 5 projects with detailed mapping:
 
 #### flext-target-oracle (14 conversions + import)
 ```
-✅ Import added: from flext_core.typings import t
+✅ Import added: from flext_core import t
 
 ✅ messages_processed → t.NonNegativeInt
 ✅ records_loaded → t.NonNegativeInt
@@ -212,7 +212,7 @@ refactor(target-ldap): apply t.* validation types to models
 - Use framework-independent validation types from flext-core
 
 refactor(target-oracle): apply t.* validation types to models
-- Add import: from flext_core.typings import t
+- Add import: from flext_core import t
 - Replace 14 bare Field constraints with t.* types
 - Use t.PortNumber, t.PositiveInt, t.BatchSize
 

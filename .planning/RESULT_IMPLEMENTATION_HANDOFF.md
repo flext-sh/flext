@@ -68,7 +68,7 @@ Completed implementation of comprehensive Result type system with strict typing 
 
 **Integration Pattern**:
 ```python
-from flext_core.errors import ErrorDomain, FlextError
+from flext_core import ErrorDomain, FlextError
 from flext_core import r
 
 # Create structured error

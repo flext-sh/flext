@@ -107,7 +107,7 @@ class StreamCreationParams(FlextLdapModels.Value):
 All converted files need this import:
 
 ```python
-from flext_core.typings import t
+from flext_core import t
 ```
 
 ## Validation Semantics

@@ -79,8 +79,8 @@ Runtime aliases (e.g., `r`, `e`, `d`, `s`, `x`) must be imported from `flext_cor
 5. Local: `from . import local_module` or `from .module import func`
 
 **Path Aliases:**
-- Root imports by class name: `from flext_core import FlextProtocols` (never `from flext_core.protocols import Protocols`)
-- Submodule imports only for direct access: `from flext_core._utilities.guards import FlextUtilitiesGuardsEnsure`
+- Root imports by class name: `from flext_core import FlextProtocols` (never `from flext_core import Protocols`)
+- Submodule imports only for direct access: `from flext_core import FlextUtilitiesGuardsEnsure`
 - In test code: Use `from tests import c, m, t, u` for local test infrastructure
 - Forbidde: Importing private `_` internals outside the module; importing aliases from sibling projects in tests
 

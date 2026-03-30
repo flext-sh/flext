@@ -56,7 +56,7 @@ affects: [flext-infra refactor engine, transformers/, u.Infra.*, c.Infra.*]
 
 ## Architectural Fixes Applied
 
-- **Wrong pattern removed:** `from flext_infra.refactor._rope import (RopeProject, init_rope_project, ...)` — FORBIDDEN direct submodule import
+- **Wrong pattern removed:** `from flext_infra import (RopeProject, init_rope_project, ...)` — FORBIDDEN direct submodule import
 - **Correct pattern:** `from flext_infra import u` → `u.Infra.init_rope_project(...)`
 - **Constants inline → c.Infra:** `_IGNORED` tuple moved from utility to `c.Infra.ROPE_IGNORED_RESOURCES`
 - **Generalized API:** orchestrator passes `project_prefix`, `src_dir` — utility doesn't embed business rules

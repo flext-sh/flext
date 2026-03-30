@@ -72,14 +72,14 @@ The following mapping was used for all conversions:
 - `successful_deletes`: `int` with `ge=0` → `t.NonNegativeInt`
 - `average_processing_time_ms`: `float` with `ge=0.0` → `t.NonNegativeFloat`
 
-**Import:** `from flext_core.typings import t` (line 18)
+**Import:** `from flext_core import t` (line 18)
 
 ### 3. flext-target-oracle
 **File:** `/home/marlonsc/flext/flext-target-oracle/src/flext_target_oracle/models.py`
 
 **Changes:**
 - 14 total type conversions
-- Import added: `from flext_core.typings import t`
+- Import added: `from flext_core import t`
 - Classes affected: `ProcessingSummary`, `LoaderOperation`, `LoaderFinalizeResult`, `OracleConnectionConfig`, `TargetConfig`, `ImplementationMetrics`
 
 **Conversions:**
@@ -98,13 +98,13 @@ The following mapping was used for all conversions:
 - `streams_configured`: `int` with `ge=0` → `t.NonNegativeInt`
 - `batch_size` (ImplementationMetrics): `int` with `ge=1` → `t.BatchSize`
 
-**Import:** `from flext_core.typings import t` (line 8 - newly added)
+**Import:** `from flext_core import t` (line 8 - newly added)
 
 ### 4. flext-target-oracle-oic
 **File:** `/home/marlonsc/flext/flext-target-oracle-oic/src/flext_target_oracle_oic/models.py`
 
 **Status:** No constraints found - already using clean type definitions
-**Import:** Already has `from flext_core.typings import t` (line 11)
+**Import:** Already has `from flext_core import t` (line 11)
 
 ### 5. flext-target-oracle-wms
 **File:** `/home/marlonsc/flext/flext-target-oracle-wms/src/flext_target_oracle_wms/models.py`
@@ -119,7 +119,7 @@ The following mapping was used for all conversions:
 - `failed_records`: bare `int` → `t.NonNegativeInt`
 - `batch_size`: bare `int` → `t.BatchSize`
 
-**Import:** Already has `from flext_core.typings import t` (line 12)
+**Import:** Already has `from flext_core import t` (line 12)
 
 ## Validation Types Reference
 
