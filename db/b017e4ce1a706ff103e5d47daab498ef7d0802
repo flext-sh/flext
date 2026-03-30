@@ -1,0 +1,23 @@
+.planning/codebase/ARCHITECTURE.md
+  9ea44718a8c2e74e 91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.22",
+  "base_commit_sha": "dbb017e4ce1a706ff103e5d47daab498ef7d0802",
+  "prompts": {
+    "9ea44718a8c2e74e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d3cc8-bb6f-7bb1-9594-70a08815f559",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
