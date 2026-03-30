@@ -13,32 +13,40 @@ from flext_core.lazy import install_lazy_exports
 if TYPE_CHECKING:
     from flext_tests import *
 
-    from tests import infra, tf, tm
-    from tests.infra import constants, models, protocols, result, typings, utilities
-    from tests.infra.constants import *
-    from tests.infra.models import *
-    from tests.infra.protocols import *
-    from tests.infra.result import *
-    from tests.infra.typings import *
-    from tests.infra.utilities import *
+    from tests import tf, tm
+    from tests.infra import *
     from tests.unit.libs.versioning_tests import *
     from tests.unit.scripts.github.test_pr_workspace import *
     from tests.unit.scripts.sync_tests import *
 
-from tests.infra import _LAZY_IMPORTS as _INFRA_LAZY
-
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
-    **_INFRA_LAZY,
+    "FlextWorkspaceTestConstants": "tests.infra.constants",
+    "FlextWorkspaceTestModels": "tests.infra.models",
+    "FlextWorkspaceTestProtocols": "tests.infra.protocols",
+    "FlextWorkspaceTestTypes": "tests.infra.typings",
+    "FlextWorkspaceTestUtilities": "tests.infra.utilities",
     "TestPrWorkspace": "tests.unit.scripts.github.test_pr_workspace",
     "TestSyncScripts": "tests.unit.scripts.sync_tests",
     "TestVersioning": "tests.unit.libs.versioning_tests",
+    "c": "tests.infra.constants",
+    "constants": "tests.infra.constants",
     "d": "flext_tests",
     "e": "flext_tests",
     "h": "flext_tests",
     "infra": "tests.infra",
+    "m": "tests.infra.models",
+    "models": "tests.infra.models",
+    "p": "tests.infra.protocols",
+    "protocols": "tests.infra.protocols",
+    "r": "tests.infra.result",
+    "result": "tests.infra.result",
     "s": "flext_tests",
+    "t": "tests.infra.typings",
     "tf": "tests.tf",
     "tm": "tests.tm",
+    "typings": "tests.infra.typings",
+    "u": "tests.infra.utilities",
+    "utilities": "tests.infra.utilities",
     "x": "flext_tests",
 }
 
