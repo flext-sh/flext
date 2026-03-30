@@ -1,0 +1,23 @@
+.planning/plans/2026-03-30-flext-infra-cli-mro.md
+  6f0d1c387a2140f2 1-436
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.22",
+  "base_commit_sha": "3efdd9cbec244a3c465254059a3ddb3fa1d4cd3c",
+  "prompts": {
+    "6f0d1c387a2140f2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "df413ba6-7b61-48cd-8b6c-70053bacb125",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 436,
+      "total_deletions": 0,
+      "accepted_lines": 436,
+      "overriden_lines": 0
+    }
+  }
+}
