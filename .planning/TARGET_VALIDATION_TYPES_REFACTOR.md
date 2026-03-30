@@ -84,7 +84,7 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
 
 ### Project 3: flext-target-oracle (14 conversions + import added)
 - **File:** `/home/marlonsc/flext/flext-target-oracle/src/flext_target_oracle/models.py`
-- **Import Added:** `from flext_core.typings import t` (line 8)
+- **Import Added:** `from flext_core import t` (line 8)
 - **Classes Modified:** 6
   - `ProcessingSummary`: 1 conversion
   - `LoaderOperation`: 2 conversions
@@ -114,7 +114,7 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
 ### Project 4: flext-target-oracle-oic (0 conversions)
 - **File:** `/home/marlonsc/flext/flext-target-oracle-oic/src/flext_target_oracle_oic/models.py`
 - **Status:** Already uses clean type definitions, no bare constraints found
-- **Import Status:** Already has `from flext_core.typings import t`
+- **Import Status:** Already has `from flext_core import t`
 
 ### Project 5: flext-target-oracle-wms (3 conversions)
 - **File:** `/home/marlonsc/flext/flext-target-oracle-wms/src/flext_target_oracle_wms/models.py`
@@ -208,7 +208,7 @@ t.NonNegativeFloat = Annotated[float, Ge(0.0)]  # ge=0.0
 ├─ 14 type conversions
 ├─ 6 classes modified
 ├─ Import added
-└─ Import now: from flext_core.typings import t
+└─ Import now: from flext_core import t
 
 /home/marlonsc/flext/flext-target-oracle-oic/src/flext_target_oracle_oic/models.py
 ├─ 0 conversions (already clean)

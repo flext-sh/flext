@@ -1145,19 +1145,19 @@ servir como referência futura para implementação:
 
 ~~ # Only register if not already present~~
 ~~ if container.get("circuit_breaker").is_failure:~~
-~~ from flext_core.\_managers.circuit_breaker import CircuitBreakerManager~~
+~~ from flext_core import CircuitBreakerManager~~
 ~~ container.register("circuit_breaker", CircuitBreakerManager())~~
 
 ~~ if container.get("rate_limiter").is_failure:~~
-~~ from flext_core.\_managers.rate_limiter import RateLimiterManager~~
+~~ from flext_core import RateLimiterManager~~
 ~~ container.register("rate_limiter", RateLimiterManager())~~
 
 ~~ if container.get("timeout_enforcer").is_failure:~~
-~~ from flext_core.\_managers.timeout_enforcer import TimeoutEnforcer~~
+~~ from flext_core import TimeoutEnforcer~~
 ~~ container.register("timeout_enforcer", TimeoutEnforcer())~~
 
 ~~ if container.get("retry_policy").is_failure:~~
-~~ from flext_core.\_managers.retry_policy import RetryPolicyManager~~
+~~ from flext_core import RetryPolicyManager~~
 ~~ container.register("retry_policy", RetryPolicyManager())~~
 ~~```~~
 

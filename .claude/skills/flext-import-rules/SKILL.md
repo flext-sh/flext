@@ -220,7 +220,7 @@ m = FlextTargetOracleModels
 # m.Meltano.* inherited, m.TargetOracle.* local
 
 # In runtime code — import from package facade/module path, not relative import:
-from flext_target_oracle.models import m
+from flext_target_oracle import m
 
 schema = m.Meltano.SingerSchemaMessage(data)
 ```

@@ -40,7 +40,7 @@ All target-* projects in the FLEXT workspace have been successfully converted fr
 - **Files Modified:** 1
   - `/home/marlonsc/flext/flext-target-oracle/src/flext_target_oracle/models.py`
 - **Changes:**
-  - Added import: `from flext_core.typings import t`
+  - Added import: `from flext_core import t`
   - 5 bare `int` fields → `t.NonNegativeInt`
   - 5 bare `int` fields with ge/le → specific t.* types
   - 1 bare `int` field → `t.BatchSize`
@@ -126,19 +126,19 @@ Total: 5 files
 
 2. `/home/marlonsc/flext/flext-target-ldap/src/flext_target_ldap/models.py`
    - 15 conversions
-   - Uses `from flext_core.typings import t`
+   - Uses `from flext_core import t`
 
 3. `/home/marlonsc/flext/flext-target-oracle/src/flext_target_oracle/models.py`
    - 14 conversions
-   - Import added: `from flext_core.typings import t` (line 8)
+   - Import added: `from flext_core import t` (line 8)
 
 4. `/home/marlonsc/flext/flext-target-oracle-oic/src/flext_target_oracle_oic/models.py`
    - 0 conversions (no changes needed)
-   - Already has `from flext_core.typings import t`
+   - Already has `from flext_core import t`
 
 5. `/home/marlonsc/flext/flext-target-oracle-wms/src/flext_target_oracle_wms/models.py`
    - 3 conversions
-   - Already has `from flext_core.typings import t`
+   - Already has `from flext_core import t`
 
 ## Verification Status
 
@@ -181,7 +181,7 @@ refactor(target-ldap): apply t.* validation types to models
 
 refactor(target-oracle): apply t.* validation types to models
 
-- Add import: from flext_core.typings import t
+- Add import: from flext_core import t
 - Replace 14 bare Field constraints with t.* types
 - Support specific types: t.PortNumber, t.PositiveInt, t.BatchSize
 

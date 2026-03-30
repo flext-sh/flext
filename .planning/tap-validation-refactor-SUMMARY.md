@@ -22,7 +22,7 @@ Convert all tap-* projects to use `t.*` validation types from `flext_core.typing
 
 **Import Added:**
 ```python
-from flext_core.typings import t
+from flext_core import t
 ```
 
 **Conversions Applied:**

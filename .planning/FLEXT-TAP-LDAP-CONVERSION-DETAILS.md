@@ -6,11 +6,11 @@
 
 ## Import Addition
 
-**Location:** Line 19 (after `from flext_core.constants import c`)
+**Location:** Line 19 (after `from flext_core import c`)
 
 **Added:**
 ```python
-from flext_core.typings import t
+from flext_core import t
 ```
 
 This enables access to all t.* validation types used in the file.
@@ -275,7 +275,7 @@ The converted file is ready for:
 ## Rollback (if needed)
 
 To revert to the original patterns:
-1. Remove `from flext_core.typings import t` import
+1. Remove `from flext_core import t` import
 2. Replace each t.* type back to its original Field() pattern
 3. Test to ensure behavior unchanged
 

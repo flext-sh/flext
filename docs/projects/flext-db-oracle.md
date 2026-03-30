@@ -32,8 +32,8 @@ make setup
 ```
 
 ```python
-from flext_db_oracle.api import FlextDbOracleApi
-from flext_db_oracle.models import FlextDbOracleModels
+from flext_db_oracle import FlextDbOracleApi
+from flext_db_oracle import FlextDbOracleModels
 
 config = FlextDbOracleModels.OracleConfig(
     host="localhost",

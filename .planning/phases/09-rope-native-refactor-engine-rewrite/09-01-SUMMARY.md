@@ -87,7 +87,7 @@ completed: 2026-03-25
 
 ## Issues Encountered
 
-- `from flext_infr import FlextInfraRefactorEngine` typo in pre-generated test file — fixed to `from flext_infra.refactor.engine import FlextInfraRefactorEngine`
+- `from flext_infr import FlextInfraRefactorEngine` typo in pre-generated test file — fixed to `from flext_infra import FlextInfraRefactorEngine`
 
 ## Next Phase Readiness
 

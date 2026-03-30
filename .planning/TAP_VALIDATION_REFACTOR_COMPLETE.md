@@ -77,7 +77,7 @@ stream_name: Annotated[str, Field(..., description="Singer stream name")]
 ### 4. flext-tap-oracle-oic
 **Status**: ✅ COMPLETE - No bare constraints found
 
-**Imports**: `from flext_tap_oracle_oic.typings import t`
+**Imports**: `from flext_tap_oracle_oic import t`
 
 **Strategy**: Uses project-specific typings module for domain-complex types, avoiding bare constraints on simple values.
 
@@ -138,7 +138,7 @@ The refactoring uses these standardized types from `flext_core.typings.FlextType
 
 ### Correct Pattern (Current State)
 ```python
-from flext_core.typings import t
+from flext_core import t
 
 
 class MyModel(BaseModel):

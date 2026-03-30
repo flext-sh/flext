@@ -24,7 +24,7 @@ re_verification: false
 | 3   | Zero UserDict/UserString in any src/ file                                         | ✓ VERIFIED | `sg --pattern 'UserDict' --lang py` + `sg --pattern 'UserString' --lang py` return no matches in `*/src/` |
 | 4   | flext-tests test suite passes (85+ tests)                                         | ✓ VERIFIED | `pytest flext-tests/tests/ -x -q` → 271 passed in 2.64s                                        |
 | 5   | flext-infra test collection succeeds without circular import errors               | ✓ VERIFIED | `pytest flext-infra/tests/ --collect-only` → 2009 tests collected, 0 errors                    |
-| 6   | make pyre passes clean across entire workspace                                    | ✓ VERIFIED | SUMMARY documents `make pyre` clean; `_utilities_loader.py` imports cleanly (`python -c "from flext_infra.refactor._utilities_loader import FlextInfraUtilitiesRefactorLoader"` → OK) |
+| 6   | make pyre passes clean across entire workspace                                    | ✓ VERIFIED | SUMMARY documents `make pyre` clean; `_utilities_loader.py` imports cleanly (`python -c "from flext_infra import FlextInfraUtilitiesRefactorLoader"` → OK) |
 
 **Score:** 6/6 truths verified
 
@@ -54,7 +54,7 @@ Not applicable — phase produces utility code, validators, and test infrastruct
 | ------------------------------------ | ------------------------------------------------------------------------------------------------ | -------------------------------- | ------- |
 | flext-tests suite passes             | `.venv/bin/python -m pytest flext-tests/tests/ -x -q`                                           | 271 passed in 2.64s              | ✓ PASS  |
 | flext-infra test collection clean    | `.venv/bin/python -m pytest flext-infra/tests/ --collect-only`                                  | 2009 tests collected, 0 errors   | ✓ PASS  |
-| _utilities_loader import succeeds    | `.venv/bin/python -c "from flext_infra.refactor._utilities_loader import FlextInfraUtilitiesRefactorLoader; print('OK')"` | OK | ✓ PASS |
+| _utilities_loader import succeeds    | `.venv/bin/python -c "from flext_infra import FlextInfraUtilitiesRefactorLoader; print('OK')"` | OK | ✓ PASS |
 | FlextUtilitiesDeprecation removed    | `sg --pattern 'FlextUtilitiesDeprecation' --lang py flext-core/src/`                            | zero matches                     | ✓ PASS  |
 | UserDict/UserString absent           | `sg --pattern 'UserDict' --lang py` + `UserString`                                              | zero matches in src/             | ✓ PASS  |
 

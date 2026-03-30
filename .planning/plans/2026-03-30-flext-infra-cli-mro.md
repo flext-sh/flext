@@ -138,7 +138,7 @@ from flext_infra import t
 
 def main(argv: t.StrSequence | None = None) -> int:
     """Run maintenance CLI."""
-    from flext_infra.cli import FlextInfraCli
+    from flext_infra import FlextInfraCli
 
     try:
         result = FlextInfraCli().run(["maintenance", *(argv or [])])
@@ -278,14 +278,14 @@ from flext_cli import cli
 from flext_core import FlextRuntime, r
 
 from flext_infra import t
-from flext_infra.basemk.cli import FlextInfraCliBasemk
-from flext_infra.codegen.cli import FlextInfraCliCodegen
-from flext_infra.docs.cli import FlextInfraCliDocs
-from flext_infra.github.cli import FlextInfraCliGithub
-from flext_infra.refactor.cli import FlextInfraCliRefactor
-from flext_infra.release.cli import FlextInfraCliRelease
-from flext_infra.validate.cli import FlextInfraCliValidate
-from flext_infra.workspace.cli import FlextInfraCliWorkspace
+from flext_infra import FlextInfraCliBasemk
+from flext_infra import FlextInfraCliCodegen
+from flext_infra import FlextInfraCliDocs
+from flext_infra import FlextInfraCliGithub
+from flext_infra import FlextInfraCliRefactor
+from flext_infra import FlextInfraCliRelease
+from flext_infra import FlextInfraCliValidate
+from flext_infra import FlextInfraCliWorkspace
 from flext_infra.workspace.maintenance.cli import FlextInfraCliMaintenance
 
 
@@ -336,7 +336,7 @@ from __future__ import annotations
 
 import sys
 
-from flext_infra.cli import FlextInfraCli
+from flext_infra import FlextInfraCli
 
 
 def main() -> int:
