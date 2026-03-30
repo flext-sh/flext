@@ -10,18 +10,18 @@ from typing import TYPE_CHECKING
 
 from flext_core.lazy import install_lazy_exports
 
+from tests.unit.scripts.github import _LAZY_IMPORTS as _CHILD_LAZY_0
+
 if TYPE_CHECKING:
-    from tests.unit.scripts import sync_tests
     from tests.unit.scripts.github import *
     from tests.unit.scripts.sync_tests import *
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
-    "TestPrWorkspace": "tests.unit.scripts.github.test_pr_workspace",
+    **_CHILD_LAZY_0,
     "TestSyncScripts": "tests.unit.scripts.sync_tests",
     "github": "tests.unit.scripts.github",
     "sync_tests": "tests.unit.scripts.sync_tests",
-    "test_pr_workspace": "tests.unit.scripts.github.test_pr_workspace",
 }
 
 
-install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, sorted(_LAZY_IMPORTS))
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)

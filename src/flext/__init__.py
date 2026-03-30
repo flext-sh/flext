@@ -11,19 +11,6 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_core import *
-
-    from flext import (
-        constants,
-        dev,
-        docs,
-        models,
-        protocols,
-        service,
-        typings,
-        utilities,
-        workspace,
-    )
     from flext.constants import *
     from flext.models import *
     from flext.protocols import *
@@ -31,6 +18,7 @@ if TYPE_CHECKING:
     from flext.typings import *
     from flext.utilities import *
     from flext.workspace import *
+
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
     "FlexRootTypes": "flext.typings",
@@ -63,4 +51,4 @@ _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
 }
 
 
-install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, sorted(_LAZY_IMPORTS))
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
