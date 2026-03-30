@@ -206,12 +206,13 @@ search-path = [
 use-ignore-files = false
 
 [tool.pyrefly.errors]
-
+bad-argument-type = true
 bad-override = false
 deprecated = true
 implicit-abstract-class = true
 implicit-any = true
 implicitly-defined-attribute = true
+missing-attribute = true
 missing-override-decorator = true
 missing-source = true
 non-convergent-recursion = false
