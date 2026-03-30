@@ -13,6 +13,17 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 if TYPE_CHECKING:
     from flext_core import FlextTypes, d, e, h, r, x
 
+    from flext import (
+        constants,
+        dev,
+        docs,
+        models,
+        protocols,
+        service,
+        typings,
+        utilities,
+        workspace,
+    )
     from flext.constants import FlextRootConstants, FlextRootConstants as c
     from flext.models import FlextRootModels, FlextRootModels as m
     from flext.protocols import FlextRootProtocols, FlextRootProtocols as p
@@ -29,16 +40,25 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "FlextRootServiceBase": ["flext.service", "FlextRootServiceBase"],
     "FlextRootUtilities": ["flext.utilities", "FlextRootUtilities"],
     "c": ["flext.constants", "FlextRootConstants"],
+    "constants": ["flext.constants", ""],
     "d": ["flext_core", "d"],
+    "dev": ["flext.dev", ""],
+    "docs": ["flext.docs", ""],
     "e": ["flext_core", "e"],
     "h": ["flext_core", "h"],
     "m": ["flext.models", "FlextRootModels"],
     "main": ["flext.workspace", "main"],
+    "models": ["flext.models", ""],
     "p": ["flext.protocols", "FlextRootProtocols"],
+    "protocols": ["flext.protocols", ""],
     "r": ["flext_core", "r"],
     "s": ["flext.service", "s"],
+    "service": ["flext.service", ""],
     "t": ["flext.typings", "FlexRootTypes"],
+    "typings": ["flext.typings", ""],
     "u": ["flext.utilities", "FlextRootUtilities"],
+    "utilities": ["flext.utilities", ""],
+    "workspace": ["flext.workspace", ""],
     "x": ["flext_core", "x"],
 }
 
@@ -50,16 +70,25 @@ __all__ = [
     "FlextRootServiceBase",
     "FlextRootUtilities",
     "c",
+    "constants",
     "d",
+    "dev",
+    "docs",
     "e",
     "h",
     "m",
     "main",
+    "models",
     "p",
+    "protocols",
     "r",
     "s",
+    "service",
     "t",
+    "typings",
     "u",
+    "utilities",
+    "workspace",
     "x",
 ]
 

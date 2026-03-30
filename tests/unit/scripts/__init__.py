@@ -13,7 +13,8 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 if TYPE_CHECKING:
     from flext_core import FlextTypes
 
-    from tests.unit.scripts import github
+    from tests.unit.scripts import github, sync_tests
+    from tests.unit.scripts.github import test_pr_workspace
     from tests.unit.scripts.github.test_pr_workspace import TestPrWorkspace
     from tests.unit.scripts.sync_tests import TestSyncScripts
 
@@ -24,12 +25,16 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     ],
     "TestSyncScripts": ["tests.unit.scripts.sync_tests", "TestSyncScripts"],
     "github": ["tests.unit.scripts.github", ""],
+    "sync_tests": ["tests.unit.scripts.sync_tests", ""],
+    "test_pr_workspace": ["tests.unit.scripts.github.test_pr_workspace", ""],
 }
 
 __all__ = [
     "TestPrWorkspace",
     "TestSyncScripts",
     "github",
+    "sync_tests",
+    "test_pr_workspace",
 ]
 
 

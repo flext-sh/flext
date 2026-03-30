@@ -13,6 +13,11 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 if TYPE_CHECKING:
     from flext_core import FlextTypes
 
+    from examples import (
+        acl_processing_example,
+        advanced_processing_example,
+        complete_workflow_example,
+    )
     from examples.acl_processing_example import (
         AclProcessingExample,
         ContextDict,
@@ -49,6 +54,9 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "StageOperation": ["examples.advanced_processing_example", "StageOperation"],
     "WorkflowContent": ["examples.complete_workflow_example", "WorkflowContent"],
     "WorkflowData": ["examples.complete_workflow_example", "WorkflowData"],
+    "acl_processing_example": ["examples.acl_processing_example", ""],
+    "advanced_processing_example": ["examples.advanced_processing_example", ""],
+    "complete_workflow_example": ["examples.complete_workflow_example", ""],
 }
 
 __all__ = [
@@ -63,6 +71,9 @@ __all__ = [
     "StageOperation",
     "WorkflowContent",
     "WorkflowData",
+    "acl_processing_example",
+    "advanced_processing_example",
+    "complete_workflow_example",
 ]
 
 
