@@ -24,7 +24,7 @@ UV_CACHE_DIR ?= /tmp/uv-cache
 UV_PROJECT_ENVIRONMENT ?= $(WORKSPACE_VENV)
 export UV_CACHE_DIR
 export UV_PROJECT_ENVIRONMENT
-ORCHESTRATOR := $(PY) -m flext_infra workspace orchestrate
+ORCHESTRATOR := env -u PYTHONPATH -u MYPYPATH $(PY) -m flext_infra workspace orchestrate
 PYTEST_ARGS ?=
 VALIDATE_SCOPE ?= project
 DOCS_PHASE ?= all
