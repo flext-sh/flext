@@ -60,11 +60,16 @@ class AlgarOudMigrationCli:
         return cli.execute_app(self._app, prog_name=..., args=args)
 
     def _register_commands(self):
-        cli.register_result_route(self._app, route=m.Cli.ResultCommandRouteModel(
-            name="migrate", model_cls=m.AlgarOudMig.MigrateInput,
-            handler=self._migration.execute_command,
-            success_message="Done", failure_message="Failed",
-        ))
+        cli.register_result_route(
+            self._app,
+            route=m.Cli.ResultCommandRouteModel(
+                name="migrate",
+                model_cls=m.AlgarOudMig.MigrateInput,
+                handler=self._migration.execute_command,
+                success_message="Done",
+                failure_message="Failed",
+            ),
+        )
 ```
 
 Key: handler IS the service method. `execute_command(params: Input) -> r[T]`.
@@ -92,6 +97,7 @@ def execute_command(self, params: m.Infra.MaintenanceRunInput) -> r[int]:
 
 ```python
 """CLI mixin for maintenance commands."""
+
 from __future__ import annotations
 
 from flext_cli import cli
@@ -122,6 +128,7 @@ class FlextInfraCliMaintenance:
 
 ```python
 """CLI entry point for maintenance."""
+
 from __future__ import annotations
 
 import sys
@@ -197,6 +204,7 @@ def execute_command(self, params: m.Infra.BaseMkGenerateInput) -> r[str]:
 
 ```python
 """CLI mixin for basemk commands."""
+
 from __future__ import annotations
 
 from flext_cli import cli
@@ -261,6 +269,7 @@ For **workspace**: `orchestrate` command uses `--projects` flag (space-separated
 
 ```python
 """FlextInfraCli — MRO-composed CLI facade for all flext-infra commands."""
+
 from __future__ import annotations
 
 from typing import ClassVar
@@ -322,6 +331,7 @@ class FlextInfraCli(
 
 ```python
 """CLI entry point for flext-infra."""
+
 from __future__ import annotations
 
 import sys
