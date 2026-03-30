@@ -460,10 +460,8 @@ boot: ## Install all projects into workspace .venv
 	$(Q)echo "Bootstrapping flext-core runtime dependencies..."; \
 	uv sync --directory flext-core --no-dev || exit 1
 	$(Q)$(ENSURE_WORKSPACE_RUNTIME)
-	$(Q)$(ENSURE_SELECTED_PROJECTS)
-	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)$(PREPARE_SELECTED_PROJECTS)
 	$(Q)echo "Enforcing Python version guards..."; $(WORKSPACE_FLEXT_INFRA) maintenance || exit 1
-	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)echo "Standardizing project metadata (make mod)..."
 	$(Q)$(MAKE) mod
 	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
@@ -744,8 +742,8 @@ val: ## Run validate gates (VALIDATE_SCOPE=project|workspace, FIX=1)
 ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(PREPARE_SELECTED_PROJECTS)
 	$(Q)$(AUTO_SYNC_ALL_PROJECTS)
-	$(Q)$(AUTO_ADJUST_SELECTED_PROJECTS)
 	$(Q)mkdir -p .reports
 	$(Q)echo "Running workspace validation (inventory + strict anti-drift gates)..."
 	$(Q)$(WORKSPACE_FLEXT_INFRA) maintenance --check || exit 1
