@@ -14,15 +14,14 @@ if TYPE_CHECKING:
     from flext_core import FlextTypes
     from flext_tests import d, e, h, s, x
 
-    from tests import infra
+    from tests import infra, tf, tm
+    from tests.infra import constants, models, protocols, result, typings, utilities
     from tests.infra.constants import FlextWorkspaceTestConstants, c
     from tests.infra.models import FlextWorkspaceTestModels, m
     from tests.infra.protocols import FlextWorkspaceTestProtocols, p
     from tests.infra.result import r
     from tests.infra.typings import FlextWorkspaceTestTypes, t
     from tests.infra.utilities import FlextWorkspaceTestUtilities, u
-    from tests.tf import tf
-    from tests.tm import tm
     from tests.unit.libs.versioning_tests import TestVersioning
     from tests.unit.scripts.github.test_pr_workspace import TestPrWorkspace
     from tests.unit.scripts.sync_tests import TestSyncScripts
@@ -49,18 +48,24 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "TestSyncScripts": ["tests.unit.scripts.sync_tests", "TestSyncScripts"],
     "TestVersioning": ["tests.unit.libs.versioning_tests", "TestVersioning"],
     "c": ["tests.infra.constants", "c"],
+    "constants": ["tests.infra.constants", ""],
     "d": ["flext_tests", "d"],
     "e": ["flext_tests", "e"],
     "h": ["flext_tests", "h"],
     "infra": ["tests.infra", ""],
     "m": ["tests.infra.models", "m"],
+    "models": ["tests.infra.models", ""],
     "p": ["tests.infra.protocols", "p"],
+    "protocols": ["tests.infra.protocols", ""],
     "r": ["tests.infra.result", "r"],
+    "result": ["tests.infra.result", ""],
     "s": ["flext_tests", "s"],
     "t": ["tests.infra.typings", "t"],
-    "tf": ["tests.tf", "tf"],
-    "tm": ["tests.tm", "tm"],
+    "tf": ["tests.tf", ""],
+    "tm": ["tests.tm", ""],
+    "typings": ["tests.infra.typings", ""],
     "u": ["tests.infra.utilities", "u"],
+    "utilities": ["tests.infra.utilities", ""],
     "x": ["flext_tests", "x"],
 }
 
@@ -74,18 +79,24 @@ __all__ = [
     "TestSyncScripts",
     "TestVersioning",
     "c",
+    "constants",
     "d",
     "e",
     "h",
     "infra",
     "m",
+    "models",
     "p",
+    "protocols",
     "r",
+    "result",
     "s",
     "t",
     "tf",
     "tm",
+    "typings",
     "u",
+    "utilities",
     "x",
 ]
 
