@@ -1,8 +1,8 @@
 <!-- TOC START -->
 
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
+- [Scope](##scope)
+- [References](#References)
+- [Rules](#Rules)
 - [Instructions](#instructions)
 - [Workflow](#workflow)
 - [Examples](#examples)

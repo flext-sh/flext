@@ -336,3 +336,6 @@ __pycache__/
 
 # --- workspace-migrate: required ignores (auto-managed) ---
 base.mk
+
+# --- workspace-sync: required ignores (auto-managed) ---
+!base.mk
