@@ -457,3 +457,11 @@ Do not make direct repo edits outside a GSD workflow unless the user explicitly 
 - **Frustrations:** Do exactly what is asked -- nothing more. Never add unrequested features, refactoring, or "improvements". Ask before expanding scope.
 - **Learning:** Point to relevant code sections and let the developer explore. Add signposts (file paths, function names) rather than full explanations.
 <!-- GSD:profile-end -->
+## Code Navigation
+
+This project has [Scope](https://github.com/rynhardt-potgieter/scope) CLI installed (`.scope/` index).
+Run `scope status` to check availability. Run `scope map` for a repo overview.
+
+When dispatching subagents that need to navigate, search, or understand code,
+include the `code-navigation` skill or instruct them to read
+`.claude/skills/code-navigation/SKILL.md` before starting.

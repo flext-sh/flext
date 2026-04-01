@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING as _TYPE_CHECKING
 from flext_core.lazy import install_lazy_exports
 
 if _TYPE_CHECKING:
-    from flext_core import d, e, h, r, x
+    from flext_core import FlextTypes, d, e, h, r, x
 
     from flext.constants import *
     from flext.models import *
