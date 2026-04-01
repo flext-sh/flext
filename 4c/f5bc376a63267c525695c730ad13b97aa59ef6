@@ -1,0 +1,35 @@
+tests/unit/libs/__init__.py
+  752ca45d3f4b2af1 14-15
+tests/unit/scripts/github/__init__.py
+  752ca45d3f4b2af1 14-15
+examples/__init__.py
+  752ca45d3f4b2af1 14-15
+src/flext/__init__.py
+  752ca45d3f4b2af1 14
+tests/infra/__init__.py
+  752ca45d3f4b2af1 14
+tests/__init__.py
+  752ca45d3f4b2af1 14
+tests/unit/scripts/__init__.py
+  752ca45d3f4b2af1 14-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.3",
+  "base_commit_sha": "4cf5bc376a63267c525695c730ad13b97aa59ef6",
+  "prompts": {
+    "752ca45d3f4b2af1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d402a-b4eb-7671-882e-4f34b708e907",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 11,
+      "total_deletions": 1,
+      "accepted_lines": 11,
+      "overriden_lines": 0
+    }
+  }
+}
