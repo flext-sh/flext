@@ -41,10 +41,24 @@ description: Layer map and dependency-direction contract for flext-core. Use whe
 Layer map (source-aligned reference for implementation work):
 
 - `L3 Application/Orchestration`: `dispatcher.py`, `handlers.py`, `decorators.py`.
-- `L2 Domain & Infrastructure`: `models.py`, `mixins.py`, `service.py`, `utilities.py`, `loggings.py`, `container.py`, `flext_infra`.
-- `L1 Foundation & Bridge`: `result.py`, `exceptions.py`, `registry.py`, `runtime.py`.
+- `L2 Domain and Infrastructure`: `models.py`, `mixins.py`, `service.py`, `utilities.py`, `loggings.py`, `container.py`, `flext_infra`.
+- `L2 Service Facade` (project-level): `api.py` (MRO facade), `base.py` (service base), `services/*.py` (mixins). See AGENTS.md section 2.5.
+- `L1 Foundation and Bridge`: `result.py`, `exceptions.py`, `registry.py`, `runtime.py`.
 - `L0 Pure Contracts`: `constants.py`, `typings.py`, `protocols.py`.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
+- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, inline imports, and `cast()`. Wait for definition time or use Protocol decoupling.
+
+### Service Facade Files (L2 Project-Level)
+
+Projects that expose a main service class (FlextCli, FlextLdif, FlextObservability) use:
+
+| File | Purpose | Layer |
+|------|---------|-------|
+| `api.py` | `Flext<Project>` MRO facade composing all service mixins | L2 |
+| `base.py` | `Flext<Project>ServiceBase(s[T], ABC)` with typed settings | L2 |
+| `services/*.py` | One mixin per concern (tracing, metrics, health, etc.) | L2 |
+| `services/__init__.py` | AUTO-GENERATED lazy exports | L2 |
+
+The facade (`api.py`) depends on services (`services/`) which depend on contracts (`L0`). Services NEVER depend on the facade.
 
 ## Instructions
 
