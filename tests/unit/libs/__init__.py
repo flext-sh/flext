@@ -13,7 +13,8 @@ from flext_core.lazy import install_lazy_exports
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
 
-    from tests.unit.libs.versioning_tests import *
+    from tests.unit.libs import versioning_tests
+    from tests.unit.libs.versioning_tests import TestVersioning
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
     "TestVersioning": "tests.unit.libs.versioning_tests",

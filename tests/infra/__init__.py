@@ -14,12 +14,13 @@ if _TYPE_CHECKING:
     from flext_core import FlextTypes
     from flext_tests import d, e, h, s, x
 
-    from tests.infra.constants import *
-    from tests.infra.models import *
-    from tests.infra.protocols import *
-    from tests.infra.result import *
-    from tests.infra.typings import *
-    from tests.infra.utilities import *
+    from tests.infra import constants, models, protocols, result, typings, utilities
+    from tests.infra.constants import FlextWorkspaceTestConstants, c
+    from tests.infra.models import FlextWorkspaceTestModels, m
+    from tests.infra.protocols import FlextWorkspaceTestProtocols, p
+    from tests.infra.result import r
+    from tests.infra.typings import FlextWorkspaceTestTypes, t
+    from tests.infra.utilities import FlextWorkspaceTestUtilities, u
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
     "FlextWorkspaceTestConstants": "tests.infra.constants",

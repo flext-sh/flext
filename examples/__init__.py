@@ -13,9 +13,28 @@ from flext_core.lazy import install_lazy_exports
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
 
-    from examples.acl_processing_example import *
-    from examples.advanced_processing_example import *
-    from examples.complete_workflow_example import *
+    from examples import (
+        acl_processing_example,
+        advanced_processing_example,
+        complete_workflow_example,
+    )
+    from examples.acl_processing_example import (
+        AclProcessingExample,
+        ContextDict,
+        EntryDict,
+    )
+    from examples.advanced_processing_example import (
+        AdvancedProcessingExample,
+        ItemDict,
+        PipelineStageData,
+        StageOperation,
+    )
+    from examples.complete_workflow_example import (
+        CompleteWorkflowExample,
+        ProcessingDict,
+        WorkflowContent,
+        WorkflowData,
+    )
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
     "AclProcessingExample": "examples.acl_processing_example",

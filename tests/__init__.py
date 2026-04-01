@@ -14,10 +14,29 @@ if _TYPE_CHECKING:
     from flext_core import FlextTypes
     from flext_tests import d, e, h, s, x
 
-    from tests.infra import *
-    from tests.unit.libs import *
-    from tests.unit.scripts import *
-    from tests.unit.scripts.github import *
+    from tests import infra, tf, tm
+    from tests.infra import (
+        FlextWorkspaceTestConstants,
+        FlextWorkspaceTestModels,
+        FlextWorkspaceTestProtocols,
+        FlextWorkspaceTestTypes,
+        FlextWorkspaceTestUtilities,
+        c,
+        constants,
+        m,
+        models,
+        p,
+        protocols,
+        r,
+        result,
+        t,
+        typings,
+        u,
+        utilities,
+    )
+    from tests.unit.libs import TestVersioning
+    from tests.unit.scripts import TestSyncScripts
+    from tests.unit.scripts.github import TestPrWorkspace
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = merge_lazy_imports(
     ("tests.infra",),

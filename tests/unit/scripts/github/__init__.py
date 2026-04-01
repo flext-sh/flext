@@ -13,6 +13,7 @@ from flext_core.lazy import install_lazy_exports
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
 
+    from tests.unit.scripts.github import test_pr_workspace
     from tests.unit.scripts.github.test_pr_workspace import TestPrWorkspace
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
