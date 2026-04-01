@@ -78,6 +78,14 @@ alwaysApply: true
 ### 2.4 Governance Anti-Patterns
 - **No Private Imports**: Public contracts MUST be consumed from package facades and root exports only.
 - **No Backward-Compat Aliases**: Backward-compatibility alias layers (e.g. `LegacyX = NewX`) and namespace shadowing are FORBIDDEN. You must NEVER re-assign parent aliases.
+- **No Facade Mirrors**: Public facade modules (e.g. `core.py`, `client.py`) must NEVER duplicate code from `_utilities/` or `_models/` internals. Implementation lives in `_utilities/`; the public module is a thin re-export stub:
+  ```python
+  """Re-export from internal module."""
+  from __future__ import annotations
+  from <package>._utilities.<module> import <Symbol1>, <Symbol2>
+  __all__ = ["Symbol1", "Symbol2"]
+  ```
+  If `qlty smells` reports `identical-code` between a public file and its `_utilities/` counterpart, replace the public file with a re-export immediately.
 
 *For full MRO matrix, architecture layers, and anti-patterns logic, consult skills:* `flext-architecture-layers`, `flext-patterns`, `rules-flext-core`, `rules-src`.
 
