@@ -14,6 +14,7 @@
   - [Pattern B: Removing Legacy Aliases](#pattern-b-removing-legacy-aliases)
   - [Pattern C: Moving Private to Facade](#pattern-c-moving-private-to-facade)
   - [Pattern D: Extracting Large Methods](#pattern-d-extracting-large-methods)
+  - [Pattern G: Facade Mirror Collapse](#pattern-g-facade-mirror-collapse)
 - [Cross-Project Refactoring](#cross-project-refactoring)
   - [Finding cross-project consumers](#finding-cross-project-consumers)
 - [Error Handling During Refactoring](#error-handling-during-refactoring)
@@ -277,6 +278,24 @@ When public surfaces expose `*API = *` aliases or free-function wrappers that on
 2. Export only the canonical class/module surface.
 3. Rewrite all tests and call sites to direct method calls.
 4. Re-run project gates and document any pre-existing unrelated failures.
+
+### Pattern G: Facade Mirror Collapse
+
+When a public module is an identical copy of its `_utilities/` counterpart (detected by `qlty smells --all` as `identical-code`):
+
+1. Keep implementation in `_utilities/` (source of truth).
+2. Replace public file with thin re-export stub:
+   ```python
+   """Re-export from internal module."""
+   from __future__ import annotations
+   from <package>._utilities.<module> import <Symbol1>, <Symbol2>
+   __all__ = ["Symbol1", "Symbol2"]
+   ```
+3. Verify `__init__.py` lazy imports still resolve (chain: `__init__.py` → public module → `_utilities/`).
+4. Run `ruff check src/`, `pyrefly check src/`, `pyright src/`.
+5. Use `scope callers <Symbol>` to confirm no external breakage.
+
+**Detection**: `qlty smells --all --sarif | jq '.runs[0].results[] | select(.ruleId == "qlty:identical-code")'`
 
 ---
 
