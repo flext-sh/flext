@@ -69,6 +69,73 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 - Validation/middleware pipeline composition
 - Factory/Adapter t.NormalizedValue-creation integration patterns
 - **Namespace Inheritance** (cross-project `m`, `c`, `t`, `u`, `p` composition via MRO)
+- **Service Facade** (`api.py` MRO composition of `services/*.py` mixins — see §2.5 of AGENTS.md)
+
+## Service Facade Pattern (`api.py` + `base.py` + `services/`)
+
+> **Rule**: See `AGENTS.md` §2.5 for the canonical specification.
+
+Projects providing a main service class use the **MRO service facade pattern**: one facade in `api.py` composing all service mixins from `services/`. A typed base class in `base.py` provides shared infrastructure (settings, logger, container).
+
+```python
+# base.py — typed service base
+from flext_core import FlextSettings, s
+from flext_observability import FlextObservabilitySettings, t
+
+
+class FlextObservabilityServiceBase(s[t.Dict], ABC):
+    @property
+    @override
+    def settings(self) -> FlextObservabilitySettings:
+        return FlextSettings.get_global().get_namespace(
+            "observability", FlextObservabilitySettings
+        )
+```
+
+```python
+# services/tracing.py — one concern per mixin
+class FlextObservabilityTracingMixin:
+    """Distributed tracing mixin for MRO composition."""
+
+    @staticmethod
+    def start_trace(
+        name: str, attributes: t.ScalarMapping | None = None
+    ) -> r[m.Observability.Trace]: ...
+```
+
+```python
+# api.py — MRO facade composing ALL mixins
+class FlextObservability(
+    FlextObservabilityTracingMixin,
+    FlextObservabilityMetricsMixin,
+    FlextObservabilityHealthMixin,
+    # ... all service mixins
+    FlextObservabilityServiceBase,
+):
+    """All domain methods come from mixins via MRO."""
+
+    _logger = FlextRuntime.get_logger(__name__)  # shadows mixin _logger fields
+```
+
+**Anti-patterns**:
+
+```python
+# ❌ FORBIDDEN — standalone service classes (not mixins)
+class FlextObservabilityMonitor:
+    def __init__(self): ...  # standalone, not composable
+
+
+# ❌ FORBIDDEN — re-export stubs for services
+"""Re-export from internal module."""
+from flext_observability._utilities._monitoring import FlextObservabilityMonitor
+
+__all__ = ["FlextObservabilityMonitor"]
+
+# ❌ FORBIDDEN — direct individual class instantiation
+monitor = FlextObservabilityMonitor()  # bypass facade
+```
+
+**Reference implementations**: `flext-cli`, `flext-ldif`, `flext-observability`.
 
 ## Simple Runtime Aliases Only (Mandatory)
 

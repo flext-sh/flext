@@ -89,6 +89,63 @@ alwaysApply: true
 
 *For full MRO matrix, architecture layers, and anti-patterns logic, consult skills:* `flext-architecture-layers`, `flext-patterns`, `rules-flext-core`, `rules-src`.
 
+### 2.5 Service Facade Pattern (`api.py` + `base.py` + `services/`)
+
+Projects that provide a main service class (e.g., FlextCli, FlextLdif, FlextObservability) MUST follow the **MRO service facade pattern**:
+
+- **`api.py`** — The single entry-point class `Flext<Project>` composing ALL service mixins via MRO inheritance. Only infrastructure (factory methods, Constants, model aliases) is defined locally. All domain behavior comes from mixins.
+- **`base.py`** — `Flext<Project>ServiceBase(s[T], ABC)` providing typed settings access. All mixins inherit from this base.
+- **`services/`** — One file per concern, one mixin class per file. Each mixin provides a single domain responsibility (e.g., tracing, metrics, health). Auto-generated `__init__.py` via `make gen`.
+
+```
+flext-<project>/src/flext_<project>/
+├── api.py                   # Flext<Project> MRO facade
+├── base.py                  # Flext<Project>ServiceBase
+├── constants.py             # c = Flext<Project>Constants
+├── models.py                # m = Flext<Project>Models
+├── protocols.py             # p = Flext<Project>Protocols
+├── typings.py               # t = Flext<Project>Types
+├── utilities.py             # u = Flext<Project>Utilities
+├── settings.py              # Flext<Project>Settings
+└── services/
+    ├── __init__.py           # AUTO-GENERATED
+    ├── <concern_a>.py        # Flext<Project><ConcernA>Mixin
+    ├── <concern_b>.py        # Flext<Project><ConcernB>Mixin
+    └── ...
+```
+
+```python
+# api.py — MRO facade (canonical example)
+class FlextObservability(
+    FlextObservabilityContextMixin,
+    FlextObservabilityMetricsMixin,
+    FlextObservabilityTracingMixin,
+    FlextObservabilityHealthMixin,
+    # ... all service mixins
+    FlextObservabilityServiceBase,
+):
+    """All domain methods come from mixins via MRO."""
+```
+
+```python
+# base.py — typed service base
+class FlextObservabilityServiceBase(s[t.Dict], ABC):
+    @property
+    @override
+    def settings(self) -> FlextObservabilitySettings:
+        return FlextSettings.get_global().get_namespace(
+            "observability", FlextObservabilitySettings
+        )
+```
+
+**Rules**:
+1. **No standalone service classes** — every service class MUST be a mixin on the facade.
+2. **No re-export stubs for services** — access is via the facade (`FlextObservability().method()`), not individual class import.
+3. **One concern per mixin** — each `services/*.py` file defines ONE mixin class.
+4. **MRO field conflicts** — the facade MUST declare shared fields (`_logger`, `_container`) to shadow inherited duplicates.
+
+**Reference implementations**: `flext-cli/src/flext_cli/`, `flext-ldif/src/flext_ldif/`, `flext-observability/src/flext_observability/`.
+
 ## §3 Code Law
 
 ### 3.1 Architecture & Code Structure
