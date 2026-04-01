@@ -191,7 +191,7 @@ from collections.abc import Mapping, Sequence
 
 ## §5 Make Contract
 
-- **Primary Entrypoint**: Automation entrypoint is always `make`. Raw scripts or direct tool commands (e.g., `pytest`, `ruff check`, `mypy`) are FORBIDDEN. You must exclusively use `make` targets to run tooling.
+- **Primary Entrypoint**: Automation entrypoint is `make` for multi-gate workflows. Bare tool commands (`ruff check`, `pyrefly check`, `pyright`, `mypy`, `pytest`) are allowed for single-file checks — they are auto-proxied through RTK for token savings. Never use `.venv/bin/` prefixed paths.
 - **Workspace Verbs**: `boot check scan fmt docs test val types clean gen mod up sync`.
 - **Project Verbs** (`base.mk`): `boot check scan fmt docs test val clean`.
 - **Git Verbs**: Use `make` for Git operations: `make stat`, `make save MESSAGE="..."`, `make push`, `make tag`, `make pr`.
@@ -292,8 +292,8 @@ UNBREAKABLE LAW for all parallel agent work:
 - **Phase 4 (Consumers)**: All agents work on their assigned consumer projects IN PARALLEL.
 
 ### 10.4 Lint Scoping & Quality
-- **During parallel work**: Agents run linters ONLY on modified files.
-- **At phase boundaries**: Agents run FULL project lint (`cd flext-core && make check`) before pushing.
+- **During parallel work**: Agents run linters ONLY on modified files using bare commands (`ruff check <file>`, `pyrefly check <file>`, `pyright <file>`, `mypy <file>`). RTK auto-proxies for token savings.
+- **At phase boundaries**: Agents run FULL project lint (`cd <project> && make check`) before pushing.
 - **Before Phase 4**: ALL agents run full `flext-core` lint and verify ZERO errors. No `# type: ignore`.
 
 ### 10.5 Git & Session Hygiene
