@@ -161,7 +161,7 @@ disable_error_code = [
 ]
 explicit_package_bases = true
 ignore_missing_imports = true
-mypy_path = [ ".", "src", "typings", "typings/generated" ]
+mypy_path = [ ".", "src", "typings" ]
 namespace_packages = true
 plugins = [
   "pydantic.mypy",
@@ -349,12 +349,10 @@ extraPaths = [
   ".",
   "src",
   "typings",
-  "typings/generated",
 ]
 ignore = [
   "**/*.pyi",
   "typings",
-  "typings/generated",
 ]
 pythonPlatform = "Linux"
 pythonVersion = "3.13"
