@@ -13,7 +13,6 @@ from flext_core.lazy import install_lazy_exports
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
     from flext_tests import d, e, h, s, x
-
     from tests.infra import constants, models, protocols, result, typings, utilities
     from tests.infra.constants import FlextWorkspaceTestConstants, c
     from tests.infra.models import FlextWorkspaceTestModels, m
@@ -22,7 +21,7 @@ if _TYPE_CHECKING:
     from tests.infra.typings import FlextWorkspaceTestTypes, t
     from tests.infra.utilities import FlextWorkspaceTestUtilities, u
 
-_LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
+_LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
     "FlextWorkspaceTestConstants": "tests.infra.constants",
     "FlextWorkspaceTestModels": "tests.infra.models",
     "FlextWorkspaceTestProtocols": "tests.infra.protocols",

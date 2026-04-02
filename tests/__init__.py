@@ -13,7 +13,6 @@ from flext_core.lazy import install_lazy_exports, merge_lazy_imports
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
     from flext_tests import d, e, h, s, x
-
     from tests import infra, tf, tm
     from tests.infra import (
         FlextWorkspaceTestConstants,
@@ -38,7 +37,7 @@ if _TYPE_CHECKING:
     from tests.unit.scripts import TestSyncScripts
     from tests.unit.scripts.github import TestPrWorkspace
 
-_LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = merge_lazy_imports(
+_LAZY_IMPORTS: FlextTypes.LazyImportIndex = merge_lazy_imports(
     ("tests.infra",),
     {
         "TestPrWorkspace": "tests.unit.scripts.github.test_pr_workspace",

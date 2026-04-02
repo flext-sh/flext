@@ -11,8 +11,6 @@ from typing import TYPE_CHECKING as _TYPE_CHECKING
 from flext_core.lazy import install_lazy_exports
 
 if _TYPE_CHECKING:
-    from flext_core import FlextTypes, d, e, h, r, x
-
     from flext import (
         constants,
         dev,
@@ -31,8 +29,9 @@ if _TYPE_CHECKING:
     from flext.typings import FlexRootTypes, FlexRootTypes as t
     from flext.utilities import FlextRootUtilities, FlextRootUtilities as u
     from flext.workspace import main
+    from flext_core import FlextTypes, d, e, h, r, x
 
-_LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
+_LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
     "FlexRootTypes": "flext.typings",
     "FlextRootConstants": "flext.constants",
     "FlextRootModels": "flext.models",

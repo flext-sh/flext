@@ -286,7 +286,7 @@ from flext_infra import FlextInfraCliRefactor
 from flext_infra import FlextInfraCliRelease
 from flext_infra import FlextInfraCliValidate
 from flext_infra import FlextInfraCliWorkspace
-from flext_infra.workspace.maintenance.cli import FlextInfraCliMaintenance
+from flext_infra import FlextInfraCliMaintenance
 
 
 class FlextInfraCli(
