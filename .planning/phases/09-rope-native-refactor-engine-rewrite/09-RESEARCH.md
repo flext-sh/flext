@@ -268,7 +268,7 @@ def _rope_rename(
     new_name: str,
     *,
     dry_run: bool = False,
-) -> r[Sequence[str]]:
+) -> r[t.StrSequence]:
     """Execute a rope rename and return change descriptions."""
     try:
         resource = project.get_resource(resource_path)
@@ -279,9 +279,9 @@ def _rope_rename(
         descriptions = [str(c) for c in changes.changes]
         if not dry_run:
             changes.do()
-        return r[Sequence[str]].ok(descriptions)
+        return r[t.StrSequence].ok(descriptions)
     except (ValueError, RopeError) as exc:
-        return r[Sequence[str]].fail(str(exc))
+        return r[t.StrSequence].fail(str(exc))
 ```
 
 ### Iterating ChangeSet without applying (dry-run inspection)

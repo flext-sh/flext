@@ -115,7 +115,7 @@ from collections.abc import Mapping, Sequence` |
 | Return value | Correct annotation | FORBIDDEN |
 |---|---|---|
 | `[1, 2, 3]` | `r[list[int]]` | `r[Sequence[int]]` |
-| `{"a": 1}` | `r[dict[str, int]]` | `r[Mapping[str, int]]` |
+| `{"a": 1}` | `r[dict[str, int]]` | `r[t.IntMapping]` |
 | `{1, 2}` | `r[set[int]]` | `r[AbstractSet[int]]` |
 | `(1, "x")` | `r[tuple[int, str]]` | `r[Sequence[int \| str]]` |
 
@@ -130,12 +130,12 @@ def get_config() -> r[dict[str, int]]: ...
 
 
 # FORBIDDEN
-def get_items() -> r[Sequence[str]]: ...  # invariance violation
-def get_config() -> r[Mapping[str, int]]: ...  # invariance violation
+def get_items() -> r[t.StrSequence]: ...  # invariance violation
+def get_config() -> r[t.IntMapping]: ...  # invariance violation
 
 
 # Parameters: abstract types OK (covariant position)
-def process(items: Sequence[str]) -> r[list[str]]: ...
+def process(items: t.StrSequence) -> r[list[str]]: ...
 ```
 
 ## Instructions

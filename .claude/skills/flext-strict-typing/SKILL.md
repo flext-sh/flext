@@ -154,7 +154,7 @@ for item in items:
 return results
 
 # ✅ Comprehension with Sequence (when not mutated after)
-results: Sequence[str] = [item.name for item in items if item.is_valid]
+results: t.StrSequence = [item.name for item in items if item.is_valid]
 return results
 
 # ✅ match/case instead of isinstance chains (Python 3.13)
@@ -215,7 +215,7 @@ Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` 
 t.Dict  # Transitional only — migrate to explicit domain dict models
 m.Domain.ConfigModel  # Canonical strict config contract
 p.ServiceMap  # Transitional only — migrate to explicit service registry models
-t.ErrorMap  # RootModel[Mapping[str, int | str | Mapping[str, int]]] — error types
+t.ErrorMap  # RootModel[Mapping[str, int | str | t.IntMapping]] — error types
 t.ObjectList  # Transitional only — migrate to Sequence[m.<Domain>.ItemModel]
 t.FactoryMap  # RootModel[Mapping[str, FactoryRegistrationCallable]]
 t.ResourceMap  # RootModel[Mapping[str, ResourceCallable]]
@@ -528,7 +528,7 @@ class FlextConstants:
     VALID_TYPES: Final[AbstractSet[str]] = frozenset({"a", "b", "c"})
 
     # Immutable maps: use MappingProxyType with Mapping type
-    DEFAULTS: Final[Mapping[str, int]] = MappingProxyType({"x": 1, "y": 2})
+    DEFAULTS: Final[t.IntMapping] = MappingProxyType({"x": 1, "y": 2})
 ```
 
 ---

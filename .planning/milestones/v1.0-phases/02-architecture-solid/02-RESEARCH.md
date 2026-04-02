@@ -96,12 +96,12 @@ Protocol mapping (from sisyphus plan):
 ```python
 # BEFORE
 name: str = Field(default="", description="Name")
-items: Sequence[str] = Field(default_factory=list)
+items: t.StrSequence = Field(default_factory=list)
 config: Config | None = Field(default=None)
 
 # AFTER
 name: Annotated[str, Field(default="", description="Name")]
-items: Annotated[Sequence[str], Field(default_factory=list)]
+items: Annotated[t.StrSequence, Field(default_factory=list)]
 config: Annotated[Config | None, Field(default=None)]
 ```
 
@@ -144,7 +144,7 @@ class MyBase:  # no longer ABC
 
 ```python
 # BEFORE (inline, hot-path)
-def validate(self, data: Mapping[str, str]) -> bool:
+def validate(self, data: t.StrMapping) -> bool:
     adapter = TypeAdapter(dict[str, str])
     return adapter.validate_python(data) is not None
 
@@ -155,7 +155,7 @@ class MyClass:
         dict[str, str]
     )
 
-    def validate(self, data: Mapping[str, str]) -> bool:
+    def validate(self, data: t.StrMapping) -> bool:
         return self._str_dict_adapter.validate_python(data) is not None
 ```
 

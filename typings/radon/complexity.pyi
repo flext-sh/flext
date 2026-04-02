@@ -9,7 +9,7 @@ Cyclomatic Complexity
 """
 
 Block: TypeAlias = Function | Class
-SortKey: TypeAlias = int | float | str
+SortKey: TypeAlias = t.Numeric | str
 
 SCORE: Callable[[Block], SortKey]
 LINES: Callable[[Block], SortKey]

@@ -1,6 +1,6 @@
 id: fix-jsondict-legacy
 valid:
   - "t.NormalizedValue"
-  - "Mapping[str, str]"
+  - "t.StrMapping"
 invalid:
   - "Mapping[str, t.NormalizedValue]"

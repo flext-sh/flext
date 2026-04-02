@@ -213,7 +213,7 @@ class DataProvider(Protocol):
 
 # Usage: Works with any dict subtype
 def process_data(provider: DataProvider) -> None:
-    # Provider can return Mapping[str, int], t.StrMapping, etc.
+    # Provider can return t.IntMapping, t.StrMapping, etc.
     data = provider.get_data()
     ...
 ```
@@ -406,13 +406,13 @@ m.FlextOudMig               # Migration tool domain
 ### Covariance (Subtype Compatibility)
 
 ```python
-# Example: Mapping[str, bool] should be compatible with Mapping[str, m.Core.ValueModel]
+# Example: t.BoolMapping should be compatible with Mapping[str, m.Core.ValueModel]
 
 # ❌ INVARIANT - WRONG
 def process_dict(data: Mapping[str, m.Core.ValueModel]) -> None: ...
 
 
-result: Mapping[str, bool] = {"ok": True}
+result: t.BoolMapping = {"ok": True}
 process_dict(result)  # Type error: dict is invariant
 
 # ✅ COVARIANT - CORRECT
@@ -422,7 +422,7 @@ from collections.abc import Mapping
 def process_mapping(data: Mapping[str, m.Core.ValueModel]) -> None: ...
 
 
-result: Mapping[str, bool] = {"ok": True}
+result: t.BoolMapping = {"ok": True}
 process_mapping(result)  # OK: Mapping is covariant
 ```
 
@@ -638,7 +638,7 @@ class AttributeProvider(Protocol):
 
 
 # Can only accept exact Mapping[str, t.StrSequence]
-result: Mapping[str, bool] = {"ok": True}
+result: t.BoolMapping = {"ok": True}
 provider.get_attributes()  # May fail type check
 ```
 
@@ -651,7 +651,7 @@ class AttributeProvider(Protocol):
 
 
 # Can accept any dict subtype or Mapping implementation
-result: Mapping[str, bool] = {"ok": True}
+result: t.BoolMapping = {"ok": True}
 provider.get_attributes()  # Works with covariance
 ```
 

@@ -242,7 +242,7 @@ from pydantic import BaseModel
 
 
 class Model(BaseModel):
-    item_counts: Sequence[Mapping[str, int]] = [{}]
+    item_counts: Sequence[t.IntMapping] = [{}]
 
 
 m1 = Model()
