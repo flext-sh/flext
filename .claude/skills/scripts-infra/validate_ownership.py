@@ -14,8 +14,9 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar
 
-from flext_infra import t
 from pydantic import BaseModel, ConfigDict, Field
+
+from flext_infra import t
 
 OWNER_MARKER_RE = re.compile(
     r"^# Owner-Skill:\s+(.claude/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md)\s*$",

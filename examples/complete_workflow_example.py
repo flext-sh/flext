@@ -30,10 +30,10 @@ from decimal import Decimal
 from enum import StrEnum, unique
 from typing import ClassVar
 
-from flext_core import r
 from pydantic import BaseModel, ConfigDict, Field
 
 from flext import t
+from flext_core import r
 
 type WorkflowScalar = Decimal | bool | bytes | date | datetime | float | int | str
 type WorkflowValue = WorkflowScalar | t.StrSequence | Mapping[str, WorkflowScalar]

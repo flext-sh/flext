@@ -12,12 +12,11 @@ from flext_core.lazy import install_lazy_exports, merge_lazy_imports
 
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
-
     from tests.unit.scripts import github, sync_tests
     from tests.unit.scripts.github import TestPrWorkspace, test_pr_workspace
     from tests.unit.scripts.sync_tests import TestSyncScripts
 
-_LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = merge_lazy_imports(
+_LAZY_IMPORTS: FlextTypes.LazyImportIndex = merge_lazy_imports(
     ("tests.unit.scripts.github",),
     {
         "TestSyncScripts": "tests.unit.scripts.sync_tests",

@@ -127,7 +127,7 @@ class FlextObservabilityMonitor:
 
 # ❌ FORBIDDEN — re-export stubs for services
 """Re-export from internal module."""
-from flext_observability._utilities._monitoring import FlextObservabilityMonitor
+from flext_observability import FlextObservabilityMonitor
 
 __all__ = ["FlextObservabilityMonitor"]
 

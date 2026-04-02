@@ -26,8 +26,9 @@ from decimal import Decimal
 from enum import StrEnum, unique
 from typing import ClassVar
 
-from flext_core import r, t
 from pydantic import BaseModel, ConfigDict, Field
+
+from flext_core import r, t
 
 type DataPrimitive = str | int | float | bool | bytes | Decimal
 type DataValue = DataPrimitive | Sequence[DataValue] | Mapping[str, DataValue]

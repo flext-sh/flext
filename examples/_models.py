@@ -13,8 +13,9 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from flext_core import FlextTypes as t
 from pydantic import BaseModel, Field
+
+from flext_core import FlextTypes as t
 
 
 class ValidationRules(BaseModel):

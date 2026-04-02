@@ -23,8 +23,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
 from typing import ClassVar, TypeIs
 
-from flext_core import r, t
 from pydantic import BaseModel, ConfigDict, Field
+
+from flext_core import r, t
 
 EntryDict = Mapping[
     str,

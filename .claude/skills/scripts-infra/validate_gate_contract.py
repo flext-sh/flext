@@ -13,8 +13,9 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar
 
-from flext_core import t
 from pydantic import BaseModel, ConfigDict, Field
+
+from flext_core import t
 
 EXIT_PASS = 0
 EXIT_FAIL = 1
