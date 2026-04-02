@@ -6,7 +6,7 @@ invalid:
 ---
 id: no-union-annotation-fix-3
 valid:
-  - "x: str | int | float = 1"
+  - "x: str | t.Numeric = 1"
 invalid:
   - "x: Union[str, int, float] = 1"
 ---

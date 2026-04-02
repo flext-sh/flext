@@ -151,7 +151,7 @@ HAS_PYTEST = importlib.util.find_spec("pytest") is not None
 # In _utilities/cli.py, add to FlextInfraUtilitiesCli:
 @staticmethod
 def emit(
-    data: BaseModel | Mapping[str, t.Scalar],
+    data: BaseModel | t.ScalarMapping,
     *,
     text_fn: Callable[..., str] | None = None,
     cli: FlextInfraUtilitiesCli.CliArgs,

@@ -1,6 +1,6 @@
 id: detect-jsondict-legacy
 valid:
   - "x = t.NormalizedValue"
-  - "x = Mapping[str, str]"
+  - "x = t.StrMapping"
 invalid:
   - "Mapping[str, t.NormalizedValue]"

@@ -30,7 +30,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from flext_core import r, t
 
-type DataPrimitive = str | int | float | bool | bytes | Decimal
+type DataPrimitive = t.Primitives | bytes | Decimal
 type DataValue = DataPrimitive | Sequence[DataValue] | Mapping[str, DataValue]
 
 ItemDict = Mapping[str, DataValue]
@@ -191,7 +191,7 @@ class AdvancedProcessingExample:
                 if isinstance(success_rate_data, (int, float))
                 else 0.0
             )
-            validation_summary: Mapping[str, int | float] = {
+            validation_summary: Mapping[str, t.Numeric] = {
                 "total_validated": len(validation_results),
                 "valid_items": sum(
                     1 for r in validation_results if r.get("is_valid") is True

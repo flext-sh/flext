@@ -361,7 +361,7 @@ servir como referência futura para implementação:
 ~~ """Base class for CQRS message handlers."""~~
 
 ~~ # ⚠️ Infraestrutura manual (será deprecated)~~
-~~ \_metrics: Mapping[str, int | float]~~
+~~ \_metrics: Mapping[str, t.Numeric]~~
 ~~\_context_stack: Sequence[t.ContainerMapping]~~
 
 ~~ # ✅ Pipeline methods~~
@@ -369,8 +369,8 @@ servir como referência futura para implementação:
 ~~ def \_run_pipeline(self, message: TCommand_contra) -> r[TResult_co]: ...~~
 
 ~~ # ⚠️ Métodos manuais (serão deprecated em V2)~~
-~~ def record_metric(self, key: str, value: int | float) -> None: ...~~
-~~ def get_metrics(self) -> Mapping[str, int | float]: ...~~
+~~ def record_metric(self, key: str, value: t.Numeric) -> None: ...~~
+~~ def get_metrics(self) -> Mapping[str, t.Numeric]: ...~~
 ~~ def push_context(self, ctx: t.ContainerMapping) -> None: ...~~
 ~~ def pop_context(self) -> t.ContainerMapping | None: ...~~
 ~~```~~
@@ -515,10 +515,10 @@ servir como referência futura para implementação:
 ~~# ❌ Anti-pattern: Estado gerenciado manualmente~~
 ~~class FlextHandlers:~~
 ~~ def **init**(self):~~
-~~ self.\_metrics: Mapping[str, int | float] = {} # Manual!~~
+~~ self.\_metrics: Mapping[str, t.Numeric] = {} # Manual!~~
 ~~ self.\_context_stack: Sequence[dict] = [] # Manual!~~
 
-    def record_metric(self, key: str, value: int | float) -> None:
+    def record_metric(self, key: str, value: t.Numeric) -> None:
         self._metrics[key] = self._metrics.get(key, 0) + value
 
 ~~ def push_context(self, ctx: dict) -> None:~~
@@ -614,20 +614,20 @@ servir como referência futura para implementação:
 ~~ """Thread-safe metrics tracking for handlers."""~~
 
 ~~ def **init**(self) -> None:~~
-~~ self.\_metrics: Mapping[str, int | float] = {}~~
+~~ self.\_metrics: Mapping[str, t.Numeric] = {}~~
 ~~ self.\_lock = threading.Lock()~~
 
-~~ def record(self, key: str, value: int | float) -> None:~~
+~~ def record(self, key: str, value: t.Numeric) -> None:~~
 ~~ """Record a metric value (thread-safe)."""~~
 ~~ with self.\_lock:~~
 ~~ current = self.\_metrics.get(key, 0)~~
 ~~ self.\_metrics[key] = current + value~~
 
-~~ def get(self, key: str) -> int | float:~~
+~~ def get(self, key: str) -> t.Numeric:~~
 ~~ """Get metric value."""~~
 ~~ return self.\_metrics.get(key, 0)~~
 
-~~ def all(self) -> Mapping[str, int | float]:~~
+~~ def all(self) -> Mapping[str, t.Numeric]:~~
 ~~ """Get all metrics."""~~
 ~~ return dict(self.\_metrics)~~
 
@@ -824,7 +824,7 @@ servir como referência futura para implementação:
 ~~ return self.\_cqrs_context~~
 
 ~~ # ⚠️ Legacy methods - deprecated in V2~~
-~~ def record_metric(self, key: str, value: int | float) -> None:~~
+~~ def record_metric(self, key: str, value: t.Numeric) -> None:~~
 ~~ """Record a metric value.~~
 
 ~~ .. deprecated:: 1.0~~
@@ -838,7 +838,7 @@ servir como referência futura para implementação:
 ~~ )~~
 ~~ self.cqrs_metrics.record(key, value)~~
 
-~~ def get_metrics(self) -> Mapping[str, int | float]:~~
+~~ def get_metrics(self) -> Mapping[str, t.Numeric]:~~
 ~~ """Get all recorded metrics.~~
 
 ~~ .. deprecated:: 1.0~~
@@ -1238,7 +1238,7 @@ servir como referência futura para implementação:
 ~~ ) -> None:~~
 ~~ self.\_failure_threshold = failure_threshold~~
 ~~ self.\_recovery_timeout = recovery_timeout~~
-~~ self.\_failures: Mapping[str, int] = {}~~
+~~ self.\_failures: t.IntMapping = {}~~
 ~~ self.\_last_failure: Mapping[str, float] = {}~~
 
 ~~ def is_open(self, key: str) -> bool:~~
@@ -1861,7 +1861,7 @@ class CustomCircuitBreaker:
     def get_state(self, key: str) -> str:
         return self._get_circuit(key).state
 
-    def get_metrics(self, key: str) -> Mapping[str, int | float | str]:
+    def get_metrics(self, key: str) -> Mapping[str, t.Numeric | str]:
         circuit = self._get_circuit(key)
         return {
             "state": circuit.state,

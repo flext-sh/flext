@@ -794,7 +794,7 @@ class CompressedString:
 
     @staticmethod
     def _validate(value: str) -> "CompressedString":
-        inverse_dictionary: Mapping[str, int] = {}
+        inverse_dictionary: t.IntMapping = {}
         text: Sequence[int] = []
         for word in value.split(" "):
             if word not in inverse_dictionary:
