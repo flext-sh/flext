@@ -11,7 +11,6 @@ requires = [ "hatchling" ]
 # [CUSTOM] project metadata
 [project]
 
-
 authors = [ {email = "team@flext.sh", name = "FLEXT Team"} ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -123,8 +122,6 @@ Documentation = "https://docs.flext.sh"
 Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 
-
-
 # [MANAGED] coverage
 [tool.coverage.report]
 fail_under = 45
@@ -136,7 +133,6 @@ skip_covered = false
 omit = [
   "*/dependency_injector/providers.pyx",
 ]
-
 
 # [MANAGED] deptry
 [tool.deptry]
@@ -150,10 +146,8 @@ pep621_dev_dependency_groups = [
   "dev",
 ]
 
-
 [tool.hatch.metadata]
 allow-direct-references = true
-
 
 # [MANAGED] mypy
 [tool.mypy]
@@ -175,30 +169,39 @@ plugins = [
 python_version = "3.13"
 
 [[tool.mypy.overrides]]
-disable_error_code = ["arg-type", "assignment", "attr-defined", "call-arg", "has-type", "misc", "no-redef", "return-value", "valid-type", "var-annotated"]
-module = ["tests", "tests.*", "tests.integration.*", "tests.unit.*"]
+disable_error_code = [
+  "arg-type",
+  "assignment",
+  "attr-defined",
+  "call-arg",
+  "has-type",
+  "misc",
+  "no-redef",
+  "return-value",
+  "valid-type",
+  "var-annotated",
+]
+module = [ "tests", "tests.*", "tests.integration.*", "tests.unit.*" ]
 
 [[tool.mypy.overrides]]
-disable_error_code = ["attr-defined", "call-arg", "return-value"]
-module = ["tests.helpers.*"]
+disable_error_code = [ "attr-defined", "call-arg", "return-value" ]
+module = [ "tests.helpers.*" ]
 
 [[tool.mypy.overrides]]
-disable_error_code = ["assignment", "attr-defined"]
-module = ["tests.integration.patterns.*"]
+disable_error_code = [ "assignment", "attr-defined" ]
+module = [ "tests.integration.patterns.*" ]
 
 [[tool.mypy.overrides]]
-disable_error_code = ["assignment"]
-module = ["tests.fixtures.*"]
+disable_error_code = [ "assignment" ]
+module = [ "tests.fixtures.*" ]
 
 [tool.poetry]
-
 
 # [MANAGED] pydantic-mypy
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
-
 
 # [MANAGED] pyrefly
 [tool.pyrefly]
@@ -320,7 +323,6 @@ unused-coroutine = true
 unused-ignore = true
 variance-mismatch = true
 
-
 # [MANAGED] pyright
 [tool.pyright]
 exclude = [
@@ -349,8 +351,8 @@ extraPaths = [
   "typings",
 ]
 ignore = [
-    "typings",
-    "**/*.pyi",
+  "**/*.pyi",
+  "typings",
 ]
 pythonPlatform = "Linux"
 pythonVersion = "3.13"
@@ -380,7 +382,7 @@ venv = ".venv"
 venvPath = "."
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["src"]
+extraPaths = [ "src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -396,7 +398,7 @@ reportUnusedImport = "none"
 root = "src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = [".", "src"]
+extraPaths = [ ".", "src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -411,7 +413,7 @@ reportUnusedImport = "none"
 root = "tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = [".", "src"]
+extraPaths = [ ".", "src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -426,7 +428,7 @@ reportUnusedImport = "none"
 root = "examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = [".", "src"]
+extraPaths = [ ".", "src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -441,7 +443,7 @@ reportUnusedImport = "none"
 root = "scripts"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["algar-oud-mig/src"]
+extraPaths = [ "algar-oud-mig/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -457,7 +459,7 @@ reportUnusedImport = "none"
 root = "algar-oud-mig/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["algar-oud-mig", "algar-oud-mig/src"]
+extraPaths = [ "algar-oud-mig", "algar-oud-mig/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -472,7 +474,7 @@ reportUnusedImport = "none"
 root = "algar-oud-mig/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["algar-oud-mig", "algar-oud-mig/src"]
+extraPaths = [ "algar-oud-mig", "algar-oud-mig/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -487,7 +489,7 @@ reportUnusedImport = "none"
 root = "algar-oud-mig/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["algar-oud-mig", "algar-oud-mig/src"]
+extraPaths = [ "algar-oud-mig", "algar-oud-mig/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -502,7 +504,7 @@ reportUnusedImport = "none"
 root = "algar-oud-mig/scripts"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flexcore/src"]
+extraPaths = [ "flexcore/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -518,7 +520,7 @@ reportUnusedImport = "none"
 root = "flexcore/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flexcore", "flexcore/src"]
+extraPaths = [ "flexcore", "flexcore/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -533,7 +535,7 @@ reportUnusedImport = "none"
 root = "flexcore/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flexcore", "flexcore/src"]
+extraPaths = [ "flexcore", "flexcore/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -548,7 +550,7 @@ reportUnusedImport = "none"
 root = "flexcore/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-api/src"]
+extraPaths = [ "flext-api/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -564,7 +566,7 @@ reportUnusedImport = "none"
 root = "flext-api/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-api", "flext-api/src"]
+extraPaths = [ "flext-api", "flext-api/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -579,7 +581,7 @@ reportUnusedImport = "none"
 root = "flext-api/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-api", "flext-api/src"]
+extraPaths = [ "flext-api", "flext-api/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -594,7 +596,7 @@ reportUnusedImport = "none"
 root = "flext-api/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-auth/src"]
+extraPaths = [ "flext-auth/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -610,7 +612,7 @@ reportUnusedImport = "none"
 root = "flext-auth/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-auth", "flext-auth/src"]
+extraPaths = [ "flext-auth", "flext-auth/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -625,7 +627,7 @@ reportUnusedImport = "none"
 root = "flext-auth/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-auth", "flext-auth/src"]
+extraPaths = [ "flext-auth", "flext-auth/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -640,7 +642,7 @@ reportUnusedImport = "none"
 root = "flext-auth/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-cli/src"]
+extraPaths = [ "flext-cli/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -656,7 +658,7 @@ reportUnusedImport = "none"
 root = "flext-cli/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-cli", "flext-cli/src"]
+extraPaths = [ "flext-cli", "flext-cli/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -671,7 +673,7 @@ reportUnusedImport = "none"
 root = "flext-cli/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-cli", "flext-cli/src"]
+extraPaths = [ "flext-cli", "flext-cli/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -686,7 +688,7 @@ reportUnusedImport = "none"
 root = "flext-cli/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-core/src"]
+extraPaths = [ "flext-core/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -702,7 +704,7 @@ reportUnusedImport = "none"
 root = "flext-core/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-core", "flext-core/src"]
+extraPaths = [ "flext-core", "flext-core/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -717,7 +719,7 @@ reportUnusedImport = "none"
 root = "flext-core/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-core", "flext-core/src"]
+extraPaths = [ "flext-core", "flext-core/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -732,7 +734,7 @@ reportUnusedImport = "none"
 root = "flext-core/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-core", "flext-core/src"]
+extraPaths = [ "flext-core", "flext-core/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -747,7 +749,7 @@ reportUnusedImport = "none"
 root = "flext-core/scripts"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-db-oracle/src"]
+extraPaths = [ "flext-db-oracle/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -763,7 +765,7 @@ reportUnusedImport = "none"
 root = "flext-db-oracle/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-db-oracle", "flext-db-oracle/src"]
+extraPaths = [ "flext-db-oracle", "flext-db-oracle/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -778,7 +780,7 @@ reportUnusedImport = "none"
 root = "flext-db-oracle/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-db-oracle", "flext-db-oracle/src"]
+extraPaths = [ "flext-db-oracle", "flext-db-oracle/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -793,7 +795,7 @@ reportUnusedImport = "none"
 root = "flext-db-oracle/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-ldap/src"]
+extraPaths = [ "flext-dbt-ldap/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -809,7 +811,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-ldap/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-ldap", "flext-dbt-ldap/src"]
+extraPaths = [ "flext-dbt-ldap", "flext-dbt-ldap/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -824,7 +826,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-ldap/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-ldap", "flext-dbt-ldap/src"]
+extraPaths = [ "flext-dbt-ldap", "flext-dbt-ldap/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -839,7 +841,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-ldap/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-ldap", "flext-dbt-ldap/src"]
+extraPaths = [ "flext-dbt-ldap", "flext-dbt-ldap/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -854,7 +856,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-ldap/scripts"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-ldif/src"]
+extraPaths = [ "flext-dbt-ldif/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -870,7 +872,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-ldif/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-ldif", "flext-dbt-ldif/src"]
+extraPaths = [ "flext-dbt-ldif", "flext-dbt-ldif/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -885,7 +887,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-ldif/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-ldif", "flext-dbt-ldif/src"]
+extraPaths = [ "flext-dbt-ldif", "flext-dbt-ldif/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -900,7 +902,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-ldif/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-oracle/src"]
+extraPaths = [ "flext-dbt-oracle/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -916,7 +918,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-oracle/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-oracle", "flext-dbt-oracle/src"]
+extraPaths = [ "flext-dbt-oracle", "flext-dbt-oracle/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -931,7 +933,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-oracle/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-oracle", "flext-dbt-oracle/src"]
+extraPaths = [ "flext-dbt-oracle", "flext-dbt-oracle/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -946,7 +948,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-oracle/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-oracle-wms/src"]
+extraPaths = [ "flext-dbt-oracle-wms/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -962,7 +964,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-oracle-wms/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-oracle-wms", "flext-dbt-oracle-wms/src"]
+extraPaths = [ "flext-dbt-oracle-wms", "flext-dbt-oracle-wms/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -977,7 +979,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-oracle-wms/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-dbt-oracle-wms", "flext-dbt-oracle-wms/src"]
+extraPaths = [ "flext-dbt-oracle-wms", "flext-dbt-oracle-wms/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -992,7 +994,7 @@ reportUnusedImport = "none"
 root = "flext-dbt-oracle-wms/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-grpc/src"]
+extraPaths = [ "flext-grpc/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1008,7 +1010,7 @@ reportUnusedImport = "none"
 root = "flext-grpc/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-grpc", "flext-grpc/src"]
+extraPaths = [ "flext-grpc", "flext-grpc/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1023,7 +1025,7 @@ reportUnusedImport = "none"
 root = "flext-grpc/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-grpc", "flext-grpc/src"]
+extraPaths = [ "flext-grpc", "flext-grpc/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1038,7 +1040,7 @@ reportUnusedImport = "none"
 root = "flext-grpc/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-infra/src"]
+extraPaths = [ "flext-infra/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1054,7 +1056,7 @@ reportUnusedImport = "none"
 root = "flext-infra/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-infra", "flext-infra/src"]
+extraPaths = [ "flext-infra", "flext-infra/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1069,7 +1071,7 @@ reportUnusedImport = "none"
 root = "flext-infra/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-ldap/src"]
+extraPaths = [ "flext-ldap/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1085,7 +1087,7 @@ reportUnusedImport = "none"
 root = "flext-ldap/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-ldap", "flext-ldap/src"]
+extraPaths = [ "flext-ldap", "flext-ldap/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1100,7 +1102,7 @@ reportUnusedImport = "none"
 root = "flext-ldap/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-ldap", "flext-ldap/src"]
+extraPaths = [ "flext-ldap", "flext-ldap/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1115,7 +1117,7 @@ reportUnusedImport = "none"
 root = "flext-ldap/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-ldif/src"]
+extraPaths = [ "flext-ldif/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1131,7 +1133,7 @@ reportUnusedImport = "none"
 root = "flext-ldif/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-ldif", "flext-ldif/src"]
+extraPaths = [ "flext-ldif", "flext-ldif/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1146,7 +1148,7 @@ reportUnusedImport = "none"
 root = "flext-ldif/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-ldif", "flext-ldif/src"]
+extraPaths = [ "flext-ldif", "flext-ldif/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1161,7 +1163,7 @@ reportUnusedImport = "none"
 root = "flext-ldif/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-meltano/src"]
+extraPaths = [ "flext-meltano/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1177,7 +1179,7 @@ reportUnusedImport = "none"
 root = "flext-meltano/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-meltano", "flext-meltano/src"]
+extraPaths = [ "flext-meltano", "flext-meltano/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1192,7 +1194,7 @@ reportUnusedImport = "none"
 root = "flext-meltano/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-meltano", "flext-meltano/src"]
+extraPaths = [ "flext-meltano", "flext-meltano/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1207,7 +1209,7 @@ reportUnusedImport = "none"
 root = "flext-meltano/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-observability/src"]
+extraPaths = [ "flext-observability/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1223,7 +1225,7 @@ reportUnusedImport = "none"
 root = "flext-observability/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-observability", "flext-observability/src"]
+extraPaths = [ "flext-observability", "flext-observability/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1238,7 +1240,7 @@ reportUnusedImport = "none"
 root = "flext-observability/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-observability", "flext-observability/src"]
+extraPaths = [ "flext-observability", "flext-observability/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1253,7 +1255,7 @@ reportUnusedImport = "none"
 root = "flext-observability/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-oracle-oic/src"]
+extraPaths = [ "flext-oracle-oic/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1269,7 +1271,7 @@ reportUnusedImport = "none"
 root = "flext-oracle-oic/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-oracle-oic", "flext-oracle-oic/src"]
+extraPaths = [ "flext-oracle-oic", "flext-oracle-oic/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1284,7 +1286,7 @@ reportUnusedImport = "none"
 root = "flext-oracle-oic/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-oracle-oic", "flext-oracle-oic/src"]
+extraPaths = [ "flext-oracle-oic", "flext-oracle-oic/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1299,7 +1301,7 @@ reportUnusedImport = "none"
 root = "flext-oracle-oic/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-oracle-wms/src"]
+extraPaths = [ "flext-oracle-wms/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1315,7 +1317,7 @@ reportUnusedImport = "none"
 root = "flext-oracle-wms/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-oracle-wms", "flext-oracle-wms/src"]
+extraPaths = [ "flext-oracle-wms", "flext-oracle-wms/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1330,7 +1332,7 @@ reportUnusedImport = "none"
 root = "flext-oracle-wms/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-oracle-wms", "flext-oracle-wms/src"]
+extraPaths = [ "flext-oracle-wms", "flext-oracle-wms/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1345,7 +1347,7 @@ reportUnusedImport = "none"
 root = "flext-oracle-wms/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-plugin/src"]
+extraPaths = [ "flext-plugin/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1361,7 +1363,7 @@ reportUnusedImport = "none"
 root = "flext-plugin/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-plugin", "flext-plugin/src"]
+extraPaths = [ "flext-plugin", "flext-plugin/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1376,7 +1378,7 @@ reportUnusedImport = "none"
 root = "flext-plugin/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-plugin", "flext-plugin/src"]
+extraPaths = [ "flext-plugin", "flext-plugin/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1391,7 +1393,7 @@ reportUnusedImport = "none"
 root = "flext-plugin/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-quality/src"]
+extraPaths = [ "flext-quality/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1407,7 +1409,7 @@ reportUnusedImport = "none"
 root = "flext-quality/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-quality", "flext-quality/src"]
+extraPaths = [ "flext-quality", "flext-quality/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1422,7 +1424,7 @@ reportUnusedImport = "none"
 root = "flext-quality/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-quality", "flext-quality/src"]
+extraPaths = [ "flext-quality", "flext-quality/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1437,7 +1439,7 @@ reportUnusedImport = "none"
 root = "flext-quality/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-ldap/src"]
+extraPaths = [ "flext-tap-ldap/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1453,7 +1455,7 @@ reportUnusedImport = "none"
 root = "flext-tap-ldap/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-ldap", "flext-tap-ldap/src"]
+extraPaths = [ "flext-tap-ldap", "flext-tap-ldap/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1468,7 +1470,7 @@ reportUnusedImport = "none"
 root = "flext-tap-ldap/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-ldap", "flext-tap-ldap/src"]
+extraPaths = [ "flext-tap-ldap", "flext-tap-ldap/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1483,7 +1485,7 @@ reportUnusedImport = "none"
 root = "flext-tap-ldap/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-ldif/src"]
+extraPaths = [ "flext-tap-ldif/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1499,7 +1501,7 @@ reportUnusedImport = "none"
 root = "flext-tap-ldif/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-ldif", "flext-tap-ldif/src"]
+extraPaths = [ "flext-tap-ldif", "flext-tap-ldif/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1514,7 +1516,7 @@ reportUnusedImport = "none"
 root = "flext-tap-ldif/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-ldif", "flext-tap-ldif/src"]
+extraPaths = [ "flext-tap-ldif", "flext-tap-ldif/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1529,7 +1531,7 @@ reportUnusedImport = "none"
 root = "flext-tap-ldif/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-oracle/src"]
+extraPaths = [ "flext-tap-oracle/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1545,7 +1547,7 @@ reportUnusedImport = "none"
 root = "flext-tap-oracle/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-oracle", "flext-tap-oracle/src"]
+extraPaths = [ "flext-tap-oracle", "flext-tap-oracle/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1560,7 +1562,7 @@ reportUnusedImport = "none"
 root = "flext-tap-oracle/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-oracle", "flext-tap-oracle/src"]
+extraPaths = [ "flext-tap-oracle", "flext-tap-oracle/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1575,7 +1577,7 @@ reportUnusedImport = "none"
 root = "flext-tap-oracle/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-oracle-oic/src"]
+extraPaths = [ "flext-tap-oracle-oic/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1591,7 +1593,7 @@ reportUnusedImport = "none"
 root = "flext-tap-oracle-oic/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-oracle-oic", "flext-tap-oracle-oic/src"]
+extraPaths = [ "flext-tap-oracle-oic", "flext-tap-oracle-oic/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1606,7 +1608,7 @@ reportUnusedImport = "none"
 root = "flext-tap-oracle-oic/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-oracle-oic", "flext-tap-oracle-oic/src"]
+extraPaths = [ "flext-tap-oracle-oic", "flext-tap-oracle-oic/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1621,7 +1623,7 @@ reportUnusedImport = "none"
 root = "flext-tap-oracle-oic/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-oracle-wms/src"]
+extraPaths = [ "flext-tap-oracle-wms/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1637,7 +1639,7 @@ reportUnusedImport = "none"
 root = "flext-tap-oracle-wms/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-oracle-wms", "flext-tap-oracle-wms/src"]
+extraPaths = [ "flext-tap-oracle-wms", "flext-tap-oracle-wms/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1652,7 +1654,7 @@ reportUnusedImport = "none"
 root = "flext-tap-oracle-wms/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tap-oracle-wms", "flext-tap-oracle-wms/src"]
+extraPaths = [ "flext-tap-oracle-wms", "flext-tap-oracle-wms/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1667,7 +1669,7 @@ reportUnusedImport = "none"
 root = "flext-tap-oracle-wms/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-ldap/src"]
+extraPaths = [ "flext-target-ldap/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1683,7 +1685,7 @@ reportUnusedImport = "none"
 root = "flext-target-ldap/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-ldap", "flext-target-ldap/src"]
+extraPaths = [ "flext-target-ldap", "flext-target-ldap/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1698,7 +1700,7 @@ reportUnusedImport = "none"
 root = "flext-target-ldap/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-ldap", "flext-target-ldap/src"]
+extraPaths = [ "flext-target-ldap", "flext-target-ldap/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1713,7 +1715,7 @@ reportUnusedImport = "none"
 root = "flext-target-ldap/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-ldif/src"]
+extraPaths = [ "flext-target-ldif/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1729,7 +1731,7 @@ reportUnusedImport = "none"
 root = "flext-target-ldif/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-ldif", "flext-target-ldif/src"]
+extraPaths = [ "flext-target-ldif", "flext-target-ldif/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1744,7 +1746,7 @@ reportUnusedImport = "none"
 root = "flext-target-ldif/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-ldif", "flext-target-ldif/src"]
+extraPaths = [ "flext-target-ldif", "flext-target-ldif/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1759,7 +1761,7 @@ reportUnusedImport = "none"
 root = "flext-target-ldif/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-oracle/src"]
+extraPaths = [ "flext-target-oracle/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1775,7 +1777,7 @@ reportUnusedImport = "none"
 root = "flext-target-oracle/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-oracle", "flext-target-oracle/src"]
+extraPaths = [ "flext-target-oracle", "flext-target-oracle/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1790,7 +1792,7 @@ reportUnusedImport = "none"
 root = "flext-target-oracle/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-oracle", "flext-target-oracle/src"]
+extraPaths = [ "flext-target-oracle", "flext-target-oracle/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1805,7 +1807,7 @@ reportUnusedImport = "none"
 root = "flext-target-oracle/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-oracle-oic/src"]
+extraPaths = [ "flext-target-oracle-oic/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1821,7 +1823,7 @@ reportUnusedImport = "none"
 root = "flext-target-oracle-oic/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-oracle-oic", "flext-target-oracle-oic/src"]
+extraPaths = [ "flext-target-oracle-oic", "flext-target-oracle-oic/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1836,7 +1838,7 @@ reportUnusedImport = "none"
 root = "flext-target-oracle-oic/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-oracle-oic", "flext-target-oracle-oic/src"]
+extraPaths = [ "flext-target-oracle-oic", "flext-target-oracle-oic/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1851,7 +1853,7 @@ reportUnusedImport = "none"
 root = "flext-target-oracle-oic/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-oracle-wms/src"]
+extraPaths = [ "flext-target-oracle-wms/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1867,7 +1869,7 @@ reportUnusedImport = "none"
 root = "flext-target-oracle-wms/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-oracle-wms", "flext-target-oracle-wms/src"]
+extraPaths = [ "flext-target-oracle-wms", "flext-target-oracle-wms/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1882,7 +1884,7 @@ reportUnusedImport = "none"
 root = "flext-target-oracle-wms/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-target-oracle-wms", "flext-target-oracle-wms/src"]
+extraPaths = [ "flext-target-oracle-wms", "flext-target-oracle-wms/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1897,7 +1899,7 @@ reportUnusedImport = "none"
 root = "flext-target-oracle-wms/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tests/src"]
+extraPaths = [ "flext-tests/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1913,7 +1915,7 @@ reportUnusedImport = "none"
 root = "flext-tests/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-tests", "flext-tests/src"]
+extraPaths = [ "flext-tests", "flext-tests/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1928,7 +1930,7 @@ reportUnusedImport = "none"
 root = "flext-tests/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-web/src"]
+extraPaths = [ "flext-web/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1944,7 +1946,7 @@ reportUnusedImport = "none"
 root = "flext-web/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-web", "flext-web/src"]
+extraPaths = [ "flext-web", "flext-web/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1959,7 +1961,7 @@ reportUnusedImport = "none"
 root = "flext-web/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-web", "flext-web/src"]
+extraPaths = [ "flext-web", "flext-web/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -1974,7 +1976,7 @@ reportUnusedImport = "none"
 root = "flext-web/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["gruponos-meltano-native/src"]
+extraPaths = [ "gruponos-meltano-native/src" ]
 reportAttributeAccessIssue = "none"
 reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
@@ -1990,7 +1992,7 @@ reportUnusedImport = "none"
 root = "gruponos-meltano-native/src"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["gruponos-meltano-native", "gruponos-meltano-native/src"]
+extraPaths = [ "gruponos-meltano-native", "gruponos-meltano-native/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -2005,7 +2007,7 @@ reportUnusedImport = "none"
 root = "gruponos-meltano-native/tests"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["gruponos-meltano-native", "gruponos-meltano-native/src"]
+extraPaths = [ "gruponos-meltano-native", "gruponos-meltano-native/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -2020,7 +2022,7 @@ reportUnusedImport = "none"
 root = "gruponos-meltano-native/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["gruponos-meltano-native", "gruponos-meltano-native/src"]
+extraPaths = [ "gruponos-meltano-native", "gruponos-meltano-native/src" ]
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportPrivateImportUsage = "none"
@@ -2059,7 +2061,6 @@ python_files = [
   "*_tests.py",
   "test_*.py",
 ]
-
 
 # [MANAGED] ruff
 [tool.ruff]
@@ -2209,7 +2210,9 @@ split-on-trailing-comma = true
 
 [tool.ruff.lint.per-file-ignores]
 
-
+"**/.vulture_whitelist.py" = [
+  "ALL",
+]
 "**/*_pb2*.py" = [
   "ALL",
 ]
@@ -2386,9 +2389,6 @@ split-on-trailing-comma = true
   "S404",
   "S603",
 ]
-"**/.vulture_whitelist.py" = [
-  "ALL",
-]
 "**/__init__.py" = [
   "A004",
   "ANN401",
@@ -2476,7 +2476,7 @@ split-on-trailing-comma = true
   "S404",
   "S603",
 ]
-"**/tools/**/*.py" = [
+"**/tools/*.py" = [
   "FBT001",
   "FBT002",
   "N802",
@@ -2485,7 +2485,7 @@ split-on-trailing-comma = true
   "S607",
   "T201",
 ]
-"**/tools/*.py" = [
+"**/tools/**/*.py" = [
   "FBT001",
   "FBT002",
   "N802",
@@ -2561,7 +2561,6 @@ members = [
   "flext-web",
   "gruponos-meltano-native",
 ]
-
 
 # [MANAGED] yamlfix
 [tool.yamlfix]
