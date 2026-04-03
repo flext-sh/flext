@@ -1,0 +1,59 @@
+libs/__init__.py
+  f6ad324c64f9d6d6 8,10-18,31-36,39,41-45,47,50-54,77-96
+docker/images/support/quality/simple/flext_core/__init__.py
+  f6ad324c64f9d6d6 8,10-19,32-35,37,45-56,80-100
+docker/images/support/quality/fixed/flext_core/__init__.py
+  f6ad324c64f9d6d6 8,10-19,32-35,37,45-56,80-100
+docs/superpowers/specs/2026-04-03-constant-consolidation-design.md
+  bce025263ce5d18b 1-91
+pyproject.toml
+  e1d2767e43e21b6f 2402-2404
+docs/superpowers/plans/2026-04-03-constant-consolidation.md
+  bce025263ce5d18b 1-153,156-163,166-264,266-268,270-271,273-276,278-280,282-286,288-291,294-295,304-305,309,311-312,315-316,321,323,325-329,335,338,347-350,352-354,356-361,364,367,369-370,372-383,387-391,393-395,399-401,405-414,416-487
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "1c50e6592133bad12515360820454d4e8df98d93",
+  "prompts": {
+    "bce025263ce5d18b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "110c144c-5b33-4bbc-8c7f-99856935f344",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 562,
+      "total_deletions": 0,
+      "accepted_lines": 512,
+      "overriden_lines": 19
+    },
+    "e1d2767e43e21b6f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b88f5b43-f2ee-4bd5-8e49-f0bc2c3099ed",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 0,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    },
+    "f6ad324c64f9d6d6": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d50de-e81c-7430-b35d-ccb63bc05707",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 208,
+      "total_deletions": 81,
+      "accepted_lines": 195,
+      "overriden_lines": 0
+    }
+  }
+}
