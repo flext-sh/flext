@@ -2399,6 +2399,9 @@ split-on-trailing-comma = true
   "N999",
   "PLC2701",
   "RUF067",
+  "TCH001",
+  "TCH002",
+  "TCH003",
 ]
 "**/_utilities/parser.py" = [
   "ARG004",

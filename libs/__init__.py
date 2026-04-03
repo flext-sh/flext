@@ -5,35 +5,55 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING as _TYPE_CHECKING
+import typing as _t
 
+from flext.versioning import (
+    SEMVER_RE,
+    bump_version,
+    current_workspace_version,
+    parse_semver,
+    release_tag_from_branch,
+    replace_project_version,
+)
+from flext_core.constants import FlextConstants as c
+from flext_core.decorators import FlextDecorators as d
+from flext_core.exceptions import FlextExceptions as e
+from flext_core.handlers import FlextHandlers as h
 from flext_core.lazy import install_lazy_exports
+from flext_core.mixins import FlextMixins as x
+from flext_core.models import FlextModels as m
+from flext_core.protocols import FlextProtocols as p
+from flext_core.result import FlextResult as r
+from flext_core.service import FlextService as s
+from flext_core.typings import FlextTypes as t
+from flext_core.utilities import FlextUtilities as u
 
-if _TYPE_CHECKING:
-    from flext import versioning
-    from flext.versioning import (
+if _t.TYPE_CHECKING:
+    import flext.versioning as _flext_versioning
+
+    versioning = _flext_versioning
+
+    _ = (
         SEMVER_RE,
         bump_version,
+        c,
         current_workspace_version,
+        d,
+        e,
+        h,
+        m,
+        p,
         parse_semver,
+        r,
         release_tag_from_branch,
         replace_project_version,
+        s,
+        t,
+        u,
+        versioning,
+        x,
     )
-    from flext_core import FlextTypes
-    from flext_core.constants import FlextConstants as c
-    from flext_core.decorators import FlextDecorators as d
-    from flext_core.exceptions import FlextExceptions as e
-    from flext_core.handlers import FlextHandlers as h
-    from flext_core.mixins import FlextMixins as x
-    from flext_core.models import FlextModels as m
-    from flext_core.protocols import FlextProtocols as p
-    from flext_core.result import FlextResult as r
-    from flext_core.service import FlextService as s
-    from flext_core.typings import FlextTypes as t
-    from flext_core.utilities import FlextUtilities as u
-
-_LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
+_LAZY_IMPORTS = {
     "SEMVER_RE": "flext.versioning",
     "bump_version": "flext.versioning",
     "c": ("flext_core.constants", "FlextConstants"),
@@ -53,6 +73,27 @@ _LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
     "versioning": "flext.versioning",
     "x": ("flext_core.mixins", "FlextMixins"),
 }
+
+__all__ = [
+    "SEMVER_RE",
+    "bump_version",
+    "c",
+    "current_workspace_version",
+    "d",
+    "e",
+    "h",
+    "m",
+    "p",
+    "parse_semver",
+    "r",
+    "release_tag_from_branch",
+    "replace_project_version",
+    "s",
+    "t",
+    "u",
+    "versioning",
+    "x",
+]
 
 
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)

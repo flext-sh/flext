@@ -5,14 +5,36 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING as _TYPE_CHECKING
+import typing as _t
 
+from flext.exceptions import (
+    AuthenticationError,
+    ConfigurationError,
+    ConnectionError,
+    Error,
+    ProcessingError,
+    TimeoutError,
+    ValidationError,
+)
+from flext_core.constants import FlextConstants as c
+from flext_core.decorators import FlextDecorators as d
+from flext_core.exceptions import FlextExceptions as e
+from flext_core.handlers import FlextHandlers as h
 from flext_core.lazy import install_lazy_exports
+from flext_core.mixins import FlextMixins as x
+from flext_core.models import FlextModels as m
+from flext_core.protocols import FlextProtocols as p
+from flext_core.result import FlextResult as r
+from flext_core.service import FlextService as s
+from flext_core.typings import FlextTypes as t
+from flext_core.utilities import FlextUtilities as u
 
-if _TYPE_CHECKING:
-    from flext import exceptions
-    from flext.exceptions import (
+if _t.TYPE_CHECKING:
+    import flext.exceptions as _flext_exceptions
+
+    exceptions = _flext_exceptions
+
+    _ = (
         AuthenticationError,
         ConfigurationError,
         ConnectionError,
@@ -20,21 +42,20 @@ if _TYPE_CHECKING:
         ProcessingError,
         TimeoutError,
         ValidationError,
+        c,
+        d,
+        e,
+        exceptions,
+        h,
+        m,
+        p,
+        r,
+        s,
+        t,
+        u,
+        x,
     )
-    from flext_core import FlextTypes
-    from flext_core.constants import FlextConstants as c
-    from flext_core.decorators import FlextDecorators as d
-    from flext_core.exceptions import FlextExceptions as e
-    from flext_core.handlers import FlextHandlers as h
-    from flext_core.mixins import FlextMixins as x
-    from flext_core.models import FlextModels as m
-    from flext_core.protocols import FlextProtocols as p
-    from flext_core.result import FlextResult as r
-    from flext_core.service import FlextService as s
-    from flext_core.typings import FlextTypes as t
-    from flext_core.utilities import FlextUtilities as u
-
-_LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
+_LAZY_IMPORTS = {
     "AuthenticationError": "flext.exceptions",
     "ConfigurationError": "flext.exceptions",
     "ConnectionError": "flext.exceptions",
@@ -55,6 +76,28 @@ _LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
     "u": ("flext_core.utilities", "FlextUtilities"),
     "x": ("flext_core.mixins", "FlextMixins"),
 }
+
+__all__ = [
+    "AuthenticationError",
+    "ConfigurationError",
+    "ConnectionError",
+    "Error",
+    "ProcessingError",
+    "TimeoutError",
+    "ValidationError",
+    "c",
+    "d",
+    "e",
+    "exceptions",
+    "h",
+    "m",
+    "p",
+    "r",
+    "s",
+    "t",
+    "u",
+    "x",
+]
 
 
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)

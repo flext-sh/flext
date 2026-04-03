@@ -5,48 +5,77 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING as _TYPE_CHECKING
+import typing as _t
 
+from examples.acl_processing_example import (
+    AclProcessingExample,
+    ContextDict,
+    EntryDict,
+)
+from examples.advanced_processing_example import (
+    AdvancedProcessingExample,
+    ItemDict,
+    PipelineStageData,
+    StageOperation,
+)
+from examples.complete_workflow_example import (
+    CompleteWorkflowExample,
+    ProcessingDict,
+    WorkflowContent,
+    WorkflowData,
+)
+from flext_core.constants import FlextConstants as c
+from flext_core.decorators import FlextDecorators as d
+from flext_core.exceptions import FlextExceptions as e
+from flext_core.handlers import FlextHandlers as h
 from flext_core.lazy import install_lazy_exports
+from flext_core.mixins import FlextMixins as x
+from flext_core.models import FlextModels as m
+from flext_core.protocols import FlextProtocols as p
+from flext_core.result import FlextResult as r
+from flext_core.service import FlextService as s
+from flext_core.typings import FlextTypes as t
+from flext_core.utilities import FlextUtilities as u
 
-if _TYPE_CHECKING:
-    from examples import (
-        acl_processing_example,
-        advanced_processing_example,
-        complete_workflow_example,
-    )
-    from examples.acl_processing_example import (
+if _t.TYPE_CHECKING:
+    import examples.acl_processing_example as _examples_acl_processing_example
+
+    acl_processing_example = _examples_acl_processing_example
+    import examples.advanced_processing_example as _examples_advanced_processing_example
+
+    advanced_processing_example = _examples_advanced_processing_example
+    import examples.complete_workflow_example as _examples_complete_workflow_example
+
+    complete_workflow_example = _examples_complete_workflow_example
+
+    _ = (
         AclProcessingExample,
+        AdvancedProcessingExample,
+        CompleteWorkflowExample,
         ContextDict,
         EntryDict,
-    )
-    from examples.advanced_processing_example import (
-        AdvancedProcessingExample,
         ItemDict,
         PipelineStageData,
-        StageOperation,
-    )
-    from examples.complete_workflow_example import (
-        CompleteWorkflowExample,
         ProcessingDict,
+        StageOperation,
         WorkflowContent,
         WorkflowData,
+        acl_processing_example,
+        advanced_processing_example,
+        c,
+        complete_workflow_example,
+        d,
+        e,
+        h,
+        m,
+        p,
+        r,
+        s,
+        t,
+        u,
+        x,
     )
-    from flext_core import FlextTypes
-    from flext_core.constants import FlextConstants as c
-    from flext_core.decorators import FlextDecorators as d
-    from flext_core.exceptions import FlextExceptions as e
-    from flext_core.handlers import FlextHandlers as h
-    from flext_core.mixins import FlextMixins as x
-    from flext_core.models import FlextModels as m
-    from flext_core.protocols import FlextProtocols as p
-    from flext_core.result import FlextResult as r
-    from flext_core.service import FlextService as s
-    from flext_core.typings import FlextTypes as t
-    from flext_core.utilities import FlextUtilities as u
-
-_LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
+_LAZY_IMPORTS = {
     "AclProcessingExample": "examples.acl_processing_example",
     "AdvancedProcessingExample": "examples.advanced_processing_example",
     "CompleteWorkflowExample": "examples.complete_workflow_example",
@@ -73,6 +102,34 @@ _LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
     "u": ("flext_core.utilities", "FlextUtilities"),
     "x": ("flext_core.mixins", "FlextMixins"),
 }
+
+__all__ = [
+    "AclProcessingExample",
+    "AdvancedProcessingExample",
+    "CompleteWorkflowExample",
+    "ContextDict",
+    "EntryDict",
+    "ItemDict",
+    "PipelineStageData",
+    "ProcessingDict",
+    "StageOperation",
+    "WorkflowContent",
+    "WorkflowData",
+    "acl_processing_example",
+    "advanced_processing_example",
+    "c",
+    "complete_workflow_example",
+    "d",
+    "e",
+    "h",
+    "m",
+    "p",
+    "r",
+    "s",
+    "t",
+    "u",
+    "x",
+]
 
 
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
