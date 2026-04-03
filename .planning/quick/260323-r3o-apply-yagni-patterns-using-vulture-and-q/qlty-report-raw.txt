@@ -1969,7 +1969,7 @@ flext-dbt-oracle-wms/tests/utilities.py
         also found at flext-api/tests/typings.py
         also found at flext-api/tests/protocols.py
 
-flext-grpc/docs/architecture/tools/validate-docs.py
+flext-grpc/docs/architecture/tools/validate_docs.py
    1  High total complexity (count = 53)
 
 flext-grpc/docs/pydantic-v2-modernization/audit_pydantic_v2.py
