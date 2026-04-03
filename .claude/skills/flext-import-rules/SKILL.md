@@ -143,7 +143,7 @@ There is **no** distinction between internal and external import style.
 
 ```python
 # ✅ CORRECT — Always import from root namespace
-from flext_core import FlextConstants, FlextModels, FlextRuntime, c, e, m, p, r, t, u
+from flext_core import FlextConstants, FlextModels, u, c, e, m, p, r, t, u
 
 
 # ✅ CORRECT — Import from _models/ or _utilities/ (inside their own facades only)

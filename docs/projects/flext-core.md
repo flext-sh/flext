@@ -61,13 +61,13 @@ FLEXT Core follows strict layering so that lower tiers never import higher tiers
 
 - **Tier 0 (Foundation)**: `constants.py`, `typings.py`, `protocols.py` define shared constants, centralized type aliases, and protocol hierarchies.
 - **Tier 1 (Domain facades)**: `models.py`, `utilities.py`, `_models/`, `_utilities/` expose Pydantic models, helpers, and short alias facades (`m`, `u`).
-- **Tier 2 (Runtime + DI)**: `container.py`, `context.py`, `decorators.py`, `runtime.py`, `service.py` build the `FlextContainer`, `FlextRuntime`, and the structured logging/context bridge.
+- **Tier 2 (Runtime + DI)**: `container.py`, `context.py`, `decorators.py`, `runtime.py`, `service.py` build the `FlextContainer`, `u`, and the structured logging/context bridge.
 - **Tier 3 (Application)**: `dispatcher.py`, `registry.py`, `handlers.py`, `services/` compose the CQRS dispatcher, handler registry, and auto-registered services.
 
 ### Key architectural patterns
 
 - **r[T]**: the railway result for success/failure chaining (`r[T]` alias) and monadic helpers.
-- **Dependency injection bridge**: `FlextRuntime` + `FlextContainer` re-export `Provide`/`inject`, auto-register the core services (`config`, `logger`, `context`), and shield projects from `dependency-injector` details.
+- **Dependency injection bridge**: `u` + `FlextContainer` re-export `Provide`/`inject`, auto-register the core services (`config`, `logger`, `context`), and shield projects from `dependency-injector` details.
 - **Protocol-first**: all interfaces accept `flext_core.protocols` namespaced types, zero `TYPE_CHECKING`, zero circular imports.
 - **Short-alias discipline**: `r`, `t`, `c`, `m`, `p`, `u`, `e`, `x`, `d`, `h` for succinct runtime code.
 

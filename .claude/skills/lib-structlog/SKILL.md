@@ -10,7 +10,7 @@
   - [Logger Creation Patterns](#logger-creation-patterns)
   - [Context Binding](#context-binding)
   - [ClassVar State](#classvar-state)
-  - [FlextRuntime Structlog Integration](#flextruntime-structlog-integration)
+  - [u Structlog Integration](#flextruntime-structlog-integration)
 - [Workflow](#workflow)
 - [Examples](#examples)
   - [Good: Module logger with scoped context](#good-module-logger-with-scoped-context)
@@ -53,7 +53,7 @@ description: FlextLogger structured logging with context propagation, DI factori
 
 ## Rules
 
-- **Never** configure structlog directly — always use `FlextRuntime.configure_structlog()` at application bootstrap.
+- **Never** configure structlog directly — always use `u.configure_structlog()` at application bootstrap.
 - **Never** create loggers with `structlog.get_logger()` directly — use `FlextLogger.create_module_logger(name)` or `FlextLogger.for_container(container)`.
 - Bind context via `FlextLogger.Context` methods — never modify `structlog.contextvars` directly.
 - Clean up scoped contexts to prevent leakage across requests/operations.
@@ -62,7 +62,7 @@ description: FlextLogger structured logging with context propagation, DI factori
 
 ### FlextLogger Class Hierarchy
 
-`FlextLogger` inherits from `FlextRuntime` and implements `p.Logger` protocol.
+`FlextLogger` inherits from `u` and implements `p.Logger` protocol.
 
 **Nested Operation Groups** (composition pattern):
 
@@ -74,17 +74,17 @@ description: FlextLogger structured logging with context propagation, DI factori
 ### Configuration (at application startup)
 
 ```python
-from flext_core import FlextRuntime
+from flext_core import u
 
 # One-time setup — MUST be called before any logging
-FlextRuntime.configure_structlog(
+u.configure_structlog(
     level="INFO",
     json_output=True,
     processors=[...],  # optional custom processors
 )
 ```
 
-Internal lazy fallback: `FlextRuntime.ensure_structlog_configured()` is called by `create_module_logger` if not yet configured, but explicit bootstrap is strongly preferred.
+Internal lazy fallback: `u.ensure_structlog_configured()` is called by `create_module_logger` if not yet configured, but explicit bootstrap is strongly preferred.
 
 ### Logger Creation Patterns
 
@@ -97,7 +97,7 @@ logger = FlextLogger.create_module_logger(__name__)
 # Container-scoped logger (DI integration)
 logger = FlextLogger.for_container(container, level="DEBUG", correlation_id="abc-123")
 
-# Static bridge to FlextRuntime.get_logger
+# Static bridge to u.get_logger
 logger = FlextLogger.get_logger("my_service")
 ```
 
@@ -126,25 +126,25 @@ _scoped_contexts: ClassVar[Mapping[str, t.ContainerMapping]]  # {scope: {key: va
 _level_contexts: ClassVar[Mapping[str, t.ContainerMapping]]  # {level: {key: value}}
 ```
 
-### FlextRuntime Structlog Integration
+### u Structlog Integration
 
-In `runtime.py`, the `FlextRuntime` class provides:
+In `runtime.py`, the `u` class provides:
 
-- `FlextRuntime.structlog()` — returns the structlog module
-- `FlextRuntime.get_logger(name)` — creates a bound logger
-- `FlextRuntime.configure_structlog(...)` — sets up processor chain (TimeStamper, level filter, context merge, JSONRenderer)
-- `FlextRuntime.ensure_structlog_configured()` — lazy one-time init
-- `FlextRuntime.is_structlog_configured()` — check config state
-- `FlextRuntime.reset_structlog_state_for_testing()` — reset for test isolation
+- `u.structlog()` — returns the structlog module
+- `u.get_logger(name)` — creates a bound logger
+- `u.configure_structlog(...)` — sets up processor chain (TimeStamper, level filter, context merge, JSONRenderer)
+- `u.ensure_structlog_configured()` — lazy one-time init
+- `u.is_structlog_configured()` — check config state
+- `u.reset_structlog_state_for_testing()` — reset for test isolation
 
 Telemetry integration methods:
 
-- `FlextRuntime.Integration.track_service_resolution(...)` — emit directly to structlog
-- `FlextRuntime.Integration.track_domain_event(...)` — emit directly to structlog
+- `u.Integration.track_service_resolution(...)` — emit directly to structlog
+- `u.Integration.track_domain_event(...)` — emit directly to structlog
 
 ## Workflow
 
-1. Call `FlextRuntime.configure_structlog()` in your application bootstrap
+1. Call `u.configure_structlog()` in your application bootstrap
 2. Create loggers via `FlextLogger.create_module_logger(__name__)`
 3. Bind request/operation context via `FlextLogger.Context.bind_global_context()`
 4. Use `scoped_context()` for operation-scoped context that auto-cleans
@@ -199,7 +199,7 @@ def get_logger():
     return structlog.get_logger()
 ```
 
-**Why bad**: Causes race conditions and inconsistent processor chains. Call `FlextRuntime.configure_structlog()` once at startup.
+**Why bad**: Causes race conditions and inconsistent processor chains. Call `u.configure_structlog()` once at startup.
 
 ### Bad: Forgetting to clean up scoped context
 

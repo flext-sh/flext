@@ -757,7 +757,7 @@ def process(data: ProcessInput) -> Result: ...
 Agents MUST apply the following when editing FLEXT code. No exceptions without explicit operator approval.
 
 1. **Runtime aliases only**  
-   Simple assignments only in package **init**: c = FlextConstants, m = FlextModels, etc. Never use FlextRuntime.Aliases or any alias registry. Access via project runtime alias only; no subdivision; MRO protocol only; direct methods.
+   Simple assignments only in package **init**: c = FlextConstants, m = FlextModels, etc. Never use u.Aliases or any alias registry. Access via project runtime alias only; no subdivision; MRO protocol only; direct methods.
 
 2. **No type() for type narrowing**  
    Never use `type(x) is T` or `type(x) == T` to narrow types. Use `isinstance(x, T)` or a `TypeGuard` so the type checker narrows correctly. Swapping `isinstance` for `type()` is forbidden.
@@ -799,7 +799,7 @@ from flext_core import r, r
 from typing import cast
 
 
-class r[T_co](FlextRuntime.RuntimeResult[T_co]):
+class r[T_co](u.RuntimeResult[T_co]):
     @classmethod
     def ok[T](cls, value: T) -> r[T]:
         # T inferred from value — no cast needed

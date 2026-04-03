@@ -26,7 +26,7 @@ RUN pip install -e . --no-deps
 RUN echo "🧪 Testing imports..." && \
     python -c "from flext_quality import CodeAnalyzer; print('✅ CodeAnalyzer')" && \
     python -c "from flext_quality import FlextQualityError; print('✅ Exceptions')" && \
-    python -c "from flext_core import FlextBus, FlextSettings, FlextConstants, FlextContainer, FlextContext, FlextDecorators, FlextDispatcher, FlextExceptions, h, FlextLogger, x, FlextModels, FlextProcessors, p, FlextRegistry, r, FlextRuntime, FlextService, u; print('✅ Flext')" && \
+    python -c "from flext_core import FlextBus, FlextSettings, FlextConstants, FlextContainer, FlextContext, FlextDecorators, FlextDispatcher, FlextExceptions, h, FlextLogger, x, FlextModels, FlextProcessors, p, FlextRegistry, r, u, FlextService, u; print('✅ Flext')" && \
     echo "✅ All imports successful!"
 
 # Run critical tests

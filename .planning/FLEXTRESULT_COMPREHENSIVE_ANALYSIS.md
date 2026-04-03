@@ -15,7 +15,7 @@ The FLEXT ecosystem uses `FlextResult[T]` (aliased as `r[T]`) for railway-orient
 ### FlextResult Architecture
 
 ```
-FlextRuntime.RuntimeResult[T]  (base: BaseModel, Layer 0.5)
+u.RuntimeResult[T]  (base: BaseModel, Layer 0.5)
     ↓
 FlextResult[T]  (extends RuntimeResult, Layer 1)
     ├── _returns_result: Result[T, str]  (internal returns library)
@@ -492,7 +492,7 @@ class FlextError:
 **File**: `flext-core/src/flext_core/result.py` (extend)
 
 ```python
-class FlextResult[T](FlextRuntime.RuntimeResult[T]):
+class FlextResult[T](u.RuntimeResult[T]):
     """Enhanced with structured error support"""
 
     @classmethod
