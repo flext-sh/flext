@@ -2125,6 +2125,7 @@ src = [
   "gruponos-meltano-native",
   "libs",
   "pkg",
+  "rope_ws",
   "scripts",
   "src",
   "tests",

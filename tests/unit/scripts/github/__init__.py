@@ -11,8 +11,6 @@ from typing import TYPE_CHECKING as _TYPE_CHECKING
 from flext_core.lazy import install_lazy_exports
 
 if _TYPE_CHECKING:
-    from flext import test_pr_workspace
-    from flext.test_pr_workspace import TestPrWorkspace
     from flext_core import FlextTypes
     from flext_core.constants import FlextConstants as c
     from flext_core.decorators import FlextDecorators as d
@@ -25,9 +23,11 @@ if _TYPE_CHECKING:
     from flext_core.service import FlextService as s
     from flext_core.typings import FlextTypes as t
     from flext_core.utilities import FlextUtilities as u
+    from tests.unit.scripts.github import test_pr_workspace
+    from tests.unit.scripts.github.test_pr_workspace import TestPrWorkspace
 
 _LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
-    "TestPrWorkspace": "flext.test_pr_workspace",
+    "TestPrWorkspace": "tests.unit.scripts.github.test_pr_workspace",
     "c": ("flext_core.constants", "FlextConstants"),
     "d": ("flext_core.decorators", "FlextDecorators"),
     "e": ("flext_core.exceptions", "FlextExceptions"),
@@ -37,7 +37,7 @@ _LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
     "r": ("flext_core.result", "FlextResult"),
     "s": ("flext_core.service", "FlextService"),
     "t": ("flext_core.typings", "FlextTypes"),
-    "test_pr_workspace": "flext.test_pr_workspace",
+    "test_pr_workspace": "tests.unit.scripts.github.test_pr_workspace",
     "u": ("flext_core.utilities", "FlextUtilities"),
     "x": ("flext_core.mixins", "FlextMixins"),
 }
