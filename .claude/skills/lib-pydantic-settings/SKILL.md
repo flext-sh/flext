@@ -77,7 +77,7 @@ class FlextSettings(p.ProtocolSettings, p.Settings, u):
     model_config = SettingsConfigDict(
         env_prefix=c.ENV_PREFIX,
         env_nested_delimiter=c.ENV_NESTED_DELIMITER,
-        env_file=u.resolve_env_file(),
+        env_file=u.Infra.resolve_env_file(),
         env_file_encoding=c.DEFAULT_ENCODING,
         case_sensitive=False,
         extra=c.EXTRA_IGNORE,
@@ -127,7 +127,7 @@ Good:
 ```python
 model_config = SettingsConfigDict(
     env_prefix="FLEXT_CLI_",
-    env_file=u.resolve_env_file(),
+    env_file=u.Infra.resolve_env_file(),
     env_file_encoding="utf-8",
     extra="ignore",
 )
