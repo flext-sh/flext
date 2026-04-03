@@ -228,7 +228,7 @@ The following are DONE and should NOT be re-planned:
 | `u.Infra.run_cli()` | Exists at `_utilities/cli.py:340` |
 | `u.Infra.exit_code()` | Exists at `_utilities/cli.py:360` |
 | CLI standardization (`--workspace`, `--dry-run`/`--apply`) | All 11+ `__main__.py` use `u.Infra.create_parser()` |
-| `FlextRuntime.ensure_structlog_configured()` removed from `__main__` | 0 grep matches |
+| `u.ensure_structlog_configured()` removed from `__main__` | 0 grep matches |
 | `apply_changes=` normalization | 0 grep matches |
 | `dry_run=cli.apply` bug fix | 0 grep matches |
 | `except Exception:` in production | 0 grep matches in `*/src/` |

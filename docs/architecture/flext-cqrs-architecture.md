@@ -330,7 +330,7 @@ servir como referência futura para implementação:
 ~~│ ├── r - Railway pattern │~~
 ~~│ └── FlextExceptions - Error handling │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│ Tier 0.5: FlextRuntime │~~
+~~│ Tier 0.5: u │~~
 ~~│ └── Runtime utilities │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
 ~~│ Tier 0.1: FlextSettings │~~

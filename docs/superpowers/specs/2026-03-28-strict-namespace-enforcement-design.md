@@ -84,7 +84,7 @@ These classes are MRO bases of the namespace facade chain. Python requires them 
 | `FlextDispatcher` | `dispatcher.py` | CQRS message bus (used by `h`, `s`, `FlextRegistry`) | Keep standalone — MRO peer. Already exported. |
 | `FlextLogger` | `loggings.py` | Structured logger (inherits `u`, `p.Logger`) | Keep standalone — MRO peer. Already exported. |
 | `FlextRegistry` | `registry.py` | Handler registry (inherits `s[bool]`) | Keep standalone — `s` subclass. Already exported. |
-| `FlextRuntime` | `runtime.py` | L0.5 bridge (BASE of `FlextUtilities`) | Keep standalone — MRO base of `u`. Already exported. |
+| `u` | `runtime.py` | L0.5 bridge (BASE of `FlextUtilities`) | Keep standalone — MRO base of `u`. Already exported. |
 
 **Must absorb into facades:**
 | Class | File | Target | Reason |

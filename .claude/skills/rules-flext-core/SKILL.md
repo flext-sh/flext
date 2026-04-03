@@ -82,7 +82,7 @@ Bad:
 from dependency_injector import providers
 ```
 
-Why bad: bypasses `FlextRuntime`/`FlextContainer` bridge contract.
+Why bad: bypasses `u`/`FlextContainer` bridge contract.
 
 ## Verification
 
@@ -97,5 +97,5 @@ Pattern checks:
 
 - `rg -n "class r|\.flat_map\(|\.lash\(" flext-core/src/flext_core/result.py`
 - `rg -n "class FlextContainer|def register\(|def get_typed\(" flext-core/src/flext_core/container.py`
-- `rg -n "class FlextRuntime|class DependencyIntegration" flext-core/src/flext_core/runtime.py`
+- `rg -n "class u|class DependencyIntegration" flext-core/src/flext_core/runtime.py`
 - `rg -n "TypeVar\(|TypeAlias|class FlextTypes" flext-core/src/flext_core/typings.py`

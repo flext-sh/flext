@@ -62,7 +62,7 @@ The facade (`api.py`) depends on services (`services/`) which depend on contract
 
 ## Instructions
 
-- `runtime.py` owns integration helpers like `FlextRuntime.DependencyIntegration.create_layered_bridge`.
+- `runtime.py` owns integration helpers like `u.DependencyIntegration.create_layered_bridge`.
 - `runtime.py` owns `configure_structlog` and low-level type/serialization guards.
 - `container.py` centralizes DI with `FlextContainer.register`, `register_factory`, `register_resource`, `get`, `get_typed`.
 - Higher layers should call bridge APIs, not import third-party infrastructure directly.
@@ -76,9 +76,9 @@ The facade (`api.py`) depends on services (`services/`) which depend on contract
 ```python
 # Good: orchestration consumes bridge + public alias
 from flext_core import r
-from flext_core import FlextRuntime
+from flext_core import u
 
-bridge, services, resources = FlextRuntime.DependencyIntegration.create_layered_bridge()
+bridge, services, resources = u.DependencyIntegration.create_layered_bridge()
 result = r[bool].ok(True)
 ```
 
@@ -252,6 +252,6 @@ Make gates:
 Pattern checks:
 
 - `rg -n "Layered Topology|L3|L2|L1|L0" flext-core/docs/architecture/overview.md`
-- `rg -n "class FlextRuntime|class DependencyIntegration|configure_structlog" flext-core/src/flext_core/runtime.py`
+- `rg -n "class u|class DependencyIntegration|configure_structlog" flext-core/src/flext_core/runtime.py`
 - `rg -n "class FlextContainer|def register\(|def register_factory\(|def register_resource\(" flext-core/src/flext_core/container.py`
 - `rg -n "r|FlextTypes|FlextConstants|FlextModels|FlextProtocols|FlextUtilities|FlextDecorators|FlextExceptions|FlextHandlers|FlextService|FlextMixins" flext-core/src/flext_core/__init__.py`

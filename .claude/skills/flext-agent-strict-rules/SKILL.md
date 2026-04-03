@@ -1,6 +1,6 @@
 ---
 name: flext-agent-strict-rules
-description: Mandatory rules for all coding agents — simple runtime aliases only (never FlextRuntime.Aliases.* for c,m,r,t,u,p,d,e,h,s,x), correct typing for narrowing (isinstance/TypeGuard, never type()), dismantle polymorphic code into centralized Pydantic v2 models, no loose methods. Apply across all projects (32+); use multiple agents in parallel for speed; lint-clean, no warnings/errors.
+description: Mandatory rules for all coding agents — simple runtime aliases only (never u.Aliases.* for c,m,r,t,u,p,d,e,h,s,x), correct typing for narrowing (isinstance/TypeGuard, never type()), dismantle polymorphic code into centralized Pydantic v2 models, no loose methods. Apply across all projects (32+); use multiple agents in parallel for speed; lint-clean, no warnings/errors.
 ---
 
 # Flext Agent Strict Rules (Mandatory)
@@ -126,12 +126,12 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 
 ## 1. Simple Runtime Aliases Only (Mandatory — No Exception)
 
-- **Forbidden**: Never use `FlextRuntime.Aliases.constants()`, `.models()`, `.result()`, `.typings()`, `.protocols()`, `.utilities()`, `.decorators()`, `.exceptions()`, `.handlers()`, `.service_base()`, or `.mixins()` to define package-level aliases. Remove any such usage totally.
+- **Forbidden**: Never use `u.Aliases.constants()`, `.models()`, `.result()`, `.typings()`, `.protocols()`, `.utilities()`, `.decorators()`, `.exceptions()`, `.handlers()`, `.service_base()`, or `.mixins()` to define package-level aliases. Remove any such usage totally.
 - **Required**: Use **simple runtime aliases only**: direct assignment to the facade class (e.g. `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`). No alias registry; no staticmethod layer for defining c, m, r, t, u, p, d, e, h, s, x.
 - **Facade pattern**: Each facade (e.g. FlextUtilities) MUST expose **staticmethod aliases from external subclasses** so call sites have **one flat namespace** (e.g. `u.foo`, `u.bar`). No subdivision of namespaces (no `u.foo` at call sites). Subprojects: access **only** via that project's namespace (`from flext_cli import m, u` then `m.Foo`, `u.parse`).
 - **Access**: Through the **project's runtime alias only**, with no subdivision. Subprojects define nested classes for organization then **class-level aliases at the facade root** so call sites use `m.Foo`, `m.Bar`. Aliases and namespaces follow the **MRO protocol only**. Use direct methods; runtime helpers come from **x** (FlextMixins) via MRO.
 - **Rule**: One namespace per project. No duplicate alias assignments; no compatibility aliases (`LegacyX = NewX`). Remove all non-runtime aliases and loose (pass-through) methods; use canonical names and direct methods only.
-- **Invalid instructions** text that says "resolve via MRO registry (FlextRuntime.Aliases)" or "use FlextRuntime.Aliases" is **wrong**. Remove it. Access is through the **project runtime alias only** (e.g. `m`, `c`, `r`, `t`, `u`, `p`, `d`, `e`, `h`, `s`, `x`); MRO protocol only; **no** alias registry or staticmethod layer.
+- **Invalid instructions** text that says "resolve via MRO registry (u.Aliases)" or "use u.Aliases" is **wrong**. Remove it. Access is through the **project runtime alias only** (e.g. `m`, `c`, `r`, `t`, `u`, `p`, `d`, `e`, `h`, `s`, `x`); MRO protocol only; **no** alias registry or staticmethod layer.
 
 ---
 
@@ -198,7 +198,7 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 
 1. **Typing (AXIOMATIC)**: `Any`, `t.NormalizedValue`, and `Mapping[str, Any]` are **TOTALLY FORBIDDEN** in type annotations, function signatures, return types, examples, and generated code. Use **exclusively** `t.*` contracts from `typings.py`. `| None` in type unions (`X | None`) is ONLY permitted when `None` carries distinct business/domain semantics (e.g., "not configured" vs "empty string"). Type narrowing (`isinstance`, `TypeGuard`) is ONLY permitted when required by business logic — never introduced gratuitously. `r` (`r`) is MANDATORY for all fallible operations — `T | None` return types and manual `try/except` in business logic are FORBIDDEN when `r[T]` can express the same intent.
 2. **Polymorphism**: Dismantle **ALL** polymorphic function/method modes: replace branching across 3+ types with **centralized Pydantic v2 models** (discriminated unions, `Field`, `@field_validator`, `@model_validator`). Maximize centralized models with Pydantic v2 validation; minimize ad-hoc type branching.
-3. **Aliases**: **ONLY** simple runtime aliases (e.g., `c = FlextConstants`, `m = FlextModels`, `x = FlextMixins`). **NEVER** use `FlextRuntime.Aliases` or any alias registry; remove all such usage completely. Facades expose **staticmethod aliases of external subclasses** into a single flat namespace; subprojects: access **ONLY** within the project namespace.
+3. **Aliases**: **ONLY** simple runtime aliases (e.g., `c = FlextConstants`, `m = FlextModels`, `x = FlextMixins`). **NEVER** use `u.Aliases` or any alias registry; remove all such usage completely. Facades expose **staticmethod aliases of external subclasses** into a single flat namespace; subprojects: access **ONLY** within the project namespace.
 4. **Removal**: Remove all non-runtime aliases and loose pass-through methods; use only direct methods and canonical names. Enforce runtime alias usage.
 5. **Scale**: Use **multiple agents in parallel at scale** (one agent per project or per report section) to apply refactors as fast as possible across all 33 projects. Each agent: one project or one section; minimal and verifiable changes; run `make check` and `make test` on the touched project.
 6. **Quality**: Code MUST be free of ruff and pyright warnings/errors; stable; remove unnecessary code. Do NOT alter established patterns from SKILLS and AGENTS.md; surgical changes only; never break business functionality.

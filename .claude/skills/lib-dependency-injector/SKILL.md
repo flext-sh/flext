@@ -27,7 +27,7 @@ description: dependency_injector bridge patterns for FLEXT runtime and container
 ### Subproject Usage Map
 
 - `flext-core`: owns all direct `dependency_injector` imports and bridge APIs.
-- `flext-cli`, `flext-quality`, `flext-meltano`, `flext-api`, other `flext-*`: consume `FlextContainer`/`FlextRuntime` APIs only; no direct DI framework imports.
+- `flext-cli`, `flext-quality`, `flext-meltano`, `flext-api`, other `flext-*`: consume `FlextContainer`/`u` APIs only; no direct DI framework imports.
 - `flext-core/tests/*`: verifies bridge semantics (`create_layered_bridge`, `register_factory`, `register_resource`, `wire`).
 
 ## References
@@ -42,8 +42,8 @@ description: dependency_injector bridge patterns for FLEXT runtime and container
 
 ## Rules
 
-- Never import `dependency_injector` directly in app/business modules; import `FlextContainer`/`FlextRuntime` bridge APIs.
-- Keep provider registration in `FlextContainer` and `FlextRuntime.DependencyIntegration` only.
+- Never import `dependency_injector` directly in app/business modules; import `FlextContainer`/`u` bridge APIs.
+- Keep provider registration in `FlextContainer` and `u.DependencyIntegration` only.
 - Use `scoped()` for test isolation and subproject-specific overlays.
 - Keep registries typed and explicit:
   - `_services: Mapping[str, m.Container.ServiceRegistration]`
@@ -54,14 +54,14 @@ description: dependency_injector bridge patterns for FLEXT runtime and container
   - `_di_services: containers.DynamicContainer`
   - `_di_resources: containers.DynamicContainer`
   - `_di_container: containers.DynamicContainer`
-- Always use `Provide`/`inject` from runtime bridge (`FlextRuntime.DependencyIntegration.Provide`, `.inject`).
+- Always use `Provide`/`inject` from runtime bridge (`u.DependencyIntegration.Provide`, `.inject`).
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 ## Instructions
 
 - Follow these declarations and signatures exactly when extending DI:
 
 ```python
-class FlextRuntime:
+class u:
     class DependencyIntegration:
         class BridgeContainer(containers.DeclarativeContainer):
             config = providers.Configuration()
@@ -82,7 +82,7 @@ class FlextRuntime:
 ```
 
 ```python
-class FlextContainer(FlextRuntime, p.Container):
+class FlextContainer(u, p.Container):
     def initialize_di_components(self) -> None: ...
     def register(self, name: str, service: t.RegisterableService) -> r[bool]: ...
     def register_factory(
@@ -105,7 +105,7 @@ class FlextContainer(FlextRuntime, p.Container):
 
 - Import patterns to keep:
   - `from flext_core import FlextContainer`
-  - `from flext_core import FlextRuntime`
+  - `from flext_core import u`
   - `from flext_core import inject` only where exported by package API.
 - Registration intent:
   - `register` -> concrete t.NormalizedValue provider (`providers.Object`)

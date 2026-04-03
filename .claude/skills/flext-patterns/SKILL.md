@@ -114,7 +114,7 @@ class FlextObservability(
 ):
     """All domain methods come from mixins via MRO."""
 
-    _logger = FlextRuntime.get_logger(__name__)  # shadows mixin _logger fields
+    _logger = u.get_logger(__name__)  # shadows mixin _logger fields
 ```
 
 **Anti-patterns**:
@@ -139,7 +139,7 @@ monitor = FlextObservabilityMonitor()  # bypass facade
 
 ## Simple Runtime Aliases Only (Mandatory)
 
-**Never** use `FlextRuntime.Aliases.*()` to define package-level runtime aliases. Use **simple runtime aliases only**: direct assignment to the facade class (e.g. `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`). No alias registry or staticmethod layer for defining these; MRO protocol only. Runtime helpers come from **x** (FlextMixins) via MRO.
+**Never** use `u.Aliases.*()` to define package-level runtime aliases. Use **simple runtime aliases only**: direct assignment to the facade class (e.g. `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`). No alias registry or staticmethod layer for defining these; MRO protocol only. Runtime helpers come from **x** (FlextMixins) via MRO.
 
 ```python
 # ✅ CORRECT
@@ -150,8 +150,8 @@ x = FlextMixins
 
 ```python
 # ❌ FORBIDDEN
-c = FlextRuntime.Aliases.constants()
-m = FlextRuntime.Aliases.models()
+c = u.Aliases.constants()
+m = u.Aliases.models()
 ```
 
 ## Namespace Inheritance Pattern
@@ -162,7 +162,7 @@ Downstream projects inherit parent facade classes to compose namespaces. This av
 
 ### Project runtime alias only; MRO protocol (subprojects)
 
-Access through **project runtime alias only**; no subdivision. Subprojects: nested classes for organization, then **class-level aliases at facade root** so call sites use `m.Foo`, `m.Bar` only (never `m.ProjectName.Foo` or `m.TargetOracle.Foo`). **Simple runtime aliases only** in **init** (e.g. `c = FlextConstants`, `m = FlextModels`); never FlextRuntime.Aliases or any registry. MRO protocol only; direct methods.
+Access through **project runtime alias only**; no subdivision. Subprojects: nested classes for organization, then **class-level aliases at facade root** so call sites use `m.Foo`, `m.Bar` only (never `m.ProjectName.Foo` or `m.TargetOracle.Foo`). **Simple runtime aliases only** in **init** (e.g. `c = FlextConstants`, `m = FlextModels`); never u.Aliases or any registry. MRO protocol only; direct methods.
 
 ```python
 # models.py — inherit parent, define nested namespace, then alias at root
@@ -216,7 +216,7 @@ print([c.__name__ for c in m.__mro__])
 
 Anti-patterns:
 
-- **Defining runtime aliases via `FlextRuntime.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`. No separate alias registry or staticmethod layer for package **init**.
+- **Defining runtime aliases via `u.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`. No separate alias registry or staticmethod layer for package **init**.
 - Prefer `m.ExecuteResult` when a class-level alias exists; `m.TargetOracle.Foo` is allowed in subprojects
 - `from flext_meltano import m` — duplicate alias surface
 - `class Meltano: X = Parent.Meltano.X` — assignment not valid as type

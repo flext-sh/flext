@@ -275,7 +275,7 @@ from __future__ import annotations
 from typing import ClassVar
 
 from flext_cli import cli
-from flext_core import FlextRuntime, r
+from flext_core import u, r
 
 from flext_infra import t
 from flext_infra import FlextInfraCliBasemk
@@ -307,7 +307,7 @@ class FlextInfraCli(
 
     def __init__(self) -> None:
         """Initialize CLI app and register all group commands via MRO mixins."""
-        FlextRuntime.ensure_structlog_configured()
+        u.ensure_structlog_configured()
         self._app = cli.create_app_with_common_params(
             name=self.app_name,
             help_text=self.app_help,
