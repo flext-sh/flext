@@ -1,7 +1,7 @@
 # AUTO-GENERATED FILE — DO NOT EDIT MANUALLY.
 # Regenerate with: make gen
 #
-"""FLEXT workspace shared libraries."""
+"""Libs package."""
 
 from __future__ import annotations
 
@@ -12,7 +12,14 @@ from flext_core.lazy import install_lazy_exports
 
 if _TYPE_CHECKING:
     from flext import versioning
-    from flext.versioning import SEMVER_RE, parse_semver
+    from flext.versioning import (
+        SEMVER_RE,
+        bump_version,
+        current_workspace_version,
+        parse_semver,
+        release_tag_from_branch,
+        replace_project_version,
+    )
     from flext_core import FlextTypes
     from flext_core.constants import FlextConstants as c
     from flext_core.decorators import FlextDecorators as d
@@ -28,7 +35,9 @@ if _TYPE_CHECKING:
 
 _LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
     "SEMVER_RE": "flext.versioning",
+    "bump_version": "flext.versioning",
     "c": ("flext_core.constants", "FlextConstants"),
+    "current_workspace_version": "flext.versioning",
     "d": ("flext_core.decorators", "FlextDecorators"),
     "e": ("flext_core.exceptions", "FlextExceptions"),
     "h": ("flext_core.handlers", "FlextHandlers"),
@@ -36,6 +45,8 @@ _LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
     "p": ("flext_core.protocols", "FlextProtocols"),
     "parse_semver": "flext.versioning",
     "r": ("flext_core.result", "FlextResult"),
+    "release_tag_from_branch": "flext.versioning",
+    "replace_project_version": "flext.versioning",
     "s": ("flext_core.service", "FlextService"),
     "t": ("flext_core.typings", "FlextTypes"),
     "u": ("flext_core.utilities", "FlextUtilities"),

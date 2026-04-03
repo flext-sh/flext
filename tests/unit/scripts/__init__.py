@@ -11,9 +11,6 @@ from typing import TYPE_CHECKING as _TYPE_CHECKING
 from flext_core.lazy import install_lazy_exports, merge_lazy_imports
 
 if _TYPE_CHECKING:
-    from flext import github, sync_tests, test_pr_workspace
-    from flext.github import TestPrWorkspace
-    from flext.sync_tests import TestSyncScripts
     from flext_core import FlextTypes
     from flext_core.constants import FlextConstants as c
     from flext_core.decorators import FlextDecorators as d
@@ -26,23 +23,25 @@ if _TYPE_CHECKING:
     from flext_core.service import FlextService as s
     from flext_core.typings import FlextTypes as t
     from flext_core.utilities import FlextUtilities as u
+    from tests.unit.scripts import github, sync_tests
+    from tests.unit.scripts.github import TestPrWorkspace, test_pr_workspace
+    from tests.unit.scripts.sync_tests import TestSyncScripts
 
 _LAZY_IMPORTS: FlextTypes.LazyImportIndex = merge_lazy_imports(
-    ("flext.github",),
+    ("tests.unit.scripts.github",),
     {
-        "TestSyncScripts": "flext.sync_tests",
+        "TestSyncScripts": "tests.unit.scripts.sync_tests",
         "c": ("flext_core.constants", "FlextConstants"),
         "d": ("flext_core.decorators", "FlextDecorators"),
         "e": ("flext_core.exceptions", "FlextExceptions"),
-        "github": "flext.github",
+        "github": "tests.unit.scripts.github",
         "h": ("flext_core.handlers", "FlextHandlers"),
         "m": ("flext_core.models", "FlextModels"),
         "p": ("flext_core.protocols", "FlextProtocols"),
         "r": ("flext_core.result", "FlextResult"),
         "s": ("flext_core.service", "FlextService"),
-        "sync_tests": "flext.sync_tests",
+        "sync_tests": "tests.unit.scripts.sync_tests",
         "t": ("flext_core.typings", "FlextTypes"),
-        "test_pr_workspace": "flext.test_pr_workspace",
         "u": ("flext_core.utilities", "FlextUtilities"),
         "x": ("flext_core.mixins", "FlextMixins"),
     },

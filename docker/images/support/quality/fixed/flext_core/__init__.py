@@ -1,7 +1,7 @@
 # AUTO-GENERATED FILE — DO NOT EDIT MANUALLY.
 # Regenerate with: make gen
 #
-"""Complete Mock flext_core for FLEXT Quality - Fixed version."""
+"""Flext core package."""
 
 from __future__ import annotations
 
@@ -12,7 +12,15 @@ from flext_core.lazy import install_lazy_exports
 
 if _TYPE_CHECKING:
     from flext import exceptions
-    from flext.exceptions import Error
+    from flext.exceptions import (
+        AuthenticationError,
+        ConfigurationError,
+        ConnectionError,
+        Error,
+        ProcessingError,
+        TimeoutError,
+        ValidationError,
+    )
     from flext_core import FlextTypes
     from flext_core.constants import FlextConstants as c
     from flext_core.decorators import FlextDecorators as d
@@ -27,7 +35,13 @@ if _TYPE_CHECKING:
     from flext_core.utilities import FlextUtilities as u
 
 _LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
+    "AuthenticationError": "flext.exceptions",
+    "ConfigurationError": "flext.exceptions",
+    "ConnectionError": "flext.exceptions",
     "Error": "flext.exceptions",
+    "ProcessingError": "flext.exceptions",
+    "TimeoutError": "flext.exceptions",
+    "ValidationError": "flext.exceptions",
     "c": ("flext_core.constants", "FlextConstants"),
     "d": ("flext_core.decorators", "FlextDecorators"),
     "e": ("flext_core.exceptions", "FlextExceptions"),
