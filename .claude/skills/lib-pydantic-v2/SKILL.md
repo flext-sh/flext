@@ -214,7 +214,7 @@ make validate PROJECT=<name> FIX=1
 model_config = SettingsConfigDict(
     env_prefix=c.ENV_PREFIX,  # "FLEXT_"
     env_nested_delimiter=c.ENV_NESTED_DELIMITER,
-    env_file=u.resolve_env_file(),
+    env_file=u.Infra.resolve_env_file(),
     env_file_encoding=c.DEFAULT_ENCODING,
     case_sensitive=False,
     extra=c.EXTRA_IGNORE,
