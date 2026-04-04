@@ -27,7 +27,7 @@ key-files:
 
 key-decisions:
   - "Fixtures in tests/fixtures/ kept with from flext_core import — they represent intentional 'bad code' patterns for validator tests"
-  - "FlextTypes as t aliased imports kept — legitimate production type access, not bare alias import"
+  - " t aliased imports kept — legitimate production type access, not bare alias import"
   - "flext-infra CST/AST TypeAlias references preserved — they reference the node type, not use TypeAlias syntax"
 
 patterns-established:
@@ -80,7 +80,7 @@ completed: 2026-03-24
 
 ## Decisions Made
 - Test fixture files (`tests/fixtures/namespace_validator/`) kept with `from flext_core import t` since they represent intentional violation patterns for validator testing
-- `FlextTypes as t` aliased imports in flext-core tests kept — these explicitly access production types under a different name, not the bare `t` alias
+- `t` aliased imports in flext-core tests kept — these explicitly access production types under a different name, not the bare `t` alias
 - `t as core_t` and `t as ft` patterns in conftest/typings kept — intentional dual-import pattern
 
 ## Deviations from Plan

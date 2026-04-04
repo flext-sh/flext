@@ -15,7 +15,7 @@
 | File | Action | Purpose |
 |------|--------|---------|
 | `services/cli.py` | Modify | Isolate `object` to `_TyperBridge`, PEP 695 generics on all methods |
-| `typings.py` | Modify | Add `FieldInfoMapping`, `TyperAnnotations` type aliases |
+| `typings.py` | Modify | Add `FieldInfoMapping`, `CliAnnotations` type aliases |
 | `utilities.py` | Modify | PEP 695 generics on `CliModelConverter`, `ModelCommandBuilder`, `CliValidation` |
 | `services/file_tools.py` | Modify | Already has generics — replace `list[`/`dict[` locals |
 | `services/tables.py` | Modify | Replace `list[` locals with `MutableSequence` |
@@ -32,13 +32,13 @@
 **Files:**
 - Modify: `flext-cli/src/flext_cli/typings.py`
 
-- [ ] **Step 1: Add `FieldInfoMapping` and `TyperAnnotations` aliases**
+- [ ] **Step 1: Add `FieldInfoMapping` and `CliAnnotations` aliases**
 
 In `FlextCliTypes.Cli`, add:
 
 ```python
 type FieldInfoMapping = Mapping[str, FieldInfo]
-type TyperAnnotations = MutableMapping[str, type]
+type CliAnnotations = MutableMapping[str, type]
 ```
 
 These replace scattered `dict[str, object]` and `Mapping[str, FieldInfo]` patterns in cli.py and utilities.py.
@@ -61,7 +61,7 @@ Expected: 0 errors
 
 ```bash
 git add flext-cli/src/flext_cli/typings.py
-git commit -m "feat(flext-cli): add FieldInfoMapping and TyperAnnotations PEP 695 aliases"
+git commit -m "feat(flext-cli): add FieldInfoMapping and CliAnnotations PEP 695 aliases"
 ```
 
 ---
