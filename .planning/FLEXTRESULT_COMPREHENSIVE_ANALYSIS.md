@@ -406,7 +406,7 @@ class ResultFactory(Protocol[T]):
 ```python
 from enum import Enum
 from dataclasses import dataclass
-from flext_core import FlextTypes as t
+from flext_core import t
 
 
 class ErrorDomain(Enum):

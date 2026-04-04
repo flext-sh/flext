@@ -32,7 +32,6 @@ None — discussion stayed within phase scope.
 
 ---
 
-<phase_requirements>
 ## Phase Requirements
 
 | ID | Description | Research Support |
@@ -45,7 +44,6 @@ None — discussion stayed within phase scope.
 | TYPE-06 | Zero `__class__ is/not in` comparisons | strict-typing-execution-plan.md Wave 1.0–1.1; 65 violations with ast-grep rules A1–A4 ready |
 | TYPE-07 | `TypeGuard` → `TypeIs` migration in all 12 type-guard functions | Final micro-plan (D-06); 12 functions identified across `_utilities/guards.py` |
 | TYPE-08 | All empty container literals annotated at their assignment sites | Final micro-plan (D-06); `implicit-any` error class in pyrefly |
-</phase_requirements>
 
 ---
 
@@ -208,7 +206,7 @@ fix: not isinstance($X, ($$$Y))
 | JSON serialization | `json.dumps(obj)` | `obj.model_dump_json()` / `TypeAdapter[T].dump_json()` | Pydantic v2 standard; eliminates `default=str` workarounds |
 | JSON deserialization | `json.loads(str)` | `Model.model_validate_json(str)` / `TypeAdapter[T].validate_json(str)` | Validated + typed |
 | Structural code search | regex grep | `sg --pattern` (ast-grep) | AST-level accuracy; handles nested expressions |
-| New recursive type alias | inline union | `t.JsonValue` (already created) | Already exists in `_typings/core.py` |
+| New recursive type alias | inline union | `t.RecursiveValue` (already created) | Already exists in `_typings/core.py` |
 | Logger factory typing | `Callable[[], Any]` | `t.LoggerFactory` (already created) | Already exists in `_typings/services.py` |
 | DI container registration type | `object` | `t.RegisterableService` (already expanded) | Already covers factories + protocols |
 
@@ -492,9 +490,9 @@ From STATE.md error hotspots and NARROWING-SCAN-SUMMARY.md:
    - Recommendation: D-08 mandates a fresh baseline as the first authoritative measurement after `make pyre` is confirmed working. Do not plan against the 4,385 number.
 
 3. **Wave 0 bare-object tasks — completion status**
-   - What we know: bare-object-elimination.md Tasks 1–5 are marked `[x]` (complete): `t.JsonValue`, `t.LoggerFactory`, `t.BootstrapInput`, expanded `t.RegisterableService`, committed `TypeHintSpecifier` changes
+   - What we know: bare-object-elimination.md Tasks 1–5 are marked `[x]` (complete): `t.RecursiveValue`, `t.LoggerFactory`, `t.BootstrapInput`, expanded `t.RegisterableService`, committed `TypeHintSpecifier` changes
    - What's unclear: Whether these were actually committed to `0.12.0-dev` branch or remain local
-   - Recommendation: Wave 1 task 0 should verify `t.JsonValue`, `t.LoggerFactory`, `t.BootstrapInput` are importable from `flext_core` before proceeding with bare-object Wave 1 fixes
+   - Recommendation: Wave 1 task 0 should verify `t.RecursiveValue`, `t.LoggerFactory`, `t.BootstrapInput` are importable from `flext_core` before proceeding with bare-object Wave 1 fixes
 
 4. **`domain.py:49,75` Option C implementation scope**
    - What we know: Requires creating `u.Domain.same_type(a, b) -> bool` utility (or equivalent)

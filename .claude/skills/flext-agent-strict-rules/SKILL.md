@@ -86,7 +86,7 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 
   **NON-RECURSIVE → MUST use `X: TypeAlias = ...` (DO NOT CHANGE):**
   `Primitives`, `Scalar`, `Container`, `ConfigurationMapping`, `MetadataValue`,
-  `RegisterableService`, `JsonDict`, `FactoryCallable`, `ResourceCallable`,
+  `RegisterableService`, `JsonMapping`, `FactoryCallable`, `ResourceCallable`,
   `HandlerCallable`, `HandlerLike`, `RegistrablePlugin`, `ConstantValue`,
   `FileContent`, `SortableObjectType`, `ConversionMode`, `TypeHintSpecifier`,
   `GenericTypeArgument`, `MessageTypeSpecifier`, `IncEx`, `TYPE_CHECKING`.
