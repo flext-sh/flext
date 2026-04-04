@@ -1,0 +1,27 @@
+.planning/milestones/v1.0-phases/07-modernization-integration-fixes/07-RESEARCH.md
+  2e22647a8cfda9ea 11,57
+.claude/skills/pydantic-v2-governance/SKILL.md
+  2e22647a8cfda9ea 442
+.claude/skills/pydantic-v2-patterns/SKILL.md
+  2e22647a8cfda9ea 492,505
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "1adfaeae9a1ab17ecff3066f8d4bc048fbea78ac",
+  "prompts": {
+    "2e22647a8cfda9ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d54b8-3b56-75a0-ac9b-c859895311b7",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 5,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
