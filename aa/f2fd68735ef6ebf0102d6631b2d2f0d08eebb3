@@ -1,0 +1,37 @@
+docs/superpowers/plans/2026-04-03-flext-cli-pep695-result-dsl.md
+  2e22647a8cfda9ea 172-174,213,247-249,251
+  f05ae18fcd8f171f 1-171,175-212,214-246,250,252-486
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "aaf2fd68735ef6ebf0102d6631b2d2f0d08eebb3",
+  "prompts": {
+    "2e22647a8cfda9ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d54b8-3b56-75a0-ac9b-c859895311b7",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 8,
+      "total_deletions": 2,
+      "accepted_lines": 8,
+      "overriden_lines": 0
+    },
+    "f05ae18fcd8f171f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8b1bbb82-6621-405d-a638-e11b8325fb7a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 480,
+      "total_deletions": 0,
+      "accepted_lines": 478,
+      "overriden_lines": 0
+    }
+  }
+}
