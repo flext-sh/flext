@@ -1,0 +1,31 @@
+.planning/milestones/v1.0-phases/01-type-system-hardening/01-CONTEXT.md
+  3ecd2342cf1a56b5 57
+.planning/milestones/v1.0-phases/01-type-system-hardening/01-RESEARCH.md
+  3ecd2342cf1a56b5 209,493,495
+docs/superpowers/plans/2026-04-03-flext-cli-pep695-result-dsl.md
+  3ecd2342cf1a56b5 18,35,41,64
+.planning/milestones/v1.0-phases/01-type-system-hardening/01-01-PLAN.md
+  3ecd2342cf1a56b5 222
+.claude/skills/flext-agent-strict-rules/SKILL.md
+  3ecd2342cf1a56b5 89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "674d8147021b1e565cb10c671908fd1d71dbebe2",
+  "prompts": {
+    "3ecd2342cf1a56b5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d5a50-099f-7553-97ca-c8cf2c53fd79",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 13,
+      "total_deletions": 15,
+      "accepted_lines": 10,
+      "overriden_lines": 0
+    }
+  }
+}
