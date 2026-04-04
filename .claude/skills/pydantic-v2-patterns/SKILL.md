@@ -489,7 +489,7 @@ Guidance:
 from pydantic import BaseModel, ConfigDict
 
 
-class FrozenStrictModel(BaseModel):
+class ContractModel(BaseModel):
     model_config = ConfigDict(
         strict=True,
         validate_assignment=True,
@@ -502,7 +502,7 @@ class FrozenStrictModel(BaseModel):
 
 Repository anchor:
 
-- `flext-core/src/flext_core/_models/base.py` (`FrozenStrictModel`)
+- `flext-core/src/flext_core/_models/base.py` (`ContractModel`)
 
 Guidance:
 

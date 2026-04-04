@@ -439,7 +439,7 @@ class MyModel(BaseModel):
 ```
 
 **Repository anchors**:
-- `flext-core/src/flext_core/_models/base.py` (`FrozenStrictModel`)
+- `flext-core/src/flext_core/_models/base.py` (`ContractModel`)
 - `flext-core/src/flext_core/_models/cqrs.py:85-90`
 - `flext-core/src/flext_core/settings.py`
 
