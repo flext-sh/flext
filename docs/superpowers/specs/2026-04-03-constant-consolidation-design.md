@@ -49,7 +49,7 @@ In `codegen_governance.py`, add `get_canonical_frozenset_values()` and `get_cano
 New handler in `codegen/cli.py` using existing APIs:
 
 ```
-python -m flext_infra codegen consolidate [--project PATH] [--dry-run] [--apply] [--json]
+python -m flext_infra codegen consolidate [--projects PATH] [--dry-run] [--apply] [--json]
 ```
 
 **Pipeline (two phases):**

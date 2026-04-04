@@ -449,7 +449,7 @@ Expected: `consolidate` appears in the command list.
 
 - [ ] **Step 3: Run dry-run on flext-infra itself**
 
-Run: `python -m flext_infra codegen consolidate --project flext-infra`
+Run: `python -m flext_infra codegen consolidate --projects flext-infra`
 Expected: Lists inline canonical matches found (or "0 matches" if all already consolidated).
 
 - [ ] **Step 4: Commit**
@@ -467,7 +467,7 @@ feat(codegen): verify consolidate command integration
 
 - [ ] **Step 1: Run consolidate with apply on a single project**
 
-Run: `python -m flext_infra codegen consolidate --project flext-infra --apply`
+Run: `python -m flext_infra codegen consolidate --projects flext-infra --apply`
 Expected: Shows applied replacements or reverted files with error details.
 
 - [ ] **Step 2: Verify no regressions**
@@ -477,7 +477,7 @@ Expected: No new F-errors (E501 line length is acceptable).
 
 - [ ] **Step 3: Run JSON output mode**
 
-Run: `python -m flext_infra codegen consolidate --project flext-infra --json`
+Run: `python -m flext_infra codegen consolidate --projects flext-infra --json`
 Expected: Valid JSON output with `total_found`, `total_applied`, `files` keys.
 
 - [ ] **Step 4: Final commit**

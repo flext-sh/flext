@@ -155,7 +155,7 @@ func (c *CLI) showUsage() {
 	fmt.Println("  flext-cli pipeline-create --name my-pipeline --description 'My ETL pipeline'")
 	fmt.Println("  flext-cli pipeline-list")
 	fmt.Println("  flext-cli singer-create --name tap-postgres --type tap")
-	fmt.Println("  flext-cli dbt-run --project my-dbt-project")
+	fmt.Println("  flext-cli dbt-run --projects my-dbt-project")
 	fmt.Println("  flext-cli server-start --port 8080")
 	fmt.Println()
 }

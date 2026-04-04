@@ -408,18 +408,6 @@ def get_container() -> FlextContainer:  # Annotation works, no runtime import
     ...
 ```
 
-### FORBIDDEN
-- Pydantic model imports (`BaseModel` subclasses need runtime access for validation)
-- Band-aid for circular imports (fix architecture instead)
-- Any import needed for `isinstance()`, `issubclass()`, or runtime type checks
-
-```python
-# ❌ FORBIDDEN — Pydantic models need runtime access
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from flext_core import FlextModels
-
 
 class MyModel(FlextModels.Base):  # CRASHES — FlextModels not available at runtime
     name: str

@@ -21,7 +21,7 @@ For workaround eradication, current violation counts are significantly lower tha
 - **D-03:** Within WA: dependency order — flext-core -> flext-infra -> flext-tests -> consumers
 - **D-04:** `u.Infra.run_cli(main_fn)` centralizes bootstrap + dispatch + error-to-exit (ALREADY DONE)
 - **D-05:** `u.Infra.iter_projects(cli)` centralizes project discovery + filtering + iteration
-- **D-06:** CLI args standardized: `--workspace PATH`, `--dry-run`/`--apply`, `--format json|text`, `--check`, `--project NAME` (ALREADY DONE)
+- **D-06:** CLI args standardized: `--workspace PATH`, `--dry-run`/`--apply`, `--format json|text`, `--check`, `--projects NAME` (ALREADY DONE)
 - **D-07:** Fix known bug: `release/__main__.py:143` has `dry_run=cli.apply` (ALREADY DONE)
 - **D-08:** `workspace_root` is the canonical parameter name
 - **D-09:** `NamespaceSourceDetector` in `flext_infra` with own test suite
