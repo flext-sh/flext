@@ -8,7 +8,7 @@
 
 Phase 7 addresses four tightly-scoped technical issues: (1) circular import in `_utilities_loader.py`, (2) StrEnum + strict Pydantic coercion mismatch breaking tests, (3) custom deprecation framework replacement with PEP 702, and (4) UserDict/UserString elimination.
 
-Investigation reveals the circular import may already be resolved (import succeeds in current state — the 2 collection errors in flext-infra are `OutputBackend` attribute errors, not circular imports). The StrEnum coercion issue is confirmed and reproduced — `CreateKwargsParams` extends `FlextModels.Value` (FrozenStrictModel with `strict=True`), and both the model default and call sites pass string literals instead of enum instances. The deprecation framework is already dead code with zero callers. UserDict/UserString grep returns zero hits in `*/src/**/*.py`.
+Investigation reveals the circular import may already be resolved (import succeeds in current state — the 2 collection errors in flext-infra are `OutputBackend` attribute errors, not circular imports). The StrEnum coercion issue is confirmed and reproduced — `CreateKwargsParams` extends `FlextModels.Value` (ContractModel with `strict=True`), and both the model default and call sites pass string literals instead of enum instances. The deprecation framework is already dead code with zero callers. UserDict/UserString grep returns zero hits in `*/src/**/*.py`.
 
 **Primary recommendation:** Fix StrEnum coercion with `BeforeValidator` on affected fields (fewer touch points than fixing all call sites + defaults). Verify circular import is already resolved. Delete or simplify deprecation.py. Confirm MOD-06 already satisfied.
 
@@ -54,7 +54,7 @@ None.
 
 ### StrEnum Coercion Fix (D-03/D-04)
 
-**Root cause confirmed:** `CreateKwargsParams` extends `FlextModels.Value` which inherits from `FrozenStrictModel` with `strict=True`. The `fmt` field is typed as `c.Tests.Files.Format` (StrEnum) but has `default="auto"` (string literal). With strict mode, Pydantic requires actual enum instances.
+**Root cause confirmed:** `CreateKwargsParams` extends `FlextModels.Value` which inherits from `ContractModel` with `strict=True`. The `fmt` field is typed as `c.Tests.Files.Format` (StrEnum) but has `default="auto"` (string literal). With strict mode, Pydantic requires actual enum instances.
 
 **Affected locations:**
 - `flext-tests/src/flext_tests/models.py:426` — field default `"auto"` should be `c.Tests.Files.Format.AUTO`
