@@ -137,7 +137,7 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 
 ## 2. No Loose Aliases or Pass-Through Methods
 
-- **Remove** alias that only renames another symbol (e.g. `FactoryDiscovery = FactoryDecoratorsDiscovery`, `FlextModelsBase = FlextModelFoundation`, `cast_direct = staticmethod(...)`). Call sites must use the canonical name.
+- **Remove** alias that only renames another symbol (e.g. `FactoryDiscovery = FactoryDecoratorsDiscovery`, `FlextModelsBase = FlextModelsBase`, `cast_direct = staticmethod(...)`). Call sites must use the canonical name.
 - **Remove**: Methods that only delegate with no added behavior (e.g. `def foo(self): return Bar.baz(self)`). Call `Bar.baz` (or the canonical method) directly.
 - **Rule**: Direct methods and single canonical names only. No wrappers that only forward.
 

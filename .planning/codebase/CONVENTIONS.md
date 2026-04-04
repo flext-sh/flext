@@ -207,7 +207,7 @@ def ensure_valid_port(value: int) -> r[int]:
 **Barrel Files:**
 - Organize subpackage exports through `__init__.py` in `_modules/`
 - Central facade classes compose all domain subclasses via MRO inheritance
-- Example: `FlextModels` inherits from `FlextModelFoundation`, `FlextModelsCqrs`, `FlextModelsEntity`, etc.
+- Example: `FlextModels` inherits from `FlextModelsBase`, `FlextModelsCqrs`, `FlextModelsEntity`, etc.
 
 **Pydantic v2 Mastery:**
 - Every class MUST extend `BaseModel` or FLEXT base models via MRO
