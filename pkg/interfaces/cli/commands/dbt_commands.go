@@ -127,7 +127,7 @@ func NewDbtRunCommand() *DbtRunCommand {
 func (c *DbtRunCommand) Name() string        { return "dbt-run" }
 func (c *DbtRunCommand) Description() string { return "Run dbt models" }
 func (c *DbtRunCommand) Usage() string {
-	return "dbt-run --project-id <project-id> [--models <models>] [--exclude <models>]"
+	return "dbt-run --projects-id <project-id> [--models <models>] [--exclude <models>]"
 }
 func (c *DbtRunCommand) Flags() *flag.FlagSet { return c.flags }
 
@@ -183,7 +183,7 @@ func NewDbtTestCommand() *DbtTestCommand {
 func (c *DbtTestCommand) Name() string        { return "dbt-test" }
 func (c *DbtTestCommand) Description() string { return "Run dbt tests" }
 func (c *DbtTestCommand) Usage() string {
-	return "dbt-test --project-id <project-id> [--models <models>]"
+	return "dbt-test --projects-id <project-id> [--models <models>]"
 }
 func (c *DbtTestCommand) Flags() *flag.FlagSet { return c.flags }
 
@@ -267,7 +267,7 @@ func NewDbtCompileCommand() *DbtCompileCommand {
 func (c *DbtCompileCommand) Name() string        { return "dbt-compile" }
 func (c *DbtCompileCommand) Description() string { return "Compile dbt models" }
 func (c *DbtCompileCommand) Usage() string {
-	return "dbt-compile --project-id <project-id> [--models <models>]"
+	return "dbt-compile --projects-id <project-id> [--models <models>]"
 }
 func (c *DbtCompileCommand) Flags() *flag.FlagSet { return c.flags }
 
@@ -351,7 +351,7 @@ func NewDbtSeedCommand() *DbtSeedCommand {
 func (c *DbtSeedCommand) Name() string        { return "dbt-seed" }
 func (c *DbtSeedCommand) Description() string { return "Run dbt seeds" }
 func (c *DbtSeedCommand) Usage() string {
-	return "dbt-seed --project-id <project-id> [--select <seeds>]"
+	return "dbt-seed --projects-id <project-id> [--select <seeds>]"
 }
 func (c *DbtSeedCommand) Flags() *flag.FlagSet { return c.flags }
 
@@ -435,7 +435,7 @@ func NewDbtSnapshotCommand() *DbtSnapshotCommand {
 func (c *DbtSnapshotCommand) Name() string        { return "dbt-snapshot" }
 func (c *DbtSnapshotCommand) Description() string { return "Run dbt snapshots" }
 func (c *DbtSnapshotCommand) Usage() string {
-	return "dbt-snapshot --project-id <project-id> [--select <snapshots>]"
+	return "dbt-snapshot --projects-id <project-id> [--select <snapshots>]"
 }
 func (c *DbtSnapshotCommand) Flags() *flag.FlagSet { return c.flags }
 
@@ -516,7 +516,7 @@ func NewDbtDebugCommand() *DbtDebugCommand {
 
 func (c *DbtDebugCommand) Name() string         { return "dbt-debug" }
 func (c *DbtDebugCommand) Description() string  { return "Debug dbt project configuration" }
-func (c *DbtDebugCommand) Usage() string        { return "dbt-debug --project-id <project-id>" }
+func (c *DbtDebugCommand) Usage() string        { return "dbt-debug --projects-id <project-id>" }
 func (c *DbtDebugCommand) Flags() *flag.FlagSet { return c.flags }
 
 func (c *DbtDebugCommand) Run(ctx context.Context, args []string) error {
@@ -601,7 +601,7 @@ func NewDbtDepsCommand() *DbtDepsCommand {
 
 func (c *DbtDepsCommand) Name() string         { return "dbt-deps" }
 func (c *DbtDepsCommand) Description() string  { return "Install dbt dependencies" }
-func (c *DbtDepsCommand) Usage() string        { return "dbt-deps --project-id <project-id>" }
+func (c *DbtDepsCommand) Usage() string        { return "dbt-deps --projects-id <project-id>" }
 func (c *DbtDepsCommand) Flags() *flag.FlagSet { return c.flags }
 
 func (c *DbtDepsCommand) Run(ctx context.Context, args []string) error {
@@ -677,7 +677,7 @@ func NewDbtCleanCommand() *DbtCleanCommand {
 
 func (c *DbtCleanCommand) Name() string         { return "dbt-clean" }
 func (c *DbtCleanCommand) Description() string  { return "Clean dbt artifacts" }
-func (c *DbtCleanCommand) Usage() string        { return "dbt-clean --project-id <project-id>" }
+func (c *DbtCleanCommand) Usage() string        { return "dbt-clean --projects-id <project-id>" }
 func (c *DbtCleanCommand) Flags() *flag.FlagSet { return c.flags }
 
 func (c *DbtCleanCommand) Run(ctx context.Context, args []string) error {

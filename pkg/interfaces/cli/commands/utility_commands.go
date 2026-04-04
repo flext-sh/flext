@@ -196,17 +196,17 @@ func (c *HelpCommand) showCommandExamples(cmd Command) {
 			fmt.Printf("  flext-cli dbt-init --name \"analytics\" --dir \"/path/to/project\" --profile \"prod_analytics\"\n\n")
 		case "dbt-run":
 			fmt.Printf("  # Run all models\n")
-			fmt.Printf("  flext-cli dbt-run --project-id abc123\n\n")
+			fmt.Printf("  flext-cli dbt-run --projects-id abc123\n\n")
 			fmt.Printf("  # Run specific models\n")
-			fmt.Printf("  flext-cli dbt-run --project-id abc123 --models \"staging,marts.sales\"\n\n")
+			fmt.Printf("  flext-cli dbt-run --projects-id abc123 --models \"staging,marts.sales\"\n\n")
 		case "dbt-test":
 			fmt.Printf("  # Run all tests\n")
-			fmt.Printf("  flext-cli dbt-test --project-id abc123\n\n")
+			fmt.Printf("  flext-cli dbt-test --projects-id abc123\n\n")
 			fmt.Printf("  # Test specific models\n")
-			fmt.Printf("  flext-cli dbt-test --project-id abc123 --models \"staging\"\n\n")
+			fmt.Printf("  flext-cli dbt-test --projects-id abc123 --models \"staging\"\n\n")
 		case "dbt-debug":
 			fmt.Printf("  # Debug project configuration\n")
-			fmt.Printf("  flext-cli dbt-debug --project-id abc123\n\n")
+			fmt.Printf("  flext-cli dbt-debug --projects-id abc123\n\n")
 		}
 
 	case strings.HasPrefix(commandName, "server-"):
@@ -300,7 +300,7 @@ func (c *HelpCommand) showGeneralHelp() {
 
 	fmt.Printf("  # Manage dbt projects\n")
 	fmt.Printf("  flext-cli dbt-init --name \"analytics\" --dir \"/path/to/project\"\n")
-	fmt.Printf("  flext-cli dbt-run --project-id <project-id>\n\n")
+	fmt.Printf("  flext-cli dbt-run --projects-id <project-id>\n\n")
 
 	fmt.Printf("  # Server management\n")
 	fmt.Printf("  flext-cli server-start --port 8080\n")

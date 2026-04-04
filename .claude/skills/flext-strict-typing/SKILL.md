@@ -591,7 +591,7 @@ Key rules in `[lint.select]`:
 
 - `ANN` — All annotation rules (requires type hints everywhere)
 - `UP` — pyupgrade (modern syntax enforcement)
-- `TCH` — Type checking imports (move strictly cyclic type-only imports to `TYPE_CHECKING` for non-Pydantic modules)
+- `TCH` — Type checking imports
 - `PYI` — Stub file rules
 - `RUF013` — Implicit `Optional` forbidden (use `X | None` explicitly)
 

@@ -237,10 +237,10 @@ Use `flext-quality` tools for automated link validation:
 
 ```bash
 # Validate all links in workspace
-flext-docs validate_links --project-root ~/flext
+flext-docs validate_links --projects-root ~/flext
 
 # Check specific project
-flext-docs validate_links --project-root ~/flext/flext-core
+flext-docs validate_links --projects-root ~/flext/flext-core
 ```
 
 ### Manual Validation Checklist

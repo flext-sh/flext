@@ -25,7 +25,7 @@ Two work streams:
 ### CLI bootstrap centralization (INFRA-01, INFRA-02)
 - **D-04:** `u.Infra.run_cli(main_fn)` centralizes: structlog init, argparse construction, dispatch, exception-to-exit-code. Eliminates 18 duplicate bootstrap patterns.
 - **D-05:** `u.Infra.iter_projects(cli)` centralizes project discovery + filtering + iteration. Eliminates 13 `discover_projects()` clones.
-- **D-06:** CLI args standardized: `--workspace PATH`, `--dry-run`/`--apply` (mutually exclusive), `--format json|text`, `--check`, `--project NAME`. Typed resolution via Pydantic model, not loose tuples.
+- **D-06:** CLI args standardized: `--workspace PATH`, `--dry-run`/`--apply` (mutually exclusive), `--format json|text`, `--check`, `--projects NAME`. Typed resolution via Pydantic model, not loose tuples.
 - **D-07:** Fix known bug: `release/__main__.py:143` has `dry_run=cli.apply` (semantically inverted).
 
 ### Parameter normalization (INFRA-03)

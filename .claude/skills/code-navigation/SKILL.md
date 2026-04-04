@@ -159,7 +159,7 @@ scope find "<query>" --workspace        # search across all projects
 scope workspace index --watch           # watch all projects for changes
 ```
 
-Use `--project <name>` to target a specific member without changing directory.
+Use `--projects <name>` to target a specific member without changing directory.
 
 ## Keeping the Index Fresh
 
