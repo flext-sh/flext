@@ -32,7 +32,7 @@ if _t.TYPE_CHECKING:
 
     service = _flext_service
     import flext.typings as _flext_typings
-    from flext.service import FlextRootServiceBase
+    from flext.service import FlextRootServiceBase, s
 
     typings = _flext_typings
     import flext.utilities as _flext_utilities
@@ -49,7 +49,6 @@ if _t.TYPE_CHECKING:
     from flext_core.handlers import FlextHandlers as h
     from flext_core.mixins import FlextMixins as x
     from flext_core.result import FlextResult as r
-    from flext_core.service import FlextService as s
 _LAZY_IMPORTS = {
     "FlexRootTypes": "flext.typings",
     "FlextRootConstants": "flext.constants",
@@ -70,7 +69,7 @@ _LAZY_IMPORTS = {
     "p": ("flext.protocols", "FlextRootProtocols"),
     "protocols": "flext.protocols",
     "r": ("flext_core.result", "FlextResult"),
-    "s": ("flext_core.service", "FlextService"),
+    "s": "flext.service",
     "service": "flext.service",
     "t": ("flext.typings", "FlexRootTypes"),
     "typings": "flext.typings",

@@ -1,49 +1,18 @@
-# User Guides
+# Guides Index
 
-<!-- TOC START -->
+Guides are curated documents for workflow, migration, and day-to-day maintenance. They complement generated API reference; they do not duplicate it.
 
-- [Canonical Migration Guide](#canonical-migration-guide)
-- [Getting Started](#getting-started)
-- [Development](#development)
-- [Operations](#operations)
-- [Supporting Guides](#supporting-guides)
+## Canonical Guides
 
-<!-- TOC END -->
+- [Migration to v0.13.0](migration-to-v0.13.0.md)
+- [Getting Started](getting-started.md)
+- [Development](development.md)
+- [Configuration](configuration.md)
+- [Testing](testing.md)
+- [Troubleshooting](troubleshooting.md)
 
-## Canonical Migration Guide
+## Scope
 
-The primary guide for the workspace `0.13.0` transition is:
-
-- [Migration to v0.13.0](./migration-to-v0.13.0.md)
-
-Use it together with:
-
-- [FLEXT Workspace Baseline v0.13.0](../architecture/baseline-v0.13.0.md)
-- [ADR-002: v0.13.0 Platform Baseline](../architecture/adr/002-v0-13-0-platform-baseline.md)
-
-## Getting Started
-
-- [Installation Guide](./getting-started.md)
-- [Configuration Guide](./configuration.md)
-
-## Development
-
-- [Development Setup](./development.md)
-- [Testing Guide](./testing.md)
-- [Troubleshooting Guide](./troubleshooting.md)
-- [Automation Skill Pattern](./skill-automation-pattern.md)
-
-## Operations
-
-- Deployment guidance remains project-specific in this cycle.
-- Monitoring guidance remains project-specific in this cycle.
-
-## Supporting Guides
-
-The guides in this directory remain useful, but they are subordinate to the workspace baseline for:
-
-- forward public class names
-- DI ownership
-- extension storage
-- workspace taxonomy
-- migration sequencing
+- architecture direction belongs in `docs/architecture/`
+- generated API details belong in `docs/api-reference/` and each project's local generated docs
+- project-specific operational playbooks remain local to the owning project

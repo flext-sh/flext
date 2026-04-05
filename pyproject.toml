@@ -146,6 +146,45 @@ pep621_dev_dependency_groups = [
   "dev",
 ]
 
+[tool.flext.docs]
+exclude_docs = [
+  "/README.md",
+  "SUPPRESSIONS-RATIONALE.md",
+  "api-reference/foundation.md",
+  "api-reference/generated/algar-*.md",
+  "api-reference/generated/flexcore.md",
+  "api-reference/generated/flext-*.md",
+  "api-reference/generated/gruponos-*.md",
+  "api/types.md",
+  "architecture/FLEXT_*.md",
+  "architecture/arc42/**",
+  "architecture/c4-model/**",
+  "architecture/clean-architecture.md",
+  "architecture/data/**",
+  "architecture/deployment/**",
+  "architecture/flext-*-architecture.md",
+  "architecture/overview.md",
+  "architecture/plantuml/**",
+  "architecture/security/**",
+  "examples/**",
+  "planning/**",
+  "projects/flext-*.md",
+  "projects/flext-*/**",
+  "prompts/**",
+  "references/**",
+  "releases/**",
+  "reports/**",
+  "roadmap/**",
+  "scripts/**",
+  "standards/docstrings/**",
+  "standards/link-management.md",
+  "superpowers/**",
+  "type-system-architecture.md",
+  "utilities-guide.md",
+  "version-policy.md",
+]
+site_title = "FLEXT Workspace"
+
 [tool.hatch.metadata]
 allow-direct-references = true
 
@@ -1412,8 +1451,6 @@ workspace = true
 
 [tool.uv.workspace]
 members = [
-  "algar-oud-mig",
-  "flexcore",
   "flext-api",
   "flext-auth",
   "flext-cli",
@@ -1445,7 +1482,6 @@ members = [
   "flext-target-oracle-wms",
   "flext-tests",
   "flext-web",
-  "gruponos-meltano-native",
 ]
 
 # [MANAGED] yamlfix

@@ -8,8 +8,6 @@
 - [Track 2: Platform Packages](#track-2-platform-packages)
 - [Track 3: Domain Packages](#track-3-domain-packages)
 - [Track 4: Integration Packages](#track-4-integration-packages)
-- [Track 5: External Consumers](#track-5-external-consumers)
-- [Track 6: flexcore](#track-6-flexcore)
 - [Core Rename Table](#core-rename-table)
 - [Method Replacement Table](#method-replacement-table)
 - [Removed Concepts](#removed-concepts)
@@ -17,14 +15,13 @@
   - [Tests](#tests)
   - [Examples](#examples)
   - [Scripts](#scripts)
-- [Adoption Guidance for External Consumers](#adoption-guidance-for-external-consumers)
 - [Done Criteria](#done-criteria)
 
 <!-- TOC END -->
 
 ## Purpose
 
-This guide describes how to migrate the workspace and its consumers to the `0.13.0` platform baseline.
+This guide describes how to migrate the FLEXT workspace to the `0.13.0` platform baseline.
 
 It is organized by project category so teams can move in a controlled order without reintroducing the patterns being removed.
 
@@ -36,10 +33,6 @@ Migrate in this order:
 2. platform packages
 3. domain packages
 4. integrations
-5. external consumers
-6. `flexcore`
-
-Do not migrate external consumers before the platform surface is stable.
 
 ## Track 1: flext-core
 
@@ -123,31 +116,6 @@ Required actions:
 - remove architecture-specific naming drift
 - adopt the workspace taxonomy for tests, examples, and scripts
 
-## Track 5: External Consumers
-
-Projects:
-
-- `algar-oud-mig`
-- `gruponos-meltano-native`
-
-Required actions:
-
-- consume the platform as consumers, not as alternate cores
-- keep orchestration local
-- do not reimplement result, settings, context, container, catalog, or DI
-- align local package layout and taxonomies with the workspace baseline
-
-## Track 6: flexcore
-
-`flexcore` is outside the forward platform baseline.
-
-Migration options:
-
-- wrap the new platform as a consumer shell
-- retire it from the strategic path
-
-`flexcore` must not become a second architecture center for future packages.
-
 ## Core Rename Table
 
 | Current | Target | Action |
@@ -217,17 +185,6 @@ These concepts do not survive into the forward public architecture:
   - `validation/`
   - `maintenance/`
 - move reusable code out of scripts and into governed packages
-
-## Adoption Guidance for External Consumers
-
-`algar-oud-mig` and `gruponos-meltano-native` should migrate as consumers of the platform.
-
-They should:
-
-- keep local `c/t/p/m/u` facades
-- keep local orchestration code
-- consume platform primitives from `flext-core` and from stable project facades
-- avoid creating local container, context, result, or catalog abstractions that duplicate platform roles
 
 ## Done Criteria
 

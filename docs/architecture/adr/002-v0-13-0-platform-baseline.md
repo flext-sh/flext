@@ -35,7 +35,7 @@ The recurring issues are:
 - inconsistent naming across files, classes, tests, examples, and scripts
 - unstable documentation where old architecture narratives conflict with current and target direction
 
-These issues already appear across `flext-core` and are amplified in downstream projects such as `flext-ldif`, `flext-auth`, `flext-api`, `flext-cli`, `algar-oud-mig`, and `gruponos-meltano-native`.
+These issues already appear across `flext-core` and are amplified in downstream FLEXT packages such as `flext-ldif`, `flext-auth`, `flext-api`, and `flext-cli`.
 
 ## Decision
 
@@ -98,7 +98,7 @@ We will standardize the workspace layout for:
 - scripts
 - project-local extension naming
 
-The baseline applies to platform packages, domain packages, integrations, external consumers, and future packages.
+The baseline applies to FLEXT platform packages, domain packages, integrations, and future FLEXT packages.
 
 ## Consequences
 
@@ -107,7 +107,6 @@ The baseline applies to platform packages, domain packages, integrations, extern
 - DI becomes discoverable, auditable, and teachable
 - extension storage and handler dispatch stop competing for the same abstraction
 - project naming becomes predictable for maintainers and consumers
-- external consumers can extend the platform without cloning its internals
 - documentation can become stable enough to support enforcement
 
 ### Negative Consequences
@@ -115,8 +114,6 @@ The baseline applies to platform packages, domain packages, integrations, extern
 - this is a hard cut with no compatibility layer
 - public names, files, and methods will change across the workspace
 - documentation and enforcement must move together with the implementation
-- external consumers must realign their wrappers and orchestration code
-
 ## Alternatives Considered
 
 - Keep the current hybrid `FlextRegistry`
@@ -138,10 +135,7 @@ The baseline applies to platform packages, domain packages, integrations, extern
   - taxonomy checks
   - public API checks
   - import direction checks
-- External consumers are part of the migration scope:
-  - `algar-oud-mig`
-  - `gruponos-meltano-native`
-- `flexcore` is not a forward platform target and must either wrap the platform or be retired from the strategic path.
+- Non-FLEXT directories in the same repository are out of scope for the root portal and must be documented locally.
 
 ## References
 
