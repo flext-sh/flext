@@ -1,0 +1,41 @@
+CLAUDE.md
+  de8b7f887621b8f7 315
+.claude/skills/lib-pydantic-settings/SKILL.md
+  f37dfa0b7a1f2237 90-97,103-107,185
+  de8b7f887621b8f7 7,9,22-23,27,34-35,40-41,44-46,50-53,57-60,62,64,66-71,73,75,77-78,89,98-102,108-110,113,116-117,120-124,127,129,131-133,135-139,141,143,145,147-157,159,161-166,168,170,173-177,180,183-184,186,189,191,194-196,199,203-207
+AGENTS.md
+  de8b7f887621b8f7 9-10,151-162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "b6a5ebdb4083ca1f14474e64788d73ae49f3a45d",
+  "prompts": {
+    "de8b7f887621b8f7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d8396fa2-af64-4e02-aed7-85de6a768a12",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 124,
+      "total_deletions": 107,
+      "accepted_lines": 121,
+      "overriden_lines": 0
+    },
+    "f37dfa0b7a1f2237": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d5ec3-07f8-7df0-bcf5-fa90490dd2e4",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 20,
+      "total_deletions": 2,
+      "accepted_lines": 15,
+      "overriden_lines": 0
+    }
+  }
+}
