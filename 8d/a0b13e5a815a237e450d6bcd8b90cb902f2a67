@@ -1,0 +1,40 @@
+.planning/phases/10-unified-docs-generation-baseline/10-RESEARCH.md
+  896ce5dc7cdeab32 1-137
+.planning/phases/10-unified-docs-generation-baseline/10-04-SUMMARY.md
+  851db9fe50f869f3 1-94
+.planning/phases/10-unified-docs-generation-baseline/10-CONTEXT.md
+  896ce5dc7cdeab32 1-147
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "8da0b13e5a815a237e450d6bcd8b90cb902f2a67",
+  "prompts": {
+    "851db9fe50f869f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "17a80e18-13b2-40de-b145-9cd2e136d4ec",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 94,
+      "total_deletions": 0,
+      "accepted_lines": 94,
+      "overriden_lines": 0
+    },
+    "896ce5dc7cdeab32": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a26b31d9-2f30-4080-b953-f6a0b8732a23",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 284,
+      "overriden_lines": 0
+    }
+  }
+}
