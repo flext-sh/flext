@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Rope Engine
 status: Ready to execute
-stopped_at: Completed 09-02-PLAN.md
-last_updated: "2026-03-25T17:03:01.823Z"
-last_activity: 2026-03-25
+stopped_at: Completed 10-01-PLAN.md
+last_updated: "2026-04-05T23:03:23.524Z"
+last_activity: 2026-04-05
 progress:
-  total_phases: 1
-  completed_phases: 0
-  total_plans: 3
-  completed_plans: 2
+  total_phases: 2
+  completed_phases: 1
+  total_plans: 11
+  completed_plans: 4
 ---
 
 # Project State
@@ -20,12 +20,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-25)
 
 **Core value:** Zero type errors, zero typing shortcuts, zero workarounds — a clean, strict, fully typed Python 3.13 monorepo that enforces AGENTS.md governance at every layer.
-**Current focus:** Phase 09 — rope-native-refactor-engine-rewrite
+**Current focus:** Phase 10 — unified-docs-generation-baseline
 
 ## Current Position
 
-Phase: 09 (rope-native-refactor-engine-rewrite) — EXECUTING
-Plan: 2 of 3
+Phase: 10 (unified-docs-generation-baseline) — EXECUTING
+Plan: 2 of 8
 
 ## Performance Metrics
 
@@ -73,12 +73,15 @@ Plan: 2 of 3
 | Phase 08 P02 | 2 | 3 tasks | 5 files |
 | Phase 08 P03 | 1 | 1 tasks | 2 files |
 | Phase 09-rope-native-refactor-engine-rewrite P02 | 90 | 2 tasks | 7 files |
+| Phase 10 P01 | 7 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
 ### Roadmap Evolution
 
 - Phase 9 added: Rope-native refactor engine rewrite
+- Phase 9 completed: 2026-03-25 — all 3 plans done, 13 transformers audited, LOC verified
+- Phase 10 added: Unified Docs Generation Baseline
 
 ### Decisions
 
@@ -120,6 +123,9 @@ Recent decisions affecting current work:
 - [Phase 09]: D-21 applied to mro_reference_rewriter: rope Rename is more complex than CST leave_Name/leave_Attribute; kept LibCST, just re-exported Rename
 - [Phase 09]: ParentNodeProvider replaced with _skip_names: set[int] using visit_ClassDef/FunctionDef/Param/AsName — pure LibCST, no external deps
 - [Phase 09]: Global pyright suppression (reportUnknownMemberType/VariableType/ArgumentType=none) for rope's missing stubs instead of per-call type: ignore
+- [Phase 10]: s alias points to FlextInfraCommandContext (not thin FlextInfraServiceBase) for backward compat -- all 19+ consumers access domain fields
+- [Phase 10]: Factory-method composition for FlextInfra facade due to incompatible type params (s[bool] vs s[str]) across domain services
+- [Phase 10]: DI fields (config_type, wire_modules, etc.) removed from FlextInfraServiceBase -- zero consumers reference them
 
 ### Pending Todos
 
@@ -140,7 +146,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T17:03:01.820Z
-Stopped at: Completed 09-02-PLAN.md
-Last activity: 2026-03-25
+Last session: 2026-04-05T23:03:23.519Z
+Stopped at: Completed 10-01-PLAN.md
+Last activity: 2026-04-05
 Resume file: None
