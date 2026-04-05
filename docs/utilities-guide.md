@@ -363,7 +363,7 @@ All utilities must meet:
 ## See Also
 
 - [Workspace Standards](../AGENTS.md) - Overall architecture patterns
-- [flext-core Architecture](../flext-core/AGENTS.md) - Core implementation details
+- [FLEXT Governance](../AGENTS.md) - Workspace implementation details
 - [Project README](../README.md) - General project information
 
 ---
