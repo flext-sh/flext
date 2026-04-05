@@ -1,0 +1,37 @@
+.planning/phases/10-unified-docs-generation-baseline/10-02-PLAN.md
+  896ce5dc7cdeab32 87-90,104-105,111-112,154,165
+.planning/phases/10-unified-docs-generation-baseline/10-01-PLAN.md
+  896ce5dc7cdeab32 15-18,21,24-25,28-30,35-38,44,46,102-105,112,128-170,178-180,182,185,189,198,200-202,207-209,211-212,223,225-228,245-254,257,260-261,263-264,276-277,280,289,293-294
+.planning/phases/10-unified-docs-generation-baseline/10-06-PLAN.md
+  896ce5dc7cdeab32 5,81-85,102,107-108,127,155,160,182
+.planning/phases/10-unified-docs-generation-baseline/10-04-PLAN.md
+  896ce5dc7cdeab32 78-81,96,101-102,143,148
+.planning/phases/10-unified-docs-generation-baseline/10-05-PLAN.md
+  896ce5dc7cdeab32 5,47,87-88,96,99,101,116-149,157-159,162,165,168,171,173
+.planning/phases/10-unified-docs-generation-baseline/10-08-PLAN.md
+  896ce5dc7cdeab32 5,17-18,23-24,27-29,41,43,45,85-89,149,157,159,166-167,170,174-182,184-202,205,219-221,226,239
+.planning/phases/10-unified-docs-generation-baseline/10-03-PLAN.md
+  896ce5dc7cdeab32 92-95,112,118-119,169,174
+.planning/phases/10-unified-docs-generation-baseline/10-07-PLAN.md
+  896ce5dc7cdeab32 5,118,124
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "1884a8515b174efd274deb0928b9300d2bbb7b03",
+  "prompts": {
+    "896ce5dc7cdeab32": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a26b31d9-2f30-4080-b953-f6a0b8732a23",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 265,
+      "total_deletions": 141,
+      "accepted_lines": 557,
+      "overriden_lines": 0
+    }
+  }
+}
