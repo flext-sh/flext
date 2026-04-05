@@ -58,7 +58,7 @@ If this document conflicts with older architecture overviews, project-level arch
 
 ## Governed Scope
 
-This baseline governs the entire workspace by project group.
+This baseline governs the FLEXT workspace by project group.
 
 | Group | Projects |
 | --- | --- |
@@ -66,10 +66,9 @@ This baseline governs the entire workspace by project group.
 | Platform capabilities | `flext-cli`, `flext-api`, `flext-auth`, `flext-web`, `flext-grpc`, `flext-observability`, `flext-plugin`, `flext-meltano` |
 | Domain packages | `flext-ldap`, `flext-ldif`, `flext-db-oracle`, `flext-oracle-wms`, `flext-oracle-oic` |
 | Integrations | all `flext-tap-*`, `flext-target-*`, `flext-dbt-*` projects |
-| External consumers | `algar-oud-mig`, `gruponos-meltano-native` |
-| Legacy outside the forward baseline | `flexcore` |
+| Shared testing and tooling | `flext-tests`, `flext-infra`, `flext-quality` |
 
-Consumers may extend the platform, but they must not reimplement platform primitives such as settings, context, dependency injection, result handling, extension storage, or alias families.
+Non-FLEXT directories that may exist in the repository are outside the root FLEXT portal and must be documented locally in their own trees.
 
 ## Authority
 
@@ -479,16 +478,13 @@ Rules:
 
 ## Expansion Rules
 
-New internal packages must adopt this baseline from the start.
-
-External consumers may extend the platform but must not replace its primitives.
+New FLEXT packages must adopt this baseline from the start.
 
 Specific rules:
 
-- `algar-oud-mig` and `gruponos-meltano-native` are consumers of the platform, not alternate cores
-- `flexcore` is outside the forward baseline and must either wrap the platform or be retired from the strategic direction
 - new packages must expose local `c/t/p/m/u` facades
 - new packages must use direct class names and the workspace taxonomy from this baseline
+- non-FLEXT projects in the same repository are not governed by this root portal
 
 ## Migration Entry Points
 
