@@ -1,0 +1,23 @@
+.planning/phases/10-unified-docs-generation-baseline/10-05-SUMMARY.md
+  851db9fe50f869f3 1-111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "d3ef1c8523a027900204ed6e305aae7381864236",
+  "prompts": {
+    "851db9fe50f869f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "17a80e18-13b2-40de-b145-9cd2e136d4ec",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 111,
+      "total_deletions": 0,
+      "accepted_lines": 111,
+      "overriden_lines": 0
+    }
+  }
+}
