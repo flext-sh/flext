@@ -6,6 +6,8 @@
   - [2.2 Facades & Namespaces](#22-facades--namespaces)
   - [2.3 Inheritance & Composition](#23-inheritance--composition)
   - [2.4 Governance Anti-Patterns](#24-governance-anti-patterns)
+  - [2.5 Service Facade Pattern](#25-service-facade-pattern-apipy--basepy--services)
+  - [2.6 Settings Law](#26-settings-law)
 - [§3 Code Law](#3-code-law)
   - [3.1 Architecture & Code Structure](#31-architecture--code-structure)
   - [3.2 Types & Contracts](#32-types--contracts)
@@ -145,6 +147,18 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 4. **MRO field conflicts** — the facade MUST declare shared fields (`_logger`, `_container`) to shadow inherited duplicates.
 
 **Reference implementations**: `flext-cli/src/flext_cli/`, `flext-ldif/src/flext_ldif/`, `flext-observability/src/flext_observability/`.
+
+### 2.6 Settings Law
+
+- **Mandatory Inheritance**: ALL settings classes MUST inherit `FlextSettings`. Using `m.Value`, `BaseSettings`, `BaseModel`, or custom singleton patterns for configuration is FORBIDDEN.
+- **SettingsConfigDict Required**: Every settings class MUST define `model_config = SettingsConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
+- **Env Prefix Convention**: `FLEXT_` (core), `FLEXT_CLI_` (cli), `FLEXT_MELTANO_` (meltano), `FLEXT_API_` (api), `FLEXT_AUTH_` (auth), `ORACLE_` (db-oracle), `FLEXT_<ROLE>_<DOMAIN>_` (integration projects).
+- **Constants as Defaults**: ALL field defaults MUST come from `c.*` constants. Hardcoded strings, numbers, or booleans as defaults are FORBIDDEN.
+- **No os.environ Access**: `os.environ`, `os.getenv`, `environ.get()` in `src/` code is PROHIBITED. Use FlextSettings env resolution or `c.*` constants. Tests are exempt.
+- **Singleton via Base**: Use `FlextSettings.__new__()` singleton. Custom `_global_instance`, manual locks, or class-level instance caches are FORBIDDEN.
+- **Namespace Registration**: Use `@FlextSettings.auto_register("<namespace>")` for namespace access via `FlextSettings.get_namespace()`.
+- **MRO Composition**: Integration projects (tap/target/dbt) MUST use dual-inheritance for settings, same as models: `FlextTargetOracleSettings(FlextMeltanoSettings, FlextDbOracleSettings)`.
+- **Auto-MRO Env Sources**: `settings_customise_sources` in FlextSettings base auto-resolves parent env prefixes from MRO. Leaf class env_prefix takes priority, parent prefixes are fallbacks.
 
 ## §3 Code Law
 

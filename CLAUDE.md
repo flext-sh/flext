@@ -312,6 +312,7 @@ A 33-project Python monorepo built on MRO-based namespace composition, DDD/CQRS 
 - Strict dependency isolation between platform chains (Core → Cli → Meltano → Integration) and (Core → Web → Api → Auth)
 - Result-oriented error handling with `r[T]` type for all fallible operations
 - Pydantic v2 BaseModel validation throughout domain layers
+- **Settings**: `FlextSettings` singleton via MRO composition (see AGENTS.md §2.6 Settings Law)
 ## Layers
 - Purpose: Type definitions, protocols, and strict typing contracts
 - Location: `flext-core/src/flext_core/_typings/`, `flext-core/src/flext_core/_protocols/`
