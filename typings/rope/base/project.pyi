@@ -3,7 +3,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from rope.base.change import ChangeSet
-from rope.base.pyobjects import PyCore, PyModule
+from rope.base.pycore import PyCore
+from rope.base.pyobjects import PyModule
 from rope.base.resources import Resource
 
 

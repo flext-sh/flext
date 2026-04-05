@@ -17,19 +17,21 @@
 - [Support & Recent Updates](#support-recent-updates)
 <!-- TOC END -->
 
-**Version**: 1.0.0 | **Status**: Updated 2026-02-02
+**Version**: 1.0.0 | **Status**: Updated 2026-04-05
 
 Welcome to the master index for the FLEXT documentation ecosystem. The portal blends the curated narrative inside `docs/README.md` with detailed guides, architecture blueprints, API references, and the per-project manuals that sit beside each library. Use this page to orient yourself, find the right section, and understand how the documentation is kept in sync with the lint, test, and coverage reports in `reports/`.
 
 ## Quick Start
 
 - **Install & bootstrap**: `docs/guides/getting-started.md` walks through environment setup, dependency installation, and a working LDIF example so you can ship a job in minutes.
+- **v0.13.0 baseline**: `docs/architecture/baseline-v0.13.0.md` is the governing workspace architecture baseline for the next platform cycle.
 - **Project catalog**: `docs/projects/README.md` (plus `docs/projects/flext-core.md`, `docs/projects/flext-ldif.md`, `docs/projects/flext-api/README.md`) gives the scope, status, and quick links for each library.
-- **Architecture overview**: `docs/architecture/README.md` explains the CQRS + Railway-oriented programming architecture, the clean layering, and the patterns that keep 30+ projects aligned.
+- **Architecture index**: `docs/architecture/README.md` points to the canonical baseline, ADRs, and supporting references.
 - **API reference**: `docs/api-reference/README.md` leads to the complete surfaces for flext-core, flext-ldif, flext-auth, and the other published packages.
 - **Testing + validation**: `docs/guides/testing.md` describes the testing strategy and how the published `reports/` directory tracks every Ruff, Pyrefly, and pytest run.
 - **Development workflow**: `docs/guides/development.md` collects tooling, git conventions, and the automation humans and bots use to keep docs healthy.
 - **Automation pattern**: `docs/guides/skill-automation-pattern.md` standardizes how to ship future script-backed skills (skill + scripts + docs + reports).
+- **Migration guide**: `docs/guides/migration-to-v0.13.0.md` translates the baseline into implementation tracks by project category.
 
 ## Status & Quality
 
@@ -43,11 +45,12 @@ All documentation changes are cross-checked against the generated artifacts in `
 
 ### Architecture & Design
 
-- `docs/architecture/README.md` introduces the clean layers, dependency diagram, and the architectural governance points. Dive into `architecture/patterns` to revisit the SOLID, Railway, and CQRS rationale that inspired the platform.
+- `docs/architecture/baseline-v0.13.0.md` is the governing forward baseline for the workspace.
+- `docs/architecture/README.md` is the architecture index that points to the baseline, ADRs, and supporting references.
 
 ### Development & Testing Guides
 
-- `docs/guides/*` hosts the practical playbooks: `getting-started.md`, `development.md`, `testing.md`, `configuration.md`, `troubleshooting.md`, and the companion README that maps the subtopics.
+- `docs/guides/*` hosts the practical playbooks: `getting-started.md`, `development.md`, `testing.md`, `configuration.md`, `troubleshooting.md`, `migration-to-v0.13.0.md`, and the companion README that maps the subtopics.
 - `docs/guides/skill-automation-pattern.md` is the canonical playbook for creating reusable automation skills and validation orchestrators.
 
 ### API & Libraries
@@ -64,7 +67,7 @@ All documentation changes are cross-checked against the generated artifacts in `
 
 ### Support & Community
 
-- `docs/guides/troubleshooting.md`, `docs/guides/faq.md`, and `README-DOCUMENTATION.md` point people to email support (`dev@flext.com`), GitHub Issues, and the contribution checklist. Keep consulting these before raising new tickets or pushing docs updates.
+- `docs/guides/troubleshooting.md`, `docs/README.md`, and `docs/standards/README.md` point people to the current documentation entry points, contribution expectations, and maintenance guidance. Check those before opening new documentation work.
 
 ## Projects by Category
 
@@ -83,9 +86,9 @@ All documentation changes are cross-checked against the generated artifacts in `
 
 ## Support & Recent Updates
 
-- Email support: <dev@flext.com>; raise documentation issues through the GitHub tracker referenced in `README-DOCUMENTATION.md`.
+- Use the repository issue tracker and the docs entry points in `docs/README.md` and `docs/standards/README.md` for documentation follow-up.
 - The docs team refreshes the portal whenever a project releases. We update the quick links, run `lsp_diagnostics`, and confirm every new section lists the relevant `reports/` evidence.
-- Recent edits: reorganized the documentation portal, expanded quick links, and added a central reminder to verify docs before merging (this file).
+- Recent edits: added the workspace `0.13.0` baseline, the platform-baseline ADR, and the migration guide, then repointed the architecture and guides indexes to the new canonical path.
 
 ---
 

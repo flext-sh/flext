@@ -2,117 +2,48 @@
 
 <!-- TOC START -->
 
+- [Canonical Migration Guide](#canonical-migration-guide)
 - [Getting Started](#getting-started)
-  - [[Installation Guide](./getting-started.md) ✅](#installation-guidegetting-startedmd)
-  - [Quick Start Tutorial (Coming Soon)](#quick-start-tutorial-coming-soon)
-  - [[Configuration Guide](./configuration.md) ✅](#configuration-guideconfigurationmd)
 - [Development](#development)
-  - [[Development Setup](./development.md) ✅](#development-setupdevelopmentmd)
-  - [[Automation Skill Pattern](./skill-automation-pattern.md) ✅](#automation-skill-patternskill-automation-patternmd)
-  - [Contributing Guide (Coming Soon)](#contributing-guide-coming-soon)
-  - [[Testing Guide](./testing.md) ✅](#testing-guidetestingmd)
 - [Operations](#operations)
-  - [Deployment Guide (Coming Soon)](#deployment-guide-coming-soon)
-  - [Monitoring Guide (Coming Soon)](#monitoring-guide-coming-soon)
-  - [[Troubleshooting Guide](./troubleshooting.md) ✅](#troubleshooting-guidetroubleshootingmd)
-- [Integration](#integration)
-  - [LDAP Integration (Coming Soon)](#ldap-integration-coming-soon)
-  - [Database Integration (Coming Soon)](#database-integration-coming-soon)
-  - [API Integration (Coming Soon)](#api-integration-coming-soon)
-- [Migration](#migration)
-  - [LDIF Migration Guide (Coming Soon)](#ldif-migration-guide-coming-soon)
-  - [Data Migration (Coming Soon)](#data-migration-coming-soon)
-- [Best Practices](#best-practices)
-  - [Performance Optimization (Coming Soon)](#performance-optimization-coming-soon)
-  - [Security Best Practices (Coming Soon)](#security-best-practices-coming-soon)
-  - [Error Handling (Coming Soon)](#error-handling-coming-soon)
-  <!-- TOC END -->
+- [Supporting Guides](#supporting-guides)
+
+<!-- TOC END -->
+
+## Canonical Migration Guide
+
+The primary guide for the workspace `0.13.0` transition is:
+
+- [Migration to v0.13.0](./migration-to-v0.13.0.md)
+
+Use it together with:
+
+- [FLEXT Workspace Baseline v0.13.0](../architecture/baseline-v0.13.0.md)
+- [ADR-002: v0.13.0 Platform Baseline](../architecture/adr/002-v0-13-0-platform-baseline.md)
 
 ## Getting Started
 
-### [Installation Guide](./getting-started.md) ✅
-
-Complete installation instructions for FLEXT and all its components.
-
-### Quick Start Tutorial (Coming Soon)
-
-Hands-on tutorial to get you up and running with FLEXT in minutes.
-
-### [Configuration Guide](./configuration.md) ✅
-
-How to configure FLEXT for your specific environment and requirements.
+- [Installation Guide](./getting-started.md)
+- [Configuration Guide](./configuration.md)
 
 ## Development
 
-### [Development Setup](./development.md) ✅
-
-Setting up a development environment for FLEXT contributions.
-
-### [Automation Skill Pattern](./skill-automation-pattern.md) ✅
-
-Standard pattern for creating future script-backed automation skills and docs.
-
-### Contributing Guide (Coming Soon)
-
-Guidelines for contributing to the FLEXT ecosystem.
-
-### [Testing Guide](./testing.md) ✅
-
-Best practices for testing FLEXT applications and libraries.
+- [Development Setup](./development.md)
+- [Testing Guide](./testing.md)
+- [Troubleshooting Guide](./troubleshooting.md)
+- [Automation Skill Pattern](./skill-automation-pattern.md)
 
 ## Operations
 
-### Deployment Guide (Coming Soon)
+- Deployment guidance remains project-specific in this cycle.
+- Monitoring guidance remains project-specific in this cycle.
 
-Deploying FLEXT applications to production environments.
+## Supporting Guides
 
-### Monitoring Guide (Coming Soon)
+The guides in this directory remain useful, but they are subordinate to the workspace baseline for:
 
-Monitoring and observability for FLEXT applications.
-
-### [Troubleshooting Guide](./troubleshooting.md) ✅
-
-Common issues and their solutions.
-
-## Integration
-
-### LDAP Integration (Coming Soon)
-
-Integrating FLEXT with LDAP servers and directories.
-
-### Database Integration (Coming Soon)
-
-Working with databases through FLEXT's data access layer.
-
-### API Integration (Coming Soon)
-
-Building and consuming APIs with FLEXT.
-
-## Migration
-
-### LDIF Migration Guide (Coming Soon)
-
-Complete guide for migrating LDIF data between LDAP servers.
-
-### Data Migration (Coming Soon)
-
-Migrating data between different systems using FLEXT.
-
-## Best Practices
-
-### Performance Optimization (Coming Soon)
-
-Optimizing FLEXT applications for better performance.
-
-### Security Best Practices (Coming Soon)
-
-Security considerations when using FLEXT.
-
-### Error Handling (Coming Soon)
-
-Effective error handling strategies in FLEXT applications.
-
----
-
-**Note**: This guide structure is being updated. Currently,
-only the Getting Started guide is available. Additional guides are being created as part of the documentation maintenance process.
+- forward public class names
+- DI ownership
+- extension storage
+- workspace taxonomy
+- migration sequencing

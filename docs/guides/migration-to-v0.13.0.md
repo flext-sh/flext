@@ -1,0 +1,241 @@
+# Migration to v0.13.0
+
+<!-- TOC START -->
+
+- [Purpose](#purpose)
+- [Migration Order](#migration-order)
+- [Track 1: flext-core](#track-1-flext-core)
+- [Track 2: Platform Packages](#track-2-platform-packages)
+- [Track 3: Domain Packages](#track-3-domain-packages)
+- [Track 4: Integration Packages](#track-4-integration-packages)
+- [Track 5: External Consumers](#track-5-external-consumers)
+- [Track 6: flexcore](#track-6-flexcore)
+- [Core Rename Table](#core-rename-table)
+- [Method Replacement Table](#method-replacement-table)
+- [Removed Concepts](#removed-concepts)
+- [Taxonomy Migration Checklists](#taxonomy-migration-checklists)
+  - [Tests](#tests)
+  - [Examples](#examples)
+  - [Scripts](#scripts)
+- [Adoption Guidance for External Consumers](#adoption-guidance-for-external-consumers)
+- [Done Criteria](#done-criteria)
+
+<!-- TOC END -->
+
+## Purpose
+
+This guide describes how to migrate the workspace and its consumers to the `0.13.0` platform baseline.
+
+It is organized by project category so teams can move in a controlled order without reintroducing the patterns being removed.
+
+## Migration Order
+
+Migrate in this order:
+
+1. `flext-core`
+2. platform packages
+3. domain packages
+4. integrations
+5. external consumers
+6. `flexcore`
+
+Do not migrate external consumers before the platform surface is stable.
+
+## Track 1: flext-core
+
+Required actions:
+
+- add `di.py` with `FlextDi`
+- replace `registry.py` with `catalog.py`
+- replace `handlers.py` with `handler.py`
+- move `FlextLogger` from `loggings.py` to `logger.py`
+- remove public `FlextMixins` responsibilities
+- narrow `FlextRuntime` to normalization and validation only
+- narrow `FlextContext` to execution context only
+- narrow `FlextDecorators` to the forward decorator set
+- reshape `FlextContainer` around `add_service/add_factory/add_resource`
+- reshape `FlextDispatcher` to absorb handler registration
+
+## Track 2: Platform Packages
+
+Projects:
+
+- `flext-cli`
+- `flext-api`
+- `flext-auth`
+- `flext-web`
+- `flext-grpc`
+- `flext-observability`
+- `flext-plugin`
+- `flext-meltano`
+- `flext-quality`
+
+Required actions:
+
+- consume the new `flext-core` runtime classes only
+- stop creating local runtime primitives
+- move reusable helpers into `u`
+- split extension storage from execution logic
+- rename public extension surfaces to direct nouns
+
+Expected target names:
+
+- `FlextCliCommands`
+- `FlextCliOptions`
+- `FlextApiComponents`
+- `FlextAuthProviders`
+- `FlextPlugins`
+
+## Track 3: Domain Packages
+
+Projects:
+
+- `flext-ldap`
+- `flext-ldif`
+- `flext-db-oracle`
+- `flext-oracle-wms`
+- `flext-oracle-oic`
+
+Required actions:
+
+- remove generic registry usage
+- replace hybrid extension abstractions with direct domain names
+- consume `FlextCatalog` only when the project truly has extension storage
+- remove local plugin storage where no real extension contract exists
+
+Expected target names:
+
+- `FlextLdifServers`
+- `FlextDbOracleExtensions` only if a real extension contract remains
+
+## Track 4: Integration Packages
+
+Projects:
+
+- all `flext-tap-*`
+- all `flext-target-*`
+- all `flext-dbt-*`
+
+Required actions:
+
+- stop touching platform primitives directly
+- consume project facades and local aliases
+- remove architecture-specific naming drift
+- adopt the workspace taxonomy for tests, examples, and scripts
+
+## Track 5: External Consumers
+
+Projects:
+
+- `algar-oud-mig`
+- `gruponos-meltano-native`
+
+Required actions:
+
+- consume the platform as consumers, not as alternate cores
+- keep orchestration local
+- do not reimplement result, settings, context, container, catalog, or DI
+- align local package layout and taxonomies with the workspace baseline
+
+## Track 6: flexcore
+
+`flexcore` is outside the forward platform baseline.
+
+Migration options:
+
+- wrap the new platform as a consumer shell
+- retire it from the strategic path
+
+`flexcore` must not become a second architecture center for future packages.
+
+## Core Rename Table
+
+| Current | Target | Action |
+| --- | --- | --- |
+| `FlextRegistry` | `FlextCatalog` or `FlextDispatcher` | Replace based on actual role |
+| `FlextHandlers` | `FlextHandler` | Rename and narrow to a single handler contract |
+| `loggings.py` | `logger.py` | Move logger to direct file name |
+| `FlextMixins` | removed | Move retained behavior into service, handler, logger, decorators, or `u` |
+| hybrid runtime DI helpers | `FlextDi` | centralize all `dependency_injector` bridge logic |
+
+## Method Replacement Table
+
+| Current method or pattern | Replacement |
+| --- | --- |
+| `register(kind=...)` | `add_service`, `add_factory`, `add_resource` |
+| `register_handler(...)` on generic registry | `add(...)` or `add_many(...)` on `FlextDispatcher` |
+| `register_plugin(...)` on generic registry | `add(...)` on `FlextCatalog` |
+| `get_plugin(...)` | `get(...)` or `require(...)` on `FlextCatalog` |
+| `list_plugins(...)` | `list()` on `FlextCatalog` |
+| `log_operation(...)` | `log(...)` |
+| `track_operation(...)` | `measure(...)` |
+| `with_context(...)` | `scope(...)` |
+| `combined(...)` | `compose(...)` |
+| direct `dependency_injector` use in app code | `u.get_*`, `u.require_*`, or `self.*` runtime properties |
+
+## Removed Concepts
+
+These concepts do not survive into the forward public architecture:
+
+- hybrid public registries
+- public mixin buckets as runtime primitives
+- nested public namespaces for runtime services
+- hidden DI spread through unrelated classes
+- public compatibility layers
+- numbered examples as part of the forward taxonomy
+
+## Taxonomy Migration Checklists
+
+### Tests
+
+- move example smoke tests out of `tests/unit/`
+- create or use:
+  - `tests/unit/`
+  - `tests/integration/`
+  - `tests/architecture/`
+  - `tests/performance/`
+  - `tests/fixtures/`
+- remove suffixes:
+  - `_cov`
+  - `_real`
+  - `_smoke`
+- remove `tests/examples` except `tests/integration/examples`
+
+### Examples
+
+- keep executable examples only
+- rename numbered examples to semantic names
+- move helper code to `examples/support/`
+- remove `examples/tests`
+- remove helper models such as `_models/exNN.py`
+
+### Scripts
+
+- reorganize scripts into:
+  - `analysis/`
+  - `migration/`
+  - `validation/`
+  - `maintenance/`
+- move reusable code out of scripts and into governed packages
+
+## Adoption Guidance for External Consumers
+
+`algar-oud-mig` and `gruponos-meltano-native` should migrate as consumers of the platform.
+
+They should:
+
+- keep local `c/t/p/m/u` facades
+- keep local orchestration code
+- consume platform primitives from `flext-core` and from stable project facades
+- avoid creating local container, context, result, or catalog abstractions that duplicate platform roles
+
+## Done Criteria
+
+A migration wave is done when:
+
+- the project no longer depends on `FlextRegistry`
+- the project no longer depends on public `FlextMixins`
+- runtime bootstrapping is owned by `FlextService`
+- extension storage, if it exists, is stored in `FlextCatalog`
+- `tests/`, `examples/`, and `scripts/` follow the baseline taxonomy
+- local docs point to the workspace baseline instead of describing conflicting architecture
