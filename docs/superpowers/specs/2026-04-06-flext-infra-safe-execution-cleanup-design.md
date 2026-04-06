@@ -164,26 +164,24 @@ All 26+ CLI input models in `cli_inputs_ops.py` and `cli_inputs_codegen.py` are 
 
 **Before:**
 ```python
-class RefactorNamespaceEnforceInput(ProjectSelectionMixin, CliInputBase):
-    ...
+class RefactorNamespaceEnforceInput(ProjectSelectionMixin, CliInputBase): ...
 ```
 
 **After:**
 ```python
-class RefactorNamespaceEnforceInput(WriteMixin):
-    ...
+class RefactorNamespaceEnforceInput(WriteMixin): ...
 ```
 
 **Before:**
 ```python
-class DocsAuditInput(CheckMixin, OutputDirMixin, ProjectSelectionMixin, CliInputBase):
-    ...
+class DocsAuditInput(
+    CheckMixin, OutputDirMixin, ProjectSelectionMixin, CliInputBase
+): ...
 ```
 
 **After:**
 ```python
-class DocsAuditInput(ReadMixin):
-    ...
+class DocsAuditInput(ReadMixin): ...
 ```
 
 Each model that does writes → `WriteMixin`. Each read-only → `ReadMixin`.
@@ -213,8 +211,10 @@ Any code checking `params.dry_run` continues to work. Any code checking `params.
 ```python
 class SafeExecution:
     """Constants for safe execution pipeline."""
+
     DEFAULT_GATES: Final[str] = "lint,pyrefly"
     BAK_SUFFIX: Final[str] = ".bak"
+
 
 class ExecutionMode(StrEnum):
     DRY_RUN = "dry-run"
@@ -228,13 +228,16 @@ class ExecutionMode(StrEnum):
 ```python
 class SafeExecutionResult(ContractModel):
     """Result of a safe execution pipeline run."""
+
     mode: c.Infra.ExecutionMode
     files_backed_up: t.StrSequence
     gate_results: Sequence[m.Infra.GateResult]
     rolled_back: bool
 
+
 class TransformStep(ContractModel):
     """Declarative step for enforcement pipeline."""
+
     detector: NonEmptyStr
     transformer: NonEmptyStr
     gates: str = c.Infra.SafeExecution.DEFAULT_GATES
@@ -247,9 +250,12 @@ class TransformStep(ContractModel):
 class SafeTransformer(Protocol):
     def transform(self, files: Sequence[Path]) -> r[Sequence[Path]]: ...
 
+
 @runtime_checkable
 class SafeValidator(Protocol):
-    def validate(self, files: Sequence[Path], project_dir: Path) -> r[m.Infra.GateResult]: ...
+    def validate(
+        self, files: Sequence[Path], project_dir: Path
+    ) -> r[m.Infra.GateResult]: ...
 ```
 
 ---
@@ -291,7 +297,10 @@ Add `check_files()` to `FlextInfraGate` base class:
 
 ```python
 def check_files(
-    self, files: Sequence[Path], project_dir: Path, ctx: m.Infra.GateContext,
+    self,
+    files: Sequence[Path],
+    project_dir: Path,
+    ctx: m.Infra.GateContext,
 ) -> m.Infra.GateExecution:
     """Check specific files instead of whole directory."""
 ```
@@ -306,18 +315,47 @@ Refactor `namespace_enforcer.py` from 12 imperative `_detect_and_apply()` calls 
 
 ```python
 ENFORCEMENT_PIPELINE: Final[Sequence[m.Infra.TransformStep]] = [
-    m.Infra.TransformStep(detector="namespace.loose_objects", transformer="FlextInfraLooseObjectFixer"),
-    m.Infra.TransformStep(detector="namespace.import_aliases", transformer="FlextInfraImportModernizer"),
-    m.Infra.TransformStep(detector="namespace.sources", transformer="FlextInfraNamespaceSourceFixer"),
-    m.Infra.TransformStep(detector="namespace.internal_imports", transformer="FlextInfraInternalImportFixer"),
-    m.Infra.TransformStep(detector="namespace.runtime_aliases", transformer="FlextInfraRuntimeAliasFixer"),
-    m.Infra.TransformStep(detector="typing.future_annotations", transformer="FlextInfraFutureAnnotationsFixer"),
-    m.Infra.TransformStep(detector="typing.manual_protocols", transformer="FlextInfraManualProtocolFixer"),
-    m.Infra.TransformStep(detector="typing.manual_aliases", transformer="FlextInfraManualTypingAliasFixer"),
-    m.Infra.TransformStep(detector="typing.compatibility_aliases", transformer="FlextInfraCompatibilityAliasFixer"),
-    m.Infra.TransformStep(detector="namespace.class_placement", transformer="FlextInfraClassPlacementFixer"),
-    m.Infra.TransformStep(detector="namespace.mro_completeness", transformer="FlextInfraMROCompletenessFixer"),
-    m.Infra.TransformStep(detector="imports.cyclic", transformer="FlextInfraCyclicImportFixer"),
+    m.Infra.TransformStep(
+        detector="namespace.loose_objects", transformer="FlextInfraLooseObjectFixer"
+    ),
+    m.Infra.TransformStep(
+        detector="namespace.import_aliases", transformer="FlextInfraImportModernizer"
+    ),
+    m.Infra.TransformStep(
+        detector="namespace.sources", transformer="FlextInfraNamespaceSourceFixer"
+    ),
+    m.Infra.TransformStep(
+        detector="namespace.internal_imports",
+        transformer="FlextInfraInternalImportFixer",
+    ),
+    m.Infra.TransformStep(
+        detector="namespace.runtime_aliases", transformer="FlextInfraRuntimeAliasFixer"
+    ),
+    m.Infra.TransformStep(
+        detector="typing.future_annotations",
+        transformer="FlextInfraFutureAnnotationsFixer",
+    ),
+    m.Infra.TransformStep(
+        detector="typing.manual_protocols", transformer="FlextInfraManualProtocolFixer"
+    ),
+    m.Infra.TransformStep(
+        detector="typing.manual_aliases", transformer="FlextInfraManualTypingAliasFixer"
+    ),
+    m.Infra.TransformStep(
+        detector="typing.compatibility_aliases",
+        transformer="FlextInfraCompatibilityAliasFixer",
+    ),
+    m.Infra.TransformStep(
+        detector="namespace.class_placement",
+        transformer="FlextInfraClassPlacementFixer",
+    ),
+    m.Infra.TransformStep(
+        detector="namespace.mro_completeness",
+        transformer="FlextInfraMROCompletenessFixer",
+    ),
+    m.Infra.TransformStep(
+        detector="imports.cyclic", transformer="FlextInfraCyclicImportFixer"
+    ),
 ]
 ```
 
