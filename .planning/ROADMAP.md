@@ -26,7 +26,7 @@ Full phase details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 ### 📋 v2.0 Rope Engine (Planned)
 
 - [x] Phase 9: Rope-native refactor engine rewrite — **3 plans** — complete 2026-03-25
-- [ ] Phase 10: Unified Docs Generation Baseline
+- [x] Phase 10: Unified Docs Generation Baseline (completed 2026-04-06)
 
 **Phase 9 Goal:** Integrate rope as pre/post hooks on FlextInfraRefactorEngine, migrate 3 cross-file transformers to rope APIs, reduce LOC in transformers/.
 
@@ -51,7 +51,7 @@ Plans:
 - [x] 10-05-PLAN.md — Complex domains: codegen + root services thin orchestrators
 - [x] 10-06-PLAN.md — Complex domains: deps thin orchestrators
 - [x] 10-07-PLAN.md — Engine domain: refactor thin orchestrators
-- [ ] 10-08-PLAN.md — Library verification + FlextInfra facade finalization
+- [x] 10-08-PLAN.md — Library verification + FlextInfra facade finalization
 
 ## Progress
 
@@ -66,4 +66,4 @@ Plans:
 | 7. Modernization & Integration Fixes | v1.0 | 2/2 | Complete | 2026-03-25 |
 | 8. Workaround Residual Cleanup | v1.0 | 3/3 | Complete | 2026-03-25 |
 | 9. Rope-native refactor engine rewrite | v2.0 | 3/3 | Complete | 2026-03-25 |
-| 10. Unified Docs Generation Baseline | v2.0 | 7/8 | In Progress|  |
+| 10. Unified Docs Generation Baseline | v2.0 | 8/8 | Complete   | 2026-04-06 |
