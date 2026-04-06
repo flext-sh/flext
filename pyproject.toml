@@ -1455,6 +1455,8 @@ workspace = true
 
 [tool.uv.workspace]
 members = [
+  "algar-oud-mig",
+  "flexcore",
   "flext-api",
   "flext-auth",
   "flext-cli",
@@ -1486,6 +1488,7 @@ members = [
   "flext-target-oracle-wms",
   "flext-tests",
   "flext-web",
+  "gruponos-meltano-native",
 ]
 
 # [MANAGED] yamlfix
