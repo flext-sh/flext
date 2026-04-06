@@ -7,12 +7,12 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import subprocess
 import sys
 from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar
 
+from flext_cli import u
 from pydantic import BaseModel, ConfigDict, Field
 
 from flext_core import t
@@ -125,7 +125,7 @@ def tracked_scripts(root: Path) -> Sequence[Path]:
     if not scripts_root.exists() or not scripts_root.is_dir():
         return []
 
-    result = subprocess.run(
+    result = u.Cli.run_raw(
         [
             "/usr/bin/env",
             "git",
@@ -136,16 +136,16 @@ def tracked_scripts(root: Path) -> Sequence[Path]:
             "scripts/**/*.py",
         ],
         cwd=root,
-        capture_output=True,
-        text=True,
-        check=False,
     )
-    if result.returncode != 0:
-        stderr = (result.stderr or "").strip()
+    if result.is_failure:
+        raise InfraError(result.error or "git ls-files failed")
+    output = result.value
+    if output.exit_code != 0:
+        stderr = (output.stderr or "").strip()
         raise InfraError(stderr or "git ls-files failed")
 
     scripts: Sequence[Path] = []
-    for line in sorted(set(result.stdout.splitlines())):
+    for line in sorted(set(output.stdout.splitlines())):
         rel = line.strip()
         if not rel:
             continue
