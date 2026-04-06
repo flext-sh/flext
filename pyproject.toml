@@ -123,7 +123,6 @@ Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 
 # [MANAGED] coverage
-
 [tool.coverage.report]
 fail_under = 45
 precision = 2
@@ -136,7 +135,6 @@ omit = [
 ]
 
 # [MANAGED] deptry
-
 [tool.deptry]
 known_first_party = [
   "flext",
@@ -190,7 +188,6 @@ site_title = "FLEXT Workspace"
 allow-direct-references = true
 
 # [MANAGED] mypy
-
 [tool.mypy]
 disable_error_code = [
   "assignment",
@@ -239,14 +236,12 @@ module = [ "tests.fixtures.*" ]
 [tool.poetry]
 
 # [MANAGED] pydantic-mypy
-
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 
 # [MANAGED] pyrefly
-
 [tool.pyrefly]
 disable-project-excludes-heuristics = true
 ignore-errors-in-generated-code = true
@@ -367,7 +362,6 @@ unused-ignore = true
 variance-mismatch = true
 
 # [MANAGED] pyright
-
 [tool.pyright]
 exclude = [
   "**/.*",
@@ -966,7 +960,6 @@ reportPrivateUsage = "none"
 root = "gruponos-meltano-native/scripts"
 
 # [MANAGED] pytest
-
 [tool.pytest.ini_options]
 addopts = [
   "--strict-markers",
@@ -993,7 +986,6 @@ python_files = [
 ]
 
 # [MANAGED] ruff
-
 [tool.ruff]
 exclude = [
   ".git",
@@ -1438,7 +1430,6 @@ split-on-trailing-comma = true
 ]
 
 # [MANAGED] tomlsort
-
 [tool.tomlsort]
 all = true
 in_place = true
@@ -1449,12 +1440,14 @@ sort_first = [
   "tool",
 ]
 
-[tool.yamlfix]
-explicit_start = false
-line_length = 88
-preserve_quotes = true
-section_whitelines = 1
-whitelines = 1
+[tool.uv.sources.flext-core]
+workspace = true
+
+[tool.uv.sources.flext-infra]
+workspace = true
+
+[tool.uv.sources.flext-tests]
+workspace = true
 
 [tool.uv.workspace]
 members = [
@@ -1492,12 +1485,9 @@ members = [
 ]
 
 # [MANAGED] yamlfix
-
-[tool.uv.sources.flext-core]
-workspace = true
-
-[tool.uv.sources.flext-infra]
-workspace = true
-
-[tool.uv.sources.flext-tests]
-workspace = true
+[tool.yamlfix]
+explicit_start = false
+line_length = 88
+preserve_quotes = true
+section_whitelines = 1
+whitelines = 1
