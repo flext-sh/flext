@@ -1,0 +1,25 @@
+.claude/skills/scripts-infra/validate_ownership.py
+  cce3b63cf06cdf3f 16,93,105-109,112
+.claude/skills/scripts-infra/validate_gate_contract.py
+  cce3b63cf06cdf3f 15,128,140-144,148
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "a91481d44e1f89c577a6bafea949e4659f6062bc",
+  "prompts": {
+    "cce3b63cf06cdf3f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d633f-babb-7293-8177-4ed9e102e47f",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 16,
+      "total_deletions": 16,
+      "accepted_lines": 16,
+      "overriden_lines": 0
+    }
+  }
+}
