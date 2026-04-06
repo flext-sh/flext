@@ -1,0 +1,53 @@
+.claude/skills/scripts-infra/validate_ownership.py
+  7561e241955f1b93 18
+.claude/skills/scripts-infra/validate_gate_contract.py
+  7561e241955f1b93 17
+pyproject.toml
+  2a95070a0314511c 126,139,193,242,249,370,969,996,1441,1452-1457,1495-1503
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "6f5bb6870d60c83ee376428be29629d5ed7c1d36",
+  "prompts": {
+    "2a95070a0314511c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d6396-349c-7792-9f2e-5c5026bc9802",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 24,
+      "total_deletions": 17,
+      "accepted_lines": 24,
+      "overriden_lines": 0
+    },
+    "7561e241955f1b93": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d6396-b4fa-7353-8578-1ecb4700cf26",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 8,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    },
+    "cce3b63cf06cdf3f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d633f-babb-7293-8177-4ed9e102e47f",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 4,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    }
+  }
+}
