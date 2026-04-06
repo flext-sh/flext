@@ -1,0 +1,36 @@
+tests/unit/scripts/__init__.py
+  e66089ff2dc71c80 10,24-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "6f635918ca475cd3c9a7abf4bb861e0f5d753aff",
+  "prompts": {
+    "2652b2305534f454": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d643e-58bf-7fb1-98a5-b4a050e33f9d",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 31,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "e66089ff2dc71c80": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "959fdf1e-7a51-411f-8874-5add099cda81",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 82,
+      "total_deletions": 53,
+      "accepted_lines": 16,
+      "overriden_lines": 0
+    }
+  }
+}
