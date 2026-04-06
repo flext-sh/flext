@@ -1,0 +1,25 @@
+pyproject.toml
+  2a95070a0314511c 125-129
+Makefile
+  2a95070a0314511c 596
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "730f5fc53f473ff062bd5d0c9d3d560c0d87ee95",
+  "prompts": {
+    "2a95070a0314511c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d6396-349c-7792-9f2e-5c5026bc9802",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 7,
+      "total_deletions": 2,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}
