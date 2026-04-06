@@ -9,7 +9,7 @@ from flext_core import t
 
 def flext_create_metric(_name: str, _value: float, _tags: t.Dict | None = None) -> None:
     """Create mock metric."""
-    not os.environ.get("FLEXT_OBSERVABILITY_QUIET")
+    _ = os.environ.get("FLEXT_OBSERVABILITY_QUIET")
 
 
 def flext_create_trace(
@@ -18,7 +18,7 @@ def flext_create_trace(
     _config: t.Dict | None = None,
 ) -> None:
     """Create mock trace."""
-    not os.environ.get("FLEXT_OBSERVABILITY_QUIET")
+    _ = os.environ.get("FLEXT_OBSERVABILITY_QUIET")
 
 
 def flext_create_log_entry(
@@ -27,4 +27,4 @@ def flext_create_log_entry(
     _context: t.Dict | None = None,
 ) -> None:
     """Create mock log entry."""
-    not os.environ.get("FLEXT_OBSERVABILITY_QUIET")
+    _ = os.environ.get("FLEXT_OBSERVABILITY_QUIET")
