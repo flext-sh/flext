@@ -52,7 +52,7 @@ On violation: outputs file+line. Exits non-zero if any policy violations found. 
 | WA-03 | PASS | Zero bare `except Exception:` in production code |
 | WA-04 | PASS | Zero `sys.exit()` outside `if __name__` guards |
 | WA-05 | PASS | Zero unauthorized `print()` in production code |
-| WA-06 | PASS | `subprocess.run()` only in wrapper (`_utilities/subprocess.py`) |
+| WA-06 | PASS | `subprocess.run()` only in flext-cli runtime (`_utilities/runtime.py`) |
 
 ## Deviations from Plan
 

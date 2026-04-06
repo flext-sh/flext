@@ -38,7 +38,7 @@ description: Exact import rules and patterns verified from the actual FLEXT code
 
 # FLEXT Import Rules
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-04-06 | **Scope**: Evidence-backed skill refresh and rule alignment
 
 > **Verified from**: Static analysis of all `.py` files in `flext-core` and consuming
 > projects (`flext-auth`, `flext-cli`, `flext-ldap`) on 2026-02-17.
@@ -53,6 +53,7 @@ description: Exact import rules and patterns verified from the actual FLEXT code
 
 - `AGENTS.md`
 - `.claude/skills/flext-architecture-layers/SKILL.md`
+- `.claude/skills/flext-mro-namespace-rules/SKILL.md`
 - `ruff-shared.toml`
 - `flext-core/src/flext_core/`
 
@@ -61,6 +62,7 @@ description: Exact import rules and patterns verified from the actual FLEXT code
 - Enforce import order: future, stdlib, third-party, first-party, local.
 - Enforce architecture directionality and private-module boundaries.
 - Use canonical aliases (`c`, `m`, `p`, `t`, `u`, `r`, `d`, `e`, `h`, `s`, `x`) at usage sites.
+- Keep same-project public facades isolated at runtime; only the `TYPE_CHECKING` matrix from `AGENTS.md` §4 allows same-project cross-facade type references.
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, and `inline imports`. `cast()` is forbidden outside `flext-core` result internals.
 
 ## Instructions
@@ -396,6 +398,15 @@ class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]): ...
 - `__init__.py` lazy loading support (see `flext-core/__init__.py:24-59`)
 - Forward references in type annotations
 
+### Same-project facade matrix
+
+- `typings.py`: same-project `p` and `m` only under `TYPE_CHECKING`
+- `protocols.py`: same-project `t` and `m` only under `TYPE_CHECKING`
+- `models.py`: same-project `t` and `p` only under `TYPE_CHECKING`
+- `constants.py`: runtime same-project imports allowed when genuinely required
+- `utilities.py`, `_models/*`, `_utilities/*`: import private classes directly, not sibling public facades
+- `flext-core` `FlextRuntime`: only standing runtime exception to the no same-project facade-import rule
+
 ```python
 # ✅ ALLOWED — type-only import for IDE support
 from typing import TYPE_CHECKING
@@ -406,9 +417,8 @@ if TYPE_CHECKING:
 
 def get_container() -> FlextContainer:  # Annotation works, no runtime import
     ...
-```
-
-
+```python
+# ❌ FORBIDDEN — runtime class body still needs the symbol to exist
 class MyModel(FlextModels.Base):  # CRASHES — FlextModels not available at runtime
     name: str
 
@@ -569,6 +579,7 @@ The FLEXT ecosystem follows a strict, tier-based inheritance model. These are th
 
 **NAMESPACE & MRO MECHANICS**: Each project defines **exactly ONE** inner class representing its own namespace (e.g., `class TapOracle:`). By inheriting parent facade classes, the project automatically gains access to all parent namespaces via Python's Method Resolution Order (MRO).
 Example: `AlgarOudMigProtocols(FlextLdapProtocols, FlextCliProtocols)` gives you access to `.AlgarOudMig` (its own), `.Cli` (from CLI), `.Ldap` (from LDAP), and `.Ldif` (because LDAP inherits from LDIF), plus all base methods from `flext-core`.
+- Preserve the organic namespace path exposed by MRO at call sites. Do not flatten `.TapOracle`, `.Infra`, `.Tests`, or similar branches back onto the facade root with alias assignments.
 
 **TARGET ARCHITECTURE**: The patterns below show what the architecture *should be* natively. Some projects currently inherit `FlextProtocols` directly instead of their intended platform dependency (e.g., `flext-meltano` currently uses `FlextProtocols` but should use `FlextCliProtocols`). When refactoring or building new modules, refer to this target state.
 

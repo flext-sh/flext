@@ -9,8 +9,8 @@ from flext_tests import FlextTestsUtilities
 from .typings import t
 
 
-class FlextWorkspaceTestUtilities(FlextTestsUtilities):
-    class Workspace:
+class TestsFlextTestUtilities(FlextTestsUtilities):
+    class Tests(FlextTestsUtilities):
         """Workspace-level test utilities."""
 
         class Tests:
@@ -33,7 +33,7 @@ class FlextWorkspaceTestUtilities(FlextTestsUtilities):
                 anchor_file: Path,
             ) -> t.Workspace.Tests.LoadedModule:
                 module_path = (
-                    FlextWorkspaceTestUtilities.Workspace.Tests.resolve_module_path(
+                    TestsFlextTestUtilities.Workspace.Tests.resolve_module_path(
                         anchor_file=anchor_file,
                         relative_path=relative_path,
                     )
@@ -48,6 +48,6 @@ class FlextWorkspaceTestUtilities(FlextTestsUtilities):
                 return module
 
 
-u = FlextWorkspaceTestUtilities
+u = TestsFlextTestUtilities
 
-__all__ = ["FlextWorkspaceTestUtilities", "u"]
+__all__ = ["TestsFlextTestUtilities", "u"]

@@ -5,7 +5,7 @@ from typing import Final
 from flext_tests import FlextTestsConstants
 
 
-class FlextWorkspaceTestConstants(FlextTestsConstants):
+class TestsFlextInfraConstants(FlextTestsConstants):
     class Workspace:
         """Workspace-level test constants."""
 
@@ -26,6 +26,6 @@ class FlextWorkspaceTestConstants(FlextTestsConstants):
                 CHECKPOINT: Final[str] = "cp"
 
 
-c = FlextWorkspaceTestConstants
+c = TestsFlextInfraConstants
 
-__all__ = ["FlextWorkspaceTestConstants", "c"]
+__all__ = ["TestsFlextInfraConstants", "c"]

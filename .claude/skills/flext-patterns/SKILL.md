@@ -21,7 +21,7 @@ description: Repository-native implementation patterns for result flow, DI, logg
 
 # Flext Patterns
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-04-06 | **Scope**: Evidence-backed skill refresh and rule alignment
 
 ## Scope
 
@@ -36,6 +36,7 @@ description: Repository-native implementation patterns for result flow, DI, logg
 - `flext-core/docs/architecture/patterns.md`
 - `flext-core/docs/guides/railway-oriented-programming.md`
 - `flext-core/src/flext_core/runtime.py`
+- `.claude/skills/flext-mro-namespace-rules/SKILL.md`
 
 ## Zero Tolerance for "Hacks" (Mandatory — No Exception)
 
@@ -162,10 +163,10 @@ Downstream projects inherit parent facade classes to compose namespaces. This av
 
 ### Project runtime alias only; MRO protocol (subprojects)
 
-Access through **project runtime alias only**; no subdivision. Subprojects: nested classes for organization, then **class-level aliases at facade root** so call sites use `m.Foo`, `m.Bar` only (never `m.ProjectName.Foo` or `m.TargetOracle.Foo`). **Simple runtime aliases only** in **init** (e.g. `c = FlextConstants`, `m = FlextModels`); never u.Aliases or any registry. MRO protocol only; direct methods.
+Access through the **project runtime alias only**, while preserving the organic nested path emitted by MRO. Use `m.TargetOracle.ExecuteResult`, `u.Infra.parse_semver`, and `c.Tests.Matcher.ERR_OK_FAILED`. Do not add class-level aliases at the facade root to flatten domain-local symbols. **Simple runtime aliases only** in `__init__.py` (e.g. `c = FlextConstants`, `m = FlextModels`); never `u.Aliases` or any registry.
 
 ```python
-# models.py — inherit parent, define nested namespace, then alias at root
+# models.py — inherit parent and keep the organic namespace path
 from flext_meltano import FlextMeltanoModels
 
 
@@ -174,20 +175,17 @@ class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
         class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
             name: str
 
-    # Class-level alias at root: flat namespace (m.ExecuteResult, not m.TargetOracle.ExecuteResult)
-    ExecuteResult = TargetOracle.ExecuteResult
-
 
 m = FlextTargetOracleModels
 ```
 
 ```python
-# Runtime usage — only runtime alias m; access is flat
+# Runtime usage — only runtime alias m; access keeps the domain path
 from .models import m
 from flext_core import r
 
 schema = m.Meltano.SingerSchemaMessage(data)
-result = r[m.ExecuteResult].ok(m.ExecuteResult(name="x"))
+result = r[m.TargetOracle.ExecuteResult].ok(m.TargetOracle.ExecuteResult(name="x"))
 ```
 
 ## .new/Swap Protocol for Large Modifications
@@ -217,7 +215,8 @@ print([c.__name__ for c in m.__mro__])
 Anti-patterns:
 
 - **Defining runtime aliases via `u.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`. No separate alias registry or staticmethod layer for package **init**.
-- Prefer `m.ExecuteResult` when a class-level alias exists; `m.TargetOracle.Foo` is allowed in subprojects
+- **Flattening domain-local classes at the facade root** — forbidden. Keep `m.TargetOracle.ExecuteResult`, not `m.ExecuteResult`.
+- **Manual wrapper nesting for private mixins** — forbidden. Compose `_models/*` and `_utilities/*` mixins in the facade MRO instead of writing `class Docker(FlextTestsDocker): ...`.
 - `from flext_meltano import m` — duplicate alias surface
 - `class Meltano: X = Parent.Meltano.X` — assignment not valid as type
 - Inheriting `FlextModels` when parent namespaces are needed — loses `m.Meltano.*`

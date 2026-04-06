@@ -5,7 +5,7 @@ from pathlib import Path
 from flext_tests import FlextTestsModels
 
 
-class FlextWorkspaceTestModels(FlextTestsModels):
+class TestsFlextTestModels(FlextTestsModels):
     class Workspace:
         """Workspace-level test models."""
 
@@ -26,6 +26,6 @@ class FlextWorkspaceTestModels(FlextTestsModels):
                 repo: Path
 
 
-m = FlextWorkspaceTestModels
+m = TestsFlextTestModels
 
-__all__ = ["FlextWorkspaceTestModels", "m"]
+__all__ = ["TestsFlextTestModels", "m"]
