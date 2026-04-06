@@ -26,7 +26,7 @@ if _t.TYPE_CHECKING:
     from flext_core.utilities import FlextUtilities as u
     from tests.unit.libs.versioning_tests import TestVersioning
 _LAZY_IMPORTS = {
-    "TestVersioning": "tests.unit.libs.versioning_tests",
+    "TestVersioning": ("tests.unit.libs.versioning_tests", "TestVersioning"),
     "c": ("flext_core.constants", "FlextConstants"),
     "d": ("flext_core.decorators", "FlextDecorators"),
     "e": ("flext_core.exceptions", "FlextExceptions"),

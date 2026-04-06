@@ -26,7 +26,10 @@ if _t.TYPE_CHECKING:
     from flext_core.utilities import FlextUtilities as u
     from tests.unit.scripts.github.test_pr_workspace import TestPrWorkspace
 _LAZY_IMPORTS = {
-    "TestPrWorkspace": "tests.unit.scripts.github.test_pr_workspace",
+    "TestPrWorkspace": (
+        "tests.unit.scripts.github.test_pr_workspace",
+        "TestPrWorkspace",
+    ),
     "c": ("flext_core.constants", "FlextConstants"),
     "d": ("flext_core.decorators", "FlextDecorators"),
     "e": ("flext_core.exceptions", "FlextExceptions"),

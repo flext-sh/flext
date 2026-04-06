@@ -32,7 +32,7 @@ if _t.TYPE_CHECKING:
 _LAZY_IMPORTS = merge_lazy_imports(
     ("tests.unit.scripts.github",),
     {
-        "TestSyncScripts": "tests.unit.scripts.sync_tests",
+        "TestSyncScripts": ("tests.unit.scripts.sync_tests", "TestSyncScripts"),
         "c": ("flext_core.constants", "FlextConstants"),
         "d": ("flext_core.decorators", "FlextDecorators"),
         "e": ("flext_core.exceptions", "FlextExceptions"),
