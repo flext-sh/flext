@@ -40,16 +40,9 @@ if _t.TYPE_CHECKING:
     from tests.tf import tf
     from tests.tm import tm
     from tests.unit.libs import TestVersioning
-    from tests.unit.scripts import TestSyncScripts
-    from tests.unit.scripts.github import TestPrWorkspace
 _LAZY_IMPORTS = merge_lazy_imports(
     ("tests.infra",),
     {
-        "TestPrWorkspace": (
-            "tests.unit.scripts.github.test_pr_workspace",
-            "TestPrWorkspace",
-        ),
-        "TestSyncScripts": ("tests.unit.scripts.sync_tests", "TestSyncScripts"),
         "TestVersioning": ("tests.unit.libs.versioning_tests", "TestVersioning"),
         "d": ("flext_core.decorators", "FlextDecorators"),
         "e": ("flext_core.exceptions", "FlextExceptions"),
@@ -70,8 +63,6 @@ _ = _LAZY_IMPORTS.pop("output", None)
 _ = _LAZY_IMPORTS.pop("output_reporting", None)
 
 __all__ = [
-    "TestPrWorkspace",
-    "TestSyncScripts",
     "TestVersioning",
     "TestsFlextInfraConstants",
     "TestsFlextTestModels",

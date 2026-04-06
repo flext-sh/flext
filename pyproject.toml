@@ -277,10 +277,11 @@ search-path = [
   "src",
   "tests",
 ]
+site-package-path = [ "./typings", ".venv/lib/python3.13/site-packages" ]
+skip-interpreter-query = true
 use-ignore-files = false
 
 [tool.pyrefly.errors]
-
 abstract-method-call = false
 annotation-mismatch = true
 bad-argument-count = true
@@ -298,7 +299,7 @@ bad-override = false
 bad-param-name-override = true
 bad-raise = true
 bad-return = true
-bad-specialization = true                    # pyrefly can't handle Callable with ParamSpec generics
+bad-specialization = true
 bad-typed-dict = true
 bad-typed-dict-key = true
 bad-unpacking = true
@@ -351,7 +352,7 @@ unannotated-attribute = true
 unannotated-parameter = true
 unannotated-return = true
 unbound-name = true
-unexpected-keyword = true                    # pyrefly doesn't understand Pydantic ConfigDict __init_subclass__ kwargs
+unexpected-keyword = true
 unexpected-positional-argument = true
 unknown-name = true
 unnecessary-comparison = true

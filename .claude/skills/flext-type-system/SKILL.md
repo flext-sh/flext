@@ -97,7 +97,7 @@ m = FlextTargetOracleModels
 
 from collections.abc import Mapping, Sequence` |
 | Per-type subclasses inside `class Meltano:` | Invariance errors: `Sequence[SubType]` ≠ `Sequence[ParentType]` |
-| `from flext_meltano import m as m`| Anti-pattern: duplicates namespace surface, adds unnecessary aliases |
+| `from flext_meltano import m`| Anti-pattern: duplicates namespace surface, adds unnecessary aliases |
 | Top-level inheritance (`class Models(Parent):`)     | ✅ Clean MRO, zero duplication, exact same types                     |
 
 **Anti-patterns (NEVER):**
