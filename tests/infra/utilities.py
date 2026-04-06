@@ -10,7 +10,7 @@ from .typings import t
 
 
 class TestsFlextTestUtilities(FlextTestsUtilities):
-    class Tests(FlextTestsUtilities):
+    class Workspace:
         """Workspace-level test utilities."""
 
         class Tests:

@@ -70,7 +70,7 @@ Each task was committed atomically:
 
 ## Files Created/Modified
 - `flext-tests/src/flext_tests/models.py` - Added BeforeValidator to 5 StrEnum fields, enum defaults
-- `flext-tests/src/flext_tests/files.py` - Changed fmt="auto" to c.Tests.Files.Format.AUTO
+- `flext-tests/src/flext_tests/files.py` - Changed fmt="auto" to c.Tests.Format.AUTO
 - `flext-core/src/flext_core/_utilities/deprecation.py` - Replaced class with empty stub module
 - `flext-core/src/flext_core/utilities.py` - Removed FlextUtilitiesDeprecation from imports and MRO
 - `flext-core/src/flext_core/_utilities/__init__.py` - Regenerated (codegen removed deprecation export)

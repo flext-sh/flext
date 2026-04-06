@@ -163,7 +163,7 @@ Downstream projects inherit parent facade classes to compose namespaces. This av
 
 ### Project runtime alias only; MRO protocol (subprojects)
 
-Access through the **project runtime alias only**, while preserving the organic nested path emitted by MRO. Use `m.TargetOracle.ExecuteResult`, `u.Infra.parse_semver`, and `c.Tests.Matcher.ERR_OK_FAILED`. Do not add class-level aliases at the facade root to flatten domain-local symbols. **Simple runtime aliases only** in `__init__.py` (e.g. `c = FlextConstants`, `m = FlextModels`); never `u.Aliases` or any registry.
+Access through the **project runtime alias only**, while preserving the organic nested path emitted by MRO. Use `m.TargetOracle.ExecuteResult`, `u.Infra.parse_semver`, and `c.Tests.ERR_OK_FAILED`. Do not add class-level aliases at the facade root to flatten domain-local symbols. **Simple runtime aliases only** in `__init__.py` (e.g. `c = FlextConstants`, `m = FlextModels`); never `u.Aliases` or any registry.
 
 ```python
 # models.py — inherit parent and keep the organic namespace path
