@@ -1,0 +1,25 @@
+docker/images/support/quality/simple/flext_observability/__init__.py
+  86d16e1165f2a264 12,21,30
+docker/images/support/quality/fixed/flext_observability/__init__.py
+  86d16e1165f2a264 12,21,30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "593c519b56341b741aa9e2b99ee7635242a1ba11",
+  "prompts": {
+    "86d16e1165f2a264": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d6017-9c4b-7ed3-b832-69d1e6e9a618",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}
