@@ -202,7 +202,7 @@ if [ ! -d "$(WORKSPACE_VENV)" ]; then \
 	echo "ERROR: workspace venv not found at $(WORKSPACE_VENV). Run 'make boot'."; \
 	exit 1; \
 fi; \
-	local_venvs=$$(for proj in $(WORKSPACE_PROJECTS); do \
+local_venvs=$$(for proj in $(WORKSPACE_PROJECTS); do \
 	if [ -d "$$proj/.venv" ]; then echo "$$proj/.venv"; fi; \
 done); \
 if [ -n "$$local_venvs" ]; then \
@@ -593,7 +593,7 @@ boot: ## Install all projects into workspace .venv
 				attach_log="/tmp/flext-attach-$$proj.log"; \
 				attach_ts=$$(date +%s); \
 				printf "     attach  %s ... " "$$proj"; \
-				if uv pip install --python "$(PY)" --editable "$$proj" --extra dev >"$$attach_log" 2>&1; then \
+				if uv pip install --python "$(PY)" --editable "$$proj[dev]" --no-sources --no-deps >"$$attach_log" 2>&1; then \
 					attach_elapsed=$$(( $$(date +%s) - attach_ts )); \
 					echo "ok ($${attach_elapsed}s)"; \
 					attached=$$((attached + 1)); \

@@ -122,6 +122,11 @@ Documentation = "https://docs.flext.sh"
 Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 
+# [MANAGED] codespell
+[tool.codespell]
+check-filenames = true
+ignore-words-list = "crate,nd"
+
 # [MANAGED] coverage
 [tool.coverage.report]
 fail_under = 45
