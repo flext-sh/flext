@@ -54,26 +54,26 @@ None.
 
 ### StrEnum Coercion Fix (D-03/D-04)
 
-**Root cause confirmed:** `CreateKwargsParams` extends `FlextModels.Value` which inherits from `ContractModel` with `strict=True`. The `fmt` field is typed as `c.Tests.Files.Format` (StrEnum) but has `default="auto"` (string literal). With strict mode, Pydantic requires actual enum instances.
+**Root cause confirmed:** `CreateKwargsParams` extends `FlextModels.Value` which inherits from `ContractModel` with `strict=True`. The `fmt` field is typed as `c.Tests.Format` (StrEnum) but has `default="auto"` (string literal). With strict mode, Pydantic requires actual enum instances.
 
 **Affected locations:**
-- `flext-tests/src/flext_tests/models.py:426` — field default `"auto"` should be `c.Tests.Files.Format.AUTO`
+- `flext-tests/src/flext_tests/models.py:426` — field default `"auto"` should be `c.Tests.Format.AUTO`
 - `flext-tests/src/flext_tests/files.py:316` — hardcoded `fmt="auto"` should use enum
 - Additional call sites in test files (6 occurrences in `test_files.py`)
 
 **Recommendation:** Use `BeforeValidator` approach. Rationale:
 1. The model's own `default="auto"` proves string-to-enum coercion is the intended API
 2. `use_enum_values=True` is already set on the config (values stored as strings)
-3. `BeforeValidator(lambda v: c.Tests.Files.Format(v) if isinstance(v, str) else v)` on the `fmt` field resolves all call sites at once
+3. `BeforeValidator(lambda v: c.Tests.Format(v) if isinstance(v, str) else v)` on the `fmt` field resolves all call sites at once
 4. Fewer code changes, lower regression risk
 
 ```python
 from pydantic import BeforeValidator
 
 fmt: Annotated[
-    c.Tests.Files.Format,
-    BeforeValidator(lambda v: c.Tests.Files.Format(v) if isinstance(v, str) else v),
-    Field(default=c.Tests.Files.Format.AUTO, description="File format override."),
+    c.Tests.Format,
+    BeforeValidator(lambda v: c.Tests.Format(v) if isinstance(v, str) else v),
+    Field(default=c.Tests.Format.AUTO, description="File format override."),
 ]
 ```
 

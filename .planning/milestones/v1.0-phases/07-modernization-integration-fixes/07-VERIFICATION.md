@@ -19,7 +19,7 @@ re_verification: false
 
 | #   | Truth                                                                             | Status     | Evidence                                                                                        |
 | --- | --------------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------- |
-| 1   | StrEnum fields on strict Pydantic models accept both string literals and enum instances | ✓ VERIFIED | `CreateKwargsParams.fmt` has `BeforeValidator(lambda v: c.Tests.Files.Format(v) if isinstance(v, str) else v)` at line 432; default is `c.Tests.Files.Format.AUTO` |
+| 1   | StrEnum fields on strict Pydantic models accept both string literals and enum instances | ✓ VERIFIED | `CreateKwargsParams.fmt` has `BeforeValidator(lambda v: c.Tests.Format(v) if isinstance(v, str) else v)` at line 432; default is `c.Tests.Format.AUTO` |
 | 2   | FlextUtilitiesDeprecation class no longer exists in production code               | ✓ VERIFIED | `deprecation.py` contains only `__all__: list[str] = []`; `utilities.py` MRO has no `FlextUtilitiesDeprecation`; `sg` returns zero hits |
 | 3   | Zero UserDict/UserString in any src/ file                                         | ✓ VERIFIED | `sg --pattern 'UserDict' --lang py` + `sg --pattern 'UserString' --lang py` return no matches in `*/src/` |
 | 4   | flext-tests test suite passes (85+ tests)                                         | ✓ VERIFIED | `pytest flext-tests/tests/ -x -q` → 271 passed in 2.64s                                        |
@@ -32,7 +32,7 @@ re_verification: false
 
 | Artifact                                                     | Expected                                           | Status     | Details                                                                                |
 | ------------------------------------------------------------ | -------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------- |
-| `flext-tests/src/flext_tests/models.py`                      | CreateKwargsParams with BeforeValidator on fmt field | ✓ VERIFIED | `BeforeValidator` found at line 432; `c.Tests.Files.Format.AUTO` used as default      |
+| `flext-tests/src/flext_tests/models.py`                      | CreateKwargsParams with BeforeValidator on fmt field | ✓ VERIFIED | `BeforeValidator` found at line 432; `c.Tests.Format.AUTO` used as default      |
 | `flext-core/src/flext_core/_utilities/deprecation.py`        | Empty/stub module (FROZEN file retained)           | ✓ VERIFIED | File contains only module docstring and `__all__: list[str] = []`                     |
 | `flext-infra/src/flext_infra/refactor/_utilities_loader.py`  | Utilities loader without circular import           | ✓ VERIFIED | Module-level import `from flext_infra import ...` present; import succeeds at runtime |
 | `flext-infra/src/flext_infra/_utilities/output.py`           | FlextInfraUtilitiesOutput with OutputBackend inner class | ✓ VERIFIED | `class OutputBackend` at line 186 with instance-based state (`__init__`, instance methods) |
@@ -41,7 +41,7 @@ re_verification: false
 
 | From                              | To                        | Via                   | Status     | Details                                                      |
 | --------------------------------- | ------------------------- | --------------------- | ---------- | ------------------------------------------------------------ |
-| `flext-tests/src/flext_tests/models.py` | `c.Tests.Files.Format` | BeforeValidator coercion | ✓ WIRED | `BeforeValidator(lambda v: c.Tests.Files.Format(v) if isinstance(v, str) else v)` directly wraps the StrEnum field |
+| `flext-tests/src/flext_tests/models.py` | `c.Tests.Format` | BeforeValidator coercion | ✓ WIRED | `BeforeValidator(lambda v: c.Tests.Format(v) if isinstance(v, str) else v)` directly wraps the StrEnum field |
 | `flext-infra/src/flext_infra/refactor/_utilities_loader.py` | `flext_infra namespace` | module-level import | ✓ WIRED | `from flext_infra import FlextInfraUtilitiesParsing, c, m, p` at line 18; import verified at runtime |
 
 ### Data-Flow Trace (Level 4)

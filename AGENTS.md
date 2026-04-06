@@ -66,7 +66,7 @@ alwaysApply: true
   - `p` = Protocols (`Flext*Protocols`)
   - `h` = Helpers (`Flext*Helpers` - mostly test/infra)
   - `s` = Services (`Flext*Services`)
-- **Organic Namespace Access**: Call sites MUST keep the namespace path produced by MRO (`u.Infra.parse_semver`, `c.Tests.Matcher.ERR_OK_FAILED`, `m.TargetOracle.ExecuteResult`). Facades MUST NOT flatten nested domain-local classes back onto the facade root with class-level alias assignments.
+- **Organic Namespace Access**: Call sites MUST keep the namespace path produced by MRO (`u.Infra.parse_semver`, `c.Tests.ERR_OK_FAILED`, `m.TargetOracle.ExecuteResult`). Facades MUST NOT flatten nested domain-local classes back onto the facade root with class-level alias assignments.
 - **Alias Import Sources**: In `src/` code, `c`, `p`, `t`, `m`, `u` come from `flext_core` or the project's own package (MRO-extended). In `tests/`, `examples/`, and `scripts/`, these aliases MUST be imported from the local MRO package: `from tests import c, m, p, t, u`, `from examples import c, m, t`, etc. NEVER import `c`, `p`, `t`, `u` from a sibling project (e.g., `from flext_target_oracle import t` in test code is FORBIDDEN). Operational aliases (`r`, `e`, `h`, `d`, `s`, `x`) come from `flext_core` or the project's extended package.
 - **Strict Boundaries**: Domain boundaries are strict (e.g. `oracle-wms != db-oracle`, `ldap != ldif`).
 - **Export Discipline**: `__init__.py` files are exports-only. They must ONLY contain type hints, `__all__`, and the native `__getattr__` module-level lazy load strategy. **These files are AUTO-GENERATED**. You must NEVER edit them manually. Run `make gen` to regenerate lazy initialization exports.
