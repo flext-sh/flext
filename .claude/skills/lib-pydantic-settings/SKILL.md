@@ -113,7 +113,7 @@ class FlextSettings(BaseSettings):
 Subproject settings:
 
 ```python
-from flext_core.settings import FlextSettings
+from flext_core import FlextSettings
 from pydantic_settings import SettingsConfigDict
 
 

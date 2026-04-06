@@ -100,13 +100,13 @@ Not applicable — no data-rendering components. This phase produces service cla
 
 | Behavior | Command | Result | Status |
 |----------|---------|--------|--------|
-| FlextInfra importable | `from flext_infra.api import FlextInfra` | Imports cleanly | PASS |
+| FlextInfra importable | `from flext_infra import FlextInfra` | Imports cleanly | PASS |
 | FlextInfra singleton | `FlextInfra.get_instance() is FlextInfra.get_instance()` | True | PASS |
 | FlextInfra.execute() | `FlextInfra.get_instance().execute()` | is_success=True | PASS |
 | All 9 factory methods exist | `hasattr(FlextInfra, name)` for each | All True | PASS |
 | Factory methods return correct classes | `FlextInfra.basemk().__name__` etc. | FlextInfraBaseMkGenerator etc. | PASS |
 | FlextInfraCommandContext has domain fields | `FlextInfraCommandContext.model_fields.keys()` | workspace_root, apply_changes, dry_run, etc. present | PASS |
-| s alias correct | `from flext_infra.base import s; s is FlextInfraCommandContext` | True | PASS |
+| s alias correct | `from flext_infra import s; s is FlextInfraCommandContext` | True | PASS |
 | ruff: full src/ | `ruff check flext-infra/src/flext_infra/` | 0 errors | PASS |
 | pyrefly: 9 command domains | `pyrefly check basemk/ check/ codegen/ deps/ github/ refactor/ release/ validate/ workspace/` | 0 errors | PASS |
 | pyrefly: 4 library domains | `pyrefly check detectors/ gates/ rules/ transformers/` | 0 errors | PASS |

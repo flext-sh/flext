@@ -30,7 +30,7 @@ Docs domain — EXCLUDED (separate agent)
 - Services MUST follow FlextService base from base.py — thin orchestrators only
 - Services MUST delegate ALL logic to u.Infra.* utility functions
 - No generic helpers that could be reused across modules — everything goes through u.* namespace
-- Import private classes directly in _utilities (e.g., `from flext_infra._utilities.docs_scope import FlextInfraUtilitiesDocsScope`)
+- Import private classes directly in _utilities (e.g., `from flext_infra import FlextInfraUtilitiesDocsScope`)
 
 ### Config SSOT: pyproject.toml + Minimal JSON
 - Maximize information read from pyproject.toml (project metadata, dependencies, package info)
