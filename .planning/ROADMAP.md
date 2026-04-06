@@ -50,7 +50,7 @@ Plans:
 - [x] 10-04-PLAN.md — Medium domains: workspace thin orchestrators
 - [x] 10-05-PLAN.md — Complex domains: codegen + root services thin orchestrators
 - [x] 10-06-PLAN.md — Complex domains: deps thin orchestrators
-- [ ] 10-07-PLAN.md — Engine domain: refactor thin orchestrators
+- [x] 10-07-PLAN.md — Engine domain: refactor thin orchestrators
 - [ ] 10-08-PLAN.md — Library verification + FlextInfra facade finalization
 
 ## Progress
@@ -66,4 +66,4 @@ Plans:
 | 7. Modernization & Integration Fixes | v1.0 | 2/2 | Complete | 2026-03-25 |
 | 8. Workaround Residual Cleanup | v1.0 | 3/3 | Complete | 2026-03-25 |
 | 9. Rope-native refactor engine rewrite | v2.0 | 3/3 | Complete | 2026-03-25 |
-| 10. Unified Docs Generation Baseline | v2.0 | 6/8 | In Progress|  |
+| 10. Unified Docs Generation Baseline | v2.0 | 7/8 | In Progress|  |
