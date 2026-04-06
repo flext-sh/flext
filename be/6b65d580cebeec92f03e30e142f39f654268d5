@@ -1,0 +1,25 @@
+docs/superpowers/specs/2026-04-06-pipeline-dag-audit-design.md
+  6cff451c18d7ce6e 1-25,31-33,35-38,40-42,44-67,69-74,76-77,79-83,85-86,88-236,238-346
+docs/superpowers/plans/2026-04-06-pipeline-dag-audit.md
+  6cff451c18d7ce6e 1-137,139-140,144-205,207-209,211-271,273-426,428-441,443-547,549-935,937-1283,1285-1289,1291,1293-1488
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "be6b65d580cebeec92f03e30e142f39f654268d5",
+  "prompts": {
+    "6cff451c18d7ce6e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "402d2823-dbda-4a2a-a6e4-189ba4b8a964",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1794,
+      "total_deletions": 4,
+      "accepted_lines": 1806,
+      "overriden_lines": 6
+    }
+  }
+}
