@@ -18,7 +18,7 @@
 - Migrated 4 remaining TypeAlias assignments to PEP 695 form and normalized ~60 test files to import c,m,t,u,p from local namespace root
 - Added iter_projects() and emit() to CLI facade, normalized all bare root: Path to semantic variants (workspace_root, repo_root, scan_root) across 9 flext-infra files
 - Result:
-- Removed all model_rebuild() calls and routed 5 direct subprocess.run invocations through FlextInfraUtilitiesSubprocess wrapper with input_data support
+- Removed all model_rebuild() calls and routed 5 direct subprocess.run invocations through the flext-cli runtime via `u.Cli.*`, with input_data support
 - One-liner:
 - One-liner:
 - Result: No changes needed.

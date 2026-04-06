@@ -18,7 +18,7 @@ description: Rules for shared source modules under top-level `src/`. Use when ed
 
 # Rules Src
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-04-06 | **Scope**: Evidence-backed skill refresh and rule alignment
 
 ## Scope
 
@@ -28,6 +28,7 @@ description: Rules for shared source modules under top-level `src/`. Use when ed
 ## References
 
 - `AGENTS.md` — canonical governance source
+- `.claude/skills/flext-mro-namespace-rules/SKILL.md`
 - `src/flext/`
 - `flext-core/docs/architecture/clean-architecture.md`
 - `Makefile`
@@ -42,6 +43,7 @@ description: Rules for shared source modules under top-level `src/`. Use when ed
 - **AXIOMATIC**: `Any`, `t.NormalizedValue`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN in ALL type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. `None` in type unions only when business-required. Every change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. Linter suppressions are FORBIDDEN without real internet citations, business necessity, and per-line scope.
 - **AXIOMATIC**: Compatibility wrappers (`def old(): return new()`), non-business validation fallbacks, legacy code maintenance, and `OldName = NewName` compatibility aliases are TOTALLY FORBIDDEN. Legacy code is DELETED and replaced with canonical patterns on contact. No grace period.
 - **AXIOMATIC**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions and standalone classes without MRO lineage are FORBIDDEN.
+- **AXIOMATIC**: Public facade roots own exactly one local domain namespace. Private `_models/*` and `_utilities/*` classes belong in the facade MRO list, not in manual nested wrapper classes. Keep organic paths such as `u.Infra.*` and `m.TargetOracle.*`.
 - **AXIOMATIC**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY. `Field()` with `description`/`title`/`examples`/`json_schema_extra` for ALL declarations. Minimize custom validators — prefer built-in constraints. `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, simple getters/setters, wrappers. USE: `@computed_field`, `model_post_init`, `PrivateAttr`. Enums/Literals from `c.*`, config from `s.*`. Internal state via `PrivateAttr`. `models.py`/`_models/` for models ONLY.
 - **AXIOMATIC**: Tests MUST follow the EXACT SAME rules as production code — no "test-only" relaxation.
 

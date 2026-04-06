@@ -15,22 +15,19 @@ if _t.TYPE_CHECKING:
     constants = _tests_infra_constants
     import tests.infra.models as _tests_infra_models
     from tests.infra.constants import (
-        FlextWorkspaceTestConstants,
-        FlextWorkspaceTestConstants as c,
+        TestsFlextInfraConstants,
+        TestsFlextInfraConstants as c,
     )
 
     models = _tests_infra_models
     import tests.infra.protocols as _tests_infra_protocols
-    from tests.infra.models import (
-        FlextWorkspaceTestModels,
-        FlextWorkspaceTestModels as m,
-    )
+    from tests.infra.models import TestsFlextTestModels, TestsFlextTestModels as m
 
     protocols = _tests_infra_protocols
     import tests.infra.result as _tests_infra_result
     from tests.infra.protocols import (
-        FlextWorkspaceTestProtocols,
-        FlextWorkspaceTestProtocols as p,
+        TestsFlextTestProtocols,
+        TestsFlextTestProtocols as p,
     )
 
     result = _tests_infra_result
@@ -38,10 +35,7 @@ if _t.TYPE_CHECKING:
 
     typings = _tests_infra_typings
     import tests.infra.utilities as _tests_infra_utilities
-    from tests.infra.typings import (
-        FlextWorkspaceTestTypes,
-        FlextWorkspaceTestTypes as t,
-    )
+    from tests.infra.typings import TestsFlextTestTypes, TestsFlextTestTypes as t
 
     utilities = _tests_infra_utilities
     from flext_core.decorators import FlextDecorators as d
@@ -51,49 +45,40 @@ if _t.TYPE_CHECKING:
     from flext_core.result import FlextResult as r
     from flext_core.service import FlextService as s
     from tests.infra.utilities import (
-        FlextWorkspaceTestUtilities,
-        FlextWorkspaceTestUtilities as u,
+        TestsFlextTestUtilities,
+        TestsFlextTestUtilities as u,
     )
 _LAZY_IMPORTS = {
-    "FlextWorkspaceTestConstants": (
-        "tests.infra.constants",
-        "FlextWorkspaceTestConstants",
-    ),
-    "FlextWorkspaceTestModels": ("tests.infra.models", "FlextWorkspaceTestModels"),
-    "FlextWorkspaceTestProtocols": (
-        "tests.infra.protocols",
-        "FlextWorkspaceTestProtocols",
-    ),
-    "FlextWorkspaceTestTypes": ("tests.infra.typings", "FlextWorkspaceTestTypes"),
-    "FlextWorkspaceTestUtilities": (
-        "tests.infra.utilities",
-        "FlextWorkspaceTestUtilities",
-    ),
-    "c": ("tests.infra.constants", "FlextWorkspaceTestConstants"),
+    "TestsFlextInfraConstants": ("tests.infra.constants", "TestsFlextInfraConstants"),
+    "TestsFlextTestModels": ("tests.infra.models", "TestsFlextTestModels"),
+    "TestsFlextTestProtocols": ("tests.infra.protocols", "TestsFlextTestProtocols"),
+    "TestsFlextTestTypes": ("tests.infra.typings", "TestsFlextTestTypes"),
+    "TestsFlextTestUtilities": ("tests.infra.utilities", "TestsFlextTestUtilities"),
+    "c": ("tests.infra.constants", "TestsFlextInfraConstants"),
     "constants": "tests.infra.constants",
     "d": ("flext_core.decorators", "FlextDecorators"),
     "e": ("flext_core.exceptions", "FlextExceptions"),
     "h": ("flext_core.handlers", "FlextHandlers"),
-    "m": ("tests.infra.models", "FlextWorkspaceTestModels"),
+    "m": ("tests.infra.models", "TestsFlextTestModels"),
     "models": "tests.infra.models",
-    "p": ("tests.infra.protocols", "FlextWorkspaceTestProtocols"),
+    "p": ("tests.infra.protocols", "TestsFlextTestProtocols"),
     "protocols": "tests.infra.protocols",
     "r": ("flext_core.result", "FlextResult"),
     "result": "tests.infra.result",
     "s": ("flext_core.service", "FlextService"),
-    "t": ("tests.infra.typings", "FlextWorkspaceTestTypes"),
+    "t": ("tests.infra.typings", "TestsFlextTestTypes"),
     "typings": "tests.infra.typings",
-    "u": ("tests.infra.utilities", "FlextWorkspaceTestUtilities"),
+    "u": ("tests.infra.utilities", "TestsFlextTestUtilities"),
     "utilities": "tests.infra.utilities",
     "x": ("flext_core.mixins", "FlextMixins"),
 }
 
 __all__ = [
-    "FlextWorkspaceTestConstants",
-    "FlextWorkspaceTestModels",
-    "FlextWorkspaceTestProtocols",
-    "FlextWorkspaceTestTypes",
-    "FlextWorkspaceTestUtilities",
+    "TestsFlextInfraConstants",
+    "TestsFlextTestModels",
+    "TestsFlextTestProtocols",
+    "TestsFlextTestTypes",
+    "TestsFlextTestUtilities",
     "c",
     "constants",
     "d",

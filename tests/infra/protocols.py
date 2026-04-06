@@ -8,7 +8,7 @@ from typing import Protocol, runtime_checkable
 from flext_tests import FlextTestsProtocols
 
 
-class FlextWorkspaceTestProtocols(FlextTestsProtocols):
+class TestsFlextTestProtocols(FlextTestsProtocols):
     class Workspace:
         """Workspace-level test protocols."""
 
@@ -26,7 +26,7 @@ class FlextWorkspaceTestProtocols(FlextTestsProtocols):
                 """Protocol for module specifications."""
 
                 name: str | None
-                loader: FlextWorkspaceTestProtocols.Workspace.Tests.SpecLoader | None
+                loader: TestsFlextTestProtocols.Workspace.Tests.SpecLoader | None
 
             @runtime_checkable
             class ModuleResolver(Protocol):
@@ -47,6 +47,6 @@ class FlextWorkspaceTestProtocols(FlextTestsProtocols):
                 def __call__(self, name: str, location: Path) -> ModuleSpec | None: ...
 
 
-p = FlextWorkspaceTestProtocols
+p = TestsFlextTestProtocols
 
-__all__ = ["FlextWorkspaceTestProtocols", "p"]
+__all__ = ["TestsFlextTestProtocols", "p"]

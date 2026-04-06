@@ -20,7 +20,7 @@ key-files:
   modified:
     - flext-core/tests/models.py
     - flext-ldif/tests/conftest.py
-    - flext-infra/src/flext_infra/_utilities/subprocess.py
+    - flext-cli/src/flext_cli/_utilities/runtime.py
     - flext-infra/src/flext_infra/workspace/workspace_makefile.py
     - flext-meltano/src/flext_meltano/singer/translator.py
     - flext-quality/src/flext_quality/utilities.py
@@ -32,7 +32,7 @@ key-decisions:
   - "WA-01 (ImportError) and WA-04 (sys.exit) already clean — no violations found in production code"
 
 patterns-established:
-  - "All subprocess execution routed through FlextInfraUtilitiesSubprocess"
+  - "All subprocess execution routed through flext-cli runtime via u.Cli.*"
 
 requirements-completed: [WA-01, WA-02, WA-03, WA-04, WA-06]
 
@@ -42,7 +42,7 @@ completed: 2026-03-24
 
 # Phase 03 Plan 03: Workaround Eradication Summary
 
-**Removed all model_rebuild() calls and routed 5 direct subprocess.run invocations through FlextInfraUtilitiesSubprocess wrapper with input_data support**
+**Removed all model_rebuild() calls and routed 5 direct subprocess.run invocations through the flext-cli runtime via `u.Cli.*`, with input_data support**
 
 ## Task 1: WA-01, WA-02, WA-04
 
@@ -58,11 +58,11 @@ completed: 2026-03-24
 
 | File | Before | After |
 |------|--------|-------|
-| flext-infra/workspace/workspace_makefile.py | subprocess.run git rev-parse | FlextInfraUtilitiesSubprocess.capture() |
-| flext-meltano/singer/translator.py | subprocess.run with stdin input | FlextInfraUtilitiesSubprocess.run_raw(input_data=) |
-| flext-quality/utilities.py | subprocess.run with timeout | FlextInfraUtilitiesSubprocess.run_raw() |
-| gruponos-meltano-native/orchestrator.py | subprocess.run meltano jobs | FlextInfraUtilitiesSubprocess.run_raw() |
-| gruponos-meltano-native/core/external_command.py | subprocess.run wrapper | FlextInfraUtilitiesSubprocess.run_raw() |
+| flext-infra/workspace/workspace_makefile.py | subprocess.run git rev-parse | u.Cli.capture() |
+| flext-meltano/singer/translator.py | subprocess.run with stdin input | u.Cli.run_raw(input_data=) |
+| flext-quality/utilities.py | subprocess.run with timeout | u.Cli.run_raw() |
+| gruponos-meltano-native/orchestrator.py | subprocess.run meltano jobs | u.Cli.run_raw() |
+| gruponos-meltano-native/core/external_command.py | subprocess.run wrapper | u.Cli.run_raw() |
 
 Added `input_data: bytes | None` parameter to `run_raw()` to support Singer translator's stdin piping.
 
@@ -75,8 +75,8 @@ Added `input_data: bytes | None` parameter to `run_raw()` to support Singer tran
 **1. [Rule 3 - Blocking] Added input_data parameter to run_raw()**
 - **Found during:** Task 2
 - **Issue:** Singer translator needs stdin piping (input= parameter) which the wrapper didn't support
-- **Fix:** Added `input_data: bytes | None` parameter to `FlextInfraUtilitiesSubprocess.run_raw()` with automatic bytes-to-str decoding
-- **Files modified:** flext-infra/src/flext_infra/_utilities/subprocess.py
+- **Fix:** Added `input_data: bytes | None` parameter to `u.Cli.run_raw()` with automatic bytes-to-str decoding
+- **Files modified:** flext-cli/src/flext_cli/_utilities/runtime.py
 
 ## Verification Results
 
@@ -84,7 +84,7 @@ Added `input_data: bytes | None` parameter to `run_raw()` to support Singer tran
 - WA-02: 0 `model_rebuild()` anywhere in repo
 - WA-03: 0 `except Exception:` in production code
 - WA-04: 0 `sys.exit()` outside `__main__` guards
-- WA-06: 0 `subprocess.run` outside wrapper (flext-infra/_utilities/subprocess.py)
+- WA-06: 0 `subprocess.run` outside runtime (flext-cli/_utilities/runtime.py)
 - Ruff: all modified files pass
 
 ## Known Stubs

@@ -18,7 +18,7 @@ description: Layer map and dependency-direction contract for flext-core. Use whe
 
 # Flext Architecture Layers
 
-**Reviewed**: 2026-02-21 | **Scope**: Added mandatory FlextMeltano composition rule, alias set, and composition matrix
+**Reviewed**: 2026-04-06 | **Scope**: Added mandatory FlextMeltano composition rule, alias set, composition matrix, and namespace-root alignment
 
 ## Scope
 
@@ -33,6 +33,7 @@ description: Layer map and dependency-direction contract for flext-core. Use whe
 - `flext-core/src/flext_core/container.py` encapsulates provider registration and resolution.
 - `flext-core/src/flext_core/__init__.py` exposes the stable public API aliases.
 - `AGENTS.md` section "Workspace Project Dependency Map" is the canonical cross-project reference.
+- `.claude/skills/flext-mro-namespace-rules/SKILL.md` is the canonical nested-namespace layout reference.
 
 ## Rules
 
@@ -45,6 +46,7 @@ Layer map (source-aligned reference for implementation work):
 - `L2 Service Facade` (project-level): `api.py` (MRO facade), `base.py` (service base), `services/*.py` (mixins). See AGENTS.md section 2.5.
 - `L1 Foundation and Bridge`: `result.py`, `exceptions.py`, `registry.py`, `runtime.py`.
 - `L0 Pure Contracts`: `constants.py`, `typings.py`, `protocols.py`.
+- Public facade roots own exactly one local namespace branch; private `_models/*` and `_utilities/*` classes are composed through MRO, not re-wrapped as nested flat classes.
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, inline imports, and `cast()`. Wait for definition time or use Protocol decoupling.
 
 ### Service Facade Files (L2 Project-Level)

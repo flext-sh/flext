@@ -12,10 +12,9 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar
 
-from flext_cli import u
 from pydantic import BaseModel, ConfigDict, Field
 
-from flext_core import t
+from flext_infra import t, u
 
 EXIT_PASS = 0
 EXIT_FAIL = 1

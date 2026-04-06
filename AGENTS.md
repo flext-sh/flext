@@ -42,7 +42,7 @@ alwaysApply: true
 ## §1 Identity
 
 - **Supreme Document**: FLEXT canonical governance file for ALL coding agents in this repository. AGENTS.md defines mandatory law; skills hold detailed implementation guidance.
-- **Reviewed**: 2026-02-22.
+- **Reviewed**: 2026-04-06.
 - **Stack Baseline**: Python 3.13+, Pydantic v2, Ruff, Pyrefly, Poetry, Make.
 - **No Shadow Policies**: Agent-specific configs are pointers only. No policy duplication exists outside this file.
 
@@ -56,6 +56,8 @@ alwaysApply: true
 
 ### 2.2 Facades, Namespaces & Naming Patterns
 - **One Facade Rule**: Each public facade module defines exactly ONE primary facade class plus ONE canonical alias.
+- **Facade Class Naming**: `src/` facades MUST use `Flext<Project><Tier>`. `tests/` facades MUST use `TestsFlext<Project><Tier>`. Legacy patterns such as `Flext<Project>Test<Tier>` and `FlextTest<Project><Tier>` are migration debt only and MUST NOT be copied into new work.
+- **Private Mixin Naming**: Classes under `_models/`, `_utilities/`, `_protocols/`, and similar private trees MUST keep the project prefix and append only the module concern (e.g. `FlextInfraUtilitiesImportNormalizer`, `FlextTestsDocker`).
 - **Canonical API & Aliases**: Namespace aliases are the STRICT canonical public API surfaces. You must always use them (`m.MyModel`, `c.MY_CONST`), never the direct classes.
   - `m` = Models (`Flext*Models`)
   - `c` = Constants (`Flext*Constants`)
@@ -64,14 +66,17 @@ alwaysApply: true
   - `p` = Protocols (`Flext*Protocols`)
   - `h` = Helpers (`Flext*Helpers` - mostly test/infra)
   - `s` = Services (`Flext*Services`)
+- **Organic Namespace Access**: Call sites MUST keep the namespace path produced by MRO (`u.Infra.parse_semver`, `c.Tests.Matcher.ERR_OK_FAILED`, `m.TargetOracle.ExecuteResult`). Facades MUST NOT flatten nested domain-local classes back onto the facade root with class-level alias assignments.
 - **Alias Import Sources**: In `src/` code, `c`, `p`, `t`, `m`, `u` come from `flext_core` or the project's own package (MRO-extended). In `tests/`, `examples/`, and `scripts/`, these aliases MUST be imported from the local MRO package: `from tests import c, m, p, t, u`, `from examples import c, m, t`, etc. NEVER import `c`, `p`, `t`, `u` from a sibling project (e.g., `from flext_target_oracle import t` in test code is FORBIDDEN). Operational aliases (`r`, `e`, `h`, `d`, `s`, `x`) come from `flext_core` or the project's extended package.
 - **Strict Boundaries**: Domain boundaries are strict (e.g. `oracle-wms != db-oracle`, `ldap != ldif`).
 - **Export Discipline**: `__init__.py` files are exports-only. They must ONLY contain type hints, `__all__`, and the native `__getattr__` module-level lazy load strategy. **These files are AUTO-GENERATED**. You must NEVER edit them manually. Run `make gen` to regenerate lazy initialization exports.
 
 ### 2.3 MRO Inheritance & Namespace Composition
 - **Single Namespaced Classes (Production & Tests)**: For both production and test infrastructure, you must create exactly ONE local namespaced class per tier (models, constants, helpers, etc.). All domain logic, constants, and methods MUST reside inside this single class.
+- **Single Root Nested Namespace**: A `src/` facade root defines exactly one local domain namespace class (e.g. `class Infra:`, `class Tests:`). A `tests/` facade root defines exactly one local project-domain namespace whose test-only branch lives under `.Tests`. No other local top-level nested namespace classes are permitted in the facade.
 - **The MRO Cascade & Exhaustive Composition**: Cross-project composition MUST use inheritance via MRO symmetrically across all components. Furthermore, within a project, a top-level facade class MUST strictly compose ALL of its domain-specific subclasses.
   *(Example: `class FlextCoreModels(FlextCoreBaseModels, FlextCoreCQRSModels, FlextCoreSettingsModels): pass` and similarly for `FlextCoreUtilities` composing all `_utilities` subclasses. Loose disconnected subclasses are FORBIDDEN).*
+- **Subdirectory Composition Only via MRO**: Private files in `_models/`, `_utilities/`, `_protocols/`, and similar trees define mixin classes only. The public facade composes them directly in its inheritance list. Manual flat wrapper nesting such as `class Docker(FlextTestsDocker): pass` inside the facade namespace is STRICTLY FORBIDDEN.
 - **Internal Namespaces & Elimination of Loose Objects**: Do not duplicate parent variables. Loose module-level objects or functions outside this class are STRICTLY FORBIDDEN. They must be absorbed into the namespace class as attributes/methods or consumed directly from base classes.
 - **Integration Projects** (`tap|target|dbt`): Composed of one platform and one domain via inheritance (e.g., `class FlextTapLdapProtocols(FlextMeltanoProtocols, FlextLdapProtocols): pass`).
 - **Naming & Location Patterns**: Classes must be placed in specific locations (e.g., `models.py` or `_models/`) and follow the `Flext<Role><Domain><Facade>` pattern (e.g. `FlextCoreModels`, `FlextTestInfraHelpers`, `FlextTapLdapProtocols`). Test classes must also match the domain they are testing. The integration class name MUST NOT contain the "Meltano" prefix.
@@ -89,7 +94,7 @@ alwaysApply: true
   ```
   If `qlty smells` reports `identical-code` between a public file and its `_utilities/` counterpart, replace the public file with a re-export immediately.
 
-*For full MRO matrix, architecture layers, and anti-patterns logic, consult skills:* `flext-architecture-layers`, `flext-patterns`, `rules-flext-core`, `rules-src`.
+*For full MRO matrix, architecture layers, and anti-patterns logic, consult skills:* `flext-mro-namespace-rules`, `flext-architecture-layers`, `flext-patterns`, `rules-flext-core`, `rules-src`.
 
 ### 2.5 Service Facade Pattern (`api.py` + `base.py` + `services/`)
 
@@ -213,11 +218,13 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 ### 3.6 Test Standardization
 - **Unified Test Namespace**: Tests MUST strictly consume utilities, constants, types, and models from the central test infrastructure (`tests.infra`). Direct imports from `flext_core` or `flext_infra` into `tests/unit` codebase are FORBIDDEN if an equivalent exists in `tests.infra`.
 - **Alias Usage**: Use the same canonical aliases for test infrastructure components: `from tests import c, t, p, m, u`.
-- **Test Namespaced Classes & MRO**: Test infrastructure MUST follow the single namespaced class structure using MRO. Test namespaces must compose with `FlextTests` and the project's own namespace (e.g., `class FlextTestInfraConstants(FlextCoreConstants, FlextTestsConstants)`), defining specific Test namespaces per project.
+- **Test Facade Naming**: Test facades MUST use the `TestsFlext<Project><Tier>` pattern. Legacy `Flext<Project>Test<Tier>` and `FlextTest<Project><Tier>` forms are migration targets only.
+- **Test Namespaced Classes & MRO**: Test infrastructure MUST follow the single namespaced class structure using MRO. Test namespaces must compose with `FlextTests` and the project's own namespace (e.g., `class TestsFlextInfraConstants(FlextCoreConstants, FlextTestsConstants)`), defining the test-only branch under `<Domain>.Tests`.
 - **Centralized Fixtures & Conftests**: All fixtures and `conftest.py` configurations MUST be centralized within the `tests.infra` MRO structure. Ad-hoc loose mocks or fixtures spread around test scripts are STRICTLY FORBIDDEN. Rely on canonical helpers (`h`) and shared centralized fixtures over recreating isolated objects.
 - **Absolute Strictness**: Tests MUST demonstrate the exact same strict typing (`r[T]`), Pydantic v2 execution, and architectural discipline as production code. "Test-only" relaxation or bypassing validators is FORBIDDEN.
 
 ### 3.7 Associated Skills
+- **Namespace/MRO Law**: `flext-mro-namespace-rules`
 - **Type Law & Result Patterns**: `flext-strict-typing`
 - **Result/Logging/DI Patterns**: `flext-patterns`
 
@@ -230,6 +237,13 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Forced Patterns**: Wildcard imports and relative imports are FORBIDDEN in governed code.
 - **Aliases**: No double-assignment of facade aliases (`c/m/p/t/u` are assigned once at module bottom).
 - **Direction**: Cross-tier imports violating architecture direction are FORBIDDEN.
+- **No Same-Project Cross-Facade Runtime Imports**: Public same-project facade files (`constants.py`, `models.py`, `protocols.py`, `typings.py`, `utilities.py`) MUST NOT import sibling public facades or aliases at runtime. Use direct private-class imports from `_models/*` / `_utilities/*` or MRO inheritance instead. The only standing runtime exception is `FlextRuntime` inside `flext-core`.
+- **Facade Import Matrix**:
+  - `typings.py` may reference same-project `p` and `m` ONLY under `TYPE_CHECKING`.
+  - `protocols.py` may reference same-project `t` and `m` ONLY under `TYPE_CHECKING`.
+  - `models.py` may reference same-project `t` and `p` ONLY under `TYPE_CHECKING`.
+  - `constants.py` may import same-project runtime symbols when genuinely required.
+  - `utilities.py`, `_models/*`, and `_utilities/*` may import private classes directly across private modules to break cycles, but MUST NOT hop through sibling public facades.
 - **Circular Import Resolution (CRITICAL)**:
   - **Root Cause**: Circular imports arise when modules at the same tier (e.g., `_protocols/base.py` and `_protocols/result.py`) reference each other, or when TIER 0.5 modules need types from TIER 1+.
   - **Correct Solution** (NO workarounds):
