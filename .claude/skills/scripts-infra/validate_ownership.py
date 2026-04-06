@@ -8,12 +8,12 @@ import argparse
 import json
 import operator
 import re
-import subprocess
 import sys
 from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar
 
+from flext_cli import u
 from pydantic import BaseModel, ConfigDict, Field
 
 from flext_infra import t
@@ -90,7 +90,7 @@ def parse_args(argv: t.StrSequence) -> argparse.Namespace:
 
 def tracked_scripts(repo_root: Path) -> Sequence[Path]:
     """tracked_scripts function."""
-    result = subprocess.run(
+    result = u.Cli.run_raw(
         [
             "/usr/bin/env",
             "git",
@@ -101,15 +101,15 @@ def tracked_scripts(repo_root: Path) -> Sequence[Path]:
             "scripts/**/*.py",
         ],
         cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
     )
-    if result.returncode != 0:
-        raise SkillInfraError(result.stderr.strip() or "git ls-files failed")
+    if result.is_failure:
+        raise SkillInfraError(result.error or "git ls-files failed")
+    output = result.value
+    if output.exit_code != 0:
+        raise SkillInfraError(output.stderr.strip() or "git ls-files failed")
 
     scripts: Sequence[Path] = []
-    for line in sorted(set(result.stdout.splitlines())):
+    for line in sorted(set(output.stdout.splitlines())):
         if not line.strip():
             continue
         path = Path(line)
