@@ -66,4 +66,4 @@ Plans:
 | 7. Modernization & Integration Fixes | v1.0 | 2/2 | Complete | 2026-03-25 |
 | 8. Workaround Residual Cleanup | v1.0 | 3/3 | Complete | 2026-03-25 |
 | 9. Rope-native refactor engine rewrite | v2.0 | 3/3 | Complete | 2026-03-25 |
-| 10. Unified Docs Generation Baseline | v2.0 | 8/8 | Complete   | 2026-04-06 |
+| 10. Unified Docs Generation Baseline | v2.0 | 8/8 | Complete    | 2026-04-06 |
