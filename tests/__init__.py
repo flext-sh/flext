@@ -13,7 +13,12 @@ if _t.TYPE_CHECKING:
     import tests.infra as _tests_infra
 
     infra = _tests_infra
-    import tests.tf as _tests_tf
+    from flext_core.decorators import FlextDecorators as d
+    from flext_core.exceptions import FlextExceptions as e
+    from flext_core.handlers import FlextHandlers as h
+    from flext_core.mixins import FlextMixins as x
+    from flext_core.result import FlextResult as r
+    from flext_core.service import FlextService as s
     from tests.infra import (
         FlextWorkspaceTestConstants,
         FlextWorkspaceTestConstants as c,
@@ -32,34 +37,28 @@ if _t.TYPE_CHECKING:
         typings,
         utilities,
     )
-
-    tf = _tests_tf
-    import tests.tm as _tests_tm
-
-    tm = _tests_tm
-    from flext_core.decorators import FlextDecorators as d
-    from flext_core.exceptions import FlextExceptions as e
-    from flext_core.handlers import FlextHandlers as h
-    from flext_core.mixins import FlextMixins as x
-    from flext_core.result import FlextResult as r
-    from flext_core.service import FlextService as s
+    from tests.tf import tf
+    from tests.tm import tm
     from tests.unit.libs import TestVersioning
     from tests.unit.scripts import TestSyncScripts
     from tests.unit.scripts.github import TestPrWorkspace
 _LAZY_IMPORTS = merge_lazy_imports(
     ("tests.infra",),
     {
-        "TestPrWorkspace": "tests.unit.scripts.github.test_pr_workspace",
-        "TestSyncScripts": "tests.unit.scripts.sync_tests",
-        "TestVersioning": "tests.unit.libs.versioning_tests",
+        "TestPrWorkspace": (
+            "tests.unit.scripts.github.test_pr_workspace",
+            "TestPrWorkspace",
+        ),
+        "TestSyncScripts": ("tests.unit.scripts.sync_tests", "TestSyncScripts"),
+        "TestVersioning": ("tests.unit.libs.versioning_tests", "TestVersioning"),
         "d": ("flext_core.decorators", "FlextDecorators"),
         "e": ("flext_core.exceptions", "FlextExceptions"),
         "h": ("flext_core.handlers", "FlextHandlers"),
         "infra": "tests.infra",
         "r": ("flext_core.result", "FlextResult"),
         "s": ("flext_core.service", "FlextService"),
-        "tf": "tests.tf",
-        "tm": "tests.tm",
+        "tf": ("tests.tf", "tf"),
+        "tm": ("tests.tm", "tm"),
         "x": ("flext_core.mixins", "FlextMixins"),
     },
 )

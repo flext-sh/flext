@@ -55,11 +55,20 @@ if _t.TYPE_CHECKING:
         FlextWorkspaceTestUtilities as u,
     )
 _LAZY_IMPORTS = {
-    "FlextWorkspaceTestConstants": "tests.infra.constants",
-    "FlextWorkspaceTestModels": "tests.infra.models",
-    "FlextWorkspaceTestProtocols": "tests.infra.protocols",
-    "FlextWorkspaceTestTypes": "tests.infra.typings",
-    "FlextWorkspaceTestUtilities": "tests.infra.utilities",
+    "FlextWorkspaceTestConstants": (
+        "tests.infra.constants",
+        "FlextWorkspaceTestConstants",
+    ),
+    "FlextWorkspaceTestModels": ("tests.infra.models", "FlextWorkspaceTestModels"),
+    "FlextWorkspaceTestProtocols": (
+        "tests.infra.protocols",
+        "FlextWorkspaceTestProtocols",
+    ),
+    "FlextWorkspaceTestTypes": ("tests.infra.typings", "FlextWorkspaceTestTypes"),
+    "FlextWorkspaceTestUtilities": (
+        "tests.infra.utilities",
+        "FlextWorkspaceTestUtilities",
+    ),
     "c": ("tests.infra.constants", "FlextWorkspaceTestConstants"),
     "constants": "tests.infra.constants",
     "d": ("flext_core.decorators", "FlextDecorators"),

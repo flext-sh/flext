@@ -34,13 +34,13 @@ if _t.TYPE_CHECKING:
     from flext_core.typings import FlextTypes as t
     from flext_core.utilities import FlextUtilities as u
 _LAZY_IMPORTS = {
-    "AuthenticationError": "flext.exceptions",
-    "ConfigurationError": "flext.exceptions",
-    "ConnectionError": "flext.exceptions",
-    "Error": "flext.exceptions",
-    "ProcessingError": "flext.exceptions",
-    "TimeoutError": "flext.exceptions",
-    "ValidationError": "flext.exceptions",
+    "AuthenticationError": ("flext.exceptions", "AuthenticationError"),
+    "ConfigurationError": ("flext.exceptions", "ConfigurationError"),
+    "ConnectionError": ("flext.exceptions", "ConnectionError"),
+    "Error": ("flext.exceptions", "Error"),
+    "ProcessingError": ("flext.exceptions", "ProcessingError"),
+    "TimeoutError": ("flext.exceptions", "TimeoutError"),
+    "ValidationError": ("flext.exceptions", "ValidationError"),
     "c": ("flext_core.constants", "FlextConstants"),
     "d": ("flext_core.decorators", "FlextDecorators"),
     "e": ("flext_core.exceptions", "FlextExceptions"),
