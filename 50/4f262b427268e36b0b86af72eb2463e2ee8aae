@@ -1,0 +1,23 @@
+docs/superpowers/specs/2026-04-06-flext-infra-canonical-namespaces-design.md
+  da6f7390ff16d652 1-128
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "504f262b427268e36b0b86af72eb2463e2ee8aae",
+  "prompts": {
+    "da6f7390ff16d652": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5abe07dc-edac-4a81-9fe6-a53d3f0017d4",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 128,
+      "total_deletions": 0,
+      "accepted_lines": 128,
+      "overriden_lines": 0
+    }
+  }
+}
