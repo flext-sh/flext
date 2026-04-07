@@ -1,0 +1,23 @@
+pyproject.toml
+  95305069e6cea891 275
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "703e9f69920eba77bd9868259ff3995b5e7eed94",
+  "prompts": {
+    "95305069e6cea891": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d68aa-75ee-7e40-8349-87c95bf16c2f",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 218,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
