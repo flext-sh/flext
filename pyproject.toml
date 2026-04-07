@@ -272,10 +272,8 @@ project-includes = [
 ]
 python-version = "3.13"
 search-path = [
-  "examples",
-  "scripts",
+  ".",
   "src",
-  "tests",
 ]
 site-package-path = [ "./typings", ".venv/lib/python3.13/site-packages" ]
 skip-interpreter-query = true
