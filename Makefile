@@ -1160,8 +1160,10 @@ sync: ## Sync project Makefiles from pyproject.toml + refresh __init__.py lazy i
 imp: ## Detect and fix import violations across workspace (CST-based)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
-	$(Q)$(WORKSPACE_INFRA_REFACTOR) imports \
-		--workspace "$(CURDIR)" $(if $(APPLY),--apply,)
+	$(Q)$(WORKSPACE_INFRA_REFACTOR) namespace-enforce \
+		--workspace "$(CURDIR)" \
+		--no-fail-fast \
+		$(if $(APPLY),--apply,)
 
 # Workspace-specific custom targets (optional, never overwritten by sync)
 -include workspace_custom.mk
