@@ -62,6 +62,7 @@ description: Exact import rules and patterns verified from the actual FLEXT code
 - Enforce import order: future, stdlib, third-party, first-party, local.
 - Enforce architecture directionality and private-module boundaries.
 - Use canonical aliases (`c`, `m`, `p`, `t`, `u`, `r`, `d`, `e`, `h`, `s`, `x`) at usage sites.
+- In wrapper surfaces (`tests/`, `examples/`, `scripts/`), import canonical aliases from the local wrapper package (`from tests import c, m, p, t, u`, `from examples import c, m, t`, `from scripts import c, m, t, u`) — never from sibling projects.
 - Keep same-project public facades isolated at runtime; only the `TYPE_CHECKING` matrix from `AGENTS.md` §4 allows same-project cross-facade type references.
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, and `inline imports`. `cast()` is forbidden outside `flext-core` result internals.
 
