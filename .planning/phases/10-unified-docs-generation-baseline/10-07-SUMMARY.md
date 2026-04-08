@@ -55,7 +55,7 @@ completed: 2026-04-06
 
 ## Accomplishments
 - Audited engine.py, _engine_helpers.py, _engine_rules.py — all delegate rope operations to u.Infra.init_rope_project(), u.Infra.get_resource_from_path(), u.Infra.apply_transformer_to_source()
-- Audited namespace_enforcer.py, _namespace_enforcer_phases.py — pure orchestration with detect-apply-redetect cycles, all via u.Infra.* and detector classes
+- Audited namespace_enforcer.py,_namespace_enforcer_phases.py — pure orchestration with detect-apply-redetect cycles, all via u.Infra.* and detector classes
 - Audited scanner.py, census.py, project_classifier.py, violation_analyzer.py, safety.py, mro_resolver.py — all either delegate to u.Infra.* or use Python stdlib (tomllib, inspect)
 - Verified zero `from rope` or `import rope` across entire refactor/ directory
 

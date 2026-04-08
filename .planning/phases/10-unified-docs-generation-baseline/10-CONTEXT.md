@@ -48,7 +48,7 @@ Docs domain — EXCLUDED (separate agent)
 - c = constants, t = types, p = protocols, m = models, u = utilities — canonical aliases
 - Flat type aliases with descriptive prefixes, separated in _constants/*.py, _typings/*.py, etc.
 - Zero duplicate declarations across c/t/p/m/u
-- Access via `from flext_infra import c, m, t, u` — u provides u.Cli.* and u.Infra.* directly
+- Access via `from flext_infra import c, m, t, u` — u provides u.Cli.*and u.Infra.* directly
 - NEVER import as `from flext_cli import u as cli_u` — the MRO provides everything
 
 ### Docs Generation Phases (LOCKED)

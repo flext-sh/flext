@@ -88,7 +88,7 @@ Each task was committed atomically:
 - **Found during:** Task 1 (base.py split)
 - **Issue:** Plan specified `s = FlextInfraServiceBase` (thin base), but all 19+ `s[T]` consumers access domain fields (workspace_root, apply_changes, dry_run, etc.) -- would break the entire codebase
 - **Fix:** Set `s = FlextInfraServiceBase` instead, updated `__init__.py` lazy mapping to match
-- **Files modified:** flext-infra/src/flext_infra/base.py, flext-infra/src/flext_infra/__init__.py
+- **Files modified:** flext-infra/src/flext_infra/base.py, flext-infra/src/flext_infra/**init**.py
 - **Verification:** All consumer imports verified, ruff + pyrefly clean
 - **Committed in:** d41f549
 
