@@ -25,7 +25,7 @@ affects: [flext-infra refactor engine, transformers/, u.Infra.*, c.Infra.*]
 | transformer | decision | rationale | SRP-ok | DRY-ok |
 |---|---|---|---|---|
 | import_modernizer | keep-libcst | QualifiedNameProvider for metadata-driven symbol tracking | Yes | Yes |
-| import_normalizer | keep-libcst | Import alias normalization + path mapping is CST-native | Yes | Yes |
+| normalizer | keep-libcst | Import alias normalization + path mapping is CST-native | Yes | Yes |
 | import_bypass_remover | keep-libcst | try/except fallback pattern matching is AST-domain | Yes | Yes |
 | tier0_import_fixer | keep-libcst | Circular import detection + TYPE_CHECKING injection requires AST | Yes | Yes |
 | lazy_import_fixer | keep-libcst | Function-local import hoisting via CST | Yes | Yes |

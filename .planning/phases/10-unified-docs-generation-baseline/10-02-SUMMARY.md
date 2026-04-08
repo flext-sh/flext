@@ -6,7 +6,7 @@ tags: [thin-orchestrator, basemk, github, release, template-engine, flext-infra]
 
 # Dependency graph
 requires:
-  - "10-01: FlextInfraServiceBase thin base + FlextInfraCommandContext mixin"
+  - "10-01: FlextInfraServiceBase thin base + FlextInfraServiceBase mixin"
 provides:
   - "basemk domain refactored: render_bootstrap_include delegates to engine.render_single()"
   - "github domain confirmed as thin orchestrator (no changes needed)"

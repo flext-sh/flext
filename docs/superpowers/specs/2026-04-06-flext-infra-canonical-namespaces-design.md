@@ -93,7 +93,7 @@ Pattern: `default_factory=list` (simpler, Pydantic-idiomatic)
 | `basemk/engine.py:23-32` | `_build_environment` | `PrivateAttr(default_factory=...)` pattern |
 | `basemk/engine.py:35-38` | `_render` | `@staticmethod` on engine class |
 | `api.py:34-37` | `_load` | `@staticmethod` on `FlextInfra` |
-| `_utilities/codegen_constants.py:79-166` | 7 helper functions | `@staticmethod` on `FlextInfraConstantsUtilitiesCodegen` |
+| `_utilities/codegen_constants.py:79-166` | 7 helper functions | `@staticmethod` on `FlextInfraUtilitiesCodegenConstantDetection` |
 | `_utilities/codegen_execution.py:36-41` | `_int`, `_totals` | `@staticmethod` on `FlextInfraUtilitiesCodegenExecution` |
 | `_utilities/docs_render.py:12` | `_is_object_list` | SSOT: `u.Guards.is_list()` from flext-core |
 

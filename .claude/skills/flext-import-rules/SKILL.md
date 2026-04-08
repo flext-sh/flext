@@ -258,7 +258,7 @@ All `flext-(tap|target|dbt)-*` projects MUST follow an **EXACT** naming pattern 
 - `FlextTapOracleProtocols`
 - `FlextDbtOracleWmsUtilities`
 
-> **CRITICAL**: Do NOT include `Meltano` in the class name (e.g., use `FlextTapLdapProtocols`, **not** `FlextMeltanoTapLdapProtocols`). The Meltano integration is represented purely through **inheritance** `(FlextMeltanoProtocols, FlextLdapProtocols)`, not through the name. This strict consistency ensures predictable mapping across all 33 ecosystem projects.
+> **CRITICAL**: Do NOT include `Meltano` in the class name (e.g., use `FlextTapLdapProtocols`, **not** `FlextMeltanoProtocolsTapLdap`). The Meltano integration is represented purely through **inheritance** `(FlextMeltanoProtocols, FlextLdapProtocols)`, not through the name. This strict consistency ensures predictable mapping across all 33 ecosystem projects.
 
 
 ### Pattern 4D: Integration Projects with Dual Inheritance (Before/After)

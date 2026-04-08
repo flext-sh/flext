@@ -14,7 +14,7 @@ class TestsFlextTestTypes(FlextTestsTypes):
         class Tests:
             """Test infrastructure type definitions."""
 
-            type Command = t.StrSequence
+            type Command = FlextTestsTypes.StrSequence
             type CommandBuffer = MutableSequence[Command]
             type LoadedModule = ModuleType
             type ProjectRef = SimpleNamespace

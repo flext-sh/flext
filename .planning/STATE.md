@@ -130,7 +130,7 @@ Recent decisions affecting current work:
 - [Phase 09]: D-21 applied to mro_reference_rewriter: rope Rename is more complex than CST leave_Name/leave_Attribute; kept LibCST, just re-exported Rename
 - [Phase 09]: ParentNodeProvider replaced with _skip_names: set[int] using visit_ClassDef/FunctionDef/Param/AsName — pure LibCST, no external deps
 - [Phase 09]: Global pyright suppression (reportUnknownMemberType/VariableType/ArgumentType=none) for rope's missing stubs instead of per-call type: ignore
-- [Phase 10]: s alias points to FlextInfraCommandContext (not thin FlextInfraServiceBase) for backward compat -- all 19+ consumers access domain fields
+- [Phase 10]: s alias points to FlextInfraServiceBase (not thin FlextInfraServiceBase) for backward compat -- all 19+ consumers access domain fields
 - [Phase 10]: Factory-method composition for FlextInfra facade due to incompatible type params (s[bool] vs s[str]) across domain services
 - [Phase 10]: DI fields (config_type, wire_modules, etc.) removed from FlextInfraServiceBase -- zero consumers reference them
 - [Phase 10]: basemk engine.py helpers acceptable — module-level config, not business logic
