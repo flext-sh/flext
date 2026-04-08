@@ -52,7 +52,7 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
   - `src/`: `class <Domain>:`
   - `tests/`: `class <Domain>:` containing `class Tests:`
 - Callers MUST keep the organic namespace path emitted by MRO. Use `u.Infra.parse_semver`, `c.Tests.ERR_OK_FAILED`, and `m.TargetOracle.ExecuteResult`. Do not flatten nested domain-local classes back onto the facade root with assignments like `ExecuteResult = TargetOracle.ExecuteResult`.
-- Private mixin files under `_models/`, `_utilities/`, `_protocols/`, and similar trees define mixin classes only. The public facade composes them in its inheritance list. Manual flat wrapper nesting such as `class Docker(TestsFlextDocker): pass` inside the facade namespace is forbidden.
+- Private mixin files under `_models/`, `_utilities/`, `_protocols/`, and similar trees define mixin classes only. The public facade composes them in its inheritance list. Manual flat wrapper nesting such as `class Docker(tk): pass` inside the facade namespace is forbidden.
 - Same-project cross-facade imports are forbidden at runtime unless explicitly allowed below:
   - `typings.py` may reference same-project `p` and `m` only under `TYPE_CHECKING`.
   - `protocols.py` may reference same-project `t` and `m` only under `TYPE_CHECKING`.
@@ -114,7 +114,7 @@ class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
 class TestsFlextCoreUtilities(TestsFlextUtilities, FlextCliUtilities):
     class Core:
         class Tests:
-            class Docker(TestsFlextDocker):
+            class Docker(tk):
                 pass
 ```
 
