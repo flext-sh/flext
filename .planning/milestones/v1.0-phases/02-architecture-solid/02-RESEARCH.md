@@ -80,7 +80,7 @@ Protocol mapping (from sisyphus plan):
 |----------|----------|-----------|
 | `FlextContext` | `p.Context` | `FlextProtocolsContext.Context` |
 | `FlextContainer` | `p.DI` | `FlextProtocolsDI.DI` |
-| `FlextSettings` | `p.Config` | `FlextProtocolsConfig.Config` |
+| `FlextSettings` | `p.Config` | `FlextProtocolsSettings.Config` |
 | `FlextLogger` | `p.StructlogLogger` | `FlextProtocolsLogging.StructlogLogger` |
 | `FlextDispatcher` | `p.CommandBus` | `FlextProtocolsHandler.CommandBus` |
 

@@ -15,11 +15,11 @@
   - [FlextLogger](#flextlogger)
   - [FlextContext](#flextcontext)
   - [FlextContainer](#flextcontainer)
-  - [FlextService](#flextservice)
+  - [s](#flextservice)
   - [FlextDispatcher](#flextdispatcher)
   - [FlextHandler](#flexthandler)
   - [FlextCatalog](#flextcatalog)
-  - [FlextDecorators](#flextdecorators)
+  - [d](#flextdecorators)
 - [DI Baseline](#di-baseline)
 - [Alias Baseline](#alias-baseline)
 - [Extension Baseline](#extension-baseline)
@@ -93,19 +93,19 @@ Per-project docs are subordinate to this baseline until each project is migrated
 | `FlextModels` | `FlextModels` | `models.py` | Root models facade | namespace facade only | Keep |
 | `FlextUtilities` | `FlextUtilities` | `utilities.py` | Root utilities facade | namespace facade only | Keep |
 | `FlextSettings` | `FlextSettings` | `settings.py` | Typed configuration root | `shared`, `build`, `add`, `load` | Keep and narrow |
-| `FlextResult` | `FlextResult` | `result.py` | Success and failure contract | existing result surface | Keep |
-| `FlextExceptions` | `FlextExceptions` | `exceptions.py` | Structured error taxonomy | error models and serializers | Keep and narrow |
+| `r` | `r` | `result.py` | Success and failure contract | existing result surface | Keep |
+| `e` | `e` | `exceptions.py` | Structured error taxonomy | error models and serializers | Keep and narrow |
 | `FlextRuntime` | `FlextRuntime` | `runtime.py` | Normalization and validation | `to_container`, `to_metadata`, `validate_many`, `ensure_utc` | Keep, remove DI ownership |
 | none | `FlextDi` | `di.py` | Bridge to `dependency_injector` | `build`, `add_service`, `add_factory`, `add_resource`, `bind_config`, `wire`, `unwire` | Add |
 | `FlextLogger` | `FlextLogger` | `logger.py` | Structured logging and context binding | `get`, `bind`, `unbind`, `scope`, `clear_scope`, `from_context` | Keep, move from `loggings.py` |
 | `FlextContext` | `FlextContext` | `context.py` | Execution context only | `get`, `set`, `has`, `remove`, `clear`, `clone`, `merge`, `export`, `get_meta`, `set_meta` | Keep and narrow |
 | `FlextContainer` | `FlextContainer` | `container.py` | Runtime dependency store and resolver | `shared`, `scope`, `add_service`, `add_factory`, `add_resource`, `get`, `require`, `has`, `list`, `remove`, `wire`, `unwire` | Keep and reshape |
-| `FlextService` | `FlextService` | `service.py` | Runtime bootstrapper | `make_settings`, `make_context`, `make_container`, `make_runtime`, `run` | Keep and narrow |
+| `s` | `s` | `service.py` | Runtime bootstrapper | `make_settings`, `make_context`, `make_container`, `make_runtime`, `run` | Keep and narrow |
 | `FlextDispatcher` | `FlextDispatcher` | `dispatcher.py` | Message dispatch and handler binding | `dispatch`, `publish`, `add`, `add_many`, `remove`, `has`, `list`, `clear` | Keep and absorb handler registration |
-| `FlextHandlers` | `FlextHandler` | `handler.py` | Individual handler contract | `handle`, `run`, `validate`, `can_handle`, `from_callable` | Rename and narrow |
+| `h` | `FlextHandler` | `handler.py` | Individual handler contract | `handle`, `run`, `validate`, `can_handle`, `from_callable` | Rename and narrow |
 | `FlextRegistry` | `FlextCatalog` | `catalog.py` | Typed extension storage | `add`, `add_many`, `get`, `require`, `has`, `list`, `remove`, `clear` | Replace |
-| `FlextDecorators` | `FlextDecorators` | `decorators.py` | Automation wrappers | `inject`, `log`, `measure`, `scope`, `compose`, `result`, `retry`, `timeout` | Keep and narrow |
-| `FlextMixins` | none | removed from public architecture | legacy behavior bucket | none | Remove from the public platform |
+| `d` | `d` | `decorators.py` | Automation wrappers | `inject`, `log`, `measure`, `scope`, `compose`, `result`, `retry`, `timeout` | Keep and narrow |
+| `x` | none | removed from public architecture | legacy behavior bucket | none | Remove from the public platform |
 | `FlextVersion` | `FlextVersion` | `__version__.py` | package metadata only | metadata only | Keep, not architectural |
 | `LazyNamespace` | `LazyNamespace` | `lazy.py` | export protocol only | internal export protocol | Keep internal |
 
@@ -246,7 +246,7 @@ Application and orchestration code should target:
   - no plugin catalog logic
   - no context orchestration
 
-### FlextService
+### s
 
 - Role: only runtime bootstrapper
 - Ownership:
@@ -328,7 +328,7 @@ Application and orchestration code should target:
   - no dispatch
   - no extension invocation pipelines
 
-### FlextDecorators
+### d
 
 - Role: only automation wrappers
 - Ownership:
@@ -358,7 +358,7 @@ The `0.13.0` workspace DI model has four layers.
 
 1. `FlextDi` builds and wires the dependency graph.
 2. `FlextContainer` stores and resolves runtime dependencies.
-3. `FlextService` bootstraps settings, context, container, and runtime state.
+3. `s` bootstraps settings, context, container, and runtime state.
 4. `u` is the flat consumption surface used outside the bootstrap path.
 
 Application code must not touch `dependency_injector` directly.

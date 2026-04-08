@@ -6,7 +6,7 @@
 
 **Architecture:** FlextLdapConnection and FlextLdapOperations become MRO mixins. ldap inherits from both plus sync logic. Adapter state (`_adapter`) lives on Connection mixin, Operations accesses it via `self._adapter` (shared MRO). All consumers switch to `ldap()` direct usage.
 
-**Tech Stack:** Python 3.13, Pydantic v2, flext-core FlextService, ldap3
+**Tech Stack:** Python 3.13, Pydantic v2, flext-core s, ldap3
 
 ---
 

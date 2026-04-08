@@ -58,7 +58,7 @@ human_verification: null
 | 1 | FlextInfra facade exists in api.py with factory-method accessors for each domain | PARTIAL | 9 methods present but `.validate` renamed to `.validate_scanner` — deviates from plan-08 must_have |
 | 2 | FlextInfraServiceBase is thin (~40 LOC) with only settings access + ABC | VERIFIED | 18 logical LOC, settings + bootstrap only — mirrors FlextCliServiceBase pattern |
 | 3 | FlextInfraServiceBase mixin carries all domain fields in same file as FlextInfraServiceBase | VERIFIED | base.py has both classes; FlextInfraServiceBase has workspace_root, apply_changes, check_only, dry_run, fail_fast, output_format, project_filter, report_path, output_dir |
-| 4 | Domain services inherit FlextInfraServiceBase — zero breakage | VERIFIED | All s[T] consumers use FlextInfraServiceBase; FlextInfraBaseMkGenerator, FlextInfraReleaseOrchestrator, FlextInfraCodegenFixer, FlextInfraOrchestratorService inherit it. Non-FlextService domains (github, check, validate, deps, refactor) are accepted as non-service thin orchestrators per domain design |
+| 4 | Domain services inherit FlextInfraServiceBase — zero breakage | VERIFIED | All s[T] consumers use FlextInfraServiceBase; FlextInfraBaseMkGenerator, FlextInfraReleaseOrchestrator, FlextInfraCodegenFixer, FlextInfraOrchestratorService inherit it. Non-s domains (github, check, validate, deps, refactor) are accepted as non-service thin orchestrators per domain design |
 | 5 | basemk/github/release are thin orchestrators delegating to u.Infra.* | VERIFIED | github: 4/4 methods delegate to u.Infra.*; release: 18+ u.Infra.* calls; basemk: delegates template rendering to engine, direct file I/O accepted per plan-02 |
 | 6 | All 4 library domains (detectors, gates, rules, transformers) pass ruff + pyrefly with 0 errors and no direct rope imports | VERIFIED | ruff: 0 errors; pyrefly: 0 errors; grep found 0 direct `from rope`/`import rope` in detectors/ or transformers/ |
 | 7 | Full ruff + pyrefly clean across entire flext-infra/src/ | PARTIAL | ruff: 0 errors (FULL). pyrefly: 8 errors in engine/toml_engine.py (6) and_models/engine.py (4) — pre-existing, not introduced by phase 10, but plan-08 acceptance criterion requires 0 across full src/ |
@@ -82,7 +82,7 @@ human_verification: null
 | From | To | Via | Status | Details |
 |------|----|-----|--------|---------|
 | `api.py` FlextInfra | domain service classes | `_load()` factory staticmethods | VERIFIED | 9 factory methods via importlib lazy-load; return `type[ServiceClass]` |
-| `api.py` FlextInfra | FlextInfraServiceBase | inheritance `FlextInfra(FlextInfraServiceBase[bool])` | VERIFIED | MRO confirmed: FlextInfra → FlextInfraServiceBase → FlextService |
+| `api.py` FlextInfra | FlextInfraServiceBase | inheritance `FlextInfra(FlextInfraServiceBase[bool])` | VERIFIED | MRO confirmed: FlextInfra → FlextInfraServiceBase → s |
 | `base.py` FlextInfraServiceBase | FlextInfraServiceBase | inheritance | VERIFIED | `class FlextInfraServiceBase[T](FlextInfraServiceBase[T])` |
 | `s` alias | FlextInfraServiceBase | module-level alias | VERIFIED | `s is FlextInfraServiceBase` = True |
 | `detectors/` rope type | t.Infra.RopeProject | type alias (not import) | VERIFIED | 0 direct rope imports; all through t.Infra |

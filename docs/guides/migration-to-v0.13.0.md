@@ -42,10 +42,10 @@ Required actions:
 - replace `registry.py` with `catalog.py`
 - replace `handlers.py` with `handler.py`
 - move `FlextLogger` from `loggings.py` to `logger.py`
-- remove public `FlextMixins` responsibilities
+- remove public `x` responsibilities
 - narrow `FlextRuntime` to normalization and validation only
 - narrow `FlextContext` to execution context only
-- narrow `FlextDecorators` to the forward decorator set
+- narrow `d` to the forward decorator set
 - reshape `FlextContainer` around `add_service/add_factory/add_resource`
 - reshape `FlextDispatcher` to absorb handler registration
 
@@ -121,9 +121,9 @@ Required actions:
 | Current | Target | Action |
 | --- | --- | --- |
 | `FlextRegistry` | `FlextCatalog` or `FlextDispatcher` | Replace based on actual role |
-| `FlextHandlers` | `FlextHandler` | Rename and narrow to a single handler contract |
+| `h` | `FlextHandler` | Rename and narrow to a single handler contract |
 | `loggings.py` | `logger.py` | Move logger to direct file name |
-| `FlextMixins` | removed | Move retained behavior into service, handler, logger, decorators, or `u` |
+| `x` | removed | Move retained behavior into service, handler, logger, decorators, or `u` |
 | hybrid runtime DI helpers | `FlextDi` | centralize all `dependency_injector` bridge logic |
 
 ## Method Replacement Table
@@ -191,8 +191,8 @@ These concepts do not survive into the forward public architecture:
 A migration wave is done when:
 
 - the project no longer depends on `FlextRegistry`
-- the project no longer depends on public `FlextMixins`
-- runtime bootstrapping is owned by `FlextService`
+- the project no longer depends on public `x`
+- runtime bootstrapping is owned by `s`
 - extension storage, if it exists, is stored in `FlextCatalog`
 - `tests/`, `examples/`, and `scripts/` follow the baseline taxonomy
 - local docs point to the workspace baseline instead of describing conflicting architecture

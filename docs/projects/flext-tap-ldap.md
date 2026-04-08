@@ -44,7 +44,7 @@ Configuration reference and example JSON live under `docs/` and the README (host
 
 - **Clean Architecture**: Domain (`domain/`), application (`application/`), infrastructure (`infrastructure/`), and protocol (`streams.py`, `ldif_stream.py`) layers; only lower tiers import via short aliases (`m`, `u`, `r`).
 - **Singer streams**: Users, Groups, OrganizationalUnits, Schema, Custom, LDIF, and LDIFAnalysis streams all implement Singer tap contracts while converting LDAP/LDIF entries through `r` orchestrators.
-- **Configuration models**: `config.py` exposes Pydantic `FlextTapLdapConfig` with strict validation, including LDAP connection settings, LDIF toggles, Melro (Meltano) integration, and security tokens.
+- **Configuration models**: `config.py` exposes Pydantic `FlextTapLdapSettings` with strict validation, including LDAP connection settings, LDIF toggles, Melro (Meltano) integration, and security tokens.
 - **Zero tolerance governance**: `AGENTS.md` enforces mandatory usage of `flext-ldap`, `flext-meltano`, `flext-core`, and `flext-cli`; forbids direct `ldap3`, `singer-sdk`, `click`, `rich`, `Any`, `cast`, or `TYPE_CHECKING`.
 
 ## Quality & operations

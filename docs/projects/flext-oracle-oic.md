@@ -10,13 +10,13 @@
 - [Support & contributions](#support-contributions)
 <!-- TOC END -->
 
-FLEXT Oracle OIC v0.9.9 is the Oracle Integration Cloud (OIC) client library for the FLEXT ecosystem. It implements OAuth2/IDCS authentication, integration pattern execution, and enterprise-grade connectors using FlextService-inspired architecture, yet remains in early development while the compliance refactor finishes.
+FLEXT Oracle OIC v0.9.9 is the Oracle Integration Cloud (OIC) client library for the FLEXT ecosystem. It implements OAuth2/IDCS authentication, integration pattern execution, and enterprise-grade connectors using s-inspired architecture, yet remains in early development while the compliance refactor finishes.
 
 ## Status & metrics
 
 - **Version**: 0.9.9 (early development / 1.0.0 prep)
 - **Python support**: 3.13+
-- **Tests**: 21% unit coverage today; integration/contract suites pending completion once FlextService refactor lands
+- **Tests**: 21% unit coverage today; integration/contract suites pending completion once s refactor lands
 - **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstrings) is blocked until FlextCore imports are refactored; lint/type/security currently green
 - **Type safety**: Pyrefly strict mode + MyPy strict mode with zero `Any`/`cast`/`# type: ignore` enforced via the project AGENTS.md
 - **Security**: SaaS credential management, token lifecycle, circuit breaker/ retry patterns requiring completion
@@ -53,7 +53,7 @@ settings = OracleOicExtensionSettings(
 
 ## Architecture snapshot
 
-- **FlextService compliance**: currently partial (`r` 65% coverage, `FlextService` and `FlextContainer` still pending). Refactor plan enforces single-service-per-module discipline and removes direct `httpx`/`typer` dependencies.
+- **s compliance**: currently partial (`r` 65% coverage, `s` and `FlextContainer` still pending). Refactor plan enforces single-service-per-module discipline and removes direct `httpx`/`typer` dependencies.
 - **Modules**: `services/` (integration patterns, retries), `auth/` (OAuth2/IDCS flows), `cli/` (pending `flext-cli` wiring), `api.py` facade, `constants/`, `typings/`, `protocols/` for short alias discipline.
 - **Integration points**: depends on `flext-core`, `flext-api`, `flext-cli`, and supplies functionality to `flext-tap-oracle-oic`/`flext-target-oracle-oic` and other Oracle flavor packages.
 

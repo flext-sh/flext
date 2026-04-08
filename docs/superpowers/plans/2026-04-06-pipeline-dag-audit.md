@@ -264,7 +264,7 @@ Edit `flext-cli/src/flext_cli/constants.py`:
 # Add import
 from flext_cli import (
     FlextCliConstantsBase,
-    FlextCliConstantsConfig,
+    FlextCliConstantsSettings,
     FlextCliConstantsEnums,
     FlextCliConstantsPipeline,
 )
@@ -275,7 +275,7 @@ class Cli(
     FlextCliConstantsPipeline,
     FlextCliConstantsBase,
     FlextCliConstantsEnums,
-    FlextCliConstantsConfig,
+    FlextCliConstantsSettings,
 ):
     """CLI related constants."""
 ```

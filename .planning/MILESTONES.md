@@ -11,7 +11,7 @@
 - flext-cli already type-clean — 0 pyrefly/pyright errors, 0 typing shortcuts, no code changes needed
 - All 34 projects pass pyrefly+pyright with 0 errors — entire repo type-clean, no code changes needed
 - TypeGuard→TypeIs already migrated, all TYPE-01 through TYPE-08 requirements verified — Phase 01 complete
-- Removed last ABC from FlextService — all flext-core interfaces now use @runtime_checkable Protocol via p.Service
+- Removed last ABC from s — all flext-core interfaces now use @runtime_checkable Protocol via p.Service
 - Replaced concrete type annotations with protocol types (p.Settings, p.Container, p.Logger) in flext-core and 2 consumer projects
 - Migrated ~500 Field() usages to Annotated[T, Field(...)] canonical Pydantic v2 form across 33 projects, fixed 2 mutable defaults, cleaned up redundant Field() assignments
 - ~45 inline TypeAdapter() instantiations cached as ClassVar/module-level across 22 files in 15 projects, eliminating repeated construction in hot paths

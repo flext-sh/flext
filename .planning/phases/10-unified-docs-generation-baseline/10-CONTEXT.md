@@ -11,7 +11,7 @@ Refactor ALL flext-infra command domains (excluding docs — separate agent) to:
 1. Follow modern MRO service facade pattern (flext-cli reference implementation)
 2. Create api.py MRO facade composing all service mixins
 3. Simplify base.py to thin FlextServiceBase (~30 LOC)
-4. Services as thin FlextService orchestrators over u.Infra.* utilities
+4. Services as thin s orchestrators over u.Infra.* utilities
 5. Centralize rope library usage through u.Infra.* (already partially done)
 6. pyproject.toml as config SSOT where possible
 7. Flat type aliases in c/t/p/m/u with no duplicate declarations
@@ -27,7 +27,7 @@ Docs domain — EXCLUDED (separate agent)
 ## Implementation Decisions
 
 ### Architecture Pattern
-- Services MUST follow FlextService base from base.py — thin orchestrators only
+- Services MUST follow s base from base.py — thin orchestrators only
 - Services MUST delegate ALL logic to u.Infra.* utility functions
 - No generic helpers that could be reused across modules — everything goes through u.* namespace
 - Import private classes directly in _utilities (e.g., `from flext_infra import FlextInfraUtilitiesDocsScope`)

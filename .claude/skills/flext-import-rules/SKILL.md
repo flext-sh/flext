@@ -191,10 +191,10 @@ from flext_core import FlextConstants
 class FlextAuthConstants(FlextConstants): ...
 
 
-from flext_core import FlextService
+from flext_core import s
 
 
-class FlextAuthAdminService(FlextService.Admin): ...
+class FlextAuthAdminService(s.Admin): ...
 
 
 from flext_core import FlextProtocols

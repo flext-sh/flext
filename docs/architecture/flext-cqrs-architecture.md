@@ -13,7 +13,7 @@
 - [~~Modernisation Roadmap~~ ✅ MIGRADO](#modernisation-roadmap-migrado)
 - [~~Handler Patterns~~ ✅ MIGRADO](#handler-patterns-migrado)
 - [~~Dispatcher Evolution~~ ✅ MIGRADO](#dispatcher-evolution-migrado)
-- [~~Integration With FlextService~~ ✅ MIGRADO](#integration-with-flextservice-migrado)
+- [~~Integration With s~~ ✅ MIGRADO](#integration-with-flextservice-migrado)
 - [~~Testing Guidance~~ ✅ MIGRADO](#testing-guidance-migrado)
 - [~~TODO Backlog~~ ✅ MIGRADO](#todo-backlog-migrado)
 - [~~References~~ ✅ MIGRADO](#references-migrado)
@@ -21,7 +21,7 @@
 - [~~📊 Sumário Executivo~~ ✅ MIGRADO](#sumrio-executivo-migrado)
 - [~~🔍 Análise do Ecossistema CQRS~~ ✅ MIGRADO](#anlise-do-ecossistema-cqrs-migrado)
   - [~~Arquitetura de Tiers~~ ✅](#arquitetura-de-tiers)
-  - [~~FlextHandlers (Tier 3.1)~~ ✅](#flexthandlers-tier-31)
+  - [~~h (Tier 3.1)~~ ✅](#flexthandlers-tier-31)
   - [~~FlextDispatcher (Tier 3.2)~~ ✅](#flextdispatcher-tier-32)
   - [~~Integração com FlextContainer (Target)~~ ✅](#integrao-com-flextcontainer-target)
 - [~~📈 Análise do Estado Atual~~ ✅ MIGRADO](#anlise-do-estado-atual-migrado)
@@ -30,10 +30,10 @@
   - [~~Anti-Patterns Identificados~~ ✅](#anti-patterns-identificados)
 - [~~🏗️ Arquitetura Proposta~~ ✅ MIGRADO](#arquitetura-proposta-migrado)
   - [~~Visão Geral V2~~ ✅](#viso-geral-v2)
-  - [~~FlextMixins.CQRS (Nova Classe Nested)~~ 📋 SPEC PENDENTE](#flextmixinscqrs-nova-classe-nested-spec-pendente)
+  - [~~x.CQRS (Nova Classe Nested)~~ 📋 SPEC PENDENTE](#flextmixinscqrs-nova-classe-nested-spec-pendente)
   - [~~Protocol-Based Manager Interfaces~~ 📋 SPEC PENDENTE](#protocol-based-manager-interfaces-spec-pendente)
   - [~~FlextDispatcher V2 Refactored~~ 📋 SPEC PENDENTE](#flextdispatcher-v2-refactored-spec-pendente)
-  - [~~FlextHandlers V2 Refactored~~ 📋 SPEC PENDENTE](#flexthandlers-v2-refactored-spec-pendente)
+  - [~~h V2 Refactored~~ 📋 SPEC PENDENTE](#flexthandlers-v2-refactored-spec-pendente)
 - [~~🔗 Padrões de Integração~~ ✅ MIGRADO](#padres-de-integrao-migrado)
   - [~~Fronteiras Arquiteturais~~ ✅](#fronteiras-arquiteturais)
   - [~~Quando Usar Cada Camada~~ ✅](#quando-usar-cada-camada)
@@ -41,7 +41,7 @@
   - [~~Pattern 2: Dispatcher Roteando para Services~~ ✅](#pattern-2-dispatcher-roteando-para-services)
   - [~~Pattern 3: Handler com Full Observability~~ 📋 SPEC PENDENTE](#pattern-3-handler-com-full-observability-spec-pendente)
 - [~~⚙️ Infraestrutura Avançada~~ ✅ MIGRADO](#infraestrutura-avanada-migrado)
-  - [~~FlextHandlers Pipeline~~ ✅](#flexthandlers-pipeline)
+  - [~~h Pipeline~~ ✅](#flexthandlers-pipeline)
   - [~~FlextDispatcher Reliability Patterns~~ ✅](#flextdispatcher-reliability-patterns)
   - [~~Manager Extraction (V2)~~ 📋 SPEC PENDENTE](#manager-extraction-v2-spec-pendente)
 - [~~📖 Guia de Implementação~~ ✅ MIGRADO](#guia-de-implementao-migrado)
@@ -54,7 +54,7 @@
   - [~~Event Processing with Audit~~ ✅](#event-processing-with-audit)
   - [~~Multi-Operation Handler~~ ✅](#multi-operation-handler)
 - [~~🔄 Guia de Migração~~ ✅ MIGRADO](#guia-de-migrao-migrado)
-  - [~~De Métricas Manuais para FlextMixins.CQRS~~ ✅](#de-mtricas-manuais-para-flextmixinscqrs)
+  - [~~De Métricas Manuais para x.CQRS~~ ✅](#de-mtricas-manuais-para-flextmixinscqrs)
   - [~~De Managers Hardcoded para DI~~ ✅](#de-managers-hardcoded-para-di)
   - [~~Deprecation Timeline~~ ✅ MIGRADO](#deprecation-timeline-migrado)
   - [~~Warnings Durante Migração~~ ✅](#warnings-durante-migrao)
@@ -94,7 +94,7 @@ Este documento foi migrado para a documentação oficial do flext-core.
 
 Os seguintes TODOs foram adicionados diretamente nos arquivos de código:
 
-1. **`handlers.py`** - Module docstring com referência a Phase 1 (FlextMixins.CQRS)
+1. **`handlers.py`** - Module docstring com referência a Phase 1 (x.CQRS)
 2. **`handlers.py`** - Comentário em `_context_stack` e `_metrics` sobre migração
 3. **`dispatcher.py`** - Module docstring com referência a Phase 2 (DI via container)
 4. **`result.py`** - Já contém TODO sobre `and_then()` helper
@@ -168,7 +168,7 @@ servir como referência futura para implementação:
 
 ---
 
-## ~~Integration With FlextService~~ ✅ MIGRADO
+## ~~Integration With s~~ ✅ MIGRADO
 
 > Migrado para: `flext-core/docs/architecture/cqrs.md#integration-with-flextservice`
 
@@ -313,7 +313,7 @@ servir como referência futura para implementação:
 ~~│ ├── Validation pipeline │~~
 ~~│ └── Message processing │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
-~~│ Tier 2.5: FlextService │~~
+~~│ Tier 2.5: s │~~
 ~~│ ├── Domain services with business logic │~~
 ~~│ ├── Execute via .result property │~~
 ~~│ └── Self-contained operations │~~
@@ -328,7 +328,7 @@ servir como referência futura para implementação:
 ~~├─────────────────────────────────────────────────────────────────┤~~
 ~~│ Tier 1: Core Abstractions │~~
 ~~│ ├── r - Railway pattern │~~
-~~│ └── FlextExceptions - Error handling │~~
+~~│ └── e - Error handling │~~
 ~~├─────────────────────────────────────────────────────────────────┤~~
 ~~│ Tier 0.5: u │~~
 ~~│ └── Runtime utilities │~~
@@ -343,7 +343,7 @@ servir como referência futura para implementação:
 ~~└─────────────────────────────────────────────────────────────────┘~~
 ~~```~~
 
-### ~~FlextHandlers (Tier 3.1)~~ ✅
+### ~~h (Tier 3.1)~~ ✅
 
 > Migrado para: `flext-core/docs/architecture/cqrs.md#flexthandlers`
 
@@ -379,7 +379,7 @@ servir como referência futura para implementação:
 
 ~~- `x` → logging, tracking, config, container (NÃO USADOS!)~~
 ~~- `FlextConstants` → status codes, messages~~
-~~- `FlextExceptions` → error handling~~
+~~- `e` → error handling~~
 ~~- `FlextModels` → message types~~
 
 ### ~~FlextDispatcher (Tier 3.2)~~ ✅
@@ -451,7 +451,7 @@ servir como referência futura para implementação:
 
 ### ~~O Que Funciona ✅~~ ✅
 
-~~**FlextHandlers:**~~
+~~**h:**~~
 
 ~~- ✅ Pipeline de validação robusto~~
 ~~- ✅ Suporte a pre/post processors~~
@@ -468,7 +468,7 @@ servir como referência futura para implementação:
 
 ### ~~O Que NÃO Funciona ❌~~ ✅
 
-~~**FlextHandlers:**~~
+~~**h:**~~
 
 ~~| Problema | Impacto | Linhas | Solução |~~
 ~~| ----------------- | -------------------------- | ------ | -------------------- |~~
@@ -509,11 +509,11 @@ servir como referência futura para implementação:
 ~~ # ... mais managers~~
 ~~```~~
 
-~~**2. Manual State Management (FlextHandlers):**~~
+~~**2. Manual State Management (h):**~~
 
 ~~```Python~~
 ~~# ❌ Anti-pattern: Estado gerenciado manualmente~~
-~~class FlextHandlers:~~
+~~class h:~~
 ~~ def **init**(self):~~
 ~~ self.\_metrics: Mapping[str, t.Numeric] = {} # Manual!~~
 ~~ self.\_context_stack: Sequence[dict] = [] # Manual!~~
@@ -525,11 +525,11 @@ servir como referência futura para implementação:
 ~~ self.\_context_stack.append(ctx)~~
 ~~```~~
 
-~~**3. Unused Infrastructure (FlextHandlers):**~~
+~~**3. Unused Infrastructure (h):**~~
 
 ~~```Python~~
 ~~# ❌ Anti-pattern: Herda x mas não usa~~
-~~class FlextHandlers(FlextMixins, Generic[TCommand, TResult]):~~
+~~class h(x, Generic[TCommand, TResult]):~~
 ~~ # Disponível mas NUNCA usado:~~
 ~~ # - self.logger → 0 chamadas em \_run_pipeline~~
 ~~ # - self.track() → 0 chamadas em \_run_pipeline~~
@@ -580,35 +580,35 @@ servir como referência futura para implementação:
 ~~ │~~
 ~~ ▼~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
-~~│ FlextHandlers V2 │~~
+~~│ h V2 │~~
 ~~│ ┌─────────────────────────────────────────────────────────┐ │~~
-~~│ │ FlextMixins │ │~~
+~~│ │ x │ │~~
 ~~│ │ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐ │ │~~
 ~~│ │ │ self.config │ │ self.logger │ │ self.container │ │ │~~
 ~~│ │ └─────────────┘ └──────────────┘ └────────────────┘ │ │~~
 ~~│ │ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐ │ │~~
-~~│ │ │ self.context│ │ self.track() │ │ FlextMixins │ │ │~~
+~~│ │ │ self.context│ │ self.track() │ │ x │ │ │~~
 ~~│ │ │ │ │ │ │ .CQRS │ │ │~~
 ~~│ │ └─────────────┘ └──────────────┘ └────────────────┘ │ │~~
 ~~│ └─────────────────────────────────────────────────────────┘ │~~
 ~~└─────────────────────────────────────────────────────────────────┘~~
 ~~```~~
 
-### ~~FlextMixins.CQRS (Nova Classe Nested)~~ 📋 SPEC PENDENTE
+### ~~x.CQRS (Nova Classe Nested)~~ 📋 SPEC PENDENTE
 
 > **STATUS:** Especificação de implementação futura (Phase 1)
 > **TODO:** Implementar conforme roadmap em `cqrs.md#modernization-roadmap`
 
 ~~**Localização:** `flext_core/mixins.py`~~
 
-~~**Propósito:** Fornecer funcionalidades CQRS-específicas que complementam as capacidades base de FlextMixins.~~
+~~**Propósito:** Fornecer funcionalidades CQRS-específicas que complementam as capacidades base de x.~~
 
 ~~```Python~~
-~~class FlextMixins(BaseModel, ABC):~~
+~~class x(BaseModel, ABC):~~
 ~~ """Existing mixin class with infrastructure properties."""~~
 
 ~~ class CQRS:~~
-~~ """CQRS-specific utilities extracted from FlextHandlers."""~~
+~~ """CQRS-specific utilities extracted from h."""~~
 
 ~~ class MetricsTracker:~~
 ~~ """Thread-safe metrics tracking for handlers."""~~
@@ -797,30 +797,30 @@ servir como referência futura para implementação:
 ~~ return default~~
 ~~```~~
 
-### ~~FlextHandlers V2 Refactored~~ 📋 SPEC PENDENTE
+### ~~h V2 Refactored~~ 📋 SPEC PENDENTE
 
 > **STATUS:** Especificação de implementação futura (Phase 1)
 
 ~~```Python~~
-~~class FlextHandlers(FlextMixins, Generic[TCommand_contra, TResult_co]):~~
+~~class h(x, Generic[TCommand_contra, TResult_co]):~~
 ~~ """CQRS message handler with automatic infrastructure."""~~
 
-~~ # ✅ V2: CQRS utilities via FlextMixins.CQRS~~
-~~ \_cqrs_metrics: FlextMixins.CQRS.MetricsTracker | None = None~~
-~~ \_cqrs_context: FlextMixins.CQRS.ContextStack | None = None~~
+~~ # ✅ V2: CQRS utilities via x.CQRS~~
+~~ \_cqrs_metrics: x.CQRS.MetricsTracker | None = None~~
+~~ \_cqrs_context: x.CQRS.ContextStack | None = None~~
 
 ~~ @property~~
-~~ def cqrs_metrics(self) -> FlextMixins.CQRS.MetricsTracker:~~
+~~ def cqrs_metrics(self) -> x.CQRS.MetricsTracker:~~
 ~~ """Get metrics tracker (lazy initialized)."""~~
 ~~ if self.\_cqrs_metrics is None:~~
-~~ self.\_cqrs_metrics = FlextMixins.CQRS.MetricsTracker()~~
+~~ self.\_cqrs_metrics = x.CQRS.MetricsTracker()~~
 ~~ return self.\_cqrs_metrics~~
 
 ~~ @property~~
-~~ def cqrs_context(self) -> FlextMixins.CQRS.ContextStack:~~
+~~ def cqrs_context(self) -> x.CQRS.ContextStack:~~
 ~~ """Get context stack (lazy initialized)."""~~
 ~~ if self.\_cqrs_context is None:~~
-~~ self.\_cqrs_context = FlextMixins.CQRS.ContextStack()~~
+~~ self.\_cqrs_context = x.CQRS.ContextStack()~~
 ~~ return self.\_cqrs_context~~
 
 ~~ # ⚠️ Legacy methods - deprecated in V2~~
@@ -860,7 +860,7 @@ servir como referência futura para implementação:
 ~~ ) -> r[TResult_co]:~~
 ~~ """Run handler pipeline with automatic observability.~~
 
-~~ V2 Enhancement: Automatically uses FlextMixins infrastructure.~~
+~~ V2 Enhancement: Automatically uses x infrastructure.~~
 ~~ """~~
 ~~ # ✅ V2: Automatic logging~~
 ~~ self.logger.info(~~
@@ -903,14 +903,14 @@ servir como referência futura para implementação:
 
 ### ~~Fronteiras Arquiteturais~~ ✅
 
-~~**FlextService (Tier 2.5):**~~
+~~**s (Tier 2.5):**~~
 
 ~~- Serviços de domínio com lógica de negócio~~
 ~~- Execução via `.result` property~~
 ~~- Operações auto-contidas~~
 ~~- Usado por: API endpoints, CLI commands, batch jobs~~
 
-~~**FlextHandlers (Tier 3.1):**~~
+~~**h (Tier 3.1):**~~
 
 ~~- Handlers de mensagens para commands/queries/events~~
 ~~- Pipeline de validação e roteamento~~
@@ -928,18 +928,18 @@ servir como referência futura para implementação:
 
 ~~| Cenário | Use | Não Use | Racional |~~
 ~~| --------------------------------- | -------------------------------- | -------------------- | ------------------------------- |~~
-~~| Operação de domínio simples | FlextService[T] | FlextHandlers | Sem overhead de messaging |~~
-~~| CRUD com validação | FlextService[T] | FlextDispatcher | Execução direta é mais rápida |~~
-~~| Command com retry/circuit breaker | FlextDispatcher + Handler | FlextService sozinho | Precisa de reliability patterns |~~
-~~| Event sourcing | FlextDispatcher + Event handlers | FlextService | Event routing necessário |~~
-~~| HTTP API endpoint | FlextService[T] wrapped | FlextHandlers diret. | Services são API units |~~
+~~| Operação de domínio simples | s[T] | h | Sem overhead de messaging |~~
+~~| CRUD com validação | s[T] | FlextDispatcher | Execução direta é mais rápida |~~
+~~| Command com retry/circuit breaker | FlextDispatcher + Handler | s sozinho | Precisa de reliability patterns |~~
+~~| Event sourcing | FlextDispatcher + Event handlers | s | Event routing necessário |~~
+~~| HTTP API endpoint | s[T] wrapped | h diret. | Services são API units |~~
 
 ### ~~Pattern 1: Service Chamado de Handler~~ ✅
 
 > Migrado para: `flext-core/docs/guides/service-patterns.md#handler-integration`
 
 ~~```Python~~
-~~class CreateUserCommandHandler(FlextHandlers[CreateUserCommand, User]):~~
+~~class CreateUserCommandHandler(h[CreateUserCommand, User]):~~
 ~~ """Handler que orquestra, service que executa."""~~
 
 ~~ def handle(self, command: CreateUserCommand) -> r[User]:~~
@@ -978,16 +978,16 @@ servir como referência futura para implementação:
 > **STATUS:** Exemplo de implementação futura (Phase 3)
 
 ~~```Python~~
-~~class ProcessOrderCommandHandler(FlextHandlers[ProcessOrderCommand, Order]):~~
-~~ """Handler com observabilidade completa via FlextMixins."""~~
+~~class ProcessOrderCommandHandler(h[ProcessOrderCommand, Order]):~~
+~~ """Handler com observabilidade completa via x."""~~
 
 ~~ def handle(self, command: ProcessOrderCommand) -> r[Order]:~~
-~~ # ✅ Logging automático via FlextMixins~~
+~~ # ✅ Logging automático via x~~
 ~~ self.logger.info(f"Processing order {command.order_id}")~~
 
-~~ # ✅ Tracking automático via FlextMixins~~
+~~ # ✅ Tracking automático via x~~
 ~~ with self.track("process_order"):~~
-~~ # ✅ Contexto via FlextMixins.CQRS~~
+~~ # ✅ Contexto via x.CQRS~~
 ~~ self.cqrs_context.push({~~
 ~~ "order_id": command.order_id,~~
 ~~ "customer_id": command.customer_id,~~
@@ -997,7 +997,7 @@ servir como referência futura para implementação:
 ~~ # Business logic~~
 ~~ order = self.\_process_order(command)~~
 
-~~ # ✅ Métricas via FlextMixins.CQRS~~
+~~ # ✅ Métricas via x.CQRS~~
 ~~ self.cqrs_metrics.record("orders_processed", 1)~~
 ~~ self.cqrs_metrics.record("order_total", order.total)~~
 
@@ -1016,7 +1016,7 @@ servir como referência futura para implementação:
 > Migrado para: `flext-core/docs/architecture/cqrs.md` (diagramas simplificados)
 > **NOTA:** Diagramas detalhados mantidos para referência de implementação
 
-### ~~FlextHandlers Pipeline~~ ✅
+### ~~h Pipeline~~ ✅
 
 ~~```~~
 ~~┌─────────────────────────────────────────────────────────────────┐~~
@@ -1171,13 +1171,13 @@ servir como referência futura para implementação:
 ### ~~Setup Básico de Handler (V2)~~ ✅
 
 ~~```Python~~
-~~from flext_core import FlextHandlers, r~~
+~~from flext_core import h, r~~
 
-~~class MyCommandHandler(FlextHandlers[MyCommand, MyResult]):~~
+~~class MyCommandHandler(h[MyCommand, MyResult]):~~
 ~~ """Handler com setup mínimo."""~~
 
 ~~ def handle(self, command: MyCommand) -> r[MyResult]:~~
-~~ # Infraestrutura automática via FlextMixins:~~
+~~ # Infraestrutura automática via x:~~
 ~~ # - self.logger: FlextLogger~~
 ~~ # - self.config: FlextSettings~~
 ~~ # - self.container: FlextContainer~~
@@ -1282,7 +1282,7 @@ servir como referência futura para implementação:
 
 ~~```Python~~
 ~~from dataclasses import dataclass~~
-~~from flext_core import FlextHandlers, r, FlextDispatcher~~
+~~from flext_core import h, r, FlextDispatcher~~
 
 ~~@dataclass~~
 ~~class CreateUserCommand:~~
@@ -1295,7 +1295,7 @@ servir como referência futura para implementação:
 ~~ name: str~~
 ~~ email: str~~
 
-~~class CreateUserHandler(FlextHandlers[CreateUserCommand, User]):~~
+~~class CreateUserHandler(h[CreateUserCommand, User]):~~
 ~~ def handle(self, command: CreateUserCommand) -> r[User]:~~
 ~~ self.logger.info(f"Creating user: {command.name}")~~
 
@@ -1327,7 +1327,7 @@ servir como referência futura para implementação:
 ~~class GetUserQuery:~~
 ~~ user_id: str~~
 
-~~class GetUserHandler(FlextHandlers[GetUserQuery, User]):~~
+~~class GetUserHandler(h[GetUserQuery, User]):~~
 ~~ \_cache: Mapping[str, User] = {}~~
 
 ~~ def handle(self, query: GetUserQuery) -> r[User]:~~
@@ -1361,7 +1361,7 @@ servir como referência futura para implementação:
 ~~ email: str~~
 ~~ created_at: datetime~~
 
-~~class UserCreatedHandler(FlextHandlers[UserCreatedEvent, None]):~~
+~~class UserCreatedHandler(h[UserCreatedEvent, None]):~~
 ~~ def handle(self, event: UserCreatedEvent) -> r[bool]:~~
 ~~ self.cqrs_context.push({~~
 ~~ "event_type": "UserCreated",~~
@@ -1400,7 +1400,7 @@ servir como referência futura para implementação:
 ~~ customer_id: str~~
 ~~ items: Sequence[OrderItem]~~
 
-~~class ProcessOrderHandler(FlextHandlers[ProcessOrderCommand, Order]):~~
+~~class ProcessOrderHandler(h[ProcessOrderCommand, Order]):~~
 ~~ def handle(self, command: ProcessOrderCommand) -> r[Order]:~~
 ~~ self.cqrs_context.push({~~
 ~~ "order_id": command.order_id,~~
@@ -1452,12 +1452,12 @@ servir como referência futura para implementação:
 
 > Migrado para: `flext-core/docs/architecture/cqrs.md#handler-patterns` (Migration Path)
 
-### ~~De Métricas Manuais para FlextMixins.CQRS~~ ✅
+### ~~De Métricas Manuais para x.CQRS~~ ✅
 
 ~~**Antes (V1):**~~
 
 ~~```Python~~
-~~class MyHandler(FlextHandlers[MyCommand, MyResult]):~~
+~~class MyHandler(h[MyCommand, MyResult]):~~
 ~~ def handle(self, command: MyCommand) -> r[MyResult]:~~
 ~~ # ❌ V1: Métricas manuais~~
 ~~ self.record_metric("commands_processed", 1)~~
@@ -1473,9 +1473,9 @@ servir como referência futura para implementação:
 ~~**Depois (V2):**~~
 
 ~~```Python~~
-~~class MyHandler(FlextHandlers[MyCommand, MyResult]):~~
+~~class MyHandler(h[MyCommand, MyResult]):~~
 ~~ def handle(self, command: MyCommand) -> r[MyResult]:~~
-~~ # ✅ V2: Métricas via FlextMixins.CQRS~~
+~~ # ✅ V2: Métricas via x.CQRS~~
 ~~ self.cqrs_metrics.record("commands_processed", 1)~~
 
 ~~ result = self.\_process(command)~~
@@ -1560,7 +1560,7 @@ servir como referência futura para implementação:
 > Exemplo extensivo - manter como referência de implementação
 
 ~~```Python~~
-~~"""Complete CQRS application with FlextHandlers and FlextDispatcher."""~~
+~~"""Complete CQRS application with h and FlextDispatcher."""~~
 
 ~~from dataclasses import dataclass~~
 ~~from datetime import datetime~~
@@ -1570,7 +1570,7 @@ servir como referência futura para implementação:
 ~~from flext_core import (~~
 ~~ FlextContainer,~~
 ~~ FlextDispatcher,~~
-~~ FlextHandlers,~~
+~~ h,~~
 ~~ r,~~
 ~~)~~
 
@@ -1630,7 +1630,7 @@ servir como referência futura para implementação:
 ~~ return users[offset:offset + limit]~~
 
 ~~# Command Handlers~~
-~~class CreateUserHandler(FlextHandlers[CreateUserCommand, User]):~~
+~~class CreateUserHandler(h[CreateUserCommand, User]):~~
 ~~ def handle(self, command: CreateUserCommand) -> r[User]:~~
 ~~ self.logger.info(f"Creating user: {command.name}")~~
 
@@ -2056,13 +2056,13 @@ class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
 
 ~~**Depois (V2):**~~
 
-~~- FlextMixins.CQRS para métricas unificadas~~
-~~- Contexto automático via FlextMixins~~
+~~- x.CQRS para métricas unificadas~~
+~~- Contexto automático via x~~
 ~~- Logging estruturado com correlation IDs~~
 
 ~~```Python~~
 ~~# flext-ldif: Batch processing handler V2~~
-~~class ProcessLdifBatchHandler(FlextHandlers[ProcessLdifBatchCommand, BatchResult]):~~
+~~class ProcessLdifBatchHandler(h[ProcessLdifBatchCommand, BatchResult]):~~
 ~~ def handle(self, command: ProcessLdifBatchCommand) -> r[BatchResult]:~~
 ~~ self.cqrs_context.push({~~
 ~~ "batch_id": command.batch_id,~~
@@ -2537,17 +2537,17 @@ class TestDispatcherLatency:
 
 > 📚 **Análise validada contra código:** flext-core v0.9.9
 
-#### Como FlextDecorators Integra com CQRS
+#### Como d Integra com CQRS
 
-FlextDecorators fornece 10 decorators que podem ser usados diretamente em handlers:
+d fornece 10 decorators que podem ser usados diretamente em handlers:
 
 ```python
 class CreateUserHandler(h[CreateUserCommand, User]):
-    """Handler usando FlextDecorators para cross-cutting concerns."""
+    """Handler usando d para cross-cutting concerns."""
 
-    @FlextDecorators.track_performance("create_user")  # Performance automático
-    @FlextDecorators.with_context(handler="CreateUserHandler")  # Context automático
-    @FlextDecorators.retry(max_attempts=3)  # Retry automático
+    @d.track_performance("create_user")  # Performance automático
+    @d.with_context(handler="CreateUserHandler")  # Context automático
+    @d.retry(max_attempts=3)  # Retry automático
     def handle(self, command: CreateUserCommand) -> r[User]:
         # Lógica focada - infraestrutura via decorators
         self.logger.info(f"Creating user: {command.name}")
@@ -2755,7 +2755,7 @@ class FlextDispatcher:
 
 | Versão | Data        | Mudanças                                                      |
 | ------ | ----------- | ------------------------------------------------------------- |
-| 1.2    | 25 Nov 2025 | Análise profunda FlextDecorators, FlextContext, FlextRegistry |
+| 1.2    | 25 Nov 2025 | Análise profunda d, FlextContext, FlextRegistry |
 | 1.1    | 25 Nov 2025 | Adicionado Plano de Execução detalhado com validação código   |
 | 1.0    | 25 Nov 2025 | Documento inicial - V2 em desenvolvimento                     |
 

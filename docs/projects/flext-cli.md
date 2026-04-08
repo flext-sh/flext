@@ -64,7 +64,7 @@ Use `cli.create_table`, `file_tools`, and `prompts` for the ready-made helpers d
 ### Core modules & responsibilities
 
 - `cli` (`api.py`): single facade exposing `formatters`, `file_tools`, `prompts`, `output`, `command` helpers and the authentication context.
-- `services/cmd.py`: command execution service with FlextService wiring.
+- `services/cmd.py`: command execution service with s wiring.
 - `services/output.py`: output management with Rich + Tabulate wrappers.
 - `file_tools.py`: JSON/YAML/CSV helpers with railway-oriented builders.
 - `prompts.py`: interactive prompt, confirm, choice APIs.

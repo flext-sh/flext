@@ -37,7 +37,7 @@ Plans:
 - [x] 09-02-PLAN.md — Migrate 3 transformers to rope (symbol_propagator, mro_reference_rewriter, nested_class_propagation)
 - [x] 09-03-PLAN.md — Audit remaining transformers + LOC verification
 
-**Phase 10 Goal:** Refactor all flext-infra command domains (excluding docs) to modern MRO service facade pattern. Services as thin FlextService orchestrators over u.Infra.*. Create api.py MRO facade, simplify base.py. Verify library domains (detectors, gates, rules, transformers).
+**Phase 10 Goal:** Refactor all flext-infra command domains (excluding docs) to modern MRO service facade pattern. Services as thin s orchestrators over u.Infra.*. Create api.py MRO facade, simplify base.py. Verify library domains (detectors, gates, rules, transformers).
 
 **Phase 10 Requirements:** DOCS-01 through DOCS-08
 

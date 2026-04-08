@@ -25,7 +25,7 @@ flext/                                    # Monorepo root
 │   │   ├── context.py                  # FlextContext (correlation, metadata)
 │   │   ├── dispatcher.py               # Message dispatcher (CQRS routing)
 │   │   ├── container.py                # DI container management
-│   │   ├── service.py                  # FlextService base class
+│   │   ├── service.py                  # s base class
 │   │   ├── handlers.py                 # Handler decorators and registration
 │   │   ├── result.py                   # r[T] Result type
 │   │   ├── registry.py                 # Resource registry

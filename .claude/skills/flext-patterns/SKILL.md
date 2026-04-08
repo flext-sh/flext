@@ -140,13 +140,13 @@ monitor = FlextObservabilityMonitor()  # bypass facade
 
 ## Simple Runtime Aliases Only (Mandatory)
 
-**Never** use `u.Aliases.*()` to define package-level runtime aliases. Use **simple runtime aliases only**: direct assignment to the facade class (e.g. `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`). No alias registry or staticmethod layer for defining these; MRO protocol only. Runtime helpers come from **x** (FlextMixins) via MRO.
+**Never** use `u.Aliases.*()` to define package-level runtime aliases. Use **simple runtime aliases only**: direct assignment to the facade class (e.g. `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = d`, `e = e`, `h = h`, `s = s`, `x = x`). No alias registry or staticmethod layer for defining these; MRO protocol only. Runtime helpers come from **x** (x) via MRO.
 
 ```python
 # ✅ CORRECT
 c = FlextConstants
 m = FlextModels
-x = FlextMixins
+x = x
 ```
 
 ```python
@@ -214,7 +214,7 @@ print([c.__name__ for c in m.__mro__])
 
 Anti-patterns:
 
-- **Defining runtime aliases via `u.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`. No separate alias registry or staticmethod layer for package **init**.
+- **Defining runtime aliases via `u.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = d`, `e = e`, `h = h`, `s = s`, `x = x`. No separate alias registry or staticmethod layer for package **init**.
 - **Flattening domain-local classes at the facade root** — forbidden. Keep `m.TargetOracle.ExecuteResult`, not `m.ExecuteResult`.
 - **Manual wrapper nesting for private mixins** — forbidden. Compose `_models/*` and `_utilities/*` mixins in the facade MRO instead of writing `class Docker(tk): ...`.
 - `from flext_meltano import m` — duplicate alias surface
