@@ -21,7 +21,7 @@
 | `flext-cli/src/flext_cli/_typings/pipeline.py` | Pipeline type aliases (PipelineHandler, PipelineSkipPredicate, PipelineStageStatus) |
 | `flext-cli/src/flext_cli/_models/pipeline.py` | Pipeline models (PipelineStageSpec, PipelineStageResult, PipelineResult, PipelineStageContext) |
 | `flext-cli/src/flext_cli/_constants/pipeline.py` | Pipeline constants (Pipeline.DEFAULT_FAIL_FAST, MAX_RETRY) |
-| `flext-cli/src/flext_cli/_utilities/pipeline.py` | Pipeline engine (execute_pipeline, _run_stage, _build_sorter) |
+| `flext-cli/src/flext_cli/_utilities/pipeline.py` | Pipeline engine (execute_pipeline,_run_stage,_build_sorter) |
 | `flext-cli/tests/unit/test_pipeline.py` | Pipeline engine unit tests |
 
 ### Modified files (flext-cli)

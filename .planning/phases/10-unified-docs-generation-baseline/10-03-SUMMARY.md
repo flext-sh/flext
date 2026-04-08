@@ -79,7 +79,7 @@ Each task was committed atomically:
 
 **1. [Rule 2 - Missing Critical] Added u.Infra.ensure_dir() utility**
 - **Found during:** Task 1 (check domain refactoring)
-- **Issue:** No r-wrapped directory creation utility existed; direct .mkdir() was used in service __init__
+- **Issue:** No r-wrapped directory creation utility existed; direct .mkdir() was used in service **init**
 - **Fix:** Added `ensure_dir(path: Path) -> r[bool]` to FlextInfraUtilitiesIo
 - **Files modified:** flext-infra/src/flext_infra/_utilities/io.py
 - **Verification:** ruff + pyrefly pass with 0 errors

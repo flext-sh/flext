@@ -61,7 +61,7 @@ human_verification: null
 | 4 | Domain services inherit FlextInfraServiceBase — zero breakage | VERIFIED | All s[T] consumers use FlextInfraServiceBase; FlextInfraBaseMkGenerator, FlextInfraReleaseOrchestrator, FlextInfraCodegenFixer, FlextInfraOrchestratorService inherit it. Non-FlextService domains (github, check, validate, deps, refactor) are accepted as non-service thin orchestrators per domain design |
 | 5 | basemk/github/release are thin orchestrators delegating to u.Infra.* | VERIFIED | github: 4/4 methods delegate to u.Infra.*; release: 18+ u.Infra.* calls; basemk: delegates template rendering to engine, direct file I/O accepted per plan-02 |
 | 6 | All 4 library domains (detectors, gates, rules, transformers) pass ruff + pyrefly with 0 errors and no direct rope imports | VERIFIED | ruff: 0 errors; pyrefly: 0 errors; grep found 0 direct `from rope`/`import rope` in detectors/ or transformers/ |
-| 7 | Full ruff + pyrefly clean across entire flext-infra/src/ | PARTIAL | ruff: 0 errors (FULL). pyrefly: 8 errors in engine/toml_engine.py (6) and _models/engine.py (4) — pre-existing, not introduced by phase 10, but plan-08 acceptance criterion requires 0 across full src/ |
+| 7 | Full ruff + pyrefly clean across entire flext-infra/src/ | PARTIAL | ruff: 0 errors (FULL). pyrefly: 8 errors in engine/toml_engine.py (6) and_models/engine.py (4) — pre-existing, not introduced by phase 10, but plan-08 acceptance criterion requires 0 across full src/ |
 | 8 | DOCS-01 through DOCS-08 requirements tracked in REQUIREMENTS.md | FAILED | REQUIREMENTS.md has no DOCS-* entries. IDs exist in plan frontmatter and ROADMAP.md but are undefined in the requirements registry |
 
 **Score:** 6/8 truths verified (truths 1 and 7 are partial; truths 3, 4, 5, 6 fully verified; truths 2 verified; truth 8 failed)
@@ -110,7 +110,7 @@ Not applicable — no data-rendering components. This phase produces service cla
 | ruff: full src/ | `ruff check flext-infra/src/flext_infra/` | 0 errors | PASS |
 | pyrefly: 9 command domains | `pyrefly check basemk/ check/ codegen/ deps/ github/ refactor/ release/ validate/ workspace/` | 0 errors | PASS |
 | pyrefly: 4 library domains | `pyrefly check detectors/ gates/ rules/ transformers/` | 0 errors | PASS |
-| pyrefly: full src/ | `pyrefly check flext-infra/src/flext_infra/` | 8 errors in engine/toml_engine.py + _models/engine.py (pre-existing) | FAIL |
+| pyrefly: full src/ | `pyrefly check flext-infra/src/flext_infra/` | 8 errors in engine/toml_engine.py +_models/engine.py (pre-existing) | FAIL |
 | No direct rope imports: detectors/ | grep `^from rope` + `^import rope` | 0 matches | PASS |
 | No direct rope imports: transformers/ | grep `^from rope` + `^import rope` | 0 matches | PASS |
 
@@ -147,7 +147,7 @@ None — all key behaviors are mechanically verifiable.
 
 1. **`.validate` accessor renamed to `.validate_scanner`** (PARTIAL) — The plan-08 must_have specifies `.validate` as an accessor name. The implementation uses `.validate_scanner` to avoid a Pydantic `BaseModel.validate` method clash. This is a justified deviation documented in 10-08-SUMMARY, but it breaks the must_have literal contract. The 9-domain facade is functionally complete; the accessor name is the only deviation. Resolution: Update must_haves and ROADMAP to reflect `.validate_scanner` as canonical, or accept as intentional deviation.
 
-2. **8 pyrefly errors in engine/ and _models/ out of scope** (PARTIAL) — Plan-08 acceptance criterion requires "Full pyrefly check on entire flext-infra/src/ passes with 0 errors." The 8 errors in `engine/toml_engine.py` (6) and `_models/engine.py` (4) are pre-existing and outside the 9+4 domain scope. The 9 command domains and 4 library domains all pass pyrefly at 0 errors. Resolution: Fix pre-existing errors in engine/toml_engine.py and _models/engine.py to satisfy the literal criterion, or scope the acceptance criterion.
+2. **8 pyrefly errors in engine/ and _models/ out of scope** (PARTIAL) — Plan-08 acceptance criterion requires "Full pyrefly check on entire flext-infra/src/ passes with 0 errors." The 8 errors in `engine/toml_engine.py` (6) and `_models/engine.py` (4) are pre-existing and outside the 9+4 domain scope. The 9 command domains and 4 library domains all pass pyrefly at 0 errors. Resolution: Fix pre-existing errors in engine/toml_engine.py and_models/engine.py to satisfy the literal criterion, or scope the acceptance criterion.
 
 3. **DOCS-01 through DOCS-08 absent from REQUIREMENTS.md** (FAILED tracking) — These requirement IDs are referenced in plan frontmatter and ROADMAP.md but never defined in REQUIREMENTS.md. The Traceability table in REQUIREMENTS.md stops at ROPE-07 from Phase 9. This is a documentation/governance gap with no functional impact. Resolution: Add DOCS-* section with definitions and traceability entries to REQUIREMENTS.md.
 
