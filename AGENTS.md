@@ -56,7 +56,7 @@ alwaysApply: true
 
 ### 2.2 Facades, Namespaces & Naming Patterns
 - **One Facade Rule**: Each public facade module defines exactly ONE primary facade class plus ONE canonical alias.
-- **Facade Class Naming**: `src/` facades MUST use `Flext<Project><Tier>`. `tests/` facades MUST use `TestsFlext<Project><Tier>`. Legacy patterns such as `Flext<Project>Test<Tier>` and `FlextTest<Project><Tier>` are migration debt only and MUST NOT be copied into new work.
+- **Facade Class Naming**: `src/` facades MUST use `Flext<Project><Tier>`. `tests/` facades MUST use `TestsFlext<Project><Tier>`. `examples/` facades MUST use `ExamplesFlext<Project><Tier>`. `scripts/` facades MUST use `ScriptsFlext<Project><Tier>`. Legacy patterns such as `Flext<Project>Test<Tier>`, `FlextTest<Project><Tier>`, and `{Flext<Project>}{Examples|Scripts}<Tier>` are migration debt only and MUST NOT be copied into new work.
 - **Private Mixin Naming**: Classes under `_models/`, `_utilities/`, `_protocols/`, and similar private trees MUST keep the project prefix and append only the module concern (e.g. `FlextInfraUtilitiesImportNormalizer`, `FlextTestsDocker`).
 - **Canonical API & Aliases**: Namespace aliases are the STRICT canonical public API surfaces. You must always use them (`m.MyModel`, `c.MY_CONST`), never the direct classes.
   - `m` = Models (`Flext*Models`)

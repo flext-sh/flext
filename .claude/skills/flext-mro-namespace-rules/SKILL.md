@@ -28,6 +28,8 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 - `flext-*/src/**/typings.py`
 - `flext-*/src/**/utilities.py`
 - `flext-*/tests/`
+- `flext-*/examples/`
+- `flext-*/scripts/`
 - Private facade mixin trees under `_constants/`, `_models/`, `_protocols/`, `_typings/`, `_utilities/`
 
 ## References
@@ -44,6 +46,8 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 
 - `src/` facades MUST use `Flext<Project><Tier>`.
 - `tests/` facades MUST use `TestsFlext<Project><Tier>`. Legacy `Flext<Project>Test<Tier>` and `FlextTest<Project><Tier>` names are migration debt only.
+- `examples/` facades MUST use `ExamplesFlext<Project><Tier>`. Legacy `{Flext<Project>}Examples<Tier>` names are migration debt only.
+- `scripts/` facades MUST use `ScriptsFlext<Project><Tier>`. Legacy `{Flext<Project>}Scripts<Tier>` names are migration debt only.
 - A public facade root defines exactly one local domain namespace:
   - `src/`: `class <Domain>:`
   - `tests/`: `class <Domain>:` containing `class Tests:`
@@ -119,6 +123,7 @@ Why bad: flattens a domain-local symbol back to the facade root and manually nes
 ## Verification
 
 - `rg -n "class (Flext[A-Za-z]+Test|FlextTest[A-Za-z]+)(Constants|Models|Protocols|Types|Utilities)" flext-*/tests || true`
+- `rg -n "class Flext[A-Za-z]+(Examples|Scripts)(Constants|Models|Protocols|Types|Utilities)" flext-*/examples flext-*/scripts || true`
 - `rg -n "^[[:space:]]+[A-Z][A-Za-z0-9_]+ = [A-Z][A-Za-z0-9_]+\\.[A-Z]" flext-*/*/src flext-*/tests || true`
 - `rg -n "if TYPE_CHECKING:" flext-*/*/src/flext_*/*.py flext-*/*/tests/*.py || true`
 - `make validate VALIDATE_SCOPE=workspace`

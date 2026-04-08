@@ -19,6 +19,8 @@ Canonical source: [`AGENTS.md`](AGENTS.md). This file stays brief on purpose. Do
 
 - `src/` facades: `Flext<Project><Tier>`
 - `tests/` facades: `TestsFlext<Project><Tier>`
+- `examples/` facades: `ExamplesFlext<Project><Tier>`
+- `scripts/` facades: `ScriptsFlext<Project><Tier>`
 - Public facades own exactly one local domain namespace at the root.
 - Test-only scope stays under `<Domain>.Tests`.
 - Compose `_models/*` and `_utilities/*` through facade MRO; never manually wrap them into nested flat classes.

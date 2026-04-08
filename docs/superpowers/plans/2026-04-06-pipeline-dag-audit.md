@@ -1240,14 +1240,14 @@ class ViolationKey(FlextModels.ContractModel):
 
     @staticmethod
     def from_violation(
-        violation: FlextInfraCodegenModels.CensusViolation,
+        violation: FlextInfraModelsCodegen.CensusViolation,
         source_lines: Sequence[str],
-    ) -> FlextInfraCodegenModels.ViolationKey:
+    ) -> FlextInfraModelsCodegen.ViolationKey:
         """Build key from violation and source context (±2 lines)."""
         ctx_start = max(0, violation.line - 2)
         ctx_end = min(len(source_lines), violation.line + 3)
         context = "\n".join(source_lines[ctx_start:ctx_end])
-        return FlextInfraCodegenModels.ViolationKey(
+        return FlextInfraModelsCodegen.ViolationKey(
             module=violation.module,
             rule=violation.rule,
             content_hash=u.Cli.sha256_content(context),
