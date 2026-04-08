@@ -1,0 +1,39 @@
+AGENTS.md
+  d5bfa92dc2a2f9f4 60,79
+docker/validate_docker_standardization.sh
+  d5bfa92dc2a2f9f4 98,100-102,104,130
+docs/prompts/migration-flext-tests-deep-analysis.md
+  d5bfa92dc2a2f9f4 11-15,84,136,159,199,209,223,225,323-326,583,586
+.claude/skills/flext-mro-namespace-rules/SKILL.md
+  d5bfa92dc2a2f9f4 41,55,114,117
+.claude/skills/flext-patterns/SKILL.md
+  d5bfa92dc2a2f9f4 219
+docker/README.md
+  d5bfa92dc2a2f9f4 9,104,109,113,192,224,233,245-246,278-279,281,305,309,350,358
+.claude/skills/flext-import-rules/SKILL.md
+  d5bfa92dc2a2f9f4 261
+docs/superpowers/specs/2026-04-06-flext-infra-canonical-namespaces-design.md
+  d5bfa92dc2a2f9f4 96
+.planning/codebase/STRUCTURE.md
+  d5bfa92dc2a2f9f4 104-108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "b82315c38dd4b85381f2d0adcff96a8f530febf1",
+  "prompts": {
+    "d5bfa92dc2a2f9f4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d6d3d-c1af-7351-838f-3cae156bdbe9",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 70,
+      "total_deletions": 70,
+      "accepted_lines": 54,
+      "overriden_lines": 2
+    }
+  }
+}
