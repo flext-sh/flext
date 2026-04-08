@@ -24,7 +24,7 @@ Every class in `src/` MUST exist inside a namespace facade or be an MRO base of 
 | Protocols, ABCs | `p.{Project}.*` | `p.Auth.Provider` |
 | Utilities, helpers, stateless functions | `u.{Project}.*` | `u.Api.Serializer` |
 | Exception hierarchies | `e.{Project}.*` or `m.{Project}.Exceptions.*` | Standalone `e` file OK |
-| Services (FlextService subclasses) | `u.{Project}.*` inner class | `u.DbtLdif.UnifiedService` |
+| Services (s subclasses) | `u.{Project}.*` inner class | `u.DbtLdif.UnifiedService` |
 | Clients | `u.{Project}.*` inner class | `u.TargetLdap.Client` |
 | Streams, Sinks | `m.{Project}.Streams.*` / `m.{Project}.Sinks.*` | `m.TargetLdap.Sinks.Writer` |
 | Adapters, Middleware | `u.{Project}.*` inner class | `u.Api.Middleware` |
@@ -49,14 +49,14 @@ Every rename/move uses `sg` (ast-grep) for IMMEDIATE workspace-wide propagation.
 
 | File pattern | Reason | Rule |
 |-------------|--------|------|
-| `settings.py` | Generic param `FlextService[T]` | Standalone OK |
+| `settings.py` | Generic param `s[T]` | Standalone OK |
 | `__main__.py` | Entry point | Standalone OK |
 | `__version__.py` | Metadata | Standalone OK |
 | `__init__.py` | Auto-generated exports | Never manual edit |
 | `lazy.py` (flext-core only) | PEP 562 infrastructure consumed by all `__init__.py` | Standalone OK |
 | MRO base classes of facades | Python MRO requires base before child | Standalone OK, must have alias |
 | `_models/`, `_utilities/`, `_constants/`, `_protocols/`, `_typings/` subdirs | These ARE the MRO composition | Must be wired into facade MRO |
-| `services/` subdir (if classes inherit from `FlextService` subclass base) | Scoped service implementations | Must be wired into facade `api.py` MRO |
+| `services/` subdir (if classes inherit from `s` subclass base) | Scoped service implementations | Must be wired into facade `api.py` MRO |
 | `providers/` subdir (flext-auth) | Auth provider implementations | Must be registered, OK standalone |
 | `protocol_impls/` subdir (flext-api) | Protocol implementations | Must be registered, OK standalone |
 | `servers/` subdir (flext-ldif) | Server quirk implementations | Must be registered, OK standalone |
@@ -69,12 +69,12 @@ These classes are MRO bases of the namespace facade chain. Python requires them 
 **Already aliased (conformant):**
 | Class | File | Alias | Status |
 |-------|------|-------|--------|
-| `FlextDecorators` | `decorators.py` | `d` | ✅ |
-| `FlextExceptions` | `exceptions.py` | `e` | ✅ |
-| `FlextHandlers` | `handlers.py` | `h` | ✅ |
-| `FlextResult` | `result.py` | `r` | ✅ |
-| `FlextService` | `service.py` | `s` | ✅ |
-| `FlextMixins` | `mixins.py` | `x` | ✅ |
+| `d` | `decorators.py` | `d` | ✅ |
+| `e` | `exceptions.py` | `e` | ✅ |
+| `h` | `handlers.py` | `h` | ✅ |
+| `r` | `result.py` | `r` | ✅ |
+| `s` | `service.py` | `s` | ✅ |
+| `x` | `mixins.py` | `x` | ✅ |
 
 **Unaliased infrastructure (must fix):**
 | Class | File | Business Role | Fix |

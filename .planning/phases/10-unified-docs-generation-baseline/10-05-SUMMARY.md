@@ -79,7 +79,7 @@ Each task was committed atomically:
 
 **1. [Rule 1 - Bug] Fixed pyrefly error with .failure attribute**
 - **Found during:** Task 1a (lazy_init.py refactoring)
-- **Issue:** Used `write_result.failure` but FlextResult has `.error` not `.failure`
+- **Issue:** Used `write_result.failure` but r has `.error` not `.failure`
 - **Fix:** Changed to `write_result.error`
 - **Files modified:** flext-infra/src/flext_infra/codegen/lazy_init.py
 - **Verification:** pyrefly check passes with 0 errors

@@ -1,8 +1,8 @@
-# FlextResult/r Comprehensive Analysis & Generic Strict Typing Solution
+# r/r Comprehensive Analysis & Generic Strict Typing Solution
 
 ## Executive Summary
 
-The FLEXT ecosystem uses `FlextResult[T]` (aliased as `r[T]`) for railway-oriented programming (ROP) across 30+ projects with 500+ usage sites. Current implementation is feature-complete but lacks:
+The FLEXT ecosystem uses `r[T]` (aliased as `r[T]`) for railway-oriented programming (ROP) across 30+ projects with 500+ usage sites. Current implementation is feature-complete but lacks:
 
 1. **Strict Protocol Enforcement**: `p.Result` protocol exists but has gaps
 2. **Type Coverage Completeness**: Some edge cases (None handling, async patterns) not fully covered
@@ -12,12 +12,12 @@ The FLEXT ecosystem uses `FlextResult[T]` (aliased as `r[T]`) for railway-orient
 
 ## Current Implementation Analysis
 
-### FlextResult Architecture
+### r Architecture
 
 ```
 u.RuntimeResult[T]  (base: BaseModel, Layer 0.5)
     ↓
-FlextResult[T]  (extends RuntimeResult, Layer 1)
+r[T]  (extends RuntimeResult, Layer 1)
     ├── _returns_result: Result[T, str]  (internal returns library)
     ├── is_success: bool
     ├── error: str | None
@@ -135,7 +135,7 @@ r[Entry].fail(
 
 **Current**:
 ```python
-async def fetch_user() -> r[User]:  # Returns sync FlextResult
+async def fetch_user() -> r[User]:  # Returns sync r
     try:
         user = await async_db.get_user()
         return r[User].ok(user)
@@ -159,12 +159,10 @@ if result.is_success:
 class AsyncResult[T]:
     """Async-aware Result type with async operators"""
 
-    async def flat_map_async[U](
-        self, func: Callable[[T], Awaitable[FlextResult[U]]]
-    ) -> FlextResult[U]:
+    async def flat_map_async[U](self, func: Callable[[T], Awaitable[r[U]]]) -> r[U]:
         """Async composition operator"""
         if self.is_failure:
-            return FlextResult[U].fail(...)
+            return r[U].fail(...)
         return await func(self.value)
 
     # Usage: composable async chains
@@ -487,12 +485,12 @@ class FlextError:
     # Factory methods for other domains...
 ```
 
-### Phase 3: FlextResult Enhancement (Backward-Compatible)
+### Phase 3: r Enhancement (Backward-Compatible)
 
 **File**: `flext-core/src/flext_core/result.py` (extend)
 
 ```python
-class FlextResult[T](u.RuntimeResult[T]):
+class r[T](u.RuntimeResult[T]):
     """Enhanced with structured error support"""
 
     @classmethod
@@ -520,12 +518,10 @@ class FlextResult[T](u.RuntimeResult[T]):
         )
 
     # Async support
-    async def flat_map_async[U](
-        self, func: Callable[[T], Awaitable[FlextResult[U]]]
-    ) -> FlextResult[U]:
+    async def flat_map_async[U](self, func: Callable[[T], Awaitable[r[U]]]) -> r[U]:
         """Async composition operator"""
         if self.is_failure:
-            return FlextResult[U].fail(
+            return r[U].fail(
                 self.error or "",
                 error_code=self.error_code,
                 error_data=self.error_data,
@@ -535,28 +531,24 @@ class FlextResult[T](u.RuntimeResult[T]):
 
     # Cross-result operations
     @staticmethod
-    def combine2[A, B](
-        ra: FlextResult[A], rb: FlextResult[B]
-    ) -> FlextResult[tuple[A, B]]:
+    def combine2[A, B](ra: r[A], rb: r[B]) -> r[tuple[A, B]]:
         """Type-safe combination of two results"""
         if ra.is_failure:
-            return FlextResult[tuple[A, B]].fail(ra.error or "")
+            return r[tuple[A, B]].fail(ra.error or "")
         if rb.is_failure:
-            return FlextResult[tuple[A, B]].fail(rb.error or "")
-        return FlextResult[tuple[A, B]].ok((ra.value, rb.value))
+            return r[tuple[A, B]].fail(rb.error or "")
+        return r[tuple[A, B]].ok((ra.value, rb.value))
 
     @staticmethod
-    def combine3[A, B, C](
-        ra: FlextResult[A], rb: FlextResult[B], rc: FlextResult[C]
-    ) -> FlextResult[tuple[A, B, C]]:
+    def combine3[A, B, C](ra: r[A], rb: r[B], rc: r[C]) -> r[tuple[A, B, C]]:
         """Type-safe combination of three results"""
         if ra.is_failure:
-            return FlextResult[tuple[A, B, C]].fail(ra.error or "")
+            return r[tuple[A, B, C]].fail(ra.error or "")
         if rb.is_failure:
-            return FlextResult[tuple[A, B, C]].fail(rb.error or "")
+            return r[tuple[A, B, C]].fail(rb.error or "")
         if rc.is_failure:
-            return FlextResult[tuple[A, B, C]].fail(rc.error or "")
-        return FlextResult[tuple[A, B, C]].ok((ra.value, rb.value, rc.value))
+            return r[tuple[A, B, C]].fail(rc.error or "")
+        return r[tuple[A, B, C]].ok((ra.value, rb.value, rc.value))
 ```
 
 ### Phase 4: Fallible Protocol Enforcement
@@ -623,7 +615,7 @@ def make_async_fallible[T](
 - ✅ Define `ErrorDomain` enum + `FlextError` dataclass
 - ✅ Enhance `Result` protocol with structured error support
 - ✅ Add `Fallible`/`AsyncFallible` protocols
-- ✅ Implement `FlextResult.from_error()`, `.to_error()`
+- ✅ Implement `r.from_error()`, `.to_error()`
 
 ### Sprint 2: Enhancement (Week 3-4)
 - ✅ Implement `combine2()`, `combine3()` cross-result operators

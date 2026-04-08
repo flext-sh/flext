@@ -254,7 +254,7 @@ result = r(Success(value))
 | `flext-grpc`     | `api.py`                                                           | r for gRPC operation results                   |
 | `flext-dbt-ldif` | `dbt_client.py`, `models.py`, `settings.py`                        | Business rule validation, DBT workflow results           |
 | `flext-tap-ldif` | `utilities.py`                                                     | `from flext_core import r, t`                  |
-| `flext-meltano`  | `dbt/service.py`                                                   | `from flext_core import r, FlextService`                 |
+| `flext-meltano`  | `dbt/service.py`                                                   | `from flext_core import r, s`                 |
 | `flext-cli`      | service modules                                                    | CLI operation results                                    |
 
 ## Verification

@@ -84,7 +84,7 @@ completed: 2026-03-24
 
 **1. [Rule 3 - Blocking] Parent class config_type in mixins.py also needed change**
 - **Found during:** Task 1
-- **Issue:** Changing `config_type` in service.py alone caused pyright `reportIncompatibleVariableOverride` because parent FlextMixins in mixins.py still had `type[FlextSettings]`
+- **Issue:** Changing `config_type` in service.py alone caused pyright `reportIncompatibleVariableOverride` because parent x in mixins.py still had `type[FlextSettings]`
 - **Fix:** Changed `config_type` annotation in mixins.py to `type[p.Settings] | None` as well
 - **Files modified:** flext-core/src/flext_core/mixins.py
 - **Verification:** pyright 0 errors on both files

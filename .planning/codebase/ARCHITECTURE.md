@@ -26,7 +26,7 @@
 **L1 - Foundation/Bridge:**
 - Purpose: Core runtime utilities, context propagation, container management, dependency injection
 - Location: `flext-core/src/flext_core/` (runtime.py, context.py, container.py, registry.py, service.py)
-- Contains: FlextContext for correlation/timing, FlextLogger for structured logging, FlextDispatcher for message routing, FlextService base for DI integration
+- Contains: FlextContext for correlation/timing, FlextLogger for structured logging, FlextDispatcher for message routing, s base for DI integration
 - Depends on: L0 (contracts), external libs (dependency_injector, structlog, orjson, pydantic)
 - Used by: Domain/Infrastructure layers and orchestration
 
@@ -58,11 +58,11 @@
 
 **Dependency Injection Flow:**
 
-1. Service instance created via `FlextService.__new__()` with optional config
+1. Service instance created via `s.__new__()` with optional config
 2. Service registers handlers with internal dispatcher via `register_handler()`
-3. FlextService wires dependency_injector container for resource injection
+3. s wires dependency_injector container for resource injection
 4. Handler method receives injected resources via `@handler` decorator
-5. Container cleanup via atexit or explicit `FlextService.shutdown()`
+5. Container cleanup via atexit or explicit `s.shutdown()`
 
 **Request Flow (HTTP API):**
 
@@ -76,19 +76,19 @@
 **State Management:**
 
 - **Request State:** Stored in `FlextContext` via contextvars (survives async/thread hops)
-- **Service State:** Stored in FlextService instance attributes and DI container
+- **Service State:** Stored in s instance attributes and DI container
 - **Domain State:** Immutable Pydantic models with explicit change tracking via events
 - **Correlation:** Automatic via FlextContext (no manual thread-local management needed)
 
 ## Key Abstractions
 
-**Service (`s[T]` / FlextService):**
+**Service (`s[T]` / s):**
 - Purpose: Base class for all executable services (Web, API, CLI, Scheduler)
 - Examples: `FlextApi(s[FlextApiSettings])`, `FlextWebApp(s[...])`, `FlextCliApp(s[...])`
-- Pattern: Inherits from `FlextService` with generic config type; implements `__init__`, `execute()`, `shutdown()`
+- Pattern: Inherits from `s` with generic config type; implements `__init__`, `execute()`, `shutdown()`
 - Lifecycle: Created → configured → wired → handlers registered → execute() → shutdown()
 
-**Result (`r[T]` / FlextResult):**
+**Result (`r[T]` / r):**
 - Purpose: Type-safe error handling for fallible operations
 - Examples: `r[str].ok("success")`, `r[User].fail("not found")`, `result.map(transform)`, `result.flat_map(chain)`
 - Pattern: Encapsulates success value or failure message with error code; supports monadic composition
@@ -147,7 +147,7 @@
 - Triggers: Server startup, incoming protocol messages
 - Responsibilities: Route to protocol implementation (HTTP, WebSocket, SSE, AsyncAPI)
 
-**FlextService (Base Lifecycle):**
+**s (Base Lifecycle):**
 - Location: `flext-core/src/flext_core/service.py`
 - Triggers: Service instantiation, `execute()` call, shutdown signal
 - Responsibilities: DI container wiring, handler registration, resource cleanup
@@ -191,7 +191,7 @@
 
 **Dependency Injection:**
 - Framework: `dependency_injector` containers and providers
-- FlextService manages container lifecycle: create → wire → execute → shutdown
+- s manages container lifecycle: create → wire → execute → shutdown
 - Handlers can be methods with `@handler` decorator for auto-wiring
 - Resources registered as providers: singleton factories, callable providers, resource providers
 

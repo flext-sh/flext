@@ -95,7 +95,7 @@ Why bad: bypasses `runtime.py` and `container.py`, increases coupling, and break
 
 ```python
 # Bad: low-level contracts importing service layer
-from flext_core import FlextService
+from flext_core import s
 ```
 
 Why bad: inverts `L1 -> L2` direction and violates the documented architecture topology.
@@ -256,4 +256,4 @@ Pattern checks:
 - `rg -n "Layered Topology|L3|L2|L1|L0" flext-core/docs/architecture/overview.md`
 - `rg -n "class u|class DependencyIntegration|configure_structlog" flext-core/src/flext_core/runtime.py`
 - `rg -n "class FlextContainer|def register\(|def register_factory\(|def register_resource\(" flext-core/src/flext_core/container.py`
-- `rg -n "r|FlextTypes|FlextConstants|FlextModels|FlextProtocols|FlextUtilities|FlextDecorators|FlextExceptions|FlextHandlers|FlextService|FlextMixins" flext-core/src/flext_core/__init__.py`
+- `rg -n "r|FlextTypes|FlextConstants|FlextModels|FlextProtocols|FlextUtilities|d|e|h|s|x" flext-core/src/flext_core/__init__.py`

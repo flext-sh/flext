@@ -1,4 +1,4 @@
-# Arquitetura FlextService - Padrão Zero Ceremony
+# Arquitetura s - Padrão Zero Ceremony
 
 <!-- TOC START -->
 
@@ -23,7 +23,7 @@
   - [⚠️ Consistência de Exemplos](#consistncia-de-exemplos)
 - [### 🎯 Eliminando `.value`, `.result` E `r[]` Declaration](#eliminando-value-result-e-flextresult-declaration)
 - [## ~~🗺️ Roadmap de Evolução~~ ✅ MIGRADO](#roadmap-de-evoluo-migrado)
-  - [~~📊 Visão Geral: Status Atual dos Padrões do FlextService (2025-11-25)~~](#viso-geral-status-atual-dos-padres-do-flextservice-2025-11-25)
+  - [~~📊 Visão Geral: Status Atual dos Padrões do s (2025-11-25)~~](#viso-geral-status-atual-dos-padres-do-flextservice-2025-11-25)
 - [### ~~📌 Versão 1: Explícito (Código Existente)~~](#verso-1-explcito-cdigo-existente)
 - [### 📌 Versão 2 Property: `.result` 🔴 PARCIALMENTE IMPLEMENTADO](#verso-2-property-result-parcialmente-implementado)
   - [📌 Versão 2 Auto: `auto_execute` 🔴 PARCIALMENTE IMPLEMENTADO](#verso-2-auto-autoexecute-parcialmente-implementado)
@@ -82,13 +82,13 @@
   - [~~Alta Prioridade (Impacto Imediato)~~](#alta-prioridade-impacto-imediato)
   - [Média Prioridade (Qualidade de Vida)](#mdia-prioridade-qualidade-de-vida)
   - [Baixa Prioridade (Nice to Have)](#baixa-prioridade-nice-to-have)
-- [## ~~🏗️ FlextService Implementation - Final Version (Python 3.13)~~ ✅ MIGRADO](#flextservice-implementation-final-version-python-313-migrado)
+- [## ~~🏗️ s Implementation - Final Version (Python 3.13)~~ ✅ MIGRADO](#flextservice-implementation-final-version-python-313-migrado)
   - [~~Como Está Hoje (flext-core atual)~~](#como-est-hoje-flext-core-atual)
   - [Como Deve Ser (Solução Final)](#como-deve-ser-soluo-final)
   - [Princípio Central: **UM Padrão, Múltiplos Estilos de Acesso**](#princpio-central-um-padro-mltiplos-estilos-de-acesso)
   - [Componentes Principais](#componentes-principais)
 - [## ~~📖 Guia de Implementação~~ ✅ MIGRADO](#guia-de-implementao-migrado)
-  - [~~Passo 1: Atualizar Base FlextService~~](#passo-1-atualizar-base-flextservice)
+  - [~~Passo 1: Atualizar Base s~~](#passo-1-atualizar-base-flextservice)
   - [Passo 2: Atualizar Services Existentes](#passo-2-atualizar-services-existentes)
 - [## ~~📝 Exemplos Completos do Mundo Real (Python 3.13 + Pydantic v2)~~ 📋 EXEMPLOS PRESERVADOS](#exemplos-completos-do-mundo-real-python-313-pydantic-v2-exemplos-preservados)
   - [~~Exemplo 1: Service Parser LDIF (Zero Ceremony)~~](#exemplo-1-service-parser-ldif-zero-ceremony)
@@ -280,13 +280,13 @@ para implementações futuras. A documentação oficial está nos links acima.
 
 ### ~~✨ O Que Você NÃO Precisa Fazer~~
 
-~~FlextService é baseado no princípio **"Zero Ceremony"**: você foca apenas na lógica de negócio, toda a infraestrutura é **automática e transparente**.~~
+~~s é baseado no princípio **"Zero Ceremony"**: você foca apenas na lógica de negócio, toda a infraestrutura é **automática e transparente**.~~
 
 ~~**Você NÃO precisa:**~~
 
 ```python
 # ❌ NÃO faça isso - é tudo automático!
-class MyService(FlextService[Result]):
+class MyService(s[Result]):
     def __init__(self):
         super().__init__()
         self._config = FlextSettings.get_global_instance()  # ❌ Desnecessário!
@@ -307,7 +307,7 @@ class MyService(FlextService[Result]):
 
 ```python
 # ✨ IMPLEMENTADO - Funciona agora!
-class MyService(FlextService[Result]):
+class MyService(s[Result]):
     """Service com ZERO setup de infraestrutura."""
 
     # ✅ Apenas declare seus campos de domínio (Pydantic)
@@ -380,7 +380,7 @@ print(f"Success: {result_value}")
 
 ```python
 # 💡 EXEMPLO - V1 (Atual - Como usar HOJE)
-class MyService(FlextService[Result]):
+class MyService(s[Result]):
     user_id: str
     action: str
 
@@ -406,7 +406,7 @@ if result_monad.is_success:
 
 **Como funciona (você não precisa saber, mas...):**
 
-- FlextService herda de x
+- s herda de x
 - x fornece properties que retornam singletons
 - **Tudo é lazy**, thread-safe, e automaticamente configurado
 - Você apenas usa `self.config`, `self.logger`, etc.
@@ -485,7 +485,7 @@ def config(self) -> FlextSettings:
 
 ### ~~🎯 Estrutura Mental~~
 
-Este documento descreve **2 estados** do FlextService:
+Este documento descreve **2 estados** do s:
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -563,7 +563,7 @@ result = AutoService(params)  # auto_execute = True
 
 Estes conceitos são **iguais em V1 e V2**:
 
-Conceito: **FlextService[T]** - Descrição: Base class com execute() - Versão: V1 ✅ V2 ✅
+Conceito: **s[T]** - Descrição: Base class com execute() - Versão: V1 ✅ V2 ✅
 Conceito: **r[T]** - Descrição: Railway pattern monad - Versão: V1 ✅ V2 ✅
 Conceito: **Pydantic fields** - Descrição: Domain data via fields - Versão: V1 ✅ V2 ✅
 Conceito: **x** - Descrição: Infraestrutura automática - Versão: V1 ✅ V2 ✅
@@ -611,7 +611,7 @@ Tipo de Exemplo: **r/Railway** - Tag: `Conceitual` - Quando Usar: Padrões funda
 
 ```python
 # ⚠️ V1: Boilerplate + declaração explícita
-class UserService(FlextService[User]):
+class UserService(s[User]):
     user_id: str
 
     def execute(self) -> r[User]:  # ← Declarar r[User]
@@ -625,7 +625,7 @@ result = service.execute().unwrap()  # ← .execute().unwrap()
 
 ```python
 # ✅ V2: ZERO boilerplate + Type inference automático!
-class UserService(FlextService[User]):  # ← TDomainResult = User
+class UserService(s[User]):  # ← TDomainResult = User
     user_id: str
 
     def execute(self):  # ← Retorno inferido automaticamente!
@@ -638,7 +638,7 @@ user = UserService(user_id="123")  # ← Tipo: User
 
 **Type Inference (Python 3.13):**
 
-- ✅ `FlextService[User]` → `TDomainResult = User`
+- ✅ `s[User]` → `TDomainResult = User`
 - ✅ `execute()` retorno inferido como `r[User]`
 - ✅ Mypy valida automaticamente
 - ✅ IDE autocomplete funciona
@@ -647,7 +647,7 @@ user = UserService(user_id="123")  # ← Tipo: User
 
 ```python
 # flext-core/src/flext_core/service.py (IMPLEMENTAÇÃO REAL - com limitações)
-class FlextService[TDomainResult](
+class s[TDomainResult](
     FlextModels.ArbitraryTypesModel,
     x,
     ABC,
@@ -668,7 +668,7 @@ class FlextService[TDomainResult](
         When auto_execute is True: Executes service and returns result value directly
 
         Raises:
-            FlextExceptions.BaseError: When auto-execution fails
+            e.BaseError: When auto-execution fails
         """
         instance = super().__new__(cls)
         if cls.auto_execute:
@@ -681,7 +681,7 @@ class FlextService[TDomainResult](
             if result.is_success:
                 # Return result directly instead of service instance
                 return cast("Self", result.value)
-            raise FlextExceptions.BaseError(result.error or "Service execution failed")
+            raise e.BaseError(result.error or "Service execution failed")
         return instance
 
     @abstractmethod
@@ -700,7 +700,7 @@ class FlextService[TDomainResult](
 
 ```python
 # 💡 V1 PATTERN - Explícito (sempre funciona, 32+ projetos usam)
-class UserService(FlextService[User]):
+class UserService(s[User]):
     user_id: str
 
     def execute(self) -> r[User]:
@@ -735,7 +735,7 @@ else:
 
 # Para usar este padrão, defina auto_execute=True:
 
-# class QuickUserService(FlextService[User]):
+# class QuickUserService(s[User]):
 
 #     auto_execute = True  # ⚠️ Testes falhando
 
@@ -793,7 +793,7 @@ user_value = result.value if result.is_success else None
 **Por Que Este Design:**
 
 1. **r obrigatório** - `execute()` SEMPRE retorna `r[T]`
-   - Railway pattern é **core** do FlextService
+   - Railway pattern é **core** do s
    - Type-safe error handling garantido
    - Validação em tempo de compilação (mypy)
 
@@ -813,9 +813,9 @@ user_value = result.value if result.is_success else None
 
 > Migrado para: `flext-core/docs/guides/service-patterns.md#execution-patterns`
 
-### ~~📊 Visão Geral: Status Atual dos Padrões do FlextService (2025-11-25)~~
+### ~~📊 Visão Geral: Status Atual dos Padrões do s (2025-11-25)~~
 
-~~O FlextService tem **3 padrões**, mas apenas V1 está pronto para uso em produção:~~
+~~O s tem **3 padrões**, mas apenas V1 está pronto para uso em produção:~~
 
 ~~| Versão | Status | Boilerplate | Redução | Notas |~~
 ~~| ----------------- | ------------------- | -------------------------------- | -------- | ---------------------------- |~~
@@ -835,7 +835,7 @@ user_value = result.value if result.is_success else None
 ~~**Como funciona:**~~
 
 ```python
-class UserService(FlextService[User]):
+class UserService(s[User]):
     user_id: str
 
     def execute(self) -> r[User]:
@@ -884,12 +884,12 @@ def result(self) -> TDomainResult:
     """Get execution result with lazy evaluation.
 
     Raises:
-        FlextExceptions.BaseError: When execution fails
+        e.BaseError: When execution fails
     """
     result = self.execute()
     if result.is_success:
         return result.value
-    raise FlextExceptions.BaseError(result.error or "Service execution failed")
+    raise e.BaseError(result.error or "Service execution failed")
 
 
 # ⚠️ PADRÃO: Não use ainda - testes falhando!
@@ -953,13 +953,13 @@ def __new__(cls, **data) -> Self:
         result = execute_fn()
         if result.is_success:
             return cast("Self", result.value)
-        raise FlextExceptions.BaseError(result.error or "Service execution failed")
+        raise e.BaseError(result.error or "Service execution failed")
     return instance
 
 
 # ⚠️ PADRÃO: Não use ainda - testes falhando!
 
-# class AutoUserService(FlextService[User]):
+# class AutoUserService(s[User]):
 
 #     auto_execute = True  # ← Enable auto-execution (❌ Testes falhando)
 
@@ -1088,7 +1088,7 @@ user = UserService(user_id="123").execute().unwrap()
 
 ### ~~⚠️ STATUS ATUAL (2025-11-25) - APENAS V1 PRONTO PARA PRODUÇÃO~~
 
-~~**FlextService V2 oferece 3 padrões progressivos, mas APENAS V1 está confiável:**~~
+~~**s V2 oferece 3 padrões progressivos, mas APENAS V1 está confiável:**~~
 
 ~~1. **V1 Explícito** - Railway nativo (backward compatible) ✅~~
 
@@ -1115,7 +1115,7 @@ result.map(...).flat_map(...)  # Railway pattern
 ```python
 # ⚠️ NÃO USE AINDA - testes falhando!
 
-# class AutoService(FlextService[T]):
+# class AutoService(s[T]):
 
 #     auto_execute = True
 
@@ -1167,7 +1167,7 @@ pipeline = (
 **O Que Realmente Funciona:**
 
 ```
-✅ FlextService[T]           → Simples, direto, todos usam
+✅ s[T]           → Simples, direto, todos usam
 ✅ r[T]            → Railway pattern, valor claro
 ✅ FlextSettings (singleton)   → Acesso a config, funciona ótimo
 ✅ FlextContainer (DI básico) → Resolução de dependências simples
@@ -1278,7 +1278,7 @@ pipeline = (
 │  └─ FlextModels.ArbitraryTypesModel → Pydantic base            │
 │                                                                  │
 │  Layer 3: Service Layer (Business Logic)                        │
-│  ├─ FlextService[T]         → Service base                      │
+│  ├─ s[T]         → Service base                      │
 │  ├─ h[M,R]      → CQRS handlers                     │
 │  └─ FlextDispatcher         → Command bus                       │
 │                                                                  │
@@ -1351,7 +1351,7 @@ class FlextModels:
 
 **Pontos de Integração:**
 
-- ✅ FlextService herda de `FlextModels.ArbitraryTypesModel`
+- ✅ s herda de `FlextModels.ArbitraryTypesModel`
 - ✅ Commands/Queries despachados via `FlextDispatcher`
 - ✅ Eventos publicados via `FlextBus`
 - ✅ Validação completa Pydantic v2
@@ -1394,7 +1394,7 @@ class FlextContainer:
 **Pontos de Integração:**
 
 - ✅ x fornece property `self.container`
-- ✅ FlextService auto-registra em `__init_subclass__`
+- ✅ s auto-registra em `__init_subclass__`
 - ✅ Singleton FlextSettings registrado automaticamente
 - ✅ Suporta padrões dependency-injector
 
@@ -1442,7 +1442,7 @@ class p:
 
 **Pontos de Integração:**
 
-- ✅ FlextService implementa `Service` via tipagem estrutural
+- ✅ s implementa `Service` via tipagem estrutural
 - ✅ FlextContainer implementa `Configurable`
 - ✅ Sem herança necessária - duck typing
 - ✅ Verificação em runtime com `isinstance()`
@@ -1460,7 +1460,7 @@ class p:
 
 # IMPLEMENTAÇÃO INTERNA do x
 
-# (você herda automaticamente via FlextService)
+# (você herda automaticamente via s)
 
 # ============================================
 class x:
@@ -1493,7 +1493,7 @@ class x:
 # 💡 EXEMPLO - Conceitual (funciona em V1 e V2)
 
 # ✅ Você apenas usa as properties automaticamente!
-class MyService(FlextService[Result]):
+class MyService(s[Result]):
     def execute(self) -> r[Result]:
         # Tudo disponível automaticamente:
         self.config  # ✅ FlextSettings singleton
@@ -1505,7 +1505,7 @@ class MyService(FlextService[Result]):
 
 **Pontos de Integração:**
 
-- ✅ FlextService inherits from x
+- ✅ s inherits from x
 - ✅ All infrastructure available via properties (AUTOMATIC!)
 - ✅ No constructor parameters needed
 - ✅ Automatic context propagation
@@ -1515,7 +1515,7 @@ class MyService(FlextService[Result]):
 ```
 User Code
     ↓
-FlextService[T]
+s[T]
     ├─ Inherits: FlextModels.ArbitraryTypesModel (Pydantic)
 ~~    ├─ Inherits: x (Infrastructure)~~
 ~~    ├─ Implements: p.Service (Protocol)~~
@@ -1535,7 +1535,7 @@ FlextService[T]
 
 ```
 flext-core/src/flext_core/
-├── service.py          → FlextService (base class)
+├── service.py          → s (base class)
 ├── handlers.py         → h (CQRS)
 ├── dispatcher.py       → FlextDispatcher (command bus)
 ├── config.py           → FlextSettings (singleton)
@@ -1546,11 +1546,11 @@ flext-core/src/flext_core/
 
 ### Problemas Identificados
 
-#### 1. **FlextService - Sem Parâmetro em execute()**
+#### 1. **s - Sem Parâmetro em execute()**
 
 ```python
 # Atual (problemático)
-class FlextService[T](ABC):
+class s[T](ABC):
     @abstractmethod
     def execute(self) -> r[T]:
         """Execute without parameters - how to pass data?"""
@@ -1567,7 +1567,7 @@ class FlextService[T](ABC):
 
 ```python
 # Atual (verboso)
-class SomeService(FlextService[T]):
+class SomeService(s[T]):
     def __init__(self, config: SomeConfig):
         super().__init__()
         self._config = config
@@ -1653,7 +1653,7 @@ class CreateUserHandler(h[CreateUserCommand, User]):
 # 💡 EXEMPLO - Conceitual (funciona em V1 e V2)
 
 # Handler apenas envolve service - por que não chamar service diretamente?
-class UserService(FlextService[User]):
+class UserService(s[User]):
     name: str
     email: str
 
@@ -1703,7 +1703,7 @@ class UserCreatedEvent(FlextModels.DomainEvent):
 # 💡 EXEMPLO - Conceitual (funciona em V1 e V2)
 
 # Just create the damn user
-class CreateUser(FlextService[User]):
+class CreateUser(s[User]):
     name: str
     email: str
 
@@ -1733,7 +1733,7 @@ class CreateUser(FlextService[User]):
 
 ```
 Layer 4: Integration (FlextBus, FlextLogger, FlextContext)
-Layer 3: Service Layer (FlextService, h, FlextDispatcher)
+Layer 3: Service Layer (s, h, FlextDispatcher)
 Layer 2: Domain Models (FlextModels with DDD)
 Layer 1: Foundation (r, FlextSettings, FlextContainer)
 Layer 0: Protocols (p)
@@ -1755,7 +1755,7 @@ Layer 0: Protocols (p)
                         ↓
 ┌─────────────────────────────────────────────────────────┐
 │  LAYER 2: Service Layer (CORE)                          │
-│  FlextService[T] with Pydantic fields                   │
+│  s[T] with Pydantic fields                   │
 │  - Direct execution via .value                          │
 │  - Monadic operations (map, and_then)                   │
 │  - Auto-config resolution                               │
@@ -1803,7 +1803,7 @@ Layer 0: Protocols (p)
 # 3. Config singleton (x.project_config)
 
 
-class MyService(FlextService[ResultType]):
+class MyService(s[ResultType]):
     """Service with full integration."""
 
     # ════════════════════════════════════════════════════════════
@@ -1864,13 +1864,13 @@ def _get_dependency(self, name: str) -> m.Service.DependencyModel:
 
 ### Padrão 2: Auto-Registro no Container
 
-**FlextService automatically registers itself:**
+**s automatically registers itself:**
 
 ```python
 # flext-core/src/flext_core/service.py
 
 
-class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
+class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
     """Service with auto-registration."""
 
     def __init_subclass__(cls) -> None:
@@ -1929,7 +1929,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 ```python
 
 # Define service
-class UserService(FlextService[User]):
+class UserService(s[User]):
     def execute(self) -> r[User]:
         return r[User].ok(User(name="John"))
 
@@ -1975,7 +1975,7 @@ assert isinstance(service, p.Service)  # ✅ True!
 **Every operation returns r:**
 
 ```python
-class DataPipelineService(FlextService[DataFrame]):
+class DataPipelineService(s[DataFrame]):
     """Data pipeline with railway pattern."""
 
     source_file: Path
@@ -2052,7 +2052,7 @@ if result.is_success:
 # 1. Define Service with persistence
 
 # ════════════════════════════════════════════════════════════
-class CreateUser(FlextService[User]):
+class CreateUser(s[User]):
     """Create user with persistence - SIMPLE."""
 
     name: str
@@ -2118,7 +2118,7 @@ else:
 
 
 # For 90% of cases, just use direct service fields:
-class CreateUser(FlextService[User]):
+class CreateUser(s[User]):
     name: str  # ← Direct field, not wrapped in Command
     email: str
 
@@ -2132,7 +2132,7 @@ class CreateUser(FlextService[User]):
 **Sometimes one class does multiple things:**
 
 ```python
-class FlextApi(FlextService[m.Api.ResponseModel]):
+class FlextApi(s[m.Api.ResponseModel]):
     """HTTP client - multiple operations via 'operation' field."""
 
     operation: Literal["get", "post", "put", "delete", "patch"]
@@ -2197,10 +2197,10 @@ result = HttpPost("https://api.example.com/users", data={"name": "John"})
 **Automatic config resolution by naming convention:**
 
 ```python
-# FlextService has smart config resolution:
+# s has smart config resolution:
 
 
-class FlextService[T]:
+class s[T]:
     @property
     def project_config(self) -> FlextSettings:
         """Auto-resolve project-specific config.
@@ -2244,7 +2244,7 @@ class FlextService[T]:
 **Execute only when needed, cache result:**
 
 ```python
-class FlextService[T]:
+class s[T]:
     """Service with lazy execution."""
 
     _result: r[T] | None = None
@@ -2296,11 +2296,11 @@ value2 = service.value  # Returns cached result (no re-execution!)
 que requerem orquestração complexa, confiabilidade resiliente, e contexto distribuído.~~
 
 ~~⚠️ **IMPORTANTE**: A maioria dos projetos (90%) **NÃO precisa** dessas abstrações!
-Use **FlextService[T] + x** para casos comuns.~~
+Use **s[T] + x** para casos comuns.~~
 
 ### ~~📊 Visão Geral~~
 
-Componente: **FlextDispatcher** - Propósito: Orquestração CQRS + Confiabilidade - Quando Usar: Event sourcing, retry patterns, circuit breakers - Quando NÃO Usar: Services simples (use FlextService[T])
+Componente: **FlextDispatcher** - Propósito: Orquestração CQRS + Confiabilidade - Quando Usar: Event sourcing, retry patterns, circuit breakers - Quando NÃO Usar: Services simples (use s[T])
 Componente: **FlextRegistry** - Propósito: Registro de handlers em batch - Quando Usar: Multi-módulo, descoberta automática - Quando NÃO Usar: Registro manual simples (use dispatcher direto)
 Componente: **FlextContext** - Propósito: Contexto distribuído + Tracing - Quando Usar: Sistemas distribuídos, correlation IDs - Quando NÃO Usar: Apps monolíticas (use logger direto)
 
@@ -2411,7 +2411,7 @@ dispatcher.get_performance_analytics()  # Complete analytics
 # ❌ BAD: Usar dispatcher para services simples
 dispatcher.register_command(ParseLdifCommand, parse_ldif_handler)
 
-# ✅ GOOD: Usar FlextService[T] direto
+# ✅ GOOD: Usar s[T] direto
 result = ParseLdifService(source="file.ldif").value
 
 
@@ -2762,14 +2762,14 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 
 ~~| Cenário | Usar | Não Usar | Recomendação |~~
 ~~| ------------------------------------- | ------------------ | --------------- | -------------------------- |~~
-~~| **Service simples (parse, validate)** | ❌ | FlextDispatcher | FlextService[T] + `.value` |~~
+~~| **Service simples (parse, validate)** | ❌ | FlextDispatcher | s[T] + `.value` |~~
 ~~| **API externa com retry** | ✅ FlextDispatcher | | Circuit breaker + retry |~~
 ~~| **Batch processing (1000+ items)** | ✅ FlextDispatcher | | `process_batch()` |~~
 ~~| **Registro de múltiplos handlers** | ✅ FlextRegistry | | `register_handlers()` |~~
 ~~| **App monolítica sem microservices** | ❌ | FlextContext | Logger direto |~~
 ~~| **Microservices com tracing** | ✅ FlextContext | | Correlation IDs |~~
 ~~| **Performance analysis** | ✅ FlextContext | | `timed_operation()` |~~
-~~| **CRUD simples** | ❌ | FlextDispatcher | FlextService[T] direto |~~
+~~| **CRUD simples** | ❌ | FlextDispatcher | s[T] direto |~~
 
 ##
 
@@ -2781,10 +2781,10 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 
 #### ~~✅ ALWAYS Use~~
 
-1. **FlextService[T]** - Your main tool
+1. **s[T]** - Your main tool
 
    ```python
-   class MyService(FlextService[ReturnType]):
+   class MyService(s[ReturnType]):
        param1: str
        param2: int
 
@@ -2807,7 +2807,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 3. **Pydantic Fields** - For parameters and validation
 
    ```python
-   class MyService(FlextService[T]):
+   class MyService(s[T]):
        email: str = Field(pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$")
        age: int = Field(gt=0, le=150)
        tags: t.StrSequence = Field(default_factory=list)
@@ -2860,7 +2860,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 
 
    # ✅ DO THIS
-   class MyService(FlextService[Result]):
+   class MyService(s[Result]):
        def execute(self): ...
    ```
 
@@ -2872,7 +2872,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 
 
    # ✅ DO THIS - direct fields
-   class CreateUser(FlextService[User]):
+   class CreateUser(s[User]):
        name: str
        email: str
    ```
@@ -2951,9 +2951,9 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 
 ### 🎓 Decision Guide: When to Use What
 
-Caso de Uso: Operação única (parse, query, etc.) - Solução: FlextService[T] com campos diretos - Motivo: Simples, direto, sem ceremony
-Caso de Uso: Múltiplas operações relacionadas (HTTP GET/POST) - Solução: FlextService[T] com campo `operation` - Motivo: Dispatch via match statement
-Caso de Uso: Precisa persistência de banco - Solução: FlextService[T] + repository do DI - Motivo: Persistência opcional, testável
+Caso de Uso: Operação única (parse, query, etc.) - Solução: s[T] com campos diretos - Motivo: Simples, direto, sem ceremony
+Caso de Uso: Múltiplas operações relacionadas (HTTP GET/POST) - Solução: s[T] com campo `operation` - Motivo: Dispatch via match statement
+Caso de Uso: Precisa persistência de banco - Solução: s[T] + repository do DI - Motivo: Persistência opcional, testável
 Caso de Uso: Precisa logging/context - Solução: Usar `self.logger`, `self.context` - Motivo: De x, automático
 Caso de Uso: Precisa configuração - Solução: Usar `self.project_config` - Motivo: Singleton auto-resolvido
 Caso de Uso: Precisa dependências - Solução: Obter de `self.container` - Motivo: DI básico, sem mágica
@@ -2968,7 +2968,7 @@ Caso de Uso: Workflows complexos - Solução: FlextDispatcher + handlers - Motiv
 **1. Simple Service (90% of cases):**
 
 ```python
-class ParseLdif(FlextService[Sequence[Entry]]):
+class ParseLdif(s[Sequence[Entry]]):
     source: str | Path
 
     def execute(self) -> r[Sequence[Entry]]:
@@ -2982,7 +2982,7 @@ entries = ParseLdif(source="file.ldif").value
 **2. Multi-Operation Service:**
 
 ```python
-class HttpClient(FlextService[dict]):
+class HttpClient(s[dict]):
     operation: Literal["get", "post"]
     url: str
 
@@ -3001,7 +3001,7 @@ users = HttpGet("https://api.example.com/users")
 **3. Service with Persistence:**
 
 ```python
-class CreateUser(FlextService[User]):
+class CreateUser(s[User]):
     name: str
     email: str
 
@@ -3281,7 +3281,7 @@ class ldif:
 **Pattern 1: Registrar Services na Inicialização**
 
 ```python
-class MyFacade(FlextService[t.ContainerMapping]):
+class MyFacade(s[t.ContainerMapping]):
     """Facade with proper DI setup."""
 
     _container: FlextContainer = PrivateAttr(default_factory=FlextContainer.get_global)
@@ -3358,7 +3358,7 @@ parser = self._get_service_typed(self.container, "parser", ParserService)
 ```bash
 
 # Buscar padrões de instanciação direta
-grep -r "Service()" src/ | grep -v "FlextService"
+grep -r "Service()" src/ | grep -v "s"
 grep -r "= .*Service(.*)" src/
 ```
 
@@ -3434,8 +3434,8 @@ config = FlextLdifSettings()  # ← Carrega .env, valida, singleton
 # $ export FLEXT_LDIF_ENCODING=utf-16
 
 
-# ✅ AUTOMÁTICO: Access via property (FlextService)
-class MyService(FlextService[T]):
+# ✅ AUTOMÁTICO: Access via property (s)
+class MyService(s[T]):
     def execute(self) -> r[T]:
         # ✅ Zero ceremony - property já existe
         encoding = self.project_config.ldif_encoding
@@ -3448,7 +3448,7 @@ class MyService(FlextService[T]):
 2. **Environment loading** → `.env` automático via Pydantic
 3. **Validation** → Field constraints automáticos
 4. **Computed fields** → Valores derivados cached
-5. **Property access** → `self.project_config` em FlextService
+5. **Property access** → `self.project_config` em s
 
 #### 📊 Estado Atual da Implementação
 
@@ -3596,10 +3596,10 @@ class FlextLdifSettings(FlextSettings):
 - ✅ **Auto computed** - usa `is_debug_enabled` herdado
 - ✅ **Singleton isolation** - cada config é seu próprio singleton
 
-**Exemplo 2: Usando Config em Services (FlextService)** ✅
+**Exemplo 2: Usando Config em Services (s)** ✅
 
 ```python
-class MyService(FlextService[Sequence[Entry]]):
+class MyService(s[Sequence[Entry]]):
     """Service com config automático."""
 
     # ✅ AUTOMÁTICO: self.project_config já existe (x)
@@ -3696,7 +3696,7 @@ config = FlextSettings(debug=True, log_level="DEBUG", log_format="json")
 
 
 # ✅ Auto: Logger reads config automatically
-class MyService(FlextService[T]):
+class MyService(s[T]):
     def execute(self) -> r[T]:
         # ✅ Auto: logger uses config.log_config
         self.logger.info("Processing", extra={"count": 10})
@@ -3712,14 +3712,14 @@ class MyService(FlextService[T]):
 
 ```python
 # ❌ ERRADO: Config como parâmetro (não usa singleton!)
-class MyService(FlextService[T]):
+class MyService(s[T]):
     def __init__(self, config: FlextSettings):
         super().__init__()
         self._config = config  # ← Duplicação desnecessária!
 
 
 # ✅ CORRETO: Property automática
-class MyService(FlextService[T]):
+class MyService(s[T]):
     def execute(self) -> r[T]:
         # ✅ Auto: self.project_config já existe
         encoding = self.project_config.ldif_encoding
@@ -3731,14 +3731,14 @@ class MyService(FlextService[T]):
 
 ```python
 # ❌ ERRADO: Instanciar config manualmente
-class MyService(FlextService[T]):
+class MyService(s[T]):
     def __init__(self):
         super().__init__()
         self.config = FlextLdifSettings()  # ← Desnecessário!
 
 
 # ✅ CORRETO: Property automática (x)
-class MyService(FlextService[T]):
+class MyService(s[T]):
     # ✅ Auto: self.project_config já é singleton
     pass
 ```
@@ -3793,7 +3793,7 @@ class MyProjectConfig(FlextSettings):
 **Pattern 2: Access in Services (Property)**
 
 ```python
-class MyService(FlextService[T]):
+class MyService(s[T]):
     """Zero ceremony - property já existe."""
 
     def execute(self) -> r[T]:
@@ -4339,7 +4339,7 @@ class p:
 
 **Por quê?**
 
-1. FlextService já fornece base class concreta
+1. s já fornece base class concreta
 2. Repository pattern não é comum no ecossistema
 3. Protocols são avançados e pouco conhecidos
 
@@ -4408,7 +4408,7 @@ attributes: m.Ldif.AttributeSetModel
 #### ❌ O Que Não É Usado
 
 1. **p.Service não usado**
-   - Ecossistema prefere `FlextService` (base class)
+   - Ecossistema prefere `s` (base class)
    - Protocols são menos conhecidos
 
 2. **p.Repository não usado**
@@ -4426,7 +4426,7 @@ attributes: m.Ldif.AttributeSetModel
 - ✅ Use para contratos locais (ex: FlextLdifProtocols.QuirksPort)
 - ✅ Use para integration com código externo
 - ❌ Evite p core (pouco valor)
-- ✅ Prefira FlextService (base class) para services
+- ✅ Prefira s (base class) para services
 
 ##
 
@@ -4445,7 +4445,7 @@ attributes: m.Ldif.AttributeSetModel
 
 # IMPLEMENTAÇÃO INTERNA do x
 
-# (você herda isso automaticamente via FlextService)
+# (você herda isso automaticamente via s)
 
 # ============================================
 class x:
@@ -4483,11 +4483,11 @@ class x:
 
 #### 📈 Uso Real no Ecossistema
 
-**Status:** ✅ **AMPLAMENTE USADO via FlextService**
+**Status:** ✅ **AMPLAMENTE USADO via s**
 
 ```python
-# FlextService herda de x
-class FlextService(x, BaseModel, Generic[TDomainResult]):
+# s herda de x
+class s(x, BaseModel, Generic[TDomainResult]):
     """Base service with infrastructure access."""
 
     pass
@@ -4519,7 +4519,7 @@ class ldif(Flext[t.ContainerMapping]):
 
    ```python
    # ✅ Funciona perfeitamente
-   class MyService(FlextService[T]):
+   class MyService(s[T]):
        def execute(self) -> r[T]:
            self.logger.info("Starting execution")
            # Auto-nomeado com class name
@@ -4529,7 +4529,7 @@ class ldif(Flext[t.ContainerMapping]):
 
    ```python
    # ✅ Funciona perfeitamente
-   class MyService(FlextService[T]):
+   class MyService(s[T]):
        def execute(self) -> r[T]:
            repo = self.container.get_typed("repo", MyRepo).unwrap()
    ```
@@ -4538,7 +4538,7 @@ class ldif(Flext[t.ContainerMapping]):
 
    ```python
    # ✅ Funciona perfeitamente (mas use project_config)
-   class MyService(FlextService[T]):
+   class MyService(s[T]):
        def execute(self) -> r[T]:
            debug = self.project_config.debug  # Melhor que self.config
    ```
@@ -4549,7 +4549,7 @@ class ldif(Flext[t.ContainerMapping]):
 
    ```python
    # ❌ RARAMENTE USADO:
-   class MyService(FlextService[T]):
+   class MyService(s[T]):
        def execute(self) -> r[T]:
            ctx = self.context  # FlextContext - pouco usado
            correlation_id = ctx.correlation_id
@@ -4561,7 +4561,7 @@ class ldif(Flext[t.ContainerMapping]):
 
 **x:**
 
-- ✅ Use via FlextService (já herda)
+- ✅ Use via s (já herda)
 - ✅ Use `self.logger` para logging
 - ✅ Use `self.container` para DI
 - ✅ Use `self.project_config` para config (melhor que `self.config`)
@@ -4583,7 +4583,7 @@ config = FlextSettings(debug=True, log_level="DEBUG", log_format="json")
 
 
 # 2️⃣ Logger auto-configura baseado em config
-class MyService(FlextService[T]):
+class MyService(s[T]):
     def execute(self) -> r[T]:
         # ✅ Auto: self.logger configured from self.project_config
         self.logger.info("Processing", extra={"count": 10})
@@ -4657,7 +4657,7 @@ def info(self, msg: str, extra: m.Logging.ExtraContextModel | None = None):
 **Exemplo 1: Basic Logging (Zero Setup)**
 
 ```python
-class MyService(FlextService[Sequence[Entry]]):
+class MyService(s[Sequence[Entry]]):
     """Logger automático via property."""
 
     source: str
@@ -4706,7 +4706,7 @@ config = FlextSettings()
 
 
 # ✅ Auto: Logger configured from config
-class MyService(FlextService[T]):
+class MyService(s[T]):
     def execute(self) -> r[T]:
         # ✅ Auto: Uses DEBUG level (from env)
         self.logger.debug("This will show!")
@@ -4721,7 +4721,7 @@ class MyService(FlextService[T]):
 **1. Property Access (Zero Setup)**
 
 ```python
-class MyService(FlextService[T]):
+class MyService(s[T]):
     def execute(self) -> r[T]:
         # ✅ Auto: self.logger available
         self.logger.info("Ready")
@@ -4748,14 +4748,14 @@ self.logger.info("Event", extra={"user_id": 123, "action": "login"})
 
 ```python
 # ❌ ERRADO: Criar logger no __init__
-class MyService(FlextService[T]):
+class MyService(s[T]):
     def __init__(self):
         super().__init__()
         self._logger = FlextLogger(__name__)  # ← Desnecessário!
 
 
 # ✅ CORRETO: Property automática
-class MyService(FlextService[T]):
+class MyService(s[T]):
     # ✅ Auto: self.logger já existe
     def execute(self) -> r[T]:
         self.logger.info("Works!")
@@ -4786,7 +4786,7 @@ class MyService(FlextService[T]):
 ~~| **FlextSettings** | ✅ Maduro | ✅ Amplamente usado | Extend para projeto, use singleton |~~
 ~~| **FlextModels** | ✅ Maduro | ⚠️ Parcialmente usado | Use Value/Entity, migre models legacy |~~
 ~~| **p** | ✅ Implementado | ❌ Pouco usado | Use localmente, evite p core |~~
-~~| **x** | ✅ Maduro | ✅ Usado via FlextService | Inherit via FlextService, use properties |~~
+~~| **x** | ✅ Maduro | ✅ Usado via s | Inherit via s, use properties |~~
 ~~| **FlextLogger** | ✅ Maduro | ✅ Amplamente usado | Use self.logger property, structured logging |~~
 
 ##
@@ -4839,7 +4839,7 @@ class MyService(FlextService[T]):
 
 ##
 
-## ~~🏗️ FlextService Implementation - Final Version (Python 3.13)~~ ✅ MIGRADO
+## ~~🏗️ s Implementation - Final Version (Python 3.13)~~ ✅ MIGRADO
 
 > Migrado para: `flext-core/docs/guides/service-patterns.md#overview`
 
@@ -4849,7 +4849,7 @@ class MyService(FlextService[T]):
 # flext-core/src/flext_core/service.py (ATUAL)
 
 
-class FlextService[TResult](
+class s[TResult](
     FlextModels.ArbitraryTypesModel,
     x,
     ABC,
@@ -4890,7 +4890,7 @@ from pydantic import computed_field, PrivateAttr
 from typing import Union
 
 
-class FlextService[TResult](
+class s[TResult](
     FlextModels.ArbitraryTypesModel,
     x,
     ABC,
@@ -4985,14 +4985,12 @@ class FlextService[TResult](
     # ═══════════════════════════════════════════════════════════════
     # ADDITION 2: Smart Resolution em Métodos Monádicos
     # ═══════════════════════════════════════════════════════════════
-    def and_then[U](
-        self, func: callable[[TResult], Union[r[U], "FlextService[U]"]]
-    ) -> r[U]:
+    def and_then[U](self, func: callable[[TResult], Union[r[U], "s[U]"]]) -> r[U]:
         """Chain operations com SMART RESOLUTION.
 
         Aceita func que retorna:
         - r[U] (tradicional)
-        - FlextService[U] (novo - auto-resolve!)
+        - s[U] (novo - auto-resolve!)
 
         Se func retorna um service, automaticamente chama .result!
 
@@ -5008,14 +5006,14 @@ class FlextService[TResult](
         next_value = func(current.value)
 
         # ✅ SMART RESOLUTION: detecta se é service
-        if isinstance(next_value, FlextService):
+        if isinstance(next_value, s):
             return next_value.result  # Auto-resolve!
 
         return next_value
 
     def or_else(
         self,
-        func: callable[[str], Union[r[TResult], "FlextService[TResult]"]],
+        func: callable[[str], Union[r[TResult], "s[TResult]"]],
     ) -> r[TResult]:
         """Fallback com smart resolution.
 
@@ -5031,7 +5029,7 @@ class FlextService[TResult](
         fallback = func(current.error)
 
         # Smart resolution
-        if isinstance(fallback, FlextService):
+        if isinstance(fallback, s):
             return fallback.result
 
         return fallback
@@ -5086,7 +5084,7 @@ entries = (
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                   FlextService[T]                        │
+│                   s[T]                        │
 │                                                          │
 │  ┌────────────────────────────────────────────────┐    │
 │  │ Fields (Pydantic)                              │    │
@@ -5119,10 +5117,10 @@ entries = (
 
 ### Componentes Principais
 
-#### 1. **FlextService - Unified Base**
+#### 1. **s - Unified Base**
 
 ```python
-class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
+class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
     """Unified service base - single or multiple operations."""
 
     # Optional: for multiple operations
@@ -5175,7 +5173,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 # Config accessed via property (from x)
 
 
-class MyService(FlextService[T]):
+class MyService(s[T]):
     def execute(self) -> r[T]:
         # Access config singleton automatically
         timeout = self.project_config.timeout
@@ -5209,7 +5207,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
 #### 4. **Multiple Operations Pattern**
 
 ```python
-class FlextApi(FlextService[m.Api.ResponseModel]):
+class FlextApi(s[m.Api.ResponseModel]):
     """Multiple operations: HTTP methods."""
 
     # Operation selector
@@ -5243,7 +5241,7 @@ class FlextApi(FlextService[m.Api.ResponseModel]):
 
 > Migrado para: `flext-core/docs/guides/service-patterns.md`
 
-### ~~Passo 1: Atualizar Base FlextService~~
+### ~~Passo 1: Atualizar Base s~~
 
 **File:** `flext-core/src/flext_core/service.py`
 
@@ -5266,7 +5264,7 @@ TResult = TypeVar("TResult")
 UResult = TypeVar("UResult")
 
 
-class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
+class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
     """Unified service base with auto-execution and monadic operations."""
 
     # Optional: for multiple operations
@@ -5334,7 +5332,7 @@ class FlextService[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
             return FlextServiceResult(r)
         return FlextServiceResult(r[TResult].fail(error_message))
 
-    def tap(self, func: Callable[[TResult], None]) -> "FlextService[TResult]":
+    def tap(self, func: Callable[[TResult], None]) -> "s[TResult]":
         """Execute side effect without changing value."""
         r = self.result
         if r.is_success:
@@ -5481,7 +5479,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
 **Before:**
 
 ```python
-class FlextApi(FlextService[dict]):
+class FlextApi(s[dict]):
     def __init__(self, config: FlextApiSettings):
         super().__init__()
         self._config = config
@@ -5502,7 +5500,7 @@ def post(self, url: str, data: m.Api.RequestBodyModel, **kwargs) -> r[m.Api.Resp
 **After:**
 
 ```python
-class FlextApi(FlextService[m.Api.ResponseModel]):
+class FlextApi(s[m.Api.ResponseModel]):
     """HTTP API client - multiple operations service."""
 
     # Operation selector
@@ -5559,7 +5557,7 @@ def get(self, url: str, **kwargs: m.Api.RequestOptionsModel) -> r[m.Api.Response
 from pathlib import Path
 from typing import Annotated
 from pydantic import Field, field_validator
-from flext_core import FlextService
+from flext_core import s
 from flext_core import r
 from flext_ldif import Entry
 
@@ -5605,7 +5603,7 @@ class FlextLdifParser(Flext[Sequence[Entry]]):
         return v
 
     # ═══════════════════════════════════════════════════════════════
-    # EXECUTION (FlextService contract)
+    # EXECUTION (s contract)
     # ═══════════════════════════════════════════════════════════════
     def execute(self) -> r[Sequence[Entry]]:
         """Execute parsing - called automatically by .value property."""
@@ -5883,7 +5881,7 @@ if result:
 
 > Migrado para: `flext-core/docs/architecture/cqrs.md#integration-with-flextservice`
 
-~~Esta seção documenta como FlextService (Tier 2.5) integra com a camada CQRS (h Tier 3.1 e FlextDispatcher Tier 3.2).~~
+~~Esta seção documenta como s (Tier 2.5) integra com a camada CQRS (h Tier 3.1 e FlextDispatcher Tier 3.2).~~
 
 > ~~📚 **Documentação Completa:** Para arquitetura detalhada da camada CQRS, veja [FLEXT_CQRS_ARCHITECTURE.md](./FLEXT_CQRS_ARCHITECTURE.md)~~
 
@@ -5901,7 +5899,7 @@ if result:
 │  ├── Pipeline de validação                                      │
 │  └── Processamento de mensagens                                 │
 ├─────────────────────────────────────────────────────────────────┤
-│  Tier 2.5: FlextService ← ESTE DOCUMENTO                        │
+│  Tier 2.5: s ← ESTE DOCUMENTO                        │
 │  ├── Serviços de domínio com lógica de negócio                  │
 │  ├── Execução via .result property                              │
 │  └── Operações auto-contidas                                    │
@@ -5910,11 +5908,11 @@ if result:
 
 ### Quando Usar Cada Camada
 
-Cenário: Operação de domínio simples - Use: FlextService[T] - Não Use: h - Racional: Sem overhead de messaging
-Cenário: CRUD com validação - Use: FlextService[T] - Não Use: FlextDispatcher - Racional: Execução direta é mais rápida
-Cenário: Command com retry/circuit breaker - Use: FlextDispatcher + Handler - Não Use: FlextService sozinho - Racional: Precisa de reliability patterns
-Cenário: Event sourcing - Use: FlextDispatcher + Event handlers - Não Use: FlextService - Racional: Event routing necessário
-Cenário: HTTP API endpoint - Use: FlextService[T] wrapped - Não Use: h diretamente - Racional: Services são API units
+Cenário: Operação de domínio simples - Use: s[T] - Não Use: h - Racional: Sem overhead de messaging
+Cenário: CRUD com validação - Use: s[T] - Não Use: FlextDispatcher - Racional: Execução direta é mais rápida
+Cenário: Command com retry/circuit breaker - Use: FlextDispatcher + Handler - Não Use: s sozinho - Racional: Precisa de reliability patterns
+Cenário: Event sourcing - Use: FlextDispatcher + Event handlers - Não Use: s - Racional: Event routing necessário
+Cenário: HTTP API endpoint - Use: s[T] wrapped - Não Use: h diretamente - Racional: Services são API units
 
 ### Pattern 1: Service Chamado de Handler
 
@@ -5966,7 +5964,7 @@ dispatcher.register_query(
 Para operações que precisam de circuit breaker, retry, etc.:
 
 ```python
-class OrderProcessingService(FlextService[Order]):
+class OrderProcessingService(s[Order]):
     """Service que delega para dispatcher para reliability."""
 
     order_id: str
@@ -5989,7 +5987,7 @@ class OrderProcessingService(FlextService[Order]):
 
 **✅ DO:**
 
-- Use FlextService para lógica de domínio pura
+- Use s para lógica de domínio pura
 - Use h para orquestração de commands/queries/events
 - Use FlextDispatcher quando precisar de reliability patterns
 - Mantenha handlers finos - delegue lógica para services
@@ -6005,7 +6003,7 @@ class OrderProcessingService(FlextService[Order]):
 
 > 📋 **Análise validada contra código:** flext-core v0.9.9
 
-#### FlextDecorators (decorators.py:30-1465) - 1435 linhas
+#### d (decorators.py:30-1465) - 1435 linhas
 
 **10 decorators públicos para cross-cutting concerns:**
 
@@ -6021,7 +6019,7 @@ Decorator: `@with_context` - Linhas: 1299-1378 - Função: Context lifecycle man
 Decorator: `@track_operation` - Linhas: 1380-1465 - Função: Full operation tracking - Uso: Service/Handler
 **Integração com x:**
 
-- FlextDecorators usa `FlextLogger.bind_global_context()` para context
+- d usa `FlextLogger.bind_global_context()` para context
 - x.track() usa `FlextContext.Performance.timed_operation()`
 - **São complementares**: decorators para funções, track() para context manager
 
@@ -6092,10 +6090,10 @@ Método: `Summary` (nested) - Linhas: 181-315 - Função: Tracking de registros
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Uso em FlextService:**
+**Uso em s:**
 
 ```python
-class MyService(FlextService[Result]):
+class MyService(s[Result]):
     """Service usa x que provê context, logger, etc."""
 
     def execute(self) -> r[Result]:
@@ -6105,14 +6103,14 @@ class MyService(FlextService[Result]):
             return r.ok(self._process())
 ```
 
-**Uso com FlextDecorators:**
+**Uso com d:**
 
 ```python
-class MyService(FlextService[Result]):
+class MyService(s[Result]):
     """Service com decorators cross-cutting."""
 
-    @FlextDecorators.track_performance("my_operation")
-    @FlextDecorators.retry(max_attempts=3)
+    @d.track_performance("my_operation")
+    @d.retry(max_attempts=3)
     def execute(self) -> r[Result]:
         return r.ok(self._process())
 ```
@@ -6153,7 +6151,7 @@ with self.track("handle_message") as metrics:
 
 ### Validação vs Código (25 Nov 2025)
 
-**✅ FlextService - VALIDADO:**
+**✅ s - VALIDADO:**
 
 - `service.py:30-34`: Herda `FlextModels.ArbitraryTypesModel`, `x`, `ABC`
 - `service.py:93`: `auto_execute: ClassVar[bool] = False` ✅
@@ -6211,7 +6209,7 @@ Componente: Testes - Mudanças: Nenhuma mudança necessária - Esforço: **Zero*
 
 **Objetivo:** Adicionar suporte para novo pattern sem quebrar nada
 
-**Tarefa 1.1:** Adicionar properties no `FlextService`
+**Tarefa 1.1:** Adicionar properties no `s`
 
 ```python
 # flext-core/src/flext_core/service.py
@@ -6236,9 +6234,9 @@ Componente: Testes - Mudanças: Nenhuma mudança necessária - Esforço: **Zero*
 ```python
 # Modificar métodos existentes:
 
-# 1. .and_then() - detectar FlextService vs r
+# 1. .and_then() - detectar s vs r
 
-# 2. .or_else() - detectar FlextService vs r
+# 2. .or_else() - detectar s vs r
 
 # 3. .map() - manter como está
 ```
@@ -6478,7 +6476,7 @@ entries = FlextLdifParser(source="file.ldif").value_or_none
 
 #### flext-core
 
-- [ ] Adicionar properties no `FlextService` (.result, .value, etc)
+- [ ] Adicionar properties no `s` (.result, .value, etc)
 - [ ] Adicionar smart resolution (.and_then, .or_else)
 - [ ] Adicionar PrivateAttr para cache
 - [ ] Adicionar convenience properties (.is_success, etc)
@@ -6609,12 +6607,12 @@ print(f"Processed {response.statistics.entries_written} users")
 
 from typing import Annotated, Literal
 from pydantic import Field, model_validator
-from flext_core import FlextService
+from flext_core import s
 from flext_core import r
 import httpx
 
 
-class FlextApi(FlextService[m.Api.ResponseModel]):
+class FlextApi(s[m.Api.ResponseModel]):
     """HTTP API client - multiple operations.
 
     Usa `operation` field para dispatch interno.
@@ -6921,7 +6919,7 @@ def complex_migration(source_file: Path, target_file: Path) -> m.Infra.Migration
 
 ~~| Aspecto | Antes | Depois |~~
 ~~| ------------------ | ---------------------------------------- | ------------------------------------------ |~~
-~~| **Base class** | `FlextService[T]` + stub execute() | `FlextService[T]` + real execute() |~~
+~~| **Base class** | `s[T]` + stub execute() | `s[T]` + real execute() |~~
 ~~| **Parameters** | Via `__init__` ou método separado | Pydantic fields + validation |~~
 ~~| **Config** | Passed in `__init__` | Singleton via `self.project_config` |~~
 ~~| **Execution** | `.execute().unwrap()` | `.value` |~~
@@ -7130,7 +7128,7 @@ Métrica: **Documentação duplicada** - Antes: Service + factories - Depois: Ap
 
 **Tasks:**
 
-1. **[1-2h]** Adicionar properties ao `FlextService`
+1. **[1-2h]** Adicionar properties ao `s`
 
    ```bash
    # Edit: flext-core/src/flext_core/service.py
@@ -7143,8 +7141,8 @@ Métrica: **Documentação duplicada** - Antes: Service + factories - Depois: Ap
 
    ```bash
    # Edit: flext-core/src/flext_core/service.py
-   # Modify: .and_then() to detect FlextService
-   # Modify: .or_else() to detect FlextService
+   # Modify: .and_then() to detect s
+   # Modify: .or_else() to detect s
    ```
 
 3. **[2-3h]** Adicionar testes
@@ -7291,7 +7289,7 @@ Semana 2+:
 
 ### ~~O que mudou~~
 
-~~**Antes:** FlextService tinha potencial, mas sofria de:~~
+~~**Antes:** s tinha potencial, mas sofria de:~~
 
 ~~- ❌ Boilerplate excessivo (`.execute().unwrap()`)~~
 ~~- ❌ Factory functions duplicando código~~
@@ -7299,7 +7297,7 @@ Semana 2+:
 ~~- ❌ `.result` obrigatório em chains monádicas~~
 ~~- ❌ `execute()` como stub, lógica em outros métodos~~
 
-~~**Depois:** FlextService realiza seu potencial:~~
+~~**Depois:** s realiza seu potencial:~~
 
 ~~- ✅ **3 additions no flext-core** resolvem tudo~~
 ~~- ✅ **Zero ceremony** (`.value` executa automaticamente)~~
@@ -7400,7 +7398,7 @@ A solução está clara, o caminho está mapeado, o esforço é baixo.
 **Arquitetura Atual:**
 
 - **cli** (api.py) - Singleton coordinator com acesso direto a domain libraries
-- **FlextCliCore** (core.py) - Extends `FlextService[CliDataDict]`
+- **FlextCliCore** (core.py) - Extends `s[CliDataDict]`
 - **FlextCliSettings** (config.py) - Extends `FlextSettings` com CLI-specific fields
 - **Domain Libraries**: FlextCliFormatters, FlextCliOutput, FlextCliFileTools, FlextCliPrompts, FlextCliCmd
 - **FlextCliCli** (cli.py) - Typer/Click abstraction layer (ONLY file allowed to import Typer/Click)
@@ -7470,12 +7468,12 @@ class FlextCliSettings(FlextSettings):
 ✅ **Type-safe** com `Literal` types
 ✅ **Computed fields** para derivações
 
-**4. FlextService Corretamente Usado**
+**4. s Corretamente Usado**
 
 ```python
 # flext-cli/src/flext_cli/core.py
-class FlextCliCore(FlextService[FlextCliTypes.Data.CliDataDict]):
-    """Core CLI service extending FlextService."""
+class FlextCliCore(s[FlextCliTypes.Data.CliDataDict]):
+    """Core CLI service extending s."""
 
     def __init__(
         self, config: FlextCliTypes.Configuration.CliConfigSchema | None = None
@@ -7492,7 +7490,7 @@ class FlextCliCore(FlextService[FlextCliTypes.Data.CliDataDict]):
         })
 ```
 
-✅ **Extends FlextService[T]** corretamente
+✅ **Extends s[T]** corretamente
 ✅ **`execute()` abstract method** implementado
 ✅ **Type parameter** especifica return type
 
@@ -7537,7 +7535,7 @@ class cli:
 - ❌ **God Object** - cli conhece TODAS as domain libraries
 - ❌ **Duplicação** - `print()`, `create_table()` só delegam para libraries
 - ❌ **Tight Coupling** - Mudança em domain library requer mudança em cli
-- ❌ **Não é um FlextService** - Deveria ser `FlextService[T]` para consistência
+- ❌ **Não é um s** - Deveria ser `s[T]` para consistência
 
 **Problema 2: Múltiplas Classes para Mesma Funcionalidade**
 
@@ -7546,7 +7544,7 @@ class cli:
 ```python
 # 8 classes diferentes em 8 arquivos diferentes!
 cli  # api.py - Coordinator
-FlextCliCore  # core.py - FlextService[CliDataDict]
+FlextCliCore  # core.py - s[CliDataDict]
 FlextCliCli  # cli.py - Typer abstraction
 FlextCliSettings  # config.py - Configuration
 FlextCliFormatters  # formatters.py - Rich output
@@ -7567,7 +7565,7 @@ FlextCliPrompts  # prompts.py - Interactive prompts
 **Estado Atual (core.py):**
 
 ```python
-class FlextCliCore(FlextService[CliDataDict]):
+class FlextCliCore(s[CliDataDict]):
     @override
     def execute(self) -> r[CliDataDict]:
         # ❌ Apenas retorna status - não faz nada útil!
@@ -7614,20 +7612,20 @@ class cli:
 
 ### 🎯 Arquitetura Proposta (Aplicando Padrões do Documento)
 
-#### **Solução 1: cli Como FlextService[T]**
+#### **Solução 1: cli Como s[T]**
 
 **Proposta:**
 
 ```python
 # flext-cli/src/flext_cli/api.py (REFATORADO)
-from flext_core import FlextService, r
+from flext_core import s, r
 from flext_cli import FlextCliSettings
 from pathlib import Path
 from typing import Literal
 
 
-class FlextCliService(FlextService[t.ContainerMapping]):
-    """CLI service following FlextService pattern.
+class FlextCliService(s[t.ContainerMapping]):
+    """CLI service following s pattern.
 
     Single service class para TODAS as operações CLI.
     Usa `operation` field para dispatch de múltiplas operações.
@@ -7697,11 +7695,11 @@ def read_json(filepath: Path) -> t.ContainerMapping:
 ```
 
 **Benefícios:**
-✅ **Um único FlextService** - Toda funcionalidade em uma classe
+✅ **Um único s** - Toda funcionalidade em uma classe
 ✅ **Zero Ceremony** - Factory functions para API simples
 ✅ **Type-safe** - Pydantic fields com validação automática
 ✅ **Testável** - Mock Pydantic fields, não **init**
-✅ **Padrão consistente** - Segue FlextService pattern do documento
+✅ **Padrão consistente** - Segue s pattern do documento
 
 #### **Solução 2: Eliminar God Object - Services**
 
@@ -7709,7 +7707,7 @@ def read_json(filepath: Path) -> t.ContainerMapping:
 
 ```python
 # flext-cli/src/flext_cli/services/output.py
-class CliOutputService(FlextService[str]):
+class CliOutputService(s[str]):
     """Output formatting service."""
 
     data: t.ContainerMapping
@@ -7728,7 +7726,7 @@ class CliOutputService(FlextService[str]):
 
 
 # flext-cli/src/flext_cli/services/file_tools.py
-class CliFileService(FlextService[t.ContainerMapping]):
+class CliFileService(s[t.ContainerMapping]):
     """File I/O service."""
 
     operation: Literal["read", "write"] = "read"
@@ -7744,7 +7742,7 @@ class CliFileService(FlextService[t.ContainerMapping]):
 
 
 # flext-cli/src/flext_cli/services/auth.py
-class CliAuthService(FlextService[str]):
+class CliAuthService(s[str]):
     """Authentication service."""
 
     operation: Literal["login", "logout", "validate"] = "login"
@@ -7827,7 +7825,7 @@ class FlextCliSettings(FlextSettings):
 ```python
 
 # flext-cli/src/flext_cli/services/cli.py (NOVO)
-class FlextCliService(FlextService[t.ContainerMapping]):
+class FlextCliService(s[t.ContainerMapping]):
     operation: Literal["print", "table", "file_read", "file_write"] = "print"
     # ... fields
 
@@ -7865,7 +7863,7 @@ class cli:
 ```python
 
 # flext-cli/src/flext_cli/services/output.py
-class CliOutputService(FlextService[str]):
+class CliOutputService(s[str]):
     data: t.ContainerMapping
     format: Literal["json", "yaml", "table"] = "json"
 
@@ -7878,7 +7876,7 @@ class CliOutputService(FlextService[str]):
 ```python
 
 # flext-cli/src/flext_cli/services/file.py
-class CliFileService(FlextService[t.ContainerMapping]):
+class CliFileService(s[t.ContainerMapping]):
     operation: Literal["read", "write"] = "read"
     filepath: Path
 
@@ -7891,7 +7889,7 @@ class CliFileService(FlextService[t.ContainerMapping]):
 ```python
 
 # flext-cli/src/flext_cli/services/auth.py
-class CliAuthService(FlextService[str]):
+class CliAuthService(s[str]):
     operation: Literal["login", "logout", "validate"] = "login"
     username: str | None = None
 
@@ -8061,7 +8059,7 @@ Métrica: **Type safety** - Antes: Parcial - Depois: 100% Pydantic - Melhoria: *
 
 **flext-core** é o **coração arquitetural** do ecossistema FLEXT, fornecendo:
 
-- Base classes para domain services (FlextService[T])
+- Base classes para domain services (s[T])
 - Railway pattern (r[T])
 - Dependency injection (FlextContainer)
 - Configuration management (FlextSettings)
@@ -8073,7 +8071,7 @@ Métrica: **Type safety** - Antes: Parcial - Depois: 100% Pydantic - Melhoria: *
 **Arquitetura Atual:**
 
 - **22 módulos** em `flext-core/src/flext_core/`
-- **7 classes principais**: FlextService, FlextSettings, FlextContainer, FlextModels, x, r, FlextLogger
+- **7 classes principais**: s, FlextSettings, FlextContainer, FlextModels, x, r, FlextLogger
 - **Usado por 32+ projetos** do ecossistema FLEXT
 
 ### 🔍 Análise do Estado Atual
@@ -8138,11 +8136,11 @@ class FlextSettings(BaseSettings):
 ✅ **Computed fields** - Derivações automáticas
 ✅ **Extensível** - Projetos podem estender (FlextCliSettings, FlextApiSettings)
 
-**3. FlextService[T] - Base Class com DI**
+**3. s[T] - Base Class com DI**
 
 ```python
 # flext-core/src/flext_core/service.py
-class FlextService[TDomainResult](
+class s[TDomainResult](
     FlextModels.ArbitraryTypesModel,
     x,
     ABC,
@@ -8219,7 +8217,7 @@ class x:
 
 ```python
 # ✅ VOCÊ faz isso - simples e direto!
-class EmailService(FlextService[EmailResult]):
+class EmailService(s[EmailResult]):
     recipient: str
     subject: str
     body: str
@@ -8263,12 +8261,12 @@ result = EmailService(
 
 #### ⚠️ Problemas Identificados
 
-**Problema 1: FlextService Tem Muitos Métodos Públicos**
+**Problema 1: s Tem Muitos Métodos Públicos**
 
 **Estado Atual:**
 
 ```python
-class FlextService[TDomainResult]:
+class s[TDomainResult]:
     # Abstract method - OK
     @abstractmethod
     def execute(self) -> r[TDomainResult]: ...
@@ -8353,7 +8351,7 @@ class FlextModels:
 **Estado Atual:**
 
 ```python
-class FlextService[T]:
+class s[T]:
     @property
     def project_config(self) -> FlextSettings:
         """Auto-resolve by naming convention."""
@@ -8386,7 +8384,7 @@ class FlextService[T]:
 
 ```python
 # flext-cli/src/flext_cli/core.py
-class FlextCliCore(FlextService[CliDataDict]):
+class FlextCliCore(s[CliDataDict]):
     def __init__(self, config: CliConfigSchema | None = None):
         super().__init__()
         self._config = config or {}  # ❌ Private attr, não Pydantic field
@@ -8414,12 +8412,12 @@ class FlextCliCore(FlextService[CliDataDict]):
 
 ### 🎯 Arquitetura Proposta (Melhorias)
 
-#### **Solução 1: Simplificar FlextService[T]**
+#### **Solução 1: Simplificar s[T]**
 
 **Proposta:**
 
 ```python
-class FlextService[TDomainResult](
+class s[TDomainResult](
     FlextModels.ArbitraryTypesModel,
     x,
     ABC,
@@ -8462,14 +8460,14 @@ class FlextService[TDomainResult](
 
 ```python
 # ANTES - Multiple methods
-class MyService(FlextService[Result]):
+class MyService(s[Result]):
     def execute(self) -> r[Result]: ...
     def execute_with_context_cleanup(self) -> r[Result]: ...  # ❌ Boilerplate
     def validate_business_rules(self) -> r[bool]: ...  # ❌ Raramente usado
 
 
 # DEPOIS - Only execute + Pydantic validators
-class MyService(FlextService[Result]):
+class MyService(s[Result]):
     # Pydantic fields
     data: t.ContainerMapping
 
@@ -8562,7 +8560,7 @@ class DomainEvent(Value):
 **Proposta:**
 
 ```python
-class FlextService[TDomainResult, TConfig: FlextSettings = FlextSettings]:
+class s[TDomainResult, TConfig: FlextSettings = FlextSettings]:
     """Add config type parameter."""
 
     @property
@@ -8575,7 +8573,7 @@ class FlextService[TDomainResult, TConfig: FlextSettings = FlextSettings]:
 
 
 # Usage - Type-safe!
-class FlextCliCore(FlextService[CliDataDict, FlextCliSettings]):
+class FlextCliCore(s[CliDataDict, FlextCliSettings]):
     def execute(self) -> r[CliDataDict]:
         # ✅ Type-safe! IDE autocomplete works
         debug = self.project_config.debug  # FlextCliSettings.debug
@@ -8595,7 +8593,7 @@ class FlextCliCore(FlextService[CliDataDict, FlextCliSettings]):
 
 ```python
 # ANTES - __init__ manual + execute() inútil
-class FlextCliCore(FlextService[CliDataDict]):
+class FlextCliCore(s[CliDataDict]):
     def __init__(self, config: CliConfigSchema | None = None):
         super().__init__()
         self._config = config or {}
@@ -8606,7 +8604,7 @@ class FlextCliCore(FlextService[CliDataDict]):
 
 
 # DEPOIS - Pydantic fields + execute() com lógica
-class FlextCliCore(FlextService[CliDataDict]):
+class FlextCliCore(s[CliDataDict]):
     # Pydantic fields (NO __init__)
     operation: Literal["execute_command", "register_command", "list_commands"] = (
         "execute_command"
@@ -8645,7 +8643,7 @@ class FlextCliCore(FlextService[CliDataDict]):
 
 ### 📋 Plano de Migração
 
-#### **Fase 1: Simplificar FlextService** (1 semana)
+#### **Fase 1: Simplificar s** (1 semana)
 
 **1.1: Deprecar métodos raramente usados**
 
@@ -8676,7 +8674,7 @@ def with_context_cleanup(func: Callable) -> Callable:
 
 
 # Usage
-class MyService(FlextService[Result]):
+class MyService(s[Result]):
     @with_context_cleanup
     def execute(self) -> r[Result]:
         return r.ok(Result())
@@ -8720,7 +8718,7 @@ from flext_core import Command
 **3.1: Add config type parameter**
 
 ```python
-class FlextService[TDomainResult, TConfig: FlextSettings = FlextSettings]:
+class s[TDomainResult, TConfig: FlextSettings = FlextSettings]:
     @property
     def project_config(self) -> TConfig: ...
 ```
@@ -8729,14 +8727,14 @@ class FlextService[TDomainResult, TConfig: FlextSettings = FlextSettings]:
 
 ```python
 # Update signature to include config type
-class FlextCliCore(FlextService[CliDataDict, FlextCliSettings]): ...
+class FlextCliCore(s[CliDataDict, FlextCliSettings]): ...
 ```
 
 **3.3: Gradual rollout** - Backward compatible (default to FlextSettings)
 
 ### 📊 Antes vs Depois
 
-#### **FlextService API Surface**
+#### **s API Surface**
 
 Antes: 9 métodos públicos - Depois: 3 métodos essenciais - Mudança: **-66%**
 Antes: 3 properties - Depois: 2 properties - Mudança: **-33%**
@@ -8756,7 +8754,7 @@ Antes: Silent failures - Depois: Type errors at compile - Mudança: **+100% safe
 
 ### 📈 Métricas de Melhoria
 
-Métrica: **Métodos em FlextService** - Antes: 9 métodos - Depois: 3 métodos - Melhoria: **-66%**
+Métrica: **Métodos em s** - Antes: 9 métodos - Depois: 3 métodos - Melhoria: **-66%**
 Métrica: **Linhas em models.py** - Antes: 3,200 linhas - Depois: 5 × 200 linhas - Melhoria: **-84% por arquivo**
 Métrica: **API Clarity** - Antes: 3 execute methods - Depois: 1 execute - Melhoria: **+200% clarity**
 Métrica: **Type Safety** - Antes: Partial - Depois: 100% - Melhoria: **+100%**
@@ -8776,7 +8774,7 @@ Métrica: **Backward Compat** - Antes: N/A - Depois: 100% - Melhoria: **Zero bre
 
 #### **O Que Melhorar (Não Urgente)**
 
-1. ⚠️ **Simplificar FlextService** - Remover métodos raramente usados
+1. ⚠️ **Simplificar s** - Remover métodos raramente usados
 2. ⚠️ **Modularizar FlextModels** - Quebrar em 5 arquivos
 3. ⚠️ **Type-safe project_config** - Add config type parameter
 4. ⚠️ **Documentar Pydantic pattern** - execute() com fields
@@ -8790,7 +8788,7 @@ Métrica: **Backward Compat** - Antes: N/A - Depois: 100% - Melhoria: **Zero bre
 
 #### **Quick Wins (1 semana)**
 
-1. **Deprecar** métodos raramente usados em FlextService
+1. **Deprecar** métodos raramente usados em s
 2. **Criar** decorators (`@with_context_cleanup`)
 3. **Documentar** "Pydantic fields + execute()" pattern
 4. **Adicionar** type hints para `project_config`
@@ -8866,7 +8864,7 @@ Este documento foi estruturado para **máxima coesão e clareza**:
 
 **Conceitos Fundamentais:**
 
-- [x] FlextService[T] explicado claramente
+- [x] s[T] explicado claramente
 - [x] r[T] railway pattern
 - [x] Pydantic fields como domain data
 - [x] x infraestrutura automática
@@ -8991,7 +8989,7 @@ def result(self) -> TDomainResult:
         TDomainResult: Unwrapped domain result from execute()
 
     Raises:
-        FlextExceptions.BaseError: If execute() fails
+        e.BaseError: If execute() fails
     """
     return self.execute().unwrap()
 ```
@@ -9042,7 +9040,7 @@ def __new__(cls, **kwargs) -> Self:
 **Uso:**
 
 ```python
-class AutoUserService(FlextService[User]):
+class AutoUserService(s[User]):
     auto_execute = True  # ← Enable auto-execution
     user_id: str
 
@@ -9133,7 +9131,7 @@ class TestServiceResultProperty:
 
     def test_result_property_raises_on_failure(self) -> None:
         """V2: .result raises exception on failure."""
-        with pytest.raises(FlextExceptions.BaseError):
+        with pytest.raises(e.BaseError):
             FailingService(error_message="Test error").result
 
     def test_result_property_type_inference(self) -> None:
@@ -9170,7 +9168,7 @@ class TestAutoExecution:
 
     def test_auto_service_raises_on_failure(self) -> None:
         """auto_execute=True: Failures raise exception."""
-        with pytest.raises(FlextExceptions.BaseError):
+        with pytest.raises(e.BaseError):
             FailingAutoService(error_message="Custom error")
 
 
@@ -9279,7 +9277,7 @@ def __new__(cls, **kwargs) -> Self:
 #### Pattern 1: V2 Auto (Zero Ceremony - 4 chars)
 
 ```python
-class AutoUserService(FlextService[User]):
+class AutoUserService(s[User]):
     auto_execute = True  # ← Enable auto-execution
     user_id: str
 
@@ -9299,7 +9297,7 @@ print(user.id)  # ✅ 'id' is now available for domain models!
 #### Pattern 2: V2 Property (Zero Ceremony - 7 chars)
 
 ```python
-class UserService(FlextService[User]):
+class UserService(s[User]):
     # auto_execute defaults to False
     user_id: str
 
@@ -9423,7 +9421,7 @@ if pipeline.is_success:
 
 ```python
 # Se NÃO precisa de railway: use auto_execute
-class SimpleService(FlextService[User]):
+class SimpleService(s[User]):
     auto_execute = True  # Retorna User direto
     user_id: str
 
@@ -9435,7 +9433,7 @@ user = SimpleService(user_id="123")  # User direto
 
 
 # Se PRECISA de railway: NÃO use auto_execute
-class RailwayService(FlextService[User]):
+class RailwayService(s[User]):
     auto_execute = False  # Default - retorna service instance
     user_id: str
 

@@ -568,7 +568,7 @@ U = TypeVar("U")  # Generic utility
 
 # Bound TypeVars
 FlextModelT = TypeVar("FlextModelT", bound="FlextModels.Model")
-FlextServiceT = TypeVar("FlextServiceT", bound="FlextService")
+FlextServiceT = TypeVar("FlextServiceT", bound="s")
 ```
 
 ### Domain-Specific TypeVars (When Necessary)

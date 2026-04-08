@@ -23,8 +23,8 @@ type ServiceConfig struct {
 	ServiceName string
 }
 
-// FlextService represents the main FLEXT service
-type FlextService struct {
+// s represents the main FLEXT service
+type s struct {
 	config      *ServiceConfig
 	logger      logging.Logger
 	coordinator *coordination.FlexCoreCoordinator
@@ -33,7 +33,7 @@ type FlextService struct {
 }
 
 // NewFlextService creates a new FLEXT service instance
-func NewFlextService(cfg *ServiceConfig) (*FlextService, error) {
+func NewFlextService(cfg *ServiceConfig) (*s, error) {
 	// Initialize logging
 	if err := logging.Initialize(cfg.ServiceName, "info"); err != nil {
 		return nil, fmt.Errorf("failed to initialize logging: %w", err)
@@ -62,7 +62,7 @@ func NewFlextService(cfg *ServiceConfig) (*FlextService, error) {
 	// Initialize monitoring server
 	srv := server.NewServer(serviceCfg, logger)
 
-	return &FlextService{
+	return &s{
 		config:      cfg,
 		logger:      logger,
 		coordinator: coordinator,
@@ -72,7 +72,7 @@ func NewFlextService(cfg *ServiceConfig) (*FlextService, error) {
 }
 
 // Start starts the FLEXT service
-func (s *FlextService) Start() error {
+func (s *s) Start() error {
 	s.logger.Info(fmt.Sprintf("Starting %s on %s:%d (%s) - FlexCore URL: http://localhost:8080",
 		s.config.ServiceName, s.config.Host, s.config.Port, s.config.Environment))
 
@@ -88,7 +88,7 @@ func (s *FlextService) Start() error {
 }
 
 // waitForShutdown waits for shutdown signals and handles graceful shutdown
-func (s *FlextService) waitForShutdown() error {
+func (s *s) waitForShutdown() error {
 	// Setup signal channel
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
@@ -112,7 +112,7 @@ func (s *FlextService) waitForShutdown() error {
 }
 
 // Stop stops the FLEXT service
-func (s *FlextService) Stop() error {
+func (s *s) Stop() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 

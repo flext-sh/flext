@@ -1,4 +1,4 @@
-# FlextResult Comprehensive Implementation Handoff
+# r Comprehensive Implementation Handoff
 
 **Status**: Phase 1 & 2 Complete | Phase 3 & 4 Pending
 **Last Updated**: 2025-12-18
@@ -94,7 +94,7 @@ result = r[User].fail(
 ### Phase 3: Async Support
 
 **Scope**:
-- Add async operators to FlextResult:
+- Add async operators to r:
   - `flat_map_async()`
   - `flow_through_async()`
   - `traverse_async()`
@@ -207,7 +207,7 @@ All changes must pass:
 
 1. **Start with Phase 3**:
    - Add async methods to p.Result protocol
-   - Implement flat_map_async() in FlextResult
+   - Implement flat_map_async() in r
    - Add async support to safe() decorator
    - Create async integration test
 
@@ -234,14 +234,14 @@ All changes must pass:
 - `.planning/FLEXTRESULT_COMPREHENSIVE_ANALYSIS.md` - Full gap analysis
 - `.planning/SSOT_CONSOLIDATION_PATTERN.md` - Test consolidation patterns
 - `flext-core/src/flext_core/_models/result.py` - RuntimeResult base class
-- `flext-core/src/flext_core/result.py` - FlextResult implementation
+- `flext-core/src/flext_core/result.py` - r implementation
 
 ## Key Decisions Documented
 
 1. **StrEnum for ErrorDomain**: Better string representation than regular Enum
 2. **ConfigDict(arbitrary_types_allowed=True)**: Needed for BaseException support
 3. **Structured error optional**: error_code and error_data are optional for backward compat
-4. **No breaking changes to FlextResult**: All changes are additive
+4. **No breaking changes to r**: All changes are additive
 
 ## Critical Notes
 

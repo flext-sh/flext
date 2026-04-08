@@ -57,7 +57,7 @@ We will make DI explicit through four public layers:
 
 - `FlextDi`
 - `FlextContainer`
-- `FlextService`
+- `s`
 - `u`
 
 Application code must not touch `dependency_injector` directly.
@@ -81,13 +81,13 @@ We will keep a small direct runtime surface:
 - `FlextLogger`
 - `FlextContext`
 - `FlextContainer`
-- `FlextService`
+- `s`
 - `FlextDispatcher`
 - `FlextHandler`
 - `FlextCatalog`
-- `FlextDecorators`
+- `d`
 
-`FlextMixins` is removed from the forward public architecture.
+`x` is removed from the forward public architecture.
 
 ### Workspace Taxonomy
 
@@ -120,7 +120,7 @@ The baseline applies to FLEXT platform packages, domain packages, integrations, 
   - rejected because it keeps CQRS and extension storage coupled
 - Keep hidden DI and only add more guidelines
   - rejected because the current hidden bootstrap is the source of repeated ambiguity
-- Keep `FlextMixins` public and try to prune it incrementally
+- Keep `x` public and try to prune it incrementally
   - rejected because the abstraction itself is the source of leakage
 - Add compatibility aliases and parallel architecture layers
   - rejected because the workspace already suffers from duplicate narratives and duplicate entry points
