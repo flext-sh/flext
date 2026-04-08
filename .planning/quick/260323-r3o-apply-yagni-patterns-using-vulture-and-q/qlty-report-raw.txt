@@ -2438,7 +2438,7 @@ flext-infra/src/flext_infra/refactor/_utilities_loader.py
   64  Function with many parameters (count = 6): build_scan_result
   40  Function with many returns (count = 6): _coerce_violation_line
 
-flext-infra/src/flext_infra/refactor/_utilities_mro_scan.py
+flext-infra/src/flext_infra/refactor/mro_scan.py
  100  Function with many returns (count = 11): _mro_scan_candidate_from_statement
  157  Function with many returns (count = 6): _mro_scan_target_specs
  281  Function with many returns (count = 11): _mro_scan_typing_candidate_from_statement

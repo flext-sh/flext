@@ -101,11 +101,11 @@ flext/                                    # Monorepo root
 │   │   ├── __init__.py                 # AUTO-GENERATED (exports c, m, p, t, u, h)
 │   │   ├── conftest.py                 # Shared pytest fixtures
 │   │   ├── constants.py                # FlextTestsConstants
-│   │   ├── models.py                   # FlextTestsModels
-│   │   ├── protocols.py                # FlextTestsProtocols
-│   │   ├── typings.py                  # FlextTestsTypes
-│   │   ├── utilities.py                # FlextTestsUtilities
-│   │   ├── helpers.py                  # FlextTestsHelpers (builders, factories)
+│   │   ├── models.py                   # TestsFlextModels
+│   │   ├── protocols.py                # TestsFlextProtocols
+│   │   ├── typings.py                  # TestsFlextTypes
+│   │   ├── utilities.py                # TestsFlextUtilities
+│   │   ├── helpers.py                  # TestsFlextHelpers (builders, factories)
 │   │   ├── builders/                   # Test builders (fluent object creation)
 │   │   └── factories/                  # Test factories (data generation)
 │   └── pyproject.toml

@@ -38,7 +38,7 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 - `flext-infra/src/flext_infra/utilities.py` — root facade composing many `_utilities/*` mixins into `class Infra`
 - `flext-tests/src/flext_tests/constants.py` — canonical `src/` facade with a single local root namespace `class Tests`
 - `flext-core/tests/base.py` — already follows the `TestsFlext*` naming prefix
-- `flext-core/tests/models.py` — legacy `FlextCoreTestModels` naming that must not be copied into new work
+- `flext-core/tests/models.py` — legacy `TestsFlextCoreModels` naming that must not be copied into new work
 - `.claude/skills/flext-import-rules/SKILL.md`
 - `.claude/skills/flext-patterns/SKILL.md`
 
@@ -52,7 +52,7 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
   - `src/`: `class <Domain>:`
   - `tests/`: `class <Domain>:` containing `class Tests:`
 - Callers MUST keep the organic namespace path emitted by MRO. Use `u.Infra.parse_semver`, `c.Tests.ERR_OK_FAILED`, and `m.TargetOracle.ExecuteResult`. Do not flatten nested domain-local classes back onto the facade root with assignments like `ExecuteResult = TargetOracle.ExecuteResult`.
-- Private mixin files under `_models/`, `_utilities/`, `_protocols/`, and similar trees define mixin classes only. The public facade composes them in its inheritance list. Manual flat wrapper nesting such as `class Docker(FlextTestsDocker): pass` inside the facade namespace is forbidden.
+- Private mixin files under `_models/`, `_utilities/`, `_protocols/`, and similar trees define mixin classes only. The public facade composes them in its inheritance list. Manual flat wrapper nesting such as `class Docker(TestsFlextDocker): pass` inside the facade namespace is forbidden.
 - Same-project cross-facade imports are forbidden at runtime unless explicitly allowed below:
   - `typings.py` may reference same-project `p` and `m` only under `TYPE_CHECKING`.
   - `protocols.py` may reference same-project `t` and `m` only under `TYPE_CHECKING`.
@@ -111,10 +111,10 @@ class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
     ExecuteResult = TargetOracle.ExecuteResult
 
 
-class TestsFlextCoreUtilities(FlextTestsUtilities, FlextCliUtilities):
+class TestsFlextCoreUtilities(TestsFlextUtilities, FlextCliUtilities):
     class Core:
         class Tests:
-            class Docker(FlextTestsDocker):
+            class Docker(TestsFlextDocker):
                 pass
 ```
 

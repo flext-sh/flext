@@ -7,7 +7,7 @@ tags: [refactor, thin-orchestrator, rope-centralization, mro, flext-infra]
 # Dependency graph
 requires:
   - phase: 10-01
-    provides: "FlextInfraServiceBase thin base + FlextInfraCommandContext mixin"
+    provides: "FlextInfraServiceBase thin base + FlextInfraServiceBase mixin"
 provides:
   - "Refactor domain (11 service files) verified as thin orchestrators"
   - "Zero direct rope imports confirmed across all refactor service files"

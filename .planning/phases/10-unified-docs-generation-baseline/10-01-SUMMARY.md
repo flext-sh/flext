@@ -8,9 +8,9 @@ tags: [service-facade, factory-method, pydantic, mro, flext-infra]
 requires: []
 provides:
   - "FlextInfraServiceBase thin base (~21 LOC) with settings + bootstrap only"
-  - "FlextInfraCommandContext mixin (~109 LOC) carrying all domain fields"
+  - "FlextInfraServiceBase mixin (~109 LOC) carrying all domain fields"
   - "FlextInfra api.py factory-method facade with singleton pattern"
-  - "s = FlextInfraCommandContext alias for backward compatibility"
+  - "s = FlextInfraServiceBase alias for backward compatibility"
 affects: [10-02, 10-03, 10-04, 10-05, 10-06, 10-07, 10-08]
 
 # Tech tracking
@@ -23,13 +23,13 @@ key-files:
   modified: ["flext-infra/src/flext_infra/base.py", "flext-infra/src/flext_infra/__init__.py", "flext-infra/src/flext_infra/codegen/census.py", "flext-infra/src/flext_infra/codegen/scaffolder.py", "flext-infra/src/flext_infra/codegen/lazy_init.py", "flext-infra/src/flext_infra/workspace/migrator.py"]
 
 key-decisions:
-  - "s alias points to FlextInfraCommandContext (not FlextInfraServiceBase) for backward compatibility -- all 19+ s[T] consumers access domain fields"
+  - "s alias points to FlextInfraServiceBase (not FlextInfraServiceBase) for backward compatibility -- all 19+ s[T] consumers access domain fields"
   - "DI fields (config_type, wire_modules, etc.) removed from base -- zero consumers reference them"
   - "Factory-method composition instead of MRO due to incompatible type params (s[bool] vs s[str])"
   - "FlextInfra facade inherits thin FlextInfraServiceBase directly -- no domain field baggage"
 
 patterns-established:
-  - "Two-class base: FlextInfraServiceBase (thin) + FlextInfraCommandContext (domain fields)"
+  - "Two-class base: FlextInfraServiceBase (thin) + FlextInfraServiceBase (domain fields)"
   - "Factory-method facade: FlextInfra delegates to domain services via methods, not MRO"
 
 requirements-completed: [DOCS-01]
@@ -41,7 +41,7 @@ completed: 2026-04-05
 
 # Phase 10 Plan 01: Foundation Layer Summary
 
-**Thin FlextInfraServiceBase + FlextInfraCommandContext mixin in base.py, FlextInfra factory-method facade in api.py**
+**Thin FlextInfraServiceBase + FlextInfraServiceBase mixin in base.py, FlextInfra factory-method facade in api.py**
 
 ## Performance
 
@@ -52,30 +52,30 @@ completed: 2026-04-05
 - **Files modified:** 7
 
 ## Accomplishments
-- Split base.py into thin FlextInfraServiceBase (21 LOC) and FlextInfraCommandContext (109 LOC)
+- Split base.py into thin FlextInfraServiceBase (21 LOC) and FlextInfraServiceBase (109 LOC)
 - Removed unused DI fields (config_type, config_overrides, initial_context, container_overrides, wire_modules, wire_packages, wire_classes)
 - Created api.py with FlextInfra factory-method facade and singleton pattern
-- Updated 4 direct FlextInfraServiceBase consumers to FlextInfraCommandContext
+- Updated 4 direct FlextInfraServiceBase consumers to FlextInfraServiceBase
 - Zero ruff + pyrefly errors across all modified files
 
 ## Task Commits
 
 Each task was committed atomically:
 
-1. **Task 1: Split base.py into thin FlextInfraServiceBase + FlextInfraCommandContext mixin** - `d41f549` (feat)
+1. **Task 1: Split base.py into thin FlextInfraServiceBase + FlextInfraServiceBase mixin** - `d41f549` (feat)
 2. **Task 2: Create api.py factory-method facade** - `1fda842` (feat)
 
 ## Files Created/Modified
 - `flext-infra/src/flext_infra/api.py` - New factory-method facade with FlextInfra singleton
 - `flext-infra/src/flext_infra/base.py` - Reorganized into thin base + command context mixin
-- `flext-infra/src/flext_infra/__init__.py` - Updated lazy exports for FlextInfraCommandContext + s alias
-- `flext-infra/src/flext_infra/codegen/census.py` - FlextInfraServiceBase -> FlextInfraCommandContext
-- `flext-infra/src/flext_infra/codegen/scaffolder.py` - FlextInfraServiceBase -> FlextInfraCommandContext
-- `flext-infra/src/flext_infra/codegen/lazy_init.py` - FlextInfraServiceBase -> FlextInfraCommandContext
-- `flext-infra/src/flext_infra/workspace/migrator.py` - FlextInfraServiceBase -> FlextInfraCommandContext + @override fix
+- `flext-infra/src/flext_infra/__init__.py` - Updated lazy exports for FlextInfraServiceBase + s alias
+- `flext-infra/src/flext_infra/codegen/census.py` - FlextInfraServiceBase -> FlextInfraServiceBase
+- `flext-infra/src/flext_infra/codegen/scaffolder.py` - FlextInfraServiceBase -> FlextInfraServiceBase
+- `flext-infra/src/flext_infra/codegen/lazy_init.py` - FlextInfraServiceBase -> FlextInfraServiceBase
+- `flext-infra/src/flext_infra/workspace/migrator.py` - FlextInfraServiceBase -> FlextInfraServiceBase + @override fix
 
 ## Decisions Made
-- `s` alias points to `FlextInfraCommandContext` (not `FlextInfraServiceBase`) because all 19+ `s[T]` consumers access domain fields -- changing the alias to thin base would break every consumer
+- `s` alias points to `FlextInfraServiceBase` (not `FlextInfraServiceBase`) because all 19+ `s[T]` consumers access domain fields -- changing the alias to thin base would break every consumer
 - DI fields removed from both classes -- zero consumers reference `config_type`, `wire_modules`, etc.
 - FlextInfra facade inherits thin `FlextInfraServiceBase[bool]` directly -- the facade doesn't need domain fields itself, it delegates to domain services via factory methods
 - Factory-method composition chosen over MRO because domain services have incompatible type parameters (`s[bool]` vs `s[str]`)
@@ -87,7 +87,7 @@ Each task was committed atomically:
 **1. [Rule 1 - Bug] s alias backward compatibility**
 - **Found during:** Task 1 (base.py split)
 - **Issue:** Plan specified `s = FlextInfraServiceBase` (thin base), but all 19+ `s[T]` consumers access domain fields (workspace_root, apply_changes, dry_run, etc.) -- would break the entire codebase
-- **Fix:** Set `s = FlextInfraCommandContext` instead, updated `__init__.py` lazy mapping to match
+- **Fix:** Set `s = FlextInfraServiceBase` instead, updated `__init__.py` lazy mapping to match
 - **Files modified:** flext-infra/src/flext_infra/base.py, flext-infra/src/flext_infra/__init__.py
 - **Verification:** All consumer imports verified, ruff + pyrefly clean
 - **Committed in:** d41f549
@@ -95,7 +95,7 @@ Each task was committed atomically:
 **2. [Rule 3 - Blocking] Consumer imports updated**
 - **Found during:** Task 1 (base.py split)
 - **Issue:** 4 files import `FlextInfraServiceBase` by name (not via `s`) and use domain fields -- they would fail at runtime if FlextInfraServiceBase lost domain fields
-- **Fix:** Updated imports to `FlextInfraCommandContext` in census.py, scaffolder.py, lazy_init.py, migrator.py
+- **Fix:** Updated imports to `FlextInfraServiceBase` in census.py, scaffolder.py, lazy_init.py, migrator.py
 - **Files modified:** 4 codegen + workspace files
 - **Verification:** ruff + pyrefly clean on all 4 files
 - **Committed in:** d41f549

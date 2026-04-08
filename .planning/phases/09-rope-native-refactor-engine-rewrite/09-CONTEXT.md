@@ -26,7 +26,7 @@ as an additional layer on top of it.
 - **D-04:** Rope-native in Phase 9: `symbol_propagator.py`, `mro_reference_rewriter.py`, `nested_class_propagation.py` — these are the only ones doing cross-file name resolution
 - **D-05:** All other transformers stay LibCST — but MUST be reviewed and simplified where rope APIs can reduce their complexity (e.g. `rope.find_occurrences` replacing hand-rolled grep logic inside LibCST transformers)
 - **D-06:** `mro_remover.py` and `mro_private_inline.py` — NO rope pre-check. Keep them as-is LibCST, simple.
-- **D-07:** Import transformers (`import_modernizer`, `import_normalizer`, `import_bypass_remover`, `tier0_import_fixer`, `lazy_import_fixer`) — stay LibCST, simplify if possible
+- **D-07:** Import transformers (`import_modernizer`, `normalizer`, `import_bypass_remover`, `tier0_import_fixer`, `lazy_import_fixer`) — stay LibCST, simplify if possible
 - **D-08:** Typing transformers (`typing_annotation_replacer`, `typing_unifier`) — stay LibCST, simplify if possible
 - **D-09:** Structural transformers (`class_reconstructor`, `alias_remover`, `deprecated_remover`, `unused_model_remover`) — stay LibCST, simplify if possible
 

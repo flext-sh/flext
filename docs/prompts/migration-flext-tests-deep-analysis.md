@@ -8,11 +8,11 @@
   - [Diretórios a Verificar](#diretrios-a-verificar)
   - [Arquivos a Verificar](#arquivos-a-verificar)
 - [Métodos Deprecados e Migrações Obrigatórias](#mtodos-deprecados-e-migraes-obrigatrias)
-  - [1. tm (FlextTestsMatchers) - Métodos Deprecados](#1-tm-flexttestsmatchers-mtodos-deprecados)
-  - [2. tt (FlextTestsFactories) - Métodos Deprecados](#2-tt-flexttestsfactories-mtodos-deprecados)
-  - [3. tf (FlextTestsFiles) - Métodos Deprecados](#3-tf-flexttestsfiles-mtodos-deprecados)
-  - [4. tv (FlextTestsValidator) - Verificar Uso Correto](#4-tv-flexttestsvalidator-verificar-uso-correto)
-  - [5. tb (FlextTestsBuilders) - Verificar Uso Correto](#5-tb-flexttestsbuilders-verificar-uso-correto)
+  - [1. tm (TestsFlextMatchers) - Métodos Deprecados](#1-tm-flexttestsmatchers-mtodos-deprecados)
+  - [2. tt (TestsFlextFactories) - Métodos Deprecados](#2-tt-flexttestsfactories-mtodos-deprecados)
+  - [3. tf (TestsFlextFiles) - Métodos Deprecados](#3-tf-flexttestsfiles-mtodos-deprecados)
+  - [4. tv (TestsFlextValidator) - Verificar Uso Correto](#4-tv-flexttestsvalidator-verificar-uso-correto)
+  - [5. tb (TestsFlextBuilders) - Verificar Uso Correto](#5-tb-flexttestsbuilders-verificar-uso-correto)
 - [Padrões a Identificar e Corrigir](#padres-a-identificar-e-corrigir)
   - [1. Imports Incorretos](#1-imports-incorretos)
   - [2. Uso de Métodos Privados ou Internos](#2-uso-de-mtodos-privados-ou-internos)
@@ -81,7 +81,7 @@ Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os p
 
 ## Métodos Deprecados e Migrações Obrigatórias
 
-### 1. tm (FlextTestsMatchers) - Métodos Deprecados
+### 1. tm (TestsFlextMatchers) - Métodos Deprecados
 
 #### ❌ DEPRECADOS → ✅ MIGRAR PARA
 
@@ -133,7 +133,7 @@ tm.list_(items, contains="item", length=3)
 tm.that(items, has="item", length=3)
 ```
 
-### 2. tt (FlextTestsFactories) - Métodos Deprecados
+### 2. tt (TestsFlextFactories) - Métodos Deprecados
 
 #### ❌ DEPRECADOS → ✅ MIGRAR PARA
 
@@ -156,7 +156,7 @@ tm.that(items, has="item", length=3)
 | `tb.Tests.Model.config(...)`        | `tt.model("config", ...)`       | `tb.Tests.Model.config(debug=True)` → `tt.model("config", debug=True)` |
 | `tb.Tests.Model.batch_users(count)` | `tt.batch("user", count=count)` | `tb.Tests.Model.batch_users(5)` → `tt.batch("user", count=5)`          |
 
-### 3. tf (FlextTestsFiles) - Métodos Deprecados
+### 3. tf (TestsFlextFiles) - Métodos Deprecados
 
 #### ❌ DEPRECADOS → ✅ MIGRAR PARA
 
@@ -196,7 +196,7 @@ tm.ok(info_result)
 info = info_result.unwrap()
 ```
 
-### 4. tv (FlextTestsValidator) - Verificar Uso Correto
+### 4. tv (TestsFlextValidator) - Verificar Uso Correto
 
 - ✅ `tv.imports()` - Verificar se está sendo usado corretamente
 - ✅ `tv.types()` - Verificar se está sendo usado corretamente
@@ -206,7 +206,7 @@ info = info_result.unwrap()
 - ✅ `tv.layer()` - Verificar se está sendo usado corretamente
 - ✅ `tv.all()` - Verificar se está sendo usado corretamente
 
-### 5. tb (FlextTestsBuilders) - Verificar Uso Correto
+### 5. tb (TestsFlextBuilders) - Verificar Uso Correto
 
 - ✅ `tb()` - Instância do builder (correto)
 - ✅ `tb.with_users(count)` - Verificar se está sendo usado corretamente
@@ -220,9 +220,9 @@ info = info_result.unwrap()
 
 ```python
 # ❌ ERRADO
-from flext_tests import FlextTestsMatchers
+from flext_tests import TestsFlextMatchers
 
-tm = FlextTestsMatchers()
+tm = TestsFlextMatchers()
 
 # ✅ CORRETO
 from flext_tests import tm
@@ -320,10 +320,10 @@ Qualquer método que não esteja na documentação pública deve ser investigado
 3. **Buscar imports incorretos:**
 
    ```bash
-   - from flext_tests import FlextTestsMatchers
-   - from flext_tests import FlextTestsFactories
-   - from flext_tests import FlextTestsFiles
-   - from flext_tests import FlextTestsBuilders
+   - from flext_tests import TestsFlextMatchers
+   - from flext_tests import TestsFlextFactories
+   - from flext_tests import TestsFlextFiles
+   - from flext_tests import TestsFlextBuilders
    ```
 
 4. **Buscar usos de métodos privados:**
@@ -580,10 +580,10 @@ def test_database_connection():
 
 ```python
 # ~/flext/models.py
-from flext_tests import FlextTestsModels
+from flext_tests import TestsFlextModels
 
 
-class FlextModels(FlextTestsModels):
+class FlextModels(TestsFlextModels):
     """Models base que estende flext_tests."""
 
     class TestsLdap:

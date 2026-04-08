@@ -6,7 +6,7 @@ tags: [thin-orchestrator, check, validate, workspace-checker, u.Infra]
 
 requires:
   - phase: 10-01
-    provides: "FlextInfraServiceBase thin base and s alias pointing to FlextInfraCommandContext"
+    provides: "FlextInfraServiceBase thin base and s alias pointing to FlextInfraServiceBase"
 provides:
   - "check domain refactored to thin orchestrator (no direct I/O in service)"
   - "validate domain audited and confirmed compliant"
