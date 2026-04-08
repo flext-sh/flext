@@ -6,7 +6,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
   - [For pytest Tests](#for-pytest-tests)
-  - [Direct TestsFlextDocker Usage](#direct-flexttestsdocker-usage)
+  - [Direct tk Usage](#direct-flexttestsdocker-usage)
 - [Architecture](#architecture)
   - [DOCKER COMPOSE FILES (17 CENTRALIZED)](#docker-compose-files-17-centralized)
   - [Container Type Reference (THREE PRIMARY TYPES)](#container-type-reference-three-primary-types)
@@ -101,16 +101,16 @@ def test_with_oracle(oracle_container):
     # Use for flext-db-oracle, flext-(dbt|tap|target)-oracle
 ```
 
-### Direct TestsFlextDocker Usage
+### Direct tk Usage
 
 For scripts and examples:
 
 ```python
-from flext_tests import TestsFlextDocker
+from flext_tests import tk
 from pathlib import Path
 
 # Initialize with workspace root
-docker_mgr = TestsFlextDocker(workspace_root=Path.home() / "flext")
+docker_mgr = tk(workspace_root=Path.home() / "flext")
 
 # Start container
 result = docker_mgr.start_container("flext-postgres-test")
@@ -189,7 +189,7 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
 # From any project directory, reference central compose files
 docker-compose -f ~/flext/docker/docker-compose.db-oracle.yml up -d
 
-# Or let TestsFlextDocker manage them automatically
+# Or let tk manage them automatically
 ```
 
 ---
@@ -221,7 +221,7 @@ All Dockerfiles are consolidated in `images/` directory with descriptive names:
 # Build from centralized location
 docker build -f ~/flext/docker/images/Dockerfile.flext-api -t flext-api:latest ~/flext/flext-api/
 
-# Or let TestsFlextDocker manage builds automatically
+# Or let tk manage builds automatically
 ```
 
 ---
@@ -230,7 +230,7 @@ docker build -f ~/flext/docker/images/Dockerfile.flext-api -t flext-api:latest ~
 
 ### Automatic Cleanup
 
-TestsFlextDocker handles container lifecycle automatically:
+tk handles container lifecycle automatically:
 
 1. **Test Isolation**: Each test gets clean container state
 2. **Automatic Cleanup**: Changes reverted after test completion
@@ -242,8 +242,8 @@ TestsFlextDocker handles container lifecycle automatically:
 Containers that can't be cleaned are marked dirty:
 
 ```python
-# TestsFlextDocker automatically manages dirty state
-docker_mgr = TestsFlextDocker()
+# tk automatically manages dirty state
+docker_mgr = tk()
 
 # If test fails and container is compromised
 docker_mgr.mark_container_dirty("flext-postgres-test")
@@ -275,10 +275,10 @@ container = client.containers.run("postgres:13", detach=True)
 ### New Pattern (REQUIRED)
 
 ```python
-# ✅ NEW - Use TestsFlextDocker
-from flext_tests import TestsFlextDocker
+# ✅ NEW - Use tk
+from flext_tests import tk
 
-docker_mgr = TestsFlextDocker()
+docker_mgr = tk()
 result = docker_mgr.start_container("flext-postgres-test")
 # Automatic cleanup, dirty state management, etc.
 ```
@@ -302,11 +302,11 @@ from flext_tests import postgres_container
 - ❌ `docker-compose.yml` in project directories (use central location)
 - ❌ `Dockerfile` in project directories (use images/ directory)
 - ❌ Local `docker_fixtures.py` (use flext_tests.fixtures)
-- ❌ Custom Docker scripts (use TestsFlextDocker API)
+- ❌ Custom Docker scripts (use tk API)
 
 ### Always Use
 
-- ✅ `flext_tests.TestsFlextDocker` for container management
+- ✅ `flext_tests.tk` for container management
 - ✅ `flext_tests.fixtures` for test fixtures
 - ✅ Centralized compose files from `~/flext/docker/`
 - ✅ Centralized Dockerfiles from `~/flext/docker/images/`
@@ -347,7 +347,7 @@ ls ~/flext/docker/images/Dockerfile.* | wc -l
 
 ### FURTHER READING
 
-- **TestsFlextDocker API**: See `flext-core/src/flext_tests/docker.py` (1649 lines)
+- **tk API**: See `flext-core/src/flext_tests/docker.py` (1649 lines)
 - **Centralized Fixtures**: See `flext-core/src/flext_tests/fixtures/docker_fixtures.py`
 - **FLEXT Standards**: See `~/flext/AGENTS.md` for ecosystem standards
 - **Project Docs**: See individual project README files for specific usage
@@ -355,7 +355,7 @@ ls ~/flext/docker/images/Dockerfile.* | wc -l
 ---
 
 **AUTHORITY**: This is the ONLY location for Docker artifacts in FLEXT ecosystem.
-**ENFORCEMENT**: All projects MUST use TestsFlextDocker for container management.
+**ENFORCEMENT**: All projects MUST use tk for container management.
 **ZERO DUPLICATION**: No Docker files allowed outside this centralized location.
 
 ---

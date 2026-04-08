@@ -216,7 +216,7 @@ Anti-patterns:
 
 - **Defining runtime aliases via `u.Aliases.*`** — forbidden. Use simple aliases only: `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = FlextDecorators`, `e = FlextExceptions`, `h = FlextHandlers`, `s = FlextService`, `x = FlextMixins`. No separate alias registry or staticmethod layer for package **init**.
 - **Flattening domain-local classes at the facade root** — forbidden. Keep `m.TargetOracle.ExecuteResult`, not `m.ExecuteResult`.
-- **Manual wrapper nesting for private mixins** — forbidden. Compose `_models/*` and `_utilities/*` mixins in the facade MRO instead of writing `class Docker(TestsFlextDocker): ...`.
+- **Manual wrapper nesting for private mixins** — forbidden. Compose `_models/*` and `_utilities/*` mixins in the facade MRO instead of writing `class Docker(tk): ...`.
 - `from flext_meltano import m` — duplicate alias surface
 - `class Meltano: X = Parent.Meltano.X` — assignment not valid as type
 - Inheriting `FlextModels` when parent namespaces are needed — loses `m.Meltano.*`
