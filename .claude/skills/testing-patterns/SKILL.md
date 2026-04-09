@@ -48,6 +48,7 @@ description: Testing patterns, anti-patterns, and guidelines for Python/pytest i
 - Mock external dependencies (DB, network, filesystem) — never real services in unit tests.
 - Test r operations by asserting `.is_success`/`.is_failure` and `.value`/`.error`.
 - Never delete failing tests to make CI pass — fix the code instead.
+- **AXIOMATIC**: Tests MUST verify stable, public behavior — not implementation details. Do NOT assert on internal warning strings, tracebacks, private helper names, temporary alias spellings, internal class names, exact MRO composition, or any detail that can change without changing module behavior. If behavior is unchanged and only internals moved, the test must be rewritten.
 - **AXIOMATIC**: Tests MUST demonstrate the EXACT SAME strict typing, Pydantic v2, r, and architectural discipline as production code. Test files are NOT exempt from ANY rule. Test fixtures MUST use `Field()`, typed models, and `r[T]` returns. Test data MUST use `t.*` types from `typings.py`. Test assertions on r MUST use `.is_success`/`.is_failure` and `.value`/`.error`. There is NO "test-only" relaxation of any typing, structural, or Pydantic v2 rule. Tests that violate these rules are themselves violations.
 - **AXIOMATIC**: Test facades use `TestsFlext<Project><Tier>` naming and keep test-only scope under `<Domain>.Tests`. Legacy `Flext<Project>Test<Tier>` names and flat nested wrappers around private mixins are migration debt, not patterns to repeat.
 - **AXIOMATIC**: ALL code in tests MUST follow "Pydantic v2 way": `Field()` for field declarations, `ConfigDict(...)` for config, validation centralized in models via `@field_validator`/`@model_validator`/`@computed_field`. Enums/Mappings/Literals from `constants.py` (`c.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`. Test models MUST inherit via MRO from FLEXT base models.
@@ -158,6 +159,17 @@ def test_service_calls_repository():
 mock_service.process.return_value = "done"
 result = mock_service.process("data")
 assert result == "done"  # proves nothing about real code
+```
+
+**Testing internal implementation details instead of contract behavior**:
+
+```python
+# BAD: implementation-coupled assertion
+assert "unquoted relative forward reference 'p'" not in combined_output
+
+# GOOD: behavioral assertion
+assert result.exit_code == 0
+assert "unexpected_success True" in combined_output
 ```
 
 **Test-only methods in production code**:

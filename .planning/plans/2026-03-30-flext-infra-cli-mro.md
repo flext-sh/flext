@@ -22,7 +22,7 @@
 - `flext-infra/src/flext_infra/release/cli.py` — `FlextInfraCliRelease`
 - `flext-infra/src/flext_infra/validate/cli.py` — `FlextInfraCliValidate`
 - `flext-infra/src/flext_infra/workspace/cli.py` — `FlextInfraCliWorkspace`
-- `flext-infra/src/flext_infra/workspace/maintenance/cli.py` — `FlextInfraCliMaintenance`
+- `flext-infra/src/flext_infra/maintenance/cli.py` — `FlextInfraCliMaintenance`
 
 ### Modify (12 files)
 - `flext-infra/src/flext_infra/__main__.py` — thin entry → `FlextInfraCli().run()`
@@ -34,7 +34,7 @@
 - `flext-infra/src/flext_infra/release/__main__.py` — thin entry + keep `_resolve_version`/`_resolve_tag` (tests import them)
 - `flext-infra/src/flext_infra/validate/__main__.py` — thin entry
 - `flext-infra/src/flext_infra/workspace/__main__.py` — thin entry
-- `flext-infra/src/flext_infra/workspace/maintenance/__main__.py` — thin entry
+- `flext-infra/src/flext_infra/maintenance/__main__.py` — thin entry
 - `flext-infra/src/flext_infra/_models/cli_inputs.py` — already exists, verify models
 - `flext-infra/src/flext_infra/Makefile` (root) — update orchestrate `--projects` flag
 
@@ -79,9 +79,9 @@ Key: handler IS the service method. `execute_command(params: Input) -> r[T]`.
 ## Task 1: Group CLI Mixin — maintenance (simplest, proves pattern)
 
 **Files:**
-- Create: `flext-infra/src/flext_infra/workspace/maintenance/cli.py`
-- Modify: `flext-infra/src/flext_infra/workspace/maintenance/__main__.py`
-- Modify: `flext-infra/src/flext_infra/workspace/maintenance/python_version.py` (add `execute_command`)
+- Create: `flext-infra/src/flext_infra/maintenance/cli.py`
+- Modify: `flext-infra/src/flext_infra/maintenance/__main__.py`
+- Modify: `flext-infra/src/flext_infra/maintenance/python_version.py` (add `execute_command`)
 
 - [ ] **Step 1: Add `execute_command` to service**
 
@@ -154,8 +154,8 @@ if __name__ == "__main__":
 - [ ] **Step 4: Validate**
 
 ```bash
-.venv/bin/ruff check flext-infra/src/flext_infra/workspace/maintenance/ --fix
-.venv/bin/pyrefly check flext-infra/src/flext_infra/workspace/maintenance/
+.venv/bin/ruff check flext-infra/src/flext_infra/maintenance/ --fix
+.venv/bin/pyrefly check flext-infra/src/flext_infra/maintenance/
 .venv/bin/pytest flext-infra/tests/unit/test_infra_maintenance_cli.py -x -q
 ```
 

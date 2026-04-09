@@ -12,7 +12,7 @@
 
 ---
 
-name: workspace-maintenance
+name: maintenance
 description: Workspace-wide maintenance automation — hygiene checks, dependabot config standardization, poetry health, and security enforcement across all submodules.
 
 ---
@@ -35,14 +35,14 @@ description: Workspace-wide maintenance automation — hygiene checks, dependabo
 - All checks must be idempotent and safe by default (read-only unless `--apply`).
 - Mutations (cleanup, lock updates) require explicit `--apply` flag.
 - Scripts must discover `flext-*` projects with `pyproject.toml` for workspace iteration.
-- Reports output to `.reports/workspace-maintenance--json--<slug>.json`.
+- Reports output to `.reports/maintenance--json--<slug>.json`.
 - Exit 0 = all checks pass, exit 1 = violations found.
 - Each script must be standalone (stdlib + PyYAML only, no flext_core imports).
 
 ## Instructions
 
 - When adding a new workspace check, create a `check_<concern>.py` under `scripts/maintenance/`.
-- Add the `# Owner-Skill: .claude/skills/workspace-maintenance/SKILL.md` marker on line 2.
+- Add the `# Owner-Skill: .claude/skills/maintenance/SKILL.md` marker on line 2.
 - Follow the gate contract pattern: `argparse`, `dataclass` violations, JSON report, `sys.exit(main())`.
 - Register the new script in this skill's Scope and Scripts table.
 - Use the project discovery pattern: iterate `flext-*` dirs with `pyproject.toml` present.
