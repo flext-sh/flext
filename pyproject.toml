@@ -11,7 +11,6 @@ requires = [ "hatchling" ]
 # [CUSTOM] project metadata
 [project]
 
-
 authors = [ {email = "team@flext.sh", name = "FLEXT Team"} ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -123,13 +122,10 @@ Documentation = "https://docs.flext.sh"
 Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 
-
-
 # [MANAGED] codespell
 [tool.codespell]
 check-filenames = true
 ignore-words-list = "crate,nd"
-
 
 # [MANAGED] coverage
 [tool.coverage.report]
@@ -142,7 +138,6 @@ skip_covered = false
 omit = [
   "*/dependency_injector/providers.pyx",
 ]
-
 
 # [MANAGED] deptry
 [tool.deptry]
@@ -194,10 +189,8 @@ exclude_docs = [
 ]
 site_title = "FLEXT Workspace"
 
-
 [tool.hatch.metadata]
 allow-direct-references = true
-
 
 # [MANAGED] mypy
 [tool.mypy]
@@ -222,16 +215,13 @@ python_version = "3.13"
 disable_error_code = [ "assignment" ]
 module = [ "tests.fixtures.*" ]
 
-
 [tool.poetry]
-
 
 # [MANAGED] pydantic-mypy
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
-
 
 # [MANAGED] pyrefly
 [tool.pyrefly]
@@ -352,7 +342,6 @@ unused-coroutine = true
 unused-ignore = true
 variance-mismatch = true
 
-
 # [MANAGED] pyright
 [tool.pyright]
 exclude = [
@@ -431,7 +420,6 @@ extraPaths = [ ".", "src" ]
 reportPrivateUsage = "none"
 root = "scripts"
 
-
 # [MANAGED] pytest
 [tool.pytest.ini_options]
 addopts = [
@@ -457,7 +445,6 @@ python_files = [
   "*_tests.py",
   "test_*.py",
 ]
-
 
 # [MANAGED] ruff
 [tool.ruff]
@@ -607,7 +594,9 @@ split-on-trailing-comma = true
 
 [tool.ruff.lint.per-file-ignores]
 
-
+"**/.vulture_whitelist.py" = [
+  "ALL",
+]
 "**/*_pb2*.py" = [
   "ALL",
 ]
@@ -787,9 +776,6 @@ split-on-trailing-comma = true
   "S404",
   "S603",
 ]
-"**/.vulture_whitelist.py" = [
-  "ALL",
-]
 "**/__init__.py" = [
   "A004",
   "ANN401",
@@ -876,7 +862,7 @@ split-on-trailing-comma = true
   "S404",
   "S603",
 ]
-"**/tools/**/*.py" = [
+"**/tools/*.py" = [
   "FBT001",
   "FBT002",
   "N802",
@@ -885,7 +871,7 @@ split-on-trailing-comma = true
   "S607",
   "T201",
 ]
-"**/tools/*.py" = [
+"**/tools/**/*.py" = [
   "FBT001",
   "FBT002",
   "N802",
@@ -1042,7 +1028,6 @@ members = [
   "flext-tests",
   "flext-web",
 ]
-
 
 # [MANAGED] yamlfix
 [tool.yamlfix]
