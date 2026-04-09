@@ -1,0 +1,39 @@
+docs/utilities-guide.md
+  9e7bd5dfd87d6dd7 110,150,337
+docs/planning/phases7_9_completion.md
+  9e7bd5dfd87d6dd7 522-523
+.claude/skills/lib-pydantic-v2/SKILL.md
+  9e7bd5dfd87d6dd7 155-156,159-160,163-164
+docs/type-system-architecture.md
+  9e7bd5dfd87d6dd7 206,211,253,257-258,274,409,412,422
+docs/planning/pydantic2_migration_roadmap.md
+  9e7bd5dfd87d6dd7 231
+docs/planning/phase1_detailed_plan.md
+  9e7bd5dfd87d6dd7 96,98,101,103,282,295-296,384,569-570
+.claude/skills/flext-strict-typing/SKILL.md
+  9e7bd5dfd87d6dd7 813
+.claude/skills/lib-returns/SKILL.md
+  9e7bd5dfd87d6dd7 84
+docs/planning/MIGRATION_SUMMARY.md
+  9e7bd5dfd87d6dd7 297-298
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "715cf670a3b04b8be4471a45ee9799e1a322cfd2",
+  "prompts": {
+    "9e7bd5dfd87d6dd7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d6f4b-876d-7953-8609-5c45ef1aa519",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 35,
+      "total_deletions": 35,
+      "accepted_lines": 35,
+      "overriden_lines": 0
+    }
+  }
+}
