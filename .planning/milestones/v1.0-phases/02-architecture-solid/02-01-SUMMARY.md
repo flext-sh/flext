@@ -24,7 +24,7 @@ key-files:
 key-decisions:
   - "s ABC removal safe — p.Service protocol already fully defined with execute(), get_service_info(), is_valid(), validate_business_rules()"
   - "6 pure ABCs and 7/8 template ABCs were already converted in prior work — only s(x, ABC) remained"
-  - "make codegen blocked by pre-existing FlextInfraNamespaceFacadeScanner import error — no codegen needed since no new classes added"
+  - "make codegen blocked by pre-existing FlextInfraUtilitiesFacadeScanner import error — no codegen needed since no new classes added"
 
 patterns-established:
   - "NotImplementedError for unimplemented base methods instead of @abstractmethod"
@@ -76,7 +76,7 @@ completed: 2026-03-24
 
 **2. make codegen and make check blocked by pre-existing flext-infra error**
 - **Found during:** Task 1 verification
-- **Issue:** `FlextInfraNamespaceFacadeScanner` missing from flext-infra `__init__.py` — blocks all make check/test/gen
+- **Issue:** `FlextInfraUtilitiesFacadeScanner` missing from flext-infra `__init__.py` — blocks all make check/test/gen
 - **Resolution:** Validated directly with ruff + pyright on service.py (0 errors). Ran pytest excluding broken flext-infra test files (2417 passed, 1 pre-existing failure)
 - **Impact:** No codegen needed since no classes were added/renamed
 
@@ -86,7 +86,7 @@ completed: 2026-03-24
 **Impact on plan:** Plan objectives fully met — zero ABCs remain in flext-core.
 
 ## Issues Encountered
-- Pre-existing `FlextInfraNamespaceFacadeScanner` import error in flext-infra blocks `make check`, `make test`, `make gen` for any project. This is out of scope for this plan.
+- Pre-existing `FlextInfraUtilitiesFacadeScanner` import error in flext-infra blocks `make check`, `make test`, `make gen` for any project. This is out of scope for this plan.
 
 ## Known Stubs
 None.
