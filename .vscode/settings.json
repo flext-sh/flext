@@ -61,4 +61,11 @@
   "pylsp.plugins.pylsp_rope.enabled": true,
   "shellcheck.useWorkspaceRootAsCwd": true,
   "ruff.configurationPreference": "filesystemFirst",
+  "ruff.format.backend": "uv",
+  "ruff.format.preview": true,
+  "ruff.lint.preview": true,
+  "ruff.nativeServer": "on",
+  "ruff.interpreter": [
+    ".venv/bin/ruff"
+  ],
 }
