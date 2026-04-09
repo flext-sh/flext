@@ -2385,7 +2385,7 @@ flext-infra/src/flext_infra/detectors/mro_completeness_detector.py
    1  High total complexity (count = 71)
  181  Function with high complexity (count = 26): _resolve_facade_class_name
 
-flext-infra/src/flext_infra/detectors/namespace_facade_scanner.py
+flext-infra/src/flext_infra/detectors/facade_scanner.py
   73  Function with many parameters (count = 7): _find_facade_class
 
 flext-infra/src/flext_infra/detectors/namespace_source_detector.py
