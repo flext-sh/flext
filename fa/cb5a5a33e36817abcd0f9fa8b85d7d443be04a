@@ -1,0 +1,23 @@
+Makefile
+  265fdda2a33d798e 93,95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "facb5a5a33e36817abcd0f9fa8b85d7d443be04a",
+  "prompts": {
+    "265fdda2a33d798e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7034-59e3-7261-9074-32beefa362ab",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 103,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
