@@ -107,7 +107,7 @@ from flext_core import FlextUtilitiesConversion
 ```python
 @staticmethod
 def to_str_list_safe(
-    value: m.Core.ListInputModel,
+    value: m.Core.Tests.ListInputModel,
     *,
     filter_list_like: bool = True,
 ) -> t.StrSequence:
@@ -147,7 +147,7 @@ result = u.to_str_list_safe(["a", ["b"]], filter_list_like=False)
 ```python
 @staticmethod
 def to_str_list_truthy(
-    value: m.Core.ListInputModel,
+    value: m.Core.Tests.ListInputModel,
 ) -> t.StrSequence:
     """Convert value to t.StrSequence filtering out falsy values."""
 ```
@@ -334,7 +334,7 @@ Add utility method to flext-core when:
 
 class FlextUtilitiesConversion:
     @staticmethod
-    def new_method(value: m.Core.UtilityInputModel) -> r[str]:
+    def new_method(value: m.Core.Tests.UtilityInputModel) -> r[str]:
         """New utility method."""
         try:
             result = ...process value...
