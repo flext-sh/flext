@@ -152,16 +152,16 @@ The `FlextUtilitiesValidation` class centralizes TypeAdapter usage for:
 from flext_core import m
 
 
-class Dict(RootModel[Mapping[str, m.Core.ValueModel]]):
-    root: Mapping[str, m.Core.ValueModel]
+class Dict(RootModel[Mapping[str, m.Core.Tests.ValueModel]]):
+    root: Mapping[str, m.Core.Tests.ValueModel]
 
 
-class ConfigMap(RootModel[Mapping[str, m.Core.ConfigEntryModel]]):
-    root: Mapping[str, m.Core.ConfigEntryModel]
+class ConfigMap(RootModel[Mapping[str, m.Core.Tests.ConfigEntryModel]]):
+    root: Mapping[str, m.Core.Tests.ConfigEntryModel]
 
 
-class ServiceMap(RootModel[Mapping[str, m.Core.ServiceEntryModel]]):
-    root: Mapping[str, m.Core.ServiceEntryModel]
+class ServiceMap(RootModel[Mapping[str, m.Core.Tests.ServiceEntryModel]]):
+    root: Mapping[str, m.Core.Tests.ServiceEntryModel]
 ```
 
 Used via explicit domain models and facade exports (`m.*`) rather than broad container aliases.

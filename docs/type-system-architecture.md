@@ -203,12 +203,12 @@ class ProgressCallback(Protocol):
 ```python
 # ❌ WRONG: Invariant dict (rejects Mapping-compatible inputs)
 class DataProvider(Protocol):
-    def get_data(self) -> Mapping[str, m.Core.ValueModel]: ...
+    def get_data(self) -> Mapping[str, m.Core.Tests.ValueModel]: ...
 
 
 # ✅ CORRECT: Covariant Mapping (accepts multiple mapping implementations)
 class DataProvider(Protocol):
-    def get_data(self) -> Mapping[str, m.Core.ValueModel]: ...
+    def get_data(self) -> Mapping[str, m.Core.Tests.ValueModel]: ...
 
 
 # Usage: Works with any dict subtype
@@ -250,12 +250,12 @@ class FlextTypes:
         type Result[T] = "r[T]"
 
     class Utilities:
-        type ConfigData = Mapping[str, m.Core.ConfigEntryModel]
+        type ConfigData = Mapping[str, m.Core.Tests.ConfigEntryModel]
 
 
 # Usage
-result: t.Core.Result[bool] = ok_result
-data: t.Utilities.ConfigData = {"key": m.Core.ConfigEntryModel(value="value")}
+result: t.Core.Tests.Result[bool] = ok_result
+data: t.Utilities.ConfigData = {"key": m.Core.Tests.ConfigEntryModel(value="value")}
 
 
 # ❌ WRONG: Over-nesting (3+ levels)
@@ -271,7 +271,7 @@ class FlextTypes:
 **flext-core**:
 
 ```
-t.Core                      # Foundation (Result, Config, Handler)
+t.Core.Tests                      # Foundation (Result, Config, Handler)
 t.Utilities                 # Reusable (Json, Collection, Validation)
 t.Exceptions                # Error types
 t.Constants                 # Enum definitions
@@ -406,10 +406,10 @@ m.FlextOudMig               # Migration tool domain
 ### Covariance (Subtype Compatibility)
 
 ```python
-# Example: t.BoolMapping should be compatible with Mapping[str, m.Core.ValueModel]
+# Example: t.BoolMapping should be compatible with Mapping[str, m.Core.Tests.ValueModel]
 
 # ❌ INVARIANT - WRONG
-def process_dict(data: Mapping[str, m.Core.ValueModel]) -> None: ...
+def process_dict(data: Mapping[str, m.Core.Tests.ValueModel]) -> None: ...
 
 
 result: t.BoolMapping = {"ok": True}
@@ -419,7 +419,7 @@ process_dict(result)  # Type error: dict is invariant
 from collections.abc import Mapping
 
 
-def process_mapping(data: Mapping[str, m.Core.ValueModel]) -> None: ...
+def process_mapping(data: Mapping[str, m.Core.Tests.ValueModel]) -> None: ...
 
 
 result: t.BoolMapping = {"ok": True}
