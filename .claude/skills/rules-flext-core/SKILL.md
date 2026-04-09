@@ -44,6 +44,7 @@ description: Authoritative rules for `flext-core` architecture, typing, result f
 - Keep dependency-injector usage routed through runtime/container bridges.
 - Keep shared type contracts centralized in `typings.py`. **AXIOMATIC**: `Any`, `t.NormalizedValue`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN — use `t.*` contracts exclusively. `None` in type unions only when business-required.
 - Consume public API from `flext_core` exports in non-internal modules.
+- For `flext-core/tests/`, assert module and facade behavior, not implementation details. Tests coupled to internal warning text, traceback fragments, local alias names, internal class names, or private MRO structure are invalid and must be rewritten to target stable external behavior.
 
 ## Instructions
 

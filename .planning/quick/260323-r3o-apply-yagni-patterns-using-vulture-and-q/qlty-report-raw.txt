@@ -2690,7 +2690,7 @@ flext-infra/src/flext_infra/validate/skill_validator.py
   52  Function with high complexity (count = 48): validate
  238  Function with high complexity (count = 18): _run_custom_count
 
-flext-infra/src/flext_infra/workspace/maintenance/__init__.py
+flext-infra/src/flext_infra/maintenance/__init__.py
    1  Found 76 lines of similar code in 2 locations (mass = 197)
         also found at flext-ldif/tests/unit/__init__/__init__.py
 
@@ -3569,7 +3569,7 @@ flext-ldif/tests/support/real_services.py
 
 flext-ldif/tests/unit/__init__/__init__.py
    1  Found 70 lines of similar code in 2 locations (mass = 197)
-        also found at flext-infra/src/flext_infra/workspace/maintenance/__init__.py
+        also found at flext-infra/src/flext_infra/maintenance/__init__.py
 
 flext-ldif/tests/unit/__init__.py
  482  Found 105 lines of similar code in 2 locations (mass = 416)

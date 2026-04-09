@@ -1,4 +1,4 @@
-skill: workspace-maintenance
+skill: maintenance
 description: "Validate workspace hygiene: script ownership, gitignore patterns, cruft
   detection."
 scan_targets:
@@ -35,7 +35,7 @@ rules:
     group: ownership
     description: Workspace maintenance scripts must declare Owner-Skill marker
     fix_auto: false
-    fix_instruction: "Add '# Owner-Skill: .claude/skills/workspace-maintenance/SKILL.md'
+    fix_instruction: "Add '# Owner-Skill: .claude/skills/maintenance/SKILL.md'
       in the first 10 lines."
     file: rules/require-owner-skill-marker.yml
   - id: gitignore-has-pycache-pattern
