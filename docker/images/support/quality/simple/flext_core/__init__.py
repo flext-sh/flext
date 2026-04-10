@@ -1,72 +1,200 @@
-# AUTO-GENERATED FILE — DO NOT EDIT MANUALLY.
-# Regenerate with: make gen
-#
-"""Flext core package."""
+"""Mock flext_core package for simple quality validation."""
 
 from __future__ import annotations
 
-import typing as _t
+import logging
+from collections.abc import MutableMapping
+from typing import Any
 
-from flext_core.lazy import install_lazy_exports
 
-if _t.TYPE_CHECKING:
-    import flext.exceptions as _flext_exceptions
+class FlextTypes:
+    """Minimal type surface used by the quality Docker images."""
 
-    exceptions = _flext_exceptions
-    from flext.exceptions import (
-        AuthenticationError,
-        ConfigurationError,
-        ConnectionError,
-        Error,
-        ProcessingError,
-        TimeoutError,
-        ValidationError,
-    )
-    from flext_core.constants import FlextConstants as c
-    from flext_core.decorators import FlextDecorators as d
-    from flext_core.exceptions import FlextExceptions as e
-    from flext_core.handlers import FlextHandlers as h
-    from flext_core.mixins import FlextMixins as x
-    from flext_core.models import FlextModels as m
-    from flext_core.protocols import FlextProtocols as p
-    from flext_core.result import FlextResult as r
-    from flext_core.service import FlextService as s
-    from flext_core.typings import FlextTypes as t
-    from flext_core.utilities import FlextUtilities as u
-_LAZY_IMPORTS = {
-    "AuthenticationError": ("flext.exceptions", "AuthenticationError"),
-    "ConfigurationError": ("flext.exceptions", "ConfigurationError"),
-    "ConnectionError": ("flext.exceptions", "ConnectionError"),
-    "Error": ("flext.exceptions", "Error"),
-    "ProcessingError": ("flext.exceptions", "ProcessingError"),
-    "TimeoutError": ("flext.exceptions", "TimeoutError"),
-    "ValidationError": ("flext.exceptions", "ValidationError"),
-    "c": ("flext_core.constants", "FlextConstants"),
-    "d": ("flext_core.decorators", "FlextDecorators"),
-    "e": ("flext_core.exceptions", "FlextExceptions"),
-    "exceptions": "flext.exceptions",
-    "h": ("flext_core.handlers", "FlextHandlers"),
-    "m": ("flext_core.models", "FlextModels"),
-    "p": ("flext_core.protocols", "FlextProtocols"),
-    "r": ("flext_core.result", "FlextResult"),
-    "s": ("flext_core.service", "FlextService"),
-    "t": ("flext_core.typings", "FlextTypes"),
-    "u": ("flext_core.utilities", "FlextUtilities"),
-    "x": ("flext_core.mixins", "FlextMixins"),
-}
+    Dict = dict[str, Any]
+    JsonMapping = dict[str, Any]
+    Scalar = str | int | float | bool
+    StrSequence = tuple[str, ...]
+
+
+t = FlextTypes
+
+
+class Result[T]:
+    """Small railway-style result used by the mock package."""
+
+    def __init__(
+        self,
+        *,
+        success: bool,
+        value: T | None = None,
+        error: str | None = None,
+    ) -> None:
+        self.success = success
+        self.is_failure = not success
+        self.value = value
+        self.error = error
+
+    @property
+    def is_success(self) -> bool:
+        return self.success
+
+    @classmethod
+    def ok(cls, value: T | None = None) -> Result[T]:
+        return cls(success=True, value=value)
+
+    @classmethod
+    def fail(cls, error: str) -> Result[T]:
+        return cls(success=False, error=error)
+
+
+r = Result
+
+
+class FlextContainer:
+    """Minimal dependency container mock."""
+
+    def __init__(self) -> None:
+        self._services: MutableMapping[str, object] = {}
+
+    def register(self, name: str, service: object) -> Result[None]:
+        self._services[name] = service
+        return Result.ok(None)
+
+    def get(self, name: str) -> Result[object]:
+        service = self._services.get(name)
+        if service is None:
+            return Result.fail(f"Service {name} not found")
+        return Result.ok(service)
+
+
+class FlextBus:
+    """Placeholder bus type."""
+
+
+class FlextConstants:
+    """Placeholder constants namespace."""
+
+
+class FlextContext:
+    """Placeholder context type."""
+
+
+class FlextDecorators:
+    """Placeholder decorators namespace."""
+
+
+class FlextDispatcher:
+    """Placeholder dispatcher type."""
+
+
+class FlextHandlers:
+    """Placeholder handlers namespace."""
+
+
+class FlextMixins:
+    """Placeholder mixins namespace."""
+
+
+class FlextModels:
+    """Placeholder models namespace."""
+
+
+class FlextProcessors:
+    """Placeholder processors namespace."""
+
+
+class FlextProtocols:
+    """Placeholder protocols namespace."""
+
+
+class FlextRegistry:
+    """Placeholder registry type."""
+
+
+class FlextSettings:
+    """Placeholder settings type."""
+
+
+class FlextService[T]:
+    """Placeholder service base."""
+
+
+class FlextUtilities:
+    """Placeholder utilities namespace."""
+
+    @staticmethod
+    def generate(_name: str) -> str:
+        return ""
+
+
+def FlextLogger(name: str) -> logging.Logger:
+    """Return a stdlib logger for the mock environment."""
+    return logging.getLogger(name)
+
+
+from .exceptions import (  # noqa: E402
+    AuthenticationError,
+    ConfigurationError,
+    ConnectionError,
+    Error,
+    ProcessingError,
+    TimeoutError,
+    ValidationError,
+)
+
+
+class FlextExceptions:
+    """Exception namespace mirroring the public flext_core alias."""
+
+    AuthenticationError = AuthenticationError
+    ConfigurationError = ConfigurationError
+    ConnectionError = ConnectionError
+    Error = Error
+    ProcessingError = ProcessingError
+    TimeoutError = TimeoutError
+    ValidationError = ValidationError
+
+
+c = FlextConstants
+d = FlextDecorators
+e = FlextExceptions
+h = FlextHandlers
+m = FlextModels
+p = FlextProtocols
+s = FlextService
+u = FlextUtilities
+x = FlextMixins
 
 __all__ = [
     "AuthenticationError",
     "ConfigurationError",
     "ConnectionError",
     "Error",
+    "FlextBus",
+    "FlextConstants",
+    "FlextContainer",
+    "FlextContext",
+    "FlextDecorators",
+    "FlextDispatcher",
+    "FlextExceptions",
+    "FlextHandlers",
+    "FlextLogger",
+    "FlextMixins",
+    "FlextModels",
+    "FlextProcessors",
+    "FlextProtocols",
+    "FlextRegistry",
+    "FlextService",
+    "FlextSettings",
+    "FlextTypes",
+    "FlextUtilities",
     "ProcessingError",
+    "Result",
     "TimeoutError",
     "ValidationError",
     "c",
     "d",
     "e",
-    "exceptions",
     "h",
     "m",
     "p",
@@ -76,6 +204,3 @@ __all__ = [
     "u",
     "x",
 ]
-
-
-install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)

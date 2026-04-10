@@ -2,36 +2,29 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
-# Install only essential dependencies
+# Copy workspace code and install the real local packages used by flext-quality.
+COPY . /app
+
+WORKDIR /app/flext-quality
+
+RUN pip install --no-cache-dir pytest
 RUN pip install --no-cache-dir \
-    click \
-    mypy \
-    pydantic \
-    pytest \
-    pytest-cov \
-    ruff
-
-# Copy source code
-COPY . .
-
-# Copy minimal mock dependencies
-COPY docker/images/support/quality/simple/flext_core/ src/flext_core/
-COPY docker/images/support/quality/simple/flext_observability/ src/flext_observability/
-
-# Set Python path and install
-ENV PYTHONPATH=/app/src:/app
-RUN pip install -e . --no-deps
+    -e /app/flext-core \
+    -e /app/flext-cli \
+    -e /app/flext-web \
+    -e /app/flext-tests \
+    -e /app/flext-quality
 
 # Test basic functionality
 RUN echo "🧪 Testing imports..." && \
-    python -c "from flext_quality import CodeAnalyzer; print('✅ CodeAnalyzer')" && \
-    python -c "from flext_quality import FlextQualityError; print('✅ Exceptions')" && \
-    python -c "from flext_core import FlextBus, FlextSettings, FlextConstants, FlextContainer, FlextContext, d, FlextDispatcher, e, h, FlextLogger, x, FlextModels, FlextProcessors, p, FlextRegistry, r, u, s, u; print('✅ Flext')" && \
+    python -c "from flext_quality import FlextQuality, FlextQualityCliService, c, m, p, t, u; print('✅ flext_quality imports')" && \
+    python -c "from flext_core import FlextContainer, FlextLogger, r; print('✅ flext_core imports')" && \
+    flext-quality status > /dev/null && \
     echo "✅ All imports successful!"
 
 # Run critical tests
 RUN echo "🧪 Running validation..." && \
-    python -m pytest tests/test_exceptions.py --tb=short -q --maxfail=3 && \
+    python -m pytest tests/unit/test_basic.py tests/unit/test_api.py --tb=short -q --maxfail=3 && \
     echo "✅ Validation passed!"
 
 CMD ["echo", "🎉 FLEXT Quality Docker ready!"]
