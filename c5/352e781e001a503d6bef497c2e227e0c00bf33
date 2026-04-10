@@ -1,0 +1,31 @@
+.planning/STATE.md
+  fe2df8808e26d10d 142
+.planning/phases/10-unified-docs-generation-baseline/10-05-PLAN.md
+  fe2df8808e26d10d 13,47,70,132-133,136,151,165,170
+.planning/quick/260323-r3o-apply-yagni-patterns-using-vulture-and-q/qlty-report-raw.txt
+  fe2df8808e26d10d 2188
+.planning/phases/10-unified-docs-generation-baseline/10-05-SUMMARY.md
+  fe2df8808e26d10d 28,57,65,72
+docs/superpowers/specs/2026-04-06-flext-infra-canonical-namespaces-design.md
+  fe2df8808e26d10d 44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "c5352e781e001a503d6bef497c2e227e0c00bf33",
+  "prompts": {
+    "fe2df8808e26d10d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d791c-7bfe-74a0-87a8-765e3ac8fdd5",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 16,
+      "total_deletions": 16,
+      "accepted_lines": 16,
+      "overriden_lines": 0
+    }
+  }
+}
