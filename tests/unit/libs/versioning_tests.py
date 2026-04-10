@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import importlib
+import sys
 from pathlib import Path
+
+import pytest
 
 from flext_tests import tm
 
@@ -46,8 +50,8 @@ python = ">=3.13,<4.0"
 flext-core = "0.11.0-dev"
 """.strip()
         updated, did_change = mod.replace_project_version(content, "0.11.0")
-        tm.that(not did_change, eq=True)
-        tm.that(updated, has='version = "0.11.0-dev"')
+        tm.that(did_change, eq=True)
+        tm.that(updated, has='version = "0.11.0"')
         tm.that(updated, has='flext-core = "0.11.0-dev"')
 
     def test_current_workspace_version_reads_project_version(
@@ -69,3 +73,21 @@ version = "0.10.0-dev"
             encoding="utf-8",
         )
         tm.that(mod.current_workspace_version(tmp_path), eq="0.10.0")
+
+    def test_libs_package_exports_versioning_helpers(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        root = Path(__file__).resolve().parents[3]
+        for relative_path in (
+            "src",
+            "flext-core/src",
+            "flext-cli/src",
+            "flext-tests/src",
+        ):
+            monkeypatch.syspath_prepend(str(root / relative_path))
+        importlib.invalidate_caches()
+        for module_name in ("libs", "libs.versioning"):
+            _ = sys.modules.pop(module_name, None)
+        libs = importlib.import_module("libs")
+        tm.that(libs.parse_semver("1.2.3"), eq=(1, 2, 3))

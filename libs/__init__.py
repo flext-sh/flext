@@ -10,17 +10,9 @@ import typing as _t
 from flext_core.lazy import install_lazy_exports
 
 if _t.TYPE_CHECKING:
-    import flext.versioning as _flext_versioning
+    import libs.versioning as _libs_versioning
 
-    versioning = _flext_versioning
-    from flext.versioning import (
-        SEMVER_RE,
-        bump_version,
-        current_workspace_version,
-        parse_semver,
-        release_tag_from_branch,
-        replace_project_version,
-    )
+    versioning = _libs_versioning
     from flext_core.constants import FlextConstants as c
     from flext_core.decorators import FlextDecorators as d
     from flext_core.exceptions import FlextExceptions as e
@@ -32,24 +24,32 @@ if _t.TYPE_CHECKING:
     from flext_core.service import FlextService as s
     from flext_core.typings import FlextTypes as t
     from flext_core.utilities import FlextUtilities as u
+    from libs.versioning import (
+        SEMVER_RE,
+        bump_version,
+        current_workspace_version,
+        parse_semver,
+        release_tag_from_branch,
+        replace_project_version,
+    )
 _LAZY_IMPORTS = {
-    "SEMVER_RE": ("flext.versioning", "SEMVER_RE"),
-    "bump_version": ("flext.versioning", "bump_version"),
+    "SEMVER_RE": ("libs.versioning", "SEMVER_RE"),
+    "bump_version": ("libs.versioning", "bump_version"),
     "c": ("flext_core.constants", "FlextConstants"),
-    "current_workspace_version": ("flext.versioning", "current_workspace_version"),
+    "current_workspace_version": ("libs.versioning", "current_workspace_version"),
     "d": ("flext_core.decorators", "FlextDecorators"),
     "e": ("flext_core.exceptions", "FlextExceptions"),
     "h": ("flext_core.handlers", "FlextHandlers"),
     "m": ("flext_core.models", "FlextModels"),
     "p": ("flext_core.protocols", "FlextProtocols"),
-    "parse_semver": ("flext.versioning", "parse_semver"),
+    "parse_semver": ("libs.versioning", "parse_semver"),
     "r": ("flext_core.result", "FlextResult"),
-    "release_tag_from_branch": ("flext.versioning", "release_tag_from_branch"),
-    "replace_project_version": ("flext.versioning", "replace_project_version"),
+    "release_tag_from_branch": ("libs.versioning", "release_tag_from_branch"),
+    "replace_project_version": ("libs.versioning", "replace_project_version"),
     "s": ("flext_core.service", "FlextService"),
     "t": ("flext_core.typings", "FlextTypes"),
     "u": ("flext_core.utilities", "FlextUtilities"),
-    "versioning": "flext.versioning",
+    "versioning": "libs.versioning",
     "x": ("flext_core.mixins", "FlextMixins"),
 }
 

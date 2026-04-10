@@ -71,10 +71,7 @@ def current_workspace_version(root: Path) -> str:
 def replace_project_version(content: str, version: str) -> tuple[str, bool]:
     """Replace project version in TOML content string."""
     raw_document = tomlkit.parse(content)
-    if not isinstance(raw_document, Table):
-        return content, False
-    document = raw_document
-    project_value = document.get("project")
+    project_value = raw_document.get("project")
     if not isinstance(project_value, Table):
         return content, False
     project_map = {str(key): value for key, value in project_value.items()}
@@ -85,5 +82,5 @@ def replace_project_version(content: str, version: str) -> tuple[str, bool]:
     if current_value == version:
         return content, False
     project_value["version"] = version
-    updated = str(tomlkit.dumps(document))
+    updated = str(tomlkit.dumps(raw_document))
     return updated, updated != content
