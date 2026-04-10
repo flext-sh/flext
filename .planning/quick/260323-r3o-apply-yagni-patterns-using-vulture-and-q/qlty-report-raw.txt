@@ -2185,7 +2185,7 @@ flext-infra/src/flext_infra/codegen/__main__.py
 flext-infra/src/flext_infra/codegen/_codegen_coercion.py
   18  Function with many returns (count = 6): as_int
 
-flext-infra/src/flext_infra/codegen/_codegen_generation.py
+flext-infra/src/flext_infra/codegen/codegen_generation.py
  132  Function with many parameters (count = 6): generate_file
   50  Function with high complexity (count = 27): generate_type_checking
 

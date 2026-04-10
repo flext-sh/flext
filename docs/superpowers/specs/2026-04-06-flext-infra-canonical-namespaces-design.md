@@ -41,7 +41,7 @@ Violations are in **3 categories** across **14 files**:
 | `transformers/class_reconstructor.py:14` | `_MIN_METHODS_FOR_REORDER` | `c.Infra.Refactor.MIN_METHODS_FOR_REORDER` |
 | `workspace/workspace_makefile.py:36-41` | `_TEMPLATE_NAME` + 3 | `c.Infra.Workspace.TEMPLATE_NAME` etc. |
 | `basemk/engine.py:20` | `_TEMPLATES_DIR` | `c.Infra.BaseMk.TEMPLATES_DIR` |
-| `codegen/_codegen_generation.py:27-29` | `_TEMPLATE_ROOT`, `_ENV` | `c.Infra.Codegen.TEMPLATE_ROOT` (env stays as PrivateAttr) |
+| `codegen/codegen_generation.py:27-29` | `_TEMPLATE_ROOT`, `_ENV` | `c.Infra.Codegen.TEMPLATE_ROOT` (env stays as PrivateAttr) |
 | `detectors/loose_object_detector.py:26-30` | `_ALLOWED_TOP_LEVEL` | `c.Infra.Scan.ALLOWED_TOP_LEVEL` |
 | `refactor/migrate_to_class_mro.py:18` | `_ROPE_MODULE_SYNTAX_ERROR` | `c.Infra.Rope.MODULE_SYNTAX_ERROR` |
 

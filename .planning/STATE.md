@@ -139,7 +139,7 @@ Recent decisions affecting current work:
 - [Phase 10]: CLI pass-through methods kept on FlextInfraWorkspaceChecker to avoid breaking 12+ test callers
 - [Phase 10]: Workspace services 95% compliant -- only 2 direct mkdir calls fixed across 8 files (1674 LOC)
 - [Phase 10]: codegen domain 10/11 files already thin orchestrator compliant; only lazy_init.py write_text replaced with u.Infra.atomic_write_file
-- [Phase 10]: _codegen_generation.py accepted as internal helper — private Jinja2 template rendering used only by codegen services
+- [Phase 10]: codegen_generation.py accepted as internal helper — private Jinja2 template rendering used only by codegen services
 - [Phase 10]: detection_analysis.py (361 LOC) accepted as internal mixin helper — pure analysis logic, not standalone service
 - [Phase 10]: tomlkit type imports retained for annotations — plan targets manipulation not annotation types
 - [Phase 10]: refactor domain (11 service files, 2504 LOC) already fully compliant thin orchestrators — zero changes needed
