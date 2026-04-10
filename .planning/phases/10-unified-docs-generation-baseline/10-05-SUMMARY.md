@@ -25,7 +25,7 @@ key-files:
 
 key-decisions:
   - "codegen lazy_init write_text replaced with u.Infra.atomic_write_file for thin orchestrator compliance"
-  - "_codegen_generation.py accepted as internal helper — used only by codegen services, not a service class"
+  - "codegen_generation.py accepted as internal helper — used only by codegen services, not a service class"
   - "py_typed marker.touch()/unlink() accepted as trivial marker operations, not business logic file writes"
   - "10 of 11 files already fully compliant thin orchestrators — only 1 change needed"
 
@@ -54,7 +54,7 @@ completed: 2026-04-05
 ## Accomplishments
 - Audited all 11 codegen + services files for thin orchestrator pattern compliance
 - Replaced direct `write_text` in lazy_init.py with `u.Infra.atomic_write_file` for proper delegation
-- Confirmed _codegen_generation.py as acceptable internal helper (Jinja2 template rendering, used only by codegen services)
+- Confirmed codegen_generation.py as acceptable internal helper (Jinja2 template rendering, used only by codegen services)
 - Verified zero ruff + pyrefly errors across all codegen/ and services/ directories
 
 ## Task Commits
@@ -62,14 +62,14 @@ completed: 2026-04-05
 Each task was committed atomically:
 
 1. **Task 1a: Refactor codegen lazy_init, census, scaffolder** - `8fa4885` (feat) — lazy_init write_text -> atomic_write_file; census + scaffolder already compliant
-2. **Task 1b: Refactor codegen fixer, _codegen_generation, constants_quality_gate, py_typed** - no changes needed (all already compliant)
+2. **Task 1b: Refactor codegen fixer, codegen_generation, constants_quality_gate, py_typed** - no changes needed (all already compliant)
 3. **Task 2: Refactor root services/ (pipeline, consolidator, deduplicator)** - no changes needed (all already compliant)
 
 ## Files Created/Modified
 - `flext-infra/src/flext_infra/codegen/lazy_init.py` - Replaced direct write_text with u.Infra.atomic_write_file
 
 ## Decisions Made
-- **_codegen_generation.py kept as internal helper:** 284 LOC private module providing Jinja2-based file generation. Used only by codegen services (specifically lazy_init.py). Not a service class — acceptable as internal helper per plan criteria.
+- **codegen_generation.py kept as internal helper:** 284 LOC private module providing Jinja2-based file generation. Used only by codegen services (specifically lazy_init.py). Not a service class — acceptable as internal helper per plan criteria.
 - **py_typed marker operations accepted:** `marker.touch()` (create empty file) and `marker.unlink()` (remove marker) are trivial single-line marker management operations, not business logic file writes. Wrapping in atomic_write_file would be over-engineering for empty marker files.
 - **10 of 11 files already compliant:** The codebase was already well-refactored. Only lazy_init.py had a direct write_text that needed delegation.
 
