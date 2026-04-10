@@ -1,0 +1,25 @@
+pyproject.toml
+  d91aec04cbaedb55 29-35,72,92,131,134-135,191,222,226-231,345-346,959,972-973,1105,1147-1148,1150,1170,1172-1177,1195-1196,1272-1273,1289-1293,1295-1310,1315
+tests/infra/__init__.py
+  d91aec04cbaedb55 1-78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "74dfd496e5b51c073aa18904dde82e195a96224b",
+  "prompts": {
+    "d91aec04cbaedb55": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d786c-cf9f-78c0-83ae-2bfe27832792",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 140,
+      "total_deletions": 242,
+      "accepted_lines": 140,
+      "overriden_lines": 0
+    }
+  }
+}
