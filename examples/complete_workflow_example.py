@@ -217,7 +217,7 @@ class CompleteWorkflowExample:
                 else 0.0
             )
             final_score = complexity_score + (
-                1 if bool(item.get("is_valid", False)) else 0
+                1 if bool(item.get("valid", False)) else 0
             )
             content_payload: WorkflowContent = {
                 **self._process_stage(
@@ -376,7 +376,7 @@ class CompleteWorkflowExample:
                     stage_func,
                     context,
                 )
-                if result.is_failure:
+                if result.failure:
                     return r[WorkflowData].fail(
                         f"Stage {stage_name} failed: {result.error}",
                     )
@@ -503,7 +503,7 @@ class CompleteWorkflowExample:
                     0.005,
                     "validated",
                     True,
-                    lambda _i: {"is_valid": bool(item.get("id") and item.get("name"))},
+                    lambda _i: {"valid": bool(item.get("id") and item.get("name"))},
                 ),
             }
             workflow_data = WorkflowData.model_validate({"content": content_payload})
@@ -545,7 +545,7 @@ class CompleteWorkflowExample:
         orchestrator.data = sample_data
         orchestrator.workflow_config = workflow_config
         result = orchestrator.execute()
-        if result.is_success:
+        if result.success:
             print("Workflow completed successfully")
         else:
             print(f"Workflow failed: {result.error}")

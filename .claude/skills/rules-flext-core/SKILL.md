@@ -43,6 +43,7 @@ description: Authoritative rules for `flext-core` architecture, typing, result f
 - Keep failure/success boundaries on `r` (`r`) and compose with `map/flat_map/lash`.
 - Keep dependency-injector usage routed through runtime/container bridges.
 - Keep shared type contracts centralized in `typings.py`. **AXIOMATIC**: `Any`, `t.NormalizedValue`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN — use `t.*` contracts exclusively. `None` in type unions only when business-required.
+- Keep public `get_*`/`set_*`/`is_*` surfaces out of `flext-core`; deterministic values belong in fields or `@computed_field`, and result/status carriers use `success`/`failure`.
 - Consume public API from `flext_core` exports in non-internal modules.
 - For `flext-core/tests/`, assert module and facade behavior, not implementation details. Tests coupled to internal warning text, traceback fragments, local alias names, internal class names, or private MRO structure are invalid and must be rewritten to target stable external behavior.
 

@@ -55,12 +55,13 @@ description: Internal Pydantic v2 governance patterns for FLEXT 33-project monor
 - **Secrets**: Use `SecretStr`/`SecretBytes` for secrets.
 - **ConfigDict**: Use `model_config = ConfigDict(...)` for config — standalone `*Config` classes TOTALLY FORBIDDEN (use `BaseSettings`/`ConfigDict`).
 - **Minimize custom validators**: Prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`, `constr`, `conint`).
-- **FORBIDDEN in models**: initialization helpers, unnecessary `@property`, simple getters/setters, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@computed_field`, `model_post_init`, `PrivateAttr`).
+- **FORBIDDEN in models**: initialization helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@computed_field`, `model_post_init`, `PrivateAttr`) and canonical field names such as `success`, `failure`, `expired`, `healthy`.
 - **Enums/Mappings/Literals**: From `constants.py` (`c.*`), config from `settings.py` (`s.*`).
 - **JSON**: Via `model_dump_json()`, `model_validate_json()`, `TypeAdapter`.
 - **Internal state**: Via `PrivateAttr` — never bare `self._x`.
 - **Nested classes**: MAY have business methods but ALL properties use `Field()`/`PrivateAttr`.
 - **models.py/_models/**: For model definitions ONLY.
+- **Centralized runtime carriers**: Prefer one `m.<Domain>.*State` or `m.<Domain>.*Status` model per service concern over many tiny pass-through carrier models and dict round-trips.
 
 ## Instructions
 

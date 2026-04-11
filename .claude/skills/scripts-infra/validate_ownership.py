@@ -101,7 +101,7 @@ def tracked_scripts(repo_root: Path) -> Sequence[Path]:
         ],
         cwd=repo_root,
     )
-    if result.is_failure:
+    if result.failure:
         raise SkillInfraError(result.error or "git ls-files failed")
     output = result.value
     if output.exit_code != 0:
