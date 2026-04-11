@@ -1,0 +1,55 @@
+.claude/skills/rules-src/SKILL.md
+  a6d275f7fcd9c0ae 47
+.claude/skills/python-313-typing/SKILL.md
+  a6d275f7fcd9c0ae 189-190
+.claude/skills/flext-patterns/SKILL.md
+  a6d275f7fcd9c0ae 60
+.claude/skills/flext-strict-typing/SKILL.md
+  a6d275f7fcd9c0ae 682,684,693,704-705,778
+examples/advanced_processing_example.py
+  a6d275f7fcd9c0ae 111,154,197,309,320,327-328,355
+.claude/skills/pydantic-v2-governance/SKILL.md
+  a6d275f7fcd9c0ae 58,64
+AGENTS.md
+  a6d275f7fcd9c0ae 153-154,175-176,180,199,231
+.claude/skills/pydantic-v2-patterns/SKILL.md
+  a6d275f7fcd9c0ae 85,287
+examples/acl_processing_example.py
+  a6d275f7fcd9c0ae 103,271,289,300,304,342,388,439,483,494,503-504
+tests/tm.py
+  a6d275f7fcd9c0ae 23,30
+.claude/skills/scripts-infra/validate_ownership.py
+  a6d275f7fcd9c0ae 104
+.claude/skills/python-type-narrowing/SKILL.md
+  a6d275f7fcd9c0ae 33,169-170,188
+.claude/skills/scripts-infra/validate_gate_contract.py
+  a6d275f7fcd9c0ae 139
+.claude/skills/rules-flext-core/SKILL.md
+  a6d275f7fcd9c0ae 46
+.claude/skills/testing-patterns/SKILL.md
+  a6d275f7fcd9c0ae 49,52,71,83,89,150,219
+.claude/skills/lib-returns/SKILL.md
+  a6d275f7fcd9c0ae 150,152
+examples/complete_workflow_example.py
+  a6d275f7fcd9c0ae 220,379,506,548
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "88afba040b8599149e033340a6072390d59db6c6",
+  "prompts": {
+    "a6d275f7fcd9c0ae": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7ce6-2981-76f0-9d8c-febff62e4c66",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 227586,
+      "total_deletions": 2796,
+      "accepted_lines": 223612,
+      "overriden_lines": 0
+    }
+  }
+}
