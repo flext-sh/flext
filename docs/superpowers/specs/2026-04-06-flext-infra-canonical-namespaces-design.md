@@ -86,7 +86,7 @@ Pattern: `default_factory=list` (simpler, Pydantic-idiomatic)
 
 | File | Function | Target |
 |------|----------|--------|
-| `__version__.py:21-31` | `_is_object_mapping`, `_is_object_sequence` | SSOT: `u.Guards.is_mapping()`, `u.Guards.is_list()` from flext-core |
+| `__version__.py:21-31` | `_is_object_mapping`, `_is_object_sequence` | SSOT: `u.Guards.mapping()`, `u.Guards.is_list()` from flext-core |
 | `__version__.py:34-48` | `_object_mapping`, `_object_sequence` | `@staticmethod` on `FlextInfraVersion` |
 | `__version__.py:51-71` | `_pyproject_metadata` | `@staticmethod` on `FlextInfraVersion` |
 | `__version__.py:74-79` | `_load_metadata` | `@staticmethod` on `FlextInfraVersion` |

@@ -6085,7 +6085,7 @@ Método: `Summary` (nested) - Linhas: 181-315 - Função: Tracking de registros
 │  └── ProtocolValidation (1180-1307) - Protocol compliance        │
 │                                                                  │
 │  CLASS VARIABLES (validators):                                   │
-│  ├── is_dict_like, is_list_like...               │
+│  ├── dict_like, list_like...               │
 │  └── ok, fail, traverse, parallel_map, accumulate_errors         │
 └─────────────────────────────────────────────────────────────────┘
 ```

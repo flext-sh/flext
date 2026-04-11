@@ -71,7 +71,7 @@ Pre-authorized decisions already in place:
 ## Existing Code Insights
 
 ### Reusable Assets
-- `u.Guards.is_*()` (56 functions): TypeGuard functions in `flext-core/_utilities/guards.py` — primary replacement for `__class__ is` patterns. Key: `is_primitive()`, `is_scalar()`, `is_container()`, `is_list()`, `is_mapping()`
+- `u.Guards.is_*()` (56 functions): TypeGuard functions in `flext-core/_utilities/guards.py` — primary replacement for `__class__ is` patterns. Key: `is_primitive()`, `is_scalar()`, `is_container()`, `is_list()`, `mapping()`
 - ast-grep rewrite rules: Already designed in strict-typing-execution-plan.md (Rules A1–A5 for `__class__`, Rules B1–B3 for `cast()`, Rules C1–C2 for isinstance misuse)
 - `t.*` validation types: 290+ annotated-types constraints already in `flext-core/src/flext_core/_typings/` — use these before creating new aliases
 
