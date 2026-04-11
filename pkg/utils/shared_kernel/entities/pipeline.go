@@ -287,18 +287,18 @@ func (p *UnifiedPipeline) Fail(reason string) error {
 }
 
 // UpdateConfiguration updates the pipeline configuration
-func (p *UnifiedPipeline) UpdateConfiguration(config map[string]interface{}) {
+func (p *UnifiedPipeline) UpdateConfiguration(settings map[string]interface{}) {
 	if p.Configuration == nil {
 		p.Configuration = make(map[string]interface{})
 	}
 
-	for k, v := range config {
+	for k, v := range settings {
 		p.Configuration[k] = v
 	}
 
 	p.IncrementVersion()
 	p.AddDomainEvent(NewBaseDomainEvent("pipeline.configuration.updated", p.GetID(), map[string]interface{}{
-		"configuration": config,
+		"configuration": settings,
 	}, p.GetVersion()))
 }
 

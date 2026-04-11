@@ -48,7 +48,7 @@ Use the CLI helpers (currently disabled in `__init__.py`) once the command layer
 
 - **Facade layer**: `FlextPluginPlatform` exposes discovery, load/unload, install, enable/disable, and hot-reload commands plus security validation hooks.
 - **Service layer**: `FlextPluginService`, `FlextPluginDiscoveryService` encapsulate lifecycle transitions."# TODO".
-- **Model layer**: `FlextPluginModels` hosts entity/config/metadata Pydantic models and scoped r helpers.
+- **Model layer**: `FlextPluginModels` hosts entity/settings/metadata Pydantic models and scoped r helpers.
 - **Infrastructure**: `PluginDiscovery`, `HotReload`, `RealAdapters`, `watchdog` watchers, and sandboxing guardrails; direct imports to `flext-core` (r, FlextContainer, FlextModels, FlextLogger, FlextDispatcher) ensure consistent design.
 - **Clean architecture**: 19 classes, 20 modules, single-class-per-module discipline, 9,767 lines of code respecting layering rules; zero-tolerance `AGENTS.md` enforces r always.
 

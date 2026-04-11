@@ -58,7 +58,7 @@
 
 **Dependency Injection Flow:**
 
-1. Service instance created via `s.__new__()` with optional config
+1. Service instance created via `s.__new__()` with optional settings
 2. Service registers handlers with internal dispatcher via `register_handler()`
 3. s wires dependency_injector container for resource injection
 4. Handler method receives injected resources via `@handler` decorator
@@ -85,7 +85,7 @@
 **Service (`s[T]` / s):**
 - Purpose: Base class for all executable services (Web, API, CLI, Scheduler)
 - Examples: `FlextApi(s[FlextApiSettings])`, `FlextWebApp(s[...])`, `FlextCliApp(s[...])`
-- Pattern: Inherits from `s` with generic config type; implements `__init__`, `execute()`, `shutdown()`
+- Pattern: Inherits from `s` with generic settings type; implements `__init__`, `execute()`, `shutdown()`
 - Lifecycle: Created → configured → wired → handlers registered → execute() → shutdown()
 
 **Result (`r[T]` / r):**

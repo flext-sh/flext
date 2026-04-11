@@ -18,7 +18,7 @@ created: 2026-03-25
 | Property | Value |
 |----------|-------|
 | **Framework** | pytest 8.4+ |
-| **Config file** | `flext-infra/pyproject.toml` |
+| **Settings file** | `flext-infra/pyproject.toml` |
 | **Quick run command** | `/home/marlonsc/flext/.venv/bin/pytest flext-infra/tests/ -x -q` |
 | **Full suite command** | `/home/marlonsc/flext/.venv/bin/pytest flext-infra/tests/ -v` |
 | **Estimated runtime** | ~30 seconds |

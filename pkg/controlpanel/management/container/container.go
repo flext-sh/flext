@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/settings"
 	"github.com/flext-sh/flext/pkg/controlpanel/handlers"
 	"github.com/flext-sh/flext/pkg/logging"
 	"github.com/flext-sh/flext/pkg/plugins/communication"
@@ -17,7 +17,7 @@ import (
 
 // Container manages dependency injection for FLEXT services
 type Container struct {
-	config          *config.Config
+	settings          *settings.Config
 	logger          logging.Logger
 	flexcoreHandler *handlers.FlexCoreHandler
 	meltanoHandler  *handlers.MeltanoHandler
@@ -32,9 +32,9 @@ type Container struct {
 }
 
 // NewContainer creates a new DI container
-func NewContainer(cfg *config.Config) (*Container, error) {
+func NewContainer(cfg *settings.Config) (*Container, error) {
 	if cfg == nil {
-		return nil, fmt.Errorf("config cannot be nil")
+		return nil, fmt.Errorf("settings cannot be nil")
 	}
 
 	logger := logging.GetLogger()
@@ -57,7 +57,7 @@ func NewContainer(cfg *config.Config) (*Container, error) {
 		logging.F("pipeline_handler", "⏳ Future implementation"))
 
 	return &Container{
-		config:          cfg,
+		settings:          cfg,
 		logger:          logger,
 		flexcoreHandler: flexcoreHandler,
 		meltanoHandler:  meltanoHandler,
@@ -73,7 +73,7 @@ func NewContainer(cfg *config.Config) (*Container, error) {
 }
 
 // initializePluginSystem initializes the complete plugin system via dependency injection
-func initializePluginSystem(cfg *config.Config, logger logging.Logger) (*registry.PluginRegistry, *deployment.PluginDeploymentManager, *communication.FlexCoreCommunicationBus, *loader.PluginLoader, error) {
+func initializePluginSystem(cfg *settings.Config, logger logging.Logger) (*registry.PluginRegistry, *deployment.PluginDeploymentManager, *communication.FlexCoreCommunicationBus, *loader.PluginLoader, error) {
 	logger.Info("🔌 Initializing Plugin System via DI...")
 
 	// Initialize plugin registry
@@ -81,9 +81,9 @@ func initializePluginSystem(cfg *config.Config, logger logging.Logger) (*registr
 
 	// Initialize communication bus
 	redisURL := "redis://localhost:6380" // Default Redis URL
-	// Extract from config if available
+	// Extract from settings if available
 	if cfg != nil {
-		// TODO: Extract from actual config when Redis config is added
+		// TODO: Extract from actual settings when Redis settings is added
 		redisURL = "redis://localhost:6380"
 	}
 

@@ -873,7 +873,7 @@ except ValidationError as exc:
     # > 'extra_forbidden'
 ```
 
-You can read more about the `extra` configuration in the [Extra Attributes][pydantic.config.ConfigDict.extra] section.
+You can read more about the `extra` configuration in the [Extra Attributes][pydantic.settings.ConfigDict.extra] section.
 
 ## `finite_number`
 
@@ -962,7 +962,7 @@ except ValidationError as exc:
 
 ## `frozen_instance`
 
-This error is raised when `frozen` is set in the [configuration](../concepts/config.md) and you attempt to delete or assign a new value to
+This error is raised when `frozen` is set in the [configuration](../concepts/settings.md) and you attempt to delete or assign a new value to
 any of the fields:
 
 ```python
@@ -1666,14 +1666,14 @@ except ValidationError as exc:
 
 ## `no_such_attribute`
 
-This error is raised when `validate_assignment=True` in the config, and you attempt to assign a value to an attribute
+This error is raised when `validate_assignment=True` in the settings, and you attempt to assign a value to an attribute
 that is not an existing field:
 
 ```python
 from pydantic import ConfigDict, ValidationError, dataclasses
 
 
-@dataclasses.dataclass(config=ConfigDict(validate_assignment=True))
+@dataclasses.dataclass(settings=ConfigDict(validate_assignment=True))
 class MyDataclass:
     x: int
 
@@ -2129,7 +2129,7 @@ from pydantic import TypeAdapter, ValidationError
 from pydantic.dataclasses import dataclass
 
 
-@dataclass(config={"extra": "forbid"})
+@dataclass(settings={"extra": "forbid"})
 class Foo:
     bar: int
 

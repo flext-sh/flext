@@ -194,7 +194,7 @@ Check out the following example for a more in-depth look at how to use default v
 ### Caching Strings
 
 **Starting in v2.7.0**, Pydantic's [JSON parser](https://docs.rs/jiter/latest/jiter/) offers support for configuring how Python strings are cached during JSON parsing and validation (when Python strings are constructed from Rust strings during Python validation, e.g. after `strip_whitespace=True`).
-The `cache_strings` setting is exposed via both [model config][pydantic.config.ConfigDict] and [`pydantic_core.from_json`][pydantic_core.from_JSON].
+The `cache_strings` setting is exposed via both [model settings][pydantic.settings.ConfigDict] and [`pydantic_core.from_json`][pydantic_core.from_JSON].
 
 The `cache_strings` setting can take any of the following values:
 

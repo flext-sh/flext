@@ -21,7 +21,7 @@ You can specify an alias in the following ways:
   - can be an instance of `str`, [`AliasPath`][pydantic.aliases.AliasPath], or [`AliasChoices`][pydantic.aliases.AliasChoices]
 - `serialization_alias` on the [`Field`][pydantic.fields.Field]
   - must be a `str`
-- `alias_generator` on the [`Config`][pydantic.config.ConfigDict.alias_generator]
+- `alias_generator` on the [`Config`][pydantic.settings.ConfigDict.alias_generator]
   - can be a callable or an instance of [`AliasGenerator`][pydantic.aliases.AliasGenerator]
 
 For examples of how to use `alias`, `validation_alias`, and `serialization_alias`, see [Field aliases](../concepts/fields.md#field-aliases).
@@ -109,7 +109,7 @@ print(user)
 
 ## Using alias generators
 
-You can use the `alias_generator` parameter of [`Config`][pydantic.config.ConfigDict.alias_generator] to specify
+You can use the `alias_generator` parameter of [`Config`][pydantic.settings.ConfigDict.alias_generator] to specify
 a callable (or group of callables, via `AliasGenerator`) that will generate aliases for all fields in a model.
 This is useful if you want to use a consistent naming convention for all fields in a model, but do not
 want to specify the alias for each field individually.
@@ -219,22 +219,22 @@ See more about the different field aliases under [field aliases](../concepts/fie
 
 ## Alias Configuration
 
-You can use [`ConfigDict`](./config.md) settings or runtime validation/serialization
+You can use [`ConfigDict`](./settings.md) settings or runtime validation/serialization
 settings to control whether or not aliases are used.
 
 ### `ConfigDict` Settings
 
-You can use [configuration settings](./config.md) to control, at the model level,
+You can use [configuration settings](./settings.md) to control, at the model level,
 whether or not aliases are used for validation and serialization. If you would like to control
-this behavior for nested models/surpassing the config-model boundary, use [runtime settings](#runtime-settings).
+this behavior for nested models/surpassing the settings-model boundary, use [runtime settings](#runtime-settings).
 
 #### Validation
 
 When validating data, you can enable population of attributes by attribute name, alias, or both.
 **By default**, Pydantic uses aliases for validation. Further configuration is available via:
 
-- [`ConfigDict.validate_by_alias`][pydantic.config.ConfigDict.validate_by_alias]: `True` by default
-- [`ConfigDict.validate_by_name`][pydantic.config.ConfigDict.validate_by_name]: `False` by default
+- [`ConfigDict.validate_by_alias`][pydantic.settings.ConfigDict.validate_by_alias]: `True` by default
+- [`ConfigDict.validate_by_name`][pydantic.settings.ConfigDict.validate_by_name]: `False` by default
 
 === "`validate_by_alias`"
 
@@ -301,7 +301,7 @@ A [user error](../errors/usage_errors.md#validate-by-alias-and-name-false) is ra
 #### Serialization
 
 When serializing data, you can enable serialization by alias, which is disabled by default.
-See the [`ConfigDict.serialize_by_alias`][pydantic.config.ConfigDict.serialize_by_alias] API documentation
+See the [`ConfigDict.serialize_by_alias`][pydantic.settings.ConfigDict.serialize_by_alias] API documentation
 for more details.
 
 ```python

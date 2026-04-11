@@ -455,7 +455,7 @@ def func(p: bool, *args: str, **kwargs: int) -> None: ...
 
 arguments_schema = generate_arguments_schema(func=func)
 
-val = SchemaValidator(arguments_schema, config={"coerce_numbers_to_str": True})
+val = SchemaValidator(arguments_schema, settings={"coerce_numbers_to_str": True})
 
 args, kwargs = val.validate_json(
     '{"p": true, "args": ["arg1", 1], "kwargs": {"extra": 1}}'

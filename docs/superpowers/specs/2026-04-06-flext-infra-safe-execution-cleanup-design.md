@@ -91,7 +91,7 @@ Methods: `normalize_link`, `should_skip_target`, `is_external`, `to_markdown`,
 7 files export `main = ClassName.method` at module level for old import paths.
 **Action:** Remove all. Callers use `__main__.py` or direct class method.
 
-Files: `check/workspace_check.py`, `deps/extra_paths.py`, `deps/fix_pyrefly_config.py`,
+Files: `check/workspace_check.py`, `deps/extra_paths.py`, `deps/fix_pyrefly_settings.py`,
 `deps/path_sync.py`, `deps/modernizer.py`, `deps/internal_sync.py`, `deps/detector.py`,
 `workspace/sync.py`
 

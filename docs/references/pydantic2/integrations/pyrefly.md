@@ -25,7 +25,7 @@ As you type `Model()`, Pyrefly hints that you need to use the name `x_` to popul
 Pyrefly can also catch errors in your code before you run it. Consider the following example:
 
 ```python {test="skip" linenums="1"}
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, SettingsDict
 
 
 class Model1(BaseModel, frozen=True):
@@ -33,7 +33,7 @@ class Model1(BaseModel, frozen=True):
 
 
 class Model2(BaseModel):
-    model_config = ConfigDict(frozen=True)
+    model_config = SettingsDict(frozen=True)
     x: int
 
 
@@ -44,7 +44,7 @@ model2 = Model2(x=0)
 model2.x = 1  # validation error: mutating a frozen field
 ```
 
-Since `Model1` declares that it is frozen using a [standard type system feature](https://typing.python.org/en/latest/spec/dataclasses.html#the-dataclass-transform-decorator), any type checker of your choice will catch the validation error from mutating `model1.x`. However, a type checker without special support for the Pydantic `ConfigDict` class will miss the validation error from mutating `model2.x`.
+Since `Model1` declares that it is frozen using a [standard type system feature](https://typing.python.org/en/latest/spec/dataclasses.html#the-dataclass-transform-decorator), any type checker of your choice will catch the validation error from mutating `model1.x`. However, a type checker without special support for the Pydantic `SettingsDict` class will miss the validation error from mutating `model2.x`.
 
 Pyrefly catches both errors:
 

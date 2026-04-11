@@ -99,7 +99,7 @@ flext-api/src/flext_api/client.py
  104  Function with many returns (count = 7): _deserialize_body
 
 flext-api/src/flext_api/models.py
- 506  Function with many parameters (count = 7): create_config
+ 506  Function with many parameters (count = 7): create_settings
 
 flext-api/src/flext_api/protocol_impls/__init__.py
    1  Found 112 lines of similar code in 3 locations (mass = 351)
@@ -507,10 +507,10 @@ flext-cli/src/flext_cli/app_base.py
 flext-cli/src/flext_cli/cli.py
  351  Function with many parameters (count = 6): echo
  576  Function with many parameters (count = 6): global_callback
- 705  Function with many parameters (count = 7): _apply_common_params_to_config
+ 705  Function with many parameters (count = 7): _apply_common_params_to_settings
  388  Function with many returns (count = 8): model_command
  398  Function with many returns (count = 7): normalized_handler
- 705  Function with many returns (count = 9): _apply_common_params_to_config
+ 705  Function with many returns (count = 9): _apply_common_params_to_settings
    1  High total complexity (count = 126)
  388  Function with high complexity (count = 24): model_command
  458  Function with high complexity (count = 23): prompt
@@ -545,8 +545,8 @@ flext-cli/src/flext_cli/services/__init__.py
         also found at flext-tap-oracle-wms/tests/unit/__init__.py
 
 flext-cli/src/flext_cli/services/cmd.py
-  98  Function with many returns (count = 6): edit_config
- 183  Function with many returns (count = 7): get_config_value
+  98  Function with many returns (count = 6): edit_settings
+ 183  Function with many returns (count = 7): get_settings_value
 
 flext-cli/src/flext_cli/services/core.py
  178  Function with many returns (count = 6): create_profile
@@ -597,7 +597,7 @@ flext-cli/tests/helpers/__init__.py
         also found at flext-infra/tests/unit/io/__init__.py
 
 flext-cli/tests/helpers/_impl.py
- 309  Function with many returns (count = 7): create_config_provider_implementation
+ 309  Function with many returns (count = 7): create_settings_provider_implementation
  349  Function with many returns (count = 8): create_authenticator_implementation
    1  High total complexity (count = 65)
 
@@ -666,9 +666,9 @@ flext-cli/tests/utilities.py
 flext-core/examples/03_models_basics.py
  317  Function with many returns (count = 9): execute
 
-flext-core/examples/04_config_basics.py
- 184  Function with many returns (count = 9): _demonstrate_validation_config
- 284  Function with many returns (count = 6): demonstrate_file_config
+flext-core/examples/04_settings_basics.py
+ 184  Function with many returns (count = 9): _demonstrate_validation_settings
+ 284  Function with many returns (count = 6): demonstrate_file_settings
  319  Function with many returns (count = 8): main
 
 flext-core/examples/__init__.py
@@ -887,7 +887,7 @@ flext-core/src/flext_core/_utilities/guards_type_core.py
   65  Function with many returns (count = 6): is_flexible_value
 
 flext-core/src/flext_core/_utilities/guards_type_model.py
-  51  Function with many returns (count = 6): is_config_value
+  51  Function with many returns (count = 6): is_settings_value
 
 flext-core/src/flext_core/_utilities/guards_type_protocol.py
  235  Function with many returns (count = 23): _run_string_type_check
@@ -942,11 +942,11 @@ flext-core/src/flext_core/_utilities/mapper.py
 
 flext-core/src/flext_core/_utilities/model.py
   74  Function with many parameters (count = 8): dump
- 282  Function with many returns (count = 9): to_config_map
+ 282  Function with many returns (count = 9): to_settings_map
  222  Deeply nested control flow (level = 5)
    1  High total complexity (count = 64)
  183  Function with high complexity (count = 21): ensure_metadata
- 282  Function with high complexity (count = 23): to_config_map
+ 282  Function with high complexity (count = 23): to_settings_map
 
 flext-core/src/flext_core/_utilities/pagination.py
   65  Function with many returns (count = 6): extract_page_params
@@ -1111,7 +1111,7 @@ flext-core/src/flext_core/result.py
    1  High total complexity (count = 74)
 
 flext-core/src/flext_core/runtime.py
- 991  Function with many parameters (count = 9): configure_structlog
+ 991  Function with many parameters (count = 9): settingsure_structlog
  301  Function with many returns (count = 12): extract_generic_args
  438  Function with many returns (count = 8): is_sequence_type
  543  Function with many returns (count = 10): normalize_to_container
@@ -1124,7 +1124,7 @@ flext-core/src/flext_core/runtime.py
  543  Function with high complexity (count = 27): normalize_to_container
  615  Function with high complexity (count = 22): normalize_to_metadata
  722  Function with high complexity (count = 29): create_container
- 991  Function with high complexity (count = 20): configure_structlog
+ 991  Function with high complexity (count = 20): settingsure_structlog
 
 flext-core/src/flext_core/service.py
  177  Function with high complexity (count = 20): _create_initial_runtime
@@ -1769,7 +1769,7 @@ flext-dbt-oracle/src/flext_dbt_oracle/__version__.py
         also found at flext-tap-ldif/src/flext_tap_ldif/__version__.py
 
 flext-dbt-oracle/src/flext_dbt_oracle/connections.py
-  14  Function with many parameters (count = 8): build_oracle_connection_config
+  14  Function with many parameters (count = 8): build_oracle_connection_settings
 
 flext-dbt-oracle/src/flext_dbt_oracle/constants.py
   58  Found 20 lines of similar code in 12 locations (mass = 125)
@@ -2777,13 +2777,13 @@ flext-infra/tests/unit/check/extended_runners_ruff_tests.py
  102  Found 15 lines of similar code in 2 locations (mass = 79)
         also found at flext-infra/tests/unit/check/extended_runners_ruff_tests.py
 
-flext-infra/tests/unit/check/fix_pyrefly_config_tests.py
+flext-infra/tests/unit/check/fix_pyrefly_settings_tests.py
    1  Found 21 lines of similar code in 2 locations (mass = 67)
         also found at flext-infra/tests/unit/check/main_tests.py
 
 flext-infra/tests/unit/check/main_tests.py
    1  Found 18 lines of similar code in 2 locations (mass = 67)
-        also found at flext-infra/tests/unit/check/fix_pyrefly_config_tests.py
+        also found at flext-infra/tests/unit/check/fix_pyrefly_settings_tests.py
 
 flext-infra/tests/unit/codegen/__init__.py
  150  Found 54 lines of similar code in 2 locations (mass = 212)
@@ -2882,7 +2882,7 @@ flext-infra/tests/unit/release/flow_tests.py
         also found at flext-infra/tests/unit/release/flow_tests.py
 
 flext-infra/tests/unit/release/orchestrator_tests.py
-  26  Function with many parameters (count = 11): _make_config
+  26  Function with many parameters (count = 11): _make_settings
 
 flext-infra/tests/unit/release/version_resolution_tests.py
  114  Found 19 lines of similar code in 2 locations (mass = 93)
@@ -3471,7 +3471,7 @@ flext-ldif/src/flext_ldif/services/detector.py
  463  Function with many parameters (count = 7): _process_server_with_oid_pattern
  491  Function with many parameters (count = 6): _process_server_with_pattern
  508  Function with many parameters (count = 10): _update_server_scores
-  66  Function with many returns (count = 7): resolve_from_config
+  66  Function with many returns (count = 7): resolve_from_settings
    1  High total complexity (count = 79)
 
 flext-ldif/src/flext_ldif/services/entries.py
@@ -3563,9 +3563,9 @@ flext-ldif/tests/support/conftest_factory.py
    1  High total complexity (count = 55)
 
 flext-ldif/tests/support/real_services.py
- 119  Function with many parameters (count = 6): create_test_config
- 234  Function with many parameters (count = 7): create_configured_api
- 279  Function with many parameters (count = 7): create_test_config
+ 119  Function with many parameters (count = 6): create_test_settings
+ 234  Function with many parameters (count = 7): create_settingsured_api
+ 279  Function with many parameters (count = 7): create_test_settings
 
 flext-ldif/tests/unit/__init__/__init__.py
    1  Found 70 lines of similar code in 2 locations (mass = 197)
@@ -3754,8 +3754,8 @@ flext-meltano/src/flext_meltano/singer/translator.py
  116  Function with many returns (count = 8): execute_singer_command
 
 flext-meltano/src/flext_meltano/utilities.py
- 111  Function with many parameters (count = 7): create_meltano_config_dict
- 195  Function with many parameters (count = 6): create_plugin_config_dict
+ 111  Function with many parameters (count = 7): create_meltano_settings_dict
+ 195  Function with many parameters (count = 6): create_plugin_settings_dict
    1  High total complexity (count = 50)
  173  Found 15 lines of similar code in 2 locations (mass = 86)
         also found at flext-meltano/src/flext_meltano/utilities.py
@@ -4460,7 +4460,7 @@ flext-plugin/src/flext_plugin/services.py
         also found at flext-plugin/src/flext_plugin/services.py
 
 flext-plugin/src/flext_plugin/utilities.py
- 533  Function with many returns (count = 6): load_plugin_config
+ 533  Function with many returns (count = 6): load_plugin_settings
    1  High total complexity (count = 118)
  461  Function with high complexity (count = 26): validate_plugin_security
 
@@ -4522,7 +4522,7 @@ flext-plugin/tests/utilities.py
 
 flext-quality/docs/maintenance/scheduled_maintenance.py
    1  High total complexity (count = 104)
- 167  Function with high complexity (count = 29): _merge_config
+ 167  Function with high complexity (count = 29): _merge_settings
  736  Found 20 lines of identical code in 2 locations (mass = 105)
         also found at flext-quality/src/flext_quality/docs/scheduled_maintenance.py
  473  Found 28 lines of identical code in 2 locations (mass = 141)
@@ -4541,7 +4541,7 @@ flext-quality/src/flext_quality/docs/core/__init__.py
         also found at src/flext/__init__.py
         also found at flext-core/tests/fixtures/namespace_validator/__init__.py
 
-flext-quality/src/flext_quality/docs/core/config_manager.py
+flext-quality/src/flext_quality/docs/core/settings_manager.py
  264  Found 16 lines of similar code in 2 locations (mass = 88)
         also found at flext-quality/src/flext_quality/docs/scripts/audit.py
 
@@ -4553,11 +4553,11 @@ flext-quality/src/flext_quality/docs/core/file_discovery.py
 
 flext-quality/src/flext_quality/docs/notifications.py
    1  High total complexity (count = 116)
- 128  Function with high complexity (count = 58): _load_user_config
+ 128  Function with high complexity (count = 58): _load_user_settings
 
 flext-quality/src/flext_quality/docs/scheduled_maintenance.py
    1  High total complexity (count = 104)
- 137  Function with high complexity (count = 25): _merge_config
+ 137  Function with high complexity (count = 25): _merge_settings
  690  Found 20 lines of identical code in 2 locations (mass = 105)
         also found at flext-quality/docs/maintenance/scheduled_maintenance.py
  434  Found 28 lines of identical code in 2 locations (mass = 141)
@@ -4574,7 +4574,7 @@ flext-quality/src/flext_quality/docs/scripts/__init__.py
 flext-quality/src/flext_quality/docs/scripts/audit.py
    1  High total complexity (count = 142)
  137  Found 16 lines of similar code in 2 locations (mass = 88)
-        also found at flext-quality/src/flext_quality/docs/core/config_manager.py
+        also found at flext-quality/src/flext_quality/docs/core/settings_manager.py
 
 flext-quality/src/flext_quality/docs/scripts/optimize.py
    1  High total complexity (count = 90)
@@ -4643,7 +4643,7 @@ flext-quality/src/flext_quality/docs/tools/link_checker.py
 
 flext-quality/src/flext_quality/docs/tools/style_validator.py
    1  High total complexity (count = 107)
- 170  Function with high complexity (count = 28): _normalize_config
+ 170  Function with high complexity (count = 28): _normalize_settings
  176  Found 15 lines of similar code in 2 locations (mass = 134)
         also found at flext-quality/src/flext_quality/docs/tools/style_validator.py
  207  Found 15 lines of similar code in 2 locations (mass = 134)
@@ -4910,7 +4910,7 @@ flext-tap-ldap/src/flext_tap_ldap/tap.py
  209  Function with high complexity (count = 21): _cli
 
 flext-tap-ldap/src/flext_tap_ldap/utilities.py
- 130  Function with many returns (count = 6): validate_ldap_config
+ 130  Function with many returns (count = 6): validate_ldap_settings
 
 flext-tap-ldap/tests/__init__.py
  147  Found 51 lines of similar code in 2 locations (mass = 200)
@@ -5068,7 +5068,7 @@ flext-tap-ldif/src/flext_tap_ldif/typings.py
 flext-tap-ldif/src/flext_tap_ldif/utilities.py
  215  Function with many returns (count = 7): validate_ldif_file
  364  Function with many returns (count = 7): parse_ldif_line
- 426  Function with many returns (count = 6): validate_ldif_config
+ 426  Function with many returns (count = 6): validate_ldif_settings
    1  High total complexity (count = 83)
  260  Function with high complexity (count = 30): build_record_from_lines
  272  Found 15 lines of similar code in 2 locations (mass = 64)
@@ -5207,7 +5207,7 @@ flext-tap-oracle/src/flext_tap_oracle/streams.py
  314  Function with high complexity (count = 24): _transform_oracle_types_with_table_metadata
 
 flext-tap-oracle/src/flext_tap_oracle/utilities.py
- 306  Function with many returns (count = 6): validate_oracle_config
+ 306  Function with many returns (count = 6): validate_oracle_settings
    1  High total complexity (count = 50)
 
 flext-tap-oracle/tests/__init__.py
@@ -5228,7 +5228,7 @@ flext-tap-oracle/tests/conftest.py
         also found at flext-target-oracle/tests/conftest.py
 
 flext-tap-oracle/tests/utilities.py
-  47  Function with many parameters (count = 6): create_test_oracle_config
+  47  Function with many parameters (count = 6): create_test_oracle_settings
 
 flext-tap-oracle-oic/docs/pydantic-v2-modernization/audit_pydantic_v2.py
    1  Found 314 lines of identical code in 6 locations (mass = 1658)
@@ -5320,8 +5320,8 @@ flext-tap-oracle-oic/src/flext_tap_oracle_oic/tap_client.py
   46  Function with many returns (count = 7): get_access_token
 
 flext-tap-oracle-oic/src/flext_tap_oracle_oic/utilities.py
- 451  Function with many returns (count = 6): validate_oic_connection_config
- 495  Function with many returns (count = 6): validate_stream_config
+ 451  Function with many returns (count = 6): validate_oic_connection_settings
+ 495  Function with many returns (count = 6): validate_stream_settings
    1  High total complexity (count = 65)
 
 flext-tap-oracle-oic/tests/conftest.py
@@ -5684,7 +5684,7 @@ flext-target-ldap/src/flext_target_ldap/target_client.py
  683  Found 48 lines of identical code in 2 locations (mass = 363)
         also found at flext-target-ldap/src/flext_target_ldap/sinks.py
 
-flext-target-ldap/src/flext_target_ldap/target_config.py
+flext-target-ldap/src/flext_target_ldap/target_settings.py
   41  Found 10 lines of similar code in 2 locations (mass = 66)
         also found at flext-target-ldap/src/flext_target_ldap/utilities.py
 
@@ -5694,8 +5694,8 @@ flext-target-ldap/src/flext_target_ldap/transformation.py
 
 flext-target-ldap/src/flext_target_ldap/utilities.py
  176  Function with many returns (count = 6): build_ldap_dn
- 423  Function with many returns (count = 11): validate_ldap_connection_config
- 505  Function with many returns (count = 6): validate_target_config
+ 423  Function with many returns (count = 11): validate_ldap_connection_settings
+ 505  Function with many returns (count = 6): validate_target_settings
    1  High total complexity (count = 134)
   41  Function with high complexity (count = 23): _coerce_container_value
  103  Found 29 lines of similar code in 2 locations (mass = 160)
@@ -5703,7 +5703,7 @@ flext-target-ldap/src/flext_target_ldap/utilities.py
  133  Found 29 lines of similar code in 2 locations (mass = 160)
         also found at flext-target-ldap/src/flext_target_ldap/utilities.py
  877  Found 31 lines of similar code in 2 locations (mass = 66)
-        also found at flext-target-ldap/src/flext_target_ldap/target_config.py
+        also found at flext-target-ldap/src/flext_target_ldap/target_settings.py
 
 flext-target-ldap/tests/__init__.py
  148  Found 47 lines of similar code in 2 locations (mass = 184)
@@ -5798,7 +5798,7 @@ flext-target-ldif/src/flext_target_ldif/utilities.py
  108  Function with many returns (count = 6): build_ldif_dn
  248  Function with many returns (count = 6): validate_ldif_entry
  377  Function with many returns (count = 6): validate_ldif_file_path
- 539  Function with many returns (count = 8): validate_ldif_target_config
+ 539  Function with many returns (count = 8): validate_ldif_target_settings
    1  High total complexity (count = 105)
  152  Function with high complexity (count = 18): convert_record_to_ldif_entry
 
@@ -6215,7 +6215,7 @@ flext-tests/src/flext_tests/_utilities/__init__.py
 flext-tests/src/flext_tests/_utilities/_payload.py
   31  Function with many returns (count = 7): to_payload
   78  Function with many returns (count = 9): to_normalized_value
-  99  Function with many returns (count = 9): to_config_map_value
+  99  Function with many returns (count = 9): to_settings_map_value
    1  High total complexity (count = 51)
 
 flext-tests/src/flext_tests/_utilities/matchers.py
@@ -6267,7 +6267,7 @@ flext-tests/src/flext_tests/_validator/imports.py
         also found at flext-tests/src/flext_tests/_validator/bypass.py
 
 flext-tests/src/flext_tests/_validator/settings.py
- 196  Function with many parameters (count = 6): _create_config_violation
+ 196  Function with many parameters (count = 6): _create_settings_violation
   88  Found 16 lines of similar code in 3 locations (mass = 69)
         also found at flext-tests/src/flext_tests/_validator/settings.py
         also found at flext-tests/src/flext_tests/_validator/settings.py
@@ -6296,7 +6296,7 @@ flext-tests/src/flext_tests/_validator/types.py
         also found at flext-tests/src/flext_tests/_validator/bypass.py
 
 flext-tests/src/flext_tests/domains.py
-  27  Function with many parameters (count = 6): build_dbt_project_config
+  27  Function with many parameters (count = 6): build_dbt_project_settings
 
 flext-tests/src/flext_tests/files.py
  234  Function with many parameters (count = 7): files
@@ -6317,7 +6317,7 @@ flext-tests/src/flext_tests/files.py
  687  Function with many returns (count = 9): compare
 1119  Function with many returns (count = 14): read
 1482  Function with many returns (count = 8): _normalize_create_format
-1613  Function with many returns (count = 6): _to_config_map_value
+1613  Function with many returns (count = 6): _to_settings_map_value
 1635  Function with many returns (count = 12): _to_payload_value
    1  High total complexity (count = 372)
  323  Function with high complexity (count = 56): assert_exists
@@ -6330,7 +6330,7 @@ flext-tests/src/flext_tests/files.py
 
 flext-tests/src/flext_tests/utilities.py
  750  Function with many parameters (count = 6): assert_result_chain
-1086  Function with many parameters (count = 7): create_handler_config
+1086  Function with many parameters (count = 7): create_handler_settings
 1369  Function with many returns (count = 6): execute_domain_operation
 1577  Function with many returns (count = 6): detect_format
    1  High total complexity (count = 161)
@@ -6590,7 +6590,7 @@ gruponos-meltano-native/src/gruponos_meltano_native/models/__init__.py
         also found at flext-target-oracle-oic/src/flext_target_oracle_oic/singer/__init__.py
 
 gruponos-meltano-native/src/gruponos_meltano_native/models/pipeline.py
- 585  Function with many parameters (count = 6): create_pipeline_config
+ 585  Function with many parameters (count = 6): create_pipeline_settings
 
 gruponos-meltano-native/src/gruponos_meltano_native/monitoring/__init__.py
    1  Found 115 lines of similar code in 2 locations (mass = 296)
@@ -6621,9 +6621,9 @@ gruponos-meltano-native/src/gruponos_meltano_native/orchestrator.py
    1  High total complexity (count = 51)
 
 gruponos-meltano-native/src/gruponos_meltano_native/settings.py
- 586  Function with many parameters (count = 6): create_oracle_connection_config
- 625  Function with many parameters (count = 7): create_wms_config
- 787  Function with many returns (count = 6): _validate_wms_config_result
+ 586  Function with many parameters (count = 6): create_oracle_connection_settings
+ 625  Function with many parameters (count = 7): create_wms_settings
+ 787  Function with many returns (count = 6): _validate_wms_settings_result
 
 gruponos-meltano-native/src/gruponos_meltano_native/validators/__init__.py
    1  Found 103 lines of similar code in 2 locations (mass = 256)

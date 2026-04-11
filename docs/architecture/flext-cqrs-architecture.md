@@ -377,7 +377,7 @@ servir como referência futura para implementação:
 
 ~~**Dependências:**~~
 
-~~- `x` → logging, tracking, config, container (NÃO USADOS!)~~
+~~- `x` → logging, tracking, settings, container (NÃO USADOS!)~~
 ~~- `FlextConstants` → status codes, messages~~
 ~~- `e` → error handling~~
 ~~- `FlextModels` → message types~~
@@ -533,7 +533,7 @@ servir como referência futura para implementação:
 ~~ # Disponível mas NUNCA usado:~~
 ~~ # - self.logger → 0 chamadas em \_run_pipeline~~
 ~~ # - self.track() → 0 chamadas em \_run_pipeline~~
-~~ # - self.config → 0 chamadas em \_run_pipeline~~
+~~ # - self.settings → 0 chamadas em \_run_pipeline~~
 ~~ # - self.container → 0 chamadas em \_run_pipeline~~
 
 ~~ def \_run_pipeline(self, message: TCommand) -> r[TResult]:~~
@@ -584,7 +584,7 @@ servir como referência futura para implementação:
 ~~│ ┌─────────────────────────────────────────────────────────┐ │~~
 ~~│ │ x │ │~~
 ~~│ │ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐ │ │~~
-~~│ │ │ self.config │ │ self.logger │ │ self.container │ │ │~~
+~~│ │ │ self.settings │ │ self.logger │ │ self.container │ │ │~~
 ~~│ │ └─────────────┘ └──────────────┘ └────────────────┘ │ │~~
 ~~│ │ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐ │ │~~
 ~~│ │ │ self.context│ │ self.track() │ │ x │ │ │~~
@@ -1179,7 +1179,7 @@ servir como referência futura para implementação:
 ~~ def handle(self, command: MyCommand) -> r[MyResult]:~~
 ~~ # Infraestrutura automática via x:~~
 ~~ # - self.logger: FlextLogger~~
-~~ # - self.config: FlextSettings~~
+~~ # - self.settings: FlextSettings~~
 ~~ # - self.container: FlextContainer~~
 ~~ # - self.context: FlextContext~~
 ~~ # - self.track(): Performance tracking~~

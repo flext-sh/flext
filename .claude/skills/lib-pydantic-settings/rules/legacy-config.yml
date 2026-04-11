@@ -1,4 +1,4 @@
-id: ban-legacy-config-class
+id: ban-legacy-settings-class
 language: python
 rule:
   pattern: |

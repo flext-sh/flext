@@ -67,7 +67,7 @@ FLEXT Core follows strict layering so that lower tiers never import higher tiers
 ### Key architectural patterns
 
 - **r[T]**: the railway result for success/failure chaining (`r[T]` alias) and monadic helpers.
-- **Dependency injection bridge**: `u` + `FlextContainer` re-export `Provide`/`inject`, auto-register the core services (`config`, `logger`, `context`), and shield projects from `dependency-injector` details.
+- **Dependency injection bridge**: `u` + `FlextContainer` re-export `Provide`/`inject`, auto-register the core services (`settings`, `logger`, `context`), and shield projects from `dependency-injector` details.
 - **Protocol-first**: all interfaces accept `flext_core.protocols` namespaced types, zero `TYPE_CHECKING`, zero circular imports.
 - **Short-alias discipline**: `r`, `t`, `c`, `m`, `p`, `u`, `e`, `x`, `d`, `h` for succinct runtime code.
 

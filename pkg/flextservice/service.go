@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/settings"
 	"github.com/flext-sh/flext/pkg/controlpanel/coordination"
 	"github.com/flext-sh/flext/pkg/controlpanel/management/container"
 	"github.com/flext-sh/flext/pkg/controlpanel/monitoring/server"
@@ -25,7 +25,7 @@ type ServiceConfig struct {
 
 // s represents the main FLEXT service
 type s struct {
-	config      *ServiceConfig
+	settings      *ServiceConfig
 	logger      logging.Logger
 	coordinator *coordination.FlexCoreCoordinator
 	container   *container.Container
@@ -41,7 +41,7 @@ func NewFlextService(cfg *ServiceConfig) (*s, error) {
 	logger := logging.GetLogger()
 
 	// Initialize configuration
-	serviceCfg := &config.Config{}
+	serviceCfg := &settings.Config{}
 	serviceCfg.Server.Host = cfg.Host
 	serviceCfg.Server.Port = cfg.Port
 	serviceCfg.Server.Environment = cfg.Environment
@@ -63,7 +63,7 @@ func NewFlextService(cfg *ServiceConfig) (*s, error) {
 	srv := server.NewServer(serviceCfg, logger)
 
 	return &s{
-		config:      cfg,
+		settings:      cfg,
 		logger:      logger,
 		coordinator: coordinator,
 		container:   containerInstance,
@@ -74,7 +74,7 @@ func NewFlextService(cfg *ServiceConfig) (*s, error) {
 // Start starts the FLEXT service
 func (s *s) Start() error {
 	s.logger.Info(fmt.Sprintf("Starting %s on %s:%d (%s) - FlexCore URL: http://localhost:8080",
-		s.config.ServiceName, s.config.Host, s.config.Port, s.config.Environment))
+		s.settings.ServiceName, s.settings.Host, s.settings.Port, s.settings.Environment))
 
 	// Start server in goroutine
 	go func() {

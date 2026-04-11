@@ -82,9 +82,9 @@ type DBTProjectInfo struct {
 }
 
 // NewDBTManager creates a new dbt manager
-func NewDBTManager(config *DBTConfig, logger logging.Logger) (*DBTManager, error) {
-	if config == nil {
-		config = &DBTConfig{
+func NewDBTManager(settings *DBTConfig, logger logging.Logger) (*DBTManager, error) {
+	if settings == nil {
+		settings = &DBTConfig{
 			ProjectPath:   "./dbt_project",
 			ProfilesDir:   "~/.dbt",
 			PythonPath:    "python3",
@@ -94,13 +94,13 @@ func NewDBTManager(config *DBTConfig, logger logging.Logger) (*DBTManager, error
 	}
 
 	manager := &DBTManager{
-		projectPath:   config.ProjectPath,
-		profilesDir:   config.ProfilesDir,
+		projectPath:   settings.ProjectPath,
+		profilesDir:   settings.ProfilesDir,
 		logger:        logger,
-		pythonPath:    config.PythonPath,
-		dbtPath:       config.DBTPath,
-		venvPath:      config.VenvPath,
-		defaultTarget: config.DefaultTarget,
+		pythonPath:    settings.PythonPath,
+		dbtPath:       settings.DBTPath,
+		venvPath:      settings.VenvPath,
+		defaultTarget: settings.DefaultTarget,
 	}
 
 	// Validate dbt installation
@@ -480,7 +480,7 @@ func (dm *DBTManager) parseTestResult(data map[string]interface{}) DBTTestResult
 }
 
 // CreateProfile creates a dbt profile configuration
-func (dm *DBTManager) CreateProfile(profileName string, config map[string]interface{}) error {
+func (dm *DBTManager) CreateProfile(profileName string, settings map[string]interface{}) error {
 	profilesDir := dm.profilesDir
 	if profilesDir == "" {
 		homeDir, err := os.UserHomeDir()

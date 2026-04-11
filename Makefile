@@ -82,14 +82,14 @@ endif
 # Project discovery is owned by flext-infra, but the workspace Makefile keeps
 # a rich inventory so help/status/git verbs continue to work before and after boot.
 # - FLEXT_PROJECTS: declared git submodules from .gitmodules
-# - WORKSPACE_PROJECTS: configured workspace members from tool.flext.workspace or tool.uv.workspace
+# - WORKSPACE_PROJECTS: settingsured workspace members from tool.flext.workspace or tool.uv.workspace
 # - EXTERNAL_PROJECTS: top-level children with pyproject.toml declaring flext-core
 FLEXT_PROJECTS := $(shell \
-	$(PYTHON_CMD) -c 'import json, pathlib, re; root = pathlib.Path("."); docs_path = root / "docs" / "docs_config.json"; payload = json.loads(docs_path.read_text()) if docs_path.is_file() else {}; scope = payload.get("scope", {}) if isinstance(payload, dict) else {}; excluded = {str(item).strip() for item in scope.get("exclude_roots", []) if str(item).strip()} if isinstance(scope, dict) else set(); gitmodules = root / ".gitmodules"; content = gitmodules.read_text() if gitmodules.is_file() else ""; print(" ".join(path for path in re.findall(r"^\s*path\s*=\s*(.+?)\s*$$", content, re.MULTILINE) if path not in excluded), end="")')
+	$(PYTHON_CMD) -c 'import json, pathlib, re; root = pathlib.Path("."); docs_path = root / "docs" / "docs_settings.json"; payload = json.loads(docs_path.read_text()) if docs_path.is_file() else {}; scope = payload.get("scope", {}) if isinstance(payload, dict) else {}; excluded = {str(item).strip() for item in scope.get("exclude_roots", []) if str(item).strip()} if isinstance(scope, dict) else set(); gitmodules = root / ".gitmodules"; content = gitmodules.read_text() if gitmodules.is_file() else ""; print(" ".join(path for path in re.findall(r"^\s*path\s*=\s*(.+?)\s*$$", content, re.MULTILINE) if path not in excluded), end="")')
 WORKSPACE_PROJECTS := $(shell \
 	$(PYTHON_CMD) -c 'import pathlib, tomllib; root = pathlib.Path("pyproject.toml"); payload = tomllib.loads(root.read_text()) if root.is_file() else {}; tool_payload = payload.get("tool", {}) if isinstance(payload, dict) else {}; flext_payload = tool_payload.get("flext", {}) if isinstance(tool_payload, dict) else {}; workspace_payload = flext_payload.get("workspace", {}) if isinstance(flext_payload, dict) else {}; members = workspace_payload.get("members", []) if isinstance(workspace_payload, dict) else []; uv_payload = tool_payload.get("uv", {}) if isinstance(tool_payload, dict) else {}; uv_workspace = uv_payload.get("workspace", {}) if isinstance(uv_payload, dict) else {}; members = members if isinstance(members, list) and members else (uv_workspace.get("members", []) if isinstance(uv_workspace, dict) else []); print(" ".join(str(item).strip() for item in members if str(item).strip()), end="") if isinstance(members, list) else print("", end="")')
 EXTERNAL_PROJECTS := $(shell \
-	$(PYTHON_CMD) -c 'import json, pathlib, re, tomllib; root = pathlib.Path("."); root_payload = tomllib.loads((root / "pyproject.toml").read_text()) if (root / "pyproject.toml").is_file() else {}; mapping = lambda value: value if isinstance(value, dict) else {}; tool_payload = mapping(root_payload.get("tool")); flext_payload = mapping(tool_payload.get("flext")); workspace_payload = mapping(flext_payload.get("workspace")); members = workspace_payload.get("members", []); uv_workspace = mapping(mapping(tool_payload.get("uv")).get("workspace")); members = members if isinstance(members, list) and members else uv_workspace.get("members", []); members = {str(item).strip() for item in members if str(item).strip()} if isinstance(members, list) else set(); docs_payload = json.loads((root / "docs" / "docs_config.json").read_text()) if (root / "docs" / "docs_config.json").is_file() else {}; excluded_roots = mapping(mapping(docs_payload).get("scope")).get("exclude_roots", []); excluded = {str(item).strip() for item in excluded_roots if str(item).strip()} if isinstance(excluded_roots, list) else set(); normalize = lambda spec: (match.group(0).lower().replace("_", "-") if (match := re.match(r"[A-Za-z0-9._-]+", str(spec).strip().split("@", 1)[0].strip())) else ""); dependency_names = lambda payload: ({name for item in (mapping(payload.get("project")).get("dependencies", []) if isinstance(mapping(payload.get("project")).get("dependencies", []), list) else []) if (name := normalize(item))} | {name for group in (mapping(payload.get("project")).get("optional-dependencies", {}).values() if isinstance(mapping(payload.get("project")).get("optional-dependencies", {}), dict) else []) for item in (group if isinstance(group, list) else []) if (name := normalize(item))} | {name for group in (payload.get("dependency-groups", {}).values() if isinstance(payload.get("dependency-groups", {}), dict) else []) for item in (group if isinstance(group, list) else []) if (name := normalize(item))} | {name for key in mapping(mapping(payload.get("tool")).get("poetry")).get("dependencies", {}) if (name := normalize(key)) and name != "python"}); print(" ".join(child.name for child in sorted(root.iterdir(), key=lambda item: item.name) if child.is_dir() and not child.name.startswith(".") and child.name != "cmd" and child.name not in excluded and child.name not in members and (pyproject := child / "pyproject.toml").is_file() and (payload := tomllib.loads(pyproject.read_text())) and not (isinstance(mapping(mapping(mapping(payload.get("tool")).get("flext")).get("docs")).get("enabled", True), bool) and not mapping(mapping(mapping(payload.get("tool")).get("flext")).get("docs")).get("enabled", True)) and "flext-core" in dependency_names(payload)), end="")')
+	$(PYTHON_CMD) -c 'import json, pathlib, re, tomllib; root = pathlib.Path("."); root_payload = tomllib.loads((root / "pyproject.toml").read_text()) if (root / "pyproject.toml").is_file() else {}; mapping = lambda value: value if isinstance(value, dict) else {}; tool_payload = mapping(root_payload.get("tool")); flext_payload = mapping(tool_payload.get("flext")); workspace_payload = mapping(flext_payload.get("workspace")); members = workspace_payload.get("members", []); uv_workspace = mapping(mapping(tool_payload.get("uv")).get("workspace")); members = members if isinstance(members, list) and members else uv_workspace.get("members", []); members = {str(item).strip() for item in members if str(item).strip()} if isinstance(members, list) else set(); docs_payload = json.loads((root / "docs" / "docs_settings.json").read_text()) if (root / "docs" / "docs_settings.json").is_file() else {}; excluded_roots = mapping(mapping(docs_payload).get("scope")).get("exclude_roots", []); excluded = {str(item).strip() for item in excluded_roots if str(item).strip()} if isinstance(excluded_roots, list) else set(); normalize = lambda spec: (match.group(0).lower().replace("_", "-") if (match := re.match(r"[A-Za-z0-9._-]+", str(spec).strip().split("@", 1)[0].strip())) else ""); dependency_names = lambda payload: ({name for item in (mapping(payload.get("project")).get("dependencies", []) if isinstance(mapping(payload.get("project")).get("dependencies", []), list) else []) if (name := normalize(item))} | {name for group in (mapping(payload.get("project")).get("optional-dependencies", {}).values() if isinstance(mapping(payload.get("project")).get("optional-dependencies", {}), dict) else []) for item in (group if isinstance(group, list) else []) if (name := normalize(item))} | {name for group in (payload.get("dependency-groups", {}).values() if isinstance(payload.get("dependency-groups", {}), dict) else []) for item in (group if isinstance(group, list) else []) if (name := normalize(item))} | {name for key in mapping(mapping(payload.get("tool")).get("poetry")).get("dependencies", {}) if (name := normalize(key)) and name != "python"}); print(" ".join(child.name for child in sorted(root.iterdir(), key=lambda item: item.name) if child.is_dir() and not child.name.startswith(".") and child.name != "cmd" and child.name not in excluded and child.name not in members and (pyproject := child / "pyproject.toml").is_file() and (payload := tomllib.loads(pyproject.read_text())) and not (isinstance(mapping(mapping(mapping(payload.get("tool")).get("flext")).get("docs")).get("enabled", True), bool) and not mapping(mapping(mapping(payload.get("tool")).get("flext")).get("docs")).get("enabled", True)) and "flext-core" in dependency_names(payload)), end="")')
 MANAGED_PROJECTS := $(strip $(FLEXT_PROJECTS))
 INDEPENDENT_PROJECTS := $(strip $(EXTERNAL_PROJECTS))
 ALL_PROJECTS := $(strip $(sort $(MANAGED_PROJECTS) $(WORKSPACE_PROJECTS) $(INDEPENDENT_PROJECTS)))
@@ -292,7 +292,7 @@ help: ## Show simple workspace verbs
 
 	$(Q)printf " %-7s %s\n" "up" "Upgrade deps + modernize + dependency report (.reports/dependencies/)"
 
-	$(Q)printf " %-7s %s\n" "mod" "Modernize pyproject.toml configs only (no lock/install)"
+	$(Q)printf " %-7s %s\n" "mod" "Modernize pyproject.toml settingss only (no lock/install)"
 
 	$(Q)printf " %-7s %s\n" "build" "Build/package all selected projects"
 
@@ -467,22 +467,22 @@ boot: ## Install all projects into workspace .venv
 	$(Q)$(PREFLIGHT_CHECK)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)if [ -f .gitmodules ]; then \
-		submodule_paths="$$(git config --file .gitmodules --get-regexp '^submodule\..*\.path$$' 2>/dev/null | awk '{print $$2}' | tr '\n' ' ')"; \
+		submodule_paths="$$(git settings --file .gitmodules --get-regexp '^submodule\..*\.path$$' 2>/dev/null | awk '{print $$2}' | tr '\n' ' ')"; \
 		if [ -z "$$submodule_paths" ]; then \
 			echo "No declared submodules found in .gitmodules."; \
 		else \
 		echo "Initializing and updating submodules..."; \
 		git submodule sync --recursive -- $$submodule_paths; \
 		if ! git submodule update --init --recursive --jobs $${JOBS:-8} -- $$submodule_paths; then \
-			echo "Submodule update with configured URLs failed. Retrying with HTTPS fallback..."; \
+			echo "Submodule update with settingsured URLs failed. Retrying with HTTPS fallback..."; \
 			while IFS=' ' read -r key url; do \
 				name="$${key#submodule.}"; \
 				name="$${name%.url}"; \
 				if [[ "$$url" == git@github.com:* ]]; then \
 					https_url="https://github.com/$${url#git@github.com:}"; \
-					git config "submodule.$$name.url" "$$https_url"; \
+					git settings "submodule.$$name.url" "$$https_url"; \
 				fi; \
-			done < <(git config --file .gitmodules --get-regexp '^submodule\..*\.url$$'); \
+			done < <(git settings --file .gitmodules --get-regexp '^submodule\..*\.url$$'); \
 			git submodule sync --recursive -- $$submodule_paths; \
 			git submodule update --init --recursive --jobs $${JOBS:-8} -- $$submodule_paths || { \
 				echo "ERROR: failed to update submodules"; \
@@ -664,7 +664,7 @@ up: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)echo "Syncing GitHub workflow templates..."
 	$(Q)$(WORKSPACE_INFRA_GITHUB) workflows --workspace "$(CURDIR)" --apply --prune --report .reports/workflows/sync.json
 
-mod: ## Modernize pyproject.toml files (standardize configs without lock/install)
+mod: ## Modernize pyproject.toml files (standardize settingss without lock/install)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
@@ -779,11 +779,11 @@ fmt: ## Run code formatting across all workspace projects (ruff/gofmt + markdown
 	fi; \
 	if [ -n "$$md_files" ]; then \
 		echo "Formatting Markdown files (markdownlint)..."; \
-		md_config=""; \
+		md_settings=""; \
 		if [ -f ".markdownlint.json" ]; then \
-			md_config="--config .markdownlint.json"; \
+			md_settings="--settings .markdownlint.json"; \
 		fi; \
-		echo "$$md_files" | xargs markdownlint --fix $$md_config; \
+		echo "$$md_files" | xargs markdownlint --fix $$md_settings; \
 	fi
 	$(Q)echo "Format complete."
 
@@ -823,7 +823,7 @@ ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)$(WORKSPACE_INFRA_VALIDATE) skill-validate --skill rules-docker --mode strict
 	$(Q)$(WORKSPACE_INFRA_DEPS) modernize --audit
 	$(Q)if git grep -nE '/home/.*/flext|file:///home/.*/flext' -- '*.py' '**/*.py' '*.toml' '**/*.toml' '*.yml' '**/*.yml' '*.yaml' '**/*.yaml' '*.json' '**/*.json' '.gitignore' 'base.mk' '**/base.mk' ':!.planning/**' ':!.reports/**' ':!.sisyphus/**' ':!docs/**'; then \
-		echo "ERROR: absolute workspace paths detected in tracked sources/config"; \
+		echo "ERROR: absolute workspace paths detected in tracked sources/settings"; \
 		exit 1; \
 	fi
 else

@@ -288,7 +288,7 @@ func (r *PipelineRepository) saveSteps(ctx context.Context, pipeline *Pipeline) 
 	for i, step := range pipeline.Steps {
 		configJSON, err := json.Marshal(step.Config)
 		if err != nil {
-			return fmt.Errorf("failed to marshal step config: %w", err)
+			return fmt.Errorf("failed to marshal step settings: %w", err)
 		}
 
 		dependenciesJSON, err := json.Marshal(step.Dependencies)
@@ -297,7 +297,7 @@ func (r *PipelineRepository) saveSteps(ctx context.Context, pipeline *Pipeline) 
 		}
 
 		query := `
-			INSERT INTO pipeline_steps (id, pipeline_id, name, type, order_index, config, dependencies)
+			INSERT INTO pipeline_steps (id, pipeline_id, name, type, order_index, settings, dependencies)
 			VALUES (?, ?, ?, ?, ?, ?, ?)
 		`
 
@@ -315,7 +315,7 @@ func (r *PipelineRepository) saveSteps(ctx context.Context, pipeline *Pipeline) 
 
 func (r *PipelineRepository) loadSteps(ctx context.Context, pipelineID uuid.UUID) ([]*Step, error) {
 	query := `
-		SELECT id, name, type, config, dependencies
+		SELECT id, name, type, settings, dependencies
 		FROM pipeline_steps
 		WHERE pipeline_id = ?
 		ORDER BY order_index
@@ -344,7 +344,7 @@ func (r *PipelineRepository) loadSteps(ctx context.Context, pipelineID uuid.UUID
 			return nil, fmt.Errorf("invalid step type: %w", err)
 		}
 
-		// Parse config and dependencies
+		// Parse settings and dependencies
 		json.Unmarshal([]byte(configJSON), &step.Config)
 		json.Unmarshal([]byte(dependenciesJSON), &step.Dependencies)
 

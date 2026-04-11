@@ -26,7 +26,7 @@ from decimal import Decimal
 from enum import StrEnum, unique
 from typing import ClassVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field, SettingsDict
 
 from flext_core import r, t
 
@@ -44,7 +44,7 @@ def _new_data_value_map() -> Mapping[str, DataValue]:
 class PipelineStageData(BaseModel):
     """Data container for pipeline stage processing."""
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(
+    model_settings: ClassVar[SettingsDict] = SettingsDict(
         arbitrary_types_allowed=True,
         extra="allow",
     )
@@ -52,7 +52,7 @@ class PipelineStageData(BaseModel):
     class PipelinePayload(BaseModel):
         """Pipeline payload container."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(
+        model_settings: ClassVar[SettingsDict] = SettingsDict(
             arbitrary_types_allowed=True,
             extra="allow",
         )
@@ -86,7 +86,9 @@ class AdvancedProcessingExample:
     class ProcessingResult(BaseModel):
         """Result of processing operation with metrics."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_settings: ClassVar[SettingsDict] = SettingsDict(
+            arbitrary_types_allowed=True
+        )
 
         operation_id: str = Field(description="Unique operation identifier")
         items_processed: int = Field(description="Total items processed")
@@ -105,7 +107,9 @@ class AdvancedProcessingExample:
     class ValidationResult(BaseModel):
         """Result of validation operation."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_settings: ClassVar[SettingsDict] = SettingsDict(
+            arbitrary_types_allowed=True
+        )
 
         item_id: str = Field(description="Unique item identifier")
         valid: bool = Field(description="Whether the item is valid")

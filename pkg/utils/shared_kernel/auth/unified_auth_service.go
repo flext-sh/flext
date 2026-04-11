@@ -81,8 +81,8 @@ type OAuth2Config struct {
 }
 
 // NewUnifiedAuthService creates a new unified authentication service
-func NewUnifiedAuthService(config UnifiedAuthConfig, logger logging.Logger) (*UnifiedAuthService, error) {
-	if config.JWTSecret == "" {
+func NewUnifiedAuthService(settings UnifiedAuthConfig, logger logging.Logger) (*UnifiedAuthService, error) {
+	if settings.JWTSecret == "" {
 		return nil, &errors.DomainError{
 			Code:    "AUTH_CONFIG_ERROR",
 			Message: "JWT secret is required",
@@ -91,9 +91,9 @@ func NewUnifiedAuthService(config UnifiedAuthConfig, logger logging.Logger) (*Un
 	}
 
 	service := &UnifiedAuthService{
-		jwtSecret:     []byte(config.JWTSecret),
-		tokenExpiry:   config.TokenExpiry,
-		refreshExpiry: config.RefreshTokenExpiry,
+		jwtSecret:     []byte(settings.JWTSecret),
+		tokenExpiry:   settings.TokenExpiry,
+		refreshExpiry: settings.RefreshTokenExpiry,
 		logger:        logger.With(logging.F("component", "unified_auth")),
 		providers:     make(map[string]FlextAuthProvider),
 	}
@@ -107,24 +107,24 @@ func NewUnifiedAuthService(config UnifiedAuthConfig, logger logging.Logger) (*Un
 	}
 
 	// Initialize built-in providers
-	if config.EnableBasicAuth {
+	if settings.EnableBasicAuth {
 		service.RegisterProvider(FlextAuthNewBasicProvider(logger))
 	}
 
-	if config.EnableOAuth2 {
-		oauth2Provider, err := NewOAuth2Provider(config.OAuth2Config, logger)
+	if settings.EnableOAuth2 {
+		oauth2Provider, err := NewOAuth2Provider(settings.OAuth2Config, logger)
 		if err != nil {
 			return nil, fmt.Errorf("failed to initialize OAuth2 provider: %w", err)
 		}
 		service.RegisterProvider(oauth2Provider)
 	}
 
-	if config.EnableAPIKeyAuth {
+	if settings.EnableAPIKeyAuth {
 		service.RegisterProvider(NewAPIKeyProvider(logger))
 	}
 
 	// Always register JWT provider for token validation
-	service.RegisterProvider(NewJWTProvider(config.JWTSecret, logger))
+	service.RegisterProvider(NewJWTProvider(settings.JWTSecret, logger))
 
 	service.logger.Info("Unified auth service initialized",
 		logging.F("providers", len(service.providers)),

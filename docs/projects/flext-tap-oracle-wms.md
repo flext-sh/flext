@@ -33,8 +33,8 @@ make validate  # full validation (currently monitors refactor progress)
 ```
 
 ```bash
-tap-oracle-wms --config config.json --discover > catalog.json
-tap-oracle-wms --config config.json --catalog catalog.json --state state.json
+tap-oracle-wms --settings settings.json --discover > catalog.json
+tap-oracle-wms --settings settings.json --catalog catalog.json --state state.json
 ```
 
 ## Architecture & integration
@@ -46,7 +46,7 @@ tap-oracle-wms --config config.json --catalog catalog.json --state state.json
 
 ## Quality & operations
 
-- **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate`, `make discover`, `make run`, `make wms-test`, `make validate-config`.
+- **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate`, `make discover`, `make run`, `make wms-test`, `make validate-settings`.
 - **Testing**: 37 MyPy errors noted (regression), 27% of tests disabled, 8,179 lines marked for simplification; tests include Singer, integration, and WMS connectivity scenarios.
 - **Security**: Bandit + pip-audit run via `make security`; zero tolerance for insecure default credentials.
 - **Documentation**: TODO, architecture, and standards docs describe the refactor plan, quality principles, and simplification roadmap.

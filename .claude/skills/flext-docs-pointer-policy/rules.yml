@@ -1,5 +1,5 @@
 skill: flext-docs-pointer-policy
-description: Enforce pointer-only content in agent config files.
+description: Enforce pointer-only content in agent settings files.
 scan_targets:
   include:
     - .github/copilot-instructions.md

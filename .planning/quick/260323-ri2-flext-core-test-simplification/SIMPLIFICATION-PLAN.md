@@ -183,7 +183,7 @@ When merging files, apply these rules to the resulting test:
    assert c.UNKNOWN_ERROR
    assert isinstance(m.Categories(), m.Categories)
    assert r[int].ok(1).is_success
-   assert isinstance(t.ConfigMap({"k": 1}), t.ConfigMap)
+   assert isinstance(t.SettingsMap({"k": 1}), t.SettingsMap)
    assert u.to_str(1) == "1"
    ```
 
@@ -216,7 +216,7 @@ When merging files, apply these rules to the resulting test:
 - `test_namespace_validator.py` — infra validator, distinct
 - `test_version.py` — version module, standalone
 - `test_deprecation_warnings.py` — deprecation warnings, distinct
-- `test_config.py` — config, standalone
+- `test_settings.py` — settings, standalone
 - `test_models.py` — primary DDD model tests
 
 ---

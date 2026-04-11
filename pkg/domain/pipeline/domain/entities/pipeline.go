@@ -68,8 +68,8 @@ func (p *Pipeline) RemoveTag(tag string) {
 }
 
 // UpdateConfiguration atualiza a configuração do pipeline
-func (p *Pipeline) UpdateConfiguration(config string) {
-	p.Configuration = config
+func (p *Pipeline) UpdateConfiguration(settings string) {
+	p.Configuration = settings
 	p.UpdatedAt = time.Now()
 }
 

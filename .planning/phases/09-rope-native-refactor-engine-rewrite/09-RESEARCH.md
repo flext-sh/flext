@@ -204,7 +204,7 @@ New flow:
 ### Pitfall 4: rope.base.project.Project is not thread-safe
 **What goes wrong:** Concurrent access to the same Project instance from multiple threads causes stale state.
 **Why it happens:** Rope was designed for single-threaded editor use.
-**How to avoid:** Sequential execution only — which is already the case (D-14, no parallelization in config).
+**How to avoid:** Sequential execution only — which is already the case (D-14, no parallelization in settings).
 **Warning signs:** Intermittent wrong results.
 
 ### Pitfall 5: Stale rope analysis after CST modifications
@@ -311,7 +311,7 @@ for change in changeset.changes:
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
-| Config file | `flext-infra/pyproject.toml` [tool.pytest.ini_options] |
+| Settings file | `flext-infra/pyproject.toml` [tool.pytest.ini_options] |
 | Quick run command | `/home/marlonsc/flext/.venv/bin/pytest flext-infra/tests/unit/refactor/ -x -q` |
 | Full suite command | `/home/marlonsc/flext/.venv/bin/pytest flext-infra/tests/ -x -q` |
 

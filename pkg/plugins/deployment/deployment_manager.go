@@ -56,7 +56,7 @@ type DeploymentTask struct {
 	PluginID      plugins.PluginID       `json:"plugin_id"`
 	FlexCoreNodes []string               `json:"flexcore_nodes"`
 	Action        string                 `json:"action"` // deploy, undeploy, update
-	Config        map[string]interface{} `json:"config"`
+	Config        map[string]interface{} `json:"settings"`
 	Status        string                 `json:"status"`
 	Progress      float64                `json:"progress"`
 	ErrorMessage  string                 `json:"error_message,omitempty"`
@@ -106,14 +106,14 @@ func (dm *PluginDeploymentManager) SetCommunicator(communicator plugins.PluginCo
 }
 
 // DeployPlugin deploys a plugin to specified FlexCore instances
-func (dm *PluginDeploymentManager) DeployPlugin(ctx context.Context, pluginID plugins.PluginID, nodes []string, config map[string]interface{}) error {
+func (dm *PluginDeploymentManager) DeployPlugin(ctx context.Context, pluginID plugins.PluginID, nodes []string, settings map[string]interface{}) error {
 	// Create deployment task
 	task := DeploymentTask{
 		ID:            fmt.Sprintf("deploy-%s-%d", pluginID, time.Now().Unix()),
 		PluginID:      pluginID,
 		FlexCoreNodes: nodes,
 		Action:        "deploy",
-		Config:        config,
+		Config:        settings,
 		Status:        "queued",
 		Progress:      0.0,
 		CreatedAt:     time.Now(),
@@ -179,14 +179,14 @@ func (dm *PluginDeploymentManager) ListDeployments() ([]plugins.PluginDeployment
 }
 
 // UpdatePluginConfig updates configuration for deployed plugin
-func (dm *PluginDeploymentManager) UpdatePluginConfig(ctx context.Context, pluginID plugins.PluginID, nodes []string, config map[string]interface{}) error {
+func (dm *PluginDeploymentManager) UpdatePluginConfig(ctx context.Context, pluginID plugins.PluginID, nodes []string, settings map[string]interface{}) error {
 	// Create update task
 	task := DeploymentTask{
 		ID:            fmt.Sprintf("update-%s-%d", pluginID, time.Now().Unix()),
 		PluginID:      pluginID,
 		FlexCoreNodes: nodes,
 		Action:        "update",
-		Config:        config,
+		Config:        settings,
 		Status:        "queued",
 		Progress:      0.0,
 		CreatedAt:     time.Now(),
@@ -504,7 +504,7 @@ func (dm *PluginDeploymentManager) executeRestart(ctx context.Context, task Depl
 }
 
 // deployToNode deploys a plugin to a specific FlexCore node
-func (dm *PluginDeploymentManager) deployToNode(ctx context.Context, nodeURL string, pluginID plugins.PluginID, binaryPath string, config map[string]interface{}) error {
+func (dm *PluginDeploymentManager) deployToNode(ctx context.Context, nodeURL string, pluginID plugins.PluginID, binaryPath string, settings map[string]interface{}) error {
 	// Open plugin binary file
 	file, err := os.Open(binaryPath)
 	if err != nil {
@@ -527,9 +527,9 @@ func (dm *PluginDeploymentManager) deployToNode(ctx context.Context, nodeURL str
 	}
 
 	// Add plugin configuration
-	configJSON, _ := json.Marshal(config)
+	configJSON, _ := json.Marshal(settings)
 	writer.WriteField("plugin_id", string(pluginID))
-	writer.WriteField("config", string(configJSON))
+	writer.WriteField("settings", string(configJSON))
 
 	writer.Close()
 
@@ -579,10 +579,10 @@ func (dm *PluginDeploymentManager) undeployFromNode(ctx context.Context, nodeURL
 }
 
 // updateConfigOnNode updates plugin configuration on a specific FlexCore node
-func (dm *PluginDeploymentManager) updateConfigOnNode(ctx context.Context, nodeURL string, pluginID plugins.PluginID, config map[string]interface{}) error {
-	configJSON, _ := json.Marshal(config)
+func (dm *PluginDeploymentManager) updateConfigOnNode(ctx context.Context, nodeURL string, pluginID plugins.PluginID, settings map[string]interface{}) error {
+	configJSON, _ := json.Marshal(settings)
 
-	url := fmt.Sprintf("%s/api/v1/plugins/%s/config", nodeURL, pluginID)
+	url := fmt.Sprintf("%s/api/v1/plugins/%s/settings", nodeURL, pluginID)
 	req, err := http.NewRequestWithContext(ctx, "PUT", url, bytes.NewBuffer(configJSON))
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
@@ -592,13 +592,13 @@ func (dm *PluginDeploymentManager) updateConfigOnNode(ctx context.Context, nodeU
 
 	resp, err := dm.httpClient.Do(req)
 	if err != nil {
-		return fmt.Errorf("failed to send config update request: %w", err)
+		return fmt.Errorf("failed to send settings update request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
-		return fmt.Errorf("config update failed with status %d: %s", resp.StatusCode, string(body))
+		return fmt.Errorf("settings update failed with status %d: %s", resp.StatusCode, string(body))
 	}
 
 	return nil

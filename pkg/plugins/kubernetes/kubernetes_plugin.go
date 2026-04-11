@@ -37,7 +37,7 @@ import (
 // KubernetesPlugin implements the deployable Kubernetes orchestration plugin
 type KubernetesPlugin struct {
 	id              plugins.PluginID
-	config          map[string]interface{}
+	settings          map[string]interface{}
 	kubeconfigPath  string
 	namespace       string
 	clusterName     string
@@ -106,7 +106,7 @@ type ContainerStatus struct {
 func NewKubernetesPlugin() *KubernetesPlugin {
 	return &KubernetesPlugin{
 		id:          plugins.PluginID("kubernetes-plugin"),
-		config:      make(map[string]interface{}),
+		settings:      make(map[string]interface{}),
 		namespace:   "default",
 		initialized: false,
 		deployments: make([]KubernetesDeployment, 0),
@@ -134,7 +134,7 @@ func (k *KubernetesPlugin) Metadata() plugins.PluginMetadata {
 			"load.balancing",
 			"health.monitoring",
 			"deployment.management",
-			"config.management",
+			"settings.management",
 			"secret.management",
 			"persistent.volumes",
 			"ingress.management",
@@ -150,36 +150,36 @@ func (k *KubernetesPlugin) Metadata() plugins.PluginMetadata {
 			"kubectl>=1.28",
 			"kubernetes>=1.28",
 		},
-		Config:    k.config,
+		Config:    k.settings,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
 }
 
 // Initialize sets up the Kubernetes plugin with configuration
-func (k *KubernetesPlugin) Initialize(ctx context.Context, config map[string]interface{}) error {
-	k.config = config
+func (k *KubernetesPlugin) Initialize(ctx context.Context, settings map[string]interface{}) error {
+	k.settings = settings
 
 	// Extract configuration parameters
-	kubeconfigPath, ok := config["kubeconfig_path"].(string)
+	kubeconfigPath, ok := settings["kubeconfig_path"].(string)
 	if !ok {
-		kubeconfigPath = filepath.Join(os.Getenv("HOME"), ".kube", "config")
+		kubeconfigPath = filepath.Join(os.Getenv("HOME"), ".kube", "settings")
 	}
 	k.kubeconfigPath = kubeconfigPath
 
-	namespace, ok := config["namespace"].(string)
+	namespace, ok := settings["namespace"].(string)
 	if !ok {
 		namespace = "default"
 	}
 	k.namespace = namespace
 
-	clusterName, ok := config["cluster_name"].(string)
+	clusterName, ok := settings["cluster_name"].(string)
 	if !ok {
 		clusterName = "default"
 	}
 	k.clusterName = clusterName
 
-	flexcoreNodeURL, ok := config["flexcore_node_url"].(string)
+	flexcoreNodeURL, ok := settings["flexcore_node_url"].(string)
 	if !ok {
 		return fmt.Errorf("flexcore_node_url is required in configuration")
 	}
@@ -323,7 +323,7 @@ func (k *KubernetesPlugin) Shutdown(ctx context.Context) error {
 	}
 
 	// Optional: Clean up created resources if configured to do so
-	if cleanup, ok := k.config["cleanup_on_shutdown"].(bool); ok && cleanup {
+	if cleanup, ok := k.settings["cleanup_on_shutdown"].(bool); ok && cleanup {
 		if err := k.cleanupResources(ctx); err != nil {
 			return fmt.Errorf("failed to cleanup resources: %w", err)
 		}
@@ -339,11 +339,11 @@ func (k *KubernetesPlugin) GetCapabilities() []string {
 }
 
 // ValidateConfig validates the provided configuration
-func (k *KubernetesPlugin) ValidateConfig(config map[string]interface{}) error {
+func (k *KubernetesPlugin) ValidateConfig(settings map[string]interface{}) error {
 	required := []string{"flexcore_node_url"}
 
 	for _, key := range required {
-		if _, exists := config[key]; !exists {
+		if _, exists := settings[key]; !exists {
 			return fmt.Errorf("required configuration key missing: %s", key)
 		}
 	}

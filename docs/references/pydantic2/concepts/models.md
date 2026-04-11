@@ -102,7 +102,7 @@ class User(BaseModel):
     model_config = ConfigDict(str_max_length=10)  # (1)!
 ```
 
-1. Pydantic models support a variety of [configuration values](./config.md)
+1. Pydantic models support a variety of [configuration values](./settings.md)
    (see [here][pydantic.ConfigDict] for the available configuration values).
 
 In this example, `User` is a model with two fields:
@@ -309,7 +309,7 @@ that will override the `extra` configuration value of the model for that validat
 
 For more details, refer to the [`extra`][pydantic.ConfigDict.extra] API documentation.
 
-Pydantic dataclasses also support extra data (see the [dataclass configuration](./dataclasses.md#dataclass-config) section).
+Pydantic dataclasses also support extra data (see the [dataclass configuration](./dataclasses.md#dataclass-settings) section).
 
 ## Nested models
 
@@ -415,8 +415,8 @@ Pydantic models can also be created from arbitrary class instances by reading th
 to the model field names. One common application of this functionality is integration with t.NormalizedValue-relational mappings
 (ORMs).
 
-To do this, set the [`from_attributes`][pydantic.config.ConfigDict.from_attributes] config value to `True`
-(see the documentation on [Configuration](./config.md) for more details).
+To do this, set the [`from_attributes`][pydantic.settings.ConfigDict.from_attributes] settings value to `True`
+(see the documentation on [Configuration](./settings.md) for more details).
 
 The example here uses [SQLAlchemy](https://www.sqlalchemy.org/), but the same approach should work for any ORM.
 
@@ -648,7 +648,7 @@ our recommendation for now is to use either use `model_validate_json(json.dumps(
 
 !!! note
 If you're passing in an instance of a model to [`model_validate`][pydantic.main.BaseModel.model_validate], you will want to consider setting
-[`revalidate_instances`][pydantic.ConfigDict.revalidate_instances] in the model's config.
+[`revalidate_instances`][pydantic.ConfigDict.revalidate_instances] in the model's settings.
 If you don't set this value, then validation will be skipped on model instances. See the below example:
 
     === ":x: `revalidate_instances='never'`"
@@ -661,7 +661,7 @@ If you don't set this value, then validation will be skipped on model instances.
 
 
         m = Model(a=0)
-        # note: setting `validate_assignment` to `True` in the config can prevent this kind of misbehavior.
+        # note: setting `validate_assignment` to `True` in the settings can prevent this kind of misbehavior.
         m.a = "not an int"
 
         # doesn't raise a validation error even though m is invalid
@@ -680,7 +680,7 @@ If you don't set this value, then validation will be skipped on model instances.
 
 
         m = Model(a=0)
-        # note: setting `validate_assignment` to `True` in the config can prevent this kind of misbehavior.
+        # note: setting `validate_assignment` to `True` in the settings can prevent this kind of misbehavior.
         m.a = "not an int"
 
         try:
@@ -870,7 +870,7 @@ is [assignable to the type variable][spec-typevars-bound] if it has an upper bou
 
     [spec-typevars-bound]: https://typing.readthedocs.io/en/latest/spec/generics.html#type-variables-with-an-upper-bound
 
-Any [configuration](./config.md), [validation](./validators.md) or [serialization](./serialization.md) logic
+Any [configuration](./settings.md), [validation](./validators.md) or [serialization](./serialization.md) logic
 set on the generic model will also be applied to the parametrized classes, in the same way as when inheriting from
 a model class. Any custom methods or attributes will also be inherited.
 
@@ -1533,11 +1533,11 @@ print(my_pets.describe())
 ## Faux immutability
 
 Models can be configured to be immutable via `model_config['frozen'] = True`. When this is set, attempting to change the
-values of instance attributes will raise errors. See the [API reference][pydantic.config.ConfigDict.frozen] for more details.
+values of instance attributes will raise errors. See the [API reference][pydantic.settings.ConfigDict.frozen] for more details.
 
 !!! note
-This behavior was achieved in Pydantic V1 via the config setting `allow_mutation = False`.
-This config flag is deprecated in Pydantic V2, and has been replaced with `frozen`.
+This behavior was achieved in Pydantic V1 via the settings setting `allow_mutation = False`.
+This settings flag is deprecated in Pydantic V2, and has been replaced with `frozen`.
 
 !!! warning
 In Python, immutability is not enforced. Developers have the ability to modify objects
@@ -1812,4 +1812,4 @@ print(f"{id(c1.arr) == id(c2.arr)=}")
 !!! note
 There are some situations where Pydantic does not copy attributes, such as when passing models &mdash; we use the
 model as is. You can override this behaviour by setting
-[`model_config['revalidate_instances'] = 'always'`](../api/config.md#pydantic.config.ConfigDict).
+[`model_config['revalidate_instances'] = 'always'`](../api/settings.md#pydantic.settings.ConfigDict).

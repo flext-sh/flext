@@ -1,5 +1,5 @@
-// Package config - Configuration management for FLEXT Service
-package config
+// Package settings - Configuration management for FLEXT Service
+package settings
 
 import (
 	"fmt"
@@ -57,16 +57,16 @@ func LoadConfig(configPath string) (*Config, error) {
 	v := viper.New()
 
 	// Set configuration sources
-	v.SetConfigName("config")
+	v.SetConfigName("settings")
 	v.SetConfigType("yaml")
 
 	if configPath != "" {
-		// Use specific config file if provided
+		// Use specific settings file if provided
 		v.SetConfigFile(configPath)
 	} else {
-		// Add default config paths
+		// Add default settings paths
 		v.AddConfigPath(".")
-		v.AddConfigPath("./config")
+		v.AddConfigPath("./settings")
 		v.AddConfigPath("/etc/flext/")
 	}
 
@@ -78,26 +78,26 @@ func LoadConfig(configPath string) (*Config, error) {
 	// Set defaults
 	setDefaults(v)
 
-	// Read config file
+	// Read settings file
 	if err := v.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			return nil, fmt.Errorf("error reading config file: %w", err)
+			return nil, fmt.Errorf("error reading settings file: %w", err)
 		}
 		// Config file not found is OK, we'll use defaults and env vars
 	}
 
 	// Unmarshal into struct
-	config := &Config{}
-	if err := v.Unmarshal(config); err != nil {
-		return nil, fmt.Errorf("error unmarshaling config: %w", err)
+	settings := &Config{}
+	if err := v.Unmarshal(settings); err != nil {
+		return nil, fmt.Errorf("error unmarshaling settings: %w", err)
 	}
 
 	// Validate configuration
-	if err := validateConfig(config); err != nil {
+	if err := validateConfig(settings); err != nil {
 		return nil, fmt.Errorf("configuration validation failed: %w", err)
 	}
 
-	return config, nil
+	return settings, nil
 }
 
 // setDefaults sets default configuration values
@@ -138,17 +138,17 @@ func setDefaults(v *viper.Viper) {
 }
 
 // validateConfig validates the configuration
-func validateConfig(config *Config) error {
-	if config.Server.Port <= 0 || config.Server.Port > 65535 {
+func validateConfig(settings *Config) error {
+	if settings.Server.Port <= 0 || settings.Server.Port > 65535 {
 		return fmt.Errorf("server.port must be between 1 and 65535")
 	}
 
-	if config.Server.Environment == "" {
+	if settings.Server.Environment == "" {
 		return fmt.Errorf("server.environment cannot be empty")
 	}
 
 	// Validate database URL
-	if config.Database.URL == "" {
+	if settings.Database.URL == "" {
 		return fmt.Errorf("database.url cannot be empty")
 	}
 

@@ -48,7 +48,7 @@ services:
     volumes:
       - flext_ldap_data:/var/lib/ldap
       - flext_ldap.settings:/etc/ldap/slapd.d
-      - ./openldap/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom:ro
+      - ./openldap/bootstrap.ldif:/container/service/slapd/assets/settings/bootstrap/ldif/custom:ro
 
     command: --copy-service --loglevel debug
 

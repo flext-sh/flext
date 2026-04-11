@@ -1,7 +1,7 @@
-id: require-ruff-config
+id: require-ruff-settings
 language: yaml
 rule:
   kind: flow_node
   regex: (ruff|pytest)
-message: Core gate configuration files should include Ruff config or test targets.
+message: Core gate configuration files should include Ruff settings or test targets.
 severity: warning

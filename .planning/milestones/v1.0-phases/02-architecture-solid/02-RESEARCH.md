@@ -45,7 +45,7 @@ The work is requirement-clustered into 4 waves: (0) issubclass prerequisite fixe
 
 | ID | Description | Research Support |
 |----|-------------|------------------|
-| ARCH-01 | All public API type annotations use protocol types (`p.Context`, `p.DI`, `p.Config`, `p.StructlogLogger`) not concrete types | Protocol mapping table in sisyphus plan: 12 DIP violations in flext-core, 23 in consumers. ast-grep patterns for mechanical replacement. |
+| ARCH-01 | All public API type annotations use protocol types (`p.Context`, `p.DI`, `p.Settings`, `p.StructlogLogger`) not concrete types | Protocol mapping table in sisyphus plan: 12 DIP violations in flext-core, 23 in consumers. ast-grep patterns for mechanical replacement. |
 | ARCH-02 | `c,m,t,u,p` always imported from local namespace root in tests/examples/scripts | Grep-based detection of `from flext_core import c,m,t,u,p` in test dirs. Mechanical find-and-replace. |
 | ARCH-03 | All ~1,551 `Field(...)` usages migrated to `Annotated[X, Field(...)]` | Sisyphus plan has per-project counts. ast-grep pattern: `$NAME: $TYPE = Field($$$)` -> `$NAME: Annotated[$TYPE, Field($$$)]`. PrivateAttr excluded. |
 | ARCH-04 | 6 pure ABCs converted to `@runtime_checkable` Protocol | Sisyphus plan identifies all 6. Prerequisite: 16 issubclass() calls in flext-core (6 relevant) must be refactored first. |
@@ -80,7 +80,7 @@ Protocol mapping (from sisyphus plan):
 |----------|----------|-----------|
 | `FlextContext` | `p.Context` | `FlextProtocolsContext.Context` |
 | `FlextContainer` | `p.DI` | `FlextProtocolsDI.DI` |
-| `FlextSettings` | `p.Config` | `FlextProtocolsSettings.Config` |
+| `FlextSettings` | `p.Settings` | `FlextProtocolsSettings.Settings` |
 | `FlextLogger` | `p.StructlogLogger` | `FlextProtocolsLogging.StructlogLogger` |
 | `FlextDispatcher` | `p.CommandBus` | `FlextProtocolsHandler.CommandBus` |
 
@@ -97,12 +97,12 @@ Protocol mapping (from sisyphus plan):
 # BEFORE
 name: str = Field(default="", description="Name")
 items: t.StrSequence = Field(default_factory=list)
-config: Config | None = Field(default=None)
+settings: Settings | None = Field(default=None)
 
 # AFTER
 name: Annotated[str, Field(default="", description="Name")]
 items: Annotated[t.StrSequence, Field(default_factory=list)]
-config: Annotated[Config | None, Field(default=None)]
+settings: Annotated[Settings | None, Field(default=None)]
 ```
 
 **Critical:** `| None` goes INSIDE `Annotated[T | None, Field()]`, NOT outside as `Annotated[T, Field()] | None` (different Pydantic semantics).
@@ -262,7 +262,7 @@ sg --pattern 'from flext_core import $$$' --lang python */tests/
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
-| Config file | `pyproject.toml` [tool.pytest.ini_options] |
+| Settings file | `pyproject.toml` [tool.pytest.ini_options] |
 | Quick run command | `make test PROJECT=<name>` |
 | Full suite command | `make validate VALIDATE_SCOPE=workspace` |
 

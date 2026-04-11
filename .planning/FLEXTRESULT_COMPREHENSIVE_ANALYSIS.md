@@ -22,7 +22,7 @@ r[T]  (extends RuntimeResult, Layer 1)
     ├── is_success: bool
     ├── error: str | None
     ├── error_code: str | None
-    ├── error_data: ConfigMap | None
+    ├── error_data: SettingsMap | None
     ├── exception: BaseException | None
     └── _payload: T | None (PrivateAttr)
 ```
@@ -84,8 +84,8 @@ result: r[Entry] = fetch_entry().lash(lambda _: r[None].fail("not found"))
 
 **Current**:
 ```python
-r[Config].fail("Failed to parse config")  # What kind of parse error?
-r[Config].fail("error", error_code="INVALID_JSON")  # Better, but unstructured
+r[Settings].fail("Failed to parse settings")  # What kind of parse error?
+r[Settings].fail("error", error_code="INVALID_JSON")  # Better, but unstructured
 
 # No standard error domain classification
 # Each project invents its own error code format
@@ -115,7 +115,7 @@ class FlextError:
     message: str
     domain: ErrorDomain
     code: str | None = None
-    data: ConfigMap | None = None
+    data: SettingsMap | None = None
     exception: BaseException | None = None
 
 
@@ -213,7 +213,7 @@ def make_fallible[T](func: Callable[[], T]) -> Fallible[T]:
 
 
 # Enforce at type level
-def run_operation(op: Fallible[Config]) -> r[Config]:
+def run_operation(op: Fallible[Settings]) -> r[Settings]:
     return op.execute()  # Type checker enforces Result
 ```
 
@@ -223,15 +223,15 @@ def run_operation(op: Fallible[Config]) -> r[Config]:
 
 **Current**:
 ```python
-# Can't easily combine r[User] + r[Config] + r[Service]
+# Can't easily combine r[User] + r[Settings] + r[Service]
 user_result: r[User] = fetch_user()
-config_result: r[Config] = load_config()
+settings_result: r[Settings] = load_settings()
 service_result: r[Service] = init_service()
 
 # Manual accumulation
-if user_result.is_success and config_result.is_success and service_result.is_success:
+if user_result.is_success and settings_result.is_success and service_result.is_success:
     user = user_result.value
-    config = config_result.value
+    settings = settings_result.value
     service = service_result.value
     # Now we can use all three
 else:
@@ -273,9 +273,9 @@ class ResultTuple:
         return r[tuple[A, B, C]].ok((ra.value, rb.value, rc.value))
 
 # Usage: clear composition
-user_config_service = ResultTuple.all3(
+user_settings_service = ResultTuple.all3(
     fetch_user(),
-    load_config(),
+    load_settings(),
     init_service()
 ).map(lambda (u, c, s): initialize_app(u, c, s))
 ```
@@ -377,7 +377,7 @@ class StructuredError(Protocol):
     message: str
     domain: ErrorDomain  # enum
     code: str | None
-    data: ConfigMap | None
+    data: SettingsMap | None
     exception: BaseException | None
 
 
@@ -447,7 +447,7 @@ class FlextError:
     message: str
     domain: ErrorDomain = ErrorDomain.UNKNOWN
     code: str | None = None
-    data: t.ConfigMap | None = None
+    data: t.SettingsMap | None = None
     exception: BaseException | None = None
 
     def __str__(self) -> str:
@@ -463,7 +463,7 @@ class FlextError:
         cls,
         message: str,
         code: str | None = None,
-        data: t.ConfigMap | None = None,
+        data: t.SettingsMap | None = None,
         exception: BaseException | None = None,
     ) -> "FlextError":
         return cls(

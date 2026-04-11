@@ -1,4 +1,4 @@
-package config
+package settings
 
 import (
 	"fmt"
@@ -223,7 +223,7 @@ type APIConfig struct {
 
 // NewUnifiedConfig creates a new configuration instance with environment variables
 func NewUnifiedConfig() (*UnifiedConfig, error) {
-	config := &UnifiedConfig{
+	settings := &UnifiedConfig{
 		Environment: getEnvOrDefault("ENVIRONMENT", "development"),
 		Debug:       getBoolEnvOrDefault("DEBUG", false),
 
@@ -239,35 +239,35 @@ func NewUnifiedConfig() (*UnifiedConfig, error) {
 		IdleTimeout:  getDurationEnvOrDefault("IDLE_TIMEOUT", 120*time.Second),
 	}
 
-	if err := config.loadDatabaseConfig(); err != nil {
-		return nil, fmt.Errorf("failed to load database config: %w", err)
+	if err := settings.loadDatabaseConfig(); err != nil {
+		return nil, fmt.Errorf("failed to load database settings: %w", err)
 	}
 
-	if err := config.loadCacheConfig(); err != nil {
-		return nil, fmt.Errorf("failed to load cache config: %w", err)
+	if err := settings.loadCacheConfig(); err != nil {
+		return nil, fmt.Errorf("failed to load cache settings: %w", err)
 	}
 
-	if err := config.loadAuthConfig(); err != nil {
-		return nil, fmt.Errorf("failed to load auth config: %w", err)
+	if err := settings.loadAuthConfig(); err != nil {
+		return nil, fmt.Errorf("failed to load auth settings: %w", err)
 	}
 
-	if err := config.loadObservabilityConfig(); err != nil {
-		return nil, fmt.Errorf("failed to load observability config: %w", err)
+	if err := settings.loadObservabilityConfig(); err != nil {
+		return nil, fmt.Errorf("failed to load observability settings: %w", err)
 	}
 
-	if err := config.loadFeatureFlags(); err != nil {
+	if err := settings.loadFeatureFlags(); err != nil {
 		return nil, fmt.Errorf("failed to load feature flags: %w", err)
 	}
 
-	if err := config.loadBoundedContextConfigs(); err != nil {
+	if err := settings.loadBoundedContextConfigs(); err != nil {
 		return nil, fmt.Errorf("failed to load bounded context configs: %w", err)
 	}
 
-	if err := config.loadExternalServicesConfig(); err != nil {
-		return nil, fmt.Errorf("failed to load external services config: %w", err)
+	if err := settings.loadExternalServicesConfig(); err != nil {
+		return nil, fmt.Errorf("failed to load external services settings: %w", err)
 	}
 
-	return config, nil
+	return settings, nil
 }
 
 func (c *UnifiedConfig) loadDatabaseConfig() error {

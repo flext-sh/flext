@@ -168,7 +168,7 @@ class User(BaseModel):
 
 ## As a configuration value
 
-Strict mode behavior can be controlled at the [configuration](./config.md) level. When used on
+Strict mode behavior can be controlled at the [configuration](./settings.md) level. When used on
 a Pydantic model (or model like class such as [dataclasses](./dataclasses.md)), strictness can still
 be overridden at the [field level](#at-the-field-level):
 

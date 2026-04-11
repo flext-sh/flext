@@ -18,7 +18,7 @@ created: 2026-03-24
 | Property | Value |
 |----------|-------|
 | **Framework** | pytest 8.4+ |
-| **Config file** | `pyproject.toml` [tool.pytest.ini_options] |
+| **Settings file** | `pyproject.toml` [tool.pytest.ini_options] |
 | **Quick run command** | `make check PROJECT=<name> CHECK_GATES=pyrefly,pyright` |
 | **Full suite command** | `make pyre && make test` |
 | **Estimated runtime** | ~120 seconds (per-project check ~10s, full suite ~120s) |

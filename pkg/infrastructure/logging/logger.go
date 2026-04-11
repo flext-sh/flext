@@ -49,7 +49,7 @@ func F(key string, value interface{}) Field {
 
 // StructuredLogger implementa logging estruturado
 type StructuredLogger struct {
-	config   LoggingConfig
+	settings   LoggingConfig
 	fields   []Field
 	minLevel LogLevel
 }
@@ -65,7 +65,7 @@ type LogEntry struct {
 // NewLogger cria um novo logger estruturado
 func NewLogger(cfg LoggingConfig) Logger {
 	return &StructuredLogger{
-		config:   cfg,
+		settings:   cfg,
 		fields:   make([]Field, 0),
 		minLevel: LogLevel(cfg.Level),
 	}
@@ -98,7 +98,7 @@ func (l *StructuredLogger) With(fields ...Field) Logger {
 	copy(newFields[len(l.fields):], fields)
 
 	return &StructuredLogger{
-		config:   l.config,
+		settings:   l.settings,
 		fields:   newFields,
 		minLevel: l.minLevel,
 	}
@@ -144,7 +144,7 @@ func (l *StructuredLogger) shouldLog(level LogLevel) bool {
 
 // output escreve a entrada de log
 func (l *StructuredLogger) output(entry LogEntry) {
-	if l.config.Structured {
+	if l.settings.Structured {
 		// Log estruturado em JSON
 		if data, err := json.Marshal(entry); err == nil {
 			log.Printf("%s", data)

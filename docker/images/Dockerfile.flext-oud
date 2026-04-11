@@ -22,17 +22,17 @@ ENV ROOT_USER_PASSWORD="iDm55OID"
 # Create necessary directories
 RUN mkdir -p /opt/oracle/oud/instances/${OUD_INSTANCE_NAME} \
     && mkdir -p /opt/oracle/oud/test-data \
-    && mkdir -p /opt/oracle/oud/config \
+    && mkdir -p /opt/oracle/oud/settings \
     && mkdir -p /opt/oracle/oud/scripts
 
 # Copy test configuration files
-COPY configs/ /opt/oracle/oud/config/
+COPY configs/ /opt/oracle/oud/settings/
 COPY data/ /opt/oracle/oud/test-data/
 
 # Copy OUD setup script
 COPY setup-oud.sh /opt/oracle/oud/scripts/
 COPY configure-oud.sh /opt/oracle/oud/scripts/
-COPY dsconfig-commands.dsconfig /opt/oracle/oud/config/
+COPY dsconfig-commands.dsconfig /opt/oracle/oud/settings/
 
 # Make scripts executable
 RUN chmod +x /opt/oracle/oud/scripts/*.sh
@@ -40,7 +40,7 @@ RUN chmod +x /opt/oracle/oud/scripts/*.sh
 # Set up OUD instance with FLEXT-specific configuration
 RUN /opt/oracle/oud/scripts/setup-oud.sh
 
-# Configure OUD for FLEXT migration requirements
+# Settingsure OUD for FLEXT migration requirements
 RUN /opt/oracle/oud/scripts/configure-oud.sh
 
 # Health check

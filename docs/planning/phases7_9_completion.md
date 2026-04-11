@@ -19,7 +19,7 @@
 - [Pydantic 2 Migration Complete](#pydantic-2-migration-complete)
   - [TypeGuard Pattern](#typeguard-pattern)
   - [Hierarchical Model Organization](#hierarchical-model-organization)
-  - [ConfigDict Standards](#configdict-standards)
+  - [SettingsDict Standards](#configdict-standards)
   - [Modern Validators](#modern-validators)
   - [Task 9.4: Cleanup and Issue Closure](#task-94-cleanup-and-issue-closure)
 - [Success Criteria for Phases 7-9](#success-criteria-for-phases-7-9)
@@ -82,7 +82,7 @@ class TestGuards:
 
     @staticmethod
     def is_config_response(obj) -> TypeGuard[dict]:
-        """Check if t.NormalizedValue is a config response fixture."""
+        """Check if t.NormalizedValue is a settings response fixture."""
         return isinstance(obj, dict) and "app_name" in obj and "version" in obj
 
 
@@ -161,8 +161,8 @@ from typing import cast
 
 def test_process_config():
     data = {"app_name": "test", "version": "1.0"}
-    config = cast(dict, data)
-    assert config["app_name"] == "test"
+    settings = cast(dict, data)
+    assert settings["app_name"] == "test"
 
 
 # AFTER
@@ -174,7 +174,7 @@ def test_process_config():
     if TestGuards.is_config_response(data):
         assert data["app_name"] == "test"
     else:
-        pytest.fail("Invalid config fixture")
+        pytest.fail("Invalid settings fixture")
 ```
 
 #### Execution Steps
@@ -276,7 +276,7 @@ flext-tap-oracle-wms is isolated in its own phase due to:
 
 **Current Issues**:
 
-- Missing config module imports
+- Missing settings module imports
 - Missing exceptions module imports
 - Circular dependencies
 
@@ -289,7 +289,7 @@ flext-tap-oracle-wms is isolated in its own phase due to:
    ```
 
 2. **Fix Missing Imports**
-   - Add missing config imports
+   - Add missing settings imports
    - Add missing exceptions imports
    - Resolve circular dependencies
 
@@ -362,11 +362,11 @@ fix(flext-tap-oracle-wms): fix type mismatches in function signatures
 1. **Apply Phase 1 Patterns**
    - Convert any remaining TypedDicts
    - Remove any remaining cast()
-   - Standardize ConfigDict
+   - Standardize SettingsDict
 
 2. **Verify Consistency**
    - Models follow hierarchical pattern
-   - ConfigDict settings standard
+   - SettingsDict settings standard
    - No TypedDict or cast()
 
 3. **Run Full Validation**
@@ -379,7 +379,7 @@ fix(flext-tap-oracle-wms): fix type mismatches in function signatures
 
 - [ ] Zero TypedDict
 - [ ] Zero cast()
-- [ ] Standard ConfigDict
+- [ ] Standard SettingsDict
 - [ ] `make validate` passes
 
 **Commit**:
@@ -421,10 +421,10 @@ refactor(flext-tap-oracle-wms): apply Pydantic 2 patterns and standardize models
    # Expected: 0 (or only in external contracts)
    ```
 
-4. **Verify ConfigDict Standardization**
+4. **Verify SettingsDict Standardization**
 
    ```bash
-   grep -r "model_config = ConfigDict" flext-*/src/ | wc -l
+   grep -r "model_config = SettingsDict" flext-*/src/ | wc -l
    # Expected: 127+
    ```
 
@@ -433,7 +433,7 @@ refactor(flext-tap-oracle-wms): apply Pydantic 2 patterns and standardize models
 - [ ] `make validate` passes on full monorepo
 - [ ] Zero cast() across all projects
 - [ ] Zero TypedDict (all converted)
-- [ ] ConfigDict standardized
+- [ ] SettingsDict standardized
 
 **Commit**:
 
@@ -484,7 +484,7 @@ test: verify 80%+ coverage across all projects
 1. **AGENTS.md**
    - Add TypeGuard pattern section
    - Add hierarchical model pattern section
-   - Add ConfigDict standards section
+   - Add SettingsDict standards section
    - Add migration guide for future projects
 
 2. **type-system-architecture.md** (create if needed)
@@ -519,17 +519,17 @@ Models are organized in nested namespaces:
 
 \`\`\`python
 
-config: m.Core.Tests.Config = ...
+settings: m.Core.Tests.Settings = ...
 context: m.Core.Tests.Context = ...
 result: m.Result.Success = ...
 \`\`\`
 
-### ConfigDict Standards
+### SettingsDict Standards
 
-All models use standard ConfigDict:
+All models use standard SettingsDict:
 
 \`\`\`python
-model_config = ConfigDict(
+model_config = SettingsDict(
 validate_assignment=True,
 use_enum_values=True,
 extra="forbid",
@@ -642,7 +642,7 @@ chore: cleanup after Pydantic 2 migration completion
 - `make validate` passes on full monorepo
 - Zero cast() across ALL projects
 - Zero TypedDict (all converted)
-- ConfigDict standardized across 127+ models
+- SettingsDict standardized across 127+ models
 
 ✅ **Documentation**
 
@@ -685,14 +685,14 @@ chore: cleanup after Pydantic 2 migration completion
 
 - 627 cast() usages
 - 305 TypedDict definitions
-- 249+ ConfigDict patterns (inconsistent)
+- 249+ SettingsDict patterns (inconsistent)
 - Multiple validator patterns (v1 and v2 mixed)
 
 ### After Migration
 
 - ✅ 0 cast() usages
 - ✅ 0 TypedDict definitions
-- ✅ 127+ models with standard ConfigDict
+- ✅ 127+ models with standard SettingsDict
 - ✅ Modern Pydantic 2.11+ validators throughout
 - ✅ All 29 projects passing `make validate`
 - ✅ 80%+ test coverage maintained
@@ -719,12 +719,12 @@ If critical issues arise at any phase:
    - Follow Phase 1 patterns from day 1
    - Use TypeGuards instead of cast()
    - Use hierarchical models
-   - Use standard ConfigDict
+   - Use standard SettingsDict
 
 2. **Code Reviews**
    - Check for cast() usage (forbidden)
    - Check for TypedDict usage (forbidden)
-   - Check for ConfigDict consistency
+   - Check for SettingsDict consistency
    - Check for modern validator patterns
 
 3. **Documentation**

@@ -1,13 +1,13 @@
 <!-- TOC START -->
 
-- [Configure VS Code](#configure-vs-code)
+- [Settingsure VS Code](#settingsure-vs-code)
   - [Install Pylance](#install-pylance)
-  - [Configure your environment](#configure-your-environment)
-  - [Configure Pylance](#configure-pylance)
-  - [Configure mypy](#configure-mypy)
+  - [Settingsure your environment](#settingsure-your-environment)
+  - [Settingsure Pylance](#settingsure-pylance)
+  - [Settingsure mypy](#settingsure-mypy)
 - [Tips and tricks](#tips-and-tricks)
   - [Strict errors](#strict-errors)
-  - [Config in class arguments](#config-in-class-arguments)
+  - [Settings in class arguments](#settings-in-class-arguments)
 - [Adding a default with `Field`](#adding-a-default-with-field)
 - [Technical Details](#technical-details)
 <!-- TOC END -->
@@ -20,9 +20,9 @@ This means that you will have **autocompletion** (or "IntelliSense") and **error
 
 ![pydantic autocompletion in VS Code](../img/vs_code_01.png)
 
-## Configure VS Code
+## Settingsure VS Code
 
-To take advantage of these features, you need to make sure you configure VS Code correctly, using the recommended settings.
+To take advantage of these features, you need to make sure you settingsure VS Code correctly, using the recommended settings.
 
 In case you have a different configuration, here's a short overview of the steps.
 
@@ -32,13 +32,13 @@ You should use the [Pylance](https://marketplace.visualstudio.com/items?itemName
 
 Pylance is installed as part of the [Python Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) by default, so it should probably just work. Otherwise, you can double check it's installed and enabled in your editor.
 
-### Configure your environment
+### Settingsure your environment
 
 Then you need to make sure your editor knows the [Python environment](https://code.visualstudio.com/docs/python/python-tutorial#_install-and-use-packages) (probably a virtual environment) for your Python project.
 
 This would be the environment in where you installed Pydantic.
 
-### Configure Pylance
+### Settingsure Pylance
 
 With the default configurations, you will get support for autocompletion, but Pylance might not check for type errors.
 
@@ -64,11 +64,11 @@ Pylance is the VS Code extension, it's closed source, but free to use. Underneat
 
     You can read more about it in the [Pylance Frequently Asked Questions](https://github.com/microsoft/pylance-release/blob/main/FAQ.md#what-is-the-relationship-between-pylance-pyright-and-the-python-extension).
 
-### Configure mypy
+### Settingsure mypy
 
-You might also want to configure mypy in VS Code to get mypy error checks inline in your editor (alternatively/additionally to Pylance).
+You might also want to settingsure mypy in VS Code to get mypy error checks inline in your editor (alternatively/additionally to Pylance).
 
-This would include the errors detected by the [Pydantic mypy plugin](../integrations/mypy.md), if you configured it.
+This would include the errors detected by the [Pydantic mypy plugin](../integrations/mypy.md), if you settingsured it.
 
 To enable mypy in VS Code, do the following:
 
@@ -217,18 +217,18 @@ So, this is the equivalent of the previous example, without the additional varia
 
 **Cons**: it requires importing `Any` and `cast`, and if you are not used to using `cast()`, it could seem strange at first.
 
-### Config in class arguments
+### Settings in class arguments
 
-Pydantic has a rich set of [Model Configurations][pydantic.config.ConfigDict] available.
+Pydantic has a rich set of [Model Configurations][pydantic.settings.SettingsDict] available.
 
-These configurations can be set in an internal `class Config` on each model:
+These configurations can be set in an internal `class Settings` on each model:
 
 ```python {hl_lines="9-10"}
 from pydantic import BaseModel
 
 
 class Knight(BaseModel):
-    model_config = dict(frozen=True)
+    model_settings = dict(frozen=True)
     title: str
     age: int
     color: str = "blue"

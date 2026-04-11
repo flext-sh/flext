@@ -144,7 +144,7 @@
 **Configuration:**
 - Pydantic Settings models: `pydantic-settings>=2.10.1`
 - YAML-based configuration: `pyyaml>=6.0.2`
-- Jinja2 templates for config: `jinja2>=3.1.6`
+- Jinja2 templates for settings: `jinja2>=3.1.6`
 
 ## Webhooks & Callbacks
 

@@ -24,7 +24,7 @@ key-files:
 
 key-decisions:
   - "s alias points to FlextInfraServiceBase (not FlextInfraServiceBase) for backward compatibility -- all 19+ s[T] consumers access domain fields"
-  - "DI fields (config_type, wire_modules, etc.) removed from base -- zero consumers reference them"
+  - "DI fields (settings_type, wire_modules, etc.) removed from base -- zero consumers reference them"
   - "Factory-method composition instead of MRO due to incompatible type params (s[bool] vs s[str])"
   - "FlextInfra facade inherits thin FlextInfraServiceBase directly -- no domain field baggage"
 
@@ -53,7 +53,7 @@ completed: 2026-04-05
 
 ## Accomplishments
 - Split base.py into thin FlextInfraServiceBase (21 LOC) and FlextInfraServiceBase (109 LOC)
-- Removed unused DI fields (config_type, config_overrides, initial_context, container_overrides, wire_modules, wire_packages, wire_classes)
+- Removed unused DI fields (settings_type, settings_overrides, initial_context, container_overrides, wire_modules, wire_packages, wire_classes)
 - Created api.py with FlextInfra factory-method facade and singleton pattern
 - Updated 4 direct FlextInfraServiceBase consumers to FlextInfraServiceBase
 - Zero ruff + pyrefly errors across all modified files
@@ -76,7 +76,7 @@ Each task was committed atomically:
 
 ## Decisions Made
 - `s` alias points to `FlextInfraServiceBase` (not `FlextInfraServiceBase`) because all 19+ `s[T]` consumers access domain fields -- changing the alias to thin base would break every consumer
-- DI fields removed from both classes -- zero consumers reference `config_type`, `wire_modules`, etc.
+- DI fields removed from both classes -- zero consumers reference `settings_type`, `wire_modules`, etc.
 - FlextInfra facade inherits thin `FlextInfraServiceBase[bool]` directly -- the facade doesn't need domain fields itself, it delegates to domain services via factory methods
 - Factory-method composition chosen over MRO because domain services have incompatible type parameters (`s[bool]` vs `s[str]`)
 

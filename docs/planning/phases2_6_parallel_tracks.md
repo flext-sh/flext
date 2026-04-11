@@ -80,7 +80,7 @@ refactor(flext-api): eliminate cast() using TypeGuards
 
 1. Find all RUF052 violations
 2. Rename dummy variables to meaningful names
-3. Update any ConfigDict settings
+3. Update any SettingsDict settings
 4. Run linting
 
 **Validation**:
@@ -109,7 +109,7 @@ refactor(flext-grpc): fix RUF052 dummy variable warnings
 
 1. Fix lint failures
 2. Migrate any TypedDicts to Pydantic
-3. Standardize ConfigDict
+3. Standardize SettingsDict
 4. Run validation
 
 **Validation**:
@@ -202,7 +202,7 @@ refactor(flext-plugin): fix ARG002 and add missing docstrings
    ```python
    class FlextLdifModels:
        class Base(BaseModel):
-           model_config = ConfigDict(...)
+           model_config = SettingsDict(...)
 
        class Entry(FlextLdifModels.Base):
            dn: str
@@ -254,7 +254,7 @@ refactor(flext-ldif): update imports to use hierarchical models
 
 1. Review existing models
 2. Ensure LDAP operations use Pydantic validation
-3. Standardize ConfigDict
+3. Standardize SettingsDict
 4. Run validation
 
 **Validation**:
@@ -312,7 +312,7 @@ refactor(flext-db-oracle): standardize Pydantic 2 patterns
 
 1. Fix missing imports
 2. Migrate TypedDicts to models
-3. Standardize ConfigDict
+3. Standardize SettingsDict
 4. Run validation
 
 **Validation**:
@@ -338,7 +338,7 @@ refactor(flext-oracle-wms): migrate to Pydantic 2 patterns
 
 1. Fix PIE794 violations
 2. Review and consolidate constants
-3. Standardize ConfigDict
+3. Standardize SettingsDict
 4. Run validation
 
 **Validation**:
@@ -371,7 +371,7 @@ refactor(flext-oracle-oic): fix PIE794 and consolidate constants
 
 1. Fix bad-override error
 2. Review Singer protocol implementations
-3. Standardize ConfigDict in any models
+3. Standardize SettingsDict in any models
 4. Run validation
 
 **Validation**:
@@ -413,7 +413,7 @@ refactor(flext-meltano): fix bad-override and standardize patterns
 2. Convert 1 TypedDict
 3. Fix RUF022 (**all** sorting)
 4. Fix F841 (unused loop variable)
-5. Standardize ConfigDict
+5. Standardize SettingsDict
 
 **Validation**:
 
@@ -437,7 +437,7 @@ refactor(flext-tap-ldap): fix RUF022 and F841 violations
 **Steps**:
 
 1. Review and verify types
-2. Standardize ConfigDict
+2. Standardize SettingsDict
 3. Run validation
 
 **Validation**:
@@ -461,7 +461,7 @@ refactor(flext-tap-ldif): standardize Pydantic 2 patterns
 **Steps**:
 
 1. Remove 1 cast() usage
-2. Standardize ConfigDict
+2. Standardize SettingsDict
 3. Run validation
 
 **Validation**:
@@ -482,7 +482,7 @@ refactor(flext-tap-oracle): eliminate cast() using TypeGuards
 **Steps**:
 
 1. Review and verify types
-2. Standardize ConfigDict
+2. Standardize SettingsDict
 3. Run validation
 
 **Validation**:
@@ -515,7 +515,7 @@ refactor(flext-tap-oracle-oic): standardize Pydantic 2 patterns
 1. Analyze all 12 cast() usages
 2. Replace with TypeGuards
 3. Refactor affected functions
-4. Standardize ConfigDict
+4. Standardize SettingsDict
 5. Run validation
 
 **Validation**:
@@ -528,7 +528,7 @@ refactor(flext-tap-oracle-oic): standardize Pydantic 2 patterns
 ```
 refactor(flext-target-oracle): eliminate cast() using TypeGuards (part 1)
 refactor(flext-target-oracle): eliminate cast() using TypeGuards (part 2)
-refactor(flext-target-oracle): standardize ConfigDict
+refactor(flext-target-oracle): standardize SettingsDict
 ```
 
 #### Task 5B.2: flext-target-ldap Migration
@@ -544,7 +544,7 @@ refactor(flext-target-oracle): standardize ConfigDict
 
 1. Fix missing orchestrator import
 2. Fix bad-dunder-all error
-3. Standardize ConfigDict
+3. Standardize SettingsDict
 4. Run validation
 
 **Validation**:
@@ -564,7 +564,7 @@ refactor(flext-target-ldap): fix imports and bad-dunder-all error
 **Steps**:
 
 1. Review and verify types
-2. Standardize ConfigDict
+2. Standardize SettingsDict
 3. Run validation
 
 **Validation**:
@@ -588,7 +588,7 @@ refactor(flext-target-ldif): standardize Pydantic 2 patterns
 **Steps**:
 
 1. Convert 5 TypedDicts to Pydantic models
-2. Standardize ConfigDict
+2. Standardize SettingsDict
 3. Run validation
 
 **Validation**:
@@ -609,7 +609,7 @@ refactor(flext-target-oracle-oic): convert TypedDicts to Pydantic models
 **Steps**:
 
 1. Review and align with tap-oracle-wms fixes
-2. Standardize ConfigDict
+2. Standardize SettingsDict
 3. Run validation
 
 **Validation**:
@@ -644,7 +644,7 @@ refactor(flext-target-oracle-wms): align with tap-oracle-wms patterns
 **Steps**:
 
 1. Remove 3 cast() usages
-2. Standardize ConfigDict
+2. Standardize SettingsDict
 3. Run validation
 
 **Validation**:
@@ -669,7 +669,7 @@ refactor(flext-dbt-oracle): eliminate cast() using TypeGuards
 **Steps**:
 
 1. Remove 1 cast() usage
-2. Standardize ConfigDict
+2. Standardize SettingsDict
 3. Run validation
 
 **Validation**:
@@ -696,7 +696,7 @@ refactor(flext-dbt-ldap): eliminate cast() using TypeGuards
 
 1. Remove 1 cast() usage
 2. Convert 2 TypedDicts
-3. Standardize ConfigDict
+3. Standardize SettingsDict
 4. Run validation
 
 **Validation**:
@@ -726,7 +726,7 @@ refactor(flext-dbt-ldif): convert TypedDicts to Pydantic models
 1. Remove 1 cast() usage
 2. Convert 22 TypedDicts to hierarchical models
 3. Create `FlextDbtOracleWmsModels` namespace
-4. Standardize ConfigDict
+4. Standardize SettingsDict
 5. Run validation
 
 **Validation**:
@@ -771,7 +771,7 @@ refactor(flext-dbt-oracle-wms): update imports to use hierarchical models
    ```python
    class FlextCliModels:
        class Base(BaseModel):
-           model_config = ConfigDict(...)
+           model_config = SettingsDict(...)
 
        class Command(FlextCliModels.Base):
            name: str
@@ -832,7 +832,7 @@ refactor(flext-cli): update imports to use hierarchical models
    ```python
    class FlextWebModels:
        class Base(BaseModel):
-           model_config = ConfigDict(...)
+           model_config = SettingsDict(...)
 
        class Request(FlextWebModels.Base):
            endpoint: str
@@ -929,7 +929,7 @@ refactor(flext-web): update imports to use hierarchical models
 
 ✅ **Standardization**
 
-- All models have standard ConfigDict
+- All models have standard SettingsDict
 - Settings consistent across projects
 
 ✅ **Quality**

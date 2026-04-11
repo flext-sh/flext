@@ -15,7 +15,7 @@ Target: Refactor all flext-infra commands to follow the modern flext-cli MRO ser
 | basemk | 397 | 4 | FlextInfraBaseMkTemplateEngine(s[str]), FlextInfraBaseMkGenerator(s[str]) | Yes |
 | check | 768 | 6 | FlextInfraWorkspaceChecker(s[bool]), FlextInfraCheckServices | Yes (2) |
 | codegen | 1,826 | 10 | LazyInit, Census, Scaffolder, Fixer, PyTyped, ConstantsQualityGate (all FlextInfraServiceBase[T]) | Yes |
-| deps | 2,942 | 13 | FlextInfraDepsDetector, FlextInfraDepsModernizer, FlextInfraConfigFixer(s[bool]) + more | Yes |
+| deps | 2,942 | 13 | FlextInfraDepsDetector, FlextInfraDepsModernizer, FlextInfraSettingsFixer(s[bool]) + more | Yes |
 | detectors | 1,799 | 16 | 12 detector classes (all FlextInfraScanFileMixin + p.Infra.Scanner) | No (library) |
 | gates | 1,157 | 10 | 8 gate classes (all _base_gate pattern) | No (library) |
 | github | 173 | 3 | FlextInfraGithubService | Yes |
@@ -73,7 +73,7 @@ Target: Refactor all flext-infra commands to follow the modern flext-cli MRO ser
 ### base.py Gap
 
 **Current FlextInfraServiceBase (187 LOC):**
-- Too many fields: config_type, config_overrides, initial_context, subproject, container_overrides, wire_modules, wire_packages, wire_classes, workspace_root, apply_changes, check_only
+- Too many fields: settings_type, settings_overrides, initial_context, subproject, container_overrides, wire_modules, wire_packages, wire_classes, workspace_root, apply_changes, check_only
 - Field validators
 - Complex initialization
 

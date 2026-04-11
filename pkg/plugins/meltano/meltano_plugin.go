@@ -36,7 +36,7 @@ import (
 // MeltanoPlugin implements the deployable Meltano plugin
 type MeltanoPlugin struct {
 	id              plugins.PluginID
-	config          map[string]interface{}
+	settings          map[string]interface{}
 	pythonVenv      string
 	meltanoProject  string
 	initialized     bool
@@ -48,7 +48,7 @@ type MeltanoPlugin struct {
 func NewMeltanoPlugin() *MeltanoPlugin {
 	return &MeltanoPlugin{
 		id:          plugins.PluginID("meltano-plugin"),
-		config:      make(map[string]interface{}),
+		settings:      make(map[string]interface{}),
 		initialized: false,
 	}
 }
@@ -88,30 +88,30 @@ func (m *MeltanoPlugin) Metadata() plugins.PluginMetadata {
 			"flext-core>=2.0.0",
 			"flext-meltano>=2.0.0",
 		},
-		Config:    m.config,
+		Config:    m.settings,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
 }
 
 // Initialize sets up the Meltano plugin with configuration
-func (m *MeltanoPlugin) Initialize(ctx context.Context, config map[string]interface{}) error {
-	m.config = config
+func (m *MeltanoPlugin) Initialize(ctx context.Context, settings map[string]interface{}) error {
+	m.settings = settings
 
 	// Extract configuration parameters
-	pythonVenv, ok := config["python_venv"].(string)
+	pythonVenv, ok := settings["python_venv"].(string)
 	if !ok {
 		pythonVenv = "./venv"
 	}
 	m.pythonVenv = pythonVenv
 
-	meltanoProject, ok := config["meltano_project"].(string)
+	meltanoProject, ok := settings["meltano_project"].(string)
 	if !ok {
 		meltanoProject = "./meltano_project"
 	}
 	m.meltanoProject = meltanoProject
 
-	flexcoreNodeURL, ok := config["flexcore_node_url"].(string)
+	flexcoreNodeURL, ok := settings["flexcore_node_url"].(string)
 	if !ok {
 		return fmt.Errorf("flexcore_node_url is required in configuration")
 	}
@@ -248,11 +248,11 @@ func (m *MeltanoPlugin) GetCapabilities() []string {
 }
 
 // ValidateConfig validates the provided configuration
-func (m *MeltanoPlugin) ValidateConfig(config map[string]interface{}) error {
+func (m *MeltanoPlugin) ValidateConfig(settings map[string]interface{}) error {
 	required := []string{"python_venv", "meltano_project", "flexcore_node_url"}
 
 	for _, key := range required {
-		if _, exists := config[key]; !exists {
+		if _, exists := settings[key]; !exists {
 			return fmt.Errorf("required configuration key missing: %s", key)
 		}
 	}
@@ -403,27 +403,27 @@ func (m *MeltanoPlugin) executeSingerTap(ctx context.Context, params map[string]
 		return nil, fmt.Errorf("tap_name parameter required")
 	}
 
-	config, _ := params["config"].(map[string]interface{})
+	settings, _ := params["settings"].(map[string]interface{})
 
 	// Notify other plugins about tap execution
 	if m.communicator != nil {
 		message := map[string]interface{}{
 			"operation": "singer.tap.started",
 			"tap_name":  tapName,
-			"config":    config,
+			"settings":    settings,
 			"timestamp": time.Now(),
 		}
 		m.communicator.BroadcastMessage(ctx, m.id, plugins.PluginTypeMeltano, message)
 	}
 
-	configJson, _ := json.Marshal(config)
+	configJson, _ := json.Marshal(settings)
 	script := fmt.Sprintf(`
 import json
 from flext_meltano import FlextMeltanoClient
 
 client = FlextMeltanoClient()
-config = %s
-result = client.execute_tap("%s", config)
+settings = %s
+result = client.execute_tap("%s", settings)
 print(json.dumps(result))
 `, string(configJson), tapName)
 

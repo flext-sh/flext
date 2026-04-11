@@ -69,7 +69,7 @@ Each task was committed atomically:
 - `flext-infra/src/flext_infra/basemk/generator.py` - Removed duplicated Jinja2 setup, delegate to engine
 
 ## Decisions Made
-- **engine.py helpers are acceptable:** `_build_environment()`, `_render()`, and `_TEMPLATES_DIR` are small module-level helpers (<15 LOC each) in the template engine domain. They configure the engine, not business logic.
+- **engine.py helpers are acceptable:** `_build_environment()`, `_render()`, and `_TEMPLATES_DIR` are small module-level helpers (<15 LOC each) in the template engine domain. They settingsure the engine, not business logic.
 - **github service: zero changes:** All 4 methods delegate directly to `u.Infra.*`. The only inline logic is exit-code checking in `execute_pull_request()` which is orchestration routing (acceptable).
 - **release domain: zero changes:** All methods in orchestrator.py and orchestrator_phases.py delegate to `u.Infra.*` for subprocess, git, file, and version operations. Phase dispatch is routing logic (acceptable).
 - **render_bootstrap_include() was the only anti-pattern:** It duplicated the entire Jinja2 Environment setup (8 lines) that already exists in engine.py. Extracted to engine.render_single().

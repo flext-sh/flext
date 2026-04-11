@@ -45,7 +45,7 @@
 | `test_utilities_deprecation_full_coverage.py` | `test_deprecation_warnings.py` | `test_deprecated_class_warning` |
 | `test_dispatcher_reliability_full_coverage.py` | `test_dispatcher_reliability.py` | `test_circuit_breaker_half_open_and_rate_limiter_accessors` |
 | `test_models_container_full_coverage.py` | `test_models_container.py` | `test_resource_registration_metadata_normalized` |
-| `test_service_full_coverage.py` | `test_service.py` | `TestServiceInternals` class (3 tests: init type guards, runtime container overrides, custom config type) |
+| `test_service_full_coverage.py` | `test_service.py` | `TestServiceInternals` class (3 tests: init type guards, runtime container overrides, custom settings type) |
 
 ## Net Line Reduction
 

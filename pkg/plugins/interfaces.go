@@ -74,7 +74,7 @@ type PluginMetadata struct {
 	Author       string                 `json:"author"`
 	Capabilities []string               `json:"capabilities"`
 	Dependencies []string               `json:"dependencies"`
-	Config       map[string]interface{} `json:"config"`
+	Config       map[string]interface{} `json:"settings"`
 	CreatedAt    time.Time              `json:"created_at"`
 	UpdatedAt    time.Time              `json:"updated_at"`
 }
@@ -84,7 +84,7 @@ type PluginDeployment struct {
 	PluginID        PluginID               `json:"plugin_id"`
 	FlexCoreNodes   []string               `json:"flexcore_nodes"`
 	Status          PluginStatus           `json:"status"`
-	Config          map[string]interface{} `json:"config"`
+	Config          map[string]interface{} `json:"settings"`
 	DeployedAt      time.Time              `json:"deployed_at"`
 	LastHealthCheck time.Time              `json:"last_health_check"`
 	HealthStatus    string                 `json:"health_status"`
@@ -120,7 +120,7 @@ type Plugin interface {
 	Metadata() PluginMetadata
 
 	// Initialize sets up the plugin with configuration
-	Initialize(ctx context.Context, config map[string]interface{}) error
+	Initialize(ctx context.Context, settings map[string]interface{}) error
 
 	// Execute performs the requested operation with parameters
 	Execute(ctx context.Context, operation string, params map[string]interface{}) (map[string]interface{}, error)
@@ -135,7 +135,7 @@ type Plugin interface {
 	GetCapabilities() []string
 
 	// ValidateConfig validates the provided configuration
-	ValidateConfig(config map[string]interface{}) error
+	ValidateConfig(settings map[string]interface{}) error
 }
 
 // PluginRegistry interface - Manages plugin registration and discovery
@@ -162,7 +162,7 @@ type PluginRegistry interface {
 // PluginDeploymentManager interface - Manages plugin deployment to FlexCore instances
 type PluginDeploymentManager interface {
 	// DeployPlugin deploys a plugin to specified FlexCore instances
-	DeployPlugin(ctx context.Context, pluginID PluginID, nodes []string, config map[string]interface{}) error
+	DeployPlugin(ctx context.Context, pluginID PluginID, nodes []string, settings map[string]interface{}) error
 
 	// UndeployPlugin removes a plugin from FlexCore instances
 	UndeployPlugin(ctx context.Context, pluginID PluginID, nodes []string) error
@@ -174,7 +174,7 @@ type PluginDeploymentManager interface {
 	ListDeployments() ([]PluginDeployment, error)
 
 	// UpdatePluginConfig updates configuration for deployed plugin
-	UpdatePluginConfig(ctx context.Context, pluginID PluginID, nodes []string, config map[string]interface{}) error
+	UpdatePluginConfig(ctx context.Context, pluginID PluginID, nodes []string, settings map[string]interface{}) error
 
 	// RestartPlugin restarts a deployed plugin
 	RestartPlugin(ctx context.Context, pluginID PluginID, nodes []string) error
@@ -216,7 +216,7 @@ type PluginCommunicator interface {
 // FlexCoreClient interface - Communicates with FlexCore instances
 type FlexCoreClient interface {
 	// LoadPlugin loads a plugin binary on FlexCore instance
-	LoadPlugin(ctx context.Context, nodeURL string, pluginPath string, config map[string]interface{}) error
+	LoadPlugin(ctx context.Context, nodeURL string, pluginPath string, settings map[string]interface{}) error
 
 	// UnloadPlugin unloads a plugin from FlexCore instance
 	UnloadPlugin(ctx context.Context, nodeURL string, pluginID PluginID) error
@@ -231,7 +231,7 @@ type FlexCoreClient interface {
 	ListPlugins(ctx context.Context, nodeURL string) ([]PluginMetadata, error)
 
 	// UpdatePluginConfig updates plugin configuration on FlexCore instance
-	UpdatePluginConfig(ctx context.Context, nodeURL string, pluginID PluginID, config map[string]interface{}) error
+	UpdatePluginConfig(ctx context.Context, nodeURL string, pluginID PluginID, settings map[string]interface{}) error
 }
 
 // PluginLoader interface - Loads plugin binaries (.so/.dll files)

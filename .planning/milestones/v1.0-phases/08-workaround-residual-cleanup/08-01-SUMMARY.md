@@ -75,7 +75,7 @@ Eliminated all residual workaround violations: 2 bare print() replaced with stru
 **Examples fixed (16 occurrences across 14 files):**
 - Socket operations: `OSError`
 - Main entry points: `(RuntimeError, ValueError, OSError)`
-- DB config: `(ValueError, OSError, RuntimeError)`
+- DB settings: `(ValueError, OSError, RuntimeError)`
 - Data processing: `(KeyError, ValueError, TypeError)`
 
 **Other:** fix_dollar.py (2 occurrences) fixed to `(subprocess.CalledProcessError, OSError)`

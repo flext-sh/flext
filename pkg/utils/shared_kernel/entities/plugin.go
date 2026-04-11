@@ -214,18 +214,18 @@ func (p *UnifiedPlugin) MarkAsFailed(reason string) {
 }
 
 // UpdateConfiguration updates the plugin configuration
-func (p *UnifiedPlugin) UpdateConfiguration(config map[string]interface{}) {
+func (p *UnifiedPlugin) UpdateConfiguration(settings map[string]interface{}) {
 	if p.Configuration == nil {
 		p.Configuration = make(map[string]interface{})
 	}
 
-	for k, v := range config {
+	for k, v := range settings {
 		p.Configuration[k] = v
 	}
 
 	p.IncrementVersion()
 	p.AddDomainEvent(NewBaseDomainEvent("plugin.configuration.updated", p.GetID(), map[string]interface{}{
-		"configuration": config,
+		"configuration": settings,
 	}, p.GetVersion()))
 }
 

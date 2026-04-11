@@ -8,7 +8,7 @@ requires:
   - phase: 05-02
     provides: All 34 pyproject.toml on hatchling + unified uv.lock
 provides:
-  - Zero Poetry references in build tooling, CI, and environment config
+  - Zero Poetry references in build tooling, CI, and environment settings
   - CI uses astral-sh/setup-uv instead of snok/install-poetry
   - All make targets use direct venv invocation or uv commands
 affects: []

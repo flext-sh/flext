@@ -30,7 +30,7 @@ type Step struct {
 	PipelineID   uuid.UUID              `json:"pipeline_id"`
 	Name         string                 `json:"name"`
 	Type         StepType               `json:"type"`
-	Config       map[string]interface{} `json:"config"`
+	Config       map[string]interface{} `json:"settings"`
 	Dependencies []uuid.UUID            `json:"dependencies"`
 	Order        int                    `json:"order"`
 	CreatedAt    time.Time              `json:"created_at"`

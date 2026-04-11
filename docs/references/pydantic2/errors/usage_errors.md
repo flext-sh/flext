@@ -14,7 +14,7 @@
 - [`TypedDict` version {#typed-dict-version}](#typeddict-version-typed-dict-version)
 - [Model parent field overridden {#model-field-overridden}](#model-parent-field-overridden-model-field-overridden)
 - [Model field missing annotation {#model-field-missing-annotation}](#model-field-missing-annotation-model-field-missing-annotation)
-- [`Config` and `model_config` both defined {#config-both}](#config-and-modelconfig-both-defined-config-both)
+- [`Config` and `model_config` both defined {#settings-both}](#settings-and-modelconfig-both-defined-settings-both)
 - [Keyword arguments removed {#removed-kwargs}](#keyword-arguments-removed-removed-kwargs)
 - [Circular reference schema {#circular-reference-schema}](#circular-reference-schema-circular-reference-schema)
 - [JSON schema invalid type {#invalid-for-JSON-schema}](#json-schema-invalid-type-invalid-for-json-schema)
@@ -29,20 +29,20 @@
 - [Validator on instance method {#validator-instance-method}](#validator-on-instance-method-validator-instance-method)
 - [`json_schema_input_type` used with the wrong mode {#validator-input-type}](#jsonschemainputtype-used-with-the-wrong-mode-validator-input-type)
 - [`model_serializer` instance methods {#model-serializer-instance-method}](#modelserializer-instance-methods-model-serializer-instance-method)
-- [`validator`, `field`, `config`, and `info` {#validator-field-config-info}](#validator-field-config-and-info-validator-field-config-info)
+- [`validator`, `field`, `settings`, and `info` {#validator-field-settings-info}](#validator-field-settings-and-info-validator-field-settings-info)
 - [Pydantic V1 validator signature {#validator-v1-signature}](#pydantic-v1-validator-signature-validator-v1-signature)
 - [Unrecognized `field_validator` signature {#validator-signature}](#unrecognized-fieldvalidator-signature-validator-signature)
 - [Unrecognized `field_serializer` signature {#field-serializer-signature}](#unrecognized-fieldserializer-signature-field-serializer-signature)
 - [Unrecognized `model_serializer` signature {#model-serializer-signature}](#unrecognized-modelserializer-signature-model-serializer-signature)
 - [Multiple field serializers {#multiple-field-serializers}](#multiple-field-serializers-multiple-field-serializers)
 - [Invalid annotated type {#invalid-annotated-type}](#invalid-annotated-type-invalid-annotated-type)
-- [`config` is unused with `TypeAdapter` {#type-adapter-config-unused}](#config-is-unused-with-typeadapter-type-adapter-config-unused)
+- [`settings` is unused with `TypeAdapter` {#type-adapter-settings-unused}](#settings-is-unused-with-typeadapter-type-adapter-settings-unused)
 - [Cannot specify `model_config['extra']` with `RootModel` {#root-model-extra}](#cannot-specify-modelconfigextra-with-rootmodel-root-model-extra)
 - [Cannot evaluate type annotation {#unevaluable-type-annotation}](#cannot-evaluate-type-annotation-unevaluable-type-annotation)
 - [Incompatible `dataclass` `init` and `extra` settings {#dataclass-init-false-extra-allow}](#incompatible-dataclass-init-and-extra-settings-dataclass-init-false-extra-allow)
 - [Incompatible `init` and `init_var` settings on `dataclass` field {#clashing-init-and-init-var}](#incompatible-init-and-initvar-settings-on-dataclass-field-clashing-init-and-init-var)
-- [`model_config` is used as a model field {#model-config-invalid-field-name}](#modelconfig-is-used-as-a-model-field-model-config-invalid-field-name)
-- [[`with_config`][pydantic.config.with_config] is used on a `BaseModel` subclass {#with-config-on-model}](#withconfigpydanticconfigwithconfig-is-used-on-a-basemodel-subclass-with-config-on-model)
+- [`model_config` is used as a model field {#model-settings-invalid-field-name}](#modelconfig-is-used-as-a-model-field-model-settings-invalid-field-name)
+- [[`with_config`][pydantic.settings.with_config] is used on a `BaseModel` subclass {#with-settings-on-model}](#withconfigpydanticconfigwithconfig-is-used-on-a-basemodel-subclass-with-settings-on-model)
 - [`dataclass` is used on a `BaseModel` subclass {#dataclass-on-model}](#dataclass-is-used-on-a-basemodel-subclass-dataclass-on-model)
 - [Unsupported type for `validate_call` {#validate-call-type}](#unsupported-type-for-validatecall-validate-call-type)
   - [`@classmethod`, `@staticmethod`, and `@property`](#classmethod-staticmethod-and-property)
@@ -536,7 +536,7 @@ class MyModel(BaseModel):
     _d: IgnoredType = IgnoredType()
 ```
 
-## `Config` and `model_config` both defined {#config-both}
+## `Config` and `model_config` both defined {#settings-both}
 
 This error is raised when `class Config` and `model_config` are used together.
 
@@ -554,7 +554,7 @@ try:
             from_attributes = True
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == "config-both"
+    assert exc_info.code == "settings-both"
 ```
 
 ## Keyword arguments removed {#removed-kwargs}
@@ -853,12 +853,12 @@ except PydanticUserError as exc_info:
     assert exc_info.code == "model-serializer-instance-method"
 ```
 
-## `validator`, `field`, `config`, and `info` {#validator-field-config-info}
+## `validator`, `field`, `settings`, and `info` {#validator-field-settings-info}
 
-The `field` and `config` parameters are not available in Pydantic V2.
+The `field` and `settings` parameters are not available in Pydantic V2.
 Please use the `info` parameter instead.
 
-You can access the configuration via `info.config`,
+You can access the configuration via `info.settings`,
 but it is a dictionary instead of an t.NormalizedValue like it was in Pydantic V1.
 
 The `field` argument is no longer available.
@@ -1069,10 +1069,10 @@ except PydanticUserError as exc_info:
     assert exc_info.code == "invalid-annotated-type"
 ```
 
-## `config` is unused with `TypeAdapter` {#type-adapter-config-unused}
+## `settings` is unused with `TypeAdapter` {#type-adapter-settings-unused}
 
-You will get this error if you try to pass `config` to `TypeAdapter` when the type is a type that
-has its own config that cannot be overridden (currently this is only `BaseModel`, `TypedDict` and `dataclass`):
+You will get this error if you try to pass `settings` to `TypeAdapter` when the type is a type that
+has its own settings that cannot be overridden (currently this is only `BaseModel`, `TypedDict` and `dataclass`):
 
 ```python
 from typing_extensions import TypedDict
@@ -1085,12 +1085,12 @@ class MyTypedDict(TypedDict):
 
 
 try:
-    TypeAdapter(MyTypedDict, config=ConfigDict(strict=True))
+    TypeAdapter(MyTypedDict, settings=ConfigDict(strict=True))
 except PydanticUserError as exc_info:
-    assert exc_info.code == "type-adapter-config-unused"
+    assert exc_info.code == "type-adapter-settings-unused"
 ```
 
-Instead you'll need to subclass the type and override or set the config on it:
+Instead you'll need to subclass the type and override or set the settings on it:
 
 ```python
 from typing_extensions import TypedDict
@@ -1111,7 +1111,7 @@ TypeAdapter(MyTypedDict)  # ok
 ## Cannot specify `model_config['extra']` with `RootModel` {#root-model-extra}
 
 Because `RootModel` is not capable of storing or even accepting extra fields during initialization, we raise an error
-if you try to specify a value for the config setting `'extra'` when creating a subclass of `RootModel`:
+if you try to specify a value for the settings setting `'extra'` when creating a subclass of `RootModel`:
 
 ```python
 from pydantic import PydanticUserError, RootModel
@@ -1166,7 +1166,7 @@ from pydantic import ConfigDict, Field
 from pydantic.dataclasses import dataclass
 
 
-@dataclass(config=ConfigDict(extra="allow"))
+@dataclass(settings=ConfigDict(extra="allow"))
 class A:
     a: int = Field(init=False, default=1)
 ```
@@ -1174,7 +1174,7 @@ class A:
 The above snippet results in the following error during schema building for the `A` dataclass:
 
 ```output
-pydantic.errors.PydanticUserError: Field a has `init=False` and dataclass has config setting `extra="allow"`.
+pydantic.errors.PydanticUserError: Field a has `init=False` and dataclass has settings setting `extra="allow"`.
 This combination is not allowed.
 ```
 
@@ -1197,7 +1197,7 @@ pydantic.errors.PydanticUserError: Dataclass field bar has init=False and init_v
 """
 ```
 
-## `model_config` is used as a model field {#model-config-invalid-field-name}
+## `model_config` is used as a model field {#model-settings-invalid-field-name}
 
 This error is raised when `model_config` is used as the name of a field.
 
@@ -1210,12 +1210,12 @@ try:
         model_config: str
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == "model-config-invalid-field-name"
+    assert exc_info.code == "model-settings-invalid-field-name"
 ```
 
-## [`with_config`][pydantic.config.with_config] is used on a `BaseModel` subclass {#with-config-on-model}
+## [`with_config`][pydantic.settings.with_config] is used on a `BaseModel` subclass {#with-settings-on-model}
 
-This error is raised when the [`with_config`][pydantic.config.with_config] decorator is used on a class which is already a Pydantic model (use the `model_config` attribute instead).
+This error is raised when the [`with_config`][pydantic.settings.with_config] decorator is used on a class which is already a Pydantic model (use the `model_config` attribute instead).
 
 ```python
 from pydantic import BaseModel, PydanticUserError, with_config
@@ -1227,7 +1227,7 @@ try:
         bar: str
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == "with-config-on-model"
+    assert exc_info.code == "with-settings-on-model"
 ```
 
 ## `dataclass` is used on a `BaseModel` subclass {#dataclass-on-model}

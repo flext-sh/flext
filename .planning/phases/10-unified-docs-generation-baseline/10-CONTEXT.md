@@ -13,7 +13,7 @@ Refactor ALL flext-infra command domains (excluding docs — separate agent) to:
 3. Simplify base.py to thin FlextServiceBase (~30 LOC)
 4. Services as thin s orchestrators over u.Infra.* utilities
 5. Centralize rope library usage through u.Infra.* (already partially done)
-6. pyproject.toml as config SSOT where possible
+6. pyproject.toml as settings SSOT where possible
 7. Flat type aliases in c/t/p/m/u with no duplicate declarations
 8. ruff + pyrefly clean at ALL times during refactoring
 
@@ -32,10 +32,10 @@ Docs domain — EXCLUDED (separate agent)
 - No generic helpers that could be reused across modules — everything goes through u.* namespace
 - Import private classes directly in _utilities (e.g., `from flext_infra import FlextInfraUtilitiesDocsScope`)
 
-### Config SSOT: pyproject.toml + Minimal JSON
+### Settings SSOT: pyproject.toml + Minimal JSON
 - Maximize information read from pyproject.toml (project metadata, dependencies, package info)
-- Use [tool.flext.docs] entries in each project's pyproject.toml for project-specific docs config
-- docs/docs_config.json for workspace-level policy that can't live in pyproject.toml (exclusions, audit rules, stale symbols)
+- Use [tool.flext.docs] entries in each project's pyproject.toml for project-specific docs settings
+- docs/docs_settings.json for workspace-level policy that can't live in pyproject.toml (exclusions, audit rules, stale symbols)
 - NEVER duplicate what pyproject.toml already provides
 
 ### Library Reuse Over Custom Code
@@ -111,9 +111,9 @@ Docs domain — EXCLUDED (separate agent)
 - `flext-infra/src/flext_infra/base.py` — FlextInfraServiceBase
 
 ### Configuration
-- `docs/docs_config.json` — Workspace docs policy config
+- `docs/docs_settings.json` — Workspace docs policy settings
 - `flext-infra/pyproject.toml` — [tool.flext.docs] entries
-- `mkdocs.yml` — Root workspace mkdocs config
+- `mkdocs.yml` — Root workspace mkdocs settings
 
 </canonical_refs>
 
@@ -124,7 +124,7 @@ Docs domain — EXCLUDED (separate agent)
 - mkdocstrings-python handler extracts docstrings at build time — generation only creates directive pages
 - pyproject.toml [project] section provides: name, version, description, dependencies
 - pyproject.toml [tool.flext.docs] provides: project_class, site_title, module_include, module_exclude
-- docs_config.json provides: scope exclusions, audit rules (placeholder terms, stale symbols), build policy
+- docs_settings.json provides: scope exclusions, audit rules (placeholder terms, stale symbols), build policy
 - Every generated file carries ownership marker (AUTO-GENERATED header)
 - Generator must not overwrite curated pages
 - Audit must fail on: missing public docstrings, stale symbols, placeholder text, scope violations

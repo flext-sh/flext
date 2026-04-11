@@ -59,7 +59,7 @@ func NewMeltanoAdapterWithConfig(pythonPath, projectRoot string) (*MeltanoAdapte
 	logger := logging.GetLogger()
 
 	// Meltano service disabled to avoid cross-module dependency
-	logger.Info("MeltanoAdapter initialized with config", logging.F("python_path", pythonPath), logging.F("project_root", projectRoot))
+	logger.Info("MeltanoAdapter initialized with settings", logging.F("python_path", pythonPath), logging.F("project_root", projectRoot))
 
 	return &MeltanoAdapter{
 		logger: logger.With(logging.F("component", "meltano_adapter")),
@@ -114,7 +114,7 @@ func (m *MeltanoAdapter) GetPlugins() string {
 }
 
 // CreateAdapter creates a new Meltano adapter
-func (m *MeltanoAdapter) CreateAdapter(adapterType string, config map[string]interface{}) string {
+func (m *MeltanoAdapter) CreateAdapter(adapterType string, settings map[string]interface{}) string {
 	return m.stubServiceDisabled("CreateAdapter")
 }
 

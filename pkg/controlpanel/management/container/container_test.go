@@ -3,30 +3,30 @@ package container
 import (
 	"testing"
 
-	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/settings"
 )
 
 func TestNewContainer(t *testing.T) {
 	tests := []struct {
 		name        string
-		config      *config.Config
+		settings      *settings.Config
 		expectError bool
 	}{
 		{
-			name:        "Valid config",
-			config:      &config.Config{},
+			name:        "Valid settings",
+			settings:      &settings.Config{},
 			expectError: false,
 		},
 		{
-			name:        "Nil config",
-			config:      nil,
+			name:        "Nil settings",
+			settings:      nil,
 			expectError: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			container, err := NewContainer(tt.config)
+			container, err := NewContainer(tt.settings)
 
 			if (err != nil) != tt.expectError {
 				t.Errorf("NewContainer() error = %v, expectError %v", err, tt.expectError)
@@ -37,8 +37,8 @@ func TestNewContainer(t *testing.T) {
 				if container == nil {
 					t.Error("Expected non-nil container")
 				}
-				if container.config != tt.config {
-					t.Error("Container config should match provided config")
+				if container.settings != tt.settings {
+					t.Error("Container settings should match provided settings")
 				}
 				if container.logger == nil {
 					t.Error("Container logger should be initialized")
@@ -49,7 +49,7 @@ func TestNewContainer(t *testing.T) {
 }
 
 func TestContainerHandlers(t *testing.T) {
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	container, err := NewContainer(cfg)
 	if err != nil {
 		t.Fatalf("Failed to create container: %v", err)
@@ -89,7 +89,7 @@ func TestContainerHandlers(t *testing.T) {
 }
 
 func TestContainerWithRealConfig(t *testing.T) {
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	cfg.Server.Host = "localhost"
 	cfg.Server.Port = 8081
 	cfg.Server.Environment = "test"
@@ -100,21 +100,21 @@ func TestContainerWithRealConfig(t *testing.T) {
 
 	container, err := NewContainer(cfg)
 	if err != nil {
-		t.Fatalf("Failed to create container with real config: %v", err)
+		t.Fatalf("Failed to create container with real settings: %v", err)
 	}
 
-	if container.config.Server.Host != "localhost" {
-		t.Error("Container should preserve config values")
+	if container.settings.Server.Host != "localhost" {
+		t.Error("Container should preserve settings values")
 	}
 
-	if container.config.Server.Port != 8081 {
-		t.Error("Container should preserve config port")
+	if container.settings.Server.Port != 8081 {
+		t.Error("Container should preserve settings port")
 	}
 }
 
 // Benchmark tests
 func BenchmarkNewContainer(b *testing.B) {
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -127,7 +127,7 @@ func BenchmarkNewContainer(b *testing.B) {
 }
 
 func BenchmarkContainerHandlers(b *testing.B) {
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	container, err := NewContainer(cfg)
 	if err != nil {
 		b.Fatalf("Failed to create container: %v", err)

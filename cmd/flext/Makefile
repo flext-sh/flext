@@ -215,10 +215,10 @@ pipeline-status: ## Check pipeline status
 	@echo "📊 Pipeline status..."
 	@go run . status
 
-.PHONY: validate-config
-validate-config: ## Validate configuration
-	@echo "⚙️ Validating config..."
-	@go run . validate-config
+.PHONY: validate-settings
+validate-settings: ## Validate configuration
+	@echo "⚙️ Validating settings..."
+	@go run . validate-settings
 
 # =============================================================================
 # MAINTENANCE

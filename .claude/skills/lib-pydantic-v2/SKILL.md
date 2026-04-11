@@ -15,7 +15,7 @@
   - [Good: r.from_validation integration](#good-flextresultfromvalidation-integration)
   - [Bad: v1-style validator](#bad-v1-style-validator)
   - [Bad: .dict() / .json()](#bad-dict-json)
-  - [Bad: class Config instead of ConfigDict](#bad-class-config-instead-of-configdict)
+  - [Bad: class Config instead of ConfigDict](#bad-class-settings-instead-of-configdict)
   - [Bad: model_rebuild patching](#bad-modelrebuild-patching)
   - [Good: all references defined before model declaration](#good-all-references-defined-before-model-declaration)
 - [Subproject Usage Map](#subproject-usage-map)
@@ -36,7 +36,7 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 ## Scope
 
 - `flext-core/src/flext_core/settings.py` — FlextSettings (BaseSettings + SettingsConfigDict)
-- `flext-core/src/flext_core/_models/settings.py` — nested config models with field_validator/model_validator
+- `flext-core/src/flext_core/_models/settings.py` — nested settings models with field_validator/model_validator
 - `flext-core/src/flext_core/_utilities/validation.py` — TypeAdapter utilities, validation helpers
 - `flext-core/src/flext_core/typings.py` — RootModel containers (Dict, ConfigMap, etc.)
 - `flext-grpc/src/flext_grpc/models.py` — gRPC domain models with computed_field

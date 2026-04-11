@@ -249,8 +249,8 @@ func (r *GormPipelineRepository) gormToDomain(gp *GormPipeline) *Pipeline {
 
 	// Convert steps
 	for i, gs := range gp.Steps {
-		var config map[string]interface{}
-		json.Unmarshal([]byte(gs.Config), &config)
+		var settings map[string]interface{}
+		json.Unmarshal([]byte(gs.Config), &settings)
 
 		// Convert string dependencies to UUIDs
 		var deps []uuid.UUID
@@ -263,7 +263,7 @@ func (r *GormPipelineRepository) gormToDomain(gp *GormPipeline) *Pipeline {
 		step := &Step{
 			ID:           gs.ID,
 			Name:         gs.Name,
-			Config:       config,
+			Config:       settings,
 			Dependencies: deps,
 		}
 		step.Type.FromString(gs.Type)

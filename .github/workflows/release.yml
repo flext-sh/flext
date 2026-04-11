@@ -111,8 +111,8 @@ jobs:
           VERSION="${{ steps.release.outputs.version }}"
           BRANCH="release/${VERSION}-sync"
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git settings user.name "github-actions[bot]"
+          git settings user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git fetch origin main --tags
           if git merge-base --is-ancestor "$TAG" origin/main; then

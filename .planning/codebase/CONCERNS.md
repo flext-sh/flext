@@ -51,7 +51,7 @@ The flext monorepo contains 4,385 type system errors across 34 projects, concent
 **Example from `flext-quality/docs/maintenance/scheduled_maintenance.py`:**
 ```python
 # Type inferred as: bool | dict[str, ...] | str
-value = config.get("key")  # Could be bool, dict, or str
+value = settings.get("key")  # Could be bool, dict, or str
 result = value[0]  # ERROR: Cannot index into bool or str
 ```
 
@@ -60,7 +60,7 @@ result = value[0]  # ERROR: Cannot index into bool or str
 **Fix Approach:**
 - Add `isinstance()` checks before indexing
 - Use discriminated unions with Pydantic models
-- Replace configuration value unions with `t.ConfigMap` or domain-specific models
+- Replace configuration value unions with `t.SettingsMap` or domain-specific models
 
 **Files:** `flext-quality/docs/maintenance/scheduled_maintenance.py` (1,106 errors), `flext-quality/docs/maintenance/scripts/report.py` (97 errors)
 
@@ -75,7 +75,7 @@ result = value[0]  # ERROR: Cannot index into bool or str
 **Example:**
 ```python
 # Type: Path | bool | datetime | float | int | str
-value = config.get("key")
+value = settings.get("key")
 value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 ```
 
@@ -105,7 +105,7 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 
 **Fix Approach:**
 - Create Pydantic models for all configuration types
-- Use `t.ConfigMap` or domain-specific model types
+- Use `t.SettingsMap` or domain-specific model types
 - Cascades: Fixes 200+ errors in other categories
 
 **Priority:** CRITICAL
@@ -205,7 +205,7 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 
 **Fix Approach:**
 - Split configuration logic by domain
-- Create discrete Pydantic models for each config block
+- Create discrete Pydantic models for each settings block
 - Establish configuration loading pipeline with proper type narrowing
 
 **Priority:** HIGH

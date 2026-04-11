@@ -33,9 +33,9 @@ type MiddlewareConfig struct {
 }
 
 // NewUnifiedAuthMiddleware creates a new unified auth middleware
-func NewUnifiedAuthMiddleware(authService *UnifiedAuthService, config MiddlewareConfig, logger logging.Logger) *UnifiedAuthMiddleware {
+func NewUnifiedAuthMiddleware(authService *UnifiedAuthService, settings MiddlewareConfig, logger logging.Logger) *UnifiedAuthMiddleware {
 	publicPaths := make(map[string]bool)
-	for _, path := range config.PublicPaths {
+	for _, path := range settings.PublicPaths {
 		publicPaths[path] = true
 	}
 
@@ -58,7 +58,7 @@ func NewUnifiedAuthMiddleware(authService *UnifiedAuthService, config Middleware
 		authService:  authService,
 		logger:       logger.With(logging.F("component", "auth_middleware")),
 		publicPaths:  publicPaths,
-		skipPrefixes: config.SkipPrefixes,
+		skipPrefixes: settings.SkipPrefixes,
 	}
 }
 

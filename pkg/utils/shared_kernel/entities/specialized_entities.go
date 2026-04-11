@@ -46,7 +46,7 @@ type PluginEntity interface {
 
 	// Configuration management
 	GetConfiguration() map[string]interface{}
-	SetConfiguration(config map[string]interface{}) error
+	SetConfiguration(settings map[string]interface{}) error
 	GetConfigurationSchema() map[string]interface{}
 
 	// Plugin state
@@ -362,11 +362,11 @@ func (p *BasePluginEntity) GetConfiguration() map[string]interface{} {
 }
 
 // SetConfiguration define a configuração do plugin
-func (p *BasePluginEntity) SetConfiguration(config map[string]interface{}) error {
-	if config == nil {
-		config = make(map[string]interface{})
+func (p *BasePluginEntity) SetConfiguration(settings map[string]interface{}) error {
+	if settings == nil {
+		settings = make(map[string]interface{})
 	}
-	p.Configuration = config
+	p.Configuration = settings
 	p.SetUpdatedAt(time.Now().UTC())
 	return nil
 }

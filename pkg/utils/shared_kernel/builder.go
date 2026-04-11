@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/flext-sh/flext/pkg/infrastructure/config"
+	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
 	"github.com/flext-sh/flext/pkg/utils/shared_kernel/application"
 )
@@ -38,16 +38,16 @@ const (
 
 // ContainerBuilder constrói containers de forma flexível
 type ContainerBuilder struct {
-	config   *config.Config
+	settings   *settings.Config
 	logger   logging.Logger
 	features map[Feature]bool
 	handlers map[string]interface{}
 }
 
 // NewContainerBuilder cria um novo builder
-func NewContainerBuilder(cfg *config.Config) *ContainerBuilder {
+func NewContainerBuilder(cfg *settings.Config) *ContainerBuilder {
 	return &ContainerBuilder{
-		config:   cfg,
+		settings:   cfg,
 		logger:   logging.GetLogger().With(logging.F("component", "container_builder")),
 		features: make(map[Feature]bool),
 		handlers: make(map[string]interface{}),
@@ -73,35 +73,35 @@ func (cb *ContainerBuilder) AutoDetectFeatures() *ContainerBuilder {
 	cb.logger.Info("Auto-detecting features from configuration")
 
 	// Database features
-	if cb.config.Features.DatabaseEnabled {
+	if cb.settings.Features.DatabaseEnabled {
 		cb.WithFeature(FeatureDatabase)
 
-		if cb.config.Features.GormEnabled || cb.config.Features.SqlxEnabled {
+		if cb.settings.Features.GormEnabled || cb.settings.Features.SqlxEnabled {
 			cb.WithFeature(FeatureAdvancedDB)
 		}
 	}
 
 	// Cache features
-	if cb.config.Features.RedisEnabled {
+	if cb.settings.Features.RedisEnabled {
 		cb.WithFeature(FeatureRedis)
 	}
 
 	// Observability features
-	if cb.config.Features.MetricsEnabled {
+	if cb.settings.Features.MetricsEnabled {
 		cb.WithFeature(FeatureMonitoring)
 	}
 
 	// Communication features
-	if cb.config.Features.WebSocketEnabled {
+	if cb.settings.Features.WebSocketEnabled {
 		cb.WithFeature(FeatureWebSocket)
 	}
 
 	// Core business features
-	if cb.config.Features.PipelineExecution {
+	if cb.settings.Features.PipelineExecution {
 		cb.WithFeature(FeaturePipeline)
 	}
 
-	if cb.config.Features.PluginSystemEnabled {
+	if cb.settings.Features.PluginSystemEnabled {
 		cb.WithFeature(FeaturePlugin)
 	}
 
@@ -112,7 +112,7 @@ func (cb *ContainerBuilder) AutoDetectFeatures() *ContainerBuilder {
 	cb.WithFeature(FeatureConnectors)
 
 	// Clean Architecture
-	if cb.config.CleanArchitecture.IsEnabled() {
+	if cb.settings.CleanArchitecture.IsEnabled() {
 		cb.WithFeature(FeatureCleanArch)
 	}
 
@@ -145,7 +145,7 @@ func (cb *ContainerBuilder) Build() (application.ContainerInterface, error) {
 
 	// Cria container base
 	container := &FlexibleContainer{
-		config:   cb.config,
+		settings:   cb.settings,
 		logger:   cb.logger,
 		features: cb.features,
 		handlers: make(map[string]interface{}),
@@ -302,7 +302,7 @@ func (cb *ContainerBuilder) initDatabase(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing database")
 	// TODO: Implementar inicialização de database
 	// if cb.features[FeatureDatabase] {
-	//     db, err := initializeDatabase(cb.config)
+	//     db, err := initializeDatabase(cb.settings)
 	//     if err != nil {
 	//         cb.logger.Error("Failed to initialize database", "error", err)
 	//     } else {
@@ -317,7 +317,7 @@ func (cb *ContainerBuilder) initCache(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing cache")
 	// TODO: Implementar inicialização de cache
 	// if cb.features[FeatureRedis] {
-	//     cache, err := initializeCache(cb.config)
+	//     cache, err := initializeCache(cb.settings)
 	//     if err != nil {
 	//         cb.logger.Error("Failed to initialize cache", "error", err)
 	//     } else {
@@ -414,7 +414,7 @@ func (cb *ContainerBuilder) initConnectorsHandler(container *FlexibleContainer) 
 
 // FlexibleContainer implementação do container flexível
 type FlexibleContainer struct {
-	config   *config.Config
+	settings   *settings.Config
 	logger   logging.Logger
 	features map[Feature]bool
 	handlers map[string]interface{}
@@ -497,15 +497,15 @@ func (fc *FlexibleContainer) IsFeatureEnabled(feature Feature) bool {
 }
 
 // GetConfig retorna a configuração
-func (fc *FlexibleContainer) GetConfig() *config.Config {
-	return fc.config
+func (fc *FlexibleContainer) GetConfig() *settings.Config {
+	return fc.settings
 }
 
 // ContainerFactory funções de factory predefinidas
 type ContainerFactory struct{}
 
 // CreateBasicContainer cria container básico
-func (cf *ContainerFactory) CreateBasicContainer(cfg *config.Config) (application.ContainerInterface, error) {
+func (cf *ContainerFactory) CreateBasicContainer(cfg *settings.Config) (application.ContainerInterface, error) {
 	return NewContainerBuilder(cfg).
 		WithFeature(FeaturePipeline).
 		WithFeature(FeaturePlugin).
@@ -515,14 +515,14 @@ func (cf *ContainerFactory) CreateBasicContainer(cfg *config.Config) (applicatio
 }
 
 // CreateAdvancedContainer cria container avançado
-func (cf *ContainerFactory) CreateAdvancedContainer(cfg *config.Config) (application.ContainerInterface, error) {
+func (cf *ContainerFactory) CreateAdvancedContainer(cfg *settings.Config) (application.ContainerInterface, error) {
 	return NewContainerBuilder(cfg).
 		AutoDetectFeatures().
 		Build()
 }
 
 // CreateCustomContainer cria container customizado
-func (cf *ContainerFactory) CreateCustomContainer(cfg *config.Config, features []Feature) (application.ContainerInterface, error) {
+func (cf *ContainerFactory) CreateCustomContainer(cfg *settings.Config, features []Feature) (application.ContainerInterface, error) {
 	builder := NewContainerBuilder(cfg)
 
 	for _, feature := range features {

@@ -42,7 +42,7 @@ key-files:
 key-decisions:
   - "D-21 applied to mro_reference_rewriter: rope Rename requires finding offsets in source + creating Project resource — more complex than current leave_Name/leave_Attribute CST approach; kept LibCST"
   - "ParentNodeProvider replaced with _skip_names: set[int] using visit_ClassDef/FunctionDef/Param/AsName visitors — pure LibCST, no external deps"
-  - "rope stubs absent: added reportUnknownMemberType/VariableType/ArgumentType = none to root pyproject.toml pyright config instead of per-call type: ignore"
+  - "rope stubs absent: added reportUnknownMemberType/VariableType/ArgumentType = none to root pyproject.toml pyright settings instead of per-call type: ignore"
   - "Re-export find_occurrences and Rename from transformer __all__ satisfies plan artifact requirements without adding wrapper logic (YAGNI compliant)"
 
 patterns-established:
@@ -98,7 +98,7 @@ Each task was committed atomically:
 
 - **D-21 applied to mro_reference_rewriter**: rope Rename requires looking up byte offsets in source text, creating a rope Project resource, and calling `get_changes(name)` — at least 3x more code than the existing CST `leave_Name`/`leave_Attribute` approach. Kept LibCST per D-21.
 - **_skip_names replaces ParentNodeProvider**: LibCST ParentNodeProvider was used only to detect definition sites (ClassDef name, FunctionDef name, Param, AsName). Pure visitor methods (`visit_ClassDef` etc.) collect `id()` of those Name nodes into `_skip_names`. The `leave_Name` check `if id(original_node) in self._skip_names` is simpler and has zero external dependencies.
-- **Global pyright suppression for rope stubs**: rope has no `.pyi` stubs. Three `= "none"` entries in root `pyproject.toml` pyright config (`reportUnknownMemberType`, `reportUnknownVariableType`, `reportUnknownArgumentType`) replace scattered `# type: ignore` comments which are forbidden by CLAUDE.md.
+- **Global pyright suppression for rope stubs**: rope has no `.pyi` stubs. Three `= "none"` entries in root `pyproject.toml` pyright settings (`reportUnknownMemberType`, `reportUnknownVariableType`, `reportUnknownArgumentType`) replace scattered `# type: ignore` comments which are forbidden by CLAUDE.md.
 
 ## Deviations from Plan
 
@@ -121,7 +121,7 @@ Each task was committed atomically:
 **3. [Rule 2 - Missing Critical] pyright errors from rope's untyped API**
 - **Found during:** Task 1 verification
 - **Issue:** rope has no `.pyi` stubs; pyright emitted `reportUnknownMemberType/VariableType/ArgumentType` for every rope call
-- **Fix:** Added three `= "none"` entries to root `pyproject.toml` pyright config
+- **Fix:** Added three `= "none"` entries to root `pyproject.toml` pyright settings
 - **Files modified:** `pyproject.toml`
 - **Verification:** `pyright flext-infra/src/flext_infra/transformers/` shows 0 errors
 

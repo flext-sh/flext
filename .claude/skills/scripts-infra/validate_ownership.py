@@ -195,7 +195,7 @@ def candidate_skill(script_path: Path) -> str:
         return "scripts-infra"
     if path.startswith("scripts/core/"):
         return "scripts-infra"
-    if path.startswith("scripts/config/"):
+    if path.startswith("scripts/settings/"):
         return "scripts-infra"
     if path.startswith("scripts/makefiles/"):
         return "scripts-infra"

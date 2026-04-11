@@ -30,7 +30,7 @@ COPY src/ ./src/
 COPY tests/ ./tests/
 
 # Install dependencies
-RUN poetry config virtualenvs.create false \
+RUN poetry settings virtualenvs.create false \
     && poetry install --no-dev
 
 # Install test dependencies

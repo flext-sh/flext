@@ -17,9 +17,9 @@ type DatabaseManager struct {
 }
 
 // NewDatabaseManager creates a new database manager with all repositories
-func NewDatabaseManager(config *DatabaseConfig, logger logging.Logger) (*DatabaseManager, error) {
+func NewDatabaseManager(settings *DatabaseConfig, logger logging.Logger) (*DatabaseManager, error) {
 	// Create database connection
-	db, err := NewDatabase(config, logger)
+	db, err := NewDatabase(settings, logger)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create database: %w", err)
 	}
@@ -43,8 +43,8 @@ func NewDatabaseManager(config *DatabaseConfig, logger logging.Logger) (*Databas
 	}
 
 	logger.Info("Database manager initialized successfully",
-		logging.F("driver", config.Driver),
-		logging.F("database", config.Database),
+		logging.F("driver", settings.Driver),
+		logging.F("database", settings.Database),
 	)
 
 	return manager, nil
@@ -202,7 +202,7 @@ func (dm *DatabaseManager) RunMaintenance(ctx context.Context) error {
 	}
 
 	// Vacuum database (SQLite specific optimization)
-	if dm.db.config.Driver == "sqlite3" {
+	if dm.db.settings.Driver == "sqlite3" {
 		if _, err := dm.db.Exec("VACUUM"); err != nil {
 			dm.logger.Error("Failed to vacuum database", logging.F("error", err.Error()))
 		} else {
@@ -257,7 +257,7 @@ func (dm *DatabaseManager) GetDatabase() *Database {
 
 // Backup creates a database backup (SQLite specific)
 func (dm *DatabaseManager) Backup(ctx context.Context, backupPath string) error {
-	if dm.db.config.Driver != "sqlite3" {
+	if dm.db.settings.Driver != "sqlite3" {
 		return fmt.Errorf("backup only supported for SQLite databases")
 	}
 

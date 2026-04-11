@@ -25,7 +25,7 @@ The following mapping was used for all conversions:
 
 **Changes:**
 - 17 total type conversions
-- Classes affected: `LdifFormatOptions`, `LdifEntry`, `LdifFile`, `LdifTransformationResult`, `LdifBatchProcessing`, `SingerStreamConfig`, `LdifTargetResult`
+- Classes affected: `LdifFormatOptions`, `LdifEntry`, `LdifFile`, `LdifTransformationResult`, `LdifBatchProcessing`, `SingerStreamSettings`, `LdifTargetResult`
 
 **Conversions:**
 - `line_length`: `int` with `ge`, `le` → `t.PositiveInt`
@@ -37,7 +37,7 @@ The following mapping was used for all conversions:
 - `total_processed`: `int` with `ge=0` → `t.NonNegativeInt`
 - `successful_exports`: `int` with `ge=0` → `t.NonNegativeInt`
 - `failed_exports`: `int` with `ge=0` → `t.NonNegativeInt`
-- `batch_size` (SingerStreamConfig): `int` with `ge=1, le=10000` → `t.BatchSize`
+- `batch_size` (SingerStreamSettings): `int` with `ge=1, le=10000` → `t.BatchSize`
 - `records_processed`: `int` with `ge=0` → `t.NonNegativeInt`
 - `entries_exported`: `int` with `ge=0` → `t.NonNegativeInt`
 - `entries_failed`: `int` with `ge=0` → `t.NonNegativeInt`
@@ -80,7 +80,7 @@ The following mapping was used for all conversions:
 **Changes:**
 - 14 total type conversions
 - Import added: `from flext_core import t`
-- Classes affected: `ProcessingSummary`, `LoaderOperation`, `LoaderFinalizeResult`, `OracleConnectionConfig`, `TargetConfig`, `ImplementationMetrics`
+- Classes affected: `ProcessingSummary`, `LoaderOperation`, `LoaderFinalizeResult`, `OracleConnectionSettings`, `TargetSettings`, `ImplementationMetrics`
 
 **Conversions:**
 - `messages_processed`: `int` with `ge=0` → `t.NonNegativeInt`
@@ -94,7 +94,7 @@ The following mapping was used for all conversions:
 - `pool_max`: `int` with `ge=1` → `t.PositiveInt`
 - `pool_increment`: `int` with `ge=1` → `t.PositiveInt`
 - `parallel_degree`: `int` with `ge=1` → `t.PositiveInt`
-- `batch_size` (TargetConfig): `int` with `ge=1` → `t.BatchSize`
+- `batch_size` (TargetSettings): `int` with `ge=1` → `t.BatchSize`
 - `streams_configured`: `int` with `ge=0` → `t.NonNegativeInt`
 - `batch_size` (ImplementationMetrics): `int` with `ge=1` → `t.BatchSize`
 
@@ -111,7 +111,7 @@ The following mapping was used for all conversions:
 
 **Changes:**
 - 3 total type conversions
-- Classes affected: `WmsTargetResult`, `WmsTargetConfig`
+- Classes affected: `WmsTargetResult`, `WmsTargetSettings`
 
 **Conversions:**
 - `total_records_processed`: bare `int` → `t.NonNegativeInt`

@@ -361,7 +361,7 @@ func (dc *DBTCommands) createDBTProfileCommand() *cobra.Command {
 
 			fmt.Printf("Creating dbt profile: %s\n", profileName)
 
-			config := map[string]interface{}{
+			settings := map[string]interface{}{
 				"type":     "postgres",
 				"host":     "localhost",
 				"port":     5432,
@@ -371,7 +371,7 @@ func (dc *DBTCommands) createDBTProfileCommand() *cobra.Command {
 				"schema":   "public",
 			}
 
-			err := dc.dbtManager.CreateProfile(profileName, config)
+			err := dc.dbtManager.CreateProfile(profileName, settings)
 			if err != nil {
 				return fmt.Errorf("failed to create profile: %w", err)
 			}

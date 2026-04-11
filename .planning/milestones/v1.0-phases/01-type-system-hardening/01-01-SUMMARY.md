@@ -15,7 +15,7 @@ provides:
 affects: [01-02, 01-03, 01-04, 01-05]
 
 tech-stack:
-  added: [pyrefly-workspace-config, WORKSPACE_PYTHONPATH]
+  added: [pyrefly-workspace-settings, WORKSPACE_PYTHONPATH]
   patterns: [isinstance-over-class-check, TypeGuard-narrowing, t-star-contracts]
 
 key-files:
@@ -33,7 +33,7 @@ key-files:
 key-decisions:
   - "cast() in decorators.py eliminated by widening _resolve_logger() param — no cast needed when using isinstance()"
   - "same_type() utility created for domain.py Option C sites (exact-type identity)"
-  - "Workspace-level pyrefly config with WORKSPACE_PYTHONPATH replacing hardcoded paths"
+  - "Workspace-level pyrefly settings with WORKSPACE_PYTHONPATH replacing hardcoded paths"
 
 patterns-established:
   - "isinstance() + TypeGuard replaces __class__ is comparisons"
@@ -64,7 +64,7 @@ completed: 2026-03-23
 - Removed all `cast()` calls outside `result.py`
 - Replaced all bare `object`/`Any` annotations with specific `t.*` contracts
 - Removed all `# type: ignore` comments
-- Introduced `WORKSPACE_PYTHONPATH` for dynamic path resolution in pyrefly config
+- Introduced `WORKSPACE_PYTHONPATH` for dynamic path resolution in pyrefly settings
 
 ## Task Commits
 
@@ -75,7 +75,7 @@ completed: 2026-03-23
 ## Decisions Made
 - cast() in decorators.py: widened parameter type instead of casting — isinstance() handles narrowing internally
 - domain.py Option C sites: created `same_type()` utility rather than isinstance() (preserves exact-type semantics)
-- WORKSPACE_PYTHONPATH: dynamic path resolution replaces hardcoded absolute paths in pyrefly config
+- WORKSPACE_PYTHONPATH: dynamic path resolution replaces hardcoded absolute paths in pyrefly settings
 
 ## Deviations from Plan
 None significant — plan executed as designed across multiple sessions.

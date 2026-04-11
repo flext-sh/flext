@@ -18,7 +18,7 @@ created: 2026-03-24
 | Property | Value |
 |----------|-------|
 | **Framework** | pytest 8.x |
-| **Config file** | `pyproject.toml` (root workspace) |
+| **Settings file** | `pyproject.toml` (root workspace) |
 | **Quick run command** | `grep -rn "except Exception:" --include="*.py" src/ tests/ examples/` |
 | **Full suite command** | `make lint && grep -c "except Exception:\|sys\.exit(\|print(" --include="*.py" -r src/` |
 | **Estimated runtime** | ~5 seconds |

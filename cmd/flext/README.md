@@ -51,7 +51,7 @@ Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 # Build and run FLEXT Service
 cd .
 go build -o flext main.go
-./flext --mode server --config ../../config.yaml
+./flext --mode server --settings ../../settings.yaml
 
 # Service will start on port 8081 (FLEXT Service standard)
 # Health check: curl http://localhost:8081/health
@@ -127,7 +127,7 @@ FLEXT_MODE=server ./flext        # Environment variable
 
 ### Configuration
 
-**Enterprise Configuration** (config.YAML):
+**Enterprise Configuration** (settings.YAML):
 
 ```yaml
 app:
@@ -190,7 +190,7 @@ make format                # gofmt + goimports
 
 ```bash
 # Production service management
-go run main.go --mode server --config config.yaml    # Server startup
+go run main.go --mode server --settings settings.yaml    # Server startup
 go run main.go --mode cli pipeline list              # CLI operations
 go run main.go --mode interactive                    # Interactive REPL
 
@@ -417,7 +417,7 @@ psql -h localhost -p 5433 -U flext -d flext            # PostgreSQL status
 cd cmd/flext
 go build -o flext main.go
 make validate                    # MANDATORY before commits
-./flext --mode server --config config.yaml
+./flext --mode server --settings settings.yaml
 ```
 
 ## License

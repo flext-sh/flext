@@ -13,7 +13,7 @@
 ---
 
 name: scripts-infra
-description: Core infrastructure services — validation, inventory, scanning, and skill orchestration. Use when using flext_infra.core or editing scripts/lib/, scripts/core/, scripts/config/, scripts/makefiles/, or scripts/common.py.
+description: Core infrastructure services — validation, inventory, scanning, and skill orchestration. Use when using flext_infra.core or editing scripts/lib/, scripts/core/, scripts/settings/, scripts/makefiles/, or scripts/common.py.
 
 ---
 
@@ -41,10 +41,10 @@ description: Core infrastructure services — validation, inventory, scanning, a
   - `scripts/core/_add_owner_markers.py`
   - `scripts/core/__init__.py`
   - `scripts/common.py`
-  - `scripts/config/load_staging_config.py`
-  - `scripts/config/setup_workspace_links.py`
-  - `scripts/config/standardize_pyproject.py`
-  - `scripts/config/__init__.py`
+  - `scripts/settings/load_staging_config.py`
+  - `scripts/settings/setup_workspace_links.py`
+  - `scripts/settings/standardize_pyproject.py`
+  - `scripts/settings/__init__.py`
   - `scripts/makefiles/simplify_makefiles.py`
   - `scripts/add-project.sh`
   - `scripts/remove-project.sh`
@@ -88,7 +88,7 @@ description: Core infrastructure services — validation, inventory, scanning, a
 - When modifying shared libs, verify all downstream scripts still work.
 - When adding a new helper function, add it to the appropriate shared lib (bash → `scripts/lib/`, python shared infra → `scripts/core/`).
 - For policy-specific validation/fix scripts, use the owning skill folder instead of `scripts/core`.
-- When editing config scripts, ensure they can run from any CWD.
+- When editing settings scripts, ensure they can run from any CWD.
 - Keep `scripts/core/` as the canonical location for cross-cutting Python infrastructure.
 
 ## Workflow
@@ -135,7 +135,7 @@ Script-level checks (internal):
 - `bash -n scripts/lib/artifact_naming.sh`
 - `python -m compileall scripts/core`
 - `python .claude/skills/scripts-infra/validate_ownership.py --root .`
-- `rg "Owner-Skill:.*scripts-infra" scripts/lib scripts/core scripts/common.py scripts/config scripts/makefiles`
+- `rg "Owner-Skill:.*scripts-infra" scripts/lib scripts/core scripts/common.py scripts/settings scripts/makefiles`
 
 ## Scripts
 
@@ -153,10 +153,10 @@ Script-level checks (internal):
 | `.claude/skills/scripts-infra/validate_artifact_naming.py` | Artifact naming validator                                   | `python .claude/skills/scripts-infra/validate_artifact_naming.py --root .` |
 | `scripts/core/_add_owner_markers.py`                       | One-shot marker insertion (temporary)                       | `python scripts/core/_add_owner_markers.py`                                |
 | `scripts/common.py`                                        | Python shared utils: workspace/project discovery            | `from scripts import discover_projects`                             |
-| `scripts/config/__init__.py`                               | Package marker                                              | —                                                                          |
-| `scripts/config/load_staging_config.py`                    | Load staging environment config                             | `python scripts/config/load_staging_config.py`                             |
-| `scripts/config/setup_workspace_links.py`                  | Setup workspace symlinks                                    | `python scripts/config/setup_workspace_links.py`                           |
-| `scripts/config/standardize_pyproject.py`                  | Standardize pyproject.toml files                            | `python scripts/config/standardize_pyproject.py`                           |
+| `scripts/settings/__init__.py`                               | Package marker                                              | —                                                                          |
+| `scripts/settings/load_staging_config.py`                    | Load staging environment settings                             | `python scripts/settings/load_staging_config.py`                             |
+| `scripts/settings/setup_workspace_links.py`                  | Setup workspace symlinks                                    | `python scripts/settings/setup_workspace_links.py`                           |
+| `scripts/settings/standardize_pyproject.py`                  | Standardize pyproject.toml files                            | `python scripts/settings/standardize_pyproject.py`                           |
 | `scripts/makefiles/simplify_makefiles.py`                  | Simplify project Makefiles                                  | `python scripts/makefiles/simplify_makefiles.py`                           |
 | `scripts/add-project.sh`                                   | Add external project to workspace                           | `bash scripts/add-project.sh`                                              |
 | `scripts/remove-project.sh`                                | Remove external project                                     | `bash scripts/remove-project.sh <name>`                                    |

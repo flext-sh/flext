@@ -181,14 +181,14 @@ Same pattern as Task 1, repeated for each group. Each group gets:
 ```python
 def execute_command(self, params: m.Infra.BaseMkGenerateInput) -> r[str]:
     """CLI handler — generate base.mk from params."""
-    config = (
-        FlextInfraBaseMkTemplateEngine.default_config().model_copy(
+    settings = (
+        FlextInfraBaseMkTemplateEngine.default_settings().model_copy(
             update={"project_name": params.project_name},
         )
         if params.project_name
         else None
     )
-    result = self.generate_basemk(config)
+    result = self.generate_basemk(settings)
     if result.is_failure:
         return result
     if params.output:
@@ -307,7 +307,7 @@ class FlextInfraCli(
 
     def __init__(self) -> None:
         """Initialize CLI app and register all group commands via MRO mixins."""
-        u.ensure_structlog_configured()
+        u.ensure_structlog_settingsured()
         self._app = cli.create_app_with_common_params(
             name=self.app_name,
             help_text=self.app_help,

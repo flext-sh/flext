@@ -36,7 +36,7 @@ from .typings import t
 
 ### Before
 ```python
-class Config(FlextModels.ArbitraryTypesModel):
+class Settings(FlextModels.ArbitraryTypesModel):
     batch_size: Annotated[int, Field(ge=1, le=10000)]
     timeout: Annotated[int, Field(ge=1)]
     name: Annotated[str, Field(min_length=1)]
@@ -49,7 +49,7 @@ class Config(FlextModels.ArbitraryTypesModel):
 from flext_core import t
 
 
-class Config(FlextModels.ArbitraryTypesModel):
+class Settings(FlextModels.ArbitraryTypesModel):
     batch_size: Annotated[t.BatchSize, Field(...)]
     timeout: Annotated[t.PositiveInt, Field(...)]
     name: Annotated[t.NonEmptyStr, Field(...)]

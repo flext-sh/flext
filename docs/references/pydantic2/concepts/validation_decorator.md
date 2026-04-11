@@ -344,7 +344,7 @@ need to suppress the error using (usually with a `# type: ignore` comment).
 
 ## Custom configuration
 
-Similarly to Pydantic models, the `config` parameter of the decorator can be used to specify a custom configuration:
+Similarly to Pydantic models, the `settings` parameter of the decorator can be used to specify a custom configuration:
 
 ```python
 from pydantic import ConfigDict, ValidationError, validate_call
@@ -361,7 +361,7 @@ class Foobar:
         return f"Foobar({self.v})"
 
 
-@validate_call(config=ConfigDict(arbitrary_types_allowed=True))
+@validate_call(settings=ConfigDict(arbitrary_types_allowed=True))
 def add_foobars(a: Foobar, b: Foobar):
     return a + b
 

@@ -39,10 +39,10 @@ gaps: []
 
 | Artifact | Expected | Status | Details |
 |----------|----------|--------|---------|
-| `flext-core/pyproject.toml` | hatchling build config | VERIFIED | `build-backend = "hatchling.build"` present, no poetry.core.masonry |
-| `flext-infra/pyproject.toml` | hatchling build config | VERIFIED | `build-backend = "hatchling.build"` present |
-| `flext-tests/pyproject.toml` | hatchling build config | VERIFIED | `build-backend = "hatchling.build"` present |
-| `pyproject.toml` | Root workspace with uv workspace config | VERIFIED | `[tool.uv.workspace]` with 35 members, `[tool.uv.sources]` with all workspace refs |
+| `flext-core/pyproject.toml` | hatchling build settings | VERIFIED | `build-backend = "hatchling.build"` present, no poetry.core.masonry |
+| `flext-infra/pyproject.toml` | hatchling build settings | VERIFIED | `build-backend = "hatchling.build"` present |
+| `flext-tests/pyproject.toml` | hatchling build settings | VERIFIED | `build-backend = "hatchling.build"` present |
+| `pyproject.toml` | Root workspace with uv workspace settings | VERIFIED | `[tool.uv.workspace]` with 35 members, `[tool.uv.sources]` with all workspace refs |
 | `uv.lock` | Unified lock file for all workspace members | VERIFIED | Exists at root, 10,322 lines |
 | `base.mk` | Shared Makefile with uv-based commands | VERIFIED | `uv lock`, `uv sync --all-groups` present; zero POETRY refs |
 | `Makefile` | Root Makefile with uv-based setup | VERIFIED | Zero POETRY_BIN / POETRY_ENV refs |
@@ -67,7 +67,7 @@ gaps: []
 
 ### Data-Flow Trace (Level 4)
 
-Not applicable — phase produces build/config artifacts, not dynamic data-rendering components.
+Not applicable — phase produces build/settings artifacts, not dynamic data-rendering components.
 
 ---
 
@@ -118,7 +118,7 @@ None required. All claims are fully verifiable from the codebase.
 
 No gaps. All 9 observable truths verified. All 6 requirements satisfied. Phase goal achieved.
 
-The migration went beyond the original 33-project scope: `algar-oud-mig` was also converted (submodule with Poetry config discovered during execution), bringing the total to 34 workspace members + root = 35 pyproject.toml files on hatchling. This is a positive deviation — completeness over strict plan adherence.
+The migration went beyond the original 33-project scope: `algar-oud-mig` was also converted (submodule with Poetry settings discovered during execution), bringing the total to 34 workspace members + root = 35 pyproject.toml files on hatchling. This is a positive deviation — completeness over strict plan adherence.
 
 ---
 

@@ -118,7 +118,7 @@ except:  # WRONG
     pass
 
 
-def get_config() -> ConfigData | None:  # WRONG - use r[ConfigData]
+def get_config() -> SettingsData | None:  # WRONG - use r[SettingsData]
     ...
 ```
 
@@ -212,10 +212,10 @@ def ensure_valid_port(value: int) -> r[int]:
 **Pydantic v2 Mastery:**
 - Every class MUST extend `BaseModel` or FLEXT base models via MRO
 - Use `Field()` with constraints, descriptions, and defaults
-- Use `model_config = ConfigDict(...)` for serialization/validation settings
+- Use `model_config = SettingsDict(...)` for serialization/validation settings
 - Use `PrivateAttr()` for internal mutable state
 - Use `field_validator` or `model_validator` for custom logic
-- Forbidde: Standalone `*Config` classes, unnecessary `@property`, manual `self._x` assignments
+- Forbidde: Standalone `*Settings` classes, unnecessary `@property`, manual `self._x` assignments
 
 **MRO Inheritance:**
 - Single namespace class per tier: exactly ONE `FlextXyzModels`, `FlextXyzUtilities`, `FlextXyzConstants` per project

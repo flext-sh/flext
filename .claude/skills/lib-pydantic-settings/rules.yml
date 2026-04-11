@@ -6,16 +6,16 @@ scan_targets:
   exclude: []
   projects: []
 rules:
-  - id: ban-legacy-config-class
+  - id: ban-legacy-settings-class
     type: ast-grep
-    file: rules/legacy-config.yml
+    file: rules/legacy-settings.yml
     severity: error
     group: pydantic_settings
     description: Legacy Pydantic class Config is banned in settings modules.
     count_by: rule_id
     fix_auto: true
     fix_type: ast-grep
-    fix_file: rules/legacy-config-fix.yml
+    fix_file: rules/legacy-settings-fix.yml
     fix_instruction:
       Auto-rewrite class Config blocks to model_config = SettingsConfigDict(); then fill explicit settings keys
       as needed.
