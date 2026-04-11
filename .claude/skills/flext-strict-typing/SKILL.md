@@ -258,11 +258,11 @@ Since ALL `t.*` aliases are `TypeAliasType`, runtime narrowing MUST use one of:
    - `t.CONTAINER_TYPES: tuple[type, ...] = (str, int, float, bool, datetime, BaseModel, Path)`
 
 2. **TypeGuard functions** (exposed via `u`):
-   - `u.is_primitive(val)` → `TypeGuard[t.Primitives]`
-   - `u.is_scalar(val)` → `TypeGuard[t.Scalar]`
+   - `u.primitive(val)` → `TypeGuard[t.Primitives]`
+   - `u.scalar(val)` → `TypeGuard[t.Scalar]`
    - `u.is_flexible_value(val)` → TypeGuard for general values
-   - `u.is_dict_like(val)` → TypeGuard for dict-like structures
-   - `u.is_list_like(val)` → TypeGuard for list-like structures
+   - `u.dict_like(val)` → TypeGuard for dict-like structures
+   - `u.list_like(val)` → TypeGuard for list-like structures
 
 ### Recursive Aliases — Transitional, Prefer Pydantic Models
 
@@ -306,9 +306,9 @@ isinstance(val, t.PRIMITIVES_TYPES)  # Uses tuple, not alias
 # ✅ CORRECT — runtime narrowing via TypeGuard functions
 from flext_core import u
 
-if u.is_primitive(val):
+if u.primitive(val):
     ...
-if u.is_scalar(val):
+if u.scalar(val):
     ...
 
 

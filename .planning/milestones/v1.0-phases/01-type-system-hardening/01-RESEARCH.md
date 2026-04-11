@@ -345,7 +345,7 @@ if isinstance(value, str):
 result = cast("Mapping[object, object]", value)
 
 # AFTER:
-if u.Guards.is_mapping(value):
+if u.Guards.mapping(value):
     result = value  # narrowed to Mapping[str, object]
 ```
 

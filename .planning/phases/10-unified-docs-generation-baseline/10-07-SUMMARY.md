@@ -88,7 +88,7 @@ None — all 11 service files were already compliant with the thin orchestrator 
 |------|-----|-------------|-------------------|--------|
 | scanner.py | 216 | 0 | u.Infra.init_rope_project, u.Infra.get_class_info, u.Infra.capture | Compliant |
 | census.py | 141 | 0 | u.Infra.* (13+ calls for discovery, metadata, aggregation) | Compliant |
-| project_classifier.py | 326 | 0 | tomllib (stdlib) + u.is_mapping, u.norm_str, c.Infra.* | Compliant |
+| project_classifier.py | 326 | 0 | tomllib (stdlib) + u.mapping, u.norm_str, c.Infra.* | Compliant |
 | violation_analyzer.py | 276 | 0 | Delegates to FlextInfraRefactorClassNestingAnalyzer, FlextInfraViolationCensusVisitor | Compliant |
 | safety.py | 131 | 0 | u.Infra.run_checked, u.Infra.create_checkpoint, u.Infra.rollback_to_checkpoint | Compliant |
 | mro_resolver.py | 197 | 0 | inspect.getmro() (stdlib), c.Infra.* constants | Compliant |
