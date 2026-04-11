@@ -127,11 +127,6 @@ class FlextUtilities:
         return ""
 
 
-def FlextLogger(name: str) -> logging.Logger:
-    """Return a stdlib logger for the mock environment."""
-    return logging.getLogger(name)
-
-
 from .exceptions import (  # noqa: E402
     AuthenticationError,
     ConfigurationError,

@@ -767,7 +767,7 @@ from flext_core import FlextLogger
 class FlextCliUtilitiesPipeline:
     """Pipeline execution utilities — exposed as u.Cli.execute_pipeline()."""
 
-    _pipeline_logger: ClassVar[FlextLogger] = FlextLogger(__name__)
+    _pipeline_logger: ClassVar[FlextLogger] = u.fetch_logger(__name__)
 
     @staticmethod
     def execute_pipeline(
