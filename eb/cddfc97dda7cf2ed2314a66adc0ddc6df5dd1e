@@ -1,0 +1,21 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "ebcddfc97dda7cf2ed2314a66adc0ddc6df5dd1e",
+  "prompts": {
+    "a6d275f7fcd9c0ae": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7ce6-2981-76f0-9d8c-febff62e4c66",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 18944,
+      "total_deletions": 400,
+      "accepted_lines": 239014,
+      "overriden_lines": 638
+    }
+  }
+}
