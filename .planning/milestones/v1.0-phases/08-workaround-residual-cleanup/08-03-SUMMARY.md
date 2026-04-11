@@ -32,7 +32,7 @@ Replace 2 remaining print() calls in flext-plugin docstring examples with struct
 
 **1. [Rule 2 - Scope clarification] print() calls were in docstrings, not executable code**
 - **Found during:** Task 1
-- **Issue:** Plan referenced line numbers in hot_reload.py:84 and loader.py:40 as production print() calls, but both were inside docstring code examples (Usage sections), not executable code paths. Both files already used `FlextLogger(__name__)` for all actual logging.
+- **Issue:** Plan referenced line numbers in hot_reload.py:84 and loader.py:40 as production print() calls, but both were inside docstring code examples (Usage sections), not executable code paths. Both files already used `u.fetch_logger(__name__)` for all actual logging.
 - **Fix:** Replaced docstring example print() calls with logger.info() calls using structured kwargs to maintain consistency with the zero-print policy even in documentation examples.
 - **Files modified:** hot_reload.py, loader.py
 - **Commit:** 893ccdd

@@ -1802,7 +1802,7 @@ class CustomCircuitBreaker:
         self._success_threshold = success_threshold
         self._recovery_timeout = recovery_timeout
         self._circuits: Mapping[str, CircuitState] = {}
-        self._logger = logger or FlextLogger(__name__)
+        self._logger = logger or u.fetch_logger(__name__)
 
     def _get_circuit(self, key: str) -> CircuitState:
         if key not in self._circuits:

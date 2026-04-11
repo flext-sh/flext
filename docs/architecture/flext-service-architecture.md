@@ -291,12 +291,12 @@ class MyService(s[Result]):
         super().__init__()
         self._config = FlextSettings.get_global_instance()  # ❌ Desnecessário!
         self._container = FlextContainer.get_global()  # ❌ Desnecessário!
-        self._logger = FlextLogger(__name__)  # ❌ Desnecessário!
+        self._logger = u.fetch_logger(__name__)  # ❌ Desnecessário!
         self._context = FlextContext()  # ❌ Desnecessário!
 
     def execute(self) -> r[Result]:
         config = FlextSettings.get_global_instance()  # ❌ Desnecessário!
-        logger = FlextLogger(__name__)  # ❌ Desnecessário!
+        logger = u.fetch_logger(__name__)  # ❌ Desnecessário!
 ```
 
 ### ✅ Como Usar (Zero Ceremony V2)
@@ -1474,7 +1474,7 @@ class x:
     @property
     def logger(self) -> FlextLogger:
         """Access logger with context."""
-        return FlextLogger(__name__)
+        return u.fetch_logger(__name__)
 
     @property
     def context(self) -> FlextContext:
@@ -4460,7 +4460,7 @@ class x:
     def logger(self) -> FlextLogger:
         """Access logger with context."""
         if not hasattr(self, "_logger"):
-            self._logger = FlextLogger(self.__class__.__name__)
+            self._logger = u.fetch_logger(self.__class__.__name__)
         return self._logger
 
     @property
@@ -4751,7 +4751,7 @@ self.logger.info("Event", extra={"user_id": 123, "action": "login"})
 class MyService(s[T]):
     def __init__(self):
         super().__init__()
-        self._logger = FlextLogger(__name__)  # ← Desnecessário!
+        self._logger = u.fetch_logger(__name__)  # ← Desnecessário!
 
 
 # ✅ CORRETO: Property automática
