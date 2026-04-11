@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-
 QUALITY_DOCKERFILES = (
     "docker/images/Dockerfile.flext-quality",
     "docker/images/Dockerfile.flext-quality-simple",
