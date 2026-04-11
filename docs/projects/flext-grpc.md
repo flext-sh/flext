@@ -49,7 +49,7 @@ poetry run ruff check src/
 ## Quality & operations
 
 - **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate` (currently blocked by coverage/test gaps).
-- **Testing**: 28 failing tests noted in README, 39% coverage; scope includes single-file config tests, service/test_config, integration stubs.
+- **Testing**: 28 failing tests noted in README, 39% coverage; scope includes single-file settings tests, service/test_config, integration stubs.
 - **Security**: Bandit + pip-audit invoked through `make security`; zero tolerance for SQL injection or dynamic code.
 - **Next steps**: raise coverage from 39% → 90%, fix failing tests, verify protobuf integrations, and mature TLS/auth features.
 

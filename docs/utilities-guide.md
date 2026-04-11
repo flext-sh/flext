@@ -83,7 +83,7 @@ from flext_core import FlextUtilitiesConversion
 | **FlextUtilitiesEnum**          | `u`          | Enum utilities                      | 10+     |
 | **FlextUtilitiesContext**       | `u.Context`       | Context/state management            | 8+      |
 | **FlextUtilitiesCache**         | `u`         | Caching utilities                   | 5+      |
-| **FlextUtilitiesConfiguration** | `u` | Config handling                     | 8+      |
+| **FlextUtilitiesConfiguration** | `u` | Settings handling                     | 8+      |
 | **FlextUtilitiesDomain**        | `u`        | Domain model utilities              | 10+     |
 | **FlextUtilitiesDeprecation**   | `u.Deprecation`   | Deprecation handling                | 4       |
 | **FlextUtilitiesGenerators**    | `u`    | Data generators                     | 10+     |

@@ -1,4 +1,4 @@
-id: fix-legacy-config-class
+id: fix-legacy-settings-class
 language: python
 rule:
   pattern: |

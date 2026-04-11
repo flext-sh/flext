@@ -23,7 +23,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
 from typing import ClassVar, TypeIs
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field, SettingsDict
 
 from flext_core import r, t
 
@@ -86,7 +86,9 @@ class AclProcessingExample:
     class AclEntry(BaseModel):
         """Represents an ACL entry with context and permissions."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_settings: ClassVar[SettingsDict] = SettingsDict(
+            arbitrary_types_allowed=True
+        )
 
         dn: str = Field(description="Distinguished name of the ACL entry")
         acl_attribute: str = Field(description="ACL attribute name")
@@ -97,7 +99,9 @@ class AclProcessingExample:
     class AclValidationResult(BaseModel):
         """Result of ACL validation with detailed context."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_settings: ClassVar[SettingsDict] = SettingsDict(
+            arbitrary_types_allowed=True
+        )
 
         entry_dn: str = Field(description="Distinguished name of the entry")
         valid: bool = Field(description="Whether the ACL entry is valid")
@@ -527,7 +531,7 @@ class AclProcessingExample:
                 },
             },
             {
-                "dn": "cn=config",
+                "dn": "cn=settings",
                 "attributes": {
                     "orclACI": 'orclACI: access to attr=(userPassword) by dn="cn=Directory Manager" (read,write)',
                 },

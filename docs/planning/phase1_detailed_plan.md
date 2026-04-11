@@ -22,7 +22,7 @@
   - [Files to Modify](#files-to-modify)
   - [Validation Checklist](#validation-checklist)
   - [Commit Message](#commit-message)
-- [Task 1.4: Standardize ConfigDict Settings Across Models](#task-14-standardize-configdict-settings-across-models)
+- [Task 1.4: Standardize SettingsDict Settings Across Models](#task-14-standardize-configdict-settings-across-models)
   - [Objective](#objective)
   - [Standard Settings by Model Type](#standard-settings-by-model-type)
   - [Audit Checklist](#audit-checklist)
@@ -36,7 +36,7 @@
   - [AGENTS.md Updates](#agentsmd-updates)
   - [TypeGuard Pattern (Replaces cast())](#typeguard-pattern-replaces-cast)
   - [Hierarchical Model Organization](#hierarchical-model-organization)
-  - [ConfigDict Standards](#configdict-standards)
+  - [SettingsDict Standards](#configdict-standards)
   - [Validation Checklist](#validation-checklist)
   - [Commit Message](#commit-message)
 - [Success Criteria for Phase 1](#success-criteria-for-phase-1)
@@ -57,7 +57,7 @@ Phase 1 is the **foundation phase** that establishes all patterns and infrastruc
 
 1. TypeGuard infrastructure (replaces cast())
 2. Hierarchical Pydantic model patterns
-3. Standard ConfigDict settings
+3. Standard SettingsDict settings
 4. Modern validator patterns
 5. Updated AGENTS.md documentation
 
@@ -93,9 +93,9 @@ class Guards:
     """Type guards for common Flext types."""
 
     @staticmethod
-    def is_config(obj) -> TypeGuard[m.Core.Tests.Config]:
-        """Check if t.NormalizedValue is a Config model."""
-        return isinstance(obj, m.Core.Tests.Config)
+    def is_config(obj) -> TypeGuard[m.Core.Tests.Settings]:
+        """Check if t.NormalizedValue is a Settings model."""
+        return isinstance(obj, m.Core.Tests.Settings)
 
     @staticmethod
     def is_context(obj) -> TypeGuard[m.Core.Tests.Context]:
@@ -152,7 +152,7 @@ class TestGuards:
 
     @staticmethod
     def is_config_response(obj) -> TypeGuard[dict]:
-        """Check if t.NormalizedValue is a config response fixture."""
+        """Check if t.NormalizedValue is a settings response fixture."""
         return isinstance(obj, dict) and "app_name" in obj and "version" in obj
 
     @staticmethod
@@ -210,7 +210,7 @@ grep -r "TypedDict" flext-core/src/ | grep -v "test" | wc -l
 
 Group the 86 TypedDicts into categories:
 
-- **Config models**: DispatcherConfig, BatchConfig, etc.
+- **Settings models**: DispatcherSettings, BatchSettings, etc.
 - **Result models**: BatchResultDict, ProcessResultDict, etc.
 - **Context models**: ContextDict, StateDict, etc.
 - **Data models**: EntityDict, AttributeDict, etc.
@@ -220,7 +220,7 @@ Group the 86 TypedDicts into categories:
 In `flext-core/src/flext_core/models.py`:
 
 ```python
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, SettingsDict, Field
 
 
 class FlextModels:
@@ -229,7 +229,7 @@ class FlextModels:
     class Base(BaseModel):
         """Base model with standard Flext configuration."""
 
-        model_config = ConfigDict(
+        model_config = SettingsDict(
             validate_assignment=True,
             use_enum_values=True,
             extra="forbid",
@@ -239,12 +239,12 @@ class FlextModels:
     class Core:
         """Core framework models."""
 
-        class Config(FlextModels.Base):
+        class Settings(FlextModels.Base):
             """Configuration models."""
 
             app_name: str = Field(description="Application name")
             version: str = Field(description="Version string")
-            # ... other config fields
+            # ... other settings fields
 
         class Context(FlextModels.Base):
             """Context models."""
@@ -275,11 +275,11 @@ Replace all TypedDict imports:
 
 ```python
 # BEFORE
-from flext_core import DispatcherConfig, BatchResultDict
+from flext_core import DispatcherSettings, BatchResultDict
 
 # AFTER
 
-config: m.Core.Tests.Config = ...
+settings: m.Core.Tests.Settings = ...
 result: m.Result.Success = ...
 ```
 
@@ -292,7 +292,7 @@ Remove all TypedDict definitions, keep only type aliases:
 """Type aliases and protocols (no TypedDict)."""
 
 # Type aliases for convenience
-ConfigType = m.Core.Tests.Config
+SettingsType = m.Core.Tests.Settings
 ContextType = m.Core.Tests.Context
 ResultType = m.Result.Success | m.Result.Failure
 ```
@@ -320,12 +320,12 @@ ResultType = m.Result.Success | m.Result.Failure
 Create atomic commits per category:
 
 ```bash
-# Commit 1: Add base models and Config namespace
-git commit -m "feat(flext-core): add hierarchical Config models
+# Commit 1: Add base models and Settings namespace
+git commit -m "feat(flext-core): add hierarchical Settings models
 
-- Create FlextModels.Base with standard ConfigDict
-- Create FlextModels.Core.Config namespace
-- Convert 20 config-related TypedDicts"
+- Create FlextModels.Base with standard SettingsDict
+- Create FlextModels.Core.Settings namespace
+- Convert 20 settings-related TypedDicts"
 
 # Commit 2: Add Result namespace
 git commit -m "feat(flext-core): add hierarchical Result models
@@ -381,8 +381,8 @@ from typing import cast
 
 
 def process_config(data: dict) -> str:
-    config = cast(m.Core.Tests.Config, data)
-    return config.app_name
+    settings = cast(m.Core.Tests.Settings, data)
+    return settings.app_name
 
 
 # AFTER
@@ -392,7 +392,7 @@ from flext_core import Guards
 def process_config(data: dict) -> str:
     if Guards.is_config(data):
         return data.app_name
-    raise ValueError("Invalid config")
+    raise ValueError("Invalid settings")
 ```
 
 ### Files to Modify
@@ -422,7 +422,7 @@ refactor(flext-core): eliminate cast() from src/ using TypeGuards
 
 ---
 
-## Task 1.4: Standardize ConfigDict Settings Across Models
+## Task 1.4: Standardize SettingsDict Settings Across Models
 
 **Beads Issue**: flext-jt2  
 **Duration**: 0.5 days  
@@ -430,14 +430,14 @@ refactor(flext-core): eliminate cast() from src/ using TypeGuards
 
 ### Objective
 
-Ensure all 127+ Pydantic models across flext-core use consistent ConfigDict settings.
+Ensure all 127+ Pydantic models across flext-core use consistent SettingsDict settings.
 
 ### Standard Settings by Model Type
 
 #### Production Models (Default)
 
 ```python
-model_config = ConfigDict(
+model_config = SettingsDict(
     validate_assignment=True,  # Validate on attribute assignment
     use_enum_values=True,  # Serialize enums to values
     extra="forbid",  # Reject unknown fields
@@ -449,7 +449,7 @@ model_config = ConfigDict(
 #### Immutable Value Objects
 
 ```python
-model_config = ConfigDict(
+model_config = SettingsDict(
     frozen=True,  # Immutable
     validate_assignment=True,
     extra="forbid",
@@ -459,7 +459,7 @@ model_config = ConfigDict(
 #### API Response Models
 
 ```python
-model_config = ConfigDict(
+model_config = SettingsDict(
     extra="ignore",  # Ignore unknown fields from API
     validate_assignment=True,
     use_enum_values=True,
@@ -469,19 +469,19 @@ model_config = ConfigDict(
 ### Audit Checklist
 
 - [ ] Review all 127+ models in flext-core
-- [ ] Identify models missing ConfigDict
+- [ ] Identify models missing SettingsDict
 - [ ] Identify models with non-standard settings
 - [ ] Document exceptions (if any)
 
 ### Standardization Tasks
 
-1. Add ConfigDict to models missing it
+1. Add SettingsDict to models missing it
 2. Update non-standard settings to match pattern
 3. Document any exceptions in comments
 
 ### Validation Checklist
 
-- [ ] All models have ConfigDict
+- [ ] All models have SettingsDict
 - [ ] Settings match documented patterns
 - [ ] Type checking passes: `pyrefly flext-core/src/`
 - [ ] Linting passes: `ruff check flext-core/src/`
@@ -490,9 +490,9 @@ model_config = ConfigDict(
 ### Commit Message
 
 ```
-refactor(flext-core): standardize ConfigDict across all models
+refactor(flext-core): standardize SettingsDict across all models
 
-- Add ConfigDict to models missing it
+- Add SettingsDict to models missing it
 - Standardize settings: validate_assignment, extra="forbid", etc.
 - Document model type patterns in models.py
 ```
@@ -566,28 +566,28 @@ Models are organized in nested namespaces for maximum reuse:
 
 \`\`\`python
 
-config: m.Core.Tests.Config = ...
+settings: m.Core.Tests.Settings = ...
 context: m.Core.Tests.Context = ...
 result: m.Result.Success = ...
 \`\`\`
 
 Pattern:
 
-- FlextModels.Base - Standard ConfigDict
+- FlextModels.Base - Standard SettingsDict
 - FlextModels.Core.\* - Core framework models
 - FlextModels.Result.\* - Result models
 - FlextModels.Data.\* - Data models
 ```
 
-#### ConfigDict Standards
+#### SettingsDict Standards
 
 ```markdown
-### ConfigDict Standards
+### SettingsDict Standards
 
-All models use standard ConfigDict settings:
+All models use standard SettingsDict settings:
 
 \`\`\`python
-model_config = ConfigDict(
+model_config = SettingsDict(
 validate_assignment=True,
 use_enum_values=True,
 extra="forbid",
@@ -615,7 +615,7 @@ docs(flext-core): update AGENTS.md with Pydantic 2 patterns
 
 - Add TypeGuard pattern documentation
 - Add hierarchical model organization pattern
-- Add ConfigDict standards
+- Add SettingsDict standards
 - Document migration patterns for other projects
 ```
 
@@ -642,7 +642,7 @@ docs(flext-core): update AGENTS.md with Pydantic 2 patterns
 
 ✅ **Standardization**
 
-- All 127+ models have standard ConfigDict
+- All 127+ models have standard SettingsDict
 - Settings consistent across project
 
 ✅ **Quality**
@@ -667,7 +667,7 @@ docs(flext-core): update AGENTS.md with Pydantic 2 patterns
 | 1.1: TypeGuard Infrastructure   | 1 day      | Day 1 | Day 1 |
 | 1.2: TypedDict Migration        | 1.5 days   | Day 1 | Day 2 |
 | 1.3: cast() Elimination         | 1 day      | Day 2 | Day 3 |
-| 1.4: ConfigDict Standardization | 0.5 days   | Day 3 | Day 3 |
+| 1.4: SettingsDict Standardization | 0.5 days   | Day 3 | Day 3 |
 | 1.5: Validation & Docs          | 0.5 days   | Day 3 | Day 3 |
 | **Total**                       | **4 days** |       |       |
 

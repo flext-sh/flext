@@ -1,4 +1,4 @@
-package config
+package settings
 
 import (
 	"fmt"
@@ -34,73 +34,73 @@ func NewConfigLoader[T ConfigType](prefix string, defaults T, validator func(T) 
 
 // Load carrega configuração de arquivo ou variáveis de ambiente
 func (cl *ConfigLoader[T]) Load(configPath string) (T, error) {
-	var config T
+	var settings T
 
 	// Começa com os defaults
-	config = cl.defaults
+	settings = cl.defaults
 
-	// Se tem arquivo de config, carrega usando Viper
+	// Se tem arquivo de settings, carrega usando Viper
 	if configPath != "" {
-		if err := cl.loadFromFile(configPath, &config); err != nil {
-			return config, fmt.Errorf("failed to load config from file: %w", err)
+		if err := cl.loadFromFile(configPath, &settings); err != nil {
+			return settings, fmt.Errorf("failed to load settings from file: %w", err)
 		}
 	}
 
 	// Sobrescreve com variáveis de ambiente
-	if err := cl.loadFromEnv(&config); err != nil {
-		return config, fmt.Errorf("failed to load config from env: %w", err)
+	if err := cl.loadFromEnv(&settings); err != nil {
+		return settings, fmt.Errorf("failed to load settings from env: %w", err)
 	}
 
 	// Valida a configuração final
-	if err := config.Validate(); err != nil {
-		return config, fmt.Errorf("config validation failed: %w", err)
+	if err := settings.Validate(); err != nil {
+		return settings, fmt.Errorf("settings validation failed: %w", err)
 	}
 
 	// Valida com validador customizado se fornecido
 	if cl.validator != nil {
-		if err := cl.validator(config); err != nil {
-			return config, fmt.Errorf("custom validation failed: %w", err)
+		if err := cl.validator(settings); err != nil {
+			return settings, fmt.Errorf("custom validation failed: %w", err)
 		}
 	}
 
-	return config, nil
+	return settings, nil
 }
 
 // LoadFromEnv carrega configuração apenas de variáveis de ambiente
 func (cl *ConfigLoader[T]) LoadFromEnv() (T, error) {
-	config := cl.defaults
+	settings := cl.defaults
 
-	if err := cl.loadFromEnv(&config); err != nil {
-		return config, fmt.Errorf("failed to load config from env: %w", err)
+	if err := cl.loadFromEnv(&settings); err != nil {
+		return settings, fmt.Errorf("failed to load settings from env: %w", err)
 	}
 
-	if err := config.Validate(); err != nil {
-		return config, fmt.Errorf("config validation failed: %w", err)
+	if err := settings.Validate(); err != nil {
+		return settings, fmt.Errorf("settings validation failed: %w", err)
 	}
 
 	if cl.validator != nil {
-		if err := cl.validator(config); err != nil {
-			return config, fmt.Errorf("custom validation failed: %w", err)
+		if err := cl.validator(settings); err != nil {
+			return settings, fmt.Errorf("custom validation failed: %w", err)
 		}
 	}
 
-	return config, nil
+	return settings, nil
 }
 
 // loadFromFile carrega configuração usando Viper
-func (cl *ConfigLoader[T]) loadFromFile(configPath string, config *T) error {
+func (cl *ConfigLoader[T]) loadFromFile(configPath string, settings *T) error {
 	viper.SetConfigFile(configPath)
 
 	if err := viper.ReadInConfig(); err != nil {
 		return err
 	}
 
-	return viper.Unmarshal(config)
+	return viper.Unmarshal(settings)
 }
 
 // loadFromEnv carrega configuração usando envconfig
-func (cl *ConfigLoader[T]) loadFromEnv(config *T) error {
-	return envconfig.Process(cl.prefix, config)
+func (cl *ConfigLoader[T]) loadFromEnv(settings *T) error {
+	return envconfig.Process(cl.prefix, settings)
 }
 
 // Config configuração base comum

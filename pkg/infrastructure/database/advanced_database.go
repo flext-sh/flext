@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/infrastructure/config"
+	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -19,14 +19,14 @@ import (
 type AdvancedDatabase struct {
 	gormDB *gorm.DB
 	sqlxDB *sqlx.DB
-	config config.DatabaseConfig
+	settings settings.DatabaseConfig
 	logger logging.Logger
 }
 
 // NewAdvancedDatabase creates a database instance with both GORM and SQLX
-func NewAdvancedDatabase(cfg config.DatabaseConfig, log logging.Logger) (*AdvancedDatabase, error) {
+func NewAdvancedDatabase(cfg settings.DatabaseConfig, log logging.Logger) (*AdvancedDatabase, error) {
 	db := &AdvancedDatabase{
-		config: cfg,
+		settings: cfg,
 		logger: log,
 	}
 
@@ -58,15 +58,15 @@ func NewAdvancedDatabase(cfg config.DatabaseConfig, log logging.Logger) (*Advanc
 func (db *AdvancedDatabase) initGORM() error {
 	var dialector gorm.Dialector
 
-	switch db.config.Driver {
+	switch db.settings.Driver {
 	case "postgres":
 		dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s TimeZone=UTC",
-			db.config.Host, db.config.Port, db.config.Username, db.config.Password, db.config.Database, db.config.SSLMode)
+			db.settings.Host, db.settings.Port, db.settings.Username, db.settings.Password, db.settings.Database, db.settings.SSLMode)
 		dialector = postgres.Open(dsn)
 	case "sqlite":
 		dialector = sqlite.Open("./flext.db")
 	default:
-		return fmt.Errorf("unsupported database driver: %s", db.config.Driver)
+		return fmt.Errorf("unsupported database driver: %s", db.settings.Driver)
 	}
 
 	// GORM configuration with advanced features
@@ -97,9 +97,9 @@ func (db *AdvancedDatabase) initGORM() error {
 		return errors.Wrap(err, "failed to get underlying sql.DB from GORM")
 	}
 
-	sqlDB.SetMaxIdleConns(db.config.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(db.config.MaxOpenConns)
-	sqlDB.SetConnMaxLifetime(db.config.ConnMaxLifetime)
+	sqlDB.SetMaxIdleConns(db.settings.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(db.settings.MaxOpenConns)
+	sqlDB.SetConnMaxLifetime(db.settings.ConnMaxLifetime)
 
 	return nil
 }
@@ -108,26 +108,26 @@ func (db *AdvancedDatabase) initGORM() error {
 func (db *AdvancedDatabase) initSQLX() error {
 	var dsn string
 
-	switch db.config.Driver {
+	switch db.settings.Driver {
 	case "postgres":
 		dsn = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
-			db.config.Host, db.config.Port, db.config.Username, db.config.Password, db.config.Database, db.config.SSLMode)
+			db.settings.Host, db.settings.Port, db.settings.Username, db.settings.Password, db.settings.Database, db.settings.SSLMode)
 	case "sqlite":
 		dsn = "./flext.db" // Default SQLite database file
 	default:
-		return fmt.Errorf("unsupported database driver: %s", db.config.Driver)
+		return fmt.Errorf("unsupported database driver: %s", db.settings.Driver)
 	}
 
 	var err error
-	db.sqlxDB, err = sqlx.Connect(db.config.Driver, dsn)
+	db.sqlxDB, err = sqlx.Connect(db.settings.Driver, dsn)
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to database with SQLX")
 	}
 
 	// Configure connection pool for SQLX
-	db.sqlxDB.SetMaxIdleConns(db.config.MaxIdleConns)
-	db.sqlxDB.SetMaxOpenConns(db.config.MaxOpenConns)
-	db.sqlxDB.SetConnMaxLifetime(db.config.ConnMaxLifetime)
+	db.sqlxDB.SetMaxIdleConns(db.settings.MaxIdleConns)
+	db.sqlxDB.SetMaxOpenConns(db.settings.MaxOpenConns)
+	db.sqlxDB.SetConnMaxLifetime(db.settings.ConnMaxLifetime)
 
 	return nil
 }

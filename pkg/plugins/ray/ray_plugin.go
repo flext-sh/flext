@@ -36,7 +36,7 @@ import (
 // RayPlugin implements the deployable Ray distributed computing plugin
 type RayPlugin struct {
 	id              plugins.PluginID
-	config          map[string]interface{}
+	settings          map[string]interface{}
 	pythonVenv      string
 	rayClusterURL   string
 	initialized     bool
@@ -64,7 +64,7 @@ type RayTask struct {
 func NewRayPlugin() *RayPlugin {
 	return &RayPlugin{
 		id:          plugins.PluginID("ray-plugin"),
-		config:      make(map[string]interface{}),
+		settings:      make(map[string]interface{}),
 		initialized: false,
 		taskQueue:   make([]RayTask, 0),
 	}
@@ -104,37 +104,37 @@ func (r *RayPlugin) Metadata() plugins.PluginMetadata {
 			"ray>=2.8.0",
 			"flext-core>=2.0.0",
 		},
-		Config:    r.config,
+		Config:    r.settings,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
 }
 
 // Initialize sets up the Ray plugin with configuration
-func (r *RayPlugin) Initialize(ctx context.Context, config map[string]interface{}) error {
-	r.config = config
+func (r *RayPlugin) Initialize(ctx context.Context, settings map[string]interface{}) error {
+	r.settings = settings
 
 	// Extract configuration parameters
-	pythonVenv, ok := config["python_venv"].(string)
+	pythonVenv, ok := settings["python_venv"].(string)
 	if !ok {
 		pythonVenv = "./venv"
 	}
 	r.pythonVenv = pythonVenv
 
-	rayClusterURL, ok := config["ray_cluster_url"].(string)
+	rayClusterURL, ok := settings["ray_cluster_url"].(string)
 	if !ok {
 		rayClusterURL = "ray://localhost:10001"
 	}
 	r.rayClusterURL = rayClusterURL
 
-	flexcoreNodeURL, ok := config["flexcore_node_url"].(string)
+	flexcoreNodeURL, ok := settings["flexcore_node_url"].(string)
 	if !ok {
 		return fmt.Errorf("flexcore_node_url is required in configuration")
 	}
 	r.flexcoreNodeURL = flexcoreNodeURL
 
 	// Extract cluster nodes
-	if nodes, ok := config["cluster_nodes"].([]interface{}); ok {
+	if nodes, ok := settings["cluster_nodes"].([]interface{}); ok {
 		r.clusterNodes = make([]string, len(nodes))
 		for i, node := range nodes {
 			if nodeStr, ok := node.(string); ok {
@@ -281,11 +281,11 @@ func (r *RayPlugin) GetCapabilities() []string {
 }
 
 // ValidateConfig validates the provided configuration
-func (r *RayPlugin) ValidateConfig(config map[string]interface{}) error {
+func (r *RayPlugin) ValidateConfig(settings map[string]interface{}) error {
 	required := []string{"python_venv", "flexcore_node_url"}
 
 	for _, key := range required {
-		if _, exists := config[key]; !exists {
+		if _, exists := settings[key]; !exists {
 			return fmt.Errorf("required configuration key missing: %s", key)
 		}
 	}

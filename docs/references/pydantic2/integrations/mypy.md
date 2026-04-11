@@ -8,7 +8,7 @@
   - [Respect the type of the `Field`'s `default` and `default_factory`](#respect-the-type-of-the-fields-default-and-defaultfactory)
   - [Warn about the use of untyped fields](#warn-about-the-use-of-untyped-fields)
   - [Prevent the use of required dynamic aliases](#prevent-the-use-of-required-dynamic-aliases)
-- [Configuring the Plugin](#configuring-the-plugin)
+- [Settingsuring the Plugin](#configuring-the-plugin)
   - [`init_typed`](#inittyped)
   - [`init_forbid_extra`](#initforbidextra)
   - [`warn_required_dynamic_aliases`](#warnrequireddynamicaliases)
@@ -73,7 +73,7 @@ The Pydantic mypy plugin is tested against the latest mypy version. Older versio
 ## Enabling the Plugin
 
 To enable the plugin, just add `pydantic.mypy` to the list of plugins in your
-[mypy config file](https://mypy.readthedocs.io/en/latest/config_file.html):
+[mypy settings file](https://mypy.readthedocs.io/en/latest/config_file.html):
 
 === "`mypy.ini`"
 
@@ -101,7 +101,7 @@ See the [plugin configuration](#configuring-the-plugin) for more details.
 
 - Any required fields that don't have dynamically-determined aliases will be included as required
   keyword arguments.
-- If the [`validate_by_name`][pydantic.ConfigDict.validate_by_name] model configuration value is set to
+- If the [`validate_by_name`][pydantic.SettingsDict.validate_by_name] model configuration value is set to
   `True`, the generated signature will use the field names rather than aliases.
 - The [`init_forbid_extra`](#init_forbid_extra) and [`init_typed`](#init_typed) plugin configuration
   values can further fine-tune the synthesized `__init__` method.
@@ -114,7 +114,7 @@ See the [plugin configuration](#configuring-the-plugin) for more details.
 
 ### Support for frozen models
 
-- If the [`frozen`][pydantic.ConfigDict.frozen] configuration is set to `True`, you will get
+- If the [`frozen`][pydantic.SettingsDict.frozen] configuration is set to `True`, you will get
   an error if you try mutating a model field (see [faux immutability](../concepts/models.md#faux-immutability))
 
 ### Respect the type of the `Field`'s `default` and `default_factory`
@@ -131,9 +131,9 @@ See the [plugin configuration](#configuring-the-plugin) for more details.
 
 See the documentation of the [`warn_required_dynamic_aliases`](#warn_required_dynamic_aliases) plugin configuration value.
 
-## Configuring the Plugin
+## Settingsuring the Plugin
 
-To change the values of the plugin settings, create a section in your mypy config file called `[pydantic-mypy]`,
+To change the values of the plugin settings, create a section in your mypy settings file called `[pydantic-mypy]`,
 and add any key-value pairs for settings you want to override.
 
 A configuration file with all plugin strictness flags enabled (and some other mypy strictness flags, too) might look like:
@@ -204,12 +204,12 @@ Model(unrelated=2)
 ```
 
 For this reason, the plugin will add an extra `**kwargs` parameter when synthesizing the `__init__` method, unless
-`init_forbid_extra` is set or the [`extra`][pydantic.ConfigDict.extra] is set to `'forbid'`.
+`init_forbid_extra` is set or the [`extra`][pydantic.SettingsDict.extra] is set to `'forbid'`.
 
 ### `warn_required_dynamic_aliases`
 
 Whether to error when using a dynamically-determined alias or alias generator on a model with
-[`validate_by_name`][pydantic.ConfigDict.validate_by_name] set to `False`. If such aliases are
+[`validate_by_name`][pydantic.SettingsDict.validate_by_name] set to `False`. If such aliases are
 present, mypy cannot properly type check calls to `__init__`. In this case, it will default to
 treating all arguments as not required.
 

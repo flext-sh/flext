@@ -53,10 +53,10 @@ description: Internal Pydantic v2 governance patterns for FLEXT 33-project monor
 - **Mandatory Pydantic v2 Mastery**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features to their fullest across ALL 33 projects (`src/`, `tests/`, `examples/`). Every class extends `BaseModel` (or FLEXT base models) via MRO.
 - **Field() for ALL declarations**: Use `Field()` with `description`, `title`, `examples`, `json_schema_extra` documenting business rules — fields are self-documenting contracts.
 - **Secrets**: Use `SecretStr`/`SecretBytes` for secrets.
-- **ConfigDict**: Use `model_config = ConfigDict(...)` for config — standalone `*Config` classes TOTALLY FORBIDDEN (use `BaseSettings`/`ConfigDict`).
+- **ConfigDict**: Use `model_config = ConfigDict(...)` for settings — standalone `*Config` classes TOTALLY FORBIDDEN (use `BaseSettings`/`ConfigDict`).
 - **Minimize custom validators**: Prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`, `constr`, `conint`).
 - **FORBIDDEN in models**: initialization helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@computed_field`, `model_post_init`, `PrivateAttr`) and canonical field names such as `success`, `failure`, `expired`, `healthy`.
-- **Enums/Mappings/Literals**: From `constants.py` (`c.*`), config from `settings.py` (`s.*`).
+- **Enums/Mappings/Literals**: From `constants.py` (`c.*`), settings from `settings.py` (`s.*`).
 - **JSON**: Via `model_dump_json()`, `model_validate_json()`, `TypeAdapter`.
 - **Internal state**: Via `PrivateAttr` — never bare `self._x`.
 - **Nested classes**: MAY have business methods but ALL properties use `Field()`/`PrivateAttr`.
@@ -522,7 +522,7 @@ from flext_core import t
 
 data: t.Container = ...
 metadata: t.MetadataValue = ...
-config: t.ConfigMap = ...
+settings: t.ConfigMap = ...
 ```
 
 #### 8.3 t.NormalizedValue — FORBIDDEN
@@ -661,7 +661,7 @@ class User(BaseModel):
     )
 ```
 
-Why good: Uses `Annotated` correctly, `Field()` with full metadata, `default_factory` for mutable default, `ConfigDict` for config.
+Why good: Uses `Annotated` correctly, `Field()` with full metadata, `default_factory` for mutable default, `ConfigDict` for settings.
 
 Bad:
 

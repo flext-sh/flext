@@ -143,10 +143,10 @@ After `get_canonical_str_values()` (line 51), add:
 ```python
 @staticmethod
 def get_canonical_frozenset_values() -> Mapping[frozenset[str], str]:
-    config = FlextInfraUtilitiesCodegenGovernance.load_governance_config()
+    settings = FlextInfraUtilitiesCodegenGovernance.load_governance_settings()
     return {
         frozenset(entry.value): entry.canonical_ref
-        for entry in config.canonical_values
+        for entry in settings.canonical_values
         if entry.type == "frozenset"
         and isinstance(entry.value, Sequence)
         and not isinstance(entry.value, str)
@@ -155,20 +155,20 @@ def get_canonical_frozenset_values() -> Mapping[frozenset[str], str]:
 
 @staticmethod
 def get_canonical_regex_values() -> t.StrMapping:
-    config = FlextInfraUtilitiesCodegenGovernance.load_governance_config()
+    settings = FlextInfraUtilitiesCodegenGovernance.load_governance_settings()
     return {
         entry.value: entry.canonical_ref
-        for entry in config.canonical_values
+        for entry in settings.canonical_values
         if entry.type == "regex" and isinstance(entry.value, str)
     }
 
 
 @staticmethod
 def get_canonical_tuple_values() -> Mapping[tuple[str, ...], str]:
-    config = FlextInfraUtilitiesCodegenGovernance.load_governance_config()
+    settings = FlextInfraUtilitiesCodegenGovernance.load_governance_settings()
     return {
         tuple(entry.value): entry.canonical_ref
-        for entry in config.canonical_values
+        for entry in settings.canonical_values
         if entry.type == "tuple"
         and isinstance(entry.value, Sequence)
         and not isinstance(entry.value, str)

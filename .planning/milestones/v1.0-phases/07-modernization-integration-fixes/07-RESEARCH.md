@@ -63,7 +63,7 @@ None.
 
 **Recommendation:** Use `BeforeValidator` approach. Rationale:
 1. The model's own `default="auto"` proves string-to-enum coercion is the intended API
-2. `use_enum_values=True` is already set on the config (values stored as strings)
+2. `use_enum_values=True` is already set on the settings (values stored as strings)
 3. `BeforeValidator(lambda v: c.Tests.Format(v) if isinstance(v, str) else v)` on the `fmt` field resolves all call sites at once
 4. Fewer code changes, lower regression risk
 
@@ -120,7 +120,7 @@ fmt: Annotated[
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
-| Config file | `pyproject.toml` [tool.pytest] |
+| Settings file | `pyproject.toml` [tool.pytest] |
 | Quick run command | `.venv/bin/python -m pytest {project}/tests/ -x` |
 | Full suite command | `make test` |
 

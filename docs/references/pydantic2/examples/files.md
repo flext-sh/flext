@@ -343,8 +343,8 @@ class Person(BaseModel):
     email: EmailStr
 
 
-config = configparser.ConfigParser()
-config.read("person.ini")
+settings = configparser.SettingsParser()
+settings.read("person.ini")
 person = Person(])
 print(person)
 # > name='John Doe' age=30 email='john@example.com'

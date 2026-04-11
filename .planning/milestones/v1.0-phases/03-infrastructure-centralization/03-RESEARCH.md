@@ -190,7 +190,7 @@ def iter_projects(
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
-| Config file | `pyproject.toml` [tool.pytest.ini_options] |
+| Settings file | `pyproject.toml` [tool.pytest.ini_options] |
 | Quick run command | `make test PROJECT=flext-infra` |
 | Full suite command | `make test` |
 

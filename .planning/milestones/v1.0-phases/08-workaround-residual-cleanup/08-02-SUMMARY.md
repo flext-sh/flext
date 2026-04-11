@@ -46,7 +46,7 @@ Removed `Exception` from catch tuples in 5 sites across 4 files:
 
 Replaced 2 bare `except Exception` catches:
 - Line 120 (flext_config property): `except (ValueError, TypeError, KeyError)` — covers Pydantic model_validate failures
-- Line 251 (initialize method): `except (ValueError, TypeError, KeyError, FlextTapOracleWmsConfigurationError)` — covers config validation + custom error from property
+- Line 251 (initialize method): `except (ValueError, TypeError, KeyError, FlextTapOracleWmsConfigurationError)` — covers settings validation + custom error from property
 
 ### Task 3: Verify WA-04 sys.exit compliance (verification only)
 

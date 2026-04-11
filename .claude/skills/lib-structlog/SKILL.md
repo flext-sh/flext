@@ -134,7 +134,7 @@ In `runtime.py`, the `u` class provides:
 - `u.get_logger(name)` — creates a bound logger
 - `u.configure_structlog(...)` — sets up processor chain (TimeStamper, level filter, context merge, JSONRenderer)
 - `u.ensure_structlog_configured()` — lazy one-time init
-- `u.is_structlog_configured()` — check config state
+- `u.is_structlog_configured()` — check settings state
 - `u.reset_structlog_state_for_testing()` — reset for test isolation
 
 Telemetry integration methods:

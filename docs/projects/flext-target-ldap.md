@@ -32,7 +32,7 @@ make validate
 ```
 
 ```bash
-target-ldap --config config.json --state state.json --catalog catalog.json
+target-ldap --settings settings.json --state state.json --catalog catalog.json
 ```
 
 ## Architecture & patterns
@@ -44,7 +44,7 @@ target-ldap --config config.json --state state.json --catalog catalog.json
 
 ## Quality & operations
 
-- **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate`, `make check`, plus Singer-specific `make discover`, `make run`, and `make validate-config`.
+- **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate`, `make check`, plus Singer-specific `make discover`, `make run`, and `make validate-settings`.
 - **Testing**: quick start docs emphasize testing strategies (unit/integration/troubleshooting modules) and Singer compliance; tests run under `pytest` with markers for integration and Singer.
 - **Performance**: includes batch processing, connection pooling, retry logic, error recovery, and instrumentation for metrics/performance analysis.
 

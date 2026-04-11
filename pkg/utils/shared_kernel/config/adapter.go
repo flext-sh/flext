@@ -1,17 +1,17 @@
-package config
+package settings
 
 import (
 	"fmt"
 	"os"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/infrastructure/config"
+	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 )
 
-// ConfigAdapter adapts UnifiedConfig to existing config.Config interface
+// ConfigAdapter adapts UnifiedConfig to existing settings.Config interface
 type ConfigAdapter struct {
 	unified *UnifiedConfig
-	legacy  *config.Config
+	legacy  *settings.Config
 }
 
 // NewConfigAdapter creates a new configuration adapter
@@ -19,17 +19,17 @@ func NewConfigAdapter() (*ConfigAdapter, error) {
 	// Load unified configuration
 	unified, err := NewUnifiedConfig()
 	if err != nil {
-		return nil, fmt.Errorf("failed to load unified config: %w", err)
+		return nil, fmt.Errorf("failed to load unified settings: %w", err)
 	}
 
 	// Validate unified configuration
 	if err := unified.Validate(); err != nil {
-		return nil, fmt.Errorf("unified config validation failed: %w", err)
+		return nil, fmt.Errorf("unified settings validation failed: %w", err)
 	}
 
-	// Create legacy config structure from unified config
-	legacy := &config.Config{
-		Database: config.DatabaseConfig{
+	// Create legacy settings structure from unified settings
+	legacy := &settings.Config{
+		Database: settings.DatabaseConfig{
 			Driver:          unified.Database.Driver,
 			Host:            unified.Database.Host,
 			Port:            unified.Database.Port,
@@ -42,16 +42,16 @@ func NewConfigAdapter() (*ConfigAdapter, error) {
 			ConnMaxLifetime: unified.Database.ConnMaxLifetime,
 		},
 
-		Features: config.FeatureFlags{
+		Features: settings.FeatureFlags{
 			DatabaseEnabled:  unified.Features.DatabaseEnabled,
 			WebSocketEnabled: unified.Features.WebSocketEnabled,
 		},
 
-		CleanArchitecture: config.CleanArchitectureConfig{
+		CleanArchitecture: settings.CleanArchitectureConfig{
 			Enabled: unified.Features.CleanArchitectureEnabled,
 		},
 
-		Server: config.ServerConfig{
+		Server: settings.ServerConfig{
 			Host:            unified.Host,
 			Port:            unified.Port,
 			Environment:     unified.Environment,
@@ -75,32 +75,32 @@ func (a *ConfigAdapter) GetUnifiedConfig() *UnifiedConfig {
 }
 
 // GetLegacyConfig returns the legacy configuration for backward compatibility
-func (a *ConfigAdapter) GetLegacyConfig() *config.Config {
+func (a *ConfigAdapter) GetLegacyConfig() *settings.Config {
 	return a.legacy
 }
 
 // UpdateFromEnvironment reloads configuration from environment variables
 func (a *ConfigAdapter) UpdateFromEnvironment() error {
-	// Reload unified config
+	// Reload unified settings
 	unified, err := NewUnifiedConfig()
 	if err != nil {
-		return fmt.Errorf("failed to reload unified config: %w", err)
+		return fmt.Errorf("failed to reload unified settings: %w", err)
 	}
 
 	if err := unified.Validate(); err != nil {
-		return fmt.Errorf("reloaded unified config validation failed: %w", err)
+		return fmt.Errorf("reloaded unified settings validation failed: %w", err)
 	}
 
 	// Update adapter state
 	a.unified = unified
 
-	// Update legacy config to match
+	// Update legacy settings to match
 	a.legacy.Server.Environment = unified.Environment
 	a.legacy.Server.Debug = unified.Debug
 	a.legacy.Server.Host = unified.Host
 	a.legacy.Server.Port = unified.Port
 
-	// Update database config
+	// Update database settings
 	a.legacy.Database.Driver = unified.Database.Driver
 	a.legacy.Database.Host = unified.Database.Host
 	a.legacy.Database.Port = unified.Database.Port
@@ -116,10 +116,10 @@ func (a *ConfigAdapter) UpdateFromEnvironment() error {
 	a.legacy.Features.DatabaseEnabled = unified.Features.DatabaseEnabled
 	a.legacy.Features.WebSocketEnabled = unified.Features.WebSocketEnabled
 
-	// Update Clean Architecture config
+	// Update Clean Architecture settings
 	a.legacy.CleanArchitecture.Enabled = unified.Features.CleanArchitectureEnabled
 
-	// Update server config
+	// Update server settings
 	a.legacy.Server.Environment = unified.Environment
 	a.legacy.Server.Debug = unified.Debug
 
@@ -138,7 +138,7 @@ func (a *ConfigAdapter) GetDatabaseDSN() string {
 
 // GetEnvWithDefault returns environment variable value or default
 func (a *ConfigAdapter) GetEnvWithDefault(key, defaultValue string) string {
-	// Since legacy config doesn't have this method, implement it here
+	// Since legacy settings doesn't have this method, implement it here
 	if value, exists := os.LookupEnv(key); exists {
 		return value
 	}

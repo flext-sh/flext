@@ -7,21 +7,21 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/settings"
 	"github.com/flext-sh/flext/pkg/logging"
 	"github.com/gin-gonic/gin"
 )
 
 // Server represents the HTTP server for FLEXT Service
 type Server struct {
-	config     *config.Config
+	settings     *settings.Config
 	logger     logging.Logger
 	router     *gin.Engine
 	httpServer *http.Server
 }
 
 // NewServer creates a new HTTP server
-func NewServer(cfg *config.Config, logger logging.Logger) *Server {
+func NewServer(cfg *settings.Config, logger logging.Logger) *Server {
 	// Set gin mode based on environment
 	if cfg.Server.Environment == "production" {
 		gin.SetMode(gin.ReleaseMode)
@@ -34,7 +34,7 @@ func NewServer(cfg *config.Config, logger logging.Logger) *Server {
 	router.Use(gin.Recovery())
 
 	return &Server{
-		config: cfg,
+		settings: cfg,
 		logger: logger,
 		router: router,
 	}
@@ -80,7 +80,7 @@ func (s *Server) RegisterCleanHandler(name string, handler interface{}) {
 
 // Start starts the HTTP server
 func (s *Server) Start() error {
-	addr := fmt.Sprintf("%s:%d", s.config.Server.Host, s.config.Server.Port)
+	addr := fmt.Sprintf("%s:%d", s.settings.Server.Host, s.settings.Server.Port)
 
 	s.httpServer = &http.Server{
 		Addr:         addr,
@@ -111,7 +111,7 @@ func (s *Server) healthCheck(c *gin.Context) {
 		"timestamp": time.Now().Format(time.RFC3339),
 		"service":   "flext",
 		"version":   "2.0.0",
-		"port":      s.config.Server.Port,
+		"port":      s.settings.Server.Port,
 	})
 }
 
@@ -121,8 +121,8 @@ func (s *Server) statusCheck(c *gin.Context) {
 		"service":     "flext",
 		"version":     "2.0.0",
 		"status":      "operational",
-		"environment": s.config.Server.Environment,
-		"debug":       s.config.Server.Debug,
+		"environment": s.settings.Server.Environment,
+		"debug":       s.settings.Server.Debug,
 		"timestamp":   time.Now().Format(time.RFC3339),
 		"endpoints": gin.H{
 			"health":   "/health",
@@ -143,8 +143,8 @@ func (s *Server) getServiceInfo(c *gin.Context) {
 		"version":      "2.0.0",
 		"description":  "FLEXT Service Control Panel - Manages and coordinates FlexCore distributed runtime services",
 		"architecture": "Clean Architecture + DDD + CQRS",
-		"environment":  s.config.Server.Environment,
-		"debug":        s.config.Server.Debug,
+		"environment":  s.settings.Server.Environment,
+		"debug":        s.settings.Server.Debug,
 		"timestamp":    time.Now().Format(time.RFC3339),
 		"capabilities": []string{
 			"flexcore_coordination",

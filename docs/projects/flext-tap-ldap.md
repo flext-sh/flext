@@ -34,8 +34,8 @@ make validate     # includes lint, type, security, tests, coverage
 ```
 
 ```bash
-tap-ldap --config config.json --discover > catalog.json
-tap-ldap --config config.json --catalog catalog.json --state state.json
+tap-ldap --settings settings.json --discover > catalog.json
+tap-ldap --settings settings.json --catalog catalog.json --state state.json
 ```
 
 Configuration reference and example JSON live under `docs/` and the README (host, bind credentials, LDIF toggles, custom streams, page sizing, etc.).
@@ -44,14 +44,14 @@ Configuration reference and example JSON live under `docs/` and the README (host
 
 - **Clean Architecture**: Domain (`domain/`), application (`application/`), infrastructure (`infrastructure/`), and protocol (`streams.py`, `ldif_stream.py`) layers; only lower tiers import via short aliases (`m`, `u`, `r`).
 - **Singer streams**: Users, Groups, OrganizationalUnits, Schema, Custom, LDIF, and LDIFAnalysis streams all implement Singer tap contracts while converting LDAP/LDIF entries through `r` orchestrators.
-- **Configuration models**: `config.py` exposes Pydantic `FlextTapLdapSettings` with strict validation, including LDAP connection settings, LDIF toggles, Melro (Meltano) integration, and security tokens.
+- **Configuration models**: `settings.py` exposes Pydantic `FlextTapLdapSettings` with strict validation, including LDAP connection settings, LDIF toggles, Melro (Meltano) integration, and security tokens.
 - **Zero tolerance governance**: `AGENTS.md` enforces mandatory usage of `flext-ldap`, `flext-meltano`, `flext-core`, and `flext-cli`; forbids direct `ldap3`, `singer-sdk`, `click`, `rich`, `Any`, `cast`, or `TYPE_CHECKING`.
 
 ## Quality & operations
 
 - **Validation pipeline**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate`, `make quality` each cover specific gates; `make validate` binds them together.
 - **Testing organization**: `tests/e2e/ldif`, `tests/test_client.py`, `tests/test_streams.py`, `tests/test_tap.py`, integration groups, and Docker-based LDAP testing (`make ldap-test`) support 90% coverage.
-- **Singer commands**: `make discover`, `make catalog`, `make run`, `make sync`, `make validate-config` align with tap-specific flows and the Singerspec.
+- **Singer commands**: `make discover`, `make catalog`, `make run`, `make sync`, `make validate-settings` align with tap-specific flows and the Singerspec.
 - **LDAP helpers**: `make ldap-test`, `make ldif-validate`, `make ldif-parse`, plus Docker Compose `openldap` for local integration.
 
 ## Resources & references

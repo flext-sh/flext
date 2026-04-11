@@ -56,7 +56,7 @@ Demonstrates comprehensive Access Control List (ACL) processing capabilities:
 **Key Features:**
 
 - Server-specific ACL attribute detection
-- Parallel batch processing with configurable worker threads
+- Parallel batch processing with settingsurable worker threads
 - Complex validation rules with forbidden permission combinations
 - Railway pattern for robust error handling
 - Performance monitoring and analytics
@@ -75,7 +75,7 @@ Demonstrates modern processing capabilities with updated APIs:
 
 **Key Features:**
 
-- Advanced processor with configurable parallel execution
+- Advanced processor with settingsurable parallel execution
 - Validation processor with parallel item checking
 - Analysis processor for data insights and aggregation
 - Batch heavy operations processor for memory-intensive tasks
@@ -117,7 +117,7 @@ All examples implement the railway pattern for robust error handling:
 Extensive use of parallel processing throughout:
 
 - `ThreadPoolExecutor` for concurrent operations
-- Configurable worker thread pools
+- Settingsurable worker thread pools
 - Batch processing for memory efficiency
 - Parallel validation and analysis stages
 
@@ -137,7 +137,7 @@ from collections.abc import Mapping, Sequence` for forward references
 Production-ready enterprise capabilities:
 
 - Comprehensive logging and metrics
-- Configurable processing parameters
+- Settingsurable processing parameters
 - Performance analytics and monitoring
 - Correlation ID tracking for distributed operations
 - Context management across pipeline stages
@@ -200,7 +200,7 @@ from examples import (
 )
 
 # Build workflow configuration
-config = CompleteWorkflowBuilder.build_comprehensive_workflow(
+settings = CompleteWorkflowBuilder.build_comprehensive_workflow(
     workflow_type="ldap_processing", requirements={"max_workers": 8, "parallel": True}
 )
 
@@ -209,8 +209,8 @@ railway = ComprehensiveRailwayPattern(max_workers=8)
 result = railway.execute_workflow_railway(
     workflow_id="enterprise_workflow",
     input_data=input_data,
-    stage_definitions=config["stage_definitions"],
-    workflow_requirements=config,
+    stage_definitions=settings["stage_definitions"],
+    workflow_requirements=settings,
 )
 ```
 

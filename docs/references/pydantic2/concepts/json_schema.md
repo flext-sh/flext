@@ -337,7 +337,7 @@ print(Model.model_json_schema(mode="serialization"))
 The generated JSON schema can be customized at both the field level and model level via:
 
 1. [Field-level customization](#field-level-customization) with the [`Field`][pydantic.fields.Field] constructor
-2. [Model-level customization](#model-level-customization) with [`model_config`][pydantic.config.ConfigDict]
+2. [Model-level customization](#model-level-customization) with [`model_config`][pydantic.settings.ConfigDict]
 
 At both the field and model levels, you can use the `json_schema_extra` option to add extra information to the JSON schema.
 The [Using `json_schema_extra`](#using-json_schema_extra) section below provides more details on this option.
@@ -556,14 +556,14 @@ print(json.dumps(Person.model_json_schema(), indent=2))
 
 ### Model-Level Customization
 
-You can also use [model config][pydantic.config.ConfigDict] to customize JSON schema generation on a model.
-Specifically, the following config options are relevant:
+You can also use [model settings][pydantic.settings.ConfigDict] to customize JSON schema generation on a model.
+Specifically, the following settings options are relevant:
 
-- [`title`][pydantic.config.ConfigDict.title]
-- [`json_schema_extra`][pydantic.config.ConfigDict.JSON_schema_extra]
-- [`json_schema_mode_override`][pydantic.config.ConfigDict.JSON_schema_mode_override]
-- [`field_title_generator`][pydantic.config.ConfigDict.field_title_generator]
-- [`model_title_generator`][pydantic.config.ConfigDict.model_title_generator]
+- [`title`][pydantic.settings.ConfigDict.title]
+- [`json_schema_extra`][pydantic.settings.ConfigDict.JSON_schema_extra]
+- [`json_schema_mode_override`][pydantic.settings.ConfigDict.JSON_schema_mode_override]
+- [`field_title_generator`][pydantic.settings.ConfigDict.field_title_generator]
+- [`model_title_generator`][pydantic.settings.ConfigDict.model_title_generator]
 
 ### Using `json_schema_extra`
 
@@ -1117,7 +1117,7 @@ print(json.dumps(Person.model_json_schema(), indent=2))
 
 ### Using `model_title_generator`
 
-The `model_title_generator` config option is similar to the `field_title_generator` option, but it applies to the title of the model itself,
+The `model_title_generator` settings option is similar to the `field_title_generator` option, but it applies to the title of the model itself,
 and accepts the model class as input.
 
 See the following example:

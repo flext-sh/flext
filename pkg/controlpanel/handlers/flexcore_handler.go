@@ -9,22 +9,22 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/settings"
 	"github.com/flext-sh/flext/pkg/logging"
 	"github.com/gin-gonic/gin"
 )
 
 // FlexCoreHandler manages FlexCore service coordination and communication
 type FlexCoreHandler struct {
-	config     *config.Config
+	settings     *settings.Config
 	logger     logging.Logger
 	httpClient *http.Client
 }
 
 // NewFlexCoreHandler creates a new FlexCore handler
-func NewFlexCoreHandler(cfg *config.Config, logger logging.Logger) *FlexCoreHandler {
+func NewFlexCoreHandler(cfg *settings.Config, logger logging.Logger) *FlexCoreHandler {
 	return &FlexCoreHandler{
-		config: cfg,
+		settings: cfg,
 		logger: logger,
 		httpClient: &http.Client{
 			Timeout: cfg.FlexCore.Timeout,
@@ -59,8 +59,8 @@ func (h *FlexCoreHandler) RegisterRoutes(router *gin.RouterGroup) {
 		flexcore.DELETE("/workflows/:id", h.StopWorkflow)
 
 		// Configuration management
-		flexcore.POST("/config/update", h.UpdateFlexCoreConfig)
-		flexcore.GET("/config", h.GetFlexCoreConfig)
+		flexcore.POST("/settings/update", h.UpdateFlexCoreConfig)
+		flexcore.GET("/settings", h.GetFlexCoreConfig)
 
 		// Coordination commands
 		flexcore.POST("/coordination/command", h.ExecuteCoordinationCommand)
@@ -114,7 +114,7 @@ func (h *FlexCoreHandler) GetFlexCoreHealth(c *gin.Context) {
 	defer cancel()
 
 	// Request detailed health check from FlexCore
-	url := fmt.Sprintf("%s/api/v1/health?detail=true", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/health?detail=true", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create FlexCore health request", logging.F("error", err))
@@ -131,7 +131,7 @@ func (h *FlexCoreHandler) GetFlexCoreHealth(c *gin.Context) {
 		c.JSON(http.StatusServiceUnavailable, gin.H{
 			"status":       "unhealthy",
 			"error":        "FlexCore unreachable",
-			"flexcore_url": h.config.FlexCore.URL,
+			"flexcore_url": h.settings.FlexCore.URL,
 			"details":      err.Error(),
 			"timestamp":    time.Now().Format(time.RFC3339),
 		})
@@ -172,7 +172,7 @@ func (h *FlexCoreHandler) GetFlexCoreStatus(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 15*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/status", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/status", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create FlexCore status request", logging.F("error", err))
@@ -187,7 +187,7 @@ func (h *FlexCoreHandler) GetFlexCoreStatus(c *gin.Context) {
 		h.logger.Error("FlexCore status check failed", logging.F("error", err))
 		c.JSON(http.StatusServiceUnavailable, gin.H{
 			"error":        "FlexCore status unavailable",
-			"flexcore_url": h.config.FlexCore.URL,
+			"flexcore_url": h.settings.FlexCore.URL,
 		})
 		return
 	}
@@ -212,7 +212,7 @@ func (h *FlexCoreHandler) ListFlexCoreInstances(c *gin.Context) {
 	instances := []gin.H{
 		{
 			"id":        "flexcore-primary",
-			"url":       h.config.FlexCore.URL,
+			"url":       h.settings.FlexCore.URL,
 			"status":    "active",
 			"type":      "primary",
 			"version":   "2.0.0",
@@ -237,7 +237,7 @@ func (h *FlexCoreHandler) ListFlexCorePlugins(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/plugins", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/plugins", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create FlexCore plugins request", logging.F("error", err))
@@ -294,7 +294,7 @@ func (h *FlexCoreHandler) ExecuteFlexCorePlugin(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/plugins/%s/execute", h.config.FlexCore.URL, pluginID)
+	url := fmt.Sprintf("%s/api/v1/plugins/%s/execute", h.settings.FlexCore.URL, pluginID)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create plugin execution request", logging.F("error", err))
@@ -335,7 +335,7 @@ func (h *FlexCoreHandler) GetPluginExecutionStatus(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/plugins/%s/status", h.config.FlexCore.URL, pluginID)
+	url := fmt.Sprintf("%s/api/v1/plugins/%s/status", h.settings.FlexCore.URL, pluginID)
 	if executionID != "" {
 		url += fmt.Sprintf("?execution_id=%s", executionID)
 	}
@@ -373,7 +373,7 @@ func (h *FlexCoreHandler) StopPluginExecution(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/plugins/%s/stop", h.config.FlexCore.URL, pluginID)
+	url := fmt.Sprintf("%s/api/v1/plugins/%s/stop", h.settings.FlexCore.URL, pluginID)
 	if executionID != "" {
 		url += fmt.Sprintf("?execution_id=%s", executionID)
 	}
@@ -412,7 +412,7 @@ func (h *FlexCoreHandler) ListAvailableRuntimes(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/runtimes", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create runtimes request", logging.F("error", err))
@@ -470,7 +470,7 @@ func (h *FlexCoreHandler) ExecuteOnRuntime(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/%s/execute", h.config.FlexCore.URL, runtimeType)
+	url := fmt.Sprintf("%s/api/v1/runtimes/%s/execute", h.settings.FlexCore.URL, runtimeType)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create runtime execution request", logging.F("error", err))
@@ -510,7 +510,7 @@ func (h *FlexCoreHandler) GetRuntimeStatus(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/%s/status", h.config.FlexCore.URL, runtimeType)
+	url := fmt.Sprintf("%s/api/v1/runtimes/%s/status", h.settings.FlexCore.URL, runtimeType)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create runtime status request", logging.F("error", err))
@@ -541,7 +541,7 @@ func (h *FlexCoreHandler) ListActiveWorkflows(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/workflows", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/workflows", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create workflows request", logging.F("error", err))
@@ -592,7 +592,7 @@ func (h *FlexCoreHandler) CreateWorkflow(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/workflows", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/workflows", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create workflow request", logging.F("error", err))
@@ -629,7 +629,7 @@ func (h *FlexCoreHandler) GetWorkflowStatus(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/workflows/%s", h.config.FlexCore.URL, workflowID)
+	url := fmt.Sprintf("%s/api/v1/workflows/%s", h.settings.FlexCore.URL, workflowID)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create workflow status request", logging.F("error", err))
@@ -662,7 +662,7 @@ func (h *FlexCoreHandler) StopWorkflow(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/workflows/%s", h.config.FlexCore.URL, workflowID)
+	url := fmt.Sprintf("%s/api/v1/workflows/%s", h.settings.FlexCore.URL, workflowID)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create workflow stop request", logging.F("error", err))
@@ -694,7 +694,7 @@ func (h *FlexCoreHandler) StopWorkflow(c *gin.Context) {
 func (h *FlexCoreHandler) UpdateFlexCoreConfig(c *gin.Context) {
 	var configUpdate map[string]interface{}
 	if err := c.ShouldBindJSON(&configUpdate); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid config update", "details": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid settings update", "details": err.Error()})
 		return
 	}
 
@@ -704,22 +704,22 @@ func (h *FlexCoreHandler) UpdateFlexCoreConfig(c *gin.Context) {
 	// Add FLEXT Service coordination metadata
 	configUpdate["coordination"] = map[string]interface{}{
 		"flext_service_id": "flext-service-primary",
-		"correlation_id":   fmt.Sprintf("flext-config-%d", time.Now().Unix()),
+		"correlation_id":   fmt.Sprintf("flext-settings-%d", time.Now().Unix()),
 		"timestamp":        time.Now().Format(time.RFC3339),
 	}
 
 	payload, err := json.Marshal(configUpdate)
 	if err != nil {
-		h.logger.Error("Failed to marshal config update", logging.F("error", err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to prepare config update"})
+		h.logger.Error("Failed to marshal settings update", logging.F("error", err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to prepare settings update"})
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/config/update", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/settings/update", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
-		h.logger.Error("Failed to create config update request", logging.F("error", err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create config request"})
+		h.logger.Error("Failed to create settings update request", logging.F("error", err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create settings request"})
 		return
 	}
 	req.Header.Set("Content-Type", "application/json")
@@ -734,12 +734,12 @@ func (h *FlexCoreHandler) UpdateFlexCoreConfig(c *gin.Context) {
 
 	var updateResponse map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&updateResponse); err != nil {
-		h.logger.Error("Failed to decode config update response", logging.F("error", err))
+		h.logger.Error("Failed to decode settings update response", logging.F("error", err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode update response"})
 		return
 	}
 
-	h.logger.Info("FlexCore config update coordinated successfully",
+	h.logger.Info("FlexCore settings update coordinated successfully",
 		logging.F("correlation_id", configUpdate["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, updateResponse)
@@ -750,11 +750,11 @@ func (h *FlexCoreHandler) GetFlexCoreConfig(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/config", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/settings", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
-		h.logger.Error("Failed to create config request", logging.F("error", err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create config request"})
+		h.logger.Error("Failed to create settings request", logging.F("error", err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create settings request"})
 		return
 	}
 
@@ -768,8 +768,8 @@ func (h *FlexCoreHandler) GetFlexCoreConfig(c *gin.Context) {
 
 	var configResponse map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&configResponse); err != nil {
-		h.logger.Error("Failed to decode config response", logging.F("error", err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode config response"})
+		h.logger.Error("Failed to decode settings response", logging.F("error", err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode settings response"})
 		return
 	}
 
@@ -802,7 +802,7 @@ func (h *FlexCoreHandler) ExecuteCoordinationCommand(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/coordination/command", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/coordination/command", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create coordination command request", logging.F("error", err))
@@ -840,13 +840,13 @@ func (h *FlexCoreHandler) GetServiceTopology(c *gin.Context) {
 			"id":      "flext-service-primary",
 			"status":  "active",
 			"role":    "control_panel",
-			"port":    h.config.Server.Port,
+			"port":    h.settings.Server.Port,
 			"version": "2.0.0",
 		},
 		"flexcore_instances": []gin.H{
 			{
 				"id":       "flexcore-primary",
-				"url":      h.config.FlexCore.URL,
+				"url":      h.settings.FlexCore.URL,
 				"status":   "active",
 				"role":     "runtime_distribuida",
 				"version":  "2.0.0",
@@ -861,11 +861,11 @@ func (h *FlexCoreHandler) GetServiceTopology(c *gin.Context) {
 		},
 		"infrastructure": gin.H{
 			"database": gin.H{
-				"url":    h.config.Database.URL,
+				"url":    h.settings.Database.URL,
 				"status": "connected",
 			},
 			"redis": gin.H{
-				"url":    h.config.Redis.URL,
+				"url":    h.settings.Redis.URL,
 				"status": "connected",
 			},
 		},

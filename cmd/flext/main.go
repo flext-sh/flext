@@ -12,7 +12,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/settings"
 	"github.com/flext-sh/flext/pkg/controlpanel/management/container"
 	"github.com/flext-sh/flext/pkg/controlpanel/monitoring/server"
 	"github.com/flext-sh/flext/pkg/logging"
@@ -27,7 +27,7 @@ var (
 
 // CommandLineFlags represents command line flags
 type CommandLineFlags struct {
-	configPath  string
+	settingsPath  string
 	environment string
 	logLevel    string
 	help        bool
@@ -38,7 +38,7 @@ type CommandLineFlags struct {
 func parseFlags() CommandLineFlags {
 	var flags CommandLineFlags
 
-	flag.StringVar(&flags.configPath, "config", "../../config.yaml", "Path to configuration file")
+	flag.StringVar(&flags.settingsPath, "settings", "../../settings.yaml", "Path to configuration file")
 	flag.StringVar(&flags.environment, "env", "", "Environment (development/production)")
 	flag.StringVar(&flags.logLevel, "log-level", "", "Log level (debug/info/warn/error)")
 	flag.BoolVar(&flags.help, "help", false, "Show help")
@@ -51,7 +51,7 @@ func parseFlags() CommandLineFlags {
 // ServiceInitializer handles FLEXT service initialization using Railway-Oriented Programming
 type ServiceInitializer struct {
 	flags     CommandLineFlags
-	config    *config.Config
+	settings    *settings.Settings
 	logger    logging.Logger
 	ctx       context.Context
 	cancel    context.CancelFunc
@@ -116,7 +116,7 @@ func initializeService() ServiceInitializationResult {
 		return result
 	}
 
-	if result := initializer.createAndConfigureServer(); !result.Success {
+	if result := initializer.createAndSettingsureServer(); !result.Success {
 		return result
 	}
 
@@ -151,9 +151,9 @@ func (si *ServiceInitializer) handleHelpAndVersion() ServiceInitializationResult
 	return ServiceInitializationResult{Success: true}
 }
 
-// initializeConfiguration loads and configures the service configuration
+// initializeConfiguration loads and settingsures the service configuration
 func (si *ServiceInitializer) initializeConfiguration() ServiceInitializationResult {
-	cfg, err := config.LoadConfig(si.flags.configPath)
+	cfg, err := settings.LoadSettings(si.flags.settingsPath)
 	if err != nil {
 		return ServiceInitializationResult{
 			Success: false,
@@ -161,12 +161,12 @@ func (si *ServiceInitializer) initializeConfiguration() ServiceInitializationRes
 		}
 	}
 
-	// Override config values from flags if provided
+	// Override settings values from flags if provided
 	if si.flags.environment != "" {
 		cfg.Server.Environment = si.flags.environment
 	}
 
-	si.config = cfg
+	si.settings = cfg
 	return ServiceInitializationResult{Success: true}
 }
 
@@ -176,9 +176,9 @@ func (si *ServiceInitializer) initializeLogging() ServiceInitializationResult {
 
 	si.logger.Info("🚀 Initializing FLEXT Enterprise Data Integration Service",
 		logging.F("version", Version),
-		logging.F("environment", si.config.Server.Environment),
-		logging.F("debug", si.config.Server.Debug),
-		logging.F("config_file", si.flags.configPath))
+		logging.F("environment", si.settings.Server.Environment),
+		logging.F("debug", si.settings.Server.Debug),
+		logging.F("settings_file", si.flags.settingsPath))
 
 	return ServiceInitializationResult{Success: true}
 }
@@ -203,7 +203,7 @@ func (si *ServiceInitializer) setupGracefulShutdown() ServiceInitializationResul
 func (si *ServiceInitializer) createDIContainer() ServiceInitializationResult {
 	si.logger.Info("📦 Creating FLEXT DI Container...")
 
-	realContainer, err := container.NewContainer(si.config)
+	realContainer, err := container.NewContainer(si.settings)
 	if err != nil {
 		return ServiceInitializationResult{
 			Success: false,
@@ -234,11 +234,11 @@ func (si *ServiceInitializer) logArchitectureStatus() ServiceInitializationResul
 	return ServiceInitializationResult{Success: true}
 }
 
-// createAndConfigureServer creates HTTP server and registers handlers
-func (si *ServiceInitializer) createAndConfigureServer() ServiceInitializationResult {
+// createAndSettingsureServer creates HTTP server and registers handlers
+func (si *ServiceInitializer) createAndSettingsureServer() ServiceInitializationResult {
 	si.logger.Info("🌐 Creating HTTP server...")
 
-	srv := server.NewServer(si.config, si.logger)
+	srv := server.NewServer(si.settings, si.logger)
 	srv.SetupBasicRoutes()
 
 	// Register REAL handlers from DI container
@@ -252,7 +252,7 @@ func (si *ServiceInitializer) createAndConfigureServer() ServiceInitializationRe
 func (si *ServiceInitializer) startServerAndWaitForShutdown() ServiceInitializationResult {
 	defer si.cancel() // Ensure cleanup happens
 
-	address := fmt.Sprintf("%s:%d", si.config.Server.Host, si.config.Server.Port)
+	address := fmt.Sprintf("%s:%d", si.settings.Server.Host, si.settings.Server.Port)
 	si.logger.Info("🚀 Starting FLEXT service HTTP server", logging.F("address", address))
 
 	// Start server in a goroutine
@@ -350,7 +350,7 @@ func registerContainerHandlers(srv *server.Server, container *container.Containe
 	}
 
 	logger.Info("✅ All available FLEXT service handlers registered from DI container")
-	logger.Info("🎯 API endpoints configured:",
+	logger.Info("🎯 API endpoints settingsured:",
 		logging.F("plugins_api", "/api/v1/plugins"),
 		logging.F("unified_meltano", "/api/v1/meltano (via flext-meltano)"),
 		logging.F("unified_singer", "/api/v1/singer (via flext-meltano)"),

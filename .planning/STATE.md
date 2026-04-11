@@ -103,7 +103,7 @@ Recent decisions affecting current work:
 - [Phase 01]: Fresh baseline 29 pyre issues (0 in flext-core) — Wave 0 did far more than documented; historical 4385 figure obsolete
 - [Phase 01-02]: flext-infra and flext-tests already nearly clean — only 1 bare object annotation fixed in matchers.py
 - [Phase 02-architecture-solid]: s was the only remaining ABC in flext-core — all other ABCs already converted in prior work
-- [Phase 02-architecture-solid]: config_type changed to type[p.Settings] in both mixins.py and service.py for DIP compliance
+- [Phase 02-architecture-solid]: settings_type changed to type[p.Settings] in both mixins.py and service.py for DIP compliance
 - [Phase 02-architecture-solid]: Redundant Annotated[T, Field(...)] = Field(...) cleaned to just Annotated form
 - [Phase 02-architecture-solid]: Dynamic TypeAdapter(target) with runtime type params accepted as uncacheable (~7 in flext-core)
 - [Phase 02-architecture-solid]: PEP 695 type aliases mandatory; test fixtures with old syntax preserved as validator test data
@@ -132,8 +132,8 @@ Recent decisions affecting current work:
 - [Phase 09]: Global pyright suppression (reportUnknownMemberType/VariableType/ArgumentType=none) for rope's missing stubs instead of per-call type: ignore
 - [Phase 10]: s alias points to FlextInfraServiceBase (not thin FlextInfraServiceBase) for backward compat -- all 19+ consumers access domain fields
 - [Phase 10]: Factory-method composition for FlextInfra facade due to incompatible type params (s[bool] vs s[str]) across domain services
-- [Phase 10]: DI fields (config_type, wire_modules, etc.) removed from FlextInfraServiceBase -- zero consumers reference them
-- [Phase 10]: basemk engine.py helpers acceptable — module-level config, not business logic
+- [Phase 10]: DI fields (settings_type, wire_modules, etc.) removed from FlextInfraServiceBase -- zero consumers reference them
+- [Phase 10]: basemk engine.py helpers acceptable — module-level settings, not business logic
 - [Phase 10]: github service (52 LOC) and release orchestrator (579 LOC) already fully compliant thin orchestrators — zero changes needed
 - [Phase 10]: validate domain already fully compliant thin orchestrator -- 7 service files audited, zero changes needed
 - [Phase 10]: CLI pass-through methods kept on FlextInfraWorkspaceChecker to avoid breaking 12+ test callers

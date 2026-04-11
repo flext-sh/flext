@@ -226,14 +226,14 @@ make validate FIX=1
 from typing import Any  # ← FORBIDDEN import
 
 
-def configure(self, config: Mapping[str, Any]) -> None: ...  # ← FORBIDDEN type
+def configure(self, settings: Mapping[str, Any]) -> None: ...  # ← FORBIDDEN type
 
 
 # After
 from flext_core import m
 
 
-def configure(self, config: m.Domain.ConfigurationModel) -> None: ...
+def configure(self, settings: m.Domain.ConfigurationModel) -> None: ...
 ```
 
 ### Pattern B: Removing Legacy Aliases

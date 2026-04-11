@@ -41,13 +41,13 @@ from flext_core import r
 
 result = (
     cli.file_tools
-    .read_json_file("config.json")
-    .flat_map(lambda cfg: cli.config.validate(cfg))
-    .map(lambda cfg: cli.formatters.print("Config loaded", style="green"))
+    .read_json_file("settings.json")
+    .flat_map(lambda cfg: cli.settings.validate(cfg))
+    .map(lambda cfg: cli.formatters.print("Settings loaded", style="green"))
 )
 
 if result.is_failure:
-    cli.formatters.print(f"Config error: {result.error}", style="red")
+    cli.formatters.print(f"Settings error: {result.error}", style="red")
 ```
 
 Use `cli.create_table`, `file_tools`, and `prompts` for the ready-made helpers described in `docs/getting-started.md`, `docs/api-reference.md`, and `docs/architecture.md` inside the project.

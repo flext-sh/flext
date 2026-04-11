@@ -1,5 +1,5 @@
 #!/bin/bash
-# Configure OUD for testing with production-like settings
+# Settingsure OUD for testing with production-like settings
 # Based on ansible roles/oracle_oud_14/tasks/schema_configuration.yml
 
 set -e
@@ -26,7 +26,7 @@ echo "=== Applying Production OUD Configuration ==="
 echo "$ADMIN_PASSWORD" >/tmp/oud_REDACTED_LDAP_BIND_PASSWORD_pwd.txt
 
 # 1. Set single-structural-objectclass-behavior to accept
-echo "1/4 - Configuring single-structural-objectclass-behavior..."
+echo "1/4 - Settingsuring single-structural-objectclass-behavior..."
 "$OUD_INSTANCE_PATH"/bin/dsconfig set-global-configuration-prop \
 	--set single-structural-objectclass-behavior:accept \
 	-h localhost -p 4444 \

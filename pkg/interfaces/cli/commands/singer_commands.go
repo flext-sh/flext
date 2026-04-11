@@ -240,7 +240,7 @@ func NewSingerRunCommand() *SingerRunCommand {
 
 	cmd.id = cmd.flags.String("id", "", "Specification ID (required)")
 	cmd.pipelineID = cmd.flags.String("pipeline-id", "", "Pipeline ID (required)")
-	cmd.configFile = cmd.flags.String("config", "", "Configuration file path (required)")
+	cmd.configFile = cmd.flags.String("settings", "", "Configuration file path (required)")
 	cmd.serverURL = cmd.flags.String("server", "http://localhost:8080", "FLEXT server URL")
 	cmd.wait = cmd.flags.Bool("wait", false, "Wait for execution to complete")
 
@@ -250,7 +250,7 @@ func NewSingerRunCommand() *SingerRunCommand {
 func (c *SingerRunCommand) Name() string        { return "singer-run" }
 func (c *SingerRunCommand) Description() string { return "Execute a Singer specification" }
 func (c *SingerRunCommand) Usage() string {
-	return "singer-run --id <spec-id> --pipeline-id <pipeline-id> --config <config-file> [--wait]"
+	return "singer-run --id <spec-id> --pipeline-id <pipeline-id> --settings <settings-file> [--wait]"
 }
 func (c *SingerRunCommand) Flags() *flag.FlagSet { return c.flags }
 
@@ -280,19 +280,19 @@ func (c *SingerRunCommand) Run(ctx context.Context, args []string) error {
 	// Load configuration file
 	configData, err := os.ReadFile(*c.configFile)
 	if err != nil {
-		return fmt.Errorf("failed to read config file: %w", err)
+		return fmt.Errorf("failed to read settings file: %w", err)
 	}
 
-	var config map[string]interface{}
-	if err := json.Unmarshal(configData, &config); err != nil {
-		return fmt.Errorf("failed to parse config file: %w", err)
+	var settings map[string]interface{}
+	if err := json.Unmarshal(configData, &settings); err != nil {
+		return fmt.Errorf("failed to parse settings file: %w", err)
 	}
 
 	// Preparar request
 	request := map[string]interface{}{
 		"spec_id":     *c.id,
 		"pipeline_id": *c.pipelineID,
-		"config":      config,
+		"settings":      settings,
 	}
 
 	reqBody, err := json.Marshal(request)
@@ -350,7 +350,7 @@ func NewSingerTestCommand() *SingerTestCommand {
 	}
 
 	cmd.id = cmd.flags.String("id", "", "Specification ID (required)")
-	cmd.configFile = cmd.flags.String("config", "", "Configuration file path (required)")
+	cmd.configFile = cmd.flags.String("settings", "", "Configuration file path (required)")
 	cmd.serverURL = cmd.flags.String("server", "http://localhost:8080", "FLEXT server URL")
 
 	return cmd
@@ -359,7 +359,7 @@ func NewSingerTestCommand() *SingerTestCommand {
 func (c *SingerTestCommand) Name() string        { return "singer-test" }
 func (c *SingerTestCommand) Description() string { return "Test Singer specification connection" }
 func (c *SingerTestCommand) Usage() string {
-	return "singer-test --id <spec-id> --config <config-file>"
+	return "singer-test --id <spec-id> --settings <settings-file>"
 }
 func (c *SingerTestCommand) Flags() *flag.FlagSet { return c.flags }
 
@@ -383,17 +383,17 @@ func (c *SingerTestCommand) Run(ctx context.Context, args []string) error {
 	// Load configuration file
 	configData, err := os.ReadFile(*c.configFile)
 	if err != nil {
-		return fmt.Errorf("failed to read config file: %w", err)
+		return fmt.Errorf("failed to read settings file: %w", err)
 	}
 
-	var config map[string]interface{}
-	if err := json.Unmarshal(configData, &config); err != nil {
-		return fmt.Errorf("failed to parse config file: %w", err)
+	var settings map[string]interface{}
+	if err := json.Unmarshal(configData, &settings); err != nil {
+		return fmt.Errorf("failed to parse settings file: %w", err)
 	}
 
-	reqBody, err := json.Marshal(config)
+	reqBody, err := json.Marshal(settings)
 	if err != nil {
-		return fmt.Errorf("failed to marshal config: %w", err)
+		return fmt.Errorf("failed to marshal settings: %w", err)
 	}
 
 	// Fazer request HTTP
@@ -432,7 +432,7 @@ func NewSingerDiscoverCommand() *SingerDiscoverCommand {
 	}
 
 	cmd.id = cmd.flags.String("id", "", "Specification ID (required)")
-	cmd.configFile = cmd.flags.String("config", "", "Configuration file path (required)")
+	cmd.configFile = cmd.flags.String("settings", "", "Configuration file path (required)")
 	cmd.outputFile = cmd.flags.String("output", "", "Output catalog file path (optional)")
 	cmd.serverURL = cmd.flags.String("server", "http://localhost:8080", "FLEXT server URL")
 
@@ -442,7 +442,7 @@ func NewSingerDiscoverCommand() *SingerDiscoverCommand {
 func (c *SingerDiscoverCommand) Name() string        { return "singer-discover" }
 func (c *SingerDiscoverCommand) Description() string { return "Discover Singer specification schema" }
 func (c *SingerDiscoverCommand) Usage() string {
-	return "singer-discover --id <spec-id> --config <config-file> [--output <catalog-file>]"
+	return "singer-discover --id <spec-id> --settings <settings-file> [--output <catalog-file>]"
 }
 func (c *SingerDiscoverCommand) Flags() *flag.FlagSet { return c.flags }
 
@@ -466,17 +466,17 @@ func (c *SingerDiscoverCommand) Run(ctx context.Context, args []string) error {
 	// Load configuration file
 	configData, err := os.ReadFile(*c.configFile)
 	if err != nil {
-		return fmt.Errorf("failed to read config file: %w", err)
+		return fmt.Errorf("failed to read settings file: %w", err)
 	}
 
-	var config map[string]interface{}
-	if err := json.Unmarshal(configData, &config); err != nil {
-		return fmt.Errorf("failed to parse config file: %w", err)
+	var settings map[string]interface{}
+	if err := json.Unmarshal(configData, &settings); err != nil {
+		return fmt.Errorf("failed to parse settings file: %w", err)
 	}
 
-	reqBody, err := json.Marshal(config)
+	reqBody, err := json.Marshal(settings)
 	if err != nil {
-		return fmt.Errorf("failed to marshal config: %w", err)
+		return fmt.Errorf("failed to marshal settings: %w", err)
 	}
 
 	// Fazer request HTTP

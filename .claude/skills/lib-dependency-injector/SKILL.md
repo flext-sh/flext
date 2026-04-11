@@ -64,7 +64,7 @@ description: dependency_injector bridge patterns for FLEXT runtime and container
 class u:
     class DependencyIntegration:
         class BridgeContainer(containers.DeclarativeContainer):
-            config = providers.Configuration()
+            settings = providers.Configuration()
             services = providers.DependenciesContainer()
             resources = providers.DependenciesContainer()
 
@@ -73,7 +73,7 @@ class u:
 
         @classmethod
         def create_layered_bridge(
-            cls, config: ConfigMap | None = None
+            cls, settings: ConfigMap | None = None
         ) -> tuple[
             containers.DeclarativeContainer,
             containers.DynamicContainer,

@@ -86,29 +86,29 @@ class _ModelCommand:
     __annotations__: MutableMapping[str, type]  # Typer introspects this
     __name__: str
     __signature__: Signature
-    _config: BaseModel | None
+    _settings: BaseModel | None
     _handler: Callable[[BaseModel], None]
     _model_cls: type[BaseModel]
 
     def __init__(
         self,
         *,
-        config: BaseModel | None,
+        settings: BaseModel | None,
         handler: Callable[[BaseModel], None],
         model_cls: type[BaseModel],
         parameters: Sequence[Parameter],
     ) -> None:
         self.__name__ = handler.__name__
         self.__signature__ = Signature(parameters)
-        self._config = config
+        self._settings = settings
         self._handler = handler
         self._model_cls = model_cls
 
     def __call__(self, **kwargs: t.Scalar) -> None:
-        if self._config is not None:
+        if self._settings is not None:
             for field_name, field_value in kwargs.items():
-                if hasattr(self._config, field_name):
-                    setattr(self._config, field_name, field_value)
+                if hasattr(self._settings, field_name):
+                    setattr(self._settings, field_name, field_value)
         self._handler(self._model_cls.model_validate(kwargs))
 ```
 
@@ -132,9 +132,9 @@ The input is always a type or TypeAliasType. The return is always a concrete typ
 ```python
 @staticmethod
 def _field_default(
-    field_name: str, field_info: FieldInfo, config: BaseModel | None
+    field_name: str, field_info: FieldInfo, settings: BaseModel | None
 ) -> t.Scalar | None:
-    """Resolve CLI default from config first, then from model field metadata."""
+    """Resolve CLI default from settings first, then from model field metadata."""
 ```
 
 `field_info` is always `FieldInfo` (from Pydantic). Return is always a scalar default or None.
@@ -147,7 +147,7 @@ def _build_model_parameter(
     cls,
     field_name: str,
     field_info: FieldInfo,
-    config: BaseModel | None,
+    settings: BaseModel | None,
 ) -> tuple[Parameter, type]:
 ```
 
@@ -161,7 +161,7 @@ def model_command[M: BaseModel](
     cls,
     model_cls: type[M],
     handler: Callable[[M], None],
-    config: BaseModel | None = None,
+    settings: BaseModel | None = None,
 ) -> Callable[..., None]:
     """Build a Typer command directly from a Pydantic request model."""
     parameters: MutableSequence[Parameter] = []
@@ -171,12 +171,12 @@ def model_command[M: BaseModel](
         parameter, annotation = cls._build_model_parameter(
             field_name,
             field_info,
-            config,
+            settings,
         )
         parameters.append(parameter)
         annotations[field_name] = annotation
     command = cls._ModelCommand(
-        config=config,
+        settings=settings,
         handler=lambda model: handler(model_cls.model_validate(model)),
         model_cls=model_cls,
         parameters=parameters,
@@ -318,12 +318,12 @@ class ModelCommandBuilder[M: BaseModel]:
         self,
         model_class: type[M],
         handler: Callable[[M], t.Cli.JsonValue],
-        config: t.Cli.JsonValue | None = None,
+        settings: t.Cli.JsonValue | None = None,
     ) -> None:
         super().__init__()
         self.model_class = model_class
         self.handler = handler
-        self.config = config
+        self.settings = settings
 ```
 
 - [ ] **Step 3: Replace `list[inspect.Parameter]` locals**

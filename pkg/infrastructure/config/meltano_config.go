@@ -1,4 +1,4 @@
-package config
+package settings
 
 import (
 	"fmt"
@@ -69,34 +69,34 @@ func DefaultMeltanoConfig() *MeltanoConfig {
 
 // AutoDetectConfiguration automatically detects the best Meltano configuration
 func AutoDetectConfiguration(logger logging.Logger) (*MeltanoConfig, error) {
-	config := DefaultMeltanoConfig()
+	settings := DefaultMeltanoConfig()
 
 	logger.Info("Starting Meltano environment auto-detection")
 
 	// 1. Detect Python environment
-	if err := config.detectPythonEnvironment(logger); err != nil {
+	if err := settings.detectPythonEnvironment(logger); err != nil {
 		return nil, fmt.Errorf("failed to detect Python environment: %w", err)
 	}
 
 	// 2. Detect Meltano installation
-	if err := config.detectMeltanoInstallation(logger); err != nil {
+	if err := settings.detectMeltanoInstallation(logger); err != nil {
 		return nil, fmt.Errorf("failed to detect Meltano installation: %w", err)
 	}
 
 	// 3. Setup bridge module
-	if err := config.setupBridgeModule(logger); err != nil {
+	if err := settings.setupBridgeModule(logger); err != nil {
 		return nil, fmt.Errorf("failed to setup bridge module: %w", err)
 	}
 
 	// 4. Validate configuration
-	if err := config.Validate(logger); err != nil {
+	if err := settings.Validate(logger); err != nil {
 		return nil, fmt.Errorf("configuration validation failed: %w", err)
 	}
 
-	config.Validated = true
+	settings.Validated = true
 	logger.Info("Meltano configuration auto-detection completed successfully")
 
-	return config, nil
+	return settings, nil
 }
 
 // detectPythonEnvironment finds the best Python environment

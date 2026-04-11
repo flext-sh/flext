@@ -32,8 +32,8 @@ started: After codegen refactor to use Jinja2 templates
   - services: ForwardRef("...FlextModelsContainer.ServiceRegistration...")
   - factories: ForwardRef("...FlextModelsContainer.FactoryRegistration...")
   - resources: ForwardRef("...FlextModelsContainer.ResourceRegistration...")
-  - container_config: ForwardRef("...FlextModelsContainer.ContainerConfig...")
-- Evidence 4: These inner classes (FactoryRegistration, ResourceRegistration, ContainerConfig) ARE defined in the same FlextModelsContainer class BEFORE ServiceRegistrationSpec uses them
+  - container_config: ForwardRef("...FlextModelsContainer.ContainerSettings...")
+- Evidence 4: These inner classes (FactoryRegistration, ResourceRegistration, ContainerSettings) ARE defined in the same FlextModelsContainer class BEFORE ServiceRegistrationSpec uses them
 - Evidence 5: No model_rebuild() call exists for ServiceRegistrationSpec anywhere in codebase
 - Evidence 6: model_rebuild() IS used in flext-core/tests/models.py for models with recursive/forward reference types
 

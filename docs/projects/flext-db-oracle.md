@@ -35,14 +35,14 @@ make setup
 from flext_db_oracle import FlextDbOracleApi
 from flext_db_oracle import FlextDbOracleModels
 
-config = FlextDbOracleModels.OracleConfig(
+settings = FlextDbOracleModels.OracleSettings(
     host="localhost",
     port=1521,
     service_name="XEPDB1",
     username="system",
     password="Oracle123",
 )
-api = FlextDbOracleApi(config)
+api = FlextDbOracleApi(settings)
 
 connection_result = api.test_connection()
 if connection_result.is_success:

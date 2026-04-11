@@ -21,7 +21,7 @@ Key finding: most changes are mechanical (ast-grep scriptable). The StrEnum @uni
 | MOD-02 | warnings.deprecated replaces FlextUtilitiesDeprecation | Framework in deprecation.py (193 lines) already uses stdlib internally — remove wrapper |
 | MOD-03 | 147+ StrEnum classes decorated with @unique | Found 297 StrEnum classes in src/, ~292 @unique already present — gap is ~5 missing |
 | MOD-04 | 70 Literal[str,...] unions convertible to StrEnum | Found 108 Literal occurrences in src/ across 44 files — needs triage for convertibility |
-| MOD-05 | defaultdict replaces hand-rolled grouping | 23 setdefault() calls in src/ — some are genuine grouping patterns, others are config defaults |
+| MOD-05 | defaultdict replaces hand-rolled grouping | 23 setdefault() calls in src/ — some are genuine grouping patterns, others are settings defaults |
 | MOD-06 | UserDict/UserString replaced with Pydantic BaseModel | 1 production UserDict (flext-auth ProviderConfiguration), rest in tests only |
 </phase_requirements>
 
@@ -117,7 +117,7 @@ for item in items:
 
 ### Anti-Patterns to Avoid
 - **Don't convert Literal used in function overloads** — `Literal["str", "bool"]` as param type discriminators must stay as Literal
-- **Don't convert setdefault used for config defaults** — `kwargs.setdefault("key", default_value)` is NOT a grouping pattern
+- **Don't convert setdefault used for settings defaults** — `kwargs.setdefault("key", default_value)` is NOT a grouping pattern
 - **Don't break **init**.py exports** — if removing FlextUtilitiesDeprecation, update generators not hand-edit
 
 ## Don't Hand-Roll
@@ -127,7 +127,7 @@ for item in items:
 | Sequence chunking | `u.chunk()` wrapper | `itertools.batched()` directly | stdlib, zero overhead |
 | Deprecation warnings | `FlextUtilitiesDeprecation` class | `warnings.deprecated` | PEP 702, type checker support |
 | Enum uniqueness | Manual review | `@unique` decorator | Compile-time enforcement |
-| Dict-like config | `UserDict` subclass | Pydantic `BaseModel` | Validation, serialization, typing |
+| Dict-like settings | `UserDict` subclass | Pydantic `BaseModel` | Validation, serialization, typing |
 
 ## Common Pitfalls
 
@@ -137,7 +137,7 @@ for item in items:
 
 ### Pitfall 2: defaultdict changes dict behavior
 **What goes wrong:** `defaultdict` auto-creates missing keys on access. Code that checks `if key in dict` still works, but `dict[missing_key]` no longer raises KeyError.
-**How to avoid:** Only convert `.setdefault(k, []).append(v)` grouping patterns. Leave config-default patterns as-is.
+**How to avoid:** Only convert `.setdefault(k, []).append(v)` grouping patterns. Leave settings-default patterns as-is.
 
 ### Pitfall 3: FlextUtilitiesDeprecation has custom features
 **What goes wrong:** The custom framework has `warn_once()` (deduplication), `warn_polymorphic_input()`, and `deprecated_parameter()` — these have no direct stdlib equivalent.
@@ -183,7 +183,7 @@ rule:
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
-| Config file | pyproject.toml [tool.pytest.ini_options] |
+| Settings file | pyproject.toml [tool.pytest.ini_options] |
 | Quick run command | `.venv/bin/pytest tests/unit/ -x --no-header -q` |
 | Full suite command | `make test` |
 
@@ -235,7 +235,7 @@ None — existing test infrastructure covers all phase requirements.
 ### MOD-05: setdefault grouping (23 occurrences, 8 files)
 - `flext-infra/` has most occurrences (refactoring tools, codegen) — genuine grouping patterns
 - `flext-ldif/` parser uses `.setdefault(key, []).append(value)` — classic grouping
-- Config-default patterns (`.setdefault("key", scalar)`) should NOT be converted
+- Settings-default patterns (`.setdefault("key", scalar)`) should NOT be converted
 - Estimate: ~10-12 genuine grouping patterns convertible to defaultdict
 
 ### MOD-06: UserDict in production (1 class)

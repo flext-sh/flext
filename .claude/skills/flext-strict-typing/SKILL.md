@@ -15,7 +15,7 @@
   - [Always use modern syntax (with Mapping-first contracts)](#always-use-modern-syntax-with-mapping-first-contracts)
   - [Use `typing.Self` for return self patterns](#use-typingself-for-return-self-patterns)
 - [Rule 5: Pydantic v2 Model Typing](#rule-5-pydantic-v2-model-typing)
-  - [ConfigDict (not inner `class Config`)](#configdict-not-inner-class-config)
+  - [ConfigDict (not inner `class Config`)](#configdict-not-inner-class-settings)
   - [Field declarations](#field-declarations)
   - [Validators use `@field_validator` and `@model_validator`](#validators-use-fieldvalidator-and-modelvalidator)
 - [Rule 6: Annotated Validation Types](#rule-6-annotated-validation-types)
@@ -213,7 +213,7 @@ Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` 
 
 ```python
 t.Dict  # Transitional only — migrate to explicit domain dict models
-m.Domain.ConfigModel  # Canonical strict config contract
+m.Domain.ConfigModel  # Canonical strict settings contract
 p.ServiceMap  # Transitional only — migrate to explicit service registry models
 t.ErrorMap  # RootModel[Mapping[str, int | str | t.IntMapping]] — error types
 t.ObjectList  # Transitional only — migrate to Sequence[m.<Domain>.ItemModel]
@@ -632,7 +632,7 @@ backup_path: str = Field(default="", description="Backup path.")
 target_dn: str = Field(default="", description="Target DN.")
 
 # ✅ CORRECT — None has distinct meaning ("not configured at all")
-config_file: str | None = Field(default=None, description="Optional config override.")
+config_file: str | None = Field(default=None, description="Optional settings override.")
 ```
 
 **Decision tree**:

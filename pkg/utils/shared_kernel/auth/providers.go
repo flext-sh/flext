@@ -419,13 +419,13 @@ func (p *APIKeyProvider) Validate(ctx context.Context, apiKey string) (*UserCont
 
 // OAuth2Provider provides OAuth2 authentication
 type OAuth2Provider struct {
-	config OAuth2Config
+	settings OAuth2Config
 	logger logging.Logger
 }
 
 // NewOAuth2Provider creates a new OAuth2 provider
-func NewOAuth2Provider(config OAuth2Config, logger logging.Logger) (*OAuth2Provider, error) {
-	if config.ClientID == "" || config.ClientSecret == "" {
+func NewOAuth2Provider(settings OAuth2Config, logger logging.Logger) (*OAuth2Provider, error) {
+	if settings.ClientID == "" || settings.ClientSecret == "" {
 		return nil, &errors.DomainError{
 			Code:    "OAUTH2_CONFIG_ERROR",
 			Message: "OAuth2 client ID and secret are required",
@@ -434,7 +434,7 @@ func NewOAuth2Provider(config OAuth2Config, logger logging.Logger) (*OAuth2Provi
 	}
 
 	return &OAuth2Provider{
-		config: config,
+		settings: settings,
 		logger: logger.With(logging.F("provider", "oauth2")),
 	}, nil
 }

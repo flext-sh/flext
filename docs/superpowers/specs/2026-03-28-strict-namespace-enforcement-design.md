@@ -316,7 +316,7 @@ These classes are MRO bases of the namespace facade chain. Python requires them 
 - `validator.py` → `u.Plugin.Validator`
 - `hooks.py` → `u.Plugin.Hooks`
 - `lifecycle.py` → `u.Plugin.Lifecycle`
-- `config_loader.py` → `u.Plugin.ConfigLoader`
+- `settings_loader.py` → `u.Plugin.SettingsLoader`
 - `plugin_exceptions.py` → rename to `errors.py`
 - `sandbox.py` → `u.Plugin.Sandbox`
 

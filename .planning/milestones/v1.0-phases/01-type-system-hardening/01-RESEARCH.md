@@ -51,7 +51,7 @@ None — discussion stayed within phase scope.
 
 Phase 1 is a pure type-system cleanup with no architecture changes. The monorepo carries an estimated 4,000+ pyrefly errors and ~2,098 pyright issues accumulated from technical debt. Both toolchains must reach zero before Phase 1 is complete. The work is structured as four wave plans plus a final micro-plan, sequenced by the hard dependency order: `flext-core` (foundation) → `flext-infra + flext-tests` (infrastructure) → `flext-cli` (largest consumer, solo) → remaining 27 projects → TYPE-07/TYPE-08 micro-sweep.
 
-**Critical blocker:** `make pyre` currently exits non-zero because pyrefly cannot resolve the `search-path` entries in `[tool.pyrefly]`. Inspection of `pyproject.toml` lines 127–174 confirms the paths are already expressed as project-relative strings (e.g., `"flext-core/src"`) — no `${PWD}` tokens present in the committed config. However per CONTEXT.md D-07, the entrypoint is still failing. Wave 1 must begin by diagnosing and fixing this before any error count is authoritative. The authoritative make target is `make pyre` (not `make pyrefly-repo` — that label was used in the sisyphus plan; the actual Makefile target is `pyre`).
+**Critical blocker:** `make pyre` currently exits non-zero because pyrefly cannot resolve the `search-path` entries in `[tool.pyrefly]`. Inspection of `pyproject.toml` lines 127–174 confirms the paths are already expressed as project-relative strings (e.g., `"flext-core/src"`) — no `${PWD}` tokens present in the committed settings. However per CONTEXT.md D-07, the entrypoint is still failing. Wave 1 must begin by diagnosing and fixing this before any error count is authoritative. The authoritative make target is `make pyre` (not `make pyrefly-repo` — that label was used in the sisyphus plan; the actual Makefile target is `pyre`).
 
 **Policy gate** (`make pol`) already exists and enforces zero `Any`, zero `t.NormalizedValue`, zero `# type: ignore`. This gate is the evidence artifact for TYPE-02/TYPE-03 acceptance.
 
@@ -241,7 +241,7 @@ fix: not isinstance($X, ($$$Y))
 | Root Cause | Issue Count | Primary Fix |
 |------------|------------:|-------------|
 | `_operation_stats` PrivateAttr pattern | 121+ cascade | Fix `Annotated[T, PrivateAttr()]` declaration |
-| `_GuardInput` union too narrow | widespread `reportArgumentType` | Widen to include `Result`, `BaseModel`, `ConfigMap`, `HasModelDump` |
+| `_GuardInput` union too narrow | widespread `reportArgumentType` | Widen to include `Result`, `BaseModel`, `SettingsMap`, `HasModelDump` |
 | Unnecessary isinstance (type already resolved) | 79 | Remove redundant checks |
 | Incompatible method overrides | scattered | Fix `model_post_init`, `get`, `register` signatures |
 | Missing type annotations | 317 `reportUnknownVariableType` | Add explicit annotations |
@@ -264,7 +264,7 @@ fix: not isinstance($X, ($$$Y))
 
 **What goes wrong:** `make pyre` exits non-zero, reporting "Invalid search-path" or "0 files checked". All error counts appear to be 0 but nothing was actually checked.
 **Why it happens:** pyrefly's `search-path` resolution doesn't expand shell variables (e.g., `${PWD}`) or fails to resolve relative paths when invoked from the repo root. Wave 0 of the sisyphus plan removed legacy artifacts; the current `pyproject.toml` already uses bare relative paths (confirmed: lines 127–174 have no `${PWD}`).
-**How to avoid:** Wave 1 task 0 — run `make pyre` first and inspect `.sisyphus/evidence/pyrefly-toolchain.txt` and `.sisyphus/evidence/pyrefly-repo-before.txt`. If errors = 0 but files_checked = 0, the path resolution is still broken. Fix the config path or the invocation in the Makefile `pyre` target.
+**How to avoid:** Wave 1 task 0 — run `make pyre` first and inspect `.sisyphus/evidence/pyrefly-toolchain.txt` and `.sisyphus/evidence/pyrefly-repo-before.txt`. If errors = 0 but files_checked = 0, the path resolution is still broken. Fix the settings path or the invocation in the Makefile `pyre` target.
 **Warning signs:** Output shows `projects: 0` or files scanned count is far below expected (~33 projects × average files).
 
 ### Pitfall 2: `make check` Reporting "Skipped: 1" for flext-core
@@ -528,7 +528,7 @@ From STATE.md error hotspots and NARROWING-SCAN-SUMMARY.md:
 - `.sisyphus/evidence/NARROWING-SCAN-SUMMARY.md` — 223 violations across 19 consumer projects
 - `.planning/phases/01-type-system-hardening/01-CONTEXT.md` — locked decisions D-01 through D-08
 - `flext/Makefile` — actual make target names (`pyre`, `pol`, `check`) verified directly
-- `flext/pyproject.toml` lines 117–185 — `[tool.pyrefly]` config verified (no `${PWD}` in search-path)
+- `flext/pyproject.toml` lines 117–185 — `[tool.pyrefly]` settings verified (no `${PWD}` in search-path)
 - `.claude/skills/flext-strict-typing/SKILL.md` — rules for t.* contracts, TypeGuard, isinstance patterns
 - `.claude/skills/flext-type-system/SKILL.md` — TypeAliasType isinstance incompatibility, cross-project namespace inheritance
 - `.claude/skills/flext-pyrefly-typecheck-fix/SKILL.md` — recurring error cluster patterns

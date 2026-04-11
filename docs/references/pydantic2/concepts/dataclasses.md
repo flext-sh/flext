@@ -1,6 +1,6 @@
 <!-- TOC START -->
 
-- [Dataclass config](#dataclass-config)
+- [Dataclass settings](#dataclass-settings)
 - [Rebuilding dataclass schema](#rebuilding-dataclass-schema)
 - [Stdlib dataclasses and Pydantic dataclasses](#stdlib-dataclasses-and-pydantic-dataclasses)
   - [Inherit from stdlib dataclasses](#inherit-from-stdlib-dataclasses)
@@ -48,7 +48,7 @@ They provide a similar functionality to stdlib dataclasses with the addition of 
 
 Similarities between Pydantic dataclasses and models include support for:
 
-- [Configuration](#dataclass-config) support
+- [Configuration](#dataclass-settings) support
 - [Nested](./models.md#nested-models) classes
 - [Generics](./models.md#generic-models)
 
@@ -90,13 +90,13 @@ print(user)
 ```
 
 The Pydantic [`@dataclass`][pydantic.dataclasses.dataclass] decorator accepts the same arguments as the standard decorator,
-with the addition of a `config` parameter.
+with the addition of a `settings` parameter.
 
-## Dataclass config
+## Dataclass settings
 
 If you want to modify the configuration like you would with a [`BaseModel`][pydantic.BaseModel], you have two options:
 
-- Use the `config` argument of the decorator.
+- Use the `settings` argument of the decorator.
 - Define the configuration with the `__pydantic_config__` attribute.
 
 ```python
@@ -105,7 +105,7 @@ from pydantic.dataclasses import dataclass
 
 
 # Option 1 -- using the decorator argument:
-@dataclass(config=ConfigDict(validate_assignment=True))  # (1)!
+@dataclass(settings=ConfigDict(validate_assignment=True))  # (1)!
 class MyDataclass1:
     a: int
 
@@ -118,12 +118,12 @@ class MyDataclass2:
     __pydantic_config__ = ConfigDict(validate_assignment=True)
 ```
 
-1. You can read more about `validate_assignment` in the [API reference][pydantic.config.ConfigDict.validate_assignment].
+1. You can read more about `validate_assignment` in the [API reference][pydantic.settings.ConfigDict.validate_assignment].
 
 !!! note
-While Pydantic dataclasses support the [`extra`][pydantic.config.ConfigDict.extra] configuration value, some default
+While Pydantic dataclasses support the [`extra`][pydantic.settings.ConfigDict.extra] configuration value, some default
 behavior of stdlib dataclasses may prevail. For example, any extra fields present on a Pydantic dataclass with
-[`extra`][pydantic.config.ConfigDict.extra] set to `'allow'` are omitted in the dataclass' string representation.
+[`extra`][pydantic.settings.ConfigDict.extra] set to `'allow'` are omitted in the dataclass' string representation.
 There is also no way to provide validation [using the `__pydantic_extra__` attribute](./models.md#extra-data).
 
 ## Rebuilding dataclass schema
@@ -195,7 +195,7 @@ print(PydanticA(a="1"))
 ### Usage of stdlib dataclasses with `BaseModel`
 
 When a standard library dataclass is used within a Pydantic model, a Pydantic dataclass or a [`TypeAdapter`][pydantic.TypeAdapter],
-validation will be applied (and the [configuration](#dataclass-config) stays the same). This means that using a stdlib or a Pydantic
+validation will be applied (and the [configuration](#dataclass-settings) stays the same). This means that using a stdlib or a Pydantic
 dataclass as a field annotation is functionally equivalent.
 
 ```python
@@ -290,7 +290,7 @@ except PydanticSchemaGenerationError as e:
     """
 
 
-# valid as we set arbitrary_types_allowed=True, and that config pushes down to the nested vanilla dataclass
+# valid as we set arbitrary_types_allowed=True, and that settings pushes down to the nested vanilla dataclass
 class Model(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 

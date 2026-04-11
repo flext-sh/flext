@@ -40,7 +40,7 @@ description: Verified development workflow including toolchain, testing, and CI/
 
 **Reviewed**: 2026-02-19 | **Scope**: Coverage source-of-truth migration to pyproject.toml
 
-> **Source of truth**: Verified from `base.mk`, `pyproject.toml`, `.pre-commit-config.yaml`,
+> **Source of truth**: Verified from `base.mk`, `pyproject.toml`, `.pre-commit-settings.yaml`,
 > and actual project structure on 2026-02-19.
 
 - `AGENTS.md` — canonical governance source
@@ -220,7 +220,7 @@ TCH, TD, TID, TRY, UP, W, YTT
 ### Pytest (Testing)
 
 - Config: `pyproject.toml` section `[tool.pytest.ini_options]`
-- Coverage config: `pyproject.toml` section `[tool.coverage]` (source of truth for `run.source` and `report.fail_under`)
+- Coverage settings: `pyproject.toml` section `[tool.coverage]` (source of truth for `run.source` and `report.fail_under`)
 - Run: `make test`
 - Coverage threshold: per-project via `pyproject.toml` `[tool.coverage.report] fail_under`
 - No `--cov*` flags in pytest addopts — coverage is owned by `[tool.coverage]` only
@@ -333,7 +333,7 @@ grep -rn "FlextModels" --include='*.py' flext-*/src/ | grep -v __pycache__
 
 ## Pre-Commit Hooks
 
-Configured in `.pre-commit-config.yaml`:
+Configured in `.pre-commit-settings.yaml`:
 
 - Ruff (lint + format)
 - Various file-level checks (trailing whitespace, end-of-file, etc.)

@@ -31,7 +31,7 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
   - `LdifFile`: 2 conversions
   - `LdifTransformationResult`: 1 conversion
   - `LdifBatchProcessing`: 5 conversions
-  - `SingerStreamConfig`: 1 conversion
+  - `SingerStreamSettings`: 1 conversion
   - `LdifTargetResult`: 5 conversions
 
 **Conversions:**
@@ -89,8 +89,8 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
   - `ProcessingSummary`: 1 conversion
   - `LoaderOperation`: 2 conversions
   - `LoaderFinalizeResult`: 2 conversions
-  - `OracleConnectionConfig`: 7 conversions
-  - `TargetConfig`: 1 conversion
+  - `OracleConnectionSettings`: 7 conversions
+  - `TargetSettings`: 1 conversion
   - `ImplementationMetrics`: 2 conversions
 
 **Conversions:**
@@ -106,7 +106,7 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
 ✅ pool_max: int → t.PositiveInt
 ✅ pool_increment: int → t.PositiveInt
 ✅ parallel_degree: int → t.PositiveInt
-✅ batch_size (TargetConfig): int → t.BatchSize
+✅ batch_size (TargetSettings): int → t.BatchSize
 ✅ streams_configured: int → t.NonNegativeInt
 ✅ batch_size (ImplementationMetrics): int → t.BatchSize
 ```
@@ -119,7 +119,7 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
 ### Project 5: flext-target-oracle-wms (3 conversions)
 - **File:** `/home/marlonsc/flext/flext-target-oracle-wms/src/flext_target_oracle_wms/models.py`
 - **Classes Modified:** 2
-  - `WmsTargetConfig`: 1 conversion
+  - `WmsTargetSettings`: 1 conversion
   - `WmsTargetResult`: 3 conversions
 
 **Conversions:**

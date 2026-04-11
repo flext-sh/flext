@@ -59,7 +59,7 @@ Completed implementation of comprehensive Result type system with strict typing 
 2. **FlextError (Pydantic BaseModel)**
    - Properties: domain, code, message, details, source
    - `from_exception()` - Create from caught exception
-   - `to_dict()` - Convert to ConfigMap for Result.error_data
+   - `to_dict()` - Convert to SettingsMap for Result.error_data
    - Proper string representation with code and message
 
 3. **ResultErrorData (Pydantic BaseModel)**
@@ -239,7 +239,7 @@ All changes must pass:
 ## Key Decisions Documented
 
 1. **StrEnum for ErrorDomain**: Better string representation than regular Enum
-2. **ConfigDict(arbitrary_types_allowed=True)**: Needed for BaseException support
+2. **SettingsDict(arbitrary_types_allowed=True)**: Needed for BaseException support
 3. **Structured error optional**: error_code and error_data are optional for backward compat
 4. **No breaking changes to r**: All changes are additive
 

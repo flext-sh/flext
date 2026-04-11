@@ -55,7 +55,7 @@ if result.is_failure:
 
 ## Architecture & patterns
 
-- **Clean Architecture**: `constants.py`, `typings.py`, `protocols.py` (Tier 0); `models.py`, `utilities.py` (Tier 1); `config.py`, `target.py`, `loader.py`, `exceptions.py` (Tier 2/3) follow strict layering. Lower tiers never import higher modules.
+- **Clean Architecture**: `constants.py`, `typings.py`, `protocols.py` (Tier 0); `models.py`, `utilities.py` (Tier 1); `settings.py`, `target.py`, `loader.py`, `exceptions.py` (Tier 2/3) follow strict layering. Lower tiers never import higher modules.
 - **Flext integration**: depends on `flext-core` (r, FlextContainer, logging), `flext-meltano` (Singer integration), `flext-db-oracle` (connection/pooling), and exposes interfaces for `flext-target-` Wish list.
 - **Data flow**: Singer tap schema/record/state messages pass through `FlextOracleTarget`, orchestrate `OracleLoader`, and land in Oracle with batched commits and `r` chaining.
 - **Issue tracking**: README/`docs/TODO.md` list critical blockers (SQL injection, exception duplication, missing Singer methods, DDL vs DML misuse, transaction support, schema evolution) that must be resolved before production readiness.

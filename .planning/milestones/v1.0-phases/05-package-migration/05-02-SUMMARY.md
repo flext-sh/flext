@@ -99,7 +99,7 @@ completed: 2026-03-24
 
 ## Decisions Made
 
-- algar-oud-mig was not in the plan's member list but existed as a submodule with poetry config; included for completeness
+- algar-oud-mig was not in the plan's member list but existed as a submodule with poetry settings; included for completeness
 - Foundation projects from Plan 01 still had `@ file:` deps that needed cleaning for uv workspace resolution
 - No `[tool.uv.override]` entries needed; resolution succeeded cleanly on first attempt
 
@@ -115,7 +115,7 @@ completed: 2026-03-24
 
 **2. [Rule 2 - Missing] algar-oud-mig not in plan member list**
 - **Found during:** Task 1
-- **Issue:** algar-oud-mig is a submodule with poetry config but was omitted from the plan
+- **Issue:** algar-oud-mig is a submodule with poetry settings but was omitted from the plan
 - **Fix:** Converted to hatchling and added to workspace members/sources
 - **Files modified:** algar-oud-mig/pyproject.toml, pyproject.toml
 

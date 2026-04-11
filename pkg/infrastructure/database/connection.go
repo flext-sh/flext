@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/infrastructure/config"
+	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // PostgreSQL driver
@@ -38,16 +38,16 @@ type Connection struct {
 	db     *sql.DB
 	gormDB *gorm.DB
 	sqlxDB *sqlx.DB
-	config *config.DatabaseConfig
+	settings *settings.DatabaseConfig
 	logger logging.Logger
 }
 
 // NewConnection cria uma nova conexão com o banco
-func NewConnection(cfg *config.DatabaseConfig, logger logging.Logger) (*Connection, error) {
+func NewConnection(cfg *settings.DatabaseConfig, logger logging.Logger) (*Connection, error) {
 	if cfg.Driver == "memory" {
 		// Para desenvolvimento, retorna uma conexão mock ou em memória
 		return &Connection{
-			config: cfg,
+			settings: cfg,
 			logger: logger,
 		}, nil
 	}
@@ -124,7 +124,7 @@ func NewConnection(cfg *config.DatabaseConfig, logger logging.Logger) (*Connecti
 		db:     db,
 		gormDB: gormDB,
 		sqlxDB: sqlxDB,
-		config: cfg,
+		settings: cfg,
 		logger: logger,
 	}, nil
 }
@@ -174,7 +174,7 @@ func (c *Connection) GetStats() sql.DBStats {
 }
 
 // buildPostgresDSN constrói a string de conexão PostgreSQL
-func buildPostgresDSN(cfg *config.DatabaseConfig) string {
+func buildPostgresDSN(cfg *settings.DatabaseConfig) string {
 	return fmt.Sprintf(
 		"host=%s port=%d user=%s dbname=%s sslmode=%s",
 		cfg.Host,

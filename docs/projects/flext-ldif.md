@@ -56,7 +56,7 @@ Use `ldif.migrate(...)` for server-to-server conversions, `parse_with_auto_detec
 Input LDIF → RFC parser → Quirk adapters → Target writer/migration pipeline
 ```
 
-- **Core modules**: `api.py` (facade), `config.py`, `constants.py`, `typings.py`, `protocols.py`, `models.py`, `utilities.py`.
+- **Core modules**: `api.py` (facade), `settings.py`, `constants.py`, `typings.py`, `protocols.py`, `models.py`, `utilities.py`.
 - **Pipeline services**: `services.migration_pipeline`, `services.server_detector`, `services.rfc_schema_parser`.
 - **Extensible quirks**: `quirks.registry`, `quirks.server-specific`, `quirks.conversion_matrix`, `quirks/dn_case_registry`.
 - **RFC compliance layer**: `rfc/` modules with parser/writer/schema helpers.

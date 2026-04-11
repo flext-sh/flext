@@ -195,7 +195,7 @@ Remove `[project.optional-dependencies].dev` entirely. uv supports `--group dev`
 
 | Problem | Don't Build | Use Instead | Why |
 |---------|-------------|-------------|-----|
-| pyproject.toml conversion | Manual editing 33 files | Update `flext_infra.deps.modernizer` to emit hatchling config | Modernizer already manages [MANAGED] sections |
+| pyproject.toml conversion | Manual editing 33 files | Update `flext_infra.deps.modernizer` to emit hatchling settings | Modernizer already manages [MANAGED] sections |
 | Workspace member discovery | Hardcoded list | Parse .gitmodules (already done in Makefile) | Single source of truth |
 | Lock file generation | Per-project locks | `uv lock` at root | uv workspace handles this natively |
 
@@ -315,7 +315,7 @@ export UV_PROJECT_ENVIRONMENT="${VENV_DIR}"
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
-| Config file | Root pyproject.toml `[tool.pytest.ini_options]` |
+| Settings file | Root pyproject.toml `[tool.pytest.ini_options]` |
 | Quick run command | `make test PYTEST_ARGS="-x" PROJECT=flext-core` |
 | Full suite command | `make test` |
 

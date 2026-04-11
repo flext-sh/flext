@@ -20,7 +20,7 @@
 - [Patterns Established](#patterns-established)
   - [1. TypeGuard Pattern (Replaces cast())](#1-typeguard-pattern-replaces-cast)
   - [2. Hierarchical Model Organization](#2-hierarchical-model-organization)
-  - [3. Standard ConfigDict](#3-standard-configdict)
+  - [3. Standard SettingsDict](#3-standard-configdict)
   - [4. Modern Validators](#4-modern-validators)
 - [Next Steps](#next-steps)
   - [Immediate (Ready Now)](#immediate-ready-now)
@@ -53,7 +53,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
 1. **Corrected Metrics** (from exhaustive codebase analysis)
    - 627 cast() usages (not 41) - ~500 in tests, ~127 in src/
    - 305 TypedDict definitions (not 402)
-   - 249+ ConfigDict patterns (already using Pydantic v2)
+   - 249+ SettingsDict patterns (already using Pydantic v2)
    - 127+ BaseModel subclasses
 
 2. **Comprehensive Planning** (3 detailed phase documents)
@@ -65,14 +65,14 @@ The Pydantic 2 migration roadmap has been completely planned with:
    - flext-fin: TypeGuard infrastructure
    - flext-pf3: TypedDict migration
    - flext-5dr: cast() elimination
-   - flext-jt2: ConfigDict standardization
+   - flext-jt2: SettingsDict standardization
    - flext-nya: Validation & documentation
 
 4. **Key Decisions Documented**
    - Convert ALL cast() including tests → TypeGuards
    - Convert ALL TypedDict → Structural Pydantic 2 models
    - Hierarchical namespace pattern: `m.Entity`, `m.Ldif.Entry`, `m.Cli.Command`
-   - Standard ConfigDict across all models
+   - Standard SettingsDict across all models
    - Modern validators: `@field_validator`, `@model_validator`, `computed_field`
 
 ---
@@ -87,7 +87,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
 
 - Executive summary with corrected metrics
 - Key decisions matrix
-- Migration patterns (TypeGuard, hierarchical models, ConfigDict, validators)
+- Migration patterns (TypeGuard, hierarchical models, SettingsDict, validators)
 - Phase structure (0-11)
 - Risk assessment
 - Timeline estimate
@@ -98,7 +98,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
 
 - TypeGuard Pattern (replaces cast())
 - TypedDict to Pydantic Model (hierarchical inheritance)
-- Standard ConfigDict Settings
+- Standard SettingsDict Settings
 - Modern Validator Patterns
 - Namespace Hierarchy Standard
 
@@ -122,7 +122,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
   - Remove 8 cast() from src/
   - Replace with TypeGuards
 
-- Task 1.4: ConfigDict Standardization
+- Task 1.4: SettingsDict Standardization
   - Standardize 127+ models
   - Document patterns
 
@@ -135,7 +135,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
 - TypeGuard utilities created
 - All 86 TypedDicts converted
 - Zero cast() in src/
-- Standard ConfigDict
+- Standard SettingsDict
 - AGENTS.md updated
 
 ### 3. Phases 2-6 Parallel Tracks
@@ -199,7 +199,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
 
 - Zero cast() across ALL projects
 - Zero TypedDict (all converted)
-- ConfigDict standardized
+- SettingsDict standardized
 - 80%+ coverage maintained
 - All documentation updated
 
@@ -213,7 +213,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
 | --------------------- | ------------------- |
 | cast() usages         | 627                 |
 | TypedDict definitions | 305                 |
-| ConfigDict patterns   | 249+ (inconsistent) |
+| SettingsDict patterns   | 249+ (inconsistent) |
 | BaseModel subclasses  | 127+                |
 | Projects affected     | 29                  |
 
@@ -223,7 +223,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
 | ------------------------- | ------------------- |
 | cast() usages             | 0                   |
 | TypedDict definitions     | 0                   |
-| ConfigDict patterns       | 127+ (standardized) |
+| SettingsDict patterns       | 127+ (standardized) |
 | Modern validators         | 100%                |
 | Projects passing validate | 29/29               |
 | Test coverage             | 80%+                |
@@ -261,7 +261,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
 | flext-fin | Phase 1.1: Create TypeGuard infrastructure           | 0        | open   |
 | flext-pf3 | Phase 1.2: Migrate TypedDicts to hierarchical models | 0        | open   |
 | flext-5dr | Phase 1.3: Eliminate cast() from src/                | 0        | open   |
-| flext-jt2 | Phase 1.4: Standardize ConfigDict                    | 0        | open   |
+| flext-jt2 | Phase 1.4: Standardize SettingsDict                    | 0        | open   |
 | flext-nya | Phase 1.5: Validate and update AGENTS.md             | 0        | open   |
 
 ### Additional Issues to Create
@@ -294,16 +294,16 @@ if Guards.is_config(obj):
 ### 2. Hierarchical Model Organization
 
 ```python
-config: m.Core.Tests.Config = ...
+settings: m.Core.Tests.Settings = ...
 context: m.Core.Tests.Context = ...
 result: m.Result.Success = ...
 entry: m.Ldif.Entry = ...
 ```
 
-### 3. Standard ConfigDict
+### 3. Standard SettingsDict
 
 ```python
-model_config = ConfigDict(
+model_config = SettingsDict(
     validate_assignment=True,
     use_enum_values=True,
     extra="forbid",
@@ -345,7 +345,7 @@ def domain(self) -> str:
 1. Create TypeGuard infrastructure
 2. Migrate 86 TypedDicts
 3. Eliminate 8 cast()
-4. Standardize ConfigDict
+4. Standardize SettingsDict
 5. Update documentation
 
 ### Phases 2-6 Execution
@@ -370,7 +370,7 @@ def domain(self) -> str:
 
 - Zero cast() in ALL code (src/ AND tests/)
 - Zero TypedDict (all converted to Pydantic models)
-- Standard ConfigDict across 127+ models
+- Standard SettingsDict across 127+ models
 - Modern validators throughout
 
 ✅ **Testing**
@@ -439,7 +439,7 @@ If critical issues arise:
 - New projects follow Phase 1 patterns
 - Code reviews check for cast() (forbidden)
 - Code reviews check for TypedDict (forbidden)
-- ConfigDict consistency enforced
+- SettingsDict consistency enforced
 - Modern validator patterns encouraged
 
 ### Monitoring

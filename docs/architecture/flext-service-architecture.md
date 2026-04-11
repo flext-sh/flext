@@ -51,13 +51,13 @@
   - [Problema 3: CQRS Command/Query - Muito Acadêmico](#problema-3-cqrs-commandquery-muito-acadmico)
   - [Problema 4: Over-Engineering Layer 3-4](#problema-4-over-engineering-layer-3-4)
 - [## ~~🔗 Padrões de Integração Simplificados (O Que Realmente Funciona)~~ ✅ MIGRADO](#padres-de-integrao-simplificados-o-que-realmente-funciona-migrado)
-  - [~~Padrão 1: Pydantic + DI + Config Singleton~~](#padro-1-pydantic-di-config-singleton)
+  - [~~Padrão 1: Pydantic + DI + Config Singleton~~](#padro-1-pydantic-di-settings-singleton)
   - [Padrão 2: Auto-Registro no Container](#padro-2-auto-registro-no-container)
   - [Padrão 3: Conformidade de Protocol via Tipagem Estrutural](#padro-3-conformidade-de-protocol-via-tipagem-estrutural)
   - [Padrão 4: Integração r Railway Pattern](#padro-4-integrao-flextresult-railway-pattern)
   - [Padrão 5: Integração Repository (Quando Precisa de Persistência)](#padro-5-integrao-repository-quando-precisa-de-persistncia)
   - [Padrão 6: Services Multi-Operação (Quando Necessário)](#padro-6-services-multi-operao-quando-necessrio)
-  - [Padrão 7: Resolução de Hierarquia de Config](#padro-7-resoluo-de-hierarquia-de-config)
+  - [Padrão 7: Resolução de Hierarquia de Config](#padro-7-resoluo-de-hierarquia-de-settings)
   - [Padrão 8: Execução Lazy com Caching](#padro-8-execuo-lazy-com-caching)
 - [## ~~🏛️ Infraestrutura Avançada: FlextDispatcher, FlextRegistry e FlextContext~~ ✅ MIGRADO](#infraestrutura-avanada-flextdispatcher-flextregistry-e-flextcontext-migrado)
   - [~~📊 Visão Geral~~](#viso-geral)
@@ -295,7 +295,7 @@ class MyService(s[Result]):
         self._context = FlextContext()  # ❌ Desnecessário!
 
     def execute(self) -> r[Result]:
-        config = FlextSettings.get_global_instance()  # ❌ Desnecessário!
+        settings = FlextSettings.get_global_instance()  # ❌ Desnecessário!
         logger = u.fetch_logger(__name__)  # ❌ Desnecessário!
 ```
 
@@ -318,7 +318,7 @@ class MyService(s[Result]):
         """
         Infraestrutura AUTOMATICAMENTE disponível via properties:
 
-        - self.config: FlextSettings      ← Global singleton
+        - self.settings: FlextSettings      ← Global singleton
         - self.logger: FlextLogger      ← Structured logging com cache
         - self.container: FlextContainer ← DI container (retorna r!)
         - self.context: FlextContext    ← Correlation IDs, tracing
@@ -328,7 +328,7 @@ class MyService(s[Result]):
         """
 
         # ✅ Use diretamente - tudo automático!
-        if self.config.debug:
+        if self.settings.debug:
             self.logger.debug(f"Processing {self.action} for user {self.user_id}")
 
         # ✅ Acesso ao container para DI (retorna r[T]!)
@@ -386,7 +386,7 @@ class MyService(s[Result]):
 
     def execute(self) -> r[Result]:
         # Mesma lógica, mas infraestrutura também automática!
-        if self.config.debug:
+        if self.settings.debug:
             self.logger.debug(f"Processing {self.action}")
 
         user_repo_result = self.container.get("UserRepository")
@@ -409,13 +409,13 @@ if result_monad.is_success:
 - s herda de x
 - x fornece properties que retornam singletons
 - **Tudo é lazy**, thread-safe, e automaticamente configurado
-- Você apenas usa `self.config`, `self.logger`, etc.
+- Você apenas usa `self.settings`, `self.logger`, etc.
 
 ### ✅ Auditoria de Lazy Loading (Garantia de Performance)
 
 **Status:** ✅ **AUDITADO e VALIDADO** - Toda infraestrutura é lazy!
 
-Property: **`self.config`** - Lazy?: ✅ - Implementação: `FlextSettings.get_global_instance()` - Performance: O(1) - Singleton lazy
+Property: **`self.settings`** - Lazy?: ✅ - Implementação: `FlextSettings.get_global_instance()` - Performance: O(1) - Singleton lazy
 Property: **`self.logger`** - Lazy?: ✅ - Implementação: Cache + DI lookup - Performance: O(1) após 1ª chamada
 Property: **`self.container`** - Lazy?: ✅ - Implementação: `FlextContainer.get_global()` - Performance: O(1) - Singleton lazy
 Property: **`self.context`** - Lazy?: ✅ - Implementação: `FlextContext()` usa contextvars - Performance: O(1) - Task-local lazy
@@ -442,7 +442,7 @@ def context(self) -> FlextContext:
 
 # VALIDADO (mixins.py ~730+): ✅ LAZY - Global singleton
 @property
-def config(self) -> FlextSettings:
+def settings(self) -> FlextSettings:
     return FlextSettings.get_global_instance()  # Singleton lazy
 ```
 
@@ -494,7 +494,7 @@ Este documento descreve **2 estados** do s:
 │ • 32+ projetos usando                                  │
 │ • .execute().unwrap() explícito                        │
 │ • Railway pattern manual                               │
-│ • Infraestrutura automática (config, logger)          │
+│ • Infraestrutura automática (settings, logger)          │
 │                                                         │
 │ ✅ FUNCIONA PERFEITAMENTE                              │
 │ ✅ Ainda suportado (100% compatível)                   │
@@ -567,7 +567,7 @@ Conceito: **s[T]** - Descrição: Base class com execute() - Versão: V1 ✅ V2 
 Conceito: **r[T]** - Descrição: Railway pattern monad - Versão: V1 ✅ V2 ✅
 Conceito: **Pydantic fields** - Descrição: Domain data via fields - Versão: V1 ✅ V2 ✅
 Conceito: **x** - Descrição: Infraestrutura automática - Versão: V1 ✅ V2 ✅
-Conceito: **self.config** - Descrição: Config singleton - Versão: V1 ✅ V2 ✅
+Conceito: **self.settings** - Descrição: Config singleton - Versão: V1 ✅ V2 ✅
 Conceito: **self.logger** - Descrição: Logger automático - Versão: V1 ✅ V2 ✅
 Conceito: **self.container** - Descrição: DI container - Versão: V1 ✅ V2 ✅
 
@@ -1169,7 +1169,7 @@ pipeline = (
 ```
 ✅ s[T]           → Simples, direto, todos usam
 ✅ r[T]            → Railway pattern, valor claro
-✅ FlextSettings (singleton)   → Acesso a config, funciona ótimo
+✅ FlextSettings (singleton)   → Acesso a settings, funciona ótimo
 ✅ FlextContainer (DI básico) → Resolução de dependências simples
 ✅ Validação Pydantic        → Validação de campos, natural
 ✅ Properties x    → Acesso a infraestrutura, transparente
@@ -1429,7 +1429,7 @@ class p:
     class Configurable(Protocol):
         """Configuration protocol."""
 
-        def configure(self, config: t.ContainerMapping) -> r[bool]: ...
+        def configure(self, settings: t.ContainerMapping) -> r[bool]: ...
         def get_config(self) -> t.ContainerMapping: ...
 
     @runtime_checkable
@@ -1482,8 +1482,8 @@ class x:
         return FlextContext.get_current()
 
     @property
-    def config(self) -> FlextSettings:
-        """Access global config singleton."""
+    def settings(self) -> FlextSettings:
+        """Access global settings singleton."""
         return FlextSettings.get_global_instance()
 ```
 
@@ -1496,7 +1496,7 @@ class x:
 class MyService(s[Result]):
     def execute(self) -> r[Result]:
         # Tudo disponível automaticamente:
-        self.config  # ✅ FlextSettings singleton
+        self.settings  # ✅ FlextSettings singleton
         self.logger  # ✅ Logger com cache
         self.container  # ✅ DI container
         self.context  # ✅ Correlation IDs
@@ -1538,7 +1538,7 @@ flext-core/src/flext_core/
 ├── service.py          → s (base class)
 ├── handlers.py         → h (CQRS)
 ├── dispatcher.py       → FlextDispatcher (command bus)
-├── config.py           → FlextSettings (singleton)
+├── settings.py           → FlextSettings (singleton)
 ├── result.py           → r (monad)
 ├── container.py        → FlextContainer (DI)
 └── mixins.py           → x (logger, context, etc)
@@ -1568,9 +1568,9 @@ class s[T](ABC):
 ```python
 # Atual (verboso)
 class SomeService(s[T]):
-    def __init__(self, config: SomeConfig):
+    def __init__(self, settings: SomeConfig):
         super().__init__()
-        self._config = config
+        self._config = settings
 ```
 
 **Problemas:**
@@ -1583,7 +1583,7 @@ class SomeService(s[T]):
 
 ```python
 # Atual (muito verboso)
-result = SomeService(config=cfg, params=data).execute()
+result = SomeService(settings=cfg, params=data).execute()
 if result.is_success:
     value = result.unwrap()
     # use value
@@ -1758,14 +1758,14 @@ Layer 0: Protocols (p)
 │  s[T] with Pydantic fields                   │
 │  - Direct execution via .value                          │
 │  - Monadic operations (map, and_then)                   │
-│  - Auto-config resolution                               │
+│  - Auto-settings resolution                               │
 │  - r[T] wrapping                              │
 └─────────────────────────────────────────────────────────┘
                         ↓
 ┌─────────────────────────────────────────────────────────┐
 │  LAYER 1: Foundation (INFRASTRUCTURE)                   │
 │  - r[T]     (Railway pattern)                 │
-│  - FlextSettings        (Singleton config)                │
+│  - FlextSettings        (Singleton settings)                │
 │  - FlextContainer     (Basic DI)                        │
 │  - x        (Property access)                 │
 │  - FlextLogger        (Structured logging)              │
@@ -1859,7 +1859,7 @@ def _get_dependency(self, name: str) -> m.Service.DependencyModel:
 
 - ✅ Pydantic validates parameters automatically
 - ✅ DI provides dependencies without constructor
-- ✅ Config singleton - no passing config around
+- ✅ Config singleton - no passing settings around
 - ✅ Logger/Context automatic via mixins
 
 ### Padrão 2: Auto-Registro no Container
@@ -1886,7 +1886,7 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
             dependencies: t.ContainerMapping = {}
 
             for param_name, param in init_signature.parameters.items():
-                if param_name not in ("self", "config", "data"):
+                if param_name not in ("self", "settings", "data"):
                     if param.annotation != inspect.Parameter.empty:
                         dependencies[param_name] = param.annotation
 
@@ -2194,16 +2194,16 @@ result = HttpPost("https://api.example.com/users", data={"name": "John"})
 
 ### Padrão 7: Resolução de Hierarquia de Config
 
-**Automatic config resolution by naming convention:**
+**Automatic settings resolution by naming convention:**
 
 ```python
-# s has smart config resolution:
+# s has smart settings resolution:
 
 
 class s[T]:
     @property
     def project_config(self) -> FlextSettings:
-        """Auto-resolve project-specific config.
+        """Auto-resolve project-specific settings.
 
         Resolution order:
         1. Try: ServiceClassName → ConfigClassName
@@ -2224,7 +2224,7 @@ class s[T]:
         except Exception:
             pass
 
-        # Fallback to global config
+        # Fallback to global settings
         return FlextSettings.get_global_instance()
 
 
@@ -2343,21 +2343,21 @@ Componente: **FlextContext** - Propósito: Contexto distribuído + Tracing - Qua
 dispatcher.register_handler(handler)  # Auto-discovery (1-arg)
 dispatcher.register_command(CommandType, handler)  # Explicit (2-arg)
 dispatcher.register_query(QueryType, handler)  # Query with caching
-dispatcher.register_function(func, config)  # Function as handler
+dispatcher.register_function(func, settings)  # Function as handler
 dispatcher.dispatch(command)  # Execute with all reliability patterns
 dispatcher.dispatch_batch(CommandType, [cmd1, cmd2, cmd3])  # Batch dispatch
 
 
 # LAYER 2: Reliability Configuration (via FlextSettings)
-config.circuit_breaker_threshold = 5  # Failures before open
-config.rate_limit_max_requests = 100  # Max requests per window
-config.rate_limit_window_seconds = 60  # Window size
-config.max_retry_attempts = 3  # Retry attempts
-config.retry_delay = 1.0  # Base delay (exponential backoff)
+settings.circuit_breaker_threshold = 5  # Failures before open
+settings.rate_limit_max_requests = 100  # Max requests per window
+settings.rate_limit_window_seconds = 60  # Window size
+settings.max_retry_attempts = 3  # Retry attempts
+settings.retry_delay = 1.0  # Base delay (exponential backoff)
 
 
 # LAYER 3: Advanced Processing
-dispatcher.register_processor(name, processor_func, config)
+dispatcher.register_processor(name, processor_func, settings)
 dispatcher.process(name, data)  # Single item
 dispatcher.process_batch(name, [data1, data2], batch_size=10)
 dispatcher.process_parallel(name, [data1, data2], max_workers=4)
@@ -2440,8 +2440,8 @@ dispatcher.register_command(HttpGetRequest, http_get_handler)
 
 
 # Config em FlextSettings
-config.max_retry_attempts = 3
-config.circuit_breaker_threshold = 5
+settings.max_retry_attempts = 3
+settings.circuit_breaker_threshold = 5
 
 
 # Uso
@@ -2818,7 +2818,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
    ```python
    def execute(self) -> r[T]:
        timeout = self.project_config.timeout_seconds
-       # NO config parameter in __init__!
+       # NO settings parameter in __init__!
    ```
 
 5. **x properties** - For infrastructure
@@ -3207,7 +3207,7 @@ class FlextLdifWriter(Flext[m.Ldif.WriteResultModel]):
 
    ```python
    # ❌ NUNCA VISTO:
-   container.batch_register({"logger": logger, "config": config, "parser": parser})
+   container.batch_register({"logger": logger, "settings": settings, "parser": parser})
    ```
 
    **Por quê:** Preferem registrar um por um para melhor controle
@@ -3259,7 +3259,7 @@ class FlextLdifWriter:
 class ldif:
     def parse(self, source: str) -> r:
         # ❌ MAL: Cria service direto
-        parser = FlextLdifParser(config=self.config)
+        parser = FlextLdifParser(settings=self.settings)
         return parser.parse(source)
 
 
@@ -3267,7 +3267,7 @@ class ldif:
 class ldif:
     def _setup_services(self) -> None:
         # ✅ BOM: Registrar no setup
-        parser = FlextLdifParser(config=self.config)
+        parser = FlextLdifParser(settings=self.settings)
         self.container.register("parser", parser)
 
     def parse(self, source: str) -> r:
@@ -3303,7 +3303,7 @@ class MyFacade(s[t.ContainerMapping]):
 
         # Factories para services parametrizados
         self.container.register_factory(
-            "processor", lambda: ProcessorService(config=self.config)
+            "processor", lambda: ProcessorService(settings=self.settings)
         )
 ```
 
@@ -3424,7 +3424,7 @@ Cenário: Type-safe retrieval - Usar: `get_typed()` - Não Usar: `get()` + cast 
 
 ```python
 # ✅ AUTOMÁTICO: Instanciar = carregar tudo
-config = FlextLdifSettings()  # ← Carrega .env, valida, singleton
+settings = FlextLdifSettings()  # ← Carrega .env, valida, singleton
 
 
 # ✅ AUTOMÁTICO: Environment vars (FLEXT_*)
@@ -3452,7 +3452,7 @@ class MyService(s[T]):
 
 #### 📊 Estado Atual da Implementação
 
-**Localização:** `flext-core/src/flext_core/config.py` (688 linhas)
+**Localização:** `flext-core/src/flext_core/settings.py` (688 linhas)
 
 **Arquitetura Automática:**
 
@@ -3521,7 +3521,7 @@ class FlextSettings(BaseSettings):
     @computed_field
     @property
 def log_config(self) -> m.Logging.ConfigSnapshotModel:
-        """Auto: complete logging config for FlextLogger."""
+        """Auto: complete logging settings for FlextLogger."""
         return {
             "level": self.effective_log_level,
             "format": self.log_format,
@@ -3546,7 +3546,7 @@ def log_config(self) -> m.Logging.ConfigSnapshotModel:
 
 ```python
 class FlextLdifSettings(FlextSettings):
-    """Project config - apenas novos fields, herda tudo."""
+    """Project settings - apenas novos fields, herda tudo."""
 
     # ✅ AUTOMÁTICO: Inherit model_config (NO override needed)
     # ✅ AUTOMÁTICO: Inherit debug, trace, log_level, max_workers
@@ -3575,7 +3575,7 @@ class FlextLdifSettings(FlextSettings):
         return self
 
     # ═══════════════════════════════════════════════════════════════
-    # COMPUTED FIELDS - Business logic derived from config
+    # COMPUTED FIELDS - Business logic derived from settings
     # ═══════════════════════════════════════════════════════════════
     @computed_field
     @property
@@ -3594,13 +3594,13 @@ class FlextLdifSettings(FlextSettings):
 - ✅ **Auto environment** - `FLEXT_LDIF__ENCODING=utf-16` funciona
 - ✅ **Auto validation** - Pydantic valida constraints
 - ✅ **Auto computed** - usa `is_debug_enabled` herdado
-- ✅ **Singleton isolation** - cada config é seu próprio singleton
+- ✅ **Singleton isolation** - cada settings é seu próprio singleton
 
 **Exemplo 2: Usando Config em Services (s)** ✅
 
 ```python
 class MyService(s[Sequence[Entry]]):
-    """Service com config automático."""
+    """Service com settings automático."""
 
     # ✅ AUTOMÁTICO: self.project_config já existe (x)
 
@@ -3624,7 +3624,7 @@ class MyService(s[Sequence[Entry]]):
 - ✅ `self.project_config` → property automática (x)
 - ✅ Singleton → sempre a mesma instância
 - ✅ Type-safe → Pydantic validation
-- ✅ Zero boilerplate → não passa config no `__init__`
+- ✅ Zero boilerplate → não passa settings no `__init__`
 
 #### ✅ O Que Funciona Bem (100% Automático)
 
@@ -3647,61 +3647,61 @@ assert core is not ldif  # ✅ True - Isolated singletons
 
 ```bash
 
-# ✅ Auto: Set environment = config loaded
+# ✅ Auto: Set environment = settings loaded
 export FLEXT_DEBUG=true
 export FLEXT_LOG_LEVEL=DEBUG
 export FLEXT_LDIF__ENCODING=utf-16  # ← Nested delimiter (__) works!
 ```
 
 ```python
-config = FlextLdifSettings()
+settings = FlextLdifSettings()
 
 # ✅ Auto: All loaded from environment
-assert config.debug == True
-assert config.log_level == "DEBUG"
-assert config.ldif_encoding == "utf-16"
+assert settings.debug == True
+assert settings.log_level == "DEBUG"
+assert settings.ldif_encoding == "utf-16"
 ```
 
 **3. Field Validation (Automatic)**
 
 ```python
 # ✅ Auto: Pydantic validates on instantiation
-config = FlextSettings(max_workers=10, timeout_seconds=30.5)  # OK
+settings = FlextSettings(max_workers=10, timeout_seconds=30.5)  # OK
 
 
 # ❌ Auto: Validation error raised
-config = FlextSettings(max_workers=100)  # Error: max 64 workers
+settings = FlextSettings(max_workers=100)  # Error: max 64 workers
 ```
 
 **4. Computed Fields (Cached)**
 
 ```python
-config = FlextSettings(trace=True)
+settings = FlextSettings(trace=True)
 
 
 # ✅ Auto: Computed once, cached
-assert config.is_debug_enabled == True  # Computed from trace
-assert config.effective_log_level == "DEBUG"  # Computed from trace
+assert settings.is_debug_enabled == True  # Computed from trace
+assert settings.effective_log_level == "DEBUG"  # Computed from trace
 
 
 # ✅ Auto: Available for FlextLogger
-log_config = config.log_config  # Dict ready for logger
+log_config = settings.log_config  # Dict ready for logger
 ```
 
 **5. Integration Config → Logger (Automatic)**
 
 ```python
 # ✅ Auto: Config controls logger behavior
-config = FlextSettings(debug=True, log_level="DEBUG", log_format="json")
+settings = FlextSettings(debug=True, log_level="DEBUG", log_format="json")
 
 
-# ✅ Auto: Logger reads config automatically
+# ✅ Auto: Logger reads settings automatically
 class MyService(s[T]):
     def execute(self) -> r[T]:
-        # ✅ Auto: logger uses config.log_config
+        # ✅ Auto: logger uses settings.log_config
         self.logger.info("Processing", extra={"count": 10})
-        # ← Automatically uses DEBUG level from config
-        # ← Automatically uses JSON format from config
+        # ← Automatically uses DEBUG level from settings
+        # ← Automatically uses JSON format from settings
 ```
 
 #### ❌ O Que NÃO Fazer - Anti-Patterns
@@ -3713,9 +3713,9 @@ class MyService(s[T]):
 ```python
 # ❌ ERRADO: Config como parâmetro (não usa singleton!)
 class MyService(s[T]):
-    def __init__(self, config: FlextSettings):
+    def __init__(self, settings: FlextSettings):
         super().__init__()
-        self._config = config  # ← Duplicação desnecessária!
+        self._config = settings  # ← Duplicação desnecessária!
 
 
 # ✅ CORRETO: Property automática
@@ -3730,11 +3730,11 @@ class MyService(s[T]):
 **Anti-Pattern 2: Criar Config em `__init__`** ❌
 
 ```python
-# ❌ ERRADO: Instanciar config manualmente
+# ❌ ERRADO: Instanciar settings manualmente
 class MyService(s[T]):
     def __init__(self):
         super().__init__()
-        self.config = FlextLdifSettings()  # ← Desnecessário!
+        self.settings = FlextLdifSettings()  # ← Desnecessário!
 
 
 # ✅ CORRETO: Property automática (x)
@@ -3826,20 +3826,20 @@ FLEXT_MYPROJECT__BATCH_SIZE=1000
 
 ```python
 # ✅ Auto: Load based on .env file present
-config = MyProjectConfig()  # Singleton, env-loaded, validated
+settings = MyProjectConfig()  # Singleton, env-loaded, validated
 ```
 
 #### 🔄 Migração (3 Passos Rápidos)
 
 ```bash
 
-# 1. Find config parameters
-grep -r "config: Flext.*Config" src/
+# 1. Find settings parameters
+grep -r "settings: Flext.*Config" src/
 
 
-# 2. Remove config from __init__
+# 2. Remove settings from __init__
 
-# ANTES: __init__(self, config: FlextSettings)
+# ANTES: __init__(self, settings: FlextSettings)
 
 # DEPOIS: (nada - use property)
 
@@ -3853,7 +3853,7 @@ grep -r "config: Flext.*Config" src/
 
 #### 📊 Quick Reference - Config Patterns
 
-Situação: Service precisa config - Solução Automática: `self.project_config` - ❌ Não Fazer: Passar no `__init__`
+Situação: Service precisa settings - Solução Automática: `self.project_config` - ❌ Não Fazer: Passar no `__init__`
 Situação: Project fields - Solução Automática: Extend FlextSettings - ❌ Não Fazer: Duplicar fields herdados
 Situação: Environment vars - Solução Automática: `FLEXT_*` prefix - ❌ Não Fazer: Manual loading
 Situação: Computed values - Solução Automática: `@computed_field` - ❌ Não Fazer: Manual calculation
@@ -4322,7 +4322,7 @@ class p:
     class Configurable(Protocol):
         """Configurable protocol."""
 
-        def configure(self, config: t.ContainerMapping) -> r[bool]: ...
+        def configure(self, settings: t.ContainerMapping) -> r[bool]: ...
         def get_config(self) -> t.ContainerMapping: ...
 ```
 
@@ -4469,8 +4469,8 @@ class x:
         return FlextContext.get_current()
 
     @property
-    def config(self) -> FlextSettings:
-        """Access global config singleton."""
+    def settings(self) -> FlextSettings:
+        """Access global settings singleton."""
         return FlextSettings.get_global_instance()
 ```
 
@@ -4479,7 +4479,7 @@ class x:
 - ✅ Property-based access (zero ceremony)
 - ✅ Lazy initialization
 - ✅ Singleton access
-- ✅ Logger, container, context, config
+- ✅ Logger, container, context, settings
 
 #### 📈 Uso Real no Ecossistema
 
@@ -4507,8 +4507,8 @@ class ldif(Flext[t.ContainerMapping]):
         # ✅ BOM: self.container via mixin
         parser = self.container.get_typed("parser", ParserService).unwrap()
 
-        # ✅ BOM: self.config via property (mas prefere self.project_config)
-        encoding = self.config.ldif_encoding
+        # ✅ BOM: self.settings via property (mas prefere self.project_config)
+        encoding = self.settings.ldif_encoding
 
         return parser.parse(source)
 ```
@@ -4540,7 +4540,7 @@ class ldif(Flext[t.ContainerMapping]):
    # ✅ Funciona perfeitamente (mas use project_config)
    class MyService(s[T]):
        def execute(self) -> r[T]:
-           debug = self.project_config.debug  # Melhor que self.config
+           debug = self.project_config.debug  # Melhor que self.settings
    ```
 
 #### ❌ O Que Não É Usado
@@ -4564,7 +4564,7 @@ class ldif(Flext[t.ContainerMapping]):
 - ✅ Use via s (já herda)
 - ✅ Use `self.logger` para logging
 - ✅ Use `self.container` para DI
-- ✅ Use `self.project_config` para config (melhor que `self.config`)
+- ✅ Use `self.project_config` para settings (melhor que `self.settings`)
 - ⚠️ `self.context` raramente necessário
 
 ##
@@ -4579,18 +4579,18 @@ class ldif(Flext[t.ContainerMapping]):
 
 ```python
 # 1️⃣ Config controls logger behavior
-config = FlextSettings(debug=True, log_level="DEBUG", log_format="json")
+settings = FlextSettings(debug=True, log_level="DEBUG", log_format="json")
 
 
-# 2️⃣ Logger auto-configura baseado em config
+# 2️⃣ Logger auto-configura baseado em settings
 class MyService(s[T]):
     def execute(self) -> r[T]:
         # ✅ Auto: self.logger configured from self.project_config
         self.logger.info("Processing", extra={"count": 10})
         # ↑ Automatically uses:
-        #   - DEBUG level (from config.effective_log_level)
-        #   - JSON format (from config.log_format)
-        #   - Structured extra fields (from config.log_config)
+        #   - DEBUG level (from settings.effective_log_level)
+        #   - JSON format (from settings.log_format)
+        #   - Structured extra fields (from settings.log_config)
 ```
 
 **Automação Completa:**
@@ -4611,20 +4611,20 @@ class MyService(s[T]):
 class FlextLogger:
     """Auto-configured logger via FlextSettings."""
 
-    def __init__(self, name: str, config: FlextSettings | None = None):
-        """Auto: Initialize with config integration."""
+    def __init__(self, name: str, settings: FlextSettings | None = None):
+        """Auto: Initialize with settings integration."""
         self._logger = logging.getLogger(name)
-        self._config = config or FlextSettings()
+        self._config = settings or FlextSettings()
 
-        # ✅ Auto: Apply config to logger
+        # ✅ Auto: Apply settings to logger
         self._configure_from_config()
 
     def _configure_from_config(self):
         """Auto: Apply FlextSettings settings."""
-        # ✅ Auto: Level from config
+        # ✅ Auto: Level from settings
         self._logger.setLevel(self._config.effective_log_level)
 
-        # ✅ Auto: Format from config (JSON if structured)
+        # ✅ Auto: Format from settings (JSON if structured)
         if self._config.log_format == "json":
             self._setup_json_formatter()
 
@@ -4634,7 +4634,7 @@ class FlextLogger:
 
 
 def info(self, msg: str, extra: m.Logging.ExtraContextModel | None = None):
-    """Auto: Add context from config."""
+    """Auto: Add context from settings."""
     enhanced_extra = {
         **(extra or {}),
         "debug_mode": self._config.is_debug_enabled,
@@ -4664,12 +4664,12 @@ class MyService(s[Sequence[Entry]]):
 
     def execute(self) -> r[Sequence[Entry]]:
         # ✅ Auto: self.logger exists (x property)
-        # ✅ Auto: Level from config.effective_log_level
+        # ✅ Auto: Level from settings.effective_log_level
         # ✅ Auto: Name = "MyService"
 
         self.logger.info("Starting parse", extra={"source": self.source})
 
-        # ✅ Auto: Debug only if config.is_debug_enabled
+        # ✅ Auto: Debug only if settings.is_debug_enabled
         if self.project_config.is_debug_enabled:
             self.logger.debug(f"Debug info: {self.source}")
 
@@ -4685,8 +4685,8 @@ class MyService(s[Sequence[Entry]]):
 **Por que é automático:**
 
 - ✅ `self.logger` → property (x)
-- ✅ Level → from `config.effective_log_level`
-- ✅ Debug check → `config.is_debug_enabled`
+- ✅ Level → from `settings.effective_log_level`
+- ✅ Debug check → `settings.is_debug_enabled`
 - ✅ Structured → `extra` dict automatic JSON
 - ✅ Name → auto-extracted from class
 
@@ -4694,7 +4694,7 @@ class MyService(s[Sequence[Entry]]):
 
 ```bash
 
-# Environment controls BOTH config AND logger
+# Environment controls BOTH settings AND logger
 export FLEXT_DEBUG=true          # ← Config field
 export FLEXT_LOG_LEVEL=DEBUG     # ← Config field
 export FLEXT_LOG_FORMAT=json     # ← Config field
@@ -4702,10 +4702,10 @@ export FLEXT_LOG_FORMAT=json     # ← Config field
 
 ```python
 # ✅ Auto: Config loaded from env
-config = FlextSettings()
+settings = FlextSettings()
 
 
-# ✅ Auto: Logger configured from config
+# ✅ Auto: Logger configured from settings
 class MyService(s[T]):
     def execute(self) -> r[T]:
         # ✅ Auto: Uses DEBUG level (from env)
@@ -4738,7 +4738,7 @@ if self.project_config.is_debug_enabled:
 **3. Structured Logging (JSON Automatic)**
 
 ```python
-# ✅ Auto: extra dict → JSON if config.log_format == "json"
+# ✅ Auto: extra dict → JSON if settings.log_format == "json"
 self.logger.info("Event", extra={"user_id": 123, "action": "login"})
 ```
 
@@ -4810,7 +4810,7 @@ class MyService(s[T]):
    - **Esforço:** 4-6 horas
 
 3. **Eliminar Config Pass-Through**
-   - Refatorar services que recebem config no `__init__`
+   - Refatorar services que recebem settings no `__init__`
    - Usar `self.project_config` property
    - **Impacto:** Simplificação, singleton pattern
    - **Esforço:** 2-3 horas
@@ -5175,7 +5175,7 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 
 class MyService(s[T]):
     def execute(self) -> r[T]:
-        # Access config singleton automatically
+        # Access settings singleton automatically
         timeout = self.project_config.timeout
         encoding = self.project_config.encoding
         # ...
@@ -5251,7 +5251,7 @@ class FlextApi(s[m.Api.ResponseModel]):
 2. Add lazy execution properties (`result`, `value`)
 3. Add monadic methods (`map`, `and_then`, `or_else`, `filter`)
 4. Add static factory methods (`run`, `try_run`)
-5. Remove config from `__init__` parameters
+5. Remove settings from `__init__` parameters
 
 **Code:**
 
@@ -5415,9 +5415,9 @@ def map(self, func: Callable[[T], m.Service.MappedValueModel]) -> "FlextServiceR
 
 ```python
 class FlextLdifWriter(Flext[m.Ldif.WriteResultModel]):
-    def __init__(self, config: FlextLdifSettings | None = None):
+    def __init__(self, settings: FlextLdifSettings | None = None):
         super().__init__()
-        self._config = config or FlextLdifSettings()
+        self._config = settings or FlextLdifSettings()
 
     def write(
         self,
@@ -5480,9 +5480,9 @@ class FlextLdifWriter(Flext[WriteResponse]):
 
 ```python
 class FlextApi(s[dict]):
-    def __init__(self, config: FlextApiSettings):
+    def __init__(self, settings: FlextApiSettings):
         super().__init__()
-        self._config = config
+        self._config = settings
 
     def get(self, url: str, **kwargs) -> r[dict]:
         # Implementation
@@ -6075,7 +6075,7 @@ Método: `Summary` (nested) - Linhas: 181-315 - Função: Tracking de registros
 │  ├── container (606-609)  → FlextContainer.get_global()          │
 │  ├── context (611-618)    → FlextContext()                       │
 │  ├── logger (620-628)     → FlextLogger com cache                │
-│  ├── config (731-761)     → FlextSettings.get_global_instance()    │
+│  ├── settings (731-761)     → FlextSettings.get_global_instance()    │
 │  └── track() (630-729)    → Performance tracking context mgr     │
 │                                                                  │
 │  NESTED CLASSES:                                                 │
@@ -6274,9 +6274,9 @@ Componente: Testes - Mudanças: Nenhuma mudança necessária - Esforço: **Zero*
 
 # ═══════════════════════════════════════════════════════════════
 class FlextLdifWriter(Flext[WriteResponse]):
-    def __init__(self, config: FlextLdifSettings | None = None):
+    def __init__(self, settings: FlextLdifSettings | None = None):
         super().__init__()
-        self._config = config or FlextLdifSettings()
+        self._config = settings or FlextLdifSettings()
 
     def write(
         self,
@@ -6295,7 +6295,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
 
 
 # Uso:
-service = FlextLdifWriter(config=cfg)
+service = FlextLdifWriter(settings=cfg)
 result = service.write(entries=my_entries, output_target="file")
 if result.is_success:
     response = result.unwrap()
@@ -6337,7 +6337,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
         return self
 
     def execute(self) -> r[WriteResponse]:
-        """Execute write - config auto-resolved!"""
+        """Execute write - settings auto-resolved!"""
         # ✅ Config singleton (não precisa passar no __init__)
         encoding = self.project_config.ldif_encoding
         max_line = self.project_config.ldif_max_line_length
@@ -6491,7 +6491,7 @@ entries = FlextLdifParser(source="file.ldif").value_or_none
 - [ ] Migrar service por service (opcional)
   - [ ] Converter **init** params → Pydantic fields
   - [ ] Mover lógica de métodos → execute()
-  - [ ] Remover config parameter → usar self.project_config
+  - [ ] Remover settings parameter → usar self.project_config
   - [ ] Adicionar validators (Pydantic)
 - [ ] Remover factory functions (opcional)
 - [ ] Update testes (se necessário)
@@ -6939,9 +6939,9 @@ def complex_migration(source_file: Path, target_file: Path) -> m.Infra.Migration
 
 # 1. Service definition (com stub execute)
 class FlextLdifParser(Flext[m.Ldif.ParseResultModel]):
-    def __init__(self, config: FlextLdifSettings | None = None):
+    def __init__(self, settings: FlextLdifSettings | None = None):
         super().__init__()
-        self._config = config or FlextLdifSettings()
+        self._config = settings or FlextLdifSettings()
 
     def parse(
         self, source: str | Path, source_server_type: str = "rfc4512"
@@ -6957,20 +6957,20 @@ def execute(self) -> r[m.Ldif.ParseResultModel]:
 
 # 2. Factory functions (duplicação!)
 def parse_ldif(source: str | Path, **kwargs) -> Sequence[Entry]:
-    service = FlextLdifParser(config=cfg)
+    service = FlextLdifParser(settings=cfg)
     result = service.parse(source=source, **kwargs)
     return result.unwrap()
 
 
 def parse_ldif_safe(source: str | Path, **kwargs) -> Sequence[Entry] | None:
-    service = FlextLdifParser(config=cfg)
+    service = FlextLdifParser(settings=cfg)
     result = service.parse(source=source, **kwargs)
     return result.value if result.is_success else None
 
 
 # 3. Usage (verbose)
-config = FlextLdifSettings()
-service = FlextLdifParser(config=config)
+settings = FlextLdifSettings()
+service = FlextLdifParser(settings=settings)
 result = service.parse(source="file.ldif", source_server_type="oud")
 if result.is_success:
     entries = result.unwrap()
@@ -6981,11 +6981,11 @@ else:
 
 # 4. Chaining (verbose - precisa .result)
 result = (
-    FlextLdifParser(config=cfg)
+    FlextLdifParser(settings=cfg)
     .parse(source="input.ldif")  # Método separado!
     .map(filter_users)
     .and_then(
-        lambda entries: FlextLdifWriter(config=cfg).write(
+        lambda entries: FlextLdifWriter(settings=cfg).write(
             entries=entries, output_path=Path("out.ldif")
         )  # Método separado!
     )
@@ -7094,7 +7094,7 @@ Métrica: **Documentação duplicada** - Antes: Service + factories - Depois: Ap
 ~~- ✅ **Zero ceremony**: `.value` ao invés de `.execute().unwrap()`~~
 ~~- ✅ **Smart resolution**: `.and_then()` detecta Service vs Result automaticamente~~
 ~~- ✅ **Type-safe**: Full Pydantic validation + Generic types~~
-~~- ✅ **Auto-config**: Singleton via `self.project_config` (sem passar parâmetros)~~
+~~- ✅ **Auto-settings**: Singleton via `self.project_config` (sem passar parâmetros)~~
 ~~- ✅ **Self-documenting**: Pydantic Field descriptions~~
 ~~- ✅ **Better DX**: Menos código = menos bugs~~
 
@@ -7103,7 +7103,7 @@ Métrica: **Documentação duplicada** - Antes: Service + factories - Depois: Ap
 ~~- ✅ **Zero duplication**: Elimina factory functions completamente~~
 ~~- ✅ **Unified pattern**: Um padrão para single/multiple operations~~
 ~~- ✅ **Pydantic-native**: Services são apenas Pydantic models~~
-~~- ✅ **Config singleton**: Não passar config em todo lugar~~
+~~- ✅ **Config singleton**: Não passar settings em todo lugar~~
 ~~- ✅ **Railway-oriented**: r para error handling natural~~
 ~~- ✅ **Testable**: Fácil de mockar e testar~~
 
@@ -7252,7 +7252,7 @@ Semana 2+:
 - [ ] Migrar services incrementalmente
   - [ ] Converter `__init__` params → Pydantic fields
   - [ ] Mover lógica → `execute()`
-  - [ ] Remover config parameter → `self.project_config`
+  - [ ] Remover settings parameter → `self.project_config`
   - [ ] Adicionar validators
 - [ ] (Opcional) Remover factory functions
 - [ ] Update testes
@@ -7399,7 +7399,7 @@ A solução está clara, o caminho está mapeado, o esforço é baixo.
 
 - **cli** (api.py) - Singleton coordinator com acesso direto a domain libraries
 - **FlextCliCore** (core.py) - Extends `s[CliDataDict]`
-- **FlextCliSettings** (config.py) - Extends `FlextSettings` com CLI-specific fields
+- **FlextCliSettings** (settings.py) - Extends `FlextSettings` com CLI-specific fields
 - **Domain Libraries**: FlextCliFormatters, FlextCliOutput, FlextCliFileTools, FlextCliPrompts, FlextCliCmd
 - **FlextCliCli** (cli.py) - Typer/Click abstraction layer (ONLY file allowed to import Typer/Click)
 
@@ -7451,7 +7451,7 @@ def save_auth_token(self, token: str) -> r[bool]:
 **3. Extensão Correta de FlextSettings**
 
 ```python
-# flext-cli/src/flext_cli/config.py
+# flext-cli/src/flext_cli/settings.py
 class FlextCliSettings(FlextSettings):
     """Extends FlextSettings with CLI-specific fields."""
 
@@ -7476,10 +7476,10 @@ class FlextCliCore(s[FlextCliTypes.Data.CliDataDict]):
     """Core CLI service extending s."""
 
     def __init__(
-        self, config: FlextCliTypes.Configuration.CliConfigSchema | None = None
+        self, settings: FlextCliTypes.Configuration.CliConfigSchema | None = None
     ):
         super().__init__()
-        self._config = config or {}
+        self._config = settings or {}
         self._commands: Mapping[str, FlextCliModels.CliCommand] = {}
 
     @override
@@ -7506,7 +7506,7 @@ class cli:
 
     # Public service instances
     logger: FlextLogger
-    config: FlextCliSettings
+    settings: FlextCliSettings
     formatters: FlextCliFormatters
     file_tools: FlextCliFileTools
     output: FlextCliOutput
@@ -7546,7 +7546,7 @@ class cli:
 cli  # api.py - Coordinator
 FlextCliCore  # core.py - s[CliDataDict]
 FlextCliCli  # cli.py - Typer abstraction
-FlextCliSettings  # config.py - Configuration
+FlextCliSettings  # settings.py - Configuration
 FlextCliFormatters  # formatters.py - Rich output
 FlextCliOutput  # output.py - Output formatting
 FlextCliFileTools  # file_tools.py - File I/O
@@ -7787,7 +7787,7 @@ class FlextCliSettings(FlextSettings):
 
 ```python
 class FlextCliSettings(FlextSettings):
-    """Simplified CLI config - only essentials."""
+    """Simplified CLI settings - only essentials."""
 
     # Output
     output_format: Literal["json", "yaml", "table", "csv"] = "json"
@@ -8109,7 +8109,7 @@ class r[T_co]:
 **2. FlextSettings - Singleton Pattern + Pydantic**
 
 ```python
-# flext-core/src/flext_core/config.py
+# flext-core/src/flext_core/settings.py
 class FlextSettings(BaseSettings):
     """Global configuration singleton extending Pydantic BaseSettings."""
 
@@ -8148,7 +8148,7 @@ class s[TDomainResult](
     """Base class for domain services."""
 
     # Pydantic fields (NO __init__ needed)
-    # Infrastructure via x (container, logger, context, config)
+    # Infrastructure via x (container, logger, context, settings)
 
     @abstractmethod
     def execute(self) -> r[TDomainResult]:
@@ -8156,12 +8156,12 @@ class s[TDomainResult](
 
     @computed_field
     def service_config(self) -> FlextSettings:
-        """Auto-resolve global config."""
+        """Auto-resolve global settings."""
         return FlextSettings.get_global_instance()
 
     @property
     def project_config(self) -> FlextSettings:
-        """Auto-resolve project-specific config by naming convention."""
+        """Auto-resolve project-specific settings by naming convention."""
         # FlextCliCore → FlextCliSettings
         config_class_name = self.__class__.__name__.replace("Service", "Config")
         return self.container.get(config_class_name).unwrap_or(self.service_config)
@@ -8171,7 +8171,7 @@ class s[TDomainResult](
 ✅ **Type parameter** - `[TDomainResult]` for return type
 ✅ **Multiple inheritance** - FlextModels + x + ABC
 ✅ **Auto-registration** - `__init_subclass__` registers in container
-✅ **Convention-based config** - `project_config` auto-resolves
+✅ **Convention-based settings** - `project_config` auto-resolves
 ✅ **Infrastructure properties** - logger, container, context via mixins
 
 **4. x - Infrastructure Access**
@@ -8203,7 +8203,7 @@ class x:
         return FlextContext()
 
     @property
-    def config(self) -> FlextSettings:
+    def settings(self) -> FlextSettings:
         return FlextSettings.get_global_instance()
 
     @contextmanager
@@ -8224,7 +8224,7 @@ class EmailService(s[EmailResult]):
 
     def execute(self) -> r[EmailResult]:
         # ✅ Infraestrutura automática!
-        if self.config.debug:
+        if self.settings.debug:
             self.logger.debug(f"Sending email to {self.recipient}")
 
         # ✅ Performance tracking
@@ -8257,7 +8257,7 @@ result = EmailService(
 ✅ **Thread-safe** - Logger caching com lock
 ✅ **Context propagation** - Correlation IDs automáticos
 ✅ **Performance tracking** - `track()` context manager
-✅ **Zero Ceremony** - Usuário apenas usa `self.config`, `self.logger`, etc.
+✅ **Zero Ceremony** - Usuário apenas usa `self.settings`, `self.logger`, etc.
 
 #### ⚠️ Problemas Identificados
 
@@ -8374,8 +8374,8 @@ class s[T]:
 **Problemas:**
 
 - ❌ **Magic naming** - Convenção implícita (Service → Config, Service → Models)
-- ❌ **Silently fails** - Se naming errado, retorna config/models default
-- ❌ **Hard to debug** - "Por que meu config não está funcionando?" → naming convention violation
+- ❌ **Silently fails** - Se naming errado, retorna settings/models default
+- ❌ **Hard to debug** - "Por que meu settings não está funcionando?" → naming convention violation
 - ❌ **No type safety** - `project_models` retorna `type` genérico
 
 **Problema 4: execute() Raramente Usa Pydantic Fields**
@@ -8385,9 +8385,9 @@ class s[T]:
 ```python
 # flext-cli/src/flext_cli/core.py
 class FlextCliCore(s[CliDataDict]):
-    def __init__(self, config: CliConfigSchema | None = None):
+    def __init__(self, settings: CliConfigSchema | None = None):
         super().__init__()
-        self._config = config or {}  # ❌ Private attr, não Pydantic field
+        self._config = settings or {}  # ❌ Private attr, não Pydantic field
         self._commands: Mapping[str, CliCommand] = {}  # ❌ Private attr
 
     def execute(self) -> r[CliDataDict]:
@@ -8432,12 +8432,12 @@ class s[TDomainResult](
     # ============ PROPERTIES (AUTO-RESOLVED) ============
     @computed_field
     def service_config(self) -> FlextSettings:
-        """Global config via computed field."""
+        """Global settings via computed field."""
         return FlextSettings.get_global_instance()
 
     @property
     def project_config(self) -> FlextSettings:
-        """Project config via naming convention."""
+        """Project settings via naming convention."""
         # Keep this - it's useful!
         return self._resolve_project_config()
 
@@ -8561,11 +8561,11 @@ class DomainEvent(Value):
 
 ```python
 class s[TDomainResult, TConfig: FlextSettings = FlextSettings]:
-    """Add config type parameter."""
+    """Add settings type parameter."""
 
     @property
     def project_config(self) -> TConfig:
-        """Type-safe project config."""
+        """Type-safe project settings."""
         # Try to resolve from container
         config_class = self.__class__.__orig_bases__[0].__args__[1]
         config_result = self.container.get(config_class.__name__)
@@ -8585,7 +8585,7 @@ class FlextCliCore(s[CliDataDict, FlextCliSettings]):
 ✅ **Type-safe** - IDE autocomplete para project_config
 ✅ **Explicit** - Config type declarado na classe
 ✅ **No magic** - Sem naming convention implícita
-✅ **Fail fast** - Type error se config errado
+✅ **Fail fast** - Type error se settings errado
 
 #### **Solução 4: Pydantic Fields + execute() Pattern**
 
@@ -8594,9 +8594,9 @@ class FlextCliCore(s[CliDataDict, FlextCliSettings]):
 ```python
 # ANTES - __init__ manual + execute() inútil
 class FlextCliCore(s[CliDataDict]):
-    def __init__(self, config: CliConfigSchema | None = None):
+    def __init__(self, settings: CliConfigSchema | None = None):
         super().__init__()
-        self._config = config or {}
+        self._config = settings or {}
         self._commands: Mapping[str, CliCommand] = {}
 
     def execute(self) -> r[CliDataDict]:
@@ -8715,7 +8715,7 @@ from flext_core import Command
 
 #### **Fase 3: Type-Safe project_config** (3 dias)
 
-**3.1: Add config type parameter**
+**3.1: Add settings type parameter**
 
 ```python
 class s[TDomainResult, TConfig: FlextSettings = FlextSettings]:
@@ -8726,7 +8726,7 @@ class s[TDomainResult, TConfig: FlextSettings = FlextSettings]:
 **3.2: Update existing services**
 
 ```python
-# Update signature to include config type
+# Update signature to include settings type
 class FlextCliCore(s[CliDataDict, FlextCliSettings]): ...
 ```
 
@@ -8776,7 +8776,7 @@ Métrica: **Backward Compat** - Antes: N/A - Depois: 100% - Melhoria: **Zero bre
 
 1. ⚠️ **Simplificar s** - Remover métodos raramente usados
 2. ⚠️ **Modularizar FlextModels** - Quebrar em 5 arquivos
-3. ⚠️ **Type-safe project_config** - Add config type parameter
+3. ⚠️ **Type-safe project_config** - Add settings type parameter
 4. ⚠️ **Documentar Pydantic pattern** - execute() com fields
 
 #### **O Que NÃO Fazer**
@@ -8900,7 +8900,7 @@ Princípio: **Migração Direta** - Status: ✅ - Evidência: V2 intermediária 
 Princípio: **Backward Compat** - Status: ✅ - Evidência: V1 continua funcionando sempre
 Princípio: **Zero Ceremony** - Status: ✅ - Evidência: Seção dedicada mostrando V2
 Princípio: **Estudos de Caso** - Status: ✅ - Evidência: 2 casos reais (cli, core)
-Princípio: **Infraestrutura Auto** - Status: ✅ - Evidência: self.config/logger explicado 3x
+Princípio: **Infraestrutura Auto** - Status: ✅ - Evidência: self.settings/logger explicado 3x
 
 ### 📊 Métricas de Qualidade
 

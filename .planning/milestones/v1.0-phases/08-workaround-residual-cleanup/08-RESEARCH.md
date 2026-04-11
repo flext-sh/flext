@@ -176,7 +176,7 @@ For `scheduled_maintenance.py` specifically — this is an echo command handler 
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
-| Config file | `pyproject.toml [tool.pytest.ini_options]` |
+| Settings file | `pyproject.toml [tool.pytest.ini_options]` |
 | Quick run command | `make test-unit` |
 | Full suite command | `make test` |
 

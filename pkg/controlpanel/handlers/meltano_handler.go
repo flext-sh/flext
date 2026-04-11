@@ -9,22 +9,22 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/settings"
 	"github.com/flext-sh/flext/pkg/logging"
 	"github.com/gin-gonic/gin"
 )
 
 // MeltanoHandler manages Meltano orchestration and Singer/DBT coordination
 type MeltanoHandler struct {
-	config     *config.Config
+	settings     *settings.Config
 	logger     logging.Logger
 	httpClient *http.Client
 }
 
 // NewMeltanoHandler creates a new Meltano handler
-func NewMeltanoHandler(cfg *config.Config, logger logging.Logger) *MeltanoHandler {
+func NewMeltanoHandler(cfg *settings.Config, logger logging.Logger) *MeltanoHandler {
 	return &MeltanoHandler{
-		config: cfg,
+		settings: cfg,
 		logger: logger,
 		httpClient: &http.Client{
 			Timeout: cfg.Python.Timeout,
@@ -41,8 +41,8 @@ func (h *MeltanoHandler) RegisterRoutes(router *gin.RouterGroup) {
 		meltano.POST("/run", h.ExecuteMeltanoPipeline)
 		meltano.GET("/status", h.GetMeltanoStatus)
 		meltano.POST("/install", h.InstallMeltanoPlugin)
-		meltano.GET("/config", h.GetMeltanoConfig)
-		meltano.POST("/config", h.UpdateMeltanoConfig)
+		meltano.GET("/settings", h.GetMeltanoConfig)
+		meltano.POST("/settings", h.UpdateMeltanoConfig)
 		meltano.GET("/schedule", h.GetMeltanoSchedules)
 		meltano.POST("/schedule", h.CreateMeltanoSchedule)
 	}
@@ -88,7 +88,7 @@ type MeltanoPlugin struct {
 	Variant string                 `json:"variant"`
 	Version string                 `json:"version"`
 	Status  string                 `json:"status"`
-	Config  map[string]interface{} `json:"config"`
+	Config  map[string]interface{} `json:"settings"`
 }
 
 // MeltanoSchedule represents a Meltano schedule
@@ -107,7 +107,7 @@ type SingerTap struct {
 	Version      string                 `json:"version"`
 	Status       string                 `json:"status"`
 	Capabilities []string               `json:"capabilities"`
-	Config       map[string]interface{} `json:"config"`
+	Config       map[string]interface{} `json:"settings"`
 }
 
 // SingerTarget represents a Singer target
@@ -117,7 +117,7 @@ type SingerTarget struct {
 	Variant     string                 `json:"variant"`
 	Version     string                 `json:"version"`
 	Status      string                 `json:"status"`
-	Config      map[string]interface{} `json:"config"`
+	Config      map[string]interface{} `json:"settings"`
 }
 
 // DBTModel represents a DBT model
@@ -136,7 +136,7 @@ func (h *MeltanoHandler) ListMeltanoProjects(c *gin.Context) {
 	defer cancel()
 
 	// Call FlexCore Meltano runtime via flext-meltano integration
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/projects", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/projects", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create Meltano projects request", logging.F("error", err))
@@ -238,7 +238,7 @@ func (h *MeltanoHandler) ExecuteMeltanoPipeline(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/execute", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/execute", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create Meltano pipeline request", logging.F("error", err))
@@ -273,7 +273,7 @@ func (h *MeltanoHandler) GetMeltanoStatus(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/status", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/status", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create Meltano status request", logging.F("error", err))
@@ -332,7 +332,7 @@ func (h *MeltanoHandler) InstallMeltanoPlugin(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/install", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/install", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create plugin install request", logging.F("error", err))
@@ -367,26 +367,26 @@ func (h *MeltanoHandler) GetMeltanoConfig(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/config", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/settings", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
-		h.logger.Error("Failed to create Meltano config request", logging.F("error", err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create config request"})
+		h.logger.Error("Failed to create Meltano settings request", logging.F("error", err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create settings request"})
 		return
 	}
 
 	resp, err := h.httpClient.Do(req)
 	if err != nil {
-		h.logger.Error("Meltano config request failed", logging.F("error", err))
-		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Meltano config unavailable"})
+		h.logger.Error("Meltano settings request failed", logging.F("error", err))
+		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Meltano settings unavailable"})
 		return
 	}
 	defer resp.Body.Close()
 
 	var configResponse map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&configResponse); err != nil {
-		h.logger.Error("Failed to decode Meltano config response", logging.F("error", err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode config response"})
+		h.logger.Error("Failed to decode Meltano settings response", logging.F("error", err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode settings response"})
 		return
 	}
 
@@ -397,7 +397,7 @@ func (h *MeltanoHandler) GetMeltanoConfig(c *gin.Context) {
 func (h *MeltanoHandler) UpdateMeltanoConfig(c *gin.Context) {
 	var configUpdate map[string]interface{}
 	if err := c.ShouldBindJSON(&configUpdate); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid config update", "details": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid settings update", "details": err.Error()})
 		return
 	}
 
@@ -407,42 +407,42 @@ func (h *MeltanoHandler) UpdateMeltanoConfig(c *gin.Context) {
 	// Add FLEXT Service coordination metadata
 	configUpdate["coordination"] = map[string]interface{}{
 		"flext_service_id": "flext-service-primary",
-		"correlation_id":   fmt.Sprintf("flext-meltano-config-%d", time.Now().Unix()),
+		"correlation_id":   fmt.Sprintf("flext-meltano-settings-%d", time.Now().Unix()),
 		"timestamp":        time.Now().Format(time.RFC3339),
 	}
 
 	payload, err := json.Marshal(configUpdate)
 	if err != nil {
-		h.logger.Error("Failed to marshal Meltano config update", logging.F("error", err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to prepare config update"})
+		h.logger.Error("Failed to marshal Meltano settings update", logging.F("error", err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to prepare settings update"})
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/config", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/settings", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
-		h.logger.Error("Failed to create Meltano config update request", logging.F("error", err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create config request"})
+		h.logger.Error("Failed to create Meltano settings update request", logging.F("error", err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create settings request"})
 		return
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := h.httpClient.Do(req)
 	if err != nil {
-		h.logger.Error("Meltano config update failed", logging.F("error", err))
-		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Meltano config update failed"})
+		h.logger.Error("Meltano settings update failed", logging.F("error", err))
+		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Meltano settings update failed"})
 		return
 	}
 	defer resp.Body.Close()
 
 	var updateResponse map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&updateResponse); err != nil {
-		h.logger.Error("Failed to decode Meltano config update response", logging.F("error", err))
+		h.logger.Error("Failed to decode Meltano settings update response", logging.F("error", err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode update response"})
 		return
 	}
 
-	h.logger.Info("Meltano config update coordinated successfully",
+	h.logger.Info("Meltano settings update coordinated successfully",
 		logging.F("correlation_id", configUpdate["coordination"].(map[string]interface{})["correlation_id"]))
 
 	c.JSON(resp.StatusCode, updateResponse)
@@ -453,7 +453,7 @@ func (h *MeltanoHandler) GetMeltanoSchedules(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/schedules", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/schedules", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create Meltano schedules request", logging.F("error", err))
@@ -504,7 +504,7 @@ func (h *MeltanoHandler) CreateMeltanoSchedule(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/schedules", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/schedules", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create schedule request", logging.F("error", err))
@@ -539,7 +539,7 @@ func (h *MeltanoHandler) ListSingerTaps(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 15*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/taps", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/taps", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create Singer taps request", logging.F("error", err))
@@ -603,7 +603,7 @@ func (h *MeltanoHandler) ListSingerTargets(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 15*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/targets", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/targets", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create Singer targets request", logging.F("error", err))
@@ -685,7 +685,7 @@ func (h *MeltanoHandler) ExecuteSingerExtraction(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/extract", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/extract", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create extraction request", logging.F("error", err))
@@ -741,7 +741,7 @@ func (h *MeltanoHandler) ExecuteSingerLoad(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/load", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/load", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create load request", logging.F("error", err))
@@ -778,7 +778,7 @@ func (h *MeltanoHandler) GetSingerSchema(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/schemas/%s", h.config.FlexCore.URL, tapName)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/schemas/%s", h.settings.FlexCore.URL, tapName)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create schema request", logging.F("error", err))
@@ -832,7 +832,7 @@ func (h *MeltanoHandler) TestSingerTap(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/test/tap/%s", h.config.FlexCore.URL, tapName)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/test/tap/%s", h.settings.FlexCore.URL, tapName)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create tap test request", logging.F("error", err))
@@ -891,7 +891,7 @@ func (h *MeltanoHandler) TestSingerTarget(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/test/target/%s", h.config.FlexCore.URL, targetName)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/singer/test/target/%s", h.settings.FlexCore.URL, targetName)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create target test request", logging.F("error", err))
@@ -927,7 +927,7 @@ func (h *MeltanoHandler) ListDBTModels(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 15*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/models", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/models", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create DBT models request", logging.F("error", err))
@@ -1002,7 +1002,7 @@ func (h *MeltanoHandler) ExecuteDBTModels(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/run", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/run", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create DBT request", logging.F("error", err))
@@ -1058,7 +1058,7 @@ func (h *MeltanoHandler) ExecuteDBTTests(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/test", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/test", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create DBT test request", logging.F("error", err))
@@ -1114,7 +1114,7 @@ func (h *MeltanoHandler) CompileDBTModels(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/compile", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/compile", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		h.logger.Error("Failed to create DBT compile request", logging.F("error", err))
@@ -1149,7 +1149,7 @@ func (h *MeltanoHandler) GenerateDBTDocs(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 120*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/docs", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/docs", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create DBT docs request", logging.F("error", err))
@@ -1180,7 +1180,7 @@ func (h *MeltanoHandler) GetDBTLineage(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Second)
 	defer cancel()
 
-	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/lineage", h.config.FlexCore.URL)
+	url := fmt.Sprintf("%s/api/v1/runtimes/meltano/dbt/lineage", h.settings.FlexCore.URL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		h.logger.Error("Failed to create DBT lineage request", logging.F("error", err))

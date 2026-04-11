@@ -333,12 +333,12 @@ async def fetch_data(url: str, timeout: int = 30) -> bytes:
 
 ### Format
 ```python
-def configure(
+def settingsure(
     mode: str,
     options: Mapping[str, Any] | None = None,
     verbosity: int = 1,
 ) -> None:
-    """Configure processor behavior.
+    """Settingsure processor behavior.
 
     Args:
         mode: Processing mode ("strict", "lenient", or "auto").
@@ -396,7 +396,7 @@ def search(query: str, limit: int = 10) -> Sequence[Result]:
     """Search index with query, return up to limit results."""
 
 
-def validate_config(cfg: dict) -> bool:
+def validate_settings(cfg: dict) -> bool:
     """Validate configuration against schema."""
 ```
 

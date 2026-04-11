@@ -12,7 +12,7 @@ def flext_create_metric(name: str, value: float, tags: t.Dict | None = None) -> 
 def flext_create_trace(
     trace_id: str,
     operation: str,
-    config: t.Dict | None = None,
+    settings: t.Dict | None = None,
 ) -> None:
     """Create mock trace."""
 

@@ -23,7 +23,7 @@ type UnifiedRepository[T Entity] struct {
 	auditTrail []AuditEntry
 	auditMu    sync.RWMutex
 	entityName string
-	config     RepositoryConfig
+	settings     RepositoryConfig
 	logger     logging.Logger
 }
 
@@ -34,15 +34,15 @@ type CacheEntry[T Entity] struct {
 }
 
 // NewUnifiedRepository creates a new unified repository
-func NewUnifiedRepository[T Entity](db *gorm.DB, entityName string, config RepositoryConfig, logger logging.Logger) *UnifiedRepository[T] {
+func NewUnifiedRepository[T Entity](db *gorm.DB, entityName string, settings RepositoryConfig, logger logging.Logger) *UnifiedRepository[T] {
 	return &UnifiedRepository[T]{
 		BaseRepository: NewBaseRepository[T](db),
 		store:          make(map[uuid.UUID]T),
 		cache:          make(map[uuid.UUID]CacheEntry[T]),
-		cacheTTL:       config.CacheTTL,
+		cacheTTL:       settings.CacheTTL,
 		auditTrail:     make([]AuditEntry, 0),
 		entityName:     entityName,
-		config:         config,
+		settings:         settings,
 		logger:         logger,
 	}
 }
@@ -78,7 +78,7 @@ func (r *UnifiedRepository[T]) Create(ctx context.Context, entity T) (T, error) 
 	r.cacheMu.Unlock()
 
 	// Record audit trail
-	if r.config.EnableAudit {
+	if r.settings.EnableAudit {
 		r.recordAuditEntry(ctx, id, "create", map[string]interface{}{"created": true})
 	}
 
@@ -124,7 +124,7 @@ func (r *UnifiedRepository[T]) GetByID(ctx context.Context, id uuid.UUID) (T, er
 	}
 
 	// Check cache first
-	if r.config.EnableCache {
+	if r.settings.EnableCache {
 		if cached, found := r.getCachedEntity(id); found {
 			r.recordOperation("get_by_id", startTime, nil)
 			return cached, nil
@@ -146,7 +146,7 @@ func (r *UnifiedRepository[T]) GetByID(ctx context.Context, id uuid.UUID) (T, er
 	}
 
 	// Cache the entity
-	if r.config.EnableCache {
+	if r.settings.EnableCache {
 		r.cacheEntity(id, entity)
 	}
 
@@ -223,7 +223,7 @@ func (r *UnifiedRepository[T]) Update(ctx context.Context, entity T) (T, error) 
 	r.cacheMu.Unlock()
 
 	// Record audit trail
-	if r.config.EnableAudit {
+	if r.settings.EnableAudit {
 		changes := r.calculateChanges(oldEntity, entity)
 		r.recordAuditEntry(ctx, id, "update", changes)
 	}
@@ -275,7 +275,7 @@ func (r *UnifiedRepository[T]) UpdatePartial(ctx context.Context, id uuid.UUID, 
 	r.cacheMu.Unlock()
 
 	// Record audit trail
-	if r.config.EnableAudit {
+	if r.settings.EnableAudit {
 		r.recordAuditEntry(ctx, id, "update_partial", updates)
 	}
 
@@ -321,7 +321,7 @@ func (r *UnifiedRepository[T]) Delete(ctx context.Context, id uuid.UUID) error {
 	r.cacheMu.Unlock()
 
 	// Record audit trail
-	if r.config.EnableAudit {
+	if r.settings.EnableAudit {
 		r.recordAuditEntry(ctx, id, "delete", map[string]interface{}{"deleted": true})
 	}
 
@@ -430,7 +430,7 @@ func (r *UnifiedRepository[T]) GetCacheStats(ctx context.Context) (*CacheStats, 
 	defer r.cacheMu.RUnlock()
 
 	size := len(r.cache)
-	maxSize := r.config.CacheSize
+	maxSize := r.settings.CacheSize
 
 	return &CacheStats{
 		Size:    size,
@@ -476,7 +476,7 @@ func (r *UnifiedRepository[T]) createValidatedEntities(ctx context.Context, enti
 		r.cacheMu.Unlock()
 
 		// Record audit trail
-		if r.config.EnableAudit {
+		if r.settings.EnableAudit {
 			r.recordAuditEntry(ctx, id, "create", map[string]interface{}{"created": true})
 		}
 	}

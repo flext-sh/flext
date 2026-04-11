@@ -13,7 +13,7 @@
 ---
 
 name: lib-pyyaml
-description: Safe and deterministic YAML read/write patterns across FLEXT subprojects. Trigger when modifying YAML parsing, config files, CLI output formatting, or docs-maintenance tooling.
+description: Safe and deterministic YAML read/write patterns across FLEXT subprojects. Trigger when modifying YAML parsing, settings files, CLI output formatting, or docs-maintenance tooling.
 
 ---
 
@@ -35,12 +35,12 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 
 ### Subproject Usage Map
 
-- `flext-quality`: YAML config ingestion and persistence (`safe_load`, `dump` with explicit options).
+- `flext-quality`: YAML settings ingestion and persistence (`safe_load`, `dump` with explicit options).
 - `flext-cli`: YAML file IO and YAML output formatting for CLI response rendering.
-- `flext-meltano`: project config lifecycle (`save_yaml_config`, `load_yaml_config`, validation).
+- `flext-meltano`: project settings lifecycle (`save_yaml_config`, `load_yaml_config`, validation).
 - `flext-dbt-oracle`: schema YAML read/merge/write in model generation.
 - `flext-db-oracle`: YAML display formatting in CLI output mode.
-- `flext-core/tests`: YAML fixture write/read for config integration tests.
+- `flext-core/tests`: YAML fixture write/read for settings integration tests.
 
 ## References
 

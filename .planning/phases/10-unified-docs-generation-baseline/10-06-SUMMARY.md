@@ -26,7 +26,7 @@ key-files:
     - "flext-infra/src/flext_infra/deps/modernizer.py"
     - "flext-infra/src/flext_infra/deps/_detector_runtime.py"
     - "flext-infra/src/flext_infra/deps/path_sync_rewrite.py"
-    - "flext-infra/src/flext_infra/deps/fix_pyrefly_config.py"
+    - "flext-infra/src/flext_infra/deps/fix_pyrefly_settings.py"
     - "flext-infra/src/flext_infra/deps/internal_sync.py"
 
 key-decisions:
@@ -66,14 +66,14 @@ completed: 2026-04-06
 Each task was committed atomically:
 
 1. **Task 1: Refactor deps modernizer and detection services** - `71b6d33` (feat)
-2. **Task 2: Refactor deps sync and config fixer services** - `51bcf77` (feat)
+2. **Task 2: Refactor deps sync and settings fixer services** - `51bcf77` (feat)
 
 ## Files Created/Modified
 - `flext-infra/src/flext_infra/_utilities/toml.py` - Added table(), document(), parse_text(), is_table(), is_aot() utilities
 - `flext-infra/src/flext_infra/deps/modernizer.py` - Removed `import tomlkit`, replaced tomlkit.table() with u.Infra.table()
 - `flext-infra/src/flext_infra/deps/_detector_runtime.py` - Replaced mkdir with u.Infra.ensure_dir()
 - `flext-infra/src/flext_infra/deps/path_sync_rewrite.py` - Removed `import tomlkit`, replaced tomlkit.table() with u.Infra.table()
-- `flext-infra/src/flext_infra/deps/fix_pyrefly_config.py` - Removed `import tomlkit`, replaced tomlkit.array()/parse()/document() with u.Infra.*
+- `flext-infra/src/flext_infra/deps/fix_pyrefly_settings.py` - Removed `import tomlkit`, replaced tomlkit.array()/parse()/document() with u.Infra.*
 - `flext-infra/src/flext_infra/deps/internal_sync.py` - Replaced 2 mkdir calls with u.Infra.ensure_dir()
 
 ## Decisions Made

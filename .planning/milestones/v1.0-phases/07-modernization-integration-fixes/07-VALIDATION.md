@@ -18,7 +18,7 @@ created: 2026-03-24
 | Property | Value |
 |----------|-------|
 | **Framework** | pytest 8.4+ |
-| **Config file** | `pyproject.toml` `[tool.pytest.ini_options]` |
+| **Settings file** | `pyproject.toml` `[tool.pytest.ini_options]` |
 | **Quick run command** | `.venv/bin/pytest -x --no-header -q` |
 | **Full suite command** | `.venv/bin/pytest --no-header -q` |
 | **Estimated runtime** | ~30 seconds (affected test collections) |

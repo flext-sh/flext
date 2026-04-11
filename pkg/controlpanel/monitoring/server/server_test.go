@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/flext-sh/flext/pkg/controlpanel/configuration/config"
+	"github.com/flext-sh/flext/pkg/controlpanel/configuration/settings"
 	"github.com/flext-sh/flext/pkg/logging"
 )
 
@@ -15,7 +15,7 @@ func TestNewServer(t *testing.T) {
 	logging.Initialize("test", "info")
 	logger := logging.GetLogger()
 
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	cfg.Server.Environment = "development"
 	cfg.Server.Port = 8081
 
@@ -25,8 +25,8 @@ func TestNewServer(t *testing.T) {
 		t.Fatal("NewServer() should not return nil")
 	}
 
-	if server.config != cfg {
-		t.Error("Server config should match provided config")
+	if server.settings != cfg {
+		t.Error("Server settings should match provided settings")
 	}
 
 	if server.logger != logger {
@@ -42,7 +42,7 @@ func TestServerRoutes(t *testing.T) {
 	logging.Initialize("test", "info")
 	logger := logging.GetLogger()
 
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	cfg.Server.Environment = "test"
 	cfg.Server.Port = 8081
 	cfg.FlexCore.URL = "http://localhost:8080"
@@ -152,7 +152,7 @@ func TestServerHealthCheck(t *testing.T) {
 	logging.Initialize("test", "info")
 	logger := logging.GetLogger()
 
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	cfg.Server.Port = 8081
 
 	server := NewServer(cfg, logger)
@@ -190,7 +190,7 @@ func TestServerStatusCheck(t *testing.T) {
 	logging.Initialize("test", "info")
 	logger := logging.GetLogger()
 
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	cfg.Server.Environment = "test"
 	cfg.Server.Debug = true
 
@@ -234,7 +234,7 @@ func TestServerRegisterHandlers(t *testing.T) {
 	logging.Initialize("test", "info")
 	logger := logging.GetLogger()
 
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	server := NewServer(cfg, logger)
 
 	// Test registering handlers doesn't panic
@@ -252,7 +252,7 @@ func TestServerProductionMode(t *testing.T) {
 	logging.Initialize("test", "info")
 	logger := logging.GetLogger()
 
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	cfg.Server.Environment = "production"
 
 	server := NewServer(cfg, logger)
@@ -268,7 +268,7 @@ func TestInvalidRoutes(t *testing.T) {
 	logging.Initialize("test", "info")
 	logger := logging.GetLogger()
 
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	server := NewServer(cfg, logger)
 	server.SetupBasicRoutes()
 
@@ -302,7 +302,7 @@ func BenchmarkHealthCheck(b *testing.B) {
 	logging.Initialize("benchmark", "info")
 	logger := logging.GetLogger()
 
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	cfg.Server.Port = 8081
 
 	server := NewServer(cfg, logger)
@@ -321,7 +321,7 @@ func BenchmarkStatusCheck(b *testing.B) {
 	logging.Initialize("benchmark", "info")
 	logger := logging.GetLogger()
 
-	cfg := &config.Config{}
+	cfg := &settings.Config{}
 	server := NewServer(cfg, logger)
 	server.SetupBasicRoutes()
 

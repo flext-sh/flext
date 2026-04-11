@@ -30,7 +30,7 @@ from decimal import Decimal
 from enum import StrEnum, unique
 from typing import ClassVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field, SettingsDict
 
 from flext import t
 from flext_core import r
@@ -46,14 +46,14 @@ def _new_workflow_content() -> WorkflowContent:
     return {}
 
 
-def _new_workflow_config() -> Mapping[str, t.Scalar | float]:
+def _new_workflow_settings() -> Mapping[str, t.Scalar | float]:
     return {}
 
 
 class WorkflowData(BaseModel):
     """Data container for workflow processing."""
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(
+    model_settings: ClassVar[SettingsDict] = SettingsDict(
         arbitrary_types_allowed=True,
         extra="allow",
     )
@@ -107,7 +107,9 @@ class CompleteWorkflowExample:
     class WorkflowContext(BaseModel):
         """Complete workflow context with correlation and metadata."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_settings: ClassVar[SettingsDict] = SettingsDict(
+            arbitrary_types_allowed=True
+        )
 
         workflow_id: str = Field(description="Unique workflow identifier")
         correlation_id: str = Field(description="Correlation ID for tracking")
@@ -136,7 +138,9 @@ class CompleteWorkflowExample:
     class WorkflowStageResult(BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_settings: ClassVar[SettingsDict] = SettingsDict(
+            arbitrary_types_allowed=True
+        )
 
         stage_name: str = Field(description="Name of the workflow stage")
         workflow_id: str = Field(description="Associated workflow ID")
@@ -162,7 +166,9 @@ class CompleteWorkflowExample:
     class CompleteWorkflowResult(BaseModel):
         """Complete workflow result with all stages aggregated."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_settings: ClassVar[SettingsDict] = SettingsDict(
+            arbitrary_types_allowed=True
+        )
 
         workflow_id: str = Field(description="Unique workflow identifier")
         correlation_id: str = Field(description="Correlation ID for tracking")
@@ -192,8 +198,8 @@ class CompleteWorkflowExample:
 
         auto_execute: bool = True
         data: Sequence[ProcessingDict] = Field(default_factory=tuple)
-        workflow_config: Mapping[str, t.Scalar | float] = Field(
-            default_factory=_new_workflow_config,
+        workflow_settings: Mapping[str, t.Scalar | float] = Field(
+            default_factory=_new_workflow_settings,
         )
 
         def execute(self) -> r[WorkflowData]:
@@ -475,7 +481,9 @@ class CompleteWorkflowExample:
         def _setup_context(self) -> CompleteWorkflowExample.WorkflowContext:
             """Setup workflow context with correlation tracking."""
             workflow_id = str(
-                self.workflow_config.get("workflow_id", f"workflow_{int(time.time())}"),
+                self.workflow_settings.get(
+                    "workflow_id", f"workflow_{int(time.time())}"
+                ),
             )
             correlation_id = f"{workflow_id}_{int(time.time() * 1000)}"
             return CompleteWorkflowExample.WorkflowContext(
@@ -484,10 +492,14 @@ class CompleteWorkflowExample:
                 start_time=time.time(),
                 metadata={
                     "parallel_enabled": bool(
-                        self.workflow_config.get("parallel", True),
+                        self.workflow_settings.get("parallel", True),
                     ),
-                    "max_workers": int(str(self.workflow_config.get("max_workers", 4))),
-                    "strict_mode": bool(self.workflow_config.get("strict_mode", False)),
+                    "max_workers": int(
+                        str(self.workflow_settings.get("max_workers", 4))
+                    ),
+                    "strict_mode": bool(
+                        self.workflow_settings.get("strict_mode", False)
+                    ),
                 },
             )
 
@@ -535,7 +547,7 @@ class CompleteWorkflowExample:
         sample_data: Sequence[ProcessingDict] = (
             CompleteWorkflowExample.create_sample_workflow_data(50)
         )
-        workflow_config: Mapping[str, t.Scalar | float] = {
+        workflow_settings: Mapping[str, t.Scalar | float] = {
             "workflow_id": "comprehensive_workflow",
             "parallel": True,
             "max_workers": 4,
@@ -543,7 +555,7 @@ class CompleteWorkflowExample:
         }
         orchestrator = CompleteWorkflowExample.WorkflowOrchestrator()
         orchestrator.data = sample_data
-        orchestrator.workflow_config = workflow_config
+        orchestrator.workflow_settings = workflow_settings
         result = orchestrator.execute()
         if result.success:
             print("Workflow completed successfully")

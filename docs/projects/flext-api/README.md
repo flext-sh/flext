@@ -36,8 +36,8 @@ pip install flext-api
 ```python
 from flext_api import FlextApiClient, FlextApiSettings
 
-config = FlextApiSettings(base_url="https://api.example.com")
-client = FlextApiClient(config)
+settings = FlextApiSettings(base_url="https://api.example.com")
+client = FlextApiClient(settings)
 result = client.get("/users")
 if result.is_success():
     print(f"Found {len(result.unwrap())} users")
@@ -54,7 +54,7 @@ src/flext_api/
 ├── api.py                # Public API exports & helpers
 ├── app.py                # FastAPI application factory
 ├── client.py             # FlextApiClient implementation
-├── config.py             # FlextApiSettings and validation
+├── settings.py             # FlextApiSettings and validation
 ├── protocols.py          # Protocol definitions reused by transports
 ├── transports.py         # Reusable transport layer (GraphQL, HTTP, WebSocket, SSE)
 ├── models.py             # Pydantic models and schema helpers
@@ -63,7 +63,7 @@ src/flext_api/
 └── protocol_impls/       # Pluggable protocol implementations
 ```
 
-The package applies Clean Architecture: core client/server code sits in `client.py` and `app.py`, configuration lives in `config.py`, transports and middleware are pluggable, and protocol implementations (GraphQL, WebSocket) live under `protocol_impls/`.
+The package applies Clean Architecture: core client/server code sits in `client.py` and `app.py`, configuration lives in `settings.py`, transports and middleware are pluggable, and protocol implementations (GraphQL, WebSocket) live under `protocol_impls/`.
 
 ## Key features
 

@@ -140,7 +140,7 @@ tm.that(items, has="item", length=3)
 | Método Deprecado                | Método Público Atual            | Exemplo de Migração                                                 |
 | ------------------------------- | ------------------------------- | ------------------------------------------------------------------- |
 | `tt.create_user(...)`           | `tt.model("user", ...)`         | `tt.create_user(name="John")` → `tt.model("user", name="John")`     |
-| `tt.create_config(...)`         | `tt.model("config", ...)`       | `tt.create_config(debug=True)` → `tt.model("config", debug=True)`   |
+| `tt.create_config(...)`         | `tt.model("settings", ...)`       | `tt.create_config(debug=True)` → `tt.model("settings", debug=True)`   |
 | `tt.create_service(...)`        | `tt.model("service", ...)`      | `tt.create_service(type="api")` → `tt.model("service", type="api")` |
 | `tt.batch_users(count)`         | `tt.batch("user", count=count)` | `tt.batch_users(5)` → `tt.batch("user", count=5)`                   |
 | `tt.create_test_operation(...)` | `tt.op(kind, ...)`              | `tt.create_test_operation("simple")` → `tt.op("simple")`            |
@@ -153,7 +153,7 @@ tm.that(items, has="item", length=3)
 | `tb.Tests.Result.ok(value)`         | `tt.res("ok", value=value)`     | `tb.Tests.Result.ok("data")` → `tt.res("ok", value="data")`            |
 | `tb.Tests.Result.fail(error)`       | `tt.res("fail", error=error)`   | `tb.Tests.Result.fail("err")` → `tt.res("fail", error="err")`          |
 | `tb.Tests.Model.user(...)`          | `tt.model("user", ...)`         | `tb.Tests.Model.user(name="John")` → `tt.model("user", name="John")`   |
-| `tb.Tests.Model.config(...)`        | `tt.model("config", ...)`       | `tb.Tests.Model.config(debug=True)` → `tt.model("config", debug=True)` |
+| `tb.Tests.Model.settings(...)`        | `tt.model("settings", ...)`       | `tb.Tests.Model.settings(debug=True)` → `tt.model("settings", debug=True)` |
 | `tb.Tests.Model.batch_users(count)` | `tt.batch("user", count=count)` | `tb.Tests.Model.batch_users(5)` → `tt.batch("user", count=5)`          |
 
 ### 3. tf (TestsFlextFiles) - Métodos Deprecados
@@ -167,7 +167,7 @@ tm.that(items, has="item", length=3)
 | `tf.create_text_file(...)`   | `tf.create(content, name)`          | `tf.create_text_file("text", "file.txt")` → `tf.create("text", "file.txt")`     |
 | `tf.create_binary_file(...)` | `tf.create(content, name)`          | `tf.create_binary_file(b"data", "file.bin")` → `tf.create(b"data", "file.bin")` |
 | `tf.create_empty_file(name)` | `tf.create("", name)`               | `tf.create_empty_file("empty.txt")` → `tf.create("", "empty.txt")`              |
-| `tf.create_config_file(...)` | `tf.create(content, name)`          | `tf.create_config_file("{}", "config.json")` → `tf.create("{}", "config.json")` |
+| `tf.create_config_file(...)` | `tf.create(content, name)`          | `tf.create_config_file("{}", "settings.json")` → `tf.create("{}", "settings.json")` |
 | `tf.temporary_files(files)`  | `tf.files(files)` (context manager) | Ver exemplo abaixo                                                              |
 
 #### Exemplos Detalhados de Migração
@@ -737,7 +737,7 @@ class TestsLdapSync:
    ```
    tests/unit/
    ├── test_user.py              # TestsLdapUser
-   ├── test_config.py            # TestsLdapConfig
+   ├── test_config.py            # TestsLdapSettings
    ├── services/
    │   └── test_entry.py         # TestsLdapServicesEntry
    └── adapters/
@@ -774,7 +774,7 @@ def generate_user_data(count: int = 1) -> Sequence[dict]:
 
 - ✅ Todas as inicializações globais
 - ✅ Fixtures compartilhadas
-- ✅ Configurações de conexões
+- ✅ Settingsurações de conexões
 - ✅ Containers de dependências
 - ✅ Classes base avançadas de pytest
 - ✅ Automação máxima para mínimo de código
@@ -928,7 +928,7 @@ def setup_test_environment():
 1. **Criar conftest centralizado:**
    - Consolidar todos os conftest.py em `~/flext/conftest.py`
    - Criar fixtures automáticas
-   - Configurar containers e conexões
+   - Settingsurar containers e conexões
 
 2. **Implementar classes base:**
    - Criar classes base avançadas de pytest

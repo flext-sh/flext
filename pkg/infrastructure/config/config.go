@@ -1,4 +1,4 @@
-package config
+package settings
 
 import (
 	"fmt"
@@ -225,13 +225,13 @@ func DefaultConfig() *Config {
 
 // LoadConfig loads configuration using Viper and envconfig
 func LoadConfig(configPath string) (*Config, error) {
-	var config Config
+	var settings Config
 
 	// Configure Viper
 	viper.SetConfigType("yaml")
-	viper.SetConfigName("config")
+	viper.SetConfigName("settings")
 	viper.AddConfigPath(".")
-	viper.AddConfigPath("./config")
+	viper.AddConfigPath("./settings")
 	viper.AddConfigPath("/etc/flext")
 
 	if configPath != "" {
@@ -242,10 +242,10 @@ func LoadConfig(configPath string) (*Config, error) {
 	viper.SetEnvPrefix("FLEXT")
 	viper.AutomaticEnv()
 
-	// Read config file (optional)
+	// Read settings file (optional)
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			return nil, fmt.Errorf("failed to read config file: %w", err)
+			return nil, fmt.Errorf("failed to read settings file: %w", err)
 		}
 	}
 
@@ -253,92 +253,92 @@ func LoadConfig(configPath string) (*Config, error) {
 	defaults := DefaultConfig()
 	setViperDefaults(defaults)
 
-	// Unmarshal Viper config
-	if err := viper.Unmarshal(&config); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
+	// Unmarshal Viper settings
+	if err := viper.Unmarshal(&settings); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal settings: %w", err)
 	}
 
 	// Process environment variables with envconfig
-	if err := envconfig.Process("FLEXT", &config); err != nil {
+	if err := envconfig.Process("FLEXT", &settings); err != nil {
 		return nil, fmt.Errorf("failed to process environment variables: %w", err)
 	}
 
 	// Override with direct environment variables for better Docker compatibility
-	processDirectEnvVars(&config)
+	processDirectEnvVars(&settings)
 
 	// Initialize Clean Architecture configuration
-	config.CleanArchitecture = *NewCleanArchitectureConfig()
+	settings.CleanArchitecture = *NewCleanArchitectureConfig()
 
 	// Validate configuration
-	if err := config.Validate(); err != nil {
+	if err := settings.Validate(); err != nil {
 		return nil, fmt.Errorf("configuration validation failed: %w", err)
 	}
 
 	// Validate Clean Architecture configuration
-	if err := config.CleanArchitecture.Validate(); err != nil {
+	if err := settings.CleanArchitecture.Validate(); err != nil {
 		return nil, fmt.Errorf("clean architecture configuration validation failed: %w", err)
 	}
 
-	return &config, nil
+	return &settings, nil
 }
 
 // processDirectEnvVars handles direct environment variable overrides for Docker compatibility
-func processDirectEnvVars(config *Config) {
+func processDirectEnvVars(settings *Config) {
 	// Server configuration
 	if port := os.Getenv("FLEXT_PORT"); port != "" {
 		if p, err := strconv.Atoi(port); err == nil {
-			config.Server.Port = p
+			settings.Server.Port = p
 		}
 	}
 	if host := os.Getenv("FLEXT_HOST"); host != "" {
-		config.Server.Host = host
+		settings.Server.Host = host
 	}
 	if logLevel := os.Getenv("FLEXT_LOG_LEVEL"); logLevel != "" {
-		config.Logging.Level = logLevel
+		settings.Logging.Level = logLevel
 	}
 
 	// Database configuration
 	if dbType := os.Getenv("FLEXT_DB_TYPE"); dbType != "" {
 		if dbType == "postgres" {
-			config.Features.DatabaseEnabled = true
-			config.Database.Driver = "postgres"
+			settings.Features.DatabaseEnabled = true
+			settings.Database.Driver = "postgres"
 		} else {
-			config.Features.DatabaseEnabled = false
+			settings.Features.DatabaseEnabled = false
 		}
 	}
 	if dbURL := os.Getenv("FLEXT_DB_URL"); dbURL != "" {
-		parsePostgresURL(dbURL, &config.Database)
-		config.Features.DatabaseEnabled = true
+		parsePostgresURL(dbURL, &settings.Database)
+		settings.Features.DatabaseEnabled = true
 	}
 
 	// JWT configuration
 	if jwtSecret := os.Getenv("JWT_SECRET_KEY"); jwtSecret != "" {
-		config.JWT.SecretKey = jwtSecret
+		settings.JWT.SecretKey = jwtSecret
 	}
 
 	// Feature flags configuration
 	if dbEnabled := os.Getenv("FLEXT_FEATURES_DATABASE_ENABLED"); dbEnabled != "" {
-		config.Features.DatabaseEnabled = strings.ToLower(dbEnabled) == "true"
+		settings.Features.DatabaseEnabled = strings.ToLower(dbEnabled) == "true"
 	}
 	if redisEnabled := os.Getenv("FLEXT_FEATURES_REDIS_ENABLED"); redisEnabled != "" {
-		config.Features.RedisEnabled = strings.ToLower(redisEnabled) == "true"
+		settings.Features.RedisEnabled = strings.ToLower(redisEnabled) == "true"
 	}
 	if gormEnabled := os.Getenv("FLEXT_FEATURES_GORM_ENABLED"); gormEnabled != "" {
-		config.Features.GormEnabled = strings.ToLower(gormEnabled) == "true"
+		settings.Features.GormEnabled = strings.ToLower(gormEnabled) == "true"
 	}
 	if sqlxEnabled := os.Getenv("FLEXT_FEATURES_SQLX_ENABLED"); sqlxEnabled != "" {
-		config.Features.SqlxEnabled = strings.ToLower(sqlxEnabled) == "true"
+		settings.Features.SqlxEnabled = strings.ToLower(sqlxEnabled) == "true"
 	}
 }
 
 // LoadFromEnv loads configuration from environment variables (backward compatibility)
 func LoadFromEnv() *Config {
-	config, err := LoadConfig("")
+	settings, err := LoadConfig("")
 	if err != nil {
 		// Fallback to DefaultConfig if LoadConfig fails
 		return DefaultConfig()
 	}
-	return config
+	return settings
 }
 
 // setViperDefaults sets default values in Viper from DefaultConfig
@@ -432,7 +432,7 @@ func (c *Config) GetAvailablePort() int {
 	port := c.findAvailablePort(c.Server.Port)
 	if port != c.Server.Port {
 		log.Printf("Port conflict resolved: requested_port=%d, assigned_port=%d", c.Server.Port, port)
-		c.Server.Port = port // Update config with available port
+		c.Server.Port = port // Update settings with available port
 	}
 
 	return port
@@ -504,7 +504,7 @@ func (c *Config) GetEnvWithDefault(key, defaultValue string) string {
 	return defaultValue
 }
 
-// parsePostgresURL parses a PostgreSQL URL and updates database config
+// parsePostgresURL parses a PostgreSQL URL and updates database settings
 func parsePostgresURL(url string, dbConfig *DatabaseConfig) {
 	if !strings.HasPrefix(url, "postgres://") {
 		return

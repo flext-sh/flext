@@ -13,7 +13,7 @@
 ---
 
 name: maintenance
-description: Workspace-wide maintenance automation — hygiene checks, dependabot config standardization, poetry health, and security enforcement across all submodules.
+description: Workspace-wide maintenance automation — hygiene checks, dependabot settings standardization, poetry health, and security enforcement across all submodules.
 
 ---
 
@@ -120,5 +120,5 @@ Script-level checks (internal):
 | Path                                             | Purpose                              | Invocation                                              |
 | ------------------------------------------------ | ------------------------------------ | ------------------------------------------------------- |
 | `scripts/maintenance/check_workspace_hygiene.py` | Workspace cleanliness validation     | `python scripts/maintenance/check_workspace_hygiene.py` |
-| `scripts/maintenance/check_dependabot_config.py` | Dependabot config standardization    | `python scripts/maintenance/check_dependabot_config.py` |
+| `scripts/maintenance/check_dependabot_config.py` | Dependabot settings standardization    | `python scripts/maintenance/check_dependabot_config.py` |
 | `scripts/maintenance/check_poetry_health.py`     | Poetry lock health and outdated deps | `python scripts/maintenance/check_poetry_health.py`     |

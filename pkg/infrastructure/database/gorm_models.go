@@ -33,7 +33,7 @@ type GormPipelineStep struct {
 	Name         string    `gorm:"not null" json:"name"`
 	Type         string    `gorm:"not null" json:"type"`
 	OrderIndex   int       `gorm:"not null" json:"order_index"`
-	Config       string    `gorm:"type:jsonb" json:"config"`
+	Config       string    `gorm:"type:jsonb" json:"settings"`
 	Dependencies []string  `gorm:"type:text[]" json:"dependencies"`
 	CreatedAt    time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt    time.Time `gorm:"autoUpdateTime" json:"updated_at"`
@@ -65,7 +65,7 @@ type GormPlugin struct {
 	Version     string         `gorm:"not null" json:"version"`
 	Type        string         `gorm:"not null" json:"type"`
 	Description string         `gorm:"type:text" json:"description"`
-	Config      string         `gorm:"type:jsonb" json:"config"`
+	Config      string         `gorm:"type:jsonb" json:"settings"`
 	Enabled     bool           `gorm:"default:true" json:"enabled"`
 	CreatedAt   time.Time      `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt   time.Time      `gorm:"autoUpdateTime" json:"updated_at"`

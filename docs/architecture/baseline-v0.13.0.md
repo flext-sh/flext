@@ -159,7 +159,7 @@ Application and orchestration code should target:
   - add service values
   - add factories
   - add resources
-  - bind typed config
+  - bind typed settings
   - wire and unwire targets
 - Public methods:
   - `build`
@@ -285,7 +285,7 @@ Application and orchestration code should target:
   - `clear`
 - Explicit exclusions:
   - no plugin storage
-  - no config bootstrapping
+  - no settings bootstrapping
   - no DI ownership
 
 ### FlextHandler

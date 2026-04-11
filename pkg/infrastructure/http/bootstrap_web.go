@@ -306,7 +306,7 @@ func (h *BootstrapWebHandler) Dashboard(c echo.Context) error {
     <!-- HTMX Extensions and Config -->
     <script>
         // HTMX configuration
-        htmx.config.globalViewTransitions = true;
+        htmx.settings.globalViewTransitions = true;
 
         // Add fade transitions
         document.body.addEventListener('htmx:beforeSwap', function(evt) {

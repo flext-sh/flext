@@ -28,18 +28,18 @@ type DatabaseConfig struct {
 // Database represents the database connection and operations
 type Database struct {
 	db     *sql.DB
-	config *DatabaseConfig
+	settings *DatabaseConfig
 	logger logging.Logger
 }
 
 // NewDatabase creates a new database connection
-func NewDatabase(config *DatabaseConfig, logger logging.Logger) (*Database, error) {
-	if config == nil {
-		config = DefaultDatabaseConfig()
+func NewDatabase(settings *DatabaseConfig, logger logging.Logger) (*Database, error) {
+	if settings == nil {
+		settings = DefaultDatabaseConfig()
 	}
 
 	db := &Database{
-		config: config,
+		settings: settings,
 		logger: logger,
 	}
 
@@ -69,15 +69,15 @@ func DefaultDatabaseConfig() *DatabaseConfig {
 func (d *Database) connect() error {
 	dsn := d.buildDSN()
 
-	db, err := sql.Open(d.config.Driver, dsn)
+	db, err := sql.Open(d.settings.Driver, dsn)
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
 	}
 
 	// Configure connection pool
-	db.SetMaxOpenConns(d.config.MaxOpenConns)
-	db.SetMaxIdleConns(d.config.MaxIdleConns)
-	db.SetConnMaxLifetime(d.config.ConnMaxLifetime)
+	db.SetMaxOpenConns(d.settings.MaxOpenConns)
+	db.SetMaxIdleConns(d.settings.MaxIdleConns)
+	db.SetConnMaxLifetime(d.settings.ConnMaxLifetime)
 
 	// Test connection
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -89,8 +89,8 @@ func (d *Database) connect() error {
 
 	d.db = db
 	d.logger.Info("Database connected successfully",
-		logging.F("driver", d.config.Driver),
-		logging.F("database", d.config.Database),
+		logging.F("driver", d.settings.Driver),
+		logging.F("database", d.settings.Database),
 	)
 
 	return nil
@@ -98,19 +98,19 @@ func (d *Database) connect() error {
 
 // buildDSN builds the database connection string
 func (d *Database) buildDSN() string {
-	switch d.config.Driver {
+	switch d.settings.Driver {
 	case "postgres":
 		return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
-			d.config.Host, d.config.Port, d.config.Username,
-			d.config.Password, d.config.Database, d.config.SSLMode)
+			d.settings.Host, d.settings.Port, d.settings.Username,
+			d.settings.Password, d.settings.Database, d.settings.SSLMode)
 	case "sqlite3":
-		return d.config.Database
+		return d.settings.Database
 	case "mysql":
 		return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true",
-			d.config.Username, d.config.Password, d.config.Host,
-			d.config.Port, d.config.Database)
+			d.settings.Username, d.settings.Password, d.settings.Host,
+			d.settings.Port, d.settings.Database)
 	default:
-		return d.config.Database
+		return d.settings.Database
 	}
 }
 
@@ -166,7 +166,7 @@ func (d *Database) createPipelineStepsTable() string {
 			name TEXT NOT NULL,
 			type TEXT NOT NULL,
 			order_index INTEGER NOT NULL,
-			config TEXT, -- JSON object
+			settings TEXT, -- JSON object
 			dependencies TEXT, -- JSON array
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 			FOREIGN KEY (pipeline_id) REFERENCES pipelines(id) ON DELETE CASCADE

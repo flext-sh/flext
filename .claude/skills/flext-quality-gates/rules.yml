@@ -9,11 +9,11 @@ scan_targets:
   projects:
     - .
 rules:
-  - id: require-ruff-config
+  - id: require-ruff-settings
     type: custom
     severity: warning
     group: quality_gate_config
-    description: Core gate configuration files should include Ruff config or test targets.
+    description: Core gate configuration files should include Ruff settings or test targets.
     fix_auto: false
     fix_instruction: Ensure pyproject.toml references Ruff and Makefile/base.mk expose
       test targets.

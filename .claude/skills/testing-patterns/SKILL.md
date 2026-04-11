@@ -51,7 +51,7 @@ description: Testing patterns, anti-patterns, and guidelines for Python/pytest i
 - **AXIOMATIC**: Tests MUST verify stable, public behavior — not implementation details. Do NOT assert on internal warning strings, tracebacks, private helper names, temporary alias spellings, internal class names, exact MRO composition, or any detail that can change without changing module behavior. If behavior is unchanged and only internals moved, the test must be rewritten.
 - **AXIOMATIC**: Tests MUST demonstrate the EXACT SAME strict typing, Pydantic v2, r, and architectural discipline as production code. Test files are NOT exempt from ANY rule. Test fixtures MUST use `Field()`, typed models, and `r[T]` returns. Test data MUST use `t.*` types from `typings.py`. Test assertions on r MUST use `.success`/`.failure` and `.value`/`.error`. There is NO "test-only" relaxation of any typing, structural, or Pydantic v2 rule. Tests that violate these rules are themselves violations.
 - **AXIOMATIC**: Test facades use `TestsFlext<Project><Tier>` naming and keep test-only scope under `<Domain>.Tests`. Legacy `Flext<Project>Test<Tier>` names and flat nested wrappers around private mixins are migration debt, not patterns to repeat.
-- **AXIOMATIC**: ALL code in tests MUST follow "Pydantic v2 way": `Field()` for field declarations, `ConfigDict(...)` for config, validation centralized in models via `@field_validator`/`@model_validator`/`@computed_field`. Enums/Mappings/Literals from `constants.py` (`c.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`. Test models MUST inherit via MRO from FLEXT base models.
+- **AXIOMATIC**: ALL code in tests MUST follow "Pydantic v2 way": `Field()` for field declarations, `ConfigDict(...)` for settings, validation centralized in models via `@field_validator`/`@model_validator`/`@computed_field`. Enums/Mappings/Literals from `constants.py` (`c.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`. Test models MUST inherit via MRO from FLEXT base models.
 - **AXIOMATIC**: Compatibility wrappers, non-business validation fallbacks, legacy test code, and `OldName = NewName` compatibility aliases are TOTALLY FORBIDDEN in test code. Legacy test patterns are DELETED and replaced with canonical patterns.
 - **AXIOMATIC**: Every test change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. Linter suppression comments are FORBIDDEN without real internet citations, business necessity, and per-line scope. Global suppressions are TOTALLY FORBIDDEN.
 
@@ -226,11 +226,11 @@ Bad:
 
 ```python
 def test_config():
-    config = parse_config({"host": "localhost", "port": 8080})
-    assert config
+    settings = parse_config({"host": "localhost", "port": 8080})
+    assert settings
 ```
 
-Why bad: vague name, no scenario described, `assert config` doesn't verify anything meaningful.
+Why bad: vague name, no scenario described, `assert settings` doesn't verify anything meaningful.
 
 ## Verification
 

@@ -12,7 +12,7 @@
 ---
 
 name: rules-github
-description: Rules for GitHub automation files in `.github/`, including workflows, templates, and dependency policy. Use when editing CI/CD or repo automation config.
+description: Rules for GitHub automation files in `.github/`, including workflows, templates, and dependency policy. Use when editing CI/CD or repo automation settings.
 
 ---
 

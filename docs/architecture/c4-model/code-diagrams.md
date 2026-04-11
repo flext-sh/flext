@@ -410,7 +410,7 @@ classDiagram
         +PluginType type
         +PluginStatus status
         +execute(input_data) r~T~
-        +validate_config(config) bool
+        +validate_config(settings) bool
         +get_metadata() PluginMetadata
     }
 
@@ -418,7 +418,7 @@ classDiagram
         +str source_type
         +Dict config_schema
         +execute_discovery() r~Catalog~
-        +execute_sync(config) r~SyncResult~
+        +execute_sync(settings) r~SyncResult~
     }
 
     class SingerTarget {

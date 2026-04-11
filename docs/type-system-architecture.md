@@ -250,12 +250,12 @@ class FlextTypes:
         type Result[T] = "r[T]"
 
     class Utilities:
-        type ConfigData = Mapping[str, m.Core.Tests.ConfigEntryModel]
+        type SettingsData = Mapping[str, m.Core.Tests.SettingsEntryModel]
 
 
 # Usage
 result: t.Core.Tests.Result[bool] = ok_result
-data: t.Utilities.ConfigData = {"key": m.Core.Tests.ConfigEntryModel(value="value")}
+data: t.Utilities.SettingsData = {"key": m.Core.Tests.SettingsEntryModel(value="value")}
 
 
 # ❌ WRONG: Over-nesting (3+ levels)
@@ -271,7 +271,7 @@ class FlextTypes:
 **flext-core**:
 
 ```
-t.Core.Tests                      # Foundation (Result, Config, Handler)
+t.Core.Tests                      # Foundation (Result, Settings, Handler)
 t.Utilities                 # Reusable (Json, Collection, Validation)
 t.Exceptions                # Error types
 t.Constants                 # Enum definitions
@@ -351,8 +351,8 @@ m.Statistics  # Ambiguous - which domain?
 **flext-core**:
 
 ```
-m.Config                    # Configuration models
-m.ProcessingConfig          # Processing-specific config
+m.Settings                    # Configuration models
+m.ProcessingSettings          # Processing-specific settings
 m.RuntimeScopeOptions       # Runtime options
 m.Options                   # Generic options
 ```
@@ -363,7 +363,7 @@ m.Options                   # Generic options
 m.Cli                       # CLI domain
   .CliCommand               # Command model
   .CliSession               # Session model
-  .CliConfig                # CLI configuration
+  .CliSettings                # CLI configuration
   .SystemInfo               # System information (module alias available)
   .EnvironmentInfo          # Environment info (module alias available)
   .PathInfo                 # Path information (module alias available)
@@ -471,7 +471,7 @@ class ItemProcessor(Protocol):
 
 ### Protocol Organization Rules
 
-**Rule 1**: Protocols NEVER import Models, Config, or concrete classes
+**Rule 1**: Protocols NEVER import Models, Settings, or concrete classes
 
 ```python
 # ✅ CORRECT: Protocols only import other Protocols

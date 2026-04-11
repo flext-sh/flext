@@ -43,7 +43,7 @@ type PluginFactory func() plugins.Plugin
 type PluginConfiguration struct {
 	PluginType   plugins.PluginType     `json:"plugin_type"`
 	BinaryPath   string                 `json:"binary_path"`
-	Config       map[string]interface{} `json:"config"`
+	Config       map[string]interface{} `json:"settings"`
 	Enabled      bool                   `json:"enabled"`
 	AutoRegister bool                   `json:"auto_register"`
 }
@@ -72,18 +72,18 @@ func (pl *PluginLoader) LoadPluginsFromConfiguration(ctx context.Context, config
 	pl.logger.Info("🔌 Loading plugins from configuration",
 		logging.F("plugin_count", len(configs)))
 
-	for _, config := range configs {
-		if !config.Enabled {
+	for _, settings := range configs {
+		if !settings.Enabled {
 			pl.logger.Info("⏭️ Skipping disabled plugin",
-				logging.F("plugin_type", config.PluginType))
+				logging.F("plugin_type", settings.PluginType))
 			continue
 		}
 
-		if err := pl.loadPlugin(ctx, config); err != nil {
+		if err := pl.loadPlugin(ctx, settings); err != nil {
 			pl.logger.Error("❌ Failed to load plugin",
-				logging.F("plugin_type", config.PluginType),
+				logging.F("plugin_type", settings.PluginType),
 				logging.F("error", err))
-			return fmt.Errorf("failed to load plugin %s: %w", config.PluginType, err)
+			return fmt.Errorf("failed to load plugin %s: %w", settings.PluginType, err)
 		}
 	}
 
@@ -92,7 +92,7 @@ func (pl *PluginLoader) LoadPluginsFromConfiguration(ctx context.Context, config
 }
 
 // LoadPluginFromBinary loads a plugin from a binary file (.so/.dll)
-func (pl *PluginLoader) LoadPluginFromBinary(ctx context.Context, binaryPath string, config map[string]interface{}) (plugins.Plugin, error) {
+func (pl *PluginLoader) LoadPluginFromBinary(ctx context.Context, binaryPath string, settings map[string]interface{}) (plugins.Plugin, error) {
 	pl.logger.Info("📂 Loading plugin from binary",
 		logging.F("binary_path", binaryPath))
 
@@ -130,7 +130,7 @@ func (pl *PluginLoader) LoadPluginFromBinary(ctx context.Context, binaryPath str
 	}
 
 	// Initialize the plugin
-	if err := pluginInstance.Initialize(ctx, config); err != nil {
+	if err := pluginInstance.Initialize(ctx, settings); err != nil {
 		return nil, fmt.Errorf("failed to initialize plugin from %s: %w", binaryPath, err)
 	}
 
@@ -195,44 +195,44 @@ func (pl *PluginLoader) RegisterPlugin(pluginInstance plugins.Plugin, binaryPath
 }
 
 // LoadAndRegisterPlugin loads and registers a plugin in one operation
-func (pl *PluginLoader) LoadAndRegisterPlugin(ctx context.Context, config PluginConfiguration) error {
+func (pl *PluginLoader) LoadAndRegisterPlugin(ctx context.Context, settings PluginConfiguration) error {
 	var pluginInstance plugins.Plugin
 	var err error
 
 	// Try to load from binary first, then fall back to factory
-	if config.BinaryPath != "" && fileExists(config.BinaryPath) {
-		pluginInstance, err = pl.LoadPluginFromBinary(ctx, config.BinaryPath, config.Config)
+	if settings.BinaryPath != "" && fileExists(settings.BinaryPath) {
+		pluginInstance, err = pl.LoadPluginFromBinary(ctx, settings.BinaryPath, settings.Config)
 		if err != nil {
 			pl.logger.Warn("⚠️ Failed to load from binary, trying factory",
-				logging.F("binary_path", config.BinaryPath),
+				logging.F("binary_path", settings.BinaryPath),
 				logging.F("error", err))
 
 			// Fall back to factory
-			pluginInstance, err = pl.CreatePluginFromFactory(config.PluginType)
+			pluginInstance, err = pl.CreatePluginFromFactory(settings.PluginType)
 			if err != nil {
 				return fmt.Errorf("failed to create plugin from factory after binary load failed: %w", err)
 			}
 
-			// Initialize with config
-			if err := pluginInstance.Initialize(ctx, config.Config); err != nil {
+			// Initialize with settings
+			if err := pluginInstance.Initialize(ctx, settings.Config); err != nil {
 				return fmt.Errorf("failed to initialize factory-created plugin: %w", err)
 			}
 		}
 	} else {
 		// Load from factory
-		pluginInstance, err = pl.CreatePluginFromFactory(config.PluginType)
+		pluginInstance, err = pl.CreatePluginFromFactory(settings.PluginType)
 		if err != nil {
 			return fmt.Errorf("failed to create plugin from factory: %w", err)
 		}
 
-		// Initialize with config
-		if err := pluginInstance.Initialize(ctx, config.Config); err != nil {
+		// Initialize with settings
+		if err := pluginInstance.Initialize(ctx, settings.Config); err != nil {
 			return fmt.Errorf("failed to initialize factory-created plugin: %w", err)
 		}
 	}
 
 	// Register the plugin
-	return pl.RegisterPlugin(pluginInstance, config.BinaryPath)
+	return pl.RegisterPlugin(pluginInstance, settings.BinaryPath)
 }
 
 // GetRegisteredPluginTypes returns all plugin types that have registered factories
@@ -245,23 +245,23 @@ func (pl *PluginLoader) GetRegisteredPluginTypes() []plugins.PluginType {
 }
 
 // loadPlugin loads a single plugin from configuration
-func (pl *PluginLoader) loadPlugin(ctx context.Context, config PluginConfiguration) error {
-	if config.AutoRegister {
-		return pl.LoadAndRegisterPlugin(ctx, config)
+func (pl *PluginLoader) loadPlugin(ctx context.Context, settings PluginConfiguration) error {
+	if settings.AutoRegister {
+		return pl.LoadAndRegisterPlugin(ctx, settings)
 	}
 
 	// Just load without registering
 	var pluginInstance plugins.Plugin
 	var err error
 
-	if config.BinaryPath != "" && fileExists(config.BinaryPath) {
-		pluginInstance, err = pl.LoadPluginFromBinary(ctx, config.BinaryPath, config.Config)
+	if settings.BinaryPath != "" && fileExists(settings.BinaryPath) {
+		pluginInstance, err = pl.LoadPluginFromBinary(ctx, settings.BinaryPath, settings.Config)
 	} else {
-		pluginInstance, err = pl.CreatePluginFromFactory(config.PluginType)
+		pluginInstance, err = pl.CreatePluginFromFactory(settings.PluginType)
 		if err != nil {
 			return err
 		}
-		if err := pluginInstance.Initialize(ctx, config.Config); err != nil {
+		if err := pluginInstance.Initialize(ctx, settings.Config); err != nil {
 			return fmt.Errorf("failed to initialize plugin: %w", err)
 		}
 	}

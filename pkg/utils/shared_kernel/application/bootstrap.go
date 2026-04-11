@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/infrastructure/config"
+	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
 )
 
@@ -63,7 +63,7 @@ func (ab *AppBootstrap) WithEnvironment(env string) *AppBootstrap {
 
 // AppConfig configuração da aplicação após bootstrap
 type AppConfig struct {
-	Config    *config.Config
+	Config    *settings.Config
 	Logger    logging.Logger
 	StartTime time.Time
 }
@@ -125,17 +125,17 @@ func (ab *AppBootstrap) Initialize() (*AppConfig, error) {
 }
 
 // loadConfiguration carrega configuração com fallbacks
-func (ab *AppBootstrap) loadConfiguration() (*config.Config, error) {
-	var cfg *config.Config
+func (ab *AppBootstrap) loadConfiguration() (*settings.Config, error) {
+	var cfg *settings.Config
 	var err error
 
 	if ab.ConfigPath != "" {
-		cfg, err = config.LoadConfig(ab.ConfigPath)
+		cfg, err = settings.LoadConfig(ab.ConfigPath)
 		if err != nil {
-			return nil, fmt.Errorf("failed to load config from file %s: %w", ab.ConfigPath, err)
+			return nil, fmt.Errorf("failed to load settings from file %s: %w", ab.ConfigPath, err)
 		}
 	} else {
-		cfg = config.LoadFromEnv()
+		cfg = settings.LoadFromEnv()
 	}
 
 	// Aplica overrides do bootstrap se necessário
@@ -151,13 +151,13 @@ func (ab *AppBootstrap) loadConfiguration() (*config.Config, error) {
 }
 
 // setupLogging configura o sistema de logging
-func (ab *AppBootstrap) setupLogging(cfg *config.Config) error {
+func (ab *AppBootstrap) setupLogging(cfg *settings.Config) error {
 	// Em desenvolvimento, promove log level para debug se for info
 	if cfg.IsDevelopment() && cfg.Logging.Level == "info" {
 		cfg.Logging.Level = "debug"
 	}
 
-	// Convert config.LoggingConfig to logging.LoggingConfig
+	// Convert settings.LoggingConfig to logging.LoggingConfig
 	loggingCfg := logging.LoggingConfig{
 		Level:       cfg.Logging.Level,
 		Format:      cfg.Logging.Format,

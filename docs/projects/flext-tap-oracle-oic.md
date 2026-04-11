@@ -34,14 +34,14 @@ make validate
 ```
 
 ```bash
-tap-oracle-oic --config config.json --discover > catalog.json
-tap-oracle-oic --config config.json --catalog catalog.json --state state.json
+tap-oracle-oic --settings settings.json --discover > catalog.json
+tap-oracle-oic --settings settings.json --catalog catalog.json --state state.json
 ```
 
 ## Architecture & patterns
 
 - **Clean layers**: Tier 0 (`constants`, `typings`, `protocols`), Tier 1 (`models`, `utilities`), Tier 2 (`client`, `auth`, `streams`), Tier 3 (`api`, `tap`, CLI). Each tier only imports lower-level functionality.
-- **Auth & streaming**: `OicAuth` handles OAuth2/IDCS flows, `OicBaseStream` powers OIC entity streams, `TapOracleOic` implements the Singer tap entry point, and `settings.py` centralizes config.
+- **Auth & streaming**: `OicAuth` handles OAuth2/IDCS flows, `OicBaseStream` powers OIC entity streams, `TapOracleOic` implements the Singer tap entry point, and `settings.py` centralizes settings.
 - **Integration**: uses `flext-oracle-oic` for API calls, `flext-core` for r DI, and `flext-meltano` to integrate with Singer orchestration; instrumentation reuses `flext-observability` helpers.
 - **Stream coverage**: 12+ entity types (integrations, connections, packages, etc.) with built-in pagination, retry, rate-limit awareness, and backoff.
 

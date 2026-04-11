@@ -69,7 +69,7 @@ as an additional layer on top of it.
 - `flext-infra/src/flext_infra/transformers/mro_reference_rewriter.py` — migrates to rope-native
 - `flext-infra/src/flext_infra/transformers/nested_class_propagation.py` — migrates to rope-native
 - `flext-infra/src/flext_infra/refactor/_base_rule.py` — rule base class; NOT changing
-- `flext-infra/src/flext_infra/rules/` — YAML rule configs; NOT changing
+- `flext-infra/src/flext_infra/rules/` — YAML rule settingss; NOT changing
 
 ### Architecture
 - `AGENTS.md` — MRO namespace composition rules, strict typing requirements

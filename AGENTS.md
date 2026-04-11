@@ -44,7 +44,7 @@ alwaysApply: true
 - **Supreme Document**: FLEXT canonical governance file for ALL coding agents in this repository. AGENTS.md defines mandatory law; skills hold detailed implementation guidance.
 - **Reviewed**: 2026-04-06.
 - **Stack Baseline**: Python 3.13+, Pydantic v2, Ruff, Pyrefly, Poetry, Make.
-- **No Shadow Policies**: Agent-specific configs are pointers only. No policy duplication exists outside this file.
+- **No Shadow Policies**: Agent-specific settingss are pointers only. No policy duplication exists outside this file.
 
 ## §2 Architecture Law
 
@@ -150,7 +150,7 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 2. **No re-export stubs for services** — access is via the facade (`FlextObservability().method()`), not individual class import.
 3. **One concern per mixin** — each `services/*.py` file defines ONE mixin class.
 4. **MRO field conflicts** — the facade MUST declare shared fields (`_logger`, `_container`) to shadow inherited duplicates.
-5. **No public accessor prefixes on service facades** — public `get_*`, `set_*`, and `is_*` methods/properties are FORBIDDEN. Local deterministic derivation MUST become fields or `@computed_field`; external boundary reads MUST use domain verbs such as `fetch_*` or `resolve_*`; state mutation MUST use validated model assignment, `model_copy(update=...)`, or a domain verb such as `configure`, `apply`, or `update`.
+5. **No public accessor prefixes on service facades** — public `get_*`, `set_*`, and `is_*` methods/properties are FORBIDDEN. Local deterministic derivation MUST become fields or `@computed_field`; external boundary reads MUST use domain verbs such as `fetch_*` or `resolve_*`; state mutation MUST use validated model assignment, `model_copy(update=...)`, or a domain verb such as `settingsure`, `apply`, or `update`.
 6. **Service runtime state is centralized** — each service concern MUST flow through one central `m.<Domain>.*State` or `m.<Domain>.*Status` model instead of spreading round-trips through many small carrier models, dict conversions, and ad-hoc type narrowing.
 
 **Reference implementations**: `flext-cli/src/flext_cli/`, `flext-ldif/src/flext_ldif/`, `flext-observability/src/flext_observability/`.
@@ -158,7 +158,7 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 ### 2.6 Settings Law
 
 - **Mandatory Inheritance**: ALL settings classes MUST inherit `FlextSettings`. Using `m.Value`, `BaseSettings`, `BaseModel`, or custom singleton patterns for configuration is FORBIDDEN.
-- **SettingsConfigDict Required**: Every settings class MUST define `model_config = SettingsConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
+- **SettingsSettingsDict Required**: Every settings class MUST define `model_settings = SettingsSettingsDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
 - **Env Prefix Convention**: `FLEXT_` (core), `FLEXT_CLI_` (cli), `FLEXT_MELTANO_` (meltano), `FLEXT_API_` (api), `FLEXT_AUTH_` (auth), `ORACLE_` (db-oracle), `FLEXT_<ROLE>_<DOMAIN>_` (integration projects).
 - **Constants as Defaults**: ALL field defaults MUST come from `c.*` constants. Hardcoded strings, numbers, or booleans as defaults are FORBIDDEN.
 - **No os.environ Access**: `os.environ`, `os.getenv`, `environ.get()` in `src/` code is PROHIBITED. Use FlextSettings env resolution or `c.*` constants. Tests are exempt.
@@ -172,17 +172,17 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 ### 3.1 Architecture & Code Structure
 - **MVI 200-LINE CAP (SUPREME LAW)** module, class, method, or function >200 **code lines** is a violation. Line count is measured via `tokei` (logical LOC only — blank lines, comments, and docstrings are excluded from the count). Refactor immediately using strict OO composition and canonical MRO architecture. Decompose into explicit contracts and reusable domain components—never use compression hacks. **FORBIDDEN approaches to meet the cap**: removing blank lines, removing or compressing docstrings, style/formatting changes that reduce line count, and arbitrary code splits without domain decomposition. Only genuine OO decomposition via MRO inheritance, facade extraction to `_models/`/`_utilities/` subdirectories, and domain responsibility separation are valid.
   - **VALID code reduction** (actively encouraged): deleting dead/unused code, removing unnecessary helpers and pass-through wrappers (`def old(): return new()`), removing proxy functions/classes, removing backward-compat aliases (`LegacyX = NewX`), and replacing inline composed type annotations (`str | t.Numeric`) with canonical `t.*` contracts from `typings.py`. These eliminate real architectural violations and are the preferred first step before OO decomposition.
-- **Pydantic v2 Mastery**: Every class MUST extend Pydantic v2 `BaseModel` (or FLEXT base models) via MRO. Fully utilize `Field()`, `model_config = ConfigDict(...)`, `PrivateAttr()`, and built-in constraints. Standalone `*Config` classes, unnecessary `@property`, manual `self._x` assignments, line-reduction wrappers, and public `get_*`/`set_*`/`is_*` accessors are FORBIDDEN.
-- **Accessor Naming Law**: Values already present in object state or derived locally MUST be exposed as fields or `@computed_field`; mutations MUST occur through validated model state or a domain verb; boolean outcomes/statuses MUST use noun/adjective names such as `success`, `failure`, `expired`, `configured`, `connected`, or `healthy`.
+- **Pydantic v2 Mastery**: Every class MUST extend Pydantic v2 `BaseModel` (or FLEXT base models) via MRO. Fully utilize `Field()`, `model_settings = SettingsDict(...)`, `PrivateAttr()`, and built-in constraints. Standalone `*Settings` classes, unnecessary `@property`, manual `self._x` assignments, line-reduction wrappers, and public `get_*`/`set_*`/`is_*` accessors are FORBIDDEN.
+- **Accessor Naming Law**: Values already present in object state or derived locally MUST be exposed as fields or `@computed_field`; mutations MUST occur through validated model state or a domain verb; boolean outcomes/statuses MUST use noun/adjective names such as `success`, `failure`, `expired`, `settingsured`, `connected`, or `healthy`.
 - **MRO Inheritance Hierarchy**: Domain logic must reside in a single nested class hierarchy. Subprojects inherit from the parent project's facade class to cascade namespaces. Loose functions or standalone classes without MRO lineage are FORBIDDEN. They MUST be absorbed into the namespace classes or used via existing base classes.
 - **Utility & Helper Generalization (`u.*`)**: All shared helpers MUST strictly flow through the `u.*` utilities namespace. Do not duplicate logic. Use and enhance the lowest-level function available, systematically generalizing existing code rather than creating new redundant functions.
 - **Centralize Polymorphic Code**: Dismantle polymorphic functions branching on type unions. Use centralized Pydantic v2 models with discriminated unions and validation.
 - **Centralized Runtime Contracts**: Inputs, outputs, runtime state, and status snapshots MUST flow through central `m.*` models. Eliminate avoidable dict round-trips, ad-hoc conversion helpers, and non-essential type narrowing between service boundaries.
 
 ### 3.2 Types & Contracts
-- **Strict Contracts Only**: `Any`, bare `t.NormalizedValue`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
+- **Strict Contracts Only**: `Any`, bare `t.NormalizedValue`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.SettingsMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
   - **Exception: Intentional Generic Types** - `t.ContainerMapping` and `t.ContainerMapping` ARE permitted ONLY in these contexts:
-    1. **Type aliases** (in `typings.py`): `type ProjectConfig = t.ContainerMapping` with docstring explaining intent
+    1. **Type aliases** (in `typings.py`): `type ProjectSettings = t.ContainerMapping` with docstring explaining intent
     2. **Test fixtures** (in `conftest.py` and test support): Dynamic test data with unknown structure
     3. **Validation/Rule engines**: Return types for unstructured violations (e.g., `r[Sequence[t.ContainerMapping]]`)
     4. **Configuration transformers**: Methods that accept/return dynamic configuration from external sources (YAML, JSON)
@@ -190,7 +190,7 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 - **PEP 695 Canonical (Python 3.13+)**: ALL type aliases in `typings.py` must use `type X = ...` syntax. These create `TypeAliasType` objects—using them in `isinstance()` crashes at runtime and is FORBIDDEN. Runtime narrowing MUST use `u.is_*()` functions instead.
 - **Type Narrowing**: NEVER use `type(x) is T` or `type(x) == T` to narrow types. Use `isinstance(x, T)` or `TypeGuard`. Avoid gratuitous narrowings for types that shouldn't exist. `cast()` is completely forbidden outside `flext-core` result internals.
 - **Nullability and Unions**:
-  - `| None` is ONLY permitted inline at usage sites when business semantics require it (e.g., "not configured"). Never bake it into aliases.
+  - `| None` is ONLY permitted inline at usage sites when business semantics require it (e.g., "not settingsured"). Never bake it into aliases.
   - Inline composed type annotations (e.g., `str | int`) are FORBIDDEN in application code.
 - **`t.Container` Exclusivity**: `type Container = Scalar | Path`. `BaseModel` is TOTALLY FORBIDDEN inside `t.Container`. If both are needed, use explicit `t.Container | BaseModel`.
 
@@ -302,7 +302,7 @@ from collections.abc import Mapping, Sequence
 - **Lint Shortcuts**: `RUFF_ARGS="--select E501"` passes extra args to ruff. `PYRIGHT_ARGS="--level basic"` passes extra args to pyright. `CHECK_ONLY=1` on format/check runs without writing (dry-run).
 - **Scope Controls** (Workspace): `VALIDATE_SCOPE=project|workspace`, optional `DEPS_REPORT=0`.
 - **No Bypasses**: Strictness is mandatory. `SKIP_*` bypass toggles in the contract are FORBIDDEN.
-- **Exit Codes**: `0` pass, `1` policy failure, `2` usage/config error, `3` infra/runtime error.
+- **Exit Codes**: `0` pass, `1` policy failure, `2` usage/settings error, `3` infra/runtime error.
 - **Validation**: Policy/automation edits MUST run `make val VALIDATE_SCOPE=workspace` before claiming completion.
 - **Reports**: Must be factual, machine-readable when produced, and include explicit executable next actions.
 - *Verb semantics & thresholds*: See skill `flext-quality-gates`.
@@ -379,7 +379,7 @@ UNBREAKABLE LAW for all parallel agent work:
 - Sections must be appended strictly at the end of their respective ownership blocks.
 - **A1**: CommandBus, Middleware, Processor
 - **A2**: Registry
-- **A3**: Model, Config, Service, Validation, ValidatorSpec
+- **A3**: Model, Settings, Service, Validation, ValidatorSpec
 - **A4**: Result, Result, VariadicCallable, ResourceFactory, Log, Logger, Metadata
 - **A5**: Context, RuntimeBootstrapOptions, DI, Handler, RegisterableService, ServiceFactory
 - *Lines 1-236 & 1289+ are strictly FROZEN for behavioral changes. Performance-only caching additions (ClassVar cache fields, lazy-load wrappers) are permitted per the FROZEN file exception above, limited to method bodies — function/method signatures and class declarations within the frozen range MUST NOT be altered.*

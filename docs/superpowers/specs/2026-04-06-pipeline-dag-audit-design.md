@@ -34,7 +34,7 @@ class PipelineStageContext(Protocol):
 
     workspace_root: Path
     shared: t.MutableContainerMapping
-    config: t.ContainerMapping
+    settings: t.ContainerMapping
 
 
 @runtime_checkable

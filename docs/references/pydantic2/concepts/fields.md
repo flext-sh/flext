@@ -295,7 +295,7 @@ print(user.model_dump(by_alias=True))  # (2)!
    Note that the `by_alias` keyword argument defaults to `False`, and must be specified explicitly to dump
    models using the field (serialization) aliases.
 
-   You can also use [`ConfigDict.serialize_by_alias`][pydantic.config.ConfigDict.serialize_by_alias] to
+   You can also use [`ConfigDict.serialize_by_alias`][pydantic.settings.ConfigDict.serialize_by_alias] to
    configure this behavior at the model level.
 
    When `by_alias=True`, the alias `'username'` used during serialization.
@@ -345,7 +345,7 @@ In case you use `alias` together with `validation_alias` or `serialization_alias
 the `validation_alias` will have priority over `alias` for validation, and `serialization_alias` will have priority
 over `alias` for serialization.
 
-    If you provide a value for the [`alias_generator`][pydantic.config.ConfigDict.alias_generator] model setting, you can control the order of precedence for field alias and generated aliases via the `alias_priority` field parameter. You can read more about alias precedence [here](../concepts/alias.md#alias-precedence).
+    If you provide a value for the [`alias_generator`][pydantic.settings.ConfigDict.alias_generator] model setting, you can control the order of precedence for field alias and generated aliases via the `alias_priority` field parameter. You can read more about alias precedence [here](../concepts/alias.md#alias-precedence).
 
 ??? tip "Static type checking/IDE support"
 If you provide a value for the `alias` field parameter, static type checkers will use this alias instead
@@ -364,7 +364,7 @@ of the actual field name to synthesize the `__init__` method:
 
     1. Accepted by type checkers.
 
-    This means that when using the [`validate_by_name`][pydantic.config.ConfigDict.validate_by_name] model setting (which allows both the field name and alias to be used during model validation), type checkers will error when the actual field name is used:
+    This means that when using the [`validate_by_name`][pydantic.settings.ConfigDict.validate_by_name] model setting (which allows both the field name and alias to be used during model validation), type checkers will error when the actual field name is used:
 
     ```python
     from pydantic import BaseModel, ConfigDict, Field

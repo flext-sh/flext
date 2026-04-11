@@ -64,14 +64,14 @@ On Pydantic models, configuration can be specified in two ways:
 ## Configuration on Pydantic dataclasses
 
 [Pydantic dataclasses](./dataclasses.md) also support configuration (read more in the
-[dedicated section](./dataclasses.md#dataclass-config)).
+[dedicated section](./dataclasses.md#dataclass-settings)).
 
 ```python
 from pydantic import ConfigDict, ValidationError
 from pydantic.dataclasses import dataclass
 
 
-@dataclass(config=ConfigDict(str_max_length=10, validate_assignment=True))
+@dataclass(settings=ConfigDict(str_max_length=10, validate_assignment=True))
 class User:
     name: str
 
@@ -91,12 +91,12 @@ except ValidationError as e:
 ## Configuration on `TypeAdapter`
 
 [Type adapters](./type_adapter.md) (using the [`TypeAdapter`][pydantic.TypeAdapter] class) support configuration,
-by providing the `config` argument.
+by providing the `settings` argument.
 
 ```python
 from pydantic import ConfigDict, TypeAdapter
 
-ta = TypeAdapter(t.StrSequence, config=ConfigDict(coerce_numbers_to_str=True))
+ta = TypeAdapter(t.StrSequence, settings=ConfigDict(coerce_numbers_to_str=True))
 
 print(ta.validate_python([1, 2]))
 # > ['1', '2']
@@ -127,7 +127,7 @@ the configuration can be set in two ways:
       name: str = "John Doe"
   ```
 
-- Using the [`@with_config`][pydantic.config.with_config] decorator (this avoids static type checking errors with
+- Using the [`@with_config`][pydantic.settings.with_config] decorator (this avoids static type checking errors with
   [`TypedDict`][typing.TypedDict]):
 
   ```python

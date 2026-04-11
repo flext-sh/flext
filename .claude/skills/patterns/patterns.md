@@ -444,7 +444,7 @@ class AppConfig(BaseModel):
     log_level: str = Field(default="INFO")
 
 
-# Loading config
+# Loading settings
 def load_config(path: str) -> AppConfig:
     import json
 
@@ -455,7 +455,7 @@ def load_config(path: str) -> AppConfig:
     try:
         return AppConfig(
     except ValidationError as e:
-        raise ConfigurationError(f"Invalid config: {e}")
+        raise ConfigurationError(f"Invalid settings: {e}")
 ```
 
 **Citations**:
@@ -559,7 +559,7 @@ For each migration from cast-heavy to model-boundary code:
 - [ ] Create `TypeAdapter` instances once at module level, reuse in loops
 - [ ] Remove redundant custom validators that duplicate Pydantic coercion
 - [ ] Add discriminator fields to all polymorphic models
-- [ ] Validate at all system boundaries (API, files, DB reads, config)
+- [ ] Validate at all system boundaries (API, files, DB reads, settings)
 
 ---
 

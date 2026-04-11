@@ -58,7 +58,7 @@
 - [ ] **Step 4: Keep FlextLdapSyncCallbacks helper class**
 - [ ] **Step 5: Keep context manager (**enter**/**exit**)**
 - [ ] **Step 6: Override execute() → r[m.Ldap.SearchResult]**
-- [ ] **Step 7: Remove from_config() (no longer needed)**
+- [ ] **Step 7: Remove from_settings() (no longer needed)**
 - [ ] **Step 8: Run ruff + pyrefly**
 - [ ] **Step 9: Commit**
 

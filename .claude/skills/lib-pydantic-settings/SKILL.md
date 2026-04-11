@@ -15,7 +15,7 @@
 ---
 
 name: lib-pydantic-settings
-description: Pydantic SettingsConfigDict and singleton config patterns across FLEXT subprojects. Trigger when editing settings.py models, env bindings, or configuration validation behavior.
+description: Pydantic SettingsConfigDict and singleton settings patterns across FLEXT subprojects. Trigger when editing settings.py models, env bindings, or configuration validation behavior.
 
 ---
 

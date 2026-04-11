@@ -53,7 +53,7 @@ from flext_ldap import ldap as ldap, c, m, t, p, u
 
 client = ldap()
 with client:
-    client.connect(m.Ldap.ConnectionConfig(host="ldap.example.com"))
+    client.connect(m.Ldap.ConnectionSettings(host="ldap.example.com"))
     result = client.search(m.Ldap.SearchOptions(base_dn="dc=example,dc=com"))
 ```
 

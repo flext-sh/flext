@@ -14,7 +14,7 @@ affects: [02-architecture-solid-03, 02-architecture-solid-04]
 
 tech-stack:
   added: []
-  patterns: [protocol-first-annotations, p.Settings-for-config-type, p.Container-for-DI, p.Logger-for-logging]
+  patterns: [protocol-first-annotations, p.Settings-for-settings-type, p.Container-for-DI, p.Logger-for-logging]
 
 key-files:
   created: []
@@ -96,7 +96,7 @@ completed: 2026-03-24
 **Impact on plan:** Required for type-checking correctness. No scope creep.
 
 ## Issues Encountered
-- Sisyphus plan referenced outdated protocol names (`p.Config`, `p.DI`, `p.StructlogLogger`) — actual codebase uses `p.Settings`, `p.Container`, `p.Logger`
+- Sisyphus plan referenced outdated protocol names (`p.Settings`, `p.DI`, `p.StructlogLogger`) — actual codebase uses `p.Settings`, `p.Container`, `p.Logger`
 - Most flext-core DIP violations identified in sisyphus plan were already resolved in prior work — only `config_type` remained
 
 ## Known Stubs

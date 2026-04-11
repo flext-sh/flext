@@ -34,15 +34,15 @@ make validate
 ```
 
 ```bash
-tap-oracle --config config.json --discover > catalog.json
-tap-oracle --config config.json --catalog catalog.json --state state.json
-flext-tap-oracle --config config.json --catalog catalog.json --state state.json
+tap-oracle --settings settings.json --discover > catalog.json
+tap-oracle --settings settings.json --catalog catalog.json --state state.json
+flext-tap-oracle --settings settings.json --catalog catalog.json --state state.json
 ```
 
 ## Architecture overview
 
-- **Layered stack**: foundation modules (`constants`, `typings`, `protocols`), domain models/utilities, infrastructure services (`oracle_stream`, `tap`, `config`), and application/CLI entry points.
-- **Core components**: `FlextTapOracle`, `OracleStream`, `TapOracleConfig`, `tap.py`, `cli.py`, `integration/` modules for telemetry.
+- **Layered stack**: foundation modules (`constants`, `typings`, `protocols`), domain models/utilities, infrastructure services (`oracle_stream`, `tap`, `settings`), and application/CLI entry points.
+- **Core components**: `FlextTapOracle`, `OracleStream`, `TapOracleSettings`, `tap.py`, `cli.py`, `integration/` modules for telemetry.
 - **Integration**: uses `flext-db-oracle` for Oracle connectivity, `flext-meltano` for Singer tap scaffolding, `flext-core` for r/DI, and `flext-observability` for instrumentation.
 - **Performance**: Oracle-specific query hints, pagination, connection pooling, and streaming results minimize memory usage.
 

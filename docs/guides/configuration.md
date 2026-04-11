@@ -56,7 +56,7 @@ Typical fields:
 ## Docs Generation Contract
 
 - generated API pages come from public exports and docstrings
-- mkdocs config is generated from project metadata plus minimal docs overrides
+- mkdocs settings is generated from project metadata plus minimal docs overrides
 - curated guides must not duplicate generated API descriptions
 
 ## Validation
