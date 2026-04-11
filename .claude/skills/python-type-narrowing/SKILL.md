@@ -30,7 +30,7 @@ description: Type narrowing techniques including isinstance, TypeIs, TypeGuard, 
 ## Scope
 
 - Type guard implementations across FLEXT subprojects
-- `flext-core/src/flext_core/result.py` — `is_success_result`, `is_failure_result` guards
+- `flext-core/src/flext_core/result.py` — `successful_result`, `failed_result` guards
 - `flext-core/src/flext_core/typings.py` — type definitions and guards
 
 ## References
@@ -166,8 +166,8 @@ Good:
 from typing import TypeIs
 
 
-def is_success_result(r: r[T]) -> TypeIs[r[T]]:
-    return r.is_success
+def successful_result(r: r[T]) -> TypeIs[r[T]]:
+    return r.success
 ```
 
 Why good: TypeIs narrows both branches — caller gets precise types in if/else.
@@ -185,5 +185,5 @@ Why bad: `type()` comparison doesn't handle subclasses — use `isinstance(value
 
 ```bash
 rg -n "TypeIs\[|TypeGuard\[|assert_never\|assert_type" --glob "**/*.py" flext-core/src/
-rg -n "is_success_result|is_failure_result" flext-core/src/flext_core/result.py
+rg -n "successful_result|failed_result" flext-core/src/flext_core/result.py
 ```

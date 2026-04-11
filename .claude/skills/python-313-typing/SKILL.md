@@ -186,8 +186,8 @@ from typing import TypeIs
 from flext_core import r
 
 
-def is_success[T](result: r[T]) -> TypeIs[r[T]]:
-    return result.is_success
+def successful_result[T](result: r[T]) -> TypeIs[r[T]]:
+    return result.success
 ```
 
 ### Other 3.13 Improvements

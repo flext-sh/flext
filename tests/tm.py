@@ -20,14 +20,14 @@ class TestModels:
     @staticmethod
     def ok(result: r[Any]) -> None:
         """Assert result is success."""
-        if result.is_failure:
+        if result.failure:
             msg = f"Expected success but got failure: {result.exception}"
             raise AssertionError(msg)
 
     @staticmethod
     def fail(result: r[Any], has: str | None = None) -> None:
         """Assert result is failure, optionally checking error message."""
-        if r.is_success_result(result):
+        if r.successful_result(result):
             msg = "Expected failure but got success"
             raise AssertionError(msg)
         if has and has not in str(result.exception):

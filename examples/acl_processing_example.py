@@ -100,7 +100,7 @@ class AclProcessingExample:
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         entry_dn: str = Field(description="Distinguished name of the entry")
-        is_valid: bool = Field(description="Whether the ACL entry is valid")
+        valid: bool = Field(description="Whether the ACL entry is valid")
         violations: t.StrSequence = Field(
             default_factory=_new_str_list,
             description="List of validation violations",
@@ -268,7 +268,7 @@ class AclProcessingExample:
         return r[AclProcessingExample.AclValidationResult].ok(
             AclProcessingExample.AclValidationResult(
                 entry_dn=dn,
-                is_valid=not violations,
+                valid=not violations,
                 violations=violations,
                 warnings=warnings,
                 processing_time=time.time() - start_time,
@@ -286,7 +286,7 @@ class AclProcessingExample:
             """Execute ACL processing pipeline using monadic flow."""
             start_time = time.time()
             detect_result = self._detect_servers(self.entries)
-            if detect_result.is_failure:
+            if detect_result.failure:
                 return r[ProcessingDict].fail(detect_result.error)
             initial_data: ProcessingDict = {
                 **detect_result.value,
@@ -297,11 +297,11 @@ class AclProcessingExample:
                 if self.parallel
                 else self._extract_sequential(initial_data)
             )
-            if extract_result.is_failure:
+            if extract_result.failure:
                 return r[ProcessingDict].fail(extract_result.error)
             extracted_data = extract_result.value
             validate_result = self._validate_batch(extracted_data)
-            if validate_result.is_failure:
+            if validate_result.failure:
                 return r[ProcessingDict].fail(validate_result.error)
             validated_data = validate_result.value
             return self._analyze_performance(validated_data)
@@ -339,7 +339,7 @@ class AclProcessingExample:
             detected_entries: MutableSequence[t.ContainerMapping] = []
             for entry in entries:
                 result = AclProcessingExample.detect_server_type(entry)
-                if result.is_success:
+                if result.success:
                     detected_entries.append({
                         "entry": entry,
                         "server_type": result.value,
@@ -385,7 +385,7 @@ class AclProcessingExample:
                 all_acls: MutableSequence[AclProcessingExample.AclEntry] = []
                 for future in as_completed(futures):
                     result = future.result()
-                    if result.is_success:
+                    if result.success:
                         all_acls.extend(result.value)
                     else:
                         return r[ProcessingDict].fail(
@@ -436,7 +436,7 @@ class AclProcessingExample:
                     entry_with_server[0],
                     entry_with_server[1],
                 )
-                if result.is_success:
+                if result.success:
                     all_acls.extend(result.value)
                 else:
                     return r[ProcessingDict].fail(
@@ -480,7 +480,7 @@ class AclProcessingExample:
                     acl,
                     {"strict_mode": True},
                 )
-                if result.is_success:
+                if result.success:
                     validation_results.append(result.value)
                 else:
                     return r[ProcessingDict].fail(
@@ -491,7 +491,7 @@ class AclProcessingExample:
                 "validation_results": [
                     {
                         "entry_dn": result.entry_dn,
-                        "is_valid": result.is_valid,
+                        "valid": result.valid,
                         "violations": tuple(
                             violation for violation in result.violations
                         ),
@@ -500,8 +500,8 @@ class AclProcessingExample:
                     }
                     for result in validation_results
                 ],
-                "valid_acls": sum(1 for r in validation_results if r.is_valid),
-                "invalid_acls": sum(1 for r in validation_results if not r.is_valid),
+                "valid_acls": sum(1 for r in validation_results if r.valid),
+                "invalid_acls": sum(1 for r in validation_results if not r.valid),
                 "total_violations": sum(len(r.violations) for r in validation_results),
                 "total_warnings": sum(len(r.warnings) for r in validation_results),
             }

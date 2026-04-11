@@ -679,9 +679,9 @@ Everything else that holds state → Pydantic model.
 
 ---
 
-## Rule 16: Result Protocol for `is_success` Pattern
+## Rule 16: Result Protocol for `success` Pattern
 
-Result models that expose an `is_success` property MUST implement
+Result models that expose outcome state MUST implement
 `FlextProtocols.SuccessCheckable` (or the project-level equivalent) instead
 of duplicating the property in every model.
 
@@ -690,7 +690,7 @@ of duplicating the property in every model.
 @runtime_checkable
 class SuccessCheckable(Protocol):
     @property
-    def is_success(self) -> bool: ...
+    def success(self) -> bool: ...
 
 
 # In models.py — base for all result models:
@@ -701,8 +701,8 @@ class ResultBase(BaseModel):
     message: str = Field(default="", description="Human-readable result.")
 
     @property
-    def is_success(self) -> bool:
-        return self.success
+    def failure(self) -> bool:
+        return not self.success
 ```
 
 This eliminates duplication across `m.Infra.MigrationResult`, `SyncResult`,
@@ -775,7 +775,7 @@ Agents MUST apply the following when editing FLEXT code. No exceptions without e
 
 ## Rule 12: r — The Sole Fallibility Mechanism (AXIOMATIC)
 
-`r` (`r`) is the **MANDATORY** mechanism for expressing fallibility across ALL 33 projects. Any function that can fail, raise, or return "not found" MUST return `r[T]` — never `T | None`, never a bare exception, never an ad-hoc error dict. `r` exists to **ELIMINATE** `| None` return types and manual `try/except` in the business layer. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace imperative `if result is None` / `try/except` chains. The `r` alias is MANDATORY at all usage sites — never spell out `r`. Only pure predicates (`-> bool`), `__init__` constructors, and trivially infallible getters may deviate — each MUST be justified in a code comment. Detailed generic behavior and edge cases follow; normative enforcement lives in `AGENTS.md` §3 Code Law.
+`r` (`r`) is the **MANDATORY** mechanism for expressing fallibility across ALL 33 projects. Any function that can fail, raise, or return "not found" MUST return `r[T]` — never `T | None`, never a bare exception, never an ad-hoc error dict. `r` exists to **ELIMINATE** `| None` return types and manual `try/except` in the business layer. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace imperative `if result is None` / `try/except` chains. The `r` alias is MANDATORY at all usage sites — never spell out `r`. Only pure predicates (`-> bool`), `__init__` constructors, and trivially infallible derived fields may deviate — each MUST be justified in a code comment. Result-like carriers expose `success`/`failure`, never `is_success`/`is_failure`. Detailed generic behavior and edge cases follow; normative enforcement lives in `AGENTS.md` §3 Code Law.
 
 ### `r` Alias — Universal Import Pattern
 

@@ -136,7 +136,7 @@ def tracked_scripts(root: Path) -> Sequence[Path]:
         ],
         cwd=root,
     )
-    if result.is_failure:
+    if result.failure:
         raise InfraError(result.error or "git ls-files failed")
     output = result.value
     if output.exit_code != 0:

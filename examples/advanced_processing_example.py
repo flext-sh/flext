@@ -108,7 +108,7 @@ class AdvancedProcessingExample:
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         item_id: str = Field(description="Unique item identifier")
-        is_valid: bool = Field(description="Whether the item is valid")
+        valid: bool = Field(description="Whether the item is valid")
         violations: t.StrSequence = Field(
             default_factory=_new_str_list,
             description="List of validation violations",
@@ -151,7 +151,7 @@ class AdvancedProcessingExample:
             current_data: Mapping[str, DataValue] = {"items": self.items}
             for operation in operations:
                 result = operation(current_data)
-                if result.is_failure:
+                if result.failure:
                     return result
                 current_data = result.value.data.values
             payload = PipelineStageData.PipelinePayload.model_validate({
@@ -194,7 +194,7 @@ class AdvancedProcessingExample:
             validation_summary: Mapping[str, t.Numeric] = {
                 "total_validated": len(validation_results),
                 "valid_items": sum(
-                    1 for r in validation_results if r.get("is_valid") is True
+                    1 for r in validation_results if r.get("valid") is True
                 ),
                 "total_violations": sum(
                     len(violations)
@@ -306,7 +306,7 @@ class AdvancedProcessingExample:
             ]
             for item in items_to_validate:
                 result = self._validate_single_item(item)
-                if result.is_success:
+                if result.success:
                     validation_results.append(result.value)
                 else:
                     return r[PipelineStageData].fail(
@@ -317,15 +317,15 @@ class AdvancedProcessingExample:
                 "validation_results": [
                     {
                         "item_id": validation.item_id,
-                        "is_valid": validation.is_valid,
+                        "valid": validation.valid,
                         "violations": tuple(validation.violations),
                         "warnings": tuple(validation.warnings),
                         "validation_time": validation.validation_time,
                     }
                     for validation in validation_results
                 ],
-                "valid_count": sum(1 for r in validation_results if r.is_valid),
-                "invalid_count": sum(1 for r in validation_results if not r.is_valid),
+                "valid_count": sum(1 for r in validation_results if r.valid),
+                "invalid_count": sum(1 for r in validation_results if not r.valid),
             }
             payload = PipelineStageData.PipelinePayload.model_validate({
                 "values": result_data,
@@ -352,7 +352,7 @@ class AdvancedProcessingExample:
             return r[AdvancedProcessingExample.ValidationResult].ok(
                 AdvancedProcessingExample.ValidationResult(
                     item_id=str(item_id) if item_id else "unknown",
-                    is_valid=not violations,
+                    valid=not violations,
                     violations=violations,
                     warnings=warnings,
                     validation_time=time.time() - start_time,

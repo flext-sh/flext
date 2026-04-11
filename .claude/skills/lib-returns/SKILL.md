@@ -147,9 +147,9 @@ r.with_resource(
 ### Type Guards
 
 ```python
-from flext_core import is_success_result, is_failure_result
+from flext_core import successful_result, failed_result
 
-if is_success_result(result):
+if successful_result(result):
     # TypeIs narrows: result.value is guaranteed non-None
     process(result.value)
 ```

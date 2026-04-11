@@ -46,10 +46,10 @@ description: Testing patterns, anti-patterns, and guidelines for Python/pytest i
 - Follow AAA pattern: Arrange, Act, Assert — one logical assertion per test.
 - Name tests descriptively: `test_<unit>_<scenario>_<expected>`.
 - Mock external dependencies (DB, network, filesystem) — never real services in unit tests.
-- Test r operations by asserting `.is_success`/`.is_failure` and `.value`/`.error`.
+- Test r operations by asserting `.success`/`.failure` and `.value`/`.error`.
 - Never delete failing tests to make CI pass — fix the code instead.
 - **AXIOMATIC**: Tests MUST verify stable, public behavior — not implementation details. Do NOT assert on internal warning strings, tracebacks, private helper names, temporary alias spellings, internal class names, exact MRO composition, or any detail that can change without changing module behavior. If behavior is unchanged and only internals moved, the test must be rewritten.
-- **AXIOMATIC**: Tests MUST demonstrate the EXACT SAME strict typing, Pydantic v2, r, and architectural discipline as production code. Test files are NOT exempt from ANY rule. Test fixtures MUST use `Field()`, typed models, and `r[T]` returns. Test data MUST use `t.*` types from `typings.py`. Test assertions on r MUST use `.is_success`/`.is_failure` and `.value`/`.error`. There is NO "test-only" relaxation of any typing, structural, or Pydantic v2 rule. Tests that violate these rules are themselves violations.
+- **AXIOMATIC**: Tests MUST demonstrate the EXACT SAME strict typing, Pydantic v2, r, and architectural discipline as production code. Test files are NOT exempt from ANY rule. Test fixtures MUST use `Field()`, typed models, and `r[T]` returns. Test data MUST use `t.*` types from `typings.py`. Test assertions on r MUST use `.success`/`.failure` and `.value`/`.error`. There is NO "test-only" relaxation of any typing, structural, or Pydantic v2 rule. Tests that violate these rules are themselves violations.
 - **AXIOMATIC**: Test facades use `TestsFlext<Project><Tier>` naming and keep test-only scope under `<Domain>.Tests`. Legacy `Flext<Project>Test<Tier>` names and flat nested wrappers around private mixins are migration debt, not patterns to repeat.
 - **AXIOMATIC**: ALL code in tests MUST follow "Pydantic v2 way": `Field()` for field declarations, `ConfigDict(...)` for config, validation centralized in models via `@field_validator`/`@model_validator`/`@computed_field`. Enums/Mappings/Literals from `constants.py` (`c.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`. Test models MUST inherit via MRO from FLEXT base models.
 - **AXIOMATIC**: Compatibility wrappers, non-business validation fallbacks, legacy test code, and `OldName = NewName` compatibility aliases are TOTALLY FORBIDDEN in test code. Legacy test patterns are DELETED and replaced with canonical patterns.
@@ -68,7 +68,7 @@ def test_user_creation_with_valid_data_returns_success():
     result = create_user(data)
 
     # Assert
-    assert result.is_success
+    assert result.success
     assert result.value.name == "Alice"
 ```
 
@@ -80,13 +80,13 @@ from flext_core import r
 
 def test_ok_result_contains_value():
     result = r[int].ok(42)
-    assert result.is_success
+    assert result.success
     assert result.value == 42
 
 
 def test_fail_result_contains_error():
     result = r[int].fail("not found")
-    assert result.is_failure
+    assert result.failure
     assert "not found" in result.error
 
 
@@ -147,7 +147,7 @@ def test_service_calls_repository():
     result = service.get_user("123")
 
     mock_repo.find.assert_called_once_with("123")
-    assert result.is_success
+    assert result.success
 ```
 
 ### Anti-Patterns to Avoid
@@ -216,7 +216,7 @@ Good:
 ```python
 def test_parse_config_with_missing_key_returns_failure():
     result = parse_config({"host": "localhost"})  # missing "port"
-    assert result.is_failure
+    assert result.failure
     assert "port" in result.error
 ```
 
