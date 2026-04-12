@@ -36,14 +36,17 @@ class Result[T]:
 
     @property
     def is_success(self) -> bool:
+        """Return whether the result is successful."""
         return self.success
 
     @classmethod
     def ok(cls, value: T | None = None) -> Result[T]:
+        """Build a successful result instance."""
         return cls(success=True, value=value)
 
     @classmethod
     def fail(cls, error: str) -> Result[T]:
+        """Build a failed result instance."""
         return cls(success=False, error=error)
 
 
@@ -57,10 +60,12 @@ class FlextContainer:
         self._services: MutableMapping[str, object] = {}
 
     def register(self, name: str, service: object) -> Result[None]:
+        """Register a service object by name."""
         self._services[name] = service
         return Result.ok(None)
 
     def get(self, name: str) -> Result[object]:
+        """Resolve a service object by name."""
         service = self._services.get(name)
         if service is None:
             return Result.fail(f"Service {name} not found")
@@ -124,6 +129,7 @@ class FlextUtilities:
 
     @staticmethod
     def generate(_name: str) -> str:
+        """Return a generated string payload."""
         return ""
 
 
