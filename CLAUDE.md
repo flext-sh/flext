@@ -31,4 +31,4 @@ Canonical source: [`AGENTS.md`](AGENTS.md). This file stays brief on purpose. Do
 
 - All rule changes land in `AGENTS.md` first.
 - Keep `CLAUDE.md` pointer-only and under 50 lines.
-- Validate governance changes with `make validate VALIDATE_SCOPE=workspace`.
+- Validate governance changes with `make val VALIDATE_SCOPE=workspace`.

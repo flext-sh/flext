@@ -42,6 +42,8 @@ description: Rules for typing support assets in `typings/` (stubs, compatibility
 - **Per-line ignores only**: For third-party libs with incomplete types and no stubs, use per-line `# pyright: ignore[reportXxx]` with specific error codes. File-level `# pyright:` settings comments are FORBIDDEN.
 - Keep stubs synchronized with runtime/public API signatures.
 - Prefer precise types over broad fallback annotations. `Any` and `t.NormalizedValue` are TOTALLY FORBIDDEN — use `t.*` contracts from `typings.py`.
+- Internal FLEXT typing gaps are NOT solved with local stubs. Fix the source contract in `protocols.py`, `typings.py`, or `models.py`, then consume it through `p.*`, `t.*`, or `m.*`.
+- Manual stubs must never preserve a concrete internal implementation annotation when a structural `p.*` or composed `t.*` contract should exist instead.
 - Keep package-specific typing shims isolated under their own stub namespace.
 - Do not introduce broken/incomplete stubs without clear compatibility intent.
 

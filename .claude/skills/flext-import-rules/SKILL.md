@@ -26,6 +26,11 @@ from collections.abc import Mapping, Sequence`](#rule-1-always-use-from-future-i
   - [L1 — Platform Libraries](#l1--platform-libraries)
   - [L2 — Integration Projects (Taps/Targets/dbt)](#l2--integration-projects-tapstargetsdbt)
   - [L2 — Custom Composition Projects](#l2--custom-composition-projects)
+- [Rule 13: Library Abstraction Boundaries (SUPREME LAW)](#rule-13-library-abstraction-boundaries-supreme-law)
+  - [What flext-core Abstracts](#what-flext-core-abstracts)
+  - [Forbidden Imports (Outside flext-core src/)](#forbidden-imports-outside-flext-core-src)
+  - [Valid Pattern (All Projects)](#valid-pattern-all-projects)
+  - [Enforcement](#enforcement)
 - [Verification](#verification)
 <!-- TOC END -->
 
@@ -687,6 +692,65 @@ Business-specific projects use structural composition combining Domains and Plat
 ---
 
 ## Verification
+
+## Rule 13: Library Abstraction Boundaries (SUPREME LAW)
+
+**CRITICAL CONSTRAINT**: Libraries abstracted by any flext project MUST NOT be imported directly outside that project's `src/` domain.
+
+### What flext-core Abstracts
+
+- **pydantic v2** — Use `m.*` (models from `models.py`), `c.*` (constants), `t.*` (types from `typings.py`), `p.*` (protocols from `protocols.py`)
+- **dependency_injector** — Use `u.Container.*` and `c.*` configuration
+- **structlog** — Use `u.Logger.*` from utilities
+- **returns (r[T])** — Use `r[T]` result container directly (canonical abstraction)
+- **orjson** — Use `u.encode_json()`, `u.decode_json()` helpers
+- **pyyaml** — Use `u.load_yaml()`, `u.dump_yaml()` helpers
+
+### Forbidden Imports (Outside flext-core src/)
+
+```python
+# ❌ ALL FORBIDDEN in flext-cli/src/, flext-ldap/src/, tests/, examples/, scripts/
+from pydantic import BaseModel, Field  # Use m.*
+from pydantic_settings import BaseSettings  # Use m.* or c.*
+from dependency_injector import containers, providers  # Use u.Container.*
+from structlog import get_logger  # Use u.Logger
+from returns import Success, Failure  # Use r[T]
+import orjson  # Use u.encode_json()
+import yaml  # Use u.load_yaml()
+```
+
+### Valid Pattern (All Projects)
+
+```python
+# ✅ CORRECT — Always use abstractions
+from flext_core import m, c, u, p, t, r
+
+# In flext-cli/src/
+class FlextCliSettings(m.Settings):
+    """Use m.Settings from flext-core."""
+    default_timeout: int = c.CLI.DEFAULT_TIMEOUT_SECONDS
+    
+# In flext-cli/tests/
+from tests import c, m, p, t, u  # Test abstractions
+
+# In flext-cli/examples/
+from examples import c, m  # Example abstractions
+```
+
+### Enforcement
+
+Use grep to detect violations:
+
+```bash
+# Find forbidden pydantic imports (outside flext-core/src/)
+rg -n "from pydantic import|import pydantic" --glob "**/*.py" flext-cli flext-ldap tests/ examples/ scripts/
+
+# Find forbidden dependency_injector imports
+rg -n "from dependency_injector import|import dependency_injector" --glob "**/*.py" flext-*/src/ tests/ examples/
+
+# Find forbidden structlog imports
+rg -n "from structlog import|import structlog" --glob "**/*.py" flext-*/src/ tests/ examples/
+```
 
 Make gates:
 
