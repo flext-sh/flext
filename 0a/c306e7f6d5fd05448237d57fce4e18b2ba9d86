@@ -1,0 +1,60 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "0ac306e7f6d5fd05448237d57fce4e18b2ba9d86",
+  "prompts": {
+    "3f20071a1278ccd7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7e27-9bfa-7561-8c64-01cec23a81ee",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 89925,
+      "overriden_lines": 346
+    },
+    "a6d275f7fcd9c0ae": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7ce6-2981-76f0-9d8c-febff62e4c66",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 248321,
+      "overriden_lines": 2441
+    },
+    "b5fd1e627f70262c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7f1a-c347-7971-a1a2-9c39867986ae",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2698,
+      "overriden_lines": 7
+    },
+    "cd76b5e618e49632": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8290-9188-7543-8c42-3d7e728d2b75",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 147,
+      "overriden_lines": 6
+    }
+  }
+}
