@@ -23,11 +23,11 @@ as shown in the example below. In this case, we take advantage of Pydantic's ali
 import sqlalchemy as sa
 from sqlalchemy.orm import declarative_base
 
-from pydantic import BaseModel, SettingsDict, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class MyModel(BaseModel):
-    model_config = SettingsDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True)
 
     metadata: t.StrMapping = Field(alias="metadata_")
 

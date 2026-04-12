@@ -27,9 +27,9 @@ type DatabaseConfig struct {
 
 // Database represents the database connection and operations
 type Database struct {
-	db     *sql.DB
+	db       *sql.DB
 	settings *DatabaseConfig
-	logger logging.Logger
+	logger   logging.Logger
 }
 
 // NewDatabase creates a new database connection
@@ -40,7 +40,7 @@ func NewDatabase(settings *DatabaseConfig, logger logging.Logger) (*Database, er
 
 	db := &Database{
 		settings: settings,
-		logger: logger,
+		logger:   logger,
 	}
 
 	if err := db.connect(); err != nil {

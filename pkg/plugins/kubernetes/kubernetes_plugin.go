@@ -37,7 +37,7 @@ import (
 // KubernetesPlugin implements the deployable Kubernetes orchestration plugin
 type KubernetesPlugin struct {
 	id              plugins.PluginID
-	settings          map[string]interface{}
+	settings        map[string]interface{}
 	kubeconfigPath  string
 	namespace       string
 	clusterName     string
@@ -106,7 +106,7 @@ type ContainerStatus struct {
 func NewKubernetesPlugin() *KubernetesPlugin {
 	return &KubernetesPlugin{
 		id:          plugins.PluginID("kubernetes-plugin"),
-		settings:      make(map[string]interface{}),
+		settings:    make(map[string]interface{}),
 		namespace:   "default",
 		initialized: false,
 		deployments: make([]KubernetesDeployment, 0),

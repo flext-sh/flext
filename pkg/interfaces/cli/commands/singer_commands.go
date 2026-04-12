@@ -250,7 +250,7 @@ func NewSingerRunCommand() *SingerRunCommand {
 func (c *SingerRunCommand) Name() string        { return "singer-run" }
 func (c *SingerRunCommand) Description() string { return "Execute a Singer specification" }
 func (c *SingerRunCommand) Usage() string {
-	return "singer-run --id <spec-id> --pipeline-id <pipeline-id> --settings <settings-file> [--wait]"
+	return "singer-run --id <spec-id> --pipeline-id <pipeline-id> --config <settings-file> [--wait]"
 }
 func (c *SingerRunCommand) Flags() *flag.FlagSet { return c.flags }
 
@@ -292,7 +292,7 @@ func (c *SingerRunCommand) Run(ctx context.Context, args []string) error {
 	request := map[string]interface{}{
 		"spec_id":     *c.id,
 		"pipeline_id": *c.pipelineID,
-		"settings":      settings,
+		"settings":    settings,
 	}
 
 	reqBody, err := json.Marshal(request)
@@ -359,7 +359,7 @@ func NewSingerTestCommand() *SingerTestCommand {
 func (c *SingerTestCommand) Name() string        { return "singer-test" }
 func (c *SingerTestCommand) Description() string { return "Test Singer specification connection" }
 func (c *SingerTestCommand) Usage() string {
-	return "singer-test --id <spec-id> --settings <settings-file>"
+	return "singer-test --id <spec-id> --config <settings-file>"
 }
 func (c *SingerTestCommand) Flags() *flag.FlagSet { return c.flags }
 
@@ -442,7 +442,7 @@ func NewSingerDiscoverCommand() *SingerDiscoverCommand {
 func (c *SingerDiscoverCommand) Name() string        { return "singer-discover" }
 func (c *SingerDiscoverCommand) Description() string { return "Discover Singer specification schema" }
 func (c *SingerDiscoverCommand) Usage() string {
-	return "singer-discover --id <spec-id> --settings <settings-file> [--output <catalog-file>]"
+	return "singer-discover --id <spec-id> --config <settings-file> [--output <catalog-file>]"
 }
 func (c *SingerDiscoverCommand) Flags() *flag.FlagSet { return c.flags }
 

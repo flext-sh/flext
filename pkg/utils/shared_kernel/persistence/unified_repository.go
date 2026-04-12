@@ -23,7 +23,7 @@ type UnifiedRepository[T Entity] struct {
 	auditTrail []AuditEntry
 	auditMu    sync.RWMutex
 	entityName string
-	settings     RepositoryConfig
+	settings   RepositoryConfig
 	logger     logging.Logger
 }
 
@@ -42,7 +42,7 @@ func NewUnifiedRepository[T Entity](db *gorm.DB, entityName string, settings Rep
 		cacheTTL:       settings.CacheTTL,
 		auditTrail:     make([]AuditEntry, 0),
 		entityName:     entityName,
-		settings:         settings,
+		settings:       settings,
 		logger:         logger,
 	}
 }

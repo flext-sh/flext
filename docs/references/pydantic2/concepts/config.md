@@ -127,7 +127,7 @@ the configuration can be set in two ways:
       name: str = "John Doe"
   ```
 
-- Using the [`@with_config`][pydantic.settings.with_config] decorator (this avoids static type checking errors with
+- Using the [`@with_config`][pydantic.config.with_config] decorator (this avoids static type checking errors with
   [`TypedDict`][typing.TypedDict]):
 
   ```python

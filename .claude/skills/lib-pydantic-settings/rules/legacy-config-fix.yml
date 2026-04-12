@@ -4,6 +4,6 @@ rule:
   pattern: |
     class Config:
       $$$BODY
-fix: model_config = SettingsConfigDict()
-message: "Rewrite class Config -> model_config = SettingsConfigDict()"
+fix: model_config = ConfigDict()
+message: "Rewrite class Config -> model_config = ConfigDict()"
 severity: error

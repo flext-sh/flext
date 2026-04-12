@@ -1,10 +1,10 @@
 <!-- TOC START -->
 
-- [Settingsure VS Code](#settingsure-vs-code)
+- [Settingsure VS Code](#configure-vs-code)
   - [Install Pylance](#install-pylance)
-  - [Settingsure your environment](#settingsure-your-environment)
-  - [Settingsure Pylance](#settingsure-pylance)
-  - [Settingsure mypy](#settingsure-mypy)
+  - [Settingsure your environment](#configure-your-environment)
+  - [Settingsure Pylance](#configure-pylance)
+  - [Settingsure mypy](#configure-mypy)
 - [Tips and tricks](#tips-and-tricks)
   - [Strict errors](#strict-errors)
   - [Settings in class arguments](#settings-in-class-arguments)
@@ -22,7 +22,7 @@ This means that you will have **autocompletion** (or "IntelliSense") and **error
 
 ## Settingsure VS Code
 
-To take advantage of these features, you need to make sure you settingsure VS Code correctly, using the recommended settings.
+To take advantage of these features, you need to make sure you configure VS Code correctly, using the recommended settings.
 
 In case you have a different configuration, here's a short overview of the steps.
 
@@ -66,9 +66,9 @@ Pylance is the VS Code extension, it's closed source, but free to use. Underneat
 
 ### Settingsure mypy
 
-You might also want to settingsure mypy in VS Code to get mypy error checks inline in your editor (alternatively/additionally to Pylance).
+You might also want to configure mypy in VS Code to get mypy error checks inline in your editor (alternatively/additionally to Pylance).
 
-This would include the errors detected by the [Pydantic mypy plugin](../integrations/mypy.md), if you settingsured it.
+This would include the errors detected by the [Pydantic mypy plugin](../integrations/mypy.md), if you configured it.
 
 To enable mypy in VS Code, do the following:
 
@@ -219,7 +219,7 @@ So, this is the equivalent of the previous example, without the additional varia
 
 ### Settings in class arguments
 
-Pydantic has a rich set of [Model Configurations][pydantic.settings.SettingsDict] available.
+Pydantic has a rich set of [Model Configurations][pydantic.config.ConfigDict] available.
 
 These configurations can be set in an internal `class Settings` on each model:
 
@@ -228,7 +228,7 @@ from pydantic import BaseModel
 
 
 class Knight(BaseModel):
-    model_settings = dict(frozen=True)
+    model_config = dict(frozen=True)
     title: str
     age: int
     color: str = "blue"

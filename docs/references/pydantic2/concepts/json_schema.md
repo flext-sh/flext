@@ -70,7 +70,7 @@ from enum import Enum
 from typing import Annotated, Union
 
 from pydantic import BaseModel, Field
-from pydantic.settings import ConfigDict
+from pydantic.config import ConfigDict
 
 
 class FooBar(BaseModel):
@@ -337,7 +337,7 @@ print(Model.model_json_schema(mode="serialization"))
 The generated JSON schema can be customized at both the field level and model level via:
 
 1. [Field-level customization](#field-level-customization) with the [`Field`][pydantic.fields.Field] constructor
-2. [Model-level customization](#model-level-customization) with [`model_config`][pydantic.settings.ConfigDict]
+2. [Model-level customization](#model-level-customization) with [`model_config`][pydantic.config.ConfigDict]
 
 At both the field and model levels, you can use the `json_schema_extra` option to add extra information to the JSON schema.
 The [Using `json_schema_extra`](#using-json_schema_extra) section below provides more details on this option.
@@ -556,14 +556,14 @@ print(json.dumps(Person.model_json_schema(), indent=2))
 
 ### Model-Level Customization
 
-You can also use [model settings][pydantic.settings.ConfigDict] to customize JSON schema generation on a model.
+You can also use [model settings][pydantic.config.ConfigDict] to customize JSON schema generation on a model.
 Specifically, the following settings options are relevant:
 
-- [`title`][pydantic.settings.ConfigDict.title]
-- [`json_schema_extra`][pydantic.settings.ConfigDict.JSON_schema_extra]
-- [`json_schema_mode_override`][pydantic.settings.ConfigDict.JSON_schema_mode_override]
-- [`field_title_generator`][pydantic.settings.ConfigDict.field_title_generator]
-- [`model_title_generator`][pydantic.settings.ConfigDict.model_title_generator]
+- [`title`][pydantic.config.ConfigDict.title]
+- [`json_schema_extra`][pydantic.config.ConfigDict.JSON_schema_extra]
+- [`json_schema_mode_override`][pydantic.config.ConfigDict.JSON_schema_mode_override]
+- [`field_title_generator`][pydantic.config.ConfigDict.field_title_generator]
+- [`model_title_generator`][pydantic.config.ConfigDict.model_title_generator]
 
 ### Using `json_schema_extra`
 

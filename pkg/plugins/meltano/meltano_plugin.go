@@ -36,7 +36,7 @@ import (
 // MeltanoPlugin implements the deployable Meltano plugin
 type MeltanoPlugin struct {
 	id              plugins.PluginID
-	settings          map[string]interface{}
+	settings        map[string]interface{}
 	pythonVenv      string
 	meltanoProject  string
 	initialized     bool
@@ -48,7 +48,7 @@ type MeltanoPlugin struct {
 func NewMeltanoPlugin() *MeltanoPlugin {
 	return &MeltanoPlugin{
 		id:          plugins.PluginID("meltano-plugin"),
-		settings:      make(map[string]interface{}),
+		settings:    make(map[string]interface{}),
 		initialized: false,
 	}
 }
@@ -410,7 +410,7 @@ func (m *MeltanoPlugin) executeSingerTap(ctx context.Context, params map[string]
 		message := map[string]interface{}{
 			"operation": "singer.tap.started",
 			"tap_name":  tapName,
-			"settings":    settings,
+			"settings":  settings,
 			"timestamp": time.Now(),
 		}
 		m.communicator.BroadcastMessage(ctx, m.id, plugins.PluginTypeMeltano, message)

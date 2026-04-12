@@ -34,8 +34,8 @@ make validate     # includes lint, type, security, tests, coverage
 ```
 
 ```bash
-tap-ldap --settings settings.json --discover > catalog.json
-tap-ldap --settings settings.json --catalog catalog.json --state state.json
+tap-ldap --config settings.json --discover > catalog.json
+tap-ldap --config settings.json --catalog catalog.json --state state.json
 ```
 
 Configuration reference and example JSON live under `docs/` and the README (host, bind credentials, LDIF toggles, custom streams, page sizing, etc.).

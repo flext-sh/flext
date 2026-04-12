@@ -7,13 +7,13 @@
 - [Migration Patterns](#migration-patterns)
   - [TypeGuard Pattern (Replaces cast())](#typeguard-pattern-replaces-cast)
   - [TypedDict to Pydantic Model (Hierarchical Inheritance)](#typeddict-to-pydantic-model-hierarchical-inheritance)
-  - [Standard SettingsDict Settings](#standard-configdict-settings)
+  - [Standard ConfigDict Settings](#standard-configdict-settings)
   - [Modern Validator Patterns (Pydantic 2.11+)](#modern-validator-patterns-pydantic-211)
   - [Namespace Hierarchy Standard](#namespace-hierarchy-standard)
 - [Migration Metrics](#migration-metrics)
   - [Cast() Usage by Location (627 total)](#cast-usage-by-location-627-total)
   - [TypedDict Usage by Project (305 total)](#typeddict-usage-by-project-305-total)
-  - [SettingsDict Standardization Scope](#configdict-standardization-scope)
+  - [ConfigDict Standardization Scope](#configdict-standardization-scope)
 - [Phase Structure (Parallelized)](#phase-structure-parallelized)
   - [Phase 0: Foundation (COMPLETED)](#phase-0-foundation-completed)
   - [Phase 1: Core Completion + Pattern Establishment](#phase-1-core-completion-pattern-establishment)
@@ -37,13 +37,13 @@
 
 ## Executive Summary
 
-**Objective**: Complete transformation of the Flext monorepo (29 projects) to modern Pydantic 2.11+ patterns with hierarchical BaseModel inheritance, eliminating all `cast()` usage, converting all `TypedDict` definitions to structural Pydantic models, standardizing `SettingsDict` settings, and modernizing validators.
+**Objective**: Complete transformation of the Flext monorepo (29 projects) to modern Pydantic 2.11+ patterns with hierarchical BaseModel inheritance, eliminating all `cast()` usage, converting all `TypedDict` definitions to structural Pydantic models, standardizing `ConfigDict` settings, and modernizing validators.
 
 **Current State** (from exhaustive codebase analysis):
 
 - **627 `cast()` usages** across the codebase (~500 in tests, ~127 in src/)
 - **305 `TypedDict` definitions** across 74 files
-- **249+ `model_config = SettingsDict()`** patterns - **codebase ALREADY uses Pydantic v2**
+- **249+ `model_config = ConfigDict()`** patterns - **codebase ALREADY uses Pydantic v2**
 - **127 BaseModel subclasses** across the monorepo
 - **ZERO `@validator` or `@root_validator`** (Pydantic v1) - already migrated to v2
 - Multiple projects with lint/type errors requiring correction
@@ -52,7 +52,7 @@
 
 - Zero `cast()` usage in ALL code (src/ AND tests/)
 - Zero `TypedDict` - ALL converted to structural Pydantic 2 models with hierarchical inheritance
-- Standardized `SettingsDict` settings across all 127+ models
+- Standardized `ConfigDict` settings across all 127+ models
 - Modern validator patterns (`@field_validator`, `@model_validator`, `computed_field`)
 - All projects passing `make validate`
 - 80%+ test coverage maintained
@@ -66,7 +66,7 @@
 | **cast() in tests**            | Convert ALL to TypeGuards                   | Consistent type safety, no exceptions                |
 | **TypedDict treatment**        | Convert ALL to structural Pydantic 2 models | Hierarchical inheritance enables reuse               |
 | **Namespace pattern**          | Hybrid with max reuse                       | `m.Entity`, `m.Ldif.Entry`, `m.Cli.Command`          |
-| **SettingsDict standardization** | YES                                         | Consistent validation, serialization across projects |
+| **ConfigDict standardization** | YES                                         | Consistent validation, serialization across projects |
 | **Validator modernization**    | YES                                         | Leverage Pydantic 2.11 features                      |
 | **Phase parallelization**      | YES                                         | Reduce timeline from 38 to ~25-28 days               |
 | **flext-tap-oracle-wms**       | Final phase                                 | 100+ errors, isolate risk                            |
@@ -81,7 +81,7 @@
 # BEFORE: Using cast() - FORBIDDEN
 from typing import cast
 
-settings = cast(SettingsDict, data)
+settings = cast(ConfigDict, data)
 
 # AFTER: Using TypeGuard
 from flext_core import u
@@ -118,7 +118,7 @@ class FlextModels:
     class Base(BaseModel):
         """Base for all Flext models."""
 
-        model_config = SettingsDict(
+        model_config = ConfigDict(
             validate_assignment=True,
             use_enum_values=True,
             extra="forbid",
@@ -146,11 +146,11 @@ class FlextModels:
                 return self.success_count + self.failure_count
 ```
 
-### Standard SettingsDict Settings
+### Standard ConfigDict Settings
 
 ```python
 # Standard production model
-model_config = SettingsDict(
+model_config = ConfigDict(
     validate_assignment=True,  # Validate on attribute assignment
     use_enum_values=True,  # Serialize enums to values
     extra="forbid",  # Reject unknown fields
@@ -159,14 +159,14 @@ model_config = SettingsDict(
 )
 
 # Immutable value t.NormalizedValue
-model_config = SettingsDict(
+model_config = ConfigDict(
     frozen=True,  # Immutable
     validate_assignment=True,
     extra="forbid",
 )
 
 # API response model (allows extra for forward compatibility)
-model_config = SettingsDict(
+model_config = ConfigDict(
     extra="ignore",  # Ignore unknown fields from API
     validate_assignment=True,
 )
@@ -260,11 +260,11 @@ entry: ldif_m.Entry = ...
 | Other projects          | 4       | Low                  |
 | **Total**               | **305** |                      |
 
-### SettingsDict Standardization Scope
+### ConfigDict Standardization Scope
 
 | Pattern                          | Current Count | Action               |
 | -------------------------------- | ------------- | -------------------- |
-| `model_config = SettingsDict(...)` | 249+          | Standardize settings |
+| `model_config = ConfigDict(...)` | 249+          | Standardize settings |
 | Missing `extra="forbid"`         | TBD           | Add to all models    |
 | Missing `validate_assignment`    | TBD           | Add to all models    |
 
@@ -305,7 +305,7 @@ entry: ldif_m.Entry = ...
 
 - Convert 86 TypedDicts to hierarchical Pydantic models
 - Organize into `FlextModels.Core.*`, `FlextModels.Settings.*`, `FlextModels.Result.*`
-- Ensure all models inherit from common base with standard SettingsDict
+- Ensure all models inherit from common base with standard ConfigDict
 
 **1.3 flext-core cast() Elimination**
 
@@ -313,9 +313,9 @@ entry: ldif_m.Entry = ...
 - Replace with TypeGuards from 1.1
 - Update affected functions
 
-**1.4 SettingsDict Standardization Template**
+**1.4 ConfigDict Standardization Template**
 
-- Create base model classes with standard SettingsDict
+- Create base model classes with standard ConfigDict
 - Document which settings apply to which model types
 - Create migration checklist for other projects
 
@@ -332,7 +332,7 @@ entry: ldif_m.Entry = ...
 - [ ] `flext_core/models.py` - All Pydantic models with hierarchy
 - [ ] `flext_core/typings.py` - Type aliases only (no TypedDict)
 - [ ] Zero cast() usage
-- [ ] Standard SettingsDict documented
+- [ ] Standard ConfigDict documented
 - [ ] `make validate` passing
 
 ---
@@ -353,7 +353,7 @@ entry: ldif_m.Entry = ...
 **2A.2 flext-grpc Lint Fixes**
 
 - Fix RUF052 warnings (dummy variables)
-- Standardize SettingsDict in any models
+- Standardize ConfigDict in any models
 
 #### Track B: Infrastructure Layer
 
@@ -361,7 +361,7 @@ entry: ldif_m.Entry = ...
 
 - Fix lint failures
 - Migrate any TypedDicts to Pydantic
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **2B.2 flext-quality**
 
@@ -393,13 +393,13 @@ entry: ldif_m.Entry = ...
 - Convert all TypedDicts to hierarchical models
 - Create `FlextLdifModels` namespace
 - Remove 5 cast() usages
-- Standardize all SettingsDict settings
+- Standardize all ConfigDict settings
 
 **3.2 flext-ldap Migration**
 
 - Review existing models
 - Ensure LDAP operations use Pydantic validation
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **3.3 flext-db-oracle Migration**
 
@@ -408,7 +408,7 @@ entry: ldif_m.Entry = ...
 
 #### Deliverables
 
-- [ ] flext-ldif: Zero TypedDict, zero cast(), standard SettingsDict
+- [ ] flext-ldif: Zero TypedDict, zero cast(), standard ConfigDict
 - [ ] All data layer projects passing `make validate`
 
 ---
@@ -425,13 +425,13 @@ entry: ldif_m.Entry = ...
 
 - Fix missing imports
 - Migrate TypedDicts to models
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **4A.2 flext-oracle-oic**
 
 - Fix PIE794 (duplicate OIC class field)
 - Review and consolidate constants
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 #### Track B: Meltano/Singer Framework
 
@@ -439,7 +439,7 @@ entry: ldif_m.Entry = ...
 
 - Fix bad-override error in `FlextMeltanoTapAbstractions.create_instance`
 - Review Singer protocol implementations
-- Standardize SettingsDict in any models
+- Standardize ConfigDict in any models
 
 #### Deliverables
 
@@ -465,17 +465,17 @@ entry: ldif_m.Entry = ...
 **5A.2 flext-tap-ldif**
 
 - Review and verify types
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **5A.3 flext-tap-oracle**
 
 - Remove 1 cast() usage
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **5A.4 flext-tap-oracle-oic**
 
 - Review and verify types
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 #### Track B: Targets (Destination Connectors)
 
@@ -483,7 +483,7 @@ entry: ldif_m.Entry = ...
 
 - Remove 12 cast() usages
 - Major TypeGuard refactoring
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **5B.2 flext-target-ldap**
 
@@ -493,12 +493,12 @@ entry: ldif_m.Entry = ...
 **5B.3 flext-target-ldif**
 
 - Review and verify types
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **5B.4 flext-target-oracle-oic**
 
 - Convert 5 TypedDicts to Pydantic models
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **5B.5 flext-target-oracle-wms**
 
@@ -522,24 +522,24 @@ entry: ldif_m.Entry = ...
 **6A.1 flext-dbt-oracle**
 
 - Remove 3 cast() usages
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **6A.2 flext-dbt-ldap**
 
 - Remove 1 cast() usage
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **6A.3 flext-dbt-ldif**
 
 - Remove 1 cast() usage
 - Convert 2 TypedDicts
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **6A.4 flext-dbt-oracle-wms**
 
 - Remove 1 cast() usage
 - Convert 22 TypedDicts to Pydantic models
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 #### Track B: User-Facing Applications
 
@@ -548,14 +548,14 @@ entry: ldif_m.Entry = ...
 - Convert all TypedDicts to hierarchical models
 - Create `FlextCliModels` namespace
 - Update command handlers
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 **6B.2 flext-web (LARGE - 89 TypedDicts)**
 
 - Convert all TypedDicts to hierarchical models
 - Create `FlextWebModels` namespace
 - Update API endpoints and handlers
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 #### Deliverables
 
@@ -625,7 +625,7 @@ entry: ldif_m.Entry = ...
 - Apply all patterns established in earlier phases
 - Convert any remaining TypedDicts
 - Remove any remaining cast()
-- Standardize SettingsDict
+- Standardize ConfigDict
 
 #### Deliverables
 
@@ -648,7 +648,7 @@ entry: ldif_m.Entry = ...
 - Run `make validate` on entire monorepo
 - Verify zero cast() across ALL projects (src/ AND tests/)
 - Verify zero TypedDict (all converted to Pydantic models)
-- Verify SettingsDict standardized across all 127+ models
+- Verify ConfigDict standardized across all 127+ models
 
 **9.2 Test Coverage**
 
@@ -662,7 +662,7 @@ entry: ldif_m.Entry = ...
 - Create migration guide for future reference
 - Document TypeGuard patterns
 - Document hierarchical model inheritance patterns
-- Document SettingsDict standards
+- Document ConfigDict standards
 
 **9.4 Cleanup**
 
@@ -726,7 +726,7 @@ entry: ldif_m.Entry = ...
 1. **Zero `cast()` usage** in ALL code (src/ AND tests/)
 2. **Zero `TypedDict`** - all converted to structural Pydantic 2 models
 3. **Hierarchical inheritance** - models organized in namespaced hierarchies
-4. **Standard SettingsDict** - consistent settings across all 127+ models
+4. **Standard ConfigDict** - consistent settings across all 127+ models
 5. **Modern validators** - `@field_validator`, `@model_validator`, `computed_field`
 6. **All 29 projects** passing `make validate`
 7. **80%+ test coverage** maintained or improved
@@ -739,12 +739,12 @@ entry: ldif_m.Entry = ...
 
 For each project migration:
 
-1. **Analyze**: Grep for cast(), TypedDict, SettingsDict patterns
+1. **Analyze**: Grep for cast(), TypedDict, ConfigDict patterns
 2. **Plan**: Create task breakdown in Beads
 3. **Infrastructure**: Add TypeGuards to project's utilities
 4. **Convert**: TypedDicts -> hierarchical Pydantic models
 5. **Eliminate**: cast() -> TypeGuards
-6. **Standardize**: SettingsDict settings per model type
+6. **Standardize**: ConfigDict settings per model type
 7. **Verify**: Run `make check` on project
 8. **Test**: Run `make test` on project
 9. **Commit**: Atomic commits per logical change

@@ -35,7 +35,7 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 
 ## Scope
 
-- `flext-core/src/flext_core/settings.py` — FlextSettings (BaseSettings + SettingsConfigDict)
+- `flext-core/src/flext_core/settings.py` — FlextSettings (BaseSettings + ConfigDict)
 - `flext-core/src/flext_core/_models/settings.py` — nested settings models with field_validator/model_validator
 - `flext-core/src/flext_core/_utilities/validation.py` — TypeAdapter utilities, validation helpers
 - `flext-core/src/flext_core/typings.py` — RootModel containers (Dict, ConfigMap, etc.)
@@ -211,7 +211,7 @@ make validate PROJECT=<name> FIX=1
 ### Good: FlextSettings model_config
 
 ```python
-model_config = SettingsConfigDict(
+model_config = ConfigDict(
     env_prefix=c.ENV_PREFIX,  # "FLEXT_"
     env_nested_delimiter=c.ENV_NESTED_DELIMITER,
     env_file=u.Infra.resolve_env_file(),
@@ -290,22 +290,22 @@ class QueryModel(m.Query):
 
 | Subproject                      | Key Files                                          | Pattern                                                                     |
 | ------------------------------- | -------------------------------------------------- | --------------------------------------------------------------------------- |
-| `flext-core`                    | `settings.py`, `_models/settings.py`, `typings.py` | SettingsConfigDict, ConfigDict, field_validator, model_validator, RootModel |
-| `flext-grpc`                    | `models.py`, `settings.py`                         | BaseModel + computed_field, SettingsConfigDict                              |
-| `flext-auth`                    | `settings.py`, `models.py`                         | SettingsConfigDict, ConfigDict                                              |
-| `flext-cli`                     | `settings.py`, `file_tools.py`                     | SettingsConfigDict, yaml → model validation                                 |
-| `flext-ldif`                    | `settings.py`, `_models/settings.py`               | SettingsConfigDict, ConfigDict                                              |
-| `flext-api`                     | `settings.py`                                      | SettingsConfigDict                                                          |
-| `flext-web`                     | `settings.py`                                      | SettingsConfigDict                                                          |
+| `flext-core`                    | `settings.py`, `_models/settings.py`, `typings.py` | ConfigDict, ConfigDict, field_validator, model_validator, RootModel |
+| `flext-grpc`                    | `models.py`, `settings.py`                         | BaseModel + computed_field, ConfigDict                              |
+| `flext-auth`                    | `settings.py`, `models.py`                         | ConfigDict, ConfigDict                                              |
+| `flext-cli`                     | `settings.py`, `file_tools.py`                     | ConfigDict, yaml → model validation                                 |
+| `flext-ldif`                    | `settings.py`, `_models/settings.py`               | ConfigDict, ConfigDict                                              |
+| `flext-api`                     | `settings.py`                                      | ConfigDict                                                          |
+| `flext-web`                     | `settings.py`                                      | ConfigDict                                                          |
 | `flext-meltano`                 | `project_service.py`                               | yaml.safe_dump + BaseModel patterns                                         |
 | `flext-quality`                 | `utilities.py`, `rules/loader.py`                  | yaml + model validation                                                     |
-| `flext-tap-*`, `flext-target-*` | `settings.py`                                      | SettingsConfigDict                                                          |
+| `flext-tap-*`, `flext-target-*` | `settings.py`                                      | ConfigDict                                                          |
 
 ## Verification
 
 ```bash
 # Confirm v2 patterns in use
-rg -n "ConfigDict|SettingsConfigDict|field_validator|model_validator|computed_field" --glob "**/*.py" flext-core flext-grpc flext-auth
+rg -n "ConfigDict|ConfigDict|field_validator|model_validator|computed_field" --glob "**/*.py" flext-core flext-grpc flext-auth
 
 # Confirm TypeAdapter usage
 rg -n "TypeAdapter" --glob "**/*.py" flext-core/src/

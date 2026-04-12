@@ -3477,7 +3477,7 @@ class FlextSettings(BaseSettings):
     # ═══════════════════════════════════════════════════════════════
     # ENVIRONMENT AUTO-LOADING (Pydantic BaseSettings)
     # ═══════════════════════════════════════════════════════════════
-    model_config = SettingsConfigDict(
+    model_config = ConfigDict(
         case_sensitive=False,
         env_prefix="FLEXT_",  # ✅ Auto: FLEXT_DEBUG → debug
         env_file=".env",  # ✅ Auto: load from .env

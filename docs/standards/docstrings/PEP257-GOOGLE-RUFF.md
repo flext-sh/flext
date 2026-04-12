@@ -333,7 +333,7 @@ async def fetch_data(url: str, timeout: int = 30) -> bytes:
 
 ### Format
 ```python
-def settingsure(
+def configure(
     mode: str,
     options: Mapping[str, Any] | None = None,
     verbosity: int = 1,

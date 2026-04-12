@@ -1,5 +1,5 @@
 skill: lib-pydantic-settings
-description: Enforce SettingsConfigDict patterns for FLEXT settings models.
+description: Enforce ConfigDict patterns for FLEXT settings models.
 scan_targets:
   include:
     - "**/settings.py"
@@ -17,7 +17,7 @@ rules:
     fix_type: ast-grep
     fix_file: rules/legacy-settings-fix.yml
     fix_instruction:
-      Auto-rewrite class Config blocks to model_config = SettingsConfigDict(); then fill explicit settings keys
+      Auto-rewrite class Config blocks to model_config = ConfigDict(); then fill explicit settings keys
       as needed.
   - id: require-env-prefix
     type: ast-grep
@@ -26,7 +26,7 @@ rules:
     group: pydantic_settings
     description: Settings modules should define env_prefix explicitly.
     fix_auto: false
-    fix_instruction: Define env_prefix in SettingsConfigDict for each settings model.
+    fix_instruction: Define env_prefix in ConfigDict for each settings model.
     file: rules/require-env-prefix.yml
 baseline:
   strategy: total

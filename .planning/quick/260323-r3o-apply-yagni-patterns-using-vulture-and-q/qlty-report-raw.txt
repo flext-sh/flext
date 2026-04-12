@@ -1111,7 +1111,7 @@ flext-core/src/flext_core/result.py
    1  High total complexity (count = 74)
 
 flext-core/src/flext_core/runtime.py
- 991  Function with many parameters (count = 9): settingsure_structlog
+ 991  Function with many parameters (count = 9): configure_structlog
  301  Function with many returns (count = 12): extract_generic_args
  438  Function with many returns (count = 8): is_sequence_type
  543  Function with many returns (count = 10): normalize_to_container
@@ -1124,7 +1124,7 @@ flext-core/src/flext_core/runtime.py
  543  Function with high complexity (count = 27): normalize_to_container
  615  Function with high complexity (count = 22): normalize_to_metadata
  722  Function with high complexity (count = 29): create_container
- 991  Function with high complexity (count = 20): settingsure_structlog
+ 991  Function with high complexity (count = 20): configure_structlog
 
 flext-core/src/flext_core/service.py
  177  Function with high complexity (count = 20): _create_initial_runtime
@@ -3564,7 +3564,7 @@ flext-ldif/tests/support/conftest_factory.py
 
 flext-ldif/tests/support/real_services.py
  119  Function with many parameters (count = 6): create_test_settings
- 234  Function with many parameters (count = 7): create_settingsured_api
+ 234  Function with many parameters (count = 7): create_configured_api
  279  Function with many parameters (count = 7): create_test_settings
 
 flext-ldif/tests/unit/__init__/__init__.py

@@ -34,8 +34,8 @@ make validate
 ```
 
 ```bash
-tap-ldif --settings settings.json --discover > catalog.json
-tap-ldif --settings settings.json --catalog catalog.json --state state.json
+tap-ldif --config settings.json --discover > catalog.json
+tap-ldif --config settings.json --catalog catalog.json --state state.json
 ```
 
 ## Architecture & patterns

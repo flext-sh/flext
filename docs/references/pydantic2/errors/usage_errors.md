@@ -42,7 +42,7 @@
 - [Incompatible `dataclass` `init` and `extra` settings {#dataclass-init-false-extra-allow}](#incompatible-dataclass-init-and-extra-settings-dataclass-init-false-extra-allow)
 - [Incompatible `init` and `init_var` settings on `dataclass` field {#clashing-init-and-init-var}](#incompatible-init-and-initvar-settings-on-dataclass-field-clashing-init-and-init-var)
 - [`model_config` is used as a model field {#model-settings-invalid-field-name}](#modelconfig-is-used-as-a-model-field-model-settings-invalid-field-name)
-- [[`with_config`][pydantic.settings.with_config] is used on a `BaseModel` subclass {#with-settings-on-model}](#withconfigpydanticconfigwithconfig-is-used-on-a-basemodel-subclass-with-settings-on-model)
+- [[`with_config`][pydantic.config.with_config] is used on a `BaseModel` subclass {#with-settings-on-model}](#withconfigpydanticconfigwithconfig-is-used-on-a-basemodel-subclass-with-settings-on-model)
 - [`dataclass` is used on a `BaseModel` subclass {#dataclass-on-model}](#dataclass-is-used-on-a-basemodel-subclass-dataclass-on-model)
 - [Unsupported type for `validate_call` {#validate-call-type}](#unsupported-type-for-validatecall-validate-call-type)
   - [`@classmethod`, `@staticmethod`, and `@property`](#classmethod-staticmethod-and-property)
@@ -1213,9 +1213,9 @@ except PydanticUserError as exc_info:
     assert exc_info.code == "model-settings-invalid-field-name"
 ```
 
-## [`with_config`][pydantic.settings.with_config] is used on a `BaseModel` subclass {#with-settings-on-model}
+## [`with_config`][pydantic.config.with_config] is used on a `BaseModel` subclass {#with-settings-on-model}
 
-This error is raised when the [`with_config`][pydantic.settings.with_config] decorator is used on a class which is already a Pydantic model (use the `model_config` attribute instead).
+This error is raised when the [`with_config`][pydantic.config.with_config] decorator is used on a class which is already a Pydantic model (use the `model_config` attribute instead).
 
 ```python
 from pydantic import BaseModel, PydanticUserError, with_config

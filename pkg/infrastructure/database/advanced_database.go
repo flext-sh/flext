@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
+	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"gorm.io/driver/postgres"
@@ -17,17 +17,17 @@ import (
 
 // AdvancedDatabase combines GORM and SQLX for maximum flexibility
 type AdvancedDatabase struct {
-	gormDB *gorm.DB
-	sqlxDB *sqlx.DB
+	gormDB   *gorm.DB
+	sqlxDB   *sqlx.DB
 	settings settings.DatabaseConfig
-	logger logging.Logger
+	logger   logging.Logger
 }
 
 // NewAdvancedDatabase creates a database instance with both GORM and SQLX
 func NewAdvancedDatabase(cfg settings.DatabaseConfig, log logging.Logger) (*AdvancedDatabase, error) {
 	db := &AdvancedDatabase{
 		settings: cfg,
-		logger: log,
+		logger:   log,
 	}
 
 	// Initialize GORM

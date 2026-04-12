@@ -73,7 +73,7 @@ from __future__ import annotations
 
 import pytest
 from flext_tests import t, tm, u
-from pydantic import BaseModel, SettingsDict, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from flext_core import r, m
 
@@ -84,7 +84,7 @@ class TestResult:
     class ResultScenario(BaseModel):
         """Parameterized test scenario."""
 
-        model_config = SettingsDict(frozen=True)
+        model_config = ConfigDict(frozen=True)
         name: str
         operation: str
         value: t.NormalizedValue
