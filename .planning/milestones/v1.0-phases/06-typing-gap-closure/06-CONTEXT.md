@@ -20,7 +20,7 @@ Migrate all TypeGuard functions to TypeIs (PEP 742) and annotate all empty conta
 
 ### Empty Container Annotations (TYPE-08)
 - **D-04:** All empty container literals (`[]`, `{}`, `set()`) at assignment sites must have explicit type annotations. Pattern: `items: list[SomeType] = []` not `items = []`.
-- **D-05:** Use the most specific type from `t.*` contracts where applicable (e.g., `t.ContainerList`, `t.ContainerMapping`).
+- **D-05:** Use the most specific type from `t.*` contracts where applicable (e.g., `t.RecursiveContainerList`, `t.RecursiveContainerMapping`).
 
 ### Claude's Discretion
 - Ordering and grouping of changes within tasks

@@ -87,7 +87,7 @@ class TestResult:
         model_config = ConfigDict(frozen=True)
         name: str
         operation: str
-        value: t.NormalizedValue
+        value: t.RecursiveContainer
         is_success_expected: bool = True
 
     # Class-level test data
@@ -175,7 +175,7 @@ class TestService:
 ```python
 # fixture in conftest.py
 @pytest.fixture
-def sample_data() -> t.ContainerMapping:
+def sample_data() -> t.RecursiveContainerMapping:
     """Provide sample test data."""
     return {
         "string": "test_value",

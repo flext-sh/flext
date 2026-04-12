@@ -18,7 +18,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 
 # Flext Type System
 
-**Reviewed**: 2026-03-03 | **Scope**: AXIOMATIC type purity — `Any`/`t.NormalizedValue` absolute prohibition enforced
+**Reviewed**: 2026-03-03 | **Scope**: AXIOMATIC type purity — `Any`/`t.RecursiveContainer` absolute prohibition enforced
 
 ## Scope
 
@@ -45,7 +45,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 - Keep recursive/general value aliases compatible with existing boundaries.
 - Preserve generic covariance/contravariance semantics where defined.
 - Keep exported short aliases (`t`, `r`) stable across refactors.
-- **AXIOMATIC**: `Any`, `t.NormalizedValue`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN in type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. Inline composed types are FORBIDDEN in all 33 projects — use `t.*` references only.
+- **AXIOMATIC**: `Any`, `t.RecursiveContainer`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN in type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. Inline composed types are FORBIDDEN in all 33 projects — use `t.*` references only.
 - **AXIOMATIC**: `| None` MUST NEVER appear in type alias definitions in `typings.py`. Type aliases are ALWAYS non-nullable. Consumers add `| None` inline at usage sites when business requires it (e.g., `field: t.Scalar | None`). No `NullableX` or `OptionalX` aliases.
 - **AXIOMATIC**: Duplicating type definitions from the MRO chain is FORBIDDEN — even inside subproject `FlextTypes` nested classes. One definition, one source of truth. Compatibility aliases (`X = t.Y`) are FORBIDDEN.
 - **AXIOMATIC**: `r` (`r`) is the SOLE mechanism for expressing fallibility. Functions that can fail MUST return `r[T]` — never `T | None`, never bare exceptions, never ad-hoc error dicts. The `r` alias (`from flext_core import r`) is MANDATORY at all usage sites. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace `if result is None` / `try/except` chains. `r` eliminates `| None` return types from the business layer.
@@ -152,7 +152,7 @@ def process(items: t.StrSequence) -> r[list[str]]: ...
 T = TypeVar("T")
 T_Settings = TypeVar("T_Settings", bound=BaseSettings)
 
-type t.NormalizedValue = (
+type t.RecursiveContainer = (
     str
     | int
     | float
@@ -161,8 +161,8 @@ type t.NormalizedValue = (
     | None
     | BaseModel
     | Path
-    | t.ContainerList
-    | t.ContainerMapping
+    | t.RecursiveContainerList
+    | t.RecursiveContainerMapping
 )
 ```
 
@@ -187,11 +187,11 @@ Bad:
 
 ```python
 JsonPrimitive = (
-    t.NormalizedValue
-)  # ← FORBIDDEN: `t.NormalizedValue` erases all type constraints
+    t.RecursiveContainer
+)  # ← FORBIDDEN: `t.RecursiveContainer` erases all type constraints
 ```
 
-Why bad: `t.NormalizedValue` is AXIOMATIC FORBIDDEN — it erases constraints and degrades static analysis. Use `t.Scalar` or the explicit union type.
+Why bad: `t.RecursiveContainer` is AXIOMATIC FORBIDDEN — it erases constraints and degrades static analysis. Use `t.Scalar` or the explicit union type.
 
 ## Verification
 
@@ -203,6 +203,6 @@ Make gates:
 
 Pattern checks:
 
-- `rg -n "TypeVar\(|type t.NormalizedValue|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
+- `rg -n "TypeVar\(|type t.RecursiveContainer|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
 - `rg -n "class r|type .*=" flext-core/src/flext_core/result.py`
 - `rg -n "T_Settings|BaseSettings" flext-core/src/flext_core/settings.py flext-core/src/flext_core/typings.py`

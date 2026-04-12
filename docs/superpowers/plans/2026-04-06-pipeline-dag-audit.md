@@ -92,12 +92,12 @@ class FlextCliProtocolsPipeline:
             ...
 
         @property
-        def shared(self) -> t.MutableContainerMapping:
+        def shared(self) -> t.MutableRecursiveContainerMapping:
             """Mutable shared state between stages — stages write outputs here."""
             ...
 
         @property
-        def settings(self) -> t.ContainerMapping:
+        def settings(self) -> t.RecursiveContainerMapping:
             """Immutable configuration for the pipeline run."""
             ...
 
@@ -1240,7 +1240,7 @@ class ViolationKey(FlextModels.ContractModel):
     @staticmethod
     def from_violation(
         violation: FlextInfraModelsCodegen.CensusViolation,
-        source_lines: Sequence[str],
+        source_lines: t.StrSequence,
     ) -> FlextInfraModelsCodegen.ViolationKey:
         """Build key from violation and source context (±2 lines)."""
         ctx_start = max(0, violation.line - 2)

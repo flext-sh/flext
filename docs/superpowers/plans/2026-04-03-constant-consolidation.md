@@ -21,7 +21,7 @@ The current model only accepts `int | str`. Extend to accept `list` (for frozens
 
 ```python
     class CanonicalValueRule(FlextModels.ArbitraryTypesModel):
-        value: Annotated[int | str | Sequence[str], Field(...)]
+        value: Annotated[int | str | t.StrSequence, Field(...)]
         type: Annotated[str, Field(...)]
         canonical_ref: Annotated[str, Field(...)]
         semantic_names: t.StrSequence = Field(default_factory=list)
@@ -35,7 +35,7 @@ Expected: No new errors.
 - [ ] **Step 3: Commit**
 
 ```
-feat(codegen): widen CanonicalValueRule.value to accept Sequence[str]
+feat(codegen): widen CanonicalValueRule.value to accept t.StrSequence
 ```
 
 ---

@@ -240,7 +240,7 @@ Replace `object` with `t.Scalar` — model_dump returns scalars, mappings passed
 def create_cli_runner(
     *,
     charset: str = "utf-8",
-    env: Mapping[str, str] | None = None,
+    env: t.StrMapping | None = None,
     echo_stdin: bool = False,
 ) -> r[CliRunner]:
     return r[CliRunner].ok(
@@ -261,7 +261,7 @@ def register_command(
     _ = app.command(name, help=help_text)(command)
 ```
 
-Changes: `dict[str, str]` → `Mapping[str, str]`, `Callable[..., object | None]` → `Callable[..., None]`.
+Changes: `dict[str, str]` → `t.StrMapping`, `Callable[..., object | None]` → `Callable[..., None]`.
 
 - [ ] **Step 8: Add `FieldInfo` import**
 

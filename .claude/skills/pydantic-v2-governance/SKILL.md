@@ -130,7 +130,7 @@ class RetryConfiguration(BaseModel):
     tags: set[str] = Field(default_factory=set)
 ```
 
-**Why**: `default=[]` creates a SHARED mutable t.NormalizedValue across all instances (Python gotcha). `default_factory=list` creates a NEW list per instance.
+**Why**: `default=[]` creates a SHARED mutable t.RecursiveContainer across all instances (Python gotcha). `default_factory=list` creates a NEW list per instance.
 
 **Anti-pattern**:
 
@@ -328,7 +328,7 @@ class _ProtocolIntrospection:
         registered_protocols = cls.get_class_protocols(instance.__class__)
         if protocol in registered_protocols:
             return True
-        protocol_annotations: t.ContainerMapping = (
+        protocol_annotations: t.RecursiveContainerMapping = (
             protocol.__annotations__ if hasattr(protocol, "__annotations__") else {}
         )
         raw_attrs_candidate = getattr(protocol, "__protocol_attrs__", ())
@@ -525,10 +525,10 @@ metadata: t.MetadataValue = ...
 settings: t.ConfigMap = ...
 ```
 
-#### 8.3 t.NormalizedValue — FORBIDDEN
+#### 8.3 t.RecursiveContainer — FORBIDDEN
 
 ```python
-# ✗ WRONG — bare t.NormalizedValue is forbidden
+# ✗ WRONG — bare t.RecursiveContainer is forbidden
 data = ...  # FORBIDDEN
 ```
 

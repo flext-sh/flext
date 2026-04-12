@@ -32,7 +32,7 @@ EntryDict = Mapping[
     t.Scalar | t.StrSequence | Mapping[str, t.Scalar | t.StrSequence],
 ]
 
-ProcessingDict = t.ContainerMapping
+ProcessingDict = t.RecursiveContainerMapping
 ContextDict = t.ContainerValueMapping
 
 
@@ -41,8 +41,8 @@ def _new_str_list() -> MutableSequence[str]:
 
 
 def _is_object_list(
-    value: t.NormalizedValue,
-) -> TypeIs[t.ContainerList]:
+    value: t.RecursiveContainer,
+) -> TypeIs[t.RecursiveContainerList]:
     return isinstance(value, Sequence) and not isinstance(
         value,
         (str, bytes, bytearray),
@@ -50,12 +50,12 @@ def _is_object_list(
 
 
 def _is_str_object_dict(
-    value: t.NormalizedValue,
-) -> TypeIs[t.ContainerMapping]:
+    value: t.RecursiveContainer,
+) -> TypeIs[t.RecursiveContainerMapping]:
     return isinstance(value, Mapping)
 
 
-def _is_entry_dict(value: t.NormalizedValue) -> TypeIs[EntryDict]:
+def _is_entry_dict(value: t.RecursiveContainer) -> TypeIs[EntryDict]:
     return isinstance(value, Mapping)
 
 
@@ -212,7 +212,7 @@ class AclProcessingExample:
 
     @staticmethod
     def validate_acl_entry(
-        acl_entry: t.ContainerMapping,
+        acl_entry: t.RecursiveContainerMapping,
         _context: ContextDict,
     ) -> r[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
@@ -336,7 +336,7 @@ class AclProcessingExample:
 
         def _detect_servers(self, entries: Sequence[EntryDict]) -> r[ProcessingDict]:
             """Auto-detect server types for all entries."""
-            detected_entries: MutableSequence[t.ContainerMapping] = []
+            detected_entries: MutableSequence[t.RecursiveContainerMapping] = []
             for entry in entries:
                 result = AclProcessingExample.detect_server_type(entry)
                 if result.success:
@@ -472,7 +472,7 @@ class AclProcessingExample:
             validation_results: MutableSequence[
                 AclProcessingExample.AclValidationResult
             ] = []
-            acl_entries: Sequence[t.ContainerMapping] = [
+            acl_entries: Sequence[t.RecursiveContainerMapping] = [
                 acl_item for acl_item in acls_data_raw if isinstance(acl_item, Mapping)
             ]
             for acl in acl_entries:

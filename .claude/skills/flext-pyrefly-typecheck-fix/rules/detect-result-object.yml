@@ -1,4 +1,4 @@
-id: detect-result-t.NormalizedValue
+id: detect-result-t.RecursiveContainer
 language: python
 rule:
-  pattern: r[t.NormalizedValue]
+  pattern: r[t.RecursiveContainer]

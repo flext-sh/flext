@@ -362,7 +362,7 @@ servir como referência futura para implementação:
 
 ~~ # ⚠️ Infraestrutura manual (será deprecated)~~
 ~~ \_metrics: Mapping[str, t.Numeric]~~
-~~\_context_stack: Sequence[t.ContainerMapping]~~
+~~\_context_stack: Sequence[t.RecursiveContainerMapping]~~
 
 ~~ # ✅ Pipeline methods~~
 ~~ def handle(self, message: TCommand_contra) -> r[TResult_co]: ...~~
@@ -371,8 +371,8 @@ servir como referência futura para implementação:
 ~~ # ⚠️ Métodos manuais (serão deprecated em V2)~~
 ~~ def record_metric(self, key: str, value: t.Numeric) -> None: ...~~
 ~~ def get_metrics(self) -> Mapping[str, t.Numeric]: ...~~
-~~ def push_context(self, ctx: t.ContainerMapping) -> None: ...~~
-~~ def pop_context(self) -> t.ContainerMapping | None: ...~~
+~~ def push_context(self, ctx: t.RecursiveContainerMapping) -> None: ...~~
+~~ def pop_context(self) -> t.RecursiveContainerMapping | None: ...~~
 ~~```~~
 
 ~~**Dependências:**~~
@@ -404,10 +404,10 @@ servir como referência futura para implementação:
 ~~\_rate_limiter_manager: RateLimiterManager # ~150 linhas~~
 ~~ \_timeout_enforcer: TimeoutEnforcer # ~100 linhas~~
 ~~ \_retry_policy_manager: RetryPolicyManager # ~150 linhas~~
-~~\_cache: t.ContainerMapping # ~100 linhas~~
+~~\_cache: t.RecursiveContainerMapping # ~100 linhas~~
 
 ~~ # ✅ Core methods~~
-~~ def dispatch(self, message) -> r[t.NormalizedValue]: ...~~
+~~ def dispatch(self, message) -> r[t.RecursiveContainer]: ...~~
 ~~ def register_command(self, cmd_type: type, handler: h) -> None: ...~~
 ~~ def register_query(self, query_type: type, handler: h) -> None: ...~~
 ~~ def register_event(self, event_type: type, handler: h) -> None: ...~~
@@ -640,19 +640,19 @@ servir como referência futura para implementação:
 ~~ """Thread-safe context stack for handlers."""~~
 
 ~~ def **init**(self) -> None:~~
-~~ self.\_stack: Sequence[t.ContainerMapping] = []~~
+~~ self.\_stack: Sequence[t.RecursiveContainerMapping] = []~~
 
-~~ def push(self, ctx: t.ContainerMapping) -> None:~~
+~~ def push(self, ctx: t.RecursiveContainerMapping) -> None:~~
 ~~ """Push context onto stack."""~~
 ~~ self.\_stack.append(ctx)~~
 
-~~ def pop(self) -> t.ContainerMapping | None:~~
+~~ def pop(self) -> t.RecursiveContainerMapping | None:~~
 ~~ """Pop context from stack."""~~
 ~~ return self.\_stack.pop() if self.\_stack else None~~
 
-~~ def current(self) -> t.ContainerMapping:~~
+~~ def current(self) -> t.RecursiveContainerMapping:~~
 ~~ """Get current context (merged stack)."""~~
-~~ result: t.ContainerMapping = {}~~
+~~ result: t.RecursiveContainerMapping = {}~~
 ~~ for ctx in self.\_stack:~~
 ~~ result.update(ctx)~~
 ~~ return result~~
