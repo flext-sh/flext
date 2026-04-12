@@ -1,4 +1,4 @@
-"""Mock flext_core.exceptions module."""
+"""Mock flext_core module."""
 
 from __future__ import annotations
 
