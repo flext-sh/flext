@@ -1,0 +1,69 @@
+Makefile
+  b5fd1e627f70262c 88,92,295,667,782,784,786
+.claude/skills/flext-import-rules/SKILL.md
+  b5fd1e627f70262c 419
+AGENTS.md
+  b5fd1e627f70262c 183
+.planning/RESULT_IMPLEMENTATION_HANDOFF.md
+  b5fd1e627f70262c 62
+.planning/codebase/CONCERNS.md
+  b5fd1e627f70262c 63,108
+.planning/FLEXTRESULT_COMPREHENSIVE_ANALYSIS.md
+  b5fd1e627f70262c 25,118,380,450,466
+.claude/skills/lib-dependency-injector/SKILL.md
+  b5fd1e627f70262c 103
+docs/architecture/flext-service-architecture.md
+  b5fd1e627f70262c 427,433,1371,1470,1475,4455,4460,8193,8197
+.planning/milestones/v1.0-phases/01-type-system-hardening/01-01-PLAN.md
+  b5fd1e627f70262c 237
+.planning/quick/260323-ri2-flext-core-test-simplification/SIMPLIFICATION-PLAN.md
+  b5fd1e627f70262c 186
+.planning/milestones/v1.0-phases/01-type-system-hardening/01-RESEARCH.md
+  b5fd1e627f70262c 244
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "62a6b8040692786a8414f9508221b3f959718715",
+  "prompts": {
+    "3f20071a1278ccd7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7e27-9bfa-7561-8c64-01cec23a81ee",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 395,
+      "total_deletions": 240,
+      "accepted_lines": 91244,
+      "overriden_lines": 0
+    },
+    "a6d275f7fcd9c0ae": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7ce6-2981-76f0-9d8c-febff62e4c66",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 254561,
+      "overriden_lines": 0
+    },
+    "b5fd1e627f70262c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7f1a-c347-7971-a1a2-9c39867986ae",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1024,
+      "total_deletions": 598,
+      "accepted_lines": 1003,
+      "overriden_lines": 0
+    }
+  }
+}
