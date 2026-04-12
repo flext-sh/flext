@@ -271,6 +271,7 @@ isinstance(val, t.Primitives)
 isinstance(val, t.Scalar)
 isinstance(val, t.Container)
 
+
 # ❌ FORBIDDEN — subclassing a type alias
 class Foo(t.Container): ...
 ```

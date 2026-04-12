@@ -176,6 +176,7 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 - **Cross-Project Abstraction**: If project A abstracts pydantic, project B must access pydantic through A's public contracts (`m.`, `c.`, `t.`, etc.), never via direct `from pydantic import ...`.
 - **No Bare Framework Imports in Consumers**: `from pydantic import ...`, `from dependency_injector import ...`, `from structlog import ...` in project code outside flext-core are FORBIDDEN if the framework is abstracted by flext-core.
 - **Testing Exemption**: In test code under `tests/`, use local test façades and helpers; if direct third-party imports are unavoidable for test scaffolding, document the exception with a technical justification comment.
+- **No Example/Script Exemption**: `examples/` and `scripts/` are NOT exempt from abstraction boundaries. Direct imports of abstracted libraries are forbidden there unless the code lives inside the owning abstraction project `src/` domain.
 - **Core Abstraction Inventory**: flext-core abstracts: pydantic v2, dependency_injector, structlog, returns (`r[T]`), orjson, pyyaml, and foundational contracts. All other projects must use flext-core abstractions for these.
 - **Enforcement**: Use `ruff` with import rules (e.g., flake8-noqa, import-order rules) and grep audits to detect violations. Suppress only with documented technical justification.
 
@@ -210,6 +211,7 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 - **`r[T]` for Fallible Operations** function that can fail MUST return `r[T]`. `T | None`, bare exceptions, and ad-hoc error dicts are FORBIDDEN. The `r` alias is mandatory.
 - **Result Outcome Naming**: `r[T]` carriers and result-like protocols/models MUST expose `success`/`failure`, never `is_success`/`is_failure`. Type-guard helpers MUST use non-`is_` names such as `successful_result` and `failed_result`.
 - **DSL-First Failure Construction**: In application/runtime flows, prefer centralized DSL helpers (`e.fail_*`, `r.fail_op`, `r.fail_exc`, and `s.fail_*` helpers) over ad-hoc `r.fail("...")` string construction. Direct `r.fail(...)` is reserved for primitive result internals, test scaffolding, or cases requiring explicit `error_data` passthrough.
+- **Runtime Strictness**: In `src/` runtime paths, ad-hoc `r.fail(...)` is forbidden unless preserving structured `error_data` from an external boundary. Default to `e.fail_*`, `r.fail_op`, or `r.fail_exc`.
 - **No Exceptions as Control Flow**: Bare `try/except` in business logic is FORBIDDEN when `r` composition (`map`/`flat_map`/`lash`) can handle the flow. Bare `except:` is universally forbidden. Catch explicit exceptions.
 
 ### 3.4 Tools, Modules & Environment

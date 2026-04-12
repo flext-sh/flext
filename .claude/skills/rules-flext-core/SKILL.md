@@ -85,9 +85,12 @@ Good (Library Abstraction Provider):
 # In flext-core/src/flext_core/models.py
 from pydantic import BaseModel, Field, ConfigDict
 
+
 class Settings(BaseModel):
     """Base settings class - abstracts pydantic for all consumers."""
+
     model_config = ConfigDict(extra="ignore")
+
 
 # In FlextCoreModels' __exports__
 m = FlextCoreModels  # Users import this facade, not BaseModel
