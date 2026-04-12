@@ -28,6 +28,8 @@ description: Mandatory rules for all coding agents — simple runtime aliases on
 - Never annotate with concrete classes when a canonical structural protocol or composed alias already expresses the contract.
 - Dismantle polymorphic branching into centralized Pydantic v2 contracts.
 - Enforce fix-forward git discipline and structural search/replace policy.
+- Enforce abstraction boundaries in `examples/` and `scripts/` exactly as `src/` (no direct imports of abstracted third-party libraries outside owning domain).
+- In runtime `src/` code, prefer `e.fail_*`, `r.fail_op`, and `r.fail_exc`; avoid ad-hoc `r.fail("...")` except explicit structured passthrough cases.
 
 ## Instructions
 

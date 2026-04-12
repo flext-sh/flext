@@ -81,8 +81,10 @@ Good (Library Abstraction):
 # In flext-cli/src/flext_cli/settings.py
 from flext_core import m, c, t
 
+
 class FlextCliSettings(m.Settings):
     """Extend FlextSettings from flext-core."""
+
     default_timeout: int = c.Cli.DEFAULT_TIMEOUT_SECONDS
     log_level: str = c.Cli.DEFAULT_LOG_LEVEL
 ```
@@ -96,8 +98,10 @@ Bad (Library Abstraction Violation):
 from pydantic import BaseModel, Field
 from dependency_injector import containers
 
+
 class CliSettings(BaseModel):
     """DO NOT DO THIS IN CONSUMING PROJECTS."""
+
     ...
 ```
 
