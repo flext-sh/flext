@@ -180,7 +180,7 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 - **Centralized Runtime Contracts**: Inputs, outputs, runtime state, and status snapshots MUST flow through central `m.*` models. Eliminate avoidable dict round-trips, ad-hoc conversion helpers, and non-essential type narrowing between service boundaries.
 
 ### 3.2 Types & Contracts
-- **Strict Contracts Only**: `Any`, bare `t.NormalizedValue`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.SettingsMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
+- **Strict Contracts Only**: `Any`, bare `t.NormalizedValue`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
   - **Exception: Intentional Generic Types** - `t.ContainerMapping` and `t.ContainerMapping` ARE permitted ONLY in these contexts:
     1. **Type aliases** (in `typings.py`): `type ProjectSettings = t.ContainerMapping` with docstring explaining intent
     2. **Test fixtures** (in `conftest.py` and test support): Dynamic test data with unknown structure

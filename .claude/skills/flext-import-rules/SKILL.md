@@ -416,7 +416,7 @@ if TYPE_CHECKING:
     from flext_core import FlextContainer
 
 
-def get_container() -> FlextContainer:  # Annotation works, no runtime import
+def get_container() -> p.Container:  # Annotation works, no runtime import
     ...
 ```python
 # ❌ FORBIDDEN — runtime class body still needs the symbol to exist

@@ -22,7 +22,7 @@ r[T]  (extends RuntimeResult, Layer 1)
     ├── is_success: bool
     ├── error: str | None
     ├── error_code: str | None
-    ├── error_data: SettingsMap | None
+    ├── error_data: ConfigMap | None
     ├── exception: BaseException | None
     └── _payload: T | None (PrivateAttr)
 ```
@@ -115,7 +115,7 @@ class FlextError:
     message: str
     domain: ErrorDomain
     code: str | None = None
-    data: SettingsMap | None = None
+    data: ConfigMap | None = None
     exception: BaseException | None = None
 
 
@@ -377,7 +377,7 @@ class StructuredError(Protocol):
     message: str
     domain: ErrorDomain  # enum
     code: str | None
-    data: SettingsMap | None
+    data: ConfigMap | None
     exception: BaseException | None
 
 
@@ -447,7 +447,7 @@ class FlextError:
     message: str
     domain: ErrorDomain = ErrorDomain.UNKNOWN
     code: str | None = None
-    data: t.SettingsMap | None = None
+    data: t.ConfigMap | None = None
     exception: BaseException | None = None
 
     def __str__(self) -> str:
@@ -463,7 +463,7 @@ class FlextError:
         cls,
         message: str,
         code: str | None = None,
-        data: t.SettingsMap | None = None,
+        data: t.ConfigMap | None = None,
         exception: BaseException | None = None,
     ) -> "FlextError":
         return cls(
