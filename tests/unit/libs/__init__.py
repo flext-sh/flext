@@ -41,7 +41,7 @@ _LAZY_IMPORTS = {
     "x": ("flext_core.mixins", "FlextMixins"),
 }
 
-__all__ = [
+__all__: list[str] = [
     "TestVersioning",
     "c",
     "d",

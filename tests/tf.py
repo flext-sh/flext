@@ -32,4 +32,4 @@ class TestFiles:
 
 
 tf = TestFiles
-__all__ = ["tf"]
+__all__: list[str] = ["tf"]

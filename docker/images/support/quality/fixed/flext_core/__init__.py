@@ -160,7 +160,7 @@ s = FlextService
 u = FlextUtilities
 x = FlextMixins
 
-__all__ = [
+__all__: list[str] = [
     "AuthenticationError",
     "ConfigurationError",
     "ConnectionError",

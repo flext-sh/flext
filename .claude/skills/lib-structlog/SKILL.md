@@ -89,8 +89,6 @@ Internal lazy fallback: `u.ensure_structlog_configured()` is called by `create_m
 ### Logger Creation Patterns
 
 ```python
-from flext_core import FlextLogger
-
 # Module-level logger (most common)
 logger = FlextLogger.create_module_logger(__name__)
 
@@ -155,8 +153,6 @@ Telemetry integration methods:
 ### Good: Module logger with scoped context
 
 ```python
-from flext_core import FlextLogger
-
 logger = FlextLogger.create_module_logger(__name__)
 
 

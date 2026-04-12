@@ -5656,7 +5656,7 @@ class FlextLdifParser(Flext[Sequence[Entry]]):
 
 
 # Export only the service
-__all__ = ["FlextLdifParser"]
+__all__: list[str] = ["FlextLdifParser"]
 ```
 
 ### Padrões de Uso (Todas as Variações)
@@ -6740,7 +6740,7 @@ def _http_post(self, timeout: int, verify: bool) -> r[m.Api.ResponseModel]:
 
 
 # Export only the service
-__all__ = ["FlextApi"]
+__all__: list[str] = ["FlextApi"]
 ```
 
 **Uso - Sync Users Between APIs (Smart Resolution):**

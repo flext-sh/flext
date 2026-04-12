@@ -342,7 +342,7 @@ class FlextUtilitiesConversion:
         except Exception as e:
             return r[str].fail(f"Error: {e}")
 
-    # __all__ = ["FlextUtilitiesConversion"]  # Already exported
+    # __all__: list[str] = ["FlextUtilitiesConversion"]  # Already exported
 ```
 
 ---

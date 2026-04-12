@@ -1776,7 +1776,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Callable
 
-from flext_core import FlextLogger, r
+from flext_core import r
 
 
 @dataclass

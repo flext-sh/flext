@@ -127,7 +127,7 @@ class FlextCliProtocolsPipeline:
             ...
 
 
-__all__ = ["FlextCliProtocolsPipeline"]
+__all__: list[str] = ["FlextCliProtocolsPipeline"]
 ```
 
 - [ ] **Step 2: Wire into protocols facade**
@@ -193,7 +193,7 @@ class FlextCliTypesPipeline:
     type PipelineSkipPredicate = Callable[[p.Cli.PipelineStageContext], bool]
 
 
-__all__ = ["FlextCliTypesPipeline"]
+__all__: list[str] = ["FlextCliTypesPipeline"]
 ```
 
 - [ ] **Step 2: Wire into typings facade**
@@ -254,7 +254,7 @@ class FlextCliConstantsPipeline:
         STAGE_TIMEOUT_SECONDS: Final[int] = 600
 
 
-__all__ = ["FlextCliConstantsPipeline"]
+__all__: list[str] = ["FlextCliConstantsPipeline"]
 ```
 
 - [ ] **Step 2: Wire into constants facade**
@@ -430,7 +430,7 @@ class FlextCliModelsPipeline:
             return [s for s in self.stages if s.status == "skipped"]
 
 
-__all__ = ["FlextCliModelsPipeline"]
+__all__: list[str] = ["FlextCliModelsPipeline"]
 ```
 
 - [ ] **Step 2: Wire into models facade**
@@ -761,7 +761,6 @@ from graphlib import CycleError, TopologicalSorter
 from typing import ClassVar
 
 from flext_cli import c, m, r, t
-from flext_core import FlextLogger
 
 
 class FlextCliUtilitiesPipeline:
@@ -918,7 +917,7 @@ class FlextCliUtilitiesPipeline:
         )
 
 
-__all__ = ["FlextCliUtilitiesPipeline"]
+__all__: list[str] = ["FlextCliUtilitiesPipeline"]
 ```
 
 - [ ] **Step 2: Wire into utilities facade**
