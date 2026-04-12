@@ -1,0 +1,75 @@
+.claude/skills/flext-docs-pointer-policy/SKILL.md
+  3f20071a1278ccd7 102
+.claude/skills/rules-src/SKILL.md
+  3f20071a1278ccd7 49,78,81-106,126-138
+.claude/skills/flext-agent-strict-rules/SKILL.md
+  3f20071a1278ccd7 27-28,35,48-49,51,54-55,58-61,63,66-67,69-70,98,111,113,179-195
+.claude/skills/flext-type-system/SKILL.md
+  3f20071a1278ccd7 43-44,58,60,63-67,71-75,147,181,184
+.claude/skills/rules-typings/SKILL.md
+  3f20071a1278ccd7 45-46
+CLAUDE.md
+  3f20071a1278ccd7 34
+.claude/skills/flext-import-rules/SKILL.md
+  3f20071a1278ccd7 29-33,696-753
+.claude/skills/flext-pyrefly-typecheck-fix/SKILL.md
+  3f20071a1278ccd7 25,47,54,66-67,70,73,76-82,85-86,95,104-107,133-134,137,149
+.claude/skills/flext-mro-namespace-rules/SKILL.md
+  3f20071a1278ccd7 55,70,131
+.claude/skills/flext-patterns/SKILL.md
+  3f20071a1278ccd7 61
+.claude/skills/testing-patterns/SKILL.md
+  3f20071a1278ccd7 52,170,175
+.claude/skills/flext-strict-typing/SKILL.md
+  3f20071a1278ccd7 72-73,81,94-95,97,100,104-113,116-117,221-223,243,245,247,250-251,262,264,269-272,275,281-282,284,287,289
+AGENTS.md
+  3f20071a1278ccd7 11,171-181,212,261
+.claude/skills/rules-flext-core/SKILL.md
+  3f20071a1278ccd7 49,74,82,85-98,106-114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "5c86b73223f3fac10296743655face5bc8fa3ab3",
+  "prompts": {
+    "3f20071a1278ccd7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7e27-9bfa-7561-8c64-01cec23a81ee",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 6454,
+      "total_deletions": 12144,
+      "accepted_lines": 89911,
+      "overriden_lines": 0
+    },
+    "a6d275f7fcd9c0ae": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7ce6-2981-76f0-9d8c-febff62e4c66",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 250816,
+      "overriden_lines": 0
+    },
+    "b5fd1e627f70262c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7f1a-c347-7971-a1a2-9c39867986ae",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 469,
+      "total_deletions": 8,
+      "accepted_lines": 980,
+      "overriden_lines": 0
+    }
+  }
+}
