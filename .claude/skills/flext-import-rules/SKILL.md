@@ -181,7 +181,6 @@ from flext_core import r, s, t, e  # pre-aliased letters
 ### Pattern B: Import specific class from submodule (used for non-aliased classes)
 
 ```python
-from flext_core import FlextLogger
 from flext_core import FlextDispatcher
 from flext_core import FlextRegistry
 from flext_core import FlextContext
@@ -453,7 +452,7 @@ if TYPE_CHECKING:
     from .protocols import FlextProtocols
 
 # 2. Strict mapping
-__all__ = ["FlextModels", "FlextProtocols"]
+__all__: list[str] = ["FlextModels", "FlextProtocols"]
 
 
 # 3. Native module-level lazy load strategy

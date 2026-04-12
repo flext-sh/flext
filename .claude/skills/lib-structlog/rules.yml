@@ -50,8 +50,7 @@ rules:
     fix_type: ast-grep
     fix_file: rules/direct-get-logger-fix.yml
     fix_imports:
-      - from flext_core import FlextLogger
-    fix_instruction:
+      -     fix_instruction:
       "MANUAL ONLY \u2014 do NOT auto-apply. Rewrite structlog.get_logger(name) to\nFlextLogger.create_module_logger(name)\
       \ AND add 'from flext_core import\nFlextLogger' if missing. NEVER apply in runtime.py, loggings.py, or parser.py\
       \ \u2014\nthese files use structlog.get_logger() directly because they are part of the\nlow-level logging bridge. u.get_logger()\

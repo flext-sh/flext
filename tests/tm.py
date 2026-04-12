@@ -43,4 +43,4 @@ class TestModels:
 
 
 tm = TestModels
-__all__ = ["tm"]
+__all__: list[str] = ["tm"]

@@ -289,7 +289,7 @@ When a public module is an identical copy of its `_utilities/` counterpart (dete
    """Re-export from internal module."""
    from __future__ import annotations
    from <package>._utilities.<module> import <Symbol1>, <Symbol2>
-   __all__ = ["Symbol1", "Symbol2"]
+   __all__: list[str] = ["Symbol1", "Symbol2"]
    ```
 3. Verify `__init__.py` lazy imports still resolve (chain: `__init__.py` → public module → `_utilities/`).
 4. Run `ruff check src/`, `pyrefly check src/`, `pyright src/`.

@@ -70,7 +70,7 @@ human_verification: null
 
 | Artifact | Expected | Status | Details |
 |----------|----------|--------|---------|
-| `flext-infra/src/flext_infra/api.py` | Factory-method facade with domain accessors; exports FlextInfra | VERIFIED | 120 LOC; 9 factory methods; `_instance`, `get_instance()`, `execute()`; `__all__ = ["FlextInfra"]` |
+| `flext-infra/src/flext_infra/api.py` | Factory-method facade with domain accessors; exports FlextInfra | VERIFIED | 120 LOC; 9 factory methods; `_instance`, `get_instance()`, `execute()`; `__all__: list[str] = ["FlextInfra"]` |
 | `flext-infra/src/flext_infra/base.py` | Thin FlextInfraServiceBase (~40 LOC) + FlextInfraServiceBase mixin (~90 LOC) | VERIFIED | 201 file LOC; FlextInfraServiceBase=18 logical LOC; FlextInfraServiceBase carries 9 domain fields + 4 validators + execute_command; exports `s`, both classes |
 | `flext-infra/src/flext_infra/detectors/_base_detector.py` | Uses t.Infra.RopeProject (no direct rope import) | VERIFIED | 3 occurrences of `t.Infra.RopeProject`; 0 direct rope imports |
 | `flext-infra/src/flext_infra/transformers/_base.py` | Uses t.Infra.RopeProject (no direct rope import) | VERIFIED | 1 occurrence of `t.Infra.RopeProject`; 0 direct rope imports |

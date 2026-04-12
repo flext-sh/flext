@@ -33,4 +33,4 @@ class ValidationRules(BaseModel):
     )
 
 
-__all__ = ["ValidationRules"]
+__all__: list[str] = ["ValidationRules"]

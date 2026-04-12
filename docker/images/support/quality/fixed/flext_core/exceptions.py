@@ -38,7 +38,7 @@ class TimeoutError(Error):
     """Timeout error mock."""
 
 
-__all__ = [
+__all__: list[str] = [
     "AuthenticationError",
     "ConfigurationError",
     "ConnectionError",

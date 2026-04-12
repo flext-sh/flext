@@ -62,9 +62,6 @@ Why good: consumes the canonical public contract through `p.*` and keeps the ret
 Bad:
 
 ```python
-from flext_core import FlextLogger
-
-
 def normalize_logger(owner: FlextLogger) -> FlextLogger:
     return owner
 ```

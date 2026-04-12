@@ -91,7 +91,7 @@ alwaysApply: true
   """Re-export from internal module."""
   from __future__ import annotations
   from <package>._utilities.<module> import <Symbol1>, <Symbol2>
-  __all__ = ["Symbol1", "Symbol2"]
+  __all__: list[str] = ["Symbol1", "Symbol2"]
   ```
   If `qlty smells` reports `identical-code` between a public file and its `_utilities/` counterpart, replace the public file with a re-export immediately.
 

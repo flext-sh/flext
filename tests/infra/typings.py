@@ -23,4 +23,4 @@ class TestsFlextTestTypes(FlextTestsTypes):
 
 t = TestsFlextTestTypes
 
-__all__ = ["TestsFlextTestTypes", "t"]
+__all__: list[str] = ["TestsFlextTestTypes", "t"]

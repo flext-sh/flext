@@ -131,7 +131,7 @@ class FlextObservabilityMonitor:
 """Re-export from internal module."""
 from flext_observability import FlextObservabilityMonitor
 
-__all__ = ["FlextObservabilityMonitor"]
+__all__: list[str] = ["FlextObservabilityMonitor"]
 
 # ❌ FORBIDDEN — direct individual class instantiation
 monitor = FlextObservabilityMonitor()  # bypass facade

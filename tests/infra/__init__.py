@@ -55,7 +55,7 @@ _LAZY_IMPORTS = {
     "utilities": "tests.infra.utilities",
 }
 
-__all__ = [
+__all__: list[str] = [
     "TestsFlextInfraConstants",
     "TestsFlextTestModels",
     "TestsFlextTestProtocols",

@@ -123,7 +123,7 @@ Add project-specific guards to `tests/conftest.py`:
 from flext_core import TestGuards, LdifTestGuards
 
 # Re-export for use in tests
-__all__ = ["TestGuards", "LdifTestGuards"]
+__all__: list[str] = ["TestGuards", "LdifTestGuards"]
 ```
 
 **Validation**:

@@ -62,7 +62,7 @@ _ = _LAZY_IMPORTS.pop("merge_lazy_imports", None)
 _ = _LAZY_IMPORTS.pop("output", None)
 _ = _LAZY_IMPORTS.pop("output_reporting", None)
 
-__all__ = [
+__all__: list[str] = [
     "TestVersioning",
     "TestsFlextInfraConstants",
     "TestsFlextTestModels",

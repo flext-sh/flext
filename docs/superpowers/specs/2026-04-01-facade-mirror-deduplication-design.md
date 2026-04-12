@@ -52,7 +52,7 @@ Each public file is replaced with a thin re-export stub:
 """Re-export from internal module."""
 from <package>._utilities.<module> import <Symbol1>, <Symbol2>
 
-__all__ = ["Symbol1", "Symbol2"]
+__all__: list[str] = ["Symbol1", "Symbol2"]
 ```
 
 Implementation stays in `_utilities/` (source of truth).
