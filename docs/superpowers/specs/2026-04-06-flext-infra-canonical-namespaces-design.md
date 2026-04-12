@@ -56,7 +56,7 @@ Violations are in **3 categories** across **14 files**:
 | Inline `list[str]` in `base.py:35` | Use `t.StrSequence` |
 | Inline `dict[str, object]` in `__version__.py` | Use `Mapping[str, object]` |
 | Inline `dict[str, str]` in `__version__.py` | Use `t.StrMapping` |
-| Inline `Callable[[t.StrSequence | None], int]` in `cli.py:78` | Define `t.Infra.CliCommandCallable` |
+| Inline `Callable[[t.StrSequence \| None], int]` in `cli.py:78` | Define `t.Infra.CliCommandCallable` |
 | Inline `Callable[[t.Cli.CliApp], None]` in `cli.py:90` | Define `t.Infra.CliSetupCallable` |
 | Inline `dict[str, t.Infra.InfraValue]` in codegen_execution.py | Define `t.Infra.InfraValueMapping` |
 | Inline `Mapping[str, MutableSequence[t.Infra.StrPair]]` in codegen_generation.py | Define `t.Infra.StrPairGroupMapping` |
