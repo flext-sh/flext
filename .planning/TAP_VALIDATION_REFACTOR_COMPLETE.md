@@ -110,10 +110,6 @@ Result:  0 occurrences across all tap models ✅
 
 ---
 
-## Validation Types Reference
-
-The refactoring uses these standardized types from `flext_core.typings.FlextTypesValidation`:
-
 ### String Types
 - `NonEmptyStr` = `Annotated[str, Len(1)]` - Required non-empty strings
 
