@@ -40,6 +40,8 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 ## Rules
 
 - Add shared aliases in `typings.py` rather than re-declaring in feature modules. Type aliases MUST be non-nullable — `| None` is added inline at usage sites only.
+- Structural protocols live in `protocols.py` and are exported through `p`; reusable composed aliases live in `typings.py` and are exported through `t`; domain carriers live in `models.py` and are exported through `m`.
+- Do not annotate with concrete classes when the same contract is already expressible through an inherited `p.*` protocol or `t.*` alias.
 - Keep recursive/general value aliases compatible with existing boundaries.
 - Preserve generic covariance/contravariance semantics where defined.
 - Keep exported short aliases (`t`, `r`) stable across refactors.
@@ -53,23 +55,24 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 - **AXIOMATIC**: Every type change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. ALL impacted references across ALL 33 projects MUST be updated via ast-grep (`sg`) search-and-replace immediately. Linter suppressions (`# type: ignore`, `# noqa`, etc.) are FORBIDDEN without real internet citations, business necessity in comments, and per-line only scope. Global suppressions are TOTALLY FORBIDDEN.
 - **Cross-project namespace inheritance**: downstream projects MUST inherit parent facade classes (e.g., `FlextMeltanoModels`, not `FlextModels`) so namespaces cascade via MRO. This applies to `m`, `c`, `t`, `u`, `p`.
 
-## TypeAliasType isinstance Incompatibility (CRITICAL — Python 3.12+)
+## TypeAliasType Runtime Boundary (CRITICAL — Python 3.12+)
 
-PEP 695 `type X = ...` creates `TypeAliasType`, NOT `UnionType`. `isinstance(val, X)` FAILS at runtime.
+PEP 695 `type X = ...` creates `TypeAliasType`. In FLEXT, that syntax is canonical in `typings.py`, and those aliases are annotation-only.
 
 **Rules:**
-1. Non-recursive aliases (`Primitives`, `Scalar`, `Container`, `ConfigurationMapping`) → `X: TypeAlias = ...` (isinstance-safe)
-2. Recursive aliases (`t.NormalizedValue`, `t.NormalizedValue`, `t.NormalizedValue`, `t.NormalizedValue`) → `type X = ...` (NEVER use with isinstance)
-3. `TypeAliasType.__value__` is transitively poisoned — do NOT use as isinstance workaround
-4. `TypeAdapter` is 4x slower than isinstance — do NOT use for type checking
-5. Use `TypeGuard` functions from `_utilities/guards.py`: `is_primitive()`, `is_scalar()`, `is_flexible_value()`
+1. Use `type X = ...` for aliases in `typings.py`, following AGENTS.md.
+2. Never use `isinstance(val, t.SomeAlias)`.
+3. Never subclass a type alias.
+4. Runtime narrowing MUST use the canonical `u.is_*()` helpers.
+5. `TypeAdapter` is validation infrastructure, not a replacement for runtime narrowing.
 
 **Quick reference:**
 
-| Syntax | Runtime type | isinstance? |
-|--------|-------------|-------------|
-| `X: TypeAlias = str \| int` | `UnionType` | ✅ |
-| `type X = str \| int` | `TypeAliasType` | ❌ |
+| Pattern | Status |
+|--------|--------|
+| `type X = str | int` in `typings.py` | ✅ canonical |
+| `isinstance(val, t.Scalar)` | ❌ forbidden |
+| `u.is_scalar(val)` | ✅ canonical |
 ## Cross-Project Namespace Inheritance (m, c, t, u, p)
 
 Each downstream project inherits its parent project's facade, gaining all parent namespaces via MRO:
@@ -141,7 +144,7 @@ def process(items: t.StrSequence) -> r[list[str]]: ...
 ## Instructions
 
 - Use existing type var definitions before introducing new generic parameters.
-- Prefer `FlextTypes` aliases (`t.NormalizedValue`, maps, scalar groups) for public contracts.
+- Prefer existing `FlextTypes` aliases and `p.*` protocols for public contracts; refine the canonical shared contract instead of inventing a local concrete annotation.
 - Ensure downstream users (`result.py`, `settings.py`, `protocols.py`) still type-check.
 - When creating a new project that depends on another FLEXT project's types, ALWAYS inherit the parent facade class in your models/protocols/etc.
 
@@ -175,10 +178,10 @@ type t.NormalizedValue = (
 Good:
 
 ```python
-type JsonPrimitive = t.Primitives | None
+type JsonPrimitive = str | int | float | bool | None
 ```
 
-Why good: focused alias with clear semantic purpose.
+Why good: focused annotation-only alias with clear semantic purpose.
 
 Bad:
 

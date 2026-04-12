@@ -69,6 +69,8 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 ## Rules
 
 - Use `t.*` contracts from `typings.py` instead of ad-hoc inline unions.
+- Keep ownership explicit: structural protocols in `p.*`, composed aliases in `t.*`, domain models in `m.*`.
+- Never annotate with a concrete class when an inherited `p.*` protocol or `t.*` alias already expresses the contract.
 - Use `r[T]` for fallible returns and avoid nullable fallibility patterns.
 - Use `isinstance`/TypeGuard for narrowing; avoid `type(...) is ...` narrowing.
 - Keep typing changes integral: verify ruff, mypy, pyright, and pyrefly.
@@ -76,6 +78,7 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 ## Instructions
 
 - Start by classifying each type issue (annotation, alias, narrowing, result flow).
+- If a failure comes from a missing shared contract, add or refine the canonical contract in `protocols.py` or `typings.py` before patching consumers.
 - Apply minimally invasive, architecture-safe fixes that preserve MRO contracts.
 - Re-run targeted and project gates after each fix group.
 
@@ -88,16 +91,29 @@ description: Verified type system rules, type hierarchy, and enforcement policie
 
 ## Examples
 
+Good:
+
 ```python
-# Preferred fallible contract
-from flext_core import r, t
+from flext_core import p, r
 
 
-def parse_payload(payload: m.Domain.PayloadModel) -> r[str]:
-    if "name" not in payload:
-        return r.fail("Missing name")
+def parse_payload(payload: p.MappingLikePayload) -> r[str]:
     return r[str].ok("ok")
 ```
+
+Why good: the example uses a public contract and keeps fallibility on `r[T]`.
+
+Bad:
+
+```python
+from flext_core import FlextRegistry
+
+
+def parse_payload(payload: FlextRegistry) -> str | None:
+    return None
+```
+
+Why bad: it couples the signature to a concrete implementation and reintroduces nullable fallibility instead of the canonical public contract.
 
 ## Python Version & Core Requirements
 
@@ -202,9 +218,9 @@ Fallibility contract  -> `r[T]`
 ## Verification
 
 ```bash
-make validate PROJECT=<name>
-make validate PROJECT=<name> FIX=1
-make validate PROJECTS="proj-a proj-b"
+make val PROJECT=<name>
+make val PROJECT=<name> FIX=1
+make val PROJECTS="proj-a proj-b"
 ```
 
 Custom checks for this skill must live in `.claude/skills/flext-strict-typing/` and emit `{"violation_count": N}` when using `type: custom`.
@@ -224,21 +240,16 @@ t.FieldValidatorMap  # RootModel[Mapping[str, Callable[[GVT], GVT]]]
 
 ---
 
-## Rule 2: TypeAlias Declaration — PEP 695 CANONICAL (Python 3.13+)
+## Rule 2: TypeAlias Declaration — PEP 695 Canonical
 
-### ALL Type Aliases Use PEP 695 `type X = ...` Syntax
+### `typings.py` aliases follow AGENTS.md: use `type X = ...` and keep runtime narrowing out of alias syntax
 
-This is the Python 3.13 recommended and canonical way. The old `X: TypeAlias = ...` syntax is DEPRECATED and MUST NOT be introduced into the codebase.
-
-PEP 695 `type X = ...` creates `TypeAliasType` objects — these are **annotation-only** and are TOTALLY FORBIDDEN as `isinstance()` args, base classes, or in any runtime type-checking context. `isinstance(val, t.SomeAlias)` will CRASH at runtime for **ALL** `t.*` aliases.
+PEP 695 is the canonical alias syntax in `typings.py`. These aliases are annotation-only and MUST NOT be used in `isinstance()`, subclass clauses, or other runtime type-checking contexts.
 
 ```python
-# ALL aliases in typings.py use this syntax:
-type Primitives = t.Primitives
-type Scalar = t.Scalar
-type Container = Scalar | BaseModel | Path
+# Canonical alias style in typings.py
+type JsonPrimitive = str | int | float | bool | None
 
-# Recursive aliases also use PEP 695 (same syntax):
 type GeneralValueType = (
     Scalar
     | BaseModel
@@ -248,72 +259,35 @@ type GeneralValueType = (
 )
 ```
 
-### Runtime isinstance() — Use Tuple Constants or TypeGuard Functions
+### Runtime narrowing — Use canonical `u.is_*()` helpers
 
-Since ALL `t.*` aliases are `TypeAliasType`, runtime narrowing MUST use one of:
-
-1. **Tuple constants** (defined in `FlextTypes`):
-   - `t.PRIMITIVES_TYPES: tuple[type, ...] = (str, int, float, bool)`
-   - `t.SCALAR_TYPES: tuple[type, ...] = t.SCALAR_TYPES`
-   - `t.CONTAINER_TYPES: tuple[type, ...] = (str, int, float, bool, datetime, BaseModel, Path)`
-
-2. **TypeGuard functions** (exposed via `u`):
-   - `u.primitive(val)` → `TypeGuard[t.Primitives]`
-   - `u.scalar(val)` → `TypeGuard[t.Scalar]`
-   - `u.is_flexible_value(val)` → TypeGuard for general values
-   - `u.dict_like(val)` → TypeGuard for dict-like structures
-   - `u.list_like(val)` → TypeGuard for list-like structures
-
-### Recursive Aliases — Transitional, Prefer Pydantic Models
-
-Self-referential aliases (`GeneralValueType`, `Serializable`, `ContainerValue`) are transitional. Business/application code MUST prefer Pydantic v2 models + protocols and MUST NOT propagate these aliases through service boundaries.
-
-### `Validation.*` Inner Aliases
-
-`Validation.*` aliases (`PortNumber`, `PositiveTimeout`, etc.) use `type X = Annotated[...]` — annotation-only, never with isinstance, correct as-is.
+When runtime narrowing is required, use the public guard utilities exposed through `u`, as required by AGENTS.md.
 
 ### FORBIDDEN PATTERNS
 
 ```python
-# ❌ FORBIDDEN — isinstance on ANY t.* alias (ALL are TypeAliasType now)
-isinstance(val, t.Primitives)  # CRASHES at runtime
-isinstance(val, t.Scalar)  # CRASHES at runtime
-isinstance(val, t.Container)  # CRASHES at runtime
-isinstance(val, t.GeneralValueType)  # CRASHES at runtime
-
-# ❌ FORBIDDEN — introducing old TypeAlias syntax
-from typing import TypeAlias
-
-Primitives: TypeAlias = t.Primitives  # DEPRECATED, do NOT use
-
+# ❌ FORBIDDEN — runtime checks against alias syntax
+isinstance(val, t.Primitives)
+isinstance(val, t.Scalar)
+isinstance(val, t.Container)
 
 # ❌ FORBIDDEN — subclassing a type alias
-class Foo(t.Container): ...  # TypeAliasType cannot be subclassed
+class Foo(t.Container): ...
 ```
 
 ### CORRECT PATTERNS
 
 ```python
-# ✅ CORRECT — ALL aliases use PEP 695
-type Primitives = t.Primitives
-type Scalar = t.Scalar
-type Container = Scalar | BaseModel | Path
+# ✅ CORRECT — alias syntax stays in typings.py
+type ContainerValue = t.Scalar | Path
 
-# ✅ CORRECT — runtime narrowing via tuple constants
-isinstance(val, t.SCALAR_TYPES)  # Uses tuple, not alias
-isinstance(val, t.PRIMITIVES_TYPES)  # Uses tuple, not alias
-
-# ✅ CORRECT — runtime narrowing via TypeGuard functions
+# ✅ CORRECT — runtime narrowing uses public guards
 from flext_core import u
 
-if u.primitive(val):
+if u.is_scalar(val):
     ...
-if u.scalar(val):
+if u.is_container(val):
     ...
-
-
-# ✅ CORRECT — subclassing uses concrete base
-class Foo(Mapping[str, t.Container]): ...  # Annotation OK, not isinstance
 ```
 
 ---

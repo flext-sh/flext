@@ -24,12 +24,15 @@ description: Mandatory rules for all coding agents — simple runtime aliases on
 
 - Apply axiomatic typing and fallibility contracts uniformly to all namespaces.
 - Use simple runtime aliases only; remove non-runtime alias indirection.
+- Protocol contracts belong in `p`; composed reusable aliases belong in `t`; domain models belong in `m`.
+- Never annotate with concrete classes when a canonical structural protocol or composed alias already expresses the contract.
 - Dismantle polymorphic branching into centralized Pydantic v2 contracts.
 - Enforce fix-forward git discipline and structural search/replace policy.
 
 ## Instructions
 
 - Read impacted modules fully before changes and reuse existing contracts via MRO.
+- If a consumer is too concrete, refine the shared contract in the ancestor facade first and keep the leaf project thin.
 - Prefer ast-grep structural operations for broad migrations.
 - Verify with required quality gates before claiming completion.
 
@@ -42,16 +45,29 @@ description: Mandatory rules for all coding agents — simple runtime aliases on
 
 ## Examples
 
+Good:
+
 ```python
-# Correct narrowing
-if isinstance(value, str):
-    normalized = value.strip()
+from flext_core import p, r
 
-# Correct fallible return
-from flext_core import r
 
-return r[str].ok(normalized)
+def normalize_logger(owner: p.HasLogger) -> r[p.Logger]:
+    return r[p.Logger].ok(owner.logger)
 ```
+
+Why good: consumes the canonical public contract through `p.*` and keeps the return flow on `r[T]`.
+
+Bad:
+
+```python
+from flext_core import FlextLogger
+
+
+def normalize_logger(owner: FlextLogger) -> FlextLogger:
+    return owner
+```
+
+Why bad: pins the contract to a concrete implementation even though the public structural protocol is the real boundary.
 
 ## Verification
 
@@ -79,43 +95,7 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 - **AXIOMATIC Git Immutability — NEVER ROLLBACK, ALWAYS FIX FORWARD**: `git checkout <file>`, `git reset`, `git revert`, `git stash pop/apply`, and ANY operation that discards, overwrites, or rolls back committed or staged work by ANY agent is TOTALLY FORBIDDEN. Every change made by any agent in this repository MUST be accepted, improved, standardized, and fixed forward. If a previous agent's change is wrong, the ONLY permitted response is a NEW forward commit that corrects it. Stash operations that discard another agent's work are FORBIDDEN. `git checkout --theirs` is ONLY permitted during a rebase conflict on a file you do NOT own — and ONLY to accept the other agent's version (never to discard it). The correct response to broken code is ALWAYS: read it, understand it, fix it forward, commit the fix. There is no rollback. There is no undo. There is only forward. Violation of this rule is an EXTREME FAULT equivalent to destroying another agent's work.
 - **AXIOMATIC ast-grep Supremacy — NEVER sed/find/custom scripts for code**: `mcp_ast_grep_search` / `mcp_ast_grep_replace` (MCP tools) are the SOLE mechanism for finding and rewriting code patterns. When MCP tools are available, they MUST be used first. When unavailable, the CLI `sg` command is the mandatory fallback. `grep`/`ripgrep` are ONLY permitted for plain-text content search (log lines, comments, string literals) — NEVER for locating code structure, symbols, imports, or type annotations. `find` is TOTALLY FORBIDDEN for locating code or information — use `glob` patterns or `ast-grep` instead. Custom Python/shell scripts written ad-hoc to fix, rewrite, or transform code are TOTALLY FORBIDDEN. `sed`, `awk`, and inline shell pipelines for code transformation are TOTALLY FORBIDDEN. The correct workflow: (1) `mcp_ast_grep_search` to locate all pattern instances, (2) `mcp_ast_grep_replace` (or `sg --rewrite`) to apply the transformation atomically, (3) verify with `make check`. Writing a one-off script to "fix" code is an EXTREME FAULT — it bypasses AST awareness, produces brittle text-level rewrites, and cannot be reviewed or audited.
 
-- **AXIOMATIC — typings.py ALIAS TABLE IS LOCKED — READ THIS BEFORE ANY EDIT TO typings.py**:
-  `type X = ...` (PEP 695) creates `TypeAliasType` — **crashes `isinstance()` at runtime with TypeError**.
-  `X: TypeAlias = ...` creates `UnionType` — **isinstance-safe, runtime-safe**.
-  They are NOT interchangeable. Changing `X: TypeAlias = ...` to `type X = ...` for a non-recursive alias = EXTREME FAULT.
-
-  **NON-RECURSIVE → MUST use `X: TypeAlias = ...` (DO NOT CHANGE):**
-  `Primitives`, `Scalar`, `Container`, `ConfigurationMapping`, `MetadataValue`,
-  `RegisterableService`, `JsonMapping`, `FactoryCallable`, `ResourceCallable`,
-  `HandlerCallable`, `HandlerLike`, `RegistrablePlugin`, `ConstantValue`,
-  `FileContent`, `SortableObjectType`, `ConversionMode`, `TypeHintSpecifier`,
-  `GenericTypeArgument`, `MessageTypeSpecifier`, `IncEx`, `TYPE_CHECKING`.
-
-  **RECURSIVE → MUST use `type X = ...` (self-referential, NEVER with isinstance):**
-  `GeneralValueType`, `Serializable`.
-
-  **MANDATORY CRASH TEST — run before AND after any edit to typings.py:**
-  ```bash
-  python3 -c "
-  import sys; [sys.modules.pop(k) for k in list(sys.modules) if 'flext' in k]
-  import flext_core; t = flext_core.t
-  for n in ['Primitives','Scalar','Container','MetadataValue','RegisterableService']:
-      try: isinstance('x', getattr(t,n)); print('PASS', n)
-      except TypeError as e: print('FAIL', n, e)
-  "
-  ```
-  **Expected output: 5 lines all starting with PASS. Any FAIL = typings.py is broken. Stop and fix.**
-
-  **FORBIDDEN patterns (will crash the runtime):**
-  ```python
-  type Primitives = t.Primitives  # FORBIDDEN — crashes isinstance()
-  type Scalar = t.Scalar  # FORBIDDEN
-  type ConfigurationMapping = Mapping[str, Container]  # FORBIDDEN
-  isinstance(val, t.GeneralValueType)  # FORBIDDEN — recursive alias, always crashes
-
-
-  class Foo(dict): ...  # FORBIDDEN — use explicit model contracts (m.*)
-  ```
+- **AXIOMATIC — PEP 695 in `typings.py` follows AGENTS.md, and runtime narrowing stays out of alias syntax**: Type aliases in `typings.py` follow the canonical `type X = ...` rule from AGENTS.md. Because these aliases are annotation-only, runtime narrowing MUST use the canonical `u.is_*()` helpers or equivalent public guard utilities — never `isinstance(val, t.SomeAlias)`, never subclassing from a type alias, and never local compatibility syntax that creates a parallel type doctrine.
 - **Every module MUST use a single nested class with MRO inheritance**: All domain logic MUST be organized into a nested class hierarchy. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models like `FlextModels.ArbitraryTypesModel`, `FlextModels.FrozenModel`). Loose functions, standalone classes without MRO lineage, and modules without a nested class facade are FORBIDDEN. Subprojects MUST inherit from the parent project's facade class to cascade namespaces via MRO.
 - **ALL code MUST be "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features**: Every class extends `BaseModel` (or FLEXT base models) via MRO. `Field()` for ALL declarations with `description`, `title`, `examples`, `json_schema_extra` documenting business rules. `SecretStr`/`SecretBytes` for secrets. `ConfigDict(...)` for settings — standalone `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). Minimize custom `@field_validator`/`@model_validator` — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`, `constr`). FORBIDDEN in models: initialization helpers, unnecessary `@property`, simple getters/setters, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@computed_field`, `model_post_init`, `PrivateAttr`). Enums/Mappings/Literals from `constants.py` (`c.*`), settings from `settings.py` (`s.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter`. Internal state via `PrivateAttr` — never bare `self._x`. Nested classes MAY have business logic methods but ALL properties MUST use `Field()`/`PrivateAttr`. `models.py`/`_models/` for model definitions ONLY. If not using a Pydantic v2 feature, REVIEW and USE it; if not needed, use a simpler base and USE it fully.
 - **Tests MUST follow the EXACT SAME rules as production code**: Test files are NOT exempt from ANY typing, Pydantic v2, r, or architectural rule. Test fixtures use `Field()`, typed models, `r[T]` returns. Test data uses `t.*` types. No "test-only" relaxation exists.
@@ -128,10 +108,9 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 
 - **Forbidden**: Never use `u.Aliases.constants()`, `.models()`, `.result()`, `.typings()`, `.protocols()`, `.utilities()`, `.decorators()`, `.exceptions()`, `.handlers()`, `.service_base()`, or `.mixins()` to define package-level aliases. Remove any such usage totally.
 - **Required**: Use **simple runtime aliases only**: direct assignment to the facade class (e.g. `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = d`, `e = e`, `h = h`, `s = s`, `x = x`). No alias registry; no staticmethod layer for defining c, m, r, t, u, p, d, e, h, s, x.
-- **Facade pattern**: Each facade (e.g. FlextUtilities) MUST expose **staticmethod aliases from external subclasses** so call sites have **one flat namespace** (e.g. `u.foo`, `u.bar`). No subdivision of namespaces (no `u.foo` at call sites). Subprojects: access **only** via that project's namespace (`from flext_cli import m, u` then `m.Foo`, `u.parse`).
-- **Access**: Through the **project's runtime alias only**, with no subdivision. Subprojects define nested classes for organization then **class-level aliases at the facade root** so call sites use `m.Foo`, `m.Bar`. Aliases and namespaces follow the **MRO protocol only**. Use direct methods; runtime helpers come from **x** (x) via MRO.
+- **Access**: Through the **project's runtime alias only**, preserving the organic namespace path produced by MRO. Call sites use paths such as `u.Infra.parse_semver`, `c.Tests.ERR_OK_FAILED`, and `m.TargetOracle.ExecuteResult`; facades MUST NOT flatten nested domain-local classes back to the root.
 - **Rule**: One namespace per project. No duplicate alias assignments; no compatibility aliases (`LegacyX = NewX`). Remove all non-runtime aliases and loose (pass-through) methods; use canonical names and direct methods only.
-- **Invalid instructions** text that says "resolve via MRO registry (u.Aliases)" or "use u.Aliases" is **wrong**. Remove it. Access is through the **project runtime alias only** (e.g. `m`, `c`, `r`, `t`, `u`, `p`, `d`, `e`, `h`, `s`, `x`); MRO protocol only; **no** alias registry or staticmethod layer.
+- **Invalid instructions** text that says "resolve via MRO registry (u.Aliases)" or "use u.Aliases" is **wrong**. Remove it. Access is through the **project runtime alias only** (e.g. `m`, `c`, `r`, `t`, `u`, `p`, `d`, `e`, `h`, `s`, `x`) and must preserve the organic MRO namespace path.
 
 ---
 
@@ -197,19 +176,20 @@ These rules are **AXIOMATIC**. They cannot be violated, deferred, exempted, or w
 
 
 1. **Typing (AXIOMATIC)**: `Any`, `t.NormalizedValue`, and `Mapping[str, Any]` are **TOTALLY FORBIDDEN** in type annotations, function signatures, return types, examples, and generated code. Use **exclusively** `t.*` contracts from `typings.py`. `| None` in type unions (`X | None`) is ONLY permitted when `None` carries distinct business/domain semantics (e.g., "not configured" vs "empty string"). Type narrowing (`isinstance`, `TypeGuard`) is ONLY permitted when required by business logic — never introduced gratuitously. `r` (`r`) is MANDATORY for all fallible operations — `T | None` return types and manual `try/except` in business logic are FORBIDDEN when `r[T]` can express the same intent.
-2. **Polymorphism**: Dismantle **ALL** polymorphic function/method modes: replace branching across 3+ types with **centralized Pydantic v2 models** (discriminated unions, `Field`, `@field_validator`, `@model_validator`). Maximize centralized models with Pydantic v2 validation; minimize ad-hoc type branching.
-3. **Aliases**: **ONLY** simple runtime aliases (e.g., `c = FlextConstants`, `m = FlextModels`, `x = x`). **NEVER** use `u.Aliases` or any alias registry; remove all such usage completely. Facades expose **staticmethod aliases of external subclasses** into a single flat namespace; subprojects: access **ONLY** within the project namespace.
-4. **Removal**: Remove all non-runtime aliases and loose pass-through methods; use only direct methods and canonical names. Enforce runtime alias usage.
-5. **Scale**: Use **multiple agents in parallel at scale** (one agent per project or per report section) to apply refactors as fast as possible across all 33 projects. Each agent: one project or one section; minimal and verifiable changes; run `make check` and `make test` on the touched project.
-6. **Quality**: Code MUST be free of ruff and pyright warnings/errors; stable; remove unnecessary code. Do NOT alter established patterns from SKILLS and AGENTS.md; surgical changes only; never break business functionality.
-7. **Hacks (Zero Tolerance)**: **NEVER** use `model_rebuild()`, `inline imports`, `cast()` (except in core `result.py`), `eval`/`exec`, or `try-except ImportError`. Everything MUST be resolved via architecture, MRO, protocols, and correct top-level declaration order.
-8. **Legacy/Compatibility (Zero Tolerance — ABOMINABLE)**: Simple compatibility wrappers, non-business validation fallbacks, legacy code of ANY kind, and `OldName = NewName` compatibility aliases are TOTALLY FORBIDDEN. Legacy code is DELETED and replaced with the canonical pattern immediately. No grace period, no deprecation path.
-9. **Module Structure (AXIOMATIC)**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions and standalone classes without MRO lineage are FORBIDDEN. Subprojects MUST inherit from the parent project's facade class.
-10. **Pydantic v2 Way (AXIOMATIC — USE EXTENSIVELY)**: Every class extends `BaseModel` via MRO. `Field()` with `description`/`title`/`examples`/`json_schema_extra` for ALL fields. Minimize custom validators — prefer built-in constraints. FORBIDDEN: `*Config` classes (use `BaseSettings`/`ConfigDict`), initialization helpers, unnecessary `@property`, simple getters/setters, wrappers. USE Pydantic built-ins: `@computed_field`, `model_post_init`, `PrivateAttr`, `TypeAdapter`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `PrivateAttr`. `models.py`/`_models/` for models ONLY. If not using a feature — REVIEW and USE it.
-11. **Tests = Production Discipline (AXIOMATIC)**: Tests MUST demonstrate the EXACT SAME strict typing, Pydantic v2, r, and architectural discipline as production code. No "test-only" relaxation of any rule.
-12. **Integral Changes (AXIOMATIC)**: Every change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. ALL impacted references across ALL 33 projects MUST be immediately updated via ast-grep (`sg`) search-and-replace. Run `make check` on every affected project. A change that breaks ANY linter in ANY project is REJECTED.
-13. **No Linter Suppressions (AXIOMATIC)**: `# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore` are FORBIDDEN without: (1) real internet citations proving unavoidability, (2) business necessity in the comment, (3) per-line only. Global suppressions in settings files are TOTALLY FORBIDDEN. Fix the code, never silence the linter.
-14. **ast-grep Supremacy (AXIOMATIC)**: `mcp_ast_grep_search` / `mcp_ast_grep_replace` (MCP) are the SOLE mechanism for code search and structural replacement. CLI `sg` is the mandatory fallback when MCP is unavailable. `grep`/`ripgrep` for plain-text only (never code structure). `find` TOTALLY FORBIDDEN for code location — use `glob` or `ast-grep`. Custom scripts, `sed`, `awk`, shell pipelines for code transformation are TOTALLY FORBIDDEN. Workflow: (1) `mcp_ast_grep_search` → (2) `mcp_ast_grep_replace` or `sg --rewrite` → (3) `make check`. Writing a one-off script to fix code is an EXTREME FAULT.
-15. **Git Immutability (AXIOMATIC)**: `git checkout <file>`, `git reset`, `git revert`, `git stash pop/apply` to discard any agent's work are TOTALLY FORBIDDEN. Every change MUST be accepted, improved, and fixed forward via a new commit. `git checkout --theirs` ONLY during rebase conflict on a file you do NOT own. Violation = EXTREME FAULT.
-16. **Commit-After-Validation (AXIOMATIC)**: Immediately after ANY validation passes (linters, tests, `make check`, any quality gate), ALL pending changes across ALL touched projects MUST be committed and pushed — without delay, without waiting, without asking permission. Sequence: validation passes → `git add -A` (every project with changes) → `git commit` → `git pull --rebase` → `git push` → confirm clean `git status`. Uncommitted work after a passing validation is a VIOLATION. Unpushed work is LOST WORK — it does not exist.
-17. **Full Context Evaluation Before Every Change (AXIOMATIC)**: Before ANY code change, the agent MUST: (1) read and fully understand ALL existing code in the affected module — its patterns, MRO chain, dependencies, base classes, and existing contracts; (2) maximize reuse of existing library code, base classes, utilities, and type contracts — never reinvent, duplicate, or shadow what already exists; (3) apply changes uniformly across ALL namespaces — `src/`, `tests/`, AND `examples/` — every namespace is in scope, no namespace is exempt; (4) produce the most correct, complete, lint-free implementation using advanced code patterns, strong typing, full Pydantic v2 discipline, and the full power of the existing architecture. Simplifications, bypasses, mocks, fallbacks, stubs, TODOs, hardcoded values, and placeholder logic are TOTALLY FORBIDDEN in any committed code. Every change is final, complete, and production-grade from the first commit. Agents that skip context evaluation, ignore existing patterns, or produce partial implementations are in violation.
+2. **Contract ownership (AXIOMATIC)**: Structural protocols live in `protocols.py` and are consumed through `p.*`. Reusable composed aliases live in `typings.py` and are consumed through `t.*`. Domain carriers live in `models.py` and are consumed through `m.*`. Do not place protocol-shaped contracts in `t`, and do not annotate with concrete classes when `p.*` or `t.*` already covers the contract.
+3. **Polymorphism**: Dismantle **ALL** polymorphic function/method modes: replace branching across 3+ types with **centralized Pydantic v2 models** (discriminated unions, `Field`, `@field_validator`, `@model_validator`). Maximize centralized models with Pydantic v2 validation; minimize ad-hoc type branching.
+4. **Aliases**: **ONLY** simple runtime aliases (e.g., `c = FlextConstants`, `m = FlextModels`, `x = x`). **NEVER** use `u.Aliases` or any alias registry; remove all such usage completely. Access through the project namespace only and preserve the organic MRO path instead of flattening nested symbols back to the facade root.
+5. **Removal**: Remove all non-runtime aliases and loose pass-through methods; use only direct methods and canonical names. Enforce runtime alias usage.
+6. **Scale**: Use **multiple agents in parallel at scale** (one agent per project or per report section) to apply refactors as fast as possible across all 33 projects. Each agent: one project or one section; minimal and verifiable changes; run `make check` and `make test` on the touched project.
+7. **Quality**: Code MUST be free of ruff and pyright warnings/errors; stable; remove unnecessary code. Do NOT alter established patterns from SKILLS and AGENTS.md; surgical changes only; never break business functionality.
+8. **Hacks (Zero Tolerance)**: **NEVER** use `model_rebuild()`, `inline imports`, `cast()` (except in core `result.py`), `eval`/`exec`, or `try-except ImportError`. Everything MUST be resolved via architecture, MRO, protocols, and correct top-level declaration order.
+9. **Legacy/Compatibility (Zero Tolerance — ABOMINABLE)**: Simple compatibility wrappers, non-business validation fallbacks, legacy code of ANY kind, and `OldName = NewName` compatibility aliases are TOTALLY FORBIDDEN. Legacy code is DELETED and replaced with the canonical pattern immediately. No grace period, no deprecation path.
+10. **Module Structure (AXIOMATIC)**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions and standalone classes without MRO lineage are FORBIDDEN. Subprojects MUST inherit from the parent project's facade class.
+11. **Pydantic v2 Way (AXIOMATIC — USE EXTENSIVELY)**: Every class extends `BaseModel` via MRO. `Field()` with `description`/`title`/`examples`/`json_schema_extra` for ALL fields. Minimize custom validators — prefer built-in constraints. FORBIDDEN: `*Config` classes (use `BaseSettings`/`ConfigDict`), initialization helpers, unnecessary `@property`, simple getters/setters, wrappers. USE Pydantic built-ins: `@computed_field`, `model_post_init`, `PrivateAttr`, `TypeAdapter`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `PrivateAttr`. `models.py`/`_models/` for models ONLY. If not using a feature — REVIEW and USE it.
+12. **Tests = Production Discipline (AXIOMATIC)**: Tests MUST demonstrate the EXACT SAME strict typing, Pydantic v2, r, and architectural discipline as production code. No "test-only" relaxation of any rule.
+13. **Integral Changes (AXIOMATIC)**: Every change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. ALL impacted references across ALL 33 projects MUST be immediately updated via ast-grep (`sg`) search-and-replace. Run `make check` on every affected project. A change that breaks ANY linter in ANY project is REJECTED.
+14. **No Linter Suppressions (AXIOMATIC)**: `# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore` are FORBIDDEN without: (1) real internet citations proving unavoidability, (2) business necessity in the comment, (3) per-line only. Global suppressions in settings files are TOTALLY FORBIDDEN. Fix the code, never silence the linter.
+15. **ast-grep Supremacy (AXIOMATIC)**: `mcp_ast_grep_search` / `mcp_ast_grep_replace` (MCP) are the SOLE mechanism for code search and structural replacement. CLI `sg` is the mandatory fallback when MCP is unavailable. `grep`/`ripgrep` for plain-text only (never code structure). `find` TOTALLY FORBIDDEN for code location — use `glob` or `ast-grep`. Custom scripts, `sed`, `awk`, shell pipelines for code transformation are TOTALLY FORBIDDEN. Workflow: (1) `mcp_ast_grep_search` → (2) `mcp_ast_grep_replace` or `sg --rewrite` → (3) `make check`. Writing a one-off script to fix code is an EXTREME FAULT.
+16. **Git Immutability (AXIOMATIC)**: `git checkout <file>`, `git reset`, `git revert`, `git stash pop/apply` to discard any agent's work are TOTALLY FORBIDDEN. Every change MUST be accepted, improved, and fixed forward via a new commit. `git checkout --theirs` ONLY during rebase conflict on a file you do NOT own. Violation = EXTREME FAULT.
+17. **Commit-After-Validation (AXIOMATIC)**: Immediately after ANY validation passes (linters, tests, `make check`, any quality gate), ALL pending changes across ALL touched projects MUST be committed and pushed — without delay, without waiting, without asking permission. Sequence: validation passes → `git add -A` (every project with changes) → `git commit` → `git pull --rebase` → `git push` → confirm clean `git status`. Uncommitted work after a passing validation is a VIOLATION. Unpushed work is LOST WORK — it does not exist.
+18. **Full Context Evaluation Before Every Change (AXIOMATIC)**: Before ANY code change, the agent MUST: (1) read and fully understand ALL existing code in the affected module — its patterns, MRO chain, dependencies, base classes, and existing contracts; (2) maximize reuse of existing library code, base classes, utilities, and type contracts — never reinvent, duplicate, or shadow what already exists; (3) apply changes uniformly across ALL namespaces — `src/`, `tests/`, AND `examples/` — every namespace is in scope, no namespace is exempt; (4) produce the most correct, complete, lint-free implementation using advanced code patterns, strong typing, full Pydantic v2 discipline, and the full power of the existing architecture. Simplifications, bypasses, mocks, fallbacks, stubs, TODOs, hardcoded values, and placeholder logic are TOTALLY FORBIDDEN in any committed code. Every change is final, complete, and production-grade from the first commit. Agents that skip context evaluation, ignore existing patterns, or produce partial implementations are in violation.

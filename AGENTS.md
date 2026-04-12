@@ -8,6 +8,7 @@
   - [2.4 Governance Anti-Patterns](#24-governance-anti-patterns)
   - [2.5 Service Facade Pattern](#25-service-facade-pattern-apipy--basepy--services)
   - [2.6 Settings Law](#26-settings-law)
+  - [2.7 Library Abstraction Boundaries](#27-library-abstraction-boundaries)
 - [§3 Code Law](#3-code-law)
   - [3.1 Architecture & Code Structure](#31-architecture--code-structure)
   - [3.2 Types & Contracts](#32-types--contracts)
@@ -167,6 +168,17 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 - **MRO Composition**: Integration projects (tap/target/dbt) MUST use dual-inheritance for settings, same as models: `FlextTargetOracleSettings(FlextMeltanoSettings, FlextDbOracleSettings)`.
 - **Auto-MRO Env Sources**: `settings_customise_sources` in FlextSettings base auto-resolves parent env prefixes from MRO. Leaf class env_prefix takes priority, parent prefixes are fallbacks.
 
+### 2.7 Library Abstraction Boundaries
+
+- **Mandatory Abstraction Enforcement**: Libraries abstracted by any flext project (dependency_injector, structlog, rich, typer, tomlib, rope, etc.) MUST NOT be used directly outside that project's `src/` domain.
+- **Scope**: Applies to all external usage (other projects' `src/`, `tests/`, `examples/`, `scripts/`, typings, constants, annotations).
+- **Access Pattern**: Always use public abstractions from the originating library: `m.*` (models), `c.*` (constants), `t.*` (types), `u.*` (utilities), `p.*` (protocols), `r[T]` (result container).
+- **Cross-Project Abstraction**: If project A abstracts pydantic, project B must access pydantic through A's public contracts (`m.`, `c.`, `t.`, etc.), never via direct `from pydantic import ...`.
+- **No Bare Framework Imports in Consumers**: `from pydantic import ...`, `from dependency_injector import ...`, `from structlog import ...` in project code outside flext-core are FORBIDDEN if the framework is abstracted by flext-core.
+- **Testing Exemption**: In test code under `tests/`, use local test façades and helpers; if direct third-party imports are unavoidable for test scaffolding, document the exception with a technical justification comment.
+- **Core Abstraction Inventory**: flext-core abstracts: pydantic v2, dependency_injector, structlog, returns (`r[T]`), orjson, pyyaml, and foundational contracts. All other projects must use flext-core abstractions for these.
+- **Enforcement**: Use `ruff` with import rules (e.g., flake8-noqa, import-order rules) and grep audits to detect violations. Suppress only with documented technical justification.
+
 ## §3 Code Law
 
 ### 3.1 Architecture & Code Structure
@@ -197,6 +209,7 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 ### 3.3 Failures & Error Handling
 - **`r[T]` for Fallible Operations** function that can fail MUST return `r[T]`. `T | None`, bare exceptions, and ad-hoc error dicts are FORBIDDEN. The `r` alias is mandatory.
 - **Result Outcome Naming**: `r[T]` carriers and result-like protocols/models MUST expose `success`/`failure`, never `is_success`/`is_failure`. Type-guard helpers MUST use non-`is_` names such as `successful_result` and `failed_result`.
+- **DSL-First Failure Construction**: In application/runtime flows, prefer centralized DSL helpers (`e.fail_*`, `r.fail_op`, `r.fail_exc`, and `s.fail_*` helpers) over ad-hoc `r.fail("...")` string construction. Direct `r.fail(...)` is reserved for primitive result internals, test scaffolding, or cases requiring explicit `error_data` passthrough.
 - **No Exceptions as Control Flow**: Bare `try/except` in business logic is FORBIDDEN when `r` composition (`map`/`flat_map`/`lash`) can handle the flow. Bare `except:` is universally forbidden. Catch explicit exceptions.
 
 ### 3.4 Tools, Modules & Environment
@@ -245,6 +258,7 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Aliases**: No double-assignment of facade aliases (`c/m/p/t/u` are assigned once at module bottom).
 - **Direction**: Cross-tier imports violating architecture direction are FORBIDDEN.
 - **No Same-Project Cross-Facade Runtime Imports**: Public same-project facade files (`constants.py`, `models.py`, `protocols.py`, `typings.py`, `utilities.py`) MUST NOT import sibling public facades or aliases at runtime. Use direct private-class imports from `_models/*` / `_utilities/*` or MRO inheritance instead. The only standing runtime exception is `FlextRuntime` inside `flext-core`.
+- **Abstraction Boundary Enforcement (SUPREME LAW)**: Libraries abstracted by a flext project MUST NOT be imported directly outside that project's `src/` domain. Core-abstracted libraries (pydantic, dependency_injector, structlog, returns, orjson, pyyaml) are FORBIDDEN in consumers (`tests/`, `examples/`, `scripts/`, other projects' `src/`). Use public abstractions from the originating library (`m.*`, `c.*`, `p.*`, `t.*`, `u.*`, `r[T]`) instead. This applies equally to runtime code, typing annotations, and constants.
 - **Facade Import Matrix**:
   - `typings.py` may reference same-project `p` and `m` ONLY under `TYPE_CHECKING`.
   - `protocols.py` may reference same-project `t` and `m` ONLY under `TYPE_CHECKING`.

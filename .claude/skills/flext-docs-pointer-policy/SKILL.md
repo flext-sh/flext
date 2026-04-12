@@ -99,7 +99,7 @@ Why bad: inverts repository governance and creates conflicting behavior between 
 
 Make gates:
 
-- `make validate VALIDATE_SCOPE=workspace` — workspace validation ensures doc consistency
+- `make val VALIDATE_SCOPE=workspace` — workspace validation ensures doc consistency
 
 Policy checks:
 

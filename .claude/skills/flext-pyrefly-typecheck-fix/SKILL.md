@@ -22,7 +22,7 @@ description: Pyrefly type-check error detection and safe auto-fix rules for recu
 
 **Reviewed**: 2026-02-18 | **Scope**: Automated detection and fix for recurring pyrefly error clusters
 
-> **Source of truth**: Error patterns extracted from `make check` and `make validate` output across FLEXT projects.
+> **Source of truth**: Error patterns extracted from `make check` and `make val` output across FLEXT projects.
 > Cross-referenced with `flext-core/src/flext_core/typings.py`, `protocols.py`, and `result.py`.
 
 - `AGENTS.md` — canonical governance source
@@ -44,12 +44,14 @@ description: Pyrefly type-check error detection and safe auto-fix rules for recu
 - Express recurring failures as explicit rule families with deterministic detection.
 - Keep fix logic safe and reversible for mechanical rewrites.
 - Never use suppression comments as default resolution path.
+- Prefer canonical `p.*` protocols and `t.*` aliases over concrete fallback annotations when resolving pyrefly contract drift.
 - **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`.
 
 ## Instructions
 
 - Run standardized quality gates before and after each fix batch.
 - Prefer ast-grep rules for structural changes; keep custom scripts minimal and auditable.
+- If pyrefly fails because a consumer is too concrete, fix the shared contract first and keep concrete typing only at framework override boundaries that genuinely require it.
 - Keep rule metadata in flat-key format for `skill_validate.py`/`skill_fix.py` consumption.
 
 ## Workflow
@@ -61,13 +63,26 @@ description: Pyrefly type-check error detection and safe auto-fix rules for recu
 
 ## Examples
 
+Good:
+
 ```bash
 # Focus one project first
-make validate PROJECT=flext-core
+make val PROJECT=flext-core
 
 # Apply approved auto-fix path and re-validate
-make validate PROJECT=flext-core FIX=1
+make val PROJECT=flext-core FIX=1
 ```
+
+Why good: uses the canonical workspace gate named in AGENTS.md and keeps the fix loop reproducible.
+
+Bad:
+
+```bash
+make validate PROJECT=flext-core
+python scripts/tmp_fix_pyrefly.py
+```
+
+Why bad: the first command does not exist in this workspace, and the second bypasses the required ast-grep/manual review path with an ad-hoc script.
 
 ## Purpose
 
@@ -77,7 +92,7 @@ Encodes each recurring pyrefly error family into:
 - A **safe fix rule** (ast-grep rewrite) when mechanical
 - A **manual-only instruction** when semantic
 
-Use `make validate` as the primary execution entrypoint. Internal script orchestration remains an implementation detail.
+Use `make val` as the primary execution entrypoint. Internal script orchestration remains an implementation detail.
 
 ## Error Clusters Covered
 
@@ -85,6 +100,11 @@ Use `make validate` as the primary execution entrypoint. Internal script orchest
 
 - **Symptom**: `BindableLogger` missing `.debug/.info/.warning/.error/.exception`; `BindableLogger` not assignable to `p.Logger`
 - **Fix**: Annotate loggers as `p.Logger` where logger originates from `u.get_logger` or `FlextLogger.get_logger`
+
+### 1b. Concrete Annotation Drift
+
+- **Symptom**: consumer annotations pin to concrete carriers like `FlextRegistry`, `BindableLogger`, settings classes, or adapter implementations even though `p.*` or `t.*` already expresses the contract
+- **Fix**: move the shared structural contract to `protocols.py` or the shared alias to `typings.py`, then annotate callers with `p.*` or `t.*` instead of the concrete implementation
 
 ### 2. `r[T].ok(None)` — Real Bug
 
@@ -110,11 +130,11 @@ Use `make validate` as the primary execution entrypoint. Internal script orchest
 
 ```bash
 # Recommended gates
-make validate PROJECT=<name>
-make validate PROJECT=<name> FIX=1
+make val PROJECT=<name>
+make val PROJECT=<name> FIX=1
 
 # Workspace slice
-make validate PROJECTS="proj-a proj-b"
+make val PROJECTS="proj-a proj-b"
 ```
 
 When `type: custom` is necessary, keep script implementations inside `.claude/skills/flext-pyrefly-typecheck-fix/` and return `{"violation_count": N}`.
@@ -126,6 +146,7 @@ When `type: custom` is necessary, keep script implementations inside `.claude/sk
 - **Rollback safety**: skill_fix.py handles hash+backup+rewrite+verify+rollback per file
 - **Stub boundary**: `typings/generated/` is for third-party stubs only; never generate stubs for internal modules (`flext_*`). Always prefer PyPI stub packages (`types-*`, `*-stubs`) over manual stubs in `typings/`. See `rules-typings` skill for the full coverage table.
 - **Root-cause only**: Internal missing imports must be fixed in source/type architecture, not patched with generated stubs
+- **Canonical contracts first**: If pyrefly can be satisfied by a `p.*` protocol or `t.*` alias, that is the preferred fix. Concrete fallback annotations are boundary-only exceptions.
 - **AXIOMATIC — ALL 4 linters mandatory**: Every change MUST pass ruff, mypy, pyright, AND pyrefly with ZERO errors. ALL impacted references across ALL 33 projects MUST be updated via ast-grep (`sg`) search-and-replace immediately. No partial fixes.
 - **AXIOMATIC — No suppressions without triple justification**: `# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore` require: (1) real internet citations proving unavoidability, (2) business necessity documented in the same comment, (3) per-line only — never global. Global suppression rules are TOTALLY FORBIDDEN. Fix the code, never silence the linter.
 - **Skill contract**: rules consumed by `skill_validate.py` / `skill_fix.py` must remain flat-key format and executable for `fix_auto: true`
