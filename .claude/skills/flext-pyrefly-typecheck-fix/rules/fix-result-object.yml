@@ -1,5 +1,5 @@
-id: fix-result-t.NormalizedValue
+id: fix-result-t.RecursiveContainer
 language: python
 rule:
-  pattern: r[t.NormalizedValue]
-fix: r[t.NormalizedValue]
+  pattern: r[t.RecursiveContainer]
+fix: r[t.RecursiveContainer]

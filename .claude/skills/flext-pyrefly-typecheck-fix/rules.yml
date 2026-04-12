@@ -24,19 +24,19 @@ rules:
     fix_instruction: "Replace .ok(None) with .ok(True) for r[bool] return types."
 
   # =========================================================================
-  # Cluster 2: r[t.NormalizedValue] type erasure
+  # Cluster 2: r[t.RecursiveContainer] type erasure
   # =========================================================================
-  - id: detect-result-t.NormalizedValue
+  - id: detect-result-t.RecursiveContainer
     type: ast-grep
-    file: rules/detect-result-t.NormalizedValue.yml
+    file: rules/detect-result-t.RecursiveContainer.yml
     severity: error
     group: result_type_erasure
     count_by: rule_id
-    description: "r[t.NormalizedValue] uses type erasure — prefer r[t.NormalizedValue]."
+    description: "r[t.RecursiveContainer] uses type erasure — prefer r[t.RecursiveContainer]."
     fix_auto: true
     fix_type: ast-grep
-    fix_file: rules/fix-result-t.NormalizedValue.yml
-    fix_instruction: "Rewrite r[t.NormalizedValue] to r[t.NormalizedValue] at boundaries."
+    fix_file: rules/fix-result-t.RecursiveContainer.yml
+    fix_instruction: "Rewrite r[t.RecursiveContainer] to r[t.RecursiveContainer] at boundaries."
     fix_imports:
       - from flext_core import t
 
@@ -46,11 +46,11 @@ rules:
     severity: error
     group: jsondict_legacy
     count_by: rule_id
-    description: "Legacy Mapping[str, t.NormalizedValue] annotation — normalize to t.NormalizedValue alias."
+    description: "Legacy Mapping[str, t.RecursiveContainer] annotation — normalize to t.RecursiveContainer alias."
     fix_auto: true
     fix_type: ast-grep
     fix_file: rules/fix-jsondict-legacy.yml
-    fix_instruction: "Rewrite Mapping[str, t.NormalizedValue] to t.NormalizedValue."
+    fix_instruction: "Rewrite Mapping[str, t.RecursiveContainer] to t.RecursiveContainer."
     fix_imports:
       - from flext_core import t
 

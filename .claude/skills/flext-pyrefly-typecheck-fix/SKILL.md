@@ -4,7 +4,7 @@
 - [Error Clusters Covered](#error-clusters-covered)
   - [1. Logger Typing Drift](#1-logger-typing-drift)
   - [2. `r.ok(None)` — Real Bug](#2-flextresultoknone-real-bug)
-  - [3. `r[t.NormalizedValue]` Type Erasure](#3-flextresultobject-type-erasure)
+  - [3. `r[t.RecursiveContainer]` Type Erasure](#3-flextresultobject-type-erasure)
   - [4. RootModel Container Coercion](#4-rootmodel-container-coercion)
   - [5. Mapping Mutation](#5-mapping-mutation)
 - [Verification](#verification)
@@ -111,10 +111,10 @@ Use `make val` as the primary execution entrypoint. Internal script orchestratio
 - **Symptom**: `Argument None is not assignable to parameter value with type T`
 - **Fix**: Replace `.ok(None)` with `.ok(True)` for `r[bool]` return types; review other types per call-site intent
 
-### 3. `r[t.NormalizedValue]` Type Erasure
+### 3. `r[t.RecursiveContainer]` Type Erasure
 
-- **Symptom**: Invariance prevents safe widening of `r[t.NormalizedValue]`
-- **Fix**: Rewrite to `r[t.NormalizedValue]` at boundaries, or make local functions generic
+- **Symptom**: Invariance prevents safe widening of `r[t.RecursiveContainer]`
+- **Fix**: Rewrite to `r[t.RecursiveContainer]` at boundaries, or make local functions generic
 
 ### 4. RootModel Container Coercion
 

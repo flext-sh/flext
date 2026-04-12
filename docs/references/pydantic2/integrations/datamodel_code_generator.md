@@ -37,7 +37,7 @@ person.JSON:
   "$id": "person.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Person",
-  "type": "t.NormalizedValue",
+  "type": "t.RecursiveContainer",
   "properties": {
     "first_name": {
       "type": "string",

@@ -33,8 +33,8 @@ class PipelineStageContext(Protocol):
     """Contract for stage execution context."""
 
     workspace_root: Path
-    shared: t.MutableContainerMapping
-    settings: t.ContainerMapping
+    shared: t.MutableRecursiveContainerMapping
+    settings: t.RecursiveContainerMapping
 
 
 @runtime_checkable
@@ -78,7 +78,7 @@ class PipelineStageResult(FlextModels.ContractModel):
 
     stage_id: str
     status: t.Cli.PipelineStageStatus
-    output: t.ContainerMapping
+    output: t.RecursiveContainerMapping
     duration_ms: float
 
 
@@ -163,7 +163,7 @@ def execute_pipeline(
 
 ### 2.2 Plan
 
-1. Extend `u.Cli.json_read()` / `u.Cli.json_write()` to accept optional `validator: Callable[[t.ContainerMapping], r[t.ContainerMapping]] | None` callback for domain-specific validation (the 5% variation)
+1. Extend `u.Cli.json_read()` / `u.Cli.json_write()` to accept optional `validator: Callable[[t.RecursiveContainerMapping], r[t.RecursiveContainerMapping]] | None` callback for domain-specific validation (the 5% variation)
 2. Update all flext-infra callers from `u.Infra.read_json()` → `u.Cli.json_read()`
 3. Delete `flext_infra/_utilities/io.py` entirely
 4. Remove `FlextInfraUtilitiesIo` from `FlextInfraUtilities.Infra` MRO
@@ -242,7 +242,7 @@ class ViolationKey(FlextModels.ContractModel):
     @staticmethod
     def from_violation(
         violation: m.Infra.Violation,
-        source_lines: Sequence[str],
+        source_lines: t.StrSequence,
     ) -> m.Infra.ViolationKey:
         ctx_start = max(0, violation.line - 2)
         ctx_end = min(len(source_lines), violation.line + 3)

@@ -110,7 +110,7 @@ def validate_non_empty(v: str) -> str:
     return cleaned
 
 
-def normalize_to_list(v) -> t.ContainerList:
+def normalize_to_list(v) -> t.RecursiveContainerList:
     if isinstance(v, list):
         return v
     if isinstance(v, (tuple, set)):
@@ -130,7 +130,7 @@ def validate_uuid_string(v: str) -> str:
 
 StrippedString = Annotated[str, AfterValidator(strip_whitespace)]
 ValidatedString = Annotated[str, AfterValidator(validate_non_empty)]
-NormalizedList = Annotated[t.ContainerList, BeforeValidator(normalize_to_list)]
+NormalizedList = Annotated[t.RecursiveContainerList, BeforeValidator(normalize_to_list)]
 UUIDStr = Annotated[str, PlainValidator(validate_uuid_string)]
 ```
 
@@ -153,11 +153,11 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class Metadata(BaseModel):
-    attributes: t.ContainerMapping = Field(default_factory=dict)
+    attributes: t.RecursiveContainerMapping = Field(default_factory=dict)
 
     @field_validator("attributes", mode="before")
     @classmethod
-    def normalize_attributes(cls, value) -> t.ContainerMapping:
+    def normalize_attributes(cls, value) -> t.RecursiveContainerMapping:
         if value is None:
             return {}
         if isinstance(value, BaseModel):
@@ -521,8 +521,8 @@ from pydantic import TypeAdapter, ValidationError
 
 
 def validate_runtime(
-    data, type_: type[t.NormalizedValue]
-) -> tuple[bool, t.NormalizedValue | str]:
+    data, type_: type[t.RecursiveContainer]
+) -> tuple[bool, t.RecursiveContainer | str]:
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_python(data)
@@ -541,7 +541,9 @@ Repository anchor:
 from pydantic import TypeAdapter
 
 
-def serialize_runtime(value, type_: type[t.NormalizedValue]) -> t.ContainerMapping:
+def serialize_runtime(
+    value, type_: type[t.RecursiveContainer]
+) -> t.RecursiveContainerMapping:
     adapter = TypeAdapter(type_)
     dumped = adapter.dump_python(value, mode="json")
     if isinstance(dumped, dict):
@@ -560,8 +562,8 @@ from pydantic import TypeAdapter, ValidationError
 
 
 def parse_json_runtime(
-    json_str: str, type_: type[t.NormalizedValue]
-) -> tuple[bool, t.NormalizedValue | str]:
+    json_str: str, type_: type[t.RecursiveContainer]
+) -> tuple[bool, t.RecursiveContainer | str]:
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_json(json_str)
@@ -582,10 +584,10 @@ from pathlib import Path
 from pydantic import TypeAdapter
 
 
-def load_fixture(path: Path) -> t.ContainerMapping:
+def load_fixture(path: Path) -> t.RecursiveContainerMapping:
     with path.open(encoding="utf-8") as f:
         payload = json.load(f)
-    adapter = TypeAdapter(t.ContainerMapping)
+    adapter = TypeAdapter(t.RecursiveContainerMapping)
     return adapter.validate_python(payload)
 ```
 

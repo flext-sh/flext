@@ -1,6 +1,6 @@
-id: detect-result-t.NormalizedValue
+id: detect-result-t.RecursiveContainer
 valid:
   - "r[str]"
   - "r[int]"
 invalid:
-  - "r[t.NormalizedValue]"
+  - "r[t.RecursiveContainer]"
