@@ -1,0 +1,184 @@
+docs/superpowers/plans/2026-04-06-pipeline-dag-audit.md
+  3f20071a1278ccd7 313,325,349,381,404,1233
+docs/planning/MIGRATION_SUMMARY.md
+  3f20071a1278ccd7 23,56,68,75,90,101,125,138,202,216,226,264,303,306,348,373,442
+pkg/utils/shared_kernel/persistence/unified_repository.go
+  3f20071a1278ccd7 26,45
+docs/references/pydantic2/integrations/visual_studio_code.md
+  3f20071a1278ccd7 3,5-7,25,69,71,222,231
+.planning/codebase/CONVENTIONS.md
+  3f20071a1278ccd7 215
+pkg/infrastructure/database/database.go
+  3f20071a1278ccd7 30,32,43
+pkg/controlpanel/handlers/flexcore_handler.go
+  3f20071a1278ccd7 19,28
+AGENTS.md
+  a6d275f7fcd9c0ae 153,161,175-176,193
+docs/projects/flext-target-ldap.md
+  3f20071a1278ccd7 35
+docs/references/pydantic2/concepts/config.md
+  3f20071a1278ccd7 130
+pkg/flextservice/service.go
+  3f20071a1278ccd7 28,66
+pkg/infrastructure/database/advanced_database.go
+  3f20071a1278ccd7 9,20-21,23,30
+docs/references/pydantic2/concepts/json_schema.md
+  3f20071a1278ccd7 73,340,559,562-566
+cmd/flext/main.go
+  3f20071a1278ccd7 30-34,54,154,353
+pkg/controlpanel/management/container/container.go
+  3f20071a1278ccd7 20,60
+docs/references/pydantic2/concepts/types.md
+  3f20071a1278ccd7 682
+docs/architecture/flext-service-architecture.md
+  3f20071a1278ccd7 3480
+.planning/quick/260323-r3o-apply-yagni-patterns-using-vulture-and-q/vulture-report.txt
+  3f20071a1278ccd7 12
+.planning/plans/2026-03-30-flext-infra-cli-mro.md
+  3f20071a1278ccd7 310
+docs/references/pydantic2/integrations/pyrefly.md
+  3f20071a1278ccd7 28,36,47
+examples/acl_processing_example.py
+  3f20071a1278ccd7 26,89,100
+.planning/phases/10-unified-docs-generation-baseline/10-02-SUMMARY.md
+  3f20071a1278ccd7 72
+pkg/plugins/kubernetes/kubernetes_plugin.go
+  3f20071a1278ccd7 40,109
+.claude/skills/lib-pydantic-settings/rules/legacy-config.yml
+  3f20071a1278ccd7 7
+docs/projects/flext-tap-oracle-wms.md
+  3f20071a1278ccd7 36-37
+docs/references/pydantic2/errors/validation_errors.md
+  3f20071a1278ccd7 876
+docs/references/pydantic2/concepts/models.md
+  3f20071a1278ccd7 418,1536,1815
+Makefile
+  3f20071a1278ccd7 85,477,784
+docs/planning/phases2_6_parallel_tracks.md
+  3f20071a1278ccd7 83,112,205,257,315,341,374,416,440,464,485,518,531,547,567,591,612,647,672,699,729,774,835,932
+pkg/utils/shared_kernel/application/bootstrap.go
+  3f20071a1278ccd7 12
+.claude/skills/lib-pydantic-settings/SKILL.md
+  3f20071a1278ccd7 18,58,70,79,117,122,133,162,175,199
+docs/references/pydantic2/examples/orms.md
+  3f20071a1278ccd7 26,30
+docs/references/pydantic2/errors/usage_errors.md
+  3f20071a1278ccd7 45,1216,1218
+pkg/controlpanel/handlers/meltano_handler.go
+  3f20071a1278ccd7 19,28
+pkg/plugins/meltano/meltano_plugin.go
+  3f20071a1278ccd7 39,51,413
+docs/planning/phase1_detailed_plan.md
+  3f20071a1278ccd7 25,39,60,223,232,326,425,433,440,452,462,472,478,484,493,495,576,582,585,587,590,618,645,670
+docs/references/pydantic2/concepts/dataclasses.md
+  3f20071a1278ccd7 121,124,126
+pkg/interfaces/cli/commands/singer_commands.go
+  3f20071a1278ccd7 253,295,362,445
+pkg/plugins/ray/ray_plugin.go
+  3f20071a1278ccd7 39,67
+pkg/interfaces/cli/commands/utility_commands.go
+  3f20071a1278ccd7 177,179,182,185,187,299
+.planning/milestones/v1.0-phases/04-python313-modernization/04-03-PLAN.md
+  3f20071a1278ccd7 131
+.planning/milestones/v1.0-phases/04-python313-modernization/04-03-SUMMARY.md
+  3f20071a1278ccd7 42
+.planning/codebase/TESTING.md
+  3f20071a1278ccd7 76,87
+examples/complete_workflow_example.py
+  3f20071a1278ccd7 33,56,110,139,165
+.planning/RESULT_IMPLEMENTATION_HANDOFF.md
+  3f20071a1278ccd7 242
+.planning/quick/260323-ri1-improve-vulture-qlty-analysis-with-prope/260323-ri1-PLAN.md
+  3f20071a1278ccd7 19,63,226
+docs/planning/phases7_9_completion.md
+  3f20071a1278ccd7 22,365,369,382,424,427,436,487,527,529,532,645,688,695,722,727
+docs/references/pydantic2/concepts/json.md
+  3f20071a1278ccd7 197
+docs/standards/docstrings/PEP257-GOOGLE-RUFF.md
+  3f20071a1278ccd7 336
+docs/projects/flext-tap-ldap.md
+  3f20071a1278ccd7 37-38
+pkg/controlpanel/monitoring/server/server.go
+  3f20071a1278ccd7 17,38-39
+docs/projects/flext-tap-oracle-oic.md
+  3f20071a1278ccd7 37-38
+.planning/quick/260323-qh4-fix-69-remaining-lint-errors-across-work/260323-qh4-PLAN.md
+  3f20071a1278ccd7 90
+pkg/infrastructure/logging/logger.go
+  3f20071a1278ccd7 52,68,101
+docs/references/pydantic2/internals/architecture.md
+  3f20071a1278ccd7 32
+pkg/utils/shared_kernel/auth/providers.go
+  3f20071a1278ccd7 423,438
+docs/planning/pydantic2_migration_roadmap.md
+  3f20071a1278ccd7 10,16,40,46,55,69,84,121,149,153,162,169,263,267,308,316,318,335,356,364,396,402,411,428,434,442,468,473,478,486,496,501,525,530,536,542,551,558,628,651,665,729,742,747
+docs/projects/flext-tap-oracle.md
+  3f20071a1278ccd7 37-39
+docs/projects/flext-tap-ldif.md
+  3f20071a1278ccd7 37-38
+cmd/flext/README.md
+  3f20071a1278ccd7 54,193,420
+.planning/EXECUTION_SUMMARY_TARGET_REFACTOR.md
+  3f20071a1278ccd7 76
+.planning/quick/260323-r3o-apply-yagni-patterns-using-vulture-and-q/qlty-report-raw.txt
+  3f20071a1278ccd7 1114,1127,3567
+pkg/infrastructure/database/connection.go
+  3f20071a1278ccd7 10,38-40,42,51,124-126,128
+docs/references/pydantic2/integrations/mypy.md
+  3f20071a1278ccd7 104,117,207,212
+base.mk
+  3f20071a1278ccd7 362,364,489,491,649
+docs/references/pydantic2/concepts/alias.md
+  3f20071a1278ccd7 24,112,236-237,304
+.claude/skills/lib-pydantic-v2/SKILL.md
+  3f20071a1278ccd7 38,214,293-299,302,308
+.planning/quick/260323-r3o-apply-yagni-patterns-using-vulture-and-q/260323-r3o-PLAN.md
+  3f20071a1278ccd7 65,174
+docs/references/pydantic2/concepts/fields.md
+  3f20071a1278ccd7 298,348,367
+examples/advanced_processing_example.py
+  3f20071a1278ccd7 29,47,55,89,108
+.claude/skills/lib-pydantic-settings/rules.yml
+  3f20071a1278ccd7 2,20,29
+.claude/skills/lib-pydantic-settings/rules/legacy-config-fix.yml
+  3f20071a1278ccd7 7-8
+pkg/utils/shared_kernel/builder.go
+  3f20071a1278ccd7 8,41,50,148,417
+pkg/controlpanel/management/container/container_test.go
+  3f20071a1278ccd7 12,17,22
+docs/references/pydantic2/concepts/type_adapter.md
+  3f20071a1278ccd7 111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "bd9c9a320c4bf9d0fd2943bf30abecb4779e97d6",
+  "prompts": {
+    "3f20071a1278ccd7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7e27-9bfa-7561-8c64-01cec23a81ee",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1130,
+      "total_deletions": 1577,
+      "accepted_lines": 91935,
+      "overriden_lines": 0
+    },
+    "a6d275f7fcd9c0ae": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7ce6-2981-76f0-9d8c-febff62e4c66",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 2704,
+      "total_deletions": 603,
+      "accepted_lines": 254624,
+      "overriden_lines": 0
+    }
+  }
+}
