@@ -33,8 +33,8 @@ make validate  # full validation (currently monitors refactor progress)
 ```
 
 ```bash
-tap-oracle-wms --settings settings.json --discover > catalog.json
-tap-oracle-wms --settings settings.json --catalog catalog.json --state state.json
+tap-oracle-wms --config settings.json --discover > catalog.json
+tap-oracle-wms --config settings.json --catalog catalog.json --state state.json
 ```
 
 ## Architecture & integration

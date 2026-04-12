@@ -22,7 +22,7 @@
   - [Files to Modify](#files-to-modify)
   - [Validation Checklist](#validation-checklist)
   - [Commit Message](#commit-message)
-- [Task 1.4: Standardize SettingsDict Settings Across Models](#task-14-standardize-configdict-settings-across-models)
+- [Task 1.4: Standardize ConfigDict Settings Across Models](#task-14-standardize-configdict-settings-across-models)
   - [Objective](#objective)
   - [Standard Settings by Model Type](#standard-settings-by-model-type)
   - [Audit Checklist](#audit-checklist)
@@ -36,7 +36,7 @@
   - [AGENTS.md Updates](#agentsmd-updates)
   - [TypeGuard Pattern (Replaces cast())](#typeguard-pattern-replaces-cast)
   - [Hierarchical Model Organization](#hierarchical-model-organization)
-  - [SettingsDict Standards](#configdict-standards)
+  - [ConfigDict Standards](#configdict-standards)
   - [Validation Checklist](#validation-checklist)
   - [Commit Message](#commit-message)
 - [Success Criteria for Phase 1](#success-criteria-for-phase-1)
@@ -57,7 +57,7 @@ Phase 1 is the **foundation phase** that establishes all patterns and infrastruc
 
 1. TypeGuard infrastructure (replaces cast())
 2. Hierarchical Pydantic model patterns
-3. Standard SettingsDict settings
+3. Standard ConfigDict settings
 4. Modern validator patterns
 5. Updated AGENTS.md documentation
 
@@ -220,7 +220,7 @@ Group the 86 TypedDicts into categories:
 In `flext-core/src/flext_core/models.py`:
 
 ```python
-from pydantic import BaseModel, SettingsDict, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class FlextModels:
@@ -229,7 +229,7 @@ class FlextModels:
     class Base(BaseModel):
         """Base model with standard Flext configuration."""
 
-        model_config = SettingsDict(
+        model_config = ConfigDict(
             validate_assignment=True,
             use_enum_values=True,
             extra="forbid",
@@ -323,7 +323,7 @@ Create atomic commits per category:
 # Commit 1: Add base models and Settings namespace
 git commit -m "feat(flext-core): add hierarchical Settings models
 
-- Create FlextModels.Base with standard SettingsDict
+- Create FlextModels.Base with standard ConfigDict
 - Create FlextModels.Core.Settings namespace
 - Convert 20 settings-related TypedDicts"
 
@@ -422,7 +422,7 @@ refactor(flext-core): eliminate cast() from src/ using TypeGuards
 
 ---
 
-## Task 1.4: Standardize SettingsDict Settings Across Models
+## Task 1.4: Standardize ConfigDict Settings Across Models
 
 **Beads Issue**: flext-jt2  
 **Duration**: 0.5 days  
@@ -430,14 +430,14 @@ refactor(flext-core): eliminate cast() from src/ using TypeGuards
 
 ### Objective
 
-Ensure all 127+ Pydantic models across flext-core use consistent SettingsDict settings.
+Ensure all 127+ Pydantic models across flext-core use consistent ConfigDict settings.
 
 ### Standard Settings by Model Type
 
 #### Production Models (Default)
 
 ```python
-model_config = SettingsDict(
+model_config = ConfigDict(
     validate_assignment=True,  # Validate on attribute assignment
     use_enum_values=True,  # Serialize enums to values
     extra="forbid",  # Reject unknown fields
@@ -449,7 +449,7 @@ model_config = SettingsDict(
 #### Immutable Value Objects
 
 ```python
-model_config = SettingsDict(
+model_config = ConfigDict(
     frozen=True,  # Immutable
     validate_assignment=True,
     extra="forbid",
@@ -459,7 +459,7 @@ model_config = SettingsDict(
 #### API Response Models
 
 ```python
-model_config = SettingsDict(
+model_config = ConfigDict(
     extra="ignore",  # Ignore unknown fields from API
     validate_assignment=True,
     use_enum_values=True,
@@ -469,19 +469,19 @@ model_config = SettingsDict(
 ### Audit Checklist
 
 - [ ] Review all 127+ models in flext-core
-- [ ] Identify models missing SettingsDict
+- [ ] Identify models missing ConfigDict
 - [ ] Identify models with non-standard settings
 - [ ] Document exceptions (if any)
 
 ### Standardization Tasks
 
-1. Add SettingsDict to models missing it
+1. Add ConfigDict to models missing it
 2. Update non-standard settings to match pattern
 3. Document any exceptions in comments
 
 ### Validation Checklist
 
-- [ ] All models have SettingsDict
+- [ ] All models have ConfigDict
 - [ ] Settings match documented patterns
 - [ ] Type checking passes: `pyrefly flext-core/src/`
 - [ ] Linting passes: `ruff check flext-core/src/`
@@ -490,9 +490,9 @@ model_config = SettingsDict(
 ### Commit Message
 
 ```
-refactor(flext-core): standardize SettingsDict across all models
+refactor(flext-core): standardize ConfigDict across all models
 
-- Add SettingsDict to models missing it
+- Add ConfigDict to models missing it
 - Standardize settings: validate_assignment, extra="forbid", etc.
 - Document model type patterns in models.py
 ```
@@ -573,21 +573,21 @@ result: m.Result.Success = ...
 
 Pattern:
 
-- FlextModels.Base - Standard SettingsDict
+- FlextModels.Base - Standard ConfigDict
 - FlextModels.Core.\* - Core framework models
 - FlextModels.Result.\* - Result models
 - FlextModels.Data.\* - Data models
 ```
 
-#### SettingsDict Standards
+#### ConfigDict Standards
 
 ```markdown
-### SettingsDict Standards
+### ConfigDict Standards
 
-All models use standard SettingsDict settings:
+All models use standard ConfigDict settings:
 
 \`\`\`python
-model_config = SettingsDict(
+model_config = ConfigDict(
 validate_assignment=True,
 use_enum_values=True,
 extra="forbid",
@@ -615,7 +615,7 @@ docs(flext-core): update AGENTS.md with Pydantic 2 patterns
 
 - Add TypeGuard pattern documentation
 - Add hierarchical model organization pattern
-- Add SettingsDict standards
+- Add ConfigDict standards
 - Document migration patterns for other projects
 ```
 
@@ -642,7 +642,7 @@ docs(flext-core): update AGENTS.md with Pydantic 2 patterns
 
 ✅ **Standardization**
 
-- All 127+ models have standard SettingsDict
+- All 127+ models have standard ConfigDict
 - Settings consistent across project
 
 ✅ **Quality**
@@ -667,7 +667,7 @@ docs(flext-core): update AGENTS.md with Pydantic 2 patterns
 | 1.1: TypeGuard Infrastructure   | 1 day      | Day 1 | Day 1 |
 | 1.2: TypedDict Migration        | 1.5 days   | Day 1 | Day 2 |
 | 1.3: cast() Elimination         | 1 day      | Day 2 | Day 3 |
-| 1.4: SettingsDict Standardization | 0.5 days   | Day 3 | Day 3 |
+| 1.4: ConfigDict Standardization | 0.5 days   | Day 3 | Day 3 |
 | 1.5: Validation & Docs          | 0.5 days   | Day 3 | Day 3 |
 | **Total**                       | **4 days** |       |       |
 

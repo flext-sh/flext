@@ -34,9 +34,9 @@ make validate
 ```
 
 ```bash
-tap-oracle --settings settings.json --discover > catalog.json
-tap-oracle --settings settings.json --catalog catalog.json --state state.json
-flext-tap-oracle --settings settings.json --catalog catalog.json --state state.json
+tap-oracle --config settings.json --discover > catalog.json
+tap-oracle --config settings.json --catalog catalog.json --state state.json
+flext-tap-oracle --config settings.json --catalog catalog.json --state state.json
 ```
 
 ## Architecture overview

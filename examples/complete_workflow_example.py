@@ -30,7 +30,7 @@ from decimal import Decimal
 from enum import StrEnum, unique
 from typing import ClassVar
 
-from pydantic import BaseModel, Field, SettingsDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from flext import t
 from flext_core import r
@@ -53,7 +53,7 @@ def _new_workflow_settings() -> Mapping[str, t.Scalar | float]:
 class WorkflowData(BaseModel):
     """Data container for workflow processing."""
 
-    model_settings: ClassVar[SettingsDict] = SettingsDict(
+    model_config: ClassVar[ConfigDict] = ConfigDict(
         arbitrary_types_allowed=True,
         extra="allow",
     )
@@ -107,9 +107,7 @@ class CompleteWorkflowExample:
     class WorkflowContext(BaseModel):
         """Complete workflow context with correlation and metadata."""
 
-        model_settings: ClassVar[SettingsDict] = SettingsDict(
-            arbitrary_types_allowed=True
-        )
+        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         workflow_id: str = Field(description="Unique workflow identifier")
         correlation_id: str = Field(description="Correlation ID for tracking")
@@ -138,9 +136,7 @@ class CompleteWorkflowExample:
     class WorkflowStageResult(BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
-        model_settings: ClassVar[SettingsDict] = SettingsDict(
-            arbitrary_types_allowed=True
-        )
+        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         stage_name: str = Field(description="Name of the workflow stage")
         workflow_id: str = Field(description="Associated workflow ID")
@@ -166,9 +162,7 @@ class CompleteWorkflowExample:
     class CompleteWorkflowResult(BaseModel):
         """Complete workflow result with all stages aggregated."""
 
-        model_settings: ClassVar[SettingsDict] = SettingsDict(
-            arbitrary_types_allowed=True
-        )
+        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
         workflow_id: str = Field(description="Unique workflow identifier")
         correlation_id: str = Field(description="Correlation ID for tracking")

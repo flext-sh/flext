@@ -310,7 +310,7 @@ from collections.abc import Mapping, MutableMapping, Sequence
 from pathlib import Path
 from typing import Annotated, ClassVar
 
-from pydantic import SettingsDict, Field
+from pydantic import ConfigDict, Field
 
 from flext_cli import c, t
 from flext_core import FlextModels
@@ -322,7 +322,7 @@ class FlextCliModelsPipeline:
     class PipelineStageContext(FlextModels.ContractModel):
         """Accumulated state passed between pipeline stages."""
 
-        model_settings: ClassVar[SettingsDict] = SettingsDict(
+        model_config: ClassVar[ConfigDict] = ConfigDict(
             extra="forbid",
             validate_assignment=True,
             arbitrary_types_allowed=True,
@@ -346,7 +346,7 @@ class FlextCliModelsPipeline:
     class PipelineStageSpec(FlextModels.ContractModel):
         """Declarative stage definition with dependency tracking."""
 
-        model_settings: ClassVar[SettingsDict] = SettingsDict(
+        model_config: ClassVar[ConfigDict] = ConfigDict(
             extra="forbid",
             arbitrary_types_allowed=True,
         )
@@ -378,7 +378,7 @@ class FlextCliModelsPipeline:
     class PipelineStageResult(FlextModels.ContractModel):
         """What a stage produces after execution."""
 
-        model_settings: ClassVar[SettingsDict] = SettingsDict(extra="forbid")
+        model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
         stage_id: Annotated[str, Field(description="Stage that produced this result")]
         status: Annotated[
@@ -401,7 +401,7 @@ class FlextCliModelsPipeline:
     class PipelineResult(FlextModels.ContractModel):
         """Full pipeline execution result — aggregated from all stages."""
 
-        model_settings: ClassVar[SettingsDict] = SettingsDict(extra="forbid")
+        model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
         stages: Annotated[
             Sequence[FlextCliModelsPipeline.PipelineStageResult],
@@ -1230,7 +1230,7 @@ Read: `flext-infra/src/flext_infra/_models/codegen.py`
 class ViolationKey(FlextModels.ContractModel):
     """Content-stable violation identifier — resilient to line shifts."""
 
-    model_settings: ClassVar[SettingsDict] = SettingsDict(frozen=True, extra="forbid")
+    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True, extra="forbid")
 
     module: Annotated[str, Field(description="Module containing the violation")]
     rule: Annotated[str, Field(description="Rule that was violated")]

@@ -212,7 +212,7 @@ def ensure_valid_port(value: int) -> r[int]:
 **Pydantic v2 Mastery:**
 - Every class MUST extend `BaseModel` or FLEXT base models via MRO
 - Use `Field()` with constraints, descriptions, and defaults
-- Use `model_config = SettingsDict(...)` for serialization/validation settings
+- Use `model_config = ConfigDict(...)` for serialization/validation settings
 - Use `PrivateAttr()` for internal mutable state
 - Use `field_validator` or `model_validator` for custom logic
 - Forbidde: Standalone `*Settings` classes, unnecessary `@property`, manual `self._x` assignments

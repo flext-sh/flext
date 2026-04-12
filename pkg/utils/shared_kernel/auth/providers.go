@@ -420,7 +420,7 @@ func (p *APIKeyProvider) Validate(ctx context.Context, apiKey string) (*UserCont
 // OAuth2Provider provides OAuth2 authentication
 type OAuth2Provider struct {
 	settings OAuth2Config
-	logger logging.Logger
+	logger   logging.Logger
 }
 
 // NewOAuth2Provider creates a new OAuth2 provider
@@ -435,7 +435,7 @@ func NewOAuth2Provider(settings OAuth2Config, logger logging.Logger) (*OAuth2Pro
 
 	return &OAuth2Provider{
 		settings: settings,
-		logger: logger.With(logging.F("provider", "oauth2")),
+		logger:   logger.With(logging.F("provider", "oauth2")),
 	}, nil
 }
 

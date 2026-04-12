@@ -32,7 +32,7 @@ make validate
 ```
 
 ```bash
-target-ldap --settings settings.json --state state.json --catalog catalog.json
+target-ldap --config settings.json --state state.json --catalog catalog.json
 ```
 
 ## Architecture & patterns

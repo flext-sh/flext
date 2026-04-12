@@ -8,8 +8,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
+	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 )
 
 // AppType define o tipo de aplicação

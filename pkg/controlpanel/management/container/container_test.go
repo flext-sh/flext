@@ -9,17 +9,17 @@ import (
 func TestNewContainer(t *testing.T) {
 	tests := []struct {
 		name        string
-		settings      *settings.Config
+		settings    *settings.Config
 		expectError bool
 	}{
 		{
 			name:        "Valid settings",
-			settings:      &settings.Config{},
+			settings:    &settings.Config{},
 			expectError: false,
 		},
 		{
 			name:        "Nil settings",
-			settings:      nil,
+			settings:    nil,
 			expectError: true,
 		},
 	}

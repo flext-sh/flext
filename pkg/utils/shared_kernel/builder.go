@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
+	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 	"github.com/flext-sh/flext/pkg/utils/shared_kernel/application"
 )
 
@@ -38,7 +38,7 @@ const (
 
 // ContainerBuilder constrói containers de forma flexível
 type ContainerBuilder struct {
-	settings   *settings.Config
+	settings *settings.Config
 	logger   logging.Logger
 	features map[Feature]bool
 	handlers map[string]interface{}
@@ -47,7 +47,7 @@ type ContainerBuilder struct {
 // NewContainerBuilder cria um novo builder
 func NewContainerBuilder(cfg *settings.Config) *ContainerBuilder {
 	return &ContainerBuilder{
-		settings:   cfg,
+		settings: cfg,
 		logger:   logging.GetLogger().With(logging.F("component", "container_builder")),
 		features: make(map[Feature]bool),
 		handlers: make(map[string]interface{}),
@@ -145,7 +145,7 @@ func (cb *ContainerBuilder) Build() (application.ContainerInterface, error) {
 
 	// Cria container base
 	container := &FlexibleContainer{
-		settings:   cb.settings,
+		settings: cb.settings,
 		logger:   cb.logger,
 		features: cb.features,
 		handlers: make(map[string]interface{}),
@@ -414,7 +414,7 @@ func (cb *ContainerBuilder) initConnectorsHandler(container *FlexibleContainer) 
 
 // FlexibleContainer implementação do container flexível
 type FlexibleContainer struct {
-	settings   *settings.Config
+	settings *settings.Config
 	logger   logging.Logger
 	features map[Feature]bool
 	handlers map[string]interface{}

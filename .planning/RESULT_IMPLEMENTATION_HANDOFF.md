@@ -239,7 +239,7 @@ All changes must pass:
 ## Key Decisions Documented
 
 1. **StrEnum for ErrorDomain**: Better string representation than regular Enum
-2. **SettingsDict(arbitrary_types_allowed=True)**: Needed for BaseException support
+2. **ConfigDict(arbitrary_types_allowed=True)**: Needed for BaseException support
 3. **Structured error optional**: error_code and error_data are optional for backward compat
 4. **No breaking changes to r**: All changes are additive
 

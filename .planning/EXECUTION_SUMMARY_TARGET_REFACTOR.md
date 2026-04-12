@@ -73,7 +73,7 @@ Applied conversions to 5 projects with detailed mapping:
 ✅ pool_increment → t.PositiveInt
 ✅ parallel_degree → t.PositiveInt
 ✅ batch_size (TargetSettings) → t.BatchSize
-✅ streams_settingsured → t.NonNegativeInt
+✅ streams_configured → t.NonNegativeInt
 ✅ batch_size (ImplementationMetrics) → t.BatchSize
 ```
 

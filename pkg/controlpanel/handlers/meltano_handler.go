@@ -16,7 +16,7 @@ import (
 
 // MeltanoHandler manages Meltano orchestration and Singer/DBT coordination
 type MeltanoHandler struct {
-	settings     *settings.Config
+	settings   *settings.Config
 	logger     logging.Logger
 	httpClient *http.Client
 }
@@ -25,7 +25,7 @@ type MeltanoHandler struct {
 func NewMeltanoHandler(cfg *settings.Config, logger logging.Logger) *MeltanoHandler {
 	return &MeltanoHandler{
 		settings: cfg,
-		logger: logger,
+		logger:   logger,
 		httpClient: &http.Client{
 			Timeout: cfg.Python.Timeout,
 		},

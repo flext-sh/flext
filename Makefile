@@ -82,7 +82,7 @@ endif
 # Project discovery is owned by flext-infra, but the workspace Makefile keeps
 # a rich inventory so help/status/git verbs continue to work before and after boot.
 # - FLEXT_PROJECTS: declared git submodules from .gitmodules
-# - WORKSPACE_PROJECTS: settingsured workspace members from tool.flext.workspace or tool.uv.workspace
+# - WORKSPACE_PROJECTS: configured workspace members from tool.flext.workspace or tool.uv.workspace
 # - EXTERNAL_PROJECTS: top-level children with pyproject.toml declaring flext-core
 FLEXT_PROJECTS := $(shell \
 	$(PYTHON_CMD) -c 'import json, pathlib, re; root = pathlib.Path("."); docs_path = root / "docs" / "docs_settings.json"; payload = json.loads(docs_path.read_text()) if docs_path.is_file() else {}; scope = payload.get("scope", {}) if isinstance(payload, dict) else {}; excluded = {str(item).strip() for item in scope.get("exclude_roots", []) if str(item).strip()} if isinstance(scope, dict) else set(); gitmodules = root / ".gitmodules"; content = gitmodules.read_text() if gitmodules.is_file() else ""; print(" ".join(path for path in re.findall(r"^\s*path\s*=\s*(.+?)\s*$$", content, re.MULTILINE) if path not in excluded), end="")')
@@ -474,7 +474,7 @@ boot: ## Install all projects into workspace .venv
 		echo "Initializing and updating submodules..."; \
 		git submodule sync --recursive -- $$submodule_paths; \
 		if ! git submodule update --init --recursive --jobs $${JOBS:-8} -- $$submodule_paths; then \
-			echo "Submodule update with settingsured URLs failed. Retrying with HTTPS fallback..."; \
+			echo "Submodule update with configured URLs failed. Retrying with HTTPS fallback..."; \
 			while IFS=' ' read -r key url; do \
 				name="$${key#submodule.}"; \
 				name="$${name%.url}"; \
@@ -781,7 +781,7 @@ fmt: ## Run code formatting across all workspace projects (ruff/gofmt + markdown
 		echo "Formatting Markdown files (markdownlint)..."; \
 		md_settings=""; \
 		if [ -f ".markdownlint.json" ]; then \
-			md_settings="--settings .markdownlint.json"; \
+			md_settings="--config .markdownlint.json"; \
 		fi; \
 		echo "$$md_files" | xargs markdownlint --fix $$md_settings; \
 	fi

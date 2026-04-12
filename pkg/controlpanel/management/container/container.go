@@ -17,7 +17,7 @@ import (
 
 // Container manages dependency injection for FLEXT services
 type Container struct {
-	settings          *settings.Config
+	settings        *settings.Config
 	logger          logging.Logger
 	flexcoreHandler *handlers.FlexCoreHandler
 	meltanoHandler  *handlers.MeltanoHandler
@@ -57,7 +57,7 @@ func NewContainer(cfg *settings.Config) (*Container, error) {
 		logging.F("pipeline_handler", "⏳ Future implementation"))
 
 	return &Container{
-		settings:          cfg,
+		settings:        cfg,
 		logger:          logger,
 		flexcoreHandler: flexcoreHandler,
 		meltanoHandler:  meltanoHandler,

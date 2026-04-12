@@ -25,7 +25,7 @@ type ServiceConfig struct {
 
 // s represents the main FLEXT service
 type s struct {
-	settings      *ServiceConfig
+	settings    *ServiceConfig
 	logger      logging.Logger
 	coordinator *coordination.FlexCoreCoordinator
 	container   *container.Container
@@ -63,7 +63,7 @@ func NewFlextService(cfg *ServiceConfig) (*s, error) {
 	srv := server.NewServer(serviceCfg, logger)
 
 	return &s{
-		settings:      cfg,
+		settings:    cfg,
 		logger:      logger,
 		coordinator: coordinator,
 		container:   containerInstance,

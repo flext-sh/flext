@@ -34,8 +34,8 @@ make validate
 ```
 
 ```bash
-tap-oracle-oic --settings settings.json --discover > catalog.json
-tap-oracle-oic --settings settings.json --catalog catalog.json --state state.json
+tap-oracle-oic --config settings.json --discover > catalog.json
+tap-oracle-oic --config settings.json --catalog catalog.json --state state.json
 ```
 
 ## Architecture & patterns

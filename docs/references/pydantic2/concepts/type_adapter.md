@@ -108,7 +108,7 @@ When you initialize a [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] with a 
 This core schema contains the information needed to validate and serialize data for that type.
 See the [architecture documentation](../internals/architecture.md) for more information on core schemas.
 
-If you set [`defer_build`][pydantic.settings.ConfigDict.defer_build] to `True` when initializing a `TypeAdapter`,
+If you set [`defer_build`][pydantic.config.ConfigDict.defer_build] to `True` when initializing a `TypeAdapter`,
 Pydantic will defer building the core schema until the first time it is needed (for validation or serialization).
 
 In order to manually trigger the building of the core schema, you can call the

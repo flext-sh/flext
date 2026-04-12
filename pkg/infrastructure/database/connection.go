@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
+	"github.com/flext-sh/flext/pkg/infrastructure/settings"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // PostgreSQL driver
 	"github.com/pkg/errors"
@@ -35,11 +35,11 @@ type DB interface {
 
 // Connection gerencia a conexão com o banco de dados
 type Connection struct {
-	db     *sql.DB
-	gormDB *gorm.DB
-	sqlxDB *sqlx.DB
+	db       *sql.DB
+	gormDB   *gorm.DB
+	sqlxDB   *sqlx.DB
 	settings *settings.DatabaseConfig
-	logger logging.Logger
+	logger   logging.Logger
 }
 
 // NewConnection cria uma nova conexão com o banco
@@ -48,7 +48,7 @@ func NewConnection(cfg *settings.DatabaseConfig, logger logging.Logger) (*Connec
 		// Para desenvolvimento, retorna uma conexão mock ou em memória
 		return &Connection{
 			settings: cfg,
-			logger: logger,
+			logger:   logger,
 		}, nil
 	}
 
@@ -121,11 +121,11 @@ func NewConnection(cfg *settings.DatabaseConfig, logger logging.Logger) (*Connec
 	)
 
 	return &Connection{
-		db:     db,
-		gormDB: gormDB,
-		sqlxDB: sqlxDB,
+		db:       db,
+		gormDB:   gormDB,
+		sqlxDB:   sqlxDB,
 		settings: cfg,
-		logger: logger,
+		logger:   logger,
 	}, nil
 }
 

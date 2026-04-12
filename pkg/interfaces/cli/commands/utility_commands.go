@@ -174,17 +174,17 @@ func (c *HelpCommand) showCommandExamples(cmd Command) {
 			fmt.Printf("  flext-cli singer-list --active\n\n")
 		case "singer-run":
 			fmt.Printf("  # Run a Singer specification\n")
-			fmt.Printf("  flext-cli singer-run --id abc123 --pipeline-id def456 --settings settings.json\n\n")
+			fmt.Printf("  flext-cli singer-run --id abc123 --pipeline-id def456 --config settings.json\n\n")
 			fmt.Printf("  # Run and wait for completion\n")
-			fmt.Printf("  flext-cli singer-run --id abc123 --pipeline-id def456 --settings settings.json --wait\n\n")
+			fmt.Printf("  flext-cli singer-run --id abc123 --pipeline-id def456 --config settings.json --wait\n\n")
 		case "singer-test":
 			fmt.Printf("  # Test a Singer connection\n")
-			fmt.Printf("  flext-cli singer-test --id abc123 --settings settings.json\n\n")
+			fmt.Printf("  flext-cli singer-test --id abc123 --config settings.json\n\n")
 		case "singer-discover":
 			fmt.Printf("  # Discover schema and save to file\n")
-			fmt.Printf("  flext-cli singer-discover --id abc123 --settings settings.json --output catalog.json\n\n")
+			fmt.Printf("  flext-cli singer-discover --id abc123 --config settings.json --output catalog.json\n\n")
 			fmt.Printf("  # Discover schema to stdout\n")
-			fmt.Printf("  flext-cli singer-discover --id abc123 --settings settings.json\n\n")
+			fmt.Printf("  flext-cli singer-discover --id abc123 --config settings.json\n\n")
 		}
 
 	case strings.HasPrefix(commandName, "dbt-"):
@@ -296,7 +296,7 @@ func (c *HelpCommand) showGeneralHelp() {
 
 	fmt.Printf("  # Work with Singer specifications\n")
 	fmt.Printf("  flext-cli singer-create --name \"tap-postgres\" --type tap --executable \"/usr/bin/tap-postgres\"\n")
-	fmt.Printf("  flext-cli singer-discover --id <spec-id> --settings settings.json\n\n")
+	fmt.Printf("  flext-cli singer-discover --id <spec-id> --config settings.json\n\n")
 
 	fmt.Printf("  # Manage dbt projects\n")
 	fmt.Printf("  flext-cli dbt-init --name \"analytics\" --dir \"/path/to/project\"\n")

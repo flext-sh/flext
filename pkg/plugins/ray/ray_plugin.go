@@ -36,7 +36,7 @@ import (
 // RayPlugin implements the deployable Ray distributed computing plugin
 type RayPlugin struct {
 	id              plugins.PluginID
-	settings          map[string]interface{}
+	settings        map[string]interface{}
 	pythonVenv      string
 	rayClusterURL   string
 	initialized     bool
@@ -64,7 +64,7 @@ type RayTask struct {
 func NewRayPlugin() *RayPlugin {
 	return &RayPlugin{
 		id:          plugins.PluginID("ray-plugin"),
-		settings:      make(map[string]interface{}),
+		settings:    make(map[string]interface{}),
 		initialized: false,
 		taskQueue:   make([]RayTask, 0),
 	}

@@ -307,7 +307,7 @@ class FlextInfraCli(
 
     def __init__(self) -> None:
         """Initialize CLI app and register all group commands via MRO mixins."""
-        u.ensure_structlog_settingsured()
+        u.ensure_structlog_configured()
         self._app = cli.create_app_with_common_params(
             name=self.app_name,
             help_text=self.app_help,

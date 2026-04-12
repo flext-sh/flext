@@ -415,7 +415,7 @@ Pydantic models can also be created from arbitrary class instances by reading th
 to the model field names. One common application of this functionality is integration with t.NormalizedValue-relational mappings
 (ORMs).
 
-To do this, set the [`from_attributes`][pydantic.settings.ConfigDict.from_attributes] settings value to `True`
+To do this, set the [`from_attributes`][pydantic.config.ConfigDict.from_attributes] settings value to `True`
 (see the documentation on [Configuration](./settings.md) for more details).
 
 The example here uses [SQLAlchemy](https://www.sqlalchemy.org/), but the same approach should work for any ORM.
@@ -1533,7 +1533,7 @@ print(my_pets.describe())
 ## Faux immutability
 
 Models can be configured to be immutable via `model_config['frozen'] = True`. When this is set, attempting to change the
-values of instance attributes will raise errors. See the [API reference][pydantic.settings.ConfigDict.frozen] for more details.
+values of instance attributes will raise errors. See the [API reference][pydantic.config.ConfigDict.frozen] for more details.
 
 !!! note
 This behavior was achieved in Pydantic V1 via the settings setting `allow_mutation = False`.
@@ -1812,4 +1812,4 @@ print(f"{id(c1.arr) == id(c2.arr)=}")
 !!! note
 There are some situations where Pydantic does not copy attributes, such as when passing models &mdash; we use the
 model as is. You can override this behaviour by setting
-[`model_config['revalidate_instances'] = 'always'`](../api/settings.md#pydantic.settings.ConfigDict).
+[`model_config['revalidate_instances'] = 'always'`](../api/settings.md#pydantic.config.ConfigDict).

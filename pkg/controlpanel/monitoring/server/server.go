@@ -14,7 +14,7 @@ import (
 
 // Server represents the HTTP server for FLEXT Service
 type Server struct {
-	settings     *settings.Config
+	settings   *settings.Config
 	logger     logging.Logger
 	router     *gin.Engine
 	httpServer *http.Server
@@ -35,8 +35,8 @@ func NewServer(cfg *settings.Config, logger logging.Logger) *Server {
 
 	return &Server{
 		settings: cfg,
-		logger: logger,
-		router: router,
+		logger:   logger,
+		router:   router,
 	}
 }
 

@@ -101,7 +101,7 @@ See the [plugin configuration](#configuring-the-plugin) for more details.
 
 - Any required fields that don't have dynamically-determined aliases will be included as required
   keyword arguments.
-- If the [`validate_by_name`][pydantic.SettingsDict.validate_by_name] model configuration value is set to
+- If the [`validate_by_name`][pydantic.ConfigDict.validate_by_name] model configuration value is set to
   `True`, the generated signature will use the field names rather than aliases.
 - The [`init_forbid_extra`](#init_forbid_extra) and [`init_typed`](#init_typed) plugin configuration
   values can further fine-tune the synthesized `__init__` method.
@@ -114,7 +114,7 @@ See the [plugin configuration](#configuring-the-plugin) for more details.
 
 ### Support for frozen models
 
-- If the [`frozen`][pydantic.SettingsDict.frozen] configuration is set to `True`, you will get
+- If the [`frozen`][pydantic.ConfigDict.frozen] configuration is set to `True`, you will get
   an error if you try mutating a model field (see [faux immutability](../concepts/models.md#faux-immutability))
 
 ### Respect the type of the `Field`'s `default` and `default_factory`
@@ -204,12 +204,12 @@ Model(unrelated=2)
 ```
 
 For this reason, the plugin will add an extra `**kwargs` parameter when synthesizing the `__init__` method, unless
-`init_forbid_extra` is set or the [`extra`][pydantic.SettingsDict.extra] is set to `'forbid'`.
+`init_forbid_extra` is set or the [`extra`][pydantic.ConfigDict.extra] is set to `'forbid'`.
 
 ### `warn_required_dynamic_aliases`
 
 Whether to error when using a dynamically-determined alias or alias generator on a model with
-[`validate_by_name`][pydantic.SettingsDict.validate_by_name] set to `False`. If such aliases are
+[`validate_by_name`][pydantic.ConfigDict.validate_by_name] set to `False`. If such aliases are
 present, mypy cannot properly type check calls to `__init__`. In this case, it will default to
 treating all arguments as not required.
 

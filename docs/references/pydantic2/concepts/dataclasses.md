@@ -118,12 +118,12 @@ class MyDataclass2:
     __pydantic_config__ = ConfigDict(validate_assignment=True)
 ```
 
-1. You can read more about `validate_assignment` in the [API reference][pydantic.settings.ConfigDict.validate_assignment].
+1. You can read more about `validate_assignment` in the [API reference][pydantic.config.ConfigDict.validate_assignment].
 
 !!! note
-While Pydantic dataclasses support the [`extra`][pydantic.settings.ConfigDict.extra] configuration value, some default
+While Pydantic dataclasses support the [`extra`][pydantic.config.ConfigDict.extra] configuration value, some default
 behavior of stdlib dataclasses may prevail. For example, any extra fields present on a Pydantic dataclass with
-[`extra`][pydantic.settings.ConfigDict.extra] set to `'allow'` are omitted in the dataclass' string representation.
+[`extra`][pydantic.config.ConfigDict.extra] set to `'allow'` are omitted in the dataclass' string representation.
 There is also no way to provide validation [using the `__pydantic_extra__` attribute](./models.md#extra-data).
 
 ## Rebuilding dataclass schema

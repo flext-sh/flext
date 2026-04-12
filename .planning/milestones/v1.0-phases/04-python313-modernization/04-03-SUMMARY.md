@@ -39,7 +39,7 @@ FlextUtilitiesDeprecation marked as dead code (zero callers, module FROZEN); Pro
 
 ### Task 2: Replace ProviderConfiguration UserDict with Pydantic BaseModel
 
-- Converted `ProviderConfiguration(UserDict[str, t.ContainerValue])` to `ProviderConfiguration(BaseModel)` with `model_config = SettingsDict(extra="allow")`
+- Converted `ProviderConfiguration(UserDict[str, t.ContainerValue])` to `ProviderConfiguration(BaseModel)` with `model_config = ConfigDict(extra="allow")`
 - Extracted 3 explicit fields from `__init__` defaults: `name`, `version`, `capabilities`
 - Removed `collections.UserDict` import (ruff auto-removed unused `collections.abc.Mapping`)
 - 148/151 tests pass; 3 failures are pre-existing `ProviderWrapper.model_rebuild()` issue (unrelated)

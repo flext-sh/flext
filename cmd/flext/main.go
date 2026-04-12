@@ -27,11 +27,11 @@ var (
 
 // CommandLineFlags represents command line flags
 type CommandLineFlags struct {
-	settingsPath  string
-	environment string
-	logLevel    string
-	help        bool
-	version     bool
+	settingsPath string
+	environment  string
+	logLevel     string
+	help         bool
+	version      bool
 }
 
 // parseFlags parses command line flags
@@ -51,7 +51,7 @@ func parseFlags() CommandLineFlags {
 // ServiceInitializer handles FLEXT service initialization using Railway-Oriented Programming
 type ServiceInitializer struct {
 	flags     CommandLineFlags
-	settings    *settings.Settings
+	settings  *settings.Settings
 	logger    logging.Logger
 	ctx       context.Context
 	cancel    context.CancelFunc
@@ -151,7 +151,7 @@ func (si *ServiceInitializer) handleHelpAndVersion() ServiceInitializationResult
 	return ServiceInitializationResult{Success: true}
 }
 
-// initializeConfiguration loads and settingsures the service configuration
+// initializeConfiguration loads and configures the service configuration
 func (si *ServiceInitializer) initializeConfiguration() ServiceInitializationResult {
 	cfg, err := settings.LoadSettings(si.flags.settingsPath)
 	if err != nil {
@@ -350,7 +350,7 @@ func registerContainerHandlers(srv *server.Server, container *container.Containe
 	}
 
 	logger.Info("✅ All available FLEXT service handlers registered from DI container")
-	logger.Info("🎯 API endpoints settingsured:",
+	logger.Info("🎯 API endpoints configured:",
 		logging.F("plugins_api", "/api/v1/plugins"),
 		logging.F("unified_meltano", "/api/v1/meltano (via flext-meltano)"),
 		logging.F("unified_singer", "/api/v1/singer (via flext-meltano)"),

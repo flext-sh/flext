@@ -16,7 +16,7 @@ import (
 
 // FlexCoreHandler manages FlexCore service coordination and communication
 type FlexCoreHandler struct {
-	settings     *settings.Config
+	settings   *settings.Config
 	logger     logging.Logger
 	httpClient *http.Client
 }
@@ -25,7 +25,7 @@ type FlexCoreHandler struct {
 func NewFlexCoreHandler(cfg *settings.Config, logger logging.Logger) *FlexCoreHandler {
 	return &FlexCoreHandler{
 		settings: cfg,
-		logger: logger,
+		logger:   logger,
 		httpClient: &http.Client{
 			Timeout: cfg.FlexCore.Timeout,
 		},

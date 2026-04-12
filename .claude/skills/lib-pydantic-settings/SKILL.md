@@ -15,7 +15,7 @@
 ---
 
 name: lib-pydantic-settings
-description: Pydantic SettingsConfigDict and singleton settings patterns across FLEXT subprojects. Trigger when editing settings.py models, env bindings, or configuration validation behavior.
+description: Pydantic ConfigDict and singleton settings patterns across FLEXT subprojects. Trigger when editing settings.py models, env bindings, or configuration validation behavior.
 
 ---
 
@@ -55,7 +55,7 @@ description: Pydantic SettingsConfigDict and singleton settings patterns across 
 ## Rules
 
 - ALL settings classes MUST inherit `FlextSettings` — never `BaseSettings`, `m.Value`, or `BaseModel`.
-- Always define `model_config = SettingsConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
+- Always define `model_config = ConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
 - ALL field defaults MUST come from `c.*` constants — no hardcoded values.
 - Use `@FlextSettings.auto_register("<namespace>")` for namespace registration.
 - Use `@model_validator(mode="after")` for cross-field consistency checks.
@@ -67,7 +67,7 @@ description: Pydantic SettingsConfigDict and singleton settings patterns across 
 - `m.Value` or `BaseSettings` as settings base class — use `FlextSettings`
 - Custom `_global_instance` or `get_or_create_global()` singleton — use inherited `get_global()`
 - Hardcoded defaults (`"utf-8"`, `30`, `True`) — use `c.*` constants
-- Legacy `class Config:` — use `SettingsConfigDict`
+- Legacy `class Config:` — use `ConfigDict`
 - `model_rebuild()`, `cast()`, inline imports
 
 ## Instructions
@@ -76,7 +76,7 @@ Canonical base class:
 
 ```python
 class FlextSettings(BaseSettings):
-    model_config = SettingsConfigDict(
+    model_config = ConfigDict(
         env_prefix=c.ENV_PREFIX,
         env_nested_delimiter=c.ENV_NESTED_DELIMITER,
         env_file=u.resolve_env_file(),
@@ -114,12 +114,12 @@ Subproject settings:
 
 ```python
 from flext_core import FlextSettings
-from pydantic_settings import SettingsConfigDict
+from pydantic_settings import ConfigDict
 
 
 @FlextSettings.auto_register("api")
 class FlextApiSettings(FlextSettings):
-    model_config = SettingsConfigDict(env_prefix="FLEXT_API_", extra="ignore")
+    model_config = ConfigDict(env_prefix="FLEXT_API_", extra="ignore")
     base_url: str = c.Api.DEFAULT_BASE_URL
     timeout: t.PositiveTimeout = c.Api.DEFAULT_TIMEOUT
 ```
@@ -130,7 +130,7 @@ Integration projects use dual-inheritance for settings, same as models:
 
 ```python
 class FlextTargetOracleSettings(FlextMeltanoSettings, FlextDbOracleSettings):
-    model_config = SettingsConfigDict(env_prefix="FLEXT_TARGET_ORACLE_", extra="ignore")
+    model_config = ConfigDict(env_prefix="FLEXT_TARGET_ORACLE_", extra="ignore")
 
     # Fields from FlextMeltanoSettings: project_root, config_dir, etc.
     # Fields from FlextDbOracleSettings: host, port, service_name, etc.
@@ -159,7 +159,7 @@ This means `FLEXT_MELTANO_PROJECT_ROOT` works even from `FlextTargetOracleSettin
 ## Workflow
 
 1. Inherit `FlextSettings` — never `BaseSettings` or `m.Value`.
-2. Define `model_config = SettingsConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
+2. Define `model_config = ConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
 3. Use `c.*` constants for all field defaults.
 4. Add `@FlextSettings.auto_register("<namespace>")` if namespace access needed.
 5. Add `@model_validator(mode="after")` for cross-field validation.
@@ -172,7 +172,7 @@ Good — FlextSettings inheritance with auto-register:
 ```python
 @FlextSettings.auto_register("auth")
 class FlextAuthSettings(FlextSettings):
-    model_config = SettingsConfigDict(env_prefix="FLEXT_AUTH_", extra="ignore")
+    model_config = ConfigDict(env_prefix="FLEXT_AUTH_", extra="ignore")
     secret_key: str = Field(min_length=c.Auth.SECRET_MIN_LENGTH)
     algorithm: str = c.Auth.DEFAULT_JWT_ALGORITHM
 ```
@@ -196,7 +196,7 @@ def from_env(cls, prefix):
         value = os.environ.get(key)
 ```
 
-Why bad: duplicates Pydantic SettingsConfigDict env resolution. Use `cls()` or `EnvSettingsSource`.
+Why bad: duplicates Pydantic ConfigDict env resolution. Use `cls()` or `EnvSettingsSource`.
 
 ## Verification
 
