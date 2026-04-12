@@ -1,0 +1,126 @@
+docker/images/support/quality/simple/flext_core/exceptions.py
+  3f20071a1278ccd7 42
+tests/utilities.py
+  3f20071a1278ccd7 52
+tests/infra/result.py
+  3f20071a1278ccd7 5
+docs/superpowers/plans/2026-04-06-pipeline-dag-audit.md
+  3f20071a1278ccd7 130,196,257,433,920
+src/flext/__init__.py
+  3f20071a1278ccd7 82
+examples/__init__.py
+  3f20071a1278ccd7 84
+docker/images/support/quality/fixed/flext_core/__init__.py
+  3f20071a1278ccd7 163
+libs/__init__.py
+  3f20071a1278ccd7 56
+tests/infra/__init__.py
+  3f20071a1278ccd7 58
+.claude/skills/flext-refactoring-workflow/SKILL.md
+  3f20071a1278ccd7 292
+.claude/skills/lib-structlog/rules.yml
+  3f20071a1278ccd7 53
+.planning/phases/10-unified-docs-generation-baseline/10-01-PLAN.md
+  3f20071a1278ccd7 170,257
+docs/architecture/flext-cqrs-architecture.md
+  3f20071a1278ccd7 1779
+tests/unit/libs/__init__.py
+  3f20071a1278ccd7 44
+docker/images/support/quality/simple/flext_core/__init__.py
+  3f20071a1278ccd7 163
+docs/planning/phases7_9_completion.md
+  3f20071a1278ccd7 126
+tests/tm.py
+  3f20071a1278ccd7 46
+tests/__init__.py
+  3f20071a1278ccd7 65
+tests/infra/utilities.py
+  3f20071a1278ccd7 52
+docs/utilities-guide.md
+  3f20071a1278ccd7 345
+.planning/phases/10-unified-docs-generation-baseline/10-VERIFICATION.md
+  3f20071a1278ccd7 73
+.claude/skills/flext-import-rules/SKILL.md
+  3f20071a1278ccd7 455
+AGENTS.md
+  3f20071a1278ccd7 94
+tests/infra/constants.py
+  3f20071a1278ccd7 31
+docker/images/support/quality/fixed/flext_core/exceptions.py
+  3f20071a1278ccd7 41
+tests/tf.py
+  3f20071a1278ccd7 35
+.claude/skills/flext-patterns/SKILL.md
+  3f20071a1278ccd7 134
+docs/architecture/flext-service-architecture.md
+  3f20071a1278ccd7 5659,6743
+examples/_models.py
+  3f20071a1278ccd7 36
+tests/infra/protocols.py
+  3f20071a1278ccd7 52
+tests/infra/models.py
+  3f20071a1278ccd7 31
+docs/superpowers/specs/2026-04-01-facade-mirror-deduplication-design.md
+  3f20071a1278ccd7 55
+tests/infra/typings.py
+  3f20071a1278ccd7 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "4c5aff724669eeacc584464434ca3fa8097941c2",
+  "prompts": {
+    "3f20071a1278ccd7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7e27-9bfa-7561-8c64-01cec23a81ee",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 4478,
+      "total_deletions": 3337,
+      "accepted_lines": 91775,
+      "overriden_lines": 0
+    },
+    "a6d275f7fcd9c0ae": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7ce6-2981-76f0-9d8c-febff62e4c66",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 249613,
+      "overriden_lines": 0
+    },
+    "b5fd1e627f70262c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7f1a-c347-7971-a1a2-9c39867986ae",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 2147,
+      "total_deletions": 603,
+      "accepted_lines": 2640,
+      "overriden_lines": 0
+    },
+    "cd76b5e618e49632": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8290-9188-7543-8c42-3d7e728d2b75",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 155,
+      "total_deletions": 55,
+      "accepted_lines": 143,
+      "overriden_lines": 0
+    }
+  }
+}
