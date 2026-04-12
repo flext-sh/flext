@@ -424,13 +424,13 @@ Property: **`self.context`** - Lazy?: ✅ - Implementação: `FlextContext()` us
 ```python
 # VALIDADO (mixins.py:607-610): ✅ LAZY - Singleton initialization
 @property
-def container(self) -> FlextContainer:
+def container(self) -> p.Container:
     return FlextContainer()  # Singleton (get_global implícito)
 
 
 # VALIDADO (mixins.py:621-629): ✅ LAZY com CACHE - DI + thread-safe
 @property
-def logger(self) -> FlextLogger:
+def logger(self) -> p.Logger:
     return self._get_or_create_logger()  # Cache ClassVar + DI lookup
 
 
@@ -1368,7 +1368,7 @@ class FlextContainer:
 
     # Singleton pattern
     @classmethod
-    def get_global(cls) -> FlextContainer:
+    def get_global(cls) -> p.Container:
         """Get global singleton instance."""
         ...
 
@@ -1467,12 +1467,12 @@ class x:
     """Transparent infrastructure access via properties."""
 
     @property
-    def container(self) -> FlextContainer:
+    def container(self) -> p.Container:
         """Access DI container singleton."""
         return FlextContainer.get_global()
 
     @property
-    def logger(self) -> FlextLogger:
+    def logger(self) -> p.Logger:
         """Access logger with context."""
         return u.fetch_logger(__name__)
 
@@ -4452,12 +4452,12 @@ class x:
     """Infrastructure access via properties."""
 
     @property
-    def container(self) -> FlextContainer:
+    def container(self) -> p.Container:
         """Access DI container singleton."""
         return FlextContainer.get_global()
 
     @property
-    def logger(self) -> FlextLogger:
+    def logger(self) -> p.Logger:
         """Access logger with context."""
         if not hasattr(self, "_logger"):
             self._logger = u.fetch_logger(self.__class__.__name__)
@@ -8190,11 +8190,11 @@ class x:
     """Reusable behavior mixins for service infrastructure."""
 
     @property
-    def container(self) -> FlextContainer:
+    def container(self) -> p.Container:
         return FlextContainer.get_global()
 
     @property
-    def logger(self) -> FlextLogger:
+    def logger(self) -> p.Logger:
         """DI-backed logger with caching."""
         return self._get_or_create_logger()
 

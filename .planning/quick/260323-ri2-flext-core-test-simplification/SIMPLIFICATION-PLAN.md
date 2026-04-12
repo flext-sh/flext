@@ -183,7 +183,7 @@ When merging files, apply these rules to the resulting test:
    assert c.UNKNOWN_ERROR
    assert isinstance(m.Categories(), m.Categories)
    assert r[int].ok(1).is_success
-   assert isinstance(t.SettingsMap({"k": 1}), t.SettingsMap)
+   assert isinstance(t.ConfigMap({"k": 1}), t.ConfigMap)
    assert u.to_str(1) == "1"
    ```
 

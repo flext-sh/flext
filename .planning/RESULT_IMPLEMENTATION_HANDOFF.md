@@ -59,7 +59,7 @@ Completed implementation of comprehensive Result type system with strict typing 
 2. **FlextError (Pydantic BaseModel)**
    - Properties: domain, code, message, details, source
    - `from_exception()` - Create from caught exception
-   - `to_dict()` - Convert to SettingsMap for Result.error_data
+   - `to_dict()` - Convert to ConfigMap for Result.error_data
    - Proper string representation with code and message
 
 3. **ResultErrorData (Pydantic BaseModel)**
