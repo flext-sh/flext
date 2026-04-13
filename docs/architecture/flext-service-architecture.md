@@ -294,7 +294,7 @@ class MyService(s[Result]):
         self._logger = u.fetch_logger(__name__)  # ❌ Desnecessário!
         self._context = FlextContext()  # ❌ Desnecessário!
 
-    def execute(self) -> r[Result]:
+    def execute(self) -> p.Result[Result]:
         settings = FlextSettings.get_global_instance()  # ❌ Desnecessário!
         logger = u.fetch_logger(__name__)  # ❌ Desnecessário!
 ```
@@ -314,7 +314,7 @@ class MyService(s[Result]):
     user_id: str
     action: str
 
-    def execute(self) -> r[Result]:
+    def execute(self) -> p.Result[Result]:
         """
         Infraestrutura AUTOMATICAMENTE disponível via properties:
 
@@ -384,7 +384,7 @@ class MyService(s[Result]):
     user_id: str
     action: str
 
-    def execute(self) -> r[Result]:
+    def execute(self) -> p.Result[Result]:
         # Mesma lógica, mas infraestrutura também automática!
         if self.settings.debug:
             self.logger.debug(f"Processing {self.action}")
@@ -614,7 +614,7 @@ Tipo de Exemplo: **r/Railway** - Tag: `Conceitual` - Quando Usar: Padrões funda
 class UserService(s[User]):
     user_id: str
 
-    def execute(self) -> r[User]:  # ← Declarar r[User]
+    def execute(self) -> p.Result[User]:  # ← Declarar r[User]
         return r.ok(User(id=self.user_id))
 
 
@@ -685,7 +685,7 @@ class s[TDomainResult](
         return instance
 
     @abstractmethod
-    def execute(self) -> r[TDomainResult]:
+    def execute(self) -> p.Result[TDomainResult]:
         """Execute domain service logic - abstract method to be implemented by subclasses."""
 ```
 
@@ -703,7 +703,7 @@ class s[TDomainResult](
 class UserService(s[User]):
     user_id: str
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         user = self.container.get("UserRepo").unwrap().find(self.user_id)
         return r.ok(user)
 
@@ -838,7 +838,7 @@ user_value = result.value if result.is_success else None
 class UserService(s[User]):
     user_id: str
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         # Lógica aqui
         return r.ok(user)
 
@@ -967,7 +967,7 @@ def __new__(cls, **data) -> Self:
 
 #
 
-#     def execute(self) -> r[User]:
+#     def execute(self) -> p.Result[User]:
 
 #         return r.ok(User(id=self.user_id, name="Alice"))
 
@@ -1373,20 +1373,22 @@ class FlextContainer:
         ...
 
     # Service registration
-    def register[T](self, name: str, service: T) -> r[bool]:
+    def register[T](self, name: str, service: T) -> p.Result[bool]:
         """Register service instance."""
         ...
 
-    def register_factory[T](self, name: str, factory: Callable[[], T]) -> r[bool]:
+    def register_factory[T](
+        self, name: str, factory: Callable[[], T]
+    ) -> p.Result[bool]:
         """Register factory for lazy instantiation."""
         ...
 
     # Service resolution
-    def get(self, name: str) -> r[t.RecursiveContainer]:
+    def get(self, name: str) -> p.Result[t.RecursiveContainer]:
         """Resolve service (untyped)."""
         ...
 
-    def get_typed[T](self, name: str, type_cls: type[T]) -> r[T]:
+    def get_typed[T](self, name: str, type_cls: type[T]) -> p.Result[T]:
         """Resolve service (type-safe)."""
         ...
 ```
@@ -1412,8 +1414,8 @@ class p:
 
         def execute(self): ...
         def is_valid(self) -> bool: ...
-        def validate_business_rules(self) -> r[bool]: ...
-        def validate_config(self) -> r[bool]: ...
+        def validate_business_rules(self) -> p.Result[bool]: ...
+        def validate_config(self) -> p.Result[bool]: ...
         def get_service_info(self) -> t.RecursiveContainerMapping: ...
 
     @runtime_checkable
@@ -1429,15 +1431,17 @@ class p:
     class Configurable(Protocol):
         """Configuration protocol."""
 
-        def configure(self, settings: t.RecursiveContainerMapping) -> r[bool]: ...
+        def configure(
+            self, settings: t.RecursiveContainerMapping
+        ) -> p.Result[bool]: ...
         def get_config(self) -> t.RecursiveContainerMapping: ...
 
     @runtime_checkable
     class ExecutableService(Protocol):
         """Enhanced execution protocol."""
 
-        def execute_operation(self) -> r[t.RecursiveContainer]: ...
-        def execute_with_validation(self) -> r[t.RecursiveContainer]: ...
+        def execute_operation(self) -> p.Result[t.RecursiveContainer]: ...
+        def execute_with_validation(self) -> p.Result[t.RecursiveContainer]: ...
 ```
 
 **Pontos de Integração:**
@@ -1494,7 +1498,7 @@ class x:
 
 # ✅ Você apenas usa as properties automaticamente!
 class MyService(s[Result]):
-    def execute(self) -> r[Result]:
+    def execute(self) -> p.Result[Result]:
         # Tudo disponível automaticamente:
         self.settings  # ✅ FlextSettings singleton
         self.logger  # ✅ Logger com cache
@@ -1552,7 +1556,7 @@ flext-core/src/flext_core/
 # Atual (problemático)
 class s[T](ABC):
     @abstractmethod
-    def execute(self) -> r[T]:
+    def execute(self) -> p.Result[T]:
         """Execute without parameters - how to pass data?"""
         ...
 ```
@@ -1641,7 +1645,7 @@ result = service.execute()  # Direto, simples, funciona
 ```python
 # Separate handler from service logic
 class CreateUserHandler(h[CreateUserCommand, User]):
-    def handle(self, command: CreateUserCommand) -> r[User]:
+    def handle(self, command: CreateUserCommand) -> p.Result[User]:
         # Now call the actual service...
         service = UserService(command=command)
         return service.result
@@ -1657,7 +1661,7 @@ class UserService(s[User]):
     name: str
     email: str
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         # Apenas faça o trabalho!
         return r.ok(User(name=self.name, email=self.email))
 ```
@@ -1687,7 +1691,7 @@ class CreateUserCommand(FlextModels.Command):
 
 
 class CreateUserHandler(h[CreateUserCommand, User]):
-    def handle(self, command: CreateUserCommand) -> r[User]:
+    def handle(self, command: CreateUserCommand) -> p.Result[User]:
         # Dispatch to service...
         pass
 
@@ -1707,7 +1711,7 @@ class CreateUser(s[User]):
     name: str
     email: str
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         user = User(name=self.name, email=self.email)
         self._save(user)
         return r.ok(user)
@@ -1838,7 +1842,7 @@ def _get_dependency(self, name: str) -> m.Service.DependencyModel:
     # ════════════════════════════════════════════════════════════
     # CONFIG: Singleton access (from x)
     # ════════════════════════════════════════════════════════════
-    def execute(self) -> r[ResultType]:
+    def execute(self) -> p.Result[ResultType]:
         """Execute with all integrations."""
         # Config singleton - NO constructor parameter!
         timeout = self.project_config.timeout_seconds
@@ -1930,10 +1934,10 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 
 # Define service
 class UserService(s[User]):
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         return r[User].ok(User(name="John"))
 
-    def validate_business_rules(self) -> r[bool]:
+    def validate_business_rules(self) -> p.Result[bool]:
         return r[bool].| ok(value=True)
 
     def is_valid(self) -> bool:
@@ -1981,7 +1985,7 @@ class DataPipelineService(s[DataFrame]):
     source_file: Path
     transformations: t.StrSequence = Field(default_factory=list)
 
-    def execute(self) -> r[DataFrame]:
+    def execute(self) -> p.Result[DataFrame]:
         """Execute pipeline with railway pattern."""
         return (
             self
@@ -1991,7 +1995,7 @@ class DataPipelineService(s[DataFrame]):
             .and_then(self._validate_results)
         )
 
-    def _load_data(self) -> r[DataFrame]:
+    def _load_data(self) -> p.Result[DataFrame]:
         """Load data from source."""
         try:
             df = pd.read_csv(self.source_file)
@@ -1999,7 +2003,7 @@ class DataPipelineService(s[DataFrame]):
         except Exception as e:
             return r.fail(f"Load failed: {e}")
 
-    def _validate_schema(self, df: DataFrame) -> r[DataFrame]:
+    def _validate_schema(self, df: DataFrame) -> p.Result[DataFrame]:
         """Validate schema."""
         required_cols = ["id", "name", "value"]
         missing = set(required_cols) - set(df.columns)
@@ -2009,7 +2013,7 @@ class DataPipelineService(s[DataFrame]):
 
         return r.ok(df)
 
-    def _apply_transformations(self, df: DataFrame) -> r[DataFrame]:
+    def _apply_transformations(self, df: DataFrame) -> p.Result[DataFrame]:
         """Apply transformations."""
         try:
             for transform in self.transformations:
@@ -2018,7 +2022,7 @@ class DataPipelineService(s[DataFrame]):
         except Exception as e:
             return r.fail(f"Transform failed: {e}")
 
-    def _validate_results(self, df: DataFrame) -> r[DataFrame]:
+    def _validate_results(self, df: DataFrame) -> p.Result[DataFrame]:
         """Validate results."""
         if df.empty:
             return r.fail("Result is empty")
@@ -2059,7 +2063,7 @@ class CreateUser(s[User]):
     email: str
     role: str = "user"
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         """Execute with repository from DI."""
         # Create user t.RecursiveContainer
         user = User(name=self.name, email=self.email, role=self.role)
@@ -2122,7 +2126,7 @@ class CreateUser(s[User]):
     name: str  # ← Direct field, not wrapped in Command
     email: str
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         # Just do it!
         return r.ok(User(name=self.name, email=self.email))
 ```
@@ -2141,7 +2145,7 @@ class FlextApi(s[m.Api.ResponseModel]):
     body: m.Api.RequestBodyModel | None = None
     timeout: int = 30
 
-    def execute(self) -> r[m.Api.ResponseModel]:
+    def execute(self) -> p.Result[m.Api.ResponseModel]:
         """Dispatch based on operation."""
         match self.operation:
             case "get":
@@ -2157,7 +2161,7 @@ class FlextApi(s[m.Api.ResponseModel]):
             case _:
                 return r.fail(f"Unknown operation: {self.operation}")
 
-    def _http_get(self) -> r[m.Api.ResponseModel]:
+    def _http_get(self) -> p.Result[m.Api.ResponseModel]:
         """GET implementation."""
         try:
             response = httpx.get(self.url, headers=self.headers, timeout=self.timeout)
@@ -2251,7 +2255,7 @@ class s[T]:
     _executed: bool = False
 
     @property
-    def result(self) -> r[T]:
+    def result(self) -> p.Result[T]:
         """Get result (executes if not executed yet)."""
         if not self._executed:
             self._result = self.execute()
@@ -2601,7 +2605,7 @@ from .validator import ValidateHandler
 
 def register_all_handlers(
     registry: FlextRegistry,
-) -> r[FlextRegistry.Summary]:
+) -> p.Result[FlextRegistry.Summary]:
     handlers = [ParseHandler(), WriteHandler(), ValidateHandler()]
     return registry.register_handlers(handlers)
 
@@ -2788,7 +2792,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
        param1: str
        param2: int
 
-       def execute(self) -> r[ReturnType]:
+       def execute(self) -> p.Result[ReturnType]:
            # Your logic here
            return r.ok(result)
    ```
@@ -2816,7 +2820,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 4. **FlextSettings singleton** - Via `self.project_config`
 
    ```python
-   def execute(self) -> r[T]:
+   def execute(self) -> p.Result[T]:
        timeout = self.project_config.timeout_seconds
        # NO settings parameter in __init__!
    ```
@@ -2824,7 +2828,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 5. **x properties** - For infrastructure
 
    ```python
-   def execute(self) -> r[T]:
+   def execute(self) -> p.Result[T]:
        self.logger.info("Starting")  # ← From mixin
        self.context.set_correlation_id(...)  # ← From mixin
        repo = self.container.get("repo")  # ← From mixin
@@ -2907,7 +2911,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 │      source: str | Path                                         │
 │      encoding: str = "utf-8"                                    │
 │                                                                  │
-│      def execute(self) -> r[Sequence[Entry]]:             │
+│      def execute(self) -> p.Result[Sequence[Entry]]:             │
 │          # Business logic with:                                 │
 │          # - self.logger (from x)                     │
 │          # - self.project_config (auto-resolved)                │
@@ -2971,7 +2975,7 @@ Caso de Uso: Workflows complexos - Solução: FlextDispatcher + handlers - Motiv
 class ParseLdif(s[Sequence[Entry]]):
     source: str | Path
 
-    def execute(self) -> r[Sequence[Entry]]:
+    def execute(self) -> p.Result[Sequence[Entry]]:
         return self._parse()
 
 
@@ -2986,7 +2990,7 @@ class HttpClient(s[dict]):
     operation: Literal["get", "post"]
     url: str
 
-    def execute(self) -> r[dict]:
+    def execute(self) -> p.Result[dict]:
         match self.operation:
             case "get":
                 return self._get()
@@ -3005,7 +3009,7 @@ class CreateUser(s[User]):
     name: str
     email: str
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         user = User(name=self.name, email=self.email)
 
         # Optional repository from DI
@@ -3048,15 +3052,15 @@ class FlextContainer:
     _global_lock: threading.RLock = threading.RLock()
 
     # Core operations
-    def register(self, name: str, service) -> r[bool]
-    def register_factory(self, name: str, factory: Callable[[], T]) -> r[bool]
-    def get(self, name: str) -> r[t.RecursiveContainer]
-    def get_typed(self, name: str, expected_type: type[T]) -> r[T]
+    def register(self, name: str, service) -> p.Result[bool]
+    def register_factory(self, name: str, factory: Callable[[], T]) -> p.Result[bool]
+    def get(self, name: str) -> p.Result[t.RecursiveContainer]
+    def get_typed(self, name: str, expected_type: type[T]) -> p.Result[T]
 
     # Advanced features
-    def auto_wire(self, service_class: type[T]) -> r[t.RecursiveContainer]
-    def create_service(self, service_class: type[T], service_name: str | None) -> r[t.RecursiveContainer]
-    def batch_register(self, services: t.RecursiveContainerMapping) -> r[bool]
+    def auto_wire(self, service_class: type[T]) -> p.Result[t.RecursiveContainer]
+    def create_service(self, service_class: type[T], service_name: str | None) -> p.Result[t.RecursiveContainer]
+    def batch_register(self, services: t.RecursiveContainerMapping) -> p.Result[bool]
 
     # Integration com dependency-injector
     _di_container: DynamicContainer  # Internal DI wrapper
@@ -3436,7 +3440,7 @@ settings = FlextLdifSettings()  # ← Carrega .env, valida, singleton
 
 # ✅ AUTOMÁTICO: Access via property (s)
 class MyService(s[T]):
-    def execute(self) -> r[T]:
+    def execute(self) -> p.Result[T]:
         # ✅ Zero ceremony - property já existe
         encoding = self.project_config.ldif_encoding
         debug = self.project_config.debug
@@ -3606,7 +3610,7 @@ class MyService(s[Sequence[Entry]]):
 
     source: str  # Pydantic field (input)
 
-    def execute(self) -> r[Sequence[Entry]]:
+    def execute(self) -> p.Result[Sequence[Entry]]:
         # ✅ Zero ceremony - property access
         encoding = self.project_config.ldif_encoding
         debug = self.project_config.is_debug_enabled
@@ -3697,7 +3701,7 @@ settings = FlextSettings(debug=True, log_level="DEBUG", log_format="json")
 
 # ✅ Auto: Logger reads settings automatically
 class MyService(s[T]):
-    def execute(self) -> r[T]:
+    def execute(self) -> p.Result[T]:
         # ✅ Auto: logger uses settings.log_config
         self.logger.info("Processing", extra={"count": 10})
         # ← Automatically uses DEBUG level from settings
@@ -3720,7 +3724,7 @@ class MyService(s[T]):
 
 # ✅ CORRETO: Property automática
 class MyService(s[T]):
-    def execute(self) -> r[T]:
+    def execute(self) -> p.Result[T]:
         # ✅ Auto: self.project_config já existe
         encoding = self.project_config.ldif_encoding
 ```
@@ -3796,7 +3800,7 @@ class MyProjectConfig(FlextSettings):
 class MyService(s[T]):
     """Zero ceremony - property já existe."""
 
-    def execute(self) -> r[T]:
+    def execute(self) -> p.Result[T]:
         # ✅ Auto: self.project_config (x property)
         url = self.project_config.api_endpoint
         workers = self.project_config.max_workers
@@ -4308,21 +4312,23 @@ class p:
     class Service(Protocol):
         """Service protocol."""
 
-        def execute(self) -> r[t.RecursiveContainer]: ...
+        def execute(self) -> p.Result[t.RecursiveContainer]: ...
 
     @runtime_checkable
     class Repository(Protocol):
         """Repository protocol."""
 
-        def get(self, id: str) -> r[t.RecursiveContainer]: ...
-        def save(self, entity) -> r[bool]: ...
-        def delete(self, id: str) -> r[bool]: ...
+        def get(self, id: str) -> p.Result[t.RecursiveContainer]: ...
+        def save(self, entity) -> p.Result[bool]: ...
+        def delete(self, id: str) -> p.Result[bool]: ...
 
     @runtime_checkable
     class Configurable(Protocol):
         """Configurable protocol."""
 
-        def configure(self, settings: t.RecursiveContainerMapping) -> r[bool]: ...
+        def configure(
+            self, settings: t.RecursiveContainerMapping
+        ) -> p.Result[bool]: ...
         def get_config(self) -> t.RecursiveContainerMapping: ...
 ```
 
@@ -4361,7 +4367,7 @@ class FlextLdifProtocols:
     class QuirksPort(Protocol):
         """Quirks port protocol."""
 
-        def normalize_entry(self, entry: dict) -> r[dict]: ...
+        def normalize_entry(self, entry: dict) -> p.Result[dict]: ...
 
     class Entry:
         class EntryWithDn(Protocol):
@@ -4520,7 +4526,7 @@ class ldif(Flext[t.RecursiveContainerMapping]):
    ```python
    # ✅ Funciona perfeitamente
    class MyService(s[T]):
-       def execute(self) -> r[T]:
+       def execute(self) -> p.Result[T]:
            self.logger.info("Starting execution")
            # Auto-nomeado com class name
    ```
@@ -4530,7 +4536,7 @@ class ldif(Flext[t.RecursiveContainerMapping]):
    ```python
    # ✅ Funciona perfeitamente
    class MyService(s[T]):
-       def execute(self) -> r[T]:
+       def execute(self) -> p.Result[T]:
            repo = self.container.get_typed("repo", MyRepo).unwrap()
    ```
 
@@ -4539,7 +4545,7 @@ class ldif(Flext[t.RecursiveContainerMapping]):
    ```python
    # ✅ Funciona perfeitamente (mas use project_config)
    class MyService(s[T]):
-       def execute(self) -> r[T]:
+       def execute(self) -> p.Result[T]:
            debug = self.project_config.debug  # Melhor que self.settings
    ```
 
@@ -4550,7 +4556,7 @@ class ldif(Flext[t.RecursiveContainerMapping]):
    ```python
    # ❌ RARAMENTE USADO:
    class MyService(s[T]):
-       def execute(self) -> r[T]:
+       def execute(self) -> p.Result[T]:
            ctx = self.context  # FlextContext - pouco usado
            correlation_id = ctx.correlation_id
    ```
@@ -4584,7 +4590,7 @@ settings = FlextSettings(debug=True, log_level="DEBUG", log_format="json")
 
 # 2️⃣ Logger auto-configura baseado em settings
 class MyService(s[T]):
-    def execute(self) -> r[T]:
+    def execute(self) -> p.Result[T]:
         # ✅ Auto: self.logger configured from self.project_config
         self.logger.info("Processing", extra={"count": 10})
         # ↑ Automatically uses:
@@ -4662,7 +4668,7 @@ class MyService(s[Sequence[Entry]]):
 
     source: str
 
-    def execute(self) -> r[Sequence[Entry]]:
+    def execute(self) -> p.Result[Sequence[Entry]]:
         # ✅ Auto: self.logger exists (x property)
         # ✅ Auto: Level from settings.effective_log_level
         # ✅ Auto: Name = "MyService"
@@ -4707,7 +4713,7 @@ settings = FlextSettings()
 
 # ✅ Auto: Logger configured from settings
 class MyService(s[T]):
-    def execute(self) -> r[T]:
+    def execute(self) -> p.Result[T]:
         # ✅ Auto: Uses DEBUG level (from env)
         self.logger.debug("This will show!")
 
@@ -4722,7 +4728,7 @@ class MyService(s[T]):
 
 ```python
 class MyService(s[T]):
-    def execute(self) -> r[T]:
+    def execute(self) -> p.Result[T]:
         # ✅ Auto: self.logger available
         self.logger.info("Ready")
 ```
@@ -4757,7 +4763,7 @@ class MyService(s[T]):
 # ✅ CORRETO: Property automática
 class MyService(s[T]):
     # ✅ Auto: self.logger já existe
-    def execute(self) -> r[T]:
+    def execute(self) -> p.Result[T]:
         self.logger.info("Works!")
 ```
 
@@ -4857,7 +4863,7 @@ class s[TResult](
     """Service base atual."""
 
     @abstractmethod
-    def execute(self) -> r[TResult]:
+    def execute(self) -> p.Result[TResult]:
         """Subclasses implementam isso."""
         ...
 
@@ -4922,7 +4928,7 @@ class s[TResult](
     # ABSTRACT METHOD (como antes)
     # ═══════════════════════════════════════════════════════════════
     @abstractmethod
-    def execute(self) -> r[TResult]:
+    def execute(self) -> p.Result[TResult]:
         """Subclasses implementam - sem mudanças aqui!"""
         ...
 
@@ -4931,7 +4937,7 @@ class s[TResult](
     # ═══════════════════════════════════════════════════════════════
     @computed_field
     @property
-    def result(self) -> r[TResult]:
+    def result(self) -> p.Result[TResult]:
         """Lazy execution - executa automaticamente.
 
         Executa execute() na primeira vez que é acessado,
@@ -4985,7 +4991,9 @@ class s[TResult](
     # ═══════════════════════════════════════════════════════════════
     # ADDITION 2: Smart Resolution em Métodos Monádicos
     # ═══════════════════════════════════════════════════════════════
-    def and_then[U](self, func: callable[[TResult], Union[r[U], "s[U]"]]) -> r[U]:
+    def and_then[U](
+        self, func: callable[[TResult], Union[r[U], "s[U]"]]
+    ) -> p.Result[U]:
         """Chain operations com SMART RESOLUTION.
 
         Aceita func que retorna:
@@ -5014,7 +5022,7 @@ class s[TResult](
     def or_else(
         self,
         func: callable[[str], Union[r[TResult], "s[TResult]"]],
-    ) -> r[TResult]:
+    ) -> p.Result[TResult]:
         """Fallback com smart resolution.
 
         Example:
@@ -5034,7 +5042,7 @@ class s[TResult](
 
         return fallback
 
-    def map[U](self, func: callable[[TResult], U]) -> r[U]:
+    def map[U](self, func: callable[[TResult], U]) -> p.Result[U]:
         """Transform result value (sem mudanças)."""
         return self.result.map(func)
 
@@ -5131,13 +5139,13 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
     _executed: bool = False
 
     @abstractmethod
-    def execute(self) -> r[TResult]:
+    def execute(self) -> p.Result[TResult]:
         """Execute operation - implement in subclass."""
         ...
 
     # Auto-execution properties
     @property
-    def result(self) -> r[TResult]:
+    def result(self) -> p.Result[TResult]:
         """Get result (executes if needed)."""
         if not self._executed:
             self._result = self.execute()
@@ -5174,7 +5182,7 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 
 
 class MyService(s[T]):
-    def execute(self) -> r[T]:
+    def execute(self) -> p.Result[T]:
         # Access settings singleton automatically
         timeout = self.project_config.timeout
         encoding = self.project_config.encoding
@@ -5195,7 +5203,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
 
     # No 'operation' field needed!
 
-    def execute(self) -> r[WriteResponse]:
+    def execute(self) -> p.Result[WriteResponse]:
         """Execute write - direct implementation."""
         # Config via property
         encoding = self.project_config.ldif_encoding
@@ -5220,7 +5228,7 @@ class FlextApi(s[m.Api.ResponseModel]):
     # Operation-specific parameters
     body: m.Api.RequestBodyModel | None = None
 
-    def execute(self) -> r[m.Api.ResponseModel]:
+    def execute(self) -> p.Result[m.Api.ResponseModel]:
         """Execute based on operation."""
         # Config via property
         timeout = self.project_config.api_timeout
@@ -5277,12 +5285,12 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
     _executed: bool = False
 
     @abstractmethod
-    def execute(self) -> r[TResult]:
+    def execute(self) -> p.Result[TResult]:
         """Execute operation and return Result."""
         ...
 
     @property
-    def result(self) -> r[TResult]:
+    def result(self) -> p.Result[TResult]:
         """Get result (executes if not executed yet)."""
         if not self._executed:
             self._result = self.execute()
@@ -5366,7 +5374,7 @@ def run(cls, **kwargs: m.Service.RunOptionsModel) -> TResult:
         return instance.value
 
     @classmethod
-def try_run(cls, **kwargs: m.Service.RunOptionsModel) -> r[TResult]:
+def try_run(cls, **kwargs: m.Service.RunOptionsModel) -> p.Result[TResult]:
         """Execute and return Result."""
         instance = cls(**kwargs)
         return instance.result
@@ -5379,7 +5387,7 @@ class FlextServiceResult[T]:
         self._result = result
 
     @property
-    def result(self) -> r[T]:
+    def result(self) -> p.Result[T]:
         return self._result
 
     @property
@@ -5425,12 +5433,12 @@ class FlextLdifWriter(Flext[m.Ldif.WriteResultModel]):
         target_server_type: str,
         output_target: str,
         output_path: Path | None = None,
-    ) -> r[WriteResponse]:
+    ) -> p.Result[WriteResponse]:
         # Implementation
         ...
 
 
-def execute(self) -> r[m.Ldif.WriteResultModel]:
+def execute(self) -> p.Result[m.Ldif.WriteResultModel]:
     # Stub
     return r.ok({})
 ```
@@ -5455,7 +5463,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
             raise ValueError("output_path required for file target")
         return self
 
-    def execute(self) -> r[WriteResponse]:
+    def execute(self) -> p.Result[WriteResponse]:
         """Execute write operation."""
         # Config singleton via property
         encoding = self.project_config.ldif_encoding
@@ -5484,15 +5492,15 @@ class FlextApi(s[dict]):
         super().__init__()
         self._config = settings
 
-    def get(self, url: str, **kwargs) -> r[dict]:
+    def get(self, url: str, **kwargs) -> p.Result[dict]:
         # Implementation
         ...
 
-def post(self, url: str, data: m.Api.RequestBodyModel, **kwargs) -> r[m.Api.ResponseModel]:
+def post(self, url: str, data: m.Api.RequestBodyModel, **kwargs) -> p.Result[m.Api.ResponseModel]:
         # Implementation
         ...
 
-    def execute(self) -> r[dict]:
+    def execute(self) -> p.Result[dict]:
         # Stub
         return r.ok(self._config.model_dump())
 ```
@@ -5515,7 +5523,7 @@ class FlextApi(s[m.Api.ResponseModel]):
 body: m.Api.RequestBodyModel | None = None
     auth: tuple[str, str] | None = None
 
-def execute(self) -> r[m.Api.ResponseModel]:
+def execute(self) -> p.Result[m.Api.ResponseModel]:
         """Execute HTTP request based on operation."""
         # Config singleton via property
         timeout = self.project_config.api_timeout
@@ -5535,7 +5543,7 @@ def execute(self) -> r[m.Api.ResponseModel]:
                 return r.fail(f"Unknown operation: {self.operation}")
 
     # Convenience methods (optional)
-def get(self, url: str, **kwargs: m.Api.RequestOptionsModel) -> r[m.Api.ResponseModel]:
+def get(self, url: str, **kwargs: m.Api.RequestOptionsModel) -> p.Result[m.Api.ResponseModel]:
         """Convenience: HTTP GET."""
         self.operation = "get"
         self.url = url
@@ -5558,7 +5566,7 @@ from pathlib import Path
 from typing import Annotated
 from pydantic import Field, field_validator
 from flext_core import s
-from flext_core import r
+from flext_core import r, p
 from flext_ldif import Entry
 
 
@@ -5605,7 +5613,7 @@ class FlextLdifParser(Flext[Sequence[Entry]]):
     # ═══════════════════════════════════════════════════════════════
     # EXECUTION (s contract)
     # ═══════════════════════════════════════════════════════════════
-    def execute(self) -> r[Sequence[Entry]]:
+    def execute(self) -> p.Result[Sequence[Entry]]:
         """Execute parsing - called automatically by .value property."""
         try:
             # ✅ Infrastructure automatic from x
@@ -5796,7 +5804,7 @@ else:
 **Handle errors gracefully:**
 
 ```python
-def create_fallback_entries(error: str) -> r[Sequence[Entry]]:
+def create_fallback_entries(error: str) -> p.Result[Sequence[Entry]]:
     """Provide fallback on parse error."""
     logger.warning(f"Parse failed: {error}, using defaults")
     return r.ok([create_default_entry()])
@@ -5922,7 +5930,7 @@ Handlers orquestram, services executam lógica de domínio:
 class CreateUserCommandHandler(h[CreateUserCommand, User]):
     """Handler que orquestra, service que executa."""
 
-    def handle(self, command: CreateUserCommand) -> r[User]:
+    def handle(self, command: CreateUserCommand) -> p.Result[User]:
         # Handler orquestra, service executa lógica de domínio
         validation_service = ValidateEmailService(email=command.email)
         if validation_service.result.is_failure:
@@ -5970,7 +5978,7 @@ class OrderProcessingService(s[Order]):
     order_id: str
     items: Sequence[OrderItem]
 
-    def execute(self) -> r[Order]:
+    def execute(self) -> p.Result[Order]:
         # Delegar para dispatcher para reliability patterns
         dispatcher = FlextDispatcher(container=self.container)
 
@@ -6096,7 +6104,7 @@ Método: `Summary` (nested) - Linhas: 181-315 - Função: Tracking de registros
 class MyService(s[Result]):
     """Service usa x que provê context, logger, etc."""
 
-    def execute(self) -> r[Result]:
+    def execute(self) -> p.Result[Result]:
         # ✅ Via x (IMPLEMENTADO)
         self.logger.info("Executing service")
         with self.track("operation"):
@@ -6111,7 +6119,7 @@ class MyService(s[Result]):
 
     @d.track_performance("my_operation")
     @d.retry(max_attempts=3)
-    def execute(self) -> r[Result]:
+    def execute(self) -> p.Result[Result]:
         return r.ok(self._process())
 ```
 
@@ -6284,12 +6292,12 @@ class FlextLdifWriter(Flext[WriteResponse]):
         target_server_type: str = "rfc4512",
         output_target: Literal["string", "file"] = "string",
         output_path: Path | None = None,
-    ) -> r[WriteResponse]:
+    ) -> p.Result[WriteResponse]:
         # Implementation
         encoding = self._config.ldif_encoding
         return self._do_write(entries, encoding)
 
-    def execute(self) -> r[WriteResponse]:
+    def execute(self) -> p.Result[WriteResponse]:
         # Stub
         return r.ok(WriteResponse())
 
@@ -6336,7 +6344,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
             raise ValueError("output_path required when target is 'file'")
         return self
 
-    def execute(self) -> r[WriteResponse]:
+    def execute(self) -> p.Result[WriteResponse]:
         """Execute write - settings auto-resolved!"""
         # ✅ Config singleton (não precisa passar no __init__)
         encoding = self.project_config.ldif_encoding
@@ -6437,7 +6445,7 @@ class FlextLdifParser(Flext[Sequence[Entry]]):
     encoding: str = "utf-8"
     strict_mode: bool = True
 
-    def execute(self) -> r[Sequence[Entry]]:
+    def execute(self) -> p.Result[Sequence[Entry]]:
         # Implementation
         ...
 
@@ -6608,7 +6616,7 @@ print(f"Processed {response.statistics.entries_written} users")
 from typing import Annotated, Literal
 from pydantic import Field, model_validator
 from flext_core import s
-from flext_core import r
+from flext_core import r, p
 import httpx
 
 
@@ -6674,7 +6682,7 @@ class FlextApi(s[m.Api.ResponseModel]):
     # ═══════════════════════════════════════════════════════════════
 
 
-def execute(self) -> r[m.Api.ResponseModel]:
+def execute(self) -> p.Result[m.Api.ResponseModel]:
     """Execute HTTP request based on operation."""
     # Config singleton
     verify_ssl = self.project_config.api_verify_ssl
@@ -6701,7 +6709,7 @@ def execute(self) -> r[m.Api.ResponseModel]:
 # ═══════════════════════════════════════════════════════════════
 # PRIVATE IMPLEMENTATIONS
 # ═══════════════════════════════════════════════════════════════
-def _http_get(self, timeout: int, verify: bool) -> r[m.Api.ResponseModel]:
+def _http_get(self, timeout: int, verify: bool) -> p.Result[m.Api.ResponseModel]:
     """Execute GET request."""
     try:
         self.logger.info(f"GET {self.url}")
@@ -6718,7 +6726,7 @@ def _http_get(self, timeout: int, verify: bool) -> r[m.Api.ResponseModel]:
         return r.fail(f"GET failed: {e}")
 
 
-def _http_post(self, timeout: int, verify: bool) -> r[m.Api.ResponseModel]:
+def _http_post(self, timeout: int, verify: bool) -> p.Result[m.Api.ResponseModel]:
     """Execute POST request."""
     try:
         self.logger.info(f"POST {self.url}")
@@ -6844,12 +6852,12 @@ from pathlib import Path
 def complex_migration(source_file: Path, target_file: Path) -> m.Infra.MigrationResult:
     """Complex LDIF migration with error recovery."""
 
-    def fallback_on_parse(error: str) -> r[Sequence[Entry]]:
+    def fallback_on_parse(error: str) -> p.Result[Sequence[Entry]]:
         """Fallback: try lenient parsing."""
         logger.warning(f"Strict parse failed: {error}, trying lenient mode")
         return FlextLdifParser.try_run(source=source_file, parse_mode="lenient")
 
-    def fallback_on_write(error: str) -> r[WriteResponse]:
+    def fallback_on_write(error: str) -> p.Result[WriteResponse]:
         """Fallback: write to alternative location."""
         logger.error(f"Primary write failed: {error}, using backup location")
         backup_path = target_file.with_suffix(".backup.ldif")
@@ -6945,13 +6953,13 @@ class FlextLdifParser(Flext[m.Ldif.ParseResultModel]):
 
     def parse(
         self, source: str | Path, source_server_type: str = "rfc4512"
-    ) -> r[Sequence[Entry]]:
+    ) -> p.Result[Sequence[Entry]]:
         # Implementation
         encoding = self._config.ldif_encoding
         return self._do_parse(source, encoding)
 
 
-def execute(self) -> r[m.Ldif.ParseResultModel]:
+def execute(self) -> p.Result[m.Ldif.ParseResultModel]:
     return r.ok({})  # stub!
 
 
@@ -7020,7 +7028,7 @@ class FlextLdifParser(Flext[Sequence[Entry]]):
             raise ValueError(f"File not found: {v}")
         return v
 
-    def execute(self) -> r[Sequence[Entry]]:
+    def execute(self) -> p.Result[Sequence[Entry]]:
         """Real implementation here!"""
         # Config singleton (auto-resolved!)
         max_entries = self.project_config.max_ldif_entries
@@ -7433,7 +7441,7 @@ class cli:
 ```python
 
 # Exemplo real de flext-cli
-def save_auth_token(self, token: str) -> r[bool]:
+def save_auth_token(self, token: str) -> p.Result[bool]:
     if not token.strip():
         return r[bool].fail(FlextCliConstants.ErrorMessages.TOKEN_EMPTY)
 
@@ -7483,7 +7491,7 @@ class FlextCliCore(s[FlextCliTypes.Data.CliDataDict]):
         self._commands: Mapping[str, FlextCliModels.CliCommand] = {}
 
     @override
-    def execute(self) -> r[FlextCliTypes.Data.CliDataDict]:
+    def execute(self) -> p.Result[FlextCliTypes.Data.CliDataDict]:
         return r[FlextCliTypes.Data.CliDataDict].ok({
             "status": "operational",
             "commands": len(self._commands),
@@ -7523,10 +7531,10 @@ class cli:
         # ...
 
     # ❌ Convenience methods que duplicam domain libraries
-    def print(self, message: str, style: str | None = None) -> r[bool]:
+    def print(self, message: str, style: str | None = None) -> p.Result[bool]:
         return self.formatters.print(message, style)
 
-    def create_table(self, data = None, ...) -> r[str]:
+    def create_table(self, data = None, ...) -> p.Result[str]:
         return self.output.format_data(...)
 ```
 
@@ -7567,7 +7575,7 @@ FlextCliPrompts  # prompts.py - Interactive prompts
 ```python
 class FlextCliCore(s[CliDataDict]):
     @override
-    def execute(self) -> r[CliDataDict]:
+    def execute(self) -> p.Result[CliDataDict]:
         # ❌ Apenas retorna status - não faz nada útil!
         return r[CliDataDict].ok({
             "status": "operational",
@@ -7575,7 +7583,7 @@ class FlextCliCore(s[CliDataDict]):
         })
 
     # ✅ Lógica real está em outros métodos
-    def execute_command(self, name: str, context: ...) -> r[CommandResult]:
+    def execute_command(self, name: str, context: ...) -> p.Result[CommandResult]:
         # Real command execution logic
         pass
 ```
@@ -7599,7 +7607,7 @@ class cli:
         self._session_permissions: Mapping[str, set[str]] = {}
         self._users: Mapping[str, t.RecursiveContainerMapping] = {}
 
-    def authenticate(self, credentials: ...) -> r[str]:
+    def authenticate(self, credentials: ...) -> p.Result[str]:
         # Auth logic directly in cli
         pass
 ```
@@ -7642,7 +7650,7 @@ class FlextCliService(s[t.RecursiveContainerMapping]):
     prompt_text: str | None = None
 
     @override
-    def execute(self) -> r[t.RecursiveContainerMapping]:
+    def execute(self) -> p.Result[t.RecursiveContainerMapping]:
         """Execute CLI operation based on operation field."""
         match self.operation:
             case "print":
@@ -7656,7 +7664,7 @@ class FlextCliService(s[t.RecursiveContainerMapping]):
             case "prompt":
                 return self._execute_prompt()
 
-    def _execute_print(self) -> r[t.RecursiveContainerMapping]:
+    def _execute_print(self) -> p.Result[t.RecursiveContainerMapping]:
         """Print with Rich styling."""
         from rich.console import Console
 
@@ -7664,7 +7672,7 @@ class FlextCliService(s[t.RecursiveContainerMapping]):
         console.print(self.message, style=self.style)
         return r.ok({"printed": self.message})
 
-    def _execute_table(self) -> r[t.RecursiveContainerMapping]:
+    def _execute_table(self) -> p.Result[t.RecursiveContainerMapping]:
         """Create table from data."""
         from rich.table import Table
 
@@ -7713,7 +7721,7 @@ class CliOutputService(s[str]):
     data: t.RecursiveContainerMapping
     format: Literal["json", "yaml", "table", "csv"] = "json"
 
-    def execute(self) -> r[str]:
+    def execute(self) -> p.Result[str]:
         match self.format:
             case "json":
                 return r.ok(json.dumps(self.data))
@@ -7733,7 +7741,7 @@ class CliFileService(s[t.RecursiveContainerMapping]):
     filepath: Path
     data: t.RecursiveContainerMapping | None = None
 
-    def execute(self) -> r[t.RecursiveContainerMapping]:
+    def execute(self) -> p.Result[t.RecursiveContainerMapping]:
         match self.operation:
             case "read":
                 return self._read_json()
@@ -7750,7 +7758,7 @@ class CliAuthService(s[str]):
     password: str | None = None
     token: str | None = None
 
-    def execute(self) -> r[str]:
+    def execute(self) -> p.Result[str]:
         match self.operation:
             case "login":
                 return self._authenticate()
@@ -7829,7 +7837,7 @@ class FlextCliService(s[t.RecursiveContainerMapping]):
     operation: Literal["print", "table", "file_read", "file_write"] = "print"
     # ... fields
 
-    def execute(self) -> r[t.RecursiveContainerMapping]:
+    def execute(self) -> p.Result[t.RecursiveContainerMapping]:
         match self.operation:
             # ... dispatch
 ```
@@ -7867,7 +7875,7 @@ class CliOutputService(s[str]):
     data: t.RecursiveContainerMapping
     format: Literal["json", "yaml", "table"] = "json"
 
-    def execute(self) -> r[str]:
+    def execute(self) -> p.Result[str]:
         # Move formatting logic here
 ```
 
@@ -7880,7 +7888,7 @@ class CliFileService(s[t.RecursiveContainerMapping]):
     operation: Literal["read", "write"] = "read"
     filepath: Path
 
-    def execute(self) -> r[t.RecursiveContainerMapping]:
+    def execute(self) -> p.Result[t.RecursiveContainerMapping]:
         # Move file I/O logic here
 ```
 
@@ -7893,7 +7901,7 @@ class CliAuthService(s[str]):
     operation: Literal["login", "logout", "validate"] = "login"
     username: str | None = None
 
-    def execute(self) -> r[str]:
+    def execute(self) -> p.Result[str]:
         # Move auth logic here
 ```
 
@@ -8071,7 +8079,7 @@ Métrica: **Type safety** - Antes: Parcial - Depois: 100% Pydantic - Melhoria: *
 **Arquitetura Atual:**
 
 - **22 módulos** em `flext-core/src/flext_core/`
-- **7 classes principais**: s, FlextSettings, FlextContainer, FlextModels, x, r, FlextLogger
+- **7 classes principais**: s, FlextSettings, FlextContainer, FlextModels, x, r, p, FlextLogger
 - **Usado por 32+ projetos** do ecossistema FLEXT
 
 ### 🔍 Análise do Estado Atual
@@ -8086,17 +8094,17 @@ class r[T_co]:
     """Railway-oriented programming pattern."""
 
     @staticmethod
-    def ok(value: T_co) -> r[T_co]:
+    def ok(value: T_co) -> p.Result[T_co]:
         return r(value=value, error=None, _is_success=True)
 
     @staticmethod
-    def fail(error: str) -> r[T_co]:
+    def fail(error: str) -> p.Result[T_co]:
         return r(value=None, error=error, _is_success=False)
 
     # Monadic operations
-    def map[U](self, func: Callable[[T_co], U]) -> r[U]: ...
-    def flat_map[U](self, func: Callable[[T_co], r[U]]) -> r[U]: ...
-    def and_then[U](self, func: Callable[[T_co], r[U]]) -> r[U]: ...
+    def map[U](self, func: Callable[[T_co], U]) -> p.Result[U]: ...
+    def flat_map[U](self, func: Callable[[T_co], r[U]]) -> p.Result[U]: ...
+    def and_then[U](self, func: Callable[[T_co], r[U]]) -> p.Result[U]: ...
 ```
 
 **Por Que É Excelente:**
@@ -8151,7 +8159,7 @@ class s[TDomainResult](
     # Infrastructure via x (container, logger, context, settings)
 
     @abstractmethod
-    def execute(self) -> r[TDomainResult]:
+    def execute(self) -> p.Result[TDomainResult]:
         """Execute domain operation."""
 
     @computed_field
@@ -8222,7 +8230,7 @@ class EmailService(s[EmailResult]):
     subject: str
     body: str
 
-    def execute(self) -> r[EmailResult]:
+    def execute(self) -> p.Result[EmailResult]:
         # ✅ Infraestrutura automática!
         if self.settings.debug:
             self.logger.debug(f"Sending email to {self.recipient}")
@@ -8269,17 +8277,17 @@ result = EmailService(
 class s[TDomainResult]:
     # Abstract method - OK
     @abstractmethod
-    def execute(self) -> r[TDomainResult]: ...
+    def execute(self) -> p.Result[TDomainResult]: ...
 
     # ❌ Métodos adicionais que confundem
-    def execute_with_context_cleanup(self) -> r[TDomainResult]: ...
+    def execute_with_context_cleanup(self) -> p.Result[TDomainResult]: ...
     def execute_operation(
         self, request: OperationExecutionRequest
-    ) -> r[TDomainResult]: ...
+    ) -> p.Result[TDomainResult]: ...
 
     # ❌ Validation methods raramente usados
-    def validate_business_rules(self) -> r[bool]: ...
-    def validate_config(self) -> r[bool]: ...
+    def validate_business_rules(self) -> p.Result[bool]: ...
+    def validate_config(self) -> p.Result[bool]: ...
     def is_valid(self) -> bool: ...
 
     # ❌ Service info raramente usado
@@ -8390,7 +8398,7 @@ class FlextCliCore(s[CliDataDict]):
         self._config = settings or {}  # ❌ Private attr, não Pydantic field
         self._commands: Mapping[str, CliCommand] = {}  # ❌ Private attr
 
-    def execute(self) -> r[CliDataDict]:
+    def execute(self) -> p.Result[CliDataDict]:
         # ❌ Apenas retorna status - não usa Pydantic fields!
         return r[CliDataDict].ok({
             "status": "operational",
@@ -8398,7 +8406,7 @@ class FlextCliCore(s[CliDataDict]):
         })
 
     # ✅ Lógica real em métodos públicos
-    def execute_command(self, name: str, context: dict) -> r[CommandResult]:
+    def execute_command(self, name: str, context: dict) -> p.Result[CommandResult]:
         # Real logic here
         pass
 ```
@@ -8426,7 +8434,7 @@ class s[TDomainResult](
 
     # ============ ABSTRACT METHOD (REQUIRED) ============
     @abstractmethod
-    def execute(self) -> r[TDomainResult]:
+    def execute(self) -> p.Result[TDomainResult]:
         """Execute domain operation - ONLY method services must implement."""
 
     # ============ PROPERTIES (AUTO-RESOLVED) ============
@@ -8461,9 +8469,9 @@ class s[TDomainResult](
 ```python
 # ANTES - Multiple methods
 class MyService(s[Result]):
-    def execute(self) -> r[Result]: ...
-    def execute_with_context_cleanup(self) -> r[Result]: ...  # ❌ Boilerplate
-    def validate_business_rules(self) -> r[bool]: ...  # ❌ Raramente usado
+    def execute(self) -> p.Result[Result]: ...
+    def execute_with_context_cleanup(self) -> p.Result[Result]: ...  # ❌ Boilerplate
+    def validate_business_rules(self) -> p.Result[bool]: ...  # ❌ Raramente usado
 
 
 # DEPOIS - Only execute + Pydantic validators
@@ -8478,7 +8486,7 @@ class MyService(s[Result]):
             raise ValueError("data cannot be empty")
         return self
 
-    def execute(self) -> r[Result]:
+    def execute(self) -> p.Result[Result]:
         """Only method to implement."""
         return r.ok(Result(data=self.data))
 ```
@@ -8574,7 +8582,7 @@ class s[TDomainResult, TConfig: FlextSettings = FlextSettings]:
 
 # Usage - Type-safe!
 class FlextCliCore(s[CliDataDict, FlextCliSettings]):
-    def execute(self) -> r[CliDataDict]:
+    def execute(self) -> p.Result[CliDataDict]:
         # ✅ Type-safe! IDE autocomplete works
         debug = self.project_config.debug  # FlextCliSettings.debug
         profile = self.project_config.profile  # FlextCliSettings.profile
@@ -8599,7 +8607,7 @@ class FlextCliCore(s[CliDataDict]):
         self._config = settings or {}
         self._commands: Mapping[str, CliCommand] = {}
 
-    def execute(self) -> r[CliDataDict]:
+    def execute(self) -> p.Result[CliDataDict]:
         return r.ok({"status": "operational"})  # ❌ Inútil
 
 
@@ -8615,7 +8623,7 @@ class FlextCliCore(s[CliDataDict]):
     # Commands stored in class-level registry
     _commands: ClassVar[Mapping[str, CliCommand]] = {}
 
-    def execute(self) -> r[CliDataDict]:
+    def execute(self) -> p.Result[CliDataDict]:
         """Execute based on operation field."""
         match self.operation:
             case "execute_command":
@@ -8625,7 +8633,7 @@ class FlextCliCore(s[CliDataDict]):
             case "list_commands":
                 return self._list_commands()
 
-    def _execute_command(self) -> r[CliDataDict]:
+    def _execute_command(self) -> p.Result[CliDataDict]:
         if self.command_name not in self._commands:
             return r.fail(f"Command not found: {self.command_name}")
 
@@ -8649,11 +8657,11 @@ class FlextCliCore(s[CliDataDict]):
 
 ```python
 @deprecated("Use execute() directly or @with_context_cleanup decorator")
-def execute_with_context_cleanup(self) -> r[TDomainResult]: ...
+def execute_with_context_cleanup(self) -> p.Result[TDomainResult]: ...
 
 
 @deprecated("Use Pydantic @model_validator instead")
-def validate_business_rules(self) -> r[bool]: ...
+def validate_business_rules(self) -> p.Result[bool]: ...
 ```
 
 **1.2: Criar decorators para funcionalidade avançada**
@@ -8676,7 +8684,7 @@ def with_context_cleanup(func: Callable) -> Callable:
 # Usage
 class MyService(s[Result]):
     @with_context_cleanup
-    def execute(self) -> r[Result]:
+    def execute(self) -> p.Result[Result]:
         return r.ok(Result())
 ```
 
@@ -9044,7 +9052,7 @@ class AutoUserService(s[User]):
     auto_execute = True  # ← Enable auto-execution
     user_id: str
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         return r.ok(User(id=self.user_id, name="Alice"))
 
 
@@ -9281,7 +9289,7 @@ class AutoUserService(s[User]):
     auto_execute = True  # ← Enable auto-execution
     user_id: str
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         return r.ok(User(id=self.user_id, name="Alice"))
 
 
@@ -9301,7 +9309,7 @@ class UserService(s[User]):
     # auto_execute defaults to False
     user_id: str
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         return r.ok(User(id=self.user_id, name="Bob"))
 
 
@@ -9425,7 +9433,7 @@ class SimpleService(s[User]):
     auto_execute = True  # Retorna User direto
     user_id: str
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         return r.ok(User(id=self.user_id))
 
 
@@ -9437,7 +9445,7 @@ class RailwayService(s[User]):
     auto_execute = False  # Default - retorna service instance
     user_id: str
 
-    def execute(self) -> r[User]:
+    def execute(self) -> p.Result[User]:
         return r.ok(User(id=self.user_id))
 
 

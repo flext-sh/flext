@@ -28,7 +28,7 @@ from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from flext_core import r, t
+from flext_core import p, r, t
 
 type DataPrimitive = t.Primitives | bytes | Decimal
 type DataValue = DataPrimitive | Sequence[DataValue] | Mapping[str, DataValue]
@@ -129,7 +129,7 @@ class AdvancedProcessingExample:
         items: Sequence[ItemDict]
         stages: t.StrSequence
 
-        def execute(self) -> r[PipelineStageData]:
+        def execute(self) -> p.Result[PipelineStageData]:
             """Execute processing pipeline using declarative stages."""
             stage_functions: Mapping[
                 str,
@@ -162,7 +162,7 @@ class AdvancedProcessingExample:
         def _analyze_results(
             self,
             data: Mapping[str, DataValue],
-        ) -> r[PipelineStageData]:
+        ) -> p.Result[PipelineStageData]:
             """Analyze processing results."""
             processed_items_data = data.get("processed_items", [])
             processed_items: MutableSequence[ItemDict] = (
@@ -233,7 +233,7 @@ class AdvancedProcessingExample:
         def _process_parallel(
             self,
             data: Mapping[str, DataValue],
-        ) -> r[PipelineStageData]:
+        ) -> p.Result[PipelineStageData]:
             """Process items in parallel."""
             items_data = data.get("items", [])
             if not isinstance(items_data, Sequence) or isinstance(
@@ -287,7 +287,7 @@ class AdvancedProcessingExample:
         def _validate_batch(
             self,
             data: Mapping[str, DataValue],
-        ) -> r[PipelineStageData]:
+        ) -> p.Result[PipelineStageData]:
             """Validate batch of items."""
             items_data = data.get("items", [])
             if not isinstance(items_data, Sequence) or isinstance(
@@ -335,7 +335,7 @@ class AdvancedProcessingExample:
         def _validate_single_item(
             self,
             item: ItemDict,
-        ) -> r[AdvancedProcessingExample.ValidationResult]:
+        ) -> p.Result[AdvancedProcessingExample.ValidationResult]:
             """Validate a single item."""
             start_time = time.time()
             violations: MutableSequence[str] = []

@@ -242,7 +242,7 @@ def create_cli_runner(
     charset: str = "utf-8",
     env: t.StrMapping | None = None,
     echo_stdin: bool = False,
-) -> r[CliRunner]:
+) -> p.Result[CliRunner]:
     return r[CliRunner].ok(
         CliRunner(
             charset=charset, env=dict(env) if env else None, echo_stdin=echo_stdin
@@ -295,7 +295,7 @@ git commit -m "refactor(flext-cli): isolate Typer object boundary, PEP 695 stric
 def cli_args_to_model[M: BaseModel](
     model_class: type[M],
     cli_args: Mapping[str, t.Cli.JsonValue],
-) -> r[M]:
+) -> p.Result[M]:
     """Convert CLI args dict to a Pydantic model instance."""
     try:
         instance = model_class.model_validate(cli_args)

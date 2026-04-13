@@ -85,7 +85,7 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 Good:
 
 ```python
-from flext_core import r
+from flext_core import r, p
 from flext_db_oracle import FlextDbOracleModels
 from flext_meltano import FlextMeltanoModels
 

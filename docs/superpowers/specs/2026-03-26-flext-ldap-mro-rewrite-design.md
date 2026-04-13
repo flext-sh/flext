@@ -21,7 +21,7 @@ class ldap(
     """MRO facade for all LDAP operations."""
 
     @override
-    def execute(self) -> r[m.Ldap.SearchResult]: ...
+    def execute(self) -> p.Result[m.Ldap.SearchResult]: ...
 ```
 
 ### Service Mixin Design

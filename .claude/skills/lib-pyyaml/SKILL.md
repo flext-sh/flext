@@ -73,7 +73,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
 
 @staticmethod
-def load_yaml_rules(path: Path) -> r[Sequence[t.RecursiveContainerMapping]]:
+def load_yaml_rules(path: Path) -> p.Result[Sequence[t.RecursiveContainerMapping]]:
     with path.open(encoding="utf-8") as f:
         parsed = yaml.safe_load(f)
 ```
@@ -81,14 +81,14 @@ def load_yaml_rules(path: Path) -> r[Sequence[t.RecursiveContainerMapping]]:
 ```python
 # flext-cli/src/flext_cli/file_tools.py
 @staticmethod
-def read_yaml_file(file_path: str | Path) -> r[t.RecursiveContainer]:
+def read_yaml_file(file_path: str | Path) -> p.Result[t.RecursiveContainer]:
     return FlextCliFileTools._execute_file_operation(
         lambda: FlextCliFileTools._load_structured_file(str(file_path), yaml.safe_load),
         c.Cli.FileErrorMessages.YAML_LOAD_FAILED,
     )
 
 @staticmethod
-def write_yaml_file(...) -> r[bool]:
+def write_yaml_file(...) -> p.Result[bool]:
     return FlextCliFileTools._write_structured_file(
         file_path,
         lambda f: yaml.safe_dump(data, f, default_flow_style=default_flow_style, sort_keys=sort_keys, allow_unicode=allow_unicode),
@@ -99,7 +99,7 @@ def write_yaml_file(...) -> r[bool]:
 ```python
 # flext-meltano/src/flext_meltano/file_managers.py
 @classmethod
-def validate_yaml_file(cls, file_path: Path) -> r[bool]:
+def validate_yaml_file(cls, file_path: Path) -> p.Result[bool]:
     with file_path.open("r", encoding=c.DEFAULT_ENCODING) as f:
         yaml.safe_load(f)
 ```

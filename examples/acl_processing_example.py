@@ -25,7 +25,7 @@ from typing import ClassVar, TypeIs
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from flext_core import r, t
+from flext_core import p, r, t
 
 EntryDict = Mapping[
     str,
@@ -145,7 +145,7 @@ class AclProcessingExample:
         return permissions or [AclProcessingExample.Permission.UNKNOWN.value]
 
     @staticmethod
-    def detect_server_type(entry: EntryDict) -> r[str]:
+    def detect_server_type(entry: EntryDict) -> p.Result[str]:
         """Auto-detect server type from entry attributes."""
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, Mapping):
@@ -163,7 +163,7 @@ class AclProcessingExample:
     def extract_acls_from_entry(
         entry: EntryDict,
         server_type: str,
-    ) -> r[Sequence[AclProcessingExample.AclEntry]]:
+    ) -> p.Result[Sequence[AclProcessingExample.AclEntry]]:
         """Extract ACLs using server-specific attribute detection."""
         start_time = time.time()
         acl_attrs = AclProcessingExample.Constants.SERVER_ACL_ATTRIBUTES.get(
@@ -214,7 +214,7 @@ class AclProcessingExample:
     def validate_acl_entry(
         acl_entry: t.RecursiveContainerMapping,
         _context: ContextDict,
-    ) -> r[AclProcessingExample.AclValidationResult]:
+    ) -> p.Result[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
         violations: MutableSequence[str] = []
@@ -282,7 +282,7 @@ class AclProcessingExample:
         entries: Sequence[EntryDict]
         parallel: bool = True
 
-        def execute(self) -> r[ProcessingDict]:
+        def execute(self) -> p.Result[ProcessingDict]:
             """Execute ACL processing pipeline using monadic flow."""
             start_time = time.time()
             detect_result = self._detect_servers(self.entries)
@@ -306,7 +306,9 @@ class AclProcessingExample:
             validated_data = validate_result.value
             return self._analyze_performance(validated_data)
 
-        def _analyze_performance(self, data: ProcessingDict) -> r[ProcessingDict]:
+        def _analyze_performance(
+            self, data: ProcessingDict
+        ) -> p.Result[ProcessingDict]:
             """Analyze processing performance."""
             total_entries = len(self.entries)
             total_acls_data = data.get("total_acls", 0)
@@ -334,7 +336,9 @@ class AclProcessingExample:
             }
             return r[ProcessingDict].ok(result_data)
 
-        def _detect_servers(self, entries: Sequence[EntryDict]) -> r[ProcessingDict]:
+        def _detect_servers(
+            self, entries: Sequence[EntryDict]
+        ) -> p.Result[ProcessingDict]:
             """Auto-detect server types for all entries."""
             detected_entries: MutableSequence[t.RecursiveContainerMapping] = []
             for entry in entries:
@@ -356,7 +360,7 @@ class AclProcessingExample:
                 "server_types": sorted(server_types_set),
             })
 
-        def _extract_acls(self, data: ProcessingDict) -> r[ProcessingDict]:
+        def _extract_acls(self, data: ProcessingDict) -> p.Result[ProcessingDict]:
             """Extract ACLs in parallel."""
             entries_data_raw = data.get("entries")
             if not _is_object_list(entries_data_raw):
@@ -413,7 +417,7 @@ class AclProcessingExample:
             }
             return r[ProcessingDict].ok(result_data)
 
-        def _extract_sequential(self, data: ProcessingDict) -> r[ProcessingDict]:
+        def _extract_sequential(self, data: ProcessingDict) -> p.Result[ProcessingDict]:
             """Extract ACLs sequentially."""
             entries_data_raw = data.get("entries")
             if not _is_object_list(entries_data_raw):
@@ -464,7 +468,7 @@ class AclProcessingExample:
             }
             return r[ProcessingDict].ok(result_data)
 
-        def _validate_batch(self, data: ProcessingDict) -> r[ProcessingDict]:
+        def _validate_batch(self, data: ProcessingDict) -> p.Result[ProcessingDict]:
             """Validate all extracted ACLs."""
             acls_data_raw = data.get("acls")
             if not _is_object_list(acls_data_raw):

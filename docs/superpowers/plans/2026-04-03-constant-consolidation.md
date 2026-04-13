@@ -259,7 +259,7 @@ After the last handler method, add:
 
 ```python
 @staticmethod
-def _handle_consolidate(params: m.Infra.CodegenConsolidateInput) -> r[str]:
+def _handle_consolidate(params: m.Infra.CodegenConsolidateInput) -> p.Result[str]:
     """Handle constant consolidation with per-file validation."""
     import subprocess
 

@@ -73,7 +73,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from flext_core import r
+from flext_core import r, p
 
 if TYPE_CHECKING:
     from flext_cli import m, t
@@ -108,7 +108,7 @@ class FlextCliProtocolsPipeline:
         def __call__(
             self,
             ctx: FlextCliProtocolsPipeline.PipelineStageContext,
-        ) -> r[m.Cli.PipelineStageResult]:
+        ) -> p.Result[m.Cli.PipelineStageResult]:
             """Execute stage and return typed result."""
             ...
 
@@ -122,7 +122,7 @@ class FlextCliProtocolsPipeline:
             context: FlextCliProtocolsPipeline.PipelineStageContext,
             *,
             fail_fast: bool = True,
-        ) -> r[m.Cli.PipelineResult]:
+        ) -> p.Result[m.Cli.PipelineResult]:
             """Execute stages in dependency order."""
             ...
 
@@ -176,7 +176,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Literal
 
-from flext_core import r
+from flext_core import r, p
 
 if TYPE_CHECKING:
     from flext_cli import m, p
@@ -477,7 +477,7 @@ from pathlib import Path
 
 import pytest
 
-from flext_cli import c, m, r, t, u
+from flext_cli import c, m, r, p, t, u
 
 
 # ── Fixtures ────────────────────────────────────────────────────────
@@ -486,7 +486,7 @@ from flext_cli import c, m, r, t, u
 def _ok_handler(stage_id: str, output_key: str = "done") -> t.Cli.PipelineHandler:
     """Factory for a handler that succeeds and writes to shared."""
 
-    def handler(ctx: m.Cli.PipelineStageContext) -> r[m.Cli.PipelineStageResult]:
+    def handler(ctx: m.Cli.PipelineStageContext) -> p.Result[m.Cli.PipelineStageResult]:
         ctx.shared[output_key] = stage_id
         return r[m.Cli.PipelineStageResult].ok(
             m.Cli.PipelineStageResult(
@@ -503,7 +503,7 @@ def _ok_handler(stage_id: str, output_key: str = "done") -> t.Cli.PipelineHandle
 def _fail_handler(stage_id: str) -> t.Cli.PipelineHandler:
     """Factory for a handler that fails."""
 
-    def handler(ctx: m.Cli.PipelineStageContext) -> r[m.Cli.PipelineStageResult]:
+    def handler(ctx: m.Cli.PipelineStageContext) -> p.Result[m.Cli.PipelineStageResult]:
         return r[m.Cli.PipelineStageResult].fail(f"{stage_id} failed")
 
     return handler
@@ -546,7 +546,7 @@ class TestPipelineExecute:
         def tracking_handler(stage_id: str) -> t.Cli.PipelineHandler:
             def handler(
                 ctx: m.Cli.PipelineStageContext,
-            ) -> r[m.Cli.PipelineStageResult]:
+            ) -> p.Result[m.Cli.PipelineStageResult]:
                 execution_order.append(stage_id)
                 return r[m.Cli.PipelineStageResult].ok(
                     m.Cli.PipelineStageResult(stage_id=stage_id, status="ok"),
@@ -573,13 +573,17 @@ class TestPipelineExecute:
         """Stage B can read what stage A wrote to shared."""
         received: dict[str, object] = {}
 
-        def reader(ctx: m.Cli.PipelineStageContext) -> r[m.Cli.PipelineStageResult]:
+        def reader(
+            ctx: m.Cli.PipelineStageContext,
+        ) -> p.Result[m.Cli.PipelineStageResult]:
             received["from_a"] = ctx.shared.get("a_output")
             return r[m.Cli.PipelineStageResult].ok(
                 m.Cli.PipelineStageResult(stage_id="b", status="ok"),
             )
 
-        def writer(ctx: m.Cli.PipelineStageContext) -> r[m.Cli.PipelineStageResult]:
+        def writer(
+            ctx: m.Cli.PipelineStageContext,
+        ) -> p.Result[m.Cli.PipelineStageResult]:
             ctx.shared["a_output"] = "hello"
             return r[m.Cli.PipelineStageResult].ok(
                 m.Cli.PipelineStageResult(stage_id="a", status="ok"),
@@ -654,7 +658,9 @@ class TestPipelineExecute:
         """Stage retries up to retry count before failing."""
         call_count = 0
 
-        def flaky(ctx: m.Cli.PipelineStageContext) -> r[m.Cli.PipelineStageResult]:
+        def flaky(
+            ctx: m.Cli.PipelineStageContext,
+        ) -> p.Result[m.Cli.PipelineStageResult]:
             nonlocal call_count
             call_count += 1
             if call_count < 3:
@@ -696,7 +702,9 @@ class TestPipelineExecute:
         order: list[str] = []
 
         def track(sid: str) -> t.Cli.PipelineHandler:
-            def h(ctx: m.Cli.PipelineStageContext) -> r[m.Cli.PipelineStageResult]:
+            def h(
+                ctx: m.Cli.PipelineStageContext,
+            ) -> p.Result[m.Cli.PipelineStageResult]:
                 order.append(sid)
                 return r[m.Cli.PipelineStageResult].ok(
                     m.Cli.PipelineStageResult(stage_id=sid, status="ok"),
@@ -760,7 +768,7 @@ from collections.abc import Mapping, Sequence
 from graphlib import CycleError, TopologicalSorter
 from typing import ClassVar
 
-from flext_cli import c, m, r, t
+from flext_cli import c, m, r, p, t
 
 
 class FlextCliUtilitiesPipeline:
@@ -775,7 +783,7 @@ class FlextCliUtilitiesPipeline:
         *,
         fail_fast: bool = c.Cli.Pipeline.DEFAULT_FAIL_FAST,
         logger: FlextLogger | None = None,
-    ) -> r[m.Cli.PipelineResult]:
+    ) -> p.Result[m.Cli.PipelineResult]:
         """Execute pipeline stages in topological order.
 
         Uses graphlib.TopologicalSorter for dependency resolution.
@@ -1062,7 +1070,9 @@ The current `execute()` method calls 6 stages sequentially. Refactor to:
 
 Key pattern for each handler:
 ```python
-def _stage_py_typed(ctx: m.Cli.PipelineStageContext) -> r[m.Cli.PipelineStageResult]:
+def _stage_py_typed(
+    ctx: m.Cli.PipelineStageContext,
+) -> p.Result[m.Cli.PipelineStageResult]:
     workspace = ctx.workspace_root
     # ... existing logic ...
     return r[m.Cli.PipelineStageResult].ok(

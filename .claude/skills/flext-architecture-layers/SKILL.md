@@ -77,7 +77,7 @@ The facade (`api.py`) depends on services (`services/`) which depend on contract
 
 ```python
 # Good: orchestration consumes bridge + public alias
-from flext_core import r
+from flext_core import r, p
 from flext_core import u
 
 bridge, services, resources = u.DependencyIntegration.create_layered_bridge()

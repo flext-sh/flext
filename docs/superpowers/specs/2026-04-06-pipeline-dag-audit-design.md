@@ -25,7 +25,7 @@ class PipelineStage(Protocol):
 
     def __call__(
         self, ctx: p.Cli.PipelineStageContext
-    ) -> r[m.Cli.PipelineStageResult]: ...
+    ) -> p.Result[m.Cli.PipelineStageResult]: ...
 
 
 @runtime_checkable
@@ -47,7 +47,7 @@ class PipelineExecutor(Protocol):
         context: p.Cli.PipelineStageContext,
         *,
         fail_fast: bool = True,
-    ) -> r[m.Cli.PipelineResult]: ...
+    ) -> p.Result[m.Cli.PipelineResult]: ...
 ```
 
 ### 1.2 Types (`t.Cli.*`)
@@ -116,7 +116,7 @@ def execute_pipeline(
     *,
     fail_fast: bool = c.Cli.Pipeline.DEFAULT_FAIL_FAST,
     logger: p.Logger | None = None,
-) -> r[m.Cli.PipelineResult]:
+) -> p.Result[m.Cli.PipelineResult]:
     """Execute stages in topological order via graphlib.TopologicalSorter."""
 ```
 

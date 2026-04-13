@@ -55,7 +55,7 @@ description: Authoritative rules for `flext-core` architecture, typing, result f
 - For new exported symbols, update `flext-core/src/flext_core/__init__.py` deliberately.
 
 ```python
-from flext_core import r
+from flext_core import r, p
 
 
 def run(value: str):

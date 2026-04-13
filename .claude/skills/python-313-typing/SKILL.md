@@ -183,7 +183,7 @@ def process(data: Sequence[str | int]) -> None:
 
 ```python
 from typing import TypeIs
-from flext_core import r
+from flext_core import r, p
 
 
 def successful_result[T](result: r[T]) -> TypeIs[r[T]]:

@@ -70,7 +70,7 @@ ls -la src
 Good:
 
 ```python
-from flext_core import r
+from flext_core import r, p
 ```
 
 Why good: uses stable public boundary from shared source logic.

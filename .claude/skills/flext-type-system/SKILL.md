@@ -128,17 +128,17 @@ from collections.abc import Mapping, Sequence` |
 
 ```python
 # CORRECT
-def get_items() -> r[list[str]]: ...
-def get_config() -> r[dict[str, int]]: ...
+def get_items() -> p.Result[list[str]]: ...
+def get_config() -> p.Result[dict[str, int]]: ...
 
 
 # FORBIDDEN
-def get_items() -> r[t.StrSequence]: ...  # invariance violation
-def get_config() -> r[t.IntMapping]: ...  # invariance violation
+def get_items() -> p.Result[t.StrSequence]: ...  # invariance violation
+def get_config() -> p.Result[t.IntMapping]: ...  # invariance violation
 
 
 # Parameters: abstract types OK (covariant position)
-def process(items: t.StrSequence) -> r[list[str]]: ...
+def process(items: t.StrSequence) -> p.Result[list[str]]: ...
 ```
 
 ## Instructions

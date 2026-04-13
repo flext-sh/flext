@@ -33,7 +33,7 @@ from typing import ClassVar
 from pydantic import BaseModel, ConfigDict, Field
 
 from flext import t
-from flext_core import r
+from flext_core import p, r
 
 type WorkflowScalar = Decimal | bool | bytes | date | datetime | float | int | str
 type WorkflowValue = WorkflowScalar | t.StrSequence | Mapping[str, WorkflowScalar]
@@ -196,7 +196,7 @@ class CompleteWorkflowExample:
             default_factory=_new_workflow_settings,
         )
 
-        def execute(self) -> r[WorkflowData]:
+        def execute(self) -> p.Result[WorkflowData]:
             """Execute complete workflow with automatic resource management."""
             context = self._setup_context()
             try:
@@ -208,7 +208,7 @@ class CompleteWorkflowExample:
             self,
             item: ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[WorkflowData]:
+        ) -> p.Result[WorkflowData]:
             """Aggregate results."""
             complexity_score_raw = item.get("complexity_score", 0)
             complexity_score = (
@@ -264,7 +264,7 @@ class CompleteWorkflowExample:
             self,
             item: ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[WorkflowData]:
+        ) -> p.Result[WorkflowData]:
             """Analyze single item."""
             content_payload: WorkflowContent = {
                 **self._process_stage(
@@ -296,7 +296,7 @@ class CompleteWorkflowExample:
                 r[WorkflowData],
             ],
             context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[CompleteWorkflowExample.WorkflowStageResult]:
+        ) -> p.Result[CompleteWorkflowExample.WorkflowStageResult]:
             """Execute a workflow stage in parallel."""
             stage_start = time.time()
             max_workers_raw = context.metadata.get("max_workers", 4)
@@ -353,7 +353,7 @@ class CompleteWorkflowExample:
             self,
             data: Sequence[ProcessingDict],
             context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[WorkflowData]:
+        ) -> p.Result[WorkflowData]:
             """Execute workflow stages with parallel processing."""
             items = data
             stage_results: MutableSequence[
@@ -438,7 +438,7 @@ class CompleteWorkflowExample:
             self,
             item: ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[WorkflowData]:
+        ) -> p.Result[WorkflowData]:
             """Process single item."""
             content_payload: WorkflowContent = {
                 **self._process_stage(
@@ -501,7 +501,7 @@ class CompleteWorkflowExample:
             self,
             item: ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> r[WorkflowData]:
+        ) -> p.Result[WorkflowData]:
             """Validate single item."""
             content_payload: WorkflowContent = {
                 **self._process_stage(

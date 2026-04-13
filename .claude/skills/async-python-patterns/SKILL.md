@@ -52,10 +52,10 @@ description: Python asyncio patterns for FLEXT integrations — LDAP, Oracle, gR
 ### Basic Async with r
 
 ```python
-from flext_core import r
+from flext_core import r, p
 
 
-async def fetch_user(user_id: str) -> r[User]:
+async def fetch_user(user_id: str) -> p.Result[User]:
     try:
         user = await db.get_user(user_id)
         return r[User].ok(user)
@@ -66,7 +66,7 @@ async def fetch_user(user_id: str) -> r[User]:
 ### Concurrent Execution with gather
 
 ```python
-async def fetch_all_users(ids: t.StrSequence) -> r[Sequence[User]]:
+async def fetch_all_users(ids: t.StrSequence) -> p.Result[Sequence[User]]:
     tasks = [fetch_user(uid) for uid in ids]
     results = await asyncio.gather(*tasks, return_exceptions=True)
     users = []
@@ -84,7 +84,7 @@ async def fetch_all_users(ids: t.StrSequence) -> r[Sequence[User]]:
 semaphore = asyncio.Semaphore(10)
 
 
-async def rate_limited_call(url: str) -> r[dict]:
+async def rate_limited_call(url: str) -> p.Result[dict]:
     async with semaphore:
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
@@ -128,7 +128,7 @@ async def consumer(queue: asyncio.Queue[str | None]) -> t.StrSequence:
 ### Timeout Handling
 
 ```python
-async def with_timeout(coro: Awaitable[T], seconds: float) -> r[T]:
+async def with_timeout(coro: Awaitable[T], seconds: float) -> p.Result[T]:
     try:
         result = await asyncio.wait_for(coro, timeout=seconds)
         return r[T].ok(result)
@@ -150,7 +150,7 @@ async def with_timeout(coro: Awaitable[T], seconds: float) -> r[T]:
 Good:
 
 ```python
-async def process_batch(ids: t.StrSequence) -> r[Sequence[Result]]:
+async def process_batch(ids: t.StrSequence) -> p.Result[Sequence[Result]]:
     tasks = [process_one(i) for i in ids]
     return await asyncio.gather(*tasks)
 ```

@@ -4,7 +4,7 @@
 
 **Goal:** Replace scattered argparse/Typer CLIs with one declarative `FlextInfraCli` composed via MRO from per-group `cli.py` mixins, following algar-oud-mig pattern exactly.
 
-**Architecture:** Each group directory gets a `cli.py` with a `FlextInfraCli{Group}` class that has ONE method: `_register_{group}(app)`. Root `cli.py` composes all via MRO into `FlextInfraCli`. Services gain `execute_command(params: m.Infra.XxxInput) -> r[T]`. Each `__main__.py` becomes a 3-line entry point.
+**Architecture:** Each group directory gets a `cli.py` with a `FlextInfraCli{Group}` class that has ONE method: `_register_{group}(app)`. Root `cli.py` composes all via MRO into `FlextInfraCli`. Services gain `execute_command(params: m.Infra.XxxInput) -> p.Result[T]`. Each `__main__.py` becomes a 3-line entry point.
 
 **Tech Stack:** `flext_cli.cli` singleton, `m.Cli.ResultCommandRouteModel`, `m.Infra.*Input` Pydantic models, `r[T]` results.
 
@@ -56,7 +56,7 @@ class AlgarOudMigrationCli:
         self._migration = MigrationService()
         self._register_commands()
 
-    def run(self, args=None) -> r[bool]:
+    def run(self, args=None) -> p.Result[bool]:
         return cli.execute_app(self._app, prog_name=..., args=args)
 
     def _register_commands(self):
@@ -72,7 +72,7 @@ class AlgarOudMigrationCli:
         )
 ```
 
-Key: handler IS the service method. `execute_command(params: Input) -> r[T]`.
+Key: handler IS the service method. `execute_command(params: Input) -> p.Result[T]`.
 
 ---
 
@@ -88,7 +88,7 @@ Key: handler IS the service method. `execute_command(params: Input) -> r[T]`.
 In `python_version.py`, add method that accepts the Pydantic model:
 
 ```python
-def execute_command(self, params: m.Infra.MaintenanceRunInput) -> r[int]:
+def execute_command(self, params: m.Infra.MaintenanceRunInput) -> p.Result[int]:
     """CLI handler — accepts input model, delegates to execute."""
     return self.execute(check_only=params.check, verbose=params.verbose)
 ```
@@ -166,7 +166,7 @@ if __name__ == "__main__":
 Same pattern as Task 1, repeated for each group. Each group gets:
 
 1. `{group}/cli.py` with `FlextInfraCli{Group}` class
-2. Service gains `execute_command(params) -> r[T]`
+2. Service gains `execute_command(params) -> p.Result[T]`
 3. `__main__.py` becomes thin entry
 
 ### Task 2a: basemk/cli.py
@@ -179,7 +179,7 @@ Same pattern as Task 1, repeated for each group. Each group gets:
 - [ ] **Step 1: Add `execute_command` to `FlextInfraBaseMkGenerator`**
 
 ```python
-def execute_command(self, params: m.Infra.BaseMkGenerateInput) -> r[str]:
+def execute_command(self, params: m.Infra.BaseMkGenerateInput) -> p.Result[str]:
     """CLI handler — generate base.mk from params."""
     settings = (
         FlextInfraBaseMkTemplateEngine.default_settings().model_copy(
@@ -245,7 +245,7 @@ Same 3-line pattern as maintenance but with `["basemk", ...]`.
 ### Task 2b–2h: docs, validate, workspace, release, codegen, github, refactor
 
 Identical pattern for each group. Each needs:
-1. `execute_command(params: m.Infra.XxxInput) -> r[T]` on the service
+1. `execute_command(params: m.Infra.XxxInput) -> p.Result[T]` on the service
 2. `{group}/cli.py` with `FlextInfraCli{Group}`
 3. Thin `__main__.py`
 4. Validate tests pass
@@ -322,7 +322,7 @@ class FlextInfraCli(
         self._register_validate(self._app)
         self._register_workspace(self._app)
 
-    def run(self, args: t.StrSequence | None = None) -> r[bool]:
+    def run(self, args: t.StrSequence | None = None) -> p.Result[bool]:
         """Execute the CLI application."""
         return cli.execute_app(self._app, prog_name=self.app_name, args=args)
 ```

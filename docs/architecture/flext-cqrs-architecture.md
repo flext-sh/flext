@@ -123,7 +123,7 @@ servir como referência futura para implementação:
 
 ### ~~Handler lifecycle~~
 
-~~1. Handlers derive from `h[TMessage, TResult]` and implement `handle(self, message) -> r[TResult]`.~~
+~~1. Handlers derive from `h[TMessage, TResult]` and implement `handle(self, message) -> p.Result[TResult]`.~~
 ~~2. The `_run_pipeline` helper wraps execution with validation, hooks, and error handling.~~
 ~~3. Manual bookkeeping for metrics/context (`self._metrics`, `self._context_stack`) remains common across projects.~~
 
@@ -365,8 +365,8 @@ servir como referência futura para implementação:
 ~~\_context_stack: Sequence[t.RecursiveContainerMapping]~~
 
 ~~ # ✅ Pipeline methods~~
-~~ def handle(self, message: TCommand_contra) -> r[TResult_co]: ...~~
-~~ def \_run_pipeline(self, message: TCommand_contra) -> r[TResult_co]: ...~~
+~~ def handle(self, message: TCommand_contra) -> p.Result[TResult_co]: ...~~
+~~ def \_run_pipeline(self, message: TCommand_contra) -> p.Result[TResult_co]: ...~~
 
 ~~ # ⚠️ Métodos manuais (serão deprecated em V2)~~
 ~~ def record_metric(self, key: str, value: t.Numeric) -> None: ...~~
@@ -407,7 +407,7 @@ servir como referência futura para implementação:
 ~~\_cache: t.RecursiveContainerMapping # ~100 linhas~~
 
 ~~ # ✅ Core methods~~
-~~ def dispatch(self, message) -> r[t.RecursiveContainer]: ...~~
+~~ def dispatch(self, message) -> p.Result[t.RecursiveContainer]: ...~~
 ~~ def register_command(self, cmd_type: type, handler: h) -> None: ...~~
 ~~ def register_query(self, query_type: type, handler: h) -> None: ...~~
 ~~ def register_event(self, event_type: type, handler: h) -> None: ...~~
@@ -536,7 +536,7 @@ servir como referência futura para implementação:
 ~~ # - self.settings → 0 chamadas em \_run_pipeline~~
 ~~ # - self.container → 0 chamadas em \_run_pipeline~~
 
-~~ def \_run_pipeline(self, message: TCommand) -> r[TResult]:~~
+~~ def \_run_pipeline(self, message: TCommand) -> p.Result[TResult]:~~
 ~~ # Manual em vez de usar infraestrutura!~~
 ~~ self.\_metrics["processed"] += 1 # Em vez de self.track()~~
 ~~```~~
@@ -708,7 +708,7 @@ servir como referência futura para implementação:
 ~~ self,~~
 ~~ func: Callable[[], T],~~
 ~~ timeout_seconds: float,~~
-~~ ) -> r[T]:~~
+~~ ) -> p.Result[T]:~~
 ~~ """Execute function with timeout."""~~
 ~~ ...~~
 
@@ -720,7 +720,7 @@ servir como referência futura para implementação:
 ~~ func: Callable[[], r[T]],~~
 ~~ max_attempts: int,~~
 ~~ backoff_factor: float,~~
-~~ ) -> r[T]:~~
+~~ ) -> p.Result[T]:~~
 ~~ """Execute function with retry logic."""~~
 ~~ ...~~
 ~~```~~
@@ -857,7 +857,7 @@ servir como referência futura para implementação:
 ~~ def \_run_pipeline(~~
 ~~ self,~~
 ~~ message: TCommand_contra,~~
-~~ ) -> r[TResult_co]:~~
+~~ ) -> p.Result[TResult_co]:~~
 ~~ """Run handler pipeline with automatic observability.~~
 
 ~~ V2 Enhancement: Automatically uses x infrastructure.~~
@@ -942,7 +942,7 @@ servir como referência futura para implementação:
 ~~class CreateUserCommandHandler(h[CreateUserCommand, User]):~~
 ~~ """Handler que orquestra, service que executa."""~~
 
-~~ def handle(self, command: CreateUserCommand) -> r[User]:~~
+~~ def handle(self, command: CreateUserCommand) -> p.Result[User]:~~
 ~~ # Handler orquestra, service executa lógica de domínio~~
 ~~ validation_service = ValidateEmailService(email=command.email)~~
 ~~ if validation_service.result.is_failure:~~
@@ -981,7 +981,7 @@ servir como referência futura para implementação:
 ~~class ProcessOrderCommandHandler(h[ProcessOrderCommand, Order]):~~
 ~~ """Handler com observabilidade completa via x."""~~
 
-~~ def handle(self, command: ProcessOrderCommand) -> r[Order]:~~
+~~ def handle(self, command: ProcessOrderCommand) -> p.Result[Order]:~~
 ~~ # ✅ Logging automático via x~~
 ~~ self.logger.info(f"Processing order {command.order_id}")~~
 
@@ -1176,7 +1176,7 @@ servir como referência futura para implementação:
 ~~class MyCommandHandler(h[MyCommand, MyResult]):~~
 ~~ """Handler com setup mínimo."""~~
 
-~~ def handle(self, command: MyCommand) -> r[MyResult]:~~
+~~ def handle(self, command: MyCommand) -> p.Result[MyResult]:~~
 ~~ # Infraestrutura automática via x:~~
 ~~ # - self.logger: FlextLogger~~
 ~~ # - self.settings: FlextSettings~~
@@ -1282,7 +1282,7 @@ servir como referência futura para implementação:
 
 ~~```Python~~
 ~~from dataclasses import dataclass~~
-~~from flext_core import h, r, FlextDispatcher~~
+~~from flext_core import h, r, p, FlextDispatcher~~
 
 ~~@dataclass~~
 ~~class CreateUserCommand:~~
@@ -1296,7 +1296,7 @@ servir como referência futura para implementação:
 ~~ email: str~~
 
 ~~class CreateUserHandler(h[CreateUserCommand, User]):~~
-~~ def handle(self, command: CreateUserCommand) -> r[User]:~~
+~~ def handle(self, command: CreateUserCommand) -> p.Result[User]:~~
 ~~ self.logger.info(f"Creating user: {command.name}")~~
 
 ~~ # Business logic~~
@@ -1330,7 +1330,7 @@ servir como referência futura para implementação:
 ~~class GetUserHandler(h[GetUserQuery, User]):~~
 ~~ \_cache: Mapping[str, User] = {}~~
 
-~~ def handle(self, query: GetUserQuery) -> r[User]:~~
+~~ def handle(self, query: GetUserQuery) -> p.Result[User]:~~
 ~~ # Check cache first~~
 ~~ if query.user_id in self.\_cache:~~
 ~~ self.cqrs_metrics.record("cache_hits", 1)~~
@@ -1362,7 +1362,7 @@ servir como referência futura para implementação:
 ~~ created_at: datetime~~
 
 ~~class UserCreatedHandler(h[UserCreatedEvent, None]):~~
-~~ def handle(self, event: UserCreatedEvent) -> r[bool]:~~
+~~ def handle(self, event: UserCreatedEvent) -> p.Result[bool]:~~
 ~~ self.cqrs_context.push({~~
 ~~ "event_type": "UserCreated",~~
 ~~ "user_id": event.user_id,~~
@@ -1401,7 +1401,7 @@ servir como referência futura para implementação:
 ~~ items: Sequence[OrderItem]~~
 
 ~~class ProcessOrderHandler(h[ProcessOrderCommand, Order]):~~
-~~ def handle(self, command: ProcessOrderCommand) -> r[Order]:~~
+~~ def handle(self, command: ProcessOrderCommand) -> p.Result[Order]:~~
 ~~ self.cqrs_context.push({~~
 ~~ "order_id": command.order_id,~~
 ~~ "customer_id": command.customer_id,~~
@@ -1458,7 +1458,7 @@ servir como referência futura para implementação:
 
 ~~```Python~~
 ~~class MyHandler(h[MyCommand, MyResult]):~~
-~~ def handle(self, command: MyCommand) -> r[MyResult]:~~
+~~ def handle(self, command: MyCommand) -> p.Result[MyResult]:~~
 ~~ # ❌ V1: Métricas manuais~~
 ~~ self.record_metric("commands_processed", 1)~~
 
@@ -1474,7 +1474,7 @@ servir como referência futura para implementação:
 
 ~~```Python~~
 ~~class MyHandler(h[MyCommand, MyResult]):~~
-~~ def handle(self, command: MyCommand) -> r[MyResult]:~~
+~~ def handle(self, command: MyCommand) -> p.Result[MyResult]:~~
 ~~ # ✅ V2: Métricas via x.CQRS~~
 ~~ self.cqrs_metrics.record("commands_processed", 1)~~
 
@@ -1631,7 +1631,7 @@ servir como referência futura para implementação:
 
 ~~# Command Handlers~~
 ~~class CreateUserHandler(h[CreateUserCommand, User]):~~
-~~ def handle(self, command: CreateUserCommand) -> r[User]:~~
+~~ def handle(self, command: CreateUserCommand) -> p.Result[User]:~~
 ~~ self.logger.info(f"Creating user: {command.name}")~~
 
 ~~ with self.track("create_user"):~~
@@ -1651,7 +1651,7 @@ UserRepository.save(user)
         return r.ok(user)
 
 class UpdateUserHandler(h[UpdateUserCommand, User]):
-def handle(self, command: UpdateUserCommand) -> r[User]:
+def handle(self, command: UpdateUserCommand) -> p.Result[User]:
 self.logger.info(f"Updating user: {command.user_id}")
 
         user = UserRepository.get(command.user_id)
@@ -1672,7 +1672,7 @@ self.logger.info(f"Updating user: {command.user_id}")
 ## Query Handlers
 
 class GetUserHandler(h[GetUserQuery, User]):
-def handle(self, query: GetUserQuery) -> r[User]:
+def handle(self, query: GetUserQuery) -> p.Result[User]:
 self.logger.debug(f"Getting user: {query.user_id}")
 
         with self.track("get_user"):
@@ -1686,7 +1686,7 @@ self.logger.debug(f"Getting user: {query.user_id}")
         return r.ok(user)
 
 class ListUsersHandler(h[ListUsersQuery, Sequence[User]]):
-def handle(self, query: ListUsersQuery) -> r[Sequence[User]]:
+def handle(self, query: ListUsersQuery) -> p.Result[Sequence[User]]:
 self.logger.debug(f"Listing users: limit={query.limit}, offset={query.offset}")
 
         with self.track("list_users"):
@@ -1698,7 +1698,7 @@ self.logger.debug(f"Listing users: limit={query.limit}, offset={query.offset}")
 ## Event Handlers
 
 class UserCreatedHandler(h[UserCreatedEvent, None]):
-def handle(self, event: UserCreatedEvent) -> r[bool]:
+def handle(self, event: UserCreatedEvent) -> p.Result[bool]:
 self.logger.info(f"Processing UserCreatedEvent: {event.user_id}")
 
         self.cqrs_context.push({
@@ -1776,7 +1776,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Callable
 
-from flext_core import r
+from flext_core import r, p
 
 
 @dataclass
@@ -1914,7 +1914,7 @@ class PaymentResult:
 class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
     """Payment handler with full observability."""
 
-    def handle(self, command: ProcessPaymentCommand) -> r[PaymentResult]:
+    def handle(self, command: ProcessPaymentCommand) -> p.Result[PaymentResult]:
         # Setup context for tracing
         self.cqrs_context.push({
             "operation": "process_payment",
@@ -2007,7 +2007,7 @@ class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
     def _validate_payment_method(
         self,
         command: ProcessPaymentCommand,
-    ) -> r[bool]:
+    ) -> p.Result[bool]:
         """Validate payment method is supported."""
         supported = ["credit_card", "debit_card", "pix", "boleto"]
         if command.payment_method not in supported:
@@ -2017,7 +2017,7 @@ class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
     def _check_fraud(
         self,
         command: ProcessPaymentCommand,
-    ) -> r[bool]:
+    ) -> p.Result[bool]:
         """Check for potential fraud."""
         # Simplified fraud check
         if command.amount > 10000:
@@ -2027,7 +2027,7 @@ class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
     def _process_with_gateway(
         self,
         command: ProcessPaymentCommand,
-    ) -> r[str]:
+    ) -> p.Result[str]:
         """Process payment with external gateway."""
         # Simulated gateway call
         import uuid
@@ -2063,7 +2063,7 @@ class ProcessPaymentHandler(h[ProcessPaymentCommand, PaymentResult]):
 ~~```Python~~
 ~~# flext-ldif: Batch processing handler V2~~
 ~~class ProcessLdifBatchHandler(h[ProcessLdifBatchCommand, BatchResult]):~~
-~~ def handle(self, command: ProcessLdifBatchCommand) -> r[BatchResult]:~~
+~~ def handle(self, command: ProcessLdifBatchCommand) -> p.Result[BatchResult]:~~
 ~~ self.cqrs_context.push({~~
 ~~ "batch_id": command.batch_id,~~
 ~~ "file_count": len(command.files),~~
@@ -2163,7 +2163,7 @@ async def get_user(user_id: str) -> UserResponse:
 ```python
 # flext-oud-mig: Migration pipeline handler
 class MigrateEntryHandler(h[MigrateEntryCommand, m.Infra.MigrationResult]):
-    def handle(self, command: MigrateEntryCommand) -> r[m.Infra.MigrationResult]:
+    def handle(self, command: MigrateEntryCommand) -> p.Result[m.Infra.MigrationResult]:
         self.cqrs_context.push({
             "migration_id": command.migration_id,
             "entry_dn": command.entry.dn,
@@ -2393,7 +2393,7 @@ class TestDispatcherDI:
 
         # Register a simple handler
         class TestHandler(h[str, str]):
-            def handle(self, message: str) -> r[str]:
+            def handle(self, message: str) -> p.Result[str]:
                 return r.ok(f"processed: {message}")
 
         dispatcher.register_command(str, TestHandler())
@@ -2415,7 +2415,7 @@ class TestDispatcherDI:
         dispatcher = FlextDispatcher(container=container)
 
         class TestHandler(h[str, str]):
-            def handle(self, message: str) -> r[str]:
+            def handle(self, message: str) -> p.Result[str]:
                 return r.ok(f"processed: {message}")
 
         dispatcher.register_command(str, TestHandler())
@@ -2445,7 +2445,7 @@ class BenchmarkCommand:
 
 
 class BenchmarkHandler(h[BenchmarkCommand, int]):
-    def handle(self, command: BenchmarkCommand) -> r[int]:
+    def handle(self, command: BenchmarkCommand) -> p.Result[int]:
         return r.ok(command.value * 2)
 
 
@@ -2548,7 +2548,7 @@ class CreateUserHandler(h[CreateUserCommand, User]):
     @d.track_performance("create_user")  # Performance automático
     @d.with_context(handler="CreateUserHandler")  # Context automático
     @d.retry(max_attempts=3)  # Retry automático
-    def handle(self, command: CreateUserCommand) -> r[User]:
+    def handle(self, command: CreateUserCommand) -> p.Result[User]:
         # Lógica focada - infraestrutura via decorators
         self.logger.info(f"Creating user: {command.name}")
         return r.ok(self._create(command))

@@ -95,7 +95,7 @@ completed: 2026-03-24
 
 **2. [Rule 2 - Missing Critical] Scope larger than plan estimated for Task 2**
 - **Found during:** Task 2
-- **Issue:** Plan estimated test import violations only for t,c,m,u,p but many files had mixed imports (e.g., `from flext_core import r, t` or `from flext_core import FlextContainer, p`)
+- **Issue:** Plan estimated test import violations only for t,c,m,u,p but many files had mixed imports (e.g., `from flext_core import r, p, t` or `from flext_core import FlextContainer, p`)
 - **Fix:** Split import lines to move c,m,t,u,p to `from tests import` while keeping other imports from flext_core
 - **Files modified:** ~60 files across 12 projects
 

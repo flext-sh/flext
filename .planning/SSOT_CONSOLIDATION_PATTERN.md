@@ -98,7 +98,7 @@ def _stub_run(
 #### Applied to All Consolidated Functions:
 ```python
 # Use strict typing from module contracts
-from flext_infra import m, c, r, t
+from flext_infra import m, c, r, p, t
 
 
 def create_gate_execution(

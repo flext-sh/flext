@@ -719,12 +719,16 @@ attributes = m.AttributeDict()  # NO
 
 ```python
 # ✅ CORRECT: Use Models and Protocols
-def process_model(data: Mapping[str, m.Domain.InputModel]) -> r[m.Domain.OutputModel]:
+def process_model(
+    data: Mapping[str, m.Domain.InputModel],
+) -> p.Result[m.Domain.OutputModel]:
     return r.ok(SomeModel(data))
 
 
 # ❌ WRONG: cast() hides type issues
-def process_model(data: Mapping[str, m.Domain.InputModel]) -> r[m.Domain.OutputModel]:
+def process_model(
+    data: Mapping[str, m.Domain.InputModel],
+) -> p.Result[m.Domain.OutputModel]:
     return r.ok(cast(SomeModel, data))
 
 

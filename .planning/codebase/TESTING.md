@@ -75,7 +75,7 @@ import pytest
 from flext_tests import t, tm, u
 from pydantic import BaseModel, ConfigDict, Field
 
-from flext_core import r, m
+from flext_core import r, p, m
 
 
 class TestResult:

@@ -248,14 +248,14 @@ class TransformStep(ContractModel):
 ```python
 @runtime_checkable
 class SafeTransformer(Protocol):
-    def transform(self, files: Sequence[Path]) -> r[Sequence[Path]]: ...
+    def transform(self, files: Sequence[Path]) -> p.Result[Sequence[Path]]: ...
 
 
 @runtime_checkable
 class SafeValidator(Protocol):
     def validate(
         self, files: Sequence[Path], project_dir: Path
-    ) -> r[m.Infra.GateResult]: ...
+    ) -> p.Result[m.Infra.GateResult]: ...
 ```
 
 ---

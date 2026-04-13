@@ -3,7 +3,7 @@ language: python
 rule:
   pattern: r[$T].ok(None)
 fix: r[$T].ok(True)
-message: "Rewrite r[T].ok(None) -> r[T].ok(True)"
+message: "Rewrite r[T].ok(None) -> p.Result[T].ok(True)"
 severity: error
 ---
 id: fix-ok-none-result
@@ -11,5 +11,5 @@ language: python
 rule:
   pattern: r[$T].ok(None)
 fix: r[$T].ok(True)
-message: "Rewrite r[T].ok(None) -> r[T].ok(True)"
+message: "Rewrite r[T].ok(None) -> p.Result[T].ok(True)"
 severity: error
