@@ -1,0 +1,75 @@
+docs/architecture/flext-service-architecture.md
+  e8500b97918814cd 297,317,387,617,688,706,841,970,1376,1380-1382,1387,1391,1417-1418,1434-1436,1443-1444,1501,1559,1648,1664,1694,1714,1845,1937,1940,1988,1998,2006,2016,2025,2066,2129,2148,2164,2258,2608,2795,2823,2831,2914,2978,2993,3012,3055-3058,3061-3063,3443,3613,3704,3727,3803,4315,4321-4323,4329-4331,4370,4529,4539,4548,4559,4593,4671,4716,4731,4766,4866,4931,4940,4994-4996,5025,5045,5142,5148,5185,5206,5231,5288,5293,5377,5390,5436,5441,5466,5495,5499,5503,5526,5546,5616,5807,5933,5981,6107,6122,6295,6300,6347,6448,6685,6712,6729,6855,6860,6956,6962,7031,7444,7494,7534,7537,7578,7586,7610,7653,7667,7675,7724,7744,7761,7840,7878,7891,7904,8097,8101,8105-8107,8162,8233,8280,8283,8286,8289-8290,8401,8409,8437,8472-8474,8489,8585,8610,8626,8636,8660,8664,8687,9055,9292,9312,9436,9448
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "01ec2911d4c7c6a9070f3cb1d879d522a23859dc",
+  "prompts": {
+    "3f20071a1278ccd7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7e27-9bfa-7561-8c64-01cec23a81ee",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 88940,
+      "overriden_lines": 297
+    },
+    "a6d275f7fcd9c0ae": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7ce6-2981-76f0-9d8c-febff62e4c66",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 245563,
+      "overriden_lines": 3141
+    },
+    "b5fd1e627f70262c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d7f1a-c347-7971-a1a2-9c39867986ae",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2653,
+      "overriden_lines": 7
+    },
+    "cd76b5e618e49632": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8290-9188-7543-8c42-3d7e728d2b75",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 116,
+      "overriden_lines": 5
+    },
+    "e8500b97918814cd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8414-a205-7ef2-b065-fd203ad960c5",
+        "model": "gpt-5.2-codex"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 5217,
+      "total_deletions": 5217,
+      "accepted_lines": 6743,
+      "overriden_lines": 23
+    }
+  }
+}
