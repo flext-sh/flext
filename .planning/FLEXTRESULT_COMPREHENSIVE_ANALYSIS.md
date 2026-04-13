@@ -135,7 +135,7 @@ r[Entry].fail(
 
 **Current**:
 ```python
-async def fetch_user() -> r[User]:  # Returns sync r
+async def fetch_user() -> p.Result[User]:  # Returns sync r
     try:
         user = await async_db.get_user()
         return r[User].ok(user)
@@ -159,7 +159,9 @@ if result.is_success:
 class AsyncResult[T]:
     """Async-aware Result type with async operators"""
 
-    async def flat_map_async[U](self, func: Callable[[T], Awaitable[r[U]]]) -> r[U]:
+    async def flat_map_async[U](
+        self, func: Callable[[T], Awaitable[r[U]]]
+    ) -> p.Result[U]:
         """Async composition operator"""
         if self.is_failure:
             return r[U].fail(...)
@@ -195,7 +197,7 @@ except Exception as e:
 class Fallible(Protocol[T]):
     """Operation that may fail"""
 
-    def execute(self) -> r[T]: ...
+    def execute(self) -> p.Result[T]: ...
 
 
 # Type-aware factory
@@ -203,7 +205,7 @@ def make_fallible[T](func: Callable[[], T]) -> Fallible[T]:
     """Wrap sync function in Fallible contract"""
 
     class FallibleImpl(Fallible[T]):
-        def execute(self) -> r[T]:
+        def execute(self) -> p.Result[T]:
             try:
                 return r[T].ok(func())
             except Exception as e:
@@ -213,7 +215,7 @@ def make_fallible[T](func: Callable[[], T]) -> Fallible[T]:
 
 
 # Enforce at type level
-def run_operation(op: Fallible[Settings]) -> r[Settings]:
+def run_operation(op: Fallible[Settings]) -> p.Result[Settings]:
     return op.execute()  # Type checker enforces Result
 ```
 
@@ -252,7 +254,7 @@ class ResultTuple:
     def all[A, B](
         ra: r[A],
         rb: r[B]
-    ) -> r[tuple[A, B]]:
+    ) -> p.Result[tuple[A, B]]:
         """Combine two results"""
         if ra.is_failure:
             return r[tuple[A, B]].fail(ra.error or "")
@@ -265,7 +267,7 @@ class ResultTuple:
         ra: r[A],
         rb: r[B],
         rc: r[C]
-    ) -> r[tuple[A, B, C]]:
+    ) -> p.Result[tuple[A, B, C]]:
         """Combine three results"""
         if ra.is_failure:
             return r[tuple[A, B, C]].fail(ra.error or "")
@@ -518,7 +520,9 @@ class r[T](u.RuntimeResult[T]):
         )
 
     # Async support
-    async def flat_map_async[U](self, func: Callable[[T], Awaitable[r[U]]]) -> r[U]:
+    async def flat_map_async[U](
+        self, func: Callable[[T], Awaitable[r[U]]]
+    ) -> p.Result[U]:
         """Async composition operator"""
         if self.is_failure:
             return r[U].fail(
@@ -531,7 +535,7 @@ class r[T](u.RuntimeResult[T]):
 
     # Cross-result operations
     @staticmethod
-    def combine2[A, B](ra: r[A], rb: r[B]) -> r[tuple[A, B]]:
+    def combine2[A, B](ra: r[A], rb: r[B]) -> p.Result[tuple[A, B]]:
         """Type-safe combination of two results"""
         if ra.is_failure:
             return r[tuple[A, B]].fail(ra.error or "")
@@ -540,7 +544,7 @@ class r[T](u.RuntimeResult[T]):
         return r[tuple[A, B]].ok((ra.value, rb.value))
 
     @staticmethod
-    def combine3[A, B, C](ra: r[A], rb: r[B], rc: r[C]) -> r[tuple[A, B, C]]:
+    def combine3[A, B, C](ra: r[A], rb: r[B], rc: r[C]) -> p.Result[tuple[A, B, C]]:
         """Type-safe combination of three results"""
         if ra.is_failure:
             return r[tuple[A, B, C]].fail(ra.error or "")

@@ -268,7 +268,7 @@ def _rope_rename(
     new_name: str,
     *,
     dry_run: bool = False,
-) -> r[t.StrSequence]:
+) -> p.Result[t.StrSequence]:
     """Execute a rope rename and return change descriptions."""
     try:
         resource = project.get_resource(resource_path)

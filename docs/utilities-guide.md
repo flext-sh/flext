@@ -334,7 +334,7 @@ Add utility method to flext-core when:
 
 class FlextUtilitiesConversion:
     @staticmethod
-    def new_method(value: m.Core.Tests.UtilityInputModel) -> r[str]:
+    def new_method(value: m.Core.Tests.UtilityInputModel) -> p.Result[str]:
         """New utility method."""
         try:
             result = ...process value...

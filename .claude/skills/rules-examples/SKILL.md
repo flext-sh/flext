@@ -64,7 +64,7 @@ python examples/complete_workflow_example.py --help || true
 Good:
 
 ```python
-from flext_core import r
+from flext_core import r, p
 ```
 
 Why good: stable public import with canonical alias.

@@ -282,7 +282,7 @@ from abc import ABC, abstractmethod
 class CommandBus(Protocol):
     """Structural interface for command dispatching."""
 
-    def dispatch(self, command: BaseModel) -> r[BaseModel]: ...
+    def dispatch(self, command: BaseModel) -> p.Result[BaseModel]: ...
 
 
 # ABC — inheritance contract
@@ -290,11 +290,11 @@ class BaseHandler(ABC):
     """Abstract base for handlers with shared implementation."""
 
     @abstractmethod
-    def handle(self, message: BaseModel) -> r[BaseModel]:
+    def handle(self, message: BaseModel) -> p.Result[BaseModel]:
         """Subclasses MUST implement."""
         ...
 
-    def validate(self, message: BaseModel) -> r[bool]:
+    def validate(self, message: BaseModel) -> p.Result[bool]:
         """Shared implementation."""
         return r[bool].ok(True)
 ```

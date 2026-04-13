@@ -112,7 +112,7 @@ class Ex00UserProfile(m.Entity):
     email: str = Field(min_length=1)
     status: c.Status = c.Status.ACTIVE
 
-    def activate(self) -> r[None]:
+    def activate(self) -> p.Result[None]:
         """Activate user once."""
         if self.status == c.Status.ACTIVE:
             return r[None].fail("Already active")
@@ -431,7 +431,7 @@ def run_raw(
     cwd: Path | None = None,
     timeout: int | None = None,
     env: t.StrMapping | None = None,
-) -> r[m.Infra.CommandOutput]:
+) -> p.Result[m.Infra.CommandOutput]:
     """Run command without enforcing exit code.
 
     Executes subprocess and returns combined stdout/stderr regardless
@@ -459,7 +459,7 @@ def create_checkpoint(
     workspace_root: Path,
     *,
     label: str = "flext-checkpoint",
-) -> r[str]:
+) -> p.Result[str]:
     """Create timestamped git stash checkpoint and return reference.
 
     Idempotent: succeeds silently if workspace is not a git repo or has

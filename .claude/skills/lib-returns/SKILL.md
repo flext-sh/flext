@@ -70,44 +70,44 @@ description: r railway composition built on dry-python/returns. Use when impleme
 **Import pattern** (all subprojects):
 
 ```python
-from flext_core import r, r
+from flext_core import r, p, r
 
 # or via short alias:
-from flext_core import r
+from flext_core import r, p
 ```
 
 ### Factory Methods
 
 | Method                 | Signature                                                                                                                    | Purpose                                                 |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| `r[T].ok(value)`       | `ok[T](cls, value: T) -> r[T]`                                                                                     | Wrap success value (raises `ValueError` if `None`)      |
-| `r[U].fail(error)`        | `fail[U](cls, error: str \| None, error_code: str \| None = None, error_data: m.Core.Tests.ResultErrorDataModel \| None = None) -> r[U]` | Create failure with message, optional code and metadata |
+| `r[T].ok(value)`       | `ok[T](cls, value: T) -> p.Result[T]`                                                                                     | Wrap success value (raises `ValueError` if `None`)      |
+| `r[U].fail(error)`        | `fail[U](cls, error: str \| None, error_code: str \| None = None, error_data: m.Core.Tests.ResultErrorDataModel \| None = None) -> p.Result[U]` | Create failure with message, optional code and metadata |
 | `r.safe`     | `safe[T](func: p.VariadicCallable[T]) -> p.VariadicCallable[r[T]]`                                                 | Decorator — catches exceptions, returns `.fail()`       |
-| `create_from_callable` | `create_from_callable(cls, func: Callable[[], T_co], error_code: str \| None = None) -> r[T_co]`                   | Execute callable, wrap result or exception              |
+| `create_from_callable` | `create_from_callable(cls, func: Callable[[], T_co], error_code: str \| None = None) -> p.Result[T_co]`                   | Execute callable, wrap result or exception              |
 
 ### Monadic Composition Chain
 
 | Method            | Signature                                                                       | When to use                                  |
 | ----------------- | ------------------------------------------------------------------------------- | -------------------------------------------- |
-| `.map(func)`      | `map[U](self, func: Callable[[T_co], U]) -> r[U]`                     | Transform success value with a pure function |
-| `.flat_map(func)` | `flat_map[U](self, func: Callable[[T_co], RuntimeResult[U]]) -> r[U]` | Chain operations returning `r`     |
+| `.map(func)`      | `map[U](self, func: Callable[[T_co], U]) -> p.Result[U]`                     | Transform success value with a pure function |
+| `.flat_map(func)` | `flat_map[U](self, func: Callable[[T_co], RuntimeResult[U]]) -> p.Result[U]` | Chain operations returning `r`     |
 | `.and_then(func)` | alias for `.flat_map()`                                                         | RFC-compliant name                           |
-| `.filter(pred)`   | `filter(self, predicate: Callable[[T_co], bool]) -> r[T_co]`          | Keep value if predicate passes, else fail    |
+| `.filter(pred)`   | `filter(self, predicate: Callable[[T_co], bool]) -> p.Result[T_co]`          | Keep value if predicate passes, else fail    |
 
 ### Failure Recovery
 
 | Method                            | Signature                                                                     | When to use                                    |
 | --------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------- |
-| `.recover(func)`                  | `recover(self, func: Callable[[str], T_co]) -> r[T_co]`             | Replace failure with computed fallback value   |
-| `.lash(func)`                     | `lash(self, func: Callable[[str], RuntimeResult[T_co]]) -> r[T_co]` | Recover from failure by returning a new result |
+| `.recover(func)`                  | `recover(self, func: Callable[[str], T_co]) -> p.Result[T_co]`             | Replace failure with computed fallback value   |
+| `.lash(func)`                     | `lash(self, func: Callable[[str], RuntimeResult[T_co]]) -> p.Result[T_co]` | Recover from failure by returning a new result |
 | `.or_else(func)`                  | alias for `.lash()`                                                           | RFC-standard name                              |
-| `.alt(func)` / `.map_error(func)` | `alt(self, func: Callable[[str], str]) -> r[T_co]`                  | Transform error message without recovering     |
+| `.alt(func)` / `.map_error(func)` | `alt(self, func: Callable[[str], str]) -> p.Result[T_co]`                  | Transform error message without recovering     |
 
 ### Side Effects
 
 | Method             | Signature                                                      | When to use                                  |
 | ------------------ | -------------------------------------------------------------- | -------------------------------------------- |
-| `.tap(func)`       | `tap(self, func: Callable[[T_co], None]) -> r[T_co]` | Logging/metrics on success, result unchanged |
+| `.tap(func)`       | `tap(self, func: Callable[[T_co], None]) -> p.Result[T_co]` | Logging/metrics on success, result unchanged |
 | `.tap_error(func)` | `tap_error(self, func: Callable[[str], None]) -> Self`         | Logging/metrics on failure, result unchanged |
 
 ### Value Extraction
@@ -123,16 +123,16 @@ from flext_core import r
 
 | Method                                    | Signature                                                                                                     | When to use                                |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| `r.traverse(items, func)`       | `traverse[T, U](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> r[Sequence[U]]`       | Map over sequence, fail-fast or accumulate |
-| `r.accumulate_errors(*results)` | `accumulate_errors(cls, *results: r[U]) -> r[Sequence[U]]`                                    | Collect all successes, combine all errors  |
-| `r.parallel_map(items, func)`   | `parallel_map[T, U2](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> r[Sequence[U2]]` | Same semantics as traverse                 |
+| `r.traverse(items, func)`       | `traverse[T, U](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> p.Result[Sequence[U]]`       | Map over sequence, fail-fast or accumulate |
+| `r.accumulate_errors(*results)` | `accumulate_errors(cls, *results: r[U]) -> p.Result[Sequence[U]]`                                    | Collect all successes, combine all errors  |
+| `r.parallel_map(items, func)`   | `parallel_map[T, U2](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> p.Result[Sequence[U2]]` | Same semantics as traverse                 |
 
 ### Pydantic Integration
 
 | Method                          | Signature                                                                                      | When to use                             |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------- |
-| `.from_validation(data, model)` | `from_validation(cls, data, model: type[T_Model]) -> r[T_Model]` | Validate data against Pydantic model    |
-| `.to_model(model)`              | `to_model[U: BaseModel](self, model: type[U]) -> r[U]`                               | Convert success value to Pydantic model |
+| `.from_validation(data, model)` | `from_validation(cls, data, model: type[T_Model]) -> p.Result[T_Model]` | Validate data against Pydantic model    |
+| `.to_model(model)`              | `to_model[U: BaseModel](self, model: type[U]) -> p.Result[U]`                               | Convert success value to Pydantic model |
 
 ### Resource Management
 
@@ -168,10 +168,10 @@ if successful_result(result):
 ### Good: Railway composition chain
 
 ```python
-from flext_core import r
+from flext_core import r, p
 
 
-def process_user(user_id: str) -> r[UserResponse]:
+def process_user(user_id: str) -> p.Result[UserResponse]:
     return (
         r[User]
         .from_validation({"id": user_id}, User)
@@ -253,8 +253,8 @@ result = r(Success(value))
 | `flext-auth`     | `provider_service.py`, `token_service.py`, `registry.py`, `api.py` | `from flext_core import r` — service results, auth flows |
 | `flext-grpc`     | `api.py`                                                           | r for gRPC operation results                   |
 | `flext-dbt-ldif` | `dbt_client.py`, `models.py`, `settings.py`                        | Business rule validation, DBT workflow results           |
-| `flext-tap-ldif` | `utilities.py`                                                     | `from flext_core import r, t`                  |
-| `flext-meltano`  | `dbt/service.py`                                                   | `from flext_core import r, s`                 |
+| `flext-tap-ldif` | `utilities.py`                                                     | `from flext_core import r, p, t`                  |
+| `flext-meltano`  | `dbt/service.py`                                                   | `from flext_core import r, p, s`                 |
 | `flext-cli`      | service modules                                                    | CLI operation results                                    |
 
 ## Verification

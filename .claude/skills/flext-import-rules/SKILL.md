@@ -151,7 +151,7 @@ There is **no** distinction between internal and external import style.
 
 ```python
 # ✅ CORRECT — Always import from root namespace
-from flext_core import FlextConstants, FlextModels, u, c, e, m, p, r, t, u
+from flext_core import FlextConstants, FlextModels, u, c, e, m, p, r, p, t, u
 
 
 # ✅ CORRECT — Import from _models/ or _utilities/ (inside their own facades only)
@@ -173,9 +173,9 @@ from flext_core import t
 ### Pattern A: Import with alias (most common, used in 90%+ of files)
 
 ```python
-from flext_core import m, r, t
+from flext_core import m, r, p, t
 from flext_core import m, u
-from flext_core import r, s, t, e  # pre-aliased letters
+from flext_core import r, p, s, t, e  # pre-aliased letters
 ```
 
 ### Pattern B: Import specific class from submodule (used for non-aliased classes)
@@ -380,7 +380,7 @@ exported in `__init__.py` and used throughout the codebase for concise code:
 ```python
 # REAL code from the codebase:
 from flext_core import m
-from flext_core import r
+from flext_core import r, p
 from flext_core import h
 
 

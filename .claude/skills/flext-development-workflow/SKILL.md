@@ -356,7 +356,7 @@ def process_command(
     command: m.Cqrs.Command,
     *,
     timeout: float = 30.0,
-) -> r[bool]:
+) -> p.Result[bool]:
     """Process a CQRS command through the dispatcher.
 
     Args:

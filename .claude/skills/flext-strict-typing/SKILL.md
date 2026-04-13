@@ -97,7 +97,7 @@ Good:
 from flext_core import p, r
 
 
-def parse_payload(payload: p.MappingLikePayload) -> r[str]:
+def parse_payload(payload: p.MappingLikePayload) -> p.Result[str]:
     return r[str].ok("ok")
 ```
 
@@ -524,14 +524,14 @@ When a typing rule is violated, prefer architecture-aware fixes over mechanical 
 
 ```python
 # ✅ Every function/method MUST have explicit return type
-def process(self, data: m.Domain.ProcessInputModel) -> r[bool]: ...
+def process(self, data: m.Domain.ProcessInputModel) -> p.Result[bool]: ...
 
 
 def validate(self, value: str) -> str: ...
 
 
 # ✅ Use r[T] for operations that can fail
-def load_config(self) -> r[m.Domain.ConfigModel]: ...
+def load_config(self) -> p.Result[m.Domain.ConfigModel]: ...
 
 
 # ❌ WRONG — Missing return type
@@ -710,7 +710,7 @@ Dismantle polymorphic functions: replace multiple branches on type/union with a 
 
 ```python
 # ❌ AVOID — many branches on polymorphic input in one function
-def process(data: m.Domain.ProcessInputModel) -> r[str]: ...
+def process(data: m.Domain.ProcessInputModel) -> p.Result[str]: ...
 
 
 # ✅ PREFER — single model with validation
@@ -755,7 +755,7 @@ Agents MUST apply the following when editing FLEXT code. No exceptions without e
 ### `r` Alias — Universal Import Pattern
 
 ```python
-from flext_core import r, r
+from flext_core import r, p, r
 # Use `r` everywhere:
 #   r[T].ok(value)  — success (subscript sets T from value)
 #   r.fail("msg")   — failure (no subscript, U inferred from return context)
@@ -776,7 +776,7 @@ from typing import cast
 
 class r[T_co](u.RuntimeResult[T_co]):
     @classmethod
-    def ok[T](cls, value: T) -> r[T]:
+    def ok[T](cls, value: T) -> p.Result[T]:
         # T inferred from value — no cast needed
         return r[T](Success(value))
 
@@ -786,7 +786,7 @@ class r[T_co](u.RuntimeResult[T_co]):
         error: str | None,
         error_code: str | None = None,
         error_data: m.Core.Tests.ResultErrorDataModel | None = None,
-    ) -> r[U]:
+    ) -> p.Result[U]:
         error_msg = error if error is not None else ""
         result = Failure(error_msg)
         # cast() required: Failure → Result[Never, str] is invariant,
@@ -809,14 +809,14 @@ generic subscript (ruff RUF046).
 
 ```python
 # Return-type annotation drives U inference for fail():
-def load(self) -> r[float]:
+def load(self) -> p.Result[float]:
     if not self._ready:
         return r.fail("Not ready")  # U inferred as float ✓
     return r[float].ok(self._value)  # T inferred from value ✓
 
 
 # Chain composition:
-def process(self) -> r[str]:
+def process(self) -> p.Result[str]:
     return (
         self.load().map(lambda v: f"Value: {v}")  # r[str]
     )

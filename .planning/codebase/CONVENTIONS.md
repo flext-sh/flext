@@ -100,7 +100,7 @@ Never use `typing.List`, `typing.Dict`, or `typing.Tuple` – use `list`, `dict`
 **Patterns:**
 ```python
 # Correct: Railway-oriented error handling
-def process_data(value: str) -> r[ProcessedData]:
+def process_data(value: str) -> p.Result[ProcessedData]:
     return validate(value).flat_map(parse).flat_map(transform)
 
 
@@ -162,7 +162,7 @@ logger.warning("high_latency", duration_ms=elapsed, threshold_ms=1000)
   - Example: code snippet if behavior is non-obvious
 
 ```python
-def ensure_valid_port(value: int) -> r[int]:
+def ensure_valid_port(value: int) -> p.Result[int]:
     """Ensure value is a valid network port number.
 
     Args:
@@ -187,7 +187,7 @@ def ensure_valid_port(value: int) -> r[int]:
 **Parameters:**
 - Use dataclass or Pydantic models for multiple related parameters
 - Keyword-only after 2-3 positional args: `def func(arg1, arg2, *, kwarg1, kwarg2)`
-- Type hints MANDATORY for all parameters: `def func(value: str) -> r[Result]:`
+- Type hints MANDATORY for all parameters: `def func(value: str) -> p.Result[Result]:`
 - Never use `*args` or `**kwargs` in production code (only test fixtures)
 
 **Return Values:**

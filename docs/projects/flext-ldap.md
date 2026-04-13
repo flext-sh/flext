@@ -10,7 +10,7 @@
 - [Support & contributions](#support-contributions)
 <!-- TOC END -->
 
-FLEXT LDAP (v0.10.3) is the universal directory-services foundation that every FLEXT project uses for LDAP operations. It wraps `ldap3`, r, and the flext-ldif converters in a clean architecture stack so teams can rely on server-specific implementations (OpenLDAP, Oracle OID/OUD, Active Directory, generic LDAP) without copying code.
+FLEXT LDAP (v0.10.3) is the universal directory-services foundation that every FLEXT project uses for LDAP operations. It wraps `ldap3`, r, p, and the flext-ldif converters in a clean architecture stack so teams can rely on server-specific implementations (OpenLDAP, Oracle OID/OUD, Active Directory, generic LDAP) without copying code.
 
 ## Status & signals
 

@@ -102,7 +102,7 @@ class FlextObservabilityTracingMixin:
     @staticmethod
     def start_trace(
         name: str, attributes: t.ScalarMapping | None = None
-    ) -> r[m.Observability.Trace]: ...
+    ) -> p.Result[m.Observability.Trace]: ...
 ```
 
 ```python
@@ -183,7 +183,7 @@ m = FlextTargetOracleModels
 ```python
 # Runtime usage — only runtime alias m; access keeps the domain path
 from .models import m
-from flext_core import r
+from flext_core import r, p
 
 schema = m.Meltano.SingerSchemaMessage(data)
 result = r[m.TargetOracle.ExecuteResult].ok(m.TargetOracle.ExecuteResult(name="x"))
@@ -258,7 +258,7 @@ from them creates confusing duplicates and breaks type identity.
 - For protocol payloads (Singer/CLI/API), prefer canonical Pydantic message models over repeated ad-hoc dict key/type checks in handlers.
 
 ```python
-from flext_core import r
+from flext_core import r, p
 
 
 def transform(value: str):

@@ -173,7 +173,7 @@ def emit(
 @staticmethod
 def iter_projects(
     cli: FlextInfraUtilitiesCli.CliArgs,
-) -> r[list[m.Infra.Workspace.ProjectInfo]]:
+) -> p.Result[list[m.Infra.Workspace.ProjectInfo]]:
     result = FlextInfraUtilitiesDiscovery.discover_projects(cli.workspace)
     if result.is_failure:
         return result

@@ -36,7 +36,7 @@ pip install flext-cli
 
 ```python
 from flext_cli import cli
-from flext_core import r
+from flext_core import r, p
 
 
 result = (

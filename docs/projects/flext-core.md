@@ -42,7 +42,7 @@ container = FlextContainer.get_global()
 dispatcher = FlextDispatcher()
 
 
-def handler(value: str) -> r[str]:
+def handler(value: str) -> p.Result[str]:
     if "@" not in value:
         return r[str].fail("invalid email")
     return r[str].ok(value.upper())
