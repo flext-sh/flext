@@ -1,3 +1,10 @@
+---
+
+name: lib-structlog
+description: FlextLogger structured logging with context propagation, DI factories, and result adapters. Use when adding logging, binding context, or configuring structlog processors.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -20,13 +27,6 @@
   - [Bad: Forgetting to clean up scoped context](#bad-forgetting-to-clean-up-scoped-context)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: lib-structlog
-description: FlextLogger structured logging with context propagation, DI factories, and result adapters. Use when adding logging, binding context, or configuring structlog processors.
-
----
 
 # Lib Structlog — FlextLogger and Context-Aware Logging
 

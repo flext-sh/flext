@@ -1,3 +1,10 @@
+---
+
+name: lib-orjson
+description: Deterministic high-performance JSON serialization with orjson in flext_core utilities. Trigger when editing sort keys, cache normalization, or JSON boundary conversion logic.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -9,13 +16,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: lib-orjson
-description: Deterministic high-performance JSON serialization with orjson in flext_core utilities. Trigger when editing sort keys, cache normalization, or JSON boundary conversion logic.
-
----
 
 ## Scope
 

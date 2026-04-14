@@ -1,3 +1,10 @@
+---
+
+name: flext-patterns
+description: Repository-native implementation patterns for result flow, DI, logging, and typed boundaries. Use when selecting or standardizing implementation style.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -11,13 +18,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: flext-patterns
-description: Repository-native implementation patterns for result flow, DI, logging, and typed boundaries. Use when selecting or standardizing implementation style.
-
----
 
 # Flext Patterns
 

@@ -1,3 +1,10 @@
+---
+
+name: scripts-validation
+description: Validation services — policy gates, automated checks, ast-grep enforcement, and workspace validation. Use when using flext_infra.check or editing scripts/validation/.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -9,13 +16,6 @@
 - [Verification](#verification)
 - [Scripts](#scripts)
 <!-- TOC END -->
-
----
-
-name: scripts-validation
-description: Validation services — policy gates, automated checks, ast-grep enforcement, and workspace validation. Use when using flext_infra.check or editing scripts/validation/.
-
----
 
 # Scripts Validation
 

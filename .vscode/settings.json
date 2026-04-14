@@ -48,6 +48,18 @@
   "pyrefly.lspPath": ".venv/bin/pyrefly",
   "python.pyrefly.diagnosticMode": "workspace",
   "python.pyrefly.displayTypeErrors": "default",
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python-envs.workspaceSearchPaths": [
+    "./.venv",
+    "./**/.venv"
+  ],
+  "python-envs.terminal.autoActivationType": "shellStartup",
+  "python.terminal.activateEnvironment": true,
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "terminal.integrated.env.linux": {
+    "VIRTUAL_ENV": "${workspaceFolder}/.venv",
+    "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}"
+  },
   "python.languageServer": "None",
   "python.useEnvironmentsExtension": true,
   "pylsp.plugins.pycodestyle.enabled": false,
@@ -67,5 +79,5 @@
   "ruff.nativeServer": "on",
   "ruff.interpreter": [
     ".venv/bin/ruff"
-  ],
+  ]
 }

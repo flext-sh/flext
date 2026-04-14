@@ -1,3 +1,10 @@
+---
+
+name: rules-docker
+description: Rules for Docker assets in `docker/`, including compose files and image folders. Use when editing container configs, service wiring, or docker validation scripts.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -8,13 +15,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: rules-docker
-description: Rules for Docker assets in `docker/`, including compose files and image folders. Use when editing container configs, service wiring, or docker validation scripts.
-
----
 
 # Rules Docker
 

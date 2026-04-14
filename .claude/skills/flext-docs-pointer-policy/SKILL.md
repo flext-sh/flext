@@ -1,3 +1,10 @@
+---
+
+name: flext-docs-pointer-policy
+description: Canonical documentation-governance policy for agent configs: one root source, lightweight pointers everywhere else.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -8,13 +15,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: flext-docs-pointer-policy
-description: Canonical documentation-governance policy for agent configs: one root source, lightweight pointers everywhere else.
-
----
 
 # Flext Docs Pointer Policy
 

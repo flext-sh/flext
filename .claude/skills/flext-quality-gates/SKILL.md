@@ -1,3 +1,10 @@
+---
+
+name: flext-quality-gates
+description: Mandatory verification gates with exact tool commands, thresholds, and configuration sources from base.mk and pyproject.toml
+
+---
+
 <!-- TOC START -->
 
 - [Standardized Make Gate Surface](#standardized-make-gate-surface)
@@ -5,13 +12,6 @@
 - [Thresholds Summary](#thresholds-summary)
 - [When to Run Which Gate](#when-to-run-which-gate)
 <!-- TOC END -->
-
----
-
-name: flext-quality-gates
-description: Mandatory verification gates with exact tool commands, thresholds, and configuration sources from base.mk and pyproject.toml
-
----
 
 # FLEXT Quality Gates
 

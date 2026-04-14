@@ -1,3 +1,10 @@
+---
+
+name: lib-pydantic-settings
+description: Pydantic ConfigDict and singleton settings patterns across FLEXT subprojects. Trigger when editing settings.py models, env bindings, or configuration validation behavior.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -11,13 +18,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: lib-pydantic-settings
-description: Pydantic ConfigDict and singleton settings patterns across FLEXT subprojects. Trigger when editing settings.py models, env bindings, or configuration validation behavior.
-
----
 
 **Reviewed**: 2026-04-05 | **Scope**: MRO composition, auto-MRO env sources, forbidden patterns
 

@@ -1,3 +1,10 @@
+---
+
+name: python-313-typing
+description: Comprehensive Python 3.13 typing PEPs reference — PEP 696 (type defaults), PEP 702 (@deprecated), PEP 705 (ReadOnly), PEP 742 (TypeIs). Use when working with Python 3.13+ type features.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -13,13 +20,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: python-313-typing
-description: Comprehensive Python 3.13 typing PEPs reference — PEP 696 (type defaults), PEP 702 (@deprecated), PEP 705 (ReadOnly), PEP 742 (TypeIs). Use when working with Python 3.13+ type features.
-
----
 
 # Python 3.13 Typing
 

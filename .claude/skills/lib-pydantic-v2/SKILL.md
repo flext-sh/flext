@@ -1,3 +1,10 @@
+---
+
+name: lib-pydantic-v2
+description: Pydantic v2 model, validation, and serialization patterns used across FLEXT. Use when creating models, adding validators, using ConfigDict, TypeAdapter, or model_validate/model_dump.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -21,13 +28,6 @@
 - [Subproject Usage Map](#subproject-usage-map)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: lib-pydantic-v2
-description: Pydantic v2 model, validation, and serialization patterns used across FLEXT. Use when creating models, adding validators, using ConfigDict, TypeAdapter, or model_validate/model_dump.
-
----
 
 # Lib Pydantic V2 — Models, Validators, and Adapters
 

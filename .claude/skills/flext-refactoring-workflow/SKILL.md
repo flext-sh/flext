@@ -1,3 +1,10 @@
+---
+
+name: flext-refactoring-workflow
+description: Step-by-step refactoring process with verified quality gates and Make targets
+
+---
+
 <!-- TOC START -->
 
 - [Pre-Refactoring Checklist](#pre-refactoring-checklist)
@@ -23,13 +30,6 @@
   - [Test Failures](#test-failures)
 - [CRITICAL RULES](#critical-rules)
 <!-- TOC END -->
-
----
-
-name: flext-refactoring-workflow
-description: Step-by-step refactoring process with verified quality gates and Make targets
-
----
 
 # FLEXT Refactoring Workflow
 

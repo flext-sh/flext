@@ -1,3 +1,10 @@
+---
+
+name: pydantic-v2-patterns
+description: Deep-dive patterns companion to lib-pydantic-v2 for advanced Pydantic v2 implementation in FLEXT.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -14,13 +21,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: pydantic-v2-patterns
-description: Deep-dive patterns companion to lib-pydantic-v2 for advanced Pydantic v2 implementation in FLEXT.
-
----
 
 # Pydantic v2 Patterns
 

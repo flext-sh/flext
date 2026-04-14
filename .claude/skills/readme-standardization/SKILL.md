@@ -1,3 +1,10 @@
+---
+
+name: readme-standardization
+description: Comprehensive guide and tooling for creating, maintaining, and updating README.md files across the FLEXT ecosystem.
+
+---
+
 <!-- TOC START -->
 
 - [🎯 Objectives](#-objectives)
@@ -12,13 +19,6 @@
 - [🔄 Workflow](#-workflow)
 - [🧩 Integration with other Skills](#-integration-with-other-skills)
 <!-- TOC END -->
-
----
-
-name: readme-standardization
-description: Comprehensive guide and tooling for creating, maintaining, and updating README.md files across the FLEXT ecosystem.
-
----
 
 # README Standardization Skill
 

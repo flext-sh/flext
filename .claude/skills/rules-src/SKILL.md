@@ -1,3 +1,10 @@
+---
+
+name: rules-src
+description: Rules for shared source modules under top-level `src/`. Use when editing common source code that impacts multiple packages or utilities.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -8,13 +15,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: rules-src
-description: Rules for shared source modules under top-level `src/`. Use when editing common source code that impacts multiple packages or utilities.
-
----
 
 # Rules Src
 

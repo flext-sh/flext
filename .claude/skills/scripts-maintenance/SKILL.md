@@ -1,3 +1,10 @@
+---
+
+name: scripts-maintenance
+description: Maintenance services — health checks, workspace status, git cleanup, and operational tooling. Use when using flext_infra.maintenance or editing scripts/maintenance/ or scripts/git/.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -9,13 +16,6 @@
 - [Verification](#verification)
 - [Scripts](#scripts)
 <!-- TOC END -->
-
----
-
-name: scripts-maintenance
-description: Maintenance services — health checks, workspace status, git cleanup, and operational tooling. Use when using flext_infra.maintenance or editing scripts/maintenance/ or scripts/git/.
-
----
 
 # Scripts Maintenance
 

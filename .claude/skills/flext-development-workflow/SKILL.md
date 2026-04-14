@@ -1,3 +1,10 @@
+---
+
+name: flext-development-workflow
+description: Verified development workflow including toolchain, testing, and CI/CD for the FLEXT monorepo
+
+---
+
 <!-- TOC START -->
 
 - [Workspace Setup](#workspace-setup)
@@ -28,13 +35,6 @@
 - [Version Management](#version-management)
 - [Branching and Git Workflow](#branching-and-git-workflow)
 <!-- TOC END -->
-
----
-
-name: flext-development-workflow
-description: Verified development workflow including toolchain, testing, and CI/CD for the FLEXT monorepo
-
----
 
 # FLEXT Development Workflow
 

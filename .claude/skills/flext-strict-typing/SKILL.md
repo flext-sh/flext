@@ -1,3 +1,10 @@
+---
+
+name: flext-strict-typing
+description: Verified type system rules, type hierarchy, and enforcement policies for the FLEXT ecosystem
+
+---
+
 <!-- TOC START -->
 
 - [Python Version & Core Requirements](#python-version-core-requirements)
@@ -37,13 +44,6 @@
   - [Why `cast` Is Required](#why-cast-is-required)
   - [Usage Examples](#usage-examples)
   <!-- TOC END -->
-
----
-
-name: flext-strict-typing
-description: Verified type system rules, type hierarchy, and enforcement policies for the FLEXT ecosystem
-
----
 
 # FLEXT Strict Typing Rules
 

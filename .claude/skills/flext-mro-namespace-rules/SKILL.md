@@ -1,3 +1,10 @@
+---
+
+name: flext-mro-namespace-rules
+description: Canonical MRO namespace rules for facade naming, organic nested-domain access, and same-project import boundaries. Use when editing `constants.py`, `models.py`, `protocols.py`, `typings.py`, `utilities.py`, `tests/`, or any `_models/` and `_utilities/` mixin tree.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -8,13 +15,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: flext-mro-namespace-rules
-description: Canonical MRO namespace rules for facade naming, organic nested-domain access, and same-project import boundaries. Use when editing `constants.py`, `models.py`, `protocols.py`, `typings.py`, `utilities.py`, `tests/`, or any `_models/` and `_utilities/` mixin tree.
-
----
 
 # Flext MRO Namespace Rules
 

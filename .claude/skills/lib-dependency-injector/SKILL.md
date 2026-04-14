@@ -1,3 +1,10 @@
+---
+
+name: lib-dependency-injector
+description: dependency_injector bridge patterns for FLEXT runtime and container internals. Trigger when adding DI wiring, provider registration, or scoped test containers.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -9,13 +16,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: lib-dependency-injector
-description: dependency_injector bridge patterns for FLEXT runtime and container internals. Trigger when adding DI wiring, provider registration, or scoped test containers.
-
----
 
 ## Scope
 

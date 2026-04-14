@@ -1,3 +1,10 @@
+---
+
+name: testing-patterns
+description: Testing patterns, anti-patterns, and guidelines for Python/pytest in FLEXT — fixtures, parameterization, mocking strategy, r testing, and TDD. Use when writing or reviewing tests.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -15,13 +22,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: testing-patterns
-description: Testing patterns, anti-patterns, and guidelines for Python/pytest in FLEXT — fixtures, parameterization, mocking strategy, r testing, and TDD. Use when writing or reviewing tests.
-
----
 
 # Testing Patterns
 
