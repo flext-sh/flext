@@ -1,3 +1,10 @@
+---
+
+name: lib-pyyaml
+description: Safe and deterministic YAML read/write patterns across FLEXT subprojects. Trigger when modifying YAML parsing, settings files, CLI output formatting, or docs-maintenance tooling.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -9,13 +16,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: lib-pyyaml
-description: Safe and deterministic YAML read/write patterns across FLEXT subprojects. Trigger when modifying YAML parsing, settings files, CLI output formatting, or docs-maintenance tooling.
-
----
 
 ## Scope
 

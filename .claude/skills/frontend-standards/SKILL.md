@@ -1,3 +1,10 @@
+---
+
+name: frontend-standards
+description: Frontend development standards — accessibility, component design, CSS methodology, responsive design. Use when building or modifying UI components, styles, or layouts.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -12,13 +19,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: frontend-standards
-description: Frontend development standards — accessibility, component design, CSS methodology, responsive design. Use when building or modifying UI components, styles, or layouts.
-
----
 
 # Frontend Standards
 

@@ -1,3 +1,10 @@
+---
+
+name: flext-strict-refactoring
+description: Strict cleanup rules for removing duplication, stale policy text, and conflicting guidance in docs and skills. Use when normalizing documentation content.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -9,13 +16,6 @@
 - [Global Rules](#global-rules)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: flext-strict-refactoring
-description: Strict cleanup rules for removing duplication, stale policy text, and conflicting guidance in docs and skills. Use when normalizing documentation content.
-
----
 
 # Flext Strict Refactoring
 

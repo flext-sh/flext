@@ -1,3 +1,10 @@
+---
+
+name: flext-pyrefly-typecheck-fix
+description: Pyrefly type-check error detection and safe auto-fix rules for recurring error patterns across the FLEXT ecosystem
+
+---
+
 <!-- TOC START -->
 
 - [Purpose](#purpose)
@@ -10,13 +17,6 @@
 - [Verification](#verification)
 - [Hard Rules](#hard-rules)
 <!-- TOC END -->
-
----
-
-name: flext-pyrefly-typecheck-fix
-description: Pyrefly type-check error detection and safe auto-fix rules for recurring error patterns across the FLEXT ecosystem
-
----
 
 # Pyrefly Type-Check Fix Rules
 

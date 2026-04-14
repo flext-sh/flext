@@ -1,3 +1,10 @@
+---
+
+name: lib-returns
+description: r railway composition built on dry-python/returns. Use when implementing result-flow operations, error recovery chains, or converting between container types.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -27,13 +34,6 @@
 - [Subproject Usage Map](#subproject-usage-map)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: lib-returns
-description: r railway composition built on dry-python/returns. Use when implementing result-flow operations, error recovery chains, or converting between container types.
-
----
 
 # Lib Returns — r Railway Composition
 

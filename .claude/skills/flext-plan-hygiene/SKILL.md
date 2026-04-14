@@ -1,3 +1,10 @@
+---
+
+name: flext-plan-hygiene
+description: Plan consolidation, deduplication, and archival protocols to prevent plan proliferation and maintain single-source-of-truth task tracking.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -9,13 +16,6 @@
 - [Verification](#verification)
 
 <!-- TOC END -->
-
----
-
-name: flext-plan-hygiene
-description: Plan consolidation, deduplication, and archival protocols to prevent plan proliferation and maintain single-source-of-truth task tracking.
-
----
 
 # Flext Plan Hygiene
 

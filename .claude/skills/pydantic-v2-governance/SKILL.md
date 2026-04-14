@@ -1,3 +1,10 @@
+---
+
+name: pydantic-v2-governance
+description: Internal Pydantic v2 governance patterns for FLEXT 33-project monorepo. Use when creating models, validators, or working with Pydantic v2 features across the codebase.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -16,13 +23,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: pydantic-v2-governance
-description: Internal Pydantic v2 governance patterns for FLEXT 33-project monorepo. Use when creating models, validators, or working with Pydantic v2 features across the codebase.
-
----
 
 # Pydantic v2 Governance
 

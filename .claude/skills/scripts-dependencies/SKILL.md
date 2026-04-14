@@ -1,3 +1,10 @@
+---
+
+name: scripts-dependencies
+description: Dependency management — analysis, consolidation, discovery, caching, and synchronization. Use when editing scripts/dependencies/ or using flext_infra.deps.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -11,13 +18,6 @@
 - [Runtime vs dev dependency detection (automatic)](#runtime-vs-dev-dependency-detection-automatic)
 - [Typing libraries (types-\*) and dependency limits](#typing-libraries-types-and-dependency-limits)
 <!-- TOC END -->
-
----
-
-name: scripts-dependencies
-description: Dependency management — analysis, consolidation, discovery, caching, and synchronization. Use when editing scripts/dependencies/ or using flext_infra.deps.
-
----
 
 # Scripts Dependencies
 

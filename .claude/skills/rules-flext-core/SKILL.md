@@ -1,3 +1,10 @@
+---
+
+name: rules-flext-core
+description: Authoritative rules for `flext-core` architecture, typing, result flow, DI, and logging boundaries. Use when modifying files under `flext-core/`.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -8,13 +15,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: rules-flext-core
-description: Authoritative rules for `flext-core` architecture, typing, result flow, DI, and logging boundaries. Use when modifying files under `flext-core/`.
-
----
 
 # Rules Flext Core
 

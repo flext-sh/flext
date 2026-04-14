@@ -1,3 +1,10 @@
+---
+
+name: rules-pkg
+description: Rules for package metadata and package-layer structure under `pkg/`. Use when editing package descriptors, plugin manifests, or packaging utilities.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -8,13 +15,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: rules-pkg
-description: Rules for package metadata and package-layer structure under `pkg/`. Use when editing package descriptors, plugin manifests, or packaging utilities.
-
----
 
 # Rules Pkg
 

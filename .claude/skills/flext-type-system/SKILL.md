@@ -1,3 +1,10 @@
+---
+
+name: flext-type-system
+description: Canonical FLEXT type-system map for aliases, generics, result interplay, and settings contracts. Use when changing shared typing primitives.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](##scope)
@@ -8,13 +15,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: flext-type-system
-description: Canonical FLEXT type-system map for aliases, generics, result interplay, and settings contracts. Use when changing shared typing primitives.
-
----
 
 # Flext Type System
 

@@ -1,3 +1,10 @@
+---
+
+name: rules-github
+description: Rules for GitHub automation files in `.github/`, including workflows, templates, and dependency policy. Use when editing CI/CD or repo automation settings.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -8,13 +15,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: rules-github
-description: Rules for GitHub automation files in `.github/`, including workflows, templates, and dependency policy. Use when editing CI/CD or repo automation settings.
-
----
 
 # Rules GitHub
 

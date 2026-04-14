@@ -1,3 +1,10 @@
+---
+
+name: async-python-patterns
+description: Python asyncio patterns for FLEXT integrations — LDAP, Oracle, gRPC async operations. Use when building async pipelines, concurrent integrations, or I/O-bound FLEXT operations.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -14,13 +21,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: async-python-patterns
-description: Python asyncio patterns for FLEXT integrations — LDAP, Oracle, gRPC async operations. Use when building async pipelines, concurrent integrations, or I/O-bound FLEXT operations.
-
----
 
 # Async Python Patterns
 

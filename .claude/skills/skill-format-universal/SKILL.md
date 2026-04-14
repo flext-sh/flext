@@ -1,3 +1,10 @@
+---
+
+name: skill-format-universal
+description: Canonical format for project SKILL.md files using Anthropic standards and FLEXT evidence. Use when creating or rewriting any skill.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -8,13 +15,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: skill-format-universal
-description: Canonical format for project SKILL.md files using Anthropic standards and FLEXT evidence. Use when creating or rewriting any skill.
-
----
 
 # Skill Format Universal
 

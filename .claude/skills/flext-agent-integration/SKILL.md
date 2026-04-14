@@ -1,3 +1,10 @@
+---
+
+name: flext-agent-integration
+description: Guide for using MCP tools, skills, and agents in the FLEXT development workflow. Use at session start or when configuring agent tooling for FLEXT work.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -12,13 +19,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: flext-agent-integration
-description: Guide for using MCP tools, skills, and agents in the FLEXT development workflow. Use at session start or when configuring agent tooling for FLEXT work.
-
----
 
 # FLEXT Agent Integration
 

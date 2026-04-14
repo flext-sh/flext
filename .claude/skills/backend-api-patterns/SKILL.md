@@ -1,3 +1,10 @@
+---
+
+name: backend-api-patterns
+description: REST API design and database query patterns — endpoint design, status codes, SQL injection prevention, N+1 prevention, indexing, transactions. Use when building or optimizing API endpoints or database queries.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -14,13 +21,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: backend-api-patterns
-description: REST API design and database query patterns — endpoint design, status codes, SQL injection prevention, N+1 prevention, indexing, transactions. Use when building or optimizing API endpoints or database queries.
-
----
 
 # Backend API & Query Patterns
 

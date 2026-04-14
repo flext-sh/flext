@@ -1,3 +1,10 @@
+---
+
+name: flext-architecture-layers
+description: Layer map and dependency-direction contract for flext-core. Use when adding modules, moving responsibilities, or reviewing imports.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -8,13 +15,6 @@
 - [Workflow](#workflow)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: flext-architecture-layers
-description: Layer map and dependency-direction contract for flext-core. Use when adding modules, moving responsibilities, or reviewing imports.
-
----
 
 # Flext Architecture Layers
 

@@ -1,3 +1,10 @@
+---
+
+name: python-performance
+description: Profile and optimize Python code using cProfile, memory profilers, and performance best practices. Use when debugging slow pipelines, optimizing bottlenecks, or improving application throughput.
+
+---
+
 <!-- TOC START -->
 
 - [Scope](#scope)
@@ -14,13 +21,6 @@
 - [Examples](#examples)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: python-performance
-description: Profile and optimize Python code using cProfile, memory profilers, and performance best practices. Use when debugging slow pipelines, optimizing bottlenecks, or improving application throughput.
-
----
 
 # Python Performance Optimization
 

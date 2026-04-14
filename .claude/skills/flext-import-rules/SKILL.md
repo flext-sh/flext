@@ -1,3 +1,10 @@
+---
+
+name: flext-import-rules
+description: Exact import rules and patterns verified from the actual FLEXT codebase
+
+---
+
 <!-- TOC START -->
 
 - [Rule 1: Always Use `from **future** import annotations
@@ -33,13 +40,6 @@ from collections.abc import Mapping, Sequence`](#rule-1-always-use-from-future-i
   - [Enforcement](#enforcement)
 - [Verification](#verification)
 <!-- TOC END -->
-
----
-
-name: flext-import-rules
-description: Exact import rules and patterns verified from the actual FLEXT codebase
-
----
 
 # FLEXT Import Rules
 
