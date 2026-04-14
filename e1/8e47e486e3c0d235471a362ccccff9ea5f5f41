@@ -1,0 +1,45 @@
+.claude/skills/flext-pyrefly-typecheck-fix/rules/fix-result-object.yml
+  d915b9853f380ecb 4-5
+.planning/FLEXTRESULT_COMPREHENSIVE_ANALYSIS.md
+  d915b9853f380ecb 59-60,74,77,229-231,255-256,267-269,291,306,538,547-549
+.claude/skills/python-313-typing/SKILL.md
+  d915b9853f380ecb 189
+.claude/skills/rules-flext-core/SKILL.md
+  d915b9853f380ecb 77
+.claude/skills/flext-pyrefly-typecheck-fix/rules/detect-result-object.yml
+  d915b9853f380ecb 4
+.claude/skills/flext-patterns/SKILL.md
+  d915b9853f380ecb 267,282
+.claude/skills/flext-pyrefly-typecheck-fix/rules.yml
+  d915b9853f380ecb 27
+.claude/skills/testing-patterns/SKILL.md
+  d915b9853f380ecb 100
+.claude/skills/flext-pyrefly-typecheck-fix/rules/fix-ok-none.yml
+  d915b9853f380ecb 4-5,12-13
+.claude/skills/flext-pyrefly-typecheck-fix/rules/detect-ok-none.yml
+  d915b9853f380ecb 5-6
+.claude/skills/python-type-narrowing/SKILL.md
+  d915b9853f380ecb 169
+.claude/skills/lib-returns/SKILL.md
+  d915b9853f380ecb 127,142,181,190
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "e18e47e486e3c0d235471a362ccccff9ea5f5f41",
+  "prompts": {
+    "d915b9853f380ecb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d88a6-609e-7a00-a230-f6e534202261",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 7924,
+      "total_deletions": 44,
+      "accepted_lines": 7560,
+      "overriden_lines": 143
+    }
+  }
+}
