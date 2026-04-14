@@ -262,7 +262,9 @@ from flext_core import r, p
 
 
 def transform(value: str):
-    return r[str].ok(value).map(str.strip).flat_map(lambda v: r[str].ok(v.lower()))
+    return (
+        r[str].ok(value).map(str.strip).flat_map(lambda v: p.Result[str].ok(v.lower()))
+    )
 ```
 
 ## Workflow
@@ -277,7 +279,7 @@ def transform(value: str):
 Good:
 
 ```python
-result = r[int].ok(10).map(lambda v: v * 2).lash(lambda err: r[int].ok(0))
+result = r[int].ok(10).map(lambda v: v * 2).lash(lambda err: p.Result[int].ok(0))
 ```
 
 Why good: preserves typed success/failure flow with explicit recovery.

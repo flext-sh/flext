@@ -108,7 +108,7 @@ from flext_infra import FlextInfraPythonVersionEnforcer, m
 class FlextInfraCliMaintenance:
     """Maintenance CLI group — composed into FlextInfraCli via MRO."""
 
-    def _register_maintenance(self, app: object) -> None:
+    def _register_maintenance(self, app) -> None:
         """Register maintenance commands on the given Typer app."""
         service = FlextInfraPythonVersionEnforcer()
         cli.register_result_route(
@@ -215,7 +215,7 @@ from flext_infra import FlextInfraBaseMkGenerator, m
 class FlextInfraCliBasemk:
     """Basemk CLI group — composed into FlextInfraCli via MRO."""
 
-    def _register_basemk(self, app: object) -> None:
+    def _register_basemk(self, app) -> None:
         """Register basemk commands."""
         group = cli.create_group(help_text="base.mk generation utilities")
         cli.register_result_route(

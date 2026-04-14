@@ -474,7 +474,7 @@ graph TB
 ### Common Patterns
 
 - **Dependency Injection**: FlextContainer for service management
-- **Error Handling**: r[T] for railway-oriented programming
+- **Error Handling**: p.Result[T] for railway-oriented programming
 - **Logging**: Structured logging with correlation IDs
 - **Configuration**: Environment-based configuration management
 - **Testing**: Comprehensive test coverage with quality gates

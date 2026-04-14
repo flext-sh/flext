@@ -9,23 +9,21 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import Any
-
-from flext_core import r
+from flext_core import p, r
 
 
 class TestModels:
     """Test models and assertion helpers."""
 
     @staticmethod
-    def ok(result: r[Any]) -> None:
+    def ok[TResult](result: p.Result[TResult]) -> None:
         """Assert result is success."""
         if result.failure:
             msg = f"Expected success but got failure: {result.exception}"
             raise AssertionError(msg)
 
     @staticmethod
-    def fail(result: r[Any], has: str | None = None) -> None:
+    def fail[TResult](result: p.Result[TResult], has: str | None = None) -> None:
         """Assert result is failure, optionally checking error message."""
         if r.successful_result(result):
             msg = "Expected failure but got success"
@@ -35,7 +33,7 @@ class TestModels:
             raise AssertionError(msg)
 
     @staticmethod
-    def that(value: Any, eq: Any = None) -> None:
+    def that[TValue](value: TValue, eq: TValue | None = None) -> None:
         """Assert value equals expected."""
         if eq is not None and value != eq:
             msg = f"Expected {eq} but got {value}"

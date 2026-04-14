@@ -6,6 +6,16 @@ import logging
 from collections.abc import MutableMapping
 from typing import Any
 
+from .exceptions import (
+    AuthenticationError,
+    ConfigurationError,
+    ConnectionError,
+    Error,
+    ProcessingError,
+    TimeoutError,
+    ValidationError,
+)
+
 
 class FlextTypes:
     """Minimal type surface used by the quality Docker images."""
@@ -57,14 +67,14 @@ class FlextContainer:
     """Minimal dependency container mock."""
 
     def __init__(self) -> None:
-        self._services: MutableMapping[str, object] = {}
+        self._services: MutableMapping[str, ServiceValue] = {}
 
-    def register(self, name: str, service: object) -> Result[None]:
+    def register(self, name: str, service: ServiceValue) -> Result[None]:
         """Register a service object by name."""
         self._services[name] = service
         return Result.ok(None)
 
-    def get(self, name: str) -> Result[object]:
+    def get(self, name: str) -> Result[ServiceValue]:
         """Resolve a service object by name."""
         service = self._services.get(name)
         if service is None:
@@ -133,14 +143,27 @@ class FlextUtilities:
         return ""
 
 
-from .exceptions import (  # noqa: E402
-    AuthenticationError,
-    ConfigurationError,
-    ConnectionError,
-    Error,
-    ProcessingError,
-    TimeoutError,
-    ValidationError,
+FlextLogger = logging.Logger
+
+type ServiceValue = (
+    FlextBus
+    | FlextConstants
+    | FlextContext
+    | FlextDecorators
+    | FlextDispatcher
+    | FlextHandlers
+    | FlextLogger
+    | FlextMixins
+    | FlextModels
+    | FlextProcessors
+    | FlextProtocols
+    | FlextRegistry
+    | FlextSettings
+    | FlextUtilities
+    | bool
+    | float
+    | int
+    | str
 )
 
 

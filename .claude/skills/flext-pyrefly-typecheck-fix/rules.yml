@@ -24,7 +24,7 @@ rules:
     fix_instruction: "Replace .ok(None) with .ok(True) for r[bool] return types."
 
   # =========================================================================
-  # Cluster 2: r[t.RecursiveContainer] type erasure
+  # Cluster 2: p.Result[t.RecursiveContainer] type erasure
   # =========================================================================
   - id: detect-result-t.RecursiveContainer
     type: ast-grep

@@ -880,7 +880,7 @@ class FlextCliUtilitiesPipeline:
             stage_start = time.monotonic()
             try:
                 result = spec.handler(context)
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:
                 last_error = f"stage {spec.stage_id} raised: {exc}"
                 log.warning(
                     "stage_exception",
