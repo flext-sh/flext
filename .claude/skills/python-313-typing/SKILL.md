@@ -186,7 +186,7 @@ from typing import TypeIs
 from flext_core import r, p
 
 
-def successful_result[T](result: r[T]) -> TypeIs[r[T]]:
+def successful_result[T](result: p.Result[T]) -> TypeIs[r[T]]:
     return result.success
 ```
 

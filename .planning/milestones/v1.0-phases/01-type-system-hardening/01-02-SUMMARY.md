@@ -61,7 +61,7 @@ completed: 2026-03-24
 **Plan metadata:** (pending docs commit)
 
 ## Files Created/Modified
-- `flext-tests/src/flext_tests/_utilities/matchers.py` - Replaced `value: object` with `value: t.Tests.TestobjectSerializable` in `_is_matcher_input` TypeIs guard
+- `flext-tests/src/flext_tests/_utilities/matchers.py` - Replaced `value` with `value: t.Tests.TestobjectSerializable` in `_is_matcher_input` TypeIs guard
 
 ## Decisions Made
 - Combined baseline (Task 1) and fix (Task 2) into single commit — only 1 annotation needed fixing

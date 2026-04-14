@@ -124,7 +124,7 @@ from flext_core import r, p
 | Method                                    | Signature                                                                                                     | When to use                                |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | `r.traverse(items, func)`       | `traverse[T, U](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> p.Result[Sequence[U]]`       | Map over sequence, fail-fast or accumulate |
-| `r.accumulate_errors(*results)` | `accumulate_errors(cls, *results: r[U]) -> p.Result[Sequence[U]]`                                    | Collect all successes, combine all errors  |
+| `r.accumulate_errors(*results)` | `accumulate_errors(cls, *results: p.Result[U]) -> p.Result[Sequence[U]]`                                    | Collect all successes, combine all errors  |
 | `r.parallel_map(items, func)`   | `parallel_map[T, U2](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> p.Result[Sequence[U2]]` | Same semantics as traverse                 |
 
 ### Pydantic Integration
@@ -139,7 +139,7 @@ from flext_core import r, p
 ```python
 r.with_resource(
     factory=lambda: open("data.json"),
-    op=lambda f: r[str].ok(f.read()),
+    op=lambda f: p.Result[str].ok(f.read()),
     cleanup=lambda f: f.close(),
 )
 ```
@@ -178,7 +178,7 @@ def process_user(user_id: str) -> p.Result[UserResponse]:
         .flat_map(lambda user: fetch_permissions(user))
         .map(lambda perms: UserResponse(permissions=perms))
         .tap(lambda resp: logger.info("processed", user_id=user_id))
-        .lash(lambda err: r[UserResponse].fail(f"User processing failed: {err}"))
+        .lash(lambda err: p.Result[UserResponse].fail(f"User processing failed: {err}"))
     )
 ```
 
@@ -187,7 +187,7 @@ def process_user(user_id: str) -> p.Result[UserResponse]:
 ```python
 results = r.traverse(
     items=user_ids,
-    func=lambda uid: r[User].from_validation({"id": uid}, User),
+    func=lambda uid: p.Result[User].from_validation({"id": uid}, User),
     fail_fast=False,  # collect ALL errors
 )
 ```

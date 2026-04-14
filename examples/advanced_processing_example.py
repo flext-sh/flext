@@ -133,14 +133,14 @@ class AdvancedProcessingExample:
             """Execute processing pipeline using declarative stages."""
             stage_functions: Mapping[
                 str,
-                Callable[[Mapping[str, DataValue]], r[PipelineStageData]],
+                Callable[[Mapping[str, DataValue]], p.Result[PipelineStageData]],
             ] = {
                 "validate": self._validate_batch,
                 "process": self._process_parallel,
                 "analyze": self._analyze_results,
             }
             operations: MutableSequence[
-                Callable[[Mapping[str, DataValue]], r[PipelineStageData]]
+                Callable[[Mapping[str, DataValue]], p.Result[PipelineStageData]]
             ] = []
             for stage in self.stages:
                 stage_func = stage_functions.get(stage)

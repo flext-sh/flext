@@ -83,7 +83,7 @@ _patch_gate_run = patch_gate_run
 ```python
 # Correct signature (matches how gates call _run)
 def _stub_run(
-    _self: object,
+    _self,
     _cmd: list[str],
     _cwd: Path,
     timeout: int = 120,  # NOT _timeout

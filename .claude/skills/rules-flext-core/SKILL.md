@@ -74,7 +74,7 @@ def run(value: str):
 Good (Result Railway):
 
 ```python
-result = r[str].ok("x").flat_map(lambda v: r[str].ok(v.upper()))
+result = r[str].ok("x").flat_map(lambda v: p.Result[str].ok(v.upper()))
 ```
 
 Why good: typed railway composition with explicit success chain.

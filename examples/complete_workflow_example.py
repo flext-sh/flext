@@ -293,7 +293,7 @@ class CompleteWorkflowExample:
             items: Sequence[ProcessingDict],
             stage_func: Callable[
                 [ProcessingDict, CompleteWorkflowExample.WorkflowContext],
-                r[WorkflowData],
+                p.Result[WorkflowData],
             ],
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowStageResult]:

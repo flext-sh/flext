@@ -166,7 +166,7 @@ Good:
 from typing import TypeIs
 
 
-def successful_result(r: r[T]) -> TypeIs[r[T]]:
+def successful_result(r: p.Result[T]) -> TypeIs[r[T]]:
     return r.success
 ```
 

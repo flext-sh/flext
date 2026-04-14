@@ -1525,7 +1525,7 @@ s[T]
 ~~    ├─ Implements: p.Service (Protocol)~~
 ~~    ├─ Uses: FlextContainer (DI)~~
 ~~    ├─ Uses: FlextSettings (Config singleton)~~
-~~    ├─ Returns: r[T] (Railway pattern)~~
+~~    ├─ Returns: p.Result[T] (Railway pattern)~~
 ~~    └─ Registers: In FlextContainer (Auto-registration)~~
 ```
 
@@ -2251,7 +2251,7 @@ class s[T]:
 class s[T]:
     """Service with lazy execution."""
 
-    _result: r[T] | None = None
+    _result: p.Result[T] | None = None
     _executed: bool = False
 
     @property
@@ -3178,7 +3178,7 @@ class FlextLdifWriter(Flext[m.Ldif.WriteResultModel]):
 
    ```python
    # ✅ Funciona perfeitamente
-   result: r[FlextLogger] = container.get_typed("logger", FlextLogger)
+   result: p.Result[FlextLogger] = container.get_typed("logger", FlextLogger)
    if result.is_success:
        logger: FlextLogger = result.unwrap()  # Type preserved
    ```
@@ -4921,7 +4921,7 @@ class s[TResult](
     # ═══════════════════════════════════════════════════════════════
     # CACHE (Pydantic v2 PrivateAttr)
     # ═══════════════════════════════════════════════════════════════
-    _cached_result: r[TResult] | None = PrivateAttr(default=None)
+    _cached_result: p.Result[TResult] | None = PrivateAttr(default=None)
     _is_executed: bool = PrivateAttr(default=False)
 
     # ═══════════════════════════════════════════════════════════════
@@ -5135,7 +5135,7 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
     operation: str | None = Field(default=None)
 
     # Lazy execution state
-    _result: r[TResult] | None = None
+    _result: p.Result[TResult] | None = None
     _executed: bool = False
 
     @abstractmethod
@@ -5281,7 +5281,7 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
     )
 
     # Lazy execution state
-    _result: r[TResult] | None = None
+    _result: p.Result[TResult] | None = None
     _executed: bool = False
 
     @abstractmethod
@@ -5383,7 +5383,7 @@ def try_run(cls, **kwargs: m.Service.RunOptionsModel) -> p.Result[TResult]:
 class FlextServiceResult[T]:
     """Wrapper for monadic operation results."""
 
-    def __init__(self, result: r[T]):
+    def __init__(self, result: p.Result[T]):
         self._result = result
 
     @property

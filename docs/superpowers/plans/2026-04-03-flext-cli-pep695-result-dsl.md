@@ -115,7 +115,7 @@ class _ModelCommand:
 Key changes:
 - `_handler` return `object | None` → `None` (handlers don't return values through Typer)
 - `parameters: list[Parameter]` → `Sequence[Parameter]`
-- `**kwargs: object` → `**kwargs: t.Scalar` (Typer only passes scalars)
+- `**kwargs` → `**kwargs: t.Scalar` (Typer only passes scalars)
 
 - [ ] **Step 2: Replace `_resolve_typer_annotation` signature**
 

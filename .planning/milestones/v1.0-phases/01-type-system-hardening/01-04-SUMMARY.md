@@ -50,7 +50,7 @@ completed: 2026-03-23
 - `make pol`: exits 0 — zero policy violations repo-wide
 - `make pyre`: 0 errors total
 - Zero `cast()` outside `result.py`, zero `__class__ is`, zero `Any` imports, zero `# type: ignore`
-- Legitimate `object` usage only: `__eq__(self, other: object)` (Python data model) and `same_type(obj_a: object, obj_b: object)` (comparison utility)
+- Legitimate `object` usage only: `__eq__(self, other)` (Python data model) and `same_type(obj_a, obj_b)` (comparison utility)
 
 ## Task Commits
 

@@ -381,7 +381,7 @@ if isinstance(value, t.PRIMITIVES_TYPES):
 # Source: .sisyphus/plans/strict-typing-execution-plan.md Wave 1.1 — Special Handling
 # domain.py:49 and :75 — Option C resolution
 # Create utility in flext-core/_utilities/domain.py:
-def same_type(a: object, b: object) -> bool:
+def same_type(a, b) -> bool:
     """Exact-type identity comparison (no MRO traversal, equivalent to __class__ is)."""
     return type(a) is type(b)
 
@@ -399,7 +399,7 @@ if not same_type(entity_b, entity_a):
 from typing import TypeGuard
 
 
-def is_str(value: object) -> TypeGuard[str]:
+def is_str(value) -> TypeGuard[str]:
     return isinstance(value, str)
 
 
@@ -407,7 +407,7 @@ def is_str(value: object) -> TypeGuard[str]:
 from typing import TypeIs
 
 
-def is_str(value: object) -> TypeIs[str]:
+def is_str(value) -> TypeIs[str]:
     return isinstance(value, str)
 ```
 

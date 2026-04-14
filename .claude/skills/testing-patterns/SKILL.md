@@ -97,7 +97,7 @@ def test_map_transforms_success_value():
 
 
 def test_flat_map_chains_results():
-    result = r[int].ok(5).flat_map(lambda x: r[str].ok(str(x)))
+    result = r[int].ok(5).flat_map(lambda x: p.Result[str].ok(str(x)))
     assert result.value == "5"
 ```
 

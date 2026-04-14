@@ -56,8 +56,8 @@ flext-meltano:       28 sites  (meltano runner)
 **Current**:
 ```python
 # Ambiguous: is None success or failure?
-result: r[str | None] = r[str | None].ok(None)  # Valid, passes type check
-result: r[str | None] = r[str | None].fail("error")  # Also valid
+result: p.Result[str | None] = r[str | None].ok(None)  # Valid, passes type check
+result: p.Result[str | None] = r[str | None].fail("error")  # Also valid
 
 # Conflicting semantics
 if result.is_success:
@@ -71,10 +71,10 @@ if result.is_success:
 **Strict Solution**:
 ```python
 # Option A: Explicit None in type (recommended)
-result: r[Entry | None] = ...  # Type indicates None is possible
+result: p.Result[Entry | None] = ...  # Type indicates None is possible
 
 # Option B: Separate None-failure pattern
-result: r[Entry] = fetch_entry().lash(lambda _: r[None].fail("not found"))
+result: p.Result[Entry] = fetch_entry().lash(lambda _: p.Result[None].fail("not found"))
 # Forces explicit None handling via type narrowing
 ```
 
@@ -226,9 +226,9 @@ def run_operation(op: Fallible[Settings]) -> p.Result[Settings]:
 **Current**:
 ```python
 # Can't easily combine r[User] + r[Settings] + r[Service]
-user_result: r[User] = fetch_user()
-settings_result: r[Settings] = load_settings()
-service_result: r[Service] = init_service()
+user_result: p.Result[User] = fetch_user()
+settings_result: p.Result[Settings] = load_settings()
+service_result: p.Result[Service] = init_service()
 
 # Manual accumulation
 if user_result.is_success and settings_result.is_success and service_result.is_success:
@@ -252,8 +252,8 @@ class ResultTuple:
 
     @staticmethod
     def all[A, B](
-        ra: r[A],
-        rb: r[B]
+        ra: p.Result[A],
+        rb: p.Result[B]
     ) -> p.Result[tuple[A, B]]:
         """Combine two results"""
         if ra.is_failure:
@@ -264,9 +264,9 @@ class ResultTuple:
 
     @staticmethod
     def all3[A, B, C](
-        ra: r[A],
-        rb: r[B],
-        rc: r[C]
+        ra: p.Result[A],
+        rb: p.Result[B],
+        rc: p.Result[C]
     ) -> p.Result[tuple[A, B, C]]:
         """Combine three results"""
         if ra.is_failure:
@@ -288,7 +288,7 @@ user_settings_service = ResultTuple.all3(
 
 **Current**:
 ```python
-def handle_error(result: r[T]) -> dict:
+def handle_error(result: p.Result[T]) -> dict:
     error = result.error or ""
     if "Connection refused" in error:
         return {"status": 503, "error": "Service unavailable"}
@@ -303,7 +303,7 @@ def handle_error(result: r[T]) -> dict:
 **Strict Solution**:
 ```python
 # Pattern match on error domain
-def to_http_response[T](result: r[T]) -> HTTPResponse:
+def to_http_response[T](result: p.Result[T]) -> HTTPResponse:
     return result.fold(
         on_failure=lambda err: _handle_error(err),
         on_success=lambda val: HTTPResponse(200, val.model_dump()),
@@ -535,7 +535,7 @@ class r[T](u.RuntimeResult[T]):
 
     # Cross-result operations
     @staticmethod
-    def combine2[A, B](ra: r[A], rb: r[B]) -> p.Result[tuple[A, B]]:
+    def combine2[A, B](ra: p.Result[A], rb: p.Result[B]) -> p.Result[tuple[A, B]]:
         """Type-safe combination of two results"""
         if ra.is_failure:
             return r[tuple[A, B]].fail(ra.error or "")
@@ -544,7 +544,9 @@ class r[T](u.RuntimeResult[T]):
         return r[tuple[A, B]].ok((ra.value, rb.value))
 
     @staticmethod
-    def combine3[A, B, C](ra: r[A], rb: r[B], rc: r[C]) -> p.Result[tuple[A, B, C]]:
+    def combine3[A, B, C](
+        ra: p.Result[A], rb: p.Result[B], rc: p.Result[C]
+    ) -> p.Result[tuple[A, B, C]]:
         """Type-safe combination of three results"""
         if ra.is_failure:
             return r[tuple[A, B, C]].fail(ra.error or "")
