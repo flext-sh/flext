@@ -1,27 +1,8 @@
 ---
-
 name: lib-dependency-injector
 description: dependency_injector bridge patterns for FLEXT runtime and container internals. Use when adding DI wiring, provider registration, or scoped test containers.
-triggers:
-  - adding DI wiring or provider registration
-  - building scoped test containers
-  - working with dependency_injector bridge patterns
-  - debugging container or provider resolution issues
-  - designing DI-backed service factories
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-  - [Subproject Usage Map](#subproject-usage-map)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 ## Scope
 
@@ -61,7 +42,6 @@ triggers:
   - `_di_resources: containers.DynamicContainer`
   - `_di_container: containers.DynamicContainer`
 - Always use `Provide`/`inject` from runtime bridge (`u.DependencyIntegration.Provide`, `.inject`).
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 ## Instructions
 
 - Follow these declarations and signatures exactly when extending DI:

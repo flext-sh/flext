@@ -1,32 +1,8 @@
 ---
-
 name: flext-patterns
 description: Repository-native implementation patterns for result flow, DI, logging, and typed boundaries. Use when selecting or standardizing implementation style.
-triggers:
-  - selecting or standardizing implementation style
-  - implementing result flow with r[T]
-  - wiring dependency injection with DI containers
-  - adding structured logging via FlextLogger
-  - defining typed service boundaries
-  - deciding between r.fail_op vs r.fail_exc vs e.fail_*
-  - implementing error recovery chains
-  - reviewing patterns for CQRS, service, or repository objects
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Pattern Catalog](#pattern-catalog)
-- [Namespace Inheritance Pattern](#namespace-inheritance-pattern)
-- [MRO Integrity Rule (Zero Tolerance)](#mro-integrity-rule-zero-tolerance)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Flext Patterns
 
@@ -63,11 +39,11 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 > **Rule**: See `AGENTS.md` §2 Architecture Law and §4 Import Law for canonical namespace alias and inheritance requirements.
 
 - This skill focuses on implementation-level patterns, anti-patterns, and concrete examples.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
-- **AXIOMATIC**: Compatibility wrappers (`def old(): return new()`), non-business validation fallbacks, legacy code maintenance of ANY kind, and `OldName = NewName` compatibility aliases are TOTALLY FORBIDDEN and ABOMINABLE. Legacy code is DELETED on contact and replaced with the canonical pattern. No grace period, no deprecation path, no "we'll remove it later".
-- **AXIOMATIC**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
-- **AXIOMATIC**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features. `Field()` with `description`/`title`/`examples` for ALL declarations. Minimize custom validators — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`). `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, wrappers. USE: `@computed_field`, `model_post_init`, `PrivateAttr`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `PrivateAttr`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for models ONLY. Result/status booleans use canonical names like `success` and `failure`. If not using a feature — REVIEW and USE it.
-- **AXIOMATIC**: Failure paths are DSL-first. Prefer `e.fail_*`, `r.fail_op`, `r.fail_exc`, and service-level DSL wrappers over ad-hoc `r.fail("...")` strings in runtime/application code. Use direct `r.fail(...)` only when implementing result primitives or when explicit passthrough payload semantics are required.
+- **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
+- **Rule**: Compatibility wrappers (`def old(): return new()`), non-business validation fallbacks, legacy code maintenance of ANY kind, and `OldName = NewName` compatibility aliases are FORBIDDEN and forbidden. Legacy code is DELETED on contact and replaced with the canonical pattern. No grace period, no deprecation path, no "we'll remove it later".
+- **Rule**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
+- **Rule**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features. `Field()` with `description`/`title`/`examples` for ALL declarations. Minimize custom validators — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`). `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, wrappers. USE: `@computed_field`, `model_post_init`, `PrivateAttr`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `PrivateAttr`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for models ONLY. Result/status booleans use canonical names like `success` and `failure`. If not using a feature — REVIEW and USE it.
+- **Rule**: Failure paths are DSL-first. Prefer `e.fail_*`, `r.fail_op`, `r.fail_exc`, and service-level DSL wrappers over ad-hoc `r.fail("...")` strings in runtime/application code. Use direct `r.fail(...)` only when implementing result primitives or when explicit passthrough payload semantics are required.
 
 ## Pattern Catalog
 

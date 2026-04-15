@@ -1,28 +1,8 @@
 ---
-
 name: skill-format-universal
 description: Canonical format for project SKILL.md files using Anthropic standards and FLEXT evidence. Use when creating or rewriting any skill.
-triggers:
-  - creating a new skill
-  - rewriting or restructuring an existing SKILL.md
-  - auditing a skill for spec compliance
-  - adding triggers:, compatibility:, or evals/ to a skill
-  - checking line count or description length
-  - applying progressive disclosure splits
-  - writing evals/evals.json for a skill
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Skill Format Universal
 

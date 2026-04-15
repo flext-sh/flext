@@ -1,26 +1,8 @@
 ---
-
 name: flext-architecture-layers
 description: Layer map and dependency-direction contract for flext-core. Use when adding modules, moving responsibilities, or reviewing imports.
-triggers:
-  - adding a new module or layer to flext-core
-  - reviewing dependency direction (L0-L3)
-  - moving responsibilities between layers
-  - auditing imports for layer violations
-  - understanding the platform chain (Core→Cli→Meltano→Integration)
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Examples](#examples)
-- [Workflow](#workflow)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Flext Architecture Layers
 
@@ -53,7 +35,7 @@ Layer map (source-aligned reference for implementation work):
 - `L1 Foundation and Bridge`: `result.py`, `exceptions.py`, `registry.py`, `runtime.py`.
 - `L0 Pure Contracts`: `constants.py`, `typings.py`, `protocols.py`.
 - Public facade roots own exactly one local namespace branch; private `_models/*` and `_utilities/*` classes are composed through MRO, not re-wrapped as nested flat classes.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, inline imports, and `cast()`. Wait for definition time or use Protocol decoupling.
+- **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
 
 ### Service Facade Files (L2 Project-Level)
 

@@ -1,34 +1,8 @@
 ---
-
 name: pydantic-v2-governance
 description: Internal Pydantic v2 governance patterns for FLEXT 33-project monorepo. Use when creating models, validators, or working with Pydantic v2 features across the codebase.
-triggers:
-  - creating models, validators, or Pydantic v2 features across the monorepo
-  - auditing Pydantic v2 governance patterns across 33 projects
-  - ensuring internal Pydantic v2 compliance
-  - reviewing model inheritance and composition patterns
-  - checking for v1-syntax remnants in any project
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-  - [1. Field() → Annotated Pattern](#1-field--annotated-pattern)
-  - [2. default_factory for Mutable Defaults](#2-defaultfactory-for-mutable-defaults)
-  - [3. TypeAdapter Caching](#3-typeadapter-caching)
-  - [4. Protocol vs ABC](#4-protocol-vs-abc)
-  - [5. issubclass() Safety](#5-issubclass-safety)
-  - [6. ConfigDict](#6-configdict)
-  - [7. Validation Boundaries](#7-validation-boundaries)
-  - [8. Anti-Patterns](#8-anti-patterns)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Pydantic v2 Governance
 
@@ -59,7 +33,7 @@ triggers:
 - **Mandatory Pydantic v2 Mastery**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features to their fullest across ALL 33 projects (`src/`, `tests/`, `examples/`). Every class extends `BaseModel` (or FLEXT base models) via MRO.
 - **Field() for ALL declarations**: Use `Field()` with `description`, `title`, `examples`, `json_schema_extra` documenting business rules — fields are self-documenting contracts.
 - **Secrets**: Use `SecretStr`/`SecretBytes` for secrets.
-- **ConfigDict**: Use `model_config = ConfigDict(...)` for settings — standalone `*Config` classes TOTALLY FORBIDDEN (use `BaseSettings`/`ConfigDict`).
+- **ConfigDict**: Use `model_config = ConfigDict(...)` for settings — standalone `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`).
 - **Minimize custom validators**: Prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`, `constr`, `conint`).
 - **FORBIDDEN in models**: initialization helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@computed_field`, `model_post_init`, `PrivateAttr`) and canonical field names such as `success`, `failure`, `expired`, `healthy`.
 - **Enums/Mappings/Literals**: From `constants.py` (`c.*`), settings from `settings.py` (`s.*`).

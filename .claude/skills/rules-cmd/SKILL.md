@@ -1,25 +1,8 @@
 ---
-
 name: rules-cmd
 description: Rules for command entrypoints under `cmd/` and their package wiring. Use when modifying command bootstrap files, CLI wrappers, or command-path docs.
-triggers:
-  - modifying command entrypoints under cmd/
-  - adding or changing CLI bootstrap files
-  - editing command-path docs or CLI wrappers
-  - wiring a new command package
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Rules Cmd
 
@@ -46,7 +29,6 @@ triggers:
 - Keep command paths and names consistent with directory names.
 - Avoid embedding business logic directly in command wrappers.
 - Ensure command examples are runnable from repository root.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 

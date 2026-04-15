@@ -1,26 +1,8 @@
 ---
-
 name: scripts-infra
 description: Core infrastructure services — validation, inventory, scanning, and skill orchestration. Use when using flext_infra.core or editing scripts/lib/, scripts/core/, scripts/settings/, scripts/makefiles/, or scripts/common.py.
-triggers:
-  - using flext_infra.core infrastructure services
-  - editing scripts/lib/, scripts/core/, scripts/settings/, or scripts/makefiles/
-  - working with validation, inventory, or skill orchestration
-  - modifying scripts/common.py
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-- [Scripts](#scripts)
-<!-- TOC END -->
 
 # Scripts Infra
 

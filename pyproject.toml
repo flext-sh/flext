@@ -225,6 +225,7 @@ project-excludes = [
   "**/node_modules",
   "**/typings/**",
   "**/vendor/**",
+  "**/.flext-deps/**",
   "**/venv/**",
   ".flext-deps/**",
   ".venv/**",
@@ -340,6 +341,7 @@ exclude = [
   "**/.mypy_cache",
   "**/.pytest_cache",
   "**/.ruff_cache",
+  "**/.flext-deps/**",
   "**/.venv",
   "**/.venv/**",
   "**/__pycache__",
@@ -992,6 +994,7 @@ python_files = [ "*_test.py", "*_tests.py", "test_*.py" ]
 [tool.ruff]
 exclude = [
   ".git",
+  "**/.flext-deps/**",
   ".mypy_cache",
   ".pytest_cache",
   ".ruff_cache",

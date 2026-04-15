@@ -1,26 +1,8 @@
 ---
-
 name: flext-automation-skill-pattern
 description: Canonical pattern for creating reusable automation skills with script-first validation, baseline/strict enforcement modes, and companion docs. Use when building new automation skills that must be repeatable across the FLEXT repo, or when standardizing existing ad-hoc automation into a testable skill.
-triggers:
-  - creating a new reusable automation skill
-  - standardizing ad-hoc automation into a testable skill
-  - adding script-first validation to a skill
-  - designing baseline/strict enforcement modes
-  - structuring a skill with companion docs or scripts/
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Flext Automation Skill Pattern
 
@@ -49,7 +31,6 @@ triggers:
 - Skills must provide concrete verification commands.
 - Prefer `ast-grep` for checks/fixes; use `custom` scripts only when AST cannot express the rule.
 - Place `custom` scripts in the owning skill directory, not in `scripts/core`.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 

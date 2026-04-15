@@ -1,28 +1,8 @@
 ---
-
 name: flext-pyrefly-typecheck-fix
 description: Use when diagnosing or fixing pyrefly type-check errors across the FLEXT monorepo. Covers recurring error patterns with safe auto-fix rules, suppression guidance, and cross-project consistency strategies for zero-error type-checking.
-triggers:
-  - diagnosing or fixing pyrefly type-check errors
-  - handling recurring pyrefly error patterns
-  - suppressing pyrefly errors with documented justifications
-  - achieving zero-error type-checking across the monorepo
-  - resolving pyrefly/pydantic default value conflicts
 
 ---
-
-<!-- TOC START -->
-
-- [Purpose](#purpose)
-- [Error Clusters Covered](#error-clusters-covered)
-  - [1. Logger Typing Drift](#1-logger-typing-drift)
-  - [2. `r.ok(None)` — Real Bug](#2-flextresultoknone-real-bug)
-  - [3. `r[t.RecursiveContainer]` Type Erasure](#3-flextresultobject-type-erasure)
-  - [4. RootModel Container Coercion](#4-rootmodel-container-coercion)
-  - [5. Mapping Mutation](#5-mapping-mutation)
-- [Verification](#verification)
-- [Hard Rules](#hard-rules)
-<!-- TOC END -->
 
 # Pyrefly Type-Check Fix Rules
 
@@ -51,7 +31,6 @@ triggers:
 - Keep fix logic safe and reversible for mechanical rewrites.
 - Never use suppression comments as default resolution path.
 - Prefer canonical `p.*` protocols and `t.*` aliases over concrete fallback annotations when resolving pyrefly contract drift.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`.
 
 ## Instructions
 
@@ -153,6 +132,6 @@ When `type: custom` is necessary, keep script implementations inside `.claude/sk
 - **Stub boundary**: `typings/generated/` is for third-party stubs only; never generate stubs for internal modules (`flext_*`). Always prefer PyPI stub packages (`types-*`, `*-stubs`) over manual stubs in `typings/`. See `rules-typings` skill for the full coverage table.
 - **Root-cause only**: Internal missing imports must be fixed in source/type architecture, not patched with generated stubs
 - **Canonical contracts first**: If pyrefly can be satisfied by a `p.*` protocol or `t.*` alias, that is the preferred fix. Concrete fallback annotations are boundary-only exceptions.
-- **AXIOMATIC — ALL 4 linters mandatory**: Every change MUST pass ruff, mypy, pyright, AND pyrefly with ZERO errors. ALL impacted references across ALL 33 projects MUST be updated via ast-grep (`sg`) search-and-replace immediately. No partial fixes.
-- **AXIOMATIC — No suppressions without triple justification**: `# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore` require: (1) real internet citations proving unavoidability, (2) business necessity documented in the same comment, (3) per-line only — never global. Global suppression rules are TOTALLY FORBIDDEN. Fix the code, never silence the linter.
+- **Rule — ALL 4 linters mandatory**: Every change MUST pass ruff, mypy, pyright, AND pyrefly with ZERO errors. ALL impacted references across ALL 33 projects MUST be updated via ast-grep (`sg`) search-and-replace immediately. No partial fixes.
+- **Rule — No suppressions without triple justification**: `# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore` require: (1) real internet citations proving unavoidability, (2) business necessity documented in the same comment, (3) per-line only — never global. Global suppression rules are FORBIDDEN. Fix the code, never silence the linter.
 - **Skill contract**: rules consumed by `skill_validate.py` / `skill_fix.py` must remain flat-key format and executable for `fix_auto: true`

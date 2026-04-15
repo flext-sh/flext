@@ -1,26 +1,8 @@
 ---
-
 name: flext-docs-pointer-policy
 description: Use when creating or editing documentation across AGENTS.md, skills, README files, or agent configs. Enforces the one-root-source policy: single authoritative document with lightweight pointers everywhere else. No duplication of governance across files.
-triggers:
-  - creating or editing documentation across AGENTS.md, skills, or README files
-  - checking for duplicated governance between docs
-  - enforcing one-root-source policy for policy text
-  - reviewing agent config files for pointer compliance
-  - consolidating overlapping policy from multiple documents
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Flext Docs Pointer Policy
 
@@ -57,7 +39,6 @@ triggers:
 - Agent-specific files remain pointers, not policy mirrors.
 - Never duplicate governance rules across multiple agent files.
 - Pointer files must remain concise and reference scoped skills instead of restating them.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, and `inline imports`. `cast()` is forbidden outside `flext-core` result internals.
 
 ## Instructions
 

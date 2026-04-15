@@ -1,63 +1,12 @@
 ---
-
 name: flext-strict-typing
 description: Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 695 type aliases, r[T] result containers, and isinstance/TypeGuard narrowing. Use when writing type annotations, fixing pyrefly or pyright errors, working with t.Container or t.Scalar, enforcing no-Any strictness, or deciding how to narrow a discriminated union in src/ code.
-triggers:
-  - writing type annotations in src/ code
-  - fixing pyrefly or pyright type errors
-  - working with t.* contracts (t.Container, t.Scalar, t.ConfigMap)
-  - deciding how to narrow a discriminated union
-  - replacing Any or bare dict with typed contracts
-  - defining a new type alias in typings.py
-  - using isinstance or TypeGuard for narrowing
-  - reviewing r[T] return types
-  - ensuring no-Any strictness across a module
 
 ---
 
-<!-- TOC START -->
-
-- [Python Version & Core Requirements](#python-version-core-requirements)
-- [FLEXT Mapping-First Policy (Contract Layer)](#flext-mapping-first-policy-contract-layer)
-- [Rule 1: NEVER Use `Any` or `t.RecursiveContainer`](#rule-1-never-use-any-or-t.RecursiveContainer)
-  - [Replace with the appropriate type from the `FlextTypes` hierarchy](#replace-with-the-appropriate-type-from-the-flexttypes-hierarchy)
-  - [The Type Hierarchy (from `typings.py` lines 153-176)](#the-type-hierarchy-from-typingspy-lines-153-176)
-- [Verification](#verification)
-  - [Special RootModel Containers (from `typings.py` lines 357-462)](#special-rootmodel-containers-from-typingspy-lines-357-462)
-- [Rule 2: TypeAlias Declaration Format](#rule-2-typealias-declaration-format)
-  - [Within the `FlextTypes` class — use `TypeAlias` annotation](#within-the-flexttypes-class-use-typealias-annotation)
-  - [At module level — use PEP 695 `type` statement (required for recursive types)](#at-module-level-use-pep-695-type-statement-required-for-recursive-types)
-- [Rule 3: TypeVars — Module-Level Only](#rule-3-typevars-module-level-only)
-- [Rule 4: Modern Python Typing (Python 3.13+)](#rule-4-modern-python-typing-python-313)
-  - [Always use modern syntax (with Mapping-first contracts)](#always-use-modern-syntax-with-mapping-first-contracts)
-  - [Use `typing.Self` for return self patterns](#use-typingself-for-return-self-patterns)
-- [Rule 5: Pydantic v2 Model Typing](#rule-5-pydantic-v2-model-typing)
-  - [ConfigDict (not inner `class Config`)](#configdict-not-inner-class-settings)
-  - [Field declarations](#field-declarations)
-  - [Validators use `@field_validator` and `@model_validator`](#validators-use-fieldvalidator-and-modelvalidator)
-- [Rule 6: Annotated Validation Types](#rule-6-annotated-validation-types)
-- [Rule 7: protocols.py — Structural Typing](#rule-7-protocolspy-structural-typing)
-- [Rule 8: Enum Typing — StrEnum Only](#rule-8-enum-typing-strenum-only)
-- [Rule 9: Constants Typing — Final + Immutable Collections](#rule-9-constants-typing-final-immutable-collections)
-- [Rule 13: Advanced Fix Strategy (No Simplistic Rewrites)](#rule-13-advanced-fix-strategy-no-simplistic-rewrites)
-- [Rule 10: Return Types — ALWAYS Explicit](#rule-10-return-types-always-explicit)
-- [Rule 11: Callable Typing](#rule-11-callable-typing)
-- [Ruff Rules That Enforce Typing (from ruff-shared.toml)](#ruff-rules-that-enforce-typing-from-ruff-sharedtoml)
-- [Rule 14: NEVER Use `str | None` When Default Is `""`](#rule-14-never-use-str--none-when-default-is-)
-- [Rule 15: Pydantic Models Over Plain Helper Classes](#rule-15-pydantic-models-over-plain-helper-classes)
-- [Rule 16: Result Protocol for `is_success` Pattern](#rule-16-result-protocol-for-is_success-pattern)
-- [Rule 17: Type Narrowing and Polymorphic Contracts (Mandatory)](#rule-17-type-narrowing-and-polymorphic-contracts-mandatory)
-- [Rule 12: r Factory Method Typing](#rule-12-flextresult-factory-method-typing)
-  - [`r` Alias — Universal Import Pattern](#r-alias-universal-import-pattern)
-  - [`ok()` vs `fail()` — Asymmetric Generics](#ok-vs-fail-asymmetric-generics)
-  - [Internal Implementation Pattern (in `result.py`)](#internal-implementation-pattern-in-resultpy)
-  - [Why `cast` Is Required](#why-cast-is-required)
-  - [Usage Examples](#usage-examples)
-  <!-- TOC END -->
-
 # FLEXT Strict Typing Rules
 
-**Reviewed**: 2026-03-03 | **Scope**: AXIOMATIC — `Any`/`t.RecursiveContainer` absolute prohibition, `None` only for business semantics, type narrowing only when business-required
+**Reviewed**: 2026-03-03 | **Scope**: Type hierarchy, PEP 695 aliases, r[T] containers, isinstance/TypeGuard narrowing
 
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
 > and cross-referenced with `models.py`, `protocols.py`, and `ruff-shared.toml`.

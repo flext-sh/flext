@@ -1,27 +1,8 @@
 ---
-
 name: scripts-architecture
 description: Architecture services — import analysis, violation detection, code reorganization, dead code scanning, and cross-project testing. Use when using flext_infra or editing scripts/architecture/ or scripts/analysis/.
-triggers:
-  - using import analysis or violation detection scripts
-  - running dead code scanning
-  - reorganizing code with architecture services
-  - running cross-project testing scripts
-  - editing scripts/architecture/ or scripts/analysis/
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-- [Scripts](#scripts)
-<!-- TOC END -->
 
 # Scripts Architecture
 
@@ -73,7 +54,6 @@ triggers:
 - Analysis output must go to `.reports/` using artifact naming contract.
 - Standard quality gates run via Make verbs (`make check`, `make validate`); architecture scripts are implementation details behind Make.
 - Cross-project tests run via `make test` (or `make test FAIL_FAST=1` to stop on first failure).
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 

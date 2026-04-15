@@ -1,44 +1,8 @@
 ---
-
 name: flext-refactoring-workflow
 description: Step-by-step refactoring workflow with quality gates, make targets, and commit discipline for the FLEXT monorepo. Use when refactoring a module, extracting mixins, decomposing classes exceeding the 200-line cap, migrating legacy patterns to current MRO/facade conventions, or cleaning up import boundary violations.
-triggers:
-  - refactoring a module or class
-  - decomposing a class exceeding the 200-line cap
-  - extracting mixins to _models/ or _utilities/
-  - migrating legacy patterns to current MRO/facade conventions
-  - cleaning up import boundary violations across multiple files
-  - renaming symbols with ast-grep across the monorepo
-  - verifying linters pass after a structural change
-  - planning a multi-file refactor
 
 ---
-
-<!-- TOC START -->
-
-- [Pre-Refactoring Checklist](#pre-refactoring-checklist)
-- [Refactoring Steps](#refactoring-steps)
-  - [Step 1: Analyze Before Editing](#step-1-analyze-before-editing)
-  - [Step 2: Make Changes in Tier Order (Bottom-Up)](#step-2-make-changes-in-tier-order-bottom-up)
-  - [Step 3: Validate After Each File](#step-3-validate-after-each-file)
-  - [Step 4: Run Tests](#step-4-run-tests)
-  - [Step 5: Extended Validation (before commits)](#step-5-extended-validation-before-commits)
-- [Make Targets Quick Reference (from base.mk)](#make-targets-quick-reference-from-basemk)
-- [Quality Gate Thresholds](#quality-gate-thresholds)
-- [Common Refactoring Patterns](#common-refactoring-patterns)
-  - [Pattern A: Replacing dict with ConfigMap](#pattern-a-replacing-dict-with-configmap)
-  - [Pattern B: Removing Legacy Aliases](#pattern-b-removing-legacy-aliases)
-  - [Pattern C: Moving Private to Facade](#pattern-c-moving-private-to-facade)
-  - [Pattern D: Extracting Large Methods](#pattern-d-extracting-large-methods)
-  - [Pattern G: Facade Mirror Collapse](#pattern-g-facade-mirror-collapse)
-- [Cross-Project Refactoring](#cross-project-refactoring)
-  - [Finding cross-project consumers](#finding-cross-project-consumers)
-- [Error Handling During Refactoring](#error-handling-during-refactoring)
-  - [Ruff Errors](#ruff-errors)
-  - [Type Check Errors (pyrefly)](#type-check-errors-pyrefly)
-  - [Test Failures](#test-failures)
-- [CRITICAL RULES](#critical-rules)
-<!-- TOC END -->
 
 # FLEXT Refactoring Workflow
 
@@ -67,7 +31,6 @@ triggers:
 - Refactor in dependency-tier order; never break architecture directionality.
 - Validate continuously with standardized make gates.
 - Use structural search/replace tooling for code-pattern migrations.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`.
 
 ## Instructions
 
@@ -384,5 +347,5 @@ make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_MODULE.py --tb=long -v
 5. **NEVER use relative imports** - the codebase uses zero relative imports
 6. **ALWAYS run tests** before declaring refactoring complete
 7. **ALWAYS preserve the facade pattern** - `_models/` and `_utilities/` are private
-# KA|8. **NEVER use `sed`, `awk`, `find`, or custom scripts to transform code** — use `mcp_ast_grep_replace` (MCP) or `sg --rewrite` (CLI) for ALL structural code changes. `grep`/`ripgrep` for plain-text only. `find` TOTALLY FORBIDDEN for code location. Writing a one-off fix script is an EXTREME FAULT.
+# KA|8. **NEVER use `sed`, `awk`, `find`, or custom scripts to transform code** — use `mcp_ast_grep_replace` (MCP) or `sg --rewrite` (CLI) for ALL structural code changes. `grep`/`ripgrep` for plain-text only. `find` FORBIDDEN for code location. Writing a one-off fix script is an EXTREME FAULT.
 # NB|9. **ast-grep is the SOLE code search and replace tool** — MCP `mcp_ast_grep_search` first, CLI `sg` as fallback. Workflow: search → replace atomically → verify with `make check`.

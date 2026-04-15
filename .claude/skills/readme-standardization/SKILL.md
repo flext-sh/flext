@@ -1,30 +1,8 @@
 ---
-
 name: readme-standardization
 description: Use when creating, updating, or auditing README.md files across the FLEXT ecosystem. Covers required sections, structure templates, badge standards, and tooling for consistent README generation and maintenance.
-triggers:
-  - creating or updating README.md files
-  - auditing README structure across projects
-  - ensuring required sections are present
-  - applying standard badge or link formats
-  - generating README content from templates
 
 ---
-
-<!-- TOC START -->
-
-- [🎯 Objectives](#-objectives)
-- [🛠️ Tools](#-tools)
-- [🔗 ADR Reference](#-adr-reference)
-  - [Installation](#installation)
-  - [Usage](#usage)
-- [📝 Standards](#-standards)
-  - [1. Preamble Structure](#1-preamble-structure)
-  - [2. Mandatory Sections](#2-mandatory-sections)
-  - [3. Link Standards](#3-link-standards)
-- [🔄 Workflow](#-workflow)
-- [🧩 Integration with other Skills](#-integration-with-other-skills)
-<!-- TOC END -->
 
 # README Standardization Skill
 
@@ -46,7 +24,6 @@ This skill provides a standardized workflow for maintaining `README.md` files, e
 - Keep README metadata and version lines current and factual.
 - Enforce consistent section order and stable relative links.
 - Prefer workspace governance pointers over duplicated policy text.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`.
 
 ## Instructions
 

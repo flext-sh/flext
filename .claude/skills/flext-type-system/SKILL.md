@@ -1,30 +1,12 @@
 ---
-
 name: flext-type-system
 description: Canonical FLEXT type-system map for aliases, generics, result interplay, and settings contracts. Use when changing shared typing primitives.
-triggers:
-  - changing shared typing primitives in typings.py
-  - reviewing generics, result interplay, or settings contracts
-  - mapping type aliases across the 33-project monorepo
-  - understanding how t.* aliases compose with r[T]
-  - auditing type system consistency across projects
 
 ---
 
-<!-- TOC START -->
-
-- [Scope](##scope)
-- [References](#References)
-- [Rules](#Rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
-
 # Flext Type System
 
-**Reviewed**: 2026-03-03 | **Scope**: AXIOMATIC type purity — `Any`/`t.RecursiveContainer` absolute prohibition enforced
+**Reviewed**: 2026-03-03 | **Scope**: Type-system map — aliases, generics, result interplay, settings contracts
 
 ## Scope
 
@@ -46,20 +28,16 @@ triggers:
 ## Rules
 
 - Add shared aliases in `typings.py` rather than re-declaring in feature modules. Type aliases MUST be non-nullable — `| None` is added inline at usage sites only.
-- Structural protocols live in `protocols.py` and are exported through `p`; reusable composed aliases live in `typings.py` and are exported through `t`; domain carriers live in `models.py` and are exported through `m`.
-- Do not annotate with concrete classes when the same contract is already expressible through an inherited `p.*` protocol or `t.*` alias.
+- Structural protocols live in `protocols.py` (consumed via `p.*`); reusable composed aliases live in `typings.py` (consumed via `t.*`); domain carriers live in `models.py` (consumed via `m.*`). Never annotate with a concrete class when an inherited `p.*`/`t.*` already expresses the contract.
 - Keep recursive/general value aliases compatible with existing boundaries.
 - Preserve generic covariance/contravariance semantics where defined.
 - Keep exported short aliases (`t`, `r`) stable across refactors.
-- **AXIOMATIC**: `Any`, `t.RecursiveContainer`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN in type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. Inline composed types are FORBIDDEN in all 33 projects — use `t.*` references only.
-- **AXIOMATIC**: `| None` MUST NEVER appear in type alias definitions in `typings.py`. Type aliases are ALWAYS non-nullable. Consumers add `| None` inline at usage sites when business requires it (e.g., `field: t.Scalar | None`). No `NullableX` or `OptionalX` aliases.
-- **AXIOMATIC**: Duplicating type definitions from the MRO chain is FORBIDDEN — even inside subproject `FlextTypes` nested classes. One definition, one source of truth. Compatibility aliases (`X = t.Y`) are FORBIDDEN.
-- **AXIOMATIC**: `r` (`r`) is the SOLE mechanism for expressing fallibility. Functions that can fail MUST return `r[T]` — never `T | None`, never bare exceptions, never ad-hoc error dicts. The `r` alias (`from flext_core import r`) is MANDATORY at all usage sites. Composition operators (`map`, `flat_map`, `lash`, `value_or`) MUST replace `if result is None` / `try/except` chains. `r` eliminates `| None` return types from the business layer.
-- **AXIOMATIC**: Compatibility wrappers (`def old(): return new()`), non-business validation fallbacks, legacy code maintenance, and `OldName = NewName` aliases are TOTALLY FORBIDDEN. Legacy code is deleted and replaced with canonical patterns. No grace period, no deprecation path.
-- **AXIOMATIC**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
-- **AXIOMATIC**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE Pydantic v2 features to their fullest. `Field()` with `description`/`title`/`examples`/`json_schema_extra` for ALL declarations. Minimize custom validators — prefer built-in constraints. `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, simple getters/setters, wrappers. USE: `@computed_field`, `model_post_init`, `PrivateAttr`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `PrivateAttr`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for models ONLY.
-- **AXIOMATIC**: Every type change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. ALL impacted references across ALL 33 projects MUST be updated via ast-grep (`sg`) search-and-replace immediately. Linter suppressions (`# type: ignore`, `# noqa`, etc.) are FORBIDDEN without real internet citations, business necessity in comments, and per-line only scope. Global suppressions are TOTALLY FORBIDDEN.
-- **Cross-project namespace inheritance**: downstream projects MUST inherit parent facade classes (e.g., `FlextMeltanoModels`, not `FlextModels`) so namespaces cascade via MRO. This applies to `m`, `c`, `t`, `u`, `p`.
+- Canonical governance (see `AGENTS.md`):
+  - §3.2 — `Any`, `t.RecursiveContainer`, and `Mapping[str, Any]` are forbidden; `| None` inline-only.
+  - §3.3 — `r[T]` is the sole fallibility contract; no `T | None` returns in business logic.
+  - §3.1 — single nested-class hierarchy per module via MRO from Pydantic v2 `BaseModel`.
+  - §3.5 — every type change passes all 4 linters and updates impacted references via `ast-grep`.
+- **Cross-project namespace inheritance**: downstream projects MUST inherit parent facade classes (e.g., `FlextMeltanoModels`, not `FlextModels`) so namespaces cascade via MRO. Applies to `m`, `c`, `t`, `u`, `p`. See the Cross-Project section below.
 
 ## TypeAliasType Runtime Boundary (CRITICAL — Python 3.12+)
 
@@ -197,7 +175,7 @@ JsonPrimitive = (
 )  # ← FORBIDDEN: `t.RecursiveContainer` erases all type constraints
 ```
 
-Why bad: `t.RecursiveContainer` is AXIOMATIC FORBIDDEN — it erases constraints and degrades static analysis. Use `t.Scalar` or the explicit union type.
+Why bad: `t.RecursiveContainer` is forbidden in annotations (`AGENTS.md` §3.2) — it erases constraints and degrades static analysis. Use `t.Scalar` or the explicit union type.
 
 ## Verification
 

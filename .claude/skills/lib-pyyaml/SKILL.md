@@ -1,27 +1,12 @@
 ---
-
 name: lib-pyyaml
 description: Safe and deterministic YAML read/write patterns across FLEXT subprojects. Use when modifying YAML parsing, settings files, CLI output formatting, or docs-maintenance tooling.
-triggers:
-  - modifying YAML parsing logic
-  - reading or writing settings files
-  - formatting CLI output as YAML
-  - maintaining docs-maintenance tooling with YAML
-  - ensuring safe and deterministic YAML read/write
 
 ---
 
-<!-- TOC START -->
+# Lib PyYAML
 
-- [Scope](#scope)
-  - [Subproject Usage Map](#subproject-usage-map)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
+**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
 
 ## Scope
 
@@ -68,16 +53,14 @@ triggers:
 - Validate loaded t.RecursiveContainer shape (`dict`, `list`) before passing to typed models.
 - Keep encoding explicit (`encoding="utf-8"` or project constant) when opening files.
 - For CLI output serialization, keep YAML formatting deterministic and user-readable.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
+- **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
+
 ## Instructions
 
 - Use these in-repo declarations as templates:
 
 ```python
 # flext-quality/src/flext_quality/utilities.py
-
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
-
 @staticmethod
 def load_yaml_rules(path: Path) -> p.Result[Sequence[t.RecursiveContainerMapping]]:
     with path.open(encoding="utf-8") as f:

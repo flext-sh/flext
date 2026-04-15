@@ -1,38 +1,8 @@
 ---
-
 name: lib-structlog
 description: FlextLogger structured logging with context propagation, DI factories, and result adapters. Use when adding logging, binding context, or configuring structlog processors.
-triggers:
-  - adding structured logging via FlextLogger
-  - binding context to log entries
-  - configuring structlog processors or output format
-  - implementing DI-backed logging factories
-  - adapting logging to result container flow
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-  - [Subproject Usage Map](#subproject-usage-map)
-- [Rules](#rules)
-- [Instructions](#instructions)
-  - [FlextLogger Class Hierarchy](#flextlogger-class-hierarchy)
-  - [Configuration (at application startup)](#configuration-at-application-startup)
-  - [Logger Creation Patterns](#logger-creation-patterns)
-  - [Context Binding](#context-binding)
-  - [ClassVar State](#classvar-state)
-  - [u Structlog Integration](#flextruntime-structlog-integration)
-- [Workflow](#workflow)
-- [Examples](#examples)
-  - [Good: Module logger with scoped context](#good-module-logger-with-scoped-context)
-  - [Good: Container-scoped logger for DI](#good-container-scoped-logger-for-di)
-  - [Bad: Direct structlog usage](#bad-direct-structlog-usage)
-  - [Bad: Configuring structlog at logger creation](#bad-configuring-structlog-at-logger-creation)
-  - [Bad: Forgetting to clean up scoped context](#bad-forgetting-to-clean-up-scoped-context)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Lib Structlog — FlextLogger and Context-Aware Logging
 
@@ -63,7 +33,6 @@ triggers:
 - **Never** create loggers with `structlog.get_logger()` directly — use `FlextLogger.create_module_logger(name)` or `FlextLogger.for_container(container)`.
 - Bind context via `FlextLogger.Context` methods — never modify `structlog.contextvars` directly.
 - Clean up scoped contexts to prevent leakage across requests/operations.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 ## Instructions
 
 ### FlextLogger Class Hierarchy

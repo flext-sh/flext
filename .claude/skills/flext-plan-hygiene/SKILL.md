@@ -1,27 +1,8 @@
 ---
-
 name: flext-plan-hygiene
 description: Use when managing implementation plans across sessions to prevent plan proliferation. Covers consolidation, deduplication, and archival protocols for maintaining single-source-of-truth task tracking in `.planning/`. Load before spawning new tasks or resuming multi-session work.
-triggers:
-  - managing implementation plans across sessions
-  - preventing plan proliferation in .planning/
-  - consolidating or deduplicating active plans
-  - archiving completed plan files
-  - resuming multi-session work with clean task state
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-
-<!-- TOC END -->
 
 # Flext Plan Hygiene
 

@@ -1,30 +1,8 @@
 ---
-
 name: flext-mro-namespace-rules
 description: Canonical MRO namespace rules for facade naming, organic nested-domain access, and same-project import boundaries. Use when editing `constants.py`, `models.py`, `protocols.py`, `typings.py`, `utilities.py`, `tests/`, or any `_models/` and `_utilities/` mixin tree.
-triggers:
-  - editing constants.py, models.py, protocols.py, typings.py, or utilities.py
-  - naming a new facade class or alias
-  - adding a mixin to _models/ or _utilities/
-  - composing MRO inheritance hierarchy
-  - reviewing or fixing namespace violations
-  - working in tests/ with TestsFlext* classes
-  - adding organic nested-domain access (u.Infra.*, c.Tests.*)
-  - auditing same-project cross-facade imports
-  - creating an integration project (tap/target/dbt) facade
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Flext MRO Namespace Rules
 
@@ -97,16 +75,17 @@ Good:
 ```python
 from flext_core import r, p
 from flext_db_oracle import FlextDbOracleModels
-from flext_meltano import FlextMeltanoModels
+from flext_meltano import m
 
 
-class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
+class FlextTargetOracleModels(m, FlextDbOracleModels):
     class TargetOracle:
-        class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
+        class ExecuteResult(m.ArbitraryTypesModel):
             name: str
 
 
 m = FlextTargetOracleModels
+
 result = r[m.TargetOracle.ExecuteResult].ok(m.TargetOracle.ExecuteResult(name="x"))
 ```
 
@@ -115,7 +94,7 @@ Why good: keeps the organic namespace path, composes parent facades through MRO,
 Bad:
 
 ```python
-class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
+class FlextTargetOracleModels(m, FlextDbOracleModels):
     class TargetOracle:
         class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
             name: str
@@ -123,7 +102,7 @@ class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
     ExecuteResult = TargetOracle.ExecuteResult
 
 
-class TestsFlextCoreUtilities(TestsFlextUtilities, FlextCliUtilities):
+class TestsFlextCoreUtilities(m, FlextCliUtilities):
     class Core:
         class Tests:
             class Docker(tk):

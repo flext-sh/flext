@@ -1,25 +1,8 @@
 ---
-
 name: rules-typings
 description: Rules for typing support assets in `typings/` (stubs, compatibility shims, and local type metadata). Use when editing `.pyi` files or typing helper packages.
-triggers:
-  - editing .pyi stub files in typings/
-  - adding compatibility shims or local type metadata
-  - modifying typing helper packages
-  - reviewing stub accuracy after API changes
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Rules Typings
 
@@ -46,7 +29,7 @@ triggers:
 - **Never shadow shipped types**: If a library ships `py.typed` (e.g., matplotlib, pydantic), custom stubs in `typings/` will CONFLICT — pyright prioritizes installed package types. Use PyPI stub packages or per-line `# pyright: ignore[specificCode]` instead.
 - **Per-line ignores only**: For third-party libs with incomplete types and no stubs, use per-line `# pyright: ignore[reportXxx]` with specific error codes. File-level `# pyright:` settings comments are FORBIDDEN.
 - Keep stubs synchronized with runtime/public API signatures.
-- Prefer precise types over broad fallback annotations. `Any` and `t.RecursiveContainer` are TOTALLY FORBIDDEN — use `t.*` contracts from `typings.py`.
+- Prefer precise types over broad fallback annotations. `Any` and `t.RecursiveContainer` are FORBIDDEN — use `t.*` contracts from `typings.py`.
 - Internal FLEXT typing gaps are NOT solved with local stubs. Fix the source contract in `protocols.py`, `typings.py`, or `models.py`, then consume it through `p.*`, `t.*`, or `m.*`.
 - Manual stubs must never preserve a concrete internal implementation annotation when a structural `p.*` or composed `t.*` contract should exist instead.
 - Keep package-specific typing shims isolated under their own stub namespace.

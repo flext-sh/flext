@@ -1,25 +1,8 @@
 ---
-
 name: rules-docs
 description: Rules for documentation under `docs/` to keep architecture and project guides aligned with current code and policy. Use when editing docs pages or docs structure.
-triggers:
-  - editing documentation pages under docs/
-  - updating architecture or project guide content
-  - checking docs structure alignment with current code
-  - adding new documentation sections
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Rules Docs
 
@@ -47,7 +30,6 @@ triggers:
 - Align architectural claims with current source files.
 - Prefer concrete file/symbol anchors over generic statements.
 - Avoid duplicating canonical policy text from root governance files.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, and `inline imports`. `cast()` is forbidden outside `flext-core` result internals.
 
 ## Instructions
 

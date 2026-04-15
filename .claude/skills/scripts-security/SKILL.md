@@ -1,26 +1,8 @@
 ---
-
 name: scripts-security
 description: Security scripts — secrets management, vault operations, and security auditing. Use when editing scripts/security/.
-triggers:
-  - managing secrets or vault operations
-  - running security auditing scripts
-  - editing scripts/security/
-  - reviewing security hygiene in the monorepo
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-- [Scripts](#scripts)
-<!-- TOC END -->
 
 # Scripts Security
 

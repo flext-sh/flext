@@ -1,29 +1,10 @@
 ---
-
 name: lib-pydantic-settings
 description: Pydantic ConfigDict and singleton settings patterns across FLEXT subprojects. Use when editing settings.py models, env bindings, or configuration validation behavior.
-triggers:
-  - editing settings.py models or env bindings
-  - configuring ConfigDict for settings classes
-  - implementing singleton settings patterns
-  - debugging environment variable resolution
-  - adding namespace registration to FlextSettings
 
 ---
 
-<!-- TOC START -->
-
-- [Scope](#scope)
-  - [Subproject Usage Map](#subproject-usage-map)
-- [References](#references)
-- [Rules](#rules)
-- [Forbidden Patterns](#forbidden-patterns)
-- [Instructions](#instructions)
-- [MRO Composition](#mro-composition)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
+# Lib Pydantic Settings
 
 **Reviewed**: 2026-04-05 | **Scope**: MRO composition, auto-MRO env sources, forbidden patterns
 
