@@ -24,35 +24,37 @@ description: Advanced Pydantic v2 implementation patterns for FLEXT: discriminat
   - `flext-core/src/flext_core/_models/settings.py`
   - `flext-core/src/flext_core/_utilities/validation.py`
   - `flext-core/src/flext_core/models.py`
-  - `flext-core/src/flext_core/service.py`
-  - `flext-core/src/flext_core/registry.py`
-  - `flext-ldif/src/flext_ldif/_models/base.py`
-  - `flext-cli/tests/conftest.py`
-  - `flext-tap-oracle-oic/src/flext_tap_oracle_oic/models.py`
+class FlextPattern(m):
+    class Domain:
+        class Window(m.Value):
+            start: int = u.Field(default=0, ge=0)
+            end: int = u.Field(default=0, ge=0)
+            label: t.NonEmptyStr
 
-## References
+            @u.field_validator("label", mode="before")
+            @classmethod
+            def normalize_label(cls, value: t.RuntimeData) -> str:
+                if not isinstance(value, str):
+                    raise TypeError("label must be str")
+                cleaned = value.strip()
+                if not cleaned:
+                    raise ValueError("label cannot be empty")
+                return cleaned
 
-- `AGENTS.md` — canonical governance source
-- `.claude/skills/lib-pydantic-v2/SKILL.md`
-- `.claude/skills/skill-format-universal/SKILL.md`
-- `flext-core/src/flext_core/_models/base.py`
-- `flext-core/src/flext_core/_models/settings.py`
-- `flext-core/src/flext_core/_utilities/validation.py`
-- `flext-core/src/flext_core/models.py`
-- `flext-core/src/flext_core/service.py`
-- `flext-core/src/flext_core/registry.py`
-- `flext-ldif/src/flext_ldif/_models/base.py`
-- `flext-cli/tests/conftest.py`
-- `flext-tap-oracle-oic/src/flext_tap_oracle_oic/models.py`
-- <https://docs.pydantic.dev/latest/concepts/validators/>
-- <https://docs.pydantic.dev/latest/concepts/serialization/>
-- <https://docs.pydantic.dev/latest/concepts/unions/>
-- <https://docs.pydantic.dev/latest/concepts/strict_mode/>
+            @u.model_validator(mode="after")
+            def validate_window(self) -> Self:
+                if self.end < self.start:
+                    raise ValueError("end must be >= start")
+                return self
 
-## Rules
+        class ServiceBase(s[t.Dict]):
+            pass
 
-- Keep policy-level mandates in `lib-pydantic-v2`; keep procedural depth here.
+        class Service(ServiceBase):
+            def validate(self, window: "FlextPattern.Domain.Window") -> p.Result[int]:
+                return r[int].ok(window.end - window.start)
 - Reuse repository-proven patterns before inventing new abstractions.
+- Prefer alias-first consumption (`c`, `p`, `t`, `m`, `u`, and `s`) throughout — never mix direct pydantic imports.
 - Keep validation phases explicit:
   - `field_validator(..., mode="before")` for normalization/coercion.
   - `field_validator(..., mode="after")` for typed semantic checks.
@@ -93,55 +95,105 @@ Pattern families available in references:
 
 ## Examples
 
-Good:
+### Good: Pydantic via `m` facade with MRO-nested validators
 
 ```python
+from __future__ import annotations
+
 from typing import Self
-from pydantic import BaseModel, Field, field_validator, model_validator
+
+from flext_core import m, p, r, s, t, c
 
 
-class Window(BaseModel):
-    start: int = Field(ge=0)
-    end: int = Field(ge=0)
-    label: str
+class FlextPatternModels(m):
+    """Models inherit from m via MRO — all Pydantic via facade."""
+    
+    class Domain:
+        class Window(m.BaseModel):
+            """Window with validation phases separated."""
+            model_config = m.ConfigDict(extra=c.EXTRA_FORBID)
+            start: int = m.Field(default=0, ge=0, description="Window start")
+            end: int = m.Field(default=0, ge=0, description="Window end")
+            label: t.NonEmptyStr = m.Field(..., description="Label")
 
-    @field_validator("label", mode="before")
-    @classmethod
-    def normalize_label(cls, value) -> str:
-        if not isinstance(value, str):
-            raise TypeError("label must be str")
-        cleaned = value.strip()
-        if not cleaned:
-            raise ValueError("label cannot be empty")
-        return cleaned
+            # Phase 1: Normalize input before type coercion
+            @m.field_validator("label", mode="before")
+            @classmethod
+            def normalize_label(cls, value: t.RuntimeData) -> str:
+                if not isinstance(value, str):
+                    raise TypeError("label must be str")
+                return value.strip()
 
-    @model_validator(mode="after")
-    def validate_window(self) -> Self:
-        if self.end < self.start:
-            raise ValueError("end must be >= start")
-        return self
+            # Phase 2: Cross-field validation after all fields coerced
+            @m.model_validator(mode="after")
+            def validate_window(self) -> Self:
+                if self.end < self.start:
+                    raise ValueError("end must be >= start")
+                return self
+
+            # Computed property (immutable derivation)
+            @m.computed_field
+            @property
+            def width(self) -> int:
+                return self.end - self.start
+
+
+class FlextPatternServiceBase(s[t.Dict]):
+    """Service base with DI support."""
+    pass
+
+
+class FlextPatternService(FlextPatternServiceBase):
+    """Service consuming models via MRO paths."""
+    
+    def validate(self, window: FlextPatternModels.Domain.Window) -> p.Result[int]:
+        """Validate and return window width."""
+        return r[int].ok(window.width)  # Uses computed_field
 ```
 
-Why good: normalization and invariants are separated, deterministic, and easy to test.
+Why good:
+- ✅ **All Pydantic via `m`** — `m.BaseModel`, `m.Field`, `m.ConfigDict`, `m.field_validator`, `m.model_validator`, `m.computed_field`
+- ✅ **MRO inheritance** — `FlextPatternModels(m)` → Domain.Window inherits Pydantic via facade
+- ✅ **Validator phases separated** — normalize (before) → coerce → validate cross-fields (after)
+- ✅ **Nested domain namespace** — `m.Domain.Window` preserved, not flattened
+- ✅ **Service boundary** — receives typed models, returns result via `r[T]`
 
-Bad:
+### Bad: Direct pydantic imports instead of via `m` facade
 
 ```python
-from pydantic import BaseModel, field_validator
-
+# ✗ WRONG — importing from pydantic directly
+from pydantic import BaseModel, field_validator, Field
 
 class Window(BaseModel):
-    start: int
-    end: int
+    start: int = Field(default=0)
+    end: int = Field(default=0)
 
     @field_validator("start", mode="before")
     @classmethod
     def mixed_logic(cls, value):
-        # Coercion + unrelated global side effects + hidden invariant checks
         return int(value)
 ```
 
-Why bad: cross-field and side-effect logic in a field validator makes behavior brittle.
+Why bad:
+- Bypasses `m` facade — no centralized Pydantic governance
+- Loses MRO composition — cannot inherit parent facades
+- Prevents cross-field validation, computed fields through abstraction
+- Breaks with architectural isolation (c/p/t/m/u contracts)
+
+### Bad: Cross-field logic in field validator
+
+```python
+# ✗ WRONG — validator with side effects and unrelated logic
+@m.field_validator("start", mode="before")
+@classmethod
+def mixed_logic(cls, value):
+    # Coercion + side effects + hidden invariant checks all in one
+    import logging
+    logging.info(f"Validating {value}")  # Side effect!
+    return int(value)
+```
+
+Why bad: side effects and cross-field logic in field validator makes behavior brittle and hard to test.
 
 Good:
 

@@ -40,6 +40,7 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
   - `src/`: `class <Domain>:`
   - `tests/`: `class <Domain>:` containing `class Tests:`
 - Callers MUST keep the organic namespace path emitted by MRO. Use `u.Infra.parse_semver`, `c.Tests.ERR_OK_FAILED`, and `m.TargetOracle.ExecuteResult`. Do not flatten nested domain-local classes back onto the facade root with assignments like `ExecuteResult = TargetOracle.ExecuteResult`.
+- Examples and docs should present Pydantic-facing usage through `c`, `p`, `t`, `m`, `u` (and `s` for services), preserving nested classes + MRO composition even in service-only snippets.
 - Contract ownership follows the facade split: `p.*` for protocols, `t.*` for composed aliases, `m.*` for models. Do not recreate protocol-shaped aliases in `t` or flatten model/protocol carriers just to shorten an annotation.
 - Private mixin files under `_models/`, `_utilities/`, `_protocols/`, and similar trees define mixin classes only. The public facade composes them in its inheritance list. Manual flat wrapper nesting such as `class Docker(tk): pass` inside the facade namespace is forbidden.
 - Same-project cross-facade imports are forbidden at runtime unless explicitly allowed below:
@@ -70,42 +71,95 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 
 ## Examples
 
-Good:
+### Good: Pydantic models consumed via `m` facade with nested domains
 
 ```python
-from flext_core import r, p
-from flext_db_oracle import FlextDbOracleModels
-from flext_meltano import m
+from __future__ import annotations
+
+from flext_core import c, m, p, r, s, t, u
 
 
-class FlextTargetOracleModels(m, FlextDbOracleModels):
+class FlextTargetOracleModels(m):
+    """Good: MRO composition with Pydantic via m facade."""
+
     class TargetOracle:
-        class ExecuteResult(m.ArbitraryTypesModel):
-            name: str
+        # Consume Pydantic DIRECTLY via m (not from pydantic import ...)
+        class ExecuteResult(m.BaseModel):
+            model_config = m.ConfigDict(extra=c.EXTRA_FORBID)
+            name: str = m.Field(..., description="Result name")
+            success: bool = m.Field(default=True)
+        
+        class ExecuteCommand(m.BaseModel):
+            target_id: str = m.Field(..., description="Target ID")
+            
+            @m.field_validator("target_id", mode="before")
+            @classmethod
+            def normalize(cls, v: str) -> str:
+                return v.upper()
+
+        class ServiceBase(s[t.Dict]):
+            pass
+
+        class ServiceMixin(ServiceBase):
+            class ServiceState(m.BaseModel):
+                status: t.NonEmptyStr = m.Field(default=c.Status.ACTIVE)
+
+            def resolve_state(self) -> p.Result["FlextTargetOracleModels.TargetOracle.ServiceState"]:
+                return r[FlextTargetOracleModels.TargetOracle.ServiceState].ok(
+                    FlextTargetOracleModels.TargetOracle.ServiceState(),
+                )
+
+        class Service(ServiceMixin, ServiceBase):
+            pass
 
 
-m = FlextTargetOracleModels
+# Access via MRO path — organic nesting
+m_module = FlextTargetOracleModels
+cmd = m_module.TargetOracle.ExecuteCommand(target_id="oracle")
+result = r[m_module.TargetOracle.ExecuteResult].ok(
+    m_module.TargetOracle.ExecuteResult(name="x", success=True)
+)
 
-result = r[m.TargetOracle.ExecuteResult].ok(m.TargetOracle.ExecuteResult(name="x"))
+service = m_module.TargetOracle.Service()
+_ = service.resolve_state()
 ```
 
-Why good: keeps the organic namespace path, composes parent facades through MRO, and avoids flat alias leakage.
+Why good: 
+- **All Pydantic via `m`** — never `from pydantic import BaseModel, Field, ...`
+- **Organic nesting** — `m.TargetOracle.ExecuteResult`, not flattened
+- **MRO chains Pydantic** — all decorators/types accessed through facade MRO
+- **Clear domain boundaries** — each namespace has its own models, validators, state
 
 Bad:
 
 ```python
-class FlextTargetOracleModels(m, FlextDbOracleModels):
+from __future__ import annotations
+
+from flext_core import m
+
+
+class _StubMixin(m):
+    """Placeholder representing a cross-project mixin import."""
+
+
+class _StubUtilities(m):
+    """Placeholder representing a cross-project utilities import."""
+
+
+class FlextTargetOracleModels(_StubMixin):
     class TargetOracle:
-        class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
+        class ExecuteResult(m.ArbitraryTypesModel):
             name: str
 
+    # BAD: flattens domain-local symbol back to facade root
     ExecuteResult = TargetOracle.ExecuteResult
 
 
-class TestsFlextCoreUtilities(m, FlextCliUtilities):
+class TestsFlextCoreUtilities(_StubMixin, _StubUtilities):
     class Core:
         class Tests:
-            class Docker(tk):
+            # BAD: manually nests private mixin instead of composing through MRO
+            class Docker(_StubMixin):
                 pass
 ```
 

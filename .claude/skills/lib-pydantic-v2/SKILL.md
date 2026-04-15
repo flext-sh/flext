@@ -25,83 +25,117 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 
 ## Rules
 
-- **Only v2 API**: `model_validate`, `model_dump`, `model_dump_json`, `ConfigDict`, `field_validator`, `model_validator`, `computed_field`.
+- **Consume Pydantic ONLY via `m` facade**: Never `from pydantic import ...` in application code. All Pydantic types (`BaseModel`, `Field`, `ConfigDict`, `field_validator`, `model_validator`, `computed_field`, etc.) are re-exported by the models facade `m` and accessed via MRO-nested classes.
+- **Only v2 API**: `m.model_validate`, `m.model_dump`, `m.model_dump_json`, `m.ConfigDict`, `m.field_validator`, `m.model_validator`, `m.computed_field`.
 - **Never** use v1 API: `@validator`, `.dict()`, `.json()`, `class Config:`, `from_orm`, `orm_mode`.
-- **Critical violation**: never use `model_rebuild(...)` to patch unresolved annotations.
+- **Critical violation**: never use `m.model_rebuild(...)` to patch unresolved annotations.
 - Models must resolve all references at definition time via explicit imports/type aliases and stable declaration order.
 - Use `make validate` as enforcement gate (with `PROJECT`/`PROJECTS` selectors). Auto-fix path is `make validate FIX=1`.
-- Use `TypeAdapter` for validating non-model types — never ad-hoc casting with `isinstance` chains.
-- Set `ConfigDict(extra="forbid")` on strict boundary models, `extra="ignore"` on flexible internal models.
-- Use `Field(...)` with explicit `description=` on all public model fields.
+- Use `m.TypeAdapter` for validating non-model types — never ad-hoc casting with `isinstance` chains.
+- Set `m.ConfigDict(extra=c.EXTRA_FORBID)` on strict boundary models, `extra=c.EXTRA_IGNORE` on flexible internal models.
+- Use `m.Field(...)` with explicit `description=` on all public model fields.
+- All model classes defined as nested classes within MRO facade hierarchy (e.g., `FlextProjectModels.Domain.ModelName`).
 
 ## Instructions
 
 ### Core Model Patterns
 
-**BaseModel with ConfigDict** (every model in FLEXT):
+**BaseModel with ConfigDict** (via facade `m` namespace):
 
 ```python
-from pydantic import BaseModel, ConfigDict, Field
+from flext_core import m, c
+
+# Access Pydantic objects DIRECTLY through m facade
+class FlextProcessingModels(m):
+    class Processing:
+        class Request(m.BaseModel):
+            model_config = m.ConfigDict(
+                validate_assignment=True,
+                use_enum_values=True,
+                extra=c.EXTRA_FORBID,
+            )
+            name: str = m.Field(..., description="Request name")
+            timeout: int = m.Field(default=30, ge=1, le=300)
 
 
-class ProcessingRequest(BaseModel):
-    model_config = ConfigDict(
-        validate_assignment=True,
-        use_enum_values=True,
-        extra="forbid",  # strict at boundaries
-    )
-    name: str = Field(..., description="Request name")
-    timeout: int = Field(default=30, ge=1, le=300)
+# Usage
+m_module = FlextProcessingModels
+request = m_module.Processing.Request(name="test", timeout=60)
 ```
 
-**field_validator** (mode="before" or "after"):
+**Why**: All Pydantic types (`BaseModel`, `Field`, `ConfigDict`, `field_validator`, `computed_field`, `model_validator`) are re-exported directly via the `m` facade MRO. Never import from `pydantic` directly in application code.
+
+**field_validator** (via `m` facade, mode="before" or "after"):
 
 ```python
-from pydantic import field_validator
+from flext_core import m, t
 
+class FlextValidationModels(m):
+    class Validation:
+        class RetryConfiguration(m.BaseModel):
+            retry_on_status_codes: t.PositiveInt | None = m.Field(default_factory=list)
 
-class RetryConfiguration(BaseModel):
-    retry_on_status_codes: Sequence[int] = Field(default_factory=list)
+            @m.field_validator("retry_on_status_codes", mode="after")
+            @classmethod
+            def validate_status_codes(cls, v: t.SequenceInt) -> t.SequenceInt:
+                return [code for code in v if 400 <= code < 600]
 
-    @field_validator("retry_on_status_codes", mode="after")
-    @classmethod
-    def validate_status_codes(cls, v: Sequence[int]) -> Sequence[int]:
-        return [c for c in v if 400 <= c < 600]
+# Usage via MRO
+m_module = FlextValidationModels
+config = m_module.Validation.RetryConfiguration(retry_on_status_codes=[400, 404, 500])
 ```
 
-**model_validator** (mode="after" for cross-field validation):
+**Pattern**: Access `field_validator` directly as `m.field_validator`. The decorator chains through the MRO-composed models.
+
+**model_validator** (via `m` facade, mode="after"):
 
 ```python
-from pydantic import model_validator
+from flext_core import m, t
 
+class FlextBatchModels(m):
+    class Batch:
+        class ProcessingConfig(m.BaseModel):
+            batch_size: int = m.Field(default=100)
+            max_workers: int = m.Field(default=4)
 
-class BatchProcessingConfig(BaseModel):
-    batch_size: int = Field(default=100)
-    max_workers: int = Field(default=4)
+            @m.model_validator(mode="after")
+            def validate_batch_config(self) -> m.Self:
+                if self.batch_size < self.max_workers:
+                    msg = "batch_size must be >= max_workers"
+                    raise ValueError(msg)
+                return self
 
-    @model_validator(mode="after")
-    def validate_batch_config(self) -> Self:
-        if self.batch_size < self.max_workers:
-            msg = "batch_size must be >= max_workers"
-            raise ValueError(msg)
-        return self
+# Usage
+m_module = FlextBatchModels
+config = m_module.Batch.ProcessingConfig(batch_size=200, max_workers=4)
 ```
 
-**computed_field** (derived read-only properties):
+**Note**: Access `model_validator`, `Self` as `m.model_validator`, `m.Self` from the MRO facade.
+
+**computed_field** (via `m` facade):
 
 ```python
-from pydantic import computed_field
+from flext_core import m
 
+class FlextGrpcModels(m):
+    class Grpc:
+        class Server(m.BaseModel):
+            host: str = m.Field(..., description="Server host")
+            port: int = m.Field(..., description="Server port")
 
-class GrpcModel(BaseModel):
-    host: str
-    port: int
+            @m.computed_field
+            @property
+            def endpoint(self) -> str:
+                """Computed endpoint from host:port."""
+                return f"{self.host}:{self.port}"
 
-    @computed_field
-    @property
-    def endpoint(self) -> str:
-        return f"{self.host}:{self.port}"
+# Usage
+m_module = FlextGrpcModels
+server = m_module.Grpc.Server(host="localhost", port=50051)
+assert server.endpoint == "localhost:50051"
 ```
+
+**Pattern**: Derive read-only properties via `m.computed_field` decorated with `@property`. The computed value is automatically serialized.
 
 ### TypeAdapter for Non-Model Validation
 
@@ -183,10 +217,36 @@ make validate PROJECT=<name> FIX=1
 
 ## Examples
 
+### Good: Pydantic consumed via `m` facade with MRO nesting
+
+```python
+from flext_core import m, c
+
+class FlextProcessingModels(m):
+    class Processing:
+        class WorkflowConfig(m.BaseModel):
+            model_config = m.ConfigDict(
+                extra=c.EXTRA_FORBID,
+                validate_assignment=True,
+            )
+            name: str = m.Field(..., description="Workflow name")
+            max_retries: int = m.Field(default=3, ge=0)
+
+            @m.field_validator("name", mode="before")
+            @classmethod
+            def strip_name(cls, v: str) -> str:
+                return v.strip()
+
+
+# Usage — access via MRO path
+m_module = FlextProcessingModels
+cfg = m_module.Processing.WorkflowConfig(name="extract")
+```
+
 ### Good: FlextSettings model_config
 
 ```python
-model_config = ConfigDict(
+model_config = m.ConfigDict(
     env_prefix=c.ENV_PREFIX,  # "FLEXT_"
     env_nested_delimiter=c.ENV_NESTED_DELIMITER,
     env_file=u.Infra.resolve_env_file(),
@@ -204,6 +264,19 @@ result = r.from_validation(raw_data, UserModel)
 # Uses model(y → r[UserModel]
 ```
 
+### Bad: Direct import from pydantic instead of facade
+
+```python
+# ✗ WRONG — importing directly from pydantic
+from pydantic import BaseModel, Field, ConfigDict
+
+class UserModel(BaseModel):
+    name: str = Field(..., description="User name")
+    model_config = ConfigDict(extra="forbid")
+```
+
+**Why bad**: Pydantic types must be accessed through the `m` facade to enable centralized governance and MRO composition. Direct imports bypass the abstraction layer.
+
 ### Bad: v1-style validator
 
 ```python
@@ -213,7 +286,7 @@ def validate_name(cls, v):
     return v.strip()
 ```
 
-**Why bad**: `@validator` is deprecated in v2. Use `@field_validator("name", mode="before")` with `@classmethod`.
+**Why bad**: `@validator` is deprecated in v2. Use `@m.field_validator("name", mode="before")` with `@classmethod` via the facade.
 
 ### Bad: .dict() / .json()
 

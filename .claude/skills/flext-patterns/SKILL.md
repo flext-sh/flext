@@ -47,10 +47,11 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 
 ## Pattern Catalog
 
+- **Pydantic Consumption via `m` Facade** — All Pydantic objects (BaseModel, Field, ConfigDict, validators) accessed via `m.*` in MRO-nested classes
 - ROP (`r` monadic chains)
-- DI (`FlextContainer` singleton + scoped instances)
-- DDD (entity/value/service models)
-- CQRS (handler command/query separation)
+- DI (`FlextContainer` singleton + scoped instances via `c`, `p`)
+- DDD (entity/value/service models via `m`)
+- CQRS (handler command/query separation via `m.Commands`, `m.Queries`)
 - Event-Driven patterns in service/dispatcher flows
 - Hexagonal ports/adapters boundaries
 - Validation/middleware pipeline composition
@@ -261,7 +262,43 @@ def transform(value: str):
 
 ## Examples
 
-Good:
+### Good: Domain Model with MRO-nested Pydantic models via `m` facade
+
+```python
+from flext_core import m, c, p, r
+
+class FlextOrderModels(m):
+    class Order:
+        class Item(m.BaseModel):
+            sku: str = m.Field(..., description="Stock keeping unit")
+            quantity: int = m.Field(default=1, ge=1)
+            
+            @m.field_validator("sku", mode="before")
+            @classmethod
+            def normalize_sku(cls, v: str) -> str:
+                return v.upper().strip()
+        
+        class CreateCommand(m.BaseModel):
+            model_config = m.ConfigDict(extra=c.EXTRA_FORBID)
+            customer_id: str
+            items: list[m.Item]
+            
+            @m.model_validator(mode="after")
+            def validate_order(self) -> m.Self:
+                if not self.items:
+                    raise ValueError("Order must have at least one item")
+                return self
+
+# Usage via MRO
+m_module = FlextOrderModels
+cmd = m_module.Order.CreateCommand(
+    customer_id="cust_123",
+    items=[m_module.Order.Item(sku="WIDGET", quantity=5)]
+)
+result = r[m_module.Order.CreateCommand].ok(cmd)
+```
+
+### Good: ROP with typed result flow
 
 ```python
 result = r[int].ok(10).map(lambda v: v * 2).lash(lambda err: p.Result[int].ok(0))
