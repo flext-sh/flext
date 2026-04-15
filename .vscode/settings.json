@@ -79,5 +79,12 @@
   "ruff.nativeServer": "on",
   "ruff.interpreter": [
     ".venv/bin/ruff"
+  ],
+  "python-envs.pythonProjects": [
+    {
+      "path": ".",
+      "envManager": "ms-python.python:system",
+      "packageManager": "ms-python.python:pip"
+    }
   ]
 }
