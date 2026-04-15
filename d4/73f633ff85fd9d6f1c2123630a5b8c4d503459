@@ -1,0 +1,108 @@
+.claude/skills/flext-mro-namespace-rules/SKILL.md
+  14776bb8a7569cd6 74,83,86-99,102,116-120,127-131
+  db4927e9f67317f0 77,82,121,136-149,151,154,158,161-162
+.claude/skills/lib-pydantic-v2/SKILL.md
+  14776bb8a7569cd6 28-29,31,34-37,43,46-63,66,68,71,73-76,78-81,83-85,88,90,93-110,113,115,118,120-135,138,220-245,249,267-279,289
+.claude/skills/pydantic-v2-patterns/SKILL.md
+  14776bb8a7569cd6 57,98,105,109-110,112-120,125-128,133-138,142,147-148,150-151,154-159,161,164-165,168-169,177-193,196
+.claude/skills/flext-patterns/SKILL.md
+  14776bb8a7569cd6 50,52-54,265-301
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "d473f633ff85fd9d6f1c2123630a5b8c4d503459",
+  "prompts": {
+    "0bf1544685a35ccd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8d70-e211-7a42-8499-6cbbe28689f2",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2254,
+      "overriden_lines": 0
+    },
+    "14776bb8a7569cd6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "808a0355-ecdb-46fb-a4dd-7348401900ee",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1198,
+      "total_deletions": 96,
+      "accepted_lines": 2035,
+      "overriden_lines": 1
+    },
+    "1b28234634c341c5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8c42-0715-7831-85d8-eb1922b1c8fb",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2069,
+      "overriden_lines": 0
+    },
+    "8eb981e40cc2a427": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8cf2-0859-7651-b73f-ed30fb6aee1d",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 74,
+      "overriden_lines": 0
+    },
+    "d915b9853f380ecb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d88a6-609e-7a00-a230-f6e534202261",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 7550,
+      "overriden_lines": 0
+    },
+    "db46130d8a27777d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d923f-8574-7731-8817-4a0433cc83a1",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 362,
+      "overriden_lines": 0
+    },
+    "db4927e9f67317f0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "312f664b-2347-4a2f-92d6-46917dcca62e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 3860,
+      "total_deletions": 178,
+      "accepted_lines": 3829,
+      "overriden_lines": 10
+    }
+  }
+}
