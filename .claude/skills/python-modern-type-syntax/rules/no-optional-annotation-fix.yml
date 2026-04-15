@@ -1,7 +1,0 @@
-id: no-optional-annotation-fix
-language: python
-rule:
-  pattern:
-    context: "a: Optional[$A]"
-    selector: generic_type
-fix: $A | None

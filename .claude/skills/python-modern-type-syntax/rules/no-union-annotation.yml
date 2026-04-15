@@ -1,8 +1,0 @@
-id: no-union-annotation
-language: python
-rule:
-  pattern:
-    context: "a: Union[$$$TYPES]"
-    selector: generic_type
-message: "Union[X, Y] annotation - use X | Y syntax"
-severity: warning

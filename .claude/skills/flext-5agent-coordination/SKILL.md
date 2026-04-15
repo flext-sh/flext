@@ -30,7 +30,6 @@ triggers:
 - `AGENTS.md` §10 (canonical law)
 - `AGENTS.md` (agent roster and delegation)
 - `flext-core/src/flext_core/protocols.py` (section ownership matrix)
-- `.claude/skills/multi-agent-coordination/SKILL.md` (quick reference)
 
 ## Rules
 

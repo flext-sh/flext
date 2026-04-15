@@ -1,5 +1,0 @@
-id: no-optional-annotation-fix
-valid:
-  - "x: str | None = None"
-invalid:
-  - "x: Optional[str] = None"

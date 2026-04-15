@@ -45,7 +45,7 @@ alwaysApply: true
 - **Supreme Document**: FLEXT canonical governance file for ALL coding agents in this repository. AGENTS.md defines mandatory law; skills hold detailed implementation guidance.
 - **Reviewed**: 2026-04-06.
 - **Stack Baseline**: Python 3.13+, Pydantic v2, Ruff, Pyrefly, Poetry, Make.
-- **No Shadow Policies**: Agent-specific settingss are pointers only. No policy duplication exists outside this file.
+- **No Shadow Policies**: Agent-specific settings are pointers only. No policy duplication exists outside this file.
 
 ## §2 Architecture Law
 
@@ -337,7 +337,7 @@ from collections.abc import Mapping, Sequence
 - **Authority**: Skills are authoritative detail documents. This file (`AGENTS.md`) is the supreme law surface framing them.
 - **Load Order**: Touched-path `rules-*` skill first, supporting skills second. Afterwards, load only minimal skills needed for the change.
 - **Mandatory Usage**: Do not implement rules from memory. Do not claim skill usage without reading the `SKILL.md`.
-- **Mapping**: Baseline maps must be respected (`flext-core->rules-flext-core`, `src->rules-src`, `tests->rules-tests`, etc.).
+- **Mapping**: Baseline maps must be respected (`flext-core->rules-flext-core`, `src->rules-src`, `tests->testing-patterns`, etc.).
 - **Rule Definitions**: `rules.yml` schema uses flat fix keys only. Prefer `type: ast-grep`; use `type: custom` only when AST matching is completely unviable. `fix_auto: true` must map to an executable real fix mechanism.
 - *Skill format policies*: See skills `skill-format-universal`, `flext-docs-pointer-policy`.
 

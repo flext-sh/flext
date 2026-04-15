@@ -1,8 +1,0 @@
-id: no-optional-annotation
-language: python
-rule:
-  pattern:
-    context: "a: Optional[$T]"
-    selector: generic_type
-message: "Optional[X] annotation - use X | None syntax"
-severity: warning
