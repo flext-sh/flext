@@ -1,10 +1,6 @@
 {
   "scope": {
-    "exclude_roots": [
-      "algar-oud-mig",
-      "gruponos-meltano-native",
-      "flexcore"
-    ]
+    "exclude_roots": []
   },
   "audit": {
     "placeholder_terms": [
