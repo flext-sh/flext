@@ -1,7 +1,16 @@
 ---
 
 name: flext-refactoring-workflow
-description: Step-by-step refactoring process with verified quality gates and Make targets
+description: Step-by-step refactoring workflow with quality gates, make targets, and commit discipline for the FLEXT monorepo. Use when refactoring a module, extracting mixins, decomposing classes exceeding the 200-line cap, migrating legacy patterns to current MRO/facade conventions, or cleaning up import boundary violations.
+triggers:
+  - refactoring a module or class
+  - decomposing a class exceeding the 200-line cap
+  - extracting mixins to _models/ or _utilities/
+  - migrating legacy patterns to current MRO/facade conventions
+  - cleaning up import boundary violations across multiple files
+  - renaming symbols with ast-grep across the monorepo
+  - verifying linters pass after a structural change
+  - planning a multi-file refactor
 
 ---
 

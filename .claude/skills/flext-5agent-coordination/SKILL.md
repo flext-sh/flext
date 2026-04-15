@@ -1,6 +1,13 @@
 ---
 name: flext-5agent-coordination
-description: 5-Agent Parallel Execution Protocol for flext-core and consumer projects. Authoritative source AGENTS.md §10.
+description: Use when coordinating 5 parallel agents on flext-core or consumer project work. Covers execution ritual (11 Commandments), ownership matrix, phase sequencing, lint scoping, and git hygiene for zero-conflict parallel delivery. Authoritative source: AGENTS.md §10.
+triggers:
+  - coordinating 5 parallel agents on flext-core
+  - assigning file ownership for parallel work
+  - planning agent execution phases (0-4)
+  - resolving file conflicts between parallel agents
+  - reviewing the 11 Commandments execution ritual
+  - determining which files are FROZEN vs. owned
 ---
 
 # 5-Agent Parallel Execution Protocol

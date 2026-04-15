@@ -2,6 +2,12 @@
 
 name: pep-703-free-threading
 description: Experimental GIL-free CPython for true parallelism. Use when evaluating free-threaded Python builds, writing thread-safe code, or optimizing CPU-bound parallel workloads.
+triggers:
+  - evaluating GIL-free CPython builds
+  - writing thread-safe code for free-threaded Python
+  - optimizing CPU-bound parallel workloads
+  - experimenting with Python 3.13 free-threading features
+  - assessing parallelism strategies for FLEXT pipelines
 
 ---
 

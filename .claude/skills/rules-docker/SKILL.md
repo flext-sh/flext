@@ -2,6 +2,11 @@
 
 name: rules-docker
 description: Rules for Docker assets in `docker/`, including compose files and image folders. Use when editing container configs, service wiring, or docker validation scripts.
+triggers:
+  - editing docker/ compose files or image folders
+  - modifying container configurations or service wiring
+  - adding or changing docker validation scripts
+  - reviewing Docker asset structure in the monorepo
 
 ---
 

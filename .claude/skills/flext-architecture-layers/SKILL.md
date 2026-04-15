@@ -2,6 +2,12 @@
 
 name: flext-architecture-layers
 description: Layer map and dependency-direction contract for flext-core. Use when adding modules, moving responsibilities, or reviewing imports.
+triggers:
+  - adding a new module or layer to flext-core
+  - reviewing dependency direction (L0-L3)
+  - moving responsibilities between layers
+  - auditing imports for layer violations
+  - understanding the platform chain (Core→Cli→Meltano→Integration)
 
 ---
 

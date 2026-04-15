@@ -1,7 +1,13 @@
 ---
 
 name: flext-agent-integration
-description: Guide for using MCP tools, skills, and agents in the FLEXT development workflow. Use at session start or when configuring agent tooling for FLEXT work.
+description: Use when setting up agent tooling, configuring MCP tools, or onboarding to the FLEXT development workflow. Covers skill discovery, tool priority ordering, session start protocols, and agent configuration for Claude Code, GitHub Copilot, and compatible agents.
+triggers:
+  - setting up agent tooling or MCP tools
+  - onboarding to the FLEXT development workflow
+  - configuring Claude Code, GitHub Copilot, or Codex for this repo
+  - discovering which skills to load for a given task
+  - troubleshooting agent session start protocols
 
 ---
 

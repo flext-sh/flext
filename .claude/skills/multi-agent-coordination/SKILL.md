@@ -1,6 +1,12 @@
 ---
 name: multi-agent-coordination
-description: Quick reference for 5 agents executing parallel work on flext codebase with zero conflicts. Authoritative source AGENTS.md §10.
+description: Use when coordinating parallel agent work to avoid file conflicts and maintain quality. Quick reference covering ownership rules, phase ordering, lint scoping, and session hygiene for the 5-agent protocol. Authoritative source: AGENTS.md §10.
+triggers:
+  - coordinating parallel agent work to avoid file conflicts
+  - assigning file ownership between agents
+  - following phase ordering for parallel execution
+  - enforcing git hygiene in multi-agent sessions
+  - quick-referencing the ownership matrix before starting work
 ---
 
 # Multi-Agent Coordination

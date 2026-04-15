@@ -1,6 +1,14 @@
 ---
 name: flext-agent-strict-rules
-description: Mandatory rules for all coding agents — simple runtime aliases only (never u.Aliases.* for c,m,r,t,u,p,d,e,h,s,x), correct typing for narrowing (isinstance/TypeGuard, never type()), dismantle polymorphic code into centralized Pydantic v2 models, no loose methods. Apply across all projects (32+); use multiple agents in parallel for speed; lint-clean, no warnings/errors.
+description: Mandatory runtime alias and typing discipline for all coding agents. Use when writing or reviewing FLEXT code to enforce: alias-only access (c/m/r/t/u/p), isinstance/TypeGuard narrowing (never type()), centralized Pydantic v2 models over polymorphic functions, and no loose module-level objects. Applies across all 33 projects; lint-clean with zero warnings or errors.
+triggers:
+  - writing or reviewing any FLEXT src/ code
+  - enforcing alias-only access (c/m/r/t/u/p)
+  - replacing type() checks with isinstance or TypeGuard
+  - auditing for loose module-level objects outside namespace classes
+  - removing polymorphic functions in favor of Pydantic v2 models
+  - ensuring zero lint warnings before pushing
+  - checking that r[T] is used for all fallible operations
 ---
 
 # Flext Agent Strict Rules (Mandatory)

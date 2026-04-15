@@ -2,6 +2,14 @@
 
 name: lib-returns
 description: r railway composition built on dry-python/returns. Use when implementing result-flow operations, error recovery chains, or converting between container types.
+triggers:
+  - implementing result-flow operations with r[T]
+  - building error recovery chains using map / flat_map / lash
+  - converting between container types (Success, Failure, IOResult)
+  - deciding when to use r.fail_op vs r.fail_exc
+  - working with railway-oriented programming patterns
+  - writing fallible functions that must return r[T]
+  - reviewing result propagation across service boundaries
 
 ---
 

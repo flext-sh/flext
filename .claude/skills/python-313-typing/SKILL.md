@@ -2,6 +2,11 @@
 
 name: python-313-typing
 description: Comprehensive Python 3.13 typing PEPs reference — PEP 696 (type defaults), PEP 702 (@deprecated), PEP 705 (ReadOnly), PEP 742 (TypeIs). Use when working with Python 3.13+ type features.
+triggers:
+  - using Python 3.13 typing features (PEP 696, 702, 705, 742)
+  - adding TypeIs, ReadOnly, or @deprecated annotations
+  - writing type defaults with PEP 696
+  - reviewing 3.13+ type annotation changes
 
 ---
 

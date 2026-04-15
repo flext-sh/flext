@@ -2,6 +2,11 @@
 
 name: rules-scripts
 description: Rules for automation and maintenance scripts under `scripts/`. Use when editing shell/python scripts that drive validation, cleanup, release, or tooling workflows.
+triggers:
+  - editing automation or maintenance scripts under scripts/
+  - modifying validation, cleanup, release, or tooling workflows
+  - adding new shell or Python scripts to the repo
+  - reviewing script conventions and structure
 
 ---
 

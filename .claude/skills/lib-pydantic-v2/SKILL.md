@@ -2,6 +2,15 @@
 
 name: lib-pydantic-v2
 description: Pydantic v2 model, validation, and serialization patterns used across FLEXT. Use when creating models, adding validators, using ConfigDict, TypeAdapter, or model_validate/model_dump.
+triggers:
+  - creating a new Pydantic v2 model
+  - adding field validators or model validators
+  - configuring ConfigDict (model_config)
+  - using TypeAdapter for dynamic validation
+  - calling model_validate or model_dump
+  - working with PrivateAttr or computed_field
+  - serializing models to JSON or dict
+  - migrating models from Pydantic v1 syntax
 
 ---
 

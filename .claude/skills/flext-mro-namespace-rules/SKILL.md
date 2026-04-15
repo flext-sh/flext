@@ -2,6 +2,16 @@
 
 name: flext-mro-namespace-rules
 description: Canonical MRO namespace rules for facade naming, organic nested-domain access, and same-project import boundaries. Use when editing `constants.py`, `models.py`, `protocols.py`, `typings.py`, `utilities.py`, `tests/`, or any `_models/` and `_utilities/` mixin tree.
+triggers:
+  - editing constants.py, models.py, protocols.py, typings.py, or utilities.py
+  - naming a new facade class or alias
+  - adding a mixin to _models/ or _utilities/
+  - composing MRO inheritance hierarchy
+  - reviewing or fixing namespace violations
+  - working in tests/ with TestsFlext* classes
+  - adding organic nested-domain access (u.Infra.*, c.Tests.*)
+  - auditing same-project cross-facade imports
+  - creating an integration project (tap/target/dbt) facade
 
 ---
 

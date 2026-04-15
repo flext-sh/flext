@@ -1,7 +1,13 @@
 ---
 
 name: flext-docs-pointer-policy
-description: Canonical documentation-governance policy for agent configs: one root source, lightweight pointers everywhere else.
+description: Use when creating or editing documentation across AGENTS.md, skills, README files, or agent configs. Enforces the one-root-source policy: single authoritative document with lightweight pointers everywhere else. No duplication of governance across files.
+triggers:
+  - creating or editing documentation across AGENTS.md, skills, or README files
+  - checking for duplicated governance between docs
+  - enforcing one-root-source policy for policy text
+  - reviewing agent config files for pointer compliance
+  - consolidating overlapping policy from multiple documents
 
 ---
 

@@ -2,6 +2,12 @@
 
 name: lib-structlog
 description: FlextLogger structured logging with context propagation, DI factories, and result adapters. Use when adding logging, binding context, or configuring structlog processors.
+triggers:
+  - adding structured logging via FlextLogger
+  - binding context to log entries
+  - configuring structlog processors or output format
+  - implementing DI-backed logging factories
+  - adapting logging to result container flow
 
 ---
 

@@ -2,6 +2,12 @@
 
 name: frontend-standards
 description: Frontend development standards — accessibility, component design, CSS methodology, responsive design. Use when building or modifying UI components, styles, or layouts.
+triggers:
+  - building or modifying UI components
+  - reviewing accessibility compliance
+  - applying CSS methodology or responsive design patterns
+  - designing component structure or layout
+  - auditing frontend code for standards compliance
 
 ---
 

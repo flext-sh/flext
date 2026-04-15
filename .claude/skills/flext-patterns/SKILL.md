@@ -2,6 +2,15 @@
 
 name: flext-patterns
 description: Repository-native implementation patterns for result flow, DI, logging, and typed boundaries. Use when selecting or standardizing implementation style.
+triggers:
+  - selecting or standardizing implementation style
+  - implementing result flow with r[T]
+  - wiring dependency injection with DI containers
+  - adding structured logging via FlextLogger
+  - defining typed service boundaries
+  - deciding between r.fail_op vs r.fail_exc vs e.fail_*
+  - implementing error recovery chains
+  - reviewing patterns for CQRS, service, or repository objects
 
 ---
 

@@ -2,6 +2,12 @@
 
 name: python-modern-type-syntax
 description: Modern Python type annotation patterns for 3.10+ including union syntax, type aliases, generics, Self, ParamSpec, and TypeVarTuple. Use when writing or modernizing type annotations.
+triggers:
+  - modernizing type annotations to Python 3.10+ syntax
+  - using X | Y union syntax instead of Union[X, Y]
+  - writing type aliases with the type keyword
+  - using Self, ParamSpec, TypeVarTuple
+  - reviewing or migrating legacy typing imports
 
 ---
 

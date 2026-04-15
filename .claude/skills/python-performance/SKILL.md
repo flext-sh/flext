@@ -2,6 +2,11 @@
 
 name: python-performance
 description: Profile and optimize Python code using cProfile, memory profilers, and performance best practices. Use when debugging slow pipelines, optimizing bottlenecks, or improving application throughput.
+triggers:
+  - debugging slow pipelines or bottlenecks
+  - profiling Python code with cProfile or memory profilers
+  - optimizing application throughput
+  - identifying and fixing performance regressions
 
 ---
 
