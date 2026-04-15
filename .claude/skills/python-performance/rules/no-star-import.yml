@@ -1,9 +1,0 @@
-id: no-star-import
-language: python
-rule:
-  kind: import_from_statement
-  has:
-    kind: wildcard_import
-    stopBy: end
-message: "Star import banned"
-severity: error
