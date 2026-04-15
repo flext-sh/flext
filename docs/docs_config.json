@@ -13,8 +13,8 @@
     ],
     "stale_symbols": [
       "FlextRegistry",
-      "h",
-      "x",
+      "FlextHandlers",
+      "FlextMixins",
       "get_global()",
       "register_handler("
     ],
