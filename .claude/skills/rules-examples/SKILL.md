@@ -2,6 +2,11 @@
 
 name: rules-examples
 description: Rules for runnable examples in `examples/` so they stay aligned with current APIs and tooling. Use when editing or adding example scripts.
+triggers:
+  - editing or adding example scripts in examples/
+  - ensuring examples stay aligned with current APIs
+  - reviewing runnable examples for current tooling
+  - adding a new illustrative example to the repo
 
 ---
 

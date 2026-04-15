@@ -2,6 +2,13 @@
 
 name: backend-data-patterns
 description: Database model design and migration patterns — naming, constraints, relationships, indexes, Alembic migrations, zero-downtime deployments. Use when defining models or creating database migrations.
+triggers:
+  - designing database models or schemas
+  - naming tables, columns, or constraints
+  - creating Alembic migrations
+  - planning zero-downtime schema deployments
+  - defining relationships, indexes, or composite keys
+  - reviewing model naming conventions
 
 ---
 

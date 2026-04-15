@@ -2,6 +2,14 @@
 
 name: skill-format-universal
 description: Canonical format for project SKILL.md files using Anthropic standards and FLEXT evidence. Use when creating or rewriting any skill.
+triggers:
+  - creating a new skill
+  - rewriting or restructuring an existing SKILL.md
+  - auditing a skill for spec compliance
+  - adding triggers:, compatibility:, or evals/ to a skill
+  - checking line count or description length
+  - applying progressive disclosure splits
+  - writing evals/evals.json for a skill
 
 ---
 
@@ -27,15 +35,19 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 ## References
 
 - `AGENTS.md`
-- `https://code.claude.com/docs/en/skills`
+- `https://agentskills.io/specification`
 - `https://github.com/anthropics/skills`
 - `.claude/skills/lib-returns/SKILL.md`
 - `.claude/skills/lib-pydantic-v2/SKILL.md`
 
 ## Rules
 
-- Keep frontmatter minimal and valid: `name`, `description`.
+- **Frontmatter required**: every SKILL.md must have `name` and `description`. Optional: `compatibility`, `metadata`, `allowed-tools`.
+- **Name constraints**: lowercase a-z + hyphens only, max 64 chars, must match parent directory name exactly (e.g. `name: flext-patterns` inside `.claude/skills/flext-patterns/SKILL.md`).
+- **Description constraints**: max 1024 chars, non-empty, 3rd person, imperative "Use when…" phrasing with specific trigger keywords that help agents identify the right skill.
 - Put trigger guidance in `description`, not in a body section called "When to use".
+- **Line count**: keep SKILL.md body under 500 lines. Move detailed reference content to `references/*.md` and link explicitly (e.g. `See [import matrix](references/import-matrix.md)`).
+- **Compatibility field**: add only if the skill requires specific environment packages, Python version, or tool prerequisites (e.g. `Requires Python 3.13+, uv, and git`). Most skills do not need this field.
 - Keep body operational and evidence-backed with repository paths and runnable checks.
 - Keep names aligned with directory names under `.claude/skills/<name>/SKILL.md`.
 - Keep policy text aligned with `AGENTS.md` (canonical), do not invent parallel policy.
@@ -94,5 +106,10 @@ Why bad: abstract instruction without symbol, path, or verification criteria.
 - `rg -n "^name:|^description:" .claude/skills/*/SKILL.md`
 - `for f in .claude/skills/*/SKILL.md; do for s in "## Scope" "## References" "## Rules" "## Instructions" "## Workflow" "## Examples" "## Verification"; do grep -q "$s" "$f" || echo "MISSING $s in $f"; done; done`
 - `rg -n "When to use|When to Use" .claude/skills/*/SKILL.md`
-- `rg -n "['\"]/[^\s\"]+" .claude/skills/*/SKILL.md || true`
 - `rg -n "TODO|TBD|placeholder" .claude/skills/*/SKILL.md || true`
+- `# Spec compliance: name matches directory`
+- `for f in .claude/skills/*/SKILL.md; do dir=$(basename $(dirname "$f")); name=$(awk '/^name:/{print $2}' "$f"); [[ "$name" != "$dir" ]] && echo "NAME MISMATCH: '$name' != '$dir' in $f"; done`
+- `# Spec compliance: line count over 500`
+- `for f in .claude/skills/*/SKILL.md; do lc=$(wc -l < "$f"); [[ $lc -gt 500 ]] && echo "OVER 500 lines ($lc): $f"; done`
+- `# Spec compliance: description length over 1024 chars`
+- `awk '/^description:/{line=$0; while(/\\$/{getline x; line=line" "x}; print length(line), FILENAME}' .claude/skills/*/SKILL.md | awk '$1>1024'`

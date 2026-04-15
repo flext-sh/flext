@@ -1,7 +1,13 @@
 ---
 
 name: lib-dependency-injector
-description: dependency_injector bridge patterns for FLEXT runtime and container internals. Trigger when adding DI wiring, provider registration, or scoped test containers.
+description: dependency_injector bridge patterns for FLEXT runtime and container internals. Use when adding DI wiring, provider registration, or scoped test containers.
+triggers:
+  - adding DI wiring or provider registration
+  - building scoped test containers
+  - working with dependency_injector bridge patterns
+  - debugging container or provider resolution issues
+  - designing DI-backed service factories
 
 ---
 

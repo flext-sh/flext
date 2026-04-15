@@ -2,6 +2,13 @@
 
 name: flext-strict-refactoring
 description: Strict cleanup rules for removing duplication, stale policy text, and conflicting guidance in docs and skills. Use when normalizing documentation content.
+triggers:
+  - normalizing documentation content
+  - removing duplication between AGENTS.md and skills
+  - cleaning stale or conflicting policy text
+  - consolidating overlapping guidance across multiple docs
+  - auditing for backward-compat aliases or legacy patterns in docs
+  - standardizing skill or guide structure
 
 ---
 

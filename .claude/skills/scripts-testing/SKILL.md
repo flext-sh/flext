@@ -2,6 +2,11 @@
 
 name: scripts-testing
 description: Testing scripts — pytest runners, test analysis, quality gates, stress tests, and distributed testing. Use when editing scripts/testing/.
+triggers:
+  - running pytest via automation scripts
+  - analyzing test results or quality gate output
+  - running stress or distributed tests
+  - editing scripts/testing/
 
 ---
 

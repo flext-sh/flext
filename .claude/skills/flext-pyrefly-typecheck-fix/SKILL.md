@@ -1,7 +1,13 @@
 ---
 
 name: flext-pyrefly-typecheck-fix
-description: Pyrefly type-check error detection and safe auto-fix rules for recurring error patterns across the FLEXT ecosystem
+description: Use when diagnosing or fixing pyrefly type-check errors across the FLEXT monorepo. Covers recurring error patterns with safe auto-fix rules, suppression guidance, and cross-project consistency strategies for zero-error type-checking.
+triggers:
+  - diagnosing or fixing pyrefly type-check errors
+  - handling recurring pyrefly error patterns
+  - suppressing pyrefly errors with documented justifications
+  - achieving zero-error type-checking across the monorepo
+  - resolving pyrefly/pydantic default value conflicts
 
 ---
 

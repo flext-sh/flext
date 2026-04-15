@@ -1,7 +1,13 @@
 ---
 
 name: readme-standardization
-description: Comprehensive guide and tooling for creating, maintaining, and updating README.md files across the FLEXT ecosystem.
+description: Use when creating, updating, or auditing README.md files across the FLEXT ecosystem. Covers required sections, structure templates, badge standards, and tooling for consistent README generation and maintenance.
+triggers:
+  - creating or updating README.md files
+  - auditing README structure across projects
+  - ensuring required sections are present
+  - applying standard badge or link formats
+  - generating README content from templates
 
 ---
 

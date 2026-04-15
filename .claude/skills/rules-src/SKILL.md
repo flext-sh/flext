@@ -2,6 +2,11 @@
 
 name: rules-src
 description: Rules for shared source modules under top-level `src/`. Use when editing common source code that impacts multiple packages or utilities.
+triggers:
+  - editing shared source modules under top-level src/
+  - modifying common source code that impacts multiple packages
+  - adding utilities or helpers to the shared src/ layer
+  - reviewing cross-package source dependencies
 
 ---
 

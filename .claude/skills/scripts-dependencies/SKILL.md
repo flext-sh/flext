@@ -2,6 +2,11 @@
 
 name: scripts-dependencies
 description: Dependency management — analysis, consolidation, discovery, caching, and synchronization. Use when editing scripts/dependencies/ or using flext_infra.deps.
+triggers:
+  - analyzing, consolidating, or synchronizing dependencies
+  - editing scripts/dependencies/
+  - using flext_infra.deps services
+  - debugging dependency discovery or caching issues
 
 ---
 

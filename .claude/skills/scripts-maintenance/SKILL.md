@@ -2,6 +2,11 @@
 
 name: scripts-maintenance
 description: Maintenance services — health checks, workspace status, git cleanup, and operational tooling. Use when using flext_infra.maintenance or editing scripts/maintenance/ or scripts/git/.
+triggers:
+  - running workspace health checks or status reports
+  - performing git cleanup operations
+  - using flext_infra.maintenance services
+  - editing scripts/maintenance/ or scripts/git/
 
 ---
 

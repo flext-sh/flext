@@ -2,6 +2,11 @@
 
 name: rules-docs
 description: Rules for documentation under `docs/` to keep architecture and project guides aligned with current code and policy. Use when editing docs pages or docs structure.
+triggers:
+  - editing documentation pages under docs/
+  - updating architecture or project guide content
+  - checking docs structure alignment with current code
+  - adding new documentation sections
 
 ---
 

@@ -2,6 +2,12 @@
 
 name: scripts-architecture
 description: Architecture services — import analysis, violation detection, code reorganization, dead code scanning, and cross-project testing. Use when using flext_infra or editing scripts/architecture/ or scripts/analysis/.
+triggers:
+  - using import analysis or violation detection scripts
+  - running dead code scanning
+  - reorganizing code with architecture services
+  - running cross-project testing scripts
+  - editing scripts/architecture/ or scripts/analysis/
 
 ---
 

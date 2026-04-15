@@ -2,6 +2,12 @@
 
 name: async-python-patterns
 description: Python asyncio patterns for FLEXT integrations — LDAP, Oracle, gRPC async operations. Use when building async pipelines, concurrent integrations, or I/O-bound FLEXT operations.
+triggers:
+  - building async pipelines for LDAP, Oracle, or gRPC integrations
+  - writing asyncio concurrent operations in FLEXT
+  - optimizing I/O-bound integration code with async/await
+  - debugging coroutine or event loop issues
+  - designing async service boundaries
 
 ---
 

@@ -2,6 +2,15 @@
 
 name: testing-patterns
 description: Testing patterns, anti-patterns, and guidelines for Python/pytest in FLEXT — fixtures, parameterization, mocking strategy, r testing, and TDD. Use when writing or reviewing tests.
+triggers:
+  - writing new tests
+  - reviewing existing tests for anti-patterns
+  - creating fixtures or conftest.py configurations
+  - designing parameterized or data-driven tests
+  - mocking external services or boundaries
+  - testing r[T] result containers
+  - structuring TDD red/green/refactor cycles
+  - ensuring behavior-only test contracts (not implementation internals)
 
 ---
 

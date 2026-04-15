@@ -2,6 +2,12 @@
 
 name: flext-type-system
 description: Canonical FLEXT type-system map for aliases, generics, result interplay, and settings contracts. Use when changing shared typing primitives.
+triggers:
+  - changing shared typing primitives in typings.py
+  - reviewing generics, result interplay, or settings contracts
+  - mapping type aliases across the 33-project monorepo
+  - understanding how t.* aliases compose with r[T]
+  - auditing type system consistency across projects
 
 ---
 

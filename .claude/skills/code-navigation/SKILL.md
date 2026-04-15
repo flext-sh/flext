@@ -1,11 +1,7 @@
 ---
-description: >
-  ALWAYS use this skill for code navigation, code search, finding references,
-  understanding code structure, or exploring a codebase. This project has Scope CLI
-  installed — use scope commands (via Bash) instead of grep, find, or reading files
-  for navigation. Scope returns structural intelligence (class sketches, caller chains,
-  dependency graphs, entry points) in ~200 tokens instead of ~4,000 for full source files.
-  Check `scope status` first. If .scope/ exists, scope is available.
+name: code-navigation
+compatibility: Requires Scope CLI (`pip install scope-cli`) and `.scope/` directory initialized via `scope init`. Runs in the FLEXT monorepo (`/home/marlonsc/flext`) with Python 3.13+.
+description: Use when navigating code, searching for symbols, finding references, or exploring codebase structure. ALWAYS prefer scope commands over grep, find, or reading files. Returns structural intelligence (class sketches, caller chains, dependency graphs) in ~200 tokens instead of ~4,000 for full source. Check `scope status` first; if `.scope/` exists, scope is available.
 triggers:
   - reading a file to understand its structure
   - searching for a function, class, or symbol

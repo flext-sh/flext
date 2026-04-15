@@ -2,6 +2,11 @@
 
 name: rules-cmd
 description: Rules for command entrypoints under `cmd/` and their package wiring. Use when modifying command bootstrap files, CLI wrappers, or command-path docs.
+triggers:
+  - modifying command entrypoints under cmd/
+  - adding or changing CLI bootstrap files
+  - editing command-path docs or CLI wrappers
+  - wiring a new command package
 
 ---
 

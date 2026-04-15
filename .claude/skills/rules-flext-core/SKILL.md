@@ -2,6 +2,14 @@
 
 name: rules-flext-core
 description: Authoritative rules for `flext-core` architecture, typing, result flow, DI, and logging boundaries. Use when modifying files under `flext-core/`.
+triggers:
+  - modifying any file under flext-core/src/
+  - adding a new module to flext-core
+  - changing result flow, DI wiring, or logging boundaries in core
+  - editing protocols.py, typings.py, models.py in flext-core
+  - reviewing ownership assignments for parallel agent work on core
+  - checking FROZEN file restrictions in flext-core
+  - adding new public API to flext-core
 
 ---
 

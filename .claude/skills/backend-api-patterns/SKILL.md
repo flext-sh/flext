@@ -2,6 +2,13 @@
 
 name: backend-api-patterns
 description: REST API design and database query patterns — endpoint design, status codes, SQL injection prevention, N+1 prevention, indexing, transactions. Use when building or optimizing API endpoints or database queries.
+triggers:
+  - designing REST API endpoints
+  - choosing appropriate HTTP status codes
+  - preventing SQL injection in query construction
+  - fixing N+1 query problems
+  - implementing database transactions or indexing strategies
+  - reviewing API endpoint structure for consistency
 
 ---
 

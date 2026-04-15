@@ -1,7 +1,13 @@
 ---
 
 name: flext-automation-skill-pattern
-description: Canonical pattern for creating reusable automation skills with script-first validation, baseline/strict enforcement modes, and companion docs. Use for future automation work that must be repeatable across the repo.
+description: Canonical pattern for creating reusable automation skills with script-first validation, baseline/strict enforcement modes, and companion docs. Use when building new automation skills that must be repeatable across the FLEXT repo, or when standardizing existing ad-hoc automation into a testable skill.
+triggers:
+  - creating a new reusable automation skill
+  - standardizing ad-hoc automation into a testable skill
+  - adding script-first validation to a skill
+  - designing baseline/strict enforcement modes
+  - structuring a skill with companion docs or scripts/
 
 ---
 

@@ -1,7 +1,16 @@
 ---
 
 name: flext-quality-gates
-description: Mandatory verification gates with exact tool commands, thresholds, and configuration sources from base.mk and pyproject.toml
+description: Use when running or interpreting quality gates (lint, typecheck, test, validate) in the FLEXT monorepo. Covers mandatory gate definitions, exact tool commands (ruff, pyrefly, pyright, mypy, pytest), pass thresholds, and configuration sources from base.mk and pyproject.toml.
+triggers:
+  - running or interpreting lint, typecheck, test, or validate
+  - understanding which make targets to use
+  - debugging a failing quality gate
+  - checking ruff, pyrefly, pyright, mypy, or pytest output
+  - configuring pass thresholds or gate skipping
+  - running gates on a single file or project
+  - onboarding to the make check / make test workflow
+  - verifying gate evidence before claiming completion
 
 ---
 

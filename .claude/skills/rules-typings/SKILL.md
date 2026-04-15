@@ -2,6 +2,11 @@
 
 name: rules-typings
 description: Rules for typing support assets in `typings/` (stubs, compatibility shims, and local type metadata). Use when editing `.pyi` files or typing helper packages.
+triggers:
+  - editing .pyi stub files in typings/
+  - adding compatibility shims or local type metadata
+  - modifying typing helper packages
+  - reviewing stub accuracy after API changes
 
 ---
 
