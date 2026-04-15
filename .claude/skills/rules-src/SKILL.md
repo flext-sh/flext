@@ -1,25 +1,8 @@
 ---
-
 name: rules-src
 description: Rules for shared source modules under top-level `src/`. Use when editing common source code that impacts multiple packages or utilities.
-triggers:
-  - editing shared source modules under top-level src/
-  - modifying common source code that impacts multiple packages
-  - adding utilities or helpers to the shared src/ layer
-  - reviewing cross-package source dependencies
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Rules Src
 
@@ -40,18 +23,16 @@ triggers:
 
 ## Rules
 
-- Keep source changes aligned with architecture boundaries.
-- Avoid package-internal imports that bypass public contracts.
-- Keep typing explicit for public/module-level APIs.
-- Preserve deterministic behavior and avoid hidden side effects.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `inline imports`, and `cast()`.
-- **AXIOMATIC**: `Any`, `t.RecursiveContainer`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN in ALL type annotations, function signatures, return types, and examples. Use `t.*` contracts from `typings.py` exclusively. `None` in type unions only when business-required. Every change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. Linter suppressions are FORBIDDEN without real internet citations, business necessity, and per-line scope.
-- **AXIOMATIC**: Compatibility wrappers (`def old(): return new()`), non-business validation fallbacks, legacy code maintenance, and `OldName = NewName` compatibility aliases are TOTALLY FORBIDDEN. Legacy code is DELETED and replaced with canonical patterns on contact. No grace period.
-- **AXIOMATIC**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions and standalone classes without MRO lineage are FORBIDDEN.
-- **AXIOMATIC**: Public facade roots own exactly one local domain namespace. Private `_models/*` and `_utilities/*` classes belong in the facade MRO list, not in manual nested wrapper classes. Keep organic paths such as `u.Infra.*` and `m.TargetOracle.*`.
-- **AXIOMATIC**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY. `Field()` with `description`/`title`/`examples`/`json_schema_extra` for ALL declarations. Minimize custom validators — prefer built-in constraints. `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, wrappers. USE: `@computed_field`, `model_post_init`, `PrivateAttr`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `PrivateAttr`. `models.py`/`_models/` for models ONLY. Use `success`/`failure` for result outcomes and central `m.*State`/`m.*Status` carriers for runtime state.
-- **AXIOMATIC**: Tests MUST follow the EXACT SAME rules as production code — no "test-only" relaxation.
-- **AXIOMATIC - Library Abstraction Boundaries (SUPREME LAW)**: Libraries abstracted by flext-core (`rich`, `dependency_injector`, `structlog`, `returns`, `orjson`, `pyyaml`) MUST NOT be imported directly in any `src/` code outside `flext-core/src/`. Use public abstractions instead: `m.*` (models), `c.*` (constants), `t.*` (types), `p.*` (protocols), `u.*` (utilities), `r[T]` (results). This applies to imports, type annotations, and constants equally.
+- Keep source changes aligned with architecture boundaries (`AGENTS.md` §2).
+- Avoid package-internal imports that bypass public contracts (`AGENTS.md` §4).
+- Keep typing explicit for public/module-level APIs (`AGENTS.md` §3.2).
+- Preserve deterministic behavior; no hidden side effects.
+- Canonical governance lives in `AGENTS.md`:
+  - §3.2 Types & Contracts — `t.*` aliases, no `Any`, no bare containers.
+  - §3.1 Architecture & Code — single nested class hierarchy, MRO inheritance, Pydantic v2 way.
+  - §2.2 Facades & Namespaces — one namespace branch per facade root.
+  - §2.7 Library Abstraction Boundaries — no direct imports of core-abstracted libs outside `flext-core/src/`.
+  - §3.6 Test Standardization — tests follow production rules without relaxation.
 
 ## Instructions
 

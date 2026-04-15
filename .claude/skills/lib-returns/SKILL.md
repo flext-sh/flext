@@ -1,47 +1,8 @@
 ---
-
 name: lib-returns
 description: r railway composition built on dry-python/returns. Use when implementing result-flow operations, error recovery chains, or converting between container types.
-triggers:
-  - implementing result-flow operations with r[T]
-  - building error recovery chains using map / flat_map / lash
-  - converting between container types (Success, Failure, IOResult)
-  - deciding when to use r.fail_op vs r.fail_exc
-  - working with railway-oriented programming patterns
-  - writing fallible functions that must return r[T]
-  - reviewing result propagation across service boundaries
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-  - [Public API Surface — `r[T_co]`](#public-api-surface-flextresulttco)
-  - [Factory Methods](#factory-methods)
-  - [Monadic Composition Chain](#monadic-composition-chain)
-  - [Failure Recovery](#failure-recovery)
-  - [Side Effects](#side-effects)
-  - [Value Extraction](#value-extraction)
-  - [Collection Operations](#collection-operations)
-  - [Pydantic Integration](#pydantic-integration)
-  - [Returns Library Interop (inside `result.py` only)](#returns-library-interop-inside-resultpy-only)
-  - [Resource Management](#resource-management)
-  - [Type Guards](#type-guards)
-- [Workflow](#workflow)
-- [Examples](#examples)
-  - [Good: Railway composition chain](#good-railway-composition-chain)
-  - [Good: Batch processing with error accumulation](#good-batch-processing-with-error-accumulation)
-  - [Good: Safe decorator for exception boundaries](#good-safe-decorator-for-exception-boundaries)
-  - [Good: Fold to HTTP response](#good-fold-to-http-response)
-  - [Bad: Imperative branching instead of composition](#bad-imperative-branching-instead-of-composition)
-  - [Bad: Bare try/except bypassing r](#bad-bare-tryexcept-bypassing-flextresult)
-  - [Bad: Constructing r directly](#bad-constructing-flextresult-directly)
-- [Subproject Usage Map](#subproject-usage-map)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Lib Returns — r Railway Composition
 
@@ -68,7 +29,6 @@ triggers:
 - Compose with `.map()` for pure transforms and `.flat_map()` for result-returning transforms.
 - Use `.lash()` / `.recover()` for failure recovery — never imperative `if result.is_failure:` branching in composition chains.
 - Keep `returns` library types (`IOResult`, `Maybe`, `Result`) inside `result.py` only — subprojects must use `r` / `r` exclusively.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 ## Instructions
 
 ### Public API Surface — `r[T_co]`

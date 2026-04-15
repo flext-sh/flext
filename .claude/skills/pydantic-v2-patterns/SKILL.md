@@ -1,35 +1,8 @@
 ---
-
 name: pydantic-v2-patterns
 description: Advanced Pydantic v2 implementation patterns for FLEXT: discriminated unions, computed_field, PrivateAttr, validators, model_config, and ConfigDict governance across 33 projects. Use when implementing complex model hierarchies, chaining validators, resolving pydantic v1-to-v2 migration errors, or writing FLEXT-compliant models.
-triggers:
-  - implementing complex model hierarchies
-  - chaining validators in a Pydantic v2 model
-  - resolving Pydantic v1-to-v2 migration errors
-  - writing FLEXT-compliant discriminated union models
-  - using computed_field across multiple projects
-  - implementing ConfigDict governance patterns
-  - writing PrivateAttr or model_post_init logic
-  - auditing 33-project Pydantic consistency
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-  - [Validators](#validators)
-  - [Computed Fields](#computed-fields)
-  - [Discriminated Unions](#discriminated-unions)
-  - [Serializers](#serializers)
-  - [Strict Mode](#strict-mode)
-  - [TypeAdapter](#typeadapter)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Pydantic v2 Patterns
 
@@ -91,9 +64,9 @@ triggers:
 - Use TypeAdapter for non-model types and dynamic/runtime payload validation.
 - Keep error messages stable enough for tests and operations.
 - Avoid repeating v1 migration anti-pattern content already documented in `lib-pydantic-v2`.
-- **AXIOMATIC**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features to their fullest across ALL 33 projects (`src/`, `tests/`, `examples/`). Every class extends `BaseModel` (or FLEXT base models) via MRO. `Field()` for ALL declarations with `description`, `title`, `examples`, `json_schema_extra` documenting business rules — fields are self-documenting contracts. `SecretStr`/`SecretBytes` for secrets. `ConfigDict(...)` for settings — standalone `*Config` classes TOTALLY FORBIDDEN (use `BaseSettings`/`ConfigDict`). Minimize custom `@field_validator`/`@model_validator` — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`, `constr`, `conint`). FORBIDDEN in models: initialization helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@computed_field`, `model_post_init`, `PrivateAttr`). Enums/Mappings/Literals from `constants.py` (`c.*`), settings from `settings.py` (`s.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter`. Internal state via `PrivateAttr` — never bare `self._x`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for model definitions ONLY. Boolean/status fields use canonical names such as `success`, `failure`, `expired`, `healthy`, or `configured`. If not using a Pydantic v2 feature, REVIEW and USE it; if not needed, use a simpler base and USE it fully.
-- **AXIOMATIC**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance from Pydantic v2 `BaseModel` (or FLEXT base models like `FlextModels.ArbitraryTypesModel`, `FlextModels.FrozenModel`). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
-- **AXIOMATIC**: Compatibility wrappers, non-business validation fallbacks, legacy code of ANY kind, and compatibility aliases are TOTALLY FORBIDDEN. Legacy code is DELETED on contact.
+- **Rule**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features to their fullest across ALL 33 projects (`src/`, `tests/`, `examples/`). Every class extends `BaseModel` (or FLEXT base models) via MRO. `Field()` for ALL declarations with `description`, `title`, `examples`, `json_schema_extra` documenting business rules — fields are self-documenting contracts. `SecretStr`/`SecretBytes` for secrets. `ConfigDict(...)` for settings — standalone `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). Minimize custom `@field_validator`/`@model_validator` — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`, `constr`, `conint`). FORBIDDEN in models: initialization helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@computed_field`, `model_post_init`, `PrivateAttr`). Enums/Mappings/Literals from `constants.py` (`c.*`), settings from `settings.py` (`s.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter`. Internal state via `PrivateAttr` — never bare `self._x`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for model definitions ONLY. Boolean/status fields use canonical names such as `success`, `failure`, `expired`, `healthy`, or `configured`. If not using a Pydantic v2 feature, REVIEW and USE it; if not needed, use a simpler base and USE it fully.
+- **Rule**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance from Pydantic v2 `BaseModel` (or FLEXT base models like `FlextModels.ArbitraryTypesModel`, `FlextModels.FrozenModel`). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
+- **Rule**: Compatibility wrappers, non-business validation fallbacks, legacy code of ANY kind, and compatibility aliases are FORBIDDEN. Legacy code is DELETED on contact.
 
 
 ## Instructions

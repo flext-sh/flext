@@ -1,28 +1,8 @@
 ---
-
 name: rules-flext-core
 description: Authoritative rules for `flext-core` architecture, typing, result flow, DI, and logging boundaries. Use when modifying files under `flext-core/`.
-triggers:
-  - modifying any file under flext-core/src/
-  - adding a new module to flext-core
-  - changing result flow, DI wiring, or logging boundaries in core
-  - editing protocols.py, typings.py, models.py in flext-core
-  - reviewing ownership assignments for parallel agent work on core
-  - checking FROZEN file restrictions in flext-core
-  - adding new public API to flext-core
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Rules Flext Core
 
@@ -50,11 +30,11 @@ triggers:
 - Keep dependency direction inward only (L3 -> L2 -> L1 -> L0).
 - Keep failure/success boundaries on `r` (`r`) and compose with `map/flat_map/lash`.
 - Keep dependency-injector usage routed through runtime/container bridges.
-- Keep shared type contracts centralized in `typings.py`. **AXIOMATIC**: `Any`, `t.RecursiveContainer`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN — use `t.*` contracts exclusively. `None` in type unions only when business-required.
+- Keep shared type contracts centralized in `typings.py`. **Rule**: `Any`, `t.RecursiveContainer`, and `Mapping[str, Any]` are FORBIDDEN — use `t.*` contracts exclusively. `None` in type unions only when business-required.
 - Keep public `get_*`/`set_*`/`is_*` surfaces out of `flext-core`; deterministic values belong in fields or `@computed_field`, and result/status carriers use `success`/`failure`.
 - Consume public API from `flext_core` exports in non-internal modules.
 - For `flext-core/tests/`, assert module and facade behavior, not implementation details. Tests coupled to internal warning text, traceback fragments, local alias names, internal class names, or private MRO structure are invalid and must be rewritten to target stable external behavior.
-- **AXIOMATIC - Library Abstraction Responsibility**: flext-core is the ONLY project that may import and use `pydantic`, `dependency_injector`, `structlog`, `returns`, `orjson`, `pyyaml` directly. All consuming projects (`flext-cli`, `flext-ldap`, integration projects, etc.) MUST access these through flext-core's public abstractions (`m.*`, `c.*`, `p.*`, `t.*`, `u.*`). This boundary is inviolable and enforced via grep audits and linting rules.
+- **Rule — Library Abstraction Responsibility**: flext-core is the ONLY project that may import and use `pydantic`, `dependency_injector`, `structlog`, `returns`, `orjson`, `pyyaml` directly. All consuming projects (`flext-cli`, `flext-ldap`, integration projects, etc.) MUST access these through flext-core's public abstractions (`m.*`, `c.*`, `p.*`, `t.*`, `u.*`). This boundary is inviolable and enforced via grep audits and linting rules.
 
 ## Instructions
 

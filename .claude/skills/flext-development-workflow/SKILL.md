@@ -1,50 +1,9 @@
 ---
-
 name: flext-development-workflow
 compatibility: Requires Python 3.13+, uv, git, and GNU make. Designed for the FLEXT monorepo. RTK command interception requires bash-pretool.sh hook active in the shell.
 description: Describes the end-to-end development workflow for the FLEXT monorepo: environment bootstrap, make targets, RTK command interception, lint/typecheck/test gates, and CI/CD lifecycle. Use when setting up the dev environment, running make check or make test, debugging CI failures, understanding the make contract, or onboarding to the project.
-triggers:
-  - setting up the dev environment for the first time
-  - running make check or make test
-  - debugging CI failures
-  - understanding the make contract or RTK command interception
-  - onboarding to the FLEXT monorepo
-  - bootstrapping the workspace .venv
-  - running make boot or make sync
-  - diagnosing environment or tool path issues
 
 ---
-
-<!-- TOC START -->
-
-- [Workspace Setup](#workspace-setup)
-  - [Prerequisites](#prerequisites)
-  - [Initial Setup](#initial-setup)
-  - [Key Principle: Single Shared .venv](#key-principle-single-shared-venv)
-- [Day-to-Day Development Loop](#day-to-day-development-loop)
-  - [1. Start Working on a Subproject](#1-start-working-on-a-subproject)
-  - [2. Edit Code](#2-edit-code)
-  - [3. Quick Feedback Loop](#3-quick-feedback-loop)
-  - [4. Pre-Commit Validation](#4-pre-commit-validation)
-- [Toolchain Details](#toolchain-details)
-  - [Ruff (Linting + Formatting)](#ruff-linting-formatting)
-  - [Pyrefly (Type Checking)](#pyrefly-type-checking)
-  - [Pytest (Testing)](#pytest-testing)
-  - [Additional Quality Tools](#additional-quality-tools)
-- [PYTHONPATH Auto-Discovery](#pythonpath-auto-discovery)
-- [Testing Conventions](#testing-conventions)
-  - [Test File Structure](#test-file-structure)
-  - [Naming Convention](#naming-convention)
-  - [Test Execution](#test-execution)
-- [Working with Multiple Projects](#working-with-multiple-projects)
-  - [Workspace-Level Commands (from root Makefile)](#workspace-level-commands-from-root-makefile)
-  - [Cross-Project Impact Analysis](#cross-project-impact-analysis)
-- [Pre-Commit Hooks](#pre-commit-hooks)
-- [Docstring Convention](#docstring-convention)
-- [File Header Convention](#file-header-convention)
-- [Version Management](#version-management)
-- [Branching and Git Workflow](#branching-and-git-workflow)
-<!-- TOC END -->
 
 # FLEXT Development Workflow
 
@@ -73,7 +32,6 @@ triggers:
 - Use the shared workspace `.venv` as the primary execution environment.
 - Run standardized make verbs (`setup`, `check`, `test`, `validate`) instead of ad-hoc command mixes.
 - Treat `pyproject.toml` `[tool.coverage.report] fail_under` as the only coverage threshold source.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`.
 
 ## Instructions
 
@@ -179,7 +137,6 @@ Follow the rules in these skill documents:
 - **Architecture**: `flext-architecture-layers/SKILL.md`
 - **Imports**: `flext-import-rules/SKILL.md`
 - **Types**: `flext-strict-typing/SKILL.md`
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ### 3. Quick Feedback Loop
 

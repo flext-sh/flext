@@ -1,25 +1,8 @@
 ---
-
 name: rules-github
 description: Rules for GitHub automation files in `.github/`, including workflows, templates, and dependency policy. Use when editing CI/CD or repo automation settings.
-triggers:
-  - editing .github/ workflow files or CI/CD configs
-  - modifying issue or PR templates
-  - updating dependabot or repo automation settings
-  - reviewing GitHub Actions pipeline rules
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Rules GitHub
 

@@ -1,32 +1,8 @@
 ---
-
 name: async-python-patterns
 description: Python asyncio patterns for FLEXT integrations — LDAP, Oracle, gRPC async operations. Use when building async pipelines, concurrent integrations, or I/O-bound FLEXT operations.
-triggers:
-  - building async pipelines for LDAP, Oracle, or gRPC integrations
-  - writing asyncio concurrent operations in FLEXT
-  - optimizing I/O-bound integration code with async/await
-  - debugging coroutine or event loop issues
-  - designing async service boundaries
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-  - [Basic Async with r](#basic-async-with-flextresult)
-  - [Concurrent Execution with gather](#concurrent-execution-with-gather)
-  - [Rate-Limited API Calls](#rate-limited-api-calls)
-  - [Async Context Manager](#async-context-manager)
-  - [Producer-Consumer with Queue](#producer-consumer-with-queue)
-  - [Timeout Handling](#timeout-handling)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Async Python Patterns
 

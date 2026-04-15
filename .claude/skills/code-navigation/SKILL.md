@@ -2,20 +2,6 @@
 name: code-navigation
 compatibility: Requires Scope CLI (`pip install scope-cli`) and `.scope/` directory initialized via `scope init`. Runs in the FLEXT monorepo (`/home/marlonsc/flext`) with Python 3.13+.
 description: Use when navigating code, searching for symbols, finding references, or exploring codebase structure. ALWAYS prefer scope commands over grep, find, or reading files. Returns structural intelligence (class sketches, caller chains, dependency graphs) in ~200 tokens instead of ~4,000 for full source. Check `scope status` first; if `.scope/` exists, scope is available.
-triggers:
-  - reading a file to understand its structure
-  - searching for a function, class, or symbol
-  - finding references or callers
-  - before editing or refactoring code
-  - understanding dependencies or call chains
-  - exploring an unfamiliar codebase
-  - finding who calls a function
-  - checking blast radius before a change
-  - navigating code
-  - finding entry points or API controllers
-  - grep for function or class names
-  - understanding how code is structured
-  - looking at imports or dependencies
 ---
 
 # Scope — Code Intelligence for LLM Agents

@@ -1,28 +1,8 @@
 ---
-
 name: flext-strict-refactoring
 description: Strict cleanup rules for removing duplication, stale policy text, and conflicting guidance in docs and skills. Use when normalizing documentation content.
-triggers:
-  - normalizing documentation content
-  - removing duplication between AGENTS.md and skills
-  - cleaning stale or conflicting policy text
-  - consolidating overlapping guidance across multiple docs
-  - auditing for backward-compat aliases or legacy patterns in docs
-  - standardizing skill or guide structure
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Global Rules](#global-rules)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # Flext Strict Refactoring
 
@@ -51,7 +31,6 @@ triggers:
 - Keep terminology consistent across related files.
 - Delete stale sections that conflict with active policy.
 - Preserve repository-relative paths in examples and references.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 
 ## Instructions
 

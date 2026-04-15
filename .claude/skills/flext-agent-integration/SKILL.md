@@ -1,30 +1,8 @@
 ---
-
 name: flext-agent-integration
 description: Use when setting up agent tooling, configuring MCP tools, or onboarding to the FLEXT development workflow. Covers skill discovery, tool priority ordering, session start protocols, and agent configuration for Claude Code, GitHub Copilot, and compatible agents.
-triggers:
-  - setting up agent tooling or MCP tools
-  - onboarding to the FLEXT development workflow
-  - configuring Claude Code, GitHub Copilot, or Codex for this repo
-  - discovering which skills to load for a given task
-  - troubleshooting agent session start protocols
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-  - [Session Start Checklist](#session-start-checklist)
-  - [Skill Selection by Path](#skill-selection-by-path)
-  - [Memory Search Patterns](#memory-search-patterns)
-  - [Context7 for Library Docs](#context7-for-library-docs)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 # FLEXT Agent Integration
 
@@ -49,7 +27,7 @@ triggers:
 - Start sessions by checking `AGENTS.md` for current project rules and conventions.
 - Prefer `make validate` for verification over ad-hoc lint/type-check commands.
 - Use scoped root Make selectors to avoid workspace-wide runs when not required: `PROJECT=<name>`, `PROJECTS="a b"`, `PYTEST_ARGS="..."`.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
+- **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
 
 ## Instructions
 

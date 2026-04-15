@@ -1,27 +1,8 @@
 ---
-
 name: lib-orjson
 description: Deterministic high-performance JSON serialization with orjson in flext_core utilities. Use when editing sort keys, cache normalization, or JSON boundary conversion logic.
-triggers:
-  - editing sort keys or cache normalization logic
-  - implementing JSON boundary conversion
-  - optimizing JSON serialization performance
-  - ensuring deterministic serialization output
-  - using orjson in flext_core utilities
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-  - [Subproject Usage Map](#subproject-usage-map)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-<!-- TOC END -->
 
 ## Scope
 
@@ -50,7 +31,6 @@ triggers:
 - Preserve fallback path to stdlib JSON for unsupported types or serialization failures.
 - Catch and handle serialization boundary errors where utility currently protects callers.
 - Keep encoded string format consistent with `c.DEFAULT_ENCODING`.
-- **Zero Tolerance for Hacks**: Prohibited use of `model_rebuild()`, `eval()`, `exec()`, `cast()`, and `inline imports`. Wait for definition time or use Protocol decoupling.
 ## Instructions
 
 - Anchor changes to the real declaration:

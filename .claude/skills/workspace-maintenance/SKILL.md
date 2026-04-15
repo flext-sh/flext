@@ -1,27 +1,8 @@
 ---
-
 name: maintenance
 description: Use when running workspace-wide maintenance tasks across all FLEXT submodules. Covers hygiene checks, dependabot settings standardization, Poetry health validation, and security enforcement automation.
-triggers:
-  - running workspace-wide maintenance tasks across all submodules
-  - performing hygiene checks or dependabot settings standardization
-  - validating Poetry health across projects
-  - enforcing security settings automatically
-  - auditing all 33+ projects in a single pass
 
 ---
-
-<!-- TOC START -->
-
-- [Scope](#scope)
-- [References](#references)
-- [Rules](#rules)
-- [Instructions](#instructions)
-- [Workflow](#workflow)
-- [Examples](#examples)
-- [Verification](#verification)
-- [Scripts](#scripts)
-<!-- TOC END -->
 
 # Workspace Maintenance
 
