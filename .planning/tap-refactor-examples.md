@@ -7,8 +7,8 @@
 **Before:**
 ```python
 class LdapConnectionParams(FlextLdapModels.Value):
-    host: Annotated[str, Field(min_length=1)]
-    base_dn: Annotated[str, Field(min_length=1)]
+    host: Annotated[str, m.Field(min_length=1)]
+    base_dn: Annotated[str, m.Field(min_length=1)]
 ```
 
 **After:**
@@ -23,21 +23,21 @@ class LdapConnectionParams(FlextLdapModels.Value):
 **Before:**
 ```python
 class LdapConnectionParams(FlextLdapModels.Value):
-    port: Annotated[int, Field(default=c.TapLdap.DEFAULT_PORT, ge=1)]
+    port: Annotated[int, m.Field(default=c.TapLdap.DEFAULT_PORT, ge=1)]
     timeout_seconds: Annotated[
-        int, Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT, ge=1)
+        int, m.Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT, ge=1)
     ]
-    page_size: Annotated[int, Field(default=c.TapLdap.DEFAULT_PAGE_SIZE, ge=1)]
+    page_size: Annotated[int, m.Field(default=c.TapLdap.DEFAULT_PAGE_SIZE, ge=1)]
 ```
 
 **After:**
 ```python
 class LdapConnectionParams(FlextLdapModels.Value):
-    port: Annotated[t.PortNumber, Field(default=c.TapLdap.DEFAULT_PORT)]
+    port: Annotated[t.PortNumber, m.Field(default=c.TapLdap.DEFAULT_PORT)]
     timeout_seconds: Annotated[
-        t.PositiveInt, Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT)
+        t.PositiveInt, m.Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT)
     ]
-    page_size: Annotated[t.PositiveInt, Field(default=c.TapLdap.DEFAULT_PAGE_SIZE)]
+    page_size: Annotated[t.PositiveInt, m.Field(default=c.TapLdap.DEFAULT_PAGE_SIZE)]
 ```
 
 ### Example 3: Multiple Constraints
@@ -45,13 +45,13 @@ class LdapConnectionParams(FlextLdapModels.Value):
 **Before:**
 ```python
 class LdapConnectionParams(FlextLdapModels.Value):
-    max_retries: Annotated[int, Field(default=3, ge=0)]
+    max_retries: Annotated[int, m.Field(default=3, ge=0)]
 ```
 
 **After:**
 ```python
 class LdapConnectionParams(FlextLdapModels.Value):
-    max_retries: Annotated[t.RetryCount, Field(default=3)]
+    max_retries: Annotated[t.RetryCount, m.Field(default=3)]
 ```
 
 ### Example 4: Entity Fields
@@ -59,9 +59,9 @@ class LdapConnectionParams(FlextLdapModels.Value):
 **Before:**
 ```python
 class LdapConnection(FlextLdapModels.Entity):
-    host: Annotated[str, Field(min_length=1)]
-    port: Annotated[int, Field(ge=1)]
-    timeout: Annotated[int, Field(ge=1)]
+    host: Annotated[str, m.Field(min_length=1)]
+    port: Annotated[int, m.Field(ge=1)]
+    timeout: Annotated[int, m.Field(ge=1)]
 ```
 
 **After:**
@@ -77,9 +77,9 @@ class LdapConnection(FlextLdapModels.Entity):
 **Before:**
 ```python
 class StreamCreationParams(FlextLdapModels.Value):
-    stream_type: Annotated[str, Field(min_length=1)]
-    connection_id: Annotated[str, Field(min_length=1)]
-    search_filter: Annotated[str, Field(min_length=1)]
+    stream_type: Annotated[str, m.Field(min_length=1)]
+    connection_id: Annotated[str, m.Field(min_length=1)]
+    search_filter: Annotated[str, m.Field(min_length=1)]
 ```
 
 **After:**
@@ -94,13 +94,13 @@ class StreamCreationParams(FlextLdapModels.Value):
 
 | Use Case | Old Pattern | New Type | Constraint |
 |----------|------------|----------|-----------|
-| Non-empty string | `Annotated[str, Field(min_length=1)]` | `t.NonEmptyStr` | Length ≥ 1 |
-| Positive integer | `Annotated[int, Field(ge=1)]` | `t.PositiveInt` | Value > 0 |
-| Non-negative integer | `Annotated[int, Field(ge=0)]` | `t.NonNegativeInt` | Value ≥ 0 |
-| Port number | `Annotated[int, Field(ge=1, le=65535)]` | `t.PortNumber` | 1 ≤ Value ≤ 65535 |
-| Retry count | `Annotated[int, Field(ge=0, le=10)]` | `t.RetryCount` | 0 ≤ Value ≤ 10 |
-| Non-negative float | `Annotated[float, Field(ge=0.0)]` | `t.NonNegativeFloat` | Value ≥ 0.0 |
-| Positive float | `Annotated[float, Field(gt=0.0)]` | `t.PositiveFloat` | Value > 0.0 |
+| Non-empty string | `Annotated[str, m.Field(min_length=1)]` | `t.NonEmptyStr` | Length ≥ 1 |
+| Positive integer | `Annotated[int, m.Field(ge=1)]` | `t.PositiveInt` | Value > 0 |
+| Non-negative integer | `Annotated[int, m.Field(ge=0)]` | `t.NonNegativeInt` | Value ≥ 0 |
+| Port number | `Annotated[int, m.Field(ge=1, le=65535)]` | `t.PortNumber` | 1 ≤ Value ≤ 65535 |
+| Retry count | `Annotated[int, m.Field(ge=0, le=10)]` | `t.RetryCount` | 0 ≤ Value ≤ 10 |
+| Non-negative float | `Annotated[float, m.Field(ge=0.0)]` | `t.NonNegativeFloat` | Value ≥ 0.0 |
+| Positive float | `Annotated[float, m.Field(gt=0.0)]` | `t.PositiveFloat` | Value > 0.0 |
 
 ## Import Statement
 

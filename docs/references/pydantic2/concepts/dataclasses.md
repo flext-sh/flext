@@ -14,7 +14,7 @@
 [`@pydantic.dataclasses.dataclass`][pydantic.dataclasses.dataclass]<br>
 
 If you don't want to use Pydantic's [`BaseModel`][pydantic.BaseModel] you can instead get the same data validation
-on standard [dataclasses][dataclasses].
+on standard dataclasses.
 
 ```python
 from datetime import datetime
@@ -118,7 +118,7 @@ class MyDataclass2:
     __pydantic_config__ = ConfigDict(validate_assignment=True)
 ```
 
-1. You can read more about `validate_assignment` in the [API reference][pydantic.config.ConfigDict.validate_assignment].
+1. You can read more about `validate_assignment` in the API reference.
 
 !!! note
 While Pydantic dataclasses support the [`extra`][pydantic.config.ConfigDict.extra] configuration value, some default

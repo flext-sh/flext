@@ -28,12 +28,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime
 from decimal import Decimal
 from enum import StrEnum, unique
-from typing import ClassVar
+from typing import Annotated, ClassVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict
 
 from flext import t
-from flext_core import p, r
+from flext_core import m, p, r
 
 type WorkflowScalar = Decimal | bool | bytes | date | datetime | float | int | str
 type WorkflowValue = WorkflowScalar | t.StrSequence | Mapping[str, WorkflowScalar]
@@ -50,14 +50,14 @@ def _new_workflow_settings() -> Mapping[str, t.Scalar | float]:
     return {}
 
 
-class WorkflowData(BaseModel):
+class WorkflowData(m.BaseModel):
     """Data container for workflow processing."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(
         arbitrary_types_allowed=True,
         extra="allow",
     )
-    content: WorkflowContent = Field(default_factory=_new_workflow_content)
+    content: WorkflowContent = m.Field(default_factory=_new_workflow_content)
 
 
 def _new_str_list() -> MutableSequence[str]:
@@ -104,15 +104,15 @@ class CompleteWorkflowExample:
         ANALYSIS = "analysis"
         AGGREGATION = "aggregation"
 
-    class WorkflowContext(BaseModel):
+    class WorkflowContext(m.BaseModel):
         """Complete workflow context with correlation and metadata."""
 
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-        workflow_id: str = Field(description="Unique workflow identifier")
-        correlation_id: str = Field(description="Correlation ID for tracking")
-        start_time: float = Field(description="Workflow start timestamp")
-        stages: t.StrSequence = Field(
+        workflow_id: str = m.Field(description="Unique workflow identifier")
+        correlation_id: str = m.Field(description="Correlation ID for tracking")
+        start_time: float = m.Field(description="Workflow start timestamp")
+        stages: t.StrSequence = m.Field(
             default_factory=lambda: [
                 "validation",
                 "processing",
@@ -121,78 +121,80 @@ class CompleteWorkflowExample:
             ],
             description="List of workflow stages to execute",
         )
-        metadata: Mapping[str, WorkflowScalar] = Field(
+        metadata: Mapping[str, WorkflowScalar] = m.Field(
             default_factory=_new_scalar_dict,
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: MutableMapping[
             str,
             float | int | Mapping[str, float | int],
-        ] = Field(
+        ] = m.Field(
             default_factory=_new_performance_metrics_dict,
             description="Performance metrics collected during workflow execution",
         )
 
-    class WorkflowStageResult(BaseModel):
+    class WorkflowStageResult(m.BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-        stage_name: str = Field(description="Name of the workflow stage")
-        workflow_id: str = Field(description="Associated workflow ID")
-        correlation_id: str = Field(description="Correlation ID for tracking")
-        success: bool = Field(description="Whether the stage succeeded")
-        items_processed: int = Field(description="Total items processed in stage")
-        items_succeeded: int = Field(description="Items that succeeded")
-        items_failed: int = Field(description="Items that failed")
-        processing_time: float = Field(description="Time taken to process stage")
-        errors: t.StrSequence = Field(
+        stage_name: str = m.Field(description="Name of the workflow stage")
+        workflow_id: str = m.Field(description="Associated workflow ID")
+        correlation_id: str = m.Field(description="Correlation ID for tracking")
+        success: bool = m.Field(description="Whether the stage succeeded")
+        items_processed: int = m.Field(description="Total items processed in stage")
+        items_succeeded: int = m.Field(description="Items that succeeded")
+        items_failed: int = m.Field(description="Items that failed")
+        processing_time: float = m.Field(description="Time taken to process stage")
+        errors: t.StrSequence = m.Field(
             default_factory=_new_str_list,
             description="List of errors encountered",
         )
-        warnings: t.StrSequence = Field(
+        warnings: t.StrSequence = m.Field(
             default_factory=_new_str_list,
             description="List of warnings encountered",
         )
-        stage_metadata: Mapping[str, float | int | bool] = Field(
+        stage_metadata: Mapping[str, float | int | bool] = m.Field(
             default_factory=_new_stage_metadata_dict,
             description="Stage-specific metadata",
         )
 
-    class CompleteWorkflowResult(BaseModel):
+    class CompleteWorkflowResult(m.BaseModel):
         """Complete workflow result with all stages aggregated."""
 
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-        workflow_id: str = Field(description="Unique workflow identifier")
-        correlation_id: str = Field(description="Correlation ID for tracking")
-        total_stages: int = Field(description="Total number of stages")
-        completed_stages: int = Field(description="Number of completed stages")
-        failed_stages: int = Field(description="Number of failed stages")
-        total_processing_time: float = Field(
+        workflow_id: str = m.Field(description="Unique workflow identifier")
+        correlation_id: str = m.Field(description="Correlation ID for tracking")
+        total_stages: int = m.Field(description="Total number of stages")
+        completed_stages: int = m.Field(description="Number of completed stages")
+        failed_stages: int = m.Field(description="Number of failed stages")
+        total_processing_time: float = m.Field(
             description="Total workflow processing time",
         )
-        stage_results: Sequence[CompleteWorkflowExample.WorkflowStageResult] = Field(
+        stage_results: Sequence[CompleteWorkflowExample.WorkflowStageResult] = m.Field(
             default_factory=_new_stage_result_list,
             description="Results from each workflow stage",
         )
         aggregated_metrics: Mapping[str, Decimal | bool | bytes | float | int | str] = (
-            Field(
+            m.Field(
                 default_factory=_new_aggregated_metrics_dict,
                 description="Aggregated metrics across all stages",
             )
         )
-        workflow_status: str = Field(
-            default="unknown",
-            description="Overall workflow status",
-        )
+        workflow_status: Annotated[
+            str,
+            m.Field(
+                description="Overall workflow status",
+            ),
+        ] = "unknown"
 
-    class WorkflowOrchestrator(BaseModel):
+    class WorkflowOrchestrator(m.BaseModel):
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
-        data: Sequence[ProcessingDict] = Field(default_factory=tuple)
-        workflow_settings: Mapping[str, t.Scalar | float] = Field(
+        data: Sequence[ProcessingDict] = m.Field(default_factory=tuple)
+        workflow_settings: Mapping[str, t.Scalar | float] = m.Field(
             default_factory=_new_workflow_settings,
         )
 

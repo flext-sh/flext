@@ -230,7 +230,7 @@ from flext_core import T, T_co, U, P, R, T_Model, T_Settings
 from typing import Self
 
 
-class MyModel(BaseModel):
+class MyModel(m.BaseModel):
     def configure(self, x: int) -> Self:
         ...
         return self
@@ -248,7 +248,7 @@ ALL code MUST follow "Pydantic v2 way" EXTENSIVELY across ALL 33 projects (`src/
 
 **Validation**: Custom `@field_validator`/`@model_validator` MUST be minimized — prefer Pydantic v2 built-in constraints (`Field(ge=0, le=100)`, `Annotated[str, StringConstraints()]`, `Literal`, `constr`, `conint`, pattern constraints) before writing custom validators. Ad-hoc validation functions outside models are FORBIDDEN.
 
-**FORBIDDEN Inside Model Classes**: Initialization helpers (`def setup()`, `def initialize()`), unnecessary `@property`, simple getters/setters, line-reduction wrappers, pass-through methods. If Pydantic v2 has a built-in mechanism (`@computed_field`, `model_post_init`, `__init_subclass__`, `PrivateAttr`), USE IT.
+**FORBIDDEN Inside Model Classes**: Initialization helpers (`def setup()`, `def initialize()`), unnecessary `@property`, simple getters/setters, line-reduction wrappers, pass-through methods. If Pydantic v2 has a built-in mechanism (`@u.computed_field`, `model_post_init`, `__init_subclass__`, `PrivateAttr`), USE IT.
 
 **Centralization**: `Enum`, `Mapping`, and `Literal` values MUST come from `constants.py` (`c.*`) — never defined inline. JSON via `model_dump_json()`, `model_validate_json()`, `model_dump()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`.
 
@@ -259,7 +259,7 @@ ALL code MUST follow "Pydantic v2 way" EXTENSIVELY across ALL 33 projects (`src/
 
 ```python
 # ✅ CORRECT — Pydantic v2 style
-class MyModel(BaseModel):
+class MyModel(m.BaseModel):
     model_config = ConfigDict(
         validate_assignment=True,
         extra="forbid",
@@ -268,7 +268,7 @@ class MyModel(BaseModel):
 
 
 # ❌ WRONG — Pydantic v1 style
-class MyModel(BaseModel):
+class MyModel(m.BaseModel):
     class Config:
         validate_assignment = True
 ```
@@ -277,12 +277,12 @@ class MyModel(BaseModel):
 
 ```python
 # ✅ CORRECT — Annotated with Field
-name: str = Field(default="", description="Name")
-items: t.StrSequence = Field(default_factory=list)
-created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+name: str = m.Field(default="", description="Name")
+items: t.StrSequence = m.Field(default_factory=list)
+created_at: datetime = m.Field(default_factory=lambda: datetime.now(UTC))
 
 # ❌ WRONG — No default_factory for mutable defaults
-items: t.StrSequence = []  # Mutable default, use Field(default_factory=list)
+items: t.StrSequence = []  # Mutable default, use m.Field(default_factory=list)
 ```
 
 ### Validators use `@field_validator` and `@model_validator`
@@ -291,7 +291,7 @@ items: t.StrSequence = []  # Mutable default, use Field(default_factory=list)
 from pydantic import field_validator, model_validator
 
 
-class MyModel(BaseModel):
+class MyModel(m.BaseModel):
     name: str
 
     @field_validator("name")
@@ -317,7 +317,7 @@ Use `t.*` validation types for constrained scalar fields:
 from flext_core import t
 
 
-class ServerConfig(BaseModel):
+class ServerConfig(m.BaseModel):
     port: t.PortNumber  # Annotated[int, Ge(1), Le(65535)]
     timeout: t.PositiveTimeout  # Annotated[float, Gt(0.0), Le(300.0)]
     retries: t.RetryCount  # Annotated[int, Ge(0), Le(10)]
@@ -482,27 +482,29 @@ when business requires it. If a type needs nullable semantics, the developer wri
 
 ```python
 # ❌ WRONG — None is semantically meaningless when default is ""
-backup_path: str | None = Field(default="", description="Backup path.")
-target_dn: str | None = Field(default="", description="Target DN.")
+backup_path: str | None = m.Field(default="", description="Backup path.")
+target_dn: str | None = m.Field(default="", description="Target DN.")
 
 # ✅ CORRECT — just str with empty default
-backup_path: str = Field(default="", description="Backup path.")
-target_dn: str = Field(default="", description="Target DN.")
+backup_path: str = m.Field(default="", description="Backup path.")
+target_dn: str = m.Field(default="", description="Target DN.")
 
 # ✅ CORRECT — None has distinct meaning ("not configured at all")
-config_file: str | None = Field(default=None, description="Optional settings override.")
+config_file: str | None = m.Field(
+    default=None, description="Optional settings override."
+)
 ```
 
 **Decision tree**:
 
-1. Is `None` a valid domain state distinct from `""`? → Use `str | None = Field(default=None)`
-2. Is the field always a string, just sometimes empty? → Use `str = Field(default="")`
+1. Is `None` a valid domain state distinct from `""`? → Use `str | None = m.Field(default=None)`
+2. Is the field always a string, just sometimes empty? → Use `str = m.Field(default="")`
 3. Is the field required? → Use `str` (no default)
 
 **`typings.py` definition rule**:
 
 4. Does the type alias definition in `typings.py` include `| None`? → VIOLATION. Remove `| None` from the alias. Consumers add `| None` inline at usage sites.
-5. Need a nullable variant? → Write `field: t.Scalar | None = Field(default=None)` at the usage site. NEVER create `NullableScalarValue` or `OptionalScalar` aliases.
+5. Need a nullable variant? → Write `field: t.Scalar | None = m.Field(default=None)` at the usage site. NEVER create `NullableScalarValue` or `OptionalScalar` aliases.
 ---
 
 ## Rule 15: Pydantic Models Over Plain Helper Classes
@@ -517,8 +519,8 @@ class PhaseResults:
         _ = self.results: MutableMapping[int, OperationStats] = {}
 
 # ✅ CORRECT — Pydantic model with proper typing
-class PhaseResults(BaseModel):
-    results: Mapping[int, OperationStats] = Field(default_factory=dict)
+class PhaseResults(m.BaseModel):
+    results: Mapping[int, OperationStats] = m.Field(default_factory=dict)
 
     def with_result(self, phase: int, stats: OperationStats) -> PhaseResults:
         """Immutable update — returns new instance with added result."""
@@ -552,11 +554,11 @@ class SuccessCheckable(Protocol):
 
 
 # In models.py — base for all result models:
-class ResultBase(BaseModel):
+class ResultBase(m.BaseModel):
     """Base for result models with success tracking."""
 
-    success: bool = Field(default=False, description="Operation succeeded.")
-    message: str = Field(default="", description="Human-readable result.")
+    success: bool = m.Field(default=False, description="Operation succeeded.")
+    message: str = m.Field(default="", description="Human-readable result.")
 
     @property
     def failure(self) -> bool:
@@ -597,7 +599,7 @@ def process(data: m.Domain.ProcessInputModel) -> p.Result[str]: ...
 
 
 # ✅ PREFER — single model with validation
-class ProcessInput(BaseModel):
+class ProcessInput(m.BaseModel):
     kind: Literal["str", "dict", "list"]
     value: m.Domain.ProcessValueModel
 

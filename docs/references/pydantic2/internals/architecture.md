@@ -74,8 +74,8 @@ When defining a Pydantic model with a boolean field:
 from pydantic import BaseModel, Field
 
 
-class Model(BaseModel):
-    foo: bool = Field(strict=True)
+class Model(m.BaseModel):
+    foo: bool = m.Field(strict=True)
 ```
 
 The core schema for the `foo` field will look like:
@@ -95,8 +95,8 @@ If we were to define a custom serialization function for `foo` (1), the `seriali
 1. For example using the [`field_serializer`][pydantic.functional_serializers.field_serializer] decorator:
 
    ```python {test="skip" lint="skip"}
-   class Model(BaseModel):
-       foo: bool = Field(strict=True)
+   class Model(m.BaseModel):
+       foo: bool = m.Field(strict=True)
 
        @field_serializer("foo", mode="plain")
        def serialize_foo(self, value: bool): ...
@@ -129,7 +129,7 @@ The [`generate`][pydantic.JSON_schema.GenerateJsonSchema.generate] method
 is the main entry point and is given the core schema of that model.
 
 Coming back to our `bool` field example, the [`bool_schema`][pydantic.JSON_schema.GenerateJsonSchema.bool_schema]
-method will be given the previously generated [boolean core schema][pydantic_core.core_schema.bool_schema]
+method will be given the previously generated boolean core schema
 and will return the following JSON Schema:
 
 ```json
@@ -213,7 +213,7 @@ and serialization happens at the _instance_ level. Both these concepts are handl
 from pydantic import BaseModel
 
 
-class Model(BaseModel):
+class Model(m.BaseModel):
     foo: int
 
 

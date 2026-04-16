@@ -32,29 +32,29 @@ from flext_core import t
 **Constraints Converted (15 total):**
 
 1. LdapConnectionParams (6 fields)
-   - `host: Annotated[str, Field(min_length=1)]` → `host: t.NonEmptyStr`
-   - `base_dn: Annotated[str, Field(min_length=1)]` → `base_dn: t.NonEmptyStr`
-   - `port: Annotated[int, Field(default=..., ge=1)]` → `port: Annotated[t.PortNumber, Field(default=...)]`
-   - `timeout_seconds: Annotated[int, Field(default=..., ge=1)]` → `timeout_seconds: Annotated[t.PositiveInt, Field(default=...)]`
-   - `page_size: Annotated[int, Field(default=..., ge=1)]` → `page_size: Annotated[t.PositiveInt, Field(default=...)]`
-   - `max_retries: Annotated[int, Field(default=3, ge=0)]` → `max_retries: Annotated[t.RetryCount, Field(default=3)]`
+   - `host: Annotated[str, m.Field(min_length=1)]` → `host: t.NonEmptyStr`
+   - `base_dn: Annotated[str, m.Field(min_length=1)]` → `base_dn: t.NonEmptyStr`
+   - `port: Annotated[int, m.Field(default=..., ge=1)]` → `port: Annotated[t.PortNumber, m.Field(default=...)]`
+   - `timeout_seconds: Annotated[int, m.Field(default=..., ge=1)]` → `timeout_seconds: Annotated[t.PositiveInt, m.Field(default=...)]`
+   - `page_size: Annotated[int, m.Field(default=..., ge=1)]` → `page_size: Annotated[t.PositiveInt, m.Field(default=...)]`
+   - `max_retries: Annotated[int, m.Field(default=3, ge=0)]` → `max_retries: Annotated[t.RetryCount, m.Field(default=3)]`
 
 2. StreamCreationParams (3 fields)
-   - `stream_type: Annotated[str, Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
-   - `connection_id: Annotated[str, Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
-   - `search_filter: Annotated[str, Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
+   - `stream_type: Annotated[str, m.Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
+   - `connection_id: Annotated[str, m.Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
+   - `search_filter: Annotated[str, m.Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
 
 3. LdapConnection (3 fields)
-   - `host: Annotated[str, Field(min_length=1)]` → `host: t.NonEmptyStr`
-   - `port: Annotated[int, Field(ge=1)]` → `port: t.PortNumber`
-   - `timeout: Annotated[int, Field(ge=1)]` → `timeout: t.PositiveInt`
+   - `host: Annotated[str, m.Field(min_length=1)]` → `host: t.NonEmptyStr`
+   - `port: Annotated[int, m.Field(ge=1)]` → `port: t.PortNumber`
+   - `timeout: Annotated[int, m.Field(ge=1)]` → `timeout: t.PositiveInt`
 
 4. LdapStream (5 fields)
-   - `name: Annotated[str, Field(min_length=1)]` → `name: t.NonEmptyStr`
-   - `connection_id: Annotated[str, Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
-   - `stream_type: Annotated[str, Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
-   - `search_filter: Annotated[str, Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
-   - `tap_stream_id: Annotated[str, Field(min_length=1)]` → `tap_stream_id: t.NonEmptyStr`
+   - `name: Annotated[str, m.Field(min_length=1)]` → `name: t.NonEmptyStr`
+   - `connection_id: Annotated[str, m.Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
+   - `stream_type: Annotated[str, m.Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
+   - `search_filter: Annotated[str, m.Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
+   - `tap_stream_id: Annotated[str, m.Field(min_length=1)]` → `tap_stream_id: t.NonEmptyStr`
 
 ### 4. Verification Results
 

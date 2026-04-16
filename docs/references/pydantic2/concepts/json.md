@@ -13,7 +13,7 @@
 ??? api "API Documentation"
 [`pydantic.main.BaseModel.model_validate_json`][pydantic.main.BaseModel.model_validate_JSON]
 [`pydantic.type_adapter.TypeAdapter.validate_json`][pydantic.type_adapter.TypeAdapter.validate_JSON]
-[`pydantic_core.from_json`][pydantic_core.from_JSON]
+`pydantic_core.from_json`
 
 Pydantic provides builtin JSON parsing, which helps achieve:
 
@@ -66,7 +66,7 @@ in the original JSON input which contained the invalid value.
 
 ### Partial JSON Parsing
 
-**Starting in v2.7.0**, Pydantic's [JSON parser](https://docs.rs/jiter/latest/jiter/) offers support for partial JSON parsing, which is exposed via [`pydantic_core.from_json`][pydantic_core.from_JSON]. Here's an example of this feature in action:
+**Starting in v2.7.0**, Pydantic's [JSON parser](https://docs.rs/jiter/latest/jiter/) offers support for partial JSON parsing, which is exposed via `pydantic_core.from_json`. Here's an example of this feature in action:
 
 ```python
 from pydantic_core import from_json
@@ -109,7 +109,7 @@ In future versions of Pydantic, we expect to expand support for this feature thr
 ([`pydantic.main.BaseModel.model_validate_json`][pydantic.main.BaseModel.model_validate_JSON] and
 [`pydantic.type_adapter.TypeAdapter.validate_json`][pydantic.type_adapter.TypeAdapter.validate_JSON]) or model configuration. Stay tuned 🚀!
 
-For now, you can use [`pydantic_core.from_json`][pydantic_core.from_JSON] in combination with [`pydantic.main.BaseModel.model_validate`][pydantic.main.BaseModel.model_validate] to achieve the same result. Here's an example:
+For now, you can use `pydantic_core.from_json` in combination with [`pydantic.main.BaseModel.model_validate`][pydantic.main.BaseModel.model_validate] to achieve the same result. Here's an example:
 
 ```python
 from pydantic_core import from_json
@@ -194,12 +194,12 @@ Check out the following example for a more in-depth look at how to use default v
 ### Caching Strings
 
 **Starting in v2.7.0**, Pydantic's [JSON parser](https://docs.rs/jiter/latest/jiter/) offers support for configuring how Python strings are cached during JSON parsing and validation (when Python strings are constructed from Rust strings during Python validation, e.g. after `strip_whitespace=True`).
-The `cache_strings` setting is exposed via both [model settings][pydantic.config.ConfigDict] and [`pydantic_core.from_json`][pydantic_core.from_JSON].
+The `cache_strings` setting is exposed via both model settings and `pydantic_core.from_json`.
 
 The `cache_strings` setting can take any of the following values:
 
 - `True` or `'all'` (the default): cache all strings
-- `'keys'`: cache only dictionary keys, this **only** applies when used with [`pydantic_core.from_json`][pydantic_core.from_JSON] or when parsing JSON using [`Json`][pydantic.types.JSON]
+- `'keys'`: cache only dictionary keys, this **only** applies when used with `pydantic_core.from_json` or when parsing JSON using [`Json`][pydantic.types.JSON]
 - `False` or `'none'`: no caching
 
 Using the string caching feature results in performance improvements, but increases memory usage slightly.

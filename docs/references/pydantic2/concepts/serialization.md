@@ -70,7 +70,7 @@ can be emulated).
 
 ### Python mode
 
-When using the Python mode, Pydantic models (and model-like types such as [dataclasses][]) (1) will be (recursively) converted to dictionaries. This is achievable by using the [`model_dump()`][pydantic.BaseModel.model_dump] method:
+When using the Python mode, Pydantic models (and model-like types such as dataclasses) (1) will be (recursively) converted to dictionaries. This is achievable by using the [`model_dump()`][pydantic.BaseModel.model_dump] method:
 { .annotate }
 
 1. With the exception of [root models](./models.md#rootmodel-and-custom-root-types), where the root value is dumped directly.
@@ -153,8 +153,8 @@ print(m.model_dump_json(indent=2))
 """
 ```
 
-In addition to the [supported types][JSON.JSONEncoder] by the standard library [`json`][] module, Pydantic supports a wide
-variety of types ([date and time types][datetime], [`UUID`][uuid.UUID] objects, [sets][set], etc). If an unsupported type
+In addition to the supported types by the standard library [`json`][] module, Pydantic supports a wide
+variety of types (date and time types, [`UUID`][uuid.UUID] objects, sets, etc). If an unsupported type
 is used and can't be serialized to JSON, a [`PydanticSerializationError`][pydantic_core.PydanticSerializationError] exception
 is raised.
 
@@ -266,7 +266,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
 
 **Two** different types of serializers can be used. They can all be defined using the
 [annotated pattern](./fields.md#the-annotated-pattern) or using the
-[`@field_serializer`][pydantic.field_serializer] decorator, applied on instance or [static methods][staticmethod].
+[`@field_serializer`][pydantic.field_serializer] decorator, applied on instance or static methods.
 
 - **_Plain_ serializers**: are called unconditionally to serialize a field. The serialization logic for types supported
   by Pydantic will _not_ be called. Using such serializers is also useful to specify the logic for arbitrary types.

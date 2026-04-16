@@ -604,7 +604,7 @@ servir como referência futura para implementação:
 ~~**Propósito:** Fornecer funcionalidades CQRS-específicas que complementam as capacidades base de x.~~
 
 ~~```Python~~
-~~class x(BaseModel, ABC):~~
+~~class x(m.BaseModel, ABC):~~
 ~~ """Existing mixin class with infrastructure properties."""~~
 
 ~~ class CQRS:~~

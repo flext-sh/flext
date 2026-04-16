@@ -97,7 +97,7 @@ Before touching any code:
 
 - Read the FULL file(s) to be refactored
 - Map the import graph - what imports this file? What does it import?
-# QS|- Use `sg --pattern 'from flext_core.$MOD import $$$' --lang python` (ast-grep MCP: `mcp_ast_grep_search`) to find all consumers — NEVER `grep -rn` for code structure
+- Use `sg --pattern 'from flext_core.$MOD import $$$' --lang python` (ast-grep) to find all consumers — NEVER `grep -rn` for code structure
 - Identify the tier of the module being refactored
 
 ### Step 2: Make Changes in Tier Order (Bottom-Up)
@@ -194,18 +194,24 @@ make validate FIX=1
 ### Pattern A: Replacing dict with ConfigMap
 
 ```python
-# Before (FORBIDDEN — `Any` and `Mapping[str, Any]` are axiomatic violations)
-from typing import Any  # ← FORBIDDEN import
+from __future__ import annotations
 
+from collections.abc import Mapping
+from typing import Any
 
-def configure(self, settings: Mapping[str, Any]) -> None: ...  # ← FORBIDDEN type
-
-
-# After
 from flext_core import m
 
 
-def configure(self, settings: m.Domain.ConfigurationModel) -> None: ...
+# Before (FORBIDDEN — `Any` and `Mapping[str, Any]` are axiomatic violations)
+def configure_bad(settings: Mapping[str, Any]) -> None:
+    """WRONG — uses Any and raw Mapping."""
+    _ = settings
+
+
+# After — use typed Pydantic model from m.*
+def configure_good(settings: m.Value) -> None:
+    """CORRECT — uses typed Pydantic model."""
+    _ = settings
 ```
 
 ### Pattern B: Removing Legacy Aliases
@@ -257,12 +263,16 @@ When a public module is an identical copy of its `_utilities/` counterpart (dete
 
 1. Keep implementation in `_utilities/` (source of truth).
 2. Replace public file with thin re-export stub:
-   ```python
-   """Re-export from internal module."""
-   from __future__ import annotations
-   from <package>._utilities.<module> import <Symbol1>, <Symbol2>
-   __all__: list[str] = ["Symbol1", "Symbol2"]
-   ```
+
+```python
+"""Re-export from internal module."""
+
+from __future__ import annotations
+
+from flext_core import m, u
+
+__all__: list[str] = ["m", "u"]
+```
 3. Verify `__init__.py` lazy imports still resolve (chain: `__init__.py` → public module → `_utilities/`).
 4. Run `ruff check src/`, `pyrefly check src/`, `pyright src/`.
 5. Use `scope callers <Symbol>` to confirm no external breakage.
@@ -347,5 +357,5 @@ make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_MODULE.py --tb=long -v
 5. **NEVER use relative imports** - the codebase uses zero relative imports
 6. **ALWAYS run tests** before declaring refactoring complete
 7. **ALWAYS preserve the facade pattern** - `_models/` and `_utilities/` are private
-# KA|8. **NEVER use `sed`, `awk`, `find`, or custom scripts to transform code** — use `mcp_ast_grep_replace` (MCP) or `sg --rewrite` (CLI) for ALL structural code changes. `grep`/`ripgrep` for plain-text only. `find` FORBIDDEN for code location. Writing a one-off fix script is an EXTREME FAULT.
-# NB|9. **ast-grep is the SOLE code search and replace tool** — MCP `mcp_ast_grep_search` first, CLI `sg` as fallback. Workflow: search → replace atomically → verify with `make check`.
+8. **NEVER use `sed`, `awk`, `find`, or custom scripts to transform code** — use `sg --rewrite` (CLI) for ALL structural code changes. `grep`/`ripgrep` for plain-text only. `find` FORBIDDEN for code location. Writing a one-off fix script is an EXTREME FAULT.
+9. **ast-grep is the SOLE code search and replace tool** — CLI `sg` as primary. Workflow: search → replace atomically → verify with `make check`.

@@ -195,8 +195,8 @@ print(adapter.json_schema())
 # > {'items': {'type': 'integer'}, 'type': 'array'}
 ```
 
-You can also generate JSON schemas for combinations of [`BaseModel`s][pydantic.main.BaseModel]
-and [`TypeAdapter`s][pydantic.type_adapter.TypeAdapter], as shown in this example:
+You can also generate JSON schemas for combinations of `BaseModel`s
+and `TypeAdapter`s, as shown in this example:
 
 ```python {output="json"}
 import json
@@ -556,7 +556,7 @@ print(json.dumps(Person.model_json_schema(), indent=2))
 
 ### Model-Level Customization
 
-You can also use [model settings][pydantic.config.ConfigDict] to customize JSON schema generation on a model.
+You can also use model settings to customize JSON schema generation on a model.
 Specifically, the following settings options are relevant:
 
 - [`title`][pydantic.config.ConfigDict.title]

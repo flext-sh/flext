@@ -24,7 +24,7 @@ This enables access to all t.* validation types used in the file.
 #### Field 1: host
 ```python
 # BEFORE
-host: Annotated[str, Field(min_length=1)]
+host: Annotated[str, m.Field(min_length=1)]
 
 # AFTER
 host: t.NonEmptyStr
@@ -36,7 +36,7 @@ host: t.NonEmptyStr
 #### Field 2: base_dn
 ```python
 # BEFORE
-base_dn: Annotated[str, Field(min_length=1)]
+base_dn: Annotated[str, m.Field(min_length=1)]
 
 # AFTER
 base_dn: t.NonEmptyStr
@@ -48,10 +48,10 @@ base_dn: t.NonEmptyStr
 #### Field 3: port
 ```python
 # BEFORE
-port: Annotated[int, Field(default=c.TapLdap.DEFAULT_PORT, ge=1)]
+port: Annotated[int, m.Field(default=c.TapLdap.DEFAULT_PORT, ge=1)]
 
 # AFTER
-port: Annotated[t.PortNumber, Field(default=c.TapLdap.DEFAULT_PORT)]
+port: Annotated[t.PortNumber, m.Field(default=c.TapLdap.DEFAULT_PORT)]
 ```
 - **Constraint:** ge=1 (becomes 1-65535 range in t.PortNumber)
 - **Type:** t.PortNumber = Annotated[int, Ge(1), Le(65535)]
@@ -62,12 +62,12 @@ port: Annotated[t.PortNumber, Field(default=c.TapLdap.DEFAULT_PORT)]
 # BEFORE
 timeout_seconds: Annotated[
     int,
-    Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT, ge=1),
+    m.Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT, ge=1),
 ]
 
 # AFTER
 timeout_seconds: Annotated[
-    t.PositiveInt, Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT)
+    t.PositiveInt, m.Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT)
 ]
 ```
 - **Constraint:** ge=1
@@ -77,10 +77,10 @@ timeout_seconds: Annotated[
 #### Field 5: page_size
 ```python
 # BEFORE
-page_size: Annotated[int, Field(default=c.TapLdap.DEFAULT_PAGE_SIZE, ge=1)]
+page_size: Annotated[int, m.Field(default=c.TapLdap.DEFAULT_PAGE_SIZE, ge=1)]
 
 # AFTER
-page_size: Annotated[t.PositiveInt, Field(default=c.TapLdap.DEFAULT_PAGE_SIZE)]
+page_size: Annotated[t.PositiveInt, m.Field(default=c.TapLdap.DEFAULT_PAGE_SIZE)]
 ```
 - **Constraint:** ge=1
 - **Type:** t.PositiveInt
@@ -89,10 +89,10 @@ page_size: Annotated[t.PositiveInt, Field(default=c.TapLdap.DEFAULT_PAGE_SIZE)]
 #### Field 6: max_retries
 ```python
 # BEFORE
-max_retries: Annotated[int, Field(default=3, ge=0)]
+max_retries: Annotated[int, m.Field(default=3, ge=0)]
 
 # AFTER
-max_retries: Annotated[t.RetryCount, Field(default=3)]
+max_retries: Annotated[t.RetryCount, m.Field(default=3)]
 ```
 - **Constraint:** ge=0 (becomes 0-10 range in t.RetryCount)
 - **Type:** t.RetryCount = Annotated[int, Ge(0), Le(10)]
@@ -105,7 +105,7 @@ max_retries: Annotated[t.RetryCount, Field(default=3)]
 #### Field 1: stream_type
 ```python
 # BEFORE
-stream_type: Annotated[str, Field(min_length=1)]
+stream_type: Annotated[str, m.Field(min_length=1)]
 
 # AFTER
 stream_type: t.NonEmptyStr
@@ -117,7 +117,7 @@ stream_type: t.NonEmptyStr
 #### Field 2: connection_id
 ```python
 # BEFORE
-connection_id: Annotated[str, Field(min_length=1)]
+connection_id: Annotated[str, m.Field(min_length=1)]
 
 # AFTER
 connection_id: t.NonEmptyStr
@@ -129,7 +129,7 @@ connection_id: t.NonEmptyStr
 #### Field 3: search_filter
 ```python
 # BEFORE
-search_filter: Annotated[str, Field(min_length=1)]
+search_filter: Annotated[str, m.Field(min_length=1)]
 
 # AFTER
 search_filter: t.NonEmptyStr
@@ -145,7 +145,7 @@ search_filter: t.NonEmptyStr
 #### Field 1: host
 ```python
 # BEFORE
-host: Annotated[str, Field(min_length=1)]
+host: Annotated[str, m.Field(min_length=1)]
 
 # AFTER
 host: t.NonEmptyStr
@@ -157,7 +157,7 @@ host: t.NonEmptyStr
 #### Field 2: port
 ```python
 # BEFORE
-port: Annotated[int, Field(ge=1)]
+port: Annotated[int, m.Field(ge=1)]
 
 # AFTER
 port: t.PortNumber
@@ -169,7 +169,7 @@ port: t.PortNumber
 #### Field 3: timeout
 ```python
 # BEFORE
-timeout: Annotated[int, Field(ge=1)]
+timeout: Annotated[int, m.Field(ge=1)]
 
 # AFTER
 timeout: t.PositiveInt
@@ -185,7 +185,7 @@ timeout: t.PositiveInt
 #### Field 1: name
 ```python
 # BEFORE
-name: Annotated[str, Field(min_length=1)]
+name: Annotated[str, m.Field(min_length=1)]
 
 # AFTER
 name: t.NonEmptyStr
@@ -197,7 +197,7 @@ name: t.NonEmptyStr
 #### Field 2: connection_id
 ```python
 # BEFORE
-connection_id: Annotated[str, Field(min_length=1)]
+connection_id: Annotated[str, m.Field(min_length=1)]
 
 # AFTER
 connection_id: t.NonEmptyStr
@@ -209,7 +209,7 @@ connection_id: t.NonEmptyStr
 #### Field 3: stream_type
 ```python
 # BEFORE
-stream_type: Annotated[str, Field(min_length=1)]
+stream_type: Annotated[str, m.Field(min_length=1)]
 
 # AFTER
 stream_type: t.NonEmptyStr
@@ -221,7 +221,7 @@ stream_type: t.NonEmptyStr
 #### Field 4: search_filter
 ```python
 # BEFORE
-search_filter: Annotated[str, Field(min_length=1)]
+search_filter: Annotated[str, m.Field(min_length=1)]
 
 # AFTER
 search_filter: t.NonEmptyStr
@@ -233,7 +233,7 @@ search_filter: t.NonEmptyStr
 #### Field 5: tap_stream_id
 ```python
 # BEFORE
-tap_stream_id: Annotated[str, Field(min_length=1)]
+tap_stream_id: Annotated[str, m.Field(min_length=1)]
 
 # AFTER
 tap_stream_id: t.NonEmptyStr
@@ -276,7 +276,7 @@ The converted file is ready for:
 
 To revert to the original patterns:
 1. Remove `from flext_core import t` import
-2. Replace each t.* type back to its original Field() pattern
+2. Replace each t.* type back to its original m.Field() pattern
 3. Test to ensure behavior unchanged
 
 However, this is not recommended as t.* types provide better type safety and clarity.

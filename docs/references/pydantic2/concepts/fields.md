@@ -42,7 +42,7 @@ class Model(BaseModel):
 
 !!! note
 Even though `name` is assigned a value, it is still required and has no default value. If you want
-to emphasize on the fact that a value must be provided, you can use the [ellipsis][Ellipsis]:
+to emphasize on the fact that a value must be provided, you can use the ellipsis:
 
     ```python {lint="skip" test="skip"}
     class Model(BaseModel):
@@ -507,7 +507,7 @@ The [standard library types](../api/standard_library_types.md) documentation des
 Some parameters of the [`Field()`][pydantic.Field] function can be used on [dataclasses](./dataclasses.md):
 
 - `init`: Whether the field should be included in the synthesized `__init__()` method of the dataclass.
-- `init_var`: Whether the field should be [init-only][dataclasses-init-only-variables] in the dataclass.
+- `init_var`: Whether the field should be init-only in the dataclass.
 - `kw_only`: Whether the field should be a keyword-only argument in the constructor of the dataclass.
 
 Here is an example:
@@ -722,7 +722,7 @@ print(Model.model_json_schema()["properties"]["deprecated_field"])
 ### `deprecated` via the `@warnings.deprecated` decorator
 
 The [`@warnings.deprecated`][warnings.deprecated] decorator (or the
-[`typing_extensions` backport][typing_extensions.deprecated] on Python
+`typing_extensions` backport on Python
 3.12 and lower) can be used as an instance.
 
 <!-- TODO: tabs should be auto-generated if using Ruff (https://github.com/pydantic/pydantic/issues/10083) -->

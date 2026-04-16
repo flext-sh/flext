@@ -108,7 +108,7 @@ The [configuration propagation](#configuration-propagation) rules also apply.
 
 ## Configuration on other supported types
 
-If you are using [standard library dataclasses][dataclasses] or [`TypedDict`][typing.TypedDict] classes,
+If you are using standard library dataclasses or `TypedDict` classes,
 the configuration can be set in two ways:
 
 - Using the `__pydantic_config__` class attribute:

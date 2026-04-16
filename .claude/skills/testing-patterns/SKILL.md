@@ -33,7 +33,7 @@ description: Testing patterns, anti-patterns, and guidelines for Python/pytest i
 - **Rule**: Public-behavior assertions also exclude concrete carrier details when the contract is structural. Prefer asserting observable `p.*`, `t.*`, or `r.*` behavior over asserting the exact concrete helper class used internally.
 - **Rule**: Tests MUST demonstrate the EXACT SAME strict typing, Pydantic v2, r, p, and architectural discipline as production code. Test files are NOT exempt from ANY rule. Test fixtures MUST use `Field()`, typed models, and `r[T]` returns. Test data MUST use `t.*` types from `typings.py`. Test assertions on r MUST use `.success`/`.failure` and `.value`/`.error`. There is NO "test-only" relaxation of any typing, structural, or Pydantic v2 rule. Tests that violate these rules are themselves violations.
 - **Rule**: Test facades use `TestsFlext<Project><Tier>` naming and keep test-only scope under `<Domain>.Tests`. Legacy `Flext<Project>Test<Tier>` names and flat nested wrappers around private mixins are migration debt, not patterns to repeat.
-- **Rule**: ALL code in tests MUST follow "Pydantic v2 way": `Field()` for field declarations, `ConfigDict(...)` for settings, validation centralized in models via `@field_validator`/`@model_validator`/`@computed_field`. Enums/Mappings/Literals from `constants.py` (`c.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`. Test models MUST inherit via MRO from FLEXT base models.
+- **Rule**: ALL code in tests MUST follow "Pydantic v2 way": `Field()` for field declarations, `ConfigDict(...)` for settings, validation centralized in models via `@field_validator`/`@model_validator`/`@u.computed_field`. Enums/Mappings/Literals from `constants.py` (`c.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`. Test models MUST inherit via MRO from FLEXT base models.
 - **Rule**: Compatibility wrappers, non-business validation fallbacks, legacy test code, and `OldName = NewName` compatibility aliases are FORBIDDEN in test code. Legacy test patterns are DELETED and replaced with canonical patterns.
 - **Rule**: Every test change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. Linter suppression comments are FORBIDDEN without real internet citations, business necessity, and per-line scope. Global suppressions are FORBIDDEN.
 
@@ -44,9 +44,7 @@ description: Testing patterns, anti-patterns, and guidelines for Python/pytest i
 ```python
 from __future__ import annotations
 
-from typing import Annotated, ClassVar
-
-from pydantic import Field
+from typing import Annotated
 
 from flext_core import m, p, r, t
 
@@ -54,10 +52,8 @@ from flext_core import m, p, r, t
 class UserRecord(m.ArbitraryTypesModel):
     """User record stub for the example."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
-    name: Annotated[t.NonEmptyStr, Field(description="User name")]
-    email: Annotated[t.NonEmptyStr, Field(description="User email")]
+    name: Annotated[t.NonEmptyStr, m.Field(description="User name")]
+    email: Annotated[t.NonEmptyStr, m.Field(description="User email")]
 
 
 def create_user(name: str, email: str) -> p.Result[UserRecord]:
@@ -108,9 +104,13 @@ def test_map_transforms_success_value() -> None:
     assert result.unwrap() == 10
 
 
+def _int_to_str(x: int) -> r[str]:
+    return r[str].ok(str(x))
+
+
 def test_flat_map_chains_results() -> None:
     """flat_map() chains another r-returning computation."""
-    result = r[int].ok(5).flat_map(lambda x: r[str].ok(str(x)))
+    result = r[int].ok(5).flat_map(_int_to_str)
     assert result.unwrap() == "5"
 ```
 
@@ -121,10 +121,9 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from pathlib import Path
-from typing import Annotated, ClassVar
+from typing import Annotated
 
 import pytest
-from pydantic import Field
 
 from flext_core import m, t
 
@@ -132,10 +131,8 @@ from flext_core import m, t
 class UserFixture(m.ArbitraryTypesModel):
     """User fixture model."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
-    name: Annotated[t.NonEmptyStr, Field(description="User name")]
-    email: Annotated[t.NonEmptyStr, Field(description="User email")]
+    name: Annotated[t.NonEmptyStr, m.Field(description="User name")]
+    email: Annotated[t.NonEmptyStr, m.Field(description="User email")]
 
 
 @pytest.fixture
@@ -179,10 +176,8 @@ def test_uppercase_transforms_correctly(input_val: str, expected: str) -> None:
 ```python
 from __future__ import annotations
 
-from typing import Annotated, ClassVar
+from typing import Annotated
 from unittest.mock import Mock
-
-from pydantic import Field
 
 from flext_core import m, p, r, t
 
@@ -190,9 +185,7 @@ from flext_core import m, p, r, t
 class UserRecord(m.ArbitraryTypesModel):
     """User record stub."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
-    name: Annotated[t.NonEmptyStr, Field(description="User name")]
+    name: Annotated[t.NonEmptyStr, m.Field(description="User name")]
 
 
 class UserService:
@@ -241,9 +234,7 @@ assert result == "done"  # proves nothing about real code
 ```python
 from __future__ import annotations
 
-from typing import Annotated, ClassVar
-
-from pydantic import Field
+from typing import Annotated
 
 from flext_core import m, t
 
@@ -251,10 +242,8 @@ from flext_core import m, t
 class CliResult(m.ArbitraryTypesModel):
     """Stub CLI execution result."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
-    exit_code: Annotated[int, Field(description="Process exit code")]
-    output: Annotated[t.NonEmptyStr, Field(description="Captured output")]
+    exit_code: Annotated[int, m.Field(description="Process exit code")]
+    output: Annotated[t.NonEmptyStr, m.Field(description="Captured output")]
 
 
 def make_result() -> CliResult:

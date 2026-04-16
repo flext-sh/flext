@@ -36,7 +36,7 @@ description: Internal Pydantic v2 governance patterns for FLEXT 33-project monor
 - **Secrets**: Use `SecretStr`/`SecretBytes` for secrets.
 - **ConfigDict**: Use `model_config = ConfigDict(...)` for settings — standalone `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`).
 - **Minimize custom validators**: Prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`, `constr`, `conint`).
-- **FORBIDDEN in models**: initialization helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@computed_field`, `model_post_init`, `PrivateAttr`) and canonical field names such as `success`, `failure`, `expired`, `healthy`.
+- **FORBIDDEN in models**: initialization helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@u.computed_field`, `model_post_init`, `PrivateAttr`) and canonical field names such as `success`, `failure`, `expired`, `healthy`.
 - **Enums/Mappings/Literals**: From `constants.py` (`c.*`), settings from `settings.py` (`s.*`).
 - **JSON**: Via `model_dump_json()`, `model_validate_json()`, `TypeAdapter`.
 - **Internal state**: Via `PrivateAttr` — never bare `self._x`.
@@ -50,11 +50,11 @@ description: Internal Pydantic v2 governance patterns for FLEXT 33-project monor
 > Full governance patterns are in [references/governance-patterns.md](references/governance-patterns.md). Load it for detailed patterns.
 
 Key rules (quick reference):
-- Use `Annotated[T | None, Field(...)]` for nullable fields, NOT `Annotated[T, Field(...)] | None`
+- Use `Annotated[T | None, m.Field(...)]` for nullable fields, NOT `Annotated[T, m.Field(...)] | None`
 - Every `BaseModel` subclass needs `ConfigDict(...)` — never `class Config:`
 - All fields declared via `Field()` with description/examples metadata
 - `PrivateAttr` for internal state — never bare `self._x`
-- `@computed_field` replaces `@property` everywhere
+- `@u.computed_field` replaces `@property` everywhere
 - Validators: `@field_validator` for field-level, `@model_validator(mode="after")` for cross-field
 - Boolean fields: `success`, `failure`, `expired`, `healthy` — never `is_success`, `is_valid`
 - No `model_rebuild()`, no `cast()`, no `Any`
@@ -77,38 +77,51 @@ Good:
 ```python
 from __future__ import annotations
 
-from flext_core import c, m, p, r, s, t, u
-from flext_governance import FlextGovernanceCreateUserMixin
+from typing import Annotated, override
+
+from flext_core import m, p, r, s, t
 
 
-class FlextGovernance(FlextGovernanceCreateUserMixin, s[t.Dict]):
-    class Domain:
+class FlextGovernance(s[m.Value]):
+    """Single facade per module — MRO-composed service with nested domain."""
+
+    class Governance:
+        """Domain namespace — nested models live here."""
+
         class User(m.Value):
-            name: t.NonEmptyStr = u.Field(default="alice")
-            email: t.EmailStr
+            """User value object."""
 
-    @staticmethod
-    def run_create() -> p.Result[str]:
-        service = FlextGovernance()
-        user = FlextGovernance.Domain.User(name="alice", email="alice@example.com")
-        return service.create_user(user)
+            name: Annotated[t.NonEmptyStr, m.Field(description="User display name")]
+            email: Annotated[t.NonEmptyStr, m.Field(description="User email")]
+
+    @override
+    def execute(self) -> p.Result[m.Value]:
+        """Create user through the facade."""
+        user = FlextGovernance.Governance.User(
+            name="alice",
+            email="alice@example.com",
+        )
+        return r[m.Value].ok(user)
 ```
 
-Why good: follows one-facade-per-module, keeps nested domain classes, and composes service behavior through MRO (`FlextGovernanceCreateUserMixin` + `s[...]`) while consuming Pydantic via aliases.
+Why good: one facade per module, nested domain namespace, MRO via `s[T]`, canonical `r[T].ok()`.
 
 Bad:
 
 ```python
-from pydantic import BaseModel
+from __future__ import annotations
+
+from pydantic import BaseModel, ConfigDict
 
 
 class User(BaseModel):
-    class Config:  # ✗ v1 style
-        extra = "forbid"
+    """v1-style Config class — FORBIDDEN in FLEXT."""
 
-    name: str  # ✗ No Field() metadata
-    email: str  # ✗ No validation
-    tags: t.StrSequence = []  # ✗ Mutable default bug
+    model_config = ConfigDict(extra="forbid")
+
+    name: str  # No Field() metadata
+    email: str  # No validation
+    tags: list[str] = []  # Mutable default bug
 ```
 
 Why bad: v1 `Config` class, no `Field()` metadata, mutable default bug.

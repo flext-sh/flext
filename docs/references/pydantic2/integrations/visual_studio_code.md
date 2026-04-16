@@ -113,13 +113,13 @@ For example, this is valid for Pydantic:
 from pydantic import BaseModel
 
 
-class Knight(BaseModel):
+class Knight(m.BaseModel):
     title: str
     age: int
     color: str = "blue"
 
 
-class Quest(BaseModel):
+class Quest(m.BaseModel):
     title: str
     knight: Knight
 
@@ -147,7 +147,7 @@ coming back to the example with `age='23'`, it would be:
 from pydantic import BaseModel
 
 
-class Knight(BaseModel):
+class Knight(m.BaseModel):
     title: str
     age: int
     color: str = "blue"
@@ -172,7 +172,7 @@ from typing import Any
 from pydantic import BaseModel
 
 
-class Knight(BaseModel):
+class Knight(m.BaseModel):
     title: str
     age: int
     color: str = "blue"
@@ -200,7 +200,7 @@ from typing import Any, cast
 from pydantic import BaseModel
 
 
-class Knight(BaseModel):
+class Knight(m.BaseModel):
     title: str
     age: int
     color: str = "blue"
@@ -219,7 +219,7 @@ So, this is the equivalent of the previous example, without the additional varia
 
 ### Settings in class arguments
 
-Pydantic has a rich set of [Model Configurations][pydantic.config.ConfigDict] available.
+Pydantic has a rich set of Model Configurations available.
 
 These configurations can be set in an internal `class Settings` on each model:
 
@@ -227,7 +227,7 @@ These configurations can be set in an internal `class Settings` on each model:
 from pydantic import BaseModel
 
 
-class Knight(BaseModel):
+class Knight(m.BaseModel):
     model_config = dict(frozen=True)
     title: str
     age: int
@@ -240,7 +240,7 @@ or passed as keyword arguments when defining the model class:
 from pydantic import BaseModel
 
 
-class Knight(BaseModel, frozen=True):
+class Knight(m.BaseModel, frozen=True):
     title: str
     age: int
     color: str = "blue"
@@ -264,9 +264,9 @@ Pylance/pyright requires `default` to be a keyword argument to `Field` in order 
 from pydantic import BaseModel, Field
 
 
-class Knight(BaseModel):
-    title: str = Field(default="Sir Lancelot")  # this is okay
-    age: int = Field(
+class Knight(m.BaseModel):
+    title: str = m.Field(default="Sir Lancelot")  # this is okay
+    age: int = m.Field(
         23
     )  # this works fine at runtime but will case an error for pyright
 
@@ -286,4 +286,4 @@ As a Pydantic user, you don't need the details below. Feel free to skip the rest
 This additional editor support works by making use of the [`@dataclass_transform` decorator](https://typing.python.org/en/latest/spec/dataclasses.html#the-dataclass-transform-decorator)
 (introduced by [PEP 681](https://peps.python.org/pep-0681/)).
 
-The standard provides a way for libraries like Pydantic and others to tell editors and tools that they (the editors) should treat these libraries (e.g. Pydantic) as if they were [dataclasses][dataclasses], providing autocompletion, type checks, etc.
+The standard provides a way for libraries like Pydantic and others to tell editors and tools that they (the editors) should treat these libraries (e.g. Pydantic) as if they were dataclasses, providing autocompletion, type checks, etc.

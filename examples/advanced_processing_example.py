@@ -24,11 +24,11 @@ from collections.abc import (
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from decimal import Decimal
 from enum import StrEnum, unique
-from typing import ClassVar
+from typing import Annotated, ClassVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict
 
-from flext_core import p, r, t
+from flext_core import m, p, r, t
 
 type DataPrimitive = t.Primitives | bytes | Decimal
 type DataValue = DataPrimitive | Sequence[DataValue] | Mapping[str, DataValue]
@@ -41,7 +41,7 @@ def _new_data_value_map() -> Mapping[str, DataValue]:
     return {}
 
 
-class PipelineStageData(BaseModel):
+class PipelineStageData(m.BaseModel):
     """Data container for pipeline stage processing."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(
@@ -49,7 +49,7 @@ class PipelineStageData(BaseModel):
         extra="allow",
     )
 
-    class PipelinePayload(BaseModel):
+    class PipelinePayload(m.BaseModel):
         """Pipeline payload container."""
 
         model_config: ClassVar[ConfigDict] = ConfigDict(
@@ -57,9 +57,9 @@ class PipelineStageData(BaseModel):
             extra="allow",
         )
 
-        values: Mapping[str, DataValue] = Field(default_factory=_new_data_value_map)
+        values: Mapping[str, DataValue] = m.Field(default_factory=_new_data_value_map)
 
-    data: PipelinePayload = Field(
+    data: PipelinePayload = m.Field(
         default_factory=lambda: PipelineStageData.PipelinePayload(values={}),
     )
 
@@ -83,46 +83,48 @@ class AdvancedProcessingExample:
         PROCESS = "process"
         ANALYZE = "analyze"
 
-    class ProcessingResult(BaseModel):
+    class ProcessingResult(m.BaseModel):
         """Result of processing operation with metrics."""
 
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-        operation_id: str = Field(description="Unique operation identifier")
-        items_processed: int = Field(description="Total items processed")
-        items_succeeded: int = Field(description="Items that succeeded")
-        items_failed: int = Field(description="Items that failed")
-        processing_time: float = Field(description="Time taken for processing")
-        errors: t.StrSequence = Field(
+        operation_id: str = m.Field(description="Unique operation identifier")
+        items_processed: int = m.Field(description="Total items processed")
+        items_succeeded: int = m.Field(description="Items that succeeded")
+        items_failed: int = m.Field(description="Items that failed")
+        processing_time: float = m.Field(description="Time taken for processing")
+        errors: t.StrSequence = m.Field(
             default_factory=_new_str_list,
             description="List of errors encountered",
         )
-        metadata: Mapping[str, DataPrimitive] = Field(
+        metadata: Mapping[str, DataPrimitive] = m.Field(
             default_factory=_new_scalar_dict,
             description="Operation metadata",
         )
 
-    class ValidationResult(BaseModel):
+    class ValidationResult(m.BaseModel):
         """Result of validation operation."""
 
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-        item_id: str = Field(description="Unique item identifier")
-        valid: bool = Field(description="Whether the item is valid")
-        violations: t.StrSequence = Field(
+        item_id: str = m.Field(description="Unique item identifier")
+        valid: bool = m.Field(description="Whether the item is valid")
+        violations: t.StrSequence = m.Field(
             default_factory=_new_str_list,
             description="List of validation violations",
         )
-        warnings: t.StrSequence = Field(
+        warnings: t.StrSequence = m.Field(
             default_factory=_new_str_list,
             description="List of validation warnings",
         )
-        validation_time: float = Field(
-            default=0.0,
-            description="Time taken for validation",
-        )
+        validation_time: Annotated[
+            float,
+            m.Field(
+                description="Time taken for validation",
+            ),
+        ] = 0.0
 
-    class FlextLdifProcessingPipeline(BaseModel):
+    class FlextLdifProcessingPipeline(m.BaseModel):
         """Declarative processing pipeline with automatic parallel execution."""
 
         auto_execute: bool = True

@@ -65,8 +65,7 @@ The facade (`api.py`) depends on services (`services/`) which depend on contract
 
 ```python
 # Good: orchestration consumes bridge + public alias
-from flext_core import r, p
-from flext_core import u
+from flext_core import r, u
 
 bridge, services, resources = u.DependencyIntegration.create_layered_bridge()
 result = r[bool].ok(True)
@@ -74,9 +73,9 @@ result = r[bool].ok(True)
 
 ```python
 # Bad: direct third-party dependency import in application code
-from dependency_injector import providers
+from dependency_injector import containers
 
-container = providers.DynamicContainer()
+container = containers.DynamicContainer()
 ```
 
 Why bad: bypasses `runtime.py` and `container.py`, increases coupling, and breaks inward-only layering.
@@ -84,6 +83,8 @@ Why bad: bypasses `runtime.py` and `container.py`, increases coupling, and break
 ```python
 # Bad: low-level contracts importing service layer
 from flext_core import s
+
+_ = s  # used at call site, not in this snippet
 ```
 
 Why bad: inverts `L1 -> L2` direction and violates the documented architecture topology.
@@ -144,13 +145,13 @@ Every `flext-(tap|target|dbt)-*` project MUST:
 
 ```python
 # ✅ CORRECT — FlextMeltano + domain composition
+from flext_ldap import m
 from flext_meltano import FlextMeltanoModels
-from flext_ldap import FlextLdapModels
 
 
-class FlextTargetLdapModels(FlextMeltanoModels, FlextLdapModels):
+class FlextTargetLdapModels(FlextMeltanoModels, m):
     class TargetLdap:
-        class MyModel(FlextMeltanoModels.ArbitraryTypesModel): ...
+        class MyModel(m.ArbitraryTypesModel): ...
 
 
 m = FlextTargetLdapModels
@@ -161,19 +162,17 @@ m = FlextTargetLdapModels
 
 ```python
 # ❌ WRONG — missing domain composition
+from flext_core import m
+from flext_meltano import FlextMeltanoModels
+
+
 class FlextTapLdifModels(FlextMeltanoModels):  # Where is FlextLdifModels?
     ...
 
 
 # ❌ WRONG — missing FlextMeltanoModels
-class FlextTargetOracleModels(FlextModels):  # loses m.Meltano.*
+class FlextTargetOracleModels(m):  # loses m.Meltano.*
     ...
-
-
-# ❌ WRONG — redefining Singer models locally
-class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
-    class Meltano:
-        class SingerSchemaMessage(BaseModel): ...  # Already in FlextMeltanoModels!
 ```
 
 ### Mandatory Alias Set for Integration Projects

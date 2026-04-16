@@ -544,7 +544,7 @@ Use Pydantic 2.11+ validators:
 \`\`\`python
 from pydantic import field_validator, model_validator, computed_field
 
-class User(BaseModel):
+class User(m.BaseModel):
 email: str
 
     @field_validator("email")
@@ -554,7 +554,7 @@ email: str
             raise ValueError("Invalid email")
         return v.lower()
 
-    @computed_field
+    @u.computed_field
     @property
     def domain(self) -> str:
         return self.email.split("@")[1]

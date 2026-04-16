@@ -66,7 +66,7 @@ class FlextPattern(m):
 - Use TypeAdapter for non-model types and dynamic/runtime payload validation.
 - Keep error messages stable enough for tests and operations.
 - Avoid repeating v1 migration anti-pattern content already documented in `lib-pydantic-v2`.
-- **Rule**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features to their fullest across ALL 33 projects (`src/`, `tests/`, `examples/`). Every class extends `BaseModel` (or FLEXT base models) via MRO. `Field()` for ALL declarations with `description`, `title`, `examples`, `json_schema_extra` documenting business rules — fields are self-documenting contracts. `SecretStr`/`SecretBytes` for secrets. `ConfigDict(...)` for settings — standalone `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). Minimize custom `@field_validator`/`@model_validator` — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`, `constr`, `conint`). FORBIDDEN in models: initialization helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@computed_field`, `model_post_init`, `PrivateAttr`). Enums/Mappings/Literals from `constants.py` (`c.*`), settings from `settings.py` (`s.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter`. Internal state via `PrivateAttr` — never bare `self._x`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for model definitions ONLY. Boolean/status fields use canonical names such as `success`, `failure`, `expired`, `healthy`, or `configured`. If not using a Pydantic v2 feature, REVIEW and USE it; if not needed, use a simpler base and USE it fully.
+- **Rule**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features to their fullest across ALL 33 projects (`src/`, `tests/`, `examples/`). Every class extends `BaseModel` (or FLEXT base models) via MRO. `Field()` for ALL declarations with `description`, `title`, `examples`, `json_schema_extra` documenting business rules — fields are self-documenting contracts. `SecretStr`/`SecretBytes` for secrets. `ConfigDict(...)` for settings — standalone `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). Minimize custom `@field_validator`/`@model_validator` — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`, `constr`, `conint`). FORBIDDEN in models: initialization helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@u.computed_field`, `model_post_init`, `PrivateAttr`). Enums/Mappings/Literals from `constants.py` (`c.*`), settings from `settings.py` (`s.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter`. Internal state via `PrivateAttr` — never bare `self._x`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for model definitions ONLY. Boolean/status fields use canonical names such as `success`, `failure`, `expired`, `healthy`, or `configured`. If not using a Pydantic v2 feature, REVIEW and USE it; if not needed, use a simpler base and USE it fully.
 - **Rule**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance from Pydantic v2 `BaseModel` (or FLEXT base models like `FlextModels.ArbitraryTypesModel`, `FlextModels.FrozenModel`). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
 - **Rule**: Compatibility wrappers, non-business validation fallbacks, legacy code of ANY kind, and compatibility aliases are FORBIDDEN. Legacy code is DELETED on contact.
 
@@ -77,7 +77,7 @@ class FlextPattern(m):
 
 Pattern families available in references:
 - **Validators**: `@field_validator`, `@model_validator`, reusable `Annotated` aliases with constraints
-- **Computed fields**: `@computed_field` with `cached_property` semantics and FLEXT examples
+- **Computed fields**: `@u.computed_field` with `cached_property` semantics and FLEXT examples
 - **Discriminated unions**: `Discriminator()` with Literal tags for polymorphic parsing
 - **Serializers**: `@field_serializer`, `@model_serializer`, `model_dump()` control
 - **Strict mode**: `model_config = ConfigDict(strict=True)` patterns
@@ -100,50 +100,57 @@ Pattern families available in references:
 ```python
 from __future__ import annotations
 
-from typing import Self
+from typing import Annotated, Self
 
-from flext_core import c, m, p, r, s, t
-from flext_pattern import FlextPatternValidateMixin
+from flext_core import c, m, p, r, t, u
 
 
-class FlextPattern(FlextPatternValidateMixin, s[t.Dict]):
-    """Single facade class per module with nested models and MRO-composed services."""
+class FlextExampleModels(m):
+    """Model facade — validators, computed fields, ConfigDict via c/m/u."""
 
-    class Domain:
-        class Window(m.BaseModel):
+    class Example:
+        class Window(m.Value):
             """Window with validation phases separated."""
 
-            model_config = m.ConfigDict(extra=c.EXTRA_FORBID)
-            start: int = m.Field(default=0, ge=0, description="Window start")
-            end: int = m.Field(default=0, ge=0, description="Window end")
-            label: t.NonEmptyStr = m.Field(..., description="Label")
+            model_config = m.ConfigDict(extra="forbid")
+            start: Annotated[
+                t.NonNegativeInt,
+                m.Field(
+                    default=0,
+                    description="Window start",
+                    validate_default=True,
+                ),
+            ]
+            end: Annotated[
+                t.NonNegativeInt,
+                m.Field(
+                    default=0,
+                    description="Window end",
+                    validate_default=True,
+                ),
+            ]
+            label: Annotated[t.NonEmptyStr, m.Field(description="Label")]
 
-            # Phase 1: Normalize input before type coercion
-            @m.field_validator("label", mode="before")
+            @u.field_validator("label", mode="before")
             @classmethod
             def normalize_label(cls, value: t.RuntimeData) -> str:
                 if not isinstance(value, str):
-                    raise TypeError("label must be str")
+                    msg = "label must be str"
+                    raise TypeError(msg)
                 return value.strip()
 
-            # Phase 2: Cross-field validation after all fields coerced
-            @m.model_validator(mode="after")
+            @u.model_validator(mode="after")
             def validate_window(self) -> Self:
                 if self.end < self.start:
-                    raise ValueError("end must be >= start")
+                    msg = "end must be >= start"
+                    raise ValueError(msg)
                 return self
 
-            # Computed property (immutable derivation)
-            @m.computed_field
-            @property
-            def width(self) -> int:
-                return self.end - self.start
 
-    @staticmethod
-    def run_validate() -> p.Result[int]:
-        service = FlextPattern()
-        window = FlextPattern.Domain.Window(start=1, end=4, label="ok")
-        return service.validate(window)
+def demo_window() -> p.Result[int]:
+    """Create a Window and compute width."""
+    w = FlextExampleModels.Example.Window(start=1, end=4, label="ok")
+    return r[int].ok(w.end - w.start)
 ```
 
 Why good:
@@ -156,17 +163,18 @@ Why good:
 ### Bad: Direct pydantic imports instead of via `m` facade
 
 ```python
-# ✗ WRONG — importing from pydantic directly
-from pydantic import BaseModel, field_validator, Field
+# ✗ WRONG — importing from pydantic directly (use flext_core c/m/u)
+# from pydantic import BaseModel, Field, field_validator  # BANNED
+from flext_core import m, u
 
 
-class Window(BaseModel):
-    start: int = Field(default=0)
-    end: int = Field(default=0)
+class Window(m.BaseModel):
+    start: int = 0
+    end: int = 0
 
-    @field_validator("start", mode="before")
+    @u.field_validator("start", mode="before")
     @classmethod
-    def mixed_logic(cls, value):
+    def mixed_logic(cls, value: str) -> int:
         return int(value)
 ```
 
@@ -180,13 +188,17 @@ Why bad:
 
 ```python
 # ✗ WRONG — validator with side effects and unrelated logic
-@m.field_validator("start", mode="before")
-@classmethod
-def mixed_logic(cls, value):
-    # Coercion + side effects + hidden invariant checks all in one
-    import logging
+from __future__ import annotations
 
-    logging.info(f"Validating {value}")  # Side effect!
+from flext_core import u
+
+
+@u.field_validator("start", mode="before")
+@classmethod
+def mixed_logic(cls, value: str) -> int:
+    # Coercion + side effects + hidden invariant checks all in one
+    logger = u.create_module_logger(__name__)
+    logger.info("validating", value=value)  # Side effect in validator!
     return int(value)
 ```
 
@@ -196,15 +208,18 @@ Good:
 
 ```python
 from typing import Annotated, Literal
-from pydantic import BaseModel, Discriminator
+
+from pydantic import Discriminator
+
+from flext_core import m
 
 
-class Ok(BaseModel):
+class Ok(m.BaseModel):
     kind: Literal["ok"] = "ok"
     value: int
 
 
-class Err(BaseModel):
+class Err(m.BaseModel):
     kind: Literal["err"] = "err"
     error: str
 

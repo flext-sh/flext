@@ -21,7 +21,7 @@ expected: `config_type` in service.py and mixins.py uses `type[p.Settings]`, not
 result: pass
 
 ### 3. Annotated Field Form
-expected: Zero `$NAME: $TYPE = Field(` pattern remaining in src/ (all migrated to `Annotated[T, Field(...)]`). Zero `Field(default=[])` or `Field(default={})` mutable defaults.
+expected: Zero `$NAME: $TYPE = m.Field(` pattern remaining in src/ (all migrated to `Annotated[T, m.Field(...)]`). Zero `Field(default=[])` or `Field(default={})` mutable defaults.
 result: pass
 
 ### 4. TypeAdapter Caching

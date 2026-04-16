@@ -17,10 +17,10 @@
 - [x] Import statement added: `from flext_core import t`
 - [x] LdapConnectionParams.host → t.NonEmptyStr
 - [x] LdapConnectionParams.base_dn → t.NonEmptyStr
-- [x] LdapConnectionParams.port → Annotated[t.PortNumber, Field(default=...)]
-- [x] LdapConnectionParams.timeout_seconds → Annotated[t.PositiveInt, Field(default=...)]
-- [x] LdapConnectionParams.page_size → Annotated[t.PositiveInt, Field(default=...)]
-- [x] LdapConnectionParams.max_retries → Annotated[t.RetryCount, Field(default=...)]
+- [x] LdapConnectionParams.port → Annotated[t.PortNumber, m.Field(default=...)]
+- [x] LdapConnectionParams.timeout_seconds → Annotated[t.PositiveInt, m.Field(default=...)]
+- [x] LdapConnectionParams.page_size → Annotated[t.PositiveInt, m.Field(default=...)]
+- [x] LdapConnectionParams.max_retries → Annotated[t.RetryCount, m.Field(default=...)]
 - [x] StreamCreationParams.stream_type → t.NonEmptyStr
 - [x] StreamCreationParams.connection_id → t.NonEmptyStr
 - [x] StreamCreationParams.search_filter → t.NonEmptyStr

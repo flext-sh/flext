@@ -53,9 +53,7 @@ description: Enforces import ordering, alias conventions, and abstraction bounda
 ```python
 from __future__ import annotations
 
-from typing import Annotated, ClassVar
-
-from pydantic import Field
+from typing import Annotated
 
 from flext_core import c, m, p, r, t
 
@@ -63,9 +61,7 @@ from flext_core import c, m, p, r, t
 class PayloadModel(m.Value):
     """Value object representing a named payload."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
-    name: Annotated[t.NonEmptyStr, Field(description="Payload name")]
+    name: Annotated[t.NonEmptyStr, m.Field(description="Payload name")]
 
 
 def parse_name(value: PayloadModel) -> p.Result[str]:

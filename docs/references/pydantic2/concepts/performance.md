@@ -216,6 +216,6 @@ except ValidationError as exc:
     """
 ```
 
-Read more about `FailFast` [here][pydantic.types.FailFast].
+Read more about `FailFast` here.
 
 [Discriminated Unions]: ../concepts/unions.md#discriminated-unions

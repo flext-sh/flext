@@ -42,7 +42,7 @@ created: 2026-03-24
 | 02-02-01 | 02 | 1 | ARCH-01 | structural | `sg --pattern ': FlextContext' --lang python` | ✅ | ⬜ pending |
 | 02-02-02 | 02 | 1 | ARCH-04 | structural | `sg --pattern 'class $A(ABC)' --lang python flext-core/src/` | ✅ | ⬜ pending |
 | 02-02-03 | 02 | 1 | ARCH-05 | structural | `grep -r "class.*ABC" flext-core/src/` | ✅ | ⬜ pending |
-| 02-03-01 | 03 | 2 | ARCH-03 | structural | `sg --pattern '$X: $T = Field($$$)' --lang python` | ✅ | ⬜ pending |
+| 02-03-01 | 03 | 2 | ARCH-03 | structural | `sg --pattern '$X: $T = m.Field($$$)' --lang python` | ✅ | ⬜ pending |
 | 02-03-02 | 03 | 2 | ARCH-06 | structural | `sg --pattern 'TypeAdapter($$$)' --lang python` | ✅ | ⬜ pending |
 | 02-03-03 | 03 | 2 | ARCH-07 | structural | `sg --pattern 'Field(default=[$$$])' --lang python` | ✅ | ⬜ pending |
 | 02-04-01 | 04 | 3 | ARCH-08 | structural | `grep -r 'TypeAlias' --include='*.py'` | ✅ | ⬜ pending |

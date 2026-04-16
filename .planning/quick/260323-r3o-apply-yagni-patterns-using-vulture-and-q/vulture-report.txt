@@ -7,7 +7,7 @@ Confidence: min 80%
 Scope: */src/ (all 34 projects)
 Excluded: *_pb2*, __pycache__, .venv, node_modules, migrations
 Ignored decorators: @app.route, @router.*, @handler, @field_validator, @model_validator,
-  @computed_field, @override, @abstractmethod, @property, @classmethod, @staticmethod,
+  @u.computed_field, @override, @abstractmethod, @property, @classmethod, @staticmethod,
   @pytest.fixture, @pytest.mark.*
 Ignored names: model_config, model_fields, __all__, __getattr__, _LAZY_IMPORTS, visit_*,
   test_*, setup_*, teardown_*, conftest, pytest_*

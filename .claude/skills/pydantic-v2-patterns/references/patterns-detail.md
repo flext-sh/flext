@@ -64,8 +64,8 @@ from collections.abc import Mapping
 from pydantic import BaseModel, Field, field_validator
 
 
-class Metadata(BaseModel):
-    attributes: t.RecursiveContainerMapping = Field(default_factory=dict)
+class Metadata(m.BaseModel):
+    attributes: t.RecursiveContainerMapping = m.Field(default_factory=dict)
 
     @field_validator("attributes", mode="before")
     @classmethod
@@ -98,8 +98,8 @@ Validate business semantics after Pydantic has typed the field.
 from pydantic import BaseModel, Field, field_validator
 
 
-class RetryConfiguration(BaseModel):
-    retry_on_status_codes: Sequence[int] = Field(default_factory=list)
+class RetryConfiguration(m.BaseModel):
+    retry_on_status_codes: Sequence[int] = m.Field(default_factory=list)
 
     @field_validator("retry_on_status_codes", mode="after")
     @classmethod
@@ -127,9 +127,9 @@ from typing import Self
 from pydantic import BaseModel, Field, model_validator
 
 
-class RetryWindow(BaseModel):
-    initial_delay_seconds: float = Field(gt=0)
-    max_delay_seconds: float = Field(gt=0)
+class RetryWindow(m.BaseModel):
+    initial_delay_seconds: float = m.Field(gt=0)
+    max_delay_seconds: float = m.Field(gt=0)
 
     @model_validator(mode="after")
     def validate_window(self) -> Self:
@@ -160,20 +160,20 @@ from datetime import UTC, datetime
 from pydantic import BaseModel, Field, computed_field
 
 
-class TimestampedModel(BaseModel):
-    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+class TimestampedModel(m.BaseModel):
+    created_at: datetime = m.Field(default_factory=lambda: datetime.now(UTC))
     updated_at: datetime | None = None
 
-    @computed_field
+    @u.computed_field
     def is_modified(self) -> bool:
         return self.updated_at is not None
 
-    @computed_field
+    @u.computed_field
     @property
     def age_seconds(self) -> float:
         return (datetime.now(UTC) - self.created_at).total_seconds()
 
-    @computed_field
+    @u.computed_field
     @property
     def is_recent(self) -> bool:
         return self.age_seconds <= 3600
@@ -191,19 +191,19 @@ Use multiple small computed fields to keep state reporting explicit.
 from pydantic import BaseModel, Field, computed_field
 
 
-class RegistrationSummary(BaseModel):
-    registered: t.StrSequence = Field(default_factory=list)
-    errors: t.StrSequence = Field(default_factory=list)
+class RegistrationSummary(m.BaseModel):
+    registered: t.StrSequence = m.Field(default_factory=list)
+    errors: t.StrSequence = m.Field(default_factory=list)
 
-    @computed_field
+    @u.computed_field
     def success(self) -> bool:
         return not self.errors
 
-    @computed_field
+    @u.computed_field
     def successful_registrations(self) -> int:
         return len(self.registered)
 
-    @computed_field
+    @u.computed_field
     def failed_registrations(self) -> int:
         return len(self.errors)
 ```
@@ -223,7 +223,7 @@ from pydantic import computed_field
 class ServiceRuntimeHolder:
     _runtime
 
-    @computed_field
+    @u.computed_field
     def runtime(self):
         return self._runtime
 ```
@@ -249,17 +249,17 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Discriminator
 
 
-class CommandMessage(BaseModel):
+class CommandMessage(m.BaseModel):
     message_type: Literal["command"] = "command"
     command_type: str
 
 
-class QueryMessage(BaseModel):
+class QueryMessage(m.BaseModel):
     message_type: Literal["query"] = "query"
     query_type: str
 
 
-class EventMessage(BaseModel):
+class EventMessage(m.BaseModel):
     message_type: Literal["event"] = "event"
     event_type: str
 
@@ -282,17 +282,17 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Discriminator
 
 
-class SuccessResult(BaseModel):
+class SuccessResult(m.BaseModel):
     result_type: Literal["success"] = "success"
     value
 
 
-class FailureResult(BaseModel):
+class FailureResult(m.BaseModel):
     result_type: Literal["failure"] = "failure"
     error: str
 
 
-class PartialResult(BaseModel):
+class PartialResult(m.BaseModel):
     result_type: Literal["partial"] = "partial"
     value
     warnings: t.StrSequence
@@ -325,7 +325,7 @@ from datetime import datetime
 from pydantic import BaseModel, field_serializer
 
 
-class AuditModel(BaseModel):
+class AuditModel(m.BaseModel):
     created_at: datetime
 
     @field_serializer("created_at", when_used="json")
@@ -345,7 +345,7 @@ from datetime import datetime
 from pydantic import BaseModel, field_serializer
 
 
-class TimestampPair(BaseModel):
+class TimestampPair(m.BaseModel):
     created_at: datetime | None
     updated_at: datetime | None
 
@@ -366,7 +366,7 @@ from pydantic import BaseModel, field_serializer
 from pydantic_core.core_schema import FieldSerializationInfo
 
 
-class EnvelopeModel(BaseModel):
+class EnvelopeModel(m.BaseModel):
     include_metadata: bool = True
 
     @field_serializer("*", when_used="json")
@@ -401,7 +401,7 @@ Guidance:
 from pydantic import BaseModel, ConfigDict
 
 
-class ContractModel(BaseModel):
+class ContractModel(m.BaseModel):
     model_config = ConfigDict(
         strict=True,
         validate_assignment=True,
@@ -438,7 +438,7 @@ def validate_runtime(
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_python(data)
-    except ValidationError as exc:
+    except c.ValidationError as exc:
         errors = "; ".join(f"{e['loc']}: {e['msg']}" for e in exc.errors())
         return False, f"Validation failed: {errors}"
 ```
@@ -479,7 +479,7 @@ def parse_json_runtime(
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_json(json_str)
-    except ValidationError as exc:
+    except c.ValidationError as exc:
         errors = "; ".join(f"{e['loc']}: {e['msg']}" for e in exc.errors())
         return False, f"JSON parsing failed: {errors}"
 ```

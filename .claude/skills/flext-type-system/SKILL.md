@@ -54,7 +54,7 @@ PEP 695 `type X = ...` creates `TypeAliasType`. In FLEXT, that syntax is canonic
 
 | Pattern | Status |
 |--------|--------|
-| `type X = str | int` in `typings.py` | ✅ canonical |
+| `type X = str \| int` in `typings.py` | ✅ canonical |
 | `isinstance(val, t.Scalar)` | ❌ forbidden |
 | `u.is_scalar(val)` | ✅ canonical |
 ## Cross-Project Namespace Inheritance (m, c, t, u, p)
@@ -80,11 +80,9 @@ m = FlextTargetOracleModels
 
 | Approach                                            | Problem                                                              |
 | --------------------------------------------------- | -------------------------------------------------------------------- |
-| `Meltano = FlextMeltanoModels.Meltano` (assignment) | mypy `name-defined` error with `from **future** import annotations
-
-from collections.abc import Mapping, Sequence` |
+| `Meltano = FlextMeltanoModels.Meltano` (assignment) | mypy `name-defined` error with `from __future__ import annotations` |
 | Per-type subclasses inside `class Meltano:` | Invariance errors: `Sequence[SubType]` ≠ `Sequence[ParentType]` |
-| `from flext_meltano import m`| Anti-pattern: duplicates namespace surface, adds unnecessary aliases |
+| `from flext_meltano import m` | Anti-pattern: duplicates namespace surface, adds unnecessary aliases |
 | Top-level inheritance (`class Models(Parent):`)     | ✅ Clean MRO, zero duplication, exact same types                     |
 
 **Anti-patterns (NEVER):**

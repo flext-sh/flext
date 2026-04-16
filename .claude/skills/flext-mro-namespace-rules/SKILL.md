@@ -76,9 +76,7 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 ```python
 from __future__ import annotations
 
-from typing import Annotated, ClassVar
-
-from pydantic import Field
+from typing import Annotated
 
 from flext_core import m, p, r, t
 
@@ -86,19 +84,17 @@ from flext_core import m, p, r, t
 class FlextTargetOracleModels(m):
     """Consumer facade: inherits flext_core m via MRO, adds one local namespace."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
     class TargetOracle:
         """One local namespace for project-specific domain models."""
 
         class ExecuteResult(m.ArbitraryTypesModel):
             """Result of an Oracle batch execute operation."""
 
-            _flext_enforcement_exempt: ClassVar[bool] = True
-
-            rows_affected: Annotated[int, Field(description="Number of rows modified")]
+            rows_affected: Annotated[
+                int, m.Field(description="Number of rows modified")
+            ]
             table_name: Annotated[
-                t.NonEmptyStr, Field(description="Target Oracle table")
+                t.NonEmptyStr, m.Field(description="Target Oracle table")
             ]
 
 
@@ -111,7 +107,7 @@ def execute_batch(table: str) -> p.Result[ExecuteResult]:
     return r[ExecuteResult].ok(result)
 ```
 
-Why good: 
+Why good:
 - **All Pydantic via `m`** — never `from pydantic import BaseModel, Field, ...`
 - **No policy sentinels in model examples** — focus stays on Pydantic contracts (`m.Field`, `m.ConfigDict`, validators)
 - **Organic nesting** — `m.TargetOracle.ExecuteResult`, not flattened

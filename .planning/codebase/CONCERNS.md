@@ -271,7 +271,7 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 # WRONG (from file)
 object.__setattr__(db_service, "db_config", db_config)
 
-# CORRECT: Use PrivateAttr() or Field() with defaults
+# CORRECT: Use PrivateAttr() or m.Field() with defaults
 ```
 
 **Impact:** Circumvents Pydantic validation; violates AGENTS.md §3.1

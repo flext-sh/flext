@@ -74,18 +74,16 @@ Good:
 ```python
 from __future__ import annotations
 
-from typing import Annotated, ClassVar
+from typing import Annotated
 
-from pydantic import Field
-
-from flext_core import m, p, r, s, t, u
+from flext_core import m, p, r, s, t
 
 
 class FlextDemoTracingMixin:
     """Tracing mixin stub for MRO composition."""
 
 
-class FlextDemo(FlextDemoTracingMixin, s[t.ScalarMapping]):  # type: ignore[misc]
+class FlextDemo(FlextDemoTracingMixin, s[t.ScalarMapping]):
     """Demo service facade — one class per module, MRO-composed."""
 
     class Demo:
@@ -94,9 +92,8 @@ class FlextDemo(FlextDemoTracingMixin, s[t.ScalarMapping]):  # type: ignore[misc
         class ParseRequest(m.ArbitraryTypesModel):
             """Request model for parse operation."""
 
-            _flext_enforcement_exempt: ClassVar[bool] = True
-            kind: Annotated[t.NonEmptyStr, Field(description="Operation kind")]
-            payload: Annotated[t.NonEmptyStr, Field(description="Raw payload")]
+            kind: Annotated[t.NonEmptyStr, m.Field(description="Operation kind")]
+            payload: Annotated[t.NonEmptyStr, m.Field(description="Raw payload")]
 
     @staticmethod
     def run_parse(payload: t.NonEmptyStr) -> p.Result[str]:
@@ -129,24 +126,21 @@ Good:
 ```python
 from __future__ import annotations
 
-from typing import Annotated, ClassVar, Literal
+from typing import Annotated, Literal, Self
 
-from pydantic import Field, model_validator
-from typing_extensions import Self
-
-from flext_core import m, p, r, s, t
+from flext_core import m, p, r, s, t, u
 
 
 class FlextDemoParseJsonMixin:
     """JSON parse mixin stub."""
 
-    def parse_json(self, request: object) -> p.Result[str]:
+    def parse_json(self, request: t.ValueOrModel) -> p.Result[str]:
         """Parse JSON from request payload."""
         _ = request
         return r[str].ok("parsed")
 
 
-class FlextDemoParse(FlextDemoParseJsonMixin, s[t.ScalarMapping]):  # type: ignore[misc]
+class FlextDemoParse(FlextDemoParseJsonMixin, s[t.ScalarMapping]):
     """Parse service — one public class per module, nested Pydantic model."""
 
     class Demo:
@@ -155,14 +149,13 @@ class FlextDemoParse(FlextDemoParseJsonMixin, s[t.ScalarMapping]):  # type: igno
         class ParseRequest(m.ArbitraryTypesModel):
             """Request model with discriminated kind field."""
 
-            _flext_enforcement_exempt: ClassVar[bool] = True
             kind: Annotated[
                 Literal["json", "yaml", "toml"],
-                Field(description="Serialization format"),
+                m.m.Field(description="Serialization format"),
             ]
-            payload: Annotated[t.NonEmptyStr, Field(description="Raw payload")]
+            payload: Annotated[t.NonEmptyStr, m.m.Field(description="Raw payload")]
 
-            @model_validator(mode="after")
+            @u.model_validator(mode="after")
             def _validate_payload(self) -> Self:
                 """Validate payload is non-empty for the given kind."""
                 if not self.payload:

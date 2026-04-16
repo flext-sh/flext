@@ -323,7 +323,7 @@ def validate_email(cls, v: str) -> str:
     return v.lower()
 
 
-@computed_field
+@u.computed_field
 @property
 def domain(self) -> str:
     return self.email.split("@")[1]

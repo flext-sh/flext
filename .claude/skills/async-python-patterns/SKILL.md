@@ -38,15 +38,12 @@ from __future__ import annotations
 
 import asyncio
 
-from pydantic import Field
-
 from flext_core import m, p, r, t
 
 
 class User(m.Value):
-    _flext_enforcement_exempt: bool = True
-    user_id: t.NonEmptyStr = Field(description="User identifier")
-    name: t.NonEmptyStr = Field(description="User display name")
+    user_id: t.NonEmptyStr = m.Field(description="User identifier")
+    name: t.NonEmptyStr = m.Field(description="User display name")
 
 
 async def _db_get_user(user_id: str) -> User:
@@ -70,15 +67,12 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Sequence
 
-from pydantic import Field
-
 from flext_core import m, p, r, t
 
 
 class User(m.Value):
-    _flext_enforcement_exempt: bool = True
-    user_id: t.NonEmptyStr = Field(description="User identifier")
-    name: t.NonEmptyStr = Field(description="User display name")
+    user_id: t.NonEmptyStr = m.Field(description="User identifier")
+    name: t.NonEmptyStr = m.Field(description="User display name")
 
 
 async def fetch_user(user_id: str) -> p.Result[User]:
@@ -91,7 +85,7 @@ async def fetch_all_users(ids: t.StrSequence) -> p.Result[Sequence[User]]:
     results = await asyncio.gather(*tasks, return_exceptions=True)
     users: list[User] = []
     for res in results:
-        if isinstance(res, Exception):
+        if isinstance(res, BaseException):
             return r[Sequence[User]].fail(str(res))
         if res.success:
             users.append(res.value)
@@ -112,18 +106,18 @@ from flext_core import p, r
 _semaphore = asyncio.Semaphore(10)
 
 
-async def rate_limited_call(url: str) -> p.Result[dict]:  # type: ignore[type-arg]
+async def rate_limited_call(url: str) -> p.Result[dict]:
     async with _semaphore:
         try:
             loop = asyncio.get_running_loop()
             data_bytes = await loop.run_in_executor(
                 None,
-                lambda: urllib.request.urlopen(url).read(),  # noqa: S310
+                lambda: urllib.request.urlopen(url).read(),
             )
-            data: dict = json.loads(data_bytes)  # type: ignore[type-arg]
-            return r[dict].ok(data)  # type: ignore[type-arg]
+            data: dict = json.loads(data_bytes)
+            return r[dict].ok(data)
         except Exception as e:
-            return r[dict].fail(str(e))  # type: ignore[type-arg]
+            return r[dict].fail(str(e))
 ```
 
 ### Async Context Manager
@@ -193,19 +187,16 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Awaitable
-from typing import TypeVar
 
 from flext_core import p, r
 
-_T = TypeVar("_T")
 
-
-async def with_timeout(coro: Awaitable[_T], seconds: float) -> p.Result[_T]:
+async def with_timeout[T](coro: Awaitable[T], seconds: float) -> p.Result[T]:
     try:
         result = await asyncio.wait_for(coro, timeout=seconds)
-        return r[_T].ok(result)
-    except asyncio.TimeoutError:
-        return r[_T].fail(f"operation timed out after {seconds}s")
+        return r[T].ok(result)
+    except TimeoutError:
+        return r[T].fail(f"operation timed out after {seconds}s")
 ```
 
 ## Workflow
@@ -225,7 +216,6 @@ Good:
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Sequence
 
 from flext_core import p, r, t
 
@@ -249,7 +239,6 @@ Bad:
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Sequence
 
 from flext_core import p, r, t
 

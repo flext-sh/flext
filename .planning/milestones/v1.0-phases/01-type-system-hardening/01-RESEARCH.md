@@ -203,8 +203,8 @@ fix: not isinstance($X, ($$$Y))
 |---------|-------------|-------------|-----|
 | Type narrowing for primitives | custom isinstance combinations | `u.Guards.is_primitive()` / `u.Guards.is_scalar()` | 56 TypeGuard functions already exist |
 | Runtime type tuple for isinstance | `(str, int, float, bool)` inline | `t.PRIMITIVES_TYPES`, `t.SCALAR_TYPES`, `t.CONTAINER_TYPES` | Centralized, correct, consistent |
-| JSON serialization | `json.dumps(obj)` | `obj.model_dump_json()` / `TypeAdapter[T].dump_json()` | Pydantic v2 standard; eliminates `default=str` workarounds |
-| JSON deserialization | `json.loads(str)` | `Model.model_validate_json(str)` / `TypeAdapter[T].validate_json(str)` | Validated + typed |
+| JSON serialization | `json.dumps(obj)` | `obj.model_dump_json()` / `m.TypeAdapter[T].dump_json()` | Pydantic v2 standard; eliminates `default=str` workarounds |
+| JSON deserialization | `json.loads(str)` | `Model.model_validate_json(str)` / `m.TypeAdapter[T].validate_json(str)` | Validated + typed |
 | Structural code search | regex grep | `sg --pattern` (ast-grep) | AST-level accuracy; handles nested expressions |
 | New recursive type alias | inline union | `t.RecursiveValue` (already created) | Already exists in `_typings/core.py` |
 | Logger factory typing | `Callable[[], Any]` | `t.LoggerFactory` (already created) | Already exists in `_typings/services.py` |

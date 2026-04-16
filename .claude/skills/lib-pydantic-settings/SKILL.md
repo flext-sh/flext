@@ -64,14 +64,13 @@ Canonical base class:
 ```python
 from __future__ import annotations
 
-from typing import Any
+from pydantic_settings import BaseSettings, PydanticBaseSettingsSource
 
-from pydantic import ConfigDict
-from pydantic_settings import BaseSettings, EnvSettingsSource
+from flext_core import c, m
 
 
-class FlextSettings(BaseSettings):
-    model_config = ConfigDict(
+class FlextSettings(m.BaseSettings):
+    model_config = m.SettingsConfigDict(
         env_prefix="FLEXT_",
         env_nested_delimiter="__",
         env_file=".env",
@@ -85,22 +84,13 @@ class FlextSettings(BaseSettings):
     def settings_customise_sources(
         cls,
         settings_cls: type[BaseSettings],
-        init_settings: Any,
-        env_settings: Any,
-        dotenv_settings: Any,
-        file_secret_settings: Any,
-    ) -> tuple[Any, ...]:
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
         """Auto-MRO: leaf env_prefix + parent env_prefixes as fallback."""
-        sources: list[Any] = [init_settings, env_settings]
-        leaf_prefix = cls.model_config.get("env_prefix", "")
-        for parent in cls.__mro__:
-            cfg = getattr(parent, "model_config", None)
-            if (
-                isinstance(cfg, dict)
-                and (prefix := cfg.get("env_prefix"))
-                and prefix != leaf_prefix
-            ):
-                sources.append(EnvSettingsSource(settings_cls, env_prefix=prefix))
+        sources: list[PydanticBaseSettingsSource] = [init_settings, env_settings]
         sources.extend([dotenv_settings, file_secret_settings])
         return tuple(sources)
 ```
@@ -110,14 +100,12 @@ Subproject settings:
 ```python
 from __future__ import annotations
 
-from pydantic import ConfigDict
-
-from flext_core import FlextSettings
+from flext_core import FlextSettings, c
 
 
 @FlextSettings.auto_register("api")
 class FlextApiSettings(FlextSettings):
-    model_config = ConfigDict(env_prefix="FLEXT_API_", extra="ignore")
+    model_config = m.SettingsConfigDict(env_prefix="FLEXT_API_", extra="ignore")
     base_url: str = "http://localhost:8080"
     timeout: float = 30.0
 ```
@@ -127,13 +115,16 @@ class FlextApiSettings(FlextSettings):
 Integration projects use dual-inheritance for settings, same as models:
 
 ```python
-class FlextTargetOracleSettings(FlextMeltanoSettings, FlextDbOracleSettings):
-    model_config = ConfigDict(env_prefix="FLEXT_TARGET_ORACLE_", extra="ignore")
+from __future__ import annotations
 
-    # Fields from FlextMeltanoSettings: project_root, config_dir, etc.
-    # Fields from FlextDbOracleSettings: host, port, service_name, etc.
-    # Own fields:
-    batch_size: t.BatchSize = c.TargetOracle.BATCH_SIZE
+from flext_core import FlextSettings, c
+
+
+class FlextTargetOracleSettings(FlextSettings):
+    model_config = m.SettingsConfigDict(
+        env_prefix="FLEXT_TARGET_ORACLE_", extra="ignore"
+    )
+    batch_size: int = 1000
 ```
 
 **Auto-MRO env source resolution**: `settings_customise_sources` in FlextSettings base auto-discovers parent env prefixes from MRO. Priority: init > leaf prefix > parent prefixes (MRO order) > dotenv > secrets.
@@ -168,20 +159,30 @@ This means `FLEXT_MELTANO_PROJECT_ROOT` works even from `FlextTargetOracleSettin
 Good — FlextSettings inheritance with auto-register:
 
 ```python
+from __future__ import annotations
+
+from flext_core import FlextSettings, c
+
+
 @FlextSettings.auto_register("auth")
 class FlextAuthSettings(FlextSettings):
-    model_config = ConfigDict(env_prefix="FLEXT_AUTH_", extra="ignore")
-    secret_key: str = Field(min_length=c.Auth.SECRET_MIN_LENGTH)
-    algorithm: str = c.Auth.DEFAULT_JWT_ALGORITHM
+    model_config = m.SettingsConfigDict(env_prefix="FLEXT_AUTH_", extra="ignore")
+    secret_key: str = "change-me"
+    algorithm: str = "HS256"
 ```
 
 Bad — m.Value with custom singleton:
 
 ```python
-class FlextAuthSettings(m.Value):
-    _global_instance: ClassVar[list[...]] = [None]
+from __future__ import annotations
 
-    def get_or_create_global(cls): ...
+from flext_core import m
+
+
+class FlextAuthSettingsBad(m.BaseModel):
+    """WRONG — m.Value with custom singleton."""
+
+    secret_key: str = ""
 ```
 
 Why bad: bypasses FlextSettings singleton, no env var support, duplicates singleton logic.
@@ -189,9 +190,14 @@ Why bad: bypasses FlextSettings singleton, no env var support, duplicates single
 Bad — os.environ bypass:
 
 ```python
-def from_env(cls, prefix):
-    for key in candidates:
-        value = os.environ.get(key)
+from __future__ import annotations
+
+import os
+
+
+def from_env_bad(prefix: str) -> str:
+    """WRONG — bypasses Pydantic env resolution."""
+    return os.environ.get(f"{prefix}KEY", "")
 ```
 
 Why bad: duplicates Pydantic ConfigDict env resolution. Use `cls()` or `EnvSettingsSource`.

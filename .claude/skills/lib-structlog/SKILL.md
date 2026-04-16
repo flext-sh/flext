@@ -52,11 +52,7 @@ description: FlextLogger structured logging with context propagation, DI factori
 from flext_core import u
 
 # One-time setup — MUST be called before any logging
-u.configure_structlog(
-    level="INFO",
-    json_output=True,
-    processors=[...],  # optional custom processors
-)
+u.configure_structlog(log_level=20, console_renderer=True)
 ```
 
 Internal lazy fallback: `u.ensure_structlog_configured()` is called by `create_module_logger` if not yet configured, but explicit bootstrap is strongly preferred.
@@ -64,51 +60,46 @@ Internal lazy fallback: `u.ensure_structlog_configured()` is called by `create_m
 ### Logger Creation Patterns
 
 ```python
+from flext_core import u
+
 # Module-level logger (most common)
-logger = FlextLogger.create_module_logger(__name__)
+logger = u.create_module_logger(__name__)
 
-# Container-scoped logger (DI integration)
-logger = FlextLogger.for_container(container, level="DEBUG", correlation_id="abc-123")
-
-# Static bridge to u.get_logger
-logger = FlextLogger.get_logger("my_service")
+# Named logger (alternative)
+logger2 = u.create_module_logger("my_service")
 ```
 
 ### Context Binding
 
 ```python
+from flext_core import u
+
 # Global context (persists across all log entries)
-FlextLogger.Context.bind_global_context(request_id="req-123", tenant="acme")
-FlextLogger.Context.clear_global_context()
-FlextLogger.Context.unbind_global_context("request_id")
+u.bind_global_context(request_id="req-123", tenant="acme")
+u.clear_global_context()
+u.unbind_global_context("request_id")
 
 # Level-based context (only for specific log levels)
-FlextLogger.Context.bind_context_for_level("DEBUG", trace_id="xyz")
-FlextLogger.Context.unbind_context_for_level("DEBUG", "trace_id")
+u.bind_context_for_level("DEBUG", trace_id="xyz")
 
-# Scoped context (context manager — auto-cleanup)
-with FlextLogger.Context.scoped_context(operation="user_sync"):
-    logger.info("processing")  # includes operation="user_sync"
-# operation key is automatically removed here
+# Scoped context (bind to named scope, clear when done)
+u.bind_context("request", operation="user_sync")
+u.clear_scope("request")
 ```
 
 ### ClassVar State
 
-```python
-_scoped_contexts: ClassVar[
-    Mapping[str, t.RecursiveContainerMapping]
-]  # {scope: {key: value}}
-_level_contexts: ClassVar[
-    Mapping[str, t.RecursiveContainerMapping]
-]  # {level: {key: value}}
-```
+Internal to `FlextLogger` (accessed via `u` MRO):
+
+- `_scoped_contexts: ClassVar[t.ScopedContainerRegistry]` — `{scope: {key: value}}`
+- `_level_contexts: ClassVar[t.ScopedContainerRegistry]` — `{level: {key: value}}`
 
 ### u Structlog Integration
 
 In `runtime.py`, the `u` class provides:
 
 - `u.structlog()` — returns the structlog module
-- `u.get_logger(name)` — creates a bound logger
+- `u.create_module_logger(name)` — creates a bound logger
 - `u.configure_structlog(...)` — sets up processor chain (TimeStamper, level filter, context merge, JSONRenderer)
 - `u.ensure_structlog_configured()` — lazy one-time init
 - `u.is_structlog_configured()` — check settings state
@@ -132,25 +123,32 @@ Telemetry integration methods:
 ### Good: Module logger with scoped context
 
 ```python
-logger = FlextLogger.create_module_logger(__name__)
+from __future__ import annotations
+
+import asyncio
+
+from flext_core import p, r, u
+
+logger = u.create_module_logger(__name__)
 
 
-async def handle_request(request_id: str):
-    with FlextLogger.Context.scoped_context(request_id=request_id):
-        logger.info("request_started")
-        result = process(request_id)
-        logger.info("request_completed", success=result.is_success)
-    # request_id context is auto-cleaned here
+async def handle_request(request_id: str) -> p.Result[str]:
+    """Handle request with scoped context."""
+    u.bind_context("request", request_id=request_id)
+    logger.info("request_started")
+    await asyncio.sleep(0)
+    logger.info("request_completed")
+    u.clear_scope("request")
+    return r[str].ok(request_id)
 ```
 
 ### Good: Container-scoped logger for DI
 
 ```python
-logger = FlextLogger.for_container(
-    container,
-    level="DEBUG",
-    service_name="auth",
-)
+from flext_core import FlextContainer, u
+
+container = FlextContainer()
+logger = u.for_container(container, service_name="auth")
 logger.info("service_initialized")
 ```
 
@@ -168,9 +166,15 @@ logger = structlog.get_logger("my_module")
 ### Bad: Configuring structlog at logger creation
 
 ```python
-# ✗ WRONG — configuration belongs in bootstrap only
-def get_logger():
-    structlog.configure(processors=[...])  # DON'T do this
+from __future__ import annotations
+
+import structlog
+
+
+# WRONG — configuration belongs in bootstrap only
+def get_logger_bad() -> structlog.stdlib.BoundLogger:
+    """Anti-pattern: configuring structlog at logger creation."""
+    structlog.configure(processors=[])
     return structlog.get_logger()
 ```
 
@@ -179,13 +183,14 @@ def get_logger():
 ### Bad: Forgetting to clean up scoped context
 
 ```python
-# ✗ WRONG — context leaks to subsequent requests
-FlextLogger.Context.bind_global_context(user_id="123")
-process_request()
+from flext_core import u
+
+# WRONG — context leaks to subsequent requests
+u.bind_global_context(user_id="123")
 # forgot to unbind → user_id appears in all subsequent logs
 ```
 
-**Why bad**: Context leakage causes misleading log entries. Use `scoped_context()` or explicitly `unbind_global_context()`.
+**Why bad**: Context leakage causes misleading log entries. Use `u.bind_context(scope, ...)` + `u.clear_scope(scope)` or explicitly `u.unbind_global_context()`.
 
 ## Verification
 

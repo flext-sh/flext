@@ -104,7 +104,7 @@ assert ta.json_schema(mode="serialization") == {"type": "string"}
 
 #### Generics
 
-[Type variables][typing.TypeVar] can be used within the [`Annotated`][typing.Annotated] type:
+Type variables can be used within the [`Annotated`][typing.Annotated] type:
 
 ```python
 from typing import Annotated, TypeVar
@@ -295,7 +295,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
     wouldn't be able to have the alias stored as a JSON Schema definition.
 
 !!! note
-As with implicit type aliases, [type variables][typing.TypeVar] can also be used inside the generic alias:
+As with implicit type aliases, type variables can also be used inside the generic alias:
 
     === "Python 3.9 and above"
 

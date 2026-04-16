@@ -201,7 +201,7 @@ refactor(flext-plugin): fix ARG002 and add missing docstrings
 
    ```python
    class FlextLdifModels:
-       class Base(BaseModel):
+       class Base(m.BaseModel):
            model_config = ConfigDict(...)
 
        class Entry(FlextLdifModels.Base):
@@ -770,7 +770,7 @@ refactor(flext-dbt-oracle-wms): update imports to use hierarchical models
 
    ```python
    class FlextCliModels:
-       class Base(BaseModel):
+       class Base(m.BaseModel):
            model_config = ConfigDict(...)
 
        class Command(FlextCliModels.Base):
@@ -831,7 +831,7 @@ refactor(flext-cli): update imports to use hierarchical models
 
    ```python
    class FlextWebModels:
-       class Base(BaseModel):
+       class Base(m.BaseModel):
            model_config = ConfigDict(...)
 
        class Request(FlextWebModels.Base):

@@ -91,7 +91,7 @@ of the decorator can be set to `True`.
 ## Function signatures
 
 The [`validate_call()`][pydantic.validate_call] decorator is designed to work with functions
-using all possible [parameter configurations][parameter] and all possible combinations of these:
+using all possible parameter configurations and all possible combinations of these:
 
 - Positional or keyword parameters with or without defaults.
 - Keyword-only parameters: parameters after `*,`.
