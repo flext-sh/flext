@@ -1,0 +1,332 @@
+.claude/skills/flext-architecture-layers/SKILL.md
+  0a878efeda78eae7 68,76,78,86-87,148,152,154,165-168,174
+.claude/skills/lib-structlog/SKILL.md
+  0a878efeda78eae7 55,63,65-66,68-69,75-76,78-80,83,85-87,92-95,102,126-128,130,132-142,148-151,169-177,186-189,193
+docs/references/pydantic2/errors/validation_errors.md
+  740b48984d352c6d 876
+.claude/skills/scripts-infra/validate_gate_contract.py
+  0a878efeda78eae7 13,15,65,70-78,81,86-89
+  740b48984d352c6d 17
+docs/references/pydantic2/concepts/serialization.md
+  740b48984d352c6d 73,156-157,269
+.claude/skills/lib-dependency-injector/SKILL.md
+  0a878efeda78eae7 54,69,80,137-138,141,160,174
+.planning/specs/2026-04-15-skill-validation-design.md
+  0a878efeda78eae7 124-125,131-132,179-180,218-220
+.planning/milestones/v1.0-ROADMAP.md
+  0a878efeda78eae7 52,60
+docs/planning/MIGRATION_SUMMARY.md
+  0a878efeda78eae7 326
+.planning/codebase/CONCERNS.md
+  0a878efeda78eae7 274
+.planning/milestones/v1.0-phases/02-architecture-solid/02-VALIDATION.md
+  0a878efeda78eae7 45
+.planning/milestones/v1.0-phases/02-architecture-solid/02-03-SUMMARY.md
+  0a878efeda78eae7 11-13,19,38-39,43,52,54,65-66,72-73,76,82-84,92-93
+.planning/codebase/TESTING.md
+  0a878efeda78eae7 84
+examples/acl_processing_example.py
+  0a878efeda78eae7 24,26,28,86,91-95,97,102-104,108,112-117,280
+.claude/skills/lib-pyyaml/SKILL.md
+  0a878efeda78eae7 71,77-78,82,87,90-92,95-97,100-102,106,111,114-119,121-126,169,171
+.claude/skills/flext-mro-namespace-rules/SKILL.md
+  0a878efeda78eae7 79,93-95,97,110
+.planning/milestones/v1.0-phases/02-architecture-solid/02-04-SUMMARY.md
+  0a878efeda78eae7 9,16,47-48
+docs/planning/phases7_9_completion.md
+  0a878efeda78eae7 547,557
+AGENTS.md
+  0a878efeda78eae7 154,189,246
+docs/architecture/flext-service-architecture.md
+  0a878efeda78eae7 229,676,678-679,882,916,1302-1303,1305-1307,1310,1315,1326,1816-1818,1986,2144,2815-2817,3495-3496,3499-3502,3505-3506,3513,3519,3525,3562-3564,3584,3757-3759,3765,3780-3781,3790,3863,3880,3886,3889-3891,3894,3900,3906,3909-3910,3913,3916,3918,3921-3922,3948,3952-3955,3958,3967-3970,3973,3978,4001,4012,4017-4018,4112,4129,4146,4157,4186,4199,4210,4232,4234,4240,4246,4267,4282-4284,4938,5135,5199,5226,5279,5453,5519-5520,5592-5594,5597,5601,6328,6331,6335,6338,6648,6651,6654,6658,6663,6667,7021,7468-7469,7472-7473,7807,7810,7814,7925,8167,8299,8324,8326,8328,8332,8334,8336,8339,8341,8343,8345,8347,8443,8523,8527,8536-8538,8550,8554,8558-8559,8987,8991,9081,9089,9102
+.claude/skills/flext-refactoring-workflow/SKILL.md
+  0a878efeda78eae7 100,197,199-200,202,205-208,211-214,266-275,360-361
+.claude/skills/rules-src/SKILL.md
+  0a878efeda78eae7 59-68,76-80,83-84,86-92,95,100-101,106,108,111,116-124,127
+.claude/skills/flext-patterns/SKILL.md
+  0a878efeda78eae7 45,50,72,80-81,112,195,209,317-318,320-321,323-324,326,343,345,351-352,354,364,366,369,372,395-399,402,404,426
+docs/references/pydantic2/concepts/json_schema.md
+  740b48984d352c6d 198-199,559
+examples/complete_workflow_example.py
+  0a878efeda78eae7 31,33,36,53,60,107,112-115,124,131,136,141-149,153,157,162,167-172,175,180,185-190,192,196-197
+.planning/EXECUTION-SUMMARY.md
+  0a878efeda78eae7 35-40,43-45,48-50,53-57
+docs/planning/phase1_detailed_plan.md
+  0a878efeda78eae7 229,245-246,252-253,262-263,268-269
+.markdownlint.json
+  740b48984d352c6d 81
+docs/superpowers/plans/2026-04-03-constant-consolidation.md
+  0a878efeda78eae7 24-27,212,216
+.planning/COMPLETION_REPORT.md
+  0a878efeda78eae7 96-99,105-107
+.planning/milestones/v1.0-phases/07-modernization-integration-fixes/07-01-PLAN.md
+  0a878efeda78eae7 78,89
+.planning/quick/260323-r3o-apply-yagni-patterns-using-vulture-and-q/260323-r3o-PLAN.md
+  0a878efeda78eae7 64,173
+.claude/skills/pydantic-v2-patterns/SKILL.md
+  0a878efeda78eae7 69,80,103,105,108-109,111-112,115-132,134,138-139,142,145-146,149-153,166-168,171-173,175,177,191-196,198,200-201,211-214,217,222
+docs/standards/docstrings/PEP257-GOOGLE-RUFF.md
+  0a878efeda78eae7 111-112
+.planning/TAP_VALIDATION_REFACTOR_COMPLETE.md
+  0a878efeda78eae7 31-32,50,53,71-72,98,101,104,107,140,148,154-155,190
+docs/references/pydantic2/concepts/json.md
+  740b48984d352c6d 16,69,112,197,202
+docs/references/pydantic2/concepts/dataclasses.md
+  740b48984d352c6d 17
+.claude/skills/rules-examples/SKILL.md
+  0a878efeda78eae7 55-65,68,73-74,76-81
+docs/references/pydantic2/concepts/validation_decorator.md
+  740b48984d352c6d 94
+examples/advanced_processing_example.py
+  0a878efeda78eae7 27,29,31,44,52,60,62,86,91-96,100,105,110-112,116,120-127
+docs/superpowers/plans/2026-04-03-flext-cli-pep695-result-dsl.md
+  0a878efeda78eae7 193,303
+docs/references/pydantic2/concepts/validators.md
+  740b48984d352c6d 58,592-593
+docs/references/pydantic2/errors/usage_errors.md
+  740b48984d352c6d 465,805,1377
+.planning/milestones/v1.0-phases/08-workaround-residual-cleanup/08-02-PLAN.md
+  0a878efeda78eae7 75
+docs/references/pydantic2/internals/resolving_annotations.md
+  0a878efeda78eae7 43,102,168,195,229,245
+  740b48984d352c6d 12,128,152,155
+.claude/skills/flext-type-system/SKILL.md
+  0a878efeda78eae7 57,83,85
+docs/references/pydantic2/integrations/visual_studio_code.md
+  0a878efeda78eae7 116,122,150,175,203,230,243,267-269
+  740b48984d352c6d 222,289
+.planning/tap-refactor-examples.md
+  0a878efeda78eae7 10-11,26,28,30,36,38,40,48,54,62-64,80-82,97-103
+.claude/skills/flext-development-workflow/SKILL.md
+  0a878efeda78eae7 321-325,327,331,340-341
+.planning/tap-validation-refactor-SUMMARY.md
+  0a878efeda78eae7 31-36,39-41,44-46,49-53
+.planning/milestones/v1.0-phases/02-architecture-solid/02-CONTEXT.md
+  0a878efeda78eae7 9,22,28,30,47,59,102
+.claude/skills/scripts-infra/validate_artifact_naming.py
+  0a878efeda78eae7 15,17,38,43-46
+.planning/milestones/v1.0-phases/04-python313-modernization/04-03-PLAN.md
+  0a878efeda78eae7 130
+.planning/milestones/v1.0-phases/02-architecture-solid/02-RESEARCH.md
+  0a878efeda78eae7 4,9,11,20,24,33,50,53,92,98-100,103-105,108,154,175,184,192,209-211,213,229,236-237,274,297,305
+.planning/FLEXT-TAP-LDAP-CONVERSION-DETAILS.md
+  0a878efeda78eae7 27,39,51,54,65,70,80,83,92,95,108,120,132,148,160,172,188,200,212,224,236,279
+docs/planning/phases2_6_parallel_tracks.md
+  0a878efeda78eae7 204,773,834
+docs/references/pydantic2/concepts/fields.md
+  740b48984d352c6d 45
+docs/references/pydantic2/concepts/models.md
+  740b48984d352c6d 40,106,148,775,869,1535
+docs/references/pydantic2/concepts/types.md
+  740b48984d352c6d 107,298
+.planning/milestones/v1.0-phases/03-infrastructure-centralization/03-01-PLAN.md
+  0a878efeda78eae7 111
+docs/references/pydantic2/concepts/config.md
+  740b48984d352c6d 111
+.claude/skills/lib-returns/SKILL.md
+  0a878efeda78eae7 41,43,107-109,115,117-119,136,138,140-157,163-169,171-173,179-183,185-186,193-203,211-219,227-234
+.planning/TAP-REFACTOR-VERIFICATION.md
+  0a878efeda78eae7 20-23
+.claude/skills/pydantic-v2-governance/SKILL.md
+  0a878efeda78eae7 39,53,57,80,82-89,92-104,107,112-114,118-120,122-124
+.planning/MILESTONES.md
+  0a878efeda78eae7 16
+.planning/milestones/v1.0-phases/02-architecture-solid/02-DISCUSSION-LOG.md
+  0a878efeda78eae7 30-31
+docs/references/pydantic2/internals/architecture.md
+  0a878efeda78eae7 77-78,98-99,216
+  740b48984d352c6d 132
+.planning/milestones/v1.0-phases/02-architecture-solid/02-UAT.md
+  0a878efeda78eae7 24
+.planning/TARGET_TYPES_QUICK_REFERENCE.md
+  0a878efeda78eae7 40-44,53-57,73
+.claude/skills/flext-agent-strict-rules/SKILL.md
+  0a878efeda78eae7 77,79,86,95-96,129,131,137,143,154,156,158
+.claude/skills/lib-pydantic-v2/SKILL.md
+  0a878efeda78eae7 28-30,32,35-37,44,47-51,55-56,58-62,66,69-72,75,78-83,87-88,90,92-93,95-98,100-104,107,110-114,118-119,121,123-135,142,145-149,153-154,156-157,159-162,175-179,181,185,190-193,197-198,200,203-204,206,213,216-217,222-243,264,267,269-275,278-282,284,288-293,296,300,303,305,307-316,319,321,323-324,326,328,331-332,334,337-342,348-356,364-378,381,388-390,393-394,396,399
+.planning/milestones/v1.0-phases/02-architecture-solid/02-03-PLAN.md
+  0a878efeda78eae7 20,22-23,26,29,35,38,58,70,73,76-77,84-85,88,109,113,119,123,127,131-132,151,163-164
+examples/_models.py
+  0a878efeda78eae7 16,19,26,29
+.planning/STATE.md
+  0a878efeda78eae7 107
+.planning/milestones/v1.0-REQUIREMENTS.md
+  0a878efeda78eae7 27
+.claude/skills/rules-flext-core/SKILL.md
+  0a878efeda78eae7 34,71-76,86,89,92,107,119-120
+docs/superpowers/plans/2026-04-06-pipeline-dag-audit.md
+  0a878efeda78eae7 333,337,343-345,358,362,366,370,374,385,388,392,396,400,410-412,416,1248-1249,1251
+.planning/quick/260323-r3o-apply-yagni-patterns-using-vulture-and-q/vulture-report.txt
+  0a878efeda78eae7 10
+.claude/skills/flext-import-rules/SKILL.md
+  0a878efeda78eae7 56,64
+docs/planning/pydantic2_migration_roadmap.md
+  0a878efeda78eae7 118,132-134,140-141,143,181,198,211,213,216,218,223,225
+.claude/skills/scripts-infra/validate_ownership.py
+  0a878efeda78eae7 14,16,18,49,54-62
+.github/scripts/check-cqrs-compliance.sh
+  0a878efeda78eae7 72,74,78,80,114,116,128-129,132
+.planning/milestones/v1.0-phases/02-architecture-solid/02-04-PLAN.md
+  0a878efeda78eae7 27,80,100
+.claude/skills/pydantic-v2-patterns/references/patterns-detail.md
+  0a878efeda78eae7 67-68,101-102,130-132,163-164,167,171,176,194-196,198,202,206,226,252,257,262,285,290,295,328,348,369,404,441,482
+.planning/milestones/v1.0-phases/07-modernization-integration-fixes/07-RESEARCH.md
+  0a878efeda78eae7 76
+docs/references/pydantic2/concepts/performance.md
+  740b48984d352c6d 219
+.claude/skills/testing-patterns/SKILL.md
+  0a878efeda78eae7 36,47,55-56,107-110,113,124,134-135,179,188,237,245-246
+.planning/milestones/v1.0-phases/01-type-system-hardening/01-RESEARCH.md
+  0a878efeda78eae7 206-207
+.planning/PROJECT.md
+  0a878efeda78eae7 28
+.planning/milestones/v1.0-phases/04-python313-modernization/04-03-SUMMARY.md
+  0a878efeda78eae7 42
+docs/architecture/flext-cqrs-architecture.md
+  0a878efeda78eae7 607
+.claude/skills/async-python-patterns/SKILL.md
+  0a878efeda78eae7 45-46,74-75,88,109,115,117-118,120,194,197-199
+.claude/skills/skill-format-universal/SKILL.md
+  740b48984d352c6d 29
+.claude/skills/pydantic-v2-governance/references/governance-patterns.md
+  0a878efeda78eae7 3,5,14,23,38,45,62-65,74-75,82-83,101-103,105,108,110-118,120,123,126,128-130,132,134-144,146,149,153,174,178,333,346-347,364,373,396,503,506,511-512,515,518-520,523-525
+.planning/REQUIREMENTS.md
+  0a878efeda78eae7 24
+.planning/phases/10-unified-docs-generation-baseline/10-04-PLAN.md
+  0a878efeda78eae7 73-75
+.claude/skills/flext-strict-typing/references/type-rules-detail.md
+  0a878efeda78eae7 233,251,262,271,280-282,285,294,320,485-486,489-490,493-495,500-501,507,522-523,557,560-561,602
+docs/superpowers/specs/2026-04-06-flext-infra-safe-execution-cleanup-design.md
+  0a878efeda78eae7 197
+.claude/skills/lib-pydantic-settings/SKILL.md
+  0a878efeda78eae7 67,69,72-73,87-91,93,103,108,118-120,122-127,162-166,169-171,177-183,185,193-200
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "818f486494699e0c6fc078448d5206754a3316b8",
+  "prompts": {
+    "0a878efeda78eae7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "31c29af1-cfc4-49f8-add4-c9f69e2aef85",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 2304,
+      "total_deletions": 1382,
+      "accepted_lines": 34637,
+      "overriden_lines": 31
+    },
+    "0bf1544685a35ccd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8d70-e211-7a42-8499-6cbbe28689f2",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2250,
+      "overriden_lines": 0
+    },
+    "14776bb8a7569cd6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "808a0355-ecdb-46fb-a4dd-7348401900ee",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 23765,
+      "overriden_lines": 3
+    },
+    "1b28234634c341c5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8c42-0715-7831-85d8-eb1922b1c8fb",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2064,
+      "overriden_lines": 0
+    },
+    "740b48984d352c6d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f3842b29-a623-4ef1-991a-c610afff4fa5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 2419,
+      "total_deletions": 156,
+      "accepted_lines": 3626,
+      "overriden_lines": 54
+    },
+    "8eb981e40cc2a427": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8cf2-0859-7651-b73f-ed30fb6aee1d",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 74,
+      "overriden_lines": 0
+    },
+    "d915b9853f380ecb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d88a6-609e-7a00-a230-f6e534202261",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 7538,
+      "overriden_lines": 0
+    },
+    "db46130d8a27777d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d923f-8574-7731-8817-4a0433cc83a1",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 362,
+      "overriden_lines": 0
+    },
+    "db4927e9f67317f0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "312f664b-2347-4a2f-92d6-46917dcca62e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 87232,
+      "overriden_lines": 11
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
