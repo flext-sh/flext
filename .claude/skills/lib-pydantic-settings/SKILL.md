@@ -62,28 +62,36 @@ description: Pydantic ConfigDict and singleton settings patterns across FLEXT su
 Canonical base class:
 
 ```python
+from __future__ import annotations
+
+from typing import Any
+
+from pydantic import ConfigDict
+from pydantic_settings import BaseSettings, EnvSettingsSource
+
+
 class FlextSettings(BaseSettings):
     model_config = ConfigDict(
-        env_prefix=c.ENV_PREFIX,
-        env_nested_delimiter=c.ENV_NESTED_DELIMITER,
-        env_file=u.resolve_env_file(),
-        env_file_encoding=c.DEFAULT_ENCODING,
+        env_prefix="FLEXT_",
+        env_nested_delimiter="__",
+        env_file=".env",
+        env_file_encoding="utf-8",
         case_sensitive=False,
-        extra=c.EXTRA_IGNORE,
+        extra="ignore",
         validate_assignment=True,
     )
 
     @classmethod
     def settings_customise_sources(
         cls,
-        settings_cls,
-        init_settings,
-        env_settings,
-        dotenv_settings,
-        file_secret_settings,
-    ):
+        settings_cls: type[BaseSettings],
+        init_settings: Any,
+        env_settings: Any,
+        dotenv_settings: Any,
+        file_secret_settings: Any,
+    ) -> tuple[Any, ...]:
         """Auto-MRO: leaf env_prefix + parent env_prefixes as fallback."""
-        sources = [init_settings, env_settings]
+        sources: list[Any] = [init_settings, env_settings]
         leaf_prefix = cls.model_config.get("env_prefix", "")
         for parent in cls.__mro__:
             cfg = getattr(parent, "model_config", None)
@@ -100,15 +108,18 @@ class FlextSettings(BaseSettings):
 Subproject settings:
 
 ```python
+from __future__ import annotations
+
+from pydantic import ConfigDict
+
 from flext_core import FlextSettings
-from pydantic_settings import ConfigDict
 
 
 @FlextSettings.auto_register("api")
 class FlextApiSettings(FlextSettings):
     model_config = ConfigDict(env_prefix="FLEXT_API_", extra="ignore")
-    base_url: str = c.Api.DEFAULT_BASE_URL
-    timeout: t.PositiveTimeout = c.Api.DEFAULT_TIMEOUT
+    base_url: str = "http://localhost:8080"
+    timeout: float = 30.0
 ```
 
 ## MRO Composition

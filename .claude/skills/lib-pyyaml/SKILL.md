@@ -61,32 +61,91 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 
 ```python
 # flext-quality/src/flext_quality/utilities.py
+from __future__ import annotations
+
+from collections.abc import Sequence
+from pathlib import Path
+
+import yaml
+
+from flext_core import p, t
+
+
 @staticmethod
 def load_yaml_rules(path: Path) -> p.Result[Sequence[t.RecursiveContainerMapping]]:
     with path.open(encoding="utf-8") as f:
-        parsed = yaml.safe_load(f)
+        yaml.safe_load(f)
 ```
 
 ```python
 # flext-cli/src/flext_cli/file_tools.py
-@staticmethod
-def read_yaml_file(file_path: str | Path) -> p.Result[t.RecursiveContainer]:
-    return FlextCliFileTools._execute_file_operation(
-        lambda: FlextCliFileTools._load_structured_file(str(file_path), yaml.safe_load),
-        c.Cli.FileErrorMessages.YAML_LOAD_FAILED,
-    )
+from __future__ import annotations
 
-@staticmethod
-def write_yaml_file(...) -> p.Result[bool]:
-    return FlextCliFileTools._write_structured_file(
-        file_path,
-        lambda f: yaml.safe_dump(data, f, default_flow_style=default_flow_style, sort_keys=sort_keys, allow_unicode=allow_unicode),
-        c.Cli.ErrorMessages.YAML_WRITE_FAILED,
-    )
+from pathlib import Path
+
+import yaml
+
+from flext_core import c, p, t
+
+
+class FlextCliFileTools:
+    @staticmethod
+    def _load_structured_file(path: str, loader: object) -> t.RecursiveContainer: ...
+
+    @staticmethod
+    def _write_structured_file(
+        file_path: Path,
+        writer: object,
+        error_msg: str,
+    ) -> p.Result[bool]: ...
+
+    @staticmethod
+    def read_yaml_file(file_path: str | Path) -> p.Result[t.RecursiveContainer]:
+        return FlextCliFileTools._execute_file_operation(
+            lambda: FlextCliFileTools._load_structured_file(
+                str(file_path), yaml.safe_load
+            ),
+            c.Cli.FileErrorMessages.YAML_LOAD_FAILED,
+        )
+
+    @staticmethod
+    def _execute_file_operation(
+        op: object,
+        error_msg: str,
+    ) -> p.Result[t.RecursiveContainer]: ...
+
+    @staticmethod
+    def write_yaml_file(
+        file_path: Path,
+        data: t.RecursiveContainer,
+        default_flow_style: bool = False,
+        sort_keys: bool = True,
+        allow_unicode: bool = True,
+    ) -> p.Result[bool]:
+        return FlextCliFileTools._write_structured_file(
+            file_path,
+            lambda f: yaml.safe_dump(
+                data,
+                f,
+                default_flow_style=default_flow_style,
+                sort_keys=sort_keys,
+                allow_unicode=allow_unicode,
+            ),
+            c.Cli.ErrorMessages.YAML_WRITE_FAILED,
+        )
 ```
 
 ```python
 # flext-meltano/src/flext_meltano/file_managers.py
+from __future__ import annotations
+
+from pathlib import Path
+
+import yaml
+
+from flext_core import c, p
+
+
 @classmethod
 def validate_yaml_file(cls, file_path: Path) -> p.Result[bool]:
     with file_path.open("r", encoding=c.DEFAULT_ENCODING) as f:
@@ -109,8 +168,16 @@ def validate_yaml_file(cls, file_path: Path) -> p.Result[bool]:
 Good:
 
 ```python
-with config_path.open("r", encoding="utf-8") as f:
-    data = yaml.safe_load(f) or {}
+from __future__ import annotations
+
+from pathlib import Path
+
+import yaml
+
+
+def load_config(config_path: Path) -> dict[str, object]:
+    with config_path.open("r", encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}
 ```
 
 Why good: safe loader, explicit encoding, and null-safe fallback to dictionary.
@@ -118,8 +185,16 @@ Why good: safe loader, explicit encoding, and null-safe fallback to dictionary.
 Bad:
 
 ```python
-with config_path.open("r") as f:
-    data = yaml.load(f)
+from __future__ import annotations
+
+from pathlib import Path
+
+import yaml
+
+
+def load_config(config_path: Path) -> object:
+    with config_path.open("r") as f:
+        return yaml.load(f)  # noqa: S506
 ```
 
 Why bad: unsafe loader behavior and implicit encoding increase security and portability risk.
@@ -127,7 +202,17 @@ Why bad: unsafe loader behavior and implicit encoding increase security and port
 Good:
 
 ```python
-yaml.dump(schema_data, f, default_flow_style=False, indent=2)
+from __future__ import annotations
+
+from io import StringIO
+
+import yaml
+
+
+def dump_schema(schema_data: dict[str, object]) -> str:
+    f = StringIO()
+    yaml.dump(schema_data, f, default_flow_style=False, indent=2)
+    return f.getvalue()
 ```
 
 Why good: explicit YAML shape and indentation in generated schema files.
@@ -135,7 +220,17 @@ Why good: explicit YAML shape and indentation in generated schema files.
 Bad:
 
 ```python
-yaml.dump(schema_data, f)
+from __future__ import annotations
+
+from io import StringIO
+
+import yaml
+
+
+def dump_schema(schema_data: dict[str, object]) -> str:
+    f = StringIO()
+    yaml.dump(schema_data, f)
+    return f.getvalue()
 ```
 
 Why bad: implicit defaults can change formatting and create noisy diffs across environments.
@@ -143,9 +238,22 @@ Why bad: implicit defaults can change formatting and create noisy diffs across e
 Good:
 
 ```python
-parsed = yaml.safe_load(f)
-if not isinstance(parsed, dict):
-    return r[Sequence[t.RecursiveContainerMapping]].fail("Expected YAML dict")
+from __future__ import annotations
+
+from collections.abc import Sequence
+from io import StringIO
+
+import yaml
+
+from flext_core import r, t
+
+
+def load_rules(raw: str) -> r[Sequence[t.RecursiveContainerMapping]]:
+    f = StringIO(raw)
+    parsed = yaml.safe_load(f)
+    if not isinstance(parsed, dict):
+        return r[Sequence[t.RecursiveContainerMapping]].fail("Expected YAML dict")
+    return r[Sequence[t.RecursiveContainerMapping]].ok([parsed])
 ```
 
 Why good: validates structure before typed access.

@@ -33,7 +33,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 - Preserve generic covariance/contravariance semantics where defined.
 - Keep exported short aliases (`t`, `r`) stable across refactors.
 - Canonical governance (see `AGENTS.md`):
-  - §3.2 — `Any`, `t.RecursiveContainer`, and `Mapping[str, Any]` are forbidden; `| None` inline-only.
+  - §3.2 — `Any`, `object`, and `Mapping[str, Any]` are forbidden; `| None` inline-only.
   - §3.3 — `r[T]` is the sole fallibility contract; no `T | None` returns in business logic.
   - §3.1 — single nested-class hierarchy per module via MRO from Pydantic v2 `BaseModel`.
   - §3.5 — every type change passes all 4 linters and updates impacted references via `ast-grep`.
@@ -111,14 +111,21 @@ from collections.abc import Mapping, Sequence` |
 **Parameter types** (function inputs) still use abstract covariant types (`Sequence`, `Mapping`) — invariance only applies inside `r[T]`.
 
 ```python
+from __future__ import annotations
+
+from flext_core import p, t
+
+
 # CORRECT
 def get_items() -> p.Result[list[str]]: ...
+
+
 def get_config() -> p.Result[dict[str, int]]: ...
 
 
-# FORBIDDEN
-def get_items() -> p.Result[t.StrSequence]: ...  # invariance violation
-def get_config() -> p.Result[t.IntMapping]: ...  # invariance violation
+# FORBIDDEN — invariance violation: r[Sequence[int]] != r[list[int]]
+# def get_items_bad() -> p.Result[t.StrSequence]: ...
+# def get_config_bad() -> p.Result[t.IntMapping]: ...
 
 
 # Parameters: abstract types OK (covariant position)
@@ -133,21 +140,18 @@ def process(items: t.StrSequence) -> p.Result[list[str]]: ...
 - When creating a new project that depends on another FLEXT project's types, ALWAYS inherit the parent facade class in your models/protocols/etc.
 
 ```python
-T = TypeVar("T")
-T_Settings = TypeVar("T_Settings", bound=BaseSettings)
+# Excerpt from flext-core/src/flext_core/typings.py — shown for reference only.
+# The actual declarations live in typings.py and are accessed via t.* at call sites.
 
-type t.RecursiveContainer = (
-    str
-    | int
-    | float
-    | bool
-    | datetime
-    | None
-    | BaseModel
-    | Path
-    | t.RecursiveContainerList
-    | t.RecursiveContainerMapping
-)
+# TypeVar declarations (in typings.py):
+# T = TypeVar("T")
+# T_Settings = TypeVar("T_Settings", bound=BaseSettings)
+
+# PEP 695 alias (in typings.py — NOT valid at call sites, annotation-only):
+# type RecursiveContainer = (
+#     str | int | float | bool | datetime | None
+#     | BaseModel | Path | RecursiveContainerList | RecursiveContainerMapping
+# )
 ```
 
 ## Workflow
@@ -170,12 +174,20 @@ Why good: focused annotation-only alias with clear semantic purpose.
 Bad:
 
 ```python
-JsonPrimitive = (
-    t.RecursiveContainer
-)  # ← FORBIDDEN: `t.RecursiveContainer` erases all type constraints
+from __future__ import annotations
+
+from flext_core import t
+
+# FORBIDDEN pattern — do NOT copy:
+# JsonPrimitive = t.RecursiveContainer  # erases all type constraints
+# Use the explicit union or t.Scalar instead.
+
+# Stub to satisfy linters in this documentation block:
+JsonPrimitive = str | int | float | bool | None  # ← correct pattern
+_ = t  # referenced above in the forbidden example comment
 ```
 
-Why bad: `t.RecursiveContainer` is forbidden in annotations (`AGENTS.md` §3.2) — it erases constraints and degrades static analysis. Use `t.Scalar` or the explicit union type.
+Why bad: `object` is forbidden in annotations (`AGENTS.md` §3.2) — it erases constraints and degrades static analysis. Use `t.Scalar` or the explicit union type.
 
 ## Verification
 

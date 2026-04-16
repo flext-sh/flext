@@ -42,88 +42,176 @@ description: Testing patterns, anti-patterns, and guidelines for Python/pytest i
 ### Test Structure (AAA)
 
 ```python
-def test_user_creation_with_valid_data_returns_success():
+from __future__ import annotations
+
+from typing import Annotated, ClassVar
+
+from pydantic import Field
+
+from flext_core import m, p, r, t
+
+
+class UserRecord(m.ArbitraryTypesModel):
+    """User record stub for the example."""
+
+    _flext_enforcement_exempt: ClassVar[bool] = True
+
+    name: Annotated[t.NonEmptyStr, Field(description="User name")]
+    email: Annotated[t.NonEmptyStr, Field(description="User email")]
+
+
+def create_user(name: str, email: str) -> p.Result[UserRecord]:
+    """Create a user from raw inputs."""
+    return r[UserRecord].ok(UserRecord(name=name, email=email))
+
+
+def test_user_creation_with_valid_data_returns_success() -> None:
+    """AAA pattern: arrange, act, assert."""
     # Arrange
-    data = {"name": "Alice", "email": "alice@example.com"}
+    name = "Alice"
+    email = "alice@example.com"
 
     # Act
-    result = create_user(data)
+    result = create_user(name=name, email=email)
 
     # Assert
     assert result.success
-    assert result.value.name == "Alice"
+    assert result.unwrap().name == "Alice"
 ```
 
 ### Testing r
 
 ```python
-from flext_core import r, p
+from __future__ import annotations
+
+from flext_core import r
 
 
-def test_ok_result_contains_value():
+def test_ok_result_contains_value() -> None:
+    """ok() result exposes the value via unwrap()."""
     result = r[int].ok(42)
     assert result.success
-    assert result.value == 42
+    assert result.unwrap() == 42
 
 
-def test_fail_result_contains_error():
+def test_fail_result_contains_error() -> None:
+    """fail() result exposes the error message."""
     result = r[int].fail("not found")
     assert result.failure
+    assert result.error is not None
     assert "not found" in result.error
 
 
-def test_map_transforms_success_value():
+def test_map_transforms_success_value() -> None:
+    """map() chains a pure transformation on the success branch."""
     result = r[int].ok(5).map(lambda x: x * 2)
-    assert result.value == 10
+    assert result.unwrap() == 10
 
 
-def test_flat_map_chains_results():
-    result = r[int].ok(5).flat_map(lambda x: p.Result[str].ok(str(x)))
-    assert result.value == "5"
+def test_flat_map_chains_results() -> None:
+    """flat_map() chains another r-returning computation."""
+    result = r[int].ok(5).flat_map(lambda x: r[str].ok(str(x)))
+    assert result.unwrap() == "5"
 ```
 
 ### Fixtures (conftest.py)
 
 ```python
+from __future__ import annotations
+
+from collections.abc import Iterator
+from pathlib import Path
+from typing import Annotated, ClassVar
+
 import pytest
+from pydantic import Field
+
+from flext_core import m, t
+
+
+class UserFixture(m.ArbitraryTypesModel):
+    """User fixture model."""
+
+    _flext_enforcement_exempt: ClassVar[bool] = True
+
+    name: Annotated[t.NonEmptyStr, Field(description="User name")]
+    email: Annotated[t.NonEmptyStr, Field(description="User email")]
 
 
 @pytest.fixture
-def sample_user() -> User:
-    return User(name="Test", email="test@example.com")
+def sample_user() -> UserFixture:
+    """Deterministic sample user."""
+    return UserFixture(name="Test", email="test@example.com")
 
 
 @pytest.fixture
-def db_session(tmp_path):
-    db = create_test_db(tmp_path / "test.db")
-    yield db
-    db.close()
+def db_path(tmp_path: Path) -> Iterator[Path]:
+    """Isolated database file path per test."""
+    path = tmp_path / "test.db"
+    yield path
+    if path.exists():
+        path.unlink()
 ```
 
 ### Parameterized Tests
 
 ```python
+from __future__ import annotations
+
+import pytest
+
+
 @pytest.mark.parametrize(
-    "input_val,expected",
+    ("input_val", "expected"),
     [
         ("hello", "HELLO"),
         ("world", "WORLD"),
         ("", ""),
     ],
 )
-def test_uppercase_transforms_correctly(input_val: str, expected: str):
+def test_uppercase_transforms_correctly(input_val: str, expected: str) -> None:
+    """Parameterized scenarios for the uppercase transformation."""
     assert input_val.upper() == expected
 ```
 
 ### Mocking Strategy
 
 ```python
-from unittest.mock import Mock, patch
+from __future__ import annotations
+
+from typing import Annotated, ClassVar
+from unittest.mock import Mock
+
+from pydantic import Field
+
+from flext_core import m, p, r, t
 
 
-def test_service_calls_repository():
+class UserRecord(m.ArbitraryTypesModel):
+    """User record stub."""
+
+    _flext_enforcement_exempt: ClassVar[bool] = True
+
+    name: Annotated[t.NonEmptyStr, Field(description="User name")]
+
+
+class UserService:
+    """Service under test — stubbed for illustration."""
+
+    def __init__(self, repo: Mock) -> None:
+        """Store the repository reference."""
+        self._repo = repo
+
+    def get_user(self, user_id: str) -> p.Result[UserRecord]:
+        """Look up a user via the repository."""
+        user: UserRecord = self._repo.find(user_id)
+        return r[UserRecord].ok(user)
+
+
+def test_service_calls_repository() -> None:
+    """Service delegates lookup to its repository dependency."""
     mock_repo = Mock()
-    mock_repo.find.return_value = User(name="Alice")
+    mock_repo.find.return_value = UserRecord(name="Alice")
     service = UserService(repo=mock_repo)
 
     result = service.get_user("123")
@@ -137,7 +225,12 @@ def test_service_calls_repository():
 **Testing mock behavior instead of real behavior**:
 
 ```python
+from __future__ import annotations
+
+from unittest.mock import Mock
+
 # BAD: tests that the mock works, not the code
+mock_service = Mock()
 mock_service.process.return_value = "done"
 result = mock_service.process("data")
 assert result == "done"  # proves nothing about real code
@@ -146,29 +239,64 @@ assert result == "done"  # proves nothing about real code
 **Testing internal implementation details instead of contract behavior**:
 
 ```python
-# BAD: implementation-coupled assertion
-assert "unquoted relative forward reference 'p'" not in combined_output
-assert result.__class__.__name__ == "ConcreteRegistry"
+from __future__ import annotations
+
+from typing import Annotated, ClassVar
+
+from pydantic import Field
+
+from flext_core import m, t
+
+
+class CliResult(m.ArbitraryTypesModel):
+    """Stub CLI execution result."""
+
+    _flext_enforcement_exempt: ClassVar[bool] = True
+
+    exit_code: Annotated[int, Field(description="Process exit code")]
+    output: Annotated[t.NonEmptyStr, Field(description="Captured output")]
+
+
+def make_result() -> CliResult:
+    """Stub result for illustration."""
+    return CliResult(exit_code=0, output="unexpected_success True")
+
+
+result = make_result()
 
 # GOOD: behavioral assertion
 assert result.exit_code == 0
-assert "unexpected_success True" in combined_output
-assert result.success
+assert "unexpected_success True" in result.output
 ```
 
 **Test-only methods in production code**:
 
 ```python
-# BAD: adding methods just for tests
+from __future__ import annotations
+
+
 class UserService:
-    def _test_get_internal_state(self):  # test pollution
+    """Illustrates the anti-pattern of test-only production methods."""
+
+    def __init__(self) -> None:
+        """Set up internal state."""
+        self._state = "active"
+
+    # BAD: adding methods just for tests
+    def _test_get_internal_state(self) -> str:
+        """Test pollution — exposes internals solely for tests."""
         return self._state
 ```
 
 **Incomplete mock data**:
 
 ```python
+from __future__ import annotations
+
+from unittest.mock import Mock
+
 # BAD: mock returns simplified data that hides bugs
+mock_api = Mock()
 mock_api.get.return_value = {"id": 1}  # missing required fields
 ```
 
@@ -198,9 +326,25 @@ tests/
 Good:
 
 ```python
-def test_parse_config_with_missing_key_returns_failure():
+from __future__ import annotations
+
+from collections.abc import Mapping
+
+from flext_core import p, r
+
+
+def parse_config(raw: Mapping[str, str | int]) -> p.Result[Mapping[str, str | int]]:
+    """Require both host and port keys, return error otherwise."""
+    if "port" not in raw:
+        return r[Mapping[str, str | int]].fail("port is required")
+    return r[Mapping[str, str | int]].ok(raw)
+
+
+def test_parse_config_with_missing_key_returns_failure() -> None:
+    """Descriptive name, specific failure scenario, asserts on error content."""
     result = parse_config({"host": "localhost"})  # missing "port"
     assert result.failure
+    assert result.error is not None
     assert "port" in result.error
 ```
 
@@ -209,9 +353,22 @@ Why good: descriptive name, tests specific failure scenario, asserts on error co
 Bad:
 
 ```python
-def test_config():
+from __future__ import annotations
+
+from collections.abc import Mapping
+
+from flext_core import p, r
+
+
+def parse_config(raw: Mapping[str, str | int]) -> p.Result[Mapping[str, str | int]]:
+    """Stub matching the Good example."""
+    return r[Mapping[str, str | int]].ok(raw)
+
+
+def test_config() -> None:
+    """Vague — no scenario, assertion reveals nothing about behavior."""
     settings = parse_config({"host": "localhost", "port": 8080})
-    assert settings
+    assert settings  # BAD: doesn't verify anything meaningful
 ```
 
 Why bad: vague name, no scenario described, `assert settings` doesn't verify anything meaningful.

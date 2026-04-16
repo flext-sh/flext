@@ -22,6 +22,7 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 ## Rules
 
 - Apply `AGENTS.md` §3 uniformly: no "test-only" or "example-only" relaxation.
+- Consume Pydantic-facing contracts through canonical aliases (`c`, `p`, `t`, `m`, `u`) and service facade alias (`s`) at usage sites; avoid direct framework-shaped contracts in consumers.
 - Use simple runtime aliases only; remove any `u.Aliases.*` indirection.
 - Protocol contracts belong in `p.*`; composed aliases in `t.*`; domain carriers in `m.*`. Never annotate with a concrete class when a canonical `p.*`/`t.*` contract exists.
 - Dismantle polymorphic branching into centralized Pydantic v2 models (`Literal` discriminators, `Field`, `model_validator`).
@@ -71,19 +72,53 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 Good:
 
 ```python
-from flext_core import p, r
+from __future__ import annotations
+
+from typing import Annotated, ClassVar
+
+from pydantic import Field
+
+from flext_core import m, p, r, s, t, u
 
 
-def normalize_logger(owner: p.HasLogger) -> p.Result[p.Logger]:
-    return r[p.Logger].ok(owner.logger)
+class FlextDemoTracingMixin:
+    """Tracing mixin stub for MRO composition."""
+
+
+class FlextDemo(FlextDemoTracingMixin, s[t.ScalarMapping]):  # type: ignore[misc]
+    """Demo service facade — one class per module, MRO-composed."""
+
+    class Demo:
+        """Demo domain namespace."""
+
+        class ParseRequest(m.ArbitraryTypesModel):
+            """Request model for parse operation."""
+
+            _flext_enforcement_exempt: ClassVar[bool] = True
+            kind: Annotated[t.NonEmptyStr, Field(description="Operation kind")]
+            payload: Annotated[t.NonEmptyStr, Field(description="Raw payload")]
+
+    @staticmethod
+    def run_parse(payload: t.NonEmptyStr) -> p.Result[str]:
+        """Run parse operation through the service facade."""
+        service = FlextDemo()
+        request = FlextDemo.Demo.ParseRequest(kind="to_str", payload=payload)
+        _ = request  # consumed by service.parse in real implementation
+        return r[str].ok(str(service))
 ```
 
-Why good: consumes the canonical structural protocol `p.HasLogger` and keeps the return flow on `r[T]`.
+Why good: keeps one facade class per module, consumes contracts via canonical aliases, preserves nested namespace, and composes behavior through explicit MRO inheritance.
 
 Bad:
 
 ```python
-def normalize_logger(owner: FlextLogger) -> FlextLogger:
+from __future__ import annotations
+
+from flext_core import p
+
+
+def normalize_logger(owner: p.Logger) -> p.Logger:
+    """Anti-pattern: pins contract to p.Logger but just returns it."""
     return owner
 ```
 
@@ -92,21 +127,58 @@ Why bad: pins the contract to a concrete implementation when the public structur
 Good:
 
 ```python
-from flext_core import m
+from __future__ import annotations
+
+from typing import Annotated, ClassVar, Literal
+
+from pydantic import Field, model_validator
+from typing_extensions import Self
+
+from flext_core import m, p, r, s, t
 
 
-class ParseRequest(m.ArbitraryTypesModel):
-    kind: Literal["json", "yaml", "toml"]
-    payload: str
+class FlextDemoParseJsonMixin:
+    """JSON parse mixin stub."""
 
-    @model_validator(mode="after")
-    def _validate_payload(self) -> Self:
-        if self.kind == "json":
-            m.validate_json(self.payload)
-        return self
+    def parse_json(self, request: object) -> p.Result[str]:
+        """Parse JSON from request payload."""
+        _ = request
+        return r[str].ok("parsed")
+
+
+class FlextDemoParse(FlextDemoParseJsonMixin, s[t.ScalarMapping]):  # type: ignore[misc]
+    """Parse service — one public class per module, nested Pydantic model."""
+
+    class Demo:
+        """Demo domain namespace."""
+
+        class ParseRequest(m.ArbitraryTypesModel):
+            """Request model with discriminated kind field."""
+
+            _flext_enforcement_exempt: ClassVar[bool] = True
+            kind: Annotated[
+                Literal["json", "yaml", "toml"],
+                Field(description="Serialization format"),
+            ]
+            payload: Annotated[t.NonEmptyStr, Field(description="Raw payload")]
+
+            @model_validator(mode="after")
+            def _validate_payload(self) -> Self:
+                """Validate payload is non-empty for the given kind."""
+                if not self.payload:
+                    msg = "payload must be non-empty"
+                    raise ValueError(msg)
+                return self
+
+    @staticmethod
+    def run_parse_json(payload: t.NonEmptyStr) -> p.Result[str]:
+        """Run JSON parse operation."""
+        service = FlextDemoParse()
+        request = FlextDemoParse.Demo.ParseRequest(kind="json", payload=payload)
+        return service.parse_json(request)
 ```
 
-Why good: one centralized Pydantic v2 model with a discriminated field and a single validator replaces three branching `if isinstance(...)` chains.
+Why good: keeps one public class per module, uses nested Pydantic model with validator, and wires runtime behavior through MRO (`FlextDemoParseJsonMixin` + `s[...]`).
 
 ## Verification
 

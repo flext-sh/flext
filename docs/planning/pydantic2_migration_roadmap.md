@@ -158,7 +158,7 @@ model_config = ConfigDict(
     frozen=False,  # Mutable by default
 )
 
-# Immutable value t.RecursiveContainer
+# Immutable value object
 model_config = ConfigDict(
     frozen=True,  # Immutable
     validate_assignment=True,

@@ -176,7 +176,7 @@ class Model(BaseModel):
 
 print(Model.model_json_schema())
 """
-{'examples': ['example'], 'properties': {}, 'title': 'Model', 'type': 't.RecursiveContainer'}
+{'examples': ['example'], 'properties': {}, 'title': 'Model', 'type': 'object'}
 """
 ```
 
@@ -666,7 +666,7 @@ except PydanticUserError as exc_info:
 
 ## Import error {#import-error}
 
-This error is raised when you try to import an t.RecursiveContainer that was available in Pydantic V1, but has been removed in
+This error is raised when you try to import an object that was available in Pydantic V1, but has been removed in
 Pydantic V2.
 
 See the [Migration Guide](../migration.md) for more information.
@@ -859,7 +859,7 @@ The `field` and `settings` parameters are not available in Pydantic V2.
 Please use the `info` parameter instead.
 
 You can access the configuration via `info.settings`,
-but it is a dictionary instead of an t.RecursiveContainer like it was in Pydantic V1.
+but it is a dictionary instead of an object like it was in Pydantic V1.
 
 The `field` argument is no longer available.
 

@@ -193,13 +193,13 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 - **Centralized Runtime Contracts**: Inputs, outputs, runtime state, and status snapshots MUST flow through central `m.*` models. Eliminate avoidable dict round-trips, ad-hoc conversion helpers, and non-essential type narrowing between service boundaries.
 
 ### 3.2 Types & Contracts
-- **Strict Contracts Only**: `Any`, bare `t.RecursiveContainer`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
+- **Strict Contracts Only**: `Any`, bare `object`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
   - **Exception: Intentional Generic Types** - `t.RecursiveContainerMapping` and `t.RecursiveContainerMapping` ARE permitted ONLY in these contexts:
     1. **Type aliases** (in `typings.py`): `type ProjectSettings = t.RecursiveContainerMapping` with docstring explaining intent
     2. **Test fixtures** (in `conftest.py` and test support): Dynamic test data with unknown structure
     3. **Validation/Rule engines**: Return types for unstructured violations (e.g., `r[Sequence[t.RecursiveContainerMapping]]`)
     4. **Configuration transformers**: Methods that accept/return dynamic configuration from external sources (YAML, JSON)
-    - **All other uses are FORBIDDEN**. Use `t.RecursiveContainer` or specific Pydantic models instead.
+    - **All other uses are FORBIDDEN**. Use `object` or specific Pydantic models instead.
 - **PEP 695 Canonical (Python 3.13+)**: ALL type aliases in `typings.py` must use `type X = ...` syntax. These create `TypeAliasType` objects—using them in `isinstance()` crashes at runtime and is FORBIDDEN. Runtime narrowing MUST use `u.is_*()` functions instead.
 - **Type Narrowing**: NEVER use `type(x) is T` or `type(x) == T` to narrow types. Use `isinstance(x, T)` or `TypeGuard`. Avoid gratuitous narrowings for types that shouldn't exist. `cast()` is completely forbidden outside `flext-core` result internals.
 - **Nullability and Unions**:
@@ -296,11 +296,11 @@ from collections.abc import Mapping, Sequence
        # ✗ WRONG — causes lazy-load cycles
        from flext_core import FlextProtocolsBase, t
        ```
-    4. **Trust lazy loading in `__init__.py`** — The `__init__.py` lazy-load system (via `lazy_getattr`) properly sequences module initialization to break cycles. Do NOT use workarounds like `model_rebuild()`, string annotations, or `t.RecursiveContainer`/`Any` types.
+    4. **Trust lazy loading in `__init__.py`** — The `__init__.py` lazy-load system (via `lazy_getattr`) properly sequences module initialization to break cycles. Do NOT use workarounds like `model_rebuild()`, string annotations, or `object`/`Any` types.
   - **FORBIDDEN Workarounds**:
     - ✗ Using `model_rebuild()` — indicates root-cause unresolved
     - ✗ Using string type hints like `"FlextProtocolsResult.Result[bool]"` — use TYPE_CHECKING instead
-    - ✗ Using `t.RecursiveContainer` or `Any` as catch-all types — use precise `t.*` contracts
+    - ✗ Using `object` or `Any` as catch-all types — use precise `t.*` contracts
     - ✗ Reordering `__init__.py` imports or relying on "order of initialization" — architecture must NOT depend on load order
   - **Verification**: Run `make gen` without timeout or errors. Imports should resolve cleanly via `python -c "from flext_core._protocols.* import *"`.
   - *Detailed matrix & exceptions*: See skill `flext-import-rules`.

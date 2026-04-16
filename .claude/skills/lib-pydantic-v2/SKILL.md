@@ -45,6 +45,7 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 ```python
 from flext_core import m, c
 
+
 # Access Pydantic objects DIRECTLY through m facade
 class FlextProcessingModels(m):
     class Processing:
@@ -70,6 +71,7 @@ request = m_module.Processing.Request(name="test", timeout=60)
 ```python
 from flext_core import m, t
 
+
 class FlextValidationModels(m):
     class Validation:
         class RetryConfiguration(m.BaseModel):
@@ -79,6 +81,7 @@ class FlextValidationModels(m):
             @classmethod
             def validate_status_codes(cls, v: t.SequenceInt) -> t.SequenceInt:
                 return [code for code in v if 400 <= code < 600]
+
 
 # Usage via MRO
 m_module = FlextValidationModels
@@ -91,6 +94,7 @@ config = m_module.Validation.RetryConfiguration(retry_on_status_codes=[400, 404,
 
 ```python
 from flext_core import m, t
+
 
 class FlextBatchModels(m):
     class Batch:
@@ -105,6 +109,7 @@ class FlextBatchModels(m):
                     raise ValueError(msg)
                 return self
 
+
 # Usage
 m_module = FlextBatchModels
 config = m_module.Batch.ProcessingConfig(batch_size=200, max_workers=4)
@@ -117,6 +122,7 @@ config = m_module.Batch.ProcessingConfig(batch_size=200, max_workers=4)
 ```python
 from flext_core import m
 
+
 class FlextGrpcModels(m):
     class Grpc:
         class Server(m.BaseModel):
@@ -128,6 +134,7 @@ class FlextGrpcModels(m):
             def endpoint(self) -> str:
                 """Computed endpoint from host:port."""
                 return f"{self.host}:{self.port}"
+
 
 # Usage
 m_module = FlextGrpcModels
@@ -222,6 +229,7 @@ make validate PROJECT=<name> FIX=1
 ```python
 from flext_core import m, c
 
+
 class FlextProcessingModels(m):
     class Processing:
         class WorkflowConfig(m.BaseModel):
@@ -269,6 +277,7 @@ result = r.from_validation(raw_data, UserModel)
 ```python
 # ✗ WRONG — importing directly from pydantic
 from pydantic import BaseModel, Field, ConfigDict
+
 
 class UserModel(BaseModel):
     name: str = Field(..., description="User name")

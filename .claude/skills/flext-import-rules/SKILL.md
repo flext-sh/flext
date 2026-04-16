@@ -30,6 +30,7 @@ description: Enforces import ordering, alias conventions, and abstraction bounda
 - Enforce import order: future, stdlib, third-party, first-party, local.
 - Enforce architecture directionality and private-module boundaries.
 - Use canonical aliases (`c`, `m`, `p`, `t`, `u`, `r`, `d`, `e`, `h`, `s`, `x`) at usage sites.
+- Treat Pydantic objects and validators as consumed through `c`, `p`, `t`, `m`, `u` (and `s` for service facades) instead of direct framework-shaped usage in consumer layers.
 - In wrapper surfaces (`tests/`, `examples/`, `scripts/`), import canonical aliases from the local wrapper package (`from tests import c, m, p, t, u`, `from examples import c, m, t`, `from scripts import c, m, t, u`) — never from sibling projects.
 - Keep same-project public facades isolated at runtime; only the `TYPE_CHECKING` matrix from `AGENTS.md` §4 allows same-project cross-facade type references.
 - **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
@@ -50,11 +51,28 @@ description: Enforces import ordering, alias conventions, and abstraction bounda
 ## Examples
 
 ```python
-# Correct usage — always from root namespace
-from flext_core import m, p, t
+from __future__ import annotations
 
-# Correct inheritance import by class name — also from root namespace
-from flext_core import FlextProtocols
+from typing import Annotated, ClassVar
+
+from pydantic import Field
+
+from flext_core import c, m, p, r, t
+
+
+class PayloadModel(m.Value):
+    """Value object representing a named payload."""
+
+    _flext_enforcement_exempt: ClassVar[bool] = True
+
+    name: Annotated[t.NonEmptyStr, Field(description="Payload name")]
+
+
+def parse_name(value: PayloadModel) -> p.Result[str]:
+    """Parse the name field, failing on empty string."""
+    if value.name == c.DEFAULT_EMPTY_STRING:
+        return r[str].fail("name is missing")
+    return r[str].ok(value.name)
 ```
 
 

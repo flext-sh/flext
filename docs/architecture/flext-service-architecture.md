@@ -673,10 +673,10 @@ class s[TDomainResult](
         instance = super().__new__(cls)
         if cls.auto_execute:
             # Auto-execution pattern: create, initialize, execute, return result
-            t.RecursiveContainer.__init__(instance)
+            object.__init__(instance)
             cls.__init__(instance, **data)
-            # Call execute via t.RecursiveContainer.__getattribute__ to bypass abstract method check
-            execute_fn = t.RecursiveContainer.__getattribute__(instance, "execute")
+            # Call execute via object.__getattribute__ to bypass abstract method check
+            execute_fn = object.__getattribute__(instance, "execute")
             result = execute_fn()
             if result.is_success:
                 # Return result directly instead of service instance
@@ -1324,7 +1324,7 @@ class FlextModels:
         ...
 
     class Value(BaseModel):
-        """Immutable value t.RecursiveContainer (frozen=True)."""
+        """Immutable value object (frozen=True)."""
 
         model_config = ConfigDict(frozen=True)
 
@@ -3876,9 +3876,9 @@ Situação: Multiple envs - Solução Automática: `.env` files - ❌ Não Fazer
 class FlextModels:
     """Namespace for all domain models - DDD patterns."""
 
-    # Base value t.RecursiveContainer (imutável)
+    # Base value object (imutável)
     class Value(BaseModel):
-        """Immutable value t.RecursiveContainer."""
+        """Immutable value object."""
 
         model_config = ConfigDict(frozen=True)
 
@@ -3943,7 +3943,7 @@ class FlextApiModels:
 
     # ✅ BOM: Herda de m.Value (immutable)
     class HttpRequest(m.Value):
-        """Immutable HTTP request value t.RecursiveContainer."""
+        """Immutable HTTP request value object."""
 
         method: str = Field(
             default="GET",
@@ -3962,7 +3962,7 @@ body: m.Api.RequestBodyModel | None = Field(default=None)
 
     # ✅ BOM: Herda de m.Value (immutable)
     class HttpResponse(m.Value):
-        """Immutable HTTP response value t.RecursiveContainer."""
+        """Immutable HTTP response value object."""
 
         status_code: int = Field(..., ge=100, le=599)
         headers: t.StrMapping = Field(default_factory=dict)

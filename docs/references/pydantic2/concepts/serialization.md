@@ -28,7 +28,7 @@ Pydantic uses the terms "serialize" and "dump" interchangeably. Both refer to th
 dictionary or JSON-encoded string.
 
     Outside of Pydantic, the word "serialize" usually refers to converting in-memory data into a string or bytes.
-    However, in the context of Pydantic, there is a very close relationship between converting an t.RecursiveContainer from a more
+    However, in the context of Pydantic, there is a very close relationship between converting an object from a more
     structured form &mdash; such as a Pydantic model, a dataclass, etc. &mdash; into a less structured form comprised of
     Python built-ins such as dict.
 

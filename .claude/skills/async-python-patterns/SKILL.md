@@ -34,12 +34,29 @@ description: Python asyncio patterns for FLEXT integrations — LDAP, Oracle, gR
 ### Basic Async with r
 
 ```python
-from flext_core import r, p
+from __future__ import annotations
+
+import asyncio
+
+from pydantic import Field
+
+from flext_core import m, p, r, t
+
+
+class User(m.Value):
+    _flext_enforcement_exempt: bool = True
+    user_id: t.NonEmptyStr = Field(description="User identifier")
+    name: t.NonEmptyStr = Field(description="User display name")
+
+
+async def _db_get_user(user_id: str) -> User:
+    await asyncio.sleep(0)  # simulated async DB call
+    return User(user_id=user_id, name="Alice")
 
 
 async def fetch_user(user_id: str) -> p.Result[User]:
     try:
-        user = await db.get_user(user_id)
+        user = await _db_get_user(user_id)
         return r[User].ok(user)
     except Exception as e:
         return r[User].fail(f"fetch failed: {e}")
@@ -48,14 +65,35 @@ async def fetch_user(user_id: str) -> p.Result[User]:
 ### Concurrent Execution with gather
 
 ```python
+from __future__ import annotations
+
+import asyncio
+from collections.abc import Sequence
+
+from pydantic import Field
+
+from flext_core import m, p, r, t
+
+
+class User(m.Value):
+    _flext_enforcement_exempt: bool = True
+    user_id: t.NonEmptyStr = Field(description="User identifier")
+    name: t.NonEmptyStr = Field(description="User display name")
+
+
+async def fetch_user(user_id: str) -> p.Result[User]:
+    await asyncio.sleep(0)
+    return r[User].ok(User(user_id=user_id, name="Alice"))
+
+
 async def fetch_all_users(ids: t.StrSequence) -> p.Result[Sequence[User]]:
     tasks = [fetch_user(uid) for uid in ids]
     results = await asyncio.gather(*tasks, return_exceptions=True)
-    users = []
+    users: list[User] = []
     for res in results:
         if isinstance(res, Exception):
             return r[Sequence[User]].fail(str(res))
-        if res.is_success:
+        if res.success:
             users.append(res.value)
     return r[Sequence[User]].ok(users)
 ```
@@ -63,23 +101,51 @@ async def fetch_all_users(ids: t.StrSequence) -> p.Result[Sequence[User]]:
 ### Rate-Limited API Calls
 
 ```python
-semaphore = asyncio.Semaphore(10)
+from __future__ import annotations
+
+import asyncio
+import json
+import urllib.request
+
+from flext_core import p, r
+
+_semaphore = asyncio.Semaphore(10)
 
 
-async def rate_limited_call(url: str) -> p.Result[dict]:
-    async with semaphore:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                data = await resp.json()
-                return r[dict].ok(data)
+async def rate_limited_call(url: str) -> p.Result[dict]:  # type: ignore[type-arg]
+    async with _semaphore:
+        try:
+            loop = asyncio.get_running_loop()
+            data_bytes = await loop.run_in_executor(
+                None,
+                lambda: urllib.request.urlopen(url).read(),  # noqa: S310
+            )
+            data: dict = json.loads(data_bytes)  # type: ignore[type-arg]
+            return r[dict].ok(data)  # type: ignore[type-arg]
+        except Exception as e:
+            return r[dict].fail(str(e))  # type: ignore[type-arg]
 ```
 
 ### Async Context Manager
 
 ```python
+from __future__ import annotations
+
+import asyncio
+from types import TracebackType
+from typing import Self
+
+
 class AsyncDBConnection:
+    """Async context manager for DB connections (stdlib-only example)."""
+
+    def __init__(self, dsn: str) -> None:
+        self._dsn = dsn
+        self._open = False
+
     async def __aenter__(self) -> Self:
-        self.conn = await asyncpg.connect(DSN)
+        await asyncio.sleep(0)  # simulate async connect
+        self._open = True
         return self
 
     async def __aexit__(
@@ -88,34 +154,58 @@ class AsyncDBConnection:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        await self.conn.close()
+        await asyncio.sleep(0)  # simulate async close
+        self._open = False
 ```
 
 ### Producer-Consumer with Queue
 
 ```python
-async def producer(queue: asyncio.Queue[str], items: t.StrSequence) -> None:
+from __future__ import annotations
+
+import asyncio
+
+from flext_core import t
+
+
+async def _process(item: str) -> str:
+    await asyncio.sleep(0)
+    return item.upper()
+
+
+async def producer(queue: asyncio.Queue[str | None], items: t.StrSequence) -> None:
     for item in items:
         await queue.put(item)
     await queue.put(None)
 
 
-async def consumer(queue: asyncio.Queue[str | None]) -> t.StrSequence:
-    results = []
+async def consumer(queue: asyncio.Queue[str | None]) -> list[str]:
+    results: list[str] = []
     while (item := await queue.get()) is not None:
-        results.append(await process(item))
+        results.append(await _process(item))
     return results
 ```
 
 ### Timeout Handling
 
 ```python
-async def with_timeout(coro: Awaitable[T], seconds: float) -> p.Result[T]:
+from __future__ import annotations
+
+import asyncio
+from collections.abc import Awaitable
+from typing import TypeVar
+
+from flext_core import p, r
+
+_T = TypeVar("_T")
+
+
+async def with_timeout(coro: Awaitable[_T], seconds: float) -> p.Result[_T]:
     try:
         result = await asyncio.wait_for(coro, timeout=seconds)
-        return r[T].ok(result)
+        return r[_T].ok(result)
     except asyncio.TimeoutError:
-        return r[T].fail(f"operation timed out after {seconds}s")
+        return r[_T].fail(f"operation timed out after {seconds}s")
 ```
 
 ## Workflow
@@ -132,9 +222,23 @@ async def with_timeout(coro: Awaitable[T], seconds: float) -> p.Result[T]:
 Good:
 
 ```python
-async def process_batch(ids: t.StrSequence) -> p.Result[Sequence[Result]]:
+from __future__ import annotations
+
+import asyncio
+from collections.abc import Sequence
+
+from flext_core import p, r, t
+
+
+async def process_one(item: str) -> p.Result[str]:
+    await asyncio.sleep(0)
+    return r[str].ok(item.upper())
+
+
+async def process_batch(ids: t.StrSequence) -> list[p.Result[str]]:
     tasks = [process_one(i) for i in ids]
-    return await asyncio.gather(*tasks)
+    results: list[p.Result[str]] = await asyncio.gather(*tasks)
+    return results
 ```
 
 Why good: concurrent execution of independent I/O operations.
@@ -142,8 +246,22 @@ Why good: concurrent execution of independent I/O operations.
 Bad:
 
 ```python
-async def process_batch(ids: t.StrSequence) -> Sequence[Result]:
-    results = []
+from __future__ import annotations
+
+import asyncio
+from collections.abc import Sequence
+
+from flext_core import p, r, t
+
+
+async def process_one(item: str) -> p.Result[str]:
+    await asyncio.sleep(0)
+    return r[str].ok(item.upper())
+
+
+# BAD: sequential awaits waste time
+async def process_batch_bad(ids: t.StrSequence) -> list[p.Result[str]]:
+    results: list[p.Result[str]] = []
     for i in ids:
         results.append(await process_one(i))
     return results

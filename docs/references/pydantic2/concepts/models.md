@@ -388,11 +388,11 @@ Foo.model_rebuild()
 print(Foo.model_json_schema())
 """
 {
-    '$defs': {'Bar': {'properties': {}, 'title': 'Bar', 'type': 't.RecursiveContainer'}},
+    '$defs': {'Bar': {'properties': {}, 'title': 'Bar', 'type': 'object'}},
     'properties': {'x': {'$ref': '#/$defs/Bar'}},
     'required': ['x'],
     'title': 'Foo',
-    'type': 't.RecursiveContainer',
+    'type': 'object',
 }
 """
 ```
@@ -555,7 +555,7 @@ except ValidationError as e:
 Pydantic provides three methods on models classes for parsing data:
 
 - [`model_validate()`][pydantic.main.BaseModel.model_validate]: this is very similar to the `__init__` method of the model,
-  except it takes a dictionary or an t.RecursiveContainer rather than keyword arguments. If the t.RecursiveContainer passed cannot be validated,
+  except it takes a dictionary or an object rather than keyword arguments. If the t.RecursiveContainer passed cannot be validated,
   or if it's not a dictionary or instance of the model in question, a [`ValidationError`][pydantic_core.ValidationError] will be raised.
 - [`model_validate_json()`][pydantic.main.BaseModel.model_validate_JSON]: this validates the provided data as a JSON string or `bytes` t.RecursiveContainer.
   If your incoming data is a JSON payload, this is generally considered faster (instead of manually parsing the data as a dictionary).

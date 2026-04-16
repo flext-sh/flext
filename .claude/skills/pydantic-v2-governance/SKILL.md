@@ -30,6 +30,7 @@ description: Internal Pydantic v2 governance patterns for FLEXT 33-project monor
 - **Policy Authority**: `AGENTS.md` §3.1-§3.3 is supreme law. This skill documents IMPLEMENTATION patterns.
 - **Codebase Evidence**: Every pattern MUST reference actual codebase files.
 - **No Contradiction**: This skill extends `lib-pydantic-v2` and `pydantic-v2-patterns`, never contradicts them.
+- **Alias-first consumption**: Pydantic-facing contracts are consumed via `c`, `p`, `t`, `m`, `u` (and `s` for service facades), not framework-direct usage patterns in consumers.
 - **Mandatory Pydantic v2 Mastery**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features to their fullest across ALL 33 projects (`src/`, `tests/`, `examples/`). Every class extends `BaseModel` (or FLEXT base models) via MRO.
 - **Field() for ALL declarations**: Use `Field()` with `description`, `title`, `examples`, `json_schema_extra` documenting business rules — fields are self-documenting contracts.
 - **Secrets**: Use `SecretStr`/`SecretBytes` for secrets.
@@ -74,44 +75,26 @@ Key rules (quick reference):
 Good:
 
 ```python
-from typing import Annotated
-from pydantic import BaseModel, ConfigDict, Field
+from __future__ import annotations
+
+from flext_core import c, m, p, r, s, t, u
+from flext_governance import FlextGovernanceCreateUserMixin
 
 
-class User(BaseModel):
-    model_config = ConfigDict(
-        validate_assignment=True,
-        extra="forbid",
-        json_schema_extra={
-            "title": "User",
-            "description": "User entity with strict validation",
-        },
-    )
+class FlextGovernance(FlextGovernanceCreateUserMixin, s[t.Dict]):
+    class Domain:
+        class User(m.Value):
+            name: t.NonEmptyStr = u.Field(default="alice")
+            email: t.EmailStr
 
-    name: Annotated[
-        str,
-        Field(
-            min_length=1,
-            max_length=100,
-            description="User full name",
-            examples=["Alice Smith", "Bob Jones"],
-        ),
-    ]
-    email: Annotated[
-        str,
-        Field(
-            pattern=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
-            description="User email address",
-            examples=["alice@example.com"],
-        ),
-    ]
-    tags: t.StrSequence = Field(
-        default_factory=list,
-        description="User tags",
-    )
+    @staticmethod
+    def run_create() -> p.Result[str]:
+        service = FlextGovernance()
+        user = FlextGovernance.Domain.User(name="alice", email="alice@example.com")
+        return service.create_user(user)
 ```
 
-Why good: Uses `Annotated` correctly, `Field()` with full metadata, `default_factory` for mutable default, `ConfigDict` for settings.
+Why good: follows one-facade-per-module, keeps nested domain classes, and composes service behavior through MRO (`FlextGovernanceCreateUserMixin` + `s[...]`) while consuming Pydantic via aliases.
 
 Bad:
 

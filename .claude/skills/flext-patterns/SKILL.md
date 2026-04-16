@@ -66,61 +66,76 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 Projects providing a main service class use the **MRO service facade pattern**: one facade in `api.py` composing all service mixins from `services/`. A typed base class in `base.py` provides shared infrastructure (settings, logger, container).
 
 ```python
-# base.py — typed service base
-from flext_core import FlextSettings, s
-from flext_observability import FlextObservabilitySettings, t
+# api.py — one facade class per module, composing all mixins via MRO
+from __future__ import annotations
+
+from typing import Annotated, ClassVar, override
+
+from pydantic import Field
+
+from flext_core import m, p, r, s, t
 
 
-class FlextObservabilityServiceBase(s[t.Dict], ABC):
-    @property
-    @override
-    def settings(self) -> FlextObservabilitySettings:
-        return FlextSettings.get_global().get_namespace(
-            "observability", FlextObservabilitySettings
-        )
-```
+class FlextObservabilityTraceResult(m.ArbitraryTypesModel):
+    """Trace result model — one model class per domain concept."""
 
-```python
-# services/tracing.py — one concern per mixin
+    _flext_enforcement_exempt: ClassVar[bool] = True
+
+    trace_id: Annotated[t.NonEmptyStr, Field(description="Distributed trace id")]
+    span_name: Annotated[t.NonEmptyStr, Field(description="Span name")]
+
+
 class FlextObservabilityTracingMixin:
-    """Distributed tracing mixin for MRO composition."""
+    """Tracing concern — one mixin per concern, composed via MRO."""
 
     @staticmethod
-    def start_trace(
-        name: str, attributes: t.ScalarMapping | None = None
-    ) -> p.Result[m.Observability.Trace]: ...
-```
+    def _build_trace(span_name: t.NonEmptyStr) -> FlextObservabilityTraceResult:
+        """Trace construction stub for MRO composition."""
+        return FlextObservabilityTraceResult(
+            trace_id="trace-1",
+            span_name=span_name,
+        )
 
-```python
-# api.py — MRO facade composing ALL mixins
+
+class FlextObservabilityMetricsMixin:
+    """Metrics concern — one mixin per concern, composed via MRO."""
+
+
+class FlextObservabilityHealthMixin:
+    """Health concern — one mixin per concern, composed via MRO."""
+
+
 class FlextObservability(
     FlextObservabilityTracingMixin,
     FlextObservabilityMetricsMixin,
     FlextObservabilityHealthMixin,
-    # ... all service mixins
-    FlextObservabilityServiceBase,
+    s[FlextObservabilityTraceResult],
 ):
-    """All domain methods come from mixins via MRO."""
+    """Facade: single class per module, domain methods inherited via MRO."""
 
-    _logger = u.get_logger(__name__)  # shadows mixin _logger fields
+    _flext_enforcement_exempt: ClassVar[bool] = True
+
+    span_name: Annotated[t.NonEmptyStr, Field(description="Initial span name")]
+
+    @override
+    def execute(self) -> p.Result[FlextObservabilityTraceResult]:
+        """Domain execution composes mixins through MRO."""
+        trace = self._build_trace(self.span_name)
+        return r[FlextObservabilityTraceResult].ok(trace)
 ```
 
 **Anti-patterns**:
 
 ```python
-# ❌ FORBIDDEN — standalone service classes (not mixins)
+# FORBIDDEN — standalone service classes (not mixins, no MRO composition)
+from __future__ import annotations
+
+
 class FlextObservabilityMonitor:
-    def __init__(self): ...  # standalone, not composable
+    """Standalone class — not composable via MRO, bypasses facade."""
 
-
-# ❌ FORBIDDEN — re-export stubs for services
-"""Re-export from internal module."""
-from flext_observability import FlextObservabilityMonitor
-
-__all__: list[str] = ["FlextObservabilityMonitor"]
-
-# ❌ FORBIDDEN — direct individual class instantiation
-monitor = FlextObservabilityMonitor()  # bypass facade
+    def __init__(self) -> None:
+        """Illustrates the anti-pattern."""
 ```
 
 **Reference implementations**: `flext-cli`, `flext-ldif`, `flext-observability`.
@@ -130,16 +145,43 @@ monitor = FlextObservabilityMonitor()  # bypass facade
 **Never** use `u.Aliases.*()` to define package-level runtime aliases. Use **simple runtime aliases only**: direct assignment to the facade class (e.g. `c = FlextConstants`, `m = FlextModels`, `r = r`, `t = FlextTypes`, `u = FlextUtilities`, `p = FlextProtocols`, `d = d`, `e = e`, `h = h`, `s = s`, `x = x`). No alias registry or staticmethod layer for defining these; MRO protocol only. Runtime helpers come from **x** (x) via MRO.
 
 ```python
-# ✅ CORRECT
+# CORRECT
+from __future__ import annotations
+
+
+class FlextConstants:
+    """Stub constants facade for illustration."""
+
+
+class FlextModels:
+    """Stub models facade for illustration."""
+
+
 c = FlextConstants
 m = FlextModels
-x = x
 ```
 
 ```python
-# ❌ FORBIDDEN
-c = u.Aliases.constants()
-m = u.Aliases.models()
+# FORBIDDEN — alias registry / staticmethod wrappers
+from __future__ import annotations
+
+
+class _AliasRegistry:
+    """Illustrates the anti-pattern."""
+
+    @staticmethod
+    def constants() -> type:
+        """Stub."""
+        return type("FlextConstants", (), {})
+
+    @staticmethod
+    def models() -> type:
+        """Stub."""
+        return type("FlextModels", (), {})
+
+
+c = _AliasRegistry.constants()
+m = _AliasRegistry.models()
 ```
 
 ## Namespace Inheritance Pattern
@@ -154,25 +196,37 @@ Access through the **project runtime alias only**, while preserving the organic 
 
 ```python
 # models.py — inherit parent and keep the organic namespace path
-from flext_meltano import FlextMeltanoModels
+from __future__ import annotations
+
+from typing import Annotated, ClassVar
+
+from pydantic import Field
+
+from flext_core import m, p, r, t
 
 
-class FlextTargetOracleModels(FlextMeltanoModels, FlextDbOracleModels):
+class FlextTargetOracleModels(m):
+    """Consumer facade — inherits flext_core m via MRO, adds one namespace."""
+
+    _flext_enforcement_exempt: ClassVar[bool] = True
+
     class TargetOracle:
-        class ExecuteResult(FlextMeltanoModels.ArbitraryTypesModel):
-            name: str
+        """One local domain namespace owned by the facade."""
+
+        class ExecuteResult(m.ArbitraryTypesModel):
+            """Domain-local model accessed as m.TargetOracle.ExecuteResult."""
+
+            _flext_enforcement_exempt: ClassVar[bool] = True
+
+            name: Annotated[t.NonEmptyStr, Field(description="Resource name")]
 
 
-m = FlextTargetOracleModels
-```
+ExecuteResult = FlextTargetOracleModels.TargetOracle.ExecuteResult
 
-```python
-# Runtime usage — only runtime alias m; access keeps the domain path
-from .models import m
-from flext_core import r, p
 
-schema = m.Meltano.SingerSchemaMessage(data)
-result = r[m.TargetOracle.ExecuteResult].ok(m.TargetOracle.ExecuteResult(name="x"))
+def build_result(name: str) -> p.Result[ExecuteResult]:
+    """Runtime usage — access keeps the organic domain path."""
+    return r[ExecuteResult].ok(ExecuteResult(name=name))
 ```
 
 ## .new/Swap Protocol for Large Modifications
@@ -193,10 +247,15 @@ Verify inheritance chain with: `[c.__name__ for c in cls.__mro__]`
 Example:
 
 ```python
-from .models import m
+from __future__ import annotations
 
-print([c.__name__ for c in m.__mro__])
-# Output: ['FlextTargetOracleModels', 'FlextMeltanoModels', 'FlextDbOracleModels', 'FlextModels', 't.RecursiveContainer']
+from flext_core import m
+
+
+def print_mro() -> None:
+    """Inspect MRO chain of the runtime facade alias."""
+    names = [cls.__name__ for cls in m.__mro__]
+    print(names)
 ```
 
 Anti-patterns:
@@ -215,17 +274,38 @@ If `FlextProjectConstants(FlextConstants)` already inherits `Platform` via MRO,
 do NOT create a subclass of it anywhere in the child hierarchy.
 
 ```python
-# ❌ FORBIDDEN — redeclares Platform received via MRO
-class FlextDbOracleConstants(FlextConstants):
+from __future__ import annotations
+
+from typing import Final
+
+
+class FlextConstants:
+    """Stub base constants facade for illustration."""
+
+
+# FORBIDDEN — redeclares Platform received via MRO
+class FlextDbOracleConstantsBad(FlextConstants):
+    """Bad: shadows a name already present on the parent chain."""
+
     class DbOracle:
-        class Platform(FlextConstants):  # WRONG!
+        """Illustrates the anti-pattern of re-inheriting a parent class."""
+
+        class Platform(FlextConstants):
+            """WRONG — Platform should not re-inherit FlextConstants."""
+
             LOOPBACK_IP: Final[str] = "127.0.0.1"
 
 
-# ✅ CORRECT — new namespace class, no MRO shadowing
+# CORRECT — new namespace class, no MRO shadowing
 class FlextDbOracleConstants(FlextConstants):
+    """Good: plain local namespace owned by this facade."""
+
     class DbOracle:
-        class Platform:  # plain class, independent namespace
+        """Project-local namespace under the constants facade."""
+
+        class Platform:
+            """Plain class — independent namespace, no parent shadowing."""
+
             LOOPBACK_IP: Final[str] = "127.0.0.1"
 ```
 
@@ -244,13 +324,14 @@ from them creates confusing duplicates and breaks type identity.
 - For protocol payloads (Singer/CLI/API), prefer canonical Pydantic message models over repeated ad-hoc dict key/type checks in handlers.
 
 ```python
-from flext_core import r, p
+from __future__ import annotations
+
+from flext_core import p, r
 
 
-def transform(value: str):
-    return (
-        r[str].ok(value).map(str.strip).flat_map(lambda v: p.Result[str].ok(v.lower()))
-    )
+def transform(value: str) -> p.Result[str]:
+    """Railway composition: ok → map → flat_map with typed result flow."""
+    return r[str].ok(value).map(str.strip).flat_map(lambda v: r[str].ok(v.lower()))
 ```
 
 ## Workflow
@@ -265,43 +346,71 @@ def transform(value: str):
 ### Good: Domain Model with MRO-nested Pydantic models via `m` facade
 
 ```python
-from flext_core import m, c, p, r
+from __future__ import annotations
 
-class FlextOrderModels(m):
-    class Order:
-        class Item(m.BaseModel):
-            sku: str = m.Field(..., description="Stock keeping unit")
-            quantity: int = m.Field(default=1, ge=1)
-            
-            @m.field_validator("sku", mode="before")
-            @classmethod
-            def normalize_sku(cls, v: str) -> str:
-                return v.upper().strip()
-        
-        class CreateCommand(m.BaseModel):
-            model_config = m.ConfigDict(extra=c.EXTRA_FORBID)
-            customer_id: str
-            items: list[m.Item]
-            
-            @m.model_validator(mode="after")
-            def validate_order(self) -> m.Self:
-                if not self.items:
-                    raise ValueError("Order must have at least one item")
-                return self
+from typing import Annotated, ClassVar, Self
 
-# Usage via MRO
-m_module = FlextOrderModels
-cmd = m_module.Order.CreateCommand(
-    customer_id="cust_123",
-    items=[m_module.Order.Item(sku="WIDGET", quantity=5)]
-)
-result = r[m_module.Order.CreateCommand].ok(cmd)
+from pydantic import ConfigDict, Field, field_validator, model_validator
+
+from flext_core import m, p, r, t
+
+
+class FlextOrderItem(m.ArbitraryTypesModel):
+    """Order item model — one class per module via MRO composition."""
+
+    _flext_enforcement_exempt: ClassVar[bool] = True
+
+    sku: Annotated[t.NonEmptyStr, Field(description="Stock keeping unit")]
+    quantity: Annotated[int, Field(default=1, ge=1, description="Unit count")]
+
+    @field_validator("sku", mode="before")
+    @classmethod
+    def normalize_sku(cls, value: str) -> str:
+        """Uppercase and strip the SKU before validation."""
+        return value.upper().strip()
+
+
+class FlextOrderCreateCommand(m.Command):
+    """Create-order command — inherits m.Command flat namespace via MRO."""
+
+    _flext_enforcement_exempt: ClassVar[bool] = True
+    model_config = ConfigDict(extra="forbid")
+
+    customer_id: Annotated[t.NonEmptyStr, Field(description="Customer id")]
+    items: Annotated[
+        list[FlextOrderItem],
+        Field(description="Items to purchase", min_length=1),
+    ]
+
+    @model_validator(mode="after")
+    def validate_order(self) -> Self:
+        """Ensure the order contains at least one item."""
+        if not self.items:
+            msg = "Order must have at least one item"
+            raise ValueError(msg)
+        return self
+
+
+def build_order() -> p.Result[FlextOrderCreateCommand]:
+    """Construct a well-formed order via railway-oriented result flow."""
+    cmd = FlextOrderCreateCommand(
+        customer_id="cust_123",
+        items=[FlextOrderItem(sku="WIDGET", quantity=5)],
+    )
+    return r[FlextOrderCreateCommand].ok(cmd)
 ```
 
 ### Good: ROP with typed result flow
 
 ```python
-result = r[int].ok(10).map(lambda v: v * 2).lash(lambda err: p.Result[int].ok(0))
+from __future__ import annotations
+
+from flext_core import p, r
+
+
+def compute() -> p.Result[int]:
+    """Preserves typed success/failure flow with explicit recovery."""
+    return r[int].ok(10).map(lambda v: v * 2).lash(lambda _err: r[int].ok(0))
 ```
 
 Why good: preserves typed success/failure flow with explicit recovery.
@@ -309,11 +418,23 @@ Why good: preserves typed success/failure flow with explicit recovery.
 Bad:
 
 ```python
-try:
-    value = fn()
+from __future__ import annotations
+
+from typing import Any
+
+
+def fn() -> int:
+    """Stub business function."""
+    return 1
+
+
+def bad_envelope() -> dict[str, Any]:
+    """Custom envelope duplicates the core result abstraction."""
+    try:
+        value = fn()
+    except Exception as exc:  # noqa: BLE001
+        return {"ok": False, "error": str(exc)}
     return {"ok": True, "value": value}
-except Exception as exc:
-    return {"ok": False, "error": str(exc)}
 ```
 
 Why bad: custom envelope duplicates core result abstraction and weakens type safety.
@@ -321,8 +442,17 @@ Why bad: custom envelope duplicates core result abstraction and weakens type saf
 Bad:
 
 ```python
-from dependency_injector import providers
+from __future__ import annotations
 
+
+class _FakeProvidersModule:
+    """Stub illustrating the DI bypass anti-pattern."""
+
+    class DynamicContainer:
+        """Stub container."""
+
+
+providers = _FakeProvidersModule()
 services = providers.DynamicContainer()
 ```
 
@@ -331,8 +461,14 @@ Why bad: imports infrastructure directly instead of using runtime/container brid
 Bad:
 
 ```python
-logger = {"scope": "request"}
-logger["user_id"] = user_id
+from __future__ import annotations
+
+
+def bad_context_logger(user_id: str) -> dict[str, str]:
+    """Manual dict payload instead of structured logging context."""
+    logger: dict[str, str] = {"scope": "request"}
+    logger["user_id"] = user_id
+    return logger
 ```
 
 Why bad: bypasses structured context APIs (`bind_global_context`, `scoped_context`) and loses standardized log behavior.
@@ -340,11 +476,15 @@ Why bad: bypasses structured context APIs (`bind_global_context`, `scoped_contex
 Bad:
 
 ```python
-# duplicate operation wrappers that are never consumed
-class DomainAPIOperationsA: ...
+from __future__ import annotations
 
 
-class DomainAPIOperationsB: ...
+class DomainAPIOperationsA:
+    """Duplicate operation wrapper never consumed by the facade."""
+
+
+class DomainAPIOperationsB:
+    """Duplicate operation wrapper never consumed by the facade."""
 ```
 
 Why bad: multiplies maintenance surface and drifts from the canonical facade API.
@@ -352,7 +492,14 @@ Why bad: multiplies maintenance surface and drifts from the canonical facade API
 Bad:
 
 ```python
-# compatibility aliases that hide canonical call sites
+from __future__ import annotations
+
+
+class NewDirectAPI:
+    """Canonical API."""
+
+
+# Compatibility alias that hides the canonical call site
 LegacyAPI = NewDirectAPI
 ```
 
@@ -361,8 +508,20 @@ Why bad: keeps obsolete surfaces alive, delays full reference migration, and pre
 Bad:
 
 ```python
-def do_work(...):
-    return DomainFacade().do_work(...)
+from __future__ import annotations
+
+
+class DomainFacade:
+    """Canonical facade."""
+
+    def do_work(self, payload: str) -> str:
+        """Do the real work."""
+        return payload.upper()
+
+
+def do_work(payload: str) -> str:
+    """Pass-through wrapper duplicating the facade surface."""
+    return DomainFacade().do_work(payload)
 ```
 
 Why bad: free-function pass-through wrappers duplicate the class surface and inflate code without adding domain behavior.
@@ -370,6 +529,14 @@ Why bad: free-function pass-through wrappers duplicate the class surface and inf
 Bad:
 
 ```python
+from __future__ import annotations
+
+
+class CanonicalNamespace:
+    """Canonical namespace."""
+
+
+# Namespace alias hides the canonical access path
 SomeNamespace = CanonicalNamespace
 ```
 
@@ -378,6 +545,18 @@ Why bad: namespace aliases hide canonical access paths and spread non-essential 
 Bad:
 
 ```python
+from __future__ import annotations
+
+from enum import Enum
+
+
+class Status(Enum):
+    """Canonical status enum."""
+
+    ACTIVE = "active"
+
+
+# Duplicate alias multiplies symbols and forces compatibility maintenance
 STATUS_ACTIVE = Status.ACTIVE
 ```
 
