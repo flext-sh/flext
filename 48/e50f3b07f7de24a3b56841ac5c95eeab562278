@@ -1,0 +1,186 @@
+.claude/skills/lib-orjson/SKILL.md
+  db4927e9f67317f0 40-46,50-51,79-90,98-106,114-130,138-145
+docs/references/pydantic2/internals/resolving_annotations.md
+  db4927e9f67317f0 250
+.claude/skills/pydantic-v2-patterns/SKILL.md
+  db4927e9f67317f0 115,142-146,151,153,162,188
+.claude/skills/flext-strict-typing/SKILL.md
+  db4927e9f67317f0 56,58,60-66
+.claude/skills/flext-strict-typing/references/type-rules-detail.md
+  14776bb8a7569cd6 77,83-84
+.claude/skills/flext-type-system/SKILL.md
+  db4927e9f67317f0 114-118,121-122,126-128,143-154,177-187
+  14776bb8a7569cd6 36,190
+.claude/skills/rules-flext-core/SKILL.md
+  14776bb8a7569cd6 46,48,50-51
+  db4927e9f67317f0 33,67-71,79-82,92,100-104,112-113,115-117
+docs/architecture/flext-service-architecture.md
+  db4927e9f67317f0 1327,3879,3881,3946,3965
+  h_9db9d35f50cf33 676,678-679
+.claude/skills/lib-dependency-injector/SKILL.md
+  db4927e9f67317f0 50-59,81-98,100-104,109,112,139,143-144,164-166,177-179
+.claude/skills/pydantic-v2-governance/SKILL.md
+  db4927e9f67317f0 33,78,80-81,83-89
+  14776bb8a7569cd6 90-94
+docs/references/pydantic2/concepts/models.md
+  14776bb8a7569cd6 391,395,558
+.github/workflows/release.yml
+  14776bb8a7569cd6 60
+docs/references/pydantic2/integrations/datamodel_code_generator.md
+  db4927e9f67317f0 40
+AGENTS.md
+  14776bb8a7569cd6 196,202,299,303
+.claude/skills/flext-import-rules/SKILL.md
+  db4927e9f67317f0 33,54,56-75
+.claude/skills/lib-pydantic-settings/SKILL.md
+  db4927e9f67317f0 65-72,75-78,80,87-92,94,111-114,121-122
+.planning/phases/wave-0/wave-0-SUMMARY.md
+  14776bb8a7569cd6 1-94
+.claude/skills/lib-pydantic-v2/SKILL.md
+  db4927e9f67317f0 48,74,85,98,112,125,138,232
+.claude/skills/async-python-patterns/SKILL.md
+  db4927e9f67317f0 37-54,59,68-88,92,96,104-110,112,114-126,132-138,140-145,147-148,157-158,164-176,182-183,185,192-203,206,208,225-238,240-241,249-264
+.claude/skills/flext-patterns/SKILL.md
+  db4927e9f67317f0 69-70,72-85,89,92-106,112,114-116,118-124,130-131,134-135,137-138,148-159,165-184,199-205,208-212,214,216-217,219-224,227-229,250,252-258,277-289,291-295,299,301-302,304-308,327,329,331-334,349-400,406-413,421-436,445-452,454-455,464-471,479,482-487,495-502,511-524,532-539,548-559
+.planning/milestones/v1.0-phases/01-type-system-hardening/01-RESEARCH.md
+  14776bb8a7569cd6 56,193,424
+.planning/specs/2026-04-15-skill-validation-design.md
+  db4927e9f67317f0 1-339
+.claude/skills/flext-mro-namespace-rules/SKILL.md
+  db4927e9f67317f0 79-83,87-89,92-111
+.claude/skills/flext-agent-strict-rules/SKILL.md
+  db4927e9f67317f0 25,75,77,79-100,103-107,115-121,130-156,158-163,165,167-171,173-175
+  14776bb8a7569cd6 166
+docs/references/pydantic2/concepts/serialization.md
+  14776bb8a7569cd6 31
+docs/planning/pydantic2_migration_roadmap.md
+  db4927e9f67317f0 161
+.planning/milestones/v1.0-phases/01-type-system-hardening/01-01-PLAN.md
+  14776bb8a7569cd6 226
+.claude/skills/testing-patterns/SKILL.md
+  db4927e9f67317f0 45-69,71-72,75,79,85,87,89-91,94,97-98,101,105-106,108,111-114,120-125,127-138,142-144,148-153,159-163,165,172-173,180-199,201-203,205-212,214,228-231,233,242-265,269,275-277,279-287,294-297,299,329-344,347,356-369,371
+docs/references/pydantic2/errors/usage_errors.md
+  14776bb8a7569cd6 179,669,862
+docs/references/pydantic2/errors/validation_errors.md
+  14776bb8a7569cd6 114
+.claude/skills/lib-pyyaml/SKILL.md
+  db4927e9f67317f0 64-73,77,82-135,140-148,171-180,188-197,205-215,223-233,241-256
+.claude/skills/rules-typings/SKILL.md
+  14776bb8a7569cd6 32
+.claude/skills/flext-5agent-coordination/SKILL.md
+  db4927e9f67317f0 207,209,211-217,225-233,241-245,249,257-261,264-271
+docs/references/pydantic2/concepts/types.md
+  14776bb8a7569cd6 203,243,359,394,413,625,744
+.claude/skills/rules-examples/SKILL.md
+  db4927e9f67317f0 31
+docs/references/pydantic2/concepts/json_schema.md
+  14776bb8a7569cd6 134,176,184,240,258,314,330,425,471,507,552,608,641,730,820,882,1069,1113,1159,1220,1231,1243,1288,1333,1372,1445,1457
+.github/workflows/ci.yml
+  14776bb8a7569cd6 30
+pyproject.toml
+  db4927e9f67317f0 267
+  14776bb8a7569cd6 1323
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "48e50f3b07f7de24a3b56841ac5c95eeab562278",
+  "prompts": {
+    "0bf1544685a35ccd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8d70-e211-7a42-8499-6cbbe28689f2",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2254,
+      "overriden_lines": 0
+    },
+    "14776bb8a7569cd6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "808a0355-ecdb-46fb-a4dd-7348401900ee",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 19840,
+      "total_deletions": 1599,
+      "accepted_lines": 22589,
+      "overriden_lines": 43
+    },
+    "1b28234634c341c5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8c42-0715-7831-85d8-eb1922b1c8fb",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2068,
+      "overriden_lines": 0
+    },
+    "8eb981e40cc2a427": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8cf2-0859-7651-b73f-ed30fb6aee1d",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 74,
+      "overriden_lines": 0
+    },
+    "d915b9853f380ecb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d88a6-609e-7a00-a230-f6e534202261",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 7549,
+      "overriden_lines": 0
+    },
+    "db46130d8a27777d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d923f-8574-7731-8817-4a0433cc83a1",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 362,
+      "overriden_lines": 0
+    },
+    "db4927e9f67317f0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "312f664b-2347-4a2f-92d6-46917dcca62e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 72037,
+      "total_deletions": 574,
+      "accepted_lines": 74923,
+      "overriden_lines": 26
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
