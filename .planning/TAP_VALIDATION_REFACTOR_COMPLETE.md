@@ -28,8 +28,8 @@ This refactoring goal sought to replace bare constraint patterns in flext-tap-*/
 **Example conversions**:
 ```python
 # Before (if it existed):
-# host: Annotated[str, Field(min_length=1)]
-# port: Annotated[int, Field(ge=1)]
+# host: Annotated[str, m.Field(min_length=1)]
+# port: Annotated[int, m.Field(ge=1)]
 
 # After (current state):
 host: t.NonEmptyStr
@@ -47,10 +47,10 @@ port: t.PortNumber
 ### 2. flext-tap-ldif
 **Status**: ✅ COMPLETE - No bare constraints found
 
-**Strategy**: Uses descriptive Field() parameters without numeric constraints. All validation handled through:
+**Strategy**: Uses descriptive m.Field() parameters without numeric constraints. All validation handled through:
 - Model validators (`@model_validator`)
 - Field serializers (`@field_serializer`)
-- Computed fields (`@computed_field`)
+- Computed fields (`@u.computed_field`)
 
 **Locations checked**:
 - 1000+ lines of LDIF-specific models
@@ -68,8 +68,8 @@ port: t.PortNumber
 
 **Example**:
 ```python
-stream_name: Annotated[str, Field(..., description="Singer stream name")]
-# Validated via custom validator, not Field(min_length=...)
+stream_name: Annotated[str, m.Field(..., description="Singer stream name")]
+# Validated via custom validator, not m.Field(min_length=...)
 ```
 
 ---
@@ -95,16 +95,16 @@ stream_name: Annotated[str, Field(..., description="Singer stream name")]
 
 ### Search Pattern Results
 ```
-Pattern: Field(min_length=...)
+Pattern: m.Field(min_length=...)
 Result:  0 occurrences across all tap models ✅
 
-Pattern: Field(ge=...) or Field(gt=...)
+Pattern: m.Field(ge=...) or m.Field(gt=...)
 Result:  0 occurrences across all tap models ✅
 
-Pattern: Field(le=...) or Field(lt=...)
+Pattern: m.Field(le=...) or m.Field(lt=...)
 Result:  0 occurrences across all tap models ✅
 
-Pattern: Field(max_length=...)
+Pattern: m.Field(max_length=...)
 Result:  0 occurrences across all tap models ✅
 ```
 
@@ -137,7 +137,7 @@ Result:  0 occurrences across all tap models ✅
 from flext_core import t
 
 
-class MyModel(BaseModel):
+class MyModel(m.BaseModel):
     # String field - must be non-empty
     name: t.NonEmptyStr
 
@@ -145,14 +145,14 @@ class MyModel(BaseModel):
     port: t.PortNumber
 
     # With default value
-    timeout: Annotated[t.PositiveInt, Field(default=30)]
+    timeout: Annotated[t.PositiveInt, m.Field(default=30)]
 ```
 
 ### Incorrect Pattern (Not Found)
 ```python
 # ❌ This pattern was NOT found anywhere
-name: Annotated[str, Field(min_length=1)]
-port: Annotated[int, Field(ge=1, le=65535)]
+name: Annotated[str, m.Field(min_length=1)]
+port: Annotated[int, m.Field(ge=1, le=65535)]
 ```
 
 ---
@@ -187,7 +187,7 @@ This represents best practice implementation:
 - ✅ Portable across ecosystems
 - ✅ Type-safe and IDE-friendly
 - ✅ Maintainable and consistent
-- ✅ Zero bare Field() constraints
+- ✅ Zero bare m.Field() constraints
 
 ---
 

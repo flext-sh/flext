@@ -21,11 +21,11 @@ import time
 from collections.abc import Mapping, MutableSequence, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
-from typing import ClassVar, TypeIs
+from typing import Annotated, ClassVar, TypeIs
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict
 
-from flext_core import p, r, t
+from flext_core import m, p, r, t
 
 EntryDict = Mapping[
     str,
@@ -83,36 +83,38 @@ class AclProcessingExample:
         SEARCH = "search"
         UNKNOWN = "unknown"
 
-    class AclEntry(BaseModel):
+    class AclEntry(m.BaseModel):
         """Represents an ACL entry with context and permissions."""
 
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-        dn: str = Field(description="Distinguished name of the ACL entry")
-        acl_attribute: str = Field(description="ACL attribute name")
-        permissions: t.StrSequence = Field(description="List of permissions")
-        context: ContextDict = Field(description="Context information")
-        server_type: str = Field(description="Type of LDAP server")
+        dn: str = m.Field(description="Distinguished name of the ACL entry")
+        acl_attribute: str = m.Field(description="ACL attribute name")
+        permissions: t.StrSequence = m.Field(description="List of permissions")
+        context: ContextDict = m.Field(description="Context information")
+        server_type: str = m.Field(description="Type of LDAP server")
 
-    class AclValidationResult(BaseModel):
+    class AclValidationResult(m.BaseModel):
         """Result of ACL validation with detailed context."""
 
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-        entry_dn: str = Field(description="Distinguished name of the entry")
-        valid: bool = Field(description="Whether the ACL entry is valid")
-        violations: t.StrSequence = Field(
+        entry_dn: str = m.Field(description="Distinguished name of the entry")
+        valid: bool = m.Field(description="Whether the ACL entry is valid")
+        violations: t.StrSequence = m.Field(
             default_factory=_new_str_list,
             description="List of validation violations",
         )
-        warnings: t.StrSequence = Field(
+        warnings: t.StrSequence = m.Field(
             default_factory=_new_str_list,
             description="List of validation warnings",
         )
-        processing_time: float = Field(
-            default=0.0,
-            description="Time taken for validation",
-        )
+        processing_time: Annotated[
+            float,
+            m.Field(
+                description="Time taken for validation",
+            ),
+        ] = 0.0
 
     class Constants:
         """Constants for ACL processing."""
@@ -275,7 +277,7 @@ class AclProcessingExample:
             ),
         )
 
-    class AclProcessor(BaseModel):
+    class AclProcessor(m.BaseModel):
         """Monadic ACL processor with zero-ceremony execution."""
 
         auto_execute: bool = True

@@ -31,7 +31,7 @@ description: Authoritative rules for `flext-core` architecture, typing, result f
 - Keep failure/success boundaries on `r` (`r`) and compose with `map/flat_map/lash`.
 - Keep dependency-injector usage routed through runtime/container bridges.
 - Keep shared type contracts centralized in `typings.py`. **Rule**: `Any`, `object`, and `Mapping[str, Any]` are FORBIDDEN — use `t.*` contracts exclusively. `None` in type unions only when business-required.
-- Keep public `get_*`/`set_*`/`is_*` surfaces out of `flext-core`; deterministic values belong in fields or `@computed_field`, and result/status carriers use `success`/`failure`.
+- Keep public `get_*`/`set_*`/`is_*` surfaces out of `flext-core`; deterministic values belong in fields or `@u.computed_field`, and result/status carriers use `success`/`failure`.
 - Consume public API from `flext_core` exports in non-internal modules.
 - For `flext-core/tests/`, assert module and facade behavior, not implementation details. Tests coupled to internal warning text, traceback fragments, local alias names, internal class names, or private MRO structure are invalid and must be rewritten to target stable external behavior.
 - **Rule — Library Abstraction Responsibility**: flext-core is the ONLY project that may import and use `pydantic`, `dependency_injector`, `structlog`, `returns`, `orjson`, `pyyaml` directly. All consuming projects (`flext-cli`, `flext-ldap`, integration projects, etc.) MUST access these through flext-core's public abstractions (`m.*`, `c.*`, `p.*`, `t.*`, `u.*`). This boundary is inviolable and enforced via grep audits and linting rules.
@@ -68,7 +68,12 @@ from __future__ import annotations
 
 from flext_core import r
 
-result = r[str].ok("x").flat_map(lambda v: r[str].ok(v.upper()))
+
+def _to_upper(v: str) -> r[str]:
+    return r[str].ok(v.upper())
+
+
+result = r[str].ok("x").flat_map(_to_upper)
 ```
 
 Why good: typed railway composition with explicit success chain.
@@ -78,14 +83,13 @@ Good (Library Abstraction Provider):
 ```python
 from __future__ import annotations
 
-from pydantic import ConfigDict
-from pydantic import BaseModel
+from flext_core import c, m
 
 
-class Settings(BaseModel):
+class Settings(m.BaseModel):
     """Base settings class - abstracts pydantic for all consumers."""
 
-    model_config = ConfigDict(extra="ignore")
+    model_config = m.ConfigDict(extra="ignore")
 
 
 # In FlextCoreModels' __exports__
@@ -100,7 +104,7 @@ Bad (Bypassing Container):
 from __future__ import annotations
 
 # ❌ NEVER — bypasses u/FlextContainer bridge contract
-# from dependency_injector import providers  # noqa: ERA001
+# from dependency_injector import providers
 _EXAMPLE_ONLY: str = "use u.Container instead of dependency_injector directly"
 ```
 
@@ -112,8 +116,8 @@ Bad (Library Abstraction Violation - if this were in flext-cli):
 from __future__ import annotations
 
 # ❌ NEVER in flext-cli/src or other consuming projects
-# from pydantic import BaseModel, Field  # noqa: ERA001
-# from dependency_injector import containers  # noqa: ERA001
+# from pydantic import BaseModel, Field
+# from dependency_injector import containers
 _EXAMPLE_ONLY: str = "use m.BaseModel and u.Container instead"
 ```
 

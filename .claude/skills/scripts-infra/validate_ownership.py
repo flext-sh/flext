@@ -11,11 +11,11 @@ import re
 import sys
 from collections.abc import Sequence
 from pathlib import Path
-from typing import ClassVar
+from typing import Annotated, ClassVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict
 
-from flext_infra import t, u
+from flext_infra import m, t, u
 
 OWNER_MARKER_RE = re.compile(
     r"^# Owner-Skill:\s+(.claude/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md)\s*$",
@@ -46,18 +46,20 @@ class SkillInfraError(Exception):
     """SkillInfraError class."""
 
 
-class ScriptCheckResult(BaseModel):
+class ScriptCheckResult(m.BaseModel):
     """ScriptCheckResult class."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
 
-    script: str = Field(description="Script file path")
-    status: str = Field(description="Validation status (OK, UNOWNED, VIOLATION)")
-    details: str = Field(description="Detailed status message")
-    owner_skill: str | None = Field(
-        default=None,
-        description="Owner skill identifier if applicable",
-    )
+    script: str = m.Field(description="Script file path")
+    status: str = m.Field(description="Validation status (OK, UNOWNED, VIOLATION)")
+    details: str = m.Field(description="Detailed status message")
+    owner_skill: Annotated[
+        str | None,
+        m.Field(
+            description="Owner skill identifier if applicable",
+        ),
+    ] = None
 
 
 def eprint(message: str) -> None:

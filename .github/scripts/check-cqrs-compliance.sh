@@ -69,15 +69,15 @@ _check() {
 echo "=== CQRS Compliance Check ==="
 echo ""
 
-# 1. No Command(BaseModel) in production code
+# 1. No Command(m.BaseModel) in production code
 _check "CMD-BASEMODEL" \
-	'class.*Command(BaseModel)' \
+	'class.*Command(m.BaseModel)' \
 	"Command classes must inherit from m.Command, not BaseModel" \
 	"flext-ldif" "flext-core" "examples" "__pycache__"
 
-# 2. No Event(BaseModel) in production code
+# 2. No Event(m.BaseModel) in production code
 _check "EVT-BASEMODEL" \
-	'class.*Event(BaseModel)' \
+	'class.*Event(m.BaseModel)' \
 	"Event classes must inherit from m.DomainEvent or m.Event, not BaseModel" \
 	"flext-ldif" "flext-core" "examples" "__pycache__"
 
@@ -111,9 +111,9 @@ else
 	_log "  PASS: No direct FlextDispatcher() instantiation"
 fi
 
-# 5. No Query(BaseModel) in production code
+# 5. No Query(m.BaseModel) in production code
 _check "QRY-BASEMODEL" \
-	'class.*Query(BaseModel)' \
+	'class.*Query(m.BaseModel)' \
 	"Query classes must inherit from m.Query, not BaseModel" \
 	"flext-ldif" "flext-core" "examples" "__pycache__"
 
@@ -125,10 +125,10 @@ else
 	echo "❌ CQRS Compliance: FAILED ($VIOLATIONS violation(s))"
 	echo ""
 	echo "Fix instructions:"
-	echo "  CMD-BASEMODEL     → Change class MyCommand(BaseModel) to class MyCommand(m.Command)"
-	echo "  EVT-BASEMODEL     → Change class MyEvent(BaseModel) to class MyEvent(m.DomainEvent)"
+	echo "  CMD-BASEMODEL     → Change class MyCommand(m.BaseModel) to class MyCommand(m.Command)"
+	echo "  EVT-BASEMODEL     → Change class MyEvent(m.BaseModel) to class MyEvent(m.DomainEvent)"
 	echo "  SETATTR-HACK      → Remove setattr(obj, 'message_type', ...) — use self-describing handler"
 	echo "  DIRECT-DISPATCHER → Use p.Dispatcher via DI, not FlextDispatcher() directly"
-	echo "  QRY-BASEMODEL     → Change class MyQuery(BaseModel) to class MyQuery(m.Query)"
+	echo "  QRY-BASEMODEL     → Change class MyQuery(m.BaseModel) to class MyQuery(m.Query)"
 	exit 1
 fi

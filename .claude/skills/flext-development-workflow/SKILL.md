@@ -318,13 +318,17 @@ poetry run pre-commit run --all-files
 The project uses Google-style docstrings (enforced by Ruff `D` rules):
 
 ```python
+from __future__ import annotations
+
+from flext_core import m, p, r
+
+
 def process_command(
-    self,
-    command: m.Cqrs.Command,
+    command: m.Value,
     *,
     timeout: float = 30.0,
 ) -> p.Result[bool]:
-    """Process a CQRS command through the dispatcher.
+    """Process a command through the dispatcher.
 
     Args:
         command: The command to process.
@@ -332,10 +336,9 @@ def process_command(
 
     Returns:
         r[bool]: Success result or error details.
-
-    Raises:
-        e.DispatchError: If command routing fails.
     """
+    _ = command, timeout
+    return r[bool].ok(True)
 ```
 
 The `"""` docstring goes on the first line if single-line, otherwise multi-line
@@ -357,8 +360,6 @@ SPDX-License-Identifier: MIT
 """
 
 from __future__ import annotations
-
-from collections.abc import Mapping, Sequence
 
 # ... imports ...
 ```

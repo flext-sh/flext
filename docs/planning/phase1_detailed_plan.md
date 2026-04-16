@@ -226,7 +226,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class FlextModels:
     """Hierarchical namespace for all Flext models."""
 
-    class Base(BaseModel):
+    class Base(m.BaseModel):
         """Base model with standard Flext configuration."""
 
         model_config = ConfigDict(
@@ -242,15 +242,15 @@ class FlextModels:
         class Settings(FlextModels.Base):
             """Configuration models."""
 
-            app_name: str = Field(description="Application name")
-            version: str = Field(description="Version string")
+            app_name: str = m.Field(description="Application name")
+            version: str = m.Field(description="Version string")
             # ... other settings fields
 
         class Context(FlextModels.Base):
             """Context models."""
 
-            request_id: str = Field(description="Request ID")
-            user_id: str | None = Field(None, description="User ID")
+            request_id: str = m.Field(description="Request ID")
+            user_id: str | None = m.Field(None, description="User ID")
             # ... other context fields
 
     class Result:
@@ -259,14 +259,14 @@ class FlextModels:
         class Success(FlextModels.Base):
             """Successful result."""
 
-            data: dict = Field(description="Result data")
-            timestamp: str = Field(description="Timestamp")
+            data: dict = m.Field(description="Result data")
+            timestamp: str = m.Field(description="Timestamp")
 
         class Failure(FlextModels.Base):
             """Failed result."""
 
-            error_code: str = Field(description="Error code")
-            message: str = Field(description="Error message")
+            error_code: str = m.Field(description="Error code")
+            message: str = m.Field(description="Error message")
 ```
 
 #### Step 3: Update All Imports

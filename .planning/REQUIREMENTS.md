@@ -21,7 +21,7 @@
 
 - [x] **ARCH-01**: All public API type annotations use protocol types (`p.Context`, `p.DI`, `p.Settings`, `p.StructlogLogger`) not concrete types (`FlextContext`, `FlextContainer`, etc.)
 - [x] **ARCH-02**: `c,m,t,u,p` always imported from local namespace root in `tests/`, `examples/`, `scripts/` — never from `flext_core` directly
-- [x] **ARCH-03**: All ~1,551 `Field(...)` usages migrated to `Annotated[X, Field(...)]` canonical Pydantic v2 form
+- [x] **ARCH-03**: All ~1,551 `Field(...)` usages migrated to `Annotated[X, m.Field(...)]` canonical Pydantic v2 form
 - [x] **ARCH-04**: 6 pure ABCs converted to `@runtime_checkable` Protocol
 - [x] **ARCH-05**: 8 template ABCs have Protocol interface extracted (keep concrete base)
 - [x] **ARCH-06**: ~100 inline `TypeAdapter()` instantiations cached as `ClassVar`/module constants

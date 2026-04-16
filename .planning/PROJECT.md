@@ -25,7 +25,7 @@ Zero type errors, zero typing shortcuts, zero workarounds — a clean, strict, f
 - ✓ **TYPE-08**: All empty container literals annotated at assignment sites — v1.0
 - ✓ **ARCH-01**: All public APIs use protocol types (`p.*`) not concrete types — DIP enforced — v1.0
 - ✓ **ARCH-02**: `c,m,t,u,p` imported from local namespace root in tests/examples/scripts — v1.0
-- ✓ **ARCH-03**: Pydantic v2 `Field()` migrated to `Annotated[X, Field(...)]` canonical form — v1.0
+- ✓ **ARCH-03**: Pydantic v2 `Field()` migrated to `Annotated[X, m.Field(...)]` canonical form — v1.0
 - ✓ **ARCH-04**: 6 pure ABCs converted to `@runtime_checkable` Protocol — v1.0
 - ✓ **ARCH-05**: 8 template ABCs have Protocol interface extracted — v1.0
 - ✓ **ARCH-06**: ~100 inline `TypeAdapter()` instantiations cached as ClassVar/module constants — v1.0

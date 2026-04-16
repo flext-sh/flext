@@ -13,7 +13,7 @@
 - TypeGuard→TypeIs already migrated, all TYPE-01 through TYPE-08 requirements verified — Phase 01 complete
 - Removed last ABC from s — all flext-core interfaces now use @runtime_checkable Protocol via p.Service
 - Replaced concrete type annotations with protocol types (p.Settings, p.Container, p.Logger) in flext-core and 2 consumer projects
-- Migrated ~500 Field() usages to Annotated[T, Field(...)] canonical Pydantic v2 form across 33 projects, fixed 2 mutable defaults, cleaned up redundant Field() assignments
+- Migrated ~500 m.Field() usages to Annotated[T, m.Field(...)] canonical Pydantic v2 form across 33 projects, fixed 2 mutable defaults, cleaned up redundant m.Field() assignments
 - ~45 inline TypeAdapter() instantiations cached as ClassVar/module-level across 22 files in 15 projects, eliminating repeated construction in hot paths
 - Migrated 4 remaining TypeAlias assignments to PEP 695 form and normalized ~60 test files to import c,m,t,u,p from local namespace root
 - Added iter_projects() and emit() to CLI facade, normalized all bare root: Path to semantic variants (workspace_root, repo_root, scan_root) across 9 flext-infra files

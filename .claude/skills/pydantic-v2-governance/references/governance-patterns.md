@@ -1,8 +1,8 @@
 ## Instructions
 
-### 1. Field() → Annotated Pattern
+### 1. m.Field() → Annotated Pattern
 
-**Pattern**: For nullable fields, use `Annotated[T | None, Field(...)]` NOT `Annotated[T, Field(...)] | None`.
+**Pattern**: For nullable fields, use `Annotated[T | None, m.Field(...)]` NOT `Annotated[T, m.Field(...)] | None`.
 
 **Canonical Example** (`flext-core/src/flext_core/_models/cqrs.py:91-99`):
 
@@ -11,7 +11,7 @@ from typing import Annotated
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class Pagination(BaseModel):
+class Pagination(m.BaseModel):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "Pagination",
@@ -20,7 +20,7 @@ class Pagination(BaseModel):
     )
     page: Annotated[
         int,
-        Field(
+        m.Field(
             default=c.DEFAULT_PAGE_NUMBER,
             ge=c.RETRY_COUNT_MIN,
             description="Page number (1-based indexing)",
@@ -35,14 +35,14 @@ class Pagination(BaseModel):
 
 ```python
 # ✗ WRONG — Field constraints don't apply to None
-field: Annotated[str, Field(min_length=1)] | None = None
+field: Annotated[str, m.Field(min_length=1)] | None = None
 ```
 
 **Correct**:
 
 ```python
 # ✓ CORRECT — Field constraints apply to entire union
-field: Annotated[str | None, Field(min_length=1)] = None
+field: Annotated[str | None, m.Field(min_length=1)] = None
 ```
 
 **Repository anchors**:
@@ -59,10 +59,10 @@ field: Annotated[str | None, Field(min_length=1)] = None
 from pydantic import BaseModel, Field
 
 
-class RetryConfiguration(BaseModel):
-    retry_on_status_codes: Sequence[int] = Field(default_factory=list)
-    metadata: t.StrMapping = Field(default_factory=dict)
-    tags: set[str] = Field(default_factory=set)
+class RetryConfiguration(m.BaseModel):
+    retry_on_status_codes: Sequence[int] = m.Field(default_factory=list)
+    metadata: t.StrMapping = m.Field(default_factory=dict)
+    tags: set[str] = m.Field(default_factory=set)
 ```
 
 **Why**: `default=[]` creates a SHARED mutable t.RecursiveContainer across all instances (Python gotcha). `default_factory=list` creates a NEW list per instance.
@@ -71,16 +71,16 @@ class RetryConfiguration(BaseModel):
 
 ```python
 # ✗ WRONG — Shared mutable default
-class Config(BaseModel):
-    items: t.StrSequence = Field(default=[])  # BUG: all instances share same list
+class Config(m.BaseModel):
+    items: t.StrSequence = m.Field(default=[])  # BUG: all instances share same list
 ```
 
 **Correct**:
 
 ```python
 # ✓ CORRECT — New list per instance
-class Config(BaseModel):
-    items: t.StrSequence = Field(default_factory=list)
+class Config(m.BaseModel):
+    items: t.StrSequence = m.Field(default_factory=list)
 ```
 
 **Repository anchors**:
@@ -98,59 +98,59 @@ from typing import Annotated, ClassVar
 from pydantic import BaseModel, Field, TypeAdapter
 
 
-class ValidationHelpers(BaseModel):
-    _tags_adapter: ClassVar[TypeAdapter[t.StrSequence] | None] = None
-    _list_adapter: ClassVar[TypeAdapter[t.FlatContainerList] | None] = None
+class ValidationHelpers(m.BaseModel):
+    _tags_adapter: ClassVar[m.TypeAdapter[t.StrSequence] | None] = None
+    _list_adapter: ClassVar[m.TypeAdapter[t.FlatContainerList] | None] = None
     _strict_string_adapter: ClassVar[
-        TypeAdapter[Annotated[str, Field(strict=True)]] | None
+        m.TypeAdapter[Annotated[str, m.Field(strict=True)]] | None
     ] = None
     _metadata_map_adapter: ClassVar[
-        TypeAdapter[Mapping[str, t.MetadataValue]] | None
+        m.TypeAdapter[Mapping[str, t.MetadataValue]] | None
     ] = None
-    _config_adapter: ClassVar[TypeAdapter[Mapping[str, t.Container]] | None] = None
-    _dict_container_adapter: ClassVar[TypeAdapter[Mapping[str, t.Container]] | None] = (
-        None
-    )
-    _list_container_adapter: ClassVar[TypeAdapter[t.FlatContainerList] | None] = None
-    _tuple_container_adapter: ClassVar[TypeAdapter[tuple[t.Container, ...]] | None] = (
-        None
-    )
-    _primitives_adapter: ClassVar[TypeAdapter[t.Primitives] | None] = None
+    _config_adapter: ClassVar[m.TypeAdapter[Mapping[str, t.Container]] | None] = None
+    _dict_container_adapter: ClassVar[
+        m.TypeAdapter[Mapping[str, t.Container]] | None
+    ] = None
+    _list_container_adapter: ClassVar[m.TypeAdapter[t.FlatContainerList] | None] = None
+    _tuple_container_adapter: ClassVar[
+        m.TypeAdapter[tuple[t.Container, ...]] | None
+    ] = None
+    _primitives_adapter: ClassVar[m.TypeAdapter[t.Primitives] | None] = None
     _dict_str_metadata_adapter: ClassVar[
-        TypeAdapter[Mapping[str, t.MetadataValue | None]] | None
+        m.TypeAdapter[Mapping[str, t.MetadataValue | None]] | None
     ] = None
     _list_serializable_adapter: ClassVar[
-        TypeAdapter[Sequence[t.Serializable]] | None
+        m.TypeAdapter[Sequence[t.Serializable]] | None
     ] = None
     _tuple_serializable_adapter: ClassVar[
-        TypeAdapter[tuple[t.Serializable, ...]] | None
+        m.TypeAdapter[tuple[t.Serializable, ...]] | None
     ] = None
-    _set_container_adapter: ClassVar[TypeAdapter[set[t.Container]] | None] = None
-    _set_str_adapter: ClassVar[TypeAdapter[set[str]] | None] = None
-    _set_scalar_adapter: ClassVar[TypeAdapter[set[t.Scalar]] | None] = None
+    _set_container_adapter: ClassVar[m.TypeAdapter[set[t.Container]] | None] = None
+    _set_str_adapter: ClassVar[m.TypeAdapter[set[str]] | None] = None
+    _set_scalar_adapter: ClassVar[m.TypeAdapter[set[t.Scalar]] | None] = None
     _sortable_dict_adapter: ClassVar[
-        TypeAdapter[Mapping[t.SortableObjectType, t.Serializable | None]] | None
+        m.TypeAdapter[Mapping[t.SortableObjectType, t.Serializable | None]] | None
     ] = None
-    _strict_json_list_adapter: ClassVar[TypeAdapter[Sequence[t.StrictValue]] | None] = (
-        None
-    )
-    _strict_json_scalar_adapter: ClassVar[TypeAdapter[t.Scalar] | None] = None
-    _scalar_adapter: ClassVar[TypeAdapter[t.Scalar] | None] = None
-    _float_adapter: ClassVar[TypeAdapter[float] | None] = None
-    _str_adapter: ClassVar[TypeAdapter[str] | None] = None
-    _str_list_adapter: ClassVar[TypeAdapter[t.StrSequence] | None] = None
-    _str_or_bytes_adapter: ClassVar[TypeAdapter[str | bytes] | None] = None
-    _enum_type_adapter: ClassVar[TypeAdapter[type[StrEnum]] | None] = None
-    _serializable_adapter: ClassVar[TypeAdapter[t.Serializable] | None] = None
+    _strict_json_list_adapter: ClassVar[
+        m.TypeAdapter[Sequence[t.StrictValue]] | None
+    ] = None
+    _strict_json_scalar_adapter: ClassVar[m.TypeAdapter[t.Scalar] | None] = None
+    _scalar_adapter: ClassVar[m.TypeAdapter[t.Scalar] | None] = None
+    _float_adapter: ClassVar[m.TypeAdapter[float] | None] = None
+    _str_adapter: ClassVar[m.TypeAdapter[str] | None] = None
+    _str_list_adapter: ClassVar[m.TypeAdapter[t.StrSequence] | None] = None
+    _str_or_bytes_adapter: ClassVar[m.TypeAdapter[str | bytes] | None] = None
+    _enum_type_adapter: ClassVar[m.TypeAdapter[type[StrEnum]] | None] = None
+    _serializable_adapter: ClassVar[m.TypeAdapter[t.Serializable] | None] = None
     _metadata_json_dict_adapter: ClassVar[
-        TypeAdapter[Mapping[str, t.Primitives]] | None
+        m.TypeAdapter[Mapping[str, t.Primitives]] | None
     ] = None
     _flat_metadata_dict_adapter: ClassVar[
-        TypeAdapter[Mapping[str, t.Primitives]] | None
+        m.TypeAdapter[Mapping[str, t.Primitives]] | None
     ] = None
 
     @classmethod
-    def get_tags_adapter(cls) -> TypeAdapter[t.StrSequence]:
+    def get_tags_adapter(cls) -> m.TypeAdapter[t.StrSequence]:
         if cls._tags_adapter is None:
             cls._tags_adapter = TypeAdapter(t.StrSequence)
         return cls._tags_adapter
@@ -171,11 +171,11 @@ def validate_tags(self, tags) -> t.StrSequence:
 
 ```python
 # ✓ CORRECT — Cached TypeAdapter
-_tags_adapter: ClassVar[TypeAdapter[t.StrSequence] | None] = None
+_tags_adapter: ClassVar[m.TypeAdapter[t.StrSequence] | None] = None
 
 
 @classmethod
-def get_tags_adapter(cls) -> TypeAdapter[t.StrSequence]:
+def get_tags_adapter(cls) -> m.TypeAdapter[t.StrSequence]:
     if cls._tags_adapter is None:
         cls._tags_adapter = TypeAdapter(t.StrSequence)
     return cls._tags_adapter
@@ -330,7 +330,7 @@ if isinstance(instance, SomeProtocol):
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class StrictBoundaryModel(BaseModel):
+class StrictBoundaryModel(m.BaseModel):
     model_config = ConfigDict(
         strict=True,
         validate_assignment=True,
@@ -343,8 +343,8 @@ class StrictBoundaryModel(BaseModel):
             "description": "Immutable contract with strict validation",
         },
     )
-    name: str = Field(..., description="Entity name")
-    value: int = Field(..., ge=0, description="Non-negative value")
+    name: str = m.Field(..., description="Entity name")
+    value: int = m.Field(..., ge=0, description="Non-negative value")
 ```
 
 **Common ConfigDict options**:
@@ -361,7 +361,7 @@ class StrictBoundaryModel(BaseModel):
 
 ```python
 # ✗ WRONG — Pydantic v1 style
-class MyModel(BaseModel):
+class MyModel(m.BaseModel):
     class Config:
         extra = "forbid"
 ```
@@ -370,7 +370,7 @@ class MyModel(BaseModel):
 
 ```python
 # ✓ CORRECT — Pydantic v2 style
-class MyModel(BaseModel):
+class MyModel(m.BaseModel):
     model_config = ConfigDict(extra="forbid")
 ```
 
@@ -393,7 +393,7 @@ from pydantic import BaseModel, ConfigDict
 STRICT_MODE = os.getenv("FLEXT_METACLASS_STRICT", "false").lower() == "true"
 
 
-class BoundaryModel(BaseModel):
+class BoundaryModel(m.BaseModel):
     model_config = ConfigDict(
         strict=STRICT_MODE,
         validate_assignment=STRICT_MODE,
@@ -500,29 +500,29 @@ if u.Guards.is_scalar(value):
     ...
 ```
 
-#### 8.5 Double Field() assignment — FORBIDDEN
+#### 8.5 Double m.Field() assignment — FORBIDDEN
 
 ```python
-# ✗ WRONG — Double Field() assignment
+# ✗ WRONG — Double m.Field() assignment
 from typing import Annotated
 from pydantic import BaseModel, Field
 
 
-class Model(BaseModel):
-    x: Annotated[str, Field(min_length=1)] = Field(default="")  # REDUNDANT
+class Model(m.BaseModel):
+    x: Annotated[str, m.Field(min_length=1)] = m.Field(default="")  # REDUNDANT
 ```
 
-**Correct**: Field() ONLY in Annotated OR as default, not both:
+**Correct**: m.Field() ONLY in Annotated OR as default, not both:
 
 ```python
-# ✓ CORRECT — Field() in Annotated
-class Model(BaseModel):
-    x: Annotated[str, Field(min_length=1, default="")] = ""
+# ✓ CORRECT — m.Field() in Annotated
+class Model(m.BaseModel):
+    x: Annotated[str, m.Field(min_length=1, default="")] = ""
 
 
-# ✓ CORRECT — Field() as default
-class Model(BaseModel):
-    x: str = Field(default="", min_length=1)
+# ✓ CORRECT — m.Field() as default
+class Model(m.BaseModel):
+    x: str = m.Field(default="", min_length=1)
 ```
 
 #### 8.6 Model(data) with dict — FORBIDDEN

@@ -73,7 +73,7 @@ from pydantic import BeforeValidator
 fmt: Annotated[
     c.Tests.Format,
     BeforeValidator(lambda v: c.Tests.Format(v) if isinstance(v, str) else v),
-    Field(default=c.Tests.Format.AUTO, description="File format override."),
+    m.Field(default=c.Tests.Format.AUTO, description="File format override."),
 ]
 ```
 

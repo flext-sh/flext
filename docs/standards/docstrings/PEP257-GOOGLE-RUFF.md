@@ -108,8 +108,8 @@ class MyClass(BaseClass):
 class Ex00UserProfile(m.Entity):
     """User profile transport model."""
 
-    name: str = Field(min_length=1)
-    email: str = Field(min_length=1)
+    name: str = m.Field(min_length=1)
+    email: str = m.Field(min_length=1)
     status: c.Status = c.Status.ACTIVE
 
     def activate(self) -> p.Result[None]:

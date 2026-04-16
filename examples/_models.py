@@ -13,22 +13,20 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from pydantic import BaseModel, Field
-
-from flext_core import t
+from flext_core import m, t
 
 
-class ValidationRules(BaseModel):
+class ValidationRules(m.BaseModel):
     """Validation rules for ACL processing examples.
 
     Defines required permissions and forbidden permission combinations
     for validating ACL entries across different server types.
     """
 
-    required_permissions: t.StrSequence = Field(
+    required_permissions: t.StrSequence = m.Field(
         description="List of permissions that must be present in valid ACL entries",
     )
-    forbidden_combinations: Sequence[tuple[str, ...]] = Field(
+    forbidden_combinations: Sequence[tuple[str, ...]] = m.Field(
         description="Permission combinations that are not allowed together",
     )
 

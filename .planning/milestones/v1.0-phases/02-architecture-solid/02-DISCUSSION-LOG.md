@@ -27,8 +27,8 @@
 
 | Option | Description | Selected |
 |--------|-------------|----------|
-| Production only | ~1,100 Field() usages in src/ | |
-| All including tests | ~1,551 Field() usages across src/ and tests/ | ✓ |
+| Production only | ~1,100 m.Field() usages in src/ | |
+| All including tests | ~1,551 m.Field() usages across src/ and tests/ | ✓ |
 
 **User's choice:** [auto] All including tests
 **Notes:** Sisyphus plan confirms tests in scope. PrivateAttr (94 usages) explicitly excluded.

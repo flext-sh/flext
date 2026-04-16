@@ -115,7 +115,7 @@ class BatchResultDict(TypedDict):
 class FlextModels:
     """Hierarchical model namespace with max reuse."""
 
-    class Base(BaseModel):
+    class Base(m.BaseModel):
         """Base for all Flext models."""
 
         model_config = ConfigDict(
@@ -129,18 +129,18 @@ class FlextModels:
         """Configuration models namespace."""
 
         class Dispatcher(FlextModels.Base):
-            timeout: int = Field(ge=0, description="Timeout in seconds")
-            retries: int = Field(ge=0, le=10, description="Max retry attempts")
-            batch_size: int = Field(ge=1, le=10000, description="Batch size")
+            timeout: int = m.Field(ge=0, description="Timeout in seconds")
+            retries: int = m.Field(ge=0, le=10, description="Max retry attempts")
+            batch_size: int = m.Field(ge=1, le=10000, description="Batch size")
 
     class Result:
         """Result models namespace."""
 
         class Batch(FlextModels.Base):
-            success_count: int = Field(ge=0)
-            failure_count: int = Field(ge=0)
+            success_count: int = m.Field(ge=0)
+            failure_count: int = m.Field(ge=0)
 
-            @computed_field
+            @u.computed_field
             @property
             def total(self) -> int:
                 return self.success_count + self.failure_count
@@ -178,7 +178,7 @@ model_config = ConfigDict(
 from pydantic import BaseModel, field_validator, model_validator, computed_field
 
 
-class User(BaseModel):
+class User(m.BaseModel):
     email: str
     password: str
 
@@ -195,7 +195,7 @@ class User(BaseModel):
             raise ValueError("Password too short")
         return self
 
-    @computed_field
+    @u.computed_field
     @property
     def domain(self) -> str:
         return self.email.split("@")[1]
@@ -208,21 +208,21 @@ class User(BaseModel):
 # flext-core/src/flext_core/models.py
 class FlextModels:
     class Core:
-        class Settings(BaseModel): ...
+        class Settings(m.BaseModel): ...
 
-        class Context(BaseModel): ...
+        class Context(m.BaseModel): ...
 
     class Result:
-        class Success(BaseModel): ...
+        class Success(m.BaseModel): ...
 
-        class Failure(BaseModel): ...
+        class Failure(m.BaseModel): ...
 
 
 # flext-ldif/src/flext_ldif/models.py
 class FlextLdifModels:
-    class Entry(BaseModel): ...  # m.Ldif.Entry
+    class Entry(m.BaseModel): ...  # m.Ldif.Entry
 
-    class Attribute(BaseModel): ...  # m.Ldif.Attribute
+    class Attribute(m.BaseModel): ...  # m.Ldif.Attribute
 
 
 # Usage with short aliases

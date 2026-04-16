@@ -462,7 +462,7 @@ except PydanticUserError as exc_info:
 
 ## `TypedDict` version {#typed-dict-version}
 
-This error is raised when you use [typing.TypedDict][]
+This error is raised when you use `typing.TypedDict`
 instead of `typing_extensions.TypedDict` on Python < 3.12.
 
 ## Model parent field overridden {#model-field-overridden}
@@ -802,7 +802,7 @@ Documenting the JSON Schema input type is only possible for validators where the
 value can be anything. That is why it isn't available for `after` validators, where
 the value is first validated against the type annotation.
 
-# r
+## root_validator
 
 If you use `@root_validator` with `pre=False` (the default) you MUST specify `skip_on_failure=True`.
 The `skip_on_failure=False` option is no longer available.
@@ -1374,7 +1374,7 @@ except PydanticUserError as exc_info:
 ## Overlapping unpacked [`TypedDict`][typing.TypedDict] fields and arguments {#overlapping-unpack-typed-dict}
 
 This error is raised when the typed dictionary used to type hint variadic keywords parameters has field names
-overlapping with other parameters (unless [positional only][positional-only_parameter]).
+overlapping with other parameters (unless positional only).
 
 For reference, see the [related specification section] and [PEP 692].
 

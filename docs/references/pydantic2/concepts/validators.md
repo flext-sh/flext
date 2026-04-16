@@ -55,7 +55,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
 **Four** different types of validators can be used. They can all be defined using the
 [annotated pattern](./fields.md#the-annotated-pattern) or using the
-[`field_validator()`][pydantic.field_validator] decorator, applied on a [class method][classmethod]:
+[`field_validator()`][pydantic.field_validator] decorator, applied on a class method:
 
 - **_After_ validators**: run after Pydantic's internal validation. They are generally more type safe and thus easier to implement.
   {#field-after-validator}
@@ -589,8 +589,8 @@ A model validator defined in a base class will be called during the validation o
 To raise a validation error, three types of exceptions can be used:
 
 - [`ValueError`][]: this is the most common exception raised inside validators.
-- [`AssertionError`][]: using the [assert][] statement also works, but be aware that these statements
-  are skipped when Python is run with the [-O][] optimization flag.
+- [`AssertionError`][]: using the `assert` statement also works, but be aware that these statements
+  are skipped when Python is run with the `-O` optimization flag.
 - [`PydanticCustomError`][pydantic_core.PydanticCustomError]: a bit more verbose, but provides extra flexibility:
 
   ```python

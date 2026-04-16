@@ -330,17 +330,19 @@ class FlextCliModelsPipeline:
 
         workspace_root: Annotated[
             Path,
-            Field(description="Workspace root directory"),
+            m.Field(description="Workspace root directory"),
         ]
         shared: Annotated[
             MutableMapping[str, object],
-            Field(
+            m.Field(
                 default_factory=dict, description="Mutable shared state between stages"
             ),
         ]
         settings: Annotated[
             Mapping[str, object],
-            Field(default_factory=dict, description="Immutable pipeline configuration"),
+            m.Field(
+                default_factory=dict, description="Immutable pipeline configuration"
+            ),
         ]
 
     class PipelineStageSpec(FlextModels.ContractModel):
@@ -353,23 +355,23 @@ class FlextCliModelsPipeline:
 
         stage_id: Annotated[
             str,
-            Field(description="Unique stage identifier"),
+            m.Field(description="Unique stage identifier"),
         ]
         depends_on: Annotated[
             frozenset[str],
-            Field(default=frozenset(), description="Stage IDs this stage depends on"),
+            m.Field(default=frozenset(), description="Stage IDs this stage depends on"),
         ]
         handler: Annotated[
             t.Cli.PipelineHandler,
-            Field(description="Callable that executes the stage"),
+            m.Field(description="Callable that executes the stage"),
         ]
         skip_if: Annotated[
             t.Cli.PipelineSkipPredicate | None,
-            Field(default=None, description="Predicate — skip stage if returns True"),
+            m.Field(default=None, description="Predicate — skip stage if returns True"),
         ]
         retry: Annotated[
             t.RetryCount,
-            Field(
+            m.Field(
                 default=c.Cli.Pipeline.DEFAULT_RETRY,
                 description="Number of retries on failure",
             ),
@@ -380,22 +382,22 @@ class FlextCliModelsPipeline:
 
         model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
-        stage_id: Annotated[str, Field(description="Stage that produced this result")]
+        stage_id: Annotated[str, m.Field(description="Stage that produced this result")]
         status: Annotated[
             t.Cli.PipelineStageStatus,
-            Field(description="Execution outcome"),
+            m.Field(description="Execution outcome"),
         ]
         output: Annotated[
             Mapping[str, object],
-            Field(default_factory=dict, description="Stage output payload"),
+            m.Field(default_factory=dict, description="Stage output payload"),
         ]
         duration_ms: Annotated[
             float,
-            Field(default=0.0, description="Execution duration in milliseconds"),
+            m.Field(default=0.0, description="Execution duration in milliseconds"),
         ]
         error: Annotated[
             str | None,
-            Field(default=None, description="Error message if failed"),
+            m.Field(default=None, description="Error message if failed"),
         ]
 
     class PipelineResult(FlextModels.ContractModel):
@@ -405,11 +407,13 @@ class FlextCliModelsPipeline:
 
         stages: Annotated[
             Sequence[FlextCliModelsPipeline.PipelineStageResult],
-            Field(default_factory=list, description="Results from all executed stages"),
+            m.Field(
+                default_factory=list, description="Results from all executed stages"
+            ),
         ]
         total_duration_ms: Annotated[
             float,
-            Field(default=0.0, description="Total pipeline execution time"),
+            m.Field(default=0.0, description="Total pipeline execution time"),
         ]
 
         @property
@@ -1241,10 +1245,10 @@ class ViolationKey(FlextModels.ContractModel):
 
     model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True, extra="forbid")
 
-    module: Annotated[str, Field(description="Module containing the violation")]
-    rule: Annotated[str, Field(description="Rule that was violated")]
+    module: Annotated[str, m.Field(description="Module containing the violation")]
+    rule: Annotated[str, m.Field(description="Rule that was violated")]
     content_hash: Annotated[
-        str, Field(description="SHA256 of surrounding context lines")
+        str, m.Field(description="SHA256 of surrounding context lines")
     ]
 
     @staticmethod

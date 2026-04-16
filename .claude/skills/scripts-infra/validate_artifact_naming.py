@@ -12,9 +12,9 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict
 
-from flext_infra import t
+from flext_infra import m, t
 
 EXIT_PASS = 0
 EXIT_FAIL = 1
@@ -35,15 +35,15 @@ class InfraError(Exception):
     """InfraError class."""
 
 
-class NamingViolation(BaseModel):
+class NamingViolation(m.BaseModel):
     """NamingViolation class."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
 
-    path: str = Field(description="Relative path to the artifact")
-    filename: str = Field(description="Artifact filename")
-    reason: str = Field(description="Reason for the violation")
-    suggestion: str = Field(description="Suggested correct filename")
+    path: str = m.Field(description="Relative path to the artifact")
+    filename: str = m.Field(description="Artifact filename")
+    reason: str = m.Field(description="Reason for the violation")
+    suggestion: str = m.Field(description="Suggested correct filename")
 
 
 def eprint(message: str) -> None:

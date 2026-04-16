@@ -194,7 +194,7 @@ Resolution: **Delete both.** `WriteMixin.apply = False` is the single source of 
 `dry_run` becomes a computed property:
 
 ```python
-@computed_field
+@u.computed_field
 @property
 def dry_run(self) -> bool:
     return not self.apply

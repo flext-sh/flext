@@ -21,10 +21,10 @@ The current model only accepts `int | str`. Extend to accept `list` (for frozens
 
 ```python
     class CanonicalValueRule(FlextModels.ArbitraryTypesModel):
-        value: Annotated[int | str | t.StrSequence, Field(...)]
-        type: Annotated[str, Field(...)]
-        canonical_ref: Annotated[str, Field(...)]
-        semantic_names: t.StrSequence = Field(default_factory=list)
+        value: Annotated[int | str | t.StrSequence, m.Field(...)]
+        type: Annotated[str, m.Field(...)]
+        canonical_ref: Annotated[str, m.Field(...)]
+        semantic_names: t.StrSequence = m.Field(default_factory=list)
 ```
 
 - [ ] **Step 2: Run ruff check on the modified file**
@@ -209,11 +209,11 @@ feat(codegen): add frozenset/regex/tuple governance getters
 
         output_format: Annotated[
             str,
-            Field(default="text", description="Output format (json|text)"),
+            m.Field(default="text", description="Output format (json|text)"),
         ] = "text"
         project: Annotated[
             str | None,
-            Field(default=None, description="Single project to consolidate"),
+            m.Field(default=None, description="Single project to consolidate"),
         ] = None
 ```
 

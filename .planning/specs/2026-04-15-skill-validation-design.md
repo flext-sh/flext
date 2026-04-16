@@ -104,7 +104,6 @@ Verified: `e.fail_auth`, `e.fail_authz`, `e.fail_circuit_breaker`, `e.fail_confi
 Classes in `m` from `flext_core` are **flat** — no sub-namespaces inside
 flext_core. Via MRO, each mixin's inner class is promoted to the facade root.
 
-**IMPORTANT for standalone examples**: add `_flext_enforcement_exempt: ClassVar[bool] = True`
 to every model class in skill examples — the FLEXT enforcer rejects classes
 that don't follow the project namespace naming convention (`Flext<Project><Tier>`),
 which standalone sandbox files cannot satisfy.
@@ -122,19 +121,15 @@ from flext_core import m, p, r, t
 class CreateUserCommand(m.Command):
     """CQRS command — inherits from m.Command (flat, no sub-namespace)."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
-    name: Annotated[t.NonEmptyStr, Field(description="User full name")]
-    email: Annotated[str, Field(description="User email address")]
+    name: Annotated[t.NonEmptyStr, m.Field(description="User full name")]
+    email: Annotated[str, m.Field(description="User email address")]
 
 
 class UserSummary(m.Value):
     """Value object — inherits from m.Value (flat, no sub-namespace)."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
-    user_id: Annotated[str, Field(description="Generated user identifier")]
-    display_name: Annotated[str, Field(description="Formatted display name")]
+    user_id: Annotated[str, m.Field(description="Generated user identifier")]
+    display_name: Annotated[str, m.Field(description="Formatted display name")]
 
 
 def register_user(cmd: CreateUserCommand) -> p.Result[UserSummary]:
@@ -173,21 +168,16 @@ from flext_core import m, p, r
 class FlextTargetOracleModels(m):
     """Consumer project facade — inherits flext_core m via MRO.
 
-    _flext_enforcement_exempt silences the enforcer in standalone examples.
     In real project code this class lives in flext_target_oracle/models.py
     and the enforcer validates the Flext<Project><Tier> naming convention.
     """
-
-    _flext_enforcement_exempt: ClassVar[bool] = True
 
     class TargetOracle:
         """ONE local namespace — project-specific domain models."""
 
         class ExecuteResult(m.ArbitraryTypesModel):
-            _flext_enforcement_exempt: ClassVar[bool] = True
-
-            rows_affected: Annotated[int, Field(description="Rows modified")]
-            table_name: Annotated[str, Field(description="Target table name")]
+            rows_affected: Annotated[int, m.Field(description="Rows modified")]
+            table_name: Annotated[str, m.Field(description="Target table name")]
 
 
 def execute_batch(
@@ -225,11 +215,9 @@ class UserProfile(m.ArbitraryTypesModel):
     t.StrSequence    = Sequence[str]                 — covariant param type
     """
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
-    name: Annotated[t.NonEmptyStr, Field(description="Display name")]
-    age: Annotated[t.NonNegativeInt, Field(description="Age in years")]
-    tags: Annotated[t.StrSequence, Field(description="Labels", default_factory=list)]
+    name: Annotated[t.NonEmptyStr, m.Field(description="Display name")]
+    age: Annotated[t.NonNegativeInt, m.Field(description="Age in years")]
+    tags: Annotated[t.StrSequence, m.Field(description="Labels", default_factory=list)]
 ```
 
 ### Parameter types use t.* composed aliases

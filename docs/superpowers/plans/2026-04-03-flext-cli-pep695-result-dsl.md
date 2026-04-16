@@ -190,7 +190,7 @@ Key changes:
 - Return `Callable[..., object | None]` → `Callable[..., None]`
 - `list[Parameter]` → `MutableSequence[Parameter]`
 - `dict[str, object]` → `MutableMapping[str, type]`
-- `getattr(model_cls, "model_fields", {})` → direct `model_cls.model_fields` (BaseModel always has it)
+- `getattr(model_cls, "model_fields", {})` → direct `model_cls.model_fields` (m.BaseModel always has it)
 
 - [ ] **Step 6: Refactor `derive_model[M]` and `_model_source_data`**
 
@@ -300,7 +300,7 @@ def cli_args_to_model[M: BaseModel](
     try:
         instance = model_class.model_validate(cli_args)
         return r[M].ok(instance)
-    except ValidationError as exc:
+    except c.ValidationError as exc:
         return r[M].fail(
             f"Validation error for {model_class.__name__}: {exc}",
         )

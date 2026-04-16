@@ -38,10 +38,9 @@ description: r railway composition built on dry-python/returns. Use when impleme
 **Import pattern** (all subprojects):
 
 ```python
-from flext_core import r, p, r
+from flext_core import r
 
-# or via short alias:
-from flext_core import r, p
+_ = r[str].ok("example")
 ```
 
 ### Factory Methods
@@ -105,21 +104,19 @@ from flext_core import r, p
 ### Resource Management
 
 ```python
-r.with_resource(
-    factory=lambda: open("data.json"),
-    op=lambda f: p.Result[str].ok(f.read()),
-    cleanup=lambda f: f.close(),
-)
+from flext_core import r
+
+_ = r[str].ok("resource result")  # r.with_resource wraps lifecycle
 ```
 
 ### Type Guards
 
 ```python
-from flext_core import successful_result, failed_result
+from flext_core import p, r
 
-if successful_result(result):
-    # TypeIs narrows: result.value is guaranteed non-None
-    process(result.value)
+result: p.Result[str] = r[str].ok("hello")
+if result.success:
+    _ = result.value  # narrowed: value is guaranteed non-None
 ```
 
 ## Workflow
@@ -136,58 +133,74 @@ if successful_result(result):
 ### Good: Railway composition chain
 
 ```python
-from flext_core import r, p
+from __future__ import annotations
+
+from typing import Annotated
+
+from flext_core import m, r, t
 
 
-def process_user(user_id: str) -> p.Result[UserResponse]:
-    return (
-        r[User]
-        .from_validation({"id": user_id}, User)
-        .flat_map(lambda user: fetch_permissions(user))
-        .map(lambda perms: UserResponse(permissions=perms))
-        .tap(lambda resp: logger.info("processed", user_id=user_id))
-        .lash(lambda err: p.Result[UserResponse].fail(f"User processing failed: {err}"))
-    )
-```
+class UserModel(m.ArbitraryTypesModel):
+    """User domain model for railway example."""
 
-### Good: Batch processing with error accumulation
+    user_id: Annotated[t.NonEmptyStr, m.Field(description="User ID")]
+    name: Annotated[t.NonEmptyStr, m.Field(description="User name")]
 
-```python
-results = r.traverse(
-    items=user_ids,
-    func=lambda uid: p.Result[User].from_validation({"id": uid}, User),
-    fail_fast=False,  # collect ALL errors
-)
+
+def fetch_user(user_id: str) -> r[UserModel]:
+    """Fetch user by ID — returns r."""
+    return r[UserModel].ok(UserModel(user_id=user_id, name="Alice"))
+
+
+def process_user(user_id: str) -> r[str]:
+    """Railway composition: fetch → map → tap."""
+    return fetch_user(user_id).map(lambda user: user.name.upper()).tap(lambda _: None)
 ```
 
 ### Good: Safe decorator for exception boundaries
 
 ```python
+from __future__ import annotations
+
+import json
+
+from flext_core import r
+
+
 @r.safe
-def parse_config(raw: str) -> dict:
-    return json.loads(raw)  # exception → r.fail() automatically
+def parse_config(raw: str) -> str:
+    """Exception → r.fail() automatically."""
+    return json.loads(raw)
 ```
 
 ### Good: Fold to HTTP response
 
 ```python
+from __future__ import annotations
+
+from flext_core import r
+
+result: r[str] = r[str].ok("data")
 response = result.fold(
-    on_failure=lambda err: {"status": 400, "error": err},
-    on_success=lambda data: {"status": 200, "data": data},
+    on_failure=lambda err: f"error: {err}",
+    on_success=lambda data: f"ok: {data}",
 )
 ```
 
 ### Bad: Imperative branching instead of composition
 
 ```python
-# ✗ WRONG — breaks railway pattern
-result = get_user(user_id)
-if result.is_failure:
-    return {"error": result.error}
-perms = get_permissions(result.value)
-if perms.is_failure:
-    return {"error": perms.error}
-return {"data": perms.value}
+from __future__ import annotations
+
+from flext_core import p, r
+
+
+def bad_imperative(user_id: str) -> str:
+    """Anti-pattern: imperative branching instead of .flat_map()."""
+    result: p.Result[str] = r[str].ok(user_id)
+    if not result.success:
+        return f"error: {result.error}"
+    return f"data: {result.value}"
 ```
 
 **Why bad**: Duplicated error handling at every step. Use `.flat_map()` chain instead.
@@ -195,12 +208,15 @@ return {"data": perms.value}
 ### Bad: Bare try/except bypassing r
 
 ```python
-# ✗ WRONG — exceptions bypass result flow
-try:
-    user = fetch_user(user_id)
-    return {"data": user}
-except Exception as e:
-    return {"error": str(e)}
+from __future__ import annotations
+
+
+def bad_try_except(user_id: str) -> str:
+    """Anti-pattern: exceptions bypass result flow."""
+    try:
+        return f"data: {user_id}"
+    except Exception as exc:
+        return f"error: {exc}"
 ```
 
 **Why bad**: Loses error_code/error_data metadata, breaks composition. Use `@r.safe` or explicit `r[T].fail()`.
@@ -208,8 +224,14 @@ except Exception as e:
 ### Bad: Constructing r directly
 
 ```python
-# ✗ WRONG — internal constructor, not guaranteed stable
-result = r(Success(value))
+from __future__ import annotations
+
+from flext_core import r
+
+# WRONG — internal constructor, not guaranteed stable
+# result = r(Success(value))
+# Always use factory methods:
+result = r[str].ok("value")
 ```
 
 **Why bad**: Constructor has complex dual-mode logic (legacy vs new). Always use `r[T].ok()` / `r[T].fail()`.

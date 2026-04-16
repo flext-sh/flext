@@ -10,11 +10,11 @@ import re
 import sys
 from collections.abc import Sequence
 from pathlib import Path
-from typing import ClassVar
+from typing import Annotated, ClassVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict
 
-from flext_infra import t, u
+from flext_infra import m, t, u
 
 EXIT_PASS = 0
 EXIT_FAIL = 1
@@ -62,29 +62,31 @@ class Ansi:
     RESET = "\033[0m"
 
 
-class Violation(BaseModel):
+class Violation(m.BaseModel):
     """Violation class."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
 
-    script: str = Field(description="Script file path")
-    check: str = Field(description="Check type that failed")
-    message: str = Field(description="Violation message")
-    severity: str = Field(
-        default="error",
-        description="Severity level (error or warning)",
-    )
+    script: str = m.Field(description="Script file path")
+    check: str = m.Field(description="Check type that failed")
+    message: str = m.Field(description="Violation message")
+    severity: Annotated[
+        str,
+        m.Field(
+            description="Severity level (error or warning)",
+        ),
+    ] = "error"
 
 
-class ScriptInfo(BaseModel):
+class ScriptInfo(m.BaseModel):
     """ScriptInfo class."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-    path: str = Field(description="Script file path")
-    extension: str = Field(description="File extension (.py or .sh)")
-    role: str = Field(description="Script role (validator, fixer, or other)")
-    violations: Sequence[Violation] = Field(
+    path: str = m.Field(description="Script file path")
+    extension: str = m.Field(description="File extension (.py or .sh)")
+    role: str = m.Field(description="Script role (validator, fixer, or other)")
+    violations: Sequence[Violation] = m.Field(
         default_factory=list,
         description="List of validation violations",
     )

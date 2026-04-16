@@ -9,7 +9,7 @@
 !!! note
 This section is part of the _internals_ documentation, and is partly targeted to contributors.
 
-Pydantic heavily relies on [type hints][type hint] at runtime to build schemas for validation, serialization, etc.
+Pydantic heavily relies on type hints at runtime to build schemas for validation, serialization, etc.
 
 While type hints were primarily introduced for static type checkers (such as [Mypy] or [Pyright]), they are
 accessible (and sometimes evaluated) at runtime. This means that the following would fail at runtime,
@@ -40,7 +40,7 @@ from collections.abc import Mapping, Sequence
 from pydantic import BaseModel
 
 
-class Foo(BaseModel):
+class Foo(m.BaseModel):
     f: MyType
     # Given the future import above, this is equivalent to:
     # f: 'MyType'
@@ -99,7 +99,7 @@ type MyType = str
 def inner() -> None:
     type InnerType = bool
 
-    class Model(BaseModel, Base):
+    class Model(m.BaseModel, Base):
         type LocalType = bytes
 
         f2: "MyType"
@@ -110,8 +110,8 @@ def inner() -> None:
     type InnerType2 = complex
 ```
 
-When the `Model` class is being built, different [namespaces][namespace] are at play. For each base class
-of the `Model`'s [MRO][method resolution order] (in reverse order — that is, starting with `Base`), the
+When the `Model` class is being built, different namespaces are at play. For each base class
+of the `Model`'s MRO (method resolution order) (in reverse order — that is, starting with `Base`), the
 following logic is applied:
 
 1. Fetch the `__annotations__` key from the current base class' `__dict__`, if present. For `Base`, this will be
@@ -125,7 +125,7 @@ following logic is applied:
        in order to support recursive references.
      - The locals of the current class (i.e. `cls.__dict__`). For `Model`, this will include `LocalType`.
      - The parent namespace of the class, if different from the globals described above. This is the
-       [locals][frame.f_locals] of the frame where the class is being defined. For `Base`, because the class is being
+       locals of the frame where the class is being defined. For `Base`, because the class is being
        defined in the module directly, this namespace won't be used as it will result in the globals being used again.
        For `Model`, the parent namespace is the locals of the frame of `inner()`.
 3. If the annotation failed to evaluate, it is kept as is, so that the model can be rebuilt at a later stage. This will
@@ -149,10 +149,10 @@ While the namespace fetching logic is trying to be as accurate as possible, we s
 
 - The locals of the current class (`cls.__dict__`) may include irrelevant entries, most of them being dunder attributes.
   This means that the following annotation: `f: '__doc__'` will successfully (and unexpectedly) be resolved.
-- When the `Model` class is being created inside a function, we keep a copy of the [locals][frame.f_locals] of the frame.
+- When the `Model` class is being created inside a function, we keep a copy of the locals of the frame.
   This copy only includes the symbols defined in the locals when `Model` is being defined, meaning `InnerType2` won't be included
   (and will **not be** if doing a model rebuild at a later point!).
-  - To avoid memory leaks, we use [weak references][weakref] to the locals of the function, meaning some forward references might
+  - To avoid memory leaks, we use weak references to the locals of the function, meaning some forward references might
     not resolve outside the function (1).
   - Locals of the function are only taken into account for Pydantic models, but this pattern does not apply to dataclasses, typed
     dictionaries or named tuples.
@@ -165,7 +165,7 @@ While the namespace fetching logic is trying to be as accurate as possible, we s
    def func():
        A = int
 
-       class Model(BaseModel):
+       class Model(m.BaseModel):
            f: "A | Forward"
 
        return Model
@@ -192,7 +192,7 @@ class Foo:
     a: "Bar | None" = None
 
 
-class Bar(BaseModel):
+class Bar(m.BaseModel):
     b: Foo
 ```
 
@@ -226,7 +226,7 @@ and the `{Bar.__name__: Bar}` namespace are included in the locals during annota
    def func():
        Inner = int
 
-       class Model(BaseModel):
+       class Model(m.BaseModel):
            foo: Foo
 
        Model.__pydantic_complete__
@@ -242,7 +242,7 @@ generation process. This can be seen by inspecting the `__pydantic_core_schema__
 from pydantic import BaseModel
 
 
-class Foo(BaseModel):
+class Foo(m.BaseModel):
     f: "MyType"
 
 

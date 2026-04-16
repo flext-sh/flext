@@ -93,18 +93,18 @@ t.NonNegativeFloat  # float with ge=0.0
 
 ### Before
 ```python
-# Bare constraints scattered in Field()
-batch_size: Annotated[int, Field(ge=1, le=10000)]
-processing_time: Annotated[float, Field(ge=0.0)]
-field_name: Annotated[str, Field(min_length=1, max_length=255)]
+# Bare constraints scattered in m.Field()
+batch_size: Annotated[int, m.Field(ge=1, le=10000)]
+processing_time: Annotated[float, m.Field(ge=0.0)]
+field_name: Annotated[str, m.Field(min_length=1, max_length=255)]
 ```
 
 ### After
 ```python
 # Clear, consistent type intent
-batch_size: Annotated[t.BatchSize, Field(...)]
-processing_time: Annotated[t.NonNegativeFloat, Field(...)]
-field_name: Annotated[t.NonEmptyStr, Field(...)]
+batch_size: Annotated[t.BatchSize, m.Field(...)]
+processing_time: Annotated[t.NonNegativeFloat, m.Field(...)]
+field_name: Annotated[t.NonEmptyStr, m.Field(...)]
 ```
 
 ## Benefits

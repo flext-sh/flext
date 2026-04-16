@@ -52,15 +52,33 @@ python examples/complete_workflow_example.py --help || true
 Good:
 
 ```python
-from flext_core import r, p
+from __future__ import annotations
+
+from flext_core import p, r
+
+
+def parse_value(raw: str) -> p.Result[int]:
+    """Stable public import with canonical alias."""
+    try:
+        return r[int].ok(int(raw))
+    except ValueError:
+        return r[int].fail(f"invalid integer: {raw}")
 ```
 
-Why good: stable public import with canonical alias.
+Why good: stable public import with canonical alias, both symbols used.
 
 Bad:
 
 ```python
+from __future__ import annotations
+
 from flext_core import m
+
+
+class _InternalModel(m.ArbitraryTypesModel):
+    """Couples to internal details that drift quickly."""
+
+    raw: str = "placeholder"
 ```
 
 Why bad: example couples to private internals and will drift quickly.

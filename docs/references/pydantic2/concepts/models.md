@@ -37,7 +37,7 @@ One of the primary ways of defining schema in Pydantic is via models. Models are
 You can think of models as similar to structs in languages like C, or as the requirements of a single endpoint
 in an API.
 
-Models share many similarities with Python's [dataclasses][dataclasses], but have been designed with some subtle-yet-important
+Models share many similarities with Python's dataclasses, but have been designed with some subtle-yet-important
 differences that streamline certain workflows related to validation, serialization, and JSON schema generation.
 You can find more discussion of this in the [Dataclasses](dataclasses.md) section of the docs.
 
@@ -103,7 +103,7 @@ class User(BaseModel):
 ```
 
 1. Pydantic models support a variety of [configuration values](./settings.md)
-   (see [here][pydantic.ConfigDict] for the available configuration values).
+   (see here for the available configuration values).
 
 In this example, `User` is a model with two fields:
 
@@ -145,7 +145,7 @@ The model instance can be serialized using the [`model_dump()`][pydantic.BaseMod
 assert user.model_dump() == {"id": 123, "name": "Jane Doe"}
 ```
 
-Calling [dict][] on the instance will also provide a dictionary, but nested fields will not be
+Calling `dict()` on the instance will also provide a dictionary, but nested fields will not be
 recursively converted into dictionaries. [`model_dump()`][pydantic.BaseModel.model_dump] also
 provides numerous arguments to customize the serialization result.
 
@@ -772,7 +772,7 @@ print(id(m.bar) == id(m.model_copy(deep=True).bar))
 ## Generic models
 
 Pydantic supports the creation of generic models to make it easier to reuse a common model structure. Both the new
-[type parameter syntax][type-params] (introduced by [PEP 695](https://peps.python.org/pep-0695/) in Python 3.12)
+type parameter syntax (introduced by [PEP 695](https://peps.python.org/pep-0695/) in Python 3.12)
 and the old syntax are supported (refer to
 [the Python documentation](https://docs.python.org/3/library/typing.html#building-generic-types-and-type-aliases)
 for more details).
@@ -866,9 +866,8 @@ Here is an example using a generic Pydantic model to create an easily-reused HTT
 
 !!! warning
 When parametrizing a model with a concrete type, Pydantic **does not** validate that the provided type
-is [assignable to the type variable][spec-typevars-bound] if it has an upper bound.
+is assignable to the type variable if it has an upper bound.
 
-    [spec-typevars-bound]: https://typing.readthedocs.io/en/latest/spec/generics.html#type-variables-with-an-upper-bound
 
 Any [configuration](./settings.md), [validation](./validators.md) or [serialization](./serialization.md) logic
 set on the generic model will also be applied to the parametrized classes, in the same way as when inheriting from
@@ -1533,7 +1532,7 @@ print(my_pets.describe())
 ## Faux immutability
 
 Models can be configured to be immutable via `model_config['frozen'] = True`. When this is set, attempting to change the
-values of instance attributes will raise errors. See the [API reference][pydantic.config.ConfigDict.frozen] for more details.
+values of instance attributes will raise errors. See the API reference for more details.
 
 !!! note
 This behavior was achieved in Pydantic V1 via the settings setting `allow_mutation = False`.

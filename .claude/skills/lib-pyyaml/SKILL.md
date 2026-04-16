@@ -68,88 +68,62 @@ from pathlib import Path
 
 import yaml
 
-from flext_core import p, t
+from flext_core import p, r, t
 
 
 @staticmethod
 def load_yaml_rules(path: Path) -> p.Result[Sequence[t.RecursiveContainerMapping]]:
     with path.open(encoding="utf-8") as f:
-        yaml.safe_load(f)
+        data = yaml.safe_load(f)
+    return r[Sequence[t.RecursiveContainerMapping]].ok(data or [])
 ```
 
 ```python
-# flext-cli/src/flext_cli/file_tools.py
+# Consumer usage via u.Cli.yaml_* (real flext-cli API)
 from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
-
-from flext_core import c, p, t
+from flext_cli import p, t, u
 
 
-class FlextCliFileTools:
+def read_config(path: Path) -> p.Result[t.Cli.YamlDict]:
+    """Read YAML via u.Cli — safe_load + validation."""
+    return u.Cli.yaml_safe_load(path)
+
+
+def write_config(path: Path, data: t.Cli.YamlDumpable) -> p.Result[bool]:
+    """Write YAML via u.Cli — safe_dump with explicit options."""
+    return u.Cli.yaml_dump(path, data, sort_keys=False, indent=2)
+
+
+def load_or_default(path: Path) -> t.Cli.YamlDict:
+    """Load YAML mapping or return empty dict."""
+    return u.Cli.yaml_load_mapping(path)
+```
+
+```python
+# flext-cli/src/flext_cli/services/file_tools.py — service pattern
+from __future__ import annotations
+
+from pathlib import Path
+
+from flext_cli import FlextCliServiceBase, p, t, u
+
+
+class FlextCliFileToolsYaml(FlextCliServiceBase):
+    """YAML file operations — services delegate to u.Cli.* utilities."""
+
     @staticmethod
-    def _load_structured_file(path: str, loader: object) -> t.RecursiveContainer: ...
-
-    @staticmethod
-    def _write_structured_file(
-        file_path: Path,
-        writer: object,
-        error_msg: str,
-    ) -> p.Result[bool]: ...
-
-    @staticmethod
-    def read_yaml_file(file_path: str | Path) -> p.Result[t.RecursiveContainer]:
-        return FlextCliFileTools._execute_file_operation(
-            lambda: FlextCliFileTools._load_structured_file(
-                str(file_path), yaml.safe_load
-            ),
-            c.Cli.FileErrorMessages.YAML_LOAD_FAILED,
-        )
-
-    @staticmethod
-    def _execute_file_operation(
-        op: object,
-        error_msg: str,
-    ) -> p.Result[t.RecursiveContainer]: ...
+    def read_yaml_file(file_path: t.Cli.TextPath) -> p.Result[t.Cli.JsonValue]:
+        return u.Cli.files_read_yaml(file_path)
 
     @staticmethod
     def write_yaml_file(
-        file_path: Path,
-        data: t.RecursiveContainer,
-        default_flow_style: bool = False,
-        sort_keys: bool = True,
-        allow_unicode: bool = True,
+        file_path: t.Cli.TextPath,
+        data: t.Cli.YamlDumpable,
     ) -> p.Result[bool]:
-        return FlextCliFileTools._write_structured_file(
-            file_path,
-            lambda f: yaml.safe_dump(
-                data,
-                f,
-                default_flow_style=default_flow_style,
-                sort_keys=sort_keys,
-                allow_unicode=allow_unicode,
-            ),
-            c.Cli.ErrorMessages.YAML_WRITE_FAILED,
-        )
-```
-
-```python
-# flext-meltano/src/flext_meltano/file_managers.py
-from __future__ import annotations
-
-from pathlib import Path
-
-import yaml
-
-from flext_core import c, p
-
-
-@classmethod
-def validate_yaml_file(cls, file_path: Path) -> p.Result[bool]:
-    with file_path.open("r", encoding=c.DEFAULT_ENCODING) as f:
-        yaml.safe_load(f)
+        return u.Cli.yaml_dump(Path(file_path), data)
 ```
 
 - Prefer `yaml.dump(..., default_flow_style=False)` only where existing module conventions require it.
@@ -192,9 +166,9 @@ from pathlib import Path
 import yaml
 
 
-def load_config(config_path: Path) -> object:
+def load_config(config_path: Path) -> str:
     with config_path.open("r") as f:
-        return yaml.load(f)  # noqa: S506
+        return yaml.load(f, Loader=yaml.SafeLoader)  # should use yaml.safe_load()
 ```
 
 Why bad: unsafe loader behavior and implicit encoding increase security and portability risk.

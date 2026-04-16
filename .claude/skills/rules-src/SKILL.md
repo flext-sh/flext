@@ -56,7 +56,16 @@ ls -la src
 Good:
 
 ```python
-from flext_core import r, p
+from __future__ import annotations
+
+from flext_core import p, r
+
+
+def validate_input(raw: str) -> p.Result[str]:
+    """Stable public boundary import with canonical aliases."""
+    if not raw.strip():
+        return r[str].fail("input is empty")
+    return r[str].ok(raw.strip())
 ```
 
 Why good: uses stable public boundary from shared source logic.
@@ -64,42 +73,58 @@ Why good: uses stable public boundary from shared source logic.
 Good (Library Abstraction):
 
 ```python
-# In flext-cli/src/flext_cli/settings.py
-from flext_core import m, c, t
+from __future__ import annotations
+
+from typing import Annotated
+
+from flext_core import c, m, t
 
 
-class FlextCliSettings(m.Settings):
-    """Extend FlextSettings from flext-core."""
+class FlextCliSettings(m.ArbitraryTypesModel):
+    """Extend FLEXT base model from flext-core."""
 
-    default_timeout: int = c.Cli.DEFAULT_TIMEOUT_SECONDS
-    log_level: str = c.Cli.DEFAULT_LOG_LEVEL
+    default_timeout: Annotated[
+        int,
+        m.Field(default=c.DEFAULT_MAX_COMMAND_RETRIES, description="Default timeout"),
+    ]
+    log_level: Annotated[
+        t.NonEmptyStr, m.Field(default="INFO", description="Log level")
+    ]
 ```
 
-Why good: Uses public abstractions (`m.Settings`, `c.Cli`) instead of importing pydantic/typing directly.
+Why good: Uses public abstractions (`m.*`, `c.*`) instead of importing pydantic/typing directly.
 
 Bad (Library Abstraction Violation):
 
 ```python
-# ❌ FORBIDDEN in flext-cli/src/
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
-from dependency_injector import containers
 
 
 class CliSettings(BaseModel):
-    """DO NOT DO THIS IN CONSUMING PROJECTS."""
+    """FORBIDDEN in consuming projects — bypasses flext-core abstraction."""
 
-    ...
+    timeout: int = Field(default=30, description="Timeout")
 ```
 
-Why bad: Bypasses flext-core's pydantic abstraction. Should use `m.Settings` from flext-core instead, giving flext-core full control over pydantic version, configuration, and validation rules.
+Why bad: Bypasses flext-core's pydantic abstraction. Should use `m.ArbitraryTypesModel` from flext-core instead.
 
 Bad (Invalid Import):
 
 ```python
-from flext_core import *
+from __future__ import annotations
+
+from flext_core import m, t
+
+
+class Example(m.BaseModel):
+    """Import only what you need — never wildcard-style c, m, p, r, t, u."""
+
+    name: t.NonEmptyStr
 ```
 
-Why bad: private/wildcard import makes source behavior fragile and hard to analyze.
+Why bad: wildcard-style import makes source behavior fragile and hard to analyze.
 
 ## Verification
 

@@ -81,7 +81,7 @@ from flext_core import r, p, m
 class TestResult:
     """Test suite for r - railway-oriented result handling."""
 
-    class ResultScenario(BaseModel):
+    class ResultScenario(m.BaseModel):
         """Parameterized test scenario."""
 
         model_config = ConfigDict(frozen=True)

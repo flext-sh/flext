@@ -49,12 +49,9 @@ description: dependency_injector bridge patterns for FLEXT runtime and container
 ```python
 from __future__ import annotations
 
-from collections.abc import Mapping
-from typing import ClassVar
-
 from dependency_injector import containers, providers, wiring
 
-ConfigMap = Mapping[str, str]
+from flext_core import t
 
 
 class u:
@@ -69,7 +66,7 @@ class u:
 
         @classmethod
         def create_layered_bridge(
-            cls, settings: ConfigMap | None = None
+            cls, settings: t.ConfigMap | None = None
         ) -> tuple[
             containers.DeclarativeContainer,
             containers.DynamicContainer,
@@ -80,7 +77,7 @@ class u:
 ```python
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from types import ModuleType
 from typing import Any, Protocol, TypeVar
 
@@ -137,14 +134,11 @@ Good:
 from flext_core import FlextContainer
 
 container = FlextContainer()
-_ = container.register_factory("token_factory", lambda: {"token": "abc123"})
-
-
-def consume() -> dict[str, str]:
-    return container.get("token_factory")  # type: ignore[return-value]
+_ = container.factory("token_factory", lambda: {"token": "abc123"})
+result = container.resolve("token_factory")
 ```
 
-Why good: uses bridge API, keeps app code framework-agnostic, and stays compatible with `scoped()`.
+Why good: uses bridge API, keeps app code framework-agnostic, and stays compatible with `scope()`.
 
 Bad:
 
@@ -163,7 +157,7 @@ Good:
 ```python
 from flext_core import FlextContainer
 
-test_container = FlextContainer().scoped(
+test_container = FlextContainer().scope(
     subproject="tests",
     services={"clock": "fake-clock"},
 )
@@ -177,7 +171,7 @@ Bad:
 from flext_core import FlextContainer
 
 container = FlextContainer()
-_ = container.register("clock", "fake-clock")
+_ = container.bind("clock", "fake-clock")
 # no cleanup, mutates shared singleton for unrelated tests
 ```
 

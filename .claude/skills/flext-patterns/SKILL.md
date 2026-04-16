@@ -42,12 +42,12 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 - **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
 - **Rule**: Compatibility wrappers (`def old(): return new()`), non-business validation fallbacks, legacy code maintenance of ANY kind, and `OldName = NewName` compatibility aliases are FORBIDDEN and forbidden. Legacy code is DELETED on contact and replaced with the canonical pattern. No grace period, no deprecation path, no "we'll remove it later".
 - **Rule**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
-- **Rule**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features. `Field()` with `description`/`title`/`examples` for ALL declarations. Minimize custom validators — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`). `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, wrappers. USE: `@computed_field`, `model_post_init`, `PrivateAttr`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `PrivateAttr`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for models ONLY. Result/status booleans use canonical names like `success` and `failure`. If not using a feature — REVIEW and USE it.
+- **Rule**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features. `Field()` with `description`/`title`/`examples` for ALL declarations. Minimize custom validators — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`). `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, wrappers. USE: `@u.computed_field`, `model_post_init`, `PrivateAttr`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `PrivateAttr`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for models ONLY. Result/status booleans use canonical names like `success` and `failure`. If not using a feature — REVIEW and USE it.
 - **Rule**: Failure paths are DSL-first. Prefer `e.fail_*`, `r.fail_op`, `r.fail_exc`, and service-level DSL wrappers over ad-hoc `r.fail("...")` strings in runtime/application code. Use direct `r.fail(...)` only when implementing result primitives or when explicit passthrough payload semantics are required.
 
 ## Pattern Catalog
 
-- **Pydantic Consumption via `m` Facade** — All Pydantic objects (BaseModel, Field, ConfigDict, validators) accessed via `m.*` in MRO-nested classes
+- **Pydantic Consumption via `m` Facade** — All Pydantic objects (m.BaseModel, Field, ConfigDict, validators) accessed via `m.*` in MRO-nested classes
 - ROP (`r` monadic chains)
 - DI (`FlextContainer` singleton + scoped instances via `c`, `p`)
 - DDD (entity/value/service models via `m`)
@@ -69,9 +69,7 @@ Projects providing a main service class use the **MRO service facade pattern**: 
 # api.py — one facade class per module, composing all mixins via MRO
 from __future__ import annotations
 
-from typing import Annotated, ClassVar, override
-
-from pydantic import Field
+from typing import Annotated, override
 
 from flext_core import m, p, r, s, t
 
@@ -79,10 +77,8 @@ from flext_core import m, p, r, s, t
 class FlextObservabilityTraceResult(m.ArbitraryTypesModel):
     """Trace result model — one model class per domain concept."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
-    trace_id: Annotated[t.NonEmptyStr, Field(description="Distributed trace id")]
-    span_name: Annotated[t.NonEmptyStr, Field(description="Span name")]
+    trace_id: Annotated[t.NonEmptyStr, m.Field(description="Distributed trace id")]
+    span_name: Annotated[t.NonEmptyStr, m.Field(description="Span name")]
 
 
 class FlextObservabilityTracingMixin:
@@ -113,9 +109,7 @@ class FlextObservability(
 ):
     """Facade: single class per module, domain methods inherited via MRO."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
-    span_name: Annotated[t.NonEmptyStr, Field(description="Initial span name")]
+    span_name: Annotated[t.NonEmptyStr, m.Field(description="Initial span name")]
 
     @override
     def execute(self) -> p.Result[FlextObservabilityTraceResult]:
@@ -198,9 +192,7 @@ Access through the **project runtime alias only**, while preserving the organic 
 # models.py — inherit parent and keep the organic namespace path
 from __future__ import annotations
 
-from typing import Annotated, ClassVar
-
-from pydantic import Field
+from typing import Annotated
 
 from flext_core import m, p, r, t
 
@@ -208,17 +200,13 @@ from flext_core import m, p, r, t
 class FlextTargetOracleModels(m):
     """Consumer facade — inherits flext_core m via MRO, adds one namespace."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-
     class TargetOracle:
         """One local domain namespace owned by the facade."""
 
         class ExecuteResult(m.ArbitraryTypesModel):
             """Domain-local model accessed as m.TargetOracle.ExecuteResult."""
 
-            _flext_enforcement_exempt: ClassVar[bool] = True
-
-            name: Annotated[t.NonEmptyStr, Field(description="Resource name")]
+            name: Annotated[t.NonEmptyStr, m.Field(description="Resource name")]
 
 
 ExecuteResult = FlextTargetOracleModels.TargetOracle.ExecuteResult
@@ -326,12 +314,16 @@ from them creates confusing duplicates and breaks type identity.
 ```python
 from __future__ import annotations
 
-from flext_core import p, r
+from flext_core import r
 
 
-def transform(value: str) -> p.Result[str]:
+def _to_lower(v: str) -> r[str]:
+    return r[str].ok(v.lower())
+
+
+def transform(value: str) -> r[str]:
     """Railway composition: ok → map → flat_map with typed result flow."""
-    return r[str].ok(value).map(str.strip).flat_map(lambda v: r[str].ok(v.lower()))
+    return r[str].ok(value).map(str.strip).flat_map(_to_lower)
 ```
 
 ## Workflow
@@ -348,22 +340,18 @@ def transform(value: str) -> p.Result[str]:
 ```python
 from __future__ import annotations
 
-from typing import Annotated, ClassVar, Self
+from typing import Annotated, Self
 
-from pydantic import ConfigDict, Field, field_validator, model_validator
-
-from flext_core import m, p, r, t
+from flext_core import c, m, p, r, t, u
 
 
 class FlextOrderItem(m.ArbitraryTypesModel):
     """Order item model — one class per module via MRO composition."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
+    sku: Annotated[t.NonEmptyStr, m.Field(description="Stock keeping unit")]
+    quantity: Annotated[int, m.Field(default=1, ge=1, description="Unit count")]
 
-    sku: Annotated[t.NonEmptyStr, Field(description="Stock keeping unit")]
-    quantity: Annotated[int, Field(default=1, ge=1, description="Unit count")]
-
-    @field_validator("sku", mode="before")
+    @u.field_validator("sku", mode="before")
     @classmethod
     def normalize_sku(cls, value: str) -> str:
         """Uppercase and strip the SKU before validation."""
@@ -373,16 +361,15 @@ class FlextOrderItem(m.ArbitraryTypesModel):
 class FlextOrderCreateCommand(m.Command):
     """Create-order command — inherits m.Command flat namespace via MRO."""
 
-    _flext_enforcement_exempt: ClassVar[bool] = True
-    model_config = ConfigDict(extra="forbid")
+    model_config = m.ConfigDict(extra="forbid")
 
-    customer_id: Annotated[t.NonEmptyStr, Field(description="Customer id")]
+    customer_id: Annotated[t.NonEmptyStr, m.Field(description="Customer id")]
     items: Annotated[
         list[FlextOrderItem],
-        Field(description="Items to purchase", min_length=1),
+        m.Field(description="Items to purchase", min_length=1),
     ]
 
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_order(self) -> Self:
         """Ensure the order contains at least one item."""
         if not self.items:
@@ -405,12 +392,16 @@ def build_order() -> p.Result[FlextOrderCreateCommand]:
 ```python
 from __future__ import annotations
 
-from flext_core import p, r
+from flext_core import r
 
 
-def compute() -> p.Result[int]:
+def _recover(_err: str) -> r[int]:
+    return r[int].ok(0)
+
+
+def compute() -> r[int]:
     """Preserves typed success/failure flow with explicit recovery."""
-    return r[int].ok(10).map(lambda v: v * 2).lash(lambda _err: r[int].ok(0))
+    return r[int].ok(10).map(lambda v: v * 2).lash(_recover)
 ```
 
 Why good: preserves typed success/failure flow with explicit recovery.
@@ -432,7 +423,7 @@ def bad_envelope() -> dict[str, Any]:
     """Custom envelope duplicates the core result abstraction."""
     try:
         value = fn()
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         return {"ok": False, "error": str(exc)}
     return {"ok": True, "value": value}
 ```

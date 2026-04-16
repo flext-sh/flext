@@ -6,14 +6,14 @@ tags: [pydantic, typeadapter, classvar, caching, performance]
 
 requires:
   - phase: 02-02
-    provides: Field() canonical Annotated form
+    provides: m.Field() canonical Annotated form
 provides:
   - "Cached TypeAdapter instances as ClassVar eliminating repeated construction in hot paths"
 affects: [03-modernization-migration]
 
 tech-stack:
   added: []
-  patterns: ["ClassVar[TypeAdapter[T]] for fixed-type adapters", "module-level adapter constants for non-class contexts"]
+  patterns: ["ClassVar[m.TypeAdapter[T]] for fixed-type adapters", "module-level adapter constants for non-class contexts"]
 
 key-files:
   created: []
@@ -44,8 +44,8 @@ key-decisions:
   - "Module-level adapter constants used for standalone functions; ClassVar for class methods"
 
 patterns-established:
-  - "ClassVar[TypeAdapter[T]] = TypeAdapter(T) for fixed-type adapters on namespace classes"
-  - "Module-level _XXX_ADAPTER: TypeAdapter[T] = TypeAdapter(T) for standalone function contexts"
+  - "ClassVar[m.TypeAdapter[T]] = TypeAdapter(T) for fixed-type adapters on namespace classes"
+  - "Module-level _XXX_ADAPTER: m.TypeAdapter[T] = TypeAdapter(T) for standalone function contexts"
 
 requirements-completed: [ARCH-06]
 

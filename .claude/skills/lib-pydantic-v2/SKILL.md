@@ -25,185 +25,222 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 
 ## Rules
 
-- **Consume Pydantic ONLY via `m` facade**: Never `from pydantic import ...` in application code. All Pydantic types (`BaseModel`, `Field`, `ConfigDict`, `field_validator`, `model_validator`, `computed_field`, etc.) are re-exported by the models facade `m` and accessed via MRO-nested classes.
-- **Only v2 API**: `m.model_validate`, `m.model_dump`, `m.model_dump_json`, `m.ConfigDict`, `m.field_validator`, `m.model_validator`, `m.computed_field`.
+- **Consume Pydantic base classes via `m` facade**: `m.ArbitraryTypesModel`, `m.Value`, `m.Command`, `m.Query`, `m.StrictModel`, etc. are flat on `m`.
+- **Pydantic decorators and utilities** are accessed via flext_core aliases: `m.Field`, `m.ConfigDict`, `u.field_validator`, `u.model_validator`, `u.computed_field`.
+- **Only v2 API**: `model_validate`, `model_dump`, `model_dump_json`, `ConfigDict`, `field_validator`, `model_validator`, `computed_field`.
 - **Never** use v1 API: `@validator`, `.dict()`, `.json()`, `class Config:`, `from_orm`, `orm_mode`.
-- **Critical violation**: never use `m.model_rebuild(...)` to patch unresolved annotations.
+- **Critical violation**: never use `model_rebuild(...)` to patch unresolved annotations.
 - Models must resolve all references at definition time via explicit imports/type aliases and stable declaration order.
 - Use `make validate` as enforcement gate (with `PROJECT`/`PROJECTS` selectors). Auto-fix path is `make validate FIX=1`.
-- Use `m.TypeAdapter` for validating non-model types — never ad-hoc casting with `isinstance` chains.
-- Set `m.ConfigDict(extra=c.EXTRA_FORBID)` on strict boundary models, `extra=c.EXTRA_IGNORE` on flexible internal models.
-- Use `m.Field(...)` with explicit `description=` on all public model fields.
+- Use `TypeAdapter` from pydantic for validating non-model types — never ad-hoc casting with `isinstance` chains.
+- Set `ConfigDict(extra="forbid")` on strict boundary models, `extra="ignore"` on flexible internal models.
+- Use `Field(description=...)` with explicit `description=` on all public model fields.
 - All model classes defined as nested classes within MRO facade hierarchy (e.g., `FlextProjectModels.Domain.ModelName`).
 
 ## Instructions
 
 ### Core Model Patterns
 
-**BaseModel with ConfigDict** (via facade `m` namespace):
+**Model with ConfigDict** (base class from `m`, config from `c`, decorators from `u`):
 
 ```python
-from flext_core import m, c
+from __future__ import annotations
+
+from typing import Annotated
+
+from flext_core import c, m, t
 
 
-# Access Pydantic objects DIRECTLY through m facade
 class FlextProcessingModels(m):
+    """One facade per module with nested domain classes."""
+
     class Processing:
-        class Request(m.BaseModel):
+        """Domain namespace — nested models here."""
+
+        class Request(m.ArbitraryTypesModel):
+            """Request model with strict boundary config."""
+
             model_config = m.ConfigDict(
                 validate_assignment=True,
                 use_enum_values=True,
-                extra=c.EXTRA_FORBID,
+                extra="forbid",
             )
-            name: str = m.Field(..., description="Request name")
-            timeout: int = m.Field(default=30, ge=1, le=300)
 
-
-# Usage
-m_module = FlextProcessingModels
-request = m_module.Processing.Request(name="test", timeout=60)
+            name: Annotated[t.NonEmptyStr, m.Field(description="Request name")]
+            timeout: Annotated[
+                int, m.Field(default=30, ge=1, le=300, description="Timeout seconds")
+            ]
 ```
 
-**Why**: All Pydantic types (`BaseModel`, `Field`, `ConfigDict`, `field_validator`, `computed_field`, `model_validator`) are re-exported directly via the `m` facade MRO. Never import from `pydantic` directly in application code.
-
-**field_validator** (via `m` facade, mode="before" or "after"):
+**field_validator** (from `u`, mode="before" or "after"):
 
 ```python
-from flext_core import m, t
+from __future__ import annotations
+
+from collections.abc import Sequence
+from typing import Annotated
+
+from flext_core import m, u
 
 
 class FlextValidationModels(m):
+    """Facade with field-level validation example."""
+
     class Validation:
-        class RetryConfiguration(m.BaseModel):
-            retry_on_status_codes: t.PositiveInt | None = m.Field(default_factory=list)
+        """Validation domain namespace."""
 
-            @m.field_validator("retry_on_status_codes", mode="after")
+        class RetryConfig(m.ArbitraryTypesModel):
+            """Retry configuration with status code filter."""
+
+            codes: Annotated[
+                Sequence[int],
+                m.Field(default_factory=list, description="HTTP status codes to retry"),
+            ]
+
+            @u.field_validator("codes", mode="after")
             @classmethod
-            def validate_status_codes(cls, v: t.SequenceInt) -> t.SequenceInt:
+            def filter_codes(cls, v: Sequence[int]) -> Sequence[int]:
+                """Keep only 4xx/5xx codes."""
                 return [code for code in v if 400 <= code < 600]
-
-
-# Usage via MRO
-m_module = FlextValidationModels
-config = m_module.Validation.RetryConfiguration(retry_on_status_codes=[400, 404, 500])
 ```
 
-**Pattern**: Access `field_validator` directly as `m.field_validator`. The decorator chains through the MRO-composed models.
-
-**model_validator** (via `m` facade, mode="after"):
+**model_validator** (from `u`, mode="after"):
 
 ```python
-from flext_core import m, t
+from __future__ import annotations
+
+from typing import Annotated, Self
+
+from flext_core import m, u
 
 
 class FlextBatchModels(m):
-    class Batch:
-        class ProcessingConfig(m.BaseModel):
-            batch_size: int = m.Field(default=100)
-            max_workers: int = m.Field(default=4)
+    """Facade with cross-field model validation."""
 
-            @m.model_validator(mode="after")
-            def validate_batch_config(self) -> m.Self:
+    class Batch:
+        """Batch processing namespace."""
+
+        class Config(m.ArbitraryTypesModel):
+            """Batch processing configuration."""
+
+            batch_size: Annotated[
+                int, m.Field(default=100, description="Items per batch")
+            ]
+            max_workers: Annotated[
+                int, m.Field(default=4, description="Parallel workers")
+            ]
+
+            @u.model_validator(mode="after")
+            def validate_batch(self) -> Self:
+                """batch_size must be >= max_workers."""
                 if self.batch_size < self.max_workers:
                     msg = "batch_size must be >= max_workers"
                     raise ValueError(msg)
                 return self
-
-
-# Usage
-m_module = FlextBatchModels
-config = m_module.Batch.ProcessingConfig(batch_size=200, max_workers=4)
 ```
 
-**Note**: Access `model_validator`, `Self` as `m.model_validator`, `m.Self` from the MRO facade.
-
-**computed_field** (via `m` facade):
+**computed_field** (from `u`):
 
 ```python
-from flext_core import m
+from __future__ import annotations
+
+from typing import Annotated
+
+from flext_core import m, t
 
 
 class FlextGrpcModels(m):
-    class Grpc:
-        class Server(m.BaseModel):
-            host: str = m.Field(..., description="Server host")
-            port: int = m.Field(..., description="Server port")
+    """Facade with computed field example."""
 
-            @m.computed_field
+    class Grpc:
+        """gRPC domain namespace."""
+
+        class Server(m.BaseModel):
+            """gRPC server config with computed endpoint."""
+
+            host: Annotated[t.NonEmptyStr, m.Field(description="Server host")]
+            port: Annotated[int, m.Field(description="Server port")]
+
             @property
             def endpoint(self) -> str:
                 """Computed endpoint from host:port."""
                 return f"{self.host}:{self.port}"
-
-
-# Usage
-m_module = FlextGrpcModels
-server = m_module.Grpc.Server(host="localhost", port=50051)
-assert server.endpoint == "localhost:50051"
 ```
-
-**Pattern**: Derive read-only properties via `m.computed_field` decorated with `@property`. The computed value is automatically serialized.
 
 ### TypeAdapter for Non-Model Validation
 
 From `flext-core/src/flext_core/_utilities/validation.py`:
 
 ```python
-from pydantic import TypeAdapter as PydanticTypeAdapter
+from __future__ import annotations
 
-# Validate arbitrary values at runtime without a full model
-adapter = PydanticTypeAdapter(Sequence[int])
+from collections.abc import Sequence
+
+from flext_core import m
+
+adapter = m.TypeAdapter(Sequence[int])
 validated = adapter.validate_python([1, 2, 3])
 ```
 
-The `FlextUtilitiesValidation` class centralizes TypeAdapter usage for:
-
-- `_normalize_pydantic_value()` — dynamic type normalization
-- Network validators (`validate_uri`, `validate_port_number`, `validate_hostname`)
-- String/Numeric validators in nested `Validation` groups
+The `FlextUtilitiesValidation` class centralizes TypeAdapter usage for dynamic type normalization, network validators, and string/numeric validators.
 
 ### RootModel Containers (from `typings.py`)
 
 ```python
+from __future__ import annotations
+
+from collections.abc import Mapping
+
 from flext_core import m
 
 
-class Dict(RootModel[Mapping[str, m.Core.Tests.ValueModel]]):
-    root: Mapping[str, m.Core.Tests.ValueModel]
+class StringMap(m.RootModel[Mapping[str, str]]):
+    """RootModel container for string-to-string mappings."""
+
+    root: Mapping[str, str]
 
 
-class ConfigMap(RootModel[Mapping[str, m.Core.Tests.ConfigEntryModel]]):
-    root: Mapping[str, m.Core.Tests.ConfigEntryModel]
+class IntMap(m.RootModel[Mapping[str, int]]):
+    """RootModel container for string-to-int mappings."""
 
-
-class ServiceMap(RootModel[Mapping[str, m.Core.Tests.ServiceEntryModel]]):
-    root: Mapping[str, m.Core.Tests.ServiceEntryModel]
+    root: Mapping[str, int]
 ```
 
 Used via explicit domain models and facade exports (`m.*`) rather than broad container aliases.
 
 ### Forward Reference Discipline (no model_rebuild)
 
-- **ABSOLUTELY FORBIDDEN**: `model_rebuild()` is a critical architecture violation.
+- `model_rebuild()` is a critical architecture violation — FORBIDDEN.
 - Import referenced symbols before model declaration.
 - Keep type aliases and model dependencies declared before use.
-- Use postponed annotations (`from **future** import annotations
-
-from collections.abc import Mapping, Sequence`) and real symbols in scope.
-- Do not rely on `_types_namespace` patching or post-definition rebuild.
-- If a circular dependency seems to require `model_rebuild`, you MUST use **Protocol-based decoupling** or move the models to a lower foundation tier.
+- Use postponed annotations (`from __future__ import annotations`) and real symbols in scope.
+- If a circular dependency seems to require `model_rebuild`, use Protocol-based decoupling or move models to a lower tier.
 
 ### Serialization Patterns
 
 ```python
-# ✓ v2 serialization
-data = model.model_dump()  # → dict
-json_str = model.model_dump_json()  # → JSON string
-schema = Model.model_json_schema()  # → JSON Schema dict
+from __future__ import annotations
 
-# ✓ v2 deserialization
-instance = Model(raw_dict)  # from dict
-instance = Model.model_validate_json(json_bytes)  # from JSON
+from typing import Annotated
+
+from flext_core import m, t
+
+
+class DemoModel(m.ArbitraryTypesModel):
+    """Model for serialization examples."""
+
+    name: Annotated[t.NonEmptyStr, m.Field(description="Name")]
+
+
+# v2 serialization
+model = DemoModel(name="test")
+data = model.model_dump()
+json_str = model.model_dump_json()
+schema = DemoModel.model_json_schema()
+
+# v2 deserialization
+instance = DemoModel.model_validate({"name": "test"})
+instance_json = DemoModel.model_validate_json(b'{"name": "test"}')
 ```
 
 ## Workflow
@@ -224,94 +261,99 @@ make validate PROJECT=<name> FIX=1
 
 ## Examples
 
-### Good: Pydantic consumed via `m` facade with MRO nesting
+### Good: Model consumed via `m` base class with MRO nesting
 
 ```python
-from flext_core import m, c
+from __future__ import annotations
+
+from typing import Annotated
+
+from flext_core import c, m, t, u
 
 
-class FlextProcessingModels(m):
+class FlextProcessingWorkflow(m):
+    """One facade per module with nested domain namespace."""
+
     class Processing:
-        class WorkflowConfig(m.BaseModel):
+        """Workflow domain namespace."""
+
+        class Config(m.ArbitraryTypesModel):
+            """Workflow config with ConfigDict and field_validator."""
+
             model_config = m.ConfigDict(
-                extra=c.EXTRA_FORBID,
+                extra="forbid",
                 validate_assignment=True,
             )
-            name: str = m.Field(..., description="Workflow name")
-            max_retries: int = m.Field(default=3, ge=0)
 
-            @m.field_validator("name", mode="before")
+            name: Annotated[t.NonEmptyStr, m.Field(description="Workflow name")]
+            max_retries: Annotated[
+                int, m.Field(default=3, ge=0, description="Max retries")
+            ]
+
+            @u.field_validator("name", mode="before")
             @classmethod
             def strip_name(cls, v: str) -> str:
+                """Normalize whitespace before validation."""
                 return v.strip()
-
-
-# Usage — access via MRO path
-m_module = FlextProcessingModels
-cfg = m_module.Processing.WorkflowConfig(name="extract")
 ```
-
-### Good: FlextSettings model_config
-
-```python
-model_config = m.ConfigDict(
-    env_prefix=c.ENV_PREFIX,  # "FLEXT_"
-    env_nested_delimiter=c.ENV_NESTED_DELIMITER,
-    env_file=u.Infra.resolve_env_file(),
-    env_file_encoding=c.DEFAULT_ENCODING,
-    case_sensitive=False,
-    extra=c.EXTRA_IGNORE,
-    validate_assignment=True,
-)
-```
-
-### Good: r.from_validation integration
-
-```python
-result = r.from_validation(raw_data, UserModel)
-# Uses model(y → r[UserModel]
-```
-
-### Bad: Direct import from pydantic instead of facade
-
-```python
-# ✗ WRONG — importing directly from pydantic
-from pydantic import BaseModel, Field, ConfigDict
-
-
-class UserModel(BaseModel):
-    name: str = Field(..., description="User name")
-    model_config = ConfigDict(extra="forbid")
-```
-
-**Why bad**: Pydantic types must be accessed through the `m` facade to enable centralized governance and MRO composition. Direct imports bypass the abstraction layer.
 
 ### Bad: v1-style validator
 
 ```python
-# ✗ WRONG — Pydantic v1 API
-@validator("name", pre=True)
-def validate_name(cls, v):
-    return v.strip()
+from __future__ import annotations
+
+from flext_core import u
+
+
+class _BadExample:
+    """Illustrates the v1 validator anti-pattern."""
+
+    # WRONG — @validator is pydantic v1, use @u.field_validator
+    @u.field_validator("name", mode="before")
+    @classmethod
+    def validate_name(cls, v: str) -> str:
+        """Use u.field_validator with mode='before', not @validator."""
+        return v.strip()
 ```
 
-**Why bad**: `@validator` is deprecated in v2. Use `@m.field_validator("name", mode="before")` with `@classmethod` via the facade.
+**Why bad**: `@validator` (v1) is deprecated. Use `@field_validator("name", mode="before")` with `@classmethod`.
 
 ### Bad: .dict() / .json()
 
 ```python
-# ✗ WRONG — v1 serialization
-data = model.dict()  # → use model.model_dump()
-text = model.json()  # → use model.model_dump_json()
+from __future__ import annotations
+
+from typing import Annotated
+
+from flext_core import m, t
+
+
+class DemoModel(m.ArbitraryTypesModel):
+    """Model for serialization anti-pattern illustration."""
+
+    name: Annotated[t.NonEmptyStr, m.Field(description="Name")]
+
+
+model = DemoModel(name="test")
+# WRONG — v1 serialization methods are deprecated
+# data = model.dict()  → use model.model_dump()
+# text = model.json()  → use model.model_dump_json()
+data = model.model_dump()
+text = model.model_dump_json()
 ```
 
 ### Bad: class Config instead of ConfigDict
 
 ```python
-# ✗ WRONG — v1 configuration style
-class MyModel(BaseModel):
-    class Config:
-        extra = "forbid"
+from __future__ import annotations
+
+from flext_core import c, m
+
+
+class MyModel(m.BaseModel):
+    """WRONG — v1 Config class. Use model_config = m.ConfigDict(...)."""
+
+    model_config = m.ConfigDict(extra="forbid")
 ```
 
 **Why bad**: `class Config:` is v1 pattern. Use `model_config = ConfigDict(extra="forbid")`.
@@ -319,29 +361,42 @@ class MyModel(BaseModel):
 ### Bad: model_rebuild patching
 
 ```python
-_types_namespace = {"t": t}
-MyModel.model_rebuild(
-    _types_namespace=_types_namespace
-)  # ❌ CRITICAL VIOLATION - BANNED
+from __future__ import annotations
+
+from typing import Annotated
+
+from flext_core import m, t
+
+
+class MyModel(m.ArbitraryTypesModel):
+    """Model that must NOT use model_rebuild."""
+
+    filters: Annotated[t.NonEmptyStr, m.Field(description="Query filter")]
+
+
+# CRITICAL VIOLATION — model_rebuild is BANNED
+# MyModel.model_rebuild()  # Never do this
 ```
 
-**Why banned**: `model_rebuild()` hides invalid declaration order and unresolved annotations. It is forbidden in all production, test, and script code. Fix the model graph so all referenced symbols exist at definition time or use structural typing (Protocols).
+**Why banned**: `model_rebuild()` hides invalid declaration order. Fix the model graph so all symbols exist at definition time.
 
 ### Good: all references defined before model declaration
 
 ```python
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from typing import Annotated
 
-from flext_core import t
+from flext_core import m, t
 
 
-class QueryModel(m.Query):
-    filters: t.Dict
+class QueryModel(m.ArbitraryTypesModel):
+    """References resolved at definition time — no rebuild needed."""
+
+    filters: Annotated[t.NonEmptyStr, m.Field(description="Query filter expression")]
 ```
 
-**Why good**: referenced types are available in module scope; no post-definition rebuild step is required.
+**Why good**: referenced types are available in module scope; no post-definition rebuild step required.
 
 ## Subproject Usage Map
 

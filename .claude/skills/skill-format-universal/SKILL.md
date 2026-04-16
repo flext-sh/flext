@@ -26,7 +26,7 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 - **Name constraints**: lowercase a-z + hyphens only, max 64 chars, must match parent directory name exactly (e.g. `name: flext-patterns` inside `.claude/skills/flext-patterns/SKILL.md`).
 - **Description constraints**: max 1024 chars, non-empty, 3rd person, imperative "Use when…" phrasing with specific trigger keywords that help agents identify the right skill.
 - Put trigger guidance in `description`, not in a body section called "When to use".
-- **Line count**: keep SKILL.md body under 500 lines. Move detailed reference content to `references/*.md` and link explicitly (e.g. `See [import matrix](references/import-matrix.md)`).
+- **Line count**: keep SKILL.md body under 500 lines. Move detailed reference content to `references/*.md` and link explicitly (e.g. See `references/<topic>.md`).
 - **Compatibility field**: add only if the skill requires specific environment packages, Python version, or tool prerequisites (e.g. `Requires Python 3.13+, uv, and git`). Most skills do not need this field.
 - Keep body operational and evidence-backed with repository paths and runnable checks.
 - Keep names aligned with directory names under `.claude/skills/<name>/SKILL.md`.
