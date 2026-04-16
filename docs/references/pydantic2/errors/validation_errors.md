@@ -111,7 +111,7 @@ may encounter when working with pydantic, together with some suggestions on how 
 
 ## `arguments_type`
 
-This error is raised when an t.RecursiveContainer that would be passed as arguments to a function during validation is not
+This error is raised when an object that would be passed as arguments to a function during validation is not
 a `tuple`, `list`, or `dict`. Because `NamedTuple` uses function calls in its implementation, that is one way to
 produce this error:
 

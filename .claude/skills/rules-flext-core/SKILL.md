@@ -30,7 +30,7 @@ description: Authoritative rules for `flext-core` architecture, typing, result f
 - Keep dependency direction inward only (L3 -> L2 -> L1 -> L0).
 - Keep failure/success boundaries on `r` (`r`) and compose with `map/flat_map/lash`.
 - Keep dependency-injector usage routed through runtime/container bridges.
-- Keep shared type contracts centralized in `typings.py`. **Rule**: `Any`, `t.RecursiveContainer`, and `Mapping[str, Any]` are FORBIDDEN — use `t.*` contracts exclusively. `None` in type unions only when business-required.
+- Keep shared type contracts centralized in `typings.py`. **Rule**: `Any`, `object`, and `Mapping[str, Any]` are FORBIDDEN — use `t.*` contracts exclusively. `None` in type unions only when business-required.
 - Keep public `get_*`/`set_*`/`is_*` surfaces out of `flext-core`; deterministic values belong in fields or `@computed_field`, and result/status carriers use `success`/`failure`.
 - Consume public API from `flext_core` exports in non-internal modules.
 - For `flext-core/tests/`, assert module and facade behavior, not implementation details. Tests coupled to internal warning text, traceback fragments, local alias names, internal class names, or private MRO structure are invalid and must be rewritten to target stable external behavior.
@@ -43,10 +43,12 @@ description: Authoritative rules for `flext-core` architecture, typing, result f
 - For new exported symbols, update `flext-core/src/flext_core/__init__.py` deliberately.
 
 ```python
-from flext_core import r, p
+from __future__ import annotations
+
+from flext_core import r
 
 
-def run(value: str):
+def run(value: str) -> object:
     return r[str].ok(value).map(str.strip)
 ```
 
@@ -62,7 +64,11 @@ def run(value: str):
 Good (Result Railway):
 
 ```python
-result = r[str].ok("x").flat_map(lambda v: p.Result[str].ok(v.upper()))
+from __future__ import annotations
+
+from flext_core import r
+
+result = r[str].ok("x").flat_map(lambda v: r[str].ok(v.upper()))
 ```
 
 Why good: typed railway composition with explicit success chain.
@@ -70,8 +76,10 @@ Why good: typed railway composition with explicit success chain.
 Good (Library Abstraction Provider):
 
 ```python
-# In flext-core/src/flext_core/models.py
-from pydantic import BaseModel, Field, ConfigDict
+from __future__ import annotations
+
+from pydantic import ConfigDict
+from pydantic import BaseModel
 
 
 class Settings(BaseModel):
@@ -81,7 +89,7 @@ class Settings(BaseModel):
 
 
 # In FlextCoreModels' __exports__
-m = FlextCoreModels  # Users import this facade, not BaseModel
+# m = FlextCoreModels  # Users import this facade, not BaseModel
 ```
 
 Why good: flext-core owns pydantic integration; all other projects access through `m.Settings` alias.
@@ -89,7 +97,11 @@ Why good: flext-core owns pydantic integration; all other projects access throug
 Bad (Bypassing Container):
 
 ```python
-from dependency_injector import providers
+from __future__ import annotations
+
+# ❌ NEVER — bypasses u/FlextContainer bridge contract
+# from dependency_injector import providers  # noqa: ERA001
+_EXAMPLE_ONLY: str = "use u.Container instead of dependency_injector directly"
 ```
 
 Why bad: bypasses `u`/`FlextContainer` bridge contract.
@@ -97,9 +109,12 @@ Why bad: bypasses `u`/`FlextContainer` bridge contract.
 Bad (Library Abstraction Violation - if this were in flext-cli):
 
 ```python
+from __future__ import annotations
+
 # ❌ NEVER in flext-cli/src or other consuming projects
-from pydantic import BaseModel, Field
-from dependency_injector import containers
+# from pydantic import BaseModel, Field  # noqa: ERA001
+# from dependency_injector import containers  # noqa: ERA001
+_EXAMPLE_ONLY: str = "use m.BaseModel and u.Container instead"
 ```
 
 Why bad: consuming projects must use flext-core abstractions (`m.Settings`, `u.Container`) instead of direct library imports. Violates boundary and makes pydantic upgrade harder.

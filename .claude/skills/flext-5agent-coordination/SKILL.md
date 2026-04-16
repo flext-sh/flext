@@ -204,19 +204,17 @@ Agents MUST execute in this order:
 ### Good: Staying in Lane
 
 ```python
-# Agent 4 working on result.py (owned file)
-# Agent 4 can modify result.py freely
-class r(Generic[T]):
-    @classmethod
-    def fail(cls, error: Exception) -> "r[T]":
-        return r[T](error=error)
+from __future__ import annotations
+
+from flext_core import m, p, r
 
 
-# Agent 4 appends to protocols.py Result section (lines 299-512)
-# Agent 4 NEVER touches other sections
-class Result(Protocol[T]):
-    @property
-    def value(self) -> T: ...
+# Agent 4 working on result.py (owned file) — uses r[T] contracts
+def process_item(item: m.Value) -> p.Result[bool]:
+    """Process using r[T].ok / r[T].fail pattern."""
+    if item is None:
+        return r[bool].fail("item required")
+    return r[bool].ok(True)
 ```
 
 Why good: Agent 4 owns result.py and their protocols.py section. No conflicts.
@@ -224,11 +222,15 @@ Why good: Agent 4 owns result.py and their protocols.py section. No conflicts.
 ### Bad: Crossing Lanes
 
 ```python
-# Agent 1 modifying result.py (NOT owned)
-# Agent 1 should NOT touch this file
-class r(Generic[T]):
-    def fail(self, error: Exception) -> "r[T]":
-        return r(error=error)
+from __future__ import annotations
+
+from flext_core import m, p, r
+
+
+# Agent 1 consuming result.py (NOT owned) — Agent 1 must read-only
+def agent1_handler(item: m.Value) -> p.Result[bool]:
+    # Agent 1 NEVER modifies result.py; only uses r[T] from it
+    return r[bool].ok(True)
 ```
 
 Why bad: Agent 1 does not own result.py. This violates Commandment 6 (Stay in lane).
@@ -236,10 +238,15 @@ Why bad: Agent 1 does not own result.py. This violates Commandment 6 (Stay in la
 ### Good: protocols.py Append-Only
 
 ```python
+from __future__ import annotations
+
+from typing import Protocol
+
+
 # Agent 4 appending to their Result section (lines 299-512)
 # Agent 4 adds new protocol at END of section
 class VariadicCallable(Protocol):
-    def __call__(self, *args, **kwargs): ...
+    def __call__(self, *args: object, **kwargs: object) -> object: ...
 ```
 
 Why good: Agent 4 appends at END of their section, never reorders.
@@ -247,13 +254,21 @@ Why good: Agent 4 appends at END of their section, never reorders.
 ### Bad: protocols.py Reordering
 
 ```python
-# Agent 4 reordering sections globally
-# This breaks other agents' section boundaries
-class Handler(Protocol):  # This is Agent 5's section!
-    def handle(self, cmd): ...  # FORBIDDEN was here
+from __future__ import annotations
+
+from typing import Protocol, TypeVar
+
+T = TypeVar("T")
 
 
-class Result(Protocol[T]):  # Agent 4's section
+# Agent 4 reordering sections globally — FORBIDDEN
+# Handler belongs to Agent 5's section
+class Handler(Protocol):
+    def handle(self, cmd: object) -> None: ...
+
+
+# Result belongs to Agent 4's section — but reordering is still bad
+class Result(Protocol[T]):
     @property
     def value(self) -> T: ...
 ```

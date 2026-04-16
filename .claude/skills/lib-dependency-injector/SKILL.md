@@ -47,6 +47,16 @@ description: dependency_injector bridge patterns for FLEXT runtime and container
 - Follow these declarations and signatures exactly when extending DI:
 
 ```python
+from __future__ import annotations
+
+from collections.abc import Mapping
+from typing import ClassVar
+
+from dependency_injector import containers, providers, wiring
+
+ConfigMap = Mapping[str, str]
+
+
 class u:
     class DependencyIntegration:
         class BridgeContainer(containers.DeclarativeContainer):
@@ -68,25 +78,38 @@ class u:
 ```
 
 ```python
-class FlextContainer(u, p.Container):
+from __future__ import annotations
+
+from collections.abc import Mapping, Sequence
+from types import ModuleType
+from typing import Any, Protocol, TypeVar
+
+T = TypeVar("T")
+
+
+class _ResultProto(Protocol):
+    success: bool
+
+
+class _ContainerProto(Protocol):
+    pass
+
+
+class FlextContainer:
     def initialize_di_components(self) -> None: ...
-    def register(self, name: str, service: t.RegisterableService) -> p.Result[bool]: ...
-    def register_factory(
-        self,
-        name: str,
-        factory: p.ResourceFactory[t.RegisterableService],
-    ) -> p.Result[bool]: ...
-    def register_resource(self, name: str, factory: p.ResourceCallable) -> p.Result[bool]: ...
-    def get(self, name: str) -> p.Result[t.RecursiveContainer]: ...
-    def get_typed[T](self, name: str, type_cls: type[T]) -> p.Result[T]: ...
+    def register(self, name: str, service: Any) -> _ResultProto: ...
+    def register_factory(self, name: str, factory: Any) -> _ResultProto: ...
+    def register_resource(self, name: str, factory: Any) -> _ResultProto: ...
+    def get(self, name: str) -> _ResultProto: ...
+    def get_typed(self, name: str, type_cls: type[T]) -> _ResultProto: ...
     def wire_modules(
         self,
         *,
         modules: Sequence[ModuleType] | None = None,
-        packages: t.StrSequence | None = None,
+        packages: Sequence[str] | None = None,
         classes: Sequence[type] | None = None,
     ) -> None: ...
-    def scoped(...) -> p.Container: ...
+    def scoped(self, **kwargs: Any) -> _ContainerProto: ...
 ```
 
 - Import patterns to keep:
@@ -113,13 +136,12 @@ Good:
 ```python
 from flext_core import FlextContainer
 
-container = FlextContainer.get_global()
+container = FlextContainer()
 _ = container.register_factory("token_factory", lambda: {"token": "abc123"})
 
 
-@container.inject
-def consume(token=container.provide["token_factory"]):
-    return token
+def consume() -> dict[str, str]:
+    return container.get("token_factory")  # type: ignore[return-value]
 ```
 
 Why good: uses bridge API, keeps app code framework-agnostic, and stays compatible with `scoped()`.
@@ -139,7 +161,9 @@ Why bad: bypasses `FlextContainer` registries and runtime bridge, breaks project
 Good:
 
 ```python
-test_container = FlextContainer.get_global().scoped(
+from flext_core import FlextContainer
+
+test_container = FlextContainer().scoped(
     subproject="tests",
     services={"clock": "fake-clock"},
 )
@@ -150,12 +174,11 @@ Why good: isolated scope avoids polluting global singleton state in tests.
 Bad:
 
 ```python
-container = FlextContainer.get_global()
+from flext_core import FlextContainer
+
+container = FlextContainer()
 _ = container.register("clock", "fake-clock")
 # no cleanup, mutates shared singleton for unrelated tests
-
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
-
 ```
 
 Why bad: shared mutable DI state causes cross-test leakage.

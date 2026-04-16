@@ -102,15 +102,17 @@ from __future__ import annotations
 
 from typing import Self
 
-from flext_core import m, p, r, s, t, c
+from flext_core import c, m, p, r, s, t
+from flext_pattern import FlextPatternValidateMixin
 
 
-class FlextPatternModels(m):
-    """Models inherit from m via MRO — all Pydantic via facade."""
-    
+class FlextPattern(FlextPatternValidateMixin, s[t.Dict]):
+    """Single facade class per module with nested models and MRO-composed services."""
+
     class Domain:
         class Window(m.BaseModel):
             """Window with validation phases separated."""
+
             model_config = m.ConfigDict(extra=c.EXTRA_FORBID)
             start: int = m.Field(default=0, ge=0, description="Window start")
             end: int = m.Field(default=0, ge=0, description="Window end")
@@ -137,25 +139,18 @@ class FlextPatternModels(m):
             def width(self) -> int:
                 return self.end - self.start
 
-
-class FlextPatternServiceBase(s[t.Dict]):
-    """Service base with DI support."""
-    pass
-
-
-class FlextPatternService(FlextPatternServiceBase):
-    """Service consuming models via MRO paths."""
-    
-    def validate(self, window: FlextPatternModels.Domain.Window) -> p.Result[int]:
-        """Validate and return window width."""
-        return r[int].ok(window.width)  # Uses computed_field
+    @staticmethod
+    def run_validate() -> p.Result[int]:
+        service = FlextPattern()
+        window = FlextPattern.Domain.Window(start=1, end=4, label="ok")
+        return service.validate(window)
 ```
 
 Why good:
 - ✅ **All Pydantic via `m`** — `m.BaseModel`, `m.Field`, `m.ConfigDict`, `m.field_validator`, `m.model_validator`, `m.computed_field`
-- ✅ **MRO inheritance** — `FlextPatternModels(m)` → Domain.Window inherits Pydantic via facade
+- ✅ **One-facade module + MRO** — `FlextPattern(FlextPatternValidateMixin, s[t.Dict])`
 - ✅ **Validator phases separated** — normalize (before) → coerce → validate cross-fields (after)
-- ✅ **Nested domain namespace** — `m.Domain.Window` preserved, not flattened
+- ✅ **Nested domain namespace** — `FlextPattern.Domain.Window` preserved, not flattened
 - ✅ **Service boundary** — receives typed models, returns result via `r[T]`
 
 ### Bad: Direct pydantic imports instead of via `m` facade
@@ -163,6 +158,7 @@ Why good:
 ```python
 # ✗ WRONG — importing from pydantic directly
 from pydantic import BaseModel, field_validator, Field
+
 
 class Window(BaseModel):
     start: int = Field(default=0)
@@ -189,6 +185,7 @@ Why bad:
 def mixed_logic(cls, value):
     # Coercion + side effects + hidden invariant checks all in one
     import logging
+
     logging.info(f"Validating {value}")  # Side effect!
     return int(value)
 ```

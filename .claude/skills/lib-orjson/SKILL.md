@@ -37,12 +37,18 @@ description: Deterministic high-performance JSON serialization with orjson in fl
 
 ```python
 # flext-core/src/flext_core/_utilities/validation.py
+from __future__ import annotations
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+import json
+
+import orjson
+
+from flext_core import c
+
 
 @staticmethod
-def sort_key(value) -> tuple[str, str]:
-    ...
+def sort_key(value: object) -> tuple[str, str]:
+    type_cat = type(value).__name__
     try:
         json_bytes = orjson.dumps(value, option=orjson.OPT_SORT_KEYS)
         serialized = json_bytes.decode(c.DEFAULT_ENCODING)
@@ -70,9 +76,18 @@ def sort_key(value) -> tuple[str, str]:
 Good:
 
 ```python
-json_bytes = orjson.dumps(value, option=orjson.OPT_SORT_KEYS)
-serialized = json_bytes.decode(c.DEFAULT_ENCODING)
-return (type_cat, serialized)
+from __future__ import annotations
+
+import orjson
+
+from flext_core import c
+
+
+def sort_key(value: object) -> tuple[str, str]:
+    type_cat = type(value).__name__
+    json_bytes = orjson.dumps(value, option=orjson.OPT_SORT_KEYS)
+    serialized = json_bytes.decode(c.DEFAULT_ENCODING)
+    return (type_cat, serialized)
 ```
 
 Why good: keeps deterministic key ordering and converts bytes to text at boundary.
@@ -80,8 +95,15 @@ Why good: keeps deterministic key ordering and converts bytes to text at boundar
 Bad:
 
 ```python
-serialized = orjson.dumps(value)
-return (type_cat, serialized)
+from __future__ import annotations
+
+import orjson
+
+
+def sort_key(value: object) -> tuple[str, bytes]:
+    type_cat = type(value).__name__
+    serialized = orjson.dumps(value)
+    return (type_cat, serialized)
 ```
 
 Why bad: returns bytes in a tuple expected to contain `str`, and drops explicit sorted-key determinism.
@@ -89,11 +111,23 @@ Why bad: returns bytes in a tuple expected to contain `str`, and drops explicit 
 Good:
 
 ```python
-try:
-    json_bytes = orjson.dumps(value, option=orjson.OPT_SORT_KEYS)
-    serialized = json_bytes.decode(c.DEFAULT_ENCODING)
-except (AttributeError, TypeError, ValueError, RuntimeError, KeyError):
-    serialized = json.dumps(value, sort_keys=True, default=str)
+from __future__ import annotations
+
+import json
+
+import orjson
+
+from flext_core import c
+
+
+def sort_key(value: object) -> tuple[str, str]:
+    type_cat = type(value).__name__
+    try:
+        json_bytes = orjson.dumps(value, option=orjson.OPT_SORT_KEYS)
+        serialized = json_bytes.decode(c.DEFAULT_ENCODING)
+    except (AttributeError, TypeError, ValueError, RuntimeError, KeyError):
+        serialized = json.dumps(value, sort_keys=True, default=str)
+    return (type_cat, serialized)
 ```
 
 Why good: preserves robustness for non-serializable values and deterministic ordering under fallback.
@@ -101,7 +135,14 @@ Why good: preserves robustness for non-serializable values and deterministic ord
 Bad:
 
 ```python
-serialized = orjson.dumps(value).decode("utf-16")
+from __future__ import annotations
+
+import orjson
+
+
+def sort_key(value: object) -> str:
+    serialized = orjson.dumps(value).decode("utf-16")
+    return serialized
 ```
 
 Why bad: hardcoded wrong encoding breaks compatibility with project default encoding and can corrupt output.

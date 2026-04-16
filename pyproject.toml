@@ -225,7 +225,6 @@ project-excludes = [
   "**/node_modules",
   "**/typings/**",
   "**/vendor/**",
-  "**/.flext-deps/**",
   "**/venv/**",
   ".flext-deps/**",
   ".venv/**",
@@ -265,7 +264,7 @@ bad-match = true
 bad-override = false
 bad-param-name-override = true
 bad-raise = true
-bad-return = false
+bad-return = true
 bad-specialization = true
 bad-typed-dict = true
 bad-typed-dict-key = true
@@ -341,7 +340,6 @@ exclude = [
   "**/.mypy_cache",
   "**/.pytest_cache",
   "**/.ruff_cache",
-  "**/.flext-deps/**",
   "**/.venv",
   "**/.venv/**",
   "**/__pycache__",
@@ -994,7 +992,6 @@ python_files = [ "*_test.py", "*_tests.py", "test_*.py" ]
 [tool.ruff]
 exclude = [
   ".git",
-  "**/.flext-deps/**",
   ".mypy_cache",
   ".pytest_cache",
   ".ruff_cache",
@@ -1323,7 +1320,7 @@ split-on-trailing-comma = true
 "**/protocol_impls/*.py" = [ "SLF001" ]
 "**/providers/*.py" = [ "S106", "S107" ]
 "**/services/prompts.py" = [ "D102", "D107" ]
-"**/settings.py" = [ "ANN401", "PLC0415", "S105" ]
+"**/settings.py" = [ "ANN401", "FBT001", "SLF001" ]
 "**/singer/*.py" = [ "S404", "S603" ]
 "**/tools/*.py" = [ "FBT001", "FBT002", "N802", "S404", "S603", "S607", "T201" ]
 "**/tools/**/*.py" = [ "FBT001", "FBT002", "N802", "S404", "S603", "S607", "T201" ]

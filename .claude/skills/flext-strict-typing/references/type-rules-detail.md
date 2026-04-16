@@ -74,14 +74,14 @@ ruff check --select=F821,F401,F811  # Verify no undefined names or unused import
 
 ---
 
-## Rule 1: NEVER Use `Any` or `t.RecursiveContainer` (AXIOMATIC — Zero Tolerance)
+## Rule 1: NEVER Use `Any` or `object` (AXIOMATIC — Zero Tolerance)
 
 ### Replace with the appropriate type from the `FlextTypes` hierarchy
 
 | Instead of       | Use                        | When                                                          |
 | ---------------- | -------------------------- | ------------------------------------------------------------- |
-| `Any` / `t.RecursiveContainer` | Specific Pydantic Model    | **MANDATORY**: For ALL domain entities and value objects      |
-| `Any` / `t.RecursiveContainer` | `t.Scalar`                 | Primitives: `str \| int \| float \| bool \| datetime`         |
+| `Any` / `object` | Specific Pydantic Model    | **MANDATORY**: For ALL domain entities and value objects      |
+| `Any` / `object` | `t.Scalar`                 | Primitives: `str \| int \| float \| bool \| datetime`         |
 | `Mapping[*, *]`      | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
 | `Mapping[*, *]`   | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
 | Broad container aliases | `m.<Domain>.*Model` / `p.<Domain>.*Protocol` | Replace permissive contracts with explicit models/protocols  |

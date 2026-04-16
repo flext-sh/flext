@@ -76,56 +76,44 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 ```python
 from __future__ import annotations
 
-from flext_core import c, m, p, r, s, t, u
+from typing import Annotated, ClassVar
+
+from pydantic import Field
+
+from flext_core import m, p, r, t
 
 
 class FlextTargetOracleModels(m):
-    """Good: MRO composition with Pydantic via m facade."""
+    """Consumer facade: inherits flext_core m via MRO, adds one local namespace."""
+
+    _flext_enforcement_exempt: ClassVar[bool] = True
 
     class TargetOracle:
-        # Consume Pydantic DIRECTLY via m (not from pydantic import ...)
-        class ExecuteResult(m.BaseModel):
-            model_config = m.ConfigDict(extra=c.EXTRA_FORBID)
-            name: str = m.Field(..., description="Result name")
-            success: bool = m.Field(default=True)
-        
-        class ExecuteCommand(m.BaseModel):
-            target_id: str = m.Field(..., description="Target ID")
-            
-            @m.field_validator("target_id", mode="before")
-            @classmethod
-            def normalize(cls, v: str) -> str:
-                return v.upper()
+        """One local namespace for project-specific domain models."""
 
-        class ServiceBase(s[t.Dict]):
-            pass
+        class ExecuteResult(m.ArbitraryTypesModel):
+            """Result of an Oracle batch execute operation."""
 
-        class ServiceMixin(ServiceBase):
-            class ServiceState(m.BaseModel):
-                status: t.NonEmptyStr = m.Field(default=c.Status.ACTIVE)
+            _flext_enforcement_exempt: ClassVar[bool] = True
 
-            def resolve_state(self) -> p.Result["FlextTargetOracleModels.TargetOracle.ServiceState"]:
-                return r[FlextTargetOracleModels.TargetOracle.ServiceState].ok(
-                    FlextTargetOracleModels.TargetOracle.ServiceState(),
-                )
-
-        class Service(ServiceMixin, ServiceBase):
-            pass
+            rows_affected: Annotated[int, Field(description="Number of rows modified")]
+            table_name: Annotated[
+                t.NonEmptyStr, Field(description="Target Oracle table")
+            ]
 
 
-# Access via MRO path — organic nesting
-m_module = FlextTargetOracleModels
-cmd = m_module.TargetOracle.ExecuteCommand(target_id="oracle")
-result = r[m_module.TargetOracle.ExecuteResult].ok(
-    m_module.TargetOracle.ExecuteResult(name="x", success=True)
-)
+ExecuteResult = FlextTargetOracleModels.TargetOracle.ExecuteResult
 
-service = m_module.TargetOracle.Service()
-_ = service.resolve_state()
+
+def execute_batch(table: str) -> p.Result[ExecuteResult]:
+    """Access pattern: FlextTargetOracleModels.TargetOracle.ExecuteResult."""
+    result = ExecuteResult(rows_affected=0, table_name=table)
+    return r[ExecuteResult].ok(result)
 ```
 
 Why good: 
 - **All Pydantic via `m`** — never `from pydantic import BaseModel, Field, ...`
+- **No policy sentinels in model examples** — focus stays on Pydantic contracts (`m.Field`, `m.ConfigDict`, validators)
 - **Organic nesting** — `m.TargetOracle.ExecuteResult`, not flattened
 - **MRO chains Pydantic** — all decorators/types accessed through facade MRO
 - **Clear domain boundaries** — each namespace has its own models, validators, state
