@@ -1,0 +1,192 @@
+.planning/milestones/v1.0-phases/08-workaround-residual-cleanup/08-CONTEXT.md
+  h_9db9d35f50cf33 16
+.planning/milestones/v1.0-phases/06-typing-gap-closure/06-CONTEXT.md
+  h_9db9d35f50cf33 16
+.planning/phases/10-unified-docs-generation-baseline/10-CONTEXT.md
+  h_9db9d35f50cf33 30
+.planning/milestones/v1.0-phases/05-package-migration/05-RESEARCH.md
+  h_9db9d35f50cf33 59
+.planning/milestones/v1.0-phases/05-package-migration/05-DISCUSSION-LOG.md
+  h_9db9d35f50cf33 83
+.planning/milestones/v1.0-phases/08-workaround-residual-cleanup/08-RESEARCH.md
+  h_9db9d35f50cf33 53
+.planning/milestones/v1.0-phases/05-package-migration/05-CONTEXT.md
+  h_9db9d35f50cf33 16
+.markdownlint.json
+  h_9db9d35f50cf33 3-6,15
+.planning/milestones/v1.0-phases/07-modernization-integration-fixes/07-RESEARCH.md
+  h_9db9d35f50cf33 50
+.planning/milestones/v1.0-phases/03-infrastructure-centralization/03-RESEARCH.md
+  h_9db9d35f50cf33 67
+.planning/phases/09-rope-native-refactor-engine-rewrite/09-CONTEXT.md
+  h_9db9d35f50cf33 20
+.planning/milestones/v1.0-phases/03-infrastructure-centralization/03-CONTEXT.md
+  h_9db9d35f50cf33 21
+AGENTS.md
+  h_9db9d35f50cf33 36,39
+.planning/milestones/v1.0-phases/02-architecture-solid/02-RESEARCH.md
+  h_9db9d35f50cf33 61
+.planning/milestones/v1.0-phases/01-type-system-hardening/01-CONTEXT.md
+  h_9db9d35f50cf33 21
+.planning/milestones/v1.0-phases/02-architecture-solid/02-CONTEXT.md
+  h_9db9d35f50cf33 21
+.planning/milestones/v1.0-phases/07-modernization-integration-fixes/07-CONTEXT.md
+  h_9db9d35f50cf33 16
+.planning/milestones/v1.0-phases/04-python313-modernization/04-RESEARCH.md
+  h_9db9d35f50cf33 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "13b295dffa996f47461413fb3960129415de7ef5",
+  "prompts": {
+    "042872ef4e0005dc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5bfd9f1e-a74b-4952-b429-f2c6cb088948",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 152,
+      "total_deletions": 159,
+      "accepted_lines": 15079,
+      "overriden_lines": 6
+    },
+    "0a878efeda78eae7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "31c29af1-cfc4-49f8-add4-c9f69e2aef85",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 33695,
+      "overriden_lines": 7
+    },
+    "0bf1544685a35ccd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8d70-e211-7a42-8499-6cbbe28689f2",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2198,
+      "overriden_lines": 0
+    },
+    "14776bb8a7569cd6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "808a0355-ecdb-46fb-a4dd-7348401900ee",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 23279,
+      "overriden_lines": 0
+    },
+    "1b28234634c341c5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8c42-0715-7831-85d8-eb1922b1c8fb",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2063,
+      "overriden_lines": 0
+    },
+    "4e92b57578bb124f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf0bbdc7-a737-4dde-9e17-c29f1079a4d5",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 8760,
+      "overriden_lines": 0
+    },
+    "740b48984d352c6d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f3842b29-a623-4ef1-991a-c610afff4fa5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 3761,
+      "overriden_lines": 18
+    },
+    "8eb981e40cc2a427": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d8cf2-0859-7651-b73f-ed30fb6aee1d",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 74,
+      "overriden_lines": 0
+    },
+    "d915b9853f380ecb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d88a6-609e-7a00-a230-f6e534202261",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 7286,
+      "overriden_lines": 0
+    },
+    "db46130d8a27777d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d923f-8574-7731-8817-4a0433cc83a1",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 362,
+      "overriden_lines": 0
+    },
+    "db4927e9f67317f0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "312f664b-2347-4a2f-92d6-46917dcca62e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 74391,
+      "overriden_lines": 17
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
