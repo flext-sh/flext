@@ -60,13 +60,13 @@ If this document conflicts with older architecture overviews, project-level arch
 
 This baseline governs the FLEXT workspace by project group.
 
-| Group | Projects |
-| --- | --- |
-| Platform core | `flext-core`, `flext-tests`, `flext-infra`, `flext-quality` |
-| Platform capabilities | `flext-cli`, `flext-api`, `flext-auth`, `flext-web`, `flext-grpc`, `flext-observability`, `flext-plugin`, `flext-meltano` |
-| Domain packages | `flext-ldap`, `flext-ldif`, `flext-db-oracle`, `flext-oracle-wms`, `flext-oracle-oic` |
-| Integrations | all `flext-tap-*`, `flext-target-*`, `flext-dbt-*` projects |
-| Shared testing and tooling | `flext-tests`, `flext-infra`, `flext-quality` |
+| Group                      | Projects                                                                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Platform core              | `flext-core`, `flext-tests`, `flext-infra`, `flext-quality`                                                               |
+| Platform capabilities      | `flext-cli`, `flext-api`, `flext-auth`, `flext-web`, `flext-grpc`, `flext-observability`, `flext-plugin`, `flext-meltano` |
+| Domain packages            | `flext-ldap`, `flext-ldif`, `flext-db-oracle`, `flext-oracle-wms`, `flext-oracle-oic`                                     |
+| Integrations               | all `flext-tap-*`, `flext-target-*`, `flext-dbt-*` projects                                                               |
+| Shared testing and tooling | `flext-tests`, `flext-infra`, `flext-quality`                                                                             |
 
 Non-FLEXT directories that may exist in the repository are outside the root FLEXT portal and must be documented locally in their own trees.
 
@@ -85,29 +85,29 @@ Per-project docs are subordinate to this baseline until each project is migrated
 
 ### Core Class Matrix
 
-| Current class | Target class | File | Role | Public methods | Decision |
-| --- | --- | --- | --- | --- | --- |
-| `FlextConstants` | `FlextConstants` | `constants.py` | Root constants facade | namespace facade only | Keep |
-| `FlextTypes` | `FlextTypes` | `typings.py` | Root types facade | namespace facade only | Keep |
-| `FlextProtocols` | `FlextProtocols` | `protocols.py` | Root protocols facade | namespace facade only | Keep |
-| `FlextModels` | `FlextModels` | `models.py` | Root models facade | namespace facade only | Keep |
-| `FlextUtilities` | `FlextUtilities` | `utilities.py` | Root utilities facade | namespace facade only | Keep |
-| `FlextSettings` | `FlextSettings` | `settings.py` | Typed configuration root | `shared`, `build`, `add`, `load` | Keep and narrow |
-| `r` | `r` | `result.py` | Success and failure contract | existing result surface | Keep |
-| `e` | `e` | `exceptions.py` | Structured error taxonomy | error models and serializers | Keep and narrow |
-| `FlextRuntime` | `FlextRuntime` | `runtime.py` | Normalization and validation | `to_container`, `to_metadata`, `validate_many`, `ensure_utc` | Keep, remove DI ownership |
-| none | `FlextDi` | `di.py` | Bridge to `dependency_injector` | `build`, `add_service`, `add_factory`, `add_resource`, `bind_config`, `wire`, `unwire` | Add |
-| `FlextLogger` | `FlextLogger` | `logger.py` | Structured logging and context binding | `get`, `bind`, `unbind`, `scope`, `clear_scope`, `from_context` | Keep, move from `loggings.py` |
-| `FlextContext` | `FlextContext` | `context.py` | Execution context only | `get`, `set`, `has`, `remove`, `clear`, `clone`, `merge`, `export`, `get_meta`, `set_meta` | Keep and narrow |
-| `FlextContainer` | `FlextContainer` | `container.py` | Runtime dependency store and resolver | `shared`, `scope`, `add_service`, `add_factory`, `add_resource`, `get`, `require`, `has`, `list`, `remove`, `wire`, `unwire` | Keep and reshape |
-| `s` | `s` | `service.py` | Runtime bootstrapper | `make_settings`, `make_context`, `make_container`, `make_runtime`, `run` | Keep and narrow |
-| `FlextDispatcher` | `FlextDispatcher` | `dispatcher.py` | Message dispatch and handler binding | `dispatch`, `publish`, `add`, `add_many`, `remove`, `has`, `list`, `clear` | Keep and absorb handler registration |
-| `h` | `FlextHandler` | `handler.py` | Individual handler contract | `handle`, `run`, `validate`, `can_handle`, `from_callable` | Rename and narrow |
-| `FlextRegistry` | `FlextCatalog` | `catalog.py` | Typed extension storage | `add`, `add_many`, `get`, `require`, `has`, `list`, `remove`, `clear` | Replace |
-| `d` | `d` | `decorators.py` | Automation wrappers | `inject`, `log`, `measure`, `scope`, `compose`, `result`, `retry`, `timeout` | Keep and narrow |
-| `x` | none | removed from public architecture | legacy behavior bucket | none | Remove from the public platform |
-| `FlextVersion` | `FlextVersion` | `__version__.py` | package metadata only | metadata only | Keep, not architectural |
-| `LazyNamespace` | `LazyNamespace` | `lazy.py` | export protocol only | internal export protocol | Keep internal |
+| Current class     | Target class      | File                             | Role                                   | Public methods                                                                                                               | Decision                             |
+| ----------------- | ----------------- | -------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `FlextConstants`  | `FlextConstants`  | `constants.py`                   | Root constants facade                  | namespace facade only                                                                                                        | Keep                                 |
+| `FlextTypes`      | `FlextTypes`      | `typings.py`                     | Root types facade                      | namespace facade only                                                                                                        | Keep                                 |
+| `FlextProtocols`  | `FlextProtocols`  | `protocols.py`                   | Root protocols facade                  | namespace facade only                                                                                                        | Keep                                 |
+| `FlextModels`     | `FlextModels`     | `models.py`                      | Root models facade                     | namespace facade only                                                                                                        | Keep                                 |
+| `FlextUtilities`  | `FlextUtilities`  | `utilities.py`                   | Root utilities facade                  | namespace facade only                                                                                                        | Keep                                 |
+| `FlextSettings`   | `FlextSettings`   | `settings.py`                    | Typed configuration root               | `shared`, `build`, `add`, `load`                                                                                             | Keep and narrow                      |
+| `r`               | `r`               | `result.py`                      | Success and failure contract           | existing result surface                                                                                                      | Keep                                 |
+| `e`               | `e`               | `exceptions.py`                  | Structured error taxonomy              | error models and serializers                                                                                                 | Keep and narrow                      |
+| `FlextRuntime`    | `FlextRuntime`    | `runtime.py`                     | Normalization and validation           | `to_container`, `to_metadata`, `validate_many`, `ensure_utc`                                                                 | Keep, remove DI ownership            |
+| none              | `FlextDi`         | `di.py`                          | Bridge to `dependency_injector`        | `build`, `add_service`, `add_factory`, `add_resource`, `bind_config`, `wire`, `unwire`                                       | Add                                  |
+| `FlextLogger`     | `FlextLogger`     | `logger.py`                      | Structured logging and context binding | `get`, `bind`, `unbind`, `scope`, `clear_scope`, `from_context`                                                              | Keep, move from `loggings.py`        |
+| `FlextContext`    | `FlextContext`    | `context.py`                     | Execution context only                 | `get`, `set`, `has`, `remove`, `clear`, `clone`, `merge`, `export`, `get_meta`, `set_meta`                                   | Keep and narrow                      |
+| `FlextContainer`  | `FlextContainer`  | `container.py`                   | Runtime dependency store and resolver  | `shared`, `scope`, `add_service`, `add_factory`, `add_resource`, `get`, `require`, `has`, `list`, `remove`, `wire`, `unwire` | Keep and reshape                     |
+| `s`               | `s`               | `service.py`                     | Runtime bootstrapper                   | `make_settings`, `make_context`, `make_container`, `make_runtime`, `run`                                                     | Keep and narrow                      |
+| `FlextDispatcher` | `FlextDispatcher` | `dispatcher.py`                  | Message dispatch and handler binding   | `dispatch`, `publish`, `add`, `add_many`, `remove`, `has`, `list`, `clear`                                                   | Keep and absorb handler registration |
+| `h`               | `FlextHandler`    | `handler.py`                     | Individual handler contract            | `handle`, `run`, `validate`, `can_handle`, `from_callable`                                                                   | Rename and narrow                    |
+| `FlextRegistry`   | `FlextCatalog`    | `catalog.py`                     | Typed extension storage                | `add`, `add_many`, `get`, `require`, `has`, `list`, `remove`, `clear`                                                        | Replace                              |
+| `d`               | `d`               | `decorators.py`                  | Automation wrappers                    | `inject`, `log`, `measure`, `scope`, `compose`, `result`, `retry`, `timeout`                                                 | Keep and narrow                      |
+| `x`               | none              | removed from public architecture | legacy behavior bucket                 | none                                                                                                                         | Remove from the public platform      |
+| `FlextVersion`    | `FlextVersion`    | `__version__.py`                 | package metadata only                  | metadata only                                                                                                                | Keep, not architectural              |
+| `LazyNamespace`   | `LazyNamespace`   | `lazy.py`                        | export protocol only                   | internal export protocol                                                                                                     | Keep internal                        |
 
 ### Namespace Composition Classes
 

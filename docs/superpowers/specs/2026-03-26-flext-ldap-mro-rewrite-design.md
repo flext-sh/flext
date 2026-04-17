@@ -29,19 +29,22 @@ class ldap(
 Each mixin inherits from `FlextLdapServiceBase`:
 
 **FlextLdapConnection** (services/connection.py):
-- PrivateAttr: `_adapter: FlextLdapLdap3Adapter`, `_ldif: ldif`
+
+- u.PrivateAttr: `_adapter: FlextLdapLdap3Adapter`, `_ldif: ldif`
 - Lazy adapter init on first `connect()` call
 - Properties: `is_connected`, `adapter`
 - Methods: `connect()`, `disconnect()`, `detect_server_type()`
 - Server detection absorbed from detection.py
 
 **FlextLdapOperations** (services/operations.py):
-- PrivateAttr: `_upsert_handler`
+
+- u.PrivateAttr: `_upsert_handler`
 - Accesses adapter via `self._adapter` (shared MRO)
 - Methods: `add()`, `delete()`, `modify()`, `search()`, `upsert()`, `batch_upsert()`
 - Inner classes: `EntryComparison`, `_UpsertHandler` (unchanged)
 
 **FlextLdapSync** (new file or absorbed into api.py):
+
 - No state — uses `self.search()`, `self.batch_upsert()` from Operations mixin
 - Methods: `sync_phase_entries()`, `sync_multiple_phases()`
 - Callback helpers: `FlextLdapSyncCallbacks` (inner class)
@@ -59,15 +62,16 @@ with client:
 
 ## Bug Fixes (root cause)
 
-| Bug | Fix |
-|-----|-----|
-| `u.Ldif.norm_string` (doesn't exist) | `u.Ldif.norm()` in operations.py:1223, api.py:583 |
-| `parser.parse_ldap3_results` (missing) | Find correct method or implement on adapter |
-| `MULTI_PHASE_CALLBACK_PARAM_COUNT` not exported | Move to `c.Ldap.*` constants (SSOT) |
+| Bug                                             | Fix                                               |
+| ----------------------------------------------- | ------------------------------------------------- |
+| `u.Ldif.norm_string` (doesn't exist)            | `u.Ldif.norm()` in operations.py:1223, api.py:583 |
+| `parser.parse_ldap3_results` (missing)          | Find correct method or implement on adapter       |
+| `MULTI_PHASE_CALLBACK_PARAM_COUNT` not exported | Move to `c.Ldap.*` constants (SSOT)               |
 
 ## Files Changed
 
 ### flext-ldap/src/
+
 - `api.py` — MRO facade (rewrite)
 - `base.py` — FlextLdapServiceBase (unchanged or minimal)
 - `services/connection.py` — MRO mixin (rewrite from standalone service)
@@ -78,12 +82,14 @@ with client:
 - `constants.py` — Add callback param count constants to c.Ldap
 
 ### flext-ldap/tests/
+
 - All unit tests updated to `ldap()` pattern
 - Remove ceremony (no more separate connection/operations creation)
 - Fix test_api.py imports
 - Fix test_operations.py norm_string failure
 
 ### Consumers (4 production)
+
 - `flext-tap-ldap/src/flext_tap_ldap/client.py`
 - `flext-target-ldap/src/flext_target_ldap/client.py`
 - `flext-target-ldap/src/flext_target_ldap/target_client.py`
@@ -93,6 +99,7 @@ with client:
 ## Quality Gates
 
 Per every file edit:
+
 1. `ruff check` — 0 errors
 2. `pyrefly check` — 0 errors
 3. `pytest` (affected tests) — 0 failures

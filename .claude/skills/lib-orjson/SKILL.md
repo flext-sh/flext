@@ -31,6 +31,7 @@ description: Deterministic high-performance JSON serialization with orjson in fl
 - Preserve fallback path to stdlib JSON for unsupported types or serialization failures.
 - Catch and handle serialization boundary errors where utility currently protects callers.
 - Keep encoded string format consistent with `c.DEFAULT_ENCODING`.
+
 ## Instructions
 
 - Anchor changes to the real declaration:

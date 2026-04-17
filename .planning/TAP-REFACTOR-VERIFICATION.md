@@ -17,10 +17,10 @@
 - [x] Import statement added: `from flext_core import t`
 - [x] LdapConnectionParams.host → t.NonEmptyStr
 - [x] LdapConnectionParams.base_dn → t.NonEmptyStr
-- [x] LdapConnectionParams.port → Annotated[t.PortNumber, m.Field(default=...)]
-- [x] LdapConnectionParams.timeout_seconds → Annotated[t.PositiveInt, m.Field(default=...)]
-- [x] LdapConnectionParams.page_size → Annotated[t.PositiveInt, m.Field(default=...)]
-- [x] LdapConnectionParams.max_retries → Annotated[t.RetryCount, m.Field(default=...)]
+- [x] LdapConnectionParams.port → Annotated[t.PortNumber, u.Field(default=...)]
+- [x] LdapConnectionParams.timeout_seconds → Annotated[t.PositiveInt, u.Field(default=...)]
+- [x] LdapConnectionParams.page_size → Annotated[t.PositiveInt, u.Field(default=...)]
+- [x] LdapConnectionParams.max_retries → Annotated[t.RetryCount, u.Field(default=...)]
 - [x] StreamCreationParams.stream_type → t.NonEmptyStr
 - [x] StreamCreationParams.connection_id → t.NonEmptyStr
 - [x] StreamCreationParams.search_filter → t.NonEmptyStr
@@ -36,18 +36,20 @@
 ### ✅ No Remaining Patterns
 
 **Grep verification results:**
-- [x] No `Field(ge=` patterns found (all converted to t.* types)
-- [x] No `Field(lt=` patterns found
-- [x] No `Field(le=` patterns found
-- [x] No `Field(gt=` patterns found
-- [x] No `Field(min_length=` patterns found (all converted to t.NonEmptyStr)
-- [x] No `Field(max_length=` patterns found
+
+- [x] No `u.Field(ge=` patterns found (all converted to t.* types)
+- [x] No `u.Field(lt=` patterns found
+- [x] No `u.Field(le=` patterns found
+- [x] No `u.Field(gt=` patterns found
+- [x] No `u.Field(min_length=` patterns found (all converted to t.NonEmptyStr)
+- [x] No `u.Field(max_length=` patterns found
 
 **grep output: 0 matches** ✅
 
 ### ✅ Type Safety Maintained
 
 All conversions maintain semantic equivalence:
+
 - `t.NonEmptyStr` = `Annotated[str, Len(1)]` - minimum length constraint preserved
 - `t.PositiveInt` = `Annotated[int, Gt(0)]` - positive constraint preserved
 - `t.PortNumber` = `Annotated[int, Ge(1), Le(65535)]` - port range constraint preserved
@@ -70,6 +72,7 @@ All conversions maintain semantic equivalence:
 ### ✅ Consistency Across Projects
 
 All tap projects now follow the same validation pattern:
+
 - [x] flext-tap-ldap uses t.* types (converted)
 - [x] flext-tap-oracle uses appropriate patterns (verified)
 - [x] flext-tap-oracle-oic uses appropriate patterns (verified)
@@ -81,6 +84,7 @@ All tap projects now follow the same validation pattern:
 **✅ COMPLETE - All objectives achieved**
 
 ### Summary Metrics
+
 - Projects scanned: 5
 - Projects converted: 1 (flext-tap-ldap)
 - Projects verified (no changes): 4
@@ -90,6 +94,7 @@ All tap projects now follow the same validation pattern:
 - Files modified: 1
 
 ### Quality Checks
+
 - Type safety: ✅ MAINTAINED
 - Semantic equivalence: ✅ PRESERVED
 - Code readability: ✅ IMPROVED
@@ -99,6 +104,7 @@ All tap projects now follow the same validation pattern:
 ## Ready for Next Steps
 
 The refactoring is complete. Ready for:
+
 1. `cd flext-tap-ldap && make check` (type checking)
 2. `cd flext-tap-ldap && make test` (unit tests)
 3. Git commit with message provided in TAP-VALIDATION-REFACTOR-COMPLETE.md

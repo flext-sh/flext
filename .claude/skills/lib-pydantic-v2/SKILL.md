@@ -11,10 +11,10 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 ## Scope
 
 - `flext-core/src/flext_core/settings.py` — FlextSettings (BaseSettings + ConfigDict)
-- `flext-core/src/flext_core/_models/settings.py` — nested settings models with field_validator/model_validator
+- `flext-core/src/flext_core/_models/settings.py` — nested settings models with u.field_validator/u.model_validator
 - `flext-core/src/flext_core/_utilities/validation.py` — TypeAdapter utilities, validation helpers
 - `flext-core/src/flext_core/typings.py` — RootModel containers (Dict, ConfigMap, etc.)
-- `flext-grpc/src/flext_grpc/models.py` — gRPC domain models with computed_field
+- `flext-grpc/src/flext_grpc/models.py` — gRPC domain models with u.computed_field
 - All subproject `settings.py` files
 
 ## References
@@ -26,15 +26,15 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 ## Rules
 
 - **Consume Pydantic base classes via `m` facade**: `m.ArbitraryTypesModel`, `m.Value`, `m.Command`, `m.Query`, `m.StrictModel`, etc. are flat on `m`.
-- **Pydantic decorators and utilities** are accessed via flext_core aliases: `m.Field`, `m.ConfigDict`, `u.field_validator`, `u.model_validator`, `u.computed_field`.
-- **Only v2 API**: `model_validate`, `model_dump`, `model_dump_json`, `ConfigDict`, `field_validator`, `model_validator`, `computed_field`.
+- **Pydantic decorators and utilities** are accessed via flext_core aliases: `u.Field`, `m.ConfigDict`, `u.field_validator`, `u.model_validator`, `u.computed_field`.
+- **Only v2 API**: `model_validate`, `model_dump`, `model_dump_json`, `ConfigDict`, `u.field_validator`, `u.model_validator`, `u.computed_field`.
 - **Never** use v1 API: `@validator`, `.dict()`, `.json()`, `class Config:`, `from_orm`, `orm_mode`.
 - **Critical violation**: never use `model_rebuild(...)` to patch unresolved annotations.
 - Models must resolve all references at definition time via explicit imports/type aliases and stable declaration order.
 - Use `make validate` as enforcement gate (with `PROJECT`/`PROJECTS` selectors). Auto-fix path is `make validate FIX=1`.
 - Use `TypeAdapter` from pydantic for validating non-model types — never ad-hoc casting with `isinstance` chains.
 - Set `ConfigDict(extra="forbid")` on strict boundary models, `extra="ignore"` on flexible internal models.
-- Use `Field(description=...)` with explicit `description=` on all public model fields.
+- Use `u.Field(description=...)` with explicit `description=` on all public model fields.
 - All model classes defined as nested classes within MRO facade hierarchy (e.g., `FlextProjectModels.Domain.ModelName`).
 
 ## Instructions
@@ -66,13 +66,13 @@ class FlextProcessingModels(m):
                 extra="forbid",
             )
 
-            name: Annotated[t.NonEmptyStr, m.Field(description="Request name")]
+            name: Annotated[t.NonEmptyStr, u.Field(description="Request name")]
             timeout: Annotated[
-                int, m.Field(default=30, ge=1, le=300, description="Timeout seconds")
+                int, u.Field(default=30, ge=1, le=300, description="Timeout seconds")
             ]
 ```
 
-**field_validator** (from `u`, mode="before" or "after"):
+**u.field_validator** (from `u`, mode="before" or "after"):
 
 ```python
 from __future__ import annotations
@@ -94,7 +94,7 @@ class FlextValidationModels(m):
 
             codes: Annotated[
                 Sequence[int],
-                m.Field(default_factory=list, description="HTTP status codes to retry"),
+                u.Field(default_factory=list, description="HTTP status codes to retry"),
             ]
 
             @u.field_validator("codes", mode="after")
@@ -104,7 +104,7 @@ class FlextValidationModels(m):
                 return [code for code in v if 400 <= code < 600]
 ```
 
-**model_validator** (from `u`, mode="after"):
+**u.model_validator** (from `u`, mode="after"):
 
 ```python
 from __future__ import annotations
@@ -124,10 +124,10 @@ class FlextBatchModels(m):
             """Batch processing configuration."""
 
             batch_size: Annotated[
-                int, m.Field(default=100, description="Items per batch")
+                int, u.Field(default=100, description="Items per batch")
             ]
             max_workers: Annotated[
-                int, m.Field(default=4, description="Parallel workers")
+                int, u.Field(default=4, description="Parallel workers")
             ]
 
             @u.model_validator(mode="after")
@@ -139,7 +139,7 @@ class FlextBatchModels(m):
                 return self
 ```
 
-**computed_field** (from `u`):
+**u.computed_field** (from `u`):
 
 ```python
 from __future__ import annotations
@@ -158,8 +158,8 @@ class FlextGrpcModels(m):
         class Server(m.BaseModel):
             """gRPC server config with computed endpoint."""
 
-            host: Annotated[t.NonEmptyStr, m.Field(description="Server host")]
-            port: Annotated[int, m.Field(description="Server port")]
+            host: Annotated[t.NonEmptyStr, u.Field(description="Server host")]
+            port: Annotated[int, u.Field(description="Server port")]
 
             @property
             def endpoint(self) -> str:
@@ -229,7 +229,7 @@ from flext_core import m, t
 class DemoModel(m.ArbitraryTypesModel):
     """Model for serialization examples."""
 
-    name: Annotated[t.NonEmptyStr, m.Field(description="Name")]
+    name: Annotated[t.NonEmptyStr, u.Field(description="Name")]
 
 
 # v2 serialization
@@ -247,9 +247,9 @@ instance_json = DemoModel.model_validate_json(b'{"name": "test"}')
 
 1. Find nearest existing model in the same subproject for pattern reference
 2. Use `ConfigDict` (never `class Config:`) with explicit `extra=` and `validate_assignment=`
-3. Add `Field(description=...)` on all public fields
-4. Use `@field_validator` (not `@validator`) with `mode=` parameter
-5. Use `@model_validator(mode="after")` for cross-field validation
+3. Add `u.Field(description=...)` on all public fields
+4. Use `@u.field_validator` (not `@validator`) with `mode=` parameter
+5. Use `@u.model_validator(mode="after")` for cross-field validation
 6. Run `rg "@validator\(" --glob "**/*.py"` to verify no v1 validators
 7. Run `rg "model_rebuild\(" --glob "**/*.py"` and keep zero hits in production and tests
 8. Run standardized validation automation:
@@ -278,16 +278,16 @@ class FlextProcessingWorkflow(m):
         """Workflow domain namespace."""
 
         class Config(m.ArbitraryTypesModel):
-            """Workflow config with ConfigDict and field_validator."""
+            """Workflow config with ConfigDict and u.field_validator."""
 
             model_config = m.ConfigDict(
                 extra="forbid",
                 validate_assignment=True,
             )
 
-            name: Annotated[t.NonEmptyStr, m.Field(description="Workflow name")]
+            name: Annotated[t.NonEmptyStr, u.Field(description="Workflow name")]
             max_retries: Annotated[
-                int, m.Field(default=3, ge=0, description="Max retries")
+                int, u.Field(default=3, ge=0, description="Max retries")
             ]
 
             @u.field_validator("name", mode="before")
@@ -316,7 +316,7 @@ class _BadExample:
         return v.strip()
 ```
 
-**Why bad**: `@validator` (v1) is deprecated. Use `@field_validator("name", mode="before")` with `@classmethod`.
+**Why bad**: `@validator` (v1) is deprecated. Use `@u.field_validator("name", mode="before")` with `@classmethod`.
 
 ### Bad: .dict() / .json()
 
@@ -331,7 +331,7 @@ from flext_core import m, t
 class DemoModel(m.ArbitraryTypesModel):
     """Model for serialization anti-pattern illustration."""
 
-    name: Annotated[t.NonEmptyStr, m.Field(description="Name")]
+    name: Annotated[t.NonEmptyStr, u.Field(description="Name")]
 
 
 model = DemoModel(name="test")
@@ -371,7 +371,7 @@ from flext_core import m, t
 class MyModel(m.ArbitraryTypesModel):
     """Model that must NOT use model_rebuild."""
 
-    filters: Annotated[t.NonEmptyStr, m.Field(description="Query filter")]
+    filters: Annotated[t.NonEmptyStr, u.Field(description="Query filter")]
 
 
 # CRITICAL VIOLATION — model_rebuild is BANNED
@@ -393,31 +393,31 @@ from flext_core import m, t
 class QueryModel(m.ArbitraryTypesModel):
     """References resolved at definition time — no rebuild needed."""
 
-    filters: Annotated[t.NonEmptyStr, m.Field(description="Query filter expression")]
+    filters: Annotated[t.NonEmptyStr, u.Field(description="Query filter expression")]
 ```
 
 **Why good**: referenced types are available in module scope; no post-definition rebuild step required.
 
 ## Subproject Usage Map
 
-| Subproject                      | Key Files                                          | Pattern                                                                     |
-| ------------------------------- | -------------------------------------------------- | --------------------------------------------------------------------------- |
-| `flext-core`                    | `settings.py`, `_models/settings.py`, `typings.py` | ConfigDict, ConfigDict, field_validator, model_validator, RootModel |
-| `flext-grpc`                    | `models.py`, `settings.py`                         | BaseModel + computed_field, ConfigDict                              |
-| `flext-auth`                    | `settings.py`, `models.py`                         | ConfigDict, ConfigDict                                              |
-| `flext-cli`                     | `settings.py`, `file_tools.py`                     | ConfigDict, yaml → model validation                                 |
-| `flext-ldif`                    | `settings.py`, `_models/settings.py`               | ConfigDict, ConfigDict                                              |
-| `flext-api`                     | `settings.py`                                      | ConfigDict                                                          |
-| `flext-web`                     | `settings.py`                                      | ConfigDict                                                          |
-| `flext-meltano`                 | `project_service.py`                               | yaml.safe_dump + BaseModel patterns                                         |
-| `flext-quality`                 | `utilities.py`, `rules/loader.py`                  | yaml + model validation                                                     |
-| `flext-tap-*`, `flext-target-*` | `settings.py`                                      | ConfigDict                                                          |
+| Subproject                      | Key Files                                          | Pattern                                                                   |
+| ------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------- |
+| `flext-core`                    | `settings.py`, `_models/settings.py`, `typings.py` | ConfigDict, ConfigDict, u.field_validator, u.model_validator, RootModel |
+| `flext-grpc`                    | `models.py`, `settings.py`                         | BaseModel + u.computed_field, ConfigDict                                  |
+| `flext-auth`                    | `settings.py`, `models.py`                         | ConfigDict, ConfigDict                                                    |
+| `flext-cli`                     | `settings.py`, `file_tools.py`                     | ConfigDict, yaml → model validation                                       |
+| `flext-ldif`                    | `settings.py`, `_models/settings.py`               | ConfigDict, ConfigDict                                                    |
+| `flext-api`                     | `settings.py`                                      | ConfigDict                                                                |
+| `flext-web`                     | `settings.py`                                      | ConfigDict                                                                |
+| `flext-meltano`                 | `project_service.py`                               | yaml.safe_dump + BaseModel patterns                                       |
+| `flext-quality`                 | `utilities.py`, `rules/loader.py`                  | yaml + model validation                                                   |
+| `flext-tap-*`, `flext-target-*` | `settings.py`                                      | ConfigDict                                                                |
 
 ## Verification
 
 ```bash
 # Confirm v2 patterns in use
-rg -n "ConfigDict|ConfigDict|field_validator|model_validator|computed_field" --glob "**/*.py" flext-core flext-grpc flext-auth
+rg -n "ConfigDict|ConfigDict|u.field_validator|u.model_validator|u.computed_field" --glob "**/*.py" flext-core flext-grpc flext-auth
 
 # Confirm TypeAdapter usage
 rg -n "TypeAdapter" --glob "**/*.py" flext-core/src/

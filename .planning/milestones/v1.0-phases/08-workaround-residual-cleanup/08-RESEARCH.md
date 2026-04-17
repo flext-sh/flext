@@ -15,9 +15,11 @@ Phase 8 closes three WA requirements left open by the v1.0 milestone audit. Fres
 **Primary recommendation:** This phase is trivial — 1-2 print replacements in production, plus optional test/example cleanup. A single plan with 2-3 tasks covers everything.
 
 <user_constraints>
+
 ## User Constraints (from CONTEXT.md)
 
 ### Locked Decisions
+
 - D-01: Replace each bare `except Exception:` with the most specific exception type for its context
 - D-02: In `src/` production code: zero tolerance — every handler must catch a specific type
 - D-03: In `tests/`: bare `except Exception:` acceptable ONLY in test helper utilities that genuinely need to catch anything
@@ -30,14 +32,17 @@ Phase 8 closes three WA requirements left open by the v1.0 milestone audit. Fres
 - D-10: `docs/maintenance/` copy — same treatment if production, skip if docs-only
 
 ### Claude's Discretion
+
 - Exact exception types per call site
 - Whether `cli.py` files need separate `__main__.py` or inline guard
 
 ### Deferred Ideas (OUT OF SCOPE)
+
 None
 </user_constraints>
 
 <phase_requirements>
+
 ## Phase Requirements
 
 | ID | Description | Research Support |
@@ -98,6 +103,7 @@ None
 ### WA-04: sys.exit() outside **main**.py
 
 **Zero violations.** All `sys.exit()` calls are inside `if __name__ == "__main__":` guards:
+
 - `flext-infra/src/flext_infra/deps/extra_paths.py:580` — inside guard
 - `flext-infra/src/flext_infra/deps/path_sync.py:467` — inside guard
 - `flext-target-oracle/src/flext_target_oracle/target_refactored.py:54` — inside guard
@@ -159,20 +165,24 @@ For `scheduled_maintenance.py` specifically — this is an echo command handler 
 ## Common Pitfalls
 
 ### Pitfall 1: Over-specifying exceptions in test cleanup
+
 **What goes wrong:** Making test teardown too specific causes resource leaks when unexpected errors occur
 **How to avoid:** D-03 exempts test helper utilities (conftest_factory.py, docker_infra.py) that genuinely need catch-all
 
 ### Pitfall 2: Confusing method calls with bare print()
+
 **What goes wrong:** Replacing `console.print()` or `cli_api.print()` — these are Rich/CLI methods, not bare `print()`
 **How to avoid:** Only target `print(` at statement level, not `.print(` method calls
 
 ### Pitfall 3: Docstring false positives
+
 **What goes wrong:** Grep finds `print()` inside docstring examples (prefixed with `...`)
 **How to avoid:** Already filtered in this research — only `scheduled_maintenance.py:590` and docs copy are real
 
 ## Validation Architecture
 
 ### Test Framework
+
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
@@ -181,6 +191,7 @@ For `scheduled_maintenance.py` specifically — this is an echo command handler 
 | Full suite command | `make test` |
 
 ### Phase Requirements -> Test Map
+
 | Req ID | Behavior | Test Type | Automated Command | File Exists? |
 |--------|----------|-----------|-------------------|-------------|
 | WA-03 | No bare except Exception in src/ | smoke | `sg --pattern 'except Exception:' --lang py` across src/ dirs | N/A — grep/ast-grep scan |
@@ -188,22 +199,26 @@ For `scheduled_maintenance.py` specifically — this is an echo command handler 
 | WA-05 | No bare print() in production | smoke | `sg --pattern 'print($$$)' --lang py` excluding docstrings | N/A — grep/ast-grep scan |
 
 ### Sampling Rate
+
 - **Per task commit:** `sg --pattern 'except Exception:' --lang py` on changed files
 - **Per wave merge:** Full workspace grep for all three violation patterns
 - **Phase gate:** Zero violations across all three patterns
 
 ### Wave 0 Gaps
+
 None — validation is grep/ast-grep based, no test infrastructure needed.
 
 ## Sources
 
 ### Primary (HIGH confidence)
+
 - Direct grep of workspace codebase (2026-03-24) — all violation counts verified
 - File-level reads to confirm `sys.exit()` guard context
 
 ## Metadata
 
 **Confidence breakdown:**
+
 - Violation census: HIGH — verified by direct grep of every file
 - Fix patterns: HIGH — standard Python exception handling
 - Scope: HIGH — WA-04 already done, WA-03 src/ already done, only WA-05 + test/example cleanup remain

@@ -5,13 +5,14 @@
 
 ## Objective
 
-Convert all tap-* projects to use `t.*` validation types from `flext_core.typings` instead of bare Pydantic Field constraints.
+Convert all tap-* projects to use `t.*` validation types from `flext_core.typings` instead of bare Pydantic u.Field constraints.
 
 **Result:** ✅ COMPLETE - All objectives achieved
 
 ## Work Completed
 
 ### 1. Scanned All Tap Projects
+
 - ✅ flext-tap-ldap
 - ✅ flext-tap-oracle
 - ✅ flext-tap-oracle-oic
@@ -19,12 +20,14 @@ Convert all tap-* projects to use `t.*` validation types from `flext_core.typing
 - ✅ flext-tap-ldif
 
 ### 2. Identified Constraint Patterns
+
 - **flext-tap-ldap:** 15 constraint fields found across 4 model classes
 - **Other projects:** No constraint patterns found
 
 ### 3. Applied Conversions to flext-tap-ldap
 
 **Import Added:**
+
 ```python
 from flext_core import t
 ```
@@ -32,47 +35,50 @@ from flext_core import t
 **Constraints Converted (15 total):**
 
 1. LdapConnectionParams (6 fields)
-   - `host: Annotated[str, m.Field(min_length=1)]` → `host: t.NonEmptyStr`
-   - `base_dn: Annotated[str, m.Field(min_length=1)]` → `base_dn: t.NonEmptyStr`
-   - `port: Annotated[int, m.Field(default=..., ge=1)]` → `port: Annotated[t.PortNumber, m.Field(default=...)]`
-   - `timeout_seconds: Annotated[int, m.Field(default=..., ge=1)]` → `timeout_seconds: Annotated[t.PositiveInt, m.Field(default=...)]`
-   - `page_size: Annotated[int, m.Field(default=..., ge=1)]` → `page_size: Annotated[t.PositiveInt, m.Field(default=...)]`
-   - `max_retries: Annotated[int, m.Field(default=3, ge=0)]` → `max_retries: Annotated[t.RetryCount, m.Field(default=3)]`
+   - `host: Annotated[str, u.Field(min_length=1)]` → `host: t.NonEmptyStr`
+   - `base_dn: Annotated[str, u.Field(min_length=1)]` → `base_dn: t.NonEmptyStr`
+   - `port: Annotated[int, u.Field(default=..., ge=1)]` → `port: Annotated[t.PortNumber, u.Field(default=...)]`
+   - `timeout_seconds: Annotated[int, u.Field(default=..., ge=1)]` → `timeout_seconds: Annotated[t.PositiveInt, u.Field(default=...)]`
+   - `page_size: Annotated[int, u.Field(default=..., ge=1)]` → `page_size: Annotated[t.PositiveInt, u.Field(default=...)]`
+   - `max_retries: Annotated[int, u.Field(default=3, ge=0)]` → `max_retries: Annotated[t.RetryCount, u.Field(default=3)]`
 
 2. StreamCreationParams (3 fields)
-   - `stream_type: Annotated[str, m.Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
-   - `connection_id: Annotated[str, m.Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
-   - `search_filter: Annotated[str, m.Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
+   - `stream_type: Annotated[str, u.Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
+   - `connection_id: Annotated[str, u.Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
+   - `search_filter: Annotated[str, u.Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
 
 3. LdapConnection (3 fields)
-   - `host: Annotated[str, m.Field(min_length=1)]` → `host: t.NonEmptyStr`
-   - `port: Annotated[int, m.Field(ge=1)]` → `port: t.PortNumber`
-   - `timeout: Annotated[int, m.Field(ge=1)]` → `timeout: t.PositiveInt`
+   - `host: Annotated[str, u.Field(min_length=1)]` → `host: t.NonEmptyStr`
+   - `port: Annotated[int, u.Field(ge=1)]` → `port: t.PortNumber`
+   - `timeout: Annotated[int, u.Field(ge=1)]` → `timeout: t.PositiveInt`
 
 4. LdapStream (5 fields)
-   - `name: Annotated[str, m.Field(min_length=1)]` → `name: t.NonEmptyStr`
-   - `connection_id: Annotated[str, m.Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
-   - `stream_type: Annotated[str, m.Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
-   - `search_filter: Annotated[str, m.Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
-   - `tap_stream_id: Annotated[str, m.Field(min_length=1)]` → `tap_stream_id: t.NonEmptyStr`
+   - `name: Annotated[str, u.Field(min_length=1)]` → `name: t.NonEmptyStr`
+   - `connection_id: Annotated[str, u.Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
+   - `stream_type: Annotated[str, u.Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
+   - `search_filter: Annotated[str, u.Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
+   - `tap_stream_id: Annotated[str, u.Field(min_length=1)]` → `tap_stream_id: t.NonEmptyStr`
 
 ### 4. Verification Results
 
 **Constraint Pattern Scan (all projects):**
+
 ```
 Before: Found patterns with ge=, gt=, le=, lt=, min_length=, max_length=
 After: 0 patterns found ✅
 ```
 
 **New Type Usage (flext-tap-ldap):**
+
 ```
 t.NonEmptyStr: 9 usages ✅
-t.PositiveInt: 2 usages (in Annotated form with Field defaults) ✅
+t.PositiveInt: 2 usages (in Annotated form with u.Field defaults) ✅
 t.PortNumber: 2 usages (1 direct, 1 in Annotated form) ✅
 t.RetryCount: 1 usage (in Annotated form) ✅
 ```
 
 **File Integrity:**
+
 - [x] Syntax valid
 - [x] Imports correct
 - [x] Class definitions intact
@@ -113,22 +119,22 @@ t.RetryCount: 1 usage (in Annotated form) ✅
 ### Types Used
 
 1. **t.NonEmptyStr**
-   - Replaces: `Field(min_length=1)` on str
+   - Replaces: `u.Field(min_length=1)` on str
    - Constraint: `Len(1)`
    - Used for: 9 fields
 
 2. **t.PositiveInt**
-   - Replaces: `Field(ge=1)` on int (for non-port integers)
+   - Replaces: `u.Field(ge=1)` on int (for non-port integers)
    - Constraint: `Gt(0)`
    - Used for: 2 fields (timeout_seconds, page_size)
 
 3. **t.PortNumber**
-   - Replaces: `Field(ge=1, le=65535)` on int
+   - Replaces: `u.Field(ge=1, le=65535)` on int
    - Constraint: `Ge(1), Le(65535)`
    - Used for: 2 fields (port with default)
 
 4. **t.RetryCount**
-   - Replaces: `Field(ge=0, le=10)` on int
+   - Replaces: `u.Field(ge=0, le=10)` on int
    - Constraint: `Ge(0), Le(10)`
    - Used for: 1 field (max_retries)
 
@@ -139,7 +145,7 @@ t.RetryCount: 1 usage (in Annotated form) ✅
 3. ✅ **Type Safety** - Better IDE support and type checker understanding
 4. ✅ **Consistency** - All tap projects aligned with flext_core patterns
 5. ✅ **Maintainability** - Single source of truth for validation types
-6. ✅ **Reduced Redundancy** - No need to repeat Field specifications
+6. ✅ **Reduced Redundancy** - No need to repeat u.Field specifications
 
 ## Documentation Generated
 
@@ -152,6 +158,7 @@ t.RetryCount: 1 usage (in Annotated form) ✅
 ## Next Steps
 
 Ready for:
+
 1. Testing: `cd flext-tap-ldap && make check && make test`
 2. Commit: Use message template from TAP-VALIDATION-REFACTOR-COMPLETE.md
 3. Push: Follow standard PR/merge process

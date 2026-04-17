@@ -69,30 +69,30 @@ from flext_core import FlextUtilitiesConversion
 
 ### Core Classes (20+ utility classes)
 
-| Class                           | Namespace         | Purpose                             | Count   |
-| ------------------------------- | ----------------- | ----------------------------------- | ------- |
-| **FlextUtilitiesConversion**    | `u`    | Value type conversion (3 methods)   | NEW     |
-| **FlextUtilitiesMapper**        | `u`        | Data structure mapping (91 methods) | UPDATED |
-| **FlextUtilitiesCollection**    | `u`    | List/dict/set operations            | 40+     |
-| **FlextUtilitiesValidator**     | `u.Validator`     | Value validation                    | 30+     |
-| **FlextUtilitiesParser**        | `u`        | String/data parsing                 | 25+     |
-| **FlextUtilitiesPattern**       | `u.Pattern`       | Regex pattern matching              | 20+     |
-| **FlextUtilitiesGuards**        | `u`        | Type guards and narrowing           | 20+     |
-| **FlextUtilitiesCast**          | `u.Cast`          | Type casting utilities              | 15+     |
-| **FlextUtilitiesText**          | `u`          | String manipulation                 | 20+     |
-| **FlextUtilitiesEnum**          | `u`          | Enum utilities                      | 10+     |
-| **FlextUtilitiesContext**       | `u.Context`       | Context/state management            | 8+      |
-| **FlextUtilitiesCache**         | `u`         | Caching utilities                   | 5+      |
-| **FlextUtilitiesConfiguration** | `u` | Settings handling                     | 8+      |
-| **FlextUtilitiesDomain**        | `u`        | Domain model utilities              | 10+     |
-| **FlextUtilitiesDeprecation**   | `u.Deprecation`   | Deprecation handling                | 4       |
-| **FlextUtilitiesGenerators**    | `u`    | Data generators                     | 10+     |
-| **FlextUtilitiesModel**         | `u`         | Pydantic model utilities            | 12+     |
-| **FlextUtilitiesPagination**    | `u`    | Pagination utilities                | 5+      |
-| **FlextUtilitiesReliability**   | `u`   | Retry/circuit breaker               | 8+      |
-| **FlextUtilitiesValidation**    | `u.Validation`    | Data validation                     | 15+     |
-| **FlextUtilitiesChecker**       | `u`       | Type/value checking                 | 12+     |
-| **FlextUtilitiesArgs**          | `u`          | CLI argument handling               | 8+      |
+| Class                           | Namespace       | Purpose                             | Count   |
+| ------------------------------- | --------------- | ----------------------------------- | ------- |
+| **FlextUtilitiesConversion**    | `u`             | Value type conversion (3 methods)   | NEW     |
+| **FlextUtilitiesMapper**        | `u`             | Data structure mapping (91 methods) | UPDATED |
+| **FlextUtilitiesCollection**    | `u`             | List/dict/set operations            | 40+     |
+| **FlextUtilitiesValidator**     | `u.Validator`   | Value validation                    | 30+     |
+| **FlextUtilitiesParser**        | `u`             | String/data parsing                 | 25+     |
+| **FlextUtilitiesPattern**       | `u.Pattern`     | Regex pattern matching              | 20+     |
+| **FlextUtilitiesGuards**        | `u`             | Type guards and narrowing           | 20+     |
+| **FlextUtilitiesCast**          | `u.Cast`        | Type casting utilities              | 15+     |
+| **FlextUtilitiesText**          | `u`             | String manipulation                 | 20+     |
+| **FlextUtilitiesEnum**          | `u`             | Enum utilities                      | 10+     |
+| **FlextUtilitiesContext**       | `u.Context`     | Context/state management            | 8+      |
+| **FlextUtilitiesCache**         | `u`             | Caching utilities                   | 5+      |
+| **FlextUtilitiesConfiguration** | `u`             | Settings handling                   | 8+      |
+| **FlextUtilitiesDomain**        | `u`             | Domain model utilities              | 10+     |
+| **FlextUtilitiesDeprecation**   | `u.Deprecation` | Deprecation handling                | 4       |
+| **FlextUtilitiesGenerators**    | `u`             | Data generators                     | 10+     |
+| **FlextUtilitiesModel**         | `u`             | Pydantic model utilities            | 12+     |
+| **FlextUtilitiesPagination**    | `u`             | Pagination utilities                | 5+      |
+| **FlextUtilitiesReliability**   | `u`             | Retry/circuit breaker               | 8+      |
+| **FlextUtilitiesValidation**    | `u.Validation`  | Data validation                     | 15+     |
+| **FlextUtilitiesChecker**       | `u`             | Type/value checking                 | 12+     |
+| **FlextUtilitiesArgs**          | `u`             | CLI argument handling               | 8+      |
 
 **Total**: 548+ centralized utility methods in flext-core
 

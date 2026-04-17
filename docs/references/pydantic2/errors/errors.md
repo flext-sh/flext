@@ -29,14 +29,14 @@ You can access these errors in several ways:
 
 The [`ErrorDetails`][pydantic_core.ErrorDetails] t.RecursiveContainer is a dictionary. It contains the following:
 
-| Property                                    | Description                                                                    |
-| ------------------------------------------- | ------------------------------------------------------------------------------ |
+| Property                                    | Description                                                                                  |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | [`ctx`][pydantic_core.ErrorDetails.ctx]     | An optional t.RecursiveContainer which contains values required to render the error message. |
-| [`input`][pydantic_core.ErrorDetails.input] | The input provided for validation.                                             |
-| [`loc`][pydantic_core.ErrorDetails.loc]     | The error's location as a list.                                                |
-| [`msg`][pydantic_core.ErrorDetails.msg]     | A human-readable explanation of the error.                                     |
-| [`type`][pydantic_core.ErrorDetails.type]   | A computer-readable identifier of the error type.                              |
-| [`url`][pydantic_core.ErrorDetails.url]     | The documentation URL giving information about the error.                      |
+| [`input`][pydantic_core.ErrorDetails.input] | The input provided for validation.                                                           |
+| [`loc`][pydantic_core.ErrorDetails.loc]     | The error's location as a list.                                                              |
+| [`msg`][pydantic_core.ErrorDetails.msg]     | A human-readable explanation of the error.                                                   |
+| [`type`][pydantic_core.ErrorDetails.type]   | A computer-readable identifier of the error type.                                            |
+| [`url`][pydantic_core.ErrorDetails.url]     | The documentation URL giving information about the error.                                    |
 
 The first item in the [`loc`][pydantic_core.ErrorDetails.loc] list will be the field where the error occurred, and if the field is a
 [sub-model](../concepts/models.md#nested-models), subsequent items will be present to indicate the nested location of the error.
@@ -44,7 +44,7 @@ The first item in the [`loc`][pydantic_core.ErrorDetails.loc] list will be the f
 As a demonstration:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError, field_validator
+from pydantic import BaseModel, u.Field, ValidationError, u.field_validator
 
 
 class Location(BaseModel):
@@ -54,12 +54,12 @@ class Location(BaseModel):
 
 class Model(BaseModel):
     is_required: float
-    gt_int: int = Field(gt=42)
+    gt_int: int = u.Field(gt=42)
     list_of_ints: Sequence[int]
     a_float: float
     recursive_model: Location
 
-    @field_validator("a_float", mode="after")
+    @u.field_validator("a_float", mode="after")
     @classmethod
     def validate_float(cls, value: float) -> float:
         if value > 2.0:
@@ -81,7 +81,7 @@ except ValidationError as e:
     """
     5 validation errors for Model
     is_required
-      Field required [type=missing, input_value={'list_of_ints': ['1', 2,...ew York'}, 'gt_int': 21}, input_type=dict]
+      u.Field required [type=missing, input_value={'list_of_ints': ['1', 2,...ew York'}, 'gt_int': 21}, input_type=dict]
     gt_int
       Input should be greater than 42 [type=greater_than, input_value=21, input_type=int]
     list_of_ints.2
@@ -101,7 +101,7 @@ except ValidationError as e:
         {
             'type': 'missing',
             'loc': ('is_required',),
-            'msg': 'Field required',
+            'msg': 'u.Field required',
             'input': {
                 'list_of_ints': ['1', 2, 'bad'],
                 'a_float': 3.0,
@@ -263,7 +263,7 @@ except ValidationError as e:
         {
             'type': 'missing',
             'loc': ('items', 1, 'value'),
-            'msg': 'Field required',
+            'msg': 'u.Field required',
             'input': {'key': 'baz'},
             'url': 'https://errors.pydantic.dev/2/v/missing',
         }
@@ -276,7 +276,7 @@ except ValidationError as e:
         {
             'type': 'missing',
             'loc': 'items[1].value',
-            'msg': 'Field required',
+            'msg': 'u.Field required',
             'input': {'key': 'baz'},
             'url': 'https://errors.pydantic.dev/2/v/missing',
         }

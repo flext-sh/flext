@@ -2,7 +2,7 @@
 
 - [Parameter types](#parameter-types)
 - [Function signatures](#function-signatures)
-- [Using the [`Field()`][pydantic.Field] function to describe function parameters](#using-the-fieldpydanticfield-function-to-describe-function-parameters)
+- [Using the [`u.Field()`][pydantic.u.Field] function to describe function parameters](#using-the-fieldpydanticfield-function-to-describe-function-parameters)
 - [Accessing the original function](#accessing-the-original-function)
 - [Async functions](#async-functions)
 - [Compatibility with type checkers](#compatibility-with-type-checkers)
@@ -14,9 +14,9 @@
   <!-- TOC END -->
 
 ??? api "API Documentation"
-[`pydantic.validate_call_decorator.validate_call`][pydantic.validate_call_decorator.validate_call]<br>
+[`pydantic.u.validate_call_decorator.u.validate_call`][pydantic.u.validate_call_decorator.u.validate_call]<br>
 
-The [`validate_call()`][pydantic.validate_call] decorator allows the arguments passed to a function to be parsed
+The [`u.validate_call()`][pydantic.u.validate_call] decorator allows the arguments passed to a function to be parsed
 and validated using the function's annotations before the function is called.
 
 While under the hood this uses the same approach of model creation and initialisation
@@ -26,10 +26,10 @@ to your code with minimal boilerplate.
 Example of usage:
 
 ```python
-from pydantic import ValidationError, validate_call
+from pydantic import ValidationError, u.validate_call
 
 
-@validate_call
+@u.validate_call
 def repeat(s: str, count: int, *, separator: bytes = b"") -> bytes:
     b = s.encode()
     return separator.join(b for _ in range(count))
@@ -62,10 +62,10 @@ As with the rest of Pydantic, types are by default coerced by the decorator befo
 ```python
 from datetime import date
 
-from pydantic import validate_call
+from pydantic import u.validate_call
 
 
-@validate_call
+@u.validate_call
 def greater_than(d1: date, d2: date, *, include_equal=False) -> date:  # (1)!
     if include_equal:
         return d1 >= d2
@@ -90,7 +90,7 @@ of the decorator can be set to `True`.
 
 ## Function signatures
 
-The [`validate_call()`][pydantic.validate_call] decorator is designed to work with functions
+The [`u.validate_call()`][pydantic.u.validate_call] decorator is designed to work with functions
 using all possible parameter configurations and all possible combinations of these:
 
 - Positional or keyword parameters with or without defaults.
@@ -102,10 +102,10 @@ using all possible parameter configurations and all possible combinations of the
 ??? example
 
     ```python
-    from pydantic import validate_call
+    from pydantic import u.validate_call
 
 
-    @validate_call
+    @u.validate_call
     def pos_or_kw(a: int, b: int = 2) -> str:
         return f"a={a} b={b}"
 
@@ -114,7 +114,7 @@ using all possible parameter configurations and all possible combinations of the
     # > a=1 b=3
 
 
-    @validate_call
+    @u.validate_call
     def kw_only(*, a: int, b: int = 2) -> str:
         return f"a={a} b={b}"
 
@@ -125,7 +125,7 @@ using all possible parameter configurations and all possible combinations of the
     # > a=1 b=3
 
 
-    @validate_call
+    @u.validate_call
     def pos_only(a: int, b: int = 2, /) -> str:
         return f"a={a} b={b}"
 
@@ -134,7 +134,7 @@ using all possible parameter configurations and all possible combinations of the
     # > a=1 b=2
 
 
-    @validate_call
+    @u.validate_call
     def var_args(*args: int) -> str:
         return str(args)
 
@@ -145,7 +145,7 @@ using all possible parameter configurations and all possible combinations of the
     # > (1, 2, 3)
 
 
-    @validate_call
+    @u.validate_call
     def var_kwargs(**kwargs: int) -> str:
         return str(kwargs)
 
@@ -156,7 +156,7 @@ using all possible parameter configurations and all possible combinations of the
     # > {'a': 1, 'b': 2}
 
 
-    @validate_call
+    @u.validate_call
     def armageddon(
         a: int,
         /,
@@ -182,7 +182,7 @@ keyword parameters of a function:
     ```python
     from typing_extensions import TypedDict, Unpack
 
-    from pydantic import validate_call
+    from pydantic import u.validate_call
 
 
     class Point(TypedDict):
@@ -190,7 +190,7 @@ keyword parameters of a function:
         y: int
 
 
-    @validate_call
+    @u.validate_call
     def add_coords(**kwargs: Unpack[Point]) -> int:
         return kwargs["x"] + kwargs["y"]
 
@@ -203,22 +203,22 @@ keyword parameters of a function:
     [related specification section]: https://typing.readthedocs.io/en/latest/spec/callables.html#unpack-for-keyword-arguments
     [PEP 692]: https://peps.python.org/pep-0692/
 
-## Using the [`Field()`][pydantic.Field] function to describe function parameters
+## Using the [`u.Field()`][pydantic.u.Field] function to describe function parameters
 
-The [`Field()` function](fields.md) can also be used with the decorator to provide extra information about
+The [`u.Field()` function](fields.md) can also be used with the decorator to provide extra information about
 the field and validations. If you don't make use of the `default` or `default_factory` parameter, it is
 recommended to use the [annotated pattern](./fields.md#the-annotated-pattern) (so that type checkers
-infer the parameter as being required). Otherwise, the [`Field()`][pydantic.Field] function can be used
+infer the parameter as being required). Otherwise, the [`u.Field()`][pydantic.u.Field] function can be used
 as a default value (again, to trick type checkers into thinking a default value is provided for the parameter).
 
 ```python
 from typing import Annotated
 
-from pydantic import Field, ValidationError, validate_call
+from pydantic import u.Field, ValidationError, u.validate_call
 
 
-@validate_call
-def how_many(num: Annotated[int, Field(gt=10)]):
+@u.validate_call
+def how_many(num: Annotated[int, u.Field(gt=10)]):
     return num
 
 
@@ -233,8 +233,8 @@ except ValidationError as e:
     """
 
 
-@validate_call
-def return_value(value: str = Field(default="default value")):
+@u.validate_call
+def return_value(value: str = u.Field(default="default value")):
     return value
 
 
@@ -247,11 +247,11 @@ print(return_value())
 ```python
 from typing import Annotated
 
-from pydantic import Field, validate_call
+from pydantic import u.Field, u.validate_call
 
 
-@validate_call
-def how_many(num: Annotated[int, Field(gt=10, alias="number")]):
+@u.validate_call
+def how_many(num: Annotated[int, u.Field(gt=10, alias="number")]):
     return num
 
 
@@ -264,10 +264,10 @@ The original function which was decorated can still be accessed by using the `ra
 This is useful if in some scenarios you trust your input arguments and want to call the function in the most efficient way (see [notes on performance](#performance) below):
 
 ```python
-from pydantic import validate_call
+from pydantic import u.validate_call
 
 
-@validate_call
+@u.validate_call
 def repeat(s: str, count: int, *, separator: bytes = b"") -> bytes:
     b = s.encode()
     return separator.join(b for _ in range(count))
@@ -284,7 +284,7 @@ print(b)
 
 ## Async functions
 
-[`validate_call()`][pydantic.validate_call] can also be used on async functions:
+[`u.validate_call()`][pydantic.u.validate_call] can also be used on async functions:
 
 ```python
 class Connection:
@@ -296,10 +296,10 @@ conn = Connection()
 # ignore-above
 import asyncio
 
-from pydantic import PositiveInt, ValidationError, validate_call
+from pydantic import PositiveInt, ValidationError, u.validate_call
 
 
-@validate_call
+@u.validate_call
 async def get_user_email(user_id: PositiveInt):
     # `conn` is some fictional connection to a database
     email = await conn.execute("select email from users where id=$1", user_id)
@@ -337,7 +337,7 @@ asyncio.run(main())
 
 ## Compatibility with type checkers
 
-As the [`validate_call()`][pydantic.validate_call] decorator preserves the decorated function's signature,
+As the [`u.validate_call()`][pydantic.u.validate_call] decorator preserves the decorated function's signature,
 it should be compatible with type checkers (such as mypy and pyright). However, due to current limitations in the Python type system,
 the [`raw_function`](#accessing-the-original-function) or other attributes won't be recognized and you will
 need to suppress the error using (usually with a `# type: ignore` comment).
@@ -347,7 +347,7 @@ need to suppress the error using (usually with a `# type: ignore` comment).
 Similarly to Pydantic models, the `settings` parameter of the decorator can be used to specify a custom configuration:
 
 ```python
-from pydantic import ConfigDict, ValidationError, validate_call
+from pydantic import ConfigDict, ValidationError, u.validate_call
 
 
 class Foobar:
@@ -361,7 +361,7 @@ class Foobar:
         return f"Foobar({self.v})"
 
 
-@validate_call(settings=ConfigDict(arbitrary_types_allowed=True))
+@u.validate_call(settings=ConfigDict(arbitrary_types_allowed=True))
 def add_foobars(a: Foobar, b: Foobar):
     return a + b
 
@@ -391,10 +391,10 @@ This might be useful when a particular function is costly/time consuming.
 Here's an example of a workaround you can use for that pattern:
 
 ```python
-from pydantic import validate_call
+from pydantic import u.validate_call
 
 
-@validate_call
+@u.validate_call
 def validate_foo(a: int, b: int):
     def foo():
         return a + b
@@ -422,5 +422,5 @@ function is only performed once, there will still be a performance impact when m
 compared to using the original function.
 
 In many situations, this will have little or no noticeable effect. However, be aware that
-[`validate_call()`][pydantic.validate_call] is not an equivalent or alternative to function
+[`u.validate_call()`][pydantic.u.validate_call] is not an equivalent or alternative to function
 definitions in strongly typed languages, and it never will be.

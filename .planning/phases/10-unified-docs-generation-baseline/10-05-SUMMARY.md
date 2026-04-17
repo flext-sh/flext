@@ -52,6 +52,7 @@ completed: 2026-04-05
 - **Files modified:** 1
 
 ## Accomplishments
+
 - Audited all 11 codegen + services files for thin orchestrator pattern compliance
 - Replaced direct `write_text` in lazy_init.py with `u.Infra.atomic_write_file` for proper delegation
 - Confirmed codegen_generation.py as acceptable internal helper (Jinja2 template rendering, used only by codegen services)
@@ -66,9 +67,11 @@ Each task was committed atomically:
 3. **Task 2: Refactor root services/ (pipeline, consolidator, deduplicator)** - no changes needed (all already compliant)
 
 ## Files Created/Modified
+
 - `flext-infra/src/flext_infra/codegen/lazy_init.py` - Replaced direct write_text with u.Infra.atomic_write_file
 
 ## Decisions Made
+
 - **codegen_generation.py kept as internal helper:** 284 LOC private module providing Jinja2-based file generation. Used only by codegen services (specifically lazy_init.py). Not a service class — acceptable as internal helper per plan criteria.
 - **py_typed marker operations accepted:** `marker.touch()` (create empty file) and `marker.unlink()` (remove marker) are trivial single-line marker management operations, not business logic file writes. Wrapping in atomic_write_file would be over-engineering for empty marker files.
 - **10 of 11 files already compliant:** The codebase was already well-refactored. Only lazy_init.py had a direct write_text that needed delegation.
@@ -78,6 +81,7 @@ Each task was committed atomically:
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] Fixed pyrefly error with .failure attribute**
+
 - **Found during:** Task 1a (lazy_init.py refactoring)
 - **Issue:** Used `write_result.failure` but r has `.error` not `.failure`
 - **Fix:** Changed to `write_result.error`
@@ -91,12 +95,15 @@ Each task was committed atomically:
 **Impact on plan:** Trivial attribute name correction. No scope creep.
 
 ## Issues Encountered
+
 None
 
 ## User Setup Required
+
 None - no external service configuration required.
 
 ## Next Phase Readiness
+
 - Codegen and services domains are fully thin-orchestrator compliant
 - Ready for remaining plan 06-08 execution
 

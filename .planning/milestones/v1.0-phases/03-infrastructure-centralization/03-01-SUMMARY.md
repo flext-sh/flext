@@ -62,6 +62,7 @@ completed: 2026-03-24
 - **Files modified:** 9
 
 ## Accomplishments
+
 - iter_projects() centralizes the discover+filter+sort pattern previously duplicated across 13 call sites
 - emit() centralizes JSON/text output switching for consistent CLI output
 - Zero bare `root: Path` parameters remain in flext-infra service interfaces
@@ -73,6 +74,7 @@ completed: 2026-03-24
 3. **Task 3: Normalize root: Path** - `16190e94` (refactor)
 
 ## Files Created/Modified
+
 - `flext-infra/src/flext_infra/_utilities/cli.py` - Added iter_projects() and emit() static methods
 - `flext-infra/src/flext_infra/_utilities/git.py` - Renamed root -> repo_root (12 methods)
 - `flext-infra/src/flext_infra/_utilities/github.py` - Renamed root -> workspace_root in github_lint_workflows
@@ -84,6 +86,7 @@ completed: 2026-03-24
 - `flext-infra/src/flext_infra/refactor/_utilities.py` - Renamed root -> base_path in private helper
 
 ## Decisions Made
+
 - git.py methods use `repo_root` (not `workspace_root`) because they operate on both workspace and submodule repos
 - scanner.py uses `scan_root` because it scans arbitrary directories (workspace or project)
 - Task 2 skipped entirely — research confirmed run_cli migration and D-07 bug fix were already completed in prior sisyphus work
@@ -91,12 +94,14 @@ completed: 2026-03-24
 ## Deviations from Plan
 
 ### Task 2 Already Complete
+
 - **Found during:** Task 2 pre-read
 - **Issue:** Plan assumed run_cli() migration and D-07 dry_run bug were pending. Research (03-RESEARCH.md) confirmed both were already done.
 - **Evidence:** All 12 **main**.py files already use u.Infra.run_cli(); `dry_run=cli.apply` bug has 0 grep matches.
 - **Action:** Skipped task 2 entirely. No commit needed.
 
 ### Parameter Naming (Rule 2 - Missing Critical)
+
 - **Found during:** Task 3
 - **Issue:** Plan said to rename all `root: Path` to `workspace_root`. But git.py methods are called on both workspace AND project repos — renaming to `workspace_root` would be semantically wrong.
 - **Fix:** Used semantic naming: `repo_root` for git ops, `scan_root` for scanner, `base_path` for private helper.
@@ -108,12 +113,15 @@ completed: 2026-03-24
 **Impact on plan:** Task 2 skip reduces scope. Naming refinement improves semantic correctness beyond plan's original intent.
 
 ## Issues Encountered
+
 None
 
 ## Known Stubs
+
 None
 
 ## Next Phase Readiness
+
 - CLI utilities (run_cli, iter_projects, emit) are ready for consumer migration
 - Parameter naming is consistent — future plans can reference workspace_root/repo_root/scan_root patterns
 

@@ -33,6 +33,7 @@ metrics:
 ### Task 1: Enhanced make pyre policy gate
 
 The `pyre` Makefile target now runs two phases:
+
 1. **Pyrefly** — repo-wide type checking (warns on errors, reports to `.reports/pyrefly/`)
 2. **Policy gate** — sweeps `*/src/` for `# type: ignore`, `Any`, and `object` annotations
 
@@ -59,6 +60,7 @@ On violation: outputs file+line. Exits non-zero if any policy violations found. 
 ### Auto-fixed Issues
 
 **1. [Rule 3 - Blocking] Pyrefly 28 pre-existing errors in non-src directories**
+
 - **Found during:** Task 1
 - **Issue:** 28 `missing-import` errors in `examples/`, `scripts/`, `tests/` `__init__.py` — pre-existing baseline, not production code
 - **Fix:** Made pyrefly phase warn-only (report but don't block); policy gate is the actual pass/fail for src/ code quality

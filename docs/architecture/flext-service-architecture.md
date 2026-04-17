@@ -1300,11 +1300,11 @@ pipeline = (
 class FlextModels:
     # Mixins (Pydantic BaseModel)
     class IdentifiableMixin(m.BaseModel):
-        id: str = m.Field(default_factory=lambda: str(uuid.uuid4()))
+        id: str = u.Field(default_factory=lambda: str(uuid.uuid4()))
 
     class TimestampableMixin(m.BaseModel):
-        created_at: datetime = m.Field(default_factory=lambda: datetime.now(UTC))
-        updated_at: datetime = m.Field(default_factory=lambda: datetime.now(UTC))
+        created_at: datetime = u.Field(default_factory=lambda: datetime.now(UTC))
+        updated_at: datetime = u.Field(default_factory=lambda: datetime.now(UTC))
 
     # Base Models
     class ArbitraryTypesModel(m.BaseModel):
@@ -1811,21 +1811,21 @@ class MyService(s[ResultType]):
     """Service with full integration."""
 
     # ════════════════════════════════════════════════════════════
-    # PYDANTIC: Fields with validation
+    # PYDANTIC: u.Fields with validation
     # ════════════════════════════════════════════════════════════
-    param1: str = m.Field(min_length=1, description="Required parameter")
-    param2: int = m.Field(gt=0, le=100, description="Range 1-100")
-    param3: t.StrSequence = m.Field(default_factory=list)
+    param1: str = u.Field(min_length=1, description="Required parameter")
+    param2: int = u.Field(gt=0, le=100, description="Range 1-100")
+    param3: t.StrSequence = u.Field(default_factory=list)
 
     # Pydantic validators
-    @field_validator("param1")
+    @u.field_validator("param1")
     @classmethod
     def validate_param1(cls, v: str) -> str:
         if not v.isalnum():
             raise ValueError("Must be alphanumeric")
         return v.lower()
 
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_model(self) -> Self:
         if self.param2 > len(self.param3) * 10:
             raise ValueError("Invalid param2/param3 ratio")
@@ -1983,7 +1983,7 @@ class DataPipelineService(s[DataFrame]):
     """Data pipeline with railway pattern."""
 
     source_file: Path
-    transformations: t.StrSequence = m.Field(default_factory=list)
+    transformations: t.StrSequence = u.Field(default_factory=list)
 
     def execute(self) -> p.Result[DataFrame]:
         """Execute pipeline with railway pattern."""
@@ -2141,7 +2141,7 @@ class FlextApi(s[m.Api.ResponseModel]):
 
     operation: Literal["get", "post", "put", "delete", "patch"]
     url: str
-    headers: t.StrMapping = m.Field(default_factory=dict)
+    headers: t.StrMapping = u.Field(default_factory=dict)
     body: m.Api.RequestBodyModel | None = None
     timeout: int = 30
 
@@ -2326,19 +2326,19 @@ Componente: **FlextContext** - Propósito: Contexto distribuído + Tracing - Qua
 
 **LAYER 2: Reliability Patterns** (Confiabilidade)
 
-6. **Circuit Breaker** - Proteção contra falhas em cascata (per-message-type)
-7. **Rate Limiting** - Throttling com sliding window (per-message-type)
-8. **Retry Logic** - Exponential backoff com tentativas configuráveis
-9. **Timeout Enforcement** - Deadlines com ThreadPoolExecutor
-10. **Context Propagation** - Correlation IDs e tracing distribuído
+1. **Circuit Breaker** - Proteção contra falhas em cascata (per-message-type)
+2. **Rate Limiting** - Throttling com sliding window (per-message-type)
+3. **Retry Logic** - Exponential backoff com tentativas configuráveis
+4. **Timeout Enforcement** - Deadlines com ThreadPoolExecutor
+5. **Context Propagation** - Correlation IDs e tracing distribuído
 
 **LAYER 3: Advanced Processing** (do FlextProcessors)
 
-11. **Processor Registry** - Registro de processadores customizados
-12. **Batch Processing** - Processamento em lote com batch configurável
-13. **Parallel Processing** - Processamento paralelo com workers configuráveis
-14. **Pipeline Composition** - Pipeline de processamento com composição funcional
-15. **Metrics & Auditing** - Métricas por processador e audit log completo
+1. **Processor Registry** - Registro de processadores customizados
+2. **Batch Processing** - Processamento em lote com batch configurável
+3. **Parallel Processing** - Processamento paralelo com workers configuráveis
+4. **Pipeline Composition** - Pipeline de processamento com composição funcional
+5. **Metrics & Auditing** - Métricas por processador e audit log completo
 
 #### 📋 API Principais
 
@@ -2808,13 +2808,13 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
    chained = service.and_then(lambda x: other_service(x).result)
    ```
 
-3. **Pydantic Fields** - For parameters and validation
+3. **Pydantic u.Fields** - For parameters and validation
 
    ```python
    class MyService(s[T]):
-       email: str = m.Field(pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$")
-       age: int = m.Field(gt=0, le=150)
-       tags: t.StrSequence = m.Field(default_factory=list)
+       email: str = u.Field(pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$")
+       age: int = u.Field(gt=0, le=150)
+       tags: t.StrSequence = u.Field(default_factory=list)
    ```
 
 4. **FlextSettings singleton** - Via `self.project_config`
@@ -3087,8 +3087,8 @@ class FlextContainer:
 class ldif(Flext[t.RecursiveContainerMapping]):
     """Main API facade."""
 
-    # ✅ BOM: Container como PrivateAttr
-    _container: FlextContainer = PrivateAttr(
+    # ✅ BOM: Container como u.PrivateAttr
+    _container: FlextContainer = u.PrivateAttr(
         default_factory=FlextContainer.get_global,
     )
 
@@ -3288,7 +3288,9 @@ class ldif:
 class MyFacade(s[t.RecursiveContainerMapping]):
     """Facade with proper DI setup."""
 
-    _container: FlextContainer = PrivateAttr(default_factory=FlextContainer.get_global)
+    _container: FlextContainer = u.PrivateAttr(
+        default_factory=FlextContainer.get_global
+    )
 
     def model_post_init(self, _context: t.RecursiveContainerMapping | None, /) -> None:
         """Setup services in DI container."""
@@ -3450,7 +3452,7 @@ class MyService(s[T]):
 
 1. **Singleton per class** → Apenas uma instância
 2. **Environment loading** → `.env` automático via Pydantic
-3. **Validation** → Field constraints automáticos
+3. **Validation** → u.Field constraints automáticos
 4. **Computed fields** → Valores derivados cached
 5. **Property access** → `self.project_config` em s
 
@@ -3492,18 +3494,18 @@ class FlextSettings(BaseSettings):
     # ═══════════════════════════════════════════════════════════════
     # CORE FIELDS (27) - Auto validation via Pydantic
     # ═══════════════════════════════════════════════════════════════
-    app_name: str = m.Field(default="flext")
-    version: str = m.Field(default="1.0.0")
+    app_name: str = u.Field(default="flext")
+    version: str = u.Field(default="1.0.0")
 
     # Logging configuration (auto-synced com FlextLogger)
-    debug: bool = m.Field(default=False)
-    trace: bool = m.Field(default=False)
-    log_level: str = m.Field(default="INFO")
-    log_format: str = m.Field(default="json")
+    debug: bool = u.Field(default=False)
+    trace: bool = u.Field(default=False)
+    log_level: str = u.Field(default="INFO")
+    log_format: str = u.Field(default="json")
 
     # Performance
-    max_workers: int = m.Field(default=4, ge=1, le=64)
-    timeout_seconds: float = m.Field(default=30.0, ge=0.1, le=300.0)
+    max_workers: int = u.Field(default=4, ge=1, le=64)
+    timeout_seconds: float = u.Field(default=30.0, ge=0.1, le=300.0)
 
     # ... (20 more fields)
 
@@ -3540,7 +3542,7 @@ def log_config(self) -> m.Logging.ConfigSnapshotModel:
 - ✅ Environment auto-loading (`FLEXT_*` → fields)
 - ✅ Type validation (Pydantic v2)
 - ✅ Computed fields (cached automatically)
-- ✅ Field validators (constraints auto-enforced)
+- ✅ u.Field validators (constraints auto-enforced)
 - ✅ Model validators (cross-field consistency)
 - ✅ Subclass isolation (each = own singleton)
 
@@ -3559,14 +3561,14 @@ class FlextLdifSettings(FlextSettings):
     # ═══════════════════════════════════════════════════════════════
     # PROJECT FIELDS - Only new fields, inherit rest
     # ═══════════════════════════════════════════════════════════════
-    ldif_encoding: str = m.Field(default="utf-8")
-    ldif_max_line_length: int = m.Field(default=76, ge=20, le=100000)
-    enable_performance_optimizations: bool = m.Field(default=False)
+    ldif_encoding: str = u.Field(default="utf-8")
+    ldif_max_line_length: int = u.Field(default=76, ge=20, le=100000)
+    enable_performance_optimizations: bool = u.Field(default=False)
 
     # ═══════════════════════════════════════════════════════════════
     # AUTO VALIDATION - Cross-field consistency
     # ═══════════════════════════════════════════════════════════════
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_consistency(self) -> Self:
         """Auto: consistency checks."""
         # ✅ Use inherited fields (debug, trace, max_workers)
@@ -3666,7 +3668,7 @@ assert settings.log_level == "DEBUG"
 assert settings.ldif_encoding == "utf-16"
 ```
 
-**3. Field Validation (Automatic)**
+**3. u.Field Validation (Automatic)**
 
 ```python
 # ✅ Auto: Pydantic validates on instantiation
@@ -3677,7 +3679,7 @@ settings = FlextSettings(max_workers=10, timeout_seconds=30.5)  # OK
 settings = FlextSettings(max_workers=100)  # Error: max 64 workers
 ```
 
-**4. Computed Fields (Cached)**
+**4. Computed u.Fields (Cached)**
 
 ```python
 settings = FlextSettings(trace=True)
@@ -3749,20 +3751,20 @@ class MyService(s[T]):
 
 **Por que é errado:** Código desnecessário, property já existe.
 
-**Anti-Pattern 3: Duplicar Fields Herdados** ❌
+**Anti-Pattern 3: Duplicar u.Fields Herdados** ❌
 
 ```python
 # ❌ ERRADO: Duplicar campos que FlextSettings já tem
 class MyConfig(FlextSettings):
-    debug: bool = m.Field(default=False)  # ← JÁ existe!
-    max_workers: int = m.Field(default=4)  # ← JÁ existe!
-    my_field: str = m.Field(default="value")  # ✅ OK: novo
+    debug: bool = u.Field(default=False)  # ← JÁ existe!
+    max_workers: int = u.Field(default=4)  # ← JÁ existe!
+    my_field: str = u.Field(default="value")  # ✅ OK: novo
 
 
 # ✅ CORRETO: Apenas novos campos
 class MyConfig(FlextSettings):
     # Inherit debug, max_workers (27 fields total)
-    my_field: str = m.Field(default="value")  # ✅ Apenas novos
+    my_field: str = u.Field(default="value")  # ✅ Apenas novos
 ```
 
 **Por que é errado:** Duplicação, confusion about defaults, maintenance burden.
@@ -3777,10 +3779,10 @@ class MyProjectConfig(FlextSettings):
 
     # ✅ Auto: Inherit model_config, debug, log_level, max_workers (27 fields)
 
-    api_url: str = m.Field(default="https://api.com")
-    batch_size: int = m.Field(default=100, ge=1, le=10000)
+    api_url: str = u.Field(default="https://api.com")
+    batch_size: int = u.Field(default=100, ge=1, le=10000)
 
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_consistency(self) -> Self:
         # ✅ Auto: Use inherited computed fields
         if self.is_debug_enabled and self.batch_size > 1000:
@@ -3861,7 +3863,7 @@ Situação: Service precisa settings - Solução Automática: `self.project_conf
 Situação: Project fields - Solução Automática: Extend FlextSettings - ❌ Não Fazer: Duplicar fields herdados
 Situação: Environment vars - Solução Automática: `FLEXT_*` prefix - ❌ Não Fazer: Manual loading
 Situação: Computed values - Solução Automática: `@u.computed_field` - ❌ Não Fazer: Manual calculation
-Situação: Validation - Solução Automática: `@model_validator` - ❌ Não Fazer: Manual checks
+Situação: Validation - Solução Automática: `@u.model_validator` - ❌ Não Fazer: Manual checks
 Situação: Multiple envs - Solução Automática: `.env` files - ❌ Não Fazer: Hard-coded values
 
 ### 3. FlextModels - Domain Modeling with Pydantic
@@ -3886,9 +3888,9 @@ class FlextModels:
     class Entity(m.BaseModel):
         """Entity with identity and lifecycle."""
 
-        id: str = m.Field(default_factory=lambda: str(uuid4()))
-        created_at: datetime = m.Field(default_factory=datetime.utcnow)
-        updated_at: datetime = m.Field(default_factory=datetime.utcnow)
+        id: str = u.Field(default_factory=lambda: str(uuid4()))
+        created_at: datetime = u.Field(default_factory=datetime.utcnow)
+        updated_at: datetime = u.Field(default_factory=datetime.utcnow)
 
     # Command (intent to change state)
     class Command(m.BaseModel):
@@ -3906,20 +3908,20 @@ class FlextModels:
     class DomainEvent(m.BaseModel):
         """Domain event - something that happened."""
 
-        event_id: str = m.Field(default_factory=lambda: str(uuid4()))
-        occurred_at: datetime = m.Field(default_factory=datetime.utcnow)
+        event_id: str = u.Field(default_factory=lambda: str(uuid4()))
+        occurred_at: datetime = u.Field(default_factory=datetime.utcnow)
 
     # Mixins
     class IdentifiableMixin(m.BaseModel):
         """Mixin for identifiable objects."""
 
-        id: str = m.Field(default_factory=lambda: str(uuid4()))
+        id: str = u.Field(default_factory=lambda: str(uuid4()))
 
     class TimestampableMixin(m.BaseModel):
         """Mixin for timestamped objects."""
 
-        created_at: datetime = m.Field(default_factory=datetime.utcnow)
-        updated_at: datetime = m.Field(default_factory=datetime.utcnow)
+        created_at: datetime = u.Field(default_factory=datetime.utcnow)
+        updated_at: datetime = u.Field(default_factory=datetime.utcnow)
 ```
 
 **Capabilities:**
@@ -3945,14 +3947,14 @@ class FlextApiModels:
     class HttpRequest(m.Value):
         """Immutable HTTP request value object."""
 
-        method: str = m.Field(
+        method: str = u.Field(
             default="GET",
             pattern=r"^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE)$",
         )
-        url: str = m.Field(..., min_length=1, max_length=2048)
-        headers: t.StrMapping = m.Field(default_factory=dict)
-body: m.Api.RequestBodyModel | None = m.Field(default=None)
-        timeout: float = m.Field(default=30.0, ge=0.1, le=300.0)
+        url: str = u.Field(..., min_length=1, max_length=2048)
+        headers: t.StrMapping = u.Field(default_factory=dict)
+body: m.Api.RequestBodyModel | None = u.Field(default=None)
+        timeout: float = u.Field(default=30.0, ge=0.1, le=300.0)
 
         # ✅ BOM: Computed field para derived values
         @u.computed_field
@@ -3964,10 +3966,10 @@ body: m.Api.RequestBodyModel | None = m.Field(default=None)
     class HttpResponse(m.Value):
         """Immutable HTTP response value object."""
 
-        status_code: int = m.Field(..., ge=100, le=599)
-        headers: t.StrMapping = m.Field(default_factory=dict)
-body: m.Api.RequestBodyModel | None = m.Field(default=None)
-        request_id: str | None = m.Field(default=None)
+        status_code: int = u.Field(..., ge=100, le=599)
+        headers: t.StrMapping = u.Field(default_factory=dict)
+body: m.Api.RequestBodyModel | None = u.Field(default=None)
+        request_id: str | None = u.Field(default=None)
 
         # ✅ BOM: Computed properties para business logic
         @u.computed_field
@@ -3984,7 +3986,7 @@ body: m.Api.RequestBodyModel | None = m.Field(default=None)
 **Análise:** FlextApiModels usa m.Value perfeitamente:
 
 - Herda de `Value` (immutability via `frozen=True`)
-- Usa `computed_field` para derived properties
+- Usa `u.computed_field` para derived properties
 - Type-safe com Pydantic validation
 - Clear separation: Request/Response são Value Objects
 
@@ -4014,8 +4016,8 @@ class FlextLdifModels:
 
         model_config = ConfigDict(frozen=True)  # ✅ Immutable
 
-        line_width: int = m.Field(default=76, ge=20, le=100000)
-        fold_long_lines: bool = m.Field(default=True)
+        line_width: int = u.Field(default=76, ge=20, le=100000)
+        fold_long_lines: bool = u.Field(default=True)
         # ...
 ```
 
@@ -4035,7 +4037,7 @@ class FlextLdifModels:
    request.method = "POST"  # ❌ ERRO: frozen=True (Pydantic v2)
    ```
 
-2. **Computed Fields**
+2. **Computed u.Fields**
 
    ```python
    # ✅ Funciona perfeitamente
@@ -4139,7 +4141,7 @@ class User(FlextModels.Entity):
     # ✅ Herda: id, created_at, updated_at
 ```
 
-**Anti-Pattern 3: Computação Manual ao Invés de Computed Fields**
+**Anti-Pattern 3: Computação Manual ao Invés de Computed u.Fields**
 
 ```python
 # ❌ ANTI-PATTERN: Método normal para valor derivado
@@ -4150,7 +4152,7 @@ class HttpResponse(m.BaseModel):
         return 200 <= self.status_code < 300
 
 
-# ✅ CORRETO: computed_field
+# ✅ CORRETO: u.computed_field
 class HttpResponse(m.Value):
     status_code: int
 
@@ -4222,14 +4224,14 @@ class User(FlextModels.Entity, AuditableMixin):
     # Herda: id, created_at, updated_at, modified_by, modification_reason
 ```
 
-**Pattern 3: Computed Fields Para Business Logic**
+**Pattern 3: Computed u.Fields Para Business Logic**
 
 ```python
 class Order(FlextModels.Entity):
     """Order with computed totals."""
 
 items: Sequence[m.Domain.ItemModel]
-    tax_rate: float = m.Field(default=0.08)
+    tax_rate: float = u.Field(default=0.08)
 
     @u.computed_field
     @property
@@ -4280,8 +4282,8 @@ class MyValue(m.Value):
 ```python
 # ANTES
 class User(m.BaseModel):
-    id: str = m.Field(default_factory=lambda: str(uuid4()))
-    created_at: datetime = m.Field(default_factory=datetime.utcnow)
+    id: str = u.Field(default_factory=lambda: str(uuid4()))
+    created_at: datetime = u.Field(default_factory=datetime.utcnow)
     username: str
 
 
@@ -4408,7 +4410,9 @@ attributes: m.Ldif.AttributeSetModel
 
 
 #### Qualquer objeto compatível com execute() funciona
+
    process_service(MyService())  # ✅ OK
+
    ```
 
 #### ❌ O Que Não É Usado
@@ -4823,13 +4827,13 @@ class MyService(s[T]):
 
 ### Média Prioridade (Qualidade de Vida)
 
-4. **Documentar p**
+1. **Documentar p**
    - Criar guide de uso
    - Exemplos de structural typing
    - **Impacto:** Educação
    - **Esforço:** 1-2 horas
 
-5. **Enhanced Logging Patterns**
+2. **Enhanced Logging Patterns**
    - Adicionar correlation_id em todos os logs
    - Structured logging consistente
    - **Impacto:** Observabilidade
@@ -4837,7 +4841,7 @@ class MyService(s[T]):
 
 ### Baixa Prioridade (Nice to Have)
 
-6. **FlextContext Usage**
+1. **FlextContext Usage**
    - Implementar request context tracking
      ~~ - Correlação de operações~~
      ~~ - **Impacto:** Tracing~~
@@ -4892,7 +4896,7 @@ result = (
 ```python
 # flext-core/src/flext_core/service.py (NOVO)
 
-from pydantic import computed_field, PrivateAttr
+from pydantic import u.computed_field, u.PrivateAttr
 from typing import Union
 
 
@@ -4913,16 +4917,16 @@ class s[TResult](
     - Pattern matching (match/case)
 
     Pydantic v2:
-    - computed_field para lazy execution
-    - PrivateAttr para cache
+    - u.computed_field para lazy execution
+    - u.PrivateAttr para cache
     - Annotated fields nos subclasses
     """
 
     # ═══════════════════════════════════════════════════════════════
-    # CACHE (Pydantic v2 PrivateAttr)
+    # CACHE (Pydantic v2 u.PrivateAttr)
     # ═══════════════════════════════════════════════════════════════
-    _cached_result: p.Result[TResult] | None = PrivateAttr(default=None)
-    _is_executed: bool = PrivateAttr(default=False)
+    _cached_result: p.Result[TResult] | None = u.PrivateAttr(default=None)
+    _is_executed: bool = u.PrivateAttr(default=False)
 
     # ═══════════════════════════════════════════════════════════════
     # ABSTRACT METHOD (como antes)
@@ -5095,7 +5099,7 @@ entries = (
 │                   s[T]                        │
 │                                                          │
 │  ┌────────────────────────────────────────────────┐    │
-│  │ Fields (Pydantic)                              │    │
+│  │ u.Fields (Pydantic)                              │    │
 │  │  • operation: str | None (for multi-ops)       │    │
 │  │  • param1, param2, ... (operation params)      │    │
 │  └────────────────────────────────────────────────┘    │
@@ -5132,7 +5136,7 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
     """Unified service base - single or multiple operations."""
 
     # Optional: for multiple operations
-    operation: str | None = m.Field(default=None)
+    operation: str | None = u.Field(default=None)
 
     # Lazy execution state
     _result: p.Result[TResult] | None = None
@@ -5196,7 +5200,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
     """Single operation: write LDIF."""
 
     # Parameters (Pydantic fields)
-    entries: Sequence[Entry] = m.Field(default_factory=list, min_length=1)
+    entries: Sequence[Entry] = u.Field(default_factory=list, min_length=1)
     target_server_type: str = "rfc4512"
     output_target: Literal["string", "file"] = "string"
     output_path: Path | None = None
@@ -5223,7 +5227,7 @@ class FlextApi(s[m.Api.ResponseModel]):
 
     # Shared parameters
     url: str
-    headers: t.StrMapping = m.Field(default_factory=dict)
+    headers: t.StrMapping = u.Field(default_factory=dict)
 
     # Operation-specific parameters
     body: m.Api.RequestBodyModel | None = None
@@ -5266,7 +5270,7 @@ class FlextApi(s[m.Api.ResponseModel]):
 ```python
 from typing import TypeVar, Generic, Callable
 from abc import ABC, abstractmethod
-from pydantic import Field
+from pydantic import u.Field
 
 TResult = TypeVar("TResult")
 UResult = TypeVar("UResult")
@@ -5276,7 +5280,7 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
     """Unified service base with auto-execution and monadic operations."""
 
     # Optional: for multiple operations
-    operation: str | None = m.Field(
+    operation: str | None = u.Field(
         default=None, description="Operation name (for multi-operation services)"
     )
 
@@ -5450,14 +5454,14 @@ class FlextLdifWriter(Flext[WriteResponse]):
     """Write LDIF entries - single operation service."""
 
     # Parameters as Pydantic fields
-    entries: Sequence[Entry] = m.Field(default_factory=list, min_length=1)
+    entries: Sequence[Entry] = u.Field(default_factory=list, min_length=1)
     target_server_type: str = "rfc4512"
     output_target: Literal["string", "file", "ldap3"] = "string"
     output_path: Path | None = None
     format_options: WriteFormatOptions | None = None
 
     # Validation
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_config(self) -> Self:
         if self.output_target == "file" and not self.output_path:
             raise ValueError("output_path required for file target")
@@ -5516,8 +5520,8 @@ class FlextApi(s[m.Api.ResponseModel]):
 
     # Shared parameters
     url: str
-    headers: t.StrMapping = m.Field(default_factory=dict)
-    params: t.StrMapping = m.Field(default_factory=dict)
+    headers: t.StrMapping = u.Field(default_factory=dict)
+    params: t.StrMapping = u.Field(default_factory=dict)
 
     # Operation-specific parameters
 body: m.Api.RequestBodyModel | None = None
@@ -5564,7 +5568,7 @@ def get(self, url: str, **kwargs: m.Api.RequestOptionsModel) -> p.Result[m.Api.R
 
 from pathlib import Path
 from typing import Annotated
-from pydantic import Field, field_validator
+from pydantic import u.Field, u.field_validator
 from flext_core import s
 from flext_core import r, p
 from flext_ldif import Entry
@@ -5590,21 +5594,21 @@ class FlextLdifParser(Flext[Sequence[Entry]]):
     # FIELDS (Pydantic v2 - Annotated pattern)
     # ═══════════════════════════════════════════════════════════════
     source: Annotated[
-        str | Path, m.Field(description="LDIF file path or string content")
+        str | Path, u.Field(description="LDIF file path or string content")
     ]
 
     encoding: Annotated[
-        str, m.Field(default="utf-8", description="Character encoding")
+        str, u.Field(default="utf-8", description="Character encoding")
     ] = "utf-8"
 
     strict_mode: Annotated[
-        bool, m.Field(default=True, description="Enable strict RFC parsing")
+        bool, u.Field(default=True, description="Enable strict RFC parsing")
     ] = True
 
     # ═══════════════════════════════════════════════════════════════
     # VALIDATION (Pydantic v2)
     # ═══════════════════════════════════════════════════════════════
-    @field_validator("source")
+    @u.field_validator("source")
     @classmethod
     def validate_source_exists(cls, v: str | Path) -> str | Path:
         """Validate source file exists if Path."""
@@ -6045,7 +6049,7 @@ Decorator: `@track_operation` - Linhas: 1380-1465 - Função: Full operation tra
 │  ├── CRUD: set, get, has, remove, clear                          │
 │  ├── Collection: keys, values, items                             │
 │  ├── Operations: merge, clone, validate                          │
-│  ├── Serialization: to_json, from_json, export, import_data      │
+│  ├── Serialization: u.to_json, u.from_json, export, import_data      │
 │  ├── Lifecycle: is_active, suspend, resume, destroy              │
 │  └── Integration: add_hook, get_container, cleanup               │
 │                                                                  │
@@ -6166,7 +6170,7 @@ with self.track("handle_message") as metrics:
 - `service.py:30-34`: Herda `FlextModels.ArbitraryTypesModel`, `x`, `ABC`
 - `service.py:93`: `auto_execute: ClassVar[bool] = False` ✅
 - `service.py:107-143`: `__new__` implementa auto-execute pattern ✅
-- `service.py:166-188`: `result` computed_field implementado ✅
+- `service.py:166-188`: `result` u.computed_field implementado ✅
 - `service.py:190-212`: `validate_business_rules()` implementado ✅
 
 **⚠️ h - PENDENTE MODERNIZAÇÃO:**
@@ -6227,9 +6231,9 @@ Componente: Testes - Mudanças: Nenhuma mudança necessária - Esforço: **Zero*
 
 # Adicionar:
 
-# 1. _cached_result e _is_executed (PrivateAttr)
+# 1. _cached_result e _is_executed (u.PrivateAttr)
 
-# 2. .result property (computed_field)
+# 2. .result property (u.computed_field)
 
 # 3. .value, .value_or_none, .value_or properties
 
@@ -6325,21 +6329,21 @@ class FlextLdifWriter(Flext[WriteResponse]):
 
     # Pydantic fields (validação automática)
     entries: Annotated[
-        Sequence[Entry], m.Field(min_length=1, description="LDIF entries to write")
+        Sequence[Entry], u.Field(min_length=1, description="LDIF entries to write")
     ]
     target_server_type: Annotated[
-        str, m.Field(default="rfc4512", description="Target LDAP server type")
+        str, u.Field(default="rfc4512", description="Target LDAP server type")
     ] = "rfc4512"
     output_target: Annotated[
         Literal["string", "file"],
-        m.Field(default="string", description="Output destination"),
+        u.Field(default="string", description="Output destination"),
     ] = "string"
     output_path: Annotated[
-        Path | None, m.Field(default=None, description="File path for 'file' target")
+        Path | None, u.Field(default=None, description="File path for 'file' target")
     ] = None
 
     # Validação cross-field
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_output_config(self) -> Self:
         """Validate output target configuration."""
         if self.output_target == "file" and not self.output_path:
@@ -6488,7 +6492,7 @@ entries = FlextLdifParser(source="file.ldif").value_or_none
 
 - [ ] Adicionar properties no `s` (.result, .value, etc)
 - [ ] Adicionar smart resolution (.and_then, .or_else)
-- [ ] Adicionar PrivateAttr para cache
+- [ ] Adicionar u.PrivateAttr para cache
 - [ ] Adicionar convenience properties (.is_success, etc)
 - [ ] Escrever testes unitários
 - [ ] Atualizar documentação (docstrings)
@@ -6541,7 +6545,7 @@ value = MyService().value
 ~~| **Melhor DX** | `.value` ao invés de `.execute().unwrap()` |~~
 ~~| **Chains mais limpos** | Smart resolution elimina `.result` |~~
 ~~| **Validação automática** | Pydantic validators |~~
-~~| **Documentação automática** | Pydantic Field descriptions |~~
+~~| **Documentação automática** | Pydantic u.Field descriptions |~~
 ~~| **Tempo de desenvolvimento** | -30-40% em novos services |~~
 
 ~~**Conclusão:** Alto ROI, baixo esforço, baixo risco!~~
@@ -6616,7 +6620,7 @@ print(f"Processed {response.statistics.entries_written} users")
 # flext-api/src/flext_api/api.py
 
 from typing import Annotated, Literal
-from pydantic import Field, model_validator
+from pydantic import u.Field, u.model_validator
 from flext_core import s
 from flext_core import r, p
 import httpx
@@ -6645,32 +6649,32 @@ class FlextApi(s[m.Api.ResponseModel]):
     # ═══════════════════════════════════════════════════════════════
     operation: Annotated[
         Literal["get", "post", "put", "delete", "patch"],
-        m.Field(description="HTTP method to execute"),
+        u.Field(description="HTTP method to execute"),
     ]
 
-    url: Annotated[str, m.Field(description="Target URL")]
+    url: Annotated[str, u.Field(description="Target URL")]
 
     headers: Annotated[
-        t.StrMapping, m.Field(default_factory=dict, description="HTTP headers")
+        t.StrMapping, u.Field(default_factory=dict, description="HTTP headers")
     ] = {}
 
     params: Annotated[
-        t.StrMapping, m.Field(default_factory=dict, description="Query parameters")
+        t.StrMapping, u.Field(default_factory=dict, description="Query parameters")
     ] = {}
 
     body: Annotated[
         m.Api.RequestBodyModel | None,
-        m.Field(default=None, description="Request body (for POST/PUT/PATCH)"),
+        u.Field(default=None, description="Request body (for POST/PUT/PATCH)"),
     ] = None
 
     timeout: Annotated[
-        int, m.Field(default=30, gt=0, description="Request timeout in seconds")
+        int, u.Field(default=30, gt=0, description="Request timeout in seconds")
     ] = 30
 
     # ═══════════════════════════════════════════════════════════════
     # VALIDATION
     # ═══════════════════════════════════════════════════════════════
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_operation(self) -> Self:
         """Validate operation-specific requirements."""
         if self.operation in ("post", "put", "patch") and self.body is None:
@@ -7018,12 +7022,12 @@ class FlextLdifParser(Flext[Sequence[Entry]]):
     """
 
     # Pydantic fields (auto-validation!)
-    source: Annotated[str | Path, m.Field(description="LDIF source")]
+    source: Annotated[str | Path, u.Field(description="LDIF source")]
     encoding: str = "utf-8"
     strict_mode: bool = True
 
-    # Field validators
-    @field_validator("source")
+    # u.Field validators
+    @u.field_validator("source")
     @classmethod
     def validate_source(cls, v: str | Path) -> str | Path:
         if isinstance(v, Path) and not v.exists():
@@ -7105,7 +7109,7 @@ Métrica: **Documentação duplicada** - Antes: Service + factories - Depois: Ap
 ~~- ✅ **Smart resolution**: `.and_then()` detecta Service vs Result automaticamente~~
 ~~- ✅ **Type-safe**: Full Pydantic validation + Generic types~~
 ~~- ✅ **Auto-settings**: Singleton via `self.project_config` (sem passar parâmetros)~~
-~~- ✅ **Self-documenting**: Pydantic Field descriptions~~
+~~- ✅ **Self-documenting**: Pydantic u.Field descriptions~~
 ~~- ✅ **Better DX**: Menos código = menos bugs~~
 
 ### ~~Para Arquitetura~~
@@ -7142,7 +7146,7 @@ Métrica: **Documentação duplicada** - Antes: Service + factories - Depois: Ap
 
    ```bash
    # Edit: flext-core/src/flext_core/service.py
-   # Add: _cached_result, _is_executed (PrivateAttr)
+   # Add: _cached_result, _is_executed (u.PrivateAttr)
    # Add: .result, .value, .value_or_none, .value_or
    # Add: .is_success, .is_failure, .error
    ```
@@ -7246,7 +7250,7 @@ Semana 2+:
 
 - [ ] Adicionar properties (`.result`, `.value`, etc)
 - [ ] Adicionar smart resolution (`.and_then`, `.or_else`)
-- [ ] Adicionar PrivateAttr para cache
+- [ ] Adicionar u.PrivateAttr para cache
 - [ ] Adicionar convenience properties (`.is_success`, etc)
 - [ ] Escrever testes unitários (cobertura 100%)
 - [ ] Atualizar docstrings
@@ -7336,7 +7340,7 @@ Semana 2+:
 
 - Type parameters syntax (`[T]`)
 - Pattern matching (`match/case`)
-- `computed_field` + `PrivateAttr`
+- `u.computed_field` + `u.PrivateAttr`
 - `Annotated` fields
 - Validators modernos
 
@@ -7465,16 +7469,16 @@ def save_auth_token(self, token: str) -> p.Result[bool]:
 class FlextCliSettings(FlextSettings):
     """Extends FlextSettings with CLI-specific fields."""
 
-    profile: str = m.Field(default="default")
-    output_format: Literal["json", "yaml", "csv", "table", "plain"] = m.Field(
+    profile: str = u.Field(default="default")
+    output_format: Literal["json", "yaml", "csv", "table", "plain"] = u.Field(
         default="table"
     )
-    no_color: bool = m.Field(default=False)
-    config_dir: Path = m.Field(default_factory=lambda: Path.home() / ".flext")
+    no_color: bool = u.Field(default=False)
+    config_dir: Path = u.Field(default_factory=lambda: Path.home() / ".flext")
 ```
 
 ✅ **Herança correta** de `FlextSettings`
-✅ **Pydantic v2** com `Field` descriptors
+✅ **Pydantic v2** com `u.Field` descriptors
 ✅ **Type-safe** com `Literal` types
 ✅ **Computed fields** para derivações
 
@@ -7804,7 +7808,7 @@ class FlextCliSettings(FlextSettings):
     no_color: bool = False
 
     # Paths
-    config_dir: Path = m.Field(default_factory=lambda: Path.home() / ".flext")
+    config_dir: Path = u.Field(default_factory=lambda: Path.home() / ".flext")
 
     # Auth (computed fields)
     @u.computed_field
@@ -7914,7 +7918,7 @@ class CliAuthService(s[str]):
 ```python
 # Remove 30+ fields, keep only 8 essentials
 
-# Use computed_field para derivações
+# Use u.computed_field para derivações
 
 # Herdar mais de FlextSettings
 ```
@@ -8388,7 +8392,7 @@ class s[T]:
 - ❌ **Hard to debug** - "Por que meu settings não está funcionando?" → naming convention violation
 - ❌ **No type safety** - `project_models` retorna `type` genérico
 
-**Problema 4: execute() Raramente Usa Pydantic Fields**
+**Problema 4: execute() Raramente Usa Pydantic u.Fields**
 
 **Estado Atual (Exemplo Real):**
 
@@ -8463,7 +8467,7 @@ class s[TDomainResult](
 **Benefícios:**
 ✅ **Simpler API** - 1 abstract method (execute), 2 properties
 ✅ **Less confusion** - Óbvio o que implementar
-✅ **Pydantic validation** - Use `@model_validator` ao invés de `validate_business_rules()`
+✅ **Pydantic validation** - Use `@u.model_validator` ao invés de `validate_business_rules()`
 ✅ **Decorator pattern** - `@with_context_cleanup` ao invés de método
 
 **Migration:**
@@ -8481,7 +8485,7 @@ class MyService(s[Result]):
     # Pydantic fields
     data: t.RecursiveContainerMapping
 
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_data(self) -> Self:
         """Use Pydantic validator instead of validate_business_rules."""
         if not self.data:
@@ -8533,13 +8537,13 @@ class Value(m.BaseModel):
 
 
 class Entity(ArbitraryTypesModel):
-    id: str = m.Field(default_factory=lambda: str(uuid.uuid4()))
-    created_at: datetime = m.Field(default_factory=lambda: datetime.now(UTC))
-    updated_at: datetime = m.Field(default_factory=lambda: datetime.now(UTC))
+    id: str = u.Field(default_factory=lambda: str(uuid.uuid4()))
+    created_at: datetime = u.Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = u.Field(default_factory=lambda: datetime.now(UTC))
 
 
 class AggregateRoot(Entity):
-    _domain_events: Sequence[DomainEvent] = PrivateAttr(default_factory=list)
+    _domain_events: Sequence[DomainEvent] = u.PrivateAttr(default_factory=list)
 
 
 # flext-core/src/flext_core/models/cqrs.py
@@ -8547,16 +8551,16 @@ class AggregateRoot(Entity):
 
 
 class Command(Value):
-    command_id: str = m.Field(default_factory=lambda: str(uuid.uuid4()))
+    command_id: str = u.Field(default_factory=lambda: str(uuid.uuid4()))
 
 
 class Query(Value):
-    query_id: str = m.Field(default_factory=lambda: str(uuid.uuid4()))
+    query_id: str = u.Field(default_factory=lambda: str(uuid.uuid4()))
 
 
 class DomainEvent(Value):
-    event_id: str = m.Field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: datetime = m.Field(default_factory=lambda: datetime.now(UTC))
+    event_id: str = u.Field(default_factory=lambda: str(uuid.uuid4()))
+    timestamp: datetime = u.Field(default_factory=lambda: datetime.now(UTC))
 ```
 
 **Benefícios:**
@@ -8597,7 +8601,7 @@ class FlextCliCore(s[CliDataDict, FlextCliSettings]):
 ✅ **No magic** - Sem naming convention implícita
 ✅ **Fail fast** - Type error se settings errado
 
-#### **Solução 4: Pydantic Fields + execute() Pattern**
+#### **Solução 4: Pydantic u.Fields + execute() Pattern**
 
 **Proposta (seguindo documento):**
 
@@ -8662,7 +8666,7 @@ class FlextCliCore(s[CliDataDict]):
 def execute_with_context_cleanup(self) -> p.Result[TDomainResult]: ...
 
 
-@deprecated("Use Pydantic @model_validator instead")
+@deprecated("Use Pydantic @u.model_validator instead")
 def validate_business_rules(self) -> p.Result[bool]: ...
 ```
 
@@ -9082,17 +9086,17 @@ class IdentifiableMixin(m.BaseModel):
     """Mixin for models with unique identifiers.
 
     Note:
-        Field renamed from 'id' to 'unique_id' to avoid conflicts with common
+        u.Field renamed from 'id' to 'unique_id' to avoid conflicts with common
         domain model fields named 'id'.
     """
 
-    unique_id: str = m.Field(default_factory=lambda: str(uuid.uuid4()))
+    unique_id: str = u.Field(default_factory=lambda: str(uuid.uuid4()))
 ```
 
 ```python
 # flext-core/src/flext_core/constants.py
 class Mixins:
-    FIELD_ID = "unique_id"  # Changed from "id"
+    u.FIELD_ID = "unique_id"  # Changed from "id"
 ```
 
 **Benefício:**
@@ -9215,7 +9219,7 @@ class TestBackwardCompatibility:
 - `User(id=...)` → `User(unique_id=...)`
 - `assert "id" in dumped` → `assert "unique_id" in dumped`
 - `hasattr(obj, "id")` → `hasattr(obj, "unique_id")`
-- `FlextConstants.FIELD_ID == "id"` → `== "unique_id"`
+- `FlextConstants.u.FIELD_ID == "id"` → `== "unique_id"`
 
 ### 📈 Métricas de Sucesso
 
@@ -9341,7 +9345,7 @@ if result.is_success:
 
 - ✅ `flext-core/src/flext_core/service.py` - Auto-execute + .result property
 - ✅ `flext-core/src/flext_core/models.py` - unique_id migration
-- ✅ `flext-core/src/flext_core/constants.py` - FIELD_ID = "unique_id"
+- ✅ `flext-core/src/flext_core/constants.py` - u.FIELD_ID = "unique_id"
 - ✅ `flext-core/src/flext_core/mixins.py` - Referencias atualizadas
 
 #### Tests Created

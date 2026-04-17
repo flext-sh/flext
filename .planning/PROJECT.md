@@ -25,11 +25,11 @@ Zero type errors, zero typing shortcuts, zero workarounds — a clean, strict, f
 - ✓ **TYPE-08**: All empty container literals annotated at assignment sites — v1.0
 - ✓ **ARCH-01**: All public APIs use protocol types (`p.*`) not concrete types — DIP enforced — v1.0
 - ✓ **ARCH-02**: `c,m,t,u,p` imported from local namespace root in tests/examples/scripts — v1.0
-- ✓ **ARCH-03**: Pydantic v2 `Field()` migrated to `Annotated[X, m.Field(...)]` canonical form — v1.0
+- ✓ **ARCH-03**: Pydantic v2 `u.Field()` migrated to `Annotated[X, u.Field(...)]` canonical form — v1.0
 - ✓ **ARCH-04**: 6 pure ABCs converted to `@runtime_checkable` Protocol — v1.0
 - ✓ **ARCH-05**: 8 template ABCs have Protocol interface extracted — v1.0
 - ✓ **ARCH-06**: ~100 inline `TypeAdapter()` instantiations cached as ClassVar/module constants — v1.0
-- ✓ **ARCH-07**: 13 mutable `Field(default=[])` replaced with `default_factory=list` — v1.0
+- ✓ **ARCH-07**: 13 mutable `u.Field(default=[])` replaced with `default_factory=list` — v1.0
 - ✓ **ARCH-08**: Type aliases use PEP 695 `type X = ...` form — v1.0
 - ✓ **INFRA-01**: `u.Infra.run_cli()` centralizes bootstrap + dispatch + error-to-exit — v1.0
 - ✓ **INFRA-02**: `u.Infra.iter_projects()` centralizes project iteration — v1.0
@@ -71,6 +71,7 @@ Zero type errors, zero typing shortcuts, zero workarounds — a clean, strict, f
 ## Context
 
 **Shipped v1.0** — 2026-03-25
+
 - 8 phases, 28 plans, 39 requirements delivered
 - 4,385 → 0 pyrefly errors
 - Poetry → uv: 33 `poetry.lock` files → 1 `uv.lock`
@@ -101,7 +102,7 @@ Zero type errors, zero typing shortcuts, zero workarounds — a clean, strict, f
 | Dynamic TypeAdapter accepted as uncacheable | ~7 instances in flext-core use runtime type params — accepted as uncacheable | ✓ Good |
 | PEP 695 type aliases mandatory | Test fixtures with old syntax preserved as validator test data only | ✓ Good |
 | ProviderConfiguration as BaseModel with extra=allow | Dict-like flexibility preserved without UserDict | ✓ Good |
-| BeforeValidator pattern for StrEnum coercion | Strict Pydantic models + StrEnum coercion at field level, not model level | ✓ Good |
+| m.BeforeValidator pattern for StrEnum coercion | Strict Pydantic models + StrEnum coercion at field level, not model level | ✓ Good |
 | Phase 8 gap closure | 30 bare except + 8 sys.exit() + print() residuals from Phase 3 audit — addressed in dedicated phase | ✓ Good |
 
 ---

@@ -8,11 +8,12 @@
 
 ## Summary
 
-All target-* projects in the FLEXT workspace have been successfully converted from bare Pydantic Field constraints to use the flext-core `t.*` validation type system. The refactor improves code clarity, consistency, and type safety across the workspace.
+All target-* projects in the FLEXT workspace have been successfully converted from bare Pydantic u.Field constraints to use the flext-core `t.*` validation type system. The refactor improves code clarity, consistency, and type safety across the workspace.
 
 ## Projects Converted
 
 ### 1. ✅ flext-target-ldif
+
 - **Status:** Complete
 - **Conversions:** 17 type changes
 - **Files Modified:** 1
@@ -24,6 +25,7 @@ All target-* projects in the FLEXT workspace have been successfully converted fr
   - 1 `int` with ge/le constraints → `t.PositiveInt`
 
 ### 2. ✅ flext-target-ldap
+
 - **Status:** Complete
 - **Conversions:** 15 type changes
 - **Files Modified:** 1
@@ -35,6 +37,7 @@ All target-* projects in the FLEXT workspace have been successfully converted fr
   - 1 `int` with gt/le constraints → `t.BatchSize`
 
 ### 3. ✅ flext-target-oracle
+
 - **Status:** Complete
 - **Conversions:** 14 type changes + import added
 - **Files Modified:** 1
@@ -50,11 +53,13 @@ All target-* projects in the FLEXT workspace have been successfully converted fr
     - `parallel_degree` → `t.PositiveInt`
 
 ### 4. ✅ flext-target-oracle-oic
+
 - **Status:** Already clean (no conversions needed)
 - **Files Modified:** 0
 - **Notes:** Project already uses clean type definitions with no bare constraints
 
 ### 5. ✅ flext-target-oracle-wms
+
 - **Status:** Complete
 - **Conversions:** 3 type changes
 - **Files Modified:** 1
@@ -92,19 +97,21 @@ t.NonNegativeFloat  # float with ge=0.0
 ## Code Quality Impact
 
 ### Before
+
 ```python
-# Bare constraints scattered in m.Field()
-batch_size: Annotated[int, m.Field(ge=1, le=10000)]
-processing_time: Annotated[float, m.Field(ge=0.0)]
-field_name: Annotated[str, m.Field(min_length=1, max_length=255)]
+# Bare constraints scattered in u.Field()
+batch_size: Annotated[int, u.Field(ge=1, le=10000)]
+processing_time: Annotated[float, u.Field(ge=0.0)]
+field_name: Annotated[str, u.Field(min_length=1, max_length=255)]
 ```
 
 ### After
+
 ```python
 # Clear, consistent type intent
-batch_size: Annotated[t.BatchSize, m.Field(...)]
-processing_time: Annotated[t.NonNegativeFloat, m.Field(...)]
-field_name: Annotated[t.NonEmptyStr, m.Field(...)]
+batch_size: Annotated[t.BatchSize, u.Field(...)]
+processing_time: Annotated[t.NonNegativeFloat, u.Field(...)]
+field_name: Annotated[t.NonEmptyStr, u.Field(...)]
 ```
 
 ## Benefits
@@ -169,20 +176,20 @@ Ready for commits with messages like:
 ```
 refactor(target-ldif): apply t.* validation types to models
 
-- Replace 17 bare Field constraints with t.* types
+- Replace 17 bare u.Field constraints with t.* types
 - Use t.NonEmptyStr, t.NonNegativeInt, t.NonNegativeFloat, t.BatchSize
 - Improve type safety and consistency across project
 
 refactor(target-ldap): apply t.* validation types to models
 
-- Replace 15 bare Field constraints with t.* types
+- Replace 15 bare u.Field constraints with t.* types
 - Use framework-independent validation types from flext-core
 - Improve code clarity and maintainability
 
 refactor(target-oracle): apply t.* validation types to models
 
 - Add import: from flext_core import t
-- Replace 14 bare Field constraints with t.* types
+- Replace 14 bare u.Field constraints with t.* types
 - Support specific types: t.PortNumber, t.PositiveInt, t.BatchSize
 
 refactor(target-oracle-wms): apply t.* validation types to models
@@ -195,6 +202,7 @@ refactor(target-oracle-wms): apply t.* validation types to models
 ## Documentation
 
 Supporting documentation created:
+
 - `/home/marlonsc/flext/.planning/TARGET_CONVERSION_SUMMARY.md` - Detailed conversion reference
 - `/home/marlonsc/flext/.planning/TARGET_VALIDATION_TYPES_REFACTOR.md` - Complete refactor guide
 - `/home/marlonsc/flext/.planning/COMPLETION_REPORT.md` - This file
@@ -210,6 +218,7 @@ Supporting documentation created:
 ## Backward Compatibility
 
 ✅ **Fully Compatible**
+
 - No API changes
 - No behavioral changes
 - Only internal implementation details changed

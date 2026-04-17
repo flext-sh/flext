@@ -61,7 +61,7 @@ from flext_core import c, m, p, r, t
 class PayloadModel(m.Value):
     """Value object representing a named payload."""
 
-    name: Annotated[t.NonEmptyStr, m.Field(description="Payload name")]
+    name: Annotated[t.NonEmptyStr, u.Field(description="Payload name")]
 
 
 def parse_name(value: PayloadModel) -> p.Result[str]:
@@ -71,10 +71,10 @@ def parse_name(value: PayloadModel) -> p.Result[str]:
     return r[str].ok(value.name)
 ```
 
-
 ## Detailed Import Rules
 
 Full import rule enforcement is in [references/import-rules-detail.md](references/import-rules-detail.md). Load it when you need rule-level detail on:
+
 - `from __future__ import annotations` + `from collections.abc import Mapping, Sequence` requirements
 - Import ordering (future / stdlib / third-party / first-party / local)
 - Cross-project import rules and tier enforcement

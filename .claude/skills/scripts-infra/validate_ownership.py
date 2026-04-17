@@ -49,14 +49,14 @@ class SkillInfraError(Exception):
 class ScriptCheckResult(m.BaseModel):
     """ScriptCheckResult class."""
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
+    model_config: ClassVar[m.ConfigDict] = ConfigDict(frozen=True)
 
-    script: str = m.Field(description="Script file path")
-    status: str = m.Field(description="Validation status (OK, UNOWNED, VIOLATION)")
-    details: str = m.Field(description="Detailed status message")
+    script: str = u.Field(description="Script file path")
+    status: str = u.Field(description="Validation status (OK, UNOWNED, VIOLATION)")
+    details: str = u.Field(description="Detailed status message")
     owner_skill: Annotated[
         str | None,
-        m.Field(
+        u.Field(
             description="Owner skill identifier if applicable",
         ),
     ] = None

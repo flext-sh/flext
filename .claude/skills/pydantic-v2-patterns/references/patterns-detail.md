@@ -8,7 +8,7 @@ Use `Annotated` aliases to avoid duplicating validation logic across models.
 
 ```python
 from typing import Annotated
-from pydantic import AfterValidator, BeforeValidator, PlainValidator
+from pydantic import AfterValidator, m.BeforeValidator, PlainValidator
 
 
 def strip_whitespace(v: str) -> str:
@@ -42,7 +42,7 @@ def validate_uuid_string(v: str) -> str:
 
 StrippedString = Annotated[str, AfterValidator(strip_whitespace)]
 ValidatedString = Annotated[str, AfterValidator(validate_non_empty)]
-NormalizedList = Annotated[t.RecursiveContainerList, BeforeValidator(normalize_to_list)]
+NormalizedList = Annotated[t.RecursiveContainerList, m.BeforeValidator(normalize_to_list)]
 UUIDStr = Annotated[str, PlainValidator(validate_uuid_string)]
 ```
 
@@ -61,13 +61,13 @@ Normalize broad input forms before typed validation.
 
 ```python
 from collections.abc import Mapping
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, u.Field, u.field_validator
 
 
 class Metadata(m.BaseModel):
-    attributes: t.RecursiveContainerMapping = m.Field(default_factory=dict)
+    attributes: t.RecursiveContainerMapping = u.Field(default_factory=dict)
 
-    @field_validator("attributes", mode="before")
+    @u.field_validator("attributes", mode="before")
     @classmethod
     def normalize_attributes(cls, value) -> t.RecursiveContainerMapping:
         if value is None:
@@ -95,13 +95,13 @@ Use when:
 Validate business semantics after Pydantic has typed the field.
 
 ```python
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, u.Field, u.field_validator
 
 
 class RetryConfiguration(m.BaseModel):
-    retry_on_status_codes: Sequence[int] = m.Field(default_factory=list)
+    retry_on_status_codes: Sequence[int] = u.Field(default_factory=list)
 
-    @field_validator("retry_on_status_codes", mode="after")
+    @u.field_validator("retry_on_status_codes", mode="after")
     @classmethod
     def validate_status_codes(cls, values: Sequence[int]) -> Sequence[int]:
         for code in values:
@@ -116,7 +116,7 @@ Repository anchor:
 
 Use when:
 
-- Field is already typed and the next step is domain-level acceptance/rejection.
+- u.Field is already typed and the next step is domain-level acceptance/rejection.
 
 #### Pattern D: Cross-field model validator
 
@@ -124,14 +124,14 @@ Enforce invariants involving more than one field.
 
 ```python
 from typing import Self
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, u.Field, u.model_validator
 
 
 class RetryWindow(m.BaseModel):
-    initial_delay_seconds: float = m.Field(gt=0)
-    max_delay_seconds: float = m.Field(gt=0)
+    initial_delay_seconds: float = u.Field(gt=0)
+    max_delay_seconds: float = u.Field(gt=0)
 
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_window(self) -> Self:
         if self.max_delay_seconds < self.initial_delay_seconds:
             raise ValueError("max_delay_seconds must be >= initial_delay_seconds")
@@ -149,7 +149,7 @@ Use when:
 
 ---
 
-### Computed Fields
+### Computed u.Fields
 
 #### Pattern A: Derived status/value properties
 
@@ -157,11 +157,11 @@ Use computed fields for values derived from stored fields.
 
 ```python
 from datetime import UTC, datetime
-from pydantic import BaseModel, Field, computed_field
+from pydantic import BaseModel, u.Field, u.computed_field
 
 
 class TimestampedModel(m.BaseModel):
-    created_at: datetime = m.Field(default_factory=lambda: datetime.now(UTC))
+    created_at: datetime = u.Field(default_factory=lambda: datetime.now(UTC))
     updated_at: datetime | None = None
 
     @u.computed_field
@@ -188,12 +188,12 @@ Repository anchor:
 Use multiple small computed fields to keep state reporting explicit.
 
 ```python
-from pydantic import BaseModel, Field, computed_field
+from pydantic import BaseModel, u.Field, u.computed_field
 
 
 class RegistrationSummary(m.BaseModel):
-    registered: t.StrSequence = m.Field(default_factory=list)
-    errors: t.StrSequence = m.Field(default_factory=list)
+    registered: t.StrSequence = u.Field(default_factory=list)
+    errors: t.StrSequence = u.Field(default_factory=list)
 
     @u.computed_field
     def success(self) -> bool:
@@ -217,7 +217,7 @@ Repository anchor:
 Expose internal runtime composition as a stable read-only surface.
 
 ```python
-from pydantic import computed_field
+from pydantic import u.computed_field
 
 
 class ServiceRuntimeHolder:
@@ -322,13 +322,13 @@ Guidance:
 
 ```python
 from datetime import datetime
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel, u.field_serializer
 
 
 class AuditModel(m.BaseModel):
     created_at: datetime
 
-    @field_serializer("created_at", when_used="json")
+    @u.field_serializer("created_at", when_used="json")
     def serialize_created_at(self, value: datetime) -> str:
         return value.isoformat()
 ```
@@ -342,14 +342,14 @@ Repository anchors:
 
 ```python
 from datetime import datetime
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel, u.field_serializer
 
 
 class TimestampPair(m.BaseModel):
     created_at: datetime | None
     updated_at: datetime | None
 
-    @field_serializer("created_at", "updated_at", when_used="json")
+    @u.field_serializer("created_at", "updated_at", when_used="json")
     def serialize_timestamps(self, value: datetime | None) -> str | None:
         return value.isoformat() if value else None
 ```
@@ -362,15 +362,15 @@ Repository anchor:
 
 ```python
 from datetime import UTC, datetime
-from pydantic import BaseModel, field_serializer
-from pydantic_core.core_schema import FieldSerializationInfo
+from pydantic import BaseModel, u.field_serializer
+from pydantic_core.core_schema import u.FieldSerializationInfo
 
 
 class EnvelopeModel(m.BaseModel):
     include_metadata: bool = True
 
-    @field_serializer("*", when_used="json")
-    def serialize_with_metadata(self, value, _info: FieldSerializationInfo):
+    @u.field_serializer("*", when_used="json")
+    def serialize_with_metadata(self, value, _info: u.FieldSerializationInfo):
         if not self.include_metadata:
             return value
         if isinstance(value, dict):
@@ -514,4 +514,3 @@ Guidance:
 - Use adapter wrappers when runtime type is generic or dynamic.
 
 ---
-

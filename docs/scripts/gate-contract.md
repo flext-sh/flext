@@ -66,19 +66,19 @@ Canonical implementations in this repository:
 
 Required flags:
 
-| Flag                      | Type   | Default    | Description                   |
-| ------------------------- | ------ | ---------- | ----------------------------- |
-| `--root <path>`           | string | `.`        | Repository root to scan       |
-| `--mode baseline\|strict` | enum   | `baseline` | Enforcement level (see Modes) |
+| Flag              | Type    | Default | Description             |                               |
+| ----------------- | ------- | ------- | ----------------------- | ----------------------------- |
+| `--root <path>`   | string  | `.`     | Repository root to scan |                               |
+| `--mode baseline\ | strict` | enum    | `baseline`              | Enforcement level (see Modes) |
 
 Optional flags:
 
-| Flag                                   | Type    | Default          | Description                          |
-| -------------------------------------- | ------- | ---------------- | ------------------------------------ |
-| `--report-file <path>`                 | string  | contract default | Override report output path          |
-| `--baseline-file <path>`               | string  | contract default | Override baseline path               |
-| `--update-baseline`                    | boolean | `false`          | Write current counts as new baseline |
-| `--baseline-strategy total\|per_group` | enum    | `total`          | Baseline comparison method           |
+| Flag                        | Type       | Default          | Description                          |                            |
+| --------------------------- | ---------- | ---------------- | ------------------------------------ | -------------------------- |
+| `--report-file <path>`      | string     | contract default | Override report output path          |                            |
+| `--baseline-file <path>`    | string     | contract default | Override baseline path               |                            |
+| `--update-baseline`         | boolean    | `false`          | Write current counts as new baseline |                            |
+| `--baseline-strategy total\ | per_group` | enum             | `total`                              | Baseline comparison method |
 
 Validators must also accept `--root` as a positional argument (last arg fallback)
 for backward compatibility with existing callers.
@@ -95,10 +95,10 @@ Required flags:
 
 Optional flags:
 
-| Flag                   | Type   | Default          | Description                 |
-| ---------------------- | ------ | ---------------- | --------------------------- |
-| `--mode safe\|risky`   | enum   | `safe`           | Fix aggressiveness level    |
-| `--report-file <path>` | string | contract default | Override report output path |
+| Flag                   | Type   | Default          | Description                 |                          |
+| ---------------------- | ------ | ---------------- | --------------------------- | ------------------------ |
+| `--mode safe\          | risky` | enum             | `safe`                      | Fix aggressiveness level |
+| `--report-file <path>` | string | contract default | Override report output path |                          |
 
 A fixer must refuse to run if neither `--dry-run` nor `--apply` is provided (exit 2).
 

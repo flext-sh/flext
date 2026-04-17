@@ -33,6 +33,7 @@ description: FlextLogger structured logging with context propagation, DI factori
 - **Never** create loggers with `structlog.get_logger()` directly — use `FlextLogger.create_module_logger(name)` or `FlextLogger.for_container(container)`.
 - Bind context via `FlextLogger.Context` methods — never modify `structlog.contextvars` directly.
 - Clean up scoped contexts to prevent leakage across requests/operations.
+
 ## Instructions
 
 ### FlextLogger Class Hierarchy

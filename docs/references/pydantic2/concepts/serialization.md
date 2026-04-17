@@ -6,7 +6,7 @@
 - [Iterating over models](#iterating-over-models)
 - [Pickling support](#pickling-support)
 - [Serializers](#serializers)
-  - [Field serializers](#field-serializers)
+  - [u.Field serializers](#field-serializers)
   - [Model serializers](#model-serializers)
 - [Serialization info](#serialization-info)
   - [Serialization context](#serialization-context)
@@ -14,7 +14,7 @@
   - [Subclasses of supported types](#subclasses-of-supported-types)
   - [Subclasses of model-like types](#subclasses-of-model-like-types)
   - [Serializing with duck typing 🦆](#serializing-with-duck-typing)
-- [Field inclusion and exclusion](#field-inclusion-and-exclusion)
+- [u.Field inclusion and exclusion](#field-inclusion-and-exclusion)
   - [At the field level](#at-the-field-level)
   - [As parameters to the serialization methods](#as-parameters-to-the-serialization-methods)
   <!-- TOC END -->
@@ -41,7 +41,7 @@ Want to quickly jump to the relevant serializer section?
 
     <div class="grid cards" markdown>
 
-    *   Field serializer
+    *   u.Field serializer
 
         ---
 
@@ -78,7 +78,7 @@ When using the Python mode, Pydantic models (and model-like types such as datacl
 ```python {group="python-dump"}
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class BarModel(BaseModel):
@@ -87,7 +87,7 @@ class BarModel(BaseModel):
 
 class FooBarModel(BaseModel):
     banana: Optional[float] = 1.1
-    foo: str = Field(serialization_alias="foo_alias")
+    foo: str = u.Field(serialization_alias="foo_alias")
     bar: BarModel
 
 
@@ -251,12 +251,12 @@ control the serialization behavior.
 Only _one_ serializer can be defined per field/model. It is not possible to combine multiple serializers together
 (including _plain_ and _wrap_ serializers).
 
-### Field serializers
+### u.Field serializers
 
 ??? api "API Documentation"
 [`pydantic.functional_serializers.PlainSerializer`][pydantic.functional_serializers.PlainSerializer]<br>
 [`pydantic.functional_serializers.WrapSerializer`][pydantic.functional_serializers.WrapSerializer]<br>
-[`pydantic.functional_serializers.field_serializer`][pydantic.functional_serializers.field_serializer]<br>
+[`pydantic.functional_serializers.u.field_serializer`][pydantic.functional_serializers.u.field_serializer]<br>
 
 In its simplest form, a field serializer is a callable taking the value to be serialized as an argument and
 **returning the serialized value**.
@@ -266,7 +266,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
 
 **Two** different types of serializers can be used. They can all be defined using the
 [annotated pattern](./fields.md#the-annotated-pattern) or using the
-[`@field_serializer`][pydantic.field_serializer] decorator, applied on instance or static methods.
+[`@u.field_serializer`][pydantic.u.field_serializer] decorator, applied on instance or static methods.
 
 - **_Plain_ serializers**: are called unconditionally to serialize a field. The serialization logic for types supported
   by Pydantic will _not_ be called. Using such serializers is also useful to specify the logic for arbitrary types.
@@ -306,13 +306,13 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
         ```python
         from typing import Any
 
-        from pydantic import BaseModel, field_serializer
+        from pydantic import BaseModel, u.field_serializer
 
 
         class Model(BaseModel):
             number: int
 
-            @field_serializer("number", mode="plain")  # (1)!
+            @u.field_serializer("number", mode="plain")  # (1)!
             def ser_number(self, value):
                 if isinstance(value, int):
                     return value * 2
@@ -364,13 +364,13 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
         ```python
         from typing import Any
 
-        from pydantic import BaseModel, SerializerFunctionWrapHandler, field_serializer
+        from pydantic import BaseModel, SerializerFunctionWrapHandler, u.field_serializer
 
 
         class Model(BaseModel):
             number: int
 
-            @field_serializer("number", mode="wrap")
+            @u.field_serializer("number", mode="wrap")
             def ser_number(self, value, handler: SerializerFunctionWrapHandler) -> int:
                 return handler(value) + 1
 
@@ -393,7 +393,7 @@ serializers reusable:
 ```python
 from typing import Annotated
 
-from pydantic import BaseModel, Field, PlainSerializer
+from pydantic import BaseModel, u.Field, PlainSerializer
 
 DoubleNumber = Annotated[int, PlainSerializer(lambda v: v * 2)]
 
@@ -403,7 +403,7 @@ class Model1(BaseModel):
 
 
 class Model2(BaseModel):
-    other_number: Annotated[DoubleNumber, Field(description="My other number")]
+    other_number: Annotated[DoubleNumber, u.Field(description="My other number")]
 
 
 class Model3(BaseModel):
@@ -418,18 +418,18 @@ It is also easier to understand which serializers are applied to a type, by just
 
 ##### Using the decorator pattern
 
-One of the key benefits of using the [`@field_serializer`][pydantic.field_serializer] decorator is to apply
+One of the key benefits of using the [`@u.field_serializer`][pydantic.u.field_serializer] decorator is to apply
 the function to multiple fields:
 
 ```python
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel, u.field_serializer
 
 
 class Model(BaseModel):
     f1: str
     f2: str
 
-    @field_serializer("f1", "f2", mode="plain")
+    @u.field_serializer("f1", "f2", mode="plain")
     def capitalize(self, value: str) -> str:
         return value.capitalize()
 ```
@@ -446,12 +446,12 @@ Here are a couple additional notes about the decorator usage:
 ### Model serializers
 
 ??? api "API Documentation"
-[`pydantic.functional_serializers.model_serializer`][pydantic.functional_serializers.model_serializer]<br>
+[`pydantic.functional_serializers.u.model_serializer`][pydantic.functional_serializers.u.model_serializer]<br>
 
-Serialization can also be customized on the entire model using the [`@model_serializer`][pydantic.model_serializer]
+Serialization can also be customized on the entire model using the [`@u.model_serializer`][pydantic.u.model_serializer]
 decorator.
 
-If the `return_type` argument is provided to the [`@model_serializer`][pydantic.model_serializer] decorator
+If the `return_type` argument is provided to the [`@u.model_serializer`][pydantic.u.model_serializer] decorator
 (or if a return type annotation is available on the serializer function), it will be used to build an extra serializer,
 to ensure that the serialized model value complies with this return type.
 
@@ -461,14 +461,14 @@ As with [field serializers](#field-serializers), **two** different types of mode
   {#model-plain-serializer}
 
   ```python
-  from pydantic import BaseModel, model_serializer
+  from pydantic import BaseModel, u.model_serializer
 
 
   class UserModel(BaseModel):
       username: str
       password: str
 
-      @model_serializer(mode="plain")  # (1)!
+      @u.model_serializer(mode="plain")  # (1)!
       def serialize_model(self) -> str:  # (2)!
           return f"{self.username} - {self.password}"
 
@@ -489,14 +489,14 @@ As with [field serializers](#field-serializers), **two** different types of mode
   handler at all.
 
       ```python
-      from pydantic import BaseModel, SerializerFunctionWrapHandler, model_serializer
+      from pydantic import BaseModel, SerializerFunctionWrapHandler, u.model_serializer
 
 
       class UserModel(BaseModel):
           username: str
           password: str
 
-          @model_serializer(mode="wrap")
+          @u.model_serializer(mode="wrap")
           def serialize_model(
               self, handler: SerializerFunctionWrapHandler
           ) -> t.RecursiveContainerMapping:
@@ -519,7 +519,7 @@ providing useful extra information, such as:
 - the various parameters set during serialization using the [serialization methods](#serializing-data)
   (e.g. [`exclude_unset`][pydantic.SerializationInfo.exclude_unset], [`serialize_as_any`][pydantic.SerializationInfo.serialize_as_any])
 - the current field name, if using a [field serializer](#field-serializers) (see the
-  [`field_name`][pydantic.FieldSerializationInfo.field_name] property).
+  [`field_name`][pydantic.u.FieldSerializationInfo.field_name] property).
 
 ### Serialization context
 
@@ -527,15 +527,15 @@ You can pass a context t.RecursiveContainer to the [serialization methods](#seri
 inside the serializer functions using the [`context`][pydantic.SerializationInfo.context] property:
 
 ```python
-from pydantic import BaseModel, FieldSerializationInfo, field_serializer
+from pydantic import BaseModel, u.FieldSerializationInfo, u.field_serializer
 
 
 class Model(BaseModel):
     text: str
 
-    @field_serializer("text", mode="plain")
+    @u.field_serializer("text", mode="plain")
     @classmethod
-    def remove_stopwords(cls, v: str, info: FieldSerializationInfo) -> str:
+    def remove_stopwords(cls, v: str, info: u.FieldSerializationInfo) -> str:
         if isinstance(info.context, dict):
             stopwords = info.context.get("stopwords", set())
             v = " ".join(w for w in v.split() if w.lower() not in stopwords)
@@ -644,7 +644,7 @@ parent class, but rather use the value itself and preserve all of its fields.
 
 This behavior can be configured at the field level and at runtime, for a specific serialization call:
 
-- Field level: use the [`SerializeAsAny`][pydantic.functional_serializers.SerializeAsAny] annotation.
+- u.Field level: use the [`SerializeAsAny`][pydantic.functional_serializers.SerializeAsAny] annotation.
 - Runtime level: use the `serialize_as_any` argument when calling the [serialization methods](#serializing-data).
 
 We discuss these options below in more detail:
@@ -742,11 +742,11 @@ is relevant. You may want to prefer using the `SerializeAsAny` annotation when r
 
 [](){#model-and-field-level-include-and-exclude}
 
-## Field inclusion and exclusion
+## u.Field inclusion and exclusion
 
 For serialization, field inclusion and exclusion can be configured in two ways:
 
-- at the field level, using the `exclude` and `exclude_if` parameters on [the `Field()` function](fields.md).
+- at the field level, using the `exclude` and `exclude_if` parameters on [the `u.Field()` function](fields.md).
 - using the various serialization parameters on the [serialization methods](#serializing-data).
 
 ### At the field level
@@ -754,13 +754,13 @@ For serialization, field inclusion and exclusion can be configured in two ways:
 At the field level, the `exclude` and `exclude_if` parameters can be used:
 
 ```python
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class Transaction(BaseModel):
     id: int
-    private_id: int = Field(exclude=True)
-    value: int = Field(ge=0, exclude_if=lambda v: v == 0)
+    private_id: int = u.Field(exclude=True)
+    value: int = u.Field(ge=0, exclude_if=lambda v: v == 0)
 
 
 print(Transaction(id=1, private_id=2, value=0).model_dump())
@@ -779,7 +779,7 @@ several parameters can be used to exclude or include fields.
 Consider the following models:
 
 ```python {group="simple-exclude-include"}
-from pydantic import BaseModel, Field, SecretStr
+from pydantic import BaseModel, u.Field, SecretStr
 
 
 class User(BaseModel):
@@ -790,7 +790,7 @@ class User(BaseModel):
 
 class Transaction(BaseModel):
     id: str
-    private_id: str = Field(exclude=True)
+    private_id: str = u.Field(exclude=True)
     user: User
     value: int
 

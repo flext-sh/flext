@@ -230,10 +230,10 @@ type RepositoryConfig struct {
 
 // RepositoryFactory creates repository instances
 type RepositoryFactory interface {
-	CreatePipelineRepository(settings RepositoryConfig) (interface{}, error)
-	CreatePluginRepository(settings RepositoryConfig) (interface{}, error)
-	CreateUserRepository(settings RepositoryConfig) (interface{}, error)
-	CreateExecutionRepository(settings RepositoryConfig) (interface{}, error)
+	CreatePipelineRepository(config RepositoryConfig) (interface{}, error)
+	CreatePluginRepository(config RepositoryConfig) (interface{}, error)
+	CreateUserRepository(config RepositoryConfig) (interface{}, error)
+	CreateExecutionRepository(config RepositoryConfig) (interface{}, error)
 }
 
 // Common repository interfaces for specific entities

@@ -114,6 +114,7 @@ The baseline applies to FLEXT platform packages, domain packages, integrations, 
 - this is a hard cut with no compatibility layer
 - public names, files, and methods will change across the workspace
 - documentation and enforcement must move together with the implementation
+
 ## Alternatives Considered
 
 - Keep the current hybrid `FlextRegistry`

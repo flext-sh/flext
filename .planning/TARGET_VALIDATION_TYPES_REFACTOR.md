@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle, flext-target-oracle-oic, flext-target-oracle-wms) have been successfully converted from bare Pydantic Field constraints to use the flext-core `t.*` validation type aliases.
+All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle, flext-target-oracle-oic, flext-target-oracle-wms) have been successfully converted from bare Pydantic u.Field constraints to use the flext-core `t.*` validation type aliases.
 
 **Key Achievement:** 100% of bare constraint patterns replaced with portable, framework-independent type aliases.
 
@@ -24,6 +24,7 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
 ## Detailed Conversions by Project
 
 ### Project 1: flext-target-ldif (17 conversions)
+
 - **File:** `/home/marlonsc/flext/flext-target-ldif/src/flext_target_ldif/models.py`
 - **Classes Modified:** 6
   - `LdifFormatOptions`: 1 conversion
@@ -35,6 +36,7 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
   - `LdifTargetResult`: 5 conversions
 
 **Conversions:**
+
 ```
 ✅ line_length: int → t.PositiveInt
 ✅ distinguished_name: str → t.NonEmptyStr
@@ -56,6 +58,7 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
 ```
 
 ### Project 2: flext-target-ldap (15 conversions)
+
 - **File:** `/home/marlonsc/flext/flext-target-ldap/src/flext_target_ldap/models.py`
 - **Classes Modified:** 5
   - `AttributeMapping`: 2 conversions
@@ -65,6 +68,7 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
   - `OperationStatistics`: 6 conversions
 
 **Conversions:**
+
 ```
 ✅ singer_field_name: str → t.NonEmptyStr
 ✅ ldap_attribute_name: str → t.NonEmptyStr
@@ -83,6 +87,7 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
 ```
 
 ### Project 3: flext-target-oracle (14 conversions + import added)
+
 - **File:** `/home/marlonsc/flext/flext-target-oracle/src/flext_target_oracle/models.py`
 - **Import Added:** `from flext_core import t` (line 8)
 - **Classes Modified:** 6
@@ -94,6 +99,7 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
   - `ImplementationMetrics`: 2 conversions
 
 **Conversions:**
+
 ```
 ✅ messages_processed: int → t.NonNegativeInt
 ✅ records_loaded: int → t.NonNegativeInt
@@ -112,17 +118,20 @@ All target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle
 ```
 
 ### Project 4: flext-target-oracle-oic (0 conversions)
+
 - **File:** `/home/marlonsc/flext/flext-target-oracle-oic/src/flext_target_oracle_oic/models.py`
 - **Status:** Already uses clean type definitions, no bare constraints found
 - **Import Status:** Already has `from flext_core import t`
 
 ### Project 5: flext-target-oracle-wms (3 conversions)
+
 - **File:** `/home/marlonsc/flext/flext-target-oracle-wms/src/flext_target_oracle_wms/models.py`
 - **Classes Modified:** 2
   - `WmsTargetSettings`: 1 conversion
   - `WmsTargetResult`: 3 conversions
 
 **Conversions:**
+
 ```
 ✅ batch_size: int → t.BatchSize
 ✅ total_records_processed: int → t.NonNegativeInt
@@ -152,13 +161,15 @@ t.NonNegativeFloat = Annotated[float, Ge(0.0)]  # ge=0.0
 ## Impact Analysis
 
 ### Before Conversion
-- 49 fields used bare Pydantic Field constraints
+
+- 49 fields used bare Pydantic u.Field constraints
 - Constraints not portable across frameworks
 - Type intent not clear from signature
 - Duplication of constraint definitions
 - Mixed patterns across projects
 
 ### After Conversion
+
 - 49 fields now use portable t.* type aliases
 - Single source of truth in flext-core
 - Clear intent: type signature shows constraints
@@ -223,6 +234,7 @@ t.NonNegativeFloat = Annotated[float, Ge(0.0)]  # ge=0.0
 ## Next Steps for CI/CD
 
 1. **Run tests for each project:**
+
    ```bash
    cd /home/marlonsc/flext/flext-target-ldif && make check && make test
    cd /home/marlonsc/flext/flext-target-ldap && make check && make test
@@ -232,18 +244,21 @@ t.NonNegativeFloat = Annotated[float, Ge(0.0)]  # ge=0.0
    ```
 
 2. **Type checking:**
+
    ```bash
    mypy flext-target-*
    pyright flext-target-*
    ```
 
 3. **Linting:**
+
    ```bash
    ruff check flext-target-*
    pyrefly flext-target-*
    ```
 
 4. **Create commits:**
+
    ```bash
    cd flext-target-ldif && git add src/... && git commit -m "refactor(target-ldif): apply t.* validation types to models"
    cd flext-target-ldap && git add src/... && git commit -m "refactor(target-ldap): apply t.* validation types to models"

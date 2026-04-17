@@ -11,9 +11,11 @@ This phase migrates a 33-project Python monorepo from Poetry to uv workspaces. T
 **Primary recommendation:** Bootstrap by converting flext-infra first (modernizer lives there), then flext-core, flext-tests, then leaf consumers in waves. Run `uv lock --dry-run` after each wave to catch resolution conflicts early.
 
 <user_constraints>
+
 ## User Constraints (from CONTEXT.md)
 
 ### Locked Decisions
+
 - D-01: Keep current git repo strategy as-is -- submodules already in place. No history extraction.
 - D-02: Validate imports resolve correctly across all 33 consumers and CI checks out submodules.
 - D-03: Replace `@ file:////flext-infra` with bare workspace member names once uv workspace wired.
@@ -29,18 +31,21 @@ This phase migrates a 33-project Python monorepo from Poetry to uv workspaces. T
 - D-13: Clean up `.envrc` POETRY_VIRTUALENVS_* env vars.
 
 ### Claude's Discretion
+
 - Sequencing of incremental project conversion (which leaf projects first)
 - Handling of flext_infra.deps.modernizer during migration
 - Specific `[tool.uv.workspace]` member list syntax and grouping
 - Error handling strategy for `uv lock` resolution conflicts
 
 ### Deferred Ideas (OUT OF SCOPE)
+
 - PyPI publication automation for ~30 packages (v2)
 - CI/CD uv cache strategy optimization (v2)
 - Polylith workspace.toml with formal bases/components/projects categorization (v2)
 </user_constraints>
 
 <phase_requirements>
+
 ## Phase Requirements
 
 | ID | Description | Research Support |
@@ -64,17 +69,20 @@ This phase migrates a 33-project Python monorepo from Poetry to uv workspaces. T
 ## Standard Stack
 
 ### Core
+
 | Library | Version | Purpose | Why Standard |
 |---------|---------|---------|--------------|
 | uv | 0.10.12 (installed) | Package manager + workspace orchestrator | Already in .venv, replaces Poetry |
 | hatchling | latest | Build backend (PEP 517) | D-05 locked decision; lightweight, PEP 621 native |
 
 ### Supporting
+
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
 | hatch-vcs | latest | Version from git tags | Only if dynamic versioning needed (currently static) |
 
 ### Alternatives Considered
+
 | Instead of | Could Use | Tradeoff |
 |------------|-----------|----------|
 | hatchling | flit-core | hatchling more flexible for src-layout; flit simpler but less configurable |
@@ -85,6 +93,7 @@ This phase migrates a 33-project Python monorepo from Poetry to uv workspaces. T
 ### pyproject.toml Conversion Template
 
 **Before (Poetry):**
+
 ```toml
 [build-system]
 build-backend = "poetry.core.masonry.api"
@@ -100,6 +109,7 @@ dependencies = [
 ```
 
 **After (hatchling + uv workspace):**
+
 ```toml
 [build-system]
 build-backend = "hatchling.build"
@@ -187,6 +197,7 @@ Remove `[project.optional-dependencies].dev` entirely. uv supports `--group dev`
 7. **Wave 6 (root + cleanup):** Root pyproject.toml, delete all poetry.lock, remove Poetry from Makefiles/CI
 
 ### Anti-Patterns to Avoid
+
 - **Converting all at once:** One broken pyproject.toml blocks everything. Incremental per decision D-04.
 - **Keeping `@ file:` deps with uv workspace:** uv resolves workspace members by name automatically when `[tool.uv.sources]` is configured.
 - **Leaving `[tool.poetry]` sections:** Must be removed entirely -- hatchling ignores them but they're confusing.
@@ -202,31 +213,37 @@ Remove `[project.optional-dependencies].dev` entirely. uv supports `--group dev`
 ## Common Pitfalls
 
 ### Pitfall 1: `@ file:` syntax incompatibility
+
 **What goes wrong:** uv workspace members are referenced by package name, not file path. Leaving `@ file:../flext-core` breaks resolution.
 **How to avoid:** Replace ALL `@ file:` refs with bare package names AND add corresponding `[tool.uv.sources]` entries.
 **Warning signs:** `uv lock` fails with "could not find package" errors.
 
 ### Pitfall 2: hatchling src-layout package discovery
+
 **What goes wrong:** hatchling defaults to auto-discovery which may find wrong packages or miss the src/ layout.
 **How to avoid:** Explicitly set `[tool.hatch.build.targets.wheel] packages = ["src/flext_core"]` for each project.
 **Warning signs:** Built wheel missing source files or including test files.
 
 ### Pitfall 3: Singer SDK / dbt fork dependency conflicts
+
 **What goes wrong:** flext uses git forks of meltano and dbt-core (`flext/relax-deps`). These may conflict when resolved together in a single lockfile.
 **How to avoid:** Run `uv lock --dry-run` early (D-09). May need `[tool.uv.override]` for fork pins.
 **Warning signs:** `uv lock` hangs or produces resolution errors on meltano/dbt packages.
 
 ### Pitfall 4: Modernizer bootstrap chicken-and-egg
+
 **What goes wrong:** flext_infra.deps.modernizer manages [MANAGED] sections but itself needs conversion first.
 **How to avoid:** Manually convert flext-infra pyproject.toml FIRST, then update modernizer to emit hatchling, then use modernizer for remaining 32 projects.
 **Warning signs:** Running `make mod` after partial conversion breaks unconverted projects.
 
 ### Pitfall 5: `poetry run` in base.mk
+
 **What goes wrong:** base.mk uses `$(POETRY) run` ~15 times for ruff, pytest, pyright, pyrefly, radon, etc. Missing even one breaks that gate.
 **How to avoid:** Since tools are already in venv PATH (per .envrc and MEMORY), most `$(POETRY) run X` can become just `X`. For explicit isolation: `uv run X`.
 **Warning signs:** `make check` fails with "command not found" after Poetry removal.
 
 ### Pitfall 6: CI missing submodule checkout
+
 **What goes wrong:** Current CI uses basic `actions/checkout` without `submodules: recursive`. After removing Poetry install, uv sync needs all workspace members present.
 **How to avoid:** Add `submodules: recursive` to checkout step in ci.yml.
 **Warning signs:** CI fails with missing workspace member errors.
@@ -234,6 +251,7 @@ Remove `[project.optional-dependencies].dev` entirely. uv supports `--group dev`
 ## Code Examples
 
 ### Root pyproject.toml build-system change
+
 ```toml
 # Before
 [build-system]
@@ -247,6 +265,7 @@ requires = ["hatchling"]
 ```
 
 ### base.mk POETRY replacement
+
 ```makefile
 # Before
 POETRY := poetry
@@ -260,6 +279,7 @@ POETRY := poetry
 ```
 
 ### CI workflow change
+
 ```yaml
 # Before
 - name: Install Poetry
@@ -277,6 +297,7 @@ POETRY := poetry
 ```
 
 ### .envrc cleanup
+
 ```bash
 # Remove these lines:
 # export POETRY_VIRTUALENVS_CREATE=false
@@ -303,6 +324,7 @@ export UV_PROJECT_ENVIRONMENT="${VENV_DIR}"
 | poetry.lock files | 34 | Root + 33 subprojects (delete) |
 
 ### Already correct
+
 - flext-infra and flext-tests are separate submodules (MIG-01, MIG-02 done)
 - flext-core/src/ only has flext_core (MIG-03 done)
 - Root uv.lock exists (needs workspace member wiring)
@@ -312,6 +334,7 @@ export UV_PROJECT_ENVIRONMENT="${VENV_DIR}"
 ## Validation Architecture
 
 ### Test Framework
+
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
@@ -320,6 +343,7 @@ export UV_PROJECT_ENVIRONMENT="${VENV_DIR}"
 | Full suite command | `make test` |
 
 ### Phase Requirements to Test Map
+
 | Req ID | Behavior | Test Type | Automated Command | File Exists? |
 |--------|----------|-----------|-------------------|-------------|
 | MIG-01 | flext-infra is submodule | smoke | `git submodule status flext-infra` | N/A (git check) |
@@ -330,11 +354,13 @@ export UV_PROJECT_ENVIRONMENT="${VENV_DIR}"
 | MIG-06 | No poetry run in Makefiles | smoke | `grep "poetry run\|POETRY" base.mk Makefile` returns empty | N/A |
 
 ### Sampling Rate
+
 - **Per task commit:** `uv lock --check && make check PROJECT=flext-core`
 - **Per wave merge:** `uv sync && make test`
 - **Phase gate:** `uv sync --all-groups && make check && make test` with zero Poetry references
 
 ### Wave 0 Gaps
+
 None -- existing test infrastructure covers all phase requirements via smoke checks. No new test files needed.
 
 ## Environment Availability
@@ -369,16 +395,19 @@ None -- existing test infrastructure covers all phase requirements via smoke che
 ## Sources
 
 ### Primary (HIGH confidence)
+
 - Direct filesystem inspection of pyproject.toml, base.mk, Makefile, .envrc, .gitmodules, CI workflows
 - uv 0.10.12 installed and verified on system
 
 ### Secondary (MEDIUM confidence)
+
 - uv workspace documentation (training data, uv workspace is well-established as of 2025)
 - hatchling build backend patterns (stable, widely adopted)
 
 ## Metadata
 
 **Confidence breakdown:**
+
 - Standard stack: HIGH - uv already installed, hatchling is the standard choice
 - Architecture: HIGH - conversion patterns well-understood, current state fully audited
 - Pitfalls: HIGH - identified from direct codebase inspection (Singer forks, modernizer bootstrap, base.mk refs)

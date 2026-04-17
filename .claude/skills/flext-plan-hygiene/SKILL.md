@@ -33,11 +33,13 @@ description: Use when managing implementation plans across sessions to prevent p
 ### Plan Consolidation Rules
 
 1. **Check Existing Plans**: Before creating a new plan, list all plans in `.sisyphus/plans/`:
+
    ```bash
    ls -1 .sisyphus/plans/*.md | head -20
    ```
 
 2. **Identify Overlapping Scope**: Read the scope section of existing plans to detect overlap:
+
    ```bash
    grep -h "^## Scope" .sisyphus/plans/*.md -A 5
    ```
@@ -60,11 +62,13 @@ Before creating a new plan, verify:
 ### Cross-Session Deduplication Protocol
 
 1. **Check Git Log for Completed Tasks**:
+
    ```bash
    git log --oneline --all | grep -i "docs(skills)|fix(import)|refactor(architecture)" | head -20
    ```
 
 2. **Verify Task Completion Status**:
+
    ```bash
    grep -r "status.*completed" .sisyphus/plans/ .sisyphus/notepads/
    ```
@@ -77,12 +81,14 @@ Before creating a new plan, verify:
 ### Plan Archival Protocol
 
 1. **Archive Completed Plans**:
+
    ```bash
    mkdir -p .sisyphus/archive
    mv .sisyphus/plans/completed-plan-name.md .sisyphus/archive/completed-plan-name-YYYYMMDD.md
    ```
 
 2. **Update Archive Index**:
+
    ```bash
    echo "- completed-plan-name (YYYYMMDD) — [link to commit]" >> .sisyphus/archive/INDEX.md
    ```

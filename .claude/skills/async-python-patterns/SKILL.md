@@ -42,8 +42,8 @@ from flext_core import m, p, r, t
 
 
 class User(m.Value):
-    user_id: t.NonEmptyStr = m.Field(description="User identifier")
-    name: t.NonEmptyStr = m.Field(description="User display name")
+    user_id: t.NonEmptyStr = u.Field(description="User identifier")
+    name: t.NonEmptyStr = u.Field(description="User display name")
 
 
 async def _db_get_user(user_id: str) -> User:
@@ -71,8 +71,8 @@ from flext_core import m, p, r, t
 
 
 class User(m.Value):
-    user_id: t.NonEmptyStr = m.Field(description="User identifier")
-    name: t.NonEmptyStr = m.Field(description="User display name")
+    user_id: t.NonEmptyStr = u.Field(description="User identifier")
+    name: t.NonEmptyStr = u.Field(description="User display name")
 
 
 async def fetch_user(user_id: str) -> p.Result[User]:

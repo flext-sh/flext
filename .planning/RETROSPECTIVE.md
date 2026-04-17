@@ -34,7 +34,7 @@
 ### Patterns Established
 
 - **Gap-closure phases**: Add decimal or numbered gap phases after milestone audit rather than retroactively marking requirements partial
-- **BeforeValidator for StrEnum coercion**: On strict Pydantic models, apply coercion at field level via `BeforeValidator`, not model level
+- **m.BeforeValidator for StrEnum coercion**: On strict Pydantic models, apply coercion at field level via `m.BeforeValidator`, not model level
 - **`workspace_root` canonical parameter**: Single parameter name across all `flext_infra` signatures eliminates cognitive load
 
 ### Key Lessons
@@ -47,7 +47,7 @@
 ### Cost Observations
 
 - Sessions: multiple over ~2-3 days of intensive work
-- Notable: Most plans completed in 1-6 minutes; Phase 2 Plan 03 (Field migration, 80 files) took 20+ minutes — bulk AST transforms are the bottleneck
+- Notable: Most plans completed in 1-6 minutes; Phase 2 Plan 03 (u.Field migration, 80 files) took 20+ minutes — bulk AST transforms are the bottleneck
 
 ---
 

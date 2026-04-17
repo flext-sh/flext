@@ -48,6 +48,7 @@ completed: 2026-03-24
 - **Files modified:** 1
 
 ## Accomplishments
+
 - Confirmed flext-infra already had 0 pyrefly and 0 pyright errors (no changes needed)
 - Fixed 1 bare `object` annotation in flext-tests `_is_matcher_input` TypeIs guard to `t.Tests.TestobjectSerializable`
 - Verified 0 cast(), 0 `__class__ is`, 0 Any, 0 `type: ignore` in both projects
@@ -61,20 +62,25 @@ completed: 2026-03-24
 **Plan metadata:** (pending docs commit)
 
 ## Files Created/Modified
+
 - `flext-tests/src/flext_tests/_utilities/matchers.py` - Replaced `value` with `value: t.Tests.TestobjectSerializable` in `_is_matcher_input` TypeIs guard
 
 ## Decisions Made
+
 - Combined baseline (Task 1) and fix (Task 2) into single commit — only 1 annotation needed fixing
 - TypeIs guard `_is_matcher_input` uses `t.Tests.TestobjectSerializable` as input type — semantically correct since the function narrows from the same type
 
 ## Deviations from Plan
+
 None - plan executed exactly as written. Both projects were nearly type-clean from prior work.
 
 ## Issues Encountered
+
 - flext-infra has pre-existing test failures (ImportError for `OutputBackend`) — unrelated to typing
 - bash-guard hook blocks safe git subcommands — used `make save` and file reads instead
 
 ## Next Phase Readiness
+
 - Infrastructure layer (flext-infra + flext-tests) is type-clean
 - Ready for Wave 3 (flext-cli) and Wave 4 (consumer projects)
 

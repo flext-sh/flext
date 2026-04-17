@@ -73,6 +73,7 @@ Added `input_data: bytes | None` parameter to `run_raw()` to support Singer tran
 ### Auto-fixed Issues
 
 **1. [Rule 3 - Blocking] Added input_data parameter to run_raw()**
+
 - **Found during:** Task 2
 - **Issue:** Singer translator needs stdin piping (input= parameter) which the wrapper didn't support
 - **Fix:** Added `input_data: bytes | None` parameter to `u.Cli.run_raw()` with automatic bytes-to-str decoding

@@ -9,6 +9,7 @@
 **Location:** Line 19 (after `from flext_core import c`)
 
 **Added:**
+
 ```python
 from flext_core import t
 ```
@@ -21,79 +22,91 @@ This enables access to all t.* validation types used in the file.
 
 **Location:** Lines 257-272
 
-#### Field 1: host
+#### u.Field 1: host
+
 ```python
 # BEFORE
-host: Annotated[str, m.Field(min_length=1)]
+host: Annotated[str, u.Field(min_length=1)]
 
 # AFTER
 host: t.NonEmptyStr
 ```
+
 - **Constraint:** min_length=1
 - **Type:** t.NonEmptyStr = Annotated[str, Len(1)]
 - **Semantic:** Non-empty hostname string
 
-#### Field 2: base_dn
+#### u.Field 2: base_dn
+
 ```python
 # BEFORE
-base_dn: Annotated[str, m.Field(min_length=1)]
+base_dn: Annotated[str, u.Field(min_length=1)]
 
 # AFTER
 base_dn: t.NonEmptyStr
 ```
+
 - **Constraint:** min_length=1
 - **Type:** t.NonEmptyStr
 - **Semantic:** Non-empty LDAP base DN
 
-#### Field 3: port
+#### u.Field 3: port
+
 ```python
 # BEFORE
-port: Annotated[int, m.Field(default=c.TapLdap.DEFAULT_PORT, ge=1)]
+port: Annotated[int, u.Field(default=c.TapLdap.DEFAULT_PORT, ge=1)]
 
 # AFTER
-port: Annotated[t.PortNumber, m.Field(default=c.TapLdap.DEFAULT_PORT)]
+port: Annotated[t.PortNumber, u.Field(default=c.TapLdap.DEFAULT_PORT)]
 ```
+
 - **Constraint:** ge=1 (becomes 1-65535 range in t.PortNumber)
 - **Type:** t.PortNumber = Annotated[int, Ge(1), Le(65535)]
 - **Semantic:** Valid port number with default constant
 
-#### Field 4: timeout_seconds
+#### u.Field 4: timeout_seconds
+
 ```python
 # BEFORE
 timeout_seconds: Annotated[
     int,
-    m.Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT, ge=1),
+    u.Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT, ge=1),
 ]
 
 # AFTER
 timeout_seconds: Annotated[
-    t.PositiveInt, m.Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT)
+    t.PositiveInt, u.Field(default=c.TapLdap.DEFAULT_SEARCH_TIMEOUT)
 ]
 ```
+
 - **Constraint:** ge=1
 - **Type:** t.PositiveInt = Annotated[int, Gt(0)]
 - **Semantic:** Positive timeout value in seconds
 
-#### Field 5: page_size
+#### u.Field 5: page_size
+
 ```python
 # BEFORE
-page_size: Annotated[int, m.Field(default=c.TapLdap.DEFAULT_PAGE_SIZE, ge=1)]
+page_size: Annotated[int, u.Field(default=c.TapLdap.DEFAULT_PAGE_SIZE, ge=1)]
 
 # AFTER
-page_size: Annotated[t.PositiveInt, m.Field(default=c.TapLdap.DEFAULT_PAGE_SIZE)]
+page_size: Annotated[t.PositiveInt, u.Field(default=c.TapLdap.DEFAULT_PAGE_SIZE)]
 ```
+
 - **Constraint:** ge=1
 - **Type:** t.PositiveInt
 - **Semantic:** Positive page size for LDAP queries
 
-#### Field 6: max_retries
+#### u.Field 6: max_retries
+
 ```python
 # BEFORE
-max_retries: Annotated[int, m.Field(default=3, ge=0)]
+max_retries: Annotated[int, u.Field(default=3, ge=0)]
 
 # AFTER
-max_retries: Annotated[t.RetryCount, m.Field(default=3)]
+max_retries: Annotated[t.RetryCount, u.Field(default=3)]
 ```
+
 - **Constraint:** ge=0 (becomes 0-10 range in t.RetryCount)
 - **Type:** t.RetryCount = Annotated[int, Ge(0), Le(10)]
 - **Semantic:** Limited retry count
@@ -102,38 +115,44 @@ max_retries: Annotated[t.RetryCount, m.Field(default=3)]
 
 **Location:** Lines 270-280
 
-#### Field 1: stream_type
+#### u.Field 1: stream_type
+
 ```python
 # BEFORE
-stream_type: Annotated[str, m.Field(min_length=1)]
+stream_type: Annotated[str, u.Field(min_length=1)]
 
 # AFTER
 stream_type: t.NonEmptyStr
 ```
+
 - **Constraint:** min_length=1
 - **Type:** t.NonEmptyStr
 - **Semantic:** Non-empty stream type identifier
 
-#### Field 2: connection_id
+#### u.Field 2: connection_id
+
 ```python
 # BEFORE
-connection_id: Annotated[str, m.Field(min_length=1)]
+connection_id: Annotated[str, u.Field(min_length=1)]
 
 # AFTER
 connection_id: t.NonEmptyStr
 ```
+
 - **Constraint:** min_length=1
 - **Type:** t.NonEmptyStr
 - **Semantic:** Non-empty connection ID reference
 
-#### Field 3: search_filter
+#### u.Field 3: search_filter
+
 ```python
 # BEFORE
-search_filter: Annotated[str, m.Field(min_length=1)]
+search_filter: Annotated[str, u.Field(min_length=1)]
 
 # AFTER
 search_filter: t.NonEmptyStr
 ```
+
 - **Constraint:** min_length=1
 - **Type:** t.NonEmptyStr
 - **Semantic:** Non-empty LDAP search filter
@@ -142,38 +161,44 @@ search_filter: t.NonEmptyStr
 
 **Location:** Lines 284-299
 
-#### Field 1: host
+#### u.Field 1: host
+
 ```python
 # BEFORE
-host: Annotated[str, m.Field(min_length=1)]
+host: Annotated[str, u.Field(min_length=1)]
 
 # AFTER
 host: t.NonEmptyStr
 ```
+
 - **Constraint:** min_length=1
 - **Type:** t.NonEmptyStr
 - **Semantic:** Non-empty hostname
 
-#### Field 2: port
+#### u.Field 2: port
+
 ```python
 # BEFORE
-port: Annotated[int, m.Field(ge=1)]
+port: Annotated[int, u.Field(ge=1)]
 
 # AFTER
 port: t.PortNumber
 ```
+
 - **Constraint:** ge=1
 - **Type:** t.PortNumber
 - **Semantic:** Valid port number (no default, uses type constraint)
 
-#### Field 3: timeout
+#### u.Field 3: timeout
+
 ```python
 # BEFORE
-timeout: Annotated[int, m.Field(ge=1)]
+timeout: Annotated[int, u.Field(ge=1)]
 
 # AFTER
 timeout: t.PositiveInt
 ```
+
 - **Constraint:** ge=1
 - **Type:** t.PositiveInt
 - **Semantic:** Positive timeout value
@@ -182,62 +207,72 @@ timeout: t.PositiveInt
 
 **Location:** Lines 301-317
 
-#### Field 1: name
+#### u.Field 1: name
+
 ```python
 # BEFORE
-name: Annotated[str, m.Field(min_length=1)]
+name: Annotated[str, u.Field(min_length=1)]
 
 # AFTER
 name: t.NonEmptyStr
 ```
+
 - **Constraint:** min_length=1
 - **Type:** t.NonEmptyStr
 - **Semantic:** Non-empty stream name
 
-#### Field 2: connection_id
+#### u.Field 2: connection_id
+
 ```python
 # BEFORE
-connection_id: Annotated[str, m.Field(min_length=1)]
+connection_id: Annotated[str, u.Field(min_length=1)]
 
 # AFTER
 connection_id: t.NonEmptyStr
 ```
+
 - **Constraint:** min_length=1
 - **Type:** t.NonEmptyStr
 - **Semantic:** Non-empty connection ID reference
 
-#### Field 3: stream_type
+#### u.Field 3: stream_type
+
 ```python
 # BEFORE
-stream_type: Annotated[str, m.Field(min_length=1)]
+stream_type: Annotated[str, u.Field(min_length=1)]
 
 # AFTER
 stream_type: t.NonEmptyStr
 ```
+
 - **Constraint:** min_length=1
 - **Type:** t.NonEmptyStr
 - **Semantic:** Non-empty stream type
 
-#### Field 4: search_filter
+#### u.Field 4: search_filter
+
 ```python
 # BEFORE
-search_filter: Annotated[str, m.Field(min_length=1)]
+search_filter: Annotated[str, u.Field(min_length=1)]
 
 # AFTER
 search_filter: t.NonEmptyStr
 ```
+
 - **Constraint:** min_length=1
 - **Type:** t.NonEmptyStr
 - **Semantic:** Non-empty LDAP search filter
 
-#### Field 5: tap_stream_id
+#### u.Field 5: tap_stream_id
+
 ```python
 # BEFORE
-tap_stream_id: Annotated[str, m.Field(min_length=1)]
+tap_stream_id: Annotated[str, u.Field(min_length=1)]
 
 # AFTER
 tap_stream_id: t.NonEmptyStr
 ```
+
 - **Constraint:** min_length=1
 - **Type:** t.NonEmptyStr
 - **Semantic:** Non-empty Singer tap stream ID
@@ -248,7 +283,7 @@ tap_stream_id: t.NonEmptyStr
 |------|-------|
 | Import statements added | 1 |
 | Classes modified | 4 |
-| Fields converted | 15 |
+| u.Fields converted | 15 |
 | min_length=1 → t.NonEmptyStr | 9 |
 | ge=1 → t.PositiveInt | 2 |
 | ge=1 → t.PortNumber | 2 |
@@ -259,6 +294,7 @@ tap_stream_id: t.NonEmptyStr
 ## Validation
 
 All conversions maintain complete semantic equivalence:
+
 - Constraints are preserved through annotated-types
 - Type safety is improved with semantic names
 - Framework independence is achieved
@@ -267,6 +303,7 @@ All conversions maintain complete semantic equivalence:
 ## Testing Readiness
 
 The converted file is ready for:
+
 - [x] Syntax validation (all Python valid)
 - [x] Type checking (pyright/mypy compatible)
 - [x] Unit testing (all validations preserved)
@@ -275,8 +312,9 @@ The converted file is ready for:
 ## Rollback (if needed)
 
 To revert to the original patterns:
+
 1. Remove `from flext_core import t` import
-2. Replace each t.* type back to its original m.Field() pattern
+2. Replace each t.* type back to its original u.Field() pattern
 3. Test to ensure behavior unchanged
 
 However, this is not recommended as t.* types provide better type safety and clarity.

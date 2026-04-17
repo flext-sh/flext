@@ -80,10 +80,10 @@ def parse_payload(payload: FlextRegistry) -> str | None:
 
 Why bad: it couples the signature to a concrete implementation and reintroduces nullable fallibility instead of the canonical public contract.
 
-
 ## Detailed Type Rules
 
 Full type enforcement rules are in [references/type-rules-detail.md](references/type-rules-detail.md). Load it when you need rule-level detail on:
+
 - `Any` prohibition and allowed exceptions
 - PEP 695 `type X = ...` alias syntax and runtime restrictions
 - TypeVar, TypeVarTuple, ParamSpec patterns

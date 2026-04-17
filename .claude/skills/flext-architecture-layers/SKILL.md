@@ -41,12 +41,12 @@ Layer map (source-aligned reference for implementation work):
 
 Projects that expose a main service class (FlextCli, FlextLdif, FlextObservability) use:
 
-| File | Purpose | Layer |
-|------|---------|-------|
-| `api.py` | `Flext<Project>` MRO facade composing all service mixins | L2 |
-| `base.py` | `Flext<Project>ServiceBase(s[T], ABC)` with typed settings | L2 |
-| `services/*.py` | One mixin per concern (tracing, metrics, health, etc.) | L2 |
-| `services/__init__.py` | AUTO-GENERATED lazy exports | L2 |
+| File                   | Purpose                                                    | Layer |
+| ---------------------- | ---------------------------------------------------------- | ----- |
+| `api.py`               | `Flext<Project>` MRO facade composing all service mixins   | L2    |
+| `base.py`              | `Flext<Project>ServiceBase(s[T], ABC)` with typed settings | L2    |
+| `services/*.py`        | One mixin per concern (tracing, metrics, health, etc.)     | L2    |
+| `services/__init__.py` | AUTO-GENERATED lazy exports                                | L2    |
 
 The facade (`api.py`) depends on services (`services/`) which depend on contracts (`L0`). Services NEVER depend on the facade.
 
@@ -184,8 +184,8 @@ respective facade modules and `__init__.py`:
 | ----- | -------------- | -------------------------------------------------------------------- |
 | `m`   | `models.py`    | `Flext<Role><Domain>Models(FlextMeltanoModels, Flext<Domain>Models)` |
 | `c`   | `constants.py` | `Flext<Role><Domain>Constants(FlextMeltanoConstants)`                |
-| `t`   | `typings.py`   | `Flext<Role><Domain>Types(FlextMeltanoTypes, Flext<Domain>Types)`                        |
-| `u`   | `utilities.py` | `Flext<Role><Domain>Utilities(u)`                |
+| `t`   | `typings.py`   | `Flext<Role><Domain>Types(FlextMeltanoTypes, Flext<Domain>Types)`    |
+| `u`   | `utilities.py` | `Flext<Role><Domain>Utilities(u)`                                    |
 | `p`   | `protocols.py` | `Flext<Role><Domain>Protocols(FlextMeltanoProtocols)`                |
 
 The `c`, `t`, `u`, `p` aliases follow the same composition pattern as `m`:
@@ -200,7 +200,7 @@ ALL 5 facades (`m`, `c`, `t`, `u`, `p`) follow the SAME dual-inheritance rule fo
 | `*-ldap`        | `FlextLdapModels`      | `FlextLdapConstants`      | `FlextLdapTypes`      |
 | `*-ldif`        | `FlextLdifModels`      | `FlextLdifConstants`      | `FlextLdifTypes`      |
 | `*-oracle` (DB) | `FlextDbOracleModels`  | `FlextDbOracleConstants`  | `FlextDbOracleTypes`  |
-| `*-oracle-wms`  | `FlextOracleWmsModels` | `FlextOracleWmsConstants`  | `FlextOracleWmsTypes`  |
+| `*-oracle-wms`  | `FlextOracleWmsModels` | `FlextOracleWmsConstants` | `FlextOracleWmsTypes` |
 | `*-oracle-oic`  | `FlextOracleOicModels` | `FlextOracleOicConstants` | `FlextOracleOicTypes` |
 
 Use `scripts.libs.discovery.discover_projects()` to enumerate all projects
@@ -208,18 +208,18 @@ programmatically for workspace-wide composition audits.
 
 ### Platform Chain Table (Per-Tier Inheritance Lookup)
 
-| Tier | Project | Facade Class | Inherits From | Own Namespace | Full Access |
-| --- | --- | --- | --- | --- | --- |
-| L0 | `flext-core` | `FlextProtocols` | `(base)` | (none) | core root |
-| L1 Domain | `flext-ldif` | `FlextLdifProtocols` | `(FlextProtocols)` | `.Ldif` | `.Ldif`, core |
-| L1 Domain | `flext-ldap` | `FlextLdapProtocols` | `(FlextLdifProtocols)` | `.Ldap` | `.Ldap`, `.Ldif`, core |
-| L1 Domain | `flext-db-oracle` | `FlextDbOracleProtocols` | `(FlextProtocols)` | `.DbOracle` | `.DbOracle`, core |
-| L1 Domain | `flext-oracle-wms` | `FlextOracleWmsProtocols` | `(FlextProtocols)` | `.OracleWms` | `.OracleWms`, core |
-| L1 Domain | `flext-oracle-oic` | `FlextOracleOicProtocols` | `(FlextProtocols)` | `.OracleOic` | `.OracleOic`, core |
-| L1 Platform | `flext-cli` | `FlextCliProtocols` | `(FlextProtocols)` | `.Cli` | `.Cli`, core |
-| L1 Platform | `flext-meltano` | `FlextMeltanoProtocols` | `(FlextCliProtocols)` | `.Meltano` | `.Meltano`, `.Cli`, core |
+| Tier           | Project                | Facade Class                 | Inherits From                                      | Own Namespace   | Full Access                                             |
+| -------------- | ---------------------- | ---------------------------- | -------------------------------------------------- | --------------- | ------------------------------------------------------- |
+| L0             | `flext-core`           | `FlextProtocols`             | `(base)`                                           | (none)          | core root                                               |
+| L1 Domain      | `flext-ldif`           | `FlextLdifProtocols`         | `(FlextProtocols)`                                 | `.Ldif`         | `.Ldif`, core                                           |
+| L1 Domain      | `flext-ldap`           | `FlextLdapProtocols`         | `(FlextLdifProtocols)`                             | `.Ldap`         | `.Ldap`, `.Ldif`, core                                  |
+| L1 Domain      | `flext-db-oracle`      | `FlextDbOracleProtocols`     | `(FlextProtocols)`                                 | `.DbOracle`     | `.DbOracle`, core                                       |
+| L1 Domain      | `flext-oracle-wms`     | `FlextOracleWmsProtocols`    | `(FlextProtocols)`                                 | `.OracleWms`    | `.OracleWms`, core                                      |
+| L1 Domain      | `flext-oracle-oic`     | `FlextOracleOicProtocols`    | `(FlextProtocols)`                                 | `.OracleOic`    | `.OracleOic`, core                                      |
+| L1 Platform    | `flext-cli`            | `FlextCliProtocols`          | `(FlextProtocols)`                                 | `.Cli`          | `.Cli`, core                                            |
+| L1 Platform    | `flext-meltano`        | `FlextMeltanoProtocols`      | `(FlextCliProtocols)`                              | `.Meltano`      | `.Meltano`, `.Cli`, core                                |
 | L2 Integration | `flext-tap-oracle-wms` | `FlextTapOracleWmsProtocols` | `(FlextMeltanoProtocols, FlextOracleWmsProtocols)` | `.TapOracleWms` | `.TapOracleWms`, `.Meltano`, `.Cli`, `.OracleWms`, core |
-| L2 Integration | `flext-target-oracle` | `FlextTargetOracleProtocols` | `(FlextMeltanoProtocols, FlextDbOracleProtocols)` | `.TargetOracle` | `.TargetOracle`, `.Meltano`, `.Cli`, `.DbOracle`, core |
+| L2 Integration | `flext-target-oracle`  | `FlextTargetOracleProtocols` | `(FlextMeltanoProtocols, FlextDbOracleProtocols)`  | `.TargetOracle` | `.TargetOracle`, `.Meltano`, `.Cli`, `.DbOracle`, core  |
 
 ## Workflow
 

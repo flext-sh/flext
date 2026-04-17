@@ -55,6 +55,7 @@ completed: 2026-04-06
 - **Files modified:** 2
 
 ## Accomplishments
+
 - Verified all 4 library domains pass ruff + pyrefly with 0 errors (detectors, gates, rules, transformers)
 - Verified zero direct `from rope` imports in detectors/ and transformers/ (all through t.Infra.RopeProject)
 - Verified inheritance patterns: 11 detectors from FlextInfraScanFileMixin, 8 gates from FlextInfraGate, 12 transformers from FlextInfraRopeTransformer/FlextInfraChangeTrackingTransformer
@@ -69,10 +70,12 @@ Each task was committed atomically:
 2. **Task 2: Finalize FlextInfra api.py facade** - `5e9d309` (feat)
 
 ## Files Created/Modified
+
 - `flext-infra/src/flext_infra/api.py` - FlextInfra facade with 9 factory-method accessors for domain services
 - `flext-infra/pyproject.toml` - Added PLC0415 per-file-ignore for api.py (inline imports required for circular avoidance)
 
 ## Decisions Made
+
 - **Factory methods return type[ServiceClass]**: Domain constructors have heterogeneous kwargs (Path, bool, Mapping, etc.). Using `type[ServiceClass]` avoids the impossible `**kwargs: str` typing issue and lets callers instantiate with correct domain-specific parameters.
 - **validate renamed to validate_scanner**: BaseModel has a built-in `validate` classmethod. Pyrefly correctly flags the override clash. Renamed to `validate_scanner` to be explicit.
 - **Per-file-ignore over noqa comments**: Adding `"**/api.py" = ["PLC0415"]` to pyproject.toml is cleaner than 9 individual `# noqa: PLC0415` comments, consistent with existing patterns (models.py, settings.py, workspace/).
@@ -83,6 +86,7 @@ Each task was committed atomically:
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] Fixed validate method name clash**
+
 - **Found during:** Task 2 (FlextInfra facade)
 - **Issue:** `validate` as a staticmethod on FlextInfra clashes with Pydantic `BaseModel.validate` (pyrefly `missing-override-decorator` error)
 - **Fix:** Renamed to `validate_scanner` to be explicit and avoid the clash
@@ -91,6 +95,7 @@ Each task was committed atomically:
 - **Committed in:** 5e9d309 (Task 2 commit)
 
 **2. [Rule 1 - Bug] Changed factory return type from instance to class**
+
 - **Found during:** Task 2 (FlextInfra facade)
 - **Issue:** `**kwargs: str` on factory methods is incompatible with domain constructors that accept Path, bool, Mapping, etc. (pyrefly reported 90+ bad-argument-type errors)
 - **Fix:** Changed factory methods to return `type[ServiceClass]` instead of instantiating. Callers get the class and instantiate with correct kwargs.
@@ -129,15 +134,19 @@ Each task was committed atomically:
 | FlextInfra.workspace() | FlextInfraOrchestratorService | OK |
 
 ## Issues Encountered
+
 - Pre-existing ruff and pyrefly errors in deps/_phases/ files (tomlkit `Item`/`Container`/`Table` not imported) and other files — these are from uncommitted changes from prior plans, not introduced by this plan.
 
 ## Known Stubs
+
 None - all factory methods are wired to actual domain service classes.
 
 ## User Setup Required
+
 None - no external service configuration required.
 
 ## Next Phase Readiness
+
 - Phase 10 complete: all 8 plans executed
 - FlextInfra facade provides single-entry-point discovery for all domain services
 - All library domains verified clean with consistent patterns

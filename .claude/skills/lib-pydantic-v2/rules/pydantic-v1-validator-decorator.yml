@@ -9,5 +9,5 @@ rule:
       regex: "^validator$"
       stopBy: end
     stopBy: end
-message: "Pydantic v1 @validator - use @field_validator"
+message: "Pydantic v1 @validator - use @u.field_validator"
 severity: error

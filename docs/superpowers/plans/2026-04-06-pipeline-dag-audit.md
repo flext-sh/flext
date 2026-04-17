@@ -15,43 +15,47 @@
 ## File Structure
 
 ### New files (flext-cli)
-| File | Responsibility |
-|------|---------------|
-| `flext-cli/src/flext_cli/_protocols/pipeline.py` | Pipeline protocols (PipelineStage, PipelineStageContext, PipelineExecutor) |
-| `flext-cli/src/flext_cli/_typings/pipeline.py` | Pipeline type aliases (PipelineHandler, PipelineSkipPredicate, PipelineStageStatus) |
-| `flext-cli/src/flext_cli/_models/pipeline.py` | Pipeline models (PipelineStageSpec, PipelineStageResult, PipelineResult, PipelineStageContext) |
-| `flext-cli/src/flext_cli/_constants/pipeline.py` | Pipeline constants (Pipeline.DEFAULT_FAIL_FAST, MAX_RETRY) |
-| `flext-cli/src/flext_cli/_utilities/pipeline.py` | Pipeline engine (execute_pipeline,_run_stage,_build_sorter) |
-| `flext-cli/tests/unit/test_pipeline.py` | Pipeline engine unit tests |
+
+| File                                             | Responsibility                                                                                 |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `flext-cli/src/flext_cli/_protocols/pipeline.py` | Pipeline protocols (PipelineStage, PipelineStageContext, PipelineExecutor)                     |
+| `flext-cli/src/flext_cli/_typings/pipeline.py`   | Pipeline type aliases (PipelineHandler, PipelineSkipPredicate, PipelineStageStatus)            |
+| `flext-cli/src/flext_cli/_models/pipeline.py`    | Pipeline models (PipelineStageSpec, PipelineStageResult, PipelineResult, PipelineStageContext) |
+| `flext-cli/src/flext_cli/_constants/pipeline.py` | Pipeline constants (Pipeline.DEFAULT_FAIL_FAST, MAX_RETRY)                                     |
+| `flext-cli/src/flext_cli/_utilities/pipeline.py` | Pipeline engine (execute_pipeline,_run_stage,_build_sorter)                                    |
+| `flext-cli/tests/unit/test_pipeline.py`          | Pipeline engine unit tests                                                                     |
 
 ### Modified files (flext-cli)
-| File | Change |
-|------|--------|
+
+| File                                   | Change                                   |
+| -------------------------------------- | ---------------------------------------- |
 | `flext-cli/src/flext_cli/protocols.py` | Add FlextCliProtocolsPipeline to Cli MRO |
-| `flext-cli/src/flext_cli/typings.py` | Add FlextCliTypesPipeline to Cli MRO |
-| `flext-cli/src/flext_cli/models.py` | Add FlextCliModelsPipeline to Cli MRO |
+| `flext-cli/src/flext_cli/typings.py`   | Add FlextCliTypesPipeline to Cli MRO     |
+| `flext-cli/src/flext_cli/models.py`    | Add FlextCliModelsPipeline to Cli MRO    |
 | `flext-cli/src/flext_cli/constants.py` | Add FlextCliConstantsPipeline to Cli MRO |
 | `flext-cli/src/flext_cli/utilities.py` | Add FlextCliUtilitiesPipeline to Cli MRO |
 
 ### Deleted files (flext-infra)
-| File | Reason |
-|------|--------|
+
+| File                                           | Reason                                             |
+| ---------------------------------------------- | -------------------------------------------------- |
 | `flext-infra/src/flext_infra/_utilities/io.py` | Dead code — all callers use `u.Cli.json_*` already |
 
 ### Modified files (flext-infra)
-| File | Change |
-|------|--------|
-| `flext-infra/src/flext_infra/utilities.py` | Remove FlextInfraUtilitiesIo from Infra MRO |
-| `flext-infra/src/flext_infra/_utilities/__init__.py` | Remove io.py lazy import |
-| `flext-infra/src/flext_infra/__init__.py` | Remove FlextInfraUtilitiesIo re-export |
-| `flext-infra/tests/unit/io/test_infra_json_io.py` | Delete or redirect tests to u.Cli.json_* |
-| `flext-infra/tests/unit/validate/basemk_validator_tests.py` | Change `u.Infra.sha256_file` → `u.Cli.sha256_file` |
-| `flext-infra/src/flext_infra/services/pipeline.py` | Rewrite to use DAG engine |
-| `flext-infra/src/flext_infra/codegen/fixer.py` | Extract stages as handlers, use ViolationKey, add logging |
-| `flext-infra/src/flext_infra/check/workspace_check.py` | Fresh GateContext per project |
-| `flext-infra/src/flext_infra/check/_workspace_check_gates.py` | Add structured logging |
-| `flext-infra/src/flext_infra/release/orchestrator.py` | Convert phases to DAG stages |
-| `flext-infra/src/flext_infra/_models/codegen.py` | Add ViolationKey model |
+
+| File                                                          | Change                                                    |
+| ------------------------------------------------------------- | --------------------------------------------------------- |
+| `flext-infra/src/flext_infra/utilities.py`                    | Remove FlextInfraUtilitiesIo from Infra MRO               |
+| `flext-infra/src/flext_infra/_utilities/__init__.py`          | Remove io.py lazy import                                  |
+| `flext-infra/src/flext_infra/__init__.py`                     | Remove FlextInfraUtilitiesIo re-export                    |
+| `flext-infra/tests/unit/io/test_infra_json_io.py`             | Delete or redirect tests to u.Cli.json_*                  |
+| `flext-infra/tests/unit/validate/basemk_validator_tests.py`   | Change `u.Infra.sha256_file` → `u.Cli.sha256_file`        |
+| `flext-infra/src/flext_infra/services/pipeline.py`            | Rewrite to use DAG engine                                 |
+| `flext-infra/src/flext_infra/codegen/fixer.py`                | Extract stages as handlers, use ViolationKey, add logging |
+| `flext-infra/src/flext_infra/check/workspace_check.py`        | Fresh GateContext per project                             |
+| `flext-infra/src/flext_infra/check/_workspace_check_gates.py` | Add structured logging                                    |
+| `flext-infra/src/flext_infra/release/orchestrator.py`         | Convert phases to DAG stages                              |
+| `flext-infra/src/flext_infra/_models/codegen.py`              | Add ViolationKey model                                    |
 
 ---
 
@@ -60,6 +64,7 @@
 ### Task 1: Create Pipeline Protocols
 
 **Files:**
+
 - Create: `flext-cli/src/flext_cli/_protocols/pipeline.py`
 
 - [ ] **Step 1: Create protocol definitions**
@@ -133,6 +138,7 @@ __all__: list[str] = ["FlextCliProtocolsPipeline"]
 - [ ] **Step 2: Wire into protocols facade**
 
 Edit `flext-cli/src/flext_cli/protocols.py`:
+
 ```python
 # Add import
 from flext_cli import (
@@ -164,6 +170,7 @@ git commit -m "feat(flext-cli): add pipeline protocol contracts (p.Cli.PipelineS
 ### Task 2: Create Pipeline Type Aliases
 
 **Files:**
+
 - Create: `flext-cli/src/flext_cli/_typings/pipeline.py`
 
 - [ ] **Step 1: Create type alias definitions**
@@ -199,6 +206,7 @@ __all__: list[str] = ["FlextCliTypesPipeline"]
 - [ ] **Step 2: Wire into typings facade**
 
 Edit `flext-cli/src/flext_cli/typings.py`:
+
 ```python
 # Add import
 from flext_cli import FlextCliTypesBase, FlextCliTypesDomain, FlextCliTypesPipeline
@@ -228,6 +236,7 @@ git commit -m "feat(flext-cli): add pipeline type aliases (t.Cli.PipelineHandler
 ### Task 3: Create Pipeline Constants
 
 **Files:**
+
 - Create: `flext-cli/src/flext_cli/_constants/pipeline.py`
 
 - [ ] **Step 1: Create constant definitions**
@@ -260,6 +269,7 @@ __all__: list[str] = ["FlextCliConstantsPipeline"]
 - [ ] **Step 2: Wire into constants facade**
 
 Edit `flext-cli/src/flext_cli/constants.py`:
+
 ```python
 # Add import
 from flext_cli import (
@@ -297,6 +307,7 @@ git commit -m "feat(flext-cli): add pipeline constants (c.Cli.Pipeline.DEFAULT_F
 ### Task 4: Create Pipeline Models
 
 **Files:**
+
 - Create: `flext-cli/src/flext_cli/_models/pipeline.py`
 
 - [ ] **Step 1: Create model definitions**
@@ -310,7 +321,7 @@ from collections.abc import Mapping, MutableMapping, Sequence
 from pathlib import Path
 from typing import Annotated, ClassVar
 
-from pydantic import ConfigDict, Field
+from pydantic import ConfigDict, u.Field
 
 from flext_cli import c, t
 from flext_core import FlextModels
@@ -322,7 +333,7 @@ class FlextCliModelsPipeline:
     class PipelineStageContext(FlextModels.ContractModel):
         """Accumulated state passed between pipeline stages."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = ConfigDict(
             extra="forbid",
             validate_assignment=True,
             arbitrary_types_allowed=True,
@@ -330,17 +341,17 @@ class FlextCliModelsPipeline:
 
         workspace_root: Annotated[
             Path,
-            m.Field(description="Workspace root directory"),
+            u.Field(description="Workspace root directory"),
         ]
         shared: Annotated[
             MutableMapping[str, object],
-            m.Field(
+            u.Field(
                 default_factory=dict, description="Mutable shared state between stages"
             ),
         ]
         settings: Annotated[
             Mapping[str, object],
-            m.Field(
+            u.Field(
                 default_factory=dict, description="Immutable pipeline configuration"
             ),
         ]
@@ -348,30 +359,30 @@ class FlextCliModelsPipeline:
     class PipelineStageSpec(FlextModels.ContractModel):
         """Declarative stage definition with dependency tracking."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = ConfigDict(
             extra="forbid",
             arbitrary_types_allowed=True,
         )
 
         stage_id: Annotated[
             str,
-            m.Field(description="Unique stage identifier"),
+            u.Field(description="Unique stage identifier"),
         ]
         depends_on: Annotated[
             frozenset[str],
-            m.Field(default=frozenset(), description="Stage IDs this stage depends on"),
+            u.Field(default=frozenset(), description="Stage IDs this stage depends on"),
         ]
         handler: Annotated[
             t.Cli.PipelineHandler,
-            m.Field(description="Callable that executes the stage"),
+            u.Field(description="Callable that executes the stage"),
         ]
         skip_if: Annotated[
             t.Cli.PipelineSkipPredicate | None,
-            m.Field(default=None, description="Predicate — skip stage if returns True"),
+            u.Field(default=None, description="Predicate — skip stage if returns True"),
         ]
         retry: Annotated[
             t.RetryCount,
-            m.Field(
+            u.Field(
                 default=c.Cli.Pipeline.DEFAULT_RETRY,
                 description="Number of retries on failure",
             ),
@@ -380,40 +391,40 @@ class FlextCliModelsPipeline:
     class PipelineStageResult(FlextModels.ContractModel):
         """What a stage produces after execution."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
+        model_config: ClassVar[m.ConfigDict] = ConfigDict(extra="forbid")
 
-        stage_id: Annotated[str, m.Field(description="Stage that produced this result")]
+        stage_id: Annotated[str, u.Field(description="Stage that produced this result")]
         status: Annotated[
             t.Cli.PipelineStageStatus,
-            m.Field(description="Execution outcome"),
+            u.Field(description="Execution outcome"),
         ]
         output: Annotated[
             Mapping[str, object],
-            m.Field(default_factory=dict, description="Stage output payload"),
+            u.Field(default_factory=dict, description="Stage output payload"),
         ]
         duration_ms: Annotated[
             float,
-            m.Field(default=0.0, description="Execution duration in milliseconds"),
+            u.Field(default=0.0, description="Execution duration in milliseconds"),
         ]
         error: Annotated[
             str | None,
-            m.Field(default=None, description="Error message if failed"),
+            u.Field(default=None, description="Error message if failed"),
         ]
 
     class PipelineResult(FlextModels.ContractModel):
         """Full pipeline execution result — aggregated from all stages."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
+        model_config: ClassVar[m.ConfigDict] = ConfigDict(extra="forbid")
 
         stages: Annotated[
             Sequence[FlextCliModelsPipeline.PipelineStageResult],
-            m.Field(
+            u.Field(
                 default_factory=list, description="Results from all executed stages"
             ),
         ]
         total_duration_ms: Annotated[
             float,
-            m.Field(default=0.0, description="Total pipeline execution time"),
+            u.Field(default=0.0, description="Total pipeline execution time"),
         ]
 
         @property
@@ -440,6 +451,7 @@ __all__: list[str] = ["FlextCliModelsPipeline"]
 - [ ] **Step 2: Wire into models facade**
 
 Edit `flext-cli/src/flext_cli/models.py`:
+
 ```python
 # Add import
 from flext_cli import FlextCliModelsBase, FlextCliModelsPipeline
@@ -467,6 +479,7 @@ git commit -m "feat(flext-cli): add pipeline models (m.Cli.PipelineStageSpec, Pi
 ### Task 5: Write Pipeline Engine Tests (TDD)
 
 **Files:**
+
 - Create: `flext-cli/tests/unit/test_pipeline.py`
 
 - [ ] **Step 1: Write failing tests**
@@ -758,6 +771,7 @@ git commit -m "test(flext-cli): add pipeline engine unit tests (TDD red phase)"
 ### Task 6: Implement Pipeline Engine
 
 **Files:**
+
 - Create: `flext-cli/src/flext_cli/_utilities/pipeline.py`
 
 - [ ] **Step 1: Implement the engine**
@@ -935,6 +949,7 @@ __all__: list[str] = ["FlextCliUtilitiesPipeline"]
 - [ ] **Step 2: Wire into utilities facade**
 
 Edit `flext-cli/src/flext_cli/utilities.py`:
+
 ```python
 # Add import
 from flext_cli import (
@@ -991,6 +1006,7 @@ git commit -m "feat(flext-cli): implement DAG pipeline engine (u.Cli.execute_pip
 **Key finding from audit:** All production callers use `u.Cli.json_read()`/`u.Cli.json_write()`/`u.Cli.json_parse()`/`u.Cli.sha256_*()` — the flext-cli versions. io.py methods (`read_json`, `write_json`, `parse`, `serialize`, `sha256_*`) have different names and zero production callers. Only test files reference them.
 
 **Files:**
+
 - Delete: `flext-infra/src/flext_infra/_utilities/io.py`
 - Modify: `flext-infra/src/flext_infra/utilities.py`
 - Modify: `flext-infra/src/flext_infra/_utilities/__init__.py`
@@ -998,12 +1014,14 @@ git commit -m "feat(flext-cli): implement DAG pipeline engine (u.Cli.execute_pip
 - [ ] **Step 1: Remove FlextInfraUtilitiesIo from utilities facade MRO**
 
 Edit `flext-infra/src/flext_infra/utilities.py` — remove `FlextInfraUtilitiesIo` from:
+
 1. The import statement
 2. The `Infra` inner class MRO bases
 
 - [ ] **Step 2: Remove from `_utilities/__init__.py`**
 
 Edit `flext-infra/src/flext_infra/_utilities/__init__.py` — remove:
+
 1. The TYPE_CHECKING import of `FlextInfraUtilitiesIo`
 2. The lazy import entry for `FlextInfraUtilitiesIo`
 3. The `__all__` entry
@@ -1011,6 +1029,7 @@ Edit `flext-infra/src/flext_infra/_utilities/__init__.py` — remove:
 - [ ] **Step 3: Remove from `__init__.py` re-export**
 
 Edit `flext-infra/src/flext_infra/__init__.py` — remove:
+
 1. The lazy import entry for `FlextInfraUtilitiesIo`
 2. The `__all__` entry
 
@@ -1029,6 +1048,7 @@ mv flext-infra/tests/unit/io/test_infra_json_io.py flext-infra/tests/unit/io/tes
 - [ ] **Step 6: Fix basemk_validator test**
 
 Edit `flext-infra/tests/unit/validate/basemk_validator_tests.py` line 135:
+
 ```python
 # Before:
 return u.Infra.sha256_file(path)
@@ -1057,6 +1077,7 @@ git commit -m "refactor(flext-infra): remove dead io.py — all callers already 
 ### Task 8: Migrate Codegen Pipeline to DAG
 
 **Files:**
+
 - Modify: `flext-infra/src/flext_infra/services/pipeline.py`
 
 - [ ] **Step 1: Read current pipeline.py to understand exact structure**
@@ -1073,6 +1094,7 @@ The current `execute()` method calls 6 stages sequentially. Refactor to:
 4. Extract final result from pipeline result
 
 Key pattern for each handler:
+
 ```python
 def _stage_py_typed(
     ctx: m.Cli.PipelineStageContext,
@@ -1107,6 +1129,7 @@ git commit -m "refactor(flext-infra): migrate codegen pipeline to DAG engine (u.
 ### Task 9: Fix Gate Context Isolation
 
 **Files:**
+
 - Modify: `flext-infra/src/flext_infra/check/_workspace_check_gates.py`
 
 - [ ] **Step 1: Read current gates mixin**
@@ -1174,6 +1197,7 @@ git commit -m "fix(flext-infra): isolate GateContext per project to prevent muta
 ### Task 10: Migrate Release Orchestrator to DAG
 
 **Files:**
+
 - Modify: `flext-infra/src/flext_infra/release/orchestrator.py`
 
 - [ ] **Step 1: Read current orchestrator**
@@ -1231,6 +1255,7 @@ git commit -m "refactor(flext-infra): migrate release orchestrator to DAG pipeli
 ### Task 11: Add ViolationKey Model
 
 **Files:**
+
 - Modify: `flext-infra/src/flext_infra/_models/codegen.py`
 
 - [ ] **Step 1: Read current codegen models**
@@ -1243,12 +1268,12 @@ Read: `flext-infra/src/flext_infra/_models/codegen.py`
 class ViolationKey(FlextModels.ContractModel):
     """Content-stable violation identifier — resilient to line shifts."""
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True, extra="forbid")
+    model_config: ClassVar[m.ConfigDict] = ConfigDict(frozen=True, extra="forbid")
 
-    module: Annotated[str, m.Field(description="Module containing the violation")]
-    rule: Annotated[str, m.Field(description="Rule that was violated")]
+    module: Annotated[str, u.Field(description="Module containing the violation")]
+    rule: Annotated[str, u.Field(description="Rule that was violated")]
     content_hash: Annotated[
-        str, m.Field(description="SHA256 of surrounding context lines")
+        str, u.Field(description="SHA256 of surrounding context lines")
     ]
 
     @staticmethod
@@ -1279,6 +1304,7 @@ git commit -m "feat(flext-infra): add ViolationKey model with content-hash-based
 ### Task 12: Integrate ViolationKey into Fixer
 
 **Files:**
+
 - Modify: `flext-infra/src/flext_infra/codegen/fixer.py`
 
 - [ ] **Step 1: Read fixer.py violation key and reconciliation methods**
@@ -1288,6 +1314,7 @@ Read: `flext-infra/src/flext_infra/codegen/fixer.py` (focus on `_violation_key` 
 - [ ] **Step 2: Replace `_violation_key` with `ViolationKey.from_violation`**
 
 In `_reconcile_namespace_violations()`, replace:
+
 ```python
 # Before:
 remaining_keys = {
@@ -1338,12 +1365,14 @@ git commit -m "fix(flext-infra): replace brittle line-number violation keys with
 ### Task 13: Add Logging at Discard Points
 
 **Files:**
+
 - Modify: `flext-infra/src/flext_infra/codegen/fixer.py`
 - Modify: `flext-infra/src/flext_infra/refactor/engine.py`
 
 - [ ] **Step 1: Add logging to fixer.py MRO migration section**
 
 At the point where MRO migration report fields are discarded (~line 124-143):
+
 ```python
 log.info(
     "mro_migration_complete",
@@ -1356,6 +1385,7 @@ log.info(
 - [ ] **Step 2: Add logging to fixer.py namespace validator error**
 
 At the point where namespace validator errors are silently skipped:
+
 ```python
 if initial_violations_result.is_failure:
     log.warning(
@@ -1369,6 +1399,7 @@ if initial_violations_result.is_failure:
 - [ ] **Step 3: Add logging to refactor engine no-op detection**
 
 In refactor engine, when `success=True, modified=False`:
+
 ```python
 if result.success and not result.modified:
     log.debug(
@@ -1397,6 +1428,7 @@ git commit -m "fix(flext-infra): add structured logging at return-value discard 
 ### Task 14: Create SSOT Duplicate Detection Test
 
 **Files:**
+
 - Create: `flext-infra/tests/unit/test_ssot_enforcement.py`
 
 - [ ] **Step 1: Write parametrized SSOT test**

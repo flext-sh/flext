@@ -40,6 +40,7 @@ Target: Refactor all flext-infra commands to follow the modern flext-cli MRO ser
 ### Rope Centralization Status
 
 **Already centralized in _utilities/rope*.py (7 files, ~1,730 LOC):**
+
 - `rope_core.py` (286 LOC) — init_rope_project, RopeProject management
 - `rope_analysis.py` (262 LOC) — class analysis, symbol resolution
 - `rope_analysis_introspection.py` (178 LOC) — introspection helpers
@@ -49,6 +50,7 @@ Target: Refactor all flext-infra commands to follow the modern flext-cli MRO ser
 - `rope.py` — MRO facade composing all above
 
 **Direct rope type usage outside utilities (via t.Infra.RopeProject — CORRECT):**
+
 - detectors/_base_detector.py — DetectorContext.rope_project field
 - detectors/namespace_source_detector.py, cyclic_import_detector.py, loose_object_detector.py
 - transformers/_base.py, tier0_import_fixer.py, alias_remover.py, mro_remover.py, etc.
@@ -59,12 +61,14 @@ Target: Refactor all flext-infra commands to follow the modern flext-cli MRO ser
 ### CLI Architecture Gap
 
 **Current (flext-infra/cli.py):**
+
 - Manual dispatcher via `importlib.import_module` + string specs
 - `_GROUP_REGISTRARS` and `_GROUP_RUNNERS` ClassVar dicts
 - Each domain has its own `cli.py` with `FlextInfraCli<Domain>` class
 - No MRO composition — groups are independently loaded
 
 **Target (flext-cli pattern):**
+
 - api.py MRO facade composing all service mixins
 - base.py thin service base (~30 LOC)
 - services/ directory with one mixin per concern
@@ -73,11 +77,13 @@ Target: Refactor all flext-infra commands to follow the modern flext-cli MRO ser
 ### base.py Gap
 
 **Current FlextInfraServiceBase (187 LOC):**
+
 - Too many fields: settings_type, settings_overrides, initial_context, subproject, container_overrides, wire_modules, wire_packages, wire_classes, workspace_root, apply_changes, check_only
-- Field validators
+- u.Field validators
 - Complex initialization
 
 **Target FlextCliServiceBase (31 LOC):**
+
 - Just settings access via property
 - ABC enforcing execute()
 
@@ -94,26 +100,31 @@ Target: Refactor all flext-infra commands to follow the modern flext-cli MRO ser
 ## What Needs to Change
 
 ### 1. Create api.py MRO Facade
+
 - New `FlextInfra` class composing domain service mixins
 - Singleton pattern like FlextCli.get_instance()
 - execute() returns r[T]
 
 ### 2. Simplify base.py
+
 - Strip to ~30 LOC like FlextCliServiceBase
-- Fields like workspace_root, apply_changes move to per-domain mixins or settings
+- u.Fields like workspace_root, apply_changes move to per-domain mixins or settings
 - All service classes inherit from new thin base
 
 ### 3. Convert Command Domains to Service Mixins
+
 - Each domain's main service class → mixin in services/
 - Business logic → u.Infra.* utilities (most already there)
 - CLI registration stays lazy but routes through facade
 
 ### 4. Ensure Thin Orchestrators
+
 - Service methods: validate inputs → call u.Infra.* → return r[T]
 - No inline business logic in service methods
 - Constants via c.Infra.*, types via t.Infra.*, utilities via u.Infra.*
 
 ### 5. Library Domains Stay As-Is
+
 - detectors/, gates/, rules/, transformers/ — these are libraries, not commands
 - They already follow correct patterns (scan mixin, gate base, rule base)
 - No changes needed unless they have anti-patterns
@@ -128,6 +139,7 @@ Target: Refactor all flext-infra commands to follow the modern flext-cli MRO ser
 ## Plan Breakdown Recommendation
 
 Given the scope (~25K LOC across 11 domains), break into waves:
+
 1. **Wave 1**: Foundation (api.py, base.py, settings) — must be first
 2. **Wave 2**: Simple domains (basemk, github, release) — low LOC, few dependencies
 3. **Wave 3**: Medium domains (check, validate, workspace) — moderate complexity

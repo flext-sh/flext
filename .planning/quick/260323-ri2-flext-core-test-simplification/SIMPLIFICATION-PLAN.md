@@ -97,63 +97,77 @@ Each cluster has 3–5 files testing the same module. Merge into one well-organi
 Within each merged file: use `@pytest.mark.parametrize` to replace duplicated bodies.
 
 #### 4a: Result cluster → `test_result.py` (keep + enrich)
+
 - Absorb: `test_result_coverage_100.py` (517), `test_result_full_coverage.py` (149), `test_result_additional.py` (~100)
 - Keep separate: `test_result_exception_carrying.py` (414) — distinct concern
 - Target: single `test_result.py` ≤ 800 lines
 
 #### 4b: Runtime cluster → `test_runtime.py` (keep + enrich)
+
 - Absorb: `test_runtime_full_coverage.py` (1073), `test_runtime_coverage_100.py` (292)
 - Target: single `test_runtime.py` ≤ 1,300 lines
 
 #### 4c: Container cluster → `test_container.py` (keep + enrich)
+
 - Absorb: `test_container_full_coverage.py` (783)
 - Keep separate: `test_models_container.py` (384) — different concern (models vs lifecycle)
 - Target: single `test_container.py` ≤ 900 lines
 
 #### 4d: Context cluster → `test_context.py` (keep + enrich)
+
 - Absorb: `test_context_full_coverage.py` (213), `test_context_coverage_100.py` (433), `test_coverage_context.py` (~200)
 - Target: single `test_context.py` ≤ 800 lines
 
 #### 4e: Dispatcher cluster → `test_dispatcher.py` (new primary)
+
 - Absorb: `test_dispatcher_full_coverage.py` (207), `test_dispatcher_minimal.py` (180), `test_dispatcher_di.py` (30), `test_dispatcher_timeout_coverage_100.py` (229)
 - Keep separate: `test_dispatcher_reliability.py` (90) — timing-dependent, distinct
 - Target: single `test_dispatcher.py` ≤ 400 lines
 
 #### 4f: Service cluster → `test_service.py` (keep + enrich)
+
 - Absorb: `test_service_coverage_100.py` (93), `test_service_additional.py` (64)
 - Keep separate: `test_service_bootstrap.py` (~120) — bootstrap lifecycle
 - Target: single `test_service.py` ≤ 350 lines
 
 #### 4g: Loggings cluster → `test_loggings.py` (new primary)
+
 - Absorb: `test_loggings_full_coverage.py` (575), `test_coverage_loggings.py` (649), `test_loggings_error_paths_coverage.py` (52)
 - Keep separate: `test_loggings_strict_returns.py` (211) — r[bool] contract testing
 - Target: single `test_loggings.py` ≤ 700 lines
 
 #### 4h: Exceptions cluster → `test_exceptions.py` (keep + enrich)
+
 - Absorb: `test_coverage_exceptions.py` (434)
 - Target: single `test_exceptions.py` ≤ 1,000 lines
 
 #### 4i: Utilities mapper cluster → `test_utilities_mapper.py` (new primary)
+
 - Absorb: `test_utilities_mapper_coverage_100.py` (526), `test_utilities_data_mapper.py` (178)
 - Target: single `test_utilities_mapper.py` ≤ 1,400 lines
 
 #### 4j: Utilities collection cluster → `test_utilities_collection.py` (new primary)
+
 - Absorb: `test_collection_utilities_coverage_100.py` (303), `test_collections_coverage_100.py` (350)
 - Target: single `test_utilities_collection.py` ≤ 1,200 lines
 
 #### 4k: Decorators cluster → `test_decorators.py` (keep + enrich)
+
 - Absorb: `test_decorators_full_coverage.py` (608), `test_decorators_discovery_full_coverage.py`
 - Target: single `test_decorators.py` ≤ 700 lines
 
 #### 4l: Handlers cluster → `test_handlers.py` (keep + enrich)
+
 - Absorb: `test_handlers_full_coverage.py`, `test_handler_decorator_discovery.py`
 - Target: single `test_handlers.py` ≤ 650 lines
 
 #### 4m: Registry cluster → `test_registry.py` (keep + enrich)
+
 - Absorb: `test_registry_full_coverage.py`
 - Target: single `test_registry.py` ≤ 400 lines
 
 #### 4n: Mixins cluster → `test_mixins.py` (keep + enrich)
+
 - Absorb: `test_mixins_full_coverage.py` (590)
 - Target: single `test_mixins.py` ≤ 700 lines
 
@@ -179,6 +193,7 @@ When merging files, apply these rules to the resulting test:
 
 1. **Boilerplate padding block** — Remove this block from all merged files (it appears
    in 20+ `*_full_coverage.py` files):
+
    ```python
    assert c.UNKNOWN_ERROR
    assert isinstance(m.Categories(), m.Categories)
@@ -224,6 +239,7 @@ When merging files, apply these rules to the resulting test:
 ## Quality constraints for execution
 
 Every merged file must pass:
+
 ```bash
 make check PROJECT=flext-core CHECK_GATES=lint
 make test PROJECT=flext-core PYTEST_ARGS="-k <test_name> -x -q"

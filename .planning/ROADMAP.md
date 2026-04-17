@@ -33,6 +33,7 @@ Full phase details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 **Phase 9 Requirements:** ROPE-01 through ROPE-07
 
 Plans:
+
 - [x] 09-01-PLAN.md — Rope Project init + engine hook infrastructure
 - [x] 09-02-PLAN.md — Migrate 3 transformers to rope (symbol_propagator, mro_reference_rewriter, nested_class_propagation)
 - [x] 09-03-PLAN.md — Audit remaining transformers + LOC verification
@@ -44,6 +45,7 @@ Plans:
 **Plans:** 8 plans
 
 Plans:
+
 - [x] 10-01-PLAN.md — Foundation: api.py MRO facade + base.py simplification
 - [x] 10-02-PLAN.md — Simple domains: basemk, github, release thin orchestrators
 - [x] 10-03-PLAN.md — Medium domains: check + validate thin orchestrators

@@ -13,6 +13,7 @@
 ## File Structure
 
 ### Create (10 files)
+
 - `flext-infra/src/flext_infra/cli.py` — Root `FlextInfraCli` MRO facade
 - `flext-infra/src/flext_infra/basemk/cli.py` — `FlextInfraCliBasemk`
 - `flext-infra/src/flext_infra/codegen/cli.py` — `FlextInfraCliCodegen`
@@ -25,6 +26,7 @@
 - `flext-infra/src/flext_infra/maintenance/cli.py` — `FlextInfraCliMaintenance`
 
 ### Modify (12 files)
+
 - `flext-infra/src/flext_infra/__main__.py` — thin entry → `FlextInfraCli().run()`
 - `flext-infra/src/flext_infra/basemk/__main__.py` — thin entry
 - `flext-infra/src/flext_infra/codegen/__main__.py` — thin entry
@@ -39,6 +41,7 @@
 - `flext-infra/src/flext_infra/Makefile` (root) — update orchestrate `--projects` flag
 
 ### Delete (.bak per CLAUDE.md)
+
 - `flext-infra/src/flext_infra/_utilities/output.py` → `.bak`
 - `flext-infra/src/flext_infra/_utilities/terminal.py` → `.bak`
 - `flext-infra/src/flext_infra/_utilities/cli.py` → `.bak`
@@ -79,6 +82,7 @@ Key: handler IS the service method. `execute_command(params: Input) -> p.Result[
 ## Task 1: Group CLI Mixin — maintenance (simplest, proves pattern)
 
 **Files:**
+
 - Create: `flext-infra/src/flext_infra/maintenance/cli.py`
 - Modify: `flext-infra/src/flext_infra/maintenance/__main__.py`
 - Modify: `flext-infra/src/flext_infra/maintenance/python_version.py` (add `execute_command`)
@@ -172,6 +176,7 @@ Same pattern as Task 1, repeated for each group. Each group gets:
 ### Task 2a: basemk/cli.py
 
 **Files:**
+
 - Create: `flext-infra/src/flext_infra/basemk/cli.py`
 - Modify: `flext-infra/src/flext_infra/basemk/generator.py` (add `execute_command`)
 - Modify: `flext-infra/src/flext_infra/basemk/__main__.py` (thin entry)
@@ -245,6 +250,7 @@ Same 3-line pattern as maintenance but with `["basemk", ...]`.
 ### Task 2b–2h: docs, validate, workspace, release, codegen, github, refactor
 
 Identical pattern for each group. Each needs:
+
 1. `execute_command(params: m.Infra.XxxInput) -> p.Result[T]` on the service
 2. `{group}/cli.py` with `FlextInfraCli{Group}`
 3. Thin `__main__.py`
@@ -263,6 +269,7 @@ For **workspace**: `orchestrate` command uses `--projects` flag (space-separated
 ## Task 3: Root FlextInfraCli
 
 **Files:**
+
 - Create: `flext-infra/src/flext_infra/cli.py`
 
 - [ ] **Step 1: Create root cli.py**

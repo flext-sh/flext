@@ -5,7 +5,7 @@
 
 **Date:** 2026-03-24
 **Phase:** 02-architecture-solid
-**Areas discussed:** Plan Decomposition, Field Migration Scope, ABC→Protocol Strategy, TypeAdapter Caching
+**Areas discussed:** Plan Decomposition, u.Field Migration Scope, ABC→Protocol Strategy, TypeAdapter Caching
 **Mode:** Auto (all decisions auto-selected with recommended defaults)
 
 ---
@@ -15,23 +15,23 @@
 | Option | Description | Selected |
 |--------|-------------|----------|
 | Wave-based (core→consumers) | Same project-cascade approach as Phase 1 | |
-| Requirement-based waves | Group by requirement cluster (protocols→Field→aliases) | ✓ |
+| Requirement-based waves | Group by requirement cluster (protocols→u.Field→aliases) | ✓ |
 | Per-requirement plans | One plan per ARCH requirement | |
 
 **User's choice:** [auto] Requirement-based waves
-**Notes:** Phase 2 requirements are independent unlike Phase 1's cascading type errors. Protocols change signatures (do first), Field migration is mechanical (do second), aliases/imports are cleanup (do last).
+**Notes:** Phase 2 requirements are independent unlike Phase 1's cascading type errors. Protocols change signatures (do first), u.Field migration is mechanical (do second), aliases/imports are cleanup (do last).
 
 ---
 
-## Field Migration Scope
+## u.Field Migration Scope
 
 | Option | Description | Selected |
 |--------|-------------|----------|
-| Production only | ~1,100 m.Field() usages in src/ | |
-| All including tests | ~1,551 m.Field() usages across src/ and tests/ | ✓ |
+| Production only | ~1,100 u.Field() usages in src/ | |
+| All including tests | ~1,551 u.Field() usages across src/ and tests/ | ✓ |
 
 **User's choice:** [auto] All including tests
-**Notes:** Sisyphus plan confirms tests in scope. PrivateAttr (94 usages) explicitly excluded.
+**Notes:** Sisyphus plan confirms tests in scope. u.PrivateAttr (94 usages) explicitly excluded.
 
 ---
 

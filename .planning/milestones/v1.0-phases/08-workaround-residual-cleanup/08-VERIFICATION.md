@@ -95,5 +95,5 @@ No gaps. All 5 must-have truths are verified. The 2 gaps from initial verificati
 
 ---
 
-_Verified: 2026-03-25_
-_Verifier: Claude (gsd-verifier)_
+*Verified: 2026-03-25*
+*Verifier: Claude (gsd-verifier)*

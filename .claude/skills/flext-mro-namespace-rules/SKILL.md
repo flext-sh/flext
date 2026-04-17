@@ -91,10 +91,10 @@ class FlextTargetOracleModels(m):
             """Result of an Oracle batch execute operation."""
 
             rows_affected: Annotated[
-                int, m.Field(description="Number of rows modified")
+                int, u.Field(description="Number of rows modified")
             ]
             table_name: Annotated[
-                t.NonEmptyStr, m.Field(description="Target Oracle table")
+                t.NonEmptyStr, u.Field(description="Target Oracle table")
             ]
 
 
@@ -108,8 +108,9 @@ def execute_batch(table: str) -> p.Result[ExecuteResult]:
 ```
 
 Why good:
-- **All Pydantic via `m`** — never `from pydantic import BaseModel, Field, ...`
-- **No policy sentinels in model examples** — focus stays on Pydantic contracts (`m.Field`, `m.ConfigDict`, validators)
+
+- **All Pydantic via `m`** — never `from pydantic import BaseModel, u.Field, ...`
+- **No policy sentinels in model examples** — focus stays on Pydantic contracts (`u.Field`, `m.ConfigDict`, validators)
 - **Organic nesting** — `m.TargetOracle.ExecuteResult`, not flattened
 - **MRO chains Pydantic** — all decorators/types accessed through facade MRO
 - **Clear domain boundaries** — each namespace has its own models, validators, state

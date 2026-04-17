@@ -13,6 +13,7 @@
 ### Task 1: Fix immediate bugs (norm_string, missing exports)
 
 **Files:**
+
 - Modify: `flext-ldap/src/flext_ldap/services/operations.py:1223`
 - Modify: `flext-ldap/src/flext_ldap/api.py:583` (docstring ref)
 - Modify: `flext-ldap/src/flext_ldap/constants.py` (add callback param constants)
@@ -26,10 +27,11 @@
 ### Task 2: Convert FlextLdapConnection to MRO mixin
 
 **Files:**
+
 - Modify: `flext-ldap/src/flext_ldap/services/connection.py`
 
 - [ ] **Step 1: Change base class from `s[bool]` to `FlextLdapServiceBase`**
-- [ ] **Step 2: Replace `__init__` with PrivateAttr defaults + lazy init**
+- [ ] **Step 2: Replace `__init__` with u.PrivateAttr defaults + lazy init**
 - [ ] **Step 3: Absorb detection.py into Connection (inner class or method)**
 - [ ] **Step 4: Ensure connect/disconnect/is_connected/execute work as MRO methods**
 - [ ] **Step 5: Run ruff + pyrefly**
@@ -38,6 +40,7 @@
 ### Task 3: Convert FlextLdapOperations to MRO mixin
 
 **Files:**
+
 - Modify: `flext-ldap/src/flext_ldap/services/operations.py`
 
 - [ ] **Step 1: Remove `_connection` field — use `self._adapter` directly (shared MRO)**
@@ -50,6 +53,7 @@
 ### Task 4: Rewrite ldap as MRO facade
 
 **Files:**
+
 - Rewrite: `flext-ldap/src/flext_ldap/api.py`
 
 - [ ] **Step 1: ldap MRO: `class ldap(FlextLdapConnection, FlextLdapOperations):`**
@@ -65,6 +69,7 @@
 ### Task 5: Update **init**.py exports
 
 **Files:**
+
 - Modify: `flext-ldap/src/flext_ldap/__init__.py`
 
 - [ ] **Step 1: Remove FlextLdapConnection, FlextLdapOperations from public exports (internal now)**
@@ -75,6 +80,7 @@
 ### Task 6: Fix all flext-ldap tests
 
 **Files:**
+
 - Modify: all files in `flext-ldap/tests/unit/` and `flext-ldap/tests/integration/`
 
 - [ ] **Step 1: Update test_api.py — ldap() direct, fix imports**
@@ -88,6 +94,7 @@
 ### Task 7: Update consumers (tap/target/dbt-ldap)
 
 **Files:**
+
 - Modify: `flext-tap-ldap/src/flext_tap_ldap/client.py`
 - Modify: `flext-target-ldap/src/flext_target_ldap/client.py`
 - Modify: `flext-target-ldap/src/flext_target_ldap/target_client.py`
@@ -101,6 +108,7 @@
 ### Task 8: Update algar-oud-mig (production consumer)
 
 **Files:**
+
 - Modify: `algar-oud-mig/src/algar_oud_mig/base.py`
 - Modify: `algar-oud-mig/src/algar_oud_mig/services/sync.py`
 - Modify: `algar-oud-mig/examples/05_ldap_connection.py`
@@ -114,6 +122,7 @@
 ### Task 9: Archive dead code
 
 **Files:**
+
 - Move: `flext-ldap/src/flext_ldap/services/detection.py` → `.bak`
 - Move: `flext-ldap/src/flext_ldap/services/sync.py` → `.bak`
 

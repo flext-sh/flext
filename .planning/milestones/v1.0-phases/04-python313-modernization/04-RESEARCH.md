@@ -13,6 +13,7 @@ Key finding: most changes are mechanical (ast-grep scriptable). The StrEnum @uni
 **Primary recommendation:** Execute in 3 waves: (1) MOD-01+MOD-05 mechanical replacements, (2) MOD-03+MOD-04 enum standardization, (3) MOD-02+MOD-06 framework removal.
 
 <phase_requirements>
+
 ## Phase Requirements
 
 | ID | Description | Research Support |
@@ -48,9 +49,11 @@ No new dependencies. All changes use Python 3.13 stdlib:
 ## Architecture Patterns
 
 ### Pattern 1: StrEnum @unique Decorator
+
 **What:** Add `@unique` decorator to all StrEnum subclasses
 **When to use:** Every StrEnum class definition in src/
 **Example:**
+
 ```python
 from enum import StrEnum, unique
 
@@ -62,10 +65,12 @@ class Status(StrEnum):
 ```
 
 ### Pattern 2: Literal-to-StrEnum Conversion
+
 **What:** Replace `Literal["a", "b", "c"]` type aliases with StrEnum classes
 **When to use:** When the Literal represents a fixed set of domain values (not function overload discriminators)
 **Do NOT convert:** `Literal["str", "bool"]` used as type discriminators in function signatures, or single-value Literals used for overloading
 **Example:**
+
 ```python
 # Before
 type OutputFormatLiteral = Literal["json", "yaml", "csv", "table", "plain"]
@@ -82,8 +87,10 @@ class OutputFormat(StrEnum):
 ```
 
 ### Pattern 3: stdlib deprecated decorator
+
 **What:** Replace `FlextUtilitiesDeprecation.deprecated()` with `warnings.deprecated`
 **Example:**
+
 ```python
 # Before
 @u.deprecated(replacement="new_func", version="0.14.0")
@@ -99,8 +106,10 @@ def old_func(): ...
 ```
 
 ### Pattern 4: defaultdict for grouping
+
 **What:** Replace `.setdefault(key, []).append(val)` with `defaultdict(list)`
 **Example:**
+
 ```python
 # Before
 result: dict[str, list[str]] = {}
@@ -116,6 +125,7 @@ for item in items:
 ```
 
 ### Anti-Patterns to Avoid
+
 - **Don't convert Literal used in function overloads** — `Literal["str", "bool"]` as param type discriminators must stay as Literal
 - **Don't convert setdefault used for settings defaults** — `kwargs.setdefault("key", default_value)` is NOT a grouping pattern
 - **Don't break **init**.py exports** — if removing FlextUtilitiesDeprecation, update generators not hand-edit
@@ -132,24 +142,29 @@ for item in items:
 ## Common Pitfalls
 
 ### Pitfall 1: Literal-to-StrEnum breaks Pydantic validation
+
 **What goes wrong:** Pydantic fields typed as `Literal["a", "b"]` accept raw strings. Changing to StrEnum may break deserialization if callers pass strings.
 **How to avoid:** StrEnum inherits from str, so Pydantic coerces strings to StrEnum automatically. Test serialization round-trips.
 
 ### Pitfall 2: defaultdict changes dict behavior
+
 **What goes wrong:** `defaultdict` auto-creates missing keys on access. Code that checks `if key in dict` still works, but `dict[missing_key]` no longer raises KeyError.
 **How to avoid:** Only convert `.setdefault(k, []).append(v)` grouping patterns. Leave settings-default patterns as-is.
 
 ### Pitfall 3: FlextUtilitiesDeprecation has custom features
+
 **What goes wrong:** The custom framework has `warn_once()` (deduplication), `warn_polymorphic_input()`, and `deprecated_parameter()` — these have no direct stdlib equivalent.
 **How to avoid:** `warn_once()` and `warn_polymorphic_input()` should remain as standalone functions or be absorbed into a simpler utility. Only `deprecated()` and `deprecated_class()` map directly to `warnings.deprecated`.
 
 ### Pitfall 4: Frozen _utilities directory
+
 **What goes wrong:** `flext-core/_utilities/collection.py` (contains `chunk()`) and `_utilities/deprecation.py` are in the frozen `_utilities/*` directory.
 **How to avoid:** Operator must explicitly unfreeze these files for Phase 4 changes, or changes must be made only at the caller sites (inline `batched()` calls, bypass the wrapper).
 
 ## Code Examples
 
 ### MOD-01: Replace u.chunk() callers with itertools.batched
+
 ```python
 # Find callers of u.chunk()
 # Replace: batches = u.chunk(records, 100)
@@ -158,6 +173,7 @@ from itertools import batched
 ```
 
 ### MOD-03: ast-grep rule for adding @unique
+
 ```yaml
 # sg rule to find StrEnum without @unique
 id: strenum-missing-unique
@@ -180,6 +196,7 @@ rule:
 ## Validation Architecture
 
 ### Test Framework
+
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
@@ -188,6 +205,7 @@ rule:
 | Full suite command | `make test` |
 
 ### Phase Requirements → Test Map
+
 | Req ID | Behavior | Test Type | Automated Command | File Exists? |
 |--------|----------|-----------|-------------------|-------------|
 | MOD-01 | itertools.batched replaces chunk() | unit | `.venv/bin/pytest flext-core/tests/unit/test_utilities_collection_full_coverage.py -x` | Existing |
@@ -198,20 +216,24 @@ rule:
 | MOD-06 | UserDict→BaseModel | unit | `.venv/bin/pytest flext-auth/tests/ -x` | Existing |
 
 ### Sampling Rate
+
 - **Per task commit:** `.venv/bin/pytest tests/unit/ -x --no-header -q` (in affected project)
 - **Per wave merge:** `make test`
 - **Phase gate:** Full suite green + `make lint` + `make typecheck`
 
 ### Wave 0 Gaps
+
 None — existing test infrastructure covers all phase requirements.
 
 ## Detailed Inventory
 
 ### MOD-01: Custom batching (1 site)
+
 - `flext-core/src/flext_core/_utilities/collection.py:382` — `chunk()` method already wraps `itertools.batched()` internally
 - Callers use `u.chunk()` — need to find all callers and replace with direct `batched()` or keep thin wrapper
 
 ### MOD-02: FlextUtilitiesDeprecation (1 file, 193 lines)
+
 - `flext-core/src/flext_core/_utilities/deprecation.py` — full framework
 - Already imports `from warnings import deprecated as _stdlib_deprecated` and delegates
 - Methods to handle:
@@ -223,22 +245,26 @@ None — existing test infrastructure covers all phase requirements.
 - No callers found for `u.deprecated` in src/ (0 usages) — framework may be unused
 
 ### MOD-03: StrEnum @unique gap
+
 - 297 StrEnum classes in src/
 - 292 @unique decorators in src/
 - Gap: ~5 StrEnum classes missing @unique (need precise identification)
 
 ### MOD-04: Literal unions (108 occurrences, 44 files)
+
 - Many are genuine domain enumerations (OutputFormat, LogLevel, etc.)
 - Some are type discriminators that MUST stay as Literal (e.g., `Literal["str", "bool"]` in cli.py)
 - Triage needed: estimate ~60-70 convertible based on manual review of grep output
 
 ### MOD-05: setdefault grouping (23 occurrences, 8 files)
+
 - `flext-infra/` has most occurrences (refactoring tools, codegen) — genuine grouping patterns
 - `flext-ldif/` parser uses `.setdefault(key, []).append(value)` — classic grouping
 - Settings-default patterns (`.setdefault("key", scalar)`) should NOT be converted
 - Estimate: ~10-12 genuine grouping patterns convertible to defaultdict
 
 ### MOD-06: UserDict in production (1 class)
+
 - `flext-auth/src/flext_auth/models.py:481` — `ProviderConfiguration(UserDict[str, t.ContainerValue])`
 - All other UserDict/UserString usages are in test code (test fixtures for edge cases)
 - Test code UserDict usages should remain (they test dict-like behavior)
@@ -263,17 +289,20 @@ None — existing test infrastructure covers all phase requirements.
 ## Sources
 
 ### Primary (HIGH confidence)
+
 - Codebase grep analysis across all 33 projects (2026-03-24)
 - `flext-core/src/flext_core/_utilities/deprecation.py` — full source reviewed
 - `flext-core/src/flext_core/_utilities/collection.py` — chunk() implementation reviewed
 
 ### Secondary (MEDIUM confidence)
+
 - Python 3.13 stdlib: `itertools.batched` (PEP 615), `warnings.deprecated` (PEP 702), `enum.@unique`
 - Count estimates based on grep pattern matching (may have false positives in Literal count)
 
 ## Metadata
 
 **Confidence breakdown:**
+
 - Standard stack: HIGH — all stdlib, no new deps
 - Architecture: HIGH — patterns are mechanical, well-understood
 - Pitfalls: HIGH — identified freeze policy and Literal triage as main risks

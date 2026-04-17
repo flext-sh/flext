@@ -9,18 +9,18 @@ Automate the consolidation of inline constants into `c.Infra.*` references by re
 
 ## What Already Exists (90%)
 
-| Need | Existing API | Module |
-|------|-------------|--------|
-| Find `Final[...] = value` | `extract_constant_definitions()` | `codegen_constant_detection` |
-| Match value → canonical | `canonical_reference_for()` | `codegen_constant_detection` |
-| Replace value with `c.Attr` | `replace_canonical_values()` | `codegen_constant_transformation` |
-| Normalize `FlextXConstants.Y` → `c.Y` | `normalize_constant_aliases()` | `codegen_constant_transformation` |
-| Detect duplicates | `detect_duplicate_constants()` | `codegen_constant_analysis` |
-| Detect unused | `detect_unused_constants()` | `codegen_constant_detection` |
-| Remove unused | `remove_unused_constants()` | `codegen_constant_transformation` |
-| Scan violations (11 patterns) | `scan_source()` | `violation_census_visitor` |
-| Governance canonical map | YAML + `get_canonical_str/int_values()` | `codegen_governance` |
-| CLI codegen | `census`, `deduplicate`, `auto-fix` | `codegen/cli.py` |
+| Need                                  | Existing API                            | Module                            |
+| ------------------------------------- | --------------------------------------- | --------------------------------- |
+| Find `Final[...] = value`             | `extract_constant_definitions()`        | `codegen_constant_detection`      |
+| Match value → canonical               | `canonical_reference_for()`             | `codegen_constant_detection`      |
+| Replace value with `c.Attr`           | `replace_canonical_values()`            | `codegen_constant_transformation` |
+| Normalize `FlextXConstants.Y` → `c.Y` | `normalize_constant_aliases()`          | `codegen_constant_transformation` |
+| Detect duplicates                     | `detect_duplicate_constants()`          | `codegen_constant_analysis`       |
+| Detect unused                         | `detect_unused_constants()`             | `codegen_constant_detection`      |
+| Remove unused                         | `remove_unused_constants()`             | `codegen_constant_transformation` |
+| Scan violations (11 patterns)         | `scan_source()`                         | `violation_census_visitor`        |
+| Governance canonical map              | YAML + `get_canonical_str/int_values()` | `codegen_governance`              |
+| CLI codegen                           | `census`, `deduplicate`, `auto-fix`     | `codegen/cli.py`                  |
 
 ## What's New (10%)
 
@@ -55,6 +55,7 @@ python -m flext_infra codegen consolidate [--projects PATH] [--dry-run] [--apply
 **Pipeline (two phases):**
 
 Phase 1 — Scan (always runs):
+
 1. `extract_constant_definitions()` per file
 2. `detect_hardcoded_canonicals()` for exact matches
 3. `scan_constant_usages()` for direct refs needing normalization
@@ -62,6 +63,7 @@ Phase 1 — Scan (always runs):
 
 Phase 2 — Apply (with `--apply`):
 For each file with exact/structural matches:
+
 1. Read source (backup in memory)
 2. Call `replace_canonical_values()` + `normalize_constant_aliases()`
 3. Validate via subprocess: `ruff check`, `pyright`, `mypy`, `pyrefly` on the single file

@@ -16,7 +16,7 @@ type ZerologLogger struct {
 
 // NewZerologLogger creates a new zerolog-based logger
 func NewZerologLogger(cfg LoggingConfig) Logger {
-	// Configure zerolog based on settings
+	// Configure zerolog based on config
 	zerolog.TimeFieldFormat = time.RFC3339
 
 	// Set log level

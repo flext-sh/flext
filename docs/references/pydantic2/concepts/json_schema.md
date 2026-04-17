@@ -3,7 +3,7 @@
 - [Generating JSON Schema](#generating-json-schema)
   - [Configuring the `JsonSchemaMode`](#configuring-the-jsonschemamode)
 - [Customizing JSON Schema](#customizing-json-schema)
-  - [Field-Level Customization](#field-level-customization)
+  - [u.Field-Level Customization](#field-level-customization)
   - [Programmatic field title generation](#programmatic-field-title-generation)
   - [Model-Level Customization](#model-level-customization)
   - [Using `json_schema_extra`](#using-jsonschemaextra)
@@ -69,7 +69,7 @@ import json
 from enum import Enum
 from typing import Annotated, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 from pydantic.config import ConfigDict
 
 
@@ -93,8 +93,8 @@ class MainModel(BaseModel):
     model_config = ConfigDict(title="Main")
 
     foo_bar: FooBar
-    gender: Annotated[Union[Gender, None], Field(alias="Gender")] = None
-    snap: int = Field(
+    gender: Annotated[Union[Gender, None], u.Field(alias="Gender")] = None
+    snap: int = u.Field(
         default=42,
         title="The Snap",
         description="this is the value of snap",
@@ -336,7 +336,7 @@ print(Model.model_json_schema(mode="serialization"))
 
 The generated JSON schema can be customized at both the field level and model level via:
 
-1. [Field-level customization](#field-level-customization) with the [`Field`][pydantic.fields.Field] constructor
+1. [u.Field-level customization](#field-level-customization) with the [`u.Field`][pydantic.fields.u.Field] constructor
 2. [Model-level customization](#model-level-customization) with [`model_config`][pydantic.config.ConfigDict]
 
 At both the field and model levels, you can use the `json_schema_extra` option to add extra information to the JSON schema.
@@ -349,9 +349,9 @@ For custom types, Pydantic offers other tools for customizing JSON schema genera
 3. [Implementing `__get_pydantic_core_schema__`](#implementing_get_pydantic_core_schema)
 4. [Implementing `__get_pydantic_json_schema__`](#implementing_get_pydantic_json_schema)
 
-### Field-Level Customization
+### u.Field-Level Customization
 
-Optionally, the [`Field`][pydantic.fields.Field] function can be used to provide extra information about the field
+Optionally, the [`u.Field`][pydantic.fields.u.Field] function can be used to provide extra information about the field
 and validations.
 
 Some field parameters are used exclusively to customize the generated JSON Schema:
@@ -367,14 +367,14 @@ Here's an example:
 ```python {output="json"}
 import json
 
-from pydantic import BaseModel, EmailStr, Field, SecretStr
+from pydantic import BaseModel, EmailStr, u.Field, SecretStr
 
 
 class User(BaseModel):
-    age: int = Field(description="Age of the user")
-    email: EmailStr = Field(examples=["marcelo@mail.com"])
-    name: str = Field(title="Username")
-    password: SecretStr = Field(
+    age: int = u.Field(description="Age of the user")
+    email: EmailStr = u.Field(examples=["marcelo@mail.com"])
+    name: str = u.Field(title="Username")
+    password: SecretStr = u.Field(
         json_schema_extra={
             "title": "Password",
             "description": "Password of the user",
@@ -427,32 +427,32 @@ print(json.dumps(User.model_json_schema(), indent=2))
 """
 ```
 
-#### Unenforced `Field` constraints
+#### Unenforced `u.Field` constraints
 
 If Pydantic finds constraints which are not being enforced, an error will be raised. If you want to force the
 constraint to appear in the schema, even though it's not being checked upon parsing, you can use variadic arguments
-to [`Field`][pydantic.fields.Field] with the raw schema attribute name:
+to [`u.Field`][pydantic.fields.u.Field] with the raw schema attribute name:
 
 ```python
-from pydantic import BaseModel, Field, PositiveInt
+from pydantic import BaseModel, u.Field, PositiveInt
 
 try:
     # this won't work since `PositiveInt` takes precedence over the
-    # constraints defined in `Field`, meaning they're ignored
+    # constraints defined in `u.Field`, meaning they're ignored
     class Model(BaseModel):
-        foo: PositiveInt = Field(lt=10)
+        foo: PositiveInt = u.Field(lt=10)
 
 except ValueError as e:
     print(e)
 
 
 # if you find yourself needing this, an alternative is to declare
-# the constraints in `Field` (or you could use `conint()`)
+# the constraints in `u.Field` (or you could use `conint()`)
 # here both constraints will be enforced:
 class ModelB(BaseModel):
     # Here both constraints will be applied and the schema
     # will be generated correctly
-    foo: int = Field(gt=0, lt=10)
+    foo: int = u.Field(gt=0, lt=10)
 
 
 print(ModelB.model_json_schema())
@@ -473,19 +473,19 @@ print(ModelB.model_json_schema())
 """
 ```
 
-You can specify JSON schema modifications via the [`Field`][pydantic.fields.Field] constructor via [`typing.Annotated`][] as well:
+You can specify JSON schema modifications via the [`u.Field`][pydantic.fields.u.Field] constructor via [`typing.Annotated`][] as well:
 
 ```python {output="json"}
 import json
 from typing import Annotated
 from uuid import uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class Foo(BaseModel):
-    id: Annotated[str, Field(default_factory=lambda: uuid4().hex)]
-    name: Annotated[str, Field(max_length=256)] = Field("Bar", title="CustomName")
+    id: Annotated[str, u.Field(default_factory=lambda: uuid4().hex)]
+    name: Annotated[str, u.Field(max_length=256)] = u.Field("Bar", title="CustomName")
 
 
 print(json.dumps(Foo.model_json_schema(), indent=2))
@@ -518,17 +518,17 @@ See the following example:
 ```python
 import json
 
-from pydantic import BaseModel, Field
-from pydantic.fields import FieldInfo
+from pydantic import BaseModel, u.Field
+from pydantic.fields import u.FieldInfo
 
 
-def make_title(field_name: str, field_info: FieldInfo) -> str:
+def make_title(field_name: str, field_info: u.FieldInfo) -> str:
     return field_name.upper()
 
 
 class Person(BaseModel):
-    name: str = Field(field_title_generator=make_title)
-    age: int = Field(field_title_generator=make_title)
+    name: str = u.Field(field_title_generator=make_title)
+    age: int = u.Field(field_title_generator=make_title)
 
 
 print(json.dumps(Person.model_json_schema(), indent=2))
@@ -568,7 +568,7 @@ Specifically, the following settings options are relevant:
 ### Using `json_schema_extra`
 
 The `json_schema_extra` option can be used to add extra information to the JSON schema, either at the
-[Field level](#field-level-customization) or at the [Model level](#model-level-customization).
+[u.Field level](#field-level-customization) or at the [Model level](#model-level-customization).
 You can pass a `dict` or a `Callable` to `json_schema_extra`.
 
 #### Using `json_schema_extra` with a `dict`
@@ -617,7 +617,7 @@ You can pass a `Callable` to `json_schema_extra` to modify the JSON schema with 
 ```python {output="json"}
 import json
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 def pop_default(s):
@@ -625,7 +625,7 @@ def pop_default(s):
 
 
 class Model(BaseModel):
-    a: int = Field(default=1, json_schema_extra=pop_default)
+    a: int = u.Field(default=1, json_schema_extra=pop_default)
 
 
 print(json.dumps(Model.model_json_schema(), indent=2))
@@ -659,11 +659,11 @@ from typing import Annotated
 
 from typing_extensions import TypeAlias
 
-from pydantic import Field, TypeAdapter
+from pydantic import u.Field, TypeAdapter
 
-ExternalType: TypeAlias = Annotated[int, Field(json_schema_extra={"key1": "value1"})]
+ExternalType: TypeAlias = Annotated[int, u.Field(json_schema_extra={"key1": "value1"})]
 
-ta = TypeAdapter(Annotated[ExternalType, Field(json_schema_extra={"key2": "value2"})])
+ta = TypeAdapter(Annotated[ExternalType, u.Field(json_schema_extra={"key2": "value2"})])
 print(json.dumps(ta.json_schema(), indent=2))
 """
 {
@@ -1347,7 +1347,7 @@ uses a no-op `sort` method to disable sorting entirely, which is reflected in th
 import json
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
 
 
@@ -1362,7 +1362,7 @@ class MyGenerateJsonSchema(GenerateJsonSchema):
 class Bar(BaseModel):
     c: str
     b: str
-    a: str = Field(json_schema_extra={"c": "hi", "b": "hello", "a": "world"})
+    a: str = u.Field(json_schema_extra={"c": "hi", "b": "hello", "a": "world"})
 
 
 json_schema = Bar.model_json_schema(schema_generator=MyGenerateJsonSchema)
@@ -1465,10 +1465,10 @@ print(
 - The `Decimal` type is exposed in JSON schema (and serialized) as a string.
 - Since the `namedtuple` type doesn't exist in JSON, a model's JSON schema does not preserve `namedtuple`s as `namedtuple`s.
 - Sub-models used are added to the `$defs` JSON attribute and referenced, as per the spec.
-- Sub-models with modifications (via the `Field` class) like a custom title, description, or default value,
+- Sub-models with modifications (via the `u.Field` class) like a custom title, description, or default value,
   are recursively included instead of referenced.
 - The `description` for models is taken from either the docstring of the class or the argument `description` to
-  the `Field` class.
+  the `u.Field` class.
 - The schema is generated by default using aliases as keys, but it can be generated using model
   property names instead by calling [`model_json_schema()`][pydantic.main.BaseModel.model_JSON_schema] or
   [`model_dump_json()`][pydantic.main.BaseModel.model_dump_JSON] with the `by_alias=False` keyword argument.

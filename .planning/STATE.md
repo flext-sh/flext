@@ -104,7 +104,7 @@ Recent decisions affecting current work:
 - [Phase 01-02]: flext-infra and flext-tests already nearly clean — only 1 bare object annotation fixed in matchers.py
 - [Phase 02-architecture-solid]: s was the only remaining ABC in flext-core — all other ABCs already converted in prior work
 - [Phase 02-architecture-solid]: settings_type changed to type[p.Settings] in both mixins.py and service.py for DIP compliance
-- [Phase 02-architecture-solid]: Redundant Annotated[T, m.Field(...)] = m.Field(...) cleaned to just Annotated form
+- [Phase 02-architecture-solid]: Redundant Annotated[T, u.Field(...)] = u.Field(...) cleaned to just Annotated form
 - [Phase 02-architecture-solid]: Dynamic TypeAdapter(target) with runtime type params accepted as uncacheable (~7 in flext-core)
 - [Phase 02-architecture-solid]: PEP 695 type aliases mandatory; test fixtures with old syntax preserved as validator test data
 - [Phase 03]: git.py root: Path renamed to repo_root (polymorphic across workspace/submodule repos)
@@ -122,7 +122,7 @@ Recent decisions affecting current work:
 - [Phase 05-package-migration]: Poetry fully removed from toolchain — all make/CI/envrc use uv
 - [Phase 06-typing-gap-closure]: Direct TypeGuard->TypeIs replacement — semantics compatible for is_registered_command usage
 - [Phase 06-typing-gap-closure]: Typed constructors (list[T](), dict[K,V]()) used for subscript/attr targets instead of annotated assignments
-- [Phase 07]: BeforeValidator lambda pattern for StrEnum coercion on strict Pydantic models
+- [Phase 07]: m.BeforeValidator lambda pattern for StrEnum coercion on strict Pydantic models
 - [Phase 07]: No circular import in _utilities_loader.py — actual issue was missing OutputBackend inner class on FlextInfraUtilitiesOutput
 - [Phase 08]: structlog.get_logger() for print() replacement; D-03 exemptions preserved for test cleanup utilities
 - [Phase 08]: Pydantic ValidationError narrowed to ValueError/TypeError/KeyError for model_validate catches

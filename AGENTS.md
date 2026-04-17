@@ -34,6 +34,7 @@
 <!-- TOC END -->
 
 ---
+
 description:
 alwaysApply: true
 ---
@@ -50,12 +51,14 @@ alwaysApply: true
 ## §2 Architecture Law
 
 ### 2.1 Dependency Flow & Layers
+
 - **Inward Flow**: Dependency flow is inward only (`L3 -> L2 -> L1 -> L0`). Reverse imports are FORBIDDEN.
 - **Layer Breakdown**: `L3` = Orchestration, `L2` = Domain/Infrastructure, `L1` = Foundation/Bridge, `L0` = Contracts.
 - **Infrastructure Bridging**: Bridge external infra through runtime/container boundaries, NEVER via direct framework imports.
 - **Platform Chains**: `Core -> Cli -> Meltano -> Integration` (orchestration), `Core -> Web -> Api -> Auth` (API layer).
 
 ### 2.2 Facades, Namespaces & Naming Patterns
+
 - **One Facade Rule**: Each public facade module defines exactly ONE primary facade class plus ONE canonical alias.
 - **Facade Class Naming**: `src/` facades MUST use `Flext<Project><Tier>`. `tests/` facades MUST use `TestsFlext<Project><Tier>`. `examples/` facades MUST use `ExamplesFlext<Project><Tier>`. `scripts/` facades MUST use `ScriptsFlext<Project><Tier>`. Legacy patterns such as `Flext<Project>Test<Tier>`, `FlextTest<Project><Tier>`, and `{Flext<Project>}{Examples|Scripts}<Tier>` are migration debt only and MUST NOT be copied into new work.
 - **Private Mixin Naming**: Classes under `_models/`, `_utilities/`, `_protocols/`, and similar private trees MUST keep the project prefix and append only the module concern (e.g. `FlextInfraUtilitiesImportNormalizer`, `tk`).
@@ -73,6 +76,7 @@ alwaysApply: true
 - **Export Discipline**: `__init__.py` files are exports-only. They must ONLY contain type hints, `__all__`, and the native `__getattr__` module-level lazy load strategy. **These files are AUTO-GENERATED**. You must NEVER edit them manually. Run `make gen` to regenerate lazy initialization exports.
 
 ### 2.3 MRO Inheritance & Namespace Composition
+
 - **Single Namespaced Classes (Production & Tests)**: For both production and test infrastructure, you must create exactly ONE local namespaced class per tier (models, constants, helpers, etc.). All domain logic, constants, and methods MUST reside inside this single class.
 - **Single Root Nested Namespace**: A `src/` facade root defines exactly one local domain namespace class (e.g. `class Infra:`, `class Tests:`). A `tests/` facade root defines exactly one local project-domain namespace whose test-only branch lives under `.Tests`. No other local top-level nested namespace classes are permitted in the facade.
 - **The MRO Cascade & Exhaustive Composition**: Cross-project composition MUST use inheritance via MRO symmetrically across all components. Furthermore, within a project, a top-level facade class MUST strictly compose ALL of its domain-specific subclasses.
@@ -84,15 +88,18 @@ alwaysApply: true
 - **Test Hierarchy Strictness**: In tests, the MRO hierarchy operates in two axes: test tools + domain under test. The test class MUST compose `FlextTests<Tier>` with the project's own `Flext<Project><Tier>` to gain both testing utilities and the full application context transparently.
 
 ### 2.4 Governance Anti-Patterns
+
 - **No Private Imports**: Public contracts MUST be consumed from package facades and root exports only.
 - **No Backward-Compat Aliases**: Backward-compatibility alias layers (e.g. `LegacyX = NewX`) and namespace shadowing are FORBIDDEN. You must NEVER re-assign parent aliases.
 - **No Facade Mirrors**: Public facade modules (e.g. `core.py`, `client.py`) must NEVER duplicate code from `_utilities/` or `_models/` internals. Implementation lives in `_utilities/`; the public module is a thin re-export stub:
+
   ```python
   """Re-export from internal module."""
   from __future__ import annotations
   from <package>._utilities.<module> import <Symbol1>, <Symbol2>
   __all__: list[str] = ["Symbol1", "Symbol2"]
   ```
+
   If `qlty smells` reports `identical-code` between a public file and its `_utilities/` counterpart, replace the public file with a re-export immediately.
 
 *For full MRO matrix, architecture layers, and anti-patterns logic, consult skills:* `flext-mro-namespace-rules`, `flext-architecture-layers`, `flext-patterns`, `rules-flext-core`, `rules-src`.
@@ -147,6 +154,7 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 ```
 
 **Rules**:
+
 1. **No standalone service classes** — every service class MUST be a mixin on the facade.
 2. **No re-export stubs for services** — access is via the facade (`FlextObservability().method()`), not individual class import.
 3. **One concern per mixin** — each `services/*.py` file defines ONE mixin class.
@@ -183,9 +191,10 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 ## §3 Code Law
 
 ### 3.1 Architecture & Code Structure
+
 - **MVI 200-LINE CAP (SUPREME LAW)** module, class, method, or function >200 **code lines** is a violation. Line count is measured via `tokei` (logical LOC only — blank lines, comments, and docstrings are excluded from the count). Refactor immediately using strict OO composition and canonical MRO architecture. Decompose into explicit contracts and reusable domain components—never use compression hacks. **FORBIDDEN approaches to meet the cap**: removing blank lines, removing or compressing docstrings, style/formatting changes that reduce line count, and arbitrary code splits without domain decomposition. Only genuine OO decomposition via MRO inheritance, facade extraction to `_models/`/`_utilities/` subdirectories, and domain responsibility separation are valid.
   - **VALID code reduction** (actively encouraged): deleting dead/unused code, removing unnecessary helpers and pass-through wrappers (`def old(): return new()`), removing proxy functions/classes, removing backward-compat aliases (`LegacyX = NewX`), and replacing inline composed type annotations (`str | t.Numeric`) with canonical `t.*` contracts from `typings.py`. These eliminate real architectural violations and are the preferred first step before OO decomposition.
-- **Pydantic v2 Mastery**: Every class MUST extend Pydantic v2 `BaseModel` (or FLEXT base models) via MRO. Fully utilize `Field()`, `model_config = ConfigDict(...)`, `PrivateAttr()`, and built-in constraints. Standalone `*Settings` classes, unnecessary `@property`, manual `self._x` assignments, line-reduction wrappers, and public `get_*`/`set_*`/`is_*` accessors are FORBIDDEN.
+- **Pydantic v2 Mastery**: Every class MUST extend Pydantic v2 `BaseModel` (or FLEXT base models) via MRO. Fully utilize `u.Field()`, `model_config = ConfigDict(...)`, `u.PrivateAttr()`, and built-in constraints. Standalone `*Settings` classes, unnecessary `@property`, manual `self._x` assignments, line-reduction wrappers, and public `get_*`/`set_*`/`is_*` accessors are FORBIDDEN.
 - **Accessor Naming Law**: Values already present in object state or derived locally MUST be exposed as fields or `@u.computed_field`; mutations MUST occur through validated model state or a domain verb; boolean outcomes/statuses MUST use noun/adjective names such as `success`, `failure`, `expired`, `configured`, `connected`, or `healthy`.
 - **MRO Inheritance Hierarchy**: Domain logic must reside in a single nested class hierarchy. Subprojects inherit from the parent project's facade class to cascade namespaces. Loose functions or standalone classes without MRO lineage are FORBIDDEN. They MUST be absorbed into the namespace classes or used via existing base classes.
 - **Utility & Helper Generalization (`u.*`)**: All shared helpers MUST strictly flow through the `u.*` utilities namespace. Do not duplicate logic. Use and enhance the lowest-level function available, systematically generalizing existing code rather than creating new redundant functions.
@@ -193,6 +202,7 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 - **Centralized Runtime Contracts**: Inputs, outputs, runtime state, and status snapshots MUST flow through central `m.*` models. Eliminate avoidable dict round-trips, ad-hoc conversion helpers, and non-essential type narrowing between service boundaries.
 
 ### 3.2 Types & Contracts
+
 - **Strict Contracts Only**: `Any`, bare `object`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
   - **Exception: Intentional Generic Types** - `t.RecursiveContainerMapping` and `t.RecursiveContainerMapping` ARE permitted ONLY in these contexts:
     1. **Type aliases** (in `typings.py`): `type ProjectSettings = t.RecursiveContainerMapping` with docstring explaining intent
@@ -208,6 +218,7 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 - **`t.Container` Exclusivity**: `type Container = t.Container`. `BaseModel` is TOTALLY FORBIDDEN inside `t.Container`. If both are needed, use explicit `t.Container | BaseModel`.
 
 ### 3.3 Failures & Error Handling
+
 - **`r[T]` for Fallible Operations** function that can fail MUST return `r[T]`. `T | None`, bare exceptions, and ad-hoc error dicts are FORBIDDEN. The `r` alias is mandatory.
 - **Result Outcome Naming**: `r[T]` carriers and result-like protocols/models MUST expose `success`/`failure`, never `is_success`/`is_failure`. Type-guard helpers MUST use non-`is_` names such as `successful_result` and `failed_result`.
 - **DSL-First Failure Construction**: In application/runtime flows, prefer centralized DSL helpers (`e.fail_*`, `r.fail_op`, `r.fail_exc`, and `s.fail_*` helpers) over ad-hoc `r.fail("...")` string construction. Direct `r.fail(...)` is reserved for primitive result internals, test scaffolding, or cases requiring explicit `error_data` passthrough.
@@ -215,17 +226,20 @@ class FlextObservabilityServiceBase(s[t.Dict], ABC):
 - **No Exceptions as Control Flow**: Bare `try/except` in business logic is FORBIDDEN when `r` composition (`map`/`flat_map`/`lash`) can handle the flow. Bare `except:` is universally forbidden. Catch explicit exceptions.
 
 ### 3.4 Tools, Modules & Environment
+
 - **Imports Rules**:
   - `from **future** import annotations
 
 from collections.abc import Mapping, Sequence` MUST be the first import in every Python module.
-  - `typing.TYPE_CHECKING` is ALLOWED ONLY for type-only imports and `__init__.py` lazy loading. Autogenerated `__init__.py` files MUST preserve the lazy-export pattern.
-  - `_LAZY_IMPORTS` string references MUST match real class names exactly.
-  - Import parent components by CLASS NAME (e.g. `from flext_core import FlextProtocols`), never by assigned alias.
-  - **Command & Output Abstractions**: Bare `subprocess` calls, `sys.exit` outside `__main__.py`, direct `dependency_injector` wiring, and `print()` in production are FORBIDDEN. Use provided abstractions and `FlextLogger`.
-  - **Zero Hacks**: `model_rebuild()`, `exec()`, `eval()`, direct architectural `getattr()`, inline imports, and fallback `try/except ImportError` blocks are TOTALLY FORBIDDEN.
+
+- `typing.TYPE_CHECKING` is ALLOWED ONLY for type-only imports and `__init__.py` lazy loading. Autogenerated `__init__.py` files MUST preserve the lazy-export pattern.
+- `_LAZY_IMPORTS` string references MUST match real class names exactly.
+- Import parent components by CLASS NAME (e.g. `from flext_core import FlextProtocols`), never by assigned alias.
+- **Command & Output Abstractions**: Bare `subprocess` calls, `sys.exit` outside `__main__.py`, direct `dependency_injector` wiring, and `print()` in production are FORBIDDEN. Use provided abstractions and `FlextLogger`.
+- **Zero Hacks**: `model_rebuild()`, `exec()`, `eval()`, direct architectural `getattr()`, inline imports, and fallback `try/except ImportError` blocks are TOTALLY FORBIDDEN.
 
 ### 3.5 Integrity & Change Management
+
 - **Context Evaluation**: Read and fully understand existing code, MRO chains, and base classes BEFORE changing code. Maximize reuse. Simplifications, TODOs, mocks, and stubs are FORBIDDEN.
 - **AST-Grep Required**: Structural code changes/renames across the codebase MUST use `ast-grep` (`sg`). Ad-hoc python/shell scripts, `sed`, and `awk` for code transformations are TOTALLY FORBIDDEN.
 - **Integral Changes**: After any type, model, or signature change, you MUST update all references across all 33 projects to maintain global consistency.
@@ -236,6 +250,7 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Git is IMMUTABLE**: Rolling back is FORBIDDEN. `git checkout <file>`, `git reset`, `git revert`, and `git stash pop/apply` to OVERWRITE/DISCARD work is forbidden. Fix issues forward.
 
 ### 3.6 Test Standardization
+
 - **Unified Test Namespace**: Tests MUST strictly consume utilities, constants, types, and models from the central test infrastructure (`tests.infra`). Direct imports from `flext_core` or `flext_infra` into `tests/unit` codebase are FORBIDDEN if an equivalent exists in `tests.infra`.
 - **Alias Usage**: Use the same canonical aliases for test infrastructure components: `from tests import c, t, p, m, u`.
 - **Test Facade Naming**: Test facades MUST use the `TestsFlext<Project><Tier>` pattern. Legacy `Flext<Project>Test<Tier>` and `FlextTest<Project><Tier>` forms are migration targets only.
@@ -246,6 +261,7 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **No Test Accessor Leakage**: Tests MUST exercise the canonical public contract after migration — fields, `@u.computed_field`, public verbs, and `r` outcomes (`success`/`failure`) only. Tests that reach into legacy getters/setters/predicates or rely on transitional naming are violations.
 
 ### 3.7 Associated Skills
+
 - **Namespace/MRO Law**: `flext-mro-namespace-rules`
 - **Type Law & Result Patterns**: `flext-strict-typing`
 - **Result/Logging/DI Patterns**: `flext-patterns`
@@ -297,13 +313,14 @@ from collections.abc import Mapping, Sequence
        from flext_core import FlextProtocolsBase, t
        ```
     4. **Trust lazy loading in `__init__.py`** — The `__init__.py` lazy-load system (via `lazy_getattr`) properly sequences module initialization to break cycles. Do NOT use workarounds like `model_rebuild()`, string annotations, or `object`/`Any` types.
-  - **FORBIDDEN Workarounds**:
-    - ✗ Using `model_rebuild()` — indicates root-cause unresolved
-    - ✗ Using string type hints like `"FlextProtocolsResult.Result[bool]"` — use TYPE_CHECKING instead
-    - ✗ Using `object` or `Any` as catch-all types — use precise `t.*` contracts
-    - ✗ Reordering `__init__.py` imports or relying on "order of initialization" — architecture must NOT depend on load order
-  - **Verification**: Run `make gen` without timeout or errors. Imports should resolve cleanly via `python -c "from flext_core._protocols.* import *"`.
-  - *Detailed matrix & exceptions*: See skill `flext-import-rules`.
+
+- **FORBIDDEN Workarounds**:
+  - ✗ Using `model_rebuild()` — indicates root-cause unresolved
+  - ✗ Using string type hints like `"FlextProtocolsResult.Result[bool]"` — use TYPE_CHECKING instead
+  - ✗ Using `object` or `Any` as catch-all types — use precise `t.*` contracts
+  - ✗ Reordering `__init__.py` imports or relying on "order of initialization" — architecture must NOT depend on load order
+- **Verification**: Run `make gen` without timeout or errors. Imports should resolve cleanly via `python -c "from flext_core._protocols.* import *"`.
+- *Detailed matrix & exceptions*: See skill `flext-import-rules`.
 
 ## §5 Make Contract
 
@@ -357,6 +374,7 @@ from collections.abc import Mapping, Sequence
 - **`.new/.old` Swap Protocol**: For massive file modifications (>50 lines changed), create a `.new` file, verify changes, then execute `mv file.py file.py.old && mv file.py.new file.py`. Commit both in one transaction.
 
 ### 9.1 Coding Directives for Agents
+
 - **Runtime Aliases**: `c`, `p`, `t`, `m`, `u` are declared via MRO in each layer (`src/`, `tests/`, `examples/`, `scripts/`). In test code: `from tests import c, m, p, t, u`. In examples: `from examples import ...`. NEVER import aliases across project boundaries (e.g., `from flext_target_oracle import t` in tests is FORBIDDEN). Operational aliases (`r`, `e`, `h`, `d`, `s`, `x`) come from `flext_core` or the project's extended package.
 - **No Loose Aliases**: Remove compatibility aliases entirely. Constants belong in `c`, protocols in `p`, typings in `t`, models in `m`, utilities/helpers in `u`. Never maintain these concerns outside their canonical namespace.
 - **Narrowing Enforced**: No `type(x) == T`. Use `isinstance(x, T)` or `TypeGuard` properly. Prefer Pydantic validation functions where structured data is involved.
@@ -365,7 +383,9 @@ from collections.abc import Mapping, Sequence
 ## §10 Multi-Agent Parallel Execution Law
 
 ### 10.1 The 11 Commandments (Execution Ritual)
+
 UNBREAKABLE LAW for all parallel agent work:
+
 1. **Organize libs first**: Domain monopoly—each module owns its domain exclusively.
 2. **Minimal skeleton**: Start with interfaces/protocols. Optimize structure before implementation.
 3. **Reconnect one-by-one**: Fix ONE integration at a time, verify before moving to the next.
@@ -379,19 +399,22 @@ UNBREAKABLE LAW for all parallel agent work:
 11. **Never Rush/ULW**: No ultrawork mode, no batched giant commits. Perfection over speed.
 
 ### 10.2 Core File Ownership (`flext-core`)
-**Ownership Matrix**:
-| Category | Primary Owner | Read-Only For Others |
-|----------|---------------|----------------------|
-| **Agent 1** | `dispatcher.py`, `constants.py`, `_models/cqrs.py` | All other agents |
-| **Agent 2** | `registry.py`, `typings.py` | All other agents |
-| **Agent 3** | `service.py`, `_models/base.py` | All other agents |
-| **Agent 4** | `result.py`, `exceptions.py`, `runtime.py`, `loggings.py` | All other agents |
-| **Agent 5** | `container.py`, `decorators.py`, `handlers.py`, `mixins.py` | All other agents |
-| **FROZEN** | `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `__version__.py` | NO AGENT MODIFIES |
 
-*Exception*: FROZEN files may be unfrozen ONLY for: (a) annotation additions (typing, `Field()`, imports), or (b) **performance-only caching changes** — adding `ClassVar` cache fields, wrapping instantiations in lazy-load patterns, and adding env-variable configuration toggles — provided the change is isomorphic (same inputs → same outputs), passes all linters and tests, and runs as single-agent work (not parallel). Behavioral logic changes beyond (a) and (b) remain frozen.
+**Ownership Matrix**:
+
+| Category    | Primary Owner                                                                              | Read-Only For Others |
+| ----------- | ------------------------------------------------------------------------------------------ | -------------------- |
+| **Agent 1** | `dispatcher.py`, `constants.py`, `_models/cqrs.py`                                         | All other agents     |
+| **Agent 2** | `registry.py`, `typings.py`                                                                | All other agents     |
+| **Agent 3** | `service.py`, `_models/base.py`                                                            | All other agents     |
+| **Agent 4** | `result.py`, `exceptions.py`, `runtime.py`, `loggings.py`                                  | All other agents     |
+| **Agent 5** | `container.py`, `decorators.py`, `handlers.py`, `mixins.py`                                | All other agents     |
+| **FROZEN**  | `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `__version__.py` | NO AGENT MODIFIES    |
+
+*Exception*: FROZEN files may be unfrozen ONLY for: (a) annotation additions (typing, `u.Field()`, imports), or (b) **performance-only caching changes** — adding `ClassVar` cache fields, wrapping instantiations in lazy-load patterns, and adding env-variable configuration toggles — provided the change is isomorphic (same inputs → same outputs), passes all linters and tests, and runs as single-agent work (not parallel). Behavioral logic changes beyond (a) and (b) remain frozen.
 
 **`protocols.py` Section Split**:
+
 - Sections must be appended strictly at the end of their respective ownership blocks.
 - **A1**: CommandBus, Middleware, Processor
 - **A2**: Registry
@@ -401,6 +424,7 @@ UNBREAKABLE LAW for all parallel agent work:
 - *Lines 1-236 & 1289+ are strictly FROZEN for behavioral changes. Performance-only caching additions (ClassVar cache fields, lazy-load wrappers) are permitted per the FROZEN file exception above, limited to method bodies — function/method signatures and class declarations within the frozen range MUST NOT be altered.*
 
 ### 10.3 Execution Phases
+
 - **Phase 0 (SOLO)**: Agent 4 completes Wave 0 (`RuntimeResult.__slots__` + `r.fail()` + `p.Result`) and PUSHES. All others BLOCKED.
 - **Phase 1**: Agent 4 continues + Agent 5 starts (containers, decorators, etc). A5 must `git pull --rebase` first.
 - **Phase 2**: Agent 1 (Dispatcher) + Agent 3 (Service) start. Must `git pull --rebase` first.
@@ -408,11 +432,13 @@ UNBREAKABLE LAW for all parallel agent work:
 - **Phase 4 (Consumers)**: All agents work on their assigned consumer projects IN PARALLEL.
 
 ### 10.4 Lint Scoping & Quality
+
 - **During parallel work**: Agents run linters ONLY on modified files using bare commands (`ruff check <file>`, `pyrefly check <file>`, `pyright <file>`, `mypy <file>`). RTK auto-proxies for token savings.
 - **At phase boundaries**: Agents run FULL project lint (`cd <project> && make check`) before pushing.
 - **Before Phase 4**: ALL agents run full `flext-core` lint and verify ZERO errors. No `# type: ignore`.
 
 ### 10.5 Git & Session Hygiene
+
 - **Always Rebase**: `git pull --rebase` before EVERY push. NEVER use basic `git pull`.
 - **Never Force Push**: NEVER `git push --force` to main/master.
 - **Conflict Resolution**: Conflict in YOUR file → resolve manually. Conflict in ANOTHER agent's file → `git checkout --theirs <file>`.

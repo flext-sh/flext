@@ -92,7 +92,7 @@ from collections.abc import Mapping, Sequence
 
 from typing import Any
 
-from pydantic import BaseModel, Field, conint
+from pydantic import BaseModel, u.Field, conint
 
 
 class Pet(BaseModel):
@@ -101,9 +101,9 @@ class Pet(BaseModel):
 
 
 class Person(BaseModel):
-    first_name: str = Field(description="The person's first name.")
-    last_name: str = Field(description="The person's last name.")
-    age: conint(ge=0) | None = Field(None, description="Age in years.")
+    first_name: str = u.Field(description="The person's first name.")
+    last_name: str = u.Field(description="The person's last name.")
+    age: conint(ge=0) | None = u.Field(None, description="Age in years.")
     pets: Sequence[Pet] | None = None
     comment | None = None
 ```

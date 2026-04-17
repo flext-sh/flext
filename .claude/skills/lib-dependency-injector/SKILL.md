@@ -42,6 +42,7 @@ description: dependency_injector bridge patterns for FLEXT runtime and container
   - `_di_resources: containers.DynamicContainer`
   - `_di_container: containers.DynamicContainer`
 - Always use `Provide`/`inject` from runtime bridge (`u.DependencyIntegration.Provide`, `.inject`).
+
 ## Instructions
 
 - Follow these declarations and signatures exactly when extending DI:

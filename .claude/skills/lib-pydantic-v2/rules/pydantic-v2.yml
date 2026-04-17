@@ -47,7 +47,7 @@ rule:
     @validator($$$ARGS)
     def $FN($$$PARAMS):
       $$$BODY
-message: Pydantic v1 @validator is banned; use @field_validator
+message: Pydantic v1 @validator is banned; use @u.field_validator
 severity: error
 ---
 id: ban-pydantic-v1-root-validator-decorator
@@ -57,5 +57,5 @@ rule:
     @root_validator($$$ARGS)
     def $FN($$$PARAMS):
       $$$BODY
-message: Pydantic v1 @root_validator is banned; use @model_validator
+message: Pydantic v1 @root_validator is banned; use @u.model_validator
 severity: error

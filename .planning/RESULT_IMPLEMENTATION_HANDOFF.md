@@ -18,6 +18,7 @@ Completed implementation of comprehensive Result type system with strict typing 
 **File**: `flext-core/src/flext_core/_protocols/result.py`
 
 **Changes**:
+
 - Added 8 missing methods to `Result` protocol:
   - `fail()` - Factory method for failures
   - `ok()` - Factory method for successes
@@ -67,6 +68,7 @@ Completed implementation of comprehensive Result type system with strict typing 
    - Supports domain, code, message, and metadata
 
 **Integration Pattern**:
+
 ```python
 from flext_core import ErrorDomain, FlextError
 from flext_core import r, p
@@ -94,6 +96,7 @@ result = r[User].fail(
 ### Phase 3: Async Support
 
 **Scope**:
+
 - Add async operators to r:
   - `flat_map_async()`
   - `flow_through_async()`
@@ -107,12 +110,14 @@ result = r[User].fail(
 **Impact**: 40+ async methods in flext-api need composition support
 
 **Files to modify**:
+
 - `flext-core/src/flext_core/_protocols/result.py` (add async methods)
 - `flext-core/src/flext_core/result.py` (implement async operators)
 
 ### Phase 4: Fallible Protocol Enforcement
 
 **Scope**:
+
 - Create `Fallible[T]` protocol
   - For functions that should always return `r[T]`
   - Enables type-checker enforcement of Result usage
@@ -130,6 +135,7 @@ result = r[User].fail(
 **Impact**: 120+ functions in flext-* projects should enforce Result returns
 
 **Files to create**:
+
 - `flext-core/src/flext_core/_protocols/fallible.py`
 - `flext-core/src/flext_core/decorators/fallible.py` (or similar)
 
@@ -140,11 +146,13 @@ result = r[User].fail(
 Once Phase 4 is complete, all 533 Result usage sites should migrate to structured errors:
 
 **Current pattern** (free-form error strings):
+
 ```python
 result = r[User].fail("User not found")
 ```
 
 **Target pattern** (structured errors):
+
 ```python
 result = r[User].fail(
     "User not found",
@@ -154,6 +162,7 @@ result = r[User].fail(
 ```
 
 **Error routing example**:
+
 ```python
 result = fetch_user(user_id)
 if result.is_failure:
@@ -180,6 +189,7 @@ if result.is_failure:
 ### Unit Tests
 
 Create test suite in `flext-core/tests/unit/` for:
+
 - ErrorDomain enum behavior
 - FlextError creation and conversions
 - Result protocol compliance
@@ -189,6 +199,7 @@ Create test suite in `flext-core/tests/unit/` for:
 ### Integration Tests
 
 For each major project consuming Result:
+
 - Verify structured error handling works
 - Check error routing logic
 - Validate async composition patterns
@@ -197,6 +208,7 @@ For each major project consuming Result:
 ## Quality Gates
 
 All changes must pass:
+
 - ✅ pyright (strict mode)
 - ✅ ruff (all checks)
 - ✅ pyrefly (call graph validation)
@@ -212,6 +224,7 @@ All changes must pass:
    - Create async integration test
 
 2. **Run validation**:
+
    ```bash
    cd flext-core
    python -m pytest tests/unit/ -v

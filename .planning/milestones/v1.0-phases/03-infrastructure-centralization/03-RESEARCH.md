@@ -13,9 +13,11 @@ For workaround eradication, current violation counts are significantly lower tha
 **Primary recommendation:** Split into 3-4 GSD plans: (1) remaining INFRA utilities + parameter normalization, (2) NamespaceSourceDetector test suite + workspace application, (3) workaround eradication sweep, (4) policy gate + final verification.
 
 <user_constraints>
+
 ## User Constraints (from CONTEXT.md)
 
 ### Locked Decisions
+
 - **D-01:** INFRA stream first (01-05), then WA stream (01-06)
 - **D-02:** Within INFRA: foundation utilities first, then normalization, then new tooling, then policy gate
 - **D-03:** Within WA: dependency order — flext-core -> flext-infra -> flext-tests -> consumers
@@ -34,16 +36,19 @@ For workaround eradication, current violation counts are significantly lower tha
 - **D-16:** `subprocess.run()` zero direct calls outside designated wrapper
 
 ### Claude's Discretion
+
 - Internal decomposition of centralized utilities
 - Whether to batch WA categories into one plan per category or per project
 - Exact exception type hierarchy for WA-03 replacements
 - NamespaceSourceDetector internal architecture
 
 ### Deferred Ideas (OUT OF SCOPE)
+
 None
 </user_constraints>
 
 <phase_requirements>
+
 ## Phase Requirements
 
 | ID | Description | Research Support |
@@ -75,12 +80,15 @@ No new libraries needed. All work uses existing codebase infrastructure:
 ## Architecture Patterns
 
 ### Pattern 1: Centralized CLI Utility (ALREADY ESTABLISHED)
+
 `FlextInfraUtilitiesCli` in `_utilities/cli.py` provides `run_cli()`, `exit_code()`, `create_parser()`, `resolve()`, `CliArgs` Pydantic model. All `__main__.py` files already use this.
 
 ### Pattern 2: Parameter Normalization via LSP Rename
+
 For INFRA-03, use `findReferences` to trace each `root: Path` to call sites. Only rename where the parameter receives `cli.workspace` (workspace root). `project_root: Path` that correctly refers to a project directory stays as-is.
 
 ### Pattern 3: Workaround Fix Patterns
+
 ```python
 # WA-01: try/except ImportError -> feature flag
 import importlib.util
@@ -101,6 +109,7 @@ HAS_PYTEST = importlib.util.find_spec("pytest") is not None
 ```
 
 ### Anti-Patterns to Avoid
+
 - **Blanket print->logger conversion**: Some `print()` calls are intentional CLI output (e.g., `flext-cli/src/flext_cli/services/output.py`). Document exemptions.
 - **Renaming `project_root` that means project dir**: Only rename where it actually receives workspace root.
 
@@ -129,17 +138,20 @@ HAS_PYTEST = importlib.util.find_spec("pytest") is not None
 ## Common Pitfalls
 
 ### Pitfall 1: print() False Positives
+
 **What goes wrong:** Blindly replacing all `print()` breaks intentional CLI output.
 **Why it happens:** Some modules (flext-cli output service, terminal utilities) use `print()` as their documented output mechanism.
 **How to avoid:** Triage each `print()` instance. Document exemptions with `# CLI output` comments. Only replace non-CLI `print()` with `FlextLogger` or `output.*`.
 **Warning signs:** Tests fail after print replacement; CLI commands produce no visible output.
 
 ### Pitfall 2: project_root vs workspace_root Confusion
+
 **What goes wrong:** Renaming `project_root` that correctly refers to a specific project directory.
 **Why it happens:** Both `root` and `project_root` are used for workspace root AND project root in different contexts.
 **How to avoid:** Trace each parameter to its call site via LSP. Only rename when call site passes `cli.workspace`.
 
 ### Pitfall 3: flext-tests except ImportError
+
 **What goes wrong:** The 3 `except ImportError` in flext-tests/src are test infrastructure that probes optional deps.
 **Why it happens:** Test validator needs to check if packages are importable.
 **How to avoid:** These may need `importlib.util.find_spec()` replacement per D-11, but verify the semantic context.
@@ -147,6 +159,7 @@ HAS_PYTEST = importlib.util.find_spec("pytest") is not None
 ## Code Examples
 
 ### emit() Implementation Pattern (to be created)
+
 ```python
 # In _utilities/cli.py, add to FlextInfraUtilitiesCli:
 @staticmethod
@@ -169,6 +182,7 @@ def emit(
 ```
 
 ### iter_projects() Implementation Pattern (to be created)
+
 ```python
 @staticmethod
 def iter_projects(
@@ -187,6 +201,7 @@ def iter_projects(
 ## Validation Architecture
 
 ### Test Framework
+
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
@@ -195,6 +210,7 @@ def iter_projects(
 | Full suite command | `make test` |
 
 ### Phase Requirements -> Test Map
+
 | Req ID | Behavior | Test Type | Automated Command | File Exists? |
 |--------|----------|-----------|-------------------|-------------|
 | INFRA-01 | run_cli centralizes bootstrap | smoke | `python -c "from flext_infra import u; u.Infra.run_cli(lambda _: 0)"` | N/A (runtime check) |
@@ -210,11 +226,13 @@ def iter_projects(
 | WA-06 | Zero subprocess.run direct | grep | Grep sweep | N/A (static check) |
 
 ### Sampling Rate
+
 - **Per task commit:** `make check PROJECT=flext-infra` (or affected project)
 - **Per wave merge:** `make check` + grep sweeps for zero-violation
 - **Phase gate:** Full grep sweep + `make pyre` + `make check PROJECT=flext-core`
 
 ### Wave 0 Gaps
+
 - [ ] `flext-infra/tests/unit/test_iter_projects.py` — covers INFRA-02
 - [ ] `flext-infra/tests/unit/test_emit.py` — covers new emit utility
 - [ ] NamespaceSourceDetector test suite verification — covers INFRA-04
@@ -237,17 +255,19 @@ The following are DONE and should NOT be re-planned:
 ## Remaining Work Summary
 
 ### INFRA Stream
+
 1. **emit() + iter_projects()** — Create 2 new utility methods in `_utilities/cli.py`
 2. **workspace_root normalization** — Rename ~20 `root: Path` params in service interfaces (docs, release, git utils, validate, refactor)
 3. **NamespaceSourceDetector test suite** — Verify/create tests, run workspace-wide
 4. **make pyre policy gate** — Enhance to enforce 0 violations with file+line output
 
 ### WA Stream
-5. **WA-01**: 3 `except ImportError` in flext-tests/src -> `find_spec()` flags
-6. **WA-02**: 7 `model_rebuild()` in test files -> restructure forward refs
-7. **WA-04**: 2 `sys.exit()` in flext-quality tools -> `raise SystemExit()` or `return r.fail()`
-8. **WA-05**: 52 `print()` instances -> triage + replace with logger/output (LARGEST EFFORT)
-9. **WA-06**: 5 `subprocess.run()` direct -> route through `u.Infra.run_raw()`/`run_checked()`
+
+1. **WA-01**: 3 `except ImportError` in flext-tests/src -> `find_spec()` flags
+2. **WA-02**: 7 `model_rebuild()` in test files -> restructure forward refs
+3. **WA-04**: 2 `sys.exit()` in flext-quality tools -> `raise SystemExit()` or `return r.fail()`
+4. **WA-05**: 52 `print()` instances -> triage + replace with logger/output (LARGEST EFFORT)
+5. **WA-06**: 5 `subprocess.run()` direct -> route through `u.Infra.run_raw()`/`run_checked()`
 
 ## Open Questions
 
@@ -264,6 +284,7 @@ The following are DONE and should NOT be re-planned:
 ## Sources
 
 ### Primary (HIGH confidence)
+
 - Codebase grep sweeps — current violation counts (2026-03-24)
 - `.sisyphus/plans/infra-runtime-centralization.md` — completed tasks verified via grep
 - `.sisyphus/plans/workaround-eradication.md` — root cause matrix and fix patterns
@@ -274,6 +295,7 @@ The following are DONE and should NOT be re-planned:
 ## Metadata
 
 **Confidence breakdown:**
+
 - Standard stack: HIGH - no new libraries, all existing infra
 - Architecture: HIGH - patterns established by completed sisyphus work
 - Pitfalls: HIGH - based on actual codebase grep analysis

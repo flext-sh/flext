@@ -6,6 +6,7 @@
 ## Context
 
 flext-infra has accumulated refactoring debt:
+
 - 32 flat mixins with no hierarchy, field conflicts (`dry_run` inverted semantics), and 3 unused
 - 30+ pass-through wrappers in docs services (logic moved to `u.Infra` but stubs left behind)
 - 8 dead helpers in doc generator, 2 dead fixer methods
@@ -29,15 +30,16 @@ This spec addresses all of these through pure refactoring of existing code.
 
 ### 1.1 Unused Mixins (delete)
 
-| Mixin | File | LOC | Action |
-|-------|------|-----|--------|
-| `ErrorDetailMixin` | `_models/mixins.py` | 4 | Delete (0 uses) |
-| `CurrentImportMixin` | `_models/mixins.py` | 4 | Delete (0 uses, inline field in ImportViolationBase) |
-| `FacadeNameMixin` | `_models/mixins.py` | 7 | Delete (inline `facade_name: str = ""` into 2 consumers) |
+| Mixin                | File                | LOC | Action                                                   |
+| -------------------- | ------------------- | --- | -------------------------------------------------------- |
+| `ErrorDetailMixin`   | `_models/mixins.py` | 4   | Delete (0 uses)                                          |
+| `CurrentImportMixin` | `_models/mixins.py` | 4   | Delete (0 uses, inline field in ImportViolationBase)   |
+| `FacadeNameMixin`    | `_models/mixins.py` | 7   | Delete (inline `facade_name: str = ""` into 2 consumers) |
 
 ### 1.2 Dead Doc Generator Helpers (delete)
 
 File: `docs/generator.py` — 8 methods with 0 references:
+
 - `_generate_root_docs()`, `_generate_project_guides()`, `_generate_project_mkdocs()`
 - `_project_guide_content()`, `_sanitize_internal_anchor_links()`, `_update_toc()`
 - `_write_if_needed()`, `_project_files()`, `_root_files()`
@@ -47,12 +49,14 @@ File: `docs/generator.py` — 8 methods with 0 references:
 ### 1.3 Dead Doc Fixer Helpers (delete)
 
 File: `docs/fixer.py`:
+
 - `_maybe_fix_link()` (0 refs) — delete
 - `_update_toc()` (0 refs) — delete
 
 ### 1.4 Doc Validator backward-compat alias (delete)
 
 File: `docs/validator.py`:
+
 - `validate_docs()` (labeled "backward-compat alias" in docstring, 0 external refs) — delete
 
 ---
@@ -64,6 +68,7 @@ File: `docs/validator.py`:
 File: `docs/auditor.py`, lines 36-122
 
 Every method is:
+
 ```python
 @staticmethod
 def normalize_link(target: str) -> str:
@@ -138,41 +143,44 @@ WriteMixin(ProjectMixin)
 
 ### 3.2 Deletion Map
 
-| Old Mixin | Action | Replacement |
-|-----------|--------|-------------|
-| `CliInputBase` | **Delete** | `WriteMixin` (has workspace + apply) |
-| `CheckMixin` | **Delete** | Field in `ReadMixin` |
-| `VerboseMixin` | **Delete** | Field in `BaseMixin` |
-| `DryRunFalseMixin` | **Delete** | `apply=False` default in WriteMixin |
-| `DryRunTrueMixin` | **Delete** | `apply=False` default in WriteMixin |
-| `ProjectSelectionMixin` | **Delete** | `ProjectMixin` |
-| `OutputDirMixin` | **Delete** | Field in `ReadMixin` |
-| `OutputDirPathMixin` | **Delete** | Field in `ReadMixin` |
-| `JsonOutputPathMixin` | **Delete** | Field in `ReadMixin` |
-| `ReportPathMixin` | **Delete** | Field in `ReadMixin` |
-| `ErrorDetailMixin` | **Delete** | Dead code |
-| `CurrentImportMixin` | **Delete** | Dead code, inline field |
-| `FacadeNameMixin` | **Delete** | Inline field in 2 consumers |
-| `FailFastMixin` | **Delete** | Field in `ProjectMixin` |
-| `ProjectNamesOptionalMixin` | **Keep** | Domain-specific (release models) |
-| `ProjectNamesListMixin` | **Keep** | Domain-specific (release models) |
-| All others (Release*, Github*, File*, etc.) | **Keep** | Domain-specific, standalone |
+| Old Mixin                                   | Action     | Replacement                          |
+| ------------------------------------------- | ---------- | ------------------------------------ |
+| `CliInputBase`                              | **Delete** | `WriteMixin` (has workspace + apply) |
+| `CheckMixin`                                | **Delete** | u.Field in `ReadMixin`               |
+| `VerboseMixin`                              | **Delete** | u.Field in `BaseMixin`               |
+| `DryRunFalseMixin`                          | **Delete** | `apply=False` default in WriteMixin  |
+| `DryRunTrueMixin`                           | **Delete** | `apply=False` default in WriteMixin  |
+| `ProjectSelectionMixin`                     | **Delete** | `ProjectMixin`                       |
+| `OutputDirMixin`                            | **Delete** | u.Field in `ReadMixin`               |
+| `OutputDirPathMixin`                        | **Delete** | u.Field in `ReadMixin`               |
+| `JsonOutputPathMixin`                       | **Delete** | u.Field in `ReadMixin`               |
+| `ReportPathMixin`                           | **Delete** | u.Field in `ReadMixin`               |
+| `ErrorDetailMixin`                          | **Delete** | Dead code                            |
+| `CurrentImportMixin`                        | **Delete** | Dead code, inline field            |
+| `FacadeNameMixin`                           | **Delete** | Inline field in 2 consumers        |
+| `FailFastMixin`                             | **Delete** | u.Field in `ProjectMixin`            |
+| `ProjectNamesOptionalMixin`                 | **Keep**   | Domain-specific (release models)     |
+| `ProjectNamesListMixin`                     | **Keep**   | Domain-specific (release models)     |
+| All others (Release*, Github*, File*, etc.) | **Keep**   | Domain-specific, standalone          |
 
 ### 3.3 Consumer Migration
 
 All 26+ CLI input models in `cli_inputs_ops.py` and `cli_inputs_codegen.py` are migrated:
 
 **Before:**
+
 ```python
 class RefactorNamespaceEnforceInput(ProjectSelectionMixin, CliInputBase): ...
 ```
 
 **After:**
+
 ```python
 class RefactorNamespaceEnforceInput(WriteMixin): ...
 ```
 
 **Before:**
+
 ```python
 class DocsAuditInput(
     CheckMixin, OutputDirMixin, ProjectSelectionMixin, CliInputBase
@@ -180,6 +188,7 @@ class DocsAuditInput(
 ```
 
 **After:**
+
 ```python
 class DocsAuditInput(ReadMixin): ...
 ```
@@ -366,70 +375,79 @@ The enforcer iterates the list, running each step through `u.Infra.execute_safel
 ## 7. Execution Order
 
 ### Wave 1: Dead Code Removal (no dependencies)
+
 1. Delete 3 unused mixins
 2. Delete 8 dead generator helpers + 2 dead fixer helpers
 3. Delete backward-compat `validate_docs()` alias
 4. Validate: `ruff check src/` + `pyrefly check src/`
 
 ### Wave 2: Pass-Through Wrapper Elimination
-5. Inline 11 auditor delegations → call `u.Infra.*` directly
-6. Inline 4 validator/builder pass-throughs
-7. Remove 7 module-level `main =` aliases
-8. Inline 3+ `_resolve_workspace_root()` duplicates
-9. Validate: `ruff check src/` + `pyrefly check src/`
+
+1. Inline 11 auditor delegations → call `u.Infra.*` directly
+2. Inline 4 validator/builder pass-throughs
+3. Remove 7 module-level `main =` aliases
+4. Inline 3+ `_resolve_workspace_root()` duplicates
+5. Validate: `ruff check src/` + `pyrefly check src/`
 
 ### Wave 3: c/t/p/m/u Additions
-10. Add `c.Infra.SafeExecution` + `c.Infra.ExecutionMode` to `_constants/base.py`
-11. Add `m.Infra.SafeExecutionResult` + `m.Infra.TransformStep` to `_models/base.py`
-12. Add `p.Infra.SafeTransformer` + `p.Infra.SafeValidator` to `_protocols/base.py`
-13. Validate: `ruff check src/` + `pyrefly check src/`
+
+1. Add `c.Infra.SafeExecution` + `c.Infra.ExecutionMode` to `_constants/base.py`
+2. Add `m.Infra.SafeExecutionResult` + `m.Infra.TransformStep` to `_models/base.py`
+3. Add `p.Infra.SafeTransformer` + `p.Infra.SafeValidator` to `_protocols/base.py`
+4. Validate: `ruff check src/` + `pyrefly check src/`
 
 ### Wave 4: Mixin Hierarchy
-14. Rewrite `_models/mixins.py` — delete 14 mixins, create 4-class hierarchy
-15. Migrate all 26+ CLI input models in `cli_inputs_ops.py` + `cli_inputs_codegen.py`
-16. Migrate any domain models that used deleted mixins
-17. Validate: `ruff check src/` + `pyrefly check src/` + run tests
+
+1. Rewrite `_models/mixins.py` — delete 14 mixins, create 4-class hierarchy
+2. Migrate all 26+ CLI input models in `cli_inputs_ops.py` + `cli_inputs_codegen.py`
+3. Migrate any domain models that used deleted mixins
+4. Validate: `ruff check src/` + `pyrefly check src/` + run tests
 
 ### Wave 5: Safe Execution
-18. Refactor `_utilities/safety.py` — git-stash → .bak
-19. Add `check_files()` to `gates/_base_gate.py`
-20. Validate: `ruff check src/` + `pyrefly check src/` + run safety tests
+
+1. Refactor `_utilities/safety.py` — git-stash → .bak
+2. Add `check_files()` to `gates/_base_gate.py`
+3. Validate: `ruff check src/` + `pyrefly check src/` + run safety tests
 
 ### Wave 6: Declarative Pipeline
-21. Refactor `refactor/namespace_enforcer.py` — imperative → declarative
-22. Update `refactor/_engine_helpers.py` to use `u.Infra.execute_safely()`
-23. Validate: full `make check` + run enforcer tests
+
+1. Refactor `refactor/namespace_enforcer.py` — imperative → declarative
+2. Update `refactor/_engine_helpers.py` to use `u.Infra.execute_safely()`
+3. Validate: full `make check` + run enforcer tests
 
 ---
 
 ## 8. Verification
 
 After each wave:
+
 - `ruff check src/` — 0 errors
 - `pyrefly check src/` — 0 errors
 
 After Wave 4 (mixin migration):
+
 - All CLI commands parse correctly (test with `--help`)
 - `flext-infra refactor namespace-enforce --dry-run` works
 - `flext-infra check ruff-lint --projects flext-core` works
 - `flext-infra docs audit` works
 
 After Wave 6 (full pipeline):
+
 - `flext-infra refactor namespace-enforce --apply --projects flext-core` creates .bak, transforms, validates, cleans up
 - Same command with intentionally broken transform → rollback occurs, .bak restored
 - `flext-infra refactor namespace-enforce --apply --no-rollback` skips validation
 
 ## 9. Net LOC Impact
 
-| Category | Removed | Added | Net |
-|----------|---------|-------|-----|
-| Dead code | -95 | 0 | -95 |
-| Pass-through wrappers | -120 | 0 | -120 |
-| Module aliases | -15 | 0 | -15 |
-| Mixin consolidation | -200 | +150 | -50 |
-| c/t/p/m/u additions | 0 | +60 | +60 |
-| Safety refactor | -80 | +60 | -20 |
-| Declarative enforcer | -100 | +40 | -60 |
-| **Total** | **-610** | **+310** | **-300** |
+| Category              | Removed  | Added    | Net      |
+| --------------------- | -------- | -------- | -------- |
+| Dead code             | -95      | 0        | -95      |
+| Pass-through wrappers | -120     | 0        | -120     |
+| Module aliases        | -15      | 0        | -15      |
+| Mixin consolidation   | -200     | +150     | -50      |
+| c/t/p/m/u additions   | 0        | +60      | +60      |
+| Safety refactor       | -80      | +60      | -20      |
+| Declarative enforcer  | -100     | +40      | -60      |
+| **Total**             | **-610** | **+310** | **-300** |
 
 **Net result: ~300 LOC reduction** with safer execution, cleaner architecture, and zero complexity wrappers.

@@ -29,6 +29,7 @@ This directory contains standards and guidance for writing Python docstrings acr
 4. **When will this function fail?** (error conditions)
 
 **Skip docstrings that:**
+
 - Repeat the method name
 - Describe implementation details
 - Document type hints already clear from signature
@@ -52,11 +53,13 @@ python3 scripts/validate-docstrings.py <path/to/files>
 ## Tools
 
 **Validation** (identify gaps):
+
 ```bash
 python3 scripts/validate-docstrings.py flext-core/src
 ```
 
 **Audit workflow** (guided manual improvement):
+
 ```bash
 bash scripts/audit-docstrings.sh flext-core/src
 ```

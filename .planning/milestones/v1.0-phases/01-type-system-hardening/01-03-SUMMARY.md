@@ -42,6 +42,7 @@ completed: 2026-03-23
 - **Files modified:** 0
 
 ## Accomplishments
+
 - Verified `make check PROJECT=flext-cli CHECK_GATES=pyrefly` exits 0
 - Verified `make check PROJECT=flext-cli CHECK_GATES=pyright` exits 0
 - Confirmed zero cast(), zero **class** is, zero Any, zero object annotations, zero type:ignore
@@ -51,16 +52,20 @@ completed: 2026-03-23
 No code changes needed — flext-cli was already type-clean.
 
 ## Decisions Made
+
 - The ~1,419 error estimate was from pre-Wave 0 and is completely obsolete
 - Wave 0 cleaned far more than documented, including flext-cli
 
 ## Deviations from Plan
+
 Plan assumed ~1,419 pyrefly errors. Actual count: 0. No work needed.
 
 ## Issues Encountered
+
 None.
 
 ## Next Phase Readiness
+
 - flext-cli is clean, ready for Wave 4 consumer projects
 
 ---

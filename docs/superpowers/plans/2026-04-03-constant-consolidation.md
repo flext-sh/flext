@@ -13,6 +13,7 @@
 ### Task 1: Extend CanonicalValueRule model for new types
 
 **Files:**
+
 - Modify: `flext-infra/src/flext_infra/codegen/_models.py:202-206`
 
 - [ ] **Step 1: Widen the `value` type in CanonicalValueRule**
@@ -21,10 +22,10 @@ The current model only accepts `int | str`. Extend to accept `list` (for frozens
 
 ```python
     class CanonicalValueRule(FlextModels.ArbitraryTypesModel):
-        value: Annotated[int | str | t.StrSequence, m.Field(...)]
-        type: Annotated[str, m.Field(...)]
-        canonical_ref: Annotated[str, m.Field(...)]
-        semantic_names: t.StrSequence = m.Field(default_factory=list)
+        value: Annotated[int | str | t.StrSequence, u.Field(...)]
+        type: Annotated[str, u.Field(...)]
+        canonical_ref: Annotated[str, u.Field(...)]
+        semantic_names: t.StrSequence = u.Field(default_factory=list)
 ```
 
 - [ ] **Step 2: Run ruff check on the modified file**
@@ -43,6 +44,7 @@ feat(codegen): widen CanonicalValueRule.value to accept t.StrSequence
 ### Task 2: Add governance YAML entries for frozenset/regex/tuple
 
 **Files:**
+
 - Modify: `flext-infra/src/flext_infra/rules/constants-governance.yml:27+`
 
 - [ ] **Step 1: Add new rule NS-006 for inline consolidation**
@@ -134,6 +136,7 @@ feat(codegen): add frozenset/regex/tuple canonical entries to governance YAML
 ### Task 3: Add governance getter methods
 
 **Files:**
+
 - Modify: `flext-infra/src/flext_infra/_utilities/codegen_governance.py:51+`
 
 - [ ] **Step 1: Add `get_canonical_frozenset_values()`**
@@ -199,6 +202,7 @@ feat(codegen): add frozenset/regex/tuple governance getters
 ### Task 4: Add CLI input model for consolidate
 
 **Files:**
+
 - Modify: `flext-infra/src/flext_infra/_models/cli_inputs_codegen.py:113+`
 
 - [ ] **Step 1: Add `CodegenConsolidateInput` after `CodegenPipelineInput`**
@@ -209,11 +213,11 @@ feat(codegen): add frozenset/regex/tuple governance getters
 
         output_format: Annotated[
             str,
-            m.Field(default="text", description="Output format (json|text)"),
+            u.Field(default="text", description="Output format (json|text)"),
         ] = "text"
         project: Annotated[
             str | None,
-            m.Field(default=None, description="Single project to consolidate"),
+            u.Field(default=None, description="Single project to consolidate"),
         ] = None
 ```
 
@@ -233,6 +237,7 @@ feat(codegen): add CodegenConsolidateInput CLI model
 ### Task 5: Add consolidate handler to codegen CLI
 
 **Files:**
+
 - Modify: `flext-infra/src/flext_infra/codegen/cli.py:125+` (register) and `337+` (handler)
 
 - [ ] **Step 1: Register the consolidate route**
@@ -432,6 +437,7 @@ feat(codegen): add consolidate CLI handler with per-file validation and rollback
 ### Task 6: Export new model and verify integration
 
 **Files:**
+
 - Verify: `flext-infra/src/flext_infra/_models/cli_inputs_codegen.py` — model exists
 - Verify: `flext-infra/src/flext_infra/codegen/cli.py` — handler registered
 
@@ -463,6 +469,7 @@ feat(codegen): verify consolidate command integration
 ### Task 7: End-to-end test with --apply
 
 **Files:**
+
 - No new files — integration test via CLI
 
 - [ ] **Step 1: Run consolidate with apply on a single project**

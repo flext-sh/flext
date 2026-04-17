@@ -87,5 +87,5 @@ No gaps. Both success criteria are met:
 
 ---
 
-_Verified: 2026-03-24T22:10:00Z_
-_Verifier: Claude (gsd-verifier)_
+*Verified: 2026-03-24T22:10:00Z*
+*Verifier: Claude (gsd-verifier)*

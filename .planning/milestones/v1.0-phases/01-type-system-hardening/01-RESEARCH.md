@@ -7,6 +7,7 @@
 ---
 
 <user_constraints>
+
 ## User Constraints (from CONTEXT.md)
 
 ### Locked Decisions
@@ -108,7 +109,7 @@ Each wave plan is a GSD plan file that covers ALL error categories for the given
 Wave 1 (Plan 1):  flext-core only
   Task 0: Fix make pyre entrypoint + capture fresh baseline
   Task 1: pyrefly errors — all categories
-  Task 2: pyright errors — _operation_stats PrivateAttr, _GuardInput widening, overrides
+  Task 2: pyright errors — _operation_stats u.PrivateAttr, _GuardInput widening, overrides
   Task 3: TYPE-05 cast() removal (15 violations — FROZEN, authorized)
   Task 4: TYPE-06 __class__ rewrites (17 FROZEN violations — authorized; 14 MODIFIABLE)
   Task 5: bare-object elimination (36 violations — new t.* aliases required)
@@ -149,6 +150,7 @@ Type changes in `flext-core` cascade to all 32 consumers. Always fix foundation 
 ### ast-grep Rewrite Rules (from sisyphus plans — pre-validated)
 
 **Rule A1** (`__class__ is` → `isinstance`):
+
 ```yaml
 id: class-is-to-isinstance
 language: python
@@ -158,6 +160,7 @@ fix: isinstance($X, $Y)
 ```
 
 **Rule A2** (`__class__ is not` → `not isinstance`):
+
 ```yaml
 id: class-is-not-to-isinstance
 language: python
@@ -167,6 +170,7 @@ fix: not isinstance($X, $Y)
 ```
 
 **Rule A3** (`__class__ in {…}` → `isinstance(…, (…))`):
+
 ```yaml
 id: class-in-to-isinstance
 language: python
@@ -176,6 +180,7 @@ fix: isinstance($X, ($$$Y))
 ```
 
 **Rule A4** (`__class__ not in {…}` → `not isinstance`):
+
 ```yaml
 id: class-not-in-to-isinstance
 language: python
@@ -240,7 +245,7 @@ fix: not isinstance($X, ($$$Y))
 
 | Root Cause | Issue Count | Primary Fix |
 |------------|------------:|-------------|
-| `_operation_stats` PrivateAttr pattern | 121+ cascade | Fix `Annotated[T, PrivateAttr()]` declaration |
+| `_operation_stats` u.PrivateAttr pattern | 121+ cascade | Fix `Annotated[T, u.PrivateAttr()]` declaration |
 | `_GuardInput` union too narrow | widespread `reportArgumentType` | Widen to include `Result`, `BaseModel`, `ConfigMap`, `HasModelDump` |
 | Unnecessary isinstance (type already resolved) | 79 | Remove redundant checks |
 | Incompatible method overrides | scattered | Fix `model_post_init`, `get`, `register` signatures |
@@ -279,9 +284,10 @@ fix: not isinstance($X, ($$$Y))
 **What goes wrong:** Code that passes `make check` crashes at runtime with `TypeError: Subscripted generics cannot be used with class and instance checks`.
 **Why it happens:** ALL `t.*` aliases use PEP 695 `type X = ...` syntax which creates `TypeAliasType` objects. These are annotation-only and CANNOT be used as `isinstance()` arguments.
 **How to avoid:** Replace with:
-  - `isinstance(value, t.PRIMITIVES_TYPES)` — for `t.Primitives`
-  - `isinstance(value, t.SCALAR_TYPES)` — for `t.Scalar`
-  - `u.Guards.is_primitive(value)` — TypeGuard function alternative
+
+- `isinstance(value, t.PRIMITIVES_TYPES)` — for `t.Primitives`
+- `isinstance(value, t.SCALAR_TYPES)` — for `t.Scalar`
+- `u.Guards.is_primitive(value)` — TypeGuard function alternative
   The 2 known violations in `flext-api/webhook.py:139` and `flext-api/utilities.py:130` are Wave 1.3 of the strict-typing plan.
 **Warning signs:** Tests pass but integration tests or runtime hits TypeError.
 
@@ -468,9 +474,10 @@ From STATE.md error hotspots and NARROWING-SCAN-SUMMARY.md:
 | `X: TypeAlias = ...` | `type X = ...` (PEP 695) | Python 3.12+ | TypeAliasType — NOT isinstance-safe; all `t.*` are now PEP 695 |
 | `json.loads` / `json.dumps` | `model_validate_json` / `model_dump_json` | Pydantic v2 | Validated, typed, no `default=str` hacks |
 | `TypeGuard[list[object]]` in guards | `TypeIs[list[object]]` | TYPE-07 migration | Cleaner narrowing semantics |
-| `Annotated[T, PrivateAttr()]` pattern | `PrivateAttr()` at field level | Pydantic v2.x | Some pyright versions don't recognize Annotated form — root cause of 121+ cascade |
+| `Annotated[T, u.PrivateAttr()]` pattern | `u.PrivateAttr()` at field level | Pydantic v2.x | Some pyright versions don't recognize Annotated form — root cause of 121+ cascade |
 
 **Deprecated/outdated:**
+
 - `TypeAlias` import from `typing`: Deprecated in Python 3.12, replaced by PEP 695 `type` statement
 - Legacy pyrefly artifacts at repo root (`pyrefly_*.{json,txt,csv}`): Wave 0 already removed; do not recreate
 - `make pyrefly-repo`: This make target does NOT exist — use `make pyre`
@@ -543,6 +550,7 @@ From STATE.md error hotspots and NARROWING-SCAN-SUMMARY.md:
 ## Metadata
 
 **Confidence breakdown:**
+
 - Standard stack / make targets: HIGH — verified directly in Makefile
 - Wave plan structure: HIGH — derived from locked CONTEXT.md decisions D-01 through D-08
 - Violation counts: MEDIUM — authoritative baseline from 2026-03-12; post-Wave 0 count unknown until `make pyre` is working

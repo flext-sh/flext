@@ -5,6 +5,7 @@
 ## Test Framework
 
 **Runner:**
+
 - pytest 8.4+
 - Configuration: `pyproject.toml` `[tool.pytest.ini_options]`
 - Key settings:
@@ -15,11 +16,13 @@
   - `enable_assertion_pass_hook = true`
 
 **Assertion Library:**
+
 - pytest's built-in assertions (no pytest-sugar, but available for enhanced output)
 - Pydantic `ValidationError` for model validation assertions
 - Helper assertions in `tests.conftest`: `assert_validates()`, `assert_rejects()`
 
 **Run Commands:**
+
 ```bash
 make test              # Run all tests
 make test-unit        # Run unit tests only
@@ -29,6 +32,7 @@ make test-watch       # Watch mode (if available)
 ```
 
 Coverage:
+
 - Tool: pytest-cov
 - Report type: Coverage percentage with missing line counts
 - Target: 45% minimum (configured as `fail_under` in pyproject.toml)
@@ -37,18 +41,21 @@ Coverage:
 ## Test File Organization
 
 **Location:**
+
 - Co-located with source: `src/module.py` → `tests/unit/test_module.py`
 - Integration tests: Separate `tests/integration/` directory
 - Test infrastructure: `tests/infra/` or `tests/conftest.py` for shared fixtures
 - Utilities/helpers: `tests/unit/helpers/` or `tests/unit/test_utils.py`
 
 **Naming:**
+
 - Test classes: `Test{Module}` (e.g., `TestResult`, `TestModels`, `TestDispatcher`)
 - Test functions: `test_{feature}_{scenario}` (e.g., `test_creation_success`, `test_map_with_ok`)
 - Parametrized tests: `test_{feature}[{param_id}]` (pytest generates suffix)
 - Fixtures: lowercase with snake_case (e.g., `clean_container`, `temp_file`, `mock_service`)
 
 **Structure:**
+
 ```
 flext-core/
 ├── tests/
@@ -68,12 +75,13 @@ flext-core/
 ## Test Structure
 
 **Suite Organization:**
+
 ```python
 from __future__ import annotations
 
 import pytest
 from flext_tests import t, tm, u
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, u.Field
 
 from flext_core import r, p, m
 
@@ -118,6 +126,7 @@ class TestResult:
 ```
 
 **Patterns:**
+
 - Setup: Fixtures via `@pytest.fixture` in conftest.py (never setUp/tearDown methods)
 - Teardown: Use fixture yield pattern or autouse fixtures that auto-cleanup
 - Assertion: Direct pytest assertions, not `self.assertEqual()`
@@ -129,6 +138,7 @@ class TestResult:
 **Framework:** `pytest-mock` (provides `mocker` fixture)
 
 **Patterns:**
+
 ```python
 from unittest.mock import Mock, patch
 import pytest
@@ -156,6 +166,7 @@ class TestService:
 ```
 
 **What to Mock:**
+
 - External APIs (HTTP clients, databases, file systems)
 - Time-dependent operations (use `freezegun` for time mocking)
 - Randomness (random seeds or mocking `random` module)
@@ -163,6 +174,7 @@ class TestService:
 - IO operations (file reads/writes when unit testing, use temp dirs in integration)
 
 **What NOT to Mock:**
+
 - Pydantic models (use real instances with test data)
 - Business logic under test (test actual behavior)
 - Result types (`r[T]`) – construct real instances
@@ -172,6 +184,7 @@ class TestService:
 ## Fixtures and Factories
 
 **Test Data:**
+
 ```python
 # fixture in conftest.py
 @pytest.fixture
@@ -191,12 +204,14 @@ def test_with_sample_data(self, sample_data):
 ```
 
 **Location:**
+
 - Global fixtures: `tests/conftest.py` (auto-discovered by pytest)
 - Module-specific: `tests/unit/test_module.py::conftest_<module>()` or same file
 - Test class fixtures: `@pytest.fixture` methods in test class (less preferred)
 - Reusable helpers: `tests/unit/helpers/scenarios.py` for scenario classes
 
 **Fixture Patterns:**
+
 - Use `@pytest.fixture` decorator (not class-based `setUp`)
 - Yield for cleanup: `yield value` instead of return for auto-cleanup
 - Scope: `scope="function"` (default, per test), `scope="module"`, `scope="session"`
@@ -222,12 +237,14 @@ def temp_dir(tmp_path):
 **Requirements:** 45% minimum (configurable per project)
 
 **View Coverage:**
+
 ```bash
 pytest --cov=src --cov-report=html
 # Open htmlcov/index.html in browser
 ```
 
 **Configuration:**
+
 - Located in `pyproject.toml` `[tool.coverage.report]`
 - Settings:
   - `fail_under = 45` (fail build if coverage below this)
@@ -237,6 +254,7 @@ pytest --cov=src --cov-report=html
 ## Test Types
 
 **Unit Tests:**
+
 - Scope: Single function/class in isolation
 - Speed: Fast (< 100ms per test)
 - Setup: Minimal, fixtures for clean state
@@ -245,6 +263,7 @@ pytest --cov=src --cov-report=html
 - Examples: testing `Result.map()`, `Model.validate()`, `u.parse_uri()`
 
 **Integration Tests:**
+
 - Scope: Multiple components working together
 - Speed: Moderate (can be seconds)
 - Setup: Real instances, temp databases, mock external services
@@ -253,6 +272,7 @@ pytest --cov=src --cov-report=html
 - Examples: testing DI container with services, dispatcher with handlers, CQRS flows
 
 **E2E Tests:**
+
 - Scope: Full application workflows
 - Speed: Slow (requires full setup/teardown)
 - Setup: Real or near-real environment
@@ -263,6 +283,7 @@ pytest --cov=src --cov-report=html
 ## Common Patterns
 
 **Async Testing:**
+
 ```python
 import pytest
 
@@ -279,6 +300,7 @@ async def test_async_function():
 ```
 
 **Error Testing:**
+
 ```python
 from pydantic import ValidationError
 
@@ -297,6 +319,7 @@ def test_result_failure():
 ```
 
 **Parametrized Testing:**
+
 ```python
 # Inline parameter sets
 @pytest.mark.parametrize(
@@ -326,6 +349,7 @@ class TestResult:
 ```
 
 **Test Isolation:**
+
 ```python
 @pytest.fixture(autouse=True)
 def isolated_state():
@@ -348,6 +372,7 @@ def clean_container():
 ## Markers
 
 **Available Markers** (configured in `pyproject.toml`):
+
 - `@pytest.mark.unit` – Unit tests (fast, isolated)
 - `@pytest.mark.integration` – Integration tests (multiple components)
 - `@pytest.mark.e2e` – End-to-end tests (full workflows)

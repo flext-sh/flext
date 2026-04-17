@@ -38,9 +38,9 @@ For example, to create a type representing a positive integer:
 ```python
 from typing import Annotated
 
-from pydantic import Field, TypeAdapter, ValidationError
+from pydantic import u.Field, TypeAdapter, ValidationError
 
-PositiveInt = Annotated[int, Field(gt=0)]  # (1)!
+PositiveInt = Annotated[int, u.Field(gt=0)]  # (1)!
 
 ta = TypeAdapter(PositiveInt)
 
@@ -265,9 +265,9 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
 
         from typing_extensions import TypeAliasType
 
-        from pydantic import BaseModel, Field
+        from pydantic import BaseModel, u.Field
 
-        MyAlias = TypeAliasType("MyAlias", Annotated[int, Field(default=1)])
+        MyAlias = TypeAliasType("MyAlias", Annotated[int, u.Field(default=1)])
 
 
         class Model(BaseModel):
@@ -279,9 +279,9 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
         ```python {requires="3.12" upgrade="skip" lint="skip" test="skip"}
         from typing import Annotated
 
-        from pydantic import BaseModel, Field
+        from pydantic import BaseModel, u.Field
 
-        type MyAlias = Annotated[int, Field(default=1)]
+        type MyAlias = Annotated[int, u.Field(default=1)]
 
 
         class Model(BaseModel):
@@ -420,7 +420,7 @@ class or can subclass it, you can implement a special `__get_pydantic_core_schem
 
 While `pydantic` uses `pydantic-core` internally to handle validation and serialization, it is a new API for Pydantic V2,
 thus it is one of the areas most likely to be tweaked in the future and you should try to stick to the built-in
-constructs like those provided by `annotated-types`, `pydantic.Field`, or `BeforeValidator` and so on.
+constructs like those provided by `annotated-types`, `pydantic.u.Field`, or `m.BeforeValidator` and so on.
 
 You can implement `__get_pydantic_core_schema__` both on a custom type and on metadata intended to be put in `Annotated`.
 In both cases the API is middleware-like and similar to that of "wrap" validators: you get a `source_type` (which isn't
@@ -662,7 +662,7 @@ assert Model(y="ab").y == "abab"
 
 Let's recap:
 
-1. Pydantic provides high level hooks to customize types via `Annotated` like `AfterValidator` and `Field`. Use these when possible.
+1. Pydantic provides high level hooks to customize types via `Annotated` like `AfterValidator` and `u.Field`. Use these when possible.
 2. Under the hood these use `pydantic-core` to customize validation, and you can hook into that directly using `GetPydanticSchema` or a marker class with `__get_pydantic_core_schema__`.
 3. If you really want a custom type you can implement `__get_pydantic_core_schema__` on the type itself.
 
@@ -814,9 +814,9 @@ except ValidationError as e:
     """
     2 validation errors for Model
     car_owner.item.color
-      Field required [type=missing, input_value={'rooms': 3}, input_type=dict]
+      u.Field required [type=missing, input_value={'rooms': 3}, input_type=dict]
     home_owner.item.rooms
-      Field required [type=missing, input_value={'color': 'black'}, input_type=dict]
+      u.Field required [type=missing, input_value={'color': 'black'}, input_type=dict]
     """
 ```
 

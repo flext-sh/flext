@@ -4,14 +4,6 @@
     "**/.flext-deps": true,
     "**/.flext-deps/**": true
   },
-  "search.exclude": {
-    "**/.flext-deps": true,
-    "**/.flext-deps/**": true
-  },
-  "python.analysis.exclude": [
-    "**/.flext-deps",
-    "**/.flext-deps/**"
-  ],
   "files.watcherExclude": {
     "__pycache__": true,
     ".DS_Store": true,
@@ -54,49 +46,73 @@
     "vendor": true,
     "venv": true
   },
+  "markdownlint.configFile": ".markdownlint.json",
+  "markdownlint.lintWorkspaceGlobs": [
+    "**/*.{md,mkd,mdwn,mdown,markdown,markdn,mdtxt,mdtext,workbook}",
+    "!**/*.code-search",
+    "!**/bower_components/**",
+    "!**/node_modules/**",
+    "!**/.git/**",
+    "!**/vendor/**",
+    "!**/.planning/**",
+    "!**/.reports/**",
+    "!**/.venv/**",
+    "!**/dist/**",
+    "!**/build/**",
+    "!**/tmp/**",
+    "!**/output/**"
+  ],
   "mypy-type-checker.importStrategy": "fromEnvironment",
-  "mypy-type-checker.reportingScope": "workspace",
   "mypy-type-checker.preferDaemon": true,
+  "mypy-type-checker.reportingScope": "workspace",
+  "pylsp.plugins.autopep8.enabled": false,
+  "pylsp.plugins.mccabe.enabled": false,
+  "pylsp.plugins.pycodestyle.enabled": false,
+  "pylsp.plugins.pyflakes.enabled": false,
+  "pylsp.plugins.pylint.enabled": false,
+  "pylsp.plugins.pylsp_rope.enabled": true,
+  "pylsp.plugins.rope_autoimport.enabled": true,
+  "pylsp.plugins.rope_completion.enabled": true,
+  "pylsp.plugins.yapf.enabled": false,
   "pyrefly.lspPath": ".venv/bin/pyrefly",
-  "python.pyrefly.diagnosticMode": "workspace",
-  "python.pyrefly.displayTypeErrors": "default",
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python-envs.pythonProjects": [
+    {
+      "envManager": "ms-python.python:system",
+      "packageManager": "ms-python.python:pip",
+      "path": "."
+    }
+  ],
+  "python-envs.terminal.autoActivationType": "shellStartup",
   "python-envs.workspaceSearchPaths": [
     "./.venv",
     "./**/.venv"
   ],
-  "python-envs.terminal.autoActivationType": "shellStartup",
-  "python.terminal.activateEnvironment": true,
-  "python.terminal.activateEnvInCurrentTerminal": true,
-  "terminal.integrated.env.linux": {
-    "VIRTUAL_ENV": "${workspaceFolder}/.venv",
-    "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}"
-  },
+  "python.analysis.exclude": [
+    "**/.flext-deps",
+    "**/.flext-deps/**"
+  ],
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
   "python.languageServer": "None",
+  "python.pyrefly.diagnosticMode": "workspace",
+  "python.pyrefly.displayTypeErrors": "default",
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.terminal.activateEnvironment": true,
   "python.useEnvironmentsExtension": true,
-  "pylsp.plugins.pycodestyle.enabled": false,
-  "pylsp.plugins.pyflakes.enabled": false,
-  "pylsp.plugins.mccabe.enabled": false,
-  "pylsp.plugins.autopep8.enabled": false,
-  "pylsp.plugins.yapf.enabled": false,
-  "pylsp.plugins.pylint.enabled": false,
-  "pylsp.plugins.rope_autoimport.enabled": true,
-  "pylsp.plugins.rope_completion.enabled": true,
-  "pylsp.plugins.pylsp_rope.enabled": true,
-  "shellcheck.useWorkspaceRootAsCwd": true,
   "ruff.configurationPreference": "filesystemFirst",
   "ruff.format.backend": "uv",
   "ruff.format.preview": true,
-  "ruff.lint.preview": true,
-  "ruff.nativeServer": "on",
   "ruff.interpreter": [
     ".venv/bin/ruff"
   ],
-  "python-envs.pythonProjects": [
-    {
-      "path": ".",
-      "envManager": "ms-python.python:system",
-      "packageManager": "ms-python.python:pip"
-    }
-  ]
+  "ruff.lint.preview": true,
+  "ruff.nativeServer": "on",
+  "search.exclude": {
+    "**/.flext-deps": true,
+    "**/.flext-deps/**": true
+  },
+  "shellcheck.useWorkspaceRootAsCwd": true,
+  "terminal.integrated.env.linux": {
+    "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}",
+    "VIRTUAL_ENV": "${workspaceFolder}/.venv"
+  }
 }

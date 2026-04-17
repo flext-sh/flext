@@ -39,35 +39,35 @@ description: Rules for typing support assets in `typings/` (stubs, compatibility
 
 Libraries with PyPI stubs (declare in `pyproject.toml` dev deps):
 
-| Library | Stub Package | Notes |
-|---|---|---|
+| Library    | Stub Package       | Notes                                              |
+| ---------- | ------------------ | -------------------------------------------------- |
 | matplotlib | `matplotlib-stubs` | Partial — some methods still need per-line ignores |
-| docker | `types-docker` | |
-| ldap3 | `types-ldap3` | |
-| protobuf | `types-protobuf` | |
-| psutil | `types-psutil` | |
-| PyYAML | `types-pyyaml` | |
-| requests | `types-requests` | |
-| cachetools | `types-cachetools` | |
-| paramiko | `types-paramiko` | |
-| setuptools | `types-setuptools` | |
+| docker     | `types-docker`     |                                                    |
+| ldap3      | `types-ldap3`      |                                                    |
+| protobuf   | `types-protobuf`   |                                                    |
+| psutil     | `types-psutil`     |                                                    |
+| PyYAML     | `types-pyyaml`     |                                                    |
+| requests   | `types-requests`   |                                                    |
+| cachetools | `types-cachetools` |                                                    |
+| paramiko   | `types-paramiko`   |                                                    |
+| setuptools | `types-setuptools` |                                                    |
 
 Libraries with NO PyPI stubs (manual `typings/` stubs kept):
 
-| Library | Manual Stubs | Notes |
-|---|---|---|
-| bandit | `typings/bandit/` | Quality tool — no upstream types |
-| msgpack | `typings/msgpack/` | Binary serialization |
-| radon | `typings/radon/` | Complexity metrics |
-| ruff | `typings/ruff/` | Linter Python API |
-| vulture | `typings/vulture/` | Dead code detection |
+| Library | Manual Stubs       | Notes                            |
+| ------- | ------------------ | -------------------------------- |
+| bandit  | `typings/bandit/`  | Quality tool — no upstream types |
+| msgpack | `typings/msgpack/` | Binary serialization             |
+| radon   | `typings/radon/`   | Complexity metrics               |
+| ruff    | `typings/ruff/`    | Linter Python API                |
+| vulture | `typings/vulture/` | Dead code detection              |
 
 Libraries with NO stubs at all (use per-line pyright ignores):
 
-| Library | Strategy |
-|---|---|
-| cairosvg | `# pyright: ignore[reportUnknownMemberType]` per line |
-| weasyprint | `# pyright: ignore[reportUnknownMemberType]` per line |
+| Library     | Strategy                                              |
+| ----------- | ----------------------------------------------------- |
+| cairosvg    | `# pyright: ignore[reportUnknownMemberType]` per line |
+| weasyprint  | `# pyright: ignore[reportUnknownMemberType]` per line |
 | python-docx | `# pyright: ignore[reportUnknownMemberType]` per line |
 
 ## Instructions
