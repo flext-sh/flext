@@ -1,7 +1,9 @@
 {
   "default": true,
-  "MD001": false,
-  "MD003": false,
+
+  "MD003": { "style": "atx" },
+  "MD060": { "style": "leading_only" },
+
   "MD013": false,
   "MD024": false,
   "MD033": false,
@@ -10,9 +12,5 @@
   "MD041": false,
   "MD042": false,
   "MD046": false,
-  "MD051": false,
-  "MD052": false,
-  "MD055": false,
-  "MD056": false,
-  "MD060": false
+  "MD051": false
 }

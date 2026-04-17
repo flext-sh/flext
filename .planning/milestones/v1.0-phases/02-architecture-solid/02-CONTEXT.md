@@ -18,7 +18,7 @@ Pre-conditions from Phase 1:
 <decisions>
 ## Implementation Decisions
 
-### Plan Decomposition
+## Plan Decomposition
 
 - **D-01:** Phase 2 uses **requirement-based waves**, not project-based waves. Unlike Phase 1 (where errors cascaded project-to-project), Phase 2 requirements are largely independent: protocols (ARCH-01/04/05), u.Field migration (ARCH-03/06/07), type aliases (ARCH-08), import normalization (ARCH-02). Each wave targets a requirement cluster.
 - **D-02:** Wave order: (0) issubclass() prerequisite fixes → (1) Protocol DIP enforcement (ARCH-01, ARCH-04, ARCH-05) → (2) Pydantic v2 u.Field() canonicalization (ARCH-03, ARCH-06, ARCH-07) → (3) PEP 695 type aliases + import normalization (ARCH-08, ARCH-02).

@@ -47,6 +47,7 @@ None.
 | MOD-02 | `warnings.deprecated` (PEP 702) replaces custom `FlextUtilitiesDeprecation` framework | deprecation.py is dead code with zero callers; already imports `warnings.deprecated` internally. Delete class, update `__init__.py` exports |
 | MOD-06 | `UserDict`/`UserString` usages replaced with Pydantic `BaseModel` | Grep confirms zero `UserDict`/`UserString` in `*/src/**/*.py`. Already satisfied — verify and mark complete |
 | INFRA-05 | `make pyrefly-repo` policy gate enforces 0 violations | Already marked complete in REQUIREMENTS.md. Circular import fix ensures `make pyre` stays clean |
+
 </phase_requirements>
 
 ## Architecture Patterns

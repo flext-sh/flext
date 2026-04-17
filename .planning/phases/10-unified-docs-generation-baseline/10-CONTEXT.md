@@ -27,7 +27,7 @@ Docs domain — EXCLUDED (separate agent)
 <decisions>
 ## Implementation Decisions
 
-### Architecture Pattern
+## Architecture Pattern
 
 - Services MUST follow s base from base.py — thin orchestrators only
 - Services MUST delegate ALL logic to u.Infra.* utility functions

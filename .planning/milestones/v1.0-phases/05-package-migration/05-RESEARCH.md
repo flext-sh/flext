@@ -56,6 +56,7 @@ This phase migrates a 33-project Python monorepo from Poetry to uv workspaces. T
 | MIG-04 | 33 pyproject.toml converted from Poetry to PEP 621 + uv workspace | pyproject.toml conversion patterns documented below |
 | MIG-05 | Root uv.lock unified | Root uv.lock already exists but only covers root; needs workspace member wiring |
 | MIG-06 | All make targets use uv run instead of poetry run | base.mk has 15+ `$(POETRY) run` refs; root Makefile uses POETRY_BIN/POETRY_ENV heavily |
+
 </phase_requirements>
 
 ## Project Constraints (from CLAUDE.md)

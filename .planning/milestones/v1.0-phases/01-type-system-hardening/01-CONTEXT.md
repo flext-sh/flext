@@ -18,7 +18,7 @@ Pre-authorized decisions already in place:
 <decisions>
 ## Implementation Decisions
 
-### Plan Decomposition
+## Plan Decomposition
 
 - **D-01:** Phase 1 is organized as big wave plans, not per-project or per-error-category. Wave order: `flext-core` → `flext-infra + flext-tests` → `flext-cli (solo)` → remaining consumers.
 - **D-02:** Each wave plan covers ALL error categories for that batch in a single pass: pyrefly errors, pyright errors, and any applicable TYPE-0X requirements (no separate `__class__` pass, no separate `cast()` pass).

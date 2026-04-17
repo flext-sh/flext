@@ -24,6 +24,7 @@ Key finding: most changes are mechanical (ast-grep scriptable). The StrEnum @uni
 | MOD-04 | 70 Literal[str,...] unions convertible to StrEnum | Found 108 Literal occurrences in src/ across 44 files — needs triage for convertibility |
 | MOD-05 | defaultdict replaces hand-rolled grouping | 23 setdefault() calls in src/ — some are genuine grouping patterns, others are settings defaults |
 | MOD-06 | UserDict/UserString replaced with Pydantic BaseModel | 1 production UserDict (flext-auth ProviderConfiguration), rest in tests only |
+
 </phase_requirements>
 
 ## Project Constraints (from CLAUDE.md)

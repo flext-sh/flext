@@ -13,7 +13,7 @@ Migrate the 33-project Python monorepo from Poetry to uv workspace: convert all 
 <decisions>
 ## Implementation Decisions
 
-### Submodule Extraction (MIG-01/02/03)
+## Submodule Extraction (MIG-01/02/03)
 
 - **D-01:** Keep current git repo strategy as-is — one repo per namespace, submodules already in place. No history extraction or repo restructuring needed.
 - **D-02:** Validate that imports resolve correctly across all 33 consumers and CI checks out submodules properly.

@@ -33,11 +33,10 @@
 
 <!-- TOC END -->
 
----
-
+<!--
 description:
 alwaysApply: true
----
+-->
 
 # AGENTS.md — Canonical Engineering Law
 

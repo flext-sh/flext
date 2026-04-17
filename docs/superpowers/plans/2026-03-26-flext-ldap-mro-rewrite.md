@@ -10,7 +10,7 @@
 
 ---
 
-### Task 1: Fix immediate bugs (norm_string, missing exports)
+## Task 1: Fix immediate bugs (norm_string, missing exports)
 
 **Files:**
 
@@ -24,7 +24,7 @@
 - [ ] **Step 4: Run ruff + pyrefly + pytest on flext-ldap**
 - [ ] **Step 5: Commit**
 
-### Task 2: Convert FlextLdapConnection to MRO mixin
+## Task 2: Convert FlextLdapConnection to MRO mixin
 
 **Files:**
 
@@ -37,7 +37,7 @@
 - [ ] **Step 5: Run ruff + pyrefly**
 - [ ] **Step 6: Commit**
 
-### Task 3: Convert FlextLdapOperations to MRO mixin
+## Task 3: Convert FlextLdapOperations to MRO mixin
 
 **Files:**
 
@@ -50,7 +50,7 @@
 - [ ] **Step 5: Run ruff + pyrefly**
 - [ ] **Step 6: Commit**
 
-### Task 4: Rewrite ldap as MRO facade
+## Task 4: Rewrite ldap as MRO facade
 
 **Files:**
 
@@ -66,7 +66,7 @@
 - [ ] **Step 8: Run ruff + pyrefly**
 - [ ] **Step 9: Commit**
 
-### Task 5: Update **init**.py exports
+## Task 5: Update **init**.py exports
 
 **Files:**
 
@@ -77,7 +77,7 @@
 - [ ] **Step 3: Run ruff + pyrefly**
 - [ ] **Step 4: Commit**
 
-### Task 6: Fix all flext-ldap tests
+## Task 6: Fix all flext-ldap tests
 
 **Files:**
 
@@ -91,7 +91,7 @@
 - [ ] **Step 6: Run full pytest suite — 0 failures**
 - [ ] **Step 7: Commit**
 
-### Task 7: Update consumers (tap/target/dbt-ldap)
+## Task 7: Update consumers (tap/target/dbt-ldap)
 
 **Files:**
 
@@ -105,7 +105,7 @@
 - [ ] **Step 3: Run ruff + pyrefly on each consumer project**
 - [ ] **Step 4: Commit**
 
-### Task 8: Update algar-oud-mig (production consumer)
+## Task 8: Update algar-oud-mig (production consumer)
 
 **Files:**
 
@@ -119,7 +119,7 @@
 - [ ] **Step 3: Run ruff + pyrefly**
 - [ ] **Step 4: Commit**
 
-### Task 9: Archive dead code
+## Task 9: Archive dead code
 
 **Files:**
 
@@ -132,7 +132,7 @@
 - [ ] **Step 4: Run ruff + pyrefly + pytest**
 - [ ] **Step 5: Commit**
 
-### Task 10: Final validation
+## Task 10: Final validation
 
 - [ ] **Step 1: ruff check flext-ldap/src/ — 0 errors**
 - [ ] **Step 2: pyrefly check flext-ldap/src/ — 0 errors**

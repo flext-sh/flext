@@ -17,7 +17,7 @@ as an additional layer on top of it.
 <decisions>
 ## Implementation Decisions
 
-### Replacement strategy
+## Replacement strategy
 
 - **D-01:** Hybrid approach — rope for cross-file semantic ops, LibCST for syntax-level pattern edits
 - **D-02:** Rope must SIMPLIFY existing code, not add layers. Where rope makes a LibCST transformer simpler, use it. Never add rope complexity to stay "pure LibCST."

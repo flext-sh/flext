@@ -58,6 +58,7 @@ The work is requirement-clustered into 4 waves: (0) issubclass prerequisite fixe
 | ARCH-06 | ~100 inline `TypeAdapter()` instantiations cached as ClassVar/module constants | Audit: 451 TypeAdapter matches, ~100 inline hot-path. Cache as `ClassVar[m.TypeAdapter[T]]` on owning class. |
 | ARCH-07 | 13 mutable `u.Field(default=[])` replaced with `default_factory=list` | Current grep shows 2 remaining in flext-dbt-oracle (others may have been fixed in Phase 1). Verify actual count at execution time. |
 | ARCH-08 | Type aliases use PEP 695 `type X = ...` form | 113 TypeAlias occurrences remain across 30 files (many in flext-infra tooling and test fixtures). 1,271 already PEP 695. |
+
 </phase_requirements>
 
 ## Standard Stack
