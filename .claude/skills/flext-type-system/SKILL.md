@@ -44,6 +44,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 PEP 695 `type X = ...` creates `TypeAliasType`. In FLEXT, that syntax is canonical in `typings.py`, and those aliases are annotation-only.
 
 **Rules:**
+
 1. Use `type X = ...` for aliases in `typings.py`, following AGENTS.md.
 2. Never use `isinstance(val, t.SomeAlias)`.
 3. Never subclass a type alias.
@@ -52,11 +53,12 @@ PEP 695 `type X = ...` creates `TypeAliasType`. In FLEXT, that syntax is canonic
 
 **Quick reference:**
 
-| Pattern | Status |
-|--------|--------|
-| `type X = str \| int` in `typings.py` | ✅ canonical |
-| `isinstance(val, t.Scalar)` | ❌ forbidden |
-| `u.is_scalar(val)` | ✅ canonical |
+| Pattern                     | Status               |             |
+| --------------------------- | -------------------- | ----------- |
+| `type X = str \             | int` in `typings.py` | ✅ canonical |
+| `isinstance(val, t.Scalar)` | ❌ forbidden          |             |
+| `u.is_scalar(val)`          | ✅ canonical          |             |
+
 ## Cross-Project Namespace Inheritance (m, c, t, u, p)
 
 Each downstream project inherits its parent project's facade, gaining all parent namespaces via MRO:
@@ -80,10 +82,10 @@ m = FlextTargetOracleModels
 
 | Approach                                            | Problem                                                              |
 | --------------------------------------------------- | -------------------------------------------------------------------- |
-| `Meltano = FlextMeltanoModels.Meltano` (assignment) | mypy `name-defined` error with `from __future__ import annotations` |
-| Per-type subclasses inside `class Meltano:` | Invariance errors: `Sequence[SubType]` ≠ `Sequence[ParentType]` |
-| `from flext_meltano import m` | Anti-pattern: duplicates namespace surface, adds unnecessary aliases |
-| Top-level inheritance (`class Models(Parent):`)     | ✅ Clean MRO, zero duplication, exact same types                     |
+| `Meltano = FlextMeltanoModels.Meltano` (assignment) | mypy `name-defined` error with `from __future__ import annotations`  |
+| Per-type subclasses inside `class Meltano:`         | Invariance errors: `Sequence[SubType]` ≠ `Sequence[ParentType]`      |
+| `from flext_meltano import m`                       | Anti-pattern: duplicates namespace surface, adds unnecessary aliases |
+| Top-level inheritance (`class Models(Parent):`)     | ✅ Clean MRO, zero duplication, exact same types                      |
 
 **Anti-patterns (NEVER):**
 
@@ -97,12 +99,12 @@ m = FlextTargetOracleModels
 
 **Rule:** Inside `r[T]`, use the **concrete** container type that matches the actual runtime value. Do NOT substitute abstract `Sequence`, `Mapping`, etc. as the type parameter — invariance makes that a type error.
 
-| Return value | Correct annotation | FORBIDDEN |
-|---|---|---|
-| `[1, 2, 3]` | `r[list[int]]` | `r[Sequence[int]]` |
-| `{"a": 1}` | `r[dict[str, int]]` | `r[t.IntMapping]` |
-| `{1, 2}` | `r[set[int]]` | `r[AbstractSet[int]]` |
-| `(1, "x")` | `r[tuple[int, str]]` | `r[Sequence[int \| str]]` |
+| Return value | Correct annotation   | FORBIDDEN             |        |
+| ------------ | -------------------- | --------------------- | ------ |
+| `[1, 2, 3]`  | `r[list[int]]`       | `r[Sequence[int]]`    |        |
+| `{"a": 1}`   | `r[dict[str, int]]`  | `r[t.IntMapping]`     |        |
+| `{1, 2}`     | `r[set[int]]`        | `r[AbstractSet[int]]` |        |
+| `(1, "x")`   | `r[tuple[int, str]]` | `r[Sequence[int \     | str]]` |
 
 **Why:** `r[Sequence[int]]` and `r[list[int]]` are distinct types under invariance. Returning `r[list[int]]` where `r[Sequence[int]]` is declared is a type error.
 

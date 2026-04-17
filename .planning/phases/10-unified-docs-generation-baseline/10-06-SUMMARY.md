@@ -56,6 +56,7 @@ completed: 2026-04-06
 - **Files modified:** 6
 
 ## Accomplishments
+
 - Eliminated all direct `tomlkit.table()`, `tomlkit.array()`, `tomlkit.parse()`, `tomlkit.document()` calls from deps service methods
 - Replaced 4 direct `mkdir` calls with `u.Infra.ensure_dir()` across 3 files
 - Added 5 new TOML utility methods to `FlextInfraUtilitiesToml`: `table()`, `document()`, `parse_text()`, `is_table()`, `is_aot()`
@@ -69,6 +70,7 @@ Each task was committed atomically:
 2. **Task 2: Refactor deps sync and settings fixer services** - `51bcf77` (feat)
 
 ## Files Created/Modified
+
 - `flext-infra/src/flext_infra/_utilities/toml.py` - Added table(), document(), parse_text(), is_table(), is_aot() utilities
 - `flext-infra/src/flext_infra/deps/modernizer.py` - Removed `import tomlkit`, replaced tomlkit.table() with u.Infra.table()
 - `flext-infra/src/flext_infra/deps/_detector_runtime.py` - Replaced mkdir with u.Infra.ensure_dir()
@@ -77,6 +79,7 @@ Each task was committed atomically:
 - `flext-infra/src/flext_infra/deps/internal_sync.py` - Replaced 2 mkdir calls with u.Infra.ensure_dir()
 
 ## Decisions Made
+
 - detection_analysis.py (361 LOC) accepted as internal mixin helper -- it provides analysis runners (deptry, mypy, pip-check) inherited by detection.py and is pure logic, not a standalone orchestrator
 - tomlkit type imports (`Table`, `TOMLDocument`, `Item`, `AoT`, `Container`) retained for type annotations -- the plan targets runtime TOML manipulation, not type-level references
 - The single `read_text()` in detection_analysis.py reads deptry's JSON output file, not TOML -- this is external tool output parsing, acceptable in the analysis helper
@@ -86,6 +89,7 @@ Each task was committed atomically:
 ### Auto-fixed Issues
 
 **1. [Rule 2 - Missing Critical] Added TOML creation utilities to u.Infra**
+
 - **Found during:** Task 1
 - **Issue:** u.Infra.* lacked table(), document(), parse_text() factory methods needed by deps services
 - **Fix:** Added 5 methods to FlextInfraUtilitiesToml delegating to u.Cli.toml_*
@@ -99,12 +103,15 @@ Each task was committed atomically:
 **Impact on plan:** Utility creation was explicitly anticipated by the plan ("If no matching utility exists, CREATE the utility method"). No scope creep.
 
 ## Issues Encountered
+
 None
 
 ## User Setup Required
+
 None - no external service configuration required.
 
 ## Next Phase Readiness
+
 - Deps domain fully compliant with thin orchestrator pattern
 - Ready for 10-07 (engine domain refactoring) and 10-08 (library verification + facade finalization)
 

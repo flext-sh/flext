@@ -21,6 +21,7 @@ description: Use when running or interpreting quality gates (lint, typecheck, te
 - `AGENTS.md` — canonical governance source
 
 ## Rules
+
 - **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
 - **Rule**: Every change MUST be INTEGRAL and pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors, ZERO warnings. No partial fixes. ALL impacted references across the ENTIRE codeset MUST be immediately updated using ast-grep (`sg`) search-and-replace. After any type/model/signature change: (1) `sg` find-and-replace ALL references across all 33 projects, (2) `make check` on every affected project, (3) verify ZERO errors from all 4 linters. A change that breaks ANY linter in ANY project is REJECTED — the portfolio is ONE unit.
 - **Rule**: Linter suppression comments (`# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore`, `typing.cast()`) are FORBIDDEN without ALL of: (1) well-founded technical explanation with REAL, verifiable internet citations (official docs, GitHub issues, PEPs), (2) explicit business necessity in the same comment, (3) per-line ONLY — never per-file, never per-module, never in settings. Global suppression rules in `pyproject.toml`, `ruff.toml`, or any settings are FORBIDDEN. Fix the code, never silence the linter.

@@ -100,16 +100,16 @@ TypeAdapter(date).validate_json('"2000-01-01"', strict=True)  # (1)!
 ## At the field level
 
 Strict mode can be enabled on specific fields, by setting the `strict` parameter of the
-[`Field()`][pydantic.Field] function to `True`. Strict mode will be applied for such fields,
+[`u.Field()`][pydantic.u.Field] function to `True`. Strict mode will be applied for such fields,
 even when the [validation methods](./models.md#validating-data) are called in lax mode.
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class User(BaseModel):
     name: str
-    age: int = Field(strict=True)  # (1)!
+    age: int = u.Field(strict=True)  # (1)!
 
 
 user = User(name="John", age=42)
@@ -129,7 +129,7 @@ except ValidationError as e:
 ```
 
 1. The strict constraint can also be applied using the [annotated pattern](./fields.md#the-annotated-pattern):
-   `Annotated[int, Field(strict=True)]`
+   `Annotated[int, u.Field(strict=True)]`
 
 <!-- old anchor added for backwards compatibility -->
 <!-- markdownlint-disable-next-line no-empty-links -->
@@ -141,7 +141,7 @@ except ValidationError as e:
 ??? api "API Documentation"
 [`pydantic.types.Strict`][pydantic.types.Strict]<br>
 
-As an alternative to the [`Field()`][pydantic.Field] function, Pydantic provides the [`Strict`][pydantic.types.Strict]
+As an alternative to the [`u.Field()`][pydantic.u.Field] function, Pydantic provides the [`Strict`][pydantic.types.Strict]
 metadata class, meant to be used with the [annotated pattern](./fields.md#the-annotated-pattern). It also provides
 convenience aliases for the most common types (namely [`StrictBool`][pydantic.types.StrictBool],
 [`StrictInt`][pydantic.types.StrictInt], [`StrictFloat`][pydantic.types.StrictFloat], [`StrictStr`][pydantic.types.StrictStr]
@@ -173,14 +173,14 @@ a Pydantic model (or model like class such as [dataclasses](./dataclasses.md)), 
 be overridden at the [field level](#at-the-field-level):
 
 ```python
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, u.Field
 
 
 class User(BaseModel):
     model_config = ConfigDict(strict=True)
 
     name: str
-    age: int = Field(strict=False)
+    age: int = u.Field(strict=False)
 
 
 print(User(name="John", age="18"))

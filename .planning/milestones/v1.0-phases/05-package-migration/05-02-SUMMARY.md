@@ -108,12 +108,14 @@ completed: 2026-03-24
 ### Auto-fixed Issues
 
 **1. [Rule 2 - Missing] Foundation projects @ file: deps not cleaned in Plan 01**
+
 - **Found during:** Task 1
 - **Issue:** flext-core, flext-infra, flext-tests still had `@ file:` dependency references
 - **Fix:** Cleaned them alongside consumer projects
 - **Files modified:** flext-core/pyproject.toml, flext-infra/pyproject.toml, flext-tests/pyproject.toml
 
 **2. [Rule 2 - Missing] algar-oud-mig not in plan member list**
+
 - **Found during:** Task 1
 - **Issue:** algar-oud-mig is a submodule with poetry settings but was omitted from the plan
 - **Fix:** Converted to hatchling and added to workspace members/sources
@@ -124,6 +126,7 @@ completed: 2026-03-24
 None.
 
 ## Self-Check: PASSED
+
 ---
 *Phase: 05-package-migration*
 *Completed: 2026-03-24*

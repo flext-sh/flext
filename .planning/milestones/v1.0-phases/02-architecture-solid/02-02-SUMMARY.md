@@ -54,6 +54,7 @@ completed: 2026-03-24
 - **Files modified:** 7
 
 ## Accomplishments
+
 - Eliminated `config_type: type[FlextSettings]` DIP violation in flext-core (service.py + parent mixins.py)
 - Replaced all `FlextContainer` and `FlextLogger` concrete annotations in flext-plugin (5 files, 7 annotations)
 - Replaced `FlextLogger` concrete annotations in flext-quality dashboard (2 annotations)
@@ -65,6 +66,7 @@ completed: 2026-03-24
 2. **Task 2: DIP enforcement across consumer projects** - `074f26bd` (refactor)
 
 ## Files Created/Modified
+
 - `flext-core/src/flext_core/service.py` - config_type: type[FlextSettings] to type[p.Settings]
 - `flext-core/src/flext_core/mixins.py` - Parent class config_type field aligned to p.Settings
 - `flext-plugin/src/flext_plugin/api.py` - FlextContainer to p.Container in **init**
@@ -74,6 +76,7 @@ completed: 2026-03-24
 - `flext-quality/src/flext_quality/docs/dashboard.py` - FlextLogger to p.Logger (field + property return)
 
 ## Decisions Made
+
 - Changed `config_type` in both mixins.py (parent) and service.py (child) to avoid pyright invariant override error
 - Used `p.Logger` (not `p.StructlogLogger`) and `p.Container` (not `p.DI`) matching actual protocol names in codebase (sisyphus plan had outdated names)
 - 3 of 5 scoped consumer projects (flext-target-ldap, flext-ldap, flext-tests) had zero violations — no changes needed
@@ -83,6 +86,7 @@ completed: 2026-03-24
 ### Auto-fixed Issues
 
 **1. [Rule 3 - Blocking] Parent class config_type in mixins.py also needed change**
+
 - **Found during:** Task 1
 - **Issue:** Changing `config_type` in service.py alone caused pyright `reportIncompatibleVariableOverride` because parent x in mixins.py still had `type[FlextSettings]`
 - **Fix:** Changed `config_type` annotation in mixins.py to `type[p.Settings] | None` as well
@@ -96,16 +100,20 @@ completed: 2026-03-24
 **Impact on plan:** Required for type-checking correctness. No scope creep.
 
 ## Issues Encountered
+
 - Sisyphus plan referenced outdated protocol names (`p.Settings`, `p.DI`, `p.StructlogLogger`) — actual codebase uses `p.Settings`, `p.Container`, `p.Logger`
 - Most flext-core DIP violations identified in sisyphus plan were already resolved in prior work — only `config_type` remained
 
 ## Known Stubs
+
 None.
 
 ## Deferred Items
+
 - DIP violations in out-of-scope projects: flext-observability (7 FlextContainer), flext-meltano (2 FlextLogger), flext-dbt-ldap (1 FlextLogger), flext-tap-ldap (1 FlextLogger), flext-tap-oracle-oic (1 FlextLogger), flext-cli (1 comment only)
 
 ## Next Phase Readiness
+
 - DIP enforcement complete for scoped projects
 - Remaining violations in 6 unscoped projects can be addressed in a future plan or expanded scope
 
@@ -114,6 +122,7 @@ None.
 *Completed: 2026-03-24*
 
 ## Self-Check: PASSED
+
 - All 7 modified files exist
 - Task 1 commit: 290d9b22
 - Task 2 commit: 074f26bd

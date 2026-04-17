@@ -118,27 +118,27 @@ Required actions:
 
 ## Core Rename Table
 
-| Current | Target | Action |
-| --- | --- | --- |
-| `FlextRegistry` | `FlextCatalog` or `FlextDispatcher` | Replace based on actual role |
-| `h` | `FlextHandler` | Rename and narrow to a single handler contract |
-| `loggings.py` | `logger.py` | Move logger to direct file name |
-| `x` | removed | Move retained behavior into service, handler, logger, decorators, or `u` |
-| hybrid runtime DI helpers | `FlextDi` | centralize all `dependency_injector` bridge logic |
+| Current                   | Target                              | Action                                                                   |
+| ------------------------- | ----------------------------------- | ------------------------------------------------------------------------ |
+| `FlextRegistry`           | `FlextCatalog` or `FlextDispatcher` | Replace based on actual role                                             |
+| `h`                       | `FlextHandler`                      | Rename and narrow to a single handler contract                           |
+| `loggings.py`             | `logger.py`                         | Move logger to direct file name                                          |
+| `x`                       | removed                             | Move retained behavior into service, handler, logger, decorators, or `u` |
+| hybrid runtime DI helpers | `FlextDi`                           | centralize all `dependency_injector` bridge logic                        |
 
 ## Method Replacement Table
 
-| Current method or pattern | Replacement |
-| --- | --- |
-| `register(kind=...)` | `add_service`, `add_factory`, `add_resource` |
-| `register_handler(...)` on generic registry | `add(...)` or `add_many(...)` on `FlextDispatcher` |
-| `register_plugin(...)` on generic registry | `add(...)` on `FlextCatalog` |
-| `get_plugin(...)` | `get(...)` or `require(...)` on `FlextCatalog` |
-| `list_plugins(...)` | `list()` on `FlextCatalog` |
-| `log_operation(...)` | `log(...)` |
-| `track_operation(...)` | `measure(...)` |
-| `with_context(...)` | `scope(...)` |
-| `combined(...)` | `compose(...)` |
+| Current method or pattern                    | Replacement                                              |
+| -------------------------------------------- | -------------------------------------------------------- |
+| `register(kind=...)`                         | `add_service`, `add_factory`, `add_resource`             |
+| `register_handler(...)` on generic registry  | `add(...)` or `add_many(...)` on `FlextDispatcher`       |
+| `register_plugin(...)` on generic registry   | `add(...)` on `FlextCatalog`                             |
+| `get_plugin(...)`                            | `get(...)` or `require(...)` on `FlextCatalog`           |
+| `list_plugins(...)`                          | `list()` on `FlextCatalog`                               |
+| `log_operation(...)`                         | `log(...)`                                               |
+| `track_operation(...)`                       | `measure(...)`                                           |
+| `with_context(...)`                          | `scope(...)`                                             |
+| `combined(...)`                              | `compose(...)`                                           |
 | direct `dependency_injector` use in app code | `u.get_*`, `u.require_*`, or `self.*` runtime properties |
 
 ## Removed Concepts

@@ -113,7 +113,7 @@ from __future__ import annotations
 
 from typing import Annotated, ClassVar
 
-from pydantic import Field
+from pydantic import u.Field
 
 from flext_core import m, p, r, t
 
@@ -121,15 +121,15 @@ from flext_core import m, p, r, t
 class CreateUserCommand(m.Command):
     """CQRS command — inherits from m.Command (flat, no sub-namespace)."""
 
-    name: Annotated[t.NonEmptyStr, m.Field(description="User full name")]
-    email: Annotated[str, m.Field(description="User email address")]
+    name: Annotated[t.NonEmptyStr, u.Field(description="User full name")]
+    email: Annotated[str, u.Field(description="User email address")]
 
 
 class UserSummary(m.Value):
     """Value object — inherits from m.Value (flat, no sub-namespace)."""
 
-    user_id: Annotated[str, m.Field(description="Generated user identifier")]
-    display_name: Annotated[str, m.Field(description="Formatted display name")]
+    user_id: Annotated[str, u.Field(description="Generated user identifier")]
+    display_name: Annotated[str, u.Field(description="Formatted display name")]
 
 
 def register_user(cmd: CreateUserCommand) -> p.Result[UserSummary]:
@@ -140,6 +140,7 @@ def register_user(cmd: CreateUserCommand) -> p.Result[UserSummary]:
 ```
 
 **Available flat on `m` (verified from flext_core source):**
+
 - Base models: `m.ArbitraryTypesModel`, `m.StrictModel`, `m.FlexibleInternalModel`,
   `m.ImmutableValueModel`, `m.FrozenModel`, `m.DynamicModel`, `m.EnforcedModel`,
   `m.ManagedModel`, `m.Metadata`
@@ -160,7 +161,7 @@ from __future__ import annotations
 
 from typing import Annotated, ClassVar
 
-from pydantic import Field
+from pydantic import u.Field
 
 from flext_core import m, p, r
 
@@ -176,8 +177,8 @@ class FlextTargetOracleModels(m):
         """ONE local namespace — project-specific domain models."""
 
         class ExecuteResult(m.ArbitraryTypesModel):
-            rows_affected: Annotated[int, m.Field(description="Rows modified")]
-            table_name: Annotated[str, m.Field(description="Target table name")]
+            rows_affected: Annotated[int, u.Field(description="Rows modified")]
+            table_name: Annotated[str, u.Field(description="Target table name")]
 
 
 def execute_batch(
@@ -202,7 +203,7 @@ from __future__ import annotations
 
 from typing import Annotated, ClassVar
 
-from pydantic import Field
+from pydantic import u.Field
 
 from flext_core import m, t
 
@@ -215,9 +216,9 @@ class UserProfile(m.ArbitraryTypesModel):
     t.StrSequence    = Sequence[str]                 — covariant param type
     """
 
-    name: Annotated[t.NonEmptyStr, m.Field(description="Display name")]
-    age: Annotated[t.NonNegativeInt, m.Field(description="Age in years")]
-    tags: Annotated[t.StrSequence, m.Field(description="Labels", default_factory=list)]
+    name: Annotated[t.NonEmptyStr, u.Field(description="Display name")]
+    age: Annotated[t.NonNegativeInt, u.Field(description="Age in years")]
+    tags: Annotated[t.StrSequence, u.Field(description="Labels", default_factory=list)]
 ```
 
 ### Parameter types use t.* composed aliases
@@ -264,7 +265,7 @@ Fixes are applied in dependency order so that later categories reuse the vocabul
 Create stub skeletons for the most common example shapes (one-time work):
 
 - `result-flow` — return `p.Result[T]`, construct with `r[T].ok/fail/fail_exc`
-- `pydantic-v2-class` — `Annotated`, `ConfigDict`, `Field`, `PrivateAttr`
+- `pydantic-v2-class` — `Annotated`, `ConfigDict`, `u.Field`, `u.PrivateAttr`
 - `protocol-consumer` — receive `p.HasLogger`, return `p.Result[...]`
 - `cross-project-mro` — dual-inheritance facade
 
@@ -280,6 +281,7 @@ Walk through the validation report, fix one skill at a time. Priority order:
 4. **Skills with only placeholder-variable issues** (easy batch fix)
 
 For each skill:
+
 - Read the skill
 - For each broken block, decide:
   - **Fix**: self-contained stubs + canonical pattern

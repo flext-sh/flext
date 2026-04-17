@@ -121,6 +121,7 @@ def execute_pipeline(
 ```
 
 **Implementation details:**
+
 1. Build `graphlib.TopologicalSorter` from `stages` + `depends_on`
 2. Execute in topological order (sequential — parallel-ready via `prepare()`/`done()` API)
 3. Each stage receives `StageContext` with `shared` dict containing prior stage outputs
@@ -132,19 +133,19 @@ def execute_pipeline(
 
 ### 1.6 Files to create/modify in flext-cli
 
-| File | Action |
-|------|--------|
-| `src/flext_cli/_protocols/pipeline.py` | CREATE — Pipeline protocols |
-| `src/flext_cli/_typings/pipeline.py` | CREATE — Pipeline type aliases |
-| `src/flext_cli/_models/pipeline.py` | CREATE — Pipeline models |
-| `src/flext_cli/_constants/pipeline.py` | CREATE — Pipeline constants |
-| `src/flext_cli/_utilities/pipeline.py` | CREATE — Pipeline engine |
-| `src/flext_cli/protocols.py` | MODIFY — Add PipelineMixin to MRO |
-| `src/flext_cli/typings.py` | MODIFY — Add PipelineMixin to MRO |
-| `src/flext_cli/models.py` | MODIFY — Add PipelineMixin to MRO |
-| `src/flext_cli/constants.py` | MODIFY — Add PipelineMixin to MRO |
-| `src/flext_cli/utilities.py` | MODIFY — Add PipelineMixin to MRO |
-| `tests/unit/test_pipeline.py` | CREATE — Engine unit tests |
+| File                                   | Action                            |
+| -------------------------------------- | --------------------------------- |
+| `src/flext_cli/_protocols/pipeline.py` | CREATE — Pipeline protocols       |
+| `src/flext_cli/_typings/pipeline.py`   | CREATE — Pipeline type aliases    |
+| `src/flext_cli/_models/pipeline.py`    | CREATE — Pipeline models          |
+| `src/flext_cli/_constants/pipeline.py` | CREATE — Pipeline constants       |
+| `src/flext_cli/_utilities/pipeline.py` | CREATE — Pipeline engine          |
+| `src/flext_cli/protocols.py`           | MODIFY — Add PipelineMixin to MRO |
+| `src/flext_cli/typings.py`             | MODIFY — Add PipelineMixin to MRO |
+| `src/flext_cli/models.py`              | MODIFY — Add PipelineMixin to MRO |
+| `src/flext_cli/constants.py`           | MODIFY — Add PipelineMixin to MRO |
+| `src/flext_cli/utilities.py`           | MODIFY — Add PipelineMixin to MRO |
+| `tests/unit/test_pipeline.py`          | CREATE — Engine unit tests        |
 
 ---
 
@@ -152,14 +153,14 @@ def execute_pipeline(
 
 ### 2.1 Current state of `flext_infra/_utilities/io.py` (~220 lines)
 
-| Method | Status | Action |
-|--------|--------|--------|
-| `sha256_content()` | Dead code (duplicate of `u.Cli.sha256_content`) | DELETE |
-| `sha256_file()` | Dead code (duplicate of `u.Cli.sha256_file`) | DELETE |
-| `read_json()` | 95% duplicate of `u.Cli.json_read()` | ABSORB into flext-cli |
-| `write_json()` | 95% duplicate of `u.Cli.json_write()` | ABSORB into flext-cli |
-| `parse()` | Thin wrapper | ABSORB or inline at call sites |
-| `serialize()` | Thin wrapper | ABSORB or inline at call sites |
+| Method             | Status                                          | Action                         |
+| ------------------ | ----------------------------------------------- | ------------------------------ |
+| `sha256_content()` | Dead code (duplicate of `u.Cli.sha256_content`) | DELETE                         |
+| `sha256_file()`    | Dead code (duplicate of `u.Cli.sha256_file`)    | DELETE                         |
+| `read_json()`      | 95% duplicate of `u.Cli.json_read()`            | ABSORB into flext-cli          |
+| `write_json()`     | 95% duplicate of `u.Cli.json_write()`           | ABSORB into flext-cli          |
+| `parse()`          | Thin wrapper                                    | ABSORB or inline at call sites |
+| `serialize()`      | Thin wrapper                                    | ABSORB or inline at call sites |
 
 ### 2.2 Plan
 
@@ -170,12 +171,12 @@ def execute_pipeline(
 
 ### 2.3 Files to modify
 
-| File | Action |
-|------|--------|
-| `flext-cli/src/flext_cli/_utilities/json.py` | MODIFY — Add validation callback params |
-| `flext-infra/src/flext_infra/_utilities/io.py` | DELETE |
-| `flext-infra/src/flext_infra/utilities.py` | MODIFY — Remove FlextInfraUtilitiesIo from MRO |
-| All `u.Infra.read_json` callers | MODIFY — Switch to `u.Cli.json_read` |
+| File                                           | Action                                         |
+| ---------------------------------------------- | ---------------------------------------------- |
+| `flext-cli/src/flext_cli/_utilities/json.py`   | MODIFY — Add validation callback params        |
+| `flext-infra/src/flext_infra/_utilities/io.py` | DELETE                                         |
+| `flext-infra/src/flext_infra/utilities.py`     | MODIFY — Remove FlextInfraUtilitiesIo from MRO |
+| All `u.Infra.read_json` callers                | MODIFY — Switch to `u.Cli.json_read`           |
 
 ---
 
@@ -186,6 +187,7 @@ def execute_pipeline(
 Convert `FlextInfraCodegenPipeline` to declare stages as `m.Cli.PipelineStageSpec` and execute via `u.Cli.execute_pipeline()`.
 
 **Stage DAG:**
+
 ```
 py_typed → census_before → scaffold → auto_fix → census_after → aggregate
 ```
@@ -195,6 +197,7 @@ py_typed → census_before → scaffold → auto_fix → census_after → aggreg
 ### 3.2 Check Pipeline (gate execution)
 
 Convert `FlextInfraWorkspaceChecker._run_project_loop()` to use DAG per project:
+
 - Each gate becomes a stage
 - Gates with `can_fix=True` get a `skip_if` based on `check_only` flag
 - **Gate context isolation**: Fresh `GateContext` per project (fixes mutation risk)
@@ -202,6 +205,7 @@ Convert `FlextInfraWorkspaceChecker._run_project_loop()` to use DAG per project:
 ### 3.3 Refactor Engine (12 rules)
 
 Rules already execute sequentially per-file. **Optional**: Convert to per-file micro-pipeline only if rule interdependencies warrant it. Otherwise, keep sequential execution but wrap the outer per-project loop as a DAG stage within the codegen pipeline:
+
 - The refactor engine itself becomes one DAG stage (`auto_fix`)
 - Internal rule execution stays sequential (rules are order-dependent by design)
 - Rule-level retry for transient Rope failures added within the stage handler
@@ -210,20 +214,21 @@ Rules already execute sequentially per-file. **Optional**: Convert to per-file m
 ### 3.4 Release Orchestrator (4 phases)
 
 Already has explicit phases. Convert to DAG stages:
+
 ```
 validate → version → build → publish
 ```
 
 ### 3.5 Files to modify in flext-infra
 
-| File | Action |
-|------|--------|
-| `codegen/pipeline.py` | REWRITE — Use DAG engine |
-| `codegen/fixer.py` | MODIFY — Extract sub-stages as handlers |
-| `check/workspace_check.py` | MODIFY — Use DAG per project |
-| `check/gates_mixin.py` | MODIFY — Gate context isolation |
-| `refactor/engine.py` | MODIFY — Rule DAG per file |
-| `release/orchestrator.py` | MODIFY — Phase DAG |
+| File                       | Action                                  |
+| -------------------------- | --------------------------------------- |
+| `codegen/pipeline.py`      | REWRITE — Use DAG engine                |
+| `codegen/fixer.py`         | MODIFY — Extract sub-stages as handlers |
+| `check/workspace_check.py` | MODIFY — Use DAG per project            |
+| `check/gates_mixin.py`     | MODIFY — Gate context isolation         |
+| `refactor/engine.py`       | MODIFY — Rule DAG per file              |
+| `release/orchestrator.py`  | MODIFY — Phase DAG                      |
 
 ---
 
@@ -260,10 +265,10 @@ Replace current `_violation_key()` in codegen fixer with `ViolationKey.from_viol
 
 ### 4.3 Files to modify
 
-| File | Action |
-|------|--------|
+| File                                             | Action                    |
+| ------------------------------------------------ | ------------------------- |
 | `flext-infra/src/flext_infra/_models/codegen.py` | MODIFY — Add ViolationKey |
-| `flext-infra/src/flext_infra/codegen/fixer.py` | MODIFY — Use ViolationKey |
+| `flext-infra/src/flext_infra/codegen/fixer.py`   | MODIFY — Use ViolationKey |
 
 ---
 
@@ -271,23 +276,23 @@ Replace current `_violation_key()` in codegen fixer with `ViolationKey.from_viol
 
 Add `FlextLogger` calls at every point where return values are currently silently discarded:
 
-| Location | What's discarded | Log level |
-|----------|-----------------|-----------|
-| Codegen fixer: MRO migration | `report.replacements_count`, `report.ordering` | INFO |
-| Refactor engine | `success=True, modified=False` no-op | DEBUG |
-| Namespace validator error | Full error on `is_failure` | WARNING |
-| Gate execution | Per-project context state | DEBUG |
+| Location                     | What's discarded                               | Log level |
+| ---------------------------- | ---------------------------------------------- | --------- |
+| Codegen fixer: MRO migration | `report.replacements_count`, `report.ordering` | INFO      |
+| Refactor engine              | `success=True, modified=False` no-op           | DEBUG     |
+| Namespace validator error    | Full error on `is_failure`                     | WARNING   |
+| Gate execution               | Per-project context state                      | DEBUG     |
 
 No interface changes. Purely additive.
 
 ### Files to modify
 
-| File | Action |
-|------|--------|
-| `codegen/fixer.py` | MODIFY — Add logging at discard points |
-| `refactor/engine.py` | MODIFY — Log no-op stages |
-| `codegen/namespace_enforcer.py` | MODIFY — Log full errors |
-| `check/gates_mixin.py` | MODIFY — Log per-project context |
+| File                            | Action                                 |
+| ------------------------------- | -------------------------------------- |
+| `codegen/fixer.py`              | MODIFY — Add logging at discard points |
+| `refactor/engine.py`            | MODIFY — Log no-op stages              |
+| `codegen/namespace_enforcer.py` | MODIFY — Log full errors               |
+| `check/gates_mixin.py`          | MODIFY — Log per-project context       |
 
 ---
 
@@ -309,6 +314,7 @@ def test_no_duplicate_implementations(method: str) -> None:
 ### 6.2 Namespace Enforcer Extension
 
 Add rule to detect re-implemented utilities:
+
 - Scan for methods in `_utilities/` that duplicate parent facade methods
 - Report as violation with `severity=error`
 
@@ -328,6 +334,7 @@ Add rule to detect re-implemented utilities:
 ## Verification
 
 ### Per-phase gates
+
 - `ruff check src/` — 0 errors
 - `pyrefly check src/ tests/` — 0 errors
 - `pyright src/` — 0 errors
@@ -335,6 +342,7 @@ Add rule to detect re-implemented utilities:
 - `pytest tests/` — all passing
 
 ### End-to-end validation
+
 1. Run `flext-infra codegen pipeline` on workspace → verify same output as before migration
 2. Run `flext-infra check` on workspace → verify same gate results
 3. Run `flext-infra refactor` on test project → verify same transformations
@@ -342,5 +350,6 @@ Add rule to detect re-implemented utilities:
 5. Verify `u.Cli.execute_pipeline()` works from other flext projects (import test)
 
 ### Performance validation
+
 - Compare pipeline duration before/after (expect improvement from cached project discovery)
 - Verify project discovery runs exactly once per pipeline execution

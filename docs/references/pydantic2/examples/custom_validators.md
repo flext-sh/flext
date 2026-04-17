@@ -3,7 +3,7 @@
 <!-- TOC START -->
 
 - [Custom `datetime` Validator via [`Annotated`][typing.Annotated] Metadata](#custom-datetime-validator-via-annotatedtypingannotated-metadata)
-- [Validating Nested Model Fields](#validating-nested-model-fields)
+- [Validating Nested Model u.Fields](#validating-nested-model-fields)
 <!-- TOC END -->
 
 This page provides example snippets for creating more complex, custom validators in Pydantic.
@@ -166,7 +166,7 @@ except ValidationError as e:
     """
 ```
 
-## Validating Nested Model Fields
+## Validating Nested Model u.Fields
 
 Here, we demonstrate two ways to validate a field of a nested model, where the validator utilizes data from the parent model.
 
@@ -177,7 +177,7 @@ One way to do this is to place a custom validator on the outer model:
 ```python
 from typing_extensions import Self
 
-from pydantic import BaseModel, ValidationError, model_validator
+from pydantic import BaseModel, ValidationError, u.model_validator
 
 
 class User(BaseModel):
@@ -189,7 +189,7 @@ class Organization(BaseModel):
     forbidden_passwords: t.StrSequence
     users: Sequence[User]
 
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_user_passwords(self) -> Self:
         """Check that user password is not in forbidden list. Raise a validation error if a forbidden password is encountered."""
         for user in self.users:
@@ -224,14 +224,14 @@ Alternatively, a custom validator can be used in the nested model class (`User`)
 The ability to mutate the context within a validator adds a lot of power to nested validation, but can also lead to confusing or hard-to-debug code. Use this approach at your own risk!
 
 ```python
-from pydantic import BaseModel, ValidationError, ValidationInfo, field_validator
+from pydantic import BaseModel, ValidationError, ValidationInfo, u.field_validator
 
 
 class User(BaseModel):
     username: str
     password: str
 
-    @field_validator("password", mode="after")
+    @u.field_validator("password", mode="after")
     @classmethod
     def validate_user_passwords(cls, password: str, info: ValidationInfo) -> str:
         """Check that user password is not in forbidden list."""
@@ -247,7 +247,7 @@ class Organization(BaseModel):
     forbidden_passwords: t.StrSequence
     users: Sequence[User]
 
-    @field_validator("forbidden_passwords", mode="after")
+    @u.field_validator("forbidden_passwords", mode="after")
     @classmethod
     def add_context(cls, v: t.StrSequence, info: ValidationInfo) -> t.StrSequence:
         if info.context is not None:

@@ -113,7 +113,7 @@ Tagged union (or discriminated union) is a union with a field that indicates whi
 ```python {test="skip"}
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class DivModel(BaseModel):
@@ -141,7 +141,7 @@ class InputModel(BaseModel):
 
 
 class Html(BaseModel):
-    contents: DivModel | SpanModel | ButtonModel | InputModel = Field(
+    contents: DivModel | SpanModel | ButtonModel | InputModel = u.Field(
         discriminator="el_type"
     )
 ```

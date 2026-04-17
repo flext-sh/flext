@@ -140,7 +140,7 @@ tm.that(items, has="item", length=3)
 | Método Deprecado                | Método Público Atual            | Exemplo de Migração                                                 |
 | ------------------------------- | ------------------------------- | ------------------------------------------------------------------- |
 | `tt.create_user(...)`           | `tt.model("user", ...)`         | `tt.create_user(name="John")` → `tt.model("user", name="John")`     |
-| `tt.create_config(...)`         | `tt.model("settings", ...)`       | `tt.create_config(debug=True)` → `tt.model("settings", debug=True)`   |
+| `tt.create_config(...)`         | `tt.model("settings", ...)`     | `tt.create_config(debug=True)` → `tt.model("settings", debug=True)` |
 | `tt.create_service(...)`        | `tt.model("service", ...)`      | `tt.create_service(type="api")` → `tt.model("service", type="api")` |
 | `tt.batch_users(count)`         | `tt.batch("user", count=count)` | `tt.batch_users(5)` → `tt.batch("user", count=5)`                   |
 | `tt.create_test_operation(...)` | `tt.op(kind, ...)`              | `tt.create_test_operation("simple")` → `tt.op("simple")`            |
@@ -148,27 +148,27 @@ tm.that(items, has="item", length=3)
 
 #### Classes Aninhadas Deprecadas (tb.\*)
 
-| Classe/Método Deprecado             | Método Público Atual            | Exemplo de Migração                                                    |
-| ----------------------------------- | ------------------------------- | ---------------------------------------------------------------------- |
-| `tb.Tests.Result.ok(value)`         | `tt.res("ok", value=value)`     | `tb.Tests.Result.ok("data")` → `tt.res("ok", value="data")`            |
-| `tb.Tests.Result.fail(error)`       | `tt.res("fail", error=error)`   | `tb.Tests.Result.fail("err")` → `tt.res("fail", error="err")`          |
-| `tb.Tests.Model.user(...)`          | `tt.model("user", ...)`         | `tb.Tests.Model.user(name="John")` → `tt.model("user", name="John")`   |
-| `tb.Tests.Model.settings(...)`        | `tt.model("settings", ...)`       | `tb.Tests.Model.settings(debug=True)` → `tt.model("settings", debug=True)` |
-| `tb.Tests.Model.batch_users(count)` | `tt.batch("user", count=count)` | `tb.Tests.Model.batch_users(5)` → `tt.batch("user", count=5)`          |
+| Classe/Método Deprecado             | Método Público Atual            | Exemplo de Migração                                                        |
+| ----------------------------------- | ------------------------------- | -------------------------------------------------------------------------- |
+| `tb.Tests.Result.ok(value)`         | `tt.res("ok", value=value)`     | `tb.Tests.Result.ok("data")` → `tt.res("ok", value="data")`                |
+| `tb.Tests.Result.fail(error)`       | `tt.res("fail", error=error)`   | `tb.Tests.Result.fail("err")` → `tt.res("fail", error="err")`              |
+| `tb.Tests.Model.user(...)`          | `tt.model("user", ...)`         | `tb.Tests.Model.user(name="John")` → `tt.model("user", name="John")`       |
+| `tb.Tests.Model.settings(...)`      | `tt.model("settings", ...)`     | `tb.Tests.Model.settings(debug=True)` → `tt.model("settings", debug=True)` |
+| `tb.Tests.Model.batch_users(count)` | `tt.batch("user", count=count)` | `tb.Tests.Model.batch_users(5)` → `tt.batch("user", count=5)`              |
 
 ### 3. tf (TestsFlextFiles) - Métodos Deprecados
 
 #### ❌ DEPRECADOS → ✅ MIGRAR PARA
 
-| Método Deprecado             | Método Público Atual                | Exemplo de Migração                                                             |
-| ---------------------------- | ----------------------------------- | ------------------------------------------------------------------------------- |
-| `tf.create_file_set(files)`  | `tf.files(files)` (context manager) | Ver exemplo abaixo                                                              |
-| `tf.get_file_info(path)`     | `tf.info(path)`                     | `tf.get_file_info(p)` → `tf.info(p).unwrap()`                                   |
-| `tf.create_text_file(...)`   | `tf.create(content, name)`          | `tf.create_text_file("text", "file.txt")` → `tf.create("text", "file.txt")`     |
-| `tf.create_binary_file(...)` | `tf.create(content, name)`          | `tf.create_binary_file(b"data", "file.bin")` → `tf.create(b"data", "file.bin")` |
-| `tf.create_empty_file(name)` | `tf.create("", name)`               | `tf.create_empty_file("empty.txt")` → `tf.create("", "empty.txt")`              |
+| Método Deprecado             | Método Público Atual                | Exemplo de Migração                                                                 |
+| ---------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------- |
+| `tf.create_file_set(files)`  | `tf.files(files)` (context manager) | Ver exemplo abaixo                                                                  |
+| `tf.get_file_info(path)`     | `tf.info(path)`                     | `tf.get_file_info(p)` → `tf.info(p).unwrap()`                                       |
+| `tf.create_text_file(...)`   | `tf.create(content, name)`          | `tf.create_text_file("text", "file.txt")` → `tf.create("text", "file.txt")`         |
+| `tf.create_binary_file(...)` | `tf.create(content, name)`          | `tf.create_binary_file(b"data", "file.bin")` → `tf.create(b"data", "file.bin")`     |
+| `tf.create_empty_file(name)` | `tf.create("", name)`               | `tf.create_empty_file("empty.txt")` → `tf.create("", "empty.txt")`                  |
 | `tf.create_config_file(...)` | `tf.create(content, name)`          | `tf.create_config_file("{}", "settings.json")` → `tf.create("{}", "settings.json")` |
-| `tf.temporary_files(files)`  | `tf.files(files)` (context manager) | Ver exemplo abaixo                                                              |
+| `tf.temporary_files(files)`  | `tf.files(files)` (context manager) | Ver exemplo abaixo                                                                  |
 
 #### Exemplos Detalhados de Migração
 
@@ -210,7 +210,7 @@ info = info_result.unwrap()
 
 - ✅ `tb()` - Instância do builder (correto)
 - ✅ `tb.with_users(count)` - Verificar se está sendo usado corretamente
-- ✅ `tb.with_configs(...)` - Verificar se está sendo usado corretamente
+- ✅ `tb.u.with_configs(...)` - Verificar se está sendo usado corretamente
 - ✅ `tb.build()` - Verificar se está sendo usado corretamente
 - ❌ `tb.Tests.*` - Classes aninhadas deprecadas (migrar para `tt.*`)
 

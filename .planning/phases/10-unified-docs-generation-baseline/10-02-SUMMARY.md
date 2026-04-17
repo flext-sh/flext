@@ -51,6 +51,7 @@ completed: 2026-04-05
 - **Files modified:** 2
 
 ## Accomplishments
+
 - Added `render_single()` method to `FlextInfraBaseMkTemplateEngine` for single-template rendering
 - Refactored `render_bootstrap_include()` in generator to delegate to engine instead of duplicating Jinja2 Environment setup
 - Removed 6 unused jinja2 imports, `_TEMPLATES_DIR` constant, and `_render_template()` helper from generator.py
@@ -65,10 +66,12 @@ Each task was committed atomically:
 2. **Task 2: Audit github + release domains** - no commit (audit-only, zero changes needed)
 
 ## Files Created/Modified
+
 - `flext-infra/src/flext_infra/basemk/engine.py` - Added render_single() for single-template rendering
 - `flext-infra/src/flext_infra/basemk/generator.py` - Removed duplicated Jinja2 setup, delegate to engine
 
 ## Decisions Made
+
 - **engine.py helpers are acceptable:** `_build_environment()`, `_render()`, and `_TEMPLATES_DIR` are small module-level helpers (<15 LOC each) in the template engine domain. They configure the engine, not business logic.
 - **github service: zero changes:** All 4 methods delegate directly to `u.Infra.*`. The only inline logic is exit-code checking in `execute_pull_request()` which is orchestration routing (acceptable).
 - **release domain: zero changes:** All methods in orchestrator.py and orchestrator_phases.py delegate to `u.Infra.*` for subprocess, git, file, and version operations. Phase dispatch is routing logic (acceptable).
@@ -79,15 +82,19 @@ Each task was committed atomically:
 None - plan executed exactly as written. The plan anticipated that github and release might need no changes, and that was confirmed by audit.
 
 ## Issues Encountered
+
 None
 
 ## User Setup Required
+
 None - no external service configuration required.
 
 ## Known Stubs
+
 None
 
 ## Next Phase Readiness
+
 - All three simple domains (basemk, github, release) confirmed as thin orchestrators
 - Pattern established for medium/complex domains in Plans 03-07
 - engine.render_single() available for any future single-template rendering needs

@@ -45,7 +45,7 @@ description: Pydantic ConfigDict and singleton settings patterns across FLEXT su
 - Always define `model_config = ConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
 - ALL field defaults MUST come from `c.*` constants — no hardcoded values.
 - Use `@FlextSettings.auto_register("<namespace>")` for namespace registration.
-- Use `@model_validator(mode="after")` for cross-field consistency checks.
+- Use `@u.model_validator(mode="after")` for cross-field consistency checks.
 - Singleton via FlextSettings `__new__()` only — no custom singleton patterns.
 
 ## Forbidden Patterns
@@ -133,17 +133,17 @@ This means `FLEXT_MELTANO_PROJECT_ROOT` works even from `FlextTargetOracleSettin
 
 ### Env Prefix Convention
 
-| Project | env_prefix |
-|---------|-----------|
-| flext-core | `FLEXT_` |
-| flext-cli | `FLEXT_CLI_` |
-| flext-meltano | `FLEXT_MELTANO_` |
-| flext-api | `FLEXT_API_` |
-| flext-auth | `FLEXT_AUTH_` |
-| flext-db-oracle | `ORACLE_` |
-| flext-grpc | `FLEXT_GRPC_` |
-| flext-observability | `FLEXT_OBSERVABILITY_` |
-| Integration | `FLEXT_<ROLE>_<DOMAIN>_` |
+| Project             | env_prefix               |
+| ------------------- | ------------------------ |
+| flext-core          | `FLEXT_`                 |
+| flext-cli           | `FLEXT_CLI_`             |
+| flext-meltano       | `FLEXT_MELTANO_`         |
+| flext-api           | `FLEXT_API_`             |
+| flext-auth          | `FLEXT_AUTH_`            |
+| flext-db-oracle     | `ORACLE_`                |
+| flext-grpc          | `FLEXT_GRPC_`            |
+| flext-observability | `FLEXT_OBSERVABILITY_`   |
+| Integration         | `FLEXT_<ROLE>_<DOMAIN>_` |
 
 ## Workflow
 
@@ -151,7 +151,7 @@ This means `FLEXT_MELTANO_PROJECT_ROOT` works even from `FlextTargetOracleSettin
 2. Define `model_config = ConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
 3. Use `c.*` constants for all field defaults.
 4. Add `@FlextSettings.auto_register("<namespace>")` if namespace access needed.
-5. Add `@model_validator(mode="after")` for cross-field validation.
+5. Add `@u.model_validator(mode="after")` for cross-field validation.
 6. Run `ruff check` + `pytest` to verify.
 
 ## Examples

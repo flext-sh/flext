@@ -51,7 +51,7 @@ func parseFlags() CommandLineFlags {
 // ServiceInitializer handles FLEXT service initialization using Railway-Oriented Programming
 type ServiceInitializer struct {
 	flags     CommandLineFlags
-	settings  *settings.Settings
+	settings  *settings.Config
 	logger    logging.Logger
 	ctx       context.Context
 	cancel    context.CancelFunc
@@ -153,7 +153,7 @@ func (si *ServiceInitializer) handleHelpAndVersion() ServiceInitializationResult
 
 // initializeConfiguration loads and configures the service configuration
 func (si *ServiceInitializer) initializeConfiguration() ServiceInitializationResult {
-	cfg, err := settings.LoadSettings(si.flags.settingsPath)
+	cfg, err := settings.LoadConfig(si.flags.settingsPath)
 	if err != nil {
 		return ServiceInitializationResult{
 			Success: false,

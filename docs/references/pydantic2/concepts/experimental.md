@@ -4,7 +4,7 @@
 
 - [Feedback](#feedback)
 - [Pipeline API](#pipeline-api)
-  - [Mapping from `BeforeValidator`, `AfterValidator` and `WrapValidator`](#mapping-from-beforevalidator-aftervalidator-and-wrapvalidator)
+  - [Mapping from `m.BeforeValidator`, `AfterValidator` and `WrapValidator`](#mapping-from-beforevalidator-aftervalidator-and-wrapvalidator)
   - [Alternative patterns](#alternative-patterns)
 - [Partial Validation](#partial-validation)
   - [How Partial Validation Works](#how-partial-validation-works)
@@ -85,16 +85,16 @@ class User(BaseModel):
 6. Calling `validate_as(...)` with `Ellipsis`, `...` as the first positional argument implies `validate_as(<field type>)`. Use `validate_as(Any)` to accept any type.
 7. You can call `validate_as()` before or after other steps to do pre or post processing.
 
-### Mapping from `BeforeValidator`, `AfterValidator` and `WrapValidator`
+### Mapping from `m.BeforeValidator`, `AfterValidator` and `WrapValidator`
 
-The `validate_as` method is a more type-safe way to define `BeforeValidator`, `AfterValidator` and `WrapValidator`:
+The `validate_as` method is a more type-safe way to define `m.BeforeValidator`, `AfterValidator` and `WrapValidator`:
 
 ```python
 from typing import Annotated
 
 from pydantic.experimental.pipeline import transform, validate_as
 
-# BeforeValidator
+# m.BeforeValidator
 Annotated[int, validate_as(str).str_strip().validate_as(...)]  # (1)!
 # AfterValidator
 Annotated[int, transform(lambda x: x * 2)]  # (2)!
@@ -278,7 +278,7 @@ The [jiter](https://github.com/pydantic/jiter) JSON parser used by Pydantic alre
 `experimental_allow_partial` is simply passed to jiter via the `allow_partial` argument.
 
 !!! note
-If you just want pure JSON parsing with support for partial JSON, you can use the [`jiter`](https://pypi.org/project/jiter/) Python library directly, or pass the `allow_partial` argument when calling [`pydantic_core.from_json`][pydantic_core.from_JSON].
+If you just want pure JSON parsing with support for partial JSON, you can use the [`jiter`](https://pypi.org/project/jiter/) Python library directly, or pass the `allow_partial` argument when calling [`pydantic_core.u.from_json`][pydantic_core.u.from_JSON].
 
 #### 2. Ignore errors in the last element of the input {#2-ignore-errors-in-last}
 
@@ -436,7 +436,7 @@ print(v)
 
 ## Validation of a callable's arguments
 
-Pydantic provides the [`@validate_call`][pydantic.validate_call] decorator to perform validation on the provided
+Pydantic provides the [`@u.validate_call`][pydantic.u.validate_call] decorator to perform validation on the provided
 arguments (and additionally return type) of a callable. However, it only allows arguments to be provided
 by actually calling the decorated callable. In some situations, you may want to just _validate_ the arguments,
 such as when loading from other data sources such as JSON data.
@@ -475,7 +475,7 @@ print(args, kwargs)  # (1)!
    ```
 
 !!! note
-Unlike [`@validate_call`][pydantic.validate_call], this core schema will only validate the provided arguments;
+Unlike [`@u.validate_call`][pydantic.u.validate_call], this core schema will only validate the provided arguments;
 the underlying callable will _not_ be called.
 
 Additionally, you can ignore specific parameters by providing a callback, which is called for every parameter:

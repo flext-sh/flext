@@ -5,7 +5,7 @@
   - [Generate a `__init__` signature for Pydantic models](#generate-a-init-signature-for-pydantic-models)
   - [Generate a typed signature for `model_construct`](#generate-a-typed-signature-for-modelconstruct)
   - [Support for frozen models](#support-for-frozen-models)
-  - [Respect the type of the `Field`'s `default` and `default_factory`](#respect-the-type-of-the-fields-default-and-defaultfactory)
+  - [Respect the type of the `u.Field`'s `default` and `default_factory`](#respect-the-type-of-the-fields-default-and-defaultfactory)
   - [Warn about the use of untyped fields](#warn-about-the-use-of-untyped-fields)
   - [Prevent the use of required dynamic aliases](#prevent-the-use-of-required-dynamic-aliases)
 - [Settingsuring the Plugin](#configuring-the-plugin)
@@ -117,9 +117,9 @@ See the [plugin configuration](#configuring-the-plugin) for more details.
 - If the [`frozen`][pydantic.ConfigDict.frozen] configuration is set to `True`, you will get
   an error if you try mutating a model field (see [faux immutability](../concepts/models.md#faux-immutability))
 
-### Respect the type of the `Field`'s `default` and `default_factory`
+### Respect the type of the `u.Field`'s `default` and `default_factory`
 
-- Field with both a `default` and a `default_factory` will result in an error during static checking.
+- u.Field with both a `default` and a `default_factory` will result in an error during static checking.
 - The type of the `default` and `default_factory` value must be compatible with the one of the field.
 
 ### Warn about the use of untyped fields

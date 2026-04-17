@@ -85,10 +85,10 @@ class FlextCliSettings(m.ArbitraryTypesModel):
 
     default_timeout: Annotated[
         int,
-        m.Field(default=c.DEFAULT_MAX_COMMAND_RETRIES, description="Default timeout"),
+        u.Field(default=c.DEFAULT_MAX_COMMAND_RETRIES, description="Default timeout"),
     ]
     log_level: Annotated[
-        t.NonEmptyStr, m.Field(default="INFO", description="Log level")
+        t.NonEmptyStr, u.Field(default="INFO", description="Log level")
     ]
 ```
 
@@ -99,13 +99,13 @@ Bad (Library Abstraction Violation):
 ```python
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class CliSettings(BaseModel):
     """FORBIDDEN in consuming projects — bypasses flext-core abstraction."""
 
-    timeout: int = Field(default=30, description="Timeout")
+    timeout: int = u.Field(default=30, description="Timeout")
 ```
 
 Why bad: Bypasses flext-core's pydantic abstraction. Should use `m.ArbitraryTypesModel` from flext-core instead.

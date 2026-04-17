@@ -128,6 +128,7 @@ Full type safety with modern Python features:
 - `from **future** import annotations
 
 from collections.abc import Mapping, Sequence` for forward references
+
 - Comprehensive type hints throughout
 - Generic types with proper variance
 - Protocol-based design where appropriate

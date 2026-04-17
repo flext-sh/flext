@@ -4,7 +4,7 @@
 
 **Goal:** Maximize PEP 695 generics throughout flext-cli, eliminate all `object`/`dict[`/`list[` annotations, reduce `r[T]` ceremony, and remove unnecessary adapters — producing a strict Python 3.13 codebase with zero linter errors.
 
-**Architecture:** Thin Typer Shim — isolate `object` annotations to a single `_TyperBridge` inner class in `cli.py` (~15 lines), replace all other `object` usages with proper `t.*`/`FieldInfo`/`BaseModel` contracts. Add PEP 695 generics to all utility helpers. Replace verbose `r[LongType].ok(val)` patterns with type-inferred `r.ok(val)` where context allows.
+**Architecture:** Thin Typer Shim — isolate `object` annotations to a single `_TyperBridge` inner class in `cli.py` (~15 lines), replace all other `object` usages with proper `t.*`/`u.FieldInfo`/`BaseModel` contracts. Add PEP 695 generics to all utility helpers. Replace verbose `r[LongType].ok(val)` patterns with type-inferred `r.ok(val)` where context allows.
 
 **Tech Stack:** Python 3.13, Pydantic v2, PEP 695 type syntax, flext-core `r[T]`, Typer, Rich, tabulate
 
@@ -12,36 +12,37 @@
 
 ## File Map
 
-| File | Action | Purpose |
-|------|--------|---------|
-| `services/cli.py` | Modify | Isolate `object` to `_TyperBridge`, PEP 695 generics on all methods |
-| `typings.py` | Modify | Add `FieldInfoMapping`, `CliAnnotations` type aliases |
-| `utilities.py` | Modify | PEP 695 generics on `CliModelConverter`, `ModelCommandBuilder`, `CliValidation` |
-| `services/file_tools.py` | Modify | Already has generics — replace `list[`/`dict[` locals |
-| `services/tables.py` | Modify | Replace `list[` locals with `MutableSequence` |
-| `services/output.py` | Modify | Replace `dict[` locals with `MutableMapping`, eliminate `isinstance(val, dict)` |
-| `services/commands.py` | Modify | Replace `dict[str, m.Cli.CommandEntryModel]` and `list[str]` |
-| `_models/base.py` | Modify | No changes needed (already clean) |
-| `protocols.py` | No change | Already uses PEP 695 generics |
-| Consumer files (flext-infra, flext-quality, flext-db-oracle) | Verify | Ensure no breakage from signature changes |
+| File                                                         | Action    | Purpose                                                                         |
+| ------------------------------------------------------------ | --------- | ------------------------------------------------------------------------------- |
+| `services/cli.py`                                            | Modify    | Isolate `object` to `_TyperBridge`, PEP 695 generics on all methods             |
+| `typings.py`                                                 | Modify    | Add `u.FieldInfoMapping`, `CliAnnotations` type aliases                         |
+| `utilities.py`                                               | Modify    | PEP 695 generics on `CliModelConverter`, `ModelCommandBuilder`, `CliValidation` |
+| `services/file_tools.py`                                     | Modify    | Already has generics — replace `list[`/`dict[` locals                           |
+| `services/tables.py`                                         | Modify    | Replace `list[` locals with `MutableSequence`                                   |
+| `services/output.py`                                         | Modify    | Replace `dict[` locals with `MutableMapping`, eliminate `isinstance(val, dict)` |
+| `services/commands.py`                                       | Modify    | Replace `dict[str, m.Cli.CommandEntryModel]` and `list[str]`                    |
+| `_models/base.py`                                            | Modify    | No changes needed (already clean)                                               |
+| `protocols.py`                                               | No change | Already uses PEP 695 generics                                                   |
+| Consumer files (flext-infra, flext-quality, flext-db-oracle) | Verify    | Ensure no breakage from signature changes                                       |
 
 ---
 
 ### Task 1: Add type aliases to `typings.py`
 
 **Files:**
+
 - Modify: `flext-cli/src/flext_cli/typings.py`
 
-- [ ] **Step 1: Add `FieldInfoMapping` and `CliAnnotations` aliases**
+- [ ] **Step 1: Add `u.FieldInfoMapping` and `CliAnnotations` aliases**
 
 In `FlextCliTypes.Cli`, add:
 
 ```python
-type FieldInfoMapping = Mapping[str, FieldInfo]
+type u.FieldInfoMapping = Mapping[str, u.FieldInfo]
 type CliAnnotations = MutableMapping[str, type]
 ```
 
-These replace scattered `dict[str, object]` and `Mapping[str, FieldInfo]` patterns in cli.py and utilities.py.
+These replace scattered `dict[str, object]` and `Mapping[str, u.FieldInfo]` patterns in cli.py and utilities.py.
 
 - [ ] **Step 2: Import additions**
 
@@ -49,7 +50,7 @@ Add to imports:
 
 ```python
 from collections.abc import Mapping, MutableMapping, Sequence
-from pydantic.fields import FieldInfo
+from pydantic.fields import u.FieldInfo
 ```
 
 - [ ] **Step 3: Validate**
@@ -61,7 +62,7 @@ Expected: 0 errors
 
 ```bash
 git add flext-cli/src/flext_cli/typings.py
-git commit -m "feat(flext-cli): add FieldInfoMapping and CliAnnotations PEP 695 aliases"
+git commit -m "feat(flext-cli): add u.FieldInfoMapping and CliAnnotations PEP 695 aliases"
 ```
 
 ---
@@ -69,6 +70,7 @@ git commit -m "feat(flext-cli): add FieldInfoMapping and CliAnnotations PEP 695 
 ### Task 2: Refactor `services/cli.py` — Isolate Typer `object` boundary
 
 **Files:**
+
 - Modify: `flext-cli/src/flext_cli/services/cli.py`
 
 - [ ] **Step 1: Replace `_ModelCommand` annotations**
@@ -113,6 +115,7 @@ class _ModelCommand:
 ```
 
 Key changes:
+
 - `_handler` return `object | None` → `None` (handlers don't return values through Typer)
 - `parameters: list[Parameter]` → `Sequence[Parameter]`
 - `**kwargs` → `**kwargs: t.Scalar` (Typer only passes scalars)
@@ -132,12 +135,12 @@ The input is always a type or TypeAliasType. The return is always a concrete typ
 ```python
 @staticmethod
 def _field_default(
-    field_name: str, field_info: FieldInfo, settings: BaseModel | None
+    field_name: str, field_info: u.FieldInfo, settings: BaseModel | None
 ) -> t.Scalar | None:
     """Resolve CLI default from settings first, then from model field metadata."""
 ```
 
-`field_info` is always `FieldInfo` (from Pydantic). Return is always a scalar default or None.
+`field_info` is always `u.FieldInfo` (from Pydantic). Return is always a scalar default or None.
 
 - [ ] **Step 4: Replace `_build_model_parameter` signature**
 
@@ -146,7 +149,7 @@ def _field_default(
 def _build_model_parameter(
     cls,
     field_name: str,
-    field_info: FieldInfo,
+    field_info: u.FieldInfo,
     settings: BaseModel | None,
 ) -> tuple[Parameter, type]:
 ```
@@ -166,7 +169,7 @@ def model_command[M: BaseModel](
     """Build a Typer command directly from a Pydantic request model."""
     parameters: MutableSequence[Parameter] = []
     annotations: MutableMapping[str, type] = {"return": type(None)}
-    fields: Mapping[str, FieldInfo] = model_cls.model_fields
+    fields: Mapping[str, u.FieldInfo] = model_cls.model_fields
     for field_name, field_info in fields.items():
         parameter, annotation = cls._build_model_parameter(
             field_name,
@@ -186,6 +189,7 @@ def model_command[M: BaseModel](
 ```
 
 Key changes:
+
 - `handler: Callable[[M], object | None]` → `Callable[[M], None]`
 - Return `Callable[..., object | None]` → `Callable[..., None]`
 - `list[Parameter]` → `MutableSequence[Parameter]`
@@ -263,10 +267,10 @@ def register_command(
 
 Changes: `dict[str, str]` → `t.StrMapping`, `Callable[..., object | None]` → `Callable[..., None]`.
 
-- [ ] **Step 8: Add `FieldInfo` import**
+- [ ] **Step 8: Add `u.FieldInfo` import**
 
 ```python
-from pydantic.fields import FieldInfo
+from pydantic.fields import u.FieldInfo
 ```
 
 - [ ] **Step 9: Validate**
@@ -286,6 +290,7 @@ git commit -m "refactor(flext-cli): isolate Typer object boundary, PEP 695 stric
 ### Task 3: Refactor `utilities.py` — PEP 695 generics + strict types
 
 **Files:**
+
 - Modify: `flext-cli/src/flext_cli/utilities.py`
 
 - [ ] **Step 1: Make `CliModelConverter.cli_args_to_model` generic**
@@ -360,6 +365,7 @@ git commit -m "refactor(flext-cli): PEP 695 generics on CliModelConverter and Mo
 ### Task 4: Replace `dict[`/`list[` in `services/tables.py`, `output.py`, `commands.py`
 
 **Files:**
+
 - Modify: `flext-cli/src/flext_cli/services/tables.py`
 - Modify: `flext-cli/src/flext_cli/services/output.py`
 - Modify: `flext-cli/src/flext_cli/services/commands.py`
@@ -370,6 +376,7 @@ Line 115: `normalized_rows: list[t.Cli.TableRow] = []` → `normalized_rows: Mut
 Line 135: `return list[str]()` → `return []` (type inferred from return type `str | t.StrSequence`)
 
 Add `MutableSequence` to imports:
+
 ```python
 from collections.abc import Mapping, MutableSequence, Sequence
 ```
@@ -387,7 +394,7 @@ Add `MutableMapping, Sequence` to imports.
 Line 28: `default_factory=dict[str, m.Cli.CommandEntryModel]` — keep (Pydantic requires concrete factory)
 Line 161: `cmd_args: list[str] = list(args[1:]) if len(args) > 1 else []` — keep (local mutation, concrete)
 
-These are the `r[T]` invariance exceptions — concrete types inside `PrivateAttr(default_factory=...)` and local mutable variables that don't escape as return types. No change needed.
+These are the `r[T]` invariance exceptions — concrete types inside `u.PrivateAttr(default_factory=...)` and local mutable variables that don't escape as return types. No change needed.
 
 - [ ] **Step 4: Validate all three files**
 
@@ -406,6 +413,7 @@ git commit -m "refactor(flext-cli): replace dict[]/list[] annotations with abstr
 ### Task 5: Verify consumer projects compile clean
 
 **Files:**
+
 - Verify: `flext-infra/src/flext_infra/` (main consumer)
 - Verify: `flext-quality/src/flext_quality/`
 - Verify: `flext-db-oracle/src/flext_db_oracle/cli.py`
@@ -450,6 +458,7 @@ git commit -m "fix(consumers): adapt to flext-cli strict type signatures"
 ### Task 6: Final validation — full linter sweep
 
 **Files:**
+
 - All modified files
 
 - [ ] **Step 1: Full ruff check**

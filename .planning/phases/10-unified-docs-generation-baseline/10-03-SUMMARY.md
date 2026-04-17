@@ -52,6 +52,7 @@ completed: 2026-04-05
 - **Files modified:** 2
 
 ## Accomplishments
+
 - Removed runtime `argparse` import from workspace_check.py (moved behind TYPE_CHECKING)
 - Replaced 3 direct I/O calls in check domain with u.Infra.* delegation (ensure_dir, atomic_write_file)
 - Added `u.Infra.ensure_dir()` utility for r-wrapped directory creation
@@ -65,10 +66,12 @@ Each task was committed atomically:
 2. **Task 2: Refactor validate domain to thin orchestrator** - No changes needed (audit-pass)
 
 ## Files Created/Modified
+
 - `flext-infra/src/flext_infra/_utilities/io.py` - Added `ensure_dir()` static method to FlextInfraUtilitiesIo
 - `flext-infra/src/flext_infra/check/workspace_check.py` - Removed runtime argparse import, replaced direct mkdir/write_text with u.Infra.* delegation
 
 ## Decisions Made
+
 - **argparse import** moved behind TYPE_CHECKING -- `from __future__ import annotations` enables forward reference resolution for the `build_parser()` return type
 - **CLI pass-through methods kept** on FlextInfraWorkspaceChecker class -- 12+ test callers use `FlextInfraWorkspaceChecker.run_cli()` directly; removing would require test refactoring outside plan scope
 - **validate domain already compliant** -- all 7 service files (scanner, basemk_validator, namespace_validator, skill_validator, stub_chain, inventory, pytest_diag) already delegate I/O to u.Infra.*/u.Cli.*/u.write_file(); no changes needed
@@ -78,6 +81,7 @@ Each task was committed atomically:
 ### Auto-fixed Issues
 
 **1. [Rule 2 - Missing Critical] Added u.Infra.ensure_dir() utility**
+
 - **Found during:** Task 1 (check domain refactoring)
 - **Issue:** No r-wrapped directory creation utility existed; direct .mkdir() was used in service **init**
 - **Fix:** Added `ensure_dir(path: Path) -> p.Result[bool]` to FlextInfraUtilitiesIo
@@ -91,12 +95,15 @@ Each task was committed atomically:
 **Impact on plan:** New utility enables proper r-wrapped I/O delegation. No scope creep.
 
 ## Issues Encountered
+
 None
 
 ## User Setup Required
+
 None - no external service configuration required.
 
 ## Next Phase Readiness
+
 - check and validate domains now follow thin orchestrator pattern
 - u.Infra.ensure_dir() available for other domains that need r-wrapped directory creation
 - Ready for Plan 04 (next wave of domain refactoring)

@@ -36,7 +36,7 @@
   - [AGENTS.md Updates](#agentsmd-updates)
   - [TypeGuard Pattern (Replaces cast())](#typeguard-pattern-replaces-cast)
   - [Hierarchical Model Organization](#hierarchical-model-organization)
-  - [ConfigDict Standards](#configdict-standards)
+  - [m.ConfigDict Standards](#configdict-standards)
   - [Validation Checklist](#validation-checklist)
   - [Commit Message](#commit-message)
 - [Success Criteria for Phase 1](#success-criteria-for-phase-1)
@@ -220,7 +220,7 @@ Group the 86 TypedDicts into categories:
 In `flext-core/src/flext_core/models.py`:
 
 ```python
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, u.Field
 
 
 class FlextModels:
@@ -242,15 +242,15 @@ class FlextModels:
         class Settings(FlextModels.Base):
             """Configuration models."""
 
-            app_name: str = m.Field(description="Application name")
-            version: str = m.Field(description="Version string")
+            app_name: str = u.Field(description="Application name")
+            version: str = u.Field(description="Version string")
             # ... other settings fields
 
         class Context(FlextModels.Base):
             """Context models."""
 
-            request_id: str = m.Field(description="Request ID")
-            user_id: str | None = m.Field(None, description="User ID")
+            request_id: str = u.Field(description="Request ID")
+            user_id: str | None = u.Field(None, description="User ID")
             # ... other context fields
 
     class Result:
@@ -259,14 +259,14 @@ class FlextModels:
         class Success(FlextModels.Base):
             """Successful result."""
 
-            data: dict = m.Field(description="Result data")
-            timestamp: str = m.Field(description="Timestamp")
+            data: dict = u.Field(description="Result data")
+            timestamp: str = u.Field(description="Timestamp")
 
         class Failure(FlextModels.Base):
             """Failed result."""
 
-            error_code: str = m.Field(description="Error code")
-            message: str = m.Field(description="Error message")
+            error_code: str = u.Field(description="Error code")
+            message: str = u.Field(description="Error message")
 ```
 
 #### Step 3: Update All Imports

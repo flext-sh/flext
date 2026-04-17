@@ -62,13 +62,13 @@ Similarly to Pydantic models, arguments used to instantiate the dataclass are [c
 To make use of the [various methods](./models.md#model-methods-and-properties) to validate, dump and generate a JSON Schema,
 you can wrap the dataclass with a [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] and make use of its methods.
 
-You can use both the Pydantic's [`Field()`][pydantic.Field] and the stdlib's [`field()`][dataclasses.field] functions:
+You can use both the Pydantic's [`u.Field()`][pydantic.u.Field] and the stdlib's [`field()`][dataclasses.field] functions:
 
 ```python
 import dataclasses
 from typing import Optional
 
-from pydantic import Field
+from pydantic import u.Field
 from pydantic.dataclasses import dataclass
 
 
@@ -81,7 +81,7 @@ class User:
         default=None,
         metadata={"title": "The age of the user", "description": "do not lie!"},
     )
-    height: Optional[int] = Field(default=None, title="The height in cm", ge=50, le=300)
+    height: Optional[int] = u.Field(default=None, title="The height in cm", ge=50, le=300)
 
 
 user = User(id="42", height="250")
@@ -338,7 +338,7 @@ print(pydantic.dataclasses.is_pydantic_dataclass(PydanticDataclass))
 Validators also work with Pydantic dataclasses:
 
 ```python
-from pydantic import field_validator
+from pydantic import u.field_validator
 from pydantic.dataclasses import dataclass
 
 
@@ -346,7 +346,7 @@ from pydantic.dataclasses import dataclass
 class DemoDataclass:
     product_id: str  # should be a five-digit string, may have leading zeros
 
-    @field_validator("product_id", mode="before")
+    @u.field_validator("product_id", mode="before")
     @classmethod
     def convert_int_serial(cls, v):
         if isinstance(v, int):
@@ -371,7 +371,7 @@ be called between the calls to _before_ and _after_ model validators.
     from pydantic_core import ArgsKwargs
     from typing_extensions import Self
 
-    from pydantic import model_validator
+    from pydantic import u.model_validator
     from pydantic.dataclasses import dataclass
 
 
@@ -386,7 +386,7 @@ be called between the calls to _before_ and _after_ model validators.
     class User:
         birth: Birth
 
-        @model_validator(mode="before")
+        @u.model_validator(mode="before")
         @classmethod
         def before(cls, values: ArgsKwargs) -> ArgsKwargs:
             print(f"First: {values}")  # (1)!
@@ -395,7 +395,7 @@ be called between the calls to _before_ and _after_ model validators.
             """
             return values
 
-        @model_validator(mode="after")
+        @u.model_validator(mode="after")
         def after(self) -> Self:
             print(f"Third: {self}")
             # > Third: User(birth=Birth(year=1995, month=3, day=2))

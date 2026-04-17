@@ -29,6 +29,7 @@ The flext monorepo contains 4,385 type system errors across 34 projects, concent
 | Missing Type Annotations | 317 | 7.2% | Infrastructure, quality, test modules |
 
 **Top Affected Projects:**
+
 1. `flext-cli` - 1,419 errors (bad-index dominant)
 2. `flext-quality` - 298 errors (configuration, maintenance scripts)
 3. `flext-observability` - 280 errors
@@ -36,6 +37,7 @@ The flext monorepo contains 4,385 type system errors across 34 projects, concent
 5. `flext-core` - 170 errors
 
 **References:**
+
 - `.reports/pyrefly/repo-pyrefly.json` - Authoritative JSON report
 - `PYREFLY_README.md` - Complete documentation
 - `PYREFLY_ACTION_PLAN.md` - Phase-based fix strategy
@@ -49,6 +51,7 @@ The flext monorepo contains 4,385 type system errors across 34 projects, concent
 **Problem:** Union types treated as indexable without type narrowing.
 
 **Example from `flext-quality/docs/maintenance/scheduled_maintenance.py`:**
+
 ```python
 # Type inferred as: bool | dict[str, ...] | str
 value = settings.get("key")  # Could be bool, dict, or str
@@ -58,6 +61,7 @@ result = value[0]  # ERROR: Cannot index into bool or str
 **Impact:** Configuration processing, data transformation pipelines fail silently or crash.
 
 **Fix Approach:**
+
 - Add `isinstance()` checks before indexing
 - Use discriminated unions with Pydantic models
 - Replace configuration value unions with `t.ConfigMap` or domain-specific models
@@ -73,6 +77,7 @@ result = value[0]  # ERROR: Cannot index into bool or str
 **Problem:** Union types containing types without expected methods (e.g., `Path | bool | datetime` lacks `.get()`).
 
 **Example:**
+
 ```python
 # Type: Path | bool | datetime | float | int | str
 value = settings.get("key")
@@ -84,6 +89,7 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 **Files:** `flext-quality/docs/maintenance/core/config_manager.py` (806 errors), `flext-quality/docs/maintenance/tools/content_analyzer.py` (13 errors)
 
 **Fix Approach:**
+
 - Replace union types with Pydantic models
 - Add type guards before attribute access
 - Refactor configuration to use structured types
@@ -99,11 +105,13 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 **Problem:** `dict[str, object]` prevents type validation and narrows type inference.
 
 **Files Identified:**
+
 - `flext-quality/docs/maintenance/tools/content_analyzer.py`
 - `flext-observability/docs/maintenance/audit/content-audit.py`
 - `flext-tap-ldap/src/flext_tap_ldap/ldif_streams.py`
 
 **Fix Approach:**
+
 - Create Pydantic models for all configuration types
 - Use `t.ConfigMap` or domain-specific model types
 - Cascades: Fixes 200+ errors in other categories
@@ -117,11 +125,13 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 **Problem:** Functions lack parameter/return type hints, causing type inference cascades.
 
 **Files:**
+
 - `flext-quality/docs/maintenance/` (maintenance scripts)
 - `flext-cli/tests/` (test infrastructure)
 - `flext-quality/docs/maintenance/scripts/`
 
 **Fix Approach:**
+
 - Add explicit type annotations to all function parameters and returns
 - Use `t.*` type contracts from AGENTS.md
 - Add `@override` decorators where applicable
@@ -135,10 +145,12 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 **Problem:** Attempting to call classes instead of instances; missing factory patterns.
 
 **Files:**
+
 - `gruponos-meltano-native/examples/` - Direct class calls instead of instantiation
 - `flext-observability/examples/` - Missing factory function patterns
 
 **Fix Approach:**
+
 - Use proper instantiation patterns (`.get_or_create_global()`)
 - Replace direct class calls with factory functions
 - Add type narrowing before calling instances
@@ -155,12 +167,14 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 **Issue:** Multiple imports of same name from different sources, violating clean code discipline.
 
 **Examples:**
+
 - `flext-auth/examples/comprehensive_demo_03.py:19` - `FlextAuthModels` imported twice
 - `flext-cli/tests/unit/test_performance_automated.py:10` - `FlextCliModels` imported twice
 - `flext-dbt-oracle/docs/pydantic-v2-modernization/audit_pydantic_v2.py:23-32` - `field` imported 6 times from different modules
 - `flext-ldif/tests/support/conftest_factory.py:22-28` - `Item` imported 5 times
 
 **Fix Approach:**
+
 - Remove redundant imports from package facades (keep only root import)
 - Audit `__all__` exports in `__init__.py` files
 - Enforce single import per symbol
@@ -175,6 +189,7 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 
 **Severity:** MEDIUM
 **Files Missing `__init__.py` in `src/` root:**
+
 - `flext-auth/src/__init__.py`
 - `flext-db-oracle/src/__init__.py`
 - `flext-dbt-ldif/src/__init__.py`
@@ -183,6 +198,7 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 **Impact:** Package discovery issues, potential import failures in packaging tools
 
 **Fix Approach:**
+
 - Add `__init__.py` to `src/` roots (can be empty)
 - Ensures PEP 420 namespace package conformance
 
@@ -199,11 +215,13 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 **Issue:** Single file contains massive union type handling causing type inference explosion
 
 **Impact:**
+
 - Type checker struggles to validate operations
 - Configuration processing fragile and error-prone
 - Impossible to extend without causing more type errors
 
 **Fix Approach:**
+
 - Split configuration logic by domain
 - Create discrete Pydantic models for each settings block
 - Establish configuration loading pipeline with proper type narrowing
@@ -219,11 +237,13 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 **Issue:** Test infrastructure creates massive union types in fixtures
 
 **Impact:**
+
 - Test code is brittle and hard to maintain
 - Type system can't validate test assertions
 - Cascades to production code using test utilities
 
 **Fix Approach:**
+
 - Refactor test helpers to use Pydantic models
 - Create discrete fixture types for each test scenario
 - Remove inline union type construction
@@ -240,6 +260,7 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 **Issue:** Code using `Any`, `object`, or `dict[str, Any]` outside permitted contexts
 
 **Permitted Contexts Only:**
+
 1. Type aliases in `typings.py` (with docstring explaining intent)
 2. Test fixtures in `conftest.py`
 3. Validation/rule engines (return types for unstructured violations)
@@ -271,7 +292,7 @@ value.get("nested")  # ERROR: Path, bool, etc. don't have .get()
 # WRONG (from file)
 object.__setattr__(db_service, "db_config", db_config)
 
-# CORRECT: Use PrivateAttr() or m.Field() with defaults
+# CORRECT: Use u.PrivateAttr() or u.Field() with defaults
 ```
 
 **Impact:** Circumvents Pydantic validation; violates AGENTS.md §3.1
@@ -287,11 +308,13 @@ object.__setattr__(db_service, "db_config", db_config)
 **Finding:** Code review shows no obvious injection, SQL, or authentication bypass risks.
 
 **Mitigations in Place:**
+
 - Pydantic v2 validation on configuration
 - Type checking prevents accidental string interpolation errors
 - Error handling via `r[T]` pattern prevents exception leaks
 
 **Recommendations:**
+
 1. Continue strict type enforcement (kills many vulnerability categories)
 2. Add security linting rules (SQL injection, environment variable leaks)
 3. Review credential handling in examples (e.g., `DEBUG_PASSWORD` in `flext-auth/examples/`)
@@ -303,15 +326,18 @@ object.__setattr__(db_service, "db_config", db_config)
 ### Untested Areas
 
 **Infrastructure Code:** `flext-infra` has low test coverage relative to complexity
+
 - `flext-infra/src/flext_infra/docs/validator.py` - Validation logic
 - `flext-infra/src/flext_infra/refactor/` - Code transformation utilities
 
 **Quality/Maintenance Scripts:** `flext-quality/docs/maintenance/` scripts have high error density, minimal tests
+
 - Configuration manager (806 errors)
 - Scheduled maintenance (1,106 errors)
 - Content analyzer (13+ errors)
 
 **Fix Approach:**
+
 - Add unit tests for configuration manager logic before refactoring
 - Create test fixtures for all configuration types
 - Test type narrowing patterns (the fix itself)
@@ -325,17 +351,20 @@ object.__setattr__(db_service, "db_config", db_config)
 ### Configuration Management (flext-quality)
 
 **Files:**
+
 - `flext-quality/docs/maintenance/core/config_manager.py`
 - `flext-quality/docs/maintenance/scheduled_maintenance.py`
 - `flext-quality/docs/maintenance/tools/content_analyzer.py`
 
 **Why Fragile:**
+
 - Union types make safe operations impossible
 - Type checker can't validate attribute access
 - Any change cascades to 806+ missing-attribute errors
 - No structured validation of configuration structure
 
 **Safe Modification Approach:**
+
 1. Create Pydantic models for each configuration block
 2. Add tests before refactoring (test the current behavior first)
 3. Refactor configuration loading in phases
@@ -351,12 +380,14 @@ object.__setattr__(db_service, "db_config", db_config)
 **File:** `flext-cli/tests/_helpers.py`
 
 **Why Fragile:**
+
 - Creates massive union types in test data
 - Type system can't validate test assertions
 - Any new assertion pattern breaks type checking
 - Tight coupling to production code internals
 
 **Safe Modification Approach:**
+
 1. Create Pydantic models for each test scenario
 2. Replace inline type construction with proper fixtures
 3. Add type guards in test assertions
@@ -375,6 +406,7 @@ object.__setattr__(db_service, "db_config", db_config)
 **Problem:** Configuration spread across 5+ different union type patterns, no canonical representation
 
 **Blocks:**
+
 - Configuration validation (must happen before type narrowing)
 - Dynamic configuration loading (YAML, environment, files)
 - Configuration versioning and migrations
@@ -390,6 +422,7 @@ object.__setattr__(db_service, "db_config", db_config)
 **Problem:** Codebase uses union types without guards; type checker can't validate
 
 **Blocks:**
+
 - Indexing operations on unions
 - Attribute access on unions
 - Function calls with union parameters
@@ -435,6 +468,7 @@ object.__setattr__(db_service, "db_config", db_config)
 **Objective:** Fix type system violations that cascade to other errors
 
 **Tasks:**
+
 1. Replace `dict[str, object]` with Pydantic models (389 errors)
 2. Add missing type annotations (317 errors)
 3. Create type contracts in `flext-core/src/flext_core/typings.py`
@@ -450,6 +484,7 @@ object.__setattr__(db_service, "db_config", db_config)
 **Objective:** Fix indexing and attribute access via type guards
 
 **Tasks:**
+
 1. Fix indexing/container issues with `isinstance()` checks (1,203 errors)
 2. Fix missing attributes via Pydantic models (835 errors)
 
@@ -462,6 +497,7 @@ object.__setattr__(db_service, "db_config", db_config)
 **Objective:** Fix argument type mismatches and callable issues
 
 **Tasks:**
+
 1. Fix argument type mismatches (463 errors)
 2. Fix callable issues (333 errors)
 
@@ -474,6 +510,7 @@ object.__setattr__(db_service, "db_config", db_config)
 **Objective:** Fix remaining issues and ensure compliance
 
 **Tasks:**
+
 1. Add `@override` decorators (74 errors)
 2. Fix import/name resolution (109 errors)
 3. Fix miscellaneous issues (237 errors)

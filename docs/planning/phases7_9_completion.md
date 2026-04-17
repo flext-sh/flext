@@ -19,7 +19,7 @@
 - [Pydantic 2 Migration Complete](#pydantic-2-migration-complete)
   - [TypeGuard Pattern](#typeguard-pattern)
   - [Hierarchical Model Organization](#hierarchical-model-organization)
-  - [ConfigDict Standards](#configdict-standards)
+  - [m.ConfigDict Standards](#configdict-standards)
   - [Modern Validators](#modern-validators)
   - [Task 9.4: Cleanup and Issue Closure](#task-94-cleanup-and-issue-closure)
 - [Success Criteria for Phases 7-9](#success-criteria-for-phases-7-9)
@@ -542,12 +542,12 @@ str_strip_whitespace=True,
 Use Pydantic 2.11+ validators:
 
 \`\`\`python
-from pydantic import field_validator, model_validator, computed_field
+from pydantic import u.field_validator, u.model_validator, u.computed_field
 
 class User(m.BaseModel):
 email: str
 
-    @field_validator("email")
+    @u.field_validator("email")
     @classmethod
     def validate_email(cls, v: str) -> str:
         if "@" not in v:

@@ -30,7 +30,7 @@ from collections.abc import Callable  # 2. STDLIB (from imports)
 from datetime import UTC, datetime
 from typing import Annotated, Final, Self
 
-from pydantic import BaseModel, Field  # 3. THIRD-PARTY
+from pydantic import BaseModel, u.Field  # 3. THIRD-PARTY
 from structlog.typing import BindableLogger
 
 from flext_core import c, t  # 4. FIRST-PARTY (flext_core.*)
@@ -157,17 +157,18 @@ This pattern applies identically to `p` (protocols), `c` (constants), `t` (types
 All `flext-(tap|target|dbt)-*` projects MUST follow an **EXACT** naming pattern for their facade classes to maintain ecosystem consistency without ambiguity.
 
 **Format**: `Flext<Role><Domain><Facade>`
+
 - **Role**: `Tap`, `Target`, or `Dbt`
 - **Domain**: CamelCase version of the domain (e.g., `Ldap`, `DbOracle`, `OracleWms`)
 - **Facade**: `Models`, `Constants`, `Types`, `Utilities`, `Protocols`
 
 **Examples**:
+
 - `FlextTargetLdapModels`
 - `FlextTapOracleProtocols`
 - `FlextDbtOracleWmsUtilities`
 
 > **CRITICAL**: Do NOT include `Meltano` in the class name (e.g., use `FlextTapLdapProtocols`, **not** `FlextMeltanoProtocolsTapLdap`). The Meltano integration is represented purely through **inheritance** `(FlextMeltanoProtocols, FlextLdapProtocols)`, not through the name. This strict consistency ensures predictable mapping across all 33 ecosystem projects.
-
 
 ### Pattern 4D: Integration Projects with Dual Inheritance (Before/After)
 
@@ -205,6 +206,7 @@ m = FlextTargetOracleModels
 # m.DbOracle.* available (from FlextDbOracleModels)
 # m.TargetOracle.* available (local)
 ```
+
 ### What is NEVER done in subprojects
 
 ```python
@@ -303,6 +305,7 @@ class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]): ...
 `typing.TYPE_CHECKING` follows a pragmatic policy in the FLEXT ecosystem:
 
 ### ALLOWED
+
 - Type-only imports for IDE support and annotations that aren't needed at runtime
 - `__init__.py` lazy loading support (see `flext-core/__init__.py:24-59`)
 - Forward references in type annotations
@@ -338,6 +341,7 @@ if TYPE_CHECKING:
 ```
 
 If a circular import exists, fix the architecture:
+
 1. Move the offending code to a lower tier module.
 2. Use protocol-based decoupling (`protocols.py`).
 3. Use dependency injection via `FlextContainer`.
@@ -373,6 +377,7 @@ def __getattr__(name: str):
     msg = f"module {__name__!r} has no attribute {name!r}"
     raise AttributeError(msg)
 ```
+
 ---
 
 ## Rule 9: Ruff Configuration (from ruff-shared.toml)
@@ -405,6 +410,7 @@ Key enforced rules:
 - `I002` — Required `from **future** import annotations
 
 from collections.abc import Mapping, Sequence`
+
 - `TCH001/TCH002/TCH003` — Type-checking imports (IGNORED in ruff-shared.toml lines 79-81 for Pydantic compatibility)
 
 ---
@@ -478,6 +484,7 @@ with `grep -n "^[cmptu] = " <file>` — if both match, it's a double-assignment.
 The FLEXT ecosystem follows a strict, tier-based inheritance model. These are the **TARGET** MRO and Namespace resolution behaviors for all 33 ecosystem projects.
 
 > **CRITICAL - UNIVERSAL APPLICATION**: This architectural rule applies **IDENTICALLY** across all five core components in every project:
+>
 > 1. `Protocols` (`p`)
 > 2. `Models` (`m`)
 > 3. `Types` (`t`)
@@ -488,12 +495,15 @@ The FLEXT ecosystem follows a strict, tier-based inheritance model. These are th
 
 **NAMESPACE & MRO MECHANICS**: Each project defines **exactly ONE** inner class representing its own namespace (e.g., `class TapOracle:`). By inheriting parent facade classes, the project automatically gains access to all parent namespaces via Python's Method Resolution Order (MRO).
 Example: `AlgarOudMigProtocols(FlextLdapProtocols, FlextCliProtocols)` gives you access to `.AlgarOudMig` (its own), `.Cli` (from CLI), `.Ldap` (from LDAP), and `.Ldif` (because LDAP inherits from LDIF), plus all base methods from `flext-core`.
+
 - Preserve the organic namespace path exposed by MRO at call sites. Do not flatten `.TapOracle`, `.Infra`, `.Tests`, or similar branches back onto the facade root with alias assignments.
 
 **TARGET ARCHITECTURE**: The patterns below show what the architecture *should be* natively. Some projects currently inherit `FlextProtocols` directly instead of their intended platform dependency (e.g., `flext-meltano` currently uses `FlextProtocols` but should use `FlextCliProtocols`). When refactoring or building new modules, refer to this target state.
 
 ### L0 — Foundation
+
 **`flext-core`** forms the basis of all ecosystem projects.
+
 - **Class**: `FlextProtocols` (same for Models `m`, Constants `c`, Utilities `u`, Types `t`)
 - **Inherits**: `(base)`
 - **Namespace**: Provides root-level base protocols (`.Result`, `.Service`, `.Config`, etc. without inner namespace class)
@@ -501,64 +511,70 @@ Example: `AlgarOudMigProtocols(FlextLdapProtocols, FlextCliProtocols)` gives you
 ---
 
 ### L1 — Domain Libraries
+
 Domain libraries encapsulate logic applicable regardless of execution environment.
+
 - **Inheritance Pattern**: Domain libraries generally inherit from `FlextProtocols` (or a lower-tier domain library like Ldif).
 - **Namespaces**: Adds one dedicated namespace inner-class (e.g., `.DbOracle`).
 
-| Project | Class Name | TARGET Inherits | Own Namespace | Full Access |
-|---|---|---|---|---|
-| `flext-ldif` | `FlextLdifProtocols` | `(FlextProtocols)` | `.Ldif` | `.Ldif`, core root |
-| `flext-ldap` | `FlextLdapProtocols` | `(FlextLdifProtocols)` | `.Ldap` | `.Ldap`, `.Ldif`, core root |
-| `flext-db-oracle` | `FlextDbOracleProtocols` | `(FlextProtocols)` | `.DbOracle` | `.DbOracle`, core root |
-| `flext-oracle-wms` | `FlextOracleWmsProtocols` | `(FlextProtocols)` | `.OracleWms` | `.OracleWms`, core root |
-| `flext-oracle-oic` | `FlextOracleOicProtocols` | `(FlextProtocols)` | `.OracleOic` | `.OracleOic`, core root |
+| Project            | Class Name                | TARGET Inherits        | Own Namespace | Full Access                 |
+| ------------------ | ------------------------- | ---------------------- | ------------- | --------------------------- |
+| `flext-ldif`       | `FlextLdifProtocols`      | `(FlextProtocols)`     | `.Ldif`       | `.Ldif`, core root          |
+| `flext-ldap`       | `FlextLdapProtocols`      | `(FlextLdifProtocols)` | `.Ldap`       | `.Ldap`, `.Ldif`, core root |
+| `flext-db-oracle`  | `FlextDbOracleProtocols`  | `(FlextProtocols)`     | `.DbOracle`   | `.DbOracle`, core root      |
+| `flext-oracle-wms` | `FlextOracleWmsProtocols` | `(FlextProtocols)`     | `.OracleWms`  | `.OracleWms`, core root     |
+| `flext-oracle-oic` | `FlextOracleOicProtocols` | `(FlextProtocols)`     | `.OracleOic`  | `.OracleOic`, core root     |
 
 ---
 
 ### L1 — Platform Libraries
+
 Base Tools provide infrastructure integrations.
+
 - **Standalone Tools**: Inherit directly from `FlextProtocols`
 - **Dependent Tools**: Inherit from other L1 Base Tools (e.g., UI needs Web, Tap needs CLI).
 
-| Project | Class Name | TARGET Inherits | Own Namespace | Full Access |
-|---|---|---|---|---|
-| *Base Tools* | | | | |
-| `flext-cli` | `FlextCliProtocols` | `(FlextProtocols)` | `.Cli` | `.Cli`, core |
-| `flext-web` | `FlextWebProtocols` | `(FlextProtocols)` | `.Web` | `.Web`, core |
-| `flext-grpc` | `FlextGrpcProtocols` | `(FlextProtocols)` | `.Grpc` | `.Grpc`, core |
-| `flext-plugin` | `FlextPluginProtocols` | `(FlextProtocols)` | `.Plugin` | `.Plugin`, core |
-| `flext-observability`| `FlextObservabilityProtocols` | `(FlextProtocols)` | `.Observability` | `.Observability`, core |
-| *Dependent Tools* | | | | |
-| `flext-meltano` | `FlextMeltanoProtocols` | `(FlextCliProtocols)` | `.Meltano` | `.Meltano`, `.Cli`, core |
-| `flext-api` | `FlextApiProtocols` | `(FlextWebProtocols)` | `.Api` | `.Api`, `.Web`, core |
-| `flext-auth` | `FlextAuthProtocols` | `(FlextWebProtocols)` | `.Auth` | `.Auth`, `.Web`, core |
-| `flext-quality` | `FlextQualityProtocols` | `(FlextWebProtocols, FlextCliProtocols)` | `.Quality` | `.Quality`, `.Web`, `.Cli`,  core |
+| Project               | Class Name                    | TARGET Inherits                          | Own Namespace    | Full Access                       |
+| --------------------- | ----------------------------- | ---------------------------------------- | ---------------- | --------------------------------- |
+| *Base Tools*          |                               |                                          |                  |                                   |
+| `flext-cli`           | `FlextCliProtocols`           | `(FlextProtocols)`                       | `.Cli`           | `.Cli`, core                      |
+| `flext-web`           | `FlextWebProtocols`           | `(FlextProtocols)`                       | `.Web`           | `.Web`, core                      |
+| `flext-grpc`          | `FlextGrpcProtocols`          | `(FlextProtocols)`                       | `.Grpc`          | `.Grpc`, core                     |
+| `flext-plugin`        | `FlextPluginProtocols`        | `(FlextProtocols)`                       | `.Plugin`        | `.Plugin`, core                   |
+| `flext-observability` | `FlextObservabilityProtocols` | `(FlextProtocols)`                       | `.Observability` | `.Observability`, core            |
+| *Dependent Tools*     |                               |                                          |                  |                                   |
+| `flext-meltano`       | `FlextMeltanoProtocols`       | `(FlextCliProtocols)`                    | `.Meltano`       | `.Meltano`, `.Cli`, core          |
+| `flext-api`           | `FlextApiProtocols`           | `(FlextWebProtocols)`                    | `.Api`           | `.Api`, `.Web`, core              |
+| `flext-auth`          | `FlextAuthProtocols`          | `(FlextWebProtocols)`                    | `.Auth`          | `.Auth`, `.Web`, core             |
+| `flext-quality`       | `FlextQualityProtocols`       | `(FlextWebProtocols, FlextCliProtocols)` | `.Quality`       | `.Quality`, `.Web`, `.Cli`,  core |
 
 ---
 
 ### L2 — Integration Projects (Taps/Targets/dbt)
+
 Integrations MUST compose exactly ONE platform and ONE domain. Because `FlextMeltanoProtocols` inherits `FlextCliProtocols` in the target architecture, integrations naturally gain access to `.Cli` tools.
 
 **Pattern Formula**: `Flext<Role><Domain><Facade> (FlextMeltano<Facade>, Flext<Domain><Facade>)`
 
-| Sub-Tier | Project | TARGET Class Name | TARGET Inherits | Own Namespace | Full Access |
-|---|---|---|---|---|---|
-| **Taps** | `flext-tap-ldap` | `FlextTapLdapProtocols` | `(FlextMeltanoProtocols, FlextLdapProtocols)` | `.TapLdap` | `.TapLdap`, `.Meltano`, `.Cli`, `.Ldap`, `.Ldif`, core root |
-| | `flext-tap-ldif` | `FlextTapLdifProtocols` | `(FlextMeltanoProtocols, FlextLdifProtocols)` | `.TapLdif` | `.TapLdif`, `.Meltano`, `.Cli`, `.Ldif`, core root |
-| | `flext-tap-oracle` | `FlextTapOracleProtocols` | `(FlextMeltanoProtocols, FlextDbOracleProtocols)` | `.TapOracle` | `.TapOracle`, `.Meltano`, `.Cli`, `.DbOracle`, core root |
-| | `flext-tap-oracle-oic` | `FlextTapOracleOicProtocols` | `(FlextMeltanoProtocols, FlextOracleOicProtocols)` | `.TapOracleOic` | `.TapOracleOic`, `.Meltano`, `.Cli`, `.OracleOic`, core root |
-| | `flext-tap-oracle-wms` | `FlextTapOracleWmsProtocols` | `(FlextMeltanoProtocols, FlextOracleWmsProtocols)` | `.TapOracleWms` | `.TapOracleWms`, `.Meltano`, `.Cli`, `.OracleWms`, core root |
-| **Targets** | `flext-target-ldap` | `FlextTargetLdapProtocols` | `(FlextMeltanoProtocols, FlextLdapProtocols)` | `.TargetLdap` | `.TargetLdap`, `.Meltano`, `.Cli`, `.Ldap`, `.Ldif`, core root |
-| | `flext-target-ldif` | `FlextTargetLdifProtocols` | `(FlextMeltanoProtocols, FlextLdifProtocols)` | `.TargetLdif` | `.TargetLdif`, `.Meltano`, `.Cli`, `.Ldif`, core root |
-| | `flext-target-oracle` | `FlextTargetOracleProtocols` | `(FlextMeltanoProtocols, FlextDbOracleProtocols)` | `.TargetOracle` | `.TargetOracle`, `.Meltano`, `.Cli`, `.DbOracle`, core root |
-| | `flext-target-oracle-oic` | `FlextTargetOracleOicProtocols` | `(FlextMeltanoProtocols, FlextOracleOicProtocols)` | `.TargetOracleOic` | `.TargetOracleOic`, `.Meltano`, `.Cli`, `.OracleOic`, core root |
-| | `flext-target-oracle-wms` | `FlextTargetOracleWmsProtocols` | `(FlextMeltanoProtocols, FlextOracleWmsProtocols)` | `.TargetOracleWms` | `.TargetOracleWms`, `.Meltano`, `.Cli`, `.OracleWms`, core root |
-| **dbt** | `flext-dbt-ldap` | `FlextDbtLdapProtocols` | `(FlextMeltanoProtocols, FlextLdapProtocols)` | `.DbtLdap` | `.DbtLdap`, `.Meltano`, `.Cli`, `.Ldap`, `.Ldif`, core root |
-| | `flext-dbt-ldif` | `FlextDbtLdifProtocols` | `(FlextMeltanoProtocols, FlextLdifProtocols)` | `.DbtLdif` | `.DbtLdif`, `.Meltano`, `.Cli`, `.Ldif`, core root |
-| | `flext-dbt-oracle` | `FlextDbtOracleProtocols` | `(FlextMeltanoProtocols, FlextDbOracleProtocols)` | `.DbtOracle` | `.DbtOracle`, `.Meltano`, `.Cli`, `.DbOracle`, core root |
-| | `flext-dbt-oracle-wms` | `FlextDbtOracleWmsProtocols` | `(FlextMeltanoProtocols, FlextOracleWmsProtocols)` | `.DbtOracleWms` | `.DbtOracleWms`, `.Meltano`, `.Cli`, `.OracleWms`, core root |
+| Sub-Tier    | Project                   | TARGET Class Name               | TARGET Inherits                                    | Own Namespace      | Full Access                                                     |
+| ----------- | ------------------------- | ------------------------------- | -------------------------------------------------- | ------------------ | --------------------------------------------------------------- |
+| **Taps**    | `flext-tap-ldap`          | `FlextTapLdapProtocols`         | `(FlextMeltanoProtocols, FlextLdapProtocols)`      | `.TapLdap`         | `.TapLdap`, `.Meltano`, `.Cli`, `.Ldap`, `.Ldif`, core root     |
+|             | `flext-tap-ldif`          | `FlextTapLdifProtocols`         | `(FlextMeltanoProtocols, FlextLdifProtocols)`      | `.TapLdif`         | `.TapLdif`, `.Meltano`, `.Cli`, `.Ldif`, core root              |
+|             | `flext-tap-oracle`        | `FlextTapOracleProtocols`       | `(FlextMeltanoProtocols, FlextDbOracleProtocols)`  | `.TapOracle`       | `.TapOracle`, `.Meltano`, `.Cli`, `.DbOracle`, core root        |
+|             | `flext-tap-oracle-oic`    | `FlextTapOracleOicProtocols`    | `(FlextMeltanoProtocols, FlextOracleOicProtocols)` | `.TapOracleOic`    | `.TapOracleOic`, `.Meltano`, `.Cli`, `.OracleOic`, core root    |
+|             | `flext-tap-oracle-wms`    | `FlextTapOracleWmsProtocols`    | `(FlextMeltanoProtocols, FlextOracleWmsProtocols)` | `.TapOracleWms`    | `.TapOracleWms`, `.Meltano`, `.Cli`, `.OracleWms`, core root    |
+| **Targets** | `flext-target-ldap`       | `FlextTargetLdapProtocols`      | `(FlextMeltanoProtocols, FlextLdapProtocols)`      | `.TargetLdap`      | `.TargetLdap`, `.Meltano`, `.Cli`, `.Ldap`, `.Ldif`, core root  |
+|             | `flext-target-ldif`       | `FlextTargetLdifProtocols`      | `(FlextMeltanoProtocols, FlextLdifProtocols)`      | `.TargetLdif`      | `.TargetLdif`, `.Meltano`, `.Cli`, `.Ldif`, core root           |
+|             | `flext-target-oracle`     | `FlextTargetOracleProtocols`    | `(FlextMeltanoProtocols, FlextDbOracleProtocols)`  | `.TargetOracle`    | `.TargetOracle`, `.Meltano`, `.Cli`, `.DbOracle`, core root     |
+|             | `flext-target-oracle-oic` | `FlextTargetOracleOicProtocols` | `(FlextMeltanoProtocols, FlextOracleOicProtocols)` | `.TargetOracleOic` | `.TargetOracleOic`, `.Meltano`, `.Cli`, `.OracleOic`, core root |
+|             | `flext-target-oracle-wms` | `FlextTargetOracleWmsProtocols` | `(FlextMeltanoProtocols, FlextOracleWmsProtocols)` | `.TargetOracleWms` | `.TargetOracleWms`, `.Meltano`, `.Cli`, `.OracleWms`, core root |
+| **dbt**     | `flext-dbt-ldap`          | `FlextDbtLdapProtocols`         | `(FlextMeltanoProtocols, FlextLdapProtocols)`      | `.DbtLdap`         | `.DbtLdap`, `.Meltano`, `.Cli`, `.Ldap`, `.Ldif`, core root     |
+|             | `flext-dbt-ldif`          | `FlextDbtLdifProtocols`         | `(FlextMeltanoProtocols, FlextLdifProtocols)`      | `.DbtLdif`         | `.DbtLdif`, `.Meltano`, `.Cli`, `.Ldif`, core root              |
+|             | `flext-dbt-oracle`        | `FlextDbtOracleProtocols`       | `(FlextMeltanoProtocols, FlextDbOracleProtocols)`  | `.DbtOracle`       | `.DbtOracle`, `.Meltano`, `.Cli`, `.DbOracle`, core root        |
+|             | `flext-dbt-oracle-wms`    | `FlextDbtOracleWmsProtocols`    | `(FlextMeltanoProtocols, FlextOracleWmsProtocols)` | `.DbtOracleWms`    | `.DbtOracleWms`, `.Meltano`, `.Cli`, `.OracleWms`, core root    |
 
 **Example (Tap):**
+
 ```python
 # flext-tap-oracle/src/flext_tap_oracle/protocols.py
 class FlextTapOracleProtocols(FlextMeltanoProtocols, FlextDbOracleProtocols):
@@ -573,17 +589,19 @@ p = FlextTapOracleProtocols
 ---
 
 ### L2 — Custom Composition Projects
+
 Business-specific projects use structural composition combining Domains and Platforms as needed.
 
-| Project | Class Name | TARGET Inherits | Access Gained via MRO |
-|---|---|---|---|
-| `algar-oud-mig` | `AlgarOudMigProtocols` | `(FlextLdapProtocols, FlextCliProtocols)` | `.AlgarOudMig`, `.Ldap`, `.Ldif`, `.Cli`, core |
-| `gruponos-meltano-native` | `GruponosMeltanoNativeProtocols`| `(FlextTapOracleProtocols, FlextTargetOracleWmsProtocols)`| `.GruponosMeltanoNative`, `.TapOracle`, `.TargetOracleWms`, `.Meltano`, `.Cli`, `.DbOracle`, `.OracleWms`, core |
+| Project                   | Class Name                       | TARGET Inherits                                            | Access Gained via MRO                                                                                           |
+| ------------------------- | -------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `algar-oud-mig`           | `AlgarOudMigProtocols`           | `(FlextLdapProtocols, FlextCliProtocols)`                  | `.AlgarOudMig`, `.Ldap`, `.Ldif`, `.Cli`, core                                                                  |
+| `gruponos-meltano-native` | `GruponosMeltanoNativeProtocols` | `(FlextTapOracleProtocols, FlextTargetOracleWmsProtocols)` | `.GruponosMeltanoNative`, `.TapOracle`, `.TargetOracleWms`, `.Meltano`, `.Cli`, `.DbOracle`, `.OracleWms`, core |
 
 > **Namespacing Access Rule & Verification**:
 >
 > Every namespace mapped as "Full Access" is available transparently on the project's alias.
 > If `p = AlgarOudMigProtocols`:
+>
 > - `p.AlgarOudMig.MutableEntryamespace)
 > - `p.Ldap.LdapEntryited from`FlextLdapProtocols`)
 > - `p.Ldif.Entryited transitively from`FlextLdifProtocols` -> `FlextLdapProtocols`)
@@ -613,7 +631,7 @@ Business-specific projects use structural composition combining Domains and Plat
 
 ```python
 # ❌ ALL FORBIDDEN in flext-cli/src/, flext-ldap/src/, tests/, examples/, scripts/
-from pydantic import BaseModel, Field  # Use m.*
+from pydantic import BaseModel, u.Field  # Use m.*
 from pydantic_settings import BaseSettings  # Use m.* or c.*
 from dependency_injector import containers, providers  # Use u.Container.*
 from structlog import get_logger  # Use u.Logger

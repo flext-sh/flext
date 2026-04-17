@@ -73,7 +73,7 @@ The Pydantic 2 migration roadmap has been completely planned with:
    - Convert ALL TypedDict → Structural Pydantic 2 models
    - Hierarchical namespace pattern: `m.Entity`, `m.Ldif.Entry`, `m.Cli.Command`
    - Standard ConfigDict across all models
-   - Modern validators: `@field_validator`, `@model_validator`, `computed_field`
+   - Modern validators: `@u.field_validator`, `@u.model_validator`, `u.computed_field`
 
 ---
 
@@ -314,10 +314,10 @@ model_config = ConfigDict(
 ### 4. Modern Validators
 
 ```python
-from pydantic import field_validator, model_validator, computed_field
+from pydantic import u.field_validator, u.model_validator, u.computed_field
 
 
-@field_validator("email")
+@u.field_validator("email")
 @classmethod
 def validate_email(cls, v: str) -> str:
     return v.lower()

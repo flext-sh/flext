@@ -105,6 +105,7 @@ Each task was committed atomically:
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] LOC > 117 after initial symbol_propagator rewrite**
+
 - **Found during:** Task 1
 - **Issue:** First iteration added rope wrapper functions (`rope_find_symbol_occurrences`, `rope_rename_symbol`) which pushed LOC to 135+
 - **Fix:** Removed wrapper functions; re-exported `find_occurrences` and `Rename` directly in `__all__` — satisfies plan artifact requirement without adding unused logic
@@ -112,6 +113,7 @@ Each task was committed atomically:
 - **Verification:** `wc -l symbol_propagator.py` = 94
 
 **2. [Rule 1 - Bug] Stale **init**.py after **all** changes**
+
 - **Found during:** Task 1 (post-commit lint)
 - **Issue:** Auto-generated `__init__.py` still imported `rope_find_symbol_occurrences` and `rope_rename_symbol` from earlier iteration
 - **Fix:** `make gen PROJECT=flext-infra` regenerated based on current `__all__`
@@ -119,6 +121,7 @@ Each task was committed atomically:
 - **Verification:** `ruff check --select F` clean
 
 **3. [Rule 2 - Missing Critical] pyright errors from rope's untyped API**
+
 - **Found during:** Task 1 verification
 - **Issue:** rope has no `.pyi` stubs; pyright emitted `reportUnknownMemberType/VariableType/ArgumentType` for every rope call
 - **Fix:** Added three `= "none"` entries to root `pyproject.toml` pyright settings
@@ -126,6 +129,7 @@ Each task was committed atomically:
 - **Verification:** `pyright flext-infra/src/flext_infra/transformers/` shows 0 errors
 
 **4. [Rule 1 - Bug] N802 linter error on visitor override methods**
+
 - **Found during:** Task 2 (ruff check after adding visit_ClassDef etc.)
 - **Issue:** ruff N802 "function name should be lowercase" on LibCST required method names (`visit_ClassDef`, `visit_FunctionDef`)
 - **Fix:** Added `@override` decorator — ruff treats these as recognized overrides and removed N802

@@ -64,7 +64,7 @@ mcp_memory(mode="search", query="recent changes to <file>")
 
 ```
 mcp_context7_resolve-library-id(libraryName="pydantic", query="validators")
-mcp_context7_query-docs(libraryId="/pydantic/pydantic", query="field_validator examples")
+mcp_context7_query-docs(libraryId="/pydantic/pydantic", query="u.field_validator examples")
 ```
 
 ## Workflow

@@ -116,7 +116,7 @@ Bad (Library Abstraction Violation - if this were in flext-cli):
 from __future__ import annotations
 
 # ❌ NEVER in flext-cli/src or other consuming projects
-# from pydantic import BaseModel, Field
+# from pydantic import BaseModel, u.Field
 # from dependency_injector import containers
 _EXAMPLE_ONLY: str = "use m.BaseModel and u.Container instead"
 ```

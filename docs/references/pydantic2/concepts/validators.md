@@ -1,6 +1,6 @@
 <!-- TOC START -->
 
-- [Field validators](#field-validators)
+- [u.Field validators](#field-validators)
   - [Which validator pattern to use](#which-validator-pattern-to-use)
 - [Model validators](#model-validators)
 - [Raising validation errors](#raising-validation-errors)
@@ -21,7 +21,7 @@ Want to quickly jump to the relevant validator section?
 
     <div class="grid cards" markdown>
 
-    *   Field validators
+    *   u.Field validators
 
         ---
 
@@ -40,14 +40,14 @@ Want to quickly jump to the relevant validator section?
 
     </div>
 
-## Field validators
+## u.Field validators
 
 ??? api "API Documentation"
 [`pydantic.functional_validators.WrapValidator`][pydantic.functional_validators.WrapValidator]<br>
 [`pydantic.functional_validators.PlainValidator`][pydantic.functional_validators.PlainValidator]<br>
-[`pydantic.functional_validators.BeforeValidator`][pydantic.functional_validators.BeforeValidator]<br>
+[`pydantic.functional_validators.m.BeforeValidator`][pydantic.functional_validators.m.BeforeValidator]<br>
 [`pydantic.functional_validators.AfterValidator`][pydantic.functional_validators.AfterValidator]<br>
-[`pydantic.functional_validators.field_validator`][pydantic.functional_validators.field_validator]<br>
+[`pydantic.functional_validators.u.field_validator`][pydantic.functional_validators.u.field_validator]<br>
 
 In its simplest form, a field validator is a callable taking the value to be validated as an argument and
 **returning the validated value**. The callable can perform checks for specific conditions (see
@@ -55,7 +55,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
 **Four** different types of validators can be used. They can all be defined using the
 [annotated pattern](./fields.md#the-annotated-pattern) or using the
-[`field_validator()`][pydantic.field_validator] decorator, applied on a class method:
+[`u.field_validator()`][pydantic.u.field_validator] decorator, applied on a class method:
 
 - **_After_ validators**: run after Pydantic's internal validation. They are generally more type safe and thus easier to implement.
   {#field-after-validator}
@@ -96,16 +96,16 @@ In its simplest form, a field validator is a callable taking the value to be val
       === "Decorator"
 
           Here is an example of a validator performing a validation check, and returning the value unchanged,
-          this time using the [`field_validator()`][pydantic.field_validator] decorator.
+          this time using the [`u.field_validator()`][pydantic.u.field_validator] decorator.
 
           ```python
-          from pydantic import BaseModel, ValidationError, field_validator
+          from pydantic import BaseModel, ValidationError, u.field_validator
 
 
           class Model(BaseModel):
               number: int
 
-              @field_validator("number", mode="after")  # (1)!
+              @u.field_validator("number", mode="after")  # (1)!
               @classmethod
               def is_even(cls, value: int) -> int:
                   if value % 2 == 1:
@@ -153,13 +153,13 @@ In its simplest form, a field validator is a callable taking the value to be val
           === "Decorator"
 
               ```python
-              from pydantic import BaseModel, field_validator
+              from pydantic import BaseModel, u.field_validator
 
 
               class Model(BaseModel):
                   number: int
 
-                  @field_validator("number", mode="after")  # (1)!
+                  @u.field_validator("number", mode="after")  # (1)!
                   @classmethod
                   def double_number(cls, value: int) -> int:
                       return value * 2
@@ -185,7 +185,7 @@ In its simplest form, a field validator is a callable taking the value to be val
         ```python
         from typing import Annotated, Any
 
-        from pydantic import BaseModel, BeforeValidator, ValidationError
+        from pydantic import BaseModel, m.BeforeValidator, ValidationError
 
 
         def ensure_list(value):  # (1)!
@@ -196,7 +196,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
 
         class Model(BaseModel):
-            numbers: Annotated[Sequence[int], BeforeValidator(ensure_list)]
+            numbers: Annotated[Sequence[int], m.BeforeValidator(ensure_list)]
 
 
         print(Model(numbers=2))
@@ -227,13 +227,13 @@ In its simplest form, a field validator is a callable taking the value to be val
         ```python
         from typing import Any
 
-        from pydantic import BaseModel, ValidationError, field_validator
+        from pydantic import BaseModel, ValidationError, u.field_validator
 
 
         class Model(BaseModel):
             numbers: Sequence[int]
 
-            @field_validator("numbers", mode="before")
+            @u.field_validator("numbers", mode="before")
             @classmethod
             def ensure_list(cls, value):  # (1)!
                 if not isinstance(value, list):  # (2)!
@@ -301,13 +301,13 @@ In its simplest form, a field validator is a callable taking the value to be val
         ```python
         from typing import Any
 
-        from pydantic import BaseModel, field_validator
+        from pydantic import BaseModel, u.field_validator
 
 
         class Model(BaseModel):
             number: int
 
-            @field_validator("number", mode="plain")
+            @u.field_validator("number", mode="plain")
             @classmethod
             def val_number(cls, value):
                 if isinstance(value, int):
@@ -344,7 +344,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
         from pydantic import (
             BaseModel,
-            Field,
+            u.Field,
             ValidationError,
             ValidatorFunctionWrapHandler,
             WrapValidator,
@@ -362,7 +362,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
 
         class Model(BaseModel):
-            my_string: Annotated[str, Field(max_length=5), WrapValidator(truncate)]
+            my_string: Annotated[str, u.Field(max_length=5), WrapValidator(truncate)]
 
 
         print(Model(my_string="abcde"))
@@ -380,17 +380,17 @@ In its simplest form, a field validator is a callable taking the value to be val
 
         from pydantic import (
             BaseModel,
-            Field,
+            u.Field,
             ValidationError,
             ValidatorFunctionWrapHandler,
-            field_validator,
+            u.field_validator,
         )
 
 
         class Model(BaseModel):
-            my_string: Annotated[str, Field(max_length=5)]
+            my_string: Annotated[str, u.Field(max_length=5)]
 
-            @field_validator("my_string", mode="wrap")
+            @u.field_validator("my_string", mode="wrap")
             @classmethod
             def truncate(cls, value, handler: ValidatorFunctionWrapHandler) -> str:
                 try:
@@ -456,18 +456,18 @@ It is also easier to understand which validators are applied to a type, by just 
 
 #### Using the decorator pattern
 
-One of the key benefits of using the [`field_validator()`][pydantic.field_validator] decorator is to apply
+One of the key benefits of using the [`u.field_validator()`][pydantic.u.field_validator] decorator is to apply
 the function to multiple fields:
 
 ```python
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, u.field_validator
 
 
 class Model(BaseModel):
     f1: str
     f2: str
 
-    @field_validator("f1", "f2", mode="before")
+    @u.field_validator("f1", "f2", mode="before")
     @classmethod
     def capitalize(cls, value: str) -> str:
         return value.capitalize()
@@ -485,9 +485,9 @@ Here are a couple additional notes about the decorator usage:
 ## Model validators
 
 ??? api "API Documentation"
-[`pydantic.functional_validators.model_validator`][pydantic.functional_validators.model_validator]<br>
+[`pydantic.functional_validators.u.model_validator`][pydantic.functional_validators.u.model_validator]<br>
 
-Validation can also be performed on the entire model's data using the [`model_validator()`][pydantic.model_validator]
+Validation can also be performed on the entire model's data using the [`u.model_validator()`][pydantic.u.model_validator]
 decorator.
 
 **Three** different types of model validators can be used:
@@ -500,7 +500,7 @@ decorator.
   ```python
   from typing_extensions import Self
 
-  from pydantic import BaseModel, model_validator
+  from pydantic import BaseModel, u.model_validator
 
 
   class UserModel(BaseModel):
@@ -508,7 +508,7 @@ decorator.
       password: str
       password_repeat: str
 
-      @model_validator(mode="after")
+      @u.model_validator(mode="after")
       def check_passwords_match(self) -> Self:
           if self.password != self.password_repeat:
               raise ValueError("Passwords do not match")
@@ -524,13 +524,13 @@ decorator.
   ```python
   from typing import Any
 
-  from pydantic import BaseModel, model_validator
+  from pydantic import BaseModel, u.model_validator
 
 
   class UserModel(BaseModel):
       username: str
 
-      @model_validator(mode="before")
+      @u.model_validator(mode="before")
       @classmethod
       def check_card_number_not_present(cls, data):  # (1)!
           if isinstance(data, dict):  # (2)!
@@ -560,14 +560,14 @@ decorator.
       BaseModel,
       ModelWrapValidatorHandler,
       ValidationError,
-      model_validator,
+      u.model_validator,
   )
 
 
   class UserModel(BaseModel):
       username: str
 
-      @model_validator(mode="wrap")
+      @u.model_validator(mode="wrap")
       @classmethod
       def log_failed_validation(
           cls, data, handler: ModelWrapValidatorHandler[Self]
@@ -596,13 +596,13 @@ To raise a validation error, three types of exceptions can be used:
   ```python
   from pydantic_core import PydanticCustomError
 
-  from pydantic import BaseModel, ValidationError, field_validator
+  from pydantic import BaseModel, ValidationError, u.field_validator
 
 
   class Model(BaseModel):
       x: int
 
-      @field_validator("x", mode="after")
+      @u.field_validator("x", mode="after")
       @classmethod
       def validate_x(cls, v: int) -> int:
           if v % 42 == 0:
@@ -642,7 +642,7 @@ property. Here is an example than can be used as an alternative to the [_after_ 
 example:
 
 ```python
-from pydantic import BaseModel, ValidationInfo, field_validator
+from pydantic import BaseModel, ValidationInfo, u.field_validator
 
 
 class UserModel(BaseModel):
@@ -650,7 +650,7 @@ class UserModel(BaseModel):
     password_repeat: str
     username: str
 
-    @field_validator("password_repeat", mode="after")
+    @u.field_validator("password_repeat", mode="after")
     @classmethod
     def check_passwords_match(cls, value: str, info: ValidationInfo) -> str:
         if value != info.data["password"]:
@@ -671,13 +671,13 @@ You can pass a context t.RecursiveContainer to the [validation methods](./models
 inside the validator functions using the [`context`][pydantic.ValidationInfo.context] property:
 
 ```python
-from pydantic import BaseModel, ValidationInfo, field_validator
+from pydantic import BaseModel, ValidationInfo, u.field_validator
 
 
 class Model(BaseModel):
     text: str
 
-    @field_validator("text", mode="after")
+    @u.field_validator("text", mode="after")
     @classmethod
     def remove_stopwords(cls, v: str, info: ValidationInfo) -> str:
         if isinstance(info.context, dict):
@@ -710,7 +710,7 @@ from collections.abc import Mapping, Sequence
     from contextvars import ContextVar
     from typing import Any
 
-    from pydantic import BaseModel, ValidationInfo, field_validator
+    from pydantic import BaseModel, ValidationInfo, u.field_validator
 
     _init_context_var = ContextVar("_init_context_var", default=None)
 
@@ -734,7 +734,7 @@ from collections.abc import Mapping, Sequence
                 context=_init_context_var.get(),
             )
 
-        @field_validator("my_number")
+        @u.field_validator("my_number")
         @classmethod
         def multiply_with_context(cls, value: int, info: ValidationInfo) -> int:
             if isinstance(info.context, dict):
@@ -761,7 +761,7 @@ is defined as follows: [_before_](#field-before-validator) and [_wrap_](#field-w
 are run from right to left, and [_after_](#field-after-validator) validators are then run from left to right:
 
 ```python {lint="skip" test="skip"}
-from pydantic import AfterValidator, BaseModel, BeforeValidator, WrapValidator
+from pydantic import AfterValidator, BaseModel, m.BeforeValidator, WrapValidator
 
 
 class Model(BaseModel):
@@ -769,7 +769,7 @@ class Model(BaseModel):
         str,
         AfterValidator(runs_3rd),
         AfterValidator(runs_4th),
-        BeforeValidator(runs_2nd),
+        m.BeforeValidator(runs_2nd),
         WrapValidator(runs_1st),
     ]
 ```
@@ -873,7 +873,7 @@ Pydantic provides a few special utilities that can be used to customize validati
 
   from pydantic_core import PydanticUseDefault
 
-  from pydantic import BaseModel, BeforeValidator
+  from pydantic import BaseModel, m.BeforeValidator
 
 
   def default_if_none(value):
@@ -883,7 +883,7 @@ Pydantic provides a few special utilities that can be used to customize validati
 
 
   class Model(BaseModel):
-      name: Annotated[str, BeforeValidator(default_if_none)] = "default_name"
+      name: Annotated[str, m.BeforeValidator(default_if_none)] = "default_name"
 
 
   print(Model(name=None))
@@ -900,13 +900,13 @@ Consider the following example:
 ```python
 from typing import Any
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, u.field_validator
 
 
 class Model(BaseModel):
     value: str
 
-    @field_validator("value", mode="before")
+    @u.field_validator("value", mode="before")
     @classmethod
     def cast_ints(cls, value):
         if isinstance(value, int):
@@ -927,13 +927,13 @@ input type, the `json_schema_input_type` argument can be provided:
 ```python
 from typing import Any, Union
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, u.field_validator
 
 
 class Model(BaseModel):
     value: str
 
-    @field_validator("value", mode="before", json_schema_input_type=Union[int, str])
+    @u.field_validator("value", mode="before", json_schema_input_type=Union[int, str])
     @classmethod
     def cast_ints(cls, value):
         if isinstance(value, int):

@@ -66,6 +66,7 @@ Eliminated all residual workaround violations: 2 bare print() replaced with stru
 ### Task 2: Fix bare except Exception: in tests and examples
 
 **Tests fixed (26 occurrences across 10 files):**
+
 - flext-core/tests: `(KeyError, RuntimeError)` for context get/set operations
 - flext-observability/tests: `(AssertionError, RuntimeError, ValueError, TypeError)` for integration smoke tests (10 occurrences)
 - flext-meltano/tests: specific types for tap abstractions and service method tests
@@ -73,6 +74,7 @@ Eliminated all residual workaround violations: 2 bare print() replaced with stru
 - flext-web/tests: `(ImportError, RuntimeError, ValueError, TypeError, AttributeError, AssertionError, OSError)` for example integration tests (5 occurrences), `(ValueError, TypeError)` for validation test
 
 **Examples fixed (16 occurrences across 14 files):**
+
 - Socket operations: `OSError`
 - Main entry points: `(RuntimeError, ValueError, OSError)`
 - DB settings: `(ValueError, OSError, RuntimeError)`
@@ -81,6 +83,7 @@ Eliminated all residual workaround violations: 2 bare print() replaced with stru
 **Other:** fix_dollar.py (2 occurrences) fixed to `(subprocess.CalledProcessError, OSError)`
 
 **D-03 exemptions preserved (5 occurrences in 3 files):**
+
 - `flext-ldif/tests/support/conftest_factory.py` (3) — test cleanup utility
 - `flext-meltano/tests/helpers/docker_test_manager.py` (1) — infrastructure cleanup
 - `flext-ldap/tests/_utilities/docker_infra.py` (1) — infrastructure cleanup

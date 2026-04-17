@@ -58,6 +58,7 @@ completed: 2026-03-23
 - **Files modified:** 17+
 
 ## Accomplishments
+
 - Fixed broken `make pyre` entrypoint — now reports authoritative 0-error counts repo-wide
 - Eliminated all pyrefly and pyright errors in flext-core
 - Replaced all `__class__ is` comparisons with `isinstance()` or `same_type()`
@@ -73,18 +74,22 @@ completed: 2026-03-23
 **Plan metadata:** `0f5228a6` (docs: complete Wave 1 plan)
 
 ## Decisions Made
+
 - cast() in decorators.py: widened parameter type instead of casting — isinstance() handles narrowing internally
 - domain.py Option C sites: created `same_type()` utility rather than isinstance() (preserves exact-type semantics)
 - WORKSPACE_PYTHONPATH: dynamic path resolution replaces hardcoded absolute paths in pyrefly settings
 
 ## Deviations from Plan
+
 None significant — plan executed as designed across multiple sessions.
 
 ## Issues Encountered
+
 - `make pyre` was silently succeeding with 0 files checked — fixed by adding workspace root to search-path and showing summary on terminal
 - Pyrefly needed `Sequence` instead of `list` for mutable usage patterns
 
 ## Next Phase Readiness
+
 - flext-core foundation is type-clean, ready for Wave 2 (flext-infra + flext-tests)
 - All downstream consumers can import from clean flext-core types
 

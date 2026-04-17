@@ -14,34 +14,34 @@ re-exports from the public module. These 17 pairs violate that pattern.
 
 ### flext-observability (14 pairs, ~4,480 LOC)
 
-| Public file | Internal source |
-|-------------|-----------------|
-| `core.py` | `_utilities/_core.py` |
+| Public file                      | Internal source                              |
+| -------------------------------- | -------------------------------------------- |
+| `core.py`                        | `_utilities/_core.py`                        |
 | `http_client_instrumentation.py` | `_utilities/_http_client_instrumentation.py` |
-| `http_instrumentation.py` | `_utilities/_http_instrumentation.py` |
-| `monitoring.py` | `_utilities/_monitoring.py` |
-| `context.py` | `_utilities/_context.py` |
-| `custom_metrics.py` | `_utilities/_custom_metrics.py` |
-| `error_handling.py` | `_utilities/_error_handling.py` |
-| `sampling.py` | `_utilities/_sampling.py` |
-| `advanced_context.py` | `_utilities/_advanced_context.py` |
-| `logging_integration.py` | `_utilities/_logging_integration.py` |
-| `performance.py` | `_utilities/_performance.py` |
-| `fields.py` | `_utilities/_fields.py` |
-| `services.py` | `_utilities/_services.py` |
-| `health.py` | `_utilities/_health.py` |
+| `http_instrumentation.py`        | `_utilities/_http_instrumentation.py`        |
+| `monitoring.py`                  | `_utilities/_monitoring.py`                  |
+| `context.py`                     | `_utilities/_context.py`                     |
+| `custom_metrics.py`              | `_utilities/_custom_metrics.py`              |
+| `error_handling.py`              | `_utilities/_error_handling.py`              |
+| `sampling.py`                    | `_utilities/_sampling.py`                    |
+| `advanced_context.py`            | `_utilities/_advanced_context.py`            |
+| `logging_integration.py`         | `_utilities/_logging_integration.py`         |
+| `performance.py`                 | `_utilities/_performance.py`                 |
+| `fields.py`                    | `_utilities/_fields.py`                    |
+| `services.py`                    | `_utilities/_services.py`                    |
+| `health.py`                      | `_utilities/_health.py`                      |
 
 ### flext-dbt-oracle-wms (1 pair, ~205 LOC)
 
-| Public file | Internal source |
-|-------------|-----------------|
+| Public file | Internal source        |
+| ----------- | ---------------------- |
 | `client.py` | `_utilities/client.py` |
 
 ### flext-dbt-oracle (2 pairs, ~154 LOC)
 
-| Public file | Internal source |
-|-------------|-----------------|
-| `simple_api.py` | `_utilities/simple_api.py` |
+| Public file      | Internal source             |
+| ---------------- | --------------------------- |
+| `simple_api.py`  | `_utilities/simple_api.py`  |
 | `connections.py` | `_utilities/connections.py` |
 
 ## Re-Export Pattern
@@ -62,6 +62,7 @@ Implementation stays in `_utilities/` (source of truth).
 ### Wave 1: flext-observability (14 files)
 
 For each pair:
+
 1. Read `_utilities/_*.py` to identify exported symbols (classes, functions, constants)
 2. Replace public file with re-export stub
 3. Verify: `ruff check src/`, `pyrefly check src/`, `pyright src/`

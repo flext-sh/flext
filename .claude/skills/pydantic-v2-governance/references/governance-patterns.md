@@ -1,14 +1,14 @@
 ## Instructions
 
-### 1. m.Field() → Annotated Pattern
+### 1. u.Field() → Annotated Pattern
 
-**Pattern**: For nullable fields, use `Annotated[T | None, m.Field(...)]` NOT `Annotated[T, m.Field(...)] | None`.
+**Pattern**: For nullable fields, use `Annotated[T | None, u.Field(...)]` NOT `Annotated[T, u.Field(...)] | None`.
 
 **Canonical Example** (`flext-core/src/flext_core/_models/cqrs.py:91-99`):
 
 ```python
 from typing import Annotated
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, u.Field
 
 
 class Pagination(m.BaseModel):
@@ -20,7 +20,7 @@ class Pagination(m.BaseModel):
     )
     page: Annotated[
         int,
-        m.Field(
+        u.Field(
             default=c.DEFAULT_PAGE_NUMBER,
             ge=c.RETRY_COUNT_MIN,
             description="Page number (1-based indexing)",
@@ -29,23 +29,24 @@ class Pagination(m.BaseModel):
     ] = c.DEFAULT_PAGE_NUMBER
 ```
 
-**Why**: The union MUST be inside `Annotated[]`, not outside. This ensures Field constraints apply to the entire union.
+**Why**: The union MUST be inside `Annotated[]`, not outside. This ensures u.Field constraints apply to the entire union.
 
 **Anti-pattern**:
 
 ```python
-# ✗ WRONG — Field constraints don't apply to None
-field: Annotated[str, m.Field(min_length=1)] | None = None
+# ✗ WRONG — u.Field constraints don't apply to None
+field: Annotated[str, u.Field(min_length=1)] | None = None
 ```
 
 **Correct**:
 
 ```python
-# ✓ CORRECT — Field constraints apply to entire union
-field: Annotated[str | None, m.Field(min_length=1)] = None
+# ✓ CORRECT — u.Field constraints apply to entire union
+field: Annotated[str | None, u.Field(min_length=1)] = None
 ```
 
 **Repository anchors**:
+
 - `flext-core/src/flext_core/_models/cqrs.py:91-99`
 - `flext-core/src/flext_core/_models/base.py` (multiple examples)
 
@@ -56,13 +57,13 @@ field: Annotated[str | None, m.Field(min_length=1)] = None
 **Canonical Example**:
 
 ```python
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class RetryConfiguration(m.BaseModel):
-    retry_on_status_codes: Sequence[int] = m.Field(default_factory=list)
-    metadata: t.StrMapping = m.Field(default_factory=dict)
-    tags: set[str] = m.Field(default_factory=set)
+    retry_on_status_codes: Sequence[int] = u.Field(default_factory=list)
+    metadata: t.StrMapping = u.Field(default_factory=dict)
+    tags: set[str] = u.Field(default_factory=set)
 ```
 
 **Why**: `default=[]` creates a SHARED mutable t.RecursiveContainer across all instances (Python gotcha). `default_factory=list` creates a NEW list per instance.
@@ -72,7 +73,7 @@ class RetryConfiguration(m.BaseModel):
 ```python
 # ✗ WRONG — Shared mutable default
 class Config(m.BaseModel):
-    items: t.StrSequence = m.Field(default=[])  # BUG: all instances share same list
+    items: t.StrSequence = u.Field(default=[])  # BUG: all instances share same list
 ```
 
 **Correct**:
@@ -80,10 +81,11 @@ class Config(m.BaseModel):
 ```python
 # ✓ CORRECT — New list per instance
 class Config(m.BaseModel):
-    items: t.StrSequence = m.Field(default_factory=list)
+    items: t.StrSequence = u.Field(default_factory=list)
 ```
 
 **Repository anchors**:
+
 - `flext-core/src/flext_core/_models/settings.py` (multiple examples)
 - `flext-core/src/flext_core/_models/base.py` (multiple examples)
 
@@ -95,14 +97,14 @@ class Config(m.BaseModel):
 
 ```python
 from typing import Annotated, ClassVar
-from pydantic import BaseModel, Field, TypeAdapter
+from pydantic import BaseModel, u.Field, TypeAdapter
 
 
 class ValidationHelpers(m.BaseModel):
     _tags_adapter: ClassVar[m.TypeAdapter[t.StrSequence] | None] = None
     _list_adapter: ClassVar[m.TypeAdapter[t.FlatContainerList] | None] = None
     _strict_string_adapter: ClassVar[
-        m.TypeAdapter[Annotated[str, m.Field(strict=True)]] | None
+        m.TypeAdapter[Annotated[str, u.Field(strict=True)]] | None
     ] = None
     _metadata_map_adapter: ClassVar[
         m.TypeAdapter[Mapping[str, t.MetadataValue]] | None
@@ -186,6 +188,7 @@ def validate_tags(self, tags) -> t.StrSequence:
 ```
 
 **Repository anchors**:
+
 - `flext-core/src/flext_core/_models/base.py:53-102`
 - `flext-core/src/flext_core/_utilities/validation.py`
 
@@ -194,12 +197,14 @@ def validate_tags(self, tags) -> t.StrSequence:
 **Pattern**: Use `Protocol` for structural typing (duck typing), `ABC` for explicit inheritance contracts.
 
 **When to use Protocol**:
+
 - Interface contracts across unrelated classes
 - Structural typing (if it walks like a duck...)
 - No shared implementation needed
 - MUST use `@runtime_checkable` for `isinstance()` checks
 
 **When to use ABC**:
+
 - Shared implementation via inheritance
 - Explicit "is-a" relationships
 - Template method pattern
@@ -237,6 +242,7 @@ class BaseHandler(ABC):
 **Why**: Protocols enable loose coupling without inheritance. ABCs enforce explicit contracts with shared behavior.
 
 **Repository anchors**:
+
 - `flext-core/src/flext_core/protocols.py:1-100`
 - `flext-core/src/flext_core/handlers.py`
 
@@ -318,6 +324,7 @@ if isinstance(instance, SomeProtocol):
 ```
 
 **Repository anchors**:
+
 - `flext-core/src/flext_core/protocols.py:39-100`
 
 ### 6. ConfigDict
@@ -327,7 +334,7 @@ if isinstance(instance, SomeProtocol):
 **Canonical Example**:
 
 ```python
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, u.Field
 
 
 class StrictBoundaryModel(m.BaseModel):
@@ -343,11 +350,12 @@ class StrictBoundaryModel(m.BaseModel):
             "description": "Immutable contract with strict validation",
         },
     )
-    name: str = m.Field(..., description="Entity name")
-    value: int = m.Field(..., ge=0, description="Non-negative value")
+    name: str = u.Field(..., description="Entity name")
+    value: int = u.Field(..., ge=0, description="Non-negative value")
 ```
 
 **Common ConfigDict options**:
+
 - `strict=True` — No coercion (boundary models)
 - `validate_assignment=True` — Validate on field assignment
 - `validate_default=True` — Validate default values
@@ -375,6 +383,7 @@ class MyModel(m.BaseModel):
 ```
 
 **Repository anchors**:
+
 - `flext-core/src/flext_core/_models/base.py` (`ContractModel`)
 - `flext-core/src/flext_core/_models/cqrs.py:85-90`
 - `flext-core/src/flext_core/settings.py`
@@ -402,11 +411,13 @@ class BoundaryModel(m.BaseModel):
 ```
 
 **Why**: Allows runtime control of validation strictness without code changes. Useful for:
+
 - Development (lenient) vs Production (strict)
 - Testing with partial fixtures
 - Gradual migration to stricter validation
 
 **Repository anchors**:
+
 - `flext-core/src/flext_core/protocols.py` (metaclass strict mode)
 - `flext-core/src/flext_core/settings.py`
 
@@ -500,29 +511,29 @@ if u.Guards.is_scalar(value):
     ...
 ```
 
-#### 8.5 Double m.Field() assignment — FORBIDDEN
+#### 8.5 Double u.Field() assignment — FORBIDDEN
 
 ```python
-# ✗ WRONG — Double m.Field() assignment
+# ✗ WRONG — Double u.Field() assignment
 from typing import Annotated
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class Model(m.BaseModel):
-    x: Annotated[str, m.Field(min_length=1)] = m.Field(default="")  # REDUNDANT
+    x: Annotated[str, u.Field(min_length=1)] = u.Field(default="")  # REDUNDANT
 ```
 
-**Correct**: m.Field() ONLY in Annotated OR as default, not both:
+**Correct**: u.Field() ONLY in Annotated OR as default, not both:
 
 ```python
-# ✓ CORRECT — m.Field() in Annotated
+# ✓ CORRECT — u.Field() in Annotated
 class Model(m.BaseModel):
-    x: Annotated[str, m.Field(min_length=1, default="")] = ""
+    x: Annotated[str, u.Field(min_length=1, default="")] = ""
 
 
-# ✓ CORRECT — m.Field() as default
+# ✓ CORRECT — u.Field() as default
 class Model(m.BaseModel):
-    x: str = m.Field(default="", min_length=1)
+    x: str = u.Field(default="", min_length=1)
 ```
 
 #### 8.6 Model(data) with dict — FORBIDDEN
@@ -540,6 +551,6 @@ model = MyModel.model_validate({"key": "value"})
 ```
 
 **Repository anchors**:
+
 - `AGENTS.md` §3.1-§3.3
 - `flext-core/AGENTS.md` (Zero Tolerance Rules)
-

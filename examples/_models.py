@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from flext_core import m, t
+from flext_core import m, t, u
 
 
 class ValidationRules(m.BaseModel):
@@ -23,10 +23,10 @@ class ValidationRules(m.BaseModel):
     for validating ACL entries across different server types.
     """
 
-    required_permissions: t.StrSequence = m.Field(
+    required_permissions: t.StrSequence = u.Field(
         description="List of permissions that must be present in valid ACL entries",
     )
-    forbidden_combinations: Sequence[tuple[str, ...]] = m.Field(
+    forbidden_combinations: Sequence[tuple[str, ...]] = u.Field(
         description="Permission combinations that are not allowed together",
     )
 

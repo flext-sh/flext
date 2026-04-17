@@ -85,6 +85,7 @@ completed: 2026-03-24
 - **Files modified:** 35+
 
 ## Accomplishments
+
 - All 297 StrEnum classes in src/ now have @unique (5 were missing)
 - 65+ Literal[str,...] type aliases removed or replaced with StrEnum references across 17 projects
 - 3 new StrEnum classes created (Operation, ErrorMode, OICApiVersion)
@@ -98,6 +99,7 @@ completed: 2026-03-24
    - 17 submodules committed + root
 
 ## Decisions Made
+
 - Redundant Literal aliases that duplicated StrEnum values were removed entirely (not converted to StrEnum references) since they were mostly unused
 - For Literal aliases used in code: replaced with the corresponding StrEnum type directly in annotations
 - Frozen `_utilities/*` files untouched; kept 2 Literal aliases as backward-compat type aliases (`AclSubjectTypeLiteral = AclSubjectType`, `AttributeMarkerStatusLiteral = AttributeMarkerStatus`)
@@ -108,6 +110,7 @@ completed: 2026-03-24
 ### Auto-fixed Issues
 
 **1. [Rule 2 - Missing Critical] Created Operation and ErrorMode StrEnums in flext-tests**
+
 - **Found during:** Task 2
 - **Issue:** `_OperationLiteral` and `_ErrorModeLiteral` in files.py had no corresponding StrEnum
 - **Fix:** Created `@unique class Operation(StrEnum)` and `@unique class ErrorMode(StrEnum)` in flext-tests constants
@@ -115,12 +118,14 @@ completed: 2026-03-24
 - **Verification:** ruff check passes
 
 **2. [Rule 2 - Missing Critical] Created OICApiVersion StrEnum in flext-oracle-oic**
+
 - **Found during:** Task 2
 - **Issue:** `OICApiVersionLiteral = Literal["v1", "v2"]` used in settings but no StrEnum
 - **Fix:** Created `@unique class OICApiVersion(StrEnum)` in settings.py
 - **Files modified:** flext-oracle-oic/src/flext_oracle_oic/settings.py
 
 **3. [Rule 2] Converted flext-api ActiveMethods/SafeMethods Literals to frozenset constants**
+
 - **Found during:** Task 2
 - **Issue:** `type ActiveMethods = Literal[...]` and `type SafeMethods = Literal[...]` were unused type aliases
 - **Fix:** Converted to `ACTIVE_METHODS: Final[frozenset[str]]` and `SAFE_METHODS: Final[frozenset[str]]` for runtime validation
@@ -132,12 +137,15 @@ completed: 2026-03-24
 **Impact on plan:** All auto-fixes necessary for correctness. No scope creep.
 
 ## Issues Encountered
+
 - Pre-existing RUF065 errors in frozen `flext-ldif/src/flext_ldif/_utilities/schema.py` (4 errors) — out of scope, not caused by changes
 
 ## Known Stubs
+
 None.
 
 ## Next Phase Readiness
+
 - All StrEnum classes have @unique enforcement
 - No remaining `type X = Literal[...]` PEP 695 aliases in constants/typings files
 - Ready for Phase 04-03 or further typing improvements

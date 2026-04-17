@@ -3,12 +3,12 @@
 - No sections found
 <!-- TOC END -->
 
-Models can be [created dynamically](../concepts/models.md#dynamic-model-creation) using the [`create_model()`][pydantic.create_model]
+Models can be [created dynamically](../concepts/models.md#dynamic-model-creation) using the [`u.create_model()`][pydantic.u.create_model]
 factory function.
 
 In this example, we will show how to dynamically derive a model from an existing one, making every field optional. To achieve this,
 we will make use of the [`model_fields`][pydantic.main.BaseModel.model_fields] model class attribute, and derive new annotations
-from the field definitions to be passed to the [`create_model()`][pydantic.create_model] factory. Of course, this example can apply
+from the field definitions to be passed to the [`u.create_model()`][pydantic.u.create_model] factory. Of course, this example can apply
 to any use case where you need to derive a new model from another (remove default values, add aliases, etc).
 
 === "Python 3.9"
@@ -16,7 +16,7 @@ to any use case where you need to derive a new model from another (remove defaul
     ```python {lint="skip" linenums="1"}
     from typing import Annotated, Union
 
-    from pydantic import BaseModel, Field, create_model
+    from pydantic import BaseModel, u.Field, u.create_model
 
 
     def make_fields_optional(model_cls: type[BaseModel]) -> type[BaseModel]:
@@ -29,20 +29,20 @@ to any use case where you need to derive a new model from another (remove defaul
                     (
                         Union[f_dct["annotation"], None],
                         *f_dct["metadata"],
-                        Field(**f_dct["attributes"]),
+                        u.Field(**f_dct["attributes"]),
                     )
                 ],
                 None,
             )
 
-        return create_model(
+        return u.create_model(
             f"{type.__name__}Optional",
             __base__=model_cls,  # (1)!
             **new_fields,
         )
     ```
 
-    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed fields](../concepts/fields.md#the-computed_field-decorator), etc.
+    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed fields](../concepts/fields.md#the-u.computed_field-decorator), etc.
     The parent fields are overridden by the ones we define.
 
 === "Python 3.10"
@@ -50,7 +50,7 @@ to any use case where you need to derive a new model from another (remove defaul
     ```python {lint="skip" requires="3.10" linenums="1"}
     from typing import Annotated
 
-    from pydantic import BaseModel, Field, create_model
+    from pydantic import BaseModel, u.Field, u.create_model
 
 
     def make_fields_optional(model_cls: type[BaseModel]) -> type[BaseModel]:
@@ -63,20 +63,20 @@ to any use case where you need to derive a new model from another (remove defaul
                     (
                         f_dct["annotation"] | None,
                         *f_dct["metadata"],
-                        Field(**f_dct["attributes"]),
+                        u.Field(**f_dct["attributes"]),
                     )
                 ],
                 None,
             )
 
-        return create_model(
+        return u.create_model(
             f"{type.__name__}Optional",
             __base__=model_cls,  # (1)!
             **new_fields,
         )
     ```
 
-    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed fields](../concepts/fields.md#the-computed_field-decorator), etc.
+    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed fields](../concepts/fields.md#the-u.computed_field-decorator), etc.
     The parent fields are overridden by the ones we define.
 
 === "Python 3.11 and above"
@@ -84,7 +84,7 @@ to any use case where you need to derive a new model from another (remove defaul
     ```python {lint="skip" requires="3.11" linenums="1"}
     from typing import Annotated
 
-    from pydantic import BaseModel, Field, create_model
+    from pydantic import BaseModel, u.Field, u.create_model
 
 
     def make_fields_optional(model_cls: type[BaseModel]) -> type[BaseModel]:
@@ -96,34 +96,34 @@ to any use case where you need to derive a new model from another (remove defaul
                 Annotated[
                     f_dct["annotation"] | None,
                     *f_dct["metadata"],
-                    Field(**f_dct["attributes"]),
+                    u.Field(**f_dct["attributes"]),
                 ],
                 None,
             )
 
-        return create_model(
+        return u.create_model(
             f"{type.__name__}Optional",
             __base__=model_cls,  # (1)!
             **new_fields,
         )
     ```
 
-    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed fields](../concepts/fields.md#the-computed_field-decorator), etc.
+    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed fields](../concepts/fields.md#the-u.computed_field-decorator), etc.
     The parent fields are overridden by the ones we define.
 
-For each field, we generate a dictionary representation of the [`FieldInfo`][pydantic.fields.FieldInfo] instance
-using the [`asdict()`][pydantic.fields.FieldInfo.asdict] method, containing the annotation, metadata and attributes.
+For each field, we generate a dictionary representation of the [`u.FieldInfo`][pydantic.fields.u.FieldInfo] instance
+using the [`asdict()`][pydantic.fields.u.FieldInfo.asdict] method, containing the annotation, metadata and attributes.
 
 With the following model:
 
 ```python {lint="skip" test="skip"}
 class Model(BaseModel):
     f: Annotated[
-        int, Field(gt=1), WithJsonSchema({"extra": "data"}), Field(title="F")
+        int, u.Field(gt=1), WithJsonSchema({"extra": "data"}), u.Field(title="F")
     ] = 1
 ```
 
-The [`FieldInfo`][pydantic.fields.FieldInfo] instance of `f` will have three items in its dictionary representation:
+The [`u.FieldInfo`][pydantic.fields.u.FieldInfo] instance of `f` will have three items in its dictionary representation:
 
 - `annotation`: `int`.
 - `metadata`: A list containing the type-specific constraints and other metadata: `[Gt(1), WithJsonSchema({'extra': 'data'})]`.
@@ -138,7 +138,7 @@ With that in mind, we can recreate an annotation that "simulates" the one from t
         (
             f_dct["annotation"] | None,  # (1)!
             *f_dct["metadata"],  # (2)!
-            Field(**f_dct["attributes"]),  # (3)!
+            u.Field(**f_dct["attributes"]),  # (3)!
         )
     ]
     ```
@@ -147,11 +147,11 @@ With that in mind, we can recreate an annotation that "simulates" the one from t
        (in our previous example, this is equivalent to `int | None`).
 
     2. We unpack the metadata to be reused (in our previous example, this is equivalent to
-       specifying `Field(gt=1)` and `WithJsonSchema({'extra': 'data'})` as [`Annotated`][typing.Annotated]
+       specifying `u.Field(gt=1)` and `WithJsonSchema({'extra': 'data'})` as [`Annotated`][typing.Annotated]
        metadata).
 
-    3. We specify the field-specific attributes by using the [`Field()`][pydantic.Field] function
-       (in our previous example, this is equivalent to `Field(title='F')`).
+    3. We specify the field-specific attributes by using the [`u.Field()`][pydantic.u.Field] function
+       (in our previous example, this is equivalent to `u.Field(title='F')`).
 
 === "Python 3.11 and above"
 
@@ -159,7 +159,7 @@ With that in mind, we can recreate an annotation that "simulates" the one from t
     new_annotation = Annotated[
         f_dct["annotation"] | None,  # (1)!
         *f_dct["metadata"],  # (2)!
-        Field(**f_dct["attributes"]),  # (3)!
+        u.Field(**f_dct["attributes"]),  # (3)!
     ]
     ```
 
@@ -167,22 +167,22 @@ With that in mind, we can recreate an annotation that "simulates" the one from t
        (in our previous example, this is equivalent to `int | None`).
 
     2. We unpack the metadata to be reused (in our previous example, this is equivalent to
-       specifying `Field(gt=1)` and `WithJsonSchema({'extra': 'data'})` as [`Annotated`][typing.Annotated]
+       specifying `u.Field(gt=1)` and `WithJsonSchema({'extra': 'data'})` as [`Annotated`][typing.Annotated]
        metadata).
 
-    3. We specify the field-specific attributes by using the [`Field()`][pydantic.Field] function
-       (in our previous example, this is equivalent to `Field(title='F')`).
+    3. We specify the field-specific attributes by using the [`u.Field()`][pydantic.u.Field] function
+       (in our previous example, this is equivalent to `u.Field(title='F')`).
 
-and specify `None` as a default value (the second element of the tuple for the field definition accepted by [`create_model()`][pydantic.create_model]).
+and specify `None` as a default value (the second element of the tuple for the field definition accepted by [`u.create_model()`][pydantic.u.create_model]).
 
 Here is a demonstration of our factory function:
 
 ```python {lint="skip" test="skip"}
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class Model(BaseModel):
-    a: Annotated[int, Field(gt=1)]
+    a: Annotated[int, u.Field(gt=1)]
 
 
 ModelOptional = make_fields_optional(Model)
@@ -219,7 +219,7 @@ A couple notes on the implementation:
 - The experimental [`MISSING` sentinel](../concepts/experimental.md#missing-sentinel) can be used as an alternative to `None`
   for the default values. Simply replace `None` by `MISSING` in the new annotation and default value.
 
-- You might be tempted to make a copy of the original [`FieldInfo`][pydantic.fields.FieldInfo] instances, add a
+- You might be tempted to make a copy of the original [`u.FieldInfo`][pydantic.fields.u.FieldInfo] instances, add a
   default and/or perform other mutations, to then reuse it as [`Annotated`][typing.Annotated] metadata. While this
   may work in some cases, it is **not** a supported pattern, and could break or be deprecated at any point. We strongly
   encourage using the pattern from this example instead.

@@ -50,6 +50,7 @@ completed: 2026-03-24
 - **Files modified:** 4
 
 ## Accomplishments
+
 - Validated MIG-01/02/03: flext-infra and flext-tests are git submodules, flext-core/src contains only flext_core
 - Converted all 3 foundation pyproject.toml files from poetry.core.masonry to hatchling.build
 - Replaced [tool.poetry] packages with [tool.hatch.build.targets.wheel] in all 3 projects
@@ -63,12 +64,14 @@ Each task was committed atomically:
 2. **Task 2: Convert flext-core and flext-tests to hatchling + update modernizer** - `make save` (feat)
 
 ## Files Created/Modified
+
 - `flext-infra/pyproject.toml` - build-backend changed to hatchling, [tool.poetry] replaced with [tool.hatch.build.targets.wheel]
 - `flext-core/pyproject.toml` - same conversion as flext-infra
 - `flext-tests/pyproject.toml` - same conversion plus removed [tool.poetry.group.dev.dependencies]
 - `flext-infra/src/flext_infra/deps/modernizer.py` - _run_poetry_check replaced with_run_build_check validating hatchling
 
 ## Decisions Made
+
 - Modernizer _run_poetry_check replaced with_run_build_check that validates hatchling presence instead of running poetry CLI
 - flext-tests poetry dev group with path deps removed (will become workspace refs in Plan 02)
 - Poetry group cleanup code in modernizer kept as-is (handles legacy projects not yet converted)
@@ -78,12 +81,15 @@ Each task was committed atomically:
 None - plan executed exactly as written.
 
 ## Issues Encountered
+
 None
 
 ## User Setup Required
+
 None - no external service configuration required.
 
 ## Next Phase Readiness
+
 - Foundation projects on hatchling, ready for bulk conversion in Plan 02
 - Modernizer validates hatchling backend, can be extended to emit it for new projects
 

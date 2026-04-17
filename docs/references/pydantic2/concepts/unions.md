@@ -44,16 +44,16 @@ With this approach, validation is attempted against each member of the union in 
 
 If validation fails on all members, the validation error includes the errors from all members of the union.
 
-`union_mode='left_to_right'` must be set as a [`Field`](../concepts/fields.md) parameter on union fields where you want to use it.
+`union_mode='left_to_right'` must be set as a [`u.Field`](../concepts/fields.md) parameter on union fields where you want to use it.
 
 ```python {title="Union with left to right mode"}
 from typing import Union
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class User(BaseModel):
-    id: Union[str, int] = Field(union_mode="left_to_right")
+    id: Union[str, int] = u.Field(union_mode="left_to_right")
 
 
 print(User(id=123))
@@ -79,11 +79,11 @@ The order of members is very important in this case, as demonstrated by tweak th
 ```python {title="Union with left to right - unexpected results"}
 from typing import Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class User(BaseModel):
-    id: Union[int, str] = Field(union_mode="left_to_right")
+    id: Union[int, str] = u.Field(union_mode="left_to_right")
 
 
 print(User(id=123))  # (1)
@@ -205,12 +205,12 @@ which union case the data should be validated against; this is referred to as th
 
 To validate models based on that information you can set the same field - let's call it `my_discriminator` -
 in each of the models with a discriminated value, which is one (or many) `Literal` value(s).
-For your `Union`, you can set the discriminator in its value: `Field(discriminator='my_discriminator')`.
+For your `Union`, you can set the discriminator in its value: `u.Field(discriminator='my_discriminator')`.
 
 ```python
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Cat(BaseModel):
@@ -229,7 +229,7 @@ class Lizard(BaseModel):
 
 
 class Model(BaseModel):
-    pet: Union[Cat, Dog, Lizard] = Field(discriminator="pet_type")
+    pet: Union[Cat, Dog, Lizard] = u.Field(discriminator="pet_type")
     n: int
 
 
@@ -242,7 +242,7 @@ except ValidationError as e:
     """
     1 validation error for Model
     pet.dog.barks
-      Field required [type=missing, input_value={'pet_type': 'dog'}, input_type=dict]
+      u.Field required [type=missing, input_value={'pet_type': 'dog'}, input_type=dict]
     """
 ```
 
@@ -391,16 +391,16 @@ the `Union` and `discriminator` information. See the next example for more detai
     For `str` discriminators:
 
     ```python {lint="skip" test="skip"}
-    some_field: Union[...] = Field(discriminator="my_discriminator")
-    some_field: Annotated[Union[...], Field(discriminator="my_discriminator")]
+    some_field: Union[...] = u.Field(discriminator="my_discriminator")
+    some_field: Annotated[Union[...], u.Field(discriminator="my_discriminator")]
     ```
 
     For callable `Discriminator`s:
 
     ```python {lint="skip" test="skip"}
-    some_field: Union[...] = Field(discriminator=Discriminator(...))
+    some_field: Union[...] = u.Field(discriminator=Discriminator(...))
     some_field: Annotated[Union[...], Discriminator(...)]
-    some_field: Annotated[Union[...], Field(discriminator=Discriminator(...))]
+    some_field: Annotated[Union[...], u.Field(discriminator=Discriminator(...))]
     ```
 
 !!! warning
@@ -417,7 +417,7 @@ You can do it by creating nested `Annotated` types, e.g.:
 ```python
 from typing import Annotated, Literal, Union
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class BlackCat(BaseModel):
@@ -432,7 +432,7 @@ class WhiteCat(BaseModel):
     white_name: str
 
 
-Cat = Annotated[Union[BlackCat, WhiteCat], Field(discriminator="color")]
+Cat = Annotated[Union[BlackCat, WhiteCat], u.Field(discriminator="color")]
 
 
 class Dog(BaseModel):
@@ -440,7 +440,7 @@ class Dog(BaseModel):
     name: str
 
 
-Pet = Annotated[Union[Cat, Dog], Field(discriminator="pet_type")]
+Pet = Annotated[Union[Cat, Dog], u.Field(discriminator="pet_type")]
 
 
 class Model(BaseModel):
@@ -467,7 +467,7 @@ except ValidationError as e:
     """
     1 validation error for Model
     pet.cat.black.black_name
-      Field required [type=missing, input_value={'pet_type': 'cat', 'color': 'black'}, input_type=dict]
+      u.Field required [type=missing, input_value={'pet_type': 'cat', 'color': 'black'}, input_type=dict]
     """
 ```
 
@@ -540,7 +540,7 @@ except ValidationError as e:
     x.Model.x.Model.x.str
       Input should be a valid string [type=string_type, input_value={}, input_type=dict]
     x.Model.x.Model.x.Model.x
-      Field required [type=missing, input_value={}, input_type=dict]
+      u.Field required [type=missing, input_value={}, input_type=dict]
     """
 
 
@@ -584,7 +584,7 @@ except ValidationError as e:
     """
     1 validation error for DiscriminatedModel
     x.model.x.model.x.model.x
-      Field required [type=missing, input_value={}, input_type=dict]
+      u.Field required [type=missing, input_value={}, input_type=dict]
     """
 
 # The data is still handled properly when valid:

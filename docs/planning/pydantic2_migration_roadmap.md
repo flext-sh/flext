@@ -13,7 +13,7 @@
 - [Migration Metrics](#migration-metrics)
   - [Cast() Usage by Location (627 total)](#cast-usage-by-location-627-total)
   - [TypedDict Usage by Project (305 total)](#typeddict-usage-by-project-305-total)
-  - [ConfigDict Standardization Scope](#configdict-standardization-scope)
+  - [m.ConfigDict Standardization Scope](#configdict-standardization-scope)
 - [Phase Structure (Parallelized)](#phase-structure-parallelized)
   - [Phase 0: Foundation (COMPLETED)](#phase-0-foundation-completed)
   - [Phase 1: Core Completion + Pattern Establishment](#phase-1-core-completion-pattern-establishment)
@@ -53,7 +53,7 @@
 - Zero `cast()` usage in ALL code (src/ AND tests/)
 - Zero `TypedDict` - ALL converted to structural Pydantic 2 models with hierarchical inheritance
 - Standardized `ConfigDict` settings across all 127+ models
-- Modern validator patterns (`@field_validator`, `@model_validator`, `computed_field`)
+- Modern validator patterns (`@u.field_validator`, `@u.model_validator`, `u.computed_field`)
 - All projects passing `make validate`
 - 80%+ test coverage maintained
 
@@ -129,16 +129,16 @@ class FlextModels:
         """Configuration models namespace."""
 
         class Dispatcher(FlextModels.Base):
-            timeout: int = m.Field(ge=0, description="Timeout in seconds")
-            retries: int = m.Field(ge=0, le=10, description="Max retry attempts")
-            batch_size: int = m.Field(ge=1, le=10000, description="Batch size")
+            timeout: int = u.Field(ge=0, description="Timeout in seconds")
+            retries: int = u.Field(ge=0, le=10, description="Max retry attempts")
+            batch_size: int = u.Field(ge=1, le=10000, description="Batch size")
 
     class Result:
         """Result models namespace."""
 
         class Batch(FlextModels.Base):
-            success_count: int = m.Field(ge=0)
-            failure_count: int = m.Field(ge=0)
+            success_count: int = u.Field(ge=0)
+            failure_count: int = u.Field(ge=0)
 
             @u.computed_field
             @property
@@ -175,21 +175,21 @@ model_config = ConfigDict(
 ### Modern Validator Patterns (Pydantic 2.11+)
 
 ```python
-from pydantic import BaseModel, field_validator, model_validator, computed_field
+from pydantic import BaseModel, u.field_validator, u.model_validator, u.computed_field
 
 
 class User(m.BaseModel):
     email: str
     password: str
 
-    @field_validator("email")
+    @u.field_validator("email")
     @classmethod
     def validate_email(cls, v: str) -> str:
         if "@" not in v:
             raise ValueError("Invalid email format")
         return v.lower()
 
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_model(self) -> Self:
         if len(self.password) < 8:
             raise ValueError("Password too short")
@@ -681,17 +681,17 @@ entry: ldif_m.Entry = ...
 
 ## Timeline Estimate (Parallelized)
 
-| Phase                      | Duration | Parallel With | Cumulative |
-| -------------------------- | -------- | ------------- | ---------- |
-| Phase 1: Core              | 4 days   | -             | 4 days     |
-| Phase 2: API + Infra       | 3 days   | (A \|\| B)    | 7 days     |
-| Phase 3: Data              | 4 days   | -             | 11 days    |
-| Phase 4: Oracle + Meltano  | 3 days   | (A \|\| B)    | 14 days    |
-| Phase 5: Taps + Targets    | 5 days   | (A \|\| B)    | 19 days    |
-| Phase 6: DBT + User-Facing | 5 days   | (A \|\| B)    | 24 days    |
-| Phase 7: Test Suite        | 4 days   | -             | 28 days    |
-| Phase 8: Problem Project   | 4 days   | -             | 32 days    |
-| Phase 9: Validation        | 3 days   | -             | 35 days    |
+| Phase                      | Duration | Parallel With | Cumulative |     |         |
+| -------------------------- | -------- | ------------- | ---------- | --- | ------- |
+| Phase 1: Core              | 4 days   | -             | 4 days     |     |         |
+| Phase 2: API + Infra       | 3 days   | (A \          | \          | B)  | 7 days  |
+| Phase 3: Data              | 4 days   | -             | 11 days    |     |         |
+| Phase 4: Oracle + Meltano  | 3 days   | (A \          | \          | B)  | 14 days |
+| Phase 5: Taps + Targets    | 5 days   | (A \          | \          | B)  | 19 days |
+| Phase 6: DBT + User-Facing | 5 days   | (A \          | \          | B)  | 24 days |
+| Phase 7: Test Suite        | 4 days   | -             | 28 days    |     |         |
+| Phase 8: Problem Project   | 4 days   | -             | 32 days    |     |         |
+| Phase 9: Validation        | 3 days   | -             | 35 days    |     |         |
 
 **Total Estimated Duration**: ~5-6 weeks (reduced from 6-8 weeks via parallelization)
 
@@ -727,7 +727,7 @@ entry: ldif_m.Entry = ...
 2. **Zero `TypedDict`** - all converted to structural Pydantic 2 models
 3. **Hierarchical inheritance** - models organized in namespaced hierarchies
 4. **Standard ConfigDict** - consistent settings across all 127+ models
-5. **Modern validators** - `@field_validator`, `@model_validator`, `computed_field`
+5. **Modern validators** - `@u.field_validator`, `@u.model_validator`, `u.computed_field`
 6. **All 29 projects** passing `make validate`
 7. **80%+ test coverage** maintained or improved
 8. **No regression** in functionality

@@ -155,5 +155,5 @@ None — all key behaviors are mechanically verifiable.
 
 ---
 
-_Verified: 2026-04-06T01:39:07Z_
-_Verifier: Claude (gsd-verifier)_
+*Verified: 2026-04-06T01:39:07Z*
+*Verifier: Claude (gsd-verifier)*

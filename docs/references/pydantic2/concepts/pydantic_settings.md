@@ -5,7 +5,7 @@
 
 ---
 
-## description: Support for loading a settings or settings class from environment variables or secrets files.
+## description: Support for loading a settings or settings class from environment variables or secrets files
 
 # Settings Management
 

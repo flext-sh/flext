@@ -71,11 +71,11 @@ class BoolSchema(TypedDict, total=False):
 When defining a Pydantic model with a boolean field:
 
 ```python
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class Model(m.BaseModel):
-    foo: bool = m.Field(strict=True)
+    foo: bool = u.Field(strict=True)
 ```
 
 The core schema for the `foo` field will look like:
@@ -92,13 +92,13 @@ the serialization logic is also defined in the core schema.
 If we were to define a custom serialization function for `foo` (1), the `serialization` key would look like:
 { .annotate }
 
-1. For example using the [`field_serializer`][pydantic.functional_serializers.field_serializer] decorator:
+1. For example using the [`u.field_serializer`][pydantic.functional_serializers.u.field_serializer] decorator:
 
    ```python {test="skip" lint="skip"}
    class Model(m.BaseModel):
-       foo: bool = m.Field(strict=True)
+       foo: bool = u.Field(strict=True)
 
-       @field_serializer("foo", mode="plain")
+       @u.field_serializer("foo", mode="plain")
        def serialize_foo(self, value: bool): ...
    ```
 
@@ -106,7 +106,7 @@ If we were to define a custom serialization function for `foo` (1), the `seriali
 {
     'type': 'function-plain',
     'function': <function Model.serialize_foo at 0x111>,
-    'is_field_serializer': True,
+    'is_u.field_serializer': True,
     'info_arg': False,
     'return_schema': {'type': 'int'},
 }

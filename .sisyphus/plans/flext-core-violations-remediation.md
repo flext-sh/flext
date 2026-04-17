@@ -5,6 +5,7 @@
 > **Quick Summary**: Fix ALL violations to AGENTS.md governance standards in `flext-core/src/flext_core/` — eliminate forbidden constructs, standardize type patterns, audit and triage 400+ dynamic dispatch calls, convert fallible returns to `r[T]`.
 >
 > **Deliverables**:
+>
 > - 0 `model_rebuild()` calls (from 6)
 > - 0 `type()` narrowing (from 1)
 > - 0 deprecated `TypeAlias` syntax (from 1)
@@ -24,16 +25,20 @@
 ## Context
 
 ### Original Request
+
 Fix ALL violations to AGENTS.md and skills in flext-core to standardize patterns, remove duplications, and eliminate forbidden constructs. User confirmed: ALL getattr/setattr/try-except audited, ALL T|None converted.
 
 ### Interview Summary
+
 **Key Decisions**:
+
 - Scope: ALL violations, not phased
 - ALL 230+ getattr/setattr audited
 - ALL T|None returns converted to r[T]
 - ALL try/except blocks audited
 
 **Research Findings**:
+
 - 63 .py files scanned exhaustively
 - ~39 distinct violation types across 8 categories
 - 6 `__eq__(other: object)` are FALSE POSITIVES (Python dunder mandate)
@@ -42,7 +47,9 @@ Fix ALL violations to AGENTS.md and skills in flext-core to standardize patterns
 - Baseline: 3197 passed, 4 failed tests; ruff clean
 
 ### Metis Review
+
 **Identified Gaps (addressed)**:
+
 - False positives in bare `object` (6 of 9 are Python-mandated dunder signatures) — EXCLUDED
 - FROZEN file violations — DEFERRED to separate plan
 - container.py setattr (14) and result.py setattr (12) are DI/Result MECHANISMS — EXCLUDED
@@ -57,9 +64,11 @@ Fix ALL violations to AGENTS.md and skills in flext-core to standardize patterns
 ## Work Objectives
 
 ### Core Objective
+
 Bring flext-core/src/flext_core/ into FULL compliance with AGENTS.md §2-§4 and all governance skills by eliminating forbidden constructs, standardizing type patterns, and auditing dynamic dispatch usage.
 
 ### Concrete Deliverables
+
 - Zero forbidden constructs (`model_rebuild`, `type()` narrowing, deprecated `TypeAlias`)
 - Zero `r[T] | None` redundant patterns
 - Zero `except Exception` broad catches
@@ -68,6 +77,7 @@ Bring flext-core/src/flext_core/ into FULL compliance with AGENTS.md §2-§4 and
 - All fallible return types converted from `T | None` to `r[T]`
 
 ### Definition of Done
+
 - [ ] `python -m ruff check src/` → "All checks passed!"
 - [ ] `python -m pytest tests/ --ignore=tests/infra --tb=no -q` → passed >= 3197, failed <= 4
 - [ ] `python -c "from flext_core import r, t, c, m, p, u"` → "OK"
@@ -75,6 +85,7 @@ Bring flext-core/src/flext_core/ into FULL compliance with AGENTS.md §2-§4 and
 - [ ] Evidence stored in `.sisyphus/evidence/`
 
 ### Must Have
+
 - ALL forbidden constructs eliminated
 - ALL `r[bool] | None` converted to `r[bool]`
 - ALL loose functions absorbed into namespace classes
@@ -83,6 +94,7 @@ Bring flext-core/src/flext_core/ into FULL compliance with AGENTS.md §2-§4 and
 - ALL fallible `T | None` returns converted to `r[T]`
 
 ### Must NOT Have (Guardrails)
+
 - **DO NOT** change `__eq__(self, other: object)` or `model_post_init(__context: object)` — Python/Pydantic mandate
 - **DO NOT** change setattr in container.py (14 calls) or result.py (12 calls) — these ARE the mechanism
 - **DO NOT** change try/except in loggings.py defensive guards unless classified as BUSINESS_LOGIC per audit
@@ -92,10 +104,10 @@ Bring flext-core/src/flext_core/ into FULL compliance with AGENTS.md §2-§4 and
 - **DO NOT** fix pre-existing 4 test failures
 - **DO NOT** fix downstream consumer breakage (scope is flext-core only)
 - **TEMPORARY GOVERNANCE EXCEPTION** (§5 Make Contract): `make check PROJECT=flext-core` is currently broken due to a CliArgs validation error in `flext_infra` (separate package, out of scope). Until that is fixed, this plan uses direct tool invocations as substitute `make` targets:
-    - `python -m ruff check src/` substitutes `make check PROJECT=flext-core CHECK_GATES=lint`
-    - `python -m pytest tests/ --ignore=tests/infra --tb=no -q` substitutes `make test PROJECT=flext-core`
-    - This exception applies ONLY to this plan. A separate beads issue should be filed to fix `make check`.
-    - **Justification**: §5 says "make is the mandatory entrypoint" but also §6 says "No Silent Failures" — a broken make target silently prevents quality gates. Direct tool invocation preserves the gate intent while the make infrastructure is repaired.
+  - `python -m ruff check src/` substitutes `make check PROJECT=flext-core CHECK_GATES=lint`
+  - `python -m pytest tests/ --ignore=tests/infra --tb=no -q` substitutes `make test PROJECT=flext-core`
+  - This exception applies ONLY to this plan. A separate beads issue should be filed to fix `make check`.
+  - **Justification**: §5 says "make is the mandatory entrypoint" but also §6 says "No Silent Failures" — a broken make target silently prevents quality gates. Direct tool invocation preserves the gate intent while the make infrastructure is repaired.
 
 ---
 
@@ -104,12 +116,14 @@ Bring flext-core/src/flext_core/ into FULL compliance with AGENTS.md §2-§4 and
 > **ZERO HUMAN INTERVENTION** — ALL verification is agent-executed. No exceptions.
 
 ### Test Decision
+
 - **Infrastructure exists**: YES
 - **Automated tests**: YES (Tests-after — verify characterization)
 - **Framework**: pytest
 - **Approach**: Capture baseline → make fix → verify no regression
 
 ### QA Policy
+
 Every task MUST include agent-executed QA scenarios.
 Evidence saved to `.sisyphus/evidence/task-{N}-{scenario-slug}.{ext}`.
 
@@ -230,6 +244,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] Baseline test count recorded (expected: ~3197 passed, ~4 failed)
 
   **QA Scenarios**:
+
   ```
   Scenario: Baseline capture
     Tool: Bash
@@ -280,6 +295,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] `python -m ruff check src/` → clean
 
   **QA Scenarios**:
+
   ```
   Scenario: TypeAlias removal verified
     Tool: Bash
@@ -339,6 +355,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] `python -m pytest tests/ --ignore=tests/infra --tb=no -q` → passed >= baseline
 
   **QA Scenarios**:
+
   ```
   Scenario: model_rebuild eliminated + imports work
     Tool: Bash
@@ -401,6 +418,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] `python -m pytest tests/ --ignore=tests/infra --tb=no -q` → passed >= baseline
 
   **QA Scenarios**:
+
   ```
   Scenario: Bare object eliminated (excl. dunders)
     Tool: Bash
@@ -450,6 +468,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] `python -m ruff check src/` → clean
 
   **QA Scenarios**:
+
   ```
   Scenario: orjson usage audited
     Tool: Bash
@@ -509,6 +528,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] `python -m ruff check src/` → clean
 
   **QA Scenarios**:
+
   ```
   Scenario: No loose module-level functions remain
     Tool: Bash
@@ -570,6 +590,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] `python -m pytest tests/ --ignore=tests/infra --tb=no -q` → passed >= baseline
 
   **QA Scenarios**:
+
   ```
   Scenario: Zero broad exception catches
     Tool: Bash
@@ -619,6 +640,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] `python -m pytest tests/ --ignore=tests/infra --tb=no -q` → passed >= baseline
 
   **QA Scenarios**:
+
   ```
   Scenario: Zero r[bool] | None in loggings
     Tool: Bash
@@ -670,6 +692,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] Each call tagged as LEGITIMATE, VIOLATION, or DEFERRED with justification
 
   **QA Scenarios**:
+
   ```
   Scenario: Triage matrix complete
     Tool: Bash
@@ -716,6 +739,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] `.sisyphus/evidence/task-10-setattr-triage.md` exists with all 52 calls classified
 
   **QA Scenarios**:
+
   ```
   Scenario: Triage matrix complete
     Tool: Bash
@@ -766,6 +790,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] `.sisyphus/evidence/task-11-try-except-triage.md` exists with all 192 blocks classified
 
   **QA Scenarios**:
+
   ```
   Scenario: Triage matrix complete
     Tool: Bash
@@ -813,6 +838,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] `python -m ruff check src/` → clean
 
   **QA Scenarios**:
+
   ```
   Scenario: All getattr violations fixed — count-based verification
     Tool: Bash
@@ -857,6 +883,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] Tests pass >= baseline
 
   **QA Scenarios**:
+
   ```
   Scenario: All setattr violations fixed — count-based verification
     Tool: Bash
@@ -911,6 +938,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] Tests pass >= baseline
 
   **QA Scenarios**:
+
   ```
   Scenario: Business logic try/except converted
     Tool: Bash
@@ -969,6 +997,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] Call sites updated to use `.is_success` / `.value` instead of `is None`
 
   **QA Scenarios**:
+
   ```
   Scenario: Fallible returns converted
     Tool: Bash
@@ -1020,6 +1049,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] Tests pass >= baseline
 
   **QA Scenarios**:
+
   ```
   Scenario: MRO lineage verified
     Tool: Bash
@@ -1067,6 +1097,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] Tests pass >= baseline
 
   **QA Scenarios**:
+
   ```
   Scenario: Protocol signatures fixed + downstream documented
     Tool: Bash
@@ -1108,6 +1139,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] Tests pass >= baseline
 
   **QA Scenarios**:
+
   ```
   Scenario: Protocol implementations aligned with r[bool] signatures
     Tool: Bash
@@ -1158,6 +1190,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   - [ ] Evidence file complete
 
   **QA Scenarios**:
+
   ```
   Scenario: Full verification pass
     Tool: Bash
@@ -1188,6 +1221,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   **What to do**: Read the plan end-to-end. For each "Must Have": verify implementation exists. For each "Must NOT Have": search codebase for forbidden patterns. Check evidence files exist. Compare deliverables against plan.
 
   **QA Scenarios**:
+
   ```
   Scenario: Must Have verification
     Tool: Bash
@@ -1210,6 +1244,7 @@ Max Concurrent: 5 (Waves 1 & 2)
     Expected Result: No behavioral diff in FROZEN files.
     Evidence: .sisyphus/evidence/F1-frozen-check.txt
   ```
+
   Output: `Must Have [N/N] | Must NOT Have [N/N] | Tasks [N/N] | VERDICT: APPROVE/REJECT`
 
 - [ ] F2. **Code Quality Review** — `unspecified-high`
@@ -1217,6 +1252,7 @@ Max Concurrent: 5 (Waves 1 & 2)
   **What to do**: Run lint + tests. Review changed files for code quality issues.
 
   **QA Scenarios**:
+
   ```
   Scenario: Lint and test gates pass
     Tool: Bash
@@ -1228,6 +1264,7 @@ Max Concurrent: 5 (Waves 1 & 2)
     Expected Result: Step 1: "All checks passed!". Step 2: passed >= 3197, failed <= 4. Steps 3-4: 0 unjustified.
     Evidence: .sisyphus/evidence/F2-quality-review.txt
   ```
+
   Output: `Lint [PASS/FAIL] | Tests [N pass/N fail] | Files [N clean/N issues] | VERDICT`
 
 - [ ] F3. **Real QA — Full Test + Import Smoke** — `unspecified-high`
@@ -1235,11 +1272,13 @@ Max Concurrent: 5 (Waves 1 & 2)
   **What to do**: From clean state, run full import smoke test + test suite + grep checks.
 
   **QA Scenarios**:
+
   ```
   Scenario: Full import smoke test
     Tool: Bash
     Steps:
       1. python -c "
+
 from flext_core import FlextModels, FlextConstants, FlextTypes
 from flext_core import FlextUtilities, FlextProtocols, FlextContainer
 from flext_core import FlextDispatcher, FlextRegistry, FlextService
@@ -1252,6 +1291,7 @@ print('ALL 16 IMPORTS OK')
       3. grep -rn "model_rebuild\|except Exception" flext-core/src/flext_core/ | grep -v "#" | wc -l
     Expected Result: Step 1: "ALL 16 IMPORTS OK". Step 2: passed >= 3197. Step 3: 0.
     Evidence: .sisyphus/evidence/F3-qa-smoke.txt
+
   ```
   Output: `Import Smoke [PASS/FAIL] | Tests [N/N] | Grep Checks [N/N] | VERDICT`
 
@@ -1261,6 +1301,7 @@ print('ALL 16 IMPORTS OK')
 
   **QA Scenarios**:
   ```
+
   Scenario: Scope fidelity — no FROZEN file behavioral changes
     Tool: Bash
     Steps:
@@ -1278,6 +1319,7 @@ print('ALL 16 IMPORTS OK')
       2. Compare against expected file list from plan tasks
     Expected Result: All changed files traceable to a specific task.
     Evidence: .sisyphus/evidence/F4-file-accounting.txt
+
   ```
   Output: `Tasks [N/N compliant] | FROZEN [CLEAN/N issues] | Unaccounted [CLEAN/N files] | VERDICT`
 
@@ -1336,6 +1378,7 @@ python -c "from flext_core import r, t, c, m, p, u, FlextModels, FlextProtocols,
 ```
 
 ### Final Checklist
+
 - [ ] All "Must Have" present
 - [ ] All "Must NOT Have" absent
 - [ ] All tests pass (>= baseline)

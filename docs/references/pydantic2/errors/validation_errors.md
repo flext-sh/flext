@@ -141,13 +141,13 @@ except ValidationError as exc:
 This error is raised when a failing `assert` statement is encountered during validation:
 
 ```python
-from pydantic import BaseModel, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, u.field_validator
 
 
 class Model(BaseModel):
     x: int
 
-    @field_validator("x")
+    @u.field_validator("x")
     @classmethod
     def force_x_positive(cls, v):
         assert v > 0
@@ -229,11 +229,11 @@ except ValidationError as exc:
 This error is raised when the length of a `bytes` value is greater than the field's `max_length` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: bytes = Field(max_length=3)
+    x: bytes = u.Field(max_length=3)
 
 
 try:
@@ -248,11 +248,11 @@ except ValidationError as exc:
 This error is raised when the length of a `bytes` value is less than the field's `min_length` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: bytes = Field(min_length=3)
+    x: bytes = u.Field(min_length=3)
 
 
 try:
@@ -477,11 +477,11 @@ This error is raised when validating JSON where the input value is string that c
 import json
 from datetime import date
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: date = Field(strict=True)
+    x: date = u.Field(strict=True)
 
 
 try:
@@ -614,11 +614,11 @@ This error is raised when the value is a string that cannot be parsed for a `dat
 import json
 from datetime import datetime
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: datetime = Field(strict=True)
+    x: datetime = u.Field(strict=True)
 
 
 try:
@@ -679,11 +679,11 @@ This error is raised when the value provided for a `Decimal` has too many digits
 ```python
 from decimal import Decimal
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: Decimal = Field(max_digits=3)
+    x: Decimal = u.Field(max_digits=3)
 
 
 try:
@@ -700,11 +700,11 @@ This error is raised when the value provided for a `Decimal` has too many digits
 ```python
 from decimal import Decimal
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: Decimal = Field(decimal_places=3)
+    x: Decimal = u.Field(decimal_places=3)
 
 
 try:
@@ -721,11 +721,11 @@ This error is raised when the value provided for a `Decimal` could not be parsed
 ```python
 from decimal import Decimal
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: Decimal = Field(decimal_places=3)
+    x: Decimal = u.Field(decimal_places=3)
 
 
 try:
@@ -742,11 +742,11 @@ This error is raised when the value provided for a `Decimal` is of the wrong typ
 ```python
 from decimal import Decimal
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: Decimal = Field(decimal_places=3)
+    x: Decimal = u.Field(decimal_places=3)
 
 
 try:
@@ -765,11 +765,11 @@ This error is raised when the value provided for a `Decimal` has more digits bef
 ```python
 from decimal import Decimal
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: Decimal = Field(max_digits=6, decimal_places=3)
+    x: Decimal = u.Field(max_digits=6, decimal_places=3)
 
 
 try:
@@ -785,12 +785,12 @@ This error is raised when a [default factory taking validated data](../concepts/
 can't be called, because validation failed on previous fields:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    a: int = Field(gt=10)
-    b: int = Field(default_factory=lambda data: data["a"])
+    a: int = u.Field(gt=10)
+    b: int = u.Field(default_factory=lambda data: data["a"])
 
 
 try:
@@ -938,11 +938,11 @@ except ValidationError as exc:
 This error is raised when you attempt to assign a value to a field with `frozen=True`, or to delete such a field:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: str = Field("test", frozen=True)
+    x: str = u.Field("test", frozen=True)
 
 
 model = Model()
@@ -1045,11 +1045,11 @@ except ValidationError as exc:
 This error is raised when the value is not greater than the field's `gt` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: int = Field(gt=10)
+    x: int = u.Field(gt=10)
 
 
 try:
@@ -1064,11 +1064,11 @@ except ValidationError as exc:
 This error is raised when the value is not greater than or equal to the field's `ge` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: int = Field(ge=10)
+    x: int = u.Field(ge=10)
 
 
 try:
@@ -1325,11 +1325,11 @@ except ValidationError as exc:
 This error is raised when the input value is not less than the field's `lt` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: int = Field(lt=10)
+    x: int = u.Field(lt=10)
 
 
 try:
@@ -1344,11 +1344,11 @@ except ValidationError as exc:
 This error is raised when the input value is not less than or equal to the field's `le` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: int = Field(le=10)
+    x: int = u.Field(le=10)
 
 
 try:
@@ -1458,13 +1458,13 @@ except ValidationError as exc:
 ## `missing_argument`
 
 This error is raised when a required positional-or-keyword argument is not passed to a function decorated with
-`validate_call`:
+`u.validate_call`:
 
 ```python
-from pydantic import ValidationError, validate_call
+from pydantic import ValidationError, u.validate_call
 
 
-@validate_call
+@u.validate_call
 def foo(a: int):
     return a
 
@@ -1478,13 +1478,13 @@ except ValidationError as exc:
 
 ## `missing_keyword_only_argument`
 
-This error is raised when a required keyword-only argument is not passed to a function decorated with `validate_call`:
+This error is raised when a required keyword-only argument is not passed to a function decorated with `u.validate_call`:
 
 ```python
-from pydantic import ValidationError, validate_call
+from pydantic import ValidationError, u.validate_call
 
 
-@validate_call
+@u.validate_call
 def foo(*, a: int):
     return a
 
@@ -1499,13 +1499,13 @@ except ValidationError as exc:
 ## `missing_positional_only_argument`
 
 This error is raised when a required positional-only argument is not passed to a function decorated with
-`validate_call`:
+`u.validate_call`:
 
 ```python
-from pydantic import ValidationError, validate_call
+from pydantic import ValidationError, u.validate_call
 
 
-@validate_call
+@u.validate_call
 def foo(a: int, /):
     return a
 
@@ -1605,13 +1605,13 @@ except ValidationError as exc:
 ## `multiple_argument_values`
 
 This error is raised when you provide multiple values for a single argument while calling a function decorated with
-`validate_call`:
+`u.validate_call`:
 
 ```python
-from pydantic import ValidationError, validate_call
+from pydantic import ValidationError, u.validate_call
 
 
-@validate_call
+@u.validate_call
 def foo(a: int):
     return a
 
@@ -1628,11 +1628,11 @@ except ValidationError as exc:
 This error is raised when the input is not a multiple of a field's `multiple_of` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: int = Field(multiple_of=5)
+    x: int = u.Field(multiple_of=5)
 
 
 try:
@@ -1793,11 +1793,11 @@ except ValidationError as exc:
 This error is raised when the input value doesn't match the field's `pattern` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: str = Field(pattern="test")
+    x: str = u.Field(pattern="test")
 
 
 try:
@@ -1814,7 +1814,7 @@ This error is raised when the value is an instance of a strict subtype of `str` 
 ```python
 from enum import Enum
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class MyEnum(str, Enum):
@@ -1822,7 +1822,7 @@ class MyEnum(str, Enum):
 
 
 class Model(BaseModel):
-    x: str = Field(strict=True)
+    x: str = u.Field(strict=True)
 
 
 try:
@@ -1837,11 +1837,11 @@ except ValidationError as exc:
 This error is raised when the input value is a string whose length is greater than the field's `max_length` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: str = Field(max_length=3)
+    x: str = u.Field(max_length=3)
 
 
 try:
@@ -1856,11 +1856,11 @@ except ValidationError as exc:
 This error is raised when the input value is a string whose length is less than the field's `min_length` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: str = Field(min_length=3)
+    x: str = u.Field(min_length=3)
 
 
 try:
@@ -2047,11 +2047,11 @@ except ValidationError as exc:
 This error is raised when the input value's length is greater than the field's `max_length` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: Sequence[int] = Field(max_length=3)
+    x: Sequence[int] = u.Field(max_length=3)
 
 
 try:
@@ -2066,11 +2066,11 @@ except ValidationError as exc:
 This error is raised when the value length is less than the field's `min_length` constraint:
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: Sequence[int] = Field(min_length=3)
+    x: Sequence[int] = u.Field(min_length=3)
 
 
 try:
@@ -2104,13 +2104,13 @@ This error is also raised for strict fields when the input value is not an insta
 ## `unexpected_keyword_argument`
 
 This error is raised when you provide a value by keyword for a positional-only
-argument while calling a function decorated with `validate_call`:
+argument while calling a function decorated with `u.validate_call`:
 
 ```python
-from pydantic import ValidationError, validate_call
+from pydantic import ValidationError, u.validate_call
 
 
-@validate_call
+@u.validate_call
 def foo(a: int, /):
     return a
 
@@ -2144,13 +2144,13 @@ except ValidationError as exc:
 ## `unexpected_positional_argument`
 
 This error is raised when you provide a positional value for a keyword-only
-argument while calling a function decorated with `validate_call`:
+argument while calling a function decorated with `u.validate_call`:
 
 ```python
-from pydantic import ValidationError, validate_call
+from pydantic import ValidationError, u.validate_call
 
 
-@validate_call
+@u.validate_call
 def foo(*, a: int):
     return a
 
@@ -2169,7 +2169,7 @@ This error is raised when the input's discriminator is not one of the expected v
 ```python
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class BlackCat(BaseModel):
@@ -2181,7 +2181,7 @@ class WhiteCat(BaseModel):
 
 
 class Model(BaseModel):
-    cat: Union[BlackCat, WhiteCat] = Field(discriminator="pet_type")
+    cat: Union[BlackCat, WhiteCat] = u.Field(discriminator="pet_type")
 
 
 try:
@@ -2198,7 +2198,7 @@ This error is raised when it is not possible to extract a discriminator value fr
 ```python
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class BlackCat(BaseModel):
@@ -2210,7 +2210,7 @@ class WhiteCat(BaseModel):
 
 
 class Model(BaseModel):
-    cat: Union[BlackCat, WhiteCat] = Field(discriminator="pet_type")
+    cat: Union[BlackCat, WhiteCat] = u.Field(discriminator="pet_type")
 
 
 try:
@@ -2263,11 +2263,11 @@ except ValidationError as exc:
 This error is raised when the URL syntax is not valid:
 
 ```python
-from pydantic import BaseModel, Field, HttpUrl, ValidationError
+from pydantic import BaseModel, u.Field, HttpUrl, ValidationError
 
 
 class Model(BaseModel):
-    x: HttpUrl = Field(strict=True)
+    x: HttpUrl = u.Field(strict=True)
 
 
 try:
@@ -2381,13 +2381,13 @@ except ValidationError as exc:
 This error is raised when a `ValueError` is raised during validation:
 
 ```python
-from pydantic import BaseModel, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, u.field_validator
 
 
 class Model(BaseModel):
     x: str
 
-    @field_validator("x")
+    @u.field_validator("x")
     @classmethod
     def repeat_b(cls, v):
         raise ValueError()

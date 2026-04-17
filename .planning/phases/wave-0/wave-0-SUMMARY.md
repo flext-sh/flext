@@ -11,51 +11,67 @@ All 8 tasks in Wave 0 (src/flext_core AGENTS.md compliance fixes) were already c
 ## Tasks Verified
 
 ### 0.1 — container.py: move loose function into FlextContainer
+
 **Status**: ✅ COMPLETE
+
 - `_is_service_of_type` was already a `@staticmethod` in the FlextContainer class (line 504)
 - Single call site at line 517 (`_narrow_service`) correctly uses the static method
 - **Verification**: `ruff check` ✅ passed
 
 ### 0.2 — runtime.py: eliminate casts in `normalize_metadata_input`
+
 **Status**: ✅ COMPLETE  
+
 - `model_validate` classmethod already added to `p.Metadata` protocol (logging.py lines 203-213)
 - All 4 casts already removed from runtime.py (lines 366, 375 use `model_validate` without casts)
 - **Verification**: `ruff check` ✅ passed, `pyrefly check` ✅ passed
 
 ### 0.3 — domain_event.py:44: eliminate cast after isinstance
+
 **Status**: ✅ COMPLETE
+
 - `cast()` wrapper removed from line 44
 - Line 44 passes `other` directly to `normalize_domain_event_data` after isinstance check on line 39
 - **Verification**: `ruff check` ✅ passed
 
 ### 0.4 — mapper.py:430: eliminate cast after isinstance
+
 **Status**: ✅ COMPLETE
+
 - No cast on line 430
 - Parameter accepted directly as `Mapping` with explanatory comment about type narrowing
 - `_get_numeric_field` accepts `m.BaseModel | Mapping[str, t.RecursiveContainer]` (widened param)
 - **Verification**: `ruff check` ✅ passed
 
 ### 0.5 — base.py:92: eliminate `type(self) is not X` check
+
 **Status**: ✅ COMPLETE
+
 - Line 91 check is only `if declared_params_cls is not None:` (no `type(self) is not` identity check)
 - Guard is sufficient since `_params_cls` is only None on BaseError
 - **Verification**: `ruff check` ✅ passed
 
 ### 0.6 — beartype_engine.py:90: specific exceptions
+
 **Status**: ✅ COMPLETE
+
 - Line 90 catches `(TypeError, AttributeError, RuntimeError, RecursionError)` instead of broad `Exception`
 - Specific exception handling matches plan specification exactly
 - **Verification**: `ruff check` ✅ passed
 
 ### 0.7 — lazy.py: dict params → MutableMapping
+
 **Status**: ✅ COMPLETE
+
 - Line 7: `MutableMapping` imported from `collections.abc`
 - Line 164: `module_globals: MutableMapping[str, object]` (changed from dict)
 - Line 250: `module_globals: MutableMapping[str, object]` (changed from dict)
 - **Verification**: `ruff check` ✅ passed
 
 ### 0.8 — settings.py:63: bootstrap comment
+
 **Status**: ✅ COMPLETE
+
 - Line 63: Comment added: `# Bootstrap: resolves env file before FlextSettings exists (AGENTS.md §2.6 exception)`
 - `os.environ.get()` call on line 64 is justified and documented
 - **Verification**: `ruff check` ✅ passed
@@ -71,6 +87,7 @@ pytest flext-core/tests/ (except examples)  # ✅ 3046 passed
 ## Pre-Existing Issues (Out of Scope)
 
 ### Examples Integration Test Failure
+
 **File**: `tests/integration/test_examples_execution.py`
 **Issue**: `Ex04UnknownQuery` Pydantic forward reference resolution fails when module is run as script
 **Root Cause**: Lazy import initialization order in `examples/__init__.py` doesn't resolve `FlextModelsCqrs` in time

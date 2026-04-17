@@ -785,11 +785,11 @@ t.Ldif.Entry.Transformation  # NO: 4 levels!
 
 | Project           | Tier 0 | Tier 1 | Tier 2 | Status                  |
 | ----------------- | ------ | ------ | ------ | ----------------------- |
-| **flext-core**    | ✅     | ✅     | ✅     | Reference template      |
-| **flext-cli**     | ✅     | ✅     | ✅     | Consolidated namespaces |
-| **flext-ldif**    | ✅     | ✅     | ✅     | Validated               |
-| **flext-ldap**    | ✅     | ✅     | ✅     | Variance fixed          |
-| **flext-oud-mig** | ✅     | ✅     | ✅     | Composition validated   |
+| **flext-core**    | ✅      | ✅      | ✅      | Reference template      |
+| **flext-cli**     | ✅      | ✅      | ✅      | Consolidated namespaces |
+| **flext-ldif**    | ✅      | ✅      | ✅      | Validated               |
+| **flext-ldap**    | ✅      | ✅      | ✅      | Variance fixed          |
+| **flext-oud-mig** | ✅      | ✅      | ✅      | Composition validated   |
 
 ### Type System Metrics
 

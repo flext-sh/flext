@@ -15,9 +15,11 @@ The 3 target transformers total 385 LOC. After rope migration, each should shrin
 **Primary recommendation:** Add a `_rope_project` property to `FlextInfraRefactorEngine` that lazily creates a single `Project(root, ropefolder=None)` instance. Implement rope hooks as private methods called in `refactor_project()`/`refactor_workspace()` before and after the CST pass. Migrate the 3 transformers to thin wrappers that call rope APIs, then inline or delete the wrapper if it adds no value.
 
 <user_constraints>
+
 ## User Constraints (from CONTEXT.md)
 
 ### Locked Decisions
+
 - **D-01:** Hybrid approach — rope for cross-file semantic ops, LibCST for syntax-level pattern edits
 - **D-02:** Rope must SIMPLIFY existing code, not add layers. Where rope makes a LibCST transformer simpler, use it. Never add rope complexity to stay "pure LibCST."
 - **D-03:** No "rope abstraction layer" — rope is used directly as a Python library where it helps
@@ -42,11 +44,13 @@ The 3 target transformers total 385 LOC. After rope migration, each should shrin
 - **D-22:** Target: reduce total LOC in `transformers/` and `refactor/` after Phase 9
 
 ### Claude's Discretion
+
 - How exactly to structure rope hook methods on the engine
 - Whether to delete migrated transformers entirely or keep them as thin wrappers
 - Order of migration (which transformer first)
 
 ### Deferred Ideas (OUT OF SCOPE)
+
 - Parallel engine (`FlextInfraRopeEngine`)
 - `FlextInfraRopeRefactorRule` subtype
 - Rope pre-check for `mro_remover`/`mro_private_inline`
@@ -57,12 +61,14 @@ The 3 target transformers total 385 LOC. After rope migration, each should shrin
 ## Standard Stack
 
 ### Core
+
 | Library | Version | Purpose | Why Standard |
 |---------|---------|---------|--------------|
 | rope | 1.14.0 | Cross-file semantic rename, find occurrences | Already declared dep in flext-infra, mature Python refactoring library |
 | libcst | (existing) | Syntax-level CST transformations | Already the backbone of all transformers |
 
 ### Supporting
+
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
 | rope.base.project.Project | 1.14.0 | Workspace-level Python project model | Single instance per engine run |
@@ -152,12 +158,14 @@ def rope_find_usages(
 ### Engine Hook Integration Point
 
 Current flow in `refactor_project()`:
+
 1. Safety stash
 2. Collect files
 3. `refactor_files()` (per-file CST loop)
 4. Safety validation
 
 New flow:
+
 1. Safety stash
 2. Collect files
 3. **Pre-hook: run rope semantic ops** (per-project, once)
@@ -166,6 +174,7 @@ New flow:
 6. Safety validation
 
 ### Anti-Patterns to Avoid
+
 - **Wrapping rope in an abstraction layer:** Use `rope.refactor.rename.Rename` directly. D-03 forbids abstraction.
 - **Running rope per-file:** Rope's execution model is per-project. D-14 requires hooks run once per project.
 - **Creating multiple Project instances:** D-19 requires a single shared instance per engine run.
@@ -184,30 +193,35 @@ New flow:
 ## Common Pitfalls
 
 ### Pitfall 1: Rope indexing the entire .venv
+
 **What goes wrong:** Without `ignored_resources`, rope will parse every file in `.venv/` (thousands of packages), causing 30+ second init.
 **Why it happens:** Rope defaults already include `.venv` BUT the monorepo root may have additional dirs to exclude.
 **How to avoid:** Explicit `ignored_resources` list including `.venv`, `dist/`, `*.egg-info`. Verified: rope 1.14.0 defaults already include `.venv`, `.git`, `*.pyc`, `.mypy_cache` — but add `dist/`, `__pycache__`, `*.egg-info` explicitly.
 **Warning signs:** Slow `Project()` construction (>5s), high memory usage.
 
 ### Pitfall 2: Offset calculation for Rename/find_occurrences
+
 **What goes wrong:** `Rename(project, resource, offset)` requires a byte offset pointing to the exact symbol name. Wrong offset = wrong symbol or crash.
 **Why it happens:** `str.index()` finds the first occurrence which may not be the definition.
 **How to avoid:** For definitions, parse with rope's `pymodule.get_scope()` or use the known file position from the transformer's rename map. For imports, search within the import section only.
 **Warning signs:** `RopeError` about "cannot determine the name".
 
 ### Pitfall 3: ChangeSet.do() writes files directly
+
 **What goes wrong:** Calling `changeset.do()` writes to disk immediately, bypassing the engine's dry-run/safety mechanism.
 **Why it happens:** Rope's change model assumes direct application.
 **How to avoid:** For dry-run mode, iterate `changeset.changes` and read `ChangeContents.new_contents` / `ChangeContents.resource.path` without calling `.do()`. For apply mode, either call `.do()` or manually write via `u.write_file()`.
 **Warning signs:** Files modified during dry-run.
 
 ### Pitfall 4: rope.base.project.Project is not thread-safe
+
 **What goes wrong:** Concurrent access to the same Project instance from multiple threads causes stale state.
 **Why it happens:** Rope was designed for single-threaded editor use.
 **How to avoid:** Sequential execution only — which is already the case (D-14, no parallelization in settings).
 **Warning signs:** Intermittent wrong results.
 
 ### Pitfall 5: Stale rope analysis after CST modifications
+
 **What goes wrong:** If rope pre-hooks rename symbols, then CST transformers read the original file content, they'll be out of sync.
 **Why it happens:** Rope writes changes to disk; CST reads from disk.
 **How to avoid:** If rope hooks write files, the CST pass must re-read from disk (which it already does — `file_path.read_text()` in `refactor_file()`). Ensure rope hooks run BEFORE the CST file collection, or re-collect after rope changes.
@@ -308,6 +322,7 @@ for change in changeset.changes:
 ## Validation Architecture
 
 ### Test Framework
+
 | Property | Value |
 |----------|-------|
 | Framework | pytest 8.4+ |
@@ -316,6 +331,7 @@ for change in changeset.changes:
 | Full suite command | `/home/marlonsc/flext/.venv/bin/pytest flext-infra/tests/ -x -q` |
 
 ### Phase Requirements -> Test Map
+
 | Req ID | Behavior | Test Type | Automated Command | File Exists? |
 |--------|----------|-----------|-------------------|-------------|
 | ROPE-01 | Project init with ropefolder=None, correct ignored_resources | unit | `pytest flext-infra/tests/unit/refactor/test_rope_project.py -x` | Wave 0 |
@@ -327,11 +343,13 @@ for change in changeset.changes:
 | ROPE-07 | LOC reduction verified | manual | `find transformers/ refactor/ -name '*.py' -exec cat {} + \| wc -l` | N/A |
 
 ### Sampling Rate
+
 - **Per task commit:** `/home/marlonsc/flext/.venv/bin/pytest flext-infra/tests/unit/refactor/ -x -q`
 - **Per wave merge:** `/home/marlonsc/flext/.venv/bin/pytest flext-infra/tests/ -x -q`
 - **Phase gate:** Full suite green + ruff + pyright zero before verify
 
 ### Wave 0 Gaps
+
 - [ ] `flext-infra/tests/unit/refactor/test_rope_project.py` — covers ROPE-01
 - [ ] `flext-infra/tests/unit/refactor/test_rope_symbol_propagation.py` — covers ROPE-02
 - [ ] `flext-infra/tests/unit/refactor/test_rope_mro_rewrite.py` — covers ROPE-03
@@ -358,18 +376,21 @@ for change in changeset.changes:
 ## Sources
 
 ### Primary (HIGH confidence)
+
 - rope 1.14.0 installed in `/home/marlonsc/flext/.venv/` — API verified via `inspect.signature()` and source inspection
 - `flext-infra/src/flext_infra/transformers/` — all 3 target transformers read in full
 - `flext-infra/src/flext_infra/refactor/engine.py` — full engine source read (748 LOC)
 - `rope.base.prefs.Prefs` source — confirmed `save_objectdb=False` default, `ignored_resources` defaults include `.venv`
 
 ### Secondary (MEDIUM confidence)
+
 - rope `ropefolder=None` behavior confirmed from `Project.__init__` source — "Pass None for not using such a folder at all"
 - `rope.contrib.findit.find_occurrences` returns `list[Location]` — confirmed from source
 
 ## Metadata
 
 **Confidence breakdown:**
+
 - Standard stack: HIGH - rope 1.14.0 already installed, API verified from source
 - Architecture: HIGH - engine.py hook points are clear, rope API is straightforward
 - Pitfalls: MEDIUM - offset calculation and `__getattr__` lazy loading interaction need runtime validation

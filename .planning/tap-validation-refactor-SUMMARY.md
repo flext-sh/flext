@@ -6,7 +6,7 @@
 
 ## Objective
 
-Convert all tap-* projects to use `t.*` validation types from `flext_core.typings` instead of bare Pydantic Field constraints.
+Convert all tap-* projects to use `t.*` validation types from `flext_core.typings` instead of bare Pydantic u.Field constraints.
 
 ## Projects Analyzed
 
@@ -21,6 +21,7 @@ Convert all tap-* projects to use `t.*` validation types from `flext_core.typing
 ### flext-tap-ldap/src/flext_tap_ldap/models.py
 
 **Import Added:**
+
 ```python
 from flext_core import t
 ```
@@ -28,38 +29,42 @@ from flext_core import t
 **Conversions Applied:**
 
 #### LdapConnectionParams class
-- `host: Annotated[str, m.Field(min_length=1)]` → `host: t.NonEmptyStr`
-- `base_dn: Annotated[str, m.Field(min_length=1)]` → `base_dn: t.NonEmptyStr`
-- `port: Annotated[int, m.Field(default=c.TapLdap.DEFAULT_PORT, ge=1)]` → `port: Annotated[t.PortNumber, m.Field(default=c.TapLdap.DEFAULT_PORT)]`
-- `timeout_seconds: Annotated[int, m.Field(default=..., ge=1)]` → `timeout_seconds: Annotated[t.PositiveInt, m.Field(default=...)]`
-- `page_size: Annotated[int, m.Field(default=..., ge=1)]` → `page_size: Annotated[t.PositiveInt, m.Field(default=...)]`
-- `max_retries: Annotated[int, m.Field(default=3, ge=0)]` → `max_retries: Annotated[t.RetryCount, m.Field(default=3)]`
+
+- `host: Annotated[str, u.Field(min_length=1)]` → `host: t.NonEmptyStr`
+- `base_dn: Annotated[str, u.Field(min_length=1)]` → `base_dn: t.NonEmptyStr`
+- `port: Annotated[int, u.Field(default=c.TapLdap.DEFAULT_PORT, ge=1)]` → `port: Annotated[t.PortNumber, u.Field(default=c.TapLdap.DEFAULT_PORT)]`
+- `timeout_seconds: Annotated[int, u.Field(default=..., ge=1)]` → `timeout_seconds: Annotated[t.PositiveInt, u.Field(default=...)]`
+- `page_size: Annotated[int, u.Field(default=..., ge=1)]` → `page_size: Annotated[t.PositiveInt, u.Field(default=...)]`
+- `max_retries: Annotated[int, u.Field(default=3, ge=0)]` → `max_retries: Annotated[t.RetryCount, u.Field(default=3)]`
 
 #### StreamCreationParams class
-- `stream_type: Annotated[str, m.Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
-- `connection_id: Annotated[str, m.Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
-- `search_filter: Annotated[str, m.Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
+
+- `stream_type: Annotated[str, u.Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
+- `connection_id: Annotated[str, u.Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
+- `search_filter: Annotated[str, u.Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
 
 #### LdapConnection class
-- `host: Annotated[str, m.Field(min_length=1)]` → `host: t.NonEmptyStr`
-- `port: Annotated[int, m.Field(ge=1)]` → `port: t.PortNumber`
-- `timeout: Annotated[int, m.Field(ge=1)]` → `timeout: t.PositiveInt`
+
+- `host: Annotated[str, u.Field(min_length=1)]` → `host: t.NonEmptyStr`
+- `port: Annotated[int, u.Field(ge=1)]` → `port: t.PortNumber`
+- `timeout: Annotated[int, u.Field(ge=1)]` → `timeout: t.PositiveInt`
 
 #### LdapStream class
-- `name: Annotated[str, m.Field(min_length=1)]` → `name: t.NonEmptyStr`
-- `connection_id: Annotated[str, m.Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
-- `stream_type: Annotated[str, m.Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
-- `search_filter: Annotated[str, m.Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
-- `tap_stream_id: Annotated[str, m.Field(min_length=1)]` → `tap_stream_id: t.NonEmptyStr`
+
+- `name: Annotated[str, u.Field(min_length=1)]` → `name: t.NonEmptyStr`
+- `connection_id: Annotated[str, u.Field(min_length=1)]` → `connection_id: t.NonEmptyStr`
+- `stream_type: Annotated[str, u.Field(min_length=1)]` → `stream_type: t.NonEmptyStr`
+- `search_filter: Annotated[str, u.Field(min_length=1)]` → `search_filter: t.NonEmptyStr`
+- `tap_stream_id: Annotated[str, u.Field(min_length=1)]` → `tap_stream_id: t.NonEmptyStr`
 
 ## Type Mappings Reference
 
 | Pattern | Replaced With | Semantic |
 |---------|---------------|----------|
-| `Field(min_length=1)` on str | `t.NonEmptyStr` | String with min length 1 |
-| `Field(ge=1)` on int | `t.PositiveInt` | Positive integer (>0) |
-| `Field(ge=0)` on int (ports) | `t.PortNumber` | Valid port range (1-65535) |
-| `Field(ge=0)` on int (retries) | `t.RetryCount` | Retry count (0-10) |
+| `u.Field(min_length=1)` on str | `t.NonEmptyStr` | String with min length 1 |
+| `u.Field(ge=1)` on int | `t.PositiveInt` | Positive integer (>0) |
+| `u.Field(ge=0)` on int (ports) | `t.PortNumber` | Valid port range (1-65535) |
+| `u.Field(ge=0)` on int (retries) | `t.RetryCount` | Retry count (0-10) |
 
 ## Validation Results
 

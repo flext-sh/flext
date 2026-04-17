@@ -1,18 +1,21 @@
 # FLEXT Docstring Standards — PEP 257 + Google Style + Ruff Compliant
 
 **Compliance**:
+
 - PEP 257 (Python Docstring Conventions)
 - Google Style (Google Python Style Guide)
 - Ruff strict mode (`select = ["ALL"]`, `preview = true`)
 - Target: Python 3.13+
 
 **Key ruff rules enforced**:
+
 - `D1xx` - Missing docstrings
 - `D2xx` - Whitespace in docstrings
 - `D4xx` - Docstring content
 - `DOC501/502` - Undocumented parameters/raises
 
 **Ignored by design** (per `pyproject.toml`):
+
 - `D203` - blank line before class docstring ✗ (not used)
 - `D213` - multi-line summary on line 2 ✗ (keep on line 1)
 - `D401` - imperative mood ✗ (not enforced)
@@ -23,6 +26,7 @@
 ## Module Level Docstring
 
 ### Format
+
 ```python
 """Brief one-line module summary.
 
@@ -45,6 +49,7 @@ from collections.abc import Mapping, Sequence
 ```
 
 ### Rules
+
 - `"""` on first line (not line 2)
 - One-line summary ends with period
 - Blank line before extended description
@@ -53,6 +58,7 @@ from collections.abc import Mapping, Sequence
 - SPDX on separate line
 
 ### Real Example from Project
+
 ```python
 """DDD base models with Pydantic v2 validation and dispatcher-first CQRS.
 
@@ -72,6 +78,7 @@ SPDX-License-Identifier: MIT
 ## Class Docstring
 
 ### Format
+
 ```python
 class MyClass(BaseClass):
     """Brief one-line class summary.
@@ -95,6 +102,7 @@ class MyClass(BaseClass):
 ```
 
 ### Rules
+
 - Summary on first line, ends with period
 - No blank line after `"""` opening
 - Extended description starts on next line
@@ -104,12 +112,13 @@ class MyClass(BaseClass):
 - Example section for complex public APIs
 
 ### Real Example from Project
+
 ```python
 class Ex00UserProfile(m.Entity):
     """User profile transport model."""
 
-    name: str = m.Field(min_length=1)
-    email: str = m.Field(min_length=1)
+    name: str = u.Field(min_length=1)
+    email: str = u.Field(min_length=1)
     status: c.Status = c.Status.ACTIVE
 
     def activate(self) -> p.Result[None]:
@@ -124,6 +133,7 @@ class Ex00UserProfile(m.Entity):
 ## Function / Method Docstring
 
 ### Format
+
 ```python
 def process_data(
     input_path: Path,
@@ -159,6 +169,7 @@ def process_data(
 ```
 
 ### Rules
+
 - Summary on first line, ends with period
 - Blank line before extended description
 - **Args section**: Required if function takes parameters
@@ -174,6 +185,7 @@ def process_data(
 - **Example section**: Optional but recommended for public APIs
 
 ### Real Example from Project
+
 ```python
 @staticmethod
 def iter_directory_python_files(
@@ -210,10 +222,12 @@ def iter_directory_python_files(
 ## Private Function (`_func`)
 
 ### When to Document
+
 - Skip detailed docstring if name + signature is self-explanatory
 - Add one-liner if purpose is non-obvious
 
 ### Examples
+
 ```python
 def _parse_value(text: str) -> int:
     """Parse integer from text string."""
@@ -230,6 +244,7 @@ def _looks_like_project(path: Path) -> bool:
 ## Property
 
 ### Format
+
 ```python
 @property
 def computed_value(self) -> float:
@@ -238,6 +253,7 @@ def computed_value(self) -> float:
 ```
 
 ### Rules
+
 - One-line summary, ends with period (usually)
 - No Args/Returns sections (obvious from decorator)
 - If side effects or expensive computation, explain
@@ -247,6 +263,7 @@ def computed_value(self) -> float:
 ## Magic Methods (`__init__`, `__str__`, etc.)
 
 ### `__init__`
+
 ```python
 def __init__(self, name: str, timeout: int = 30):
     """Initialize processor with name and timeout.
@@ -261,6 +278,7 @@ def __init__(self, name: str, timeout: int = 30):
 ```
 
 ### `__str__` / `__repr__`
+
 ```python
 def __str__(self) -> str:
     """Return '{ClassName}(field1=value, field2=value)' representation."""
@@ -268,6 +286,7 @@ def __str__(self) -> str:
 ```
 
 ### Others
+
 - Document if behavior is non-obvious
 - Skip if trivial (e.g., `__eq__` comparing fields)
 
@@ -276,6 +295,7 @@ def __str__(self) -> str:
 ## Exception Class
 
 ### Format
+
 ```python
 class DataProcessingError(Exception):
     """Raised when data processing encounters unrecoverable error.
@@ -310,6 +330,7 @@ class DataProcessingError(Exception):
 ## Async Function
 
 ### Format
+
 ```python
 async def fetch_data(url: str, timeout: int = 30) -> bytes:
     """Fetch data from URL asynchronously.
@@ -332,6 +353,7 @@ async def fetch_data(url: str, timeout: int = 30) -> bytes:
 ## Multi-line Parameter Description
 
 ### Format
+
 ```python
 def configure(
     mode: str,
@@ -369,6 +391,7 @@ Before committing code, verify:
 - [ ] SPDX identifier present: `SPDX-License-Identifier: MIT`
 
 Run validation:
+
 ```bash
 ruff check --select=D --preview src/
 python3 scripts/validate-docstrings.py src/
@@ -378,7 +401,8 @@ python3 scripts/validate-docstrings.py src/
 
 ## Private vs Public
 
-### Skip docstring (private):
+### Skip docstring (private)
+
 ```python
 def _internal_helper(x: int) -> int:
     # Skip if obvious from name + type
@@ -390,7 +414,8 @@ def _validate_email(addr: str) -> bool:
     return "@" in addr and "." in addr.split("@")[1]
 ```
 
-### Document (public):
+### Document (public)
+
 ```python
 def search(query: str, limit: int = 10) -> Sequence[Result]:
     """Search index with query, return up to limit results."""
@@ -405,6 +430,7 @@ def validate_settings(cfg: dict) -> bool:
 ## Document When
 
 ✅ **MUST document**:
+
 - Non-obvious return value semantics (True/False/None meaning)
 - Functions that modify state or have side effects
 - Multiple similar methods (contrast them)
@@ -413,6 +439,7 @@ def validate_settings(cfg: dict) -> bool:
 - Public functions called by other projects
 
 ❌ **DON'T document**:
+
 - Trivial getters/setters
 - Private implementation details
 - Obvious loops or conditions
@@ -424,6 +451,7 @@ def validate_settings(cfg: dict) -> bool:
 ## Examples from FLEXT Codebase
 
 ### Good: Utility Method
+
 ```python
 @staticmethod
 def run_raw(
@@ -453,6 +481,7 @@ def run_raw(
 ```
 
 ### Good: Idempotent Operation
+
 ```python
 @staticmethod
 def create_checkpoint(
@@ -485,7 +514,8 @@ def create_checkpoint(
 
 ## Ruff Integration
 
-### Check conformance:
+### Check conformance
+
 ```bash
 # Check all docstring rules (D, DOC)
 ruff check --select=D --preview src/
@@ -497,7 +527,8 @@ ruff format --preview src/
 ruff check --preview src/
 ```
 
-### Expected ignores (from pyproject.toml):
+### Expected ignores (from pyproject.toml)
+
 - D203: blank line before class summary (use pep257 style, no blank)
 - D213: multi-line summary on line 2 (keep on line 1)
 - D401: imperative mood not enforced
@@ -508,12 +539,14 @@ ruff check --preview src/
 ## Copyright Placement
 
 ❌ **WRONG** (comment outside docstring):
+
 ```python
 # Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Module description."""
 ```
 
 ✅ **RIGHT** (inside docstring):
+
 ```python
 """Module description.
 
@@ -542,6 +575,7 @@ ruff check --select=D,DOC --preview flext-core/src
 ## Summary
 
 **FLEXT docstring standard is**:
+
 - **Style**: Google Style (PEP 257 base, Google extensions)
 - **Sections**: One-line summary (required), Args, Returns, Raises, Example, Attributes
 - **Copyright**: Inside docstring at module level (not code comment)

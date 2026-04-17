@@ -135,15 +135,15 @@ Script-level checks (internal):
 | `scripts/core/__init__.py`                                 | Package marker                                              | —                                                                          |
 | `scripts/core/script_runner.py`                            | Central script executor                                     | `python scripts/core/script_runner.py <name>`                              |
 | `scripts/core/script_registry.py`                          | Script discovery and metadata                               | (imported by script_runner)                                                |
-| `scripts/core/artifact_naming.py`                          | Python helper: artifact naming contract                     | `from scripts import artifact_path`                   |
+| `scripts/core/artifact_naming.py`                          | Python helper: artifact naming contract                     | `from scripts import artifact_path`                                        |
 | `.claude/skills/scripts-infra/validate_ownership.py`       | Ownership validator (hard gate)                             | `python .claude/skills/scripts-infra/validate_ownership.py --root .`       |
 | `.claude/skills/scripts-infra/validate_artifact_naming.py` | Artifact naming validator                                   | `python .claude/skills/scripts-infra/validate_artifact_naming.py --root .` |
 | `scripts/core/_add_owner_markers.py`                       | One-shot marker insertion (temporary)                       | `python scripts/core/_add_owner_markers.py`                                |
-| `scripts/common.py`                                        | Python shared utils: workspace/project discovery            | `from scripts import discover_projects`                             |
-| `scripts/settings/__init__.py`                               | Package marker                                              | —                                                                          |
-| `scripts/settings/load_staging_config.py`                    | Load staging environment settings                             | `python scripts/settings/load_staging_config.py`                             |
-| `scripts/settings/setup_workspace_links.py`                  | Setup workspace symlinks                                    | `python scripts/settings/setup_workspace_links.py`                           |
-| `scripts/settings/standardize_pyproject.py`                  | Standardize pyproject.toml files                            | `python scripts/settings/standardize_pyproject.py`                           |
+| `scripts/common.py`                                        | Python shared utils: workspace/project discovery            | `from scripts import discover_projects`                                    |
+| `scripts/settings/__init__.py`                             | Package marker                                              | —                                                                          |
+| `scripts/settings/load_staging_config.py`                  | Load staging environment settings                           | `python scripts/settings/load_staging_config.py`                           |
+| `scripts/settings/setup_workspace_links.py`                | Setup workspace symlinks                                    | `python scripts/settings/setup_workspace_links.py`                         |
+| `scripts/settings/standardize_pyproject.py`                | Standardize pyproject.toml files                            | `python scripts/settings/standardize_pyproject.py`                         |
 | `scripts/makefiles/simplify_makefiles.py`                  | Simplify project Makefiles                                  | `python scripts/makefiles/simplify_makefiles.py`                           |
 | `scripts/add-project.sh`                                   | Add external project to workspace                           | `bash scripts/add-project.sh`                                              |
 | `scripts/remove-project.sh`                                | Remove external project                                     | `bash scripts/remove-project.sh <name>`                                    |

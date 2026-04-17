@@ -2,32 +2,35 @@
 
 ## Overview
 
-This document summarizes the conversion of all target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle, flext-target-oracle-oic, flext-target-oracle-wms) to use `t.*` validation types instead of bare Pydantic Field constraints.
+This document summarizes the conversion of all target-* projects (flext-target-ldap, flext-target-ldif, flext-target-oracle, flext-target-oracle-oic, flext-target-oracle-wms) to use `t.*` validation types instead of bare Pydantic u.Field constraints.
 
 ## Conversion Rules Applied
 
 The following mapping was used for all conversions:
 
-- `Field(min_length=1, ...)` on `str` → `t.NonEmptyStr`
-- `Field(ge=0, ...)` on `int` → `t.NonNegativeInt`
-- `Field(ge=1, ...)` on `int` → `t.PositiveInt`
-- `Field(gt=0, ...)` on `int` → `t.PositiveInt`
-- `Field(ge=0.0, ...)` on `float` → `t.NonNegativeFloat`
-- `Field(gt=0.0, ...)` on `float` → `t.PositiveFloat`
-- `Field(ge=1, le=65535, ...)` on `int` → `t.PortNumber`
-- `Field(ge=1, le=10000, ...)` on `int` → `t.BatchSize`
+- `u.Field(min_length=1, ...)` on `str` → `t.NonEmptyStr`
+- `u.Field(ge=0, ...)` on `int` → `t.NonNegativeInt`
+- `u.Field(ge=1, ...)` on `int` → `t.PositiveInt`
+- `u.Field(gt=0, ...)` on `int` → `t.PositiveInt`
+- `u.Field(ge=0.0, ...)` on `float` → `t.NonNegativeFloat`
+- `u.Field(gt=0.0, ...)` on `float` → `t.PositiveFloat`
+- `u.Field(ge=1, le=65535, ...)` on `int` → `t.PortNumber`
+- `u.Field(ge=1, le=10000, ...)` on `int` → `t.BatchSize`
 - All `max_length` constraints removed (not part of t.* types)
 
 ## Projects Converted
 
 ### 1. flext-target-ldif
+
 **File:** `/home/marlonsc/flext/flext-target-ldif/src/flext_target_ldif/models.py`
 
 **Changes:**
+
 - 17 total type conversions
 - Classes affected: `LdifFormatOptions`, `LdifEntry`, `LdifFile`, `LdifTransformationResult`, `LdifBatchProcessing`, `SingerStreamSettings`, `LdifTargetResult`
 
 **Conversions:**
+
 - `line_length`: `int` with `ge`, `le` → `t.PositiveInt`
 - `distinguished_name`: `str` with `min_length=1, max_length` → `t.NonEmptyStr`
 - `file_size_bytes`: `int` with `ge=0` → `t.NonNegativeInt`
@@ -49,13 +52,16 @@ The following mapping was used for all conversions:
 **Import:** Uses local import `from .typings import t` (line 20)
 
 ### 2. flext-target-ldap
+
 **File:** `/home/marlonsc/flext/flext-target-ldap/src/flext_target_ldap/models.py`
 
 **Changes:**
+
 - 15 total type conversions
 - Classes affected: `AttributeMapping`, `Entry`, `TransformationResult`, `BatchProcessing`, `OperationStatistics`
 
 **Conversions:**
+
 - `singer_field_name`: `str` with `min_length=1, max_length=255` → `t.NonEmptyStr`
 - `ldap_attribute_name`: `str` with `min_length=1, max_length=255` → `t.NonEmptyStr`
 - `distinguished_name`: `str` with `min_length=1, max_length=1000` → `t.NonEmptyStr`
@@ -75,14 +81,17 @@ The following mapping was used for all conversions:
 **Import:** `from flext_core import t` (line 18)
 
 ### 3. flext-target-oracle
+
 **File:** `/home/marlonsc/flext/flext-target-oracle/src/flext_target_oracle/models.py`
 
 **Changes:**
+
 - 14 total type conversions
 - Import added: `from flext_core import t`
 - Classes affected: `ProcessingSummary`, `LoaderOperation`, `LoaderFinalizeResult`, `OracleConnectionSettings`, `TargetSettings`, `ImplementationMetrics`
 
 **Conversions:**
+
 - `messages_processed`: `int` with `ge=0` → `t.NonNegativeInt`
 - `records_loaded`: `int` with `ge=0` → `t.NonNegativeInt`
 - `records_failed`: `int` with `ge=0` → `t.NonNegativeInt`
@@ -101,19 +110,23 @@ The following mapping was used for all conversions:
 **Import:** `from flext_core import t` (line 8 - newly added)
 
 ### 4. flext-target-oracle-oic
+
 **File:** `/home/marlonsc/flext/flext-target-oracle-oic/src/flext_target_oracle_oic/models.py`
 
 **Status:** No constraints found - already using clean type definitions
 **Import:** Already has `from flext_core import t` (line 11)
 
 ### 5. flext-target-oracle-wms
+
 **File:** `/home/marlonsc/flext/flext-target-oracle-wms/src/flext_target_oracle_wms/models.py`
 
 **Changes:**
+
 - 3 total type conversions
 - Classes affected: `WmsTargetResult`, `WmsTargetSettings`
 
 **Conversions:**
+
 - `total_records_processed`: bare `int` → `t.NonNegativeInt`
 - `successful_records`: bare `int` → `t.NonNegativeInt`
 - `failed_records`: bare `int` → `t.NonNegativeInt`
@@ -162,7 +175,7 @@ Total files modified: **5**
 
 ## Verification Status
 
-✅ All bare Field constraints removed
+✅ All bare u.Field constraints removed
 ✅ All files updated with t.* types
 ✅ All required imports in place
 ✅ No syntax errors introduced

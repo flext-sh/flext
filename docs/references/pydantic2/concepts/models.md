@@ -19,7 +19,7 @@
 - [`RootModel` and custom root types](#rootmodel-and-custom-root-types)
 - [Faux immutability](#faux-immutability)
 - [Abstract base classes](#abstract-base-classes)
-- [Field ordering](#field-ordering)
+- [u.Field ordering](#field-ordering)
 - [Automatically excluded attributes](#automatically-excluded-attributes)
   - [Class variables](#class-variables)
   - [Private model attributes](#private-model-attributes)
@@ -112,7 +112,7 @@ In this example, `User` is a model with two fields:
 
 The documentation on [types](./types.md) expands on the supported types.
 
-Fields can be customized in a number of ways using the [`Field()`][pydantic.Field] function.
+u.Fields can be customized in a number of ways using the [`u.Field()`][pydantic.u.Field] function.
 See the [documentation on fields](./fields.md) for more information.
 
 The model can then be instantiated:
@@ -125,7 +125,7 @@ user = User(id="123")
 If no [`ValidationError`][pydantic_core.ValidationError] exception is raised,
 you know the resulting model instance is valid.
 
-Fields of a model can be accessed as normal attributes of the `user` t.RecursiveContainer:
+u.Fields of a model can be accessed as normal attributes of the `user` t.RecursiveContainer:
 
 ```python {group="basic-model"}
 assert user.name == "Jane Doe"  # (1)!
@@ -193,8 +193,8 @@ Models possess the following methods and attributes:
 - [`model_copy()`][pydantic.main.BaseModel.model_copy]: Returns a copy (by default, shallow copy) of the model. See
   [Model copy](#model-copy).
 - [`model_json_schema()`][pydantic.main.BaseModel.model_JSON_schema]: Returns a jsonable dictionary representing the model's JSON Schema. See [JSON Schema](json_schema.md).
-- [`model_fields`][pydantic.main.BaseModel.model_fields]: A mapping between field names and their definitions ([`FieldInfo`][pydantic.fields.FieldInfo] instances).
-- [`model_computed_fields`][pydantic.main.BaseModel.model_computed_fields]: A mapping between computed field names and their definitions ([`ComputedFieldInfo`][pydantic.fields.ComputedFieldInfo] instances).
+- [`model_fields`][pydantic.main.BaseModel.model_fields]: A mapping between field names and their definitions ([`u.FieldInfo`][pydantic.fields.u.FieldInfo] instances).
+- [`model_u.computed_fields`][pydantic.main.BaseModel.model_u.computed_fields]: A mapping between computed field names and their definitions ([`Computedu.FieldInfo`][pydantic.fields.Computedu.FieldInfo] instances).
 - [`model_extra`][pydantic.main.BaseModel.model_extra]: The extra fields set during validation.
 - [`model_fields_set`][pydantic.main.BaseModel.model_fields_set]: The set of fields which were explicitly provided when the model was initialized.
 - [`model_parametrized_name()`][pydantic.main.BaseModel.model_parametrized_name]: Computes the class name for parametrizations of generic classes.
@@ -868,7 +868,6 @@ Here is an example using a generic Pydantic model to create an easily-reused HTT
 When parametrizing a model with a concrete type, Pydantic **does not** validate that the provided type
 is assignable to the type variable if it has an upper bound.
 
-
 Any [configuration](./settings.md), [validation](./validators.md) or [serialization](./serialization.md) logic
 set on the generic model will also be applied to the parametrized classes, in the same way as when inheriting from
 a model class. Any custom methods or attributes will also be inherited.
@@ -1077,7 +1076,7 @@ we will inspect the data, recognize that the input data is sort of a "loose" sub
     ```python {test="skip"}
     from typing import Any, Generic, Self, TypeVar
 
-    from pydantic import BaseModel, model_validator
+    from pydantic import BaseModel, u.model_validator
 
     T = TypeVar("T")
 
@@ -1085,7 +1084,7 @@ we will inspect the data, recognize that the input data is sort of a "loose" sub
     class GenericModel(BaseModel, Generic[T]):
         a: T
 
-        @model_validator(mode="after")
+        @u.model_validator(mode="after")
         def validate_after(self: Self) -> Self:
             print("after validator running custom validation...")
             return self
@@ -1336,15 +1335,15 @@ assert error.model_dump() == {
 ## Dynamic model creation
 
 ??? api "API Documentation"
-[`pydantic.main.create_model`][pydantic.main.create_model]<br>
+[`pydantic.main.u.create_model`][pydantic.main.u.create_model]<br>
 
 There are some occasions where it is desirable to create a model using runtime information to specify the fields.
-Pydantic provides the [`create_model()`][pydantic.create_model] function to allow models to be created dynamically:
+Pydantic provides the [`u.create_model()`][pydantic.u.create_model] function to allow models to be created dynamically:
 
 ```python
-from pydantic import BaseModel, create_model
+from pydantic import BaseModel, u.create_model
 
-DynamicFoobarModel = create_model("DynamicFoobarModel", foo=str, bar=(int, 123))
+DynamicFoobarModel = u.create_model("DynamicFoobarModel", foo=str, bar=(int, 123))
 
 # Equivalent to:
 
@@ -1354,38 +1353,38 @@ class StaticFoobarModel(BaseModel):
     bar: int = 123
 ```
 
-Field definitions are specified as keyword arguments, and should either be:
+u.Field definitions are specified as keyword arguments, and should either be:
 
 - A single element, representing the type annotation of the field.
 - A two-tuple, the first element being the type and the second element the assigned value
-  (either a default or the [`Field()`][pydantic.Field] function).
+  (either a default or the [`u.Field()`][pydantic.u.Field] function).
 
 Here is a more advanced example:
 
 ```python
 from typing import Annotated
 
-from pydantic import BaseModel, Field, PrivateAttr, create_model
+from pydantic import BaseModel, u.Field, u.PrivateAttr, u.create_model
 
-DynamicModel = create_model(
+DynamicModel = u.create_model(
     "DynamicModel",
-    foo=(str, Field(alias="FOO")),
-    bar=Annotated[str, Field(description="Bar field")],
-    _private=(int, PrivateAttr(default=1)),
+    foo=(str, u.Field(alias="FOO")),
+    bar=Annotated[str, u.Field(description="Bar field")],
+    _private=(int, u.PrivateAttr(default=1)),
 )
 
 
 class StaticModel(BaseModel):
-    foo: str = Field(alias="FOO")
-    bar: Annotated[str, Field(description="Bar field")]
-    _private: int = PrivateAttr(default=1)
+    foo: str = u.Field(alias="FOO")
+    bar: Annotated[str, u.Field(description="Bar field")]
+    _private: int = u.PrivateAttr(default=1)
 ```
 
 The special keyword arguments `__config__` and `__base__` can be used to customize the new model.
 This includes extending a base model with extra fields.
 
 ```python
-from pydantic import BaseModel, create_model
+from pydantic import BaseModel, u.create_model
 
 
 class FooModel(BaseModel):
@@ -1393,7 +1392,7 @@ class FooModel(BaseModel):
     bar: int = 123
 
 
-BarModel = create_model(
+BarModel = u.create_model(
     "BarModel",
     apple=(str, "russet"),
     banana=(str, "yellow"),
@@ -1408,7 +1407,7 @@ print(BarModel.model_fields.keys())
 You can also add validators by passing a dictionary to the `__validators__` argument.
 
 ```python {rewrite_assert="false"}
-from pydantic import ValidationError, create_model, field_validator
+from pydantic import ValidationError, u.create_model, u.field_validator
 
 
 def alphanum(cls, v):
@@ -1417,10 +1416,10 @@ def alphanum(cls, v):
 
 
 validators = {
-    "username_validator": field_validator("username")(alphanum)  # (1)!
+    "username_validator": u.field_validator("username")(alphanum)  # (1)!
 }
 
-UserModel = create_model("UserModel", username=(str, ...), __validators__=validators)
+UserModel = u.create_model("UserModel", username=(str, ...), __validators__=validators)
 
 user = UserModel(username="scolvin")
 print(user)
@@ -1597,9 +1596,9 @@ class FooBarModel(BaseModel, abc.ABC):
         pass
 ```
 
-## Field ordering
+## u.Field ordering
 
-Field order affects models in the following ways:
+u.Field order affects models in the following ways:
 
 - field order is preserved in the model [JSON Schema](json_schema.md)
 - field order is preserved in [validation errors](#error-handling)
@@ -1660,7 +1659,7 @@ print(Model.x)
 ### Private model attributes
 
 ??? api "API Documentation"
-[`pydantic.fields.PrivateAttr`][pydantic.fields.PrivateAttr]<br>
+[`pydantic.fields.u.PrivateAttr`][pydantic.fields.u.PrivateAttr]<br>
 
 Attributes whose name has a leading underscore are not treated as fields by Pydantic, and are not included in the
 model schema. Instead, these are converted into a "private attribute" which is not validated or even set during
@@ -1673,11 +1672,11 @@ from datetime import datetime
 from random import randint
 from typing import Any
 
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel, u.PrivateAttr
 
 
 class TimeAwareModel(BaseModel):
-    _processed_at: datetime = PrivateAttr(default_factory=datetime.now)
+    _processed_at: datetime = u.PrivateAttr(default_factory=datetime.now)
     _secret_value: str
 
     def model_post_init(self, context) -> None:
@@ -1702,14 +1701,14 @@ All Pydantic models will have their signature generated based on their fields:
 ```python
 import inspect
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class FooModel(BaseModel):
     id: int
     name: str = None
     description: str = "Foo"
-    apple: int = Field(alias="pear")
+    apple: int = u.Field(alias="pear")
 
 
 print(inspect.signature(FooModel))
@@ -1743,7 +1742,7 @@ To be included in the signature, a field's alias or name must be a valid Python 
 Pydantic will prioritize a field's alias over its name when generating the signature, but may use the field name if the
 alias is not a valid Python identifier.
 
-If a field's alias and name are _both_ not valid identifiers (which may be possible through exotic use of `create_model`),
+If a field's alias and name are _both_ not valid identifiers (which may be possible through exotic use of `u.create_model`),
 a `**data` argument will be added. In addition, the `**data` argument will always be present in the signature if
 `model_config['extra'] == 'allow'`.
 

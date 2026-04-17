@@ -114,7 +114,7 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from dataclasses import field
 
-from pydantic import BaseModel, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, u.field_validator
 
 
 def is_recursion_validation_error(exc: ValidationError) -> bool:
@@ -135,7 +135,7 @@ class Node(BaseModel):
     id: int
     children: Sequence[Node] = field(default_factory=list)
 
-    @field_validator("children", mode="wrap")
+    @u.field_validator("children", mode="wrap")
     @classmethod
     def drop_cyclic_references(cls, children, h):
         try:
@@ -188,7 +188,7 @@ from typing import Any
 from pydantic import (
     SerializerFunctionWrapHandler,
     TypeAdapter,
-    field_serializer,
+    u.field_serializer,
 )
 from pydantic.dataclasses import dataclass
 
@@ -202,7 +202,7 @@ class NodeReference:
 class Node(NodeReference):
     children: Sequence["Node"] = field(default_factory=list)
 
-    @field_serializer("children", mode="wrap")
+    @u.field_serializer("children", mode="wrap")
     def serialize(
         self, children: Sequence["Node"], handler: SerializerFunctionWrapHandler
     ):

@@ -37,6 +37,7 @@ Removed 7 `except Exception` violations from 5 production src/ files and verifie
 ### Task 1: Remove Exception from catch tuples in 4 files (241e7e3)
 
 Removed `Exception` from catch tuples in 5 sites across 4 files:
+
 - `serializers.py`: `(ValidationError, Exception)` -> `ValidationError`
 - `context.py` (2 sites): `(TypeError, Exception)` -> `TypeError` (also simplified error_msg logic)
 - `conversion.py`: `(ValueError, TypeError, AttributeError, RuntimeError, Exception)` -> 4 specific types
@@ -45,6 +46,7 @@ Removed `Exception` from catch tuples in 5 sites across 4 files:
 ### Task 2: Replace bare except Exception in tap-oracle-wms/tap.py (4e9c288)
 
 Replaced 2 bare `except Exception` catches:
+
 - Line 120 (flext_config property): `except (ValueError, TypeError, KeyError)` — covers Pydantic model_validate failures
 - Line 251 (initialize method): `except (ValueError, TypeError, KeyError, FlextTapOracleWmsConfigurationError)` — covers settings validation + custom error from property
 

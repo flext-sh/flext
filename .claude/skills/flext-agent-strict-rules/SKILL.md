@@ -25,7 +25,7 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 - Consume Pydantic-facing contracts through canonical aliases (`c`, `p`, `t`, `m`, `u`) and service facade alias (`s`) at usage sites; avoid direct framework-shaped contracts in consumers.
 - Use simple runtime aliases only; remove any `u.Aliases.*` indirection.
 - Protocol contracts belong in `p.*`; composed aliases in `t.*`; domain carriers in `m.*`. Never annotate with a concrete class when a canonical `p.*`/`t.*` contract exists.
-- Dismantle polymorphic branching into centralized Pydantic v2 models (`Literal` discriminators, `Field`, `model_validator`).
+- Dismantle polymorphic branching into centralized Pydantic v2 models (`Literal` discriminators, `u.Field`, `u.model_validator`).
 - Enforce abstraction boundaries in `examples/` and `scripts/` exactly as in `src/` (`AGENTS.md` §2.7).
 - In runtime `src/` code, prefer `e.fail_*`, `r.fail_op`, `r.fail_exc`. Avoid ad-hoc `r.fail("...")` except for explicit structured `error_data` passthrough.
 
@@ -52,7 +52,7 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 ### 4. Polymorphic Code → Centralized Pydantic v2 Models
 
 - Dismantle polymorphic functions that branch on 3+ types. Replace with one (or a small set of) Pydantic v2 models defining shape and validation.
-- Use discriminated unions (`Literal` discriminator field), `Field`, `@field_validator`, `@model_validator`, `model_validate`, `model_validate_json`. One entry point for validation; avoid long `if isinstance(...)` chains over many types.
+- Use discriminated unions (`Literal` discriminator field), `u.Field`, `@u.field_validator`, `@u.model_validator`, `model_validate`, `model_validate_json`. One entry point for validation; avoid long `if isinstance(...)` chains over many types.
 
 ### 5. Scale and Parallelism
 
@@ -92,8 +92,8 @@ class FlextDemo(FlextDemoTracingMixin, s[t.ScalarMapping]):
         class ParseRequest(m.ArbitraryTypesModel):
             """Request model for parse operation."""
 
-            kind: Annotated[t.NonEmptyStr, m.Field(description="Operation kind")]
-            payload: Annotated[t.NonEmptyStr, m.Field(description="Raw payload")]
+            kind: Annotated[t.NonEmptyStr, u.Field(description="Operation kind")]
+            payload: Annotated[t.NonEmptyStr, u.Field(description="Raw payload")]
 
     @staticmethod
     def run_parse(payload: t.NonEmptyStr) -> p.Result[str]:
@@ -151,9 +151,9 @@ class FlextDemoParse(FlextDemoParseJsonMixin, s[t.ScalarMapping]):
 
             kind: Annotated[
                 Literal["json", "yaml", "toml"],
-                m.m.Field(description="Serialization format"),
+                u.Field(description="Serialization format"),
             ]
-            payload: Annotated[t.NonEmptyStr, m.m.Field(description="Raw payload")]
+            payload: Annotated[t.NonEmptyStr, u.Field(description="Raw payload")]
 
             @u.model_validator(mode="after")
             def _validate_payload(self) -> Self:

@@ -273,9 +273,10 @@ from flext_core import m, u
 
 __all__: list[str] = ["m", "u"]
 ```
-3. Verify `__init__.py` lazy imports still resolve (chain: `__init__.py` → public module → `_utilities/`).
-4. Run `ruff check src/`, `pyrefly check src/`, `pyright src/`.
-5. Use `scope callers <Symbol>` to confirm no external breakage.
+
+1. Verify `__init__.py` lazy imports still resolve (chain: `__init__.py` → public module → `_utilities/`).
+2. Run `ruff check src/`, `pyrefly check src/`, `pyright src/`.
+3. Use `scope callers <Symbol>` to confirm no external breakage.
 
 **Detection**: `qlty smells --all --sarif | jq '.runs[0].results[] | select(.ruleId == "qlty:identical-code")'`
 

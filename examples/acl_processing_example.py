@@ -25,7 +25,7 @@ from typing import Annotated, ClassVar, TypeIs
 
 from pydantic import ConfigDict
 
-from flext_core import m, p, r, t
+from flext_core import m, p, r, t, u
 
 EntryDict = Mapping[
     str,
@@ -88,30 +88,30 @@ class AclProcessingExample:
 
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-        dn: str = m.Field(description="Distinguished name of the ACL entry")
-        acl_attribute: str = m.Field(description="ACL attribute name")
-        permissions: t.StrSequence = m.Field(description="List of permissions")
-        context: ContextDict = m.Field(description="Context information")
-        server_type: str = m.Field(description="Type of LDAP server")
+        dn: str = u.Field(description="Distinguished name of the ACL entry")
+        acl_attribute: str = u.Field(description="ACL attribute name")
+        permissions: t.StrSequence = u.Field(description="List of permissions")
+        context: ContextDict = u.Field(description="Context information")
+        server_type: str = u.Field(description="Type of LDAP server")
 
     class AclValidationResult(m.BaseModel):
         """Result of ACL validation with detailed context."""
 
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-        entry_dn: str = m.Field(description="Distinguished name of the entry")
-        valid: bool = m.Field(description="Whether the ACL entry is valid")
-        violations: t.StrSequence = m.Field(
+        entry_dn: str = u.Field(description="Distinguished name of the entry")
+        valid: bool = u.Field(description="Whether the ACL entry is valid")
+        violations: t.StrSequence = u.Field(
             default_factory=_new_str_list,
             description="List of validation violations",
         )
-        warnings: t.StrSequence = m.Field(
+        warnings: t.StrSequence = u.Field(
             default_factory=_new_str_list,
             description="List of validation warnings",
         )
         processing_time: Annotated[
             float,
-            m.Field(
+            u.Field(
                 description="Time taken for validation",
             ),
         ] = 0.0

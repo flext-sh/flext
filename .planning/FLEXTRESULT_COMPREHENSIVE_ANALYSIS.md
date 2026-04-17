@@ -24,7 +24,7 @@ r[T]  (extends RuntimeResult, Layer 1)
     ├── error_code: str | None
     ├── error_data: ConfigMap | None
     ├── exception: BaseException | None
-    └── _payload: T | None (PrivateAttr)
+    └── _payload: T | None (u.PrivateAttr)
 ```
 
 ### Key Methods (23 monadic operators)
@@ -54,6 +54,7 @@ flext-meltano:       28 sites  (meltano runner)
 **Problem**: `r[T]` allows both `r[str | None]` and implicit None handling
 
 **Current**:
+
 ```python
 # Ambiguous: is None success or failure?
 result: p.Result[str | None] = r[str | None].ok(None)  # Valid, passes type check
@@ -69,6 +70,7 @@ if result.is_success:
 **Impact**: 87 sites in flext-tap-* extract LDAP entries that may not exist
 
 **Strict Solution**:
+
 ```python
 # Option A: Explicit None in type (recommended)
 result: p.Result[Entry | None] = ...  # Type indicates None is possible
@@ -83,6 +85,7 @@ result: p.Result[Entry] = fetch_entry().lash(lambda _: p.Result[None].fail("not 
 **Problem**: Error messages are free-form strings with optional code/data
 
 **Current**:
+
 ```python
 r[Settings].fail("Failed to parse settings")  # What kind of parse error?
 r[Settings].fail("error", error_code="INVALID_JSON")  # Better, but unstructured
@@ -97,6 +100,7 @@ flext-api uses: HTTP status codes embedded in error
 **Impact**: Error routing/handling logic is ad-hoc across projects
 
 **Strict Solution**:
+
 ```python
 class ErrorDomain(Enum):
     """Strict enumeration of error categories"""
@@ -134,6 +138,7 @@ r[Entry].fail(
 **Problem**: No first-class support for async Result operations
 
 **Current**:
+
 ```python
 async def fetch_user() -> p.Result[User]:  # Returns sync r
     try:
@@ -154,6 +159,7 @@ if result.is_success:
 **Impact**: 40+ async methods in flext-api lack composable patterns
 
 **Strict Solution**:
+
 ```python
 # AsyncResult[T] wrapper
 class AsyncResult[T]:
@@ -176,6 +182,7 @@ class AsyncResult[T]:
 **Problem**: No mechanism to enforce Result return types for fallible operations
 
 **Current**:
+
 ```python
 def parse_ldif_entry(text: str) -> LdifEntry:  # Can raise!
     # Violates ROP pattern - should return r[LdifEntry]
@@ -191,6 +198,7 @@ except Exception as e:
 **Impact**: 120+ functions that should return `r[T]` return bare `T`
 
 **Strict Solution**:
+
 ```python
 # Fallible protocol - enforces Result return
 @runtime_checkable
@@ -224,6 +232,7 @@ def run_operation(op: Fallible[Settings]) -> p.Result[Settings]:
 **Problem**: Limited support for operations over mixed result types
 
 **Current**:
+
 ```python
 # Can't easily combine r[User] + r[Settings] + r[Service]
 user_result: p.Result[User] = fetch_user()
@@ -244,6 +253,7 @@ else:
 **Impact**: 45+ sites in flext-api/flext-infra combine multiple Results
 
 **Strict Solution**:
+
 ```python
 # Applicative/Monad pattern for multiple results
 @dataclass(frozen=True)
@@ -287,6 +297,7 @@ user_settings_service = ResultTuple.all3(
 **Problem**: No structured way to route errors based on type/domain
 
 **Current**:
+
 ```python
 def handle_error(result: p.Result[T]) -> dict:
     error = result.error or ""
@@ -301,6 +312,7 @@ def handle_error(result: p.Result[T]) -> dict:
 **Impact**: Error routing is fragile string-matching
 
 **Strict Solution**:
+
 ```python
 # Pattern match on error domain
 def to_http_response[T](result: p.Result[T]) -> HTTPResponse:
@@ -618,23 +630,27 @@ def make_async_fallible[T](
 ## Implementation Roadmap
 
 ### Sprint 1: Foundation (Week 1-2)
+
 - ✅ Define `ErrorDomain` enum + `FlextError` dataclass
 - ✅ Enhance `Result` protocol with structured error support
 - ✅ Add `Fallible`/`AsyncFallible` protocols
 - ✅ Implement `r.from_error()`, `.to_error()`
 
 ### Sprint 2: Enhancement (Week 3-4)
+
 - ✅ Implement `combine2()`, `combine3()` cross-result operators
 - ✅ Add async support: `flat_map_async()`, `AsyncResult` wrapper
 - ✅ Create test utilities for Result validation
 
 ### Sprint 3: Migration (Week 5-8)
+
 - ✅ Audit 533 existing Result usage sites
 - ✅ Migrate high-impact sites (flext-tap-*) to structured errors
 - ✅ Add linting rules for FlextError creation
 - ✅ Document patterns in AGENTS.md
 
 ### Sprint 4: Validation (Week 9-10)
+
 - ✅ Run pyright on all projects
 - ✅ Create lint rule for "bare `T` return on fallible operation"
 - ✅ Performance testing (no regression)
@@ -643,6 +659,7 @@ def make_async_fallible[T](
 ## Backward Compatibility
 
 All changes are **non-breaking**:
+
 - `r[T].ok()` / `r[T].fail()` continue to work unchanged
 - `FlextError` is opt-in via new factory methods
 - `ErrorDomain` improves pattern-matching but old code still works

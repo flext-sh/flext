@@ -16,7 +16,7 @@ Phase 7 has 4 tightly-scoped technical fixes with clear pass/fail criteria from 
 ## Claude's Discretion
 
 - Circular import resolution strategy
-- StrEnum coercion fix approach (BeforeValidator vs call-site fixes)
+- StrEnum coercion fix approach (m.BeforeValidator vs call-site fixes)
 - Deprecation framework migration approach
 - UserDict/UserString verification
 

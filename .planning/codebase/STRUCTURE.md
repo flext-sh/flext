@@ -186,51 +186,62 @@ flext/                                    # Monorepo root
 ## Directory Purposes
 
 **flext-core:**
+
 - Purpose: Foundation layer (L1) and Contracts (L0) - shared by all projects
 - Contains: Base models, constants, protocols, types, utilities, dispatcher, context management, DI container
 - Key files: `models.py`, `constants.py`, `protocols.py`, `typings.py`, `utilities.py`, `dispatcher.py`, `context.py`, `service.py`
 
 **flext-api:**
+
 - Purpose: HTTP REST API implementation (L3 Orchestration)
 - Contains: FastAPI app, HTTP client, schema validators, protocol implementations, middleware, lifecycle management
 - Key files: `api.py` (facade), `server.py`, `client.py`, `models.py`, `app.py`, `middleware.py`
 
 **flext-infra:**
+
 - Purpose: Infrastructure automation and code generation (L2)
 - Contains: Makefile generation, dependency modernization, code generation (codegen), validation checks, refactoring rules
 - Key files: `basemk/`, `codegen/`, `deps/`, `gates/`, `rules/`
 
 **flext-tests:**
+
 - Purpose: Centralized test infrastructure and utilities (test support for all projects)
 - Contains: Test builders, factories, fixtures, constants, models, protocols specific to testing
 - Key files: `conftest.py`, `helpers.py`, `builders/`, `factories/`
 
 **flext-web:**
+
 - Purpose: Web frontend framework (L3)
 - Contains: Frontend-specific models, components, middleware
 
 **flext-cli:**
+
 - Purpose: CLI application and orchestration (L3)
 - Contains: CLI commands, input parsing, orchestration logic
 
 **flext-meltano:**
+
 - Purpose: Meltano ELT platform integration (L2/L3)
 - Contains: Singer TAP/TARGET support, Meltano plugin system integration
 
 **flext-tap-* and flext-target-*:**
+
 - Purpose: Singer protocol implementations (L3 Orchestration)
 - Pattern: Each is a composition of platform (flext-meltano) + domain (flext-ldap, flext-oracle-wms, etc.)
 - Example: `flext-tap-ldap` = `class FlextTapLdapProtocols(FlextMeltanoProtocols, FlextLdapProtocols): pass`
 
 **flext-dbt-*:**
+
 - Purpose: dbt model transformations (L3 Orchestration)
 - Pattern: Similar composition: platform (dbt runner) + domain
 
 **flext-auth, flext-observability, flext-quality:**
+
 - Purpose: Cross-cutting infrastructure (L2)
 - Contains: Shared capabilities for authentication, observability, and quality checking
 
 **flext-db-oracle, flext-ldap, flext-ldif, flext-oracle-wms, flext-oracle-oic:**
+
 - Purpose: Domain-specific modules (L2 Infrastructure)
 - Pattern: Strict boundaries (oracle-wms ≠ db-oracle; ldap ≠ ldif)
 - Contains: Domain models, protocols, constants specific to that integration point
@@ -301,28 +312,33 @@ flext/                                    # Monorepo root
 ## Where to Add New Code
 
 **New Feature (Domain Logic):**
+
 - Primary code: `flext-<domain>/src/flext_<domain>/_models/feature.py` (model class)
 - Tests: `flext-<domain>/tests/test_feature.py`
 - Shared utilities: `flext-core/src/flext_core/_utilities/feature_utils.py`
 - Constants: `flext-core/src/flext_core/_constants/feature_constants.py`
 
 **New Component/Module:**
+
 - Implementation: Create new directory under `flext-<domain>/src/flext_<domain>/`
 - Facade class: `flext-<domain>/src/flext_<domain>/<module>.py` with `Flext<Domain><Module>` class
 - Sub-components: Store in `flext-<domain>/src/flext_<domain>/_<module>/`
 - Export: Auto-generated in `__init__.py` via `make codegen`
 
 **Utilities (Shared Helpers):**
+
 - Shared helpers: `flext-core/src/flext_core/_utilities/<purpose>/` (guards, introspection, transformers)
 - Access: Always via `u.*` namespace alias (never direct import)
 - Test helpers: `flext-tests/src/tests/helpers.py` or `flext-tests/src/tests/builders/`
 
 **Constants:**
+
 - Domain-specific: `flext-<domain>/src/flext_<domain>/_constants.py`
 - Shared validation: `flext-core/src/flext_core/_constants/validation.py`
 - Access: Always via `c.*` namespace alias
 
 **Tests:**
+
 - Unit tests: `flext-<project>/tests/test_<module>.py`
 - Test infrastructure: `flext-tests/src/tests/<purpose>/`
 - Fixtures: Centralized in `flext-tests/src/tests/conftest.py`
@@ -331,48 +347,56 @@ flext/                                    # Monorepo root
 ## Special Directories
 
 **`.planning/codebase/`:**
+
 - Purpose: GSD (Grand Software Design) codebase analysis documents
 - Generated: No (manually maintained by developers)
 - Committed: Yes
 - Contents: ARCHITECTURE.md, STRUCTURE.md, CONVENTIONS.md, TESTING.md, CONCERNS.md
 
 **`.beads/`:**
+
 - Purpose: Distributed issue tracking (alternative to GitHub Issues)
 - Generated: Yes (automatically managed)
 - Committed: No (.gitignored)
 - Contents: Issue metadata, task tracking
 
 **`.reports/`:**
+
 - Purpose: Test reports, coverage, validation results
 - Generated: Yes (by `make test`, `make validate`)
 - Committed: Partially (tracked in git)
 - Contents: Coverage reports, test results, validation logs
 
 **`docs/`:**
+
 - Purpose: Documentation (maintenance guides, architectural decisions)
 - Generated: No
 - Committed: Yes
 - Contents: .md files for project documentation
 
 **`scripts/`:**
+
 - Purpose: Utility scripts for development
 - Generated: No
 - Committed: Yes
 - Contents: Python scripts for code generation, migration, validation
 
 **`examples/`:**
+
 - Purpose: Example code demonstrating usage patterns
 - Generated: No
 - Committed: Yes
 - Contents: Runnable examples using flext modules
 
 **`tests/`:**
+
 - Purpose: Unit and integration tests for the project
 - Generated: No
 - Committed: Yes
 - Contents: Test files following pytest conventions
 
 **`docker/`:**
+
 - Purpose: Docker images and containers
 - Generated: No
 - Committed: Yes

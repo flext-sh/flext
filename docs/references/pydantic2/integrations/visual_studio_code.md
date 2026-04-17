@@ -8,7 +8,7 @@
 - [Tips and tricks](#tips-and-tricks)
   - [Strict errors](#strict-errors)
   - [Settings in class arguments](#settings-in-class-arguments)
-- [Adding a default with `Field`](#adding-a-default-with-field)
+- [Adding a default with `u.Field`](#adding-a-default-with-field)
 - [Technical Details](#technical-details)
 <!-- TOC END -->
 
@@ -256,17 +256,17 @@ in a model that is "frozen".
 
 ![VS Code strict type errors with model](../img/vs_code_08.png)
 
-## Adding a default with `Field`
+## Adding a default with `u.Field`
 
-Pylance/pyright requires `default` to be a keyword argument to `Field` in order to infer that the field is optional.
+Pylance/pyright requires `default` to be a keyword argument to `u.Field` in order to infer that the field is optional.
 
 ```python
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class Knight(m.BaseModel):
-    title: str = m.Field(default="Sir Lancelot")  # this is okay
-    age: int = m.Field(
+    title: str = u.Field(default="Sir Lancelot")  # this is okay
+    age: int = u.Field(
         23
     )  # this works fine at runtime but will case an error for pyright
 

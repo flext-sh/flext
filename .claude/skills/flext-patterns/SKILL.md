@@ -42,12 +42,12 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 - **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
 - **Rule**: Compatibility wrappers (`def old(): return new()`), non-business validation fallbacks, legacy code maintenance of ANY kind, and `OldName = NewName` compatibility aliases are FORBIDDEN and forbidden. Legacy code is DELETED on contact and replaced with the canonical pattern. No grace period, no deprecation path, no "we'll remove it later".
 - **Rule**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
-- **Rule**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features. `Field()` with `description`/`title`/`examples` for ALL declarations. Minimize custom validators — prefer built-in constraints (`Field(ge=0)`, `StringConstraints()`, `Literal`). `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, wrappers. USE: `@u.computed_field`, `model_post_init`, `PrivateAttr`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `PrivateAttr`. Nested classes MAY have business methods but ALL properties use `Field()`/`PrivateAttr`. `models.py`/`_models/` for models ONLY. Result/status booleans use canonical names like `success` and `failure`. If not using a feature — REVIEW and USE it.
+- **Rule**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features. `u.Field()` with `description`/`title`/`examples` for ALL declarations. Minimize custom validators — prefer built-in constraints (`u.Field(ge=0)`, `StringConstraints()`, `Literal`). `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, wrappers. USE: `@u.computed_field`, `model_post_init`, `u.PrivateAttr`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `u.PrivateAttr`. Nested classes MAY have business methods but ALL properties use `u.Field()`/`u.PrivateAttr`. `models.py`/`_models/` for models ONLY. Result/status booleans use canonical names like `success` and `failure`. If not using a feature — REVIEW and USE it.
 - **Rule**: Failure paths are DSL-first. Prefer `e.fail_*`, `r.fail_op`, `r.fail_exc`, and service-level DSL wrappers over ad-hoc `r.fail("...")` strings in runtime/application code. Use direct `r.fail(...)` only when implementing result primitives or when explicit passthrough payload semantics are required.
 
 ## Pattern Catalog
 
-- **Pydantic Consumption via `m` Facade** — All Pydantic objects (m.BaseModel, Field, ConfigDict, validators) accessed via `m.*` in MRO-nested classes
+- **Pydantic Consumption via `m` Facade** — All Pydantic objects (m.BaseModel, u.Field, ConfigDict, validators) accessed via `m.*` in MRO-nested classes
 - ROP (`r` monadic chains)
 - DI (`FlextContainer` singleton + scoped instances via `c`, `p`)
 - DDD (entity/value/service models via `m`)
@@ -77,8 +77,8 @@ from flext_core import m, p, r, s, t
 class FlextObservabilityTraceResult(m.ArbitraryTypesModel):
     """Trace result model — one model class per domain concept."""
 
-    trace_id: Annotated[t.NonEmptyStr, m.Field(description="Distributed trace id")]
-    span_name: Annotated[t.NonEmptyStr, m.Field(description="Span name")]
+    trace_id: Annotated[t.NonEmptyStr, u.Field(description="Distributed trace id")]
+    span_name: Annotated[t.NonEmptyStr, u.Field(description="Span name")]
 
 
 class FlextObservabilityTracingMixin:
@@ -109,7 +109,7 @@ class FlextObservability(
 ):
     """Facade: single class per module, domain methods inherited via MRO."""
 
-    span_name: Annotated[t.NonEmptyStr, m.Field(description="Initial span name")]
+    span_name: Annotated[t.NonEmptyStr, u.Field(description="Initial span name")]
 
     @override
     def execute(self) -> p.Result[FlextObservabilityTraceResult]:
@@ -206,7 +206,7 @@ class FlextTargetOracleModels(m):
         class ExecuteResult(m.ArbitraryTypesModel):
             """Domain-local model accessed as m.TargetOracle.ExecuteResult."""
 
-            name: Annotated[t.NonEmptyStr, m.Field(description="Resource name")]
+            name: Annotated[t.NonEmptyStr, u.Field(description="Resource name")]
 
 
 ExecuteResult = FlextTargetOracleModels.TargetOracle.ExecuteResult
@@ -348,8 +348,8 @@ from flext_core import c, m, p, r, t, u
 class FlextOrderItem(m.ArbitraryTypesModel):
     """Order item model — one class per module via MRO composition."""
 
-    sku: Annotated[t.NonEmptyStr, m.Field(description="Stock keeping unit")]
-    quantity: Annotated[int, m.Field(default=1, ge=1, description="Unit count")]
+    sku: Annotated[t.NonEmptyStr, u.Field(description="Stock keeping unit")]
+    quantity: Annotated[int, u.Field(default=1, ge=1, description="Unit count")]
 
     @u.field_validator("sku", mode="before")
     @classmethod
@@ -363,10 +363,10 @@ class FlextOrderCreateCommand(m.Command):
 
     model_config = m.ConfigDict(extra="forbid")
 
-    customer_id: Annotated[t.NonEmptyStr, m.Field(description="Customer id")]
+    customer_id: Annotated[t.NonEmptyStr, u.Field(description="Customer id")]
     items: Annotated[
         list[FlextOrderItem],
-        m.Field(description="Items to purchase", min_length=1),
+        u.Field(description="Items to purchase", min_length=1),
     ]
 
     @u.model_validator(mode="after")

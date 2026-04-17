@@ -28,7 +28,7 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict
 
-from flext_core import m, p, r, t
+from flext_core import m, p, r, t, u
 
 type DataPrimitive = t.Primitives | bytes | Decimal
 type DataValue = DataPrimitive | Sequence[DataValue] | Mapping[str, DataValue]
@@ -57,9 +57,9 @@ class PipelineStageData(m.BaseModel):
             extra="allow",
         )
 
-        values: Mapping[str, DataValue] = m.Field(default_factory=_new_data_value_map)
+        values: Mapping[str, DataValue] = u.Field(default_factory=_new_data_value_map)
 
-    data: PipelinePayload = m.Field(
+    data: PipelinePayload = u.Field(
         default_factory=lambda: PipelineStageData.PipelinePayload(values={}),
     )
 
@@ -88,16 +88,16 @@ class AdvancedProcessingExample:
 
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-        operation_id: str = m.Field(description="Unique operation identifier")
-        items_processed: int = m.Field(description="Total items processed")
-        items_succeeded: int = m.Field(description="Items that succeeded")
-        items_failed: int = m.Field(description="Items that failed")
-        processing_time: float = m.Field(description="Time taken for processing")
-        errors: t.StrSequence = m.Field(
+        operation_id: str = u.Field(description="Unique operation identifier")
+        items_processed: int = u.Field(description="Total items processed")
+        items_succeeded: int = u.Field(description="Items that succeeded")
+        items_failed: int = u.Field(description="Items that failed")
+        processing_time: float = u.Field(description="Time taken for processing")
+        errors: t.StrSequence = u.Field(
             default_factory=_new_str_list,
             description="List of errors encountered",
         )
-        metadata: Mapping[str, DataPrimitive] = m.Field(
+        metadata: Mapping[str, DataPrimitive] = u.Field(
             default_factory=_new_scalar_dict,
             description="Operation metadata",
         )
@@ -107,19 +107,19 @@ class AdvancedProcessingExample:
 
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-        item_id: str = m.Field(description="Unique item identifier")
-        valid: bool = m.Field(description="Whether the item is valid")
-        violations: t.StrSequence = m.Field(
+        item_id: str = u.Field(description="Unique item identifier")
+        valid: bool = u.Field(description="Whether the item is valid")
+        violations: t.StrSequence = u.Field(
             default_factory=_new_str_list,
             description="List of validation violations",
         )
-        warnings: t.StrSequence = m.Field(
+        warnings: t.StrSequence = u.Field(
             default_factory=_new_str_list,
             description="List of validation warnings",
         )
         validation_time: Annotated[
             float,
-            m.Field(
+            u.Field(
                 description="Time taken for validation",
             ),
         ] = 0.0

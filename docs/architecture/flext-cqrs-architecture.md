@@ -2236,7 +2236,7 @@ class MigrateEntryHandler(h[MigrateEntryCommand, m.Infra.MigrationResult]):
 
 ## ~~✅ Validação e Testes~~ 📋 EXEMPLOS DE TESTES PRESERVADOS
 
-> _Esta seção contém exemplos de código de testes. A estrutura foi migrada para cqrs.md._
+> *Esta seção contém exemplos de código de testes. A estrutura foi migrada para cqrs.md.*
 > Veja: `flext-core/docs/architecture/cqrs.md` → Testing Structure
 
 ### ~~Estrutura de Testes CQRS~~
@@ -2506,7 +2506,7 @@ class TestDispatcherLatency:
 
 ## ~~📚 Referências~~ ✅ MIGRADO
 
-> _Seção migrada para `flext-core/docs/architecture/cqrs.md` → External References_
+> *Seção migrada para `flext-core/docs/architecture/cqrs.md` → External References*
 
 ~~### Documentos Relacionados~~
 
@@ -2530,7 +2530,7 @@ class TestDispatcherLatency:
 
 ## ~~📋 Plano de Execução - CQRS Modernization~~ 📋 SPEC PENDENTE
 
-> _Esta seção contém o plano de execução detalhado. Mantida como referência para implementação futura._
+> *Esta seção contém o plano de execução detalhado. Mantida como referência para implementação futura.*
 > Roadmap resumido disponível em: `flext-core/docs/architecture/cqrs.md` → Modernization Roadmap
 
 ### ~~Classes Cross-Cutting e Integração CQRS (25 Nov 2025)~~
@@ -2617,16 +2617,16 @@ print(f"Registered: {summary.successful_count}, Failed: {summary.failed_count}")
 
 #### Fase 0: Documentação ✅ COMPLETA
 
-| Item                          | Status        | Arquivo                    | Descrição          |
-| ----------------------------- | ------------- | -------------------------- | ------------------ |
+| Item                          | Status       | Arquivo                    | Descrição          |
+| ----------------------------- | ------------ | -------------------------- | ------------------ |
 | FLEXT_CQRS_ARCHITECTURE.md    | ✅ Criado     | docs/                      | Este documento     |
 | FLEXT_SERVICE_ARCHITECTURE.md | ✅ Atualizado | docs/                      | Cross-ref com CQRS |
 | Validação código vs docs      | ✅ Completo   | handlers.py, dispatcher.py | Line references    |
 
 #### Fase 1: x.CQRS (Estimativa: 3-5 dias)
 
-| Item                        | Status      | Arquivo             | Linhas | Descrição                          |
-| --------------------------- | ----------- | ------------------- | ------ | ---------------------------------- |
+| Item                        | Status     | Arquivo             | Linhas | Descrição                          |
+| --------------------------- | ---------- | ------------------- | ------ | ---------------------------------- |
 | Criar x.CQRS                | 🔴 Pendente | mixins.py           | +80    | Nested class com métricas/contexto |
 | cqrs_metrics property       | 🔴 Pendente | mixins.py           | +20    | Acessor para métricas CQRS         |
 | cqrs_context property       | 🔴 Pendente | mixins.py           | +20    | Acessor para contexto CQRS         |
@@ -2661,12 +2661,12 @@ class x:
 
 #### Fase 2: FlextDispatcher DI (Estimativa: 5-7 dias)
 
-| Item                           | Status      | Arquivo             | Linhas | Descrição              |
-| ------------------------------ | ----------- | ------------------- | ------ | ---------------------- |
-| CircuitBreaker         | 🔴 Pendente | protocols.py        | +30    | Interface manager      |
-| RateLimiter            | 🔴 Pendente | protocols.py        | +25    | Interface manager      |
-| RetryPolicy            | 🔴 Pendente | protocols.py        | +25    | Interface manager      |
-| TimeoutEnforcer        | 🔴 Pendente | protocols.py        | +20    | Interface manager      |
+| Item                           | Status     | Arquivo             | Linhas | Descrição              |
+| ------------------------------ | ---------- | ------------------- | ------ | ---------------------- |
+| CircuitBreaker                 | 🔴 Pendente | protocols.py        | +30    | Interface manager      |
+| RateLimiter                    | 🔴 Pendente | protocols.py        | +25    | Interface manager      |
+| RetryPolicy                    | 🔴 Pendente | protocols.py        | +25    | Interface manager      |
+| TimeoutEnforcer                | 🔴 Pendente | protocols.py        | +20    | Interface manager      |
 | \_managers/circuit_breaker.py  | 🔴 Pendente | \_managers/         | +150   | Manager extraído       |
 | \_managers/rate_limiter.py     | 🔴 Pendente | \_managers/         | +120   | Manager extraído       |
 | \_managers/retry_policy.py     | 🔴 Pendente | \_managers/         | +100   | Manager extraído       |
@@ -2706,8 +2706,8 @@ class FlextDispatcher:
 
 #### Fase 3: Migração Projetos Dependentes (Estimativa: 5-10 dias)
 
-| Projeto       | Arquivos | Handlers | Status      | Prioridade |
-| ------------- | -------- | -------- | ----------- | ---------- |
+| Projeto       | Arquivos | Handlers | Status     | Prioridade |
+| ------------- | -------- | -------- | ---------- | ---------- |
 | flext-api     | ~8-10    | 5        | 🔴 Pendente | Alta       |
 | flext-ldif    | ~5-8     | 3        | 🔴 Pendente | Alta       |
 | flext-ldap    | ~6-10    | 4        | 🔴 Pendente | Média      |
@@ -2751,13 +2751,13 @@ class FlextDispatcher:
 
 ## ~~📅 Histórico de Versões~~ 📋 METADADO
 
-> _Histórico do documento original - para referência._
+> *Histórico do documento original - para referência.*
 
-| Versão | Data        | Mudanças                                                      |
-| ------ | ----------- | ------------------------------------------------------------- |
-| 1.2    | 25 Nov 2025 | Análise profunda d, FlextContext, FlextRegistry |
-| 1.1    | 25 Nov 2025 | Adicionado Plano de Execução detalhado com validação código   |
-| 1.0    | 25 Nov 2025 | Documento inicial - V2 em desenvolvimento                     |
+| Versão | Data        | Mudanças                                                    |
+| ------ | ----------- | ----------------------------------------------------------- |
+| 1.2    | 25 Nov 2025 | Análise profunda d, FlextContext, FlextRegistry             |
+| 1.1    | 25 Nov 2025 | Adicionado Plano de Execução detalhado com validação código |
+| 1.0    | 25 Nov 2025 | Documento inicial - V2 em desenvolvimento                   |
 
 ---
 

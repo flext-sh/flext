@@ -7011,7 +7011,7 @@ pkg/utils/shared_kernel/persistence/unified_repository.go
 
 pkg/utils/shared_kernel/utils/functional.go
  361  Function with many returns (count = 9): ToString
- 520  Function with many returns (count = 6): SetFieldValue
+ 520  Function with many returns (count = 6): Setu.FieldValue
    1  High total complexity (count = 81)
 
 pkg/utils/shared_kernel/validation/validator.go

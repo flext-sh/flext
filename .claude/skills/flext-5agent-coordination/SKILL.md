@@ -42,44 +42,44 @@ description: Use when coordinating 5 parallel agents on flext-core or consumer p
 
 ### File Ownership (flext-core)
 
-| File | Owner | Others Allowed |
-|------|-------|----------------|
-| `dispatcher.py` | Agent 1 | READ only |
-| `constants.py` | Agent 1 | READ only |
-| `_models/cqrs.py` | Agent 1 | READ only |
-| `registry.py` | Agent 2 | READ only |
-| `typings.py` | Agent 2 | READ only |
-| `service.py` | Agent 3 | READ only |
-| `_models/base.py` | Agent 3 | READ only |
-| `result.py` | Agent 4 | READ only |
-| `exceptions.py` | Agent 4 | READ only (exception: Agent 4 may modify exceptions.py in ANY consumer project for e.BaseError hierarchy) |
-| `runtime.py` | Agent 4 | Agent 5 READ only (MRO chain reference) |
-| `loggings.py` | Agent 4 | READ only |
-| `container.py` | Agent 5 (primary) | Agent 1: dispatcher singleton ADD only; Agent 4: return types only |
-| `decorators.py` | Agent 5 | READ only |
-| `handlers.py` | Agent 5 | READ only |
-| `mixins.py` | Agent 5 | READ only |
-| `protocols.py` | SECTION-OWNED (see matrix below) | Each agent: own section ONLY, append at END, NEVER reorder, NEVER auto-format globally |
-| `__init__.py` | ❄️ FROZEN | Each agent appends own new exports only |
-| `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `__version__.py` | ❄️ FROZEN | No agent modifies |
+| File                                                                                       | Owner                            | Others Allowed                                                                                            |
+| ------------------------------------------------------------------------------------------ | -------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `dispatcher.py`                                                                            | Agent 1                          | READ only                                                                                                 |
+| `constants.py`                                                                             | Agent 1                          | READ only                                                                                                 |
+| `_models/cqrs.py`                                                                          | Agent 1                          | READ only                                                                                                 |
+| `registry.py`                                                                              | Agent 2                          | READ only                                                                                                 |
+| `typings.py`                                                                               | Agent 2                          | READ only                                                                                                 |
+| `service.py`                                                                               | Agent 3                          | READ only                                                                                                 |
+| `_models/base.py`                                                                          | Agent 3                          | READ only                                                                                                 |
+| `result.py`                                                                                | Agent 4                          | READ only                                                                                                 |
+| `exceptions.py`                                                                            | Agent 4                          | READ only (exception: Agent 4 may modify exceptions.py in ANY consumer project for e.BaseError hierarchy) |
+| `runtime.py`                                                                               | Agent 4                          | Agent 5 READ only (MRO chain reference)                                                                   |
+| `loggings.py`                                                                              | Agent 4                          | READ only                                                                                                 |
+| `container.py`                                                                             | Agent 5 (primary)                | Agent 1: dispatcher singleton ADD only; Agent 4: return types only                                        |
+| `decorators.py`                                                                            | Agent 5                          | READ only                                                                                                 |
+| `handlers.py`                                                                              | Agent 5                          | READ only                                                                                                 |
+| `mixins.py`                                                                                | Agent 5                          | READ only                                                                                                 |
+| `protocols.py`                                                                             | SECTION-OWNED (see matrix below) | Each agent: own section ONLY, append at END, NEVER reorder, NEVER auto-format globally                    |
+| `__init__.py`                                                                              | ❄️ FROZEN                        | Each agent appends own new exports only                                                                   |
+| `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `__version__.py` | ❄️ FROZEN                        | No agent modifies                                                                                         |
 
 ### protocols.py Section Ownership Matrix
 
-| Section | A1 (Dispatcher) | A2 (Registry) | A3 (Service) | A4 (Result/Exceptions) | A5 (CDH/Mixins) |
-|---------|-----------------|---------------|--------------|------------------------|-----------------|
-| L1-236 (infra) | ❄️ | ❄️ | ❄️ | ❄️ | ❄️ |
-| Context, RuntimeBootstrapOptions, DI | — | — | — | — | ✅ |
-| Result, Result | — | — | — | ✅ | — |
-| Model, Config, Service, Validation | — | — | ✅ | — | — |
-| CommandBus, Middleware, Processor | ✅ | — | — | — | — |
-| Handler | — | — | — | — | ✅ |
-| Registry | — | ✅ | — | — | — |
-| VariadicCallable, ResourceFactory | — | — | — | ✅ | — |
-| RegisterableService, ServiceFactory | — | — | — | — | ✅ |
-| Log, Logger, Metadata | — | — | — | ✅ | — |
-| ValidatorSpec | — | — | ✅ | — | — |
-| L1289+ (metaclass infra) | ❄️ | ❄️ | ❄️ | ❄️ | ❄️ |
-| ALL other sections | ❄️ | ❄️ | ❄️ | ❄️ | ❄️ |
+| Section                              | A1 (Dispatcher) | A2 (Registry) | A3 (Service) | A4 (Result/Exceptions) | A5 (CDH/Mixins) |
+| ------------------------------------ | --------------- | ------------- | ------------ | ---------------------- | --------------- |
+| L1-236 (infra)                       | ❄️              | ❄️            | ❄️           | ❄️                     | ❄️              |
+| Context, RuntimeBootstrapOptions, DI | —               | —             | —            | —                      | ✅               |
+| Result, Result                       | —               | —             | —            | ✅                      | —               |
+| Model, Config, Service, Validation   | —               | —             | ✅            | —                      | —               |
+| CommandBus, Middleware, Processor    | ✅               | —             | —            | —                      | —               |
+| Handler                              | —               | —             | —            | —                      | ✅               |
+| Registry                             | —               | ✅             | —            | —                      | —               |
+| VariadicCallable, ResourceFactory    | —               | —             | —            | ✅                      | —               |
+| RegisterableService, ServiceFactory  | —               | —             | —            | —                      | ✅               |
+| Log, Logger, Metadata                | —               | —             | —            | ✅                      | —               |
+| ValidatorSpec                        | —               | —             | ✅            | —                      | —               |
+| L1289+ (metaclass infra)             | ❄️              | ❄️            | ❄️           | ❄️                     | ❄️              |
+| ALL other sections                   | ❄️              | ❄️            | ❄️           | ❄️                     | ❄️              |
 
 ### Execution Phases (Dependency-Ordered)
 
@@ -93,13 +93,13 @@ Agents MUST execute in this order:
 
 ### Consumer Project Partition (31 projects, zero overlap)
 
-| Agent | Projects | Count |
-|-------|----------|-------|
-| Agent 1 | `algar-oud-mig`, `flexcore`, `flext-api` | 3 |
-| Agent 2 | `flext-auth`, `flext-cli`, `flext-db-oracle` | 3 |
-| Agent 3 | `flext-grpc`, `flext-ldap`, `flext-ldif`, `flext-meltano` | 4 |
-| Agent 4 | `flext-observability`, `flext-oracle-oic`, `flext-oracle-wms`, `flext-plugin`, `flext-quality`, `flext-tap-oracle-wms`, `flext-target-ldif` | 7 |
-| Agent 5 | `flext-tap-ldap`, `flext-tap-ldif`, `flext-tap-oracle`, `flext-tap-oracle-oic`, `flext-target-ldap`, `flext-target-oracle`, `flext-target-oracle-oic`, `flext-target-oracle-wms`, `flext-web`, `flext-dbt-ldap`, `flext-dbt-ldif`, `flext-dbt-oracle`, `flext-dbt-oracle-wms`, `gruponos-meltano-native` | 14 |
+| Agent   | Projects                                                                                                                                                                                                                                                                                                 | Count |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| Agent 1 | `algar-oud-mig`, `flexcore`, `flext-api`                                                                                                                                                                                                                                                                 | 3     |
+| Agent 2 | `flext-auth`, `flext-cli`, `flext-db-oracle`                                                                                                                                                                                                                                                             | 3     |
+| Agent 3 | `flext-grpc`, `flext-ldap`, `flext-ldif`, `flext-meltano`                                                                                                                                                                                                                                                | 4     |
+| Agent 4 | `flext-observability`, `flext-oracle-oic`, `flext-oracle-wms`, `flext-plugin`, `flext-quality`, `flext-tap-oracle-wms`, `flext-target-ldif`                                                                                                                                                              | 7     |
+| Agent 5 | `flext-tap-ldap`, `flext-tap-ldif`, `flext-tap-oracle`, `flext-tap-oracle-oic`, `flext-target-ldap`, `flext-target-oracle`, `flext-target-oracle-oic`, `flext-target-oracle-wms`, `flext-web`, `flext-dbt-ldap`, `flext-dbt-ldif`, `flext-dbt-oracle`, `flext-dbt-oracle-wms`, `gruponos-meltano-native` | 14    |
 
 ### Lint Scoping
 

@@ -6,7 +6,7 @@
 - [Configuration on Pydantic dataclasses](#configuration-on-pydantic-dataclasses)
 - [Configuration on `TypeAdapter`](#configuration-on-typeadapter)
 - [Configuration on other supported types](#configuration-on-other-supported-types)
-- [Configuration on the `@validate_call` decorator](#configuration-on-the-validatecall-decorator)
+- [Configuration on the `@u.validate_call` decorator](#configuration-on-the-validatecall-decorator)
 - [Change behaviour globally](#change-behaviour-globally)
 - [Configuration propagation](#configuration-propagation)
 <!-- TOC END -->
@@ -127,23 +127,23 @@ the configuration can be set in two ways:
       name: str = "John Doe"
   ```
 
-- Using the [`@with_config`][pydantic.config.with_config] decorator (this avoids static type checking errors with
+- Using the [`@u.with_config`][pydantic.config.u.with_config] decorator (this avoids static type checking errors with
   [`TypedDict`][typing.TypedDict]):
 
   ```python
   from typing_extensions import TypedDict
 
-  from pydantic import ConfigDict, with_config
+  from pydantic import ConfigDict, u.with_config
 
 
-  @with_config(ConfigDict(str_to_lower=True))
+  @u.with_config(ConfigDict(str_to_lower=True))
   class Model(TypedDict):
       x: str
   ```
 
-## Configuration on the `@validate_call` decorator
+## Configuration on the `@u.validate_call` decorator
 
-The [`@validate_call`](./validation_decorator.md) also supports setting custom configuration. See the
+The [`@u.validate_call`](./validation_decorator.md) also supports setting custom configuration. See the
 [dedicated section](./validation_decorator.md#custom-configuration) for more details.
 
 ## Change behaviour globally
@@ -228,7 +228,7 @@ When using types that support configuration as field annotations, configuration 
   ```python
   from dataclasses import dataclass
 
-  from pydantic import BaseModel, ConfigDict, with_config
+  from pydantic import BaseModel, ConfigDict, u.with_config
 
 
   @dataclass
@@ -237,7 +237,7 @@ When using types that support configuration as field annotations, configuration 
 
 
   @dataclass
-  @with_config(str_to_lower=False)
+  @u.with_config(str_to_lower=False)
   class UserWithConfig:
       name: str
 

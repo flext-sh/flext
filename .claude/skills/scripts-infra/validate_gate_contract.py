@@ -65,14 +65,14 @@ class Ansi:
 class Violation(m.BaseModel):
     """Violation class."""
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
+    model_config: ClassVar[m.ConfigDict] = ConfigDict(frozen=True)
 
-    script: str = m.Field(description="Script file path")
-    check: str = m.Field(description="Check type that failed")
-    message: str = m.Field(description="Violation message")
+    script: str = u.Field(description="Script file path")
+    check: str = u.Field(description="Check type that failed")
+    message: str = u.Field(description="Violation message")
     severity: Annotated[
         str,
-        m.Field(
+        u.Field(
             description="Severity level (error or warning)",
         ),
     ] = "error"
@@ -81,12 +81,12 @@ class Violation(m.BaseModel):
 class ScriptInfo(m.BaseModel):
     """ScriptInfo class."""
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+    model_config: ClassVar[m.ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
-    path: str = m.Field(description="Script file path")
-    extension: str = m.Field(description="File extension (.py or .sh)")
-    role: str = m.Field(description="Script role (validator, fixer, or other)")
-    violations: Sequence[Violation] = m.Field(
+    path: str = u.Field(description="Script file path")
+    extension: str = u.Field(description="File extension (.py or .sh)")
+    role: str = u.Field(description="Script role (validator, fixer, or other)")
+    violations: Sequence[Violation] = u.Field(
         default_factory=list,
         description="List of validation violations",
     )

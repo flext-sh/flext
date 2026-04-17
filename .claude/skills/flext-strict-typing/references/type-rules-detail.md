@@ -17,30 +17,30 @@ from collections.abc import Mapping, Sequence`** in every file
 
 ### Collections.abc Migration Rules
 
-| Bare Type | Read-Only | Mutated |
-|-----------|-----------|---------|
-| `dict[K, V]` | `Mapping[K, V]` | `MutableMapping[K, V]` |
-| `list[X]` | `Sequence[X]` | `MutableSequence[X]` |
-| `set[X]` | `AbstractSet[X]` | Keep `set[X]` (see exceptions) |
-| `tuple[X, ...]` | Keep `tuple[X, ...]` | N/A (immutable) |
+| Bare Type       | Read-Only            | Mutated                        |
+| --------------- | -------------------- | ------------------------------ |
+| `dict[K, V]`    | `Mapping[K, V]`      | `MutableMapping[K, V]`         |
+| `list[X]`       | `Sequence[X]`        | `MutableSequence[X]`           |
+| `set[X]`        | `AbstractSet[X]`     | Keep `set[X]` (see exceptions) |
+| `tuple[X, ...]` | Keep `tuple[X, ...]` | N/A (immutable)                |
 
 ### Keep Concrete — Exceptions (CRITICAL)
 
 These patterns MUST keep concrete `dict`/`list`/`set` types:
 
-| Pattern | Reason |
-|---------|--------|
-| `r[list[X]]`, `r[dict[K,V]]` | **r[T] is INVARIANT** — `r[Sequence[X]]` ≠ `r[list[X]]` |
-| `dict[str, list[X]]` from PrivateAttr | **Nested invariance** — return type must match concrete backing |
-| `__all__: list[str]` | Python convention |
-| `Field(default_factory=list)` | Pydantic internals require concrete |
-| `PrivateAttr(default_factory=dict)` | Pydantic internals require concrete |
-| `ClassVar[list[...]]` | Class variable convention |
-| PEP 695 `type X = dict[...]` | Type alias definitions |
-| Singer SDK method overrides | Framework requires concrete `dict`/`list` |
-| `isinstance(x, dict)` | Runtime check requires concrete type |
-| `TypeAdapter(dict[...])` | Pydantic validation requires concrete |
-| `set[X]` with `.update()`/`.discard()` | `MutableSet` lacks these methods |
+| Pattern                                   | Reason                                                          |
+| ----------------------------------------- | --------------------------------------------------------------- |
+| `r[list[X]]`, `r[dict[K,V]]`              | **r[T] is INVARIANT** — `r[Sequence[X]]` ≠ `r[list[X]]`         |
+| `dict[str, list[X]]` from u.PrivateAttr | **Nested invariance** — return type must match concrete backing |
+| `__all__: list[str]`                      | Python convention                                               |
+| `u.Field(default_factory=list)`           | Pydantic internals require concrete                             |
+| `u.PrivateAttr(default_factory=dict)`   | Pydantic internals require concrete                             |
+| `ClassVar[list[...]]`                     | Class variable convention                                       |
+| PEP 695 `type X = dict[...]`              | Type alias definitions                                          |
+| Singer SDK method overrides               | Framework requires concrete `dict`/`list`                       |
+| `isinstance(x, dict)`                     | Runtime check requires concrete type                            |
+| `TypeAdapter(dict[...])`                  | Pydantic validation requires concrete                           |
+| `set[X]` with `.update()`/`.discard()`    | `MutableSet` lacks these methods                                |
 
 ### Simplification Patterns
 
@@ -78,16 +78,16 @@ ruff check --select=F821,F401,F811  # Verify no undefined names or unused import
 
 ### Replace with the appropriate type from the `FlextTypes` hierarchy
 
-| Instead of       | Use                        | When                                                          |
-| ---------------- | -------------------------- | ------------------------------------------------------------- |
-| `Any` / `object` | Specific Pydantic Model    | **MANDATORY**: For ALL domain entities and value objects      |
-| `Any` / `object` | `t.Scalar`                 | Primitives: `str \| int \| float \| bool \| datetime`         |
-| `Mapping[*, *]`      | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
-| `Mapping[*, *]`   | `FlextModels.Dict` / Model | Replaced by `RootModel` or specialized Pydantic models         |
-| Broad container aliases | `m.<Domain>.*Model` / `p.<Domain>.*Protocol` | Replace permissive contracts with explicit models/protocols  |
-| `t.Dict`          | `FlextModels.Dict`         | **Transitioning**: Prefer specialized models over generic dict |
-| `Sequence[Any]`      | `Sequence[SpecificModel]`      | Generic lists are forbidden                                   |
-| `Sequence[Any]`  | `Sequence[SpecificModel]`  | Read-only batch contracts                                     |
+| Instead of              | Use                                          | When                                                           |       |         |        |           |
+| ----------------------- | -------------------------------------------- | -------------------------------------------------------------- | ----- | ------- | ------ | --------- |
+| `Any` / `object`        | Specific Pydantic Model                      | **MANDATORY**: For ALL domain entities and value objects       |       |         |        |           |
+| `Any` / `object`        | `t.Scalar`                                   | Primitives: `str \                                             | int \ | float \ | bool \ | datetime` |
+| `Mapping[*, *]`         | `FlextModels.Dict` / Model                   | Replaced by `RootModel` or specialized Pydantic models         |       |         |        |           |
+| `Mapping[*, *]`         | `FlextModels.Dict` / Model                   | Replaced by `RootModel` or specialized Pydantic models         |       |         |        |           |
+| Broad container aliases | `m.<Domain>.*Model` / `p.<Domain>.*Protocol` | Replace permissive contracts with explicit models/protocols    |       |         |        |           |
+| `t.Dict`                | `FlextModels.Dict`                           | **Transitioning**: Prefer specialized models over generic dict |       |         |        |           |
+| `Sequence[Any]`         | `Sequence[SpecificModel]`                    | Generic lists are forbidden                                    |       |         |        |           |
+| `Sequence[Any]`         | `Sequence[SpecificModel]`                    | Read-only batch contracts                                      |       |         |        |           |
 
 ### The Type Hierarchy (from `typings.py` lines 153-176)
 
@@ -118,7 +118,7 @@ t.ErrorMap  # RootModel[Mapping[str, int | str | t.IntMapping]] — error types
 t.ObjectList  # Transitional only — migrate to Sequence[m.<Domain>.ItemModel]
 t.FactoryMap  # RootModel[Mapping[str, FactoryRegistrationCallable]]
 t.ResourceMap  # RootModel[Mapping[str, ResourceCallable]]
-t.FieldValidatorMap  # RootModel[Mapping[str, Callable[[GVT], GVT]]]
+t.u.FieldValidatorMap  # RootModel[Mapping[str, Callable[[GVT], GVT]]]
 ```
 
 ---
@@ -212,17 +212,17 @@ from flext_core import T, T_co, U, P, R, T_Model, T_Settings
 
 ### Always use modern syntax (with Mapping-first contracts)
 
-| Old (FORBIDDEN)         | New (REQUIRED)                                                 | Ruff Rule            |
-| ----------------------- | -------------------------------------------------------------- | -------------------- |
-| `typing.List[X]`        | `Sequence[X]`                                                      | UP006                |
-| `typing.Dict[str, X]`   | `Mapping[str, X]` (contract) / `Mapping[str, X]` (local mutation) | UP006 + FLEXT policy |
-| `typing.Tuple[X, ...]`  | `tuple[X, ...]`                                                | UP006                |
-| `typing.Optional[X]`    | `X \| None`                                                    | UP007                |
-| `typing.Union[X, Y]`    | `X \| Y`                                                       | UP007                |
-| `typing.Sequence`       | `collections.abc.Sequence`                                     | UP035                |
-| `typing.Mapping`        | `collections.abc.Mapping`                                      | UP035                |
-| `typing.Callable`       | `collections.abc.Callable`                                     | UP035                |
-| `isinstance(x, (A, B))` | `isinstance(x, A \| B)`                                        | UP038                |
+| Old (FORBIDDEN)         | New (REQUIRED)                                                    | Ruff Rule            |       |
+| ----------------------- | ----------------------------------------------------------------- | -------------------- | ----- |
+| `typing.List[X]`        | `Sequence[X]`                                                     | UP006                |       |
+| `typing.Dict[str, X]`   | `Mapping[str, X]` (contract) / `Mapping[str, X]` (local mutation) | UP006 + FLEXT policy |       |
+| `typing.Tuple[X, ...]`  | `tuple[X, ...]`                                                   | UP006                |       |
+| `typing.Optional[X]`    | `X \                                                              | None`                | UP007 |
+| `typing.Union[X, Y]`    | `X \                                                              | Y`                   | UP007 |
+| `typing.Sequence`       | `collections.abc.Sequence`                                        | UP035                |       |
+| `typing.Mapping`        | `collections.abc.Mapping`                                         | UP035                |       |
+| `typing.Callable`       | `collections.abc.Callable`                                        | UP035                |       |
+| `isinstance(x, (A, B))` | `isinstance(x, A \                                                | B)`                  | UP038 |
 
 ### Use `typing.Self` for return self patterns
 
@@ -242,19 +242,20 @@ class MyModel(m.BaseModel):
 
 ALL code MUST follow "Pydantic v2 way" EXTENSIVELY across ALL 33 projects (`src/`, `tests/`, `examples/`). Every class MUST extend Pydantic v2 `BaseModel` (or FLEXT base models) via MRO — USE, USE, USE Pydantic v2 features to their fullest; if not using a feature, REVIEW and USE it; if not needed, use a simpler base and USE it fully.
 
-**Field Declarations**: `Field()` for ALL field declarations with `description`, `title`, `examples`, `json_schema_extra` documenting business rules. Fields are self-documenting contracts, not bare attributes. `SecretStr`/`SecretBytes` for ALL sensitive values. Internal/private state MUST use `PrivateAttr()` — never bare `self._x = ...` assignments.
+**u.Field Declarations**: `u.Field()` for ALL field declarations with `description`, `title`, `examples`, `json_schema_extra` documenting business rules. u.Fields are self-documenting contracts, not bare attributes. `SecretStr`/`SecretBytes` for ALL sensitive values. Internal/private state MUST use `u.PrivateAttr()` — never bare `self._x = ...` assignments.
 
 **Model Configuration**: `model_config = ConfigDict(...)` for ALL model configuration. Standalone `*Config` classes are TOTALLY FORBIDDEN — use `BaseSettings` or `ConfigDict` instead. Configuration values from `settings.py` (`s.*`).
 
-**Validation**: Custom `@field_validator`/`@model_validator` MUST be minimized — prefer Pydantic v2 built-in constraints (`Field(ge=0, le=100)`, `Annotated[str, StringConstraints()]`, `Literal`, `constr`, `conint`, pattern constraints) before writing custom validators. Ad-hoc validation functions outside models are FORBIDDEN.
+**Validation**: Custom `@u.field_validator`/`@u.model_validator` MUST be minimized — prefer Pydantic v2 built-in constraints (`u.Field(ge=0, le=100)`, `Annotated[str, StringConstraints()]`, `Literal`, `constr`, `conint`, pattern constraints) before writing custom validators. Ad-hoc validation functions outside models are FORBIDDEN.
 
-**FORBIDDEN Inside Model Classes**: Initialization helpers (`def setup()`, `def initialize()`), unnecessary `@property`, simple getters/setters, line-reduction wrappers, pass-through methods. If Pydantic v2 has a built-in mechanism (`@u.computed_field`, `model_post_init`, `__init_subclass__`, `PrivateAttr`), USE IT.
+**FORBIDDEN Inside Model Classes**: Initialization helpers (`def setup()`, `def initialize()`), unnecessary `@property`, simple getters/setters, line-reduction wrappers, pass-through methods. If Pydantic v2 has a built-in mechanism (`@u.computed_field`, `model_post_init`, `__init_subclass__`, `u.PrivateAttr`), USE IT.
 
 **Centralization**: `Enum`, `Mapping`, and `Literal` values MUST come from `constants.py` (`c.*`) — never defined inline. JSON via `model_dump_json()`, `model_validate_json()`, `model_dump()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`.
 
-**Scope**: Nested facade classes in modules MAY contain business logic methods beyond validation, but ALL their internal properties MUST use `Field()` and `PrivateAttr`. `models.py`/`_models/` directories are for model definitions ONLY — remove business logic, utility functions, and orchestration code. Compatibility wrappers, legacy code, and non-business validation fallbacks are TOTALLY FORBIDDEN. Tests follow these exact same rules.
+**Scope**: Nested facade classes in modules MAY contain business logic methods beyond validation, but ALL their internal properties MUST use `u.Field()` and `u.PrivateAttr`. `models.py`/`_models/` directories are for model definitions ONLY — remove business logic, utility functions, and orchestration code. Compatibility wrappers, legacy code, and non-business validation fallbacks are TOTALLY FORBIDDEN. Tests follow these exact same rules.
 
 **AXIOMATIC — Integral Validation**: Every typing or model change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. ALL impacted references across ALL 33 projects MUST be immediately updated via ast-grep (`sg`) search-and-replace. Linter suppression comments (`# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore`) are FORBIDDEN without: (1) real, verifiable internet citations, (2) explicit business necessity in the comment, (3) per-line only — never global. Fix the code, never silence the linter.
+
 ### ConfigDict (not inner `class Config`)
 
 ```python
@@ -273,35 +274,35 @@ class MyModel(m.BaseModel):
         validate_assignment = True
 ```
 
-### Field declarations
+### u.Field declarations
 
 ```python
-# ✅ CORRECT — Annotated with Field
-name: str = m.Field(default="", description="Name")
-items: t.StrSequence = m.Field(default_factory=list)
-created_at: datetime = m.Field(default_factory=lambda: datetime.now(UTC))
+# ✅ CORRECT — Annotated with u.Field
+name: str = u.Field(default="", description="Name")
+items: t.StrSequence = u.Field(default_factory=list)
+created_at: datetime = u.Field(default_factory=lambda: datetime.now(UTC))
 
 # ❌ WRONG — No default_factory for mutable defaults
-items: t.StrSequence = []  # Mutable default, use m.Field(default_factory=list)
+items: t.StrSequence = []  # Mutable default, use u.Field(default_factory=list)
 ```
 
-### Validators use `@field_validator` and `@model_validator`
+### Validators use `@u.field_validator` and `@u.model_validator`
 
 ```python
-from pydantic import field_validator, model_validator
+from pydantic import u.field_validator, u.model_validator
 
 
 class MyModel(m.BaseModel):
     name: str
 
-    @field_validator("name")
+    @u.field_validator("name")
     @classmethod
     def validate_name(cls, v: str) -> str:
         if not v.strip():
             raise ValueError("Name cannot be empty")
         return v.strip()
 
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def validate_model(self) -> Self:
         ...
         return self
@@ -338,7 +339,7 @@ from typing import Protocol, runtime_checkable
 @runtime_checkable
 class SerializableRecord(Protocol):
     def to_dict(self) -> m.Domain.SerializedModel: ...
-    def to_json(self) -> str: ...
+    def u.to_json(self) -> str: ...
 ```
 
 - Protocols go in `protocols.py`, organized inside the `FlextProtocols` class
@@ -482,29 +483,30 @@ when business requires it. If a type needs nullable semantics, the developer wri
 
 ```python
 # ❌ WRONG — None is semantically meaningless when default is ""
-backup_path: str | None = m.Field(default="", description="Backup path.")
-target_dn: str | None = m.Field(default="", description="Target DN.")
+backup_path: str | None = u.Field(default="", description="Backup path.")
+target_dn: str | None = u.Field(default="", description="Target DN.")
 
 # ✅ CORRECT — just str with empty default
-backup_path: str = m.Field(default="", description="Backup path.")
-target_dn: str = m.Field(default="", description="Target DN.")
+backup_path: str = u.Field(default="", description="Backup path.")
+target_dn: str = u.Field(default="", description="Target DN.")
 
 # ✅ CORRECT — None has distinct meaning ("not configured at all")
-config_file: str | None = m.Field(
+config_file: str | None = u.Field(
     default=None, description="Optional settings override."
 )
 ```
 
 **Decision tree**:
 
-1. Is `None` a valid domain state distinct from `""`? → Use `str | None = m.Field(default=None)`
-2. Is the field always a string, just sometimes empty? → Use `str = m.Field(default="")`
+1. Is `None` a valid domain state distinct from `""`? → Use `str | None = u.Field(default=None)`
+2. Is the field always a string, just sometimes empty? → Use `str = u.Field(default="")`
 3. Is the field required? → Use `str` (no default)
 
 **`typings.py` definition rule**:
 
-4. Does the type alias definition in `typings.py` include `| None`? → VIOLATION. Remove `| None` from the alias. Consumers add `| None` inline at usage sites.
-5. Need a nullable variant? → Write `field: t.Scalar | None = m.Field(default=None)` at the usage site. NEVER create `NullableScalarValue` or `OptionalScalar` aliases.
+1. Does the type alias definition in `typings.py` include `| None`? → VIOLATION. Remove `| None` from the alias. Consumers add `| None` inline at usage sites.
+2. Need a nullable variant? → Write `field: t.Scalar | None = u.Field(default=None)` at the usage site. NEVER create `NullableScalarValue` or `OptionalScalar` aliases.
+
 ---
 
 ## Rule 15: Pydantic Models Over Plain Helper Classes
@@ -520,7 +522,7 @@ class PhaseResults:
 
 # ✅ CORRECT — Pydantic model with proper typing
 class PhaseResults(m.BaseModel):
-    results: Mapping[int, OperationStats] = m.Field(default_factory=dict)
+    results: Mapping[int, OperationStats] = u.Field(default_factory=dict)
 
     def with_result(self, phase: int, stats: OperationStats) -> PhaseResults:
         """Immutable update — returns new instance with added result."""
@@ -557,8 +559,8 @@ class SuccessCheckable(Protocol):
 class ResultBase(m.BaseModel):
     """Base for result models with success tracking."""
 
-    success: bool = m.Field(default=False, description="Operation succeeded.")
-    message: str = m.Field(default="", description="Human-readable result.")
+    success: bool = u.Field(default=False, description="Operation succeeded.")
+    message: str = u.Field(default="", description="Human-readable result.")
 
     @property
     def failure(self) -> bool:
@@ -591,7 +593,7 @@ def is_config_map(val: m.Domain.UnknownInputModel) -> TypeGuard[m.Domain.ConfigM
 ```
 
 **Polymorphic code → centralized Pydantic models**  
-Dismantle polymorphic functions: replace multiple branches on type/union with a single contract. Use centralized Pydantic v2 models with validation (discriminated unions, `Field`, `model_validator`, `field_validator`). Prefer overloads or discriminated unions over loose `Union` handling in function bodies.
+Dismantle polymorphic functions: replace multiple branches on type/union with a single contract. Use centralized Pydantic v2 models with validation (discriminated unions, `u.Field`, `u.model_validator`, `u.field_validator`). Prefer overloads or discriminated unions over loose `Union` handling in function bodies.
 
 ```python
 # ❌ AVOID — many branches on polymorphic input in one function
@@ -603,7 +605,7 @@ class ProcessInput(m.BaseModel):
     kind: Literal["str", "dict", "list"]
     value: m.Domain.ProcessValueModel
 
-    @model_validator(mode="after")
+    @u.model_validator(mode="after")
     def check_kind_match(self): ...
 
 
@@ -623,7 +625,7 @@ Agents MUST apply the following when editing FLEXT code. No exceptions without e
    Never use `type(x) is T` or `type(x) == T` to narrow types. Use `isinstance(x, T)` or a `TypeGuard` so the type checker narrows correctly. Swapping `isinstance` for `type()` is forbidden.
 
 3. **Dismantle polymorphic code**  
-   Replace functions/methods that branch on multiple types (str | dict | list | BaseModel, etc.) with a single contract: centralized Pydantic v2 models, discriminated unions, `Field`, `@field_validator`, `@model_validator`. One entry point, validation in the model.
+   Replace functions/methods that branch on multiple types (str | dict | list | BaseModel, etc.) with a single contract: centralized Pydantic v2 models, discriminated unions, `u.Field`, `@u.field_validator`, `@u.model_validator`. One entry point, validation in the model.
 
 4. **No non-runtime aliases**  
    Remove compatibility or duplicate aliases (e.g. `LegacyX = NewX`, extra module-level aliases that mirror facades). Keep only the canonical runtime alias per facade (e.g. one `m`, one `c`, one `t` at package/project root).

@@ -2,7 +2,8 @@
 
 ## What Was Changed
 
-All 5 target-* projects converted from bare Pydantic Field constraints to `t.*` validation types:
+All 5 target-* projects converted from bare Pydantic u.Field constraints to `t.*` validation types:
+
 - **flext-target-ldif:** 17 conversions ✅
 - **flext-target-ldap:** 15 conversions ✅
 - **flext-target-oracle:** 14 conversions ✅
@@ -13,14 +14,14 @@ All 5 target-* projects converted from bare Pydantic Field constraints to `t.*` 
 
 | Old Pattern | New Type | Example |
 |---|---|---|
-| `Field(ge=0)` on int | `t.NonNegativeInt` | counts, sizes |
-| `Field(ge=1)` on int | `t.PositiveInt` | timeouts, ports |
-| `Field(gt=0)` on int | `t.PositiveInt` | batch size |
-| `Field(ge=0.0)` on float | `t.NonNegativeFloat` | durations |
-| `Field(gt=0.0)` on float | `t.PositiveFloat` | timeouts |
-| `Field(min_length=1)` on str | `t.NonEmptyStr` | names, paths |
-| `Field(ge=1, le=10000)` on int | `t.BatchSize` | batch_size fields |
-| `Field(ge=1, le=65535)` on int | `t.PortNumber` | port numbers |
+| `u.Field(ge=0)` on int | `t.NonNegativeInt` | counts, sizes |
+| `u.Field(ge=1)` on int | `t.PositiveInt` | timeouts, ports |
+| `u.Field(gt=0)` on int | `t.PositiveInt` | batch size |
+| `u.Field(ge=0.0)` on float | `t.NonNegativeFloat` | durations |
+| `u.Field(gt=0.0)` on float | `t.PositiveFloat` | timeouts |
+| `u.Field(min_length=1)` on str | `t.NonEmptyStr` | names, paths |
+| `u.Field(ge=1, le=10000)` on int | `t.BatchSize` | batch_size fields |
+| `u.Field(ge=1, le=65535)` on int | `t.PortNumber` | port numbers |
 
 ## Import Statement
 
@@ -35,26 +36,28 @@ from .typings import t
 ## Usage Examples
 
 ### Before
+
 ```python
 class Settings(FlextModels.ArbitraryTypesModel):
-    batch_size: Annotated[int, m.Field(ge=1, le=10000)]
-    timeout: Annotated[int, m.Field(ge=1)]
-    name: Annotated[str, m.Field(min_length=1)]
-    duration: Annotated[float, m.Field(ge=0.0)]
-    port: Annotated[int, m.Field(ge=1, le=65535)]
+    batch_size: Annotated[int, u.Field(ge=1, le=10000)]
+    timeout: Annotated[int, u.Field(ge=1)]
+    name: Annotated[str, u.Field(min_length=1)]
+    duration: Annotated[float, u.Field(ge=0.0)]
+    port: Annotated[int, u.Field(ge=1, le=65535)]
 ```
 
 ### After
+
 ```python
 from flext_core import t
 
 
 class Settings(FlextModels.ArbitraryTypesModel):
-    batch_size: Annotated[t.BatchSize, m.Field(...)]
-    timeout: Annotated[t.PositiveInt, m.Field(...)]
-    name: Annotated[t.NonEmptyStr, m.Field(...)]
-    duration: Annotated[t.NonNegativeFloat, m.Field(...)]
-    port: Annotated[t.PortNumber, m.Field(...)]
+    batch_size: Annotated[t.BatchSize, u.Field(...)]
+    timeout: Annotated[t.PositiveInt, u.Field(...)]
+    name: Annotated[t.NonEmptyStr, u.Field(...)]
+    duration: Annotated[t.NonNegativeFloat, u.Field(...)]
+    port: Annotated[t.PortNumber, u.Field(...)]
 ```
 
 ## Files That Changed
@@ -70,7 +73,7 @@ class Settings(FlextModels.ArbitraryTypesModel):
 ## Why This Matters
 
 1. **Consistency:** All projects follow the same pattern
-2. **Clarity:** Type signature shows intent without reading m.Field()
+2. **Clarity:** Type signature shows intent without reading u.Field()
 3. **Portability:** Works with any framework that understands annotated-types
 4. **Type Safety:** Better IDE support and mypy/pyright checking
 5. **Maintenance:** Single source of truth in flext-core
@@ -114,6 +117,7 @@ cd flext-target-oracle-wms && make check && make test
 ## Questions?
 
 Refer to:
+
 - `/home/marlonsc/flext/.planning/TARGET_CONVERSION_SUMMARY.md` - Detailed reference
 - `/home/marlonsc/flext/.planning/TARGET_VALIDATION_TYPES_REFACTOR.md` - Full documentation
 - `/home/marlonsc/flext/flext-core/src/flext_core/_typings/validation.py` - Type definitions
