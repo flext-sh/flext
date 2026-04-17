@@ -224,6 +224,89 @@ from flext_ldif import FlextLdifModels
 
 ---
 
+## Rule 4F: MRO Parent Import Rule for Private Modules and Facade Files
+
+Each facade file (`constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py`) DEFINES its own alias. That alias MUST be imported from the **parent MRO package** in:
+1. The facade file itself (it cannot import the alias it defines from own package — self-referential)
+2. All private modules (`_models/*.py`, `_utilities/*.py`) that participate in its lazy-load chain
+
+### Why this prevents cycles
+
+```
+# CYCLE: _models/domain_acl.py → from flext_ldif import u
+#   → lazy loads utilities.py → imports _utilities/*.py → imports _models/*.py → DEADLOCK
+#
+# SAFE: _models/domain_acl.py → from flext_cli import u
+#   → flext_cli already loaded (parent) → no cycle
+```
+
+### Complete import matrix
+
+| File type | `m` source | `u` source | `c` source | `t` source | `p` source | `r, s, e, ...` |
+|-----------|-----------|-----------|-----------|-----------|-----------|-----------------|
+| `_models/*.py` | **parent** | **parent** | own pkg | own pkg | own pkg | own pkg |
+| `_utilities/*.py` | own pkg | **parent** | own pkg | own pkg | own pkg | own pkg |
+| `models.py` (facade) | **parent** | **parent** | — | own pkg | — | — |
+| `utilities.py` (facade) | own pkg | **parent** | — | — | — | — |
+| `constants.py` (facade) | — | — | **parent** | own pkg | — | — |
+| `typings.py` (facade) | — | — | — | **parent** | — | — |
+| `protocols.py` (facade) | — | — | — | — | **parent** | — |
+| `services/*.py` | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg |
+| `servers/*.py` | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg |
+| `tests/*.py` | tests pkg | tests pkg | tests pkg | tests pkg | tests pkg | tests pkg |
+
+**"parent"** = the most advanced parent MRO package. Find it by reading the facade file's own imports.
+**"own pkg"** = `from flext_<project> import X` — lazy init resolves it safely.
+**flext-core** (MRO root): ALL aliases from own package (`from flext_core import ...`).
+
+### How to find the parent MRO for each alias
+
+Check the project's facade file for that alias:
+```python
+# flext-ldif/src/flext_ldif/models.py
+from flext_cli import m, u  # → parent for m is flext_cli
+
+# flext-ldif/src/flext_ldif/constants.py
+from flext_cli import c  # → parent for c is flext_cli
+
+# flext-ldif/src/flext_ldif/typings.py
+from flext_cli import t  # → parent for t is flext_cli
+```
+
+### Example: _models/domain_acl.py (flext-ldif)
+
+```python
+# ✅ CORRECT
+from flext_cli import m, u  # parent MRO for m, u
+from flext_ldif import FlextLdifModelsBases, c, t  # sibling class + leaf deps
+
+if TYPE_CHECKING:
+    from flext_ldif import FlextLdifModelsDomainMetadata  # annotation-only
+
+
+class FlextLdifModelsDomainAcl:
+    class Acl(FlextLdifModelsBases.AclElement):  # runtime base — OK
+        metadata: (
+            FlextLdifModelsDomainMetadata.QuirkMetadata | None
+        )  # TYPE_CHECKING — OK
+```
+
+```python
+# ❌ WRONG — m from own package triggers models.py load → cycle
+from flext_ldif import FlextLdifModelsBases, c, m, t, u
+
+# ❌ WRONG — flext_core is not the most advanced parent (flext_cli is)
+from flext_core import m, u
+```
+
+### Sibling class imports in _models/*.py
+
+- **Runtime** (base class, isinstance): `from flext_<project> import FlextProjectModelsBases` — lazy init resolves before the cycle point
+- **Annotation-only** (type hint with `from __future__ import annotations`): `TYPE_CHECKING` block
+- **Organic namespace**: Use `m.Ldif.ClassName` instead of raw `FlextLdifModelsSettings.ClassName`
+
+---
+
 ## Rule 5: Tier Enforcement
 
 A module may ONLY import from modules in **lower** tiers. See `flext-architecture-layers` SKILL for the complete tier map.
