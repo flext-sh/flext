@@ -64,6 +64,7 @@ None
 | WA-04 | Zero `sys.exit()` outside `__main__.py` | 2 real violations in flext-quality tools (style_validator.py, content_analyzer.py) |
 | WA-05 | Zero `print()` in production | 52 instances across 20 files — largest effort, needs case-by-case triage |
 | WA-06 | Zero `subprocess.run()` outside wrapper | 5 instances outside wrapper (flext-meltano, flext-quality, gruponos, workspace_makefile) |
+
 </phase_requirements>
 
 ## Standard Stack

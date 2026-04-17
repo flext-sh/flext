@@ -80,7 +80,7 @@
 | Option | Description | Selected |
 |--------|-------------|----------|
 | Hard-cut to uv | Replace `poetry install` with `uv sync` in all Makefiles. Swap CI actions. | ✓ |
-| Keep Poetry as fallback | Hybrid `uv sync || poetry install`. Safer but adds complexity. | |
+| Keep Poetry as fallback | Hybrid `uv sync \|\| poetry install`. Safer but adds complexity. | |
 
 **User's choice:** Hard-cut to uv (Recommended)
 

@@ -13,7 +13,7 @@ Migrate all TypeGuard functions to TypeIs (PEP 742) and annotate all empty conta
 <decisions>
 ## Implementation Decisions
 
-### TypeGuard → TypeIs Migration (TYPE-07)
+## TypeGuard → TypeIs Migration (TYPE-07)
 
 - **D-01:** All 12 TypeGuard functions across the monorepo must be converted to TypeIs (PEP 742). TypeIs narrows in both branches (true AND false), which is strictly more useful than TypeGuard's true-only narrowing.
 - **D-02:** Import `TypeIs` from `typing` (Python 3.13 stdlib) — not from `typing_extensions`.

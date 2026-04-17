@@ -10,7 +10,7 @@
 
 ---
 
-### Task 1: Extend CanonicalValueRule model for new types
+## Task 1: Extend CanonicalValueRule model for new types
 
 **Files:**
 
@@ -41,7 +41,7 @@ feat(codegen): widen CanonicalValueRule.value to accept t.StrSequence
 
 ---
 
-### Task 2: Add governance YAML entries for frozenset/regex/tuple
+## Task 2: Add governance YAML entries for frozenset/regex/tuple
 
 **Files:**
 
@@ -133,7 +133,7 @@ feat(codegen): add frozenset/regex/tuple canonical entries to governance YAML
 
 ---
 
-### Task 3: Add governance getter methods
+## Task 3: Add governance getter methods
 
 **Files:**
 
@@ -199,7 +199,7 @@ feat(codegen): add frozenset/regex/tuple governance getters
 
 ---
 
-### Task 4: Add CLI input model for consolidate
+## Task 4: Add CLI input model for consolidate
 
 **Files:**
 
@@ -234,7 +234,7 @@ feat(codegen): add CodegenConsolidateInput CLI model
 
 ---
 
-### Task 5: Add consolidate handler to codegen CLI
+## Task 5: Add consolidate handler to codegen CLI
 
 **Files:**
 
@@ -434,7 +434,7 @@ feat(codegen): add consolidate CLI handler with per-file validation and rollback
 
 ---
 
-### Task 6: Export new model and verify integration
+## Task 6: Export new model and verify integration
 
 **Files:**
 
@@ -466,7 +466,7 @@ feat(codegen): verify consolidate command integration
 
 ---
 
-### Task 7: End-to-end test with --apply
+## Task 7: End-to-end test with --apply
 
 **Files:**
 

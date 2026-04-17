@@ -18,7 +18,7 @@ Two work streams:
 <decisions>
 ## Implementation Decisions
 
-### Execution ordering
+## Execution ordering
 
 - **D-01:** INFRA stream first (01→05), then WA stream (01→06). Rationale: centralized helpers (`run_cli`, `iter_projects`) must exist before workaround fixes can use them.
 - **D-02:** Within INFRA: foundation utilities first (run_cli, iter_projects), then normalization (workspace_root), then new tooling (NamespaceSourceDetector), then policy gate.

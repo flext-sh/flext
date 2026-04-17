@@ -13,7 +13,7 @@ Eliminate all residual workaround violations found by v1.0 milestone audit: bare
 <decisions>
 ## Implementation Decisions
 
-### Exception Specificity (WA-03)
+## Exception Specificity (WA-03)
 
 - **D-01:** Replace each bare `except Exception:` with the most specific exception type for its context (e.g., `OSError`, `ValueError`, `KeyError`, `oracledb.Error`, `RuntimeError`)
 - **D-02:** In `src/` production code: zero tolerance — every handler must catch a specific type

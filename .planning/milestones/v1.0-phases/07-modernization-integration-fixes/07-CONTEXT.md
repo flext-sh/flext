@@ -13,7 +13,7 @@ Fix cross-phase integration breakage (circular import in `_utilities_loader.py`,
 <decisions>
 ## Implementation Decisions
 
-### Circular import resolution (INFRA-05)
+## Circular import resolution (INFRA-05)
 
 - **D-01:** Break the circular import in `flext-infra/src/flext_infra/refactor/_utilities_loader.py` — module-level `from flext_infra import c,m,p,u` during lazy init causes 12 test collection failures and breaks `make pyre`
 - **D-02:** Preferred approach: lazy/deferred imports inside functions, or restructure to avoid the cycle. TYPE_CHECKING guard acceptable if the import is only needed for type annotations.

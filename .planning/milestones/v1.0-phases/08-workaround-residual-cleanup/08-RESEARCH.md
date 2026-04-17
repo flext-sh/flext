@@ -50,6 +50,7 @@ None
 | WA-03 | Zero bare `except Exception:` — all handlers catch specific types | 0 violations in src/; 51 in tests/examples — D-03/D-04 apply |
 | WA-04 | Zero `sys.exit()` outside `__main__.py` | 0 violations — all already inside `if __name__ == "__main__":` guards |
 | WA-05 | Zero `print()` in production code | 2 violations: `scheduled_maintenance.py` src (line 590) + docs copy (line 652) |
+
 </phase_requirements>
 
 ## Project Constraints (from CLAUDE.md)
