@@ -1,5 +1,5 @@
 ---
-name: maintenance
+name: workspace-maintenance
 description: Use when running workspace-wide maintenance tasks across all FLEXT submodules. Covers hygiene checks, dependabot settings standardization, Poetry health validation, and security enforcement automation.
 
 ---
@@ -29,7 +29,7 @@ description: Use when running workspace-wide maintenance tasks across all FLEXT 
 ## Instructions
 
 - When adding a new workspace check, create a `check_<concern>.py` under `scripts/maintenance/`.
-- Add the `# Owner-Skill: .claude/skills/maintenance/SKILL.md` marker on line 2.
+- Add the `# Owner-Skill: .claude/skills/workspace-maintenance/SKILL.md` marker on line 2.
 - Follow the gate contract pattern: `argparse`, `dataclass` violations, JSON report, `sys.exit(main())`.
 - Register the new script in this skill's Scope and Scripts table.
 - Use the project discovery pattern: iterate `flext-*` dirs with `pyproject.toml` present.

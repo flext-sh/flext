@@ -282,40 +282,52 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
   - `models.py` may reference same-project `t` and `p` ONLY under `TYPE_CHECKING`.
   - `constants.py` may import same-project runtime symbols when genuinely required.
   - `utilities.py`, `_models/*`, and `_utilities/*` may import private classes directly across private modules to break cycles, but MUST NOT hop through sibling public facades.
+- **MRO Alias Import Rule — Complete Matrix (CRITICAL)**:
+  - Each facade file (`constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py`) DEFINES its own alias (`c`, `m`, `t`, `p`, `u` respectively). Therefore, that alias MUST come from the **parent MRO package** in that facade file AND in ALL private modules (`_models/*.py`, `_utilities/*.py`, `_typings/*.py`, `_protocols/*.py`, `_constants/*.py`) that participate in its lazy-load chain.
+  - **Why**: Importing an alias from own package triggers loading the facade file that defines it (`m` → `models.py`, `u` → `utilities.py`, `c` → `constants.py`, `t` → `typings.py`, `p` → `protocols.py`). If that facade depends on `_models/`/`_utilities/` which are still loading → deadlock.
+  - **Parent MRO lookup**: Check each facade file to find its parent. Example for flext-ldif:
+    - `models.py`: `from flext_cli import m` → parent for `m` is `flext_cli`
+    - `utilities.py`: `from flext_cli import u` → parent for `u` is `flext_cli`
+    - `constants.py`: `from flext_cli import c` → parent for `c` is `flext_cli`
+    - `typings.py`: `from flext_cli import t` → parent for `t` is `flext_cli`
+    - `protocols.py`: `from flext_cli import p` → parent for `p` is `flext_cli`
+  - **flext-core (ROOT)**: Is the MRO root — its `_models/*.py` and `_utilities/*.py` import ALL aliases from `flext_core` (own package). This works because flext-core's lazy loader handles internal sequencing.
+
+  **Complete import matrix by file type**:
+
+  | File type | `m` | `u` | `c` | `t` | `p` | `r` | Sibling classes | Named Flext* classes |
+  |-----------|-----|-----|-----|-----|-----|-----|-----------------|---------------------|
+  | `_models/*.py` | parent | parent | own pkg | own pkg | own pkg | own pkg | own pkg (runtime) or TYPE_CHECKING (annotation) | own pkg via lazy init |
+  | `_utilities/*.py` | own pkg | parent | own pkg | own pkg | own pkg | own pkg | own pkg via lazy init | own pkg via lazy init |
+  | `models.py` (facade) | parent | parent | — | own pkg | — | — | own pkg via lazy init | — |
+  | `utilities.py` (facade) | own pkg | parent | — | — | — | — | own pkg via lazy init | — |
+  | `constants.py` (facade) | — | — | parent | own pkg | — | — | — | — |
+  | `typings.py` (facade) | — | — | — | parent | — | — | own pkg via lazy init | — |
+  | `protocols.py` (facade) | — | — | — | — | parent | — | own pkg via lazy init | — |
+  | `services/*.py` | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg |
+  | `servers/*.py` | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg |
+  | `base.py` / `api.py` | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg |
+  | `settings.py` | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg | own pkg |
+  | `tests/*.py` | tests pkg | tests pkg | tests pkg | tests pkg | tests pkg | tests pkg | tests pkg | tests pkg |
+
+  **Key rule**: "parent" means the alias comes from the **most advanced parent MRO package** that the project inherits from (check the facade file's own import). "own pkg" means `from flext_<project> import X` which resolves via the auto-generated lazy `__init__.py`.
+
+  - **Sibling classes** in `_models/*.py` used at runtime (base classes, `isinstance`) → `from flext_<project> import FlextProjectModelsBases` (lazy init resolves before cycle).
+  - **Sibling classes** used ONLY in annotations (with `from __future__ import annotations`) → `TYPE_CHECKING` block.
+  - **Use organic namespace** `m.Ldif.ClassName` at all usage sites instead of raw `FlextLdifModelsSettings.ClassName`.
 - **Circular Import Resolution (CRITICAL)**:
-  - **Root Cause**: Circular imports arise when modules at the same tier (e.g., `_protocols/base.py` and `_protocols/result.py`) reference each other, or when TIER 0.5 modules need types from TIER 1+.
+  - **Root Cause**: Circular imports arise when (1) `_models/*.py`/`_utilities/*.py` import `m` or `u` from own package, triggering the facade module load chain, or (2) modules at the same tier reference each other.
   - **Correct Solution** (NO workarounds):
-    1. **Use `from **future** import annotations
-
-from collections.abc import Mapping, Sequence`** — Converts ALL type hints to forward references (strings). This allows type hints to reference types not yet imported.
-    2. **Use`TYPE_CHECKING` ONLY for type-only imports** — When a module needs a type in annotations but importing it would create a cycle, use `TYPE_CHECKING`:
-       ```python
-       from **future** import annotations
-
-from collections.abc import Mapping, Sequence
-       from typing import TYPE_CHECKING
-
-       if TYPE_CHECKING:
-           from flext_core import FlextProtocolsResult
-
-
-       def validate(self) -> FlextProtocolsResult.Result[bool]:  # Works! String at runtime
-           ...
-       ```
-    3. **Import concrete submodules, NOT `flext_core`** — In internal modules (`_protocols/`, `_models/`, `_typings/`), import from sibling submodules or foundation modules directly:
-       ```python
-       # ✓ CORRECT
-       from flext_core import FlextProtocolsBase
-       from flext_core import t
-
-       # ✗ WRONG — causes lazy-load cycles
-       from flext_core import FlextProtocolsBase, t
-       ```
-    4. **Trust lazy loading in `__init__.py`** — The `__init__.py` lazy-load system (via `lazy_getattr`) properly sequences module initialization to break cycles. Do NOT use workarounds like `model_rebuild()`, string annotations, or `object`/`Any` types.
+    1. **`m, u` from parent MRO** in `_models/*.py`, `_utilities/*.py`, `models.py`, `utilities.py` — prevents facade self-load cycle.
+    2. **Use `from __future__ import annotations`** — Converts ALL type hints to forward references (strings).
+    3. **Use `TYPE_CHECKING`** for annotation-only imports that would create a cycle.
+    4. **Trust lazy loading in `__init__.py`** — The lazy-load system properly sequences module initialization. Sibling class imports via `from flext_project import ClassName` work correctly through the lazy map.
 
 - **FORBIDDEN Workarounds**:
+  - ✗ `from flext_project._models.X import Y` — private submodule bypass
+  - ✗ `from flext_core import m, u` when the parent MRO is `flext_cli` — wrong parent, less complete namespace
+  - ✗ `from pydantic import BaseModel/ConfigDict` in consumers — use `m.BaseModel`, `m.ConfigDict`
   - ✗ Using `model_rebuild()` — indicates root-cause unresolved
-  - ✗ Using string type hints like `"FlextProtocolsResult.Result[bool]"` — use TYPE_CHECKING instead
   - ✗ Using `object` or `Any` as catch-all types — use precise `t.*` contracts
   - ✗ Reordering `__init__.py` imports or relying on "order of initialization" — architecture must NOT depend on load order
 - **Verification**: Run `make gen` without timeout or errors. Imports should resolve cleanly via `python -c "from flext_core._protocols.* import *"`.
