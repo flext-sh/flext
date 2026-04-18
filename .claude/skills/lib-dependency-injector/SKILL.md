@@ -75,23 +75,9 @@ class u:
         ]: ...
 ```
 
-```python
-from __future__ import annotations
-
-from collections.abc import Sequence
-from types import ModuleType
-from typing import Any, Protocol, TypeVar
-
-T = TypeVar("T")
-
-
-class _ResultProto(Protocol):
-    success: bool
-
-
-class _ContainerProto(Protocol):
-    pass
-
+```text
+# DI bridge boundary — Any is confined to this interface.
+# This is a reference stub, not executable code.
 
 class FlextContainer:
     def initialize_di_components(self) -> None: ...
@@ -100,13 +86,7 @@ class FlextContainer:
     def register_resource(self, name: str, factory: Any) -> _ResultProto: ...
     def get(self, name: str) -> _ResultProto: ...
     def get_typed(self, name: str, type_cls: type[T]) -> _ResultProto: ...
-    def wire_modules(
-        self,
-        *,
-        modules: Sequence[ModuleType] | None = None,
-        packages: Sequence[str] | None = None,
-        classes: Sequence[type] | None = None,
-    ) -> None: ...
+    def wire_modules(self, *, modules, packages, classes) -> None: ...
     def scoped(self, **kwargs: Any) -> _ContainerProto: ...
 ```
 

@@ -17,6 +17,7 @@
   - [3.5 Integrity & Change Management](#35-integrity--change-management)
   - [3.6 Test Standardization](#36-test-standardization)
   - [3.7 Associated Skills](#37-associated-skills)
+  - [3.8 Verification Discipline](#38-verification-discipline)
 - [§4 Import Law](#4-import-law)
 - [§5 Make Contract](#5-make-contract)
 - [§6 Quality Gates](#6-quality-gates)
@@ -92,11 +93,12 @@ alwaysApply: true
 - **No Backward-Compat Aliases**: Backward-compatibility alias layers (e.g. `LegacyX = NewX`) and namespace shadowing are FORBIDDEN. You must NEVER re-assign parent aliases.
 - **No Facade Mirrors**: Public facade modules (e.g. `core.py`, `client.py`) must NEVER duplicate code from `_utilities/` or `_models/` internals. Implementation lives in `_utilities/`; the public module is a thin re-export stub:
 
-  ```python
-  """Re-export from internal module."""
-  from __future__ import annotations
-  from <package>._utilities.<module> import <Symbol1>, <Symbol2>
-  __all__: list[str] = ["Symbol1", "Symbol2"]
+  ```text
+  # Re-export stub structure (uses placeholders — not executable Python):
+  # 1. """Re-export from internal module."""
+  # 2. from __future__ import annotations
+  # 3. from <package>._utilities.<module> import <Symbol1>, <Symbol2>
+  # 4. __all__: list[str] = ["Symbol1", "Symbol2"]
   ```
 
   If `qlty smells` reports `identical-code` between a public file and its `_utilities/` counterpart, replace the public file with a re-export immediately.
@@ -128,29 +130,31 @@ flext-<project>/src/flext_<project>/
     └── ...
 ```
 
-```python
-# api.py — MRO facade (canonical example)
-class FlextObservability(
-    FlextObservabilityContextMixin,
-    FlextObservabilityMetricsMixin,
-    FlextObservabilityTracingMixin,
-    FlextObservabilityHealthMixin,
-    # ... all service mixins
-    FlextObservabilityServiceBase,
-):
-    """All domain methods come from mixins via MRO."""
+```text
+# api.py — MRO facade (structural pattern):
+# class Flext<Project>(
+#     Flext<Project><ConcernA>Mixin,
+#     Flext<Project><ConcernB>Mixin,
+#     ...all service mixins...
+#     Flext<Project>ServiceBase,
+# ):
+#     """All domain methods come from mixins via MRO."""
 ```
 
-```python
-# base.py — typed service base
-class FlextObservabilityServiceBase(s[t.Dict], ABC):
-    @property
-    @override
-    def settings(self) -> FlextObservabilitySettings:
-        return FlextSettings.get_global().get_namespace(
-            "observability", FlextObservabilitySettings
-        )
+*See `flext-patterns` skill for valid reference implementations.*
+
+```text
+# base.py — typed service base (structural pattern):
+# class Flext<Project>ServiceBase(s, ABC):
+#     @property
+#     @override
+#     def settings(self) -> Flext<Project>Settings:
+#         return FlextSettings.fetch_global().fetch_namespace(
+#             "<namespace>", Flext<Project>Settings
+#         )
 ```
+
+*Reference: `flext-cli/src/flext_cli/base.py`.*
 
 **Rules**:
 
@@ -243,7 +247,7 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **AST-Grep Required**: Structural code changes/renames across the codebase MUST use `ast-grep` (`sg`). Ad-hoc python/shell scripts, `sed`, and `awk` for code transformations are TOTALLY FORBIDDEN.
 - **Integral Changes**: After any type, model, or signature change, you MUST update all references across all 33 projects to maintain global consistency.
 - **Linter Zero Tolerance**: Code must pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors/warnings. Suppressions (`# type: ignore`) are FORBIDDEN unless accompanied by a verifiable technical explanation and business necessity, restricted to a single line.
-- **Evidence Required**: Never claim checks passed without executable evidence.
+- **Evidence Required**: See §3.8 Verification Discipline.
 - **Stay In Scope**: Execute ONLY the assigned task. Out-of-scope cleanups or "obvious improvements" are FORBIDDEN. If found, file a new `beads` issue.
 - **Legacy Extermination**: Legacy maintenance, non-business validation fallbacks, compatibility wrappers (`def old(): return new()`), and deprecation shims are ABOMINABLE. Delete and replace immediately. Fix forward.
 - **Git is IMMUTABLE**: Rolling back is FORBIDDEN. `git checkout <file>`, `git reset`, `git revert`, and `git stash pop/apply` to OVERWRITE/DISCARD work is forbidden. Fix issues forward.
@@ -264,6 +268,16 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Namespace/MRO Law**: `flext-mro-namespace-rules`
 - **Type Law & Result Patterns**: `flext-strict-typing`
 - **Result/Logging/DI Patterns**: `flext-patterns`
+
+### 3.8 Verification Discipline
+
+- **Skepticism by Default**: Treat every claim (test pass, lint clean, behavior unchanged) as unverified until executable evidence is produced. Memory, logs from prior sessions, and "it worked before" are not evidence.
+- **Evidence-First**: Every assertion that code passes a gate MUST include the exact command, its stdout/stderr, the exit code, and a UTC timestamp. Store evidence in `.sisyphus/evidence/`. Links and proof, never bare verdicts.
+- **Severity-First Reporting**: When reporting issues, lead with the highest-risk item. Order: data loss > security > correctness > performance > style.
+- **Transparency About Limits**: Be explicit about what was NOT checked. If only one project was linted, say so. Partial verification presented as complete verification is a governance violation.
+- **No Proxy Evidence**: Screenshots, CI badge URLs, or "make check passed" without output are FORBIDDEN. The raw command output is the evidence.
+- **Scope Must Match Claim**: A claim of "all linters pass" requires evidence from ALL 4 linters (ruff, mypy, pyright, pyrefly). A claim of "all projects pass" requires evidence across all affected projects.
+- **Documentation Code Integrity**: Every Python code block in governance files (AGENTS.md, skills, docs) MUST pass all 4 linters. Pseudo-code and structural patterns use ` ```text ` fences, never ` ```python `. Bad-pattern examples are replaced with text instructions describing what is FORBIDDEN and what to use instead — no invalid Python in documentation.
 
 ## §4 Import Law
 
@@ -372,7 +386,7 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 ## §8 Change Management
 
 - **Policy Workflow**: Policy changes land in `AGENTS.md` first, then propagate to skill documents.
-- **Complete Work**: Never ship incomplete work as complete. Each claim REQUIRES command evidence. Changes must be minimal, explicit, root-cause oriented, and verifiable.
+- **Complete Work**: Never ship incomplete work as complete. Each claim REQUIRES command evidence (format per §3.8). Changes must be minimal, explicit, root-cause oriented, and verifiable.
 - **No Unapproved Bypass**: Altering lint/gate semantics or deferring/skipping a violation is FORBIDDEN without explicit in-session user approval.
 - **Correct Governance**: If governance corrections arise during work, update this file immediately before further implementation.
 - **Commit-After-Validation**: Every passing validation MUST be immediately accompanied by a `git add -A` → `git commit` → `git pull --rebase` → `git push` sequence. Uncommitted or unpushed work is LOST WORK.
@@ -389,7 +403,7 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Runtime Aliases**: `c`, `p`, `t`, `m`, `u` are declared via MRO in each layer (`src/`, `tests/`, `examples/`, `scripts/`). In test code: `from tests import c, m, p, t, u`. In examples: `from examples import ...`. NEVER import aliases across project boundaries (e.g., `from flext_target_oracle import t` in tests is FORBIDDEN). Operational aliases (`r`, `e`, `h`, `d`, `s`, `x`) come from `flext_core` or the project's extended package.
 - **No Loose Aliases**: Remove compatibility aliases entirely. Constants belong in `c`, protocols in `p`, typings in `t`, models in `m`, utilities/helpers in `u`. Never maintain these concerns outside their canonical namespace.
 - **Narrowing Enforced**: No `type(x) == T`. Use `isinstance(x, T)` or `TypeGuard` properly. Prefer Pydantic validation functions where structured data is involved.
-- **Evidence Requirement**: "Tests pass", "linters clean" claims MUST include command output proof (with exit code and UTC timestamp) so the audit logic can replay the claim. Store evidence in `.sisyphus/evidence/`.
+- **Evidence Requirement**: See §3.8 Verification Discipline.
 
 ## §10 Multi-Agent Parallel Execution Law
 

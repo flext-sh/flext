@@ -182,6 +182,13 @@ Current checks (lines 62–990): `check_no_any`, `check_no_bare_collections`, `c
 
 **User's explicit rule:** _"ao alterar codigo, sempre valide o impacto e funcionamento com ruff e pyrefly, se falhar significa que temos problemas e que pode ser até no projeto que estamos importando que precisa ser corrigido primeiro."_
 
+### Bypass prohibition (hard rule)
+
+- Bypasses are totally forbidden and must be removed wherever found.
+- No workaround-style shortcuts are allowed as temporary or permanent fixes.
+- If a bypass is detected, stop and refactor to the canonical path immediately (facade aliases, infra wrappers, and project-native contracts only).
+- Never keep a bypass under any hypothesis: no exceptions.
+
 ```bash
 ruff check <edited-file>              # must be 0 errors
 pyrefly check <edited-file>           # must be 0 errors

@@ -406,29 +406,7 @@ def compute() -> r[int]:
 
 Why good: preserves typed success/failure flow with explicit recovery.
 
-Bad:
-
-```python
-from __future__ import annotations
-
-from typing import Any
-
-
-def fn() -> int:
-    """Stub business function."""
-    return 1
-
-
-def bad_envelope() -> dict[str, Any]:
-    """Custom envelope duplicates the core result abstraction."""
-    try:
-        value = fn()
-    except Exception as exc:
-        return {"ok": False, "error": str(exc)}
-    return {"ok": True, "value": value}
-```
-
-Why bad: custom envelope duplicates core result abstraction and weakens type safety.
+**FORBIDDEN**: Custom `dict[str, Any]` result envelopes. Use `r[T]` result flow with `r.ok()` / `r.fail()`. Custom envelopes duplicate the core result abstraction and weaken type safety.
 
 Bad:
 

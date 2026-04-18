@@ -453,14 +453,9 @@ if u.Guards.is_scalar(some_value):
 
 #### 8.2 Any — FORBIDDEN
 
-```python
-# ✗ WRONG — Any is forbidden
-from typing import Any
+**FORBIDDEN**: `from typing import Any`. Use `t.*` contracts instead.
 
-data = ...  # FORBIDDEN
-```
-
-**Correct**: Use `t.*` contracts:
+**Correct**:
 
 ```python
 # ✓ CORRECT — Use t.* contracts
