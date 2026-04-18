@@ -155,8 +155,8 @@ Bypasses the immediate parent (`flext_meltano`, which already re-exports these v
 Lines 16-25 of [models/**init**.py](gruponos-meltano-native/src/gruponos_meltano_native/models/__init__.py):
 
 ```python
-from flext_core.constants import FlextConstants as c
-from flext_core.decorators import FlextDecorators as d
+from flext_core import FlextConstants as c
+from flext_core import FlextDecorators as d
 
 ...
 ```

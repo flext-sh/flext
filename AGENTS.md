@@ -32,6 +32,7 @@ alwaysApply: true
 The rules most commonly violated. Scan this section at the start of EVERY flext task.
 
 ### Canonical Aliases (SSOT — flat, never wrap)
+
 | Alias | Source Class | Facade File |
 |-------|--------------|-------------|
 | `c` | `Flext<Project>Constants` | `constants.py` |
@@ -47,18 +48,21 @@ The rules most commonly violated. Scan this section at the start of EVERY flext 
 **Organic MRO paths** — `u.Infra.parse_semver`, `c.Tests.ERR_OK_FAILED`, `m.TargetOracle.ExecuteResult`. NEVER flatten to `m.ExecuteResult`.
 
 **Alias import sources**:
+
 - `src/` code: `c/p/t/m/u` from `flext_core` OR own package (MRO-extended)
 - `tests/` code: `from tests import c, m, p, t, u` (NEVER cross-project like `from flext_target_oracle import t`)
 - `examples/`: `from examples import c, m, t, ...`
 - `scripts/`: `from scripts import ...`
 
 ### Facade Class Naming
+
 - `src/` → `Flext<Project><Tier>`
 - `tests/` → `TestsFlext<Project><Tier>`
 - `examples/` → `ExamplesFlext<Project><Tier>`
 - `scripts/` → `ScriptsFlext<Project><Tier>`
 
 ### Top 10 Forbidden Patterns
+
 1. **`git checkout`/`restore`/`reset`/`stash pop`** to discard uncommitted work — fix forward, never rollback
 2. **`Any`, `object`, `Mapping[str, Any]`** in type annotations — use `t.*` contracts
 3. **`# type: ignore`** without one-line business justification
@@ -71,17 +75,21 @@ The rules most commonly violated. Scan this section at the start of EVERY flext 
 10. **Out-of-scope cleanup** — stay strictly within assigned task
 
 ### After EVERY Edit (MANDATORY)
+
 ```bash
 ruff check <modified-files>
 pyrefly check <modified-files>
 pytest tests/ -k <matching-test>
 ```
+
 Evidence required before proceeding. No "should work" claims.
 
 ### Zero-Error Objective
+
 All 34 flext projects, all 4 linters (ruff, mypy, pyright, pyrefly), ZERO errors/warnings. No exceptions. No "pre-existing error" dismissals.
 
 ### MRO Composition (critical)
+
 - Public facade composes ALL its domain subclasses via MRO
 - Example: `class FlextCoreModels(FlextCoreBaseModels, FlextCoreCQRSModels, FlextCoreSettingsModels): pass`
 - `_models/*`, `_utilities/*` files define mixins ONLY; facade composes them in inheritance list
@@ -89,6 +97,7 @@ All 34 flext projects, all 4 linters (ruff, mypy, pyright, pyrefly), ZERO errors
 - Integration projects (`tap|target|dbt`): dual inheritance `FlextTapLdap(FlextMeltano, FlextLdap)`
 
 ### Common t.* Contracts
+
 - `t.Primitives` = `str | int | float | bool`
 - `t.Scalar` = `Primitives | datetime`
 - `t.Container` = `Scalar | Path`
@@ -98,23 +107,28 @@ All 34 flext projects, all 4 linters (ruff, mypy, pyright, pyrefly), ZERO errors
 - PEP 695 `type X = ...` aliases can't be subclassed — use long form for class bases
 
 ### Coverage: `t.*` Validation Types
+
 Use `annotated-types`-based `t.*` validators instead of bare `Field(ge=..., le=..., min_length=...)`:
+
 - **String**: `NonEmptyStr`, `StrippedStr`, `BoundedStr`, `HostnameStr`, `UriString`, `TimestampStr`
 - **Int**: `PositiveInt`, `NonNegativeInt`, `PortNumber`, `RetryCount`, `WorkerCount`, `HttpStatusCode`, `BatchSize`, `MaxLength`
 - **Float**: `PositiveFloat`, `NonNegativeFloat`, `PositiveTimeout`, `BackoffMultiplier`, `Percentage`, `DecimalFraction`
 
 ### Settings
+
 - ALL settings classes inherit `FlextSettings` (never `BaseSettings`/`BaseModel` custom)
 - `model_config = ConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`
 - Defaults from `c.*` constants (no hardcoded strings/numbers)
 - Use `@FlextSettings.auto_register("<namespace>")` for namespace access
 
 ### Facade Import Matrix (CRITICAL — see §4 for full table)
+
 - `_models/*.py`, `_utilities/*.py`: import `m`, `u` from **parent MRO package**, never own package
 - Sibling classes in `_models/*.py` used at runtime → own package via lazy init
 - Sibling classes only in annotations → `TYPE_CHECKING` + `from __future__ import annotations`
 
 ### Code Intelligence — Use Cheapest First
+
 1. `smart_outline` / `smart_search` (claude-mem AST, ~200 tokens)
 2. Serena `get_symbols_overview` → `find_symbol(include_body=False, depth=1)`
 3. Serena `find_symbol(include_body=True)` — only when reading body
