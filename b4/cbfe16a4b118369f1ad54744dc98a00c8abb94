@@ -1,0 +1,41 @@
+typings/msgpack/__init__.pyi
+  h_9db9d35f50cf33 1-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "b4cbfe16a4b118369f1ad54744dc98a00c8abb94",
+  "prompts": {
+    "2a008a39b1ce7c77": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "234d2634-32e6-47bf-99b1-de4c2dbf1d3c",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 26,
+      "total_deletions": 48,
+      "accepted_lines": 26,
+      "overriden_lines": 0
+    },
+    "c2ddf1f7072fae82": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4f88112c-8a58-4dbb-a64c-e1e7cf9155e2",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 19750,
+      "total_deletions": 98,
+      "accepted_lines": 41318,
+      "overriden_lines": 67
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
