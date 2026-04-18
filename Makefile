@@ -94,7 +94,8 @@ MANAGED_PROJECTS := $(strip $(FLEXT_PROJECTS))
 INDEPENDENT_PROJECTS := $(strip $(EXTERNAL_PROJECTS))
 ALL_PROJECTS := $(strip $(sort $(MANAGED_PROJECTS) $(WORKSPACE_PROJECTS) $(INDEPENDENT_PROJECTS)))
 ATTACHABLE_PROJECTS := $(strip $(filter-out $(WORKSPACE_PROJECTS),$(ALL_PROJECTS)))
-SELECTED_PROJECTS := $(strip $(if $(PROJECT),$(PROJECT),$(if $(PROJECTS),$(PROJECTS),$(ALL_PROJECTS))))
+DEFAULT_SELECTED_PROJECTS := $(strip $(if $(WORKSPACE_PROJECTS),$(WORKSPACE_PROJECTS),$(ALL_PROJECTS)))
+SELECTED_PROJECTS := $(strip $(if $(PROJECT),$(PROJECT),$(if $(PROJECTS),$(PROJECTS),$(DEFAULT_SELECTED_PROJECTS))))
 DOCS_DEFAULT_PROJECTS := $(strip $(filter flext-%,$(ALL_PROJECTS)))
 DOCS_SELECTED_PROJECTS := $(strip $(if $(PROJECT),$(PROJECT),$(if $(PROJECTS),$(PROJECTS),$(DOCS_DEFAULT_PROJECTS))))
 GIT_SELECTED_PROJECTS := $(strip $(if $(SELECTED_PROJECTS),$(SELECTED_PROJECTS),$(ALL_PROJECTS)))
@@ -838,6 +839,11 @@ ifeq ($(VALIDATE_SCOPE),workspace)
 	$(Q)$(WORKSPACE_INFRA_VALIDATE) skill-validate --skill scripts-validation --mode strict
 	$(Q)$(WORKSPACE_INFRA_VALIDATE) skill-validate --skill rules-github --mode strict
 	$(Q)$(WORKSPACE_INFRA_VALIDATE) skill-validate --skill rules-docker --mode strict
+	$(Q)$(WORKSPACE_INFRA_VALIDATE) fresh-import
+	$(Q)$(WORKSPACE_INFRA_VALIDATE) import-cycles
+	$(Q)$(WORKSPACE_INFRA_VALIDATE) lazy-map-freshness
+	$(Q)$(WORKSPACE_INFRA_VALIDATE) tier-whitelist
+	$(Q)$(WORKSPACE_INFRA_VALIDATE) metadata-discipline
 	$(Q)$(WORKSPACE_INFRA_DEPS) modernize --audit
 	$(Q)if git grep -nE '/home/.*/flext|file:///home/.*/flext' -- '*.py' '**/*.py' '*.toml' '**/*.toml' '*.yml' '**/*.yml' '*.yaml' '**/*.yaml' '*.json' '**/*.json' '.gitignore' 'base.mk' '**/base.mk' ':!.planning/**' ':!.reports/**' ':!.sisyphus/**' ':!docs/**'; then \
 		echo "ERROR: absolute workspace paths detected in tracked sources/settings"; \

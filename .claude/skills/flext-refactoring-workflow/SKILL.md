@@ -193,26 +193,7 @@ make validate FIX=1
 
 ### Pattern A: Replacing dict with ConfigMap
 
-```python
-from __future__ import annotations
-
-from collections.abc import Mapping
-from typing import Any
-
-from flext_core import m
-
-
-# Before (FORBIDDEN — `Any` and `Mapping[str, Any]` are axiomatic violations)
-def configure_bad(settings: Mapping[str, Any]) -> None:
-    """WRONG — uses Any and raw Mapping."""
-    _ = settings
-
-
-# After — use typed Pydantic model from m.*
-def configure_good(settings: m.Value) -> None:
-    """CORRECT — uses typed Pydantic model."""
-    _ = settings
-```
+**FORBIDDEN**: `Mapping[str, Any]`, bare `Any`, untyped mappings. Use typed Pydantic models from `m.*` (e.g., `m.Value`). For mapping parameters use `t.ConfigMap`.
 
 ### Pattern B: Removing Legacy Aliases
 
