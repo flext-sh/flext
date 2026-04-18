@@ -1,52 +1,136 @@
 <!-- TOC START -->
 
+- [§0 Quick Reference (MUST READ)](#0-quick-reference-must-read)
 - [§1 Identity](#1-identity)
 - [§2 Architecture Law](#2-architecture-law)
-  - [2.1 Dependency Flow & Layers](#21-dependency-flow--layers)
-  - [2.2 Facades & Namespaces](#22-facades--namespaces)
-  - [2.3 Inheritance & Composition](#23-inheritance--composition)
-  - [2.4 Governance Anti-Patterns](#24-governance-anti-patterns)
-  - [2.5 Service Facade Pattern](#25-service-facade-pattern-apipy--basepy--services)
-  - [2.6 Settings Law](#26-settings-law)
-  - [2.7 Library Abstraction Boundaries](#27-library-abstraction-boundaries)
 - [§3 Code Law](#3-code-law)
-  - [3.1 Architecture & Code Structure](#31-architecture--code-structure)
-  - [3.2 Types & Contracts](#32-types--contracts)
-  - [3.3 Failures & Error Handling](#33-failures--error-handling)
-  - [3.4 Tools, Modules & Environment](#34-tools-modules--environment)
-  - [3.5 Integrity & Change Management](#35-integrity--change-management)
-  - [3.6 Test Standardization](#36-test-standardization)
-  - [3.7 Associated Skills](#37-associated-skills)
-  - [3.8 Verification Discipline](#38-verification-discipline)
 - [§4 Import Law](#4-import-law)
 - [§5 Make Contract](#5-make-contract)
 - [§6 Quality Gates](#6-quality-gates)
 - [§7 Skill System](#7-skill-system)
 - [§8 Change Management](#8-change-management)
 - [§9 Agent Execution Pre-requisites](#9-agent-execution-pre-requisites)
-  - [9.1 Coding Directives for Agents](#91-coding-directives-for-agents)
 - [§10 Multi-Agent Parallel Execution Law](#10-multi-agent-parallel-execution-law)
-  - [10.1 The 11 Commandments (Execution Ritual)](#101-the-11-commandments-execution-ritual)
-  - [10.2 Core File Ownership (`flext-core`)](#102-core-file-ownership-flext-core)
-  - [10.3 Execution Phases](#103-execution-phases)
-  - [10.4 Lint Scoping & Quality](#104-lint-scoping--quality)
-  - [10.5 Git & Session Hygiene](#105-git--session-hygiene)
 
 <!-- TOC END -->
 
 <!--
-description:
+description: FLEXT canonical governance — Python 3.13+, Pydantic v2, MRO namespace law
 alwaysApply: true
 -->
 
-# AGENTS.md — Canonical Engineering Law
+# AGENTS.md — FLEXT Canonical Engineering Law
+
+**Upstream**: `~/.claude/AGENTS.md` (universal cross-project rules). This file contains ONLY FLEXT-specific and Python-specific law. Do not duplicate content from the universal file here.
+
+**Authority order**: user message > this file > `~/.claude/AGENTS.md` > skills > default agent behavior.
+
+---
+
+## §0 Quick Reference (MUST READ)
+
+The rules most commonly violated. Scan this section at the start of EVERY flext task.
+
+### Canonical Aliases (SSOT — flat, never wrap)
+| Alias | Source Class | Facade File |
+|-------|--------------|-------------|
+| `c` | `Flext<Project>Constants` | `constants.py` |
+| `m` | `Flext<Project>Models` | `models.py` |
+| `t` | `Flext<Project>Types` | `typings.py` |
+| `p` | `Flext<Project>Protocols` | `protocols.py` |
+| `u` | `Flext<Project>Utilities` | `utilities.py` |
+| `r` | Result container | via `flext_core` |
+| `h, s, d, e, x` | Operational helpers | via `flext_core` |
+
+**Always use canonical aliases at call sites** — `m.MyModel`, `c.MY_CONST`. Never raw classes.
+
+**Organic MRO paths** — `u.Infra.parse_semver`, `c.Tests.ERR_OK_FAILED`, `m.TargetOracle.ExecuteResult`. NEVER flatten to `m.ExecuteResult`.
+
+**Alias import sources**:
+- `src/` code: `c/p/t/m/u` from `flext_core` OR own package (MRO-extended)
+- `tests/` code: `from tests import c, m, p, t, u` (NEVER cross-project like `from flext_target_oracle import t`)
+- `examples/`: `from examples import c, m, t, ...`
+- `scripts/`: `from scripts import ...`
+
+### Facade Class Naming
+- `src/` → `Flext<Project><Tier>`
+- `tests/` → `TestsFlext<Project><Tier>`
+- `examples/` → `ExamplesFlext<Project><Tier>`
+- `scripts/` → `ScriptsFlext<Project><Tier>`
+
+### Top 10 Forbidden Patterns
+1. **`git checkout`/`restore`/`reset`/`stash pop`** to discard uncommitted work — fix forward, never rollback
+2. **`Any`, `object`, `Mapping[str, Any]`** in type annotations — use `t.*` contracts
+3. **`# type: ignore`** without one-line business justification
+4. **`cast()`** outside `flext-core` result internals
+5. **`model_rebuild()`** — indicates unresolved root cause; use bare sibling names with `from __future__ import annotations`
+6. **Flat aliases on facades** — `X = Namespace.X`; always full namespace path `m.DbtLdap.X`
+7. **Manually editing `__init__.py`** — auto-generated; run `make gen`
+8. **`os.environ` / `os.getenv` in `src/`** — use `FlextSettings` or `c.*`
+9. **`.venv/bin/` prefixed commands** — use bare commands (RTK auto-proxies)
+10. **Out-of-scope cleanup** — stay strictly within assigned task
+
+### After EVERY Edit (MANDATORY)
+```bash
+ruff check <modified-files>
+pyrefly check <modified-files>
+pytest tests/ -k <matching-test>
+```
+Evidence required before proceeding. No "should work" claims.
+
+### Zero-Error Objective
+All 34 flext projects, all 4 linters (ruff, mypy, pyright, pyrefly), ZERO errors/warnings. No exceptions. No "pre-existing error" dismissals.
+
+### MRO Composition (critical)
+- Public facade composes ALL its domain subclasses via MRO
+- Example: `class FlextCoreModels(FlextCoreBaseModels, FlextCoreCQRSModels, FlextCoreSettingsModels): pass`
+- `_models/*`, `_utilities/*` files define mixins ONLY; facade composes them in inheritance list
+- Manual flat wrapper nesting like `class Docker(tk): pass` inside facade → FORBIDDEN
+- Integration projects (`tap|target|dbt`): dual inheritance `FlextTapLdap(FlextMeltano, FlextLdap)`
+
+### Common t.* Contracts
+- `t.Primitives` = `str | int | float | bool`
+- `t.Scalar` = `Primitives | datetime`
+- `t.Container` = `Scalar | Path`
+- `t.NormalizedValue` = recursive union (Container, list, Mapping, tuple, None, BaseModel)
+- `t.ContainerMapping`, `t.MutableContainerMapping`, `t.ContainerList` — prefer shortest alias
+- `Sequence` (covariant) over `list` for parameter types — list invariance in pyrefly
+- PEP 695 `type X = ...` aliases can't be subclassed — use long form for class bases
+
+### Coverage: `t.*` Validation Types
+Use `annotated-types`-based `t.*` validators instead of bare `Field(ge=..., le=..., min_length=...)`:
+- **String**: `NonEmptyStr`, `StrippedStr`, `BoundedStr`, `HostnameStr`, `UriString`, `TimestampStr`
+- **Int**: `PositiveInt`, `NonNegativeInt`, `PortNumber`, `RetryCount`, `WorkerCount`, `HttpStatusCode`, `BatchSize`, `MaxLength`
+- **Float**: `PositiveFloat`, `NonNegativeFloat`, `PositiveTimeout`, `BackoffMultiplier`, `Percentage`, `DecimalFraction`
+
+### Settings
+- ALL settings classes inherit `FlextSettings` (never `BaseSettings`/`BaseModel` custom)
+- `model_config = ConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`
+- Defaults from `c.*` constants (no hardcoded strings/numbers)
+- Use `@FlextSettings.auto_register("<namespace>")` for namespace access
+
+### Facade Import Matrix (CRITICAL — see §4 for full table)
+- `_models/*.py`, `_utilities/*.py`: import `m`, `u` from **parent MRO package**, never own package
+- Sibling classes in `_models/*.py` used at runtime → own package via lazy init
+- Sibling classes only in annotations → `TYPE_CHECKING` + `from __future__ import annotations`
+
+### Code Intelligence — Use Cheapest First
+1. `smart_outline` / `smart_search` (claude-mem AST, ~200 tokens)
+2. Serena `get_symbols_overview` → `find_symbol(include_body=False, depth=1)`
+3. Serena `find_symbol(include_body=True)` — only when reading body
+4. `scope map` / `scope sketch` for architecture
+5. `ast-grep` for structural search/replace
+6. Read tool last resort
+
+---
 
 ## §1 Identity
 
-- **Supreme Document**: FLEXT canonical governance file for ALL coding agents in this repository. AGENTS.md defines mandatory law; skills hold detailed implementation guidance.
-- **Reviewed**: 2026-04-06.
-- **Stack Baseline**: Python 3.13+, Pydantic v2, Ruff, Pyrefly, Poetry, Make.
-- **No Shadow Policies**: Agent-specific settings are pointers only. No policy duplication exists outside this file.
+- **Supreme Document**: FLEXT canonical governance file. AGENTS.md defines mandatory law; skills hold detailed implementation guidance.
+- **Reviewed**: 2026-04-18.
+- **Stack Baseline**: Python 3.13+, Pydantic v2, Ruff, Pyrefly, Pyright, Mypy, Poetry, Make, RTK.
+- **Projects**: 34 flext projects in monorepo (`flext-core`, `flext-cli`, `flext-meltano`, etc.).
+- **No Shadow Policies**: Agent-specific settings are pointers only. No policy duplication outside this file.
 
 ## §2 Architecture Law
 
