@@ -22,45 +22,45 @@ if _t.TYPE_CHECKING:
     typings = _tests_infra_typings
     utilities = _tests_infra_utilities
     from tests.infra.constants import (
-        TestsFlextInfraConstants,
-        TestsFlextInfraConstants as c,
+        TestsFlextRootConstants,
+        TestsFlextRootConstants as c,
     )
-    from tests.infra.models import TestsFlextTestModels, TestsFlextTestModels as m
+    from tests.infra.models import TestsFlextRootModels, TestsFlextRootModels as m
     from tests.infra.protocols import (
-        TestsFlextTestProtocols,
-        TestsFlextTestProtocols as p,
+        TestsFlextRootProtocols,
+        TestsFlextRootProtocols as p,
     )
-    from tests.infra.typings import TestsFlextTestTypes, TestsFlextTestTypes as t
+    from tests.infra.typings import TestsFlextRootTypes, TestsFlextRootTypes as t
     from tests.infra.utilities import (
-        TestsFlextTestUtilities,
-        TestsFlextTestUtilities as u,
+        TestsFlextRootUtilities,
+        TestsFlextRootUtilities as u,
     )
 
 _LAZY_IMPORTS = {
-    "TestsFlextInfraConstants": ("tests.infra.constants", "TestsFlextInfraConstants"),
-    "TestsFlextTestModels": ("tests.infra.models", "TestsFlextTestModels"),
-    "TestsFlextTestProtocols": ("tests.infra.protocols", "TestsFlextTestProtocols"),
-    "TestsFlextTestTypes": ("tests.infra.typings", "TestsFlextTestTypes"),
-    "TestsFlextTestUtilities": ("tests.infra.utilities", "TestsFlextTestUtilities"),
-    "c": ("tests.infra.constants", "TestsFlextInfraConstants"),
+    "TestsFlextRootConstants": ("tests.infra.constants", "TestsFlextRootConstants"),
+    "TestsFlextRootModels": ("tests.infra.models", "TestsFlextRootModels"),
+    "TestsFlextRootProtocols": ("tests.infra.protocols", "TestsFlextRootProtocols"),
+    "TestsFlextRootTypes": ("tests.infra.typings", "TestsFlextRootTypes"),
+    "TestsFlextRootUtilities": ("tests.infra.utilities", "TestsFlextRootUtilities"),
+    "c": ("tests.infra.constants", "TestsFlextRootConstants"),
     "constants": "tests.infra.constants",
-    "m": ("tests.infra.models", "TestsFlextTestModels"),
+    "m": ("tests.infra.models", "TestsFlextRootModels"),
     "models": "tests.infra.models",
-    "p": ("tests.infra.protocols", "TestsFlextTestProtocols"),
+    "p": ("tests.infra.protocols", "TestsFlextRootProtocols"),
     "protocols": "tests.infra.protocols",
     "result": "tests.infra.result",
-    "t": ("tests.infra.typings", "TestsFlextTestTypes"),
+    "t": ("tests.infra.typings", "TestsFlextRootTypes"),
     "typings": "tests.infra.typings",
-    "u": ("tests.infra.utilities", "TestsFlextTestUtilities"),
+    "u": ("tests.infra.utilities", "TestsFlextRootUtilities"),
     "utilities": "tests.infra.utilities",
 }
 
 __all__: list[str] = [
-    "TestsFlextInfraConstants",
-    "TestsFlextTestModels",
-    "TestsFlextTestProtocols",
-    "TestsFlextTestTypes",
-    "TestsFlextTestUtilities",
+    "TestsFlextRootConstants",
+    "TestsFlextRootModels",
+    "TestsFlextRootProtocols",
+    "TestsFlextRootTypes",
+    "TestsFlextRootUtilities",
     "c",
     "constants",
     "m",

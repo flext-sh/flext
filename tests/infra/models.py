@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Annotated
 
+from flext_core import u
 from flext_tests import FlextTestsModels
 
 
-class TestsFlextTestModels(FlextTestsModels):
+class TestsFlextRootModels(FlextTestsModels):
     class Workspace:
         """Workspace-level test models."""
 
@@ -15,17 +17,32 @@ class TestsFlextTestModels(FlextTestsModels):
             class ModuleRef(FlextTestsModels.Value):
                 """Module reference with path and name information."""
 
-                anchor_file: Path
-                module_name: str
-                relative_path: str
+                anchor_file: Annotated[
+                    Path,
+                    u.Field(description="Absolute path to the module's anchor file."),
+                ]
+                module_name: Annotated[
+                    str,
+                    u.Field(description="Fully qualified module name."),
+                ]
+                relative_path: Annotated[
+                    str,
+                    u.Field(description="Module path relative to the workspace root."),
+                ]
 
             class SyncCall(FlextTestsModels.Value):
                 """Workspace synchronization call record."""
 
-                action: str
-                repo: Path
+                action: Annotated[
+                    str,
+                    u.Field(description="Sync action performed (e.g. pull, push)."),
+                ]
+                repo: Annotated[
+                    Path,
+                    u.Field(description="Target repository root."),
+                ]
 
 
-m = TestsFlextTestModels
+m = TestsFlextRootModels
 
-__all__: list[str] = ["TestsFlextTestModels", "m"]
+__all__: list[str] = ["TestsFlextRootModels", "m"]

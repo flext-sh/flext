@@ -8,7 +8,7 @@ from flext_tests import FlextTestsUtilities
 from tests import t
 
 
-class TestsFlextTestUtilities(FlextTestsUtilities):
+class TestsFlextRootUtilities(FlextTestsUtilities):
     class Workspace:
         """Workspace-level test utilities."""
 
@@ -32,7 +32,7 @@ class TestsFlextTestUtilities(FlextTestsUtilities):
                 anchor_file: Path,
             ) -> t.Workspace.Tests.LoadedModule:
                 module_path = (
-                    TestsFlextTestUtilities.Workspace.Tests.resolve_module_path(
+                    TestsFlextRootUtilities.Workspace.Tests.resolve_module_path(
                         anchor_file=anchor_file,
                         relative_path=relative_path,
                     )
@@ -47,6 +47,6 @@ class TestsFlextTestUtilities(FlextTestsUtilities):
                 return module
 
 
-u = TestsFlextTestUtilities
+u = TestsFlextRootUtilities
 
-__all__: list[str] = ["TestsFlextTestUtilities", "u"]
+__all__: list[str] = ["TestsFlextRootUtilities", "u"]

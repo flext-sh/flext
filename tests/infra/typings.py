@@ -7,7 +7,7 @@ from types import ModuleType, SimpleNamespace
 from flext_tests import FlextTestsTypes
 
 
-class TestsFlextTestTypes(FlextTestsTypes):
+class TestsFlextRootTypes(FlextTestsTypes):
     class Workspace:
         """Workspace-level test type aliases."""
 
@@ -21,6 +21,6 @@ class TestsFlextTestTypes(FlextTestsTypes):
             type RepoCall = tuple[str, Path]
 
 
-t = TestsFlextTestTypes
+t = TestsFlextRootTypes
 
-__all__: list[str] = ["TestsFlextTestTypes", "t"]
+__all__: list[str] = ["TestsFlextRootTypes", "t"]

@@ -72,7 +72,7 @@ The FLEXT type system provides a unified, composable type architecture across 5 
 2. **flext-cli** - Command-line interface with CLI-specific types
 3. **flext-ldif** - LDIF processing domain library
 4. **flext-ldap** - LDAP operations library
-5. **flext-oud-mig** - Oracle Unified Directory migration tool
+5. **algar-oud-mig** - Oracle Unified Directory migration tool
 
 **Key Principles**:
 
@@ -97,7 +97,7 @@ flext-ldif (depends on flext-core)
     ↓
 flext-ldap (depends on flext-core, flext-ldif)
     ↓
-flext-oud-mig (depends on flext-core, flext-cli, flext-ldif, flext-ldap)
+algar-oud-mig (depends on flext-core, flext-cli, flext-ldif, flext-ldap)
 ```
 
 ### Architecture Layering within Projects
@@ -307,7 +307,7 @@ t.Ldap                      # LDAP operations
 t.Ldap.Protocol             # Infrastructure (ldap3 wrappers)
 ```
 
-**flext-oud-mig**:
+**algar-oud-mig**:
 
 ```
 t.FlextOudMig               # Migration tool
@@ -390,7 +390,7 @@ m.Ldap                      # LDAP domain
   .Result                   # Operation result
 ```
 
-**flext-oud-mig**:
+**algar-oud-mig**:
 
 ```
 m.FlextOudMig               # Migration tool domain
@@ -575,7 +575,7 @@ FlextServiceT = TypeVar("FlextServiceT", bound="s")
 
 ```python
 # ✅ ONLY add domain TypeVars if truly specialized
-# Example: flext-oud-mig has specialized entry types
+# Example: algar-oud-mig has specialized entry types
 
 FlextFlextOudMigEntryT = TypeVar(
     "FlextFlextOudMigEntryT",
@@ -789,7 +789,7 @@ t.Ldif.Entry.Transformation  # NO: 4 levels!
 | **flext-cli**     | ✅      | ✅      | ✅      | Consolidated namespaces |
 | **flext-ldif**    | ✅      | ✅      | ✅      | Validated               |
 | **flext-ldap**    | ✅      | ✅      | ✅      | Variance fixed          |
-| **flext-oud-mig** | ✅      | ✅      | ✅      | Composition validated   |
+| **algar-oud-mig** | ✅      | ✅      | ✅      | Composition validated   |
 
 ### Type System Metrics
 
@@ -808,7 +808,7 @@ flext-core:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-cli:       Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-ldif:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-ldap:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
-flext-oud-mig:   Pyright: 0 errors | Ruff: ✅ | Tests: ✅
+algar-oud-mig:   Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 ```
 
 ---
