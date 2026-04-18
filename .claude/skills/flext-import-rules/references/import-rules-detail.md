@@ -227,6 +227,7 @@ from flext_ldif import FlextLdifModels
 ## Rule 4F: MRO Parent Import Rule for Private Modules and Facade Files
 
 Each facade file (`constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py`) DEFINES its own alias. That alias MUST be imported from the **parent MRO package** in:
+
 1. The facade file itself (it cannot import the alias it defines from own package — self-referential)
 2. All private modules (`_models/*.py`, `_utilities/*.py`) that participate in its lazy-load chain
 
@@ -262,6 +263,7 @@ Each facade file (`constants.py`, `models.py`, `typings.py`, `protocols.py`, `ut
 ### How to find the parent MRO for each alias
 
 Check the project's facade file for that alias:
+
 ```python
 # flext-ldif/src/flext_ldif/models.py
 from flext_cli import m, u  # → parent for m is flext_cli

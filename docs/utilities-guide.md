@@ -13,7 +13,7 @@
   - [flext-ldif Utilities (extending flext-core)](#flext-ldif-utilities-extending-flext-core)
   - [flext-ldap Utilities (extending flext-ldif)](#flext-ldap-utilities-extending-flext-ldif)
   - [flext-cli Utilities (extending flext-core)](#flext-cli-utilities-extending-flext-core)
-  - [flext-oud-mig Utilities (extending all)](#flext-oud-mig-utilities-extending-all)
+  - [algar-oud-mig Utilities (extending all)](#algar-oud-mig-utilities-extending-all)
 - [Best Practices](#best-practices)
   - [DO's ✅](#dos)
   - [DON'Ts ❌](#donts)
@@ -273,7 +273,7 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 - Progress indicators
 - Configuration file loading
 
-### flext-oud-mig Utilities (extending all)
+### algar-oud-mig Utilities (extending all)
 
 **Namespace**: `u.Migration.*`
 

@@ -16,6 +16,7 @@ Two files define the same class name with incompatible shapes:
 **Which one wins?** The lazy `__init__.py` (line 43) binds `GruponosMeltanoNativeModels` to `models/pipeline.py`. The root `models.py` is dead code — never exported, never imported by anyone.
 
 **Recommended action:**
+
 1. Merge `models.py`'s `AlertSettingsConfig` into `models/pipeline.py`'s nested namespace.
 2. Decide canonical parent: the pipeline-side (`flext_meltano`) is correct; the `flext_tap_oracle + flext_target_oracle_wms` combination in `models.py` is incoherent (gruponos is a **native** meltano project, not a tap/target).
 3. Delete `models.py` (archive to `.bak`).
@@ -35,6 +36,7 @@ Two files define the same class name with incompatible shapes:
 **Also note:** the root `__init__.py` lazy map (line 149) already exports proper handlers from `gruponos_meltano_native.cli.handlers.{health, list_pipelines, run, run_with_retry, show_config, validate}` — so there's a parallel proper CLI structure in `cli/handlers/` that `_cli_main.py` completely ignores.
 
 **Recommended action:**
+
 1. Delete `_cli_main.py` (archive to `.bak`).
 2. Create canonical `cli.py` at project root following `algar-oud-mig/cli.py` pattern: `FlextInfraCli`-style root router with `cli.register_result_routes` using the nested Pydantic services.
 3. Move `GruponosCliOrchestrator(Protocol)` into `protocols.py` under `GruponosMeltanoNativeProtocols.GruponosMeltanoNative`.
@@ -66,6 +68,7 @@ class WMSSourceConfigDict(m.BaseModel): ...
 - Fields like `webhook_url: str | None = None`, `host: str | None = None`, `port: int = 1521` — **no `description="..."`** on any field. Violates existing `check_field_descriptions` enforcement but no warning emitted because `FlextUtilitiesEnforcement` only walks `m.BaseModel` subclasses when their module matches `FlextConstantsEnforcement.ENFORCEMENT_MODULE_FRAGMENTS`. The private `_models.py` dodges the check.
 
 **Recommended action:**
+
 1. Move all 5 classes into `models/pipeline.py` (after merging `models.py` per Finding 1) under a new nested namespace `GruponosMeltanoNativeModels.GruponosMeltanoNative.Settings` (or similar).
 2. Add `description="..."` to every field.
 3. Add `model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid", validate_assignment=True)`.
@@ -99,17 +102,20 @@ ImportError: cannot import name 'm' from 'flext_target_oracle_wms'
 ```
 
 Chain:
+
 1. gruponos root imports `m` → lazy-loads `models/pipeline.py`
 2. pipeline.py imports `FlextTargetOracleWmsModels` → lazy-loads flext-target-oracle-wms root
 3. flext-target-oracle-wms root transitively loads `_utilities/helpers.py`
 4. helpers.py does `from flext_target_oracle_wms import c, m, p, r, t` — **but the root hasn't finished binding** `m` yet → `ImportError`
 
 Partially fixed this session (at upstream):
+
 - `flext_oracle_wms/typings.py` → moved `m` import from self to `flext_api` ✓
 - `flext_target_oracle_wms/typings.py` → moved `m` import from self to `flext_meltano` ✓
 - `_utilities/helpers.py` — **still cyclic**. `helpers.py` needs `t.NV_ADAPTER` (project-local) and `m.TargetOracleWms.*` (project-local). Parent package aliases don't expose these.
 
 **Recommended action:**
+
 1. Keep the canonical pattern of `from flext_target_oracle_wms import c, m, p, r, t` in `_utilities/*.py` (this pattern works in `flext-ldif/_utilities/entry.py`).
 2. Investigate **why** gruponos's lazy chain triggers helpers.py BEFORE root binding completes. Likely cause: some class body in `models/pipeline.py` or similar calls `m.TargetOracleWms.helpers.xxx` at class-body evaluation time (not method call time), forcing eager helpers.py load.
 3. Move any eager helpers.py access into `__init_subclass__` hooks or method bodies.
@@ -130,6 +136,7 @@ The `_cli_main.py` + `_models.py` are vestigial artifacts duplicating/competing 
 ## Finding 7 — Root `__init__.py` uses flext-core aliases directly (R1)
 
 Lines 189-206:
+
 ```python
 "d": ("flext_core.decorators", "FlextDecorators"),
 "e": ("flext_core.exceptions", "FlextExceptions"),
@@ -145,7 +152,8 @@ Bypasses the immediate parent (`flext_meltano`, which already re-exports these v
 
 ## Finding 8 — `models/__init__.py` identical R1 violation
 
-Lines 16-25 of [models/__init__.py](gruponos-meltano-native/src/gruponos_meltano_native/models/__init__.py):
+Lines 16-25 of [models/**init**.py](gruponos-meltano-native/src/gruponos_meltano_native/models/__init__.py):
+
 ```python
 from flext_core.constants import FlextConstants as c
 from flext_core.decorators import FlextDecorators as d
@@ -158,6 +166,7 @@ Should come from `flext_meltano` per R1 / R3. Same regeneration required.
 ## Finding 9 — `settings.py` direct pydantic imports (R2)
 
 [settings.py](gruponos-meltano-native/src/gruponos_meltano_native/settings.py) lines 20-23:
+
 ```python
 from pydantic import (
     SecretStr,

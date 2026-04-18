@@ -65,7 +65,7 @@
 - [~~📊 Estudos de Caso~~ 📋 EXEMPLOS PRESERVADOS](#estudos-de-caso-exemplos-preservados)
   - [~~Estudo de Caso: flext-ldif~~ 📋](#estudo-de-caso-flext-ldif)
   - [Estudo de Caso: flext-api](#estudo-de-caso-flext-api)
-  - [Estudo de Caso: flext-oud-mig](#estudo-de-caso-flext-oud-mig)
+  - [Estudo de Caso: algar-oud-mig](#estudo-de-caso-algar-oud-mig)
 - [~~✅ Validação e Testes~~ 📋 EXEMPLOS DE TESTES PRESERVADOS](#-validao-e-testes-exemplos-de-testes-preservados)
   - [~~Estrutura de Testes CQRS~~](#estrutura-de-testes-cqrs)
   - [Testes para x.CQRS](#testes-para-xcqrs)
@@ -2150,7 +2150,7 @@ async def get_user(user_id: str) -> UserResponse:
     )
 ```
 
-### Estudo de Caso: flext-oud-mig
+### Estudo de Caso: algar-oud-mig
 
 **Contexto:** Pipeline de migração OUD com audit trail completo.
 
@@ -2161,7 +2161,7 @@ async def get_user(user_id: str) -> UserResponse:
 - Contexto persistido para debugging
 
 ```python
-# flext-oud-mig: Migration pipeline handler
+# algar-oud-mig: Migration pipeline handler
 class MigrateEntryHandler(h[MigrateEntryCommand, m.Infra.MigrationResult]):
     def handle(self, command: MigrateEntryCommand) -> p.Result[m.Infra.MigrationResult]:
         self.cqrs_context.push({
@@ -2711,7 +2711,7 @@ class FlextDispatcher:
 | flext-api     | ~8-10    | 5        | 🔴 Pendente | Alta       |
 | flext-ldif    | ~5-8     | 3        | 🔴 Pendente | Alta       |
 | flext-ldap    | ~6-10    | 4        | 🔴 Pendente | Média      |
-| flext-oud-mig | ~5-8     | 3        | 🔴 Pendente | Média      |
+| algar-oud-mig | ~5-8     | 3        | 🔴 Pendente | Média      |
 | flext-cli     | ~3-5     | 2        | 🔴 Pendente | Baixa      |
 
 #### Fase 4: Remoção Legacy (Após 6+ meses)
