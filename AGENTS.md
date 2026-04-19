@@ -21,9 +21,20 @@ alwaysApply: true
 
 # AGENTS.md — FLEXT Canonical Engineering Law
 
-**Upstream**: `~/.claude/AGENTS.md` (universal cross-project rules). This file contains ONLY FLEXT-specific and Python-specific law. Do not duplicate content from the universal file here.
+**Canonical sources** (in priority order):
 
-**Authority order**: user message > this file > `~/.claude/AGENTS.md` > skills > default agent behavior.
+1. User message (explicit task request)
+2. This file (`/flext/AGENTS.md`) — FLEXT-specific rules
+3. `~/.claude/AGENTS.md` — Universal cross-project rules
+4. Project skills (domain-specific patterns)
+5. Default agent behavior
+
+**Scope separation**:
+
+- `~/.claude/AGENTS.md` — Non-negotiable rules, tool priority, forbidden operations, Serena/Scope/RTK/claude-mem, language-specific basics, linting, communication style, security (UNIVERSAL across all projects)
+- This file (`/flext/AGENTS.md`) — Python 3.13+, Pydantic v2 governance, MRO namespace law, 34-project architecture, c/t/p/m/u centralization, import discipline (FLEXT-only)
+- `~/.claude/CLAUDE.md` — Developer profile, GSD, Code Simplifier, Superpowers, claude-mem (UNIVERSAL)
+- `/flext/CLAUDE.md` — Load order for FLEXT skills, namespace checklist, maintenance (FLEXT pointer-only, <50 lines)
 
 ---
 
