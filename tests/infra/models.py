@@ -3,8 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated
 
-from flext_core import u
 from flext_tests import FlextTestsModels
+from tests import u
 
 
 class TestsFlextRootModels(FlextTestsModels):
