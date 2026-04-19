@@ -1,0 +1,191 @@
+.agents/skills/flext-pyrefly-typecheck-fix/rules.yml
+  h_9db9d35f50cf33 27,29,31,35,38-39,49,53
+docs/references/pydantic2/examples/custom_validators.md
+  h_9db9d35f50cf33 16,18
+.agents/skills/flext-pyrefly-typecheck-fix/rules/detect-jsondict-legacy.yml
+  h_9db9d35f50cf33 4
+docs/references/pydantic2/concepts/validation_decorator.md
+  h_9db9d35f50cf33 82
+.agents/skills/flext-pyrefly-typecheck-fix/tests/detect-jsondict-legacy-test.yml
+  h_9db9d35f50cf33 3,6
+.agents/skills/flext-type-system/rules.yml
+  h_9db9d35f50cf33 15
+docs/references/pydantic2/errors/validation_errors.md
+  h_9db9d35f50cf33 583,1647,1756
+docs/references/pydantic2/concepts/experimental.md
+  h_9db9d35f50cf33 153,265-266
+.agents/skills/lib-pyyaml/SKILL.md
+  h_9db9d35f50cf33 66,217
+docs/references/pydantic2/concepts/type_adapter.md
+  h_9db9d35f50cf33 54
+.agents/skills/flext-type-system/SKILL.md
+  h_9db9d35f50cf33 182,202
+.agents/skills/flext-strict-typing/references/type-rules-detail.md
+  h_9db9d35f50cf33 88,114,440
+.agents/skills/pydantic-v2-patterns/references/patterns-detail.md
+  h_9db9d35f50cf33 68,72
+examples/acl_processing_example.py
+  h_9db9d35f50cf33 33,42,51-52,56,219,347,483
+.agents/skills/pydantic-v2-patterns/SKILL.md
+  h_9db9d35f50cf33 50,159
+.agents/skills/lib-dependency-injector/SKILL.md
+  h_9db9d35f50cf33 70,98
+.agents/skills/flext-strict-typing/rules.yml
+  h_9db9d35f50cf33 75
+.agents/skills/scripts-infra/validate_gate_contract.py
+  h_9db9d35f50cf33 11
+docker/images/support/quality/fixed/flext_observability/__init__.py
+  h_9db9d35f50cf33 10,18,27
+docs/references/pydantic2/concepts/json_schema.md
+  h_9db9d35f50cf33 840
+.agents/skills/scripts-infra/validate_ownership.py
+  d83215e23735d612 306
+docs/references/pydantic2/concepts/models.md
+  h_9db9d35f50cf33 124,128,185,415,460,558,560,764,767
+docs/architecture/c4-model/code-diagrams.md
+  h_9db9d35f50cf33 99,115-116,467,479,485,492,498
+.agents/skills/lib-pydantic-v2/SKILL.md
+  h_9db9d35f50cf33 80,177
+.agents/README.md
+  d83215e23735d612 18-19
+.agents/skills/flext-patterns/SKILL.md
+  h_9db9d35f50cf33 58
+.agents/skills/pydantic-v2-governance/references/governance-patterns.md
+  h_9db9d35f50cf33 69,272,466,469,472
+.agents/skills/flext-context-routing/SKILL.md
+  h_9db9d35f50cf33 1-73
+docs/references/pydantic2/errors/errors.md
+  h_9db9d35f50cf33 30,34
+docker/images/support/quality/simple/flext_observability/__init__.py
+  h_9db9d35f50cf33 10,18,27
+docs/references/pydantic2/concepts/serialization.md
+  h_9db9d35f50cf33 502,526,628
+.agents/skills/flext-pyrefly-typecheck-fix/tests/fix-result-object-test.yml
+  h_9db9d35f50cf33 1,6
+.agents/skills/async-python-patterns/SKILL.md
+  h_9db9d35f50cf33 68
+.agents/skills/flext-pyrefly-typecheck-fix/tests/fix-jsondict-legacy-test.yml
+  h_9db9d35f50cf33 3,6
+docker/images/support/quality/fixed/flext_core/__init__.py
+  h_9db9d35f50cf33 6
+docs/planning/phase1_detailed_plan.md
+  h_9db9d35f50cf33 97,102,107,112,117,122,145,155,160
+docker/images/Dockerfile.flext-quality-standalone
+  h_9db9d35f50cf33 119
+docker/images/support/quality/enterprise/flext_observability/__init__.py
+  h_9db9d35f50cf33 8,15,23
+AGENTS.md
+  h_9db9d35f50cf33 277-279,281
+.agents/skills/flext-pyrefly-typecheck-fix/rules/fix-jsondict-legacy.yml
+  h_9db9d35f50cf33 4-5
+docs/projects/flext-oracle-wms.md
+  h_9db9d35f50cf33 50
+docs/references/pydantic2/concepts/types.md
+  h_9db9d35f50cf33 828
+sgconfig.yml
+  d83215e23735d612 3-5,8,10-13,27-30
+docs/references/pydantic2/examples/orms.md
+  h_9db9d35f50cf33 8
+.agents/skills/flext-refactoring-workflow/SKILL.md
+  h_9db9d35f50cf33 196
+docs/references/pydantic2/concepts/validators.md
+  h_9db9d35f50cf33 176,519,670
+docs/references/pydantic2/errors/usage_errors.md
+  h_9db9d35f50cf33 1355
+docs/architecture/flext-cqrs-architecture.md
+  h_9db9d35f50cf33 365,374-375,407,410,643,645,649,653,655
+CLAUDE.md
+  d83215e23735d612 21
+docker/images/support/quality/simple/flext_core/__init__.py
+  h_9db9d35f50cf33 6
+docs/references/pydantic2/concepts/fields.md
+  h_9db9d35f50cf33 231,860
+.agents/skills/flext-pyrefly-typecheck-fix/rules/fix-result-object.yml
+  h_9db9d35f50cf33 1,4-5
+docs/superpowers/plans/2026-04-06-pipeline-dag-audit.md
+  h_9db9d35f50cf33 77,183,492
+.agents/skills/flext-pyrefly-typecheck-fix/rules/detect-result-object.yml
+  h_9db9d35f50cf33 1,4
+.agents/skills/flext-agent-integration/SKILL.md
+  h_9db9d35f50cf33 3
+docs/planning/phases7_9_completion.md
+  h_9db9d35f50cf33 80,85,94,103,112
+Makefile
+  h_9db9d35f50cf33 322,969,999,1001
+.agents/skills/flext-pyrefly-typecheck-fix/SKILL.md
+  h_9db9d35f50cf33 99,101-102
+.agents/skills/flext-strict-typing/SKILL.md
+  h_9db9d35f50cf33 61-62
+docs/architecture/flext-service-architecture.md
+  h_9db9d35f50cf33 676,678-679,919,950,952,1387,1419,1435,3061,7842,7893
+.agents/skills/flext-pyrefly-typecheck-fix/tests/detect-result-object-test.yml
+  h_9db9d35f50cf33 1,6
+docs/references/pydantic2/concepts/unions.md
+  h_9db9d35f50cf33 197
+docs/superpowers/specs/2026-04-06-pipeline-dag-audit-design.md
+  h_9db9d35f50cf33 37,81,167
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "d58321ab896da2fb8b448e7b4389533f7ca872cb",
+  "prompts": {
+    "2a008a39b1ce7c77": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "234d2634-32e6-47bf-99b1-de4c2dbf1d3c",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 24813,
+      "overriden_lines": 426
+    },
+    "376f82a5e64b61d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c3fe1632-f119-41b5-bbd0-0fc56ae1884d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 8,
+      "total_deletions": 2,
+      "accepted_lines": 7,
+      "overriden_lines": 0
+    },
+    "c2ddf1f7072fae82": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4f88112c-8a58-4dbb-a64c-e1e7cf9155e2",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 12554,
+      "overriden_lines": 69
+    },
+    "d83215e23735d612": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e06bb0d-1d63-4dfa-adde-212b5404c554",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 475,
+      "total_deletions": 15,
+      "accepted_lines": 474,
+      "overriden_lines": 1
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
