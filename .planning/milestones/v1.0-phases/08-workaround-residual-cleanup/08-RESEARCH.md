@@ -24,7 +24,7 @@ Phase 8 closes three WA requirements left open by the v1.0 milestone audit. Fres
 - D-02: In `src/` production code: zero tolerance — every handler must catch a specific type
 - D-03: In `tests/`: bare `except Exception:` acceptable ONLY in test helper utilities that genuinely need to catch anything
 - D-04: In `examples/` and `docs/`: lower priority, fix if trivial, defer if complex
-- D-05: In `.claude/skills/` validation scripts: out of scope
+- D-05: In `.agents/skills/` validation scripts: out of scope
 - D-06: `sys.exit()` ONLY permitted inside `__main__.py` files
 - D-07: Non-`__main__` files with `sys.exit()` must return exit code, caller wraps with `sys.exit()`
 - D-08: Files that ARE `__main__.py` but have `sys.exit()` in unusual positions are fine

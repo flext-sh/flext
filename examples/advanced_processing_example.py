@@ -26,9 +26,7 @@ from decimal import Decimal
 from enum import StrEnum, unique
 from typing import Annotated, ClassVar
 
-from pydantic import ConfigDict
-
-from flext_core import m, p, r, t, u
+from examples import m, p, r, t, u
 
 type DataPrimitive = t.Primitives | bytes | Decimal
 type DataValue = DataPrimitive | Sequence[DataValue] | Mapping[str, DataValue]
@@ -44,7 +42,7 @@ def _new_data_value_map() -> Mapping[str, DataValue]:
 class PipelineStageData(m.BaseModel):
     """Data container for pipeline stage processing."""
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(
+    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
         arbitrary_types_allowed=True,
         extra="allow",
     )
@@ -52,7 +50,7 @@ class PipelineStageData(m.BaseModel):
     class PipelinePayload(m.BaseModel):
         """Pipeline payload container."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True,
             extra="allow",
         )
@@ -86,7 +84,9 @@ class AdvancedProcessingExample:
     class ProcessingResult(m.BaseModel):
         """Result of processing operation with metrics."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True
+        )
 
         operation_id: str = u.Field(description="Unique operation identifier")
         items_processed: int = u.Field(description="Total items processed")
@@ -105,7 +105,9 @@ class AdvancedProcessingExample:
     class ValidationResult(m.BaseModel):
         """Result of validation operation."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True
+        )
 
         item_id: str = u.Field(description="Unique item identifier")
         valid: bool = u.Field(description="Whether the item is valid")

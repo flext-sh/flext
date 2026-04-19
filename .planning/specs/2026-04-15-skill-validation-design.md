@@ -1,7 +1,7 @@
 # Skill Validation & Harmonization — Design Spec
 
 **Date**: 2026-04-15
-**Scope**: 49 SKILL.md files under `.claude/skills/`
+**Scope**: 49 SKILL.md files under `.agents/skills/`
 **Authority**: AGENTS.md §3 Code Law, §4 Import Law, §7 Skill System
 
 ## Context
@@ -241,7 +241,7 @@ composed aliases (`t.StrSequence`, `t.ConfigMap`, `t.IntMapping`, etc.) from
 `flext_core.typings`. Do not write `Sequence[str]`, `list[str]`, or
 `Mapping[str, int]` inline in parameter positions. Return types inside `r[T]`
 remain concrete (`r[list[int]]`) due to invariance — see
-[flext-type-system](.claude/skills/flext-type-system/SKILL.md).
+[flext-type-system](.agents/skills/flext-type-system/SKILL.md).
 
 ## Validator Specification
 
@@ -316,7 +316,7 @@ Re-run these in order and confirm:
 
 ## Success Criteria
 
-- Every `python` code block in `.claude/skills/*/SKILL.md` passes the validator
+- Every `python` code block in `.agents/skills/*/SKILL.md` passes the validator
 - No phantom symbols: every `p.X`, `t.X`, `r.X`, `m.X`, `c.X`, `e.X`, `u.X`, `h.X`, `d.X`, `s.X`, `x.X` reference resolves to a real attribute on the current `flext_core` module
 - Canonical `r[T].ok(...)` / `p.Result[T]` return-type pattern is consistent across all examples
 - Dead config refs (`ruff-shared.toml`) are gone

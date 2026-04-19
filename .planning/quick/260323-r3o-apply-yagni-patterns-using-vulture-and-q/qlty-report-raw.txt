@@ -1,13 +1,13 @@
 
 
-.claude/skills/scripts-infra/validate_artifact_naming.py
+.agents/skills/scripts-infra/validate_artifact_naming.py
   87  Function with many returns (count = 7): should_validate
 
-.claude/skills/scripts-infra/validate_gate_contract.py
+.agents/skills/scripts-infra/validate_gate_contract.py
    1  High total complexity (count = 110)
  427  Function with high complexity (count = 20): print_results
 
-.claude/skills/scripts-infra/validate_ownership.py
+.agents/skills/scripts-infra/validate_ownership.py
  176  Function with many returns (count = 13): candidate_skill
  322  Function with many returns (count = 6): run_main
    1  High total complexity (count = 67)

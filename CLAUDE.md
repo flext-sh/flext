@@ -7,25 +7,20 @@ Canonical source: [`AGENTS.md`](AGENTS.md). This file stays brief on purpose. Do
 ## Load Order
 
 1. Read [`AGENTS.md`](AGENTS.md).
-2. For facade, import, or namespace work, load:
-   - [`.claude/skills/flext-mro-namespace-rules/SKILL.md`](.claude/skills/flext-mro-namespace-rules/SKILL.md)
-   - [`.claude/skills/flext-import-rules/SKILL.md`](.claude/skills/flext-import-rules/SKILL.md)
-   - [`.claude/skills/flext-patterns/SKILL.md`](.claude/skills/flext-patterns/SKILL.md)
-3. For doc or skill edits, also load:
-   - [`.claude/skills/flext-docs-pointer-policy/SKILL.md`](.claude/skills/flext-docs-pointer-policy/SKILL.md)
-   - [`.claude/skills/skill-format-universal/SKILL.md`](.claude/skills/skill-format-universal/SKILL.md)
+2. Load path-scoped skills from [`.agents/skills/`](.agents/skills/) only.
+3. For facade/import/namespace changes, prioritize:
+   - [`.agents/skills/flext-mro-namespace-rules/SKILL.md`](.agents/skills/flext-mro-namespace-rules/SKILL.md)
+   - [`.agents/skills/flext-import-rules/SKILL.md`](.agents/skills/flext-import-rules/SKILL.md)
+   - [`.agents/skills/flext-patterns/SKILL.md`](.agents/skills/flext-patterns/SKILL.md)
+4. For governance/docs edits, prioritize:
+   - [`.agents/skills/flext-docs-pointer-policy/SKILL.md`](.agents/skills/flext-docs-pointer-policy/SKILL.md)
+   - [`.agents/skills/skill-format-universal/SKILL.md`](.agents/skills/skill-format-universal/SKILL.md)
 
-## Namespace Checklist
+## Discovery Scope
 
-- `src/` facades: `Flext<Project><Tier>`
-- `tests/` facades: `TestsFlext<Project><Tier>`
-- `examples/` facades: `ExamplesFlext<Project><Tier>`
-- `scripts/` facades: `ScriptsFlext<Project><Tier>`
-- Public facades own exactly one local domain namespace at the root.
-- Test-only scope stays under `<Domain>.Tests`.
-- Compose `_models/*` and `_utilities/*` through facade MRO; never manually wrap them into nested flat classes.
-- Same-project cross-facade imports are runtime-illegal unless `AGENTS.md` §4 explicitly allows them through `TYPE_CHECKING`.
-- Keep organic MRO paths at call sites: `u.Infra.*`, `c.Tests.*`, `m.TargetOracle.*`; do not flatten them to `m.ExecuteResult`.
+- Canonical instruction sources in this repository: `AGENTS.md`, `CLAUDE.md`, and `.agents/skills/`.
+- Do not treat third-party/vendor/cache trees as instruction sources (`vendor/**`, `.cache/**`, `.venv/**`, `**/dbt_packages/**`).
+- Never use fallback instruction paths.
 
 ## Maintenance
 

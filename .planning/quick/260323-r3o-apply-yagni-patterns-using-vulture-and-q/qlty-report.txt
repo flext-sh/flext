@@ -19,12 +19,12 @@ Analyzed: 1832 files across entire workspace
      c) Cross-project patterns (different projects, not consolidatable)
 
 2. High Complexity Functions
-   - .claude/skills/scripts-infra/validate_gate_contract.py (complexity 110)
-   - .claude/skills/scripts-infra/validate_ownership.py (complexity 67)
+   - .agents/skills/scripts-infra/validate_gate_contract.py (complexity 110)
+   - .agents/skills/scripts-infra/validate_ownership.py (complexity 67)
    - cmd/flext/main.go (many returns in initializeService)
    - examples/acl_processing_example.py (complexity 73)
    VERDICT: Not actionable under YAGNI.
-     a) .claude/skills/ — validation scripts need many branches
+     a) .agents/skills/ — validation scripts need many branches
      b) Go code — not in Python scope
      c) Examples — not production code
 
@@ -34,7 +34,7 @@ Analyzed: 1832 files across entire workspace
    VERDICT: Not dead code — these are factory/builder patterns.
 
 4. Functions with Many Returns
-   - .claude/skills/ validation functions
+   - .agents/skills/ validation functions
    - cmd/flext/main.go
    VERDICT: Not actionable — validation logic requires early returns.
 

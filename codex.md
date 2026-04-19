@@ -8,5 +8,6 @@
 OpenAI Codex instructions for this repository are defined in `AGENTS.md`.
 
 - Read `AGENTS.md` first.
-- Use `.claude/skills/` for path-scoped, evidence-backed guidance.
+- Use `.agents/skills/` for path-scoped, evidence-backed guidance.
+- Never use fallback instruction paths.
 - Do not duplicate rules here; update `AGENTS.md` as the source of truth.

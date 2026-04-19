@@ -325,9 +325,9 @@ Measured via grep (research time):
 - `.sisyphus/plans/protocol-solid-standardization.md` -- DIP enforcement audit, protocol mapping, ast-grep patterns
 - `.sisyphus/plans/pydantic-v2-advanced-modernization.md` -- u.Field() counts, ABC audit, TypeAdapter audit, mutable defaults
 - `.sisyphus/plans/flext-core-typing-simplification.md` -- Type alias cleanup, protocol simplification
-- `.claude/skills/lib-pydantic-v2/SKILL.md` -- Pydantic v2 patterns and rules
-- `.claude/skills/flext-strict-typing/SKILL.md` -- Type system rules, PEP 695 patterns
-- `.claude/skills/python-313-typing/SKILL.md` -- PEP 695/742 reference
+- `.agents/skills/lib-pydantic-v2/SKILL.md` -- Pydantic v2 patterns and rules
+- `.agents/skills/flext-strict-typing/SKILL.md` -- Type system rules, PEP 695 patterns
+- `.agents/skills/python-313-typing/SKILL.md` -- PEP 695/742 reference
 
 ### Secondary (MEDIUM confidence)
 

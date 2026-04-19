@@ -19,11 +19,11 @@ Primary mission:
 Authoritative references:
 
 - [AGENTS.md](../../AGENTS.md)
-- [FLEXT MRO Namespace Rules](../../.claude/skills/flext-mro-namespace-rules/SKILL.md)
-- [FLEXT Import Rules](../../.claude/skills/flext-import-rules/SKILL.md)
-- [FLEXT Strict Typing](../../.claude/skills/flext-strict-typing/SKILL.md)
-- [FLEXT Patterns](../../.claude/skills/flext-patterns/SKILL.md)
-- [FLEXT Quality Gates](../../.claude/skills/flext-quality-gates/SKILL.md)
+- [FLEXT MRO Namespace Rules](../../.agents/skills/flext-mro-namespace-rules/SKILL.md)
+- [FLEXT Import Rules](../../.agents/skills/flext-import-rules/SKILL.md)
+- [FLEXT Strict Typing](../../.agents/skills/flext-strict-typing/SKILL.md)
+- [FLEXT Patterns](../../.agents/skills/flext-patterns/SKILL.md)
+- [FLEXT Quality Gates](../../.agents/skills/flext-quality-gates/SKILL.md)
 - [Code Navigation Skill](../../.agents/skills/code-navigation/SKILL.md)
 
 Mandatory operating rules:

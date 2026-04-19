@@ -20,80 +20,30 @@ import time
 from collections.abc import (
     Callable,
     Mapping,
-    MutableMapping,
     MutableSequence,
     Sequence,
 )
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import date, datetime
-from decimal import Decimal
 from enum import StrEnum, unique
 from typing import Annotated, ClassVar
 
-from pydantic import ConfigDict
-
-from flext import t
-from flext_core import m, p, r, u
-
-type WorkflowScalar = Decimal | bool | bytes | date | datetime | float | int | str
-type WorkflowValue = WorkflowScalar | t.StrSequence | Mapping[str, WorkflowScalar]
-
-ProcessingDict = Mapping[str, WorkflowValue]
-WorkflowContent = Mapping[str, WorkflowValue]
-
-
-def _new_workflow_content() -> WorkflowContent:
-    return {}
-
-
-def _new_workflow_settings() -> Mapping[str, t.Scalar | float]:
-    return {}
-
-
-class WorkflowData(m.BaseModel):
-    """Data container for workflow processing."""
-
-    model_config: ClassVar[ConfigDict] = ConfigDict(
-        arbitrary_types_allowed=True,
-        extra="allow",
-    )
-    content: WorkflowContent = u.Field(default_factory=_new_workflow_content)
-
-
-def _new_str_list() -> MutableSequence[str]:
-    return []
-
-
-def _new_scalar_dict() -> MutableMapping[str, WorkflowScalar]:
-    return {}
-
-
-def _new_stage_metadata_dict() -> MutableMapping[str, float | int | bool]:
-    return {}
-
-
-def _new_performance_metrics_dict() -> MutableMapping[
-    str,
-    float | int | Mapping[str, float | int],
-]:
-    return {}
-
-
-def _new_stage_result_list() -> MutableSequence[
-    CompleteWorkflowExample.WorkflowStageResult
-]:
-    return []
-
-
-def _new_aggregated_metrics_dict() -> MutableMapping[
-    str,
-    Decimal | bool | bytes | float | int | str,
-]:
-    return {}
+from examples import m, p, r, t, u
 
 
 class CompleteWorkflowExample:
     """Complete workflow example demonstrating FLEXT enterprise data integration capabilities."""
+
+    type ProcessingDict = t.ContainerValueMapping
+    type WorkflowContent = t.ContainerValueMapping
+
+    class WorkflowData(m.BaseModel):
+        """Data container for workflow processing."""
+
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True,
+            extra="allow",
+        )
+        content: t.ContainerValueMapping = u.Field(default_factory=dict)
 
     @unique
     class Stage(StrEnum):
@@ -107,7 +57,9 @@ class CompleteWorkflowExample:
     class WorkflowContext(m.BaseModel):
         """Complete workflow context with correlation and metadata."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True
+        )
 
         workflow_id: str = u.Field(description="Unique workflow identifier")
         correlation_id: str = u.Field(description="Correlation ID for tracking")
@@ -121,22 +73,21 @@ class CompleteWorkflowExample:
             ],
             description="List of workflow stages to execute",
         )
-        metadata: Mapping[str, WorkflowScalar] = u.Field(
-            default_factory=_new_scalar_dict,
+        metadata: t.ContainerValueMapping = u.Field(
+            default_factory=dict,
             description="Workflow metadata key-value pairs",
         )
-        performance_metrics: MutableMapping[
-            str,
-            float | int | Mapping[str, float | int],
-        ] = u.Field(
-            default_factory=_new_performance_metrics_dict,
+        performance_metrics: t.MutableContainerValueMapping = u.Field(
+            default_factory=dict,
             description="Performance metrics collected during workflow execution",
         )
 
     class WorkflowStageResult(m.BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True
+        )
 
         stage_name: str = u.Field(description="Name of the workflow stage")
         workflow_id: str = u.Field(description="Associated workflow ID")
@@ -147,22 +98,24 @@ class CompleteWorkflowExample:
         items_failed: int = u.Field(description="Items that failed")
         processing_time: float = u.Field(description="Time taken to process stage")
         errors: t.StrSequence = u.Field(
-            default_factory=_new_str_list,
+            default_factory=list,
             description="List of errors encountered",
         )
         warnings: t.StrSequence = u.Field(
-            default_factory=_new_str_list,
+            default_factory=list,
             description="List of warnings encountered",
         )
-        stage_metadata: Mapping[str, float | int | bool] = u.Field(
-            default_factory=_new_stage_metadata_dict,
+        stage_metadata: t.ContainerValueMapping = u.Field(
+            default_factory=dict,
             description="Stage-specific metadata",
         )
 
     class CompleteWorkflowResult(m.BaseModel):
         """Complete workflow result with all stages aggregated."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True
+        )
 
         workflow_id: str = u.Field(description="Unique workflow identifier")
         correlation_id: str = u.Field(description="Correlation ID for tracking")
@@ -173,14 +126,12 @@ class CompleteWorkflowExample:
             description="Total workflow processing time",
         )
         stage_results: Sequence[CompleteWorkflowExample.WorkflowStageResult] = u.Field(
-            default_factory=_new_stage_result_list,
+            default_factory=list,
             description="Results from each workflow stage",
         )
-        aggregated_metrics: Mapping[str, Decimal | bool | bytes | float | int | str] = (
-            u.Field(
-                default_factory=_new_aggregated_metrics_dict,
-                description="Aggregated metrics across all stages",
-            )
+        aggregated_metrics: t.ContainerValueMapping = u.Field(
+            default_factory=dict,
+            description="Aggregated metrics across all stages",
         )
         workflow_status: Annotated[
             str,
@@ -193,12 +144,14 @@ class CompleteWorkflowExample:
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
-        data: Sequence[ProcessingDict] = u.Field(default_factory=tuple)
-        workflow_settings: Mapping[str, t.Scalar | float] = u.Field(
-            default_factory=_new_workflow_settings,
+        data: Sequence[CompleteWorkflowExample.ProcessingDict] = u.Field(
+            default_factory=tuple,
+        )
+        workflow_settings: t.ScalarMapping = u.Field(
+            default_factory=dict,
         )
 
-        def execute(self) -> p.Result[WorkflowData]:
+        def execute(self) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Execute complete workflow with automatic resource management."""
             context = self._setup_context()
             try:
@@ -208,9 +161,9 @@ class CompleteWorkflowExample:
 
         def _aggregate_results(
             self,
-            item: ProcessingDict,
+            item: CompleteWorkflowExample.ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> p.Result[WorkflowData]:
+        ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Aggregate results."""
             complexity_score_raw = item.get("complexity_score", 0)
             complexity_score = (
@@ -221,7 +174,7 @@ class CompleteWorkflowExample:
             final_score = complexity_score + (
                 1 if bool(item.get("valid", False)) else 0
             )
-            content_payload: WorkflowContent = {
+            content_payload: CompleteWorkflowExample.WorkflowContent = {
                 **self._process_stage(
                     item,
                     0,
@@ -230,14 +183,16 @@ class CompleteWorkflowExample:
                     lambda _i: {"final_score": final_score},
                 ),
             }
-            workflow_data = WorkflowData.model_validate({"content": content_payload})
+            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
+                {"content": content_payload},
+            )
             return r.ok(workflow_data)
 
         def _aggregate_workflow_metrics(
             self,
             stage_results: Sequence[CompleteWorkflowExample.WorkflowStageResult],
             total_time: float,
-        ) -> Mapping[str, float | int]:
+        ) -> Mapping[str, t.Numeric]:
             """Aggregate metrics across all workflow stages."""
             if not stage_results:
                 return {}
@@ -264,11 +219,11 @@ class CompleteWorkflowExample:
 
         def _analyze_items(
             self,
-            item: ProcessingDict,
+            item: CompleteWorkflowExample.ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> p.Result[WorkflowData]:
+        ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Analyze single item."""
-            content_payload: WorkflowContent = {
+            content_payload: CompleteWorkflowExample.WorkflowContent = {
                 **self._process_stage(
                     item,
                     0.005,
@@ -277,7 +232,9 @@ class CompleteWorkflowExample:
                     lambda _i: {"complexity_score": len(str(item)) * 0.1},
                 ),
             }
-            workflow_data = WorkflowData.model_validate({"content": content_payload})
+            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
+                {"content": content_payload},
+            )
             return r.ok(workflow_data)
 
         def _cleanup_context(
@@ -292,10 +249,13 @@ class CompleteWorkflowExample:
         def _execute_stage_parallel(
             self,
             stage_name: str,
-            items: Sequence[ProcessingDict],
+            items: Sequence[CompleteWorkflowExample.ProcessingDict],
             stage_func: Callable[
-                [ProcessingDict, CompleteWorkflowExample.WorkflowContext],
-                p.Result[WorkflowData],
+                [
+                    CompleteWorkflowExample.ProcessingDict,
+                    CompleteWorkflowExample.WorkflowContext,
+                ],
+                p.Result[CompleteWorkflowExample.WorkflowData],
             ],
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowStageResult]:
@@ -308,20 +268,29 @@ class CompleteWorkflowExample:
                 else 4
             )
 
-            def process_single_item(item: ProcessingDict) -> ProcessingDict | None:
+            def process_single_item(
+                item: CompleteWorkflowExample.ProcessingDict,
+            ) -> CompleteWorkflowExample.ProcessingDict | None:
                 try:
                     result = stage_func(item, context)
                     workflow_data = result.map_or(None)
                     return (
                         {**workflow_data.content}
-                        if isinstance(workflow_data, WorkflowData)
+                        if isinstance(
+                            workflow_data, CompleteWorkflowExample.WorkflowData
+                        )
                         else workflow_data
                     )
                 except Exception as e:
-                    err: ProcessingDict = {"error": str(e), "item": str(item)}
+                    err: CompleteWorkflowExample.ProcessingDict = {
+                        "error": str(e),
+                        "item": str(item),
+                    }
                     return err
 
-            processed_results: MutableSequence[ProcessingDict] = []
+            processed_results: MutableSequence[
+                CompleteWorkflowExample.ProcessingDict
+            ] = []
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 future_to_item = {
                     executor.submit(process_single_item, item): item for item in items
@@ -353,9 +322,9 @@ class CompleteWorkflowExample:
 
         def _execute_workflow(
             self,
-            data: Sequence[ProcessingDict],
+            data: Sequence[CompleteWorkflowExample.ProcessingDict],
             context: CompleteWorkflowExample.WorkflowContext,
-        ) -> p.Result[WorkflowData]:
+        ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Execute workflow stages with parallel processing."""
             items = data
             stage_results: MutableSequence[
@@ -371,7 +340,9 @@ class CompleteWorkflowExample:
             for stage_name in context.stages:
                 stage_func = stage_functions.get(stage_name)
                 if not stage_func:
-                    return r[WorkflowData].fail(f"Unknown stage: {stage_name}")
+                    return r[CompleteWorkflowExample.WorkflowData].fail(
+                        f"Unknown stage: {stage_name}",
+                    )
                 result = self._execute_stage_parallel(
                     stage_name,
                     current_data,
@@ -379,7 +350,7 @@ class CompleteWorkflowExample:
                     context,
                 )
                 if result.failure:
-                    return r[WorkflowData].fail(
+                    return r[CompleteWorkflowExample.WorkflowData].fail(
                         f"Stage {stage_name} failed: {result.error}",
                     )
                 stage_result = result.value
@@ -401,10 +372,7 @@ class CompleteWorkflowExample:
                 stage_results,
                 total_time,
             )
-            aggregated_metrics_payload: MutableMapping[
-                str,
-                Decimal | bool | bytes | float | int | str,
-            ] = {}
+            aggregated_metrics_payload: t.MutableContainerValueMapping = {}
             for key, value in aggregated_metrics.items():
                 aggregated_metrics_payload[key] = value
 
@@ -421,10 +389,10 @@ class CompleteWorkflowExample:
                     "workflow_status": "completed",
                 })
             )
-            perf_summary_raw: MutableMapping[str, WorkflowScalar] = {}
+            perf_summary_raw: t.MutableContainerValueMapping = {}
             for key, value in aggregated_metrics.items():
                 perf_summary_raw[key] = value
-            summary: ProcessingDict = {
+            summary: CompleteWorkflowExample.ProcessingDict = {
                 "workflow_id": workflow_result.workflow_id,
                 "workflow_status": workflow_result.workflow_status,
                 "total_stages": workflow_result.total_stages,
@@ -432,17 +400,19 @@ class CompleteWorkflowExample:
                 "total_processing_time": workflow_result.total_processing_time,
                 "performance_summary": perf_summary_raw,
             }
-            summary_content: WorkflowContent = {**summary}
-            workflow_data = WorkflowData.model_validate({"content": summary_content})
+            summary_content: CompleteWorkflowExample.WorkflowContent = {**summary}
+            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
+                {"content": summary_content},
+            )
             return r.ok(workflow_data)
 
         def _process_items(
             self,
-            item: ProcessingDict,
+            item: CompleteWorkflowExample.ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> p.Result[WorkflowData]:
+        ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Process single item."""
-            content_payload: WorkflowContent = {
+            content_payload: CompleteWorkflowExample.WorkflowContent = {
                 **self._process_stage(
                     item,
                     0.01,
@@ -451,24 +421,28 @@ class CompleteWorkflowExample:
                     lambda _i: {"processed_at": time.time()},
                 ),
             }
-            workflow_data = WorkflowData.model_validate({"content": content_payload})
+            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
+                {"content": content_payload},
+            )
             return r.ok(workflow_data)
 
         def _process_stage(
             self,
-            item: ProcessingDict,
+            item: CompleteWorkflowExample.ProcessingDict,
             sleep_time: float,
             add_field: str,
-            value: str | float | bool,
-            extra_logic: Callable[[ProcessingDict], Mapping[str, WorkflowScalar]]
+            value: t.Primitives,
+            extra_logic: Callable[
+                [CompleteWorkflowExample.ProcessingDict],
+                t.ContainerValueMapping,
+            ]
             | None = None,
-        ) -> ProcessingDict:
+        ) -> CompleteWorkflowExample.ProcessingDict:
             """Generic stage processing helper."""
             time.sleep(sleep_time)
-            result: MutableMapping[
-                str,
-                WorkflowScalar | t.StrSequence | Mapping[str, WorkflowScalar],
-            ] = {**item}
+            result: t.MutableContainerValueMapping = {
+                **item,
+            }
             result[add_field] = value
             if extra_logic:
                 result.update(extra_logic(item))
@@ -501,11 +475,11 @@ class CompleteWorkflowExample:
 
         def _validate_items(
             self,
-            item: ProcessingDict,
+            item: CompleteWorkflowExample.ProcessingDict,
             _context: CompleteWorkflowExample.WorkflowContext,
-        ) -> p.Result[WorkflowData]:
+        ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Validate single item."""
-            content_payload: WorkflowContent = {
+            content_payload: CompleteWorkflowExample.WorkflowContent = {
                 **self._process_stage(
                     item,
                     0.005,
@@ -514,20 +488,24 @@ class CompleteWorkflowExample:
                     lambda _i: {"valid": bool(item.get("id") and item.get("name"))},
                 ),
             }
-            workflow_data = WorkflowData.model_validate({"content": content_payload})
+            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
+                {"content": content_payload},
+            )
             return r.ok(workflow_data)
 
     @staticmethod
-    def create_sample_workflow_data(count: int = 100) -> Sequence[ProcessingDict]:
+    def create_sample_workflow_data(
+        count: int = 100,
+    ) -> Sequence[CompleteWorkflowExample.ProcessingDict]:
         """Create sample data for workflow testing."""
-        result: MutableSequence[ProcessingDict] = []
+        result: MutableSequence[CompleteWorkflowExample.ProcessingDict] = []
         for i in range(count):
-            attrs: MutableMapping[str, WorkflowScalar] = {
+            attrs: t.MutableContainerValueMapping = {
                 "objectClass": "person,organizationalPerson",
                 "cn": f"user{i}",
                 "sn": f"User{i}",
             }
-            item: ProcessingDict = {
+            item: CompleteWorkflowExample.ProcessingDict = {
                 "id": f"item_{i}",
                 "dn": f"cn=user{i},ou=users,dc=example,dc=com",
                 "name": f"User {i}",
@@ -540,10 +518,10 @@ class CompleteWorkflowExample:
     @staticmethod
     def run_example() -> None:
         """Run the complete workflow example."""
-        sample_data: Sequence[ProcessingDict] = (
+        sample_data: Sequence[CompleteWorkflowExample.ProcessingDict] = (
             CompleteWorkflowExample.create_sample_workflow_data(50)
         )
-        workflow_settings: Mapping[str, t.Scalar | float] = {
+        workflow_settings: t.ScalarMapping = {
             "workflow_id": "comprehensive_workflow",
             "parallel": True,
             "max_workers": 4,
