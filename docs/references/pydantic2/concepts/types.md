@@ -410,7 +410,7 @@ For instance, here is an example definition of a JSON type:
     1. The value of a named type alias is lazily evaluated, so there's no need to use forward annotations.
 
 !!! tip
-Pydantic defines a [`object`][pydantic.types.t.RecursiveContainer] type as a convenience.
+Pydantic defines a [`object`][pydantic.types.t.Container] type as a convenience.
 
 ### Customizing validation with `__get_pydantic_core_schema__` <a name="customizing_validation_with_get_pydantic_core_schema"></a>
 
@@ -825,7 +825,7 @@ except ValidationError as e:
 The same idea can be applied to create generic container types, like a custom `Sequence` type:
 
 ```python
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 from typing import Any, TypeVar
 
 from pydantic_core import ValidationError, core_schema
@@ -874,7 +874,7 @@ class M(BaseModel):
 
 m = M()
 print(m)
-# > s1=<__main__.MySequence t.RecursiveContainer at 0x0123456789ab>
+# > s1=<__main__.MySequence t.Container at 0x0123456789ab>
 print(m.s1.v)
 # > [3]
 

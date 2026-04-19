@@ -580,7 +580,7 @@ except ValidationError as exc:
 
 ## `datetime_object_invalid`
 
-This error is raised when something about the `datetime` t.RecursiveContainer is not valid:
+This error is raised when something about the `datetime` t.Container is not valid:
 
 ```python
 from datetime import datetime, tzinfo
@@ -1644,7 +1644,7 @@ except ValidationError as exc:
 
 ## `needs_python_object`
 
-This type of error is raised when validation is attempted from a format that cannot be converted to a Python t.RecursiveContainer.
+This type of error is raised when validation is attempted from a format that cannot be converted to a Python t.Container.
 For example, we cannot check `isinstance` or `issubclass` from JSON:
 
 ```python
@@ -1753,7 +1753,7 @@ from pydantic import BaseModel, ValidationError
 
 
 class Model(BaseModel):
-    x: set[t.RecursiveContainer]
+    x: set[t.Container]
 
 
 class Unhashable:

@@ -837,7 +837,7 @@ The process for `Annotated` metadata is much the same except that you can genera
 Pydantic handle generating the schema.
 
 ```python
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 from dataclasses import dataclass
 from typing import Annotated, Any
 
@@ -986,7 +986,7 @@ except ValidationError as e:
     """
     1 validation error for Model
     f
-      Value error, Expected an instance of <class '__main__.Foo'>, got an instance of <class '__main__.NotFoo'> [type=value_error, input_value=<__main__.NotFoo t.RecursiveContainer at 0x0123456789ab>, input_type=NotFoo]
+      Value error, Expected an instance of <class '__main__.Foo'>, got an instance of <class '__main__.NotFoo'> [type=value_error, input_value=<__main__.NotFoo t.Container at 0x0123456789ab>, input_type=NotFoo]
     """
 ```
 

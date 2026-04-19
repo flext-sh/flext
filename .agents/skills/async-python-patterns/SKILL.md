@@ -65,7 +65,7 @@ async def fetch_user(user_id: str) -> p.Result[User]:
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 
 from flext_core import m, p, r, t
 

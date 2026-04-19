@@ -15,8 +15,8 @@ This directory contains only project agent assets.
 
 ## Non-Canonical Instruction Trees (must not be loaded)
 
-- `.claude/skills`
-- `.github/skills`
+- `.claude/skills/**`
+- `.github/skills/**`
 - `vendor/**`
 - `.cache/**`
 - `.venv/**`

@@ -193,7 +193,7 @@ make validate FIX=1
 
 ### Pattern A: Replacing dict with ConfigMap
 
-**FORBIDDEN**: `Mapping[str, Any]`, bare `Any`, untyped mappings. Use typed Pydantic models from `m.*` (e.g., `m.Value`). For mapping parameters use `t.ConfigMap`.
+**FORBIDDEN**: `Mapping[str, Any]`, bare `Any`, untyped mappings. Use typed Pydantic models from `m.*` (e.g., `m.Value`). For mapping parameters use `m.ConfigMap`.
 
 ### Pattern B: Removing Legacy Aliases
 

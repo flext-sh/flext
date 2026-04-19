@@ -65,11 +65,11 @@ from pydantic import BaseModel, u.Field, u.field_validator
 
 
 class Metadata(m.BaseModel):
-    attributes: t.RecursiveContainerMapping = u.Field(default_factory=dict)
+    attributes: Mapping[str, t.Container] = u.Field(default_factory=dict)
 
     @u.field_validator("attributes", mode="before")
     @classmethod
-    def normalize_attributes(cls, value) -> t.RecursiveContainerMapping:
+    def normalize_attributes(cls, value) -> Mapping[str, t.Container]:
         if value is None:
             return {}
         if isinstance(value, BaseModel):
@@ -432,9 +432,7 @@ Guidance:
 from pydantic import TypeAdapter, ValidationError
 
 
-def validate_runtime(
-    data, type_: type[t.RecursiveContainer]
-) -> tuple[bool, t.RecursiveContainer | str]:
+def validate_runtime(data, type_: type[t.Container]) -> tuple[bool, t.Container | str]:
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_python(data)
@@ -453,9 +451,7 @@ Repository anchor:
 from pydantic import TypeAdapter
 
 
-def serialize_runtime(
-    value, type_: type[t.RecursiveContainer]
-) -> t.RecursiveContainerMapping:
+def serialize_runtime(value, type_: type[t.Container]) -> Mapping[str, t.Container]:
     adapter = TypeAdapter(type_)
     dumped = adapter.dump_python(value, mode="json")
     if isinstance(dumped, dict):
@@ -474,8 +470,8 @@ from pydantic import TypeAdapter, ValidationError
 
 
 def parse_json_runtime(
-    json_str: str, type_: type[t.RecursiveContainer]
-) -> tuple[bool, t.RecursiveContainer | str]:
+    json_str: str, type_: type[t.Container]
+) -> tuple[bool, t.Container | str]:
     adapter = TypeAdapter(type_)
     try:
         return True, adapter.validate_json(json_str)
@@ -496,10 +492,10 @@ from pathlib import Path
 from pydantic import TypeAdapter
 
 
-def load_fixture(path: Path) -> t.RecursiveContainerMapping:
+def load_fixture(path: Path) -> Mapping[str, t.Container]:
     with path.open(encoding="utf-8") as f:
         payload = json.load(f)
-    adapter = TypeAdapter(t.RecursiveContainerMapping)
+    adapter = TypeAdapter(Mapping[str, t.Container])
     return adapter.validate_python(payload)
 ```
 

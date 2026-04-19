@@ -1,6 +1,6 @@
 ---
 name: flext-agent-integration
-description: Use when setting up agent tooling, configuring MCP tools, or onboarding to the FLEXT development workflow. Covers skill discovery, tool priority ordering, session start protocols, and agent configuration for Claude Code, GitHub Copilot, and compatible agents.
+description: Use when setting up agent tooling, configuring MCP tools, or enabling automatic project-context routing across FLEXT and non-FLEXT repositories. Covers skill discovery, tool priority ordering, session start protocols, safe tool guardrails, and agent configuration for Claude Code, GitHub Copilot, and compatible agents.
 
 ---
 

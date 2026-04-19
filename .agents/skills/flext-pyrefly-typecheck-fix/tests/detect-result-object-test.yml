@@ -1,6 +1,6 @@
-id: detect-result-t.RecursiveContainer
+id: detect-result-t.Container
 valid:
   - "r[str]"
   - "r[int]"
 invalid:
-  - "r[t.RecursiveContainer]"
+  - "r[t.Container]"

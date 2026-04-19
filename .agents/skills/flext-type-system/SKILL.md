@@ -179,7 +179,7 @@ from __future__ import annotations
 from flext_core import t
 
 # FORBIDDEN pattern — do NOT copy:
-# JsonPrimitive = t.RecursiveContainer  # erases all type constraints
+# JsonPrimitive = t.Container  # erases all type constraints
 # Use the explicit union or t.Scalar instead.
 
 # Stub to satisfy linters in this documentation block:
@@ -199,6 +199,6 @@ Make gates:
 
 Pattern checks:
 
-- `rg -n "TypeVar\(|type t.RecursiveContainer|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
+- `rg -n "TypeVar\(|type t.Container|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
 - `rg -n "class r|type .*=" flext-core/src/flext_core/result.py`
 - `rg -n "T_Settings|BaseSettings" flext-core/src/flext_core/settings.py flext-core/src/flext_core/typings.py`

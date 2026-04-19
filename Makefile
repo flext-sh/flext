@@ -319,7 +319,7 @@ help: ## Show simple workspace verbs
 
 	$(Q)printf " %-7s %s\n" "stubs" "Validate typing stub supply-chain (repo-wide)"
 
-	$(Q)printf " %-7s %s\n" "pol" "Enforce no Any/t.RecursiveContainer/type: ignore (repo-wide)"
+	$(Q)printf " %-7s %s\n" "pol" "Enforce no Any/t.Container/type: ignore (repo-wide)"
 
 	$(Q)printf " %-7s %s\n" "cqrs" "Enforce strict CQRS/FlextModels patterns across ecosystem"
 
@@ -966,7 +966,7 @@ stubs: ## Repo-wide stub supply-chain validation -> .sisyphus/evidence
 	printf "exit_code: %s\n" "$$stub_status" >> .sisyphus/evidence/pyrefly-stub-validate.txt; \
 	exit $$stub_status
 
-pol: ## Repo-wide typing policy gate (no Any/t.RecursiveContainer/# type: ignore)
+pol: ## Repo-wide typing policy gate (no Any/t.Container/# type: ignore)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)mkdir -p .sisyphus/evidence .reports/pyrefly
@@ -996,9 +996,9 @@ pol: ## Repo-wide typing policy gate (no Any/t.RecursiveContainer/# type: ignore
 		--match absent \
 		2>&1 | tee -a .reports/pyrefly/type-policy.txt || status=$$?; \
 	echo "" >> .reports/pyrefly/type-policy.txt; \
-	echo "--- t.RecursiveContainer (typing contexts) ---" >> .reports/pyrefly/type-policy.txt; \
+	echo "--- t.Container (typing contexts) ---" >> .reports/pyrefly/type-policy.txt; \
 	$(WORKSPACE_INFRA_VALIDATE) scan --workspace . \
-		--pattern "(?:\\:\\s*|->\\s*|=\\s*|\\|\\s*|\\[\\s*|,\\s*)t.RecursiveContainer\\b" \
+		--pattern "(?:\\:\\s*|->\\s*|=\\s*|\\|\\s*|\\[\\s*|,\\s*)t.Container\\b" \
 		--include "**/*.py*" \
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
 		--exclude "**/*.pyc" --exclude "**/*.pyo" \
