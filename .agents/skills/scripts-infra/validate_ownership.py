@@ -303,7 +303,7 @@ def write_candidates(
     candidates: Sequence[t.StrMapping],
 ) -> Path:
     """write_candidates function."""
-    report_path = repo_root / ".claude" / "skills" / "scripts-infra" / "report.json"
+    report_path = repo_root / ".agents" / "skills" / "scripts-infra" / "report.json"
     try:
         report_path.parent.mkdir(parents=True, exist_ok=True)
         payload = {

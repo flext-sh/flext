@@ -1,4 +1,4 @@
-id: detect-result-t.RecursiveContainer
+id: detect-result-t.Container
 language: python
 rule:
-  pattern: p.Result[t.RecursiveContainer]
+  pattern: p.Result[t.Container]

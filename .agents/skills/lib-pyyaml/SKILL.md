@@ -50,7 +50,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 - Always prefer `yaml.safe_load(...)` when reading YAML from files or user-controlled content.
 - Never use `yaml.load(...)` without an explicit safe loader policy (current repo evidence shows zero `yaml.load(` occurrences).
 - Use explicit dump options for stable output (`default_flow_style=False`, and set `sort_keys` intentionally).
-- Validate loaded t.RecursiveContainer shape (`dict`, `list`) before passing to typed models.
+- Validate loaded t.Container shape (`dict`, `list`) before passing to typed models.
 - Keep encoding explicit (`encoding="utf-8"` or project constant) when opening files.
 - For CLI output serialization, keep YAML formatting deterministic and user-readable.
 - **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
@@ -63,7 +63,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 # flext-quality/src/flext_quality/utilities.py
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 from pathlib import Path
 
 import yaml
@@ -72,10 +72,10 @@ from flext_core import p, r, t
 
 
 @staticmethod
-def load_yaml_rules(path: Path) -> p.Result[Sequence[t.RecursiveContainerMapping]]:
+def load_yaml_rules(path: Path) -> p.Result[Sequence[Mapping[str, t.Container]]]:
     with path.open(encoding="utf-8") as f:
         data = yaml.safe_load(f)
-    return r[Sequence[t.RecursiveContainerMapping]].ok(data or [])
+    return r[Sequence[Mapping[str, t.Container]]].ok(data or [])
 ```
 
 ```python
@@ -214,7 +214,7 @@ Good:
 ```python
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 from io import StringIO
 
 import yaml
@@ -222,12 +222,12 @@ import yaml
 from flext_core import r, t
 
 
-def load_rules(raw: str) -> r[Sequence[t.RecursiveContainerMapping]]:
+def load_rules(raw: str) -> r[Sequence[Mapping[str, t.Container]]]:
     f = StringIO(raw)
     parsed = yaml.safe_load(f)
     if not isinstance(parsed, dict):
-        return r[Sequence[t.RecursiveContainerMapping]].fail("Expected YAML dict")
-    return r[Sequence[t.RecursiveContainerMapping]].ok([parsed])
+        return r[Sequence[Mapping[str, t.Container]]].fail("Expected YAML dict")
+    return r[Sequence[Mapping[str, t.Container]]].ok([parsed])
 ```
 
 Why good: validates structure before typed access.

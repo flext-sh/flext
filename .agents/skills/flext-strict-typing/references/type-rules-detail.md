@@ -85,7 +85,7 @@ ruff check --select=F821,F401,F811  # Verify no undefined names or unused import
 | `Mapping[*, *]`         | `FlextModels.Dict` / Model                   | Replaced by `RootModel` or specialized Pydantic models         |       |         |        |           |
 | `Mapping[*, *]`         | `FlextModels.Dict` / Model                   | Replaced by `RootModel` or specialized Pydantic models         |       |         |        |           |
 | Broad container aliases | `m.<Domain>.*Model` / `p.<Domain>.*Protocol` | Replace permissive contracts with explicit models/protocols    |       |         |        |           |
-| `t.Dict`                | `FlextModels.Dict`                           | **Transitioning**: Prefer specialized models over generic dict |       |         |        |           |
+| `m.Dict`                | `FlextModels.Dict`                           | **Transitioning**: Prefer specialized models over generic dict |       |         |        |           |
 | `Sequence[Any]`         | `Sequence[SpecificModel]`                    | Generic lists are forbidden                                    |       |         |        |           |
 | `Sequence[Any]`         | `Sequence[SpecificModel]`                    | Read-only batch contracts                                      |       |         |        |           |
 
@@ -111,7 +111,7 @@ Custom checks for this skill must live in `.agents/skills/flext-strict-typing/` 
 ### Special RootModel Containers (from `typings.py` lines 357-462)
 
 ```python
-t.Dict  # Transitional only — migrate to explicit domain dict models
+m.Dict  # Transitional only — migrate to explicit domain dict models
 m.Domain.ConfigModel  # Canonical strict settings contract
 p.ServiceMap  # Transitional only — migrate to explicit service registry models
 t.ErrorMap  # RootModel[Mapping[str, int | str | t.IntMapping]] — error types
@@ -437,7 +437,7 @@ p.ResourceCallable  # Prefer Callable[[], m.<Domain>.ResourceModel]
 t.DecoratorType  # Callable[[HandlerCallable], HandlerCallable]
 
 # For custom signatures, use import from collections.abc:
-from collections.abc import Callable
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 
 callback: Callable[[str, int], bool]
 ```

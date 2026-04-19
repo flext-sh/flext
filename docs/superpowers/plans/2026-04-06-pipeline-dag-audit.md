@@ -74,7 +74,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
@@ -102,7 +102,7 @@ class FlextCliProtocolsPipeline:
             ...
 
         @property
-        def settings(self) -> t.RecursiveContainerMapping:
+        def settings(self) -> Mapping[str, t.Container]:
             """Immutable configuration for the pipeline run."""
             ...
 
@@ -180,7 +180,7 @@ git commit -m "feat(flext-cli): add pipeline protocol contracts (p.Cli.PipelineS
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 from typing import TYPE_CHECKING, Literal
 
 from flext_core import r, p
@@ -489,7 +489,7 @@ git commit -m "feat(flext-cli): add pipeline models (m.Cli.PipelineStageSpec, Pi
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 from pathlib import Path
 
 import pytest

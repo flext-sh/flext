@@ -1,38 +1,157 @@
 # Instruction Surface Manifest
 
-Single manifest for instruction loading in this repository.
+**Reviewed**: 2026-04-19 | **Scope**: Complete audit of all agent/skill/MCP/instruction surfaces
 
-## Canonical Loading Precedence
+Canonical governance: [`AGENTS.md`](../AGENTS.md)
 
-1. `AGENTS.md` (normative policy)
-2. `CLAUDE.md` (routing and skill selection)
-3. `.agents/skills/` (path-scoped skills)
+---
 
-No other tree is canonical for project instruction loading.
+## §1 Surface Hierarchy
 
-## Canonical Pointer Files (must remain pointer-only)
+```
+LOAD ORDER (highest authority first):
+1. AGENTS.md              — FLEXT canonical governance (SSOT)
+2. .agents/skills/        — FLEXT path-scoped skills (80 skills)
+3. .github/copilot-instructions.md — pointer only → AGENTS.md
+4. ~/.claude/CLAUDE.md    — universal user profile + GSD
+5. ~/.claude/rules/       — language-level rules (python, rust, ts, k8s)
+6. ~/.copilot/agents/     — user-level agents (CLEAN — see §4)
+7. ~/.copilot/skills/     — user-level skills (manifest only)
+8. ~/.agents/skills/      — user-level unique skills (4 skills)
+9. ~/.vscode/agent-plugins/ — installed plugin repos (see §3)
+```
 
-- `.github/copilot-instructions.md`
-- `.clinerules`
-- `.windsurfrules`
-- `.continue/rules/flext.md`
-- `.cursor/rules/flext.mdc`
-- `.gemini/styleguide.md`
-- `codex.md`
-- `CONVENTIONS.md`
+---
 
-Required pointer behavior:
+## §2 Workspace Surfaces (canonical)
 
-- Reference `AGENTS.md` as canonical governance.
-- Reference `.agents/skills/` as the only project skill root.
-- Never use fallback instruction paths.
-- Avoid duplicated policy text.
+| Surface | Path | Count | Status |
+|---------|------|-------|--------|
+| FLEXT Skills | `.agents/skills/` | 80 skills | ✅ Canonical |
+| GitHub Prompts | `.github/prompts/` | 1 prompt | ✅ OK |
+| Copilot Instructions | `.github/copilot-instructions.md` | pointer | ✅ OK |
+| Cline Rules | `.clinerules` | pointer | ✅ OK |
+| Windsurf Rules | `.windsurfrules` | pointer | ✅ OK |
+| Codex | `codex.md` | pointer | ✅ OK |
+| Child AGENTS | `<repo>/AGENTS.md` × 30 | pointer | ✅ OK |
+| MCP Config | `.vscode/mcp.json` | empty | ⚠️ See §5 |
 
-## Non-Canonical Discovery Trees (must be ignored)
+---
 
-- `.venv/**`
-- `.cache/**`
-- `vendor/**`
-- `**/dbt_packages/**`
-- `.claude/skills/**`
-- `.github/skills/**`
+## §3 Installed Plugin Repos (`~/.vscode/agent-plugins/`)
+
+Plugins are loaded automatically by VS Code Copilot. Do NOT copy their
+skills/agents into `.agents/` — they are already surfaced by the plugin system.
+
+| Plugin Repo | Size | Skills | Agents | Relevance |
+|-------------|------|--------|--------|-----------|
+| `github/awesome-copilot` | 139MB | 296 | 203 | HIGH — generic engineering toolkit |
+| `davepoon/buildwithclaude` | 37MB | 6 | 6 | MEDIUM — multi-agent builders (ag2, triforce) |
+| `obra/episodic-memory` | 5.7MB | 1 | 1 | LOW — semantic convo search (claude-mem overlap) |
+| `obra/double-shot-latte` | 9MB | 0 | 0 | MEDIUM — auto-continue decision |
+| `obra/superpowers` | 1MB | 0 | 1 | MEDIUM — brainstorm/execute-plan/write-plan cmds |
+| `mhattingpete/claude-skills-marketplace` | 3.1MB | 14 | 0 | HIGH — code-auditor, test-fixing, git-pushing |
+| `github/copilot-plugins` | varied | 3 | 0 | MEDIUM — secret-scanning (useful) |
+| `Piebald-AI/claude-code-lsps` | 548KB | 0 | 0 | MEDIUM — basedpyright LSP config |
+
+### Removed plugins (2026-04-19)
+
+| Removed | Reason |
+|---------|--------|
+| `microsoft/What-I-Did-Copilot` | Daily work tracker — not FLEXT relevant |
+| `scaryrawr/scarypilot` | Azure DevOps focused — not FLEXT relevant |
+| `daothihuong2111/*` | Empty repository |
+| `obra/episodic-memory/node_modules` | 439MB node_modules removed (reinstallable) |
+
+---
+
+## §4 User-Level Agent/Skill Surfaces
+
+### `~/.copilot/agents/` — CLEANED (2026-04-19)
+
+All 40 agents that were here were exact duplicates of `github/awesome-copilot/agents/`.
+Since `awesome-copilot` is loaded as a plugin, these were loaded twice.
+**All 40 removed.** Backup at `/tmp/copilot-agents-backup-20260419/`.
+
+### `~/.copilot/installed-plugins/thedotmack/claude-mem/`
+
+Memory management plugin with 7 skills: `do`, `knowledge-agent`, `make-plan`,
+`mem-search`, `smart-explore`, `timeline-report`, `version-bump`.
+**KEEP** — provides cross-session memory for Claude Code. No overlap with workspace.
+
+### `~/.agents/skills/` (user-level, 4 unique skills)
+
+| Skill | Purpose | Overlap |
+|-------|---------|---------|
+| `microsoft-foundry` | Foundry deploy/eval | None in workspace |
+| `ask` | Code archaeology | None in workspace |
+| `git-ai-search` | Search git for AI conversations | None in workspace |
+| `prompt-analysis` | Analyze prompting patterns | None in workspace |
+
+### `~/.claude/agents/` (user-level, 8 GSD agents)
+
+GSD workflow agents: `gsd-advisor-researcher`, `gsd-assumptions-analyzer`,
+`gsd-codebase-mapper`, `gsd-debugger`, `gsd-executor`, `gsd-integration-checker`,
+`gsd-nyquist-auditor`, `gsd-phase-researcher`.
+**KEEP** — GSD workflow, no overlap with workspace skills.
+
+### `~/.claude/rules/` (language rules, 4 files)
+
+python.md, rust.md, typescript.md, kubernetes.md — always-apply language rules.
+These supplement AGENTS.md with language-specific defaults.
+**KEEP, NO OVERLAP** with workspace (AGENTS.md delegates to these).
+
+---
+
+## §5 MCP Server Gap
+
+`.vscode/mcp.json` has `servers: {}` — no MCP servers configured.
+
+Recommended MCP servers for FLEXT workflows:
+
+```json
+{
+  "servers": {
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${env:GITHUB_TOKEN}" }
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/marlonsc/flext"]
+    }
+  }
+}
+```
+
+> Note: Apply only when GitHub token is available and MCP use is intentional.
+
+---
+
+## §6 Deduplication Findings: Sub-Repo Docs
+
+Each of 30 sub-repos has `docs/guides/skill-automation-pattern.md`.
+These are project-specific evolved copies of the skill pattern guide,
+NOT governance duplicates. They are developer reference docs and intentionally
+project-scoped. No action required — do not delete.
+
+---
+
+## §7 What Belongs in `.agents/skills/` (FLEXT canonical)
+
+All FLEXT-specific domain skills live here. Do NOT copy generic skills
+from installed plugins into `.agents/skills/`. Plugin skills are loaded
+automatically by the VS Code Copilot plugin system.
+
+Add to `.agents/skills/` ONLY when:
+1. The skill is FLEXT-domain-specific (MRO, pydantic governance, etc.)
+2. The skill needs to be available to Claude Code (not just VS Code Copilot)
+3. The skill cannot be sourced from any installed plugin
+
+---
+
+*Last audit: 2026-04-19 | Auditor: agent | Evidence: removed 40 duplicate agents,
+439MB node_modules, 2 irrelevant plugins, 1 empty org dir.*

@@ -96,10 +96,10 @@ Use `make val` as the primary execution entrypoint. Internal script orchestratio
 - **Symptom**: `Argument None is not assignable to parameter value with type T`
 - **Fix**: Replace `.ok(None)` with `.ok(True)` for `r[bool]` return types; review other types per call-site intent
 
-### 3. `r[t.RecursiveContainer]` Type Erasure
+### 3. `r[t.Container]` Type Erasure
 
-- **Symptom**: Invariance prevents safe widening of `r[t.RecursiveContainer]`
-- **Fix**: Rewrite to `r[t.RecursiveContainer]` at boundaries, or make local functions generic
+- **Symptom**: Invariance prevents safe widening of `r[t.Container]`
+- **Fix**: Rewrite to `r[t.Container]` at boundaries, or make local functions generic
 
 ### 4. RootModel Container Coercion
 

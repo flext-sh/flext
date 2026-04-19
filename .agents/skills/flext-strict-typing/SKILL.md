@@ -58,8 +58,8 @@ from __future__ import annotations
 from flext_core import p, r, t
 
 
-def parse_payload(payload: t.ConfigMap) -> p.Result[str]:
-    """Use t.ConfigMap for Mapping[str, str] parameters, p.Result[T] as return type."""
+def parse_payload(payload: m.ConfigMap) -> p.Result[str]:
+    """Use m.ConfigMap for Mapping[str, str] parameters, p.Result[T] as return type."""
     value = payload.get("key", "")
     if not value:
         return r[str].fail("key is missing")

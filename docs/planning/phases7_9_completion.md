@@ -77,12 +77,12 @@ class TestGuards:
 
     @staticmethod
     def is_user_response(obj) -> TypeGuard[dict]:
-        """Check if t.RecursiveContainer is a user response fixture."""
+        """Check if t.Container is a user response fixture."""
         return isinstance(obj, dict) and "user_id" in obj and "email" in obj
 
     @staticmethod
     def is_config_response(obj) -> TypeGuard[dict]:
-        """Check if t.RecursiveContainer is a settings response fixture."""
+        """Check if t.Container is a settings response fixture."""
         return isinstance(obj, dict) and "app_name" in obj and "version" in obj
 
 
@@ -91,7 +91,7 @@ class LdifTestGuards:
 
     @staticmethod
     def is_entry_fixture(obj) -> TypeGuard[dict]:
-        """Check if t.RecursiveContainer is an LDIF entry fixture."""
+        """Check if t.Container is an LDIF entry fixture."""
         return isinstance(obj, dict) and "dn" in obj and "attributes" in obj
 
 
@@ -100,7 +100,7 @@ class CliTestGuards:
 
     @staticmethod
     def is_command_fixture(obj) -> TypeGuard[dict]:
-        """Check if t.RecursiveContainer is a command fixture."""
+        """Check if t.Container is a command fixture."""
         return isinstance(obj, dict) and "name" in obj and "args" in obj
 
 
@@ -109,7 +109,7 @@ class WebTestGuards:
 
     @staticmethod
     def is_request_fixture(obj) -> TypeGuard[dict]:
-        """Check if t.RecursiveContainer is a request fixture."""
+        """Check if t.Container is a request fixture."""
         return isinstance(obj, dict) and "method" in obj and "endpoint" in obj
 ```
 

@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-from flext_core import t
-
 
 class Error(Exception):
     """Base flext exception."""
 
-    def __init__(self, message: str, context: t.Dict | None = None) -> None:
+    def __init__(self, message: str, context: m.Dict | None = None) -> None:
         """Initialize error."""
         super().__init__(message)
         self.context = context or {}

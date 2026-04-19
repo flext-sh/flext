@@ -1,6 +1,6 @@
 id: detect-jsondict-legacy
 valid:
-  - "x = t.RecursiveContainer"
+  - "x = t.Container"
   - "x = t.StrMapping"
 invalid:
-  - "Mapping[str, t.RecursiveContainer]"
+  - "Mapping[str, t.Container]"

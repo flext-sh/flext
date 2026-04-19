@@ -673,10 +673,10 @@ class s[TDomainResult](
         instance = super().__new__(cls)
         if cls.auto_execute:
             # Auto-execution pattern: create, initialize, execute, return result
-            t.RecursiveContainer.__init__(instance)
+            t.Container.__init__(instance)
             cls.__init__(instance, **data)
-            # Call execute via t.RecursiveContainer.__getattribute__ to bypass abstract method check
-            execute_fn = t.RecursiveContainer.__getattribute__(instance, "execute")
+            # Call execute via t.Container.__getattribute__ to bypass abstract method check
+            execute_fn = t.Container.__getattribute__(instance, "execute")
             result = execute_fn()
             if result.is_success:
                 # Return result directly instead of service instance
@@ -916,7 +916,7 @@ if result.is_success:
 - ✅ **Pydantic-native** - @u.computed_field (zero hacks)
 - ⚠️ **Type-safe** - Type checkers inferem TDomainResult (mas testes falhando)
 - ✅ **Lazy evaluation** - Só executa quando acessado
-- ⚠️ **t.RecursiveContainer** - Precisa validação (testes falhando)
+- ⚠️ **t.Container** - Precisa validação (testes falhando)
 - ✅ **100% backward compatible** - V1 continua funcionando
 - ✅ **Zero type ignores** - 100% type-safe
 
@@ -947,9 +947,9 @@ def __new__(cls, **data) -> Self:
     """Handle auto-execution pattern and instance creation."""
     instance = super().__new__(cls)
     if cls.auto_execute:
-        t.RecursiveContainer.__init__(instance)
+        t.Container.__init__(instance)
         cls.__init__(instance, **data)
-        execute_fn = t.RecursiveContainer.__getattribute__(instance, "execute")
+        execute_fn = t.Container.__getattribute__(instance, "execute")
         result = execute_fn()
         if result.is_success:
             return cast("Self", result.value)
@@ -1384,7 +1384,7 @@ class FlextContainer:
         ...
 
     # Service resolution
-    def get(self, name: str) -> p.Result[t.RecursiveContainer]:
+    def get(self, name: str) -> p.Result[t.Container]:
         """Resolve service (untyped)."""
         ...
 
@@ -1416,7 +1416,7 @@ class p:
         def is_valid(self) -> bool: ...
         def validate_business_rules(self) -> p.Result[bool]: ...
         def validate_config(self) -> p.Result[bool]: ...
-        def get_service_info(self) -> t.RecursiveContainerMapping: ...
+        def get_service_info(self) -> Mapping[str, t.Container]: ...
 
     @runtime_checkable
     class Repository[T](Protocol):
@@ -1431,17 +1431,15 @@ class p:
     class Configurable(Protocol):
         """Configuration protocol."""
 
-        def configure(
-            self, settings: t.RecursiveContainerMapping
-        ) -> p.Result[bool]: ...
-        def get_config(self) -> t.RecursiveContainerMapping: ...
+        def configure(self, settings: Mapping[str, t.Container]) -> p.Result[bool]: ...
+        def get_config(self) -> Mapping[str, t.Container]: ...
 
     @runtime_checkable
     class ExecutableService(Protocol):
         """Enhanced execution protocol."""
 
-        def execute_operation(self) -> p.Result[t.RecursiveContainer]: ...
-        def execute_with_validation(self) -> p.Result[t.RecursiveContainer]: ...
+        def execute_operation(self) -> p.Result[t.Container]: ...
+        def execute_with_validation(self) -> p.Result[t.Container]: ...
 ```
 
 **Pontos de Integração:**
@@ -1887,7 +1885,7 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
         # Detect dependencies from __init__ signature
         try:
             init_signature = inspect.signature(cls.__init__)
-            dependencies: t.RecursiveContainerMapping = {}
+            dependencies: Mapping[str, t.Container] = {}
 
             for param_name, param in init_signature.parameters.items():
                 if param_name not in ("self", "settings", "data"):
@@ -1899,7 +1897,7 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 
                 def smart_factory(deps=dependencies):
                     """Factory with auto-injection."""
-                    resolved_deps: t.RecursiveContainerMapping = {}
+                    resolved_deps: Mapping[str, t.Container] = {}
 
                     for dep_name, dep_type in deps.items():
                         # Try resolve from container
@@ -1943,7 +1941,7 @@ class UserService(s[User]):
     def is_valid(self) -> bool:
         return True
 
-    def get_service_info(self) -> t.RecursiveContainerMapping:
+    def get_service_info(self) -> Mapping[str, t.Container]:
         return {"service": "UserService"}
 
 
@@ -2065,7 +2063,7 @@ class CreateUser(s[User]):
 
     def execute(self) -> p.Result[User]:
         """Execute with repository from DI."""
-        # Create user t.RecursiveContainer
+        # Create user t.Container
         user = User(name=self.name, email=self.email, role=self.role)
 
         # Get repository from DI (if registered)
@@ -3054,13 +3052,13 @@ class FlextContainer:
     # Core operations
     def register(self, name: str, service) -> p.Result[bool]
     def register_factory(self, name: str, factory: Callable[[], T]) -> p.Result[bool]
-    def get(self, name: str) -> p.Result[t.RecursiveContainer]
+    def get(self, name: str) -> p.Result[t.Container]
     def get_typed(self, name: str, expected_type: type[T]) -> p.Result[T]
 
     # Advanced features
-    def auto_wire(self, service_class: type[T]) -> p.Result[t.RecursiveContainer]
-    def create_service(self, service_class: type[T], service_name: str | None) -> p.Result[t.RecursiveContainer]
-    def batch_register(self, services: t.RecursiveContainerMapping) -> p.Result[bool]
+    def auto_wire(self, service_class: type[T]) -> p.Result[t.Container]
+    def create_service(self, service_class: type[T], service_name: str | None) -> p.Result[t.Container]
+    def batch_register(self, services: Mapping[str, t.Container]) -> p.Result[bool]
 
     # Integration com dependency-injector
     _di_container: DynamicContainer  # Internal DI wrapper
@@ -3084,7 +3082,7 @@ class FlextContainer:
 # flext-ldif/src/flext_ldif/api.py (linha 128-129, 239-278)
 
 
-class ldif(Flext[t.RecursiveContainerMapping]):
+class ldif(Flext[Mapping[str, t.Container]]):
     """Main API facade."""
 
     # ✅ BOM: Container como u.PrivateAttr
@@ -3110,7 +3108,7 @@ class ldif(Flext[t.RecursiveContainerMapping]):
         _ = container.register("validation", FlextLdifValidation())
 
         # ✅ BOM: Register factory for parameterized service
-        def migration_pipeline_factory(params: t.RecursiveContainerMapping | None):
+        def migration_pipeline_factory(params: Mapping[str, t.Container] | None):
             if params is None:
                 params = {}
             return FlextLdifMigrationPipeline(
@@ -3285,14 +3283,14 @@ class ldif:
 **Pattern 1: Registrar Services na Inicialização**
 
 ```python
-class MyFacade(s[t.RecursiveContainerMapping]):
+class MyFacade(s[Mapping[str, t.Container]]):
     """Facade with proper DI setup."""
 
     _container: FlextContainer = u.PrivateAttr(
         default_factory=FlextContainer.get_global
     )
 
-    def model_post_init(self, _context: t.RecursiveContainerMapping | None, /) -> None:
+    def model_post_init(self, _context: Mapping[str, t.Container] | None, /) -> None:
         """Setup services in DI container."""
         # Registrar todos os services necessários
         self._setup_services()
@@ -4167,7 +4165,7 @@ class HttpResponse(m.Value):
 - Cached automaticamente (Pydantic v2)
 - Included in `model_dump()`
 - Type-safe
-- t.RecursiveContainer
+- t.Container
 
 #### ✅ Padrões Recomendados
 
@@ -4314,13 +4312,13 @@ class p:
     class Service(Protocol):
         """Service protocol."""
 
-        def execute(self) -> p.Result[t.RecursiveContainer]: ...
+        def execute(self) -> p.Result[t.Container]: ...
 
     @runtime_checkable
     class Repository(Protocol):
         """Repository protocol."""
 
-        def get(self, id: str) -> p.Result[t.RecursiveContainer]: ...
+        def get(self, id: str) -> p.Result[t.Container]: ...
         def save(self, entity) -> p.Result[bool]: ...
         def delete(self, id: str) -> p.Result[bool]: ...
 
@@ -4328,10 +4326,8 @@ class p:
     class Configurable(Protocol):
         """Configurable protocol."""
 
-        def configure(
-            self, settings: t.RecursiveContainerMapping
-        ) -> p.Result[bool]: ...
-        def get_config(self) -> t.RecursiveContainerMapping: ...
+        def configure(self, settings: Mapping[str, t.Container]) -> p.Result[bool]: ...
+        def get_config(self) -> Mapping[str, t.Container]: ...
 ```
 
 **Capabilities:**
@@ -4507,7 +4503,7 @@ class s(x, BaseModel, Generic[TDomainResult]):
 
 ```python
 # flext-ldif/src/flext_ldif/api.py
-class ldif(Flext[t.RecursiveContainerMapping]):
+class ldif(Flext[Mapping[str, t.Container]]):
     """API facade with mixins."""
 
     def parse(self, source: str) -> r:
@@ -6139,9 +6135,9 @@ class h[MessageT_contra, ResultT](x, ABC):
     ...
     # handlers.py:119-120 - MAS USA INFRAESTRUTURA MANUAL!
     self._context_stack: Sequence[
-        t.RecursiveContainerMapping
+        Mapping[str, t.Container]
     ] = []  # ❌ deveria usar self.context
-    self._metrics: t.RecursiveContainerMapping = {}  # ❌ deveria usar self.track()
+    self._metrics: Mapping[str, t.Container] = {}  # ❌ deveria usar self.track()
 ```
 
 **Duplicação em \_run_pipeline (handlers.py:495-584):**
@@ -7611,7 +7607,7 @@ class cli:
         self._valid_tokens: set[str] = set()
         self._valid_sessions: set[str] = set()
         self._session_permissions: Mapping[str, set[str]] = {}
-        self._users: Mapping[str, t.RecursiveContainerMapping] = {}
+        self._users: Mapping[str, Mapping[str, t.Container]] = {}
 
     def authenticate(self, credentials: ...) -> p.Result[str]:
         # Auth logic directly in cli
@@ -7638,7 +7634,7 @@ from pathlib import Path
 from typing import Literal
 
 
-class FlextCliService(s[t.RecursiveContainerMapping]):
+class FlextCliService(s[Mapping[str, t.Container]]):
     """CLI service following s pattern.
 
     Single service class para TODAS as operações CLI.
@@ -7651,12 +7647,12 @@ class FlextCliService(s[t.RecursiveContainerMapping]):
     # Operation-specific fields
     message: str = ""
     style: str | None = None
-    data: t.RecursiveContainerMapping | None = None
+    data: Mapping[str, t.Container] | None = None
     filepath: Path | None = None
     prompt_text: str | None = None
 
     @override
-    def execute(self) -> p.Result[t.RecursiveContainerMapping]:
+    def execute(self) -> p.Result[Mapping[str, t.Container]]:
         """Execute CLI operation based on operation field."""
         match self.operation:
             case "print":
@@ -7670,7 +7666,7 @@ class FlextCliService(s[t.RecursiveContainerMapping]):
             case "prompt":
                 return self._execute_prompt()
 
-    def _execute_print(self) -> p.Result[t.RecursiveContainerMapping]:
+    def _execute_print(self) -> p.Result[Mapping[str, t.Container]]:
         """Print with Rich styling."""
         from rich.console import Console
 
@@ -7678,7 +7674,7 @@ class FlextCliService(s[t.RecursiveContainerMapping]):
         console.print(self.message, style=self.style)
         return r.ok({"printed": self.message})
 
-    def _execute_table(self) -> p.Result[t.RecursiveContainerMapping]:
+    def _execute_table(self) -> p.Result[Mapping[str, t.Container]]:
         """Create table from data."""
         from rich.table import Table
 
@@ -7691,19 +7687,19 @@ class FlextCliService(s[t.RecursiveContainerMapping]):
 # ============ PUBLIC API - Zero Ceremony ============
 
 
-def print_cli(message: str, style: str | None = None) -> t.RecursiveContainerMapping:
+def print_cli(message: str, style: str | None = None) -> Mapping[str, t.Container]:
     """Factory function - Zero ceremony CLI print."""
     return FlextCliService(operation="print", message=message, style=style).value
 
 
 def create_table(
-    data: t.RecursiveContainerMapping,
-) -> t.RecursiveContainerMapping:
+    data: Mapping[str, t.Container],
+) -> Mapping[str, t.Container]:
     """Factory function - Zero ceremony table creation."""
     return FlextCliService(operation="table", data=data).value
 
 
-def read_json(filepath: Path) -> t.RecursiveContainerMapping:
+def read_json(filepath: Path) -> Mapping[str, t.Container]:
     """Factory function - Zero ceremony JSON read."""
     return FlextCliService(operation="read_file", filepath=filepath).value
 ```
@@ -7724,7 +7720,7 @@ def read_json(filepath: Path) -> t.RecursiveContainerMapping:
 class CliOutputService(s[str]):
     """Output formatting service."""
 
-    data: t.RecursiveContainerMapping
+    data: Mapping[str, t.Container]
     format: Literal["json", "yaml", "table", "csv"] = "json"
 
     def execute(self) -> p.Result[str]:
@@ -7740,14 +7736,14 @@ class CliOutputService(s[str]):
 
 
 # flext-cli/src/flext_cli/services/file_tools.py
-class CliFileService(s[t.RecursiveContainerMapping]):
+class CliFileService(s[Mapping[str, t.Container]]):
     """File I/O service."""
 
     operation: Literal["read", "write"] = "read"
     filepath: Path
-    data: t.RecursiveContainerMapping | None = None
+    data: Mapping[str, t.Container] | None = None
 
-    def execute(self) -> p.Result[t.RecursiveContainerMapping]:
+    def execute(self) -> p.Result[Mapping[str, t.Container]]:
         match self.operation:
             case "read":
                 return self._read_json()
@@ -7839,11 +7835,11 @@ class FlextCliSettings(FlextSettings):
 ```python
 
 # flext-cli/src/flext_cli/services/cli.py (NOVO)
-class FlextCliService(s[t.RecursiveContainerMapping]):
+class FlextCliService(s[Mapping[str, t.Container]]):
     operation: Literal["print", "table", "file_read", "file_write"] = "print"
     # ... fields
 
-    def execute(self) -> p.Result[t.RecursiveContainerMapping]:
+    def execute(self) -> p.Result[Mapping[str, t.Container]]:
         match self.operation:
             # ... dispatch
 ```
@@ -7856,7 +7852,7 @@ def print_cli(message: str, style: str | None = None):
     return FlextCliService(operation="print", message=message, style=style).value
 
 
-def create_table(data: t.RecursiveContainerMapping):
+def create_table(data: Mapping[str, t.Container]):
     return FlextCliService(operation="table", data=data).value
 ```
 
@@ -7878,7 +7874,7 @@ class cli:
 
 # flext-cli/src/flext_cli/services/output.py
 class CliOutputService(s[str]):
-    data: t.RecursiveContainerMapping
+    data: Mapping[str, t.Container]
     format: Literal["json", "yaml", "table"] = "json"
 
     def execute(self) -> p.Result[str]:
@@ -7890,11 +7886,11 @@ class CliOutputService(s[str]):
 ```python
 
 # flext-cli/src/flext_cli/services/file.py
-class CliFileService(s[t.RecursiveContainerMapping]):
+class CliFileService(s[Mapping[str, t.Container]]):
     operation: Literal["read", "write"] = "read"
     filepath: Path
 
-    def execute(self) -> p.Result[t.RecursiveContainerMapping]:
+    def execute(self) -> p.Result[Mapping[str, t.Container]]:
         # Move file I/O logic here
 ```
 
@@ -8221,7 +8217,7 @@ class x:
         return FlextSettings.get_global_instance()
 
     @contextmanager
-    def track(self, operation_name: str) -> Iterator[t.RecursiveContainerMapping]:
+    def track(self, operation_name: str) -> Iterator[Mapping[str, t.Container]]:
         """Performance monitoring context manager."""
         with FlextContext.Performance.timed_operation(operation_name) as metrics:
             yield metrics
@@ -8297,7 +8293,7 @@ class s[TDomainResult]:
     def is_valid(self) -> bool: ...
 
     # ❌ Service info raramente usado
-    def get_service_info(self) -> t.RecursiveContainerMapping: ...
+    def get_service_info(self) -> Mapping[str, t.Container]: ...
 
     # ✅ Properties - ÓTIMOS
     @u.computed_field
@@ -8483,7 +8479,7 @@ class MyService(s[Result]):
 # DEPOIS - Only execute + Pydantic validators
 class MyService(s[Result]):
     # Pydantic fields
-    data: t.RecursiveContainerMapping
+    data: Mapping[str, t.Container]
 
     @u.model_validator(mode="after")
     def validate_data(self) -> Self:
@@ -8624,7 +8620,7 @@ class FlextCliCore(s[CliDataDict]):
         "execute_command"
     )
     command_name: str = ""
-    command_context: t.RecursiveContainerMapping = {}
+    command_context: Mapping[str, t.Container] = {}
 
     # Commands stored in class-level registry
     _commands: ClassVar[Mapping[str, CliCommand]] = {}
@@ -9025,7 +9021,7 @@ user = UserService(user_id="123").execute().unwrap()
 - ✅ Pydantic-native (zero hacks)
 - ✅ Lazy evaluation (só executa quando acessado)
 - ✅ Type-safe (type checkers inferem TDomainResult)
-- ✅ t.RecursiveContainer (incluído em model_dump se configurado)
+- ✅ t.Container (incluído em model_dump se configurado)
 
 #### 2. ✅ V2 Auto Pattern: `auto_execute`
 

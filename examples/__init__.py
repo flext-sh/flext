@@ -32,9 +32,6 @@ if _t.TYPE_CHECKING:
     complete_workflow_example = _examples_complete_workflow_example
     from examples.complete_workflow_example import (
         CompleteWorkflowExample,
-        ProcessingDict,
-        WorkflowContent,
-        WorkflowData,
     )
     from flext_core.constants import FlextConstants as c
     from flext_core.decorators import FlextDecorators as d
@@ -89,10 +86,7 @@ __all__: list[str] = [
     "EntryDict",
     "ItemDict",
     "PipelineStageData",
-    "ProcessingDict",
     "StageOperation",
-    "WorkflowContent",
-    "WorkflowData",
     "acl_processing_example",
     "advanced_processing_example",
     "c",

@@ -77,7 +77,7 @@ class FlextProcessingModels(m):
 ```python
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 from typing import Annotated
 
 from flext_core import m, u
@@ -174,7 +174,7 @@ From `flext-core/src/flext_core/_utilities/validation.py`:
 ```python
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 
 from flext_core import m
 

@@ -1,6 +1,6 @@
 id: fix-jsondict-legacy
 valid:
-  - "t.RecursiveContainer"
+  - "t.Container"
   - "t.StrMapping"
 invalid:
-  - "Mapping[str, t.RecursiveContainer]"
+  - "Mapping[str, t.Container]"

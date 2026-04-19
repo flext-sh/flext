@@ -47,7 +47,7 @@ class FlextPattern(m):
                     raise ValueError("end must be >= start")
                 return self
 
-        class ServiceBase(s[t.Dict]):
+        class ServiceBase(s[m.Dict]):
             pass
 
         class Service(ServiceBase):
@@ -156,7 +156,7 @@ def demo_window() -> p.Result[int]:
 Why good:
 
 - ✅ **All Pydantic via `m`** — `m.BaseModel`, `u.Field`, `m.ConfigDict`, `u.field_validator`, `u.model_validator`, `u.computed_field`
-- ✅ **One-facade module + MRO** — `FlextPattern(FlextPatternValidateMixin, s[t.Dict])`
+- ✅ **One-facade module + MRO** — `FlextPattern(FlextPatternValidateMixin, s[m.Dict])`
 - ✅ **Validator phases separated** — normalize (before) → coerce → validate cross-fields (after)
 - ✅ **Nested domain namespace** — `FlextPattern.Domain.Window` preserved, not flattened
 - ✅ **Service boundary** — receives typed models, returns result via `r[T]`

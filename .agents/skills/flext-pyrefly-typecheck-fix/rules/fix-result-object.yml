@@ -1,5 +1,5 @@
-id: fix-result-t.RecursiveContainer
+id: fix-result-t.Container
 language: python
 rule:
-  pattern: p.Result[t.RecursiveContainer]
-fix: p.Result[t.RecursiveContainer]
+  pattern: p.Result[t.Container]
+fix: p.Result[t.Container]

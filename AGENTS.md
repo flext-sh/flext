@@ -274,11 +274,11 @@ flext-<project>/src/flext_<project>/
 
 ### 3.2 Types & Contracts
 
-- **Strict Contracts Only**: `Any`, bare `object`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `t.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
-  - **Exception: Intentional Generic Types** - `t.RecursiveContainerMapping` and `t.RecursiveContainerMapping` ARE permitted ONLY in these contexts:
-    1. **Type aliases** (in `typings.py`): `type ProjectSettings = t.RecursiveContainerMapping` with docstring explaining intent
+- **Strict Contracts Only**: `Any`, bare `object`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `m.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
+  - **Exception: Intentional Generic Types** - `Mapping[str, t.Container]` and `Mapping[str, t.Container]` ARE permitted ONLY in these contexts:
+    1. **Type aliases** (in `typings.py`): `type ProjectSettings = Mapping[str, t.Container]` with docstring explaining intent
     2. **Test fixtures** (in `conftest.py` and test support): Dynamic test data with unknown structure
-    3. **Validation/Rule engines**: Return types for unstructured violations (e.g., `r[Sequence[t.RecursiveContainerMapping]]`)
+    3. **Validation/Rule engines**: Return types for unstructured violations (e.g., `r[Sequence[Mapping[str, t.Container]]]`)
     4. **Configuration transformers**: Methods that accept/return dynamic configuration from external sources (YAML, JSON)
     - **All other uses are FORBIDDEN**. Use `object` or specific Pydantic models instead.
 - **PEP 695 Canonical (Python 3.13+)**: ALL type aliases in `typings.py` must use `type X = ...` syntax. These create `TypeAliasType` objects—using them in `isinstance()` crashes at runtime and is FORBIDDEN. Runtime narrowing MUST use `u.is_*()` functions instead.

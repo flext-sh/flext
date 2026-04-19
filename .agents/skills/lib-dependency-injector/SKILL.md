@@ -67,7 +67,7 @@ class u:
 
         @classmethod
         def create_layered_bridge(
-            cls, settings: t.ConfigMap | None = None
+            cls, settings: m.ConfigMap | None = None
         ) -> tuple[
             containers.DeclarativeContainer,
             containers.DynamicContainer,
@@ -95,7 +95,7 @@ class FlextContainer:
   - `from flext_core import u`
   - `from flext_core import inject` only where exported by package API.
 - Registration intent:
-  - `register` -> concrete t.RecursiveContainer provider (`providers.Object`)
+  - `register` -> concrete t.Container provider (`providers.Object`)
   - `register_factory` -> `providers.Singleton` or `providers.Factory` via `cache`
   - `register_resource` -> `providers.Resource`
 
