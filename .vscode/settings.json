@@ -63,8 +63,8 @@
     "!**/output/**"
   ],
   "mypy-type-checker.importStrategy": "fromEnvironment",
-  "mypy-type-checker.preferDaemon": true,
-  "mypy-type-checker.reportingScope": "workspace",
+  "mypy-type-checker.preferDaemon": false,
+  "mypy-type-checker.reportingScope": "file",
   "pylsp.plugins.autopep8.enabled": false,
   "pylsp.plugins.mccabe.enabled": false,
   "pylsp.plugins.pycodestyle.enabled": false,
@@ -114,5 +114,9 @@
   "terminal.integrated.env.linux": {
     "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}",
     "VIRTUAL_ENV": "${workspaceFolder}/.venv"
-  }
+  },
+  "mypy-type-checker.interpreter": [
+    ".venv/bin/python",
+    ""
+  ]
 }
