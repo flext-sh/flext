@@ -7,14 +7,15 @@
 - [Changelog](#changelog)
 <!-- TOC END -->
 
-This directory contains VSCode/Cursor workspace settings, MCP configuration,
-and extension recommendations for Neptor.
+This directory contains VS Code workspace settings, MCP configuration,
+and extension recommendations for FLEXT.
 
 ## Purpose
 
 - Share editor settings (formatting, linting, Python path, etc.)
 - Share workspace MCP server configuration for Copilot/VS Code chat tools
 - Recommend extensions for Python, Docker, YAML, Kubernetes, etc.
+- Keep editor/tooling configuration only (no governance policy duplication)
 
 ## Example Files
 
@@ -24,4 +25,5 @@ and extension recommendations for Neptor.
 
 ## Changelog
 
-- 2025-05-04 - Initial mockup and documentation. (by AI, guideline 5.5)
+- 2025-05-04 - Initial mockup and documentation.
+- 2026-04-19 - Updated project naming and clarified scope as tooling-only.

@@ -40,7 +40,7 @@ alwaysApply: true
 
 ## §0 Quick Reference (MUST READ)
 
-The rules most commonly violated. Scan this section at the start of EVERY flext task.
+FLEXT-only deltas. Universal rules (rollback, scope, generic tooling, communication) live in `~/.claude/AGENTS.md`.
 
 ### Canonical Aliases (SSOT — flat, never wrap)
 
@@ -72,32 +72,13 @@ The rules most commonly violated. Scan this section at the start of EVERY flext 
 - `examples/` → `ExamplesFlext<Project><Tier>`
 - `scripts/` → `ScriptsFlext<Project><Tier>`
 
-### Top 10 Forbidden Patterns
+### FLEXT-Specific Non-Negotiables
 
-1. **`git checkout`/`restore`/`reset`/`stash pop`** to discard uncommitted work — fix forward, never rollback
-2. **`Any`, `object`, `Mapping[str, Any]`** in type annotations — use `t.*` contracts
-3. **`# type: ignore`** without one-line business justification
-4. **`cast()`** outside `flext-core` result internals
-5. **`model_rebuild()`** — indicates unresolved root cause; use bare sibling names with `from __future__ import annotations`
-6. **Flat aliases on facades** — `X = Namespace.X`; always full namespace path `m.DbtLdap.X`
-7. **Manually editing `__init__.py`** — auto-generated; run `make gen`
-8. **`os.environ` / `os.getenv` in `src/`** — use `FlextSettings` or `c.*`
-9. **`.venv/bin/` prefixed commands** — use bare commands (RTK auto-proxies)
-10. **Out-of-scope cleanup** — stay strictly within assigned task
-
-### After EVERY Edit (MANDATORY)
-
-```bash
-ruff check <modified-files>
-pyrefly check <modified-files>
-pytest tests/ -k <matching-test>
-```
-
-Evidence required before proceeding. No "should work" claims.
-
-### Zero-Error Objective
-
-All 34 flext projects, all 4 linters (ruff, mypy, pyright, pyrefly), ZERO errors/warnings. No exceptions. No "pre-existing error" dismissals.
+1. Never flatten organic namespace paths (`m.TargetOracle.ExecuteResult`, not `m.ExecuteResult`).
+2. Never manually edit auto-generated `__init__.py`; run `make gen`.
+3. No direct imports of core-abstracted libraries outside owning abstraction project.
+4. No `model_rebuild()` as fix strategy; resolve forward refs via proper imports/annotations.
+5. No `os.environ`/`os.getenv` in `src/`; use settings + constants contracts.
 
 ### MRO Composition (critical)
 
@@ -107,45 +88,23 @@ All 34 flext projects, all 4 linters (ruff, mypy, pyright, pyrefly), ZERO errors
 - Manual flat wrapper nesting like `class Docker(tk): pass` inside facade → FORBIDDEN
 - Integration projects (`tap|target|dbt`): dual inheritance `FlextTapLdap(FlextMeltano, FlextLdap)`
 
-### Common t.* Contracts
+### Quick Contracts (frequent errors)
 
 - `t.Primitives` = `str | int | float | bool`
-- `t.Scalar` = `Primitives | datetime`
-- `t.Container` = `Scalar | Path`
-- `t.NormalizedValue` = recursive union (Container, list, Mapping, tuple, None, BaseModel)
-- `t.ContainerMapping`, `t.MutableContainerMapping`, `t.ContainerList` — prefer shortest alias
-- `Sequence` (covariant) over `list` for parameter types — list invariance in pyrefly
-- PEP 695 `type X = ...` aliases can't be subclassed — use long form for class bases
+- `t.Scalar` = `t.Primitives | datetime`
+- `t.Container` = `t.Scalar | Path`
+- Prefer `Sequence` over `list` in parameter types (variance-safe).
+- Prefer `t.*` validators over ad-hoc `Field(...)` constraints.
 
-### Coverage: `t.*` Validation Types
+### Settings Baseline
 
-Use `annotated-types`-based `t.*` validators instead of bare `Field(ge=..., le=..., min_length=...)`:
+- Settings models inherit `FlextSettings`.
+- Defaults come from `c.*` constants.
+- Namespace registration uses `@FlextSettings.auto_register("<namespace>")`.
 
-- **String**: `NonEmptyStr`, `StrippedStr`, `BoundedStr`, `HostnameStr`, `UriString`, `TimestampStr`
-- **Int**: `PositiveInt`, `NonNegativeInt`, `PortNumber`, `RetryCount`, `WorkerCount`, `HttpStatusCode`, `BatchSize`, `MaxLength`
-- **Float**: `PositiveFloat`, `NonNegativeFloat`, `PositiveTimeout`, `BackoffMultiplier`, `Percentage`, `DecimalFraction`
+### Verification Baseline
 
-### Settings
-
-- ALL settings classes inherit `FlextSettings` (never `BaseSettings`/`BaseModel` custom)
-- `model_config = ConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`
-- Defaults from `c.*` constants (no hardcoded strings/numbers)
-- Use `@FlextSettings.auto_register("<namespace>")` for namespace access
-
-### Facade Import Matrix (CRITICAL — see §4 for full table)
-
-- `_models/*.py`, `_utilities/*.py`: import `m`, `u` from **parent MRO package**, never own package
-- Sibling classes in `_models/*.py` used at runtime → own package via lazy init
-- Sibling classes only in annotations → `TYPE_CHECKING` + `from __future__ import annotations`
-
-### Code Intelligence — Use Cheapest First
-
-1. `smart_outline` / `smart_search` (claude-mem AST, ~200 tokens)
-2. Serena `get_symbols_overview` → `find_symbol(include_body=False, depth=1)`
-3. Serena `find_symbol(include_body=True)` — only when reading body
-4. `scope map` / `scope sketch` for architecture
-5. `ast-grep` for structural search/replace
-6. Read tool last resort
+After edits, run project-relevant `ruff`, `pyrefly`, and `pytest` gates with evidence.
 
 ---
 

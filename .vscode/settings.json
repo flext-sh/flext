@@ -2,7 +2,15 @@
   "files.autoSave": "afterDelay",
   "files.exclude": {
     "**/.flext-deps": true,
-    "**/.flext-deps/**": true
+    "**/.flext-deps/**": true,
+    "**/.cache": true,
+    "**/.cache/**": true,
+    "**/.venv": true,
+    "**/.venv/**": true,
+    "**/vendor": true,
+    "**/vendor/**": true,
+    "**/dbt_packages": true,
+    "**/dbt_packages/**": true
   },
   "files.watcherExclude": {
     "__pycache__": true,
@@ -108,7 +116,15 @@
   "ruff.nativeServer": "on",
   "search.exclude": {
     "**/.flext-deps": true,
-    "**/.flext-deps/**": true
+    "**/.flext-deps/**": true,
+    "**/.cache": true,
+    "**/.cache/**": true,
+    "**/.venv": true,
+    "**/.venv/**": true,
+    "**/vendor": true,
+    "**/vendor/**": true,
+    "**/dbt_packages": true,
+    "**/dbt_packages/**": true
   },
   "shellcheck.useWorkspaceRootAsCwd": true,
   "terminal.integrated.env.linux": {

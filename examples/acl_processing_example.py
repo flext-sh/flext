@@ -23,9 +23,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
 from typing import Annotated, ClassVar, TypeIs
 
-from pydantic import ConfigDict
-
-from flext_core import m, p, r, t, u
+from examples import m, p, r, t, u
 
 EntryDict = Mapping[
     str,
@@ -86,7 +84,9 @@ class AclProcessingExample:
     class AclEntry(m.BaseModel):
         """Represents an ACL entry with context and permissions."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True
+        )
 
         dn: str = u.Field(description="Distinguished name of the ACL entry")
         acl_attribute: str = u.Field(description="ACL attribute name")
@@ -97,7 +97,9 @@ class AclProcessingExample:
     class AclValidationResult(m.BaseModel):
         """Result of ACL validation with detailed context."""
 
-        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True
+        )
 
         entry_dn: str = u.Field(description="Distinguished name of the entry")
         valid: bool = u.Field(description="Whether the ACL entry is valid")

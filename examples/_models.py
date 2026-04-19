@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from flext_core import m, t, u
+from examples import m, t, u
 
 
 class ValidationRules(m.BaseModel):

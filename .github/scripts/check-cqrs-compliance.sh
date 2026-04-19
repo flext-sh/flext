@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Owner-Skill: .claude/skills/scripts-validation/SKILL.md
+# Owner-Skill: .agents/skills/scripts-validation/SKILL.md
 # check-cqrs-compliance.sh — Enforce strict CQRS/FlextModels patterns across the ecosystem.
 #
 # Prevents:

@@ -19,7 +19,7 @@ Eliminate all residual workaround violations found by v1.0 milestone audit: bare
 - **D-02:** In `src/` production code: zero tolerance — every handler must catch a specific type
 - **D-03:** In `tests/`: bare `except Exception:` is acceptable ONLY in test helper utilities that genuinely need to catch anything (e.g., `conftest_factory.py` cleanup). All others must be specific.
 - **D-04:** In `examples/` and `docs/`: lower priority, fix if trivial, defer if complex
-- **D-05:** In `.claude/skills/` validation scripts: out of scope (not production code)
+- **D-05:** In `.agents/skills/` validation scripts: out of scope (not production code)
 
 ### sys.exit Refactoring (WA-04)
 

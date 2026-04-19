@@ -536,9 +536,9 @@ From STATE.md error hotspots and NARROWING-SCAN-SUMMARY.md:
 - `.planning/phases/01-type-system-hardening/01-CONTEXT.md` — locked decisions D-01 through D-08
 - `flext/Makefile` — actual make target names (`pyre`, `pol`, `check`) verified directly
 - `flext/pyproject.toml` lines 117–185 — `[tool.pyrefly]` settings verified (no `${PWD}` in search-path)
-- `.claude/skills/flext-strict-typing/SKILL.md` — rules for t.* contracts, TypeGuard, isinstance patterns
-- `.claude/skills/flext-type-system/SKILL.md` — TypeAliasType isinstance incompatibility, cross-project namespace inheritance
-- `.claude/skills/flext-pyrefly-typecheck-fix/SKILL.md` — recurring error cluster patterns
+- `.agents/skills/flext-strict-typing/SKILL.md` — rules for t.* contracts, TypeGuard, isinstance patterns
+- `.agents/skills/flext-type-system/SKILL.md` — TypeAliasType isinstance incompatibility, cross-project namespace inheritance
+- `.agents/skills/flext-pyrefly-typecheck-fix/SKILL.md` — recurring error cluster patterns
 
 ### Secondary (MEDIUM confidence)
 

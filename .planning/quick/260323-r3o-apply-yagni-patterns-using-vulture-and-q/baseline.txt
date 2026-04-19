@@ -23,7 +23,7 @@ Total findings: ~300+ (mostly StrEnum members, constants, namespace class method
 Total lines: 7025
 Categories found:
 - Duplicated code blocks (mostly in docker/examples/test __init__.py files)
-- High complexity functions (in .claude/skills scripts, examples, Go main)
+- High complexity functions (in .agents/skills scripts, examples, Go main)
 - Functions with many parameters (API/app factory patterns)
 - Functions with many returns (CLI/validation logic)
 
