@@ -8,7 +8,10 @@ import argparse
 import json
 import re
 import sys
-from collections.abc import Mapping, Sequence
+from collections.abc import (
+    Mapping,
+    Sequence,
+)
 from pathlib import Path
 from typing import Annotated, ClassVar
 

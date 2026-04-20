@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from flext_core import m
+
 
 class Error(Exception):
     """Base flext exception."""

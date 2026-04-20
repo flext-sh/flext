@@ -9,7 +9,9 @@ import json
 import operator
 import re
 import sys
-from collections.abc import Sequence
+from collections.abc import (
+    Sequence,
+)
 from pathlib import Path
 from typing import Annotated, ClassVar
 

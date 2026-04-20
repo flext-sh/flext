@@ -502,124 +502,59 @@ boot: ## Install all projects into workspace .venv
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "Bootstrapping flext-core runtime dependencies..."; \
 	uv sync --directory flext-core --no-dev || exit 1
-	$(Q)$(ENSURE_WORKSPACE_RUNTIME)
 	$(Q)$(PREPARE_SELECTED_PROJECTS)
-	$(Q)$(AUTO_SYNC_ALL_PROJECTS)
-	$(Q)echo "Enforcing Python version guards..."; $(WORKSPACE_INFRA_MAINTENANCE) || exit 1
-	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
-	echo "Starting workspace setup for $$total_steps item(s) ($(words $(SELECTED_PROJECTS)) projects + root)"; \
-	failed=0; prepared=0; installed=0; attached=0; step=1; failed_projects=""; external_projects=""; \
+	$(Q)log_file="/tmp/flext-workspace-runtime-sync.log"; \
+	echo "Locking workspace dependencies (uv lock)..."; \
+	if uv lock >"$$log_file" 2>&1; then \
+		echo "     lock  ... ok"; \
+	else \
+		echo "     lock  ... failed"; \
+		cat "$$log_file"; \
+		rm -f "$$log_file"; \
+		exit 1; \
+	fi; \
+	echo "Installing all workspace packages (uv sync --all-packages)..."; \
+	if uv sync --all-packages --all-groups --all-extras >>"$$log_file" 2>&1; then \
+		echo "     install ... ok"; \
+	else \
+		echo "     install ... failed"; \
+		cat "$$log_file"; \
+		rm -f "$$log_file"; \
+		exit 1; \
+	fi; \
+	rm -f "$$log_file"
+	$(Q)total_steps=$(words $(SELECTED_PROJECTS)); \
+	echo "Attaching external projects (editable install)..."; \
+	failed=0; attached=0; skipped=0; step=1; failed_projects=""; \
 	for proj in $(SELECTED_PROJECTS); do \
 		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
-			log_file="/tmp/flext-setup-$$proj.log"; \
-			start_ts=$$(date +%s); \
-			printf "[%2d/%2d] boot %s\n" $$step $$total_steps "$$proj"; \
+			printf "[%2d/%2d] attach %s " $$step $$total_steps "$$proj"; \
 			if echo " $(ATTACHABLE_PROJECTS) " | grep -qF " $$proj "; then \
-				if echo " $(INDEPENDENT_PROJECTS) " | grep -qF " $$proj "; then \
-					echo "     detect ... independent project (no workspace writes)"; \
-				else \
-					echo "     detect ... attach-only project (outside uv workspace)"; \
-				fi; \
-				echo "     install ... deferred to editable workspace attach"; \
-				external_projects="$$external_projects $$proj"; \
-				prepared=$$((prepared + 1)); \
-				rm -f "$$log_file"; \
-				step=$$((step + 1)); \
-				continue; \
-			fi; \
-			if $(WORKSPACE_INFRA_DEPS) internal-sync --workspace "$$proj" >>"$$log_file" 2>&1; then \
-				:; \
-			else \
-				echo "     sync  ... failed"; \
-				cat "$$log_file"; \
-				failed=$$((failed + 1)); \
-				failed_projects="$$failed_projects $$proj"; \
-				step=$$((step + 1)); \
-				continue; \
-			fi; \
-			printf "     lock  ... "; \
-			if uv lock --directory "$$proj" >"$$log_file" 2>&1; then \
-				echo "ok"; \
-			else \
-				echo "failed"; \
-				cat "$$log_file"; \
-				failed=$$((failed + 1)); \
-				failed_projects="$$failed_projects $$proj"; \
-				step=$$((step + 1)); \
-				continue; \
-			fi; \
-			printf "     install ... "; \
-			elapsed=$$(( $$(date +%s) - start_ts )); \
-			echo "deferred to workspace sync ($${elapsed}s)"; \
-			prepared=$$((prepared + 1)); \
-			rm -f "$$log_file"; \
-			step=$$((step + 1)); \
-		fi; \
-	done; \
-	log_file="/tmp/flext-setup-root.log"; \
-	start_ts=$$(date +%s); \
-	root_lock_ok=0; \
-	printf "[%2d/%2d] boot %s\n" $$step $$total_steps "root"; \
-	if ! $(WORKSPACE_INFRA_DEPS) internal-sync --workspace . >"$$log_file" 2>&1; then \
-		echo "     sync  ... failed"; \
-		cat "$$log_file"; \
-		failed=$$((failed + 1)); \
-		failed_projects="$$failed_projects root"; \
-	fi; \
-	printf "     lock  ... "; \
-	if uv lock >"$$log_file" 2>&1; then \
-		echo "ok"; \
-		root_lock_ok=1; \
-	else \
-		echo "failed"; \
-		cat "$$log_file"; \
-		failed=$$((failed + 1)); \
-		failed_projects="$$failed_projects root"; \
-	fi; \
-	if [ $$root_lock_ok -eq 1 ]; then \
-		printf "     install ... "; \
-		if uv sync --all-packages --all-groups --all-extras >>"$$log_file" 2>&1; then \
-			elapsed=$$(( $$(date +%s) - start_ts )); \
-			echo "ok ($${elapsed}s)"; \
-			installed=$$((installed + 1)); \
-			for proj in $$external_projects; do \
 				attach_log="/tmp/flext-attach-$$proj.log"; \
-				attach_ts=$$(date +%s); \
-				printf "     attach  %s ... " "$$proj"; \
 				if uv pip install --python "$(PY)" --editable "$$proj[dev]" --no-sources --no-deps >"$$attach_log" 2>&1; then \
-					attach_elapsed=$$(( $$(date +%s) - attach_ts )); \
-					echo "ok ($${attach_elapsed}s)"; \
+					echo "... ok"; \
 					attached=$$((attached + 1)); \
 				else \
-					echo "failed"; \
+					echo "... failed"; \
 					cat "$$attach_log"; \
 					failed=$$((failed + 1)); \
 					failed_projects="$$failed_projects $$proj"; \
 				fi; \
 				rm -f "$$attach_log"; \
-			done; \
-		else \
-			echo "failed"; \
-			cat "$$log_file"; \
-			failed=$$((failed + 1)); \
-			failed_projects="$$failed_projects root"; \
+			else \
+				echo "... skipped (in-workspace)"; \
+				skipped=$$((skipped + 1)); \
+			fi; \
 		fi; \
-	else \
-		printf "     install ... skipped\n"; \
-	fi; \
-	rm -f "$$log_file"; \
-	echo "Setup summary: Prepared=$$prepared Installed=$$installed Attached=$$attached Failed=$$failed Total=$$total_steps"; \
+		step=$$((step + 1)); \
+	done; \
+	echo "Boot summary: Attached=$$attached Skipped=$$skipped Failed=$$failed Total=$$total_steps"; \
 	if [ $$failed -ne 0 ]; then \
 		echo "Failed projects:$$failed_projects"; \
 		echo "FAIL: boot ($$failed projects)"; \
 		exit 1; \
 	fi; \
-	if [ -n "$(BOOT_VALIDATE_PROJECTS)" ]; then \
-		echo "Validating workspace selection (validate VALIDATE_SCOPE=workspace)..."; \
-		$(MAKE) val VALIDATE_SCOPE=workspace PROJECTS="$(BOOT_VALIDATE_PROJECTS)" || { echo "FAIL: boot validation"; exit 1; }; \
-	else \
-		echo "Skipping workspace validation (no managed workspace projects selected)."; \
-	fi
+	echo "OK: boot complete. Run 'make up' or 'make val' for additional gates."
 
 up: ## Upgrade Python dependencies to latest via Poetry
 	$(Q)$(REQUIRE_VENV)

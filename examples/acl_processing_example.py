@@ -18,7 +18,11 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import Mapping, MutableSequence, Sequence
+from collections.abc import (
+    Mapping,
+    MutableSequence,
+    Sequence,
+)
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
 from typing import Annotated, ClassVar, TypeIs
