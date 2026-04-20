@@ -1,0 +1,71 @@
+.planning/PROGRESS_2026-04-20.md
+  h_9db9d35f50cf33 1-74
+.planning/typing-consolidation-0.12.1.md
+  h_9db9d35f50cf33 1-72
+.planning/FINAL_REPORT_2026-04-20.md
+  h_9db9d35f50cf33 1-96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "ab2f3929dbaf714ecf19d479a9f61a5f4c00fdae",
+  "prompts": {
+    "2a008a39b1ce7c77": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "234d2634-32e6-47bf-99b1-de4c2dbf1d3c",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 24868,
+      "overriden_lines": 4
+    },
+    "376f82a5e64b61d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c3fe1632-f119-41b5-bbd0-0fc56ae1884d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 7073,
+      "overriden_lines": 2
+    },
+    "c2ddf1f7072fae82": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4f88112c-8a58-4dbb-a64c-e1e7cf9155e2",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 12607,
+      "overriden_lines": 0
+    },
+    "d83215e23735d612": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e06bb0d-1d63-4dfa-adde-212b5404c554",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 460,
+      "overriden_lines": 0
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
