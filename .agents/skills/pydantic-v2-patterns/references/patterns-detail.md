@@ -22,7 +22,7 @@ def validate_non_empty(v: str) -> str:
     return cleaned
 
 
-def normalize_to_list(v) -> t.RecursiveContainerList:
+def normalize_to_list(v) -> t.FlatContainerList:
     if isinstance(v, list):
         return v
     if isinstance(v, (tuple, set)):
@@ -42,7 +42,7 @@ def validate_uuid_string(v: str) -> str:
 
 StrippedString = Annotated[str, AfterValidator(strip_whitespace)]
 ValidatedString = Annotated[str, AfterValidator(validate_non_empty)]
-NormalizedList = Annotated[t.RecursiveContainerList, m.BeforeValidator(normalize_to_list)]
+NormalizedList = Annotated[t.FlatContainerList, m.BeforeValidator(normalize_to_list)]
 UUIDStr = Annotated[str, PlainValidator(validate_uuid_string)]
 ```
 

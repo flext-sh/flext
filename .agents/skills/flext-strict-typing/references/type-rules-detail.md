@@ -163,7 +163,7 @@ class Foo(t.Container): ...
 
 ```python
 # ✅ CORRECT — alias syntax stays in typings.py
-type ContainerValue = t.t.Container
+type Container = t.t.Container
 
 # ✅ CORRECT — runtime narrowing uses public guards
 from flext_core import u

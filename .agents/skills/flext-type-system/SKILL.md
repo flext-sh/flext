@@ -150,7 +150,7 @@ def process(items: t.StrSequence) -> p.Result[list[str]]: ...
 # PEP 695 alias (in typings.py — NOT valid at call sites, annotation-only):
 # type RecursiveContainer = (
 #     str | int | float | bool | datetime | None
-#     | BaseModel | Path | RecursiveContainerList | RecursiveContainerMapping
+#     | BaseModel | Path | FlatContainerList | FlatContainerMapping
 # )
 ```
 
