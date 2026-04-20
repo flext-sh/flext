@@ -71,7 +71,9 @@ This session achieved **52% workspace-wide pyrefly error reduction** through:
 **Root Cause**: 
 ```python
 t.AttemptData = MutableMapping[str, t.Container]  # was wrong
-self._attempts[username]["attempts"] = recent_attempts  # recent_attempts is Sequence[Container]
+self._attempts[username]["attempts"] = (
+    recent_attempts  # recent_attempts is Sequence[Container]
+)
 # Type error: Sequence[Container] not assignable to Container
 ```
 

@@ -16,11 +16,14 @@
 class JsonLiteral(RootModel[str | int | float | bool | None]):
     """Atomic JSON value."""
 
+
 class JsonValue(RootModel[JsonLiteral | dict[str, "JsonValue"] | list["JsonValue"]]):
     """Full recursive JSON (Pydantic native)."""
 
+
 class ConfigMap(RootModel[Mapping[str, JsonValue]]):
     """Configuration mapping (Pydantic native)."""
+
 
 # Deduplication: all former t.Container, t.Scalar, t.Primitives vanish
 ```

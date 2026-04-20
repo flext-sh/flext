@@ -6,7 +6,7 @@ description: Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 6
 
 # FLEXT Strict Typing Rules
 
-**Reviewed**: 2026-03-03 | **Scope**: Type hierarchy, PEP 695 aliases, r[T] containers, isinstance/TypeGuard narrowing
+**Reviewed**: 2026-04-20 | **Scope**: Type hierarchy, PEP 695 aliases/generics, r[T] containers, TypeIs/TypeGuard narrowing, match/case dispatch, @override/@final/Self
 
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
 > and cross-referenced with `models.py`, `protocols.py`, and `ruff-shared.toml`.
@@ -33,6 +33,15 @@ description: Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 6
 - Use `r[T]` for fallible returns and avoid nullable fallibility patterns.
 - Use `isinstance`/TypeGuard for narrowing; avoid `type(...) is ...` narrowing.
 - Keep typing changes integral: verify ruff, mypy, pyright, and pyrefly.
+- **PEP 695 only** for new/touched code: `type X = ...` aliases (no `typing.TypeAlias`), `class Foo[T]` generics, `def f[T](x: T) -> T` (no `typing.TypeVar`/`Generic`).
+- **Narrowing**: prefer `TypeIs[T]` (bidirectional narrowing) over `TypeGuard[T]` (one-way) for every `is_*` helper. Bare `bool` returns from is-helpers at public boundaries are forbidden.
+- **Structural pattern matching** (`match/case`) mandatory for multi-branch dispatch on discriminated unions or subtypes. Rewrite `isinstance` ladders of three or more branches.
+- **`@override`** on every overriding method (prevents drift after parent signature changes).
+- **`@final`** on leaf classes that must not be subclassed.
+- **`Self`** return type for fluent/copy methods and classmethod factories that return the current class.
+- **Builtin generics** only: `list`, `dict`, `tuple`, `set`, `frozenset`. `typing.List/Dict/Tuple/Set/FrozenSet` forbidden.
+- **`T | None`** / **`A | B`** only; `typing.Optional` and `typing.Union` are forbidden in new or touched code.
+- **Protocols at boundaries**: see `.agents/skills/flext-type-system/SKILL.md` for the mandatory use of `p.*` protocols at every public API boundary that accepts a concrete class.
 
 ## Instructions
 
@@ -55,12 +64,12 @@ Good:
 ```python
 from __future__ import annotations
 
-from flext_core import p, r, t
+from flext_core import m, p, r
 
 
 def parse_payload(payload: m.ConfigMap) -> p.Result[str]:
-    """Use m.ConfigMap for Mapping[str, str] parameters, p.Result[T] as return type."""
-    value = payload.get("key", "")
+    """Use m.ConfigMap for mapping parameters, p.Result[T] as return type."""
+    value = payload.root.get("key", "")
     if not value:
         return r[str].fail("key is missing")
     return r[str].ok(str(value))
@@ -92,3 +101,14 @@ Full type enforcement rules are in [references/type-rules-detail.md](references/
 - Enum/Literal patterns in `constants.py`
 - Return type policies by code path
 - Advanced pyrefly/pyright error fix strategies
+
+## Verification
+
+- `rg -n "typing\.(TypeVar|TypeAlias|Generic|Optional|Union|List|Dict|Tuple|Set|FrozenSet)" --type py --glob '!**/.venv/**'` — expect zero hits in new/touched code.
+- `rg -n "\bObject\b|\bAny\b" flext-core/src/flext_core --type py` — audit every hit for §3.2 compliance.
+- `rg -n "Optional\[|Union\[" --type py --glob '!**/.venv/**'` — expect zero hits.
+- `rg -n "def is_[a-z_]+\([^)]*\)\s*->\s*bool:" --type py --glob '!**/.venv/**'` — audit for `TypeIs`/`TypeGuard` migration.
+- `rg -n "@override\b" --type py src/ | head -20` — spot-check decorator usage on overrides.
+- `ruff check src/ tests/` — 0.
+- `pyrefly check src/` — 0.
+- `pyright src/` — 0.

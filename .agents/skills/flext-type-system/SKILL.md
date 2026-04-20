@@ -6,7 +6,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 
 # Flext Type System
 
-**Reviewed**: 2026-03-03 | **Scope**: Type-system map — aliases, generics, result interplay, settings contracts
+**Reviewed**: 2026-04-20 | **Scope**: Type-system map — aliases, generics, result interplay, settings contracts, p.* protocols mandatory at public boundaries
 
 ## Scope
 
@@ -38,6 +38,8 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
   - §3.1 — single nested-class hierarchy per module via MRO from Pydantic v2 `BaseModel`.
   - §3.5 — every type change passes all 4 linters and updates impacted references via `ast-grep`.
 - **Cross-project namespace inheritance**: downstream projects MUST inherit parent facade classes (e.g., `FlextMeltanoModels`, not `FlextModels`) so namespaces cascade via MRO. Applies to `m`, `c`, `t`, `u`, `p`. See the Cross-Project section below.
+- **Protocols mandatory at public boundaries**: every public parameter/return that accepts or exposes a dispatcher, handler, service, container, settings, or model MUST be typed as a `p.*` protocol — never as a concrete `m.*` class or a concrete service class. Concrete classes appear only inside their own implementation body and at wire boundaries (factory output, fixture bootstrap). Missing protocols MUST be added under the owning project's `p.*` namespace first. Verification: `rg -n "-> (Flext|m)\.[A-Z][A-Za-z]+\." --type py src/ --glob '!**/factory*.py' --glob '!**/fixtures/**'` — every hit must be justified as a wire boundary.
+- See `.agents/skills/flext-strict-typing/SKILL.md` for PEP 695 aliases/generics, `TypeIs`/`TypeGuard` narrowing, structural `match/case`, `@override` and `@final` usage — those rules compose with everything in this skill.
 
 ## TypeAliasType Runtime Boundary (CRITICAL — Python 3.12+)
 
