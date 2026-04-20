@@ -33,7 +33,7 @@ class PipelineStageContext(Protocol):
     """Contract for stage execution context."""
 
     workspace_root: Path
-    shared: t.MutableRecursiveContainerMapping
+    shared: t.MutableFlatContainerMapping
     settings: Mapping[str, t.Container]
 
 

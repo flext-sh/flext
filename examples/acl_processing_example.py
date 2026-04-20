@@ -44,7 +44,7 @@ def _new_str_list() -> MutableSequence[str]:
 
 def _is_object_list(
     value: t.Container,
-) -> TypeIs[t.RecursiveContainerList]:
+) -> TypeIs[t.FlatContainerList]:
     return isinstance(value, Sequence) and not isinstance(
         value,
         (str, bytes, bytearray),
