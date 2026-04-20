@@ -6,7 +6,7 @@ description: Step-by-step refactoring workflow with quality gates, make targets,
 
 # FLEXT Refactoring Workflow
 
-**Reviewed**: 2026-02-19 | **Scope**: Coverage source-of-truth migration to pyproject.toml
+**Reviewed**: 2026-04-20 | **Scope**: End-to-end refactoring with quality gates, tier-ordered sequencing, net-negative LOC delta gate, "more with less" north star
 
 > **Source of truth**: Verified from `base.mk` (shared Makefile), `ruff-shared.toml`,
 > and actual `pyproject.toml` configurations across the monorepo on 2026-02-19.
@@ -31,6 +31,12 @@ description: Step-by-step refactoring workflow with quality gates, make targets,
 - Refactor in dependency-tier order; never break architecture directionality.
 - Validate continuously with standardized make gates.
 - Use structural search/replace tooling for code-pattern migrations.
+- **Net-negative LOC delta gate**: every refactor task MUST produce a measurable reduction (LOC, number of aliases, `isinstance` checks, imports, utility wrappers, recursive unions). A task that adds code without removing more is a failed task; re-plan for reduction. Report per task:
+  - `LOC delta: -X (+Y new, -Z removed)`
+  - `Pyrefly delta: -A`
+  - `Enforcement warnings: -B`
+  - If the reported delta is ≥ 0, the task is rejected and re-planned for a net-negative outcome.
+- **"More with less" north star**: every edit is an opportunity to remove, unify, or replace with a canonical contract. Cosmetic changes without reduction are FORBIDDEN.
 
 ## Instructions
 

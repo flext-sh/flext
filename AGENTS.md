@@ -265,7 +265,7 @@ flext-<project>/src/flext_<project>/
 
 - **MVI 200-LINE CAP (SUPREME LAW)** module, class, method, or function >200 **code lines** is a violation. Line count is measured via `tokei` (logical LOC only — blank lines, comments, and docstrings are excluded from the count). Refactor immediately using strict OO composition and canonical MRO architecture. Decompose into explicit contracts and reusable domain components—never use compression hacks. **FORBIDDEN approaches to meet the cap**: removing blank lines, removing or compressing docstrings, style/formatting changes that reduce line count, and arbitrary code splits without domain decomposition. Only genuine OO decomposition via MRO inheritance, facade extraction to `_models/`/`_utilities/` subdirectories, and domain responsibility separation are valid.
   - **VALID code reduction** (actively encouraged): deleting dead/unused code, removing unnecessary helpers and pass-through wrappers (`def old(): return new()`), removing proxy functions/classes, removing backward-compat aliases (`LegacyX = NewX`), and replacing inline composed type annotations (`str | t.Numeric`) with canonical `t.*` contracts from `typings.py`. These eliminate real architectural violations and are the preferred first step before OO decomposition.
-- **Pydantic v2 Mastery**: Every class MUST extend Pydantic v2 `BaseModel` (or FLEXT base models) via MRO. Fully utilize `u.Field()`, `model_config = ConfigDict(...)`, `u.PrivateAttr()`, and built-in constraints. Standalone `*Settings` classes, unnecessary `@property`, manual `self._x` assignments, line-reduction wrappers, and public `get_*`/`set_*`/`is_*` accessors are FORBIDDEN.
+- **Pydantic v2 Mastery**: Every class MUST extend Pydantic v2 `BaseModel` (or FLEXT base models) via MRO. Fully utilize `m.Field()`, `model_config = m.ConfigDict(...)`, `u.PrivateAttr()`, and built-in constraints. Standalone `*Settings` classes, unnecessary `@property`, manual `self._x` assignments, line-reduction wrappers, and public `get_*`/`set_*`/`is_*` accessors are FORBIDDEN. Direct `from pydantic import ...` in consumer projects is BANNED — every Pydantic construct flows through the canonical `m.*` / `u.*` aliases from `flext_core` (or the project's MRO-extended package). The `FlextUtilitiesPydantic as up` / `FlextModelsPydantic as mp` internal aliases exist ONLY inside `flext-core/src/flext_core/_*` to break `c/t/p/m/u` bootstrap cycles — they are NOT consumer-facing. See `pydantic-v2-patterns` §Facade-Only.
 - **Accessor Naming Law**: Values already present in object state or derived locally MUST be exposed as fields or `@u.computed_field`; mutations MUST occur through validated model state or a domain verb; boolean outcomes/statuses MUST use noun/adjective names such as `success`, `failure`, `expired`, `configured`, `connected`, or `healthy`.
 - **MRO Inheritance Hierarchy**: Domain logic must reside in a single nested class hierarchy. Subprojects inherit from the parent project's facade class to cascade namespaces. Loose functions or standalone classes without MRO lineage are FORBIDDEN. They MUST be absorbed into the namespace classes or used via existing base classes.
 - **Utility & Helper Generalization (`u.*`)**: All shared helpers MUST strictly flow through the `u.*` utilities namespace. Do not duplicate logic. Use and enhance the lowest-level function available, systematically generalizing existing code rather than creating new redundant functions.
@@ -333,9 +333,15 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 
 ### 3.7 Associated Skills
 
-- **Namespace/MRO Law**: `flext-mro-namespace-rules`
-- **Type Law & Result Patterns**: `flext-strict-typing`
+- **Namespace/MRO Law**: `flext-mro-namespace-rules` (includes cross-project slot registry for `c/p/t/m/u` ownership)
+- **Type Law & Result Patterns**: `flext-strict-typing` (includes PEP 695 aliases/generics, `TypeIs`/`TypeGuard`, `match/case`, `@override`, `@final`, `Self`)
+- **Type-System Protocols**: `flext-type-system` (includes the "protocols mandatory at public boundaries" rule)
 - **Result/Logging/DI Patterns**: `flext-patterns`
+- **Pydantic v2 Governance**: `pydantic-v2-governance` (Model HARD Rules Checklist, Forbidden Structures, facade-only rule)
+- **Pydantic v2 Patterns**: `pydantic-v2-patterns` (TypeAdapter caching, RootModel vs BaseModel, Annotated validators, facade import discipline)
+- **Constants Discipline**: `flext-constants-discipline` (StrEnum/IntEnum/Literal/frozenset/MappingProxyType/tuple/Final rules)
+- **Testing Discipline**: `testing-patterns` (public-API-only, real-flow-over-mocks, enforcement warnings as failures, golden-file examples)
+- **Refactoring Workflow**: `flext-refactoring-workflow` (includes the net-negative-LOC delta gate, "more with less" north star)
 
 ### 3.8 Verification Discipline
 
@@ -504,7 +510,7 @@ UNBREAKABLE LAW for all parallel agent work:
 | **Agent 5** | `container.py`, `decorators.py`, `handlers.py`, `mixins.py`                                | All other agents     |
 | **FROZEN**  | `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `__version__.py` | NO AGENT MODIFIES    |
 
-*Exception*: FROZEN files may be unfrozen ONLY for: (a) annotation additions (typing, `u.Field()`, imports), or (b) **performance-only caching changes** — adding `ClassVar` cache fields, wrapping instantiations in lazy-load patterns, and adding env-variable configuration toggles — provided the change is isomorphic (same inputs → same outputs), passes all linters and tests, and runs as single-agent work (not parallel). Behavioral logic changes beyond (a) and (b) remain frozen.
+*Exception*: FROZEN files may be unfrozen ONLY for: (a) annotation additions (typing, `m.Field()`, imports), or (b) **performance-only caching changes** — adding `ClassVar` cache fields, wrapping instantiations in lazy-load patterns, and adding env-variable configuration toggles — provided the change is isomorphic (same inputs → same outputs), passes all linters and tests, and runs as single-agent work (not parallel). Behavioral logic changes beyond (a) and (b) remain frozen.
 
 **`protocols.py` Section Split**:
 

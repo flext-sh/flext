@@ -1,41 +1,46 @@
 ---
 name: testing-patterns
-description: Testing patterns, anti-patterns, and guidelines for Python/pytest in FLEXT — fixtures, parameterization, mocking strategy, r testing, and TDD. Use when writing or reviewing tests.
-
+description: Testing discipline for Python/pytest in FLEXT — public-API-only assertions, real-flow-over-mocks, enforcement warnings as failures, golden-file examples, AAA structure, r[T] result assertions, facade-only imports. Use when writing or reviewing any test, fixture, or example.
 ---
 
 # Testing Patterns
 
-**Reviewed**: 2026-04-06 | **Scope**: Disabled skill revival — consolidates 4 disabled skills
+**Reviewed**: 2026-04-20 | **Scope**: Python/pytest testing discipline — public-API-only, no-mock-pretend, enforcement warnings as failures, golden-file examples, facade-only imports in tests
 
 ## Scope
 
-- Test files across all FLEXT Python subprojects
-- `flext-core/tests/` — core test suite patterns
-- `conftest.py` files — shared fixtures
+- Test files across all 34 FLEXT Python subprojects (`tests/**`).
+- `flext-core/tests/` — core test suite patterns.
+- `conftest.py` files — shared fixtures.
+- `examples/**` across every project — treated as integration tests via golden `.expected` snapshots.
 
 ## References
 
 - `AGENTS.md` — canonical governance source
-- <https://docs.pytest.org/en/stable/>
+- `.agents/skills/pydantic-v2-governance/SKILL.md` — Model HARD rules the tests must also respect
+- `.agents/skills/pydantic-v2-patterns/SKILL.md` — facade-only imports (applies to tests equally)
 - `.agents/skills/flext-mro-namespace-rules/SKILL.md`
 - `.agents/skills/scripts-testing/SKILL.md` — test infrastructure (complementary)
-- `.agents/skills/lib-returns/SKILL.md` — r testing patterns
+- `.agents/skills/lib-returns/SKILL.md` — `r[T]` testing patterns
+- <https://docs.pytest.org/en/stable/>
 
 ## Rules
 
-- Follow AAA pattern: Arrange, Act, Assert — one logical assertion per test.
-- Name tests descriptively: `test_<unit>_<scenario>_<expected>`.
-- Mock external dependencies (DB, network, filesystem) — never real services in unit tests.
-- Test r operations by asserting `.success`/`.failure` and `.value`/`.error`.
-- Never delete failing tests to make CI pass — fix the code instead.
-- **Rule**: Tests MUST verify stable, public behavior — not implementation details. Do NOT assert on internal warning strings, tracebacks, private helper names, temporary alias spellings, internal class names, exact MRO composition, or any detail that can change without changing module behavior. If behavior is unchanged and only internals moved, the test must be rewritten.
-- **Rule**: Public-behavior assertions also exclude concrete carrier details when the contract is structural. Prefer asserting observable `p.*`, `t.*`, or `r.*` behavior over asserting the exact concrete helper class used internally.
-- **Rule**: Tests MUST demonstrate the EXACT SAME strict typing, Pydantic v2, r, p, and architectural discipline as production code. Test files are NOT exempt from ANY rule. Test fixtures MUST use `u.Field()`, typed models, and `r[T]` returns. Test data MUST use `t.*` types from `typings.py`. Test assertions on r MUST use `.success`/`.failure` and `.value`/`.error`. There is NO "test-only" relaxation of any typing, structural, or Pydantic v2 rule. Tests that violate these rules are themselves violations.
-- **Rule**: Test facades use `TestsFlext<Project><Tier>` naming and keep test-only scope under `<Domain>.Tests`. Legacy `Flext<Project>Test<Tier>` names and flat nested wrappers around private mixins are migration debt, not patterns to repeat.
-- **Rule**: ALL code in tests MUST follow "Pydantic v2 way": `u.Field()` for field declarations, `ConfigDict(...)` for settings, validation centralized in models via `@u.field_validator`/`@u.model_validator`/`@u.computed_field`. Enums/Mappings/Literals from `constants.py` (`c.*`). JSON via `model_dump_json()`, `model_validate_json()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`. Test models MUST inherit via MRO from FLEXT base models.
-- **Rule**: Compatibility wrappers, non-business validation fallbacks, legacy test code, and `OldName = NewName` compatibility aliases are FORBIDDEN in test code. Legacy test patterns are DELETED and replaced with canonical patterns.
-- **Rule**: Every test change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. Linter suppression comments are FORBIDDEN without real internet citations, business necessity, and per-line scope. Global suppressions are FORBIDDEN.
+- **AAA structure**: Arrange, Act, Assert — one logical assertion per test. Descriptive names: `test_<unit>_<scenario>_<expected>`.
+- **Tests validate stable, public behavior** — never private implementation details. BANNED assertions: internal warning strings, traceback text, private helper names (`hasattr(obj, "_private")`), temporary alias spellings, internal class names, exact MRO composition. If behavior is unchanged and only internals moved, the test MUST be rewritten.
+- **Public API only**: tests exercise `tm.that(...)`, `tm.ok(...)`, public classmethods, documented methods. `obj._helper is None`, `obj._cache is not None` assertions are violations even when they pass.
+- **Structural contracts over concrete carriers**: prefer asserting observable `p.*`, `t.*`, or `r.*` behavior over asserting the exact concrete helper class used internally.
+- **Real flow over mocks**: mocks are allowed ONLY at true I/O boundaries that cannot be instantiated in-process (remote HTTP/IdP/DB, external message brokers). Mocks of services, models, repositories, or any in-process class are FORBIDDEN — rewrite to use the real class with a test fixture. Tests that cannot reach the real path MUST be deleted, not retrofitted with fakes.
+- **Result assertions**: `r[T]` outcomes are asserted via `.success`/`.failure` + `.unwrap()`/`.error`. Never introspect the `Ok` / `Err` concrete carriers.
+- **Enforcement warnings are failures**: every project's test suite MUST treat `UserWarning` from HARD-rule enforcement (`_flext_enforcement_exempt`, model HARD-rule `UserWarning`s, etc.) as a failure. Configure `filterwarnings = ["error::UserWarning"]` in `pyproject.toml`.
+- **No test-only code in production**: if a `src/` symbol exists only to support tests, DELETE it from production and move the fixture logic into `tests/`.
+- **Golden-file examples**: every file under `examples/` MUST have a matching `.expected` snapshot; `pytest` runs the example and diffs stdout/stderr. Prose-only examples are forbidden.
+- **Same discipline as production**: tests are NOT exempt from typing, Pydantic v2, architectural, or import rules. Test fixtures MUST use `m.Field()`, typed models, and `r[T]` returns. Test data MUST use `t.*` types from `typings.py`.
+- **Test facades** use `TestsFlext<Project><Tier>` naming and keep test-only scope under `<Domain>.Tests`. Legacy `Flext<Project>Test<Tier>` names are migration debt.
+- **Facade-only imports**: direct `from pydantic import ...` / `from pydantic_core import ...` is BANNED in tests (same rule as production). Every Pydantic construct goes through the canonical aliases `m.*` / `u.*` (e.g. `m.Field`, `m.ConfigDict`, `m.BeforeValidator`, `u.PrivateAttr`, `u.computed_field`, `u.field_validator`, `u.model_validator`). JSON via `model_dump_json()`, `model_validate_json()`, cached `m.TypeAdapter` — never raw `json.loads()`/`json.dumps()`.
+- **No compatibility wrappers / legacy aliases** in test code. Legacy test patterns are DELETED and replaced with canonical patterns.
+- **All 4 linters clean**: every test change passes ruff + mypy + pyright + pyrefly with ZERO errors. Per-line suppressions require real citations + business necessity. Global suppressions are FORBIDDEN.
+- **Never delete failing tests to make CI pass** — fix the code instead.
 
 ## Instructions
 
@@ -52,8 +57,8 @@ from flext_core import m, p, r, t
 class UserRecord(m.ArbitraryTypesModel):
     """User record stub for the example."""
 
-    name: Annotated[t.NonEmptyStr, u.Field(description="User name")]
-    email: Annotated[t.NonEmptyStr, u.Field(description="User email")]
+    name: Annotated[t.NonEmptyStr, m.Field(description="User name")]
+    email: Annotated[t.NonEmptyStr, m.Field(description="User email")]
 
 
 def create_user(name: str, email: str) -> p.Result[UserRecord]:
@@ -75,7 +80,7 @@ def test_user_creation_with_valid_data_returns_success() -> None:
     assert result.unwrap().name == "Alice"
 ```
 
-### Testing r
+### Testing `r[T]`
 
 ```python
 from __future__ import annotations
@@ -84,14 +89,12 @@ from flext_core import r
 
 
 def test_ok_result_contains_value() -> None:
-    """ok() result exposes the value via unwrap()."""
     result = r[int].ok(42)
     assert result.success
     assert result.unwrap() == 42
 
 
 def test_fail_result_contains_error() -> None:
-    """fail() result exposes the error message."""
     result = r[int].fail("not found")
     assert result.failure
     assert result.error is not None
@@ -99,7 +102,6 @@ def test_fail_result_contains_error() -> None:
 
 
 def test_map_transforms_success_value() -> None:
-    """map() chains a pure transformation on the success branch."""
     result = r[int].ok(5).map(lambda x: x * 2)
     assert result.unwrap() == 10
 
@@ -109,7 +111,6 @@ def _int_to_str(x: int) -> r[str]:
 
 
 def test_flat_map_chains_results() -> None:
-    """flat_map() chains another r-returning computation."""
     result = r[int].ok(5).flat_map(_int_to_str)
     assert result.unwrap() == "5"
 ```
@@ -131,8 +132,8 @@ from flext_core import m, t
 class UserFixture(m.ArbitraryTypesModel):
     """User fixture model."""
 
-    name: Annotated[t.NonEmptyStr, u.Field(description="User name")]
-    email: Annotated[t.NonEmptyStr, u.Field(description="User email")]
+    name: Annotated[t.NonEmptyStr, m.Field(description="User name")]
+    email: Annotated[t.NonEmptyStr, m.Field(description="User email")]
 
 
 @pytest.fixture
@@ -167,127 +168,109 @@ import pytest
     ],
 )
 def test_uppercase_transforms_correctly(input_val: str, expected: str) -> None:
-    """Parameterized scenarios for the uppercase transformation."""
     assert input_val.upper() == expected
 ```
 
-### Mocking Strategy
+### Real flow — no mock-pretend
+
+Prefer real fixtures over mocks for any in-process class. Mocks only at true I/O boundaries (remote HTTP/IdP/DB). When a mock is genuinely required, use a narrow `p.*` protocol so the test substitutes structurally, not through `unittest.mock.Mock(spec=...)`.
 
 ```python
 from __future__ import annotations
 
 from typing import Annotated
-from unittest.mock import Mock
 
 from flext_core import m, p, r, t
 
 
 class UserRecord(m.ArbitraryTypesModel):
-    """User record stub."""
+    """User record."""
 
-    name: Annotated[t.NonEmptyStr, u.Field(description="User name")]
+    name: Annotated[t.NonEmptyStr, m.Field(description="User name")]
+
+
+class InMemoryUserRepo:
+    """Real repository backed by a dict — substitutes the production repo in-process."""
+
+    def __init__(self) -> None:
+        self._store: dict[str, UserRecord] = {}
+
+    def save(self, user_id: str, user: UserRecord) -> None:
+        self._store[user_id] = user
+
+    def find(self, user_id: str) -> UserRecord | None:
+        return self._store.get(user_id)
 
 
 class UserService:
-    """Service under test — stubbed for illustration."""
+    """Service under test — accepts any `p.UserRepo` structurally."""
 
-    def __init__(self, repo: Mock) -> None:
-        """Store the repository reference."""
+    def __init__(self, repo: p.UserRepo) -> None:
         self._repo = repo
 
     def get_user(self, user_id: str) -> p.Result[UserRecord]:
-        """Look up a user via the repository."""
-        user: UserRecord = self._repo.find(user_id)
+        user = self._repo.find(user_id)
+        if user is None:
+            return r[UserRecord].fail(f"unknown user: {user_id}")
         return r[UserRecord].ok(user)
 
 
-def test_service_calls_repository() -> None:
-    """Service delegates lookup to its repository dependency."""
-    mock_repo = Mock()
-    mock_repo.find.return_value = UserRecord(name="Alice")
-    service = UserService(repo=mock_repo)
+def test_service_returns_user_from_repo() -> None:
+    repo = InMemoryUserRepo()
+    repo.save("123", UserRecord(name="Alice"))
+    service = UserService(repo=repo)
 
     result = service.get_user("123")
 
-    mock_repo.find.assert_called_once_with("123")
     assert result.success
+    assert result.unwrap().name == "Alice"
 ```
 
-### Anti-Patterns to Avoid
+Why good: the test exercises the REAL `UserService` against a REAL in-memory repository; the only substitution is at a structural `p.UserRepo` boundary — no `unittest.mock.Mock`.
 
-**Testing mock behavior instead of real behavior**:
+### Anti-Patterns (FORBIDDEN — do NOT copy)
 
-```python
-from __future__ import annotations
+**1. Mock-pretend of an in-process class**:
 
-from unittest.mock import Mock
-
-# BAD: tests that the mock works, not the code
-mock_service = Mock()
-mock_service.process.return_value = "done"
-result = mock_service.process("data")
-assert result == "done"  # proves nothing about real code
+```text
+# FORBIDDEN: in-process class mocked — tests the mock, not the code
+mock_repo = Mock(spec=UserRepo)
+mock_repo.find.return_value = UserRecord(name="Alice")
+service = UserService(repo=mock_repo)
+assert service.get_user("123").success
 ```
 
-**Testing internal implementation details instead of contract behavior**:
+Why bad: the real `UserRepo` is instantiable in-process; substituting a `Mock` tests the mock's return value, not the service's real behavior. Rewrite with an in-memory fixture or a structural `p.*` protocol stub.
 
-```python
-from __future__ import annotations
+**2. Assertion on private state**:
 
-from typing import Annotated
-
-from flext_core import m, t
-
-
-class CliResult(m.ArbitraryTypesModel):
-    """Stub CLI execution result."""
-
-    exit_code: Annotated[int, u.Field(description="Process exit code")]
-    output: Annotated[t.NonEmptyStr, u.Field(description="Captured output")]
-
-
-def make_result() -> CliResult:
-    """Stub result for illustration."""
-    return CliResult(exit_code=0, output="unexpected_success True")
-
-
-result = make_result()
-
-# GOOD: behavioral assertion
-assert result.exit_code == 0
-assert "unexpected_success True" in result.output
+```text
+# FORBIDDEN: pins implementation detail
+service = UserService(repo=InMemoryUserRepo())
+assert hasattr(service, "_repo")        # private attribute check
+assert service._cache is not None       # private attribute check
 ```
 
-**Test-only methods in production code**:
+Why bad: refactoring away `_cache` or `_repo` breaks the test even when public behavior is unchanged. Assert on observable outcomes (the `r[T]` value) instead.
 
-```python
-from __future__ import annotations
+**3. Test-only method on a production class**:
 
-
+```text
+# FORBIDDEN: exposes internals solely for tests
 class UserService:
-    """Illustrates the anti-pattern of test-only production methods."""
-
-    def __init__(self) -> None:
-        """Set up internal state."""
-        self._state = "active"
-
-    # BAD: adding methods just for tests
-    def _test_get_internal_state(self) -> str:
-        """Test pollution — exposes internals solely for tests."""
-        return self._state
+    def _test_get_internal_state(self) -> str: ...   # test pollution
 ```
 
-**Incomplete mock data**:
+Why bad: production surface grows to satisfy tests. Remove the helper; widen the legitimate public contract or assert on a public side-effect.
 
-```python
-from __future__ import annotations
+**4. Incomplete mock payload**:
 
-from unittest.mock import Mock
-
-# BAD: mock returns simplified data that hides bugs
-mock_api = Mock()
-mock_api.get.return_value = {"id": 1}  # missing required fields
+```text
+# FORBIDDEN: mock returns fake-shape data that hides real schema drift
+mock_api.get.return_value = {"id": 1}   # required fields missing
 ```
+
+Why bad: the real API response schema is never exercised; schema drift goes undetected until production.
 
 ### Test Organization
 
@@ -298,21 +281,22 @@ tests/
     test_result.py       # unit tests grouped by module
     test_service.py
   integration/
-    test_api.py           # integration tests
-    conftest.py           # integration-specific fixtures
+    test_api.py          # integration tests
+    conftest.py          # integration-specific fixtures
 ```
 
 ## Workflow
 
-1. Write a failing test for the desired behavior (Red).
+1. Write a failing test for the desired PUBLIC behavior (Red).
 2. Write minimal code to make the test pass (Green).
-3. Refactor while keeping tests green.
+3. Refactor while keeping tests green (Refactor).
 4. Run full suite with standardized gate: `make test`.
 5. For focused runs, use selectors: `make test PYTEST_ARGS="-k <expr>"`.
+6. Add `filterwarnings = ["error::UserWarning"]` to `pyproject.toml` if not already present, then re-run.
 
 ## Examples
 
-Good:
+Good — behavior-focused, descriptive name:
 
 ```python
 from __future__ import annotations
@@ -323,49 +307,35 @@ from flext_core import p, r
 
 
 def parse_config(raw: Mapping[str, str | int]) -> p.Result[Mapping[str, str | int]]:
-    """Require both host and port keys, return error otherwise."""
     if "port" not in raw:
         return r[Mapping[str, str | int]].fail("port is required")
     return r[Mapping[str, str | int]].ok(raw)
 
 
 def test_parse_config_with_missing_key_returns_failure() -> None:
-    """Descriptive name, specific failure scenario, asserts on error content."""
-    result = parse_config({"host": "localhost"})  # missing "port"
+    result = parse_config({"host": "localhost"})
     assert result.failure
     assert result.error is not None
     assert "port" in result.error
 ```
 
-Why good: descriptive name, tests specific failure scenario, asserts on error content.
+Why good: descriptive name, tests the specific failure scenario, asserts on public error content.
 
-Bad:
+Bad — vague, meaningless assertion:
 
-```python
-from __future__ import annotations
-
-from collections.abc import Mapping
-
-from flext_core import p, r
-
-
-def parse_config(raw: Mapping[str, str | int]) -> p.Result[Mapping[str, str | int]]:
-    """Stub matching the Good example."""
-    return r[Mapping[str, str | int]].ok(raw)
-
-
+```text
 def test_config() -> None:
-    """Vague — no scenario, assertion reveals nothing about behavior."""
     settings = parse_config({"host": "localhost", "port": 8080})
-    assert settings  # BAD: doesn't verify anything meaningful
+    assert settings   # doesn't verify anything — violates public-behavior rule
 ```
 
-Why bad: vague name, no scenario described, `assert settings` doesn't verify anything meaningful.
+Why bad: no scenario described; `assert settings` is trivially true for any non-empty value; refactoring is un-guarded.
 
 ## Verification
 
-```bash
-make PROJECT=flext-core test
-make PROJECT=flext-core validate
-make PROJECTS="flext-core flext-api" test
-```
+- `rg -n 'hasattr\([^,]+,\s*[\"'"'"']_' --type py tests/ --glob '!**/.venv/**'` → expect zero hits.
+- `rg -n '_[a-z_]+\s+is (None|not None)' --type py tests/` → audit every hit.
+- `rg -n '@patch|MagicMock\(|Mock\(' --type py tests/` → every remaining hit MUST resolve to a true I/O boundary; otherwise rewrite.
+- `rg -n "^(import pydantic|from pydantic|from pydantic_core)" --type py tests/ --glob '!**/.venv/**'` → zero hits.
+- `PYTHONWARNINGS=error::UserWarning pytest -q` → clean exit.
+- `make PROJECT=<name> test` + `make PROJECT=<name> validate` — 0 errors, 0 warnings.

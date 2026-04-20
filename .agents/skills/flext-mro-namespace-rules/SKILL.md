@@ -6,7 +6,7 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 
 # Flext MRO Namespace Rules
 
-**Reviewed**: 2026-04-06 | **Scope**: Canonical naming, organic namespace access, and cross-facade import boundaries
+**Reviewed**: 2026-04-20 | **Scope**: Canonical naming, organic namespace access, cross-facade import boundaries, cross-project c/p/t/m/u slot registry
 
 ## Scope
 
@@ -52,6 +52,36 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
   - `flext-core` `FlextRuntime` is the only standing exception to the no same-project facade-import rule.
 - Non-canonical short aliases such as `tf`, `tm`, and `td` are forbidden in new work. Fix consumers instead of adding compatibility wrappers.
 
+## Cross-Project Slot Registry
+
+Each project owns specific nested namespaces under `c / p / t / m / u`. A slot is owned by EXACTLY ONE project; overlap is forbidden. To add a new slot, file a workspace RFC and update this table before any code change.
+
+| Project | `c.*` | `p.*` | `t.*` | `m.*` | `u.*` |
+| --- | --- | --- | --- | --- | --- |
+| flext-core | (base) — `Errors`, `Encoding`, `HttpStatus`, `Severity`, etc. | (base) — `Result`, `Registry`, `Container`, `Dispatcher`, `Logger`, `HasDomainEvents` | (base) — `Scalar`, `Container`, `Primitives`, `FlatContainerMapping`, `JsonValue`, ... | (base) — `BaseModel`, `Value`, `Entity`, `AggregateRoot`, `DomainEvent`, `ConfigMap` | (base) — `Collection`, `Domain`, `Pydantic`, `Runtime` |
+| flext-cli | `c.Cli` — `ENCODING_DEFAULT`, `YAML_*`, `JSON_*`, exit codes | `p.Cli` — command, option, result | `t.Cli` — `JsonMapping`, `YamlDict`, adapters | `m.Cli` — command result models | `u.Cli` — `json_*`, `yaml_*`, `toml_*` |
+| flext-tests | `c.Tests` — `ERR_OK_FAILED`, fixture paths, golden-file roots | `p.Tests` — matcher, fixture, golden | `t.Tests` — `Testobject`, matcher inputs | `m.Tests` — test record models | `u.Tests` — `tm.*` matchers, builders, factories |
+| flext-infra | `c.Infra` — `Encoding`, `SourceCode.*`, transformers | `p.Infra` — rule, scanner, transformer | `t.Infra` — `ChangeCallback`, `StrIndex` | `m.Infra` — scan report models | `u.Infra` — `atomic_write_file`, `parse_semver` |
+| flext-auth | `c.Auth` — token kinds, scopes, default lifetimes | `p.Auth` — Token, AuthResponse, Provider | `t.Auth` — token payloads | `m.Auth` — auth records | `u.Auth` — token normalization |
+| flext-web | `c.Web` — HTTP method set, status codes | `p.Web` — FastApiLikeApp, FlaskLikeApp, Repository, Handler | `t.Web` — `EndpointPayload`, request body aliases | `m.Web` — request/response models | `u.Web` — request normalization |
+| flext-api | `c.Api` — error codes, openapi tags | `p.Api` — handler, middleware, client | `t.Api` — request/response aliases | `m.Api` — DTO models | `u.Api` — serialization helpers |
+| flext-ldap | `c.Ldap` — object classes, attribute SSOT | `p.Ldap` — connection, entry, search | `t.Ldap` — filter expressions | `m.Ldap` — entry models | `u.Ldap` — filter builders |
+| flext-ldif | `c.Ldif` — RFC magic strings | `p.Ldif` — parser, writer | `t.Ldif` — line types | `m.Ldif` — entry/record models | `u.Ldif` — stream encoders |
+| flext-dbt-ldap | `c.DbtLdap` — `Attributes`, `ObjectClasses`, `Timestamps` StrEnums | `p.DbtLdap` — run, macro, source | `t.DbtLdap` — macro inputs | `m.DbtLdap` — run-result models | `u.DbtLdap` — jinja helpers |
+| flext-dbt-ldif | `c.DbtLdif` | `p.DbtLdif` | `t.DbtLdif` | `m.DbtLdif` | `u.DbtLdif` |
+| flext-dbt-oracle | `c.DbtOracle` | `p.DbtOracle` | `t.DbtOracle` | `m.DbtOracle` | `u.DbtOracle` |
+| flext-tap-oracle / flext-tap-oracle-oic / flext-tap-oracle-wms | `c.TapOracle*` | `p.TapOracle*` | `t.TapOracle*` | `m.TapOracle*` | `u.TapOracle*` |
+| flext-target-oracle / flext-target-oracle-wms / flext-target-ldap / flext-target-ldif | `c.Target*` | `p.Target*` | `t.Target*` | `m.Target*` | `u.Target*` |
+| flext-meltano | `c.Meltano` | `p.Meltano` | `t.Meltano` | `m.Meltano` | `u.Meltano` |
+| flext-quality | `c.Quality` | `p.Quality` | `t.Quality` | `m.Quality` | `u.Quality` |
+| flext-plugin | `c.Plugin` | `p.Plugin` | `t.Plugin` | `m.Plugin` | `u.Plugin` |
+| flext-observability | `c.Observability` | `p.Observability` | `t.Observability` | `m.Observability` | `u.Observability` |
+| flext-db-oracle | `c.DbOracle` | `p.DbOracle` | `t.DbOracle` | `m.DbOracle` | `u.DbOracle` |
+| flext-grpc | `c.Grpc` | `p.Grpc` | `t.Grpc` | `m.Grpc` — `Generic.ValidationSummary`, `Generic.ValidationResults` | `u.Grpc` |
+| flext-oracle-wms | `c.OracleWms` | `p.OracleWms` | `t.OracleWms` | `m.OracleWms` | `u.OracleWms` |
+
+**Conflict Resolution Rule**: a slot is owned by exactly one project. Duplicate ownership requires a new namespace name. If two projects need the same domain concept (e.g. both Tap and Target need "Stream"), the concept lives in `flext-meltano` (parent) and both consume it via MRO.
+
 ## Instructions
 
 - Inspect both the public facade file and the private mixin tree it composes before changing namespace structure.
@@ -90,30 +120,36 @@ class FlextTargetOracleModels(m):
         class ExecuteResult(m.ArbitraryTypesModel):
             """Result of an Oracle batch execute operation."""
 
+            model_config = m.ConfigDict(frozen=True, strict=True)
+
             rows_affected: Annotated[
-                int, u.Field(description="Number of rows modified")
+                t.NonNegativeInt,
+                m.Field(description="Number of rows modified"),
             ]
             table_name: Annotated[
-                t.NonEmptyStr, u.Field(description="Target Oracle table")
+                t.NonEmptyStr,
+                m.Field(description="Target Oracle table"),
             ]
 
 
-ExecuteResult = FlextTargetOracleModels.TargetOracle.ExecuteResult
-
-
-def execute_batch(table: str) -> p.Result[ExecuteResult]:
-    """Access pattern: FlextTargetOracleModels.TargetOracle.ExecuteResult."""
-    result = ExecuteResult(rows_affected=0, table_name=table)
-    return r[ExecuteResult].ok(result)
+def execute_batch(
+    table: str,
+) -> p.Result[FlextTargetOracleModels.TargetOracle.ExecuteResult]:
+    """Canonical access: via the full nested namespace — no flat aliases."""
+    result = FlextTargetOracleModels.TargetOracle.ExecuteResult(
+        rows_affected=0,
+        table_name=table,
+    )
+    return r[FlextTargetOracleModels.TargetOracle.ExecuteResult].ok(result)
 ```
 
 Why good:
 
-- **All Pydantic via `m`** — never `from pydantic import BaseModel, u.Field, ...`
-- **No policy sentinels in model examples** — focus stays on Pydantic contracts (`u.Field`, `m.ConfigDict`, validators)
-- **Organic nesting** — `m.TargetOracle.ExecuteResult`, not flattened
-- **MRO chains Pydantic** — all decorators/types accessed through facade MRO
-- **Clear domain boundaries** — each namespace has its own models, validators, state
+- **Facade-only imports** — `from flext_core import m, p, r, t` (never `from pydantic import ...`). Pydantic constructs flow through `m.*`/`u.*` via MRO.
+- **Organic nesting preserved** — callers use `FlextTargetOracleModels.TargetOracle.ExecuteResult`, no flat alias assignment
+- **MRO chains Pydantic** — the class inherits `m.ArbitraryTypesModel`, exposing `m.Field`/`m.ConfigDict` through the workspace facade
+- **Frozen + strict boundary contract** on every public model
+- **Clear domain boundaries** — each namespace owns its own models/validators/state
 
 Bad:
 
