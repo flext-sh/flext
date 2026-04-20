@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 
-from flext_core import t
+from flext_core import m, t
 
 
 def flext_create_metric(_name: str, _value: float, _tags: m.Dict | None = None) -> None:
