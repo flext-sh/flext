@@ -177,7 +177,7 @@ After edits, run project-relevant `ruff`, `pyrefly`, and `pytest` gates with evi
 
 Projects that provide a main service class (e.g., FlextCli, FlextLdif, FlextObservability) MUST follow the **MRO service facade pattern**:
 
-- **`api.py`** — The single entry-point class `Flext<Project>` composing ALL service mixins via MRO inheritance. Only infrastructure (factory methods, Constants, model aliases) is defined locally. All domain behavior comes from mixins.
+- **`api.py`** — The single entry-point class `Flext<Project>` composing only the service mixins whose public behavior is reused directly via MRO. Only infrastructure (factory methods, Constants, model aliases, strict runtime DSL alias support) is defined locally. Services that require dedicated construction state but are only orchestrated once MUST be instantiated from local facade methods instead of being inherited only to wrap them again.
 - **`base.py`** — `Flext<Project>ServiceBase(s[T], ABC)` providing typed settings access. All mixins inherit from this base.
 - **`services/`** — One file per concern, one mixin class per file. Each mixin provides a single domain responsibility (e.g., tracing, metrics, health). Auto-generated `__init__.py` via `make gen`.
 
@@ -232,6 +232,8 @@ flext-<project>/src/flext_<project>/
 4. **MRO field conflicts** — the facade MUST declare shared fields (`_logger`, `_container`) to shadow inherited duplicates.
 5. **No public accessor prefixes on service facades** — public `get_*`, `set_*`, and `is_*` methods/properties are FORBIDDEN. Local deterministic derivation MUST become fields or `@u.computed_field`; external boundary reads MUST use domain verbs such as `fetch_*` or `resolve_*`; state mutation MUST use validated model assignment, `model_copy(update=...)`, or a domain verb such as `configure`, `apply`, or `update`.
 6. **Service runtime state is centralized** — each service concern MUST flow through one central `m.<Domain>.*State` or `m.<Domain>.*Status` model instead of spreading round-trips through many small carrier models, dict conversions, and ad-hoc type narrowing.
+7. **Runtime DSL aliases are eager instances** — the module runtime alias MUST be `alias = Flext<Project>()`, never `alias = Flext<Project>`. When migration compatibility requires `alias(...)`, implement `__call__` on the facade as a typed factory and keep all direct behavior available on the eager alias itself.
+8. **Do not inherit stateful services just to re-wrap them** — if a service has its own constructor/state and the facade only exposes a single orchestration verb around it, keep that verb local in `api.py` and instantiate the concrete service there.
 
 **Reference implementations**: `flext-cli/src/flext_cli/`, `flext-ldif/src/flext_ldif/`, `flext-observability/src/flext_observability/`.
 
