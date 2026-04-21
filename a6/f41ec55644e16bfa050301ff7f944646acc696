@@ -1,0 +1,91 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "a6f41ec55644e16bfa050301ff7f944646acc696",
+  "prompts": {
+    "03e25c1352bb3fbf": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "dce5a796-8eb8-4d62-a968-995aa4b99a1f",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 2283,
+      "total_deletions": 45,
+      "accepted_lines": 4405,
+      "overriden_lines": 3
+    },
+    "7136894992ba563e": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "2527d06e-e0ed-4fe2-ada1-1c40298a1f91",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 6,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    },
+    "a2ee0b79f7679b2e": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "43036f48-ea0f-411f-8f29-3adad9f9faa8",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1877,
+      "total_deletions": 99,
+      "accepted_lines": 2886,
+      "overriden_lines": 0
+    },
+    "bbd5ded0c04a15c0": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "38ab9abe-252b-412d-8211-c106164986d7",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 13,
+      "total_deletions": 4,
+      "accepted_lines": 13,
+      "overriden_lines": 0
+    },
+    "e076539c6287e452": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "60a55689-8b4a-4f4e-83aa-1e285ce90cdd",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 291,
+      "total_deletions": 25,
+      "accepted_lines": 287,
+      "overriden_lines": 1
+    },
+    "fee08f0033cd3a5a": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "f6409307-d282-46e3-9f00-bbf80151be2d",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 210,
+      "total_deletions": 16,
+      "accepted_lines": 515,
+      "overriden_lines": 8
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
