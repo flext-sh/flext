@@ -37,8 +37,6 @@ if _t.TYPE_CHECKING:
         typings,
         utilities,
     )
-    from tests.tf import tf
-    from tests.tm import tm
     from tests.unit.libs import TestVersioning
 _LAZY_IMPORTS = merge_lazy_imports(
     ("tests.infra",),
@@ -50,8 +48,6 @@ _LAZY_IMPORTS = merge_lazy_imports(
         "infra": "tests.infra",
         "r": ("flext_core.result", "FlextResult"),
         "s": ("flext_core.service", "FlextService"),
-        "tf": ("tests.tf", "tf"),
-        "tm": ("tests.tm", "tm"),
         "x": ("flext_core.mixins", "FlextMixins"),
     },
 )
@@ -83,8 +79,6 @@ __all__: list[str] = [
     "result",
     "s",
     "t",
-    "tf",
-    "tm",
     "typings",
     "u",
     "utilities",
