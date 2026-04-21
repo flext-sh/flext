@@ -15,7 +15,7 @@
 ### ✅ Type Alias Consolidation (Phase 1)
 
 **Undefined → Canonical Aliases**:
-- `t.ApiJsonValue` → `t.JsonValue` ✅
+- `t.JsonValue` → `t.JsonValue` ✅
 - `t.JsonObject` → `t.JsonMapping` ✅
 - `t.RecursiveValue` → `t.JsonValue` ✅
 - `t.OptionalPrimitive` → `t.Primitives | None` ✅

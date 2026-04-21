@@ -77,7 +77,7 @@ description: Advanced Pydantic v2 implementation patterns for FLEXT — TypeAdap
 | `from pydantic_core import ...` | same — via `m.*` / `u.*` |
 | `from pydantic.dataclasses import dataclass` | `class X(m.BaseModel): model_config = m.ConfigDict(frozen=True)` |
 
-Internal flext-core escape (ONLY inside `flext-core/src/flext_core/_*`): `from flext_core._utilities.pydantic import FlextUtilitiesPydantic as up` / `from flext_core._models.pydantic import FlextModelsPydantic as mp`. This is NOT a consumer pattern — it exists solely to break initialization cycles in `c/t/p/m/u`.
+Internal flext-core escape (ONLY inside `flext-core/src/flext_core/_*`): `from flext_core import  FlextUtilitiesPydantic as up` / `from flext_core import  FlextModelsPydantic as mp`. This is NOT a consumer pattern — it exists solely to break initialization cycles in `c/t/p/m/u`.
 
 If a facade symbol is missing, ADD it to `flext-core/_utilities/pydantic.py` / `_models/pydantic.py` FIRST (with tests), re-export through the right facade (`m.*` or `u.*`), THEN consume downstream via the canonical alias.
 

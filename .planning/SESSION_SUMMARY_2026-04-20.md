@@ -8,7 +8,7 @@
 
 This session achieved **52% workspace-wide pyrefly error reduction** through:
 1. Diagnosis and elimination of recursive `Container` type composition
-2. Consolidation of 4 undefined type aliases (`ApiJsonValue`, `JsonObject`, `RecursiveValue`, `OptionalPrimitive`)
+2. Consolidation of 4 undefined type aliases (`JsonValue`, `JsonObject`, `RecursiveValue`, `OptionalPrimitive`)
 3. Strategic Pydantic model wrapping for generic service types
 4. Targeted semantic type fixes in 2 critical projects
 
@@ -36,7 +36,7 @@ This session achieved **52% workspace-wide pyrefly error reduction** through:
 **Completed**: ✅
 
 **Consolidated Undefined Aliases** (via sed in flext-api):
-- `t.ApiJsonValue` → `t.JsonValue`
+- `t.JsonValue` → `t.JsonValue`
 - `t.JsonObject` → `t.JsonMapping`
 - `t.RecursiveValue` → `t.JsonValue`
 - `t.OptionalPrimitive` → `t.Primitives | None`
