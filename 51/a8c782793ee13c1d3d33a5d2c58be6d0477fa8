@@ -1,0 +1,215 @@
+.agents/skills/lib-dependency-injector/SKILL.md
+  c400234001f3b6cd 55,167
+.agents/skills/lib-pydantic-v2/SKILL.md
+  c400234001f3b6cd 34
+  h_9db9d35f50cf33 51,149,164,226,258-259,302-303,306,316,324,326,334,350,394-395
+.agents/skills/flext-automation-skill-pattern/SKILL.md
+  c400234001f3b6cd 50-51,53-54,61-62,77-79
+.agents/skills/flext-agent-integration/SKILL.md
+  h_9db9d35f50cf33 11,13-21,24-30,32,37-38,51-54,56-59,79,81,83-92,107-112
+  c400234001f3b6cd 22-23,31,33-36,47,55,72,74-78,93-98,105-106
+.agents/skills/flext-development-workflow/SKILL.md
+  c400234001f3b6cd 35-36,49,51
+  h_9db9d35f50cf33 69,79,93,107,110,284
+AGENTS.md
+  h_9db9d35f50cf33 461,480-481,491-493,495,498-500
+  c400234001f3b6cd 460,472-479,482,494,496-497,501
+.agents/INSTRUCTION_SURFACE.md
+  c400234001f3b6cd 14-22,31-32,34,134-139,164-170
+.agents/skills/flext-import-rules/SKILL.md
+  c400234001f3b6cd 58
+.agents/skills/workspace-maintenance/SKILL.md
+  c400234001f3b6cd 45
+.agents/skills/flext-strict-refactoring/SKILL.md
+  c400234001f3b6cd 87,89
+  h_9db9d35f50cf33 40-41,48,58-60,96
+codex.md
+  h_9db9d35f50cf33 12-13
+.agents/skills/rules-src/SKILL.md
+  h_9db9d35f50cf33 80,102,108,116,119-121,124
+.agents/skills/skill-format-universal/SKILL.md
+  h_9db9d35f50cf33 34,51
+.agents/skills/scripts-security/SKILL.md
+  c400234001f3b6cd 44,51,76
+.agents/skills/flext-plan-hygiene/SKILL.md
+  c400234001f3b6cd 163
+.agents/skills/flext-constants-discipline/SKILL.md
+  c400234001f3b6cd 62-64,76,93-95,119-121
+.agents/skills/rules-scripts/SKILL.md
+  h_9db9d35f50cf33 60
+  c400234001f3b6cd 40,75,78
+.agents/skills/flext-architecture-layers/SKILL.md
+  c400234001f3b6cd 38,68-69,72-77,81-82,85-88,94-95,98-101
+.github/prompts/flext-aggressive-scale-refactor.prompt.md
+  h_9db9d35f50cf33 43,67,76,92,111,137
+  c400234001f3b6cd 3,8,10,12,14-20,22,24-36,38,40-42,44-66,68-75,77,81-87,89,91,93-95,99-103,106,109-110,112-115,119,122,124-130,134-136,138-143,148-149,156-157,162-165
+.agents/skills/flext-refactoring-workflow/SKILL.md
+  c400234001f3b6cd 40-41,72,108-110,114-136,187-188,190-191,194-195,203,205-206,209,341,344
+  h_9db9d35f50cf33 351,354
+.agents/skills/scripts-validation/SKILL.md
+  c400234001f3b6cd 39-40,47,49,57-59,66-72,89-95,106
+.agents/skills/rules-pkg/SKILL.md
+  c400234001f3b6cd 72
+.agents/skills/flext-quality-gates/SKILL.md
+  c400234001f3b6cd 28,33,35,41,43
+  h_9db9d35f50cf33 3,11,53,62
+.agents/skills/lib-pydantic-settings/SKILL.md
+  c400234001f3b6cd 103,109-110,120,127,164,170-171
+.agents/skills/testing-patterns/SKILL.md
+  c400234001f3b6cd 44,342
+.agents/skills/scripts-maintenance/SKILL.md
+  c400234001f3b6cd 69,96
+.agents/skills/rules-flext-core/SKILL.md
+  c400234001f3b6cd 132
+.agents/skills/pydantic-v2-governance/SKILL.md
+  c400234001f3b6cd 42,114-115,198-199
+.agents/skills/code-navigation/SKILL.md
+  h_9db9d35f50cf33 17-18,117-123,157
+  c400234001f3b6cd 19-20,177,179
+.agents/skills/rules-github/SKILL.md
+  c400234001f3b6cd 72
+.agents/skills/readme-standardization/SKILL.md
+  c400234001f3b6cd 57,85
+.agents/skills/scripts-infra/SKILL.md
+  c400234001f3b6cd 116-117
+.agents/skills/flext-agent-strict-rules/SKILL.md
+  c400234001f3b6cd 31-33,66-70
+  h_9db9d35f50cf33 8-9,37-39,94
+.agents/skills/scripts-dependencies/SKILL.md
+  c400234001f3b6cd 33,47,54-55,81,84
+  h_9db9d35f50cf33 26,56-57,82,101,107-108,123
+.agents/README.md
+  h_9db9d35f50cf33 8,16-23
+.agents/skills/scripts-architecture/SKILL.md
+  c400234001f3b6cd 55,70,79,107
+.agents/skills/flext-import-rules/references/import-rules-detail.md
+  h_9db9d35f50cf33 417-418,692-694,719
+.agents/skills/flext-patterns/SKILL.md
+  c400234001f3b6cd 47,74,81-83,85,103,109-120,122,125,203,218-220,222-224,547
+.agents/skills/flext-5agent-coordination/SKILL.md
+  h_9db9d35f50cf33 329,333-334
+.agents/skills/flext-pyrefly-typecheck-fix/SKILL.md
+  h_9db9d35f50cf33 69
+.agents/skills/async-python-patterns/SKILL.md
+  c400234001f3b6cd 41,70
+.agents/skills/rules-docs/SKILL.md
+  c400234001f3b6cd 76
+.agents/skills/flext-docs-pointer-policy/SKILL.md
+  h_9db9d35f50cf33 42,51,57-59
+.agents/skills/flext-context-routing/SKILL.md
+  c400234001f3b6cd 3,19-20,26,29,41-43,47,49-51,60-66,75-76
+  h_9db9d35f50cf33 28,30,33,45
+.github/copilot-instructions.md
+  c400234001f3b6cd 10
+.agents/skills/rules-docker/SKILL.md
+  c400234001f3b6cd 77
+.agents/skills/rules-typings/SKILL.md
+  h_9db9d35f50cf33 114
+.agents/skills/flext-strict-typing/SKILL.md
+  c400234001f3b6cd 36-37
+.agents/skills/lib-returns/SKILL.md
+  c400234001f3b6cd 141,259
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "51a8c782793ee13c1d3d33a5d2c58be6d0477fa8",
+  "prompts": {
+    "03e25c1352bb3fbf": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "dce5a796-8eb8-4d62-a968-995aa4b99a1f",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 510,
+      "total_deletions": 144,
+      "accepted_lines": 6821,
+      "overriden_lines": 8
+    },
+    "3b73ac92d414916f": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "f2253e92-8e72-42ac-9a01-f671ff72e04a",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 21,
+      "total_deletions": 31,
+      "accepted_lines": 19,
+      "overriden_lines": 2
+    },
+    "7136894992ba563e": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "2527d06e-e0ed-4fe2-ada1-1c40298a1f91",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 10498,
+      "total_deletions": 1130,
+      "accepted_lines": 18901,
+      "overriden_lines": 96
+    },
+    "758bfadb6525c1c0": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "4ff96bef-e610-4f9d-ac96-f9da76087e71",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 4,
+      "accepted_lines": 3,
+      "overriden_lines": 1
+    },
+    "82b44c161d90cd80": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "fc39c22c-a19a-4a47-b2d0-7d215f352373",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 134,
+      "total_deletions": 117,
+      "accepted_lines": 556,
+      "overriden_lines": 1
+    },
+    "c400234001f3b6cd": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "a4927df8-2705-4272-b980-fda4fd9bcde5",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1940,
+      "total_deletions": 321,
+      "accepted_lines": 2895,
+      "overriden_lines": 15
+    },
+    "f74fd48d1bc98d32": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "fef8f525-bab0-4377-bf96-034e7c998cae",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 254,
+      "total_deletions": 278,
+      "accepted_lines": 340343,
+      "overriden_lines": 341
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
