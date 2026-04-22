@@ -39,6 +39,7 @@ description: Internal Pydantic v2 governance patterns for the FLEXT 34-project m
 - **FORBIDDEN in models**: initialization helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@u.computed_field`, `model_post_init`, `u.PrivateAttr`) and canonical field names such as `success`, `failure`, `expired`, `healthy`.
 - **Enums/Mappings/Literals**: From `constants.py` (`c.*`), settings from `settings.py` (`s.*`).
 - **JSON**: Via `model_dump_json()`, `model_validate_json()`, and cached `m.TypeAdapter` through the registry in `flext-core/src/flext_core/_typings/typeadapters.py` — never raw `json.loads()`/`json.dumps()` in consumers.
+- **Boundary simplification**: Prefer replacing repeated local conversion pipelines with one canonical `m.*` boundary model plus validators. Delete converter helpers once the boundary model owns normalization.
 - **Internal state**: Via `u.PrivateAttr` — never bare `self._x`.
 - **Nested classes**: MAY have business methods but ALL properties use `m.Field()`/`u.PrivateAttr`.
 - **models.py/_models/**: For model definitions ONLY.
@@ -110,8 +111,8 @@ Key rules (quick reference):
 4. Locate nearest codebase example for the pattern you need
 5. Copy structure from real implementation
 6. Adapt names/types while preserving validation semantics
-7. Run `make validate PROJECT=<name>` to verify
-8. Run `make validate PROJECT=<name> FIX=1` to auto-fix
+7. Run `make val PROJECT=<name>` to verify
+8. Run `make val PROJECT=<name> FIX=1` to auto-fix
 
 ## Examples
 
@@ -194,6 +195,6 @@ rg -n "ClassVar\[TypeAdapter" flext-core/src/flext_core/_models/base.py
 rg -n "Annotated\[.*\|.*None.*m.Field" flext-core/src/flext_core/_models/cqrs.py
 
 # Run validation
-make validate PROJECT=flext-core
-make validate PROJECT=flext-core FIX=1
+make val PROJECT=flext-core
+make val PROJECT=flext-core FIX=1
 ```

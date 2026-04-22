@@ -111,7 +111,7 @@ Why bad: loses useful type information and weakens analyzer value.
 
 Make gates:
 
-- `make typings` — run typings supply-chain automation
+- `make types` — run typings supply-chain automation
 - `make check PROJECT=flext-core CHECK_GATES=type` — type-check after stub changes
 
 File checks:

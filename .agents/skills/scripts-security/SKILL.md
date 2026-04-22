@@ -41,14 +41,14 @@ description: Security scripts — secrets management, vault operations, and secu
 3. Ensure the script extends `_base_security_script.py` if applicable.
 4. Test with `python scripts/security/<script>.py --help`.
 5. Verify no secrets leak in output.
-6. Run security gate: `make security PROJECT=<name>` or `make check PROJECT=<name> CHECK_GATES=security`.
+6. Run security gate: `make scan PROJECT=<name>` or `make check PROJECT=<name> CHECK_GATES=security`.
 
 ## Examples
 
 Good (primary — Make verbs for security gates):
 
 ```bash
-make security PROJECT=flext-core                     # dedicated security check
+make scan PROJECT=flext-core                         # dedicated security check
 make check PROJECT=flext-core CHECK_GATES=security   # security via check gate selector
 make check PROJECT=flext-core                        # all 4 gates including security
 ```
@@ -73,7 +73,7 @@ Why bad: Secrets piped through shell, no structured output.
 
 Make gates (primary):
 
-- `make security PROJECT=flext-core` — run bandit security check
+- `make scan PROJECT=flext-core` — run bandit security check
 - `make check PROJECT=flext-core CHECK_GATES=security` — security via gate selector
 - `make check PROJECT=flext-core` — all 4 gates including security
 

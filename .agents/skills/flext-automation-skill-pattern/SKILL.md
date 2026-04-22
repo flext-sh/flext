@@ -31,6 +31,7 @@ description: Canonical pattern for creating reusable automation skills with scri
 - Skills must provide concrete verification commands.
 - Prefer `ast-grep` for checks/fixes; use `custom` scripts only when AST cannot express the rule.
 - Place `custom` scripts in the owning skill directory, not in `scripts/core`.
+- Automation skills that govern refactoring, routing, or validation should encode mandatory tool usage and zero-debt closure, not optional best-effort behavior.
 
 ## Instructions
 
@@ -40,24 +41,25 @@ description: Canonical pattern for creating reusable automation skills with scri
 - For custom checks, implement scripts inside the skill folder that output JSON `{"violation_count": N}`.
 - Skills are auto-discovered by `scripts/core/skill_validate.py` — no orchestrator wiring needed.
 - Publish companion guidance in `docs/guides/skill-automation-pattern.md`.
+- When the skill governs broad or structural work, document Scope freshness, Serena setup, `ast-grep` usage, MCP applicability, and the required zero-debt exit condition.
 
 ## Workflow
 
 1. Define the invariant (policy or quality behavior).
 2. Create `rules.yml` with detection rules (ast-grep, ripgrep, or custom).
-3. Run standardized gate on target project with `make validate PROJECT=<name>`.
-4. Verify with `make validate PROJECT=<name> FIX=1` when autofix is needed.
+3. Run standardized gate on target project with `make val PROJECT=<name>`.
+4. Verify with `make val PROJECT=<name> FIX=1` when autofix is needed.
 5. Update skill SKILL.md and docs with exact command contract.
-6. Run `make validate PROJECTS="proj-a proj-b"` for integration scope.
-7. Use root `make validate` as the workspace gate entrypoint.
+6. Run `make val PROJECTS="proj-a proj-b"` for integration scope.
+7. Use root `make val` as the workspace gate entrypoint.
 
 ## Examples
 
 Good:
 
 ```bash
-make validate PROJECT=flext-core
-make validate PROJECT=flext-core FIX=1
+make val PROJECT=flext-core
+make val PROJECT=flext-core FIX=1
 ```
 
 Why good: reproducible, non-interactive, and tied to artifacts.
@@ -72,7 +74,7 @@ Why bad: no reusable command surface and no persisted evidence.
 
 ## Verification
 
-- `make validate PROJECT=<name>`
-- `make validate PROJECT=<name> FIX=1`
-- `make validate PROJECTS="proj-a proj-b"`
+- `make val PROJECT=<name>`
+- `make val PROJECT=<name> FIX=1`
+- `make val PROJECTS="proj-a proj-b"`
 - `rg -n "## Scope|## References|## Rules|## Instructions|## Workflow|## Examples|## Verification" .agents/skills/flext-automation-skill-pattern/SKILL.md`

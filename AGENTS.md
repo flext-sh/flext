@@ -457,6 +457,8 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Mandatory Usage**: Do not implement rules from memory. Do not claim skill usage without reading the `SKILL.md`.
 - **Mapping**: Baseline maps must be respected (`flext-core->rules-flext-core`, `src->rules-src`, `tests->testing-patterns`, etc.).
 - **Rule Definitions**: `rules.yml` schema uses flat fix keys only. Prefer `type: ast-grep`; use `type: custom` only when AST matching is completely unviable. `fix_auto: true` must map to an executable real fix mechanism.
+- **Prompt Routing**: For requests centered on simplification, deduplication, pyrefly/ruff reduction, canonical facade migration, or large-scale contract cleanup, agents MUST load `.github/prompts/flext-aggressive-scale-refactor.prompt.md` after `AGENTS.md` and the path-scoped skills. Prompts operationalize this file; they never replace it.
+- **Continuous Skill Hardening**: When repeated agent failure modes appear (skipped impact analysis, incomplete propagation, non-surgical edits, wrong tool choice, weak context alignment), update the relevant skill or prompt in the same governance cycle so the behavior becomes stricter for future runs.
 - *Skill format policies*: See skills `skill-format-universal`, `flext-docs-pointer-policy`.
 
 ## §8 Change Management
@@ -467,12 +469,36 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Correct Governance**: If governance corrections arise during work, update this file immediately before further implementation.
 - **Commit-After-Validation**: Every passing validation MUST be immediately accompanied by a `git add -A` → `git commit` → `git pull --rebase` → `git push` sequence. Uncommitted or unpushed work is LOST WORK.
 
+### 8.1 Refactor Priority Stack
+
+- **Delete Before Wrapping**: Prefer deleting redundant wrappers, aliases, converters, fallback paths, and compatibility layers over preserving them behind new abstractions.
+- **Canonical Facades First**: Prefer `flext-core` and `flext-cli` public facades, settings, models, typings, protocols, utilities, results, and exceptions over local re-declarations.
+- **Pydantic at the Boundary**: Validation, transport typing, and runtime data normalization MUST converge on canonical Pydantic v2 models through `m.*` and `u.*`, not ad-hoc dict conversion pipelines.
+- **Constants Drive Contracts**: Closed token sets, regexes, read-only maps, and immutable collections belong in `c.*`; `t.*` should reuse those canonical definitions instead of duplicating them.
+- **Same-Cycle Propagation**: Signature, contract, enum, model, or settings changes MUST be propagated to every impacted caller in the same cycle. No half-migrations.
+- **Measured Reduction**: Every refactor cycle must reduce real duplication, type complexity, conversion code, or enforcement debt. Cosmetic churn is a violation.
+- **Impact First**: No refactor, rename, or contract change may start without an explicit blast-radius check proportionate to the change. If the change can cross file or project boundaries, you MUST inspect references before editing.
+- **Surgical Necessity**: Every change must be justified by real architectural, typing, validation, or enforcement need in the active context. Edits that are broad, speculative, or weakly justified are violations.
+- **Zero Debt at All Times**: `ruff`, `pyrefly`, enforcement checks, and `pytest` must remain zeroed across all affected projects at all times. Pre-existing failures in the active dependency chain or requested scope are not an excuse to stop; fix them in the same execution cycle unless the user explicitly narrows scope or blocks the work.
+
 ## §9 Agent Execution Pre-requisites
 
 - **Verify Before Implement**: Check recent commits (`git log --oneline -20`) and active task trackers to prevent duplication. Cross-session deduplication is critical.
 - **Scope Discipline**: DO NOT modify files outside the specific task boundary. If blocked, escalate instead of silently rewriting external dependencies.
 - **Scale and Parallelism**: Refactoring many call sites or modules across the portfolio should utilize multiple batched passes to retain focus and verifiability.
 - **`.new/.old` Swap Protocol**: For massive file modifications (>50 lines changed), create a `.new` file, verify changes, then execute `mv file.py file.py.old && mv file.py.new file.py`. Commit both in one transaction.
+
+### 9.2 Mandatory Tooling Discipline
+
+- **Scope is Mandatory When Available**: If `.scope/` exists or `scope status` succeeds, use `scope` first for cross-file discovery, call-site inspection, blast-radius analysis, caller/reference tracing, and architecture orientation. Skipping `scope` for qualifying tasks is a governance violation.
+- **Scope Freshness is Mandatory**: Keep the Scope index fresh. Run `scope index` after structural edits, and for multi-project or workspace-wide work prefer `scope workspace index` (or `scope workspace index --watch`) so structural queries stay trustworthy.
+- **AST-Grep is Mandatory for Structural Changes**: Any structural rename, repeated call-site migration, broad contract propagation, or syntax-pattern rewrite MUST use `ast-grep` (`sg`) unless the change is provably single-site. Plain grep-only refactors for structural work are forbidden.
+- **Serena is Mandatory When Available**: If Serena is connected or its project configuration is present, activate the workspace/project correctly and use its project-aware capabilities for symbol/refactor/navigation flows that depend on language-server-backed context. Do not leave Serena half-configured and then ignore it.
+- **MCP is Mandatory When Context Requires It**: If the task depends on configured MCP capabilities (remote repo metadata, GitHub workflow state, external structured resources, Serena project tooling), use the configured MCP server rather than improvising local guesses or skipping context.
+- **No Excuses Routing**: Tool availability must be checked, not assumed away. If a required tool is unavailable or misconfigured, state that explicitly and reduce scope safely; do not silently fall back to weaker reasoning for a high-blast-radius change.
+- **Impact Analysis Before Edit**: Signature changes, alias changes, namespace moves, protocol/model/settings/constant changes, and deletions require a tool-backed reference audit before the first substantive edit.
+- **Propagation Audit Before Exit**: Before claiming completion on cross-file changes, rerun the relevant caller/reference search to confirm there are no leftover old paths.
+- **Learning Loop Required**: When a required tool is misused or underused, harden the relevant skill or prompt in the same governance cycle so the next execution becomes stricter and more precise.
 
 ### 9.1 Coding Directives for Agents
 

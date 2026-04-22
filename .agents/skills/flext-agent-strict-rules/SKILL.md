@@ -5,6 +5,8 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 
 # Flext Agent Strict Rules
 
+## Scope
+
 **Scope**: Runtime guardrails for coding agents across all 33 FLEXT projects.
 **Authority**: `AGENTS.md` §3 Code Law, §4 Import Law, §9 Agent Execution Pre-requisites. This skill is the operational expansion of those sections — not a replacement.
 
@@ -26,8 +28,15 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 - Use simple runtime aliases only; remove any `u.Aliases.*` indirection.
 - Protocol contracts belong in `p.*`; composed aliases in `t.*`; domain carriers in `m.*`. Never annotate with a concrete class when a canonical `p.*`/`t.*` contract exists.
 - Dismantle polymorphic branching into centralized Pydantic v2 models (`Literal` discriminators, `u.Field`, `u.model_validator`).
+- Prefer deleting redundant conversion helpers, fallback paths, compatibility aliases, and proxy methods over preserving them behind new wrappers.
+- Prefer canonical `flext-core` and `flext-cli` JSON-capable types, settings, results, exceptions, and validators over local transport-shape aliases and recursive type inventions.
+- Constants, regexes, token sets, and immutable maps belong in `c.*`; when a `Literal` only mirrors a `StrEnum`, remove the `Literal` and use the enum as the source of truth.
 - Enforce abstraction boundaries in `examples/` and `scripts/` exactly as in `src/` (`AGENTS.md` §2.7).
 - In runtime `src/` code, prefer `e.fail_*`, `r.fail_op`, `r.fail_exc`. Avoid ad-hoc `r.fail("...")` except for explicit structured `error_data` passthrough.
+
+## Instructions
+
+Apply the operational discipline below when simplifying or reviewing FLEXT code. Prefer deletion, centralization, and canonical facade usage over local adapters or compatibility scaffolding.
 
 ## Operational Discipline (Expansion of AGENTS.md §3)
 
@@ -54,6 +63,12 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 - Dismantle polymorphic functions that branch on 3+ types. Replace with one (or a small set of) Pydantic v2 models defining shape and validation.
 - Use discriminated unions (`Literal` discriminator field), `u.Field`, `@u.field_validator`, `@u.model_validator`, `model_validate`, `model_validate_json`. One entry point for validation; avoid long `if isinstance(...)` chains over many types.
 
+### 4.1 Boundary Normalization by Canonical Models
+
+- Prefer one canonical boundary model over repeated dict normalization or per-call conversions.
+- If the same input/output shape appears in multiple modules, centralize it into the lowest stable `m.*` namespace instead of repeating local carriers.
+- Use `t.JsonValue` or existing CLI/Core JSON-capable types before introducing any new recursive or transport-shape type alias.
+
 ### 5. Scale and Parallelism
 
 - Apply these rules across **all 33 projects**. Use multiple agents in parallel (see `flext-5agent-coordination`) — one agent per project or per report section — with minimal, verifiable changes.
@@ -76,7 +91,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from flext_core import m, p, r, s, t
+from flext_core import m, p, r, s, t, u
 
 
 class FlextDemoTracingMixin:

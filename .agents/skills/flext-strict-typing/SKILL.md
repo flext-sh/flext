@@ -33,6 +33,8 @@ description: Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 6
 - Use `r[T]` for fallible returns and avoid nullable fallibility patterns.
 - Use `isinstance`/TypeGuard for narrowing; avoid `type(...) is ...` narrowing.
 - Keep typing changes integral: verify ruff, mypy, pyright, and pyrefly.
+- Prefer central `t.*` aliases at the lowest stable layer when the same type composition appears more than once; do not keep rebuilding equivalent unions at call sites.
+- Prefer existing `t.JsonValue` and CLI/Core JSON-capable contracts over new recursive or transport-shape aliases.
 - **PEP 695 only** for new/touched code: `type X = ...` aliases (no `typing.TypeAlias`), `class Foo[T]` generics, `def f[T](x: T) -> T` (no `typing.TypeVar`/`Generic`).
 - **Narrowing**: prefer `TypeIs[T]` (bidirectional narrowing) over `TypeGuard[T]` (one-way) for every `is_*` helper. Bare `bool` returns from is-helpers at public boundaries are forbidden.
 - **Structural pattern matching** (`match/case`) mandatory for multi-branch dispatch on discriminated unions or subtypes. Rewrite `isinstance` ladders of three or more branches.

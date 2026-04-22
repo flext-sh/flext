@@ -30,12 +30,14 @@ description: Rules for documentation under `docs/` to keep architecture and proj
 - Align architectural claims with current source files.
 - Prefer concrete file/symbol anchors over generic statements.
 - Avoid duplicating canonical policy text from root governance files.
+- Documentation that explains workflows, commands, or governance must stay aligned with the current mandatory toolchain: Scope, Serena, `ast-grep`, MCP, and zero-debt quality gates for affected projects.
 
 ## Instructions
 
 - Verify referenced files exist before publishing links or commands.
 - Update related docs pages when structure/naming changes.
 - For architecture docs, include source-aligned module names.
+- When a governance change hardens execution law, propagate it to affected docs pages in the same cycle instead of leaving stale command guidance behind.
 
 ```bash
 ls -la docs
@@ -71,7 +73,7 @@ Why bad: vague guidance with no verifiable anchor.
 Make gates:
 
 - `make docs PROJECT=<name>` — build docs for a specific project
-- `make validate VALIDATE_SCOPE=workspace` — workspace-level validation
+- `make val VALIDATE_SCOPE=workspace` — workspace-level validation
 
 File checks:
 

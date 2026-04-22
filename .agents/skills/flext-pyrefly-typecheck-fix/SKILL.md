@@ -63,11 +63,10 @@ Why good: uses the canonical workspace gate named in AGENTS.md and keeps the fix
 Bad:
 
 ```bash
-make validate PROJECT=flext-core
 python scripts/tmp_fix_pyrefly.py
 ```
 
-Why bad: the first command does not exist in this workspace, and the second bypasses the required ast-grep/manual review path with an ad-hoc script.
+Why bad: it bypasses the required ast-grep/manual review path with an ad-hoc script instead of using the governed fix loop.
 
 ## Purpose
 

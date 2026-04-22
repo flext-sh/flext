@@ -16,7 +16,7 @@ description: Describes the end-to-end development workflow for the FLEXT monorep
 
 ## Scope
 
-- Workspace-level developer workflow for setup, check, test, validate, and cross-project impact handling.
+- Workspace-level developer workflow for boot, check, test, val, and cross-project impact handling.
 - Applies to all projects orchestrated by root `Makefile` and project `base.mk` contracts.
 
 ## References
@@ -30,8 +30,10 @@ description: Describes the end-to-end development workflow for the FLEXT monorep
 ## Rules
 
 - Use the shared workspace `.venv` as the primary execution environment.
-- Run standardized make verbs (`setup`, `check`, `test`, `validate`) instead of ad-hoc command mixes.
+- Run standardized make verbs (`boot`, `check`, `test`, `val`) instead of ad-hoc command mixes.
 - Treat `pyproject.toml` `[tool.coverage.report] fail_under` as the only coverage threshold source.
+- Treat `ruff`, `pyrefly`, enforcement, and `pytest` as always-zero gates for all affected projects during active work, not just final cleanup.
+- For multi-project or shared-contract work, keep Scope indexed (`scope workspace index`) and Serena correctly activated/configured if Serena-backed tooling is in use.
 
 ## Instructions
 
@@ -44,8 +46,9 @@ description: Describes the end-to-end development workflow for the FLEXT monorep
 1. Bootstrap workspace and dependencies.
 2. Edit code with skill/rule alignment.
 3. Run fast feedback (`make check`, `make test`).
-4. Run extended validation (`make validate`, optional `FIX=1`).
+4. Run extended validation (`make val`, optional `FIX=1`).
 5. Run scoped cross-project checks when touching shared modules.
+6. Do not stop while any affected project still has non-zero `ruff`, `pyrefly`, enforcement, or `pytest` failures.
 
 ## Examples
 
@@ -63,17 +66,17 @@ make test PROJECT=flext-core MATCH=test_container FAIL_FAST=1
 make check CHECK_GATES=lint FIX=1 CHANGED_ONLY=1
 
 # Then validate broader impact
-make PROJECTS="flext-core flext-api" validate
+make PROJECTS="flext-core flext-api" val
 ```
 
 ## Verification
 
 - `make check`
 - `make test`
-- `make validate`
+- `make val`
 - `make PROJECT=<name> check`
 - `make PROJECT=<name> check FILE=src/foo.py CHECK_GATES=pyright`
-- `make PROJECTS="proj-a proj-b" validate`
+- `make PROJECTS="proj-a proj-b" val`
 
 ## Workspace Setup
 
@@ -87,7 +90,7 @@ make PROJECTS="flext-core flext-api" validate
 
 ```bash
 # Clone with submodules
-git clone --recursive <repo-url>
+git clone --recursive https://github.com/flext-sh/flext.git
 cd flext
 
 # Create workspace-level virtual environment
@@ -95,16 +98,16 @@ python3.13 -m venv .venv
 source .venv/bin/activate
 
 # Install workspace + selected project dependencies
-make setup
+make boot
 # Optional scope:
-# make setup PROJECT=flext-core
-# make setup PROJECTS="flext-core flext-api"
+# make boot PROJECT=flext-core
+# make boot PROJECTS="flext-core flext-api"
 
 # After setup: upgrade deps and refresh dependency report (or DEPS_REPORT=0 to skip report)
-make upgrade
+make up
 
 # Typings: stub supply-chain + typing report (optional PROJECT=, PROJECTS=, DEPS_REPORT=0)
-make typings
+make types
 ```
 
 ### Key Principle: Single Shared .venv
@@ -150,7 +153,7 @@ make test
 ### 4. Pre-Commit Validation
 
 ```bash
-make validate   # Extended non-lint validation (optional FIX=1)
+make val        # Extended non-lint validation (optional FIX=1)
 ```
 
 ---
@@ -163,7 +166,7 @@ make validate   # Extended non-lint validation (optional FIX=1)
 - Each project's `pyproject.toml` extends it: `extend = "../ruff-shared.toml"`
 - Zero tolerance: lint/type/security failures fail `make check`
 - Preview mode enabled for latest rules
-- Auto-fix path: `make validate FIX=1`
+- Auto-fix path: `make val FIX=1`
 - Line length: 88 characters
 - Quote style: double
 - Indent: spaces
@@ -199,8 +202,8 @@ TCH, TD, TID, TRY, UP, W, YTT
 These tools run behind standardized verbs:
 
 - `make check`: ruff + format check + pyrefly + bandit
-- `make validate`: radon + interrogate (with optional `FIX=1`)
-- `make security`: explicit bandit gate
+- `make val`: extended validation gates (with optional `FIX=1`)
+- `make scan`: explicit security gate
 
 ---
 
@@ -271,14 +274,14 @@ make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_models.py -v --timeout
 # Default scope: all discovered projects
 make check
 make test
-make validate
+make val
 
 # Target a single project
 make PROJECT=flext-auth check
 make PROJECT=flext-auth test
 
 # Target multiple projects
-make PROJECTS="flext-core flext-api" validate FIX=1
+make PROJECTS="flext-core flext-api" val FIX=1
 
 # Pass pytest selectors to project tests
 make PROJECT=flext-auth test PYTEST_ARGS="-k unit"

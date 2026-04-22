@@ -37,7 +37,7 @@ description: Rules for automation and maintenance scripts under `scripts/`. Use 
 
 - When adding a new script, assign it to one of the 7 domain skills (scripts-infra, scripts-validation, scripts-security, scripts-architecture, scripts-testing, scripts-dependencies, scripts-maintenance).
 - Add the `# Owner-Skill:` marker and list it in the owning skill's `## Scripts` table.
-- When defining rule automation, prefer root `make validate` with selectors (`PROJECT`, `PROJECTS`) as session gate.
+- When defining rule automation, prefer root `make val` with selectors (`PROJECT`, `PROJECTS`) as session gate.
 - For shell scripts, prefer explicit command checks over implicit assumptions.
 - For Python scripts, keep imports and file paths workspace-relative.
 
@@ -57,7 +57,7 @@ ls -la scripts
 Good:
 
 ```bash
-make validate PROJECT=<name>
+make val PROJECT=flext-core
 ```
 
 Why good: explicit repository validation gate with reproducible behavior.
@@ -72,8 +72,8 @@ Why bad: ambiguous path and unclear contract from repository root.
 
 ## Verification
 
-- `make validate PROJECT=<name>` — standardized project validation gate
+- `make val PROJECT=<name>` — standardized project validation gate
 - `python .agents/skills/scripts-infra/validate_ownership.py --root .` — ownership validator (hard gate)
 - `python .agents/skills/scripts-infra/validate_artifact_naming.py --root .` — artifact naming validator
-- `make validate PROJECT=<name> FIX=1` — standardized gate with auto-fix phase when applicable
+- `make val PROJECT=<name> FIX=1` — standardized gate with auto-fix phase when applicable
 - `bash -n <file>` for bash, `python -m py_compile <file>` for Python

@@ -24,12 +24,14 @@ This skill provides a standardized workflow for maintaining `README.md` files, e
 - Keep README metadata and version lines current and factual.
 - Enforce consistent section order and stable relative links.
 - Prefer workspace governance pointers over duplicated policy text.
+- README workflow sections and contributor guidance must reflect the current mandatory toolchain and zero-debt policy without copying AGENTS verbatim.
 
 ## Instructions
 
 - Use `make docs` for documentation automation flows.
 - Run validation after each remediation batch.
 - Keep project-specific README updates aligned with corresponding docs index entries.
+- When a README mentions developer workflow, point readers to canonical surfaces for Scope, Serena, `ast-grep`, MCP, and zeroed quality gates.
 
 ## Workflow
 
@@ -52,7 +54,7 @@ Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 - `make docs`
 - `make docs DOCS_PHASE=validate`
-- `make validate VALIDATE_SCOPE=workspace`
+- `make val VALIDATE_SCOPE=workspace`
 
 ## 🎯 Objectives
 
@@ -80,7 +82,7 @@ No extra installation required if you have the dev dependencies. The script uses
 Primary (Make verbs):
 
 ```bash
-make validate VALIDATE_SCOPE=workspace    # workspace-level validation including docs
+make val VALIDATE_SCOPE=workspace         # workspace-level validation including docs
 make check PROJECT=flext-core             # standard quality gates
 ```
 

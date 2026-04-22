@@ -27,6 +27,7 @@ description: Use when managing implementation plans across sessions to prevent p
 - **Cross-Session Deduplication**: Check `git log` for completed tasks before starting new work.
 - **Plan Archival**: Archive completed plans to `.sisyphus/archive/` with timestamp.
 - **Consolidation First**: Merge small plans into larger scoped plans rather than proliferating.
+- **Tooling and Gate Reality**: Plans for refactors or workspace maintenance must explicitly account for Scope/Serena/`ast-grep`/MCP applicability and the requirement to return all affected projects to zero `ruff`, `pyrefly`, enforcement, and `pytest` debt.
 
 ## Instructions
 
@@ -103,6 +104,7 @@ Before creating a new plan, verify:
    - Run overlap detection checklist
    - Check git log for related completed work
    - Review existing plan scopes
+   - Verify the plan includes impact analysis, tool usage, propagation, and zero-debt closure when the task is cross-file or cross-project
 
 2. **When Consolidating Plans**:
    - Merge task lists into the larger plan
@@ -158,7 +160,7 @@ Why bad: Three separate plans for related skill fixes; should be consolidated in
 
 Make gates:
 
-- `make validate VALIDATE_SCOPE=workspace` — workspace validation ensures plan consistency
+- `make val VALIDATE_SCOPE=workspace` — workspace validation ensures plan consistency
 
 Pattern checks:
 

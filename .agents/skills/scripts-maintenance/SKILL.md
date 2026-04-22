@@ -66,7 +66,7 @@ Good (Make verbs for standard gates):
 
 ```bash
 make check
-make validate
+make val
 make clean
 ```
 
@@ -93,7 +93,7 @@ Make gates (primary):
 
 - `make check PROJECT=flext-core` — lint + format + type + security
 - `make clean PROJECT=flext-core` — verify clean targets work
-- `make validate VALIDATE_SCOPE=workspace` — workspace-level inventory validation
+- `make val VALIDATE_SCOPE=workspace` — workspace-level inventory validation
 
 Script-level checks (internal):
 

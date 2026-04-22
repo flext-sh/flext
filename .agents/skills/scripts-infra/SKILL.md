@@ -113,8 +113,8 @@ Why bad: Hardcoded path bypasses artifact naming contract.
 Make gates (primary):
 
 - `make check PROJECT=flext-core` — verify dependent projects pass lint/type/format/security
-- `make validate VALIDATE_SCOPE=workspace` — run workspace inventory + wiring map
-- `make validate PROJECT=flext-core` — verify complexity + docstring gates
+- `make val VALIDATE_SCOPE=workspace` — run workspace inventory + wiring map
+- `make val PROJECT=flext-core` — verify complexity + docstring gates
 
 Script-level checks (internal):
 
