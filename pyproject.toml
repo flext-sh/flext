@@ -144,14 +144,7 @@ omit = [ "*/dependency_injector/providers.pyx" ]
 
 # [MANAGED] deptry
 [tool.deptry]
-known_first_party = [
-  "flext",
-  "flext-core",
-  "flext-infra",
-  "flext-tests",
-  "importlib-resources (",
-  "pydantic (",
-]
+known_first_party = [ "flext" ]
 pep621_dev_dependency_groups = [ "dev" ]
 
 [tool.flext.docs]
@@ -372,7 +365,6 @@ exclude = [
   ".git",
   ".sisyphus",
   ".venv",
-  "vendor",
 ]
 extraPaths = [ ".", "src", "typings" ]
 ignore = [ "**/*.pyi", "typings" ]
@@ -1079,9 +1071,6 @@ combine-as-imports = true
 force-single-line = false
 known-first-party = [
   "flext",
-  "flext-core",
-  "flext-infra",
-  "flext-tests",
   "flext_api",
   "flext_auth",
   "flext_cli",
@@ -1113,8 +1102,6 @@ known-first-party = [
   "flext_target_oracle_wms",
   "flext_tests",
   "flext_web",
-  "importlib-resources (",
-  "pydantic (",
 ]
 split-on-trailing-comma = true
 
