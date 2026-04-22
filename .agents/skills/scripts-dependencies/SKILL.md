@@ -23,14 +23,14 @@ description: Dependency management — analysis, consolidation, discovery, cachi
 - `AGENTS.md` — canonical governance source
 - `flext-core/src/flext_infra/deps/` — Module source
 - `.agents/skills/rules-scripts/SKILL.md`
-- `Makefile` (upgrade, typings)
+- `Makefile` (up, types)
 
 ## Rules
 
 - Dependency scripts must not modify lockfiles without explicit `--apply` flag.
 - Dependency/typing reports go to `.reports/dependencies/` (e.g. `detect-runtime-dev-latest.json`).
 - All scripts must be runnable from repo root.
-- `modernize_pyproject.py --audit` is enforced by `make validate VALIDATE_SCOPE=workspace` and must stay clean.
+- `modernize_pyproject.py --audit` is enforced by `make val VALIDATE_SCOPE=workspace` and must stay clean.
 
 ## Instructions
 
@@ -44,17 +44,17 @@ description: Dependency management — analysis, consolidation, discovery, cachi
 2. Create or modify the script under `scripts/dependencies/`.
 3. Test with `--help` and dry-run mode.
 4. Verify script compiles: `python -m compileall scripts/dependencies`.
-5. Run standard gates: `make check PROJECT=<name>` and `make validate PROJECT=<name>`.
+5. Run standard gates: `make check PROJECT=<name>` and `make val PROJECT=<name>`.
 
 ## Examples
 
 Good (primary — Make verbs for standard workflow):
 
 ```bash
-make setup                          # install all project dependencies
-make setup PROJECT=flext-core       # install single project
-make upgrade                        # upgrade deps + dependency report (use DEPS_REPORT=0 to skip report)
-make typings PROJECT=flext-core     # stub supply-chain + typing report (use DEPS_REPORT=0 to skip report)
+make boot                           # install all project dependencies
+make boot PROJECT=flext-core        # install single project
+make up                             # upgrade deps + dependency report (use DEPS_REPORT=0 to skip report)
+make types PROJECT=flext-core       # stub supply-chain + typing report (use DEPS_REPORT=0 to skip report)
 make check PROJECT=flext-core      # verify after dependency changes
 ```
 
@@ -78,10 +78,10 @@ Why bad: No analysis, no structured output, destructive.
 
 Make gates (primary):
 
-- `make setup PROJECT=flext-core` — verify dependency installation
-- `make upgrade` / `make typings` — produce dependency/typing report (or `DEPS_REPORT=0` to skip)
+- `make boot PROJECT=flext-core` — verify dependency installation
+- `make up` / `make types` — produce dependency/typing report (or `DEPS_REPORT=0` to skip)
 - `make check PROJECT=flext-core` — lint + format + type + security gates
-- `make validate PROJECT=flext-core` — complexity + docstring gates
+- `make val PROJECT=flext-core` — complexity + docstring gates
 
 Script-level checks (internal):
 
@@ -98,14 +98,14 @@ Script-level checks (internal):
 | `scripts/dependencies/consolidate_dependencies.py` | Consolidate duplicate dependencies                       | `python scripts/dependencies/consolidate_dependencies.py`                                                 |
 | `scripts/dependencies/dependency_cache.py`         | Dependency caching utilities                             | `python scripts/dependencies/dependency_cache.py`                                                         |
 | `scripts/dependencies/dependency_detection.py`     | Helpers: deptry + pip check, discover_projects, classify | Imported by detect_runtime_dev_deps                                                                       |
-| `scripts/dependencies/detect_runtime_dev_deps.py`  | Detect runtime vs dev deps (deptry + pip check)          | Invoked by `make upgrade` and `make typings`; or `python scripts/dependencies/detect_runtime_dev_deps.py` |
+| `scripts/dependencies/detect_runtime_dev_deps.py`  | Detect runtime vs dev deps (deptry + pip check)          | Invoked by `make up` and `make types`; or `python scripts/dependencies/detect_runtime_dev_deps.py` |
 | `scripts/dependencies/discover_missing_deps.py`    | Discover missing dependencies                            | `python scripts/dependencies/discover_missing_deps.py`                                                    |
 | `scripts/dependencies/sync_dependencies.py`        | Sync dependencies across projects                        | `python scripts/dependencies/sync_dependencies.py`                                                        |
 
 ## Runtime vs dev dependency detection (automatic)
 
-- **make upgrade** — After a successful upgrade, runs `detect_runtime_dev_deps.py -q --no-fail` and writes `.reports/dependencies/detect-runtime-dev-latest.json`. Use **DEPS_REPORT=0** to skip this step.
-- **make typings** — Runs `stub_supply_chain.py` (with PROJECT/PROJECTS/--all), then runs `detect_runtime_dev_deps.py --typings -q --no-fail` and writes the same report (including typings). Use **DEPS_REPORT=0** to skip the report step.
+- **make up** — After a successful upgrade, runs `detect_runtime_dev_deps.py -q --no-fail` and writes `.reports/dependencies/detect-runtime-dev-latest.json`. Use **DEPS_REPORT=0** to skip this step.
+- **make types** — Runs `stub_supply_chain.py` (with PROJECT/PROJECTS/--all), then runs `detect_runtime_dev_deps.py --typings -q --no-fail` and writes the same report (including typings). Use **DEPS_REPORT=0** to skip the report step.
 - No separate `deps-detect` or `deps-detect-report` targets; dependency and typing reports are produced automatically by these Make verbs.
 
 ## Typing libraries (types-\*) and dependency limits
@@ -120,4 +120,4 @@ Script-level checks (internal):
   - `--typings` — Run mypy stub detection per project; add to report `projects.<name>.typings` (required_packages, to_add, current, limits_applied, python_version).
   - `--apply-typings` — Add missing typings to each project (`poetry add --group typings <pkg>`). Implies `--typings`. Use `--dry-run` to only report.
   - `--limits FILE` — Path to dependency_limits.toml (default: `scripts/dependencies/dependency_limits.toml`).
-- Keeping typings updated: use **make typings** (optionally **PROJECT=…** or **PROJECTS="…"**); the report is written automatically. For applying typings, run the script directly with `--typings --apply-typings` after review; use `dependency_limits.toml` to cap Python or package versions.
+- Keeping typings updated: use **make types** (optionally **PROJECT=…** or **PROJECTS="…"**); the report is written automatically. For applying typings, run the script directly with `--typings --apply-typings` after review; use `dependency_limits.toml` to cap Python or package versions.

@@ -37,6 +37,8 @@ description: Step-by-step refactoring workflow with quality gates, make targets,
   - `Enforcement warnings: -B`
   - If the reported delta is ≥ 0, the task is rejected and re-planned for a net-negative outcome.
 - **"More with less" north star**: every edit is an opportunity to remove, unify, or replace with a canonical contract. Cosmetic changes without reduction are FORBIDDEN.
+- **Structural tooling is mandatory**: cross-file propagation requires `scope` for blast radius and `ast-grep` for structural rewrite. Serena should be used as well when project-aware symbol operations are available and correctly configured.
+- **Zero debt steady state**: `ruff`, `pyrefly`, enforcement checks, and `pytest` must be zero across all affected projects before a refactor task can be considered complete, even when failures predate the current batch.
 
 ## Instructions
 
@@ -67,7 +69,7 @@ make PROJECTS="flext-core flext-auth flext-cli" check
 
 - `make check`
 - `make test`
-- `make validate`
+- `make val`
 - `make PROJECT=<name> check`
 - `make PROJECTS="proj-a proj-b" check`
 
@@ -103,8 +105,34 @@ Before touching any code:
 
 - Read the FULL file(s) to be refactored
 - Map the import graph - what imports this file? What does it import?
+- Run `scope status` first, and `scope workspace index` for multi-project work.
+- If Serena is available, activate/check the `flext` project before relying on Serena symbol operations.
+- Use `scope refs <symbol>` / `scope callers <symbol>` to define blast radius before editing.
 - Use `sg --pattern 'from flext_core.$MOD import $$$' --lang python` (ast-grep) to find all consumers — NEVER `grep -rn` for code structure
 - Identify the tier of the module being refactored
+
+### Step 1.1: AST-Grep Syntax Discipline
+
+Use `ast-grep` structurally, not as a blind text replacer.
+
+- Start with `sg --pattern '<pattern>' --lang python <path>` to inspect matches before any rewrite.
+- Prefer patterns that encode syntax roles, for example:
+   - `$NAME` for a single node
+   - `$$$ARGS` for variadic argument lists
+   - `$$$BODY` for repeated statements
+- Narrow the path scope first; never run a broad workspace rewrite before blast-radius analysis.
+- After confirming the match set, apply the smallest structural rewrite possible.
+- Re-run `scope refs` or `scope callers` after the rewrite to confirm propagation is complete.
+- Keep `sgconfig.yml` and `.ast-grep/` rules as references for syntax and testability.
+
+Example audit flow:
+
+```bash
+scope refs FlextCoreModels.TargetOracle.ExecuteResult --workspace
+sg --pattern 'ExecuteResult($$$ARGS)' --lang python flext-target-oracle/src flext-target-oracle/tests
+sg --pattern 'ExecuteResult($$$ARGS)' --rewrite 'm.TargetOracle.ExecuteResult($$$ARGS)' --lang python flext-target-oracle/src flext-target-oracle/tests
+scope refs FlextCoreModels.TargetOracle.ExecuteResult --workspace
+```
 
 ### Step 2: Make Changes in Tier Order (Bottom-Up)
 
@@ -156,12 +184,14 @@ make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_MODULE.py -v -k test_s
 ### Step 5: Extended Validation (before commits)
 
 ```bash
-# Full validation: lint + format + type-check + complexity + docstrings + security + test
-make validate
+# Full extended validation gate
+make val
 
-# Optional auto-fix before validate:
-make validate FIX=1
+# Optional auto-fix before validation:
+make val FIX=1
 ```
+
+If a shared contract changed, widen validation until every affected project returns to zero `ruff`, `pyrefly`, enforcement, and `pytest` failures.
 
 ---
 
@@ -170,13 +200,13 @@ make validate FIX=1
 | Target          | What It Does                                               |
 | --------------- | ---------------------------------------------------------- |
 | `make help`     | Show available standardized commands                       |
-| `make setup`    | Install dependencies and hooks                             |
+| `make boot`     | Install dependencies and hooks                             |
 | `make check`    | Fast quality gate (ruff + format check + pyrefly + bandit) |
-| `make security` | Security scan gate                                         |
-| `make format`   | Code formatting                                            |
+| `make scan`     | Security scan gate                                         |
+| `make fmt`      | Code formatting                                            |
 | `make docs`     | Build docs                                                 |
 | `make test`     | Pytest with coverage gate                                  |
-| `make validate` | Extended non-lint validation (`FIX=1` optional)            |
+| `make val`      | Extended non-lint validation (`FIX=1` optional)            |
 | `make clean`    | Clean artifacts                                            |
 
 ---
@@ -308,20 +338,20 @@ grep -rn "from flext_core.MODULE" --include='*.py' flext-*/src/
 make PROJECT=flext-core check
 
 # Auto-fix path:
-make validate FIX=1
+make val FIX=1
 
 # For format issues:
-make format
+make fmt
 ```
 
 ### Type Check Errors (pyrefly)
 
 ```bash
 # Run standardized validation gate:
-make PROJECT=flext-core validate
+make PROJECT=flext-core val
 
 # With auto-fix first:
-make PROJECT=flext-core validate FIX=1
+make PROJECT=flext-core val FIX=1
 ```
 
 ### Test Failures

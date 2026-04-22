@@ -38,7 +38,7 @@ from __future__ import annotations
 
 import asyncio
 
-from flext_core import m, p, r, t
+from flext_core import m, p, r, t, u
 
 
 class User(m.Value):
@@ -67,7 +67,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 
-from flext_core import m, p, r, t
+from flext_core import m, p, r, t, u
 
 
 class User(m.Value):

@@ -25,6 +25,7 @@ description: Use when running workspace-wide maintenance tasks across all FLEXT 
 - Reports output to `.reports/maintenance--json--<slug>.json`.
 - Exit 0 = all checks pass, exit 1 = violations found.
 - Each script must be standalone (stdlib + PyYAML only, no flext_core imports).
+- Workspace maintenance work must preserve or restore zero `ruff`, `pyrefly`, enforcement, and `pytest` debt across all affected projects before completion.
 
 ## Instructions
 
@@ -41,7 +42,8 @@ description: Use when running workspace-wide maintenance tasks across all FLEXT 
 3. Run specific maintenance checker with `--help` first, then default (dry-run) mode.
 4. Review the JSON report in `.reports/` or the ANSI terminal output.
 5. If fixes are needed, re-run with `--apply` to mutate state.
-6. Verify: `make validate VALIDATE_SCOPE=workspace` for workspace-level inventory.
+6. Verify: `make val VALIDATE_SCOPE=workspace` for workspace-level inventory.
+7. Do not stop while affected projects still carry non-zero quality or enforcement debt.
 
 ## Examples
 

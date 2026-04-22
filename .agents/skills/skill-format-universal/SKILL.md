@@ -31,6 +31,7 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 - Keep body operational and evidence-backed with repository paths and runnable checks.
 - Keep names aligned with directory names under `.agents/skills/<name>/SKILL.md`.
 - Keep policy text aligned with `AGENTS.md` (canonical), do not invent parallel policy.
+- Operational skills that govern refactoring, navigation, routing, validation, or automation must explicitly state mandatory tooling and execution law when applicable: Scope availability/freshness, Serena setup, `ast-grep` for structural propagation, MCP when configured, impact analysis before edit, and zero-debt gate expectations.
 - Use exactly these body sections for project consistency:
   - `## Scope`
   - `## References`
@@ -47,6 +48,7 @@ description: Canonical format for project SKILL.md files using Anthropic standar
 - Prefer project anchors like `flext-core/src/flext_core/result.py` over generic text.
 - Add a verification block with commands that can be run as-is.
 - Include at least one Good and one Bad code/example pair with a "Why bad" explanation.
+- For workflow/routing/refactor skills, document the required preflight tools and the completion condition for propagation and zero open gate debt.
 - For `lib-*` skills, include concrete declarations (classes/methods) and subproject usage map.
 - For `rules-*` skills, include concrete file anchors in target directory and enforceable grep checks.
 - For skills with `rules.yml`, keep rule metadata in flat keys only (`fix_auto`, `fix_type`, `fix_file`, `fix_script`, `fix_instruction`, `fix_description`).

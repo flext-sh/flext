@@ -11,14 +11,15 @@ Canonical governance: [`AGENTS.md`](../AGENTS.md)
 ```
 LOAD ORDER (highest authority first):
 1. AGENTS.md              — FLEXT canonical governance (SSOT)
-2. .agents/skills/        — FLEXT path-scoped skills (80 skills)
-3. .github/copilot-instructions.md — pointer only → AGENTS.md
-4. ~/.claude/CLAUDE.md    — universal user profile + GSD
-5. ~/.claude/rules/       — language-level rules (python, rust, ts, k8s)
-6. ~/.copilot/agents/     — user-level agents (CLEAN — see §4)
-7. ~/.copilot/skills/     — user-level skills (manifest only)
-8. ~/.agents/skills/      — user-level unique skills (4 skills)
-9. ~/.vscode/agent-plugins/ — installed plugin repos (see §3)
+2. .agents/skills/        — FLEXT path-scoped skills (51 skills)
+3. .github/prompts/       — workspace prompts for high-intensity task modes
+4. .github/copilot-instructions.md — pointer only → AGENTS.md
+5. ~/.claude/CLAUDE.md    — universal user profile + GSD
+6. ~/.claude/rules/       — language-level rules (python, rust, ts, k8s)
+7. ~/.copilot/agents/     — user-level agents (CLEAN — see §4)
+8. ~/.copilot/skills/     — user-level skills (manifest only)
+9. ~/.agents/skills/      — user-level unique skills (4 skills)
+10. ~/.vscode/agent-plugins/ — installed plugin repos (see §3)
 ```
 
 ---
@@ -27,9 +28,10 @@ LOAD ORDER (highest authority first):
 
 | Surface | Path | Count | Status |
 |---------|------|-------|--------|
-| FLEXT Skills | `.agents/skills/` | 80 skills | ✅ Canonical |
-| GitHub Prompts | `.github/prompts/` | 1 prompt | ✅ OK |
+| FLEXT Skills | `.agents/skills/` | 51 skills | ✅ Canonical |
+| GitHub Prompts | `.github/prompts/` | 1 prompt | ✅ Default refactor directive |
 | Copilot Instructions | `.github/copilot-instructions.md` | pointer | ✅ OK |
+| Serena Project Config | `.serena/project.yml` | 1 config | ✅ Present |
 | Cline Rules | `.clinerules` | pointer | ✅ OK |
 | Windsurf Rules | `.windsurfrules` | pointer | ✅ OK |
 | Codex | `codex.md` | pointer | ✅ OK |
@@ -129,6 +131,12 @@ Recommended MCP servers for FLEXT workflows:
 
 > Note: Apply only when GitHub token is available and MCP use is intentional.
 
+### Serena Status
+
+- `.serena/project.yml` is present and configured for project `flext` with Python language support.
+- When Serena-backed tooling is available, agents must activate/setup the `flext` project correctly before relying on Serena navigation or rename flows.
+- Serena setup is not optional for Serena-dependent tasks; half-configured usage is treated as a tooling failure that must be surfaced explicitly.
+
 ---
 
 ## §6 Deduplication Findings: Sub-Repo Docs
@@ -150,6 +158,16 @@ Add to `.agents/skills/` ONLY when:
 1. The skill is FLEXT-domain-specific (MRO, pydantic governance, etc.)
 2. The skill needs to be available to Claude Code (not just VS Code Copilot)
 3. The skill cannot be sourced from any installed plugin
+
+---
+
+## §8 Prompt Routing
+
+Use workspace prompts only for task-mode amplification, never as an alternate policy source.
+
+- `flext-aggressive-scale-refactor.prompt.md` is the default high-intensity mode for requests about simplification, deduplication, pyrefly/ruff reduction, contract centralization, facade migration, MRO cleanup, or aggressive Pydantic v2 standardization.
+- Prompts do not override `AGENTS.md`; they operationalize it for a specific execution mode.
+- When that prompt is selected, agents still load `AGENTS.md` first, then path-scoped skills, then the prompt.
 
 ---
 

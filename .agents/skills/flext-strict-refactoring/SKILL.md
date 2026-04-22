@@ -37,12 +37,15 @@ description: Strict cleanup rules for removing duplication, stale policy text, a
 - Keep terminology consistent across related files.
 - Delete stale sections that conflict with active policy.
 - Preserve repository-relative paths in examples and references.
+- When AGENTS or a core workflow/prompt/skill adds stricter execution law, propagate that change through the remaining relevant pointer and meta-skill surfaces in the same governance cycle.
+- Meta-skills and pointer docs must reinforce mandatory impact analysis, surgical necessity, complete propagation, and required tool usage without copying AGENTS wholesale.
 
 ## Instructions
 
 - Compare candidate content against canonical source before copying.
 - Prefer referencing canonical files over re-explaining identical policy.
 - Keep each skill focused on domain-specific action, not global boilerplate.
+- When normalizing docs, prioritize the still-unupdated meta surfaces first: pointer entrypoints, formatting rules, routing manifests, and documentation/refactor governance skills.
 
 ```bash
 rg -n "single source of truth|Canonical source|AGENTS.md" AGENTS.md .agents/skills/*/SKILL.md
@@ -52,8 +55,9 @@ rg -n "single source of truth|Canonical source|AGENTS.md" AGENTS.md .agents/skil
 
 1. Detect duplicated sections across docs/skills.
 2. Decide canonical location for each concept.
-3. Remove duplicates and replace with pointers.
-4. Verify section completeness and coherence.
+3. Propagate new mandatory execution rules to remaining meta surfaces that drive future edits.
+4. Remove duplicates and replace with pointers.
+5. Verify section completeness and coherence.
 
 ## Examples
 
@@ -80,12 +84,13 @@ Why bad: duplicated policy rapidly becomes inconsistent.
 Make gates:
 
 - `make check PROJECT=flext-core` — verify no regressions after refactoring
-- `make validate PROJECT=flext-core` — complexity + docstring gates
+- `make val PROJECT=flext-core` — complexity + docstring gates
 - `make test PROJECT=flext-core` — test suite must pass after any refactor
-- `make validate VALIDATE_SCOPE=workspace` — workspace-level validation
+- `make val VALIDATE_SCOPE=workspace` — workspace-level validation
 
 Policy checks:
 
 - `rg -n "TODO|TBD|placeholder" .agents/skills/*/SKILL.md || true`
 - `rg -n "(^|[\"'`])/(Users|home)/" .agents/skills/\*/SKILL.md || true`
 - `rg -n "Canonical source:`AGENTS.md`|single source of truth" AGENTS.md codex.md .github/copilot-instructions.md .gemini/styleguide.md`
+- `rg -n "scope|Serena|ast-grep|MCP|zero.*ruff|zero.*pyrefly|enforcement|pytest" AGENTS.md codex.md .agents/README.md .agents/skills/*.md .github/prompts/*.md`

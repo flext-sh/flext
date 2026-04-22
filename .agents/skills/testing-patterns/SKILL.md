@@ -41,6 +41,7 @@ description: Testing discipline for Python/pytest in FLEXT — public-API-only a
 - **No compatibility wrappers / legacy aliases** in test code. Legacy test patterns are DELETED and replaced with canonical patterns.
 - **All 4 linters clean**: every test change passes ruff + mypy + pyright + pyrefly with ZERO errors. Per-line suppressions require real citations + business necessity. Global suppressions are FORBIDDEN.
 - **Never delete failing tests to make CI pass** — fix the code instead.
+- **Refactor alignment**: when production code is simplified by removing wrappers, converters, or compatibility layers, tests must be rewritten in the same cycle to target the remaining public behavior and shared `conftest.py` fixtures rather than the removed internals.
 
 ## Instructions
 
@@ -338,4 +339,4 @@ Why bad: no scenario described; `assert settings` is trivially true for any non-
 - `rg -n '@patch|MagicMock\(|Mock\(' --type py tests/` → every remaining hit MUST resolve to a true I/O boundary; otherwise rewrite.
 - `rg -n "^(import pydantic|from pydantic|from pydantic_core)" --type py tests/ --glob '!**/.venv/**'` → zero hits.
 - `PYTHONWARNINGS=error::UserWarning pytest -q` → clean exit.
-- `make PROJECT=<name> test` + `make PROJECT=<name> validate` — 0 errors, 0 warnings.
+- `make PROJECT=<name> test` + `make PROJECT=<name> val` — 0 errors, 0 warnings.

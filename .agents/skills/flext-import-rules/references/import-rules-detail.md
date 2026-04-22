@@ -414,6 +414,8 @@ if TYPE_CHECKING:
 
 def get_container() -> p.Container:  # Annotation works, no runtime import
     ...
+```
+
 ```python
 # ❌ FORBIDDEN — runtime class body still needs the symbol to exist
 class MyModel(FlextModels.Base):  # CRASHES — FlextModels not available at runtime
@@ -687,17 +689,15 @@ Business-specific projects use structural composition combining Domains and Plat
 > Every namespace mapped as "Full Access" is available transparently on the project's alias.
 > If `p = AlgarOudMigProtocols`:
 >
-> - `p.AlgarOudMig.MutableEntryamespace)
-> - `p.Ldap.LdapEntryited from`FlextLdapProtocols`)
-> - `p.Ldif.Entryited transitively from`FlextLdifProtocols` -> `FlextLdapProtocols`)
+> - `p.AlgarOudMig.MutableEntry` (declared on `AlgarOudMigProtocols`)
+> - `p.Ldap.LdapEntry` (inherited from `FlextLdapProtocols`)
+> - `p.Ldif.Entry` (inherited transitively from `FlextLdifProtocols` through `FlextLdapProtocols`)
 > - `p.Cli.Command` (Inherited from `FlextCliProtocols`)
 > - `p.Service` (Inherited transitively from `FlextProtocols` -> core root)
 >
 > **You do NOT need to import the parent aliases** (like `ldif_p` or `cli_p`). Simply import the local alias (`from .protocols import p`) and navigate the namespaces `p.Ldif.*`, `p.Cli.*`.
 
 ---
-
-## Verification
 
 ## Rule 13: Library Abstraction Boundaries (SUPREME LAW)
 
@@ -716,7 +716,7 @@ Business-specific projects use structural composition combining Domains and Plat
 
 ```python
 # ❌ ALL FORBIDDEN in flext-cli/src/, flext-ldap/src/, tests/, examples/, scripts/
-from pydantic import BaseModel, u.Field  # Use m.*
+from pydantic import BaseModel, Field  # Use m.*
 from pydantic_settings import BaseSettings  # Use m.* or c.*
 from dependency_injector import containers, providers  # Use u.Container.*
 from structlog import get_logger  # Use u.Logger
@@ -731,17 +731,22 @@ import yaml  # Use u.load_yaml()
 # ✅ CORRECT — Always use abstractions
 from flext_core import m, c, u, p, t, r
 
+
 # In flext-cli/src/
 class FlextCliSettings(m.Settings):
     """Use m.Settings from flext-core."""
+
     default_timeout: int = c.CLI.DEFAULT_TIMEOUT_SECONDS
-    
+
+
 # In flext-cli/tests/
 from tests import c, m, p, t, u  # Test abstractions
 
 # In flext-cli/examples/
 from examples import c, m  # Example abstractions
 ```
+
+## Verification
 
 ### Enforcement
 

@@ -52,7 +52,7 @@ from __future__ import annotations
 
 from dependency_injector import containers, providers, wiring
 
-from flext_core import t
+from flext_core import m, t
 
 
 class u:
@@ -164,7 +164,7 @@ Make gates:
 
 - `make check PROJECT=flext-core` — lint + type gates verify DI import boundaries
 - `make test PROJECT=flext-core` — DI integration tests
-- `make validate PROJECT=flext-core` — complexity gates
+- `make val PROJECT=flext-core` — complexity gates
 
 Pattern checks:
 

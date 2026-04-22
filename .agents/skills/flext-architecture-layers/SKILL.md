@@ -35,6 +35,7 @@ Layer map (source-aligned reference for implementation work):
 - `L1 Foundation and Bridge`: `result.py`, `exceptions.py`, `registry.py`, `runtime.py`.
 - `L0 Pure Contracts`: `constants.py`, `typings.py`, `protocols.py`.
 - Public facade roots own exactly one local namespace branch; private `_models/*` and `_utilities/*` classes are composed through MRO, not re-wrapped as nested flat classes.
+- Broad simplification and deduplication work must push repeated contracts, constants, and validators downward toward `L0` and stable `L1`/`L2` facades instead of creating new orchestration-layer adapters.
 - **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
 
 ### Service Facade Files (L2 Project-Level)
@@ -64,27 +65,40 @@ The facade (`api.py`) depends on services (`services/`) which depend on contract
 ## Examples
 
 ```python
-# Good: orchestration consumes bridge + public alias
+from __future__ import annotations
+
 from flext_core import r, u
 
-bridge, services, resources = u.DependencyIntegration.create_layered_bridge()
-result = r[bool].ok(True)
+
+def build_bridge_result() -> tuple[object, object, object, object]:
+    """Consume the bridge through canonical runtime utilities."""
+    bridge, services, resources = u.DependencyIntegration.create_layered_bridge()
+    result = r[bool].ok(True)
+    return bridge, services, resources, result
 ```
 
 ```python
-# Bad: direct third-party dependency import in application code
+from __future__ import annotations
+
 from dependency_injector import containers
 
-container = containers.DynamicContainer()
+
+def build_container() -> containers.DynamicContainer:
+    """Illustrate the forbidden direct dependency on the DI framework."""
+    return containers.DynamicContainer()
 ```
 
 Why bad: bypasses `runtime.py` and `container.py`, increases coupling, and breaks inward-only layering.
 
 ```python
-# Bad: low-level contracts importing service layer
+from __future__ import annotations
+
 from flext_core import s
 
-_ = s  # used at call site, not in this snippet
+
+def read_service_alias() -> object:
+    """Illustrate the forbidden layer inversion."""
+    return s
 ```
 
 Why bad: inverts `L1 -> L2` direction and violates the documented architecture topology.

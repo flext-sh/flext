@@ -39,6 +39,7 @@ description: Use when creating or editing documentation across AGENTS.md, skills
 - Agent-specific files remain pointers, not policy mirrors.
 - Never duplicate governance rules across multiple agent files.
 - Pointer files must remain concise and reference scoped skills instead of restating them.
+- Pointer files must reflect current mandatory routing for prompts, Scope, Serena, `ast-grep`, MCP, and zero-debt quality gates by pointing to the canonical surfaces that define them.
 
 ## Instructions
 
@@ -47,13 +48,15 @@ description: Use when creating or editing documentation across AGENTS.md, skills
 - `.cursor/rules/flext.mdc` keeps frontmatter + brief pointer instructions only.
 - `.clinerules`, `.windsurfrules`, `.continue/rules/flext.md` remain concise bridge docs.
 - `CONVENTIONS.md` and `codex.md` behave as entrypoint pointers for their tools.
+- `.agents/README.md` should point to `AGENTS.md`, `.agents/INSTRUCTION_SURFACE.md`, and prompt-routing surfaces rather than restating policy.
 
 ## Workflow
 
 1. **Pre-scan**: inventory pointer files and identify drift from canonical wording.
 2. **Remediation**: update references and remove duplicated policy content.
-3. **Verification**: run scanner checks for `AGENTS.md` presence and legacy reference absence.
-4. **Drift prevention**: keep checks in CI/automation and re-run after every governance edit.
+3. **Propagation**: when AGENTS or a core skill/prompt becomes stricter, update remaining pointers in the same cycle.
+4. **Verification**: run scanner checks for `AGENTS.md` presence and legacy reference absence.
+5. **Drift prevention**: keep checks in CI/automation and re-run after every governance edit.
 
 ## Examples
 

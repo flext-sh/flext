@@ -5,6 +5,7 @@ Canonical instruction-loading policy for this repository is defined in:
 - `AGENTS.md` (normative governance)
 - `CLAUDE.md` (load-order pointer)
 - `.agents/INSTRUCTION_SURFACE.md` (single manifest for instruction sources)
+- `.github/prompts/flext-aggressive-scale-refactor.prompt.md` (task-mode prompt for broad simplification/refactor work)
 
 This directory contains only project agent assets.
 
@@ -12,6 +13,14 @@ This directory contains only project agent assets.
 
 - Skills: `.agents/skills/`
 - Manifest: `.agents/INSTRUCTION_SURFACE.md`
+- Prompt: `.github/prompts/flext-aggressive-scale-refactor.prompt.md`
+
+## Required Tooling Surfaces
+
+- Scope routing and freshness rules live in `AGENTS.md` and `.agents/skills/code-navigation/SKILL.md`.
+- Serena setup expectations live in `AGENTS.md` and `.serena/project.yml`.
+- Structural propagation rules for `ast-grep` live in `AGENTS.md` and `.agents/skills/flext-refactoring-workflow/SKILL.md`.
+- MCP routing expectations live in `AGENTS.md` and `.vscode/mcp.json`.
 
 ## Non-Canonical Instruction Trees (must not be loaded)
 

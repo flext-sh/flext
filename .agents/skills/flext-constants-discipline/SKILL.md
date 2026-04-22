@@ -59,6 +59,9 @@ Good — closed token set:
 
 ```python
 # flext-core/_constants/base.py
+from enum import StrEnum
+
+
 class FlextConstantsBase:
     class Encoding(StrEnum):
         DEFAULT = "utf-8"
@@ -70,6 +73,7 @@ Why good: enum discipline, namespace access via `c.Encoding.DEFAULT`, no tuple s
 Good — read-only map:
 
 ```python
+from collections.abc import Mapping
 from types import MappingProxyType
 from typing import Final
 
@@ -86,6 +90,9 @@ Why good: immutable, type-annotated, namespaced.
 Good — membership frozen set:
 
 ```python
+from typing import Final, Literal
+
+
 class FlextConstantsBase:
     TRUE_TOKENS: Final[frozenset[Literal["1", "true", "yes", "on"]]] = frozenset({
         "1",
@@ -109,6 +116,9 @@ Why bad: mutable at import; consumers can patch; no type guarantees; violates co
 Bad — ClassVar tuple enum surrogate:
 
 ```python
+from typing import ClassVar
+
+
 class Attrs:
     USER_IDS: ClassVar[tuple[str, ...]] = (
         "cn",

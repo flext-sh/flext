@@ -100,14 +100,14 @@ Subproject settings:
 ```python
 from __future__ import annotations
 
-from flext_core import FlextSettings, c
+from flext_core import FlextSettings, m
 
 
 @FlextSettings.auto_register("api")
 class FlextApiSettings(FlextSettings):
     model_config = m.SettingsConfigDict(env_prefix="FLEXT_API_", extra="ignore")
-    base_url: str = "http://localhost:8080"
-    timeout: float = 30.0
+    base_url: str
+    timeout: float
 ```
 
 ## MRO Composition
@@ -117,14 +117,14 @@ Integration projects use dual-inheritance for settings, same as models:
 ```python
 from __future__ import annotations
 
-from flext_core import FlextSettings, c
+from flext_core import FlextSettings, m
 
 
 class FlextTargetOracleSettings(FlextSettings):
     model_config = m.SettingsConfigDict(
         env_prefix="FLEXT_TARGET_ORACLE_", extra="ignore"
     )
-    batch_size: int = 1000
+    batch_size: int
 ```
 
 **Auto-MRO env source resolution**: `settings_customise_sources` in FlextSettings base auto-discovers parent env prefixes from MRO. Priority: init > leaf prefix > parent prefixes (MRO order) > dotenv > secrets.
@@ -161,14 +161,14 @@ Good — FlextSettings inheritance with auto-register:
 ```python
 from __future__ import annotations
 
-from flext_core import FlextSettings, c
+from flext_core import FlextSettings, m
 
 
 @FlextSettings.auto_register("auth")
 class FlextAuthSettings(FlextSettings):
     model_config = m.SettingsConfigDict(env_prefix="FLEXT_AUTH_", extra="ignore")
-    secret_key: str = "change-me"
-    algorithm: str = "HS256"
+    secret_key: str
+    algorithm: str
 ```
 
 Bad — m.Value with custom singleton:

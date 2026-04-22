@@ -31,7 +31,7 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 - **Never** use v1 API: `@validator`, `.dict()`, `.json()`, `class Config:`, `from_orm`, `orm_mode`.
 - **Critical violation**: never use `model_rebuild(...)` to patch unresolved annotations.
 - Models must resolve all references at definition time via explicit imports/type aliases and stable declaration order.
-- Use `make validate` as enforcement gate (with `PROJECT`/`PROJECTS` selectors). Auto-fix path is `make validate FIX=1`.
+- Use `make val` as enforcement gate (with `PROJECT`/`PROJECTS` selectors). Auto-fix path is `make val FIX=1`.
 - Use `TypeAdapter` from pydantic for validating non-model types — never ad-hoc casting with `isinstance` chains.
 - Set `ConfigDict(extra="forbid")` on strict boundary models, `extra="ignore"` on flexible internal models.
 - Use `u.Field(description=...)` with explicit `description=` on all public model fields.
@@ -48,7 +48,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from flext_core import c, m, t
+from flext_core import c, m, t, u
 
 
 class FlextProcessingModels(m):
@@ -146,7 +146,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from flext_core import m, t
+from flext_core import m, t, u
 
 
 class FlextGrpcModels(m):
@@ -161,7 +161,7 @@ class FlextGrpcModels(m):
             host: Annotated[t.NonEmptyStr, u.Field(description="Server host")]
             port: Annotated[int, u.Field(description="Server port")]
 
-            @property
+            @u.computed_field
             def endpoint(self) -> str:
                 """Computed endpoint from host:port."""
                 return f"{self.host}:{self.port}"
@@ -223,7 +223,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from flext_core import m, t
+from flext_core import m, t, u
 
 
 class DemoModel(m.ArbitraryTypesModel):
@@ -255,8 +255,8 @@ instance_json = DemoModel.model_validate_json(b'{"name": "test"}')
 8. Run standardized validation automation:
 
 ```bash
-make validate PROJECT=<name>
-make validate PROJECT=<name> FIX=1
+make val PROJECT=flext-core
+make val PROJECT=flext-core FIX=1
 ```
 
 ## Examples
@@ -299,20 +299,13 @@ class FlextProcessingWorkflow(m):
 
 ### Bad: v1-style validator
 
-```python
-from __future__ import annotations
-
-from flext_core import u
-
+```text
+from pydantic import validator
 
 class _BadExample:
-    """Illustrates the v1 validator anti-pattern."""
-
-    # WRONG — @validator is pydantic v1, use @u.field_validator
-    @u.field_validator("name", mode="before")
+    @validator("name", pre=True)
     @classmethod
     def validate_name(cls, v: str) -> str:
-        """Use u.field_validator with mode='before', not @validator."""
         return v.strip()
 ```
 
@@ -320,62 +313,29 @@ class _BadExample:
 
 ### Bad: .dict() / .json()
 
-```python
-from __future__ import annotations
-
-from typing import Annotated
-
-from flext_core import m, t
-
-
-class DemoModel(m.ArbitraryTypesModel):
-    """Model for serialization anti-pattern illustration."""
-
-    name: Annotated[t.NonEmptyStr, u.Field(description="Name")]
-
-
+```text
 model = DemoModel(name="test")
-# WRONG — v1 serialization methods are deprecated
-# data = model.dict()  → use model.model_dump()
-# text = model.json()  → use model.model_dump_json()
-data = model.model_dump()
-text = model.model_dump_json()
+data = model.dict()
+text = model.json()
 ```
 
 ### Bad: class Config instead of ConfigDict
 
-```python
-from __future__ import annotations
-
-from flext_core import c, m
-
-
+```text
 class MyModel(m.BaseModel):
-    """WRONG — v1 Config class. Use model_config = m.ConfigDict(...)."""
-
-    model_config = m.ConfigDict(extra="forbid")
+    class Config:
+        extra = "forbid"
 ```
 
 **Why bad**: `class Config:` is v1 pattern. Use `model_config = ConfigDict(extra="forbid")`.
 
 ### Bad: model_rebuild patching
 
-```python
-from __future__ import annotations
-
-from typing import Annotated
-
-from flext_core import m, t
-
-
+```text
 class MyModel(m.ArbitraryTypesModel):
-    """Model that must NOT use model_rebuild."""
-
     filters: Annotated[t.NonEmptyStr, u.Field(description="Query filter")]
 
-
-# CRITICAL VIOLATION — model_rebuild is BANNED
-# MyModel.model_rebuild()  # Never do this
+MyModel.model_rebuild()
 ```
 
 **Why banned**: `model_rebuild()` hides invalid declaration order. Fix the model graph so all symbols exist at definition time.
@@ -387,7 +347,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from flext_core import m, t
+from flext_core import m, t, u
 
 
 class QueryModel(m.ArbitraryTypesModel):
@@ -431,8 +391,8 @@ rg -n "class Config:" --glob "**/*.py" flext-core/src/
 rg -n "model_rebuild\(" --glob "**/*.py" flext-core/src/ flext-core/tests/ flext-auth/src/ flext-api/src/ flext-cli/src/ flext-grpc/src/ flext-ldif/src/ flext-web/src/
 
 # Skill automation gate
-make validate PROJECT=<name>
-make validate PROJECT=<name> FIX=1
+make val PROJECT=flext-core
+make val PROJECT=flext-core FIX=1
 
 # Confirm dependency version
 rg "pydantic>=" flext-core/pyproject.toml

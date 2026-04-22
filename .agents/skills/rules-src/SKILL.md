@@ -77,7 +77,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from flext_core import c, m, t
+from flext_core import c, m, t, u
 
 
 class FlextCliSettings(m.ArbitraryTypesModel):
@@ -99,13 +99,13 @@ Bad (Library Abstraction Violation):
 ```python
 from __future__ import annotations
 
-from pydantic import BaseModel, u.Field
+from pydantic import BaseModel, Field
 
 
 class CliSettings(BaseModel):
     """FORBIDDEN in consuming projects — bypasses flext-core abstraction."""
 
-    timeout: int = u.Field(default=30, description="Timeout")
+    timeout: int = Field(default=30, description="Timeout")
 ```
 
 Why bad: Bypasses flext-core's pydantic abstraction. Should use `m.ArbitraryTypesModel` from flext-core instead.
@@ -113,18 +113,15 @@ Why bad: Bypasses flext-core's pydantic abstraction. Should use `m.ArbitraryType
 Bad (Invalid Import):
 
 ```python
-from __future__ import annotations
-
-from flext_core import m, t
+from flext_core._utilities.validation import normalize_value
 
 
-class Example(m.BaseModel):
-    """Import only what you need — never wildcard-style c, m, p, r, t, u."""
-
-    name: t.NonEmptyStr
+def parse_name(raw: str) -> str:
+    """FORBIDDEN — private imports bypass the public facade contract."""
+    return normalize_value(raw)
 ```
 
-Why bad: wildcard-style import makes source behavior fragile and hard to analyze.
+Why bad: private-module imports bypass the public facade and make source behavior fragile and harder to evolve safely.
 
 ## Verification
 

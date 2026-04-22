@@ -14,6 +14,10 @@ Scope is a CLI tool that gives you structural code intelligence without reading 
 
 **Check first:** Run `scope status` at the start of any session. If a `.scope/` directory exists, Scope is available.
 
+**Mandatory rule:** If Scope is available, using it is not optional for cross-file discovery, call-site analysis, blast-radius estimation, architecture orientation, or signature-change work. Skipping Scope on those tasks is a policy failure, not a preference.
+
+**Freshness rule:** If the task spans multiple projects, use `scope workspace index` before relying on workspace-wide structural queries. After structural edits, refresh with `scope index` or `scope workspace index` so later queries reflect the current state.
+
 **Use Scope INSTEAD of grep/find when you need to:**
 
 - Understand a class or function before editing it → `scope sketch`
@@ -110,6 +114,14 @@ scope callers <method>         → Read each call site → EDIT each
 
 Total: 1 scope command gives you every file to change. No need for grep.
 
+### Structural propagation — "Rename, move, or rewrite repeated syntax"
+
+```
+scope refs <symbol>            → sg run/apply on the structural pattern → Re-run scope refs
+```
+
+Total: one structural audit, one structural rewrite, one confirmation pass. Use `ast-grep` for the rewrite; Scope tells you where and how far the change goes.
+
 ## Command Reference
 
 | Command                         | What it returns                                  | Tokens    | When to use                       |
@@ -142,6 +154,7 @@ If you've run 3 scope commands and haven't edited a file yet, **stop navigating 
 5. **Don't skip `scope map`** on complex tasks — one call replaces 5-17 file reads for orientation
 6. **Don't ignore line numbers** in scope output — they point you exactly where to read/edit
 7. **Don't re-index unnecessarily** — `scope status` tells you if it's stale
+8. **Don't claim propagation is complete without rerunning a scope query** — re-check callers/refs after the edit
 
 ## Workspace Support
 
@@ -161,5 +174,7 @@ Use `--projects <name>` to target a specific member without changing directory.
 
 - `scope status` — check if index is stale
 - `scope index` — incremental re-index (< 1s for a few files)
+- `scope workspace index` — refresh workspace-wide indexes before or during multi-project work
 - `scope index --watch` — auto re-index on file changes
+- `scope workspace index --watch` — preferred for long-running multi-project refactors
 - Line numbers in scope output reflect the last index run. If they look wrong, re-index first.

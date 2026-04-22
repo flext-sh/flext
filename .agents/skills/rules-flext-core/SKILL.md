@@ -129,7 +129,7 @@ Make gates (run after any flext-core change):
 
 - `make check PROJECT=flext-core` — lint + format + type + security
 - `make check PROJECT=flext-core CHECK_GATES=type` — type-check only
-- `make validate PROJECT=flext-core` — complexity + docstring gates
+- `make val PROJECT=flext-core` — complexity + docstring gates
 - `make test PROJECT=flext-core` — full test suite
 
 Pattern checks:

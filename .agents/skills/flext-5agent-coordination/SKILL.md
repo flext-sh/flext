@@ -326,11 +326,11 @@ git push
 # If conflict in YOUR file: resolve manually
 git status  # See conflicted files
 # Edit file, resolve conflict
-git add <file>
+git add flext-core/src/flext_core/protocols.py
 git rebase --continue
 
 # If conflict in ANOTHER agent's file: accept their version
-git checkout --theirs <file>
-git add <file>
+git checkout --theirs flext-core/src/flext_core/protocols.py
+git add flext-core/src/flext_core/protocols.py
 git rebase --continue
 ```

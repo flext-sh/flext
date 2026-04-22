@@ -74,7 +74,7 @@ Why bad: empty service stubs obscure runtime behavior and break reproducibility.
 
 Make gates:
 
-- `make validate VALIDATE_SCOPE=workspace` — verify script references in docker configs
+- `make val VALIDATE_SCOPE=workspace` — verify script references in docker configs
 
 File checks:
 

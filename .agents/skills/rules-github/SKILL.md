@@ -69,7 +69,7 @@ Why bad: overly broad trigger often causes unnecessary CI load and unclear inten
 
 Make gates:
 
-- `make validate VALIDATE_SCOPE=workspace` — verify CI workflow references match real scripts
+- `make val VALIDATE_SCOPE=workspace` — verify CI workflow references match real scripts
 - `make check PROJECT=flext-core` — verify CI-referenced gates work
 
 File checks:

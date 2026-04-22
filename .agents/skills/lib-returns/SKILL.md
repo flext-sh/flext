@@ -138,7 +138,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from flext_core import m, r, t
+from flext_core import m, r, t, u
 
 
 class UserModel(m.ArbitraryTypesModel):
@@ -256,7 +256,7 @@ Make gates:
 make check PROJECT=flext-core                  # lint + type gates for result.py
 make check PROJECT=flext-core CHECK_GATES=type # type-check r composition
 make test PROJECT=flext-core                   # railway composition tests
-make validate PROJECT=flext-core               # complexity gates
+make val PROJECT=flext-core                    # complexity gates
 ```
 
 Pattern checks:

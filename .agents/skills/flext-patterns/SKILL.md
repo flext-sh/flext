@@ -44,6 +44,7 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 - **Rule**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
 - **Rule**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features. `u.Field()` with `description`/`title`/`examples` for ALL declarations. Minimize custom validators — prefer built-in constraints (`u.Field(ge=0)`, `StringConstraints()`, `Literal`). `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, wrappers. USE: `@u.computed_field`, `model_post_init`, `u.PrivateAttr`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `u.PrivateAttr`. Nested classes MAY have business methods but ALL properties use `u.Field()`/`u.PrivateAttr`. `models.py`/`_models/` for models ONLY. Result/status booleans use canonical names like `success` and `failure`. If not using a feature — REVIEW and USE it.
 - **Rule**: Failure paths are DSL-first. Prefer `e.fail_*`, `r.fail_op`, `r.fail_exc`, and service-level DSL wrappers over ad-hoc `r.fail("...")` strings in runtime/application code. Use direct `r.fail(...)` only when implementing result primitives or when explicit passthrough payload semantics are required.
+- **Rule**: Delete conversion layers, fallback branches, compatibility shims, and pass-through proxies before introducing any new abstraction. Prefer canonical `flext-core` and `flext-cli` contracts, JSON-capable types, settings, and DSL surfaces over local reinvention.
 
 ## Pattern Catalog
 
@@ -66,28 +67,22 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 Projects providing a main service class use the **MRO service facade pattern**: one facade in `api.py` composing all service mixins from `services/`. A typed base class in `base.py` provides shared infrastructure (settings, logger, container).
 
 ```python
-# api.py — one facade class per module, composing all mixins via MRO
 from __future__ import annotations
 
 from typing import Annotated, override
 
-from flext_core import m, p, r, s, t
-
-
-class FlextObservabilityTraceResult(m.ArbitraryTypesModel):
-    """Trace result model — one model class per domain concept."""
-
-    trace_id: Annotated[t.NonEmptyStr, u.Field(description="Distributed trace id")]
-    span_name: Annotated[t.NonEmptyStr, u.Field(description="Span name")]
+from flext_core import m, p, r, s, t, u
 
 
 class FlextObservabilityTracingMixin:
     """Tracing concern — one mixin per concern, composed via MRO."""
 
     @staticmethod
-    def _build_trace(span_name: t.NonEmptyStr) -> FlextObservabilityTraceResult:
+    def _build_trace(
+        span_name: t.NonEmptyStr,
+    ) -> "FlextObservability.Observability.TraceResult":
         """Trace construction stub for MRO composition."""
-        return FlextObservabilityTraceResult(
+        return FlextObservability.Observability.TraceResult(
             trace_id="trace-1",
             span_name=span_name,
         )
@@ -105,17 +100,29 @@ class FlextObservability(
     FlextObservabilityTracingMixin,
     FlextObservabilityMetricsMixin,
     FlextObservabilityHealthMixin,
-    s[FlextObservabilityTraceResult],
+    s[m.ArbitraryTypesModel],
 ):
     """Facade: single class per module, domain methods inherited via MRO."""
 
     span_name: Annotated[t.NonEmptyStr, u.Field(description="Initial span name")]
 
+    class Observability:
+        """Local domain namespace."""
+
+        class TraceResult(m.ArbitraryTypesModel):
+            """Trace result model — one model class per domain concept."""
+
+            trace_id: Annotated[
+                t.NonEmptyStr,
+                u.Field(description="Distributed trace id"),
+            ]
+            span_name: Annotated[t.NonEmptyStr, u.Field(description="Span name")]
+
     @override
-    def execute(self) -> p.Result[FlextObservabilityTraceResult]:
+    def execute(self) -> p.Result[m.ArbitraryTypesModel]:
         """Domain execution composes mixins through MRO."""
         trace = self._build_trace(self.span_name)
-        return r[FlextObservabilityTraceResult].ok(trace)
+        return r[m.ArbitraryTypesModel].ok(trace)
 ```
 
 **Anti-patterns**:
@@ -189,12 +196,11 @@ Downstream projects inherit parent facade classes to compose namespaces. This av
 Access through the **project runtime alias only**, while preserving the organic nested path emitted by MRO. Use `m.TargetOracle.ExecuteResult`, `u.Infra.parse_semver`, and `c.Tests.ERR_OK_FAILED`. Do not add class-level aliases at the facade root to flatten domain-local symbols. **Simple runtime aliases only** in `__init__.py` (e.g. `c = FlextConstants`, `m = FlextModels`); never `u.Aliases` or any registry.
 
 ```python
-# models.py — inherit parent and keep the organic namespace path
 from __future__ import annotations
 
 from typing import Annotated
 
-from flext_core import m, p, r, t
+from flext_core import m, p, r, t, u
 
 
 class FlextTargetOracleModels(m):
@@ -209,12 +215,13 @@ class FlextTargetOracleModels(m):
             name: Annotated[t.NonEmptyStr, u.Field(description="Resource name")]
 
 
-ExecuteResult = FlextTargetOracleModels.TargetOracle.ExecuteResult
-
-
-def build_result(name: str) -> p.Result[ExecuteResult]:
+def build_result(
+    name: t.NonEmptyStr,
+) -> p.Result[FlextTargetOracleModels.TargetOracle.ExecuteResult]:
     """Runtime usage — access keeps the organic domain path."""
-    return r[ExecuteResult].ok(ExecuteResult(name=name))
+    return r[FlextTargetOracleModels.TargetOracle.ExecuteResult].ok(
+        FlextTargetOracleModels.TargetOracle.ExecuteResult(name=name)
+    )
 ```
 
 ## .new/Swap Protocol for Large Modifications
@@ -537,7 +544,7 @@ Make gates:
 
 - `make check PROJECT=flext-core` — lint + type gates enforce pattern contracts
 - `make test PROJECT=flext-core` — pattern usage exercised by test suite
-- `make validate PROJECT=flext-core VALIDATE_GATES=complexity` — complexity gates
+- `make val PROJECT=flext-core VALIDATE_GATES=complexity` — complexity gates
 
 Pattern checks:
 
