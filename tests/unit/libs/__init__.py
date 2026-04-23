@@ -6,12 +6,6 @@
 from __future__ import annotations
 
 import typing as _t
-from collections.abc import (
-    Mapping,
-    MutableMapping,
-    MutableSequence,
-    Sequence,
-)
 
 from flext_core.lazy import install_lazy_exports
 
