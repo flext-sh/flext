@@ -60,7 +60,7 @@ The project ships CLI helpers inside `examples/` and `docs/QUICK_START.md` for m
 FLEXT Core follows strict layering so that lower tiers never import higher tiers.
 
 - **Tier 0 (Foundation)**: `constants.py`, `typings.py`, `protocols.py` define shared constants, centralized type aliases, and protocol hierarchies.
-- **Tier 1 (Domain facades)**: `models.py`, `utilities.py`, `_models/`, `_utilities/` expose Pydantic models, helpers, and short alias facades (`m`, `u`).
+- **Tier 1 (Domain facades)**: `models.py`, `utilities.py`, `models/`, `_utilities/` expose Pydantic models, helpers, and short alias facades (`m`, `u`).
 - **Tier 2 (Runtime + DI)**: `container.py`, `context.py`, `decorators.py`, `runtime.py`, `service.py` build the `FlextContainer`, `u`, and the structured logging/context bridge.
 - **Tier 3 (Application)**: `dispatcher.py`, `registry.py`, `handlers.py`, `services/` compose the CQRS dispatcher, handler registry, and auto-registered services.
 

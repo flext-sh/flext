@@ -84,7 +84,7 @@ FLEXT-only deltas. Universal rules (rollback, scope, generic tooling, communicat
 
 - Public facade composes ALL its domain subclasses via MRO
 - Example: `class FlextCoreModels(FlextCoreBaseModels, FlextCoreCQRSModels, FlextCoreSettingsModels): pass`
-- `_models/*`, `_utilities/*` files define mixins ONLY; facade composes them in inheritance list
+- `models/*`, `_utilities/*` files define mixins ONLY; facade composes them in inheritance list
 - Manual flat wrapper nesting like `class Docker(tk): pass` inside facade → FORBIDDEN
 - Integration projects (`tap|target|dbt`): dual inheritance `FlextTapLdap(FlextMeltano, FlextLdap)`
 
@@ -129,7 +129,7 @@ After edits, run project-relevant `ruff`, `pyrefly`, and `pytest` gates with evi
 
 - **One Facade Rule**: Each public facade module defines exactly ONE primary facade class plus ONE canonical alias.
 - **Facade Class Naming**: `src/` facades MUST use `Flext<Project><Tier>`. `tests/` facades MUST use `TestsFlext<Project><Tier>`. `examples/` facades MUST use `ExamplesFlext<Project><Tier>`. `scripts/` facades MUST use `ScriptsFlext<Project><Tier>`. Legacy patterns such as `Flext<Project>Test<Tier>`, `FlextTest<Project><Tier>`, and `{Flext<Project>}{Examples|Scripts}<Tier>` are migration debt only and MUST NOT be copied into new work.
-- **Private Mixin Naming**: Classes under `_models/`, `_utilities/`, `_protocols/`, and similar private trees MUST keep the project prefix and append only the module concern (e.g. `FlextInfraUtilitiesImportNormalizer`, `tk`).
+- **Private Mixin Naming**: Classes under `models/`, `_utilities/`, `_protocols/`, and similar private trees MUST keep the project prefix and append only the module concern (e.g. `FlextInfraUtilitiesImportNormalizer`, `tk`).
 - **Canonical API & Aliases**: Namespace aliases are the STRICT canonical public API surfaces. You must always use them (`m.MyModel`, `c.MY_CONST`), never the direct classes.
   - `m` = Models (`Flext*Models`)
   - `c` = Constants (`Flext*Constants`)
@@ -149,17 +149,17 @@ After edits, run project-relevant `ruff`, `pyrefly`, and `pytest` gates with evi
 - **Single Root Nested Namespace**: A `src/` facade root defines exactly one local domain namespace class (e.g. `class Infra:`, `class Tests:`). A `tests/` facade root defines exactly one local project-domain namespace whose test-only branch lives under `.Tests`. No other local top-level nested namespace classes are permitted in the facade.
 - **The MRO Cascade & Exhaustive Composition**: Cross-project composition MUST use inheritance via MRO symmetrically across all components. Furthermore, within a project, a top-level facade class MUST strictly compose ALL of its domain-specific subclasses.
   *(Example: `class FlextCoreModels(FlextCoreBaseModels, FlextCoreCQRSModels, FlextCoreSettingsModels): pass` and similarly for `FlextCoreUtilities` composing all `_utilities` subclasses. Loose disconnected subclasses are FORBIDDEN).*
-- **Subdirectory Composition Only via MRO**: Private files in `_models/`, `_utilities/`, `_protocols/`, and similar trees define mixin classes only. The public facade composes them directly in its inheritance list. Manual flat wrapper nesting such as `class Docker(tk): pass` inside the facade namespace is STRICTLY FORBIDDEN.
+- **Subdirectory Composition Only via MRO**: Private files in `models/`, `_utilities/`, `_protocols/`, and similar trees define mixin classes only. The public facade composes them directly in its inheritance list. Manual flat wrapper nesting such as `class Docker(tk): pass` inside the facade namespace is STRICTLY FORBIDDEN.
 - **Internal Namespaces & Elimination of Loose Objects**: Do not duplicate parent variables. Loose module-level objects or functions outside this class are STRICTLY FORBIDDEN. They must be absorbed into the namespace class as attributes/methods or consumed directly from base classes.
 - **Integration Projects** (`tap|target|dbt`): Composed of one platform and one domain via inheritance (e.g., `class FlextTapLdapProtocols(FlextMeltanoProtocols, FlextLdapProtocols): pass`).
-- **Naming & Location Patterns**: Classes must be placed in specific locations (e.g., `models.py` or `_models/`) and follow the `Flext<Role><Domain><Facade>` pattern (e.g. `FlextCoreModels`, `FlextTestInfraHelpers`, `FlextTapLdapProtocols`). Test classes must also match the domain they are testing. The integration class name MUST NOT contain the "Meltano" prefix.
+- **Naming & Location Patterns**: Classes must be placed in specific locations (e.g., `models.py` or `models/`) and follow the `Flext<Role><Domain><Facade>` pattern (e.g. `FlextCoreModels`, `FlextTestInfraHelpers`, `FlextTapLdapProtocols`). Test classes must also match the domain they are testing. The integration class name MUST NOT contain the "Meltano" prefix.
 - **Test Hierarchy Strictness**: In tests, the MRO hierarchy operates in two axes: test tools + domain under test. The test class MUST compose `FlextTests<Tier>` with the project's own `Flext<Project><Tier>` to gain both testing utilities and the full application context transparently.
 
 ### 2.4 Governance Anti-Patterns
 
 - **No Private Imports**: Public contracts MUST be consumed from package facades and root exports only.
 - **No Backward-Compat Aliases**: Backward-compatibility alias layers (e.g. `LegacyX = NewX`) and namespace shadowing are FORBIDDEN. You must NEVER re-assign parent aliases.
-- **No Facade Mirrors**: Public facade modules (e.g. `core.py`, `client.py`) must NEVER duplicate code from `_utilities/` or `_models/` internals. Implementation lives in `_utilities/`; the public module is a thin re-export stub:
+- **No Facade Mirrors**: Public facade modules (e.g. `core.py`, `client.py`) must NEVER duplicate code from `_utilities/` or `models/` internals. Implementation lives in `_utilities/`; the public module is a thin re-export stub:
 
   ```text
   # Re-export stub structure (uses placeholders — not executable Python):
@@ -229,7 +229,7 @@ flext-<project>/src/flext_<project>/
 1. **No standalone service classes** — every service class MUST be a mixin on the facade.
 2. **No re-export stubs for services** — access is via the facade (`FlextObservability().method()`), not individual class import.
 3. **One concern per mixin** — each `services/*.py` file defines ONE mixin class.
-4. **MRO field conflicts** — the facade MUST declare shared fields (`_logger`, `_container`) to shadow inherited duplicates.
+4. **MRO field conflicts** — the facade MUST declare shared fields (`logger`, `_container`) to shadow inherited duplicates.
 5. **No public accessor prefixes on service facades** — public `get_*`, `set_*`, and `is_*` methods/properties are FORBIDDEN. Local deterministic derivation MUST become fields or `@u.computed_field`; external boundary reads MUST use domain verbs such as `fetch_*` or `resolve_*`; state mutation MUST use validated model assignment, `model_copy(update=...)`, or a domain verb such as `configure`, `apply`, or `update`.
 6. **Service runtime state is centralized** — each service concern MUST flow through one central `m.<Domain>.*State` or `m.<Domain>.*Status` model instead of spreading round-trips through many small carrier models, dict conversions, and ad-hoc type narrowing.
 7. **Runtime DSL aliases are eager instances** — the module runtime alias MUST be `alias = Flext<Project>()`, never `alias = Flext<Project>`. When migration compatibility requires `alias(...)`, implement `__call__` on the facade as a typed factory and keep all direct behavior available on the eager alias itself.
@@ -265,7 +265,7 @@ flext-<project>/src/flext_<project>/
 
 ### 3.1 Architecture & Code Structure
 
-- **MVI 200-LINE CAP (SUPREME LAW)** module, class, method, or function >200 **code lines** is a violation. Line count is measured via `tokei` (logical LOC only — blank lines, comments, and docstrings are excluded from the count). Refactor immediately using strict OO composition and canonical MRO architecture. Decompose into explicit contracts and reusable domain components—never use compression hacks. **FORBIDDEN approaches to meet the cap**: removing blank lines, removing or compressing docstrings, style/formatting changes that reduce line count, and arbitrary code splits without domain decomposition. Only genuine OO decomposition via MRO inheritance, facade extraction to `_models/`/`_utilities/` subdirectories, and domain responsibility separation are valid.
+- **MVI 200-LINE CAP (SUPREME LAW)** module, class, method, or function >200 **code lines** is a violation. Line count is measured via `tokei` (logical LOC only — blank lines, comments, and docstrings are excluded from the count). Refactor immediately using strict OO composition and canonical MRO architecture. Decompose into explicit contracts and reusable domain components—never use compression hacks. **FORBIDDEN approaches to meet the cap**: removing blank lines, removing or compressing docstrings, style/formatting changes that reduce line count, and arbitrary code splits without domain decomposition. Only genuine OO decomposition via MRO inheritance, facade extraction to `models/`/`_utilities/` subdirectories, and domain responsibility separation are valid.
   - **VALID code reduction** (actively encouraged): deleting dead/unused code, removing unnecessary helpers and pass-through wrappers (`def old(): return new()`), removing proxy functions/classes, removing backward-compat aliases (`LegacyX = NewX`), and replacing inline composed type annotations (`str | t.Numeric`) with canonical `t.*` contracts from `typings.py`. These eliminate real architectural violations and are the preferred first step before OO decomposition.
 - **Pydantic v2 Mastery**: Every class MUST extend Pydantic v2 `BaseModel` (or FLEXT base models) via MRO. Fully utilize `m.Field()`, `model_config = m.ConfigDict(...)`, `u.PrivateAttr()`, and built-in constraints. Standalone `*Settings` classes, unnecessary `@property`, manual `self._x` assignments, line-reduction wrappers, and public `get_*`/`set_*`/`is_*` accessors are FORBIDDEN. Direct `from pydantic import ...` in consumer projects is BANNED — every Pydantic construct flows through the canonical `m.*` / `u.*` aliases from `flext_core` (or the project's MRO-extended package). The `FlextUtilitiesPydantic as up` / `FlextModelsPydantic as mp` internal aliases exist ONLY inside `flext-core/src/flext_core/_*` to break `c/t/p/m/u` bootstrap cycles — they are NOT consumer-facing. See `pydantic-v2-patterns` §Facade-Only.
 - **Accessor Naming Law**: Values already present in object state or derived locally MUST be exposed as fields or `@u.computed_field`; mutations MUST occur through validated model state or a domain verb; boolean outcomes/statuses MUST use noun/adjective names such as `success`, `failure`, `expired`, `configured`, `connected`, or `healthy`.
@@ -365,30 +365,30 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Forced Patterns**: Wildcard imports and relative imports are FORBIDDEN in governed code.
 - **Aliases**: No double-assignment of facade aliases (`c/m/p/t/u` are assigned once at module bottom).
 - **Direction**: Cross-tier imports violating architecture direction are FORBIDDEN.
-- **No Same-Project Cross-Facade Runtime Imports**: Public same-project facade files (`constants.py`, `models.py`, `protocols.py`, `typings.py`, `utilities.py`) MUST NOT import sibling public facades or aliases at runtime. Use direct private-class imports from `_models/*` / `_utilities/*` or MRO inheritance instead. The only standing runtime exception is `FlextRuntime` inside `flext-core`.
+- **No Same-Project Cross-Facade Runtime Imports**: Public same-project facade files (`constants.py`, `models.py`, `protocols.py`, `typings.py`, `utilities.py`) MUST NOT import sibling public facades or aliases at runtime. Use direct private-class imports from `models/*` / `_utilities/*` or MRO inheritance instead. The only standing runtime exception is `FlextRuntime` inside `flext-core`.
 - **Abstraction Boundary Enforcement (SUPREME LAW)**: Libraries abstracted by a flext project MUST NOT be imported directly outside that project's `src/` domain. Core-abstracted libraries (pydantic, dependency_injector, structlog, returns, orjson, pyyaml) are FORBIDDEN in consumers (`tests/`, `examples/`, `scripts/`, other projects' `src/`). Use public abstractions from the originating library (`m.*`, `c.*`, `p.*`, `t.*`, `u.*`, `r[T]`) instead. This applies equally to runtime code, typing annotations, and constants.
 - **Facade Import Matrix**:
   - `typings.py` may reference same-project `p` and `m` ONLY under `TYPE_CHECKING`.
   - `protocols.py` may reference same-project `t` and `m` ONLY under `TYPE_CHECKING`.
   - `models.py` may reference same-project `t` and `p` ONLY under `TYPE_CHECKING`.
   - `constants.py` may import same-project runtime symbols when genuinely required.
-  - `utilities.py`, `_models/*`, and `_utilities/*` may import private classes directly across private modules to break cycles, but MUST NOT hop through sibling public facades.
+  - `utilities.py`, `models/*`, and `_utilities/*` may import private classes directly across private modules to break cycles, but MUST NOT hop through sibling public facades.
 - **MRO Alias Import Rule — Complete Matrix (CRITICAL)**:
-  - Each facade file (`constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py`) DEFINES its own alias (`c`, `m`, `t`, `p`, `u` respectively). Therefore, that alias MUST come from the **parent MRO package** in that facade file AND in ALL private modules (`_models/*.py`, `_utilities/*.py`, `_typings/*.py`, `_protocols/*.py`, `_constants/*.py`) that participate in its lazy-load chain.
-  - **Why**: Importing an alias from own package triggers loading the facade file that defines it (`m` → `models.py`, `u` → `utilities.py`, `c` → `constants.py`, `t` → `typings.py`, `p` → `protocols.py`). If that facade depends on `_models/`/`_utilities/` which are still loading → deadlock.
+  - Each facade file (`constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py`) DEFINES its own alias (`c`, `m`, `t`, `p`, `u` respectively). Therefore, that alias MUST come from the **parent MRO package** in that facade file AND in ALL private modules (`models/*.py`, `_utilities/*.py`, `_typings/*.py`, `_protocols/*.py`, `_constants/*.py`) that participate in its lazy-load chain.
+  - **Why**: Importing an alias from own package triggers loading the facade file that defines it (`m` → `models.py`, `u` → `utilities.py`, `c` → `constants.py`, `t` → `typings.py`, `p` → `protocols.py`). If that facade depends on `models/`/`_utilities/` which are still loading → deadlock.
   - **Parent MRO lookup**: Check each facade file to find its parent. Example for flext-ldif:
     - `models.py`: `from flext_cli import m` → parent for `m` is `flext_cli`
     - `utilities.py`: `from flext_cli import u` → parent for `u` is `flext_cli`
     - `constants.py`: `from flext_cli import c` → parent for `c` is `flext_cli`
     - `typings.py`: `from flext_cli import t` → parent for `t` is `flext_cli`
     - `protocols.py`: `from flext_cli import p` → parent for `p` is `flext_cli`
-  - **flext-core (ROOT)**: Is the MRO root — its `_models/*.py` and `_utilities/*.py` import ALL aliases from `flext_core` (own package). This works because flext-core's lazy loader handles internal sequencing.
+  - **flext-core (ROOT)**: Is the MRO root — its `models/*.py` and `_utilities/*.py` import ALL aliases from `flext_core` (own package). This works because flext-core's lazy loader handles internal sequencing.
 
   **Complete import matrix by file type**:
 
   | File type | `m` | `u` | `c` | `t` | `p` | `r` | Sibling classes | Named Flext* classes |
   |-----------|-----|-----|-----|-----|-----|-----|-----------------|---------------------|
-  | `_models/*.py` | parent | parent | own pkg | own pkg | own pkg | own pkg | own pkg (runtime) or TYPE_CHECKING (annotation) | own pkg via lazy init |
+  | `models/*.py` | parent | parent | own pkg | own pkg | own pkg | own pkg | own pkg (runtime) or TYPE_CHECKING (annotation) | own pkg via lazy init |
   | `_utilities/*.py` | own pkg | parent | own pkg | own pkg | own pkg | own pkg | own pkg via lazy init | own pkg via lazy init |
   | `models.py` (facade) | parent | parent | — | own pkg | — | — | own pkg via lazy init | — |
   | `utilities.py` (facade) | own pkg | parent | — | — | — | — | own pkg via lazy init | — |
@@ -403,13 +403,13 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 
   **Key rule**: "parent" means the alias comes from the **most advanced parent MRO package** that the project inherits from (check the facade file's own import). "own pkg" means `from flext_<project> import X` which resolves via the auto-generated lazy `__init__.py`.
 
-  - **Sibling classes** in `_models/*.py` used at runtime (base classes, `isinstance`) → `from flext_<project> import FlextProjectModelsBases` (lazy init resolves before cycle).
+  - **Sibling classes** in `models/*.py` used at runtime (base classes, `isinstance`) → `from flext_<project> import FlextProjectModelsBases` (lazy init resolves before cycle).
   - **Sibling classes** used ONLY in annotations (with `from __future__ import annotations`) → `TYPE_CHECKING` block.
   - **Use organic namespace** `m.Ldif.ClassName` at all usage sites instead of raw `FlextLdifModelsSettings.ClassName`.
 - **Circular Import Resolution (CRITICAL)**:
-  - **Root Cause**: Circular imports arise when (1) `_models/*.py`/`_utilities/*.py` import `m` or `u` from own package, triggering the facade module load chain, or (2) modules at the same tier reference each other.
+  - **Root Cause**: Circular imports arise when (1) `models/*.py`/`_utilities/*.py` import `m` or `u` from own package, triggering the facade module load chain, or (2) modules at the same tier reference each other.
   - **Correct Solution** (NO workarounds):
-    1. **`m, u` from parent MRO** in `_models/*.py`, `_utilities/*.py`, `models.py`, `utilities.py` — prevents facade self-load cycle.
+    1. **`m, u` from parent MRO** in `models/*.py`, `_utilities/*.py`, `models.py`, `utilities.py` — prevents facade self-load cycle.
     2. **Use `from __future__ import annotations`** — Converts ALL type hints to forward references (strings).
     3. **Use `TYPE_CHECKING`** for annotation-only imports that would create a cycle.
     4. **Trust lazy loading in `__init__.py`** — The lazy-load system properly sequences module initialization. Sibling class imports via `from flext_project import ClassName` work correctly through the lazy map.
@@ -541,9 +541,9 @@ UNBREAKABLE LAW for all parallel agent work:
 
 | Category    | Primary Owner                                                                              | Read-Only For Others |
 | ----------- | ------------------------------------------------------------------------------------------ | -------------------- |
-| **Agent 1** | `dispatcher.py`, `constants.py`, `_models/cqrs.py`                                         | All other agents     |
+| **Agent 1** | `dispatcher.py`, `constants.py`, `models/cqrs.py`                                         | All other agents     |
 | **Agent 2** | `registry.py`, `typings.py`                                                                | All other agents     |
-| **Agent 3** | `service.py`, `_models/base.py`                                                            | All other agents     |
+| **Agent 3** | `service.py`, `models/base.py`                                                            | All other agents     |
 | **Agent 4** | `result.py`, `exceptions.py`, `runtime.py`, `loggings.py`                                  | All other agents     |
 | **Agent 5** | `container.py`, `decorators.py`, `handlers.py`, `mixins.py`                                | All other agents     |
 | **FROZEN**  | `context.py`, `settings.py`, `models.py`, `utilities.py`, `_utilities/*`, `__version__.py` | NO AGENT MODIFIES    |

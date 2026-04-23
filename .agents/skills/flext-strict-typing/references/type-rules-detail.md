@@ -252,7 +252,7 @@ ALL code MUST follow "Pydantic v2 way" EXTENSIVELY across ALL 33 projects (`src/
 
 **Centralization**: `Enum`, `Mapping`, and `Literal` values MUST come from `constants.py` (`c.*`) — never defined inline. JSON via `model_dump_json()`, `model_validate_json()`, `model_dump()`, `TypeAdapter` — never raw `json.loads()`/`json.dumps()`.
 
-**Scope**: Nested facade classes in modules MAY contain business logic methods beyond validation, but ALL their internal properties MUST use `u.Field()` and `u.PrivateAttr`. `models.py`/`_models/` directories are for model definitions ONLY — remove business logic, utility functions, and orchestration code. Compatibility wrappers, legacy code, and non-business validation fallbacks are TOTALLY FORBIDDEN. Tests follow these exact same rules.
+**Scope**: Nested facade classes in modules MAY contain business logic methods beyond validation, but ALL their internal properties MUST use `u.Field()` and `u.PrivateAttr`. `models.py`/`models/` directories are for model definitions ONLY — remove business logic, utility functions, and orchestration code. Compatibility wrappers, legacy code, and non-business validation fallbacks are TOTALLY FORBIDDEN. Tests follow these exact same rules.
 
 **AXIOMATIC — Integral Validation**: Every typing or model change MUST pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors. ALL impacted references across ALL 33 projects MUST be immediately updated via ast-grep (`sg`) search-and-replace. Linter suppression comments (`# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore`) are FORBIDDEN without: (1) real, verifiable internet citations, (2) explicit business necessity in the comment, (3) per-line only — never global. Fix the code, never silence the linter.
 
@@ -699,7 +699,7 @@ generic subscript (ruff RUF046).
 def load(self) -> p.Result[float]:
     if not self._ready:
         return r.fail("Not ready")  # U inferred as float ✓
-    return r[float].ok(self._value)  # T inferred from value ✓
+    return r[float].ok(self.value)  # T inferred from value ✓
 
 
 # Chain composition:

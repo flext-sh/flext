@@ -64,7 +64,7 @@ Do not duplicate governance text in this skill.
 | Path pattern | Load first |
 |---|---|
 | `flext-core/**` | `rules-flext-core`, `flext-strict-typing` |
-| `**/constants.py`, `**/models.py`, `**/protocols.py`, `**/typings.py`, `**/utilities.py`, `**/_models/**`, `**/_utilities/**` | `flext-mro-namespace-rules`, `flext-import-rules` |
+| `**/constants.py`, `**/models.py`, `**/protocols.py`, `**/typings.py`, `**/utilities.py`, `**/models/**`, `**/_utilities/**` | `flext-mro-namespace-rules`, `flext-import-rules` |
 | `scripts/**` | `rules-scripts` + matching `scripts-*` skill |
 | `docs/**` | `rules-docs` |
 | `.agents/skills/**` | `skill-format-universal`, `flext-docs-pointer-policy` |

@@ -1,6 +1,6 @@
 ---
 name: flext-mro-namespace-rules
-description: Canonical MRO namespace rules for facade naming, organic nested-domain access, and same-project import boundaries. Use when editing `constants.py`, `models.py`, `protocols.py`, `typings.py`, `utilities.py`, `tests/`, or any `_models/` and `_utilities/` mixin tree.
+description: Canonical MRO namespace rules for facade naming, organic nested-domain access, and same-project import boundaries. Use when editing `constants.py`, `models.py`, `protocols.py`, `typings.py`, `utilities.py`, `tests/`, or any `models/` and `_utilities/` mixin tree.
 
 ---
 
@@ -18,7 +18,7 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 - `flext-*/tests/`
 - `flext-*/examples/`
 - `flext-*/scripts/`
-- Private facade mixin trees under `_constants/`, `_models/`, `_protocols/`, `_typings/`, `_utilities/`
+- Private facade mixin trees under `_constants/`, `models/`, `_protocols/`, `_typings/`, `_utilities/`
 
 ## References
 
@@ -42,13 +42,13 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 - Callers MUST keep the organic namespace path emitted by MRO. Use `u.Infra.parse_semver`, `c.Tests.ERR_OK_FAILED`, and `m.TargetOracle.ExecuteResult`. Do not flatten nested domain-local classes back onto the facade root with assignments like `ExecuteResult = TargetOracle.ExecuteResult`.
 - Examples and docs should present Pydantic-facing usage through `c`, `p`, `t`, `m`, `u` (and `s` for services), preserving nested classes + MRO composition even in service-only snippets.
 - Contract ownership follows the facade split: `p.*` for protocols, `t.*` for composed aliases, `m.*` for models. Do not recreate protocol-shaped aliases in `t` or flatten model/protocol carriers just to shorten an annotation.
-- Private mixin files under `_models/`, `_utilities/`, `_protocols/`, and similar trees define mixin classes only. The public facade composes them in its inheritance list. Manual flat wrapper nesting such as `class Docker(tk): pass` inside the facade namespace is forbidden.
+- Private mixin files under `models/`, `_utilities/`, `_protocols/`, and similar trees define mixin classes only. The public facade composes them in its inheritance list. Manual flat wrapper nesting such as `class Docker(tk): pass` inside the facade namespace is forbidden.
 - Same-project cross-facade imports are forbidden at runtime unless explicitly allowed below:
   - `typings.py` may reference same-project `p` and `m` only under `TYPE_CHECKING`.
   - `protocols.py` may reference same-project `t` and `m` only under `TYPE_CHECKING`.
   - `models.py` may reference same-project `t` and `p` only under `TYPE_CHECKING`.
   - `constants.py` may import same-project runtime symbols when genuinely required.
-  - `utilities.py`, `_models/*`, and `_utilities/*` may import private classes directly across private modules to resolve cycles, but must not hop through sibling public facades.
+  - `utilities.py`, `models/*`, and `_utilities/*` may import private classes directly across private modules to resolve cycles, but must not hop through sibling public facades.
   - `flext-core` `FlextRuntime` is the only standing exception to the no same-project facade-import rule.
 - Non-canonical short aliases such as `tf`, `tm`, and `td` are forbidden in new work. Fix consumers instead of adding compatibility wrappers.
 

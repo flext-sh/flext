@@ -4,7 +4,7 @@
 
 **Pattern**: For nullable fields, use `Annotated[T | None, u.Field(...)]` NOT `Annotated[T, u.Field(...)] | None`.
 
-**Canonical Example** (`flext-core/src/flext_core/_models/cqrs.py:91-99`):
+**Canonical Example** (`flext-core/src/flext_core/models/cqrs.py:91-99`):
 
 ```python
 from typing import Annotated
@@ -47,8 +47,8 @@ field: Annotated[str | None, u.Field(min_length=1)] = None
 
 **Repository anchors**:
 
-- `flext-core/src/flext_core/_models/cqrs.py:91-99`
-- `flext-core/src/flext_core/_models/base.py` (multiple examples)
+- `flext-core/src/flext_core/models/cqrs.py:91-99`
+- `flext-core/src/flext_core/models/base.py` (multiple examples)
 
 ### 2. default_factory for Mutable Defaults
 
@@ -86,14 +86,14 @@ class Config(m.BaseModel):
 
 **Repository anchors**:
 
-- `flext-core/src/flext_core/_models/settings.py` (multiple examples)
-- `flext-core/src/flext_core/_models/base.py` (multiple examples)
+- `flext-core/src/flext_core/models/settings.py` (multiple examples)
+- `flext-core/src/flext_core/models/base.py` (multiple examples)
 
 ### 3. TypeAdapter Caching
 
 **Pattern**: Cache `TypeAdapter` instances as `ClassVar` to avoid repeated instantiation in loops.
 
-**Canonical Example** (`flext-core/src/flext_core/_models/base.py:53-102`):
+**Canonical Example** (`flext-core/src/flext_core/models/base.py:53-102`):
 
 ```python
 from typing import Annotated, ClassVar
@@ -189,7 +189,7 @@ def validate_tags(self, tags) -> t.StrSequence:
 
 **Repository anchors**:
 
-- `flext-core/src/flext_core/_models/base.py:53-102`
+- `flext-core/src/flext_core/models/base.py:53-102`
 - `flext-core/src/flext_core/_utilities/validation.py`
 
 ### 4. Protocol vs ABC
@@ -384,8 +384,8 @@ class MyModel(m.BaseModel):
 
 **Repository anchors**:
 
-- `flext-core/src/flext_core/_models/base.py` (`ContractModel`)
-- `flext-core/src/flext_core/_models/cqrs.py:85-90`
+- `flext-core/src/flext_core/models/base.py` (`ContractModel`)
+- `flext-core/src/flext_core/models/cqrs.py:85-90`
 - `flext-core/src/flext_core/settings.py`
 
 ### 7. Validation Boundaries

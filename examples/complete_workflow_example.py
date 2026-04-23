@@ -162,7 +162,7 @@ class CompleteWorkflowExample:
         def _aggregate_results(
             self,
             item: CompleteWorkflowExample.ProcessingDict,
-            _context: CompleteWorkflowExample.WorkflowContext,
+            context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Aggregate results."""
             complexity_score_raw = item.get("complexity_score", 0)
@@ -181,6 +181,7 @@ class CompleteWorkflowExample:
                     "aggregated",
                     True,
                     lambda _i: {"final_score": final_score},
+                    context=context,
                 ),
             }
             workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
@@ -220,7 +221,7 @@ class CompleteWorkflowExample:
         def _analyze_items(
             self,
             item: CompleteWorkflowExample.ProcessingDict,
-            _context: CompleteWorkflowExample.WorkflowContext,
+            context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Analyze single item."""
             content_payload: CompleteWorkflowExample.WorkflowContent = {
@@ -230,6 +231,7 @@ class CompleteWorkflowExample:
                     "analyzed",
                     True,
                     lambda _i: {"complexity_score": len(str(item)) * 0.1},
+                    context=context,
                 ),
             }
             workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
@@ -411,7 +413,7 @@ class CompleteWorkflowExample:
         def _process_items(
             self,
             item: CompleteWorkflowExample.ProcessingDict,
-            _context: CompleteWorkflowExample.WorkflowContext,
+            context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Process single item."""
             content_payload: CompleteWorkflowExample.WorkflowContent = {
@@ -421,6 +423,7 @@ class CompleteWorkflowExample:
                     "processed",
                     True,
                     lambda _i: {"processed_at": time.time()},
+                    context=context,
                 ),
             }
             workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
@@ -434,6 +437,7 @@ class CompleteWorkflowExample:
             sleep_time: float,
             add_field: str,
             value: t.Primitives,
+            context: CompleteWorkflowExample.WorkflowContext | None = None,
             extra_logic: Callable[
                 [CompleteWorkflowExample.ProcessingDict],
                 t.JsonMapping,
@@ -446,6 +450,11 @@ class CompleteWorkflowExample:
                 **item,
             }
             result[add_field] = value
+            if context is not None:
+                result["workflow_context"] = {
+                    "workflow_id": context.workflow_id,
+                    "correlation_id": context.correlation_id,
+                }
             if extra_logic:
                 result.update(extra_logic(item))
             return result
@@ -478,7 +487,7 @@ class CompleteWorkflowExample:
         def _validate_items(
             self,
             item: CompleteWorkflowExample.ProcessingDict,
-            _context: CompleteWorkflowExample.WorkflowContext,
+            context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Validate single item."""
             content_payload: CompleteWorkflowExample.WorkflowContent = {
@@ -488,6 +497,7 @@ class CompleteWorkflowExample:
                     "validated",
                     True,
                     lambda _i: {"valid": bool(item.get("id") and item.get("name"))},
+                    context=context,
                 ),
             }
             workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(

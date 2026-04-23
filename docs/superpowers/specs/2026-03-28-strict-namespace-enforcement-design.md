@@ -8,7 +8,7 @@
 
 ## 1. Problem Statement
 
-301 loose classes across 31 projects violate AGENTS.md §2.3: "Loose module-level objects or functions outside the namespace class are STRICTLY FORBIDDEN." Additionally, 9 MRO gaps exist where `_models/` or `_utilities/` subclasses are not wired into their facade's MRO chain.
+301 loose classes across 31 projects violate AGENTS.md §2.3: "Loose module-level objects or functions outside the namespace class are STRICTLY FORBIDDEN." Additionally, 9 MRO gaps exist where `models/` or `_utilities/` subclasses are not wired into their facade's MRO chain.
 
 ## 2. Rules (Non-Negotiable)
 
@@ -32,7 +32,7 @@ Every class in `src/` MUST exist inside a namespace facade or be an MRO base of 
 
 ### 2.2 MRO Completeness Rule
 
-Every class in a `_models/`, `_utilities/`, `_constants/`, `_protocols/`, `_typings/` subdirectory MUST appear in the corresponding facade's inner namespace MRO bases. No orphan subclasses.
+Every class in a `models/`, `_utilities/`, `_constants/`, `_protocols/`, `_typings/` subdirectory MUST appear in the corresponding facade's inner namespace MRO bases. No orphan subclasses.
 
 ### 2.3 Same-Type Import Rule
 
@@ -56,7 +56,7 @@ Every rename/move uses `sg` (ast-grep) for IMMEDIATE workspace-wide propagation.
 | `__init__.py`                                                                | Auto-generated exports                               | Never manual edit                      |
 | `lazy.py` (flext-core only)                                                  | PEP 562 infrastructure consumed by all `__init__.py` | Standalone OK                          |
 | MRO base classes of facades                                                  | Python MRO requires base before child                | Standalone OK, must have alias         |
-| `_models/`, `_utilities/`, `_constants/`, `_protocols/`, `_typings/` subdirs | These ARE the MRO composition                        | Must be wired into facade MRO          |
+| `models/`, `_utilities/`, `_constants/`, `_protocols/`, `_typings/` subdirs | These ARE the MRO composition                        | Must be wired into facade MRO          |
 | `services/` subdir (if classes inherit from `s` subclass base)               | Scoped service implementations                       | Must be wired into facade `api.py` MRO |
 | `providers/` subdir (flext-auth)                                             | Auth provider implementations                        | Must be registered, OK standalone      |
 | `protocol_impls/` subdir (flext-api)                                         | Protocol implementations                             | Must be registered, OK standalone      |
@@ -101,7 +101,7 @@ These classes are MRO bases of the namespace facade chain. Python requires them 
 | #   | Project                 | Facade         | Missing base                                                                  | File                                                   |
 | --- | ----------------------- | -------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------ |
 | 1   | flext-api               | `typings.py`   | `FlextApiTypes` inherits `FlextTypes` — should inherit `FlextWebTypes`        | `flext-api/src/flext_api/typings.py`                   |
-| 2   | flext-ldif              | `models.py`    | `FlextLdifModelsBases` not in `Ldif` MRO                                      | `flext-ldif/src/flext_ldif/_models/base.py`            |
+| 2   | flext-ldif              | `models.py`    | `FlextLdifModelsBases` not in `Ldif` MRO                                      | `flext-ldif/src/flext_ldif/models/base.py`            |
 | 3   | flext-ldif              | `utilities.py` | `FlextLdifUtilitiesPipeline` not in `Ldif` MRO                                | `flext-ldif/src/flext_ldif/_utilities/pipeline.py`     |
 | 4   | flext-ldif              | `utilities.py` | `FlextLdifUtilitiesTransformers` not in `Ldif` MRO                            | `flext-ldif/src/flext_ldif/_utilities/transformers.py` |
 | 5   | flext-infra             | `typings.py`   | `FlextInfraProtocolsBase` mixed into typings bases (protocol in wrong facade) | `flext-infra/src/flext_infra/typings.py`               |
@@ -437,7 +437,7 @@ These classes are MRO bases of the namespace facade chain. Python requires them 
 
 **flext-core** (2 true loose, rest conformant):
 
-- ABSORB `FlextError` → `m.Error` inner class in `_models/`
+- ABSORB `FlextError` → `m.Error` inner class in `models/`
 - ABSORB `FlextErrorDomain` → `c.ErrorDomain` inner class in `_constants/`
 - FIX MRO: if needed after absorption
 - All other files → conformant (aliased or MRO bases)

@@ -48,7 +48,7 @@ UUIDStr = Annotated[str, PlainValidator(validate_uuid_string)]
 
 Repository anchor:
 
-- `flext-core/src/flext_core/_models/base.py` (`StrippedString`, `ValidatedString`, `NormalizedList`, `UUIDStr`)
+- `flext-core/src/flext_core/models/base.py` (`StrippedString`, `ValidatedString`, `NormalizedList`, `UUIDStr`)
 
 Use when:
 
@@ -84,7 +84,7 @@ class Metadata(m.BaseModel):
 
 Repository anchor:
 
-- `flext-core/src/flext_core/_models/base.py` (`Metadata._validate_attributes`)
+- `flext-core/src/flext_core/models/base.py` (`Metadata._validate_attributes`)
 
 Use when:
 
@@ -112,7 +112,7 @@ class RetryConfiguration(m.BaseModel):
 
 Repository anchor:
 
-- `flext-core/src/flext_core/_models/settings.py` (`validate_backoff_strategy`)
+- `flext-core/src/flext_core/models/settings.py` (`validate_backoff_strategy`)
 
 Use when:
 
@@ -140,8 +140,8 @@ class RetryWindow(m.BaseModel):
 
 Repository anchors:
 
-- `flext-core/src/flext_core/_models/settings.py` (`validate_delay_consistency`, `validate_batch`)
-- `flext-core/src/flext_core/_models/base.py` (audit/timestamp/id consistency validators)
+- `flext-core/src/flext_core/models/settings.py` (`validate_delay_consistency`, `validate_batch`)
+- `flext-core/src/flext_core/models/base.py` (audit/timestamp/id consistency validators)
 
 Use when:
 
@@ -181,7 +181,7 @@ class TimestampedModel(m.BaseModel):
 
 Repository anchor:
 
-- `flext-core/src/flext_core/_models/base.py` (`TimestampableMixin`)
+- `flext-core/src/flext_core/models/base.py` (`TimestampableMixin`)
 
 #### Pattern B: Registry/service summaries
 
@@ -272,7 +272,7 @@ MessageUnion = Annotated[
 
 Repository anchors:
 
-- `flext-core/src/flext_core/_models/base.py` (`MessageUnion`)
+- `flext-core/src/flext_core/models/base.py` (`MessageUnion`)
 - `flext-core/src/flext_core/models.py` (`MessageUnion` alias)
 
 #### Pattern B: Result unions for explicit branching
@@ -306,7 +306,7 @@ OperationResult = Annotated[
 
 Repository anchor:
 
-- `flext-core/src/flext_core/_models/base.py` (`OperationResult`, `ValidationOutcome`)
+- `flext-core/src/flext_core/models/base.py` (`OperationResult`, `ValidationOutcome`)
 
 Guidance:
 
@@ -335,7 +335,7 @@ class AuditModel(m.BaseModel):
 
 Repository anchors:
 
-- `flext-core/src/flext_core/_models/base.py` (datetime serializers)
+- `flext-core/src/flext_core/models/base.py` (datetime serializers)
 - `flext-db-oracle/src/flext_db_oracle/models.py` (execution and time serializers)
 
 #### Pattern B: Multi-field serializer for coherent formatting
@@ -356,7 +356,7 @@ class TimestampPair(m.BaseModel):
 
 Repository anchor:
 
-- `flext-core/src/flext_core/_models/base.py` (`serialize_timestamps`, `serialize_audit_timestamps`)
+- `flext-core/src/flext_core/models/base.py` (`serialize_timestamps`, `serialize_audit_timestamps`)
 
 #### Pattern C: Wildcard serializer for envelope enrichment
 
@@ -414,7 +414,7 @@ class ContractModel(m.BaseModel):
 
 Repository anchor:
 
-- `flext-core/src/flext_core/_models/base.py` (`ContractModel`)
+- `flext-core/src/flext_core/models/base.py` (`ContractModel`)
 
 Guidance:
 

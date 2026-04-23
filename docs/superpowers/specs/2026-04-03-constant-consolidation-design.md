@@ -83,7 +83,7 @@ For each file with exact/structural matches:
 1. `rules/constants-governance.yml` — add frozenset/regex/tuple entries
 2. `_utilities/codegen_governance.py` — add 2 getter methods
 3. `codegen/cli.py` — add `consolidate` handler
-4. `_models/` — add `ConsolidationResult` model (if needed, else reuse existing)
+4. `models/` — add `ConsolidationResult` model (if needed, else reuse existing)
 
 ## Non-Goals
 

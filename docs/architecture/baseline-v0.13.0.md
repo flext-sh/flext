@@ -460,7 +460,7 @@ Explicit removals:
 
 - numbered example filenames such as `ex_01_*`
 - numbered example filenames such as `01_basic_usage.py`
-- helper models like `_models/exNN.py`
+- helper models like `models/exNN.py`
 
 ### Scripts
 

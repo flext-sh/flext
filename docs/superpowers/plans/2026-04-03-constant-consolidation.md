@@ -14,7 +14,7 @@
 
 **Files:**
 
-- Modify: `flext-infra/src/flext_infra/codegen/_models.py:202-206`
+- Modify: `flext-infra/src/flext_infra/codegen/models.py:202-206`
 
 - [ ] **Step 1: Widen the `value` type in CanonicalValueRule**
 
@@ -30,7 +30,7 @@ The current model only accepts `int | str`. Extend to accept `list` (for frozens
 
 - [ ] **Step 2: Run ruff check on the modified file**
 
-Run: `ruff check flext-infra/src/flext_infra/codegen/_models.py --select E,F,W --no-fix`
+Run: `ruff check flext-infra/src/flext_infra/codegen/models.py --select E,F,W --no-fix`
 Expected: No new errors.
 
 - [ ] **Step 3: Commit**
@@ -203,7 +203,7 @@ feat(codegen): add frozenset/regex/tuple governance getters
 
 **Files:**
 
-- Modify: `flext-infra/src/flext_infra/_models/cli_inputs_codegen.py:113+`
+- Modify: `flext-infra/src/flext_infra/models/cli_inputs_codegen.py:113+`
 
 - [ ] **Step 1: Add `CodegenConsolidateInput` after `CodegenPipelineInput`**
 
@@ -223,7 +223,7 @@ feat(codegen): add frozenset/regex/tuple governance getters
 
 - [ ] **Step 2: Run ruff check**
 
-Run: `ruff check flext-infra/src/flext_infra/_models/cli_inputs_codegen.py --select E,F,W --no-fix`
+Run: `ruff check flext-infra/src/flext_infra/models/cli_inputs_codegen.py --select E,F,W --no-fix`
 Expected: No errors.
 
 - [ ] **Step 3: Commit**
@@ -438,7 +438,7 @@ feat(codegen): add consolidate CLI handler with per-file validation and rollback
 
 **Files:**
 
-- Verify: `flext-infra/src/flext_infra/_models/cli_inputs_codegen.py` — model exists
+- Verify: `flext-infra/src/flext_infra/models/cli_inputs_codegen.py` — model exists
 - Verify: `flext-infra/src/flext_infra/codegen/cli.py` — handler registered
 
 - [ ] **Step 1: Verify the model is accessible via `m.Infra.CodegenConsolidateInput`**

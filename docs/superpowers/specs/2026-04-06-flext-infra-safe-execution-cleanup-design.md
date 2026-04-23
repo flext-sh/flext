@@ -32,9 +32,9 @@ This spec addresses all of these through pure refactoring of existing code.
 
 | Mixin                | File                | LOC | Action                                                   |
 | -------------------- | ------------------- | --- | -------------------------------------------------------- |
-| `ErrorDetailMixin`   | `_models/mixins.py` | 4   | Delete (0 uses)                                          |
-| `CurrentImportMixin` | `_models/mixins.py` | 4   | Delete (0 uses, inline field in ImportViolationBase)   |
-| `FacadeNameMixin`    | `_models/mixins.py` | 7   | Delete (inline `facade_name: str = ""` into 2 consumers) |
+| `ErrorDetailMixin`   | `models/mixins.py` | 4   | Delete (0 uses)                                          |
+| `CurrentImportMixin` | `models/mixins.py` | 4   | Delete (0 uses, inline field in ImportViolationBase)   |
+| `FacadeNameMixin`    | `models/mixins.py` | 7   | Delete (inline `facade_name: str = ""` into 2 consumers) |
 
 ### 1.2 Dead Doc Generator Helpers (delete)
 
@@ -392,13 +392,13 @@ The enforcer iterates the list, running each step through `u.Infra.execute_safel
 ### Wave 3: c/t/p/m/u Additions
 
 1. Add `c.Infra.SafeExecution` + `c.Infra.ExecutionMode` to `_constants/base.py`
-2. Add `m.Infra.SafeExecutionResult` + `m.Infra.TransformStep` to `_models/base.py`
+2. Add `m.Infra.SafeExecutionResult` + `m.Infra.TransformStep` to `models/base.py`
 3. Add `p.Infra.SafeTransformer` + `p.Infra.SafeValidator` to `_protocols/base.py`
 4. Validate: `ruff check src/` + `pyrefly check src/`
 
 ### Wave 4: Mixin Hierarchy
 
-1. Rewrite `_models/mixins.py` — delete 14 mixins, create 4-class hierarchy
+1. Rewrite `models/mixins.py` — delete 14 mixins, create 4-class hierarchy
 2. Migrate all 26+ CLI input models in `cli_inputs_ops.py` + `cli_inputs_codegen.py`
 3. Migrate any domain models that used deleted mixins
 4. Validate: `ruff check src/` + `pyrefly check src/` + run tests

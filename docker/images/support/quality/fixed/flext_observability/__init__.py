@@ -12,25 +12,46 @@ from collections.abc import (
 
 from flext_core import m, t
 
+last_events = {
+    "metric": None,
+    "trace": None,
+    "log_entry": None,
+}
 
-def flext_create_metric(_name: str, _value: float, _tags: m.Dict | None = None) -> None:
+
+def flext_create_metric(name: str, value: float, tags: m.Dict | None = None) -> None:
     """Create mock metric."""
-    _ = os.environ.get("FLEXT_OBSERVABILITY_QUIET")
+    last_events["metric"] = {
+        "name": name,
+        "value": value,
+        "tags": dict(tags or {}),
+        "quiet": os.environ.get("FLEXT_OBSERVABILITY_QUIET"),
+    }
 
 
 def flext_create_trace(
-    _trace_id: str,
-    _operation: str,
-    _config: m.Dict | None = None,
+    trace_id: str,
+    operation: str,
+    config: m.Dict | None = None,
 ) -> None:
     """Create mock trace."""
-    _ = os.environ.get("FLEXT_OBSERVABILITY_QUIET")
+    last_events["trace"] = {
+        "trace_id": trace_id,
+        "operation": operation,
+        "config": dict(config or {}),
+        "quiet": os.environ.get("FLEXT_OBSERVABILITY_QUIET"),
+    }
 
 
 def flext_create_log_entry(
-    _message: str,
+    message: str,
     level: str = "info",
-    _context: m.Dict | None = None,
+    context: m.Dict | None = None,
 ) -> None:
     """Create mock log entry."""
-    _ = os.environ.get("FLEXT_OBSERVABILITY_QUIET")
+    last_events["log_entry"] = {
+        "message": message,
+        "level": level,
+        "context": dict(context or {}),
+        "quiet": os.environ.get("FLEXT_OBSERVABILITY_QUIET"),
+    }

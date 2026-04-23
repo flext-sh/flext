@@ -46,11 +46,11 @@ description: Use when coordinating 5 parallel agents on flext-core or consumer p
 | ------------------------------------------------------------------------------------------ | -------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | `dispatcher.py`                                                                            | Agent 1                          | READ only                                                                                                 |
 | `constants.py`                                                                             | Agent 1                          | READ only                                                                                                 |
-| `_models/cqrs.py`                                                                          | Agent 1                          | READ only                                                                                                 |
+| `models/cqrs.py`                                                                          | Agent 1                          | READ only                                                                                                 |
 | `registry.py`                                                                              | Agent 2                          | READ only                                                                                                 |
 | `typings.py`                                                                               | Agent 2                          | READ only                                                                                                 |
 | `service.py`                                                                               | Agent 3                          | READ only                                                                                                 |
-| `_models/base.py`                                                                          | Agent 3                          | READ only                                                                                                 |
+| `models/base.py`                                                                          | Agent 3                          | READ only                                                                                                 |
 | `result.py`                                                                                | Agent 4                          | READ only                                                                                                 |
 | `exceptions.py`                                                                            | Agent 4                          | READ only (exception: Agent 4 may modify exceptions.py in ANY consumer project for e.BaseError hierarchy) |
 | `runtime.py`                                                                               | Agent 4                          | Agent 5 READ only (MRO chain reference)                                                                   |
@@ -179,8 +179,8 @@ Agents MUST execute in this order:
 ### Phase 2 (Agent 1 + Agent 3)
 
 1. Both pull latest: `git pull --rebase`
-2. Agent 1 works on: dispatcher.py, constants.py, _models/cqrs.py
-3. Agent 3 works on: service.py, _models/base.py
+2. Agent 1 works on: dispatcher.py, constants.py, models/cqrs.py
+3. Agent 3 works on: service.py, models/base.py
 4. Both run linters on their files only
 5. Both commit and push independently
 

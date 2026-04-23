@@ -11,7 +11,7 @@ description: Pydantic v2 model, validation, and serialization patterns used acro
 ## Scope
 
 - `flext-core/src/flext_core/settings.py` — FlextSettings (BaseSettings + ConfigDict)
-- `flext-core/src/flext_core/_models/settings.py` — nested settings models with u.field_validator/u.model_validator
+- `flext-core/src/flext_core/models/settings.py` — nested settings models with u.field_validator/u.model_validator
 - `flext-core/src/flext_core/_utilities/validation.py` — TypeAdapter utilities, validation helpers
 - `flext-core/src/flext_core/typings.py` — RootModel containers (Dict, ConfigMap, etc.)
 - `flext-grpc/src/flext_grpc/models.py` — gRPC domain models with u.computed_field
@@ -362,11 +362,11 @@ class QueryModel(m.ArbitraryTypesModel):
 
 | Subproject                      | Key Files                                          | Pattern                                                                   |
 | ------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------- |
-| `flext-core`                    | `settings.py`, `_models/settings.py`, `typings.py` | ConfigDict, ConfigDict, u.field_validator, u.model_validator, RootModel |
+| `flext-core`                    | `settings.py`, `models/settings.py`, `typings.py` | ConfigDict, ConfigDict, u.field_validator, u.model_validator, RootModel |
 | `flext-grpc`                    | `models.py`, `settings.py`                         | BaseModel + u.computed_field, ConfigDict                                  |
 | `flext-auth`                    | `settings.py`, `models.py`                         | ConfigDict, ConfigDict                                                    |
 | `flext-cli`                     | `settings.py`, `file_tools.py`                     | ConfigDict, yaml → model validation                                       |
-| `flext-ldif`                    | `settings.py`, `_models/settings.py`               | ConfigDict, ConfigDict                                                    |
+| `flext-ldif`                    | `settings.py`, `models/settings.py`               | ConfigDict, ConfigDict                                                    |
 | `flext-api`                     | `settings.py`                                      | ConfigDict                                                                |
 | `flext-web`                     | `settings.py`                                      | ConfigDict                                                                |
 | `flext-meltano`                 | `project_service.py`                               | yaml.safe_dump + BaseModel patterns                                       |

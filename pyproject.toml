@@ -248,6 +248,7 @@ search-path = [
   "flext-cli/examples",
   "flext-cli/src",
   "flext-core/examples",
+  "flext-core/scripts",
   "flext-core/src",
   "flext-infra/src",
   "flext-tests/src",
@@ -381,6 +382,7 @@ include = [
   "flext-cli/src",
   "flext-cli/tests",
   "flext-core/examples",
+  "flext-core/scripts",
   "flext-core/src",
   "flext-core/tests",
   "flext-db-oracle/examples",
@@ -572,6 +574,11 @@ root = "flext-cli/tests"
 extraPaths = [ "flext-core", "flext-core/src" ]
 reportPrivateUsage = "none"
 root = "flext-core/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-core", "flext-core/src" ]
+reportPrivateUsage = "none"
+root = "flext-core/scripts"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = [ "flext-core/src" ]

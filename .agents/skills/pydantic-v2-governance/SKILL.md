@@ -19,8 +19,8 @@ description: Internal Pydantic v2 governance patterns for the FLEXT 34-project m
 - `AGENTS.md` §3.1-§3.3 — Code Law (canonical governance)
 - `.agents/skills/lib-pydantic-v2/SKILL.md` — Pydantic v2 API rules
 - `.agents/skills/pydantic-v2-patterns/SKILL.md` — Advanced patterns
-- `flext-core/src/flext_core/_models/cqrs.py:82-101` — Annotated pattern
-- `flext-core/src/flext_core/_models/base.py:53-102` — TypeAdapter caching
+- `flext-core/src/flext_core/models/cqrs.py:82-101` — Annotated pattern
+- `flext-core/src/flext_core/models/base.py:53-102` — TypeAdapter caching
 - `flext-core/src/flext_core/protocols.py:1-100` — Protocol patterns
 - `flext-core/src/flext_core/typings.py:1-150` — Type system foundation
 - `flext-core/AGENTS.md` — Project-level pointer
@@ -42,7 +42,7 @@ description: Internal Pydantic v2 governance patterns for the FLEXT 34-project m
 - **Boundary simplification**: Prefer replacing repeated local conversion pipelines with one canonical `m.*` boundary model plus validators. Delete converter helpers once the boundary model owns normalization.
 - **Internal state**: Via `u.PrivateAttr` — never bare `self._x`.
 - **Nested classes**: MAY have business methods but ALL properties use `m.Field()`/`u.PrivateAttr`.
-- **models.py/_models/**: For model definitions ONLY.
+- **models.py/models/**: For model definitions ONLY.
 - **Centralized runtime carriers**: Prefer one `m.<Domain>.*State` or `m.<Domain>.*Status` model per service concern over many tiny pass-through carrier models and dict round-trips.
 
 ## Recursive Types — single permitted source
@@ -189,10 +189,10 @@ rg -n "class Config:" --glob "**/*.py" flext-core/src/
 rg -n "model_rebuild\(" --glob "**/*.py" flext-core/src/ flext-core/tests/
 
 # Confirm TypeAdapter caching pattern
-rg -n "ClassVar\[TypeAdapter" flext-core/src/flext_core/_models/base.py
+rg -n "ClassVar\[TypeAdapter" flext-core/src/flext_core/models/base.py
 
 # Confirm Annotated pattern
-rg -n "Annotated\[.*\|.*None.*m.Field" flext-core/src/flext_core/_models/cqrs.py
+rg -n "Annotated\[.*\|.*None.*m.Field" flext-core/src/flext_core/models/cqrs.py
 
 # Run validation
 make val PROJECT=flext-core

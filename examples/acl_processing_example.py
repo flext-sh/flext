@@ -186,7 +186,7 @@ class AclProcessingExample:
     @staticmethod
     def validate_acl_entry(
         acl_entry: t.JsonMapping,
-        _context: t.JsonMapping,
+        context: t.JsonMapping,
     ) -> p.Result[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
@@ -228,7 +228,7 @@ class AclProcessingExample:
                 if all(permission in permissions for permission in combo.split("|"))
             )
         if (
-            _context.get("strict_mode")
+            context.get("strict_mode")
             and AclProcessingExample.Permission.UNKNOWN.value in permissions
         ):
             violations.append("Unknown permissions not allowed in strict mode")
