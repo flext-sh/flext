@@ -1,0 +1,403 @@
+docs/references/pydantic2/concepts/fields.md
+  h_9db9d35f50cf33 231,860
+.agents/skills/flext-pyrefly-typecheck-fix/tests/fix-result-object-test.yml
+  h_9db9d35f50cf33 1,6
+docs/projects/flext-plugin.md
+  c400234001f3b6cd 20,31,57
+.agents/skills/workspace-maintenance/SKILL.md
+  h_9db9d35f50cf33 17,23,31
+.agents/skills/scripts-infra/validate_gate_contract.py
+  h_9db9d35f50cf33 490
+.agents/skills/flext-patterns/SKILL.md
+  h_9db9d35f50cf33 59
+.agents/skills/code-navigation/SKILL.md
+  h_9db9d35f50cf33 3,13-18
+docs/projects/flext-dbt-ldap.md
+  c400234001f3b6cd 21,37,58
+docs/projects/flext-tap-ldif.md
+  c400234001f3b6cd 21,33,50
+docs/projects/flext-target-oracle.md
+  c400234001f3b6cd 20,32,65
+.planning/PROGRESS_2026-04-20.md
+  03e25c1352bb3fbf 8,14,25,31,68-70
+  h_9db9d35f50cf33 20,24,27,50,54,58
+.agents/skills/flext-pyrefly-typecheck-fix/tests/fix-jsondict-legacy-test.yml
+  h_9db9d35f50cf33 3,6
+libs/__init__.py
+  7cc3841f6b2f3c48 9-14
+docs/projects/flext-core.md
+  c400234001f3b6cd 23,78
+docs/planning/MIGRATION_SUMMARY.md
+  c400234001f3b6cd 384
+docs/projects/flext-ldif.md
+  c400234001f3b6cd 24,75
+docs/projects/flext-observability.md
+  c400234001f3b6cd 19
+docs/projects/flext-oracle-wms.md
+  h_9db9d35f50cf33 50
+  c400234001f3b6cd 20,32,66
+.planning/SESSION_SUMMARY_2026-04-20.md
+  03e25c1352bb3fbf 2,11,25,29,40,44,55,62-63,70,79,82-83,85,93,99,128,132,145,149,160,164,175,186,190,194,196,204,206,216,218,226,228,236,238,249,251,262,264,271,279,287,295,303,313,367
+  f2977f58b0abc70f 60,65,329
+  h_9db9d35f50cf33 13,31,48,95,134-135,253-254,266,333
+docs/planning/pydantic2_migration_roadmap.md
+  c400234001f3b6cd 57,324,336,378,412,446,509,562-563,632,648,675,731
+.github/ci-template/ci.yml
+  h_9db9d35f50cf33 53-54
+docs/releases/v0.11.0.md
+  c400234001f3b6cd 97-98
+.agents/skills/pydantic-v2-governance/references/governance-patterns.md
+  h_9db9d35f50cf33 69,105,110,112,114,116,118,122,125,128,130,134,146,265,272,464-465,469,472,482
+docker/images/support/quality/fixed/flext_core/__init__.py
+  7cc3841f6b2f3c48 6-12
+docs/projects/flext-tap-oracle-oic.md
+  c400234001f3b6cd 21,33,50
+docs/references/pydantic2/concepts/json_schema.md
+  h_9db9d35f50cf33 989
+docs/architecture/c4-model/code-diagrams.md
+  h_9db9d35f50cf33 99,115-116,467,479,485,492,498
+docs/projects/flext-oracle-oic.md
+  c400234001f3b6cd 20,62,72
+tests/unit/libs/__init__.py
+  7cc3841f6b2f3c48 9-14
+docker/images/support/quality/enterprise/flext_core/__init__.py
+  7cc3841f6b2f3c48 6-12
+.planning/typing-consolidation-0.12.1.md
+  h_9db9d35f50cf33 11,24,28,33
+tests/__init__.py
+  7cc3841f6b2f3c48 9-14
+docs/references/pydantic2/errors/validation_errors.md
+  h_9db9d35f50cf33 583,1647,1756
+.agents/skills/flext-scope-bootstrap/SKILL.md
+  03e25c1352bb3fbf 97
+  h_9db9d35f50cf33 1-96
+docs/projects/flext-api/README.md
+  c400234001f3b6cd 22,80
+docs/references/pydantic2/concepts/validation_decorator.md
+  h_9db9d35f50cf33 82
+.agents/skills/flext-pyrefly-typecheck-fix/rules.yml
+  h_9db9d35f50cf33 27,29,31,35,38-39,49,53
+.agents/skills/flext-pyrefly-typecheck-fix/tests/detect-result-object-test.yml
+  h_9db9d35f50cf33 1,6
+docs/references/pydantic2/concepts/validators.md
+  h_9db9d35f50cf33 176,519,670
+docs/projects/flext-dbt-ldif.md
+  c400234001f3b6cd 19,21,32,53
+docs/projects/flext-target-ldap.md
+  h_9db9d35f50cf33 20,31,48
+  c400234001f3b6cd 32
+docs/projects/flext-dbt-oracle.md
+  c400234001f3b6cd 19,21,32,52
+.agents/skills/flext-refactoring-workflow/SKILL.md
+  h_9db9d35f50cf33 28,48,111-113
+.planning/FINAL_REPORT_2026-04-20.md
+  h_9db9d35f50cf33 22,29,63-64,69
+  03e25c1352bb3fbf 18,27,33,61,67,92
+docker/images/support/quality/fixed/flext_observability/__init__.py
+  7cc3841f6b2f3c48 6-11
+.agents/skills/flext-pyrefly-typecheck-fix/rules/fix-result-object.yml
+  h_9db9d35f50cf33 1,4-5
+examples/advanced_processing_example.py
+  fac34b4b5e6f8cbe 175-177,190,193-195,210,213-215,218-219,222-223,226,229,237-238,241,249,252-253,261,279,283-284,286,294,297-298,311,325
+src/flext/__init__.py
+  7cc3841f6b2f3c48 9-14
+docs/architecture/flext-service-architecture.md
+  h_9db9d35f50cf33 676,678-679,919,950,952,1387,1419,1434-1435,1441-1442,1944,2066,3055,3059-3061,3085,3111,3286,3293,4168,4315,4321,4329-4330,4506,7608,7635,7648,7653,7667,7675,7688,7694-7695,7700,7721,7737,7742,7744,7836,7840,7853,7875,7887,7891,8218,8294,8480,9022
+  f2977f58b0abc70f 6137
+.agents/skills/pydantic-v2-patterns/references/patterns-detail.md
+  h_9db9d35f50cf33 25,45,68,72,435,454,473-474,495,498
+docs/references/pydantic2/concepts/unions.md
+  h_9db9d35f50cf33 197
+.agents/skills/flext-agent-integration/SKILL.md
+  h_9db9d35f50cf33 35,56,114
+docs/projects/flext-cli.md
+  c400234001f3b6cd 25
+docs/projects/flext-tap-oracle.md
+  c400234001f3b6cd 19,21,33,53
+examples/acl_processing_example.py
+  h_9db9d35f50cf33 76,80,121,137,158,189,255,264,309,313,321,324,334,337,343,345,347,351,396,402,404,406,410,449,455,466,494,498
+  f2977f58b0abc70f 28,60,65,308,310,333,335-336,338,375,395,397,448,450,474,493,495
+docs/superpowers/plans/2026-04-06-pipeline-dag-audit.md
+  h_9db9d35f50cf33 100,105
+.github/workflows/release.yml
+  h_9db9d35f50cf33 71-72,76,114-115
+docs/planning/phase1_detailed_plan.md
+  c400234001f3b6cd 516,603,650
+  h_9db9d35f50cf33 97,102,107,112,117,122,145,155,160
+.agents/skills/flext-strict-typing/SKILL.md
+  h_9db9d35f50cf33 3
+.agents/skills/flext-pyrefly-typecheck-fix/SKILL.md
+  h_9db9d35f50cf33 98,100-101
+docs/reports/README.md
+  c400234001f3b6cd 22
+.agents/skills/flext-pyrefly-typecheck-fix/tests/detect-jsondict-legacy-test.yml
+  h_9db9d35f50cf33 3,6
+.agents/INSTRUCTION_SURFACE.md
+  h_9db9d35f50cf33 14,31,136,138
+tests/infra/__init__.py
+  7cc3841f6b2f3c48 7-12
+docs/references/pydantic2/concepts/experimental.md
+  h_9db9d35f50cf33 153,265-266
+examples/complete_workflow_example.py
+  f2977f58b0abc70f 36-37,46,76,108,132
+  fac34b4b5e6f8cbe 396-404,439,445,505,510-517
+  h_9db9d35f50cf33 80,375,392,395
+docs/projects/flext-dbt-oracle-wms.md
+  c400234001f3b6cd 19,31,54
+.agents/skills/flext-strict-typing/rules.yml
+  h_9db9d35f50cf33 54-64,80,94,102,110
+Makefile
+  h_9db9d35f50cf33 322,969,999,1001
+.agents/skills/flext-pyrefly-typecheck-fix/rules/detect-jsondict-legacy.yml
+  h_9db9d35f50cf33 4
+docs/projects/flext-db-oracle.md
+  c400234001f3b6cd 21,72
+docker/images/support/quality/simple/flext_observability/__init__.py
+  7cc3841f6b2f3c48 6-11
+examples/__init__.py
+  h_9db9d35f50cf33 10,45,47-49,51-52,54-56,58-63,65-79
+docs/superpowers/plans/2026-04-03-flext-cli-pep695-result-dsl.md
+  fac34b4b5e6f8cbe 302,325-326,384,386
+docs/projects/flext-quality.md
+  c400234001f3b6cd 21,32,65,67
+docs/releases/latest.md
+  c400234001f3b6cd 97-98
+AGENTS.md
+  h_9db9d35f50cf33 95,279-281,283,291,347,463,498-500
+.agents/skills/flext-mro-namespace-rules/SKILL.md
+  f2977f58b0abc70f 61
+docs/references/pydantic2/examples/custom_validators.md
+  h_9db9d35f50cf33 16,18
+docker/images/support/quality/simple/flext_core/__init__.py
+  7cc3841f6b2f3c48 6-12
+docs/references/pydantic2/errors/errors.md
+  h_9db9d35f50cf33 30,34
+docs/references/pydantic2/concepts/type_adapter.md
+  h_9db9d35f50cf33 54
+docs/planning/phases2_6_parallel_tracks.md
+  c400234001f3b6cd 62,89,118,138,165,236,262,282,320,347,381,423,445,470,490,524,552,572,597,617,653,678,706,736,800,860,937
+.agents/skills/lib-pyyaml/SKILL.md
+  fac34b4b5e6f8cbe 118
+  h_9db9d35f50cf33 53,75,78,225,229-230
+docs/projects/flext-tap-oracle-wms.md
+  h_9db9d35f50cf33 21,31-33,50,52
+.agents/skills/lib-pydantic-v2/SKILL.md
+  h_9db9d35f50cf33 197,200,203,206
+.agents/skills/pydantic-v2-governance/SKILL.md
+  fac34b4b5e6f8cbe 50
+docker/images/Dockerfile.flext-quality-standalone
+  h_9db9d35f50cf33 119
+docs/planning/phases7_9_completion.md
+  c400234001f3b6cd 375,383,407,433,441,642,697
+  h_9db9d35f50cf33 80,85,94,103,112
+docs/architecture/flext-cqrs-architecture.md
+  h_9db9d35f50cf33 365,374-375,407,410,643,645,649,653
+.agents/skills/flext-constants-discipline/SKILL.md
+  h_9db9d35f50cf33 82
+.agents/skills/flext-context-routing/SKILL.md
+  h_9db9d35f50cf33 19,30,32,48,52-57,69,71-76,99-100
+docs/references/pydantic2/examples/orms.md
+  h_9db9d35f50cf33 8
+.agents/skills/lib-dependency-injector/SKILL.md
+  h_9db9d35f50cf33 98
+docs/projects/flext-tap-ldap.md
+  c400234001f3b6cd 63
+  h_9db9d35f50cf33 20,33-34,53,55-56
+.agents/skills/flext-strict-typing/references/type-rules-detail.md
+  h_9db9d35f50cf33 118,155,159,166,508
+.agents/skills/flext-pyrefly-typecheck-fix/rules/fix-jsondict-legacy.yml
+  h_9db9d35f50cf33 4-5
+docs/projects/flext-ldap.md
+  c400234001f3b6cd 20,37,75
+.agents/skills/rules-cmd/SKILL.md
+  h_9db9d35f50cf33 28
+docs/references/pydantic2/errors/usage_errors.md
+  h_9db9d35f50cf33 1355
+docs/references/pydantic2/concepts/serialization.md
+  h_9db9d35f50cf33 502,526,628
+docs/projects/flext-auth.md
+  c400234001f3b6cd 21
+.agents/skills/flext-pyrefly-typecheck-fix/rules/detect-result-object.yml
+  h_9db9d35f50cf33 1,4
+docs/projects/flext-grpc.md
+  c400234001f3b6cd 21,32,51
+docs/references/pydantic2/concepts/models.md
+  h_9db9d35f50cf33 124,128,185,415,460,558,560,764,767
+.gitignore
+  c400234001f3b6cd 193
+.planning/EXTENDED_SESSION_SUMMARY_2026-04-20.md
+  03e25c1352bb3fbf 2,20,25,46,52-53,58,64,70,80,82,88,92,96,116,123,132,159,167,174,184,192,201
+  f2977f58b0abc70f 47
+docker/images/support/quality/enterprise/flext_observability/__init__.py
+  7cc3841f6b2f3c48 5-11
+.agents/skills/flext-type-system/SKILL.md
+  h_9db9d35f50cf33 32,152-153,181,201
+.agents/skills/rules-scripts/SKILL.md
+  h_9db9d35f50cf33 25,36
+tests/unit/__init__.py
+  7cc3841f6b2f3c48 2-8
+.github/workflows/ci.yml
+  h_9db9d35f50cf33 34,36,46,48
+.agents/README.md
+  h_9db9d35f50cf33 21
+docs/superpowers/specs/2026-04-06-pipeline-dag-audit-design.md
+  h_9db9d35f50cf33 36-37,81,167
+docker/docker-compose.meltano-test.yml
+  c400234001f3b6cd 50
+docs/projects/flext-meltano.md
+  c400234001f3b6cd 35,55
+docs/references/pydantic2/concepts/types.md
+  h_9db9d35f50cf33 413,877
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "8784265a38bd56b41e4ec5b7f217f79bd2bea476",
+  "prompts": {
+    "03e25c1352bb3fbf": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "dce5a796-8eb8-4d62-a968-995aa4b99a1f",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 150,
+      "total_deletions": 76,
+      "accepted_lines": 6836,
+      "overriden_lines": 96,
+      "messages_url": "https://usegitai.com/cas/34675eb77c73c2cd7576da1069bd9159a13f52264d3a61456602280f189a3027"
+    },
+    "090c63af50032683": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "eb27f5e0-e7ed-4b57-af9e-dd78e5fabc39",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 4,
+      "accepted_lines": 3,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/02b276866208574df1f3de9d81f65adbbfd8e2d82c9571f8ee3173131175d44f"
+    },
+    "0cb80679e2badf73": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "a0663cfd-bd21-4aa5-aa65-4e3d5723f714",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1368,
+      "total_deletions": 25,
+      "accepted_lines": 1365,
+      "overriden_lines": 1,
+      "messages_url": "https://usegitai.com/cas/e4540b9f942374a483a2857bfaa0446d9a1cfde72af424496d4ba857fae01552"
+    },
+    "2a9b1e922a239b52": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "8ab0822a-64f4-4823-8ca1-dec8811b0499",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 389,
+      "total_deletions": 179,
+      "accepted_lines": 277,
+      "overriden_lines": 22,
+      "messages_url": "https://usegitai.com/cas/7d5e993175ca5da67cbfc3f9c133b71987a8a735f669b0e818877acf32c4e43d"
+    },
+    "7cc3841f6b2f3c48": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "f0c0aa95-d851-400e-8030-9a37700fa21d",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 724,
+      "total_deletions": 782,
+      "accepted_lines": 718,
+      "overriden_lines": 17,
+      "messages_url": "https://usegitai.com/cas/b5903396400614adf355ec976c9bdc829ef30adf39cc73b6bfc7b249571ceed4"
+    },
+    "82b44c161d90cd80": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "fc39c22c-a19a-4a47-b2d0-7d215f352373",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 74,
+      "total_deletions": 1,
+      "accepted_lines": 609,
+      "overriden_lines": 21,
+      "messages_url": "https://usegitai.com/cas/6738e3827b84a38bb7f7d1319cbc9716e9707778b27166318750425412d919b5"
+    },
+    "a0d238a276384dc5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019db5ad-fb00-7532-abec-eddfd4d16806",
+        "model": "gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 835,
+      "total_deletions": 4495,
+      "accepted_lines": 4402,
+      "overriden_lines": 145,
+      "messages_url": "https://usegitai.com/cas/14cb0a7a580efebde41f1c40beb6760cf87c717e0a113e6687636e5eaf4f4786"
+    },
+    "c400234001f3b6cd": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "a4927df8-2705-4272-b980-fda4fd9bcde5",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 57483,
+      "total_deletions": 220,
+      "accepted_lines": 61869,
+      "overriden_lines": 361,
+      "messages_url": "https://usegitai.com/cas/f66dda32456c70c2c00497b321722b7f6b31541f6a873eab4d38623e6b320550"
+    },
+    "f2977f58b0abc70f": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "2f2c0c95-570b-4cbb-8a4f-53d5ebac0082",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 2964,
+      "total_deletions": 2600,
+      "accepted_lines": 5429,
+      "overriden_lines": 109,
+      "messages_url": "https://usegitai.com/cas/d19ea7a03afb6c18ea0d8907cefaa8ade813f26dc19e472033132eb45a6047c4"
+    },
+    "fac34b4b5e6f8cbe": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "02c86e73-ad1a-4839-975c-dca7a7f4247f",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 741,
+      "total_deletions": 649,
+      "accepted_lines": 979,
+      "overriden_lines": 53,
+      "messages_url": "https://usegitai.com/cas/74c94fa96fb09e0fc5fd89a30f0b9ff1e010d2e09762f0ce775e3a3a659c6c51"
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
