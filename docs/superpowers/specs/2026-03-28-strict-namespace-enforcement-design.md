@@ -336,12 +336,12 @@ These classes are MRO bases of the namespace facade chain. Python requires them 
 - `api.py` → entry point — KEEP
 - `manager.py` → `u.Plugin.Manager`
 - `installer.py` → `u.Plugin.Installer`
-- `registry.py` → `u.Plugin.Registry`
-- `discovery.py` → `u.Plugin.Discovery`
+- `registry.py` → `u.Plugin`
+- `discovery.py` → `u.Plugin`
 - `loader.py` → `u.Plugin.Loader`
 - `validator.py` → `u.Plugin.Validator`
 - `hooks.py` → `u.Plugin.Hooks`
-- `lifecycle.py` → `u.Plugin.Lifecycle`
+- `lifecycle.py` → `u.Plugin`
 - `settings_loader.py` → `u.Plugin.SettingsLoader`
 - `plugin_exceptions.py` → rename to `errors.py`
 - `sandbox.py` → `u.Plugin.Sandbox`

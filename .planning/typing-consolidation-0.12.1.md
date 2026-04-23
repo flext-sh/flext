@@ -33,7 +33,7 @@ class ConfigMap(RootModel[t.JsonMapping]):
 - Remove `t.JsonValue` alias (replaced by `JsonValue`)
 - Remove `t.Scalar` (replaced by `JsonLiteral`)
 - Remove `t.Primitives` (replaced by inline `str | int | float | bool | None`)
-- Remove `t.RuntimeData` composition
+- Remove `t.JsonPayload` composition
 
 ### 1.3 TypeAdapter consolidation for all JSON validation
 

@@ -149,7 +149,7 @@ from flext_core import m, p, r, s, t, u
 class FlextDemoParseJsonMixin:
     """JSON parse mixin stub."""
 
-    def parse_json(self, request: t.RuntimeData) -> p.Result[str]:
+    def parse_json(self, request: t.JsonPayload) -> p.Result[str]:
         """Parse JSON from request payload."""
         _ = request
         return r[str].ok("parsed")
