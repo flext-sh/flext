@@ -33,8 +33,8 @@ from examples import m, p, r, t, u
 class CompleteWorkflowExample:
     """Complete workflow example demonstrating FLEXT enterprise data integration capabilities."""
 
-    type ProcessingDict = t.ContainerValueMapping
-    type WorkflowContent = t.ContainerValueMapping
+    type ProcessingDict = t.JsonMapping
+    type WorkflowContent = t.JsonMapping
 
     class WorkflowData(m.BaseModel):
         """Data container for workflow processing."""
@@ -43,7 +43,7 @@ class CompleteWorkflowExample:
             arbitrary_types_allowed=True,
             extra="allow",
         )
-        content: t.ContainerValueMapping = u.Field(default_factory=dict)
+        content: t.JsonMapping = u.Field(default_factory=dict)
 
     @unique
     class Stage(StrEnum):
@@ -73,11 +73,11 @@ class CompleteWorkflowExample:
             ],
             description="List of workflow stages to execute",
         )
-        metadata: t.ContainerValueMapping = u.Field(
+        metadata: t.JsonMapping = u.Field(
             default_factory=dict,
             description="Workflow metadata key-value pairs",
         )
-        performance_metrics: t.MutableContainerValueMapping = u.Field(
+        performance_metrics: t.MutableJsonMapping = u.Field(
             default_factory=dict,
             description="Performance metrics collected during workflow execution",
         )
@@ -105,7 +105,7 @@ class CompleteWorkflowExample:
             default_factory=list,
             description="List of warnings encountered",
         )
-        stage_metadata: t.ContainerValueMapping = u.Field(
+        stage_metadata: t.JsonMapping = u.Field(
             default_factory=dict,
             description="Stage-specific metadata",
         )
@@ -129,7 +129,7 @@ class CompleteWorkflowExample:
             default_factory=list,
             description="Results from each workflow stage",
         )
-        aggregated_metrics: t.ContainerValueMapping = u.Field(
+        aggregated_metrics: t.JsonMapping = u.Field(
             default_factory=dict,
             description="Aggregated metrics across all stages",
         )
@@ -372,7 +372,7 @@ class CompleteWorkflowExample:
                 stage_results,
                 total_time,
             )
-            aggregated_metrics_payload: t.MutableContainerValueMapping = {}
+            aggregated_metrics_payload: t.MutableJsonMapping = {}
             for key, value in aggregated_metrics.items():
                 aggregated_metrics_payload[key] = value
 
@@ -389,17 +389,19 @@ class CompleteWorkflowExample:
                     "workflow_status": "completed",
                 })
             )
-            perf_summary_raw: t.MutableContainerValueMapping = {}
+            perf_summary_raw: t.MutableJsonMapping = {}
             for key, value in aggregated_metrics.items():
                 perf_summary_raw[key] = value
-            summary: CompleteWorkflowExample.ProcessingDict = {
-                "workflow_id": workflow_result.workflow_id,
-                "workflow_status": workflow_result.workflow_status,
-                "total_stages": workflow_result.total_stages,
-                "completed_stages": workflow_result.completed_stages,
-                "total_processing_time": workflow_result.total_processing_time,
-                "performance_summary": perf_summary_raw,
-            }
+            summary: CompleteWorkflowExample.ProcessingDict = (
+                t.json_mapping_adapter().validate_python({
+                    "workflow_id": workflow_result.workflow_id,
+                    "workflow_status": workflow_result.workflow_status,
+                    "total_stages": workflow_result.total_stages,
+                    "completed_stages": workflow_result.completed_stages,
+                    "total_processing_time": workflow_result.total_processing_time,
+                    "performance_summary": perf_summary_raw,
+                })
+            )
             summary_content: CompleteWorkflowExample.WorkflowContent = {**summary}
             workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
                 {"content": summary_content},
@@ -434,13 +436,13 @@ class CompleteWorkflowExample:
             value: t.Primitives,
             extra_logic: Callable[
                 [CompleteWorkflowExample.ProcessingDict],
-                t.ContainerValueMapping,
+                t.JsonMapping,
             ]
             | None = None,
         ) -> CompleteWorkflowExample.ProcessingDict:
             """Generic stage processing helper."""
             time.sleep(sleep_time)
-            result: t.MutableContainerValueMapping = {
+            result: t.MutableJsonMapping = {
                 **item,
             }
             result[add_field] = value
@@ -500,18 +502,20 @@ class CompleteWorkflowExample:
         """Create sample data for workflow testing."""
         result: MutableSequence[CompleteWorkflowExample.ProcessingDict] = []
         for i in range(count):
-            attrs: t.MutableContainerValueMapping = {
+            attrs: t.MutableJsonMapping = {
                 "objectClass": "person,organizationalPerson",
                 "cn": f"user{i}",
                 "sn": f"User{i}",
             }
-            item: CompleteWorkflowExample.ProcessingDict = {
-                "id": f"item_{i}",
-                "dn": f"cn=user{i},ou=users,dc=example,dc=com",
-                "name": f"User {i}",
-                "attributes": attrs,
-                "timestamp": time.time() + i,
-            }
+            item: CompleteWorkflowExample.ProcessingDict = (
+                t.json_mapping_adapter().validate_python({
+                    "id": f"item_{i}",
+                    "dn": f"cn=user{i},ou=users,dc=example,dc=com",
+                    "name": f"User {i}",
+                    "attributes": attrs,
+                    "timestamp": time.time() + i,
+                })
+            )
             result.append(item)
         return result
 

@@ -14,11 +14,13 @@ description: Use when running workspace-wide maintenance tasks across all FLEXT 
 
 ## References
 
+- `AGENTS.md`
 - `.agents/skills/rules-scripts/SKILL.md`
 - `.agents/skills/scripts-maintenance/SKILL.md`
 
 ## Rules
 
+- `AGENTS.md` is the canonical governance source; this skill covers workspace-maintenance automation only.
 - All checks must be idempotent and safe by default (read-only unless `--apply`).
 - Mutations (cleanup, lock updates) require explicit `--apply` flag.
 - Scripts must discover `flext-*` projects with `pyproject.toml` for workspace iteration.
@@ -26,6 +28,7 @@ description: Use when running workspace-wide maintenance tasks across all FLEXT 
 - Exit 0 = all checks pass, exit 1 = violations found.
 - Each script must be standalone (stdlib + PyYAML only, no flext_core imports).
 - Workspace maintenance work must preserve or restore zero `ruff`, `pyrefly`, enforcement, and `pytest` debt across all affected projects before completion.
+- Do not duplicate repository-wide execution law here; point back to `AGENTS.md` when broader process or tooling policy is needed.
 
 ## Instructions
 

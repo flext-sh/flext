@@ -9,7 +9,6 @@ import json
 import re
 import sys
 from collections.abc import (
-    Mapping,
     Sequence,
 )
 from pathlib import Path
@@ -488,7 +487,7 @@ def write_report(root: Path, scripts: Sequence[ScriptInfo], mode: str) -> Path:
         1 for s in scripts for v in s.violations if v.severity == "warning"
     )
 
-    payload: Mapping[str, t.Container] = {
+    payload = {
         "checked": checked_count,
         "errors": error_count,
         "mode": mode,

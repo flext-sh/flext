@@ -18,7 +18,7 @@ FLEXT gRPC (v0.9.0) is the gRPC communication foundation for the FLEXT platform.
 - **Python**: 3.13+
 - **Tests**: 18 018 lines in multiple suites; the README reports 28 failing tests that block full validation.
 - **Coverage**: 39% actual (target 90%); coverage gates flagged in `pyproject.toml` and README.
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) remains blocked until coverage/test issues are resolved; `make lint`, `make type-check`, `make security`, `make test`, `poetry run pytest` commands currently pass individually.
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) remains blocked until coverage/test issues are resolved; `make lint`, `make type-check`, `make security`, `make test`, `poetry run pytest` commands currently pass individually.
 - **Type discipline**: MyPy strict, zero `Any`/`cast`/`TYPE_CHECKING`; every public API returns `r[T]` with consistent error handling.
 
 ## Quick start
@@ -29,7 +29,7 @@ cd flext-grpc
 poetry install
 make setup
 make check       # lint + type
-make validate    # runs lint, type, security, tests, coverage (currently blocked)
+make val    # runs lint, type, security, tests, coverage (currently blocked)
 ```
 
 ```bash
@@ -48,7 +48,7 @@ poetry run ruff check src/
 
 ## Quality & operations
 
-- **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate` (currently blocked by coverage/test gaps).
+- **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make val` (currently blocked by coverage/test gaps).
 - **Testing**: 28 failing tests noted in README, 39% coverage; scope includes single-file settings tests, service/test_config, integration stubs.
 - **Security**: Bandit + pip-audit invoked through `make security`; zero tolerance for SQL injection or dynamic code.
 - **Next steps**: raise coverage from 39% → 90%, fix failing tests, verify protobuf integrations, and mature TLS/auth features.

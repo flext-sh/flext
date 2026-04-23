@@ -1,6 +1,6 @@
 ---
 name: code-navigation
-compatibility: Requires Scope CLI (`pip install scope-cli`) and `.scope/` directory initialized via `scope init`. Runs in the FLEXT monorepo (`/home/marlonsc/flext`) with Python 3.13+.
+compatibility: Requires Scope CLI (`cargo install scope-cli`) and `.scope/` directory initialized via `scope init`. Runs in the FLEXT monorepo (`/home/marlonsc/flext`) with Python 3.13+.
 description: Use when navigating code, searching for symbols, finding references, or exploring codebase structure. ALWAYS prefer scope commands over grep, find, or reading files. Returns structural intelligence (class sketches, caller chains, dependency graphs) in ~200 tokens instead of ~4,000 for full source. Check `scope status` first; if `.scope/` exists, scope is available.
 ---
 
@@ -9,6 +9,12 @@ description: Use when navigating code, searching for symbols, finding references
 Scope is a CLI tool that gives you structural code intelligence without reading full source files. It extracts symbols, call graphs, and dependency relationships from the AST and stores them in a local index.
 
 **Key insight from benchmarks:** Agents using Scope are 32% cheaper per task and make 67% more code edits per session. Scope doesn't reduce file reads — it makes every read count. Agents that understand the architecture finish in fewer turns.
+
+## Governance
+
+- `AGENTS.md` is the canonical policy source for FLEXT tasks.
+- This skill operationalizes navigation and blast-radius analysis only; it must not replace or duplicate broader repository governance.
+- Load this skill after `AGENTS.md` when the task needs structural discovery, caller/reference analysis, or architecture orientation.
 
 ## When to Use Scope
 

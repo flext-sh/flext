@@ -18,7 +18,7 @@ FLEXT Tap Oracle WMS (v1.0.0 release preparation) is the Singer tap that continu
 - **Python**: 3.13+
 - **Status**: Production-ready core features (10 working streams) while refactoring (26 files → 6‑8 target) and reopening disabled tests (27% of tests currently disabled)
 - **Coverage goal**: 90%+ target; reporting shows coverage is limited while refactor completes
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring + Singer checks) is required before merges; `make lint`, `make type-check`, `make security`, `make test`, and Singer discovery/run commands currently run as part of `make check`
+- **Quality gates**: `make check`, `make test`, and `make val` are the current project gates; use `make check CHECK_GATES=...` when you need a narrower lint, type, or security pass.
 - **Zero tolerance**: No direct Singer SDK, Oracle WMS SDK, or SQLAlchemy imports; rely on flext-core/flext-oracle-wms/flext-db-oracle; everything returns `r[T]`
 
 ## Quick start
@@ -28,8 +28,9 @@ git clone https://github.com/flext-sh/flext-tap-oracle-wms.git
 cd flext-tap-oracle-wms
 poetry install
 make setup
-make check     # lint + type-check + tests
-make validate  # full validation (currently monitors refactor progress)
+make check     # standard lint, type, and security gate set
+make test
+make val
 ```
 
 ```bash
@@ -46,9 +47,9 @@ tap-oracle-wms --config settings.json --catalog catalog.json --state state.json
 
 ## Quality & operations
 
-- **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate`, `make discover`, `make run`, `make wms-test`, `make validate-settings`.
+- **Validation commands**: `make check`, `make test`, `make val`, `make discover`, `make catalog`, `make run`, `make sync`, `make validate-config`, and `make wms-test`.
 - **Testing**: 37 MyPy errors noted (regression), 27% of tests disabled, 8,179 lines marked for simplification; tests include Singer, integration, and WMS connectivity scenarios.
-- **Security**: Bandit + pip-audit run via `make security`; zero tolerance for insecure default credentials.
+- **Security**: Security gates run through `make check CHECK_GATES=security`; zero tolerance remains for insecure default credentials.
 - **Documentation**: TODO, architecture, and standards docs describe the refactor plan, quality principles, and simplification roadmap.
 
 ## Resources & references

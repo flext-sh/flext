@@ -18,7 +18,7 @@ FLEXT Auth v2.0.0 is the generic, multi-provider authentication foundation for t
 - **Python support**: 3.13+
 - **Tests**: 558 tests in total; 228 passing (40.9%), 319 failing (57.2%), 11 errors (2.0%) [see `reports/pytest/` snapshots]
 - **Coverage**: ~70% as captured in `reports/coverage-scan-*`
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks)
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks)
 - **Type safety**: Pyrefly strict mode and MyPy strict mode run clean; no `Any`, no `cast`, no `# type:` ignores allowed
 - **Security posture**: bcrypt (12 rounds) + JWT (HS256) plus planned phase 2 providers
 

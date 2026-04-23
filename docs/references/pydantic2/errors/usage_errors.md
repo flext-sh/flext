@@ -1352,7 +1352,7 @@ except PydanticUserError as exc_info:
 ## [`Unpack`][typing.Unpack] used without a [`TypedDict`][typing.TypedDict] {#unpack-typed-dict}
 
 This error is raised when [`Unpack`][typing.Unpack] is used with something other than
-a [`TypedDict`][typing.TypedDict] class t.Container to type hint variadic keyword parameters.
+a [`TypedDict`][typing.TypedDict] class t.JsonValue to type hint variadic keyword parameters.
 
 For reference, see the [related specification section] and [PEP 692].
 

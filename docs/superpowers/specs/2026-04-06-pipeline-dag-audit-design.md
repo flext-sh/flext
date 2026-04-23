@@ -33,8 +33,8 @@ class PipelineStageContext(Protocol):
     """Contract for stage execution context."""
 
     workspace_root: Path
-    shared: t.MutableFlatContainerMapping
-    settings: Mapping[str, t.Container]
+    shared: t.MutableJsonMapping
+    settings: t.JsonMapping
 
 
 @runtime_checkable
@@ -78,7 +78,7 @@ class PipelineStageResult(FlextModels.ContractModel):
 
     stage_id: str
     status: t.Cli.PipelineStageStatus
-    output: Mapping[str, t.Container]
+    output: t.JsonMapping
     duration_ms: float
 
 
@@ -164,7 +164,7 @@ def execute_pipeline(
 
 ### 2.2 Plan
 
-1. Extend `u.Cli.json_read()` / `u.Cli.json_write()` to accept optional `validator: Callable[[Mapping[str, t.Container]], r[Mapping[str, t.Container]]] | None` callback for domain-specific validation (the 5% variation)
+1. Extend `u.Cli.json_read()` / `u.Cli.json_write()` to accept optional `validator: Callable[[t.JsonMapping], r[t.JsonMapping]] | None` callback for domain-specific validation (the 5% variation)
 2. Update all flext-infra callers from `u.Infra.read_json()` → `u.Cli.json_read()`
 3. Delete `flext_infra/_utilities/io.py` entirely
 4. Remove `FlextInfraUtilitiesIo` from `FlextInfraUtilities.Infra` MRO

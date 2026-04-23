@@ -17,7 +17,7 @@ FLEXT Target Oracle is the Singer target that loads data into Oracle databases w
 - **Version**: 0.9.9 (1.0.0 Release Preparation)
 - **Python**: 3.13+
 - **Status**: Documentation ready, implementation blocked (critical SQL injection vulnerability in `loader.py`, missing Singer SDK standard methods, DDL/DML mixups, transaction gaps)
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is configured but cannot fully pass until the security fixes land; `make lint`, `make type-check`, `make security`, and `make test` currently run but warning on the blockers
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is configured but cannot fully pass until the security fixes land; `make lint`, `make type-check`, `make security`, and `make test` currently run but warning on the blockers
 - **Coverage**: >90% per README but the final gate waits for migration/transaction fixes
 - **Security**: SQL injection fix, exception consolidation, Singer compliance, and transaction management are documented with blocking warnings (see `docs/TODO.md`)
 - **Type discipline**: MyPy + Pyrefly strict, zero `Any`/`cast`/`# type: ignore`; every API returns `r[T]`
@@ -29,7 +29,7 @@ git clone https://github.com/flext-sh/flext-target-oracle.git
 cd flext-target-oracle
 poetry install
 make setup
-make validate  # currently blocked until security fixes land
+make val  # currently blocked until security fixes land
 ```
 
 ```python
@@ -62,7 +62,7 @@ if result.is_failure:
 
 ## Quality & concerns
 
-- `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate` exist; the final gate stops at the security warnings.
+- `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make val` exist; the final gate stops at the security warnings.
 - Coverage is ~90% but gating scripts flag the blockers; the team tracks them under priority 1-4 targets in the README.
 - Security status: SQL injection in `loader.py` is red-flagged with remediation steps in `docs/TODO.md`; production deployment is blocked until the analyzer/transaction code is hardened.
 - Pre-commit hooks ensure no `singer-sdk`/`sqlalchemy/oracledb` imports outside allowed adapters and enforce zero tolerance for `Any` or `cast`.

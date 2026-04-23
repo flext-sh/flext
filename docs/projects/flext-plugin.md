@@ -17,7 +17,7 @@ FLEXT Plugin (v0.9.0) is the production-grade plugin management platform for the
 - **Version**: 0.9.0 (production ready, 0.10.0 enhancements planned)
 - **Python**: 3.13+
 - **Tests**: 339 test methods across unit, integration, and e2e suites; coverage target 90% (currently met per README)
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is required before merges
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is required before merges
 - **Type safety**: MyPy strict mode, zero `Any`, `cast`, or `# type: ignore`; every public surface returns `r[T]`
 - **Security**: Sandbox validation, hot reload monitoring, and watchdog-backed file discovery run inside isolation layers defined by the project’s zero-tolerance AGENTS rules
 
@@ -28,7 +28,7 @@ git clone https://github.com/flext-sh/flext.git
 cd flext-plugin
 make setup
 make check
-make validate
+make val
 ```
 
 ```python
@@ -54,7 +54,7 @@ Use the CLI helpers (currently disabled in `__init__.py`) once the command layer
 
 ## Quality & compliance
 
-- **Validation commands**: `make lint`, `make type-check`, `make test`, `make coverage`, `make security`, `make validate`, `make check`, `make format`.
+- **Validation commands**: `make lint`, `make type-check`, `make test`, `make coverage`, `make security`, `make val`, `make check`, `make format`.
 - **Coverage goal**: 90% minimum across the plugin stack; tests run via `pytest tests/`, `pytest --cov=flext_plugin`, `pytest -m "not slow"`, etc.
 - **Security**: plugin sandboxing, entry point validation, and hot reload watchers all validated by the quality pipeline; zero Ruff/Pyrefly errors allowed.
 - **Architecture compliance**: single class per module, no `TYPE_CHECKING`, no `Any`, all operations return `r`, instrumentation built into `flext-observability` and `flext-cli` once CLI integration finalizes.

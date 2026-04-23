@@ -79,7 +79,7 @@ from typing import Final
 
 
 class FlextConstantsBase:
-    HEADER_MAP: Final[Mapping[str, str]] = MappingProxyType({
+    HEADER_MAP: Final[t.StrMapping] = MappingProxyType({
         "content-type": "application/json",
         "accept": "application/json",
     })

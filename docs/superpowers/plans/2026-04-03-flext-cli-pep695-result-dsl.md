@@ -299,7 +299,7 @@ git commit -m "refactor(flext-cli): isolate Typer object boundary, PEP 695 stric
 @staticmethod
 def cli_args_to_model[M: BaseModel](
     model_class: type[M],
-    cli_args: Mapping[str, t.Cli.JsonValue],
+    cli_args: Mapping[str, t.JsonValue],
 ) -> p.Result[M]:
     """Convert CLI args dict to a Pydantic model instance."""
     try:
@@ -322,8 +322,8 @@ class ModelCommandBuilder[M: BaseModel]:
     def __init__(
         self,
         model_class: type[M],
-        handler: Callable[[M], t.Cli.JsonValue],
-        settings: t.Cli.JsonValue | None = None,
+        handler: Callable[[M], t.JsonValue],
+        settings: t.JsonValue | None = None,
     ) -> None:
         super().__init__()
         self.model_class = model_class
@@ -381,9 +381,9 @@ Add `MutableSequence` to imports:
 from collections.abc import Mapping, MutableSequence, Sequence
 ```
 
-- [ ] **Step 2: output.py — Replace `dict[str, t.Cli.JsonValue]`**
+- [ ] **Step 2: output.py — Replace `dict[str, t.JsonValue]`**
 
-Line 104: `result: dict[str, t.Cli.JsonValue] = {}` → `result: MutableMapping[str, t.Cli.JsonValue] = {}`
+Line 104: `result: dict[str, t.JsonValue] = {}` → `result: MutableMapping[str, t.JsonValue] = {}`
 
 Replace `isinstance(value, dict)` and `isinstance(value, list)` with `isinstance(value, Mapping)` and `isinstance(value, Sequence)` (with `not isinstance(value, str)` guard for sequences).
 

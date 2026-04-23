@@ -18,7 +18,7 @@ This directory contains only project agent assets.
 ## Required Tooling Surfaces
 
 - Scope routing and freshness rules live in `AGENTS.md` and `.agents/skills/code-navigation/SKILL.md`.
-- Serena setup expectations live in `AGENTS.md` and `.serena/project.yml`.
+- Serena setup expectations live in `AGENTS.md`, `.vscode/mcp.json`, and `.serena/project.yml`.
 - Structural propagation rules for `ast-grep` live in `AGENTS.md` and `.agents/skills/flext-refactoring-workflow/SKILL.md`.
 - MCP routing expectations live in `AGENTS.md` and `.vscode/mcp.json`.
 

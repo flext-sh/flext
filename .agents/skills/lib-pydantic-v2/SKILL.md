@@ -194,16 +194,16 @@ from collections.abc import Mapping
 from flext_core import m
 
 
-class StringMap(m.RootModel[Mapping[str, str]]):
+class StringMap(m.RootModel[t.StrMapping]):
     """RootModel container for string-to-string mappings."""
 
-    root: Mapping[str, str]
+    root: t.StrMapping
 
 
-class IntMap(m.RootModel[Mapping[str, int]]):
+class IntMap(m.RootModel[t.IntMapping]):
     """RootModel container for string-to-int mappings."""
 
-    root: Mapping[str, int]
+    root: t.IntMapping
 ```
 
 Used via explicit domain models and facade exports (`m.*`) rather than broad container aliases.

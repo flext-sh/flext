@@ -362,7 +362,7 @@ servir como referência futura para implementação:
 
 ~~ # ⚠️ Infraestrutura manual (será deprecated)~~
 ~~ \_metrics: Mapping[str, t.Numeric]~~
-~~\_context_stack: Sequence[Mapping[str, t.Container]]~~
+~~\_context_stack: Sequence[t.JsonMapping]~~
 
 ~~ # ✅ Pipeline methods~~
 ~~ def handle(self, message: TCommand_contra) -> p.Result[TResult_co]: ...~~
@@ -371,8 +371,8 @@ servir como referência futura para implementação:
 ~~ # ⚠️ Métodos manuais (serão deprecated em V2)~~
 ~~ def record_metric(self, key: str, value: t.Numeric) -> None: ...~~
 ~~ def get_metrics(self) -> Mapping[str, t.Numeric]: ...~~
-~~ def push_context(self, ctx: Mapping[str, t.Container]) -> None: ...~~
-~~ def pop_context(self) -> Mapping[str, t.Container] | None: ...~~
+~~ def push_context(self, ctx: t.JsonMapping) -> None: ...~~
+~~ def pop_context(self) -> t.JsonMapping | None: ...~~
 ~~```~~
 
 ~~**Dependências:**~~
@@ -404,10 +404,10 @@ servir como referência futura para implementação:
 ~~\_rate_limiter_manager: RateLimiterManager # ~150 linhas~~
 ~~ \_timeout_enforcer: TimeoutEnforcer # ~100 linhas~~
 ~~ \_retry_policy_manager: RetryPolicyManager # ~150 linhas~~
-~~\_cache: Mapping[str, t.Container] # ~100 linhas~~
+~~\_cache: t.JsonMapping # ~100 linhas~~
 
 ~~ # ✅ Core methods~~
-~~ def dispatch(self, message) -> p.Result[t.Container]: ...~~
+~~ def dispatch(self, message) -> p.Result[t.JsonValue]: ...~~
 ~~ def register_command(self, cmd_type: type, handler: h) -> None: ...~~
 ~~ def register_query(self, query_type: type, handler: h) -> None: ...~~
 ~~ def register_event(self, event_type: type, handler: h) -> None: ...~~
@@ -640,19 +640,19 @@ servir como referência futura para implementação:
 ~~ """Thread-safe context stack for handlers."""~~
 
 ~~ def **init**(self) -> None:~~
-~~ self.\_stack: Sequence[Mapping[str, t.Container]] = []~~
+~~ self.\_stack: Sequence[t.JsonMapping] = []~~
 
-~~ def push(self, ctx: Mapping[str, t.Container]) -> None:~~
+~~ def push(self, ctx: t.JsonMapping) -> None:~~
 ~~ """Push context onto stack."""~~
 ~~ self.\_stack.append(ctx)~~
 
-~~ def pop(self) -> Mapping[str, t.Container] | None:~~
+~~ def pop(self) -> t.JsonMapping | None:~~
 ~~ """Pop context from stack."""~~
 ~~ return self.\_stack.pop() if self.\_stack else None~~
 
-~~ def current(self) -> Mapping[str, t.Container]:~~
+~~ def current(self) -> t.JsonMapping:~~
 ~~ """Get current context (merged stack)."""~~
-~~ result: Mapping[str, t.Container] = {}~~
+~~ result = {}~~
 ~~ for ctx in self.\_stack:~~
 ~~ result.update(ctx)~~
 ~~ return result~~

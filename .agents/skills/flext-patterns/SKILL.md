@@ -56,7 +56,7 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 - Event-Driven patterns in service/dispatcher flows
 - Hexagonal ports/adapters boundaries
 - Validation/middleware pipeline composition
-- Factory/Adapter t.Container-creation integration patterns
+- Factory/Adapter t.JsonValue-creation integration patterns
 - **Namespace Inheritance** (cross-project `m`, `c`, `t`, `u`, `p` composition via MRO)
 - **Service Facade** (`api.py` MRO composition of `services/*.py` mixins — see §2.5 of AGENTS.md)
 

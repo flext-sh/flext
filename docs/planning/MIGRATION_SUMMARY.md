@@ -381,7 +381,7 @@ def domain(self) -> str:
 
 ✅ **Validation**
 
-- `make validate` passes on full monorepo
+- `make val` passes on full monorepo
 - Zero lint violations
 - Zero type errors
 

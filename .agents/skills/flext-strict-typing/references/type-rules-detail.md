@@ -115,7 +115,7 @@ m.Dict  # Transitional only — migrate to explicit domain dict models
 m.Domain.ConfigModel  # Canonical strict settings contract
 p.ServiceMap  # Transitional only — migrate to explicit service registry models
 t.ErrorMap  # RootModel[Mapping[str, int | str | t.IntMapping]] — error types
-t.ObjectList  # Transitional only — migrate to Sequence[m.<Domain>.ItemModel]
+t.JsonList  # Transitional only — migrate to Sequence[m.<Domain>.ItemModel]
 t.FactoryMap  # RootModel[Mapping[str, FactoryRegistrationCallable]]
 t.ResourceMap  # RootModel[Mapping[str, ResourceCallable]]
 t.u.FieldValidatorMap  # RootModel[Mapping[str, Callable[[GVT], GVT]]]
@@ -152,18 +152,18 @@ When runtime narrowing is required, use the public guard utilities exposed throu
 # ❌ FORBIDDEN — runtime checks against alias syntax
 isinstance(val, t.Primitives)
 isinstance(val, t.Scalar)
-isinstance(val, t.Container)
+isinstance(val, t.JsonValue)
 
 
 # ❌ FORBIDDEN — subclassing a type alias
-class Foo(t.Container): ...
+class Foo(t.JsonValue): ...
 ```
 
 ### CORRECT PATTERNS
 
 ```python
 # ✅ CORRECT — alias syntax stays in typings.py
-type Container = t.t.Container
+type Container = t.t.JsonValue
 
 # ✅ CORRECT — runtime narrowing uses public guards
 from flext_core import u
@@ -505,7 +505,7 @@ config_file: str | None = u.Field(
 **`typings.py` definition rule**:
 
 1. Does the type alias definition in `typings.py` include `| None`? → VIOLATION. Remove `| None` from the alias. Consumers add `| None` inline at usage sites.
-2. Need a nullable variant? → Write `field: t.Scalar | None = u.Field(default=None)` at the usage site. NEVER create `NullableScalarValue` or `OptionalScalar` aliases.
+2. Need a nullable variant? → Write `field: t.Scalar | None = u.Field(default=None)` at the usage site. NEVER create `NullableScalarValue` or `Scalar | None` aliases.
 
 ---
 

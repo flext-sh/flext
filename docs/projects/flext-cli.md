@@ -22,7 +22,7 @@ FLEXT CLI is the production-ready command-line foundation that wires Click, Rich
 - **Production readiness**: 32+ projects rely on this unified CLI surface
 - **Tests**: 1 016 passing (see `reports/pytest/`) with zero pytest failures
 - **Coverage**: 96%+ per `reports/coverage-scan-*` snapshots
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks)
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks)
 - **Type safety**: Pyrefly strict mode + MyPy strict mode pass, `Any`, `cast`, and `# type:` ignores are forbidden
 
 ## Quick start

@@ -47,7 +47,7 @@ description: Internal Pydantic v2 governance patterns for the FLEXT 34-project m
 
 ## Recursive Types — single permitted source
 
-- **Only `pydantic.JsonValue`** (re-exported as `t.JsonValue` / `t.Cli.JsonValue`) is permitted as a recursive type anywhere in the workspace.
+- **Only `pydantic.JsonValue`** (re-exported as `t.JsonValue` / `t.JsonValue`) is permitted as a recursive type anywhere in the workspace.
 - **FORBIDDEN**: introducing any other recursive `type X = ...` alias, any recursive `RootModel` self-reference, or any manual `t.Recursive*` alias in `src/`. Existing legacy recursive aliases marked for refactor MUST NOT be expanded — the call site MUST be rewritten to use `t.JsonValue` or a flat composed alias.
 - Verification: `rg -n "type\s+[A-Z][A-Za-z]+\s*=\s*[^\n]*\\b\\1\\b" --type py src/` → every hit must either be `t.JsonValue` itself or a legacy alias with an explicit `# refactor: replace with t.JsonValue` comment.
 

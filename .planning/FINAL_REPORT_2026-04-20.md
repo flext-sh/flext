@@ -15,19 +15,22 @@
 ### ✅ Type Alias Consolidation (Phase 1)
 
 **Undefined → Canonical Aliases**:
+
 - `t.JsonValue` → `t.JsonValue` ✅
 - `t.JsonObject` → `t.JsonMapping` ✅
 - `t.RecursiveValue` → `t.JsonValue` ✅
-- `t.OptionalPrimitive` → `t.Primitives | None` ✅
+- `t.Primitives | None` → `t.Primitives | None` ✅
 
 ### ✅ Container Recursion Elimination
 
 **Before** (5-part recursive union):
+
 ```python
-type Container = Scalar | Path | FlatScalarMapping | FlatScalarSequence | JsonValue
+type Container = Scalar | Path | ScalarMapping | ScalarList | JsonValue
 ```
 
 **After** (3-part flat non-recursive):
+
 ```python
 type Container = Scalar | Path | JsonValue
 ```
@@ -55,13 +58,15 @@ type Container = Scalar | Path | JsonValue
 ### Modified Files
 
 **flext-core/src/flext_core/_typings/base.py**:
+
 - Simplified `Container` from recursive to flat composition
-- Updated `FlatContainerList`, `FlatContainerMapping` to use `JsonValue` directly
-- Removed redundant `ContainerValue`, `OpaqueValue` aliasing
+- Updated `JsonList`, `JsonMapping` to use `JsonValue` directly
+- Removed redundant `JsonValue`, `JsonValue` aliasing
 
 **flext-api/src/flext_api/**:
+
 - Consolidated undefined type aliases to canonical forms
-- Changed return types from `Mapping[str, JsonValue]` to `dict[str, JsonValue]` (concrete)
+- Changed return types from `t.JsonMapping` to `dict[str, JsonValue]` (concrete)
 - Maintained `Mapping[str, X]` in parameters (contravariant)
 
 ### Quality Gates Status
@@ -84,6 +89,7 @@ These are **high-effort, high-impact refactors** best done per-project with doma
 ## Conclusion
 
 **Type consolidation phase complete**. Core infrastructure now has:
+
 - ✅ Zero errors in production (core/cli/infra)
 - ✅ Nonrecursive type hierarchy (Container simplified)
 - ✅ Clear canonical aliases (all undefined types fixed)

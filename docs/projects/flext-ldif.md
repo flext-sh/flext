@@ -21,7 +21,7 @@ FLEXT LDIF is the RFC 2849/4512-compliant LDIF processor for the FLEXT platform.
 - **Tests**: 1 766 passing
 - **Coverage**: 78% (see `reports/coverage-scan-*`)
 - **Type safety**: Pyrefly strict mode and Ruff pass with zero errors
-- **Quality gate**: `make validate` (lint + type-check + security + test)
+- **Quality gate**: `make val` (lint + type-check + security + test)
 
 ## Quick start
 
@@ -72,7 +72,7 @@ Input LDIF → RFC parser → Quirk adapters → Target writer/migration pipelin
 
 - `make check` (Ruff + Pyrefly)
 - `make test` (unit + integration) with unified helpers (`tests.tm`, `tests.tf`)
-- `make validate` (adds Bandit, detect-secrets, coverage, docstring checks)
+- `make val` (adds Bandit, detect-secrets, coverage, docstring checks)
 - Quality expectations: Pyrefly strict (100% type safety), Ruff zero violations, Bandit zero high/medium issues, test coverage ≥78%.
 
 ## Resources

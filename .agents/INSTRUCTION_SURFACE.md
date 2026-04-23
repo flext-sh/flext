@@ -11,7 +11,7 @@ Canonical governance: [`AGENTS.md`](../AGENTS.md)
 ```
 LOAD ORDER (highest authority first):
 1. AGENTS.md              — FLEXT canonical governance (SSOT)
-2. .agents/skills/        — FLEXT path-scoped skills (51 skills)
+2. .agents/skills/        — FLEXT path-scoped skills (52 skills)
 3. .github/prompts/       — workspace prompts for high-intensity task modes
 4. .github/copilot-instructions.md — pointer only → AGENTS.md
 5. ~/.claude/CLAUDE.md    — universal user profile + GSD
@@ -28,7 +28,7 @@ LOAD ORDER (highest authority first):
 
 | Surface | Path | Count | Status |
 |---------|------|-------|--------|
-| FLEXT Skills | `.agents/skills/` | 51 skills | ✅ Canonical |
+| FLEXT Skills | `.agents/skills/` | 52 skills | ✅ Canonical |
 | GitHub Prompts | `.github/prompts/` | 1 prompt | ✅ Default refactor directive |
 | Copilot Instructions | `.github/copilot-instructions.md` | pointer | ✅ OK |
 | Serena Project Config | `.serena/project.yml` | 1 config | ✅ Present |
@@ -133,8 +133,9 @@ Recommended MCP servers for FLEXT workflows:
 
 ### Serena Status
 
+- `.vscode/mcp.json` registers the workspace Serena MCP server through `serena start-mcp-server --context=vscode --project-from-cwd`.
 - `.serena/project.yml` is present and configured for project `flext` with Python language support.
-- When Serena-backed tooling is available, agents must activate/setup the `flext` project correctly before relying on Serena navigation or rename flows.
+- When Serena-backed tooling is available, agents must use the installed `serena` CLI, validate the local project with `serena project health-check`, and activate/setup the `flext` project correctly before relying on Serena navigation or rename flows.
 - Serena setup is not optional for Serena-dependent tasks; half-configured usage is treated as a tooling failure that must be surfaced explicitly.
 
 ---
@@ -155,6 +156,7 @@ from installed plugins into `.agents/skills/`. Plugin skills are loaded
 automatically by the VS Code Copilot plugin system.
 
 Add to `.agents/skills/` ONLY when:
+
 1. The skill is FLEXT-domain-specific (MRO, pydantic governance, etc.)
 2. The skill needs to be available to Claude Code (not just VS Code Copilot)
 3. The skill cannot be sourced from any installed plugin

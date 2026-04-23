@@ -32,6 +32,7 @@ description: Use when setting up agent tooling, configuring MCP tools, or enabli
 - Do not allow broad edits, weakly justified edits, or incomplete propagation when the required tooling for impact analysis is available.
 - If Scope is available, keep it fresh during the task (`scope index` or `scope workspace index` for multi-project work).
 - If Serena is available, activate the workspace/project correctly and confirm its configuration before relying on Serena-based navigation or refactors.
+- Serena setup must use the installed `serena` CLI plus the official `init`/`project create` flow; do not encode transient bootstrap commands as the long-term MCP configuration.
 - If `ast-grep` is required, prefer a tested structural pattern and confirmation pass over ad-hoc bulk text edits.
 - Treat zero `ruff`, `pyrefly`, enforcement, and `pytest` debt as the steady-state requirement for all affected projects, not just the files touched by the current diff.
 
@@ -52,7 +53,7 @@ Do not duplicate governance text in this skill.
 
 1. Identify touched paths.
 2. Identify whether the request intent matches a workspace prompt.
-3. Check whether `scope` is available, whether Serena is configured/usable, and whether `ast-grep` or MCP is required by the task.
+3. Check whether `scope` is available, whether Serena is configured/usable (`command -v serena`, `serena start-mcp-server --help`, `serena project health-check`), and whether `ast-grep` or MCP is required by the task.
 4. Load only the mapped skills for those paths.
 5. Load the matching workspace prompt when the task mode requires it.
 6. Implement changes.
@@ -110,3 +111,4 @@ Why bad: high-blast-radius structural work requires project-aware setup, structu
 - `rg -n "^name:|^description:" .agents/skills/flext-agent-integration/SKILL.md`
 - `for s in "## Scope" "## References" "## Rules" "## Instructions" "## Workflow" "## Examples" "## Verification"; do grep -q "$s" .agents/skills/flext-agent-integration/SKILL.md || echo "MISSING $s"; done`
 - `rg -n "flext-aggressive-scale-refactor|task-mode" .agents/skills/flext-agent-integration/SKILL.md .agents/INSTRUCTION_SURFACE.md .github/copilot-instructions.md`
+- `command -v serena && serena project health-check`

@@ -77,12 +77,12 @@ class TestGuards:
 
     @staticmethod
     def is_user_response(obj) -> TypeGuard[dict]:
-        """Check if t.Container is a user response fixture."""
+        """Check if t.JsonValue is a user response fixture."""
         return isinstance(obj, dict) and "user_id" in obj and "email" in obj
 
     @staticmethod
     def is_config_response(obj) -> TypeGuard[dict]:
-        """Check if t.Container is a settings response fixture."""
+        """Check if t.JsonValue is a settings response fixture."""
         return isinstance(obj, dict) and "app_name" in obj and "version" in obj
 
 
@@ -91,7 +91,7 @@ class LdifTestGuards:
 
     @staticmethod
     def is_entry_fixture(obj) -> TypeGuard[dict]:
-        """Check if t.Container is an LDIF entry fixture."""
+        """Check if t.JsonValue is an LDIF entry fixture."""
         return isinstance(obj, dict) and "dn" in obj and "attributes" in obj
 
 
@@ -100,7 +100,7 @@ class CliTestGuards:
 
     @staticmethod
     def is_command_fixture(obj) -> TypeGuard[dict]:
-        """Check if t.Container is a command fixture."""
+        """Check if t.JsonValue is a command fixture."""
         return isinstance(obj, dict) and "name" in obj and "args" in obj
 
 
@@ -109,7 +109,7 @@ class WebTestGuards:
 
     @staticmethod
     def is_request_fixture(obj) -> TypeGuard[dict]:
-        """Check if t.Container is a request fixture."""
+        """Check if t.JsonValue is a request fixture."""
         return isinstance(obj, dict) and "method" in obj and "endpoint" in obj
 ```
 
@@ -372,7 +372,7 @@ fix(flext-tap-oracle-wms): fix type mismatches in function signatures
 3. **Run Full Validation**
 
    ```bash
-   make validate PROJECT=flext-tap-oracle-wms
+   make val PROJECT=flext-tap-oracle-wms
    ```
 
 **Validation**:
@@ -380,7 +380,7 @@ fix(flext-tap-oracle-wms): fix type mismatches in function signatures
 - [ ] Zero TypedDict
 - [ ] Zero cast()
 - [ ] Standard ConfigDict
-- [ ] `make validate` passes
+- [ ] `make val` passes
 
 **Commit**:
 
@@ -404,7 +404,7 @@ refactor(flext-tap-oracle-wms): apply Pydantic 2 patterns and standardize models
 1. **Full Monorepo Validation**
 
    ```bash
-   make validate
+   make val
    ```
 
 2. **Verify Zero cast()**
@@ -430,7 +430,7 @@ refactor(flext-tap-oracle-wms): apply Pydantic 2 patterns and standardize models
 
 **Validation**:
 
-- [ ] `make validate` passes on full monorepo
+- [ ] `make val` passes on full monorepo
 - [ ] Zero cast() across all projects
 - [ ] Zero TypedDict (all converted)
 - [ ] ConfigDict standardized
@@ -438,7 +438,7 @@ refactor(flext-tap-oracle-wms): apply Pydantic 2 patterns and standardize models
 **Commit**:
 
 ```
-ci: verify full monorepo passes make validate
+ci: verify full monorepo passes make val
 ```
 
 ### Task 9.2: Test Coverage Verification
@@ -639,7 +639,7 @@ chore: cleanup after Pydantic 2 migration completion
 
 ✅ **Global Validation**
 
-- `make validate` passes on full monorepo
+- `make val` passes on full monorepo
 - Zero cast() across ALL projects
 - Zero TypedDict (all converted)
 - ConfigDict standardized across 127+ models
@@ -694,7 +694,7 @@ chore: cleanup after Pydantic 2 migration completion
 - ✅ 0 TypedDict definitions
 - ✅ 127+ models with standard ConfigDict
 - ✅ Modern Pydantic 2.11+ validators throughout
-- ✅ All 29 projects passing `make validate`
+- ✅ All 29 projects passing `make val`
 - ✅ 80%+ test coverage maintained
 
 ---

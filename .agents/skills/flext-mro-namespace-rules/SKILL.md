@@ -58,7 +58,7 @@ Each project owns specific nested namespaces under `c / p / t / m / u`. A slot i
 
 | Project | `c.*` | `p.*` | `t.*` | `m.*` | `u.*` |
 | --- | --- | --- | --- | --- | --- |
-| flext-core | (base) — `Errors`, `Encoding`, `HttpStatus`, `Severity`, etc. | (base) — `Result`, `Registry`, `Container`, `Dispatcher`, `Logger`, `HasDomainEvents` | (base) — `Scalar`, `Container`, `Primitives`, `FlatContainerMapping`, `JsonValue`, ... | (base) — `BaseModel`, `Value`, `Entity`, `AggregateRoot`, `DomainEvent`, `ConfigMap` | (base) — `Collection`, `Domain`, `Pydantic`, `Runtime` |
+| flext-core | (base) — `Errors`, `Encoding`, `HttpStatus`, `Severity`, etc. | (base) — `Result`, `Registry`, `Container`, `Dispatcher`, `Logger`, `HasDomainEvents` | (base) — `Scalar`, `Container`, `Primitives`, `JsonMapping`, `JsonValue`, ... | (base) — `BaseModel`, `Value`, `Entity`, `AggregateRoot`, `DomainEvent`, `ConfigMap` | (base) — `Collection`, `Domain`, `Pydantic`, `Runtime` |
 | flext-cli | `c.Cli` — `ENCODING_DEFAULT`, `YAML_*`, `JSON_*`, exit codes | `p.Cli` — command, option, result | `t.Cli` — `JsonMapping`, `YamlDict`, adapters | `m.Cli` — command result models | `u.Cli` — `json_*`, `yaml_*`, `toml_*` |
 | flext-tests | `c.Tests` — `ERR_OK_FAILED`, fixture paths, golden-file roots | `p.Tests` — matcher, fixture, golden | `t.Tests` — `Testobject`, matcher inputs | `m.Tests` — test record models | `u.Tests` — `tm.*` matchers, builders, factories |
 | flext-infra | `c.Infra` — `Encoding`, `SourceCode.*`, transformers | `p.Infra` — rule, scanner, transformer | `t.Infra` — `ChangeCallback`, `StrIndex` | `m.Infra` — scan report models | `u.Infra` — `atomic_write_file`, `parse_semver` |

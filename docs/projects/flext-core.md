@@ -20,7 +20,7 @@ FLEXT Core is the dispatcher-centric foundation library for the FLEXT platform. 
 - **Python**: 3.13+ only
 - **Tests**: 2 820 passing (see `reports/pytest` artifacts)
 - **Coverage**: 81.41% (`reports/coverage-scan-*` snapshot)
-- **Quality gate**: `make validate` (runs Ruff, Pyrefly, Bandit, `make test`, coverage, docstring checks)
+- **Quality gate**: `make val` (runs Ruff, Pyrefly, Bandit, `make test`, coverage, docstring checks)
 
 ### Quality signals
 
@@ -75,7 +75,7 @@ FLEXT Core follows strict layering so that lower tiers never import higher tiers
 
 - `make check`: Ruff linting + Pyrefly type-checks
 - `make test`: pytest suite with ~2 820 tests
-- `make validate`: full pipeline (`make check`, `make format-check`, `make complexity`, `make docstring-check`, `make security`, `make test`)
+- `make val`: full pipeline (`make check`, `make format-check`, `make complexity`, `make docstring-check`, `make security`, `make test`)
 - `pyproject.toml`/`ruff-shared.toml` enforce ZERO tolerance for `Any`, `cast`, `TYPE_CHECKING`, and ensure `PYI042` is ignored only for short aliases.
 
 ## Resources

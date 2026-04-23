@@ -25,6 +25,7 @@ description: Rules for command entrypoints under `cmd/` and their package wiring
 
 ## Rules
 
+- `AGENTS.md` is canonical; keep this skill limited to `cmd/` entrypoint guidance and do not duplicate broader governance here.
 - Keep command entrypoints thin: parse/dispatch/bootstrap only.
 - Keep command paths and names consistent with directory names.
 - Avoid embedding business logic directly in command wrappers.

@@ -18,7 +18,7 @@ FLEXT DB Oracle (v0.9.9) is the enterprise Oracle database integration foundatio
 - **Python**: 3.13+ only
 - **Tests**: 558 default suites + 30 integration files (8,633+ lines)
 - **Coverage**: ~100% target (currently improving toward 90%+)
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks)
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks)
 - **Type safety**: Pyrefly strict + MyPy strict (zero `Any`, zero `cast`, zero `# type` ignores)
 - **Security**: Bandit zero high/medium findings reported in `reports/lint-output/`
 
@@ -69,7 +69,7 @@ if result.is_success:
 - Schema introspection helpers (tables, columns, constraints) and migration-ready builders for Oracle-specific quirks.
 - Railway error handling (`r[T]`) and compliance with flext-core patterns (no `TYPE_CHECKING`, no `Any`, zero-cast policy).
 - Integration with `flext-tap-oracle`, `flext-target-oracle`, and `flext-dbt-oracle` so downstream ETL flows re-use workloads.
-- Quality gates: `make lint`, `make type-check`, `make security`, `make test`, `make validate`, plus Oracle integration tests (Pytest markers `unit`, `integration`).
+- Quality gates: `make lint`, `make type-check`, `make security`, `make test`, `make val`, plus Oracle integration tests (Pytest markers `unit`, `integration`).
 
 ## References & resources
 
