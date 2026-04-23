@@ -22,11 +22,11 @@ description: Advanced Pydantic v2 implementation patterns for FLEXT — TypeAdap
 - `.agents/skills/flext-type-system/SKILL.md` — `p.*`/`t.*`/`m.*` ownership
 - Code anchors (read before implementing):
   - `flext-core/src/flext_core/_typings/typeadapters.py` — canonical TypeAdapter registry
-  - `flext-core/src/flext_core/_models/containers.py` — canonical RootModel (`ConfigMap`)
-  - `flext-core/src/flext_core/_models/domain_event.py` — canonical `Annotated[..., BeforeValidator]`
-  - `flext-core/src/flext_core/_models/settings.py`
+  - `flext-core/src/flext_core/models/containers.py` — canonical RootModel (`ConfigMap`)
+  - `flext-core/src/flext_core/models/domain_event.py` — canonical `Annotated[..., BeforeValidator]`
+  - `flext-core/src/flext_core/models/settings.py`
   - `flext-core/src/flext_core/_utilities/pydantic.py` — internal `FlextUtilitiesPydantic` (alias `up`, used only inside flext-core to break c/t/p/m/u cycles)
-  - `flext-core/src/flext_core/_models/pydantic.py` — internal `FlextModelsPydantic` (alias `mp`, same role)
+  - `flext-core/src/flext_core/models/pydantic.py` — internal `FlextModelsPydantic` (alias `mp`, same role)
 
 ## Rules
 
@@ -79,9 +79,9 @@ description: Advanced Pydantic v2 implementation patterns for FLEXT — TypeAdap
 
 Internal flext-core escape (ONLY inside `flext-core/src/flext_core/_*`): `from flext_core import  FlextUtilitiesPydantic as up` / `from flext_core import  FlextModelsPydantic as mp`. This is NOT a consumer pattern — it exists solely to break initialization cycles in `c/t/p/m/u`.
 
-If a facade symbol is missing, ADD it to `flext-core/_utilities/pydantic.py` / `_models/pydantic.py` FIRST (with tests), re-export through the right facade (`m.*` or `u.*`), THEN consume downstream via the canonical alias.
+If a facade symbol is missing, ADD it to `flext-core/_utilities/pydantic.py` / `models/pydantic.py` FIRST (with tests), re-export through the right facade (`m.*` or `u.*`), THEN consume downstream via the canonical alias.
 
-Verification: `rg -n "^(import pydantic|from pydantic|from pydantic_core)" --type py --glob '!flext-core/src/flext_core/_models/pydantic.py' --glob '!flext-core/src/flext_core/_utilities/pydantic.py' --glob '!flext-core/src/flext_core/_typings/typeadapters.py' --glob '!**/.venv/**'` → zero hits.
+Verification: `rg -n "^(import pydantic|from pydantic|from pydantic_core)" --type py --glob '!flext-core/src/flext_core/models/pydantic.py' --glob '!flext-core/src/flext_core/_utilities/pydantic.py' --glob '!flext-core/src/flext_core/_typings/typeadapters.py' --glob '!**/.venv/**'` → zero hits.
 
 ## Instructions
 
@@ -207,5 +207,5 @@ Why bad: direct `pydantic` imports bypass the workspace facade; validator has I/
 - `rg -n "^name:|^description:" .agents/skills/pydantic-v2-patterns/SKILL.md`
 - `for s in "## Scope" "## References" "## Rules" "## Instructions" "## Workflow" "## Examples" "## Verification"; do grep -q "$s" .agents/skills/pydantic-v2-patterns/SKILL.md || echo "MISSING $s"; done`
 - `rg -n "TypeAdapter\(" --type py --glob '!flext-core/src/flext_core/_typings/typeadapters.py' --glob '!**/.venv/**'`
-- `rg -n "^(import pydantic|from pydantic|from pydantic_core)" --type py --glob '!flext-core/src/flext_core/_models/pydantic.py' --glob '!flext-core/src/flext_core/_utilities/pydantic.py' --glob '!flext-core/src/flext_core/_typings/typeadapters.py' --glob '!**/.venv/**'`
-- `rg -n "up\.field_validator\(|up\.model_validator\(|up\.computed_field|mp\.Discriminator\(|mp\.BeforeValidator\(|strict=True" flext-core/src/flext_core/_models/base.py flext-core/src/flext_core/_models/settings.py flext-core/src/flext_core/_models/domain_event.py flext-core/src/flext_core/_typings/typeadapters.py`
+- `rg -n "^(import pydantic|from pydantic|from pydantic_core)" --type py --glob '!flext-core/src/flext_core/models/pydantic.py' --glob '!flext-core/src/flext_core/_utilities/pydantic.py' --glob '!flext-core/src/flext_core/_typings/typeadapters.py' --glob '!**/.venv/**'`
+- `rg -n "up\.field_validator\(|up\.model_validator\(|up\.computed_field|mp\.Discriminator\(|mp\.BeforeValidator\(|strict=True" flext-core/src/flext_core/models/base.py flext-core/src/flext_core/models/settings.py flext-core/src/flext_core/models/domain_event.py flext-core/src/flext_core/_typings/typeadapters.py`

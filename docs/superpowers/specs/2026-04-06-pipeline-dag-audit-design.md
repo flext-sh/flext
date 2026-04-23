@@ -137,7 +137,7 @@ def execute_pipeline(
 | -------------------------------------- | --------------------------------- |
 | `src/flext_cli/_protocols/pipeline.py` | CREATE — Pipeline protocols       |
 | `src/flext_cli/_typings/pipeline.py`   | CREATE — Pipeline type aliases    |
-| `src/flext_cli/_models/pipeline.py`    | CREATE — Pipeline models          |
+| `src/flext_cli/models/pipeline.py`    | CREATE — Pipeline models          |
 | `src/flext_cli/_constants/pipeline.py` | CREATE — Pipeline constants       |
 | `src/flext_cli/_utilities/pipeline.py` | CREATE — Pipeline engine          |
 | `src/flext_cli/protocols.py`           | MODIFY — Add PipelineMixin to MRO |
@@ -267,7 +267,7 @@ Replace current `_violation_key()` in codegen fixer with `ViolationKey.from_viol
 
 | File                                             | Action                    |
 | ------------------------------------------------ | ------------------------- |
-| `flext-infra/src/flext_infra/_models/codegen.py` | MODIFY — Add ViolationKey |
+| `flext-infra/src/flext_infra/models/codegen.py` | MODIFY — Add ViolationKey |
 | `flext-infra/src/flext_infra/codegen/fixer.py`   | MODIFY — Use ViolationKey |
 
 ---

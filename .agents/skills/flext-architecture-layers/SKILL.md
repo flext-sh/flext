@@ -34,7 +34,7 @@ Layer map (source-aligned reference for implementation work):
 - `L2 Service Facade` (project-level): `api.py` (MRO facade), `base.py` (service base), `services/*.py` (mixins). See AGENTS.md section 2.5.
 - `L1 Foundation and Bridge`: `result.py`, `exceptions.py`, `registry.py`, `runtime.py`.
 - `L0 Pure Contracts`: `constants.py`, `typings.py`, `protocols.py`.
-- Public facade roots own exactly one local namespace branch; private `_models/*` and `_utilities/*` classes are composed through MRO, not re-wrapped as nested flat classes.
+- Public facade roots own exactly one local namespace branch; private `models/*` and `_utilities/*` classes are composed through MRO, not re-wrapped as nested flat classes.
 - Broad simplification and deduplication work must push repeated contracts, constants, and validators downward toward `L0` and stable `L1`/`L2` facades instead of creating new orchestration-layer adapters.
 - **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
 

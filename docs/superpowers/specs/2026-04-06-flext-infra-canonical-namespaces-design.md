@@ -68,17 +68,17 @@ Violations are in **3 categories** across **14 files**:
 
 | File                        | Function              | Evidence        |
 | --------------------------- | --------------------- | --------------- |
-| `_models/refactor.py:23-24` | `_class_moves()`      | Zero references |
-| `_models/refactor.py:27-28` | `_alias_moves()`      | Zero references |
-| `_models/docs.py:15-16`     | `_docs_phase_items()` | Zero references |
+| `models/refactor.py:23-24` | `_class_moves()`      | Zero references |
+| `models/refactor.py:27-28` | `_alias_moves()`      | Zero references |
+| `models/docs.py:15-16`     | `_docs_phase_items()` | Zero references |
 
 **B. default_factory → @staticmethod on model class:**
 
 | File                    | Function               | Model          |
 | ----------------------- | ---------------------- | -------------- |
-| `_models/codegen.py:18` | `_census_violations()` | `CensusReport` |
-| `_models/release.py:14` | `_build_records()`     | `BuildReport`  |
-| `_models/scan.py:20`    | `_scan_violations()`   | `ScanResult`   |
+| `models/codegen.py:18` | `_census_violations()` | `CensusReport` |
+| `models/release.py:14` | `_build_records()`     | `BuildReport`  |
+| `models/scan.py:20`    | `_scan_violations()`   | `ScanResult`   |
 
 Pattern: `default_factory=list` (simpler, Pydantic-idiomatic)
 

@@ -20,7 +20,7 @@ re-exports from the public module. These 17 pairs violate that pattern.
 | `http_client_instrumentation.py` | `_utilities/_http_client_instrumentation.py` |
 | `http_instrumentation.py`        | `_utilities/_http_instrumentation.py`        |
 | `monitoring.py`                  | `_utilities/_monitoring.py`                  |
-| `context.py`                     | `_utilities/_context.py`                     |
+| `context.py`                     | `_utilities/context.py`                     |
 | `custom_metrics.py`              | `_utilities/_custom_metrics.py`              |
 | `error_handling.py`              | `_utilities/_error_handling.py`              |
 | `sampling.py`                    | `_utilities/_sampling.py`                    |

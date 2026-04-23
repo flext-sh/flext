@@ -289,10 +289,10 @@ para implementações futuras. A documentação oficial está nos links acima.
 class MyService(s[Result]):
     def __init__(self):
         super().__init__()
-        self._config = FlextSettings.get_global_instance()  # ❌ Desnecessário!
+        self.config = FlextSettings.get_global_instance()  # ❌ Desnecessário!
         self._container = FlextContainer.get_global()  # ❌ Desnecessário!
-        self._logger = u.fetch_logger(__name__)  # ❌ Desnecessário!
-        self._context = FlextContext()  # ❌ Desnecessário!
+        self.logger = u.fetch_logger(__name__)  # ❌ Desnecessário!
+        self.context = FlextContext()  # ❌ Desnecessário!
 
     def execute(self) -> p.Result[Result]:
         settings = FlextSettings.get_global_instance()  # ❌ Desnecessário!
@@ -1572,7 +1572,7 @@ class s[T](ABC):
 class SomeService(s[T]):
     def __init__(self, settings: SomeConfig):
         super().__init__()
-        self._config = settings
+        self.config = settings
 ```
 
 **Problemas:**
@@ -3290,7 +3290,7 @@ class MyFacade(s[t.JsonMapping]):
         default_factory=FlextContainer.get_global
     )
 
-    def model_post_init(self, _context: t.JsonMapping | None, /) -> None:
+    def model_post_init(self, context: t.JsonMapping | None, /) -> None:
         """Setup services in DI container."""
         # Registrar todos os services necessários
         self._setup_services()
@@ -3470,7 +3470,7 @@ class FlextSettings(BaseSettings):
     _instances: ClassVar[Mapping[type, Self]] = {}
     _lock: ClassVar[threading.RLock] = threading.RLock()
 
-    def __new__(cls, **_kwargs) -> Self:
+    def __new__(cls, **kwargs) -> Self:
         """Singleton automático - each subclass = one instance."""
         if cls not in cls._instances:
             with cls._lock:
@@ -3719,7 +3719,7 @@ class MyService(s[T]):
 class MyService(s[T]):
     def __init__(self, settings: FlextSettings):
         super().__init__()
-        self._config = settings  # ← Duplicação desnecessária!
+        self.config = settings  # ← Duplicação desnecessária!
 
 
 # ✅ CORRETO: Property automática
@@ -3850,7 +3850,7 @@ grep -r "settings: Flext.*Config" src/
 
 # 3. Use self.project_config everywhere
 
-# ANTES: self._config.debug
+# ANTES: self.config.debug
 
 # DEPOIS: self.project_config.debug
 ```
@@ -4465,9 +4465,9 @@ class x:
     @property
     def logger(self) -> p.Logger:
         """Access logger with context."""
-        if not hasattr(self, "_logger"):
-            self._logger = u.fetch_logger(self.__class__.__name__)
-        return self._logger
+        if not hasattr(self, "logger"):
+            self.logger = u.fetch_logger(self.__class__.__name__)
+        return self.logger
 
     @property
     def context(self) -> FlextContext:
@@ -4619,8 +4619,8 @@ class FlextLogger:
 
     def __init__(self, name: str, settings: FlextSettings | None = None):
         """Auto: Initialize with settings integration."""
-        self._logger = logging.getLogger(name)
-        self._config = settings or FlextSettings()
+        self.logger = logging.getLogger(name)
+        self.config = settings or FlextSettings()
 
         # ✅ Auto: Apply settings to logger
         self._configure_from_config()
@@ -4628,10 +4628,10 @@ class FlextLogger:
     def _configure_from_config(self):
         """Auto: Apply FlextSettings settings."""
         # ✅ Auto: Level from settings
-        self._logger.setLevel(self._config.effective_log_level)
+        self.logger.setLevel(self.config.effective_log_level)
 
         # ✅ Auto: Format from settings (JSON if structured)
-        if self._config.log_format == "json":
+        if self.config.log_format == "json":
             self._setup_json_formatter()
 
     # ═══════════════════════════════════════════════════════════════
@@ -4643,10 +4643,10 @@ def info(self, msg: str, extra: m.Logging.ExtraContextModel | None = None):
     """Auto: Add context from settings."""
     enhanced_extra = {
         **(extra or {}),
-        "debug_mode": self._config.is_debug_enabled,
-        "app": self._config.app_name,
+        "debug_mode": self.config.is_debug_enabled,
+        "app": self.config.app_name,
     }
-    self._logger.info(msg, extra=enhanced_extra)
+    self.logger.info(msg, extra=enhanced_extra)
 ```
 
 **Capabilities (Todas Automáticas):**
@@ -4757,7 +4757,7 @@ self.logger.info("Event", extra={"user_id": 123, "action": "login"})
 class MyService(s[T]):
     def __init__(self):
         super().__init__()
-        self._logger = u.fetch_logger(__name__)  # ← Desnecessário!
+        self.logger = u.fetch_logger(__name__)  # ← Desnecessário!
 
 
 # ✅ CORRETO: Property automática
@@ -5425,7 +5425,7 @@ def map(self, func: Callable[[T], m.Service.MappedValueModel]) -> "FlextServiceR
 class FlextLdifWriter(Flext[m.Ldif.WriteResultModel]):
     def __init__(self, settings: FlextLdifSettings | None = None):
         super().__init__()
-        self._config = settings or FlextLdifSettings()
+        self.config = settings or FlextLdifSettings()
 
     def write(
         self,
@@ -5490,7 +5490,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
 class FlextApi(s[dict]):
     def __init__(self, settings: FlextApiSettings):
         super().__init__()
-        self._config = settings
+        self.config = settings
 
     def get(self, url: str, **kwargs) -> p.Result[dict]:
         # Implementation
@@ -5502,7 +5502,7 @@ def post(self, url: str, data: m.Api.RequestBodyModel, **kwargs) -> p.Result[m.A
 
     def execute(self) -> p.Result[dict]:
         # Stub
-        return r.ok(self._config.model_dump())
+        return r.ok(self.config.model_dump())
 ```
 
 **After:**
@@ -6284,7 +6284,7 @@ Componente: Testes - Mudanças: Nenhuma mudança necessária - Esforço: **Zero*
 class FlextLdifWriter(Flext[WriteResponse]):
     def __init__(self, settings: FlextLdifSettings | None = None):
         super().__init__()
-        self._config = settings or FlextLdifSettings()
+        self.config = settings or FlextLdifSettings()
 
     def write(
         self,
@@ -6294,7 +6294,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
         output_path: Path | None = None,
     ) -> p.Result[WriteResponse]:
         # Implementation
-        encoding = self._config.ldif_encoding
+        encoding = self.config.ldif_encoding
         return self._do_write(entries, encoding)
 
     def execute(self) -> p.Result[WriteResponse]:
@@ -6949,13 +6949,13 @@ def complex_migration(source_file: Path, target_file: Path) -> m.Infra.Migration
 class FlextLdifParser(Flext[m.Ldif.ParseResultModel]):
     def __init__(self, settings: FlextLdifSettings | None = None):
         super().__init__()
-        self._config = settings or FlextLdifSettings()
+        self.config = settings or FlextLdifSettings()
 
     def parse(
         self, source: str | Path, source_server_type: str = "rfc4512"
     ) -> p.Result[Sequence[Entry]]:
         # Implementation
-        encoding = self._config.ldif_encoding
+        encoding = self.config.ldif_encoding
         return self._do_parse(source, encoding)
 
 
@@ -7073,7 +7073,7 @@ result = (
 
 Métrica: **Linhas por service** - Antes: ~80-120 - Depois: ~40-60 - Redução: **-50%**
 Métrica: **Factory functions** - Antes: 2-3 por service - Depois: 0 - Redução: **-100%**
-Métrica: **Config boilerplate** - Antes: `__init__` + `self._config` - Depois: 0 (singleton) - Redução: **-100%**
+Métrica: **Config boilerplate** - Antes: `__init__` + `self.config` - Depois: 0 (singleton) - Redução: **-100%**
 Métrica: **Execution boilerplate** - Antes: `.execute().unwrap()` - Depois: `.value` - Redução: **-60%**
 Métrica: **Chain boilerplate** - Antes: `.result` em cada step - Depois: 0 (smart resolution) - Redução: **-100%**
 Métrica: **Documentação duplicada** - Antes: Service + factories - Depois: Apenas service - Redução: **-50%**
@@ -7487,7 +7487,7 @@ class FlextCliCore(s[FlextCliTypes.Data.CliDataDict]):
         self, settings: FlextCliTypes.Configuration.CliConfigSchema | None = None
     ):
         super().__init__()
-        self._config = settings or {}
+        self.config = settings or {}
         self._commands: Mapping[str, FlextCliModels.CliCommand] = {}
 
     @override
@@ -8395,7 +8395,7 @@ class s[T]:
 class FlextCliCore(s[CliDataDict]):
     def __init__(self, settings: CliConfigSchema | None = None):
         super().__init__()
-        self._config = settings or {}  # ❌ Private attr, não Pydantic field
+        self.config = settings or {}  # ❌ Private attr, não Pydantic field
         self._commands: Mapping[str, CliCommand] = {}  # ❌ Private attr
 
     def execute(self) -> p.Result[CliDataDict]:
@@ -8415,7 +8415,7 @@ class FlextCliCore(s[CliDataDict]):
 
 - ❌ **execute() inútil** - Só retorna status
 - ❌ \***\*init** manual\*\* - Não usa Pydantic fields
-- ❌ **Private attrs** - `_config`, `_commands` ao invés de Pydantic fields
+- ❌ **Private attrs** - `config`, `_commands` ao invés de Pydantic fields
 - ❌ **Não segue padrão** - Documento recomenda Pydantic fields + execute()
 
 ### 🎯 Arquitetura Proposta (Melhorias)
@@ -8604,7 +8604,7 @@ class FlextCliCore(s[CliDataDict, FlextCliSettings]):
 class FlextCliCore(s[CliDataDict]):
     def __init__(self, settings: CliConfigSchema | None = None):
         super().__init__()
-        self._config = settings or {}
+        self.config = settings or {}
         self._commands: Mapping[str, CliCommand] = {}
 
     def execute(self) -> p.Result[CliDataDict]:

@@ -1802,7 +1802,7 @@ class CustomCircuitBreaker:
         self._success_threshold = success_threshold
         self._recovery_timeout = recovery_timeout
         self._circuits: Mapping[str, CircuitState] = {}
-        self._logger = logger or u.fetch_logger(__name__)
+        self.logger = logger or u.fetch_logger(__name__)
 
     def _get_circuit(self, key: str) -> CircuitState:
         if key not in self._circuits:
@@ -1819,7 +1819,7 @@ class CustomCircuitBreaker:
             # Check if recovery timeout has passed
             if time.time() - circuit.last_failure_time > self._recovery_timeout:
                 circuit.state = "half_open"
-                self._logger.info(f"Circuit {key} transitioning to half_open")
+                self.logger.info(f"Circuit {key} transitioning to half_open")
                 return False
             return True
 
@@ -1835,7 +1835,7 @@ class CustomCircuitBreaker:
                 circuit.state = "closed"
                 circuit.failures = 0
                 circuit.successes = 0
-                self._logger.info(f"Circuit {key} closed after recovery")
+                self.logger.info(f"Circuit {key} closed after recovery")
         elif circuit.state == "closed":
             # Reset failure count on success
             circuit.failures = 0
@@ -1849,10 +1849,10 @@ class CustomCircuitBreaker:
             # Immediately re-open on failure during half_open
             circuit.state = "open"
             circuit.successes = 0
-            self._logger.warning(f"Circuit {key} re-opened during half_open")
+            self.logger.warning(f"Circuit {key} re-opened during half_open")
         elif circuit.failures >= self._failure_threshold:
             circuit.state = "open"
-            self._logger.warning(f"Circuit {key} opened after {circuit.failures} failures")
+            self.logger.warning(f"Circuit {key} opened after {circuit.failures} failures")
 
     def reset(self, key: str) -> None:
         if key in self._circuits:

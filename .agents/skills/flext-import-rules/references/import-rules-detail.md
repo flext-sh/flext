@@ -58,7 +58,7 @@ There is **no** distinction between internal and external import style.
 from flext_core import FlextConstants, FlextModels, u, c, e, m, p, r, p, t, u
 
 
-# ✅ CORRECT — Import from _models/ or _utilities/ (inside their own facades only)
+# ✅ CORRECT — Import from models/ or _utilities/ (inside their own facades only)
 from flext_core import FlextModelsBase
 from flext_core import FlextUtilitiesValidation
 ```
@@ -210,7 +210,7 @@ m = FlextTargetOracleModels
 ### What is NEVER done in subprojects
 
 ```python
-# ❌ NEVER import from _models/ or _utilities/ in subprojects
+# ❌ NEVER import from models/ or _utilities/ in subprojects
 from flext_core import FlextModelsBase  # Private API!
 from flext_core import FlextUtilitiesGuards  # Private API!
 from flext_ldif import FlextLdifModelsResults  # Private API!
@@ -229,15 +229,15 @@ from flext_ldif import FlextLdifModels
 Each facade file (`constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py`) DEFINES its own alias. That alias MUST be imported from the **parent MRO package** in:
 
 1. The facade file itself (it cannot import the alias it defines from own package — self-referential)
-2. All private modules (`_models/*.py`, `_utilities/*.py`) that participate in its lazy-load chain
+2. All private modules (`models/*.py`, `_utilities/*.py`) that participate in its lazy-load chain
 
 ### Why this prevents cycles
 
 ```
-# CYCLE: _models/domain_acl.py → from flext_ldif import u
-#   → lazy loads utilities.py → imports _utilities/*.py → imports _models/*.py → DEADLOCK
+# CYCLE: models/domain_acl.py → from flext_ldif import u
+#   → lazy loads utilities.py → imports _utilities/*.py → imports models/*.py → DEADLOCK
 #
-# SAFE: _models/domain_acl.py → from flext_cli import u
+# SAFE: models/domain_acl.py → from flext_cli import u
 #   → flext_cli already loaded (parent) → no cycle
 ```
 
@@ -245,7 +245,7 @@ Each facade file (`constants.py`, `models.py`, `typings.py`, `protocols.py`, `ut
 
 | File type | `m` source | `u` source | `c` source | `t` source | `p` source | `r, s, e, ...` |
 |-----------|-----------|-----------|-----------|-----------|-----------|-----------------|
-| `_models/*.py` | **parent** | **parent** | own pkg | own pkg | own pkg | own pkg |
+| `models/*.py` | **parent** | **parent** | own pkg | own pkg | own pkg | own pkg |
 | `_utilities/*.py` | own pkg | **parent** | own pkg | own pkg | own pkg | own pkg |
 | `models.py` (facade) | **parent** | **parent** | — | own pkg | — | — |
 | `utilities.py` (facade) | own pkg | **parent** | — | — | — | — |
@@ -275,7 +275,7 @@ from flext_cli import c  # → parent for c is flext_cli
 from flext_cli import t  # → parent for t is flext_cli
 ```
 
-### Example: _models/domain_acl.py (flext-ldif)
+### Example: models/domain_acl.py (flext-ldif)
 
 ```python
 # ✅ CORRECT
@@ -301,7 +301,7 @@ from flext_ldif import FlextLdifModelsBases, c, m, t, u
 from flext_core import m, u
 ```
 
-### Sibling class imports in _models/*.py
+### Sibling class imports in models/*.py
 
 - **Runtime** (base class, isinstance): `from flext_<project> import FlextProjectModelsBases` — lazy init resolves before the cycle point
 - **Annotation-only** (type hint with `from __future__ import annotations`): `TYPE_CHECKING` block
@@ -317,7 +317,7 @@ A module may ONLY import from modules in **lower** tiers. See `flext-architectur
 Tier 0: constants, typings               → No internal imports
 Tier 1: runtime                           → constants, typings
 Tier 2: protocols                         → typings (NOT constants directly)
-Tier 3: models (_models/*)                → constants, typings, protocols
+Tier 3: models (models/*)                → constants, typings, protocols
 Tier 4: utilities, exceptions, result, settings → Tiers 0-3 + runtime
 Tier 5: loggings, context, container, handlers, mixins, decorators → Tiers 0-4
 Tier 6: dispatcher, registry, service     → Tiers 0-5
@@ -331,10 +331,10 @@ None found in the current codebase. The tier structure is clean.
 
 ## Rule 6: Private Module Convention
 
-- Prefixed with `_` (e.g., `_models/`, `_utilities/`, `_decorators/`, `_dispatcher/`)
+- Prefixed with `_` (e.g., `models/`, `_utilities/`, `_decorators/`, `_dispatcher/`)
 - These are implementation details, NOT public API
 - Only the corresponding facade (e.g., `models.py`, `utilities.py`) may import from them
-- Exception: `registry.py` imports from `_models/entity.py` (acceptable as same package)
+- Exception: `registry.py` imports from `models/entity.py` (acceptable as same package)
 - Subprojects MUST NOT import from `_` modules
 
 ---
@@ -401,7 +401,7 @@ class MyHandler(h.BaseCommandHandler[m.Cqrs.Command, r]): ...
 - `protocols.py`: same-project `t` and `m` only under `TYPE_CHECKING`
 - `models.py`: same-project `t` and `p` only under `TYPE_CHECKING`
 - `constants.py`: runtime same-project imports allowed when genuinely required
-- `utilities.py`, `_models/*`, `_utilities/*`: import private classes directly, not sibling public facades
+- `utilities.py`, `models/*`, `_utilities/*`: import private classes directly, not sibling public facades
 - `flext-core` `FlextRuntime`: only standing runtime exception to the no same-project facade-import rule
 
 ```python

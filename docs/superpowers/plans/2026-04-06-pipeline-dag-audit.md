@@ -20,7 +20,7 @@
 | ------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
 | `flext-cli/src/flext_cli/_protocols/pipeline.py` | Pipeline protocols (PipelineStage, PipelineStageContext, PipelineExecutor)                     |
 | `flext-cli/src/flext_cli/_typings/pipeline.py`   | Pipeline type aliases (PipelineHandler, PipelineSkipPredicate, PipelineStageStatus)            |
-| `flext-cli/src/flext_cli/_models/pipeline.py`    | Pipeline models (PipelineStageSpec, PipelineStageResult, PipelineResult, PipelineStageContext) |
+| `flext-cli/src/flext_cli/models/pipeline.py`    | Pipeline models (PipelineStageSpec, PipelineStageResult, PipelineResult, PipelineStageContext) |
 | `flext-cli/src/flext_cli/_constants/pipeline.py` | Pipeline constants (Pipeline.DEFAULT_FAIL_FAST, MAX_RETRY)                                     |
 | `flext-cli/src/flext_cli/_utilities/pipeline.py` | Pipeline engine (execute_pipeline,_run_stage,_build_sorter)                                    |
 | `flext-cli/tests/unit/test_pipeline.py`          | Pipeline engine unit tests                                                                     |
@@ -55,7 +55,7 @@
 | `flext-infra/src/flext_infra/check/workspace_check.py`        | Fresh GateContext per project                             |
 | `flext-infra/src/flext_infra/check/_workspace_check_gates.py` | Add structured logging                                    |
 | `flext-infra/src/flext_infra/release/orchestrator.py`         | Convert phases to DAG stages                              |
-| `flext-infra/src/flext_infra/_models/codegen.py`              | Add ViolationKey model                                    |
+| `flext-infra/src/flext_infra/models/codegen.py`              | Add ViolationKey model                                    |
 
 ---
 
@@ -308,7 +308,7 @@ git commit -m "feat(flext-cli): add pipeline constants (c.Cli.Pipeline.DEFAULT_F
 
 **Files:**
 
-- Create: `flext-cli/src/flext_cli/_models/pipeline.py`
+- Create: `flext-cli/src/flext_cli/models/pipeline.py`
 
 - [ ] **Step 1: Create model definitions**
 
@@ -464,13 +464,13 @@ class Cli(FlextCliModelsPipeline, FlextCliModelsBase):
 
 - [ ] **Step 3: Run linter**
 
-Run: `cd /home/marlonsc/flext/flext-cli && ruff check src/flext_cli/_models/pipeline.py src/flext_cli/models.py`
+Run: `cd /home/marlonsc/flext/flext-cli && ruff check src/flext_cli/models/pipeline.py src/flext_cli/models.py`
 Expected: 0 errors
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add flext-cli/src/flext_cli/_models/pipeline.py flext-cli/src/flext_cli/models.py
+git add flext-cli/src/flext_cli/models/pipeline.py flext-cli/src/flext_cli/models.py
 git commit -m "feat(flext-cli): add pipeline models (m.Cli.PipelineStageSpec, PipelineStageResult, PipelineResult, PipelineStageContext)"
 ```
 
@@ -992,7 +992,7 @@ Expected: 0 errors across all linters
 ```bash
 git add flext-cli/src/flext_cli/_utilities/pipeline.py flext-cli/src/flext_cli/utilities.py
 git add flext-cli/src/flext_cli/_protocols/__init__.py flext-cli/src/flext_cli/_typings/__init__.py
-git add flext-cli/src/flext_cli/_models/__init__.py flext-cli/src/flext_cli/_constants/__init__.py
+git add flext-cli/src/flext_cli/models/__init__.py flext-cli/src/flext_cli/_constants/__init__.py
 git add flext-cli/src/flext_cli/_utilities/__init__.py
 git commit -m "feat(flext-cli): implement DAG pipeline engine (u.Cli.execute_pipeline) with graphlib TopologicalSorter"
 ```
@@ -1256,11 +1256,11 @@ git commit -m "refactor(flext-infra): migrate release orchestrator to DAG pipeli
 
 **Files:**
 
-- Modify: `flext-infra/src/flext_infra/_models/codegen.py`
+- Modify: `flext-infra/src/flext_infra/models/codegen.py`
 
 - [ ] **Step 1: Read current codegen models**
 
-Read: `flext-infra/src/flext_infra/_models/codegen.py`
+Read: `flext-infra/src/flext_infra/models/codegen.py`
 
 - [ ] **Step 2: Add ViolationKey model**
 
@@ -1295,7 +1295,7 @@ class ViolationKey(FlextModels.ContractModel):
 - [ ] **Step 3: Commit**
 
 ```bash
-git add flext-infra/src/flext_infra/_models/codegen.py
+git add flext-infra/src/flext_infra/models/codegen.py
 git commit -m "feat(flext-infra): add ViolationKey model with content-hash-based identification"
 ```
 

@@ -144,9 +144,9 @@ class FlextUtilities:
     """Placeholder utilities namespace."""
 
     @staticmethod
-    def generate(_name: str) -> str:
+    def generate(name: str) -> str:
         """Return a generated string payload."""
-        return ""
+        return f"generated:{name}"
 
 
 FlextLogger = logging.Logger

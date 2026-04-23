@@ -21,7 +21,7 @@
 | `services/tables.py`                                         | Modify    | Replace `list[` locals with `MutableSequence`                                   |
 | `services/output.py`                                         | Modify    | Replace `dict[` locals with `MutableMapping`, eliminate `isinstance(val, dict)` |
 | `services/commands.py`                                       | Modify    | Replace `dict[str, m.Cli.CommandEntryModel]` and `list[str]`                    |
-| `_models/base.py`                                            | Modify    | No changes needed (already clean)                                               |
+| `models/base.py`                                            | Modify    | No changes needed (already clean)                                               |
 | `protocols.py`                                               | No change | Already uses PEP 695 generics                                                   |
 | Consumer files (flext-infra, flext-quality, flext-db-oracle) | Verify    | Ensure no breakage from signature changes                                       |
 

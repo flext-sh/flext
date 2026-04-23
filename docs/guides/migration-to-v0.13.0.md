@@ -175,7 +175,7 @@ These concepts do not survive into the forward public architecture:
 - rename numbered examples to semantic names
 - move helper code to `examples/support/`
 - remove `examples/tests`
-- remove helper models such as `_models/exNN.py`
+- remove helper models such as `models/exNN.py`
 
 ### Scripts
 

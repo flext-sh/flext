@@ -148,7 +148,7 @@ Always refactor bottom-up through the tiers:
 Tier 0  -> constants.py, typings.py            (change first)
 Tier 1  -> runtime.py                          (then this)
 Tier 2  -> protocols.py                        (then this)
-Tier 3  -> _models/*.py, models.py             (then this)
+Tier 3  -> models/*.py, models.py             (then this)
 Tier 4  -> _utilities/*.py, utilities.py,
            exceptions.py, result.py, settings.py
 Tier 5  -> loggings.py, context.py, container.py,
@@ -246,12 +246,12 @@ If a shared contract changed, widen validation until every affected project retu
 
 ### Pattern C: Moving Private to Facade
 
-If a class from `_models/base.py` needs to be publicly accessible:
+If a class from `models/base.py` needs to be publicly accessible:
 
 1. Add the class to the facade in `models.py`
 2. Update `FlextModels` class to expose it
 3. Update consumers to import via `m.ClassName`
-4. Never expose `_models/*.py` directly to subprojects
+4. Never expose `models/*.py` directly to subprojects
 
 ### Pattern D: Extracting Large Methods
 
@@ -380,6 +380,6 @@ make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_MODULE.py --tb=long -v
 4. **NEVER introduce `Any`** - use the type hierarchy from `flext-strict-typing`
 5. **NEVER use relative imports** - the codebase uses zero relative imports
 6. **ALWAYS run tests** before declaring refactoring complete
-7. **ALWAYS preserve the facade pattern** - `_models/` and `_utilities/` are private
+7. **ALWAYS preserve the facade pattern** - `models/` and `_utilities/` are private
 8. **NEVER use `sed`, `awk`, `find`, or custom scripts to transform code** — use `sg --rewrite` (CLI) for ALL structural code changes. `grep`/`ripgrep` for plain-text only. `find` FORBIDDEN for code location. Writing a one-off fix script is an EXTREME FAULT.
 9. **ast-grep is the SOLE code search and replace tool** — CLI `sg` as primary. Workflow: search → replace atomically → verify with `make check`.
