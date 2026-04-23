@@ -29,7 +29,7 @@ def flext_create_trace(
 
 def flext_create_log_entry(
     _message: str,
-    _level: str = "info",
+    level: str = "info",
     _context: m.Dict | None = None,
 ) -> None:
     """Create mock log entry."""
