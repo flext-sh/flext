@@ -7,29 +7,33 @@ from collections.abc import MutableMapping
 
 from flext_core import m, t
 
-last_events: MutableMapping[str, dict[str, t.JsonPayload] | None] = {
+type EventFieldValue = t.Scalar | m.Dict | None
+type EventPayload = dict[str, EventFieldValue]
+
+
+last_events: MutableMapping[str, EventPayload | None] = {
     "metric": None,
     "trace": None,
     "log_entry": None,
 }
 
 
-def _copy_mapping(value: m.Dict | None) -> dict[str, t.JsonPayload]:
-    """Copy optional mapping values into a mutable JSON mapping."""
+def _copy_mapping(value: m.Dict | None) -> m.Dict:
+    """Copy optional mapping values into a Dict container."""
     if value is None:
-        empty_mapping: dict[str, t.JsonPayload] = {}
-        return empty_mapping
-    return dict(value)
+        return m.Dict(root={})
+    return m.Dict(root=dict(value.root))
 
 
 def flext_create_metric(name: str, value: float, tags: m.Dict | None = None) -> None:
     """Create mock metric."""
-    last_events["metric"] = {
+    metric_event: EventPayload = {
         "name": name,
         "value": value,
         "tags": _copy_mapping(tags),
         "quiet": os.environ.get("FLEXT_OBSERVABILITY_QUIET"),
     }
+    last_events["metric"] = metric_event
 
 
 def flext_create_trace(
@@ -38,12 +42,13 @@ def flext_create_trace(
     config: m.Dict | None = None,
 ) -> None:
     """Create mock trace."""
-    last_events["trace"] = {
+    trace_event: EventPayload = {
         "trace_id": trace_id,
         "operation": operation,
         "config": _copy_mapping(config),
         "quiet": os.environ.get("FLEXT_OBSERVABILITY_QUIET"),
     }
+    last_events["trace"] = trace_event
 
 
 def flext_create_log_entry(
@@ -52,9 +57,10 @@ def flext_create_log_entry(
     context: m.Dict | None = None,
 ) -> None:
     """Create mock log entry."""
-    last_events["log_entry"] = {
+    log_event: EventPayload = {
         "message": message,
         "level": level,
         "context": _copy_mapping(context),
         "quiet": os.environ.get("FLEXT_OBSERVABILITY_QUIET"),
     }
+    last_events["log_entry"] = log_event
