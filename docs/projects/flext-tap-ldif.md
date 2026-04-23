@@ -18,7 +18,7 @@ FLEXT Tap LDIF (v1.0.0 release prep) is the Singer tap responsible for extractin
 - **Python**: 3.13+
 - **Status**: production-ready extraction flows with Strong gating (90%+ coverage, zero tech debt). Documentation is still being expanded but the project is stable.
 - **Coverage**: 90%+ (see `reports/coverage-scan-*` & README badges)
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + dbt/test + coverage + docstring checks) is the enforced pre-merge command; `make lint`, `make type-check`, `make security`, `make test`, and other quality scripts all report clean results.
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + dbt/test + coverage + docstring checks) is the enforced pre-merge command; `make lint`, `make type-check`, `make security`, `make test`, and other quality scripts all report clean results.
 - **Dependencies**: `flext-core`, `flext-ldif`, `flext-meltano`, Singer SDK, `dbt`, `dbt-core`, `dbt-postgres`, instrumentation via `flext-observability`
 - **Zero tolerance**: Forbidden direct imports of singer-sdk, ldap3, or flext-ldif internals; use the standard flext adapters, always return `r[T]`, never rely on exception-based flows, and keep settings in Pydantic models.
 
@@ -30,7 +30,7 @@ cd flext-tap-ldif
 poetry install
 make setup
 make check
-make validate
+make val
 ```
 
 ```bash
@@ -47,7 +47,7 @@ tap-ldif --config settings.json --catalog catalog.json --state state.json
 
 ## Quality & operations
 
-- **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate`, and Singer-specific commands (discover, run, sync, validate-settings).
+- **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make val`, and Singer-specific commands (discover, run, sync, validate-settings).
 - **Testing**: 90%+ coverage across unit, integration, e2e Singer streams, plus Docker-backed LDIF tests; specialized commands like `make ldif-validate`, `make ldif-parse`, `make ldif-test`, `pytest -m singer` keep the spec satisfied.
 - **Quality policy**: zero Ruff/Pyrefly errors, zero type ignores, zero direct Singer or LDIF parsing outside mandated adapters, and pre-commit hooks enforce the gating pipeline.
 

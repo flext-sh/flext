@@ -92,7 +92,7 @@ FLEXT-only deltas. Universal rules (rollback, scope, generic tooling, communicat
 
 - `t.Primitives` = `str | int | float | bool`
 - `t.Scalar` = `t.Primitives | datetime`
-- `t.Container` = `t.Scalar | Path`
+- `t.JsonValue` = `pydantic.JsonValue` (re-exported via `tp.JsonValue` / `t.JsonValue`; never widen the alias)
 - Prefer `Sequence` over `list` in parameter types (variance-safe).
 - Prefer `t.*` validators over ad-hoc `Field(...)` constraints.
 
@@ -276,11 +276,11 @@ flext-<project>/src/flext_<project>/
 
 ### 3.2 Types & Contracts
 
-- **Strict Contracts Only**: `Any`, bare `object`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.Container`, `m.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
-  - **Exception: Intentional Generic Types** - `Mapping[str, t.Container]` and `Mapping[str, t.Container]` ARE permitted ONLY in these contexts:
-    1. **Type aliases** (in `typings.py`): `type ProjectSettings = Mapping[str, t.Container]` with docstring explaining intent
+- **Strict Contracts Only**: `Any`, bare `object`, and `Mapping[str, Any]` are TOTALLY FORBIDDEN across all code. Use `t.*` contracts exclusively (`t.Scalar`, `t.JsonValue`, `m.ConfigMap`, etc.). Duplicate type definitions or compatibility aliases (`MyScalar = t.Scalar`) are FORBIDDEN. Use modern Python typing syntax (`X | Y`).
+  - **Exception: Intentional Generic Types** - `t.JsonMapping` and `t.JsonMapping` ARE permitted ONLY in these contexts:
+    1. **Type aliases** (in `typings.py`): `type ProjectSettings = t.JsonMapping` with docstring explaining intent
     2. **Test fixtures** (in `conftest.py` and test support): Dynamic test data with unknown structure
-    3. **Validation/Rule engines**: Return types for unstructured violations (e.g., `r[Sequence[Mapping[str, t.Container]]]`)
+    3. **Validation/Rule engines**: Return types for unstructured violations (e.g., `r[Sequence[t.JsonMapping]]`)
     4. **Configuration transformers**: Methods that accept/return dynamic configuration from external sources (YAML, JSON)
     - **All other uses are FORBIDDEN**. Use `object` or specific Pydantic models instead.
 - **PEP 695 Canonical (Python 3.13+)**: ALL type aliases in `typings.py` must use `type X = ...` syntax. These create `TypeAliasType` objects—using them in `isinstance()` crashes at runtime and is FORBIDDEN. Runtime narrowing MUST use `u.is_*()` functions instead.
@@ -288,7 +288,7 @@ flext-<project>/src/flext_<project>/
 - **Nullability and Unions**:
   - `| None` is ONLY permitted inline at usage sites when business semantics require it (e.g., "not configured"). Never bake it into aliases.
   - Inline composed type annotations (e.g., `str | int`) are FORBIDDEN in application code.
-- **`t.Container` Exclusivity**: `type Container = t.Container`. `BaseModel` is TOTALLY FORBIDDEN inside `t.Container`. If both are needed, use explicit `t.Container | BaseModel`.
+- **`t.JsonValue` Exclusivity**: `type Container = t.JsonValue`. `BaseModel` is TOTALLY FORBIDDEN inside `t.JsonValue`. If both are needed, use explicit `t.JsonValue | BaseModel`.
 
 ### 3.3 Failures & Error Handling
 
@@ -344,6 +344,7 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Constants Discipline**: `flext-constants-discipline` (StrEnum/IntEnum/Literal/frozenset/MappingProxyType/tuple/Final rules)
 - **Testing Discipline**: `testing-patterns` (public-API-only, real-flow-over-mocks, enforcement warnings as failures, golden-file examples)
 - **Refactoring Workflow**: `flext-refactoring-workflow` (includes the net-negative-LOC delta gate, "more with less" north star)
+- **Scope Bootstrap & Reindexing**: `flext-scope-bootstrap` (official Scope bootstrap from the correct root, validation with `status`/`index`, and FLEXT-specific reindex triggers)
 
 ### 3.8 Verification Discipline
 
@@ -455,9 +456,11 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Authority**: Skills are authoritative detail documents. This file (`AGENTS.md`) is the supreme law surface framing them.
 - **Load Order**: Touched-path `rules-*` skill first, supporting skills second. Afterwards, load only minimal skills needed for the change.
 - **Mandatory Usage**: Do not implement rules from memory. Do not claim skill usage without reading the `SKILL.md`.
+- **Plan-Mode Intent Recovery**: In plan mode, always use the `/ask` skill on the target code before writing the plan. Use it to read the code and recover the original transcript that generated it when available; understanding intent is mandatory input to a better plan.
 - **Mapping**: Baseline maps must be respected (`flext-core->rules-flext-core`, `src->rules-src`, `tests->testing-patterns`, etc.).
 - **Rule Definitions**: `rules.yml` schema uses flat fix keys only. Prefer `type: ast-grep`; use `type: custom` only when AST matching is completely unviable. `fix_auto: true` must map to an executable real fix mechanism.
 - **Prompt Routing**: For requests centered on simplification, deduplication, pyrefly/ruff reduction, canonical facade migration, or large-scale contract cleanup, agents MUST load `.github/prompts/flext-aggressive-scale-refactor.prompt.md` after `AGENTS.md` and the path-scoped skills. Prompts operationalize this file; they never replace it.
+- **Prompt/Agent Review Routing**: Requests to review or improve prompts, agent instructions, `AGENTS.md`, `copilot-instructions`, or `SKILL.md` files are governance work. Agents MUST read `AGENTS.md` first, then load the relevant scoped skills, and improve those surfaces by reinforcing canonical-source discipline, correct skill-loading order, repository-native tool routing, and non-duplication of policy text.
 - **Continuous Skill Hardening**: When repeated agent failure modes appear (skipped impact analysis, incomplete propagation, non-surgical edits, wrong tool choice, weak context alignment), update the relevant skill or prompt in the same governance cycle so the behavior becomes stricter for future runs.
 - *Skill format policies*: See skills `skill-format-universal`, `flext-docs-pointer-policy`.
 
@@ -492,8 +495,15 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 
 - **Scope is Mandatory When Available**: If `.scope/` exists or `scope status` succeeds, use `scope` first for cross-file discovery, call-site inspection, blast-radius analysis, caller/reference tracing, and architecture orientation. Skipping `scope` for qualifying tasks is a governance violation.
 - **Scope Freshness is Mandatory**: Keep the Scope index fresh. Run `scope index` after structural edits, and for multi-project or workspace-wide work prefer `scope workspace index` (or `scope workspace index --watch`) so structural queries stay trustworthy.
+- **Scope Bootstrap Must Use The Official CLI Baseline**: For repo-local FLEXT work, initialize Scope from the repository root with `scope init`, which creates `.scope/config.toml`. For multi-repository sessions, initialize member repositories first and then run `scope workspace init` at the workspace root to generate `scope-workspace.toml`. Do not handcraft Scope config files from memory.
+- **Scope Validation Loop Is Required**: After Scope bootstrap or any edit to `.scope/config.toml` or `scope-workspace.toml`, run `scope status` before trusting queries, then rebuild the matching index with `scope index` or `scope workspace index`.
+- **FLEXT Structural Changes Require Reindexing**: Re-run the relevant Scope index after `make gen`, facade/export regeneration, namespace or alias migration, symbol/file moves, or other structural changes that can invalidate caller/reference results.
 - **AST-Grep is Mandatory for Structural Changes**: Any structural rename, repeated call-site migration, broad contract propagation, or syntax-pattern rewrite MUST use `ast-grep` (`sg`) unless the change is provably single-site. Plain grep-only refactors for structural work are forbidden.
 - **Serena is Mandatory When Available**: If Serena is connected or its project configuration is present, activate the workspace/project correctly and use its project-aware capabilities for symbol/refactor/navigation flows that depend on language-server-backed context. Do not leave Serena half-configured and then ignore it.
+- **Official Serena Setup Only**: FLEXT Serena setup must follow the upstream quick-start flow from the global AGENTS contract: installed `serena` CLI, `serena init --language-backend LSP`, workspace MCP registration in `.vscode/mcp.json`, and repo-local project config in `.serena/project.yml`. Do not replace these with local wrappers or alternate config formats.
+- **FLEXT Serena Project Baseline**: The canonical local project setup is `serena project create . --name flext --language python --index`. When `.serena/project.yml` already exists, validate with `serena project health-check` and refresh with `serena project index` instead of recreating the project.
+- **FLEXT Serena Scope Hygiene**: Keep `.serena/project.yml` focused on the navigable repository surface. Synthetic or support-only trees that break symbol extraction, such as `docker/images/support/quality/**`, must be excluded through `ignored_paths` rather than tolerated as routine Serena failures.
+- **FLEXT Serena Boot Order**: For Serena-backed work in this repository, use the workspace MCP server command `serena start-mcp-server --context=vscode --project-from-cwd`, activate `flext`, then run `check_onboarding_performed` and `onboarding` when required before relying on symbol tools.
 - **MCP is Mandatory When Context Requires It**: If the task depends on configured MCP capabilities (remote repo metadata, GitHub workflow state, external structured resources, Serena project tooling), use the configured MCP server rather than improvising local guesses or skipping context.
 - **No Excuses Routing**: Tool availability must be checked, not assumed away. If a required tool is unavailable or misconfigured, state that explicitly and reduce scope safely; do not silently fall back to weaker reasoning for a high-blast-radius change.
 - **Impact Analysis Before Edit**: Signature changes, alias changes, namespace moves, protocol/model/settings/constant changes, and deletions require a tool-backed reference audit before the first substantive edit.

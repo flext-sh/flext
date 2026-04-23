@@ -47,7 +47,7 @@ services:
         
         # Run quality gates
         echo '🔒 Running security checks...'
-        make validate || echo 'Quality gates completed with warnings'
+        make val || echo 'Quality gates completed with warnings'
         
         # Generate test report
         echo '📊 Container validation completed!'

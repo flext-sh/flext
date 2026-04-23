@@ -25,40 +25,9 @@ from collections.abc import (
 )
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
-from typing import Annotated, ClassVar, TypeIs
+from typing import Annotated, ClassVar
 
 from examples import m, p, r, t, u
-
-EntryDict = Mapping[
-    str,
-    t.Scalar | t.StrSequence | Mapping[str, t.Scalar | t.StrSequence],
-]
-
-ProcessingDict = Mapping[str, t.Container]
-ContextDict = t.ContainerValueMapping
-
-
-def _new_str_list() -> MutableSequence[str]:
-    return []
-
-
-def _is_object_list(
-    value: t.Container,
-) -> TypeIs[t.FlatContainerList]:
-    return isinstance(value, Sequence) and not isinstance(
-        value,
-        (str, bytes, bytearray),
-    )
-
-
-def _is_str_object_dict(
-    value: t.Container,
-) -> TypeIs[Mapping[str, t.Container]]:
-    return isinstance(value, Mapping)
-
-
-def _is_entry_dict(value: t.Container) -> TypeIs[EntryDict]:
-    return isinstance(value, Mapping)
 
 
 class AclProcessingExample:
@@ -88,31 +57,27 @@ class AclProcessingExample:
     class AclEntry(m.BaseModel):
         """Represents an ACL entry with context and permissions."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True
-        )
+        model_config = m.ConfigDict(arbitrary_types_allowed=True)
 
         dn: str = u.Field(description="Distinguished name of the ACL entry")
         acl_attribute: str = u.Field(description="ACL attribute name")
         permissions: t.StrSequence = u.Field(description="List of permissions")
-        context: ContextDict = u.Field(description="Context information")
+        context: t.JsonMapping = u.Field(description="Context information")
         server_type: str = u.Field(description="Type of LDAP server")
 
     class AclValidationResult(m.BaseModel):
         """Result of ACL validation with detailed context."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True
-        )
+        model_config = m.ConfigDict(arbitrary_types_allowed=True)
 
         entry_dn: str = u.Field(description="Distinguished name of the entry")
         valid: bool = u.Field(description="Whether the ACL entry is valid")
         violations: t.StrSequence = u.Field(
-            default_factory=_new_str_list,
+            default_factory=tuple,
             description="List of validation violations",
         )
         warnings: t.StrSequence = u.Field(
-            default_factory=_new_str_list,
+            default_factory=tuple,
             description="List of validation warnings",
         )
         processing_time: Annotated[
@@ -153,7 +118,7 @@ class AclProcessingExample:
         return permissions or [AclProcessingExample.Permission.UNKNOWN.value]
 
     @staticmethod
-    def detect_server_type(entry: EntryDict) -> p.Result[str]:
+    def detect_server_type(entry: t.JsonMapping) -> p.Result[str]:
         """Auto-detect server type from entry attributes."""
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, Mapping):
@@ -169,7 +134,7 @@ class AclProcessingExample:
 
     @staticmethod
     def extract_acls_from_entry(
-        entry: EntryDict,
+        entry: t.JsonMapping,
         server_type: str,
     ) -> p.Result[Sequence[AclProcessingExample.AclEntry]]:
         """Extract ACLs using server-specific attribute detection."""
@@ -190,7 +155,7 @@ class AclProcessingExample:
             )
         for attr_name in acl_attrs:
             if attr_name in attributes:
-                acl_values = attributes[attr_name]
+                acl_values = attributes.get(attr_name)
                 if isinstance(acl_values, str):
                     values_list = [acl_values]
                 elif isinstance(acl_values, Sequence) and not isinstance(
@@ -220,8 +185,8 @@ class AclProcessingExample:
 
     @staticmethod
     def validate_acl_entry(
-        acl_entry: Mapping[str, t.Container],
-        _context: ContextDict,
+        acl_entry: t.JsonMapping,
+        _context: t.JsonMapping,
     ) -> p.Result[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
@@ -287,16 +252,16 @@ class AclProcessingExample:
         """Monadic ACL processor with zero-ceremony execution."""
 
         auto_execute: bool = True
-        entries: Sequence[EntryDict]
+        entries: Sequence[t.JsonMapping]
         parallel: bool = True
 
-        def execute(self) -> p.Result[ProcessingDict]:
+        def execute(self) -> p.Result[t.JsonMapping]:
             """Execute ACL processing pipeline using monadic flow."""
             start_time = time.time()
             detect_result = self._detect_servers(self.entries)
             if detect_result.failure:
-                return r[ProcessingDict].fail(detect_result.error)
-            initial_data: ProcessingDict = {
+                return r[t.JsonMapping].fail(detect_result.error)
+            initial_data: t.JsonMapping = {
                 **detect_result.value,
                 "start_time": start_time,
             }
@@ -306,17 +271,15 @@ class AclProcessingExample:
                 else self._extract_sequential(initial_data)
             )
             if extract_result.failure:
-                return r[ProcessingDict].fail(extract_result.error)
+                return r[t.JsonMapping].fail(extract_result.error)
             extracted_data = extract_result.value
             validate_result = self._validate_batch(extracted_data)
             if validate_result.failure:
-                return r[ProcessingDict].fail(validate_result.error)
+                return r[t.JsonMapping].fail(validate_result.error)
             validated_data = validate_result.value
             return self._analyze_performance(validated_data)
 
-        def _analyze_performance(
-            self, data: ProcessingDict
-        ) -> p.Result[ProcessingDict]:
+        def _analyze_performance(self, data: t.JsonMapping) -> p.Result[t.JsonMapping]:
             """Analyze processing performance."""
             total_entries = len(self.entries)
             total_acls_data = data.get("total_acls", 0)
@@ -342,44 +305,50 @@ class AclProcessingExample:
                 "performance_analytics": analytics,
                 "processing_time_seconds": processing_time,
             }
-            return r[ProcessingDict].ok(result_data)
+            return r[t.JsonMapping].ok(
+                t.json_mapping_adapter().validate_python(result_data)
+            )
 
         def _detect_servers(
-            self, entries: Sequence[EntryDict]
-        ) -> p.Result[ProcessingDict]:
+            self, entries: Sequence[t.JsonMapping]
+        ) -> p.Result[t.JsonMapping]:
             """Auto-detect server types for all entries."""
-            detected_entries: MutableSequence[Mapping[str, t.Container]] = []
+            detected_entries: MutableSequence[t.JsonMapping] = []
             for entry in entries:
                 result = AclProcessingExample.detect_server_type(entry)
                 if result.success:
-                    detected_entries.append({
-                        "entry": entry,
-                        "server_type": result.value,
-                    })
+                    detected_entries.append(
+                        t.json_mapping_adapter().validate_python({
+                            "entry": entry,
+                            "server_type": result.value,
+                        })
+                    )
                 else:
-                    return r[ProcessingDict].fail(
+                    return r[t.JsonMapping].fail(
                         f"Server detection failed: {result.error}",
                     )
             server_types_set: set[str] = {
                 str(item.get("server_type", "")) for item in detected_entries
             }
-            return r[ProcessingDict].ok({
-                "entries": detected_entries,
-                "server_types": sorted(server_types_set),
-            })
+            return r[t.JsonMapping].ok(
+                t.json_mapping_adapter().validate_python({
+                    "entries": detected_entries,
+                    "server_types": sorted(server_types_set),
+                })
+            )
 
-        def _extract_acls(self, data: ProcessingDict) -> p.Result[ProcessingDict]:
+        def _extract_acls(self, data: t.JsonMapping) -> p.Result[t.JsonMapping]:
             """Extract ACLs in parallel."""
             entries_data_raw = data.get("entries")
-            if not _is_object_list(entries_data_raw):
-                return r[ProcessingDict].fail("Invalid entries format")
-            entries_with_servers: MutableSequence[tuple[EntryDict, str]] = []
+            if not u.list_value(entries_data_raw):
+                return r[t.JsonMapping].fail("Invalid entries format")
+            entries_with_servers: MutableSequence[tuple[t.JsonMapping, str]] = []
             for entry_with_server_raw in entries_data_raw:
-                if not _is_str_object_dict(entry_with_server_raw):
+                if not u.mapping(entry_with_server_raw):
                     continue
                 entry_raw = entry_with_server_raw.get("entry")
                 server_type_raw = entry_with_server_raw.get("server_type")
-                if not _is_entry_dict(entry_raw) or not isinstance(
+                if not u.mapping(entry_raw) or not isinstance(
                     server_type_raw,
                     str,
                 ):
@@ -400,10 +369,10 @@ class AclProcessingExample:
                     if result.success:
                         all_acls.extend(result.value)
                     else:
-                        return r[ProcessingDict].fail(
+                        return r[t.JsonMapping].fail(
                             f"ACL extraction failed: {result.error}",
                         )
-            result_data: ProcessingDict = {
+            result_data = {
                 **data,
                 "acls": [
                     {
@@ -423,20 +392,22 @@ class AclProcessingExample:
                 ],
                 "total_acls": len(all_acls),
             }
-            return r[ProcessingDict].ok(result_data)
+            return r[t.JsonMapping].ok(
+                t.json_mapping_adapter().validate_python(result_data)
+            )
 
-        def _extract_sequential(self, data: ProcessingDict) -> p.Result[ProcessingDict]:
+        def _extract_sequential(self, data: t.JsonMapping) -> p.Result[t.JsonMapping]:
             """Extract ACLs sequentially."""
             entries_data_raw = data.get("entries")
-            if not _is_object_list(entries_data_raw):
-                return r[ProcessingDict].fail("Invalid entries format")
-            entries_with_servers: MutableSequence[tuple[EntryDict, str]] = []
+            if not u.list_value(entries_data_raw):
+                return r[t.JsonMapping].fail("Invalid entries format")
+            entries_with_servers: MutableSequence[tuple[t.JsonMapping, str]] = []
             for entry_with_server_raw in entries_data_raw:
-                if not _is_str_object_dict(entry_with_server_raw):
+                if not u.mapping(entry_with_server_raw):
                     continue
                 entry_raw = entry_with_server_raw.get("entry")
                 server_type_raw = entry_with_server_raw.get("server_type")
-                if not _is_entry_dict(entry_raw) or not isinstance(
+                if not u.mapping(entry_raw) or not isinstance(
                     server_type_raw,
                     str,
                 ):
@@ -451,10 +422,10 @@ class AclProcessingExample:
                 if result.success:
                     all_acls.extend(result.value)
                 else:
-                    return r[ProcessingDict].fail(
+                    return r[t.JsonMapping].fail(
                         f"ACL extraction failed: {result.error}",
                     )
-            result_data: ProcessingDict = {
+            result_data = {
                 **data,
                 "acls": [
                     {
@@ -474,31 +445,33 @@ class AclProcessingExample:
                 ],
                 "total_acls": len(all_acls),
             }
-            return r[ProcessingDict].ok(result_data)
+            return r[t.JsonMapping].ok(
+                t.json_mapping_adapter().validate_python(result_data)
+            )
 
-        def _validate_batch(self, data: ProcessingDict) -> p.Result[ProcessingDict]:
+        def _validate_batch(self, data: t.JsonMapping) -> p.Result[t.JsonMapping]:
             """Validate all extracted ACLs."""
             acls_data_raw = data.get("acls")
-            if not _is_object_list(acls_data_raw):
-                return r[ProcessingDict].fail("Invalid ACLs format")
+            if not u.list_value(acls_data_raw):
+                return r[t.JsonMapping].fail("Invalid ACLs format")
             validation_results: MutableSequence[
                 AclProcessingExample.AclValidationResult
             ] = []
-            acl_entries: Sequence[Mapping[str, t.Container]] = [
+            acl_entries: Sequence[t.JsonMapping] = [
                 acl_item for acl_item in acls_data_raw if isinstance(acl_item, Mapping)
             ]
             for acl in acl_entries:
                 result = AclProcessingExample.validate_acl_entry(
                     acl,
-                    {"strict_mode": True},
+                    t.json_mapping_adapter().validate_python({"strict_mode": True}),
                 )
                 if result.success:
                     validation_results.append(result.value)
                 else:
-                    return r[ProcessingDict].fail(
+                    return r[t.JsonMapping].fail(
                         f"ACL validation failed: {result.error}",
                     )
-            result_data: ProcessingDict = {
+            result_data = {
                 **data,
                 "validation_results": [
                     {
@@ -517,10 +490,12 @@ class AclProcessingExample:
                 "total_violations": sum(len(r.violations) for r in validation_results),
                 "total_warnings": sum(len(r.warnings) for r in validation_results),
             }
-            return r[ProcessingDict].ok(result_data)
+            return r[t.JsonMapping].ok(
+                t.json_mapping_adapter().validate_python(result_data)
+            )
 
     @staticmethod
-    def create_sample_acl_entries() -> Sequence[EntryDict]:
+    def create_sample_acl_entries() -> Sequence[t.JsonMapping]:
         """Create sample LDAP entries with ACL attributes for testing."""
         return [
             {

@@ -16,9 +16,9 @@ FLEXT dbt LDIF (v1.0.0 release prep) is the dbt project that turns LDAP/LDIF dat
 
 - **Version**: 1.0.0 (Release Preparation)
 - **Python**: 3.13+ with Poetry-managed dependencies
-- **Tests**: 339+ unit/integration/e2e suites (Python + dbt); `make validate` (lint + type + security + tests + coverage) is the gating command, and everyone is expected to run it before merging.
+- **Tests**: 339+ unit/integration/e2e suites (Python + dbt); `make val` (lint + type + security + tests + coverage) is the gating command, and everyone is expected to run it before merging.
 - **Coverage**: 90%+ (See `reports/coverage-scan-*` for snapshots)
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + dbt tests + coverage + docstring checks); `make check`, `make lint`, `make type-check`, and `make security` are green.
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + dbt tests + coverage + docstring checks); `make check`, `make lint`, `make type-check`, and `make security` are green.
 - **Dependencies**: `flext-core`, `flext-ldap`, `flext-meltano`, `dbt-core`, `dbt-postgres`, `flext-dbt-ldif` macros built on the Singer tap/target ecosystem.
 - **Zero tolerance**: no direct dbt/ldif/click/rich imports; use flext-meltano/flext-ldif/flext-cli; all flows return `r[T]`, no `Any`, `cast`, or `TYPE_CHECKING`.
 
@@ -29,7 +29,7 @@ git clone https://github.com/flext-sh/flext-dbt-ldif.git
 cd flext-dbt-ldif
 poetry install
 make setup
-make validate
+make val
 ```
 
 ```bash
@@ -50,7 +50,7 @@ dbt docs serve --port 8080
 
 ## Quality & operations
 
-- Validation commands: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make dbt-test`, and `make validate` (combines all gates).
+- Validation commands: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make dbt-test`, and `make val` (combines all gates).
 - Testing categories: Python (`pytest` for generators, CLI, infrastructure), dbt tests (staging/marts) triggered via `dbt test`, Docker/LDAP integration for Singer flows, and scenario-specific `tests/test_ldif_*.py` modules.
 - Quality policy: zero Ruff/Pyrefly errors, zero `Any`, zero `cast`, and all CLI flows routed through `flext-cli` to respect zero-tolerance rules.
 

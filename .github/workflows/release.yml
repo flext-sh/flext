@@ -68,12 +68,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libldap2-dev libsasl2-dev libssl-dev
 
-      - name: Setup workspace
-        run: make setup
+      - name: Boot workspace
+        run: make boot
 
       - name: Run release pipeline
         run: |
-          make release \
+          make rel \
             RELEASE_PHASE=validate,version,build,publish \
             VERSION="${{ steps.release.outputs.version }}" \
             TAG="${{ steps.release.outputs.tag }}" \
@@ -111,8 +111,8 @@ jobs:
           VERSION="${{ steps.release.outputs.version }}"
           BRANCH="release/${VERSION}-sync"
 
-          git settings user.name "github-actions[bot]"
-          git settings user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git fetch origin main --tags
           if git merge-base --is-ancestor "$TAG" origin/main; then

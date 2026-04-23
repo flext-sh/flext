@@ -31,9 +31,9 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Setup (advisory)
+      - name: Boot (advisory)
         continue-on-error: true
-        run: make setup
+        run: make boot
 
       - name: Check (advisory)
         continue-on-error: true
@@ -43,6 +43,6 @@ jobs:
         continue-on-error: true
         run: make test
 
-      - name: Validate (advisory)
+      - name: Val (advisory)
         continue-on-error: true
-        run: make validate
+        run: make val

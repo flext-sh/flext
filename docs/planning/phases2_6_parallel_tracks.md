@@ -59,7 +59,7 @@
 **Validation**:
 
 - [ ] Zero cast() in flext-api
-- [ ] `make validate PROJECT=flext-api` passes
+- [ ] `make val PROJECT=flext-api` passes
 
 **Commit**:
 
@@ -86,7 +86,7 @@ refactor(flext-api): eliminate cast() using TypeGuards
 **Validation**:
 
 - [ ] Zero RUF052 warnings
-- [ ] `make validate PROJECT=flext-grpc` passes
+- [ ] `make val PROJECT=flext-grpc` passes
 
 **Commit**:
 
@@ -115,7 +115,7 @@ refactor(flext-grpc): fix RUF052 dummy variable warnings
 **Validation**:
 
 - [ ] Zero lint violations
-- [ ] `make validate PROJECT=flext-observability` passes
+- [ ] `make val PROJECT=flext-observability` passes
 
 **Commit**:
 
@@ -135,7 +135,7 @@ refactor(flext-observability): migrate to Pydantic 2 patterns
 
 **Validation**:
 
-- [ ] `make validate PROJECT=flext-quality` passes
+- [ ] `make val PROJECT=flext-quality` passes
 
 **Commit**:
 
@@ -162,7 +162,7 @@ refactor(flext-quality): update for Pydantic 2 patterns
 
 - [ ] Zero ARG002 violations
 - [ ] All docstrings present
-- [ ] `make validate PROJECT=flext-plugin` passes
+- [ ] `make val PROJECT=flext-plugin` passes
 
 **Commit**:
 
@@ -233,7 +233,7 @@ refactor(flext-plugin): fix ARG002 and add missing docstrings
 
 - [ ] All 93 TypedDicts converted
 - [ ] Zero cast() usage
-- [ ] `make validate PROJECT=flext-ldif` passes
+- [ ] `make val PROJECT=flext-ldif` passes
 - [ ] 80%+ coverage maintained
 
 **Commits** (atomic per category):
@@ -259,7 +259,7 @@ refactor(flext-ldif): update imports to use hierarchical models
 
 **Validation**:
 
-- [ ] `make validate PROJECT=flext-ldap` passes
+- [ ] `make val PROJECT=flext-ldap` passes
 
 **Commit**:
 
@@ -279,7 +279,7 @@ refactor(flext-ldap): standardize Pydantic 2 patterns
 
 **Validation**:
 
-- [ ] `make validate PROJECT=flext-db-oracle` passes
+- [ ] `make val PROJECT=flext-db-oracle` passes
 
 **Commit**:
 
@@ -317,7 +317,7 @@ refactor(flext-db-oracle): standardize Pydantic 2 patterns
 
 **Validation**:
 
-- [ ] `make validate PROJECT=flext-oracle-wms` passes
+- [ ] `make val PROJECT=flext-oracle-wms` passes
 
 **Commit**:
 
@@ -344,7 +344,7 @@ refactor(flext-oracle-wms): migrate to Pydantic 2 patterns
 **Validation**:
 
 - [ ] Zero PIE794 violations
-- [ ] `make validate PROJECT=flext-oracle-oic` passes
+- [ ] `make val PROJECT=flext-oracle-oic` passes
 
 **Commit**:
 
@@ -378,7 +378,7 @@ refactor(flext-oracle-oic): fix PIE794 and consolidate constants
 
 - [ ] Zero bad-override errors
 - [ ] Singer protocol compliance verified
-- [ ] `make validate PROJECT=flext-meltano` passes
+- [ ] `make val PROJECT=flext-meltano` passes
 
 **Commit**:
 
@@ -420,7 +420,7 @@ refactor(flext-meltano): fix bad-override and standardize patterns
 - [ ] Zero cast()
 - [ ] Zero TypedDict
 - [ ] Zero RUF022, F841
-- [ ] `make validate PROJECT=flext-tap-ldap` passes
+- [ ] `make val PROJECT=flext-tap-ldap` passes
 
 **Commits**:
 
@@ -442,7 +442,7 @@ refactor(flext-tap-ldap): fix RUF022 and F841 violations
 
 **Validation**:
 
-- [ ] `make validate PROJECT=flext-tap-ldif` passes
+- [ ] `make val PROJECT=flext-tap-ldif` passes
 
 **Commit**:
 
@@ -467,7 +467,7 @@ refactor(flext-tap-ldif): standardize Pydantic 2 patterns
 **Validation**:
 
 - [ ] Zero cast()
-- [ ] `make validate PROJECT=flext-tap-oracle` passes
+- [ ] `make val PROJECT=flext-tap-oracle` passes
 
 **Commit**:
 
@@ -487,7 +487,7 @@ refactor(flext-tap-oracle): eliminate cast() using TypeGuards
 
 **Validation**:
 
-- [ ] `make validate PROJECT=flext-tap-oracle-oic` passes
+- [ ] `make val PROJECT=flext-tap-oracle-oic` passes
 
 **Commit**:
 
@@ -521,7 +521,7 @@ refactor(flext-tap-oracle-oic): standardize Pydantic 2 patterns
 **Validation**:
 
 - [ ] Zero cast()
-- [ ] `make validate PROJECT=flext-target-oracle` passes
+- [ ] `make val PROJECT=flext-target-oracle` passes
 
 **Commits**:
 
@@ -549,7 +549,7 @@ refactor(flext-target-oracle): standardize ConfigDict
 
 **Validation**:
 
-- [ ] `make validate PROJECT=flext-target-ldap` passes
+- [ ] `make val PROJECT=flext-target-ldap` passes
 
 **Commit**:
 
@@ -569,7 +569,7 @@ refactor(flext-target-ldap): fix imports and bad-dunder-all error
 
 **Validation**:
 
-- [ ] `make validate PROJECT=flext-target-ldif` passes
+- [ ] `make val PROJECT=flext-target-ldif` passes
 
 **Commit**:
 
@@ -594,7 +594,7 @@ refactor(flext-target-ldif): standardize Pydantic 2 patterns
 **Validation**:
 
 - [ ] Zero TypedDict
-- [ ] `make validate PROJECT=flext-target-oracle-oic` passes
+- [ ] `make val PROJECT=flext-target-oracle-oic` passes
 
 **Commit**:
 
@@ -614,7 +614,7 @@ refactor(flext-target-oracle-oic): convert TypedDicts to Pydantic models
 
 **Validation**:
 
-- [ ] `make validate PROJECT=flext-target-oracle-wms` passes
+- [ ] `make val PROJECT=flext-target-oracle-wms` passes
 
 **Commit**:
 
@@ -650,7 +650,7 @@ refactor(flext-target-oracle-wms): align with tap-oracle-wms patterns
 **Validation**:
 
 - [ ] Zero cast()
-- [ ] `make validate PROJECT=flext-dbt-oracle` passes
+- [ ] `make val PROJECT=flext-dbt-oracle` passes
 
 **Commit**:
 
@@ -675,7 +675,7 @@ refactor(flext-dbt-oracle): eliminate cast() using TypeGuards
 **Validation**:
 
 - [ ] Zero cast()
-- [ ] `make validate PROJECT=flext-dbt-ldap` passes
+- [ ] `make val PROJECT=flext-dbt-ldap` passes
 
 **Commit**:
 
@@ -703,7 +703,7 @@ refactor(flext-dbt-ldap): eliminate cast() using TypeGuards
 
 - [ ] Zero cast()
 - [ ] Zero TypedDict
-- [ ] `make validate PROJECT=flext-dbt-ldif` passes
+- [ ] `make val PROJECT=flext-dbt-ldif` passes
 
 **Commits**:
 
@@ -733,7 +733,7 @@ refactor(flext-dbt-ldif): convert TypedDicts to Pydantic models
 
 - [ ] Zero cast()
 - [ ] Zero TypedDict
-- [ ] `make validate PROJECT=flext-dbt-oracle-wms` passes
+- [ ] `make val PROJECT=flext-dbt-oracle-wms` passes
 
 **Commits**:
 
@@ -797,7 +797,7 @@ refactor(flext-dbt-oracle-wms): update imports to use hierarchical models
 **Validation**:
 
 - [ ] All 84 TypedDicts converted
-- [ ] `make validate PROJECT=flext-cli` passes
+- [ ] `make val PROJECT=flext-cli` passes
 - [ ] 80%+ coverage maintained
 
 **Commits**:
@@ -857,7 +857,7 @@ refactor(flext-cli): update imports to use hierarchical models
 **Validation**:
 
 - [ ] All 89 TypedDicts converted
-- [ ] `make validate PROJECT=flext-web` passes
+- [ ] `make val PROJECT=flext-web` passes
 - [ ] 80%+ coverage maintained
 - [ ] UI/UX functionality preserved
 
@@ -934,7 +934,7 @@ refactor(flext-web): update imports to use hierarchical models
 
 ✅ **Quality**
 
-- `make validate` passes for all projects
+- `make val` passes for all projects
 - 80%+ coverage maintained
 - Zero lint violations
 - Zero type errors

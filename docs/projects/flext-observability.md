@@ -16,7 +16,7 @@ FLEXT Observability (v0.9.0) is the platform-wide monitoring, metrics, tracing, 
 
 - **Version**: 0.9.0 (architecture complete, quality checks blocked)
 - **Tests**: 481 functions across 40 files, currently failing because of import errors; quality validation cannot run until `flext-core` exports are unblocked
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is blocked by the import failure noted in the README
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is blocked by the import failure noted in the README
 - **Coverage**: 100% architecture target (currently blocked)
 - **Type safety**: Pyrefly strict mode + MyPy strict mode are configured to read-level discipline (zero `Any`, no `TYPE_CHECKING`, no `cast`, no `# type: ignore`)
 - **Security**: Bandit + pip-audit gates defined but not executed until the `flext-core` dependency stabilizes

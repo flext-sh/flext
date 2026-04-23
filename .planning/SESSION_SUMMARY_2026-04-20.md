@@ -1,4 +1,5 @@
 # FLEXT Typing Consolidation - Final Session Summary
+
 **Date**: 2026-04-20 | **Phase**: Type Consolidation + Error Reduction  
 **Status**: Partial Completion - 399/27+ errors remaining (47% workspace error reduction overall)
 
@@ -7,8 +8,9 @@
 ## Executive Summary
 
 This session achieved **52% workspace-wide pyrefly error reduction** through:
+
 1. Diagnosis and elimination of recursive `Container` type composition
-2. Consolidation of 4 undefined type aliases (`JsonValue`, `JsonObject`, `RecursiveValue`, `OptionalPrimitive`)
+2. Consolidation of 4 undefined type aliases (`JsonValue`, `JsonObject`, `RecursiveValue`, `Primitives | None`)
 3. Strategic Pydantic model wrapping for generic service types
 4. Targeted semantic type fixes in 2 critical projects
 
@@ -20,11 +22,13 @@ This session achieved **52% workspace-wide pyrefly error reduction** through:
 ## Detailed Progress Report
 
 ### Phase 1: Root Cause Analysis & Container Refactoring
+
 **Completed**: ✅ (Previous session work maintained)
 
 **Key Achievement**:
+
 - Eliminated recursive `Container` composition
-- **Before**: `Container = Scalar | Path | FlatScalarMapping | FlatScalarSequence | JsonValue` (5-part, recursive)
+- **Before**: `Container = Scalar | Path | ScalarMapping | ScalarList | JsonValue` (5-part, recursive)
 - **After**: `Container = Scalar | Path | JsonValue` (3-part, flat, non-recursive)
 - **Impact**: Reduced type union explosion from ~20 alternatives per reference to 3-part flat
 
@@ -33,31 +37,37 @@ This session achieved **52% workspace-wide pyrefly error reduction** through:
 ---
 
 ### Phase 2: Type Alias Consolidation (Previous Session)
+
 **Completed**: ✅
 
 **Consolidated Undefined Aliases** (via sed in flext-api):
+
 - `t.JsonValue` → `t.JsonValue`
 - `t.JsonObject` → `t.JsonMapping`
 - `t.RecursiveValue` → `t.JsonValue`
-- `t.OptionalPrimitive` → `t.Primitives | None`
+- `t.Primitives | None` → `t.Primitives | None`
 
 **Impact**: flext-api: 256 → 35 errors (86% reduction)
 
 ---
 
 ### Phase 3: This Session - Semantic Type Fixes
+
 **New Work**: Strategic fixes beyond simple substitution
 
 #### Fix 1: flext-dbt-ldif (1 → 0 errors)
-**Problem**: `s[t.FlatContainerMapping]` - using abstract `Mapping` type in service generic
 
-**Solution**: 
+**Problem**: `s[t.JsonMapping]` - using abstract `Mapping` type in service generic
+
+**Solution**:
+
 - Created wrapper model: `UnifiedServicePayload(m.ArbitraryTypesModel)`
-  - Field: `payload: t.FlatContainerMapping`
+  - Field: `payload: t.JsonMapping`
 - Changed service base: `s[m.DbtLdif.UnifiedServicePayload]`
 - Updated execute() return type and instantiation
 
 **Files Modified**:
+
 - `flext-dbt-ldif/src/flext_dbt_ldif/models.py` (+UnifiedServicePayload)
 - `flext-dbt-ldif/src/flext_dbt_ldif/services/unified_service.py` (base class + return type)
 
@@ -66,11 +76,13 @@ This session achieved **52% workspace-wide pyrefly error reduction** through:
 ---
 
 #### Fix 2: flext-auth (3 → 0 errors)
+
 **Problem**: `MutableMapping` assignment failures - nested structure type mismatch
 
-**Root Cause**: 
+**Root Cause**:
+
 ```python
-t.AttemptData = MutableMapping[str, t.Container]  # was wrong
+t.AttemptData = t.MutableJsonMapping  # was wrong
 self._attempts[username]["attempts"] = (
     recent_attempts  # recent_attempts is Sequence[Container]
 )
@@ -78,11 +90,13 @@ self._attempts[username]["attempts"] = (
 ```
 
 **Solution**:
+
 ```python
-type AttemptData = MutableMapping[str, Sequence[t.Container]]  # fixed
+type AttemptData = MutableMapping[str, t.JsonList]  # fixed
 ```
 
 **File Modified**:
+
 - `flext-auth/src/flext_auth/typings.py` (AttemptData type alias + Sequence import)
 
 **Lesson**: Type aliases must accurately reflect actual runtime structure; audit all `MutableMapping[str, X]` definitions
@@ -111,12 +125,14 @@ type AttemptData = MutableMapping[str, Sequence[t.Container]]  # fixed
 ## Remaining Error Patterns Analysis
 
 ### Category A: Return Type Variance (3 projects, ~10 errors)
+
 **Affected**: flext-target-ldif (4), flext-target-oracle-oic (2), flext-target-oracle-wms (2)
 
 **Pattern**:
+
 ```
-Returned type `dict[str, Container]` is not assignable to `t.Container`
-Returned type `list[Container]` is not assignable to `t.Container`
+Returned type `dict[str, Container]` is not assignable to `t.JsonValue`
+Returned type `list[Container]` is not assignable to `t.JsonValue`
 ```
 
 **Root Cause**: Functions returning `dict` or `list` when type system expects `Container`
@@ -126,9 +142,11 @@ Returned type `list[Container]` is not assignable to `t.Container`
 ---
 
 ### Category B: Mapping Variance (3+ projects, ~25 errors)
+
 **Affected**: flext-infra(2), flext-tap-oracle-wms(1), flext-dbt-ldap(1)
 
 **Pattern**:
+
 ```
 Mapping[str, Mapping[...]] passed to function expecting Mapping[str, Container]
 dict[str, X] passed to function expecting Mapping[str, Context]
@@ -139,9 +157,11 @@ dict[str, X] passed to function expecting Mapping[str, Context]
 ---
 
 ### Category C: Generic Type Nesting (14+ projects, ~200 errors)
+
 **Affected**: flext-ldif (69), flext-tap-oracle (71), flext-api (35), flext-plugin (45), others
 
 **Pattern**:
+
 ```
 Argument of type `dict[str, Mapping[str, ...] | Path | Sequence[...] | bool | ...]`
 is not assignable to `Container`
@@ -152,6 +172,7 @@ is not assignable to `Container`
 ---
 
 ### Category D: Other Issues (5+ projects, ~35 errors)
+
 - Missing attributes (flext-web, flext-db-oracle)
 - Handler protocol mismatches
 - Settings kwargs type issues (flext-oracle-wms)
@@ -162,13 +183,17 @@ is not assignable to `Container`
 ## Strategic Decisions Made
 
 ### 1. **Protected Core Boundary** ✅
+
 All changes validated against `flext-core`, `flext-cli` staying at **0 errors**. Created checkpoint validation after each fix.
 
 ### 2. **No Rollback to Recursion** ✅
+
 Maintained commitment: 100% no return to `Container` recursive composition. All fixes use flat unions or Pydantic models.
 
 ### 3. **Accept Variance Limitations** ⚠️
+
 Did NOT attempt to:
+
 - Force `dict` to be `Mapping` via complex typing tricks
 - Use `cast()` or `type: ignore`
 - Create intermediate type aliases that collapse variance
@@ -176,7 +201,9 @@ Did NOT attempt to:
 Instead: Acknowledged that deep generic nesting requires **semantic refactoring** (Pydantic models, discriminated unions), not type-only fixes.
 
 ### 4. **Scope Boundary** 📌
+
 This session focused on:
+
 - ✅ Quick wins (simple type alias/model wrapping fixes)
 - ✅ Type system correctness (fixing wrong type definitions)
 - ❌ Avoided: Deep refactoring of function signatures across 20+ projects
@@ -186,7 +213,9 @@ This session focused on:
 ## Technical Learnings
 
 ### 1. Service Generic Constraints
+
 Service base `s[T]` only accepts:
+
 - Pydantic `BaseModel` subclasses
 - Scalar values (`bool`, `str`, `int`, `float`)
 - NOT abstract `Mapping`/`Sequence` types
@@ -194,7 +223,9 @@ Service base `s[T]` only accepts:
 **Solution**: Wrap complex types in `RootModel` or `ArbitraryTypesModel`.
 
 ### 2. Type Alias Accuracy
+
 Type aliases like `AttemptData` must precisely match:
+
 - Actual runtime structure stored
 - How values are accessed/modified
 - Expected return types
@@ -202,7 +233,9 @@ Type aliases like `AttemptData` must precisely match:
 **Anti-pattern**: `MutableMapping[str, X]` when code stores `Mapping[str, Sequence[X]]`
 
 ### 3. Mapping Variance Limitations
+
 Python's `Mapping[str, X]` is:
+
 - Covariant in value type `X`
 - **But**: `dict` literal assignment requires exact type match under strict checking
 
@@ -213,10 +246,12 @@ Python's `Mapping[str, X]` is:
 ## What's Blocking Further Progress
 
 ### Blocker 1: Return Type Variance (affects ~10 errors)
+
 **Example**:
+
 ```python
-def process() -> t.Container:
-    return {"key": value}  # dict[str, X] ≠ t.Container
+def process() -> t.JsonValue:
+    return {"key": value}  # dict[str, X] ≠ t.JsonValue
 ```
 
 **Why it's hard**: Changing return type from `Container` to `JsonValue` breaks callers expecting `Container`. Requires coordinated refactoring across call chains.
@@ -224,13 +259,16 @@ def process() -> t.Container:
 ---
 
 ### Blocker 2: Generic Nesting Depth (affects ~200 errors)
+
 **Example**:
+
 ```python
-def handle(payload: Mapping[str, Mapping[str, t.Container | Path | ...]]):
+def handle(payload: Mapping[str, Mapping[str, t.JsonValue | Path | ...]]):
     # Nested unions explode - pyrefly can't narrow correctly
 ```
 
 **Why it's hard**: No type-only solution. Requires:
+
 1. Extract inner types to Pydantic models
 2. Use discriminated unions
 3. Refactor at 3+ projects simultaneously
@@ -238,6 +276,7 @@ def handle(payload: Mapping[str, Mapping[str, t.Container | Path | ...]]):
 ---
 
 ### Blocker 3: Missing Handler Implementations
+
 Some projects define incomplete or mismatched handler registrations.
 
 ---
@@ -245,6 +284,7 @@ Some projects define incomplete or mismatched handler registrations.
 ## Recommendations for Phase 2
 
 ### Priority 1: flext-api (35 errors)
+
 **Effort**: Medium | **Impact**: High
 
 Consolidate deeply nested response types into Pydantic models. This will likely cascade fixes to dependent projects.
@@ -252,6 +292,7 @@ Consolidate deeply nested response types into Pydantic models. This will likely 
 ---
 
 ### Priority 2: Category B - Mapping Variance (25 errors)
+
 **Effort**: Low-Medium | **Impact**: Medium
 
 Audit call sites passing `dict` literals to Mapping parameters. Add explicit model wrapping at boundaries.
@@ -259,6 +300,7 @@ Audit call sites passing `dict` literals to Mapping parameters. Add explicit mod
 ---
 
 ### Priority 3: flext-ldif & flext-tap-oracle (140 errors combined)
+
 **Effort**: High | **Impact**: High
 
 These are integration projects with similar patterns. Consolidating one will provide template for others.
@@ -268,6 +310,7 @@ These are integration projects with similar patterns. Consolidating one will pro
 ## Verification Checkpoints
 
 **All changes passed**:
+
 - ✅ flext-core pyrefly check: 0 errors
 - ✅ flext-cli pyrefly check: 0 errors
 - ✅ 2 targeted projects reduced to 0 errors
@@ -283,11 +326,11 @@ flext-dbt-ldif/src/flext_dbt_ldif/models.py
   ↳ +UnifiedServicePayload(m.ArbitraryTypesModel) wrapper model
 
 flext-dbt-ldif/src/flext_dbt_ldif/services/unified_service.py
-  ↳ Changed base class from s[t.FlatContainerMapping] to s[m.DbtLdif.UnifiedServicePayload]
+  ↳ Changed base class from s[t.JsonMapping] to s[m.DbtLdif.UnifiedServicePayload]
   ↳ Updated execute() return type and instantiation
 
 flext-auth/src/flext_auth/typings.py
-  ↳ Fixed t.AttemptData = Mapping[str, Sequence[t.Container]] (was Container)
+  ↳ Fixed t.AttemptData = Mapping[str, t.JsonList] (was Container)
   ↳ Added Sequence import from collections.abc
 ```
 
@@ -321,6 +364,7 @@ flext-auth/src/flext_auth/typings.py
 ## Conclusion
 
 **Session achieved 52% workspace error reduction** via surgical semantic fixes while maintaining:
+
 - ✅ Zero recursion
 - ✅ Protected core projects  
 - ✅ Quality gate compliance

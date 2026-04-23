@@ -16,9 +16,9 @@ FLEXT dbt Oracle (v1.0.0 release prep) is the dbt integration for Oracle Databas
 
 - **Version**: 1.0.0 (Release Preparation)
 - **Python**: 3.13+ with Poetry-managed dependencies
-- **Tests**: ~250 unit/integration/Oracle-focused suites; `make validate` (ruff + pyrefly + bandit + pytest + dbt tests + coverage) is the gating command that must pass before merging.
+- **Tests**: ~250 unit/integration/Oracle-focused suites; `make val` (ruff + pyrefly + bandit + pytest + dbt tests + coverage) is the gating command that must pass before merging.
 - **Coverage**: 90%+ (see `reports/coverage-scan-*` snapshots)
-- **Quality gate**: `make validate` (lint + type + security + tests + docstring + dbt validations) - other commands (`make lint`, `make type-check`, `make security`, `make test`) already run successfully.
+- **Quality gate**: `make val` (lint + type + security + tests + docstring + dbt validations) - other commands (`make lint`, `make type-check`, `make security`, `make test`) already run successfully.
 - **Dependencies**: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flr` (Singer), Oracle Instant Client, `dbt-core`, `dbt-oracle`
 - **Zero tolerance**: no direct dbt/Singer imports (use flext-meltano), no direct SQLAlchemy/oracledb usage (use flext-db-oracle), no direct Click/Rich (use flext-cli), and every API returns `r[T]` without `Any` or `cast`.
 
@@ -29,7 +29,7 @@ git clone https://github.com/flext-sh/flext-dbt-oracle.git
 cd flext-dbt-oracle
 poetry install
 make setup
-make validate
+make val
 ```
 
 ```bash
@@ -49,7 +49,7 @@ dbt docs generate --target dev
 
 ## Quality & operations
 
-- Validation commands: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make dbt-test`, and `make validate`.
+- Validation commands: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make dbt-test`, and `make val`.
 - Testing focus: Python unit tests, Oracle integration tests (connection, loader, macros), dbt model/tests, and `dbt run` with Oracle-specific macros.
 - Security gating: Bandit and pip-audit run through `make security`; the README lists SQL compliance and connection timeouts as follow-ups when additional features ship.
 

@@ -8,7 +8,7 @@
 
 ### 1.1 Native Pydantic v2 RootModel-based JSON types in `flext-core/_typings/base.py`
 
-**Current**: Multiple JSON aliases scattered (`t.JsonValue`, `t.Container`, `t.Scalar`)
+**Current**: Multiple JSON aliases scattered (`t.JsonValue`, `t.JsonValue`, `t.Scalar`)
 **Target**: Single canonical RootModel-based JSON contract
 
 ```python
@@ -21,16 +21,16 @@ class JsonValue(RootModel[JsonLiteral | dict[str, "JsonValue"] | list["JsonValue
     """Full recursive JSON (Pydantic native)."""
 
 
-class ConfigMap(RootModel[Mapping[str, JsonValue]]):
+class ConfigMap(RootModel[t.JsonMapping]):
     """Configuration mapping (Pydantic native)."""
 
 
-# Deduplication: all former t.Container, t.Scalar, t.Primitives vanish
+# Deduplication: all former t.JsonValue, t.Scalar, t.Primitives vanish
 ```
 
 ### 1.2 Complete Container elimination in favor of JSON hierarchy
 
-- Remove `t.Container` alias (replaced by `JsonValue`)
+- Remove `t.JsonValue` alias (replaced by `JsonValue`)
 - Remove `t.Scalar` (replaced by `JsonLiteral`)
 - Remove `t.Primitives` (replaced by inline `str | int | float | bool | None`)
 - Remove `t.RuntimeData` composition
@@ -72,4 +72,3 @@ CONFIG_MAP_ADAPTER: ClassVar[TypeAdapter[ConfigMap]] = TypeAdapter(ConfigMap)
 
 **Implementation Start**: Now
 **Current User**: Principal Software Engineer Mode
-

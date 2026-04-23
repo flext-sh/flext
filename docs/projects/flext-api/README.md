@@ -19,7 +19,7 @@ FLEXT API provides the HTTP client foundation, FastAPI application factory, and 
 - **Python**: 3.13+
 - **Coverage**: 100% test pass rate (see `reports/coverage-scan-*` for the reporting snapshot)
 - **Type safety**: Pyrefly strict mode passes, MyPy strict mode passes, Ruff reports zero violations
-- **Quality gate**: `make validate` (includes lint, type-check, security, coverage, docstring checks)
+- **Quality gate**: `make val` (includes lint, type-check, security, coverage, docstring checks)
 
 ## Quick start
 
@@ -77,7 +77,7 @@ The package applies Clean Architecture: core client/server code sits in `client.
 
 - `make check` runs Ruff + Pyrefly
 - `make test` executes the `pytest` suite and generates coverage reports
-- `make validate` (lint + type-check + security + tests) is the pre-merge gate
+- `make val` (lint + type-check + security + tests) is the pre-merge gate
 - Continuous integration publishes `reports/lint-output/*`, `reports/pytest/*`, and `reports/coverage-scan-*` so the portal can link to living artifacts.
 
 ## Resources

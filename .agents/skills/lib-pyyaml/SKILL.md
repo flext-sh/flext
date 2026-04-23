@@ -50,7 +50,7 @@ description: Safe and deterministic YAML read/write patterns across FLEXT subpro
 - Always prefer `yaml.safe_load(...)` when reading YAML from files or user-controlled content.
 - Never use `yaml.load(...)` without an explicit safe loader policy (current repo evidence shows zero `yaml.load(` occurrences).
 - Use explicit dump options for stable output (`default_flow_style=False`, and set `sort_keys` intentionally).
-- Validate loaded t.Container shape (`dict`, `list`) before passing to typed models.
+- Validate loaded t.JsonValue shape (`dict`, `list`) before passing to typed models.
 - Keep encoding explicit (`encoding="utf-8"` or project constant) when opening files.
 - For CLI output serialization, keep YAML formatting deterministic and user-readable.
 - **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
@@ -72,10 +72,10 @@ from flext_core import p, r, t
 
 
 @staticmethod
-def load_yaml_rules(path: Path) -> p.Result[Sequence[Mapping[str, t.Container]]]:
+def load_yaml_rules(path: Path) -> p.Result[Sequence[t.JsonMapping]]:
     with path.open(encoding="utf-8") as f:
         data = yaml.safe_load(f)
-    return r[Sequence[Mapping[str, t.Container]]].ok(data or [])
+    return r[Sequence[t.JsonMapping]].ok(data or [])
 ```
 
 ```python
@@ -115,7 +115,7 @@ class FlextCliFileToolsYaml(FlextCliServiceBase):
     """YAML file operations — services delegate to u.Cli.* utilities."""
 
     @staticmethod
-    def read_yaml_file(file_path: t.Cli.TextPath) -> p.Result[t.Cli.JsonValue]:
+    def read_yaml_file(file_path: t.Cli.TextPath) -> p.Result[t.JsonValue]:
         return u.Cli.files_read_yaml(file_path)
 
     @staticmethod
@@ -222,12 +222,12 @@ import yaml
 from flext_core import r, t
 
 
-def load_rules(raw: str) -> r[Sequence[Mapping[str, t.Container]]]:
+def load_rules(raw: str) -> r[Sequence[t.JsonMapping]]:
     f = StringIO(raw)
     parsed = yaml.safe_load(f)
     if not isinstance(parsed, dict):
-        return r[Sequence[Mapping[str, t.Container]]].fail("Expected YAML dict")
-    return r[Sequence[Mapping[str, t.Container]]].ok([parsed])
+        return r[Sequence[t.JsonMapping]].fail("Expected YAML dict")
+    return r[Sequence[t.JsonMapping]].ok([parsed])
 ```
 
 Why good: validates structure before typed access.

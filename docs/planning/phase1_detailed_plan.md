@@ -94,32 +94,32 @@ class Guards:
 
     @staticmethod
     def is_config(obj) -> TypeGuard[m.Core.Tests.Settings]:
-        """Check if t.Container is a Settings model."""
+        """Check if t.JsonValue is a Settings model."""
         return isinstance(obj, m.Core.Tests.Settings)
 
     @staticmethod
     def is_context(obj) -> TypeGuard[m.Core.Tests.Context]:
-        """Check if t.Container is a Context model."""
+        """Check if t.JsonValue is a Context model."""
         return isinstance(obj, m.Core.Tests.Context)
 
     @staticmethod
     def is_result_success(obj) -> TypeGuard[m.Result.Success]:
-        """Check if t.Container is a successful Result."""
+        """Check if t.JsonValue is a successful Result."""
         return isinstance(obj, m.Result.Success)
 
     @staticmethod
     def is_result_failure(obj) -> TypeGuard[m.Result.Failure]:
-        """Check if t.Container is a failed Result."""
+        """Check if t.JsonValue is a failed Result."""
         return isinstance(obj, m.Result.Failure)
 
     @staticmethod
     def is_dict_with_keys(obj, *keys: str) -> TypeGuard[dict]:
-        """Check if t.Container is a dict with specific keys."""
+        """Check if t.JsonValue is a dict with specific keys."""
         return isinstance(obj, dict) and all(k in obj for k in keys)
 
     @staticmethod
     def is_list_of(obj, item_type: type) -> TypeGuard[list]:
-        """Check if t.Container is a list of specific type."""
+        """Check if t.JsonValue is a list of specific type."""
         return isinstance(obj, list) and all(
             isinstance(item, item_type) for item in obj
         )
@@ -142,7 +142,7 @@ class TestGuards:
 
     @staticmethod
     def is_user_response(obj) -> TypeGuard[dict]:
-        """Check if t.Container is a user response fixture."""
+        """Check if t.JsonValue is a user response fixture."""
         return (
             isinstance(obj, dict)
             and "user_id" in obj
@@ -152,12 +152,12 @@ class TestGuards:
 
     @staticmethod
     def is_config_response(obj) -> TypeGuard[dict]:
-        """Check if t.Container is a settings response fixture."""
+        """Check if t.JsonValue is a settings response fixture."""
         return isinstance(obj, dict) and "app_name" in obj and "version" in obj
 
     @staticmethod
     def is_error_response(obj) -> TypeGuard[dict]:
-        """Check if t.Container is an error response fixture."""
+        """Check if t.JsonValue is an error response fixture."""
         return isinstance(obj, dict) and "error_code" in obj and "message" in obj
 ```
 
@@ -513,7 +513,7 @@ Run full validation suite and update documentation with new patterns.
 
 ```bash
 # Full validation
-make validate PROJECT=flext-core
+make val PROJECT=flext-core
 
 # Specific checks
 make lint PROJECT=flext-core
@@ -600,7 +600,7 @@ Exceptions documented in models.py
 
 ### Validation Checklist
 
-- [ ] `make validate PROJECT=flext-core` passes
+- [ ] `make val PROJECT=flext-core` passes
 - [ ] Zero lint violations
 - [ ] Zero type errors
 - [ ] All tests passing
@@ -647,7 +647,7 @@ docs(flext-core): update AGENTS.md with Pydantic 2 patterns
 
 ✅ **Quality**
 
-- `make validate PROJECT=flext-core` passes
+- `make val PROJECT=flext-core` passes
 - 80%+ coverage maintained
 - Zero lint violations
 - Zero type errors

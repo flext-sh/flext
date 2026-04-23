@@ -17,7 +17,7 @@ FLEXT Target LDAP (v1.0.0 release preparation) is the Singer target that loads L
 - **Version**: 1.0.0 (Release Preparation)
 - **Status**: Production ready—official docs confirm coverage and features—while developer docs are still expanding.
 - **Coverage**: 90%+ (per the docs and coverage scan artifacts)
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is expected before merging; the README highlights `make check`, `make lint`, `make type-check`, and `make security` as supporting commands.
+- **Quality gates**: `make check`, `make test`, and `make val` are the current project gates; use `make check CHECK_GATES=...` when you need a narrower lint, type, or security pass.
 - **Dependencies**: `flext-core`, `flext-ldif`, Singer SDK, `flext-cli`, `flext-observability`, and mission-critical connectors.
 
 ## Quick start
@@ -28,7 +28,8 @@ cd flext-target-ldap
 poetry install
 make setup
 make check
-make validate
+make test
+make val
 ```
 
 ```bash
@@ -44,7 +45,7 @@ target-ldap --config settings.json --state state.json --catalog catalog.json
 
 ## Quality & operations
 
-- **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate`, `make check`, plus Singer-specific `make discover`, `make run`, and `make validate-settings`.
+- **Validation commands**: `make check`, `make test`, and `make val` are the current documented project gates; no additional target-specific `discover`, `run`, or settings-validation wrappers are defined in this project Makefile.
 - **Testing**: quick start docs emphasize testing strategies (unit/integration/troubleshooting modules) and Singer compliance; tests run under `pytest` with markers for integration and Singer.
 - **Performance**: includes batch processing, connection pooling, retry logic, error recovery, and instrumentation for metrics/performance analysis.
 

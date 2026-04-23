@@ -673,10 +673,10 @@ class s[TDomainResult](
         instance = super().__new__(cls)
         if cls.auto_execute:
             # Auto-execution pattern: create, initialize, execute, return result
-            t.Container.__init__(instance)
+            t.JsonValue.__init__(instance)
             cls.__init__(instance, **data)
-            # Call execute via t.Container.__getattribute__ to bypass abstract method check
-            execute_fn = t.Container.__getattribute__(instance, "execute")
+            # Call execute via t.JsonValue.__getattribute__ to bypass abstract method check
+            execute_fn = t.JsonValue.__getattribute__(instance, "execute")
             result = execute_fn()
             if result.is_success:
                 # Return result directly instead of service instance
@@ -916,7 +916,7 @@ if result.is_success:
 - ✅ **Pydantic-native** - @u.computed_field (zero hacks)
 - ⚠️ **Type-safe** - Type checkers inferem TDomainResult (mas testes falhando)
 - ✅ **Lazy evaluation** - Só executa quando acessado
-- ⚠️ **t.Container** - Precisa validação (testes falhando)
+- ⚠️ **t.JsonValue** - Precisa validação (testes falhando)
 - ✅ **100% backward compatible** - V1 continua funcionando
 - ✅ **Zero type ignores** - 100% type-safe
 
@@ -947,9 +947,9 @@ def __new__(cls, **data) -> Self:
     """Handle auto-execution pattern and instance creation."""
     instance = super().__new__(cls)
     if cls.auto_execute:
-        t.Container.__init__(instance)
+        t.JsonValue.__init__(instance)
         cls.__init__(instance, **data)
-        execute_fn = t.Container.__getattribute__(instance, "execute")
+        execute_fn = t.JsonValue.__getattribute__(instance, "execute")
         result = execute_fn()
         if result.is_success:
             return cast("Self", result.value)
@@ -1384,7 +1384,7 @@ class FlextContainer:
         ...
 
     # Service resolution
-    def get(self, name: str) -> p.Result[t.Container]:
+    def get(self, name: str) -> p.Result[t.JsonValue]:
         """Resolve service (untyped)."""
         ...
 
@@ -1416,7 +1416,7 @@ class p:
         def is_valid(self) -> bool: ...
         def validate_business_rules(self) -> p.Result[bool]: ...
         def validate_config(self) -> p.Result[bool]: ...
-        def get_service_info(self) -> Mapping[str, t.Container]: ...
+        def get_service_info(self) -> t.JsonMapping: ...
 
     @runtime_checkable
     class Repository[T](Protocol):
@@ -1431,15 +1431,15 @@ class p:
     class Configurable(Protocol):
         """Configuration protocol."""
 
-        def configure(self, settings: Mapping[str, t.Container]) -> p.Result[bool]: ...
-        def get_config(self) -> Mapping[str, t.Container]: ...
+        def configure(self, settings: t.JsonMapping) -> p.Result[bool]: ...
+        def get_config(self) -> t.JsonMapping: ...
 
     @runtime_checkable
     class ExecutableService(Protocol):
         """Enhanced execution protocol."""
 
-        def execute_operation(self) -> p.Result[t.Container]: ...
-        def execute_with_validation(self) -> p.Result[t.Container]: ...
+        def execute_operation(self) -> p.Result[t.JsonValue]: ...
+        def execute_with_validation(self) -> p.Result[t.JsonValue]: ...
 ```
 
 **Pontos de Integração:**
@@ -1885,7 +1885,7 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
         # Detect dependencies from __init__ signature
         try:
             init_signature = inspect.signature(cls.__init__)
-            dependencies: Mapping[str, t.Container] = {}
+            dependencies = {}
 
             for param_name, param in init_signature.parameters.items():
                 if param_name not in ("self", "settings", "data"):
@@ -1897,7 +1897,7 @@ class s[TResult](FlextModels.ArbitraryTypesModel, x, ABC):
 
                 def smart_factory(deps=dependencies):
                     """Factory with auto-injection."""
-                    resolved_deps: Mapping[str, t.Container] = {}
+                    resolved_deps = {}
 
                     for dep_name, dep_type in deps.items():
                         # Try resolve from container
@@ -1941,7 +1941,7 @@ class UserService(s[User]):
     def is_valid(self) -> bool:
         return True
 
-    def get_service_info(self) -> Mapping[str, t.Container]:
+    def get_service_info(self) -> t.JsonMapping:
         return {"service": "UserService"}
 
 
@@ -2063,7 +2063,7 @@ class CreateUser(s[User]):
 
     def execute(self) -> p.Result[User]:
         """Execute with repository from DI."""
-        # Create user t.Container
+        # Create user t.JsonValue
         user = User(name=self.name, email=self.email, role=self.role)
 
         # Get repository from DI (if registered)
@@ -3052,13 +3052,13 @@ class FlextContainer:
     # Core operations
     def register(self, name: str, service) -> p.Result[bool]
     def register_factory(self, name: str, factory: Callable[[], T]) -> p.Result[bool]
-    def get(self, name: str) -> p.Result[t.Container]
+    def get(self, name: str) -> p.Result[t.JsonValue]
     def get_typed(self, name: str, expected_type: type[T]) -> p.Result[T]
 
     # Advanced features
-    def auto_wire(self, service_class: type[T]) -> p.Result[t.Container]
-    def create_service(self, service_class: type[T], service_name: str | None) -> p.Result[t.Container]
-    def batch_register(self, services: Mapping[str, t.Container]) -> p.Result[bool]
+    def auto_wire(self, service_class: type[T]) -> p.Result[t.JsonValue]
+    def create_service(self, service_class: type[T], service_name: str | None) -> p.Result[t.JsonValue]
+    def batch_register(self, services: t.JsonMapping) -> p.Result[bool]
 
     # Integration com dependency-injector
     _di_container: DynamicContainer  # Internal DI wrapper
@@ -3082,7 +3082,7 @@ class FlextContainer:
 # flext-ldif/src/flext_ldif/api.py (linha 128-129, 239-278)
 
 
-class ldif(Flext[Mapping[str, t.Container]]):
+class ldif(Flext[t.JsonMapping]):
     """Main API facade."""
 
     # ✅ BOM: Container como u.PrivateAttr
@@ -3108,7 +3108,7 @@ class ldif(Flext[Mapping[str, t.Container]]):
         _ = container.register("validation", FlextLdifValidation())
 
         # ✅ BOM: Register factory for parameterized service
-        def migration_pipeline_factory(params: Mapping[str, t.Container] | None):
+        def migration_pipeline_factory(params: t.JsonMapping | None):
             if params is None:
                 params = {}
             return FlextLdifMigrationPipeline(
@@ -3283,14 +3283,14 @@ class ldif:
 **Pattern 1: Registrar Services na Inicialização**
 
 ```python
-class MyFacade(s[Mapping[str, t.Container]]):
+class MyFacade(s[t.JsonMapping]):
     """Facade with proper DI setup."""
 
     _container: FlextContainer = u.PrivateAttr(
         default_factory=FlextContainer.get_global
     )
 
-    def model_post_init(self, _context: Mapping[str, t.Container] | None, /) -> None:
+    def model_post_init(self, _context: t.JsonMapping | None, /) -> None:
         """Setup services in DI container."""
         # Registrar todos os services necessários
         self._setup_services()
@@ -4165,7 +4165,7 @@ class HttpResponse(m.Value):
 - Cached automaticamente (Pydantic v2)
 - Included in `model_dump()`
 - Type-safe
-- t.Container
+- t.JsonValue
 
 #### ✅ Padrões Recomendados
 
@@ -4312,13 +4312,13 @@ class p:
     class Service(Protocol):
         """Service protocol."""
 
-        def execute(self) -> p.Result[t.Container]: ...
+        def execute(self) -> p.Result[t.JsonValue]: ...
 
     @runtime_checkable
     class Repository(Protocol):
         """Repository protocol."""
 
-        def get(self, id: str) -> p.Result[t.Container]: ...
+        def get(self, id: str) -> p.Result[t.JsonValue]: ...
         def save(self, entity) -> p.Result[bool]: ...
         def delete(self, id: str) -> p.Result[bool]: ...
 
@@ -4326,8 +4326,8 @@ class p:
     class Configurable(Protocol):
         """Configurable protocol."""
 
-        def configure(self, settings: Mapping[str, t.Container]) -> p.Result[bool]: ...
-        def get_config(self) -> Mapping[str, t.Container]: ...
+        def configure(self, settings: t.JsonMapping) -> p.Result[bool]: ...
+        def get_config(self) -> t.JsonMapping: ...
 ```
 
 **Capabilities:**
@@ -4503,7 +4503,7 @@ class s(x, BaseModel, Generic[TDomainResult]):
 
 ```python
 # flext-ldif/src/flext_ldif/api.py
-class ldif(Flext[Mapping[str, t.Container]]):
+class ldif(Flext[t.JsonMapping]):
     """API facade with mixins."""
 
     def parse(self, source: str) -> r:
@@ -6134,10 +6134,8 @@ class MyService(s[Result]):
 class h[MessageT_contra, ResultT](x, ABC):
     ...
     # handlers.py:119-120 - MAS USA INFRAESTRUTURA MANUAL!
-    self._context_stack: Sequence[
-        Mapping[str, t.Container]
-    ] = []  # ❌ deveria usar self.context
-    self._metrics: Mapping[str, t.Container] = {}  # ❌ deveria usar self.track()
+    self._context_stack: Sequence[t.JsonMapping] = []  # ❌ deveria usar self.context
+    self._metrics = {}  # ❌ deveria usar self.track()
 ```
 
 **Duplicação em \_run_pipeline (handlers.py:495-584):**
@@ -7607,7 +7605,7 @@ class cli:
         self._valid_tokens: set[str] = set()
         self._valid_sessions: set[str] = set()
         self._session_permissions: Mapping[str, set[str]] = {}
-        self._users: Mapping[str, Mapping[str, t.Container]] = {}
+        self._users: Mapping[str, t.JsonMapping] = {}
 
     def authenticate(self, credentials: ...) -> p.Result[str]:
         # Auth logic directly in cli
@@ -7634,7 +7632,7 @@ from pathlib import Path
 from typing import Literal
 
 
-class FlextCliService(s[Mapping[str, t.Container]]):
+class FlextCliService(s[t.JsonMapping]):
     """CLI service following s pattern.
 
     Single service class para TODAS as operações CLI.
@@ -7647,12 +7645,12 @@ class FlextCliService(s[Mapping[str, t.Container]]):
     # Operation-specific fields
     message: str = ""
     style: str | None = None
-    data: Mapping[str, t.Container] | None = None
+    data: t.JsonMapping | None = None
     filepath: Path | None = None
     prompt_text: str | None = None
 
     @override
-    def execute(self) -> p.Result[Mapping[str, t.Container]]:
+    def execute(self) -> p.Result[t.JsonMapping]:
         """Execute CLI operation based on operation field."""
         match self.operation:
             case "print":
@@ -7666,7 +7664,7 @@ class FlextCliService(s[Mapping[str, t.Container]]):
             case "prompt":
                 return self._execute_prompt()
 
-    def _execute_print(self) -> p.Result[Mapping[str, t.Container]]:
+    def _execute_print(self) -> p.Result[t.JsonMapping]:
         """Print with Rich styling."""
         from rich.console import Console
 
@@ -7674,7 +7672,7 @@ class FlextCliService(s[Mapping[str, t.Container]]):
         console.print(self.message, style=self.style)
         return r.ok({"printed": self.message})
 
-    def _execute_table(self) -> p.Result[Mapping[str, t.Container]]:
+    def _execute_table(self) -> p.Result[t.JsonMapping]:
         """Create table from data."""
         from rich.table import Table
 
@@ -7687,19 +7685,19 @@ class FlextCliService(s[Mapping[str, t.Container]]):
 # ============ PUBLIC API - Zero Ceremony ============
 
 
-def print_cli(message: str, style: str | None = None) -> Mapping[str, t.Container]:
+def print_cli(message: str, style: str | None = None) -> t.JsonMapping:
     """Factory function - Zero ceremony CLI print."""
     return FlextCliService(operation="print", message=message, style=style).value
 
 
 def create_table(
-    data: Mapping[str, t.Container],
-) -> Mapping[str, t.Container]:
+    data: t.JsonMapping,
+) -> t.JsonMapping:
     """Factory function - Zero ceremony table creation."""
     return FlextCliService(operation="table", data=data).value
 
 
-def read_json(filepath: Path) -> Mapping[str, t.Container]:
+def read_json(filepath: Path) -> t.JsonMapping:
     """Factory function - Zero ceremony JSON read."""
     return FlextCliService(operation="read_file", filepath=filepath).value
 ```
@@ -7720,7 +7718,7 @@ def read_json(filepath: Path) -> Mapping[str, t.Container]:
 class CliOutputService(s[str]):
     """Output formatting service."""
 
-    data: Mapping[str, t.Container]
+    data: t.JsonMapping
     format: Literal["json", "yaml", "table", "csv"] = "json"
 
     def execute(self) -> p.Result[str]:
@@ -7736,14 +7734,14 @@ class CliOutputService(s[str]):
 
 
 # flext-cli/src/flext_cli/services/file_tools.py
-class CliFileService(s[Mapping[str, t.Container]]):
+class CliFileService(s[t.JsonMapping]):
     """File I/O service."""
 
     operation: Literal["read", "write"] = "read"
     filepath: Path
-    data: Mapping[str, t.Container] | None = None
+    data: t.JsonMapping | None = None
 
-    def execute(self) -> p.Result[Mapping[str, t.Container]]:
+    def execute(self) -> p.Result[t.JsonMapping]:
         match self.operation:
             case "read":
                 return self._read_json()
@@ -7835,11 +7833,11 @@ class FlextCliSettings(FlextSettings):
 ```python
 
 # flext-cli/src/flext_cli/services/cli.py (NOVO)
-class FlextCliService(s[Mapping[str, t.Container]]):
+class FlextCliService(s[t.JsonMapping]):
     operation: Literal["print", "table", "file_read", "file_write"] = "print"
     # ... fields
 
-    def execute(self) -> p.Result[Mapping[str, t.Container]]:
+    def execute(self) -> p.Result[t.JsonMapping]:
         match self.operation:
             # ... dispatch
 ```
@@ -7852,7 +7850,7 @@ def print_cli(message: str, style: str | None = None):
     return FlextCliService(operation="print", message=message, style=style).value
 
 
-def create_table(data: Mapping[str, t.Container]):
+def create_table(data: t.JsonMapping):
     return FlextCliService(operation="table", data=data).value
 ```
 
@@ -7874,7 +7872,7 @@ class cli:
 
 # flext-cli/src/flext_cli/services/output.py
 class CliOutputService(s[str]):
-    data: Mapping[str, t.Container]
+    data: t.JsonMapping
     format: Literal["json", "yaml", "table"] = "json"
 
     def execute(self) -> p.Result[str]:
@@ -7886,11 +7884,11 @@ class CliOutputService(s[str]):
 ```python
 
 # flext-cli/src/flext_cli/services/file.py
-class CliFileService(s[Mapping[str, t.Container]]):
+class CliFileService(s[t.JsonMapping]):
     operation: Literal["read", "write"] = "read"
     filepath: Path
 
-    def execute(self) -> p.Result[Mapping[str, t.Container]]:
+    def execute(self) -> p.Result[t.JsonMapping]:
         # Move file I/O logic here
 ```
 
@@ -8217,7 +8215,7 @@ class x:
         return FlextSettings.get_global_instance()
 
     @contextmanager
-    def track(self, operation_name: str) -> Iterator[Mapping[str, t.Container]]:
+    def track(self, operation_name: str) -> Iterator[t.JsonMapping]:
         """Performance monitoring context manager."""
         with FlextContext.Performance.timed_operation(operation_name) as metrics:
             yield metrics
@@ -8293,7 +8291,7 @@ class s[TDomainResult]:
     def is_valid(self) -> bool: ...
 
     # ❌ Service info raramente usado
-    def get_service_info(self) -> Mapping[str, t.Container]: ...
+    def get_service_info(self) -> t.JsonMapping: ...
 
     # ✅ Properties - ÓTIMOS
     @u.computed_field
@@ -8479,7 +8477,7 @@ class MyService(s[Result]):
 # DEPOIS - Only execute + Pydantic validators
 class MyService(s[Result]):
     # Pydantic fields
-    data: Mapping[str, t.Container]
+    data: t.JsonMapping
 
     @u.model_validator(mode="after")
     def validate_data(self) -> Self:
@@ -8620,7 +8618,7 @@ class FlextCliCore(s[CliDataDict]):
         "execute_command"
     )
     command_name: str = ""
-    command_context: Mapping[str, t.Container] = {}
+    command_context = {}
 
     # Commands stored in class-level registry
     _commands: ClassVar[Mapping[str, CliCommand]] = {}
@@ -9021,7 +9019,7 @@ user = UserService(user_id="123").execute().unwrap()
 - ✅ Pydantic-native (zero hacks)
 - ✅ Lazy evaluation (só executa quando acessado)
 - ✅ Type-safe (type checkers inferem TDomainResult)
-- ✅ t.Container (incluído em model_dump se configurado)
+- ✅ t.JsonValue (incluído em model_dump se configurado)
 
 #### 2. ✅ V2 Auto Pattern: `auto_execute`
 

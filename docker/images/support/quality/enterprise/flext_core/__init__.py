@@ -3,7 +3,13 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Container as BeartypeContainer, MutableMapping
+from collections.abc import (
+    Container as BeartypeContainer,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 
 from dependency_injector.containers import Container as DIContainersContainer
 from dependency_injector.providers import Container as DIProvidersContainer

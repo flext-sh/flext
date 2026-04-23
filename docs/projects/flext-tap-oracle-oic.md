@@ -18,7 +18,7 @@ FLEXT Tap Oracle OIC (v1.0.0 release prep) is the Singer tap that extracts metad
 - **Python**: 3.13+
 - **Status**: production-ready but documentation still being finalized; quality gates succeed while README notes remaining docs work.
 - **Coverage**: 90%+ (see `reports/coverage-scan-*`)
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring + Singer tests) is enforced before merges; `make lint`, `make type-check`, `make security`, `make test`, and Singer helper commands operate cleanly.
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring + Singer tests) is enforced before merges; `make lint`, `make type-check`, `make security`, `make test`, and Singer helper commands operate cleanly.
 - **Dependencies**: `flext-core`, `flext-oracle-oic`, `flext-meltano`, `flext-observability`, Singer SDK, Oracle OIC OAuth2 endpoints
 - **Zero tolerance**: no direct Singer SDK, httpx, or Oracle OIC imports; rely on flext-oracle-oic for connectors, flext-meltano for orchestration, and `r[T]` for flow control.
 
@@ -30,7 +30,7 @@ cd flext-tap-oracle-oic
 poetry install
 make setup
 make check
-make validate
+make val
 ```
 
 ```bash
@@ -47,7 +47,7 @@ tap-oracle-oic --config settings.json --catalog catalog.json --state state.json
 
 ## Quality & operations
 
-- Validation commands: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make validate`, plus Singer-specific commands (`make discover`, `make run`, `make sync`).
+- Validation commands: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make val`, plus Singer-specific commands (`make discover`, `make run`, `make sync`).
 - Testing: unit/integration/Singer tests (authentication, streams, errors) run via `pytest -m singer`, `make test-singer`, and the `tap-oracle-oic` CLI.
 - Security: Bandit and pip-audit enforced in `make security`; zero tolerance for unverified HTTP calls or exception-based flows.
 - Observability: integrated with `flext-observability` for instrumentation, traces, and metrics.

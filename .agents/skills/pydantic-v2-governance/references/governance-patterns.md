@@ -66,7 +66,7 @@ class RetryConfiguration(m.BaseModel):
     tags: set[str] = u.Field(default_factory=set)
 ```
 
-**Why**: `default=[]` creates a SHARED mutable t.Container across all instances (Python gotcha). `default_factory=list` creates a NEW list per instance.
+**Why**: `default=[]` creates a SHARED mutable t.JsonValue across all instances (Python gotcha). `default_factory=list` creates a NEW list per instance.
 
 **Anti-pattern**:
 
@@ -102,36 +102,36 @@ from pydantic import BaseModel, u.Field, TypeAdapter
 
 class ValidationHelpers(m.BaseModel):
     _tags_adapter: ClassVar[m.TypeAdapter[t.StrSequence] | None] = None
-    _list_adapter: ClassVar[m.TypeAdapter[t.FlatContainerList] | None] = None
+    _list_adapter: ClassVar[m.TypeAdapter[t.JsonList] | None] = None
     _strict_string_adapter: ClassVar[
         m.TypeAdapter[Annotated[str, u.Field(strict=True)]] | None
     ] = None
     _metadata_map_adapter: ClassVar[
-        m.TypeAdapter[Mapping[str, t.MetadataValue]] | None
+        m.TypeAdapter[Mapping[str, t.JsonValue]] | None
     ] = None
-    _config_adapter: ClassVar[m.TypeAdapter[Mapping[str, t.Container]] | None] = None
+    _config_adapter: ClassVar[m.TypeAdapter[t.JsonMapping] | None] = None
     _dict_container_adapter: ClassVar[
-        m.TypeAdapter[Mapping[str, t.Container]] | None
+        m.TypeAdapter[t.JsonMapping] | None
     ] = None
-    _list_container_adapter: ClassVar[m.TypeAdapter[t.FlatContainerList] | None] = None
+    _list_container_adapter: ClassVar[m.TypeAdapter[t.JsonList] | None] = None
     _tuple_container_adapter: ClassVar[
-        m.TypeAdapter[tuple[t.Container, ...]] | None
+        m.TypeAdapter[tuple[t.JsonValue, ...]] | None
     ] = None
     _primitives_adapter: ClassVar[m.TypeAdapter[t.Primitives] | None] = None
     _dict_str_metadata_adapter: ClassVar[
-        m.TypeAdapter[Mapping[str, t.MetadataValue | None]] | None
+        m.TypeAdapter[Mapping[str, t.JsonValue | None]] | None
     ] = None
     _list_serializable_adapter: ClassVar[
-        m.TypeAdapter[Sequence[t.Serializable]] | None
+        m.TypeAdapter[Sequence[t.JsonValue]] | None
     ] = None
     _tuple_serializable_adapter: ClassVar[
-        m.TypeAdapter[tuple[t.Serializable, ...]] | None
+        m.TypeAdapter[tuple[t.JsonValue, ...]] | None
     ] = None
-    _set_container_adapter: ClassVar[m.TypeAdapter[set[t.Container]] | None] = None
+    _set_container_adapter: ClassVar[m.TypeAdapter[set[t.JsonValue]] | None] = None
     _set_str_adapter: ClassVar[m.TypeAdapter[set[str]] | None] = None
     _set_scalar_adapter: ClassVar[m.TypeAdapter[set[t.Scalar]] | None] = None
     _sortable_dict_adapter: ClassVar[
-        m.TypeAdapter[Mapping[t.SortableObjectType, t.Serializable | None]] | None
+        m.TypeAdapter[Mapping[t.SortableObjectType, t.JsonValue | None]] | None
     ] = None
     _strict_json_list_adapter: ClassVar[
         m.TypeAdapter[Sequence[t.StrictValue]] | None
@@ -143,7 +143,7 @@ class ValidationHelpers(m.BaseModel):
     _str_list_adapter: ClassVar[m.TypeAdapter[t.StrSequence] | None] = None
     _str_or_bytes_adapter: ClassVar[m.TypeAdapter[str | bytes] | None] = None
     _enum_type_adapter: ClassVar[m.TypeAdapter[type[StrEnum]] | None] = None
-    _serializable_adapter: ClassVar[m.TypeAdapter[t.Serializable] | None] = None
+    _serializable_adapter: ClassVar[m.TypeAdapter[t.JsonValue] | None] = None
     _metadata_json_dict_adapter: ClassVar[
         m.TypeAdapter[Mapping[str, t.Primitives]] | None
     ] = None
@@ -262,14 +262,14 @@ class _ProtocolIntrospection:
     @classmethod
     def check_implements_protocol(
         cls,
-        instance: FlextProtocols.Base | t.Container,
+        instance: FlextProtocols.Base | t.JsonValue,
         protocol: type,
     ) -> bool:
         """Check if an instance implements a protocol."""
         registered_protocols = cls.get_class_protocols(instance.__class__)
         if protocol in registered_protocols:
             return True
-        protocol_annotations: Mapping[str, t.Container] = (
+        protocol_annotations: t.JsonMapping = (
             protocol.__annotations__ if hasattr(protocol, "__annotations__") else {}
         )
         raw_attrs_candidate = getattr(protocol, "__protocol_attrs__", ())
@@ -461,15 +461,15 @@ if u.Guards.is_scalar(some_value):
 # ✓ CORRECT — Use t.* contracts
 from flext_core import t
 
-data: t.Container = ...
-metadata: t.MetadataValue = ...
+data: t.JsonValue = ...
+metadata: t.JsonValue = ...
 settings: m.ConfigMap = ...
 ```
 
-#### 8.3 t.Container — FORBIDDEN
+#### 8.3 t.JsonValue — FORBIDDEN
 
 ```python
-# ✗ WRONG — bare t.Container is forbidden
+# ✗ WRONG — bare t.JsonValue is forbidden
 data = ...  # FORBIDDEN
 ```
 
@@ -479,7 +479,7 @@ data = ...  # FORBIDDEN
 # ✓ CORRECT — Use t.* contracts
 from flext_core import t
 
-data: t.Container = ...
+data: t.JsonValue = ...
 ```
 
 #### 8.4 type() for narrowing — FORBIDDEN

@@ -17,7 +17,7 @@ FLEXT LDAP (v0.10.3) is the universal directory-services foundation that every F
 - **Version**: 0.10.3 (production ready)
 - **Python**: 3.13+ only
 - **Tests**: ~80+ unit/integration/e2e suites (42% coverage target; all existing suites pass) plus Docker-backed LDAP scenarios
-- **Quality gate**: `make validate` (ruff, pyrefly, Bandit, type checks, tests, coverage, docstring checks); zero Ruff/MyPy/Pyrefly errors documented
+- **Quality gate**: `make val` (ruff, pyrefly, Bandit, type checks, tests, coverage, docstring checks); zero Ruff/MyPy/Pyrefly errors documented
 - **Security**: Bandit reports zero high/medium findings in `reports/lint-output/*`
 - **Type discipline**: no `Any`, `cast`, `TYPE_CHECKING`, or `# type: ignore`; strict layering ensures lower tiers never import higher
 
@@ -34,7 +34,7 @@ Development flow:
 git clone https://github.com/flext-sh/flext-ldap.git
 cd flext-ldap
 make setup                    # install deps, pre-commit hooks
-make validate                 # run lint/type/security/test pipeline
+make val                 # run lint/type/security/test pipeline
 ```
 
 Python usage:
@@ -72,7 +72,7 @@ Use `FlextLdapEntryAdapter` when converting between `ldap3` and `flext-ldif`, an
 ## Quality & operations
 
 - **Testing**: `make test`, `make test-unit`, `make test-integration` (Docker LDAP server `flext-ldap-test-server`), `make test-fast`, `pytest -m ldap`, etc.
-- **Validation**: `make lint`, `make type-check`, `make security`, `make coverage-html`, `make validate` ensures zero Ruff/MyPy/Pyrefly failures and enforces 42% coverage target toward 100%.
+- **Validation**: `make lint`, `make type-check`, `make security`, `make coverage-html`, `make val` ensures zero Ruff/MyPy/Pyrefly failures and enforces 42% coverage target toward 100%.
 - **Zero‑tolerance rules**: no `TYPE_CHECKING`, no `.py` fixtures, no root aliases; constants files only hold StrEnum/Final/Literal; `cast()` forbidden, short alias usage mandated via `ruff-shared.toml` (PYI042 ignored globally).
 - **Docker helpers**: `make ldap-start/stop/health/reset` manage the osixia/openldap:1.5.0 container for integration runs.
 

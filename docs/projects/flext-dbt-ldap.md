@@ -18,7 +18,7 @@ FLEXT DBT LDAP (v1.0.0) is the dbt Core transformation suite that turns LDAP/Act
 - **Version**: 1.0.0 (Release preparation)
 - **Python**: 3.13+ with Poetry-managed deps
 - **Tests**: 90%+ coverage across Python tests and dbt suites
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + dbt test + coverage)
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + dbt test + coverage)
 - **Dependencies**: `flext-core`, `flext-ldap`, `flext-meltano`, `dbt-core` (>=1.6), DuckDB/PostgreSQL adapters
 - **Documentation**: full docs under `flext-dbt-ldap/docs/` (getting-started, architecture, guides)
 
@@ -34,7 +34,7 @@ dbt run
 ```
 
 ```bash
-make validate          # run lint/type/security/test/dbt checks
+make val          # run lint/type/security/test/dbt checks
 dbt docs generate
 dbt docs serve --port 8080
 ```
@@ -55,7 +55,7 @@ dbt docs serve --port 8080
 
 ## Testing & quality
 
-- `make validate` runs Pett, Pyrefly, Ruff, Bandit, coverage, and dbt tests (unit + integration + dbt compilation).
+- `make val` runs Pett, Pyrefly, Ruff, Bandit, coverage, and dbt tests (unit + integration + dbt compilation).
 - dbt tests cover staging/intermediate/mart models plus LDAP macros (`dbt test --select staging`).
 - Python tests run via `pytest tests/` with markers for `unit`, `integration`, `dbt`, `ldap`, and `validation`.
 - `reports/coverage-scan-*`, `reports/lint-output/*`, and `reports/pytest/*` contain the artifacts referenced in the portal.

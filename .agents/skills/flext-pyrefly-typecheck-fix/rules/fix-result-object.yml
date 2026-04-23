@@ -1,5 +1,5 @@
-id: fix-result-t.Container
+id: fix-result-t.JsonValue
 language: python
 rule:
-  pattern: p.Result[t.Container]
-fix: p.Result[t.Container]
+  pattern: p.Result[t.JsonValue]
+fix: p.Result[t.JsonValue]

@@ -18,7 +18,7 @@ FLEXT Quality (v0.9.9) is the centralized code quality analysis framework for th
 - **Python**: 3.13+ only
 - **Tests**: ~250 total (unit, integration, CLI); running `make test` is currently blocked by `flext-core` import issues (FlextModels.BaseModel missing)
 - **Coverage**: 96% target per README, but automated coverage gates cannot run until the import blockers are resolved
-- **Quality gate**: `make validate` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is blocked by import/accessibility errors; lint/type/security commands individually succeed
+- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is blocked by import/accessibility errors; lint/type/security commands individually succeed
 - **Type safety**: Pyrefly/MyPy strict modes are enforced; zero `Any`/`cast`/`# type: ignore` allowed
 - **Security**: Bandit and pip-audit scans configured; pipeline currently defers final auditing until the FlextCore dependency stabilizes
 
@@ -29,7 +29,7 @@ git clone https://github.com/flext-sh/flext-quality.git
 cd flext-quality
 make setup
 make check      # lint + type-check are expected to pass
-make validate   # currently blocked until FlextModels imports are available
+make val   # currently blocked until FlextModels imports are available
 ```
 
 ```python
@@ -62,9 +62,9 @@ analyzer.analyze_project()
 
 ## Quality & compliance
 
-- **Validation commands**: `make lint`, `make type-check`, `make security`, `make check`, `make validate`, `make quality-analysis`, `make report`, `make diagnose`.
+- **Validation commands**: `make lint`, `make type-check`, `make security`, `make check`, `make val`, `make quality-analysis`, `make report`, `make diagnose`.
 - **Zero-tolerance policy**: No `Any`, no `cast`, no `TYPE_CHECKING`, no exception-based results anywhere; all APIs return `r[T]` (r alias `r`).
-- **Testing**: Unit + integration + CLI tests exist, but `pytest` runs fail because FlextModels.BaseModel isn’t accessible; these failures are noted in the README and block `make validate`.
+- **Testing**: Unit + integration + CLI tests exist, but `pytest` runs fail because FlextModels.BaseModel isn’t accessible; these failures are noted in the README and block `make val`.
 - **Security**: Bandit + pip-audit configured, plus `flext-quality` supplies hooks/validators to enforce dangerous-command detection, type rules, and architecture compliance in other workspaces.
 
 ## Resources & references

@@ -95,7 +95,7 @@ class FlextContainer:
   - `from flext_core import u`
   - `from flext_core import inject` only where exported by package API.
 - Registration intent:
-  - `register` -> concrete t.Container provider (`providers.Object`)
+  - `register` -> concrete t.JsonValue provider (`providers.Object`)
   - `register_factory` -> `providers.Singleton` or `providers.Factory` via `cache`
   - `register_resource` -> `providers.Resource`
 

@@ -25,6 +25,7 @@ description: Step-by-step refactoring workflow with quality gates, make targets,
 - `Makefile`
 - `ruff-shared.toml`
 - `pyproject.toml`
+- `.agents/skills/flext-scope-bootstrap/SKILL.md`
 
 ## Rules
 
@@ -38,11 +39,13 @@ description: Step-by-step refactoring workflow with quality gates, make targets,
   - If the reported delta is ≥ 0, the task is rejected and re-planned for a net-negative outcome.
 - **"More with less" north star**: every edit is an opportunity to remove, unify, or replace with a canonical contract. Cosmetic changes without reduction are FORBIDDEN.
 - **Structural tooling is mandatory**: cross-file propagation requires `scope` for blast radius and `ast-grep` for structural rewrite. Serena should be used as well when project-aware symbol operations are available and correctly configured.
+- **Serena health is part of refactor readiness**: before Serena-backed symbol/refactor work, the local project config must pass `serena project health-check`, and any non-source support trees that break symbol extraction must be excluded in `.serena/project.yml` rather than ignored informally.
 - **Zero debt steady state**: `ruff`, `pyrefly`, enforcement checks, and `pytest` must be zero across all affected projects before a refactor task can be considered complete, even when failures predate the current batch.
 
 ## Instructions
 
 - Baseline current state before edits with `make check` and `make test`.
+- If Scope is missing, stale, or misconfigured, follow `flext-scope-bootstrap` before starting blast-radius analysis.
 - Apply smallest safe batch per file/tier and verify immediately.
 - Expand validation scope whenever shared contracts/types are touched.
 
@@ -105,8 +108,11 @@ Before touching any code:
 
 - Read the FULL file(s) to be refactored
 - Map the import graph - what imports this file? What does it import?
-- Run `scope status` first, and `scope workspace index` for multi-project work.
-- If Serena is available, activate/check the `flext` project before relying on Serena symbol operations.
+- Determine the correct Scope root before querying: repo root for repo-local work, workspace root for multi-repo work.
+- If `.scope/config.toml` is missing in the repo root, run `scope init`. If `scope-workspace.toml` is required for the task and missing at the workspace root, run `scope workspace init` after member repositories are initialized.
+- Run `scope status` first, then `scope index` for repo-local work or `scope workspace index` for multi-project work.
+- If Serena is available, validate the local config with `serena project health-check`; if `.serena/project.yml` is missing, create it with `serena project create . --name flext --language python --index`; if health-check fails on synthetic/support trees, fix `.serena/project.yml` `ignored_paths` before proceeding.
+- After the local config is healthy, activate/check the `flext` project before relying on Serena symbol operations.
 - Use `scope refs <symbol>` / `scope callers <symbol>` to define blast radius before editing.
 - Use `sg --pattern 'from flext_core.$MOD import $$$' --lang python` (ast-grep) to find all consumers — NEVER `grep -rn` for code structure
 - Identify the tier of the module being refactored
@@ -117,9 +123,9 @@ Use `ast-grep` structurally, not as a blind text replacer.
 
 - Start with `sg --pattern '<pattern>' --lang python <path>` to inspect matches before any rewrite.
 - Prefer patterns that encode syntax roles, for example:
-   - `$NAME` for a single node
-   - `$$$ARGS` for variadic argument lists
-   - `$$$BODY` for repeated statements
+  - `$NAME` for a single node
+  - `$$$ARGS` for variadic argument lists
+  - `$$$BODY` for repeated statements
 - Narrow the path scope first; never run a broad workspace rewrite before blast-radius analysis.
 - After confirming the match set, apply the smallest structural rewrite possible.
 - Re-run `scope refs` or `scope callers` after the rewrite to confirm propagation is complete.
@@ -201,7 +207,7 @@ If a shared contract changed, widen validation until every affected project retu
 | --------------- | ---------------------------------------------------------- |
 | `make help`     | Show available standardized commands                       |
 | `make boot`     | Install dependencies and hooks                             |
-| `make check`    | Fast quality gate (ruff + format check + pyrefly + bandit) |
+| `make check`    | Fast quality gate for the configured check selectors       |
 | `make scan`     | Security scan gate                                         |
 | `make fmt`      | Code formatting                                            |
 | `make docs`     | Build docs                                                 |

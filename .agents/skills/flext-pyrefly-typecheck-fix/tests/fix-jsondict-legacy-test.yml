@@ -1,6 +1,6 @@
 id: fix-jsondict-legacy
 valid:
-  - "t.Container"
-  - "t.StrMapping"
+- "t.JsonValue"
+- "t.StrMapping"
 invalid:
-  - "Mapping[str, t.Container]"
+- "t.JsonMapping"

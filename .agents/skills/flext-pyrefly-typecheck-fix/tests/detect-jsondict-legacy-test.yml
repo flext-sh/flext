@@ -1,6 +1,6 @@
 id: detect-jsondict-legacy
 valid:
-  - "x = t.Container"
-  - "x = t.StrMapping"
+- "x = t.JsonValue"
+- "x = t.StrMapping"
 invalid:
-  - "Mapping[str, t.Container]"
+- "t.JsonMapping"

@@ -29,7 +29,7 @@ description: Canonical FLEXT type-system map for aliases, generics, result inter
 
 - Add shared aliases in `typings.py` rather than re-declaring in feature modules. Type aliases MUST be non-nullable — `| None` is added inline at usage sites only.
 - Structural protocols live in `protocols.py` (consumed via `p.*`); reusable composed aliases live in `typings.py` (consumed via `t.*`); domain carriers live in `models.py` (consumed via `m.*`). Never annotate with a concrete class when an inherited `p.*`/`t.*` already expresses the contract.
-- Keep recursive/general value aliases compatible with existing boundaries.
+- Keep `t.JsonValue` canonical: it is only the `pydantic.JsonValue` re-export (`tp.JsonValue` / `t.JsonValue`). Never widen that alias with `Path`, `BaseModel`, `JsonList`, `JsonMapping`, or any other union members.
 - Preserve generic covariance/contravariance semantics where defined.
 - Keep exported short aliases (`t`, `r`) stable across refactors.
 - Canonical governance (see `AGENTS.md`):
@@ -149,11 +149,8 @@ def process(items: t.StrSequence) -> p.Result[list[str]]: ...
 # T = TypeVar("T")
 # T_Settings = TypeVar("T_Settings", bound=BaseSettings)
 
-# PEP 695 alias (in typings.py — NOT valid at call sites, annotation-only):
-# type RecursiveContainer = (
-#     str | int | float | bool | datetime | None
-#     | BaseModel | Path | FlatContainerList | FlatContainerMapping
-# )
+# Canonical alias (in typings.py — NOT valid at call sites, annotation-only):
+# type JsonValue = pydantic.JsonValue  # re-exported via tp.JsonValue / t.JsonValue
 ```
 
 ## Workflow
@@ -181,7 +178,7 @@ from __future__ import annotations
 from flext_core import t
 
 # FORBIDDEN pattern — do NOT copy:
-# JsonPrimitive = t.Container  # erases all type constraints
+# JsonPrimitive = t.JsonValue  # erases all type constraints
 # Use the explicit union or t.Scalar instead.
 
 # Stub to satisfy linters in this documentation block:
@@ -201,6 +198,6 @@ Make gates:
 
 Pattern checks:
 
-- `rg -n "TypeVar\(|type t.Container|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
+- `rg -n "TypeVar\(|type t.JsonValue|class FlextTypes|JsonPrimitive" flext-core/src/flext_core/typings.py`
 - `rg -n "class r|type .*=" flext-core/src/flext_core/result.py`
 - `rg -n "T_Settings|BaseSettings" flext-core/src/flext_core/settings.py flext-core/src/flext_core/typings.py`

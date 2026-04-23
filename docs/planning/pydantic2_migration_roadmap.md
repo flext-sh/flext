@@ -54,7 +54,7 @@
 - Zero `TypedDict` - ALL converted to structural Pydantic 2 models with hierarchical inheritance
 - Standardized `ConfigDict` settings across all 127+ models
 - Modern validator patterns (`@u.field_validator`, `@u.model_validator`, `u.computed_field`)
-- All projects passing `make validate`
+- All projects passing `make val`
 - 80%+ test coverage maintained
 
 ---
@@ -321,7 +321,7 @@ entry: ldif_m.Entry = ...
 
 **1.5 Validation**
 
-- Run `make validate` - zero errors
+- Run `make val` - zero errors
 - 80%+ coverage maintained
 - Update AGENTS.md with final patterns
 
@@ -333,7 +333,7 @@ entry: ldif_m.Entry = ...
 - [ ] `flext_core/typings.py` - Type aliases only (no TypedDict)
 - [ ] Zero cast() usage
 - [ ] Standard ConfigDict documented
-- [ ] `make validate` passing
+- [ ] `make val` passing
 
 ---
 
@@ -375,7 +375,7 @@ entry: ldif_m.Entry = ...
 
 #### Deliverables
 
-- [ ] Track A + Track B all passing `make validate`
+- [ ] Track A + Track B all passing `make val`
 - [ ] Zero cast(), zero TypedDict in these projects
 
 ---
@@ -409,7 +409,7 @@ entry: ldif_m.Entry = ...
 #### Deliverables
 
 - [ ] flext-ldif: Zero TypedDict, zero cast(), standard ConfigDict
-- [ ] All data layer projects passing `make validate`
+- [ ] All data layer projects passing `make val`
 
 ---
 
@@ -443,7 +443,7 @@ entry: ldif_m.Entry = ...
 
 #### Deliverables
 
-- [ ] Both tracks passing `make validate`
+- [ ] Both tracks passing `make val`
 - [ ] Singer protocol compliance verified
 
 ---
@@ -506,7 +506,7 @@ entry: ldif_m.Entry = ...
 
 #### Deliverables
 
-- [ ] All tap and target projects passing `make validate`
+- [ ] All tap and target projects passing `make val`
 - [ ] Zero cast() across all connectors
 
 ---
@@ -559,8 +559,8 @@ entry: ldif_m.Entry = ...
 
 #### Deliverables
 
-- [ ] All DBT projects passing `make validate`
-- [ ] Both user-facing projects passing `make validate`
+- [ ] All DBT projects passing `make val`
+- [ ] Both user-facing projects passing `make val`
 - [ ] UI/UX functionality preserved
 
 ---
@@ -629,7 +629,7 @@ entry: ldif_m.Entry = ...
 
 #### Deliverables
 
-- [ ] flext-tap-oracle-wms passing `make validate`
+- [ ] flext-tap-oracle-wms passing `make val`
 - [ ] Zero type errors
 - [ ] Patterns consistent with rest of monorepo
 
@@ -645,7 +645,7 @@ entry: ldif_m.Entry = ...
 
 **9.1 Global Validation**
 
-- Run `make validate` on entire monorepo
+- Run `make val` on entire monorepo
 - Verify zero cast() across ALL projects (src/ AND tests/)
 - Verify zero TypedDict (all converted to Pydantic models)
 - Verify ConfigDict standardized across all 127+ models
@@ -672,7 +672,7 @@ entry: ldif_m.Entry = ...
 
 #### Deliverables
 
-- [ ] `make validate` passing on full monorepo
+- [ ] `make val` passing on full monorepo
 - [ ] All Beads issues closed
 - [ ] Documentation complete
 - [ ] Zero technical debt from migration
@@ -728,7 +728,7 @@ entry: ldif_m.Entry = ...
 3. **Hierarchical inheritance** - models organized in namespaced hierarchies
 4. **Standard ConfigDict** - consistent settings across all 127+ models
 5. **Modern validators** - `@u.field_validator`, `@u.model_validator`, `u.computed_field`
-6. **All 29 projects** passing `make validate`
+6. **All 29 projects** passing `make val`
 7. **80%+ test coverage** maintained or improved
 8. **No regression** in functionality
 9. **Documentation** complete with patterns and examples

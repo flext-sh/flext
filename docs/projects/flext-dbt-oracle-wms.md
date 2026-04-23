@@ -16,7 +16,7 @@ FLEXT dbt Oracle WMS (v2.1.0) is the enterprise dbt project for Oracle Warehouse
 
 - **Version**: 2.1.0 (Production-ready)
 - **Python**: 3.13+
-- **Tests**: ~339+ unit/integration/e2e methods; `make validate` (ruff + pyrefly + bandit + pytest + dbt tests + coverage) is the QA gate before merging.
+- **Tests**: ~339+ unit/integration/e2e methods; `make val` (ruff + pyrefly + bandit + pytest + dbt tests + coverage) is the QA gate before merging.
 - **Coverage**: 90%+ per README + coverage reports (`reports/coverage-scan-*`).
 - **Dependencies**: `flext-core`, `flext-db-oracle`, `flext-oracle-wms`, `flext-meltano`, `flext-cli`, `flext-observability`, `dbt-core`, `dbt-oracle`, `Singer SDK`.
 - **Zero tolerance**: no direct dbt/oracle/Singer imports; always route through flext-\* adapters, return `r[T]`, avoid `Any`/`cast`/`TYPE_CHECKING`, and keep CLI logic in flext-
@@ -28,7 +28,7 @@ git clone https://github.com/flext-sh/flext-dbt-oracle-wms.git
 cd flext-dbt-oracle-wms
 poetry install
 make setup
-make validate
+make val
 ```
 
 ```bash
@@ -51,7 +51,7 @@ dbt docs serve --port 8080
 
 - **Oracle WMS analytics**: allocation, inventory, order, location, task, and wave models plus KPI dashboards.
 - **Macros**: helper macros for allocation efficiency, inventory turnover, ABC classification, SLA compliance, and labor productivity.
-- **Testing & quality**: schema tests, data tests, Python component tests, and coverage checks run via `make validate`; 90%+ coverage enforced.
+- **Testing & quality**: schema tests, data tests, Python component tests, and coverage checks run via `make val`; 90%+ coverage enforced.
 - **Performance**: incremental models, partitioning, clustering, and query optimization tuned for enterprise WMS datasets.
 - **Instrumentation**: integrates with `flext-observability` and `flext-cli` for telemetry and consistent CLI behavior.
 

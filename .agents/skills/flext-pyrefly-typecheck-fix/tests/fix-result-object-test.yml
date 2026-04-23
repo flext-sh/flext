@@ -1,6 +1,6 @@
-id: fix-result-t.Container
+id: fix-result-t.JsonValue
 valid:
-  - "r[str]"
-  - "r[int]"
+- "r[str]"
+- "r[int]"
 invalid:
-  - "r[t.Container]"
+- "r[t.JsonValue]"

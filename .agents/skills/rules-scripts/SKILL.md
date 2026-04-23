@@ -22,6 +22,7 @@ description: Rules for automation and maintenance scripts under `scripts/`. Use 
 
 ## Rules
 
+- `AGENTS.md` is canonical; this skill governs `scripts/` specifics and must not mirror wider repository policy.
 - Every script MUST have exactly one `# Owner-Skill: .agents/skills/<skill>/SKILL.md` marker in its header (line 2).
 - Keep scripts non-interactive by default for CI compatibility; interactive prompts require explicit `--interactive` flag.
 - Fail fast with clear error output for validation scripts.
@@ -32,6 +33,7 @@ description: Rules for automation and maintenance scripts under `scripts/`. Use 
 - Keep script behavior deterministic and root-relative.
 - Prefer `ast-grep`-driven rules first; only use custom script checks when AST matching is insufficient.
 - Custom checks must be placed in the owning skill folder and expose machine-readable `violation_count`.
+- When script documentation or automation guidance overlaps with canonical process rules, reference `AGENTS.md` rather than copying those rules inline.
 
 ## Instructions
 

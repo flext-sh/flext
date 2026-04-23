@@ -19,7 +19,7 @@ The `reports/` directory at the repository root stores every automated validatio
 
 ## Keeping Reports Fresh
 
-1. Run `make validate` or the narrower `make check` targets before updating documentation references that claim a certain scan exists.
+1. Run `make val` or the narrower `make check` targets before updating documentation references that claim a certain scan exists.
 2. After the run, copy the resulting artifact into `reports/` so the portal can still point to a real file.
 3. Link to the relevant artifact from anywhere in `docs/` when you declare a quality gate, so readers always have the concrete evidence they need.
 

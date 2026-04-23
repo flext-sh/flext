@@ -94,6 +94,6 @@
 
 ## Verification
 
-- make release INTERACTIVE=0 CREATE_BRANCHES=0 RELEASE_PHASE=all
-- make validate VALIDATE_SCOPE=workspace
+- make rel INTERACTIVE=0 CREATE_BRANCHES=0 RELEASE_PHASE=all
+- make val VALIDATE_SCOPE=workspace
 - make build

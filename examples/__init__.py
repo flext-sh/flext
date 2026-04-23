@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import typing as _t
 
-from flext_core.lazy import install_lazy_exports
+from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if _t.TYPE_CHECKING:
     import examples.acl_processing_example as _examples_acl_processing_example
@@ -16,8 +16,6 @@ if _t.TYPE_CHECKING:
     import examples.advanced_processing_example as _examples_advanced_processing_example
     from examples.acl_processing_example import (
         AclProcessingExample,
-        ContextDict,
-        EntryDict,
     )
 
     advanced_processing_example = _examples_advanced_processing_example
@@ -44,46 +42,46 @@ if _t.TYPE_CHECKING:
     from flext_core.service import FlextService as s
     from flext_core.typings import FlextTypes as t
     from flext_core.utilities import FlextUtilities as u
-_LAZY_IMPORTS = {
-    "AclProcessingExample": ("examples.acl_processing_example", "AclProcessingExample"),
-    "AdvancedProcessingExample": (
-        "examples.advanced_processing_example",
-        "AdvancedProcessingExample",
-    ),
-    "CompleteWorkflowExample": (
-        "examples.complete_workflow_example",
-        "CompleteWorkflowExample",
-    ),
-    "ContextDict": ("examples.acl_processing_example", "ContextDict"),
-    "EntryDict": ("examples.acl_processing_example", "EntryDict"),
-    "ItemDict": ("examples.advanced_processing_example", "ItemDict"),
-    "PipelineStageData": ("examples.advanced_processing_example", "PipelineStageData"),
-    "ProcessingDict": ("examples.complete_workflow_example", "ProcessingDict"),
-    "StageOperation": ("examples.advanced_processing_example", "StageOperation"),
-    "WorkflowContent": ("examples.complete_workflow_example", "WorkflowContent"),
-    "WorkflowData": ("examples.complete_workflow_example", "WorkflowData"),
-    "acl_processing_example": "examples.acl_processing_example",
-    "advanced_processing_example": "examples.advanced_processing_example",
-    "c": ("flext_core.constants", "FlextConstants"),
-    "complete_workflow_example": "examples.complete_workflow_example",
-    "d": ("flext_core.decorators", "FlextDecorators"),
-    "e": ("flext_core.exceptions", "FlextExceptions"),
-    "h": ("flext_core.handlers", "FlextHandlers"),
-    "m": ("flext_core.models", "FlextModels"),
-    "p": ("flext_core.protocols", "FlextProtocols"),
-    "r": ("flext_core.result", "FlextResult"),
-    "s": ("flext_core.service", "FlextService"),
-    "t": ("flext_core.typings", "FlextTypes"),
-    "u": ("flext_core.utilities", "FlextUtilities"),
-    "x": ("flext_core.mixins", "FlextMixins"),
-}
+_LAZY_IMPORTS = build_lazy_import_map(
+    {
+        "examples.acl_processing_example": (
+            "acl_processing_example",
+            "AclProcessingExample",
+        ),
+        "examples.advanced_processing_example": (
+            "advanced_processing_example",
+            "AdvancedProcessingExample",
+            "ItemDict",
+            "PipelineStageData",
+            "StageOperation",
+        ),
+        "examples.complete_workflow_example": (
+            "complete_workflow_example",
+            "CompleteWorkflowExample",
+            "ProcessingDict",
+            "WorkflowContent",
+            "WorkflowData",
+        ),
+    },
+    alias_groups={
+        "flext_core.constants": (("c", "FlextConstants"),),
+        "flext_core.decorators": (("d", "FlextDecorators"),),
+        "flext_core.exceptions": (("e", "FlextExceptions"),),
+        "flext_core.handlers": (("h", "FlextHandlers"),),
+        "flext_core.mixins": (("x", "FlextMixins"),),
+        "flext_core.models": (("m", "FlextModels"),),
+        "flext_core.protocols": (("p", "FlextProtocols"),),
+        "flext_core.result": (("r", "FlextResult"),),
+        "flext_core.service": (("s", "FlextService"),),
+        "flext_core.typings": (("t", "FlextTypes"),),
+        "flext_core.utilities": (("u", "FlextUtilities"),),
+    },
+)
 
 __all__: list[str] = [
     "AclProcessingExample",
     "AdvancedProcessingExample",
     "CompleteWorkflowExample",
-    "ContextDict",
-    "EntryDict",
     "ItemDict",
     "PipelineStageData",
     "StageOperation",
