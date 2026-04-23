@@ -1,0 +1,73 @@
+docker/images/support/quality/fixed/flext_observability/__init__.py
+  h_9db9d35f50cf33 32
+docker/images/support/quality/simple/flext_observability/__init__.py
+  h_9db9d35f50cf33 32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "f74c9ba5734a396801e2ce117f6e17f5df1fe61f",
+  "prompts": {
+    "2d85865bfae72b0d": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "8a7500cb-5995-4cf5-83dd-25994826fedf",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 53,
+      "total_deletions": 97,
+      "accepted_lines": 1296,
+      "overriden_lines": 14,
+      "messages_url": "https://usegitai.com/cas/59189efa7c3f8ce9a90b7df0413bdda98d07773564da05fe883890135326454d"
+    },
+    "39912a2a531af5d0": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "9ab55f23-bc15-42bf-97d9-0f92561893bb",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 106,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/cff6f56169b12553df6ebd8fd7029aacde88e2c747a92ebae9636fb38162e47a"
+    },
+    "ab0a5c1fa642f68f": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "8e7049e2-dae1-4699-a45d-59c2c58a82a1",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 141,
+      "total_deletions": 24,
+      "accepted_lines": 658,
+      "overriden_lines": 16,
+      "messages_url": "https://usegitai.com/cas/d0c7cfb0fc61bb445b684dd6d94ccf4f925a31a7c2059a352eaf97f364420d0c"
+    },
+    "e9e91624bfe89767": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "98f53549-9257-4cdf-84a6-c933a906e987",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 3,
+      "accepted_lines": 30,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/4005a615827e87b3245639436b63a355ee1584465d90ea2755985b448c8d11cf"
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
