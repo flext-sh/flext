@@ -437,12 +437,12 @@ class CompleteWorkflowExample:
             sleep_time: float,
             add_field: str,
             value: t.Primitives,
-            context: CompleteWorkflowExample.WorkflowContext | None = None,
             extra_logic: Callable[
                 [CompleteWorkflowExample.ProcessingDict],
                 t.JsonMapping,
             ]
             | None = None,
+            context: CompleteWorkflowExample.WorkflowContext | None = None,
         ) -> CompleteWorkflowExample.ProcessingDict:
             """Generic stage processing helper."""
             time.sleep(sleep_time)
