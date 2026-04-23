@@ -3,20 +3,23 @@
 from __future__ import annotations
 
 import os
-from collections.abc import (
-    Mapping,
-    MutableMapping,
-    MutableSequence,
-    Sequence,
-)
+from collections.abc import MutableMapping
 
 from flext_core import m, t
 
-last_events = {
+last_events: MutableMapping[str, dict[str, t.JsonPayload] | None] = {
     "metric": None,
     "trace": None,
     "log_entry": None,
 }
+
+
+def _copy_mapping(value: m.Dict | None) -> dict[str, t.JsonPayload]:
+    """Copy optional mapping values into a mutable JSON mapping."""
+    if value is None:
+        empty_mapping: dict[str, t.JsonPayload] = {}
+        return empty_mapping
+    return dict(value)
 
 
 def flext_create_metric(name: str, value: float, tags: m.Dict | None = None) -> None:
@@ -24,7 +27,7 @@ def flext_create_metric(name: str, value: float, tags: m.Dict | None = None) -> 
     last_events["metric"] = {
         "name": name,
         "value": value,
-        "tags": dict(tags or {}),
+        "tags": _copy_mapping(tags),
         "quiet": os.environ.get("FLEXT_OBSERVABILITY_QUIET"),
     }
 
@@ -38,7 +41,7 @@ def flext_create_trace(
     last_events["trace"] = {
         "trace_id": trace_id,
         "operation": operation,
-        "config": dict(config or {}),
+        "config": _copy_mapping(config),
         "quiet": os.environ.get("FLEXT_OBSERVABILITY_QUIET"),
     }
 
@@ -52,6 +55,6 @@ def flext_create_log_entry(
     last_events["log_entry"] = {
         "message": message,
         "level": level,
-        "context": dict(context or {}),
+        "context": _copy_mapping(context),
         "quiet": os.environ.get("FLEXT_OBSERVABILITY_QUIET"),
     }
