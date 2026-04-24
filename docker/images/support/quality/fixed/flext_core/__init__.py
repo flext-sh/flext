@@ -3,13 +3,7 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import (
-    Callable,
-    Mapping,
-    MutableMapping,
-    MutableSequence,
-    Sequence,
-)
+from collections.abc import MutableMapping
 from typing import Any
 
 from .exceptions import (

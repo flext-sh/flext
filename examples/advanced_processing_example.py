@@ -86,10 +86,6 @@ class PipelineStageData(m.BaseModel):
     )
 
 
-def _new_str_list() -> MutableSequence[str]:
-    return []
-
-
 def _new_scalar_dict() -> t.MutableJsonMapping:
     return {}
 
