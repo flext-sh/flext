@@ -1,0 +1,78 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "77ca1cd0870f086b091f5bc82cbdaddd94d53a54",
+  "prompts": {
+    "35cbb1b3e5674de8": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "f1ec7053-c1b6-4e4a-935a-f90d53d5475b",
+        "model": "copilot/auto"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 1,
+      "accepted_lines": 0,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/0b7e6c53f16bd86a71a58b56d344c9f1ba334afcc6735efaa899e76c47c274e0"
+    },
+    "53614cb0b8a1410a": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "788f13c8-e763-423c-ae17-c2ff6da4e1bc",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1348,
+      "total_deletions": 0,
+      "accepted_lines": 1350,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/9c6bd9b9801a2594b593f618b60e79afd9ddec670cc553bd9cd944a272279387"
+    },
+    "8101ec7ad65f4317": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "557c886b-b02d-489a-8237-05da7f2a1438",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/2fdc7ca0f3478eb858f12b51b071031402f939c24af3eb1aa1ed259a04ef4c86"
+    },
+    "8c2cbdeb70613e9e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2e74716b-0d32-4eb3-b239-a0f08c033edc",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 4940,
+      "total_deletions": 1339,
+      "accepted_lines": 4940,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/3648d296a319362cf0bdb65f503b9ce32d047efef06e52e747f922fcbf89dc32"
+    },
+    "9123441aa21a4185": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e9169874-590d-4541-8054-007b2d9cac16",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 12142,
+      "total_deletions": 698,
+      "accepted_lines": 11648,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/1c18e8f1f6c9acae37d1381e763112c29466c5bcf88f41a14436eb7ee49e3a0d"
+    }
+  }
+}
