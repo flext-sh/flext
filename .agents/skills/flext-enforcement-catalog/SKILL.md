@@ -32,7 +32,9 @@ for rule in c.ENFORCEMENT_CATALOG.rules:
         print(rule.id, rule.severity, rule.source.kind)
 
 # Filter by origin
-infra_rules = c.ENFORCEMENT_CATALOG.by_kind(m_enf.EnforcementSourceKind.FLEXT_INFRA_DETECTOR)
+infra_rules = c.ENFORCEMENT_CATALOG.by_kind(
+    m_enf.EnforcementSourceKind.FLEXT_INFRA_DETECTOR
+)
 ```
 
 Each entry is a `m_enf.EnforcementRuleSpec` carrying a discriminated `source` union (one of `EnforcementInfraDetectorSource` / `EnforcementTestsValidatorSource` / `EnforcementRuntimeWarningSource` / `EnforcementRuffSource` / `EnforcementAstGrepSource` / `EnforcementSkillPointerSource`).
