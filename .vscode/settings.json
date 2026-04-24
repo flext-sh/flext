@@ -10,7 +10,8 @@
     "**/vendor": true,
     "**/vendor/**": true,
     "**/dbt_packages": true,
-    "**/dbt_packages/**": true
+    "**/dbt_packages/**": true,
+    "**/__pyrefly_virtual__/**": true
   },
   "files.watcherExclude": {
     "__pycache__": true,
@@ -52,7 +53,8 @@
     "tmp": true,
     "vectorbt.pro": true,
     "vendor": true,
-    "venv": true
+    "venv": true,
+    "**/__pyrefly_virtual__/**": true
   },
   "markdownlint.configFile": "${workspaceFolder}/.markdownlint.json",
   "markdownlint.lintWorkspaceGlobs": [
@@ -101,10 +103,11 @@
   ],
   "python.analysis.exclude": [
     "**/.flext-deps",
-    "**/.flext-deps/**"
+    "**/.flext-deps/**",
+    "**/__pyrefly_virtual__/**"
   ],
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-  "python.languageServer": "None",
+  "python.languageServer": "Default",
   "python.pyrefly.diagnosticMode": "workspace",
   "python.pyrefly.displayTypeErrors": "default",
   "python.terminal.activateEnvInCurrentTerminal": true,
@@ -113,22 +116,21 @@
   "ruff.configurationPreference": "filesystemFirst",
   "ruff.format.backend": "uv",
   "ruff.format.preview": true,
-  "ruff.interpreter": [
-    ".venv/bin/ruff"
-  ],
+  "ruff.importStrategy": "fromEnvironment",
   "ruff.lint.preview": true,
   "ruff.nativeServer": "on",
   "search.exclude": {
-    "**/.flext-deps": true,
-    "**/.flext-deps/**": true,
+    "**/__pyrefly_virtual__/**": true,
     "**/.cache": true,
     "**/.cache/**": true,
+    "**/.flext-deps": true,
+    "**/.flext-deps/**": true,
     "**/.venv": true,
     "**/.venv/**": true,
+    "**/dbt_packages": true,
+    "**/dbt_packages/**": true,
     "**/vendor": true,
     "**/vendor/**": true,
-    "**/dbt_packages": true,
-    "**/dbt_packages/**": true
   },
   "shellcheck.useWorkspaceRootAsCwd": true,
   "terminal.integrated.env.linux": {

@@ -237,6 +237,7 @@ project-excludes = [
   "**/*_pb2_grpc*.py",
   "**/.venv/**",
   "**/__pycache__",
+  "**/__pyrefly_virtual__/**",
   "**/node_modules",
   "**/typings/**",
   "**/vendor/**",
@@ -264,6 +265,7 @@ search-path = [
   "flext-core/scripts",
   "flext-core/src",
   "flext-infra/src",
+  "flext-infra/tmp_flow_test",
   "flext-tests/src",
   "src",
 ]
@@ -367,6 +369,7 @@ exclude = [
   "**/.venv",
   "**/.venv/**",
   "**/__pycache__",
+  "**/__pyrefly_virtual__/**",
   "**/dist-packages",
   "**/dist-packages/**",
   "**/node_modules",
@@ -415,6 +418,7 @@ include = [
   "flext-grpc/tests",
   "flext-infra/src",
   "flext-infra/tests",
+  "flext-infra/tmp_flow_test",
   "flext-ldap/src",
   "flext-ldap/tests",
   "flext-ldif/examples",
@@ -689,6 +693,11 @@ reportPrivateUsage = "none"
 root = "flext-infra/tests"
 
 [[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-infra", "flext-infra/src" ]
+reportPrivateUsage = "none"
+root = "flext-infra/tmp_flow_test"
+
+[[tool.pyright.executionEnvironments]]
 extraPaths = [ "flext-ldap/src" ]
 reportPrivateUsage = "error"
 root = "flext-ldap/src"
@@ -954,6 +963,7 @@ python_files = [ "*_test.py", "*_tests.py", "test_*.py" ]
 # [MANAGED] ruff
 [tool.ruff]
 exclude = [
+  "**/__pyrefly_virtual__/**",
   ".git",
   ".mypy_cache",
   ".pytest_cache",
