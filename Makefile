@@ -1020,6 +1020,9 @@ ns-check: ## Detect flattening damage in c/m/p/t/u domain references (guard rail
 ns-recover: ## Recover from flattening damage (runs rewriter with ruff+pyrefly gates)
 	$(Q)/home/marlonsc/flext/.venv/bin/python /home/marlonsc/flext/scripts/namespace_rewrite_guard.py --apply
 
+facade-check: ## Detect circular facade imports inside _<X>/ private subpackages (guard rail)
+	$(Q)/home/marlonsc/flext/.venv/bin/python /home/marlonsc/flext/scripts/check_facade_circular_imports.py
+
 save: ## Commit all changes in selected projects (MESSAGE=)
 	$(Q)$(PREPARE_SELECTED_PROJECTS)
 	$(Q)if [ -z "$(MESSAGE)" ]; then \
