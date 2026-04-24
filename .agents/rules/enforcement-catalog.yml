@@ -1,0 +1,383 @@
+# FLEXT Enforcement Catalog
+#
+# Single source of truth for runtime pytest enforcement. Each rule declares its
+# existing detection source (flext-infra detector, flext-tests validator,
+# runtime warning category, ruff rule, or skill pointer). The pytest plugin
+# at flext_tests._fixtures.enforcement consumes this file and dispatches to
+# the appropriate source. No detection logic lives here.
+#
+# Maintenance:
+#   - Add/edit rules by editing this file; plugin reloads on next pytest run.
+#   - Validate structure with .agents/rules/enforcement-catalog.schema.json
+#   - See AGENTS.md and .agents/skills/ for canonical rule semantics.
+#
+# Categories:
+#   ENFORCE-001..014  flext-infra AST/Rope detectors (14 existing detectors)
+#   ENFORCE-015..020  flext-tests validators (delegated, filtered by rule_ids)
+#   ENFORCE-021..023  ruff rules (documented; executed via `make lint`)
+#   ENFORCE-024       runtime warning capture (FlextMroViolation)
+#   ENFORCE-025..034  skill pointers (no automation yet; manual review)
+
+version: 1
+description: >-
+  Declarative FLEXT enforcement rule catalog consumed by the flext-tests pytest
+  plugin. Maps AGENTS.md/skills governance to existing detectors, validators,
+  runtime warnings and ruff rules. Zero detection logic; pure configuration.
+
+rules:
+
+  # ---------------------------------------------------------------------------
+  # flext-infra AST/Rope detectors
+  # ---------------------------------------------------------------------------
+
+  - id: ENFORCE-001
+    description: "Loose object declared outside a namespace class."
+    severity: MEDIUM
+    agents_md: "§2.2 Loose Objects"
+    skills: [flext-mro-namespace-rules, flext-patterns]
+    source:
+      kind: flext_infra_detector
+      violation_field: loose_objects
+
+  - id: ENFORCE-002
+    description: "Import alias violates canonical aliases (c/m/p/t/u)."
+    severity: HIGH
+    agents_md: "§2.2 Organic Namespace"
+    skills: [flext-mro-namespace-rules, flext-import-rules]
+    source:
+      kind: flext_infra_detector
+      violation_field: import_violations
+
+  - id: ENFORCE-003
+    description: "Runtime alias imported from wrong source package."
+    severity: HIGH
+    agents_md: "§2.2 Alias Sources"
+    skills: [flext-mro-namespace-rules, flext-import-rules]
+    source:
+      kind: flext_infra_detector
+      violation_field: namespace_source_violations
+
+  - id: ENFORCE-004
+    description: "Import of a private module (underscore-prefixed) outside allowed scope."
+    severity: HIGH
+    agents_md: "§2.2 Private Imports"
+    skills: [flext-import-rules]
+    source:
+      kind: flext_infra_detector
+      violation_field: internal_import_violations
+
+  - id: ENFORCE-005
+    description: "Protocol defined outside protocols.py / _protocols/ location."
+    severity: MEDIUM
+    agents_md: "§2.2 Facade Mirrors"
+    skills: [flext-mro-namespace-rules, flext-type-system]
+    source:
+      kind: flext_infra_detector
+      violation_field: manual_protocol_violations
+
+  - id: ENFORCE-006
+    description: "Cyclic import detected in dependency graph."
+    severity: CRITICAL
+    agents_md: "§4 Import Law"
+    skills: [flext-import-rules]
+    source:
+      kind: flext_infra_detector
+      violation_field: cyclic_imports
+
+  - id: ENFORCE-007
+    description: "Runtime alias (c/m/p/t/u/r) duplicated, redefined or shadowed."
+    severity: HIGH
+    agents_md: "§2.2 Runtime Aliases"
+    skills: [flext-mro-namespace-rules]
+    source:
+      kind: flext_infra_detector
+      violation_field: runtime_alias_violations
+
+  - id: ENFORCE-008
+    description: "Missing `from __future__ import annotations` in Python module."
+    severity: MEDIUM
+    agents_md: "§3.4 Future Import"
+    skills: [flext-strict-typing]
+    source:
+      kind: flext_infra_detector
+      violation_field: future_violations
+
+  - id: ENFORCE-009
+    description: "Type alias defined outside typings.py / _typings/ location."
+    severity: HIGH
+    agents_md: "§3.4 Type Aliases"
+    skills: [flext-strict-typing, flext-type-system]
+    source:
+      kind: flext_infra_detector
+      violation_field: manual_typing_violations
+
+  - id: ENFORCE-010
+    description: "Compatibility/legacy alias (`OldName = NewName`) forbidden."
+    severity: HIGH
+    agents_md: "§3.4 Zero Hacks"
+    skills: [flext-patterns, flext-strict-refactoring]
+    source:
+      kind: flext_infra_detector
+      violation_field: compatibility_alias_violations
+
+  - id: ENFORCE-011
+    description: "Class placed in the wrong file family (e.g. model in utilities.py)."
+    severity: MEDIUM
+    agents_md: "§2.2 Facade Mirrors"
+    skills: [flext-mro-namespace-rules]
+    source:
+      kind: flext_infra_detector
+      violation_field: class_placement_violations
+
+  - id: ENFORCE-012
+    description: "Facade MRO is incomplete (missing required base in inheritance chain)."
+    severity: CRITICAL
+    agents_md: "§2.3 Facade MRO"
+    skills: [flext-mro-namespace-rules, flext-patterns]
+    source:
+      kind: flext_infra_detector
+      violation_field: mro_completeness_violations
+
+  - id: ENFORCE-013
+    description: "Python parse failure — detector could not analyse the file."
+    severity: LOW
+    agents_md: "§3 Code Discipline"
+    skills: []
+    source:
+      kind: flext_infra_detector
+      violation_field: parse_failures
+
+  - id: ENFORCE-014
+    description: "Required facade class is missing from the project."
+    severity: CRITICAL
+    agents_md: "§2.3 Facade MRO"
+    skills: [flext-mro-namespace-rules]
+    source:
+      kind: flext_infra_detector
+      violation_field: facade_statuses
+      match_missing: true
+
+  # ---------------------------------------------------------------------------
+  # flext-tests validators (delegated)
+  # ---------------------------------------------------------------------------
+
+  - id: ENFORCE-015
+    description: "`Any` or `object` used as a type annotation."
+    severity: CRITICAL
+    agents_md: "§3.2 Type Contracts"
+    skills: [flext-strict-typing]
+    source:
+      kind: flext_tests_validator
+      method: types
+      rule_ids: [TYPE-002, TYPE-006]
+
+  - id: ENFORCE-016
+    description: "`# type: ignore` comment without code and/or justification."
+    severity: CRITICAL
+    agents_md: "§3.5 Type Discipline"
+    skills: [flext-patterns]
+    source:
+      kind: flext_tests_validator
+      method: types
+      rule_ids: [TYPE-001]
+
+  - id: ENFORCE-017
+    description: "Legacy typing forms (Optional/Union/List/Dict/Tuple/Set/TypeVar/Generic)."
+    severity: CRITICAL
+    agents_md: "§3.2 Type Contracts"
+    skills: [flext-strict-typing]
+    source:
+      kind: flext_tests_validator
+      method: types
+      rule_ids: [TYPE-004, TYPE-005]
+
+  - id: ENFORCE-018
+    description: "Forbidden imports: ImportError handling, sys.path manipulation, direct tech."
+    severity: HIGH
+    agents_md: "§2.7 Abstraction"
+    skills: [flext-import-rules, flext-architecture-layers]
+    source:
+      kind: flext_tests_validator
+      method: imports
+      rule_ids: [IMPORT-003, IMPORT-004, IMPORT-005]
+
+  - id: ENFORCE-019
+    description: "Bypass patterns (noqa without justification, unapproved pragma, exception swallowing)."
+    severity: MEDIUM
+    agents_md: "§3.4 Zero Hacks"
+    skills: [flext-patterns]
+    source:
+      kind: flext_tests_validator
+      method: bypass
+      rule_ids: [BYPASS-001, BYPASS-002, BYPASS-003]
+
+  - id: ENFORCE-020
+    description: "Mocking anti-patterns (monkeypatch, Mock/MagicMock, @patch) in tests."
+    severity: HIGH
+    agents_md: "§3 Code Discipline"
+    skills: [testing-patterns]
+    source:
+      kind: flext_tests_validator
+      method: tests
+      rule_ids: [TEST-001, TEST-002, TEST-003]
+
+  # ---------------------------------------------------------------------------
+  # Ruff (documentation only; executed by `make lint`)
+  # ---------------------------------------------------------------------------
+
+  - id: ENFORCE-021
+    description: "Ruff ANN401 — any use of `typing.Any` in annotations."
+    severity: CRITICAL
+    agents_md: "§3.2 Type Contracts"
+    skills: [flext-strict-typing]
+    notes: "Execution delegated to `make lint`. Catalog entry documents ownership."
+    source:
+      kind: ruff
+      rule_code: ANN401
+
+  - id: ENFORCE-022
+    description: "Ruff PGH003 — blanket `# type: ignore` without a specific code."
+    severity: HIGH
+    agents_md: "§3.5 Type Discipline"
+    skills: [flext-patterns]
+    notes: "Execution delegated to `make lint`."
+    source:
+      kind: ruff
+      rule_code: PGH003
+
+  - id: ENFORCE-023
+    description: "Ruff TID252 — prefer absolute over relative imports."
+    severity: HIGH
+    agents_md: "§4 Import Law"
+    skills: [flext-import-rules]
+    notes: "Execution delegated to `make lint`."
+    source:
+      kind: ruff
+      rule_code: TID252
+
+  # ---------------------------------------------------------------------------
+  # Runtime warning capture
+  # ---------------------------------------------------------------------------
+
+  - id: ENFORCE-024
+    description: "Runtime FlextMroViolation raised during class/module init."
+    severity: HIGH
+    agents_md: "§2.3 MRO Rules"
+    skills: [flext-mro-namespace-rules, flext-patterns]
+    source:
+      kind: runtime_warning
+      category: flext_core._constants.enforcement.FlextMroViolation
+
+  # ---------------------------------------------------------------------------
+  # Skill pointers (no automation; tracked for future v2 detectors)
+  # ---------------------------------------------------------------------------
+
+  - id: ENFORCE-025
+    description: "Flat alias declared inside a facade class body (`X = Namespace.X`)."
+    severity: HIGH
+    agents_md: "§2.2 Organic Namespace"
+    skills: [flext-mro-namespace-rules]
+    enabled: false
+    notes: "No automated detector yet. Tracked via skill; add AST detector in v2."
+    source:
+      kind: skill_pointer
+      skill: flext-mro-namespace-rules
+
+  - id: ENFORCE-026
+    description: "`model_rebuild()` invoked outside namespace bootstrap contexts."
+    severity: CRITICAL
+    agents_md: "§3.1 Pydantic Models"
+    skills: [flext-patterns, pydantic-v2-governance]
+    enabled: false
+    notes: "No automated detector yet. Runtime-only today."
+    source:
+      kind: skill_pointer
+      skill: pydantic-v2-governance
+
+  - id: ENFORCE-027
+    description: "`class Config:` block inside a Pydantic model (should use `model_config = m.ConfigDict(...)`)."
+    severity: HIGH
+    agents_md: "§3.1 Pydantic Models"
+    skills: [pydantic-v2-governance, lib-pydantic-v2]
+    enabled: false
+    notes: "No automated detector yet. Tracked via skill."
+    source:
+      kind: skill_pointer
+      skill: pydantic-v2-governance
+
+  - id: ENFORCE-028
+    description: "`TypeAdapter(...)` instantiated outside the central registry."
+    severity: MEDIUM
+    agents_md: "§3.1 Pydantic Patterns"
+    skills: [pydantic-v2-patterns, lib-pydantic-v2]
+    enabled: false
+    notes: "No automated detector yet."
+    source:
+      kind: skill_pointer
+      skill: pydantic-v2-patterns
+
+  - id: ENFORCE-029
+    description: "Narrowing via `type(x) is T` / `type(x) == T` instead of `isinstance` / `TypeIs`."
+    severity: MEDIUM
+    agents_md: "§3.2 Type Narrowing"
+    skills: [flext-strict-typing]
+    enabled: false
+    notes: "No automated detector yet."
+    source:
+      kind: skill_pointer
+      skill: flext-strict-typing
+
+  - id: ENFORCE-030
+    description: "`object.__setattr__` bypass on a frozen Pydantic model."
+    severity: HIGH
+    agents_md: "§3.1 Pydantic Models"
+    skills: [flext-patterns, pydantic-v2-governance]
+    enabled: false
+    notes: "No automated detector yet."
+    source:
+      kind: skill_pointer
+      skill: flext-patterns
+
+  - id: ENFORCE-031
+    description: "PEP 695 `type X = Callable[...]` form used for a callable alias (breaks runtime)."
+    severity: MEDIUM
+    agents_md: "§3.2 Type Aliases"
+    skills: [flext-strict-typing]
+    enabled: false
+    notes: "Memory: `feedback_direct_submodule_imports.md` — PEP 695 `type X = Y` breaks runtime calls for callables."
+    source:
+      kind: skill_pointer
+      skill: flext-strict-typing
+
+  - id: ENFORCE-032
+    description: "Public `get_*` / `set_*` / `is_*` accessor on a Pydantic model (use fields/computed_field)."
+    severity: MEDIUM
+    agents_md: "§3.1 Pydantic Models"
+    skills: [pydantic-v2-governance]
+    enabled: false
+    notes: "No automated detector yet."
+    source:
+      kind: skill_pointer
+      skill: pydantic-v2-governance
+
+  - id: ENFORCE-033
+    description: "Custom `BaseSettings` inheritance — must inherit `FlextSettings`."
+    severity: HIGH
+    agents_md: "§2.6 Settings"
+    skills: [lib-pydantic-settings]
+    enabled: false
+    notes: "No automated detector yet."
+    source:
+      kind: skill_pointer
+      skill: lib-pydantic-settings
+
+  - id: ENFORCE-034
+    description: "Missing `.expected` golden-file for an example script."
+    severity: LOW
+    agents_md: "§3 Code Discipline"
+    skills: [testing-patterns]
+    enabled: false
+    notes: "No automated detector yet."
+    source:
+      kind: skill_pointer
+      skill: testing-patterns
