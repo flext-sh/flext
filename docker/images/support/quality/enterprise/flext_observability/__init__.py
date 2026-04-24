@@ -2,14 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import (
-    Mapping,
-    MutableMapping,
-    MutableSequence,
-    Sequence,
-)
-
-from flext_core import m, t
+from flext_core import m
 
 
 def flext_create_metric(name: str, value: float, tags: m.Dict | None = None) -> None:
