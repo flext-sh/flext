@@ -1,0 +1,65 @@
+docs/architecture/flext-service-architecture.md
+  h_9db9d35f50cf33 6652,6656
+docs/superpowers/plans/2026-04-06-pipeline-dag-audit.md
+  h_9db9d35f50cf33 349,355,403
+docs/guides/README.md
+  35cbb1b3e5674de8 7
+docs/guides/onboarding.md
+  h_9db9d35f50cf33 8
+examples/complete_workflow_example.py
+  35cbb1b3e5674de8 33-35,40-41,81,113,137,151,155,168,181,227,231,258,261,278-279,291,297,329,399,409,417,421,438,443,448,491,495,513,515,522,537
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "7c04fce60cc5f9114d55435398bf64d9e15cb529",
+  "prompts": {
+    "35cbb1b3e5674de8": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "f1ec7053-c1b6-4e4a-935a-f90d53d5475b",
+        "model": "copilot/auto"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 823,
+      "total_deletions": 27,
+      "accepted_lines": 1054,
+      "overriden_lines": 2,
+      "messages_url": "https://usegitai.com/cas/023f43c17ef2d6676b6f2803828b1493b4e2e775e7d43b825d49fd98e3d732dc"
+    },
+    "99cd8bffff92e97b": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "a16db4f0-f4f0-44dc-a36f-2736e5fdba50",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 7953,
+      "total_deletions": 35,
+      "accepted_lines": 8419,
+      "overriden_lines": 15,
+      "messages_url": "https://usegitai.com/cas/c99d8cb0004742f23a9dd343fbd2c7de2b818060e5fafedd0d539a7d9d3cf7af"
+    },
+    "d47817c7586d1e59": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bc7f6bd0-731d-49b0-9c44-6c380d65f6ff",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 2,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/419e3f300eb1e16b57dfa6cec6142e14c3398b281abb15a861b74f7cc2e1d19b"
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
