@@ -25,6 +25,8 @@ This skill provides a standardized workflow for maintaining `README.md` files, e
 - Enforce consistent section order and stable relative links.
 - Prefer workspace governance pointers over duplicated policy text.
 - README workflow sections and contributor guidance must reflect the current mandatory toolchain and zero-debt policy without copying AGENTS verbatim.
+- README files MUST include a "Collection Rules (regras de coletas)" section enumerating the AGENTS.md §9 pre-requisites concretely for the project: parent MRO chain, abstracted-library owners, primary skills to load, scope/serena bootstrap, current `make check` baseline.
+- Canonical section order is: Title + Reviewed/Version line, Purpose, Module Map (`c/m/p/t/u` slots owned by this project per `flext-mro-namespace-rules`), Collection Rules, Operation Flow, Integration Points (parents, consumers, abstracted libs), Quality Gates, Governance Pointer to AGENTS.md.
 
 ## Instructions
 
@@ -36,9 +38,10 @@ This skill provides a standardized workflow for maintaining `README.md` files, e
 ## Workflow
 
 1. Discover README drift from expected structure.
-2. Apply safe automatic fixes, then manual content adjustments.
-3. Re-validate links and structure.
-4. Record outcomes in docs-oriented validation outputs.
+2. Confirm the project's parent MRO chain, abstracted libraries, and primary skills before drafting the Collection Rules section.
+3. Apply safe automatic fixes via `make docs DOCS_PHASE=fix`, then manual content adjustments only where the auto-generator cannot derive content (purpose, onboarding narrative, operation flow).
+4. Re-validate links and structure with `make docs DOCS_PHASE=validate`.
+5. Record outcomes in docs-oriented validation outputs (`<project>/.reports/docs/`).
 
 ## Examples
 
