@@ -206,7 +206,7 @@ extra_checks = true
 follow_imports = "normal"
 ignore_missing_imports = true
 local_partial_types = true
-mypy_path = [ ".", "src", "typings" ]
+mypy_path = [ ".", "src" ]
 namespace_packages = true
 no_implicit_reexport = true
 overrides = [  ]
@@ -383,8 +383,8 @@ exclude = [
   ".sisyphus",
   ".venv",
 ]
-extraPaths = [ ".", "src", "typings" ]
-ignore = [ "**/*.pyi", "typings" ]
+extraPaths = [ ".", "src" ]
+ignore = [ "**/*.pyi" ]
 include = [
   "docker",
   "examples",
@@ -502,7 +502,6 @@ reportUnusedClass = "error"
 reportUnusedFunction = "error"
 reportUnusedImport = "error"
 reportUnusedVariable = "error"
-stubPath = "typings"
 typeCheckingMode = "strict"
 venv = ".venv"
 venvPath = "."
