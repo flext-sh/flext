@@ -6649,11 +6649,11 @@ class FlextApi(s[m.Api.ResponseModel]):
     url: Annotated[str, u.Field(description="Target URL")]
 
     headers: Annotated[
-        t.StrMapping, u.Field(default_factory=dict, description="HTTP headers")
+        t.StrMapping, u.Field(default_factory=lambda: MappingProxyType({}), description="HTTP headers")
     ] = {}
 
     params: Annotated[
-        t.StrMapping, u.Field(default_factory=dict, description="Query parameters")
+        t.StrMapping, u.Field(default_factory=lambda: MappingProxyType({}), description="Query parameters")
     ] = {}
 
     body: Annotated[

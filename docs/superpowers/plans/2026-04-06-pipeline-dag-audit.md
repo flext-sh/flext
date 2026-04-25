@@ -346,13 +346,13 @@ class FlextCliModelsPipeline:
         shared: Annotated[
             MutableMapping[str, object],
             u.Field(
-                default_factory=dict, description="Mutable shared state between stages"
+                default_factory=lambda: MappingProxyType({}), description="Mutable shared state between stages"
             ),
         ]
         settings: Annotated[
             Mapping[str, object],
             u.Field(
-                default_factory=dict, description="Immutable pipeline configuration"
+                default_factory=lambda: MappingProxyType({}), description="Immutable pipeline configuration"
             ),
         ]
 
@@ -400,7 +400,7 @@ class FlextCliModelsPipeline:
         ]
         output: Annotated[
             Mapping[str, object],
-            u.Field(default_factory=dict, description="Stage output payload"),
+            u.Field(default_factory=lambda: MappingProxyType({}), description="Stage output payload"),
         ]
         duration_ms: Annotated[
             float,
