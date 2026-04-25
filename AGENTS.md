@@ -249,6 +249,8 @@ flext-<project>/src/flext_<project>/
 - **MRO Composition**: Integration projects (tap/target/dbt) MUST use dual-inheritance for settings, same as models: `FlextTargetOracleSettings(FlextMeltanoSettings, FlextDbOracleSettings)`.
 - **Auto-MRO Env Sources**: `settings_customise_sources` in FlextSettings base auto-resolves parent env prefixes from MRO. Leaf class env_prefix takes priority, parent prefixes are fallbacks.
 
+> **ENFORCE-042** — Settings classes missing `FlextSettings` base or wrong `env_prefix` are detected at runtime by `FlextUtilitiesBeartypeEngine.check_settings_inheritance` (dispatched via `c.ENFORCEMENT_RULES["settings_inheritance"]`).
+
 ### 2.7 Library Abstraction Boundaries
 
 - **Mandatory Abstraction Enforcement**: Libraries abstracted by any flext project (dependency_injector, structlog, rich, typer, tomlib, rope, etc.) MUST NOT be used directly outside that project's `src/` domain.
@@ -290,6 +292,8 @@ flext-<project>/src/flext_<project>/
   - Inline composed type annotations (e.g., `str | int`) are FORBIDDEN in application code.
 - **`t.JsonValue` Exclusivity**: `type Container = t.JsonValue`. `BaseModel` is TOTALLY FORBIDDEN inside `t.JsonValue`. If both are needed, use explicit `t.JsonValue | BaseModel`.
 
+> **ENFORCE-039** — `cast()` calls outside `flext-core` are detected at runtime by `FlextUtilitiesBeartypeEngine.check_cast_outside_core` (dispatched via `c.ENFORCEMENT_RULES["cast_outside_core"]`).
+
 ### 3.3 Failures & Error Handling
 
 - **`r[T]` for Fallible Operations** function that can fail MUST return `r[T]`. `T | None`, bare exceptions, and ad-hoc error dicts are FORBIDDEN. The `r` alias is mandatory.
@@ -311,6 +315,8 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Command & Output Abstractions**: Bare `subprocess` calls, `sys.exit` outside `__main__.py`, direct `dependency_injector` wiring, and `print()` in production are FORBIDDEN. Use provided abstractions and `FlextLogger`.
 - **Zero Hacks**: `model_rebuild()`, `exec()`, `eval()`, direct architectural `getattr()`, inline imports, and fallback `try/except ImportError` blocks are TOTALLY FORBIDDEN.
 
+> **ENFORCE-041** — `model_rebuild` invocations are detected at runtime by `FlextUtilitiesBeartypeEngine.check_model_rebuild_call` (dispatched via `c.ENFORCEMENT_RULES["model_rebuild_call"]`).
+
 ### 3.5 Integrity & Change Management
 
 - **Context Evaluation**: Read and fully understand existing code, MRO chains, and base classes BEFORE changing code. Maximize reuse. Simplifications, TODOs, mocks, and stubs are FORBIDDEN.
@@ -322,6 +328,9 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Legacy Extermination**: Legacy maintenance, non-business validation fallbacks, compatibility wrappers (`def old(): return new()`), and deprecation shims are ABOMINABLE. Delete and replace immediately. Fix forward.
 - **Git is IMMUTABLE**: Rolling back is FORBIDDEN. `git checkout <file>`, `git reset`, `git revert`, and `git stash pop/apply` to OVERWRITE/DISCARD work is forbidden. Fix issues forward.
 
+> **ENFORCE-040** — Unjustified linter-ignore directives are caught by `ruff PGH003` (registered in catalog as `EnforcementRuffSource(rule_code="PGH003")`).
+> **ENFORCE-043** — Pass-through wrappers (single-statement return delegating to another callable with identical args) are detected at runtime by `FlextUtilitiesBeartypeEngine.check_pass_through_wrapper` (dispatched via `c.ENFORCEMENT_RULES["pass_through_wrapper"]`).
+
 ### 3.6 Test Standardization
 
 - **Unified Test Namespace**: Tests MUST strictly consume utilities, constants, types, and models from the central test infrastructure (`tests.infra`). Direct imports from `flext_core` or `flext_infra` into `tests/unit` codebase are FORBIDDEN if an equivalent exists in `tests.infra`.
@@ -332,6 +341,8 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Absolute Strictness**: Tests MUST demonstrate the exact same strict typing (`r[T]`), Pydantic v2 execution, and architectural discipline as production code. "Test-only" relaxation or bypassing validators is FORBIDDEN.
 - **Behavior-Only Test Contract**: Tests MUST assert public, observable behavior of modules, facades, and services — never their private implementation details. Assertions against internal warning text, stack trace fragments, private helper names, local alias spellings (`p`, `m`, etc.), exact internal class names, MRO shape, or other non-contract internals are FORBIDDEN unless that exact surface is itself the explicit public contract being tested. When a test fails because internals were refactored but behavior is unchanged, the test is wrong and MUST be rewritten to assert stable external behavior instead.
 - **No Test Accessor Leakage**: Tests MUST exercise the canonical public contract after migration — fields, `@u.computed_field`, public verbs, and `r` outcomes (`success`/`failure`) only. Tests that reach into legacy getters/setters/predicates or rely on transitional naming are violations.
+
+> **ENFORCE-044** — Reflective probes against private attributes (`hasattr`/`getattr`/`setattr` with a string argument starting with `_` and not dunder) are detected at runtime by `FlextUtilitiesBeartypeEngine.check_private_attr_probe` (dispatched via `c.ENFORCEMENT_RULES["private_attr_probe"]`). Test the public contract; private internals are not part of the test surface.
 
 ### 3.7 Associated Skills
 
@@ -355,6 +366,8 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **No Proxy Evidence**: Screenshots, CI badge URLs, or "make check passed" without output are FORBIDDEN. The raw command output is the evidence.
 - **Scope Must Match Claim**: A claim of "all linters pass" requires evidence from ALL 4 linters (ruff, mypy, pyright, pyrefly). A claim of "all projects pass" requires evidence across all affected projects.
 - **Documentation Code Integrity**: Every Python code block in governance files (AGENTS.md, skills, docs) MUST pass all 4 linters. Pseudo-code and structural patterns use ` ```text ` fences, never ` ```python `. Bad-pattern examples are replaced with text instructions describing what is FORBIDDEN and what to use instead — no invalid Python in documentation.
+
+> **Runtime Catalog Dispatch** — All `ENFORCE-NNN` rules in `c.ENFORCEMENT_CATALOG` whose source is `EnforcementBeartypeSource(hook=...)` are exercised at runtime by `FlextUtilitiesEnforcement` (dispatcher in `c.ENFORCEMENT_RULES` + per-tag arms in `FlextUtilitiesEnforcementCollect._namespace_items` + `check_<tag>` static methods on `FlextUtilitiesBeartypeEngine`). `make val` and the test suite both surface violations as `me.Violation` records — no separate audit verb is required (per YAGNI; see §5).
 
 ## §4 Import Law
 
@@ -450,6 +463,7 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Coverage**: Source of truth is purely `[tool.coverage.report] fail_under` in each project's `pyproject.toml`. No Makefile constants, no `--cov-fail-under` flags.
 - **No Silent Failures**: Constructs like `2>/dev/null` or `|| true` on mandatory gates are FORBIDDEN.
 - **Attached sub-repo opt-in**: directories outside the workspace's git tree (separate sub-repos) opt into workspace iteration by declaring `[tool.flext.workspace] attached = true` in their own `pyproject.toml`. The contract is the typed `FlextModelsProjectMetadata.ProjectToolFlextWorkspace` model in `flext-core` (frozen, `extra="forbid"`, single `attached: bool = False` field) reachable via `u.read_tool_flext_config(root).workspace.attached`. Workspace iterators (`u.Infra.discover_project_candidates`, `u.Infra.discover_projects`, `u.Infra.resolve_projects`) surface attached entries only when `include_attached=True` is passed. Default (False) preserves the legacy git-tracked-only behaviour.
+- **Docs Python codeblock parity**: embedded ` ```python ` fenced blocks under every governed `docs/` scope are linted by the `python-codeblocks` audit check on `FlextInfraDocAuditor` (extends the existing `docs/auditor.py` service — no parallel route or service). Each block is extracted via `c.Infra.PYTHON_FENCE_RE`, written to a temp file, and gated through `u.Cli.run_raw(["ruff", "check", ...])`. Failures land as `m.Infra.AuditIssue(issue_type="python_codeblock", severity="medium")` records flowing through the standard audit JSON + markdown reports. Invoked via `make docs DOCS_PHASE=audit` (default `check="all"` includes `python-codeblocks`).
 - *Gate details & matrix*: See skill `flext-quality-gates`.
 
 ## §7 Skill System

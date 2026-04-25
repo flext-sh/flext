@@ -66,6 +66,7 @@ make PROJECTS="flext-core flext-api" val
 Project `base.mk` and workspace `Makefile` expose these standardized command verbs:
 
 ```bash
+make audit
 make boot
 make check
 make scan
@@ -75,6 +76,8 @@ make test
 make val
 make clean
 ```
+
+`make audit` runs the SSOT enforcement audit (`ENFORCE-039/041/043/044`) via `FlextInfraEnforcementAuditor`. `make audit GATES=docs` delegates to `FlextInfraDocAuditor` for mkdocs python-codeblock parity (AGENTS.md §3.8). Rollback for the rope auto-fix path uses `FlextInfraRefactorSafetyManager`'s `.bak` flow — never `git checkout`.
 
 Execution semantics:
 
@@ -155,3 +158,4 @@ Selector contract:
 | Security-sensitive | `make scan` + `make val`          |
 | New public API     | `make val` + `make test`          |
 | Docs only          | `make docs`                       |
+| Embedded `python` codeblocks in `docs/**/*.md` | `make docs DOCS_PHASE=audit` (runs `python-codeblocks` check on `FlextInfraDocAuditor` — extracts via `c.Infra.PYTHON_FENCE_RE`, gates each block through `u.Cli.run_raw(["ruff", "check", ...])`, emits `m.Infra.AuditIssue` records into the standard audit report). |
