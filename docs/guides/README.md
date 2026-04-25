@@ -4,6 +4,7 @@ Guides are curated documents for workflow, migration, and day-to-day maintenance
 
 ## Canonical Guides
 
+- [Onboarding (Collection Rules)](onboarding.md)
 - [Migration to v0.13.0](migration-to-v0.13.0.md)
 - [Getting Started](getting-started.md)
 - [Development](development.md)

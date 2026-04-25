@@ -25,16 +25,20 @@ from collections.abc import (
 )
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
+from types import MappingProxyType
 from typing import Annotated, ClassVar
 
 from examples import m, p, r, t, u
+
+type CompleteWorkflowProcessingDict = t.JsonMapping
+type CompleteWorkflowContent = t.JsonMapping
 
 
 class CompleteWorkflowExample:
     """Complete workflow example demonstrating FLEXT enterprise data integration capabilities."""
 
-    type ProcessingDict = t.JsonMapping
-    type WorkflowContent = t.JsonMapping
+    ProcessingDict = CompleteWorkflowProcessingDict
+    WorkflowContent = CompleteWorkflowContent
 
     class WorkflowData(m.BaseModel):
         """Data container for workflow processing."""
@@ -74,7 +78,7 @@ class CompleteWorkflowExample:
             description="List of workflow stages to execute",
         )
         metadata: t.JsonMapping = u.Field(
-            default_factory=dict,
+            default_factory=lambda: MappingProxyType({}),
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = u.Field(
@@ -106,7 +110,7 @@ class CompleteWorkflowExample:
             description="List of warnings encountered",
         )
         stage_metadata: t.JsonMapping = u.Field(
-            default_factory=dict,
+            default_factory=lambda: MappingProxyType({}),
             description="Stage-specific metadata",
         )
 
@@ -130,7 +134,7 @@ class CompleteWorkflowExample:
             description="Results from each workflow stage",
         )
         aggregated_metrics: t.JsonMapping = u.Field(
-            default_factory=dict,
+            default_factory=lambda: MappingProxyType({}),
             description="Aggregated metrics across all stages",
         )
         workflow_status: Annotated[
@@ -144,11 +148,11 @@ class CompleteWorkflowExample:
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
-        data: Sequence[CompleteWorkflowExample.ProcessingDict] = u.Field(
+        data: Sequence[CompleteWorkflowProcessingDict] = u.Field(
             default_factory=tuple,
         )
         workflow_settings: t.ScalarMapping = u.Field(
-            default_factory=dict,
+            default_factory=lambda: MappingProxyType({}),
         )
 
         def execute(self) -> p.Result[CompleteWorkflowExample.WorkflowData]:
@@ -161,7 +165,7 @@ class CompleteWorkflowExample:
 
         def _aggregate_results(
             self,
-            item: CompleteWorkflowExample.ProcessingDict,
+            item: CompleteWorkflowProcessingDict,
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Aggregate results."""
@@ -174,7 +178,7 @@ class CompleteWorkflowExample:
             final_score = complexity_score + (
                 1 if bool(item.get("valid", False)) else 0
             )
-            content_payload: CompleteWorkflowExample.WorkflowContent = {
+            content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
                     0,
@@ -220,11 +224,11 @@ class CompleteWorkflowExample:
 
         def _analyze_items(
             self,
-            item: CompleteWorkflowExample.ProcessingDict,
+            item: CompleteWorkflowProcessingDict,
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Analyze single item."""
-            content_payload: CompleteWorkflowExample.WorkflowContent = {
+            content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
                     0.005,
@@ -251,10 +255,10 @@ class CompleteWorkflowExample:
         def _execute_stage_parallel(
             self,
             stage_name: str,
-            items: Sequence[CompleteWorkflowExample.ProcessingDict],
+            items: Sequence[CompleteWorkflowProcessingDict],
             stage_func: Callable[
                 [
-                    CompleteWorkflowExample.ProcessingDict,
+                    CompleteWorkflowProcessingDict,
                     CompleteWorkflowExample.WorkflowContext,
                 ],
                 p.Result[CompleteWorkflowExample.WorkflowData],
@@ -271,8 +275,8 @@ class CompleteWorkflowExample:
             )
 
             def process_single_item(
-                item: CompleteWorkflowExample.ProcessingDict,
-            ) -> CompleteWorkflowExample.ProcessingDict | None:
+                item: CompleteWorkflowProcessingDict,
+            ) -> CompleteWorkflowProcessingDict | None:
                 try:
                     result = stage_func(item, context)
                     workflow_data = result.map_or(None)
@@ -284,15 +288,13 @@ class CompleteWorkflowExample:
                         else workflow_data
                     )
                 except Exception as e:
-                    err: CompleteWorkflowExample.ProcessingDict = {
+                    err: CompleteWorkflowProcessingDict = {
                         "error": str(e),
                         "item": str(item),
                     }
                     return err
 
-            processed_results: MutableSequence[
-                CompleteWorkflowExample.ProcessingDict
-            ] = []
+            processed_results: MutableSequence[CompleteWorkflowProcessingDict] = []
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 future_to_item = {
                     executor.submit(process_single_item, item): item for item in items
@@ -324,7 +326,7 @@ class CompleteWorkflowExample:
 
         def _execute_workflow(
             self,
-            data: Sequence[CompleteWorkflowExample.ProcessingDict],
+            data: Sequence[CompleteWorkflowProcessingDict],
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Execute workflow stages with parallel processing."""
@@ -394,7 +396,7 @@ class CompleteWorkflowExample:
             perf_summary_raw: t.MutableJsonMapping = {}
             for key, value in aggregated_metrics.items():
                 perf_summary_raw[key] = value
-            summary: CompleteWorkflowExample.ProcessingDict = (
+            summary: CompleteWorkflowProcessingDict = (
                 t.json_mapping_adapter().validate_python({
                     "workflow_id": workflow_result.workflow_id,
                     "workflow_status": workflow_result.workflow_status,
@@ -404,7 +406,7 @@ class CompleteWorkflowExample:
                     "performance_summary": perf_summary_raw,
                 })
             )
-            summary_content: CompleteWorkflowExample.WorkflowContent = {**summary}
+            summary_content: CompleteWorkflowContent = {**summary}
             workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
                 {"content": summary_content},
             )
@@ -412,11 +414,11 @@ class CompleteWorkflowExample:
 
         def _process_items(
             self,
-            item: CompleteWorkflowExample.ProcessingDict,
+            item: CompleteWorkflowProcessingDict,
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Process single item."""
-            content_payload: CompleteWorkflowExample.WorkflowContent = {
+            content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
                     0.01,
@@ -433,17 +435,17 @@ class CompleteWorkflowExample:
 
         def _process_stage(
             self,
-            item: CompleteWorkflowExample.ProcessingDict,
+            item: CompleteWorkflowProcessingDict,
             sleep_time: float,
             add_field: str,
             value: t.Primitives,
             extra_logic: Callable[
-                [CompleteWorkflowExample.ProcessingDict],
+                [CompleteWorkflowProcessingDict],
                 t.JsonMapping,
             ]
             | None = None,
             context: CompleteWorkflowExample.WorkflowContext | None = None,
-        ) -> CompleteWorkflowExample.ProcessingDict:
+        ) -> CompleteWorkflowProcessingDict:
             """Generic stage processing helper."""
             time.sleep(sleep_time)
             result: t.MutableJsonMapping = {
@@ -486,11 +488,11 @@ class CompleteWorkflowExample:
 
         def _validate_items(
             self,
-            item: CompleteWorkflowExample.ProcessingDict,
+            item: CompleteWorkflowProcessingDict,
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Validate single item."""
-            content_payload: CompleteWorkflowExample.WorkflowContent = {
+            content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
                     0.005,
@@ -508,16 +510,16 @@ class CompleteWorkflowExample:
     @staticmethod
     def create_sample_workflow_data(
         count: int = 100,
-    ) -> Sequence[CompleteWorkflowExample.ProcessingDict]:
+    ) -> Sequence[CompleteWorkflowProcessingDict]:
         """Create sample data for workflow testing."""
-        result: MutableSequence[CompleteWorkflowExample.ProcessingDict] = []
+        result: MutableSequence[CompleteWorkflowProcessingDict] = []
         for i in range(count):
             attrs: t.MutableJsonMapping = {
                 "objectClass": "person,organizationalPerson",
                 "cn": f"user{i}",
                 "sn": f"User{i}",
             }
-            item: CompleteWorkflowExample.ProcessingDict = (
+            item: CompleteWorkflowProcessingDict = (
                 t.json_mapping_adapter().validate_python({
                     "id": f"item_{i}",
                     "dn": f"cn=user{i},ou=users,dc=example,dc=com",
@@ -532,7 +534,7 @@ class CompleteWorkflowExample:
     @staticmethod
     def run_example() -> None:
         """Run the complete workflow example."""
-        sample_data: Sequence[CompleteWorkflowExample.ProcessingDict] = (
+        sample_data: Sequence[CompleteWorkflowProcessingDict] = (
             CompleteWorkflowExample.create_sample_workflow_data(50)
         )
         workflow_settings: t.ScalarMapping = {
