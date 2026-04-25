@@ -1,0 +1,64 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "6d84243f4c6865671501733c2e405ee9e3817189",
+  "prompts": {
+    "1e8c46a785af34f8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "aa25f2cb-80b0-440b-a64c-b692f5b15b99",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 960,
+      "total_deletions": 0,
+      "accepted_lines": 7957,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/54d23f4e0d8b275de51ebbadddf6fc4ca99e324cb63cfea926769c21c1b0f269"
+    },
+    "8101ec7ad65f4317": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "557c886b-b02d-489a-8237-05da7f2a1438",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 106,
+      "total_deletions": 22,
+      "accepted_lines": 361,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/609dc52829f0f3d4ad148dc5a08e179368b5cb7f48ca82ecfc2cd8d142ad0c05"
+    },
+    "8c2cbdeb70613e9e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2e74716b-0d32-4eb3-b239-a0f08c033edc",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 3027,
+      "overriden_lines": 83,
+      "messages_url": "https://usegitai.com/cas/4ba7c384762d9d78333ae8b6c25c01adddd367b0096052f58c8e09e943d35ee2"
+    },
+    "9123441aa21a4185": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e9169874-590d-4541-8054-007b2d9cac16",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 4628,
+      "total_deletions": 0,
+      "accepted_lines": 27756,
+      "overriden_lines": 74,
+      "messages_url": "https://usegitai.com/cas/ad1dedbe13c17b3bbde6286de85398a454db161b0c7d68f873d416e31601ea04"
+    }
+  }
+}
