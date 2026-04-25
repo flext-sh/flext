@@ -5,7 +5,7 @@ description: Canonical index of cross-layer enforcement rules exposed as c.ENFOR
 
 # FLEXT Enforcement Catalog
 
-**Reviewed**: 2026-04-24 | **Scope**: cross-layer rule index + pytest dispatcher
+**Reviewed**: 2026-04-25 | **Scope**: cross-layer rule index + pytest dispatcher
 
 ## Scope
 
@@ -37,7 +37,7 @@ infra_rules = c.ENFORCEMENT_CATALOG.by_kind(
 )
 ```
 
-Each entry is a `m_enf.EnforcementRuleSpec` carrying a discriminated `source` union (one of `EnforcementInfraDetectorSource` / `EnforcementTestsValidatorSource` / `EnforcementRuntimeWarningSource` / `EnforcementRuffSource` / `EnforcementAstGrepSource` / `EnforcementSkillPointerSource`).
+Each entry is a `m_enf.EnforcementRuleSpec` carrying a discriminated `source` union (one of `EnforcementInfraDetectorSource` / `EnforcementTestsValidatorSource` / `EnforcementRuntimeWarningSource` / `EnforcementRuffSource` / `EnforcementAstGrepSource` / `EnforcementSkillPointerSource` / `EnforcementBeartypeSource`).
 
 ## Source kinds
 
@@ -46,6 +46,7 @@ Each entry is a `m_enf.EnforcementRuleSpec` carrying a discriminated `source` un
 | `flext_infra_detector` | Yes via `FlextInfraNamespaceEnforcer.enforce()` | field on `m.Infra.ProjectEnforcementReport` |
 | `flext_tests_validator` | Yes via `tv.<method>` | classmethod on `FlextTestsValidator` |
 | `runtime_warning` | Yes via pytest `filterwarnings` + `pytest_warning_recorded` | warning class in `flext-core` |
+| `beartype` | Yes via `FlextUtilitiesEnforcement` (`c.ENFORCEMENT_RULES["<tag>"]` + `check_<tag>` on `FlextUtilitiesBeartypeEngine` + dispatch arm in `FlextUtilitiesEnforcementCollect._namespace_items`) | static method on `FlextUtilitiesBeartypeEngine` |
 | `ruff` | No (documentation-only) | `make lint` owns dispatch |
 | `ast_grep` | No (documentation-only) | `sgconfig.yml` + `.agents/skills/<skill>/rules.yml` own dispatch |
 | `skill_pointer` | No (documentation-only) | narrative SKILL.md only |
@@ -73,7 +74,8 @@ Items appear in collection under `flext-enforcement::ENFORCE-NNN[project]`. A te
 4. For `flext_tests_validator`: the `method` must be one of `imports`, `types`, `bypass`, `layer`, `tests`, `validate_config`, `markdown`; `rule_ids` filters the validator's internal IDs.
 5. For `runtime_warning`: `category` is a dotted class path; pytest will register a `filterwarnings` line automatically.
 6. For `ast_grep`: `skill + rule_id` must resolve to an entry in `.agents/skills/<skill>/rules.yml`.
-7. Run `pytest flext-core/tests/ -k enforcement_catalog` to validate the catalog.
+7. For `beartype`: `hook` must name a `check_<tag>` static method on `FlextUtilitiesBeartypeEngine`; the same `<tag>` must be registered in `c.ENFORCEMENT_RULES` and routed by an arm in `FlextUtilitiesEnforcementCollect._namespace_items`. Detection sentinels (regexes / path markers / builtin-name sets) live as `Final` class attributes on `FlextConstantsEnforcement` (never as loose module-level constants on `beartype_engine.py`).
+8. Run `pytest flext-core/tests/ -k enforcement_catalog` to validate the catalog.
 
 ## Retiring a rule
 
@@ -87,5 +89,6 @@ Set `enabled=False`. Leave the entry in place with a `notes=` marker for at leas
 - `ENFORCE-023..025` — ruff (`ANN401`, `PGH003`, `TID252`).
 - `ENFORCE-026..033` — ast-grep cross-references (`flext-patterns`, `flext-strict-typing`).
 - `ENFORCE-034..038` — skill pointers (accessor methods, settings inheritance, `model_rebuild`, `os.environ` ban, flat-alias ban).
+- `ENFORCE-039..044` — beartype runtime hooks + ruff delegation (`cast_outside_core`, `PGH003`, `model_rebuild_call`, `settings_inheritance` (reuses existing hook), `pass_through_wrapper`, `private_attr_probe`).
 
 For the live set call `len(c.ENFORCEMENT_CATALOG.rules)` — the docs above are a snapshot, not an SSOT.
