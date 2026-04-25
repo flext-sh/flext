@@ -449,6 +449,7 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **`pyproject.toml` Generation**: Files must follow Poetry 2.x + PEP 621/639 constraints. New packages MUST be managed via `poetry add` and `poetry remove`. Furthermore, you must run `make mod` and `make up` to regenerate, consolidate dependencies, and format the toml files before lock/install. Manually hacking dependency tables is FORBIDDEN.
 - **Coverage**: Source of truth is purely `[tool.coverage.report] fail_under` in each project's `pyproject.toml`. No Makefile constants, no `--cov-fail-under` flags.
 - **No Silent Failures**: Constructs like `2>/dev/null` or `|| true` on mandatory gates are FORBIDDEN.
+- **Attached sub-repo opt-in**: directories outside the workspace's git tree (separate sub-repos) opt into workspace iteration by declaring `[tool.flext.workspace] attached = true` in their own `pyproject.toml`. The contract is the typed `FlextModelsProjectMetadata.ProjectToolFlextWorkspace` model in `flext-core` (frozen, `extra="forbid"`, single `attached: bool = False` field) reachable via `u.read_tool_flext_config(root).workspace.attached`. Workspace iterators (`u.Infra.discover_project_candidates`, `u.Infra.discover_projects`, `u.Infra.resolve_projects`) surface attached entries only when `include_attached=True` is passed. Default (False) preserves the legacy git-tracked-only behaviour.
 - *Gate details & matrix*: See skill `flext-quality-gates`.
 
 ## §7 Skill System
