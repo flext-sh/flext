@@ -294,8 +294,6 @@ help: ## Show simple workspace verbs
 	$(Q)echo ""
 	$(Q)echo "Core verbs:"
 
-	$(Q)printf " %-7s %s\n" "audit" "Run SSOT enforcement audit across selected projects (SCOPE/GATES/FIX)"
-
 	$(Q)printf " %-7s %s\n" "boot" "Install all projects into workspace .venv, then run val VALIDATE_SCOPE=workspace"
 
 	$(Q)printf " %-7s %s\n" "up" "Upgrade deps + modernize + dependency report (.reports/dependencies/)"

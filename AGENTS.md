@@ -1,6 +1,7 @@
 <!-- TOC START -->
 
-- [§0 Quick Reference (MUST READ)](#0-quick-reference-must-read)
+- [§0 QUICKSTART (15s)](#0-quickstart-15s)
+- [§0 STOP CARD (read in 60s before ANY edit)](#0-stop-card-read-in-60s-before-any-edit)
 - [§1 Identity](#1-identity)
 - [§2 Architecture Law](#2-architecture-law)
 - [§3 Code Law](#3-code-law)
@@ -38,77 +39,131 @@ alwaysApply: true
 
 ---
 
-## §0 Quick Reference (MUST READ)
+## §0 QUICKSTART (15s)
 
-FLEXT-only deltas. Universal rules (rollback, scope, generic tooling, communication) live in `~/.claude/AGENTS.md`.
+Skip any item below and the task is invalid.
 
-### Canonical Aliases (SSOT — flat, never wrap)
+1. Run smells first: `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json`.
+2. Pick one offender only; close its full usage chain before touching another.
+3. Search SSOT first (`flext-core` -> `flext-cli` -> `flext-infra` -> `flext-tests`).
+4. Delete before create: wrappers, aliases, dead code, duplicate validators/config/helpers die first.
+5. Exhaust Pydantic 2 + Python 3.13 before custom code. If native exists, custom dies now.
+6. Collapse duplication into existing MRO facades. No parallel trees. No compatibility layers.
+7. Validate immediately: `ruff` -> `pyrefly` -> focused `pytest` -> affected `make check`.
+8. No raw green output, no completion. No negative LOC delta, no refactor acceptance.
 
-| Alias | Source Class | Facade File |
-|-------|--------------|-------------|
-| `c` | `Flext<Project>Constants` | `constants.py` |
-| `m` | `Flext<Project>Models` | `models.py` |
-| `t` | `Flext<Project>Types` | `typings.py` |
-| `p` | `Flext<Project>Protocols` | `protocols.py` |
-| `u` | `Flext<Project>Utilities` | `utilities.py` |
-| `r` | Result container | via `flext_core` |
-| `h, s, d, e, x` | Operational helpers | via `flext_core` |
+If you cannot name which Pydantic/Python primitive replaces the custom code, do not edit yet.
 
-**Always use canonical aliases at call sites** — `m.MyModel`, `c.MY_CONST`. Never raw classes.
+### §0.A AUTOPSY CARD (MUST RUN BEFORE FIRST EDIT)
 
-**Organic MRO paths** — `u.Infra.parse_semver`, `c.Tests.ERR_OK_FAILED`, `m.TargetOracle.ExecuteResult`. NEVER flatten to `m.ExecuteResult`.
+Failures that keep repeating and the mandatory counter-rule:
 
-**Tests namespace is flat** — use `c/p/t/m/u.Tests.*` in `tests/`, `examples/`, and `scripts/`. `*.Core.Tests.*` is forbidden migration debt.
+1. Syntax break after patch: STOP and restore a compilable minimal state immediately.
+2. New helper/wrapper/proxy/compat alias: DELETE in the same cycle.
+3. Contract changed without caller propagation: task stays OPEN.
+4. Selective validation hiding red gates: result INVALID.
+5. Refactor without negative LOC: result INVALID.
+6. SSOT primitive exists but local duplicate was written: DELETE duplicate now.
 
-**Alias import sources**:
+Hard floor: no loose declarations outside `c/p/t/m/u`; Pydantic 2 + Python 3.13 are deletion primitives first.
 
-- `src/` code: `c/p/t/m/u` from `flext_core` OR own package (MRO-extended)
-- `tests/` code: `from tests import c, m, p, t, u` (NEVER cross-project like `from flext_target_oracle import t`)
-- `examples/`: `from examples import c, m, t, ...`
-- `scripts/`: `from scripts import ...`
+### §0.B CONTEXT LOAD (20s, NO EXCUSES)
 
-In `tests/`, `examples/`, and `scripts/`, alias imports must come from wrapper root (`from tests|examples|scripts import ...`) outside `__init__.py`; submodule alias imports are forbidden migration debt.
+Load in this exact order before coding:
 
-### Facade Class Naming
+1. `AGENTS.md` §0 + touched-path rules skill.
+2. One-line blast radius (`scope`/`sg`/`rg`) for edited symbols.
+3. First failing smell offender + full caller chain.
+4. First gate command to run after edit.
 
-- `src/` → `Flext<Project><Tier>`
-- `tests/` → `TestsFlext<Project><Tier>`
-- `examples/` → `ExamplesFlext<Project><Tier>`
-- `scripts/` → `ScriptsFlext<Project><Tier>`
+If you cannot state these 4 items in one short paragraph, you are not ready to edit.
 
-### FLEXT-Specific Non-Negotiables
+## §0 STOP CARD (read in 60s before ANY edit)
 
-1. Never flatten organic namespace paths (`m.TargetOracle.ExecuteResult`, not `m.ExecuteResult`).
-2. Never manually edit auto-generated `__init__.py`; run `make gen`.
-3. No direct imports of core-abstracted libraries outside owning abstraction project.
-4. No `model_rebuild()` as fix strategy; resolve forward refs via proper imports/annotations.
-5. No `os.environ`/`os.getenv` in `src/`; use settings + constants contracts.
+FLEXT-only. Read §0 first. Ignore excuses. Universal rules → `~/.claude/AGENTS.md`. Detail rules → §1–§10.
 
-### MRO Composition (critical)
+### §0.0 EXECUTION FLOW (every task, every edit)
 
-- Public facade composes ALL its domain subclasses via MRO
-- Example: `class FlextCoreModels(FlextCoreBaseModels, FlextCoreCQRSModels, FlextCoreSettingsModels): pass`
-- `models/*`, `_utilities/*` files define mixins ONLY; facade composes them in inheritance list
-- Manual flat wrapper nesting like `class Docker(tk): pass` inside facade → FORBIDDEN
-- Integration projects (`tap|target|dbt`): dual inheritance `FlextTapLdap(FlextMeltano, FlextLdap)`
+```
+SMELL → SEARCH → REUSE → DELETE → P2+3.13 REPLACE → MRO COLLAPSE → PROPAGATE → VALIDATE → COMMIT
+```
 
-### Quick Contracts (frequent errors)
+Rules:
 
-- `t.Primitives` = `str | int | float | bool`
-- `t.Scalar` = `t.Primitives | datetime`
-- `t.JsonValue` = `pydantic.JsonValue` (re-exported via `tp.JsonValue` / `t.JsonValue`; never widen the alias)
-- Prefer `Sequence` over `list` in parameter types (variance-safe).
-- Prefer `t.*` validators over ad-hoc `Field(...)` constraints.
+- Net LOC delta MUST be negative.
+- New code only with ≥8× LOC eliminated.
+- One offender per cycle.
+- No skipped blast radius.
+- No skipped post-edit gate.
+- No custom helper before the native deletion ladder fails.
 
-### Settings Baseline
+### §0.1 PYDANTIC 2 + PYTHON 3.13 FLOOR — exhaust before writing ANY custom code
 
-- Settings models inherit `FlextSettings`.
-- Defaults come from `c.*` constants.
-- Namespace registration uses `@FlextSettings.auto_register("<namespace>")`.
+Deletion ladder, in order:
 
-### Verification Baseline
+`Annotated[T, Field(...)]` -> `BeforeValidator` / `AfterValidator` -> `field_validator` -> `model_validator` -> `computed_field` -> `model_dump` / `model_validate(_json)` -> cached `TypeAdapter` -> `Discriminator("kind")` -> `RootModel` -> `PrivateAttr` -> PEP 695 generics / aliases -> `Self` -> `@override` / `@final` -> `TypeIs[T]` -> `match/case` -> `cached_property` -> frozen/slots dataclass.
 
-After edits, run project-relevant `ruff`, `pyrefly`, and `pytest` gates with evidence.
+Custom equivalent = AUTOMATIC DELETION (§3.1.PYDANTIC-V2-NATIVE table).
+
+### §0.2 ABSOLUTE BANS (any one = STOP, REVERT, RE-PLAN)
+
+`Any` / bare `object` / `cast()` outside flext-core/result.py · `model_rebuild()` · pass-through wrappers (`def x(): return y()`) · compat aliases (`OldX = NewX`) · `os.environ`/`os.getenv` in `src/` · bare `except:` · `# type: ignore` / `# pyrefly: ignore` / `# noqa` for SUPPRESSION (root-cause fix only) · `git checkout/reset --hard/stash pop` to discard work · `T | None` without docstring sentence justifying `None` · public `get_*/set_*/is_*` accessors on facade services · loose module-level `def`/`class`/`Final` · direct framework imports of flext-core-abstracted libs (pydantic/structlog/orjson/pyyaml/dependency_injector/returns) in consumers · `model_validate(...).execute()` GOD-pattern dispatchers · sibling duplication of `model_config`/fields/methods.
+
+### §0.3 FORBIDDEN RATIONALIZATIONS (task INVALID on first utterance)
+
+| Excuse | Rule |
+|---|---|
+| "distinct cohesive concern" | Cohesion DESCRIBES, never JUSTIFIES. MRO absorbs all. |
+| "collapse would create a monster" | SHIP collapse THEN split via MRO ≤200 LOC. |
+| "different signatures" | Unify via widening OR delete descendant. Two defs same name = §3.1 violation. |
+| "defensive / safe / pragmatic" | SUPREME LAW = net-LOC-negative. Tests prove correctness; LOC delta proves work. |
+| "plan target was a ceiling" | INVERTED. Targets are FLOORS. Ship below floor only with §0.A.2 evidence. |
+| "this is too complex / risky" | Then split into ≤30-LOC atomic edits, not skip. |
+| "parallel agent's work" | Fix-forward across the boundary if it blocks measurable LOC reduction. |
+
+### §0.4 HARD STOPS (instant, no debate)
+
+- "Done" without raw command output + exit code → INVALID
+- First edit without first running `qlty smells` for the active lane → INVALID
+- File touched twice same session → INVALID (re-plan)
+- Class named without grepping `_models/` → REVERT
+- Pass-through `__init__` re-declaring parent fields → DELETE
+- `make check` passed but no commit → INCOMPLETE
+- Suppression hint instead of structural fix → DELETE hint, fix root cause
+- Custom helper/class written before exhausting Pydantic 2 + Python 3.13 → DELETE and re-plan
+- Offender fixed locally without caller propagation → INCOMPLETE
+- First substantive edit not followed by the cheapest focused executable validation → INVALID
+- Smell loop skipped while debt remains → INVALID
+
+### §0.5 OPTIMIZATION LOOP (continuous improvement)
+
+```bash
+qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json
+# pick one eligible offender (src/ first; tests/ allowed when selected or coupled to the same flow)
+# close the whole usage chain for that offender
+# validate immediately
+# repeat
+```
+
+### §0.6 STRUCTURAL RENAME
+
+```bash
+sg -p 'OldName' --lang py flext-*/src              # find
+sg -p 'OldName' -r 'NewName' --lang py flext-*/src # replace
+```
+Never grep+manual.
+
+### §0.7 CANONICAL ALIASES (use, never wrap)
+
+`c` Constants · `m` Models · `t` Types · `p` Protocols · `u` Utilities · `r` Result · `h s d e x` operational. Call sites use alias (`m.MyModel`, `c.MY_CONST`), never raw class. Organic MRO paths preserved (`m.TargetOracle.ExecuteResult`); flattening FORBIDDEN. Tests/examples/scripts import via wrapper root (`from tests import c, m, p, t, u`). Facade naming: `src/`→`Flext<Project><Tier>` · `tests/`→`TestsFlext<Project><Tier>` · `examples/`→`ExamplesFlext<Project><Tier>` · `scripts/`→`ScriptsFlext<Project><Tier>`. *Detail*: §2.2, §3.6, §4.
+
+### §0.8 SSOT SEARCH KEYS (grep BEFORE creating)
+
+`cce.get_catalog().{rules,by_id,by_kind}` · `FlextUtilitiesEnforcement.{check,run,run_layer}` · `ube.find_*` (cast/model_rebuild/pass-through/private-probe) · `FlextInfraUtilitiesProtectedEdit.protected_file_edit` · `FlextInfraRefactorSafetyManager.create_pre_transformation_stash` · `r[T]` + `e.fail_*` · `FlextLogger` · `FlextContainer` + `@u.factory` · `FlextSettings` + `@FlextSettings.auto_register("<ns>")` · flext-core JSON/YAML utilities (no direct `orjson`/`pyyaml`/`structlog`/`dependency_injector`/`returns`).
+
+### §0.9 VERIFICATION (BLOCKING for any "done" claim)
+
+Per-touched-file: `ruff check <file>` + `pyrefly check <file>` + relevant `pytest`. Per-PR boundary: `make check` on affected projects. No proxy evidence — only raw command output. *Detail*: §3.8.
 
 ---
 
@@ -279,6 +334,62 @@ flext-<project>/src/flext_<project>/
 - **Utility & Helper Generalization (`u.*`)**: All shared helpers MUST strictly flow through the `u.*` utilities namespace. Do not duplicate logic. Use and enhance the lowest-level function available, systematically generalizing existing code rather than creating new redundant functions.
 - **Centralize Polymorphic Code**: Dismantle polymorphic functions branching on type unions. Use centralized Pydantic v2 models with discriminated unions and validation.
 - **Centralized Runtime Contracts**: Inputs, outputs, runtime state, and status snapshots MUST flow through central `m.*` models. Eliminate avoidable dict round-trips, ad-hoc conversion helpers, and non-essential type narrowing between service boundaries.
+- **Sibling-Config Duplication**: ≥2 classes sharing identical `model_config = ConfigDict(...)`, fields, or methods MUST extract an MRO base/mixin in the lowest existing facade. New base class allowed only with proven ≥8× LOC elimination stated in commit message.
+- **Pydantic 2 + Python 3.13 IDIOM MANDATE**: Custom imperative code is GUILTY UNTIL PROVEN INNOCENT. Before declaring any custom function/class/dispatcher/validator "legitimate", confirm NO row below replaces it. Any row that applies → REWRITE using the idiom (declarative, type-checked, shorter). Custom re-implementation of a row's idiomatic replacement = §3.5 Legacy Extermination violation.
+
+  | Custom pattern (FORBIDDEN if replaceable) | Idiomatic replacement (Pydantic v2 / PEP) |
+  |---|---|
+  | `__init__` body computing derived fields | `model_post_init(self, __context)` OR `@model_validator(mode="after")` returning `self` |
+  | `def get_x(self): return self._x` getter | direct field access OR `@u.computed_field` (auto-serialized to JSON) |
+  | `def set_x(self, v): self._x = v` setter | direct assignment + `model_config = ConfigDict(validate_assignment=True)` |
+  | `if/elif` chain over `kind`/`type` discriminator | `Annotated[Union[A, B, C], Field(discriminator="kind")]` (Pydantic auto-dispatches) |
+  | `match k: case "a": …` over Pydantic-modelled discriminator | same as above — let Pydantic do it, no `match` boilerplate |
+  | `cast(X, value)` after `isinstance(value, X)` | `TypeIs[X]`-narrowing predicate (PEP 742, bidirectional) |
+  | `__getattribute__` override | `PrivateAttr(default_factory=…)` for tracked private state |
+  | Mutable default in `__init__` | `Field(default_factory=…)` |
+  | `Annotated[str, Field(min_length=1)]` repeated ≥3× | PEP 695 alias `type NonEmptyStr = Annotated[str, Field(min_length=1)]` in `_typings/` |
+  | Custom JSON parsing with manual schema | `model_validate_json` |
+  | `try: int(s); return True; except: return False` | `TypeAdapter(int).validate_python(s, strict=True)` (catch `ValidationError`) |
+  | Custom dispatch table `{"a": fn_a, "b": fn_b}` | `singledispatch` / `singledispatchmethod` |
+  | `@property` returning derived data | `@u.computed_field` (auto-serialized) |
+  | `Generic[T]` with no useful default | PEP 696 `TypeVar("T", default=…)` |
+  | Forgotten override → silent drift | PEP 698 `@override` decorator (mandatory on every overriding method) |
+  | `class Sealed(BaseModel): pass` doc-only seal | `@final` decorator |
+  | `if isinstance(x, dict): … elif isinstance(x, Mapping): …` | `match x: case Mapping(): …` (PEP 634 class patterns) |
+  | One-shot expensive computation per instance | `functools.cached_property` |
+  | Catching multi-exception in TaskGroup / parallel awaits | `except*` (PEP 654) |
+  | `def fluent(self) -> "MyClass":` | `def fluent(self) -> Self:` (PEP 673) |
+  | `BaseModel` accepting JSON-shaped scalars only | `RootModel[t.JsonValue]` (no boilerplate field) |
+  | Custom `@field_validator` doing single coercion | `Annotated[T, AfterValidator(coerce_fn)]` (declarative composition) |
+  | Custom `@field_validator` doing single coercion BEFORE validation | `Annotated[T, BeforeValidator(coerce_fn)]` |
+  | Custom `__eq__` over field bag | `model_config = ConfigDict(frozen=True)` (Pydantic auto-equality) |
+  | `Optional[X] = None` + null-check loops | `X \| <SkipMarker>` discriminated union OR remove the `None` branch if dead |
+  | `Union[ModelA, ModelB]` without discriminator | `Annotated[Union[ModelA, ModelB], Field(discriminator="kind")]` + `kind: Literal["a"]` per variant |
+  | `to_dict()` / `to_json()` wrapper methods | `model_dump()` / `model_dump_json()` directly |
+  | `from_dict(d)` / `from_json(s)` factory methods | `Model.model_validate(d)` / `Model.model_validate_json(s)` directly |
+  | Manual schema dict construction | `Model.model_json_schema()` |
+  | `dataclass` with validation | Pydantic `BaseModel` (validation built-in) |
+  | `dataclass` without validation | `@dataclass(slots=True, kw_only=True, frozen=True)` (when truly no validation) |
+
+- **None-Audit Mandate**: every `T | None` parameter or return MUST justify `None` semantics in one short sentence stating the **business condition** that produces `None`. Anti-patterns and required fixes:
+
+  | Anti-pattern | Real semantic | Fix |
+  |---|---|---|
+  | `def helper(x: A \| None = None)` ("use default if None") | The default IS the value | `Field(default_factory=...)` or two overloads |
+  | `def lookup(...) -> T \| None` ("not found = None") | "Not found" is a failure mode | `r[T].fail("not found")` (Result monad) |
+  | `def maybe_compute(...) -> T \| None` ("not yet computed") | Lazy computation | `@u.computed_field @property` (cache + schema) |
+  | `Optional[X]` chains in signatures (`a: A \| None, b: B \| None`) | Caller is dispatching | discriminated union, single param |
+  | `if value is None: return default` boilerplate at start of function | Default-handling | `Field(default=...)` on the model where `value` lives |
+  | `return None` to indicate "skip" | Caller-side branching | `r[T].ok(...)` vs `r[T].fail("skip")`, or yield from generator |
+
+  Helper signatures with `T | None` lacking a docstring sentence explaining `None` semantics → AUTOMATIC REWORK.
+
+- **Cached-Adapter Mandate**: every recurring parse target gets ONE module-level/class-level `_X_ADAPTER: ClassVar[TypeAdapter[X]] = TypeAdapter(X)` constructed once, reused forever. Calling `TypeAdapter(X)` per invocation = §3.5 Legacy Extermination violation (re-parses schema each call).
+
+- **MRO-Collapse Mandate**: when 2+ classes/files share concern, COLLAPSE via MRO immediately:
+  - Same-named verb in 2 projects (`to_str`, `run`, `build`, `_apply_rule`) with different signatures → unify by widening param OR delete descendant + callers go to canonical via `c.* / u.*` from the most-root project. NEVER keep two definitions.
+  - `_utilities/<cluster>_*.py` cluster with N>2 files → ask "is each file a genuinely separate public API?" If `cluster_helpers.py` is internal-only → MERGE into the public file. Helper-only files = DELETE TARGETS.
+  - Cohesion is NEVER a reason to keep ≥2 files when the MRO can absorb them. "Each file has a single concern" is a description, not a justification — every concern lives on a single MRO-composed mixin.
 
 ### 3.2 Types & Contracts
 
@@ -323,13 +434,15 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 
 ### 3.5 Integrity & Change Management
 
+- **Pre-Action Gate (BLOCKING)**: §0.1 applies before any new symbol. Search-first via `grep -rn` (§0.4), prove ≥8× duplication elimination for any new abstraction, delete-first refactor priority. Skipping the gate = governance violation, not "iteration speed".
 - **Context Evaluation**: Read and fully understand existing code, MRO chains, and base classes BEFORE changing code. Maximize reuse. Simplifications, TODOs, mocks, and stubs are FORBIDDEN.
 - **AST-Grep Required**: Structural code changes/renames across the codebase MUST use `ast-grep` (`sg`). Ad-hoc python/shell scripts, `sed`, and `awk` for code transformations are TOTALLY FORBIDDEN.
 - **Integral Changes**: After any type, model, or signature change, you MUST update all references across all 33 projects to maintain global consistency.
 - **Linter Zero Tolerance**: Code must pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors/warnings. Suppressions (`# type: ignore`) are FORBIDDEN unless accompanied by a verifiable technical explanation and business necessity, restricted to a single line.
 - **Evidence Required**: See §3.8 Verification Discipline.
-- **Stay In Scope**: Execute ONLY the assigned task. Out-of-scope cleanups or "obvious improvements" are FORBIDDEN. If found, file a new `beads` issue.
-- **Legacy Extermination**: Legacy maintenance, non-business validation fallbacks, compatibility wrappers (`def old(): return new()`), and deprecation shims are ABOMINABLE. Delete and replace immediately. Fix forward.
+- **Stay In Scope vs Fix-Forward**: Execute ONLY the assigned task. Out-of-scope speculative "improvements" are FORBIDDEN. **Exception**: when a §0.5 forbidden construct or dead infrastructure blocks measurable LOC reduction inside the active task, fix-forward across the lane boundary — document the cross-lane edit in the commit message. "Another agent's lane" is NOT a valid reason to keep dead code in place.
+- **Legacy Extermination (ABOMINABLE)**: Legacy maintenance, non-business validation fallbacks, compatibility wrappers (`def old(): return new()`), deprecation shims, and parallel re-implementations of canonical SSOT (`FlextUtilitiesEnforcement`, `cce.get_catalog()`, `FlextLogger`, `FlextContainer`, etc.) are ABOMINABLE. Delete and replace immediately. Fix forward.
+- **Net LOC Delta Negative**: Any PR labelled "refactor", "deduplicate", "cleanup", or "YAGNI" MUST show insertions − deletions ≤ 0. Positive delta on a refactor PR = the work was creation in disguise. Reviewers MUST reject.
 - **Git is IMMUTABLE**: Rolling back is FORBIDDEN. `git checkout <file>`, `git reset`, `git revert`, and `git stash pop/apply` to OVERWRITE/DISCARD work is forbidden. Fix issues forward.
 
 > **ENFORCE-040** — Unjustified linter-ignore directives are caught by `ruff PGH003` (registered in catalog as `EnforcementRuffSource(rule_code="PGH003")`).
@@ -491,14 +604,20 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Correct Governance**: If governance corrections arise during work, update this file immediately before further implementation.
 - **Commit-After-Validation**: Every passing validation MUST be immediately accompanied by a `git add -A` → `git commit` → `git pull --rebase` → `git push` sequence. Uncommitted or unpushed work is LOST WORK.
 
-### 8.1 Refactor Priority Stack
+### 8.1 Refactor Priority Stack (THE ONLY VALID ORDER)
 
-- **Delete Before Wrapping**: Prefer deleting redundant wrappers, aliases, converters, fallback paths, and compatibility layers over preserving them behind new abstractions.
-- **Canonical Facades First**: Prefer `flext-core` and `flext-cli` public facades, settings, models, typings, protocols, utilities, results, and exceptions over local re-declarations.
+The four refactor questions, asked **in order**. Skipping any of (1)–(3) to reach (4) = governance violation.
+
+1. **Delete dead code first.** Run `grep -rn '<symbol>' flext-core/src flext-cli/src flext-infra/src flext-tests/src --include='*.py' | grep -v '<owning_file>'`. Zero external consumers = the symbol is dead infrastructure. Archive (`mv X X.bkp`) and remove its export sites (lazy manifests, `__all__`, MRO bases). Per AGENTS.md §3.8, anything duplicating runtime detection (`FlextUtilitiesEnforcement`, `__pydantic_init_subclass__`) is YAGNI-FORBIDDEN regardless of lane ownership.
+2. **Collapse via existing MRO.** ≥2 classes sharing fields/methods/`model_config` → re-parent to an existing or new MRO base. New base allowed ONLY with §0.1#2 evidence (≥8× LOC eliminated by the new base).
+3. **Move loose objects into class.** Module-level `def`/`Final[X]`/assignments → relocate as classmethod/staticmethod/ClassVar inside the canonical class. Skip when relocation cost (callsite churn) exceeds 5× LOC saved.
+4. **Only after (1)–(3): propose new abstraction.** Must satisfy §0.1#2.
+
+- **Canonical Facades First**: Prefer `flext-core` and `flext-cli` public facades, settings, models, typings, protocols, utilities, results, and exceptions over local re-declarations. Search §0.4 inventory before creating.
 - **Pydantic at the Boundary**: Validation, transport typing, and runtime data normalization MUST converge on canonical Pydantic v2 models through `m.*` and `u.*`, not ad-hoc dict conversion pipelines.
 - **Constants Drive Contracts**: Closed token sets, regexes, read-only maps, and immutable collections belong in `c.*`; `t.*` should reuse those canonical definitions instead of duplicating them.
 - **Same-Cycle Propagation**: Signature, contract, enum, model, or settings changes MUST be propagated to every impacted caller in the same cycle. No half-migrations.
-- **Measured Reduction**: Every refactor cycle must reduce real duplication, type complexity, conversion code, or enforcement debt. Cosmetic churn is a violation.
+- **Measured Reduction (BLOCKING)**: Refactor PR MUST close with `git diff HEAD --stat` showing insertions ≤ deletions. Cosmetic churn (renames, blank-line tweaks, file splits without LOC reduction) is a §3.5 violation. Reviewers MUST reject positive-delta refactor PRs.
 - **Impact First**: No refactor, rename, or contract change may start without an explicit blast-radius check proportionate to the change. If the change can cross file or project boundaries, you MUST inspect references before editing.
 - **Surgical Necessity**: Every change must be justified by real architectural, typing, validation, or enforcement need in the active context. Edits that are broad, speculative, or weakly justified are violations.
 - **Zero Debt at All Times**: `ruff`, `pyrefly`, enforcement checks, and `pytest` must remain zeroed across all affected projects at all times. Pre-existing failures in the active dependency chain or requested scope are not an excuse to stop; fix them in the same execution cycle unless the user explicitly narrows scope or blocks the work.

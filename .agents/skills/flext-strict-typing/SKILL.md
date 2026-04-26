@@ -8,6 +8,15 @@ description: Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 6
 
 **Reviewed**: 2026-04-20 | **Scope**: Type hierarchy, PEP 695 aliases/generics, r[T] containers, TypeIs/TypeGuard narrowing, match/case dispatch, @override/@final/Self
 
+## Hard Start Card (mandatory)
+
+1. No `Any`, no loose unions rebuilt at call sites.
+2. Reuse canonical `c.*`, `t.*`, `p.*`, `m.*`, `u.*`, `h.*`, `r[T]` first.
+3. Prefer `TypeIs`, `Self`, `@override`, `match/case`, PEP 695 aliases/generics.
+4. Replace nullable fallibility with `r[T]`.
+5. Delete unnecessary polymorphic helper code when typing primitives or Pydantic contracts already express the contract.
+6. Finish only with all typing gates green.
+
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
 > and cross-referenced with `models.py`, `protocols.py`, and `ruff-shared.toml`.
 >
@@ -28,12 +37,14 @@ description: Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 6
 ## Rules
 
 - Use `t.*` contracts from `typings.py` instead of ad-hoc inline unions.
+- Before creating a new alias/helper, check whether the concern already belongs to `c.*`, `t.*`, `p.*`, `m.*`, `u.*`, or `h.*`. Reuse the owner first.
 - Keep ownership explicit: structural protocols in `p.*`, composed aliases in `t.*`, domain models in `m.*`.
 - Never annotate with a concrete class when an inherited `p.*` protocol or `t.*` alias already expresses the contract.
 - Use `r[T]` for fallible returns and avoid nullable fallibility patterns.
 - Use `isinstance`/TypeGuard for narrowing; avoid `type(...) is ...` narrowing.
 - Keep typing changes integral: verify ruff, mypy, pyright, and pyrefly.
 - Prefer central `t.*` aliases at the lowest stable layer when the same type composition appears more than once; do not keep rebuilding equivalent unions at call sites.
+- Ad-hoc polymorphic helpers that only re-express an existing protocol, typed union, discriminated union, or result contract are deletion targets.
 - Prefer existing `t.JsonValue` and CLI/Core JSON-capable contracts over new recursive or transport-shape aliases.
 - **PEP 695 only** for new/touched code: `type X = ...` aliases (no `typing.TypeAlias`), `class Foo[T]` generics, `def f[T](x: T) -> T` (no `typing.TypeVar`/`Generic`).
 - **Narrowing**: prefer `TypeIs[T]` (bidirectional narrowing) over `TypeGuard[T]` (one-way) for every `is_*` helper. Bare `bool` returns from is-helpers at public boundaries are forbidden.

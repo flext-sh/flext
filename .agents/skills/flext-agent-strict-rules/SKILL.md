@@ -10,6 +10,25 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 **Scope**: Runtime guardrails for coding agents across all 33 FLEXT projects.
 **Authority**: `AGENTS.md` §3 Code Law, §4 Import Law, §9 Agent Execution Pre-requisites. This skill is the operational expansion of those sections — not a replacement.
 
+## Hard Start Card (mandatory)
+
+1. Use canonical aliases only (`c m p t u r d e h s x`).
+2. Delete wrappers/proxies/compat aliases before adding code.
+3. Collapse duplication into existing MRO chain, never parallel standalone classes.
+4. Replace custom polymorphism with Pydantic2 discriminated models.
+5. Enforce strict narrowing (`TypeIs`/`isinstance`), never `type()` narrowing.
+6. Keep contracts in `t.*`, protocols in `p.*`, models in `m.*`.
+7. Validate quickly (`ruff`, `pyrefly`, scoped `pytest`) before moving files.
+8. Before writing helper code, prove no Pydantic2/Python3.13 primitive deletes it.
+
+**One-line execution flow:**
+`ALIAS DISCIPLINE -> DELETE CEREMONY -> MRO COMPOSITION -> Pydantic2/Python3.13 REPLACEMENT -> VALIDATE`
+
+**Immediate failure conditions:**
+- new helper/class added without SSOT search proof
+- any pass-through method retained after touch
+- ad-hoc polymorphic dispatch kept when discriminated model is possible
+
 ## References
 
 - `AGENTS.md` — canonical governance source (always read first)
@@ -28,7 +47,9 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 - Use simple runtime aliases only; remove any `u.Aliases.*` indirection.
 - Protocol contracts belong in `p.*`; composed aliases in `t.*`; domain carriers in `m.*`. Never annotate with a concrete class when a canonical `p.*`/`t.*` contract exists.
 - Dismantle polymorphic branching into centralized Pydantic v2 models (`Literal` discriminators, `u.Field`, `u.model_validator`).
+- Before writing helper/wrapper code, try this deletion ladder first: `Annotated[..., Field(...)]` -> `BeforeValidator`/`AfterValidator` -> `field_validator` -> `model_validator` -> `computed_field` -> `PrivateAttr` -> `RootModel` -> `Discriminator` -> cached `TypeAdapter` -> `Self`/`TypeIs`/`match/case`. If one fits, the helper is forbidden.
 - Prefer deleting redundant conversion helpers, fallback paths, compatibility aliases, and proxy methods over preserving them behind new wrappers.
+- Delete dead code in `src/`, `tests/`, and `examples/` equally. `--include-tests` smells are first-class cleanup targets, not lower priority.
 - Prefer canonical `flext-core` and `flext-cli` JSON-capable types, settings, results, exceptions, and validators over local transport-shape aliases and recursive type inventions.
 - Constants, regexes, token sets, and immutable maps belong in `c.*`; when a `Literal` only mirrors a `StrEnum`, remove the `Literal` and use the enum as the source of truth.
 - Enforce abstraction boundaries in `examples/` and `scripts/` exactly as in `src/` (`AGENTS.md` §2.7).

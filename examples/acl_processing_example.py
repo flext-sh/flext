@@ -265,11 +265,7 @@ class AclProcessingExample:
                 **detect_result.value,
                 "start_time": start_time,
             }
-            extract_result = (
-                self._extract_acls(initial_data)
-                if self.parallel
-                else self._extract_sequential(initial_data)
-            )
+            extract_result = self._extract_acls(initial_data)
             if extract_result.failure:
                 return r[t.JsonMapping].fail(extract_result.error)
             extracted_data = extract_result.value
@@ -338,7 +334,7 @@ class AclProcessingExample:
             )
 
         def _extract_acls(self, data: t.JsonMapping) -> p.Result[t.JsonMapping]:
-            """Extract ACLs in parallel."""
+            """Extract ACLs (parallel if ``self.parallel`` else sequential)."""
             entries_data_raw = data.get("entries")
             if not u.list_value(entries_data_raw):
                 return r[t.JsonMapping].fail("Invalid entries format")
@@ -354,86 +350,36 @@ class AclProcessingExample:
                 ):
                     continue
                 entries_with_servers.append((entry_raw, server_type_raw))
-            with ThreadPoolExecutor(max_workers=4) as executor:
-                futures = [
-                    executor.submit(
-                        AclProcessingExample.extract_acls_from_entry,
-                        entry_with_server[0],
-                        entry_with_server[1],
-                    )
-                    for entry_with_server in entries_with_servers
-                ]
-                all_acls: MutableSequence[AclProcessingExample.AclEntry] = []
-                for future in as_completed(futures):
-                    result = future.result()
-                    if result.success:
+            extract = AclProcessingExample.extract_acls_from_entry
+            all_acls: MutableSequence[AclProcessingExample.AclEntry] = []
+            if self.parallel:
+                with ThreadPoolExecutor(max_workers=4) as executor:
+                    futures = [
+                        executor.submit(extract, entry, server)
+                        for entry, server in entries_with_servers
+                    ]
+                    for future in as_completed(futures):
+                        result = future.result()
+                        if result.failure:
+                            return r[t.JsonMapping].fail(
+                                f"ACL extraction failed: {result.error}",
+                            )
                         all_acls.extend(result.value)
-                    else:
+            else:
+                for entry, server in entries_with_servers:
+                    result = extract(entry, server)
+                    if result.failure:
                         return r[t.JsonMapping].fail(
                             f"ACL extraction failed: {result.error}",
                         )
-            result_data = {
-                **data,
-                "acls": [
-                    {
-                        "dn": acl.dn,
-                        "acl_attribute": acl.acl_attribute,
-                        "permissions": tuple(
-                            permission for permission in acl.permissions
-                        ),
-                        "context": {
-                            key: value
-                            for key, value in acl.context.items()
-                            if isinstance(value, (str, int, float, bool))
-                        },
-                        "server_type": acl.server_type,
-                    }
-                    for acl in all_acls
-                ],
-                "total_acls": len(all_acls),
-            }
-            return r[t.JsonMapping].ok(
-                t.json_mapping_adapter().validate_python(result_data)
-            )
-
-        def _extract_sequential(self, data: t.JsonMapping) -> p.Result[t.JsonMapping]:
-            """Extract ACLs sequentially."""
-            entries_data_raw = data.get("entries")
-            if not u.list_value(entries_data_raw):
-                return r[t.JsonMapping].fail("Invalid entries format")
-            entries_with_servers: MutableSequence[tuple[t.JsonMapping, str]] = []
-            for entry_with_server_raw in entries_data_raw:
-                if not u.mapping(entry_with_server_raw):
-                    continue
-                entry_raw = entry_with_server_raw.get("entry")
-                server_type_raw = entry_with_server_raw.get("server_type")
-                if not u.mapping(entry_raw) or not isinstance(
-                    server_type_raw,
-                    str,
-                ):
-                    continue
-                entries_with_servers.append((entry_raw, server_type_raw))
-            all_acls: MutableSequence[AclProcessingExample.AclEntry] = []
-            for entry_with_server in entries_with_servers:
-                result = AclProcessingExample.extract_acls_from_entry(
-                    entry_with_server[0],
-                    entry_with_server[1],
-                )
-                if result.success:
                     all_acls.extend(result.value)
-                else:
-                    return r[t.JsonMapping].fail(
-                        f"ACL extraction failed: {result.error}",
-                    )
             result_data = {
                 **data,
                 "acls": [
                     {
                         "dn": acl.dn,
                         "acl_attribute": acl.acl_attribute,
-                        "permissions": tuple(
-                            permission for permission in acl.permissions
-                        ),
+                        "permissions": tuple(acl.permissions),
                         "context": {
                             key: value
                             for key, value in acl.context.items()

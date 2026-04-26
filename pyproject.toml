@@ -144,7 +144,7 @@ omit = [ "*/dependency_injector/providers.pyx" ]
 
 # [MANAGED] deptry
 [tool.deptry]
-known_first_party = [ "flext" ]
+known_first_party = [ "flext", "flext_core", "flext_infra", "flext_tests" ]
 pep621_dev_dependency_groups = [ "dev" ]
 
 [tool.flext.docs]
@@ -206,7 +206,7 @@ extra_checks = true
 follow_imports = "normal"
 ignore_missing_imports = true
 local_partial_types = true
-mypy_path = [ ".", "src" ]
+mypy_path = [ ".", "src", "typings" ]
 namespace_packages = true
 no_implicit_reexport = true
 overrides = [  ]
@@ -383,8 +383,8 @@ exclude = [
   ".sisyphus",
   ".venv",
 ]
-extraPaths = [ ".", "src" ]
-ignore = [ "**/*.pyi" ]
+extraPaths = [ ".", "src", "typings" ]
+ignore = [ "**/*.pyi", "typings" ]
 include = [
   "docker",
   "examples",
@@ -502,6 +502,7 @@ reportUnusedClass = "error"
 reportUnusedFunction = "error"
 reportUnusedImport = "error"
 reportUnusedVariable = "error"
+stubPath = "typings"
 typeCheckingMode = "strict"
 venv = ".venv"
 venvPath = "."

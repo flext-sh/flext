@@ -6,7 +6,19 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 
 # Flext MRO Namespace Rules
 
-**Reviewed**: 2026-04-20 | **Scope**: Canonical naming, organic namespace access, cross-facade import boundaries, cross-project c/p/t/m/u slot registry
+**Reviewed**: 2026-04-26 | **Scope**: Canonical naming, organic namespace access, cross-facade import boundaries, cross-project c/p/t/m/u slot registry
+
+## Fast Card (strict, short, mandatory)
+
+1. Search first. If equivalent symbol exists, reuse it.
+2. Duplication in 2+ siblings: extract MRO base now.
+3. Keep one facade root namespace; do not flatten nested symbols.
+4. No facade-to-facade same-project imports at runtime (except documented rule exceptions).
+5. No compatibility aliases or pass-through wrappers.
+6. Prefer MRO composition over local polymorphic helper dispatch.
+7. Replace custom glue with `c/p/t/m/u` reuse before writing new code.
+8. Keep generated exports generated: change source, then run `make gen`.
+9. Finish only with `ruff + pyrefly + pytest` evidence on touched scope.
 
 ## Scope
 
