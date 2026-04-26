@@ -23,6 +23,9 @@ description: Advanced Pydantic v2 implementation patterns for FLEXT — TypeAdap
 3. If you wrote getter/setter/property boilerplate, stop and use field + `computed_field`.
 4. If you wrote conversion wrappers (`to_*`, `from_*`), stop and use `model_dump*` / `model_validate*`.
 5. If you instantiated `TypeAdapter` at call sites, stop and move it to cached registry.
+6. If you are assembling model payloads manually, stop and prefer `Model(**kwargs)`, `model_validate(...)`, or `model_copy(update=...)`.
+7. If you are about to add a one-off request/helper model just to quiet a smell, stop and search for an existing canonical origin first; local envelope duplication is invalid when an existing `u.*`, `m.*`, `t.*`, or parent-class method already covers the concern.
+8. If `**kwargs` enters a method and a canonical model exists, manual key/type checks are invalid; validate once with `ExistingModel.model_validate(kwargs)`.
 
 If any line above applies, custom implementation is invalid and must be deleted in the same cycle.
 
@@ -62,6 +65,7 @@ If any line above applies, custom implementation is invalid and must be deleted 
 - **Strict mode for boundaries**: `model_config = m.ConfigDict(strict=True, frozen=True)` for public contracts and settings.
 - **Discriminated unions** via `Annotated[A | B | C, m.Discriminator("kind")]` with `Literal[...]` tags — no isinstance ladders.
 - **No helpers on models**: only fields + `Annotated` validators + `@computed_field` + `@model_validator`. Domain operations live in `u.*`. If the urge is to add `to_*`, `from_*`, `get_*`, `set_*`, `is_*`, `build_*`, or `normalize_*` methods on a model, stop and replace the need with a native Pydantic construct or a canonical `u.*` utility.
+- **No local helper-envelope escape hatch**: do not add a new request/spec/helper model inside a consumer module when the only goal is to hide parameter count or manual payload assembly. First consume the centralized origin directly (`Model(**kwargs)`, `model_validate`, parent method, existing `u.*` helper, existing `t.*` adapter).
 - **Error messages stable** — tests and operators depend on them.
 - **Legacy code is DELETED on contact**. No compatibility wrappers, no fallbacks, no v1 aliases.
 

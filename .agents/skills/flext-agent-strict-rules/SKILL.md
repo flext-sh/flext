@@ -28,6 +28,8 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 - new helper/class added without SSOT search proof
 - any pass-through method retained after touch
 - ad-hoc polymorphic dispatch kept when discriminated model is possible
+- manual kwargs normalization kept when `model_validate(...)` or `TypeAdapter` can own the payload
+- repeated inline literal kept in a touched runtime block when one `c.*` origin can be introduced or reused
 
 ## References
 
@@ -48,7 +50,9 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 - Protocol contracts belong in `p.*`; composed aliases in `t.*`; domain carriers in `m.*`. Never annotate with a concrete class when a canonical `p.*`/`t.*` contract exists.
 - Dismantle polymorphic branching into centralized Pydantic v2 models (`Literal` discriminators, `u.Field`, `u.model_validator`).
 - Before writing helper/wrapper code, try this deletion ladder first: `Annotated[..., Field(...)]` -> `BeforeValidator`/`AfterValidator` -> `field_validator` -> `model_validator` -> `computed_field` -> `PrivateAttr` -> `RootModel` -> `Discriminator` -> cached `TypeAdapter` -> `Self`/`TypeIs`/`match/case`. If one fits, the helper is forbidden.
+- A helper is allowed only after proving both negatives: no existing origin method/class already owns the concern, and no item in the deletion ladder removes the need for the helper.
 - Prefer deleting redundant conversion helpers, fallback paths, compatibility aliases, and proxy methods over preserving them behind new wrappers.
+- For dynamic payloads, validate once at the owner boundary with `InputModel.model_validate(kwargs)` or cached `TypeAdapter`. Manual `kwargs.pop/get/setdefault` normalization chains are regression, not cleanup.
 - Delete dead code in `src/`, `tests/`, and `examples/` equally. `--include-tests` smells are first-class cleanup targets, not lower priority.
 - Prefer canonical `flext-core` and `flext-cli` JSON-capable types, settings, results, exceptions, and validators over local transport-shape aliases and recursive type inventions.
 - Constants, regexes, token sets, and immutable maps belong in `c.*`; when a `Literal` only mirrors a `StrEnum`, remove the `Literal` and use the enum as the source of truth.

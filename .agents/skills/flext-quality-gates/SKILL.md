@@ -18,6 +18,7 @@ description: Use when running or interpreting quality gates (lint, typecheck, te
 6. Zero errors, zero warnings, zero suppressions.
 7. Any red gate keeps task OPEN.
 8. If target file is in a sub-project, run and report gates from that sub-project.
+9. In iterative cleanup loops, do not claim iteration complete before updating `ralph-progress.md`.
 
 ## Brutal Self-Critique Gate (mandatory)
 
@@ -35,7 +36,7 @@ If you cannot state this, stop and re-plan.
 2. Syntax error after patch: restore compile-first state immediately.
 3. Selective gate execution to hide red output: invalid; rerun full touched chain.
 4. Running gates only from workspace root for a sub-project target: invalid evidence.
-4. Pytest run with zero selected tests (exit 5) is invalid behavior evidence; rerun with a concrete test file.
+5. Pytest run with zero selected tests (exit 5) is invalid behavior evidence; rerun with a concrete test file.
 
 **One-line execution flow:**
 `ruff -> pyrefly -> pyright -> mypy -> pytest -> (if shared change) multi-project check`
