@@ -17,6 +17,13 @@ description: Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 6
 5. Delete unnecessary polymorphic helper code when typing primitives or Pydantic contracts already express the contract.
 6. Finish only with all typing gates green.
 
+## Typing Kill-Switches (mandatory)
+
+1. If you write `Any`, stop and replace with `t.*` contract.
+2. If you write `T | None` for fallibility, stop and replace with `r[T]`.
+3. If you write a custom polymorphic helper, stop and try `TypeIs` / discriminated union / `match`.
+4. If you cannot name the exact shared alias/protocol being reused, stop and search first.
+
 > **Source of truth**: Extracted from `flext-core/src/flext_core/typings.py` (534 lines)
 > and cross-referenced with `models.py`, `protocols.py`, and `ruff-shared.toml`.
 >

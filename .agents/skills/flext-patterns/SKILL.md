@@ -18,6 +18,17 @@ description: Repository-native implementation patterns for result flow, DI, logg
 6. No hacks: no `model_rebuild`, inline import, eval/exec, `cast`, pass-through `__init__`.
 7. Validate touched scope immediately (`ruff`, `pyrefly`, `pytest`).
 
+## Brutal Preflight (mandatory)
+
+Before first patch, write one short paragraph with:
+
+1. The failure you are most likely to repeat now.
+2. The exact stop-rule that blocks it in this cycle.
+3. The exact Pydantic2/Python3.13 primitive replacing custom code.
+4. The propagation command and first gate command.
+
+Missing one item = no patch.
+
 **One-line execution flow:**
 `SEARCH SSOT -> DELETE dead/wrapper code -> MRO compose -> Pydantic2/Python3.13 replace -> VALIDATE`
 

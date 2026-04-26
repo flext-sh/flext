@@ -41,18 +41,52 @@ alwaysApply: true
 
 ## §0 QUICKSTART (15s)
 
-Skip any item below and the task is invalid.
+Skip one item and the task is invalid.
 
-1. Run smells first: `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json`.
-2. Pick one offender only; close its full usage chain before touching another.
-3. Search SSOT first (`flext-core` -> `flext-cli` -> `flext-infra` -> `flext-tests`).
-4. Delete before create: wrappers, aliases, dead code, duplicate validators/config/helpers die first.
-5. Exhaust Pydantic 2 + Python 3.13 before custom code. If native exists, custom dies now.
-6. Collapse duplication into existing MRO facades. No parallel trees. No compatibility layers.
-7. Validate immediately: `ruff` -> `pyrefly` -> focused `pytest` -> affected `make check`.
-8. No raw green output, no completion. No negative LOC delta, no refactor acceptance.
+### §0.00A EXECUTION HEADER (copy/paste before first edit)
 
-If you cannot name which Pydantic/Python primitive replaces the custom code, do not edit yet.
+`OFFENDER=<file:line>; PRIMITIVE=<Annotated|validator|TypeAdapter|Discriminator|RootModel|TypeIs|match>; PROPAGATE=<scope/sg cmd>; GATE1=ruff <file>; GATE2=pyrefly <file>; TEST=<pytest target>`
+
+Missing one field above = no patch.
+
+### §0.00 ULTRA START CARD (10s, EXECUTE OR STOP)
+
+1. `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json`
+2. Pick one offender (`src/` first) and map full caller chain (`scope`/`sg`/`rg`).
+3. Reuse SSOT primitive or delete duplicate; no new helper/wrapper/alias.
+4. Replace custom code with native ladder first: `Annotated` -> validators -> `computed_field` -> cached `TypeAdapter` -> `Discriminator` -> `RootModel` -> `TypeIs` -> `match/case`.
+5. First edit must be followed by `ruff` then `pyrefly` on touched file.
+6. Shared contract changed => propagate now with `sg` and re-check callers.
+7. Refactor with non-negative LOC delta is invalid.
+8. No raw gate output + exit code => no done claim.
+9. Repeat same failure twice => stop patching and rewrite minimal clean block.
+
+### §0.0 NO-EXCUSES START CARD (READ FIRST, 20s)
+
+1. Run `qlty smells` first. No smell run, no edit.
+2. Pick exactly one offender in `src/` and close full caller chain.
+3. Reuse SSOT first; if duplicate exists, delete local custom code.
+4. Exhaust Pydantic2/Python3.13 deletion ladder before writing anything custom.
+5. First edit must be followed immediately by `ruff` then `pyrefly`.
+6. Shared contract changed -> propagate now with `sg` + caller audit.
+7. Net LOC for refactor must be negative.
+8. No raw gate output, no done claim.
+9. If you repeat the same failure twice, stop patching and rewrite minimal clean block.
+10. If you cannot name the replacing primitive (`Annotated`, validator, `TypeAdapter`, `RootModel`, `Discriminator`, `TypeIs`, `match/case`), do not start.
+11. If `/tmp/qlty_smells-tests.json` is empty/corrupted, rerun smells immediately; stale SARIF is invalid evidence.
+12. One cycle only counts when it has: one offender, caller audit, one gate run, and command output evidence.
+13. When file lives in a sub-project, run status/gates in that sub-project (`git -C <project> status`, then project-local checks). Root-only green is invalid.
+
+### §0.Z BRUTAL SELF-CRITIQUE (MANDATORY BEFORE FIRST PATCH)
+
+State this in one paragraph before editing:
+
+1. Which prior mistake you are about to repeat (scope creep, no propagation, selective gates, helper creation, custom code before native).
+2. Which exact stop-rule will kill that mistake in this cycle.
+3. Which Pydantic v2/Python 3.13 primitive will delete custom code now.
+4. Which command proves caller propagation and which command proves gates are green.
+
+If you cannot answer all 4 items, you are not ready to patch.
 
 ### §0.A AUTOPSY CARD (MUST RUN BEFORE FIRST EDIT)
 
@@ -64,6 +98,8 @@ Failures that keep repeating and the mandatory counter-rule:
 4. Selective validation hiding red gates: result INVALID.
 5. Refactor without negative LOC: result INVALID.
 6. SSOT primitive exists but local duplicate was written: DELETE duplicate now.
+7. Same failure repeated twice in one lane: STOP patching and rewrite the smallest clean version.
+8. Pytest command ran with zero selected tests: result INVALID (no behavior evidence).
 
 Hard floor: no loose declarations outside `c/p/t/m/u`; Pydantic 2 + Python 3.13 are deletion primitives first.
 
@@ -75,8 +111,20 @@ Load in this exact order before coding:
 2. One-line blast radius (`scope`/`sg`/`rg`) for edited symbols.
 3. First failing smell offender + full caller chain.
 4. First gate command to run after edit.
+5. One-line statement of last recurring failure and its stop-rule.
 
-If you cannot state these 4 items in one short paragraph, you are not ready to edit.
+If you cannot state these 5 items in one short paragraph, you are not ready to edit.
+
+### §0.C FIRST PARAGRAPH CONTRACT (MANDATORY)
+
+Before first edit, write exactly one short execution paragraph containing:
+
+1. Offender file:line and why it is selected now.
+2. Which SSOT primitive will replace duplicate/custom code.
+3. First post-edit gate command.
+4. Caller-propagation command.
+
+Missing any item above = INVALID start.
 
 ## §0 STOP CARD (read in 60s before ANY edit)
 
@@ -134,6 +182,7 @@ Custom equivalent = AUTOMATIC DELETION (§3.1.PYDANTIC-V2-NATIVE table).
 - Offender fixed locally without caller propagation → INCOMPLETE
 - First substantive edit not followed by the cheapest focused executable validation → INVALID
 - Smell loop skipped while debt remains → INVALID
+- Claims of "done" without naming the exact replaced Pydantic/Python primitive → INVALID
 
 ### §0.5 OPTIMIZATION LOOP (continuous improvement)
 
@@ -144,6 +193,15 @@ qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json
 # validate immediately
 # repeat
 ```
+
+Hard stop: do NOT claim completion while unresolved `src/` smell offenders remain in the active lane.
+
+Stop condition is strict:
+
+1. The active lane/scope has zero unresolved selected smells.
+2. Every selected smell has caller-chain proof + green gates evidence.
+3. "Good enough for now" is forbidden while selected smells remain.
+4. If the user explicitly requests full-smell cleanup, completion claim is valid only when SARIF total smells is zero (`jq '[.runs[].results[]] | length' /tmp/qlty_smells-tests.json`).
 
 ### §0.6 STRUCTURAL RENAME
 
