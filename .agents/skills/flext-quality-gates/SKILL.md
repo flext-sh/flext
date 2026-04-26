@@ -8,6 +8,23 @@ description: Use when running or interpreting quality gates (lint, typecheck, te
 
 **Reviewed**: 2026-02-19 | **Scope**: Coverage source-of-truth migration to pyproject.toml
 
+## Hard Start Card (mandatory)
+
+1. No raw output, no completion claim.
+2. First edit: `ruff` on touched file.
+3. Second gate: `pyrefly` on touched file.
+4. Third gate: behavior (`pytest` or `make check PROJECT=<affected>`).
+5. Shared contract/type/import change: widen immediately.
+6. Zero errors, zero warnings, zero suppressions.
+7. Any red gate keeps task OPEN.
+
+**One-line execution flow:**
+`ruff -> pyrefly -> pyright -> mypy -> pytest -> (if shared change) multi-project check`
+
+**Evidence contract (mandatory):** UTC timestamp + command + exit code + relevant output. No evidence = no completion claim.
+
+**Immediate failure conditions:** touched project left red; suppression without explicit technical + business justification; shared contract changed without propagation proof.
+
 > **Source of truth**: Verified from `base.mk` (`check`, `test`, and `val` targets), `ruff-shared.toml`,
 > and individual `pyproject.toml` files on 2026-02-19.
 
@@ -36,11 +53,12 @@ description: Use when running or interpreting quality gates (lint, typecheck, te
 
 ## Workflow
 
-1. Run `make check` for immediate lint/type/security feedback.
-2. Run `make test` for behavior and coverage.
-3. Run `make val` for extended non-lint checks.
-4. Re-run scoped gates for every touched project when shared contracts change.
-5. Do not exit the task while any affected project still has non-zero `ruff`, `pyrefly`, enforcement, or `pytest` failures.
+1. First edit -> `ruff check <file>`.
+2. Same slice -> `pyrefly check <file>`.
+3. Same slice -> narrow behavior gate (`pytest` or `make check PROJECT=<affected>`).
+4. Shared change -> widen to affected projects.
+5. Final claim -> raw output proving green gates.
+6. No green claim while any affected gate is red.
 
 ## Examples
 
@@ -66,7 +84,6 @@ make PROJECTS="flext-core flext-api" val
 Project `base.mk` and workspace `Makefile` expose these standardized command verbs:
 
 ```bash
-make audit
 make boot
 make check
 make scan
@@ -77,7 +94,7 @@ make val
 make clean
 ```
 
-`make audit` runs the SSOT enforcement audit (`ENFORCE-039/041/043/044/054/055`) via `FlextInfraEnforcementAuditor`. `make audit GATES=docs` delegates to `FlextInfraDocAuditor` for mkdocs python-codeblock parity (AGENTS.md §3.8). Rollback for the rope auto-fix path uses `FlextInfraRefactorSafetyManager`'s `.bak` flow — never `git checkout`.
+Per AGENTS.md §3.8: ENFORCE-039/041/043/044 detection runs at runtime via `FlextUtilitiesEnforcement` invoked by `make val` and the test suite — no separate audit verb is required (per YAGNI). Auto-fix for ENFORCE-039 (cast removal) flows through the existing rule `remove-validated-redundant-casts` in `flext-infra/src/flext_infra/rules/pattern-corrections.yml` via `make refactor`. Docs codeblock parity uses `flext_infra docs audit` directly (separate concern). Rollback for any rope-backed refactor uses `FlextInfraRefactorSafetyManager`'s `.bak` flow — never `git checkout`.
 
 Execution semantics:
 

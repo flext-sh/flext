@@ -6,7 +6,30 @@ description: Repository-native implementation patterns for result flow, DI, logg
 
 # Flext Patterns
 
-**Reviewed**: 2026-04-06 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-04-26 | **Scope**: Evidence-backed skill refresh and rule alignment
+
+## Hard Start Card (mandatory)
+
+1. Search existing pattern before writing anything.
+2. Delete compatibility/fallback/wrapper code first.
+3. Replace custom code with Pydantic 2 / Python 3.13 feature before considering a helper.
+4. Use MRO composition, not standalone orchestrator classes.
+5. Use facade aliases only (`c`, `t`, `p`, `m`, `u`, `h`, `r`, `e`).
+6. No hacks: no `model_rebuild`, inline import, eval/exec, `cast`, pass-through `__init__`.
+7. Validate touched scope immediately (`ruff`, `pyrefly`, `pytest`).
+
+**One-line execution flow:**
+`SEARCH SSOT -> DELETE dead/wrapper code -> MRO compose -> Pydantic2/Python3.13 replace -> VALIDATE`
+
+**Pydantic2/Python3.13 floor before custom code:**
+- `Annotated` + `Field` / `computed_field` / `PrivateAttr`
+- `model_validator` / discriminated unions / `RootModel`
+- cached `TypeAdapter`
+- `Self`, `@override`, `TypeIs`, `match/case`
+
+## Pre-Action Gate
+
+Before any new symbol: AGENTS.md §0.A pre-flight + §0.D SSOT search keys. Domain-specific rules: §3.1, §3.5, §8.1.
 
 ## Scope
 
@@ -42,7 +65,8 @@ All forms of dynamic evaluation, runtime patching, and hidden imports are strict
 - **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
 - **Rule**: Compatibility wrappers (`def old(): return new()`), non-business validation fallbacks, legacy code maintenance of ANY kind, and `OldName = NewName` compatibility aliases are FORBIDDEN and forbidden. Legacy code is DELETED on contact and replaced with the canonical pattern. No grace period, no deprecation path, no "we'll remove it later".
 - **Rule**: Every module MUST organize domain logic into a single nested class hierarchy using MRO inheritance. The most base class MUST inherit from Pydantic v2 `BaseModel` (or FLEXT base models). Loose functions, standalone classes without MRO lineage, and modules without nested class facades are FORBIDDEN.
-- **Rule**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY — USE, USE, USE Pydantic v2 features. `u.Field()` with `description`/`title`/`examples` for ALL declarations. Minimize custom validators — prefer built-in constraints (`u.Field(ge=0)`, `StringConstraints()`, `Literal`). `*Config` classes FORBIDDEN (use `BaseSettings`/`ConfigDict`). FORBIDDEN in models: init helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, wrappers. USE: `@u.computed_field`, `model_post_init`, `u.PrivateAttr`. Enums/Literals from `c.*`, settings from `s.*`. Internal state via `u.PrivateAttr`. Nested classes MAY have business methods but ALL properties use `u.Field()`/`u.PrivateAttr`. `models.py`/`models/` for models ONLY. Result/status booleans use canonical names like `success` and `failure`. If not using a feature — REVIEW and USE it.
+- **Rule**: Prefer declarative Pydantic v2 + Python 3.13 features over custom helpers. Mandatory defaults: `u.Field`, validators via `Annotated`/`model_validator`, derived values via `computed_field`, state via `PrivateAttr`, discriminated unions for polymorphism, typed narrowing via `TypeIs`/`isinstance`, `Self`, `@override`, `type X = ...`, `match/case`, cached `TypeAdapter`, `RootModel`. Getter/setter wrappers, pass-through `__init__`, ad-hoc polymorphic dispatch, and helper-only conversion layers are deletion targets.
+- **Rule**: Before creating a helper, check whether the concern belongs in `c.*`, `t.*`, `p.*`, `m.*`, `u.*`, or `h.*`. Reuse or extend the owning facade first. New free-floating helpers are a last resort and usually a design failure.
 - **Rule**: Failure paths are DSL-first. Prefer `e.fail_*`, `r.fail_op`, `r.fail_exc`, and service-level DSL wrappers over ad-hoc `r.fail("...")` strings in runtime/application code. Use direct `r.fail(...)` only when implementing result primitives or when explicit passthrough payload semantics are required.
 - **Rule**: Delete conversion layers, fallback branches, compatibility shims, and pass-through proxies before introducing any new abstraction. Prefer canonical `flext-core` and `flext-cli` contracts, JSON-capable types, settings, and DSL surfaces over local reinvention.
 

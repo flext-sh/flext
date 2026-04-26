@@ -7,6 +7,15 @@ description: Advanced Pydantic v2 implementation patterns for FLEXT — TypeAdap
 
 **Reviewed**: 2026-04-20 | **Scope**: Implementation depth that complements `pydantic-v2-governance` and `lib-pydantic-v2` — TypeAdapter caching, RootModel vs BaseModel, Annotated validators, discriminated unions, facade-only imports
 
+## Hard Start Card (mandatory)
+
+1. No custom code until Pydantic v2 is exhausted.
+2. First choices: `Annotated`, `Field`, `BeforeValidator`, `AfterValidator`, `computed_field`, `RootModel`, discriminated union, cached `TypeAdapter`, `PrivateAttr`.
+3. Manual dispatch, coercion helpers, `to_*`, `from_*`, getters, setters, and wrapper validators are deletion targets.
+4. Keep all access facade-only through `m.*` and `u.*`.
+5. If one native feature replaces the code, the old code dies now.
+6. Finish with `ruff`, `pyrefly`, focused tests.
+
 ## Scope
 
 - Advanced Pydantic v2 usage across FLEXT 34-project workspace (`src/`, `tests/`, `examples/`).
@@ -30,6 +39,7 @@ description: Advanced Pydantic v2 implementation patterns for FLEXT — TypeAdap
 
 ## Rules
 
+- **Deletion ladder first**: before writing custom code, try these in order: `Annotated[..., Field(...)]` constraints -> reusable `BeforeValidator`/`AfterValidator` -> `field_validator` -> `model_validator` -> `computed_field` -> `PrivateAttr` -> `RootModel` -> discriminated union with `Discriminator` -> cached `TypeAdapter`. If one works, custom code is forbidden.
 - **Alias-first consumption (consumers)**: every Pydantic construct is accessed through `m.*` / `u.*` from `flext_core` (or the project's MRO-extended package). Never mix direct `pydantic` imports in consumers. The `up` / `mp` aliases are reserved for INTERNAL flext-core modules that would otherwise cycle on `c/t/p/m/u` during bootstrap — do not use them outside `flext-core/src/flext_core/_*`.
 - **Every model extends a FLEXT base via MRO** (`m.BaseModel`, `m.Value`, `m.ArbitraryTypesModel`, `m.FrozenModel`). Loose classes without MRO lineage are forbidden.
 - **Validator phases are explicit**:
@@ -41,7 +51,7 @@ description: Advanced Pydantic v2 implementation patterns for FLEXT — TypeAdap
 - **Serializers explicit and scope-limited** — no hidden state.
 - **Strict mode for boundaries**: `model_config = m.ConfigDict(strict=True, frozen=True)` for public contracts and settings.
 - **Discriminated unions** via `Annotated[A | B | C, m.Discriminator("kind")]` with `Literal[...]` tags — no isinstance ladders.
-- **No helpers on models**: only fields + `Annotated` validators + `@computed_field` + `@model_validator`. Domain operations live in `u.*`.
+- **No helpers on models**: only fields + `Annotated` validators + `@computed_field` + `@model_validator`. Domain operations live in `u.*`. If the urge is to add `to_*`, `from_*`, `get_*`, `set_*`, `is_*`, `build_*`, or `normalize_*` methods on a model, stop and replace the need with a native Pydantic construct or a canonical `u.*` utility.
 - **Error messages stable** — tests and operators depend on them.
 - **Legacy code is DELETED on contact**. No compatibility wrappers, no fallbacks, no v1 aliases.
 

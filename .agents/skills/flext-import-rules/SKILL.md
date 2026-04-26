@@ -6,11 +6,32 @@ description: Enforces import ordering, alias conventions, and abstraction bounda
 
 # FLEXT Import Rules
 
-**Reviewed**: 2026-04-06 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-04-26 | **Scope**: Evidence-backed skill refresh and rule alignment
 
-> **Verified from**: Static analysis of all `.py` files in `flext-core` and consuming
-> projects (`flext-auth`, `flext-cli`, `flext-ldap`) on 2026-02-17.
+## Hard Start Card (mandatory)
+
+1. Imports at top-level only.
+2. Respect order: future, stdlib, third-party, first-party, local.
+3. Use canonical aliases only (`c m p t u r d e h s x`).
+4. Do not import private modules from sibling projects.
+5. In wrappers (`tests/examples/scripts`), import aliases from local wrapper package only.
+6. Same-project cross-facade runtime imports are forbidden (except documented exceptions).
+7. Validate with `ruff` and `pyrefly` immediately after import changes.
+
+**One-line execution flow:**
+`CHECK LAYER -> IMPORT FROM CANONICAL FACADE -> KEEP ORDER -> RUN RUFF/PYREFLY`
+
+**Immediate failure conditions:**
+- import added without checking `AGENTS.md` §4 matrix
+- direct framework import in consumer project when abstraction exists
+- same-project cross-facade runtime import without explicit exception
+
+> **Verified from**: Static analysis of all `.py` files in `flext-core` and consuming projects on 2026-02-17.
 > **Rule**: See `AGENTS.md` §4 Import Law for canonical aliases, import order, and prohibited import forms.
+
+## Pre-Action Gate
+
+Before any new import: AGENTS.md §0.D SSOT search keys + §4 Import Law + §2.7 Library Abstraction Boundaries. Inline imports inside functions: §3.4.
 
 ## Scope
 

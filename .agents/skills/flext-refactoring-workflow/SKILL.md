@@ -6,17 +6,56 @@ description: Step-by-step refactoring workflow with quality gates, make targets,
 
 # FLEXT Refactoring Workflow
 
-**Reviewed**: 2026-04-20 | **Scope**: End-to-end refactoring with quality gates, tier-ordered sequencing, net-negative LOC delta gate, "more with less" north star
+**Reviewed**: 2026-04-26 | **Scope**: Refactor flow under AGENTS.md §0.0 ZERO TOLERANCE TABLE.
 
-> **Source of truth**: Verified from `base.mk` (shared Makefile), `ruff-shared.toml`,
-> and actual `pyproject.toml` configurations across the monorepo on 2026-02-19.
+## Hard Start Card (mandatory)
 
-- `AGENTS.md` — canonical governance source
+1. Smell first. `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json`
+2. One offender + full caller chain only. No parallel edits.
+3. Search before write. Reuse before create. Delete before extend.
+4. Structural propagation uses `sg`; manual grep rewrites are invalid.
+5. Pydantic2/Python3.13 first (`TypeAdapter`, `Annotated`, validators, `computed_field`, `TypeIs`, `Self`, `@override`, `match/case`).
+6. Net LOC must be negative.
+7. Validate now: `ruff` -> `pyrefly` -> focused `pytest` -> affected `make check`.
+8. Shared contract changed = propagate now, not later.
+
+## 20s Context Load (mandatory)
+
+State these before first patch:
+
+1. Selected offender and exact file:line pair.
+2. SSOT primitive being reused.
+3. First gate command after edit.
+4. Propagation command for callers.
+
+If any item is missing, do not edit.
+
+## Recurrence Kill-Switches (mandatory)
+
+- Syntax break after first patch: stop and restore a minimal clean file before continuing.
+- Any new helper/proxy/wrapper/compat alias: delete immediately in the same cycle.
+- Contract changed without caller propagation: task invalid.
+- Refactor with non-negative LOC delta: task invalid.
+- Smell run skipped before edit: task invalid.
+
+## Execution Plan Floor
+
+`SMELL -> SEARCH -> DELETE -> COLLAPSE -> REPLACE with Pydantic2/Py3.13 -> PROPAGATE -> VALIDATE`
+
+## Optimization Loop (mandatory when debt remains)
+
+1. `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json`
+2. Choose one `src/` offender (randomized if needed).
+3. Refactor offender + usage chain with MRO + Pydantic2/Python3.13 first.
+4. Validate touched scope (`ruff`, `pyrefly`, focused `pytest`).
+5. Repeat until the current lane has no high-value unresolved offenders.
+
+> **READ FIRST**: `AGENTS.md` §0.0 (the 18-rule ZERO TOLERANCE TABLE). Every rule below is a SPECIALIZATION of that table. Conflict between this skill and §0.0 → §0.0 wins.
 
 ## Scope
 
-- End-to-end refactoring execution flow for FLEXT projects.
-- Tier-ordered change sequencing, gate discipline, and cross-project impact handling.
+- End-to-end refactoring under §0.0 (SEARCH → REUSE → DELETE → COMPOSE-VIA-MRO → USE-PYDANTIC2/PY3.13 → only-then-EDIT).
+- Tier-ordered sequencing, gate discipline, cross-project propagation.
 
 ## References
 
@@ -27,20 +66,17 @@ description: Step-by-step refactoring workflow with quality gates, make targets,
 - `pyproject.toml`
 - `.agents/skills/flext-scope-bootstrap/SKILL.md`
 
-## Rules
+## Rules (specialization of §0.0)
 
+- §0.0#1 SEARCH FIRST: grep `flext-{core,cli,infra,tests}/src` BEFORE writing.
+- §0.0#2 NET-LOC < 0: every task `(deleted - added) > 0`. Report `LOC delta: -X (+Y, -Z)` + pyrefly delta + enforcement-warning delta. Delta ≥ 0 = TASK REJECTED.
+- §0.0#3 8× DUPLICATION GATE on any new mixin/helper. Cite the multiplier in the commit.
+- §0.0#4 MRO mixin into lowest existing facade. Standalone classes outside facade-composed tree FORBIDDEN.
+- §0.0#5 Pydantic 2 + Python 3.13 patterns BEFORE writing custom code (TypeAdapter, RootModel, computed_field, discriminated unions, Annotated[T, Field], model_validator, ConfigDict, type X = …, TypeIs, match/case, @override/@final/Self, generic params, `cached_property`). Any custom code that an existing P2/Py3.13 feature replaces = DELETE.
+- §0.0#6 forbidden constructs (pass-through wrappers, compat aliases, Any, cast(), os.environ in src/, model_rebuild(), unjustified noqa/type:ignore, hasattr(_priv), get_*/set_*/is_* accessors).
 - Refactor in dependency-tier order; never break architecture directionality.
-- Validate continuously with standardized make gates.
-- Use structural search/replace tooling for code-pattern migrations.
-- **Net-negative LOC delta gate**: every refactor task MUST produce a measurable reduction (LOC, number of aliases, `isinstance` checks, imports, utility wrappers, recursive unions). A task that adds code without removing more is a failed task; re-plan for reduction. Report per task:
-  - `LOC delta: -X (+Y new, -Z removed)`
-  - `Pyrefly delta: -A`
-  - `Enforcement warnings: -B`
-  - If the reported delta is ≥ 0, the task is rejected and re-planned for a net-negative outcome.
-- **"More with less" north star**: every edit is an opportunity to remove, unify, or replace with a canonical contract. Cosmetic changes without reduction are FORBIDDEN.
-- **Structural tooling is mandatory**: cross-file propagation requires `scope` for blast radius and `ast-grep` for structural rewrite. Serena should be used as well when project-aware symbol operations are available and correctly configured.
-- **Serena health is part of refactor readiness**: before Serena-backed symbol/refactor work, the local project config must pass `serena project health-check`, and any non-source support trees that break symbol extraction must be excluded in `.serena/project.yml` rather than ignored informally.
-- **Zero debt steady state**: `ruff`, `pyrefly`, enforcement checks, and `pytest` must be zero across all affected projects before a refactor task can be considered complete, even when failures predate the current batch.
+- Structural propagation: `ast-grep` (sg) for rewrites, `scope` for blast radius, Serena for symbol-aware ops (after `serena project health-check`).
+- Zero debt steady state: ruff/pyrefly/enforcement/pytest must be ZERO across affected projects before task is complete (pre-existing failures count).
 
 ## Instructions
 
@@ -51,11 +87,14 @@ description: Step-by-step refactoring workflow with quality gates, make targets,
 
 ## Workflow
 
-1. Baseline and dependency map.
-2. Refactor bottom-up by tier.
-3. Validate after each edited file.
-4. Run tests and extended validation.
-5. Execute cross-project verification for shared changes.
+1. Baseline: run the 3 pre-edit commands from `AGENTS.md` §0.0.
+2. Blast radius: use `scope`/`sg`/`grep` to map callers before first edit.
+3. Deletion pass: remove wrappers, compat aliases, dead code, duplicated fields/methods first.
+4. Reduction pass: replace remaining custom code with Pydantic 2 / Python 3.13 primitives.
+5. MRO pass: collapse surviving duplication into the lowest existing facade.
+6. Validate after each edited file.
+7. Run widened project gates for shared changes.
+8. Commit immediately after green gates.
 
 ## Examples
 
@@ -206,7 +245,6 @@ If a shared contract changed, widen validation until every affected project retu
 | Target          | What It Does                                               |
 | --------------- | ---------------------------------------------------------- |
 | `make help`     | Show available standardized commands                       |
-| `make audit`    | SSOT enforcement audit (`GATES=docs` for mkdocs parity)    |
 | `make boot`     | Install dependencies and hooks                             |
 | `make check`    | Fast quality gate for the configured check selectors       |
 | `make scan`     | Security scan gate                                         |

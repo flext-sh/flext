@@ -13,7 +13,6 @@ description: Rules for automation and maintenance scripts under `scripts/`. Use 
 - `scripts/testing/`
 - `scripts/*.py`
 - `scripts/*.sh`
-- `scripts/refactor_wrapper_root_namespace.py`
 
 ## References
 
