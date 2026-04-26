@@ -16,6 +16,13 @@ description: Advanced Pydantic v2 implementation patterns for FLEXT — TypeAdap
 5. If one native feature replaces the code, the old code dies now.
 6. Finish with `ruff`, `pyrefly`, focused tests.
 
+Brutal flash:
+- helper-first patch = invalid
+- manual kwargs key/type checks when model exists = invalid
+- duplicate local wrapper over canonical origin = invalid
+
+Autopsy trigger: if the patch starts with helper creation, kwargs key-check loops, or inline coercion branches, delete the draft and restart from an origin + native primitive.
+
 ## No-Excuse Native-First Rule
 
 1. If you wrote `if/elif` dispatch over `kind`, stop and use `Annotated[Union..., Discriminator("kind")]`.
@@ -24,6 +31,7 @@ description: Advanced Pydantic v2 implementation patterns for FLEXT — TypeAdap
 4. If you wrote conversion wrappers (`to_*`, `from_*`), stop and use `model_dump*` / `model_validate*`.
 5. If you instantiated `TypeAdapter` at call sites, stop and move it to cached registry.
 6. If you are assembling model payloads manually, stop and prefer `Model(**kwargs)`, `model_validate(...)`, or `model_copy(update=...)`.
+6.1 For constructors with option bags, prefer one typed options model + `model_validate(kwargs)`; manual key filtering and dict-building is forbidden when this path fits.
 7. If you are about to add a one-off request/helper model just to quiet a smell, stop and search for an existing canonical origin first; local envelope duplication is invalid when an existing `u.*`, `m.*`, `t.*`, or parent-class method already covers the concern.
 8. If `**kwargs` enters a method and a canonical model exists, manual key/type checks are invalid; validate once with `ExistingModel.model_validate(kwargs)`.
 
