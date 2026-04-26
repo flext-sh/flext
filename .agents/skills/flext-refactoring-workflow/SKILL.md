@@ -10,6 +10,10 @@ description: Step-by-step refactoring workflow with quality gates, make targets,
 
 ## Hard Start Card (mandatory)
 
+Hard line: one offender, one primitive, one proof chain; no helper/proxy/alias, no pass-through `__init__`, no zero-test pytest, no ambiguous output.
+
+Fast brief: search before write, origin before helper, model before manual kwargs, constants before inline literals, delete before add.
+
 Execution header (mandatory before first patch):
 
 `OFFENDER=<file:line>; PRIMITIVE=<Annotated|validator|TypeAdapter|Discriminator|RootModel|TypeIs|match>; PROPAGATE=<scope/sg cmd>; GATE1=ruff <file>; GATE2=pyrefly <file>; TEST=<pytest target>`
@@ -19,14 +23,24 @@ Missing one field = no patch.
 1. Smell first. `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json`
 2. One offender + full caller chain only. No parallel edits.
 3. Search before write. Reuse before create. Delete before extend.
-4. Structural propagation uses `sg`; manual grep rewrites are invalid.
-5. Pydantic2/Python3.13 first (`TypeAdapter`, `Annotated`, validators, `computed_field`, `TypeIs`, `Self`, `@override`, `match/case`).
-6. Net LOC must be negative.
-7. Validate now: `ruff` -> `pyrefly` -> focused `pytest` -> affected `make check`.
-8. Shared contract changed = propagate now, not later.
-9. Empty/corrupted SARIF is invalid; rerun `qlty smells` before selecting offender.
-10. A cycle is valid only with offender + caller audit + gate + raw output evidence.
-11. If target file is in a sub-project, run status and gates in that sub-project context.
+4. If a canonical origin method/class already exists, use it directly; local helper duplication is invalid.
+5. Structural propagation uses `sg`; manual grep rewrites are invalid.
+6. Pydantic2/Python3.13 first (`TypeAdapter`, `Annotated`, validators, `computed_field`, `TypeIs`, `Self`, `@override`, `match/case`).
+7. Prefer declarative model creation via `Model(**kwargs)`, `model_validate(...)`, and `model_copy(update=...)` over manual dict assembly or field-by-field mutation.
+7.1 Manual/inplace kwargs validation (`pop/get/if` chains) is forbidden when one canonical Pydantic validation path can own the payload.
+8. Do not create a local helper/envelope/spec class just to reduce a smell when an existing centralized origin or parent method already exists.
+9. Net LOC must be negative.
+10. Validate now: `ruff` -> `pyrefly` -> focused `pytest` -> affected `make check`.
+11. Shared contract changed = propagate now, not later.
+12. Empty/corrupted SARIF is invalid; rerun `qlty smells` before selecting offender.
+13. A cycle is valid only with offender + caller audit + gate + raw output evidence.
+14. If target file is in a sub-project, run status and gates in that sub-project context.
+15. Ralph-loop iterations must update `ralph-progress.md` before the next offender.
+16. Constants-first: no new inline magic string/number in runtime code when a `c.*` origin exists.
+17. `**kwargs` must be validated through canonical Pydantic paths (`model_validate`, typed input models, or `TypeAdapter`) instead of manual key/type checks or inplace coercion.
+18. Import origin is part of the refactor contract: if a facade import would re-enter lazy loading or duplicate an owner primitive, use the owner-origin import or existing parent method instead. Guessing the import source is invalid.
+19. If a patch begins by adding a helper, assume it is wrong until two proofs exist: zero reusable origin hits and zero applicable Pydantic/Python deletion primitives.
+20. Addition-heavy first passes are presumptively wrong. Re-search before continuing unless the added code eliminates at least 8x more duplicated code in the same cycle.
 
 ## Brutal Self-Critique Gate (mandatory)
 
@@ -38,6 +52,8 @@ Before first patch, write one short paragraph with:
 4. The propagation command and first gate command.
 
 Missing one item = no patch.
+
+Short memory: the common failure is helper-first refactoring. The correction is always the same: grep the owning origin, validate kwargs with one typed model, delete manual normalization, then patch.
 
 ## 20s Context Load (mandatory)
 
@@ -69,6 +85,7 @@ If any field is missing, the cycle is invalid.
 - Refactor with non-negative LOC delta: task invalid.
 - Smell run skipped before edit: task invalid.
 - Root-only validation evidence for sub-project target: task invalid.
+- Wrong origin import causing lazy recursion or duplicate owner behavior: delete the patch and re-route to the owning primitive.
 
 ## Execution Plan Floor
 
@@ -113,7 +130,7 @@ Hard stop condition:
 - §0.0#3 8× DUPLICATION GATE on any new mixin/helper. Cite the multiplier in the commit.
 - §0.0#4 MRO mixin into lowest existing facade. Standalone classes outside facade-composed tree FORBIDDEN.
 - §0.0#5 Pydantic 2 + Python 3.13 patterns BEFORE writing custom code (TypeAdapter, RootModel, computed_field, discriminated unions, Annotated[T, Field], model_validator, ConfigDict, type X = …, TypeIs, match/case, @override/@final/Self, generic params, `cached_property`). Any custom code that an existing P2/Py3.13 feature replaces = DELETE.
-- §0.0#6 forbidden constructs (pass-through wrappers, compat aliases, Any, cast(), os.environ in src/, model_rebuild(), unjustified noqa/type:ignore, hasattr(_priv), get_*/set_*/is_* accessors).
+- §0.0#6 forbidden constructs (pass-through wrappers, pass-through `__init__`, compat aliases, Any, cast(), os.environ in src/, model_rebuild(), unjustified noqa/type:ignore, hasattr(_priv), get_*/set_*/is_* accessors).
 - Refactor in dependency-tier order; never break architecture directionality.
 - Structural propagation: `ast-grep` (sg) for rewrites, `scope` for blast radius, Serena for symbol-aware ops (after `serena project health-check`).
 - Zero debt steady state: ruff/pyrefly/enforcement/pytest must be ZERO across affected projects before task is complete (pre-existing failures count).

@@ -49,17 +49,71 @@ Skip one item and the task is invalid.
 
 Missing one field above = no patch.
 
+### §0.00A.1 FAST EXECUTION BRIEF (read in 5s)
+
+Search before write. Origin before helper. Pydantic model before manual kwargs. `c.*` before magic literal. Delete before add. `ruff` -> `pyrefly` immediately.
+
 ### §0.00 ULTRA START CARD (10s, EXECUTE OR STOP)
+
+Hard line: no helper/proxy/alias, no zero-test pytest, no ambiguous evidence, no second repeat of the same failure.
 
 1. `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json`
 2. Pick one offender (`src/` first) and map full caller chain (`scope`/`sg`/`rg`).
 3. Reuse SSOT primitive or delete duplicate; no new helper/wrapper/alias.
-4. Replace custom code with native ladder first: `Annotated` -> validators -> `computed_field` -> cached `TypeAdapter` -> `Discriminator` -> `RootModel` -> `TypeIs` -> `match/case`.
-5. First edit must be followed by `ruff` then `pyrefly` on touched file.
-6. Shared contract changed => propagate now with `sg` and re-check callers.
-7. Refactor with non-negative LOC delta is invalid.
-8. No raw gate output + exit code => no done claim.
-9. Repeat same failure twice => stop patching and rewrite minimal clean block.
+4. Use the canonical origin method/class directly; if a centralized method already exists, duplicating it locally with a new helper is invalid.
+5. Replace custom code with native ladder first: `Annotated` -> validators -> `computed_field` -> cached `TypeAdapter` -> `Discriminator` -> `RootModel` -> `TypeIs` -> `match/case`.
+6. First edit must be followed by `ruff` then `pyrefly` on touched file.
+7. Shared contract changed => propagate now with `sg` and re-check callers.
+8. Refactor with non-negative LOC delta is invalid.
+9. No raw gate output + exit code => no done claim.
+10. Repeat same failure twice => stop patching and rewrite minimal clean block.
+11. No new inline magic strings/numbers; new runtime literals must come from `c.*` unless they are one-off boundary messages.
+12. Moving a smell from the selected file to a sibling file is an invalid cycle; decomposition must reduce or keep total selected-smell family count in-lane.
+13. `**kwargs` payloads in runtime code must be validated by canonical Pydantic paths (`model_validate`, typed input models, or `TypeAdapter`); manual key/type validation loops are invalid.
+13. **`**kwargs: T` always produces `dict[str, T]` — never annotate internal helpers with `Mapping[str, T]` or scalar `T` for these; use `dict[str, T]` directly.**
+14. **`metadata or ModelClass(field=default)` is the Pydantic 2 canonical "default model" pattern — never write `ModelClass(field=metadata.field if metadata is not None else default)` multi-branch constructors.**
+15. **Before deleting any helper, verify the type error is not a wrong annotation in the helper — wrong annotation must be fixed, not fixed by deleting the helper.**
+16. **`model_copy(update={...})` is the canonical Pydantic 2 mutation — never construct a new model from scratch when you already have a base instance to copy from.**
+17. **Never write `if x is None: super()(without_x) else: super()(with_x)` for optional kwargs — Python accepts `kwarg=None` and the parent's `Optional` type handles it.**
+18. **If you are about to add a helper, first prove two negatives: no existing origin method/class covers it, and no Pydantic 2 / Python 3.13 primitive deletes it. Missing either proof = invalid patch.**
+19. **Manual kwargs normalization (`pop`, `get`, `setdefault`, key-existence branches, inline coercion loops) is invalid when one typed input model or `TypeAdapter` can validate the payload once at the origin.**
+20. **If the touched block repeats the same string/number twice and no `c.*` constant exists, centralize it in the same cycle. Leaving repeated inline literals behind is incomplete work.**
+21. **Addition-heavy refactor is suspect by default: if the first pass adds more than it deletes, stop and re-search for the canonical origin or native primitive before continuing.**
+
+### §0.00B RECURRING FAILURE EXTERMINATION (MANDATORY — read before EVERY patch)
+
+These patterns recur every session. Kill on sight — no debate, no deferral.
+
+**A. Duplicate helpers instead of canonical origin — ABOMINABLE**
+> Symptom: new local `def _do_x(...)` when `u.X.do_x(...)` or `FlextBaseClass.do_x(...)` already exists.
+> Fix: `grep -rn "def <verb>" flext-core/src flext-cli/src flext-infra/src --include='*.py'` BEFORE writing anything. Zero hits only = allowed to write.
+
+**B. Multi-return branches instead of `match/case` type dispatch — FORBIDDEN**
+> Symptom: `if isinstance(x, A): return ...; if isinstance(x, B): return ...; if x is None: return ...` (≥3 returns on type checks).
+> Fix: `match x: case A(): ...; case B(): ...; case _: ...` — one return at end. Pydantic discriminated union where applicable.
+
+**C. Repeated model construction instead of one sentinel + `model_copy` — FORBIDDEN**
+> Symptom: `m.X(field="", meta=default)` written 2+ times in same function.
+> Fix: `_EMPTY = m.X(field="", meta=default)` class/module-level sentinel; branches use `_EMPTY` or `_EMPTY.model_copy(update={...})`.
+
+**D. Manual validation instead of Pydantic auto-coercion — FORBIDDEN**
+> Symptom: `if not isinstance(x, str): raise ...; x = str(x).strip()` before constructing a model.
+> Fix: Put coercion in `Annotated[T, BeforeValidator(fn)]` field definition; caller passes raw data to `Model.model_validate(data)` or `TypeAdapter[T].validate_python(data)` — Pydantic does the rest.
+
+**E. Inline magic strings/numbers — FORBIDDEN**
+> Symptom: `return ""`, `count = 6`, `rule = "qlty:function-parameters"` hardcoded in logic.
+> Fix: Move to `c.*` `StrEnum`/`Literal`/`Final`. Use `c.X.EMPTY_DN`, not `""`. No new inline literal in patched block.
+
+**F. Pass-through wrapper with same signature — ABOMINABLE (§3.5)**
+> Symptom: `def old_name(a, b, c): return new_name(a, b, c)`.
+> Fix: Delete `old_name`; update all callers to `new_name` via `sg`. Same cycle, no deferral.
+
+**G. `del param` inside function body — DEAD API, remove now**
+> Symptom: `def f(a, b, unused): del unused; ...`.
+> Fix: Remove `unused` from signature; propagate removal to all callers. Track cascade: removal may make caller params dead too.
+
+**H. `kwargs` passed straight into `Model(**kwargs)` without schema — WEAK**
+> Fix: Use `Model.model_validate(kwargs)` — raises `ValidationError` with full field diagnostics instead of silent `TypeError`. Always prefer `model_validate` at system boundaries.
 
 ### §0.0 NO-EXCUSES START CARD (READ FIRST, 20s)
 
@@ -76,6 +130,14 @@ Missing one field above = no patch.
 11. If `/tmp/qlty_smells-tests.json` is empty/corrupted, rerun smells immediately; stale SARIF is invalid evidence.
 12. One cycle only counts when it has: one offender, caller audit, one gate run, and command output evidence.
 13. When file lives in a sub-project, run status/gates in that sub-project (`git -C <project> status`, then project-local checks). Root-only green is invalid.
+14. Ralph-style iterative work must update `ralph-progress.md` in the same cycle; no progress update means cycle incomplete.
+15. NEVER drop a symbol/import assuming it became unused. `grep -nE '\b<name>\b' <file>` first. Drop only when the count is 1 (the import line itself).
+16. Pydantic decorators (`@field_serializer`, `@model_validator`, `@field_validator`, `@computed_field`) on classes that DO NOT inherit `BaseModel` are INERT scaffolding. Delete the whole method, not just the decorator.
+17. NEVER add a new private helper method (even on a base class) until you `grep -rn "def <verb>" flext-core/src flext-cli/src flext-infra/src` and confirm no existing canonical method covers it. Dedup MUST consume existing centralized origins (`u.*`, `c.*`, `m.*`, parent-class methods). Adding a helper is a LAST resort.
+18. Wrong import origin that re-enters a lazy facade is an INVALID patch. In owner code, import directly from the owning source when facade reuse would recurse; in consumers, use only the public facade. If you cannot name the owner, stop and search first.
+19. For `**kwargs` payloads, manual key/type validation is INVALID when a canonical Pydantic model can `model_validate(...)` the payload at the origin method.
+19. No new magic literals in touched blocks: if a same-meaning token/value already exists in `c.*`, using inline string/number is INVALID. Reuse canonical constants or stop and centralize first.
+20. `**kwargs` in public/orchestrator methods must be validated once at the owner origin through a typed Pydantic contract (`Model.model_validate(kwargs)` or cached `TypeAdapter`). Manual inline key/type checks and inplace kwargs mutation are INVALID.
 
 ### §0.Z BRUTAL SELF-CRITIQUE (MANDATORY BEFORE FIRST PATCH)
 
@@ -87,6 +149,8 @@ State this in one paragraph before editing:
 4. Which command proves caller propagation and which command proves gates are green.
 
 If you cannot answer all 4 items, you are not ready to patch.
+
+Failure memory, short version: the recurring defect is not lack of logic; it is writing local logic that should have been deleted in favor of an existing origin, a typed model, or a built-in Pydantic/Python primitive. If your patch starts by inventing code instead of deleting code, assume you are repeating the failure.
 
 ### §0.A AUTOPSY CARD (MUST RUN BEFORE FIRST EDIT)
 
@@ -155,7 +219,7 @@ Custom equivalent = AUTOMATIC DELETION (§3.1.PYDANTIC-V2-NATIVE table).
 
 ### §0.2 ABSOLUTE BANS (any one = STOP, REVERT, RE-PLAN)
 
-`Any` / bare `object` / `cast()` outside flext-core/result.py · `model_rebuild()` · pass-through wrappers (`def x(): return y()`) · compat aliases (`OldX = NewX`) · `os.environ`/`os.getenv` in `src/` · bare `except:` · `# type: ignore` / `# pyrefly: ignore` / `# noqa` for SUPPRESSION (root-cause fix only) · `git checkout/reset --hard/stash pop` to discard work · `T | None` without docstring sentence justifying `None` · public `get_*/set_*/is_*` accessors on facade services · loose module-level `def`/`class`/`Final` · direct framework imports of flext-core-abstracted libs (pydantic/structlog/orjson/pyyaml/dependency_injector/returns) in consumers · `model_validate(...).execute()` GOD-pattern dispatchers · sibling duplication of `model_config`/fields/methods.
+`Any` / bare `object` / `cast()` outside flext-core/result.py · `model_rebuild()` · pass-through wrappers (`def x(): return y()`) · pass-through constructors (`__init__` only forwarding parent args) · compat aliases (`OldX = NewX`) · manual/inplace kwargs validation or normalization chains when `Model.model_validate(...)` / `model_copy(update=...)` can replace them · `os.environ`/`os.getenv` in `src/` · bare `except:` · `# type: ignore` / `# pyrefly: ignore` / `# noqa` for SUPPRESSION (root-cause fix only) · `git checkout/reset --hard/stash pop` to discard work · `T | None` without docstring sentence justifying `None` · public `get_*/set_*/is_*` accessors on facade services · loose module-level `def`/`class`/`Final` · direct framework imports of flext-core-abstracted libs (pydantic/structlog/orjson/pyyaml/dependency_injector/returns) in consumers · `model_validate(...).execute()` GOD-pattern dispatchers · sibling duplication of `model_config`/fields/methods.
 
 ### §0.3 FORBIDDEN RATIONALIZATIONS (task INVALID on first utterance)
 
@@ -443,6 +507,8 @@ flext-<project>/src/flext_<project>/
   Helper signatures with `T | None` lacking a docstring sentence explaining `None` semantics → AUTOMATIC REWORK.
 
 - **Cached-Adapter Mandate**: every recurring parse target gets ONE module-level/class-level `_X_ADAPTER: ClassVar[TypeAdapter[X]] = TypeAdapter(X)` constructed once, reused forever. Calling `TypeAdapter(X)` per invocation = §3.5 Legacy Extermination violation (re-parses schema each call).
+
+- **KWARGS-Model Mandate**: dynamic option bags MUST be validated exactly once at the origin method via a Pydantic v2 model (`OptionsModel.model_validate(kwargs)`). Manual `if key in kwargs`, manual type checks, and in-place dict mutation chains are FORBIDDEN except at unavoidable external boundaries.
 
 - **MRO-Collapse Mandate**: when 2+ classes/files share concern, COLLAPSE via MRO immediately:
   - Same-named verb in 2 projects (`to_str`, `run`, `build`, `_apply_rule`) with different signatures → unify by widening param OR delete descendant + callers go to canonical via `c.* / u.*` from the most-root project. NEVER keep two definitions.
