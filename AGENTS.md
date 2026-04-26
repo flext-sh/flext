@@ -43,6 +43,17 @@ alwaysApply: true
 
 Skip one item and the task is invalid.
 
+### §0.00 QUICK KILL CARD (READ IN 8s)
+
+1. One offender only.
+2. Reuse canonical origin first (`u.*`, parent method, existing `m.*` contract).
+3. No helper/proxy/wrapper until search proves origin does not exist.
+4. Validate `**kwargs` once with Pydantic (`model_validate` or cached `TypeAdapter`), never manual key/type loops.
+5. No new inline magic literals when `c.*` exists.
+6. First edit must be followed by `ruff` then `pyrefly`.
+7. Positive LOC refactor is invalid.
+8. No raw gate output => not done.
+
 ### §0.00A EXECUTION HEADER (copy/paste before first edit)
 
 `OFFENDER=<file:line>; PRIMITIVE=<Annotated|validator|TypeAdapter|Discriminator|RootModel|TypeIs|match>; PROPAGATE=<scope/sg cmd>; GATE1=ruff <file>; GATE2=pyrefly <file>; TEST=<pytest target>`
@@ -52,6 +63,22 @@ Missing one field above = no patch.
 ### §0.00A.1 FAST EXECUTION BRIEF (read in 5s)
 
 Search before write. Origin before helper. Pydantic model before manual kwargs. `c.*` before magic literal. Delete before add. `ruff` -> `pyrefly` immediately.
+
+### §0.00A.2 BRUTAL 6-LINE START (MANDATORY)
+
+1. One offender only. No side quests.
+2. No new helper/wrapper/proxy until `grep` proves no canonical origin.
+3. `**kwargs` must be validated once via `Model.model_validate(kwargs)` (or cached `TypeAdapter`) at owner origin.
+4. No inline magic strings/numbers when `c.*` exists.
+5. First edit => `ruff` then `pyrefly` on touched file.
+6. Any red gate or missing raw output => cycle stays OPEN.
+
+### §0.00A.2 BRUTAL SELF-CRITIQUE FLASH (read in 5s)
+
+Helper-first = failure.
+Manual kwargs validation = failure.
+Magic literal duplication = failure.
+Only valid path: reuse origin -> validate once with Pydantic (`model_validate`/`TypeAdapter`) -> centralize in `c.*` -> delete duplicate.
 
 ### §0.00 ULTRA START CARD (10s, EXECUTE OR STOP)
 
@@ -115,6 +142,10 @@ These patterns recur every session. Kill on sight — no debate, no deferral.
 **H. `kwargs` passed straight into `Model(**kwargs)` without schema — WEAK**
 > Fix: Use `Model.model_validate(kwargs)` — raises `ValidationError` with full field diagnostics instead of silent `TypeError`. Always prefer `model_validate` at system boundaries.
 
+**I. `e.BaseError` subclass with custom `__init__` building context manually — ABOMINABLE**
+> Symptom: subclass defines `_build_context()`, `InitOptions(BaseModel)`, manual `self.attr=`, manual `error_code or "..."`.
+> Fix: Set `_params_cls = MyParamsModel`, `_param_keys = frozenset({...})`, `_default_error_code = "..."` as ClassVars. The base `__init__` validates kwargs, assigns attrs, builds context. Single `super().__init__(msg, merged_kwargs=kwargs)` call. Delete everything else.
+
 ### §0.0 NO-EXCUSES START CARD (READ FIRST, 20s)
 
 1. Run `qlty smells` first. No smell run, no edit.
@@ -138,19 +169,20 @@ These patterns recur every session. Kill on sight — no debate, no deferral.
 19. For `**kwargs` payloads, manual key/type validation is INVALID when a canonical Pydantic model can `model_validate(...)` the payload at the origin method.
 19. No new magic literals in touched blocks: if a same-meaning token/value already exists in `c.*`, using inline string/number is INVALID. Reuse canonical constants or stop and centralize first.
 20. `**kwargs` in public/orchestrator methods must be validated once at the owner origin through a typed Pydantic contract (`Model.model_validate(kwargs)` or cached `TypeAdapter`). Manual inline key/type checks and inplace kwargs mutation are INVALID.
+21. **`e.BaseError` subclasses: use `_params_cls` + `_param_keys` + `_default_error_code` ClassVars. NEVER add nested `InitOptions`/`_XxxContextMixin`/`_build_context` — the base hook validates kwargs, builds context, and assigns attrs automatically. Writing a local context builder when `_params_cls` already handles it is §3.5 ABOMINABLE.**
 
 ### §0.Z BRUTAL SELF-CRITIQUE (MANDATORY BEFORE FIRST PATCH)
 
-State this in one paragraph before editing:
+Before editing, state exactly this (one short paragraph):
 
-1. Which prior mistake you are about to repeat (scope creep, no propagation, selective gates, helper creation, custom code before native).
-2. Which exact stop-rule will kill that mistake in this cycle.
-3. Which Pydantic v2/Python 3.13 primitive will delete custom code now.
-4. Which command proves caller propagation and which command proves gates are green.
+1. Recurring failure risk in this cycle.
+2. Exact stop-rule that blocks it.
+3. Exact Pydantic 2 / Python 3.13 primitive replacing custom code.
+4. Exact propagation command + exact green-gate command.
 
-If you cannot answer all 4 items, you are not ready to patch.
+Missing one item = do not patch.
 
-Failure memory, short version: the recurring defect is not lack of logic; it is writing local logic that should have been deleted in favor of an existing origin, a typed model, or a built-in Pydantic/Python primitive. If your patch starts by inventing code instead of deleting code, assume you are repeating the failure.
+Failure memory: the defect is helper-first invention. Start by deletion and origin reuse, not by creating local logic.
 
 ### §0.A AUTOPSY CARD (MUST RUN BEFORE FIRST EDIT)
 

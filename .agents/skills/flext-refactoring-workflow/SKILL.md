@@ -12,7 +12,29 @@ description: Step-by-step refactoring workflow with quality gates, make targets,
 
 Hard line: one offender, one primitive, one proof chain; no helper/proxy/alias, no pass-through `__init__`, no zero-test pytest, no ambiguous output.
 
+Ultra-short enforcement:
+
+1. One offender.
+2. Origin first, helper last.
+3. `**kwargs` -> one `model_validate(kwargs)`.
+4. No manual kwargs normalization.
+5. No magic literals if `c.*` exists.
+6. `ruff` -> `pyrefly` immediately after first edit.
+7. No raw output, no done.
+
 Fast brief: search before write, origin before helper, model before manual kwargs, constants before inline literals, delete before add.
+
+No-excuse mini card:
+
+1. One offender.
+2. No helper-first patches.
+3. Validate kwargs once with Pydantic (`model_validate(kwargs)`).
+4. No magic literals when `c.*` exists.
+5. `ruff` -> `pyrefly` before anything else.
+6. No raw output, no done.
+
+Failure signature (stop immediately): helper-first patch, manual kwargs normalization, guessed import origin, or positive LOC refactor.
+Kill order: reuse origin -> validate once with Pydantic -> propagate -> gate.
 
 Execution header (mandatory before first patch):
 
