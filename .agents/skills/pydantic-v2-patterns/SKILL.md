@@ -16,6 +16,16 @@ description: Advanced Pydantic v2 implementation patterns for FLEXT — TypeAdap
 5. If one native feature replaces the code, the old code dies now.
 6. Finish with `ruff`, `pyrefly`, focused tests.
 
+## No-Excuse Native-First Rule
+
+1. If you wrote `if/elif` dispatch over `kind`, stop and use `Annotated[Union..., Discriminator("kind")]`.
+2. If you wrote coercion helpers, stop and use `BeforeValidator`/`AfterValidator`.
+3. If you wrote getter/setter/property boilerplate, stop and use field + `computed_field`.
+4. If you wrote conversion wrappers (`to_*`, `from_*`), stop and use `model_dump*` / `model_validate*`.
+5. If you instantiated `TypeAdapter` at call sites, stop and move it to cached registry.
+
+If any line above applies, custom implementation is invalid and must be deleted in the same cycle.
+
 ## Scope
 
 - Advanced Pydantic v2 usage across FLEXT 34-project workspace (`src/`, `tests/`, `examples/`).

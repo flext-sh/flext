@@ -251,6 +251,14 @@ class AclProcessingExample:
     class AclProcessor(m.BaseModel):
         """Monadic ACL processor with zero-ceremony execution."""
 
+        class EntryWithServer(m.BaseModel):
+            """Typed envelope for extracted entry/server pairs."""
+
+            model_config = m.ConfigDict(extra="forbid")
+
+            entry: t.JsonMapping
+            server_type: str
+
         auto_execute: bool = True
         entries: Sequence[t.JsonMapping]
         parallel: bool = True
@@ -338,41 +346,43 @@ class AclProcessingExample:
             entries_data_raw = data.get("entries")
             if not u.list_value(entries_data_raw):
                 return r[t.JsonMapping].fail("Invalid entries format")
-            entries_with_servers: MutableSequence[tuple[t.JsonMapping, str]] = []
-            for entry_with_server_raw in entries_data_raw:
-                if not u.mapping(entry_with_server_raw):
-                    continue
-                entry_raw = entry_with_server_raw.get("entry")
-                server_type_raw = entry_with_server_raw.get("server_type")
-                if not u.mapping(entry_raw) or not isinstance(
-                    server_type_raw,
-                    str,
-                ):
-                    continue
-                entries_with_servers.append((entry_raw, server_type_raw))
+
+            try:
+                entries_with_servers = tuple(
+                    self.EntryWithServer.model_validate(entry_with_server_raw)
+                    for entry_with_server_raw in entries_data_raw
+                    if isinstance(entry_with_server_raw, Mapping)
+                )
+            except m.ValidationError as exc:
+                return r[t.JsonMapping].fail(f"Invalid entries format: {exc}")
+
+            if not entries_with_servers:
+                return r[t.JsonMapping].fail("No valid entries to extract")
+
             extract = AclProcessingExample.extract_acls_from_entry
             all_acls: MutableSequence[AclProcessingExample.AclEntry] = []
             if self.parallel:
                 with ThreadPoolExecutor(max_workers=4) as executor:
                     futures = [
-                        executor.submit(extract, entry, server)
-                        for entry, server in entries_with_servers
+                        executor.submit(extract, item.entry, item.server_type)
+                        for item in entries_with_servers
                     ]
-                    for future in as_completed(futures):
-                        result = future.result()
-                        if result.failure:
-                            return r[t.JsonMapping].fail(
-                                f"ACL extraction failed: {result.error}",
-                            )
-                        all_acls.extend(result.value)
+                    extraction_results = [
+                        future.result() for future in as_completed(futures)
+                    ]
             else:
-                for entry, server in entries_with_servers:
-                    result = extract(entry, server)
-                    if result.failure:
-                        return r[t.JsonMapping].fail(
-                            f"ACL extraction failed: {result.error}",
-                        )
-                    all_acls.extend(result.value)
+                extraction_results = [
+                    extract(item.entry, item.server_type)
+                    for item in entries_with_servers
+                ]
+
+            for result in extraction_results:
+                if result.failure:
+                    return r[t.JsonMapping].fail(
+                        f"ACL extraction failed: {result.error}",
+                    )
+                all_acls.extend(result.value)
+
             result_data = {
                 **data,
                 "acls": [

@@ -10,13 +10,32 @@ description: Use when running or interpreting quality gates (lint, typecheck, te
 
 ## Hard Start Card (mandatory)
 
-1. No raw output, no completion claim.
-2. First edit: `ruff` on touched file.
-3. Second gate: `pyrefly` on touched file.
-4. Third gate: behavior (`pytest` or `make check PROJECT=<affected>`).
-5. Shared contract/type/import change: widen immediately.
+1. No raw output, no done claim.
+2. First edit must trigger `ruff` on touched file.
+3. Next gate must be `pyrefly` on touched file.
+4. Then run behavior gate (`pytest` or `make check PROJECT=<affected>`).
+5. Shared contract/type/import change -> widen now, same cycle.
 6. Zero errors, zero warnings, zero suppressions.
 7. Any red gate keeps task OPEN.
+8. If target file is in a sub-project, run and report gates from that sub-project.
+
+## Brutal Self-Critique Gate (mandatory)
+
+Before running gates, state in one line:
+
+1. Which gate you skipped previously.
+2. Which command enforces it now.
+3. Which completion claim will be blocked if evidence is missing.
+
+If you cannot state this, stop and re-plan.
+
+## Recurrence Fail-Fast (mandatory)
+
+1. Same gate failure twice: stop patching and rewrite minimal clean block.
+2. Syntax error after patch: restore compile-first state immediately.
+3. Selective gate execution to hide red output: invalid; rerun full touched chain.
+4. Running gates only from workspace root for a sub-project target: invalid evidence.
+4. Pytest run with zero selected tests (exit 5) is invalid behavior evidence; rerun with a concrete test file.
 
 **One-line execution flow:**
 `ruff -> pyrefly -> pyright -> mypy -> pytest -> (if shared change) multi-project check`
@@ -24,6 +43,10 @@ description: Use when running or interpreting quality gates (lint, typecheck, te
 **Evidence contract (mandatory):** UTC timestamp + command + exit code + relevant output. No evidence = no completion claim.
 
 **Immediate failure conditions:** touched project left red; suppression without explicit technical + business justification; shared contract changed without propagation proof.
+
+**Completion invalidation:** claiming "done" without naming the exact replaced Pydantic/Python primitive for each refactor cycle.
+
+When user asks to finish only with smells finalized, also require `jq '[.runs[].results[]] | length' /tmp/qlty_smells-tests.json` equal to `0` before completion claim.
 
 > **Source of truth**: Verified from `base.mk` (`check`, `test`, and `val` targets), `ruff-shared.toml`,
 > and individual `pyproject.toml` files on 2026-02-19.
