@@ -77,7 +77,7 @@ make val
 make clean
 ```
 
-`make audit` runs the SSOT enforcement audit (`ENFORCE-039/041/043/044`) via `FlextInfraEnforcementAuditor`. `make audit GATES=docs` delegates to `FlextInfraDocAuditor` for mkdocs python-codeblock parity (AGENTS.md §3.8). Rollback for the rope auto-fix path uses `FlextInfraRefactorSafetyManager`'s `.bak` flow — never `git checkout`.
+`make audit` runs the SSOT enforcement audit (`ENFORCE-039/041/043/044/054`) via `FlextInfraEnforcementAuditor`. `make audit GATES=docs` delegates to `FlextInfraDocAuditor` for mkdocs python-codeblock parity (AGENTS.md §3.8). Rollback for the rope auto-fix path uses `FlextInfraRefactorSafetyManager`'s `.bak` flow — never `git checkout`.
 
 Execution semantics:
 

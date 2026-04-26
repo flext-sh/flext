@@ -40,6 +40,7 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
   - `src/`: `class <Domain>:`
   - `tests/`: `class <Domain>:` containing `class Tests:`
 - Callers MUST keep the organic namespace path emitted by MRO. Use `u.Infra.parse_semver`, `c.Tests.ERR_OK_FAILED`, and `m.TargetOracle.ExecuteResult`. Do not flatten nested domain-local classes back onto the facade root with assignments like `ExecuteResult = TargetOracle.ExecuteResult`.
+- For test wrapper aliases (`c/p/t/m/u` in `tests/`, `examples/`, `scripts/`), use flat `.Tests.*` paths. `*.Core.Tests.*` is forbidden migration debt.
 - Examples and docs should present Pydantic-facing usage through `c`, `p`, `t`, `m`, `u` (and `s` for services), preserving nested classes + MRO composition even in service-only snippets.
 - Contract ownership follows the facade split: `p.*` for protocols, `t.*` for composed aliases, `m.*` for models. Do not recreate protocol-shaped aliases in `t` or flatten model/protocol carriers just to shorten an annotation.
 - Private mixin files under `models/`, `_utilities/`, `_protocols/`, and similar trees define mixin classes only. The public facade composes them in its inheritance list. Manual flat wrapper nesting such as `class Docker(tk): pass` inside the facade namespace is forbidden.

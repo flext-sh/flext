@@ -58,6 +58,8 @@ FLEXT-only deltas. Universal rules (rollback, scope, generic tooling, communicat
 
 **Organic MRO paths** — `u.Infra.parse_semver`, `c.Tests.ERR_OK_FAILED`, `m.TargetOracle.ExecuteResult`. NEVER flatten to `m.ExecuteResult`.
 
+**Tests namespace is flat** — use `c/p/t/m/u.Tests.*` in `tests/`, `examples/`, and `scripts/`. `*.Core.Tests.*` is forbidden migration debt.
+
 **Alias import sources**:
 
 - `src/` code: `c/p/t/m/u` from `flext_core` OR own package (MRO-extended)

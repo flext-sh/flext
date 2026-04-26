@@ -35,6 +35,10 @@ FAIL_FAST ?=
 JOBS ?= 
 CHECK_GATES ?= 
 VALIDATE_GATES ?= 
+SCOPE ?= project
+NAMESPACE ?= 
+GATES ?= 
+PROPAGATE ?= 
 FIX ?= 
 FILE ?= 
 FILES ?= 
@@ -289,6 +293,8 @@ help: ## Show simple workspace verbs
 	$(Q)echo "Selection: $(words $(SELECTED_PROJECTS)) selected"
 	$(Q)echo ""
 	$(Q)echo "Core verbs:"
+
+	$(Q)printf " %-7s %s\n" "audit" "Run SSOT enforcement audit across selected projects (SCOPE/GATES/FIX)"
 
 	$(Q)printf " %-7s %s\n" "boot" "Install all projects into workspace .venv, then run val VALIDATE_SCOPE=workspace"
 
