@@ -1,6 +1,6 @@
 ---
 name: flext-audit-pipeline
-description: Use when running or wiring the SSOT enforcement audit (`make audit`) that surfaces `ENFORCE-039/041/043/044` violations across the workspace via `FlextInfraEnforcementAuditor` and dispatches mkdocs python-codeblock parity via `FlextInfraDocAuditor`. Pointer-only — no parallel policy.
+description: Use when running or wiring the SSOT enforcement audit (`make audit`) that surfaces `ENFORCE-039/041/043/044/054` violations across the workspace via `FlextInfraEnforcementAuditor` and dispatches mkdocs python-codeblock parity via `FlextInfraDocAuditor`. Pointer-only — no parallel policy.
 ---
 
 # FLEXT Audit Pipeline
@@ -18,7 +18,7 @@ description: Use when running or wiring the SSOT enforcement audit (`make audit`
 
 ## References
 
-- `AGENTS.md` §3.2 / §3.4 / §3.5 / §3.6 / §3.8 — anchors for ENFORCE-039..044 + Documentation Code Integrity
+- `AGENTS.md` §0 / §3.2 / §3.4 / §3.5 / §3.6 / §3.8 — anchors for ENFORCE-039..044/054 + Documentation Code Integrity
 - `.agents/skills/flext-enforcement-catalog/SKILL.md` — catalog SSOT (`c.ENFORCEMENT_CATALOG`)
 - `.agents/skills/flext-quality-gates/SKILL.md` — gate execution model
 - `.agents/skills/flext-refactoring-workflow/SKILL.md` — rope-based auto-fix safety contract

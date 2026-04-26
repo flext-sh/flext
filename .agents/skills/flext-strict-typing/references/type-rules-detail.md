@@ -672,7 +672,7 @@ class r[T_co](u.RuntimeResult[T_co]):
         cls,
         error: str | None,
         error_code: str | None = None,
-        error_data: m.Core.Tests.ResultErrorDataModel | None = None,
+        error_data: m.Tests.ResultErrorDataModel | None = None,
     ) -> p.Result[U]:
         error_msg = error if error is not None else ""
         result = Failure(error_msg)

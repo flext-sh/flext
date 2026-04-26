@@ -93,14 +93,14 @@ class Guards:
     """Type guards for common Flext types."""
 
     @staticmethod
-    def is_config(obj) -> TypeGuard[m.Core.Tests.Settings]:
+    def is_config(obj) -> TypeGuard[m.Tests.Settings]:
         """Check if t.JsonValue is a Settings model."""
-        return isinstance(obj, m.Core.Tests.Settings)
+        return isinstance(obj, m.Tests.Settings)
 
     @staticmethod
-    def is_context(obj) -> TypeGuard[m.Core.Tests.Context]:
+    def is_context(obj) -> TypeGuard[m.Tests.Context]:
         """Check if t.JsonValue is a Context model."""
-        return isinstance(obj, m.Core.Tests.Context)
+        return isinstance(obj, m.Tests.Context)
 
     @staticmethod
     def is_result_success(obj) -> TypeGuard[m.Result.Success]:
@@ -279,7 +279,7 @@ from flext_core import DispatcherSettings, BatchResultDict
 
 # AFTER
 
-settings: m.Core.Tests.Settings = ...
+settings: m.Tests.Settings = ...
 result: m.Result.Success = ...
 ```
 
@@ -292,8 +292,8 @@ Remove all TypedDict definitions, keep only type aliases:
 """Type aliases and protocols (no TypedDict)."""
 
 # Type aliases for convenience
-SettingsType = m.Core.Tests.Settings
-ContextType = m.Core.Tests.Context
+SettingsType = m.Tests.Settings
+ContextType = m.Tests.Context
 ResultType = m.Result.Success | m.Result.Failure
 ```
 
@@ -381,7 +381,7 @@ from typing import cast
 
 
 def process_config(data: dict) -> str:
-    settings = cast(m.Core.Tests.Settings, data)
+    settings = cast(m.Tests.Settings, data)
     return settings.app_name
 
 
@@ -566,8 +566,8 @@ Models are organized in nested namespaces for maximum reuse:
 
 \`\`\`python
 
-settings: m.Core.Tests.Settings = ...
-context: m.Core.Tests.Context = ...
+settings: m.Tests.Settings = ...
+context: m.Tests.Context = ...
 result: m.Result.Success = ...
 \`\`\`
 
