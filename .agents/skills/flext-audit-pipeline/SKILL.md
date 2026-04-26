@@ -1,6 +1,6 @@
 ---
 name: flext-audit-pipeline
-description: Use when running or wiring the SSOT enforcement audit (`make audit`) that surfaces `ENFORCE-039/041/043/044/054` violations across the workspace via `FlextInfraEnforcementAuditor` and dispatches mkdocs python-codeblock parity via `FlextInfraDocAuditor`. Pointer-only — no parallel policy.
+description: Use when running or wiring the SSOT enforcement audit (`make audit`) that surfaces `ENFORCE-039/041/043/044/054/055` violations across the workspace via `FlextInfraEnforcementAuditor` and dispatches mkdocs python-codeblock parity via `FlextInfraDocAuditor`. Pointer-only — no parallel policy.
 ---
 
 # FLEXT Audit Pipeline

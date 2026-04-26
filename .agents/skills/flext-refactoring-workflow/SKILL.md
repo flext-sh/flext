@@ -216,7 +216,7 @@ If a shared contract changed, widen validation until every affected project retu
 | `make val`      | Extended non-lint validation (`FIX=1` optional)            |
 | `make clean`    | Clean artifacts                                            |
 
-`make audit` delegates to `FlextInfraEnforcementAuditor` (ENFORCE-039/041/043/044/054). Selectors: `PROJECTS=` (filter), `FIX=1` (apply rope auto-fix where supported), `GATES=docs` (route to `FlextInfraDocAuditor` python-codeblock parity per AGENTS.md §3.8). Rope-only: rewrites use `FlextInfraRefactorSafetyManager` `.bak` flow — never `git checkout`.
+`make audit` delegates to `FlextInfraEnforcementAuditor` (ENFORCE-039/041/043/044/054/055). Selectors: `PROJECTS=` (filter), `FIX=1` (apply rope auto-fix where supported), `GATES=docs` (route to `FlextInfraDocAuditor` python-codeblock parity per AGENTS.md §3.8). Rope-only: rewrites use `FlextInfraRefactorSafetyManager` `.bak` flow — never `git checkout`.
 
 ---
 

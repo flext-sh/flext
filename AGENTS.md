@@ -67,6 +67,8 @@ FLEXT-only deltas. Universal rules (rollback, scope, generic tooling, communicat
 - `examples/`: `from examples import c, m, t, ...`
 - `scripts/`: `from scripts import ...`
 
+In `tests/`, `examples/`, and `scripts/`, alias imports must come from wrapper root (`from tests|examples|scripts import ...`) outside `__init__.py`; submodule alias imports are forbidden migration debt.
+
 ### Facade Class Naming
 
 - `src/` → `Flext<Project><Tier>`

@@ -89,6 +89,6 @@ Set `enabled=False`. Leave the entry in place with a `notes=` marker for at leas
 - `ENFORCE-023..025` — ruff (`ANN401`, `PGH003`, `TID252`).
 - `ENFORCE-026..033` — ast-grep cross-references (`flext-patterns`, `flext-strict-typing`).
 - `ENFORCE-034..038` — skill pointers (accessor methods, settings inheritance, `model_rebuild`, `os.environ` ban, flat-alias ban).
-- `ENFORCE-039..044` + `ENFORCE-054` — beartype runtime hooks + ruff delegation (`cast_outside_core`, `PGH003`, `model_rebuild_call`, `settings_inheritance` (reuses existing hook), `pass_through_wrapper`, `private_attr_probe`, `no_core_tests_namespace`).
+- `ENFORCE-039..044` + `ENFORCE-054/055` — beartype runtime hooks + ruff delegation (`cast_outside_core`, `PGH003`, `model_rebuild_call`, `settings_inheritance` (reuses existing hook), `pass_through_wrapper`, `private_attr_probe`, `no_core_tests_namespace`, `no_wrapper_root_alias_import`).
 
 For the live set call `len(c.ENFORCEMENT_CATALOG.rules)` — the docs above are a snapshot, not an SSOT.
