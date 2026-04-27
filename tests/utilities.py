@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 from flext_tests import FlextTestsUtilities
-from tests import t
+from tests.infra.typings import t
 
 
 class TestsFlextTestUtilities(FlextTestsUtilities):
