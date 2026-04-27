@@ -204,44 +204,54 @@ func (cb *ContainerBuilder) initializeInfrastructure(container *FlexibleContaine
 func (cb *ContainerBuilder) initializeServices(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing application services")
 
-	// Event system
-	if err := cb.initEventSystem(container); err != nil {
-		return fmt.Errorf("event system initialization failed: %w", err)
+	serviceInitializers := []struct {
+		name    string
+		enabled bool
+		init    func(*FlexibleContainer) error
+	}{
+		{
+			name:    "event system",
+			enabled: true,
+			init:    cb.initEventSystem,
+		},
+		{
+			name:    "repositories",
+			enabled: true,
+			init:    cb.initRepositories,
+		},
+		{
+			name:    "pipeline service",
+			enabled: cb.IsFeatureEnabled(FeaturePipeline),
+			init:    cb.initPipelineService,
+		},
+		{
+			name:    "plugin service",
+			enabled: cb.IsFeatureEnabled(FeaturePlugin),
+			init:    cb.initPluginService,
+		},
+		{
+			name:    "meltano service",
+			enabled: cb.IsFeatureEnabled(FeatureMeltano),
+			init:    cb.initMeltanoService,
+		},
+		{
+			name:    "dbt service",
+			enabled: cb.IsFeatureEnabled(FeatureDBT),
+			init:    cb.initDBTService,
+		},
+		{
+			name:    "singer service",
+			enabled: cb.IsFeatureEnabled(FeatureSinger),
+			init:    cb.initSingerService,
+		},
 	}
 
-	// Repositories
-	if err := cb.initRepositories(container); err != nil {
-		return fmt.Errorf("repositories initialization failed: %w", err)
-	}
-
-	// Business services
-	if cb.IsFeatureEnabled(FeaturePipeline) {
-		if err := cb.initPipelineService(container); err != nil {
-			return fmt.Errorf("pipeline service initialization failed: %w", err)
+	for _, serviceInitializer := range serviceInitializers {
+		if !serviceInitializer.enabled {
+			continue
 		}
-	}
-
-	if cb.IsFeatureEnabled(FeaturePlugin) {
-		if err := cb.initPluginService(container); err != nil {
-			return fmt.Errorf("plugin service initialization failed: %w", err)
-		}
-	}
-
-	if cb.IsFeatureEnabled(FeatureMeltano) {
-		if err := cb.initMeltanoService(container); err != nil {
-			return fmt.Errorf("meltano service initialization failed: %w", err)
-		}
-	}
-
-	if cb.IsFeatureEnabled(FeatureDBT) {
-		if err := cb.initDBTService(container); err != nil {
-			return fmt.Errorf("dbt service initialization failed: %w", err)
-		}
-	}
-
-	if cb.IsFeatureEnabled(FeatureSinger) {
-		if err := cb.initSingerService(container); err != nil {
-			return fmt.Errorf("singer service initialization failed: %w", err)
+		if err := serviceInitializer.init(container); err != nil {
+			return fmt.Errorf("%s initialization failed: %w", serviceInitializer.name, err)
 		}
 	}
 
@@ -252,45 +262,49 @@ func (cb *ContainerBuilder) initializeServices(container *FlexibleContainer) err
 func (cb *ContainerBuilder) initializeHandlers(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing HTTP handlers")
 
-	// Pipeline handler
-	if cb.IsFeatureEnabled(FeaturePipeline) {
-		if err := cb.initPipelineHandler(container); err != nil {
-			return fmt.Errorf("pipeline handler initialization failed: %w", err)
-		}
+	handlerInitializers := []struct {
+		name    string
+		enabled bool
+		init    func(*FlexibleContainer) error
+	}{
+		{
+			name:    "pipeline handler",
+			enabled: cb.IsFeatureEnabled(FeaturePipeline),
+			init:    cb.initPipelineHandler,
+		},
+		{
+			name:    "plugin handler",
+			enabled: cb.IsFeatureEnabled(FeaturePlugin),
+			init:    cb.initPluginHandler,
+		},
+		{
+			name:    "meltano handler",
+			enabled: cb.IsFeatureEnabled(FeatureMeltano),
+			init:    cb.initMeltanoHandler,
+		},
+		{
+			name:    "dbt handler",
+			enabled: cb.IsFeatureEnabled(FeatureDBT),
+			init:    cb.initDBTHandler,
+		},
+		{
+			name:    "singer handler",
+			enabled: cb.IsFeatureEnabled(FeatureSinger),
+			init:    cb.initSingerHandler,
+		},
+		{
+			name:    "connectors handler",
+			enabled: cb.IsFeatureEnabled(FeatureConnectors),
+			init:    cb.initConnectorsHandler,
+		},
 	}
 
-	// Plugin handler
-	if cb.IsFeatureEnabled(FeaturePlugin) {
-		if err := cb.initPluginHandler(container); err != nil {
-			return fmt.Errorf("plugin handler initialization failed: %w", err)
+	for _, handlerInitializer := range handlerInitializers {
+		if !handlerInitializer.enabled {
+			continue
 		}
-	}
-
-	// Meltano handler
-	if cb.IsFeatureEnabled(FeatureMeltano) {
-		if err := cb.initMeltanoHandler(container); err != nil {
-			return fmt.Errorf("meltano handler initialization failed: %w", err)
-		}
-	}
-
-	// DBT handler
-	if cb.IsFeatureEnabled(FeatureDBT) {
-		if err := cb.initDBTHandler(container); err != nil {
-			return fmt.Errorf("dbt handler initialization failed: %w", err)
-		}
-	}
-
-	// Singer handler
-	if cb.IsFeatureEnabled(FeatureSinger) {
-		if err := cb.initSingerHandler(container); err != nil {
-			return fmt.Errorf("singer handler initialization failed: %w", err)
-		}
-	}
-
-	// Connectors handler
-	if cb.IsFeatureEnabled(FeatureConnectors) {
-		if err := cb.initConnectorsHandler(container); err != nil {
-			return fmt.Errorf("connectors handler initialization failed: %w", err)
+		if err := handlerInitializer.init(container); err != nil {
+			return fmt.Errorf("%s initialization failed: %w", handlerInitializer.name, err)
 		}
 	}
 
@@ -298,7 +312,7 @@ func (cb *ContainerBuilder) initializeHandlers(container *FlexibleContainer) err
 }
 
 // Métodos de inicialização específicos (implementação placeholder)
-func (cb *ContainerBuilder) initDatabase(container *FlexibleContainer) error {
+func (cb *ContainerBuilder) initDatabase(_ *FlexibleContainer) error {
 	cb.logger.Debug("Initializing database")
 	// TODO: Implementar inicialização de database
 	// if cb.features[FeatureDatabase] {
@@ -313,7 +327,7 @@ func (cb *ContainerBuilder) initDatabase(container *FlexibleContainer) error {
 	return nil
 }
 
-func (cb *ContainerBuilder) initCache(container *FlexibleContainer) error {
+func (cb *ContainerBuilder) initCache(_ *FlexibleContainer) error {
 	cb.logger.Debug("Initializing cache")
 	// TODO: Implementar inicialização de cache
 	// if cb.features[FeatureRedis] {
@@ -328,7 +342,7 @@ func (cb *ContainerBuilder) initCache(container *FlexibleContainer) error {
 	return nil
 }
 
-func (cb *ContainerBuilder) initMonitoring(container *FlexibleContainer) error {
+func (cb *ContainerBuilder) initMonitoring(_ *FlexibleContainer) error {
 	cb.logger.Debug("Initializing monitoring")
 	// TODO: Implementar inicialização de monitoring
 	return nil

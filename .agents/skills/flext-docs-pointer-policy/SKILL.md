@@ -42,7 +42,7 @@ description: Use when creating or editing documentation across AGENTS.md, skills
 - Pointer files must remain concise and reference scoped skills instead of restating them.
 - Pointer files must reflect current mandatory routing for prompts, Scope, Serena, `ast-grep`, MCP, and zero-debt quality gates by pointing to the canonical surfaces that define them.
 - If `AGENTS.md` §0 holds the real execution law, pointer files must name `AGENTS.md` §0 directly.
-- Entry surfaces for refactor modes must foreground the four startup facts: `qlty` first, one offender, origin before helper, `ruff` -> `pyrefly` after first edit.
+- Entry surfaces for refactor modes must foreground the shortest live startup law only: `AGENTS.md` §0 first, `qlty` first, stale selection -> rerun `qlty`, single-caller helper -> inline delete, origin before helper, `ruff` -> `pyrefly` after first edit.
 
 ## Instructions
 

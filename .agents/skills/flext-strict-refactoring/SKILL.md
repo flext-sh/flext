@@ -6,125 +6,94 @@ description: Strict cleanup rules for removing duplication, stale policy text, a
 
 # Flext Strict Refactoring
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**Reviewed**: 2026-04-27 | **Scope**: Pointer/meta-surface hardening without policy duplication
 
 ## Scope
 
-- Documentation governance files:
-  - `AGENTS.md`
-  - `CLAUDE.md`
-  - `.agents/INSTRUCTION_SURFACE.md`
-  - `.agents/skills/*/SKILL.md`
-- Agent pointer files:
-  - `codex.md`
-  - `.github/copilot-instructions.md`
-  - `.gemini/styleguide.md`
-  - `.clinerules`
-  - `.windsurfrules`
-  - `.continue/rules/flext.md`
-  - `.cursor/rules/flext.mdc`
-  - `CONVENTIONS.md`
+- `AGENTS.md`
+- `.agents/INSTRUCTION_SURFACE.md`
+- `.agents/skills/*/SKILL.md`
+- `codex.md`
+- `.github/copilot-instructions.md`
+- `.gemini/styleguide.md`
+- `.clinerules`
+---
+name: flext-strict-refactoring
+description: Strict cleanup rules for removing duplicated policy, stale guidance, and weak refactor prompts across FLEXT governance surfaces. Use when editing AGENTS.md, pointer docs, or meta-skills so startup law stays short, hard, and aligned with canonical execution rules.
+
+---
+
+# Flext Strict Refactoring
+
+**Reviewed**: 2026-04-27 | **Scope**: Governance hardening under `AGENTS.md` §0.
+
+## Scope
+
+- `AGENTS.md`
+- `.github/copilot-instructions.md`
+- `codex.md`
+- `.agents/INSTRUCTION_SURFACE.md`
+- `.agents/skills/*/SKILL.md`
 
 ## References
 
-- `AGENTS.md` (canonical policy)
-- `.agents/INSTRUCTION_SURFACE.md` (canonical loading manifest)
+- `AGENTS.md` §0
+- `.agents/skills/flext-docs-pointer-policy/SKILL.md`
 - `.agents/skills/skill-format-universal/SKILL.md`
 
 ## Rules
 
-- Remove duplicated guidance when canonical source exists.
-- Keep terminology consistent across related files.
-- Delete stale sections that conflict with active policy.
-- Preserve repository-relative paths in examples and references.
-- When AGENTS or a core workflow/prompt/skill adds stricter execution law, propagate that change through the remaining relevant pointer and meta-skill surfaces in the same governance cycle.
-- Meta-skills and pointer docs must reinforce mandatory impact analysis, surgical necessity, complete propagation, and required tool usage without copying AGENTS wholesale.
-- Meta-skills that mention kwargs discipline must distinguish true dynamic option bags from fixed-shape APIs: `model_validate(kwargs)` for the former, explicit typed params + `model_validate({...})` for the latter.
-
-Hard execution floor:
-
-1. Read `AGENTS.md` §0 first.
-2. Run `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json` before edits.
-3. One offender per cycle.
-4. Origin search before helper (`u.*`, `m.*`, parent method, centralized utility).
-5. New helper/proxy/wrapper without proof of no origin is invalid.
-6. True option bag -> one `model_validate(kwargs)`; fixed-shape API -> explicit params + one packed `model_validate({...})`.
-7. No manual kwargs key/type normalization when Pydantic can own payload.
-8. No `Any`/`object` fallback in runtime refactor paths.
-9. No completion claim without raw gate output (`ruff` -> `pyrefly` minimum after first edit).
-
-No-mercy short card:
-
-1. Canonical source first; no local policy mirrors.
-2. One offender per cycle; no side quests.
-3. Origin method/class before helper creation.
-4. `**kwargs` only through one typed Pydantic validation path.
-5. No `Any`/`object` fallback in runtime refactors.
-6. No manual key/type normalization when `model_validate(...)` can own payload.
-7. No completion claim without raw gate output.
-- Pointer surfaces must send agents to `AGENTS.md` §0 explicitly when that section defines the startup law.
-- For refactor/cleanup entrypoints, prefer one short start card (`qlty` first, one offender, origin before helper, `ruff` -> `pyrefly`) over diluted prose.
-
-Brutal self-critique requirement (must appear before first patch):
-
-1. Recurring failure risk in this cycle.
-2. Exact stop-rule that blocks it.
-3. Exact native replacement primitive (`Annotated`, validator, `TypeAdapter`, `model_copy`, `Discriminator`, `RootModel`, `TypeIs`, `match/case`).
-4. Exact propagation command and first gate command.
+- `AGENTS.md` is canonical. Pointer files point; they do not mirror policy.
+- Startup law stays short: `qlty` first, one offender, origin before helper, `ruff` -> `pyrefly`.
+- If `AGENTS.md` §0 already says it clearly, delete the duplicate instead of paraphrasing it elsewhere.
+- Meta-skills must hit the recurring failures directly: helper-first patches, manual kwargs normalization, magic literals, skipped propagation, and positive-LOC refactors.
+- Parameter-count smell is not a license to add a carrier model or widen a fixed-shape signature; prefer the existing owner model, enum, or `match/case` when that deletes the fan-out.
+- True option bags say `model_validate(kwargs)`. Fixed-shape APIs say explicit typed params + one `model_validate({...})`.
+- Name the native deletion primitive when tightening guidance: `model_copy(update=...)`, cached `TypeAdapter`, `Annotated`, validators, `computed_field`, `Discriminator`, `RootModel`, `TypeIs`, `match/case`.
+- No `Any`/`object` fallback language in runtime refactor guidance.
+- The brutal self-critique is mandatory in execution-heavy surfaces: failure risk, stop-rule, primitive, propagation + first gate.
+- When `AGENTS.md` gets stricter, patch the drifting meta-skill or pointer in the same cycle.
 
 ## Instructions
 
-- Compare candidate content against canonical source before copying.
-- Prefer referencing canonical files over re-explaining identical policy.
-- Keep each skill focused on domain-specific action, not global boilerplate.
-- When normalizing docs, prioritize the still-unupdated meta surfaces first: pointer entrypoints, formatting rules, routing manifests, and documentation/refactor governance skills.
-- Shorter and harder wins: remove filler before adding new rules.
-- If a pointer file says only “read AGENTS.md”, tighten it to “read `AGENTS.md` §0 first” when the task mode is execution-heavy.
-
-```bash
-rg -n "single source of truth|Canonical source|AGENTS.md" AGENTS.md .agents/skills/*/SKILL.md
-```
+- Read `AGENTS.md` §0 first, then patch the smallest set of meta surfaces that still drift.
+- Cut filler before adding rules.
+- Prefer one hard start card over stacked mini-cards that repeat the same law.
+- Use repository-relative paths and direct symbol names.
+- Keep meta-skills operational: one failure pattern, one counter-rule, one verification command.
+- If a pointer already says `AGENTS.md` §0 first and does not drift, leave it alone.
 
 ## Workflow
 
-1. Detect duplicated sections across docs/skills.
-2. Decide canonical location for each concept.
-3. Propagate new mandatory execution rules to remaining meta surfaces that drive future edits.
-4. Remove duplicates and replace with pointers.
-5. Verify section completeness and coherence.
+1. Run `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json` before edits.
+2. Read `AGENTS.md` §0 and isolate the exact recurring failure to harden.
+3. Patch `AGENTS.md` first if the law changes; then patch only the affected meta skills or pointers.
+4. After the first edit, run the minimum relevant gate for the touched file set.
+5. Verify drift with `rg` and delete leftover mirror text in the same cycle.
 
 ## Examples
 
 Good:
 
 ```markdown
-Canonical source: `AGENTS.md`.
+Read `AGENTS.md` §0 first.
+Start every refactor lane with `qlty`, one offender, origin before helper, then `ruff` -> `pyrefly`.
 ```
 
-Why good: one source reduces drift and conflict.
+Why good: short, operational, and aligned with canonical startup law.
 
 Bad:
 
 ```markdown
-## Global Rules
-
-[copy of 150 lines from AGENTS.md]
+Follow these local rules first.
+[120 lines copied from AGENTS.md]
 ```
 
-Why bad: duplicated policy rapidly becomes inconsistent.
+Why bad: it creates policy drift and hides the real startup law.
 
 ## Verification
 
-Make gates:
-
-- `make check PROJECT=flext-core` — verify no regressions after refactoring
-- `make val PROJECT=flext-core` — complexity + docstring gates
-- `make test PROJECT=flext-core` — test suite must pass after any refactor
-- `make val VALIDATE_SCOPE=workspace` — workspace-level validation
-
-Policy checks:
-
-- `rg -n "TODO|TBD|placeholder" .agents/skills/*/SKILL.md || true`
-- `rg -n "(^|[\"'`])/(Users|home)/" .agents/skills/\*/SKILL.md || true`
-- `rg -n "Canonical source:`AGENTS.md`|single source of truth" AGENTS.md codex.md .github/copilot-instructions.md .gemini/styleguide.md`
-- `rg -n "scope|Serena|ast-grep|MCP|zero.*ruff|zero.*pyrefly|enforcement|pytest" AGENTS.md codex.md .agents/README.md .agents/skills/*.md .github/prompts/*.md`
+- `rg -n "AGENTS.md §0|qlty smells --all --sarif --include-tests|origin before helper|ruff -> pyrefly" AGENTS.md .github/copilot-instructions.md .agents/skills/*/SKILL.md`
+- `rg -n "model_validate\(kwargs\)|model_validate\(\{.*\}\)|model_copy\(update=|TypeAdapter|Annotated|TypeIs|match/case" AGENTS.md .agents/skills/*/SKILL.md`
+- `rg -n "full policy|copy of .*AGENTS|local rules first" .github/copilot-instructions.md codex.md .agents/skills/*/SKILL.md`
+```markdown
