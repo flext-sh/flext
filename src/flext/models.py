@@ -10,3 +10,5 @@ class FlextRootModels(FlextModels):
 
 
 m = FlextRootModels
+
+__all__: list[str] = ["FlextRootModels", "m"]

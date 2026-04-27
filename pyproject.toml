@@ -248,7 +248,6 @@ project-excludes = [
   "vendor/**",
 ]
 project-includes = [
-  "docker/**/*.py*",
   "examples/**/*.py*",
   "libs/**/*.py*",
   "pkg/**/*.py*",
@@ -386,7 +385,6 @@ exclude = [
 extraPaths = [ ".", "src", "typings" ]
 ignore = [ "**/*.pyi", "typings" ]
 include = [
-  "docker",
   "examples",
   "flext-api/examples",
   "flext-api/src",
@@ -506,11 +504,6 @@ stubPath = "typings"
 typeCheckingMode = "strict"
 venv = ".venv"
 venvPath = "."
-
-[[tool.pyright.executionEnvironments]]
-extraPaths = [ ".", "src" ]
-reportPrivateUsage = "none"
-root = "docker"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = [ ".", "src" ]
@@ -989,7 +982,6 @@ respect-gitignore = true
 show-fixes = true
 src = [
   "algar-oud-mig",
-  "docker",
   "examples",
   "flexcore",
   "flext-api",
