@@ -57,7 +57,9 @@ class AclProcessingExample:
     class AclEntry(m.BaseModel):
         """Represents an ACL entry with context and permissions."""
 
-        model_config = m.ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True
+        )
 
         dn: str = u.Field(description="Distinguished name of the ACL entry")
         acl_attribute: str = u.Field(description="ACL attribute name")
@@ -68,7 +70,9 @@ class AclProcessingExample:
     class AclValidationResult(m.BaseModel):
         """Result of ACL validation with detailed context."""
 
-        model_config = m.ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True
+        )
 
         entry_dn: str = u.Field(description="Distinguished name of the entry")
         valid: bool = u.Field(description="Whether the ACL entry is valid")
@@ -254,7 +258,7 @@ class AclProcessingExample:
         class EntryWithServer(m.BaseModel):
             """Typed envelope for extracted entry/server pairs."""
 
-            model_config = m.ConfigDict(extra="forbid")
+            model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
             entry: t.JsonMapping
             server_type: str

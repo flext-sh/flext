@@ -23,7 +23,7 @@ from collections.abc import (
 )
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
-from typing import Annotated
+from typing import Annotated, ClassVar
 
 from examples import m, p, r, t, u
 
@@ -66,7 +66,7 @@ def _string_sequence(value: t.JsonValue) -> t.StrSequence:
 class PipelineStageData(m.BaseModel):
     """Data container for pipeline stage processing."""
 
-    model_config = m.ConfigDict(
+    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
         arbitrary_types_allowed=True,
         extra="allow",
     )
@@ -74,7 +74,7 @@ class PipelineStageData(m.BaseModel):
     class PipelinePayload(m.BaseModel):
         """Pipeline payload container."""
 
-        model_config = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True,
             extra="allow",
         )
@@ -104,7 +104,9 @@ class AdvancedProcessingExample:
     class ProcessingResult(m.BaseModel):
         """Result of processing operation with metrics."""
 
-        model_config = m.ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True
+        )
 
         operation_id: str = u.Field(description="Unique operation identifier")
         items_processed: int = u.Field(description="Total items processed")
@@ -123,7 +125,9 @@ class AdvancedProcessingExample:
     class ValidationResult(m.BaseModel):
         """Result of validation operation."""
 
-        model_config = m.ConfigDict(arbitrary_types_allowed=True)
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+            arbitrary_types_allowed=True
+        )
 
         item_id: str = u.Field(description="Unique item identifier")
         valid: bool = u.Field(description="Whether the item is valid")

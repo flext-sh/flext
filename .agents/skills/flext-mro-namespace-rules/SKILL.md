@@ -133,7 +133,9 @@ class FlextTargetOracleModels(m):
         class ExecuteResult(m.ArbitraryTypesModel):
             """Result of an Oracle batch execute operation."""
 
-            model_config = m.ConfigDict(frozen=True, strict=True)
+            model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+                frozen=True, strict=True
+            )
 
             rows_affected: Annotated[
                 t.NonNegativeInt,

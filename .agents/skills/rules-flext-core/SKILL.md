@@ -89,7 +89,7 @@ from flext_core import c, m
 class Settings(m.BaseModel):
     """Base settings class - abstracts pydantic for all consumers."""
 
-    model_config = m.ConfigDict(extra="ignore")
+    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="ignore")
 
 
 # In FlextCoreModels' __exports__
