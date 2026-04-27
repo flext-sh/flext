@@ -11,6 +11,7 @@ description: Mandatory runtime alias and typing discipline for all coding agents
 - If a centralized origin already exists, call it directly. Do not add a local wrapper first.
 - If a function repeats the same model construction, keep one sentinel instance and branch with `model_copy(update=...)`.
 - If a payload arrives as dynamic `kwargs`, validate it once with `Model.model_validate(kwargs)`; do not mutate keys by hand.
+- `**kwargs: object` or `dict[str, object]` in runtime code is forbidden; use canonical JSON-safe `t.*` contracts.
 - If a branch tree is only doing type dispatch, collapse it to `match/case` or a discriminated Pydantic model.
 - If a touched block introduces a new string or number literal, stop and look for a `c.*` origin before writing it.
 - If a parameter is deleted with `del`, the API is already dead. Remove it from the signature and propagate the caller chain now.

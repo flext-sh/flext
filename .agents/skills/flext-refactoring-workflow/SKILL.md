@@ -16,7 +16,7 @@ Ultra-short enforcement:
 
 1. One offender.
 2. Origin first, helper last.
-3. `**kwargs` -> one `model_validate(kwargs)`.
+3. True option bag -> one `model_validate(kwargs)`; fixed-shape signature -> explicit typed params + one `model_validate({...})`.
 4. No manual kwargs normalization.
 5. No magic literals if `c.*` exists.
 6. `ruff` -> `pyrefly` immediately after first edit.
@@ -28,13 +28,20 @@ No-excuse mini card:
 
 1. One offender.
 2. No helper-first patches.
-3. Validate kwargs once with Pydantic (`model_validate(kwargs)`).
+3. Validate real option bags once with `model_validate(kwargs)`; keep fixed-shape params explicit and validate one packed payload.
 4. No magic literals when `c.*` exists.
 5. `ruff` -> `pyrefly` before anything else.
 6. No raw output, no done.
 
 Failure signature (stop immediately): helper-first patch, manual kwargs normalization, guessed import origin, or positive LOC refactor.
 Kill order: reuse origin -> validate once with Pydantic -> propagate -> gate.
+
+Two-second start:
+
+1. `qlty` first.
+2. One offender.
+3. Origin before helper.
+4. `ruff` -> `pyrefly` after first edit.
 
 Execution header (mandatory before first patch):
 
@@ -59,7 +66,8 @@ Missing one field = no patch.
 14. If target file is in a sub-project, run status and gates in that sub-project context.
 15. Ralph-loop iterations must update `ralph-progress.md` before the next offender.
 16. Constants-first: no new inline magic string/number in runtime code when a `c.*` origin exists.
-17. `**kwargs` must be validated through canonical Pydantic paths (`model_validate`, typed input models, or `TypeAdapter`) instead of manual key/type checks or inplace coercion.
+17. Real `**kwargs` must be validated through canonical Pydantic paths (`model_validate`, typed input models, or `TypeAdapter`) instead of manual key/type checks or inplace coercion.
+17.1 Fixed-shape APIs do not become `**kwargs` bags to quiet `function-parameters`; keep explicit typed params and validate one packed payload with `model_validate({...})`.
 18. Import origin is part of the refactor contract: if a facade import would re-enter lazy loading or duplicate an owner primitive, use the owner-origin import or existing parent method instead. Guessing the import source is invalid.
 19. If a patch begins by adding a helper, assume it is wrong until two proofs exist: zero reusable origin hits and zero applicable Pydantic/Python deletion primitives.
 20. Addition-heavy first passes are presumptively wrong. Re-search before continuing unless the added code eliminates at least 8x more duplicated code in the same cycle.
