@@ -1,0 +1,29 @@
+AGENTS.md
+  ead63461a449b0d9 800
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "e0084632ed7719d9372b91a21799aa3339daebb8",
+  "prompts": {
+    "ead63461a449b0d9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9ada7b6a-e4e4-4c0b-b8b2-9e8fb91b16d7",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 491,
+      "total_deletions": 7,
+      "accepted_lines": 1396,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/fba7cbccb41feae50d61844456a9a0a81e258adb6d06e3faad45198aac34d7fc"
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
