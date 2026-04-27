@@ -12,20 +12,28 @@ import sys
 from collections.abc import (
     Sequence,
 )
+from enum import IntEnum
 from pathlib import Path
 from typing import Annotated, ClassVar, Final
 
 from flext_infra import m, t, u
 
-OWNER_MARKER_RE: Final[re.Pattern[str]] = re.compile(
-    r"^# Owner-Skill:\s+(.agents/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md)\s*$",
-)
-MAX_HEADER_LINES: Final[int] = 10
 
-EXIT_PASS: Final[int] = 0
-EXIT_FAIL: Final[int] = 1
-EXIT_USAGE: Final[int] = 2
-EXIT_INFRA: Final[int] = 3
+class OwnershipValidationConstants:
+    """Strict namespaced constants for ownership validation."""
+
+    OWNER_MARKER_RE: Final[re.Pattern[str]] = re.compile(
+        r"^# Owner-Skill:\s+(.agents/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md)\s*$",
+    )
+    MAX_HEADER_LINES: Final[int] = 10
+
+    class ExitCode(IntEnum):
+        """Process exit codes for ownership validation."""
+
+        PASS = 0
+        FAIL = 1
+        USAGE = 2
+        INFRA = 3
 
 
 class Ansi:
@@ -109,7 +117,7 @@ def tracked_scripts(repo_root: Path) -> Sequence[Path]:
     if output.exit_code != 0:
         raise SkillInfraError(output.stderr.strip() or "git ls-files failed")
 
-    scripts: Sequence[Path] = []
+    scripts: list[Path] = []
     for line in sorted(set(output.stdout.splitlines())):
         if not line.strip():
             continue
@@ -127,8 +135,8 @@ def read_header(repo_root: Path, script_path: Path) -> t.StrSequence:
     full_path = repo_root / script_path
     try:
         with full_path.open("r", encoding="utf-8") as handle:
-            lines = []
-            for _ in range(MAX_HEADER_LINES):
+            lines: list[str] = []
+            for _ in range(OwnershipValidationConstants.MAX_HEADER_LINES):
                 line = handle.readline()
                 if not line:
                     break
@@ -149,7 +157,7 @@ def scripts_section(skill_file: Path) -> str:
 
     lines = content.splitlines()
     in_section = False
-    section_lines: t.StrSequence = []
+    section_lines: list[str] = []
 
     for line in lines:
         if line.startswith("## "):
@@ -179,31 +187,33 @@ def script_listed_in_skill(skill_file: Path, script_path: Path) -> bool:
 def candidate_skill(script_path: Path) -> str:
     """candidate_skill function."""
     path = script_path.as_posix()
-    if path.startswith("scripts/validation/"):
-        return "scripts-validation"
-    if path.startswith("scripts/security/"):
-        return "scripts-security"
-    if path.startswith("scripts/architecture/"):
-        return "scripts-architecture"
-    if path.startswith("scripts/testing/"):
-        return "scripts-testing"
-    if path.startswith("scripts/dependencies/"):
-        return "scripts-dependencies"
-    if path.startswith("scripts/maintenance/"):
-        return "scripts-maintenance"
-    if path.startswith("scripts/git/"):
-        return "scripts-maintenance"
-    if path.startswith("scripts/lib/"):
-        return "scripts-infra"
-    if path.startswith("scripts/core/"):
-        return "scripts-infra"
-    if path.startswith("scripts/settings/"):
-        return "scripts-infra"
-    if path.startswith("scripts/makefiles/"):
-        return "scripts-infra"
-    if path.startswith("scripts/analysis/"):
-        return "scripts-architecture"
-    return "scripts-infra"
+    skill = "scripts-infra"
+    match path:
+        case value if value.startswith("scripts/validation/"):
+            skill = "scripts-validation"
+        case value if value.startswith("scripts/security/"):
+            skill = "scripts-security"
+        case value if value.startswith("scripts/architecture/"):
+            skill = "scripts-architecture"
+        case value if value.startswith("scripts/testing/"):
+            skill = "scripts-testing"
+        case value if value.startswith("scripts/dependencies/"):
+            skill = "scripts-dependencies"
+        case value if value.startswith("scripts/maintenance/"):
+            skill = "scripts-maintenance"
+        case value if value.startswith("scripts/git/"):
+            skill = "scripts-maintenance"
+        case value if value.startswith("scripts/lib/"):
+            skill = "scripts-infra"
+        case value if value.startswith("scripts/core/"):
+            skill = "scripts-infra"
+        case value if value.startswith("scripts/settings/"):
+            skill = "scripts-infra"
+        case value if value.startswith("scripts/makefiles/"):
+            skill = "scripts-infra"
+        case value if value.startswith("scripts/analysis/"):
+            skill = "scripts-architecture"
+    return skill
 
 
 def validate_script(
@@ -211,82 +221,78 @@ def validate_script(
     script_path: Path,
 ) -> tuple[ScriptCheckResult, t.StrMapping | None]:
     """validate_script function."""
+    script = script_path.as_posix()
     header = read_header(repo_root, script_path)
-    markers = [match for line in header if (match := OWNER_MARKER_RE.match(line))]
+    markers = [
+        match
+        for line in header
+        if (match := OwnershipValidationConstants.OWNER_MARKER_RE.match(line))
+    ]
+    candidate_report: t.StrMapping | None = None
+    result: ScriptCheckResult
 
     if not markers:
         candidate = candidate_skill(script_path)
-        return (
-            ScriptCheckResult(
-                script=script_path.as_posix(),
-                status="UNOWNED",
-                details=f"missing Owner-Skill marker (candidate: {candidate})",
-                owner_skill=None,
-            ),
-            {
-                "script": script_path.as_posix(),
-                "candidate_skill": candidate,
-                "candidate_skill_file": f".agents/skills/{candidate}/SKILL.md",
-                "reason": "missing_owner_marker",
-            },
+        result = ScriptCheckResult(
+            script=script,
+            status="UNOWNED",
+            details=f"missing Owner-Skill marker (candidate: {candidate})",
+            owner_skill=None,
         )
-
-    if len(markers) > 1:
-        return (
-            ScriptCheckResult(
-                script=script_path.as_posix(),
-                status="VIOLATION",
-                details="multiple Owner-Skill markers in first 10 lines",
-                owner_skill=None,
-            ),
-            None,
+        candidate_report = {
+            "script": script,
+            "candidate_skill": candidate,
+            "candidate_skill_file": f".agents/skills/{candidate}/SKILL.md",
+            "reason": "missing_owner_marker",
+        }
+    elif len(markers) > 1:
+        result = ScriptCheckResult(
+            script=script,
+            status="VIOLATION",
+            details="multiple Owner-Skill markers in first 10 lines",
+            owner_skill=None,
         )
+    else:
+        marker = markers[0]
+        owner_rel = marker.group(1)
+        owner_skill = marker.group(2)
+        owner_file = repo_root / owner_rel
 
-    marker = markers[0]
-    owner_rel = marker.group(1)
-    owner_skill = marker.group(2)
-    owner_file = repo_root / owner_rel
-
-    if not owner_file.exists():
-        return (
-            ScriptCheckResult(
-                script=script_path.as_posix(),
+        if not owner_file.exists():
+            result = ScriptCheckResult(
+                script=script,
                 status="VIOLATION",
                 details=f"owner skill file does not exist: {owner_rel}",
                 owner_skill=owner_skill,
-            ),
-            None,
-        )
-
-    if not script_listed_in_skill(owner_file, script_path):
-        return (
-            ScriptCheckResult(
-                script=script_path.as_posix(),
+            )
+        elif not script_listed_in_skill(owner_file, script_path):
+            result = ScriptCheckResult(
+                script=script,
                 status="VIOLATION",
                 details="script not listed under target SKILL.md ## Scripts section",
                 owner_skill=owner_skill,
-            ),
-            None,
-        )
+            )
+        else:
+            result = ScriptCheckResult(
+                script=script,
+                status="OK",
+                details="owner marker and SKILL.md scripts section validated",
+                owner_skill=owner_skill,
+            )
 
-    return (
-        ScriptCheckResult(
-            script=script_path.as_posix(),
-            status="OK",
-            details="owner marker and SKILL.md scripts section validated",
-            owner_skill=owner_skill,
-        ),
-        None,
-    )
+    return result, candidate_report
 
 
 def status_color(status: str) -> str:
     """status_color function."""
-    if status == "OK":
-        return Ansi.GREEN
-    if status == "UNOWNED":
-        return Ansi.YELLOW
-    return Ansi.RED
+    match status:
+        case "OK":
+            color = Ansi.GREEN
+        case "UNOWNED":
+            color = Ansi.YELLOW
+        case _:
+            color = Ansi.RED
+    return color
 
 
 def print_table(results: Sequence[ScriptCheckResult]) -> None:
@@ -324,68 +330,81 @@ def write_candidates(
 
 def run_main(argv: t.StrSequence) -> int:
     """run_main function."""
+    exit_code = OwnershipValidationConstants.ExitCode.INFRA
     try:
         args = parse_args(argv)
     except SystemExit as exc:
-        code = int(exc.code) if isinstance(exc.code, int) else EXIT_USAGE
-        return (
-            code
-            if code in {EXIT_PASS, EXIT_FAIL, EXIT_USAGE, EXIT_INFRA}
-            else EXIT_USAGE
-        )
+        match exc.code:
+            case int() as raw_code if raw_code in {
+                item.value for item in OwnershipValidationConstants.ExitCode
+            }:
+                exit_code = OwnershipValidationConstants.ExitCode(raw_code)
+            case _:
+                exit_code = OwnershipValidationConstants.ExitCode.USAGE
+    else:
+        try:
+            repo_root = Path(args.root).resolve()
+            if not repo_root.exists() or not repo_root.is_dir():
+                eprint(
+                    f"{Ansi.RED}error:{Ansi.RESET} --root is not a directory: {repo_root}"
+                )
+                exit_code = OwnershipValidationConstants.ExitCode.USAGE
+            else:
+                validations = [
+                    validate_script(repo_root, script)
+                    for script in tracked_scripts(repo_root)
+                ]
+                results = [result for result, _ in validations]
+                candidates = [
+                    candidate for _, candidate in validations if candidate is not None
+                ]
 
-    repo_root = Path(args.root).resolve()
-    if not repo_root.exists() or not repo_root.is_dir():
-        eprint(f"{Ansi.RED}error:{Ansi.RESET} --root is not a directory: {repo_root}")
-        return EXIT_USAGE
+                print_table(results)
+                report_path = write_candidates(repo_root, candidates)
 
-    try:
-        scripts = tracked_scripts(repo_root)
+                ok_count = sum(1 for item in results if item.status == "OK")
+                unowned_count = sum(1 for item in results if item.status == "UNOWNED")
+                violation_only_count = len(results) - ok_count - unowned_count
+                total_violations = len(results) - ok_count
 
-        results: Sequence[ScriptCheckResult] = []
-        candidates: Sequence[t.StrMapping] = []
-        for script in scripts:
-            result, candidate = validate_script(repo_root, script)
-            results.append(result)
-            if candidate is not None:
-                candidates.append(candidate)
+                summary = (
+                    f"\n{Ansi.CYAN}Summary:{Ansi.RESET} total={len(results)} "
+                    f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
+                    f"{Ansi.YELLOW}unowned={unowned_count}{Ansi.RESET} "
+                    f"{Ansi.RED}violations={violation_only_count}{Ansi.RESET} "
+                    f"{Ansi.RED}total_noncompliant={total_violations}{Ansi.RESET}"
+                )
+                eprint(summary)
+                eprint(f"Candidates report: {report_path.relative_to(repo_root)}")
 
-        print_table(results)
-        report_path = write_candidates(repo_root, candidates)
-
-        ok_count = sum(1 for item in results if item.status == "OK")
-        unowned_count = sum(1 for item in results if item.status == "UNOWNED")
-        violation_only_count = sum(1 for item in results if item.status == "VIOLATION")
-        total_violations = unowned_count + violation_only_count
-
-        summary = (
-            f"\n{Ansi.CYAN}Summary:{Ansi.RESET} total={len(results)} "
-            f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
-            f"{Ansi.YELLOW}unowned={unowned_count}{Ansi.RESET} "
-            f"{Ansi.RED}violations={violation_only_count}{Ansi.RESET} "
-            f"{Ansi.RED}total_noncompliant={total_violations}{Ansi.RESET}"
-        )
-        eprint(summary)
-        eprint(f"Candidates report: {report_path.relative_to(repo_root)}")
-
-        print(json.dumps({"violation_count": total_violations}, separators=(",", ":")))
-        return EXIT_PASS if total_violations == 0 else EXIT_FAIL
-    except SkillUsageError as exc:
-        eprint(f"{Ansi.RED}error:{Ansi.RESET} {exc}")
-        return EXIT_USAGE
-    except SkillInfraError as exc:
-        eprint(f"{Ansi.RED}error:{Ansi.RESET} {exc}")
-        return EXIT_INFRA
-    except Exception as exc:
-        eprint(f"{Ansi.RED}error:{Ansi.RESET} unexpected failure: {exc}")
-        return EXIT_INFRA
+                print(
+                    json.dumps(
+                        {"violation_count": total_violations},
+                        separators=(",", ":"),
+                    )
+                )
+                exit_code = (
+                    OwnershipValidationConstants.ExitCode.PASS
+                    if total_violations == 0
+                    else OwnershipValidationConstants.ExitCode.FAIL
+                )
+        except SkillUsageError as exc:
+            eprint(f"{Ansi.RED}error:{Ansi.RESET} {exc}")
+            exit_code = OwnershipValidationConstants.ExitCode.USAGE
+        except SkillInfraError as exc:
+            eprint(f"{Ansi.RED}error:{Ansi.RESET} {exc}")
+            exit_code = OwnershipValidationConstants.ExitCode.INFRA
+        except Exception as exc:
+            eprint(f"{Ansi.RED}error:{Ansi.RESET} unexpected failure: {exc}")
+            exit_code = OwnershipValidationConstants.ExitCode.INFRA
+    return int(exit_code)
 
 
 def main() -> None:
     """Main function."""
     code = run_main(sys.argv[1:])
-    if code not in {EXIT_PASS, EXIT_FAIL, EXIT_USAGE, EXIT_INFRA}:
-        code = EXIT_INFRA
+    if code not in {item.value for item in OwnershipValidationConstants.ExitCode}:
+        code = int(OwnershipValidationConstants.ExitCode.INFRA)
     raise SystemExit(code)
 
 
