@@ -1,0 +1,61 @@
+.agents/skills/rules-flext-core/SKILL.md
+  h_9db9d35f50cf33 92
+docs/superpowers/plans/2026-04-27-flext-core-enforcement-sweep.md
+  22632355ef1e26ce 561-563
+AGENTS.md
+  h_9db9d35f50cf33 498
+examples/acl_processing_example.py
+  22632355ef1e26ce 60-62,73-75
+.agents/skills/pydantic-v2-governance/SKILL.md
+  22632355ef1e26ce 138-140
+.agents/skills/flext-mro-namespace-rules/SKILL.md
+  22632355ef1e26ce 136-138
+examples/advanced_processing_example.py
+  22632355ef1e26ce 107-109,128-130
+.agents/skills/lib-pydantic-v2/SKILL.md
+  h_9db9d35f50cf33 63,283
+.agents/skills/pydantic-v2-patterns/SKILL.md
+  22632355ef1e26ce 162-164,204-206,211-213
+.agents/skills/flext-patterns/SKILL.md
+  h_9db9d35f50cf33 406
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "9194c97fd56d5fef3e48672fd4961f7cc70fbd0e",
+  "prompts": {
+    "22632355ef1e26ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c6ac7df6-1398-4096-87d8-e634aca30e02",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1642,
+      "total_deletions": 34,
+      "accepted_lines": 2532,
+      "overriden_lines": 8,
+      "messages_url": "https://usegitai.com/cas/b6f773d8c1ffe8059edde4640896d01f10f76536abfacced63dead19d90c203f"
+    },
+    "7f8dabdbc28465a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6be116e4-c6d0-4712-993e-5282bb50c991",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 520,
+      "total_deletions": 386,
+      "accepted_lines": 658,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/9d1a6b97c9605fbc25a9c6831de5aac4560cc18b3c3f3d4c7314b2dd694f4dd2"
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
