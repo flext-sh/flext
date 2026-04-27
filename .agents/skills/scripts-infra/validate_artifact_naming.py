@@ -12,19 +12,27 @@ from collections.abc import (
     Sequence,
 )
 from pathlib import Path
-from typing import ClassVar
+from typing import ClassVar, Final
 
 from flext_infra import m, t
 
-EXIT_PASS = 0
-EXIT_FAIL = 1
-EXIT_USAGE = 2
-EXIT_INFRA = 3
+EXIT_PASS: Final[int] = 0
+EXIT_FAIL: Final[int] = 1
+EXIT_USAGE: Final[int] = 2
+EXIT_INFRA: Final[int] = 3
 
-ARTIFACT_PATTERN = re.compile(r"^[a-z][-a-z0-9]*--[a-z]+--[a-z][-a-z0-9]*\.[a-z]+$")
-VALIDATED_TOP_DIRS = {"."}
-SKIPPED_TOP_DIRS = {"evidence", "plans", "drafts", "validation", "dependencies"}
-SKIPPED_FILES = {".gitkeep"}
+ARTIFACT_PATTERN: Final[re.Pattern[str]] = re.compile(
+    r"^[a-z][-a-z0-9]*--[a-z]+--[a-z][-a-z0-9]*\.[a-z]+$"
+)
+VALIDATED_TOP_DIRS: Final[frozenset[str]] = frozenset({"."})
+SKIPPED_TOP_DIRS: Final[frozenset[str]] = frozenset({
+    "evidence",
+    "plans",
+    "drafts",
+    "validation",
+    "dependencies",
+})
+SKIPPED_FILES: Final[frozenset[str]] = frozenset({".gitkeep"})
 
 
 class UsageError(Exception):
