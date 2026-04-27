@@ -13,19 +13,19 @@ from collections.abc import (
     Sequence,
 )
 from pathlib import Path
-from typing import Annotated, ClassVar
+from typing import Annotated, ClassVar, Final
 
 from flext_infra import m, t, u
 
-OWNER_MARKER_RE = re.compile(
+OWNER_MARKER_RE: Final[re.Pattern[str]] = re.compile(
     r"^# Owner-Skill:\s+(.agents/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md)\s*$",
 )
-MAX_HEADER_LINES = 10
+MAX_HEADER_LINES: Final[int] = 10
 
-EXIT_PASS = 0
-EXIT_FAIL = 1
-EXIT_USAGE = 2
-EXIT_INFRA = 3
+EXIT_PASS: Final[int] = 0
+EXIT_FAIL: Final[int] = 1
+EXIT_USAGE: Final[int] = 2
+EXIT_INFRA: Final[int] = 3
 
 
 class Ansi:
