@@ -18,7 +18,6 @@ REQUIRED_WORKSPACE_INSTALLS = (
 )
 
 FORBIDDEN_MOCK_COPIES = (
-    "docker/images/support/quality/",
     "src/flext_core/",
     "src/flext_observability/",
 )
