@@ -49,12 +49,15 @@ If this card conflicts with any longer text below, this card wins.
 
 1. Run `qlty` first; one offender only.
 2. If offender is stale, rerun `qlty` immediately.
-3. Search canonical origin (`u.*`, `m.*`, parent) before any new code.
-4. New helper/proxy/wrapper without proof of no origin is invalid.
+3. Search canonical origin (`u.*`, `m.*`, parent, existing enum/model`) before any new code.
+4. New helper/proxy/wrapper/carrier model/widened kwargs without zero-origin proof is invalid.
 5. Single-caller private helper must be inlined and deleted.
-6. True option bag -> one `model_validate(kwargs)` at owner origin.
-7. First edit -> `ruff` then `pyrefly`; no raw output means cycle open.
-8. Refactor with non-negative LOC delta is invalid.
+6. True option bag -> one `model_validate(kwargs)` at owner origin; fixed-shape API -> explicit params + one packed `model_validate({...})`.
+7. Delete custom code with `model_copy(update=...)`, cached `TypeAdapter`, `Annotated`, validators, `computed_field`, `Discriminator`, `RootModel`, `TypeIs`, or `match/case` before writing anything new.
+8. No loose module-scope constants/objects; move them into the existing owner class now.
+9. No manual kwargs normalization, no magic literals when `c.*` exists, no raw gate output.
+10. First edit -> `ruff` then `pyrefly`; cycle stays open until both are green.
+11. Refactor with non-negative LOC delta or skipped propagation is invalid.
 
 ### §0.00R START GRID (READ IN 10s)
 
@@ -65,10 +68,11 @@ If this card conflicts with any longer text below, this card wins.
 5. True option bag -> one `model_validate(kwargs)`. Fixed-shape API -> explicit typed params + one packed `model_validate({...})`.
 6. Prefer deletion primitives first: `model_copy(update=...)`, cached `TypeAdapter`, `Annotated`, validators, `computed_field`, `Discriminator`, `RootModel`, `TypeIs`, `match/case`.
 7. No manual kwargs normalization, no `Any`/`object`/`cast`, no magic literals when `c.*` exists.
-8. First edit => `ruff` then `pyrefly` immediately.
-9. Net LOC must be negative. Moving the smell, skipping propagation, or adding a helper first is invalid.
-10. Repeat the same failure twice -> stop and rewrite the smallest clean block.
-11. No raw gate output + exit code => no done claim.
+8. No loose module-scope constants/objects; centralize them under the correct owner class in the same cycle.
+9. First edit => `ruff` then `pyrefly` immediately.
+10. Net LOC must be negative. Moving the smell, skipping propagation, or adding a helper first is invalid.
+11. Repeat the same failure twice -> stop and rewrite the smallest clean block.
+12. No raw gate output + exit code => no done claim.
 
 Default failure memory: helper-first invention. Correct route: search origin -> delete duplicate -> let Pydantic own the payload -> gate immediately.
 
@@ -78,8 +82,8 @@ Write one short paragraph with exactly these four facts, or do not patch:
 
 1. Recurring failure risk in this cycle.
 2. Exact stop-rule that blocks it.
-3. Exact native primitive replacing the custom code.
-4. Exact propagation command + first gate command.
+3. Exact owner origin being reused, or explicit proof that no origin exists.
+4. Exact native primitive replacing the custom code + exact propagation command + first gate command.
 
 ### §0.00H EXECUTION HEADER (copy/paste before first edit)
 
@@ -341,6 +345,7 @@ Per-touched-file: `ruff check <file>` + `pyrefly check <file>` + relevant `pytes
 - **Stack Baseline**: Python 3.13+, Pydantic v2, Ruff, Pyrefly, Pyright, Mypy, Poetry, Make, RTK.
 - **Projects**: 34 flext projects in monorepo (`flext-core`, `flext-cli`, `flext-meltano`, etc.).
 - **No Shadow Policies**: Agent-specific settings are pointers only. No policy duplication outside this file.
+- **Meta-Surface Drift Is Invalid**: Pointer docs, prompts, and meta-skills with duplicated startup law, repeated frontmatter, or stacked mini-cards are governance defects. Collapse them to one pointer plus one operational start card in the same cycle.
 
 ## §2 Architecture Law
 

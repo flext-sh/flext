@@ -1,6 +1,6 @@
 # Instruction Surface Manifest
 
-**Reviewed**: 2026-04-27 | **Scope**: Complete audit of all agent/skill/MCP/instruction surfaces
+**Reviewed**: 2026-04-27 | **Scope**: Inventory and startup routing only
 
 Canonical governance: [`AGENTS.md`](../AGENTS.md)
 
@@ -9,19 +9,15 @@ Canonical governance: [`AGENTS.md`](../AGENTS.md)
 This file is inventory and routing only. Policy lives in [`AGENTS.md`](../AGENTS.md).
 
 1. Read `AGENTS.md` §0 first.
-2. Run `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json` before the next refactor cycle.
-3. If the selected smell is stale or already gone, rerun `qlty` immediately.
-4. Pick one offender only.
-5. Search owner/origin before writing.
-6. Single-caller private helper = inline delete. No new carrier model or wrapper.
-7. Reuse `c/m/p/t/u` or parent method before adding anything.
-8. New helper/proxy/wrapper before proof of no origin is invalid.
-9. Manual kwargs key/type normalization is invalid when one Pydantic validation call can own payload.
-10. True option bags: `model_validate(kwargs)` once; fixed-shape APIs: explicit params + one packed `model_validate({...})`.
-11. Parameter-count smell does not justify widened kwargs or a new carrier model; reuse the owner model, enum, or `match/case` first.
-12. First edit is followed immediately by `ruff` then `pyrefly` on the touched file.
-13. Before first patch, write the 4-item brutal self-critique (risk, stop-rule, primitive, propagate+gate command).
-14. Pointer/meta docs reinforce routing and tool choice only; normative rules are updated in `AGENTS.md`.
+2. Run `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json`; pick one live offender only.
+3. Search exact owner/origin before writing. Helper-first patches are invalid.
+4. Single-caller private helper = inline delete. No new wrapper, proxy, or carrier model.
+5. True option bags: `model_validate(kwargs)` once. Fixed-shape APIs: explicit params + one packed `model_validate({...})`.
+6. Prefer deletion primitives first: `model_copy(update=...)`, cached `TypeAdapter`, `Annotated`, validators, `computed_field`, `Discriminator`, `RootModel`, `TypeIs`, `match/case`.
+7. Manual kwargs normalization, magic literals, and positive-LOC refactors are invalid when a canonical origin exists.
+8. First edit is followed immediately by `ruff` then `pyrefly` on the touched file.
+9. Before first patch, write the brutal self-critique: risk, stop-rule, primitive, propagate+gate command.
+10. This file routes; `AGENTS.md` governs. Delete mirrored policy text instead of paraphrasing it here.
 
 ---
 
