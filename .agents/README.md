@@ -22,6 +22,14 @@ This directory contains only project agent assets.
 - Structural propagation rules for `ast-grep` live in `AGENTS.md` and `.agents/skills/flext-refactoring-workflow/SKILL.md`.
 - MCP routing expectations live in `AGENTS.md` and `.vscode/mcp.json`.
 
+## Refactor Entry
+
+- Read `AGENTS.md` §0 first for execution law.
+- Run `qlty smells` first and close one offender only.
+- Reuse canonical origin before helpers.
+- Let owner `model_validate(kwargs)` / cached `TypeAdapter` own true option bags; keep fixed-shape APIs explicit and validate one packed payload.
+- Missing raw `ruff`/`pyrefly` output means incomplete work.
+
 ## Non-Canonical Instruction Trees (must not be loaded)
 
 - `.claude/skills/**`

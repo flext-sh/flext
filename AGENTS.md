@@ -43,16 +43,42 @@ alwaysApply: true
 
 Skip one item and the task is invalid.
 
+### §0.00X NO-MERCY START (READ IN 5s)
+
+1. `qlty` first, one offender only, no side quests.
+2. Search origin (`u.*`, `m.*`, parent method) before writing anything.
+3. New helper/proxy/wrapper before proof of no origin = invalid patch.
+4. True option bag: one `model_validate(kwargs)`; fixed-shape API: explicit typed params + one packed `model_validate({...})`.
+5. Manual kwargs key/type normalization is forbidden when Pydantic can own payload.
+6. No `Any`/`object`/`cast` in runtime refactor path.
+7. No inline magic string/number when `c.*` exists.
+8. First edit -> `ruff` then `pyrefly`; no raw gate output = no done.
+
+### §0.00Y BRUTAL SELF-CRITIQUE (MANDATORY BEFORE FIRST PATCH)
+
+State exactly 4 items in one short paragraph, or do not patch:
+
+1. Recurring failure risk you are likely to repeat now.
+2. Exact stop-rule that blocks this failure.
+3. Exact Pydantic 2 / Python 3.13 primitive replacing custom code.
+4. Exact propagation command + first gate command.
+
 ### §0.00 QUICK KILL CARD (READ IN 8s)
 
 1. One offender only.
-2. Reuse canonical origin first (`u.*`, parent method, existing `m.*` contract).
-3. No helper/proxy/wrapper until search proves origin does not exist.
-4. Validate `**kwargs` once with Pydantic (`model_validate` or cached `TypeAdapter`), never manual key/type loops.
-5. No new inline magic literals when `c.*` exists.
-6. First edit must be followed by `ruff` then `pyrefly`.
-7. Positive LOC refactor is invalid.
-8. No raw gate output => not done.
+2. Origin first (`u.*`, parent, existing `m.*`) or stop.
+3. New helper/proxy/wrapper before proof of no origin = invalid patch.
+4. `**kwargs` must be validated once (`model_validate` / cached `TypeAdapter`).
+5. Manual `kwargs` normalization (`pop/get/setdefault`) is forbidden when model validation can own payload.
+6. `Any` / `object` / `cast` in runtime refactor path is forbidden.
+7. No inline magic string/number when `c.*` exists.
+8. First edit => `ruff` then `pyrefly` immediately.
+9. Refactor with non-negative LOC delta is invalid.
+10. No raw gate output + exit code => no done.
+11. **NEW MODEL FORBIDDEN unless ≥8× LOC eliminated**: Do NOT create a new `m.*` model/dataclass just to fix a `function-parameters` smell. First ask: can inlining the helper delete it entirely? Can the existing settings/model at the call boundary validate the payload? Only if neither works, prove ≥8× LOC saved by the new model — otherwise the smell is structural and must be accepted or fixed by deletion.
+12. **SINGLE-CALLER HELPER = DELETE**: One call site + private helper = inline and delete the helper. Net LOC must be negative. No new `m.*` model as a "better" carrier — just inline the body.
+13. **EXISTING SETTINGS OWNS KWARGS**: If the function already calls `XSettings.model_validate(...)` internally, change the public signature to `**kwargs` and pass them straight to that existing call. NEVER create a new `ConnectionParams`/`HealthCheckParams`/`OptionsModel` that duplicates an existing settings class schema.
+14. **POSITIVE LOC ON PARAMETER-COUNT SMELL = INVALID**: A fix that adds a dataclass + propagates to 5+ callers, netting ≥0 LOC, is a governance violation regardless of how "clean" the carrier looks. Skip the offender and choose another one.
 
 ### §0.00A EXECUTION HEADER (copy/paste before first edit)
 
@@ -77,6 +103,7 @@ Search before write. Origin before helper. Pydantic model before manual kwargs. 
 
 Helper-first = failure.
 Manual kwargs validation = failure.
+Fixed-shape signature widened to `**kwargs` = failure.
 Magic literal duplication = failure.
 Only valid path: reuse origin -> validate once with Pydantic (`model_validate`/`TypeAdapter`) -> centralize in `c.*` -> delete duplicate.
 
@@ -96,8 +123,9 @@ Hard line: no helper/proxy/alias, no zero-test pytest, no ambiguous evidence, no
 10. Repeat same failure twice => stop patching and rewrite minimal clean block.
 11. No new inline magic strings/numbers; new runtime literals must come from `c.*` unless they are one-off boundary messages.
 12. Moving a smell from the selected file to a sibling file is an invalid cycle; decomposition must reduce or keep total selected-smell family count in-lane.
-13. `**kwargs` payloads in runtime code must be validated by canonical Pydantic paths (`model_validate`, typed input models, or `TypeAdapter`); manual key/type validation loops are invalid.
+13. Real `**kwargs` payloads in runtime code must be validated by canonical Pydantic paths (`model_validate`, typed input models, or `TypeAdapter`); manual key/type validation loops are invalid.
 13. **`**kwargs: T` always produces `dict[str, T]` — never annotate internal helpers with `Mapping[str, T]` or scalar `T` for these; use `dict[str, T]` directly.**
+13.1 **Fixed-shape public/orchestrator signatures MUST stay explicit and typed; pack once into `Model.model_validate({...})` at the origin. Do not widen fixed parameters into `**kwargs` just to hide a smell.**
 14. **`metadata or ModelClass(field=default)` is the Pydantic 2 canonical "default model" pattern — never write `ModelClass(field=metadata.field if metadata is not None else default)` multi-branch constructors.**
 15. **Before deleting any helper, verify the type error is not a wrong annotation in the helper — wrong annotation must be fixed, not fixed by deleting the helper.**
 16. **`model_copy(update={...})` is the canonical Pydantic 2 mutation — never construct a new model from scratch when you already have a base instance to copy from.**
@@ -146,6 +174,10 @@ These patterns recur every session. Kill on sight — no debate, no deferral.
 > Symptom: subclass defines `_build_context()`, `InitOptions(BaseModel)`, manual `self.attr=`, manual `error_code or "..."`.
 > Fix: Set `_params_cls = MyParamsModel`, `_param_keys = frozenset({...})`, `_default_error_code = "..."` as ClassVars. The base `__init__` validates kwargs, assigns attrs, builds context. Single `super().__init__(msg, merged_kwargs=kwargs)` call. Delete everything else.
 
+**J. New model created to fix `function-parameters` smell — ABOMINABLE**
+> Symptom: smell is 5+ params → agent creates `ConnectionParams`, `HealthCheckParams`, `JsonWriteOptions`, `RopeEditContext` etc. Net LOC is zero or positive.
+> Fix: (1) Single caller? → inline the function body, delete the helper. (2) `**kwargs` + existing `XSettings.model_validate(kwargs)`? → use it, zero new model. (3) Caller always co-locates `(a, b)` already paired upstream? → dataclass only if ≥8× LOC eliminated, otherwise skip and pick another offender. NEVER add a model just to make the parameter count drop below threshold.
+
 ### §0.0 NO-EXCUSES START CARD (READ FIRST, 20s)
 
 1. Run `qlty smells` first. No smell run, no edit.
@@ -168,7 +200,7 @@ These patterns recur every session. Kill on sight — no debate, no deferral.
 18. Wrong import origin that re-enters a lazy facade is an INVALID patch. In owner code, import directly from the owning source when facade reuse would recurse; in consumers, use only the public facade. If you cannot name the owner, stop and search first.
 19. For `**kwargs` payloads, manual key/type validation is INVALID when a canonical Pydantic model can `model_validate(...)` the payload at the origin method.
 19. No new magic literals in touched blocks: if a same-meaning token/value already exists in `c.*`, using inline string/number is INVALID. Reuse canonical constants or stop and centralize first.
-20. `**kwargs` in public/orchestrator methods must be validated once at the owner origin through a typed Pydantic contract (`Model.model_validate(kwargs)` or cached `TypeAdapter`). Manual inline key/type checks and inplace kwargs mutation are INVALID.
+20. True option-bag `**kwargs` in public/orchestrator methods must be validated once at the owner origin through a typed Pydantic contract (`Model.model_validate(kwargs)` or cached `TypeAdapter`). Fixed-shape signatures stay explicit and validate one packed payload via `Model.model_validate({...})`. Manual inline key/type checks and inplace kwargs mutation are INVALID.
 21. **`e.BaseError` subclasses: use `_params_cls` + `_param_keys` + `_default_error_code` ClassVars. NEVER add nested `InitOptions`/`_XxxContextMixin`/`_build_context` — the base hook validates kwargs, builds context, and assigns attrs automatically. Writing a local context builder when `_params_cls` already handles it is §3.5 ABOMINABLE.**
 22. NEVER write `if isinstance(x, Model): self.x = x.model_copy(update=overrides)` else parse-branches. Canonical Pydantic 2: `Model.model_validate({**x.model_dump() if isinstance(x, Model) else (x or {}), **overrides})` — ONE call, validator owns all type coercion + defaulting + extra-key rejection. Manual inplace branches before parse are INVALID.
 
@@ -541,7 +573,7 @@ flext-<project>/src/flext_<project>/
 
 - **Cached-Adapter Mandate**: every recurring parse target gets ONE module-level/class-level `_X_ADAPTER: ClassVar[TypeAdapter[X]] = TypeAdapter(X)` constructed once, reused forever. Calling `TypeAdapter(X)` per invocation = §3.5 Legacy Extermination violation (re-parses schema each call).
 
-- **KWARGS-Model Mandate**: dynamic option bags MUST be validated exactly once at the origin method via a Pydantic v2 model (`OptionsModel.model_validate(kwargs)`). Manual `if key in kwargs`, manual type checks, and in-place dict mutation chains are FORBIDDEN except at unavoidable external boundaries.
+- **KWARGS-Model Mandate**: dynamic option bags MUST be validated exactly once at the origin method via a Pydantic v2 model (`OptionsModel.model_validate(kwargs)`). Fixed-shape signatures MUST stay explicit and typed, then pack once into `OptionsModel.model_validate({...})` at the owner origin. Widening a fixed signature to `**kwargs` to hide parameter count is FORBIDDEN. Manual `if key in kwargs`, manual type checks, and in-place dict mutation chains are FORBIDDEN except at unavoidable external boundaries.
 
 - **MRO-Collapse Mandate**: when 2+ classes/files share concern, COLLAPSE via MRO immediately:
   - Same-named verb in 2 projects (`to_str`, `run`, `build`, `_apply_rule`) with different signatures → unify by widening param OR delete descendant + callers go to canonical via `c.* / u.*` from the most-root project. NEVER keep two definitions.

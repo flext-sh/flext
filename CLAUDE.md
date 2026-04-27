@@ -6,7 +6,7 @@ Canonical source: [`AGENTS.md`](AGENTS.md). This file stays brief on purpose. Do
 
 ## Load Order
 
-1. Read [`AGENTS.md`](AGENTS.md).
+1. Read [`AGENTS.md`](AGENTS.md) §0 first (startup law), then the rest as needed.
 2. Load path-scoped skills from [`.agents/skills/`](.agents/skills/) only.
 3. For facade/import/namespace changes, prioritize:
    - [`.agents/skills/flext-mro-namespace-rules/SKILL.md`](.agents/skills/flext-mro-namespace-rules/SKILL.md)

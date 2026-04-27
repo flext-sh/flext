@@ -4,9 +4,34 @@
 
 Canonical governance: [`AGENTS.md`](../AGENTS.md)
 
+## Hard Start Card
+
+This file is inventory and routing only. Policy lives in [`AGENTS.md`](../AGENTS.md).
+
+1. Read `AGENTS.md` first.
+2. Pick one offender only.
+3. Search owner/origin before writing.
+4. Reuse `c/m/p/t/u` or parent method before adding anything.
+5. New helper/proxy/wrapper before proof of no origin is invalid.
+6. Manual kwargs key/type normalization is invalid when one Pydantic validation call can own payload.
+7. True option bags: `model_validate(kwargs)` once; fixed-shape APIs: explicit params + one packed `model_validate({...})`.
+8. Run `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json` before the next refactor cycle.
+9. First edit is followed immediately by `ruff` then `pyrefly` on the touched file.
+10. Pointer/meta docs reinforce routing and tool choice only; normative rules are updated in `AGENTS.md`.
+
 ---
 
 ## §1 Surface Hierarchy
+
+Startup floor before any edit:
+
+1. Read `AGENTS.md` §0 first.
+2. Run `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json` for refactor/cleanup work.
+3. Select one offender only.
+4. Reuse canonical origin before adding helpers, wrappers, or local validation.
+5. True option bags use owner `model_validate(kwargs)` or cached `TypeAdapter`; fixed-shape APIs keep explicit typed params and validate one packed payload.
+6. First edit must be followed immediately by `ruff` then `pyrefly`.
+7. No raw gate output means the cycle is still open.
 
 ```
 LOAD ORDER (highest authority first):

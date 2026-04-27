@@ -20,6 +20,7 @@ Brutal flash:
 - helper-first patch = invalid
 - manual kwargs key/type checks when model exists = invalid
 - duplicate local wrapper over canonical origin = invalid
+- fixed-shape API widened to `**kwargs` = invalid
 
 Autopsy trigger: if the patch starts with helper creation, kwargs key-check loops, or inline coercion branches, delete the draft and restart from an origin + native primitive.
 
@@ -32,6 +33,7 @@ Autopsy trigger: if the patch starts with helper creation, kwargs key-check loop
 5. If you instantiated `TypeAdapter` at call sites, stop and move it to cached registry.
 6. If you are assembling model payloads manually, stop and prefer `Model(**kwargs)`, `model_validate(...)`, or `model_copy(update=...)`.
 6.1 For constructors with option bags, prefer one typed options model + `model_validate(kwargs)`; manual key filtering and dict-building is forbidden when this path fits.
+6.2 If the parameter set is fixed and public, keep explicit typed params and validate one packed payload with `Model.model_validate({...})`; do not widen the surface to `**kwargs: object` or other catch-all bags just to reduce parameter count.
 7. If you are about to add a one-off request/helper model just to quiet a smell, stop and search for an existing canonical origin first; local envelope duplication is invalid when an existing `u.*`, `m.*`, `t.*`, or parent-class method already covers the concern.
 8. If `**kwargs` enters a method and a canonical model exists, manual key/type checks are invalid; validate once with `ExistingModel.model_validate(kwargs)`.
 

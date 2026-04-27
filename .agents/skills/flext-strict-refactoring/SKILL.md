@@ -39,6 +39,38 @@ description: Strict cleanup rules for removing duplication, stale policy text, a
 - Preserve repository-relative paths in examples and references.
 - When AGENTS or a core workflow/prompt/skill adds stricter execution law, propagate that change through the remaining relevant pointer and meta-skill surfaces in the same governance cycle.
 - Meta-skills and pointer docs must reinforce mandatory impact analysis, surgical necessity, complete propagation, and required tool usage without copying AGENTS wholesale.
+- Meta-skills that mention kwargs discipline must distinguish true dynamic option bags from fixed-shape APIs: `model_validate(kwargs)` for the former, explicit typed params + `model_validate({...})` for the latter.
+
+Hard execution floor:
+
+1. Read `AGENTS.md` §0 first.
+2. Run `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json` before edits.
+3. One offender per cycle.
+4. Origin search before helper (`u.*`, `m.*`, parent method, centralized utility).
+5. New helper/proxy/wrapper without proof of no origin is invalid.
+6. True option bag -> one `model_validate(kwargs)`; fixed-shape API -> explicit params + one packed `model_validate({...})`.
+7. No manual kwargs key/type normalization when Pydantic can own payload.
+8. No `Any`/`object` fallback in runtime refactor paths.
+9. No completion claim without raw gate output (`ruff` -> `pyrefly` minimum after first edit).
+
+No-mercy short card:
+
+1. Canonical source first; no local policy mirrors.
+2. One offender per cycle; no side quests.
+3. Origin method/class before helper creation.
+4. `**kwargs` only through one typed Pydantic validation path.
+5. No `Any`/`object` fallback in runtime refactors.
+6. No manual key/type normalization when `model_validate(...)` can own payload.
+7. No completion claim without raw gate output.
+- Pointer surfaces must send agents to `AGENTS.md` §0 explicitly when that section defines the startup law.
+- For refactor/cleanup entrypoints, prefer one short start card (`qlty` first, one offender, origin before helper, `ruff` -> `pyrefly`) over diluted prose.
+
+Brutal self-critique requirement (must appear before first patch):
+
+1. Recurring failure risk in this cycle.
+2. Exact stop-rule that blocks it.
+3. Exact native replacement primitive (`Annotated`, validator, `TypeAdapter`, `model_copy`, `Discriminator`, `RootModel`, `TypeIs`, `match/case`).
+4. Exact propagation command and first gate command.
 
 ## Instructions
 
@@ -46,6 +78,8 @@ description: Strict cleanup rules for removing duplication, stale policy text, a
 - Prefer referencing canonical files over re-explaining identical policy.
 - Keep each skill focused on domain-specific action, not global boilerplate.
 - When normalizing docs, prioritize the still-unupdated meta surfaces first: pointer entrypoints, formatting rules, routing manifests, and documentation/refactor governance skills.
+- Shorter and harder wins: remove filler before adding new rules.
+- If a pointer file says only “read AGENTS.md”, tighten it to “read `AGENTS.md` §0 first” when the task mode is execution-heavy.
 
 ```bash
 rg -n "single source of truth|Canonical source|AGENTS.md" AGENTS.md .agents/skills/*/SKILL.md
