@@ -10,3 +10,5 @@ class FlextRootProtocols(FlextProtocols):
 
 
 p = FlextRootProtocols
+
+__all__: list[str] = ["FlextRootProtocols", "p"]

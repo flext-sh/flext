@@ -386,17 +386,17 @@ class AclProcessingExample:
             result_data = {
                 **data,
                 "acls": [
-                    {
+                    t.json_mapping_adapter().validate_python({
                         "dn": acl.dn,
                         "acl_attribute": acl.acl_attribute,
-                        "permissions": tuple(acl.permissions),
+                        "permissions": list(acl.permissions),
                         "context": {
                             key: value
                             for key, value in acl.context.items()
                             if isinstance(value, (str, int, float, bool))
                         },
                         "server_type": acl.server_type,
-                    }
+                    })
                     for acl in all_acls
                 ],
                 "total_acls": len(all_acls),
@@ -430,15 +430,13 @@ class AclProcessingExample:
             result_data = {
                 **data,
                 "validation_results": [
-                    {
+                    t.json_mapping_adapter().validate_python({
                         "entry_dn": result.entry_dn,
                         "valid": result.valid,
-                        "violations": tuple(
-                            violation for violation in result.violations
-                        ),
-                        "warnings": tuple(warning for warning in result.warnings),
+                        "violations": list(result.violations),
+                        "warnings": list(result.warnings),
                         "processing_time": result.processing_time,
-                    }
+                    })
                     for result in validation_results
                 ],
                 "valid_acls": sum(1 for r in validation_results if r.valid),

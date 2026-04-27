@@ -10,3 +10,5 @@ class FlextRootUtilities(FlextUtilities):
 
 
 u = FlextRootUtilities
+
+__all__: list[str] = ["FlextRootUtilities", "u"]

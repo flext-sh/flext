@@ -24,3 +24,5 @@ class FlextRootServiceBase:
 
 
 s = FlextRootServiceBase
+
+__all__: list[str] = ["FlextRootServiceBase", "s"]
