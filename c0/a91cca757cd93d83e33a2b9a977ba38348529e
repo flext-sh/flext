@@ -1,0 +1,41 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "c0a91cca757cd93d83e33a2b9a977ba38348529e",
+  "prompts": {
+    "c8a4efa99583d305": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "064e59bc-4db0-43f3-84df-745838365e34",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 0,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/3309256b52de06128fd598261db39f62fc3bd0df705b2c3ac90eaf9fa2af350d"
+    },
+    "d47817c7586d1e59": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bc7f6bd0-731d-49b0-9c44-6c380d65f6ff",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 1,
+      "accepted_lines": 12669,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/957f7c06a5470386c47439f7a78fb20e4b4a8141e93bee15c74da7711bc7dd11"
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
