@@ -11,4 +11,4 @@ class FlextRootConstants(FlextConstants):
 
 c = FlextRootConstants
 
-__all__: list[str] = ["FlextRootConstants", "c"]
+__all__: tuple[str, ...] = ("FlextRootConstants", "c")
