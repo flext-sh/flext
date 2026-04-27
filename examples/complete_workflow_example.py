@@ -181,11 +181,9 @@ class CompleteWorkflowExample:
             content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
-                    0,
-                    "aggregated",
-                    True,
+                    CompleteWorkflowExample.Stage.AGGREGATION,
+                    context,
                     lambda _i: {"final_score": final_score},
-                    context=context,
                 ),
             }
             workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
@@ -231,11 +229,9 @@ class CompleteWorkflowExample:
             content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
-                    0.005,
-                    "analyzed",
-                    True,
+                    CompleteWorkflowExample.Stage.ANALYSIS,
+                    context,
                     lambda _i: {"complexity_score": len(str(item)) * 0.1},
-                    context=context,
                 ),
             }
             workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
@@ -421,11 +417,9 @@ class CompleteWorkflowExample:
             content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
-                    0.01,
-                    "processed",
-                    True,
+                    CompleteWorkflowExample.Stage.PROCESSING,
+                    context,
                     lambda _i: {"processed_at": time.time()},
-                    context=context,
                 ),
             }
             workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
@@ -436,28 +430,39 @@ class CompleteWorkflowExample:
         def _process_stage(
             self,
             item: CompleteWorkflowProcessingDict,
-            sleep_time: float,
-            add_field: str,
-            value: t.Primitives,
+            stage: CompleteWorkflowExample.Stage,
+            context: CompleteWorkflowExample.WorkflowContext,
             extra_logic: Callable[
                 [CompleteWorkflowProcessingDict],
                 t.JsonMapping,
             ]
             | None = None,
-            context: CompleteWorkflowExample.WorkflowContext | None = None,
         ) -> CompleteWorkflowProcessingDict:
             """Generic stage processing helper."""
+            sleep_time = 0.0
+            add_field = "aggregated"
+            match stage:
+                case CompleteWorkflowExample.Stage.VALIDATION:
+                    sleep_time = 0.005
+                    add_field = "validated"
+                case CompleteWorkflowExample.Stage.PROCESSING:
+                    sleep_time = 0.01
+                    add_field = "processed"
+                case CompleteWorkflowExample.Stage.ANALYSIS:
+                    sleep_time = 0.005
+                    add_field = "analyzed"
+                case CompleteWorkflowExample.Stage.AGGREGATION:
+                    add_field = "aggregated"
             time.sleep(sleep_time)
             result: t.MutableJsonMapping = {
                 **item,
             }
-            result[add_field] = value
-            if context is not None:
-                result["workflow_context"] = {
-                    "workflow_id": context.workflow_id,
-                    "correlation_id": context.correlation_id,
-                }
-            if extra_logic:
+            result[add_field] = True
+            result["workflow_context"] = {
+                "workflow_id": context.workflow_id,
+                "correlation_id": context.correlation_id,
+            }
+            if extra_logic is not None:
                 result.update(extra_logic(item))
             return result
 
@@ -495,11 +500,9 @@ class CompleteWorkflowExample:
             content_payload: CompleteWorkflowContent = {
                 **self._process_stage(
                     item,
-                    0.005,
-                    "validated",
-                    True,
+                    CompleteWorkflowExample.Stage.VALIDATION,
+                    context,
                     lambda _i: {"valid": bool(item.get("id") and item.get("name"))},
-                    context=context,
                 ),
             }
             workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(

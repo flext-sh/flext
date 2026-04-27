@@ -86,42 +86,22 @@ func main() {
 // SOLID SRP: Single method coordinating all initialization phases with proper error propagation
 func initializeService() ServiceInitializationResult {
 	initializer := &ServiceInitializer{}
-
-	// Railway Pattern: Chain initialization steps
-	if result := initializer.parseCommandFlags(); !result.Success {
-		return result
+	steps := []func() ServiceInitializationResult{
+		initializer.parseCommandFlags,
+		initializer.handleHelpAndVersion,
+		initializer.initializeConfiguration,
+		initializer.initializeLogging,
+		initializer.setupGracefulShutdown,
+		initializer.createDIContainer,
+		initializer.logArchitectureStatus,
+		initializer.createAndSettingsureServer,
+		initializer.startServerAndWaitForShutdown,
 	}
 
-	if result := initializer.handleHelpAndVersion(); !result.Success {
-		return result
-	}
-
-	if result := initializer.initializeConfiguration(); !result.Success {
-		return result
-	}
-
-	if result := initializer.initializeLogging(); !result.Success {
-		return result
-	}
-
-	if result := initializer.setupGracefulShutdown(); !result.Success {
-		return result
-	}
-
-	if result := initializer.createDIContainer(); !result.Success {
-		return result
-	}
-
-	if result := initializer.logArchitectureStatus(); !result.Success {
-		return result
-	}
-
-	if result := initializer.createAndSettingsureServer(); !result.Success {
-		return result
-	}
-
-	if result := initializer.startServerAndWaitForShutdown(); !result.Success {
-		return result
+	for _, step := range steps {
+		if result := step(); !result.Success {
+			return result
+		}
 	}
 
 	return ServiceInitializationResult{

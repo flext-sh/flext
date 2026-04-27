@@ -43,69 +43,49 @@ alwaysApply: true
 
 Skip one item and the task is invalid.
 
-### §0.00X NO-MERCY START (READ IN 5s)
+### §0.000 FAST KILL CARD (READ IN 10s)
 
-1. `qlty` first, one offender only, no side quests.
-2. Search origin (`u.*`, `m.*`, parent method) before writing anything.
-3. New helper/proxy/wrapper before proof of no origin = invalid patch.
-4. True option bag: one `model_validate(kwargs)`; fixed-shape API: explicit typed params + one packed `model_validate({...})`.
-5. Manual kwargs key/type normalization is forbidden when Pydantic can own payload.
-6. No `Any`/`object`/`cast` in runtime refactor path.
-7. No inline magic string/number when `c.*` exists.
-8. First edit -> `ruff` then `pyrefly`; no raw gate output = no done.
+If this card conflicts with any longer text below, this card wins.
 
-### §0.00Y BRUTAL SELF-CRITIQUE (MANDATORY BEFORE FIRST PATCH)
+1. Run `qlty` first; one offender only.
+2. If offender is stale, rerun `qlty` immediately.
+3. Search canonical origin (`u.*`, `m.*`, parent) before any new code.
+4. New helper/proxy/wrapper without proof of no origin is invalid.
+5. Single-caller private helper must be inlined and deleted.
+6. True option bag -> one `model_validate(kwargs)` at owner origin.
+7. First edit -> `ruff` then `pyrefly`; no raw output means cycle open.
+8. Refactor with non-negative LOC delta is invalid.
 
-State exactly 4 items in one short paragraph, or do not patch:
+### §0.00R START GRID (READ IN 10s)
 
-1. Recurring failure risk you are likely to repeat now.
-2. Exact stop-rule that blocks this failure.
-3. Exact Pydantic 2 / Python 3.13 primitive replacing custom code.
+1. `qlty` first. One offender only. If the selection is stale, rerun `qlty` immediately.
+2. Generated / auto-generated files are invalid smell lanes unless the generator is the target.
+3. Origin before helper. Search `u.*`, `m.*`, parent methods, and existing utilities before writing anything.
+4. Single-caller private helper = inline delete. New helper/proxy/wrapper without zero-origin proof = invalid patch.
+5. True option bag -> one `model_validate(kwargs)`. Fixed-shape API -> explicit typed params + one packed `model_validate({...})`.
+6. Prefer deletion primitives first: `model_copy(update=...)`, cached `TypeAdapter`, `Annotated`, validators, `computed_field`, `Discriminator`, `RootModel`, `TypeIs`, `match/case`.
+7. No manual kwargs normalization, no `Any`/`object`/`cast`, no magic literals when `c.*` exists.
+8. First edit => `ruff` then `pyrefly` immediately.
+9. Net LOC must be negative. Moving the smell, skipping propagation, or adding a helper first is invalid.
+10. Repeat the same failure twice -> stop and rewrite the smallest clean block.
+11. No raw gate output + exit code => no done claim.
+
+Default failure memory: helper-first invention. Correct route: search origin -> delete duplicate -> let Pydantic own the payload -> gate immediately.
+
+### §0.00S BRUTAL SELF-CRITIQUE (MANDATORY BEFORE FIRST PATCH)
+
+Write one short paragraph with exactly these four facts, or do not patch:
+
+1. Recurring failure risk in this cycle.
+2. Exact stop-rule that blocks it.
+3. Exact native primitive replacing the custom code.
 4. Exact propagation command + first gate command.
 
-### §0.00 QUICK KILL CARD (READ IN 8s)
-
-1. One offender only.
-2. Origin first (`u.*`, parent, existing `m.*`) or stop.
-3. New helper/proxy/wrapper before proof of no origin = invalid patch.
-4. `**kwargs` must be validated once (`model_validate` / cached `TypeAdapter`).
-5. Manual `kwargs` normalization (`pop/get/setdefault`) is forbidden when model validation can own payload.
-6. `Any` / `object` / `cast` in runtime refactor path is forbidden.
-7. No inline magic string/number when `c.*` exists.
-8. First edit => `ruff` then `pyrefly` immediately.
-9. Refactor with non-negative LOC delta is invalid.
-10. No raw gate output + exit code => no done.
-11. **NEW MODEL FORBIDDEN unless ≥8× LOC eliminated**: Do NOT create a new `m.*` model/dataclass just to fix a `function-parameters` smell. First ask: can inlining the helper delete it entirely? Can the existing settings/model at the call boundary validate the payload? Only if neither works, prove ≥8× LOC saved by the new model — otherwise the smell is structural and must be accepted or fixed by deletion.
-12. **SINGLE-CALLER HELPER = DELETE**: One call site + private helper = inline and delete the helper. Net LOC must be negative. No new `m.*` model as a "better" carrier — just inline the body.
-13. **EXISTING SETTINGS OWNS KWARGS**: If the function already calls `XSettings.model_validate(...)` internally, change the public signature to `**kwargs` and pass them straight to that existing call. NEVER create a new `ConnectionParams`/`HealthCheckParams`/`OptionsModel` that duplicates an existing settings class schema.
-14. **POSITIVE LOC ON PARAMETER-COUNT SMELL = INVALID**: A fix that adds a dataclass + propagates to 5+ callers, netting ≥0 LOC, is a governance violation regardless of how "clean" the carrier looks. Skip the offender and choose another one.
-
-### §0.00A EXECUTION HEADER (copy/paste before first edit)
+### §0.00H EXECUTION HEADER (copy/paste before first edit)
 
 `OFFENDER=<file:line>; PRIMITIVE=<Annotated|validator|TypeAdapter|Discriminator|RootModel|TypeIs|match>; PROPAGATE=<scope/sg cmd>; GATE1=ruff <file>; GATE2=pyrefly <file>; TEST=<pytest target>`
 
 Missing one field above = no patch.
-
-### §0.00A.1 FAST EXECUTION BRIEF (read in 5s)
-
-Search before write. Origin before helper. Pydantic model before manual kwargs. `c.*` before magic literal. Delete before add. `ruff` -> `pyrefly` immediately.
-
-### §0.00A.2 BRUTAL 6-LINE START (MANDATORY)
-
-1. One offender only. No side quests.
-2. No new helper/wrapper/proxy until `grep` proves no canonical origin.
-3. `**kwargs` must be validated once via `Model.model_validate(kwargs)` (or cached `TypeAdapter`) at owner origin.
-4. No inline magic strings/numbers when `c.*` exists.
-5. First edit => `ruff` then `pyrefly` on touched file.
-6. Any red gate or missing raw output => cycle stays OPEN.
-
-### §0.00A.2 BRUTAL SELF-CRITIQUE FLASH (read in 5s)
-
-Helper-first = failure.
-Manual kwargs validation = failure.
-Fixed-shape signature widened to `**kwargs` = failure.
-Magic literal duplication = failure.
-Only valid path: reuse origin -> validate once with Pydantic (`model_validate`/`TypeAdapter`) -> centralize in `c.*` -> delete duplicate.
 
 ### §0.00 ULTRA START CARD (10s, EXECUTE OR STOP)
 

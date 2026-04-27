@@ -1,6 +1,6 @@
 # Instruction Surface Manifest
 
-**Reviewed**: 2026-04-19 | **Scope**: Complete audit of all agent/skill/MCP/instruction surfaces
+**Reviewed**: 2026-04-27 | **Scope**: Complete audit of all agent/skill/MCP/instruction surfaces
 
 Canonical governance: [`AGENTS.md`](../AGENTS.md)
 
@@ -8,30 +8,26 @@ Canonical governance: [`AGENTS.md`](../AGENTS.md)
 
 This file is inventory and routing only. Policy lives in [`AGENTS.md`](../AGENTS.md).
 
-1. Read `AGENTS.md` first.
-2. Pick one offender only.
-3. Search owner/origin before writing.
-4. Reuse `c/m/p/t/u` or parent method before adding anything.
-5. New helper/proxy/wrapper before proof of no origin is invalid.
-6. Manual kwargs key/type normalization is invalid when one Pydantic validation call can own payload.
-7. True option bags: `model_validate(kwargs)` once; fixed-shape APIs: explicit params + one packed `model_validate({...})`.
-8. Run `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json` before the next refactor cycle.
-9. First edit is followed immediately by `ruff` then `pyrefly` on the touched file.
-10. Pointer/meta docs reinforce routing and tool choice only; normative rules are updated in `AGENTS.md`.
+1. Read `AGENTS.md` §0 first.
+2. Run `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json` before the next refactor cycle.
+3. If the selected smell is stale or already gone, rerun `qlty` immediately.
+4. Pick one offender only.
+5. Search owner/origin before writing.
+6. Single-caller private helper = inline delete. No new carrier model or wrapper.
+7. Reuse `c/m/p/t/u` or parent method before adding anything.
+8. New helper/proxy/wrapper before proof of no origin is invalid.
+9. Manual kwargs key/type normalization is invalid when one Pydantic validation call can own payload.
+10. True option bags: `model_validate(kwargs)` once; fixed-shape APIs: explicit params + one packed `model_validate({...})`.
+11. Parameter-count smell does not justify widened kwargs or a new carrier model; reuse the owner model, enum, or `match/case` first.
+12. First edit is followed immediately by `ruff` then `pyrefly` on the touched file.
+13. Before first patch, write the 4-item brutal self-critique (risk, stop-rule, primitive, propagate+gate command).
+14. Pointer/meta docs reinforce routing and tool choice only; normative rules are updated in `AGENTS.md`.
 
 ---
 
 ## §1 Surface Hierarchy
 
-Startup floor before any edit:
-
-1. Read `AGENTS.md` §0 first.
-2. Run `qlty smells --all --sarif --include-tests > /tmp/qlty_smells-tests.json` for refactor/cleanup work.
-3. Select one offender only.
-4. Reuse canonical origin before adding helpers, wrappers, or local validation.
-5. True option bags use owner `model_validate(kwargs)` or cached `TypeAdapter`; fixed-shape APIs keep explicit typed params and validate one packed payload.
-6. First edit must be followed immediately by `ruff` then `pyrefly`.
-7. No raw gate output means the cycle is still open.
+This section is load-order only. Startup law stays in the Hard Start Card above and canonically in `AGENTS.md` §0.
 
 ```
 LOAD ORDER (highest authority first):

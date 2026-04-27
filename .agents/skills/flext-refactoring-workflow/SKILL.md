@@ -10,38 +10,17 @@ description: Step-by-step refactoring workflow with quality gates, make targets,
 
 ## Hard Start Card (mandatory)
 
-Hard line: one offender, one primitive, one proof chain; no helper/proxy/alias, no pass-through `__init__`, no zero-test pytest, no ambiguous output.
+Hard line: one offender, one primitive, one proof chain; helper-first patches, manual kwargs normalization, guessed origin imports, and positive-LOC refactors are invalid.
 
-Ultra-short enforcement:
-
-1. One offender.
-2. Origin first, helper last.
-3. True option bag -> one `model_validate(kwargs)`; fixed-shape signature -> explicit typed params + one `model_validate({...})`.
-4. No manual kwargs normalization.
-5. No magic literals if `c.*` exists.
-6. `ruff` -> `pyrefly` immediately after first edit.
-7. No raw output, no done.
-
-Fast brief: search before write, origin before helper, model before manual kwargs, constants before inline literals, delete before add.
-
-No-excuse mini card:
-
-1. One offender.
-2. No helper-first patches.
-3. Validate real option bags once with `model_validate(kwargs)`; keep fixed-shape params explicit and validate one packed payload.
-4. No magic literals when `c.*` exists.
-5. `ruff` -> `pyrefly` before anything else.
-6. No raw output, no done.
-
-Failure signature (stop immediately): helper-first patch, manual kwargs normalization, guessed import origin, or positive LOC refactor.
-Kill order: reuse origin -> validate once with Pydantic -> propagate -> gate.
-
-Two-second start:
-
-1. `qlty` first.
-2. One offender.
-3. Origin before helper.
-4. `ruff` -> `pyrefly` after first edit.
+1. `qlty` first. One offender only. Stale selection -> rerun now.
+2. Search origin before helper. Single-caller private helper -> inline delete.
+3. True option bag -> one `model_validate(kwargs)`. Fixed-shape API -> explicit typed params + one packed `model_validate({...})`.
+4. Prefer `model_copy(update=...)`, cached `TypeAdapter`, `Annotated`, validators, `computed_field`, `Discriminator`, `RootModel`, `TypeIs`, and `match/case` before custom code.
+5. No manual kwargs normalization, no `Any`/`object`/`cast`, no magic literals when `c.*` exists.
+6. First edit => `ruff` then `pyrefly`. Then run the cheapest focused executable check.
+7. Shared contract changed => propagate with `sg` now.
+8. Net LOC must be negative. No raw output, no done.
+9. Same failure twice -> rewrite the smallest clean block.
 
 Execution header (mandatory before first patch):
 
@@ -54,9 +33,8 @@ Missing one field = no patch.
 3. Search before write. Reuse before create. Delete before extend.
 4. If a canonical origin method/class already exists, use it directly; local helper duplication is invalid.
 5. Structural propagation uses `sg`; manual grep rewrites are invalid.
-6. Pydantic2/Python3.13 first (`TypeAdapter`, `Annotated`, validators, `computed_field`, `TypeIs`, `Self`, `@override`, `match/case`).
-7. Prefer declarative model creation via `Model(**kwargs)`, `model_validate(...)`, and `model_copy(update=...)` over manual dict assembly or field-by-field mutation.
-7.1 Manual/inplace kwargs validation (`pop/get/if` chains) is forbidden when one canonical Pydantic validation path can own the payload.
+6. Pydantic2/Python3.13 first (`TypeAdapter`, `Annotated`, validators, `computed_field`, `TypeIs`, `Self`, `@override`, `match/case`, `model_copy(update=...)`, `model_validate(...)`).
+7. Manual/inplace kwargs validation (`pop/get/if` chains) is forbidden when one canonical Pydantic validation path can own the payload.
 8. Do not create a local helper/envelope/spec class just to reduce a smell when an existing centralized origin or parent method already exists.
 9. Net LOC must be negative.
 10. Validate now: `ruff` -> `pyrefly` -> focused `pytest` -> affected `make check`.
@@ -66,8 +44,7 @@ Missing one field = no patch.
 14. If target file is in a sub-project, run status and gates in that sub-project context.
 15. Ralph-loop iterations must update `ralph-progress.md` before the next offender.
 16. Constants-first: no new inline magic string/number in runtime code when a `c.*` origin exists.
-17. Real `**kwargs` must be validated through canonical Pydantic paths (`model_validate`, typed input models, or `TypeAdapter`) instead of manual key/type checks or inplace coercion.
-17.1 Fixed-shape APIs do not become `**kwargs` bags to quiet `function-parameters`; keep explicit typed params and validate one packed payload with `model_validate({...})`.
+17. Fixed-shape APIs do not become `**kwargs` bags to quiet `function-parameters`; keep explicit typed params and validate one packed payload with `model_validate({...})`.
 18. Import origin is part of the refactor contract: if a facade import would re-enter lazy loading or duplicate an owner primitive, use the owner-origin import or existing parent method instead. Guessing the import source is invalid.
 19. If a patch begins by adding a helper, assume it is wrong until two proofs exist: zero reusable origin hits and zero applicable Pydantic/Python deletion primitives.
 20. Addition-heavy first passes are presumptively wrong. Re-search before continuing unless the added code eliminates at least 8x more duplicated code in the same cycle.
