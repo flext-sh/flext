@@ -34,7 +34,7 @@ description: Internal Pydantic v2 governance patterns for the FLEXT 34-project m
 - **Mandatory Pydantic v2 Mastery**: ALL code MUST follow "Pydantic v2 way" EXTENSIVELY across ALL 34 projects (`src/`, `tests/`, `examples/`). Every class extends `m.BaseModel` (or FLEXT base models like `m.Value`, `m.Entity`, `m.FrozenModel`) via MRO.
 - **m.Field() for ALL declarations**: Use `m.Field()` with `description`, `title`, `examples`, `json_schema_extra` documenting business rules — fields are self-documenting contracts.
 - **Secrets**: Use `m.SecretStr` / `up.SecretBytes` for secrets (never plain `str`).
-- **ConfigDict**: Use `model_config = m.ConfigDict(...)` on every model. Standalone `*Config` classes or `class Config:` blocks FORBIDDEN.
+- **ConfigDict**: Use `model_config: ClassVar[m.ConfigDict] = m.ConfigDict(...)` on every model. Standalone `*Config` classes or `class Config:` blocks FORBIDDEN.
 - **Minimize custom validators**: Prefer built-in constraints through the facade (`m.Field(ge=0, le=100)`, `m.StringConstraints()`, `Literal[...]`, `m.constr`, `m.conint`) before writing a custom validator.
 - **FORBIDDEN in models**: initialization helpers, unnecessary `@property`, public `get_*`/`set_*`/`is_*` accessors, line-reduction wrappers, pass-through methods — USE Pydantic built-ins (`@u.computed_field`, `model_post_init`, `u.PrivateAttr`) and canonical field names such as `success`, `failure`, `expired`, `healthy`.
 - **Enums/Mappings/Literals**: From `constants.py` (`c.*`), settings from `settings.py` (`s.*`).
@@ -55,7 +55,7 @@ description: Internal Pydantic v2 governance patterns for the FLEXT 34-project m
 
 Every new or touched Pydantic model MUST satisfy these non-negotiable rules. Each `UserWarning` emitted by the enforcement layer is a FAILURE, not a nag.
 
-- **`model_config = m.ConfigDict(...)`** present on every `BaseModel`/`RootModel` subclass. `frozen=True` for settings/values, `strict=True` for public contracts.
+- **`model_config: ClassVar[m.ConfigDict] = m.ConfigDict(...)`** present on every `BaseModel`/`RootModel` subclass. `frozen=True` for settings/values, `strict=True` for public contracts.
 - **No `class Config:`** blocks anywhere. v1 syntax is banned.
 - **Immutable defaults**: `default_factory=lambda: MappingProxyType({})` for empty maps, `default_factory=frozenset` for empty sets, `default_factory=tuple` for empty tuples. Never bare `= {}`, `= set()`, `= []`.
 - **`u.PrivateAttr` for internal state** — never `self._foo: X = ...` in `__init__`, never module-level helpers bound to models.
@@ -78,13 +78,13 @@ Every new or touched Pydantic model MUST satisfy these non-negotiable rules. Eac
 | Forbidden | Replacement |
 | --- | --- |
 | `typing.TypedDict` | `class X(m.BaseModel): ...` or `class X(m.RootModel[Mapping[...]]): ...` |
-| `@dataclasses.dataclass` | `class X(m.BaseModel): model_config = m.ConfigDict(frozen=True)` |
+| `@dataclasses.dataclass` | `class X(m.BaseModel): model_config: ClassVar[m.ConfigDict] = m.ConfigDict(frozen=True)` |
 | `typing.NamedTuple` / `collections.namedtuple` | frozen `m.BaseModel` |
 | `pydantic.dataclasses.dataclass` | `m.BaseModel` subclass |
 | Module-scope `dict[...]` / `list[...]` / `set[...]` constants | `StrEnum` / `Final[frozenset[Literal[...]]]` / `MappingProxyType(...)` (see flext-constants-discipline) |
 | `typing.TypeVar` / `typing.TypeAlias` / `typing.Generic` | PEP 695 `class Foo[T]` / `def f[T]` / `type X = ...` |
 | `typing.Optional[T]` / `typing.Union[A, B]` | `T | None` / `A | B` |
-| `class Config:` inline on a model | `model_config = m.ConfigDict(...)` |
+| `class Config:` inline on a model | `model_config: ClassVar[m.ConfigDict] = m.ConfigDict(...)` |
 
 Every deviation requires an explicit SKILL exemption with a named owner and a planned migration ticket.
 
@@ -135,7 +135,9 @@ class FlextGovernance(s[m.Value]):
         class User(m.Value):
             """User value object."""
 
-            model_config = m.ConfigDict(frozen=True, strict=True)
+            model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+                frozen=True, strict=True
+            )
 
             name: Annotated[t.NonEmptyStr, m.Field(description="User display name")]
             email: Annotated[t.NonEmptyStr, m.Field(description="User email")]

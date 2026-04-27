@@ -403,7 +403,7 @@ class FlextOrderItem(m.ArbitraryTypesModel):
 class FlextOrderCreateCommand(m.Command):
     """Create-order command — inherits m.Command flat namespace via MRO."""
 
-    model_config = m.ConfigDict(extra="forbid")
+    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(extra="forbid")
 
     customer_id: Annotated[t.NonEmptyStr, u.Field(description="Customer id")]
     items: Annotated[

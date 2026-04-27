@@ -72,7 +72,7 @@ If any line above applies, custom implementation is invalid and must be deleted 
   - `Annotated[T, m.BeforeValidator(fn)]` / `m.AfterValidator(fn)` preferred over decorator when the rule is reusable across fields.
 - **Computed fields pure and deterministic** — `@u.computed_field` replaces every `@property` on a model.
 - **Serializers explicit and scope-limited** — no hidden state.
-- **Strict mode for boundaries**: `model_config = m.ConfigDict(strict=True, frozen=True)` for public contracts and settings.
+- **Strict mode for boundaries**: `model_config: ClassVar[m.ConfigDict] = m.ConfigDict(strict=True, frozen=True)` for public contracts and settings.
 - **Discriminated unions** via `Annotated[A | B | C, m.Discriminator("kind")]` with `Literal[...]` tags — no isinstance ladders.
 - **No helpers on models**: only fields + `Annotated` validators + `@computed_field` + `@model_validator`. Domain operations live in `u.*`. If the urge is to add `to_*`, `from_*`, `get_*`, `set_*`, `is_*`, `build_*`, or `normalize_*` methods on a model, stop and replace the need with a native Pydantic construct or a canonical `u.*` utility.
 - **No local helper-envelope escape hatch**: do not add a new request/spec/helper model inside a consumer module when the only goal is to hide parameter count or manual payload assembly. First consume the centralized origin directly (`Model(**kwargs)`, `model_validate`, parent method, existing `u.*` helper, existing `t.*` adapter).
@@ -109,7 +109,7 @@ If any line above applies, custom implementation is invalid and must be deleted 
 | `import pydantic` | `from flext_core import c, m, p, t, u` (+ `r` / `s` as needed) |
 | `from pydantic import Field, BaseModel, ...` | access via `m.Field`, `m.BaseModel`, `m.ConfigDict`, `u.computed_field`, `u.field_validator`, `u.model_validator`, `u.PrivateAttr`, `m.BeforeValidator`, `m.AfterValidator`, `m.Discriminator`, `m.Tag`, `m.SecretStr`, `m.TypeAdapter`, `m.ValidationError` |
 | `from pydantic_core import ...` | same — via `m.*` / `u.*` |
-| `from pydantic.dataclasses import dataclass` | `class X(m.BaseModel): model_config = m.ConfigDict(frozen=True)` |
+| `from pydantic.dataclasses import dataclass` | `class X(m.BaseModel): model_config: ClassVar[m.ConfigDict] = m.ConfigDict(frozen=True)` |
 
 Internal flext-core escape (ONLY inside `flext-core/src/flext_core/_*`): `from flext_core import  FlextUtilitiesPydantic as up` / `from flext_core import  FlextModelsPydantic as mp`. This is NOT a consumer pattern — it exists solely to break initialization cycles in `c/t/p/m/u`.
 
@@ -127,7 +127,7 @@ Pattern families available in references:
 - **Computed fields**: `@u.computed_field` with `cached_property` semantics and FLEXT examples.
 - **Discriminated unions**: `m.Discriminator(...)` with `Literal[...]` tags for polymorphic parsing.
 - **Serializers**: `@u.field_serializer`, `@u.model_serializer`, `model_dump()` control.
-- **Strict mode**: `model_config = m.ConfigDict(strict=True)` patterns.
+- **Strict mode**: `model_config: ClassVar[m.ConfigDict] = m.ConfigDict(strict=True)` patterns.
 - **TypeAdapter**: caching strategy, `ClassVar[m.TypeAdapter[T] | None]` slot + classmethod factory.
 
 ## Workflow
@@ -159,7 +159,9 @@ class FlextExampleModels(m):
         class Window(m.Value):
             """Window with separated validation phases."""
 
-            model_config = m.ConfigDict(frozen=True, strict=True, extra="forbid")
+            model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+                frozen=True, strict=True, extra="forbid"
+            )
 
             start: Annotated[
                 t.NonNegativeInt, m.Field(default=0, validate_default=True)
@@ -199,12 +201,16 @@ from flext_core import m
 class FlextExampleModels(m):
     class Example:
         class Ok(m.Value):
-            model_config = m.ConfigDict(frozen=True, strict=True)
+            model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+                frozen=True, strict=True
+            )
             kind: Annotated[Literal["ok"], m.Field(frozen=True)] = "ok"
             value: Annotated[int, m.Field(description="Payload value")]
 
         class Err(m.Value):
-            model_config = m.ConfigDict(frozen=True, strict=True)
+            model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+                frozen=True, strict=True
+            )
             kind: Annotated[Literal["err"], m.Field(frozen=True)] = "err"
             error: Annotated[str, m.Field(description="Failure reason")]
 

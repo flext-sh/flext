@@ -558,7 +558,9 @@ db_host = os.environ.get("FLEXT_DB_HOST", "localhost")
 
 # After:
 class FlextCoreSettings(FlextSettings):
-    model_config = m.ConfigDict(env_prefix="FLEXT_", extra="ignore")
+    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        env_prefix="FLEXT_", extra="ignore"
+    )
     db_host: str = m.Field(default=c.Core.DEFAULT_DB_HOST)
 ```
 

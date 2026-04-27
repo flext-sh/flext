@@ -60,7 +60,7 @@ class FlextProcessingModels(m):
         class Request(m.ArbitraryTypesModel):
             """Request model with strict boundary config."""
 
-            model_config = m.ConfigDict(
+            model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
                 validate_assignment=True,
                 use_enum_values=True,
                 extra="forbid",
@@ -280,7 +280,7 @@ class FlextProcessingWorkflow(m):
         class Config(m.ArbitraryTypesModel):
             """Workflow config with ConfigDict and u.field_validator."""
 
-            model_config = m.ConfigDict(
+            model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
                 extra="forbid",
                 validate_assignment=True,
             )
