@@ -11,9 +11,16 @@ from __future__ import annotations
 from flext_cli import cli
 
 
-def main() -> None:
-    """Entry point for flext-dev."""
-    _ = cli.execute()
+class FlextRootDev:
+    """Workspace development command entry point."""
+
+    @staticmethod
+    def main() -> None:
+        """Entry point for flext-dev."""
+        _ = cli.execute()
+
+
+main = FlextRootDev.main
 
 
 if __name__ == "__main__":
