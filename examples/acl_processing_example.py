@@ -174,11 +174,11 @@ class AclProcessingExample:
                         dn=str(entry.get("dn", "")),
                         acl_attribute=attr_name,
                         permissions=AclProcessingExample._parse_acl_permissions(
-                            str(acl_value),
+                            acl_value,
                         ),
                         context={
                             "index": i,
-                            "raw_value": str(acl_value),
+                            "raw_value": acl_value,
                             "server_type": server_type,
                             "extraction_time": time.time() - start_time,
                         },

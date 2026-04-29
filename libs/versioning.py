@@ -55,7 +55,7 @@ def current_workspace_version(root: Path) -> str:
     """Read current workspace version from root pyproject.toml."""
     pyproject = root / "pyproject.toml"
     raw_data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
-    data_map = {str(key): value for key, value in raw_data.items()}
+    data_map = dict(raw_data.items())
     project_value = data_map.get("project")
     if not isinstance(project_value, dict):
         msg = "unable to detect [project] section from pyproject.toml"
@@ -82,5 +82,5 @@ def replace_project_version(content: str, version: str) -> tuple[str, bool]:
     if current_value == version:
         return content, False
     project_value["version"] = version
-    updated = str(tomlkit.dumps(raw_document))
+    updated = tomlkit.dumps(raw_document)
     return updated, updated != content
