@@ -39,7 +39,7 @@ def _new_data_value_map() -> t.JsonMapping:
 def _json_mapping_or_none(value: t.JsonValue) -> t.JsonMapping | None:
     if not isinstance(value, Mapping):
         return None
-    return {str(key): item for key, item in value.items()}
+    return dict(value.items())
 
 
 def _json_mapping_sequence(value: t.JsonValue) -> Sequence[t.JsonMapping]:

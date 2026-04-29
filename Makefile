@@ -284,7 +284,7 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help boot up mod build check cqrs scan fmt docs test val types pyre stubs pol clean rel pr save tag push gen sync imp stat
+.PHONY: help boot up mod constraints build check cqrs scan fmt docs test val types pyre stubs pol clean rel pr save tag push gen sync imp stat
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -296,9 +296,11 @@ help: ## Show simple workspace verbs
 
 	$(Q)printf " %-7s %s\n" "boot" "Install all projects into workspace .venv, then run val VALIDATE_SCOPE=workspace"
 
-	$(Q)printf " %-7s %s\n" "up" "Upgrade deps + modernize + dependency report (.reports/dependencies/)"
+	$(Q)printf " %-7s %s\n" "up" "Refresh lock/install + modernize + dependency report (.reports/dependencies/)"
 
 	$(Q)printf " %-7s %s\n" "mod" "Modernize pyproject.toml configs only (no lock/install)"
+
+	$(Q)printf " %-7s %s\n" "constraints" "Rewrite pyproject dependency constraints from uv.lock (policy=floor)"
 
 	$(Q)printf " %-7s %s\n" "build" "Build/package all selected projects"
 
@@ -626,7 +628,7 @@ boot: ## Install all projects into workspace .venv
 		echo "Skipping workspace validation (no managed workspace projects selected)."; \
 	fi
 
-up: ## Refresh workspace lock/install + dependency report (uv workspace mode)
+up: ## Refresh workspace lock/install + rewrite dependency constraints + dependency report
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
 	$(Q)$(ENSURE_WORKSPACE_RUNTIME)
@@ -667,6 +669,12 @@ up: ## Refresh workspace lock/install + dependency report (uv workspace mode)
 	fi; \
 	rm -f "$$log_file"; \
 	echo "Upgrade summary: Upgraded=workspace Failed=0 Total=workspace"; \
+
+	$(Q)echo "Rewriting dependency constraints from uv.lock..."
+	$(Q)$(WORKSPACE_INFRA_DEPS) modernize --apply --rewrite-constraints --constraint-policy floor $(MODERNIZE_SELECTION_FLAGS)
+	$(Q)echo "Formatting pyproject.toml files with taplo..."
+	$(Q)taplo format --config "$(CURDIR)/.taplo.toml" $(WORKSPACE_MODERNIZE_PYPROJECTS)
+
 	if [ "$(DEPS_REPORT)" != "0" ]; then \
 		printf "Dependency report (deptry + pip check)... "; \
 		report_ts=$$(date +%s); \
@@ -699,6 +707,20 @@ mod: ## Modernize pyproject.toml files (standardize configs without lock/install
 	$(Q)echo "Formatting Python files (ruff)..."
 	$(Q)ruff format $(WORKSPACE_SELECTED_ROOTS) --quiet
 	$(Q)echo "Modernization complete."
+
+constraints: ## Rewrite dependency constraints from uv.lock (policy=floor). Use PROJECT= or PROJECTS= to scope.
+	$(Q)$(REQUIRE_VENV)
+	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)echo "Rewriting dependency constraints from uv.lock..."; \
+	$(WORKSPACE_INFRA_DEPS) modernize --apply --rewrite-constraints --constraint-policy floor $(MODERNIZE_SELECTION_FLAGS); \
+	echo ""
+	$(Q)echo "Formatting pyproject.toml files with taplo..."; \
+	taplo format --config "$(CURDIR)/.taplo.toml" $(WORKSPACE_MODERNIZE_PYPROJECTS); \
+	echo ""
+	$(Q)echo "Dependency constraint rewrite complete."
 
 check: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type)
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
