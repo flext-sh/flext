@@ -38,7 +38,7 @@ description: Canonical MRO namespace rules for facade naming, organic nested-dom
 - `flext-infra/src/flext_infra/utilities.py` — root facade composing many `_utilities/*` mixins into `class Infra`
 - `flext-tests/src/flext_tests/constants.py` — canonical `src/` facade with a single local root namespace `class Tests`
 - `flext-core/tests/base.py` — already follows the `TestsFlext*` naming prefix
-- `flext-core/tests/models.py` — legacy `TestsFlextCoreModels` naming that must not be copied into new work
+- `flext-core/tests/models.py` — legacy `TestsFlextModels` naming that must not be copied into new work
 - `.agents/skills/flext-import-rules/SKILL.md`
 - `.agents/skills/flext-patterns/SKILL.md`
 
@@ -191,7 +191,7 @@ class FlextTargetOracleModels(_StubMixin):
     ExecuteResult = TargetOracle.ExecuteResult
 
 
-class TestsFlextCoreUtilities(_StubMixin, _StubUtilities):
+class TestsFlextUtilities(_StubMixin, _StubUtilities):
     class Core:
         class Tests:
             # BAD: manually nests private mixin instead of composing through MRO
