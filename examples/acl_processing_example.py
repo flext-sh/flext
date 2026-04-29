@@ -126,7 +126,7 @@ class AclProcessingExample:
         """Auto-detect server type from entry attributes."""
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, Mapping):
-            return r[str].fail("Invalid entry attributes format")
+            return r[str].fail("Invalid attributes format")
         attr_keys: set[str] = set(attributes.keys())
         for (
             server_type,
