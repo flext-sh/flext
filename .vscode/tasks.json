@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Patch project_metadata alias mapping",
+			"type": "shell",
+			"command": "python",
+			"args": [
+				"-c",
+				"print('noop')"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}
