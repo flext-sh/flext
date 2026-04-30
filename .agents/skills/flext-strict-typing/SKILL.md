@@ -1,6 +1,6 @@
 ---
 name: flext-strict-typing
-description: Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 695 type aliases, r[T] result containers, and isinstance/TypeGuard narrowing. Use when writing type annotations, fixing pyrefly or pyright errors, working with t.JsonValue or t.Scalar, enforcing no-Any strictness, or deciding how to narrow a discriminated union in src/ code.
+description: "Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 695 type aliases, r[T] result containers, and isinstance/TypeGuard narrowing. Use when writing type annotations, fixing pyrefly or pyright errors, working with t.JsonValue or t.Scalar, enforcing no-Any strictness, or deciding how to narrow a discriminated union in src/ code."
 
 ---
 

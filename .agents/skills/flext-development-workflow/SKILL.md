@@ -1,7 +1,7 @@
 ---
 name: flext-development-workflow
-compatibility: Requires Python 3.13+, uv, git, and GNU make. Designed for the FLEXT monorepo. RTK command interception requires bash-pretool.sh hook active in the shell.
-description: Describes the end-to-end development workflow for the FLEXT monorepo: environment bootstrap, make targets, RTK command interception, lint/typecheck/test gates, and CI/CD lifecycle. Use when setting up the dev environment, running make check or make test, debugging CI failures, understanding the make contract, or onboarding to the project.
+compatibility: "Requires Python 3.13+, uv, git, and GNU make. Designed for the FLEXT monorepo. RTK command interception requires bash-pretool.sh hook active in the shell."
+description: "Describes the end-to-end development workflow for the FLEXT monorepo: environment bootstrap, make targets, RTK command interception, lint/typecheck/test gates, and CI/CD lifecycle. Use when setting up the dev environment, running make check or make test, debugging CI failures, understanding the make contract, or onboarding to the project."
 
 ---
 
