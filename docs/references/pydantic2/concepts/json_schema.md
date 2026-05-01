@@ -771,8 +771,8 @@ from pydantic import BaseModel, GetCoreSchemaHandler
 
 @dataclass
 class CompressedString:
-    dictionary: Mapping[int, str]
-    text: Sequence[int]
+    dictionary: t.MappingKV[int, str]
+    text: t.SequenceOf[int]
 
     def build(self) -> str:
         return " ".join([self.dictionary[key] for key in self.text])
@@ -795,7 +795,7 @@ class CompressedString:
     @staticmethod
     def _validate(value: str) -> "CompressedString":
         inverse_dictionary: t.IntMapping = {}
-        text: Sequence[int] = []
+        text: t.SequenceOf[int] = []
         for word in value.split(" "):
             if word not in inverse_dictionary:
                 inverse_dictionary[word] = len(inverse_dictionary)

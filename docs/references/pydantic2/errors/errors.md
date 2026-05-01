@@ -55,7 +55,7 @@ class Location(BaseModel):
 class Model(BaseModel):
     is_required: float
     gt_int: int = u.Field(gt=42)
-    list_of_ints: Sequence[int]
+    list_of_ints: t.SequenceOf[int]
     a_float: float
     recursive_model: Location
 
@@ -168,8 +168,8 @@ CUSTOM_MESSAGES = {
 
 def convert_errors(
     e: ValidationError, custom_messages: t.StrMapping
-) -> Sequence[ErrorDetails]:
-    new_errors: Sequence[ErrorDetails] = []
+) -> t.SequenceOf[ErrorDetails]:
+    new_errors: t.SequenceOf[ErrorDetails] = []
     for error in e.errors():
         custom_message = custom_messages.get(error["type"])
         if custom_message:
@@ -236,8 +236,8 @@ def loc_to_dot_sep(loc: tuple[Union[str, int], ...]) -> str:
     return path
 
 
-def convert_errors(e: ValidationError) -> Sequence[Mapping[str, Any]]:
-    new_errors: Sequence[Mapping[str, Any]] = e.errors()
+def convert_errors(e: ValidationError) -> t.SequenceOf[Mapping[str, Any]]:
+    new_errors: t.SequenceOf[Mapping[str, Any]] = e.errors()
     for error in new_errors:
         error["loc"] = loc_to_dot_sep(error["loc"])
     return new_errors
@@ -249,7 +249,7 @@ class TestNestedModel(BaseModel):
 
 
 class TestModel(BaseModel):
-    items: Sequence[TestNestedModel]
+    items: t.SequenceOf[TestNestedModel]
 
 
 data = {"items": [{"key": "foo", "value": "bar"}, {"key": "baz"}]}

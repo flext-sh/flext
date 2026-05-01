@@ -618,10 +618,10 @@ try:
 except ValidationError as exc_info:
     print(exc_info)
     """
-    2 validation errors for union[function-after[<lambda>(), Sequence[int]],Mapping[str,str]]
-    function-after[<lambda>(), Sequence[int]].0
+    2 validation errors for union[function-after[<lambda>(), t.SequenceOf[int]],Mapping[str,str]]
+    function-after[<lambda>(), t.SequenceOf[int]].0
       Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='a', input_type=str]
-    Mapping[str,str]
+    t.MappingKV[str,str]
       Input should be a valid dictionary [type=dict_type, input_value=['a'], input_type=list]
     """
 

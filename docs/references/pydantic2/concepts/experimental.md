@@ -349,7 +349,7 @@ from pydantic import BaseModel, TypeAdapter, ValidationError
 
 class MyModel(BaseModel):
     a: int = 1
-    b: Sequence[Annotated[str, MinLen(5)]] = []  # (1)!
+    b: t.SequenceOf[Annotated[str, MinLen(5)]] = []  # (1)!
 
 
 ta = TypeAdapter(MyModel)

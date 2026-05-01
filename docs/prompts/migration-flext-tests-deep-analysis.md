@@ -759,7 +759,7 @@ class TestsLdapSync:
 
 ```python
 # tests/fixtures/users.py
-def generate_user_data(count: int = 1) -> Sequence[dict]:
+def generate_user_data(count: int = 1) -> t.SequenceOf[dict]:
     """Gera dados de usuário para testes."""
     return [
         {"name": f"User {i}", "email": f"user{i}@example.com"} for i in range(count)

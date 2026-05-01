@@ -133,7 +133,7 @@ def suppress_recursion_validation_error() -> Generator[None]:
 
 class Node(BaseModel):
     id: int
-    children: Sequence[Node] = field(default_factory=list)
+    children: t.SequenceOf[Node] = field(default_factory=list)
 
     @u.field_validator("children", mode="wrap")
     @classmethod
@@ -200,11 +200,11 @@ class NodeReference:
 
 @dataclass
 class Node(NodeReference):
-    children: Sequence["Node"] = field(default_factory=list)
+    children: t.SequenceOf["Node"] = field(default_factory=list)
 
     @u.field_serializer("children", mode="wrap")
     def serialize(
-        self, children: Sequence["Node"], handler: SerializerFunctionWrapHandler
+        self, children: t.SequenceOf["Node"], handler: SerializerFunctionWrapHandler
     ):
         """
         Serialize a list of nodes, handling circular references by excluding the children.

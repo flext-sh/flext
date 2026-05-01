@@ -1209,7 +1209,7 @@ pipeline = (
 
    ```python
    # ❌ NÃO CRIAR: factory é só duplicação
-   def parse_ldif(source: str) -> Sequence[Entry]:
+   def parse_ldif(source: str) -> t.SequenceOf[Entry]:
        return ParseLdif(source=source).value
 
 
@@ -2835,7 +2835,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 6. **Factory Functions** - For public API
 
    ```python
-   def ParseLdif(source: str | Path) -> Sequence[Entry]:
+   def ParseLdif(source: str | Path) -> t.SequenceOf[Entry]:
        """Simple function interface."""
        return FlextLdifParser(source=source).value
    ```
@@ -2896,7 +2896,7 @@ Projeto: **flext-ldif** - Funcionalidade: Operation context - Benefício: Batch 
 ┌─────────────────────────────────────────────────────────────────┐
 │  USER CODE: Factory Functions (Public API)                      │
 │  ─────────────────────────────────────────────────────────────  │
-│  def ParseLdif(source: str) -> Sequence[Entry]:                     │
+│  def ParseLdif(source: str) -> t.SequenceOf[Entry]:                     │
 │      return FlextLdifParser(source=source).value         │
 │                                                                  │
 │  users = ParseLdif("file.ldif")  # Direct, simple!              │
@@ -4228,7 +4228,7 @@ class User(FlextModels.Entity, AuditableMixin):
 class Order(FlextModels.Entity):
     """Order with computed totals."""
 
-items: Sequence[m.Domain.ItemModel]
+items: t.SequenceOf[m.Domain.ItemModel]
     tax_rate: float = u.Field(default=0.08)
 
     @u.computed_field
@@ -5196,7 +5196,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
     """Single operation: write LDIF."""
 
     # Parameters (Pydantic fields)
-    entries: Sequence[Entry] = u.Field(default_factory=list, min_length=1)
+    entries: t.SequenceOf[Entry] = u.Field(default_factory=list, min_length=1)
     target_server_type: str = "rfc4512"
     output_target: Literal["string", "file"] = "string"
     output_path: Path | None = None
@@ -5429,7 +5429,7 @@ class FlextLdifWriter(Flext[m.Ldif.WriteResultModel]):
 
     def write(
         self,
-        entries: Sequence[Entry],
+        entries: t.SequenceOf[Entry],
         target_server_type: str,
         output_target: str,
         output_path: Path | None = None,
@@ -5450,7 +5450,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
     """Write LDIF entries - single operation service."""
 
     # Parameters as Pydantic fields
-    entries: Sequence[Entry] = u.Field(default_factory=list, min_length=1)
+    entries: t.SequenceOf[Entry] = u.Field(default_factory=list, min_length=1)
     target_server_type: str = "rfc4512"
     output_target: Literal["string", "file", "ldap3"] = "string"
     output_path: Path | None = None
@@ -5652,7 +5652,7 @@ class FlextLdifParser(Flext[Sequence[Entry]]):
             case str() as content:
                 return content
 
-    def _parse_ldif_content(self, content: str) -> Sequence[Entry]:
+    def _parse_ldif_content(self, content: str) -> t.SequenceOf[Entry]:
         """Parse LDIF content."""
         # Implementation...
         return parse_ldif_impl(content, strict=self.strict_mode)
@@ -5855,7 +5855,7 @@ response = (
 # Execute without creating instance variable
 entries = FlextLdifParser.run(source=Path("data.ldif"), source_server_type="oud")
 
-# ← Returns Sequence[Entry] directly (raises on failure)
+# ← Returns t.SequenceOf[Entry] directly (raises on failure)
 
 
 # Or with Result for error handling
@@ -5978,7 +5978,7 @@ class OrderProcessingService(s[Order]):
     """Service que delega para dispatcher para reliability."""
 
     order_id: str
-    items: Sequence[OrderItem]
+    items: t.SequenceOf[OrderItem]
 
     def execute(self) -> p.Result[Order]:
         # Delegar para dispatcher para reliability patterns
@@ -6134,7 +6134,9 @@ class MyService(s[Result]):
 class h[MessageT_contra, ResultT](x, ABC):
     ...
     # handlers.py:119-120 - MAS USA INFRAESTRUTURA MANUAL!
-    self._context_stack: Sequence[t.JsonMapping] = []  # ❌ deveria usar self.context
+    self._context_stack: t.SequenceOf[
+        t.JsonMapping
+    ] = []  # ❌ deveria usar self.context
     self._metrics = {}  # ❌ deveria usar self.track()
 ```
 
@@ -6288,7 +6290,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
 
     def write(
         self,
-        entries: Sequence[Entry],
+        entries: t.SequenceOf[Entry],
         target_server_type: str = "rfc4512",
         output_target: Literal["string", "file"] = "string",
         output_path: Path | None = None,
@@ -6323,7 +6325,7 @@ class FlextLdifWriter(Flext[WriteResponse]):
 
     # Pydantic fields (validação automática)
     entries: Annotated[
-        Sequence[Entry], u.Field(min_length=1, description="LDIF entries to write")
+        t.SequenceOf[Entry], u.Field(min_length=1, description="LDIF entries to write")
     ]
     target_server_type: Annotated[
         str, u.Field(default="rfc4512", description="Target LDAP server type")
@@ -6398,14 +6400,14 @@ if result.is_success:
 # ═══════════════════════════════════════════════════════════════
 def parse_ldif(
     source: str | Path, *, encoding: str = "utf-8", strict_mode: bool = True
-) -> Sequence[Entry]:
+) -> t.SequenceOf[Entry]:
     """Parse LDIF file."""
     return FlextLdifParser(
         source=source, encoding=encoding, strict_mode=strict_mode
     ).value
 
 
-def parse_ldif_safe(source: str | Path, **kwargs) -> Sequence[Entry] | None:
+def parse_ldif_safe(source: str | Path, **kwargs) -> t.SequenceOf[Entry] | None:
     """Parse LDIF file (safe)."""
     return FlextLdifParser(source=source, **kwargs).value_or_none
 
@@ -6964,13 +6966,13 @@ def execute(self) -> p.Result[m.Ldif.ParseResultModel]:
 
 
 # 2. Factory functions (duplicação!)
-def parse_ldif(source: str | Path, **kwargs) -> Sequence[Entry]:
+def parse_ldif(source: str | Path, **kwargs) -> t.SequenceOf[Entry]:
     service = FlextLdifParser(settings=cfg)
     result = service.parse(source=source, **kwargs)
     return result.unwrap()
 
 
-def parse_ldif_safe(source: str | Path, **kwargs) -> Sequence[Entry] | None:
+def parse_ldif_safe(source: str | Path, **kwargs) -> t.SequenceOf[Entry] | None:
     service = FlextLdifParser(settings=cfg)
     result = service.parse(source=source, **kwargs)
     return result.value if result.is_success else None
@@ -7488,7 +7490,7 @@ class FlextCliCore(s[FlextCliTypes.Data.CliDataDict]):
     ):
         super().__init__()
         self.config = settings or {}
-        self._commands: Mapping[str, FlextCliModels.CliCommand] = {}
+        self._commands: t.MappingKV[str, FlextCliModels.CliCommand] = {}
 
     @override
     def execute(self) -> p.Result[FlextCliTypes.Data.CliDataDict]:
@@ -7604,8 +7606,8 @@ class cli:
         # ❌ Auth state embedded in cli
         self._valid_tokens: set[str] = set()
         self._valid_sessions: set[str] = set()
-        self._session_permissions: Mapping[str, set[str]] = {}
-        self._users: Mapping[str, t.JsonMapping] = {}
+        self._session_permissions: t.MappingKV[str, set[str]] = {}
+        self._users: t.MappingKV[str, t.JsonMapping] = {}
 
     def authenticate(self, credentials: ...) -> p.Result[str]:
         # Auth logic directly in cli
@@ -8396,7 +8398,7 @@ class FlextCliCore(s[CliDataDict]):
     def __init__(self, settings: CliConfigSchema | None = None):
         super().__init__()
         self.config = settings or {}  # ❌ Private attr, não Pydantic field
-        self._commands: Mapping[str, CliCommand] = {}  # ❌ Private attr
+        self._commands: t.MappingKV[str, CliCommand] = {}  # ❌ Private attr
 
     def execute(self) -> p.Result[CliDataDict]:
         # ❌ Apenas retorna status - não usa Pydantic fields!
@@ -8537,7 +8539,7 @@ class Entity(ArbitraryTypesModel):
 
 
 class AggregateRoot(Entity):
-    _domain_events: Sequence[DomainEvent] = u.PrivateAttr(default_factory=list)
+    _domain_events: t.SequenceOf[DomainEvent] = u.PrivateAttr(default_factory=list)
 
 
 # flext-core/src/flext_core/models/cqrs.py
@@ -8605,7 +8607,7 @@ class FlextCliCore(s[CliDataDict]):
     def __init__(self, settings: CliConfigSchema | None = None):
         super().__init__()
         self.config = settings or {}
-        self._commands: Mapping[str, CliCommand] = {}
+        self._commands: t.MappingKV[str, CliCommand] = {}
 
     def execute(self) -> p.Result[CliDataDict]:
         return r.ok({"status": "operational"})  # ❌ Inútil

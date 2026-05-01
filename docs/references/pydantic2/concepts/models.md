@@ -243,7 +243,7 @@ from pydantic import BaseModel
 
 
 class Model(BaseModel):
-    items: Sequence[int]  # (1)!
+    items: t.SequenceOf[int]  # (1)!
 
 
 print(Model(items=(1, 2, 3)))
@@ -333,7 +333,7 @@ class Bar(BaseModel):
 
 class Spam(BaseModel):
     foo: Foo
-    bars: Sequence[Bar]
+    bars: t.SequenceOf[Bar]
 
 
 m = Spam(foo={"count": 4}, bars=[{"apple": "x1"}, {"apple": "x2"}])
@@ -448,7 +448,7 @@ class CompanyModel(BaseModel):
 
     id: int
     public_key: Annotated[str, StringConstraints(max_length=20)]
-    domains: Sequence[Annotated[str, StringConstraints(max_length=255)]]
+    domains: t.SequenceOf[Annotated[str, StringConstraints(max_length=255)]]
 
 
 co_orm = CompanyOrm(
@@ -481,7 +481,7 @@ class PetCls:
 
 
 class PersonCls:
-    def __init__(self, *, name: str, age: float = None, pets: Sequence[PetCls]):
+    def __init__(self, *, name: str, age: float = None, pets: t.SequenceOf[PetCls]):
         self.name = name
         self.age = age
         self.pets = pets
@@ -499,7 +499,7 @@ class Person(BaseModel):
 
     name: str
     age: float = None
-    pets: Sequence[Pet]
+    pets: t.SequenceOf[Pet]
 
 
 bones = PetCls(name="Bones", species="dog")
@@ -528,7 +528,7 @@ from pydantic import BaseModel, ValidationError
 
 
 class Model(BaseModel):
-    list_of_ints: Sequence[int]
+    list_of_ints: t.SequenceOf[int]
     a_float: float
 
 
@@ -1795,7 +1795,7 @@ class C1:
 
 
 class C2(BaseModel):
-    arr: Sequence[int]
+    arr: t.SequenceOf[int]
 
 
 arr_orig = [1, 9, 10, 3]

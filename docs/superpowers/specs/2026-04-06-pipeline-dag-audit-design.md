@@ -43,7 +43,7 @@ class PipelineExecutor(Protocol):
 
     def execute(
         self,
-        stages: Sequence[m.Cli.PipelineStageSpec],
+        stages: t.SequenceOf[m.Cli.PipelineStageSpec],
         context: p.Cli.PipelineStageContext,
         *,
         fail_fast: bool = True,
@@ -85,7 +85,7 @@ class PipelineStageResult(FlextModels.ContractModel):
 class PipelineResult(FlextModels.ContractModel):
     """Full pipeline execution result."""
 
-    stages: Sequence[m.Cli.PipelineStageResult]
+    stages: t.SequenceOf[m.Cli.PipelineStageResult]
     total_duration_ms: float
 
     @property
@@ -93,7 +93,7 @@ class PipelineResult(FlextModels.ContractModel):
         return all(s.status != "failed" for s in self.stages)
 
     @property
-    def failed_stages(self) -> Sequence[m.Cli.PipelineStageResult]:
+    def failed_stages(self) -> t.SequenceOf[m.Cli.PipelineStageResult]:
         return [s for s in self.stages if s.status == "failed"]
 ```
 
@@ -111,7 +111,7 @@ class Pipeline:
 ```python
 @staticmethod
 def execute_pipeline(
-    stages: Sequence[m.Cli.PipelineStageSpec],
+    stages: t.SequenceOf[m.Cli.PipelineStageSpec],
     context: p.Cli.PipelineStageContext,
     *,
     fail_fast: bool = c.Cli.Pipeline.DEFAULT_FAIL_FAST,

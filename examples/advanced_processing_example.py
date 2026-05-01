@@ -42,7 +42,7 @@ def _json_mapping_or_none(value: t.JsonValue) -> t.JsonMapping | None:
     return dict(value.items())
 
 
-def _json_mapping_sequence(value: t.JsonValue) -> Sequence[t.JsonMapping]:
+def _json_mapping_sequence(value: t.JsonValue) -> t.SequenceOf[t.JsonMapping]:
     if not isinstance(value, Sequence) or isinstance(value, (str, bytes, bytearray)):
         return ()
     mappings: MutableSequence[t.JsonMapping] = []
@@ -150,12 +150,12 @@ class AdvancedProcessingExample:
         """Declarative processing pipeline with automatic parallel execution."""
 
         auto_execute: bool = True
-        items: Sequence[ItemDict]
+        items: t.SequenceOf[ItemDict]
         stages: t.StrSequence
 
         def execute(self) -> p.Result[PipelineStageData]:
             """Execute processing pipeline using declarative stages."""
-            stage_functions: Mapping[
+            stage_functions: t.MappingKV[
                 str,
                 Callable[[t.JsonMapping], p.Result[PipelineStageData]],
             ] = {
@@ -196,7 +196,7 @@ class AdvancedProcessingExample:
             )
             field_counts: MutableMapping[int, int] = {}
             complexity_scores: MutableSequence[float] = []
-            items_to_analyze: Sequence[ItemDict] = processed_items
+            items_to_analyze: t.SequenceOf[ItemDict] = processed_items
             for item in items_to_analyze:
                 field_count = len(item)
                 field_counts[field_count] = field_counts.get(field_count, 0) + 1
@@ -356,7 +356,7 @@ class AdvancedProcessingExample:
             )
 
     @staticmethod
-    def create_sample_items(count: int = 100) -> Sequence[ItemDict]:
+    def create_sample_items(count: int = 100) -> t.SequenceOf[ItemDict]:
         """Create sample items for testing."""
         return [
             {

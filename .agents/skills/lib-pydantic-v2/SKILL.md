@@ -93,13 +93,13 @@ class FlextValidationModels(m):
             """Retry configuration with status code filter."""
 
             codes: Annotated[
-                Sequence[int],
+                t.SequenceOf[int],
                 u.Field(default_factory=list, description="HTTP status codes to retry"),
             ]
 
             @u.field_validator("codes", mode="after")
             @classmethod
-            def filter_codes(cls, v: Sequence[int]) -> Sequence[int]:
+            def filter_codes(cls, v: t.SequenceOf[int]) -> t.SequenceOf[int]:
                 """Keep only 4xx/5xx codes."""
                 return [code for code in v if 400 <= code < 600]
 ```

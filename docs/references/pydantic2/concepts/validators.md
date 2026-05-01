@@ -231,7 +231,7 @@ In its simplest form, a field validator is a callable taking the value to be val
 
 
         class Model(BaseModel):
-            numbers: Sequence[int]
+            numbers: t.SequenceOf[int]
 
             @u.field_validator("numbers", mode="before")
             @classmethod
@@ -445,7 +445,7 @@ class Model2(BaseModel):
 
 
 class Model3(BaseModel):
-    list_of_even_numbers: Sequence[EvenNumber]  # (1)!
+    list_of_even_numbers: t.SequenceOf[EvenNumber]  # (1)!
 ```
 
 1. As mentioned in the [annotated pattern](./fields.md#the-annotated-pattern) documentation,
@@ -716,7 +716,7 @@ from collections.abc import Mapping, Sequence
 
 
     @contextmanager
-    def init_context(value: Mapping[str, Any]) -> Generator[None]:
+    def init_context(value: t.MappingKV[str, Any]) -> Generator[None]:
         token = _init_context_var.set(value)
         try:
             yield
@@ -800,7 +800,7 @@ Pydantic provides a few special utilities that can be used to customize validati
 
 
   class Basket(BaseModel):
-      fruits: Sequence[InstanceOf[Fruit]]
+      fruits: t.SequenceOf[InstanceOf[Fruit]]
 
 
   print(Basket(fruits=[Banana(), Apple()]))
@@ -823,7 +823,7 @@ Pydantic provides a few special utilities that can be used to customize validati
 
 
   class Model(BaseModel):
-      names: Sequence[SkipValidation[str]]
+      names: t.SequenceOf[SkipValidation[str]]
 
 
   m = Model(names=["foo", "bar"])

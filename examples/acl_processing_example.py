@@ -264,7 +264,7 @@ class AclProcessingExample:
             server_type: str
 
         auto_execute: bool = True
-        entries: Sequence[t.JsonMapping]
+        entries: t.SequenceOf[t.JsonMapping]
         parallel: bool = True
 
         def execute(self) -> p.Result[t.JsonMapping]:
@@ -318,7 +318,7 @@ class AclProcessingExample:
             )
 
         def _detect_servers(
-            self, entries: Sequence[t.JsonMapping]
+            self, entries: t.SequenceOf[t.JsonMapping]
         ) -> p.Result[t.JsonMapping]:
             """Auto-detect server types for all entries."""
             detected_entries: MutableSequence[t.JsonMapping] = []
@@ -417,7 +417,7 @@ class AclProcessingExample:
             validation_results: MutableSequence[
                 AclProcessingExample.AclValidationResult
             ] = []
-            acl_entries: Sequence[t.JsonMapping] = [
+            acl_entries: t.SequenceOf[t.JsonMapping] = [
                 acl_item for acl_item in acls_data_raw if isinstance(acl_item, Mapping)
             ]
             for acl in acl_entries:
@@ -453,7 +453,7 @@ class AclProcessingExample:
             )
 
     @staticmethod
-    def create_sample_acl_entries() -> Sequence[t.JsonMapping]:
+    def create_sample_acl_entries() -> t.SequenceOf[t.JsonMapping]:
         """Create sample LDAP entries with ACL attributes for testing."""
         return [
             {

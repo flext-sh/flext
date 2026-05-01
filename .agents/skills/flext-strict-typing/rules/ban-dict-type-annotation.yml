@@ -2,11 +2,11 @@ id: ban-dict-type-annotation
 language: python
 rule:
   any:
-    - pattern:
-        context: "a: Dict[$$$ARGS]"
-        selector: generic_type
-    - pattern:
-        context: "a: Mapping[$$$ARGS]"
-        selector: generic_type
+  - pattern:
+      context: "a: Dict[$$$ARGS]"
+      selector: generic_type
+  - pattern:
+      context: "a: t.MappingKV[$$$ARGS]"
+      selector: generic_type
 message: dict in type annotations is banned for contracts
 severity: error

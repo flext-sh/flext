@@ -8,9 +8,6 @@ import argparse
 import json
 import re
 import sys
-from collections.abc import (
-    Sequence,
-)
 from pathlib import Path
 from typing import ClassVar, Final
 
@@ -116,7 +113,7 @@ def should_validate(path: Path, reports_root: Path) -> bool:
     return top_dir in VALIDATED_TOP_DIRS
 
 
-def collect_artifacts(reports_root: Path) -> Sequence[Path]:
+def collect_artifacts(reports_root: Path) -> t.SequenceOf[Path]:
     """collect_artifacts function."""
     if not reports_root.exists():
         return []
@@ -154,10 +151,10 @@ def validate(
     *,
     repo_root: Path,
     reports_root: Path,
-) -> Sequence[NamingViolation]:
+) -> t.SequenceOf[NamingViolation]:
     """Validate function."""
     artifacts = collect_artifacts(reports_root)
-    violations: Sequence[NamingViolation] = []
+    violations: t.SequenceOf[NamingViolation] = []
 
     eprint("Artifact Naming Validation")
     eprint(f"Scanned artifacts: {len(artifacts)}")
@@ -188,7 +185,7 @@ def validate(
     return violations
 
 
-def write_report(report_path: Path, violations: Sequence[NamingViolation]) -> None:
+def write_report(report_path: Path, violations: t.SequenceOf[NamingViolation]) -> None:
     """write_report function."""
     payload = {
         "total_violations": len(violations),

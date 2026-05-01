@@ -8,9 +8,6 @@ import argparse
 import json
 import re
 import sys
-from collections.abc import (
-    Sequence,
-)
 from pathlib import Path
 from typing import Annotated, ClassVar
 
@@ -86,7 +83,7 @@ class ScriptInfo(m.BaseModel):
     path: str = u.Field(description="Script file path")
     extension: str = u.Field(description="File extension (.py or .sh)")
     role: str = u.Field(description="Script role (validator, fixer, or other)")
-    violations: Sequence[Violation] = u.Field(
+    violations: t.SequenceOf[Violation] = u.Field(
         default_factory=list,
         description="List of validation violations",
     )
@@ -120,7 +117,7 @@ def parse_args(argv: t.StrSequence) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def tracked_scripts(root: Path) -> Sequence[Path]:
+def tracked_scripts(root: Path) -> t.SequenceOf[Path]:
     """tracked_scripts function."""
     scripts_root = root / "scripts"
     if not scripts_root.exists() or not scripts_root.is_dir():
@@ -145,7 +142,7 @@ def tracked_scripts(root: Path) -> Sequence[Path]:
         stderr = (output.stderr or "").strip()
         raise InfraError(stderr or "git ls-files failed")
 
-    scripts: Sequence[Path] = []
+    scripts: t.SequenceOf[Path] = []
     for line in sorted(set(output.stdout.splitlines())):
         rel = line.strip()
         if not rel:
@@ -245,12 +242,12 @@ def check_owner_marker(header: t.StrSequence) -> Violation | None:
     )
 
 
-def check_exit_codes(content: str, extension: str) -> Sequence[Violation]:
+def check_exit_codes(content: str, extension: str) -> t.SequenceOf[Violation]:
     """check_exit_codes function."""
     if extension != ".sh":
         return []
 
-    violations: Sequence[Violation] = []
+    violations: t.SequenceOf[Violation] = []
     for i, line in enumerate(content.splitlines(), 1):
         match = BASH_EXIT_RE.match(line)
         if not match:
@@ -271,13 +268,13 @@ def check_interactive(
     content: str,
     extension: str,
     script_path: str,
-) -> Sequence[Violation]:
+) -> t.SequenceOf[Violation]:
     """check_interactive function."""
     _ = script_path
     if INTERACTIVE_GATE_RE.search(content):
         return []
 
-    violations: Sequence[Violation] = []
+    violations: t.SequenceOf[Violation] = []
     pattern = INTERACTIVE_PY_RE if extension == ".py" else INTERACTIVE_SH_RE
 
     for i, line in enumerate(content.splitlines(), 1):
@@ -298,9 +295,9 @@ def check_interactive(
     return violations
 
 
-def check_artifact_naming(content: str) -> Sequence[Violation]:
+def check_artifact_naming(content: str) -> t.SequenceOf[Violation]:
     """check_artifact_naming function."""
-    violations: Sequence[Violation] = []
+    violations: t.SequenceOf[Violation] = []
     for i, line in enumerate(content.splitlines(), 1):
         for match in REPORTS_PATH_RE.finditer(line):
             filename = Path(match.group(1)).name
@@ -426,7 +423,7 @@ def validate_script(root: Path, script_path: Path, *, check_all: bool) -> Script
     return info
 
 
-def print_results(scripts: Sequence[ScriptInfo]) -> None:
+def print_results(scripts: t.SequenceOf[ScriptInfo]) -> None:
     """print_results function."""
     eprint(f"{Ansi.CYAN}Gate Contract Validation{Ansi.RESET}")
     eprint(f"{Ansi.CYAN}{'SCRIPT':<60} {'ROLE':<10} {'STATUS':<10} DETAILS{Ansi.RESET}")
@@ -464,12 +461,12 @@ def report_path_for(root: Path) -> Path:
     return root / ".claude" / "skills" / "scripts-infra" / "report.json"
 
 
-def write_report(root: Path, scripts: Sequence[ScriptInfo], mode: str) -> Path:
+def write_report(root: Path, scripts: t.SequenceOf[ScriptInfo], mode: str) -> Path:
     """write_report function."""
     report_path = report_path_for(root)
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
-    all_violations: Sequence[t.StrMapping] = []
+    all_violations: t.SequenceOf[t.StrMapping] = []
     for script in scripts:
         all_violations.extend(
             {

@@ -38,7 +38,7 @@
 In `FlextCliTypes.Cli`, add:
 
 ```python
-type u.FieldInfoMapping = Mapping[str, u.FieldInfo]
+type u.FieldInfoMapping = t.MappingKV[str, u.FieldInfo]
 type CliAnnotations = MutableMapping[str, type]
 ```
 
@@ -98,7 +98,7 @@ class _ModelCommand:
         settings: BaseModel | None,
         handler: Callable[[BaseModel], None],
         model_cls: type[BaseModel],
-        parameters: Sequence[Parameter],
+        parameters: t.SequenceOf[Parameter],
     ) -> None:
         self.__name__ = handler.__name__
         self.__signature__ = Signature(parameters)
@@ -169,7 +169,7 @@ def model_command[M: BaseModel](
     """Build a Typer command directly from a Pydantic request model."""
     parameters: MutableSequence[Parameter] = []
     annotations: MutableMapping[str, type] = {"return": type(None)}
-    fields: Mapping[str, u.FieldInfo] = model_cls.model_fields
+    fields: t.MappingKV[str, u.FieldInfo] = model_cls.model_fields
     for field_name, field_info in fields.items():
         parameter, annotation = cls._build_model_parameter(
             field_name,
@@ -203,8 +203,8 @@ Key changes:
 def derive_model[M: BaseModel](
     cls,
     model_cls: type[M],
-    *sources: BaseModel | Mapping[str, t.Scalar] | None,
-    overrides: Mapping[str, t.Scalar] | None = None,
+    *sources: BaseModel | t.MappingKV[str, t.Scalar] | None,
+    overrides: t.MappingKV[str, t.Scalar] | None = None,
 ) -> M:
     """Derive a target Pydantic model from ordered model/mapping sources."""
     merged: MutableMapping[str, t.Scalar] = {}
@@ -218,12 +218,12 @@ def derive_model[M: BaseModel](
 @staticmethod
 def _model_source_data(
     model_cls: type[BaseModel],
-    source: BaseModel | Mapping[str, t.Scalar] | None,
-) -> Mapping[str, t.Scalar]:
+    source: BaseModel | t.MappingKV[str, t.Scalar] | None,
+) -> t.MappingKV[str, t.Scalar]:
     """Extract only target-compatible fields from a model or mapping source."""
     if source is None:
         return {}
-    raw_source: Mapping[str, t.Scalar]
+    raw_source: t.MappingKV[str, t.Scalar]
     if isinstance(source, BaseModel):
         raw_source = source.model_dump(exclude_none=True)
     else:
@@ -299,7 +299,7 @@ git commit -m "refactor(flext-cli): isolate Typer object boundary, PEP 695 stric
 @staticmethod
 def cli_args_to_model[M: BaseModel](
     model_class: type[M],
-    cli_args: Mapping[str, t.JsonValue],
+    cli_args: t.MappingKV[str, t.JsonValue],
 ) -> p.Result[M]:
     """Convert CLI args dict to a Pydantic model instance."""
     try:

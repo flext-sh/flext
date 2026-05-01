@@ -240,7 +240,7 @@ class SafeExecutionResult(ContractModel):
 
     mode: c.Infra.ExecutionMode
     files_backed_up: t.StrSequence
-    gate_results: Sequence[m.Infra.GateResult]
+    gate_results: t.SequenceOf[m.Infra.GateResult]
     rolled_back: bool
 
 
@@ -257,13 +257,13 @@ class TransformStep(ContractModel):
 ```python
 @runtime_checkable
 class SafeTransformer(Protocol):
-    def transform(self, files: Sequence[Path]) -> p.Result[Sequence[Path]]: ...
+    def transform(self, files: t.SequenceOf[Path]) -> p.Result[Sequence[Path]]: ...
 
 
 @runtime_checkable
 class SafeValidator(Protocol):
     def validate(
-        self, files: Sequence[Path], project_dir: Path
+        self, files: t.SequenceOf[Path], project_dir: Path
     ) -> p.Result[m.Infra.GateResult]: ...
 ```
 
@@ -276,20 +276,20 @@ Refactor existing `_utilities/safety.py` from git-stash to .bak:
 ```python
 class FlextInfraUtilitiesSafety:
     @staticmethod
-    def backup_files(files: Sequence[Path]) -> Sequence[Path]:
+    def backup_files(files: t.SequenceOf[Path]) -> t.SequenceOf[Path]:
         """Copy each file to .bak. Fail fast on any error."""
 
     @staticmethod
-    def restore_files(bak_files: Sequence[Path]) -> None:
+    def restore_files(bak_files: t.SequenceOf[Path]) -> None:
         """Move .bak back to original. Fail fast."""
 
     @staticmethod
-    def cleanup_backups(bak_files: Sequence[Path]) -> None:
+    def cleanup_backups(bak_files: t.SequenceOf[Path]) -> None:
         """Remove .bak files after successful validation."""
 
     @staticmethod
     def execute_safely(
-        files: Sequence[Path],
+        files: t.SequenceOf[Path],
         transform: p.Infra.SafeTransformer,
         project_dir: Path,
         gates: str = c.Infra.SafeExecution.DEFAULT_GATES,
@@ -307,7 +307,7 @@ Add `check_files()` to `FlextInfraGate` base class:
 ```python
 def check_files(
     self,
-    files: Sequence[Path],
+    files: t.SequenceOf[Path],
     project_dir: Path,
     ctx: m.Infra.GateContext,
 ) -> m.Infra.GateExecution:

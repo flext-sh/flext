@@ -104,7 +104,7 @@ class Person(BaseModel):
     first_name: str = u.Field(description="The person's first name.")
     last_name: str = u.Field(description="The person's last name.")
     age: conint(ge=0) | None = u.Field(None, description="Age in years.")
-    pets: Sequence[Pet] | None = None
+    pets: t.SequenceOf[Pet] | None = None
     comment | None = None
 ```
 

@@ -205,7 +205,9 @@ class User(BaseModel):
 REDIS_SETTINGS = RedisSettings()
 
 
-async def process_user(ctx: Mapping[str, Any], user_data: Mapping[str, Any]) -> None:
+async def process_user(
+    ctx: t.MappingKV[str, Any], user_data: t.MappingKV[str, Any]
+) -> None:
     user = User(user_data)
     print(f"Processing user: {repr(user)}")
 

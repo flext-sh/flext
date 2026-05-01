@@ -61,7 +61,7 @@ from pydantic import BaseModel, u.Field
 
 
 class RetryConfiguration(m.BaseModel):
-    retry_on_status_codes: Sequence[int] = u.Field(default_factory=list)
+    retry_on_status_codes: t.SequenceOf[int] = u.Field(default_factory=list)
     metadata: t.StrMapping = u.Field(default_factory=dict)
     tags: set[str] = u.Field(default_factory=set)
 ```

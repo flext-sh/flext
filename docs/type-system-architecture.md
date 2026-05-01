@@ -147,7 +147,7 @@ class FlextCliTypes:
     class Cli:
         class Data:
             # Collection types grouped by domain
-            type RowData = Mapping[str, m.Cli.RowModel]
+            type RowData = t.MappingKV[str, m.Cli.RowModel]
             type CellContent = t.Primitives | None
 ```
 
@@ -203,12 +203,12 @@ class ProgressCallback(Protocol):
 ```python
 # ❌ WRONG: Invariant dict (rejects Mapping-compatible inputs)
 class DataProvider(Protocol):
-    def get_data(self) -> Mapping[str, m.Tests.ValueModel]: ...
+    def get_data(self) -> t.MappingKV[str, m.Tests.ValueModel]: ...
 
 
 # ✅ CORRECT: Covariant Mapping (accepts multiple mapping implementations)
 class DataProvider(Protocol):
-    def get_data(self) -> Mapping[str, m.Tests.ValueModel]: ...
+    def get_data(self) -> t.MappingKV[str, m.Tests.ValueModel]: ...
 
 
 # Usage: Works with any dict subtype
@@ -250,7 +250,7 @@ class FlextTypes:
         type Result[T] = "r[T]"
 
     class Utilities:
-        type SettingsData = Mapping[str, m.Tests.SettingsEntryModel]
+        type SettingsData = t.MappingKV[str, m.Tests.SettingsEntryModel]
 
 
 # Usage
@@ -406,10 +406,10 @@ m.FlextOudMig               # Migration tool domain
 ### Covariance (Subtype Compatibility)
 
 ```python
-# Example: t.BoolMapping should be compatible with Mapping[str, m.Tests.ValueModel]
+# Example: t.BoolMapping should be compatible with t.MappingKV[str, m.Tests.ValueModel]
 
 # ❌ INVARIANT - WRONG
-def process_dict(data: Mapping[str, m.Tests.ValueModel]) -> None: ...
+def process_dict(data: t.MappingKV[str, m.Tests.ValueModel]) -> None: ...
 
 
 result: t.BoolMapping = {"ok": True}
@@ -419,7 +419,7 @@ process_dict(result)  # Type error: dict is invariant
 from collections.abc import Mapping
 
 
-def process_mapping(data: Mapping[str, m.Tests.ValueModel]) -> None: ...
+def process_mapping(data: t.MappingKV[str, m.Tests.ValueModel]) -> None: ...
 
 
 result: t.BoolMapping = {"ok": True}
@@ -432,14 +432,14 @@ process_mapping(result)  # OK: Mapping is covariant
 # ✅ CORRECT: Return type uses covariant Mapping
 @runtime_checkable
 class DataProvider(Protocol):
-    def get_attributes(self) -> Mapping[str, t.StrSequence]:
+    def get_attributes(self) -> t.MappingKV[str, t.StrSequence]:
         """Returns read-only attributes - covariant."""
         ...
 
 
 # Implementation can return more specific dict type
 class MyProvider:
-    def get_attributes(self) -> Mapping[str, t.StrSequence]:
+    def get_attributes(self) -> t.MappingKV[str, t.StrSequence]:
         return {"cn": ["test"], "mail": ["user@example.com"]}
 
 
@@ -481,7 +481,7 @@ from typing import Protocol
 @runtime_checkable
 class Entry(Protocol):
     dn: str
-    attributes: Mapping[str, t.StrSequence]
+    attributes: t.MappingKV[str, t.StrSequence]
 
 
 # ❌ WRONG: Don't import concrete classes
@@ -522,7 +522,7 @@ from typing import Protocol, runtime_checkable
 @runtime_checkable
 class Entry(Protocol):
     dn: str
-    attributes: Mapping[str, t.StrSequence]
+    attributes: t.MappingKV[str, t.StrSequence]
 
 
 # Can now use isinstance() at runtime
@@ -634,10 +634,10 @@ def track_progress(callback: ProgressCallback) -> None:
 ```python
 @runtime_checkable
 class AttributeProvider(Protocol):
-    def get_attributes(self) -> Mapping[str, t.StrSequence]: ...
+    def get_attributes(self) -> t.MappingKV[str, t.StrSequence]: ...
 
 
-# Can only accept exact Mapping[str, t.StrSequence]
+# Can only accept exact t.MappingKV[str, t.StrSequence]
 result: t.BoolMapping = {"ok": True}
 provider.get_attributes()  # May fail type check
 ```
@@ -647,7 +647,7 @@ provider.get_attributes()  # May fail type check
 ```python
 @runtime_checkable
 class AttributeProvider(Protocol):
-    def get_attributes(self) -> Mapping[str, t.StrSequence]: ...
+    def get_attributes(self) -> t.MappingKV[str, t.StrSequence]: ...
 
 
 # Can accept any dict subtype or Mapping implementation
@@ -667,12 +667,12 @@ provider.get_attributes()  # Works with covariance
 # typings.py (Tier 0)
 class FlextLdapTypes:
     class Ldap:
-        type ModifyChanges = Mapping[str, Sequence[tuple[str, t.StrSequence]]]
+        type ModifyChanges = t.MappingKV[str, t.SequenceOf[tuple[str, t.StrSequence]]]
 
     class Ldap:
         class Operation:
-            type ModifyChanges = Mapping[
-                str, Sequence[tuple[str, t.StrSequence]]
+            type ModifyChanges = t.MappingKV[
+                str, t.SequenceOf[tuple[str, t.StrSequence]]
             ]  # DUPLICATE
 
 
@@ -685,7 +685,7 @@ class FlextLdapTypes:
 # typings.py (Tier 0) - Single definition
 class FlextLdapTypes:
     class Ldap:
-        type ModifyChanges = Mapping[str, Sequence[tuple[str, t.StrSequence]]]
+        type ModifyChanges = t.MappingKV[str, t.SequenceOf[tuple[str, t.StrSequence]]]
 
         # Backward compatibility (remove after 2-3 releases)
         class Operation:
@@ -720,14 +720,14 @@ attributes = m.AttributeDict()  # NO
 ```python
 # ✅ CORRECT: Use Models and Protocols
 def process_model(
-    data: Mapping[str, m.Domain.InputModel],
+    data: t.MappingKV[str, m.Domain.InputModel],
 ) -> p.Result[m.Domain.OutputModel]:
     return r.ok(SomeModel(data))
 
 
 # ❌ WRONG: cast() hides type issues
 def process_model(
-    data: Mapping[str, m.Domain.InputModel],
+    data: t.MappingKV[str, m.Domain.InputModel],
 ) -> p.Result[m.Domain.OutputModel]:
     return r.ok(cast(SomeModel, data))
 
@@ -741,13 +741,13 @@ if TYPE_CHECKING:
 
 ```python
 # ✅ CORRECT: Mapping for read-only
-def read_attributes(attrs: Mapping[str, t.StrSequence]) -> None:
+def read_attributes(attrs: t.MappingKV[str, t.StrSequence]) -> None:
     for key, values in attrs.items():
         print(f"{key}: {values}")
 
 
 # ❌ WRONG: dict for read-only (invariant)
-def read_attributes(attrs: Mapping[str, t.StrSequence]) -> None:
+def read_attributes(attrs: t.MappingKV[str, t.StrSequence]) -> None:
     for key, values in attrs.items():
         print(f"{key}: {values}")
 ```

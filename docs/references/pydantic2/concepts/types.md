@@ -129,12 +129,12 @@ try:
 except ValidationError as exc:
     print(exc)
     """
-    1 validation error for Sequence[int]
+    1 validation error for t.SequenceOf[int]
       List should have at most 4 items after validation, not 5 [type=too_long, input_value=[1, 2, 3, 4, 5], input_type=list]
     """
 
 
-PositiveList = Sequence[Annotated[T, Gt(0)]]
+PositiveList = t.SequenceOf[Annotated[T, Gt(0)]]
 
 ta = TypeAdapter(PositiveList[float])
 
@@ -147,7 +147,7 @@ try:
 except ValidationError as exc:
     print(exc)
     """
-    1 validation error for Sequence[constrained-float]
+    1 validation error for t.SequenceOf[constrained-float]
     0
       Input should be greater than 0 [type=greater_than, input_value=-1.0, input_type=float]
     """
@@ -177,7 +177,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
 
     from pydantic import BaseModel
 
-    PositiveIntList = TypeAliasType("PositiveIntList", Sequence[Annotated[int, Gt(0)]])
+    PositiveIntList = TypeAliasType("PositiveIntList", t.SequenceOf[Annotated[int, Gt(0)]])
 
 
     class Model(BaseModel):
@@ -217,7 +217,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
 
     from pydantic import BaseModel
 
-    type PositiveIntList = Sequence[Annotated[int, Gt(0)]]
+    type PositiveIntList = t.SequenceOf[Annotated[int, Gt(0)]]
 
 
     class Model(BaseModel):
@@ -344,7 +344,7 @@ For instance, here is an example definition of a JSON type:
 
     Json = TypeAliasType(
         "Json",
-        "Union[Mapping[str, Json], Sequence[Json], str, int, float, bool, None]",  # (1)!
+        "Union[Mapping[str, Json], t.SequenceOf[Json], str, int, float, bool, None]",  # (1)!
     )
 
     ta = TypeAdapter(Json)
@@ -380,7 +380,7 @@ For instance, here is an example definition of a JSON type:
     ```python {requires="3.12" upgrade="skip" lint="skip"}
     from pydantic import TypeAdapter
 
-    type Json = Mapping[str, Json] | Sequence[Json] | t.Primitives | None  # (1)!
+    type Json = t.MappingKV[str, Json] | t.SequenceOf[Json] | t.Primitives | None  # (1)!
 
     ta = TypeAdapter(Json)
     print(ta.json_schema())
@@ -837,7 +837,7 @@ T = TypeVar("T")
 
 
 class MySequence(Sequence[T]):
-    def __init__(self, v: Sequence[T]):
+    def __init__(self, v: t.SequenceOf[T]):
         self.v = v
 
     def __getitem__(self, i):
