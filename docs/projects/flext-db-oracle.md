@@ -66,7 +66,7 @@ if result.is_success:
 ## Key features
 
 - Enterprise-grade Oracle connectivity with failover-aware connection pooling, metadata extraction, and parameterized query execution.
-- Schema introspection helpers (tables, columns, constraints) and migration-ready builders for Oracle-specific quirks.
+- Schema introspection helpers (tables, columns, constraints) and migration-ready builders for Oracle-specific servers.
 - Railway error handling (`r[T]`) and compliance with flext-core patterns (no `TYPE_CHECKING`, no `Any`, zero-cast policy).
 - Integration with `flext-tap-oracle`, `flext-target-oracle`, and `flext-dbt-oracle` so downstream ETL flows re-use workloads.
 - Quality gates: `make lint`, `make type-check`, `make security`, `make test`, `make val`, plus Oracle integration tests (Pytest markers `unit`, `integration`).

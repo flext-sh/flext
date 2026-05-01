@@ -60,7 +60,7 @@ Every rename/move uses `sg` (ast-grep) for IMMEDIATE workspace-wide propagation.
 | `services/` subdir (if classes inherit from `s` subclass base)               | Scoped service implementations                       | Must be wired into facade `api.py` MRO |
 | `providers/` subdir (flext-auth)                                             | Auth provider implementations                        | Must be registered, OK standalone      |
 | `protocol_impls/` subdir (flext-api)                                         | Protocol implementations                             | Must be registered, OK standalone      |
-| `servers/` subdir (flext-ldif)                                               | Server quirk implementations                         | Must be registered, OK standalone      |
+| `servers/` subdir (flext-ldif)                                               | Server server implementations                         | Must be registered, OK standalone      |
 | `domain/` subdir                                                             | Domain entity re-exports                             | Must reference facade `m.*`            |
 
 ### 2.6 flext-core Foundation Classes

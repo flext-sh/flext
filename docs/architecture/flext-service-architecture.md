@@ -3094,9 +3094,9 @@ class ldif(Flext[t.JsonMapping]):
         """Register all services in the DI container."""
         container = self.container  # ✅ BOM: Property access
 
-        # ✅ BOM: Register quirk registry singleton
-        quirk_registry = FlextLdifServer()
-        _ = container.register("quirk_registry", quirk_registry)
+        # ✅ BOM: Register server registry singleton
+        server_registry = FlextLdifServer()
+        _ = container.register("server_registry", server_registry)
 
         # ✅ BOM: Register stateless writer
         unified_writer = FlextLdifWriter()
@@ -3242,7 +3242,9 @@ class FlextLdifWriter:
     def __init__(self, container: FlextContainer) -> None:
         super().__init__()
         # ✅ BOM: Resolve via container
-        self._registry = container.get_typed("quirk_registry", FlextLdifServer).unwrap()
+        self._registry = container.get_typed(
+            "server_registry", FlextLdifServer
+        ).unwrap()
         self._statistics_service = container.get_typed(
             "statistics", FlextLdifStatistics
         ).unwrap()
@@ -4362,8 +4364,8 @@ grep -r "p" flext-ldif/ flext-api/
 class FlextLdifProtocols:
     """LDIF-specific protocols - NÃO herda de p."""
 
-    class QuirksPort(Protocol):
-        """Quirks port protocol."""
+    class ServersPort(Protocol):
+        """Servers port protocol."""
 
         def normalize_entry(self, entry: dict) -> p.Result[dict]: ...
 
@@ -4429,7 +4431,7 @@ attributes: m.Ldif.AttributeSetModel
 
 **Uso de Protocols:**
 
-- ✅ Use para contratos locais (ex: FlextLdifProtocols.QuirksPort)
+- ✅ Use para contratos locais (ex: FlextLdifProtocols.ServersPort)
 - ✅ Use para integration com código externo
 - ❌ Evite p core (pouco valor)
 - ✅ Prefira s (base class) para services
@@ -5470,8 +5472,8 @@ class FlextLdifWriter(Flext[WriteResponse]):
         max_line = self.project_config.ldif_max_line_length
 
         # Implementation
-        quirks = self._gets()
-        denormalized = self._denormalize_entries(quirks)
+        servers = self._gets()
+        denormalized = self._denormalize_entries(servers)
 
         match self.output_target:
             case "file":
