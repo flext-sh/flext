@@ -289,7 +289,7 @@ if TYPE_CHECKING:
 class FlextLdifModelsDomainAcl:
     class Acl(FlextLdifModelsBases.AclElement):  # runtime base — OK
         metadata: (
-            FlextLdifModelsDomainMetadata.QuirkMetadata | None
+            FlextLdifModelsDomainMetadata.ServerMetadata | None
         )  # TYPE_CHECKING — OK
 ```
 
