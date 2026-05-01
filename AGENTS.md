@@ -30,6 +30,14 @@ alwaysApply: true
 4. Project skills (domain-specific patterns)
 5. Default agent behavior
 
+### USER-INTENT SUPREMACY (NON-NEGOTIABLE)
+
+- Explicit user directives are law: deliver exactly what was requested, no scope expansion, no speculative refactor, no unauthorized architecture migration.
+- Never "optimize" by changing namespace contracts (`src` vs `tests`) unless the user explicitly requested that migration.
+- If the user reports regression, mess, or rejected direction, STOP feature edits immediately, perform only rollback-safe corrective work aligned to the last explicit user request.
+- If the user says work is cancelled/prohibited, agents must halt implementation edits and only execute the explicit governance/documentation action requested in that same message.
+- Any output that ignores or reinterprets the user's direct instruction is INVALID work.
+
 **Scope separation**:
 
 - `~/.claude/AGENTS.md` — Non-negotiable rules, tool priority, forbidden operations, Serena/Scope/RTK/claude-mem, language-specific basics, linting, communication style, security (UNIVERSAL across all projects)
@@ -269,6 +277,12 @@ Custom equivalent = AUTOMATIC DELETION (§3.1.PYDANTIC-V2-NATIVE table).
 ### §0.2 ABSOLUTE BANS (any one = STOP, REVERT, RE-PLAN)
 
 `Any` / bare `object` / `cast()` outside flext-core/result.py · `model_rebuild()` · pass-through wrappers (`def x(): return y()`) · pass-through constructors (`__init__` only forwarding parent args) · compat aliases (`OldX = NewX`) · manual/inplace kwargs validation or normalization chains when `Model.model_validate(...)` / `model_copy(update=...)` can replace them · `os.environ`/`os.getenv` in `src/` · bare `except:` · `# type: ignore` / `# pyrefly: ignore` / `# noqa` for SUPPRESSION (root-cause fix only) · `git checkout/reset --hard/stash pop` to discard work · `T | None` without docstring sentence justifying `None` · public `get_*/set_*/is_*` accessors on facade services · loose module-level `def`/`class`/`Final` · direct framework imports of flext-core-abstracted libs (pydantic/structlog/orjson/pyyaml/dependency_injector/returns) in consumers · `model_validate(...).execute()` GOD-pattern dispatchers · sibling duplication of `model_config`/fields/methods.
+
+Also absolutely banned:
+
+- Editing outside explicit user scope after user requested focus correction.
+- Mixing `src` and `tests` namespace contracts without explicit migration approval.
+- Continuing implementation work after explicit user cancellation/prohibition.
 
 ### §0.3 FORBIDDEN RATIONALIZATIONS (task INVALID on first utterance)
 

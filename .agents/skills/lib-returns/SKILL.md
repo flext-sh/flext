@@ -91,9 +91,9 @@ _ = r[str].ok("example")
 
 | Method                          | Signature                                                                                                      | When to use                                |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| `r.traverse(items, func)`       | `traverse[T, U](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> p.Result[Sequence[U]]`       | Map over sequence, fail-fast or accumulate |
+| `r.traverse(items, func)`       | `traverse[T, U](cls, items: t.SequenceOf[T], func: ..., *, fail_fast: bool = True) -> p.Result[Sequence[U]]`       | Map over sequence, fail-fast or accumulate |
 | `r.accumulate_errors(*results)` | `accumulate_errors(cls, *results: p.Result[U]) -> p.Result[Sequence[U]]`                                       | Collect all successes, combine all errors  |
-| `r.parallel_map(items, func)`   | `parallel_map[T, U2](cls, items: Sequence[T], func: ..., *, fail_fast: bool = True) -> p.Result[Sequence[U2]]` | Same semantics as traverse                 |
+| `r.parallel_map(items, func)`   | `parallel_map[T, U2](cls, items: t.SequenceOf[T], func: ..., *, fail_fast: bool = True) -> p.Result[Sequence[U2]]` | Same semantics as traverse                 |
 
 ### Pydantic Integration
 

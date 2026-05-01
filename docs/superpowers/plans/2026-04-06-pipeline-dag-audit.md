@@ -123,7 +123,7 @@ class FlextCliProtocolsPipeline:
 
         def execute(
             self,
-            stages: Sequence[m.Cli.PipelineStageSpec],
+            stages: t.SequenceOf[m.Cli.PipelineStageSpec],
             context: FlextCliProtocolsPipeline.PipelineStageContext,
             *,
             fail_fast: bool = True,
@@ -350,7 +350,7 @@ class FlextCliModelsPipeline:
             ),
         ]
         settings: Annotated[
-            Mapping[str, object],
+            t.MappingKV[str, object],
             u.Field(
                 default_factory=lambda: MappingProxyType({}), description="Immutable pipeline configuration"
             ),
@@ -399,7 +399,7 @@ class FlextCliModelsPipeline:
             u.Field(description="Execution outcome"),
         ]
         output: Annotated[
-            Mapping[str, object],
+            t.MappingKV[str, object],
             u.Field(default_factory=lambda: MappingProxyType({}), description="Stage output payload"),
         ]
         duration_ms: Annotated[
@@ -417,7 +417,7 @@ class FlextCliModelsPipeline:
         model_config: ClassVar[m.ConfigDict] = ConfigDict(extra="forbid")
 
         stages: Annotated[
-            Sequence[FlextCliModelsPipeline.PipelineStageResult],
+            t.SequenceOf[FlextCliModelsPipeline.PipelineStageResult],
             u.Field(
                 default_factory=list, description="Results from all executed stages"
             ),
@@ -433,14 +433,14 @@ class FlextCliModelsPipeline:
             return all(s.status != "failed" for s in self.stages)
 
         @property
-        def failed_stages(self) -> Sequence[FlextCliModelsPipeline.PipelineStageResult]:
+        def failed_stages(self) -> t.SequenceOf[FlextCliModelsPipeline.PipelineStageResult]:
             """Return only failed stage results."""
             return [s for s in self.stages if s.status == "failed"]
 
         @property
         def skipped_stages(
             self,
-        ) -> Sequence[FlextCliModelsPipeline.PipelineStageResult]:
+        ) -> t.SequenceOf[FlextCliModelsPipeline.PipelineStageResult]:
             """Return only skipped stage results."""
             return [s for s in self.stages if s.status == "skipped"]
 
@@ -796,7 +796,7 @@ class FlextCliUtilitiesPipeline:
 
     @staticmethod
     def execute_pipeline(
-        stages: Sequence[m.Cli.PipelineStageSpec],
+        stages: t.SequenceOf[m.Cli.PipelineStageSpec],
         context: m.Cli.PipelineStageContext,
         *,
         fail_fast: bool = c.Cli.Pipeline.DEFAULT_FAIL_FAST,
@@ -817,7 +817,7 @@ class FlextCliUtilitiesPipeline:
             )
 
         # Build stage lookup and dependency graph.
-        stage_map: Mapping[str, m.Cli.PipelineStageSpec] = {
+        stage_map: t.MappingKV[str, m.Cli.PipelineStageSpec] = {
             s.stage_id: s for s in stages
         }
 

@@ -119,7 +119,7 @@ from pydantic import BaseModel, u.Field
 class DivModel(BaseModel):
     el_type: Literal["div"] = "div"
     class_name: str | None = None
-    children: Sequence[Any] | None = None
+    children: t.SequenceOf[Any] | None = None
 
 
 class SpanModel(BaseModel):
@@ -210,7 +210,7 @@ try:
 except ValidationError as exc:
     print(exc)
     """
-    1 validation error for Sequence[bool]
+    1 validation error for t.SequenceOf[bool]
     1
       Input should be a valid boolean, unable to interpret input [type=bool_parsing, input_value='invalid', input_type=str]
     """

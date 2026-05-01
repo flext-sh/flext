@@ -307,7 +307,7 @@ from collections.abc import Mapping
 from flext_core import p, r
 
 
-def parse_config(raw: Mapping[str, str | int]) -> p.Result[Mapping[str, str | int]]:
+def parse_config(raw: t.MappingKV[str, str | int]) -> p.Result[Mapping[str, str | int]]:
     if "port" not in raw:
         return r[Mapping[str, str | int]].fail("port is required")
     return r[Mapping[str, str | int]].ok(raw)

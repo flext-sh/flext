@@ -19,9 +19,7 @@ from __future__ import annotations
 import time
 from collections.abc import (
     Callable,
-    Mapping,
     MutableSequence,
-    Sequence,
 )
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from enum import StrEnum, unique
@@ -129,9 +127,11 @@ class CompleteWorkflowExample:
         total_processing_time: float = u.Field(
             description="Total workflow processing time",
         )
-        stage_results: Sequence[CompleteWorkflowExample.WorkflowStageResult] = u.Field(
-            default_factory=list,
-            description="Results from each workflow stage",
+        stage_results: t.SequenceOf[CompleteWorkflowExample.WorkflowStageResult] = (
+            u.Field(
+                default_factory=list,
+                description="Results from each workflow stage",
+            )
         )
         aggregated_metrics: t.JsonMapping = u.Field(
             default_factory=lambda: MappingProxyType({}),
@@ -148,7 +148,7 @@ class CompleteWorkflowExample:
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
-        data: Sequence[CompleteWorkflowProcessingDict] = u.Field(
+        data: t.SequenceOf[CompleteWorkflowProcessingDict] = u.Field(
             default_factory=tuple,
         )
         workflow_settings: t.ScalarMapping = u.Field(
@@ -193,9 +193,9 @@ class CompleteWorkflowExample:
 
         def _aggregate_workflow_metrics(
             self,
-            stage_results: Sequence[CompleteWorkflowExample.WorkflowStageResult],
+            stage_results: t.SequenceOf[CompleteWorkflowExample.WorkflowStageResult],
             total_time: float,
-        ) -> Mapping[str, t.Numeric]:
+        ) -> t.MappingKV[str, t.Numeric]:
             """Aggregate metrics across all workflow stages."""
             if not stage_results:
                 return {}
@@ -251,7 +251,7 @@ class CompleteWorkflowExample:
         def _execute_stage_parallel(
             self,
             stage_name: str,
-            items: Sequence[CompleteWorkflowProcessingDict],
+            items: t.SequenceOf[CompleteWorkflowProcessingDict],
             stage_func: Callable[
                 [
                     CompleteWorkflowProcessingDict,
@@ -322,7 +322,7 @@ class CompleteWorkflowExample:
 
         def _execute_workflow(
             self,
-            data: Sequence[CompleteWorkflowProcessingDict],
+            data: t.SequenceOf[CompleteWorkflowProcessingDict],
             context: CompleteWorkflowExample.WorkflowContext,
         ) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Execute workflow stages with parallel processing."""
@@ -513,7 +513,7 @@ class CompleteWorkflowExample:
     @staticmethod
     def create_sample_workflow_data(
         count: int = 100,
-    ) -> Sequence[CompleteWorkflowProcessingDict]:
+    ) -> t.SequenceOf[CompleteWorkflowProcessingDict]:
         """Create sample data for workflow testing."""
         result: MutableSequence[CompleteWorkflowProcessingDict] = []
         for i in range(count):
@@ -537,7 +537,7 @@ class CompleteWorkflowExample:
     @staticmethod
     def run_example() -> None:
         """Run the complete workflow example."""
-        sample_data: Sequence[CompleteWorkflowProcessingDict] = (
+        sample_data: t.SequenceOf[CompleteWorkflowProcessingDict] = (
             CompleteWorkflowExample.create_sample_workflow_data(50)
         )
         workflow_settings: t.ScalarMapping = {

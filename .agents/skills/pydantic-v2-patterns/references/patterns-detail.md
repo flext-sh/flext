@@ -99,11 +99,11 @@ from pydantic import BaseModel, u.Field, u.field_validator
 
 
 class RetryConfiguration(m.BaseModel):
-    retry_on_status_codes: Sequence[int] = u.Field(default_factory=list)
+    retry_on_status_codes: t.SequenceOf[int] = u.Field(default_factory=list)
 
     @u.field_validator("retry_on_status_codes", mode="after")
     @classmethod
-    def validate_status_codes(cls, values: Sequence[int]) -> Sequence[int]:
+    def validate_status_codes(cls, values: t.SequenceOf[int]) -> t.SequenceOf[int]:
         for code in values:
             if code < 100 or code > 599:
                 raise ValueError(f"Invalid HTTP status code: {code}")

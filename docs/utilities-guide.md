@@ -185,7 +185,7 @@ result = u.to_str_list_truthy(None)
 ```python
 @staticmethod
 def find_callable[T](
-    callables: Mapping[str, _Predicate[T]],
+    callables: t.MappingKV[str, _Predicate[T]],
     value: T,
 ) -> str | None:
     """Find first matching callable key from dict of predicates."""

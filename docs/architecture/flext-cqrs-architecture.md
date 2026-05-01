@@ -361,8 +361,8 @@ servir como referência futura para implementação:
 ~~ """Base class for CQRS message handlers."""~~
 
 ~~ # ⚠️ Infraestrutura manual (será deprecated)~~
-~~ \_metrics: Mapping[str, t.Numeric]~~
-~~\_context_stack: Sequence[t.JsonMapping]~~
+~~ \_metrics: t.MappingKV[str, t.Numeric]~~
+~~\_context_stack: t.SequenceOf[t.JsonMapping]~~
 
 ~~ # ✅ Pipeline methods~~
 ~~ def handle(self, message: TCommand_contra) -> p.Result[TResult_co]: ...~~
@@ -370,7 +370,7 @@ servir como referência futura para implementação:
 
 ~~ # ⚠️ Métodos manuais (serão deprecated em V2)~~
 ~~ def record_metric(self, key: str, value: t.Numeric) -> None: ...~~
-~~ def get_metrics(self) -> Mapping[str, t.Numeric]: ...~~
+~~ def get_metrics(self) -> t.MappingKV[str, t.Numeric]: ...~~
 ~~ def push_context(self, ctx: t.JsonMapping) -> None: ...~~
 ~~ def pop_context(self) -> t.JsonMapping | None: ...~~
 ~~```~~
@@ -515,8 +515,8 @@ servir como referência futura para implementação:
 ~~# ❌ Anti-pattern: Estado gerenciado manualmente~~
 ~~class h:~~
 ~~ def **init**(self):~~
-~~ self.\_metrics: Mapping[str, t.Numeric] = {} # Manual!~~
-~~ self.\_context_stack: Sequence[dict] = [] # Manual!~~
+~~ self.\_metrics: t.MappingKV[str, t.Numeric] = {} # Manual!~~
+~~ self.\_context_stack: t.SequenceOf[dict] = [] # Manual!~~
 
     def record_metric(self, key: str, value: t.Numeric) -> None:
         self._metrics[key] = self._metrics.get(key, 0) + value
@@ -614,7 +614,7 @@ servir como referência futura para implementação:
 ~~ """Thread-safe metrics tracking for handlers."""~~
 
 ~~ def **init**(self) -> None:~~
-~~ self.\_metrics: Mapping[str, t.Numeric] = {}~~
+~~ self.\_metrics: t.MappingKV[str, t.Numeric] = {}~~
 ~~ self.\_lock = threading.Lock()~~
 
 ~~ def record(self, key: str, value: t.Numeric) -> None:~~
@@ -627,7 +627,7 @@ servir como referência futura para implementação:
 ~~ """Get metric value."""~~
 ~~ return self.\_metrics.get(key, 0)~~
 
-~~ def all(self) -> Mapping[str, t.Numeric]:~~
+~~ def all(self) -> t.MappingKV[str, t.Numeric]:~~
 ~~ """Get all metrics."""~~
 ~~ return dict(self.\_metrics)~~
 
@@ -640,7 +640,7 @@ servir como referência futura para implementação:
 ~~ """Thread-safe context stack for handlers."""~~
 
 ~~ def **init**(self) -> None:~~
-~~ self.\_stack: Sequence[t.JsonMapping] = []~~
+~~ self.\_stack: t.SequenceOf[t.JsonMapping] = []~~
 
 ~~ def push(self, ctx: t.JsonMapping) -> None:~~
 ~~ """Push context onto stack."""~~
@@ -838,7 +838,7 @@ servir como referência futura para implementação:
 ~~ )~~
 ~~ self.cqrs_metrics.record(key, value)~~
 
-~~ def get_metrics(self) -> Mapping[str, t.Numeric]:~~
+~~ def get_metrics(self) -> t.MappingKV[str, t.Numeric]:~~
 ~~ """Get all recorded metrics.~~
 
 ~~ .. deprecated:: 1.0~~
@@ -1239,7 +1239,7 @@ servir como referência futura para implementação:
 ~~ self.\_failure_threshold = failure_threshold~~
 ~~ self.\_recovery_timeout = recovery_timeout~~
 ~~ self.\_failures: t.IntMapping = {}~~
-~~ self.\_last_failure: Mapping[str, float] = {}~~
+~~ self.\_last_failure: t.MappingKV[str, float] = {}~~
 
 ~~ def is_open(self, key: str) -> bool:~~
 ~~ """Check if circuit is open."""~~
@@ -1328,7 +1328,7 @@ servir como referência futura para implementação:
 ~~ user_id: str~~
 
 ~~class GetUserHandler(h[GetUserQuery, User]):~~
-~~ \_cache: Mapping[str, User] = {}~~
+~~ \_cache: t.MappingKV[str, User] = {}~~
 
 ~~ def handle(self, query: GetUserQuery) -> p.Result[User]:~~
 ~~ # Check cache first~~
@@ -1398,7 +1398,7 @@ servir como referência futura para implementação:
 ~~class ProcessOrderCommand:~~
 ~~ order_id: str~~
 ~~ customer_id: str~~
-~~ items: Sequence[OrderItem]~~
+~~ items: t.SequenceOf[OrderItem]~~
 
 ~~class ProcessOrderHandler(h[ProcessOrderCommand, Order]):~~
 ~~ def handle(self, command: ProcessOrderCommand) -> p.Result[Order]:~~
@@ -1625,7 +1625,7 @@ servir como referência futura para implementação:
 ~~ return cls.\_users.get(user_id)~~
 
 ~~ @classmethod~~
-~~ def list(cls, limit: int, offset: int) -> Sequence[User]:~~
+~~ def list(cls, limit: int, offset: int) -> t.SequenceOf[User]:~~
 ~~ users = list(cls.\_users.values())~~
 ~~ return users[offset:offset + limit]~~
 
@@ -1685,7 +1685,7 @@ self.logger.debug(f"Getting user: {query.user_id}")
         self.cqrs_metrics.record("users_found", 1)
         return r.ok(user)
 
-class ListUsersHandler(h[ListUsersQuery, Sequence[User]]):
+class ListUsersHandler(h[ListUsersQuery, t.SequenceOf[User]]):
 def handle(self, query: ListUsersQuery) -> p.Result[Sequence[User]]:
 self.logger.debug(f"Listing users: limit={query.limit}, offset={query.offset}")
 
@@ -1801,7 +1801,7 @@ class CustomCircuitBreaker:
         self._failure_threshold = failure_threshold
         self._success_threshold = success_threshold
         self._recovery_timeout = recovery_timeout
-        self._circuits: Mapping[str, CircuitState] = {}
+        self._circuits: t.MappingKV[str, CircuitState] = {}
         self.logger = logger or u.fetch_logger(__name__)
 
     def _get_circuit(self, key: str) -> CircuitState:
@@ -1861,7 +1861,7 @@ class CustomCircuitBreaker:
     def get_state(self, key: str) -> str:
         return self._get_circuit(key).state
 
-    def get_metrics(self, key: str) -> Mapping[str, t.Numeric | str]:
+    def get_metrics(self, key: str) -> t.MappingKV[str, t.Numeric | str]:
         circuit = self._get_circuit(key)
         return {
             "state": circuit.state,

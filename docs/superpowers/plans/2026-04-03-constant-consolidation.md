@@ -145,7 +145,7 @@ After `get_canonical_str_values()` (line 51), add:
 
 ```python
 @staticmethod
-def get_canonical_frozenset_values() -> Mapping[frozenset[str], str]:
+def get_canonical_frozenset_values() -> t.MappingKV[frozenset[str], str]:
     settings = FlextInfraUtilitiesCodegenGovernance.load_governance_settings()
     return {
         frozenset(entry.value): entry.canonical_ref
@@ -167,7 +167,7 @@ def get_canonical_regex_values() -> t.StrMapping:
 
 
 @staticmethod
-def get_canonical_tuple_values() -> Mapping[tuple[str, ...], str]:
+def get_canonical_tuple_values() -> t.MappingKV[tuple[str, ...], str]:
     settings = FlextInfraUtilitiesCodegenGovernance.load_governance_settings()
     return {
         tuple(entry.value): entry.canonical_ref
@@ -280,7 +280,7 @@ def _handle_consolidate(params: m.Infra.CodegenConsolidateInput) -> p.Result[str
     if projects_result.is_failure:
         return r[str].fail("Failed to discover projects")
 
-    projects: Sequence[m.Infra.ProjectInfo] = projects_result.value
+    projects: t.SequenceOf[m.Infra.ProjectInfo] = projects_result.value
     if params.project:
         projects = [p for p in projects if p.name == params.project]
 

@@ -11,10 +11,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import (
-    Sequence,
-)
-
 from examples import m, t, u
 
 
@@ -28,7 +24,7 @@ class ValidationRules(m.BaseModel):
     required_permissions: t.StrSequence = u.Field(
         description="List of permissions that must be present in valid ACL entries",
     )
-    forbidden_combinations: Sequence[tuple[str, ...]] = u.Field(
+    forbidden_combinations: t.SequenceOf[tuple[str, ...]] = u.Field(
         description="Permission combinations that are not allowed together",
     )
 

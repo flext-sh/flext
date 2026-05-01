@@ -41,7 +41,7 @@ try:
 except ValidationError as e:
     print(e)
     """
-    1 validation error for Sequence[User]
+    1 validation error for t.SequenceOf[User]
     0.id
       Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='wrong', input_type=str]
     """

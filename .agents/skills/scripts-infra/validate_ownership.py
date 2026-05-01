@@ -9,9 +9,6 @@ import json
 import operator
 import re
 import sys
-from collections.abc import (
-    Sequence,
-)
 from enum import IntEnum
 from pathlib import Path
 from typing import Annotated, ClassVar, Final
@@ -97,7 +94,7 @@ def parse_args(argv: t.StrSequence) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def tracked_scripts(repo_root: Path) -> Sequence[Path]:
+def tracked_scripts(repo_root: Path) -> t.SequenceOf[Path]:
     """tracked_scripts function."""
     result = u.Cli.run_raw(
         [
@@ -295,7 +292,7 @@ def status_color(status: str) -> str:
     return color
 
 
-def print_table(results: Sequence[ScriptCheckResult]) -> None:
+def print_table(results: t.SequenceOf[ScriptCheckResult]) -> None:
     """print_table function."""
     eprint(f"{Ansi.CYAN}Script Ownership Validation{Ansi.RESET}")
     eprint(f"{Ansi.CYAN}{'SCRIPT':<55} {'STATUS':<10} DETAILS{Ansi.RESET}")
@@ -308,7 +305,7 @@ def print_table(results: Sequence[ScriptCheckResult]) -> None:
 
 def write_candidates(
     repo_root: Path,
-    candidates: Sequence[t.StrMapping],
+    candidates: t.SequenceOf[t.StrMapping],
 ) -> Path:
     """write_candidates function."""
     report_path = repo_root / ".agents" / "skills" / "scripts-infra" / "report.json"

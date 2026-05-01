@@ -407,7 +407,7 @@ class Model2(BaseModel):
 
 
 class Model3(BaseModel):
-    list_of_even_numbers: Sequence[DoubleNumber]  # (1)!
+    list_of_even_numbers: t.SequenceOf[DoubleNumber]  # (1)!
 ```
 
 1. As mentioned in the [annotated pattern](./fields.md#the-annotated-pattern) documentation,
@@ -834,7 +834,7 @@ class Hobby(BaseModel):
 
 
 class User(BaseModel):
-    hobbies: Sequence[Hobby]
+    hobbies: t.SequenceOf[Hobby]
 
 
 user = User(

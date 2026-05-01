@@ -187,7 +187,7 @@ class User(BaseModel):
 
 class Organization(BaseModel):
     forbidden_passwords: t.StrSequence
-    users: Sequence[User]
+    users: t.SequenceOf[User]
 
     @u.model_validator(mode="after")
     def validate_user_passwords(self) -> Self:
@@ -245,7 +245,7 @@ class User(BaseModel):
 
 class Organization(BaseModel):
     forbidden_passwords: t.StrSequence
-    users: Sequence[User]
+    users: t.SequenceOf[User]
 
     @u.field_validator("forbidden_passwords", mode="after")
     @classmethod

@@ -1272,7 +1272,7 @@ def gen():
 
 
 class Model(BaseModel):
-    x: Sequence[int]
+    x: t.SequenceOf[int]
 
 
 try:
@@ -1367,7 +1367,7 @@ from pydantic import BaseModel, ValidationError
 
 
 class Model(BaseModel):
-    x: Sequence[int]
+    x: t.SequenceOf[int]
 
 
 try:
@@ -1732,7 +1732,7 @@ from pydantic import BaseModel, ValidationError
 
 
 class Model(BaseModel):
-    x: Sequence["Model"]
+    x: t.SequenceOf["Model"]
 
 
 d = {"x": []}
@@ -2051,7 +2051,7 @@ from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: Sequence[int] = u.Field(max_length=3)
+    x: t.SequenceOf[int] = u.Field(max_length=3)
 
 
 try:
@@ -2070,7 +2070,7 @@ from pydantic import BaseModel, u.Field, ValidationError
 
 
 class Model(BaseModel):
-    x: Sequence[int] = u.Field(min_length=3)
+    x: t.SequenceOf[int] = u.Field(min_length=3)
 
 
 try:

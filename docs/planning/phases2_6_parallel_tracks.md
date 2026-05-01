@@ -206,7 +206,7 @@ refactor(flext-plugin): fix ARG002 and add missing docstrings
 
        class Entry(FlextLdifModels.Base):
            dn: str
-           attributes: Mapping[str, t.StrSequence]
+           attributes: t.MappingKV[str, t.StrSequence]
 
        class Attribute(FlextLdifModels.Base):
            name: str
@@ -214,7 +214,7 @@ refactor(flext-plugin): fix ARG002 and add missing docstrings
 
        class Result:
            class Success(FlextLdifModels.Base):
-               entries: Sequence[FlextLdifModels.Entry]
+               entries: t.SequenceOf[FlextLdifModels.Entry]
 
            class Failure(FlextLdifModels.Base):
                error: str

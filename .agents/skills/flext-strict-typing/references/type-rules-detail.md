@@ -115,7 +115,7 @@ m.Dict  # Transitional only — migrate to explicit domain dict models
 m.Domain.ConfigModel  # Canonical strict settings contract
 p.ServiceMap  # Transitional only — migrate to explicit service registry models
 t.ErrorMap  # RootModel[Mapping[str, int | str | t.IntMapping]] — error types
-t.JsonList  # Transitional only — migrate to Sequence[m.<Domain>.ItemModel]
+t.JsonList  # Transitional only — migrate to t.SequenceOf[m.<Domain>.ItemModel]
 t.FactoryMap  # RootModel[Mapping[str, FactoryRegistrationCallable]]
 t.ResourceMap  # RootModel[Mapping[str, ResourceCallable]]
 t.u.FieldValidatorMap  # RootModel[Mapping[str, Callable[[GVT], GVT]]]
@@ -137,8 +137,8 @@ type GeneralValueType = (
     Scalar
     | BaseModel
     | Path
-    | Sequence[FlextTypes.GeneralValueType]
-    | Mapping[str, FlextTypes.GeneralValueType]
+    | t.SequenceOf[FlextTypes.GeneralValueType]
+    | t.MappingKV[str, FlextTypes.GeneralValueType]
 )
 ```
 
@@ -522,7 +522,7 @@ class PhaseResults:
 
 # ✅ CORRECT — Pydantic model with proper typing
 class PhaseResults(m.BaseModel):
-    results: Mapping[int, OperationStats] = u.Field(default_factory=dict)
+    results: t.MappingKV[int, OperationStats] = u.Field(default_factory=dict)
 
     def with_result(self, phase: int, stats: OperationStats) -> PhaseResults:
         """Immutable update — returns new instance with added result."""

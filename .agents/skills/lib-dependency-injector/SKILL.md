@@ -33,9 +33,9 @@ description: dependency_injector bridge patterns for FLEXT runtime and container
 - Keep provider registration in `FlextContainer` and `u.DependencyIntegration` only.
 - Use `scoped()` for test isolation and subproject-specific overlays.
 - Keep registries typed and explicit:
-  - `_services: Mapping[str, m.Container.ServiceRegistration]`
-  - `_factories: Mapping[str, m.Container.FactoryRegistration]`
-  - `_resources: Mapping[str, m.Container.ResourceRegistration]`
+  - `_services: t.MappingKV[str, m.Container.ServiceRegistration]`
+  - `_factories: t.MappingKV[str, m.Container.FactoryRegistration]`
+  - `_resources: t.MappingKV[str, m.Container.ResourceRegistration]`
 - Keep bridge components layered and synchronized:
   - `_di_bridge: containers.DeclarativeContainer`
   - `_di_services: containers.DynamicContainer`

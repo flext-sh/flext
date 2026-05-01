@@ -84,9 +84,9 @@ This session achieved **52% workspace-wide pyrefly error reduction** through:
 ```python
 t.AttemptData = t.MutableJsonMapping  # was wrong
 self._attempts[username]["attempts"] = (
-    recent_attempts  # recent_attempts is Sequence[Container]
+    recent_attempts  # recent_attempts is t.SequenceOf[Container]
 )
-# Type error: Sequence[Container] not assignable to Container
+# Type error: t.SequenceOf[Container] not assignable to Container
 ```
 
 **Solution**:
@@ -148,8 +148,8 @@ Returned type `list[Container]` is not assignable to `t.JsonValue`
 **Pattern**:
 
 ```
-Mapping[str, Mapping[...]] passed to function expecting Mapping[str, Container]
-dict[str, X] passed to function expecting Mapping[str, Context]
+Mapping[str, t.MappingKV[...]] passed to function expecting t.MappingKV[str, Container]
+dict[str, X] passed to function expecting t.MappingKV[str, Context]
 ```
 
 **Root Cause**: `dict` not recognized as valid `Mapping` subtype under variance rules
@@ -163,7 +163,7 @@ dict[str, X] passed to function expecting Mapping[str, Context]
 **Pattern**:
 
 ```
-Argument of type `dict[str, Mapping[str, ...] | Path | Sequence[...] | bool | ...]`
+Argument of type `dict[str, t.MappingKV[str, ...] | Path | t.SequenceOf[...] | bool | ...]`
 is not assignable to `Container`
 ```
 
@@ -230,7 +230,7 @@ Type aliases like `AttemptData` must precisely match:
 - How values are accessed/modified
 - Expected return types
 
-**Anti-pattern**: `MutableMapping[str, X]` when code stores `Mapping[str, Sequence[X]]`
+**Anti-pattern**: `MutableMapping[str, X]` when code stores `Mapping[str, t.SequenceOf[X]]`
 
 ### 3. Mapping Variance Limitations
 
@@ -263,7 +263,7 @@ def process() -> t.JsonValue:
 **Example**:
 
 ```python
-def handle(payload: Mapping[str, Mapping[str, t.JsonValue | Path | ...]]):
+def handle(payload: t.MappingKV[str, t.MappingKV[str, t.JsonValue | Path | ...]]):
     # Nested unions explode - pyrefly can't narrow correctly
 ```
 
@@ -330,7 +330,7 @@ flext-dbt-ldif/src/flext_dbt_ldif/services/unified_service.py
   ↳ Updated execute() return type and instantiation
 
 flext-auth/src/flext_auth/typings.py
-  ↳ Fixed t.AttemptData = Mapping[str, t.JsonList] (was Container)
+  ↳ Fixed t.AttemptData = t.MappingKV[str, t.JsonList] (was Container)
   ↳ Added Sequence import from collections.abc
 ```
 
