@@ -331,7 +331,7 @@ return cast(Success[T], result)
 
 
 # After:
-def is_success(result: r[T]) -> TypeIs[Success[T]]:
+def is_success(result: p.Result[T]) -> TypeIs[Success[T]]:
     return result.is_ok()
 
 
@@ -517,7 +517,7 @@ qlty smells flext-core/src/flext_core/handlers.py | head -20
 
 Look for:
 ```python
-def handle(self, command: object) -> r[t.Any]:
+def handle(self, command: object) -> p.Result[t.Any]:
     if isinstance(command, CommandA):
         return self._handle_a(command)
     elif isinstance(command, CommandB):
@@ -532,14 +532,14 @@ from flext_core import r, t
 
 
 @singledispatch
-def _handle_dispatch(command: object) -> r[None]:
+def _handle_dispatch(command: object) -> p.Result[None]:
     return r.fail_op(
         "unregistered command type", context={"type": type(command).__name__}
     )
 
 
 @_handle_dispatch.register
-def _(command: CommandA) -> r[CommandAResult]: ...
+def _(command: CommandA) -> p.Result[CommandAResult]: ...
 ```
 
 - [ ] **Step 2: settings.py — delete manual env-reading**

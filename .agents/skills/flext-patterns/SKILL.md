@@ -359,11 +359,11 @@ from __future__ import annotations
 from flext_core import r
 
 
-def _to_lower(v: str) -> r[str]:
+def _to_lower(v: str) -> p.Result[str]:
     return r[str].ok(v.lower())
 
 
-def transform(value: str) -> r[str]:
+def transform(value: str) -> p.Result[str]:
     """Railway composition: ok → map → flat_map with typed result flow."""
     return r[str].ok(value).map(str.strip).flat_map(_to_lower)
 ```
@@ -437,11 +437,11 @@ from __future__ import annotations
 from flext_core import r
 
 
-def _recover(_err: str) -> r[int]:
+def _recover(_err: str) -> p.Result[int]:
     return r[int].ok(0)
 
 
-def compute() -> r[int]:
+def compute() -> p.Result[int]:
     """Preserves typed success/failure flow with explicit recovery."""
     return r[int].ok(10).map(lambda v: v * 2).lash(_recover)
 ```
