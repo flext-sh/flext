@@ -16,14 +16,14 @@ classifiers = [
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.13",
   "Topic :: Software Development :: Libraries :: Python Modules",
-  "Typing :: Typed"
+  "Typing :: Typed",
 ]
 dependencies = [
   "flext-core",
   "flext-infra",
   "flext-tests",
   "importlib-resources>=6.5.2",
-  "pydantic>=2.13.3"
+  "pydantic>=2.13.3",
 ]
 description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
 keywords = [ "coordination", "enterprise", "flext", "typed", "workspace" ]
@@ -114,7 +114,7 @@ dev = [
   "types-setuptools>=80.9",
   "types-tabulate>=0.10",
   "types-toml>=0.10.8.20240310",
-  "vulture>=2.13"
+  "vulture>=2.13",
 ]
 
 [project.scripts]
@@ -182,7 +182,7 @@ exclude_docs = [
   "superpowers/**",
   "type-system-architecture.md",
   "utilities-guide.md",
-  "version-policy.md"
+  "version-policy.md",
 ]
 site_title = "FLEXT Workspace"
 
@@ -199,7 +199,7 @@ disable_error_code = [
   "misc",
   "name-defined",
   "prop-decorator",
-  "valid-type"
+  "valid-type",
 ]
 exclude = "^tests/fixtures(?:/|$)"
 explicit_package_bases = true
@@ -246,7 +246,7 @@ project-excludes = [
   ".flext-deps/**",
   ".venv/**",
   "typings/**",
-  "vendor/**"
+  "vendor/**",
 ]
 project-includes = [
   "examples/**/*.py*",
@@ -254,7 +254,7 @@ project-includes = [
   "pkg/**/*.py*",
   "scripts/**/*.py*",
   "src/**/*.py*",
-  "tests/**/*.py*"
+  "tests/**/*.py*",
 ]
 python-version = "3.13"
 search-path = [
@@ -267,7 +267,7 @@ search-path = [
   "flext-infra/src",
   "flext-infra/tmp_flow_test",
   "flext-tests/src",
-  "src"
+  "src",
 ]
 site-package-path = [ "./typings", ".venv/lib/python3.13/site-packages" ]
 skip-interpreter-query = true
@@ -382,7 +382,7 @@ exclude = [
   "**/venv/**",
   ".git",
   ".sisyphus",
-  ".venv"
+  ".venv",
 ]
 extraPaths = [ ".", "src", "typings" ]
 ignore = [ "**/*.pyi", "typings" ]
@@ -472,7 +472,7 @@ include = [
   "pkg",
   "scripts",
   "src",
-  "tests"
+  "tests",
 ]
 pythonPlatform = "Linux"
 pythonVersion = "3.13"
@@ -955,10 +955,10 @@ addopts = [
   "--ignore-glob=*/tests/typings.py",
   "--ignore-glob=*/tests/utilities.py",
   "--markdown-docs",
-  "--strict-markers"
+  "--strict-markers",
 ]
 filterwarnings = [
-  "ignore:.*cannot collect test class.*because it has a __init__ constructor.*:pytest.PytestCollectionWarning"
+  "ignore:.*cannot collect test class.*because it has a __init__ constructor.*:pytest.PytestCollectionWarning",
 ]
 markers = [
   "docker: tests requiring Docker",
@@ -969,7 +969,7 @@ markers = [
   "resilience: resilience tests",
   "slow: slow-running tests",
   "stress: stress tests",
-  "unit: unit tests"
+  "unit: unit tests",
 ]
 minversion = "8.0"
 python_classes = [ "Test*" ]
@@ -995,7 +995,7 @@ exclude = [
   "tests/fixtures/**",
   "typings",
   "vendor",
-  "venv"
+  "venv",
 ]
 fix = true
 line-length = 88
@@ -1043,7 +1043,7 @@ src = [
   "rope_ws",
   "scripts",
   "src",
-  "tests"
+  "tests",
 ]
 target-version = "py313"
 
@@ -1106,7 +1106,7 @@ ignore = [
   "TRY300",
   "TRY301",
   "UP040",
-  "W293"
+  "W293",
 ]
 select = [ "ALL" ]
 
@@ -1145,7 +1145,7 @@ known-first-party = [
   "flext_target_oracle_oic",
   "flext_target_oracle_wms",
   "flext_tests",
-  "flext_web"
+  "flext_web",
 ]
 split-on-trailing-comma = true
 
@@ -1171,7 +1171,7 @@ split-on-trailing-comma = true
   "S404",
   "S603",
   "T201",
-  "TID252"
+  "TID252",
 ]
 "**/*exceptions*" = [ "A001", "S105", "SLF001" ]
 "**/*handlers*" = [  ]
@@ -1196,7 +1196,7 @@ split-on-trailing-comma = true
   "S404",
   "S603",
   "T201",
-  "TID252"
+  "TID252",
 ]
 "**/*service*" = [ "N815", "PLC2801", "S404", "S603", "SLF001" ]
 "**/*subprocess_utils*" = [ "S404", "S603" ]
@@ -1273,7 +1273,7 @@ split-on-trailing-comma = true
   "TD003",
   "TID252",
   "TRY003",
-  "TRY004"
+  "TRY004",
 ]
 "**/*typings*" = [ "ANN401" ]
 "**/*utilities*" = [ "C901", "E402", "PLC2801", "PLW1510", "S404", "S603" ]
@@ -1289,7 +1289,7 @@ split-on-trailing-comma = true
   "N999",
   "PLC2701",
   "RUF067",
-  "TC004"
+  "TC004",
 ]
 "**/_constants/*.py" = [ "S105" ]
 "**/_utilities/parser.py" = [ "ARG004", "FBT001" ]
@@ -1445,7 +1445,7 @@ members = [
   "flext-target-oracle-oic",
   "flext-target-oracle-wms",
   "flext-tests",
-  "flext-web"
+  "flext-web",
 ]
 
 # [MANAGED] yamlfix
