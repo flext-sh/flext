@@ -1,0 +1,29 @@
+pyproject.toml
+  79f99aac0960c18a 19,26,117,185,202,249,257,270,385,475,958,961,972,998,1046,1109,1148,1174,1199,1276,1292,1448
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "fea7143876046a1c2d9a5d6b66e954a847da29ce",
+  "prompts": {
+    "79f99aac0960c18a": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "b6b41190-3b2a-4bf8-9811-e4b8331ad356",
+        "model": "copilot/oswe-vscode-prime"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 23669,
+      "total_deletions": 548,
+      "accepted_lines": 49633,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/0462406fc00e64e4429e1ecb5731aee4318dc29945339db03c068242f9e31969"
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
