@@ -1,0 +1,59 @@
+CLAUDE.md
+  79f99aac0960c18a 1,3,5-7,9
+.github/copilot-instructions.md.bak.20260502151828
+  79f99aac0960c18a 1-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "5a653777d06e983c0ffdc58d5e0525fbc382befa",
+  "prompts": {
+    "19ccc571c64265d0": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "39fb1625-4eaa-4847-9e8b-a4e070c2ffda",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 494,
+      "total_deletions": 161,
+      "accepted_lines": 69688,
+      "overriden_lines": 30,
+      "messages_url": "https://usegitai.com/cas/a696201db3eb1a7e4481965cf19b284d3d754b21a0fb831ae7d863d4903e86a8"
+    },
+    "473c59be621cc5d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f6001f8b-afdd-4757-8812-9bff0bfd46d9",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 10,
+      "total_deletions": 22,
+      "accepted_lines": 311,
+      "overriden_lines": 1,
+      "messages_url": "https://usegitai.com/cas/2d7c5694aca9330c5c4fdb5f6130331f3bc61b5fad3e6eae75b9e37d5d5b08b2"
+    },
+    "79f99aac0960c18a": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "b6b41190-3b2a-4bf8-9811-e4b8331ad356",
+        "model": "copilot/oswe-vscode-prime"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1856,
+      "total_deletions": 728,
+      "accepted_lines": 23241,
+      "overriden_lines": 20,
+      "messages_url": "https://usegitai.com/cas/3d1656569bc9f02eb593f93d7aedceb09c5c4e5111c7cb5fe04a19610c29d2ca"
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
