@@ -1,0 +1,113 @@
+.agents/skills/flext-patterns/SKILL.md
+  h_9db9d35f50cf33 362,366,440,444
+.agents/skills/flext-type-system/SKILL.md
+  h_9db9d35f50cf33 128
+.agents/skills/rules-flext-core/SKILL.md
+  h_9db9d35f50cf33 72
+docs/superpowers/plans/2026-04-27-flext-core-enforcement-sweep.md
+  h_9db9d35f50cf33 334,520,535,542
+.agents/skills/flext-mro-namespace-rules/SKILL.md
+  h_9db9d35f50cf33 79
+.agents/skills/lib-returns/SKILL.md
+  h_9db9d35f50cf33 151,156,184
+.agents/skills/lib-pyyaml/SKILL.md
+  h_9db9d35f50cf33 225
+.agents/skills/testing-patterns/SKILL.md
+  h_9db9d35f50cf33 110
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "711be06dc216c2ee2931e78a2805a3bbfad4e04c",
+  "prompts": {
+    "210739f7bced7f07": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "a9647251-ea5b-43e2-8ba1-97175f4ee031",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 4,
+      "accepted_lines": 82,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/8beb4ccbc22bb8925ffef5d94169c74d9e47655dece156bc6204e7b885cac4b3"
+    },
+    "3ea586bd942da50e": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "7a955dca-3edc-4eb1-822a-8b7cdac0e158",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 43,
+      "total_deletions": 68,
+      "accepted_lines": 106,
+      "overriden_lines": 1,
+      "messages_url": "https://usegitai.com/cas/94c8f5dc21e009ec958108043d6da5006197696a7a8b55804244d993495dd8e2"
+    },
+    "50e0c0d813f462db": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "13a6c0dd-6080-49a5-9712-151bd8f9c035",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 1084,
+      "total_deletions": 10,
+      "accepted_lines": 1677,
+      "overriden_lines": 4,
+      "messages_url": "https://usegitai.com/cas/9a5202163857d381976ccdd682569d05630cd785408a45d7f3dfd2d8140ac12d"
+    },
+    "7dd4fbe7f68d7d70": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "374cfbe8-6653-40f7-ad1d-6afd3c75a9b8",
+        "model": "copilot/auto"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 75,
+      "total_deletions": 58,
+      "accepted_lines": 1179,
+      "overriden_lines": 2,
+      "messages_url": "https://usegitai.com/cas/437e0e064383b4945b0b2945bf1efa4a415f8d7e8b3439aee638240de5039e86"
+    },
+    "81bd344b75a4c5f1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "288f9aad-a0e4-4b23-a3ad-bc9b7b265cbd",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 145,
+      "total_deletions": 146,
+      "accepted_lines": 79,
+      "overriden_lines": 22,
+      "messages_url": "https://usegitai.com/cas/4a80bc1d25c8066f9554ab5dc92716e2b429f8bfcc0a24d055c03cf249ad9cb1"
+    },
+    "beaa1fdbcd16842a": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "089f73ca-047d-4f49-8f27-e6b52e40d262",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 140,
+      "accepted_lines": 9,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/c4dab77d4630b7575a5826630f4bd2b8b1c5582ced0205be1c722ad00652c4a7"
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
