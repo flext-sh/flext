@@ -1,3 +1,5 @@
+> Universal: ~/.agents/AGENTS.md (load first). Project overrides below.
+
 <!-- TOC START -->
 
 - [§0 QUICKSTART (15s)](#0-quickstart-15s)
