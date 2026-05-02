@@ -148,12 +148,12 @@ class UserModel(m.ArbitraryTypesModel):
     name: Annotated[t.NonEmptyStr, u.Field(description="User name")]
 
 
-def fetch_user(user_id: str) -> r[UserModel]:
+def fetch_user(user_id: str) -> p.Result[UserModel]:
     """Fetch user by ID — returns r."""
     return r[UserModel].ok(UserModel(user_id=user_id, name="Alice"))
 
 
-def process_user(user_id: str) -> r[str]:
+def process_user(user_id: str) -> p.Result[str]:
     """Railway composition: fetch → map → tap."""
     return fetch_user(user_id).map(lambda user: user.name.upper()).tap(lambda _: None)
 ```
@@ -181,7 +181,7 @@ from __future__ import annotations
 
 from flext_core import r
 
-result: r[str] = r[str].ok("data")
+result: p.Result[str] = r[str].ok("data")
 response = result.fold(
     on_failure=lambda err: f"error: {err}",
     on_success=lambda data: f"ok: {data}",

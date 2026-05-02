@@ -222,7 +222,7 @@ import yaml
 from flext_core import r, t
 
 
-def load_rules(raw: str) -> r[Sequence[t.JsonMapping]]:
+def load_rules(raw: str) -> p.Result[Sequence[t.JsonMapping]]:
     f = StringIO(raw)
     parsed = yaml.safe_load(f)
     if not isinstance(parsed, dict):

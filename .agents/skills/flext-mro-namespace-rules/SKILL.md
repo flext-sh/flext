@@ -76,7 +76,7 @@ Each project owns specific nested namespaces under `c / p / t / m / u`. A slot i
 | flext-tests | `c.Tests` — `ERR_OK_FAILED`, fixture paths, golden-file roots | `p.Tests` — matcher, fixture, golden | `t.Tests` — `Testobject`, matcher inputs | `m.Tests` — test record models | `u.Tests` — `tm.*` matchers, builders, factories |
 | flext-infra | `c.Infra` — `Encoding`, `SourceCode.*`, transformers | `p.Infra` — rule, scanner, transformer | `t.Infra` — `ChangeCallback`, `StrIndex` | `m.Infra` — scan report models | `u.Infra` — `atomic_write_file`, `parse_semver` |
 | flext-auth | `c.Auth` — token kinds, scopes, default lifetimes | `p.Auth` — Token, AuthResponse, Provider | `t.Auth` — token payloads | `m.Auth` — auth records | `u.Auth` — token normalization |
-| flext-web | `c.Web` — HTTP method set, status codes | `p.Web` — FastApiLikeApp, FlaskLikeApp, Repository, Handler | `t.Web` — `EndpointPayload`, request body aliases | `m.Web` — request/response models | `u.Web` — request normalization |
+| flext-web | `c.Web` — HTTP method set, status codes | `u.Web` — FastApiLikeApp, FlaskLikeApp, Repository, Handler | `t.Web` — `EndpointPayload`, request body aliases | `m.Web` — request/response models | `u.Web` — request normalization |
 | flext-api | `c.Api` — error codes, openapi tags | `p.Api` — handler, middleware, client | `t.Api` — request/response aliases | `m.Api` — DTO models | `u.Api` — serialization helpers |
 | flext-ldap | `c.Ldap` — object classes, attribute SSOT | `p.Ldap` — connection, entry, search | `t.Ldap` — filter expressions | `m.Ldap` — entry models | `u.Ldap` — filter builders |
 | flext-ldif | `c.Ldif` — RFC magic strings | `p.Ldif` — parser, writer | `t.Ldif` — line types | `m.Ldif` — entry/record models | `u.Ldif` — stream encoders |

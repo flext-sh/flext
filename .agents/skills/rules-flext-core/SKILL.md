@@ -69,7 +69,7 @@ from __future__ import annotations
 from flext_core import r
 
 
-def _to_upper(v: str) -> r[str]:
+def _to_upper(v: str) -> p.Result[str]:
     return r[str].ok(v.upper())
 
 

@@ -107,7 +107,7 @@ def test_map_transforms_success_value() -> None:
     assert result.unwrap() == 10
 
 
-def _int_to_str(x: int) -> r[str]:
+def _int_to_str(x: int) -> p.Result[str]:
     return r[str].ok(str(x))
 
 
