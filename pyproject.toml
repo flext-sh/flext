@@ -22,7 +22,7 @@ dependencies = [
   "flext-core",
   "flext-infra",
   "flext-tests",
-  "importlib-resources>=6.5.2",
+  "importlib-resources>=7.1.0",
   "pydantic>=2.13.3",
 ]
 description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
@@ -67,7 +67,6 @@ dev = [
   "mkdocs-material>=9.5",
   "mkdocs-mermaid2-plugin>=1.1",
   "mkdocs-minify-plugin>=0.7",
-  "mkdocs-newsletter>=0.1",
   "mkdocs-print-site-plugin>=0.8",
   "mkdocs-redirects>=1.2",
   "mkdocs-section-index>=0.3",
