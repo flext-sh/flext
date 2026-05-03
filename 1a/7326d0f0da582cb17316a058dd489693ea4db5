@@ -1,0 +1,27 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "1a7326d0f0da582cb17316a058dd489693ea4db5",
+  "prompts": {
+    "210739f7bced7f07": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "a9647251-ea5b-43e2-8ba1-97175f4ee031",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 22,
+      "accepted_lines": 13799,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/a82e7baf2bedddd3fe7623d6b6ce19a04be722bf1e29679349dd0a68765f3759"
+    }
+  },
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
