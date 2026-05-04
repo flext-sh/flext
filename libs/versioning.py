@@ -2,21 +2,20 @@
 
 from __future__ import annotations
 
-import re
 import tomllib
 from pathlib import Path
 
 import tomlkit
 from tomlkit.items import Table
 
-SEMVER_RE = re.compile(
-    r"^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)$",
-)
+from flext_core import c
+
+SEMVER_RE = c.PATTERN_SEMVER_RE
 
 
 def parse_semver(version: str) -> tuple[int, int, int]:
     """Parse a semver string into (major, minor, patch) tuple."""
-    match = SEMVER_RE.match(version)
+    match = SEMVER_RE.fullmatch(version)
     if not match:
         msg = f"invalid semver version: {version}"
         raise ValueError(msg)
@@ -45,10 +44,13 @@ def release_tag_from_branch(branch: str) -> str | None:
     version = branch.removesuffix("-dev")
     if SEMVER_RE.fullmatch(version):
         return f"v{version}"
-    match = re.fullmatch(r"release/(?P<version>\d+\.\d+\.\d+)", branch)
-    if not match:
+    release_prefix = "release/"
+    if not branch.startswith(release_prefix):
         return None
-    return f"v{match.group('version')}"
+    release_version = branch.removeprefix(release_prefix)
+    if not SEMVER_RE.fullmatch(release_version):
+        return None
+    return f"v{release_version}"
 
 
 def current_workspace_version(root: Path) -> str:
