@@ -7,7 +7,6 @@ from __future__ import annotations
 import argparse
 import json
 import operator
-import re
 import sys
 from enum import IntEnum
 from pathlib import Path

@@ -84,7 +84,6 @@ File checks:
 ```bash
 python3 - <<'PY'
 import pathlib
-import re
 
 root = pathlib.Path('.')
 docs = root / 'docs'
