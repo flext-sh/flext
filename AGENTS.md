@@ -911,3 +911,68 @@ UNBREAKABLE LAW for all parallel agent work:
 - **Never Force Push**: NEVER `git push --force` to main/master.
 - **Conflict Resolution**: Conflict in YOUR file → resolve manually. Conflict in ANOTHER agent's file → `git checkout --theirs <file>`.
 - **Cross-Session Deduplication**: Before spawning new tasks, verify no other agent is working on the same scope via `.sisyphus/plans/` and `git log --oneline -20`. Merge overlapping plans rather than creating duplicates.
+
+## §11 flext-cli SSOT — Inviolable CLI Domain Owner
+
+**flext-cli is the SINGLE source of truth for the CLI domain across the entire workspace.** No other project may invade this responsibility. The only exception is flext-core (which cannot import flext-cli to avoid circular imports).
+
+### Forbidden imports outside `flext-cli/src/` (audited automatically)
+
+The following stdlib/third-party libraries MUST NOT be imported anywhere outside `flext-cli/src/`:
+
+- `argparse` → `cli.register_result_command(model_cls=PydanticModel, handler=...)` + `cli.create_app_with_common_params`
+- `typer` → `cli.create_app_with_common_params` + `cli.register_command` / `cli.register_result_routes`
+- `click` → `c.Cli.CliAbortError` / `c.Cli.CliCommandError` (re-exported); `t.Cli.ExternalCli` for Singer-SDK boundary types
+- `rich` → `cli.print` / `cli.display_message` / `cli.render_panel` / `cli.create_tree`
+- `tabulate` → `cli.format_table` / `cli.show_table`
+- `colorama` → `cli.print` with `c.Cli.MessageStyles.*`
+- `prompt_toolkit` → `cli.prompt` / `cli.confirm` / `cli.prompt_choice` / `cli.prompt_password`
+- `tqdm` → `cli.display_progress`
+- `getpass` → `cli.prompt_password`
+- `orjson` / `ujson` / `simplejson` → `cli.read_json_file` / `cli.write_json_file` / `u.Cli.json_dumps` / `u.Cli.json_loads`
+- stdlib `subprocess` module → `cli.run` / `cli.capture` / `cli.run_raw` / `cli.run_checked` / `cli.run_to_file`
+
+### Direct stdlib usage forbidden (call-site detection)
+
+- `json.load(open(...))` / `json.dump(data, open(...))` → `cli.read_json_file` / `cli.write_json_file`
+- `json.loads(s)` / `json.dumps(d)` → `u.Cli.json_loads` / `u.Cli.json_dumps`
+- `yaml.safe_load(open(...))` / `yaml.dump(data, open(...))` → `cli.read_yaml_file` / `cli.write_yaml_file`
+- `csv.reader(...)` / `csv.writer(...)` / `csv.DictReader` → `cli.read_csv_file_with_headers` / `cli.write_csv_file`
+- `print(...)` (top-level call-site) → `cli.print` / `cli.display_message`
+- `sys.exit(code)` → `cli.exit(code)` (context-aware: raises `typer.Exit` inside Typer/Click context, `sys.exit` at process boundary)
+
+### Project-scoped exemptions (documented in audit script)
+
+- **`tomllib` / `tomlkit`**: exempt ONLY in `flext-infra` (workspace pyproject orchestration).
+- **`click`**: exempt in Singer SDK boundary files: `flext-tap-*`, `flext-target-*`, `flext-meltano/services/executor_base.py`, `flext-meltano/_protocols/singer.py`, `flext-meltano/tests/unit/test_singer_sdk_adapter.py`.
+
+### `FlextCli<X>` concrete-class imports
+
+Forbidden EVERYWHERE outside `flext-cli/src/` EXCEPT in **MRO namespace extension files** of consumer projects:
+
+- `<projeto>/src/<projeto>/{constants,models,protocols,typings,utilities,settings}.py` may extend the corresponding `FlextCli<Tier>` (e.g., `class MyProjectModels(FlextCliModels)`) — this is the canonical SSOT pattern (cf. skill `flext-mro-namespace-rules`).
+- `FlextCli` (the singleton class type) is allowed only inside `if TYPE_CHECKING:` blocks of test helpers needing typed inheritance.
+
+### Mandatory canonical aliases at every call-site
+
+Consumers MUST use:
+
+- `cli` — singleton facade (runtime API)
+- `c, m, p, t, u, s, r, d, e, h, x` — namespace aliases (constants, models, protocols, typings, utilities, service base, result, dispatcher, exceptions, handlers, mixins/extras)
+
+Direct concrete imports (`FlextCliFileTools`, `FlextCliFormatters`, `FlextCliSettings`, etc.) are FORBIDDEN. Use `cli.<method>`, `cli.settings`, `cli.new_settings()`.
+
+### Enforcement
+
+- Pre-commit hook: `.pre-commit-config.yaml` workspace-root.
+- CI gate: `python .agents/skills/scripts-infra/audit_banned_cli_libs.py` and `python .agents/skills/scripts-infra/audit_flext_cli_concrete_imports.py` — both must return exit code 0.
+- Per-project Ruff: `[tool.ruff.lint.flake8-tidy-imports.banned-api]` block in every `pyproject.toml` outside flext-cli/flext-core.
+- Skill: `.agents/skills/flext-cli-ssot-enforcement/SKILL.md` documents the decision tree.
+
+### flext-cli MUST NOT invade other projects' domains
+
+flext-cli is a leaf in the dep graph for the CLI domain. It depends ONLY on flext-core. Imports from any other workspace project (`flext-ldap`, `flext-meltano`, `flext-quality`, etc.) are FORBIDDEN inside `flext-cli/src/`.
+
+### Required dependency declaration
+
+Every consumer project that imports from `flext_cli` MUST declare `"flext-cli"` in `[project] dependencies` of its `pyproject.toml`.
