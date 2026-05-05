@@ -583,16 +583,27 @@ test: ## Run pytest only
 	skips_file="$$report_dir/skipped-tests.txt"; \
 	command_file="$$report_dir/command.txt"; \
 	interrupted=0; \
-	echo "$(POETRY) run pytest $$_pytest_run $(PYTEST_REPORT_ARGS) $(if $(filter 1,$(DIAG)),$(PYTEST_DIAG_ARGS),) -p no:metadata --junitxml=$$junit_file --cov --cov-report=xml:$$coverage_file $(if $(filter 1,$(DIAG)),-vv,-q) $$_all_pytest_args" > "$$command_file"; \
+	echo "$(POETRY) run coverage erase && $(POETRY) run coverage run -m pytest $$_pytest_run $(PYTEST_REPORT_ARGS) $(if $(filter 1,$(DIAG)),$(PYTEST_DIAG_ARGS),) -p no:metadata --junitxml=$$junit_file --no-cov $(if $(filter 1,$(DIAG)),-vv,-q) $$_all_pytest_args && $(POETRY) run coverage xml -o $$coverage_file && $(POETRY) run coverage report -m" > "$$command_file"; \
 	trap 'interrupted=1; trap "" INT TERM' INT TERM; \
-	$(POETRY) run pytest $$_pytest_run \
+	$(POETRY) run coverage erase; \
+	$(POETRY) run coverage run -m pytest $$_pytest_run \
 		$(PYTEST_REPORT_ARGS) \
 		$(if $(filter 1,$(DIAG)),$(PYTEST_DIAG_ARGS),) \
 		-p no:metadata \
 		--junitxml="$$junit_file" \
-		--cov --cov-report=xml:$$coverage_file \
+		--no-cov \
 		$(if $(filter 1,$(DIAG)),-vv,-q) $$_all_pytest_args 2>&1 | tee "$$log_file"; \
 	rc=$${PIPESTATUS[0]}; \
+	if [ $$rc -eq 0 ]; then \
+		$(POETRY) run coverage xml -o "$$coverage_file" 2>&1 | tee -a "$$log_file"; \
+		cov_rc=$${PIPESTATUS[0]}; \
+		if [ $$cov_rc -ne 0 ]; then rc=$$cov_rc; fi; \
+	fi; \
+	if [ $$rc -eq 0 ]; then \
+		$(POETRY) run coverage report -m 2>&1 | tee -a "$$log_file"; \
+		cov_rc=$${PIPESTATUS[0]}; \
+		if [ $$cov_rc -ne 0 ]; then rc=$$cov_rc; fi; \
+	fi; \
 	if [ "$$interrupted" = "1" ]; then rc=130; fi; \
 	if [ -f "$$junit_file" ]; then \
 		tests=$$(grep -Eo 'tests="[0-9]+"' "$$junit_file" | head -n 1 | tr -dc '0-9'); \
