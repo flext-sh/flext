@@ -7,29 +7,12 @@ from __future__ import annotations
 import argparse
 import json
 import operator
+import re
 import sys
-from enum import IntEnum
 from pathlib import Path
-from typing import Annotated, ClassVar, Final
+from typing import Annotated, ClassVar
 
-from flext_infra import m, t, u
-
-
-class OwnershipValidationConstants:
-    """Strict namespaced constants for ownership validation."""
-
-    OWNER_MARKER_RE: Final[re.Pattern[str]] = re.compile(
-        r"^# Owner-Skill:\s+(.agents/skills/([a-z0-9][-a-z0-9]*)/SKILL\.md)\s*$",
-    )
-    MAX_HEADER_LINES: Final[int] = 10
-
-    class ExitCode(IntEnum):
-        """Process exit codes for ownership validation."""
-
-        PASS = 0
-        FAIL = 1
-        USAGE = 2
-        INFRA = 3
+from flext_infra import c, m, t, u
 
 
 class Ansi:
@@ -132,7 +115,7 @@ def read_header(repo_root: Path, script_path: Path) -> t.StrSequence:
     try:
         with full_path.open("r", encoding="utf-8") as handle:
             lines: list[str] = []
-            for _ in range(OwnershipValidationConstants.MAX_HEADER_LINES):
+            for _ in range(c.Infra.SCRIPT_HEADER_MAX_LINES):
                 line = handle.readline()
                 if not line:
                     break
@@ -220,9 +203,7 @@ def validate_script(
     script = script_path.as_posix()
     header = read_header(repo_root, script_path)
     markers = [
-        match
-        for line in header
-        if (match := OwnershipValidationConstants.OWNER_MARKER_RE.match(line))
+        match for line in header if (match := c.Infra.SKILL_OWNER_MARKER_RE.match(line))
     ]
     candidate_report: t.StrMapping | None = None
     result: ScriptCheckResult
@@ -326,17 +307,15 @@ def write_candidates(
 
 def run_main(argv: t.StrSequence) -> int:
     """run_main function."""
-    exit_code = OwnershipValidationConstants.ExitCode.INFRA
+    exit_code = c.Infra.ScriptExitCode.INFRA
     try:
         args = parse_args(argv)
     except SystemExit as exc:
         match exc.code:
-            case int() as raw_code if raw_code in {
-                item.value for item in OwnershipValidationConstants.ExitCode
-            }:
-                exit_code = OwnershipValidationConstants.ExitCode(raw_code)
+            case int() as raw_code if raw_code in c.Infra.SCRIPT_EXIT_CODE_VALUES:
+                exit_code = c.Infra.ScriptExitCode(raw_code)
             case _:
-                exit_code = OwnershipValidationConstants.ExitCode.USAGE
+                exit_code = c.Infra.ScriptExitCode.USAGE
     else:
         try:
             repo_root = Path(args.root).resolve()
@@ -344,7 +323,7 @@ def run_main(argv: t.StrSequence) -> int:
                 eprint(
                     f"{Ansi.RED}error:{Ansi.RESET} --root is not a directory: {repo_root}"
                 )
-                exit_code = OwnershipValidationConstants.ExitCode.USAGE
+                exit_code = c.Infra.ScriptExitCode.USAGE
             else:
                 validations = [
                     validate_script(repo_root, script)
@@ -380,27 +359,27 @@ def run_main(argv: t.StrSequence) -> int:
                     )
                 )
                 exit_code = (
-                    OwnershipValidationConstants.ExitCode.PASS
+                    c.Infra.ScriptExitCode.PASS
                     if total_violations == 0
-                    else OwnershipValidationConstants.ExitCode.FAIL
+                    else c.Infra.ScriptExitCode.FAIL
                 )
         except SkillUsageError as exc:
             eprint(f"{Ansi.RED}error:{Ansi.RESET} {exc}")
-            exit_code = OwnershipValidationConstants.ExitCode.USAGE
+            exit_code = c.Infra.ScriptExitCode.USAGE
         except SkillInfraError as exc:
             eprint(f"{Ansi.RED}error:{Ansi.RESET} {exc}")
-            exit_code = OwnershipValidationConstants.ExitCode.INFRA
+            exit_code = c.Infra.ScriptExitCode.INFRA
         except Exception as exc:
             eprint(f"{Ansi.RED}error:{Ansi.RESET} unexpected failure: {exc}")
-            exit_code = OwnershipValidationConstants.ExitCode.INFRA
+            exit_code = c.Infra.ScriptExitCode.INFRA
     return int(exit_code)
 
 
 def main() -> None:
     """Main function."""
     code = run_main(sys.argv[1:])
-    if code not in {item.value for item in OwnershipValidationConstants.ExitCode}:
-        code = int(OwnershipValidationConstants.ExitCode.INFRA)
+    if code not in c.Infra.SCRIPT_EXIT_CODE_VALUES:
+        code = int(c.Infra.ScriptExitCode.INFRA)
     raise SystemExit(code)
 
 
