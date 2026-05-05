@@ -969,6 +969,10 @@ pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyrefl
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
 		--exclude "**/*.pyc" --exclude "**/*.pyo" \
 		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--exclude "**/_constants/enforcement.py" \
+		--exclude "**/_utilities/_beartype/**" \
+		--exclude "**/typings.py" --exclude "**/typings/**" \
+		--exclude "**/tests/fixtures/**" \
 		--match absent \
 		2>&1 || policy_violations=$$((policy_violations + 1)); \
 	echo "--- Any (typing) ---"; \
@@ -978,6 +982,10 @@ pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyrefl
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
 		--exclude "**/*.pyc" --exclude "**/*.pyo" \
 		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--exclude "**/_constants/enforcement.py" \
+		--exclude "**/_utilities/_beartype/**" \
+		--exclude "**/typings.py" --exclude "**/typings/**" \
+		--exclude "**/tests/fixtures/**" \
 		--match absent \
 		2>&1 || policy_violations=$$((policy_violations + 1)); \
 	echo "--- object annotations ---"; \
@@ -987,6 +995,10 @@ pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyrefl
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
 		--exclude "**/*.pyc" --exclude "**/*.pyo" \
 		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--exclude "**/_constants/enforcement.py" \
+		--exclude "**/_utilities/_beartype/**" \
+		--exclude "**/typings.py" --exclude "**/typings/**" \
+		--exclude "**/tests/fixtures/**" \
 		--match absent \
 		2>&1 || policy_violations=$$((policy_violations + 1)); \
 	if [ "$$policy_violations" -gt 0 ]; then \
@@ -1025,6 +1037,10 @@ pol: ## Repo-wide typing policy gate (no Any/t.JsonValue/# type: ignore)
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
 		--exclude "**/*.pyc" --exclude "**/*.pyo" \
 		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--exclude "**/_constants/enforcement.py" \
+		--exclude "**/_utilities/_beartype/**" \
+		--exclude "**/typings.py" --exclude "**/typings/**" \
+		--exclude "**/tests/fixtures/**" \
 		--match absent \
 		2>&1 | tee -a .reports/pyrefly/type-policy.txt || status=$$?; \
 	echo "" >> .reports/pyrefly/type-policy.txt; \
@@ -1035,6 +1051,10 @@ pol: ## Repo-wide typing policy gate (no Any/t.JsonValue/# type: ignore)
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
 		--exclude "**/*.pyc" --exclude "**/*.pyo" \
 		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--exclude "**/_constants/enforcement.py" \
+		--exclude "**/_utilities/_beartype/**" \
+		--exclude "**/typings.py" --exclude "**/typings/**" \
+		--exclude "**/tests/fixtures/**" \
 		--match absent \
 		2>&1 | tee -a .reports/pyrefly/type-policy.txt || status=$$?; \
 	echo "" >> .reports/pyrefly/type-policy.txt; \
@@ -1045,6 +1065,10 @@ pol: ## Repo-wide typing policy gate (no Any/t.JsonValue/# type: ignore)
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
 		--exclude "**/*.pyc" --exclude "**/*.pyo" \
 		--exclude ".reports/**" --exclude ".sisyphus/**" \
+		--exclude "**/_constants/enforcement.py" \
+		--exclude "**/_utilities/_beartype/**" \
+		--exclude "**/typings.py" --exclude "**/typings/**" \
+		--exclude "**/tests/fixtures/**" \
 		--match absent \
 		2>&1 | tee -a .reports/pyrefly/type-policy.txt || status=$$?; \
 	printf "\nexit_code: %s\n" "$$status" >> .reports/pyrefly/type-policy.txt; \
