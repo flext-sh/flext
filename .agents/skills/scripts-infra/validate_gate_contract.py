@@ -4,38 +4,13 @@
 
 from __future__ import annotations
 
+import argparse
+import json
 import sys
 from pathlib import Path
 from typing import Annotated, ClassVar
 
-from flext_infra import m, t, u
-
-EXIT_PASS = 0
-EXIT_FAIL = 1
-EXIT_USAGE = 2
-EXIT_INFRA = 3
-
-OWNER_MARKER_RE = re.compile(
-    r"^# Owner-Skill:\s+(.agents/skills/[a-z0-9][-a-z0-9]*/SKILL\.md)\s*$",
-)
-ARTIFACT_NAME_RE = re.compile(r"[a-z][-a-z0-9]*--[a-z]+--[a-z][-a-z0-9]*\.[a-z]+")
-REPORTS_PATH_RE = re.compile(r"\.reports/([^\s\"']+)")
-BASH_EXIT_RE = re.compile(r"^\s*exit\s+(\d+)")
-INTERACTIVE_PY_RE = re.compile(r"\binput\s*\(")
-INTERACTIVE_SH_RE = re.compile(
-    r"\bread\s+-p\b|\bselect\s+\w+\s+in\b|\bdialog\b|\bwhiptail\b",
-)
-INTERACTIVE_GATE_RE = re.compile(r"--interactive")
-
-MAX_HEADER_LINES = 10
-MIN_CODE_LINES = 20
-
-VALIDATOR_NAMES = re.compile(
-    r"^(enforce|check|validate|test|verify|audit|lint|scan)[-_]",
-)
-FIXER_NAMES = re.compile(
-    r"^(fix|autofix|repair|correct|reorder|refactor|standardize)[-_]",
-)
+from flext_infra import c, m, t, u
 
 
 class UsageError(Exception):
@@ -80,7 +55,7 @@ class ScriptInfo(m.BaseModel):
     path: str = u.Field(description="Script file path")
     extension: str = u.Field(description="File extension (.py or .sh)")
     role: str = u.Field(description="Script role (validator, fixer, or other)")
-    violations: t.SequenceOf[Violation] = u.Field(
+    violations: list[Violation] = u.Field(
         default_factory=list,
         description="List of validation violations",
     )
@@ -139,7 +114,7 @@ def tracked_scripts(root: Path) -> t.SequenceOf[Path]:
         stderr = (output.stderr or "").strip()
         raise InfraError(stderr or "git ls-files failed")
 
-    scripts: t.SequenceOf[Path] = []
+    scripts: list[Path] = []
     for line in sorted(set(output.stdout.splitlines())):
         rel = line.strip()
         if not rel:
@@ -157,14 +132,14 @@ def classify_role(script_path: Path) -> str:
 
     if (
         script_path.as_posix().startswith(("scripts/lib/", "scripts/core/"))
-        and not VALIDATOR_NAMES.match(name)
-        and not FIXER_NAMES.match(name)
+        and not c.Infra.SKILL_VALIDATOR_NAME_RE.match(name)
+        and not c.Infra.SKILL_FIXER_NAME_RE.match(name)
     ):
         return "other"
 
-    if VALIDATOR_NAMES.match(name):
+    if c.Infra.SKILL_VALIDATOR_NAME_RE.match(name):
         return "validator"
-    if FIXER_NAMES.match(name):
+    if c.Infra.SKILL_FIXER_NAME_RE.match(name):
         return "fixer"
     return "other"
 
@@ -180,7 +155,7 @@ def read_content(root: Path, script_path: Path) -> str:
 
 def read_header(content: str) -> t.StrSequence:
     """read_header function."""
-    return content.splitlines()[:MAX_HEADER_LINES]
+    return content.splitlines()[: c.Infra.SCRIPT_HEADER_MAX_LINES]
 
 
 def count_code_lines(content: str, extension: str) -> int:
@@ -230,12 +205,15 @@ def check_shebang(header: t.StrSequence, extension: str) -> Violation | None:
 def check_owner_marker(header: t.StrSequence) -> Violation | None:
     """check_owner_marker function."""
     for line in header:
-        if OWNER_MARKER_RE.match(line):
+        if c.Infra.SKILL_OWNER_MARKER_RE.match(line):
             return None
     return Violation(
         script="",
         check="owner_marker",
-        message="missing Owner-Skill marker in first 10 lines",
+        message=(
+            "missing Owner-Skill marker in first "
+            f"{c.Infra.SCRIPT_HEADER_MAX_LINES} lines"
+        ),
     )
 
 
@@ -244,13 +222,13 @@ def check_exit_codes(content: str, extension: str) -> t.SequenceOf[Violation]:
     if extension != ".sh":
         return []
 
-    violations: t.SequenceOf[Violation] = []
+    violations: list[Violation] = []
     for i, line in enumerate(content.splitlines(), 1):
-        match = BASH_EXIT_RE.match(line)
+        match = c.Infra.SKILL_BASH_EXIT_RE.match(line)
         if not match:
             continue
         code = int(match.group(1))
-        if code not in {0, 1, 2, 3}:
+        if code not in c.Infra.SCRIPT_EXIT_CODE_VALUES:
             violations.append(
                 Violation(
                     script="",
@@ -268,11 +246,15 @@ def check_interactive(
 ) -> t.SequenceOf[Violation]:
     """check_interactive function."""
     _ = script_path
-    if INTERACTIVE_GATE_RE.search(content):
+    if c.Infra.SKILL_INTERACTIVE_GATE_RE.search(content):
         return []
 
-    violations: t.SequenceOf[Violation] = []
-    pattern = INTERACTIVE_PY_RE if extension == ".py" else INTERACTIVE_SH_RE
+    violations: list[Violation] = []
+    pattern = (
+        c.Infra.SKILL_INTERACTIVE_PY_RE
+        if extension == ".py"
+        else c.Infra.SKILL_INTERACTIVE_SH_RE
+    )
 
     for i, line in enumerate(content.splitlines(), 1):
         stripped = line.strip()
@@ -294,15 +276,15 @@ def check_interactive(
 
 def check_artifact_naming(content: str) -> t.SequenceOf[Violation]:
     """check_artifact_naming function."""
-    violations: t.SequenceOf[Violation] = []
+    violations: list[Violation] = []
     for i, line in enumerate(content.splitlines(), 1):
-        for match in REPORTS_PATH_RE.finditer(line):
+        for match in c.Infra.SKILL_REPORTS_PATH_RE.finditer(line):
             filename = Path(match.group(1)).name
             if "$" in filename or "*" in filename or "{" in filename:
                 continue
             if filename == ".gitkeep":
                 continue
-            if not ARTIFACT_NAME_RE.fullmatch(filename):
+            if not c.Infra.SKILL_REPORT_ARTIFACT_NAME_RE.fullmatch(filename):
                 violations.append(
                     Violation(
                         script="",
@@ -322,13 +304,13 @@ def check_min_code_lines(content: str, extension: str, role: str) -> Violation |
     if role == "other":
         return None
     code_lines = count_code_lines(content, extension)
-    if code_lines < MIN_CODE_LINES:
+    if code_lines < c.Infra.SCRIPT_MIN_CODE_LINES:
         return Violation(
             script="",
             check="min_code_lines",
             message=(
                 f"{role} has only {code_lines} code lines "
-                f"(minimum {MIN_CODE_LINES}) - may be a stub"
+                f"(minimum {c.Infra.SCRIPT_MIN_CODE_LINES}) - may be a stub"
             ),
             severity="warning",
         )
@@ -439,7 +421,7 @@ def print_results(scripts: t.SequenceOf[ScriptInfo]) -> None:
         else:
             status = f"{Ansi.GREEN}OK{Ansi.RESET}"
 
-        detail_parts: t.StrSequence = []
+        detail_parts: list[str] = []
         if errors:
             detail_parts.append(f"{len(errors)} error(s)")
         if warnings:
@@ -463,7 +445,7 @@ def write_report(root: Path, scripts: t.SequenceOf[ScriptInfo], mode: str) -> Pa
     report_path = report_path_for(root)
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
-    all_violations: t.SequenceOf[t.StrMapping] = []
+    all_violations: list[t.StrMapping] = []
     for script in scripts:
         all_violations.extend(
             {
@@ -504,8 +486,17 @@ def run_main(argv: t.StrSequence) -> tuple[int, int]:
     try:
         args = parse_args(argv)
     except SystemExit as exc:
-        code = int(exc.code) if isinstance(exc.code, int) else EXIT_USAGE
-        return (EXIT_USAGE if code not in {0, 1, 2, 3} else code, 0)
+        code = (
+            exc.code if isinstance(exc.code, int) else int(c.Infra.ScriptExitCode.USAGE)
+        )
+        return (
+            (
+                int(c.Infra.ScriptExitCode.USAGE)
+                if code not in c.Infra.SCRIPT_EXIT_CODE_VALUES
+                else code
+            ),
+            0,
+        )
 
     root = Path(args.root).resolve()
     if not root.exists() or not root.is_dir():
@@ -551,7 +542,14 @@ def run_main(argv: t.StrSequence) -> tuple[int, int]:
     eprint(summary_line)
     eprint(f"Report: {report_path}")
 
-    return (EXIT_FAIL if error_count > 0 else EXIT_PASS, error_count)
+    return (
+        (
+            int(c.Infra.ScriptExitCode.FAIL)
+            if error_count > 0
+            else int(c.Infra.ScriptExitCode.PASS)
+        ),
+        error_count,
+    )
 
 
 def main() -> int:
@@ -560,18 +558,18 @@ def main() -> int:
         code, violation_count = run_main(sys.argv[1:])
     except UsageError as exc:
         eprint(f"ERROR: {exc}")
-        code = EXIT_USAGE
+        code = int(c.Infra.ScriptExitCode.USAGE)
         violation_count = 0
     except InfraError as exc:
         eprint(f"ERROR: {exc}")
-        code = EXIT_INFRA
+        code = int(c.Infra.ScriptExitCode.INFRA)
         violation_count = 0
     except Exception as exc:
         eprint(f"ERROR: unexpected failure: {exc}")
-        code = EXIT_INFRA
+        code = int(c.Infra.ScriptExitCode.INFRA)
         violation_count = 0
 
-    print(json.dumps({"violation_count": int(violation_count)}))
+    print(json.dumps({"violation_count": violation_count}))
     return code
 
 

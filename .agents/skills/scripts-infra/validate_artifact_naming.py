@@ -4,30 +4,13 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
-from typing import ClassVar, Final
+from typing import ClassVar
 
-from flext_infra import m, t
-
-EXIT_PASS: Final[int] = 0
-EXIT_FAIL: Final[int] = 1
-EXIT_USAGE: Final[int] = 2
-EXIT_INFRA: Final[int] = 3
-
-ARTIFACT_PATTERN: Final[re.Pattern[str]] = re.compile(
-    r"^[a-z][-a-z0-9]*--[a-z]+--[a-z][-a-z0-9]*\.[a-z]+$"
-)
-VALIDATED_TOP_DIRS: Final[frozenset[str]] = frozenset({"."})
-SKIPPED_TOP_DIRS: Final[frozenset[str]] = frozenset({
-    "evidence",
-    "plans",
-    "drafts",
-    "validation",
-    "dependencies",
-})
-SKIPPED_FILES: Final[frozenset[str]] = frozenset({".gitkeep"})
+from flext_infra import c, m, t
 
 
 class UsageError(Exception):
@@ -61,7 +44,7 @@ def artifact_name(skill: str, kind: str, slug: str) -> str:
 
 def validate_artifact_name(filename: str) -> bool:
     """validate_artifact_name function."""
-    return bool(ARTIFACT_PATTERN.match(filename))
+    return bool(c.Infra.SKILL_REPORT_ARTIFACT_NAME_RE.match(filename))
 
 
 def parse_args(argv: t.StrSequence) -> argparse.Namespace:
@@ -81,7 +64,9 @@ def parse_args(argv: t.StrSequence) -> argparse.Namespace:
     try:
         return parser.parse_args(argv)
     except SystemExit as exc:
-        code = int(exc.code) if isinstance(exc.code, int) else EXIT_USAGE
+        code = (
+            exc.code if isinstance(exc.code, int) else int(c.Infra.ScriptExitCode.USAGE)
+        )
         if code == 0:
             raise
         msg = "invalid CLI arguments"
@@ -92,7 +77,7 @@ def should_validate(path: Path, reports_root: Path) -> bool:
     """should_validate function."""
     if not path.is_file():
         return False
-    if path.name in SKIPPED_FILES:
+    if path.name in c.Infra.SKILL_REPORT_SKIPPED_FILES:
         return False
 
     try:
@@ -106,9 +91,9 @@ def should_validate(path: Path, reports_root: Path) -> bool:
     if len(relative.parts) == 1:
         return True
     top_dir = relative.parts[0]
-    if top_dir in SKIPPED_TOP_DIRS:
+    if top_dir in c.Infra.SKILL_REPORT_SKIPPED_TOP_DIRS:
         return False
-    return top_dir in VALIDATED_TOP_DIRS
+    return top_dir in c.Infra.SKILL_REPORT_VALIDATED_TOP_DIRS
 
 
 def collect_artifacts(reports_root: Path) -> t.SequenceOf[Path]:
@@ -123,8 +108,8 @@ def collect_artifacts(reports_root: Path) -> t.SequenceOf[Path]:
 def slugify(value: str) -> str:
     """Slugify function."""
     text = value.lower().replace("_", "-").replace(" ", "-")
-    text = re.sub(r"[^a-z0-9-]+", "-", text)
-    text = re.sub(r"-+", "-", text).strip("-")
+    text = c.Infra.SKILL_REPORT_ARTIFACT_SLUG_INVALID_RE.sub("-", text)
+    text = c.Infra.SKILL_REPORT_ARTIFACT_MULTI_DASH_RE.sub("-", text).strip("-")
     return text or "artifact"
 
 
@@ -139,7 +124,7 @@ def suggest_filename(filename: str) -> str:
     skill = "scripts-infra"
     if len(parts) >= 3:
         possible_skill = parts[0]
-        if re.match(r"^[a-z][-a-z0-9]*$", possible_skill):
+        if c.Infra.SKILL_REPORT_ARTIFACT_SKILL_RE.match(possible_skill):
             skill = possible_skill
 
     return artifact_name(skill, kind, stem)
@@ -152,7 +137,7 @@ def validate(
 ) -> t.SequenceOf[NamingViolation]:
     """Validate function."""
     artifacts = collect_artifacts(reports_root)
-    violations: t.SequenceOf[NamingViolation] = []
+    violations: list[NamingViolation] = []
 
     eprint("Artifact Naming Validation")
     eprint(f"Scanned artifacts: {len(artifacts)}")
@@ -228,16 +213,20 @@ def run_main(argv: t.StrSequence) -> int:
         violation_count = len(violations)
         write_report(report_path, violations)
         eprint(f"Violations report: {report_path}")
-        return EXIT_PASS if violation_count == 0 else EXIT_FAIL
+        return (
+            int(c.Infra.ScriptExitCode.PASS)
+            if violation_count == 0
+            else int(c.Infra.ScriptExitCode.FAIL)
+        )
     except UsageError as exc:
         eprint(f"ERROR: {exc}")
-        return EXIT_USAGE
+        return int(c.Infra.ScriptExitCode.USAGE)
     except InfraError as exc:
         eprint(f"ERROR: {exc}")
-        return EXIT_INFRA
+        return int(c.Infra.ScriptExitCode.INFRA)
     except Exception as exc:
         eprint(f"ERROR: unexpected infra failure: {exc}")
-        return EXIT_INFRA
+        return int(c.Infra.ScriptExitCode.INFRA)
     finally:
         print(json.dumps({"violation_count": violation_count}, separators=(",", ":")))
 
