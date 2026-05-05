@@ -1422,6 +1422,7 @@ workspace = true
 
 [tool.uv.workspace]
 members = [
+  "flexcore",
   "flext-api",
   "flext-auth",
   "flext-cli",
