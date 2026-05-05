@@ -6,12 +6,14 @@ description: Pydantic ConfigDict and singleton settings patterns across FLEXT su
 
 # Lib Pydantic Settings
 
-**Reviewed**: 2026-04-05 | **Scope**: MRO composition, auto-MRO env sources, forbidden patterns
+**Reviewed**: 2026-05-05 | **Scope**: FlextSettingsBase + Pydantic-2 mutation API + rule-3 isolation
 
 ## Scope
 
-- Core canonical implementation: `flext-core/src/flext_core/settings.py`
-- Governance: `AGENTS.md` §2.6 Settings Law
+- Core canonical implementation: `flext-core/src/flext_core/_settings/base.py` (FlextSettingsBase)
+  and `flext-core/src/flext_core/settings.py` (FlextSettings root composition)
+- Governance: `AGENTS.md` §2.6 Settings Law + plan
+  `~/.claude/plans/temos-varios-erros-de-serialized-fountain.md`
 - Broad usage surface: `flext-*/src/*/settings.py`
 - Representative consumers:
   - `flext-cli/src/flext_cli/settings.py`
@@ -24,112 +26,103 @@ description: Pydantic ConfigDict and singleton settings patterns across FLEXT su
 
 ### Subproject Usage Map
 
-- `flext-core`: defines `FlextSettings` singleton + `settings_customise_sources` auto-MRO + `AutoConfig` helper.
-- `flext-cli`: `FlextCliSettings(FlextSettings)` with `@FlextSettings.auto_register("cli")`.
-- `flext-meltano`: `FlextMeltanoSettings(FlextSettings)` with strict env-bound configuration.
-- `flext-quality`: `FlextQualitySettings(FlextSettings)` for hook/rule/MCP settings.
-- `flext-api`: `FlextApiSettings(FlextSettings)` with `@FlextSettings.auto_register("api")`.
-- `flext-auth`: `FlextAuthSettings(FlextSettings)` with `@FlextSettings.auto_register("auth")`.
-- `flext-db-oracle`: `FlextDbOracleSettings(FlextSettings)` with `env_prefix="ORACLE_"`.
+- `flext-core`: defines `FlextSettings` root + `FlextSettingsBase` Pydantic-2
+  base with `fetch_global` / `clone` / `update_global` / `validate_overrides`
+  / `clone_for_injection` / `reset_for_testing` / `resolve_env_file`.
+- All project subclasses inherit `FlextSettingsBase` (NOT `FlextSettings`)
+  to honour rule-3 isolation: project subclasses MUST NOT inherit root
+  concrete fields (`app_name`, `version`, `debug`, `log_level`,
+  `database_url`, dispatcher_*, etc.). Each project owns its own copies
+  if it actually uses those fields.
 
 ## References
 
 - `AGENTS.md` §2.6 Settings Law — canonical governance source
-- `flext-core/src/flext_core/settings.py`: `FlextSettings`, `settings_customise_sources`, `_normalize_log_level`
-- `flext-core/src/flext_core/_utilities/configuration.py`: `resolve_env_file()`
+- `flext-core/src/flext_core/_settings/base.py`: FlextSettingsBase (BaseSettings
+  subclass with per-class singleton + Pydantic-2 mutation API)
+- `flext-core/src/flext_core/settings.py`: FlextSettings root facade
+- `flext-core/src/flext_core/_protocols/settings.py`: minimal `p.Settings`
+  protocol (operations-only, no concrete fields)
 - `pydantic-settings>=2.10.1`
 
 ## Rules
 
-- ALL settings classes MUST inherit `FlextSettings` — never `BaseSettings`, `m.Value`, or `BaseModel`.
-- Always define `model_config = ConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
-- ALL field defaults MUST come from `c.*` constants — no hardcoded values.
-- Use `@FlextSettings.auto_register("<namespace>")` for namespace registration.
-- Use `@u.model_validator(mode="after")` for cross-field consistency checks.
-- Singleton via FlextSettings `__new__()` only — no custom singleton patterns.
+- All project settings classes MUST inherit `FlextSettingsBase` — never
+  `FlextSettings` (root), never `BaseSettings` directly, never `BaseModel`.
+- Always define `model_config = m.SettingsConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
+  Each project owns its own env_prefix; never reuse the root `FLEXT_` prefix.
+- All field defaults MUST come from `c.*` constants — no hardcoded values.
+- Singleton via `FlextSettingsBase.__new__()` only — never custom singleton patterns.
+- Use `cls.fetch_global()` to read; `cls.update_global(**overrides)` to mutate
+  (replaces `cls._instance` via `model_copy(update=…)` + revalidation, propagates).
+- Use `instance.clone()` (deep-copy + re-validation) when a service/container
+  needs an isolated snapshot at construction time.
+- Use `cls.reset_for_testing()` (or `cls.reset_instance()`) for test isolation.
+- Use `cls.validate_overrides(**kwargs)` as a typo guard before update.
 
 ## Forbidden Patterns
 
-- `os.environ`, `os.getenv`, `environ.get()` in `src/` code — use FlextSettings env resolution
-- `m.Value` or `BaseSettings` as settings base class — use `FlextSettings`
-- Custom `_global_instance` or `get_or_create_global()` singleton — use inherited `get_global()`
-- Hardcoded defaults (`"utf-8"`, `30`, `True`) — use `c.*` constants
-- Legacy `class Config:` — use `ConfigDict`
-- `model_rebuild()`, `cast()`, inline imports
+- `os.environ`, `os.getenv`, `environ.get()` in `src/` code — use FlextSettingsBase env resolution.
+- `BaseSettings` (pydantic_settings) as direct settings base class — use `FlextSettingsBase`.
+- `FlextSettings` (root) as project subclass base — use `FlextSettingsBase`.
+- `m.Value` or `BaseModel` as settings base — use `FlextSettingsBase`.
+- `@FlextSettings.auto_register("<ns>")` — namespace registry is being phased out;
+  consumers must call `FlextXSettings.fetch_global()` directly.
+- Custom `_global_instance` / `get_or_create_global()` singleton — inherited.
+- Hardcoded defaults (`"utf-8"`, `30`, `True`) — use `c.*` constants.
+- `apply_override(...)` / `setattr(settings, …)` / custom `__setattr__` —
+  use Pydantic-2 native `update_global(**overrides)` instead.
+- Module-level singletons (`api = FlextApi()`) — use `cls.fetch_global()` or DI.
+- `class Config:` (Pydantic v1) — use `m.SettingsConfigDict`.
 
 ## Instructions
 
-Canonical base class:
+Canonical project subclass:
 
 ```python
 from __future__ import annotations
 
-from pydantic_settings import BaseSettings, PydanticBaseSettingsSource
+from typing import Annotated, ClassVar
 
-from flext_core import c, m
+from flext_core import FlextSettingsBase
+from flext_<project> import c, m, u
 
 
-class FlextSettings(m.BaseSettings):
-    model_config = m.SettingsConfigDict(
-        env_prefix="FLEXT_",
-        env_nested_delimiter="__",
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
+class Flext<Project>Settings(FlextSettingsBase):
+    """Validated runtime settings for <project>."""
+
+    model_config: ClassVar[m.SettingsConfigDict] = m.SettingsConfigDict(
+        env_prefix="FLEXT_<PROJECT>_",
         extra="ignore",
         validate_assignment=True,
     )
 
-    @classmethod
-    def settings_customise_sources(
-        cls,
-        settings_cls: type[BaseSettings],
-        init_settings: PydanticBaseSettingsSource,
-        env_settings: PydanticBaseSettingsSource,
-        dotenv_settings: PydanticBaseSettingsSource,
-        file_secret_settings: PydanticBaseSettingsSource,
-    ) -> tuple[PydanticBaseSettingsSource, ...]:
-        """Auto-MRO: leaf env_prefix + parent env_prefixes as fallback."""
-        sources: list[PydanticBaseSettingsSource] = [init_settings, env_settings]
-        sources.extend([dotenv_settings, file_secret_settings])
-        return tuple(sources)
+    # Project-specific fields ONLY — no inherited root fields (rule-3 isolation).
+    base_url: Annotated[str, u.Field(description="Service base URL")] = c.<Project>.DEFAULT_BASE_URL
+    timeout: Annotated[float, u.Field(description="Request timeout")] = c.<Project>.DEFAULT_TIMEOUT
 ```
 
-Subproject settings:
+If a project genuinely uses root-style fields (e.g. `app_name`, `version`,
+`debug`, `log_level`), declare them locally with project-specific defaults:
 
 ```python
-from __future__ import annotations
-
-from flext_core import FlextSettings, m
-
-
-@FlextSettings.auto_register("api")
-class FlextApiSettings(FlextSettings):
-    model_config = m.SettingsConfigDict(env_prefix="FLEXT_API_", extra="ignore")
-    base_url: str
-    timeout: float
+class FlextWebSettings(FlextSettingsBase):
+    app_name: Annotated[str, u.Field(...)] = c.Web.DEFAULT_APP_NAME
+    version: Annotated[str, u.Field(...)] = c.Web.DEFAULT_VERSION_STRING
 ```
 
-## MRO Composition
-
-Integration projects use dual-inheritance for settings, same as models:
+Mutation contract (Pydantic-2 native — no `setattr`, no `__setattr__`):
 
 ```python
-from __future__ import annotations
+# Read shared singleton (mutations propagate via update_global).
+settings = FlextLdifSettings.fetch_global()
 
-from flext_core import FlextSettings, m
+# Mutate the singleton globally — replaces cls._instance via model_copy(update=…).
+FlextLdifSettings.update_global(dn_max_length=512)
 
-
-class FlextTargetOracleSettings(FlextSettings):
-    model_config = m.SettingsConfigDict(
-        env_prefix="FLEXT_TARGET_ORACLE_", extra="ignore"
-    )
-    batch_size: int
+# Snapshot for an isolated container/service lifetime (rule 2).
+snapshot = settings.clone(dn_max_length=2048)
 ```
-
-**Auto-MRO env source resolution**: `settings_customise_sources` in FlextSettings base auto-discovers parent env prefixes from MRO. Priority: init > leaf prefix > parent prefixes (MRO order) > dotenv > secrets.
-
-This means `FLEXT_MELTANO_PROJECT_ROOT` works even from `FlextTargetOracleSettings`.
 
 ### Env Prefix Convention
 
@@ -147,65 +140,63 @@ This means `FLEXT_MELTANO_PROJECT_ROOT` works even from `FlextTargetOracleSettin
 
 ## Workflow
 
-1. Inherit `FlextSettings` — never `BaseSettings` or `m.Value`.
-2. Define `model_config = ConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
-3. Use `c.*` constants for all field defaults.
-4. Add `@FlextSettings.auto_register("<namespace>")` if namespace access needed.
-5. Add `@u.model_validator(mode="after")` for cross-field validation.
-6. Run `ruff check` + `pytest` to verify.
+1. Inherit `FlextSettingsBase` — never `FlextSettings`/`BaseSettings`/`BaseModel`.
+2. Define `model_config = m.SettingsConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
+3. Declare ONLY project-specific fields (rule-3 isolation; redeclare root-like
+   fields locally if genuinely needed).
+4. Use `c.*` constants for all defaults.
+5. Use `@u.model_validator(mode="after")` for cross-field validation.
+6. Run `make check CHECK_GATES=lint,pyrefly` + `make test` to verify.
 
 ## Examples
 
-Good — FlextSettings inheritance with auto-register:
+Good — FlextSettingsBase isolation:
 
 ```python
 from __future__ import annotations
 
-from flext_core import FlextSettings, m
+from typing import Annotated, ClassVar
+
+from flext_core import FlextSettingsBase
+from flext_auth import c, m, u
 
 
-@FlextSettings.auto_register("auth")
-class FlextAuthSettings(FlextSettings):
-    model_config = m.SettingsConfigDict(env_prefix="FLEXT_AUTH_", extra="ignore")
-    secret_key: str
-    algorithm: str
+class FlextAuthSettings(FlextSettingsBase):
+    model_config: ClassVar[m.SettingsConfigDict] = m.SettingsConfigDict(
+        env_prefix="FLEXT_AUTH_",
+        extra="ignore",
+        validate_assignment=True,
+    )
+    secret_key: Annotated[str, u.Field(description="JWT signing secret")] = c.Auth.DEFAULT_SECRET
+    algorithm: Annotated[str, u.Field(description="JWT algorithm")] = c.Auth.DEFAULT_ALG
 ```
 
-Bad — m.Value with custom singleton:
+Bad — inheriting root FlextSettings:
 
 ```python
-from __future__ import annotations
-
-from flext_core import m
-
-
-class FlextAuthSettingsBad(m.BaseModel):
-    """WRONG — m.Value with custom singleton."""
-
-    secret_key: str = ""
+class FlextAuthSettingsBad(FlextSettings):
+    """WRONG — inherits 8+ root mixins (Core/Database/Dispatcher/...)
+    contaminating FlextAuthSettings with `app_name`, `database_url`,
+    `dispatcher_timeout_seconds`, etc. Violates rule-3 isolation."""
 ```
-
-Why bad: bypasses FlextSettings singleton, no env var support, duplicates singleton logic.
 
 Bad — os.environ bypass:
 
 ```python
-from __future__ import annotations
-
 import os
-
 
 def from_env_bad(prefix: str) -> str:
     """WRONG — bypasses Pydantic env resolution."""
     return os.environ.get(f"{prefix}KEY", "")
 ```
 
-Why bad: duplicates Pydantic ConfigDict env resolution. Use `cls()` or `EnvSettingsSource`.
-
 ## Verification
 
-- `ruff check flext-*/src/*/settings.py` — zero errors
-- `pytest flext-core/tests/ -k settings` — settings tests pass
-- No `os.environ` in src/: `rg "os\.environ|os\.getenv" flext-*/src/ --type py`
-- All inherit FlextSettings: `rg "class Flext.*Settings\(" flext-*/src/ --type py`
-- No m.Value settings: `rg "Settings\(m\.Value\)" flext-*/src/ --type py`
+- `make check CHECK_GATES=lint,pyrefly` per project — zero errors.
+- `pytest flext-core/tests/unit/test_settings.py` — singleton + clone +
+  update_global + validate_overrides + clone_for_injection contract.
+- Workspace-wide audit: zero matches for forbidden patterns:
+  - `sg run --pattern '@FlextSettings.auto_register($N)' --lang python .`
+  - `sg run --pattern 'class Flext$X$Settings(FlextSettings)' --lang python -p '*/settings.py'`
+  - `sg run --pattern 'apply_override' --lang python .`
+  - `sg run --pattern 'def __setattr__($$$)' --lang python -p '*/settings.py'`
