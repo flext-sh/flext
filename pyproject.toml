@@ -389,6 +389,8 @@ ignore = [ "**/*.pyi", "typings" ]
 include = [
   "context_test",
   "examples",
+  "flexcore/src",
+  "flexcore/tests",
   "flext-api/examples",
   "flext-api/src",
   "flext-api/tests",
@@ -543,6 +545,16 @@ root = "src"
 extraPaths = [ ".", "src" ]
 reportPrivateUsage = "none"
 root = "tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flexcore/src" ]
+reportPrivateUsage = "error"
+root = "flexcore/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flexcore", "flexcore/src" ]
+reportPrivateUsage = "none"
+root = "flexcore/tests"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = [ "flext-api", "flext-api/src" ]
@@ -1121,6 +1133,7 @@ select = [ "ALL" ]
 combine-as-imports = true
 force-single-line = false
 known-first-party = [
+  "flexcore",
   "flext",
   "flext_api",
   "flext_auth",
@@ -1326,6 +1339,9 @@ split-on-trailing-comma = true
 all = true
 in_place = true
 sort_first = [ "build-system", "dependency-groups", "project", "tool" ]
+
+[tool.uv.sources.flexcore]
+workspace = true
 
 [tool.uv.sources.flext-api]
 workspace = true

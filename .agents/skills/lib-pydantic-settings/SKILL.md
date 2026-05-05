@@ -167,7 +167,9 @@ class FlextAuthSettings(FlextSettingsBase):
         extra="ignore",
         validate_assignment=True,
     )
-    secret_key: Annotated[str, u.Field(description="JWT signing secret")] = c.Auth.DEFAULT_SECRET
+    secret_key: Annotated[str, u.Field(description="JWT signing secret")] = (
+        c.Auth.DEFAULT_SECRET
+    )
     algorithm: Annotated[str, u.Field(description="JWT algorithm")] = c.Auth.DEFAULT_ALG
 ```
 
@@ -184,6 +186,7 @@ Bad — os.environ bypass:
 
 ```python
 import os
+
 
 def from_env_bad(prefix: str) -> str:
     """WRONG — bypasses Pydantic env resolution."""
