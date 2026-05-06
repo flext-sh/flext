@@ -107,7 +107,7 @@ class ValidationHelpers(m.BaseModel):
         m.TypeAdapter[Annotated[str, u.Field(strict=True)]] | None
     ] = None
     _metadata_map_adapter: ClassVar[
-        m.TypeAdapter[Mapping[str, t.JsonValue]] | None
+        m.TypeAdapter[t.JsonMapping] | None
     ] = None
     _config_adapter: ClassVar[m.TypeAdapter[t.JsonMapping] | None] = None
     _dict_container_adapter: ClassVar[
