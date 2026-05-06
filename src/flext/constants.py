@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from flext_core import FlextConstants
+from flext_core import FlextConstants, t
 
 
 class FlextRootConstants(FlextConstants):
@@ -11,4 +11,4 @@ class FlextRootConstants(FlextConstants):
 
 c = FlextRootConstants
 
-__all__: tuple[str, ...] = ("FlextRootConstants", "c")
+__all__: t.StrSequence = ("FlextRootConstants", "c")

@@ -22,7 +22,7 @@ description: Canonical constants layout using StrEnum, IntEnum, Literal, frozens
 
 ## Rules
 
-- **Closed sets of tokens** (status, mode, kind, phase) MUST be `StrEnum` or `IntEnum`. Never `tuple[str, ...]`, never `Literal[...]` lists pretending to be enums.
+- **Closed sets of tokens** (status, mode, kind, phase) MUST be `StrEnum` or `IntEnum`. Never `t.StrSequence`, never `Literal[...]` lists pretending to be enums.
 - **Small literal unions** (≤4 values used as type hints, not iteration) MUST be a PEP 695 `type <Name> = Literal["a", "b"]` alias in the typings tier.
 - **Membership tests** MUST use `Final[frozenset[Literal[...]]]`. Never `set[str]`, never mutable set literals.
 - **Read-only maps** MUST be `Final[Mapping[K, V]] = MappingProxyType({...})`. Never raw `dict[...]` at module scope.
@@ -30,8 +30,8 @@ description: Canonical constants layout using StrEnum, IntEnum, Literal, frozens
 - **Scalar sentinels / names** MUST be `Final[X]`. Never bare assignments without `Final[...]`.
 - **Namespace everything**: each constant lives under `c.<Project>.<Category>.<Name>`. No module-top-level constants, no flat aliases on the facade.
 - **No raw `list` / `set` / `dict` at module scope** — forbidden in production code. Tests may use ephemeral collections inside fixtures only.
-- **No `ClassVar[tuple[str, ...]]` as enum surrogate** — if it's a closed set of tokens, migrate to `StrEnum`.
-- **Rich types only**: prefer `StrEnum` over `Literal` for runtime iteration; prefer `frozenset[Literal[...]]` over `tuple[str, ...]` for membership.
+- **No `ClassVar[t.StrSequence]` as enum surrogate** — if it's a closed set of tokens, migrate to `StrEnum`.
+- **Rich types only**: prefer `StrEnum` over `Literal` for runtime iteration; prefer `frozenset[Literal[...]]` over `t.StrSequence` for membership.
 
 ## Instructions
 
@@ -120,7 +120,7 @@ from typing import ClassVar
 
 
 class Attrs:
-    USER_IDS: ClassVar[tuple[str, ...]] = (
+    USER_IDS: ClassVar[t.StrSequence] = (
         "cn",
         "uid",
         "sAMAccountName",
