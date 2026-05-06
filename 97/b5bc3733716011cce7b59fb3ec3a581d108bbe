@@ -1,0 +1,146 @@
+.agents/skills/scripts-infra/audit_flext_cli_concrete_imports.py
+  h_9db9d35f50cf33 64
+.agents/skills/scripts-infra/audit_banned_cli_libs.py
+  h_9db9d35f50cf33 135
+.agents/skills/lib-pyyaml/SKILL.md
+  h_5cf852cc46bf92 90,100
+.agents/skills/pydantic-v2-governance/references/governance-patterns.md
+  h_5cf852cc46bf92 110
+base.mk
+  s_5a9c2b140a8456::t_d889b9bca8957c 586,588,593
+docs/superpowers/plans/2026-04-03-flext-cli-pep695-result-dsl.md
+  h_5cf852cc46bf92 386
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "97b5bc3733716011cce7b59fb3ec3a581d108bbe",
+  "prompts": {
+    "0e705bc42d882a34": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "f9092722-0444-4a32-9929-00c9db28ef43",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "total_additions": 44,
+      "total_deletions": 18,
+      "accepted_lines": 0,
+      "overriden_lines": 2
+    },
+    "15192fa4ed826461": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "c7f78961-271f-4ea7-ae99-9c161040fb62",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "total_additions": 636,
+      "total_deletions": 198,
+      "accepted_lines": 667,
+      "overriden_lines": 12
+    },
+    "3a8294237b240b62": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "22302034-1cf1-40d7-9105-274596ad6cbe",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "total_additions": 275,
+      "total_deletions": 129,
+      "accepted_lines": 10,
+      "overriden_lines": 2
+    },
+    "9cd6e2601014f73a": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "e67c0ae5-5a8f-4fdc-9b17-a9a5b0760683",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "total_additions": 1927,
+      "total_deletions": 336,
+      "accepted_lines": 1834,
+      "overriden_lines": 125
+    },
+    "9d9d62e5c21e3b12": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "63eb5d55-7a19-4f9c-a0a0-a59de054c32b",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "total_additions": 1469,
+      "total_deletions": 1007,
+      "accepted_lines": 2186,
+      "overriden_lines": 68
+    },
+    "aabe71416adf4070": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "44f1956e-f891-44e8-b0a1-b2b1fa9d18ee",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "total_additions": 52,
+      "total_deletions": 24,
+      "accepted_lines": 37,
+      "overriden_lines": 13
+    },
+    "ec4ebdfbc2ce208d": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "f049bcd6-badc-46dd-b4ad-1eeed823f908",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "total_additions": 1629,
+      "total_deletions": 179,
+      "accepted_lines": 2895,
+      "overriden_lines": 19
+    },
+    "ee53baefb7cad0fc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6f1f4a05-4b57-4b6c-b7d8-374c863c4493",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "total_additions": 10831,
+      "total_deletions": 2019,
+      "accepted_lines": 10051,
+      "overriden_lines": 16
+    },
+    "f93e0a158d69637f": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "111225b0-c9bb-4270-aeb1-49cbf975a83e",
+        "model": "copilot/gpt-5.4"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "total_additions": 356,
+      "total_deletions": 188,
+      "accepted_lines": 576,
+      "overriden_lines": 18
+    }
+  },
+  "humans": {
+    "h_5cf852cc46bf92": {
+      "author": "FLEXT Bot <team@flext.sh>"
+    },
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  },
+  "sessions": {
+    "s_5a9c2b140a8456": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019dfddc-86ee-79a0-b5bf-0433a8110b6a",
+        "model": "gpt-5.5"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>"
+    }
+  }
+}
