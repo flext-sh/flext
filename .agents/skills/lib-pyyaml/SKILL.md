@@ -87,7 +87,7 @@ from pathlib import Path
 from flext_cli import p, t, u
 
 
-def read_config(path: Path) -> p.Result[t.Cli.YamlDict]:
+def read_config(path: Path) -> p.Result[t.JsonMapping]:
     """Read YAML via u.Cli — safe_load + validation."""
     return u.Cli.yaml_safe_load(path)
 
@@ -97,7 +97,7 @@ def write_config(path: Path, data: t.Cli.YamlDumpable) -> p.Result[bool]:
     return u.Cli.yaml_dump(path, data, sort_keys=False, indent=2)
 
 
-def load_or_default(path: Path) -> t.Cli.YamlDict:
+def load_or_default(path: Path) -> t.JsonMapping:
     """Load YAML mapping or return empty dict."""
     return u.Cli.yaml_load_mapping(path)
 ```

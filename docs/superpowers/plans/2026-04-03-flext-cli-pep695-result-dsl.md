@@ -383,7 +383,7 @@ from collections.abc import Mapping, MutableSequence, Sequence
 
 - [ ] **Step 2: output.py — Replace `dict[str, t.JsonValue]`**
 
-Line 104: `result: dict[str, t.JsonValue] = {}` → `result: MutableMapping[str, t.JsonValue] = {}`
+Line 104: `result: dict[str, t.JsonValue] = {}` → `result: t.MutableJsonMapping = {}`
 
 Replace `isinstance(value, dict)` and `isinstance(value, list)` with `isinstance(value, Mapping)` and `isinstance(value, Sequence)` (with `not isinstance(value, str)` guard for sequences).
 

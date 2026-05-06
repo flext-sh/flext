@@ -61,6 +61,7 @@ def _check_file(py_file: Path, *, is_extension_allowed: bool) -> list[str]:
 
 
 def main() -> int:
+    """Scan workspace projects for forbidden concrete FlextCli imports."""
     violations: list[str] = []
     for project_dir in sorted(WORKSPACE.iterdir()):
         if not project_dir.is_dir() or project_dir.name in SKIP_PROJECTS:

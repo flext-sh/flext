@@ -132,6 +132,7 @@ def _scan_file(py_file: Path, project_name: str) -> list[str]:
 
 
 def main() -> int:
+    """Scan workspace projects for banned direct CLI-domain library usage."""
     violations: list[str] = []
     for project_dir in sorted(WORKSPACE.iterdir()):
         if not project_dir.is_dir() or project_dir.name in SKIP_PROJECTS:
