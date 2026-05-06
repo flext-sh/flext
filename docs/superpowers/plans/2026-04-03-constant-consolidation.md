@@ -167,7 +167,7 @@ def get_canonical_regex_values() -> t.StrMapping:
 
 
 @staticmethod
-def get_canonical_tuple_values() -> t.MappingKV[tuple[str, ...], str]:
+def get_canonical_tuple_values() -> t.MappingKV[t.StrSequence, str]:
     settings = FlextInfraUtilitiesCodegenGovernance.load_governance_settings()
     return {
         tuple(entry.value): entry.canonical_ref
