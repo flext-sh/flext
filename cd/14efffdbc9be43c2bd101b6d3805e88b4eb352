@@ -1,0 +1,19 @@
+examples/acl_processing_example.py
+  h_5cf852cc46bf92 400
+.planning/mro-dedup-continuation-prompt.md
+  h_5cf852cc46bf92 297
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "cd14efffdbc9be43c2bd101b6d3805e88b4eb352",
+  "prompts": {},
+  "humans": {
+    "h_5cf852cc46bf92": {
+      "author": "FLEXT Bot <team@flext.sh>"
+    },
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
