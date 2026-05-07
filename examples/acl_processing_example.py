@@ -397,7 +397,7 @@ class AclProcessingExample:
                         "context": {
                             key: value
                             for key, value in acl.context.items()
-                            if isinstance(value, (str, int, float, bool))
+                            if isinstance(value, t.PRIMITIVES_TYPES)
                         },
                         "server_type": acl.server_type,
                     })
