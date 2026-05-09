@@ -12,7 +12,7 @@ from flext_core.lazy import (
 )
 
 if _t.TYPE_CHECKING:
-    from flext import c, d, e, h, m, p, r, s, t, x
+    from flext import c, d, e, h, m, p, r, t, x
     from tests.infra.constants import TestsFlextRootConstants
     from tests.infra.models import TestsFlextRootModels
     from tests.infra.protocols import TestsFlextRootProtocols
@@ -47,7 +47,6 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "m",
                 "p",
                 "r",
-                "s",
                 "t",
                 "x",
             ),
@@ -94,7 +93,6 @@ __all__: list[str] = [
     "m",
     "p",
     "r",
-    "s",
     "t",
     "u",
     "x",
