@@ -1,0 +1,26 @@
+examples/__init__.py
+  s_3191897cc9b094::t_f189f5c1d6c652 17
+tests/__init__.py
+  s_3191897cc9b094::t_d8bfd46b65b373 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "fc8c11de9f91d29b022b12514327e98c2a45747a",
+  "prompts": {},
+  "humans": {
+    "h_5cf852cc46bf92": {
+      "author": "FLEXT Bot <team@flext.sh>"
+    }
+  },
+  "sessions": {
+    "s_3191897cc9b094": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c26c7eff-85c3-4363-97a9-7aedbb148af8",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>"
+    }
+  }
+}
