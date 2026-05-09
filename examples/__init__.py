@@ -14,7 +14,7 @@ if _t.TYPE_CHECKING:
         PipelineStageData,
     )
     from examples.complete_workflow_example import CompleteWorkflowExample
-    from flext import c, d, e, h, m, p, r, s, t, u, x
+    from flext import c, d, e, h, m, p, r, t, u, x
 _LAZY_IMPORTS = build_lazy_import_map(
     {
         ".acl_processing_example": ("AclProcessingExample",),
@@ -31,7 +31,6 @@ _LAZY_IMPORTS = build_lazy_import_map(
             "m",
             "p",
             "r",
-            "s",
             "t",
             "u",
             "x",
@@ -54,7 +53,6 @@ __all__: list[str] = [
     "m",
     "p",
     "r",
-    "s",
     "t",
     "u",
     "x",

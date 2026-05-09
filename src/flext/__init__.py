@@ -11,7 +11,6 @@ if _t.TYPE_CHECKING:
     from flext.constants import FlextRootConstants, c
     from flext.models import FlextRootModels, m
     from flext.protocols import FlextRootProtocols, p
-    from flext.service import FlextRootServiceBase, s
     from flext.typings import FlextRootTypes, t
     from flext.utilities import FlextRootUtilities, u
     from flext_core import d, e, h, r, x
@@ -28,10 +27,6 @@ _LAZY_IMPORTS = build_lazy_import_map(
         ".protocols": (
             "FlextRootProtocols",
             "p",
-        ),
-        ".service": (
-            "FlextRootServiceBase",
-            "s",
         ),
         ".typings": (
             "FlextRootTypes",
@@ -58,7 +53,6 @@ __all__: list[str] = [
     "FlextRootConstants",
     "FlextRootModels",
     "FlextRootProtocols",
-    "FlextRootServiceBase",
     "FlextRootTypes",
     "FlextRootUtilities",
     "c",
@@ -68,7 +62,6 @@ __all__: list[str] = [
     "m",
     "p",
     "r",
-    "s",
     "t",
     "u",
     "x",
