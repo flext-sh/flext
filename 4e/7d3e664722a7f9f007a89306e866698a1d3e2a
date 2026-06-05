@@ -1,0 +1,9 @@
+.gitmodules
+  ai_agent 141-143
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "4e7d3e664722a7f9f007a89306e866698a1d3e2a",
+  "prompts": {}
+}
