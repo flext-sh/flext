@@ -1,0 +1,9 @@
+AGENTS.md
+  ai_agent 27-124
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "47caa91d24b065cf25e85fa3db9abe695490adad",
+  "prompts": {}
+}
