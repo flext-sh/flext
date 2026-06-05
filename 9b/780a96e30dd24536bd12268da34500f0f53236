@@ -1,0 +1,19 @@
+.agents/coordination/tasks.md
+  s_ec83492d4209e5::t_78e1b36f9e5a55 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "9b780a96e30dd24536bd12268da34500f0f53236",
+  "prompts": {},
+  "sessions": {
+    "s_ec83492d4209e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e97b7-d073-7711-a0a1-e7daf811f073",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Zed <hi@zed.dev>"
+    }
+  }
+}
