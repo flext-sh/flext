@@ -209,13 +209,7 @@ func (p *JWTProvider) Authenticate(ctx context.Context, credentials Credentials)
 
 // Validate validates a JWT token
 func (p *JWTProvider) Validate(ctx context.Context, tokenString string) (*UserContext, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return p.jwtSecret, nil
-	})
-
+	token, err := jwt.Parse(tokenString, jwtHMACKeyFunc(p.jwtSecret))
 	if err != nil {
 		return nil, &errors.DomainError{
 			Code:    "TOKEN_PARSE_ERROR",
@@ -232,7 +226,24 @@ func (p *JWTProvider) Validate(ctx context.Context, tokenString string) (*UserCo
 		}
 	}
 
-	claims, ok := token.Claims.(jwt.MapClaims)
+	claims, err := parseAccessClaims(token.Claims)
+	if err != nil {
+		return nil, err
+	}
+	return userContextFromAccessClaims(claims)
+}
+
+func jwtHMACKeyFunc(secret []byte) jwt.Keyfunc {
+	return func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return secret, nil
+	}
+}
+
+func parseAccessClaims(claims jwt.Claims) (jwt.MapClaims, error) {
+	mapClaims, ok := claims.(jwt.MapClaims)
 	if !ok {
 		return nil, &errors.DomainError{
 			Code:    "INVALID_CLAIMS",
@@ -241,15 +252,17 @@ func (p *JWTProvider) Validate(ctx context.Context, tokenString string) (*UserCo
 		}
 	}
 
-	// Verify token type (should be access token for authentication)
-	if tokenType, ok := claims["type"].(string); ok && tokenType != "access" {
+	if tokenType, ok := mapClaims["type"].(string); ok && tokenType != "access" {
 		return nil, &errors.DomainError{
 			Code:    "INVALID_TOKEN_TYPE",
 			Message: "Invalid token type",
 			Details: fmt.Sprintf("Expected access token, got %s", tokenType),
 		}
 	}
+	return mapClaims, nil
+}
 
+func userContextFromAccessClaims(claims jwt.MapClaims) (*UserContext, error) {
 	userIDStr, ok := claims["sub"].(string)
 	if !ok {
 		return nil, &errors.DomainError{
@@ -270,32 +283,12 @@ func (p *JWTProvider) Validate(ctx context.Context, tokenString string) (*UserCo
 
 	username, _ := claims["username"].(string)
 	email, _ := claims["email"].(string)
-
-	// Parse roles and permissions
-	var roles []string
-	if rolesInterface, ok := claims["roles"].([]interface{}); ok {
-		for _, role := range rolesInterface {
-			if roleStr, ok := role.(string); ok {
-				roles = append(roles, roleStr)
-			}
-		}
-	}
-
-	var permissions []string
-	if permissionsInterface, ok := claims["permissions"].([]interface{}); ok {
-		for _, permission := range permissionsInterface {
-			if permissionStr, ok := permission.(string); ok {
-				permissions = append(permissions, permissionStr)
-			}
-		}
-	}
-
 	return &UserContext{
 		UserID:      userID,
 		Username:    username,
 		Email:       email,
-		Roles:       roles,
-		Permissions: permissions,
+		Roles:       stringSliceClaim(claims, "roles", []string{}),
+		Permissions: stringSliceClaim(claims, "permissions", []string{}),
 		AuthType:    "jwt",
 	}, nil
 }

@@ -165,40 +165,6 @@ func (m *UnifiedAuthMiddleware) RequirePermission(permissions ...string) echo.Mi
 	}
 }
 
-// extractToken extracts authentication token from request
-func (m *UnifiedAuthMiddleware) extractToken(c echo.Context) (string, string) {
-	// Try Authorization header first (Bearer token or Basic auth)
-	authHeader := c.Request().Header.Get("Authorization")
-	if authHeader != "" {
-		if strings.HasPrefix(authHeader, "Bearer ") {
-			return strings.TrimPrefix(authHeader, "Bearer "), "jwt"
-		}
-		if strings.HasPrefix(authHeader, "Basic ") {
-			return authHeader, "basic"
-		}
-	}
-
-	// Try API key header
-	apiKey := c.Request().Header.Get("X-API-Key")
-	if apiKey != "" {
-		return apiKey, "api_key"
-	}
-
-	// Try API key in query parameter
-	queryAPIKey := c.QueryParam("api_key")
-	if queryAPIKey != "" {
-		return queryAPIKey, "api_key"
-	}
-
-	// Try cookie for web sessions
-	cookie, err := c.Cookie("flext_token")
-	if err == nil && cookie.Value != "" {
-		return cookie.Value, "jwt"
-	}
-
-	return "", ""
-}
-
 // shouldSkipPath determines if authentication should be skipped for a path
 func (m *UnifiedAuthMiddleware) shouldSkipPath(path string) bool {
 	// Check exact matches

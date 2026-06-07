@@ -215,120 +215,65 @@ func NewCleanArchitectureConfig() *CleanArchitectureConfig {
 
 // Validate validates the Clean Architecture configuration
 func (c *CleanArchitectureConfig) Validate() error {
-	// Repository validation
-	if c.Repository.MaxOpenConnections <= 0 {
-		return fmt.Errorf("repository max_open_connections must be > 0")
+	var err error
+	switch {
+	case c.Repository.MaxOpenConnections <= 0:
+		err = fmt.Errorf("repository max_open_connections must be > 0")
+	case c.Repository.MaxIdleConnections <= 0:
+		err = fmt.Errorf("repository max_idle_connections must be > 0")
+	case c.Repository.QueryTimeout <= 0:
+		err = fmt.Errorf("repository query_timeout must be > 0")
+	case c.Repository.TransactionTimeout <= 0:
+		err = fmt.Errorf("repository transaction_timeout must be > 0")
+	case c.Repository.MaxRetries < 0:
+		err = fmt.Errorf("repository max_retries must be >= 0")
+	case c.UseCase.DefaultTimeout <= 0:
+		err = fmt.Errorf("usecase default_timeout must be > 0")
+	case c.UseCase.LongRunningTimeout <= 0:
+		err = fmt.Errorf("usecase long_running_timeout must be > 0")
+	case c.UseCase.MaxConcurrentExecutions <= 0:
+		err = fmt.Errorf("usecase max_concurrent_executions must be > 0")
+	case c.UseCase.WorkerPoolSize <= 0:
+		err = fmt.Errorf("usecase worker_pool_size must be > 0")
+	case c.UseCase.RateLimitRPS <= 0:
+		err = fmt.Errorf("usecase rate_limit_rps must be > 0")
+	case c.Events.BufferSize <= 0:
+		err = fmt.Errorf("events buffer_size must be > 0")
+	case c.Events.FlushInterval <= 0:
+		err = fmt.Errorf("events flush_interval must be > 0")
+	case c.Events.PublishTimeout <= 0:
+		err = fmt.Errorf("events publish_timeout must be > 0")
+	case c.Events.MaxRetries < 0:
+		err = fmt.Errorf("events max_retries must be >= 0")
+	case c.API.MaxRequestSize <= 0:
+		err = fmt.Errorf("api max_request_size must be > 0")
+	case c.API.RequestTimeout <= 0:
+		err = fmt.Errorf("api request_timeout must be > 0")
+	case c.API.DefaultPageSize <= 0:
+		err = fmt.Errorf("api default_page_size must be > 0")
+	case c.API.MaxPageSize <= 0:
+		err = fmt.Errorf("api max_page_size must be > 0")
+	case c.API.DefaultPageSize > c.API.MaxPageSize:
+		err = fmt.Errorf("api default_page_size must be <= max_page_size")
+	case c.Performance.MetricsInterval <= 0:
+		err = fmt.Errorf("performance metrics_interval must be > 0")
+	case c.Performance.TracingSampleRate < 0 || c.Performance.TracingSampleRate > 1:
+		err = fmt.Errorf("performance tracing_sample_rate must be between 0 and 1")
+	case c.Performance.ProfilingPort <= 0 || c.Performance.ProfilingPort > 65535:
+		err = fmt.Errorf("performance profiling_port must be between 1 and 65535")
+	case c.Performance.CircuitBreakerThreshold <= 0:
+		err = fmt.Errorf("performance circuit_breaker_threshold must be > 0")
+	case c.Performance.CircuitBreakerTimeout <= 0:
+		err = fmt.Errorf("performance circuit_breaker_timeout must be > 0")
+	case c.Performance.GCPercent < 0:
+		err = fmt.Errorf("performance gc_percent must be >= 0")
+	case c.Performance.MaxMemoryMB <= 0:
+		err = fmt.Errorf("performance max_memory_mb must be > 0")
+	case c.Performance.MemoryThresholdPercent <= 0 || c.Performance.MemoryThresholdPercent > 100:
+		err = fmt.Errorf("performance memory_threshold_percent must be between 1 and 100")
 	}
 
-	if c.Repository.MaxIdleConnections <= 0 {
-		return fmt.Errorf("repository max_idle_connections must be > 0")
-	}
-
-	if c.Repository.QueryTimeout <= 0 {
-		return fmt.Errorf("repository query_timeout must be > 0")
-	}
-
-	if c.Repository.TransactionTimeout <= 0 {
-		return fmt.Errorf("repository transaction_timeout must be > 0")
-	}
-
-	if c.Repository.MaxRetries < 0 {
-		return fmt.Errorf("repository max_retries must be >= 0")
-	}
-
-	// Use case validation
-	if c.UseCase.DefaultTimeout <= 0 {
-		return fmt.Errorf("usecase default_timeout must be > 0")
-	}
-
-	if c.UseCase.LongRunningTimeout <= 0 {
-		return fmt.Errorf("usecase long_running_timeout must be > 0")
-	}
-
-	if c.UseCase.MaxConcurrentExecutions <= 0 {
-		return fmt.Errorf("usecase max_concurrent_executions must be > 0")
-	}
-
-	if c.UseCase.WorkerPoolSize <= 0 {
-		return fmt.Errorf("usecase worker_pool_size must be > 0")
-	}
-
-	if c.UseCase.RateLimitRPS <= 0 {
-		return fmt.Errorf("usecase rate_limit_rps must be > 0")
-	}
-
-	// Events validation
-	if c.Events.BufferSize <= 0 {
-		return fmt.Errorf("events buffer_size must be > 0")
-	}
-
-	if c.Events.FlushInterval <= 0 {
-		return fmt.Errorf("events flush_interval must be > 0")
-	}
-
-	if c.Events.PublishTimeout <= 0 {
-		return fmt.Errorf("events publish_timeout must be > 0")
-	}
-
-	if c.Events.MaxRetries < 0 {
-		return fmt.Errorf("events max_retries must be >= 0")
-	}
-
-	// API validation
-	if c.API.MaxRequestSize <= 0 {
-		return fmt.Errorf("api max_request_size must be > 0")
-	}
-
-	if c.API.RequestTimeout <= 0 {
-		return fmt.Errorf("api request_timeout must be > 0")
-	}
-
-	if c.API.DefaultPageSize <= 0 {
-		return fmt.Errorf("api default_page_size must be > 0")
-	}
-
-	if c.API.MaxPageSize <= 0 {
-		return fmt.Errorf("api max_page_size must be > 0")
-	}
-
-	if c.API.DefaultPageSize > c.API.MaxPageSize {
-		return fmt.Errorf("api default_page_size must be <= max_page_size")
-	}
-
-	// Performance validation
-	if c.Performance.MetricsInterval <= 0 {
-		return fmt.Errorf("performance metrics_interval must be > 0")
-	}
-
-	if c.Performance.TracingSampleRate < 0 || c.Performance.TracingSampleRate > 1 {
-		return fmt.Errorf("performance tracing_sample_rate must be between 0 and 1")
-	}
-
-	if c.Performance.ProfilingPort <= 0 || c.Performance.ProfilingPort > 65535 {
-		return fmt.Errorf("performance profiling_port must be between 1 and 65535")
-	}
-
-	if c.Performance.CircuitBreakerThreshold <= 0 {
-		return fmt.Errorf("performance circuit_breaker_threshold must be > 0")
-	}
-
-	if c.Performance.CircuitBreakerTimeout <= 0 {
-		return fmt.Errorf("performance circuit_breaker_timeout must be > 0")
-	}
-
-	if c.Performance.GCPercent < 0 {
-		return fmt.Errorf("performance gc_percent must be >= 0")
-	}
-
-	if c.Performance.MaxMemoryMB <= 0 {
-		return fmt.Errorf("performance max_memory_mb must be > 0")
-	}
-
-	if c.Performance.MemoryThresholdPercent <= 0 || c.Performance.MemoryThresholdPercent > 100 {
-		return fmt.Errorf("performance memory_threshold_percent must be between 1 and 100")
-	}
-
-	return nil
+	return err
 }
 
 // IsEnabled returns whether Clean Architecture is enabled

@@ -12,6 +12,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel/application"
 	"github.com/flext-sh/flext/pkg/utils/shared_kernel/value_objects"
 )
 
@@ -47,55 +48,44 @@ func (h *BaseHandler) HandleError(c echo.Context, err error) error {
 		logging.F("method", c.Request().Method),
 	)
 
-	// Determina o status code baseado no tipo do erro
 	statusCode := http.StatusInternalServerError
 	message := "Internal server error"
+	code := ""
+	var details any
 
-	// Personaliza baseado no tipo do erro
-	// switch e := err.(type) { // Disabled - application types not available
-	// case *application.ValidationErrors: // Disabled - application package not found
-	// 	statusCode = http.StatusBadRequest
-	// 	message = "Validation failed"
-	// 	return c.JSON(statusCode, ErrorResponse{
-	// 		Error:     message,
-	// 		Message:   e.Error(),
-	// 		Code:      "VALIDATION_ERROR",
-	// 		Details:   e,
-	// 		Timestamp: time.Now().UTC(),
-	// 		RequestID: getRequestID(c),
-	// 	})
-	// case application.ValidationError: // Disabled - application package not found
-	// 	statusCode = http.StatusBadRequest
-	// 	message = "Validation failed"
-	// 	return c.JSON(statusCode, ErrorResponse{
-	// 		Error:     message,
-	// 		Message:   e.Error(),
-	// 		Code:      "VALIDATION_ERROR",
-	// 		Details:   []application.ValidationError{e},
-	// 		Timestamp: time.Now().UTC(),
-	// 		RequestID: getRequestID(c),
-	// 	})
-	// default: // Disabled switch
-	// For error handling without switch
-	// Para outros tipos de erro, verifica se é um erro conhecido
-	if isNotFoundError(err) {
-		statusCode = http.StatusNotFound
-		message = "Resource not found"
-	} else if isBadRequestError(err) {
+	switch e := err.(type) {
+	case *application.ValidationErrors:
 		statusCode = http.StatusBadRequest
-		message = "Bad request"
-	} else if isUnauthorizedError(err) {
-		statusCode = http.StatusUnauthorized
-		message = "Unauthorized"
-	} else if isForbiddenError(err) {
-		statusCode = http.StatusForbidden
-		message = "Forbidden"
+		message = "Validation failed"
+		code = "VALIDATION_ERROR"
+		details = e
+	case application.ValidationError:
+		statusCode = http.StatusBadRequest
+		message = "Validation failed"
+		code = "VALIDATION_ERROR"
+		details = []application.ValidationError{e}
+	default:
+		if isNotFoundError(err) {
+			statusCode = http.StatusNotFound
+			message = "Resource not found"
+		} else if isBadRequestError(err) {
+			statusCode = http.StatusBadRequest
+			message = "Bad request"
+		} else if isUnauthorizedError(err) {
+			statusCode = http.StatusUnauthorized
+			message = "Unauthorized"
+		} else if isForbiddenError(err) {
+			statusCode = http.StatusForbidden
+			message = "Forbidden"
+		}
+		code = getErrorCode(statusCode)
 	}
 
 	return c.JSON(statusCode, ErrorResponse{
 		Error:     message,
 		Message:   err.Error(),
-		Code:      getErrorCode(statusCode),
+		Code:      code,
+		Details:   details,
 		Timestamp: time.Now().UTC(),
 		RequestID: getRequestID(c),
 	})
@@ -407,22 +397,22 @@ func getRequestID(c echo.Context) string {
 }
 
 func getErrorCode(statusCode int) string {
+	code := "UNKNOWN_ERROR"
 	switch statusCode {
 	case http.StatusBadRequest:
-		return "BAD_REQUEST"
+		code = "BAD_REQUEST"
 	case http.StatusUnauthorized:
-		return "UNAUTHORIZED"
+		code = "UNAUTHORIZED"
 	case http.StatusForbidden:
-		return "FORBIDDEN"
+		code = "FORBIDDEN"
 	case http.StatusNotFound:
-		return "NOT_FOUND"
+		code = "NOT_FOUND"
 	case http.StatusConflict:
-		return "CONFLICT"
+		code = "CONFLICT"
 	case http.StatusInternalServerError:
-		return "INTERNAL_SERVER_ERROR"
-	default:
-		return "UNKNOWN_ERROR"
+		code = "INTERNAL_SERVER_ERROR"
 	}
+	return code
 }
 
 func isNotFoundError(err error) bool {

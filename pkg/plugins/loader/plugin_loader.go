@@ -18,6 +18,7 @@ package loader
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"path/filepath"
 	"plugin"
@@ -72,6 +73,8 @@ func (pl *PluginLoader) LoadPluginsFromConfiguration(ctx context.Context, config
 	pl.logger.Info("🔌 Loading plugins from configuration",
 		logging.F("plugin_count", len(configs)))
 
+	var failures []error
+	loaded := 0
 	for _, settings := range configs {
 		if !settings.Enabled {
 			pl.logger.Info("⏭️ Skipping disabled plugin",
@@ -80,15 +83,24 @@ func (pl *PluginLoader) LoadPluginsFromConfiguration(ctx context.Context, config
 		}
 
 		if err := pl.loadPlugin(ctx, settings); err != nil {
+			// Non-fatal: a plugin whose external runtime (Python venv, Ray
+			// cluster, kubeconfig) is unavailable must not abort loading the
+			// rest. Collect every failure so the caller sees the full set and
+			// can apply its own degradation policy.
 			pl.logger.Error("❌ Failed to load plugin",
 				logging.F("plugin_type", settings.PluginType),
 				logging.F("error", err))
-			return fmt.Errorf("failed to load plugin %s: %w", settings.PluginType, err)
+			failures = append(failures, fmt.Errorf("plugin %s: %w", settings.PluginType, err))
+			continue
 		}
+		loaded++
 	}
 
-	pl.logger.Info("✅ All enabled plugins loaded successfully")
-	return nil
+	pl.logger.Info("✅ Plugin load phase complete",
+		logging.F("loaded", loaded),
+		logging.F("failed", len(failures)))
+
+	return errors.Join(failures...)
 }
 
 // LoadPluginFromBinary loads a plugin from a binary file (.so/.dll)
