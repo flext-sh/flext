@@ -1,0 +1,116 @@
+pkg/utils/shared_kernel/settings/base_config.go
+  s_ec83492d4209e5::t_b911972e79d351 167-180,183,222-238,241,314,317,319,321,323,325,327,329,331
+pkg/utils/shared_kernel/validation/validator_test.go
+  s_ec83492d4209e5::t_05c76cc2b0f2bf 11-35,55,81,105,136,161,187,307,333,361,555,630
+pkg/plugins/registry/lifecycle.go
+  s_ec83492d4209e5::t_d030c18e130fbc 1-56
+pkg/utils/shared_kernel/entities/pipeline_steps.go
+  s_ec83492d4209e5::t_dbd5da599538a7 1-103
+pkg/plugins/registry/deployments.go
+  s_ec83492d4209e5::t_d030c18e130fbc 1-134
+pkg/utils/shared_kernel/utils/either.go
+  s_ec83492d4209e5::t_fa415f1ea3ef12 1-86
+pkg/utils/shared_kernel/persistence/unified_repository_batch.go
+  s_ec83492d4209e5::t_69167a745de40a 1-55
+pkg/utils/shared_kernel/persistence/unified_repository_validation.go
+  s_ec83492d4209e5::t_69167a745de40a 1-69
+pkg/utils/shared_kernel/entities/pipeline_attributes.go
+  s_ec83492d4209e5::t_dbd5da599538a7 1-63
+pkg/plugins/communication/flexcore_bus.go
+  s_73cbfc60e45e37::t_d65ce9c43e02b2 120-123,126
+pkg/utils/shared_kernel/entities/pipeline_state.go
+  s_ec83492d4209e5::t_dbd5da599538a7 1-111
+pkg/utils/shared_kernel/persistence/unified_repository_cache.go
+  s_ec83492d4209e5::t_69167a745de40a 1-85
+pkg/utils/shared_kernel/http/base_handler.go
+  s_ec83492d4209e5::t_01d8176ef4c497 54
+  s_ec83492d4209e5::t_b34e93b65ccc92 400,403,405,407,409,411,413,415
+  s_ec83492d4209e5::t_9be43cbe2d2c90 15,53,56-57,59-81,87-88
+pkg/utils/shared_kernel/utils/reflection.go
+  s_ec83492d4209e5::t_fa415f1ea3ef12 1-75
+pkg/plugins/registry/validation.go
+  s_ec83492d4209e5::t_691f4fd457508b 27-36
+  s_ec83492d4209e5::t_d030c18e130fbc 1-26,37-53
+pkg/utils/shared_kernel/entities/plugin_attributes.go
+  s_ec83492d4209e5::t_15f01a765518f1 1-117
+pkg/utils/shared_kernel/settings/unified_config.go
+  s_ec83492d4209e5::t_c25b02f308bcc5 244
+  s_ec83492d4209e5::t_3417d6d8ee053e 242,245,254-255,257,423-432,434-441
+  s_ec83492d4209e5::t_e1e6a9873a2d01 243,246-252,256
+pkg/utils/shared_kernel/persistence/unified_repository_list.go
+  s_ec83492d4209e5::t_69167a745de40a 1-95
+pkg/utils/shared_kernel/auth/middleware_tokens.go
+  s_ec83492d4209e5::t_1f711d2399b1f7 1-39
+pkg/utils/shared_kernel/validation/requests.go
+  s_ec83492d4209e5::t_e0dc3f8896e85c 1-78
+pkg/utils/shared_kernel/persistence/unified_repository_audit.go
+  s_ec83492d4209e5::t_69167a745de40a 1-58
+pkg/plugins/registry/plugins.go
+  s_ec83492d4209e5::t_d030c18e130fbc 1-145
+pkg/utils/shared_kernel/auth/providers.go
+  s_ec83492d4209e5::t_a93c99245c0c1f 212,229-246,255,262-263,265,290-291
+pkg/utils/shared_kernel/entities/plugin_validation.go
+  s_ec83492d4209e5::t_15f01a765518f1 1-66
+pkg/utils/shared_kernel/utils/conversion.go
+  s_ec83492d4209e5::t_fa415f1ea3ef12 1-60
+pkg/utils/shared_kernel/entities/plugin_state.go
+  s_ec83492d4209e5::t_15f01a765518f1 1-67
+pkg/infrastructure/settings/clean_architecture.go
+  s_ec83492d4209e5::t_b2d4beae01ab73 218-273,276
+pkg/controlpanel/management/container/container.go
+  s_73cbfc60e45e37::t_cfd5d038e4233f 133-137,140-141,144
+pkg/utils/shared_kernel/utils/numeric.go
+  s_ec83492d4209e5::t_60338c0e45447d 1-46
+pkg/utils/shared_kernel/utils/optional.go
+  s_ec83492d4209e5::t_fa415f1ea3ef12 1-67
+pkg/utils/shared_kernel/entities/pipeline_validation.go
+  s_ec83492d4209e5::t_dbd5da599538a7 1-17
+pkg/utils/shared_kernel/entities/plugin_ports.go
+  s_ec83492d4209e5::t_15f01a765518f1 1-78
+pkg/utils/shared_kernel/utils/strings.go
+  s_ec83492d4209e5::t_60338c0e45447d 1-59
+pkg/utils/shared_kernel/auth/unified_auth_service.go
+  s_ec83492d4209e5::t_51c9c4e9494e50 265,320-322,335-336,339-340,347-348
+  s_ec83492d4209e5::t_278f350495b658 173,237-256,267-270,278-286,288,307-316,318-319,323-328,330-331,333-334
+  s_ec83492d4209e5::t_a93c99245c0c1f 227
+pkg/utils/shared_kernel/validation/sanitize.go
+  s_ec83492d4209e5::t_e0dc3f8896e85c 1-52
+pkg/plugins/registry/nodes.go
+  s_ec83492d4209e5::t_d030c18e130fbc 1-92
+pkg/controlpanel/monitoring/server/server_test.go
+  s_73cbfc60e45e37::t_125d6a23e0d378 321
+  s_73cbfc60e45e37::t_78892720d42633 337
+  s_73cbfc60e45e37::t_6f52b8a377c1be 232
+  s_73cbfc60e45e37::t_12a274ee9b6ef0 49-52,56-59,90,97,104,111,114-122
+  s_73cbfc60e45e37::t_346f2c53177f69 10
+  s_73cbfc60e45e37::t_44633c49781bc2 144,174,213,228
+pkg/plugins/registry/stats.go
+  s_ec83492d4209e5::t_d030c18e130fbc 1-74
+pkg/plugins/loader/plugin_loader.go
+  s_73cbfc60e45e37::t_a065c8e0933d9e 76-77,86-89,93-94,96,99-103
+  s_73cbfc60e45e37::t_8b2215716f9d9c 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "02f7a8b00b3b13eb91427faf3cd73940870362b4",
+  "prompts": {},
+  "sessions": {
+    "s_73cbfc60e45e37": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "80f2c44c-f1f2-49a0-8035-ccac60ac602b",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Zed <hi@zed.dev>"
+    },
+    "s_ec83492d4209e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e97b7-d073-7711-a0a1-e7daf811f073",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Zed <hi@zed.dev>"
+    }
+  }
+}
