@@ -130,13 +130,18 @@ func loadCorePlugins(pluginLoader *loader.PluginLoader, logger logging.Logger) e
 	// Get default plugin configurations
 	configs := loader.GetDefaultPluginConfigurations()
 
-	// Load plugins from configurations
+	// Load plugins from configurations. Plugin runtimes (Python venv, Ray,
+	// Kubernetes) are external and may be absent at boot; their failures are
+	// surfaced here and the control panel starts in degraded mode with the
+	// plugins that did initialize, mirroring the graceful degradation the
+	// FlexCore/Meltano handlers already implement.
 	ctx := context.Background()
 	if err := pluginLoader.LoadPluginsFromConfiguration(ctx, configs); err != nil {
-		return fmt.Errorf("failed to load plugins from configuration: %w", err)
+		logger.Warn("⚠️ Some core plugins failed to load; continuing in degraded mode",
+			logging.F("error", err))
 	}
 
-	logger.Info("✅ Core plugins loaded successfully via DI")
+	logger.Info("✅ Core plugin load phase complete")
 	return nil
 }
 

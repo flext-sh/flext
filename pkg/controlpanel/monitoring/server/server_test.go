@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/flext-sh/flext/pkg/controlpanel/configuration/settings"
+	"github.com/flext-sh/flext/pkg/controlpanel/handlers"
 	"github.com/flext-sh/flext/pkg/logging"
 )
 
@@ -45,10 +46,17 @@ func TestServerRoutes(t *testing.T) {
 	cfg := &settings.Config{}
 	cfg.Server.Environment = "test"
 	cfg.Server.Port = 8081
-	cfg.FlexCore.URL = "http://localhost:8080"
+	// Point FlexCore/Python integrations at a closed port so the handlers
+	// exercise their deterministic degraded-mode responses (connection
+	// refused is immediate) instead of depending on a live backend.
+	cfg.FlexCore.URL = "http://127.0.0.1:9"
 
 	server := NewServer(cfg, logger)
 	server.SetupBasicRoutes()
+	// Detailed routes are owned by the real handlers, registered exactly as the
+	// production container wires them (controlpanel/management/container).
+	server.RegisterHandler(handlers.NewMeltanoHandler(cfg, logger))
+	server.RegisterHandler(handlers.NewFlexCoreHandler(cfg, logger))
 
 	tests := []struct {
 		name           string
@@ -79,39 +87,39 @@ func TestServerRoutes(t *testing.T) {
 			expectedFields: []string{"service", "version", "status", "environment", "debug", "timestamp", "endpoints"},
 		},
 		{
-			name:           "List plugins",
-			method:         "GET",
-			path:           "/api/v1/plugins",
-			expectedStatus: http.StatusOK,
-			expectedFields: []string{"plugins", "message"},
-		},
-		{
-			name:           "List Meltano projects",
+			name:           "List Meltano projects (degraded)",
 			method:         "GET",
 			path:           "/api/v1/meltano/projects",
 			expectedStatus: http.StatusOK,
 			expectedFields: []string{"projects", "message"},
 		},
 		{
-			name:           "List Singer taps",
+			name:           "List Singer taps (degraded)",
 			method:         "GET",
 			path:           "/api/v1/singer/taps",
 			expectedStatus: http.StatusOK,
 			expectedFields: []string{"taps", "message"},
 		},
 		{
-			name:           "List DBT models",
+			name:           "List DBT models (degraded)",
 			method:         "GET",
 			path:           "/api/v1/dbt/models",
 			expectedStatus: http.StatusOK,
 			expectedFields: []string{"models", "message"},
 		},
 		{
-			name:           "FlexCore health",
+			name:           "FlexCore health (unreachable backend)",
 			method:         "GET",
 			path:           "/api/v1/flexcore/health",
-			expectedStatus: http.StatusOK,
-			expectedFields: []string{"flexcore_status", "message", "flexcore_url"},
+			expectedStatus: http.StatusServiceUnavailable,
+			expectedFields: []string{"status", "error", "flexcore_url"},
+		},
+		{
+			name:           "List FlexCore plugins (unreachable backend)",
+			method:         "GET",
+			path:           "/api/v1/flexcore/plugins",
+			expectedStatus: http.StatusServiceUnavailable,
+			expectedFields: []string{"error"},
 		},
 	}
 
@@ -133,7 +141,7 @@ func TestServerRoutes(t *testing.T) {
 			}
 
 			// Parse JSON response
-			var response map[string]interface{}
+			var response map[string]any
 			if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
 				t.Fatalf("Failed to parse JSON response: %v", err)
 			}
@@ -163,7 +171,7 @@ func TestServerHealthCheck(t *testing.T) {
 
 	server.router.ServeHTTP(w, req)
 
-	var response map[string]interface{}
+	var response map[string]any
 	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
 		t.Fatalf("Failed to parse health check response: %v", err)
 	}
@@ -202,7 +210,7 @@ func TestServerStatusCheck(t *testing.T) {
 
 	server.router.ServeHTTP(w, req)
 
-	var response map[string]interface{}
+	var response map[string]any
 	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
 		t.Fatalf("Failed to parse status response: %v", err)
 	}
@@ -217,11 +225,11 @@ func TestServerStatusCheck(t *testing.T) {
 	}
 
 	// Check endpoints field
-	endpoints, ok := response["endpoints"].(map[string]interface{})
+	endpoints, ok := response["endpoints"].(map[string]any)
 	if !ok {
 		t.Error("Expected endpoints to be an object")
 	} else {
-		expectedEndpoints := []string{"health", "status", "plugins", "meltano", "singer", "dbt", "flexcore"}
+		expectedEndpoints := []string{"health", "status", "info", "meltano", "singer", "dbt", "flexcore"}
 		for _, endpoint := range expectedEndpoints {
 			if _, exists := endpoints[endpoint]; !exists {
 				t.Errorf("Expected endpoint '%s' not found", endpoint)
@@ -310,8 +318,7 @@ func BenchmarkHealthCheck(b *testing.B) {
 
 	req := httptest.NewRequest("GET", "/health", nil)
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		w := httptest.NewRecorder()
 		server.router.ServeHTTP(w, req)
 	}
@@ -327,8 +334,7 @@ func BenchmarkStatusCheck(b *testing.B) {
 
 	req := httptest.NewRequest("GET", "/api/v1/status", nil)
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		w := httptest.NewRecorder()
 		server.router.ServeHTTP(w, req)
 	}

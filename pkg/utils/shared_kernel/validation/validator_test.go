@@ -8,6 +8,31 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func assertValidatorResult(t *testing.T, validator *Validator, expectError bool, errorContains string) {
+	t.Helper()
+
+	if !expectError {
+		assert.False(t, validator.HasErrors())
+		return
+	}
+
+	require.True(t, validator.HasErrors())
+	if errorContains != "" {
+		assert.Contains(t, validator.Error().Error(), errorContains)
+	}
+}
+
+func assertRequestValidation(t *testing.T, err error, expectError bool) {
+	t.Helper()
+
+	if expectError {
+		assert.Error(t, err)
+		return
+	}
+
+	assert.NoError(t, err)
+}
+
 // TestValidator_Required tests required field validation
 func TestValidator_Required(t *testing.T) {
 	tests := []struct {
@@ -27,13 +52,7 @@ func TestValidator_Required(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			validator := NewValidator()
 			validator.Required(tt.field, tt.value)
-
-			if tt.expectError {
-				assert.True(t, validator.HasErrors())
-				assert.Contains(t, validator.Error().Error(), "field is required")
-			} else {
-				assert.False(t, validator.HasErrors())
-			}
+			assertValidatorResult(t, validator, tt.expectError, "field is required")
 		})
 	}
 }
@@ -59,13 +78,7 @@ func TestValidator_Length(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				validator := NewValidator()
 				validator.MinLength("field", tt.value, tt.min)
-
-				if tt.expectError {
-					assert.True(t, validator.HasErrors())
-					assert.Contains(t, validator.Error().Error(), "minimum length")
-				} else {
-					assert.False(t, validator.HasErrors())
-				}
+				assertValidatorResult(t, validator, tt.expectError, "minimum length")
 			})
 		}
 	})
@@ -89,13 +102,7 @@ func TestValidator_Length(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				validator := NewValidator()
 				validator.MaxLength("field", tt.value, tt.max)
-
-				if tt.expectError {
-					assert.True(t, validator.HasErrors())
-					assert.Contains(t, validator.Error().Error(), "maximum length")
-				} else {
-					assert.False(t, validator.HasErrors())
-				}
+				assertValidatorResult(t, validator, tt.expectError, "maximum length")
 			})
 		}
 	})
@@ -126,13 +133,7 @@ func TestValidator_AlphaNumeric(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			validator := NewValidator()
 			validator.AlphaNumeric("field", tt.value, tt.allowedChars...)
-
-			if tt.expectError {
-				assert.True(t, validator.HasErrors())
-				assert.Contains(t, validator.Error().Error(), "invalid characters")
-			} else {
-				assert.False(t, validator.HasErrors())
-			}
+			assertValidatorResult(t, validator, tt.expectError, "invalid characters")
 		})
 	}
 }
@@ -157,13 +158,7 @@ func TestValidator_Pattern(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			validator := NewValidator()
 			validator.Pattern("field", tt.value, tt.pattern, "pattern does not match")
-
-			if tt.expectError {
-				assert.True(t, validator.HasErrors())
-				assert.Contains(t, validator.Error().Error(), "pattern")
-			} else {
-				assert.False(t, validator.HasErrors())
-			}
+			assertValidatorResult(t, validator, tt.expectError, "pattern")
 		})
 	}
 }
@@ -189,13 +184,7 @@ func TestValidator_Email(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			validator := NewValidator()
 			validator.Email("email", tt.email)
-
-			if tt.expectError {
-				assert.True(t, validator.HasErrors())
-				assert.Contains(t, validator.Error().Error(), "invalid email")
-			} else {
-				assert.False(t, validator.HasErrors())
-			}
+			assertValidatorResult(t, validator, tt.expectError, "invalid email")
 		})
 	}
 }
@@ -315,15 +304,7 @@ func TestValidator_PipelineValidation(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			validator := NewValidator()
 			validator.ValidatePipelineName(tt.pipelineName)
-
-			if tt.expectError {
-				assert.True(t, validator.HasErrors())
-				if tt.errorContains != "" {
-					assert.Contains(t, validator.Error().Error(), tt.errorContains)
-				}
-			} else {
-				assert.False(t, validator.HasErrors())
-			}
+			assertValidatorResult(t, validator, tt.expectError, tt.errorContains)
 		})
 	}
 }
@@ -349,15 +330,7 @@ func TestValidator_PluginValidation(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			validator := NewValidator()
 			validator.ValidatePluginName(tt.pluginName)
-
-			if tt.expectError {
-				assert.True(t, validator.HasErrors())
-				if tt.errorContains != "" {
-					assert.Contains(t, validator.Error().Error(), tt.errorContains)
-				}
-			} else {
-				assert.False(t, validator.HasErrors())
-			}
+			assertValidatorResult(t, validator, tt.expectError, tt.errorContains)
 		})
 	}
 }
@@ -385,13 +358,7 @@ func TestValidator_VersionValidation(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			validator := NewValidator()
 			validator.ValidateVersion(tt.version)
-
-			if tt.expectError {
-				assert.True(t, validator.HasErrors())
-				assert.Contains(t, validator.Error().Error(), "version")
-			} else {
-				assert.False(t, validator.HasErrors())
-			}
+			assertValidatorResult(t, validator, tt.expectError, "version")
 		})
 	}
 }
@@ -585,12 +552,7 @@ func TestValidateCreatePipelineRequest(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := ValidateCreatePipelineRequest(tt.pipelineName, tt.description, tt.tags)
-
-			if tt.expectError {
-				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
-			}
+			assertRequestValidation(t, err, tt.expectError)
 		})
 	}
 }
@@ -665,12 +627,7 @@ func TestValidateRegisterPluginRequest(t *testing.T) {
 				tt.entryPoint,
 				tt.dependencies,
 			)
-
-			if tt.expectError {
-				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
-			}
+			assertRequestValidation(t, err, tt.expectError)
 		})
 	}
 }

@@ -117,16 +117,13 @@ func NewFlexCoreCommunicationBus(redisURL, nodeID, nodeURL string) (*FlexCoreCom
 		return nil, fmt.Errorf("failed to parse Redis URL: %w", err)
 	}
 
+	// go-redis connects lazily and auto-reconnects, so we do not ping here:
+	// a transient or not-yet-up Redis must not prevent the node from booting.
+	// Connectivity failures surface as errors at operation time (publish/
+	// subscribe), which the bus goroutines and callers handle explicitly.
 	redisClient := redis.NewClient(opts)
 
-	// Test Redis connection
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := redisClient.Ping(ctx).Err(); err != nil {
-		return nil, fmt.Errorf("failed to connect to Redis: %w", err)
-	}
-
-	ctx, cancel = context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
 
 	bus := &FlexCoreCommunicationBus{
 		redisClient:       redisClient,

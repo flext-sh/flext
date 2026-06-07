@@ -164,31 +164,23 @@ func (s ServerConfig) Address() string {
 
 // Validate valida a configuração do servidor
 func (s ServerConfig) Validate() error {
-	if s.Port <= 0 || s.Port > 65535 {
-		return fmt.Errorf("invalid port: %d, must be between 1 and 65535", s.Port)
+	var err error
+	switch {
+	case s.Port <= 0 || s.Port > 65535:
+		err = fmt.Errorf("invalid port: %d, must be between 1 and 65535", s.Port)
+	case s.ReadTimeout <= 0:
+		err = fmt.Errorf("read_timeout must be positive")
+	case s.WriteTimeout <= 0:
+		err = fmt.Errorf("write_timeout must be positive")
+	case s.IdleTimeout <= 0:
+		err = fmt.Errorf("idle_timeout must be positive")
+	case s.ShutdownTimeout <= 0:
+		err = fmt.Errorf("shutdown_timeout must be positive")
+	case s.MaxHeaderBytes <= 0:
+		err = fmt.Errorf("max_header_bytes must be positive")
 	}
 
-	if s.ReadTimeout <= 0 {
-		return fmt.Errorf("read_timeout must be positive")
-	}
-
-	if s.WriteTimeout <= 0 {
-		return fmt.Errorf("write_timeout must be positive")
-	}
-
-	if s.IdleTimeout <= 0 {
-		return fmt.Errorf("idle_timeout must be positive")
-	}
-
-	if s.ShutdownTimeout <= 0 {
-		return fmt.Errorf("shutdown_timeout must be positive")
-	}
-
-	if s.MaxHeaderBytes <= 0 {
-		return fmt.Errorf("max_header_bytes must be positive")
-	}
-
-	return nil
+	return err
 }
 
 // BaseDatabaseConfig configuração base para banco de dados
@@ -227,35 +219,26 @@ func (d BaseDatabaseConfig) ConnectionString() string {
 // Validate valida a configuração do banco
 func (d BaseDatabaseConfig) Validate() error {
 	validDrivers := []string{"postgres", "mysql", "sqlite", "memory"}
-	if !contains(validDrivers, d.Driver) {
-		return fmt.Errorf("invalid driver: %s, must be one of %v", d.Driver, validDrivers)
+	requiresNetwork := d.Driver != "memory" && d.Driver != "sqlite"
+	var err error
+	switch {
+	case !contains(validDrivers, d.Driver):
+		err = fmt.Errorf("invalid driver: %s, must be one of %v", d.Driver, validDrivers)
+	case requiresNetwork && d.Host == "":
+		err = fmt.Errorf("host is required for driver %s", d.Driver)
+	case requiresNetwork && (d.Port <= 0 || d.Port > 65535):
+		err = fmt.Errorf("invalid port: %d", d.Port)
+	case requiresNetwork && d.Username == "":
+		err = fmt.Errorf("username is required for driver %s", d.Driver)
+	case d.Database == "":
+		err = fmt.Errorf("database name is required")
+	case d.MaxOpenConns <= 0:
+		err = fmt.Errorf("max_open_conns must be positive")
+	case d.MaxIdleConns <= 0:
+		err = fmt.Errorf("max_idle_conns must be positive")
 	}
 
-	if d.Driver != "memory" && d.Driver != "sqlite" {
-		if d.Host == "" {
-			return fmt.Errorf("host is required for driver %s", d.Driver)
-		}
-		if d.Port <= 0 || d.Port > 65535 {
-			return fmt.Errorf("invalid port: %d", d.Port)
-		}
-		if d.Username == "" {
-			return fmt.Errorf("username is required for driver %s", d.Driver)
-		}
-	}
-
-	if d.Database == "" {
-		return fmt.Errorf("database name is required")
-	}
-
-	if d.MaxOpenConns <= 0 {
-		return fmt.Errorf("max_open_conns must be positive")
-	}
-
-	if d.MaxIdleConns <= 0 {
-		return fmt.Errorf("max_idle_conns must be positive")
-	}
-
-	return nil
+	return err
 }
 
 // GetEnvWithDefault retorna valor da variável de ambiente ou default
@@ -328,22 +311,24 @@ func mergeStructs(base, override reflect.Value) {
 
 // isZeroValue verifica se o valor é zero
 func isZeroValue(v reflect.Value) bool {
+	var zero bool
 	switch v.Kind() {
 	case reflect.String:
-		return v.String() == ""
+		zero = v.String() == ""
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		return v.Int() == 0
+		zero = v.Int() == 0
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		return v.Uint() == 0
+		zero = v.Uint() == 0
 	case reflect.Bool:
-		return !v.Bool()
+		zero = !v.Bool()
 	case reflect.Float32, reflect.Float64:
-		return v.Float() == 0
+		zero = v.Float() == 0
 	case reflect.Slice, reflect.Map, reflect.Interface:
-		return v.IsNil()
+		zero = v.IsNil()
 	default:
-		return reflect.DeepEqual(v.Interface(), reflect.Zero(v.Type()).Interface())
+		zero = reflect.DeepEqual(v.Interface(), reflect.Zero(v.Type()).Interface())
 	}
+	return zero
 }
 
 // contains verifica se slice contém item

@@ -170,7 +170,7 @@ func (s *UnifiedAuthService) Authenticate(ctx context.Context, credentials Crede
 		return nil, fmt.Errorf("failed to generate access token: %w", err)
 	}
 
-	refreshToken, err := s.generateRefreshToken(result.UserID)
+	refreshToken, err := s.generateRefreshToken(result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate refresh token: %w", err)
 	}
@@ -224,13 +224,7 @@ func (s *UnifiedAuthService) ValidateToken(ctx context.Context, token string) (*
 
 // RefreshToken refreshes an access token using a refresh token
 func (s *UnifiedAuthService) RefreshToken(ctx context.Context, refreshToken string) (*AuthResult, error) {
-	// Parse refresh token to get user ID
-	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return s.jwtSecret, nil
-	})
+	token, err := jwt.Parse(refreshToken, jwtHMACKeyFunc(s.jwtSecret))
 
 	if err != nil || !token.Valid {
 		return nil, &errors.DomainError{
@@ -240,7 +234,40 @@ func (s *UnifiedAuthService) RefreshToken(ctx context.Context, refreshToken stri
 		}
 	}
 
-	claims, ok := token.Claims.(jwt.MapClaims)
+	claims, err := parseRefreshClaims(token.Claims)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := authResultFromRefreshClaims(claims)
+	if err != nil {
+		return nil, err
+	}
+
+	accessToken, err := s.generateAccessToken(result)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate new access token: %w", err)
+	}
+
+	result.AccessToken = accessToken
+	result.ExpiresAt = time.Now().Add(s.tokenExpiry)
+
+	s.logger.Info("Token refreshed successfully",
+		logging.F("user_id", result.UserID),
+		logging.F("username", result.Username),
+	)
+
+	return result, nil
+}
+
+// generateAccessToken generates a JWT access token
+func (s *UnifiedAuthService) generateAccessToken(authResult *AuthResult) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, s.tokenClaims(authResult, "access", s.tokenExpiry))
+	return token.SignedString(s.jwtSecret)
+}
+
+func parseRefreshClaims(claims jwt.Claims) (jwt.MapClaims, error) {
+	mapClaims, ok := claims.(jwt.MapClaims)
 	if !ok {
 		return nil, &errors.DomainError{
 			Code:    "INVALID_TOKEN_CLAIMS",
@@ -248,7 +275,17 @@ func (s *UnifiedAuthService) RefreshToken(ctx context.Context, refreshToken stri
 			Details: "Unable to parse token claims",
 		}
 	}
+	if tokenType, ok := mapClaims["type"].(string); !ok || tokenType != "refresh" {
+		return nil, &errors.DomainError{
+			Code:    "INVALID_REFRESH_TOKEN",
+			Message: "Invalid refresh token",
+			Details: "Token is not a refresh token",
+		}
+	}
+	return mapClaims, nil
+}
 
+func authResultFromRefreshClaims(claims jwt.MapClaims) (*AuthResult, error) {
 	userIDStr, ok := claims["sub"].(string)
 	if !ok {
 		return nil, &errors.DomainError{
@@ -267,59 +304,49 @@ func (s *UnifiedAuthService) RefreshToken(ctx context.Context, refreshToken stri
 		}
 	}
 
-	// TODO: Fetch user details from user repository
-	// For now, create a basic result with the user ID
-	result := &AuthResult{
-		UserID:   userID,
-		Username: claims["username"].(string),
-		Roles:    []string{"user"}, // TODO: Fetch from user repository
-	}
-
-	// Generate new access token
-	accessToken, err := s.generateAccessToken(result)
-	if err != nil {
-		return nil, fmt.Errorf("failed to generate new access token: %w", err)
-	}
-
-	result.AccessToken = accessToken
-	result.ExpiresAt = time.Now().Add(s.tokenExpiry)
-
-	s.logger.Info("Token refreshed successfully",
-		logging.F("user_id", userID),
-		logging.F("username", result.Username),
-	)
-
-	return result, nil
+	username, _ := claims["username"].(string)
+	email, _ := claims["email"].(string)
+	return &AuthResult{
+		UserID:      userID,
+		Username:    username,
+		Email:       email,
+		Roles:       stringSliceClaim(claims, "roles", []string{"user"}),
+		Permissions: stringSliceClaim(claims, "permissions", []string{}),
+	}, nil
 }
 
-// generateAccessToken generates a JWT access token
-func (s *UnifiedAuthService) generateAccessToken(authResult *AuthResult) (string, error) {
-	claims := jwt.MapClaims{
+func stringSliceClaim(claims jwt.MapClaims, key string, fallback []string) []string {
+	values := fallback
+	if typedValues, ok := claims[key].([]string); ok {
+		values = typedValues
+	} else if rawValues, ok := claims[key].([]interface{}); ok {
+		values = make([]string, 0, len(rawValues))
+		for _, rawValue := range rawValues {
+			if value, ok := rawValue.(string); ok {
+				values = append(values, value)
+			}
+		}
+	}
+	return values
+}
+
+// generateRefreshToken generates a JWT refresh token
+func (s *UnifiedAuthService) generateRefreshToken(authResult *AuthResult) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, s.tokenClaims(authResult, "refresh", s.refreshExpiry))
+	return token.SignedString(s.jwtSecret)
+}
+
+func (s *UnifiedAuthService) tokenClaims(authResult *AuthResult, tokenType string, expiry time.Duration) jwt.MapClaims {
+	return jwt.MapClaims{
 		"sub":         authResult.UserID.String(),
 		"username":    authResult.Username,
 		"email":       authResult.Email,
 		"roles":       authResult.Roles,
 		"permissions": authResult.Permissions,
 		"iat":         time.Now().Unix(),
-		"exp":         time.Now().Add(s.tokenExpiry).Unix(),
-		"type":        "access",
+		"exp":         time.Now().Add(expiry).Unix(),
+		"type":        tokenType,
 	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(s.jwtSecret)
-}
-
-// generateRefreshToken generates a JWT refresh token
-func (s *UnifiedAuthService) generateRefreshToken(userID uuid.UUID) (string, error) {
-	claims := jwt.MapClaims{
-		"sub":  userID.String(),
-		"iat":  time.Now().Unix(),
-		"exp":  time.Now().Add(s.refreshExpiry).Unix(),
-		"type": "refresh",
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(s.jwtSecret)
 }
 
 // GetUserContext extracts user context from authenticated request

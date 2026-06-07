@@ -239,32 +239,22 @@ func NewUnifiedConfig() (*UnifiedConfig, error) {
 		IdleTimeout:  getDurationEnvOrDefault("IDLE_TIMEOUT", 120*time.Second),
 	}
 
-	if err := settings.loadDatabaseConfig(); err != nil {
-		return nil, fmt.Errorf("failed to load database settings: %w", err)
+	loaders := []struct {
+		failure string
+		load    func() error
+	}{
+		{failure: "failed to load database settings", load: settings.loadDatabaseConfig},
+		{failure: "failed to load cache settings", load: settings.loadCacheConfig},
+		{failure: "failed to load auth settings", load: settings.loadAuthConfig},
+		{failure: "failed to load observability settings", load: settings.loadObservabilityConfig},
+		{failure: "failed to load feature flags", load: settings.loadFeatureFlags},
+		{failure: "failed to load bounded context configs", load: settings.loadBoundedContextConfigs},
+		{failure: "failed to load external services settings", load: settings.loadExternalServicesConfig},
 	}
-
-	if err := settings.loadCacheConfig(); err != nil {
-		return nil, fmt.Errorf("failed to load cache settings: %w", err)
-	}
-
-	if err := settings.loadAuthConfig(); err != nil {
-		return nil, fmt.Errorf("failed to load auth settings: %w", err)
-	}
-
-	if err := settings.loadObservabilityConfig(); err != nil {
-		return nil, fmt.Errorf("failed to load observability settings: %w", err)
-	}
-
-	if err := settings.loadFeatureFlags(); err != nil {
-		return nil, fmt.Errorf("failed to load feature flags: %w", err)
-	}
-
-	if err := settings.loadBoundedContextConfigs(); err != nil {
-		return nil, fmt.Errorf("failed to load bounded context configs: %w", err)
-	}
-
-	if err := settings.loadExternalServicesConfig(); err != nil {
-		return nil, fmt.Errorf("failed to load external services settings: %w", err)
+	for _, loader := range loaders {
+		if err := loader.load(); err != nil {
+			return nil, fmt.Errorf("%s: %w", loader.failure, err)
+		}
 	}
 
 	return settings, nil
@@ -430,25 +420,25 @@ func (c *UnifiedConfig) loadExternalServicesConfig() error {
 
 	// Load API configurations dynamically based on environment variables
 	for _, env := range os.Environ() {
-		if strings.HasPrefix(env, "API_") && strings.Contains(env, "_BASE_URL=") {
-			parts := strings.SplitN(env, "=", 2)
-			if len(parts) == 2 {
-				keyParts := strings.Split(parts[0], "_")
-				if len(keyParts) >= 2 {
-					apiName := strings.ToLower(keyParts[1])
-					if _, exists := c.External.APIs[apiName]; !exists {
-						c.External.APIs[apiName] = APIConfig{}
-					}
-					apiConfig := c.External.APIs[apiName]
-					apiConfig.BaseURL = parts[1]
-					apiConfig.APIKey = getEnvOrDefault(fmt.Sprintf("API_%s_KEY", strings.ToUpper(apiName)), "")
-					apiConfig.Timeout = getDurationEnvOrDefault(fmt.Sprintf("API_%s_TIMEOUT", strings.ToUpper(apiName)), 30*time.Second)
-					apiConfig.RetryCount = getIntEnvOrDefault(fmt.Sprintf("API_%s_RETRY_COUNT", strings.ToUpper(apiName)), 3)
-					apiConfig.RateLimit = getIntEnvOrDefault(fmt.Sprintf("API_%s_RATE_LIMIT", strings.ToUpper(apiName)), 100)
-					c.External.APIs[apiName] = apiConfig
-				}
-			}
+		if !strings.HasPrefix(env, "API_") || !strings.Contains(env, "_BASE_URL=") {
+			continue
 		}
+		parts := strings.SplitN(env, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		keyParts := strings.Split(parts[0], "_")
+		if len(keyParts) < 2 {
+			continue
+		}
+		apiName := strings.ToLower(keyParts[1])
+		apiConfig := c.External.APIs[apiName]
+		apiConfig.BaseURL = parts[1]
+		apiConfig.APIKey = getEnvOrDefault(fmt.Sprintf("API_%s_KEY", strings.ToUpper(apiName)), "")
+		apiConfig.Timeout = getDurationEnvOrDefault(fmt.Sprintf("API_%s_TIMEOUT", strings.ToUpper(apiName)), 30*time.Second)
+		apiConfig.RetryCount = getIntEnvOrDefault(fmt.Sprintf("API_%s_RETRY_COUNT", strings.ToUpper(apiName)), 3)
+		apiConfig.RateLimit = getIntEnvOrDefault(fmt.Sprintf("API_%s_RATE_LIMIT", strings.ToUpper(apiName)), 100)
+		c.External.APIs[apiName] = apiConfig
 	}
 
 	return nil
