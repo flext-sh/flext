@@ -1,6 +1,13 @@
 # FLEXT Coordination Tasks
 
-| id | owner | status | claimed_at | lease_expires_at | updated_at | notes |
-| --- | --- | --- | --- | --- | --- | --- |
-| strict-recovery-001 | codex | doing | 2026-06-05T12:33:52Z | 2026-06-05T18:59:57Z | 2026-06-05T18:29:57Z | algar, validate_gate_contract, auth providers/middleware, and flext-cli runtime-test lanes are qlty-clean; workspace qlty is 1275; current lane is flext-meltano cleanup. |
-| strict-recovery-002 | unassigned | todo |  |  |  | Security scan subagent coverage lane after functional blockers are under control. |
+This file is not a task board.
+
+Use Beads (`bd`) for ownership, status, dependencies, leases, validation
+evidence, and subagent coordination. Do not add rows here.
+
+Legacy rows migrated on 2026-06-07:
+
+- `strict-recovery-001`: stale expired lease; current work is represented by
+  `mro-hbj4.4`, `mro-nwc.14`, and related Beads.
+- `strict-recovery-002`: security scan coverage is represented by
+  `mro-uqji.6.8.6`.
