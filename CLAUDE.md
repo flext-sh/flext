@@ -1,5 +1,7 @@
 # CLAUDE.md (pointer)
 
+<!-- bd-doctor-divergence: ok -->
+
 This file is intentionally minimal. Canonical rules live in:
 
 - `./AGENTS.md` — project-canonical (overrides + project-specific).
