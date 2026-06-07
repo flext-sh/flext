@@ -34,6 +34,7 @@ instructions override this block; nothing else does. These rules apply to every 
 session, and may not be relaxed, reinterpreted, or scoped-out for convenience, speed, or perceived triviality.
 
 ### 1. Zero-Tolerance / Strict-Total
+
 - **Always** fix the root cause — generically, cleanly, via reuse of existing canonical code — and validate it
   in the same turn with the actual command, its exit code, and the relevant output line.
 - **Always** remove superseded code in the same cycle the replacement lands. No dead code "for later".
@@ -45,6 +46,7 @@ session, and may not be relaxed, reinterpreted, or scoped-out for convenience, s
   "acceptable legacy". If it appears in your flow, you own it.
 
 ### 2. Fix-Forward-Only
+
 Multiple agents may share one working tree. Reverting to a past state silently destroys another agent's
 in-flight work. **Accept the current state and fix forward.** Discarding changes via `git checkout -- <path>`,
 `git restore`, `git reset --hard`, `git reset <path>`, `git stash` (hiding others' work), `git clean`, or
@@ -52,22 +54,26 @@ in-flight work. **Accept the current state and fix forward.** Discarding changes
 never unilaterally revert shared work.
 
 ### 3. Root Cause Only — No Workarounds
+
 No TODOs, stubs, fakes, fallbacks, compat wrappers, or "temporary" workarounds. No suppression directives
 (`# type: ignore`, blanket `# noqa`, `@ts-ignore`, `eslint-disable`, etc.) and no escape-hatch typing
 (`Any`, bare `object`, unchecked casts) unless carrying a one-line documented justification. A bypass that
 hides a symptom is a defect even when the gate turns green.
 
 ### 4. Stay In Scope
+
 Do exactly what the user asked — nothing more. No unrequested refactors, renames, cleanups, "obvious
 improvements", or adjacent fixes. Found something unrelated? Mention it in one sentence; do not touch it.
 
 ### 5. Evidence Before Done — Report Honesty Is 100% Mandatory
+
 "Done" means the **complete chain validated** with objective evidence (command + exit code + output), not
 conclusion-by-sample. **Never** present partial, assumed, speculative, or unverified results as verified.
 State explicitly when a step was skipped, when a check failed (paste the output), and when a result is
 unverified. If something only worked via a workaround, say so — it is not "done".
 
 ### 6. Execute As Planned, Else Stop And Ask
+
 Execute the agreed plan exactly. On anything that cannot be done cleanly — a blocked tool, a missing source of
 truth, a real ambiguity, or a step that would require a bad practice — **STOP and ask**, presenting concrete
 options. **Every option must be a clean, root-cause solution.** Fallback, hack, hardcode, suppression, skip,
@@ -75,6 +81,7 @@ or stub are **forbidden as suggestions** — never offer one, even labelled "qui
 mid-execution deviation from the plan requires explicit user confirmation **before** applying.
 
 ### 7. Blocked-Operation Protocol
+
 When a tool, command, or edit is blocked (deny rule, security hook, sandbox, missing permission, unavailable
 integration): (1) **Stop** — do not retry a variation or seek a bypass; (2) **diagnose in one sentence** what
 was blocked and why; (3) **hand the exact command or edit to the user** to run on their side; (4) **wait for
@@ -84,10 +91,12 @@ still a violation. Forbidden bypass techniques include `bash -c`/`sh -c` subshel
 blocked command, and invoking it via a `subprocess` call.
 
 ### 8. Strict, Most-Restrictive Typing
+
 Use the most restrictive type that compiles. No `Any`, no bare `object`, no suppression of type errors. Fix
 types at the source; depend on declared contracts, not loosely-typed escape hatches.
 
 ### 9. Universal Engineering Principles (always, no exception)
+
 - **SSOT** — one authoritative source per fact; reference it, never duplicate or restate it; fail loud when
   absent.
 - **SOLID** — SRP / OCP / LSP / ISP / DIP respected. Type-switching where polymorphism applies, fat
@@ -98,24 +107,97 @@ types at the source; depend on declared contracts, not loosely-typed escape hatc
   hard-wired construction inside business logic.
 
 ### 10. User Manages Git
+
 Do not run `git add`/`commit`/`push`/`tag` unless the user explicitly requests it, and do not suggest
 committing. Read-only inspection (`status`/`log`/`diff`) is fine. When a commit is authorized, write it as the
 user with no agent/bot attribution — no `Co-Authored-By`, no "Generated with …" trailer, and never override
 author/committer identity.
 
-### 11. Multi-Agent Coordination
-Agents may share one working tree. Coordinate through a committed task board (e.g.
-`<repo>/.agents/coordination/tasks.md`): claim a task with an ownership + lease entry before editing, heartbeat
-the lease, set `done`/`blocked` on finish, and recover stale tasks from git history. Commit small and often so
-a fresh agent rebuilds state from `git log`. **Never overwrite or discard another agent's work** (see Rule 2);
-on a divergent approach, stop and escalate to the user.
+### 11. Beads-First Multi-Agent Coordination
+
+Agents may share one working tree. The source of truth for work, ownership, dependencies, and completion is
+**beads (`bd`) inside the repository**, not markdown task boards, chat, transcript memory, or ad-hoc files.
+If `.beads/` is absent, initialize or request initialization before starting non-trivial work; never invent a
+parallel tracker.
+
+The durable backend baseline is `bd` with Dolt. Multi-agent and multi-project machines use Dolt
+server/shared-server mode so concurrent writers go through one SQL server; embedded/single-writer mode is for
+solo use only. `.beads/issues.jsonl` is an export/import artifact, not the live coordination database. Full
+database recovery and cross-machine durability use `bd backup` and `bd dolt`/Dolt remotes; JSONL import is a
+protected migration/recovery path after backups, not a normal sync surface.
+
+- The project-level `beads.role` config must be set to a valid durable authority role (default: `maintainer`
+  unless the repo documents another value). Do not mutate `beads.role` just to switch task phase; task phase
+  lives in labels.
+- Local CLI contract: this repository uses `bd 1.0.5` with Dolt shared-server mode. Verify with
+  `bd context --json`, `bd dolt show`, `bd status --json`, `bd dep cycles --json`, and
+  `bd backup status --json`. Do not use legacy SQLite/no-db/daemon recovery commands unless explicitly running
+  a protected migration from a backed-up JSONL snapshot.
+- Every non-trivial bead carries canonical labels: `role:<role>`, `agent:<agent>`, `phase:<phase>`, and when
+  useful `gate:<gate>` / `scope:<area>` / `project:<member>`. Required roles are `planner`, `coordinator`,
+  `executor`, `validator`, `security`, `reviewer`, and `maintainer`.
+- Start every task with `bd ready --json`, then inspect the chosen bead with `bd show <id> --json`.
+- Claim work atomically with `bd update <id> --claim --json` before editing. If claim is unavailable, use the
+  repo's documented `bd update <id> --status in_progress --assignee <agent> --json` equivalent.
+- Structure work as `epic -> feature/task/bug/chore`; use advanced bead types only for their native purpose:
+  `gate` for validation or async release blockers, `agent` for long-lived worker sessions, `role` for standing
+  role charters, `molecule` for repeatable fan-out recipes, `event` for audit entries, `merge-request` for
+  publication/review artifacts, and `slot`/`convoy` for serialized capacity lanes. Use priorities `P0`..`P4`;
+  link ordering and discovery with `parent-child`, `blocks`, `discovered-from`, `related`, `duplicate`, or
+  `supersede`.
+- Role rules: `planner` creates epics/design/acceptance/deps; `coordinator` owns parent sequencing and subagent
+  integration; `executor` performs scoped implementation only; `validator` supplies independent evidence and
+  gate beads; `security` owns threat, secret, dependency, supply-chain, and abuse-risk work; `reviewer` performs
+  read-only/diff/ADR review; `maintainer` handles routine repo/tooling upkeep. A single agent may play multiple
+  roles only through separate beads, and may not be the only validator of its own executor bead.
+- Coordinator loop is canonical for any non-trivial bead: `bd status`/`bd ready` -> choose the unblocked parent
+  or child -> claim/update -> create or refine sub-beads -> dispatch workers with disjoint scope -> receive
+  evidence -> dispatch an independent verifier/corrector -> integrate corrections -> rerun gates -> record the
+  report in `bd` -> decide close, continue, or blocked. The loop continues until the bead is genuinely closed
+  or explicitly blocked; silent stopping is a coordination defect.
+- Worker subagents must receive a high-quality prompt containing the bead id, exact objective, allowed write
+  paths, forbidden paths, required context files, acceptance criteria, required `make`/test/security/docs gates,
+  expected evidence format, and Git policy. Workers do not own publication unless their bead explicitly grants
+  that lane and the live user has authorized Git for that lane.
+- After every worker return, a separate verifier/corrector bead is required for meaningful changes. The verifier
+  must be independent from the executor, review the diff/evidence against acceptance criteria, fix only narrowly
+  scoped issues or return blockers, and record command + exit code + decisive output in `bd`.
+- Quality interlock is mandatory: each implementation bead names its smallest relevant `make` gate, any required
+  security/docs gate, and the CI/Actions check to inspect after publication. Local `make`/test output and remote
+  CI status are recorded back into the bead; they are not tracked in a second report.
+- Git remains user-authorized only: beads record readiness, validation, release notes, and CI evidence; they do
+  not authorize `git add`/`commit`/`push` by themselves.
+- Publication interlock: when Git is explicitly authorized for the lane, the coordinator stages only the bead's
+  scoped paths, commits with no agent attribution, pushes, records commit/push/CI evidence in `bd`, and keeps
+  the bead open until remote checks finish.
+- GitOps interlock: for Kubernetes/GitOps changes, completion requires dese-first validation from ArgoCD/read-only
+  cluster evidence, then prod and control sync/soak in the documented dependency order after dese is green. The
+  bead cannot close while dese/prod/control validation is missing, red, skipped without justification, or only
+  locally verified. For non-GitOps changes, record `not applicable` with the reason in the bead.
+- Subagents require their own bead or child bead, a disjoint write scope, and their own validation evidence.
+  The coordinator integrates results and closes the bead only after review.
+- Keep long work alive with `bd agent heartbeat <agent-id>` or a repo-documented heartbeat note; stale or blocked
+  work must be visible through `bd`, not hidden in chat.
+- Close only with evidence: command, exit code, and relevant output in the close reason or bead notes. No red
+  gate, warning, skipped check, or unverified claim may be closed as done.
+- Never edit `.beads/*.jsonl` or any beads database/export by hand. Every create/update/close/dependency/status
+  change goes through `bd`, followed by the repo's `bd backup status` / `bd dolt status` / validation path.
+  Do not use `bd --no-db`, manual JSONL edits, or `bd export -o` as a substitute for Dolt-backed state.
+- Git hooks for Beads are part of the baseline: run `bd hooks install --chain` in each repository and verify with
+  `bd hooks list --json`. The `prepare-commit-msg` hook must be guarded so it does not add agent attribution
+  trailers unless the user explicitly opts in with `BD_ALLOW_AGENT_COMMIT_TRAILERS=1`; R5 forbids trailers by default.
+
+**Never overwrite or discard another agent's work** (see Rule 2); on a divergent approach, stop and escalate to
+the user.
 
 ### 12. When Unsure — Ask
+
 If a task is unclear, ambiguous, or would expand scope → ask one focused question. If an action is hard to
 reverse, affects shared state, or could surprise the user → confirm first. Authorization is scope-specific:
 approval for one action once does not authorize it in future contexts.
 
 ### 13. Destructive Commands — Archive, Don't Destroy
+
 Prefer non-destructive moves: archive a file as `<file>.bak` instead of deleting it. Do not escalate
 privileges (`sudo`/`su`), change ownership/permissions, perform remote operations, or fetch over the network
 without explicit user confirmation. Use the agent's structured file/search/edit tools over raw destructive
@@ -858,6 +940,7 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Exit Codes**: `0` pass, `1` policy failure, `2` usage/settings error, `3` infra/runtime error.
 - **Validation**: Policy/automation edits MUST run `make val VALIDATE_SCOPE=workspace` before claiming completion.
 - **Reports**: Must be factual, machine-readable when produced, and include explicit executable next actions.
+- **Always-Permitted Operational Commands**: `make`, `sg`, `bd`, `rg`, and structured Edit/Update operations are always permitted for repo-local discovery, validation, Beads coordination, and scoped file changes. This permission does not authorize destructive flags, manual `.beads/*.jsonl` edits, unrelated-lane edits, secret writes, or bypass techniques. If an external sandbox or hook still blocks one of these operations, follow the blocked-operation protocol and record the blocker in the active Bead.
 - *Verb semantics & thresholds*: See skill `flext-quality-gates`.
 
 ## §6 Quality Gates
@@ -890,8 +973,8 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **Complete Work**: Never ship incomplete work as complete. Each claim REQUIRES command evidence (format per §3.8). Changes must be minimal, explicit, root-cause oriented, and verifiable.
 - **No Unapproved Bypass**: Altering lint/gate semantics or deferring/skipping a violation is FORBIDDEN without explicit in-session user approval.
 - **Correct Governance**: If governance corrections arise during work, update this file immediately before further implementation.
-- **Commit-After-Validation**: Every passing validation MUST be immediately accompanied by a `git add -A` → `git commit` → `git pull --rebase` → `git push` sequence. Uncommitted or unpushed work is LOST WORK.
-- **Frequent Push is FUNDAMENTAL (BLOCKING)**: Push after EVERY atomic per-lane fix — never batch multiple lanes or hold work for an end-of-session push. Each push is a coordination point: another agent may be working in parallel, so `git fetch` + `git pull --rebase --autostash` before every push, never `--force`, and never sweep another lane's dirty working tree into your commit. Every push/handoff MUST end with an explicit indication of what to do next (recorded in Beads, see below) so the next actor — human or agent — can continue without re-discovery.
+- **Checkpoint-After-Validation**: Every passing validation MUST be immediately recorded in the active Bead with command, exit code, and decisive output. If the current conversation or lane explicitly authorizes Git writes, stage only the scoped files for that lane, commit with no agent attribution, pull/rebase as the repo requires, and push. Without explicit authorization, do not run `git add`, `git commit`, or `git push`.
+- **Frequent Bead Checkpoint is FUNDAMENTAL (BLOCKING)**: Record evidence and next action in Beads after EVERY atomic per-lane fix — never batch multiple lanes or hold status for an end-of-session note. If the current lane explicitly authorizes Git writes, each authorized push is a coordination point: fetch/rebase as the repo requires, never `--force`, and never sweep another lane's dirty working tree into your commit. Every handoff MUST end with an explicit indication of what to do next in Beads so the next actor can continue without re-discovery.
 - **Beads Action Tracking (BLOCKING)**: Track your own work as Beads issues with a parent epic + sub-beads per task/sub-task, under a distinct `--actor`/`--assignee` and an `agent:<name>` label so your lane is separable from concurrent agents'. Set state as you progress (`bd update`/`bd close`), and when dispatching subagents give each a sub-bead. Coordinate by reading other actors' beads; do not act on a lane another actor owns while it is in-progress/dirty.
 - **One Session Loop**: At most ONE recurring 5-minute session loop (cron) per agent session — do not spawn duplicates; reuse the existing job.
 
@@ -955,9 +1038,26 @@ The four refactor questions, asked **in order**. Skipping any of (1)–(3) to re
 
 Beads is the only source of truth for pending work, lane state, and cross-lane dependency hierarchy in this repository. Legacy plans, reports, continuation prompts, operations handoffs, and migrated architecture TODOs are reference material only until their actionable content is imported into Beads; after import, they must be removed with `git rm` or archived as `.bak`.
 
-`.beads/issues.jsonl` and `.beads/interactions.jsonl` are generated storage files. Manual edits to any `.beads/*.jsonl` file are FORBIDDEN. Create, update, close, relate, import, export, repair, resolve conflicts, and sync Beads data only through `bd` commands such as `bd create`, `bd update`, `bd close`, `bd dep`, `bd import`, `bd export`, `bd repair`, `bd resolve-conflicts`, and `bd sync`.
+Dolt is the live Beads coordination database. `.beads/config.yaml` carries team defaults; local Dolt data,
+SQLite leftovers, daemon/runtime files, sockets, locks, backups, and JSONL exports are not the active work
+source. `.beads/*.jsonl` files are export/import snapshots for migration and interoperability only. Manual
+edits to any `.beads/*.jsonl` file are FORBIDDEN. Create, update, close, relate, import, export, repair,
+resolve conflicts, sync, backup, and publish Beads data only through `bd` commands such as `bd create`,
+`bd update`, `bd close`, `bd dep`, `bd import`, `bd export`, `bd backup`, `bd dolt`, and `bd doctor`.
 
-If Beads storage appears stale, corrupt, conflicted, or out of sync, stop editing and repair through the CLI path: `bd sync --import-only`, `bd repair`, `bd resolve-conflicts`, `bd sync`, then validate with `bd doctor`, `bd lint --status all`, `bd dep cycles`, and `bd graph --all --compact`. A patch to JSONL that bypasses `bd` is invalid even when it produces valid JSON.
+If Beads storage appears stale, corrupt, conflicted, or out of sync, stop implementation edits and recover in
+Dolt-preserving order. First capture `bd context --json`, `bd dolt show`, `bd status --json`, `bd dep cycles
+--json`, and `bd backup status --json`. Use `bd backup sync` before destructive or migration repair. Use
+`bd import --dry-run` before importing JSONL, and import JSONL only as a protected migration/recovery path from
+a known backup/export. Do not use legacy SQLite/no-db/daemon recovery commands or daemon kill/restart loops. A patch to
+JSONL that bypasses `bd` is invalid even when it produces valid JSON.
+
+For multi-session and multi-project work, each independent repository owns its own `.beads/` and Dolt database.
+Shared multi-agent machines must use Dolt shared-server mode; embedded/single-writer mode is for solo use only.
+A parent workspace coordinates member work with Bead hierarchy, labels such as `project:<member>`, and
+supported local commands (`bd repo`, `bd ship`, external dependencies). Do not invent `.beads/routes.jsonl`,
+file reservations, lock protocols, or JSONL sync branches unless the local `bd` version supports the
+corresponding commands and `bd context --json` confirms the intended backend.
 
 ### 10.0.1 Temporary Migration Session Rule — `mro-uqji`
 
@@ -979,7 +1079,7 @@ This lane is owned by **agent:opus** (the Claude Opus loop) and is DISTINCT from
 
 Cursor of record: `~/.claude/plans/quero-que-voce-use-zazzy-teacup.md` §F. Scope: the centralization sweep tracked under `mro-q81y` and its child Beads — `mro-cexr` (tomlkit §2.7 `TOMLDocument` type-imports → `t.Cli.*` in flext-infra), then `mro-hy20` (§2.7 direct 3rd-party lib import re-scan across consumers). STEP6 datetime-clock abstraction is COMPLETE in this lane (flext-* + gruponos).
 
-**Frequent Git checkpoint is MANDATORY and FUNDAMENTAL (user law):** every validated atomic change = `git status` → stage **only this lane's files** (`git add <file>`, never `-A`/`.`) → commit → **`git push origin <branch>` immediately**. Never batch. If `push` is rejected because the parallel agent advanced the remote, `git fetch` + `git pull --no-rebase` accepting their side on conflict, re-validate, then push. Never include other agents' dirty files; if the tree blocks a clean checkpoint, record the blocker in the active Bead and continue with the next non-conflicting slice.
+**Frequent checkpoint is MANDATORY and FUNDAMENTAL (user law):** every validated atomic change = `git status` → record evidence and next action in the active Bead. If this lane explicitly authorizes Git writes, stage **only this lane's files** (`git add <file>`, never `-A`/`.`), commit, then push the authorized branch immediately. Never batch unrelated work. If publication is blocked by another agent's remote change, stop, record the blocker in the active Bead, and coordinate a fix-forward merge path; never auto-accept another side or include other agents' dirty files.
 
 Each delegated subagent gets a distinct child/sub-Bead before work starts, with non-overlapping scope and explicit acceptance criteria, and may touch only its assigned files; it reports changed paths + command/exit-code/output back to agent:opus, who controls quality (re-validate ruff+pyrefly+affected-tests before marking the sub-Bead done). Subagents must not edit `.beads/*.jsonl` directly.
 
@@ -996,7 +1096,7 @@ UNBREAKABLE LAW for all parallel agent work:
 5. **Zero Tolerance Linters**: Ruff, mypy, pyright, pyrefly MUST all pass. No `# type: ignore`.
 6. **Stay in Lane**: Only touch files in your ownership. READ-ONLY for others.
 7. **Never Rollback**: Fix forward only. No `git revert`, no deprecation shims.
-8. **Commit Frequently**: Every task completion = separate commit + push.
+8. **Checkpoint Frequently**: Every bead checkpoint records evidence; commit + push only when explicitly authorized for the current lane.
 9. **`.new/.old` Owned-Only**: Use the `.new/.old` pattern ONLY for files you own exclusively.
 10. **No Automation Scripts**: Manual changes only. No shell scripts for mass edits.
 11. **Never Rush/ULW**: No ultrawork mode, no batched giant commits. Perfection over speed.
@@ -1042,9 +1142,9 @@ UNBREAKABLE LAW for all parallel agent work:
 
 ### 10.5 Git & Session Hygiene
 
-- **Always Rebase**: `git pull --rebase` before EVERY push. NEVER use basic `git pull`.
+- **Authorized Publication Only**: `git pull --rebase` before every authorized push. NEVER use basic `git pull`.
 - **Never Force Push**: NEVER `git push --force` to main/master.
-- **Conflict Resolution**: Conflict in YOUR file → resolve manually. Conflict in ANOTHER agent's file → `git checkout --theirs <file>`.
+- **Conflict Resolution**: Conflict in YOUR file → resolve manually and validate. Conflict in ANOTHER agent's file → STOP, record the blocker in Beads, and coordinate with the owner/user. Never run `git checkout --theirs <file>` or discard another agent's work.
 - **Cross-Session Deduplication**: Before spawning new tasks, verify no other agent is working on the same scope via Beads (`bd search`, `bd list --status open`, `bd list --status in_progress`, `bd dep tree`) and `git log --oneline -20`. Merge overlapping work into the existing Bead hierarchy rather than creating duplicate plans.
 
 ## §11 flext-cli SSOT — Inviolable CLI Domain Owner
