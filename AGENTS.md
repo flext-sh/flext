@@ -971,6 +971,20 @@ For this migration only, the user has authorized frequent Git checkpoints: after
 
 Quality control for each slice is mandatory: use `bd` commands for Beads mutations, run Beads graph/storage checks for Beads changes, run stale-reference scans for documentation cleanup, and report command names, exit codes, and relevant output before marking any child Bead done.
 
+### 10.0.2 Temporary Centralization-Sweep Session Rule — `mro-q81y`
+
+This subsection is temporary and active only while Bead `mro-q81y` is not closed. Remove it in the same checkpoint that closes `mro-q81y`.
+
+This lane is owned by **agent:opus** (the Claude Opus loop) and is DISTINCT from the `mro-uqji` migration lane and from **codex**, who owns `algar-oud-mig`. agent:opus must not edit `algar-oud-mig`; coordinate via Beads. The session has exactly **one** 5-minute coordination loop (cron `0b6467a5`); creating a second timer, heartbeat, watcher, or background cadence for this lane is forbidden.
+
+Cursor of record: `~/.claude/plans/quero-que-voce-use-zazzy-teacup.md` §F. Scope: the centralization sweep tracked under `mro-q81y` and its child Beads — `mro-cexr` (tomlkit §2.7 `TOMLDocument` type-imports → `t.Cli.*` in flext-infra), then `mro-hy20` (§2.7 direct 3rd-party lib import re-scan across consumers). STEP6 datetime-clock abstraction is COMPLETE in this lane (flext-* + gruponos).
+
+**Frequent Git checkpoint is MANDATORY and FUNDAMENTAL (user law):** every validated atomic change = `git status` → stage **only this lane's files** (`git add <file>`, never `-A`/`.`) → commit → **`git push origin <branch>` immediately**. Never batch. If `push` is rejected because the parallel agent advanced the remote, `git fetch` + `git pull --no-rebase` accepting their side on conflict, re-validate, then push. Never include other agents' dirty files; if the tree blocks a clean checkpoint, record the blocker in the active Bead and continue with the next non-conflicting slice.
+
+Each delegated subagent gets a distinct child/sub-Bead before work starts, with non-overlapping scope and explicit acceptance criteria, and may touch only its assigned files; it reports changed paths + command/exit-code/output back to agent:opus, who controls quality (re-validate ruff+pyrefly+affected-tests before marking the sub-Bead done). Subagents must not edit `.beads/*.jsonl` directly.
+
+Per-slice quality gate (before any commit/push and before marking a Bead done): `.venv/bin/ruff check <files>` + `.venv/bin/pyrefly check <files>` (zero findings) + affected `pytest` + import-smoke of the module and its facade. Never `make check` (mypy hangs). When a project is not importable in the workspace `.venv` (e.g. `gruponos-meltano-native`), validate with ruff + pyrefly only and state honestly that runtime import/pytest is N/A by environment limitation — never fake green.
+
 ### 10.1 The 11 Commandments (Execution Ritual)
 
 UNBREAKABLE LAW for all parallel agent work:
