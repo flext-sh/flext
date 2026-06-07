@@ -765,7 +765,7 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 ### 3.8 Verification Discipline
 
 - **Skepticism by Default**: Treat every claim (test pass, lint clean, behavior unchanged) as unverified until executable evidence is produced. Memory, logs from prior sessions, and "it worked before" are not evidence.
-- **Evidence-First**: Every assertion that code passes a gate MUST include the exact command, its stdout/stderr, the exit code, and a UTC timestamp. Store evidence in `.sisyphus/evidence/`. Links and proof, never bare verdicts.
+- **Evidence-First**: Every assertion that code passes a gate MUST include the exact command, its stdout/stderr, the exit code, and a UTC timestamp. Store durable artifacts under `.reports/` and attach concise execution notes to the owning Bead with `bd comments add`. Links and proof, never bare verdicts.
 - **Severity-First Reporting**: When reporting issues, lead with the highest-risk item. Order: data loss > security > correctness > performance > style.
 - **Transparency About Limits**: Be explicit about what was NOT checked. If only one project was linted, say so. Partial verification presented as complete verification is a governance violation.
 - **No Proxy Evidence**: Screenshots, CI badge URLs, or "make check passed" without output are FORBIDDEN. The raw command output is the evidence.
@@ -891,6 +891,9 @@ from collections.abc import Mapping, Sequence` MUST be the first import in every
 - **No Unapproved Bypass**: Altering lint/gate semantics or deferring/skipping a violation is FORBIDDEN without explicit in-session user approval.
 - **Correct Governance**: If governance corrections arise during work, update this file immediately before further implementation.
 - **Commit-After-Validation**: Every passing validation MUST be immediately accompanied by a `git add -A` → `git commit` → `git pull --rebase` → `git push` sequence. Uncommitted or unpushed work is LOST WORK.
+- **Frequent Push is FUNDAMENTAL (BLOCKING)**: Push after EVERY atomic per-lane fix — never batch multiple lanes or hold work for an end-of-session push. Each push is a coordination point: another agent may be working in parallel, so `git fetch` + `git pull --rebase --autostash` before every push, never `--force`, and never sweep another lane's dirty working tree into your commit. Every push/handoff MUST end with an explicit indication of what to do next (recorded in Beads, see below) so the next actor — human or agent — can continue without re-discovery.
+- **Beads Action Tracking (BLOCKING)**: Track your own work as Beads issues with a parent epic + sub-beads per task/sub-task, under a distinct `--actor`/`--assignee` and an `agent:<name>` label so your lane is separable from concurrent agents'. Set state as you progress (`bd update`/`bd close`), and when dispatching subagents give each a sub-bead. Coordinate by reading other actors' beads; do not act on a lane another actor owns while it is in-progress/dirty.
+- **One Session Loop**: At most ONE recurring 5-minute session loop (cron) per agent session — do not spawn duplicates; reuse the existing job.
 
 ### 8.1 Refactor Priority Stack (THE ONLY VALID ORDER)
 
@@ -947,6 +950,26 @@ The four refactor questions, asked **in order**. Skipping any of (1)–(3) to re
 - **Evidence Requirement**: See §3.8 Verification Discipline.
 
 ## §10 Multi-Agent Parallel Execution Law
+
+### 10.0 Beads Pending-Work SSOT
+
+Beads is the only source of truth for pending work, lane state, and cross-lane dependency hierarchy in this repository. Legacy plans, reports, continuation prompts, operations handoffs, and migrated architecture TODOs are reference material only until their actionable content is imported into Beads; after import, they must be removed with `git rm` or archived as `.bak`.
+
+`.beads/issues.jsonl` and `.beads/interactions.jsonl` are generated storage files. Manual edits to any `.beads/*.jsonl` file are FORBIDDEN. Create, update, close, relate, import, export, repair, resolve conflicts, and sync Beads data only through `bd` commands such as `bd create`, `bd update`, `bd close`, `bd dep`, `bd import`, `bd export`, `bd repair`, `bd resolve-conflicts`, and `bd sync`.
+
+If Beads storage appears stale, corrupt, conflicted, or out of sync, stop editing and repair through the CLI path: `bd sync --import-only`, `bd repair`, `bd resolve-conflicts`, `bd sync`, then validate with `bd doctor`, `bd lint --status all`, `bd dep cycles`, and `bd graph --all --compact`. A patch to JSONL that bypasses `bd` is invalid even when it produces valid JSON.
+
+### 10.0.1 Temporary Migration Session Rule — `mro-uqji`
+
+This subsection is temporary and active only while Bead `mro-uqji` is not closed. Remove it in the same checkpoint that closes `mro-uqji`.
+
+For the legacy-docs-to-Beads migration, the session has exactly one coordination loop: every 5 minutes, the owning agent must run one Beads/Git/quality checkpoint, update the active Bead notes or sub-bead status, and then continue from the current state. Creating a second timer, heartbeat loop, watcher, daemon, or background cadence for the same migration is forbidden.
+
+The owning agent must coordinate its own work through `mro-uqji` and child Beads, not through legacy markdown or chat memory. Each delegated subagent gets a distinct child Bead or sub-bead before work starts, with a non-overlapping scope and explicit acceptance criteria. Subagents may audit or patch only their assigned scope; they must not edit `.beads/*.jsonl` directly and must report changed paths or read-only findings back to the owning agent.
+
+For this migration only, the user has authorized frequent Git checkpoints: after each validated migration slice, run `git status`, stage only files belonging to this migration slice, commit with no agent attribution, and push. Do not include unrelated dirty files from other agents. If the tree contains unrelated changes that prevent a clean checkpoint, record the blocker in the active Bead and continue with the next non-conflicting migration slice.
+
+Quality control for each slice is mandatory: use `bd` commands for Beads mutations, run Beads graph/storage checks for Beads changes, run stale-reference scans for documentation cleanup, and report command names, exit codes, and relevant output before marking any child Bead done.
 
 ### 10.1 The 11 Commandments (Execution Ritual)
 
@@ -1008,7 +1031,7 @@ UNBREAKABLE LAW for all parallel agent work:
 - **Always Rebase**: `git pull --rebase` before EVERY push. NEVER use basic `git pull`.
 - **Never Force Push**: NEVER `git push --force` to main/master.
 - **Conflict Resolution**: Conflict in YOUR file → resolve manually. Conflict in ANOTHER agent's file → `git checkout --theirs <file>`.
-- **Cross-Session Deduplication**: Before spawning new tasks, verify no other agent is working on the same scope via `.sisyphus/plans/` and `git log --oneline -20`. Merge overlapping plans rather than creating duplicates.
+- **Cross-Session Deduplication**: Before spawning new tasks, verify no other agent is working on the same scope via Beads (`bd search`, `bd list --status open`, `bd list --status in_progress`, `bd dep tree`) and `git log --oneline -20`. Merge overlapping work into the existing Bead hierarchy rather than creating duplicate plans.
 
 ## §11 flext-cli SSOT — Inviolable CLI Domain Owner
 
