@@ -1,0 +1,30 @@
+AGENTS.md
+  s_fec2050ea607c1::t_42fb57b1d6045b 954-961
+  s_fec2050ea607c1::t_cc70db8e9c937e 962-973
+  s_fec2050ea607c1::t_276598dd8908f4 768,1034
+  s_73cbfc60e45e37::t_b2ddb180feddae 894-896
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "43de51369fa36176783016acf2bd0b6929c55925",
+  "prompts": {},
+  "sessions": {
+    "s_73cbfc60e45e37": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "80f2c44c-f1f2-49a0-8035-ccac60ac602b",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Zed <hi@zed.dev>"
+    },
+    "s_fec2050ea607c1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ea2cd-580d-7e50-9f28-e9adbe7acc8a",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Zed <hi@zed.dev>"
+    }
+  }
+}
