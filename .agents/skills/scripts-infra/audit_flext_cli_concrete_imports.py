@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import re
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 
 ALLOWED_EXTENSION_FILES = frozenset({
@@ -60,25 +61,29 @@ def _check_file(py_file: Path, *, is_extension_allowed: bool) -> list[str]:
     return violations
 
 
-def main() -> int:
-    """Scan workspace projects for forbidden concrete FlextCli imports."""
-    violations: list[str] = []
+def _iter_project_dirs() -> Iterator[Path]:
     for project_dir in sorted(WORKSPACE.iterdir()):
         if not project_dir.is_dir() or project_dir.name in SKIP_PROJECTS:
             continue
-        src = project_dir / "src"
-        if src.is_dir():
-            for py_file in src.rglob("*.py"):
-                if _is_skipped(py_file):
-                    continue
-                allowed = py_file.name in ALLOWED_EXTENSION_FILES
-                violations.extend(_check_file(py_file, is_extension_allowed=allowed))
-        tests = project_dir / "tests"
-        if tests.is_dir():
-            for py_file in tests.rglob("*.py"):
-                if _is_skipped(py_file):
-                    continue
-                violations.extend(_check_file(py_file, is_extension_allowed=False))
+        yield project_dir
+
+
+def _iter_scan_files(project_dir: Path) -> Iterator[tuple[Path, bool]]:
+    for sub in ("src", "tests"):
+        base = project_dir / sub
+        if not base.is_dir():
+            continue
+        for py_file in base.rglob("*.py"):
+            if not _is_skipped(py_file):
+                yield py_file, sub == "src" and py_file.name in ALLOWED_EXTENSION_FILES
+
+
+def main() -> int:
+    """Scan workspace projects for forbidden concrete FlextCli imports."""
+    violations: list[str] = []
+    for project_dir in _iter_project_dirs():
+        for py_file, allowed in _iter_scan_files(project_dir):
+            violations.extend(_check_file(py_file, is_extension_allowed=allowed))
 
     if violations:
         print(f"FlextCli* concrete-import violations: {len(violations)}")

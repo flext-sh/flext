@@ -1,79 +1,51 @@
 ---
 name: rules-pkg
-description: Rules for package metadata and package-layer structure under `pkg/`. Use when editing package descriptors, plugin manifests, or packaging utilities.
-
+description: 'Use this skill to rules for package metadata and package-layer structure
+  under `pkg/`. Use when editing package descriptors, plugin manifests, or packaging
+  utilities. **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and
+  rule alignment. DO NOT USE FOR: questions unrelated to rules-pkg creating projects
+  or architecture from scratch'
+license: MIT
+metadata:
+  version: 1.0.0
 ---
-
 # Rules Pkg
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**UTILITY SKILL**
 
-## Scope
+## USE FOR
 
-- `pkg/controlpanel/`
-- `pkg/domain/`
-- `pkg/flextservice/`
-- `pkg/infrastructure/`
-- `pkg/plugins/`
+- Requests about rules pkg.
+- Workflows described in this skill.
+- Operator tasks within this scope.
 
-## References
 
-- `AGENTS.md` — canonical governance source
-- `pyproject.toml`
-- `pkg/`
-- `Makefile`
+## DO NOT USE FOR
 
-## Rules
+- questions unrelated to rules-pkg.
+- creating projects or architecture from scratch.
 
-- Keep package metadata consistent with workspace naming/version patterns.
-- Keep package boundaries clear (domain vs infrastructure vs plugin layers).
-- Avoid leaking internal-only code via package exports.
-- Update consuming docs/scripts when package paths change.
-
-## Instructions
-
-- Verify package path exists and matches intended layer.
-- Keep naming stable and deterministic across related files.
-- Validate packaging-related references in build/test scripts.
-
-```bash
-ls -la pkg
-```
 
 ## Workflow
 
 1. Identify package area being modified.
 2. Apply minimal metadata/structure change.
 3. Confirm references in build scripts/docs still resolve.
-4. Verify no accidental layer boundary drift.
 
-## Examples
 
-Good:
+## Critical rules
 
-```text
-pkg/domain/ contains domain-focused package artifacts only.
-```
+- Prefer canonical sources.
+- Require evidence before claiming success.
 
-Why good: preserves package-layer responsibility.
 
-Bad:
+## Example
 
-```text
-Place infrastructure bootstrap files inside pkg/domain/ for convenience.
-```
+**Input:** a request.
+**Output:** a concise response.
 
-Why bad: layer mixing increases maintenance and dependency confusion.
 
-## Verification
+## Troubleshooting
 
-Make gates:
-
-- `make boot PROJECT=<name>` — verify package installation
-- `make check PROJECT=<name>` — quality gates for package changes
-
-File checks:
-
-- `ls -la pkg`
-- `rg -n "pkg/" Makefile scripts/*.sh docs || true`
-- `rg -n "TODO|FIXME" pkg || true`
+- Unclear scope → ask.
+- Missing context → state assumptions.

@@ -9,6 +9,7 @@ import json
 import operator
 import re
 import sys
+from itertools import islice
 from pathlib import Path
 from typing import Annotated, ClassVar
 
@@ -47,6 +48,18 @@ class ScriptCheckResult(m.BaseModel):
             description="Owner skill identifier if applicable",
         ),
     ] = None
+
+
+SCRIPT_SKILL_PREFIXES = (
+    ("scripts/validation/", "scripts-validation"),
+    ("scripts/security/", "scripts-security"),
+    ("scripts/architecture/", "scripts-architecture"),
+    ("scripts/testing/", "scripts-testing"),
+    ("scripts/dependencies/", "scripts-dependencies"),
+    ("scripts/maintenance/", "scripts-maintenance"),
+    ("scripts/git/", "scripts-maintenance"),
+    ("scripts/analysis/", "scripts-architecture"),
+)
 
 
 def eprint(message: str) -> None:
@@ -96,30 +109,26 @@ def tracked_scripts(repo_root: Path) -> t.SequenceOf[Path]:
     if output.exit_code != 0:
         raise SkillInfraError(output.stderr.strip() or "git ls-files failed")
 
-    scripts: list[Path] = []
-    for line in sorted(set(output.stdout.splitlines())):
-        if not line.strip():
-            continue
-        path = Path(line)
-        if path.name == "__init__.py":
-            continue
-        if not (repo_root / path).exists():
-            continue
-        scripts.append(path)
-    return scripts
+    paths = sorted({Path(line) for line in output.stdout.splitlines() if line.strip()})
+    return [
+        path
+        for path in paths
+        if path.name != "__init__.py" and (repo_root / path).exists()
+    ]
+
+
+def _read_header_lines(full_path: Path) -> list[str]:
+    with full_path.open("r", encoding="utf-8") as handle:
+        return [
+            line.rstrip("\n")
+            for line in islice(handle, c.Infra.SCRIPT_HEADER_MAX_LINES)
+        ]
 
 
 def read_header(repo_root: Path, script_path: Path) -> t.StrSequence:
     """read_header function."""
-    full_path = repo_root / script_path
     try:
-        with full_path.open("r", encoding="utf-8") as handle:
-            lines: list[str] = []
-            for _ in range(c.Infra.SCRIPT_HEADER_MAX_LINES):
-                line = handle.readline()
-                if not line:
-                    break
-                lines.append(line.rstrip("\n"))
+        lines = _read_header_lines(repo_root / script_path)
     except OSError as exc:
         msg = f"cannot read script header: {script_path}"
         raise SkillInfraError(msg) from exc
@@ -135,63 +144,37 @@ def scripts_section(skill_file: Path) -> str:
         raise SkillInfraError(msg) from exc
 
     lines = content.splitlines()
-    in_section = False
-    section_lines: list[str] = []
-
-    for line in lines:
-        if line.startswith("## "):
-            if line.strip() == "## Scripts":
-                in_section = True
-                continue
-            if in_section:
-                break
-
-        if in_section:
-            section_lines.append(line)
-
-    return "\n".join(section_lines)
+    start = next(
+        (index + 1 for index, line in enumerate(lines) if line.strip() == "## Scripts"),
+        len(lines),
+    )
+    end = next(
+        (
+            index
+            for index, line in enumerate(lines[start:], start)
+            if line.startswith("## ")
+        ),
+        len(lines),
+    )
+    return "\n".join(lines[start:end])
 
 
 def script_listed_in_skill(skill_file: Path, script_path: Path) -> bool:
     """script_listed_in_skill function."""
     section = scripts_section(skill_file)
-    if not section.strip():
-        return False
-
     escaped = re.escape(script_path.as_posix())
     pattern = rf"`{escaped}`|{escaped}"
-    return re.search(pattern, section) is not None
+    return bool(section.strip()) and re.search(pattern, section) is not None
 
 
 def candidate_skill(script_path: Path) -> str:
     """candidate_skill function."""
     path = script_path.as_posix()
     skill = "scripts-infra"
-    match path:
-        case value if value.startswith("scripts/validation/"):
-            skill = "scripts-validation"
-        case value if value.startswith("scripts/security/"):
-            skill = "scripts-security"
-        case value if value.startswith("scripts/architecture/"):
-            skill = "scripts-architecture"
-        case value if value.startswith("scripts/testing/"):
-            skill = "scripts-testing"
-        case value if value.startswith("scripts/dependencies/"):
-            skill = "scripts-dependencies"
-        case value if value.startswith("scripts/maintenance/"):
-            skill = "scripts-maintenance"
-        case value if value.startswith("scripts/git/"):
-            skill = "scripts-maintenance"
-        case value if value.startswith("scripts/lib/"):
-            skill = "scripts-infra"
-        case value if value.startswith("scripts/core/"):
-            skill = "scripts-infra"
-        case value if value.startswith("scripts/settings/"):
-            skill = "scripts-infra"
-        case value if value.startswith("scripts/makefiles/"):
-            skill = "scripts-infra"
-        case value if value.startswith("scripts/analysis/"):
-            skill = "scripts-architecture"
+    for prefix, candidate in SCRIPT_SKILL_PREFIXES:
+        if path.startswith(prefix):
+            skill = candidate
+            break
     return skill
 
 
@@ -262,14 +245,7 @@ def validate_script(
 
 def status_color(status: str) -> str:
     """status_color function."""
-    match status:
-        case "OK":
-            color = Ansi.GREEN
-        case "UNOWNED":
-            color = Ansi.YELLOW
-        case _:
-            color = Ansi.RED
-    return color
+    return {"OK": Ansi.GREEN, "UNOWNED": Ansi.YELLOW}.get(status, Ansi.RED)
 
 
 def print_table(results: t.SequenceOf[ScriptCheckResult]) -> None:
@@ -305,6 +281,44 @@ def write_candidates(
     return report_path
 
 
+def _run_validation(args: argparse.Namespace) -> c.Infra.ScriptExitCode:
+    repo_root = Path(args.root).resolve()
+    if not repo_root.exists() or not repo_root.is_dir():
+        eprint(f"{Ansi.RED}error:{Ansi.RESET} --root is not a directory: {repo_root}")
+        return c.Infra.ScriptExitCode.USAGE
+
+    validations = [
+        validate_script(repo_root, script) for script in tracked_scripts(repo_root)
+    ]
+    results = [result for result, _ in validations]
+    candidates = [candidate for _, candidate in validations if candidate is not None]
+
+    print_table(results)
+    report_path = write_candidates(repo_root, candidates)
+
+    ok_count = sum(1 for item in results if item.status == "OK")
+    unowned_count = sum(1 for item in results if item.status == "UNOWNED")
+    violation_only_count = len(results) - ok_count - unowned_count
+    total_violations = len(results) - ok_count
+
+    summary = (
+        f"\n{Ansi.CYAN}Summary:{Ansi.RESET} total={len(results)} "
+        f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
+        f"{Ansi.YELLOW}unowned={unowned_count}{Ansi.RESET} "
+        f"{Ansi.RED}violations={violation_only_count}{Ansi.RESET} "
+        f"{Ansi.RED}total_noncompliant={total_violations}{Ansi.RESET}"
+    )
+    eprint(summary)
+    eprint(f"Candidates report: {report_path.relative_to(repo_root)}")
+
+    print(json.dumps({"violation_count": total_violations}, separators=(",", ":")))
+    return (
+        c.Infra.ScriptExitCode.PASS
+        if total_violations == 0
+        else c.Infra.ScriptExitCode.FAIL
+    )
+
+
 def run_main(argv: t.StrSequence) -> int:
     """run_main function."""
     exit_code = c.Infra.ScriptExitCode.INFRA
@@ -318,51 +332,7 @@ def run_main(argv: t.StrSequence) -> int:
                 exit_code = c.Infra.ScriptExitCode.USAGE
     else:
         try:
-            repo_root = Path(args.root).resolve()
-            if not repo_root.exists() or not repo_root.is_dir():
-                eprint(
-                    f"{Ansi.RED}error:{Ansi.RESET} --root is not a directory: {repo_root}"
-                )
-                exit_code = c.Infra.ScriptExitCode.USAGE
-            else:
-                validations = [
-                    validate_script(repo_root, script)
-                    for script in tracked_scripts(repo_root)
-                ]
-                results = [result for result, _ in validations]
-                candidates = [
-                    candidate for _, candidate in validations if candidate is not None
-                ]
-
-                print_table(results)
-                report_path = write_candidates(repo_root, candidates)
-
-                ok_count = sum(1 for item in results if item.status == "OK")
-                unowned_count = sum(1 for item in results if item.status == "UNOWNED")
-                violation_only_count = len(results) - ok_count - unowned_count
-                total_violations = len(results) - ok_count
-
-                summary = (
-                    f"\n{Ansi.CYAN}Summary:{Ansi.RESET} total={len(results)} "
-                    f"{Ansi.GREEN}ok={ok_count}{Ansi.RESET} "
-                    f"{Ansi.YELLOW}unowned={unowned_count}{Ansi.RESET} "
-                    f"{Ansi.RED}violations={violation_only_count}{Ansi.RESET} "
-                    f"{Ansi.RED}total_noncompliant={total_violations}{Ansi.RESET}"
-                )
-                eprint(summary)
-                eprint(f"Candidates report: {report_path.relative_to(repo_root)}")
-
-                print(
-                    json.dumps(
-                        {"violation_count": total_violations},
-                        separators=(",", ":"),
-                    )
-                )
-                exit_code = (
-                    c.Infra.ScriptExitCode.PASS
-                    if total_violations == 0
-                    else c.Infra.ScriptExitCode.FAIL
-                )
+            exit_code = _run_validation(args)
         except SkillUsageError as exc:
             eprint(f"{Ansi.RED}error:{Ansi.RESET} {exc}")
             exit_code = c.Infra.ScriptExitCode.USAGE

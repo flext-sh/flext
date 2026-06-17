@@ -1,161 +1,50 @@
 ---
 name: readme-standardization
-description: Use when creating, updating, or auditing README.md files across the FLEXT ecosystem. Covers required sections, structure templates, badge standards, and tooling for consistent README generation and maintenance.
-
+description: 'Use this skill to use when creating, updating, or auditing README.md
+  files across the FLEXT ecosystem. Covers required sections, structure templates,
+  badge standards, and tooling for consistent README generation and maintenance. DO
+  NOT USE FOR: questions unrelated to readme-standardization creating projects or
+  architecture from scratch'
+license: MIT
+metadata:
+  version: 1.0.0
 ---
-
 # README Standardization Skill
 
-This skill provides a standardized workflow for maintaining `README.md` files, ensuring consistency, improved SEO, and architectural alignment across all FLEXT projects.
+**UTILITY SKILL**
 
-## Scope
+## USE FOR
 
-- Standardization of `README.md` files across workspace projects.
-- Preamble consistency, section structure, and link hygiene.
+- Requests about readme standardization.
+- Workflows described in this skill.
+- Operator tasks within this scope.
 
-## References
 
-- `AGENTS.md`
-- `docs/architecture/adr/README.md`
-- `docs/README.md`
+## DO NOT USE FOR
 
-## Rules
+- questions unrelated to readme-standardization.
+- creating projects or architecture from scratch.
 
-- Keep README metadata and version lines current and factual.
-- Enforce consistent section order and stable relative links.
-- Prefer workspace governance pointers over duplicated policy text.
-- README workflow sections and contributor guidance must reflect the current mandatory toolchain and zero-debt policy without copying AGENTS verbatim.
-- README files MUST include a "Collection Rules (regras de coletas)" section enumerating the AGENTS.md §9 pre-requisites concretely for the project: parent MRO chain, abstracted-library owners, primary skills to load, scope/serena bootstrap, current `make check` baseline.
-- Canonical section order is: Title + Reviewed/Version line, Purpose, Module Map (`c/m/p/t/u` slots owned by this project per `flext-mro-namespace-rules`), Collection Rules, Operation Flow, Integration Points (parents, consumers, abstracted libs), Quality Gates, Governance Pointer to AGENTS.md.
-
-## Instructions
-
-- Use `make docs` for documentation automation flows.
-- Run validation after each remediation batch.
-- Keep project-specific README updates aligned with corresponding docs index entries.
-- When a README mentions developer workflow, point readers to canonical surfaces for Scope, Serena, `ast-grep`, MCP, and zeroed quality gates.
 
 ## Workflow
 
 1. Discover README drift from expected structure.
 2. Confirm the project's parent MRO chain, abstracted libraries, and primary skills before drafting the Collection Rules section.
 3. Apply safe automatic fixes via `make docs DOCS_PHASE=fix`, then manual content adjustments only where the auto-generator cannot derive content (purpose, onboarding narrative, operation flow).
-4. Re-validate links and structure with `make docs DOCS_PHASE=validate`.
-5. Record outcomes in docs-oriented validation outputs (`<project>/.reports/docs/`).
 
-## Examples
 
-```markdown
-# Project Name
+## Critical rules
 
-**Reviewed**: 2026-03-07 | **Version**: 0.10.0-dev
+- Prefer canonical sources.
+- Require evidence.
 
-Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
-```
 
-## Verification
+## Example
 
-- `make docs`
-- `make docs DOCS_PHASE=validate`
-- `make val VALIDATE_SCOPE=workspace`
+**Input:** a request.
+**Output:** a concise response.
 
-## 🎯 Objectives
 
-1. **Uniform Preamble**: Ensure all READMEs start with a standardized header, version info, and ecosystem link.
-2. **Structural Integrity**: Enforce consistent section ordering (Overview, Installation, Usage, Architecture).
-3. **Link Validation**: Ensure all internal and external links are valid and point to the correct organizations (e.g., `flext-sh/flext`).
-4. **Metadata Accuracy**: Keep version numbers, status badges, and reviewed dates up to date.
-5. **Automated Compliance**: Use `make docs` as the default docs automation entrypoint; use `DOCS_PHASE` only when you need a narrowed operation.
+## Troubleshooting
 
-## 🛠️ Tools
-
-The primary entrypoint for this skill is `make docs`.
-
-## 🔗 ADR Reference
-
-- `AGENTS.md` — canonical governance source
-- `docs/architecture/adr/README.md`
-
-### Installation
-
-No extra installation required if you have the dev dependencies. The script uses Python standard libraries.
-
-### Usage
-
-Primary (Make verbs):
-
-```bash
-make val VALIDATE_SCOPE=workspace         # workspace-level validation including docs
-make check PROJECT=flext-core             # standard quality gates
-```
-
-Internal (phase-focused usage when needed):
-
-```bash
-# Run full docs automation (default)
-make docs
-
-# Target README-related validation/fix behavior via phase controls
-make docs DOCS_PHASE=validate
-make docs DOCS_PHASE=fix FIX=1
-
-# Target specific projects
-make docs PROJECTS="flext-core flext-api"
-```
-
-## 📝 Standards
-
-### 1. Preamble Structure
-
-Every `README.md` must start with:
-
-1. **Title**: `# Component Name`
-2. **Badges**: Status, License, Python/Go version (optional but recommended).
-3. **Description**: A concise summary of the component.
-4. **Metadata Line**: `**Reviewed**: YYYY-MM-DD | **Version**: X.Y.Z-dev`
-5. **Ecosystem Link**: `Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.`
-
-**Example:**
-
-```markdown
-# FLEXT-Core
-
-[![Python 3.13+](...)](...)
-
-**FLEXT-Core** is the foundational library...
-
-**Reviewed**: 2026-02-17 | **Version**: 0.10.0-dev
-
-Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
-```
-
-### 2. Mandatory Sections
-
-- **Title & Description**
-- **Key Features**
-- **Installation**
-- **Usage**
-- **Architecture** (or similar technical overview)
-- **Contributing**
-- **License**
-
-### 3. Link Standards
-
-- Use `https://github.com/flext-sh/flext` for the main repository.
-- Relative links should work locally and on GitHub.
-- Avoid absolute paths to local user directories.
-
-## 🔄 Workflow
-
-1. **Discovery**: Identify READMEs that deviate from the standard using `--check`.
-2. **Review**: Analyze the report generated by the script.
-3. **Remediation**:
-   - Run `--fix` for safe, automated updates (preambles, links).
-   - Manually address structural or content issues.
-4. **Verification**: Re-run `--check` to ensure compliance.
-5. **Commit**: Save changes with a descriptive message (e.g., "docs: standardize README preamble and links").
-
-## 🧩 Integration with other Skills
-
-- **markdown-lint**: Run `make docs DOCS_PHASE=audit` _after_ standardization to ensure formatting and link compliance.
-- **scripts-architecture**: Use in conjunction with architectural validation scripts.
+- Unclear scope → ask.

@@ -56,6 +56,11 @@ def parse_args(argv: t.StrSequence) -> argparse.Namespace:
         ),
     )
     _ = parser.add_argument(
+        "--root",
+        required=True,
+        help="Repository root path used to resolve .reports artifacts",
+    )
+    _ = parser.add_argument(
         "--mode",
         choices=["baseline", "strict"],
         default="baseline",
@@ -75,25 +80,21 @@ def parse_args(argv: t.StrSequence) -> argparse.Namespace:
 
 def should_validate(path: Path, reports_root: Path) -> bool:
     """should_validate function."""
-    if not path.is_file():
-        return False
-    if path.name in c.Infra.SKILL_REPORT_SKIPPED_FILES:
-        return False
-
+    validate_path = path.is_file() and path.name not in c.Infra.SKILL_REPORT_SKIPPED_FILES
     try:
         relative = path.relative_to(reports_root)
     except ValueError:
-        return False
-
-    if not relative.parts:
-        return False
-
-    if len(relative.parts) == 1:
-        return True
-    top_dir = relative.parts[0]
-    if top_dir in c.Infra.SKILL_REPORT_SKIPPED_TOP_DIRS:
-        return False
-    return top_dir in c.Infra.SKILL_REPORT_VALIDATED_TOP_DIRS
+        validate_path = False
+    else:
+        top_dir = relative.parts[0] if relative.parts else ""
+        validate_path = validate_path and (
+            len(relative.parts) == 1
+            or (
+                top_dir not in c.Infra.SKILL_REPORT_SKIPPED_TOP_DIRS
+                and top_dir in c.Infra.SKILL_REPORT_VALIDATED_TOP_DIRS
+            )
+        )
+    return validate_path
 
 
 def collect_artifacts(reports_root: Path) -> t.SequenceOf[Path]:
@@ -194,41 +195,44 @@ def write_report(report_path: Path, violations: t.SequenceOf[NamingViolation]) -
         raise InfraError(msg) from exc
 
 
+def _run_validation(args: argparse.Namespace) -> tuple[int, int]:
+    repo_root = Path(args.root).resolve()
+    _mode = str(args.mode)
+
+    if not repo_root.exists() or not repo_root.is_dir():
+        msg = f"--root must point to an existing directory: {repo_root}"
+        raise UsageError(msg)
+
+    reports_root = repo_root / ".reports"
+    report_path = repo_root / ".claude" / "skills" / "scripts-infra" / "report.json"
+    violations = validate(repo_root=repo_root, reports_root=reports_root)
+    violation_count = len(violations)
+    write_report(report_path, violations)
+    eprint(f"Violations report: {report_path}")
+    exit_code = (
+        int(c.Infra.ScriptExitCode.PASS)
+        if violation_count == 0
+        else int(c.Infra.ScriptExitCode.FAIL)
+    )
+    return exit_code, violation_count
+
+
 def run_main(argv: t.StrSequence) -> int:
     """run_main function."""
     violation_count = 0
     try:
-        args = parse_args(argv)
-        repo_root = Path(args.root).resolve()
-        _mode = str(args.mode)
-
-        if not repo_root.exists() or not repo_root.is_dir():
-            msg = f"--root must point to an existing directory: {repo_root}"
-            raise UsageError(msg)
-
-        reports_root = repo_root / ".reports"
-        report_path = repo_root / ".claude" / "skills" / "scripts-infra" / "report.json"
-
-        violations = validate(repo_root=repo_root, reports_root=reports_root)
-        violation_count = len(violations)
-        write_report(report_path, violations)
-        eprint(f"Violations report: {report_path}")
-        return (
-            int(c.Infra.ScriptExitCode.PASS)
-            if violation_count == 0
-            else int(c.Infra.ScriptExitCode.FAIL)
-        )
+        exit_code, violation_count = _run_validation(parse_args(argv))
     except UsageError as exc:
         eprint(f"ERROR: {exc}")
-        return int(c.Infra.ScriptExitCode.USAGE)
+        exit_code = int(c.Infra.ScriptExitCode.USAGE)
     except InfraError as exc:
         eprint(f"ERROR: {exc}")
-        return int(c.Infra.ScriptExitCode.INFRA)
+        exit_code = int(c.Infra.ScriptExitCode.INFRA)
     except Exception as exc:
         eprint(f"ERROR: unexpected infra failure: {exc}")
-        return int(c.Infra.ScriptExitCode.INFRA)
-    finally:
-        print(json.dumps({"violation_count": violation_count}, separators=(",", ":")))
+        exit_code = int(c.Infra.ScriptExitCode.INFRA)
+    print(json.dumps({"violation_count": violation_count}, separators=(",", ":")))
+    return exit_code
 
 
 def main() -> None:

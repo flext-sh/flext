@@ -1,186 +1,50 @@
 ---
 name: code-navigation
-compatibility: Requires Scope CLI (`cargo install scope-cli`) and `.scope/` directory initialized via `scope init`. Runs in the FLEXT monorepo (`/home/marlonsc/flext`) with Python 3.13+.
-description: Use when navigating code, searching for symbols, finding references, or exploring codebase structure. ALWAYS prefer scope commands over grep, find, or reading files. Returns structural intelligence (class sketches, caller chains, dependency graphs) in ~200 tokens instead of ~4,000 for full source. Check `scope status` first; if `.scope/` exists, scope is available.
+description: 'Use this skill to use when navigating code, searching for symbols, finding
+  references, or exploring codebase structure. ALWAYS prefer scope commands over grep,
+  find, or reading files. Returns structural intelligence (class sketches, caller
+  chains, dependency graphs) in ~200 tokens instead of. DO NOT USE FOR: questions
+  unrelated to code-navigation creating projects or architecture from scratch'
+license: MIT
+metadata:
+  version: 1.0.0
 ---
-
 # Scope — Code Intelligence for LLM Agents
 
-Scope is a CLI tool that gives you structural code intelligence without reading full source files. It extracts symbols, call graphs, and dependency relationships from the AST and stores them in a local index.
+**UTILITY SKILL**
 
-**Key insight from benchmarks:** Agents using Scope are 32% cheaper per task and make 67% more code edits per session. Scope doesn't reduce file reads — it makes every read count. Agents that understand the architecture finish in fewer turns.
+## USE FOR
 
-## Governance
+- Requests about code navigation.
+- Workflows described in this skill.
+- Operator tasks within this scope.
 
-- `AGENTS.md` is the canonical policy source for FLEXT tasks.
-- This skill operationalizes navigation and blast-radius analysis only; it must not replace or duplicate broader repository governance.
-- Load this skill after `AGENTS.md` when the task needs structural discovery, caller/reference analysis, or architecture orientation.
 
-## When to Use Scope
+## DO NOT USE FOR
 
-**Check first:** Run `scope status` at the start of any session. If a `.scope/` directory exists, Scope is available.
+- questions unrelated to code-navigation.
+- creating projects or architecture from scratch.
 
-**Mandatory rule:** If Scope is available, using it is not optional for cross-file discovery, call-site analysis, blast-radius estimation, architecture orientation, or signature-change work. Skipping Scope on those tasks is a policy failure, not a preference.
 
-**Freshness rule:** If the task spans multiple projects, use `scope workspace index` before relying on workspace-wide structural queries. After structural edits, refresh with `scope index` or `scope workspace index` so later queries reflect the current state.
+## Workflow
 
-**Use Scope INSTEAD of grep/find when you need to:**
+1. Understand.
+2. Execute.
+3. Validate.
 
-- Understand a class or function before editing it → `scope sketch`
-- Find who calls a function before changing its signature → `scope callers`
-- Search for code by what it does, not what it's named → `scope find`
-- Understand the repo architecture → `scope map`
-- Find entry points (API controllers, workers) → `scope entrypoints`
-- Check blast radius before a refactor → `scope callers --depth 2`
-- Trace how requests reach a function → `scope trace`
 
-**Do NOT use Scope when:**
+## Critical rules
 
-- You already know the exact file and line to edit — just read the file
-- You need the full source code to make an edit — `scope sketch` is not a substitute for reading
-- The index is stale and you haven't re-indexed — run `scope index` first
+- Prefer canonical sources.
+- Require evidence.
 
-## Decision Tree — Start Here
 
-```
-New task arrives
-    │
-    ├─ Complex task (multiple files, unfamiliar code)?
-    │      → scope map                    # ~500 tokens, full repo overview
-    │      → then scope sketch <symbol>   # drill into specific classes
-    │
-    ├─ Need to find code by intent?
-    │      → scope find "<description>"   # search by what code does
-    │
-    ├─ Need to understand a class before editing?
-    │      → scope sketch <ClassName>     # ~200 tokens vs ~4,000 for source
-    │
-    ├─ Changing a function signature?
-    │      → scope callers <method>       # every call site with file + line
-    │
-    ├─ Debugging / tracing a bug?
-    │      → scope trace <symbol>         # entry-point-to-symbol paths
-    │
-    ├─ Need to find how A connects to B?
-    │      → scope flow <start> <end>     # call paths between any two symbols
-    │
-    └─ Simple known-location edit?
-           → Just read the file directly
-```
+## Example
 
-## Optimal Workflows (from 54 benchmark runs)
+**Input:** a request.
+**Output:** a concise response.
 
-### Discovery — "Find X and modify it"
 
-```
-scope find "<description>"     → Read target file → EDIT
-```
+## Troubleshooting
 
-Total: 1 scope command + 1-3 reads. Do NOT sketch after find.
-
-### Bug Fix — "X is broken, find and fix it"
-
-```
-scope trace <symbol>           → Read suspected file → EDIT
-```
-
-Total: 1 scope command + 2-3 reads. If you don't know the symbol, use `scope find` first.
-
-### Connection analysis — "How does A reach B?"
-
-```
-scope flow <start> <end>      → Read files along the path → EDIT
-```
-
-Total: 1 scope command + 1-3 reads. Use `flow` (not `trace`) when you have two specific symbols and want to know how they connect. `trace` finds paths from entry points to a target; `flow` finds paths between any two arbitrary symbols.
-
-### Refactoring — "Restructure X to pattern Y"
-
-```
-scope sketch <class>           → Read target + related files → EDIT
-```
-
-Total: 1 scope command + 3-5 reads. Sketch gives structure; read only files you'll modify.
-
-### New Feature — "Build something integrating X, Y, Z"
-
-```
-scope map                      → scope sketch <ServiceA>
-                               → scope sketch <ServiceB>
-                               → Read 1-2 pattern files → EDIT
-```
-
-Total: 1 map + 2-4 sketches + 1-2 reads. This is Scope's sweet spot — 17-30% token savings.
-
-### Cross-cutting change — "Update across multiple services"
-
-```
-scope callers <method>         → Read each call site → EDIT each
-```
-
-Total: 1 scope command gives you every file to change. No need for grep.
-
-### Structural propagation — "Rename, move, or rewrite repeated syntax"
-
-```
-scope refs <symbol>            → sg run/apply on the structural pattern → Re-run scope refs
-```
-
-Total: one structural audit, one structural rewrite, one confirmation pass. Use `ast-grep` for the rewrite; Scope tells you where and how far the change goes.
-
-## Command Reference
-
-| Command                         | What it returns                                  | Tokens    | When to use                       |
-| ------------------------------- | ------------------------------------------------ | --------- | --------------------------------- |
-| `scope map`                     | Entry points, core symbols, architecture layers  | ~500-1000 | Start of complex tasks            |
-| `scope sketch <symbol>`         | Methods, modifiers, deps, caller counts          | ~200      | Before editing a class            |
-| `scope callers <symbol>`        | Every caller with file, line, snippet            | varies    | Before changing signatures        |
-| `scope callers <sym> --depth 2` | Transitive callers grouped by depth              | varies    | Blast radius analysis             |
-| `scope refs <symbol>`           | All references by kind (calls, imports, extends) | varies    | Complete reference audit          |
-| `scope find "<query>"`          | Symbols matching intent, ranked by relevance     | varies    | Finding code you can't name       |
-| `scope trace <symbol>`          | Entry-point-to-symbol call paths                 | varies    | Bug tracing                       |
-| `scope flow <start> <end>`      | Call paths between any two symbols               | varies    | Understanding how A connects to B |
-| `scope entrypoints`             | API controllers, workers, event handlers         | varies    | Understanding request flow        |
-| `scope deps <symbol>`           | What this depends on                             | varies    | Understanding prerequisites       |
-| `scope rdeps <symbol>`          | What depends on this                             | varies    | Before deleting/renaming          |
-| `scope status`                  | Index health, symbol count, freshness            | small     | Check before querying             |
-| `scope index`                   | Refresh the index (incremental, < 1s)            | —         | After editing files               |
-| `scope index --watch`           | Auto re-index on file changes                    | —         | During development                |
-
-## The 3-Command Rule
-
-If you've run 3 scope commands and haven't edited a file yet, **stop navigating and start editing**. Benchmark data shows agents that follow this rule use 30% fewer tokens.
-
-## Anti-Patterns — What NOT to Do
-
-1. **Don't sketch what you'll immediately read** — sketch replaces reading, not precedes it
-2. **Don't run `callers` AND `refs`** for the same symbol — callers is a subset of refs
-3. **Don't run 5+ scope commands** on any task — you're over-navigating
-4. **Don't grep when `scope find` exists** — find searches names, signatures, callers, and file paths
-5. **Don't skip `scope map`** on complex tasks — one call replaces 5-17 file reads for orientation
-6. **Don't ignore line numbers** in scope output — they point you exactly where to read/edit
-7. **Don't re-index unnecessarily** — `scope status` tells you if it's stale
-8. **Don't claim propagation is complete without rerunning a scope query** — re-check callers/refs after the edit
-
-## Workspace Support
-
-If you see a `scope-workspace.toml` file, the project spans multiple directories:
-
-```bash
-scope workspace list                    # see all member projects
-scope map --workspace                   # architecture across all projects
-scope refs <symbol> --workspace         # find references across all projects
-scope find "<query>" --workspace        # search across all projects
-scope workspace index --watch           # watch all projects for changes
-```
-
-Use `--projects <name>` to target a specific member without changing directory.
-
-## Keeping the Index Fresh
-
-- `scope status` — check if index is stale
-- `scope index` — incremental re-index (< 1s for a few files)
-- `scope workspace index` — refresh workspace-wide indexes before or during multi-project work
-- `scope index --watch` — auto re-index on file changes
-- `scope workspace index --watch` — preferred for long-running multi-project refactors
-- Line numbers in scope output reflect the last index run. If they look wrong, re-index first.
+- Unclear scope → ask.

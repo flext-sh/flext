@@ -1,202 +1,50 @@
 ---
 name: flext-quality-gates
-description: Use when running or interpreting quality gates (lint, typecheck, test, val) in the FLEXT monorepo. Covers mandatory gate definitions, exact tool commands (ruff, pyrefly, pyright, mypy, pytest), pass thresholds, and configuration sources from base.mk and pyproject.toml.
-
+description: 'Use this skill to use when running or interpreting quality gates (lint,
+  typecheck, test, val) in the FLEXT monorepo. Covers mandatory gate definitions,
+  exact tool commands (ruff, pyrefly, pyright, mypy, pytest), pass thresholds, and
+  configuration sources from base.mk and pyproject.toml. DO NOT USE FOR: questions
+  unrelated to flext-quality-gates creating projects or architecture from scratch'
+license: MIT
+metadata:
+  version: 1.0.0
 ---
-
 # FLEXT Quality Gates
 
-**Reviewed**: 2026-02-19 | **Scope**: Coverage source-of-truth migration to pyproject.toml
+**UTILITY SKILL**
 
-## Hard Start Card (mandatory)
+## USE FOR
 
-1. No raw output, no done claim.
-2. First edit must trigger `ruff` on touched file.
-3. Next gate must be `pyrefly` on touched file.
-4. Then run behavior gate (`pytest` or `make check PROJECT=<affected>`).
-5. Shared contract/type/import change -> widen now, same cycle.
-6. Zero errors, zero warnings, zero suppressions.
-7. Any red gate keeps task OPEN.
-8. If target file is in a sub-project, run and report gates from that sub-project.
-9. In iterative cleanup loops, do not claim iteration complete before updating `ralph-progress.md`.
+- Requests about flext quality gates.
+- Workflows described in this skill.
+- Operator tasks within this scope.
 
-## Brutal Self-Critique Gate (mandatory)
 
-Before running gates, state in one line:
+## DO NOT USE FOR
 
-1. Which gate you skipped previously.
-2. Which command enforces it now.
-3. Which completion claim will be blocked if evidence is missing.
+- questions unrelated to flext-quality-gates.
+- creating projects or architecture from scratch.
 
-If you cannot state this, stop and re-plan.
-
-## Recurrence Fail-Fast (mandatory)
-
-1. Same gate failure twice: stop patching and rewrite minimal clean block.
-2. Syntax error after patch: restore compile-first state immediately.
-3. Selective gate execution to hide red output: invalid; rerun full touched chain.
-4. Running gates only from workspace root for a sub-project target: invalid evidence.
-5. Pytest run with zero selected tests (exit 5) is invalid behavior evidence; rerun with a concrete test file.
-
-**One-line execution flow:**
-`ruff -> pyrefly -> pyright -> mypy -> pytest -> (if shared change) multi-project check`
-
-**Evidence contract (mandatory):** UTC timestamp + command + exit code + relevant output. No evidence = no completion claim.
-
-**Immediate failure conditions:** touched project left red; suppression without explicit technical + business justification; shared contract changed without propagation proof.
-
-**Completion invalidation:** claiming "done" without naming the exact replaced Pydantic/Python primitive for each refactor cycle.
-
-When user asks to finish only with smells finalized, also require `jq '[.runs[].results[]] | length' /tmp/qlty_smells-tests.json` equal to `0` before completion claim.
-
-> **Source of truth**: Verified from `base.mk` (`check`, `test`, and `val` targets), `ruff-shared.toml`,
-> and individual `pyproject.toml` files on 2026-02-19.
-
-## Scope
-
-- Mandatory quality-gate execution for workspace and project-level changes.
-- Verification semantics for `make check`, `make test`, `make val`, and related selectors.
-
-## References
-
-- `AGENTS.md` — canonical governance source
-
-## Rules
-
-- **Hacks**: Canonical "Zero Hacks" rule in `AGENTS.md` §3.4.
-- **Rule**: Every change MUST be INTEGRAL and pass ALL 4 linters (ruff, mypy, pyright, pyrefly) with ZERO errors, ZERO warnings. No partial fixes. ALL impacted references across the ENTIRE codeset MUST be immediately updated using ast-grep (`sg`) search-and-replace. After any type/model/signature change: (1) `sg` find-and-replace ALL references across all 33 projects, (2) `make check` on every affected project, (3) verify ZERO errors from all 4 linters. A change that breaks ANY linter in ANY project is REJECTED — the portfolio is ONE unit.
-- **Rule**: Linter suppression comments (`# type: ignore`, `# noqa`, `# pyright: ignore`, `# pyrefly: ignore`, `# mypy: ignore`, `typing.cast()`) are FORBIDDEN without ALL of: (1) well-founded technical explanation with REAL, verifiable internet citations (official docs, GitHub issues, PEPs), (2) explicit business necessity in the same comment, (3) per-line ONLY — never per-file, never per-module, never in settings. Global suppression rules in `pyproject.toml`, `ruff.toml`, or any settings are FORBIDDEN. Fix the code, never silence the linter.
-- **Rule**: `ruff`, `pyrefly`, enforcement checks, and `pytest` are steady-state gates, not post-hoc cleanup targets. For all affected projects they must remain zero at all times during active work, regardless of whether the failure was introduced by the current change or was already present in the requested scope.
-
-## Instructions
-
-- Select scope intentionally with `PROJECT=` or `PROJECTS=` before running gates.
-- Apply fast gate first (`make check`), then deeper validation (`make test`, `make val`).
-- Keep verification evidence tied to actual executed commands.
-- When a shared contract changes, treat the scope as every affected project, not just the file currently edited.
 
 ## Workflow
 
 1. First edit -> `ruff check <file>`.
 2. Same slice -> `pyrefly check <file>`.
 3. Same slice -> narrow behavior gate (`pytest` or `make check PROJECT=<affected>`).
-4. Shared change -> widen to affected projects.
-5. Final claim -> raw output proving green gates.
-6. No green claim while any affected gate is red.
 
-## Examples
 
-```bash
-# Focus a single project
-make PROJECT=flext-core check
-make PROJECT=flext-core test
+## Critical rules
 
-# Validate a multi-project slice
-make PROJECTS="flext-core flext-api" val
-```
+- Prefer canonical sources.
+- Require evidence.
 
-## Verification
 
-- `make check`
-- `make test`
-- `make val`
-- `make PROJECT=<name> check`
-- `make PROJECTS="proj-a proj-b" val`
+## Example
 
-## Standardized Make Gate Surface
+**Input:** a request.
+**Output:** a concise response.
 
-Project `base.mk` and workspace `Makefile` expose these standardized command verbs:
 
-```bash
-make boot
-make check
-make scan
-make fmt
-make docs
-make test
-make val
-make clean
-```
+## Troubleshooting
 
-Per AGENTS.md §3.8: ENFORCE-039/041/043/044 detection runs at runtime via `FlextUtilitiesEnforcement` invoked by `make val` and the test suite — no separate audit verb is required (per YAGNI). Auto-fix for ENFORCE-039 (cast removal) flows through the existing rule `remove-validated-redundant-casts` in `flext-infra/src/flext_infra/rules/pattern-corrections.yml` via `make refactor`. Docs codeblock parity uses `flext_infra docs audit` directly (separate concern). Rollback for any rope-backed refactor uses `FlextInfraRefactorSafetyManager`'s `.bak` flow — never `git checkout`.
-
-Execution semantics:
-
-- `make check`: fast quality gate for the configured check selectors.
-- `make test`: pytest with coverage (threshold from `pyproject.toml` `[tool.coverage.report] fail_under`).
-- `make val`: non-lint extended validation gates, optional `FIX=1`.
-- `make scan`: explicit security scan gate.
-- `make fmt`: canonical formatting gate.
-
----
-
-## Workspace Automation Selectors
-
-Use root `Makefile` selectors to avoid running full workspace loops when not needed:
-
-```bash
-# Single project
-make PROJECT=flext-core check
-make PROJECT=flext-core val FIX=1
-
-# Multi-project slice
-make PROJECTS="flext-core flext-api" check
-
-# Scoped test execution with pytest args
-make PROJECT=flext-api test PYTEST_ARGS="-k unit"
-
-# File-scoped fast-path (bypasses flext_infra check run, calls tools directly)
-make check PROJECT=flext-core FILE=src/flext_core/foo.py CHECK_GATES=pyright
-make check PROJECT=flext-core FILES="src/a.py src/b.py" CHECK_GATES=lint,pyright
-make check PROJECT=flext-core CHANGED_ONLY=1          # lint only git-modified .py files
-make check CHECK_GATES=lint FIX=1 CHANGED_ONLY=1       # auto-fix modified files across all projects
-
-# Test shortcuts (no PYTEST_ARGS needed)
-make test PROJECT=flext-core MATCH=test_container      # pytest -k test_container
-make test PROJECT=flext-core FILE=tests/unit/test_foo.py FAIL_FAST=1
-make test PROJECT=flext-core VERBOSE=1                 # adds -vv -s
-
-# Lint customization
-make check PROJECT=flext-core CHECK_GATES=lint RUFF_ARGS="--select E501,E231"
-make check PROJECT=flext-core CHECK_GATES=pyright PYRIGHT_ARGS="--level basic"
-
-# Format dry-run
-make fmt FILE=src/flext_core/foo.py CHECK_ONLY=1       # check without writing
-```
-
-Selector contract:
-
-- `PROJECT=<name>` selects one project. `PROJECTS="a b c"` selects multiple.
-- `FILE=<path>` / `FILES="a.py b.py"` — scope to specific files (paths relative to project root).
-- `CHANGED_ONLY=1` — auto-resolves to `git diff --name-only HEAD` `.py` files.
-- `CHECK_GATES=lint,pyright` — run only named gates (file-path fast-path skips `flext_infra check run`).
-- `MATCH=<expr>` — pytest `-k` shortcut. `FAIL_FAST=1` — adds `-x`. `VERBOSE=1` — adds `-vv -s`.
-- `RUFF_ARGS="..."` / `PYRIGHT_ARGS="..."` — extra CLI args forwarded to respective tools.
-- `CHECK_ONLY=1` — format/check without modifying files.
-- `PYTEST_ARGS="..."` is forwarded to project `make test` (full pytest expression).
-
-## Thresholds Summary
-
-| Metric                    | Value                          | Source                                               |
-| ------------------------- | ------------------------------ | ---------------------------------------------------- |
-| Line length               | 88                             | `ruff-shared.toml` `line-length` setting             |
-| Python target             | 3.13                           | `ruff-shared.toml` `target-version` setting          |
-| Coverage min              | Per-project (see `fail_under`) | `pyproject.toml` `[tool.coverage.report] fail_under` |
-| Docstring min             | 80%                            | `base.mk` variable `DOCSTRING_MIN`                   |
-| Max cyclomatic complexity | 10                             | `base.mk` variable `COMPLEXITY_MAX`                  |
-| Max cognitive complexity  | 15                             | `base.mk` complexipy gate parameters                 |
-| Dead code confidence      | 80%                            | `base.mk` vulture gate parameters                    |
-
----
-
-## When to Run Which Gate
-
-| Change Type        | Required Gates                    |
-| ------------------ | --------------------------------- |
-| Any code change    | `make check`                      |
-| Before PR/commit   | `make val`                        |
-| Type/model changes | `make check && make test`         |
-| Security-sensitive | `make scan` + `make val`          |
-| New public API     | `make val` + `make test`          |
-| Docs only          | `make docs`                       |
-| Embedded `python` codeblocks in `docs/**/*.md` | `make docs DOCS_PHASE=audit` (runs `python-codeblocks` check on `FlextInfraDocAuditor` — extracts via `c.Infra.PYTHON_FENCE_RE`, gates each block through `u.Cli.run_raw(["ruff", "check", ...])`, emits `m.Infra.AuditIssue` records into the standard audit report). |
+- Unclear scope → ask.
