@@ -1,385 +1,50 @@
 ---
 name: flext-development-workflow
-compatibility: "Requires Python 3.13+, uv, git, and GNU make. Designed for the FLEXT monorepo. RTK command interception requires bash-pretool.sh hook active in the shell."
-description: "Describes the end-to-end development workflow for the FLEXT monorepo: environment bootstrap, make targets, RTK command interception, lint/typecheck/test gates, and CI/CD lifecycle. Use when setting up the dev environment, running make check or make test, debugging CI failures, understanding the make contract, or onboarding to the project."
-
+description: 'Use this skill to describes the end-to-end development workflow for
+  the FLEXT monorepo: environment bootstrap, make targets, RTK command interception,
+  lint/typecheck/test gates, and CI/CD lifecycle. Use when setting up the dev environment,
+  running make check or make test,. DO NOT USE FOR: questions unrelated to flext-development-workflow
+  creating projects or architecture from scratch'
+license: MIT
+metadata:
+  version: 1.0.0
 ---
-
 # FLEXT Development Workflow
 
-**Reviewed**: 2026-02-19 | **Scope**: Coverage source-of-truth migration to pyproject.toml
+**UTILITY SKILL**
 
-> **Source of truth**: Verified from `base.mk`, `pyproject.toml`, `.pre-commit-settings.yaml`,
-> and actual project structure on 2026-02-19.
+## USE FOR
 
-- `AGENTS.md` — canonical governance source
+- Requests about flext development workflow.
+- Workflows described in this skill.
+- Operator tasks within this scope.
 
-## Scope
 
-- Workspace-level developer workflow for boot, check, test, val, and cross-project impact handling.
-- Applies to all projects orchestrated by root `Makefile` and project `base.mk` contracts.
+## DO NOT USE FOR
 
-## References
+- questions unrelated to flext-development-workflow.
+- creating projects or architecture from scratch.
 
-- `AGENTS.md`
-- `base.mk`
-- `Makefile`
-- `ruff-shared.toml`
-- `pyproject.toml`
-
-## Rules
-
-- Use the shared workspace `.venv` as the primary execution environment.
-- Run standardized make verbs (`boot`, `check`, `test`, `val`) instead of ad-hoc command mixes.
-- Treat `pyproject.toml` `[tool.coverage.report] fail_under` as the only coverage threshold source.
-- Treat `ruff`, `pyrefly`, enforcement, and `pytest` as always-zero gates for all affected projects during active work, not just final cleanup.
-- For multi-project or shared-contract work, keep Scope indexed (`scope workspace index`) and Serena correctly activated/configured if Serena-backed tooling is in use.
-
-## Instructions
-
-- Start from workspace root and prefer `PROJECT=` or `PROJECTS=` selectors for focused runs.
-- Keep architecture/import/typing aligned with `flext-architecture-layers`, `flext-import-rules`, and `flext-strict-typing`.
-- Re-run quality gates immediately after edits and before commit actions.
 
 ## Workflow
 
 1. Bootstrap workspace and dependencies.
 2. Edit code with skill/rule alignment.
 3. Run fast feedback (`make check`, `make test`).
-4. Run extended validation (`make val`, optional `FIX=1`).
-5. Run scoped cross-project checks when touching shared modules.
-6. Do not stop while any affected project still has non-zero `ruff`, `pyrefly`, enforcement, or `pytest` failures.
 
-## Examples
 
-```bash
-# Focus one project during active implementation
-make PROJECT=flext-core check
-make PROJECT=flext-core test PYTEST_ARGS="-k unit"
+## Critical rules
 
-# File-scoped feedback (fastest — bypasses orchestrator for tools)
-make check PROJECT=flext-core FILE=src/flext_core/foo.py CHECK_GATES=pyright,lint
-make check PROJECT=flext-core CHANGED_ONLY=1            # only git-modified files
-make test PROJECT=flext-core MATCH=test_container FAIL_FAST=1
+- Prefer canonical sources.
+- Require evidence.
 
-# Auto-fix modified files
-make check CHECK_GATES=lint FIX=1 CHANGED_ONLY=1
 
-# Then validate broader impact
-make PROJECTS="flext-core flext-api" val
-```
+## Example
 
-## Verification
+**Input:** a request.
+**Output:** a concise response.
 
-- `make check`
-- `make test`
-- `make val`
-- `make PROJECT=<name> check`
-- `make PROJECT=<name> check FILE=src/foo.py CHECK_GATES=pyright`
-- `make PROJECTS="proj-a proj-b" val`
 
-## Workspace Setup
+## Troubleshooting
 
-### Prerequisites
-
-- Python 3.13+ (required, verified in `pyproject.toml` and `ruff-shared.toml`)
-- Poetry (package management)
-- Git with submodule support (30 submodules)
-
-### Initial Setup
-
-```bash
-# Clone with submodules
-git clone --recursive https://github.com/flext-sh/flext.git
-cd flext
-
-# Create workspace-level virtual environment
-python3.13 -m venv .venv
-source .venv/bin/activate
-
-# Install workspace + selected project dependencies
-make boot
-# Optional scope:
-# make boot PROJECT=flext-core
-# make boot PROJECTS="flext-core flext-api"
-
-# After setup: upgrade deps and refresh dependency report (or DEPS_REPORT=0 to skip report)
-make up
-
-# Typings: stub supply-chain + typing report (optional PROJECT=, PROJECTS=, DEPS_REPORT=0)
-make types
-```
-
-### Key Principle: Single Shared .venv
-
-All subprojects share ONE virtual environment at `flext/.venv/`.
-The `base.mk` enforces this:
-
-```makefile
-WORKSPACE_VENV := $(WORKSPACE_ROOT)/.venv
-export VIRTUAL_ENV := $(WORKSPACE_VENV)
-export PATH := $(WORKSPACE_VENV)/bin:$(PATH)
-```
-
-If a local `.venv/` exists inside a subproject, workspace enforcement removes it automatically during standardized make verb execution.
-
----
-
-## Day-to-Day Development Loop
-
-### 1. Start Working on a Subproject
-
-```bash
-make PROJECT=flext-core check
-```
-
-### 2. Edit Code
-
-Follow the rules in these skill documents:
-
-- **Architecture**: `flext-architecture-layers/SKILL.md`
-- **Imports**: `flext-import-rules/SKILL.md`
-- **Types**: `flext-strict-typing/SKILL.md`
-
-### 3. Quick Feedback Loop
-
-```bash
-make check
-make test
-# Optional focused run:
-# make test PYTEST_ARGS="-k unit"
-```
-
-### 4. Pre-Commit Validation
-
-```bash
-make val        # Extended non-lint validation (optional FIX=1)
-```
-
----
-
-## Toolchain Details
-
-### Ruff (Linting + Formatting)
-
-- Config: `ruff-shared.toml` at workspace root
-- Each project's `pyproject.toml` extends it: `extend = "../ruff-shared.toml"`
-- Zero tolerance: lint/type/security failures fail `make check`
-- Preview mode enabled for latest rules
-- Auto-fix path: `make val FIX=1`
-- Line length: 88 characters
-- Quote style: double
-- Indent: spaces
-- Line ending: LF
-
-Key Ruff categories enabled:
-
-```
-A, ANN, ARG, ASYNC, B, BLE, C4, C90, COM, D, DJ, DTZ, E, EM, ERA, EXE, F,
-FA, FBT, FIX, FLY, FURB, G, I, ICN, INP, INT, ISC, LOG, N, NPY, PERF, PGH,
-PIE, PL, PT, PTH, PYI, Q, RET, RSE, RUF, S, SIM, SLF, SLOT, T10, T20, TC,
-TCH, TD, TID, TRY, UP, W, YTT
-```
-
-### Pyrefly (Type Checking)
-
-- Config: `pyproject.toml` section `[tool.pyrefly]`
-- Run through standardized gate: `make check`
-- Zero tolerance: ANY type error fails the build
-
-### Pytest (Testing)
-
-- Config: `pyproject.toml` section `[tool.pytest.ini_options]`
-- Coverage settings: `pyproject.toml` section `[tool.coverage]` (source of truth for `run.source` and `report.fail_under`)
-- Run: `make test`
-- Coverage threshold: per-project via `pyproject.toml` `[tool.coverage.report] fail_under`
-- No `--cov*` flags in pytest addopts — coverage is owned by `[tool.coverage]` only
-- Optional selector: `PYTEST_ARGS="-k <expr>"`
-- Markers: `unit`, `integration`
-
-### Additional Quality Tools
-
-These tools run behind standardized verbs:
-
-- `make check`: ruff + format check + pyrefly + bandit
-- `make val`: extended validation gates (with optional `FIX=1`)
-- `make scan`: explicit security gate
-
----
-
-## PYTHONPATH Auto-Discovery
-
-`base.mk` automatically builds PYTHONPATH with all project source dirs:
-
-```makefile
-FLEXT_PYTHONPATH := $(CURDIR)/src:$(WORKSPACE_ROOT)/flext-core/src:
-    $(WORKSPACE_ROOT)/flext-cli/src:$(WORKSPACE_ROOT)/flext-ldif/src:
-    $(WORKSPACE_ROOT)/flext-ldap/src:$(WORKSPACE_ROOT)/flext-api/src:
-    $(WORKSPACE_ROOT)/flext-auth/src:...
-```
-
-This means you can run tests or scripts from any subproject and cross-project
-imports will resolve correctly.
-
----
-
-## Testing Conventions
-
-### Test File Structure
-
-```
-flext-core/
-  tests/
-    unit/
-      test_constants.py
-      test_typings.py
-      test_models.py
-      test_result.py
-      ...
-    integration/
-      test_dispatcher_integration.py
-      ...
-    conftest.py
-```
-
-### Naming Convention
-
-- Test files: `test_<module_name>.py`
-- Test classes: `Test<ClassName>`
-- Test methods: `test_<method_name>_<scenario>` or `test_<behavior>`
-
-### Test Execution
-
-```bash
-# All tests
-make test
-
-# Focused selection — convenience shortcuts
-make test PROJECT=flext-core MATCH=test_entity_creation   # pytest -k test_entity_creation
-make test PROJECT=flext-core FILE=tests/unit/test_models.py
-make test PROJECT=flext-core FILE=tests/unit/test_models.py FAIL_FAST=1 VERBOSE=1
-
-# Full pytest expression (when MATCH is insufficient)
-make test PYTEST_ARGS="-k unit"
-make PROJECT=flext-core test PYTEST_ARGS="tests/unit/test_models.py -v --timeout=120"
-```
-
----
-
-## Working with Multiple Projects
-
-### Workspace-Level Commands (from root Makefile)
-
-```bash
-# Default scope: all discovered projects
-make check
-make test
-make val
-
-# Target a single project
-make PROJECT=flext-auth check
-make PROJECT=flext-auth test
-
-# Target multiple projects
-make PROJECTS="flext-core flext-api" val FIX=1
-
-# Pass pytest selectors to project tests
-make PROJECT=flext-auth test PYTEST_ARGS="-k unit"
-```
-
-### Cross-Project Impact Analysis
-
-When modifying `flext-core`, identify affected projects:
-
-```bash
-# Find all consumers of a specific module/class
-grep -rn "from flext_core.CHANGED_MODULE" --include='*.py' flext-*/src/
-
-# Find all consumers of a specific class
-grep -rn "FlextModels" --include='*.py' flext-*/src/ | grep -v __pycache__
-```
-
----
-
-## Pre-Commit Hooks
-
-Configured in `.pre-commit-settings.yaml`:
-
-- Ruff (lint + format)
-- Various file-level checks (trailing whitespace, end-of-file, etc.)
-
-Run manually:
-
-```bash
-poetry run pre-commit run --all-files
-```
-
----
-
-## Docstring Convention
-
-The project uses Google-style docstrings (enforced by Ruff `D` rules):
-
-```python
-from __future__ import annotations
-
-from flext_core import m, p, r
-
-
-def process_command(
-    command: m.Value,
-    *,
-    timeout: float = 30.0,
-) -> p.Result[bool]:
-    """Process a command through the dispatcher.
-
-    Args:
-        command: The command to process.
-        timeout: Maximum execution time in seconds.
-
-    Returns:
-        r[bool]: Success result or error details.
-    """
-    _ = command, timeout
-    return r[bool].ok(True)
-```
-
-The `"""` docstring goes on the first line if single-line, otherwise multi-line
-as shown above.
-
----
-
-## File Header Convention
-
-Every Python source file has this header:
-
-```python
-"""Short description of the module.
-
-Optional longer description with architectural context.
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-"""
-
-from __future__ import annotations
-
-# ... imports ...
-```
-
----
-
-## Version Management
-
-- Version defined in `__version__.py` in each package
-- Poetry manages versions in `pyproject.toml`
-- Subprojects pin `flext-core` as a dependency
-
----
-
-## Branching and Git Workflow
-
-- Main branch: `main`
-- Feature branches: `feature/<description>`
-- The 30 submodules each have their own Git repositories
-- Workspace-level `.gitmodules` tracks them all
+- Unclear scope → ask.

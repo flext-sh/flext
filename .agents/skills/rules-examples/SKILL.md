@@ -1,96 +1,51 @@
 ---
 name: rules-examples
-description: Rules for runnable examples in `examples/` so they stay aligned with current APIs and tooling. Use when editing or adding example scripts.
-
+description: 'Use this skill to rules for runnable examples in `examples/` so they
+  stay aligned with current APIs and tooling. Use when editing or adding example scripts.
+  **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment.
+  DO NOT USE FOR: questions unrelated to rules-examples creating projects or architecture
+  from scratch'
+license: MIT
+metadata:
+  version: 1.0.0
 ---
-
 # Rules Examples
 
-**Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment
+**UTILITY SKILL**
 
-## Scope
+## USE FOR
 
-- `examples/acl_processing_example.py`
-- `examples/advanced_processing_example.py`
-- `examples/complete_workflow_example.py`
-- `examples/README.md`
+- Requests about rules examples.
+- Workflows described in this skill.
+- Operator tasks within this scope.
 
-## References
 
-- `AGENTS.md` — canonical governance source
-- `examples/README.md`
-- `flext-core/src/flext_core/__init__.py`
-- `flext-core/src/flext_core/result.py`
+## DO NOT USE FOR
 
-## Rules
+- questions unrelated to rules-examples.
+- creating projects or architecture from scratch.
 
-- Keep examples executable from repository root.
-- Use current public APIs; avoid stale/internal imports.
-- Include realistic input/output flow, not placeholder pseudo-code.
-- Keep example naming and README references synchronized.
-- **Rule**: `Any`, `object`, and `Mapping[str, Any]` are FORBIDDEN in example code — use `t.*` contracts from `typings.py` exclusively. `None` in type unions only when business-required. Examples must demonstrate the same strict typing discipline as production code.
-
-## Instructions
-
-- Anchor imports to public package surfaces (`flext_core`, package root exports).
-- Update `examples/README.md` when files are added/renamed.
-- Remove outdated APIs from examples when core contracts change.
-
-```bash
-python examples/complete_workflow_example.py --help || true
-```
 
 ## Workflow
 
 1. Choose target example and its API dependencies.
 2. Update script with current public imports and behavior.
 3. Verify script syntax and invocation.
-4. Sync README references.
-
-## Examples
-
-Good:
-
-```python
-from __future__ import annotations
-
-from flext_core import p, r
 
 
-def parse_value(raw: str) -> p.Result[int]:
-    """Stable public import with canonical alias."""
-    try:
-        return r[int].ok(int(raw))
-    except ValueError:
-        return r[int].fail(f"invalid integer: {raw}")
-```
+## Critical rules
 
-Why good: stable public import with canonical alias, both symbols used.
-
-Bad:
-
-```python
-from __future__ import annotations
-
-from flext_core import m
+- Prefer canonical sources.
+- Require evidence before claiming success.
 
 
-class _InternalModel(m.ArbitraryTypesModel):
-    """Couples to internal details that drift quickly."""
+## Example
 
-    raw: str = "placeholder"
-```
+**Input:** a request.
+**Output:** a concise response.
 
-Why bad: example couples to private internals and will drift quickly.
 
-## Verification
+## Troubleshooting
 
-Make gates:
-
-- `make check PROJECT=flext-core` — verify core imports used by examples still pass
-
-File checks:
-
-- `ls -la examples`
-- `rg -n "from flext_core|from flext_core\._" examples/*.py`
-- `rg -n "TODO|FIXME" examples || true`
+- Unclear scope → ask.
+- Missing context → state assumptions.

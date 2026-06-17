@@ -1,116 +1,49 @@
 ---
 name: workspace-maintenance
-description: Use when running workspace-wide maintenance tasks across all FLEXT submodules. Covers hygiene checks, dependabot settings standardization, Poetry health validation, and security enforcement automation.
-
+description: 'Use this skill to use when running workspace-wide maintenance tasks
+  across all FLEXT submodules. Covers hygiene checks, dependabot settings standardization,
+  Poetry health validation, and security enforcement automation. DO NOT USE FOR: questions
+  unrelated to workspace-maintenance creating projects or architecture from scratch'
+license: MIT
+metadata:
+  version: 1.0.0
 ---
-
 # Workspace Maintenance
 
-## Scope
+**UTILITY SKILL**
 
-- `scripts/maintenance/check_workspace_hygiene.py`
-- `scripts/maintenance/check_dependabot_config.py`
-- `scripts/maintenance/check_poetry_health.py`
+## USE FOR
 
-## References
+- Requests about workspace maintenance.
+- Workflows described in this skill.
+- Operator tasks within this scope.
 
-- `AGENTS.md`
-- `.agents/skills/rules-scripts/SKILL.md`
-- `.agents/skills/scripts-maintenance/SKILL.md`
 
-## Rules
+## DO NOT USE FOR
 
-- `AGENTS.md` is the canonical governance source; this skill covers workspace-maintenance automation only.
-- All checks must be idempotent and safe by default (read-only unless `--apply`).
-- Mutations (cleanup, lock updates) require explicit `--apply` flag.
-- Scripts must discover `flext-*` projects with `pyproject.toml` for workspace iteration.
-- Reports output to `.reports/maintenance--json--<slug>.json`.
-- Exit 0 = all checks pass, exit 1 = violations found.
-- Each script must be standalone (stdlib + PyYAML only, no flext_core imports).
-- Workspace maintenance work must preserve or restore zero `ruff`, `pyrefly`, enforcement, and `pytest` debt across all affected projects before completion.
-- Do not duplicate repository-wide execution law here; point back to `AGENTS.md` when broader process or tooling policy is needed.
+- questions unrelated to workspace-maintenance.
+- creating projects or architecture from scratch.
 
-## Instructions
-
-- When adding a new workspace check, create a `check_<concern>.py` under `scripts/maintenance/`.
-- Add the `# Owner-Skill: .agents/skills/workspace-maintenance/SKILL.md` marker on line 2.
-- Follow the gate contract pattern: `argparse`, `dataclass` violations, JSON report, `sys.exit(main())`.
-- Register the new script in this skill's Scope and Scripts table.
-- Use the project discovery pattern: iterate `flext-*` dirs with `pyproject.toml` present.
 
 ## Workflow
 
 1. Identify the maintenance concern (hygiene, dependabot, poetry, security).
 2. Run standard gates first: `make check` and `make val`.
 3. Run specific maintenance checker with `--help` first, then default (dry-run) mode.
-4. Review the JSON report in `.reports/` or the ANSI terminal output.
-5. If fixes are needed, re-run with `--apply` to mutate state.
-6. Verify: `make val VALIDATE_SCOPE=workspace` for workspace-level inventory.
-7. Do not stop while affected projects still carry non-zero quality or enforcement debt.
 
-## Examples
 
-Good (primary — Make verbs for standard gates):
+## Critical rules
 
-```bash
-make check                                  # all lint gates across all projects
-make val                                    # complexity + docstring gates
-make val VALIDATE_SCOPE=workspace           # workspace-level inventory validation
-make clean                                  # clean all projects
-make boot                                   # reinstall dependencies
-make up                                     # upgrade deps + dependency report (.reports/dependencies/)
-make types                                  # stub supply-chain + typing report (DEPS_REPORT=0 to skip report)
-make sync                                   # sync all project Makefiles from pyproject.toml + refresh __init__.py
-make sync PROJECT=flext-api                 # sync a single project Makefile
+- Prefer canonical sources.
+- Require evidence.
 
-# File-scoped (fast feedback — bypasses orchestrator):
-make check PROJECT=flext-core CHANGED_ONLY=1            # lint only git-modified .py files
-make check PROJECT=flext-core FILE=src/foo.py CHECK_GATES=lint,pyright
-make check CHECK_GATES=lint FIX=1 CHANGED_ONLY=1        # auto-fix modified files across workspace
-make fmt FILE=src/flext_core/foo.py CHECK_ONLY=1        # dry-run format check on single file
-```
 
-Good (internal — maintenance checkers for specific concerns):
+## Example
 
-```bash
-python scripts/maintenance/check_workspace_hygiene.py
-python scripts/maintenance/check_dependabot_config.py --json
-python scripts/maintenance/check_poetry_health.py --apply
-```
+**Input:** a request.
+**Output:** a concise response.
 
-Why good: Make verbs for standard workflow; maintenance scripts for specialized checks with safe defaults.
 
-Bad:
+## Troubleshooting
 
-```bash
-git clean -fdx  # directly without guard
-poetry update   # in root without per-project isolation
-```
-
-Why bad: Destructive without confirmation, no per-project isolation or reporting.
-
-## Verification
-
-Make gates (primary):
-
-- `make check` — all lint gates across all projects
-- `make val` — complexity + docstring gates across all projects
-- `make val VALIDATE_SCOPE=workspace` — workspace-level inventory + wiring validation
-- `make clean` — verify clean targets
-- `make boot` — verify dependency installation
-- `make up` / `make types` — dependency and typing reports under `.reports/dependencies/` (see AGENTS.md Maintenance and standard places)
-
-Script-level checks (internal):
-
-- `python -m compileall scripts/maintenance/check_workspace_hygiene.py scripts/maintenance/check_dependabot_config.py scripts/maintenance/check_poetry_health.py`
-- `python scripts/maintenance/check_workspace_hygiene.py --help`
-- `python scripts/maintenance/check_dependabot_config.py --help`
-- `python scripts/maintenance/check_poetry_health.py --help`
-
-## Scripts
-
-| Path                                             | Purpose                              | Invocation                                              |
-| ------------------------------------------------ | ------------------------------------ | ------------------------------------------------------- |
-| `scripts/maintenance/check_workspace_hygiene.py` | Workspace cleanliness validation     | `python scripts/maintenance/check_workspace_hygiene.py` |
-| `scripts/maintenance/check_dependabot_config.py` | Dependabot settings standardization  | `python scripts/maintenance/check_dependabot_config.py` |
-| `scripts/maintenance/check_poetry_health.py`     | Poetry lock health and outdated deps | `python scripts/maintenance/check_poetry_health.py`     |
+- Unclear scope → ask.

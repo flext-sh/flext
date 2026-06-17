@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import re
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 
 WORKSPACE = Path("/home/marlonsc/flext")
@@ -131,20 +132,33 @@ def _scan_file(py_file: Path, project_name: str) -> list[str]:
     return violations
 
 
-def main() -> int:
-    """Scan workspace projects for banned direct CLI-domain library usage."""
-    violations: list[str] = []
+def _iter_project_dirs() -> Iterator[Path]:
     for project_dir in sorted(WORKSPACE.iterdir()):
         if not project_dir.is_dir() or project_dir.name in SKIP_PROJECTS:
             continue
-        for sub in ("src", "tests"):
-            base = project_dir / sub
-            if not base.is_dir():
-                continue
+        yield project_dir
+
+
+def _iter_project_scan_bases(project_dir: Path) -> Iterator[Path]:
+    for sub in ("src", "tests"):
+        base = project_dir / sub
+        if base.is_dir():
+            yield base
+
+
+def _iter_scan_files() -> Iterator[tuple[Path, str]]:
+    for project_dir in _iter_project_dirs():
+        for base in _iter_project_scan_bases(project_dir):
             for py_file in base.rglob("*.py"):
-                if _is_skipped(py_file):
-                    continue
-                violations.extend(_scan_file(py_file, project_dir.name))
+                if not _is_skipped(py_file):
+                    yield py_file, project_dir.name
+
+
+def main() -> int:
+    """Scan workspace projects for banned direct CLI-domain library usage."""
+    violations: list[str] = []
+    for py_file, project_name in _iter_scan_files():
+        violations.extend(_scan_file(py_file, project_name))
 
     if violations:
         print(f"{len(violations)} CLI-domain violations detected:")
