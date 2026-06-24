@@ -1,0 +1,11 @@
+# code-review-graph custom language config for flext
+# Teach CRG to parse Markdown docs as first-class graph nodes.
+
+[languages.markdown]
+extensions = [".md"]
+grammar = "markdown"
+function_node_types = ["atx_heading", "list_item"]
+class_node_types = ["section", "fenced_code_block"]
+import_node_types = []
+call_node_types = []
+comment = "Markdown documentation: headings and list items as functions, sections and fenced code blocks as classes"
