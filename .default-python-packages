@@ -1,0 +1,5 @@
+# packages auto-installed into the mise-pinned python (python.default_packages_file)
+ruff==0.15.17
+mypy==1.20.2
+pyright==1.1.410
+pyrefly==1.0.0

@@ -41,6 +41,17 @@
 !.agents/**
 .agents/skills/*/report.json
 
+# Dispatcher-based command surface (Make SSOT)
+!scripts/
+!scripts/cmd/
+!scripts/cmd/**
+scripts/*.py
+scripts/*.sh
+scripts/*.md
+scripts/maintenance/
+!scripts/dispatch.py
+!scripts/__init__.py
+
 # TRACK: Beads team config; keep Dolt data, runtime state, and JSONL exports local.
 # ============================================================================
 !.beads/
@@ -57,6 +68,10 @@
 !pyrefly.toml
 !poetry.lock
 !ruff-shared.toml
+
+# mise toolchain pinning
+!.mise.toml
+!.default-python-packages
 
 # Go configuration
 !go.mod
