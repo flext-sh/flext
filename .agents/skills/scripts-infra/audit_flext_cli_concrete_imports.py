@@ -30,7 +30,7 @@ ALLOWED_EXTENSION_FILES = frozenset({
     "settings.py",
 })
 PUBLIC_FACADE_NAMES = frozenset({"FlextCli"})  # only the class type for type(cli)
-WORKSPACE = Path("/home/marlonsc/flext")
+WORKSPACE = Path(__file__).resolve().parents[3]
 SKIP_PROJECTS = frozenset({"flext-cli", "flext-core"})
 
 CONCRETE_IMPORT_RE = re.compile(

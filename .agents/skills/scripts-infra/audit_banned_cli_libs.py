@@ -32,7 +32,7 @@ import sys
 from collections.abc import Iterator
 from pathlib import Path
 
-WORKSPACE = Path("/home/marlonsc/flext")
+WORKSPACE = Path(__file__).resolve().parents[3]
 SKIP_PROJECTS = frozenset({"flext-cli", "flext-core"})
 SKIP_PATH_FRAGMENTS = (".bak", "__pycache__", ".scope", ".serena", ".venv", ".git")
 TOML_ALLOWED = frozenset({"flext-infra"})
