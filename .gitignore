@@ -32,6 +32,7 @@
 !typings/
 !libs/
 !.vscode/
+!.code-review-graph/
 !.claude/
 !.claude/CLAUDE.md
 !.claude/settings.json
