@@ -127,8 +127,17 @@ Recommended baseline for contribution work:
 
 ## Commit and PR behavior
 
-- Default profile is conservative: no commit/push without explicit authorization.
-- If authorization exists, stage only lane files; avoid `git add .`.
+- Default profile is land-immediately: after scoped green validation, stage only
+  the active bead lane files, commit, push fast-forward, and record SHA/evidence
+  in Beads.
+- The operator grants durable authorization for normal scoped `git add`,
+  `git commit`, and fast-forward `git push`; do not stop at “needs
+  authorization” for routine landing.
+- Never use `git add .` in the shared worktree. Use explicit pathspecs and
+  coordinate overlaps through Beads before staging.
+- Escalate only destructive, non-fast-forward, history-rewrite, rollback, or
+  cross-lane ambiguity. A dirty worktree outside the bead is not a blocker when
+  explicit pathspecs can isolate the lane.
 - PRs/commits should state: scope, why, commands run, and remaining risk.
 
 ## Tooling and agent workflow (ECC alignment)
@@ -147,5 +156,6 @@ Session-specific overrides are read from active Beads only. If a migration lane 
 A task is complete only with:
 
 - objective command evidence (command + exit code + output),
+- a scoped commit and fast-forward push, with SHA recorded in Beads,
 - no unresolved scoped smells in the touched lane,
 - bead notes updated with blocker status or completion evidence.
