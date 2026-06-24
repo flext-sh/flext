@@ -29,6 +29,7 @@ metadata:
 1. Identify touched paths.
 2. Identify whether the request intent matches a workspace prompt.
 3. Check whether `scope` is available, whether Serena is configured/usable (`command -v serena`, `serena start-mcp-server --help`, `serena project health-check`), and whether `ast-grep` or MCP is required by the task.
+4. For common workspace verbs, prefer the `~/.ai-hub` distributed base (`make cosmos-help`) and update it from `~/.ai-hub` when the verb surface changes.
 
 ## Critical rules
 
