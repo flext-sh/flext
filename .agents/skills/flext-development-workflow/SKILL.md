@@ -29,6 +29,7 @@ metadata:
 1. Bootstrap workspace and dependencies.
 2. Edit code with skill/rule alignment.
 3. Run fast feedback (`make check`, `make test`).
+4. Use `make cosmos-help` to discover dispatcher verbs provided by the `~/.ai-hub` workspace base.
 
 ## Critical rules
 
