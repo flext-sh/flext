@@ -836,7 +836,7 @@ _pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyref
 	$(WORKSPACE_INFRA_CHECK) run \
 		--gates pyrefly \
 		--reports-dir "$(CURDIR)/.reports/pyrefly" \
-		--projects "." \
+		$(if $(HAS_EXPLICIT_PROJECT_SELECTION),$(SELECTED_PROJECT_FLAGS),--projects ".") \
 		2>&1 | tee .reports/pyrefly/pyrefly-repo-before.txt; \
 	pyre_status=$${PIPESTATUS[0]}; \
 	printf "exit_code: %s\n" "$$pyre_status" >> .reports/pyrefly/pyrefly-repo-before.txt; \
