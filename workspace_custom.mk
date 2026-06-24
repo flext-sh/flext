@@ -133,3 +133,6 @@ full-check: ## Run legacy full check path with explicit timeout (use only when n
 		fi; \
 		exit $$code; \
 	fi
+
+# ~/.ai-hub workspace tooling thin-wrapper
+include /home/marlonsc/.ai-hub/templates/cosmos-wrapper.mk
