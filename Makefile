@@ -815,8 +815,10 @@ _types: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency re
 		echo "  no packages to regenerate"; \
 	fi; \
 	rm -rf "$$tmp_dir"
-	$(Q)$(WORKSPACE_INFRA_VALIDATE) stub-validate \
-		$(if $(SELECTED_PROJECT_FLAGS),$(SELECTED_PROJECT_FLAGS),--all)
+	$(Q)if [ "$(TYPES_FAST)" != "1" ]; then \
+		$(WORKSPACE_INFRA_VALIDATE) stub-validate \
+			$(if $(SELECTED_PROJECT_FLAGS),$(SELECTED_PROJECT_FLAGS),--all); \
+	fi
 	$(Q)if [ "$(TYPES_FAST)" != "1" ] && [ "$(DEPS_REPORT)" = "1" ]; then \
 		printf "Dependency report (deptry + pip check)... "; \
 		report_ts=$$(date +%s); \
