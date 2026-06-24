@@ -4,12 +4,13 @@
 # what = "types"
 # domain = "quality"
 # summary = "Run typing supply chain"
-# description = "Generates/updates stubs, validates typing dependency report and optional pyrefly."
+# description = "Runs stubs/typing validation, optional dependency report and optional pyrefly."
 # example = "make check WHAT=types"
 # mutates = false
 # aliases = []
 # params = [
-#   { name = "CHECK_GATES", help = "Optional additional gates (e.g. pyrefly)", required = false, default = "" }
+#   { name = "CHECK_GATES", help = "Optional additional gates (e.g. pyrefly)", required = false, default = "" },
+#   { name = "DEPS_REPORT", help = "Run global dependency report when set to 1", required = false, default = "0", choices = ["0","1"] }
 # ]
 # rules = ["dev-gate", "type-check"]
 # ///
