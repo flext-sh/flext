@@ -25,6 +25,13 @@ The root portal is intentionally small. It documents the FLEXT workspace itself,
 - [API Reference](api-reference/README.md)
 - [Standards](standards/README.md)
 
+## Workspace tooling
+
+FLEXT participates in the `~/.ai-hub` distributed workspace base. The common
+thin-wrapper is included via `workspace_custom.mk` and exposes dispatcher verbs
+through `make cosmos-help`. Existing FLEXT targets (`make check`, `make test`,
+etc.) are unchanged. See [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md).
+
 ## Scope Boundary
 
 The root portal governs only FLEXT packages and shared FLEXT infrastructure. If another internal directory lives in the same repository but is not a FLEXT package, it must be documented in its own local tree and is not part of this portal.
