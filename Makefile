@@ -79,7 +79,8 @@ PR_CHECKS_STRICT ?= 0
 PR_RELEASE_ON_MERGE ?= 1
 PR_INCLUDE_ROOT ?= 1
 PR_CHECKPOINT ?= 1
-DEPS_REPORT ?= 1
+DEPS_REPORT ?= 0
+TYPES_FAST ?= 0
 VERBOSE ?=
 
 PR_BRANCH ?= 0.12.0-dev
@@ -815,7 +816,7 @@ _types: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency re
 	rm -rf "$$tmp_dir"
 	$(Q)$(WORKSPACE_INFRA_VALIDATE) stub-validate \
 		$(if $(SELECTED_PROJECT_FLAGS),$(SELECTED_PROJECT_FLAGS),--all)
-	$(Q)if [ "$(DEPS_REPORT)" != "0" ]; then \
+	$(Q)if [ "$(TYPES_FAST)" != "1" ] && [ "$(DEPS_REPORT)" = "1" ]; then \
 		printf "Dependency report (deptry + pip check)... "; \
 		report_ts=$$(date +%s); \
 		if $(WORKSPACE_INFRA_DEPS) detect --typings --quiet --no-fail --output "$(CURDIR)/.reports/dependencies/detect-runtime-dev-latest.json"; then \
