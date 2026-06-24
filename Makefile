@@ -117,6 +117,7 @@ MAKE_SELECTION_ARGS := $(strip $(if $(PROJECT),PROJECT="$(PROJECT)") $(if $(PROJ
 MODERNIZE_SELECTION_FLAGS := $(strip $(if $(HAS_EXPLICIT_PROJECT_SELECTION),$(SELECTED_PROJECT_FLAGS),))
 WORKSPACE_SELECTED_ROOTS := $(strip $(if $(HAS_EXPLICIT_PROJECT_SELECTION),$(SELECTED_PROJECTS),.))
 WORKSPACE_MODERNIZE_PYPROJECTS := $(strip $(if $(HAS_EXPLICIT_PROJECT_SELECTION),$(foreach proj,$(SELECTED_PROJECTS),$(proj)/pyproject.toml),pyproject.toml $(foreach proj,$(ALL_PROJECTS),$(proj)/pyproject.toml)))
+PYREFLY_POLICY_INCLUDES := $(strip $(if $(HAS_EXPLICIT_PROJECT_SELECTION),$(foreach proj,$(SELECTED_PROJECTS),--include "$(proj)/**/*.py*"),--include "**/*.py*"))
 
 # Auto-detect PYTHONPATH from all project src/ directories (no hardcoded names)
 # Priority: flext-infra and flext-tests BEFORE flext-core (they split from flext-core
@@ -849,7 +850,7 @@ _pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyref
 	echo "--- # type: ignore ---"; \
 	$(WORKSPACE_INFRA_VALIDATE) scan --workspace . \
 		--pattern "#\\s*type:\\s*ignore" \
-		--include "**/*.py*" \
+		$(PYREFLY_POLICY_INCLUDES) \
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
 		--exclude "**/*.pyc" --exclude "**/*.pyo" \
 		--exclude ".reports/**" --exclude "**/*.bak" \
@@ -862,7 +863,7 @@ _pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyref
 	echo "--- Any (typing) ---"; \
 	$(WORKSPACE_INFRA_VALIDATE) scan --workspace . \
 		--pattern "\\bAny\\b" \
-		--include "**/*.py*" \
+		$(PYREFLY_POLICY_INCLUDES) \
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
 		--exclude "**/*.pyc" --exclude "**/*.pyo" \
 		--exclude ".reports/**" --exclude "**/*.bak" \
@@ -875,7 +876,7 @@ _pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyref
 	echo "--- object annotations ---"; \
 	$(WORKSPACE_INFRA_VALIDATE) scan --workspace . \
 		--pattern "(?::\\s*|->\\s*)object\\b" \
-		--include "**/*.py*" \
+		$(PYREFLY_POLICY_INCLUDES) \
 		--exclude "**/.venv/**" --exclude "**/venv/**" --exclude "**/__pycache__/**" --exclude "**/.git/**" \
 		--exclude "**/*.pyc" --exclude "**/*.pyo" \
 		--exclude ".reports/**" --exclude "**/*.bak" \
