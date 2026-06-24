@@ -8,7 +8,7 @@
 # other lanes' uncommitted/untracked changes never pollute or brick it. Green when
 # nothing is committed-ahead.
 
-.PHONY: done-check waza legacy-check legacy-val full-check
+.PHONY: done-check waza legacy-check legacy-val full-check legacy-boot legacy-build legacy-ship legacy-test legacy-clean
 
 done-check: ## Real-user/green-green check, scoped to committed changes vs upstream
 	$(Q)base=$$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo origin/main); \
@@ -20,6 +20,16 @@ done-check: ## Real-user/green-green check, scoped to committed changes vs upstr
 	n=$$(printf '%s\n' "$$files" | grep -c .); \
 	echo "done-check: ruff on $$n committed-vs-$$base .py file(s)"; \
 	printf '%s\n' "$$files" | xargs -r ruff check --quiet
+
+workspace-docs-audit: ## Markdown lint for workspace docs (used by docs-reorg audit/validate)
+	$(Q)md_files=$$(find docs/ -type f -name '*.md' 2>/dev/null | sort); \
+	if [ -z "$$md_files" ]; then \
+		echo "workspace-docs-audit: no .md files in docs/ — green"; \
+		exit 0; \
+	fi; \
+	md_config=""; \
+	if [ -f ".markdownlint.json" ]; then md_config="--config .markdownlint.json"; fi; \
+	printf '%s\n' "$$md_files" | xargs -r markdownlint $$md_config
 
 waza: ## Waza readiness gate for .agents/skills (WHAT=check|optimize; default: check)
 	$(Q)case "$(WHAT)" in \
@@ -57,6 +67,55 @@ legacy-val: ## Legacy validation dispatch (prefer: make val WHAT=<scope>).
 	   echo "VALID legacy values: project|workspace|all (or empty=project)"; \
 	   exit 2 ;; \
 	esac
+
+legacy-boot: ## Legacy boot dispatch (prefer: make boot WHAT=<action>).
+	$(Q)echo "DEPRECATED: legacy-boot keeps old boot WHAT mappings; prefer make boot WHAT=<all|sync|stat|imp>."
+	$(Q)case "$(WHAT)" in \
+	"" | all | venv | submodules) $(MAKE) --no-print-directory _boot_default $(MAKE_SELECTION_ARGS) ;; \
+	sync) $(MAKE) --no-print-directory _sync $(MAKE_SELECTION_ARGS) ;; \
+	stat) $(MAKE) --no-print-directory _stat $(MAKE_SELECTION_ARGS) ;; \
+	imp) $(MAKE) --no-print-directory _imp $(MAKE_SELECTION_ARGS) ;; \
+	*) echo "ERRO: invalid legacy boot WHAT='$(WHAT)'"; \
+	   echo "VALID legacy values: all|venv|submodules|sync|stat|imp (or empty=all)"; \
+	   exit 2 ;; \
+	esac
+
+legacy-build: ## Legacy build dispatch (prefer: make build WHAT=<action>).
+	$(Q)echo "DEPRECATED: legacy-build keeps old build WHAT mappings; prefer make build WHAT=<all|gen|mod|up|constraints|sync|docs|stubs>."
+	$(Q)case "$(WHAT)" in \
+	"" | all) $(MAKE) --no-print-directory _build_default $(MAKE_SELECTION_ARGS) ;; \
+	gen) $(MAKE) --no-print-directory _gen $(MAKE_SELECTION_ARGS) ;; \
+	mod) $(MAKE) --no-print-directory _mod $(MAKE_SELECTION_ARGS) ;; \
+	up) $(MAKE) --no-print-directory _up $(MAKE_SELECTION_ARGS) ;; \
+	constraints) $(MAKE) --no-print-directory _constraints $(MAKE_SELECTION_ARGS) ;; \
+	sync) $(MAKE) --no-print-directory _sync $(MAKE_SELECTION_ARGS) ;; \
+	docs) $(MAKE) --no-print-directory _docs $(MAKE_SELECTION_ARGS) ;; \
+	stubs) $(MAKE) --no-print-directory _stubs $(MAKE_SELECTION_ARGS) ;; \
+	*) echo "ERRO: invalid legacy build WHAT='$(WHAT)'"; \
+	   echo "VALID legacy values: all|gen|mod|up|constraints|sync|docs|stubs (or empty=all)"; \
+	   exit 2 ;; \
+	esac
+
+legacy-ship: ## Legacy ship dispatch (prefer: make ship WHAT=<action>).
+	$(Q)echo "DEPRECATED: legacy-ship keeps old ship WHAT mappings; prefer make ship WHAT=<all|save|tag|push|pr|rel>."
+	$(Q)case "$(WHAT)" in \
+	"" | all | rel) $(MAKE) --no-print-directory _rel $(MAKE_SELECTION_ARGS) ;; \
+	save) $(MAKE) --no-print-directory _save $(MAKE_SELECTION_ARGS) ;; \
+	tag) $(MAKE) --no-print-directory _tag $(MAKE_SELECTION_ARGS) ;; \
+	push) $(MAKE) --no-print-directory _push $(MAKE_SELECTION_ARGS) ;; \
+	pr) $(MAKE) --no-print-directory _pr $(MAKE_SELECTION_ARGS) ;; \
+	*) echo "ERRO: invalid legacy ship WHAT='$(WHAT)'"; \
+	   echo "VALID legacy values: all|save|tag|push|pr|rel (or empty=all)"; \
+	   exit 2 ;; \
+	esac
+
+legacy-test: ## Legacy test dispatch (prefer: make test WHAT=<action>).
+	$(Q)echo "DEPRECATED: legacy-test keeps old test interface; prefer make test WHAT=all PROJECT=... MATCH=...."
+	$(Q)$(MAKE) --no-print-directory _test_default $(MAKE_SELECTION_ARGS)
+
+legacy-clean: ## Legacy clean dispatch (prefer: make clean WHAT=<action>).
+	$(Q)echo "DEPRECATED: legacy-clean keeps old clean interface; prefer make clean WHAT=all."
+	$(Q)$(MAKE) --no-print-directory _clean_default $(MAKE_SELECTION_ARGS)
 
 full-check: ## Run legacy full check path with explicit timeout (use only when needed)
 	$(Q)timeout_s=$${FULL_CHECK_TIMEOUT:-1200}; \
