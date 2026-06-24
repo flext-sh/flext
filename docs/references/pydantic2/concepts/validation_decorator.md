@@ -1,17 +1,3 @@
-<!-- TOC START -->
-
-- [Parameter types](#parameter-types)
-- [Function signatures](#function-signatures)
-- [Using the [`u.Field()`][pydantic.u.Field] function to describe function parameters](#using-the-fieldpydanticfield-function-to-describe-function-parameters)
-- [Accessing the original function](#accessing-the-original-function)
-- [Async functions](#async-functions)
-- [Compatibility with type checkers](#compatibility-with-type-checkers)
-- [Custom configuration](#custom-configuration)
-- [Extension — validating arguments before calling a function](#extension-validating-arguments-before-calling-a-function)
-- [Limitations](#limitations)
-  - [Validation exception](#validation-exception)
-  - [Performance](#performance)
-  <!-- TOC END -->
 
 ??? api "API Documentation"
 [`pydantic.u.validate_call_decorator.u.validate_call`][pydantic.u.validate_call_decorator.u.validate_call]<br>

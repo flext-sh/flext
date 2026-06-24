@@ -1,11 +1,5 @@
 # Forward Annotations
 
-<!-- TOC START -->
-
-- [Self-referencing (or "Recursive") Models](#self-referencing-or-recursive-models)
-  - [Cyclic references](#cyclic-references)
-  <!-- TOC END -->
-
 Forward annotations (wrapped in quotes) or using the `from **future** import annotations
 
 from collections.abc import Mapping, Sequence` [future statement]

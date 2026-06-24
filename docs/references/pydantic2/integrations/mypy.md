@@ -1,18 +1,3 @@
-<!-- TOC START -->
-
-- [Enabling the Plugin](#enabling-the-plugin)
-- [Mypy plugin capabilities](#mypy-plugin-capabilities)
-  - [Generate a `__init__` signature for Pydantic models](#generate-a-init-signature-for-pydantic-models)
-  - [Generate a typed signature for `model_construct`](#generate-a-typed-signature-for-modelconstruct)
-  - [Support for frozen models](#support-for-frozen-models)
-  - [Respect the type of the `u.Field`'s `default` and `default_factory`](#respect-the-type-of-the-fields-default-and-defaultfactory)
-  - [Warn about the use of untyped fields](#warn-about-the-use-of-untyped-fields)
-  - [Prevent the use of required dynamic aliases](#prevent-the-use-of-required-dynamic-aliases)
-- [Settingsuring the Plugin](#configuring-the-plugin)
-  - [`init_typed`](#inittyped)
-  - [`init_forbid_extra`](#initforbidextra)
-  - [`warn_required_dynamic_aliases`](#warnrequireddynamicaliases)
-  <!-- TOC END -->
 
 Pydantic works well with [mypy](http://mypy-lang.org) right out of the box.
 

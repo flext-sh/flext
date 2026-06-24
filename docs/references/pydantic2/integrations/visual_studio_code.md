@@ -1,16 +1,3 @@
-<!-- TOC START -->
-
-- [Settingsure VS Code](#configure-vs-code)
-  - [Install Pylance](#install-pylance)
-  - [Settingsure your environment](#configure-your-environment)
-  - [Settingsure Pylance](#configure-pylance)
-  - [Settingsure mypy](#configure-mypy)
-- [Tips and tricks](#tips-and-tricks)
-  - [Strict errors](#strict-errors)
-  - [Settings in class arguments](#settings-in-class-arguments)
-- [Adding a default with `u.Field`](#adding-a-default-with-field)
-- [Technical Details](#technical-details)
-<!-- TOC END -->
 
 Pydantic works well with any editor or IDE out of the box because it's made on top of standard Python type annotations.
 

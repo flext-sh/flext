@@ -1,25 +1,3 @@
-<!-- TOC START -->
-
-- [The annotated pattern](#the-annotated-pattern)
-- [Inspecting model fields](#inspecting-model-fields)
-- [Default values](#default-values)
-- [Validate default values](#validate-default-values)
-  - [Mutable default values](#mutable-default-values)
-- [u.Field aliases](#field-aliases)
-- [u.Field constraints](#field-constraints)
-- [Strict fields](#strict-fields)
-- [Dataclass fields](#dataclass-fields)
-- [u.Field Representation](#field-representation)
-- [Discriminator](#discriminator)
-- [Immutability](#immutability)
-- [Excluding fields](#excluding-fields)
-- [Deprecated fields](#deprecated-fields)
-  - [`deprecated` as a string](#deprecated-as-a-string)
-  - [`deprecated` via the `@warnings.deprecated` decorator](#deprecated-via-the-warningsdeprecated-decorator)
-  - [`deprecated` as a boolean](#deprecated-as-a-boolean)
-- [Customizing JSON Schema](#customizing-json-schema)
-- [The `u.computed_field` decorator](#the-computedfield-decorator)
-<!-- TOC END -->
 
 ??? api "API Documentation"
 [`pydantic.fields.u.Field`][pydantic.fields.u.Field]<br>

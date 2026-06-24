@@ -1,15 +1,5 @@
 # FLEXT Oracle OIC
 
-<!-- TOC START -->
-
-- [Status & metrics](#status-metrics)
-- [Quick start](#quick-start)
-- [Architecture snapshot](#architecture-snapshot)
-- [Quality & compliance](#quality-compliance)
-- [Resources & references](#resources-references)
-- [Support & contributions](#support-contributions)
-<!-- TOC END -->
-
 FLEXT Oracle OIC v0.9.9 is the Oracle Integration Cloud (OIC) client library for the FLEXT ecosystem. It implements OAuth2/IDCS authentication, integration pattern execution, and enterprise-grade connectors using s-inspired architecture, yet remains in early development while the compliance refactor finishes.
 
 ## Status & metrics

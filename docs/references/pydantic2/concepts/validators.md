@@ -1,16 +1,3 @@
-<!-- TOC START -->
-
-- [u.Field validators](#field-validators)
-  - [Which validator pattern to use](#which-validator-pattern-to-use)
-- [Model validators](#model-validators)
-- [Raising validation errors](#raising-validation-errors)
-- [Validation info](#validation-info)
-  - [Validation data](#validation-data)
-  - [Validation context](#validation-context)
-- [Ordering of validators](#ordering-of-validators)
-- [Special types](#special-types)
-- [JSON Schema and field validators](#json-schema-and-field-validators)
-<!-- TOC END -->
 
 In addition to Pydantic's [built-in validation capabilities](./fields.md#field-constraints),
 you can leverage custom validators at the field and model levels to enforce more complex constraints
