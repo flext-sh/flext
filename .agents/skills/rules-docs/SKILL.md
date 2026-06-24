@@ -18,12 +18,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to rules-docs.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -31,18 +29,15 @@ metadata:
 2. **Remediation**: update content with concrete source anchors and canonical governance references.
 3. **Verification**: validate links/paths and remove stale references.
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence before claiming success.
 
-
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
-
 
 ## Troubleshooting
 

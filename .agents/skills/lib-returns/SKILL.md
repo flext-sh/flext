@@ -18,12 +18,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to lib-returns.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -31,18 +29,15 @@ metadata:
 2. Create results via `r[T].ok(value)` or `r[T].fail("error")`
 3. Compose with `.map()` → `.flat_map()` → `.lash()` chains
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
 
-
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
-
 
 ## Troubleshooting
 

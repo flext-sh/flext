@@ -25,7 +25,6 @@ metadata:
 - Keep secrets/environment references scoped and explicit.
 - For documentation workflows, ensure path filters match docs locations.
 
-
 ## Workflow
 
 1. Select workflow/template to change.
@@ -36,11 +35,9 @@ metadata:
 
 Good:
 
-
 Why good: explicit workflow identity and trigger event.
 
 Bad:
-
 
 Why bad: overly broad trigger often causes unnecessary CI load and unclear intent.
 

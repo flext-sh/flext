@@ -18,12 +18,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to scripts-dependencies.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -31,18 +29,15 @@ metadata:
 2. Create or modify the script under `scripts/dependencies/`.
 3. Test with `--help` and dry-run mode.
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
 
-
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
-
 
 ## Troubleshooting
 

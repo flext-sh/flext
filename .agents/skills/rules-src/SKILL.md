@@ -19,12 +19,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to rules-src.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -32,18 +30,15 @@ metadata:
 2. Apply scoped edits with explicit contract impact.
 3. Verify no boundary violations in imports.
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
 
-
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
-
 
 ## Troubleshooting
 

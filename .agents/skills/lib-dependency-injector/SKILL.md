@@ -18,12 +18,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to lib-dependency-injector.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -31,18 +29,15 @@ metadata:
 2. Keep direct framework calls in `DependencyIntegration` and `FlextContainer` only.
 3. If adding provider types, mirror updates in `p.Container` protocol signatures.
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
 
-
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
-
 
 ## Troubleshooting
 

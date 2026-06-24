@@ -19,12 +19,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to flext-strict-typing.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -32,22 +30,20 @@ metadata:
 2. Map each violation to canonical `t.*` and `r` patterns.
 3. Apply fixes in shared-core-first order when contracts are reused.
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
-
 
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
 
-
 ## Troubleshooting
 
 - Unclear scope → ask.
+
 ## References
 
 - [references/type-rules-detail.md](references/type-rules-detail.md)

@@ -27,7 +27,6 @@ metadata:
 - Anchor docs to actual command files/scripts under `cmd/<name>/`.
 - When moving command code, update all docs and call paths in same change.
 
-
 ## Workflow
 
 1. Identify command entrypoint being changed.
@@ -38,11 +37,9 @@ metadata:
 
 Good:
 
-
 Why good: explicit command path and predictable root-relative invocation.
 
 Bad:
-
 
 Why bad: ambiguous instruction that cannot be executed or validated.
 

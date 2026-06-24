@@ -80,7 +80,9 @@ def parse_args(argv: t.StrSequence) -> argparse.Namespace:
 
 def should_validate(path: Path, reports_root: Path) -> bool:
     """should_validate function."""
-    validate_path = path.is_file() and path.name not in c.Infra.SKILL_REPORT_SKIPPED_FILES
+    validate_path = (
+        path.is_file() and path.name not in c.Infra.SKILL_REPORT_SKIPPED_FILES
+    )
     try:
         relative = path.relative_to(reports_root)
     except ValueError:

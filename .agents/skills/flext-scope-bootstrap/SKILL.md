@@ -19,12 +19,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to flext-scope-bootstrap.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -32,18 +30,15 @@ metadata:
 2. Bootstrap missing or invalid Scope config with `scope init` or `scope workspace init`.
 3. Run `scope status`.
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
 
-
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
-
 
 ## Troubleshooting
 

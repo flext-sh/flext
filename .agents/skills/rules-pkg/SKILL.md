@@ -19,12 +19,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to rules-pkg.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -32,18 +30,15 @@ metadata:
 2. Apply minimal metadata/structure change.
 3. Confirm references in build scripts/docs still resolve.
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence before claiming success.
 
-
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
-
 
 ## Troubleshooting
 

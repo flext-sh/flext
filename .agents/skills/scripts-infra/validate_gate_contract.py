@@ -54,8 +54,12 @@ def run_main(argv: t.StrSequence) -> tuple[int, int]:
     try:
         args = parse_args(argv)
     except SystemExit as exc:
-        code = exc.code if isinstance(exc.code, int) else int(
-            c.Infra.ScriptExitCode.USAGE,
+        code = (
+            exc.code
+            if isinstance(exc.code, int)
+            else int(
+                c.Infra.ScriptExitCode.USAGE,
+            )
         )
         return (usage_exit_code(code), 0)
 

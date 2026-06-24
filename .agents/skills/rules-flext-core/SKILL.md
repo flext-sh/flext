@@ -19,12 +19,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to rules-flext-core.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -32,18 +30,15 @@ metadata:
 2. Apply minimal change aligned with local pattern.
 3. Verify imports/exports and boundary integrity.
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
 
-
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
-
 
 ## Troubleshooting
 

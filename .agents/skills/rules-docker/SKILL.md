@@ -25,7 +25,6 @@ metadata:
 - Preserve existing naming conventions for service blocks and compose filenames.
 - When adding a new compose variant, document it in `docker/README.md`.
 
-
 ## Workflow
 
 1. Select target compose file(s).
@@ -36,11 +35,9 @@ metadata:
 
 Good:
 
-
 Why good: explicit service declaration in a concrete compose file.
 
 Bad:
-
 
 Why bad: empty service stubs obscure runtime behavior and break reproducibility.
 

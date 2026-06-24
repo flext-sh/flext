@@ -19,12 +19,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to testing-patterns.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -32,18 +30,15 @@ metadata:
 2. Write minimal code to make the test pass (Green).
 3. Refactor while keeping tests green (Refactor).
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
 
-
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
-
 
 ## Troubleshooting
 

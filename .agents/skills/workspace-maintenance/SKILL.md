@@ -18,12 +18,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to workspace-maintenance.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -31,18 +29,15 @@ metadata:
 2. Run standard gates first: `make check` and `make val`.
 3. Run specific maintenance checker with `--help` first, then default (dry-run) mode.
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
 
-
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
-
 
 ## Troubleshooting
 
