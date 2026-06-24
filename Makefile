@@ -292,21 +292,13 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help boot _boot_default build _build_default _up _mod _constraints _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination test val _val_project _val_workspace status coordination makefile clean ship _rel _pr _save _tag _push _imp _stat
+.PHONY: help boot _boot_default build _build_default _up _mod _constraints _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination test _test_default val _val_project _val_workspace status coordination makefile clean _clean_default ship _rel _pr _save _tag _push _imp _stat
 
 help: ## Show simple workspace verbs
 	$(Q)$(DISPATCH) help
 
-boot: ## Bootstrap .venv + submodules (WHAT=venv|submodules|sync|stat|imp)
-	$(Q)case "$(WHAT)" in \
-"") $(MAKE) --no-print-directory _boot_default $(MAKE_SELECTION_ARGS) ;; \
-	venv) $(MAKE) --no-print-directory _boot_default $(MAKE_SELECTION_ARGS) ;; \
-	submodules) $(MAKE) --no-print-directory _boot_default $(MAKE_SELECTION_ARGS) ;; \
-	sync) $(MAKE) --no-print-directory _sync $(MAKE_SELECTION_ARGS) ;; \
-	stat) $(MAKE) --no-print-directory _stat $(MAKE_SELECTION_ARGS) ;; \
-	imp) $(MAKE) --no-print-directory _imp $(MAKE_SELECTION_ARGS) ;; \
-	*) echo "invalid WHAT '$(WHAT)' for boot (valid: venv submodules sync stat imp)" >&2; exit 2 ;; \
-	esac
+boot: ## Bootstrap workspace (WHAT=all|sync|stat|imp; default: all)
+	$(Q)$(DISPATCH) boot
 
 _boot_default: ## Install all projects into workspace .venv
 	$(Q)$(PREFLIGHT_CHECK)
@@ -589,32 +581,15 @@ _coordination: ## Run Beads coordination reports
 _cqrs: ## Enforce strict CQRS/FlextModels patterns across ecosystem
 	$(Q).github/scripts/check-cqrs-compliance.sh
 
-build: ## Build/regen (WHAT=gen|mod|up|constraints|sync|docs|stubs)
-	$(Q)case "$(WHAT)" in \
-"") $(MAKE) --no-print-directory _build_default $(MAKE_SELECTION_ARGS) ;; \
-	gen) $(MAKE) --no-print-directory _gen $(MAKE_SELECTION_ARGS) ;; \
-	mod) $(MAKE) --no-print-directory _mod $(MAKE_SELECTION_ARGS) ;; \
-	up) $(MAKE) --no-print-directory _up $(MAKE_SELECTION_ARGS) ;; \
-	constraints) $(MAKE) --no-print-directory _constraints $(MAKE_SELECTION_ARGS) ;; \
-	sync) $(MAKE) --no-print-directory _sync $(MAKE_SELECTION_ARGS) ;; \
-	docs) $(MAKE) --no-print-directory _docs $(MAKE_SELECTION_ARGS) ;; \
-	stubs) $(MAKE) --no-print-directory _stubs $(MAKE_SELECTION_ARGS) ;; \
-	*) echo "invalid WHAT '$(WHAT)' for build (valid: gen mod up constraints sync docs stubs)" >&2; exit 2 ;; \
-	esac
+build: ## Build/regen (WHAT=all|gen|mod|up|constraints|sync|docs|stubs; default: all)
+	$(Q)$(DISPATCH) build
 
 _build_default: ## Build/package all selected projects
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb build $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(ORCHESTRATOR_PROJECTS)
 
-ship: ## Release workflow (WHAT=save|tag|push|pr|rel)
-	$(Q)case "$(WHAT)" in \
-save) $(MAKE) --no-print-directory _save $(MAKE_SELECTION_ARGS) ;; \
-	tag) $(MAKE) --no-print-directory _tag $(MAKE_SELECTION_ARGS) ;; \
-	push) $(MAKE) --no-print-directory _push $(MAKE_SELECTION_ARGS) ;; \
-	pr) $(MAKE) --no-print-directory _pr $(MAKE_SELECTION_ARGS) ;; \
-	rel) $(MAKE) --no-print-directory _rel $(MAKE_SELECTION_ARGS) ;; \
-	*) echo "invalid WHAT '$(WHAT)' for ship (valid: save tag push pr rel)" >&2; exit 2 ;; \
-	esac
+ship: ## Release workflow (WHAT=all|save|tag|push|pr|rel; default: all)
+	$(Q)$(DISPATCH) ship
 
 _rel: ## Interactive workspace release orchestration
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
@@ -719,7 +694,10 @@ $(if $(DOCS_PHASE),--make-arg "DOCS_PHASE=$(DOCS_PHASE)") \
 		$(if $(filter 1,$(FIX)),--make-arg "FIX=$(FIX)") \
 		$(DOCS_PROJECT_FLAGS)
 
-test: ## Run tests only in all projects
+test: ## Run tests in selected projects
+	$(Q)$(DISPATCH) test
+
+_test_default: ## Run tests in selected projects
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb test \
 		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
@@ -962,7 +940,10 @@ _pol: ## Repo-wide typing policy gate (no Any/t.JsonValue/# type: ignore)
 	cp .reports/pyrefly/type-policy.txt .reports/pyrefly/type-policy-before.txt; \
 	exit $$status
 
-clean: ## Clean all projects
+clean: ## Clean build/test/type artifacts
+	$(Q)$(DISPATCH) clean
+
+_clean_default: ## Clean all selected projects and workspace caches
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb clean $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(ORCHESTRATOR_PROJECTS)
 	$(Q)rm -rf .pytest_cache/ htmlcov/ .coverage* .mypy_cache/ .ruff_cache/
