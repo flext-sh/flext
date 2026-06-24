@@ -32,7 +32,7 @@ def main() -> int:
         if item.strip()
     ]
     if "pyrefly" in gates:
-        return run_make("_pyre")
+        return run_make("_check_default", extra_env={"CHECK_GATES": "pyrefly"})
     return 0
 
 
