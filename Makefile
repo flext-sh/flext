@@ -701,7 +701,7 @@ _test_default: ## Run tests in selected projects
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb test \
 		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
-$(if $(PYTEST_ARGS),--make-arg "PYTEST_ARGS=$(PYTEST_ARGS)") \
+$(if $(strip $(FILE)$(FILES)$(MATCH)),--make-arg "PYTEST_ARGS=$(strip $(PYTEST_ARGS) --cov-fail-under=0)",$(if $(PYTEST_ARGS),--make-arg "PYTEST_ARGS=$(PYTEST_ARGS)")) \
 		$(if $(FILE),--make-arg "FILE=$(FILE)") \
 		$(if $(FILES),--make-arg "FILES=$(FILES)") \
 		$(if $(MATCH),--make-arg "MATCH=$(MATCH)") \
