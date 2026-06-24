@@ -364,6 +364,11 @@ run_project() {
     mkdir -p "$scope_root/docs"
   fi
 
+  local restored_count skipped_count
+  read -r restored_count skipped_count < <(restore_useful_docs "$scope_root" "$scope_id" "$scope_name")
+  echo "- Restored non-generated docs: $restored_count" >> "$run_report"
+  echo "- Skipped managed docs (protected): $skipped_count" >> "$run_report"
+
   local phase_idx=0
   for phase in "${PHASES[@]}"; do
     phase_idx=$((phase_idx + 1))
@@ -380,16 +385,11 @@ run_project() {
     echo "$phase_line" >> "$run_report"
   done
 
-  local restored_line restored_count skipped_count
-  read -r restored_count skipped_count < <(restore_useful_docs "$scope_root" "$scope_id" "$scope_name")
-  echo "- Restored non-generated docs: $restored_count" >> "$run_report"
-  echo "- Skipped managed docs (protected): $skipped_count" >> "$run_report"
-
-  if [ "${#PHASES[@]}" -gt 0 ] && ! run_phase "$scope_name" "validate" "$run_dir/${scope_report_id//\//_}-validate-post-restore.log"; then
+  if [ "${#PHASES[@]}" -gt 0 ] && ! run_phase "$scope_name" "validate" "$run_dir/${scope_report_id//\//_}-validate-final.log"; then
     phases_ok=0
-    echo "- ❌ validate-post-restore: FAIL" >> "$run_report"
+    echo "- ❌ validate-final: FAIL" >> "$run_report"
   else
-    echo "- ✅ validate-post-restore: OK" >> "$run_report"
+    echo "- ✅ validate-final: OK" >> "$run_report"
   fi
 
   return $((1 - phases_ok))
