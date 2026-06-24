@@ -19,12 +19,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to readme-standardization.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -32,18 +30,15 @@ metadata:
 2. Confirm the project's parent MRO chain, abstracted libraries, and primary skills before drafting the Collection Rules section.
 3. Apply safe automatic fixes via `make docs DOCS_PHASE=fix`, then manual content adjustments only where the auto-generator cannot derive content (purpose, onboarding narrative, operation flow).
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
 
-
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
-
 
 ## Troubleshooting
 

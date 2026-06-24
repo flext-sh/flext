@@ -8,8 +8,24 @@
 # other lanes' uncommitted/untracked changes never pollute or brick it. Green when
 # nothing is committed-ahead.
 
-.PHONY: done-check
+.PHONY: done-check waza
+
 done-check: ## Real-user/green-green check, scoped to committed changes vs upstream
+	@base=$$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo origin/main); \
+	files=$$(git diff --name-only --diff-filter=d "$$base"...HEAD -- '*.py' 2>/dev/null || true); \
+	if [ -z "$$files" ]; then \
+		echo "done-check: no committed .py changes vs $$base — green/green"; \
+		exit 0; \
+	fi; \
+	n=$$(printf '%s\n' "$$files" | grep -c .); \
+	echo "done-check: ruff on $$n committed-vs-$$base .py file(s)"; \
+	printf '%s\n' "$$files" | xargs -r ruff check --quiet
+
+waza: ## Waza readiness gate for .agents/skills (WHAT=check|optimize; default: check)
+	@case "$(WHAT)" in \
+	  optimize) APPLY=1 MAX_WORKERS=4 $(HOME)/.ai-hub/.venv/bin/python $(HOME)/.ai-hub/scripts/waza-optimize-batch.py --workspace $(CURDIR) --skills-dir .agents/skills ;; \
+	  *) WORKSPACE_ROOT=$(CURDIR) SKILLS_DIR=.agents/skills bash $(HOME)/.ai-hub/scripts/waza-check.sh ;; \
+	esac
 	@base=$$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo origin/main); \
 	files=$$(git diff --name-only --diff-filter=d "$$base"...HEAD -- '*.py' 2>/dev/null || true); \
 	if [ -z "$$files" ]; then \

@@ -19,12 +19,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to pydantic-v2-patterns.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -32,22 +30,20 @@ metadata:
 2. Read `lib-pydantic-v2` for API policy deltas.
 3. Select the needed pattern family (validators, computed fields, unions, serializers, strict mode, TypeAdapter, RootModel, Annotated).
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
-
 
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
 
-
 ## Troubleshooting
 
 - Unclear scope → ask.
+
 ## References
 
 - [references/patterns-detail.md](references/patterns-detail.md)

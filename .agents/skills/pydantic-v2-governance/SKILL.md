@@ -19,12 +19,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to pydantic-v2-governance.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -32,22 +30,20 @@ metadata:
 2. Read `lib-pydantic-v2` for API rules
 3. Read `pydantic-v2-patterns` for advanced patterns
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
-
 
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
 
-
 ## Troubleshooting
 
 - Unclear scope → ask.
+
 ## References
 
 - [references/governance-patterns.md](references/governance-patterns.md)

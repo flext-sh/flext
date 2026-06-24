@@ -24,21 +24,15 @@ metadata:
 
 ### Basic Async with r
 
-
 ### Concurrent Execution with gather
-
 
 ### Rate-Limited API Calls
 
-
 ### Async Context Manager
-
 
 ### Producer-Consumer with Queue
 
-
 ### Timeout Handling
-
 
 ## Workflow
 
@@ -50,11 +44,9 @@ metadata:
 
 Good:
 
-
 Why good: concurrent execution of independent I/O operations.
 
 Bad:
-
 
 Why bad: sequential awaits waste time — each call waits for the previous one to finish.
 

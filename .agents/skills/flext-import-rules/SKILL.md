@@ -19,12 +19,10 @@ metadata:
 - Workflows described in this skill.
 - Operator tasks within this scope.
 
-
 ## DO NOT USE FOR
 
 - questions unrelated to flext-import-rules.
 - creating projects or architecture from scratch.
-
 
 ## Workflow
 
@@ -32,22 +30,20 @@ metadata:
 2. Apply canonical import form aligned with module tier.
 3. Fix cross-project inheritance/import boundaries.
 
-
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
-
 
 ## Example
 
 **Input:** a request.
 **Output:** a concise response.
 
-
 ## Troubleshooting
 
 - Unclear scope → ask.
+
 ## References
 
 - [references/import-rules-detail.md](references/import-rules-detail.md)

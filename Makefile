@@ -622,28 +622,36 @@ _constraints: ## Rewrite dependency constraints from uv.lock (policy=floor). Use
 	echo ""
 	$(Q)echo "Dependency constraint rewrite complete."
 
-check: ## Quality gates (WHAT=scan|fmt|types|pyre|pol|cqrs|lint|pyrefly|loc-cap|boundary|coordination)
-	$(Q)case "$(WHAT)" in \
-"") $(MAKE) --no-print-directory _check_default $(MAKE_SELECTION_ARGS) ;; \
-	scan) $(MAKE) --no-print-directory _scan $(MAKE_SELECTION_ARGS) ;; \
-	fmt) $(MAKE) --no-print-directory _fmt $(MAKE_SELECTION_ARGS) ;; \
-	format) $(MAKE) --no-print-directory _fmt $(MAKE_SELECTION_ARGS) ;; \
-	types) $(MAKE) --no-print-directory _types $(MAKE_SELECTION_ARGS) ;; \
-	pyre) $(MAKE) --no-print-directory _pyre $(MAKE_SELECTION_ARGS) ;; \
-	pol) $(MAKE) --no-print-directory _pol $(MAKE_SELECTION_ARGS) ;; \
-	cqrs) $(MAKE) --no-print-directory _cqrs $(MAKE_SELECTION_ARGS) ;; \
-	coordination) $(MAKE) --no-print-directory _coordination $(MAKE_SELECTION_ARGS) ;; \
-	lint) $(MAKE) --no-print-directory _check_default CHECK_GATES="lint" $(MAKE_SELECTION_ARGS) ;; \
-	pyrefly) $(MAKE) --no-print-directory _check_default CHECK_GATES="pyrefly" $(MAKE_SELECTION_ARGS) ;; \
-	mypy) $(MAKE) --no-print-directory _check_default CHECK_GATES="mypy" $(MAKE_SELECTION_ARGS) ;; \
-	pyright) $(MAKE) --no-print-directory _check_default CHECK_GATES="pyright" $(MAKE_SELECTION_ARGS) ;; \
-	markdown) $(MAKE) --no-print-directory _check_default CHECK_GATES="markdown" $(MAKE_SELECTION_ARGS) ;; \
-	go) $(MAKE) --no-print-directory _check_default CHECK_GATES="go" $(MAKE_SELECTION_ARGS) ;; \
-	silent-failure) $(MAKE) --no-print-directory _check_default CHECK_GATES="silent-failure" $(MAKE_SELECTION_ARGS) ;; \
-	loc-cap) $(MAKE) --no-print-directory _check_default CHECK_GATES="loc-cap" $(MAKE_SELECTION_ARGS) ;; \
-	boundary) $(MAKE) --no-print-directory _check_default CHECK_GATES="boundary" $(MAKE_SELECTION_ARGS) ;; \
-	*) echo "invalid WHAT '$(WHAT)' for check (valid: scan fmt format types pyre pol cqrs coordination lint pyrefly mypy pyright markdown go silent-failure loc-cap boundary)" >&2; exit 2 ;; \
-	esac
+check: ## Quality gates (WHAT=scan|fmt|types|pyre|pol|cqrs|lint|pyrefly|loc-cap|boundary|coordination; comma-separated)
+	$(Q)if [ -z "$(WHAT)" ]; then \
+		$(MAKE) --no-print-directory _check_default $(MAKE_SELECTION_ARGS); \
+	else \
+		SAVE_IFS="$$IFS"; \
+		for what in $$(echo '$(WHAT)' | tr ',' ' '); do \
+			what="$$(echo "$$what" | tr -d '[:space:]')"; \
+			case "$$what" in \
+				scan) $(MAKE) --no-print-directory _scan $(MAKE_SELECTION_ARGS) ;; \
+				fmt) $(MAKE) --no-print-directory _fmt $(MAKE_SELECTION_ARGS) ;; \
+				format) $(MAKE) --no-print-directory _fmt $(MAKE_SELECTION_ARGS) ;; \
+				types) $(MAKE) --no-print-directory _types $(MAKE_SELECTION_ARGS) ;; \
+				pyre) $(MAKE) --no-print-directory _pyre $(MAKE_SELECTION_ARGS) ;; \
+				pol) $(MAKE) --no-print-directory _pol $(MAKE_SELECTION_ARGS) ;; \
+				cqrs) $(MAKE) --no-print-directory _cqrs $(MAKE_SELECTION_ARGS) ;; \
+				coordination) $(MAKE) --no-print-directory _coordination $(MAKE_SELECTION_ARGS) ;; \
+				lint) $(MAKE) --no-print-directory _check_default CHECK_GATES="lint" $(MAKE_SELECTION_ARGS) ;; \
+				pyrefly) $(MAKE) --no-print-directory _check_default CHECK_GATES="pyrefly" $(MAKE_SELECTION_ARGS) ;; \
+				mypy) $(MAKE) --no-print-directory _check_default CHECK_GATES="mypy" $(MAKE_SELECTION_ARGS) ;; \
+				pyright) $(MAKE) --no-print-directory _check_default CHECK_GATES="pyright" $(MAKE_SELECTION_ARGS) ;; \
+				markdown) $(MAKE) --no-print-directory _check_default CHECK_GATES="markdown" $(MAKE_SELECTION_ARGS) ;; \
+				go) $(MAKE) --no-print-directory _check_default CHECK_GATES="go" $(MAKE_SELECTION_ARGS) ;; \
+				silent-failure) $(MAKE) --no-print-directory _check_default CHECK_GATES="silent-failure" $(MAKE_SELECTION_ARGS) ;; \
+				loc-cap) $(MAKE) --no-print-directory _check_default CHECK_GATES="loc-cap" $(MAKE_SELECTION_ARGS) ;; \
+				boundary) $(MAKE) --no-print-directory _check_default CHECK_GATES="boundary" $(MAKE_SELECTION_ARGS) ;; \
+				*) echo "invalid WHAT '$$what' for check (valid: scan fmt format types pyre pol cqrs coordination lint pyrefly mypy pyright markdown go silent-failure loc-cap boundary)" >&2; IFS="$$SAVE_IFS"; exit 2 ;; \
+			esac; \
+		done; \
+		IFS="$$SAVE_IFS"; \
+	fi
 
 _check_default: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type)
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
