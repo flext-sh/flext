@@ -144,6 +144,7 @@ Recommended baseline for contribution work:
 
 - Use repository skills: `.agents/skills/*` and `gd`/`scope`/`sg` where available.
 - `make` is the canonical execution lane; avoid direct `git`-wide scripts when a Make target exists.
+- FLEXT participates in the `~/.ai-hub` distributed workspace base: `make cosmos-help` exposes dispatcher verbs; the common base is maintained from `~/.ai-hub` via `make workspaces WHAT=distribute APPLY=1`.
 - Bead system (`bd`) is the mandatory work ledger.
 - Repeated cross-file edits require caller/audit validation before marking done.
 
