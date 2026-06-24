@@ -27,7 +27,8 @@ metadata:
 
 1. Identify the maintenance concern (hygiene, dependabot, poetry, security).
 2. Run standard gates first: `make check` and `make val`.
-3. Run specific maintenance checker with `--help` first, then default (dry-run) mode.
+3. For cross-workspace tooling distribution, use `make workspaces WHAT=status` and `make workspaces WHAT=distribute APPLY=1` from `~/.ai-hub`.
+4. Run specific maintenance checker with `--help` first, then default (dry-run) mode.
 
 ## Critical rules
 
