@@ -152,7 +152,7 @@ is_generated_managed_file() {
       ;;
     *)
       case "$rel_path" in
-        README.md|index.md|guides/README.md|api-reference/README.md|api-reference/generated/*|mkdocs.yml) return 0 ;;
+        README.md|index.md|guides/README.md|api-reference/README.md|api-reference/generated/*|projects/generated/catalog.md|mkdocs.yml) return 0 ;;
       esac
       ;;
   esac
