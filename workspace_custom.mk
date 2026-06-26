@@ -135,4 +135,5 @@ full-check: ## Run legacy full check path with explicit timeout (use only when n
 	fi
 
 # ~/.ai-hub workspace tooling thin-wrapper
-include /home/marlonsc/.ai-hub/templates/cosmos-wrapper.mk
+$(HOME)/.ai-hub/templates/workspace-wrapper.mk: ;
+include $(HOME)/.ai-hub/templates/workspace-wrapper.mk
