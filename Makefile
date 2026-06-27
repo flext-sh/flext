@@ -287,7 +287,7 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help boot _boot_default build _build_default _up _mod _constraints _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination test val clean ship _rel _pr _save _tag _push _imp _stat
+.PHONY: help boot _boot_default build _build_default _up _mod _constraints _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination coordination makefile status test val clean ship _rel _pr _save _tag _push _imp _stat
 
 help: ## Show simple workspace verbs
 	$(Q)echo "FLEXT Workspace"
@@ -299,7 +299,7 @@ help: ## Show simple workspace verbs
 
 	$(Q)printf " %-12s %s\n" "boot" "Bootstrap .venv + submodules (WHAT=all|venv|submodules|sync|stat|imp)"
 
-	$(Q)printf " %-12s %s\n" "build" "Build/regen (WHAT=all|gen|mod|up|constraints|sync|docs|stubs)"
+	$(Q)printf " %-12s %s\n" "build" "Build/regen (WHAT=gen|mod|up|constraints|sync|docs|stubs)"
 
 	$(Q)printf " %-12s %s\n" "check" "Quality gates (WHAT=all|lint|pyrefly|mypy|pyright|fmt|scan|types)"
 
