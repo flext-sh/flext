@@ -5,13 +5,13 @@
 # what = "all"
 # domain = "quality"
 # summary = "Run quick default checks"
-# description = "Runs fmt and lint gates using the lightweight default profile."
+# description = "Runs lint and pyrefly gates using the lightweight default profile."
 # example = "make check WHAT=all"
 # mutates = false
 # aliases = []
 # params = [
 #   { name = "CHECK_GATES", help = "Optional override for lint gate set", required = false, default = "lint,pyrefly" },
-#   { name = "WHAT", help = "Comando de check", required = false, default = "all", choices = ["all","fmt","types","lint","pyrefly","loc-cap","boundary","coordination"] }
+#   { name = "WHAT", help = "Comando de check", required = false, default = "all", choices = ["all","boundary","coordination","cqrs","fmt","format","go","lint","loc-cap","markdown","mypy","pol","pyre","pyrefly","pyright","scan","silent-failure","types"] }
 # ]
 # rules = ["dev-gate"]
 # ///
@@ -22,10 +22,7 @@ from scripts.dispatch import env_value, promoted_main, run_make
 
 
 def main() -> int:
-    """Run formatting first, then the selected lint gate set."""
-    code = run_make("_fmt")
-    if code != 0:
-        return code
+    """Run the selected lint gate set."""
     gate_env = {"CHECK_GATES": "lint,pyrefly"}
     if value := env_value("CHECK_GATES"):
         gate_env["CHECK_GATES"] = value

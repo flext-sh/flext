@@ -5,7 +5,7 @@
 # what = "constraints"
 # domain = "build"
 # summary = "Rewrite dependency constraints"
-# description = "Runs the legacy _constraints target to rewrite constraints from uv.lock."
+# description = "Runs the canonical _constraints target to rewrite constraints from uv.lock."
 # example = "make build WHAT=constraints"
 # target = "_constraints"
 # mutates = true

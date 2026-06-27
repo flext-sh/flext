@@ -5,7 +5,7 @@
 # what = "rel"
 # domain = "release"
 # summary = "Interactive workspace release orchestration"
-# description = "Runs the legacy _rel target."
+# description = "Runs the canonical _rel target."
 # example = "make ship WHAT=rel APPLY=Y"
 # target = "_rel"
 # mutates = true

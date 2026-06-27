@@ -5,7 +5,7 @@
 # what = "tag"
 # domain = "release"
 # summary = "Create git tags for selected projects"
-# description = "Runs the legacy _tag target."
+# description = "Runs the canonical _tag target."
 # example = "make ship WHAT=tag APPLY=Y TAG=v0.12.0"
 # target = "_tag"
 # mutates = true

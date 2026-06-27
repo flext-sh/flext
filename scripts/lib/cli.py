@@ -21,6 +21,7 @@ from scripts.lib.render import (
     render_global_help,
     render_verb_help,
 )
+from scripts.lib.surface_validation import validate_surface
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -32,7 +33,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not args:
             return _print_help(u.Cli.process_env().get("WHAT", "").strip())
         if args[0] == "--validate":
+            discover()
             return 0
+        if args[0] == "--validate-surface":
+            return validate_surface(main)
         return dispatch(args[0])
     except RegistryError as exc:
         print(f"ERRO: {exc}", file=sys.stderr)

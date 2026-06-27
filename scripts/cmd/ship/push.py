@@ -5,7 +5,7 @@
 # what = "push"
 # domain = "release"
 # summary = "Push branches and tags for selected projects"
-# description = "Runs the legacy _push target."
+# description = "Runs the canonical _push target."
 # example = "make ship WHAT=push APPLY=Y"
 # target = "_push"
 # mutates = true

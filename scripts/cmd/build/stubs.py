@@ -5,7 +5,7 @@
 # what = "stubs"
 # domain = "build"
 # summary = "Run repo-wide stub supply-chain validation"
-# description = "Runs the legacy _stubs target."
+# description = "Runs the canonical _stubs target."
 # example = "make build WHAT=stubs"
 # target = "_stubs"
 # mutates = false
