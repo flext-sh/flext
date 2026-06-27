@@ -151,10 +151,6 @@ Recommended baseline for contribution work:
 - Subagents write verbose findings to disk (`coordination/resultados/` or `.beads/artifacts/`) and update `bd` only with filepath and status.
 - Repeated cross-file edits require caller/audit validation before marking done.
 
-## Temporary lane policy
-
-Session-specific overrides are read from active Beads only. If a migration lane is active, follow its explicit cadence and checkpoint requirements; do not create alternate timers/watchers.
-
 ## Verification expectation
 
 A task is complete only with:
