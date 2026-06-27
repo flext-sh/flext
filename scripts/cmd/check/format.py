@@ -2,11 +2,11 @@
 """Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "check"
-# what = "fmt"
+# what = "format"
 # domain = "quality"
 # summary = "Run formatting gates"
-# description = "Runs ruff, gofmt/goimports and markdownlint over current selection."
-# example = "make check WHAT=fmt APPLY=Y"
+# description = "Runs the canonical _fmt target."
+# example = "make check WHAT=format APPLY=Y"
 # target = "_fmt"
 # mutates = true
 # aliases = []

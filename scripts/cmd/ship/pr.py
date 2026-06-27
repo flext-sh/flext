@@ -5,7 +5,7 @@
 # what = "pr"
 # domain = "release"
 # summary = "Manage pull requests for selected projects"
-# description = "Runs the legacy _pr target."
+# description = "Runs the canonical _pr target."
 # example = "make ship WHAT=pr APPLY=Y"
 # target = "_pr"
 # mutates = true

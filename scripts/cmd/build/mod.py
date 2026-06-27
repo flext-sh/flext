@@ -5,7 +5,7 @@
 # what = "mod"
 # domain = "build"
 # summary = "Modernize pyproject.toml files"
-# description = "Runs the legacy _mod target to standardize configs without lock/install."
+# description = "Runs the canonical _mod target to standardize configs without lock/install."
 # example = "make build WHAT=mod"
 # target = "_mod"
 # mutates = true

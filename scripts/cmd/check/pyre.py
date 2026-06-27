@@ -2,11 +2,11 @@
 """Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "check"
-# what = "pyrefly"
+# what = "pyre"
 # domain = "quality"
-# summary = "Run pyrefly repository or scoped type check"
-# description = "Runs the canonical _pyre target configured in the Makefile."
-# example = "make check WHAT=pyrefly"
+# summary = "Run pyrefly repository type check"
+# description = "Runs the canonical _pyre target."
+# example = "make check WHAT=pyre"
 # target = "_pyre"
 # mutates = false
 # aliases = []

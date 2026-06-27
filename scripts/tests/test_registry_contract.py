@@ -68,9 +68,7 @@ def test_unknown_what_raises(registry: Registry) -> None:
 def test_header_what_matches_file_stem(registry: Registry) -> None:
     for verb in registry.verbs():
         for what, cmd in registry.commands(verb).items():
-            assert cmd.what == what == cmd.path.stem, (
-                f"{cmd.path}: what/stem mismatch"
-            )
+            assert cmd.what == what == cmd.path.stem, f"{cmd.path}: what/stem mismatch"
             assert cmd.verb == verb == cmd.path.parent.name, (
                 f"{cmd.path}: verb/dir mismatch"
             )

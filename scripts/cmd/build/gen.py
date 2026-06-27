@@ -5,7 +5,7 @@
 # what = "gen"
 # domain = "build"
 # summary = "Regenerate standardized project files"
-# description = "Runs the legacy _gen target (mod + sync)."
+# description = "Runs the canonical _gen target (mod + sync)."
 # example = "make build WHAT=gen"
 # target = "_gen"
 # mutates = true

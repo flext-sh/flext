@@ -5,7 +5,7 @@
 # what = "save"
 # domain = "release"
 # summary = "Commit all changes in selected projects"
-# description = "Runs the legacy _save target. Requires MESSAGE=."
+# description = "Runs the canonical _save target. Requires MESSAGE=."
 # example = "make ship WHAT=save APPLY=Y MESSAGE='chore: update'"
 # target = "_save"
 # mutates = true

@@ -27,9 +27,7 @@ def main() -> int:
     if code != 0:
         return code
     gates = [
-        item.strip()
-        for item in env_value("CHECK_GATES").split(",")
-        if item.strip()
+        item.strip() for item in env_value("CHECK_GATES").split(",") if item.strip()
     ]
     if "pyrefly" in gates:
         return run_make("_check_default", extra_env={"CHECK_GATES": "pyrefly"})

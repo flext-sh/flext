@@ -17,6 +17,7 @@ from scripts.lib.parsing import (
     parse_aliases,
     parse_params,
     parse_string_list,
+    parse_string_map,
     require_bool,
     require_optional_string,
     require_string,
@@ -78,7 +79,9 @@ class Registry:
         for alias in command.aliases:
             previous = self._aliases.get(alias)
             if previous and previous != command.verb:
-                msg = f"alias duplicado: {alias} aponta para {previous} e {command.verb}"
+                msg = (
+                    f"alias duplicado: {alias} aponta para {previous} e {command.verb}"
+                )
                 raise RegistryError(msg)
             self._aliases[alias] = command.verb
 
@@ -98,9 +101,7 @@ class Registry:
                 raise RegistryError(msg)
             for command in commands.values():
                 if command.what != DEFAULT_COMMAND and command.aliases:
-                    msg = (
-                        f"{command.path}: aliases podem ser declarados apenas em WHAT={DEFAULT_COMMAND}"
-                    )
+                    msg = f"{command.path}: aliases podem ser declarados apenas em WHAT={DEFAULT_COMMAND}"
                     raise RegistryError(msg)
                 validate_command_contract(command)
             validate_all_choices(verb, commands)
@@ -184,6 +185,7 @@ def load_command(path: Path, expected_verb: str) -> Command:
         params=parse_params(data.get("params"), path),
         rules=parse_string_list(data, "rules", path),
         target=require_optional_string(data, "target", path),
+        target_env=parse_string_map(data.get("target_env"), path),
     )
 
 

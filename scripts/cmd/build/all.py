@@ -5,7 +5,7 @@
 # what = "all"
 # domain = "build"
 # summary = "Build/package all selected projects"
-# description = "Runs the legacy _build_default target via orchestrator."
+# description = "Runs the canonical _build_default target via orchestrator."
 # example = "make build WHAT=all"
 # target = "_build_default"
 # mutates = true

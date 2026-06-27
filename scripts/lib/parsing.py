@@ -41,6 +41,7 @@ class Command:
     params: tuple[Param, ...]
     rules: tuple[str, ...]
     target: str = ""
+    target_env: tuple[tuple[str, str], ...] = ()
 
 
 class RegistryError(Exception):
@@ -56,9 +57,7 @@ def require_string(data: Mapping[str, TomlValue], key: str, path: Path) -> str:
     return value.strip()
 
 
-def require_optional_string(
-    data: Mapping[str, TomlValue], key: str, path: Path
-) -> str:
+def require_optional_string(data: Mapping[str, TomlValue], key: str, path: Path) -> str:
     """Return one optional string field from header TOML."""
     value = data.get(key, "")
     if not isinstance(value, str):
@@ -132,6 +131,27 @@ def parse_params(value: TomlValue | None, path: Path) -> tuple[Param, ...]:
     return tuple(params)
 
 
+def parse_string_map(
+    value: TomlValue | None, path: Path
+) -> tuple[tuple[str, str], ...]:
+    """Parse an optional string-to-string mapping from header TOML."""
+    if value is None:
+        return ()
+    if not isinstance(value, dict):
+        msg = f"{path}: target_env deve ser objeto TOML"
+        raise RegistryError(msg)
+    items: list[tuple[str, str]] = []
+    for key, item in sorted(value.items()):
+        if not isinstance(key, str) or not key.strip():
+            msg = f"{path}: target_env possui chave invalida"
+            raise RegistryError(msg)
+        if not isinstance(item, str):
+            msg = f"{path}: target_env.{key} deve ser string"
+            raise RegistryError(msg)
+        items.append((key.strip(), item))
+    return tuple(items)
+
+
 def parse_param(data: Mapping[str, TomlValue], path: Path) -> Param:
     """Parse one parameter object from header TOML."""
     name = require_string(data, "name", path)
@@ -165,18 +185,14 @@ def validate_invocation(command: Command, *, require_required: bool = True) -> N
             raise RegistryError(msg)
         if value and param.choices and value not in param.choices:
             valid = "|".join(param.choices)
-            msg = (
-                f"{command.verb} WHAT={command.what}: {param.name}={value!r} invalido; validos: {valid}"
-            )
+            msg = f"{command.verb} WHAT={command.what}: {param.name}={value!r} invalido; validos: {valid}"
             raise RegistryError(msg)
 
 
 def validate_command_contract(command: Command) -> None:
     """Validate one discovered command against the dispatcher contract."""
     if command.mutates and not any(param.name == "APPLY" for param in command.params):
-        msg = (
-            f"{command.path}: comandos mutadores devem declarar param APPLY com validacao de mudanca"
-        )
+        msg = f"{command.path}: comandos mutadores devem declarar param APPLY com validacao de mudanca"
         raise RegistryError(msg)
     if command.path.name != f"{command.what}.py" and command.path.suffix != ".sh":
         msg = f"{command.path}: comando deve usar extensão .py ou .sh"
@@ -186,6 +202,9 @@ def validate_command_contract(command: Command) -> None:
         raise RegistryError(msg)
     if command.target and command.path.suffix != ".py":
         msg = f"{command.path}: target header-only deve usar arquivo .py"
+        raise RegistryError(msg)
+    if command.target_env and not command.target:
+        msg = f"{command.path}: target_env exige target"
         raise RegistryError(msg)
 
 

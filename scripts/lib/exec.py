@@ -16,7 +16,7 @@ from scripts.lib.registry import ROOT, Command
 def run(command: Command) -> int:
     """Run one promoted command through the canonical execution path."""
     if command.target:
-        return run_make(command.target)
+        return run_make(command.target, extra_env=dict(command.target_env))
     env = command_env(command)
     if command.path.suffix == ".py":
         return run_python(command, env)
@@ -30,6 +30,13 @@ def run_make(
     extra_env: Mapping[str, str] | None = None,
 ) -> int:
     """Run a Makefile target and return the process exit code."""
+    if surface_validation_enabled():
+        if not make_target_exists(target):
+            print(f"ERRO: Make target ausente: {target}", file=sys.stderr)
+            return 2
+        rendered = " ".join(("make", target, *make_args))
+        print(f"SURFACE-VALIDATE: {rendered}")
+        return 0
     command = ("make", target, *make_args)
     return run_streaming(command, env=extra_env)
 
@@ -38,6 +45,9 @@ def run_shell(
     command: Sequence[str], *, extra_env: Mapping[str, str] | None = None
 ) -> int:
     """Run a generic shell command and return the process exit code."""
+    if surface_validation_enabled():
+        print(f"SURFACE-VALIDATE: {' '.join(command)}")
+        return 0
     result = u.Cli.run_raw(command, cwd=ROOT, env=extra_env)
     if result.failure:
         print(result.error or "command execution failed", file=sys.stderr)
@@ -52,7 +62,15 @@ def run_shell(
 
 def run_python(command: Command, env: Mapping[str, str]) -> int:
     """Execute a promoted Python command under canonical dispatch env."""
-    return run_streaming((sys.executable, str(command.path)), env=env)
+    return run_streaming(
+        (
+            sys.executable,
+            "-c",
+            "import runpy, sys; runpy.run_path(sys.argv[1], run_name='__main__')",
+            str(command.path),
+        ),
+        env=env,
+    )
 
 
 def run_streaming(command: Sequence[str], env: Mapping[str, str] | None = None) -> int:
@@ -108,3 +126,34 @@ def env_enabled(name: str) -> bool:
 def env_value(name: str, default: str = "") -> str:
     """Return one environment value through the canonical CLI env resolver."""
     return u.Cli.process_env().get(name, default).strip()
+
+
+def surface_validation_enabled() -> bool:
+    """Return whether Make execution should only validate command routing."""
+    return os.environ.get("FLEXT_SURFACE_VALIDATE", "N").upper() in {
+        "1",
+        "Y",
+        "YES",
+        "TRUE",
+    }
+
+
+def make_targets() -> frozenset[str]:
+    """Return target names declared in the root Makefile."""
+    targets: set[str] = set()
+    makefile = ROOT / "Makefile"
+    for raw_line in makefile.read_text(encoding="utf-8").splitlines():
+        if not raw_line or raw_line.startswith(("\t", " ", "#", ".")):
+            continue
+        head, marker, _tail = raw_line.partition(":")
+        if marker != ":" or not head:
+            continue
+        for target in head.split():
+            if target and all(char not in target for char in "$(){}"):
+                targets.add(target)
+    return frozenset(targets)
+
+
+def make_target_exists(target: str) -> bool:
+    """Return whether one Make target exists in the root Makefile."""
+    return target in make_targets()

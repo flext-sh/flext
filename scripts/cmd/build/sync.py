@@ -5,7 +5,7 @@
 # what = "sync"
 # domain = "build"
 # summary = "Sync project Makefiles from pyproject.toml"
-# description = "Runs the legacy _sync target to refresh Makefiles and __init__.py lazy imports."
+# description = "Runs the canonical _sync target to refresh Makefiles and __init__.py lazy imports."
 # example = "make build WHAT=sync"
 # target = "_sync"
 # mutates = true
