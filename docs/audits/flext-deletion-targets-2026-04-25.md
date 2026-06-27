@@ -75,7 +75,7 @@ Top offenders:
 | flext-auth | 4 | 4 |
 | flext-oracle-wms | 4 | 3 |
 
-**Phase 3 action**: run `python -m flext_infra codegen auto-fix --apply` at workspace scope to land the 51 auto-fixable violations; the remaining 60 require human triage. Note: the CLI route currently crashes (`u.Cli.output_message_payload` missing in `flext-cli/services/output.py:38`) — the in-process API works. Bug ownership: flext-cli maintainer / A-CH execution-pattern hub remit.
+**Phase 3 action**: run `python -m flext_infra codegen auto-fix --apply` at workspace scope to land the 51 auto-fixable violations; the remaining 60 require human triage. ~~Note: the CLI route currently crashes (`u.Cli.output_message_payload` missing in `flext-cli/services/output.py:38`) — the in-process API works. Bug ownership: flext-cli maintainer / A-CH execution-pattern hub remit.~~ *(Resolved 2026-06-27: `u.Cli.output_message_payload` is available and `FlextCliOutput.display_message` runs without error.)*
 
 Source: `/tmp/phase2-codegen-census.txt`.
 
@@ -141,7 +141,7 @@ The Phase 4 audit produces the canonical "concern → owner / duplicate / action
 
 Not a deletion target, but surfaced for ownership routing:
 
-1. **`python -m flext_infra codegen census` CLI crashes** — `AttributeError: type object 'FlextUtilities' has no attribute 'Cli'` at `flext-cli/src/flext_cli/services/output.py:38`. In-process `FlextInfraCodegenCensus().run()` works. A-CH or flext-cli maintainer.
+1. ~~**`python -m flext_infra codegen census` CLI crashes** — `AttributeError: type object 'FlextUtilities' has no attribute 'Cli'` at `flext-cli/src/flext_cli/services/output.py:38`. In-process `FlextInfraCodegenCensus().run()` works. A-CH or flext-cli maintainer.~~ *(Resolved 2026-06-27: `u.Cli.output_message_payload` is present and the CLI route no longer crashes.)*
 2. **A-CH draft files in `flext-infra/refactor/`** — `catalog_loader.py` references missing `EnforcementAstGrepFixSource.handler` attribute; `_enforcement_harvest.py` has subprocess hygiene + import-ordering errors. Logged as conflict C11 in `~/.claude/plans/AGENT_COORDINATION.md`.
 
 ## Phase 2.4 exit gate
