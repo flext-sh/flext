@@ -1,13 +1,11 @@
 # Flext CQRS Architecture – Migração Completa
 
-**Status:** ✅ MIGRADO para `flext-core/docs/architecture/cqrs.md`
+**Status:** ⚠️ ARQUIVADO — a documentação oficial de CQRS/service patterns foi reestruturada e os destinos listados abaixo não existem mais. O conteúdo funcional deste documento foi superseded pelo código atual (`flext_core.result`, `flext_core.handlers`, `flext_core.dispatcher`) e pelos beads ativos de namespace/handlers.
 
-Este documento foi migrado para a documentação oficial do flext-core.
+## Documentação de destino (arquivada)
 
-## Documentação de destino
-
-- **CQRS Architecture:** [`flext-core/docs/architecture/cqrs.md`](https://github.com/organization/flext/tree/main/flext-core/docs/architecture/cqrs.md)
-- **Service Patterns:** [`flext-core/docs/guides/service-patterns.md`](https://github.com/organization/flext/tree/main/flext-core/docs/guides/service-patterns.md)
+- ~~**CQRS Architecture:** `flext-core/docs/architecture/cqrs.md`~~ (não existe; conteúdo migrado para implementação de código)
+- ~~**Service Patterns:** `flext-core/docs/guides/service-patterns.md`~~ (não existe; service composition usa `flat_map`/`map` de `FlextResult`)
 
 ## TODOs migrados para código
 
@@ -16,7 +14,7 @@ Os seguintes TODOs foram adicionados diretamente nos arquivos de código:
 1. **`handlers.py`** - Module docstring com referência a Phase 1 (x.CQRS)
 2. **`handlers.py`** - Comentário em `_context_stack` e `_metrics` sobre migração
 3. **`dispatcher.py`** - Module docstring com referência a Phase 2 (DI via container)
-4. **`result.py`** - Já contém TODO sobre `and_then()` helper
+4. **`result.py`** - Result API atual usa `flat_map`/`map`; `and_then()` não é helper ativo nem roadmap vigente
 
 ## Conteúdo restante (pendente de implementação)
 
