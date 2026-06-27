@@ -5,7 +5,7 @@
 # what = "docs"
 # domain = "build"
 # summary = "Run docs pipeline"
-# description = "Runs the legacy _docs target (DOCS_PHASE=audit|fix|build|generate|validate|all)."
+# description = "Runs the canonical _docs target (DOCS_PHASE=audit|fix|build|generate|validate|all)."
 # example = "make build WHAT=docs DOCS_PHASE=validate"
 # target = "_docs"
 # mutates = true

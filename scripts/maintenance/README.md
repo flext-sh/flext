@@ -1,40 +1,39 @@
 # Scripts de manutenção do repositório
 
-## `docs-reorg.sh`
+## Canonical docs maintenance
 
-Script de reorganização de documentação para o workspace e subprojetos FLEXT.
+O fluxo de documentação do workspace e dos subprojetos FLEXT é o alvo canônico
+`make build WHAT=docs`, implementado pelo orquestrador de `flext-infra`.
 
 ### Objetivo
 
-- Mover documentação atual para quarentena (`.legacy-docs/<run-id>/<scope>`) com sufixo `.bak`.
-- Rodar pipeline docs (`generate`, `build`, `audit`, `validate`) por escopo, um por execução.
-- Reidratar documentos úteis não-gerenciados automaticamente.
-- Produzir relatório de execução em `.reports/docs/doc-reorg/<run-id>/`.
+- Rodar o pipeline docs (`generate`, `fix`, `build`, `audit`, `validate`) por
+  escopo usando a superfície `make` já gerada.
+- Manter a lógica em `flext-infra`, sem scripts paralelos de manutenção.
+- Usar `workspace-docs-audit` apenas como alvo customizado estreito para lint
+  Markdown dos documentos do workspace.
 
 ### Contrato
 
-- **Um escopo por execução**: obrigatório passar exatamente `--project <name>` ou `--project workspace`.
-- Não há execução em lote nem `--continue-on-error`.
-- Para workspace, as fases `audit`/`validate` usam `make check WHAT=markdown`; as demais fases são no-ops de restauração/preservação.
+- Use `PROJECT=<name>` ou `PROJECTS="a b"` para selecionar escopos.
+- Use `DOCS_PHASE=<generate|fix|audit|build|validate|all>` para escolher a fase.
+- Use `FIX=1` somente quando a fase suportar correção automática.
 
 ### Uso rápido
 
 ```bash
-# Recuperar docs de uma quarentena anterior
-scripts/maintenance/docs-reorg.sh --project workspace --recover-run 20260624144000
+# Validar documentação de um subprojeto
+make build WHAT=docs DOCS_PHASE=validate PROJECT=flext-core
 
-# Reorganizar docs do workspace
-scripts/maintenance/docs-reorg.sh --project workspace --run-id $(date +%Y%m%d%H%M%S)
+# Auditar documentação do workspace
+make build WHAT=docs DOCS_PHASE=audit
 
-# Reorganizar docs de um subprojeto
-scripts/maintenance/docs-reorg.sh --project flext-core --run-id $(date +%Y%m%d%H%M%S)
-
-# Simular sem alterar arquivos
-scripts/maintenance/docs-reorg.sh --project workspace --dry-run
+# Corrigir docs quando a fase suportar auto-fix
+make build WHAT=docs DOCS_PHASE=fix PROJECT=flext-core FIX=1
 ```
 
 ### Notas de compliance
 
 - Arquivos gerenciados automaticamente por `flext_infra` são preservados.
-- Documentos fora desses arquivos geridos podem voltar da quarentena.
-- Use `--dry-run` para simular alterações.
+- Não recrie scripts shell para fases já cobertas pelo orquestrador.
+- Para validação Markdown isolada do workspace, use `make workspace-docs-audit`.
