@@ -11,7 +11,7 @@
 # aliases = []
 # params = [
 #   { name = "CHECK_GATES", help = "Optional override for lint gate set", required = false, default = "lint,pyrefly" },
-#   { name = "WHAT", help = "Comando de check", required = false, default = "all", choices = ["all","boundary","coordination","cqrs","fmt","format","go","lint","loc-cap","markdown","mypy","pol","pyre","pyrefly","pyright","scan","silent-failure","types"] }
+#   { name = "WHAT", help = "Comando de check", required = false, default = "all", choices = ["all","boundary","coordination","cqrs","docker_standardization","fmt","format","go","lint","loc-cap","markdown","mypy","pol","pyre","pyrefly","pyright","scan","silent-failure","types"] }
 # ]
 # rules = ["dev-gate"]
 # ///
