@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Show Beads runtime status through read-only status commands."""
 # /// flext-command
 # verb = "status"
 # what = "all"
@@ -18,6 +19,7 @@ from scripts.dispatch import promoted_main, run_shell
 
 
 def main() -> int:
+    """Run the read-only Beads status command set."""
     commands = [
         ["bd", "status", "--json"],
         ["bd", "dolt", "show"],

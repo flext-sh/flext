@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "clean"
 # what = "all"
@@ -6,6 +7,7 @@
 # summary = "Clean build/test/type artifacts"
 # description = "Runs the legacy _clean_default target to remove caches and orchestrated clean artifacts."
 # example = "make clean WHAT=all"
+# target = "_clean_default"
 # mutates = true
 # aliases = []
 # params = [
@@ -13,15 +15,3 @@
 # ]
 # rules = ["workspace-bootstrap"]
 # ///
-
-from __future__ import annotations
-
-from scripts.dispatch import promoted_main, run_make
-
-
-def main() -> int:
-    return run_make("_clean_default")
-
-
-if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))

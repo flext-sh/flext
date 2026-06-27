@@ -6,6 +6,7 @@ import os
 import sys
 from collections.abc import Sequence
 
+from flext_cli import u
 from scripts.lib.exec import env_enabled, run
 from scripts.lib.registry import (
     DEFAULT_COMMAND,
@@ -23,12 +24,13 @@ from scripts.lib.render import (
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    """Run the FLEXT scripts dispatcher."""
     args = tuple(_apply_env_from_args(sys.argv[1:] if argv is None else argv))
     try:
         if args and args[0] in {"help", "--help", "-h"}:
             return _print_help("")
         if not args:
-            return _print_help(os.environ.get("WHAT", "").strip())
+            return _print_help(u.Cli.process_env().get("WHAT", "").strip())
         if args[0] == "--validate":
             return 0
         return dispatch(args[0])
@@ -63,19 +65,23 @@ def _print_help(requested: str) -> int:
 
 
 def print_command_or_verb_help(registry: Registry, verb: str, what: str) -> int:
+    """Print help for one command."""
     print(render_command_help(registry, verb, what))
     return 0
 
 
 def print_verb_help(registry: Registry, requested_verb: str) -> int:
+    """Print help for one verb."""
     print(render_verb_help(registry, requested_verb))
     return 0
 
 
 def dispatch(requested_verb: str) -> int:
+    """Dispatch one promoted verb from the current process environment."""
     registry = discover()
     verb = registry.resolve_verb(requested_verb)
-    requested = os.environ.get("WHAT", "").strip() or DEFAULT_COMMAND
+    env = u.Cli.process_env()
+    requested = env.get("WHAT", "").strip() or DEFAULT_COMMAND
     what_values = _normalize_what(requested)
 
     if requested == "help":
@@ -89,7 +95,7 @@ def dispatch(requested_verb: str) -> int:
     code = 0
     for what in what_values:
         command = registry.command(verb, what)
-        is_dry_run = command.mutates and os.environ.get("APPLY", "N").upper() != "Y"
+        is_dry_run = command.mutates and env.get("APPLY", "N").upper() != "Y"
         validate_invocation(command, require_required=not is_dry_run)
         if is_dry_run:
             print(render_dry_run(command, requested_verb, what))
@@ -120,6 +126,7 @@ def _normalize_what(raw: str) -> tuple[str, ...]:
 def print_verbosity_help(
     registry: Registry, requested_verb: str, what_values: tuple[str, ...]
 ) -> None:
+    """Print detailed help for one WHAT value or the parent verb."""
     if len(what_values) != 1:
         print(render_verb_help(registry, requested_verb))
         return

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "test"
 # what = "all"
@@ -6,6 +7,7 @@
 # summary = "Run tests in selected projects"
 # description = "Runs the legacy _test_default target via orchestrator."
 # example = "make test WHAT=all PROJECT=flext-infra MATCH=test_foo"
+# target = "_test_default"
 # mutates = false
 # aliases = []
 # params = [
@@ -16,15 +18,3 @@
 # ]
 # rules = ["dev-gate"]
 # ///
-
-from __future__ import annotations
-
-from scripts.dispatch import promoted_main, run_make
-
-
-def main() -> int:
-    return run_make("_test_default")
-
-
-if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))

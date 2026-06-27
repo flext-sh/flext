@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "build"
 # what = "mod"
@@ -6,6 +7,7 @@
 # summary = "Modernize pyproject.toml files"
 # description = "Runs the legacy _mod target to standardize configs without lock/install."
 # example = "make build WHAT=mod"
+# target = "_mod"
 # mutates = true
 # aliases = []
 # params = [
@@ -13,15 +15,3 @@
 # ]
 # rules = ["build"]
 # ///
-
-from __future__ import annotations
-
-from scripts.dispatch import promoted_main, run_make
-
-
-def main() -> int:
-    return run_make("_mod")
-
-
-if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))

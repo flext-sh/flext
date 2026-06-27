@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Run typing supply-chain checks and optional pyrefly gate."""
 # /// flext-command
 # verb = "check"
 # what = "types"
@@ -17,18 +18,17 @@
 
 from __future__ import annotations
 
-import os
-
-from scripts.dispatch import promoted_main, run_make
+from scripts.dispatch import env_value, promoted_main, run_make
 
 
 def main() -> int:
+    """Run `_types`, then optional pyrefly when requested."""
     code = run_make("_types")
     if code != 0:
         return code
     gates = [
         item.strip()
-        for item in os.environ.get("CHECK_GATES", "").split(",")
+        for item in env_value("CHECK_GATES").split(",")
         if item.strip()
     ]
     if "pyrefly" in gates:

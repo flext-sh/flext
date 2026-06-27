@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Render the promoted command surface from the scripts registry."""
 # /// flext-command
 # verb = "makefile"
 # what = "all"
@@ -14,10 +15,11 @@
 
 from __future__ import annotations
 
-from scripts.dispatch import promoted_main, discover, render_global_help
+from scripts.dispatch import discover, promoted_main, render_global_help
 
 
 def main() -> int:
+    """Print global dispatcher help from discovered command metadata."""
     print(render_global_help(discover()))
     return 0
 

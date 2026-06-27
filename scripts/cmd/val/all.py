@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Run validation gates for project, workspace, or both scopes."""
 # /// flext-command
 # verb = "val"
 # what = "all"
@@ -17,13 +18,12 @@
 
 from __future__ import annotations
 
-import os
-
-from scripts.dispatch import promoted_main, run_make
+from scripts.dispatch import env_value, promoted_main, run_make
 
 
 def main() -> int:
-    scope = os.environ.get("VALIDATE_SCOPE", "project").strip().lower()
+    """Dispatch validation by VALIDATE_SCOPE."""
+    scope = env_value("VALIDATE_SCOPE", "project").lower()
     if scope == "workspace":
         return run_make("_val_workspace")
     if scope == "project":
