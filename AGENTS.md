@@ -1,6 +1,7 @@
 # AGENTS.md — FLEXT Canonical Engineering Law
 
 <!-- BEGIN UNIVERSAL AGENT LAW (portable; regenerable; do not edit inside) -->
+
 ## Universal Agent Law (portable core)
 
 This block references `~/.ai-hub/AGENTS.md` as the single source of truth for the universal cross-project law. The full detailed version lives in `~/.ai-hub/docs/agent-law-full.md`.
@@ -41,21 +42,21 @@ Do not restate these rules. Prefer targeted tool calls and `make` verbs.
 ## Scope and authoritative sources
 
 1. User request (highest)
-2. `AGENTS.md` (this file)
-3. `~/.claude/AGENTS.md`
-4. `.agents/skills/*/SKILL.md`
+1. `AGENTS.md` (this file)
+1. `~/.claude/AGENTS.md`
+1. `.agents/skills/*/SKILL.md`
 
 `AGENTS.md` below is the operational summary for the monorepo. Detailed mechanics live in SKILL docs.
 
 ## Quick execution flow (per task)
 
 1. Confirm active bead/issue and ownership with `bd ready` and `bd show <id>`.
-2. Read the relevant local scoped SKILL docs before editing.
-3. Run the narrowest smell/quality discovery first (`qlty`, `rg`, `sg`, or `scope` as available).
-4. Reuse canonical origin before creating helpers/abstractions.
-5. Make the minimal fix, then run the first local validation gate.
-6. Update impacted callers in the same cycle.
-7. Record evidence and next step in Beads before any handoff.
+1. Read the relevant local scoped SKILL docs before editing.
+1. Run the narrowest smell/quality discovery first (`qlty`, `rg`, `sg`, or `scope` as available).
+1. Reuse canonical origin before creating helpers/abstractions.
+1. Make the minimal fix, then run the first local validation gate.
+1. Update impacted callers in the same cycle.
+1. Record evidence and next step in Beads before any handoff.
 
 Any unresolved blocker at step 6 keeps the change incomplete.
 
@@ -146,6 +147,8 @@ Recommended baseline for contribution work:
 - `make` is the canonical execution lane; avoid direct `git`-wide scripts when a Make target exists.
 - FLEXT participates in the `~/.ai-hub` distributed workspace base: `make cosmos-help` exposes dispatcher verbs; the common base is maintained from `~/.ai-hub` via `make workspaces WHAT=distribute APPLY=1`.
 - Bead system (`bd`) is the mandatory work ledger.
+- Agent lanes (Claude, Codex, Gemini, and their subagents) claim work via `bd` (epics/tasks), keep child beads for disjoint scopes, and record evidence in bead notes rather than chat-only state.
+- Subagents write verbose findings to disk (`coordination/resultados/` or `.beads/artifacts/`) and update `bd` only with filepath and status.
 - Repeated cross-file edits require caller/audit validation before marking done.
 
 ## Temporary lane policy
