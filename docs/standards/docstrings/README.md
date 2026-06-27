@@ -40,7 +40,7 @@ This directory contains standards and guidance for writing Python docstrings acr
 
 ```bash
 # Check which files need docstrings
-python3 scripts/validate-docstrings.py <path/to/files>
+ruff check --select=D,DOC --preview <path/to/files>
 ```
 
 ### For Implementation
@@ -55,13 +55,13 @@ python3 scripts/validate-docstrings.py <path/to/files>
 **Validation** (identify gaps):
 
 ```bash
-python3 scripts/validate-docstrings.py flext-core/src
+ruff check --select=D,DOC --preview flext-core/src
 ```
 
 **Audit workflow** (guided manual improvement):
 
 ```bash
-bash scripts/audit-docstrings.sh flext-core/src
+make build WHAT=docs DOCS_PHASE=audit PROJECT=flext-core
 ```
 
 ## Philosophy

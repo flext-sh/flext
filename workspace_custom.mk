@@ -21,7 +21,7 @@ done-check: ## Real-user/green-green check, scoped to committed changes vs upstr
 	echo "done-check: ruff on $$n committed-vs-$$base .py file(s)"; \
 	printf '%s\n' "$$files" | xargs -r ruff check --quiet
 
-workspace-docs-audit: ## Markdown lint for workspace docs (used by docs-reorg audit/validate)
+workspace-docs-audit: ## Markdown lint for workspace docs
 	$(Q)md_files=$$(find docs/ -type f -name '*.md' 2>/dev/null | sort); \
 	if [ -z "$$md_files" ]; then \
 		echo "workspace-docs-audit: no .md files in docs/ — green"; \

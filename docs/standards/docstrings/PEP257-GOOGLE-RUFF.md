@@ -394,7 +394,7 @@ Run validation:
 
 ```bash
 ruff check --select=D --preview src/
-python3 scripts/validate-docstrings.py src/
+ruff check --select=D,DOC --preview src/
 ```
 
 ---
@@ -561,10 +561,10 @@ SPDX-License-Identifier: MIT
 
 ```bash
 # Validate completeness
-python3 scripts/validate-docstrings.py flext-core/src
+ruff check --select=D,DOC --preview flext-core/src
 
 # Audit with guidance
-bash scripts/audit-docstrings.sh flext-core/src
+make build WHAT=docs DOCS_PHASE=audit PROJECT=flext-core
 
 # Ruff strict check
 ruff check --select=D,DOC --preview flext-core/src
