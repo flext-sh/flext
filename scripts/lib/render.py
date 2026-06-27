@@ -14,6 +14,7 @@ from scripts.lib.registry import (
 
 
 def render_global_help(registry: Registry) -> str:
+    """Render top-level dispatcher help."""
     lines = ["flext - make <verbo> WHAT=<acao> [PARAM=value ...]", ""]
     for verb in registry.verbs():
         command = registry.command(verb, DEFAULT_COMMAND)
@@ -31,6 +32,7 @@ def render_global_help(registry: Registry) -> str:
 
 
 def render_verb_help(registry: Registry, requested_verb: str) -> str:
+    """Render help for one promoted verb."""
     verb = registry.resolve_verb(requested_verb)
     aliases = registry.aliases_for(verb)
     alias_suffix = f" (alias: {', '.join(aliases)})" if aliases else ""
@@ -70,6 +72,7 @@ def render_verb_help(registry: Registry, requested_verb: str) -> str:
 
 
 def render_command_help(registry: Registry, requested_verb: str, what: str) -> str:
+    """Render help for one promoted command."""
     command = registry.command(requested_verb, what)
     lines = [
         f"make {requested_verb} WHAT={what}",
@@ -95,6 +98,7 @@ def render_command_help(registry: Registry, requested_verb: str, what: str) -> s
 
 
 def render_dry_run(command: Command, requested_verb: str, what: str) -> str:
+    """Render dry-run output for one mutating command."""
     lines = [
         "DRY-RUN: nenhuma mutacao executada.",
         f"Comando: make {requested_verb} WHAT={what}",
@@ -121,6 +125,7 @@ def render_dry_run(command: Command, requested_verb: str, what: str) -> str:
 
 
 def format_params_inline(params: Iterable[Param]) -> str:
+    """Render command params in one compact inline form."""
     parts: list[str] = []
     for param in params:
         suffix = "*" if param.required else ""
@@ -137,6 +142,7 @@ def format_params_inline(params: Iterable[Param]) -> str:
 
 
 def example_for(command: Command, requested_verb: str) -> str:
+    """Return the example adjusted for an alias-preserving verb."""
     canonical = f"make {command.verb}"
     requested = f"make {requested_verb}"
     if command.example.startswith(canonical):

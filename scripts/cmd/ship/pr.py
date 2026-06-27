@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "ship"
 # what = "pr"
@@ -6,6 +7,7 @@
 # summary = "Manage pull requests for selected projects"
 # description = "Runs the legacy _pr target."
 # example = "make ship WHAT=pr APPLY=Y"
+# target = "_pr"
 # mutates = true
 # aliases = []
 # params = [
@@ -13,15 +15,3 @@
 # ]
 # rules = ["release"]
 # ///
-
-from __future__ import annotations
-
-from scripts.dispatch import promoted_main, run_make
-
-
-def main() -> int:
-    return run_make("_pr")
-
-
-if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))

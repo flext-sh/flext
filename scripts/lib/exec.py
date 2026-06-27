@@ -9,16 +9,18 @@ from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import NoReturn
 
+from flext_cli import u
 from scripts.lib.registry import ROOT, Command
 
 
 def run(command: Command) -> int:
+    """Run one promoted command through the canonical execution path."""
+    if command.target:
+        return run_make(command.target)
     env = command_env(command)
     if command.path.suffix == ".py":
         return run_python(command, env)
-    return subprocess.run(
-        ["bash", str(command.path)], cwd=str(ROOT), env=env, check=False
-    ).returncode
+    return run_streaming(("bash", str(command.path)), env=env)
 
 
 def run_make(
@@ -28,42 +30,53 @@ def run_make(
     extra_env: Mapping[str, str] | None = None,
 ) -> int:
     """Run a Makefile target and return the process exit code."""
-    env = os.environ.copy()
-    if extra_env:
-        env.update(extra_env)
     command = ("make", target, *make_args)
-    result = subprocess.run(list(command), cwd=str(ROOT), env=env, check=False)
-    return result.returncode
+    return run_streaming(command, env=extra_env)
 
 
 def run_shell(
     command: Sequence[str], *, extra_env: Mapping[str, str] | None = None
 ) -> int:
     """Run a generic shell command and return the process exit code."""
-    env = os.environ.copy()
-    if extra_env:
-        env.update(extra_env)
-    result = subprocess.run(list(command), cwd=str(ROOT), env=env, check=False)
-    return result.returncode
+    result = u.Cli.run_raw(command, cwd=ROOT, env=extra_env)
+    if result.failure:
+        print(result.error or "command execution failed", file=sys.stderr)
+        return 1
+    output = result.value
+    if output.stdout:
+        print(output.stdout, end="")
+    if output.stderr:
+        print(output.stderr, file=sys.stderr, end="")
+    return output.exit_code
 
 
 def run_python(command: Command, env: Mapping[str, str]) -> int:
     """Execute a promoted Python command under canonical dispatch env."""
+    return run_streaming((sys.executable, str(command.path)), env=env)
+
+
+def run_streaming(command: Sequence[str], env: Mapping[str, str] | None = None) -> int:
+    """Run a command that must stream output directly to the terminal."""
     return subprocess.run(
-        [sys.executable, str(command.path)], cwd=str(ROOT), env=dict(env), check=False
+        list(command),
+        cwd=str(ROOT),
+        env=u.Cli.process_env(overrides=env),
+        check=False,
     ).returncode
 
 
 def command_env(command: Command) -> dict[str, str]:
     """Return canonical environment for a promoted command."""
-    env = os.environ.copy()
-    env["WHAT"] = command.what
-    env["FLEXT_COMMAND_DISPATCHED"] = "Y"
-    env["FLEXT_COMMAND_VERB"] = command.verb
-    env["FLEXT_COMMAND_WHAT"] = command.what
-    env["FLEXT_COMMAND_PATH"] = str(command.path.resolve())
-    env["PYTHONPATH"] = str(ROOT)
-    return env
+    return u.Cli.process_env(
+        overrides={
+            "WHAT": command.what,
+            "FLEXT_COMMAND_DISPATCHED": "Y",
+            "FLEXT_COMMAND_VERB": command.verb,
+            "FLEXT_COMMAND_WHAT": command.what,
+            "FLEXT_COMMAND_PATH": str(command.path.resolve()),
+            "PYTHONPATH": str(ROOT),
+        }
+    )
 
 
 def require_dispatched(path: Path) -> None:
@@ -88,4 +101,10 @@ def promoted_main(script_file: str | Path, handler: Callable[[], int]) -> NoRetu
 
 
 def env_enabled(name: str) -> bool:
-    return os.environ.get(name, "N").upper() in {"1", "Y", "YES", "TRUE"}
+    """Return whether an environment flag is truthy."""
+    return u.Cli.process_env().get(name, "N").upper() in {"1", "Y", "YES", "TRUE"}
+
+
+def env_value(name: str, default: str = "") -> str:
+    """Return one environment value through the canonical CLI env resolver."""
+    return u.Cli.process_env().get(name, default).strip()

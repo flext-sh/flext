@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "build"
 # what = "docs"
@@ -6,6 +7,7 @@
 # summary = "Run docs pipeline"
 # description = "Runs the legacy _docs target (DOCS_PHASE=audit|fix|build|generate|validate|all)."
 # example = "make build WHAT=docs DOCS_PHASE=validate"
+# target = "_docs"
 # mutates = true
 # aliases = []
 # params = [
@@ -14,15 +16,3 @@
 # ]
 # rules = ["build"]
 # ///
-
-from __future__ import annotations
-
-from scripts.dispatch import promoted_main, run_make
-
-
-def main() -> int:
-    return run_make("_docs")
-
-
-if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))

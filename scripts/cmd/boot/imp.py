@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "boot"
 # what = "imp"
@@ -6,6 +7,7 @@
 # summary = "Detect/fix import violations"
 # description = "Runs the legacy _imp target to detect and optionally fix import violations."
 # example = "make boot WHAT=imp APPLY=Y"
+# target = "_imp"
 # mutates = true
 # aliases = []
 # params = [
@@ -13,15 +15,3 @@
 # ]
 # rules = ["workspace-bootstrap"]
 # ///
-
-from __future__ import annotations
-
-from scripts.dispatch import promoted_main, run_make
-
-
-def main() -> int:
-    return run_make("_imp")
-
-
-if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))

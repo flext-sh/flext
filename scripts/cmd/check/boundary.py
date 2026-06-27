@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Run the boundary quality gate through the workspace orchestrator."""
 # /// flext-command
 # verb = "check"
 # what = "boundary"
@@ -16,13 +17,12 @@
 
 from __future__ import annotations
 
-import os
-
-from scripts.dispatch import promoted_main, run_make
+from scripts.dispatch import env_value, promoted_main, run_make
 
 
 def main() -> int:
-    gates = os.environ.get("CHECK_GATES", "boundary")
+    """Run `_check_default` with the boundary gate selected."""
+    gates = env_value("CHECK_GATES", "boundary")
     return run_make("_check_default", extra_env={"CHECK_GATES": gates})
 
 

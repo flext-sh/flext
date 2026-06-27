@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "ship"
 # what = "save"
@@ -6,6 +7,7 @@
 # summary = "Commit all changes in selected projects"
 # description = "Runs the legacy _save target. Requires MESSAGE=."
 # example = "make ship WHAT=save APPLY=Y MESSAGE='chore: update'"
+# target = "_save"
 # mutates = true
 # aliases = []
 # params = [
@@ -14,15 +16,3 @@
 # ]
 # rules = ["release"]
 # ///
-
-from __future__ import annotations
-
-from scripts.dispatch import promoted_main, run_make
-
-
-def main() -> int:
-    return run_make("_save")
-
-
-if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))

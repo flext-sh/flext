@@ -6,6 +6,7 @@ from scripts.lib.cli import main
 from scripts.lib.exec import (
     command_env,
     env_enabled,
+    env_value,
     promoted_main,
     require_dispatched,
     run_make,
@@ -30,6 +31,7 @@ __all__ = [
     "command_env",
     "discover",
     "env_enabled",
+    "env_value",
     "main",
     "promoted_main",
     "render_global_help",

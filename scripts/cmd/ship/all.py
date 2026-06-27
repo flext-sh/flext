@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "ship"
 # what = "all"
@@ -6,6 +7,7 @@
 # summary = "Interactive workspace release orchestration"
 # description = "Runs the legacy _rel target (release workflow)."
 # example = "make ship WHAT=all APPLY=Y"
+# target = "_rel"
 # mutates = true
 # aliases = []
 # params = [
@@ -13,15 +15,3 @@
 # ]
 # rules = ["release"]
 # ///
-
-from __future__ import annotations
-
-from scripts.dispatch import promoted_main, run_make
-
-
-def main() -> int:
-    return run_make("_rel")
-
-
-if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))

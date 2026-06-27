@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Run the LOC cap quality gate through the workspace orchestrator."""
 # /// flext-command
 # verb = "check"
 # what = "loc-cap"
@@ -16,13 +17,12 @@
 
 from __future__ import annotations
 
-import os
-
-from scripts.dispatch import promoted_main, run_make
+from scripts.dispatch import env_value, promoted_main, run_make
 
 
 def main() -> int:
-    gates = os.environ.get("CHECK_GATES", "loc-cap")
+    """Run `_check_default` with the LOC cap gate selected."""
+    gates = env_value("CHECK_GATES", "loc-cap")
     return run_make("_check_default", extra_env={"CHECK_GATES": gates})
 
 

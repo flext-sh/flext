@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Run the default check pipeline through promoted Make targets."""
 # /// flext-command
 # verb = "check"
 # what = "all"
@@ -17,17 +18,16 @@
 
 from __future__ import annotations
 
-import os
-
-from scripts.dispatch import promoted_main, run_make
+from scripts.dispatch import env_value, promoted_main, run_make
 
 
 def main() -> int:
+    """Run formatting first, then the selected lint gate set."""
     code = run_make("_fmt")
     if code != 0:
         return code
     gate_env = {"CHECK_GATES": "lint,pyrefly"}
-    if value := os.environ.get("CHECK_GATES"):
+    if value := env_value("CHECK_GATES"):
         gate_env["CHECK_GATES"] = value
     return run_make("_check_default", extra_env=gate_env)
 
