@@ -38,12 +38,13 @@ classDiagram
         +bool is_failure
         +unwrap() T
         +unwrap_failure() Exception
+        +value T
+        +error str
         +map(Func~T, U~) r~U~
         +flat_map(Func~T, r~U~~) r~U~
-        +and_then(Func~T, r~U~~) r~U~
-        +or_else(Func~Exception, r~T~~) r~T~
-        +on_success(Action~T~) r~T~
-        +on_failure(Action~Exception~) r~T~
+        +recover(Func~str, T~~) r~T~
+        +tap(Action~T~) r~T~
+        +tap_error(Action~str~) r~T~
         +ok(T value) r~T~
         +fail(Exception error) r~T~
     }
@@ -62,7 +63,7 @@ classDiagram
         +bool is_success = false
         +bool is_failure = true
         +unwrap_failure() Exception
-        +or_else(Func~Exception, r~T~~) r~T~
+        +map_error(Func~str, str~) r~T~
     }
 
     r~T~ <|-- FlextSuccess~T~
