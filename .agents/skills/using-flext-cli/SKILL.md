@@ -1,11 +1,9 @@
 ---
 name: using-flext-cli
-description: 'Use when building or testing FLEXT CLI commands. Covers the model-driven
-  Typer abstraction, CLI settings, output formatting, and CliRunner testing. DO NOT
-  USE FOR: questions unrelated to flext-cli or creating projects/architecture from scratch.'
+description: 'Use when building or testing FLEXT CLI commands. Covers the model-driven Typer abstraction, CLI settings, output formatting, and CliRunner testing. DO NOT USE FOR: questions unrelated to flext-cli or creating projects/architecture from scratch.'
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 # Using flext-cli
 
@@ -26,15 +24,16 @@ Quick-reference for building CLI commands with `flext_cli`.
 
 ## Workflow
 
-1. Define a Pydantic input model.
+1. Define a Pydantic input model (`m.BaseModel`).
 2. Register a handler and build a Typer command with `FlextCliCli.model_command`.
-3. Test with `CliRunner`.
+3. Test with `CliRunner` from `typer.testing`.
 
 ## Critical rules
 
 - Model-driven commands only; avoid ad-hoc Typer functions.
-- Use `FlextCliSettings` for configuration; `s` is the service/runtime alias, not settings.
-- Use `u.Cli` helpers for annotations and defaults.
+- Use `FlextCliSettings.fetch_global()` for configuration; `s` is the service/runtime alias, not settings.
+- Command input models are plain `m.BaseModel` subclasses (`m.CliInput`/`m.CliOutput` do not exist).
+- `FlextCliCli.build_model_command` does not exist; the canonical method is `FlextCliCli.model_command(...)`.
 
 ## Aliases
 
@@ -42,13 +41,15 @@ Quick-reference for building CLI commands with `flext_cli`.
 from flext_cli import c, m, p, r, s, t, u
 ```
 
+`flext_cli` reexports `d`, `e`, `h`, `r`, `x` from `flext_core`.
+
 | Alias | Purpose |
 |-------|---------|
 | `c` | constants |
 | `m` | models |
 | `p` | protocols |
 | `r` | result (reexported from `flext_core`) |
-| `s` | service / runtime |
+| `s` | service / runtime (`FlextCliServiceBase`) |
 | `t` | typings |
 | `u` | utilities |
 
@@ -58,19 +59,23 @@ Settings are accessed via `FlextCliSettings` (no short alias).
 
 ```python
 from __future__ import annotations
+
 from flext_cli import m, t
 from flext_cli.services.cli import FlextCliCli
 from flext_cli.settings import FlextCliSettings
 
+
 class GreetInput(m.BaseModel):
     name: str
     shout: bool = False
+
 
 def greet_handler(model: GreetInput) -> t.JsonValue:
     message = f"Hello, {model.name}!"
     if model.shout:
         message = message.upper()
     return {"message": message}
+
 
 settings = FlextCliSettings.fetch_global()
 command = FlextCliCli.model_command(
@@ -82,12 +87,12 @@ command = FlextCliCli.model_command(
 
 ## Settings
 
-```python
-from flext_cli import c
-from flext_core import FlextSettings, m
+Import and use the existing settings class; do not redefine it:
 
-class FlextCliSettings(FlextSettings):
-    model_config = m.SettingsConfigDict(env_prefix="FLEXT_CLI_", extra="ignore")
+```python
+from flext_cli.settings import FlextCliSettings
+
+settings = FlextCliSettings.fetch_global()
 ```
 
 ## Testing
@@ -111,6 +116,7 @@ class GreetInput(m.BaseModel):
 
 ```python
 import typer
+
 
 def main(name: str):
     print(f"Hello, {name}")

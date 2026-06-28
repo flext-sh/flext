@@ -20,19 +20,24 @@ Use the facade aliases exposed by `flext_core` and project facades:
 | Alias | Purpose |
 |-------|---------|
 | `c` | constants / constants namespace |
+| `d` | decorators |
+| `e` | errors / exceptions |
+| `h` | handlers |
 | `m` | models |
 | `p` | protocols |
+| `r` | result (`FlextResult`) |
+| `s` | service / runtime |
 | `t` | typings |
 | `u` | utilities |
-| `r` | result (`returns`-based) |
-| `e` | errors / exceptions |
-| `s` | settings |
-| `x` | execution / dispatch |
+| `x` | mixins / execution |
+
+**Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`, `FlextCliSettings`, `FlextTestsSettings`) have no short alias.
 
 Example:
 
 ```python
 from flext_core import c, m, r, t, u
+
 
 def load(user_id: int) -> r[m.User]:
     return u.http_get(f"{c.API_BASE}/users/{user_id}")
@@ -44,6 +49,7 @@ def load(user_id: int) -> r[m.User]:
 - No wildcard imports.
 - No relative imports.
 - No legacy typing imports (`typing.Dict`, `typing.List`, etc.).
+- No direct imports of abstracted frameworks (pydantic, structlog, typer, returns) in consumer projects; use the project facade.
 
 Order:
 
@@ -65,24 +71,29 @@ Order:
 from collections.abc import Mapping
 from flext_core import t
 
+
 def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue:
     ...
 ```
 
 ## Result flow
 
-Fallible paths return `r[T]` from `returns`. Do not use ad-hoc error dicts or raw exceptions for control flow.
+Fallible paths return `r[T]` from `FlextResult`. Do not use ad-hoc error dicts or raw exceptions for control flow.
 
 ```python
 from flext_core import r
 
+
 def parse(value: str) -> r[int]:
-    ...
+    try:
+        return r.ok(int(value))
+    except ValueError as exc:
+        return r[int].fail("invalid_integer", exception=exc)
 ```
 
 ## Logging
 
-Use `FlextLogger`. No `print()` in library code.
+Use `u.fetch_logger(__name__)`. No `print()` in library code.
 
 ```python
 from flext_core import u
@@ -102,6 +113,18 @@ except ValueError as exc:
     raise e.ValidationError("invalid integer") from exc
 ```
 
+## Models and settings
+
+Use Pydantic v2 `BaseModel` and `m.SettingsConfigDict` for settings branches.
+
+```python
+from flext_core import FlextSettings, m
+
+
+class FlextCliSettings(FlextSettings):
+    model_config = m.SettingsConfigDict(env_prefix="FLEXT_CLI_", extra="ignore")
+```
+
 ## Anti-patterns
 
 | Anti-pattern | Fix |
@@ -115,6 +138,7 @@ except ValueError as exc:
 | `# type: ignore` / `# noqa` | fix root cause |
 | relative imports | absolute imports |
 | wildcard imports | explicit imports |
+| `s` used for settings | `s` is service/runtime; use `FlextSettings` by name |
 
 ## Local validation
 

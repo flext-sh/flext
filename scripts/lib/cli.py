@@ -6,7 +6,7 @@ import os
 import sys
 from collections.abc import Sequence
 
-from flext_cli import u
+from flext_tests import c, u
 from scripts.lib.exec import env_enabled, run
 from scripts.lib.registry import (
     DEFAULT_COMMAND,
@@ -31,7 +31,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args and args[0] in {"help", "--help", "-h"}:
             return _print_help("")
         if not args:
-            return _print_help(u.Cli.process_env().get("WHAT", "").strip())
+            return _print_help(
+                u.Cli.process_env().get(c.Tests.MAKE_WHAT_PARAM, "").strip()
+            )
         if args[0] == "--validate":
             discover()
             return 0
@@ -85,13 +87,13 @@ def dispatch(requested_verb: str) -> int:
     registry = discover()
     verb = registry.resolve_verb(requested_verb)
     env = u.Cli.process_env()
-    requested = env.get("WHAT", "").strip() or DEFAULT_COMMAND
+    requested = env.get(c.Tests.MAKE_WHAT_PARAM, "").strip() or DEFAULT_COMMAND
     what_values = _normalize_what(requested)
 
     if requested == "help":
         print(render_verb_help(registry, requested_verb))
         return 0
-    if env_enabled("HELP") or env_enabled("OPTIONS"):
+    if env_enabled(c.Tests.MAKE_HELP_PARAM) or env_enabled(c.Tests.MAKE_OPTIONS_PARAM):
         if len(what_values) == 1:
             return print_command_or_verb_help(registry, requested_verb, what_values[0])
         print_verbosity_help(registry, requested_verb, what_values)
@@ -99,7 +101,11 @@ def dispatch(requested_verb: str) -> int:
     code = 0
     for what in what_values:
         command = registry.command(verb, what)
-        is_dry_run = command.mutates and env.get("APPLY", "N").upper() != "Y"
+        is_dry_run = (
+            command.mutates
+            and env.get(c.Tests.MAKE_APPLY_PARAM, "N").upper()
+            != c.Tests.MAKE_DISPATCH_ENV_VALUE
+        )
         validate_invocation(command, require_required=not is_dry_run)
         if is_dry_run:
             print(render_dry_run(command, requested_verb, what))
