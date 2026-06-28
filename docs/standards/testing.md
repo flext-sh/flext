@@ -1,3 +1,112 @@
 # Testing Standards
 
-Testing conventions for workspace documentation.
+Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `.agents/skills/flext-quality-gates/SKILL.md`.
+
+## Mindset
+
+- Tests protect behavior, not implementation.
+- Prefer real flows over mocks when the cost is acceptable.
+- A failing quality gate is a P0 incident; fix the root cause, do not suppress.
+
+## Structure (AAA)
+
+```python
+def test_user_creation():
+    # Arrange
+    data = {"name": "Ada"}
+
+    # Act
+    user = m.User.model_validate(data)
+
+    # Assert
+    assert user.name == "Ada"
+```
+
+## Imports in tests
+
+Use the same aliases as production code. Test facades may be named `TestsFlext<Project><Tier>` when the project exposes one.
+
+```python
+from __future__ import annotations
+from collections.abc import Mapping, Sequence
+
+from flext_core import m, r
+```
+
+## Asserting results
+
+Use public API assertions. For `r[T]` results, assert on the public shape rather than private internals.
+
+```python
+from returns.result import Success, Failure
+
+def test_load_user():
+    result = load_user(1)
+    assert isinstance(result, Success)
+    assert result.unwrap().id == 1
+```
+
+## Fixtures
+
+Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it to the canonical `conftest.py` for the affected tier.
+
+```python
+import pytest
+
+@pytest.fixture
+def sample_user():
+    return m.User(id=1, name="Ada")
+```
+
+## Golden files and examples
+
+When output is stable and reviewable, prefer golden-file examples. Store them under `tests/fixtures/` or the project-local equivalent. Update golden files deliberately, never as a side effect of unrelated changes.
+
+## Parametrization
+
+Use `@pytest.mark.parametrize` for multi-case checks.
+
+```python
+import pytest
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("1", 1),
+        ("42", 42),
+    ],
+)
+def test_parse_int(raw, expected):
+    assert parse_int(raw) == expected
+```
+
+## What to avoid
+
+| Anti-pattern | Fix |
+|--------------|-----|
+| Testing private methods | test public behavior |
+| Heavy mocking without real-flow fallback | prefer real dependencies or fakes |
+| `assert True` smoke tests | assert a real invariant |
+| Ignoring enforcement warnings | treat warnings as failures |
+| Shared mutable fixtures | return fresh objects or use factories |
+
+## Running tests
+
+```bash
+# narrow
+make test PROJECT=<proj> MATCH=<expr>
+
+# broad
+make test PROJECT=<proj>
+```
+
+## Coverage
+
+`pyproject.toml` sets `fail_under = 45` for the consolidated workspace. Project-local targets may be higher. Do not lower the threshold to make a build pass.
+
+## Related
+
+- `AGENTS.md` — root engineering law
+- `.agents/skills/flext-quality-gates/SKILL.md` — gate commands
+- `.agents/skills/coding-standards/SKILL.md` — general coding standards
+- `.agents/skills/flext-development-workflow/SKILL.md` — CI/CD lifecycle

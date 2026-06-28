@@ -1,10 +1,10 @@
 ---
 name: flext-strict-typing
-description: 'Use this skill to defines and enforces the FLEXT type hierarchy: t.*
-  contracts, PEP 695 type aliases, r[T] result containers, and isinstance/TypeGuard
-  narrowing. Use when writing type annotations, fixing pyrefly or pyright errors,
-  working with t.JsonValue or t.Scalar, enforcing no-Any. DO NOT USE FOR: questions
-  unrelated to flext-strict-typing creating projects or architecture from scratch'
+description: 'Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 695
+  type aliases, r[T] result containers, and isinstance/TypeGuard narrowing. Use when
+  writing type annotations, fixing pyrefly or pyright errors, working with t.JsonValue
+  or t.Scalar, enforcing no-Any. DO NOT USE FOR: questions unrelated to flext-strict-typing
+  creating projects or architecture from scratch'
 license: MIT
 metadata:
   version: 1.0.0
@@ -13,37 +13,98 @@ metadata:
 
 **UTILITY SKILL**
 
+Defines and enforces the FLEXT type hierarchy.
+
 ## USE FOR
 
-- Requests about flext strict typing.
-- Workflows described in this skill.
-- Operator tasks within this scope.
+- Writing or fixing type annotations.
+- Resolving `pyrefly` / `pyright` errors.
+- Choosing between `dict`, `Mapping`, `TypedDict`, Pydantic models, and `t.JsonValue`.
+- Enforcing no-`Any` policies.
 
 ## DO NOT USE FOR
 
-- questions unrelated to flext-strict-typing.
-- creating projects or architecture from scratch.
+- Questions unrelated to FLEXT typing.
+- Creating projects or architecture from scratch.
 
 ## Workflow
 
-1. Detect typing violations from gates and structural search.
-2. Map each violation to canonical `t.*` and `r` patterns.
+1. Detect typing violations from gates or structural search.
+2. Map each violation to canonical `t.*` and `r[T]` patterns.
 3. Apply fixes in shared-core-first order when contracts are reused.
 
 ## Critical rules
 
-- Prefer canonical sources.
-- Require evidence.
+- No `typing.Any` in contracts.
+- Use `Mapping` / `MutableMapping` for mapping contracts; use `dict` only for mutation hotspots.
+- Use `t.JsonValue` for unknown JSON payloads.
+- Use `r[T]` for fallible application paths.
+- Narrow with `isinstance` + `TypeGuard`; avoid `type()`.
 
-## Example
+## Good examples
 
-**Input:** a request.
-**Output:** a concise response.
+```python
+from collections.abc import Mapping
+from flext_core import r, t
 
-## Troubleshooting
+def parse(data: Mapping[str, t.JsonValue]) -> r[int]:
+    ...
+```
 
-- Unclear scope → ask.
+```python
+from typing import TypeGuard
+
+def is_user(value: object) -> TypeGuard[m.User]:
+    return isinstance(value, m.User)
+```
+
+## Bad examples
+
+```python
+from typing import Any, Dict
+
+def parse(data: Dict[str, Any]) -> Any:
+    ...
+```
+
+```python
+def parse(data: dict[str, object]) -> dict[str, object]:
+    ...
+```
+
+## Mapping contract guide
+
+| Intent | Type |
+|--------|------|
+| read-only contract | `Mapping[str, t.JsonValue]` |
+| mutating contract | `MutableMapping[str, t.JsonValue]` |
+| schema payload | Pydantic `BaseModel` or `TypedDict` |
+| mutation hotspot | `dict[str, t.JsonValue]` (rare) |
+
+## Result containers
+
+Fallible paths return `r[T]` from `returns`:
+
+```python
+from flext_core import r
+
+def load(user_id: int) -> r[m.User]:
+    ...
+```
+
+## Suppression comments
+
+Do not use `# type: ignore`, `# noqa`, `# pylint: disable`, or `# mypy: ignore`. Fix the root cause.
+
+## Validation
+
+```bash
+pyrefly check <file>
+pyright <file>
+ruff check <file>
+```
 
 ## References
 
 - [references/type-rules-detail.md](references/type-rules-detail.md)
+- `.agents/skills/coding-standards/SKILL.md` — general coding standards quick-reference
