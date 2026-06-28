@@ -152,9 +152,7 @@ exclude_docs = [
   "/README.md",
   "SUPPRESSIONS-RATIONALE.md",
   "api-reference/foundation.md",
-  "api-reference/generated/algar-*.md",
   "api-reference/generated/flexcore.md",
-  "api-reference/generated/gruponos-*.md",
   "api/types.md",
   "architecture/FLEXT_*.md",
   "architecture/arc42/**",
@@ -1009,7 +1007,6 @@ preview = true
 respect-gitignore = true
 show-fixes = true
 src = [
-  "algar-oud-mig",
   "examples",
   "flexcore",
   "flext-api",
@@ -1043,7 +1040,6 @@ src = [
   "flext-target-oracle-wms",
   "flext-tests",
   "flext-web",
-  "gruponos-meltano-native",
   "libs",
   "pkg",
   "scripts",
