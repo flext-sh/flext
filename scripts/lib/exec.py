@@ -41,11 +41,21 @@ class CommandExecution:
             if not CommandExecution.make_target_exists(target):
                 print(f"ERRO: Make target ausente: {target}", file=sys.stderr)
                 return 2
-            rendered = " ".join(("make", target, *make_args))
+            rendered = " ".join((
+                "make",
+                target,
+                *make_args,
+                *CommandExecution.make_variable_args(extra_env),
+            ))
             print(f"SURFACE-VALIDATE: {rendered}")
             return 0
         return CommandExecution.run_process(
-            ("make", target, *make_args), extra_env=extra_env
+            (
+                "make",
+                target,
+                *make_args,
+                *CommandExecution.make_variable_args(extra_env),
+            ),
         )
 
     @staticmethod
@@ -97,6 +107,13 @@ class CommandExecution:
             print(output.stderr, file=sys.stderr, end="")
         exit_code: int = output.exit_code
         return exit_code
+
+    @staticmethod
+    def make_variable_args(values: t.MappingKV[str, str] | None) -> t.StrSequence:
+        """Return Make command-line variable assignments for override precedence."""
+        if not values:
+            return ()
+        return tuple(f"{name}={value}" for name, value in values.items())
 
     @staticmethod
     def command_env(command: m.Tests.MakeCommand) -> t.StrMapping:

@@ -6,9 +6,11 @@ They import only the public namespace (`scripts.dispatch.Dispatch`).
 
 from __future__ import annotations
 
+import os
+
 import pytest
 
-from flext_tests import u
+from flext_tests import c, u
 from scripts.dispatch import Dispatch
 
 
@@ -69,6 +71,39 @@ def test_header_what_matches_file_stem(registry: Dispatch.Registry) -> None:
             assert cmd.verb == verb == cmd.path.parent.name, (
                 f"{cmd.path}: verb/dir mismatch"
             )
+
+
+def test_make_surface_validation_succeeds(registry: Dispatch.Registry) -> None:
+    assert u.Tests.make_registry_verbs(registry), "no verbs discovered"
+    assert Dispatch.main(("--validate-surface",)) == 0
+
+
+def test_target_env_overrides_makeflags_cli_values(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    keys = (
+        c.Tests.MAKE_SURFACE_VALIDATE_ENV,
+        c.Tests.MAKE_WHAT_PARAM,
+        "CHECK_GATES",
+        "MAKEFLAGS",
+    )
+    original: dict[str, str | None] = {key: os.environ.get(key) for key in keys}
+    try:
+        os.environ[c.Tests.MAKE_SURFACE_VALIDATE_ENV] = c.Tests.MAKE_DISPATCH_ENV_VALUE
+        os.environ[c.Tests.MAKE_WHAT_PARAM] = "pyrefly"
+        os.environ["CHECK_GATES"] = "lint"
+        os.environ["MAKEFLAGS"] = " -- CHECK_GATES=lint"
+
+        assert Dispatch.main(("check",)) == 0
+
+        output = capsys.readouterr().out
+        assert "SURFACE-VALIDATE: make _check_default CHECK_GATES=pyrefly" in output
+    finally:
+        for key, value in original.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
 
 
 def _registry_command_or_raise(

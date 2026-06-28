@@ -103,6 +103,15 @@ consume `scripts.dispatch.Dispatch`; they should not redefine command models,
 parse TOML independently, or discover projects outside declared workspace
 membership.
 
+Workspace Makefiles should expose public verbs only as thin dispatcher wrappers.
+Keep the `WHAT` catalog in `scripts/cmd/**` headers, and keep long-running shell
+recipes private (`_check_default`, `_test_default`, etc.) so command metadata can
+target them without duplicating route logic in Make.
+
+Coverage belongs to full project test runs. Focused test runs selected with
+`FILE`, `FILES`, or `MATCH` should still emit JUnit and diagnostics, but should
+not enforce project coverage thresholds.
+
 Inside `flext-tests`, the Make utility domain is split into parsing, contract,
 registry, and rendering mixins. Consumers still call only `u.Tests.make_*`.
 

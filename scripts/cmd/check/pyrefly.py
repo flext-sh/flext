@@ -4,10 +4,11 @@
 # verb = "check"
 # what = "pyrefly"
 # domain = "quality"
-# summary = "Run pyrefly repository or scoped type check"
-# description = "Runs the canonical _pyre target configured in the Makefile."
+# summary = "Run pyrefly scoped type check"
+# description = "Runs the canonical check orchestrator with CHECK_GATES=pyrefly."
 # example = "make check WHAT=pyrefly"
-# target = "_pyre"
+# target = "_check_default"
+# target_env = { CHECK_GATES = "pyrefly" }
 # mutates = false
 # aliases = []
 # params = []
