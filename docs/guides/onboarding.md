@@ -42,11 +42,22 @@ Default load order:
 2. `flext-mro-namespace-rules` — ownership and naming.
 3. `flext-import-rules` — import discipline.
 4. `flext-patterns` — result/logging/DI patterns.
-5. Tier-specific: `pydantic-v2-governance`, `flext-strict-typing`, `flext-type-system`, `flext-constants-discipline`, `testing-patterns`.
+5. `coding-standards` — quick-reference for daily Python work.
+6. Tier-specific: `pydantic-v2-governance`, `flext-strict-typing`, `flext-type-system`, `flext-constants-discipline`, `testing-patterns`.
 
 Path-scoped skills live in [`.agents/skills/`](../../.agents/skills/).
 
-## 6. Per-Project Collection Rules
+## 6. Fundamental Packages
+
+Before writing code, know the three shared packages most projects consume:
+
+| Package | What it provides | Quick guide | Skill |
+|---------|------------------|-------------|-------|
+| `flext_core` | Result flow, settings, container, dispatcher | [Using flext-core](using-flext-core.md) | `using-flext-core` |
+| `flext_cli` | Model-driven Typer CLI abstraction | [Using flext-cli](using-flext-cli.md) | `using-flext-cli` |
+| `flext_tests` | Shared fixtures, matchers, test runtime | [Using flext-tests](using-flext-tests.md) | `using-flext-tests` |
+
+## 7. Per-Project Collection Rules
 
 Every project ships an auto-generated `docs/index.md` with Collection Rules tailored to its parent MRO chain, abstracted libraries, owned slot registry, and quality gates. Open `<project>/docs/index.md` and follow the project-specific list before editing.
 
@@ -59,11 +70,14 @@ make docs DOCS_PHASE=fix         # safe automated docs remediation
 make docs DOCS_PHASE=audit       # re-confirm zero issues
 ```
 
-## 7. Cross-References
+## 8. Cross-References
 
 - [Getting Started](getting-started.md) — workspace bootstrap.
 - [Development](development.md) — daily workflow.
 - [Configuration](configuration.md) — `pyproject.toml` and docs metadata.
 - [Testing](testing.md) — quality gates and docs validation.
+- [Using flext-core](using-flext-core.md) — base package usage.
+- [Using flext-cli](using-flext-cli.md) — CLI abstraction usage.
+- [Using flext-tests](using-flext-tests.md) — shared test toolkit usage.
 - [Workspace API overview](../api-reference/generated/overview.md) — auto-generated cross-project surface.
 - [Project catalog](../projects/generated/catalog.md) — full project registry.
