@@ -33,8 +33,9 @@ through `make cosmos-help`. Existing FLEXT targets (`make check`, `make test`,
 etc.) are unchanged. See [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md).
 
 The generic registry-driven Make framework is owned by `flext-tests` and exposed
-through `c/m/t/u.Tests`; `flext-infra` consumes it when rendering workspace
-artifacts. See [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md).
+through `c/m/t/u.Tests`; `flext-infra` consumes it when rendering thin
+dispatcher-backed workspace Makefiles. See
+[ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md).
 
 ## Scope Boundary
 

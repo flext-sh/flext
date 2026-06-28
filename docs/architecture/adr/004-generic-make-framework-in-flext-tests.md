@@ -38,12 +38,25 @@ but it must not own the generic command registry library.
   so static Makefile validation is not coupled to in-process route execution.
 - `flext-infra` remains a consumer that renders/syncs the root Makefile from
   templates. It does not discover undeclared projects by dependency heuristics.
+- The root `Makefile` public verbs are thin wrappers. They call
+  `uv run --all-packages python -m scripts.dispatch <verb>` through the
+  generated `FLEXT_MAKE_DISPATCH` variable and do not contain `WHAT` `case`
+  catalogs.
+- Heavy shell recipes remain private Make targets such as `_check_default`,
+  `_test_default`, and `_clean_default`. Promoted command metadata may point to
+  those private targets with `target = "..."`.
+- `FLEXT_MAKE_DISPATCH` is intentionally distinct from hub wrapper variables
+  such as `WORKSPACE_DISPATCH` so the optional `workspace_custom.mk` include
+  cannot override the FLEXT command path.
 - Workspace project inventory is computed only from declared sources:
   `.gitmodules`, `tool.flext.workspace.members`, and
   `tool.uv.workspace.members`.
 - Superseded Make targets are removed from the active surface.
   Their removed body can be retained only under ignored `legado/` for local
   audit.
+- `make test` keeps coverage enabled for full project runs. Focused runs
+  selected by `FILE`, `FILES`, or `MATCH` omit `--cov` because their coverage
+  percentage is not a project quality signal.
 
 ## Consequences
 
@@ -55,6 +68,9 @@ but it must not own the generic command registry library.
   or promoted command helpers.
 - Mutation remains explicit: command metadata must declare required `APPLY` for
   mutating commands, and the CLI boundary converts failed validations to exit 2.
+- Static Make validation now checks that every public registry verb delegates to
+  the dispatcher wrapper and that every declared private target exists. It no
+  longer accepts or requires `WHAT` `case` blocks in the Makefile.
 
 ## Verification
 
@@ -65,5 +81,6 @@ but it must not own the generic command registry library.
   undeclared-project text, or removed project names in the active workspace
   surface. Declared `.gitmodules` submodules remain canonical workspace
   inventory, not undeclared-project discovery.
-- `make help`, `make makefile WHAT=all`, and dispatcher surface validation must
-  pass before closing the migration.
+- `make help`, `make makefile WHAT=all`, `make check WHAT=help`,
+  `make test PROJECT=flext-tests MATCH=<existing-test>`, and dispatcher surface
+  validation must pass before closing the migration.

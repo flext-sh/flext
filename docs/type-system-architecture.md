@@ -112,8 +112,8 @@ class FlextCliTypes:
 
 ```python
 # In typings.py (Tier 0)
-FlextFlextOudMigEntryT = TypeVar(
-    "FlextFlextOudMigEntryT",
+FlextFlextDemoMigrationEntryT = TypeVar(
+    "FlextFlextDemoMigrationEntryT",
     bound="fldif.Ldif.Entry",
 )
 
@@ -123,7 +123,7 @@ FlextFlextOudMigEntryT = TypeVar(
 class EntryService[T: "fldif.Ldif.Entry"](Protocol):
     """Service for entry operations with generic type parameter."""
 
-    def get(self, dn: str) -> "FlextOudMigProtocols.FlextOudMig.Result[T]": ...
+    def get(self, dn: str) -> "FlextDemoMigrationProtocols.FlextDemoMigration.Result[T]": ...
 ```
 
 ### Pattern 4: Union → Protocol (Complexity Reduction)
@@ -514,8 +514,8 @@ FlextServiceT = TypeVar("FlextServiceT", bound="s")
 # ✅ ONLY add domain TypeVars if truly specialized
 # Example: a workspace-specific migration package has specialized entry types
 
-FlextFlextOudMigEntryT = TypeVar(
-    "FlextFlextOudMigEntryT",
+FlextFlextDemoMigrationEntryT = TypeVar(
+    "FlextFlextDemoMigrationEntryT",
     bound="fldif.Ldif.Entry",  # Protocol-bound to avoid circular imports
 )
 

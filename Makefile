@@ -120,6 +120,7 @@ WORKSPACE_PYTHONPATH := $(shell \
 		[ "$$skip" = "0" ] && [ -d "$(CURDIR)/$$d/src" ] && printf "$(CURDIR)/$$d/src:"; \
 	done)$(CURDIR)/src
 WORKSPACE_PYTHON := env -u PYTHONPATH -u MYPYPATH PYTHONPATH="$(WORKSPACE_PYTHONPATH)" $(PY)
+FLEXT_MAKE_DISPATCH := FLEXT_WORKSPACE_ROOT="$(CURDIR)" PROJECT="$(PROJECT)" PROJECTS="$(PROJECTS)" WHAT="$(WHAT)" PYTEST_ARGS="$(PYTEST_ARGS)" VALIDATE_SCOPE="$(VALIDATE_SCOPE)" DOCS_PHASE="$(DOCS_PHASE)" FAIL_FAST="$(FAIL_FAST)" JOBS="$(JOBS)" CHECK_GATES="$(CHECK_GATES)" VALIDATE_GATES="$(VALIDATE_GATES)" SCOPE="$(SCOPE)" NAMESPACE="$(NAMESPACE)" GATES="$(GATES)" PROPAGATE="$(PROPAGATE)" FIX="$(FIX)" FILE="$(FILE)" FILES="$(FILES)" CHANGED_ONLY="$(CHANGED_ONLY)" MATCH="$(MATCH)" RUFF_ARGS="$(RUFF_ARGS)" PYRIGHT_ARGS="$(PYRIGHT_ARGS)" CHECK_ONLY="$(CHECK_ONLY)" RELEASE_PHASE="$(RELEASE_PHASE)" INTERACTIVE="$(INTERACTIVE)" DRY_RUN="$(DRY_RUN)" PUSH="$(PUSH)" VERSION="$(VERSION)" MESSAGE="$(MESSAGE)" TAG="$(TAG)" BUMP="$(BUMP)" RELEASE_DEV_SUFFIX="$(RELEASE_DEV_SUFFIX)" RELEASE_NEXT_DEV="$(RELEASE_NEXT_DEV)" RELEASE_NEXT_BUMP="$(RELEASE_NEXT_BUMP)" CREATE_BRANCHES="$(CREATE_BRANCHES)" PR_ACTION="$(PR_ACTION)" PR_BASE="$(PR_BASE)" PR_HEAD="$(PR_HEAD)" PR_NUMBER="$(PR_NUMBER)" PR_TITLE="$(PR_TITLE)" PR_BODY="$(PR_BODY)" PR_DRAFT="$(PR_DRAFT)" PR_MERGE_METHOD="$(PR_MERGE_METHOD)" PR_AUTO="$(PR_AUTO)" PR_DELETE_BRANCH="$(PR_DELETE_BRANCH)" PR_CHECKS_STRICT="$(PR_CHECKS_STRICT)" PR_RELEASE_ON_MERGE="$(PR_RELEASE_ON_MERGE)" PR_INCLUDE_ROOT="$(PR_INCLUDE_ROOT)" PR_CHECKPOINT="$(PR_CHECKPOINT)" DEPS_REPORT="$(DEPS_REPORT)" VERBOSE="$(VERBOSE)" PYTHONPATH="$(WORKSPACE_PYTHONPATH)" uv run --all-packages python -m scripts.dispatch
 WORKSPACE_FLEXT_INFRA := FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(WORKSPACE_PYTHON) -m flext_infra
 WORKSPACE_INFRA_CHECK := $(WORKSPACE_FLEXT_INFRA) check
 WORKSPACE_INFRA_CODEGEN := $(WORKSPACE_FLEXT_INFRA) codegen
@@ -282,96 +283,13 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help boot _boot_default build _build_default _up _mod _constraints _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination coordination makefile status test val clean ship _rel _pr _save _tag _push _imp _stat
+.PHONY: help boot _boot_default build _build_default _up _mod _constraints _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination coordination makefile status test _test_default val clean _clean_default ship _rel _pr _save _tag _push _imp _stat
 
-help: ## Show simple workspace verbs
-	$(Q)echo "FLEXT Workspace"
-	$(Q)echo ""
-	$(Q)echo "Projects: $(words $(ALL_PROJECTS)) total"
-	$(Q)echo "Selection: $(words $(SELECTED_PROJECTS)) selected"
-	$(Q)echo ""
-	$(Q)echo "Core verbs:"
-
-	$(Q)printf " %-12s %s\n" "boot" "Bootstrap .venv + submodules (WHAT=all|venv|submodules|sync|stat|imp)"
-
-	$(Q)printf " %-12s %s\n" "build" "Build/regen (WHAT=gen|mod|up|constraints|sync|docs|stubs)"
-
-	$(Q)printf " %-12s %s\n" "check" "Quality gates (WHAT=all|lint|pyrefly|mypy|pyright|fmt|scan|types)"
-
-	$(Q)printf " %-12s %s\n" "test" "Run tests (WHAT=all)"
-
-	$(Q)printf " %-12s %s\n" "val" "Validation gates (WHAT=all|project|workspace)"
-
-	$(Q)printf " %-12s %s\n" "ship" "Release workflow (WHAT=all|save|tag|push|pr|rel; APPLY=Y)"
-
-	$(Q)printf " %-12s %s\n" "clean" "Clean build/test/type artifacts"
-
-	$(Q)printf " %-12s %s\n" "coordination" "Run Beads coordination diagnostics"
-
-	$(Q)printf " %-12s %s\n" "makefile" "Show promoted scripts command surface"
-
-	$(Q)printf " %-12s %s\n" "status" "Show Beads status"
-
-	$(Q)printf " %-12s %s\n" "help" "Show workspace verbs"
-
-	$(Q)echo ""
-	$(Q)echo "Git workflow:"
-
-	$(Q)echo ""
-	$(Q)echo "Selectors:"
-
-	$(Q)echo " PROJECT=<name> / PROJECTS=\"a b\"    Scope to project(s)"
-
-	$(Q)echo " WHAT=<phase>               Sub-phase for promoted workspace verbs"
-
-	$(Q)echo " FIX=1                      Auto-fix (check/val)"
-
-	$(Q)echo " FILE=src/x.py / FILES=\"a b\"        Scope to file(s)"
-
-	$(Q)echo " CHANGED_ONLY=1             Only git-modified files"
-
-	$(Q)echo " MATCH=expr                 pytest -k filter (test)"
-
-	$(Q)echo " FAIL_FAST=1                Stop on first failure"
-
-	$(Q)echo " APPLY=Y                    Allow mutation (ship/build/check fmt)"
-
-	$(Q)echo " VERBOSE=1                  Show executed commands"
-
-	$(Q)echo ""
-	$(Q)echo "Examples:"
-
-	$(Q)echo " make check PROJECT=flext-core"
-
-	$(Q)echo " make check WHAT=lint FIX=1 CHANGED_ONLY=1"
-
-	$(Q)echo " make check WHAT=loc-cap"
-
-	$(Q)echo " make check WHAT=coordination"
-
-	$(Q)echo " make build WHAT=mod PROJECT=flext-core"
-
-	$(Q)echo " make test WHAT=all PROJECT=flext-core MATCH=test_x FAIL_FAST=1"
-
-	$(Q)echo " make val WHAT=workspace"
-
-	$(Q)echo " make ship WHAT=save MESSAGE=\"chore: ...\" APPLY=Y"
-
-	$(Q)echo " make makefile WHAT=all"
-
-	$(Q)echo " make boot WHAT=all"
-
+help: ## Show registry-driven workspace verbs
+	$(Q)$(FLEXT_MAKE_DISPATCH) help
 
 boot: ## Bootstrap .venv + submodules (WHAT=all|venv|submodules|sync|stat|imp)
-	$(Q)case "$(WHAT)" in \
-"" | all) $(MAKE) --no-print-directory _boot_default $(MAKE_SELECTION_ARGS) ;; \
-	venv) $(MAKE) --no-print-directory _boot_default $(MAKE_SELECTION_ARGS) ;; \
-	submodules) $(MAKE) --no-print-directory _boot_default $(MAKE_SELECTION_ARGS) ;; \
-	sync) $(MAKE) --no-print-directory _sync $(MAKE_SELECTION_ARGS) ;; \
-	stat) $(MAKE) --no-print-directory _stat $(MAKE_SELECTION_ARGS) ;; \
-	imp) $(MAKE) --no-print-directory _imp $(MAKE_SELECTION_ARGS) ;; \
-	*) echo "invalid WHAT '$(WHAT)' for boot (valid: all venv submodules sync stat imp)" >&2; exit 2 ;; \
-	esac
+	$(Q)$(FLEXT_MAKE_DISPATCH) boot
 
 _boot_default: ## Install all projects into workspace .venv
 	$(Q)$(PREFLIGHT_CHECK)
@@ -585,27 +503,7 @@ _constraints: ## Rewrite dependency constraints from uv.lock (policy=floor). Use
 	$(Q)echo "Dependency constraint rewrite complete."
 
 check: ## Quality gates (WHAT=all|scan|fmt|format|types|pyre|pol|cqrs|lint|pyrefly|mypy|pyright|markdown|go|silent-failure|loc-cap|boundary|coordination)
-	$(Q)case "$(WHAT)" in \
-"" | all) $(MAKE) --no-print-directory _check_default $(MAKE_SELECTION_ARGS) ;; \
-	scan) $(MAKE) --no-print-directory _scan $(MAKE_SELECTION_ARGS) ;; \
-	fmt) $(MAKE) --no-print-directory _fmt $(MAKE_SELECTION_ARGS) ;; \
-	format) $(MAKE) --no-print-directory _fmt $(MAKE_SELECTION_ARGS) ;; \
-	types) $(MAKE) --no-print-directory _types $(MAKE_SELECTION_ARGS) ;; \
-	pyre) $(MAKE) --no-print-directory _pyre $(MAKE_SELECTION_ARGS) ;; \
-	pol) $(MAKE) --no-print-directory _pol $(MAKE_SELECTION_ARGS) ;; \
-	cqrs) $(MAKE) --no-print-directory _cqrs $(MAKE_SELECTION_ARGS) ;; \
-	coordination) $(MAKE) --no-print-directory _coordination $(MAKE_SELECTION_ARGS) ;; \
-	lint) $(MAKE) --no-print-directory _check_default CHECK_GATES="lint" $(MAKE_SELECTION_ARGS) ;; \
-	pyrefly) $(MAKE) --no-print-directory _check_default CHECK_GATES="pyrefly" $(MAKE_SELECTION_ARGS) ;; \
-	mypy) $(MAKE) --no-print-directory _check_default CHECK_GATES="mypy" $(MAKE_SELECTION_ARGS) ;; \
-	pyright) $(MAKE) --no-print-directory _check_default CHECK_GATES="pyright" $(MAKE_SELECTION_ARGS) ;; \
-	markdown) $(MAKE) --no-print-directory _check_default CHECK_GATES="markdown" $(MAKE_SELECTION_ARGS) ;; \
-	go) $(MAKE) --no-print-directory _check_default CHECK_GATES="go" $(MAKE_SELECTION_ARGS) ;; \
-	silent-failure) $(MAKE) --no-print-directory _check_default CHECK_GATES="silent-failure" $(MAKE_SELECTION_ARGS) ;; \
-	loc-cap) $(MAKE) --no-print-directory _check_default CHECK_GATES="loc-cap" $(MAKE_SELECTION_ARGS) ;; \
-	boundary) $(MAKE) --no-print-directory _check_default CHECK_GATES="boundary" $(MAKE_SELECTION_ARGS) ;; \
-	*) echo "invalid WHAT '$(WHAT)' for check (valid: all scan fmt format types pyre pol cqrs coordination lint pyrefly mypy pyright markdown go silent-failure loc-cap boundary)" >&2; exit 2 ;; \
-	esac
+	$(Q)$(FLEXT_MAKE_DISPATCH) check
 
 _check_default: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,go,type)
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
@@ -632,53 +530,26 @@ _coordination: ## Run Beads coordination reports
 	$(Q)bd graph --all --compact >/dev/null
 
 coordination: ## Run Beads coordination reports (WHAT=all)
-	$(Q)case "$(WHAT)" in \
-	"" | all) $(MAKE) --no-print-directory _coordination $(MAKE_SELECTION_ARGS) ;; \
-	*) echo "invalid WHAT '$(WHAT)' for coordination (valid: all)" >&2; exit 2 ;; \
-	esac
+	$(Q)$(FLEXT_MAKE_DISPATCH) coordination
 
 makefile: ## Show promoted scripts command surface (WHAT=all)
-	$(Q)case "$(WHAT)" in \
-	"" | all) $(PY) -m scripts.dispatch makefile WHAT=all ;; \
-	*) echo "invalid WHAT '$(WHAT)' for makefile (valid: all)" >&2; exit 2 ;; \
-	esac
+	$(Q)$(FLEXT_MAKE_DISPATCH) makefile
 
 status: ## Show Beads status (WHAT=all)
-	$(Q)case "$(WHAT)" in \
-	"" | all) $(PY) -m scripts.dispatch status WHAT=all ;; \
-	*) echo "invalid WHAT '$(WHAT)' for status (valid: all)" >&2; exit 2 ;; \
-	esac
+	$(Q)$(FLEXT_MAKE_DISPATCH) status
 
 _cqrs: ## Enforce strict CQRS/FlextModels patterns across ecosystem
 	$(Q).github/scripts/check-cqrs-compliance.sh
 
 build: ## Build/regen (WHAT=all|gen|mod|up|constraints|sync|docs|stubs)
-	$(Q)case "$(WHAT)" in \
-"" | all) $(MAKE) --no-print-directory _build_default $(MAKE_SELECTION_ARGS) ;; \
-	gen) $(MAKE) --no-print-directory _gen $(MAKE_SELECTION_ARGS) ;; \
-	mod) $(MAKE) --no-print-directory _mod $(MAKE_SELECTION_ARGS) ;; \
-	up) $(MAKE) --no-print-directory _up $(MAKE_SELECTION_ARGS) ;; \
-	constraints) $(MAKE) --no-print-directory _constraints $(MAKE_SELECTION_ARGS) ;; \
-	sync) $(MAKE) --no-print-directory _sync $(MAKE_SELECTION_ARGS) ;; \
-	docs) $(MAKE) --no-print-directory _docs $(MAKE_SELECTION_ARGS) ;; \
-	stubs) $(MAKE) --no-print-directory _stubs $(MAKE_SELECTION_ARGS) ;; \
-	*) echo "invalid WHAT '$(WHAT)' for build (valid: all gen mod up constraints sync docs stubs)" >&2; exit 2 ;; \
-	esac
+	$(Q)$(FLEXT_MAKE_DISPATCH) build
 
 _build_default: ## Build/package all selected projects
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb build $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(ORCHESTRATOR_PROJECTS)
 
 ship: ## Release workflow (WHAT=all|save|tag|push|pr|rel)
-	$(Q)case "$(WHAT)" in \
-"" | all) $(MAKE) --no-print-directory _rel $(MAKE_SELECTION_ARGS) ;; \
-	save) $(MAKE) --no-print-directory _save $(MAKE_SELECTION_ARGS) ;; \
-	tag) $(MAKE) --no-print-directory _tag $(MAKE_SELECTION_ARGS) ;; \
-	push) $(MAKE) --no-print-directory _push $(MAKE_SELECTION_ARGS) ;; \
-	pr) $(MAKE) --no-print-directory _pr $(MAKE_SELECTION_ARGS) ;; \
-	rel) $(MAKE) --no-print-directory _rel $(MAKE_SELECTION_ARGS) ;; \
-	*) echo "invalid WHAT '$(WHAT)' for ship (valid: all save tag push pr rel)" >&2; exit 2 ;; \
-	esac
+	$(Q)$(FLEXT_MAKE_DISPATCH) ship
 
 _rel: ## Interactive workspace release orchestration
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
@@ -818,6 +689,9 @@ $(if $(DOCS_PHASE),--make-arg "DOCS_PHASE=$(DOCS_PHASE)") \
 		$(DOCS_PROJECT_FLAGS)
 
 test: ## Run tests only in all projects
+	$(Q)$(FLEXT_MAKE_DISPATCH) test
+
+_test_default: ## Run tests only in all projects
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb test \
 		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \
@@ -829,12 +703,7 @@ $(if $(PYTEST_ARGS),--make-arg "PYTEST_ARGS=$(PYTEST_ARGS)") \
 		$(ORCHESTRATOR_PROJECTS)
 
 val: ## Run validate gates (WHAT=all|project|workspace, VALIDATE_SCOPE=project|workspace, FIX=1)
-	$(Q)case "$(WHAT)" in \
-	"" | all) $(MAKE) --no-print-directory _val_body VALIDATE_SCOPE="$(VALIDATE_SCOPE)" $(MAKE_SELECTION_ARGS) ;; \
-	project) $(MAKE) --no-print-directory _val_project $(MAKE_SELECTION_ARGS) ;; \
-	workspace) $(MAKE) --no-print-directory _val_workspace $(MAKE_SELECTION_ARGS) ;; \
-	*) echo "invalid WHAT '$(WHAT)' for val (valid: all project workspace)" >&2; exit 2 ;; \
-	esac
+	$(Q)$(FLEXT_MAKE_DISPATCH) val
 
 _val_project: ## Run project validation gates
 	$(Q)$(MAKE) --no-print-directory _val_body VALIDATE_SCOPE=project $(MAKE_SELECTION_ARGS)
@@ -1061,6 +930,9 @@ _pol: ## Repo-wide typing policy gate (dynamic typing/t.JsonValue/# type: ignore
 	exit $$status
 
 clean: ## Clean all projects
+	$(Q)$(FLEXT_MAKE_DISPATCH) clean
+
+_clean_default: ## Clean all projects
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb clean $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(ORCHESTRATOR_PROJECTS)
 	$(Q)rm -rf .pytest_cache/ htmlcov/ .coverage* .mypy_cache/ .ruff_cache/
