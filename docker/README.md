@@ -90,7 +90,7 @@ def test_flext_migration(flext_oud_container):
     """Test using FLEXT OUD container (port 3389)."""
     # FLEXT-specific OpenLDAP with dc=invaliddc, cn=invalid_user
     connection_string = flext_oud_container  # ldap://localhost:3389
-    # Use for algar-oud-mig project exclusively
+    # Use for OUD migration workloads exclusively
 
 
 # Example 3: Using Oracle Database for Oracle projects
@@ -155,7 +155,7 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
    - **Compose File**: `docker-compose.flext-oud.yml`
    - **Purpose**: FLEXT Telecom OUD migration (OpenLDAP simulating OUD with dc=invaliddc, cn=invalid_user)
    - **Fixture**: `flext_oud_container` from `flext_tests.fixtures`
-   - **Projects**: algar-oud-mig
+   - **Projects**: OUD migration workloads
 
 3. **Generic OpenLDAP** (`flext-openldap-test`)
    - **Port**: 3390

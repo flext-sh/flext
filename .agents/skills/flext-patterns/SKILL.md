@@ -65,8 +65,8 @@ logger.info("user.created", user_id=user_id)
 ```python
 from flext_core import r
 
-def load(user_id: int) -> r[m.User]:
-    ...
+
+def load(user_id: int) -> r[m.User]: ...
 ```
 
 ## Bad examples
@@ -83,7 +83,9 @@ print("debug")
 ```
 
 ```python
-import pdb; pdb.set_trace()
+import pdb
+
+pdb.set_trace()
 ```
 
 ```python

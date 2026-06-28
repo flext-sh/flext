@@ -18,21 +18,30 @@
 
 from __future__ import annotations
 
-from scripts.dispatch import env_value, promoted_main, run_make
+from scripts.dispatch import Dispatch
 
 
-def main() -> int:
-    """Run `_types`, then optional pyrefly when requested."""
-    code = run_make("_types")
-    if code != 0:
-        return code
-    gates = [
-        item.strip() for item in env_value("CHECK_GATES").split(",") if item.strip()
-    ]
-    if "pyrefly" in gates:
-        return run_make("_check_default", extra_env={"CHECK_GATES": "pyrefly"})
-    return 0
+class CheckTypesCommand:
+    """Run typing supply-chain checks."""
+
+    @staticmethod
+    def run() -> int:
+        """Run `_types`, then optional pyrefly when requested."""
+        code = Dispatch.run_make("_types")
+        if code != 0:
+            return code
+        gates = tuple(
+            item.strip()
+            for item in Dispatch.env_value("CHECK_GATES").split(",")
+            if item.strip()
+        )
+        if "pyrefly" in gates:
+            return Dispatch.run_make(
+                "_check_default",
+                extra_env={"CHECK_GATES": "pyrefly"},
+            )
+        return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))
+    Dispatch.promoted_main(__file__, CheckTypesCommand.run)

@@ -2,44 +2,37 @@
 
 from __future__ import annotations
 
-from scripts.lib.cli import main
-from scripts.lib.exec import (
-    command_env,
-    env_enabled,
-    env_value,
-    promoted_main,
-    require_dispatched,
-    run_make,
-    run_shell,
-)
-from scripts.lib.registry import (
-    DEFAULT_COMMAND,
-    Command,
-    Param,
-    Registry,
-    RegistryError,
-    discover,
-)
-from scripts.lib.render import render_global_help
+from typing import ClassVar
 
-__all__ = [
-    "DEFAULT_COMMAND",
-    "Command",
-    "Param",
-    "Registry",
-    "RegistryError",
-    "command_env",
-    "discover",
-    "env_enabled",
-    "env_value",
-    "main",
-    "promoted_main",
-    "render_global_help",
-    "require_dispatched",
-    "run_make",
-    "run_shell",
-]
+from scripts.lib.cli import CommandCli
+from scripts.lib.exec import CommandExecution
+from scripts.lib.registry import CommandRegistry
+from scripts.lib.render import CommandRenderer
+
+
+class Dispatch:
+    """Public namespace for promoted Make command scripts."""
+
+    DEFAULT_COMMAND: ClassVar[str] = CommandRegistry.DEFAULT_COMMAND
+    Command = CommandRegistry.Command
+    Param = CommandRegistry.Param
+    Registry = CommandRegistry.Registry
+    RegistryError = CommandRegistry.Error
+
+    main = staticmethod(CommandCli.main)
+    discover = staticmethod(CommandRegistry.discover)
+    command_env = staticmethod(CommandExecution.command_env)
+    env_enabled = staticmethod(CommandExecution.env_enabled)
+    env_value = staticmethod(CommandExecution.env_value)
+    promoted_main = staticmethod(CommandExecution.promoted_main)
+    render_global_help = staticmethod(CommandRenderer.global_help)
+    require_dispatched = staticmethod(CommandExecution.require_dispatched)
+    run_make = staticmethod(CommandExecution.run_make)
+    run_shell = staticmethod(CommandExecution.run_shell)
+
+
+__all__: list[str] = ["Dispatch"]
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(Dispatch.main())

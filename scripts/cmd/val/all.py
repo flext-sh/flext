@@ -18,24 +18,28 @@
 
 from __future__ import annotations
 
-from scripts.dispatch import env_value, promoted_main, run_make
+from scripts.dispatch import Dispatch
 
 
-def main() -> int:
-    """Dispatch validation by VALIDATE_SCOPE."""
-    scope = env_value("VALIDATE_SCOPE", "project").lower()
-    if scope == "workspace":
-        return run_make("_val_workspace")
-    if scope == "project":
-        return run_make("_val_project")
-    if scope == "all":
-        code = run_make("_val_workspace")
-        if code != 0:
-            return code
-        return run_make("_val_project")
-    print(f"ERRO: VALIDATE_SCOPE invalido: {scope}")
-    return 2
+class ValAllCommand:
+    """Run validation gates for the selected scope."""
+
+    @staticmethod
+    def run() -> int:
+        """Dispatch validation by VALIDATE_SCOPE."""
+        scope = Dispatch.env_value("VALIDATE_SCOPE", "project").lower()
+        if scope == "workspace":
+            return Dispatch.run_make("_val_workspace")
+        if scope == "project":
+            return Dispatch.run_make("_val_project")
+        if scope == "all":
+            code = Dispatch.run_make("_val_workspace")
+            if code != 0:
+                return code
+            return Dispatch.run_make("_val_project")
+        print(f"ERRO: VALIDATE_SCOPE invalido: {scope}")
+        return 2
 
 
 if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))
+    Dispatch.promoted_main(__file__, ValAllCommand.run)

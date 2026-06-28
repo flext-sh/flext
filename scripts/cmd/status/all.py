@@ -15,23 +15,27 @@
 
 from __future__ import annotations
 
-from scripts.dispatch import promoted_main, run_shell
+from scripts.dispatch import Dispatch
 
 
-def main() -> int:
-    """Run the read-only Beads status command set."""
-    commands = [
-        ["bd", "status", "--json"],
-        ["bd", "dolt", "show"],
-        ["bd", "backup", "status", "--json"],
-    ]
-    code = 0
-    for command in commands:
-        result = run_shell(command)
-        if result != 0 and code == 0:
-            code = result
-    return code
+class StatusAllCommand:
+    """Run read-only Beads status checks."""
+
+    @staticmethod
+    def run() -> int:
+        """Run the read-only Beads status command set."""
+        commands = (
+            ("bd", "status", "--json"),
+            ("bd", "dolt", "show"),
+            ("bd", "backup", "status", "--json"),
+        )
+        code = 0
+        for command in commands:
+            result = Dispatch.run_shell(command)
+            if result != 0 and code == 0:
+                code = result
+        return code
 
 
 if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))
+    Dispatch.promoted_main(__file__, StatusAllCommand.run)

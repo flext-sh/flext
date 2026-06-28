@@ -17,14 +17,18 @@
 
 from __future__ import annotations
 
-from scripts.dispatch import env_value, promoted_main, run_make
+from scripts.dispatch import Dispatch
 
 
-def main() -> int:
-    """Run `_check_default` with the requested lint gate set."""
-    gates = env_value("CHECK_GATES", "lint,pyrefly")
-    return run_make("_check_default", extra_env={"CHECK_GATES": gates})
+class CheckLintCommand:
+    """Run lint/type quality gates."""
+
+    @staticmethod
+    def run() -> int:
+        """Run `_check_default` with the requested lint gate set."""
+        gates = Dispatch.env_value("CHECK_GATES", "lint,pyrefly")
+        return Dispatch.run_make("_check_default", extra_env={"CHECK_GATES": gates})
 
 
 if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))
+    Dispatch.promoted_main(__file__, CheckLintCommand.run)

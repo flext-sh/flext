@@ -365,3 +365,4 @@ base.mk
 *.db
 .beads-credential-key
 .worktrees/
+legado/

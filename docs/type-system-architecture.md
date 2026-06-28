@@ -2,7 +2,7 @@
 
 **Version**: 1.0.0
 **Last Updated**: 2025-12-10
-**Scope**: Complete FLEXT ecosystem type system (5 projects)
+**Scope**: Complete FLEXT ecosystem type system
 **Status**: Specification and reference
 
 ---
@@ -24,13 +24,12 @@
 
 ## Overview
 
-The FLEXT type system provides a unified, composable type architecture across 5 projects:
+The FLEXT type system provides a unified, composable type architecture across the core FLEXT projects:
 
 1. **flext-core** - Foundation library with TypeVars, Protocols, and base types
 2. **flext-cli** - Command-line interface with CLI-specific types
 3. **flext-ldif** - LDIF processing domain library
 4. **flext-ldap** - LDAP operations library
-5. **algar-oud-mig** - Oracle Unified Directory migration tool
 
 **Key Principles**:
 
@@ -54,8 +53,6 @@ flext-cli (depends on flext-core)
 flext-ldif (depends on flext-core)
     ↓
 flext-ldap (depends on flext-core, flext-ldif)
-    ↓
-algar-oud-mig (depends on flext-core, flext-cli, flext-ldif, flext-ldap)
 ```
 
 ### Architecture Layering within Projects
@@ -265,15 +262,6 @@ t.Ldap                      # LDAP operations
 t.Ldap.Protocol             # Infrastructure (ldap3 wrappers)
 ```
 
-**algar-oud-mig**:
-
-```
-t.FlextOudMig               # Migration tool
-  .Migration                # Migration types
-  .Status                   # Status types
-  .Output                   # Output types
-```
-
 ### Models Namespace Architecture (m.\*)
 
 **CRITICAL RULE**: Models follow **2-level maximum** namespace: `m.Domain.Class` (not `m.Domain.Concern.SubClass`)
@@ -346,15 +334,6 @@ m.Ldap                      # LDAP domain
   .Connection               # Connection model
   .Operation                # Operation model
   .Result                   # Operation result
-```
-
-**algar-oud-mig**:
-
-```
-m.FlextOudMig               # Migration tool domain
-  .MigrationTask            # Migration task
-  .MigrationStatus          # Migration status
-  .m.Infra.MigrationResult          # Migration result
 ```
 
 ---
@@ -533,7 +512,7 @@ FlextServiceT = TypeVar("FlextServiceT", bound="s")
 
 ```python
 # ✅ ONLY add domain TypeVars if truly specialized
-# Example: algar-oud-mig has specialized entry types
+# Example: a workspace-specific migration package has specialized entry types
 
 FlextFlextOudMigEntryT = TypeVar(
     "FlextFlextOudMigEntryT",
@@ -747,7 +726,6 @@ t.Ldif.Entry.Transformation  # NO: 4 levels!
 | **flext-cli**     | ✅      | ✅      | ✅      | Consolidated namespaces |
 | **flext-ldif**    | ✅      | ✅      | ✅      | Validated               |
 | **flext-ldap**    | ✅      | ✅      | ✅      | Variance fixed          |
-| **algar-oud-mig** | ✅      | ✅      | ✅      | Composition validated   |
 
 ### Type System Metrics
 
@@ -766,14 +744,13 @@ flext-core:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-cli:       Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-ldif:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-ldap:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
-algar-oud-mig:   Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 ```
 
 ---
 
 ## Summary
 
-The FLEXT type system provides a **unified, composable, and extensible** architecture across all 5 projects with:
+The FLEXT type system provides a **unified, composable, and extensible** architecture across the core projects with:
 
 1. **Consistent namespace patterns** - 2-level maximum depth
 2. **Proper covariance** - Protocols use `Mapping`/`Iterable`

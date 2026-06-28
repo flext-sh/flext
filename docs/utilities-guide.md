@@ -248,7 +248,7 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 - Progress indicators
 - Configuration file loading
 
-### algar-oud-mig Utilities (extending all)
+### Migration Utilities (extending all)
 
 **Namespace**: `u.Migration.*`
 

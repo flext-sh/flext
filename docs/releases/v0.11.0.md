@@ -8,12 +8,11 @@
 ## Scope
 
 - Workspace release version: 0.11.0
-- Projects packaged: 33
+- Projects packaged: 31
 
 ## Projects impacted
 
 - root
-- algar-oud-mig
 - flexcore
 - flext-api
 - flext-auth
@@ -44,7 +43,6 @@
 - flext-target-oracle-oic
 - flext-target-oracle-wms
 - flext-web
-- gruponos-meltano-native
 
 ## Changes since last tag
 
