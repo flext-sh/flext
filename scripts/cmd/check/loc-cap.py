@@ -17,14 +17,18 @@
 
 from __future__ import annotations
 
-from scripts.dispatch import env_value, promoted_main, run_make
+from scripts.dispatch import Dispatch
 
 
-def main() -> int:
-    """Run `_check_default` with the LOC cap gate selected."""
-    gates = env_value("CHECK_GATES", "loc-cap")
-    return run_make("_check_default", extra_env={"CHECK_GATES": gates})
+class CheckLocCapCommand:
+    """Run the LOC cap quality gate."""
+
+    @staticmethod
+    def run() -> int:
+        """Run `_check_default` with the LOC cap gate selected."""
+        gates = Dispatch.env_value("CHECK_GATES", "loc-cap")
+        return Dispatch.run_make("_check_default", extra_env={"CHECK_GATES": gates})
 
 
 if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))
+    Dispatch.promoted_main(__file__, CheckLocCapCommand.run)

@@ -85,6 +85,27 @@ def test_safe_divide() -> None:
 - Use `settings_factory` when a project-specific settings subclass is required.
 - Assert result state via `.success`, `.failure`, and `.unwrap()` on `r[T]` instances.
 
+## Generic Make Framework
+
+`flext_tests` is also the shared library for registry-driven Make surfaces. A
+workspace can promote commands by placing scripts under
+`scripts/cmd/<verb>/<what>.py` with a `# /// flext-command` TOML header.
+
+Use the public facades:
+
+- `c.Tests.MAKE_*` for header names, environment keys, suffixes, and validation constants.
+- `t.Tests.MakeTomlTable` / `t.Tests.MakeTomlValue` for parsed header payloads.
+- `m.Tests.MakeCommand`, `m.Tests.MakeParam`, and `m.Tests.MakeRegistry` for command contracts.
+- `u.Tests.make_discover`, `u.Tests.make_validate_invocation`, and `u.Tests.make_render_*` for discovery, validation, and help text.
+
+The root dispatcher is only a CLI adapter. Promoted Python commands should
+consume `scripts.dispatch.Dispatch`; they should not redefine command models,
+parse TOML independently, or discover projects outside declared workspace
+membership.
+
+Inside `flext-tests`, the Make utility domain is split into parsing, contract,
+registry, and rendering mixins. Consumers still call only `u.Tests.make_*`.
+
 ## Bad practices
 
 ```python
@@ -93,6 +114,9 @@ FlextSettings.fetch_global().debug = True
 
 # Importing returns directly instead of using the r alias
 from returns.result import Success
+
+# Defining a parallel Make registry outside c/m/t/u.Tests
+from dataclasses import dataclass
 ```
 
 ## Related
@@ -100,3 +124,4 @@ from returns.result import Success
 - `.agents/skills/using-flext-tests/SKILL.md`
 - `.agents/skills/coding-standards/SKILL.md`
 - `flext-tests/src/flext_tests/_fixtures/settings.py`
+- `docs/architecture/adr/004-generic-make-framework-in-flext-tests.md`

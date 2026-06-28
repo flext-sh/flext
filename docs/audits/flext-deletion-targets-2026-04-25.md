@@ -22,8 +22,6 @@ Pattern audits run via `python -m flext_infra validate <verb>` — outputs harve
 | 3 | `flext-core/tests/unit/test_enforcement.py` | `pydantic.warnings` *(test fixture; possibly intentional)* |
 | 4 | `flext-target-oracle-wms/tests/integration/test_oracle.py` | `orjson` |
 | 5 | `flext-target-oracle-wms/tests/unit/test_workflow.py` | `orjson` |
-| 6 | `gruponos-meltano-native/scripts/configure_project.py` | `yaml` |
-| 7 | `gruponos-meltano-native/src/gruponos_meltano_native/settings.py` | `pydantic_settings` |
 
 **Phase 3 action**: route every banned-lib import through the appropriate `flext-core` facade (`u.Yaml.*`, `u.Json.*`, `m.Settings`). Per AGENTS.md §2.7 abstraction-boundary law.
 

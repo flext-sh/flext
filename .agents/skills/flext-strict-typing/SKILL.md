@@ -47,12 +47,13 @@ Defines and enforces the FLEXT type hierarchy.
 from collections.abc import Mapping
 from flext_core import r, t
 
-def parse(data: Mapping[str, t.JsonValue]) -> r[int]:
-    ...
+
+def parse(data: Mapping[str, t.JsonValue]) -> r[int]: ...
 ```
 
 ```python
 from typing import TypeGuard
+
 
 def is_user(value: object) -> TypeGuard[m.User]:
     return isinstance(value, m.User)
@@ -63,13 +64,12 @@ def is_user(value: object) -> TypeGuard[m.User]:
 ```python
 from typing import Any, Dict
 
-def parse(data: Dict[str, Any]) -> Any:
-    ...
+
+def parse(data: Dict[str, Any]) -> Any: ...
 ```
 
 ```python
-def parse(data: dict[str, object]) -> dict[str, object]:
-    ...
+def parse(data: dict[str, object]) -> dict[str, object]: ...
 ```
 
 ## Mapping contract guide
@@ -88,8 +88,8 @@ Fallible paths return `r[T]` from `returns`:
 ```python
 from flext_core import r
 
-def load(user_id: int) -> r[m.User]:
-    ...
+
+def load(user_id: int) -> r[m.User]: ...
 ```
 
 ## Suppression comments

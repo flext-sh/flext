@@ -72,8 +72,7 @@ from collections.abc import Mapping
 from flext_core import t
 
 
-def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue:
-    ...
+def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue: ...
 ```
 
 ## Result flow

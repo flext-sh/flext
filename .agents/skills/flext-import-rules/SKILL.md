@@ -55,10 +55,10 @@ from flext_core import c, m, r, t, u
 ## Bad examples
 
 ```python
-from .utils import helper          # relative import
-from flext_core import *           # wildcard
-from typing import Dict, List      # legacy typing
-import oracledb                    # direct framework; use flext_db_oracle wrapper
+from .utils import helper  # relative import
+from flext_core import *  # wildcard
+from typing import Dict, List  # legacy typing
+import oracledb  # direct framework; use flext_db_oracle wrapper
 ```
 
 ## Import order

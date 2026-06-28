@@ -11,24 +11,27 @@
 # aliases = []
 # params = [
 #   { name = "CHECK_GATES", help = "Optional override for lint gate set", required = false, default = "lint,pyrefly" },
-#   { name = "WHAT", help = "Comando de check", required = false, default = "all", choices = ["all","boundary","coordination","cqrs","docker_standardization","fmt","format","go","lint","loc-cap","markdown","mypy","pol","pyre","pyrefly","pyright","scan","silent-failure","types"] }
+#   { name = "WHAT", help = "Comando de check", required = false, default = "all", choices = ["all","boundary","coordination","cqrs","fmt","format","go","lint","loc-cap","markdown","mypy","pol","pyre","pyrefly","pyright","scan","silent-failure","types"] }
 # ]
 # rules = ["dev-gate"]
 # ///
 
 from __future__ import annotations
 
-from scripts.dispatch import env_value, promoted_main, run_make
+from scripts.dispatch import Dispatch
 
 
-def main() -> int:
-    """Run the selected lint gate set."""
-    gate_env = {"CHECK_GATES": "lint,pyrefly"}
-    if value := env_value("CHECK_GATES"):
-        gate_env["CHECK_GATES"] = value
-    return run_make("_check_default", extra_env=gate_env)
+class CheckAllCommand:
+    """Run the selected quality gate set."""
+
+    @staticmethod
+    def run() -> int:
+        """Run the selected lint gate set."""
+        gate_env = {"CHECK_GATES": "lint,pyrefly"}
+        if value := Dispatch.env_value("CHECK_GATES"):
+            gate_env["CHECK_GATES"] = value
+        return Dispatch.run_make("_check_default", extra_env=gate_env)
 
 
 if __name__ == "__main__":
-    # guard via dispatch contract
-    raise SystemExit(promoted_main(__file__, main))
+    Dispatch.promoted_main(__file__, CheckAllCommand.run)

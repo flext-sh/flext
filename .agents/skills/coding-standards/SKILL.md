@@ -79,6 +79,7 @@ Settings classes (`FlextSettings`, `FlextCliSettings`, etc.) have no short alias
 ```python
 from flext_core import c, m, r, t, u
 
+
 def fetch() -> r[m.User]:
     return u.http_get(...)
 ```
@@ -87,6 +88,7 @@ def fetch() -> r[m.User]:
 
 ```python
 from flext_core import models
+
 
 def fetch() -> models.User:  # shadowing, extra keystrokes
     ...
@@ -123,9 +125,9 @@ from flext_ldap import constants as ldap_constants
 **Bad:**
 
 ```python
-from .utils import helper        # relative import
-from flext_core import *         # wildcard
-from typing import Dict, List    # legacy typing
+from .utils import helper  # relative import
+from flext_core import *  # wildcard
+from typing import Dict, List  # legacy typing
 ```
 
 **Validate:** `ruff check <file>` (`I001`, `I002`, `TID252`).
@@ -149,8 +151,8 @@ from typing import Dict, List    # legacy typing
 from collections.abc import Mapping
 from flext_core import t
 
-def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue:
-    ...
+
+def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue: ...
 ```
 
 **Bad:**
@@ -158,8 +160,8 @@ def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue:
 ```python
 from typing import Any, Dict
 
-def normalize(data: Dict[str, Any]) -> Any:
-    ...
+
+def normalize(data: Dict[str, Any]) -> Any: ...
 ```
 
 ### Narrowing
@@ -195,8 +197,9 @@ Fallible application paths return `r[T]`. Do not use raw exceptions or ad-hoc er
 ```python
 from flext_core import r
 
-def load_user(user_id: int) -> r[m.User]:
-    ...
+
+def load_user(user_id: int) -> r[m.User]: ...
+
 
 result = load_user(1)
 # compose with .map / .bind / .alt from returns
@@ -265,6 +268,7 @@ Use Pydantic v2 `BaseModel`. Validate dynamic payloads with `OptionsModel.model_
 ```python
 from pydantic import BaseModel, ConfigDict
 
+
 class User(BaseModel):
     model_config = ConfigDict(frozen=True)
     id: int
@@ -275,6 +279,7 @@ class User(BaseModel):
 
 ```python
 from dataclasses import dataclass
+
 
 @dataclass
 class User:

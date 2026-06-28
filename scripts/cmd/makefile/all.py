@@ -15,14 +15,18 @@
 
 from __future__ import annotations
 
-from scripts.dispatch import discover, promoted_main, render_global_help
+from scripts.dispatch import Dispatch
 
 
-def main() -> int:
-    """Print global dispatcher help from discovered command metadata."""
-    print(render_global_help(discover()))
-    return 0
+class MakefileAllCommand:
+    """Render the promoted Make command registry."""
+
+    @staticmethod
+    def run() -> int:
+        """Print global dispatcher help from discovered command metadata."""
+        print(Dispatch.render_global_help(Dispatch.discover()))
+        return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))
+    Dispatch.promoted_main(__file__, MakefileAllCommand.run)

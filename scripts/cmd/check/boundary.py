@@ -17,14 +17,18 @@
 
 from __future__ import annotations
 
-from scripts.dispatch import env_value, promoted_main, run_make
+from scripts.dispatch import Dispatch
 
 
-def main() -> int:
-    """Run `_check_default` with the boundary gate selected."""
-    gates = env_value("CHECK_GATES", "boundary")
-    return run_make("_check_default", extra_env={"CHECK_GATES": gates})
+class CheckBoundaryCommand:
+    """Run the boundary quality gate."""
+
+    @staticmethod
+    def run() -> int:
+        """Run `_check_default` with the boundary gate selected."""
+        gates = Dispatch.env_value("CHECK_GATES", "boundary")
+        return Dispatch.run_make("_check_default", extra_env={"CHECK_GATES": gates})
 
 
 if __name__ == "__main__":
-    raise SystemExit(promoted_main(__file__, main))
+    Dispatch.promoted_main(__file__, CheckBoundaryCommand.run)
