@@ -8,17 +8,19 @@
 from flext_cli import c, m, p, r, s, t, u
 ```
 
+`flext_cli` reexports `d`, `e`, `h`, `r`, `x` from `flext_core`.
+
 | Alias | Purpose |
 |-------|---------|
 | `c` | constants |
 | `m` | models |
 | `p` | protocols |
 | `r` | result (reexported from `flext_core`) |
-| `s` | service / runtime |
+| `s` | service / runtime (`FlextCliServiceBase`) |
 | `t` | typings |
 | `u` | utilities |
 
-Settings are accessed via `FlextCliSettings` (no short alias).
+**Important:** `s` is the service/runtime alias. CLI settings are accessed via `FlextCliSettings` (no short alias).
 
 ## Purpose
 
@@ -28,18 +30,22 @@ Settings are accessed via `FlextCliSettings` (no short alias).
 
 ## Settings
 
-CLI settings extend `FlextSettings` with `env_prefix="FLEXT_CLI_"`:
+Import the existing settings class; do not redefine it:
 
 ```python
-from flext_cli import c
+from flext_cli.settings import FlextCliSettings
+
+settings = FlextCliSettings.fetch_global()
+```
+
+If you need a project-specific subclass, extend `FlextSettings` (or `FlextCliSettings`) with `m.SettingsConfigDict`:
+
+```python
 from flext_core import FlextSettings, m
 
-class FlextCliSettings(FlextSettings):
-    model_config = m.SettingsConfigDict(env_prefix="FLEXT_CLI_", extra="ignore")
 
-    class CliSettings(m.SettingsValue):
-        verbose: bool = c.Cli.CLI_DEFAULT_VERBOSE
-        output_format: str = c.Cli.OUTPUT_DEFAULT_FORMAT_TYPE
+class FlextApiSettings(FlextSettings):
+    model_config = m.SettingsConfigDict(env_prefix="FLEXT_API_", extra="ignore")
 ```
 
 ## Model-driven command
@@ -72,6 +78,11 @@ command = FlextCliCli.model_command(
 )
 ```
 
+**Common mistakes to avoid:**
+
+- `FlextCliCli.build_model_command(...)` does not exist; use `FlextCliCli.model_command(...)`.
+- `m.CliInput` / `m.CliOutput` do not exist; use plain `m.BaseModel` subclasses.
+
 ## Testing a command
 
 ```python
@@ -86,12 +97,13 @@ assert result.exit_code == 0
 
 - Use plain `m.BaseModel` subclasses for command input.
 - Read settings via `FlextCliSettings.fetch_global()`; `s` is the service/runtime alias.
-- Use `u.Cli` helpers to resolve annotations and defaults.
+- Avoid ad-hoc Typer functions and direct `print()`/`sys.exit()` in commands.
 
 ## Bad practices
 
 ```python
 import typer
+
 
 def main(name: str):  # ad-hoc command, no model
     print(f"Hello, {name}")

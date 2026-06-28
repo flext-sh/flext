@@ -11,7 +11,7 @@ Guidelines for writing tests in the FLEXT monorepo. For the root engineering law
 ## Structure (AAA)
 
 ```python
-def test_user_creation():
+def test_user_creation() -> None:
     # Arrange
     data = {"name": "Ada"}
 
@@ -38,12 +38,16 @@ from flext_core import m, r
 Use public API assertions. For `r[T]` results, assert on the public shape rather than private internals.
 
 ```python
-from returns.result import Success, Failure
+from flext_core import r
 
-def test_load_user():
+
+def test_load_user() -> None:
     result = load_user(1)
-    assert isinstance(result, Success)
+    assert result.success
     assert result.unwrap().id == 1
+
+    failure = load_user(-1)
+    assert failure.failure
 ```
 
 ## Fixtures
@@ -53,9 +57,23 @@ Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it t
 ```python
 import pytest
 
+
 @pytest.fixture
-def sample_user():
+def sample_user() -> m.User:
     return m.User(id=1, name="Ada")
+```
+
+## Singleton reset
+
+Rely on the autouse `reset_settings` fixture from `flext_tests`. When manual reset is required:
+
+```python
+from flext_core import FlextContainer, FlextSettings
+from flext_tests import FlextTestsSettings
+
+FlextSettings.reset_for_testing()
+FlextTestsSettings.reset_for_testing()
+FlextContainer.reset_for_testing()
 ```
 
 ## Golden files and examples
@@ -69,6 +87,7 @@ Use `@pytest.mark.parametrize` for multi-case checks.
 ```python
 import pytest
 
+
 @pytest.mark.parametrize(
     ("raw", "expected"),
     [
@@ -76,7 +95,7 @@ import pytest
         ("42", 42),
     ],
 )
-def test_parse_int(raw, expected):
+def test_parse_int(raw: str, expected: int) -> None:
     assert parse_int(raw) == expected
 ```
 
