@@ -27,13 +27,13 @@ Quick-reference for building CLI commands with `flext_cli`.
 ## Workflow
 
 1. Define a Pydantic input model.
-2. Register a handler and build a Typer command with `FlextCliCli`.
+2. Register a handler and build a Typer command with `FlextCliCli.model_command`.
 3. Test with `CliRunner`.
 
 ## Critical rules
 
 - Model-driven commands only; avoid ad-hoc Typer functions.
-- Use `FlextCliSettings` / `s.fetch_global()` for configuration.
+- Use `FlextCliSettings` for configuration; `s` is the service/runtime alias, not settings.
 - Use `u.Cli` helpers for annotations and defaults.
 
 ## Aliases
@@ -42,14 +42,27 @@ Quick-reference for building CLI commands with `flext_cli`.
 from flext_cli import c, m, p, r, s, t, u
 ```
 
+| Alias | Purpose |
+|-------|---------|
+| `c` | constants |
+| `m` | models |
+| `p` | protocols |
+| `r` | result (reexported from `flext_core`) |
+| `s` | service / runtime |
+| `t` | typings |
+| `u` | utilities |
+
+Settings are accessed via `FlextCliSettings` (no short alias).
+
 ## Model-driven command
 
 ```python
 from __future__ import annotations
-from flext_cli import m, s, t
+from flext_cli import m, t
 from flext_cli.services.cli import FlextCliCli
+from flext_cli.settings import FlextCliSettings
 
-class GreetInput(m.CliInput):
+class GreetInput(m.BaseModel):
     name: str
     shout: bool = False
 
@@ -59,10 +72,11 @@ def greet_handler(model: GreetInput) -> t.JsonValue:
         message = message.upper()
     return {"message": message}
 
-command = FlextCliCli.build_model_command(
+settings = FlextCliSettings.fetch_global()
+command = FlextCliCli.model_command(
     model_cls=GreetInput,
     handler=greet_handler,
-    settings=s.fetch_global(),
+    settings=settings,
 )
 ```
 
@@ -89,7 +103,7 @@ assert result.exit_code == 0
 ## Good
 
 ```python
-class GreetInput(m.CliInput):
+class GreetInput(m.BaseModel):
     name: str
 ```
 

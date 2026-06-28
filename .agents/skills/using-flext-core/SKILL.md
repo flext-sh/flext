@@ -41,11 +41,18 @@ Quick-reference for using `flext_core` in FLEXT projects.
 | Alias | Purpose |
 |-------|---------|
 | `c` | constants |
+| `d` | decorators |
+| `e` | errors / exceptions |
+| `h` | handlers |
 | `m` | models / Pydantic helpers |
 | `p` | protocols |
 | `r` | result (`returns`) |
+| `s` | service / runtime |
 | `t` | typings |
 | `u` | utilities |
+| `x` | mixins |
+
+Settings are accessed via `FlextSettings` (no short alias).
 
 ## Result flow
 
@@ -55,8 +62,8 @@ from flext_core import p, r
 
 def safe_divide(a: float, b: float) -> p.Result[float]:
     if b == 0:
-        return r[float].fail("division_by_zero")
-    return r[float].ok(a / b)
+        return r.fail("division_by_zero")
+    return r.ok(a / b)
 ```
 
 ## Settings
