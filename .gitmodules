@@ -138,6 +138,3 @@
 [submodule "flext-tests"]
 	path = flext-tests
 	url = https://github.com/flext-sh/flext-tests.git
-[submodule "gruponos-meltano-native"]
-	path = gruponos-meltano-native
-	url = https://github.com/datacosmos-br/gruponos-meltano-native.git

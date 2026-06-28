@@ -16,7 +16,6 @@
 # Allow all FLEXT ecosystem project directories
 !flext-*/
 !flexcore/
-!gruponos-meltano-native/
 
 # ============================================================================
 # WHITELIST: Workspace Directories
@@ -365,3 +364,4 @@ base.mk
 .dolt/
 *.db
 .beads-credential-key
+.worktrees/
