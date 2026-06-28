@@ -18,28 +18,71 @@
 
 from __future__ import annotations
 
+import sys
+from typing import Annotated, Literal
+
 from scripts.dispatch import Dispatch
 
+from flext_tests import m, u
 
-class ValAllCommand:
+
+class FlextRootValAllCommand:
     """Run validation gates for the selected scope."""
+
+    class Options(m.Value):
+        """Validated validation command options."""
+
+        model_config = m.ConfigDict(
+            extra="forbid",
+            frozen=True,
+            validate_assignment=True,
+        )
+
+        scope: Annotated[
+            Literal["project", "workspace", "all"],
+            u.Field(description="Validation scope to execute."),
+        ] = "project"
+
+        @u.field_validator("scope", mode="before")
+        @classmethod
+        def normalize_scope(cls, value: str | None) -> str:
+            """Normalize the environment value before Literal validation."""
+            return (value or "project").strip().lower()
+
+        @property
+        def targets(self) -> tuple[str, ...]:
+            """Return the private Make targets for the validated scope."""
+            if self.scope == "workspace":
+                return ("_val_workspace",)
+            if self.scope == "project":
+                return ("_val_project",)
+            return ("_val_workspace", "_val_project")
 
     @staticmethod
     def run() -> int:
         """Dispatch validation by VALIDATE_SCOPE."""
-        scope = Dispatch.env_value("VALIDATE_SCOPE", "project").lower()
-        if scope == "workspace":
-            return Dispatch.run_make("_val_workspace")
-        if scope == "project":
-            return Dispatch.run_make("_val_project")
-        if scope == "all":
-            code = Dispatch.run_make("_val_workspace")
+        try:
+            options = FlextRootValAllCommand.options()
+        except ValueError as exc:
+            print(f"ERRO: {exc}", file=sys.stderr)
+            return 2
+
+        for target in options.targets:
+            code = Dispatch.run_make(target)
             if code != 0:
                 return code
-            return Dispatch.run_make("_val_project")
-        print(f"ERRO: VALIDATE_SCOPE invalido: {scope}")
-        return 2
+        return 0
+
+    @staticmethod
+    def options() -> Options:
+        """Validate environment-backed validation command options."""
+        options: FlextRootValAllCommand.Options = (
+            FlextRootValAllCommand.Options.model_validate({
+                "scope": Dispatch.env_value("VALIDATE_SCOPE", "project").lower(),
+            })
+        )
+        return options
 
 
 if __name__ == "__main__":
-    Dispatch.promoted_main(__file__, ValAllCommand.run)
+    Dispatch.promoted_main(__file__, FlextRootValAllCommand.run)

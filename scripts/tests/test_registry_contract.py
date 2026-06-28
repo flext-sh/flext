@@ -53,6 +53,17 @@ def test_known_readonly_command(registry: Dispatch.Registry) -> None:
     assert check_all.domain == "quality"
 
 
+def test_docs_command_declares_conditional_mutation(
+    registry: Dispatch.Registry,
+) -> None:
+    docs_all = u.Tests.make_registry_command(registry, "docs", "all").unwrap()
+    assert docs_all.mutates is False
+    assert tuple((item.name, item.values) for item in docs_all.mutates_when) == (
+        ("DOCS_PHASE", ("all", "fix", "generate")),
+    )
+    assert any(param.name == "FIX" for param in docs_all.params)
+
+
 def test_unknown_verb_raises(registry: Dispatch.Registry) -> None:
     with pytest.raises(Dispatch.RegistryError):
         _registry_command_or_raise(registry, "does-not-exist", "all")
@@ -100,6 +111,34 @@ def test_target_env_overrides_makeflags_cli_values(
         assert "SURFACE-VALIDATE: make _check_default CHECK_GATES=pyrefly" in output
     finally:
         for key, value in original.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+
+
+def test_docs_fix_opt_in_reaches_private_docs_target(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    keys = (
+        c.Tests.MAKE_SURFACE_VALIDATE_ENV,
+        c.Tests.MAKE_WHAT_PARAM,
+        "DOCS_PHASE",
+        "FIX",
+    )
+    original = tuple((key, os.environ.get(key)) for key in keys)
+    try:
+        os.environ[c.Tests.MAKE_SURFACE_VALIDATE_ENV] = c.Tests.MAKE_DISPATCH_ENV_VALUE
+        os.environ[c.Tests.MAKE_WHAT_PARAM] = "all"
+        os.environ["DOCS_PHASE"] = "fix"
+        os.environ["FIX"] = "1"
+
+        assert Dispatch.main(("docs",)) == 0
+
+        output = capsys.readouterr().out
+        assert "SURFACE-VALIDATE: make _docs DOCS_PHASE=fix FIX=1" in output
+    finally:
+        for key, value in original:
             if value is None:
                 os.environ.pop(key, None)
             else:
