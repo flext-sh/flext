@@ -87,7 +87,7 @@ Use `FlextLogger`. No `print()` in library code.
 ```python
 from flext_core import u
 
-logger = u.get_logger(__name__)
+logger = u.fetch_logger(__name__)
 logger.info("event.name", key=value)
 ```
 

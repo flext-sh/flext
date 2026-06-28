@@ -56,7 +56,7 @@ except ValueError as exc:
 ```python
 from flext_core import u
 
-logger = u.get_logger(__name__)
+logger = u.fetch_logger(__name__)
 logger.info("user.created", user_id=user_id)
 ```
 

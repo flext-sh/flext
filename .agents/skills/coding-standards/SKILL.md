@@ -67,8 +67,12 @@ Use the project facade aliases. Do not rename or shadow them.
 | `u` | utilities | `u.some_utility` |
 | `r` | result / returns | `r[SomeModel]` |
 | `e` | errors / exceptions | `e.SomeError` |
-| `s` | settings | `s.SomeSetting` |
-| `x` | execution / dispatch | `x.dispatch(...)` |
+| `s` | service / runtime | `s.fetch_global()` |
+| `x` | mixins / execution | `x.SomeMixin` |
+| `d` | decorators | `d.some_decorator` |
+| `h` | handlers | `h.some_handler` |
+
+Settings classes (`FlextSettings`, `FlextCliSettings`, etc.) have no short alias; import the class by name.
 
 **Good:**
 
@@ -216,7 +220,7 @@ Use `FlextLogger`. No `print()` in `src/`.
 ```python
 from flext_core import u
 
-logger = u.get_logger(__name__)
+logger = u.fetch_logger(__name__)
 logger.info("user.created", user_id=user_id)
 ```
 

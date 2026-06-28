@@ -42,6 +42,19 @@ Quick-reference for using the `flext_tests` toolkit.
 from flext_tests import c, e, m, p, r, s, t, u
 ```
 
+| Alias | Purpose |
+|-------|---------|
+| `c` | constants |
+| `e` | errors / exceptions (reexported) |
+| `m` | models |
+| `p` | protocols |
+| `r` | result (reexported) |
+| `s` | service / test runtime |
+| `t` | typings |
+| `u` | utilities |
+
+Settings are accessed via `FlextTestsSettings` or project-specific settings classes (no short alias).
+
 ## Essential fixtures
 
 | Fixture | Purpose |
