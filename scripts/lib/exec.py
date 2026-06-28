@@ -76,9 +76,6 @@ class CommandExecution:
         env: t.MappingKV[str, str],
     ) -> int:
         """Execute a promoted Python command under canonical dispatch env."""
-        if CommandExecution.surface_validation_enabled():
-            print(f"SURFACE-VALIDATE: python {command.path}")
-            return 0
         return CommandExecution.run_process(
             (
                 sys.executable,

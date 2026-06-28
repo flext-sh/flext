@@ -43,8 +43,14 @@ but it must not own the generic command registry library.
   generated `FLEXT_MAKE_DISPATCH` variable and do not contain `WHAT` `case`
   catalogs.
 - Heavy shell recipes remain private Make targets such as `_check_default`,
-  `_test_default`, and `_clean_default`. Promoted command metadata may point to
-  those private targets with `target = "..."`.
+  `_test_default`, `_docs`, and `_clean_default`. Promoted command metadata may
+  point to those private targets with `target = "..."`.
+- Commands that mutate only for specific parameter values declare those
+  predicates with `mutates_when`; the generic `flext-tests` registry validates
+  the referenced params and renders them as conditional mutation in help.
+- `make docs DOCS_PHASE=<phase>` is a first-class registry-backed public verb.
+  `make build WHAT=docs` remains a build-domain route to the same private
+  `_docs` recipe.
 - `FLEXT_MAKE_DISPATCH` is intentionally distinct from hub wrapper variables
   such as `WORKSPACE_DISPATCH` so the optional `workspace_custom.mk` include
   cannot override the FLEXT command path.
@@ -67,7 +73,8 @@ but it must not own the generic command registry library.
 - External project names are not part of the workspace catalog, docs, templates,
   or promoted command helpers.
 - Mutation remains explicit: command metadata must declare required `APPLY` for
-  mutating commands, and the CLI boundary converts failed validations to exit 2.
+  mutating commands or `mutates_when` predicates for conditional mutation, and
+  the CLI boundary converts failed validations to exit 2.
 - Static Make validation now checks that every public registry verb delegates to
   the dispatcher wrapper and that every declared private target exists. It no
   longer accepts or requires `WHAT` `case` blocks in the Makefile.

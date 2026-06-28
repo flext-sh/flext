@@ -78,19 +78,20 @@ class SurfaceProbeRunner:
                 expected_output=(f"make {command.verb} WHAT={command.what}",),
             )
         ]
-        if command.mutates:
+        if command.mutates or command.mutates_when:
+            mutation_env = SurfaceProbeRunner.mutation_env(command, env)
             probes.extend((
                 m.Tests.MakeSurfaceProbe(
                     name=f"{command.verb}/{command.what} dry-run",
                     argv=(command.verb,),
-                    env=env,
+                    env=mutation_env,
                     expected_output=("DRY-RUN: nenhuma mutacao executada.",),
                 ),
                 m.Tests.MakeSurfaceProbe(
                     name=f"{command.verb}/{command.what} apply route",
                     argv=(command.verb,),
                     env={
-                        **env,
+                        **mutation_env,
                         c.Tests.MAKE_APPLY_PARAM: c.Tests.MAKE_DISPATCH_ENV_VALUE,
                         c.Tests.MAKE_SURFACE_VALIDATE_ENV: (
                             c.Tests.MAKE_DISPATCH_ENV_VALUE
@@ -126,6 +127,17 @@ class SurfaceProbeRunner:
                 param.default,
             )
         return env
+
+    @staticmethod
+    def mutation_env(
+        command: m.Tests.MakeCommand,
+        env: t.MappingKV[str, str],
+    ) -> t.StrMapping:
+        """Return probe environment values that activate mutation conditions."""
+        resolved: t.MutableStrMapping = dict(env)
+        for condition in command.mutates_when:
+            resolved[condition.name] = condition.values[0]
+        return resolved
 
     @staticmethod
     def run(
