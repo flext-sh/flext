@@ -24,35 +24,17 @@ from collections.abc import (
     Sequence,
 )
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from enum import StrEnum, unique
 from typing import Annotated, ClassVar
 
 from examples import m, p, r, t, u
+from examples._constants import ExamplesPermission, ExamplesServerType
 
 
 class AclProcessingExample:
     """Advanced ACL processing example demonstrating enterprise-grade ACL capabilities."""
 
-    @unique
-    class ServerType(StrEnum):
-        """Server type enumeration."""
-
-        OPENLDAP = "openldap"
-        ORACLE_OID = "oracle_oid"
-        ORACLE_UNIFIED_DIRECTORY = "oracle_unified_directory"
-        ACTIVE_DIRECTORY = "active_directory"
-        APACHE_DS = "apache_ds"
-        UNKNOWN = "unknown"
-
-    @unique
-    class Permission(StrEnum):
-        """Permission enumeration."""
-
-        READ = "read"
-        WRITE = "write"
-        DELETE = "delete"
-        SEARCH = "search"
-        UNKNOWN = "unknown"
+    ServerType = ExamplesServerType
+    Permission = ExamplesPermission
 
     class AclEntry(m.BaseModel):
         """Represents an ACL entry with context and permissions."""
