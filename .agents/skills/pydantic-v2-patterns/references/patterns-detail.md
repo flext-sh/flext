@@ -18,12 +18,12 @@ NonEmptyStr = Annotated[
 ```python
 from __future__ import annotations
 
-from flext_core import u
+from flext_core import t, u
 
 
 @u.field_validator("email", mode="before")
 @classmethod
-def _normalize_email(cls, v: object) -> str:
+def _normalize_email(cls, v: t.JsonValue) -> str:
     return str(v).strip().lower()
 ```
 
@@ -113,8 +113,14 @@ class Boundary(BaseModel):
 ```python
 from __future__ import annotations
 
-from pydantic import TypeAdapter
+from pydantic import BaseModel, TypeAdapter
 
+
+class MyModel(BaseModel):
+    id: int
+
+
+raw = [{"id": 1}]
 adapter = TypeAdapter(list[MyModel])
 items = adapter.validate_python(raw)
 json_out = adapter.dump_json(items)

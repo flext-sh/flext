@@ -53,9 +53,8 @@ from flext_core import r, t
 def parse(data: Mapping[str, t.JsonValue]) -> r[int]: ...
 ```
 
-```python
-from __future__ import annotations
-
+```python notest
+# Illustrative TypeGuard pattern — runtime narrowing requires an unconstrained input.
 from typing import TypeGuard
 
 

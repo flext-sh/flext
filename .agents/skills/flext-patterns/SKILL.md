@@ -47,11 +47,18 @@ Repository-native implementation patterns for result flow, DI, logging, and type
 ```python
 from __future__ import annotations
 
-raw = "not-an-int"
+
+def parse_int(raw: str) -> int:
+    try:
+        return int(raw)
+    except ValueError as exc:
+        raise ValueError("invalid integer") from exc
+
+
 try:
-    value = int(raw)
+    parse_int("not-an-int")
 except ValueError as exc:
-    raise ValueError("invalid integer") from exc
+    assert "invalid integer" in str(exc)
 ```
 
 ### Logging
