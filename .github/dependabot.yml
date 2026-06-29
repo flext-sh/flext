@@ -21,15 +21,6 @@ updates:
       - python
 
   - package-ecosystem: "pip"
-    directory: "/flexcore"
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 5
-    labels:
-      - dependencies
-      - python
-
-  - package-ecosystem: "pip"
     directory: "/flext-api"
     schedule:
       interval: weekly

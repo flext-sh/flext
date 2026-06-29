@@ -15,7 +15,6 @@
 # ============================================================================
 # Allow all FLEXT ecosystem project directories
 !flext-*/
-!flexcore/
 
 # ============================================================================
 # WHITELIST: Workspace Directories
@@ -112,7 +111,6 @@ scripts/maintenance/
 # WHITELIST: Contents Inside Allowed Directories
 # ============================================================================
 !flext-*/**
-!flexcore/**
 !docker/**
 !docs/**
 !examples/**

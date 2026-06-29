@@ -213,7 +213,7 @@ All Dockerfiles are consolidated in `images/` directory with descriptive names:
 ### Project Images
 
 - `Dockerfile.flext-oud`, `Dockerfile.flext-oud-mig`
-- `Dockerfile.flext`, `Dockerfile.flexcore`
+- `Dockerfile.flext`
 
 **Build Example**:
 
