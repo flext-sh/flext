@@ -43,8 +43,8 @@ package "FLEXT Platform" {
         component "DBT Transformations" as DBT
     }
     
-    ' Runtime Container
-    component "FlexCore Runtime" as FLEXCORE
+    ' Runtime Service
+    component "Pipeline Runtime" as RUNTIME
     
     ' Quality and Observability
     component "Quality Service" as QUALITY
@@ -77,11 +77,11 @@ APIGATEWAY --> ORACLESVC
 APIGATEWAY --> QUALITY
 APIGATEWAY --> OBSERVABILITY
 
-' FlexCore Integration
-FLEXCORE --> APIGATEWAY
-FLEXCORE --> TAPS
-FLEXCORE --> TARGETS
-FLEXCORE --> DBT
+' Runtime Integration
+RUNTIME --> APIGATEWAY
+RUNTIME --> TAPS
+RUNTIME --> TARGETS
+RUNTIME --> DBT
 
 ' Service Dependencies
 LDAPSVC --> CORE

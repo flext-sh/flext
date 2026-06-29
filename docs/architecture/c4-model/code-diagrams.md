@@ -312,36 +312,36 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Scheduler
-    participant FlexCore
+    participant RuntimeService
     participant SingerTap
     participant DBTTransform
     participant SingerTarget
     participant Database
     participant FileSystem
 
-    Scheduler->>FlexCore: Trigger Pipeline
-    FlexCore->>SingerTap: Execute Data Extraction
+    Scheduler->>RuntimeService: Trigger Pipeline
+    RuntimeService->>SingerTap: Execute Data Extraction
     SingerTap->>Database: Query Source Data
     Database-->>SingerTap: Source Data
     SingerTap->>FileSystem: Write Singer Messages
-    SingerTap-->>FlexCore: Extraction Complete
+    SingerTap-->>RuntimeService: Extraction Complete
 
-    FlexCore->>DBTTransform: Execute Data Transformation
+    RuntimeService->>DBTTransform: Execute Data Transformation
     DBTTransform->>FileSystem: Read Singer Messages
     FileSystem-->>DBTTransform: Singer Messages
     DBTTransform->>Database: Execute SQL Transformations
     Database-->>DBTTransform: Transformed Data
     DBTTransform->>FileSystem: Write Transformed Data
-    DBTTransform-->>FlexCore: Transformation Complete
+    DBTTransform-->>RuntimeService: Transformation Complete
 
-    FlexCore->>SingerTarget: Execute Data Loading
+    RuntimeService->>SingerTarget: Execute Data Loading
     SingerTarget->>FileSystem: Read Transformed Data
     FileSystem-->>SingerTarget: Transformed Data
     SingerTarget->>Database: Load Target Data
     Database-->>SingerTarget: Load Complete
-    SingerTarget-->>FlexCore: Loading Complete
+    SingerTarget-->>RuntimeService: Loading Complete
 
-    FlexCore-->>Scheduler: Pipeline Complete
+    RuntimeService-->>Scheduler: Pipeline Complete
 ```
 
 ## 7. Error Handling Flow Sequence Diagram

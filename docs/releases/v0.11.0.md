@@ -13,7 +13,6 @@
 ## Projects impacted
 
 - root
-- flexcore
 - flext-api
 - flext-auth
 - flext-cli
@@ -77,7 +76,6 @@
 - ea2e95db chore(workspace): propagate unified make and release automation (#3) (marlon-costa-dc)
 - 9ca7374f chore(workspace): update flext-core pointer (Marlon Costa)
 - be9ad89f test(scripts): centralize remaining script tests under unit layout (Marlon Costa)
-- 9c63c476 chore(workspace): update flexcore pointer (Marlon Costa)
 - 00969675 chore: checkpoint pending 0.11.0-dev changes (Marlon Costa)
 - 1f638d97 chore(workspace): update flext-ldif pointer (Marlon Costa)
 - a8de2925 chore: checkpoint pending 0.11.0-dev changes (Marlon Costa)
