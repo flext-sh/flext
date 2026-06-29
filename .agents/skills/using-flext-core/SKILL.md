@@ -88,6 +88,8 @@ assert isinstance(settings.model_dump(), dict)
 Subprojects extend `FlextSettings` with their own `env_prefix`:
 
 ```python
+from __future__ import annotations
+
 from flext_core import FlextSettings
 from flext_core import m
 
@@ -125,7 +127,7 @@ logger.info("user.created", user_id=42)
 from flext_core import s, FlextSettings
 
 settings = FlextSettings.fetch_global()
-runtime = s(settings=settings)
+runtime = s(runtime_settings=settings)
 ```
 
 ## Good
@@ -136,7 +138,8 @@ from flext_core import c, m, r, t, u
 
 ## Bad
 
-```python
+```python notest
+# Illustrative anti-patterns — these imports bypass the canonical facade.
 from flext_core._models.base import SomeModel  # bypass facade
 from flext_core.result import ok, fail  # bypass r alias
 from flext_core import s as settings  # s is service/runtime, not settings
