@@ -22,11 +22,11 @@ from collections.abc import (
     MutableSequence,
 )
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from enum import StrEnum, unique
 from types import MappingProxyType
 from typing import Annotated, ClassVar
 
 from examples import m, p, r, t, u
+from examples._constants import ExamplesWorkflowStage
 
 type CompleteWorkflowProcessingDict = t.JsonMapping
 type CompleteWorkflowContent = t.JsonMapping
@@ -47,14 +47,7 @@ class CompleteWorkflowExample:
         )
         content: t.JsonMapping = u.Field(default_factory=dict)
 
-    @unique
-    class Stage(StrEnum):
-        """Processing stage enumeration."""
-
-        VALIDATION = "validation"
-        PROCESSING = "processing"
-        ANALYSIS = "analysis"
-        AGGREGATION = "aggregation"
+    Stage = ExamplesWorkflowStage
 
     class WorkflowContext(m.BaseModel):
         """Complete workflow context with correlation and metadata."""

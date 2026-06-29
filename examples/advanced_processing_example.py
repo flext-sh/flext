@@ -22,10 +22,10 @@ from collections.abc import (
     Sequence,
 )
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from enum import StrEnum, unique
 from typing import Annotated, ClassVar
 
 from examples import m, p, r, t, u
+from examples._constants import ExamplesStage
 
 type DataValue = t.JsonValue
 type ItemDict = t.JsonMapping
@@ -93,13 +93,7 @@ def _new_scalar_dict() -> t.MutableJsonMapping:
 class AdvancedProcessingExample:
     """Advanced processing example demonstrating FLEXT parallel capabilities."""
 
-    @unique
-    class Stage(StrEnum):
-        """Processing stage enumeration."""
-
-        VALIDATE = "validate"
-        PROCESS = "process"
-        ANALYZE = "analyze"
+    Stage = ExamplesStage
 
     class ProcessingResult(m.BaseModel):
         """Result of processing operation with metrics."""
