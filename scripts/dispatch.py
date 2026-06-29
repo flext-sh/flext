@@ -29,6 +29,9 @@ class Dispatch:
     require_dispatched = staticmethod(CommandExecution.require_dispatched)
     run_make = staticmethod(CommandExecution.run_make)
     run_shell = staticmethod(CommandExecution.run_shell)
+    surface_validation_enabled = staticmethod(
+        CommandExecution.surface_validation_enabled
+    )
 
 
 __all__: list[str] = ["Dispatch"]

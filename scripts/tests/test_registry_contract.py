@@ -235,13 +235,6 @@ def test_clean_without_apply_stays_dry_run(
         ("ship", "pr", "_pr", True, ()),
         (
             "ship",
-            "save",
-            "_save",
-            True,
-            (("MESSAGE", "chore: surface validation"),),
-        ),
-        (
-            "ship",
             "tag",
             "_tag",
             True,
@@ -287,6 +280,33 @@ def test_release_status_coordination_routes_reach_private_targets(
 
         output = capsys.readouterr().out
         assert f"SURFACE-VALIDATE: make {target}" in output
+    finally:
+        _restore_env(original)
+
+
+def test_ship_save_runs_python_command_directly(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """ship/save is implemented in Python and does not route through a Make target."""
+    keys = (
+        c.Tests.MAKE_SURFACE_VALIDATE_ENV,
+        c.Tests.MAKE_WHAT_PARAM,
+        c.Tests.MAKE_APPLY_PARAM,
+        "MESSAGE",
+    )
+    original = _snapshot_env(keys)
+    try:
+        os.environ[c.Tests.MAKE_SURFACE_VALIDATE_ENV] = c.Tests.MAKE_DISPATCH_ENV_VALUE
+        os.environ[c.Tests.MAKE_WHAT_PARAM] = "save"
+        os.environ[c.Tests.MAKE_APPLY_PARAM] = c.Tests.MAKE_DISPATCH_ENV_VALUE
+        os.environ["MESSAGE"] = "chore: surface validation"
+
+        assert Dispatch.main(("ship",)) == 0
+
+        output = capsys.readouterr().out
+        assert "SURFACE-VALIDATE:" in output
+        assert "scripts.cmd.ship.save" in output
+        assert "make _save" not in output
     finally:
         _restore_env(original)
 
