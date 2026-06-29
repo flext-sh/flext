@@ -152,7 +152,6 @@ exclude_docs = [
   "/README.md",
   "SUPPRESSIONS-RATIONALE.md",
   "api-reference/foundation.md",
-  "api-reference/generated/flexcore.md",
   "api/types.md",
   "architecture/FLEXT_*.md",
   "architecture/arc42/**",
@@ -386,8 +385,6 @@ extraPaths = [ ".", "src", "typings", "typings/generated" ]
 ignore = [ "**/*.pyi", "typings", "typings/generated" ]
 include = [
   "examples",
-  "flexcore/src",
-  "flexcore/tests",
   "flext-api/examples",
   "flext-api/src",
   "flext-api/tests",
@@ -536,16 +533,6 @@ root = "src"
 extraPaths = [ ".", "src" ]
 reportPrivateUsage = "none"
 root = "tests"
-
-[[tool.pyright.executionEnvironments]]
-extraPaths = [ "flexcore/src" ]
-reportPrivateUsage = "error"
-root = "flexcore/src"
-
-[[tool.pyright.executionEnvironments]]
-extraPaths = [ "flexcore", "flexcore/src" ]
-reportPrivateUsage = "none"
-root = "flexcore/tests"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = [ "flext-api", "flext-api/src" ]
@@ -1006,7 +993,6 @@ respect-gitignore = true
 show-fixes = true
 src = [
   "examples",
-  "flexcore",
   "flext-api",
   "flext-auth",
   "flext-cli",
@@ -1113,7 +1099,6 @@ select = [ "ALL" ]
 combine-as-imports = true
 force-single-line = false
 known-first-party = [
-  "flexcore",
   "flext",
   "flext_api",
   "flext_auth",
@@ -1320,9 +1305,6 @@ all = true
 in_place = true
 sort_first = [ "build-system", "dependency-groups", "project", "tool" ]
 
-[tool.uv.sources.flexcore]
-workspace = true
-
 [tool.uv.sources.flext-api]
 workspace = true
 
@@ -1418,7 +1400,6 @@ workspace = true
 
 [tool.uv.workspace]
 members = [
-  "flexcore",
   "flext-api",
   "flext-auth",
   "flext-cli",

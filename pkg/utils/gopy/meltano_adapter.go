@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	// "github.com/flext-sh/flexcore/pkg/runtimes/meltano/application/services" // Disabled - cross-module dependency
+	// "github.com/datacosmos-br/flexcore/pkg/runtimes/meltano/application/services" // Disabled - cross-module dependency
 	"github.com/flext-sh/flext/pkg/infrastructure/logging"
 )
 

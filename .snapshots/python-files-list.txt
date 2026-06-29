@@ -3,16 +3,6 @@
 ./examples/acl_processing_example.py
 ./examples/advanced_processing_example.py
 ./examples/complete_workflow_example.py
-./flexcore/src/flexcore/core.py
-./flexcore/src/flexcore/__version__.py
-./flexcore/src/flexcore/__init__.py
-./flexcore/tests/unit/__init__.py
-./flexcore/tests/unit/test_conftest_configuration.py
-./flexcore/tests/unit/test_core.py
-./flexcore/tests/unit/test_init.py
-./flexcore/tests/__init__.py
-./flexcore/vendor/github.com/ugorji/go/codec/test.py
-./flexcore/conftest.py
 ./flext-api/docs/pydantic-v2-modernization/audit_pydantic_v2.py
 ./flext-api/examples/01_basic_usage.py
 ./flext-api/src/flext_api/protocol_impls/base.py

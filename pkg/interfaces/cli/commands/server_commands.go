@@ -131,10 +131,9 @@ func (c *ServerStartCommand) isServerRunning() bool {
 func (c *ServerStartCommand) findServerExecutable() (string, error) {
 	// Try common paths
 	paths := []string{
-		"./cmd/flext/flext",
-		"./flext",
-		"/usr/local/bin/flext",
-		"/usr/bin/flext",
+		"./flexcontrol",
+		"/usr/local/bin/flexcontrol",
+		"/usr/bin/flexcontrol",
 	}
 
 	for _, path := range paths {
@@ -143,17 +142,7 @@ func (c *ServerStartCommand) findServerExecutable() (string, error) {
 		}
 	}
 
-	// Try building from source if go.mod exists
-	if _, err := os.Stat("go.mod"); err == nil {
-		fmt.Println("Building server from source...")
-		buildCmd := exec.Command("go", "build", "-o", "./flext", "./cmd/flext")
-		if err := buildCmd.Run(); err != nil {
-			return "", fmt.Errorf("failed to build server: %w", err)
-		}
-		return "./flext", nil
-	}
-
-	return "", fmt.Errorf("server executable not found")
+	return "", fmt.Errorf("flexcontrol executable not found; install it from https://github.com/datacosmos-br/flexcontrol")
 }
 
 // ServerStatusCommand comando para verificar status do servidor
