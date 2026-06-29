@@ -97,15 +97,30 @@ settings = FlextCliSettings.fetch_global()
 
 ## Testing
 
-```python
-from __future__ import annotations
+```python notest
+# Illustrative test sketch — real CLI tests require a Typer app, command group,
+# and runner assembled via FlextCliCli.create_app_with_common_params/create_group/
+# register_command/add_group/create_cli_runner.
+from flext_cli import m, t, u
+from flext_cli.services.cli import FlextCliCli
+from flext_cli.settings import FlextCliSettings
 
-from typer.testing import CliRunner
 
-# `app` is the Typer application built with FlextCliCli.model_command.
-runner = CliRunner()
-result = runner.invoke(app, ["greet", "--name", "Ada"])
-assert result.exit_code == 0
+class GreetInput(m.BaseModel):
+    name: str
+
+
+def greet_handler(model: GreetInput) -> t.JsonValue:
+    return {"message": f"Hello, {model.name}!"}
+
+
+settings = FlextCliSettings.fetch_global()
+command = FlextCliCli.model_command(
+    model_cls=GreetInput,
+    handler=greet_handler,
+    settings=settings,
+)
+_ = command
 ```
 
 ## Good
