@@ -26,6 +26,9 @@ from scripts.dispatch import Dispatch
 from flext_tests import m, u
 
 
+_VALIDATE_SCOPES: tuple[str, ...] = ("project", "workspace", "all")
+
+
 class FlextRootValAllCommand:
     """Run validation gates for the selected scope."""
 
@@ -52,11 +55,12 @@ class FlextRootValAllCommand:
         @property
         def targets(self) -> tuple[str, ...]:
             """Return the private Make targets for the validated scope."""
-            if self.scope == "workspace":
-                return ("_val_workspace",)
-            if self.scope == "project":
-                return ("_val_project",)
-            return ("_val_workspace", "_val_project")
+            mapping: dict[str, tuple[str, ...]] = {
+                "workspace": ("_val_workspace",),
+                "project": ("_val_project",),
+                "all": ("_val_workspace", "_val_project"),
+            }
+            return mapping.get(self.scope, mapping["project"])
 
     @staticmethod
     def run() -> int:
