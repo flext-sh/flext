@@ -47,3 +47,5 @@ dolt:
 # - github.repo
 
 dolt.database: "mro"
+
+sync.remote: "git+https://github.com/flext-sh/flext.git"
