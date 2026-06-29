@@ -78,7 +78,7 @@ FLEXT is built using modern architectural patterns:
 - **Domain-Driven Design** for business logic modeling
 - **Railway-Oriented Programming** for error handling
 - **CQRS** and **Event Sourcing** for data processing
-- **Microservices** architecture with Go and Python components
+- **Microservices** architecture with Python services
 
 ## 🏗️ Key Architectural Components
 
@@ -111,8 +111,7 @@ FLEXT is built using modern architectural patterns:
 
 ### Runtime Layer
 
-- **FlexCore** - Go-based runtime container (port 8080)
-- **FLEXT Service** - Python-based plugin execution (port 8081)
+- **FLEXT Service** - Python-based plugin and pipeline execution
 
 ## 📊 Diagram Types
 

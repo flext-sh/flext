@@ -236,7 +236,7 @@ def _parse_value(text: str) -> int:
 
 def _looks_like_project(path: Path) -> bool:
     # Skip docstring HERE—obvious from name
-    return (path / "Makefile").exists() or (path / "go.mod").exists()
+    return (path / "Makefile").exists() or (path / "pyproject.toml").exists()
 ```
 
 ---

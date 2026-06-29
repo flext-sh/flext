@@ -599,7 +599,7 @@ _scan: ## Run all security checks in all projects
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb scan $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(ORCHESTRATOR_PROJECTS)
 
-_fmt: ## Run code formatting across all workspace projects (ruff/gofmt + markdownlint)
+_fmt: ## Run code formatting across all workspace projects (ruff + markdownlint)
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)_fmt_apply=0; \
@@ -618,34 +618,6 @@ _fmt: ## Run code formatting across all workspace projects (ruff/gofmt + markdow
 		ruff format $$_fmt_target --quiet; \
 	else \
 		ruff format $$_fmt_target --check; \
-	fi
-	$(Q)_fmt_apply=0; \
-	if [ "$(APPLY)" = "Y" ] || [ "$(FIX)" = "1" ]; then _fmt_apply=1; fi; \
-	go_files=$$(find $(WORKSPACE_SELECTED_ROOTS) -type f -name '*.go' ! -path '*/.git/*' ! -path '*/vendor/*' ! -path '*/.venv/*' ! -path '*/.cache/*'); \
-	if [ -n "$$go_files" ]; then \
-		if [ "$$_fmt_apply" = "1" ]; then \
-			echo "Formatting Go files (gofmt)..."; \
-			printf '%s\n' "$$go_files" | xargs -r gofmt -w; \
-			if command -v goimports >/dev/null 2>&1; then \
-				printf '%s\n' "$$go_files" | xargs -r goimports -w; \
-			fi; \
-		else \
-			echo "Checking Go formatting (gofmt)..."; \
-			gofmt_out=$$(printf '%s\n' "$$go_files" | xargs -r gofmt -l); \
-			if [ -n "$$gofmt_out" ]; then \
-				echo "Go files require formatting:"; \
-				printf '%s\n' "$$gofmt_out"; \
-				exit 1; \
-			fi; \
-			if command -v goimports >/dev/null 2>&1; then \
-				goimports_out=$$(printf '%s\n' "$$go_files" | xargs -r goimports -l); \
-				if [ -n "$$goimports_out" ]; then \
-					echo "Go files require goimports formatting:"; \
-					printf '%s\n' "$$goimports_out"; \
-					exit 1; \
-				fi; \
-			fi; \
-		fi; \
 	fi
 	$(Q)_fmt_apply=0; \
 	if [ "$(APPLY)" = "Y" ] || [ "$(FIX)" = "1" ]; then _fmt_apply=1; fi; \

@@ -6,7 +6,7 @@
 
 - [FLEXT Component Diagrams](#flext-component-diagrams)
   - [Overview](#overview)
-  - [1. FlexCore Runtime Container Components](#1-flexcore-runtime-container-components)
+  - [1. Pipeline Runtime Service Components](#1-pipeline-runtime-service-components)
   - [2. FLEXT Core Service Components](#2-flext-core-service-components)
   - [3. API Gateway Components](#3-api-gateway-components)
   - [4. LDAP Service Components](#4-ldap-service-components)
@@ -18,7 +18,7 @@
     - [4. CQRS Pattern](#4-cqrs-pattern)
     - [5. Railway Pattern](#5-railway-pattern)
   - [Technology Stack by Component](#technology-stack-by-component)
-    - [Go Components (FlexCore)](#go-components-flexcore)
+    - [Runtime Components](#runtime-components)
     - [Python Components (FLEXT Services)](#python-components-flext-services)
     - [Common Patterns](#common-patterns)
 
@@ -27,13 +27,13 @@
 This document provides detailed component diagrams for the key containers in the FLEXT platform,
 showing how each container is composed of components and their relationships.
 
-## 1. FlexCore Runtime Container Components
+## 1. Pipeline Runtime Service Components
 
 ```mermaid
 graph TB
-    subgraph FlexCore["FlexCore Runtime Container (Go 1.24+)"]
+    subgraph PipelineRuntime["Pipeline Runtime Service (Python 3.13+)"]
         %% HTTP Layer
-        HTTPRouter[HTTP Router<br/>Gin Framework]
+        HTTPRouter[HTTP Router<br/>FLEXT API]
         Middleware[Middleware Stack<br/>CORS, Auth, Logging]
 
         %% Application Layer
@@ -52,15 +52,15 @@ graph TB
         ServiceRegistry[Service Registry<br/>Dependency Injection]
 
         %% External Interfaces
-        DatabaseConn[Database Connection<br/>PostgreSQL Driver]
+        DatabaseConn[Database Connection<br/>PostgreSQL]
         RedisConn[Redis Connection<br/>Cache Layer]
-        PythonRuntime[Python Runtime<br/>Plugin Execution]
+        PluginRuntime[Plugin Runtime<br/>Service Execution]
     end
 
     %% External Dependencies
     PostgreSQL[(PostgreSQL<br/>Event Store)]
     Redis[(Redis<br/>Cache)]
-    PythonPlugins[Python Plugins<br/>FLEXT Services]
+    PythonPlugins[FLEXT Services<br/>Plugin Execution]
 
     %% Internal Flow
     HTTPRouter --> Middleware
@@ -435,10 +435,10 @@ graph TB
 
 ## Technology Stack by Component
 
-### Go Components (FlexCore)
+### Runtime Components
 
-- **Framework**: Gin for HTTP routing
-- **Database**: PostgreSQL driver with connection pooling
+- **Framework**: FLEXT API routing and service abstractions
+- **Database**: PostgreSQL access with connection pooling
 - **Cache**: Redis client with clustering support
 - **Logging**: Structured logging with context propagation
 

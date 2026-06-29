@@ -5,7 +5,7 @@
 # what = "fmt"
 # domain = "quality"
 # summary = "Run formatting gates"
-# description = "Runs ruff, gofmt/goimports and markdownlint over current selection."
+# description = "Runs ruff and markdownlint over current selection."
 # example = "make check WHAT=fmt APPLY=Y"
 # target = "_fmt"
 # mutates = true

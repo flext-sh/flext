@@ -48,7 +48,7 @@ FLEXT is an enterprise-grade data integration platform built with:
 - **Railway-Oriented Programming** for error handling
 - **CQRS** and **Event Sourcing** for data processing
 - **Dependency Injection** for loose coupling
-- **Microservices** architecture with Go and Python components
+- **Microservices** architecture with Python services
 
 ## 🏗️ Key Architectural Patterns
 
@@ -81,8 +81,7 @@ FLEXT is an enterprise-grade data integration platform built with:
 
 ### Runtime Layer
 
-- **FlexCore** - Go-based runtime container (port 8080)
-- **FLEXT Service** - Python-based plugin execution (port 8081)
+- **FLEXT Service** - Python-based plugin and pipeline execution
 
 ## 📊 Architecture Quality Attributes
 
@@ -91,7 +90,7 @@ FLEXT is an enterprise-grade data integration platform built with:
 - **Maintainability**: Clean Architecture with clear boundaries
 - **Testability**: Dependency injection and comprehensive testing
 - **Security**: Authentication, authorization, and secure communication
-- **Performance**: Optimized Go runtime with Python business logic
+- **Performance**: Optimized Python service runtime for data workloads
 
 ## 🔗 Related Documentation
 

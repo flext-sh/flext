@@ -26,11 +26,6 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: "1.24"
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -47,8 +42,6 @@ jobs:
         run: |
           set -euo pipefail
           npm install -g markdownlint-cli
-          go install github.com/securego/gosec/v2/cmd/gosec@latest
-          go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
       - name: Boot
         run: make boot

@@ -63,11 +63,6 @@
   - **Constraint**: Must use Python 3.13+ features (pattern matching, improved error messages)
   - **Impact**: Requires modern Python runtime, limits deployment options
 
-- **Go 1.24+**: High-performance runtime container and system services
-  - **Rationale**: Excellent performance for concurrent operations, strong typing
-  - **Constraint**: Must use Go 1.24+ features (generics, improved error handling)
-  - **Impact**: Requires modern Go runtime, limits deployment options
-
 #### Framework and Library Constraints
 
 - **flext-core**: Foundation library for all Python components

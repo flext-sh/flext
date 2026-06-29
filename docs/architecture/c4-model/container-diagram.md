@@ -21,8 +21,8 @@
       - [Singer Taps (flext-tap-\*)](#singer-taps-flext-tap-)
       - [Singer Targets (flext-target-\*)](#singer-targets-flext-target-)
       - [DBT Transformations (flext-dbt-\*)](#dbt-transformations-flext-dbt-)
-    - [Runtime Container](#runtime-container)
-      - [FlexCore Runtime](#flexcore-runtime)
+    - [Runtime Service](#runtime-service)
+      - [Pipeline Runtime](#pipeline-runtime)
     - [Quality and Observability](#quality-and-observability)
       - [Quality Service (flext-quality)](#quality-service-flext-quality)
       - [Observability Service (flext-observability)](#observability-service-flext-observability)
@@ -86,8 +86,8 @@ graph TB
         SingerTargets[Singer Targets<br/>flext-target-*<br/>Data Loading]
         DBTTransformations[DBT Transformations<br/>flext-dbt-*<br/>Data Transformation]
 
-        %% Runtime Container
-        FlexCore[FlexCore Runtime<br/>Go 1.24+<br/>Port 8080]
+        %% Runtime Service
+        PipelineRuntime[Pipeline Runtime<br/>Python 3.13+<br/>Service Layer]
 
         %% Quality and Observability
         QualityService[Quality Service<br/>flext-quality<br/>Port 8086]
@@ -131,11 +131,11 @@ graph TB
     APIGateway --> QualityService
     APIGateway --> ObservabilityService
 
-    %% FlexCore Integration
-    FlexCore --> APIGateway
-    FlexCore --> SingerTaps
-    FlexCore --> SingerTargets
-    FlexCore --> DBTTransformations
+    %% Runtime Integration
+    PipelineRuntime --> APIGateway
+    PipelineRuntime --> SingerTaps
+    PipelineRuntime --> SingerTargets
+    PipelineRuntime --> DBTTransformations
 
     %% Service Dependencies
     LDAPService --> CoreService
@@ -171,7 +171,7 @@ graph TB
 
     class DataEngineers,SystemAdmins,BusinessUsers,Developers user
     class WebUI,APIGateway,AuthService,CoreService,LDAPService,LDIFService,OracleService,SingerTaps,SingerTargets,
-    DBTTransformations,FlexCore,QualityService,ObservabilityService,CLITool container
+    DBTTransformations,PipelineRuntime,QualityService,ObservabilityService,CLITool container
     class PostgreSQL,Redis,FileStorage storage
     class LDAPSystems,OracleSystems,FileSystems,MonitoringSystems external
 ```
@@ -294,14 +294,13 @@ graph TB
   - Testing and validation
   - Documentation generation
 
-### Runtime Container
+### Runtime Service
 
-#### FlexCore Runtime
+#### Pipeline Runtime
 
-- **Technology**: Go 1.24+ with Gin framework
-- **Port**: 8080
+- **Technology**: Python 3.13+ with FLEXT service abstractions
 - **Responsibilities**:
-  - High-performance runtime container
+  - Pipeline runtime coordination
   - Plugin execution and management
   - Service orchestration and coordination
   - Event sourcing and CQRS patterns
@@ -389,14 +388,12 @@ graph TB
 ### Programming Languages
 
 - **Python 3.13+**: Primary language for business logic and data processing
-- **Go 1.24+**: High-performance runtime container and system services
 - **TypeScript**: Frontend web application
 
 ### Frameworks and Libraries
 
 - **flext-core**: Foundation library with architectural patterns
 - **FastAPI**: Modern Python web framework
-- **Gin**: High-performance Go web framework
 - **React**: Frontend user interface framework
 
 ### Data Storage

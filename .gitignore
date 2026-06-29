@@ -1,6 +1,6 @@
 # ============================================================================
 # FLEXT WORKSPACE - AGGRESSIVE WHITELIST .gitignore
-# Multi-language monorepo: Python 3.13+ | Go 1.21+ | Docker | Singer/Meltano
+# Multi-language monorepo: Python 3.13+ | Docker | Singer/Meltano
 # Strategy: Block everything by default, explicitly allow only needed files
 # ============================================================================
 
@@ -23,8 +23,6 @@
 !docs/
 !examples/
 !.github/
-!cmd/
-!pkg/
 !src/
 !tests/
 !typings/
@@ -73,11 +71,6 @@ scripts/maintenance/
 !.mise.toml
 !.default-python-packages
 
-# Go configuration
-!go.mod
-!gopy.mod
-!go.sum
-
 # Docker configuration
 !.dockerignore
 
@@ -115,8 +108,6 @@ scripts/maintenance/
 !docs/**
 !examples/**
 !.github/**
-!cmd/**
-!pkg/**
 !src/**
 !tests/**
 !typings/**
@@ -224,7 +215,7 @@ fix-report.json
 **/ENV/
 **/.virtualenv/
 
-# Go build artifacts inside allowed directories
+# Native build artifacts inside allowed directories
 **/*.exe
 **/*.exe~
 **/*.dll
