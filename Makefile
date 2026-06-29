@@ -120,7 +120,7 @@ WORKSPACE_PYTHONPATH := $(shell \
 		[ "$$skip" = "0" ] && [ -d "$(CURDIR)/$$d/src" ] && printf "$(CURDIR)/$$d/src:"; \
 	done)$(CURDIR)/src
 WORKSPACE_PYTHON := env -u PYTHONPATH -u MYPYPATH PYTHONPATH="$(WORKSPACE_PYTHONPATH)" $(PY)
-FLEXT_MAKE_DISPATCH := FLEXT_WORKSPACE_ROOT="$(CURDIR)" PROJECT="$(PROJECT)" PROJECTS="$(PROJECTS)" WHAT="$(WHAT)" PYTEST_ARGS="$(PYTEST_ARGS)" VALIDATE_SCOPE="$(VALIDATE_SCOPE)" DOCS_PHASE="$(DOCS_PHASE)" FAIL_FAST="$(FAIL_FAST)" JOBS="$(JOBS)" CHECK_GATES="$(CHECK_GATES)" VALIDATE_GATES="$(VALIDATE_GATES)" SCOPE="$(SCOPE)" NAMESPACE="$(NAMESPACE)" GATES="$(GATES)" PROPAGATE="$(PROPAGATE)" FIX="$(FIX)" FILE="$(FILE)" FILES="$(FILES)" CHANGED_ONLY="$(CHANGED_ONLY)" MATCH="$(MATCH)" RUFF_ARGS="$(RUFF_ARGS)" PYRIGHT_ARGS="$(PYRIGHT_ARGS)" CHECK_ONLY="$(CHECK_ONLY)" RELEASE_PHASE="$(RELEASE_PHASE)" INTERACTIVE="$(INTERACTIVE)" DRY_RUN="$(DRY_RUN)" PUSH="$(PUSH)" VERSION="$(VERSION)" MESSAGE="$(MESSAGE)" TAG="$(TAG)" BUMP="$(BUMP)" RELEASE_DEV_SUFFIX="$(RELEASE_DEV_SUFFIX)" RELEASE_NEXT_DEV="$(RELEASE_NEXT_DEV)" RELEASE_NEXT_BUMP="$(RELEASE_NEXT_BUMP)" CREATE_BRANCHES="$(CREATE_BRANCHES)" PR_ACTION="$(PR_ACTION)" PR_BASE="$(PR_BASE)" PR_HEAD="$(PR_HEAD)" PR_NUMBER="$(PR_NUMBER)" PR_TITLE="$(PR_TITLE)" PR_BODY="$(PR_BODY)" PR_DRAFT="$(PR_DRAFT)" PR_MERGE_METHOD="$(PR_MERGE_METHOD)" PR_AUTO="$(PR_AUTO)" PR_DELETE_BRANCH="$(PR_DELETE_BRANCH)" PR_CHECKS_STRICT="$(PR_CHECKS_STRICT)" PR_RELEASE_ON_MERGE="$(PR_RELEASE_ON_MERGE)" PR_INCLUDE_ROOT="$(PR_INCLUDE_ROOT)" PR_CHECKPOINT="$(PR_CHECKPOINT)" DEPS_REPORT="$(DEPS_REPORT)" VERBOSE="$(VERBOSE)" PYTHONPATH="$(WORKSPACE_PYTHONPATH)" uv run --all-packages python -m scripts.dispatch
+FLEXT_MAKE_DISPATCH := FLEXT_WORKSPACE_ROOT="$(CURDIR)" PROJECT="$(PROJECT)" PROJECTS="$(PROJECTS)" WHAT="$(WHAT)" PYTEST_ARGS="$(PYTEST_ARGS)" VALIDATE_SCOPE="$(VALIDATE_SCOPE)" DOCS_PHASE="$(DOCS_PHASE)" FAIL_FAST="$(FAIL_FAST)" JOBS="$(JOBS)" CHECK_GATES="$(CHECK_GATES)" VALIDATE_GATES="$(VALIDATE_GATES)" SCOPE="$(SCOPE)" NAMESPACE="$(NAMESPACE)" GATES="$(GATES)" PROPAGATE="$(PROPAGATE)" FIX="$(FIX)" FILE="$(FILE)" FILES="$(FILES)" CHANGED_ONLY="$(CHANGED_ONLY)" MATCH="$(MATCH)" RUFF_ARGS="$(RUFF_ARGS)" PYRIGHT_ARGS="$(PYRIGHT_ARGS)" CHECK_ONLY="$(CHECK_ONLY)" RELEASE_PHASE="$(RELEASE_PHASE)" INTERACTIVE="$(INTERACTIVE)" DRY_RUN="$(DRY_RUN)" PUSH="$(PUSH)" VERSION="$(VERSION)" MESSAGE="$(MESSAGE)" TAG="$(TAG)" BUMP="$(BUMP)" RELEASE_DEV_SUFFIX="$(RELEASE_DEV_SUFFIX)" RELEASE_NEXT_DEV="$(RELEASE_NEXT_DEV)" RELEASE_NEXT_BUMP="$(RELEASE_NEXT_BUMP)" CREATE_BRANCHES="$(CREATE_BRANCHES)" PR_ACTION="$(PR_ACTION)" PR_BASE="$(PR_BASE)" PR_HEAD="$(PR_HEAD)" PR_NUMBER="$(PR_NUMBER)" PR_TITLE="$(PR_TITLE)" PR_BODY="$(PR_BODY)" PR_DRAFT="$(PR_DRAFT)" PR_MERGE_METHOD="$(PR_MERGE_METHOD)" PR_AUTO="$(PR_AUTO)" PR_DELETE_BRANCH="$(PR_DELETE_BRANCH)" PR_CHECKS_STRICT="$(PR_CHECKS_STRICT)" PR_RELEASE_ON_MERGE="$(PR_RELEASE_ON_MERGE)" PR_INCLUDE_ROOT="$(PR_INCLUDE_ROOT)" PR_CHECKPOINT="$(PR_CHECKPOINT)" DEPS_REPORT="$(DEPS_REPORT)" VERBOSE="$(VERBOSE)" PR_BRANCH="$(PR_BRANCH)" PYTHONPATH="$(WORKSPACE_PYTHONPATH)" uv run --all-packages python -m scripts.dispatch
 WORKSPACE_FLEXT_INFRA := FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(WORKSPACE_PYTHON) -m flext_infra
 WORKSPACE_INFRA_CHECK := $(WORKSPACE_FLEXT_INFRA) check
 WORKSPACE_INFRA_CODEGEN := $(WORKSPACE_FLEXT_INFRA) codegen
@@ -283,7 +283,7 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help boot _boot_default build _build_default _up _mod _constraints docs _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination coordination makefile status test _test_default val clean _clean_default ship _rel _pr _save _tag _push _imp _stat
+.PHONY: help boot _boot_default build _build_default _up _mod _constraints docs _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination coordination makefile status _status test _test_default val clean _clean_default ship _rel _pr _save _tag _push _imp _stat
 
 help: ## Show registry-driven workspace verbs
 	$(Q)$(FLEXT_MAKE_DISPATCH) help
@@ -537,6 +537,11 @@ makefile: ## Show promoted scripts command surface (WHAT=all)
 
 status: ## Show Beads status (WHAT=all)
 	$(Q)$(FLEXT_MAKE_DISPATCH) status
+
+_status: ## Show Beads status
+	$(Q)bd status --json
+	$(Q)bd dolt show
+	$(Q)bd backup status --json
 
 _cqrs: ## Enforce strict CQRS/FlextModels patterns across ecosystem
 	$(Q).github/scripts/check-cqrs-compliance.sh

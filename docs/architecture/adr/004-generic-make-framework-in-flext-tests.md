@@ -45,15 +45,22 @@ but it must not own the generic command registry library.
 - Heavy shell recipes remain private Make targets such as `_check_default`,
   `_test_default`, `_docs`, and `_clean_default`. Promoted command metadata may
   point to those private targets with `target = "..."`.
+- A promoted command that declares `target = "..."` is metadata-only: no
+  executable Python body may appear after the `flext-command` header. The
+  generic `flext-tests` Make contract validates this so root scripts stay thin.
 - Commands that mutate only for specific parameter values declare those
   predicates with `mutates_when`; the generic `flext-tests` registry validates
   the referenced params and renders them as conditional mutation in help.
+- Governance/read-only shell sequences also go through private targets, for
+  example `_status` and `_coordination`, rather than duplicating process lists
+  in promoted scripts.
 - `make docs DOCS_PHASE=<phase>` is a first-class registry-backed public verb.
   `make build WHAT=docs` remains a build-domain route to the same private
   `_docs` recipe.
 - `FLEXT_MAKE_DISPATCH` is intentionally distinct from hub wrapper variables
   such as `WORKSPACE_DISPATCH` so the optional `workspace_custom.mk` include
-  cannot override the FLEXT command path.
+  cannot override the FLEXT command path. It forwards declared workspace
+  variables consumed by promoted commands, including the generated `PR_BRANCH`.
 - Workspace project inventory is computed only from declared sources:
   `.gitmodules`, `tool.flext.workspace.members`, and
   `tool.uv.workspace.members`.

@@ -14,6 +14,19 @@ from flext_tests import c, u
 from scripts.dispatch import Dispatch
 
 
+def _snapshot_env(keys: tuple[str, ...]) -> dict[str, str | None]:
+    """Return a typed snapshot for environment keys mutated by a test."""
+    return {key: os.environ.get(key) for key in keys}
+
+
+def _restore_env(snapshot: dict[str, str | None]) -> None:
+    """Restore environment keys from a typed snapshot."""
+    for key, value in snapshot.items():
+        os.environ.pop(key, None)
+        if value is not None:
+            os.environ[key] = value
+
+
 @pytest.fixture(scope="module")
 def registry() -> Dispatch.Registry:
     return Dispatch.discover()
@@ -39,18 +52,51 @@ def test_single_domain_per_verb(registry: Dispatch.Registry) -> None:
         assert len(domains) == 1, f"verb {verb!r} has multiple domains: {domains}"
 
 
-def test_known_mutating_command_declares_apply(registry: Dispatch.Registry) -> None:
-    push = u.Tests.make_registry_command(registry, "ship", "push").unwrap()
-    assert push.mutates is True
-    assert any(p.name == "APPLY" for p in push.params), (
-        "mutating command must declare APPLY param"
-    )
+def test_all_mutating_commands_declare_required_apply(
+    registry: Dispatch.Registry,
+) -> None:
+    """Assert every mutating command exposes the dispatcher mutation opt-in."""
+    for verb in u.Tests.make_registry_verbs(registry):
+        commands = u.Tests.make_registry_commands(registry, verb).unwrap()
+        for command in commands.values():
+            if not command.mutates:
+                continue
+            apply_param = next(
+                (
+                    param
+                    for param in command.params
+                    if param.name == c.Tests.MAKE_APPLY_PARAM
+                ),
+                None,
+            )
+            assert apply_param is not None, (
+                f"{command.verb} WHAT={command.what} must declare APPLY"
+            )
+            assert apply_param.required is True, (
+                f"{command.verb} WHAT={command.what} APPLY must be required"
+            )
+            assert c.Tests.MAKE_DISPATCH_ENV_VALUE in apply_param.choices, (
+                f"{command.verb} WHAT={command.what} APPLY choices must include Y"
+            )
 
 
 def test_known_readonly_command(registry: Dispatch.Registry) -> None:
     check_all = u.Tests.make_registry_command(registry, "check", "all").unwrap()
     assert check_all.mutates is False
     assert check_all.domain == "quality"
+
+
+def test_workspace_governance_verbs_use_target_metadata(
+    registry: Dispatch.Registry,
+) -> None:
+    expected_targets = {
+        ("clean", "all"): "_clean_default",
+        ("coordination", "all"): "_coordination",
+        ("status", "all"): "_status",
+    }
+    for key, target in expected_targets.items():
+        command = u.Tests.make_registry_command(registry, *key).unwrap()
+        assert command.target == target
 
 
 def test_docs_command_declares_conditional_mutation(
@@ -98,7 +144,7 @@ def test_target_env_overrides_makeflags_cli_values(
         "CHECK_GATES",
         "MAKEFLAGS",
     )
-    original: dict[str, str | None] = {key: os.environ.get(key) for key in keys}
+    original = _snapshot_env(keys)
     try:
         os.environ[c.Tests.MAKE_SURFACE_VALIDATE_ENV] = c.Tests.MAKE_DISPATCH_ENV_VALUE
         os.environ[c.Tests.MAKE_WHAT_PARAM] = "pyrefly"
@@ -110,11 +156,7 @@ def test_target_env_overrides_makeflags_cli_values(
         output = capsys.readouterr().out
         assert "SURFACE-VALIDATE: make _check_default CHECK_GATES=pyrefly" in output
     finally:
-        for key, value in original.items():
-            if value is None:
-                os.environ.pop(key, None)
-            else:
-                os.environ[key] = value
+        _restore_env(original)
 
 
 def test_docs_fix_opt_in_reaches_private_docs_target(
@@ -126,7 +168,7 @@ def test_docs_fix_opt_in_reaches_private_docs_target(
         "DOCS_PHASE",
         "FIX",
     )
-    original = tuple((key, os.environ.get(key)) for key in keys)
+    original = _snapshot_env(keys)
     try:
         os.environ[c.Tests.MAKE_SURFACE_VALIDATE_ENV] = c.Tests.MAKE_DISPATCH_ENV_VALUE
         os.environ[c.Tests.MAKE_WHAT_PARAM] = "all"
@@ -138,11 +180,115 @@ def test_docs_fix_opt_in_reaches_private_docs_target(
         output = capsys.readouterr().out
         assert "SURFACE-VALIDATE: make _docs DOCS_PHASE=fix FIX=1" in output
     finally:
-        for key, value in original:
-            if value is None:
-                os.environ.pop(key, None)
-            else:
-                os.environ[key] = value
+        _restore_env(original)
+
+
+def test_status_reaches_private_status_target(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    keys = (
+        c.Tests.MAKE_SURFACE_VALIDATE_ENV,
+        c.Tests.MAKE_WHAT_PARAM,
+    )
+    original = _snapshot_env(keys)
+    try:
+        os.environ[c.Tests.MAKE_SURFACE_VALIDATE_ENV] = c.Tests.MAKE_DISPATCH_ENV_VALUE
+        os.environ[c.Tests.MAKE_WHAT_PARAM] = "all"
+
+        assert Dispatch.main(("status",)) == 0
+
+        output = capsys.readouterr().out
+        assert "SURFACE-VALIDATE: make _status" in output
+    finally:
+        _restore_env(original)
+
+
+def test_clean_without_apply_stays_dry_run(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    keys = (
+        c.Tests.MAKE_APPLY_PARAM,
+        c.Tests.MAKE_WHAT_PARAM,
+    )
+    original = _snapshot_env(keys)
+    try:
+        os.environ.pop(c.Tests.MAKE_APPLY_PARAM, None)
+        os.environ[c.Tests.MAKE_WHAT_PARAM] = "all"
+
+        assert Dispatch.main(("clean",)) == 0
+
+        output = capsys.readouterr().out
+        assert "DRY-RUN: nenhuma mutacao executada." in output
+        assert "make clean WHAT=all" in output
+    finally:
+        _restore_env(original)
+
+
+@pytest.mark.parametrize(
+    ("verb", "what", "target", "requires_apply", "env_updates"),
+    [
+        ("clean", "all", "_clean_default", True, ()),
+        ("coordination", "all", "_coordination", False, ()),
+        ("status", "all", "_status", False, ()),
+        ("ship", "all", "_rel", True, ()),
+        ("ship", "rel", "_rel", True, ()),
+        ("ship", "pr", "_pr", True, ()),
+        (
+            "ship",
+            "save",
+            "_save",
+            True,
+            (("MESSAGE", "chore: surface validation"),),
+        ),
+        (
+            "ship",
+            "tag",
+            "_tag",
+            True,
+            (("DRY_RUN", "1"), ("TAG", "surface-validation")),
+        ),
+        (
+            "ship",
+            "push",
+            "_push",
+            True,
+            (("DRY_RUN", "1"),),
+        ),
+    ],
+)
+def test_release_status_coordination_routes_reach_private_targets(
+    capsys: pytest.CaptureFixture[str],
+    verb: str,
+    what: str,
+    target: str,
+    requires_apply: bool,
+    env_updates: tuple[tuple[str, str], ...],
+) -> None:
+    keys = (
+        c.Tests.MAKE_SURFACE_VALIDATE_ENV,
+        c.Tests.MAKE_WHAT_PARAM,
+        c.Tests.MAKE_APPLY_PARAM,
+        "DRY_RUN",
+        "MESSAGE",
+        "TAG",
+    )
+    original = _snapshot_env(keys)
+    try:
+        os.environ[c.Tests.MAKE_SURFACE_VALIDATE_ENV] = c.Tests.MAKE_DISPATCH_ENV_VALUE
+        os.environ[c.Tests.MAKE_WHAT_PARAM] = what
+        if requires_apply:
+            os.environ[c.Tests.MAKE_APPLY_PARAM] = c.Tests.MAKE_DISPATCH_ENV_VALUE
+        else:
+            os.environ.pop(c.Tests.MAKE_APPLY_PARAM, None)
+        for key, value in env_updates:
+            os.environ[key] = value
+
+        assert Dispatch.main((verb,)) == 0
+
+        output = capsys.readouterr().out
+        assert f"SURFACE-VALIDATE: make {target}" in output
+    finally:
+        _restore_env(original)
 
 
 def _registry_command_or_raise(
