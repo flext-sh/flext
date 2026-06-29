@@ -25,6 +25,12 @@ Use the `FlextTypes` hierarchy:
 ### Rule 2: PEP 695 type aliases
 
 ```python
+from __future__ import annotations
+
+from collections.abc import Mapping
+
+from flext_core import t
+
 type UserIds = list[t.AutoStr]
 type ConfigMap = Mapping[str, t.JsonValue]
 ```
@@ -34,6 +40,8 @@ Runtime narrowing uses `u.is_*` helpers (e.g., `u.is_str_list`).
 ### Rule 3: TypeVars at module level only
 
 ```python
+from __future__ import annotations
+
 from typing import TypeVar
 
 T = TypeVar("T")
@@ -57,7 +65,10 @@ T_co = TypeVar("T_co", covariant=True)
 ### Rule 6: Annotated validation
 
 ```python
+from __future__ import annotations
+
 from typing import Annotated
+
 from pydantic import Field
 
 name = Annotated[str, Field(min_length=1)]

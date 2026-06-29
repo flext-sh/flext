@@ -45,17 +45,23 @@ Repository-native implementation patterns for result flow, DI, logging, and type
 ### Error handling
 
 ```python
+from __future__ import annotations
+
+raw = "not-an-int"
 try:
     value = int(raw)
 except ValueError as exc:
-    raise e.ValidationError("invalid integer") from exc
+    raise ValueError("invalid integer") from exc
 ```
 
 ### Logging
 
 ```python
+from __future__ import annotations
+
 from flext_core import u
 
+user_id = 42
 logger = u.fetch_logger(__name__)
 logger.info("user.created", user_id=user_id)
 ```
@@ -63,32 +69,38 @@ logger.info("user.created", user_id=user_id)
 ### Result flow
 
 ```python
+from __future__ import annotations
+
 from flext_core import r
 
 
-def load(user_id: int) -> r[m.User]: ...
+def load(user_id: int) -> r[str]: ...
 ```
 
 ## Bad examples
 
-```python
+```python notest
+# Illustrative anti-pattern: bare except/pass.
 try:
     ...
 except:
     pass
 ```
 
-```python
+```python notest
+# Illustrative anti-pattern: print() in library code.
 print("debug")
 ```
 
-```python
+```python notest
+# Illustrative anti-pattern: debugger left in committed code.
 import pdb
 
 pdb.set_trace()
 ```
 
-```python
+```python notest
+# Illustrative anti-pattern: raw error dict instead of r[T].
 def load(user_id: int) -> dict[str, object]:
     return {"ok": False, "error": "not found"}
 ```

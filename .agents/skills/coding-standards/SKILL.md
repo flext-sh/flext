@@ -77,16 +77,19 @@ Settings classes (`FlextSettings`, `FlextCliSettings`, etc.) have no short alias
 **Good:**
 
 ```python
-from flext_core import c, m, r, t, u
+from __future__ import annotations
+
+from flext_core import c, r, t, u
 
 
-def fetch() -> r[m.User]:
-    return u.http_get(...)
+def fetch() -> r[t.JsonValue]:
+    return u.Result.ok({"user_id": 1})
 ```
 
 **Bad:**
 
-```python
+```python notest
+# Illustrative anti-pattern: shadowing the canonical `m` alias with the long module name.
 from flext_core import models
 
 
@@ -124,7 +127,8 @@ from flext_ldap import constants as ldap_constants
 
 **Bad:**
 
-```python
+```python notest
+# Illustrative anti-patterns — these imports violate FLEXT import discipline.
 from .utils import helper  # relative import
 from flext_core import *  # wildcard
 from typing import Dict, List  # legacy typing
@@ -148,6 +152,8 @@ from typing import Dict, List  # legacy typing
 **Good:**
 
 ```python
+from __future__ import annotations
+
 from collections.abc import Mapping
 from flext_core import t
 
@@ -157,7 +163,8 @@ def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue: ...
 
 **Bad:**
 
-```python
+```python notest
+# Illustrative anti-pattern: legacy typing and bare Any.
 from typing import Any, Dict
 
 
@@ -170,7 +177,8 @@ Use `isinstance` with `TypeGuard` or protocol checks. Avoid `type()`.
 
 **Good:**
 
-```python
+```python notest
+# Illustrative narrowing pattern — value comes from caller context.
 from collections.abc import Mapping
 
 if isinstance(value, Mapping):
@@ -179,7 +187,8 @@ if isinstance(value, Mapping):
 
 **Bad:**
 
-```python
+```python notest
+# Illustrative anti-pattern: use isinstance(value, Mapping) instead.
 if type(value) is dict:
     ...
 ```
@@ -195,10 +204,12 @@ Fallible application paths return `r[T]`. Do not use raw exceptions or ad-hoc er
 **Good:**
 
 ```python
+from __future__ import annotations
+
 from flext_core import r
 
 
-def load_user(user_id: int) -> r[m.User]: ...
+def load_user(user_id: int) -> r[str]: ...
 
 
 result = load_user(1)
@@ -207,7 +218,8 @@ result = load_user(1)
 
 **Bad:**
 
-```python
+```python notest
+# Illustrative anti-pattern: ad-hoc error dict instead of r[T].
 def load_user(user_id: int) -> dict[str, object]:
     return {"ok": False, "error": "not found"}
 ```
@@ -221,15 +233,19 @@ Use `FlextLogger`. No `print()` in `src/`.
 **Good:**
 
 ```python
+from __future__ import annotations
+
 from flext_core import u
 
+user_id = 42
 logger = u.fetch_logger(__name__)
 logger.info("user.created", user_id=user_id)
 ```
 
 **Bad:**
 
-```python
+```python notest
+# Illustrative anti-pattern: print() in library code.
 print(f"created user {user_id}")
 ```
 
@@ -242,15 +258,19 @@ Catch specific exceptions. No bare `except:`. No empty `except/pass`.
 **Good:**
 
 ```python
+from __future__ import annotations
+
+raw = "not-an-int"
 try:
     value = int(raw)
 except ValueError as exc:
-    raise e.ValidationError("invalid integer") from exc
+    raise ValueError("invalid integer") from exc
 ```
 
 **Bad:**
 
-```python
+```python notest
+# Illustrative anti-pattern: bare except/pass swallows all errors.
 try:
     value = int(raw)
 except:
@@ -266,6 +286,8 @@ Use Pydantic v2 `BaseModel`. Validate dynamic payloads with `OptionsModel.model_
 **Good:**
 
 ```python
+from __future__ import annotations
+
 from pydantic import BaseModel, ConfigDict
 
 
@@ -277,7 +299,8 @@ class User(BaseModel):
 
 **Bad:**
 
-```python
+```python notest
+# Illustrative anti-pattern: use Pydantic BaseModel for schema payloads.
 from dataclasses import dataclass
 
 

@@ -54,7 +54,8 @@ from flext_core import c, m, r, t, u
 
 ## Bad examples
 
-```python
+```python notest
+# Illustrative anti-patterns — these imports violate FLEXT import discipline.
 from .utils import helper  # relative import
 from flext_core import *  # wildcard
 from typing import Dict, List  # legacy typing

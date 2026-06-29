@@ -44,6 +44,8 @@ Defines and enforces the FLEXT type hierarchy.
 ## Good examples
 
 ```python
+from __future__ import annotations
+
 from collections.abc import Mapping
 from flext_core import r, t
 
@@ -52,23 +54,31 @@ def parse(data: Mapping[str, t.JsonValue]) -> r[int]: ...
 ```
 
 ```python
+from __future__ import annotations
+
 from typing import TypeGuard
 
 
-def is_user(value: object) -> TypeGuard[m.User]:
-    return isinstance(value, m.User)
+class User:
+    pass
+
+
+def is_user(value: object) -> TypeGuard[User]:
+    return isinstance(value, User)
 ```
 
 ## Bad examples
 
-```python
+```python notest
+# Illustrative anti-pattern: legacy typing and bare Any.
 from typing import Any, Dict
 
 
 def parse(data: Dict[str, Any]) -> Any: ...
 ```
 
-```python
+```python notest
+# Illustrative anti-pattern: bare object/dict instead of typed contracts.
 def parse(data: dict[str, object]) -> dict[str, object]: ...
 ```
 
@@ -86,10 +96,12 @@ def parse(data: dict[str, object]) -> dict[str, object]: ...
 Fallible paths return `r[T]` from `returns`:
 
 ```python
+from __future__ import annotations
+
 from flext_core import r
 
 
-def load(user_id: int) -> r[m.User]: ...
+def load(user_id: int) -> r[str]: ...
 ```
 
 ## Suppression comments

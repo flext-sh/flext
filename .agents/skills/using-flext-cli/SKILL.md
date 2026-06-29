@@ -98,8 +98,11 @@ settings = FlextCliSettings.fetch_global()
 ## Testing
 
 ```python
+from __future__ import annotations
+
 from typer.testing import CliRunner
 
+# `app` is the Typer application built with FlextCliCli.model_command.
 runner = CliRunner()
 result = runner.invoke(app, ["greet", "--name", "Ada"])
 assert result.exit_code == 0
@@ -108,13 +111,19 @@ assert result.exit_code == 0
 ## Good
 
 ```python
+from __future__ import annotations
+
+from flext_cli import m
+
+
 class GreetInput(m.BaseModel):
     name: str
 ```
 
 ## Bad
 
-```python
+```python notest
+# Illustrative anti-pattern: ad-hoc typer function instead of model-driven command.
 import typer
 
 

@@ -3,6 +3,8 @@
 ### Use `Annotated` for reusable field constraints
 
 ```python
+from __future__ import annotations
+
 from typing import Annotated
 from pydantic import Field
 
@@ -12,6 +14,11 @@ NonEmptyStr = Annotated[str, Field(min_length=1)]
 ### Mutable defaults via `default_factory`
 
 ```python
+from __future__ import annotations
+
+from pydantic import BaseModel, Field
+
+
 class Config(BaseModel):
     tags: list[str] = Field(default_factory=list)
 ```
@@ -19,6 +26,8 @@ class Config(BaseModel):
 ### Cache TypeAdapters
 
 ```python
+from __future__ import annotations
+
 from functools import lru_cache
 from pydantic import TypeAdapter
 
@@ -40,6 +49,11 @@ Always guard with `isinstance(x, type) and issubclass(x, BaseModel)`.
 ### ConfigDict defaults
 
 ```python
+from __future__ import annotations
+
+from pydantic import BaseModel, ConfigDict
+
+
 class MyModel(BaseModel):
     model_config = ConfigDict(
         strict=True,

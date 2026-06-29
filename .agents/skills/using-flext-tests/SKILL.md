@@ -82,7 +82,15 @@ def test_settings_isolation(settings: FlextTestsSettings) -> None:
 ## Asserting results
 
 ```python
+from __future__ import annotations
+
 from flext_core import r
+
+
+def safe_divide(a: float, b: float) -> r[float]:
+    if b == 0:
+        return r.from_failure(ValueError("division by zero"))
+    return r.from_value(a / b)
 
 
 def test_safe_divide() -> None:
@@ -99,6 +107,8 @@ def test_safe_divide() -> None:
 When a fixture is not enough:
 
 ```python
+from __future__ import annotations
+
 from flext_core import FlextContainer, FlextSettings
 from flext_tests import FlextTestsSettings
 
@@ -110,6 +120,8 @@ FlextContainer.reset_for_testing()
 ## Good
 
 ```python
+from __future__ import annotations
+
 from flext_tests import settings_factory
 
 
@@ -122,8 +134,8 @@ def test_create_user(settings_factory) -> None:
 
 ## Bad
 
-```python
-# Mutating global singleton without resetting
+```python notest
+# Illustrative anti-pattern: mutating global singleton without resetting.
 FlextSettings.fetch_global().debug = True
 ```
 
