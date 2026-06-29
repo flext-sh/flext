@@ -64,6 +64,15 @@ but it must not own the generic command registry library.
 - Workspace project inventory is computed only from declared sources:
   `.gitmodules`, `tool.flext.workspace.members`, and
   `tool.uv.workspace.members`.
+- `flext-infra check --what <gate>` is generic workspace tooling. When no
+  explicit `--projects` value is provided, it calculates the project list from
+  the declared workspace inventory above. A caller that needs a smaller scope
+  must pass that scope explicitly.
+- The root `.pre-commit-config.yaml` is a tracked generated artifact owned by
+  `flext-infra` sync. Its hooks call
+  `uv run --all-packages python -m flext_infra` for boundary, LOC cap, and
+  manual-command validation; hooks must not call ad-hoc scripts or direct tool
+  binaries.
 - Superseded Make targets are removed from the active surface.
   Their removed body can be retained only under ignored `legado/` for local
   audit.
@@ -79,6 +88,9 @@ but it must not own the generic command registry library.
   `pyproject.toml` depends on `flext-core`.
 - External project names are not part of the workspace catalog, docs, templates,
   or promoted command helpers.
+- Workspace pre-commit validation is reproducible in any declared workspace
+  because hook project scope is computed from workspace metadata, not from
+  hardcoded project names.
 - Mutation remains explicit: command metadata must declare required `APPLY` for
   mutating commands or `mutates_when` predicates for conditional mutation, and
   the CLI boundary converts failed validations to exit 2.
@@ -95,6 +107,11 @@ but it must not own the generic command registry library.
   undeclared-project text, or removed project names in the active workspace
   surface. Declared `.gitmodules` submodules remain canonical workspace
   inventory, not undeclared-project discovery.
+- `uv run --all-packages python -m flext_infra check --what boundary` and
+  `uv run --all-packages python -m flext_infra check --what loc-cap` must pass
+  without requiring hardcoded project names.
+- `pre-commit run --config .pre-commit-config.yaml --all-files` must execute
+  only the generated `flext_infra` hooks.
 - `make help`, `make makefile WHAT=all`, `make check WHAT=help`,
   `make test PROJECT=flext-tests MATCH=<existing-test>`, and dispatcher surface
   validation must pass before closing the migration.

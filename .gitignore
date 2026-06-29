@@ -68,6 +68,7 @@ scripts/maintenance/
 !pyrefly.toml
 !poetry.lock
 !ruff-shared.toml
+!.pre-commit-config.yaml
 
 # mise toolchain pinning
 !.mise.toml
