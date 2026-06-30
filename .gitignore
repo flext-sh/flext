@@ -356,3 +356,5 @@ base.mk
 .beads-credential-key
 .worktrees/
 legado/
+# --- ai-hub workspace local environment cache ---
+.direnv/
