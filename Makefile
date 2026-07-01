@@ -283,7 +283,7 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help boot _boot_default build _build_default _up _mod _constraints docs _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination coordination makefile status _status test _test_default val clean _clean_default ship _rel _pr _tag _push _imp _stat
+.PHONY: help boot _boot_default build _build_default _up _mod _constraints docs _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination coordination makefile status _status test _test_default val clean _clean_default ship _rel _pr _save _tag _push _imp _stat
 
 help: ## Show registry-driven workspace verbs
 	$(Q)$(FLEXT_MAKE_DISPATCH) help
@@ -916,6 +916,41 @@ _clean_default: ## Clean all projects
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb clean $(if $(filter 1,$(FAIL_FAST)),--fail-fast) $(ORCHESTRATOR_PROJECTS)
 	$(Q)rm -rf .pytest_cache/ htmlcov/ .coverage* .mypy_cache/ .ruff_cache/
+
+_save: ## Commit all changes in selected projects (MESSAGE=)
+	$(Q)$(PREPARE_SELECTED_PROJECTS)
+	$(Q)if [ -z "$(MESSAGE)" ]; then \
+		echo "ERROR: MESSAGE is required. Usage: make save MESSAGE='chore: your message'"; \
+		exit 1; \
+	fi
+	$(Q)committed=0; skipped=0; failed=0; \
+	for proj in $(GIT_SELECTED_PROJECTS); do \
+		if [ -e "$$proj/.git" ]; then \
+			changes=$$(cd "$$proj" && git status --porcelain 2>/dev/null | wc -l); \
+			if [ "$$changes" -gt 0 ]; then \
+				if (cd "$$proj" && git ls-files -m -d -o --exclude-standard -z | xargs -0 -r git add -- && git commit -m "$(MESSAGE)") >/dev/null 2>&1; then \
+					echo "  ✓ $$proj"; \
+					committed=$$((committed + 1)); \
+				else \
+					echo "  ✗ $$proj (commit failed)"; \
+					failed=$$((failed + 1)); \
+				fi; \
+			else \
+				skipped=$$((skipped + 1)); \
+			fi; \
+		fi; \
+	done; \
+	root_changes=$$(git status --porcelain 2>/dev/null | wc -l); \
+	if [ "$$root_changes" -gt 0 ]; then \
+		if git ls-files -m -d -o --exclude-standard -z | xargs -0 -r git add -- && git commit -m "$(MESSAGE)" >/dev/null 2>&1; then \
+			echo "  ✓ root"; \
+			committed=$$((committed + 1)); \
+		else \
+			echo "  ✗ root (commit failed)"; \
+			failed=$$((failed + 1)); \
+		fi; \
+	fi; \
+	echo "Commit: $$committed committed, $$skipped clean, $$failed failed"
 
 _stat: ## Show git status for all declared workspace projects plus root
 	$(Q)for proj in $(ALL_PROJECTS); do \
