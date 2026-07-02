@@ -31,7 +31,7 @@ Honesty at 100%, always, backed by real evidence. "I could not" is always accept
 
 Fix every defect at the root in GitOps/source and verify green. No bypass, workaround, or suppression.
 
-### Core Rules (R0–R15)
+### Core Rules (R0–R18)
 
 - R0: Zero-tolerance for bypass/fallback/hardcode/stub. Fix root cause generically.
 - R1: Fix-forward-only. Never `git checkout/restore/reset --hard/stash/revert` another's work.
@@ -49,6 +49,8 @@ Fix every defect at the root in GitOps/source and verify green. No bypass, worka
 - R13: Change accountability — atomic, impact/risk declared, no compat shims.
 - R14: Dev/prod parity.
 - R15: Bead ledger discipline — continuous status and evidence.
+- R17: Law binds EVERY agent (subagents included, any depth). Every delegation prompt MUST embed the Supreme Rule, Supreme Law, R18, and the exact validation commands. A subagent violation is the coordinator's violation.
+- R18: Continuous-green — tree importable/collectable at EVERY instant, not just mission end. Per edit batch (≤5 files): fresh-import smoke + `ruff --no-fix` + typecheck + scoped tests, all green before next batch. Facade/public member move/rename/removal updates ALL consumers (grep-proof, workspace-wide) in the SAME batch. Broken import/collection = active incident: stop everything, fix first.
 
 ### Context-Economy Directive
 
