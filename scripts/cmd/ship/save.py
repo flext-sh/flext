@@ -41,9 +41,7 @@ def _selected_projects(workspace_root: Path) -> list[str]:
     return sorted(
         path.name
         for path in workspace_root.iterdir()
-        if path.is_dir()
-        and not path.name.startswith(".")
-        and (path / ".git").exists()
+        if path.is_dir() and not path.name.startswith(".") and (path / ".git").exists()
     )
 
 

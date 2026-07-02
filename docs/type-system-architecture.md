@@ -123,7 +123,9 @@ FlextFlextDemoMigrationEntryT = TypeVar(
 class EntryService[T: "fldif.Ldif.Entry"](Protocol):
     """Service for entry operations with generic type parameter."""
 
-    def get(self, dn: str) -> "FlextDemoMigrationProtocols.FlextDemoMigration.Result[T]": ...
+    def get(
+        self, dn: str
+    ) -> "FlextDemoMigrationProtocols.FlextDemoMigration.Result[T]": ...
 ```
 
 ### Pattern 4: Union → Protocol (Complexity Reduction)
