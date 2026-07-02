@@ -126,6 +126,18 @@ Recommended baseline for contribution work:
 - For project-level contract changes, run project-local checks before wider propagation.
 - Keep failure evidence in Beads: command, output, and exit code.
 
+### Safe validation before production (universal)
+
+- Validations and tests must be REAL — they execute the actual code path — yet
+  must never mutate the active workspace or environment. Anything that would
+  write outside the bead lane runs in an isolated sandbox (`pytester`,
+  `tmp_path`, temp-dir synthetic packages); evidence artifacts under
+  `.beads/artifacts/` are the only permitted side effects.
+- Activating a behavior/enforcement change as the workspace or production
+  default is a SEPARATE, explicit final gate: allowed only after the full
+  validation chain (unit + E2E + read-only baseline) is green with recorded
+  evidence — never in the same edit that introduces the change.
+
 ## Commit and PR behavior
 
 - Default profile is land-immediately: after scoped green validation, stage only
