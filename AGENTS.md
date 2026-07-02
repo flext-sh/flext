@@ -1,5 +1,22 @@
 # AGENTS.md — FLEXT Canonical Engineering Law
 
+## § Meta do FLEXT (North Star — governa todas as ações)
+
+FLEXT é a plataforma fundacional tipada e ecossistema de pacotes Python para integração de dados, tooling de plataforma e conectores operacionais enterprise. Todo pacote `flext-*` herda de uma única fonte de verdade arquitetural (`flext-core`) e serve a esta meta: **garantir que toda integração seja construída sobre primitivas tipadas, validadas e reutilizáveis** — com contratos `r[T]` em todo caminho falível, facades canônicas (`c/m/t/p/u`) por responsabilidade, e zero código ad-hoc.
+
+O sucesso do FLEXT é medido por: net-LOC negativo em refactors, zero `Any`/bypass/stub, e toda mudança verde validada com evidência antes de declarar pronto.
+
+### Cadeia de governança inviolável (sempre ativa)
+
+Esta Meta e as regras universais abaixo governam **todas as ações de todos os agentes em todas as sessões**, sem exceção, atalho, ou flexibilização por conveniência, urgência ou trivialidade percebida. A cadeia é always-on via prelúdio do `~/.ai-hub/AGENTS.md` + hooks `aihub-hook.sh` (PreToolUse/PostToolUse/SessionStart/Stop) + carregamento deste arquivo:
+
+1. **Meta do FLEXT** (acima) — o norte que toda decisão técnica serve.
+2. **Universal Agent Law** (abaixo, espelha `~/.ai-hub/AGENTS.md`) — R0–R15 invioláveis.
+3. **Regras FLEXT** (abaixo do bloco universal) — stack, naming, contratos, runtime.
+4. **Skills path-scoped** (`.agents/skills/*/SKILL.md`) — carregadas por contexto.
+
+Se qualquer ação não puder servir à Meta nem obedecer às regras limpas, o agente PARA e pergunta ao operador — nunca desvia, contorna, ou executa às cegas.
+
 <!-- BEGIN UNIVERSAL AGENT LAW (portable; regenerable; do not edit inside) -->
 
 ## Universal Agent Law (portable core)
