@@ -200,12 +200,21 @@ class _DockerStandardizationChecker:
             ("[1/9] Duplicate docker-compose files", self.check_duplicate_compose),
             ("[2/9] Dockerfiles outside images/", self.check_duplicate_dockerfiles),
             ("[3/9] Local docker_fixtures.py files", self.check_duplicate_fixtures),
-            ("[4/9] Centralized compose files count", self.check_centralized_compose_count),
-            ("[5/9] Centralized Dockerfiles count", self.check_centralized_dockerfile_count),
+            (
+                "[4/9] Centralized compose files count",
+                self.check_centralized_compose_count,
+            ),
+            (
+                "[5/9] Centralized Dockerfiles count",
+                self.check_centralized_dockerfile_count,
+            ),
             ("[6/9] tk availability", self.check_tk_importable),
             ("[7/9] Centralized fixtures availability", self.check_fixtures_importable),
             ("[8/9] Prohibited Docker scripts", self.check_docker_scripts),
-            ("[9/9] Deprecated parallel_docker usage", self.check_deprecated_parallel_docker),
+            (
+                "[9/9] Deprecated parallel_docker usage",
+                self.check_deprecated_parallel_docker,
+            ),
         ]
         for title, check in checks:
             print(f"\n{title}")

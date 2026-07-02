@@ -126,7 +126,9 @@ def run() -> int:
         print(f"DONE  {repo}")
         restored += 1
 
-    print(f"SUMMARY total={total} restored={restored} skipped={skipped} failed={failed}")
+    print(
+        f"SUMMARY total={total} restored={restored} skipped={skipped} failed={failed}"
+    )
     if failed:
         return 1
 
