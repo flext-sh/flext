@@ -125,10 +125,42 @@ def standard_message(title: str, head_ref: str) -> str | None:
     return f"chore(deps): bump {package} {old} → {new} [{eco}]"
 
 
-def merge_pr(slug: str, pr: dict[str, object], *, dry_run: bool) -> tuple[bool, bool]:
+def update_pr_branch(slug: str, number: int) -> bool:
+    """Update a PR branch from its base (rebase/merge) to resolve conflicts."""
+    result = run(
+        ["gh", "pr", "update-branch", str(number), "-R", slug],
+        check=False,
+    )
+    if result.returncode == 0:
+        return True
+    # update-branch may report "Already up to date"; treat as success.
+    if "already up to date" in result.stderr.lower():
+        return True
+    return False
+
+
+def close_pr(slug: str, number: int, *, dry_run: bool, reason: str) -> bool:
+    """Close a stale/conflicting Dependabot PR so it can be regenerated."""
+    if dry_run:
+        print(f"    [dry-run] would close #{number}: {reason}")
+        return True
+    close_result = run(
+        ["gh", "pr", "close", str(number), "-R", slug, "--comment", reason],
+        check=False,
+    )
+    return close_result.returncode == 0
+
+
+def merge_pr(
+    slug: str,
+    pr: dict[str, object],
+    *,
+    dry_run: bool,
+    close_on_conflict: bool = True,
+) -> tuple[bool, bool, bool]:
     """Merge a single Dependabot PR using the standard commit schema.
 
-    Returns (merged_or_enqueued, skipped).
+    Returns (merged_or_enqueued, skipped, closed).
     """
     number = pr["number"]
     title = pr["title"]
@@ -136,7 +168,7 @@ def merge_pr(slug: str, pr: dict[str, object], *, dry_run: bool) -> tuple[bool, 
     message = standard_message(title, head_ref)
     if message is None:
         print(f"  SKIP #{number}: title does not match bump schema: {title}")
-        return False, True
+        return False, True, False
 
     base_cmd = [
         "gh",
@@ -153,12 +185,12 @@ def merge_pr(slug: str, pr: dict[str, object], *, dry_run: bool) -> tuple[bool, 
     print(f"  MERGE #{number}: {message}")
     if dry_run:
         print(f"    [dry-run] {' '.join(base_cmd)}")
-        return True, False
+        return True, False, False
 
     result = run(base_cmd, check=False)
     if result.returncode == 0:
         print(f"  OK #{number}")
-        return True, False
+        return True, False, False
 
     stderr = result.stderr.strip()
     if "Required status check" in stderr or "checks" in stderr.lower():
@@ -166,38 +198,70 @@ def merge_pr(slug: str, pr: dict[str, object], *, dry_run: bool) -> tuple[bool, 
         auto_result = run(auto_cmd, check=False)
         if auto_result.returncode == 0:
             print(f"  ENQUEUED #{number}: will merge when checks pass")
-            return True, False
+            return True, False, False
         stderr = auto_result.stderr.strip()
 
     if "already merged" in stderr.lower() or "not found" in stderr.lower():
         print(f"  ALREADY #{number}")
-        return True, False
+        return True, False, False
+
+    # Conflict: try to update the branch and retry a few times.
+    if "conflict" in stderr.lower() or "merge conflicts" in stderr.lower():
+        for attempt in range(1, RETRIES_ON_CONFLICT + 1):
+            print(f"  CONFLICT #{number}: updating branch (attempt {attempt})")
+            if not update_pr_branch(slug, number):
+                break
+            retry = run(base_cmd, check=False)
+            if retry.returncode == 0:
+                print(f"  OK #{number} (after update)")
+                return True, False, False
+            stderr = retry.stderr.strip()
+            if "conflict" not in stderr.lower():
+                break
+
+        if close_on_conflict:
+            reason = (
+                "Closing stale Dependabot PR due to persistent merge conflicts; "
+                "Dependabot will recreate a fresh update if still needed."
+            )
+            if close_pr(slug, number, dry_run=dry_run, reason=reason):
+                print(f"  CLOSED #{number}: persistent merge conflict")
+                return False, False, True
 
     print(f"  FAIL #{number}: {stderr}", file=sys.stderr)
-    return False, False
+    return False, False, False
 
 
-def process_repo(slug: str, base: str, *, dry_run: bool) -> tuple[int, int, int]:
+def process_repo(
+    slug: str, base: str, *, dry_run: bool, close_on_conflict: bool = True
+) -> tuple[int, int, int, int]:
     """Process all open Dependabot PRs for a single repository.
 
-    Returns (merged, skipped, failed).
+    Returns (merged, skipped, failed, closed).
     """
     print(f"==> {slug}")
     prs = list_dependabot_prs(slug, base)
     if not prs:
         print("  no open dependabot PRs")
-        return 0, 0, 0
+        return 0, 0, 0, 0
 
-    merged = skipped = failed = 0
+    # Sort ascending so older PRs merge first, reducing lock-file conflicts.
+    prs.sort(key=lambda p: int(p["number"]))
+
+    merged = skipped = failed = closed = 0
     for pr in prs:
-        ok, is_skip = merge_pr(slug, pr, dry_run=dry_run)
+        ok, is_skip, was_closed = merge_pr(
+            slug, pr, dry_run=dry_run, close_on_conflict=close_on_conflict
+        )
         if is_skip:
             skipped += 1
         elif ok:
             merged += 1
+        elif was_closed:
+            closed += 1
         else:
             failed += 1
-    return merged, skipped, failed
+    return merged, skipped, failed, closed
 
 
 def main() -> int:
@@ -206,6 +270,18 @@ def main() -> int:
     parser.add_argument("--base", default="main", help="target branch for PRs")
     parser.add_argument("--dry-run", action="store_true", help="preview only")
     parser.add_argument("--workers", type=int, default=MAX_WORKERS, help="parallel repo workers")
+    parser.add_argument(
+        "--close-on-conflict",
+        action="store_true",
+        default=True,
+        help="close Dependabot PRs that cannot be merged due to persistent conflicts",
+    )
+    parser.add_argument(
+        "--no-close-on-conflict",
+        dest="close_on_conflict",
+        action="store_false",
+        help="leave conflicting PRs open for manual resolution",
+    )
     args = parser.parse_args()
 
     root = Path.cwd()
@@ -226,20 +302,28 @@ def main() -> int:
             continue
         slugs.append(slug)
 
-    total_merged = total_skipped = total_failed = 0
+    total_merged = total_skipped = total_failed = total_closed = 0
     with ThreadPoolExecutor(max_workers=args.workers) as executor:
         futures = {
-            executor.submit(process_repo, slug, args.base, dry_run=args.dry_run): slug
+            executor.submit(
+                process_repo,
+                slug,
+                args.base,
+                dry_run=args.dry_run,
+                close_on_conflict=args.close_on_conflict,
+            ): slug
             for slug in slugs
         }
         for future in as_completed(futures):
-            merged, skipped, failed = future.result()
+            merged, skipped, failed, closed = future.result()
             total_merged += merged
             total_skipped += skipped
             total_failed += failed
+            total_closed += closed
 
     print(
-        f"\nSummary: merged={total_merged} skipped={total_skipped} failed={total_failed}"
+        f"\nSummary: merged={total_merged} skipped={total_skipped} "
+        f"closed={total_closed} failed={total_failed}"
     )
     return 0 if total_failed == 0 else 1
 
