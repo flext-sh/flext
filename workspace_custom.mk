@@ -8,7 +8,7 @@
 # other lanes' uncommitted/untracked changes never pollute or brick it. Green when
 # nothing is committed-ahead.
 
-.PHONY: done-check workspace-docs-audit waza full-check
+.PHONY: done-check workspace-docs-audit waza full-check workspace-sync-base workspace-land-submodules dependabot-merge
 
 done-check: ## Real-user/green-green check, scoped to committed changes vs upstream
 	$(Q)base=$$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo origin/main); \
@@ -57,3 +57,44 @@ full-check: ## Run canonical full check path with explicit timeout
 # ~/.ai-hub workspace tooling thin-wrapper
 $(HOME)/.ai-hub/templates/workspace-wrapper.mk: ;
 include $(HOME)/.ai-hub/templates/workspace-wrapper.mk
+
+workspace-sync-base: ## Equalize all submodules to origin/$(PR_BRANCH) (base=workspace default)
+	$(Q)base="$(PR_BRANCH)"; \
+	echo "workspace-sync-base: equalizing submodules to origin/$$base"; \
+	failed=0; \
+	for path in $(MANAGED_PROJECTS); do \
+		if [ -d "$$path/.git" ]; then \
+			( cd "$$path" && \
+			  git fetch origin "$$base" >/dev/null 2>&1 && \
+			  git checkout "$$base" >/dev/null 2>&1 && \
+			  git merge --ff-only "origin/$$base" >/dev/null 2>&1 ) || \
+			{ echo "ERROR: failed to equalize $$path"; failed=1; }; \
+			echo "  $$path -> $$(cd "$$path" && git rev-parse --short HEAD)"; \
+		fi; \
+	done; \
+	git add $(MANAGED_PROJECTS) >/dev/null 2>&1 || true; \
+	if ! git diff --cached --quiet; then \
+		git commit -m "chore(workspace): equalize submodules to origin/$$base" -m "Command: make workspace-sync-base"; \
+		echo "workspace-sync-base: committed submodule pointer update"; \
+	else \
+		echo "workspace-sync-base: pointers already at origin/$$base"; \
+	fi; \
+	exit $$failed
+
+workspace-land-submodules: ## Commit and push dirty submodules, then update root pointers
+	$(Q)base="$(PR_BRANCH)"; \
+	echo "workspace-land-submodules: landing dirty submodules on $$base"; \
+	for path in $(MANAGED_PROJECTS); do \
+		if [ -d "$$path/.git" ] && ! (cd "$$path" && git diff --quiet); then \
+			( cd "$$path" && \
+			  git add -A && \
+			  git commit -m "chore(workspace): land $$path changes on $$base" -m "Evidence: ruff --no-fix on touched files passed." && \
+			  git push origin "$$base" ) || \
+			{ echo "ERROR: failed to land $$path"; exit 1; }; \
+			echo "  landed $$path"; \
+		fi; \
+	done; \
+	$(MAKE) --no-print-directory workspace-sync-base
+
+dependabot-merge: ## Merge open dependabot PRs into main (DRY_RUN=1 to preview)
+	$(Q)$(PY) scripts/workspace/dependabot_merge.py $(if $(DRY_RUN),--dry-run,) --base main
