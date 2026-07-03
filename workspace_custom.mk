@@ -8,7 +8,12 @@
 # other lanes' uncommitted/untracked changes never pollute or brick it. Green when
 # nothing is committed-ahead.
 
-.PHONY: done-check workspace-docs-audit waza full-check workspace-sync-base workspace-land-submodules dependabot-merge workspace-merge-main workspace-main-sync workspace-dependabot-apply
+# SSOT for the workspace base branch. All equalization/merge targets use this.
+WORKSPACE_BASE ?= 0.12.0-dev
+
+.PHONY: done-check workspace-docs-audit waza full-check workspace-status \
+        workspace-sync-base workspace-land-submodules dependabot-merge \
+        workspace-merge-main workspace-main-sync workspace-dependabot-apply
 
 done-check: ## Real-user/green-green check, scoped to committed changes vs upstream
 	$(Q)base=$$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo origin/main); \
@@ -58,23 +63,69 @@ full-check: ## Run canonical full check path with explicit timeout
 $(HOME)/.ai-hub/templates/workspace-wrapper.mk: ;
 include $(HOME)/.ai-hub/templates/workspace-wrapper.mk
 
-workspace-sync-base: ## Equalize all submodules to origin/$(PR_BRANCH) (base=workspace default)
-	$(Q)base="$(PR_BRANCH)"; \
+# Internal helpers -----------------------------------------------------------
+
+# Standardized commit message schema for workspace automation.
+# All generated messages include a unique counter and a command tag to avoid
+# repetition and to keep Beads/git history auditable.
+WORKSPACE_COMMIT_COUNTER_FILE := .workspace-commit-counter
+
+define workspace_next_counter
+$(shell mkdir -p .workspace-state && (cat .workspace-state/commit-counter 2>/dev/null || echo 0) | awk '{printf "%04d", $$1+1}' > .workspace-state/commit-counter.tmp && mv .workspace-state/commit-counter.tmp .workspace-state/commit-counter && cat .workspace-state/commit-counter)
+endef
+
+# $(1)=verb (chore|merge|sync|land), $(2)=scope, $(3)=short summary, $(4)=command
+workspace_commit_message = \
+	$(1)(workspace): $(2) — $(3)\n\n\
+	Counter: $(call workspace_next_counter)\n\
+	Base: $(WORKSPACE_BASE)\n\
+	Command: $(4)\n\
+	Evidence: make $(4)
+
+# Abort if a submodule has unstaged/uncommitted changes.
+# Callers must pass the submodule path in $(1).
+workspace_require_clean = \
+	if ! git -C "$(1)" diff --quiet; then \
+		echo "ERROR: $(1) has unstaged changes; commit or stash before $(2)"; \
+		exit 1; \
+	fi; \
+	if ! git -C "$(1)" diff --cached --quiet; then \
+		echo "ERROR: $(1) has staged but uncommitted changes; commit before $(2)"; \
+		exit 1; \
+	fi
+
+workspace-status: ## Show workspace/submodule branch and dirty state
+	$(Q)echo "workspace base: $(WORKSPACE_BASE)"; \
+	echo "root branch:    $$(git rev-parse --abbrev-ref HEAD)"; \
+	echo "root dirty:     $$(git diff --quiet && git diff --cached --quiet && echo clean || echo DIRTY)"; \
+	for path in $(MANAGED_PROJECTS); do \
+		if [ -e "$$path/.git" ]; then \
+			branch=$$(git -C "$$path" rev-parse --abbrev-ref HEAD); \
+			dirty=$$(git -C "$$path" diff --quiet && git -C "$$path" diff --cached --quiet && echo clean || echo DIRTY); \
+			ahead=$$(git -C "$$path" log --oneline origin/main..HEAD 2>/dev/null | wc -l); \
+			printf "  %-36s %-20s ahead=%-4s %s\n" "$$path" "$$branch" "$$ahead" "$$dirty"; \
+		fi; \
+	done
+
+workspace-sync-base: ## Equalize all submodules to origin/$(WORKSPACE_BASE)
+	$(Q)base="$(WORKSPACE_BASE)"; \
 	echo "workspace-sync-base: equalizing submodules to origin/$$base"; \
 	failed=0; \
 	for path in $(MANAGED_PROJECTS); do \
 		if [ -e "$$path/.git" ]; then \
+			$(call workspace_require_clean,$$path,workspace-sync-base) || { failed=1; continue; }; \
 			( cd "$$path" && \
 			  git fetch origin "$$base" >/dev/null 2>&1 && \
 			  git checkout "$$base" >/dev/null 2>&1 && \
 			  git merge --ff-only "origin/$$base" >/dev/null 2>&1 ) || \
-			{ echo "ERROR: failed to equalize $$path"; failed=1; }; \
+			{ echo "ERROR: failed to equalize $$path"; failed=1; continue; }; \
 			echo "  $$path -> $$(cd "$$path" && git rev-parse --short HEAD)"; \
 		fi; \
 	done; \
 	git add $(MANAGED_PROJECTS) >/dev/null 2>&1 || true; \
 	if ! git diff --cached --quiet; then \
-		git commit -m "chore(workspace): equalize submodules to origin/$$base" -m "Command: make workspace-sync-base"; \
+		msg=$$(printf '%s' "$(call workspace_commit_message,chore,equalize submodules,origin/$$base,workspace-sync-base)"); \
+		git commit -m "$$msg"; \
 		echo "workspace-sync-base: committed submodule pointer update"; \
 	else \
 		echo "workspace-sync-base: pointers already at origin/$$base"; \
@@ -82,57 +133,67 @@ workspace-sync-base: ## Equalize all submodules to origin/$(PR_BRANCH) (base=wor
 	exit $$failed
 
 workspace-land-submodules: ## Commit and push dirty submodules, then update root pointers
-	$(Q)base="$(PR_BRANCH)"; \
+	$(Q)base="$(WORKSPACE_BASE)"; \
 	echo "workspace-land-submodules: landing dirty submodules on $$base"; \
+	failed=0; \
 	for path in $(MANAGED_PROJECTS); do \
-		if [ -e "$$path/.git" ] && ! (cd "$$path" && git diff --quiet); then \
+		if [ -e "$$path/.git" ] && ! (git -C "$$path" diff --quiet && git -C "$$path" diff --cached --quiet); then \
 			( cd "$$path" && \
+			  files=$$(git diff --name-only && git diff --cached --name-only | sort -u) && \
+			  if [ -z "$$files" ]; then echo "  $$path: nothing to land"; exit 0; fi && \
+			  printf '%s\n' "$$files" | xargs -r ruff check --quiet && \
 			  git add -A && \
-			  git commit -m "chore(workspace): land $$path changes on $$base" -m "Evidence: ruff --no-fix on touched files passed." && \
+			  msg=$$(printf '%s' "$(call workspace_commit_message,chore,$$path,land local changes,workspace-land-submodules)") && \
+			  git commit -m "$$msg" && \
 			  git push origin "$$base" ) || \
-			{ echo "ERROR: failed to land $$path"; exit 1; }; \
+			{ echo "ERROR: failed to land $$path"; failed=1; continue; }; \
 			echo "  landed $$path"; \
 		fi; \
 	done; \
-	$(MAKE) --no-print-directory workspace-sync-base
+	$(MAKE) --no-print-directory workspace-sync-base; \
+	exit $$failed
 
 dependabot-merge: ## Merge open dependabot PRs into main (DRY_RUN=1 to preview)
 	$(Q)$(PY) scripts/workspace/dependabot_merge.py $(if $(DRY_RUN),--dry-run,) --base main
 
-workspace-merge-main: ## Merge PR_BRANCH into main for every submodule and root
-	$(Q)base="$(PR_BRANCH)"; \
+workspace-merge-main: ## Merge $(WORKSPACE_BASE) into main for every submodule and root
+	$(Q)base="$(WORKSPACE_BASE)"; \
 	echo "workspace-merge-main: merging origin/$$base into main"; \
 	failed=0; \
+	$(call workspace_require_clean,.,workspace-merge-main) || exit 1; \
 	for path in $(MANAGED_PROJECTS); do \
 		if [ -e "$$path/.git" ]; then \
+			$(call workspace_require_clean,$$path,workspace-merge-main) || { failed=1; continue; }; \
 			( cd "$$path" && \
 			  git fetch origin main >/dev/null 2>&1 && \
 			  git fetch origin "$$base" >/dev/null 2>&1 && \
 			  git checkout main >/dev/null 2>&1 && \
-			  git merge --no-ff "origin/$$base" -m "chore(workspace): merge $$base into main" && \
+			  git merge --no-ff "origin/$$base" -m "$$(printf '%s' "$(call workspace_commit_message,merge,$$path,merge $$base into main,workspace-merge-main)")" && \
 			  $(if $(DRY_RUN),echo "[dry-run] would push $$path main",git push origin main) ) || \
-			{ echo "ERROR: failed to merge $$path"; failed=1; }; \
+			{ echo "ERROR: failed to merge $$path"; failed=1; continue; }; \
 			echo "  $$path main -> $$(cd "$$path" && git rev-parse --short HEAD)"; \
 		fi; \
 	done; \
 	$(MAKE) --no-print-directory workspace-sync-base; \
 	git fetch origin main >/dev/null 2>&1; \
 	git checkout main >/dev/null 2>&1 || true; \
-	git merge --no-ff "origin/$$base" -m "chore(workspace): merge $$base into main" || { echo "ERROR: failed to merge root"; failed=1; }; \
+	git merge --no-ff "origin/$$base" -m "$$(printf '%s' "$(call workspace_commit_message,merge,root,merge $$base into main,workspace-merge-main)")" || { echo "ERROR: failed to merge root"; failed=1; }; \
 	$(if $(DRY_RUN),echo "[dry-run] would push root main",git push origin main); \
 	exit $$failed
 
-workspace-main-sync: ## Pull origin/main into PR_BRANCH to absorb released dependabot updates
-	$(Q)base="$(PR_BRANCH)"; \
+workspace-main-sync: ## Pull origin/main into $(WORKSPACE_BASE) to absorb released updates
+	$(Q)base="$(WORKSPACE_BASE)"; \
 	echo "workspace-main-sync: fast-forward $$base to include origin/main"; \
 	failed=0; \
+	$(call workspace_require_clean,.,workspace-main-sync) || exit 1; \
 	for path in $(MANAGED_PROJECTS); do \
 		if [ -e "$$path/.git" ]; then \
+			$(call workspace_require_clean,$$path,workspace-main-sync) || { failed=1; continue; }; \
 			( cd "$$path" && \
 			  git fetch origin main >/dev/null 2>&1 && \
 			  git checkout "$$base" >/dev/null 2>&1 && \
 			  git merge --ff-only origin/main >/dev/null 2>&1 ) || \
-			{ echo "ERROR: failed to sync $$path"; failed=1; }; \
+			{ echo "ERROR: failed to sync $$path"; failed=1; continue; }; \
 			echo "  $$path $$base -> $$(cd "$$path" && git rev-parse --short HEAD)"; \
 		fi; \
 	done; \
