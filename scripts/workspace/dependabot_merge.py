@@ -101,7 +101,10 @@ def list_dependabot_prs(slug: str, base: str) -> list[dict[str, object]]:
         check=False,
     )
     if result.returncode != 0:
-        print(f"  WARN: cannot list PRs for {slug}: {result.stderr.strip()}", file=sys.stderr)
+        print(
+            f"  WARN: cannot list PRs for {slug}: {result.stderr.strip()}",
+            file=sys.stderr,
+        )
         return []
     try:
         return json.loads(result.stdout or "[]")
@@ -136,7 +139,9 @@ def standard_message(title: str, head_ref: str) -> str | None:
         group_name = group.group("group").strip()
         count = group.group("count").strip()
         eco = ecosystem_from_head_ref(head_ref)
-        return f"chore(deps): bump {group_name} dependency group ({count} updates) [{eco}]"
+        return (
+            f"chore(deps): bump {group_name} dependency group ({count} updates) [{eco}]"
+        )
 
     return None
 
@@ -150,9 +155,7 @@ def update_pr_branch(slug: str, number: int) -> bool:
     if result.returncode == 0:
         return True
     # update-branch may report "Already up to date"; treat as success.
-    if "already up to date" in result.stderr.lower():
-        return True
-    return False
+    return "already up to date" in result.stderr.lower()
 
 
 def close_pr(slug: str, number: int, *, dry_run: bool, reason: str) -> bool:
@@ -244,7 +247,9 @@ def merge_pr(
                 print(f"  OK #{number} (after update)")
                 return True, False, False
             retry_stderr = retry.stderr.strip()
-            if not any(indicator in retry_stderr.lower() for indicator in conflict_indicators):
+            if not any(
+                indicator in retry_stderr.lower() for indicator in conflict_indicators
+            ):
                 break
 
         if close_on_conflict:
@@ -294,10 +299,14 @@ def process_repo(
 
 def main() -> int:
     """Entry point for the dependabot merge orchestrator."""
-    parser = argparse.ArgumentParser(description="Merge Dependabot PRs across FLEXT workspace")
+    parser = argparse.ArgumentParser(
+        description="Merge Dependabot PRs across FLEXT workspace"
+    )
     parser.add_argument("--base", default="main", help="target branch for PRs")
     parser.add_argument("--dry-run", action="store_true", help="preview only")
-    parser.add_argument("--workers", type=int, default=MAX_WORKERS, help="parallel repo workers")
+    parser.add_argument(
+        "--workers", type=int, default=MAX_WORKERS, help="parallel repo workers"
+    )
     parser.add_argument(
         "--close-on-conflict",
         action="store_true",
