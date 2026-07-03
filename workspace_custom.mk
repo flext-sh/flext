@@ -13,7 +13,8 @@ WORKSPACE_BASE ?= 0.12.0-dev
 
 .PHONY: done-check workspace-docs-audit waza full-check workspace-status \
         workspace-sync-base workspace-land-submodules dependabot-merge \
-        workspace-merge-main workspace-main-sync workspace-dependabot-apply
+        workspace-merge-main workspace-main-sync workspace-dependabot-apply \
+        workspace-check-changed workspace-fix-changed
 
 done-check: ## Real-user/green-green check, scoped to committed changes vs upstream
 	$(Q)base=$$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo origin/main); \
@@ -106,6 +107,55 @@ workspace-status: ## Show workspace/submodule branch and dirty state
 			printf "  %-36s %-20s ahead=%-4s %s\n" "$$path" "$$branch" "$$ahead" "$$dirty"; \
 		fi; \
 	done
+
+# Helper: list FLEXT projects touched in the working tree (staged or unstaged).
+# Returns a space-separated list of top-level project directory names.
+workspace_changed_projects = \
+	( git diff --name-only; \
+	  git diff --cached --name-only; \
+	  git submodule foreach --quiet 'if [ -n "$$(git status --porcelain)" ]; then echo $$name; fi' ) | \
+	cut -d/ -f1 | \
+	sort -u | \
+	while read -r proj; do \
+		[ -f "$$proj/pyproject.toml" ] && echo "$$proj"; \
+	done
+
+workspace-check-changed: ## Run `make check` only on projects with working-tree changes
+	$(Q)projects=$$($(workspace_changed_projects)); \
+	if [ -z "$$projects" ]; then \
+		echo "workspace-check-changed: no FLEXT projects changed — green"; \
+		exit 0; \
+	fi; \
+	echo "workspace-check-changed: checking $$projects"; \
+	failed=0; \
+	for proj in $$projects; do \
+		( cd "$$proj" && $(MAKE) --no-print-directory check PROJECT="$$proj" ) || \
+		{ echo "ERROR: check failed for $$proj"; failed=1; }; \
+	done; \
+	exit $$failed
+
+workspace-fix-changed: ## Auto-fix ruff + enforcement issues on changed projects
+	$(Q)projects=$$($(workspace_changed_projects)); \
+	if [ -z "$$projects" ]; then \
+		echo "workspace-fix-changed: no FLEXT projects changed — green"; \
+		exit 0; \
+	fi; \
+	echo "workspace-fix-changed: fixing $$projects"; \
+	failed=0; \
+	for proj in $$projects; do \
+		echo "  fixing $$proj"; \
+		( cd "$$proj" && \
+		  files=$$(git diff --name-only -- '*.py' && git diff --cached --name-only -- '*.py' | sort -u) && \
+		  if [ -n "$$files" ]; then \
+			  printf '%s\n' "$$files" | xargs -r ruff format && \
+			  printf '%s\n' "$$files" | xargs -r ruff check --fix; \
+		  fi ) || \
+		{ echo "ERROR: ruff fix failed for $$proj"; failed=1; continue; }; \
+		( cd "$$proj" && \
+		  $(MAKE) --no-print-directory fix-enforcement APPLY=1 PROJECTS="$$proj" ) || \
+		{ echo "WARN: enforcement fix left unresolved issues in $$proj (see above)"; }; \
+	done; \
+	exit $$failed
 
 workspace-sync-base: ## Equalize all submodules to origin/$(WORKSPACE_BASE)
 	$(Q)base="$(WORKSPACE_BASE)"; \
