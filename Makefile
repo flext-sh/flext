@@ -79,7 +79,7 @@ PR_CHECKPOINT ?= 1
 DEPS_REPORT ?= 1
 VERBOSE ?=
 
-PR_BRANCH ?= main
+PR_BRANCH ?= 0.12.0-dev
 
 Q := @
 ifdef VERBOSE
@@ -406,6 +406,12 @@ _boot_default: ## Install all projects into workspace .venv
 		$(MAKE) val WHAT=workspace VALIDATE_SCOPE=workspace PROJECTS="$(BOOT_VALIDATE_PROJECTS)" || { echo "FAIL: boot validation"; exit 1; }; \
 	else \
 		echo "Skipping workspace validation (no managed workspace projects selected)."; \
+	fi
+	$(Q)if git rev-parse --git-dir >/dev/null 2>&1 && [ -f .pre-commit-config.yaml ]; then \
+		echo "Installing pre-commit hooks (workspace root)..."; \
+		uv run --all-packages pre-commit install || exit 1; \
+	else \
+		echo "INFO: skipping pre-commit install (no git repository or config)"; \
 	fi
 
 _up: ## Refresh workspace lock/install + rewrite dependency constraints + dependency report
