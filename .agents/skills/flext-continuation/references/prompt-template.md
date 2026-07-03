@@ -1,33 +1,29 @@
-# Continuação — EPIC `<BEAD_ID>`
+# Continuação — `<BEAD_ID>`
 
-## Instrução de entrada
-
-Você está retomando um EPIC no FLEXT. Siga a skill canônica `flext-continuation`; este arquivo é apenas o gatilho de contexto.
+Retome o trabalho cujo estado vivo está no bead `<BEAD_ID>`.
+Este prompt é apenas um gatilho; a skill `<SKILL_NAME>` é a fonte da verdade.
 
 ## Contexto mínimo
 
 - **Bead ativo:** `<BEAD_ID>`
-- **Objetivo do EPIC:** `<EPIC_OBJECTIVE>`
-- **Skills de domínio prováveis:** `<DOMAIN_SKILLS>`
+- **Skill canônica:** `<SKILL_NAME>`
 
-## O que fazer agora
+## Regras
 
-1. Invocar **skill `flext-continuation`** com o bead `<BEAD_ID>`.
-2. Carregar as skills de domínio listadas acima se o próximo passo tocar em seus respectivos domínios.
-3. Ler o plano/artefato mais recente em `.beads/artifacts/<BEAD_ID>/`.
-4. Executar o próximo passo não-finalizado, um por ciclo, com os gates canônicos do FLEXT.
+- SSOT é o bead: recarregue-o a cada ciclo.
+- Uma ação por ciclo: próximo passo não finalizado apenas.
+- Verifique antes de editar: gate mais estreito da lane ativa.
+- Evidência no bead: exit code + saída decisiva; logs longos em `.beads/artifacts/<BEAD_ID>/`.
+- Pare no vermelho: sem contorno, supressão, adivinhação ou stub.
+- Commit atômico: pathspecs explícitos, nunca `git add .`.
 
-## O que NÃO fazer
+## Proibições
 
-- Não recopie `AGENTS.md` ou skills neste prompt.
-- Não armazene estado transitório aqui (SHAs, contagens, nomes de arquivos específicos).
-- Não prescreva soluções técnicas; derive-as do diagnóstico atual.
-- Não crie automação/detectores/heurísticas novos no fluxo principal — sub-bead próprio.
+Não recopie `AGENTS.md`, skills ou código neste prompt.
+Não armazene estado transitório aqui.
+Não prescreva soluções técnicas; derive-as do diagnóstico.
+Não crie automação, detectores ou heurísticas novos; use sub-bead.
 
-## Comando de referência
+## Próximo passo
 
-```bash
-bd show <BEAD_ID>
-```
-
-Toda ação subsequente está na skill `flext-continuation`.
+Invoque `<SKILL_NAME>` e execute o próximo passo do bead com os gates canônicos.
