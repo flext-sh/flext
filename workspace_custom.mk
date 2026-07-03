@@ -8,7 +8,7 @@
 # other lanes' uncommitted/untracked changes never pollute or brick it. Green when
 # nothing is committed-ahead.
 
-.PHONY: done-check workspace-docs-audit waza full-check workspace-sync-base workspace-land-submodules dependabot-merge
+.PHONY: done-check workspace-docs-audit waza full-check workspace-sync-base workspace-land-submodules dependabot-merge workspace-merge-main workspace-main-sync workspace-dependabot-apply
 
 done-check: ## Real-user/green-green check, scoped to committed changes vs upstream
 	$(Q)base=$$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo origin/main); \
@@ -98,3 +98,51 @@ workspace-land-submodules: ## Commit and push dirty submodules, then update root
 
 dependabot-merge: ## Merge open dependabot PRs into main (DRY_RUN=1 to preview)
 	$(Q)$(PY) scripts/workspace/dependabot_merge.py $(if $(DRY_RUN),--dry-run,) --base main
+
+workspace-merge-main: ## Merge PR_BRANCH into main for every submodule and root
+	$(Q)base="$(PR_BRANCH)"; \
+	echo "workspace-merge-main: merging origin/$$base into main"; \
+	failed=0; \
+	for path in $(MANAGED_PROJECTS); do \
+		if [ -d "$$path/.git" ]; then \
+			( cd "$$path" && \
+			  git fetch origin main >/dev/null 2>&1 && \
+			  git fetch origin "$$base" >/dev/null 2>&1 && \
+			  git checkout main >/dev/null 2>&1 && \
+			  git merge --no-ff "origin/$$base" -m "chore(workspace): merge $$base into main" && \
+			  $(if $(DRY_RUN),echo "[dry-run] would push $$path main",git push origin main) ) || \
+			{ echo "ERROR: failed to merge $$path"; failed=1; }; \
+			echo "  $$path main -> $$(cd "$$path" && git rev-parse --short HEAD)"; \
+		fi; \
+	done; \
+	$(MAKE) --no-print-directory workspace-sync-base; \
+	git fetch origin main >/dev/null 2>&1; \
+	git checkout main >/dev/null 2>&1 || true; \
+	git merge --no-ff "origin/$$base" -m "chore(workspace): merge $$base into main" || { echo "ERROR: failed to merge root"; failed=1; }; \
+	$(if $(DRY_RUN),echo "[dry-run] would push root main",git push origin main); \
+	exit $$failed
+
+workspace-main-sync: ## Pull origin/main into PR_BRANCH to absorb released dependabot updates
+	$(Q)base="$(PR_BRANCH)"; \
+	echo "workspace-main-sync: fast-forward $$base to include origin/main"; \
+	failed=0; \
+	for path in $(MANAGED_PROJECTS); do \
+		if [ -d "$$path/.git" ]; then \
+			( cd "$$path" && \
+			  git fetch origin main >/dev/null 2>&1 && \
+			  git checkout "$$base" >/dev/null 2>&1 && \
+			  git merge --ff-only origin/main >/dev/null 2>&1 ) || \
+			{ echo "ERROR: failed to sync $$path"; failed=1; }; \
+			echo "  $$path $$base -> $$(cd "$$path" && git rev-parse --short HEAD)"; \
+		fi; \
+	done; \
+	$(MAKE) --no-print-directory workspace-sync-base; \
+	git fetch origin main >/dev/null 2>&1; \
+	git checkout "$$base" >/dev/null 2>&1 || true; \
+	git merge --ff-only origin/main >/dev/null 2>&1 || { echo "ERROR: failed to sync root"; failed=1; }; \
+	git push origin "$$base"; \
+	exit $$failed
+
+workspace-dependabot-apply: ## dependabot-merge + merge result into main
+	$(Q)$(MAKE) --no-print-directory dependabot-merge && \
+	$(MAKE) --no-print-directory workspace-merge-main
