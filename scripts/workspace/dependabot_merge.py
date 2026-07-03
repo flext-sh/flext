@@ -229,7 +229,7 @@ def main() -> int:
     total_merged = total_skipped = total_failed = 0
     with ThreadPoolExecutor(max_workers=args.workers) as executor:
         futures = {
-            executor.submit(process_repo, slug, args.base, args.dry_run): slug
+            executor.submit(process_repo, slug, args.base, dry_run=args.dry_run): slug
             for slug in slugs
         }
         for future in as_completed(futures):
