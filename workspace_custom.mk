@@ -63,7 +63,7 @@ workspace-sync-base: ## Equalize all submodules to origin/$(PR_BRANCH) (base=wor
 	echo "workspace-sync-base: equalizing submodules to origin/$$base"; \
 	failed=0; \
 	for path in $(MANAGED_PROJECTS); do \
-		if [ -d "$$path/.git" ]; then \
+		if [ -e "$$path/.git" ]; then \
 			( cd "$$path" && \
 			  git fetch origin "$$base" >/dev/null 2>&1 && \
 			  git checkout "$$base" >/dev/null 2>&1 && \
@@ -85,7 +85,7 @@ workspace-land-submodules: ## Commit and push dirty submodules, then update root
 	$(Q)base="$(PR_BRANCH)"; \
 	echo "workspace-land-submodules: landing dirty submodules on $$base"; \
 	for path in $(MANAGED_PROJECTS); do \
-		if [ -d "$$path/.git" ] && ! (cd "$$path" && git diff --quiet); then \
+		if [ -e "$$path/.git" ] && ! (cd "$$path" && git diff --quiet); then \
 			( cd "$$path" && \
 			  git add -A && \
 			  git commit -m "chore(workspace): land $$path changes on $$base" -m "Evidence: ruff --no-fix on touched files passed." && \
@@ -104,7 +104,7 @@ workspace-merge-main: ## Merge PR_BRANCH into main for every submodule and root
 	echo "workspace-merge-main: merging origin/$$base into main"; \
 	failed=0; \
 	for path in $(MANAGED_PROJECTS); do \
-		if [ -d "$$path/.git" ]; then \
+		if [ -e "$$path/.git" ]; then \
 			( cd "$$path" && \
 			  git fetch origin main >/dev/null 2>&1 && \
 			  git fetch origin "$$base" >/dev/null 2>&1 && \
@@ -127,7 +127,7 @@ workspace-main-sync: ## Pull origin/main into PR_BRANCH to absorb released depen
 	echo "workspace-main-sync: fast-forward $$base to include origin/main"; \
 	failed=0; \
 	for path in $(MANAGED_PROJECTS); do \
-		if [ -d "$$path/.git" ]; then \
+		if [ -e "$$path/.git" ]; then \
 			( cd "$$path" && \
 			  git fetch origin main >/dev/null 2>&1 && \
 			  git checkout "$$base" >/dev/null 2>&1 && \
