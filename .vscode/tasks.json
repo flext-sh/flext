@@ -170,7 +170,7 @@
 			"command": "bash",
 			"args": [
 				"-lc",
-				"source ${workspaceFolder}/.venv/bin/activate && cd ${workspaceFolder} && ${workspaceFolder}/.venv/bin/ruff check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/src/flext_infra/tests/unit/docs/auditor_codeblocks_tests.py && ${workspaceFolder}/.venv/bin/pyrefly check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/src/flext_infra/tests/unit/docs/auditor_codeblocks_tests.py && cd ${workspaceFolder}/flext-infra && ${workspaceFolder}/.venv/bin/pytest src/flext_infra/tests/unit/docs/auditor_codeblocks_tests.py --no-cov"
+				"source ${workspaceFolder}/.venv/bin/activate && cd ${workspaceFolder} && ${workspaceFolder}/.venv/bin/ruff check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/tests/unit/docs/auditor_codeblocks_tests.py && ${workspaceFolder}/.venv/bin/pyrefly check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/tests/unit/docs/auditor_codeblocks_tests.py && cd ${workspaceFolder}/flext-infra && ${workspaceFolder}/.venv/bin/pytest tests/unit/docs/auditor_codeblocks_tests.py --no-cov"
 			],
 			"isBackground": false,
 			"group": "test"
@@ -192,7 +192,7 @@
 			"command": "bash",
 			"args": [
 				"-lc",
-				"source ${workspaceFolder}/.venv/bin/activate && cd ${workspaceFolder} && ${workspaceFolder}/.venv/bin/ruff check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/src/flext_infra/tests/unit/docs/auditor_codeblocks_tests.py && ${workspaceFolder}/.venv/bin/pyrefly check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/src/flext_infra/tests/unit/docs/auditor_codeblocks_tests.py && cd ${workspaceFolder}/flext-infra && ${workspaceFolder}/.venv/bin/pytest src/flext_infra/tests/unit/docs/auditor_codeblocks_tests.py --no-cov"
+				"source ${workspaceFolder}/.venv/bin/activate && cd ${workspaceFolder} && ${workspaceFolder}/.venv/bin/ruff check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/tests/unit/docs/auditor_codeblocks_tests.py && ${workspaceFolder}/.venv/bin/pyrefly check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/tests/unit/docs/auditor_codeblocks_tests.py && cd ${workspaceFolder}/flext-infra && ${workspaceFolder}/.venv/bin/pytest tests/unit/docs/auditor_codeblocks_tests.py --no-cov"
 			],
 			"isBackground": false,
 			"group": "test"
