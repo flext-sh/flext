@@ -1,60 +1,5 @@
 # Usage Errors
 
-
-<!-- TOC START -->
-- [Class not fully defined {#class-not-fully-defined}](#class-not-fully-defined-class-not-fully-defined)
-- [Custom JSON Schema {#custom-JSON-schema}](#custom-json-schema-custom-json-schema)
-- [Decorator on missing field {#decorator-missing-field}](#decorator-on-missing-field-decorator-missing-field)
-- [Discriminator no field {#discriminator-no-field}](#discriminator-no-field-discriminator-no-field)
-- [Discriminator alias type {#discriminator-alias-type}](#discriminator-alias-type-discriminator-alias-type)
-- [Discriminator needs literal {#discriminator-needs-literal}](#discriminator-needs-literal-discriminator-needs-literal)
-- [Discriminator alias {#discriminator-alias}](#discriminator-alias-discriminator-alias)
-- [Invalid discriminator validator {#discriminator-validator}](#invalid-discriminator-validator-discriminator-validator)
-- [Callable discriminator case with no tag {#callable-discriminator-no-tag}](#callable-discriminator-case-with-no-tag-callable-discriminator-no-tag)
-- [`TypedDict` version {#typed-dict-version}](#typeddict-version-typed-dict-version)
-- [Model parent field overridden {#model-field-overridden}](#model-parent-field-overridden-model-field-overridden)
-- [Model field missing annotation {#model-field-missing-annotation}](#model-field-missing-annotation-model-field-missing-annotation)
-- [`Config` and `model_config` both defined {#config-both}](#config-and-modelconfig-both-defined-config-both)
-- [Keyword arguments removed {#removed-kwargs}](#keyword-arguments-removed-removed-kwargs)
-- [Circular reference schema {#circular-reference-schema}](#circular-reference-schema-circular-reference-schema)
-- [JSON schema invalid type {#invalid-for-JSON-schema}](#json-schema-invalid-type-invalid-for-json-schema)
-- [JSON schema already used {#JSON-schema-already-used}](#json-schema-already-used-json-schema-already-used)
-- [BaseModel instantiated {#base-model-instantiated}](#basemodel-instantiated-base-model-instantiated)
-- [Undefined annotation {#undefined-annotation}](#undefined-annotation-undefined-annotation)
-- [Schema for unknown type {#schema-for-unknown-type}](#schema-for-unknown-type-schema-for-unknown-type)
-- [Import error {#import-error}](#import-error-import-error)
-- [`create_model` field definitions {#create-model-field-definitions}](#createmodel-field-definitions-create-model-field-definitions)
-- [Validator with no fields {#validator-no-fields}](#validator-with-no-fields-validator-no-fields)
-- [Invalid validator fields {#validator-invalid-fields}](#invalid-validator-fields-validator-invalid-fields)
-- [Validator on instance method {#validator-instance-method}](#validator-on-instance-method-validator-instance-method)
-- [`json_schema_input_type` used with the wrong mode {#validator-input-type}](#jsonschemainputtype-used-with-the-wrong-mode-validator-input-type)
-- [`model_serializer` instance methods {#model-serializer-instance-method}](#modelserializer-instance-methods-model-serializer-instance-method)
-- [`validator`, `field`, `config`, and `info` {#validator-field-config-info}](#validator-field-config-and-info-validator-field-config-info)
-- [Pydantic V1 validator signature {#validator-v1-signature}](#pydantic-v1-validator-signature-validator-v1-signature)
-- [Unrecognized `field_validator` signature {#validator-signature}](#unrecognized-fieldvalidator-signature-validator-signature)
-- [Unrecognized `field_serializer` signature {#field-serializer-signature}](#unrecognized-fieldserializer-signature-field-serializer-signature)
-- [Unrecognized `model_serializer` signature {#model-serializer-signature}](#unrecognized-modelserializer-signature-model-serializer-signature)
-- [Multiple field serializers {#multiple-field-serializers}](#multiple-field-serializers-multiple-field-serializers)
-- [Invalid annotated type {#invalid-annotated-type}](#invalid-annotated-type-invalid-annotated-type)
-- [`config` is unused with `TypeAdapter` {#type-adapter-config-unused}](#config-is-unused-with-typeadapter-type-adapter-config-unused)
-- [Cannot specify `model_config['extra']` with `RootModel` {#root-model-extra}](#cannot-specify-modelconfigextra-with-rootmodel-root-model-extra)
-- [Cannot evaluate type annotation {#unevaluable-type-annotation}](#cannot-evaluate-type-annotation-unevaluable-type-annotation)
-- [Incompatible `dataclass` `init` and `extra` settings {#dataclass-init-false-extra-allow}](#incompatible-dataclass-init-and-extra-settings-dataclass-init-false-extra-allow)
-- [Incompatible `init` and `init_var` settings on `dataclass` field {#clashing-init-and-init-var}](#incompatible-init-and-initvar-settings-on-dataclass-field-clashing-init-and-init-var)
-- [`model_config` is used as a model field {#model-config-invalid-field-name}](#modelconfig-is-used-as-a-model-field-model-config-invalid-field-name)
-- [[`with_config`][pydantic.config.with_config] is used on a `BaseModel` subclass {#with-config-on-model}](#withconfigpydanticconfigwithconfig-is-used-on-a-basemodel-subclass-with-config-on-model)
-- [`dataclass` is used on a `BaseModel` subclass {#dataclass-on-model}](#dataclass-is-used-on-a-basemodel-subclass-dataclass-on-model)
-- [Unsupported type for `validate_call` {#validate-call-type}](#unsupported-type-for-validatecall-validate-call-type)
-  - [`@classmethod`, `@staticmethod`, and `@property`](#classmethod-staticmethod-and-property)
-  - [Classes](#classes)
-  - [Callable instances](#callable-instances)
-  - [Invalid signature](#invalid-signature)
-- [[`Unpack`][typing.Unpack] used without a [`TypedDict`][typing.TypedDict] {#unpack-typed-dict}](#unpacktypingunpack-used-without-a-typeddicttypingtypeddict-unpack-typed-dict)
-- [Overlapping unpacked [`TypedDict`][typing.TypedDict] fields and arguments {#overlapping-unpack-typed-dict}](#overlapping-unpacked-typeddicttypingtypeddict-fields-and-arguments-overlapping-unpack-typed-dict)
-- [Invalid `Self` type {#invalid-self-type}](#invalid-self-type-invalid-self-type)
-- [`validate_by_alias` and `validate_by_name` both set to `False` {#validate-by-alias-and-name-false}](#validatebyalias-and-validatebyname-both-set-to-false-validate-by-alias-and-name-false)
-<!-- TOC END -->
-
 Pydantic attempts to provide useful errors. The following sections provide details on common errors developers may
 encounter when working with Pydantic, along with suggestions for addressing the error condition.
 
@@ -68,7 +13,7 @@ from typing import ForwardRef
 
 from pydantic import BaseModel, PydanticUserError
 
-UndefinedType = ForwardRef('UndefinedType')
+UndefinedType = ForwardRef("UndefinedType")
 
 
 class Foobar(BaseModel):
@@ -78,7 +23,7 @@ class Foobar(BaseModel):
 try:
     Foobar(a=1)
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'class-not-fully-defined'
+    assert exc_info.code == "class-not-fully-defined"
 ```
 
 Or when the type has been defined after usage:
@@ -90,22 +35,22 @@ from pydantic import BaseModel, PydanticUserError
 
 
 class Foo(BaseModel):
-    a: Optional['Bar'] = None
+    a: Optional["Bar"] = None
 
 
 try:
     # this doesn't work, see raised error
-    foo = Foo(a={'b': {'a': None}})
+    foo = Foo(a={"b": {"a": None}})
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'class-not-fully-defined'
+    assert exc_info.code == "class-not-fully-defined"
 
 
 class Bar(BaseModel):
-    b: 'Foo'
+    b: "Foo"
 
 
 # this works, though
-foo = Foo(a={'b': {'a': None}})
+foo = Foo(a={"b": {"a": None}})
 ```
 
 For BaseModel subclasses, it can be fixed by defining the type and then calling `.model_rebuild()`:
@@ -117,16 +62,16 @@ from pydantic import BaseModel
 
 
 class Foo(BaseModel):
-    a: Optional['Bar'] = None
+    a: Optional["Bar"] = None
 
 
 class Bar(BaseModel):
-    b: 'Foo'
+    b: "Foo"
 
 
 Foo.model_rebuild()
 
-foo = Foo(a={'b': {'a': None}})
+foo = Foo(a={"b": {"a": None}})
 ```
 
 In other cases, the error message should indicate how to rebuild the class with the appropriate type defined.
@@ -145,10 +90,10 @@ try:
     class Model(BaseModel):
         @classmethod
         def __modify_schema__(cls, field_schema):
-            field_schema.update(examples=['example'])
+            field_schema.update(examples=["example"])
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'custom-json-schema'
+    assert exc_info.code == "custom-json-schema"
 ```
 
 The new method `__get_pydantic_json_schema__` receives two arguments: the first is a dictionary denoted as `CoreSchema`,
@@ -167,10 +112,10 @@ class Model(BaseModel):
     @classmethod
     def __get_pydantic_json_schema__(
         cls, core_schema: CoreSchema, handler: GetJsonSchemaHandler
-    ) -> dict[str, Any]:
+    ) -> t.MappingKV[str, Any]:
         json_schema = super().__get_pydantic_json_schema__(core_schema, handler)
         json_schema = handler.resolve_ref_schema(json_schema)
-        json_schema.update(examples=['example'])
+        json_schema.update(examples=["example"])
         return json_schema
 
 
@@ -187,19 +132,19 @@ This error is raised when you define a decorator with a field that is not valid.
 ```python
 from typing import Any
 
-from pydantic import BaseModel, PydanticUserError, field_validator
+from pydantic import BaseModel, PydanticUserError, u.field_validator
 
 try:
 
     class Model(BaseModel):
         a: str
 
-        @field_validator('b')
-        def check_b(cls, v: Any):
+        @u.field_validator("b")
+        def check_b(cls, v):
             return v
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'decorator-missing-field'
+    assert exc_info.code == "decorator-missing-field"
 ```
 
 You can use `check_fields=False` if you're inheriting from the model and intended this.
@@ -207,16 +152,16 @@ You can use `check_fields=False` if you're inheriting from the model and intende
 ```python
 from typing import Any
 
-from pydantic import BaseModel, create_model, field_validator
+from pydantic import BaseModel, u.create_model, u.field_validator
 
 
 class Model(BaseModel):
-    @field_validator('a', check_fields=False)
-    def check_a(cls, v: Any):
+    @u.field_validator("a", check_fields=False)
+    def check_a(cls, v):
         return v
 
 
-model = create_model('FooModel', a=(str, 'cake'), __base__=Model)
+model = u.create_model("FooModel", a=(str, "cake"), __base__=Model)
 ```
 
 ## Discriminator no field {#discriminator-no-field}
@@ -226,7 +171,7 @@ This error is raised when a model in discriminated unions doesn't define a discr
 ```python
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field, PydanticUserError
+from pydantic import BaseModel, u.Field, PydanticUserError
 
 
 class Cat(BaseModel):
@@ -234,18 +179,18 @@ class Cat(BaseModel):
 
 
 class Dog(BaseModel):
-    pet_type: Literal['dog']
+    pet_type: Literal["dog"]
     d: str
 
 
 try:
 
     class Model(BaseModel):
-        pet: Union[Cat, Dog] = Field(discriminator='pet_type')
+        pet: Union[Cat, Dog] = u.Field(discriminator="pet_type")
         number: int
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'discriminator-no-field'
+    assert exc_info.code == "discriminator-no-field"
 ```
 
 ## Discriminator alias type {#discriminator-alias-type}
@@ -255,29 +200,27 @@ This error is raised when you define a non-string alias on a discriminator field
 ```python
 from typing import Literal, Union
 
-from pydantic import AliasChoices, BaseModel, Field, PydanticUserError
+from pydantic import AliasChoices, BaseModel, u.Field, PydanticUserError
 
 
 class Cat(BaseModel):
-    pet_type: Literal['cat'] = Field(
-        validation_alias=AliasChoices('Pet', 'PET')
-    )
+    pet_type: Literal["cat"] = u.Field(validation_alias=AliasChoices("Pet", "PET"))
     c: str
 
 
 class Dog(BaseModel):
-    pet_type: Literal['dog']
+    pet_type: Literal["dog"]
     d: str
 
 
 try:
 
     class Model(BaseModel):
-        pet: Union[Cat, Dog] = Field(discriminator='pet_type')
+        pet: Union[Cat, Dog] = u.Field(discriminator="pet_type")
         number: int
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'discriminator-alias-type'
+    assert exc_info.code == "discriminator-alias-type"
 ```
 
 ## Discriminator needs literal {#discriminator-needs-literal}
@@ -287,7 +230,7 @@ This error is raised when you define a non-`Literal` type on a discriminator fie
 ```python
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field, PydanticUserError
+from pydantic import BaseModel, u.Field, PydanticUserError
 
 
 class Cat(BaseModel):
@@ -296,18 +239,18 @@ class Cat(BaseModel):
 
 
 class Dog(BaseModel):
-    pet_type: Literal['dog']
+    pet_type: Literal["dog"]
     d: str
 
 
 try:
 
     class Model(BaseModel):
-        pet: Union[Cat, Dog] = Field(discriminator='pet_type')
+        pet: Union[Cat, Dog] = u.Field(discriminator="pet_type")
         number: int
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'discriminator-needs-literal'
+    assert exc_info.code == "discriminator-needs-literal"
 ```
 
 ## Discriminator alias {#discriminator-alias}
@@ -317,27 +260,27 @@ This error is raised when you define different aliases on discriminator fields.
 ```python
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field, PydanticUserError
+from pydantic import BaseModel, u.Field, PydanticUserError
 
 
 class Cat(BaseModel):
-    pet_type: Literal['cat'] = Field(validation_alias='PET')
+    pet_type: Literal["cat"] = u.Field(validation_alias="PET")
     c: str
 
 
 class Dog(BaseModel):
-    pet_type: Literal['dog'] = Field(validation_alias='Pet')
+    pet_type: Literal["dog"] = u.Field(validation_alias="Pet")
     d: str
 
 
 try:
 
     class Model(BaseModel):
-        pet: Union[Cat, Dog] = Field(discriminator='pet_type')
+        pet: Union[Cat, Dog] = u.Field(discriminator="pet_type")
         number: int
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'discriminator-alias'
+    assert exc_info.code == "discriminator-alias"
 ```
 
 ## Invalid discriminator validator {#discriminator-validator}
@@ -350,32 +293,32 @@ so you can't use a validator that might change its value.
 ```python
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field, PydanticUserError, field_validator
+from pydantic import BaseModel, u.Field, PydanticUserError, u.field_validator
 
 
 class Cat(BaseModel):
-    pet_type: Literal['cat']
+    pet_type: Literal["cat"]
 
-    @field_validator('pet_type', mode='before')
+    @u.field_validator("pet_type", mode="before")
     @classmethod
     def validate_pet_type(cls, v):
-        if v == 'kitten':
-            return 'cat'
+        if v == "kitten":
+            return "cat"
         return v
 
 
 class Dog(BaseModel):
-    pet_type: Literal['dog']
+    pet_type: Literal["dog"]
 
 
 try:
 
     class Model(BaseModel):
-        pet: Union[Cat, Dog] = Field(discriminator='pet_type')
+        pet: Union[Cat, Dog] = u.Field(discriminator="pet_type")
         number: int
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'discriminator-validator'
+    assert exc_info.code == "discriminator-validator"
 ```
 
 This can be worked around by using a standard `Union`, dropping the discriminator:
@@ -383,29 +326,29 @@ This can be worked around by using a standard `Union`, dropping the discriminato
 ```python
 from typing import Literal, Union
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, u.field_validator
 
 
 class Cat(BaseModel):
-    pet_type: Literal['cat']
+    pet_type: Literal["cat"]
 
-    @field_validator('pet_type', mode='before')
+    @u.field_validator("pet_type", mode="before")
     @classmethod
     def validate_pet_type(cls, v):
-        if v == 'kitten':
-            return 'cat'
+        if v == "kitten":
+            return "cat"
         return v
 
 
 class Dog(BaseModel):
-    pet_type: Literal['dog']
+    pet_type: Literal["dog"]
 
 
 class Model(BaseModel):
     pet: Union[Cat, Dog]
 
 
-assert Model(pet={'pet_type': 'kitten'}).pet.pet_type == 'cat'
+assert Model(pet={"pet_type": "kitten"}).pet.pet_type == "cat"
 ```
 
 ## Callable discriminator case with no tag {#callable-discriminator-no-tag}
@@ -420,9 +363,9 @@ from pydantic import BaseModel, Discriminator, PydanticUserError, Tag
 
 def model_x_discriminator(v):
     if isinstance(v, str):
-        return 'str'
+        return "str"
     if isinstance(v, (dict, BaseModel)):
-        return 'model'
+        return "model"
 
 
 # tag missing for both union choices
@@ -430,41 +373,41 @@ try:
 
     class DiscriminatedModel(BaseModel):
         x: Annotated[
-            Union[str, 'DiscriminatedModel'],
+            Union[str, "DiscriminatedModel"],
             Discriminator(model_x_discriminator),
         ]
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'callable-discriminator-no-tag'
+    assert exc_info.code == "callable-discriminator-no-tag"
 
 # tag missing for `'DiscriminatedModel'` union choice
 try:
 
     class DiscriminatedModel(BaseModel):
         x: Annotated[
-            Union[Annotated[str, Tag('str')], 'DiscriminatedModel'],
+            Union[Annotated[str, Tag("str")], "DiscriminatedModel"],
             Discriminator(model_x_discriminator),
         ]
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'callable-discriminator-no-tag'
+    assert exc_info.code == "callable-discriminator-no-tag"
 
 # tag missing for `str` union choice
 try:
 
     class DiscriminatedModel(BaseModel):
         x: Annotated[
-            Union[str, Annotated['DiscriminatedModel', Tag('model')]],
+            Union[str, Annotated["DiscriminatedModel", Tag("model")]],
             Discriminator(model_x_discriminator),
         ]
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'callable-discriminator-no-tag'
+    assert exc_info.code == "callable-discriminator-no-tag"
 ```
 
 ## `TypedDict` version {#typed-dict-version}
 
-This error is raised when you use [typing.TypedDict][]
+This error is raised when you use `typing.TypedDict`
 instead of `typing_extensions.TypedDict` on Python < 3.12.
 
 ## Model parent field overridden {#model-field-overridden}
@@ -486,7 +429,7 @@ try:
         a = 123.0
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'model-field-overridden'
+    assert exc_info.code == "model-field-overridden"
 ```
 
 ## Model field missing annotation {#model-field-missing-annotation}
@@ -494,16 +437,16 @@ except PydanticUserError as exc_info:
 This error is raised when a field doesn't have an annotation.
 
 ```python
-from pydantic import BaseModel, Field, PydanticUserError
+from pydantic import BaseModel, u.Field, PydanticUserError
 
 try:
 
     class Model(BaseModel):
-        a = Field('foobar')
+        a = u.Field("foobar")
         b = None
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'model-field-missing-annotation'
+    assert exc_info.code == "model-field-missing-annotation"
 ```
 
 If the field is not meant to be a field, you may be able to resolve the error
@@ -538,7 +481,7 @@ class MyModel(BaseModel):
     _d: IgnoredType = IgnoredType()
 ```
 
-## `Config` and `model_config` both defined {#config-both}
+## `Config` and `model_config` both defined {#settings-both}
 
 This error is raised when `class Config` and `model_config` are used together.
 
@@ -556,7 +499,7 @@ try:
             from_attributes = True
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'config-both'
+    assert exc_info.code == "settings-both"
 ```
 
 ## Keyword arguments removed {#removed-kwargs}
@@ -566,15 +509,15 @@ This error is raised when the keyword arguments are not available in Pydantic V2
 For example, `regex` is removed from Pydantic V2:
 
 ```python
-from pydantic import BaseModel, Field, PydanticUserError
+from pydantic import BaseModel, u.Field, PydanticUserError
 
 try:
 
     class Model(BaseModel):
-        x: str = Field(regex='test')
+        x: str = u.Field(regex="test")
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'removed-kwargs'
+    assert exc_info.code == "removed-kwargs"
 ```
 
 ## Circular reference schema {#circular-reference-schema}
@@ -584,7 +527,7 @@ This error is raised when a circular reference is found that would otherwise res
 For example, this is a valid type alias:
 
 ```python {test="skip" lint="skip" upgrade="skip"}
-type A = list[A] | None
+type A = t.SequenceOf[A] | None
 ```
 
 while these are not:
@@ -611,7 +554,7 @@ class Model(BaseModel):
 try:
     Model.model_json_schema()
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'invalid-for-json-schema'
+    assert exc_info.code == "invalid-for-json-schema"
 ```
 
 ## JSON schema already used {#JSON-schema-already-used}
@@ -629,7 +572,7 @@ from pydantic import BaseModel, PydanticUserError
 try:
     BaseModel()
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'base-model-instantiated'
+    assert exc_info.code == "base-model-instantiated"
 ```
 
 ## Undefined annotation {#undefined-annotation}
@@ -641,13 +584,13 @@ from pydantic import BaseModel, PydanticUndefinedAnnotation
 
 
 class Model(BaseModel):
-    a: 'B'  # noqa F821
+    a: "B"  # noqa F821
 
 
 try:
     Model.model_rebuild()
 except PydanticUndefinedAnnotation as exc_info:
-    assert exc_info.code == 'undefined-annotation'
+    assert exc_info.code == "undefined-annotation"
 ```
 
 ## Schema for unknown type {#schema-for-unknown-type}
@@ -663,7 +606,7 @@ try:
         x: 43 = 123
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'schema-for-unknown-type'
+    assert exc_info.code == "schema-for-unknown-type"
 ```
 
 ## Import error {#import-error}
@@ -673,17 +616,17 @@ Pydantic V2.
 
 See the [Migration Guide](../migration.md) for more information.
 
-## `create_model` field definitions {#create-model-field-definitions}
+## `u.create_model` field definitions {#create-model-field-definitions}
 
-This error is raised when you provide invalid field definitions in [`create_model()`][pydantic.create_model].
+This error is raised when you provide invalid field definitions in [`u.create_model()`][pydantic.u.create_model].
 
 ```python
-from pydantic import PydanticUserError, create_model
+from pydantic import PydanticUserError, u.create_model
 
 try:
-    create_model('FooModel', foo=(str, 'default value', 'more'))
+    u.create_model("FooModel", foo=(str, "default value", "more"))
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'create-model-field-definitions'
+    assert exc_info.code == "create-model-field-definitions"
 ```
 
 The fields definition syntax can be found in the [dynamic model creation](../concepts/models.md#dynamic-model-creation) documentation.
@@ -693,31 +636,31 @@ The fields definition syntax can be found in the [dynamic model creation](../con
 This error is raised when you use validator bare (with no fields).
 
 ```python
-from pydantic import BaseModel, PydanticUserError, field_validator
+from pydantic import BaseModel, PydanticUserError, u.field_validator
 
 try:
 
     class Model(BaseModel):
         a: str
 
-        @field_validator
+        @u.field_validator
         def checker(cls, v):
             return v
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'validator-no-fields'
+    assert exc_info.code == "validator-no-fields"
 ```
 
 Validators should be used with fields and keyword arguments.
 
 ```python
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, u.field_validator
 
 
 class Model(BaseModel):
     a: str
 
-    @field_validator('a')
+    @u.field_validator("a")
     def checker(cls, v):
         return v
 ```
@@ -727,7 +670,7 @@ class Model(BaseModel):
 This error is raised when you use a validator with non-string fields.
 
 ```python
-from pydantic import BaseModel, PydanticUserError, field_validator
+from pydantic import BaseModel, PydanticUserError, u.field_validator
 
 try:
 
@@ -735,25 +678,25 @@ try:
         a: str
         b: str
 
-        @field_validator(['a', 'b'])
+        @u.field_validator(["a", "b"])
         def check_fields(cls, v):
             return v
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'validator-invalid-fields'
+    assert exc_info.code == "validator-invalid-fields"
 ```
 
-Fields should be passed as separate string arguments:
+u.Fields should be passed as separate string arguments:
 
 ```python
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, u.field_validator
 
 
 class Model(BaseModel):
     a: str
     b: str
 
-    @field_validator('a', 'b')
+    @u.field_validator("a", "b")
     def check_fields(cls, v):
         return v
 ```
@@ -763,19 +706,19 @@ class Model(BaseModel):
 This error is raised when you apply a validator on an instance method.
 
 ```python
-from pydantic import BaseModel, PydanticUserError, field_validator
+from pydantic import BaseModel, PydanticUserError, u.field_validator
 
 try:
 
     class Model(BaseModel):
         a: int = 1
 
-        @field_validator('a')
+        @u.field_validator("a")
         def check_a(self, value):
             return value
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'validator-instance-method'
+    assert exc_info.code == "validator-instance-method"
 ```
 
 ## `json_schema_input_type` used with the wrong mode {#validator-input-type}
@@ -784,27 +727,27 @@ This error is raised when you explicitly specify a value for the `json_schema_in
 argument and `mode` isn't set to either `'before'`, `'plain'` or `'wrap'`.
 
 ```python
-from pydantic import BaseModel, PydanticUserError, field_validator
+from pydantic import BaseModel, PydanticUserError, u.field_validator
 
 try:
 
     class Model(BaseModel):
         a: int = 1
 
-        @field_validator('a', mode='after', json_schema_input_type=int)
+        @u.field_validator("a", mode="after", json_schema_input_type=int)
         @classmethod
         def check_a(self, value):
             return value
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'validator-input-type'
+    assert exc_info.code == "validator-input-type"
 ```
 
 Documenting the JSON Schema input type is only possible for validators where the given
 value can be anything. That is why it isn't available for `after` validators, where
 the value is first validated against the type annotation.
 
-# r
+## root_validator
 
 If you use `@root_validator` with `pre=False` (the default) you MUST specify `skip_on_failure=True`.
 The `skip_on_failure=False` option is no longer available.
@@ -814,53 +757,53 @@ If you do, this root validator will no longer be called if validation fails for 
 
 Please see the [Migration Guide](../migration.md) for more details.
 
-## `model_serializer` instance methods {#model-serializer-instance-method}
+## `u.model_serializer` instance methods {#model-serializer-instance-method}
 
-`@model_serializer` must be applied to instance methods.
+`@u.model_serializer` must be applied to instance methods.
 
-This error is raised when you apply `model_serializer` on an instance method without `self`:
+This error is raised when you apply `u.model_serializer` on an instance method without `self`:
 
 ```python
-from pydantic import BaseModel, PydanticUserError, model_serializer
+from pydantic import BaseModel, PydanticUserError, u.model_serializer
 
 try:
 
     class MyModel(BaseModel):
         a: int
 
-        @model_serializer
+        @u.model_serializer
         def _serialize(slf, x, y, z):
             return slf
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'model-serializer-instance-method'
+    assert exc_info.code == "model-serializer-instance-method"
 ```
 
 Or on a class method:
 
 ```python
-from pydantic import BaseModel, PydanticUserError, model_serializer
+from pydantic import BaseModel, PydanticUserError, u.model_serializer
 
 try:
 
     class MyModel(BaseModel):
         a: int
 
-        @model_serializer
+        @u.model_serializer
         @classmethod
         def _serialize(self, x, y, z):
             return self
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'model-serializer-instance-method'
+    assert exc_info.code == "model-serializer-instance-method"
 ```
 
-## `validator`, `field`, `config`, and `info` {#validator-field-config-info}
+## `validator`, `field`, `settings`, and `info` {#validator-field-settings-info}
 
-The `field` and `config` parameters are not available in Pydantic V2.
+The `field` and `settings` parameters are not available in Pydantic V2.
 Please use the `info` parameter instead.
 
-You can access the configuration via `info.config`,
+You can access the configuration via `info.settings`,
 but it is a dictionary instead of an object like it was in Pydantic V1.
 
 The `field` argument is no longer available.
@@ -874,148 +817,166 @@ import warnings
 
 from pydantic import BaseModel, PydanticUserError, validator
 
-warnings.filterwarnings('ignore', category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 try:
 
     class Model(BaseModel):
         a: int
 
-        @validator('a')
+        @validator("a")
         def check_a(cls, value, foo):
             return value
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'validator-v1-signature'
+    assert exc_info.code == "validator-v1-signature"
 ```
 
-## Unrecognized `field_validator` signature {#validator-signature}
+## Unrecognized `u.field_validator` signature {#validator-signature}
 
-This error is raised when a `field_validator` or `model_validator` function has the wrong signature.
+This error is raised when a `u.field_validator` or `u.model_validator` function has the wrong signature.
 
 ```python
-from pydantic import BaseModel, PydanticUserError, field_validator
+from pydantic import BaseModel, PydanticUserError, u.field_validator
 
 try:
 
     class Model(BaseModel):
         a: str
 
-        @field_validator('a')
+        @u.field_validator("a")
         @classmethod
         def check_a(cls):
-            return 'a'
+            return "a"
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'validator-signature'
+    assert exc_info.code == "validator-signature"
 ```
 
-## Unrecognized `field_serializer` signature {#field-serializer-signature}
+## Unrecognized `u.field_serializer` signature {#field-serializer-signature}
 
-This error is raised when the `field_serializer` function has the wrong signature.
+This error is raised when the `u.field_serializer` function has the wrong signature.
 
 ```python
-from pydantic import BaseModel, PydanticUserError, field_serializer
+from pydantic import BaseModel, PydanticUserError, u.field_serializer
 
 try:
 
     class Model(BaseModel):
         x: int
 
-        @field_serializer('x')
+        @u.field_serializer("x")
         def no_args():
-            return 'x'
+            return "x"
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'field-serializer-signature'
+    assert exc_info.code == "field-serializer-signature"
 ```
 
 Valid field serializer signatures are:
 
 ```python {test="skip" lint="skip" upgrade="skip"}
-from pydantic import FieldSerializationInfo, SerializerFunctionWrapHandler, field_serializer
+from pydantic import (
+    u.FieldSerializationInfo,
+    SerializerFunctionWrapHandler,
+    u.field_serializer,
+)
+
 
 # an instance method with the default mode or `mode='plain'`
-@field_serializer('x')  # or @field_serializer('x', mode='plain')
-def ser_x(self, value: Any, info: FieldSerializationInfo): ...
+@u.field_serializer("x")  # or @u.field_serializer('x', mode='plain')
+def ser_x(self, value, info: u.FieldSerializationInfo): ...
+
 
 # a static method or function with the default mode or `mode='plain'`
-@field_serializer('x')  # or @field_serializer('x', mode='plain')
+@u.field_serializer("x")  # or @u.field_serializer('x', mode='plain')
 @staticmethod
-def ser_x(value: Any, info: FieldSerializationInfo): ...
+def ser_x(value, info: u.FieldSerializationInfo): ...
+
 
 # equivalent to
-def ser_x(value: Any, info: FieldSerializationInfo): ...
-serializer('x')(ser_x)
+def ser_x(value, info: u.FieldSerializationInfo): ...
+
+
+serializer("x")(ser_x)
+
 
 # an instance method with `mode='wrap'`
-@field_serializer('x', mode='wrap')
-def ser_x(self, value: Any, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo): ...
+@u.field_serializer("x", mode="wrap")
+def ser_x(
+    self, value, nxt: SerializerFunctionWrapHandler, info: u.FieldSerializationInfo
+): ...
+
 
 # a static method or function with `mode='wrap'`
-@field_serializer('x', mode='wrap')
+@u.field_serializer("x", mode="wrap")
 @staticmethod
-def ser_x(value: Any, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo): ...
+def ser_x(value, nxt: SerializerFunctionWrapHandler, info: u.FieldSerializationInfo): ...
+
 
 # equivalent to
-def ser_x(value: Any, nxt: SerializerFunctionWrapHandler, info: FieldSerializationInfo): ...
-serializer('x')(ser_x)
+def ser_x(value, nxt: SerializerFunctionWrapHandler, info: u.FieldSerializationInfo): ...
+
+
+serializer("x")(ser_x)
+
 
 # For all of these, you can also choose to omit the `info` argument, for example:
-@field_serializer('x')
-def ser_x(self, value: Any): ...
+@u.field_serializer("x")
+def ser_x(self, value): ...
 
-@field_serializer('x', mode='wrap')
-def ser_x(self, value: Any, handler: SerializerFunctionWrapHandler): ...
+
+@u.field_serializer("x", mode="wrap")
+def ser_x(self, value, handler: SerializerFunctionWrapHandler): ...
 ```
 
-## Unrecognized `model_serializer` signature {#model-serializer-signature}
+## Unrecognized `u.model_serializer` signature {#model-serializer-signature}
 
-This error is raised when the `model_serializer` function has the wrong signature.
+This error is raised when the `u.model_serializer` function has the wrong signature.
 
 ```python
-from pydantic import BaseModel, PydanticUserError, model_serializer
+from pydantic import BaseModel, PydanticUserError, u.model_serializer
 
 try:
 
     class MyModel(BaseModel):
         a: int
 
-        @model_serializer
+        @u.model_serializer
         def _serialize(self, x, y, z):
             return self
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'model-serializer-signature'
+    assert exc_info.code == "model-serializer-signature"
 ```
 
 Valid model serializer signatures are:
 
 ```python {test="skip" lint="skip" upgrade="skip"}
-from pydantic import SerializerFunctionWrapHandler, SerializationInfo, model_serializer
+from pydantic import SerializerFunctionWrapHandler, SerializationInfo, u.model_serializer
 
 # an instance method with the default mode or `mode='plain'`
-@model_serializer  # or model_serializer(mode='plain')
+@u.model_serializer  # or u.model_serializer(mode='plain')
 def mod_ser(self, info: SerializationInfo): ...
 
 # an instance method with `mode='wrap'`
-@model_serializer(mode='wrap')
+@u.model_serializer(mode='wrap')
 def mod_ser(self, handler: SerializerFunctionWrapHandler, info: SerializationInfo):
 
 # For all of these, you can also choose to omit the `info` argument, for example:
-@model_serializer(mode='plain')
+@u.model_serializer(mode='plain')
 def mod_ser(self): ...
 
-@model_serializer(mode='wrap')
+@u.model_serializer(mode='wrap')
 def mod_ser(self, handler: SerializerFunctionWrapHandler): ...
 ```
 
 ## Multiple field serializers {#multiple-field-serializers}
 
-This error is raised when multiple `model_serializer` functions are defined for a field.
+This error is raised when multiple `u.model_serializer` functions are defined for a field.
 
 ```python
-from pydantic import BaseModel, PydanticUserError, field_serializer
+from pydantic import BaseModel, PydanticUserError, u.field_serializer
 
 try:
 
@@ -1023,16 +984,16 @@ try:
         x: int
         y: int
 
-        @field_serializer('x', 'y')
+        @u.field_serializer("x", "y")
         def serializer1(v):
-            return f'{v:,}'
+            return f"{v:,}"
 
-        @field_serializer('x')
+        @u.field_serializer("x")
         def serializer2(v):
             return v
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'multiple-field-serializers'
+    assert exc_info.code == "multiple-field-serializers"
 ```
 
 ## Invalid annotated type {#invalid-annotated-type}
@@ -1050,13 +1011,13 @@ try:
         foo: Annotated[str, FutureDate()]
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'invalid-annotated-type'
+    assert exc_info.code == "invalid-annotated-type"
 ```
 
-## `config` is unused with `TypeAdapter` {#type-adapter-config-unused}
+## `settings` is unused with `TypeAdapter` {#type-adapter-settings-unused}
 
-You will get this error if you try to pass `config` to `TypeAdapter` when the type is a type that
-has its own config that cannot be overridden (currently this is only `BaseModel`, `TypedDict` and `dataclass`):
+You will get this error if you try to pass `settings` to `TypeAdapter` when the type is a type that
+has its own settings that cannot be overridden (currently this is only `BaseModel`, `TypedDict` and `dataclass`):
 
 ```python
 from typing_extensions import TypedDict
@@ -1069,12 +1030,12 @@ class MyTypedDict(TypedDict):
 
 
 try:
-    TypeAdapter(MyTypedDict, config=ConfigDict(strict=True))
+    TypeAdapter(MyTypedDict, settings=ConfigDict(strict=True))
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'type-adapter-config-unused'
+    assert exc_info.code == "type-adapter-settings-unused"
 ```
 
-Instead you'll need to subclass the type and override or set the config on it:
+Instead you'll need to subclass the type and override or set the settings on it:
 
 ```python
 from typing_extensions import TypedDict
@@ -1095,7 +1056,7 @@ TypeAdapter(MyTypedDict)  # ok
 ## Cannot specify `model_config['extra']` with `RootModel` {#root-model-extra}
 
 Because `RootModel` is not capable of storing or even accepting extra fields during initialization, we raise an error
-if you try to specify a value for the config setting `'extra'` when creating a subclass of `RootModel`:
+if you try to specify a value for the settings setting `'extra'` when creating a subclass of `RootModel`:
 
 ```python
 from pydantic import PydanticUserError, RootModel
@@ -1103,11 +1064,11 @@ from pydantic import PydanticUserError, RootModel
 try:
 
     class MyRootModel(RootModel):
-        model_config = {'extra': 'allow'}
+        model_config = {"extra": "allow"}
         root: int
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'root-model-extra'
+    assert exc_info.code == "root-model-extra"
 ```
 
 ## Cannot evaluate type annotation {#unevaluable-type-annotation}
@@ -1118,11 +1079,11 @@ that clashes with one of your fields. We raise an error in the following case:
 ```python {test="skip"}
 from datetime import date
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class Model(BaseModel):
-    date: date = Field(description='A date')
+    date: date = u.Field(description="A date")
 ```
 
 As a workaround, you can either use an alias or change your import:
@@ -1131,11 +1092,11 @@ As a workaround, you can either use an alias or change your import:
 import datetime
 # Or `from datetime import date as _date`
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class Model(BaseModel):
-    date: datetime.date = Field(description='A date')
+    date: datetime.date = u.Field(description="A date")
 ```
 
 ## Incompatible `dataclass` `init` and `extra` settings {#dataclass-init-false-extra-allow}
@@ -1146,19 +1107,19 @@ while any of the fields have `init=False` set.
 Thus, you may not do something like the following:
 
 ```python {test="skip"}
-from pydantic import ConfigDict, Field
+from pydantic import ConfigDict, u.Field
 from pydantic.dataclasses import dataclass
 
 
-@dataclass(config=ConfigDict(extra='allow'))
+@dataclass(settings=ConfigDict(extra="allow"))
 class A:
-    a: int = Field(init=False, default=1)
+    a: int = u.Field(init=False, default=1)
 ```
 
 The above snippet results in the following error during schema building for the `A` dataclass:
 
 ```output
-pydantic.errors.PydanticUserError: Field a has `init=False` and dataclass has config setting `extra="allow"`.
+pydantic.errors.PydanticUserError: u.Field a has `init=False` and dataclass has settings setting `extra="allow"`.
 This combination is not allowed.
 ```
 
@@ -1167,13 +1128,13 @@ This combination is not allowed.
 The `init=False` and `init_var=True` settings are mutually exclusive. Doing so results in the `PydanticUserError` shown in the example below.
 
 ```python {test="skip"}
-from pydantic import Field
+from pydantic import u.Field
 from pydantic.dataclasses import dataclass
 
 
 @dataclass
 class Foo:
-    bar: str = Field(init=False, init_var=True)
+    bar: str = u.Field(init=False, init_var=True)
 
 
 """
@@ -1181,7 +1142,7 @@ pydantic.errors.PydanticUserError: Dataclass field bar has init=False and init_v
 """
 ```
 
-## `model_config` is used as a model field {#model-config-invalid-field-name}
+## `model_config` is used as a model field {#model-settings-invalid-field-name}
 
 This error is raised when `model_config` is used as the name of a field.
 
@@ -1194,24 +1155,24 @@ try:
         model_config: str
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'model-config-invalid-field-name'
+    assert exc_info.code == "model-settings-invalid-field-name"
 ```
 
-## [`with_config`][pydantic.config.with_config] is used on a `BaseModel` subclass {#with-config-on-model}
+## [`u.with_config`][pydantic.config.u.with_config] is used on a `BaseModel` subclass {#with-settings-on-model}
 
-This error is raised when the [`with_config`][pydantic.config.with_config] decorator is used on a class which is already a Pydantic model (use the `model_config` attribute instead).
+This error is raised when the [`u.with_config`][pydantic.config.u.with_config] decorator is used on a class which is already a Pydantic model (use the `model_config` attribute instead).
 
 ```python
-from pydantic import BaseModel, PydanticUserError, with_config
+from pydantic import BaseModel, PydanticUserError, u.with_config
 
 try:
 
-    @with_config({'allow_inf_nan': True})
+    @u.with_config({"allow_inf_nan": True})
     class Model(BaseModel):
         bar: str
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'with-config-on-model'
+    assert exc_info.code == "with-settings-on-model"
 ```
 
 ## `dataclass` is used on a `BaseModel` subclass {#dataclass-on-model}
@@ -1230,73 +1191,73 @@ try:
         bar: str
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'dataclass-on-model'
+    assert exc_info.code == "dataclass-on-model"
 ```
 
-## Unsupported type for `validate_call` {#validate-call-type}
+## Unsupported type for `u.validate_call` {#validate-call-type}
 
-`validate_call` has some limitations on the callables it can validate. This error is raised when you try to use it with an unsupported callable.
+`u.validate_call` has some limitations on the callables it can validate. This error is raised when you try to use it with an unsupported callable.
 Currently the supported callables are functions (including lambdas, but not built-ins) and methods and instances of [`partial`][functools.partial].
 In the case of [`partial`][functools.partial], the function being partially applied must be one of the supported callables.
 
 ### `@classmethod`, `@staticmethod`, and `@property`
 
-These decorators must be put before `validate_call`.
+These decorators must be put before `u.validate_call`.
 
 ```python
-from pydantic import PydanticUserError, validate_call
+from pydantic import PydanticUserError, u.validate_call
 
 # error
 try:
 
     class A:
-        @validate_call
+        @u.validate_call
         @classmethod
         def f1(cls): ...
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'validate-call-type'
+    assert exc_info.code == "validate-call-type"
 
 
 # correct
 @classmethod
-@validate_call
+@u.validate_call
 def f2(cls): ...
 ```
 
 ### Classes
 
-While classes are callables themselves, `validate_call` can't be applied on them, as it needs to know about which method to use (`__init__` or `__new__`) to fetch type annotations. If you want to validate the constructor of a class, you should put `validate_call` on top of the appropriate method instead.
+While classes are callables themselves, `u.validate_call` can't be applied on them, as it needs to know about which method to use (`__init__` or `__new__`) to fetch type annotations. If you want to validate the constructor of a class, you should put `u.validate_call` on top of the appropriate method instead.
 
 ```python
-from pydantic import PydanticUserError, validate_call
+from pydantic import PydanticUserError, u.validate_call
 
 # error
 try:
 
-    @validate_call
+    @u.validate_call
     class A1: ...
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'validate-call-type'
+    assert exc_info.code == "validate-call-type"
 
 
 # correct
 class A2:
-    @validate_call
+    @u.validate_call
     def __init__(self): ...
 
-    @validate_call
+    @u.validate_call
     def __new__(cls): ...
 ```
 
 ### Callable instances
 
-Although instances can be callable by implementing a `__call__` method, currently the instances of these types cannot be validated with `validate_call`.
-This may change in the future, but for now, you should use `validate_call` explicitly on `__call__` instead.
+Although instances can be callable by implementing a `__call__` method, currently the instances of these types cannot be validated with `u.validate_call`.
+This may change in the future, but for now, you should use `u.validate_call` explicitly on `__call__` instead.
 
 ```python
-from pydantic import PydanticUserError, validate_call
+from pydantic import PydanticUserError, u.validate_call
 
 # error
 try:
@@ -1304,15 +1265,15 @@ try:
     class A1:
         def __call__(self): ...
 
-    validate_call(A1())
+    u.validate_call(A1())
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'validate-call-type'
+    assert exc_info.code == "validate-call-type"
 
 
 # correct
 class A2:
-    @validate_call
+    @u.validate_call
     def __call__(self): ...
 ```
 
@@ -1321,51 +1282,51 @@ class A2:
 This is generally less common, but a possible reason is that you are trying to validate a method that doesn't have at least one argument (usually `self`).
 
 ```python
-from pydantic import PydanticUserError, validate_call
+from pydantic import PydanticUserError, u.validate_call
 
 try:
 
     class A:
         def f(): ...
 
-    validate_call(A().f)
+    u.validate_call(A().f)
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'validate-call-type'
+    assert exc_info.code == "validate-call-type"
 ```
 
 ## [`Unpack`][typing.Unpack] used without a [`TypedDict`][typing.TypedDict] {#unpack-typed-dict}
 
 This error is raised when [`Unpack`][typing.Unpack] is used with something other than
-a [`TypedDict`][typing.TypedDict] class object to type hint variadic keyword parameters.
+a [`TypedDict`][typing.TypedDict] class t.JsonValue to type hint variadic keyword parameters.
 
 For reference, see the [related specification section] and [PEP 692].
 
 ```python
 from typing_extensions import Unpack
 
-from pydantic import PydanticUserError, validate_call
+from pydantic import PydanticUserError, u.validate_call
 
 try:
 
-    @validate_call
+    @u.validate_call
     def func(**kwargs: Unpack[int]):
         pass
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'unpack-typed-dict'
+    assert exc_info.code == "unpack-typed-dict"
 ```
 
 ## Overlapping unpacked [`TypedDict`][typing.TypedDict] fields and arguments {#overlapping-unpack-typed-dict}
 
 This error is raised when the typed dictionary used to type hint variadic keywords parameters has field names
-overlapping with other parameters (unless [positional only][positional-only_parameter]).
+overlapping with other parameters (unless positional only).
 
 For reference, see the [related specification section] and [PEP 692].
 
 ```python
 from typing_extensions import TypedDict, Unpack
 
-from pydantic import PydanticUserError, validate_call
+from pydantic import PydanticUserError, u.validate_call
 
 
 class TD(TypedDict):
@@ -1374,12 +1335,12 @@ class TD(TypedDict):
 
 try:
 
-    @validate_call
+    @u.validate_call
     def func(a: int, **kwargs: Unpack[TD]):
         pass
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'overlapping-unpack-typed-dict'
+    assert exc_info.code == "overlapping-unpack-typed-dict"
 ```
 
 [related specification section]: https://typing.readthedocs.io/en/latest/spec/callables.html#unpack-for-keyword-arguments
@@ -1392,34 +1353,34 @@ Currently, [`Self`][typing.Self] can only be used to annotate a field of a class
 ```python
 from typing_extensions import Self
 
-from pydantic import PydanticUserError, validate_call
+from pydantic import PydanticUserError, u.validate_call
 
 try:
 
-    @validate_call
+    @u.validate_call
     def func(self: Self):
         pass
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'invalid-self-type'
+    assert exc_info.code == "invalid-self-type"
 ```
 
-The following example of [`validate_call()`][pydantic.validate_call] will also raise this error, even though it is correct from a type-checking perspective. This may be supported in the future.
+The following example of [`u.validate_call()`][pydantic.u.validate_call] will also raise this error, even though it is correct from a type-checking perspective. This may be supported in the future.
 
 ```python
 from typing_extensions import Self
 
-from pydantic import BaseModel, PydanticUserError, validate_call
+from pydantic import BaseModel, PydanticUserError, u.validate_call
 
 try:
 
     class A(BaseModel):
-        @validate_call
+        @u.validate_call
         def func(self, arg: Self):
             pass
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'invalid-self-type'
+    assert exc_info.code == "invalid-self-type"
 ```
 
 ## `validate_by_alias` and `validate_by_name` both set to `False` {#validate-by-alias-and-name-false}
@@ -1429,17 +1390,15 @@ This error is raised when you set `validate_by_alias` and `validate_by_name` to 
 This is not allowed because it would make it impossible to populate attributes.
 
 ```python
-from pydantic import BaseModel, ConfigDict, Field, PydanticUserError
+from pydantic import BaseModel, ConfigDict, u.Field, PydanticUserError
 
 try:
 
     class Model(BaseModel):
-        a: int = Field(alias='A')
+        a: int = u.Field(alias="A")
 
-        model_config = ConfigDict(
-            validate_by_alias=False, validate_by_name=False
-        )
+        model_config = ConfigDict(validate_by_alias=False, validate_by_name=False)
 
 except PydanticUserError as exc_info:
-    assert exc_info.code == 'validate-by-alias-and-name-false'
+    assert exc_info.code == "validate-by-alias-and-name-false"
 ```

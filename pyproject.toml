@@ -1,675 +1,1514 @@
+# [MANAGED] FLEXT pyproject standardization
+# Sections with [MANAGED] are enforced by flext_infra.deps.modernizer.
+# Run `make mod` to regenerate all managed pyproject sections.
+# Sections with [CUSTOM] are project-specific extension points.
+# [MANAGED] build system
 [build-system]
-    build-backend = "poetry.core.masonry.api"
-    requires = [
-        "poetry-core>=2.0",
-    ]
+build-backend = "hatchling.build"
+requires = [ "hatchling" ]
 
+# [CUSTOM] project metadata
 [project]
-    classifiers = [
-        "Development Status :: 4 - Beta",
-        "Intended Audience :: Developers",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.13",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-        "Typing :: Typed",
-    ]
-    dependencies = [
-        "flexcore @ ./.flext-deps/flexcore",
-        "flext-api @ ./.flext-deps/flext-api",
-        "flext-auth @ ./.flext-deps/flext-auth",
-        "flext-cli @ ./.flext-deps/flext-cli",
-        "flext-core @ ./.flext-deps/flext-core",
-        "flext-db-oracle @ ./.flext-deps/flext-db-oracle",
-        "flext-dbt-ldap @ ./.flext-deps/flext-dbt-ldap",
-        "flext-dbt-ldif @ ./.flext-deps/flext-dbt-ldif",
-        "flext-dbt-oracle @ ./.flext-deps/flext-dbt-oracle",
-        "flext-dbt-oracle-wms @ ./.flext-deps/flext-dbt-oracle-wms",
-        "flext-grpc @ ./.flext-deps/flext-grpc",
-        "flext-ldap @ ./.flext-deps/flext-ldap",
-        "flext-ldif @ ./.flext-deps/flext-ldif",
-        "flext-meltano @ ./.flext-deps/flext-meltano",
-        "flext-observability @ ./.flext-deps/flext-observability",
-        "flext-oracle-oic @ ./.flext-deps/flext-oracle-oic",
-        "flext-oracle-wms @ ./.flext-deps/flext-oracle-wms",
-        "flext-plugin @ ./.flext-deps/flext-plugin",
-        "flext-quality @ ./.flext-deps/flext-quality",
-        "flext-tap-ldap @ ./.flext-deps/flext-tap-ldap",
-        "flext-tap-ldif @ ./.flext-deps/flext-tap-ldif",
-        "flext-tap-oracle @ ./.flext-deps/flext-tap-oracle",
-        "flext-tap-oracle-oic @ ./.flext-deps/flext-tap-oracle-oic",
-        "flext-tap-oracle-wms @ ./.flext-deps/flext-tap-oracle-wms",
-        "flext-target-ldap @ ./.flext-deps/flext-target-ldap",
-        "flext-target-ldif @ ./.flext-deps/flext-target-ldif",
-        "flext-target-oracle @ ./.flext-deps/flext-target-oracle",
-        "flext-target-oracle-oic @ ./.flext-deps/flext-target-oracle-oic",
-        "flext-target-oracle-wms @ ./.flext-deps/flext-target-oracle-wms",
-        "flext-web @ ./.flext-deps/flext-web",
-    ]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
+]
+dependencies = [
+  "flext-core",
+  "flext-infra",
+  "flext-tests",
+  "importlib-resources>=7.1.0",
+  "pydantic>=2.13.3",
+]
+description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
+keywords = [ "coordination", "enterprise", "flext", "typed", "workspace" ]
+license = "MIT"
+name = "flext"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+version = "0.12.0-dev"
 
-    description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
-    keywords = [
-        "coordination",
-        "enterprise",
-        "flext",
-        "typed",
-        "workspace",
-    ]
-    name = "flext"
-    readme = "README.md"
-    requires-python = ">=3.13,<3.14"
-    version = "0.10.0-dev"
-    license = "MIT"
-    [[project.authors]]
-        email = "team@flext.sh"
-        name = "FLEXT Team"
-    [[project.maintainers]]
-        email = "team@flext.sh"
-        name = "FLEXT Team"
+[[project.authors]]
+email = "team@flext.sh"
+name = "FLEXT Team"
 
-    [project.optional-dependencies]
-        dev = [
-            "autoflake>=2.3.1",
-            "black>=25.1.0",
-            "codespell>=2.3.0",
-            "deptry>=0.23.0",
-            "isort>=6.0.1",
-            "pre-commit>=4.0.1",
-            "pylint>=3.3.0",
-            "pyupgrade>=3.19.0",
-            "radon>=6.0.1",
-            "ruff>=0.12.3",
-            "vulture>=2.13",
-        ]
-        docs = [
-            "mkdocs-awesome-pages-plugin>=2.9.0",
-            "mkdocs-encryptcontent-plugin>=2.0.0",
-            "mkdocs-exclude>=1.0.0",
-            "mkdocs-get-deps>=0.2.0",
-            "mkdocs-git-revision-date-localized-plugin>=1.2.0",
-            "mkdocs-literate-nav>=0.6.0",
-            "mkdocs-macros-plugin>=1.0.0",
-            "mkdocs-material-extensions>=1.3.1",
-            "mkdocs-material>=9.5.0",
-            "mkdocs-mermaid2-plugin>=1.1.0",
-            "mkdocs-minify-plugin>=0.7.0",
-            "mkdocs-newsletter>=0.1.0",
-            "mkdocs-print-site-plugin>=0.8.0",
-            "mkdocs-redirects>=1.2.0",
-            "mkdocs-section-index>=0.3.0",
-            "mkdocs-versioning>=0.2.0",
-            "mkdocs>=1.6.0",
-            "mkdocstrings-python>=1.7.0",
-            "mkdocstrings>=0.24.0",
-        ]
-        security = [
-            "bandit>=1.8.0",
-            "pip-audit>=2.7.3",
-        ]
-        test = [
-            "factory-boy>=3.3.1",
-            "faker>=37.4.0",
-            "hypothesis>=6.125.0",
-            "pytest-benchmark>=5.1.0",
-            "pytest-clarity>=1.0.1",
-            "pytest-cov>=6.2.0",
-            "pytest-deadfixtures>=2.2.1",
-            "pytest-env>=1.1.5",
-            "pytest-mock>=3.14.0",
-            "pytest-randomly>=3.16.0",
-            "pytest-sugar>=1.0.0",
-            "pytest-timeout>=2.4.0",
-            "pytest-xdist>=3.8.0",
-            "pytest>=8.4.0",
-        ]
-        typings = [
-            "django-stubs>=5.2.2",
-            "types-docker>=7.1.0",
-            "types-ldap3>=2.9.13.20250622",
-            "types-protobuf>=6.30.2.20250703",
-            "types-psutil>=7.0.0",
-            "types-psycopg2>=2.9.21.20250718",
-            "types-python-dateutil>=2.9.0",
-            "types-pyyaml>=6.0.12",
-            "types-redis>=4.6.0",
-            "types-requests>=2.32.4",
-            "types-setuptools>=80.9.0",
-            "types-toml>=0.10.8.20240310",
-        ]
+[[project.maintainers]]
+email = "team@flext.sh"
+name = "FLEXT Team"
 
-    [project.scripts]
-        flext-dev = "flext.dev:main"
-        flext-docs = "flext.docs:main"
-        flext-workspace = "flext.workspace:main"
+# [MANAGED] consolidated development dependencies
+[project.optional-dependencies]
+dev = [
+  "autoflake>=2.3.1",
+  "bandit>=1.8",
+  "black>=25.1",
+  "blacken-docs>=1.19",
+  "codespell>=2.3",
+  "deptry>=0.23",
+  "django-stubs>=5.2.2",
+  "factory-boy>=3.3.1",
+  "faker>=37.4",
+  "hypothesis>=6.125",
+  "isort>=6.0.1",
+  "matplotlib-stubs>=0.3",
+  "mkdocs-awesome-pages-plugin>=2.9",
+  "mkdocs-encryptcontent-plugin>=2",
+  "mkdocs-exclude>=1",
+  "mkdocs-get-deps>=0.2",
+  "mkdocs-git-revision-date-localized-plugin>=1.2",
+  "mkdocs-literate-nav>=0.6",
+  "mkdocs-macros-plugin>=1",
+  "mkdocs-material-extensions>=1.3.1",
+  "mkdocs-material>=9.5",
+  "mkdocs-mermaid2-plugin>=1.1",
+  "mkdocs-minify-plugin>=0.7",
+  "mkdocs-print-site-plugin>=0.8",
+  "mkdocs-redirects>=1.2",
+  "mkdocs-section-index>=0.3",
+  "mkdocs-versioning>=0.2",
+  "mkdocs>=1.6",
+  "mkdocstrings-python>=1.7",
+  "mkdocstrings>=0.24",
+  "pip-audit>=2.7.3",
+  "pre-commit>=4.0.1",
+  "pylint>=3.3",
+  "pyrefly>=1.0.0,<1.1.0",
+  "pytest-benchmark>=5.1",
+  "pytest-clarity>=1.0.1",
+  "pytest-codeblocks>=0.17.0",
+  "pytest-cov>=6.2",
+  "pytest-deadfixtures>=2.2.1",
+  "pytest-env>=1.1.5",
+  "pytest-mock>=3.14",
+  "pytest-randomly>=3.16",
+  "pytest-sugar>=1",
+  "pytest-timeout>=2.4",
+  "pytest-xdist>=3.8",
+  "pytest>=8.4",
+  "pyupgrade>=3.19",
+  "radon>=6.0.1",
+  "ruff>=0.12.3",
+  "types-cachetools>=6.2",
+  "types-cffi>=2.0",
+  "types-click>=7.1",
+  "types-defusedxml>=0.7",
+  "types-docker>=7.1",
+  "types-flask>=1.1.6",
+  "types-ldap3>=2.9.13.20250622",
+  "types-paramiko>=4.0",
+  "types-protobuf>=6.30.2.20250703",
+  "types-psutil>=7",
+  "types-psycopg2>=2.9.21.20250718",
+  "types-pyasn1>=0.6",
+  "types-pyopenssl>=24.1",
+  "types-python-dateutil>=2.9",
+  "types-pyyaml>=6.0.12",
+  "types-redis>=4.6",
+  "types-requests>=2.32.4",
+  "types-setuptools>=80.9",
+  "types-tabulate>=0.10",
+  "types-toml>=0.10.8.20240310",
+  "vulture>=2.13",
+]
 
-    [project.urls]
-        Documentation = "https://docs.flext.sh"
-        Homepage = "https://github.com/flext-sh/flext"
-        Repository = "https://github.com/flext-sh/flext"
-[tool]
-    [tool.deptry]
-        exclude = [
-            ".archive",
-            ".git",
-            ".meltano",
-            ".mypy_cache",
-            ".pytest_cache",
-            ".ruff_cache",
-            ".venv",
-            "__pycache__",
-            "build",
-            "dist",
-            "htmlcov",
-            "node_modules",
-            "reports",
-            "scripts",
-            "tests",
-            "vendor",
-            "venv",
-        ]
-        extend_exclude = [
-            "flexcore/",
-            "flext-.*/",
-        ]
-        known_first_party = [
-            "flext",
-            "flext_quality",
-        ]
-        pep621_dev_dependency_groups = [
-            "dev",
-            "docs",
-            "security",
-            "test",
-            "typings",
-        ]
+[project.scripts]
+flext-dev = "flext.dev:main"
+flext-docs = "flext.docs:main"
+flext-workspace = "flext.workspace:main"
 
-    [tool.mypy]
-        cache_dir = ".mypy_cache"
-        check_untyped_defs = true
-        color_output = true
-        disallow_any_decorated = false
-        disallow_any_explicit = true
-        disallow_any_expr = false
-        disallow_any_generics = true
-        disallow_any_unimported = true
-        disallow_incomplete_defs = true
-        disallow_subclassing_any = true
-        disallow_untyped_calls = true
-        disallow_untyped_decorators = false
-        disallow_untyped_defs = true
-        error_summary = true
-        exclude = [
-            ".*/generate_config.py",
-            ".*/manage.py",
-            ".*_pb2\\.py$",
-            ".*_pb2_grpc\\.py$",
-            ".coverage.*",
-            ".git/",
-            ".mypy_cache/",
-            ".pytest_cache/",
-            ".ruff_cache/",
-            ".venv/",
-            "__pycache__/",
-            "build/",
-            "dist/",
-            "node_modules/",
-            "vendor/",
-        ]
-        extra_checks = true
-        follow_imports = "silent"
-        follow_imports_for_stubs = true
-        incremental = true
-        local_partial_types = true
-        namespace_packages = true
-        no_implicit_optional = true
-        no_implicit_reexport = true
-        platform = "linux"
-        plugins = [
-            "pydantic.mypy",
-        ]
-        pretty = true
-        python_version = "3.13"
-        show_column_numbers = true
-        show_error_codes = true
-        show_error_context = true
-        show_traceback = true
-        strict = true
-        strict_equality = true
-        strict_optional = true
-        warn_incomplete_stub = true
-        warn_no_return = true
-        warn_redundant_casts = true
-        warn_return_any = true
-        warn_unreachable = true
-        warn_unused_configs = true
-        warn_unused_ignores = false
-mypy_path = ["src", "flext-api/src", "flext-auth/src", "flext-cli/src", "flext-core/src", "flext-db-oracle/src", "flext-dbt-ldap/src", "flext-dbt-ldif/src", "flext-dbt-oracle/src", "flext-dbt-oracle-wms/src", "flext-grpc/src", "flext-ldap/src", "flext-ldif/src", "flext-meltano/src", "flext-observability/src", "flext-oracle-oic/src", "flext-oracle-wms/src", "flext-plugin/src", "flext-quality/src", "flext-tap-ldap/src", "flext-tap-ldif/src", "flext-tap-oracle/src", "flext-tap-oracle-oic/src", "flext-tap-oracle-wms/src", "flext-target-ldap/src", "flext-target-ldif/src", "flext-target-oracle/src", "flext-target-oracle-oic/src", "flext-target-oracle-wms/src", "flext-web/src"]
-files = ["src/flext"]
+[project.urls]
+Documentation = "https://docs.flext.sh"
+Homepage = "https://github.com/flext-sh/flext"
+Repository = "https://github.com/flext-sh/flext"
 
-        [[tool.mypy.overrides]]
-            disable_error_code = [
-                "call-overload",
-            ]
-            module = "(models.py|result.py|service.py)"
+# [MANAGED] codespell
+[tool.codespell]
+check-filenames = true
+ignore-words-list = "crate,nd"
 
-        [[tool.mypy.overrides]]
-            disable_error_code = [
-                "comparison-overlap",
-                "truthy-function",
-            ]
-            disallow_untyped_defs = false
-            module = "tests.*"
+# [MANAGED] coverage
+[tool.coverage.report]
+exclude_also = [ "if TYPE_CHECKING:", "if _t.TYPE_CHECKING:", "if typing.TYPE_CHECKING:" ]
+fail_under = 45
+precision = 2
+show_missing = true
+skip_covered = false
 
-        [[tool.mypy.overrides]]
-            disable_error_code = [
-                "name-defined",
-            ]
-            module = "*.protocols"
+[tool.coverage.run]
+omit = [ "*/dependency_injector/providers.pyx" ]
 
-        [[tool.mypy.overrides]]
-            disable_error_code = [
-                "explicit-any",
-            ]
-            module = "flext_core.typings"
+# [MANAGED] deptry
+[tool.deptry]
+known_first_party = [ "flext", "flext_core", "flext_infra", "flext_tests" ]
+pep621_dev_dependency_groups = [ "dev" ]
 
-        [[tool.mypy.overrides]]
-            disable_error_code = [
-                "prop-decorator",
-                "return-value",
-            ]
-            module = "flext_core._models.base"
+[tool.flext.docs]
+exclude_docs = [
+  "/README.md",
+  "SUPPRESSIONS-RATIONALE.md",
+  "api-reference/foundation.md",
+  "api/types.md",
+  "architecture/FLEXT_*.md",
+  "architecture/arc42/**",
+  "architecture/c4-model/**",
+  "architecture/clean-architecture.md",
+  "architecture/data/**",
+  "architecture/deployment/**",
+  "architecture/flext-*-architecture.md",
+  "architecture/overview.md",
+  "architecture/plantuml/**",
+  "architecture/security/**",
+  "examples/**",
+  "planning/**",
+  "projects/flext-*.md",
+  "projects/flext-*/**",
+  "prompts/**",
+  "references/**",
+  "releases/**",
+  "reports/**",
+  "roadmap/**",
+  "scripts/**",
+  "standards/docstrings/**",
+  "standards/link-management.md",
+  "superpowers/**",
+  "type-system-architecture.md",
+  "utilities-guide.md",
+  "version-policy.md",
+]
+site_title = "FLEXT Workspace"
 
-    [tool.poetry]
+[tool.hatch.metadata]
+allow-direct-references = true
 
-        packages = [
-            { from = "src", include = "flext" },
-        ]
+# [MANAGED] mypy
+[tool.mypy]
+check_untyped_defs = true
+disable_error_code = [
+  "assignment",
+  "attr-defined",
+  "call-arg",
+  "misc",
+  "name-defined",
+  "prop-decorator",
+  "valid-type",
+]
+exclude = "^tests/fixtures(?:/|$)"
+explicit_package_bases = true
+extra_checks = true
+follow_imports = "normal"
+ignore_missing_imports = true
+local_partial_types = true
+mypy_path = [ ".", "src", "typings", "typings/generated" ]
+namespace_packages = true
+no_implicit_reexport = true
+overrides = [  ]
+plugins = [ "pydantic.mypy", "returns.contrib.mypy.returns_plugin" ]
+python_version = "3.13"
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_ignores = true
 
-        [tool.poetry.dependencies]
-            python = ">=3.13,<3.14"
-            # Regular dependencies (moved from [project.dependencies])
-            cachetools = ">=6.2.0"
-            cbor2 = ">=5.7.0"
-            click = ">=8.2.1"
-            docker = ">=7.1.0"
-            packaging = ">=25.0"
-            protobuf = ">=6.30.2"
-            pydantic = ">=2.12.3"
-            pydantic-settings = ">=2.10.1"
-            pyyaml = ">=6.0"
-            rich = ">=14.0.0"
-            structlog = ">=25.4.0"
-            toml = ">=0.10.2"
-            tomli-w = ">=1.2.0"
-            tomlkit = ">=0.13.3"
-            trio = ">=0.31.0"
-            pydantic-core = ">=2.41.4"
-            trafilatura = ">=2.0.0"
-            # Path dependencies (editable installs - paths defined in [project.dependencies])
-            flexcore = {path = ".flext-deps/flexcore", develop = true}
-            flext-api = {path = ".flext-deps/flext-api", develop = true}
-            flext-auth = {path = ".flext-deps/flext-auth", develop = true}
-            flext-cli = {path = ".flext-deps/flext-cli", develop = true}
-            flext-core = {path = ".flext-deps/flext-core", develop = true}
-            flext-db-oracle = {path = ".flext-deps/flext-db-oracle", develop = true}
-            flext-dbt-ldap = {path = ".flext-deps/flext-dbt-ldap", develop = true}
-            flext-dbt-ldif = {path = ".flext-deps/flext-dbt-ldif", develop = true}
-            flext-dbt-oracle = {path = ".flext-deps/flext-dbt-oracle", develop = true}
-            flext-dbt-oracle-wms = {path = ".flext-deps/flext-dbt-oracle-wms", develop = true}
-            flext-grpc = {path = ".flext-deps/flext-grpc", develop = true}
-            flext-ldap = {path = ".flext-deps/flext-ldap", develop = true}
-            flext-ldif = {path = ".flext-deps/flext-ldif", develop = true}
-            flext-meltano = {path = ".flext-deps/flext-meltano", develop = true}
-            flext-observability = {path = ".flext-deps/flext-observability", develop = true}
-            flext-oracle-oic = {path = ".flext-deps/flext-oracle-oic", develop = true}
-            flext-oracle-wms = {path = ".flext-deps/flext-oracle-wms", develop = true}
-            flext-plugin = {path = ".flext-deps/flext-plugin", develop = true}
-            flext-quality = {path = ".flext-deps/flext-quality", develop = true}
-            flext-tap-ldap = {path = ".flext-deps/flext-tap-ldap", develop = true}
-            flext-tap-ldif = {path = ".flext-deps/flext-tap-ldif", develop = true}
-            flext-tap-oracle = {path = ".flext-deps/flext-tap-oracle", develop = true}
-            flext-tap-oracle-oic = {path = ".flext-deps/flext-tap-oracle-oic", develop = true}
-            flext-tap-oracle-wms = {path = ".flext-deps/flext-tap-oracle-wms", develop = true}
-            flext-target-ldap = {path = ".flext-deps/flext-target-ldap", develop = true}
-            flext-target-ldif = {path = ".flext-deps/flext-target-ldif", develop = true}
-            flext-target-oracle = {path = ".flext-deps/flext-target-oracle", develop = true}
-            flext-target-oracle-oic = {path = ".flext-deps/flext-target-oracle-oic", develop = true}
-            flext-target-oracle-wms = {path = ".flext-deps/flext-target-oracle-wms", develop = true}
-            flext-web = {path = ".flext-deps/flext-web", develop = true}
+[tool.poetry]
 
-        [tool.poetry.group.dev.dependencies]
-            aiohttp = ">=3.12.14"
-            docker = ">=7.1.0"
-            email-validator = "^2.3.0"
-            jedi-language-server = "^0.45.1"
-            ldap3 = ">=2.9.1"
-            numpy = ">=2.3.2"
-            psycopg2 = ">=2.9.10"
-            pytest-benchmark = "^5.1.0"
-            pytest-clarity = "^1.0.1"
-            pytest-cov = "^7.0.0"
-            pytest-json-report = "^1.5.0"
-            pytest-randomly = "^4.0.1"
-            pytest-xdist = "^3.8.0"
-            redis = ">=5.0.0"
-            twisted = "^25.5.0"
-            types-pyyaml = "^6.0.12.20250809"
-            beartype = "^0.22.5"
-        commitizen = ">=4.8.3,<4.9"
-        opentelemetry-exporter-prometheus = ">=0.60b1"
-        opentelemetry-api = ">=1.39.1"
-        opentelemetry-sdk = ">=1.39.1"
-        prompt-toolkit = ">=3.0.52"
-        sqlparse = ">=0.5.5"
-        vulture = "^2.14"
-        complexipy = "^5.1.0"
-        rope = "^1.14.0"
-        detect-secrets = "^1.5.0"
-        safety = "^3.7.0"
+# [MANAGED] pydantic-mypy
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
 
-        [tool.poetry.group.typings.dependencies]
-            aiofiles = "^24.1.0"
-            pyarrow-stubs = "^20.0.0.20250825"
-            types-aiofiles = "^24.1.0.20250809"
-            types-click-default-group = "^1.2.0.20250513"
-            types-croniter = "^6.0.0.20250626"
-            types-dateparser = "^1.2.2.20250627"
-            types-factory-boy = "^0.4.1"
-            types-greenlet = "^3.2.0.20250417"
-            types-grpcio = "^1.0.0.20250914"
-            types-ldap3 = "^2.9.13.20250622"
-            types-mock = "^5.2.0.20250809"
-            types-networkx = "^3.5.0.20250728"
-            types-pymysql = "^1.1.0.20250711"
-            types-pytz = "^2025.2.0.20250516"
-            types-pyyaml = ">=6.0.12.20250516"
-            types-simplejson = "^3.20.0.20250326"
-            types-six = "^1.17.0.20250515"
-            types-ujson = "^5.10.0.20250326"
-types-cachetools = "^6.2.0.20251022"
-types-tabulate = "^0.9.0.20241207"
+# [MANAGED] pyrefly
+[tool.pyrefly]
+disable-project-excludes-heuristics = true
+ignore-errors-in-generated-code = true
+project-excludes = [
+  "**/*_pb2*.py",
+  "**/*_pb2_grpc*.py",
+  "**/.venv/**",
+  "**/__pycache__",
+  "**/__pyrefly_virtual__/**",
+  "**/node_modules",
+  "**/site-packages/**",
+  "**/typings/**",
+  "**/vendor/**",
+  "**/venv/**",
+  ".flext-deps/**",
+  ".venv/**",
+  "typings/**",
+  "vendor/**",
+]
+project-includes = [
+  "examples/**/*.py*",
+  "flext-api/examples/**/*.py*",
+  "flext-api/src/**/*.py*",
+  "flext-api/tests/**/*.py*",
+  "flext-auth/examples/**/*.py*",
+  "flext-auth/src/**/*.py*",
+  "flext-auth/tests/**/*.py*",
+  "flext-cli/examples/**/*.py*",
+  "flext-cli/src/**/*.py*",
+  "flext-cli/tests/**/*.py*",
+  "flext-core/examples/**/*.py*",
+  "flext-core/scripts/**/*.py*",
+  "flext-core/src/**/*.py*",
+  "flext-core/tests/**/*.py*",
+  "flext-db-oracle/examples/**/*.py*",
+  "flext-db-oracle/src/**/*.py*",
+  "flext-db-oracle/tests/**/*.py*",
+  "flext-dbt-ldap/src/**/*.py*",
+  "flext-dbt-ldap/tests/**/*.py*",
+  "flext-dbt-ldif/src/**/*.py*",
+  "flext-dbt-ldif/tests/**/*.py*",
+  "flext-dbt-oracle-wms/src/**/*.py*",
+  "flext-dbt-oracle-wms/tests/**/*.py*",
+  "flext-dbt-oracle/src/**/*.py*",
+  "flext-dbt-oracle/tests/**/*.py*",
+  "flext-grpc/architecture/**/*.py*",
+  "flext-grpc/examples/**/*.py*",
+  "flext-grpc/src/**/*.py*",
+  "flext-grpc/tests/**/*.py*",
+  "flext-infra/src/**/*.py*",
+  "flext-infra/tests/**/*.py*",
+  "flext-ldap/src/**/*.py*",
+  "flext-ldap/tests/**/*.py*",
+  "flext-ldif/examples/**/*.py*",
+  "flext-ldif/src/**/*.py*",
+  "flext-ldif/tests/**/*.py*",
+  "flext-meltano/examples/**/*.py*",
+  "flext-meltano/src/**/*.py*",
+  "flext-meltano/tests/**/*.py*",
+  "flext-observability/examples/**/*.py*",
+  "flext-observability/src/**/*.py*",
+  "flext-observability/tests/**/*.py*",
+  "flext-oracle-oic/src/**/*.py*",
+  "flext-oracle-oic/tests/**/*.py*",
+  "flext-oracle-wms/examples/**/*.py*",
+  "flext-oracle-wms/src/**/*.py*",
+  "flext-oracle-wms/tests/**/*.py*",
+  "flext-plugin/examples/**/*.py*",
+  "flext-plugin/src/**/*.py*",
+  "flext-plugin/tests/**/*.py*",
+  "flext-quality/src/**/*.py*",
+  "flext-quality/tests/**/*.py*",
+  "flext-tap-ldap/src/**/*.py*",
+  "flext-tap-ldap/tests/**/*.py*",
+  "flext-tap-ldif/src/**/*.py*",
+  "flext-tap-ldif/tests/**/*.py*",
+  "flext-tap-oracle-oic/src/**/*.py*",
+  "flext-tap-oracle-oic/tests/**/*.py*",
+  "flext-tap-oracle-wms/examples/**/*.py*",
+  "flext-tap-oracle-wms/src/**/*.py*",
+  "flext-tap-oracle-wms/tests/**/*.py*",
+  "flext-tap-oracle/src/**/*.py*",
+  "flext-tap-oracle/tests/**/*.py*",
+  "flext-target-ldap/src/**/*.py*",
+  "flext-target-ldap/tests/**/*.py*",
+  "flext-target-ldif/src/**/*.py*",
+  "flext-target-ldif/tests/**/*.py*",
+  "flext-target-oracle-oic/src/**/*.py*",
+  "flext-target-oracle-oic/tests/**/*.py*",
+  "flext-target-oracle-wms/examples/**/*.py*",
+  "flext-target-oracle-wms/src/**/*.py*",
+  "flext-target-oracle-wms/tests/**/*.py*",
+  "flext-target-oracle/examples/**/*.py*",
+  "flext-target-oracle/src/**/*.py*",
+  "flext-target-oracle/tests/**/*.py*",
+  "flext-tests/src/**/*.py*",
+  "flext-tests/tests/**/*.py*",
+  "flext-web/examples/**/*.py*",
+  "flext-web/src/**/*.py*",
+  "flext-web/tests/**/*.py*",
+  "libs/**/*.py*",
+  "scripts/**/*.py*",
+  "src/**/*.py*",
+  "tests/**/*.py*",
+]
+python-version = "3.13"
+search-path = [
+  ".",
+  "flext-cli/examples",
+  "flext-cli/src",
+  "flext-core/examples",
+  "flext-core/scripts",
+  "flext-core/src",
+  "flext-infra/src",
+  "flext-infra/tmp_flow_test",
+  "flext-tests/src",
+  "scripts",
+  "src",
+]
+site-package-path = [ "./typings", ".venv/lib/python3.13/site-packages" ]
+skip-interpreter-query = true
+use-ignore-files = false
 
-        [tool.poetry.group.docs.dependencies]
-            matplotlib = "^3.10.7"
-            seaborn = "^0.13.2"
+[tool.pyrefly.errors]
+abstract-method-call = false
+annotation-mismatch = "error"
+bad-argument-count = "error"
+bad-argument-type = "error"
+bad-assignment = "error"
+bad-class-definition = "error"
+bad-context-manager = "error"
+bad-dunder-all = "error"
+bad-function-definition = "error"
+bad-index = "error"
+bad-instantiation = "error"
+bad-keyword-argument = "error"
+bad-match = "error"
+bad-override = false
+bad-param-name-override = "error"
+bad-raise = "error"
+bad-return = "error"
+bad-specialization = "error"
+bad-typed-dict = "error"
+bad-typed-dict-key = "error"
+bad-unpacking = "error"
+deprecated = "error"
+implicit-abstract-class = "error"
+implicit-any = "error"
+implicit-import = "error"
+implicitly-defined-attribute = "error"
+inconsistent-inheritance = "error"
+inconsistent-overload = "error"
+inconsistent-overload-default = "error"
+invalid-annotation = "error"
+invalid-argument = "error"
+invalid-decorator = "error"
+invalid-inheritance = "error"
+invalid-literal = "error"
+invalid-overload = "error"
+invalid-param-spec = "error"
+invalid-pattern = "error"
+invalid-self-type = "error"
+invalid-super-call = "error"
+invalid-type-alias = "error"
+invalid-type-var = "error"
+invalid-type-var-tuple = "error"
+invalid-variance = "error"
+invalid-yield = "error"
+missing-argument = "error"
+missing-attribute = "error"
+missing-import = "error"
+missing-module-attribute = "error"
+missing-override-decorator = "error"
+missing-source = "error"
+missing-source-for-stubs = "error"
+no-access = "error"
+no-matching-overload = "error"
+non-convergent-recursion = false
+non-exhaustive-match = false
+not-a-type = "error"
+not-async = "error"
+not-callable = "error"
+not-iterable = "error"
+not-required-key-access = "error"
+open-unpacking = "error"
+protocol-implicitly-defined-attribute = "error"
+read-only = "error"
+redefinition = "error"
+redundant-cast = "error"
+redundant-condition = "error"
+unannotated-attribute = "error"
+unannotated-parameter = "error"
+unannotated-return = "error"
+unbound-name = "error"
+unexpected-keyword = "error"
+unexpected-positional-argument = "error"
+unknown-name = "error"
+unnecessary-comparison = "error"
+unnecessary-type-conversion = "error"
+unreachable = "error"
+unresolvable-dunder-all = "error"
+unsafe-overlap = "error"
+unsupported = "error"
+unsupported-delete = "error"
+unsupported-operation = "error"
+untyped-import = "error"
+unused-coroutine = "error"
+unused-ignore = "error"
+variance-mismatch = "error"
 
-    [tool.pydantic-mypy]
-        init_forbid_extra = true
-        init_typed = true
-        warn_required_dynamic_aliases = true
+# [MANAGED] pyright
+[tool.pyright]
+exclude = [
+  "**/.*",
+  "**/.mypy_cache",
+  "**/.pytest_cache",
+  "**/.ruff_cache",
+  "**/.venv",
+  "**/.venv/**",
+  "**/__pycache__",
+  "**/__pyrefly_virtual__/**",
+  "**/dist-packages",
+  "**/dist-packages/**",
+  "**/node_modules",
+  "**/site-packages",
+  "**/site-packages/**",
+  "**/tests/fixtures",
+  "**/tests/fixtures/**",
+  "**/venv",
+  "**/venv/**",
+  ".git",
+  ".reports",
+  ".venv",
+]
+extraPaths = [ ".", "src", "typings", "typings/generated" ]
+ignore = [ "**/*.pyi", "typings", "typings/generated" ]
+include = [
+  "examples",
+  "flext-api/examples",
+  "flext-api/src",
+  "flext-api/tests",
+  "flext-auth/examples",
+  "flext-auth/src",
+  "flext-auth/tests",
+  "flext-cli/examples",
+  "flext-cli/src",
+  "flext-cli/tests",
+  "flext-core/examples",
+  "flext-core/scripts",
+  "flext-core/src",
+  "flext-core/tests",
+  "flext-db-oracle/examples",
+  "flext-db-oracle/src",
+  "flext-db-oracle/tests",
+  "flext-dbt-ldap/src",
+  "flext-dbt-ldap/tests",
+  "flext-dbt-ldif/src",
+  "flext-dbt-ldif/tests",
+  "flext-dbt-oracle-wms/src",
+  "flext-dbt-oracle-wms/tests",
+  "flext-dbt-oracle/src",
+  "flext-dbt-oracle/tests",
+  "flext-grpc/architecture",
+  "flext-grpc/examples",
+  "flext-grpc/src",
+  "flext-grpc/tests",
+  "flext-infra/src",
+  "flext-infra/tests",
+  "flext-ldap/src",
+  "flext-ldap/tests",
+  "flext-ldif/examples",
+  "flext-ldif/src",
+  "flext-ldif/tests",
+  "flext-meltano/examples",
+  "flext-meltano/src",
+  "flext-meltano/tests",
+  "flext-observability/examples",
+  "flext-observability/src",
+  "flext-observability/tests",
+  "flext-oracle-oic/src",
+  "flext-oracle-oic/tests",
+  "flext-oracle-wms/examples",
+  "flext-oracle-wms/src",
+  "flext-oracle-wms/tests",
+  "flext-plugin/examples",
+  "flext-plugin/src",
+  "flext-plugin/tests",
+  "flext-quality/src",
+  "flext-quality/tests",
+  "flext-tap-ldap/src",
+  "flext-tap-ldap/tests",
+  "flext-tap-ldif/src",
+  "flext-tap-ldif/tests",
+  "flext-tap-oracle-oic/src",
+  "flext-tap-oracle-oic/tests",
+  "flext-tap-oracle-wms/examples",
+  "flext-tap-oracle-wms/src",
+  "flext-tap-oracle-wms/tests",
+  "flext-tap-oracle/src",
+  "flext-tap-oracle/tests",
+  "flext-target-ldap/src",
+  "flext-target-ldap/tests",
+  "flext-target-ldif/src",
+  "flext-target-ldif/tests",
+  "flext-target-oracle-oic/src",
+  "flext-target-oracle-oic/tests",
+  "flext-target-oracle-wms/examples",
+  "flext-target-oracle-wms/src",
+  "flext-target-oracle-wms/tests",
+  "flext-target-oracle/examples",
+  "flext-target-oracle/src",
+  "flext-target-oracle/tests",
+  "flext-tests/src",
+  "flext-tests/tests",
+  "flext-web/examples",
+  "flext-web/src",
+  "flext-web/tests",
+  "libs",
+  "scripts",
+  "src",
+  "tests",
+]
+pythonPlatform = "Linux"
+pythonVersion = "3.13"
+reportArgumentType = "none"
+reportAttributeAccessIssue = "none"
+reportCallIssue = "none"
+reportConstantRedefinition = "error"
+reportIncompatibleMethodOverride = "error"
+reportIncompatibleVariableOverride = "none"
+reportInconsistentConstructor = "error"
+reportInvalidTypeForm = "none"
+reportMissingImports = "error"
+reportMissingModuleSource = "error"
+reportMissingTypeStubs = "none"
+reportPrivateUsage = "warning"
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "none"
+reportUnknownMemberType = "none"
+reportUnknownParameterType = "none"
+reportUnknownVariableType = "none"
+reportUnnecessaryCast = "error"
+reportUnnecessaryComparison = "warning"
+reportUnnecessaryIsInstance = "warning"
+reportUnreachable = "none"
+reportUnsupportedDunderAll = "none"
+reportUntypedBaseClass = "none"
+reportUntypedFunctionDecorator = "none"
+reportUnusedClass = "error"
+reportUnusedFunction = "error"
+reportUnusedImport = "error"
+reportUnusedVariable = "error"
+stubPath = "typings"
+typeCheckingMode = "strict"
+venv = ".venv"
+venvPath = "."
 
-    [tool.pyright]
-        exclude = [
-            "**/*.pb2.py",
-            "**/*.pb2_grpc.py",
-            ".git/",
-            ".meltano/",
-            ".mypy_cache/",
-            ".pytest_cache/",
-            ".ruff_cache/",
-            "__pycache__/",
-            "build/",
-            "dist/",
-            "node_modules/",
-            "target/",
-        ]
-        pythonPlatform = "Linux"
-        pythonVersion = "3.13"
-        typeCheckingMode = "strict"
-        enableTypeIgnoreComments = false
-        reportAssertAlwaysTrue = false
-        reportCallInDefaultInitializer = "error"
-        reportCallIssue = "error"
-        reportConstantRedefinition = "error"
-        reportDuplicateImport = "error"
-        reportFunctionMemberAccess = "error"
-        reportGeneralTypeIssues = "error"
-        reportImplicitRelativeImport = false
-        reportImplicitStringConcatenation = "warning"
-        reportImportCycles = "error"
-        reportIncompatibleMethodOverride = "error"
-        reportIncompatibleVariableOverride = "error"
-        reportIncompleteStub = "warning"
-        reportInconsistentConstructor = "error"
-        reportInvalidStringEscapeSequence = "error"
-        reportInvalidStubStatement = "error"
-        reportInvalidTypeForm = false
-        reportInvalidTypeVarUse = "error"
-        reportMatchNotExhaustive = "warning"
-        reportMissingImports = "error"
-        reportMissingModuleSource = "error"
-        reportMissingParameterType = "error"
-        reportMissingSuperCall = "warning"
-        reportMissingTypeArgument = "error"
-        reportMissingTypeStubs = "warning"
-        reportOptionalCall = "error"
-        reportOptionalContextManager = "error"
-        reportOptionalIterable = "error"
-        reportOptionalMemberAccess = "error"
-        reportOptionalOperand = "error"
-        reportOptionalSubscript = "error"
-        reportPrivateUsage = false
-        reportPropertyTypeMismatch = "error"
-        reportSelfClsParameterName = "error"
-        reportTypedDictNotRequiredAccess = "error"
-        reportUnboundVariable = "error"
-        # reportUndefinedVariable = false
-        reportUninitializedInstanceVariable = "warning"
-        # reportUnknownArgumentType = "error"
-        reportUnknownArgumentType = false
-        reportUnknownLambdaType = "error"
-        # reportUnknownMemberType = "error"
-        reportUnknownMemberType = false
-        # reportUnknownParameterType = "error"
-        reportUnknownParameterType = false
-        # reportUnknownVariableType = "error"
-        reportUnknownVariableType = false
-        reportUnnecessaryCast = "warning"
-        reportUnnecessaryComparison = "warning"
-        reportUnnecessaryIsInstance = "warning"
-        reportUnnecessaryTypeIgnoreComment = "warning"
-        reportUnsupportedDunderAll = "error"
-        reportUntypedBaseClass = "error"
-        reportUntypedClassDecorator = "error"
-        reportUntypedFunctionDecorator = "error"
-        reportUntypedNamedTuple = "error"
-        reportUnusedCallResult = "warning"
-        reportUnusedClass = "warning"
-        reportUnusedCoroutine = "error"
-        reportUnusedExpression = "warning"
-        reportUnusedFunction = "warning"
-        reportUnusedImport = "error"
-        reportUnusedVariable = "error"
-        reportWildcardImportFromLibrary = "error"
-        strictDictionaryInference = true
-        strictListInference = true
-        strictParameterNoneValue = true
-        strictSetInference = true
-        useLibraryCodeForTypes = true
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ ".", "src" ]
+reportPrivateUsage = "none"
+root = "examples"
 
-        # Execution environment for specific directory with known pyright limitations
-        # Known limitation: kwargs unpacking with type aliases (pyright issue #11136)
-        # Dynamic attribute access with hasattr checks (pyright limitation)
-        [[tool.pyright.executionEnvironments]]
-        root = "flext-ldif/tests/helpers"
-        reportArgumentType = false
-        reportAttributeAccessIssue = false
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ ".", "src" ]
+reportPrivateUsage = "none"
+root = "libs"
 
-    [tool.pytest.ini_options]
-        addopts = [
-            "--strict-config",
-            "--strict-markers",
-            "--tb=short",
-            "-p no:sugar",
-            "-q",
-            "-ra",
-            "--timeout=30",
-            "--timeout-method=signal",
-            "--durations=0",
-        ]
-        filterwarnings = [
-            "ignore::DeprecationWarning:pyasn1(.*|$)",
-        ]
-        markers = [
-            "docker: marca testes que requerem Docker",
-            "e2e: marca testes como testes de integração end-to-end",
-            "edge_cases: marca testes de casos extremos",
-            "integration: marca testes como testes de integração",
-            "integrity: marca testes de integridade",
-            "oracle: marca testes específicos do Oracle",
-            "performance: marca testes de performance",
-            "resilience: marca testes de resiliência",
-            "slow: marca testes como execução lenta",
-            "stress: marca testes de stress",
-            "unit: marca testes como testes unitários",
-        ]
-        minversion = "8.0"
-        python_classes = [
-            "Test*",
-        ]
-        python_files = [
-            "*_test.py",
-            "test_*.py",
-        ]
-        python_functions = [
-            "test_*",
-        ]
-        pythonpath = [
-            "src",
-        ]
-        testpaths = [
-            "tests/",
-        ]
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ ".", "src" ]
+reportPrivateUsage = "none"
+root = "scripts"
 
-    [tool.pyrefly]
-        search-path = [
-            "../typings",
-            "../typings/generated",
-            "typings",
-            "typings/generated",
-            "src",
-            "examples",
-            "scripts",
-        ]
-        project-excludes = ["**/*_pb2*.py", "**/*_pb2_grpc*.py"]
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "src" ]
+reportPrivateUsage = "error"
+root = "src"
 
-        [[tool.pyrefly.sub-config]]
-        matches = "**/typings.py"
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ ".", "src" ]
+reportPrivateUsage = "none"
+root = "tests"
 
-            [tool.pyrefly.sub-config.errors]
-            unknown-name = false
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-api", "flext-api/src" ]
+reportPrivateUsage = "none"
+root = "flext-api/examples"
 
-    [tool.ruff]
-        extend = "./ruff-shared.toml"
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-api/src" ]
+reportPrivateUsage = "error"
+root = "flext-api/src"
 
-        [tool.ruff.lint.isort]
-            known-first-party = [
-                "flext",
-                "flext_tools",
-            ]
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-api", "flext-api/src" ]
+reportPrivateUsage = "none"
+root = "flext-api/tests"
 
-    [tool.bandit]
-        # Skip known false positives for CLI tools and quality analysis
-        skips = [
-            "B404",  # subprocess import - required for CLI tool execution
-            "B603",  # subprocess without shell=True - actually MORE secure
-            "B607",  # partial paths - standard for CLI tool discovery via PATH
-            "B105",  # "PASS" constant - not a password, it's a result status
-            "B608",  # hardcoded_sql_expressions - DBT/template code-gen; identifiers from config
-        ]
-        exclude_dirs = [
-            ".git",
-            ".mypy_cache",
-            ".pytest_cache",
-            ".ruff_cache",
-            ".venv",
-            "__pycache__",
-            "build",
-            "dist",
-            "node_modules",
-            "tests",
-            "vendor",
-        ]
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-auth", "flext-auth/src" ]
+reportPrivateUsage = "none"
+root = "flext-auth/examples"
 
-    [tool.vulture]
-        exclude = [
-            ".*/examples/",
-            ".*/scripts/",
-            ".*/tests/",
-            ".coverage.*",
-            ".git/",
-            ".mypy_cache/",
-            ".pytest_cache/",
-            ".ruff_cache/",
-            ".venv/",
-            "__pycache__/",
-            "build/",
-            "dist/",
-            "node_modules/",
-            "tests/",
-            "vendor/",
-        ]
-        min_confidence = 80
-        paths = [
-            "**/src",
-            "src",
-        ]
-        sort_by_size = true
-        verbose = false
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-auth/src" ]
+reportPrivateUsage = "error"
+root = "flext-auth/src"
 
-    # ============================================
-    # REFURB - Python Modernization
-    # ============================================
-    # ============================================
-    # COMPLEXIPY - Cognitive Complexity
-    # ============================================
-    [tool.complexipy]
-        max_complexity = 15
-        output_format = "plain"
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-auth", "flext-auth/src" ]
+reportPrivateUsage = "none"
+root = "flext-auth/tests"
 
-    # ============================================
-    # CODESPELL - Spell Checking
-    # ============================================
-    [tool.codespell]
-        skip = ".git,*.lock,*.egg-info,dist,build,.venv,__pycache__,.mypy_cache,.pytest_cache,.ruff_cache,node_modules,vendor,*.pb2*.py"
-        ignore-words-list = "dn,cn,ou,uid,sn,aci,acl,ldif,flext,FLEXT,dbt,oic,wms,grpc,meltano,protobuf,creds,assertIn"
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-cli", "flext-cli/src" ]
+reportPrivateUsage = "none"
+root = "flext-cli/examples"
 
-    # ============================================
-    # COVERAGE - Test Coverage Configuration
-    # ============================================
-    [tool.coverage.run]
-        branch = true
-        source = ["src"]
-        omit = [
-            "*/tests/*",
-            "*/__pycache__/*",
-            "*/_pb2*.py",
-            "*/conftest.py",
-        ]
-        relative_files = true
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-cli/src" ]
+reportPrivateUsage = "error"
+root = "flext-cli/src"
 
-    [tool.coverage.report]
-        fail_under = 100
-        exclude_lines = [
-            "pragma: no cover",
-            'if __name__ == .__main__.:',
-            'if __name__ == "__main__":',
-            "if TYPE_CHECKING:",
-            "raise NotImplementedError",
-            "@abstractmethod",
-            "^\\s*\\.\\.\\.\\s*$",
-            "def __repr__",
-            "def __str__",
-        ]
-        partial_branches = [
-            "pragma: no branch",
-        ]
-        skip_empty = true
-        show_missing = true
-        precision = 2
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-cli", "flext-cli/src" ]
+reportPrivateUsage = "none"
+root = "flext-cli/tests"
 
-    [tool.coverage.html]
-        directory = "htmlcov"
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-core", "flext-core/src" ]
+reportPrivateUsage = "none"
+root = "flext-core/examples"
 
-    [tool.coverage.xml]
-        output = "coverage.xml"
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-core", "flext-core/src" ]
+reportPrivateUsage = "none"
+root = "flext-core/scripts"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-core/src" ]
+reportPrivateUsage = "error"
+root = "flext-core/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-core", "flext-core/src" ]
+reportPrivateUsage = "none"
+root = "flext-core/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-db-oracle", "flext-db-oracle/src" ]
+reportPrivateUsage = "none"
+root = "flext-db-oracle/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-db-oracle/src" ]
+reportPrivateUsage = "error"
+root = "flext-db-oracle/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-db-oracle", "flext-db-oracle/src" ]
+reportPrivateUsage = "none"
+root = "flext-db-oracle/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-dbt-ldap/src" ]
+reportPrivateUsage = "error"
+root = "flext-dbt-ldap/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-dbt-ldap", "flext-dbt-ldap/src" ]
+reportPrivateUsage = "none"
+root = "flext-dbt-ldap/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-dbt-ldif/src" ]
+reportPrivateUsage = "error"
+root = "flext-dbt-ldif/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-dbt-ldif", "flext-dbt-ldif/src" ]
+reportPrivateUsage = "none"
+root = "flext-dbt-ldif/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-dbt-oracle/src" ]
+reportPrivateUsage = "error"
+root = "flext-dbt-oracle/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-dbt-oracle", "flext-dbt-oracle/src" ]
+reportPrivateUsage = "none"
+root = "flext-dbt-oracle/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-dbt-oracle-wms/src" ]
+reportPrivateUsage = "error"
+root = "flext-dbt-oracle-wms/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-dbt-oracle-wms", "flext-dbt-oracle-wms/src" ]
+reportPrivateUsage = "none"
+root = "flext-dbt-oracle-wms/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-grpc", "flext-grpc/src" ]
+reportPrivateUsage = "none"
+root = "flext-grpc/architecture"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-grpc", "flext-grpc/src" ]
+reportPrivateUsage = "none"
+root = "flext-grpc/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-grpc/src" ]
+reportPrivateUsage = "error"
+root = "flext-grpc/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-grpc", "flext-grpc/src" ]
+reportPrivateUsage = "none"
+root = "flext-grpc/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-infra/src" ]
+reportPrivateUsage = "error"
+root = "flext-infra/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-infra", "flext-infra/src" ]
+reportPrivateUsage = "none"
+root = "flext-infra/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-ldap/src" ]
+reportPrivateUsage = "error"
+root = "flext-ldap/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-ldap", "flext-ldap/src" ]
+reportPrivateUsage = "none"
+root = "flext-ldap/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-ldif", "flext-ldif/src" ]
+reportPrivateUsage = "none"
+root = "flext-ldif/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-ldif/src" ]
+reportPrivateUsage = "error"
+root = "flext-ldif/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-ldif", "flext-ldif/src" ]
+reportPrivateUsage = "none"
+root = "flext-ldif/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-meltano", "flext-meltano/src" ]
+reportPrivateUsage = "none"
+root = "flext-meltano/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-meltano/src" ]
+reportPrivateUsage = "error"
+root = "flext-meltano/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-meltano", "flext-meltano/src" ]
+reportPrivateUsage = "none"
+root = "flext-meltano/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-observability", "flext-observability/src" ]
+reportPrivateUsage = "none"
+root = "flext-observability/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-observability/src" ]
+reportPrivateUsage = "error"
+root = "flext-observability/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-observability", "flext-observability/src" ]
+reportPrivateUsage = "none"
+root = "flext-observability/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-oracle-oic/src" ]
+reportPrivateUsage = "error"
+root = "flext-oracle-oic/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-oracle-oic", "flext-oracle-oic/src" ]
+reportPrivateUsage = "none"
+root = "flext-oracle-oic/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-oracle-wms", "flext-oracle-wms/src" ]
+reportPrivateUsage = "none"
+root = "flext-oracle-wms/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-oracle-wms/src" ]
+reportPrivateUsage = "error"
+root = "flext-oracle-wms/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-oracle-wms", "flext-oracle-wms/src" ]
+reportPrivateUsage = "none"
+root = "flext-oracle-wms/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-plugin", "flext-plugin/src" ]
+reportPrivateUsage = "none"
+root = "flext-plugin/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-plugin/src" ]
+reportPrivateUsage = "error"
+root = "flext-plugin/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-plugin", "flext-plugin/src" ]
+reportPrivateUsage = "none"
+root = "flext-plugin/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-quality/src" ]
+reportPrivateUsage = "error"
+root = "flext-quality/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-quality", "flext-quality/src" ]
+reportPrivateUsage = "none"
+root = "flext-quality/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tap-ldap/src" ]
+reportPrivateUsage = "error"
+root = "flext-tap-ldap/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tap-ldap", "flext-tap-ldap/src" ]
+reportPrivateUsage = "none"
+root = "flext-tap-ldap/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tap-ldif/src" ]
+reportPrivateUsage = "error"
+root = "flext-tap-ldif/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tap-ldif", "flext-tap-ldif/src" ]
+reportPrivateUsage = "none"
+root = "flext-tap-ldif/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tap-oracle/src" ]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tap-oracle", "flext-tap-oracle/src" ]
+reportPrivateUsage = "none"
+root = "flext-tap-oracle/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tap-oracle-oic/src" ]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle-oic/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tap-oracle-oic", "flext-tap-oracle-oic/src" ]
+reportPrivateUsage = "none"
+root = "flext-tap-oracle-oic/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tap-oracle-wms", "flext-tap-oracle-wms/src" ]
+reportPrivateUsage = "none"
+root = "flext-tap-oracle-wms/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tap-oracle-wms/src" ]
+reportPrivateUsage = "error"
+root = "flext-tap-oracle-wms/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tap-oracle-wms", "flext-tap-oracle-wms/src" ]
+reportPrivateUsage = "none"
+root = "flext-tap-oracle-wms/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-ldap/src" ]
+reportPrivateUsage = "error"
+root = "flext-target-ldap/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-ldap", "flext-target-ldap/src" ]
+reportPrivateUsage = "none"
+root = "flext-target-ldap/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-ldif/src" ]
+reportPrivateUsage = "error"
+root = "flext-target-ldif/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-ldif", "flext-target-ldif/src" ]
+reportPrivateUsage = "none"
+root = "flext-target-ldif/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-oracle", "flext-target-oracle/src" ]
+reportPrivateUsage = "none"
+root = "flext-target-oracle/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-oracle/src" ]
+reportPrivateUsage = "error"
+root = "flext-target-oracle/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-oracle", "flext-target-oracle/src" ]
+reportPrivateUsage = "none"
+root = "flext-target-oracle/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-oracle-oic/src" ]
+reportPrivateUsage = "error"
+root = "flext-target-oracle-oic/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-oracle-oic", "flext-target-oracle-oic/src" ]
+reportPrivateUsage = "none"
+root = "flext-target-oracle-oic/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-oracle-wms", "flext-target-oracle-wms/src" ]
+reportPrivateUsage = "none"
+root = "flext-target-oracle-wms/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-oracle-wms/src" ]
+reportPrivateUsage = "error"
+root = "flext-target-oracle-wms/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-target-oracle-wms", "flext-target-oracle-wms/src" ]
+reportPrivateUsage = "none"
+root = "flext-target-oracle-wms/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tests/src" ]
+reportPrivateUsage = "error"
+root = "flext-tests/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-tests", "flext-tests/src" ]
+reportPrivateUsage = "none"
+root = "flext-tests/tests"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-web", "flext-web/src" ]
+reportPrivateUsage = "none"
+root = "flext-web/examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-web/src" ]
+reportPrivateUsage = "error"
+root = "flext-web/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-web", "flext-web/src" ]
+reportPrivateUsage = "none"
+root = "flext-web/tests"
+
+# [MANAGED] pytest
+[tool.pytest.ini_options]
+addopts = [
+  "--durations=10",
+  "--ignore-glob=*/tests/_constants/*",
+  "--ignore-glob=*/tests/_models/*",
+  "--ignore-glob=*/tests/_protocols/*",
+  "--ignore-glob=*/tests/_typings/*",
+  "--ignore-glob=*/tests/_utilities/*",
+  "--ignore-glob=*/tests/constants.py",
+  "--ignore-glob=*/tests/models.py",
+  "--ignore-glob=*/tests/protocols.py",
+  "--ignore-glob=*/tests/typings.py",
+  "--ignore-glob=*/tests/utilities.py",
+  "--markdown-docs",
+  "--strict-markers",
+]
+filterwarnings = [
+  "ignore:.*cannot collect test class.*because it has a __init__ constructor.*:pytest.PytestCollectionWarning",
+]
+markers = [
+  "docker: tests requiring Docker",
+  "e2e: end-to-end integration tests",
+  "edge_cases: edge case tests",
+  "integration: integration tests",
+  "performance: performance and benchmark tests",
+  "resilience: resilience tests",
+  "slow: slow-running tests",
+  "stress: stress tests",
+  "unit: unit tests",
+]
+minversion = "8.0"
+python_classes = [ "Test*" ]
+python_files = [ "*_test.py", "*_tests.py", "test_*.py" ]
+
+# [MANAGED] ruff
+[tool.ruff]
+exclude = [
+  "**/__pyrefly_virtual__/**",
+  ".git",
+  ".mypy_cache",
+  ".pytest_cache",
+  ".ruff_cache",
+  ".venv",
+  "__pycache__",
+  "archive",
+  "backup",
+  "build",
+  "dist",
+  "htmlcov",
+  "temp-backup",
+  "tests/fixtures",
+  "tests/fixtures/**",
+  "typings",
+  "vendor",
+  "venv",
+]
+fix = false
+line-length = 88
+preview = true
+respect-gitignore = true
+show-fixes = true
+src = [
+  "examples",
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
+  "libs",
+  "scripts",
+  "src",
+  "tests",
+]
+target-version = "py313"
+
+[tool.ruff.format]
+docstring-code-format = true
+indent-style = "space"
+line-ending = "lf"
+quote-style = "double"
+
+[tool.ruff.lint]
+ignore = [
+  "ANN202",
+  "B009",
+  "B010",
+  "B017",
+  "BLE001",
+  "C901",
+  "COM812",
+  "CPY001",
+  "D203",
+  "D213",
+  "D401",
+  "D417",
+  "DOC201",
+  "DOC202",
+  "DOC402",
+  "DOC501",
+  "DOC502",
+  "E501",
+  "ERA001",
+  "FBT003",
+  "G004",
+  "N805",
+  "N813",
+  "N816",
+  "PIE790",
+  "PLR0904",
+  "PLR0911",
+  "PLR0912",
+  "PLR0913",
+  "PLR0914",
+  "PLR0915",
+  "PLR0917",
+  "PLR1702",
+  "PLR6301",
+  "PLW0108",
+  "PLW2901",
+  "PLW3201",
+  "PYI042",
+  "Q000",
+  "RUF001",
+  "RUF002",
+  "RUF003",
+  "RUF005",
+  "S608",
+  "TC001",
+  "TC002",
+  "TC003",
+  "TRY003",
+  "TRY300",
+  "TRY301",
+  "UP040",
+  "W293",
+]
+select = [ "ALL" ]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+force-single-line = false
+known-first-party = [
+  "flext",
+  "flext_api",
+  "flext_auth",
+  "flext_cli",
+  "flext_core",
+  "flext_db_oracle",
+  "flext_dbt_ldap",
+  "flext_dbt_ldif",
+  "flext_dbt_oracle",
+  "flext_dbt_oracle_wms",
+  "flext_grpc",
+  "flext_infra",
+  "flext_ldap",
+  "flext_ldif",
+  "flext_meltano",
+  "flext_observability",
+  "flext_oracle_oic",
+  "flext_oracle_wms",
+  "flext_plugin",
+  "flext_quality",
+  "flext_tap_ldap",
+  "flext_tap_ldif",
+  "flext_tap_oracle",
+  "flext_tap_oracle_oic",
+  "flext_tap_oracle_wms",
+  "flext_target_ldap",
+  "flext_target_ldif",
+  "flext_target_oracle",
+  "flext_target_oracle_oic",
+  "flext_target_oracle_wms",
+  "flext_tests",
+  "flext_web",
+]
+split-on-trailing-comma = true
+
+[tool.ruff.lint.per-file-ignores]
+"**/.vulture_whitelist.py" = [ "ALL" ]
+"**/*_pb2*.py" = [ "ALL" ]
+"**/*dispatcher*" = [  ]
+"**/*docs*" = [ "INP001", "S404", "S603", "T201" ]
+"**/*examples*" = [
+  "ANN401",
+  "C901",
+  "D103",
+  "EXE001",
+  "FBT001",
+  "FBT002",
+  "FIX002",
+  "INP001",
+  "N999",
+  "PLR2004",
+  "S105",
+  "S106",
+  "S112",
+  "S404",
+  "S603",
+  "T201",
+  "TID252",
+]
+"**/*exceptions*" = [ "A001", "S105", "SLF001" ]
+"**/*handlers*" = [  ]
+"**/*instrumentation*" = [ "C901", "FBT001", "SLF001" ]
+"**/*loggings*" = [ "PLR0904", "PLW0603" ]
+"**/*middleware*" = [ "ANN401", "FBT001", "FBT002", "PLC2801", "S107" ]
+"**/*models*" = [ "ANN401", "FBT001", "PLC2701", "PLR0206", "PLW0603" ]
+"**/*oracle*" = [ "DTZ007" ]
+"**/*result*" = [ "PLC2701", "SLF001" ]
+"**/*runtime*" = [  ]
+"**/*scripts*" = [
+  "EXE001",
+  "FIX002",
+  "INP001",
+  "PLR0911",
+  "PLR0912",
+  "PLR0915",
+  "PLR2004",
+  "PLW2901",
+  "S105",
+  "S107",
+  "S404",
+  "S603",
+  "T201",
+  "TID252",
+]
+"**/*service*" = [ "N815", "PLC2801", "S404", "S603", "SLF001" ]
+"**/*subprocess_utils*" = [ "S404", "S603" ]
+"**/*tests*" = [
+  "ANN001",
+  "ANN002",
+  "ANN003",
+  "ANN401",
+  "ARG001",
+  "ARG002",
+  "ARG003",
+  "ARG004",
+  "ARG005",
+  "B009",
+  "B010",
+  "B018",
+  "B903",
+  "C901",
+  "D100",
+  "D101",
+  "D102",
+  "D103",
+  "D104",
+  "D106",
+  "D107",
+  "EM102",
+  "F822",
+  "FBT001",
+  "FBT002",
+  "FBT003",
+  "FURB118",
+  "INP001",
+  "N818",
+  "N999",
+  "PLC0206",
+  "PLC1901",
+  "PLC2701",
+  "PLC2801",
+  "PLR0904",
+  "PLR0912",
+  "PLR0913",
+  "PLR0914",
+  "PLR0915",
+  "PLR0917",
+  "PLR1704",
+  "PLR2004",
+  "PLR6301",
+  "PLW1641",
+  "PLW2901",
+  "PT011",
+  "PT018",
+  "PT019",
+  "PYI063",
+  "RUF012",
+  "RUF029",
+  "S101",
+  "S103",
+  "S104",
+  "S105",
+  "S106",
+  "S107",
+  "S108",
+  "S110",
+  "S112",
+  "S311",
+  "S404",
+  "S603",
+  "S607",
+  "S608",
+  "SIM105",
+  "SIM117",
+  "SLF001",
+  "TD002",
+  "TD003",
+  "TID252",
+  "TRY003",
+  "TRY004",
+]
+"**/*typings*" = [ "ANN401" ]
+"**/*utilities*" = [ "C901", "E402", "PLC2801", "PLW1510", "S404", "S603" ]
+"**/__init__.py" = [
+  "A004",
+  "ANN401",
+  "D107",
+  "F401",
+  "F403",
+  "F405",
+  "F822",
+  "INP001",
+  "N999",
+  "PLC2701",
+  "RUF067",
+  "TC004",
+]
+"**/_constants/*.py" = [ "S105" ]
+"**/_utilities/parser.py" = [ "ARG004", "FBT001" ]
+"**/alert_manager*.py" = [ "S310" ]
+"**/constants.py" = [ "S105" ]
+"**/container.py" = [ "ANN401", "SLF001" ]
+"**/context.py" = [  ]
+"**/external_command*.py" = [ "S404", "S603" ]
+"**/file_tools.py" = [ "D102" ]
+"**/managers.py" = [ "S105" ]
+"**/models.py" = [ "PLC0415", "PLC2801", "S102", "S105" ]
+"**/orchestrator*.py" = [ "S404", "S603" ]
+"**/output.py" = [ "FBT001" ]
+"**/plugins/*.py" = [ "FBT001", "FBT002", "S404", "S603", "S607", "TID252" ]
+"**/protocol_impls/*.py" = [ "SLF001" ]
+"**/providers/*.py" = [ "S106", "S107" ]
+"**/services/prompts.py" = [ "D102", "D107" ]
+"**/settings.py" = [ "ANN401", "FBT001", "SLF001" ]
+"**/singer/*.py" = [ "S404", "S603" ]
+"**/tools/*.py" = [ "FBT001", "FBT002", "N802", "S404", "S603", "S607", "T201" ]
+"**/tools/**/*.py" = [ "FBT001", "FBT002", "N802", "S404", "S603", "S607", "T201" ]
+"**/typings.py" = [ "RUF036" ]
+"**/workspace/*.py" = [ "PLC0415", "S404", "S603", "S607" ]
+
+# [MANAGED] tomlsort
+[tool.tomlsort]
+all = true
+in_place = true
+sort_first = [ "build-system", "dependency-groups", "project", "tool" ]
+
+[tool.uv.sources.flext-api]
+workspace = true
+
+[tool.uv.sources.flext-auth]
+workspace = true
+
+[tool.uv.sources.flext-cli]
+workspace = true
+
+[tool.uv.sources.flext-core]
+workspace = true
+
+[tool.uv.sources.flext-db-oracle]
+workspace = true
+
+[tool.uv.sources.flext-dbt-ldap]
+workspace = true
+
+[tool.uv.sources.flext-dbt-ldif]
+workspace = true
+
+[tool.uv.sources.flext-dbt-oracle]
+workspace = true
+
+[tool.uv.sources.flext-dbt-oracle-wms]
+workspace = true
+
+[tool.uv.sources.flext-grpc]
+workspace = true
+
+[tool.uv.sources.flext-infra]
+workspace = true
+
+[tool.uv.sources.flext-ldap]
+workspace = true
+
+[tool.uv.sources.flext-ldif]
+workspace = true
+
+[tool.uv.sources.flext-meltano]
+workspace = true
+
+[tool.uv.sources.flext-observability]
+workspace = true
+
+[tool.uv.sources.flext-oracle-oic]
+workspace = true
+
+[tool.uv.sources.flext-oracle-wms]
+workspace = true
+
+[tool.uv.sources.flext-plugin]
+workspace = true
+
+[tool.uv.sources.flext-quality]
+workspace = true
+
+[tool.uv.sources.flext-tap-ldap]
+workspace = true
+
+[tool.uv.sources.flext-tap-ldif]
+workspace = true
+
+[tool.uv.sources.flext-tap-oracle]
+workspace = true
+
+[tool.uv.sources.flext-tap-oracle-oic]
+workspace = true
+
+[tool.uv.sources.flext-tap-oracle-wms]
+workspace = true
+
+[tool.uv.sources.flext-target-ldap]
+workspace = true
+
+[tool.uv.sources.flext-target-ldif]
+workspace = true
+
+[tool.uv.sources.flext-target-oracle]
+workspace = true
+
+[tool.uv.sources.flext-target-oracle-oic]
+workspace = true
+
+[tool.uv.sources.flext-target-oracle-wms]
+workspace = true
+
+[tool.uv.sources.flext-tests]
+workspace = true
+
+[tool.uv.sources.flext-web]
+workspace = true
+
+[tool.uv.workspace]
+members = [
+  "flext-api",
+  "flext-auth",
+  "flext-cli",
+  "flext-core",
+  "flext-db-oracle",
+  "flext-dbt-ldap",
+  "flext-dbt-ldif",
+  "flext-dbt-oracle",
+  "flext-dbt-oracle-wms",
+  "flext-grpc",
+  "flext-infra",
+  "flext-ldap",
+  "flext-ldif",
+  "flext-meltano",
+  "flext-observability",
+  "flext-oracle-oic",
+  "flext-oracle-wms",
+  "flext-plugin",
+  "flext-quality",
+  "flext-tap-ldap",
+  "flext-tap-ldif",
+  "flext-tap-oracle",
+  "flext-tap-oracle-oic",
+  "flext-tap-oracle-wms",
+  "flext-target-ldap",
+  "flext-target-ldif",
+  "flext-target-oracle",
+  "flext-target-oracle-oic",
+  "flext-target-oracle-wms",
+  "flext-tests",
+  "flext-web",
+]
+
+# [MANAGED] yamlfix
+[tool.yamlfix]
+explicit_start = false
+line_length = 88
+preserve_quotes = true
+section_whitelines = 1
+whitelines = 1

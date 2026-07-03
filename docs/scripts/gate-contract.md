@@ -1,32 +1,5 @@
 # Gate Contract
 
-
-<!-- TOC START -->
-- [Overview](#overview)
-- [Script Roles](#script-roles)
-- [CLI Contract](#cli-contract)
-  - [Validators](#validators)
-  - [Fixers](#fixers)
-  - [Environment Variables](#environment-variables)
-- [Exit Codes](#exit-codes)
-- [Modes](#modes)
-  - [`baseline` (default)](#baseline-default)
-  - [`strict`](#strict)
-  - [Mode not applicable](#mode-not-applicable)
-- [Artifact Output](#artifact-output)
-  - [Naming Contract](#naming-contract)
-  - [Report Locations](#report-locations)
-- [Skill Rule Contract](#skill-rule-contract)
-  - [Report JSON Structure](#report-json-structure)
-- [Non-Interactive Guarantee](#non-interactive-guarantee)
-- [Determinism](#determinism)
-- [Script Header](#script-header)
-- [Conformance Checking](#conformance-checking)
-- [Examples of Conforming Scripts](#examples-of-conforming-scripts)
-  - [Validator (python — skill-based)](#validator-python-skill-based)
-  - [Validator (python — standalone)](#validator-python-standalone)
-<!-- TOC END -->
-
 > Canonical specification for all validator and fixer scripts in the FLEXT repository.
 >
 > **Status**: Active | **Reviewed**: 2026-02-18
@@ -44,11 +17,11 @@ composable by the orchestrator and safe for CI.
 
 ## Script Roles
 
-| Role | Purpose | Default behavior | Mutates files? |
-|------|---------|------------------|----------------|
-| **Validator** | Checks code against a policy | Read-only scan, report results | Never |
-| **Fixer** | Applies automated repairs | Dry-run (report only) | Only with `--apply` or `--fix` |
-| **Orchestrator** | Runs multiple gates | Delegates to validators/fixers | Never directly |
+| Role             | Purpose                      | Default behavior               | Mutates files?                 |
+| ---------------- | ---------------------------- | ------------------------------ | ------------------------------ |
+| **Validator**    | Checks code against a policy | Read-only scan, report results | Never                          |
+| **Fixer**        | Applies automated repairs    | Dry-run (report only)          | Only with `--apply` or `--fix` |
+| **Orchestrator** | Runs multiple gates          | Delegates to validators/fixers | Never directly                 |
 
 A script is exactly ONE role. A single script must never combine validate + fix
 in its default path.
@@ -66,19 +39,19 @@ Canonical implementations in this repository:
 
 Required flags:
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--root <path>` | string | `.` | Repository root to scan |
-| `--mode baseline\|strict` | enum | `baseline` | Enforcement level (see Modes) |
+| Flag              | Type    | Default | Description             |                               |
+| ----------------- | ------- | ------- | ----------------------- | ----------------------------- |
+| `--root <path>`   | string  | `.`     | Repository root to scan |                               |
+| `--mode baseline\ | strict` | enum    | `baseline`              | Enforcement level (see Modes) |
 
 Optional flags:
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--report-file <path>` | string | contract default | Override report output path |
-| `--baseline-file <path>` | string | contract default | Override baseline path |
-| `--update-baseline` | boolean | `false` | Write current counts as new baseline |
-| `--baseline-strategy total\|per_group` | enum | `total` | Baseline comparison method |
+| Flag                        | Type       | Default          | Description                          |                            |
+| --------------------------- | ---------- | ---------------- | ------------------------------------ | -------------------------- |
+| `--report-file <path>`      | string     | contract default | Override report output path          |                            |
+| `--baseline-file <path>`    | string     | contract default | Override baseline path               |                            |
+| `--update-baseline`         | boolean    | `false`          | Write current counts as new baseline |                            |
+| `--baseline-strategy total\ | per_group` | enum             | `total`                              | Baseline comparison method |
 
 Validators must also accept `--root` as a positional argument (last arg fallback)
 for backward compatibility with existing callers.
@@ -87,18 +60,18 @@ for backward compatibility with existing callers.
 
 Required flags:
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--root <path>` | string | `.` | Repository root to operate on |
-| `--dry-run` | boolean | **required** | Report what would change (no mutation) |
-| `--apply` | boolean | n/a | Actually apply fixes (mutually exclusive with `--dry-run`) |
+| Flag            | Type    | Default      | Description                                                |
+| --------------- | ------- | ------------ | ---------------------------------------------------------- |
+| `--root <path>` | string  | `.`          | Repository root to operate on                              |
+| `--dry-run`     | boolean | **required** | Report what would change (no mutation)                     |
+| `--apply`       | boolean | n/a          | Actually apply fixes (mutually exclusive with `--dry-run`) |
 
 Optional flags:
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--mode safe\|risky` | enum | `safe` | Fix aggressiveness level |
-| `--report-file <path>` | string | contract default | Override report output path |
+| Flag                   | Type   | Default          | Description                 |                          |
+| ---------------------- | ------ | ---------------- | --------------------------- | ------------------------ |
+| `--mode safe\          | risky` | enum             | `safe`                      | Fix aggressiveness level |
+| `--report-file <path>` | string | contract default | Override report output path |                          |
 
 A fixer must refuse to run if neither `--dry-run` nor `--apply` is provided (exit 2).
 
@@ -107,11 +80,11 @@ A fixer must refuse to run if neither `--dry-run` nor `--apply` is provided (exi
 Scripts may read environment variables as alternatives to CLI flags, following
 this naming convention:
 
-| Variable | Equivalent flag | Example |
-|----------|----------------|---------|
-| `FLEXT_POLICY_MODE` | `--mode` | `baseline` |
-| `FLEXT_VALIDATION_ROOT` | `--root` | `.` |
-| `FLEXT_VALIDATION_REPORT_DIR` | `--report-file` directory | `.sisyphus/reports/validation` |
+| Variable                      | Equivalent flag           | Example               |
+| ----------------------------- | ------------------------- | --------------------- |
+| `FLEXT_POLICY_MODE`           | `--mode`                  | `baseline`            |
+| `FLEXT_VALIDATION_ROOT`       | `--root`                  | `.`                   |
+| `FLEXT_VALIDATION_REPORT_DIR` | `--report-file` directory | `.reports/validation` |
 
 CLI flags take precedence over environment variables.
 
@@ -119,12 +92,12 @@ CLI flags take precedence over environment variables.
 
 ## Exit Codes
 
-| Code | Meaning | When |
-|------|---------|------|
-| `0` | Pass | No violations (strict) or within baseline (baseline) |
-| `1` | Fail | Violations found that exceed policy threshold |
-| `2` | Invalid arguments | Bad CLI flags, missing required args, invalid mode |
-| `3` | Runtime error | Missing tool dependency, I/O error, unexpected crash |
+| Code | Meaning           | When                                                 |
+| ---- | ----------------- | ---------------------------------------------------- |
+| `0`  | Pass              | No violations (strict) or within baseline (baseline) |
+| `1`  | Fail              | Violations found that exceed policy threshold        |
+| `2`  | Invalid arguments | Bad CLI flags, missing required args, invalid mode   |
+| `3`  | Runtime error     | Missing tool dependency, I/O error, unexpected crash |
 
 Scripts must never exit with codes outside 0-3.
 
@@ -148,6 +121,7 @@ Scripts must never exit with codes outside 0-3.
 
 Some validators don't have baseline semantics (e.g., syntax checks that must
 always pass). These scripts:
+
 - May omit `--mode` from their CLI.
 - Must document this in their header comment: `# Gate-Contract: no-mode`.
 - Must always exit 0 on pass, 1 on fail.
@@ -167,11 +141,11 @@ All artifacts follow: `<skill>--<kind>--<slug>.<ext>`
 
 ### Report Locations
 
-| Type | Path pattern | Example |
-|------|-------------|---------|
-| Latest report | `.reports/validate/<gate>/<project>.txt` (workspace) or `.claude/skills/<skill>/report.json` (skill) | `.reports/validate/type-check/flext-core.txt` |
-| Baseline | `.claude/skills/<skill>/baseline.json` | `.claude/skills/flext-strict-typing/baseline.json` |
-| Fix report | `.claude/skills/<skill>/fix-report.json` | `.claude/skills/flext-pyrefly-typecheck-fix/fix-report.json` |
+| Type          | Path pattern                                                                                         | Example                                                      |
+| ------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Latest report | `.reports/validate/<gate>/<project>.txt` (workspace) or `.agents/skills/<skill>/report.json` (skill) | `.reports/validate/type-check/flext-core.txt`                |
+| Baseline      | `.agents/skills/<skill>/baseline.json`                                                               | `.agents/skills/flext-strict-typing/baseline.json`           |
+| Fix report    | `.agents/skills/<skill>/fix-report.json`                                                             | `.agents/skills/flext-pyrefly-typecheck-fix/fix-report.json` |
 
 Do not write validation artifacts to `.sisyphus/`.
 
@@ -179,7 +153,7 @@ Do not write validation artifacts to `.sisyphus/`.
 
 ## Skill Rule Contract
 
-- Skill rules are loaded only from `.claude/skills/*/rules.yml`.
+- Skill rules are loaded only from `.agents/skills/*/rules.yml`.
 - Rule fix metadata must use flat keys only: `fix_auto`, `fix_type`, `fix_file`, `fix_script`, `fix_instruction`, `fix_description`.
 - Nested `fix:` metadata in `rules.yml` is invalid.
 - If `fix_auto: true`, the fix mechanism must be executable and target files must exist.
@@ -225,6 +199,7 @@ Scripts must be fully non-interactive by default:
 - No `dialog`/`whiptail` usage
 
 If a script needs interactive mode for manual use, it must:
+
 - Be gated behind an explicit `--interactive` flag.
 - Default to non-interactive behavior.
 
@@ -245,14 +220,14 @@ Every gate script must include these elements in its first 10 lines:
 
 ```bash
 #!/usr/bin/env bash
-# Owner-Skill: .claude/skills/<skill-name>/SKILL.md
+# Owner-Skill: .agents/skills/<skill-name>/SKILL.md
 ```
 
 or for Python:
 
 ```python
 #!/usr/bin/env python3
-# Owner-Skill: .claude/skills/<skill-name>/SKILL.md
+# Owner-Skill: .agents/skills/<skill-name>/SKILL.md
 """One-line description of what this gate checks."""
 ```
 
@@ -266,7 +241,7 @@ The contract validator (`scripts/core/check_script_gate_contract.py`) verifies:
 2. **Shebang line** present (`#!/usr/bin/env bash` or `#!/usr/bin/env python3`).
 3. **Exit code hygiene**: bash scripts use only `exit 0`, `exit 1`, `exit 2`, `exit 3`.
 4. **No interactive prompts** in default path (unless `--interactive` gated).
-5. **Artifact naming**: any `.sisyphus/` paths in the script follow the naming contract.
+5. **Artifact naming**: any explicit report paths in scripts must target `.reports/` and follow the naming contract.
 6. **Non-empty**: scripts classified as validators/fixers have >= 20 lines of code.
 
 Scripts not classified as validators or fixers (libraries, orchestrators) are
@@ -277,10 +252,12 @@ exempt from gate contract validation but must still have Owner-Skill markers.
 ## Examples of Conforming Scripts
 
 ### Validator (python — skill-based)
-- `python3 scripts/core/skill_validate.py --skill flext-strict-typing` — discovers rules from `.claude/skills/flext-strict-typing/rules.yml`; accepts `--mode baseline|strict`; exits 0/1/2/3
+
+- `python3 scripts/core/skill_validate.py --skill flext-strict-typing` — discovers rules from `.agents/skills/flext-strict-typing/rules.yml`; accepts `--mode baseline|strict`; exits 0/1/2/3
 - `python3 scripts/core/skill_validate.py --skill lib-pydantic-v2` — same contract
 - `python3 scripts/core/skill_validate.py --all` — runs all discovered skills
 
 ### Validator (python — standalone)
-- `.claude/skills/scripts-infra/validate_ownership.py --root .` — exits 0/1; produces JSON report
-- `.claude/skills/scripts-infra/validate_artifact_naming.py --root .` — exits 0/1; produces JSON report
+
+- `.agents/skills/scripts-infra/validate_ownership.py --root .` — exits 0/1; produces JSON report
+- `.agents/skills/scripts-infra/validate_artifact_naming.py --root .` — exits 0/1; produces JSON report

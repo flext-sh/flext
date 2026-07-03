@@ -1,11 +1,6 @@
 # ORM Integration
 
-
-<!-- TOC START -->
-- [SQLAlchemy](#sqlalchemy)
-<!-- TOC END -->
-
-Pydantic serves as a great tool for defining models for ORM (object relational mapping) libraries.
+Pydantic serves as a great tool for defining models for ORM (t.JsonValue relational mapping) libraries.
 ORMs are used to map objects to database tables, and vice versa.
 
 ## SQLAlchemy
@@ -23,32 +18,32 @@ as shown in the example below. In this case, we take advantage of Pydantic's ali
 import sqlalchemy as sa
 from sqlalchemy.orm import declarative_base
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, u.Field
 
 
 class MyModel(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    metadata: dict[str, str] = Field(alias='metadata_')
+    metadata: t.StrMapping = u.Field(alias="metadata_")
 
 
 Base = declarative_base()
 
 
 class MyTableModel(Base):
-    __tablename__ = 'my_table'
-    id = sa.Column('id', sa.Integer, primary_key=True)
+    __tablename__ = "my_table"
+    id = sa.Column("id", sa.Integer, primary_key=True)
     # 'metadata' is reserved by SQLAlchemy, hence the '_'
-    metadata_ = sa.Column('metadata', sa.JSON)
+    metadata_ = sa.Column("metadata", sa.JSON)
 
 
-sql_model = MyTableModel(metadata_={'key': 'val'}, id=1)
-pydantic_model = MyModel.model_validate(sql_model)
+sql_model = MyTableModel(metadata_={"key": "val"}, id=1)
+pydantic_model = MyModel(sql_model)
 
 print(pydantic_model.model_dump())
-#> {'metadata': {'key': 'val'}}
+# > {'metadata': {'key': 'val'}}
 print(pydantic_model.model_dump(by_alias=True))
-#> {'metadata_': {'key': 'val'}}
+# > {'metadata_': {'key': 'val'}}
 ```
 
 !!! note

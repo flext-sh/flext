@@ -11,7 +11,7 @@ BASE_DN="${BASE_DN:-dc=network,dc=invaliddc}"
 echo "=== FLEXT OUD Setup Starting ==="
 
 # Check if OUD instance already exists
-if [ ! -f "$INSTANCE_PATH/OUD/config/config.ldif" ]; then
+if [ ! -f "$INSTANCE_PATH/OUD/settings/settings.ldif" ]; then
 	echo "Setting up new OUD instance..."
 
 	$OUD_SETUP \
@@ -42,8 +42,8 @@ echo "Starting OUD server..."
 echo "Waiting for OUD server to be ready..."
 sleep 10
 
-# Configure single structural objectclass behavior
-echo "Configuring OUD settings..."
+# Settingsure single structural objectclass behavior
+echo "Settingsuring OUD settings..."
 "$INSTANCE_PATH/OUD/bin/dsconfig" \
 	-h localhost -p 4444 \
 	-D "cn=Directory Manager" \

@@ -26,7 +26,7 @@ services:
       # Additional Settings
       sampleData: "0"
       addBaseEntry: "true"
-      sleepBeforeConfig: "3"
+      sleepBeforeSettings: "3"
     volumes:
       # Docker named volume - container will create with correct permissions
       - flext_oud_test_data:/u01/oracle/user_projects

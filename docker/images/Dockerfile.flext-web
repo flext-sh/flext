@@ -19,8 +19,8 @@ COPY pyproject.toml poetry.lock* ./
 # Install Poetry
 RUN pip install poetry
 
-# Configure Poetry for container
-RUN poetry config virtualenvs.create false
+# Settingsure Poetry for container
+RUN poetry settings virtualenvs.create false
 
 # Install dependencies
 RUN poetry install --without=dev

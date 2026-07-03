@@ -1,13 +1,7 @@
 # Type Adapter
 
-
-<!-- TOC START -->
-- [Parsing data into a specified type](#parsing-data-into-a-specified-type)
-- [Rebuilding a `TypeAdapter`'s schema](#rebuilding-a-typeadapters-schema)
-<!-- TOC END -->
-
 You may have types that are not `BaseModel`s that you want to validate data against.
-Or you may want to validate a `list[SomeModel]`, or dump it to JSON.
+Or you may want to validate a `Sequence[SomeModel]`, or dump it to JSON.
 
 ??? api "API Documentation"
 [`pydantic.type_adapter.TypeAdapter`][pydantic.type_adapter.TypeAdapter]<br>
@@ -31,29 +25,27 @@ class User(TypedDict):
     id: int
 
 
-user_list_adapter = TypeAdapter(list[User])
-user_list = user_list_adapter.validate_python([{'name': 'Fred', 'id': '3'}])
+user_list_adapter = TypeAdapter(Sequence[User])
+user_list = user_list_adapter.validate_python([{"name": "Fred", "id": "3"}])
 print(repr(user_list))
-#> [{'name': 'Fred', 'id': 3}]
+# > [{'name': 'Fred', 'id': 3}]
 
 try:
-    user_list_adapter.validate_python(
-        [{'name': 'Fred', 'id': 'wrong', 'other': 'no'}]
-    )
+    user_list_adapter.validate_python([{"name": "Fred", "id": "wrong", "other": "no"}])
 except ValidationError as e:
     print(e)
     """
-    1 validation error for list[User]
+    1 validation error for t.SequenceOf[User]
     0.id
       Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='wrong', input_type=str]
     """
 
 print(repr(user_list_adapter.dump_json(user_list)))
-#> b'[{"name":"Fred","id":3}]'
+# > b'[{"name":"Fred","id":3}]'
 ```
 
 !!! info "`dump_json` returns `bytes`"
-`TypeAdapter`'s `dump_json` methods returns a `bytes` object, unlike the corresponding method for `BaseModel`, `model_dump_json`, which returns a `str`.
+`TypeAdapter`'s `dump_json` methods returns a `bytes` t.JsonValue, unlike the corresponding method for `BaseModel`, `model_dump_json`, which returns a `str`.
 The reason for this discrepancy is that in V1, model dumping returned a str type, so this behavior is retained in V2 for backwards compatibility.
 For the `BaseModel` case, `bytes` are coerced to `str` types, but `bytes` are often the desired end type.
 Hence, for the new `TypeAdapter` class in V2, the return type is simply `bytes`, which can easily be coerced to a `str` type if desired.
@@ -84,11 +76,11 @@ class Item(BaseModel):
 
 # `item_data` could come from an API call, eg., via something like:
 # item_data = requests.get('https://my-api.com/items').json()
-item_data = [{'id': 1, 'name': 'My Item'}]
+item_data = [{"id": 1, "name": "My Item"}]
 
-items = TypeAdapter(list[Item]).validate_python(item_data)
+items = TypeAdapter(Sequence[Item]).validate_python(item_data)
 print(items)
-#> [Item(id=1, name='My Item')]
+# > [Item(id=1, name='My Item')]
 ```
 
 [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] is capable of parsing data into any of the types Pydantic can
@@ -119,7 +111,7 @@ In order to manually trigger the building of the core schema, you can call the
 ```python
 from pydantic import ConfigDict, TypeAdapter
 
-ta = TypeAdapter('MyInt', config=ConfigDict(defer_build=True))
+ta = TypeAdapter("MyInt", settings=ConfigDict(defer_build=True))
 
 # some time later, the forward reference is defined
 MyInt = int

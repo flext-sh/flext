@@ -1,0 +1,6 @@
+id: detect-jsondict-legacy
+valid:
+- "x = t.JsonValue"
+- "x = t.StrMapping"
+invalid:
+- "t.JsonMapping"

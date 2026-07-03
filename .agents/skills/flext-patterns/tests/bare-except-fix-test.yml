@@ -1,0 +1,13 @@
+id: fix-bare-except
+valid:
+  - |
+    try:
+      pass
+    except Exception:
+      pass
+invalid:
+  - |
+    try:
+      pass
+    except:
+      pass

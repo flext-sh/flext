@@ -1,17 +1,3 @@
-<!-- TOC START -->
-- [Enabling the Plugin](#enabling-the-plugin)
-- [Mypy plugin capabilities](#mypy-plugin-capabilities)
-  - [Generate a `__init__` signature for Pydantic models](#generate-a-init-signature-for-pydantic-models)
-  - [Generate a typed signature for `model_construct`](#generate-a-typed-signature-for-modelconstruct)
-  - [Support for frozen models](#support-for-frozen-models)
-  - [Respect the type of the `Field`'s `default` and `default_factory`](#respect-the-type-of-the-fields-default-and-defaultfactory)
-  - [Warn about the use of untyped fields](#warn-about-the-use-of-untyped-fields)
-  - [Prevent the use of required dynamic aliases](#prevent-the-use-of-required-dynamic-aliases)
-- [Configuring the Plugin](#configuring-the-plugin)
-  - [`init_typed`](#inittyped)
-  - [`init_forbid_extra`](#initforbidextra)
-  - [`warn_required_dynamic_aliases`](#warnrequireddynamicaliases)
-<!-- TOC END -->
 
 Pydantic works well with [mypy](http://mypy-lang.org) right out of the box.
 
@@ -29,13 +15,13 @@ from pydantic import BaseModel
 
 class Model(BaseModel):
     age: int
-    first_name = 'John'
+    first_name = "John"
     last_name: Optional[str] = None
     signup_ts: Optional[datetime] = None
-    list_of_ints: list[int]
+    list_of_ints: t.SequenceOf[int]
 
 
-m = Model(age=42, list_of_ints=[1, '2', b'3'])
+m = Model(age=42, list_of_ints=[1, "2", b"3"])
 print(m.middle_name)  # not a model field!
 Model()  # will raise a validation error for age and list_of_ints
 ```
@@ -72,7 +58,7 @@ The Pydantic mypy plugin is tested against the latest mypy version. Older versio
 ## Enabling the Plugin
 
 To enable the plugin, just add `pydantic.mypy` to the list of plugins in your
-[mypy config file](https://mypy.readthedocs.io/en/latest/config_file.html):
+[mypy settings file](https://mypy.readthedocs.io/en/latest/config_file.html):
 
 === "`mypy.ini`"
 
@@ -116,9 +102,9 @@ See the [plugin configuration](#configuring-the-plugin) for more details.
 - If the [`frozen`][pydantic.ConfigDict.frozen] configuration is set to `True`, you will get
   an error if you try mutating a model field (see [faux immutability](../concepts/models.md#faux-immutability))
 
-### Respect the type of the `Field`'s `default` and `default_factory`
+### Respect the type of the `u.Field`'s `default` and `default_factory`
 
-- Field with both a `default` and a `default_factory` will result in an error during static checking.
+- u.Field with both a `default` and a `default_factory` will result in an error during static checking.
 - The type of the `default` and `default_factory` value must be compatible with the one of the field.
 
 ### Warn about the use of untyped fields
@@ -130,9 +116,9 @@ See the [plugin configuration](#configuring-the-plugin) for more details.
 
 See the documentation of the [`warn_required_dynamic_aliases`](#warn_required_dynamic_aliases) plugin configuration value.
 
-## Configuring the Plugin
+## Settingsuring the Plugin
 
-To change the values of the plugin settings, create a section in your mypy config file called `[pydantic-mypy]`,
+To change the values of the plugin settings, create a section in your mypy settings file called `[pydantic-mypy]`,
 and add any key-value pairs for settings you want to override.
 
 A configuration file with all plugin strictness flags enabled (and some other mypy strictness flags, too) might look like:
@@ -162,7 +148,7 @@ A configuration file with all plugin strictness flags enabled (and some other my
     [tool.mypy]
     plugins = ["pydantic.mypy"]
 
-    follow_imports = "silent"
+    follow_imports = "normal"
     warn_redundant_casts = true
     warn_unused_ignores = true
     disallow_any_generics = true
@@ -184,7 +170,7 @@ class Model(BaseModel):
     a: int
 
 
-Model(a='1')
+Model(a="1")
 ```
 
 For this reason, the plugin will use [`Any`][typing.Any] for field annotations when synthesizing the `__init__` method,
@@ -202,7 +188,7 @@ class Model(BaseModel):
 Model(unrelated=2)
 ```
 
-For this reason, the plugin will add an extra `**kwargs: Any` parameter when synthesizing the `__init__` method, unless
+For this reason, the plugin will add an extra `**kwargs` parameter when synthesizing the `__init__` method, unless
 `init_forbid_extra` is set or the [`extra`][pydantic.ConfigDict.extra] is set to `'forbid'`.
 
 ### `warn_required_dynamic_aliases`
