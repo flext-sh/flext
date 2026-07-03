@@ -32,12 +32,13 @@ DEPENDABOT_TITLE_RE = re.compile(
 
 
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
-    """Run a subprocess command and return its result."""
+    """Run a subprocess command (stdin=/dev/null to avoid interactive prompts)."""
     return subprocess.run(
         cmd,
         check=check,
         capture_output=True,
         text=True,
+        stdin=subprocess.DEVNULL,
     )
 
 
@@ -132,7 +133,7 @@ def merge_pr(slug: str, pr: dict[str, object], *, dry_run: bool) -> bool:
         print(f"  SKIP #{number}: title does not match bump schema: {title}")
         return False
 
-    cmd = [
+    base_cmd = [
         "gh",
         "pr",
         "merge",
@@ -146,15 +147,28 @@ def merge_pr(slug: str, pr: dict[str, object], *, dry_run: bool) -> bool:
     ]
     print(f"  MERGE #{number}: {message}")
     if dry_run:
-        print(f"    [dry-run] {' '.join(cmd)}")
+        print(f"    [dry-run] {' '.join(base_cmd)}")
         return True
 
-    result = run(cmd, check=False)
-    if result.returncode != 0:
-        print(f"  FAIL #{number}: {result.stderr.strip()}", file=sys.stderr)
-        return False
-    print(f"  OK #{number}")
-    return True
+    # First attempt: direct squash merge. stdin=/dev/null prevents interactive prompts.
+    result = run(base_cmd, check=False)
+    if result.returncode == 0:
+        print(f"  OK #{number}")
+        return True
+
+    stderr = result.stderr.strip()
+    # If required checks are pending/failing, enqueue via --auto so the PR merges
+    # as soon as GitHub checks complete successfully.
+    if "Required status check" in stderr or "checks" in stderr.lower():
+        auto_cmd = [*base_cmd, "--auto"]
+        auto_result = run(auto_cmd, check=False)
+        if auto_result.returncode == 0:
+            print(f"  ENQUEUED #{number}: will merge when checks pass")
+            return True
+        stderr = auto_result.stderr.strip()
+
+    print(f"  FAIL #{number}: {stderr}", file=sys.stderr)
+    return False
 
 
 def main() -> int:
