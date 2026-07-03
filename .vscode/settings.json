@@ -101,11 +101,15 @@
     "./.venv",
     "./**/.venv"
   ],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUntypedBaseClass": "none"
+  },
   "python.analysis.exclude": [
     "**/.flext-deps",
     "**/.flext-deps/**",
     "**/__pyrefly_virtual__/**"
   ],
+  "python.analysis.typeCheckingMode": "strict",
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
   "python.languageServer": "Default",
   "python.pyrefly.diagnosticMode": "workspace",
