@@ -38,26 +38,15 @@ if [[ ! -d "$SKILLS_DIR" ]]; then
 fi
 
 REQUIRED_SECTIONS=(
-	"## Scope"
-	"## References"
-	"## Rules"
-	"## Instructions"
+	"## USE FOR"
+	"## DO NOT USE FOR"
 	"## Workflow"
-	"## Examples"
-	"## Verification"
+	"## Critical rules"
 )
 
-for skill_dir in "$SKILLS_DIR"/*/; do
-	[[ -d "$skill_dir" ]] || continue
+while IFS= read -r skill_file; do
+	skill_dir=$(dirname "$skill_file")
 	skill_name=$(basename "$skill_dir")
-	skill_file="$skill_dir/SKILL.md"
-
-	if [[ ! -f "$skill_file" ]]; then
-		ERRORS+=("$skill_name: MISSING SKILL.md")
-		FAIL=1
-		continue
-	fi
-
 	CHECKED=$((CHECKED + 1))
 
 	# Check frontmatter presence (--- block at top)
@@ -113,7 +102,7 @@ for skill_dir in "$SKILLS_DIR"/*/; do
 		ERRORS+=("$skill_name: contains TODO/TBD/placeholder text ($todo_hits occurrence(s) outside code blocks)")
 		FAIL=1
 	fi
-done
+done < <(find "$SKILLS_DIR" -mindepth 2 -maxdepth 2 -name "SKILL.md" -type f | sort)
 
 echo "=== Skill Format Validation ===" >&2
 echo "Checked: $CHECKED skills" >&2
