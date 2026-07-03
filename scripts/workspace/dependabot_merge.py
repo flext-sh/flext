@@ -30,7 +30,12 @@ DEPENDABOT_TITLE_RE = re.compile(
     r"bump\s+(?P<package>.+?)\s+from\s+(?P<old>\S+)\s+to\s+(?P<new>\S+)\s*$",
     re.IGNORECASE,
 )
+DEPENDABOT_GROUP_RE = re.compile(
+    r"bump\s+(?:the\s+)?(?P<group>[\w\-]+)\s+group\s+.*\s+with\s+(?P<count>\d+)\s+updates?",
+    re.IGNORECASE,
+)
 MAX_WORKERS = 4
+RETRIES_ON_CONFLICT = 2
 
 
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
