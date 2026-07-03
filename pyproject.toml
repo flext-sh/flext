@@ -275,6 +275,7 @@ project-includes = [
   "flext-grpc/src/**/*.py*",
   "flext-grpc/tests/**/*.py*",
   "flext-infra/src/**/*.py*",
+  "flext-infra/tests/**/*.py*",
   "flext-ldap/src/**/*.py*",
   "flext-ldap/tests/**/*.py*",
   "flext-ldif/examples/**/*.py*",
@@ -491,6 +492,7 @@ include = [
   "flext-grpc/src",
   "flext-grpc/tests",
   "flext-infra/src",
+  "flext-infra/tests",
   "flext-ldap/src",
   "flext-ldap/tests",
   "flext-ldif/examples",
@@ -749,6 +751,11 @@ root = "flext-grpc/tests"
 extraPaths = [ "flext-infra/src" ]
 reportPrivateUsage = "error"
 root = "flext-infra/src"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-infra", "flext-infra/src" ]
+reportPrivateUsage = "none"
+root = "flext-infra/tests"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = [ "flext-ldap/src" ]
