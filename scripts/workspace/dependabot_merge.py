@@ -119,15 +119,26 @@ def ecosystem_from_head_ref(head_ref: str) -> str:
 
 
 def standard_message(title: str, head_ref: str) -> str | None:
-    """Return a single, non-repeating conventional commit message."""
-    match = DEPENDABOT_TITLE_RE.search(title)
-    if not match:
-        return None
-    package = match.group("package").strip()
-    old = match.group("old").strip()
-    new = match.group("new").strip()
-    eco = ecosystem_from_head_ref(head_ref)
-    return f"chore(deps): bump {package} {old} → {new} [{eco}]"
+    """Return a single, non-repeating conventional commit message.
+
+    Supports single-package bumps and Dependabot grouped updates.
+    """
+    single = DEPENDABOT_TITLE_RE.search(title)
+    if single:
+        package = single.group("package").strip()
+        old = single.group("old").strip()
+        new = single.group("new").strip()
+        eco = ecosystem_from_head_ref(head_ref)
+        return f"chore(deps): bump {package} {old} → {new} [{eco}]"
+
+    group = DEPENDABOT_GROUP_RE.search(title)
+    if group:
+        group_name = group.group("group").strip()
+        count = group.group("count").strip()
+        eco = ecosystem_from_head_ref(head_ref)
+        return f"chore(deps): bump {group_name} dependency group ({count} updates) [{eco}]"
+
+    return None
 
 
 def update_pr_branch(slug: str, number: int) -> bool:
@@ -197,7 +208,8 @@ def merge_pr(
         print(f"  OK #{number}")
         return True, False, False
 
-    stderr = result.stderr.strip()
+    merge_stderr = result.stderr.strip()
+    stderr = merge_stderr
     if (
         "Required status check" in stderr
         or "checks" in stderr.lower()
@@ -216,7 +228,13 @@ def merge_pr(
         return True, False, False
 
     # Conflict: try to update the branch and retry a few times.
-    if "conflict" in stderr.lower() or "merge conflicts" in stderr.lower():
+    conflict_indicators = (
+        "conflict",
+        "merge conflicts",
+        "not mergeable",
+        "cannot be cleanly created",
+    )
+    if any(indicator in merge_stderr.lower() for indicator in conflict_indicators):
         for attempt in range(1, RETRIES_ON_CONFLICT + 1):
             print(f"  CONFLICT #{number}: updating branch (attempt {attempt})")
             if not update_pr_branch(slug, number):
@@ -225,8 +243,8 @@ def merge_pr(
             if retry.returncode == 0:
                 print(f"  OK #{number} (after update)")
                 return True, False, False
-            stderr = retry.stderr.strip()
-            if "conflict" not in stderr.lower():
+            retry_stderr = retry.stderr.strip()
+            if not any(indicator in retry_stderr.lower() for indicator in conflict_indicators):
                 break
 
         if close_on_conflict:
