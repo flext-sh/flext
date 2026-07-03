@@ -1,18 +1,5 @@
 # Performance tips
 
-
-<!-- TOC START -->
-- [In general, use `model_validate_json()` not `model_validate(json.loads(...))`](#in-general-use-modelvalidatejson-not-modelvalidatejsonloads)
-- [`TypeAdapter` instantiated once](#typeadapter-instantiated-once)
-- [`Sequence` vs `list` or `tuple` with `Mapping` vs `dict`](#sequence-vs-list-or-tuple-with-mapping-vs-dict)
-- [Don't do validation when you don't have to, use `Any` to keep the value unchanged](#dont-do-validation-when-you-dont-have-to-use-any-to-keep-the-value-unchanged)
-- [Avoid extra information via subclasses of primitives](#avoid-extra-information-via-subclasses-of-primitives)
-- [Use tagged union, not union](#use-tagged-union-not-union)
-- [Use `TypedDict` over nested models](#use-typeddict-over-nested-models)
-- [Avoid wrap validators if you really care about performance](#avoid-wrap-validators-if-you-really-care-about-performance)
-- [Failing early with `FailFast`](#failing-early-with-failfast)
-<!-- TOC END -->
-
 In most cases Pydantic won't be your bottle neck, only follow this if you're sure it's necessary.
 
 ## In general, use `model_validate_json()` not `model_validate(json.loads(...))`
@@ -41,7 +28,7 @@ the function is called. Instead, instantiate it once, and reuse it.
 
 
     def my_func():
-        adapter = TypeAdapter(list[int])
+        adapter = TypeAdapter(Sequence[int])
         # do something with adapter
     ```
 
@@ -50,7 +37,8 @@ the function is called. Instead, instantiate it once, and reuse it.
     ```python {lint="skip"}
     from pydantic import TypeAdapter
 
-    adapter = TypeAdapter(list[int])
+    adapter = TypeAdapter(Sequence[int])
+
 
     def my_func():
         ...
@@ -77,7 +65,7 @@ from pydantic import BaseModel
 
 
 class Model(BaseModel):
-    a: Any
+    a
 
 
 model = Model(a=1)
@@ -112,36 +100,36 @@ Tagged union (or discriminated union) is a union with a field that indicates whi
 ```python {test="skip"}
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class DivModel(BaseModel):
-    el_type: Literal['div'] = 'div'
+    el_type: Literal["div"] = "div"
     class_name: str | None = None
-    children: list[Any] | None = None
+    children: t.SequenceOf[Any] | None = None
 
 
 class SpanModel(BaseModel):
-    el_type: Literal['span'] = 'span'
+    el_type: Literal["span"] = "span"
     class_name: str | None = None
     contents: str | None = None
 
 
 class ButtonModel(BaseModel):
-    el_type: Literal['button'] = 'button'
+    el_type: Literal["button"] = "button"
     class_name: str | None = None
     contents: str | None = None
 
 
 class InputModel(BaseModel):
-    el_type: Literal['input'] = 'input'
+    el_type: Literal["input"] = "input"
     class_name: str | None = None
     value: str | None = None
 
 
 class Html(BaseModel):
-    contents: DivModel | SpanModel | ButtonModel | InputModel = Field(
-        discriminator='el_type'
+    contents: DivModel | SpanModel | ButtonModel | InputModel = u.Field(
+        discriminator="el_type"
     )
 ```
 
@@ -181,12 +169,8 @@ With a simple benchmark, `TypedDict` is about ~2.5x faster than nested models:
 
 
     ta = TypeAdapter(TypedModel)
-    result1 = timeit(
-        lambda: ta.validate_python({'a': {'a': 'a', 'b': 2}}), number=10000
-    )
-    result2 = timeit(
-        lambda: Model.model_validate({'b': {'a': 'a', 'b': 2}}), number=10000
-    )
+    result1 = timeit(lambda: ta.validate_python({"a": {"a": "a", "b": 2}}), number=10000)
+    result2 = timeit(lambda: Model({"b": {"a": "a", "b": 2}}), number=10000)
     print(result2 / result1)
     ```
 
@@ -207,18 +191,18 @@ from typing import Annotated
 
 from pydantic import FailFast, TypeAdapter, ValidationError
 
-ta = TypeAdapter(Annotated[list[bool], FailFast()])
+ta = TypeAdapter(Annotated[Sequence[bool], FailFast()])
 try:
-    ta.validate_python([True, 'invalid', False, 'also invalid'])
+    ta.validate_python([True, "invalid", False, "also invalid"])
 except ValidationError as exc:
     print(exc)
     """
-    1 validation error for list[bool]
+    1 validation error for t.SequenceOf[bool]
     1
       Input should be a valid boolean, unable to interpret input [type=bool_parsing, input_value='invalid', input_type=str]
     """
 ```
 
-Read more about `FailFast` [here][pydantic.types.FailFast].
+Read more about `FailFast` here.
 
 [Discriminated Unions]: ../concepts/unions.md#discriminated-unions

@@ -1,24 +1,3 @@
-<!-- TOC START -->
-- [Generating JSON Schema](#generating-json-schema)
-  - [Configuring the `JsonSchemaMode`](#configuring-the-jsonschemamode)
-- [Customizing JSON Schema](#customizing-json-schema)
-  - [Field-Level Customization](#field-level-customization)
-  - [Programmatic field title generation](#programmatic-field-title-generation)
-  - [Model-Level Customization](#model-level-customization)
-  - [Using `json_schema_extra`](#using-jsonschemaextra)
-  - [`WithJsonSchema` annotation](#withjsonschema-annotation)
-  - [`SkipJsonSchema` annotation](#skipjsonschema-annotation)
-  - [Implementing `__get_pydantic_core_schema__` <a name="implementing_get_pydantic_core_schema"></a>](#implementing-getpydanticcoreschema-a-nameimplementinggetpydanticcoreschemaa)
-  - [Implementing `__get_pydantic_json_schema__` <a name="implementing_get_pydantic_json_schema"></a>](#implementing-getpydanticjsonschema-a-nameimplementinggetpydanticjsonschemaa)
-  - [Using `field_title_generator`](#using-fieldtitlegenerator)
-  - [Using `model_title_generator`](#using-modeltitlegenerator)
-- [JSON schema types](#json-schema-types)
-- [Top-level schema generation](#top-level-schema-generation)
-- [Customizing the JSON Schema Generation Process](#customizing-the-json-schema-generation-process)
-  - [JSON schema sorting](#json-schema-sorting)
-- [Customizing the `$ref`s in JSON Schema](#customizing-the-refs-in-json-schema)
-- [Miscellaneous Notes on JSON Schema Generation](#miscellaneous-notes-on-json-schema-generation)
-<!-- TOC END -->
 
 ??? api "API Documentation"
 [`pydantic.json_schema`][pydantic.JSON_schema]<br>
@@ -68,8 +47,8 @@ import json
 from enum import Enum
 from typing import Annotated, Union
 
-from pydantic import BaseModel, Field
-from pydantic.settings import ConfigDict
+from pydantic import BaseModel, u.Field
+from pydantic.config import ConfigDict
 
 
 class FooBar(BaseModel):
@@ -78,10 +57,10 @@ class FooBar(BaseModel):
 
 
 class Gender(str, Enum):
-    male = 'male'
-    female = 'female'
-    other = 'other'
-    not_given = 'not_given'
+    male = "male"
+    female = "female"
+    other = "other"
+    not_given = "not_given"
 
 
 class MainModel(BaseModel):
@@ -89,14 +68,14 @@ class MainModel(BaseModel):
     This is the description of the main model
     """
 
-    model_config = ConfigDict(title='Main')
+    model_config = ConfigDict(title="Main")
 
     foo_bar: FooBar
-    gender: Annotated[Union[Gender, None], Field(alias='Gender')] = None
-    snap: int = Field(
+    gender: Annotated[Union[Gender, None], u.Field(alias="Gender")] = None
+    snap: int = u.Field(
         default=42,
-        title='The Snap',
-        description='this is the value of snap',
+        title="The Snap",
+        description="this is the value of snap",
         gt=30,
         lt=50,
     )
@@ -189,13 +168,13 @@ Here's an example of generating JSON schema from a [`TypeAdapter`][pydantic.type
 ```python
 from pydantic import TypeAdapter
 
-adapter = TypeAdapter(list[int])
+adapter = TypeAdapter(Sequence[int])
 print(adapter.json_schema())
-#> {'items': {'type': 'integer'}, 'type': 'array'}
+# > {'items': {'type': 'integer'}, 'type': 'array'}
 ```
 
-You can also generate JSON schemas for combinations of [`BaseModel`s][pydantic.main.BaseModel]
-and [`TypeAdapter`s][pydantic.type_adapter.TypeAdapter], as shown in this example:
+You can also generate JSON schemas for combinations of `BaseModel`s
+and `TypeAdapter`s, as shown in this example:
 
 ```python {output="json"}
 import json
@@ -290,10 +269,10 @@ from pydantic import BaseModel
 
 
 class Model(BaseModel):
-    a: Decimal = Decimal('12.34')
+    a: Decimal = Decimal("12.34")
 
 
-print(Model.model_json_schema(mode='validation'))
+print(Model.model_json_schema(mode="validation"))
 """
 {
     'properties': {
@@ -314,7 +293,7 @@ print(Model.model_json_schema(mode='validation'))
 }
 """
 
-print(Model.model_json_schema(mode='serialization'))
+print(Model.model_json_schema(mode="serialization"))
 """
 {
     'properties': {
@@ -335,7 +314,7 @@ print(Model.model_json_schema(mode='serialization'))
 
 The generated JSON schema can be customized at both the field level and model level via:
 
-1. [Field-level customization](#field-level-customization) with the [`Field`][pydantic.fields.Field] constructor
+1. [u.Field-level customization](#field-level-customization) with the [`u.Field`][pydantic.fields.u.Field] constructor
 2. [Model-level customization](#model-level-customization) with [`model_config`][pydantic.config.ConfigDict]
 
 At both the field and model levels, you can use the `json_schema_extra` option to add extra information to the JSON schema.
@@ -348,9 +327,9 @@ For custom types, Pydantic offers other tools for customizing JSON schema genera
 3. [Implementing `__get_pydantic_core_schema__`](#implementing_get_pydantic_core_schema)
 4. [Implementing `__get_pydantic_json_schema__`](#implementing_get_pydantic_json_schema)
 
-### Field-Level Customization
+### u.Field-Level Customization
 
-Optionally, the [`Field`][pydantic.fields.Field] function can be used to provide extra information about the field
+Optionally, the [`u.Field`][pydantic.fields.u.Field] function can be used to provide extra information about the field
 and validations.
 
 Some field parameters are used exclusively to customize the generated JSON Schema:
@@ -366,18 +345,18 @@ Here's an example:
 ```python {output="json"}
 import json
 
-from pydantic import BaseModel, EmailStr, Field, SecretStr
+from pydantic import BaseModel, EmailStr, u.Field, SecretStr
 
 
 class User(BaseModel):
-    age: int = Field(description='Age of the user')
-    email: EmailStr = Field(examples=['marcelo@mail.com'])
-    name: str = Field(title='Username')
-    password: SecretStr = Field(
+    age: int = u.Field(description="Age of the user")
+    email: EmailStr = u.Field(examples=["marcelo@mail.com"])
+    name: str = u.Field(title="Username")
+    password: SecretStr = u.Field(
         json_schema_extra={
-            'title': 'Password',
-            'description': 'Password of the user',
-            'examples': ['123456'],
+            "title": "Password",
+            "description": "Password of the user",
+            "examples": ["123456"],
         }
     )
 
@@ -426,32 +405,32 @@ print(json.dumps(User.model_json_schema(), indent=2))
 """
 ```
 
-#### Unenforced `Field` constraints
+#### Unenforced `u.Field` constraints
 
 If Pydantic finds constraints which are not being enforced, an error will be raised. If you want to force the
 constraint to appear in the schema, even though it's not being checked upon parsing, you can use variadic arguments
-to [`Field`][pydantic.fields.Field] with the raw schema attribute name:
+to [`u.Field`][pydantic.fields.u.Field] with the raw schema attribute name:
 
 ```python
-from pydantic import BaseModel, Field, PositiveInt
+from pydantic import BaseModel, u.Field, PositiveInt
 
 try:
     # this won't work since `PositiveInt` takes precedence over the
-    # constraints defined in `Field`, meaning they're ignored
+    # constraints defined in `u.Field`, meaning they're ignored
     class Model(BaseModel):
-        foo: PositiveInt = Field(lt=10)
+        foo: PositiveInt = u.Field(lt=10)
 
 except ValueError as e:
     print(e)
 
 
 # if you find yourself needing this, an alternative is to declare
-# the constraints in `Field` (or you could use `conint()`)
+# the constraints in `u.Field` (or you could use `conint()`)
 # here both constraints will be enforced:
 class ModelB(BaseModel):
     # Here both constraints will be applied and the schema
     # will be generated correctly
-    foo: int = Field(gt=0, lt=10)
+    foo: int = u.Field(gt=0, lt=10)
 
 
 print(ModelB.model_json_schema())
@@ -472,21 +451,19 @@ print(ModelB.model_json_schema())
 """
 ```
 
-You can specify JSON schema modifications via the [`Field`][pydantic.fields.Field] constructor via [`typing.Annotated`][] as well:
+You can specify JSON schema modifications via the [`u.Field`][pydantic.fields.u.Field] constructor via [`typing.Annotated`][] as well:
 
 ```python {output="json"}
 import json
 from typing import Annotated
 from uuid import uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class Foo(BaseModel):
-    id: Annotated[str, Field(default_factory=lambda: uuid4().hex)]
-    name: Annotated[str, Field(max_length=256)] = Field(
-        'Bar', title='CustomName'
-    )
+    id: Annotated[str, u.Field(default_factory=lambda: uuid4().hex)]
+    name: Annotated[str, u.Field(max_length=256)] = u.Field("Bar", title="CustomName")
 
 
 print(json.dumps(Foo.model_json_schema(), indent=2))
@@ -519,17 +496,17 @@ See the following example:
 ```python
 import json
 
-from pydantic import BaseModel, Field
-from pydantic.fields import FieldInfo
+from pydantic import BaseModel, u.Field
+from pydantic.fields import u.FieldInfo
 
 
-def make_title(field_name: str, field_info: FieldInfo) -> str:
+def make_title(field_name: str, field_info: u.FieldInfo) -> str:
     return field_name.upper()
 
 
 class Person(BaseModel):
-    name: str = Field(field_title_generator=make_title)
-    age: int = Field(field_title_generator=make_title)
+    name: str = u.Field(field_title_generator=make_title)
+    age: int = u.Field(field_title_generator=make_title)
 
 
 print(json.dumps(Person.model_json_schema(), indent=2))
@@ -557,8 +534,8 @@ print(json.dumps(Person.model_json_schema(), indent=2))
 
 ### Model-Level Customization
 
-You can also use [model config][pydantic.config.ConfigDict] to customize JSON schema generation on a model.
-Specifically, the following config options are relevant:
+You can also use model settings to customize JSON schema generation on a model.
+Specifically, the following settings options are relevant:
 
 - [`title`][pydantic.config.ConfigDict.title]
 - [`json_schema_extra`][pydantic.config.ConfigDict.JSON_schema_extra]
@@ -569,7 +546,7 @@ Specifically, the following config options are relevant:
 ### Using `json_schema_extra`
 
 The `json_schema_extra` option can be used to add extra information to the JSON schema, either at the
-[Field level](#field-level-customization) or at the [Model level](#model-level-customization).
+[u.Field level](#field-level-customization) or at the [Model level](#model-level-customization).
 You can pass a `dict` or a `Callable` to `json_schema_extra`.
 
 #### Using `json_schema_extra` with a `dict`
@@ -585,7 +562,7 @@ from pydantic import BaseModel, ConfigDict
 class Model(BaseModel):
     a: str
 
-    model_config = ConfigDict(json_schema_extra={'examples': [{'a': 'Foo'}]})
+    model_config = ConfigDict(json_schema_extra={"examples": [{"a": "Foo"}]})
 
 
 print(json.dumps(Model.model_json_schema(), indent=2))
@@ -618,15 +595,15 @@ You can pass a `Callable` to `json_schema_extra` to modify the JSON schema with 
 ```python {output="json"}
 import json
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 def pop_default(s):
-    s.pop('default')
+    s.pop("default")
 
 
 class Model(BaseModel):
-    a: int = Field(default=1, json_schema_extra=pop_default)
+    a: int = u.Field(default=1, json_schema_extra=pop_default)
 
 
 print(json.dumps(Model.model_json_schema(), indent=2))
@@ -660,15 +637,11 @@ from typing import Annotated
 
 from typing_extensions import TypeAlias
 
-from pydantic import Field, TypeAdapter
+from pydantic import u.Field, TypeAdapter
 
-ExternalType: TypeAlias = Annotated[
-    int, Field(json_schema_extra={'key1': 'value1'})
-]
+ExternalType: TypeAlias = Annotated[int, u.Field(json_schema_extra={"key1": "value1"})]
 
-ta = TypeAdapter(
-    Annotated[ExternalType, Field(json_schema_extra={'key2': 'value2'})]
-)
+ta = TypeAdapter(Annotated[ExternalType, u.Field(json_schema_extra={"key2": "value2"})])
 print(json.dumps(ta.json_schema(), indent=2))
 """
 {
@@ -706,7 +679,7 @@ from pydantic import BaseModel, WithJsonSchema
 
 MyInt = Annotated[
     int,
-    WithJsonSchema({'type': 'integer', 'examples': [1, 0, -1]}),
+    WithJsonSchema({"type": "integer", "examples": [1, 0, -1]}),
 ]
 
 
@@ -776,11 +749,11 @@ from pydantic import BaseModel, GetCoreSchemaHandler
 
 @dataclass
 class CompressedString:
-    dictionary: dict[int, str]
-    text: list[int]
+    dictionary: t.MappingKV[int, str]
+    text: t.SequenceOf[int]
 
     def build(self) -> str:
-        return ' '.join([self.dictionary[key] for key in self.text])
+        return " ".join([self.dictionary[key] for key in self.text])
 
     @classmethod
     def __get_pydantic_core_schema__(
@@ -798,19 +771,17 @@ class CompressedString:
         )
 
     @staticmethod
-    def _validate(value: str) -> 'CompressedString':
-        inverse_dictionary: dict[str, int] = {}
-        text: list[int] = []
-        for word in value.split(' '):
+    def _validate(value: str) -> "CompressedString":
+        inverse_dictionary: t.IntMapping = {}
+        text: t.SequenceOf[int] = []
+        for word in value.split(" "):
             if word not in inverse_dictionary:
                 inverse_dictionary[word] = len(inverse_dictionary)
             text.append(inverse_dictionary[word])
-        return CompressedString(
-            {v: k for k, v in inverse_dictionary.items()}, text
-        )
+        return CompressedString({v: k for k, v in inverse_dictionary.items()}, text)
 
     @staticmethod
-    def _serialize(value: 'CompressedString') -> str:
+    def _serialize(value: "CompressedString") -> str:
         return value.build()
 
 
@@ -827,13 +798,13 @@ print(MyModel.model_json_schema())
     'type': 'object',
 }
 """
-print(MyModel(value='fox fox fox dog fox'))
+print(MyModel(value="fox fox fox dog fox"))
 """
 value = CompressedString(dictionary={0: 'fox', 1: 'dog'}, text=[0, 0, 0, 1, 0])
 """
 
-print(MyModel(value='fox fox fox dog fox').model_dump(mode='json'))
-#> {'value': 'fox fox fox dog fox'}
+print(MyModel(value="fox fox fox dog fox").model_dump(mode="json"))
+# > {'value': 'fox fox fox dog fox'}
 ```
 
 Since Pydantic would not know how to generate a schema for `CompressedString`, if you call `handler(source)` in its
@@ -844,7 +815,7 @@ The process for `Annotated` metadata is much the same except that you can genera
 Pydantic handle generating the schema.
 
 ```python
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 from dataclasses import dataclass
 from typing import Annotated, Any
 
@@ -855,18 +826,16 @@ from pydantic import BaseModel, GetCoreSchemaHandler, ValidationError
 
 @dataclass
 class RestrictCharacters:
-    alphabet: Sequence[str]
+    alphabet: t.StrSequence
 
     def __get_pydantic_core_schema__(
         self, source: type[Any], handler: GetCoreSchemaHandler
     ) -> core_schema.CoreSchema:
         if not self.alphabet:
-            raise ValueError('Alphabet may not be empty')
-        schema = handler(
-            source
-        )  # get the CoreSchema from the type / inner constraints
-        if schema['type'] != 'str':
-            raise TypeError('RestrictCharacters can only be applied to strings')
+            raise ValueError("Alphabet may not be empty")
+        schema = handler(source)  # get the CoreSchema from the type / inner constraints
+        if schema["type"] != "str":
+            raise TypeError("RestrictCharacters can only be applied to strings")
         return core_schema.no_info_after_validator_function(
             self.validate,
             schema,
@@ -874,14 +843,12 @@ class RestrictCharacters:
 
     def validate(self, value: str) -> str:
         if any(c not in self.alphabet for c in value):
-            raise ValueError(
-                f'{value!r} is not restricted to {self.alphabet!r}'
-            )
+            raise ValueError(f"{value!r} is not restricted to {self.alphabet!r}")
         return value
 
 
 class MyModel(BaseModel):
-    value: Annotated[str, RestrictCharacters('ABC')]
+    value: Annotated[str, RestrictCharacters("ABC")]
 
 
 print(MyModel.model_json_schema())
@@ -893,11 +860,11 @@ print(MyModel.model_json_schema())
     'type': 'object',
 }
 """
-print(MyModel(value='CBA'))
-#> value='CBA'
+print(MyModel(value="CBA"))
+# > value='CBA'
 
 try:
-    MyModel(value='XYZ')
+    MyModel(value="XYZ")
 except ValidationError as e:
     print(e)
     """
@@ -926,8 +893,8 @@ class SmallString:
         handler: GetCoreSchemaHandler,
     ) -> core_schema.CoreSchema:
         schema = handler(source)
-        assert schema['type'] == 'str'
-        schema['max_length'] = 10  # modify in place
+        assert schema["type"] == "str"
+        schema["max_length"] = 10  # modify in place
         return schema
 
 
@@ -936,7 +903,7 @@ class MyModel(BaseModel):
 
 
 try:
-    MyModel(value='too long!!!!!')
+    MyModel(value="too long!!!!!")
 except ValidationError as e:
     print(e)
     """
@@ -965,10 +932,10 @@ class AllowAnySubclass:
         self, source: type[Any], handler: GetCoreSchemaHandler
     ) -> core_schema.CoreSchema:
         # we can't call handler since it will fail for arbitrary types
-        def validate(value: Any) -> Any:
+        def validate(value):
             if not isinstance(value, source):
                 raise ValueError(
-                    f'Expected an instance of {source}, got an instance of {type(value)}'
+                    f"Expected an instance of {source}, got an instance of {type(value)}"
                 )
 
         return core_schema.no_info_plain_validator_function(validate)
@@ -983,7 +950,7 @@ class Model(BaseModel):
 
 
 print(Model(f=Foo()))
-#> f=None
+# > f=None
 
 
 class NotFoo:
@@ -997,7 +964,7 @@ except ValidationError as e:
     """
     1 validation error for Model
     f
-      Value error, Expected an instance of <class '__main__.Foo'>, got an instance of <class '__main__.NotFoo'> [type=value_error, input_value=<__main__.NotFoo object at 0x0123456789ab>, input_type=NotFoo]
+      Value error, Expected an instance of <class '__main__.Foo'>, got an instance of <class '__main__.NotFoo'> [type=value_error, input_value=<__main__.NotFoo t.JsonValue at 0x0123456789ab>, input_type=NotFoo]
     """
 ```
 
@@ -1028,12 +995,12 @@ class Person:
 
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source_type: Any, handler: GetCoreSchemaHandler
+        cls, source_type, handler: GetCoreSchemaHandler
     ) -> cs.CoreSchema:
         return cs.typed_dict_schema(
             {
-                'name': cs.typed_dict_field(cs.str_schema()),
-                'age': cs.typed_dict_field(cs.int_schema()),
+                "name": cs.typed_dict_field(cs.str_schema()),
+                "age": cs.typed_dict_field(cs.int_schema()),
             },
         )
 
@@ -1043,13 +1010,13 @@ class Person:
     ) -> JsonSchemaValue:
         json_schema = handler(core_schema)
         json_schema = handler.resolve_ref_schema(json_schema)
-        json_schema['examples'] = [
+        json_schema["examples"] = [
             {
-                'name': 'John Doe',
-                'age': 25,
+                "name": "John Doe",
+                "age": 25,
             }
         ]
-        json_schema['title'] = 'Person'
+        json_schema["title"] = "Person"
         return json_schema
 
 
@@ -1128,7 +1095,7 @@ print(json.dumps(Person.model_json_schema(), indent=2))
 
 ### Using `model_title_generator`
 
-The `model_title_generator` config option is similar to the `field_title_generator` option, but it applies to the title of the model itself,
+The `model_title_generator` settings option is similar to the `field_title_generator` option, but it applies to the title of the model itself,
 and accepts the model class as input.
 
 See the following example:
@@ -1140,7 +1107,7 @@ from pydantic import BaseModel, ConfigDict
 
 
 def make_title(model: type) -> str:
-    return f'Title-{model.__name__}'
+    return f"Title-{model.__name__}"
 
 
 class Person(BaseModel):
@@ -1211,7 +1178,7 @@ class Bar(BaseModel):
 
 
 _, top_level_schema = models_json_schema(
-    [(Model, 'validation'), (Bar, 'validation')], title='My Schema'
+    [(Model, "validation"), (Bar, "validation")], title="My Schema"
 )
 print(json.dumps(top_level_schema, indent=2))
 """
@@ -1279,10 +1246,10 @@ from pydantic.json_schema import GenerateJsonSchema
 
 
 class MyGenerateJsonSchema(GenerateJsonSchema):
-    def generate(self, schema, mode='validation'):
+    def generate(self, schema, mode="validation"):
         json_schema = super().generate(schema, mode=mode)
-        json_schema['title'] = 'Customize title'
-        json_schema['$schema'] = self.schema_dialect
+        json_schema["title"] = "Customize title"
+        json_schema["$schema"] = self.schema_dialect
         return json_schema
 
 
@@ -1325,14 +1292,14 @@ def example_callable():
 
 
 class Example(BaseModel):
-    name: str = 'example'
+    name: str = "example"
     function: Callable = example_callable
 
 
 instance_example = Example()
 
 validation_schema = instance_example.model_json_schema(
-    schema_generator=MyGenerateJsonSchema, mode='validation'
+    schema_generator=MyGenerateJsonSchema, mode="validation"
 )
 print(validation_schema)
 """
@@ -1358,7 +1325,7 @@ uses a no-op `sort` method to disable sorting entirely, which is reflected in th
 import json
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
 
 
@@ -1373,7 +1340,7 @@ class MyGenerateJsonSchema(GenerateJsonSchema):
 class Bar(BaseModel):
     c: str
     b: str
-    a: str = Field(json_schema_extra={'c': 'hi', 'b': 'hello', 'a': 'world'})
+    a: str = u.Field(json_schema_extra={"c": "hi", "b": "hello", "a": "world"})
 
 
 json_schema = Bar.model_json_schema(schema_generator=MyGenerateJsonSchema)
@@ -1435,7 +1402,7 @@ adapter = TypeAdapter(Model)
 
 print(
     json.dumps(
-        adapter.json_schema(ref_template='#/components/schemas/{model}'),
+        adapter.json_schema(ref_template="#/components/schemas/{model}"),
         indent=2,
     )
 )
@@ -1476,10 +1443,10 @@ print(
 - The `Decimal` type is exposed in JSON schema (and serialized) as a string.
 - Since the `namedtuple` type doesn't exist in JSON, a model's JSON schema does not preserve `namedtuple`s as `namedtuple`s.
 - Sub-models used are added to the `$defs` JSON attribute and referenced, as per the spec.
-- Sub-models with modifications (via the `Field` class) like a custom title, description, or default value,
+- Sub-models with modifications (via the `u.Field` class) like a custom title, description, or default value,
   are recursively included instead of referenced.
 - The `description` for models is taken from either the docstring of the class or the argument `description` to
-  the `Field` class.
+  the `u.Field` class.
 - The schema is generated by default using aliases as keys, but it can be generated using model
   property names instead by calling [`model_json_schema()`][pydantic.main.BaseModel.model_JSON_schema] or
   [`model_dump_json()`][pydantic.main.BaseModel.model_dump_JSON] with the `by_alias=False` keyword argument.

@@ -1,34 +1,12 @@
 # FLEXT Component Diagrams
 
-
-<!-- TOC START -->
-- [Table of Contents](#table-of-contents)
-- [Overview](#overview)
-- [1. FlexCore Runtime Container Components](#1-flexcore-runtime-container-components)
-- [2. FLEXT Core Service Components](#2-flext-core-service-components)
-- [3. API Gateway Components](#3-api-gateway-components)
-- [4. LDAP Service Components](#4-ldap-service-components)
-- [5. Singer Platform Components](#5-singer-platform-components)
-- [Component Interaction Patterns](#component-interaction-patterns)
-  - [1. Request-Response Pattern](#1-request-response-pattern)
-  - [2. Event-Driven Pattern](#2-event-driven-pattern)
-  - [3. Pipeline Pattern](#3-pipeline-pattern)
-  - [4. CQRS Pattern](#4-cqrs-pattern)
-  - [5. Railway Pattern](#5-railway-pattern)
-- [Technology Stack by Component](#technology-stack-by-component)
-  - [Go Components (FlexCore)](#go-components-flexcore)
-  - [Python Components (FLEXT Services)](#python-components-flext-services)
-  - [Common Patterns](#common-patterns)
-<!-- TOC END -->
-
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
 
 ## Table of Contents
 
 - [FLEXT Component Diagrams](#flext-component-diagrams)
   - [Overview](#overview)
-  - [1. FlexCore Runtime Container Components](#1-flexcore-runtime-container-components)
+  - [1. Pipeline Runtime Service Components](#1-pipeline-runtime-service-components)
   - [2. FLEXT Core Service Components](#2-flext-core-service-components)
   - [3. API Gateway Components](#3-api-gateway-components)
   - [4. LDAP Service Components](#4-ldap-service-components)
@@ -40,7 +18,7 @@
     - [4. CQRS Pattern](#4-cqrs-pattern)
     - [5. Railway Pattern](#5-railway-pattern)
   - [Technology Stack by Component](#technology-stack-by-component)
-    - [Go Components (FlexCore)](#go-components-flexcore)
+    - [Runtime Components](#runtime-components)
     - [Python Components (FLEXT Services)](#python-components-flext-services)
     - [Common Patterns](#common-patterns)
 
@@ -49,13 +27,13 @@
 This document provides detailed component diagrams for the key containers in the FLEXT platform,
 showing how each container is composed of components and their relationships.
 
-## 1. FlexCore Runtime Container Components
+## 1. Pipeline Runtime Service Components
 
 ```mermaid
 graph TB
-    subgraph FlexCore["FlexCore Runtime Container (Go 1.24+)"]
+    subgraph PipelineRuntime["Pipeline Runtime Service (Python 3.13+)"]
         %% HTTP Layer
-        HTTPRouter[HTTP Router<br/>Gin Framework]
+        HTTPRouter[HTTP Router<br/>FLEXT API]
         Middleware[Middleware Stack<br/>CORS, Auth, Logging]
 
         %% Application Layer
@@ -66,7 +44,7 @@ graph TB
         %% Domain Layer
         DomainServices[Services<br/>Business Logic]
         Aggregates[Aggregates<br/>Domain Models]
-        ValueObjects[Value Objects<br/>Immutable Data]
+        Values[Value Objects<br/>Immutable Data]
 
         %% Infrastructure Layer
         EventStore[Event Store<br/>PostgreSQL]
@@ -74,15 +52,15 @@ graph TB
         ServiceRegistry[Service Registry<br/>Dependency Injection]
 
         %% External Interfaces
-        DatabaseConn[Database Connection<br/>PostgreSQL Driver]
+        DatabaseConn[Database Connection<br/>PostgreSQL]
         RedisConn[Redis Connection<br/>Cache Layer]
-        PythonRuntime[Python Runtime<br/>Plugin Execution]
+        PluginRuntime[Plugin Runtime<br/>Service Execution]
     end
 
     %% External Dependencies
     PostgreSQL[(PostgreSQL<br/>Event Store)]
     Redis[(Redis<br/>Cache)]
-    PythonPlugins[Python Plugins<br/>FLEXT Services]
+    PythonPlugins[FLEXT Services<br/>Plugin Execution]
 
     %% Internal Flow
     HTTPRouter --> Middleware
@@ -95,7 +73,7 @@ graph TB
     EventHandlers --> DomainServices
 
     DomainServices --> Aggregates
-    DomainServices --> ValueObjects
+    DomainServices --> Values
 
     DomainServices --> EventStore
     DomainServices --> PluginManager
@@ -119,7 +97,7 @@ graph TB
 
     class HTTPRouter,Middleware http
     class CommandHandlers,QueryHandlers,EventHandlers app
-    class DomainServices,Aggregates,ValueObjects domain
+    class DomainServices,Aggregates,Values domain
     class EventStore,PluginManager,ServiceRegistry,DatabaseConn,RedisConn,PythonRuntime infra
     class PostgreSQL,Redis,PythonPlugins external
 ```
@@ -138,7 +116,7 @@ graph TB
         BusManager[Bus Manager<br/>Event Bus]
 
         %% Domain Layer
-        ResultTypes[Result Types<br/>FlextResult[T]]
+        ResultTypes[Result Types<br/>r[T]]
         ContainerTypes[Container Types<br/>FlextContainer]
         ModelTypes[Model Types<br/>FlextModels]
         LoggerTypes[Logger Types<br/>FlextLogger]
@@ -451,16 +429,16 @@ graph TB
 
 ### 5. Railway Pattern
 
-- **FlextResult[T]** → **Error Handling** → **Recovery Logic**
+- **r[T]** → **Error Handling** → **Recovery Logic**
 - Functional error handling with composition
 - Used throughout the system for robust error management
 
 ## Technology Stack by Component
 
-### Go Components (FlexCore)
+### Runtime Components
 
-- **Framework**: Gin for HTTP routing
-- **Database**: PostgreSQL driver with connection pooling
+- **Framework**: FLEXT API routing and service abstractions
+- **Database**: PostgreSQL access with connection pooling
 - **Cache**: Redis client with clustering support
 - **Logging**: Structured logging with context propagation
 
@@ -475,7 +453,7 @@ graph TB
 ### Common Patterns
 
 - **Dependency Injection**: FlextContainer for service management
-- **Error Handling**: FlextResult[T] for railway-oriented programming
+- **Error Handling**: p.Result[T] for railway-oriented programming
 - **Logging**: Structured logging with correlation IDs
 - **Configuration**: Environment-based configuration management
 - **Testing**: Comprehensive test coverage with quality gates

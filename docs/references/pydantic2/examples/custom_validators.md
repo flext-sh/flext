@@ -1,11 +1,5 @@
 # Custom Validators
 
-
-<!-- TOC START -->
-- [Custom `datetime` Validator via [`Annotated`][typing.Annotated] Metadata](#custom-datetime-validator-via-annotatedtypingannotated-metadata)
-- [Validating Nested Model Fields](#validating-nested-model-fields)
-<!-- TOC END -->
-
 This page provides example snippets for creating more complex, custom validators in Pydantic.
 Many of these examples are adapted from Pydantic issues and discussions, and are intended to showcase
 the flexibility and power of Pydantic's validation system.
@@ -13,9 +7,9 @@ the flexibility and power of Pydantic's validation system.
 ## Custom `datetime` Validator via [`Annotated`][typing.Annotated] Metadata
 
 In this example, we'll construct a custom validator, attached to an [`Annotated`][typing.Annotated] type,
-that ensures a [`datetime`][datetime.datetime] object adheres to a given timezone constraint.
+that ensures a [`datetime`][datetime.datetime] t.JsonValue adheres to a given timezone constraint.
 
-The custom validator supports string specification of the timezone, and will raise an error if the [`datetime`][datetime.datetime] object does not have the correct timezone.
+The custom validator supports string specification of the timezone, and will raise an error if the [`datetime`][datetime.datetime] t.JsonValue does not have the correct timezone.
 
 We use `__get_pydantic_core_schema__` in the validator to customize the schema of the annotated type (in this case, [`datetime`][datetime.datetime]), which allows us to add custom validation logic. Notably, we use a `wrap` validator function so that we can perform operations both before and after the default `pydantic` validation of a [`datetime`][datetime.datetime].
 
@@ -48,27 +42,27 @@ class MyDatetimeValidator:
         """Validate tz_constraint and tz_info."""
         # handle naive datetimes
         if self.tz_constraint is None:
-            assert (
-                value.tzinfo is None
-            ), 'tz_constraint is None, but provided value is tz-aware.'
+            assert value.tzinfo is None, (
+                "tz_constraint is None, but provided value is tz-aware."
+            )
             return handler(value)
 
         # validate tz_constraint and tz-aware tzinfo
         if self.tz_constraint not in pytz.all_timezones:
             raise PydanticUserError(
-                f'Invalid tz_constraint: {self.tz_constraint}',
-                code='unevaluable-type-annotation',
+                f"Invalid tz_constraint: {self.tz_constraint}",
+                code="unevaluable-type-annotation",
             )
         result = handler(value)  # (2)!
-        assert self.tz_constraint == str(
-            result.tzinfo
-        ), f'Invalid tzinfo: {str(result.tzinfo)}, expected: {self.tz_constraint}'
+        assert self.tz_constraint == str(result.tzinfo), (
+            f"Invalid tzinfo: {str(result.tzinfo)}, expected: {self.tz_constraint}"
+        )
 
         return result
 
     def __get_pydantic_core_schema__(
         self,
-        source_type: Any,
+        source_type,
         handler: GetCoreSchemaHandler,
     ) -> CoreSchema:
         return core_schema.no_info_wrap_validator_function(
@@ -77,18 +71,14 @@ class MyDatetimeValidator:
         )
 
 
-LA = 'America/Los_Angeles'
+LA = "America/Los_Angeles"
 ta = TypeAdapter(Annotated[dt.datetime, MyDatetimeValidator(LA)])
-print(
-    ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA)))
-)
-#> 2023-01-01 00:00:00-07:53
+print(ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA))))
+# > 2023-01-01 00:00:00-07:53
 
-LONDON = 'Europe/London'
+LONDON = "Europe/London"
 try:
-    ta.validate_python(
-        dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LONDON))
-    )
+    ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LONDON)))
 except ValidationError as ve:
     pprint(ve.errors(), width=100)
     """
@@ -125,21 +115,21 @@ class MyDatetimeValidator:
 
     def validate_tz_bounds(self, value: dt.datetime, handler: Callable):
         """Validate and test bounds"""
-        assert value.utcoffset() is not None, 'UTC offset must exist'
-        assert self.lower_bound <= self.upper_bound, 'Invalid bounds'
+        assert value.utcoffset() is not None, "UTC offset must exist"
+        assert self.lower_bound <= self.upper_bound, "Invalid bounds"
 
         result = handler(value)
 
         hours_offset = value.utcoffset().total_seconds() / 3600
-        assert (
-            self.lower_bound <= hours_offset <= self.upper_bound
-        ), 'Value out of bounds'
+        assert self.lower_bound <= hours_offset <= self.upper_bound, (
+            "Value out of bounds"
+        )
 
         return result
 
     def __get_pydantic_core_schema__(
         self,
-        source_type: Any,
+        source_type,
         handler: GetCoreSchemaHandler,
     ) -> CoreSchema:
         return core_schema.no_info_wrap_validator_function(
@@ -148,19 +138,15 @@ class MyDatetimeValidator:
         )
 
 
-LA = 'America/Los_Angeles'  # UTC-7 or UTC-8
+LA = "America/Los_Angeles"  # UTC-7 or UTC-8
 ta = TypeAdapter(Annotated[dt.datetime, MyDatetimeValidator(-10, -5)])
-print(
-    ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA)))
-)
-#> 2023-01-01 00:00:00-07:53
+print(ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA))))
+# > 2023-01-01 00:00:00-07:53
 
-LONDON = 'Europe/London'
+LONDON = "Europe/London"
 try:
     print(
-        ta.validate_python(
-            dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LONDON))
-        )
+        ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LONDON)))
     )
 except ValidationError as e:
     pprint(e.errors(), width=100)
@@ -174,7 +160,7 @@ except ValidationError as e:
     """
 ```
 
-## Validating Nested Model Fields
+## Validating Nested Model u.Fields
 
 Here, we demonstrate two ways to validate a field of a nested model, where the validator utilizes data from the parent model.
 
@@ -185,7 +171,7 @@ One way to do this is to place a custom validator on the outer model:
 ```python
 from typing_extensions import Self
 
-from pydantic import BaseModel, ValidationError, model_validator
+from pydantic import BaseModel, ValidationError, u.model_validator
 
 
 class User(BaseModel):
@@ -194,26 +180,26 @@ class User(BaseModel):
 
 
 class Organization(BaseModel):
-    forbidden_passwords: list[str]
-    users: list[User]
+    forbidden_passwords: t.StrSequence
+    users: t.SequenceOf[User]
 
-    @model_validator(mode='after')
+    @u.model_validator(mode="after")
     def validate_user_passwords(self) -> Self:
         """Check that user password is not in forbidden list. Raise a validation error if a forbidden password is encountered."""
         for user in self.users:
             current_pw = user.password
             if current_pw in self.forbidden_passwords:
                 raise ValueError(
-                    f'Password {current_pw} is forbidden. Please choose another password for user {user.username}.'
+                    f"Password {current_pw} is forbidden. Please choose another password for user {user.username}."
                 )
         return self
 
 
 data = {
-    'forbidden_passwords': ['123'],
-    'users': [
-        {'username': 'Spartacat', 'password': '123'},
-        {'username': 'Iceburgh', 'password': '87'},
+    "forbidden_passwords": ["123"],
+    "users": [
+        {"username": "Spartacat", "password": "123"},
+        {"username": "Iceburgh", "password": "87"},
     ],
 }
 try:
@@ -232,49 +218,47 @@ Alternatively, a custom validator can be used in the nested model class (`User`)
 The ability to mutate the context within a validator adds a lot of power to nested validation, but can also lead to confusing or hard-to-debug code. Use this approach at your own risk!
 
 ```python
-from pydantic import BaseModel, ValidationError, ValidationInfo, field_validator
+from pydantic import BaseModel, ValidationError, ValidationInfo, u.field_validator
 
 
 class User(BaseModel):
     username: str
     password: str
 
-    @field_validator('password', mode='after')
+    @u.field_validator("password", mode="after")
     @classmethod
-    def validate_user_passwords(
-        cls, password: str, info: ValidationInfo
-    ) -> str:
+    def validate_user_passwords(cls, password: str, info: ValidationInfo) -> str:
         """Check that user password is not in forbidden list."""
         forbidden_passwords = (
-            info.context.get('forbidden_passwords', []) if info.context else []
+            info.context.get("forbidden_passwords", []) if info.context else []
         )
         if password in forbidden_passwords:
-            raise ValueError(f'Password {password} is forbidden.')
+            raise ValueError(f"Password {password} is forbidden.")
         return password
 
 
 class Organization(BaseModel):
-    forbidden_passwords: list[str]
-    users: list[User]
+    forbidden_passwords: t.StrSequence
+    users: t.SequenceOf[User]
 
-    @field_validator('forbidden_passwords', mode='after')
+    @u.field_validator("forbidden_passwords", mode="after")
     @classmethod
-    def add_context(cls, v: list[str], info: ValidationInfo) -> list[str]:
+    def add_context(cls, v: t.StrSequence, info: ValidationInfo) -> t.StrSequence:
         if info.context is not None:
-            info.context.update({'forbidden_passwords': v})
+            info.context.update({"forbidden_passwords": v})
         return v
 
 
 data = {
-    'forbidden_passwords': ['123'],
-    'users': [
-        {'username': 'Spartacat', 'password': '123'},
-        {'username': 'Iceburgh', 'password': '87'},
+    "forbidden_passwords": ["123"],
+    "users": [
+        {"username": "Spartacat", "password": "123"},
+        {"username": "Iceburgh", "password": "87"},
     ],
 }
 
 try:
-    org = Organization.model_validate(data, context={})
+    org = Organization(data, context={})
 except ValidationError as e:
     print(e)
     """

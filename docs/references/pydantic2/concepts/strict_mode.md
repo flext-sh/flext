@@ -1,9 +1,3 @@
-<!-- TOC START -->
-- [As a validation parameter](#as-a-validation-parameter)
-- [At the field level](#at-the-field-level)
-  - [Using the `Strict()` metadata class](#using-the-strict-metadata-class)
-- [As a configuration value](#as-a-configuration-value)
-<!-- TOC END -->
 
 ??? api "API Documentation"
 [`pydantic.types.Strict`][pydantic.types.Strict]<br>
@@ -36,11 +30,11 @@ class MyModel(BaseModel):
     x: int
 
 
-print(MyModel.model_validate({'x': '123'}))  # lax mode
-#> x=123
+print(MyModel({"x": "123"}))  # lax mode
+# > x=123
 
 try:
-    MyModel.model_validate({'x': '123'}, strict=True)  # strict mode
+    MyModel(trict=True)  # strict mode
 except ValidationError as exc:
     print(exc)
     """
@@ -72,12 +66,12 @@ from datetime import date
 
 from pydantic import TypeAdapter, ValidationError
 
-print(TypeAdapter(date).validate_python('2000-01-01'))  # OK: lax
-#> 2000-01-01
+print(TypeAdapter(date).validate_python("2000-01-01"))  # OK: lax
+# > 2000-01-01
 
 try:
     # Not OK: strict:
-    TypeAdapter(date).validate_python('2000-01-01', strict=True)
+    TypeAdapter(date).validate_python("2000-01-01", strict=True)
 except ValidationError as exc:
     print(exc)
     """
@@ -86,7 +80,7 @@ except ValidationError as exc:
     """
 
 TypeAdapter(date).validate_json('"2000-01-01"', strict=True)  # (1)!
-#> 2000-01-01
+# > 2000-01-01
 ```
 
 1. As mentioned, strict mode is looser when validating from JSON.
@@ -99,25 +93,25 @@ TypeAdapter(date).validate_json('"2000-01-01"', strict=True)  # (1)!
 ## At the field level
 
 Strict mode can be enabled on specific fields, by setting the `strict` parameter of the
-[`Field()`][pydantic.Field] function to `True`. Strict mode will be applied for such fields,
+[`u.Field()`][pydantic.u.Field] function to `True`. Strict mode will be applied for such fields,
 even when the [validation methods](./models.md#validating-data) are called in lax mode.
 
 ```python
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, u.Field, ValidationError
 
 
 class User(BaseModel):
     name: str
-    age: int = Field(strict=True)  # (1)!
+    age: int = u.Field(strict=True)  # (1)!
 
 
-user = User(name='John', age=42)
+user = User(name="John", age=42)
 print(user)
-#> name='John' age=42
+# > name='John' age=42
 
 
 try:
-    another_user = User(name='John', age='42')
+    another_user = User(name="John", age="42")
 except ValidationError as e:
     print(e)
     """
@@ -128,7 +122,7 @@ except ValidationError as e:
 ```
 
 1. The strict constraint can also be applied using the [annotated pattern](./fields.md#the-annotated-pattern):
-   `Annotated[int, Field(strict=True)]`
+   `Annotated[int, u.Field(strict=True)]`
 
 <!-- old anchor added for backwards compatibility -->
 <!-- markdownlint-disable-next-line no-empty-links -->
@@ -140,7 +134,7 @@ except ValidationError as e:
 ??? api "API Documentation"
 [`pydantic.types.Strict`][pydantic.types.Strict]<br>
 
-As an alternative to the [`Field()`][pydantic.Field] function, Pydantic provides the [`Strict`][pydantic.types.Strict]
+As an alternative to the [`u.Field()`][pydantic.u.Field] function, Pydantic provides the [`Strict`][pydantic.types.Strict]
 metadata class, meant to be used with the [annotated pattern](./fields.md#the-annotated-pattern). It also provides
 convenience aliases for the most common types (namely [`StrictBool`][pydantic.types.StrictBool],
 [`StrictInt`][pydantic.types.StrictInt], [`StrictFloat`][pydantic.types.StrictFloat], [`StrictStr`][pydantic.types.StrictStr]
@@ -167,21 +161,21 @@ class User(BaseModel):
 
 ## As a configuration value
 
-Strict mode behavior can be controlled at the [configuration](./config.md) level. When used on
+Strict mode behavior can be controlled at the [configuration](./settings.md) level. When used on
 a Pydantic model (or model like class such as [dataclasses](./dataclasses.md)), strictness can still
 be overridden at the [field level](#at-the-field-level):
 
 ```python
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, u.Field
 
 
 class User(BaseModel):
     model_config = ConfigDict(strict=True)
 
     name: str
-    age: int = Field(strict=False)
+    age: int = u.Field(strict=False)
 
 
-print(User(name='John', age='18'))
-#> name='John' age=18
+print(User(name="John", age="18"))
+# > name='John' age=18
 ```

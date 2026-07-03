@@ -1,27 +1,5 @@
 # FLEXT System Context Diagram
 
-
-<!-- TOC START -->
-- [Table of Contents](#table-of-contents)
-- [Overview](#overview)
-- [System Context Diagram](#system-context-diagram)
-- [Key Stakeholders](#key-stakeholders)
-  - [Primary Users](#primary-users)
-  - [External Systems](#external-systems)
-- [System Responsibilities](#system-responsibilities)
-  - [Core Capabilities](#core-capabilities)
-- [Quality Attributes](#quality-attributes)
-  - [Performance](#performance)
-  - [Reliability](#reliability)
-  - [Security](#security)
-  - [Maintainability](#maintainability)
-- [Technology Stack](#technology-stack)
-  - [Runtime Environment](#runtime-environment)
-  - [Data Storage](#data-storage)
-  - [Integration Protocols](#integration-protocols)
-  - [Monitoring and Observability](#monitoring-and-observability)
-<!-- TOC END -->
-
 ## Table of Contents
 
 - [FLEXT System Context Diagram](#flext-system-context-diagram)
@@ -66,7 +44,7 @@ graph TB
     SecuritySystems[Security Systems<br/>OAuth2/OIDC<br/>SAML]
 
     %% FLEXT Platform
-    FLEXT[FLEXT Platform<br/>Enterprise Data Integration<br/>Python 3.13+ + Go 1.24+]
+    FLEXT[FLEXT Platform<br/>Enterprise Data Integration<br/>Python 3.13+]
 
     %% User Interactions
     DataEngineers -->|Configure Pipelines| FLEXT
@@ -214,7 +192,6 @@ graph TB
 ### Runtime Environment
 
 - **Python 3.13+**: Primary business logic language
-- **Go 1.24+**: High-performance runtime container
 - **Docker**: Containerization and deployment
 
 ### Data Storage

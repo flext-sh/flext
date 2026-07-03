@@ -1,0 +1,6 @@
+id: fix-jsondict-legacy
+valid:
+- "t.JsonValue"
+- "t.StrMapping"
+invalid:
+- "t.JsonMapping"

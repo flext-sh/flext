@@ -1,0 +1,18 @@
+id: ban-bare-except
+valid:
+  - |
+    try:
+      pass
+    except Exception:
+      pass
+  - |
+    try:
+      pass
+    except ValueError:
+      pass
+invalid:
+  - |
+    try:
+      pass
+    except:
+      pass

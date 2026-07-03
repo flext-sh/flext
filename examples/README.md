@@ -1,7 +1,7 @@
 # FLEXT Examples
 
-
 <!-- TOC START -->
+
 - [Key Features](#key-features)
   - [Examples Overview](#examples-overview)
   - [1. ACL Processing Example (`acl_processing_example.py`)](#1-acl-processing-example-aclprocessingexamplepy)
@@ -56,7 +56,7 @@ Demonstrates comprehensive Access Control List (ACL) processing capabilities:
 **Key Features:**
 
 - Server-specific ACL attribute detection
-- Parallel batch processing with configurable worker threads
+- Parallel batch processing with settingsurable worker threads
 - Complex validation rules with forbidden permission combinations
 - Railway pattern for robust error handling
 - Performance monitoring and analytics
@@ -75,7 +75,7 @@ Demonstrates modern processing capabilities with updated APIs:
 
 **Key Features:**
 
-- Advanced processor with configurable parallel execution
+- Advanced processor with settingsurable parallel execution
 - Validation processor with parallel item checking
 - Analysis processor for data insights and aggregation
 - Batch heavy operations processor for memory-intensive tasks
@@ -108,7 +108,7 @@ Demonstrates the complete FLEXT enterprise workflow with all capabilities integr
 
 All examples implement the railway pattern for robust error handling:
 
-- Operations return `FlextResult[T]` for type-safe error handling
+- Operations return `r[T]` for type-safe error handling
 - Pipeline stops on first failure (no exception propagation)
 - Comprehensive error reporting and context tracking
 
@@ -117,7 +117,7 @@ All examples implement the railway pattern for robust error handling:
 Extensive use of parallel processing throughout:
 
 - `ThreadPoolExecutor` for concurrent operations
-- Configurable worker thread pools
+- Settingsurable worker thread pools
 - Batch processing for memory efficiency
 - Parallel validation and analysis stages
 
@@ -125,7 +125,10 @@ Extensive use of parallel processing throughout:
 
 Full type safety with modern Python features:
 
-- `from __future__ import annotations` for forward references
+- `from **future** import annotations
+
+from collections.abc import Mapping, Sequence` for forward references
+
 - Comprehensive type hints throughout
 - Generic types with proper variance
 - Protocol-based design where appropriate
@@ -135,7 +138,7 @@ Full type safety with modern Python features:
 Production-ready enterprise capabilities:
 
 - Comprehensive logging and metrics
-- Configurable processing parameters
+- Settingsurable processing parameters
 - Performance analytics and monitoring
 - Correlation ID tracking for distributed operations
 - Context management across pipeline stages
@@ -155,16 +158,14 @@ pip install flext-core flext-ldif flext-api
 ### Basic ACL Processing
 
 ```python
-from examples.acl_processing_example import AclProcessingPipeline
+from examples import AclProcessingPipeline
 
 # Create pipeline with 8 worker threads
 pipeline = AclProcessingPipeline(max_workers=8)
 
 # Process ACL entries
 result = pipeline.process_acls_with_pipeline(
-    raw_entries=ldap_entries,
-    server_context={"strict_mode": True},
-    parallel=True
+    raw_entries=ldap_entries, server_context={"strict_mode": True}, parallel=True
 )
 
 if result.is_success:
@@ -176,7 +177,7 @@ if result.is_success:
 ### Advanced Processing Pipeline
 
 ```python
-from examples.advanced_processing_example import IntegratedProcessingPipeline
+from examples import IntegratedProcessingPipeline
 
 # Create integrated pipeline
 pipeline = IntegratedProcessingPipeline(max_workers=8, batch_size=200)
@@ -187,22 +188,21 @@ result = pipeline.execute_integrated_pipeline(
     processing_func=process_function,
     validation_func=validate_function,
     analysis_func=analyze_function,
-    use_parallel=True
+    use_parallel=True,
 )
 ```
 
 ### Complete Workflow
 
 ```python
-from examples.complete_workflow_example import (
+from examples import (
     ComprehensiveRailwayPattern,
-    CompleteWorkflowBuilder
+    CompleteWorkflowBuilder,
 )
 
 # Build workflow configuration
-config = CompleteWorkflowBuilder.build_comprehensive_workflow(
-    workflow_type="ldap_processing",
-    requirements={"max_workers": 8, "parallel": True}
+settings = CompleteWorkflowBuilder.build_comprehensive_workflow(
+    workflow_type="ldap_processing", requirements={"max_workers": 8, "parallel": True}
 )
 
 # Execute complete workflow
@@ -210,8 +210,8 @@ railway = ComprehensiveRailwayPattern(max_workers=8)
 result = railway.execute_workflow_railway(
     workflow_id="enterprise_workflow",
     input_data=input_data,
-    stage_definitions=config["stage_definitions"],
-    workflow_requirements=config
+    stage_definitions=settings["stage_definitions"],
+    workflow_requirements=settings,
 )
 ```
 

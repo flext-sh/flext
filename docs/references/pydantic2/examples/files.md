@@ -1,16 +1,5 @@
 # File Validation
 
-
-<!-- TOC START -->
-- [JSON data](#json-data)
-- [JSON lines files](#json-lines-files)
-- [CSV files](#csv-files)
-- [TOML files](#toml-files)
-- [YAML files](#yaml-files)
-- [XML files](#xml-files)
-- [INI files](#ini-files)
-<!-- TOC END -->
-
 `pydantic` is a great tool for validating data coming from various sources.
 In this section, we will look at how to validate data from different types of files.
 
@@ -46,10 +35,10 @@ class Person(BaseModel):
     email: EmailStr
 
 
-json_string = pathlib.Path('person.json').read_text()
+json_string = pathlib.Path("person.json").read_text()
 person = Person.model_validate_json(json_string)
 print(person)
-#> name='John Doe' age=30 email='john@example.com'
+# > name='John Doe' age=30 email='john@example.com'
 ```
 
 If the data in the file is not valid, `pydantic` will raise a [`ValidationError`][pydantic_core.ValidationError].
@@ -83,7 +72,7 @@ class Person(BaseModel):
     email: EmailStr
 
 
-json_string = pathlib.Path('person.json').read_text()
+json_string = pathlib.Path("person.json").read_text()
 try:
     person = Person.model_validate_json(json_string)
 except ValidationError as err:
@@ -91,7 +80,7 @@ except ValidationError as err:
     """
     3 validation errors for Person
     name
-    Field required [type=missing, input_value={'age': -30, 'email': 'not-an-email-address'}, input_type=dict]
+    u.Field required [type=missing, input_value={'age': -30, 'email': 'not-an-email-address'}, input_type=dict]
         For further information visit https://errors.pydantic.dev/2.10/v/missing
     age
     Input should be greater than 0 [type=greater_than, input_value=-30, input_type=int]
@@ -119,7 +108,7 @@ For example, you might have a list of people:
 ]
 ```
 
-In this case, you can validate the data against a `list[Person]` model:
+In this case, you can validate the data against a `Sequence[Person]` model:
 
 ```python {test="skip"}
 import pathlib
@@ -133,12 +122,12 @@ class Person(BaseModel):
     email: EmailStr
 
 
-person_list_adapter = TypeAdapter(list[Person])  # (1)!
+person_list_adapter = TypeAdapter(Sequence[Person])  # (1)!
 
-json_string = pathlib.Path('people.json').read_text()
+json_string = pathlib.Path("people.json").read_text()
 people = person_list_adapter.validate_json(json_string)
 print(people)
-#> [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
+# > [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
 ```
 
 1. We use [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] to validate a list of `Person` objects.
@@ -170,10 +159,10 @@ class Person(BaseModel):
     email: EmailStr
 
 
-json_lines = pathlib.Path('people.jsonl').read_text().splitlines()
+json_lines = pathlib.Path("people.jsonl").read_text().splitlines()
 people = [Person.model_validate_json(line) for line in json_lines]
 print(people)
-#> [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
+# > [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
 ```
 
 ## CSV files
@@ -204,12 +193,12 @@ class Person(BaseModel):
     email: EmailStr
 
 
-with open('people.csv') as f:
+with open("people.csv") as f:
     reader = csv.DictReader(f)
-    people = [Person.model_validate(row) for row in reader]
+    people = [Person(row) for row in reader]
 
 print(people)
-#> [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
+# > [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
 ```
 
 ## TOML files
@@ -238,12 +227,12 @@ class Person(BaseModel):
     email: EmailStr
 
 
-with open('person.toml', 'rb') as f:
+with open("person.toml", "rb") as f:
     data = tomllib.load(f)
 
-person = Person.model_validate(data)
+person = Person(
 print(person)
-#> name='John Doe' age=30 email='john@example.com'
+# > name='John Doe' age=30 email='john@example.com'
 ```
 
 ## YAML files
@@ -272,12 +261,12 @@ class Person(BaseModel):
     email: EmailStr
 
 
-with open('person.yaml') as f:
+with open("person.yaml") as f:
     data = yaml.safe_load(f)
 
-person = Person.model_validate(data)
+person = Person(
 print(person)
-#> name='John Doe' age=30 email='john@example.com'
+# > name='John Doe' age=30 email='john@example.com'
 ```
 
 ## XML files
@@ -309,11 +298,11 @@ class Person(BaseModel):
     email: EmailStr
 
 
-tree = ET.parse('person.xml').getroot()
+tree = ET.parse("person.xml").getroot()
 data = {child.tag: child.text for child in tree}
-person = Person.model_validate(data)
+person = Person(
 print(person)
-#> name='John Doe' age=30 email='john@example.com'
+# > name='John Doe' age=30 email='john@example.com'
 ```
 
 ## INI files
@@ -343,9 +332,9 @@ class Person(BaseModel):
     email: EmailStr
 
 
-config = configparser.ConfigParser()
-config.read('person.ini')
-person = Person.model_validate(config['PERSON'])
+settings = configparser.SettingsParser()
+settings.read("person.ini")
+person = Person(])
 print(person)
-#> name='John Doe' age=30 email='john@example.com'
+# > name='John Doe' age=30 email='john@example.com'
 ```

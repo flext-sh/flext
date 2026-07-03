@@ -1,15 +1,3 @@
-<!-- TOC START -->
-- [Configure VS Code](#configure-vs-code)
-  - [Install Pylance](#install-pylance)
-  - [Configure your environment](#configure-your-environment)
-  - [Configure Pylance](#configure-pylance)
-  - [Configure mypy](#configure-mypy)
-- [Tips and tricks](#tips-and-tricks)
-  - [Strict errors](#strict-errors)
-  - [Config in class arguments](#config-in-class-arguments)
-- [Adding a default with `Field`](#adding-a-default-with-field)
-- [Technical Details](#technical-details)
-<!-- TOC END -->
 
 Pydantic works well with any editor or IDE out of the box because it's made on top of standard Python type annotations.
 
@@ -19,7 +7,7 @@ This means that you will have **autocompletion** (or "IntelliSense") and **error
 
 ![pydantic autocompletion in VS Code](../img/vs_code_01.png)
 
-## Configure VS Code
+## Settingsure VS Code
 
 To take advantage of these features, you need to make sure you configure VS Code correctly, using the recommended settings.
 
@@ -31,13 +19,13 @@ You should use the [Pylance](https://marketplace.visualstudio.com/items?itemName
 
 Pylance is installed as part of the [Python Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) by default, so it should probably just work. Otherwise, you can double check it's installed and enabled in your editor.
 
-### Configure your environment
+### Settingsure your environment
 
 Then you need to make sure your editor knows the [Python environment](https://code.visualstudio.com/docs/python/python-tutorial#_install-and-use-packages) (probably a virtual environment) for your Python project.
 
 This would be the environment in where you installed Pydantic.
 
-### Configure Pylance
+### Settingsure Pylance
 
 With the default configurations, you will get support for autocompletion, but Pylance might not check for type errors.
 
@@ -63,7 +51,7 @@ Pylance is the VS Code extension, it's closed source, but free to use. Underneat
 
     You can read more about it in the [Pylance Frequently Asked Questions](https://github.com/microsoft/pylance-release/blob/main/FAQ.md#what-is-the-relationship-between-pylance-pyright-and-the-python-extension).
 
-### Configure mypy
+### Settingsure mypy
 
 You might also want to configure mypy in VS Code to get mypy error checks inline in your editor (alternatively/additionally to Pylance).
 
@@ -112,19 +100,19 @@ For example, this is valid for Pydantic:
 from pydantic import BaseModel
 
 
-class Knight(BaseModel):
+class Knight(m.BaseModel):
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 
 
-class Quest(BaseModel):
+class Quest(m.BaseModel):
     title: str
     knight: Knight
 
 
 quest = Quest(
-    title='To seek the Holy Grail', knight={'title': 'Sir Lancelot', 'age': 23}
+    title="To seek the Holy Grail", knight={"title": "Sir Lancelot", "age": 23}
 )
 ```
 
@@ -138,20 +126,6 @@ In those cases, there are several ways to disable or ignore strict errors in ver
 
 Below are several techniques to achieve it.
 
-#### Disable type checks in a line
-
-You can disable the errors for a specific line using a comment of:
-
-```python
-# type: ignore
-```
-
-or (to be specific to pylance/pyright):
-
-```python
-# pyright: ignore
-```
-
 ([pyright](https://github.com/microsoft/pyright) is the language server used by Pylance.).
 
 coming back to the example with `age='23'`, it would be:
@@ -160,13 +134,13 @@ coming back to the example with `age='23'`, it would be:
 from pydantic import BaseModel
 
 
-class Knight(BaseModel):
+class Knight(m.BaseModel):
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 
 
-lancelot = Knight(title='Sir Lancelot', age='23')
+lancelot = Knight(title="Sir Lancelot", age="23")
 ```
 
 that way Pylance and mypy will ignore errors in that line.
@@ -185,14 +159,14 @@ from typing import Any
 from pydantic import BaseModel
 
 
-class Knight(BaseModel):
+class Knight(m.BaseModel):
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 
 
-age_str: Any = '23'
-lancelot = Knight(title='Sir Lancelot', age=age_str)
+age_str = "23"
+lancelot = Knight(title="Sir Lancelot", age=age_str)
 ```
 
 that way Pylance and mypy will interpret the variable `age_str` as if they didn't know its type, instead of knowing it has a type of `str` when an `int` was expected (and then showing the corresponding error).
@@ -213,13 +187,13 @@ from typing import Any, cast
 from pydantic import BaseModel
 
 
-class Knight(BaseModel):
+class Knight(m.BaseModel):
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 
 
-lancelot = Knight(title='Sir Lancelot', age=cast(Any, '23'))
+lancelot = Knight(title="Sir Lancelot", age=cast(Any, "23"))
 ```
 
 `cast(Any, '23')` doesn't affect the value, it's still just `'23'`, but now Pylance and mypy will assume it is of type `Any`, which means, they will act as if they didn't know the type of the value.
@@ -230,21 +204,21 @@ So, this is the equivalent of the previous example, without the additional varia
 
 **Cons**: it requires importing `Any` and `cast`, and if you are not used to using `cast()`, it could seem strange at first.
 
-### Config in class arguments
+### Settings in class arguments
 
-Pydantic has a rich set of [Model Configurations][pydantic.config.ConfigDict] available.
+Pydantic has a rich set of Model Configurations available.
 
-These configurations can be set in an internal `class Config` on each model:
+These configurations can be set in an internal `class Settings` on each model:
 
 ```python {hl_lines="9-10"}
 from pydantic import BaseModel
 
 
-class Knight(BaseModel):
+class Knight(m.BaseModel):
     model_config = dict(frozen=True)
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 ```
 
 or passed as keyword arguments when defining the model class:
@@ -253,10 +227,10 @@ or passed as keyword arguments when defining the model class:
 from pydantic import BaseModel
 
 
-class Knight(BaseModel, frozen=True):
+class Knight(m.BaseModel, frozen=True):
     title: str
     age: int
-    color: str = 'blue'
+    color: str = "blue"
 ```
 
 The specific configuration **`frozen`** (in beta) has a special meaning.
@@ -269,17 +243,17 @@ in a model that is "frozen".
 
 ![VS Code strict type errors with model](../img/vs_code_08.png)
 
-## Adding a default with `Field`
+## Adding a default with `u.Field`
 
-Pylance/pyright requires `default` to be a keyword argument to `Field` in order to infer that the field is optional.
+Pylance/pyright requires `default` to be a keyword argument to `u.Field` in order to infer that the field is optional.
 
 ```python
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
-class Knight(BaseModel):
-    title: str = Field(default='Sir Lancelot')  # this is okay
-    age: int = Field(
+class Knight(m.BaseModel):
+    title: str = u.Field(default="Sir Lancelot")  # this is okay
+    age: int = u.Field(
         23
     )  # this works fine at runtime but will case an error for pyright
 
@@ -299,4 +273,4 @@ As a Pydantic user, you don't need the details below. Feel free to skip the rest
 This additional editor support works by making use of the [`@dataclass_transform` decorator](https://typing.python.org/en/latest/spec/dataclasses.html#the-dataclass-transform-decorator)
 (introduced by [PEP 681](https://peps.python.org/pep-0681/)).
 
-The standard provides a way for libraries like Pydantic and others to tell editors and tools that they (the editors) should treat these libraries (e.g. Pydantic) as if they were [dataclasses][dataclasses], providing autocompletion, type checks, etc.
+The standard provides a way for libraries like Pydantic and others to tell editors and tools that they (the editors) should treat these libraries (e.g. Pydantic) as if they were dataclasses, providing autocompletion, type checks, etc.

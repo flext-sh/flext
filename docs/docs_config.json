@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "exclude_roots": []
+  },
+  "audit": {
+    "placeholder_terms": [
+      "Coming Soon",
+      "Documentation coming soon"
+    ],
+    "stale_symbols": [
+      "FlextRegistry",
+      "FlextHandlers",
+      "FlextMixins",
+      "get_global()",
+      "register_handler("
+    ],
+    "stale_symbol_exempt_paths": [
+      "architecture/baseline-v0.13.0.md",
+      "architecture/adr/002-v0-13-0-platform-baseline.md",
+      "guides/migration-to-v0.13.0.md"
+    ]
+  }
+}

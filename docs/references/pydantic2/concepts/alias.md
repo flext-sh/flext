@@ -1,29 +1,18 @@
-<!-- TOC START -->
-- [`AliasPath` and `AliasChoices`](#aliaspath-and-aliaschoices)
-- [Using alias generators](#using-alias-generators)
-  - [Using a callable](#using-a-callable)
-  - [Using an `AliasGenerator`](#using-an-aliasgenerator)
-- [Alias Precedence](#alias-precedence)
-  - [Alias Priority](#alias-priority)
-- [Alias Configuration](#alias-configuration)
-  - [`ConfigDict` Settings](#configdict-settings)
-  - [Runtime Settings](#runtime-settings)
-<!-- TOC END -->
 
 An alias is an alternative name for a field, used when serializing and deserializing data.
 
 You can specify an alias in the following ways:
 
-- `alias` on the [`Field`][pydantic.fields.Field]
+- `alias` on the [`u.Field`][pydantic.fields.u.Field]
   - must be a `str`
-- `validation_alias` on the [`Field`][pydantic.fields.Field]
+- `validation_alias` on the [`u.Field`][pydantic.fields.u.Field]
   - can be an instance of `str`, [`AliasPath`][pydantic.aliases.AliasPath], or [`AliasChoices`][pydantic.aliases.AliasChoices]
-- `serialization_alias` on the [`Field`][pydantic.fields.Field]
+- `serialization_alias` on the [`u.Field`][pydantic.fields.u.Field]
   - must be a `str`
 - `alias_generator` on the [`Config`][pydantic.config.ConfigDict.alias_generator]
   - can be a callable or an instance of [`AliasGenerator`][pydantic.aliases.AliasGenerator]
 
-For examples of how to use `alias`, `validation_alias`, and `serialization_alias`, see [Field aliases](../concepts/fields.md#field-aliases).
+For examples of how to use `alias`, `validation_alias`, and `serialization_alias`, see [u.Field aliases](../concepts/fields.md#field-aliases).
 
 ## `AliasPath` and `AliasChoices`
 
@@ -37,16 +26,17 @@ Pydantic provides two special types for convenience when using `validation_alias
 The `AliasPath` is used to specify a path to a field using aliases. For example:
 
 ```python {lint="skip"}
-from pydantic import BaseModel, Field, AliasPath
+from pydantic import BaseModel, u.Field, AliasPath
 
 
 class User(BaseModel):
-    first_name: str = Field(validation_alias=AliasPath('names', 0))
-    last_name: str = Field(validation_alias=AliasPath('names', 1))
+    first_name: str = u.Field(validation_alias=AliasPath("names", 0))
+    last_name: str = u.Field(validation_alias=AliasPath("names", 1))
 
-user = User.model_validate({'names': ['John', 'Doe']})  # (1)!
+
+user = User({"names": ["John", "Doe"]})  # (1)!
 print(user)
-#> first_name='John' last_name='Doe'
+# > first_name='John' last_name='Doe'
 ```
 
 1. We are using `model_validate` to validate a dictionary using the field aliases.
@@ -59,19 +49,20 @@ In the `'last_name'` field, we are using the alias `'names'` and the index `1` t
 `AliasChoices` is used to specify a choice of aliases. For example:
 
 ```python {lint="skip"}
-from pydantic import BaseModel, Field, AliasChoices
+from pydantic import BaseModel, u.Field, AliasChoices
 
 
 class User(BaseModel):
-    first_name: str = Field(validation_alias=AliasChoices('first_name', 'fname'))
-    last_name: str = Field(validation_alias=AliasChoices('last_name', 'lname'))
+    first_name: str = u.Field(validation_alias=AliasChoices("first_name", "fname"))
+    last_name: str = u.Field(validation_alias=AliasChoices("last_name", "lname"))
 
-user = User.model_validate({'fname': 'John', 'lname': 'Doe'})  # (1)!
+
+user = User(", "lname": "Doe"})  # (1)!
 print(user)
-#> first_name='John' last_name='Doe'
-user = User.model_validate({'first_name': 'John', 'lname': 'Doe'})  # (2)!
+# > first_name='John' last_name='Doe'
+user = User("John", "lname": "Doe"})  # (2)!
 print(user)
-#> first_name='John' last_name='Doe'
+# > first_name='John' last_name='Doe'
 ```
 
 1. We are using the second alias choice for both fields.
@@ -81,23 +72,27 @@ print(user)
 You can also use `AliasChoices` with `AliasPath`:
 
 ```python {lint="skip"}
-from pydantic import BaseModel, Field, AliasPath, AliasChoices
+from pydantic import BaseModel, u.Field, AliasPath, AliasChoices
 
 
 class User(BaseModel):
-    first_name: str = Field(validation_alias=AliasChoices('first_name', AliasPath('names', 0)))
-    last_name: str = Field(validation_alias=AliasChoices('last_name', AliasPath('names', 1)))
+    first_name: str = u.Field(
+        validation_alias=AliasChoices("first_name", AliasPath("names", 0))
+    )
+    last_name: str = u.Field(
+        validation_alias=AliasChoices("last_name", AliasPath("names", 1))
+    )
 
 
-user = User.model_validate({'first_name': 'John', 'last_name': 'Doe'})
+user = User("John", "last_name": "Doe"})
 print(user)
-#> first_name='John' last_name='Doe'
-user = User.model_validate({'names': ['John', 'Doe']})
+# > first_name='John' last_name='Doe'
+user = User(n", "Doe"]})
 print(user)
-#> first_name='John' last_name='Doe'
-user = User.model_validate({'names': ['John'], 'last_name': 'Doe'})
+# > first_name='John' last_name='Doe'
+user = User(n"], "last_name": "Doe"})
 print(user)
-#> first_name='John' last_name='Doe'
+# > first_name='John' last_name='Doe'
 ```
 
 ## Using alias generators
@@ -123,18 +118,16 @@ from pydantic import BaseModel, ConfigDict
 
 
 class Tree(BaseModel):
-    model_config = ConfigDict(
-        alias_generator=lambda field_name: field_name.upper()
-    )
+    model_config = ConfigDict(alias_generator=lambda field_name: field_name.upper())
 
     age: int
     height: float
     kind: str
 
 
-t = Tree.model_validate({'AGE': 12, 'HEIGHT': 1.2, 'KIND': 'oak'})
+t = Tree(IGHT": 1.2, "KIND": "oak"})
 print(t.model_dump(by_alias=True))
-#> {'AGE': 12, 'HEIGHT': 1.2, 'KIND': 'oak'}
+# > {'AGE': 12, 'HEIGHT': 1.2, 'KIND': 'oak'}
 ```
 
 ### Using an `AliasGenerator`
@@ -168,35 +161,35 @@ class Tree(BaseModel):
     kind: str
 
 
-t = Tree.model_validate({'AGE': 12, 'HEIGHT': 1.2, 'KIND': 'oak'})
+t = Tree(IGHT": 1.2, "KIND": "oak"})
 print(t.model_dump(by_alias=True))
-#> {'Age': 12, 'Height': 1.2, 'Kind': 'oak'}
+# > {'Age': 12, 'Height': 1.2, 'Kind': 'oak'}
 ```
 
 ## Alias Precedence
 
-If you specify an `alias` on the [`Field`][pydantic.fields.Field], it will take precedence over the generated alias by default:
+If you specify an `alias` on the [`u.Field`][pydantic.fields.u.Field], it will take precedence over the generated alias by default:
 
 ```python
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, u.Field
 
 
 def to_camel(string: str) -> str:
-    return ''.join(word.capitalize() for word in string.split('_'))
+    return "".join(word.capitalize() for word in string.split("_"))
 
 
 class Voice(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel)
 
     name: str
-    language_code: str = Field(alias='lang')
+    language_code: str = u.Field(alias="lang")
 
 
-voice = Voice(Name='Filiz', lang='tr-TR')
+voice = Voice(Name="Filiz", lang="tr-TR")
 print(voice.language_code)
-#> tr-TR
+# > tr-TR
 print(voice.model_dump(by_alias=True))
-#> {'Name': 'Filiz', 'lang': 'tr-TR'}
+# > {'Name': 'Filiz', 'lang': 'tr-TR'}
 ```
 
 ### Alias Priority
@@ -214,14 +207,14 @@ See more about the different field aliases under [field aliases](../concepts/fie
 
 ## Alias Configuration
 
-You can use [`ConfigDict`](./config.md) settings or runtime validation/serialization
+You can use [`ConfigDict`](./settings.md) settings or runtime validation/serialization
 settings to control whether or not aliases are used.
 
 ### `ConfigDict` Settings
 
-You can use [configuration settings](./config.md) to control, at the model level,
+You can use [configuration settings](./settings.md) to control, at the model level,
 whether or not aliases are used for validation and serialization. If you would like to control
-this behavior for nested models/surpassing the config-model boundary, use [runtime settings](#runtime-settings).
+this behavior for nested models/surpassing the settings-model boundary, use [runtime settings](#runtime-settings).
 
 #### Validation
 
@@ -234,17 +227,17 @@ When validating data, you can enable population of attributes by attribute name,
 === "`validate_by_alias`"
 
     ```python
-    from pydantic import BaseModel, ConfigDict, Field
+    from pydantic import BaseModel, ConfigDict, u.Field
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = u.Field(validation_alias="my_alias")
 
         model_config = ConfigDict(validate_by_alias=True, validate_by_name=False)
 
 
-    print(repr(Model(my_alias='foo')))  # (1)!
-    #> Model(my_field='foo')
+    print(repr(Model(my_alias="foo")))  # (1)!
+    # > Model(my_field='foo')
     ```
 
     1. The alias `my_alias` is used for validation.
@@ -252,17 +245,17 @@ When validating data, you can enable population of attributes by attribute name,
 === "`validate_by_name`"
 
     ```python
-    from pydantic import BaseModel, ConfigDict, Field
+    from pydantic import BaseModel, ConfigDict, u.Field
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = u.Field(validation_alias="my_alias")
 
         model_config = ConfigDict(validate_by_alias=False, validate_by_name=True)
 
 
-    print(repr(Model(my_field='foo')))  # (1)!
-    #> Model(my_field='foo')
+    print(repr(Model(my_field="foo")))  # (1)!
+    # > Model(my_field='foo')
     ```
 
     1. the attribute identifier `my_field` is used for validation.
@@ -270,20 +263,20 @@ When validating data, you can enable population of attributes by attribute name,
 === "`validate_by_alias` and `validate_by_name`"
 
     ```python
-    from pydantic import BaseModel, ConfigDict, Field
+    from pydantic import BaseModel, ConfigDict, u.Field
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = u.Field(validation_alias="my_alias")
 
         model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
 
-    print(repr(Model(my_alias='foo')))  # (1)!
-    #> Model(my_field='foo')
+    print(repr(Model(my_alias="foo")))  # (1)!
+    # > Model(my_field='foo')
 
-    print(repr(Model(my_field='foo')))  # (2)!
-    #> Model(my_field='foo')
+    print(repr(Model(my_field="foo")))  # (2)!
+    # > Model(my_field='foo')
     ```
 
     1. The alias `my_alias` is used for validation.
@@ -300,18 +293,18 @@ See the [`ConfigDict.serialize_by_alias`][pydantic.config.ConfigDict.serialize_b
 for more details.
 
 ```python
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, u.Field
 
 
 class Model(BaseModel):
-    my_field: str = Field(serialization_alias='my_alias')
+    my_field: str = u.Field(serialization_alias="my_alias")
 
     model_config = ConfigDict(serialize_by_alias=True)
 
 
-m = Model(my_field='foo')
+m = Model(my_field="foo")
 print(m.model_dump())  # (1)!
-#> {'my_alias': 'foo'}
+# > {'my_alias': 'foo'}
 ```
 
 1. The alias `my_alias` is used for serialization.
@@ -341,20 +334,20 @@ By default:
 === "`by_alias`"
 
     ```python
-    from pydantic import BaseModel, Field
+    from pydantic import BaseModel, u.Field
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = u.Field(validation_alias="my_alias")
 
 
-    m = Model.model_validate(
-        {'my_alias': 'foo'},  # (1)!
+    m = Model(
+        {"my_alias": "foo"},  # (1)!
         by_alias=True,
         by_name=False,
     )
     print(repr(m))
-    #> Model(my_field='foo')
+    # > Model(my_field='foo')
     ```
 
     1. The alias `my_alias` is used for validation.
@@ -362,18 +355,20 @@ By default:
 === "`by_name`"
 
     ```python
-    from pydantic import BaseModel, Field
+    from pydantic import BaseModel, u.Field
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = u.Field(validation_alias="my_alias")
 
 
-    m = Model.model_validate(
-        {'my_field': 'foo'}, by_alias=False, by_name=True  # (1)!
+    m = Model(
+        {"my_field": "foo"},
+        by_alias=False,
+        by_name=True,  # (1)!
     )
     print(repr(m))
-    #> Model(my_field='foo')
+    # > Model(my_field='foo')
     ```
 
     1. The attribute name `my_field` is used for validation.
@@ -381,24 +376,28 @@ By default:
 === "`validate_by_alias` and `validate_by_name`"
 
     ```python
-    from pydantic import BaseModel, Field
+    from pydantic import BaseModel, u.Field
 
 
     class Model(BaseModel):
-        my_field: str = Field(validation_alias='my_alias')
+        my_field: str = u.Field(validation_alias="my_alias")
 
 
-    m = Model.model_validate(
-        {'my_alias': 'foo'}, by_alias=True, by_name=True  # (1)!
+    m = Model(
+        {"my_alias": "foo"},
+        by_alias=True,
+        by_name=True,  # (1)!
     )
     print(repr(m))
-    #> Model(my_field='foo')
+    # > Model(my_field='foo')
 
-    m = Model.model_validate(
-        {'my_field': 'foo'}, by_alias=True, by_name=True  # (2)!
+    m = Model(
+        {"my_field": "foo"},
+        by_alias=True,
+        by_name=True,  # (2)!
     )
     print(repr(m))
-    #> Model(my_field='foo')
+    # > Model(my_field='foo')
     ```
 
     1. The alias `my_alias` is used for validation.
@@ -418,16 +417,16 @@ the [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] ones.
 By default, `by_alias` is `False`.
 
 ```py
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class Model(BaseModel):
-    my_field: str = Field(serialization_alias='my_alias')
+    my_field: str = u.Field(serialization_alias="my_alias")
 
 
-m = Model(my_field='foo')
+m = Model(my_field="foo")
 print(m.model_dump(by_alias=True))  # (1)!
-#> {'my_alias': 'foo'}
+# > {'my_alias': 'foo'}
 ```
 
 1. The alias `my_alias` is used for serialization.

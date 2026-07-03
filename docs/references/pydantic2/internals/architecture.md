@@ -1,10 +1,3 @@
-<!-- TOC START -->
-- [Model definition](#model-definition)
-  - [Communicating between `pydantic` and `pydantic-core`: the core schema](#communicating-between-pydantic-and-pydantic-core-the-core-schema)
-  - [JSON Schema generation](#json-schema-generation)
-  - [Customizing the core schema and JSON schema](#customizing-the-core-schema-and-json-schema)
-- [Model validation and serialization](#model-validation-and-serialization)
-<!-- TOC END -->
 
 !!! note
 This section is part of the _internals_ documentation, and is partly targeted to contributors.
@@ -60,29 +53,29 @@ To illustrate what a core schema looks like, we will take the example of the
 
 ```python {lint="skip" test="skip"}
 class BoolSchema(TypedDict, total=False):
-    type: Required[Literal['bool']]
+    type: Required[Literal["bool"]]
     strict: bool
     ref: str
-    metadata: Any
+    metadata
     serialization: SerSchema
 ```
 
 When defining a Pydantic model with a boolean field:
 
 ```python
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
-class Model(BaseModel):
-    foo: bool = Field(strict=True)
+class Model(m.BaseModel):
+    foo: bool = u.Field(strict=True)
 ```
 
 The core schema for the `foo` field will look like:
 
 ```python
 {
-    'type': 'bool',
-    'strict': True,
+    "type": "bool",
+    "strict": True,
 }
 ```
 
@@ -91,22 +84,21 @@ the serialization logic is also defined in the core schema.
 If we were to define a custom serialization function for `foo` (1), the `serialization` key would look like:
 { .annotate }
 
-1. For example using the [`field_serializer`][pydantic.functional_serializers.field_serializer] decorator:
+1. For example using the [`u.field_serializer`][pydantic.functional_serializers.u.field_serializer] decorator:
 
    ```python {test="skip" lint="skip"}
-   class Model(BaseModel):
-       foo: bool = Field(strict=True)
+   class Model(m.BaseModel):
+       foo: bool = u.Field(strict=True)
 
-       @field_serializer('foo', mode='plain')
-       def serialize_foo(self, value: bool) -> Any:
-           ...
+       @u.field_serializer("foo", mode="plain")
+       def serialize_foo(self, value: bool): ...
    ```
 
 ```python {lint="skip" test="skip"}
 {
     'type': 'function-plain',
     'function': <function Model.serialize_foo at 0x111>,
-    'is_field_serializer': True,
+    'is_u.field_serializer': True,
     'info_arg': False,
     'return_schema': {'type': 'int'},
 }
@@ -129,7 +121,7 @@ The [`generate`][pydantic.JSON_schema.GenerateJsonSchema.generate] method
 is the main entry point and is given the core schema of that model.
 
 Coming back to our `bool` field example, the [`bool_schema`][pydantic.JSON_schema.GenerateJsonSchema.bool_schema]
-method will be given the previously generated [boolean core schema][pydantic_core.core_schema.bool_schema]
+method will be given the previously generated boolean core schema
 and will return the following JSON Schema:
 
 ```json
@@ -165,20 +157,20 @@ from pydantic import GetCoreSchemaHandler, TypeAdapter
 class MyStrict:
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source: Any, handler: GetCoreSchemaHandler
+        cls, source, handler: GetCoreSchemaHandler
     ) -> CoreSchema:
         schema = handler(source)  # (1)!
-        schema['strict'] = True
+        schema["strict"] = True
         return schema
 
 
 class MyGt:
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source: Any, handler: GetCoreSchemaHandler
+        cls, source, handler: GetCoreSchemaHandler
     ) -> CoreSchema:
         schema = handler(source)  # (2)!
-        schema['gt'] = 1
+        schema["gt"] = 1
         return schema
 
 
@@ -213,11 +205,11 @@ and serialization happens at the _instance_ level. Both these concepts are handl
 from pydantic import BaseModel
 
 
-class Model(BaseModel):
+class Model(m.BaseModel):
     foo: int
 
 
-model = Model.model_validate({'foo': 1})  # (1)!
+model = Model({"foo": 1})  # (1)!
 dumped = model.model_dump()  # (2)!
 ```
 

@@ -1,10 +1,5 @@
 # Linting Integration
 
-
-<!-- TOC START -->
-- [Flake8 plugin](#flake8-plugin)
-<!-- TOC END -->
-
 ## Flake8 plugin
 
 If using Flake8 in your project, a [plugin](https://pypi.org/project/flake8-pydantic/) is available

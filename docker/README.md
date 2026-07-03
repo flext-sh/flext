@@ -1,12 +1,12 @@
 # FLEXT Docker Infrastructure - Centralized Management
 
-
 <!-- TOC START -->
+
 - [Key Features](#key-features)
 - [Installation](#installation)
 - [Usage](#usage)
   - [For pytest Tests](#for-pytest-tests)
-  - [Direct FlextTestsDocker Usage](#direct-flexttestsdocker-usage)
+  - [Direct tk Usage](#direct-flexttestsdocker-usage)
 - [Architecture](#architecture)
   - [DOCKER COMPOSE FILES (17 CENTRALIZED)](#docker-compose-files-17-centralized)
   - [Container Type Reference (THREE PRIMARY TYPES)](#container-type-reference-three-primary-types)
@@ -66,14 +66,15 @@ Ensure you have Docker and Docker Compose installed.
 All tests MUST use centralized fixtures from `flext_tests.fixtures`:
 
 ```python
-from flext_tests.fixtures import (
-    flext_docker,          # Main Docker management fixture
-    flext_oud_container,   # FLEXT OUD container (port 3389)
-    ldap_container,        # Generic OpenLDAP (port 3390)
-    oracle_container,      # Oracle Database (port 1522)
-    postgres_container,    # PostgreSQL fixture
-    redis_container,       # Redis fixture
+from flext_tests import (
+    flext_docker,  # Main Docker management fixture
+    flext_oud_container,  # FLEXT OUD container (port 3389)
+    ldap_container,  # Generic OpenLDAP (port 3390)
+    oracle_container,  # Oracle Database (port 1522)
+    postgres_container,  # PostgreSQL fixture
+    redis_container,  # Redis fixture
 )
+
 
 # Example 1: Using Generic OpenLDAP for LDAP/LDIF projects
 def test_with_ldap(ldap_container):
@@ -83,12 +84,14 @@ def test_with_ldap(ldap_container):
     connection_string = ldap_container  # ldap://localhost:3390
     # Use for flext-ldap, flext-ldif, flext-(dbt|tap|target)-(ldap|ldif)
 
+
 # Example 2: Using FLEXT OUD for FLEXT migration
 def test_flext_migration(flext_oud_container):
     """Test using FLEXT OUD container (port 3389)."""
     # FLEXT-specific OpenLDAP with dc=invaliddc, cn=invalid_user
     connection_string = flext_oud_container  # ldap://localhost:3389
-    # Use for flext-oud-mig project exclusively
+    # Use for OUD migration workloads exclusively
+
 
 # Example 3: Using Oracle Database for Oracle projects
 def test_with_oracle(oracle_container):
@@ -98,16 +101,16 @@ def test_with_oracle(oracle_container):
     # Use for flext-db-oracle, flext-(dbt|tap|target)-oracle
 ```
 
-### Direct FlextTestsDocker Usage
+### Direct tk Usage
 
 For scripts and examples:
 
 ```python
-from flext_tests import FlextTestsDocker
+from flext_tests import tk
 from pathlib import Path
 
 # Initialize with workspace root
-docker_mgr = FlextTestsDocker(workspace_root=Path.home() / "flext")
+docker_mgr = tk(workspace_root=Path.home() / "flext")
 
 # Start container
 result = docker_mgr.start_container("flext-postgres-test")
@@ -152,7 +155,7 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
    - **Compose File**: `docker-compose.flext-oud.yml`
    - **Purpose**: FLEXT Telecom OUD migration (OpenLDAP simulating OUD with dc=invaliddc, cn=invalid_user)
    - **Fixture**: `flext_oud_container` from `flext_tests.fixtures`
-   - **Projects**: flext-oud-mig
+   - **Projects**: OUD migration workloads
 
 3. **Generic OpenLDAP** (`flext-openldap-test`)
    - **Port**: 3390
@@ -186,7 +189,7 @@ All compose files follow naming convention: `docker-compose.{project}-{purpose}.
 # From any project directory, reference central compose files
 docker-compose -f ~/flext/docker/docker-compose.db-oracle.yml up -d
 
-# Or let FlextTestsDocker manage them automatically
+# Or let tk manage them automatically
 ```
 
 ---
@@ -210,7 +213,7 @@ All Dockerfiles are consolidated in `images/` directory with descriptive names:
 ### Project Images
 
 - `Dockerfile.flext-oud`, `Dockerfile.flext-oud-mig`
-- `Dockerfile.flext`, `Dockerfile.flexcore`
+- `Dockerfile.flext`
 
 **Build Example**:
 
@@ -218,7 +221,7 @@ All Dockerfiles are consolidated in `images/` directory with descriptive names:
 # Build from centralized location
 docker build -f ~/flext/docker/images/Dockerfile.flext-api -t flext-api:latest ~/flext/flext-api/
 
-# Or let FlextTestsDocker manage builds automatically
+# Or let tk manage builds automatically
 ```
 
 ---
@@ -227,7 +230,7 @@ docker build -f ~/flext/docker/images/Dockerfile.flext-api -t flext-api:latest ~
 
 ### Automatic Cleanup
 
-FlextTestsDocker handles container lifecycle automatically:
+tk handles container lifecycle automatically:
 
 1. **Test Isolation**: Each test gets clean container state
 2. **Automatic Cleanup**: Changes reverted after test completion
@@ -239,8 +242,8 @@ FlextTestsDocker handles container lifecycle automatically:
 Containers that can't be cleaned are marked dirty:
 
 ```python
-# FlextTestsDocker automatically manages dirty state
-docker_mgr = FlextTestsDocker()
+# tk automatically manages dirty state
+docker_mgr = tk()
 
 # If test fails and container is compromised
 docker_mgr.mark_container_dirty("flext-postgres-test")
@@ -264,6 +267,7 @@ Dirty state tracked in: `~/.flext/docker_state.json`
 ```python
 # ❌ OLD - Direct docker-compose in project directory
 import docker
+
 client = docker.from_env()
 container = client.containers.run("postgres:13", detach=True)
 ```
@@ -271,10 +275,10 @@ container = client.containers.run("postgres:13", detach=True)
 ### New Pattern (REQUIRED)
 
 ```python
-# ✅ NEW - Use FlextTestsDocker
-from flext_tests import FlextTestsDocker
+# ✅ NEW - Use tk
+from flext_tests import tk
 
-docker_mgr = FlextTestsDocker()
+docker_mgr = tk()
 result = docker_mgr.start_container("flext-postgres-test")
 # Automatic cleanup, dirty state management, etc.
 ```
@@ -283,10 +287,10 @@ result = docker_mgr.start_container("flext-postgres-test")
 
 ```python
 # ❌ OLD - Local fixture files
-from tests.fixtures.docker_fixtures import postgres_container
+from tests import postgres_container
 
 # ✅ NEW - Centralized fixtures
-from flext_tests.fixtures import postgres_container
+from flext_tests import postgres_container
 ```
 
 ---
@@ -298,11 +302,11 @@ from flext_tests.fixtures import postgres_container
 - ❌ `docker-compose.yml` in project directories (use central location)
 - ❌ `Dockerfile` in project directories (use images/ directory)
 - ❌ Local `docker_fixtures.py` (use flext_tests.fixtures)
-- ❌ Custom Docker scripts (use FlextTestsDocker API)
+- ❌ Custom Docker scripts (use tk API)
 
 ### Always Use
 
-- ✅ `flext_tests.FlextTestsDocker` for container management
+- ✅ `flext_tests.tk` for container management
 - ✅ `flext_tests.fixtures` for test fixtures
 - ✅ Centralized compose files from `~/flext/docker/`
 - ✅ Centralized Dockerfiles from `~/flext/docker/images/`
@@ -343,15 +347,15 @@ ls ~/flext/docker/images/Dockerfile.* | wc -l
 
 ### FURTHER READING
 
-- **FlextTestsDocker API**: See `flext-core/src/flext_tests/docker.py` (1649 lines)
+- **tk API**: See `flext-core/src/flext_tests/docker.py` (1649 lines)
 - **Centralized Fixtures**: See `flext-core/src/flext_tests/fixtures/docker_fixtures.py`
-- **FLEXT Standards**: See `~/flext/CLAUDE.md` for ecosystem standards
+- **FLEXT Standards**: See `~/flext/AGENTS.md` for ecosystem standards
 - **Project Docs**: See individual project README files for specific usage
 
 ---
 
 **AUTHORITY**: This is the ONLY location for Docker artifacts in FLEXT ecosystem.
-**ENFORCEMENT**: All projects MUST use FlextTestsDocker for container management.
+**ENFORCEMENT**: All projects MUST use tk for container management.
 **ZERO DUPLICATION**: No Docker files allowed outside this centralized location.
 
 ---

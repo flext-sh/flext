@@ -1,30 +1,6 @@
 # 2. Constraints
 
-
-<!-- TOC START -->
-- [Table of Contents](#table-of-contents)
-- [2.1 Technical Constraints](#21-technical-constraints)
-  - [2.1.1 Technology Stack Constraints](#211-technology-stack-constraints)
-  - [2.1.2 Architecture Constraints](#212-architecture-constraints)
-  - [2.1.3 Performance Constraints](#213-performance-constraints)
-  - [2.1.4 Security Constraints](#214-security-constraints)
-- [2.2 Organizational Constraints](#22-organizational-constraints)
-  - [2.2.1 Team Structure Constraints](#221-team-structure-constraints)
-  - [2.2.2 Process Constraints](#222-process-constraints)
-  - [2.2.3 Budget Constraints](#223-budget-constraints)
-- [2.3 Regulatory Constraints](#23-regulatory-constraints)
-  - [2.3.1 Data Protection Regulations](#231-data-protection-regulations)
-  - [2.3.2 Industry Standards](#232-industry-standards)
-- [2.4 Environmental Constraints](#24-environmental-constraints)
-  - [2.4.1 Infrastructure Constraints](#241-infrastructure-constraints)
-  - [2.4.2 Operational Constraints](#242-operational-constraints)
-- [2.5 Compliance Constraints](#25-compliance-constraints)
-  - [2.5.1 Data Governance](#251-data-governance)
-  - [2.5.2 Security Compliance](#252-security-compliance)
-<!-- TOC END -->
-
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
 
 ## Table of Contents
 
@@ -87,11 +63,6 @@
   - **Constraint**: Must use Python 3.13+ features (pattern matching, improved error messages)
   - **Impact**: Requires modern Python runtime, limits deployment options
 
-- **Go 1.24+**: High-performance runtime container and system services
-  - **Rationale**: Excellent performance for concurrent operations, strong typing
-  - **Constraint**: Must use Go 1.24+ features (generics, improved error handling)
-  - **Impact**: Requires modern Go runtime, limits deployment options
-
 #### Framework and Library Constraints
 
 - **flext-core**: Foundation library for all Python components
@@ -140,7 +111,7 @@
 
 #### Railway-Oriented Programming Constraints
 
-- **FlextResult[T]**: All operations that can fail must return FlextResult[T]
+- **r[T]**: All operations that can fail must return r[T]
   - **Constraint**: No exceptions for business logic errors
   - **Impact**: Requires functional programming patterns throughout
 

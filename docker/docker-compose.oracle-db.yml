@@ -7,8 +7,8 @@ services:
     image: gvenzl/oracle-xe:21-slim
     container_name: flext-oracle-db-test
     ports:
-      - "1522:1521" # Oracle TNS
-      - "2484:2484" # Oracle TCPS (SSL/TLS)
+      - "1521" # Oracle TNS (dynamic host port)
+      - "2484" # Oracle TCPS (dynamic host port)
     environment:
       ORACLE_PASSWORD: flext_oracle_test
       APP_USER: flext_test

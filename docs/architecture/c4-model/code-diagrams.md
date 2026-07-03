@@ -1,33 +1,12 @@
 # FLEXT Code Diagrams
 
-
-<!-- TOC START -->
-- [Table of Contents](#table-of-contents)
-- [Overview](#overview)
-- [1. FlextResult[T] Class Diagram](#1-flextresultt-class-diagram)
-- [2. FlextContainer Class Diagram](#2-flextcontainer-class-diagram)
-- [3. FlextModels Domain Model](#3-flextmodels-domain-model)
-- [4. LDAP Service Entity Relationship Diagram](#4-ldap-service-entity-relationship-diagram)
-- [5. API Gateway Request Flow Sequence Diagram](#5-api-gateway-request-flow-sequence-diagram)
-- [6. Data Pipeline Execution Sequence Diagram](#6-data-pipeline-execution-sequence-diagram)
-- [7. Error Handling Flow Sequence Diagram](#7-error-handling-flow-sequence-diagram)
-- [8. Plugin Execution Architecture](#8-plugin-execution-architecture)
-- [9. Configuration Management Class Diagram](#9-configuration-management-class-diagram)
-- [10. Event Sourcing Architecture](#10-event-sourcing-architecture)
-- [Code Quality Metrics](#code-quality-metrics)
-  - [Test Coverage by Component](#test-coverage-by-component)
-  - [Performance Benchmarks](#performance-benchmarks)
-  - [Memory Usage](#memory-usage)
-<!-- TOC END -->
-
 **Reviewed**: 2026-02-17 | **Scope**: Documentation alignment and link consistency
-
 
 ## Table of Contents
 
 - [FLEXT Code Diagrams](#flext-code-diagrams)
   - [Overview](#overview)
-  - [1. FlextResult[T] Class Diagram](#1-flextresultt-class-diagram)
+  - [1. r[T] Class Diagram](#1-flextresultt-class-diagram)
   - [2. FlextContainer Class Diagram](#2-flextcontainer-class-diagram)
   - [3. FlextModels Domain Model](#3-flextmodels-domain-model)
   - [4. LDAP Service Entity Relationship Diagram](#4-ldap-service-entity-relationship-diagram)
@@ -47,11 +26,11 @@
 This document provides detailed code-level diagrams showing the implementation structure of key components in the FLEXT platform,
 including class diagrams, entity relationship diagrams, and sequence diagrams.
 
-## 1. FlextResult[T] Class Diagram
+## 1. r[T] Class Diagram
 
 ```mermaid
 classDiagram
-    class FlextResult~T~ {
+    class r~T~ {
         <<Generic Type>>
         +T value
         +Exception error
@@ -59,14 +38,15 @@ classDiagram
         +bool is_failure
         +unwrap() T
         +unwrap_failure() Exception
-        +map(Func~T, U~) FlextResult~U~
-        +flat_map(Func~T, FlextResult~U~~) FlextResult~U~
-        +and_then(Func~T, FlextResult~U~~) FlextResult~U~
-        +or_else(Func~Exception, FlextResult~T~~) FlextResult~T~
-        +on_success(Action~T~) FlextResult~T~
-        +on_failure(Action~Exception~) FlextResult~T~
-        +ok(T value) FlextResult~T~
-        +fail(Exception error) FlextResult~T~
+        +value T
+        +error str
+        +map(Func~T, U~) r~U~
+        +flat_map(Func~T, r~U~~) r~U~
+        +recover(Func~str, T~~) r~T~
+        +tap(Action~T~) r~T~
+        +tap_error(Action~str~) r~T~
+        +ok(T value) r~T~
+        +fail(Exception error) r~T~
     }
 
     class FlextSuccess~T~ {
@@ -74,8 +54,8 @@ classDiagram
         +bool is_success = true
         +bool is_failure = false
         +unwrap() T
-        +map(Func~T, U~) FlextResult~U~
-        +flat_map(Func~T, FlextResult~U~~) FlextResult~U~
+        +map(Func~T, U~) r~U~
+        +flat_map(Func~T, r~U~~) r~U~
     }
 
     class FlextFailure~T~ {
@@ -83,11 +63,11 @@ classDiagram
         +bool is_success = false
         +bool is_failure = true
         +unwrap_failure() Exception
-        +or_else(Func~Exception, FlextResult~T~~) FlextResult~T~
+        +map_error(Func~str, str~) r~T~
     }
 
-    FlextResult~T~ <|-- FlextSuccess~T~
-    FlextResult~T~ <|-- FlextFailure~T~
+    r~T~ <|-- FlextSuccess~T~
+    r~T~ <|-- FlextFailure~T~
 ```
 
 ## 2. FlextContainer Class Diagram
@@ -97,12 +77,12 @@ classDiagram
     class FlextContainer {
         <<Singleton>>
         -Dict~str, ServiceRegistration~ registrations
-        -Dict~str, object~ instances
+        -Dict~str, t.JsonValue~ instances
         +register_singleton~T~(str key, Type~T~ service_type) None
         +register_transient~T~(str key, Type~T~ service_type) None
         +register_factory~T~(str key, Callable~T~ factory) None
-        +resolve~T~(str key) FlextResult~T~
-        +get~T~(str key) FlextResult~T~
+        +resolve~T~(str key) r~T~
+        +get~T~(str key) r~T~
         +is_registered(str key) bool
         +get_global() FlextContainer
         +clear() None
@@ -113,8 +93,8 @@ classDiagram
         +ServiceLifetime lifetime
         +Type service_type
         +Callable factory
-        +object instance
-        +create_instance() object
+        +t.JsonValue instance
+        +create_instance() t.JsonValue
     }
 
     class ServiceLifetime {
@@ -148,12 +128,12 @@ classDiagram
         +from_dict(data) Entity
     }
 
-    class ValueObject {
+    class Value {
         <<Abstract Base Class>>
         +__eq__(other) bool
         +__hash__() int
         +to_dict() Dict
-        +from_dict(data) ValueObject
+        +from_dict(data) Value
     }
 
     class AggregateRoot {
@@ -205,12 +185,12 @@ classDiagram
     }
 
     FlextModels --> Entity
-    FlextModels --> ValueObject
+    FlextModels --> Value
     FlextModels --> AggregateRoot
     FlextModels --> DomainEvent
 
     Entity <|-- AggregateRoot
-    ValueObject <|-- Email
+    Value <|-- Email
     AggregateRoot <|-- User
     User --> Email : contains
     User --> Role : has many
@@ -332,36 +312,36 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Scheduler
-    participant FlexCore
+    participant RuntimeService
     participant SingerTap
     participant DBTTransform
     participant SingerTarget
     participant Database
     participant FileSystem
 
-    Scheduler->>FlexCore: Trigger Pipeline
-    FlexCore->>SingerTap: Execute Data Extraction
+    Scheduler->>RuntimeService: Trigger Pipeline
+    RuntimeService->>SingerTap: Execute Data Extraction
     SingerTap->>Database: Query Source Data
     Database-->>SingerTap: Source Data
     SingerTap->>FileSystem: Write Singer Messages
-    SingerTap-->>FlexCore: Extraction Complete
+    SingerTap-->>RuntimeService: Extraction Complete
 
-    FlexCore->>DBTTransform: Execute Data Transformation
+    RuntimeService->>DBTTransform: Execute Data Transformation
     DBTTransform->>FileSystem: Read Singer Messages
     FileSystem-->>DBTTransform: Singer Messages
     DBTTransform->>Database: Execute SQL Transformations
     Database-->>DBTTransform: Transformed Data
     DBTTransform->>FileSystem: Write Transformed Data
-    DBTTransform-->>FlexCore: Transformation Complete
+    DBTTransform-->>RuntimeService: Transformation Complete
 
-    FlexCore->>SingerTarget: Execute Data Loading
+    RuntimeService->>SingerTarget: Execute Data Loading
     SingerTarget->>FileSystem: Read Transformed Data
     FileSystem-->>SingerTarget: Transformed Data
     SingerTarget->>Database: Load Target Data
     Database-->>SingerTarget: Load Complete
-    SingerTarget-->>FlexCore: Loading Complete
+    SingerTarget-->>RuntimeService: Loading Complete
 
-    FlexCore-->>Scheduler: Pipeline Complete
+    RuntimeService-->>Scheduler: Pipeline Complete
 ```
 
 ## 7. Error Handling Flow Sequence Diagram
@@ -369,24 +349,24 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Service
-    participant FlextResult
+    participant r
     participant Logger
     participant ErrorHandler
     participant NotificationService
 
-    Service->>FlextResult: Process Operation
-    FlextResult->>FlextResult: Execute Business Logic
+    Service->>r: Process Operation
+    r->>r: Execute Business Logic
 
     alt Operation Success
-        FlextResult-->>Service: Success Result
+        r-->>Service: Success Result
         Service->>Logger: Log Success
     else Operation Failure
-        FlextResult->>ErrorHandler: Handle Error
+        r->>ErrorHandler: Handle Error
         ErrorHandler->>Logger: Log Error
         ErrorHandler->>NotificationService: Send Alert
         NotificationService-->>ErrorHandler: Alert Sent
-        ErrorHandler-->>FlextResult: Error Handled
-        FlextResult-->>Service: Failure Result
+        ErrorHandler-->>r: Error Handled
+        r-->>Service: Failure Result
         Service->>Logger: Log Failure
     end
 ```
@@ -398,7 +378,7 @@ classDiagram
     class PluginManager {
         +Dict~str, Plugin~ plugins
         +register_plugin(plugin) None
-        +execute_plugin(plugin_id, input_data) FlextResult~T~
+        +execute_plugin(plugin_id, input_data) r~T~
         +get_plugin_status(plugin_id) PluginStatus
         +list_plugins() List~Plugin~
     }
@@ -410,28 +390,28 @@ classDiagram
         +str version
         +PluginType type
         +PluginStatus status
-        +execute(input_data) FlextResult~T~
-        +validate_config(config) bool
+        +execute(input_data) r~T~
+        +validate_config(settings) bool
         +get_metadata() PluginMetadata
     }
 
     class SingerTap {
         +str source_type
         +Dict config_schema
-        +execute_discovery() FlextResult~Catalog~
-        +execute_sync(config) FlextResult~SyncResult~
+        +execute_discovery() r~Catalog~
+        +execute_sync(settings) r~SyncResult~
     }
 
     class SingerTarget {
         +str destination_type
         +Dict config_schema
-        +execute_sync(catalog, records) FlextResult~SyncResult~
+        +execute_sync(catalog, records) r~SyncResult~
     }
 
     class DBTTransform {
         +str transform_type
         +List~str~ dependencies
-        +execute_transform(sql) FlextResult~TransformResult~
+        +execute_transform(sql) r~TransformResult~
     }
 
     class PluginStatus {
@@ -465,7 +445,7 @@ classDiagram
 classDiagram
     class FlextSettings {
         <<Singleton>>
-        -Dict~str, object~ settings
+        -Dict~str, t.JsonValue~ settings
         -ConfigSource source
         +get~T~(key, default_value) T
         +set(key, value) None
@@ -477,26 +457,26 @@ classDiagram
 
     class ConfigSource {
         <<Abstract Base Class>>
-        +load_settings() Dict~str, object~
+        +load_settings() Dict~str, t.JsonValue~
         +save_settings(settings) None
         +validate_settings(settings) bool
     }
 
     class EnvironmentConfigSource {
-        +load_settings() Dict~str, object~
+        +load_settings() Dict~str, t.JsonValue~
         +get_env_var(key, default_value) str
     }
 
     class FileConfigSource {
         +str file_path
         +ConfigFormat format
-        +load_settings() Dict~str, object~
+        +load_settings() Dict~str, t.JsonValue~
         +save_settings(settings) None
     }
 
     class DatabaseConfigSource {
         +str connection_string
-        +load_settings() Dict~str, object~
+        +load_settings() Dict~str, t.JsonValue~
         +save_settings(settings) None
     }
 
@@ -520,11 +500,11 @@ classDiagram
 ```mermaid
 classDiagram
     class EventStore {
-        +append_events(stream_id, events) FlextResult~None~
-        +get_events(stream_id, from_version) FlextResult~List~Event~~
-        +get_stream_metadata(stream_id) FlextResult~StreamMetadata~
-        +create_snapshot(stream_id, version) FlextResult~Snapshot~
-        +get_snapshot(stream_id) FlextResult~Snapshot~
+        +append_events(stream_id, events) r~None~
+        +get_events(stream_id, from_version) r~List~Event~~
+        +get_stream_metadata(stream_id) r~StreamMetadata~
+        +create_snapshot(stream_id, version) r~Snapshot~
+        +get_snapshot(stream_id) r~Snapshot~
     }
 
     class Event {
@@ -581,7 +561,7 @@ classDiagram
 
 ### Test Coverage by Component
 
-- **FlextResult[T]**: 95% coverage
+- **r[T]**: 95% coverage
 - **FlextContainer**: 99% coverage
 - **FlextModels**: 65% coverage
 - **LDAP Service**: 85% coverage
@@ -590,7 +570,7 @@ classDiagram
 
 ### Performance Benchmarks
 
-- **FlextResult Operations**: < 1ms per operation
+- **r Operations**: < 1ms per operation
 - **Container Resolution**: < 0.1ms per service
 - **LDAP Queries**: < 100ms per query
 - **API Response Time**: < 200ms per request
@@ -598,7 +578,7 @@ classDiagram
 
 ### Memory Usage
 
-- **FlextResult Instances**: ~100 bytes per instance
+- **r Instances**: ~100 bytes per instance
 - **Container Services**: ~1KB per service registration
 - **LDAP Connections**: ~2MB per connection pool
 - **API Gateway**: ~50MB base memory usage

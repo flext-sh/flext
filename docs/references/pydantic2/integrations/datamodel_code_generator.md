@@ -1,11 +1,5 @@
 # Code Generation with datamodel-code-generator
 
-
-<!-- TOC START -->
-- [Installation](#installation)
-- [Example](#example)
-<!-- TOC END -->
-
 The [datamodel-code-generator](https://github.com/koxudaxi/datamodel-code-generator/) project is a library and command-line utility to generate pydantic models from just about any data source, including:
 
 - OpenAPI 3 (YAML/JSON)
@@ -88,9 +82,11 @@ model.py:
 #   timestamp: 2020-05-19T15:07:31+00:00
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
+
 from typing import Any
 
-from pydantic import BaseModel, Field, conint
+from pydantic import BaseModel, u.Field, conint
 
 
 class Pet(BaseModel):
@@ -99,11 +95,11 @@ class Pet(BaseModel):
 
 
 class Person(BaseModel):
-    first_name: str = Field(description="The person's first name.")
-    last_name: str = Field(description="The person's last name.")
-    age: conint(ge=0) | None = Field(None, description='Age in years.')
-    pets: list[Pet] | None = None
-    comment: Any | None = None
+    first_name: str = u.Field(description="The person's first name.")
+    last_name: str = u.Field(description="The person's last name.")
+    age: conint(ge=0) | None = u.Field(None, description="Age in years.")
+    pets: t.SequenceOf[Pet] | None = None
+    comment | None = None
 ```
 
 More information can be found on the

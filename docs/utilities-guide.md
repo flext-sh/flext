@@ -1,30 +1,5 @@
 # FLEXT Utilities Usage Guide
 
-
-<!-- TOC START -->
-- [Overview](#overview)
-- [Utilities Architecture](#utilities-architecture)
-  - [Inheritance Hierarchy](#inheritance-hierarchy)
-  - [Import Pattern (MANDATORY)](#import-pattern-mandatory)
-- [Centralized Utilities in flext-core](#centralized-utilities-in-flext-core)
-  - [Core Classes (20+ utility classes)](#core-classes-20-utility-classes)
-  - [New Methods (Added December 28, 2025)](#new-methods-added-december-28-2025)
-- [Project-Specific Utilities](#project-specific-utilities)
-  - [flext-ldif Utilities (extending flext-core)](#flext-ldif-utilities-extending-flext-core)
-  - [flext-ldap Utilities (extending flext-ldif)](#flext-ldap-utilities-extending-flext-ldif)
-  - [flext-cli Utilities (extending flext-core)](#flext-cli-utilities-extending-flext-core)
-  - [flext-oud-mig Utilities (extending all)](#flext-oud-mig-utilities-extending-all)
-- [Best Practices](#best-practices)
-  - [DO's ✅](#dos)
-  - [DON'Ts ❌](#donts)
-- [Adding New Utilities](#adding-new-utilities)
-  - [When to Add to flext-core](#when-to-add-to-flext-core)
-  - [How to Add](#how-to-add)
-  - [Example: Add new utility method](#example-add-new-utility-method)
-- [Quality Standards](#quality-standards)
-- [See Also](#see-also)
-<!-- TOC END -->
-
 **Last Updated**: 2025-12-28
 **Version**: 1.0.0
 
@@ -52,15 +27,15 @@ FlextCliUtilities (flext-cli) - Extends with CLI-specific utilities
 
 ```python
 # ✅ CORRECT - Use short alias
-from flext_core.utilities import u
+from flext_core import u
 
 # Access centralized utilities
-result = u.Conversion.to_str("value")
-result = u.Mapper.get(data, "key")
-matches = u.Mapper.find_callable(predicates, value)
+result = u.to_str("value")
+result = u.get(data, "key")
+matches = u.find_callable(predicates, value)
 
 # ❌ FORBIDDEN - Direct internal imports
-from flext_core._utilities.conversion import FlextUtilitiesConversion
+from flext_core import FlextUtilitiesConversion
 ```
 
 ---
@@ -69,30 +44,30 @@ from flext_core._utilities.conversion import FlextUtilitiesConversion
 
 ### Core Classes (20+ utility classes)
 
-| Class                           | Namespace         | Purpose                             | Count   |
-| ------------------------------- | ----------------- | ----------------------------------- | ------- |
-| **FlextUtilitiesConversion**    | `u.Conversion`    | Value type conversion (3 methods)   | NEW     |
-| **FlextUtilitiesMapper**        | `u.Mapper`        | Data structure mapping (91 methods) | UPDATED |
-| **FlextUtilitiesCollection**    | `u.Collection`    | List/dict/set operations            | 40+     |
-| **FlextUtilitiesValidator**     | `u.Validator`     | Value validation                    | 30+     |
-| **FlextUtilitiesParser**        | `u.Parser`        | String/data parsing                 | 25+     |
-| **FlextUtilitiesPattern**       | `u.Pattern`       | Regex pattern matching              | 20+     |
-| **FlextUtilitiesGuards**        | `u.Guards`        | Type guards and narrowing           | 20+     |
-| **FlextUtilitiesCast**          | `u.Cast`          | Type casting utilities              | 15+     |
-| **FlextUtilitiesText**          | `u.Text`          | String manipulation                 | 20+     |
-| **FlextUtilitiesEnum**          | `u.Enum`          | Enum utilities                      | 10+     |
-| **FlextUtilitiesContext**       | `u.Context`       | Context/state management            | 8+      |
-| **FlextUtilitiesCache**         | `u.Cache`         | Caching utilities                   | 5+      |
-| **FlextUtilitiesConfiguration** | `u.Configuration` | Config handling                     | 8+      |
-| **FlextUtilitiesDomain**        | `u.Domain`        | Domain model utilities              | 10+     |
-| **FlextUtilitiesDeprecation**   | `u.Deprecation`   | Deprecation handling                | 4       |
-| **FlextUtilitiesGenerators**    | `u.Generators`    | Data generators                     | 10+     |
-| **FlextUtilitiesModel**         | `u.Model`         | Pydantic model utilities            | 12+     |
-| **FlextUtilitiesPagination**    | `u.Pagination`    | Pagination utilities                | 5+      |
-| **FlextUtilitiesReliability**   | `u.Reliability`   | Retry/circuit breaker               | 8+      |
-| **FlextUtilitiesValidation**    | `u.Validation`    | Data validation                     | 15+     |
-| **FlextUtilitiesChecker**       | `u.Checker`       | Type/value checking                 | 12+     |
-| **FlextUtilitiesArgs**          | `u.Args`          | CLI argument handling               | 8+      |
+| Class                           | Namespace       | Purpose                             | Count   |
+| ------------------------------- | --------------- | ----------------------------------- | ------- |
+| **FlextUtilitiesConversion**    | `u`             | Value type conversion (3 methods)   | NEW     |
+| **FlextUtilitiesMapper**        | `u`             | Data structure mapping (91 methods) | UPDATED |
+| **FlextUtilitiesCollection**    | `u`             | List/dict/set operations            | 40+     |
+| **FlextUtilitiesValidator**     | `u.Validator`   | Value validation                    | 30+     |
+| **FlextUtilitiesParser**        | `u`             | String/data parsing                 | 25+     |
+| **FlextUtilitiesPattern**       | `u.Pattern`     | Regex pattern matching              | 20+     |
+| **FlextUtilitiesGuards**        | `u`             | Type guards and narrowing           | 20+     |
+| **FlextUtilitiesCast**          | `u.Cast`        | Type casting utilities              | 15+     |
+| **FlextUtilitiesText**          | `u`             | String manipulation                 | 20+     |
+| **FlextUtilitiesEnum**          | `u`             | Enum utilities                      | 10+     |
+| **FlextUtilitiesContext**       | `u.Context`     | Context/state management            | 8+      |
+| **FlextUtilitiesCache**         | `u`             | Caching utilities                   | 5+      |
+| **FlextUtilitiesConfiguration** | `u`             | Settings handling                   | 8+      |
+| **FlextUtilitiesDomain**        | `u`             | Domain model utilities              | 10+     |
+| **FlextUtilitiesDeprecation**   | `u.Deprecation` | Deprecation handling                | 4       |
+| **FlextUtilitiesGenerators**    | `u`             | Data generators                     | 10+     |
+| **FlextUtilitiesModel**         | `u`             | Pydantic model utilities            | 12+     |
+| **FlextUtilitiesPagination**    | `u`             | Pagination utilities                | 5+      |
+| **FlextUtilitiesReliability**   | `u`             | Retry/circuit breaker               | 8+      |
+| **FlextUtilitiesValidation**    | `u.Validation`  | Data validation                     | 15+     |
+| **FlextUtilitiesChecker**       | `u`             | Type/value checking                 | 12+     |
+| **FlextUtilitiesArgs**          | `u`             | CLI argument handling               | 8+      |
 
 **Total**: 548+ centralized utility methods in flext-core
 
@@ -107,28 +82,28 @@ from flext_core._utilities.conversion import FlextUtilitiesConversion
 ```python
 @staticmethod
 def to_str_list_safe(
-    value: t.GeneralValueType,
+    value: m.Tests.ListInputModel,
     *,
     filter_list_like: bool = True,
-) -> list[str]:
-    """Convert value to list[str] with safe nested list handling."""
+) -> t.StrSequence:
+    """Convert value to t.StrSequence with safe nested list handling."""
 ```
 
 **Usage**:
 
 ```python
-from flext_core.utilities import u
+from flext_core import u
 
 # Simple values
-result = u.Conversion.to_str_list_safe("hello")
+result = u.to_str_list_safe("hello")
 # → ["hello"]
 
 # Lists with nested structures
-result = u.Conversion.to_str_list_safe(["a", "b", ["nested"]], filter_list_like=True)
+result = u.to_str_list_safe(["a", "b", ["nested"]], filter_list_like=True)
 # → ["a", "b"]  # Nested list filtered out
 
 # Disable filtering
-result = u.Conversion.to_str_list_safe(["a", ["b"]], filter_list_like=False)
+result = u.to_str_list_safe(["a", ["b"]], filter_list_like=False)
 # → ["a", "[b]"]  # Nested list converted to string
 ```
 
@@ -147,26 +122,26 @@ result = u.Conversion.to_str_list_safe(["a", ["b"]], filter_list_like=False)
 ```python
 @staticmethod
 def to_str_list_truthy(
-    value: t.GeneralValueType,
-) -> list[str]:
-    """Convert value to list[str] filtering out falsy values."""
+    value: m.Tests.ListInputModel,
+) -> t.StrSequence:
+    """Convert value to t.StrSequence filtering out falsy values."""
 ```
 
 **Usage**:
 
 ```python
-from flext_core.utilities import u
+from flext_core import u
 
 # Filter falsy values
-result = u.Conversion.to_str_list_truthy(["a", "", "b", None])
+result = u.to_str_list_truthy(["a", "", "b", None])
 # → ["a", "b"]  # Empty strings and None removed
 
 # Single value
-result = u.Conversion.to_str_list_truthy("test")
+result = u.to_str_list_truthy("test")
 # → ["test"]
 
 # Empty/falsy input
-result = u.Conversion.to_str_list_truthy(None)
+result = u.to_str_list_truthy(None)
 # → []
 ```
 
@@ -185,7 +160,7 @@ result = u.Conversion.to_str_list_truthy(None)
 ```python
 @staticmethod
 def find_callable[T](
-    callables: Mapping[str, _Predicate[T]],
+    callables: t.MappingKV[str, _Predicate[T]],
     value: T,
 ) -> str | None:
     """Find first matching callable key from dict of predicates."""
@@ -194,7 +169,7 @@ def find_callable[T](
 **Usage**:
 
 ```python
-from flext_core.utilities import u
+from flext_core import u
 
 # Define predicates
 predicates = {
@@ -204,13 +179,13 @@ predicates = {
 }
 
 # Find matching predicate
-result = u.Mapper.find_callable(predicates, [1, 2])
+result = u.find_callable(predicates, [1, 2])
 # → "is_multiple"
 
-result = u.Mapper.find_callable(predicates, [])
+result = u.find_callable(predicates, [])
 # → "is_empty"
 
-result = u.Mapper.find_callable(predicates, "no_match")
+result = u.find_callable(predicates, "no_match")
 # → None  # No predicate matched
 ```
 
@@ -240,10 +215,10 @@ result = u.Mapper.find_callable(predicates, "no_match")
 **Example**:
 
 ```python
-from flext_ldif.utilities import u
+from flext_ldif import u
 
 # Use inherited methods from flext-core
-result = u.Conversion.to_str_list(values)  # Inherited
+result = u.to_str_list(values)  # Inherited
 
 # Use LDIF-specific methods
 entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
@@ -273,7 +248,7 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 - Progress indicators
 - Configuration file loading
 
-### flext-oud-mig Utilities (extending all)
+### Migration Utilities (extending all)
 
 **Namespace**: `u.Migration.*`
 
@@ -290,18 +265,18 @@ entry = u.Ldif.parse_entry(ldif_data)  # Domain-specific
 
 ### DO's ✅
 
-1. **Use short aliases**: `from flext_core.utilities import u`
-2. **Access via namespace**: `u.Conversion.method()`, `u.Mapper.method()`
-3. **Chain operations**: `u.Collection.filter(...).map(...)`
+1. **Use short aliases**: `from flext_core import u`
+2. **Access via namespace**: `u.method()`, `u.method()`
+3. **Chain operations**: `u.filter(...).map(...)`
 4. **Inherit for domain extensions**: Extend `FlextUtilities` for project-specific utilities
 5. **Reuse existing methods**: Check if method already exists before adding
-6. **Use full namespaces in type hints**: `u.Conversion.to_str()`
+6. **Use full namespaces in type hints**: `u.to_str()`
 
 ### DON'Ts ❌
 
-1. **Don't import internal modules**: ❌ `from flext_core._utilities.conversion import ...`
-2. **Don't re-implement**: ❌ Create your own string conversion if `u.Conversion.*` exists
-3. **Don't mix namespaces**: ❌ `from flext_core.utilities import FlextUtilities`
+1. **Don't import internal modules**: ❌ `from flext_core import ...`
+2. **Don't re-implement**: ❌ Create your own string conversion if `u.*` exists
+3. **Don't mix namespaces**: ❌ `from flext_core import FlextUtilities`
 4. **Don't use module imports**: ❌ `from flext_core import utilities as util`
 5. **Don't create new utility classes at same level**: ❌ Extend in your project, not flext-core root
 
@@ -334,7 +309,7 @@ Add utility method to flext-core when:
 
 class FlextUtilitiesConversion:
     @staticmethod
-    def new_method(value: t.GeneralValueType) -> r[str]:
+    def new_method(value: m.Tests.UtilityInputModel) -> p.Result[str]:
         """New utility method."""
         try:
             result = ...process value...
@@ -342,7 +317,7 @@ class FlextUtilitiesConversion:
         except Exception as e:
             return r[str].fail(f"Error: {e}")
 
-    # __all__ = ["FlextUtilitiesConversion"]  # Already exported
+    # __all__: list[str] = ["FlextUtilitiesConversion"]  # Already exported
 ```
 
 ---
@@ -354,7 +329,7 @@ All utilities must meet:
 - ✅ **Type Safety**: Full type annotations, no `Any` or `cast()`
 - ✅ **Testing**: 100% test coverage with real implementations
 - ✅ **Documentation**: Clear docstrings with examples
-- ✅ **Error Handling**: FlextResult pattern for fallible operations
+- ✅ **Error Handling**: r pattern for fallible operations
 - ✅ **Performance**: No unnecessary complexity or allocations
 - ✅ **Code Quality**: MyPy strict, Ruff lint, zero violations
 
@@ -362,8 +337,8 @@ All utilities must meet:
 
 ## See Also
 
-- [Workspace Standards](../CLAUDE.md) - Overall architecture patterns
-- [flext-core Architecture](../flext-core/CLAUDE.md) - Core implementation details
+- [Workspace Standards](../AGENTS.md) - Overall architecture patterns
+- [FLEXT Governance](../AGENTS.md) - Workspace implementation details
 - [Project README](../README.md) - General project information
 
 ---

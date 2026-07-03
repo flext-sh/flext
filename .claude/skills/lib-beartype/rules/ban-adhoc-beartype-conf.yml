@@ -1,6 +1,0 @@
-id: ban-adhoc-beartype-conf
-language: python
-rule:
-  pattern: "BeartypeConf($$$ARGS)"
-message: "Ad-hoc BeartypeConf() banned - use centralized configuration"
-severity: error

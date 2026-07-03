@@ -1,19 +1,11 @@
 # JSON
 
-
-<!-- TOC START -->
-- [JSON Parsing](#json-parsing)
-  - [Partial JSON Parsing](#partial-json-parsing)
-  - [Caching Strings](#caching-strings)
-- [JSON Serialization](#json-serialization)
-<!-- TOC END -->
-
 ## JSON Parsing
 
 ??? api "API Documentation"
 [`pydantic.main.BaseModel.model_validate_json`][pydantic.main.BaseModel.model_validate_JSON]
 [`pydantic.type_adapter.TypeAdapter.validate_json`][pydantic.type_adapter.TypeAdapter.validate_JSON]
-[`pydantic_core.from_json`][pydantic_core.from_JSON]
+`pydantic_core.u.from_json`
 
 Pydantic provides builtin JSON parsing, which helps achieve:
 
@@ -38,10 +30,10 @@ class Event(BaseModel):
 
 json_data = '{"when": "1987-01-28", "where": [51, -1]}'
 print(Event.model_validate_json(json_data))  # (1)!
-#> when=datetime.date(1987, 1, 28) where=(51, -1)
+# > when=datetime.date(1987, 1, 28) where=(51, -1)
 
 try:
-    Event.model_validate({'when': '1987-01-28', 'where': [51, -1]})  # (2)!
+    Event({"when": "1987-01-28", "where": [51, -1]})  # (2)!
 except ValidationError as e:
     print(e)
     """
@@ -66,22 +58,22 @@ in the original JSON input which contained the invalid value.
 
 ### Partial JSON Parsing
 
-**Starting in v2.7.0**, Pydantic's [JSON parser](https://docs.rs/jiter/latest/jiter/) offers support for partial JSON parsing, which is exposed via [`pydantic_core.from_json`][pydantic_core.from_JSON]. Here's an example of this feature in action:
+**Starting in v2.7.0**, Pydantic's [JSON parser](https://docs.rs/jiter/latest/jiter/) offers support for partial JSON parsing, which is exposed via `pydantic_core.u.from_json`. Here's an example of this feature in action:
 
 ```python
-from pydantic_core import from_json
+from pydantic_core import u.from_json
 
 partial_json_data = '["aa", "bb", "c'  # (1)!
 
 try:
-    result = from_json(partial_json_data, allow_partial=False)
+    result = u.from_json(partial_json_data, allow_partial=False)
 except ValueError as e:
     print(e)  # (2)!
-    #> EOF while parsing a string at line 1 column 15
+    # > EOF while parsing a string at line 1 column 15
 
-result = from_json(partial_json_data, allow_partial=True)
+result = u.from_json(partial_json_data, allow_partial=True)
 print(result)  # (3)!
-#> ['aa', 'bb']
+# > ['aa', 'bb']
 ```
 
 1. The JSON list is incomplete - it's missing a closing `"]`
@@ -91,12 +83,14 @@ print(result)  # (3)!
 This also works for deserializing partial dictionaries. For example:
 
 ```python
-from pydantic_core import from_json
+from pydantic_core import u.from_json
 
-partial_dog_json = '{"breed": "lab", "name": "fluffy", "friends": ["buddy", "spot", "rufus"], "age'
-dog_dict = from_json(partial_dog_json, allow_partial=True)
+partial_dog_json = (
+    '{"breed": "lab", "name": "fluffy", "friends": ["buddy", "spot", "rufus"], "age'
+)
+dog_dict = u.from_json(partial_dog_json, allow_partial=True)
 print(dog_dict)
-#> {'breed': 'lab', 'name': 'fluffy', 'friends': ['buddy', 'spot', 'rufus']}
+# > {'breed': 'lab', 'name': 'fluffy', 'friends': ['buddy', 'spot', 'rufus']}
 ```
 
 !!! tip "Validating LLM Output"
@@ -107,10 +101,10 @@ In future versions of Pydantic, we expect to expand support for this feature thr
 ([`pydantic.main.BaseModel.model_validate_json`][pydantic.main.BaseModel.model_validate_JSON] and
 [`pydantic.type_adapter.TypeAdapter.validate_json`][pydantic.type_adapter.TypeAdapter.validate_JSON]) or model configuration. Stay tuned 🚀!
 
-For now, you can use [`pydantic_core.from_json`][pydantic_core.from_JSON] in combination with [`pydantic.main.BaseModel.model_validate`][pydantic.main.BaseModel.model_validate] to achieve the same result. Here's an example:
+For now, you can use `pydantic_core.u.from_json` in combination with [`pydantic.main.BaseModel.model_validate`][pydantic.main.BaseModel.model_validate] to achieve the same result. Here's an example:
 
 ```python
-from pydantic_core import from_json
+from pydantic_core import u.from_json
 
 from pydantic import BaseModel
 
@@ -121,10 +115,12 @@ class Dog(BaseModel):
     friends: list
 
 
-partial_dog_json = '{"breed": "lab", "name": "fluffy", "friends": ["buddy", "spot", "rufus"], "age'
-dog = Dog.model_validate(from_json(partial_dog_json, allow_partial=True))
+partial_dog_json = (
+    '{"breed": "lab", "name": "fluffy", "friends": ["buddy", "spot", "rufus"], "age'
+)
+dog = Dog(al_dog_json, allow_partial=True))
 print(repr(dog))
-#> Dog(breed='lab', name='fluffy', friends=['buddy', 'spot', 'rufus'])
+# > Dog(breed='lab', name='fluffy', friends=['buddy', 'spot', 'rufus'])
 ```
 
 !!! tip
@@ -142,7 +138,7 @@ Check out the following example for a more in-depth look at how to use default v
     from pydantic import BaseModel, ValidationError, WrapValidator
 
 
-    def default_on_error(v, handler) -> Any:
+    def default_on_error(v, handler):
         """
         Raise a PydanticUseDefault exception if the value is missing.
 
@@ -154,7 +150,7 @@ Check out the following example for a more in-depth look at how to use default v
         except ValidationError as exc:
             # there might be other types of errors resulting from partial JSON parsing
             # that you allow here, feel free to customize as needed
-            if all(e['type'] == 'missing' for e in exc.errors()):
+            if all(e["type"] == "missing" for e in exc.errors()):
                 raise pydantic_core.PydanticUseDefault()
             else:
                 raise
@@ -167,39 +163,35 @@ Check out the following example for a more in-depth look at how to use default v
 
     class MyModel(BaseModel):
         foo: Optional[str] = None
-        bar: Annotated[
-            Optional[tuple[str, int]], WrapValidator(default_on_error)
-        ] = None
-        nested: Annotated[
-            Optional[NestedModel], WrapValidator(default_on_error)
-        ] = None
+        bar: Annotated[Optional[tuple[str, int]], WrapValidator(default_on_error)] = None
+        nested: Annotated[Optional[NestedModel], WrapValidator(default_on_error)] = None
 
 
-    m = MyModel.model_validate(
-        pydantic_core.from_json('{"foo": "x", "bar": ["world",', allow_partial=True)
+    m = MyModel(
+        pydantic_core.u.from_json('{"foo": "x", "bar": ["world",', allow_partial=True)
     )
     print(repr(m))
-    #> MyModel(foo='x', bar=None, nested=None)
+    # > MyModel(foo='x', bar=None, nested=None)
 
 
-    m = MyModel.model_validate(
-        pydantic_core.from_json(
+    m = MyModel(
+        pydantic_core.u.from_json(
             '{"foo": "x", "bar": ["world", 1], "nested": {"x":', allow_partial=True
         )
     )
     print(repr(m))
-    #> MyModel(foo='x', bar=('world', 1), nested=None)
+    # > MyModel(foo='x', bar=('world', 1), nested=None)
     ```
 
 ### Caching Strings
 
 **Starting in v2.7.0**, Pydantic's [JSON parser](https://docs.rs/jiter/latest/jiter/) offers support for configuring how Python strings are cached during JSON parsing and validation (when Python strings are constructed from Rust strings during Python validation, e.g. after `strip_whitespace=True`).
-The `cache_strings` setting is exposed via both [model config][pydantic.config.ConfigDict] and [`pydantic_core.from_json`][pydantic_core.from_JSON].
+The `cache_strings` setting is exposed via both model settings and `pydantic_core.u.from_json`.
 
 The `cache_strings` setting can take any of the following values:
 
 - `True` or `'all'` (the default): cache all strings
-- `'keys'`: cache only dictionary keys, this **only** applies when used with [`pydantic_core.from_json`][pydantic_core.from_JSON] or when parsing JSON using [`Json`][pydantic.types.JSON]
+- `'keys'`: cache only dictionary keys, this **only** applies when used with `pydantic_core.u.from_json` or when parsing JSON using [`Json`][pydantic.types.JSON]
 - `False` or `'none'`: no caching
 
 Using the string caching feature results in performance improvements, but increases memory usage slightly.
@@ -217,6 +209,6 @@ Using the string caching feature results in performance improvements, but increa
 ??? api "API Documentation"
 [`pydantic.main.BaseModel.model_dump_json`][pydantic.main.BaseModel.model_dump_JSON]<br>
 [`pydantic.type_adapter.TypeAdapter.dump_json`][pydantic.type_adapter.TypeAdapter.dump_JSON]<br>
-[`pydantic_core.to_json`][pydantic_core.to_JSON]<br>
+[`pydantic_core.u.to_json`][pydantic_core.u.to_JSON]<br>
 
 For more information on JSON serialization, see the [serialization concepts](./serialization.md) page.

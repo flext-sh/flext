@@ -1,18 +1,5 @@
 # Experimental Features
 
-
-<!-- TOC START -->
-- [Feedback](#feedback)
-- [Pipeline API](#pipeline-api)
-  - [Mapping from `BeforeValidator`, `AfterValidator` and `WrapValidator`](#mapping-from-beforevalidator-aftervalidator-and-wrapvalidator)
-  - [Alternative patterns](#alternative-patterns)
-- [Partial Validation](#partial-validation)
-  - [How Partial Validation Works](#how-partial-validation-works)
-  - [Limitations of Partial Validation](#limitations-of-partial-validation)
-- [Validation of a callable's arguments](#validation-of-a-callables-arguments)
-- [`MISSING` sentinel](#missing-sentinel)
-<!-- TOC END -->
-
 In this section you will find documentation for new, experimental features in Pydantic. These features are subject to change or removal, and we are looking for feedback and suggestions before making them a permanent part of Pydantic.
 
 See our [Version Policy](../version-policy.md#experimental-features) for more information on experimental features.
@@ -47,6 +34,8 @@ These APIs are meant for situations where the code savings are significant and t
 ```python
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
+
 from datetime import datetime
 from typing import Annotated
 
@@ -57,25 +46,21 @@ from pydantic.experimental.pipeline import validate_as
 class User(BaseModel):
     name: Annotated[str, validate_as(str).str_lower()]  # (1)!
     age: Annotated[int, validate_as(int).gt(0)]  # (2)!
-    username: Annotated[str, validate_as(str).str_pattern(r'[a-z]+')]  # (3)!
+    username: Annotated[str, validate_as(str).str_pattern(r"[a-z]+")]  # (3)!
     password: Annotated[
         str,
         validate_as(str)
         .transform(str.lower)
-        .predicate(lambda x: x != 'password'),  # (4)!
+        .predicate(lambda x: x != "password"),  # (4)!
     ]
     favorite_number: Annotated[  # (5)!
         int,
-        (validate_as(int) | validate_as(str).str_strip().validate_as(int)).gt(
-            0
-        ),
+        (validate_as(int) | validate_as(str).str_strip().validate_as(int)).gt(0),
     ]
-    friends: Annotated[list[User], validate_as(...).len(0, 100)]  # (6)!
+    friends: Annotated[Sequence[User], validate_as(...).len(0, 100)]  # (6)!
     bio: Annotated[
         datetime,
-        validate_as(int)
-        .transform(lambda x: x / 1_000_000)
-        .validate_as(...),  # (8)!
+        validate_as(int).transform(lambda x: x / 1_000_000).validate_as(...),  # (8)!
     ]
 ```
 
@@ -87,26 +72,23 @@ class User(BaseModel):
 6. Calling `validate_as(...)` with `Ellipsis`, `...` as the first positional argument implies `validate_as(<field type>)`. Use `validate_as(Any)` to accept any type.
 7. You can call `validate_as()` before or after other steps to do pre or post processing.
 
-### Mapping from `BeforeValidator`, `AfterValidator` and `WrapValidator`
+### Mapping from `m.BeforeValidator`, `AfterValidator` and `WrapValidator`
 
-The `validate_as` method is a more type-safe way to define `BeforeValidator`, `AfterValidator` and `WrapValidator`:
+The `validate_as` method is a more type-safe way to define `m.BeforeValidator`, `AfterValidator` and `WrapValidator`:
 
 ```python
 from typing import Annotated
 
 from pydantic.experimental.pipeline import transform, validate_as
 
-# BeforeValidator
+# m.BeforeValidator
 Annotated[int, validate_as(str).str_strip().validate_as(...)]  # (1)!
 # AfterValidator
 Annotated[int, transform(lambda x: x * 2)]  # (2)!
 # WrapValidator
 Annotated[
     int,
-    validate_as(str)
-    .str_strip()
-    .validate_as(...)
-    .transform(lambda x: x * 2),  # (3)!
+    validate_as(str).str_strip().validate_as(...).transform(lambda x: x * 2),  # (3)!
 ]
 ```
 
@@ -121,6 +103,8 @@ Just as an example, consider the `UserIn` and `UserOut` pattern mentioned above:
 
 ```python
 from __future__ import annotations
+
+from collections.abc import Mapping, Sequence
 
 from pydantic import BaseModel
 
@@ -141,7 +125,7 @@ def my_api(user: UserIn) -> UserOut:
     return UserOut(favorite_number=favorite_number)
 
 
-assert my_api(UserIn(favorite_number=' 1 ')).favorite_number == 1
+assert my_api(UserIn(favorite_number=" 1 ")).favorite_number == 1
 ```
 
 This example uses plain idiomatic Python code that may be easier to understand, type-check, etc. than the examples above.
@@ -153,7 +137,7 @@ Just be mindful of abusing advanced patterns like the pipeline API just because 
 
 Pydantic v2.10.0 introduces experimental support for "partial validation".
 
-This allows you to validate an incomplete JSON string, or a Python object representing incomplete input data.
+This allows you to validate an incomplete JSON string, or a Python t.JsonValue representing incomplete input data.
 
 Partial validation is particularly helpful when processing the output of an LLM, where the model streams structured responses, and you may wish to begin validating the stream while you're still receiving data (e.g. to show partial data to users).
 
@@ -178,7 +162,7 @@ It can take the following values (and is `False`, by default):
 `'trailing-strings'` mode allows for trailing incomplete strings at the end of partial JSON to be included in the output.
 For example, if you're validating against the following model:
 
-````python
+```python
 from typing import TypedDict
 
 
@@ -196,7 +180,7 @@ from typing import TypedDict
     And would be validated as:
 
     ```python {test="skip" lint="skip"}
-    {'a': 'hello', 'b': 'wor'}
+    {"a": "hello", "b": "wor"}
     ```
 
 `experiment_allow_partial` in action:
@@ -216,54 +200,57 @@ class Foobar(TypedDict):  # (1)!
     c: NotRequired[Annotated[str, MinLen(5)]]
 
 
-ta = TypeAdapter(list[Foobar])
+ta = TypeAdapter(Sequence[Foobar])
 
 v = ta.validate_json('[{"a": 1, "b"', experimental_allow_partial=True)  # (2)!
 print(v)
-#> [{'a': 1}]
+# > [{'a': 1}]
 
 v = ta.validate_json(
-    '[{"a": 1, "b": 1.0, "c": "abcd', experimental_allow_partial=True  # (3)!
+    '[{"a": 1, "b": 1.0, "c": "abcd',
+    experimental_allow_partial=True,  # (3)!
 )
 print(v)
-#> [{'a': 1, 'b': 1.0}]
+# > [{'a': 1, 'b': 1.0}]
 
 v = ta.validate_json(
-    '[{"b": 1.0, "c": "abcde"', experimental_allow_partial=True  # (4)!
+    '[{"b": 1.0, "c": "abcde"',
+    experimental_allow_partial=True,  # (4)!
 )
 print(v)
-#> []
+# > []
 
 v = ta.validate_json(
     '[{"a": 1, "b": 1.0, "c": "abcde"},{"a": ', experimental_allow_partial=True
 )
 print(v)
-#> [{'a': 1, 'b': 1.0, 'c': 'abcde'}]
+# > [{'a': 1, 'b': 1.0, 'c': 'abcde'}]
 
-v = ta.validate_python([{'a': 1}], experimental_allow_partial=True)  # (5)!
+v = ta.validate_python([{"a": 1}], experimental_allow_partial=True)  # (5)!
 print(v)
-#> [{'a': 1}]
+# > [{'a': 1}]
 
 v = ta.validate_python(
-    [{'a': 1, 'b': 1.0, 'c': 'abcd'}], experimental_allow_partial=True  # (6)!
+    [{"a": 1, "b": 1.0, "c": "abcd"}],
+    experimental_allow_partial=True,  # (6)!
 )
 print(v)
-#> [{'a': 1, 'b': 1.0}]
+# > [{'a': 1, 'b': 1.0}]
 
 v = ta.validate_json(
     '[{"a": 1, "b": 1.0, "c": "abcdefg',
-    experimental_allow_partial='trailing-strings',  # (7)!
+    experimental_allow_partial="trailing-strings",  # (7)!
 )
 print(v)
-#> [{'a': 1, 'b': 1.0, 'c': 'abcdefg'}]
-````
+# > [{'a': 1, 'b': 1.0, 'c': 'abcdefg'}]
+```
 
 1. The TypedDict `Foobar` has three field, but only `a` is required, that means that a valid instance of `Foobar` can be created even if the `b` and `c` fields are missing.
 2. Parsing JSON, the input is valid JSON up to the point where the string is truncated.
 3. In this case truncation of the input means the value of `c` (`abcd`) is invalid as input to `c` field, hence it's omitted.
 4. The `a` field is required, so validation on the only item in the list fails and is dropped.
-5. Partial validation also works with Python objects, it should have the same semantics as with JSON except of course you can't have a genuinely "incomplete" Python object.
-6. The same as above but with a Python object, `c` is dropped as it's not required and failed validation.
+5. Partial validation also works with Python objects, it should have the same semantics as with JSON except of course you can't have a genuinely "incomplete" Python t.JsonValue.
+6. The same as above but with a Python t.JsonValue, `c` is dropped as it's not required and failed validation.
 7. The `trailing-strings` mode allows for incomplete strings at the end of partial JSON to be included in the output, in this case the input is valid JSON up to the point where the string is truncated, so the last string is included.
 
 ### How Partial Validation Works
@@ -278,7 +265,7 @@ The [jiter](https://github.com/pydantic/jiter) JSON parser used by Pydantic alre
 `experimental_allow_partial` is simply passed to jiter via the `allow_partial` argument.
 
 !!! note
-If you just want pure JSON parsing with support for partial JSON, you can use the [`jiter`](https://pypi.org/project/jiter/) Python library directly, or pass the `allow_partial` argument when calling [`pydantic_core.from_json`][pydantic_core.from_JSON].
+If you just want pure JSON parsing with support for partial JSON, you can use the [`jiter`](https://pypi.org/project/jiter/) Python library directly, or pass the `allow_partial` argument when calling [`pydantic_core.u.from_json`][pydantic_core.u.from_JSON].
 
 #### 2. Ignore errors in the last element of the input {#2-ignore-errors-in-last}
 
@@ -308,13 +295,13 @@ class MyModel(BaseModel):
     b: Annotated[str, MinLen(5)]
 
 
-ta = TypeAdapter(list[MyModel])
+ta = TypeAdapter(Sequence[MyModel])
 v = ta.validate_json(
     '[{"a": 1, "b": "12345"}, {"a": 1,',
     experimental_allow_partial=True,
 )
 print(v)
-#> [MyModel(a=1, b='12345')]
+# > [MyModel(a=1, b='12345')]
 ```
 
 ### Limitations of Partial Validation
@@ -330,7 +317,7 @@ Right now only a subset of collection validators know how to handle partial vali
 - `list`
 - `set`
 - `frozenset`
-- `dict` (as in `dict[X, Y]`)
+- `dict` (as in `Mapping[X, Y]`)
 - `TypedDict` — only non-required fields may be missing, e.g. via [`NotRequired`][typing.NotRequired] or [`total=False`][typing.TypedDict.**total**])
 
 While you can use `experimental_allow_partial` while validating against types that include other collection validators, those types will be validated "all or nothing", and partial validation will not work on more nested types.
@@ -349,14 +336,12 @@ from pydantic import BaseModel, TypeAdapter, ValidationError
 
 class MyModel(BaseModel):
     a: int = 1
-    b: list[Annotated[str, MinLen(5)]] = []  # (1)!
+    b: t.SequenceOf[Annotated[str, MinLen(5)]] = []  # (1)!
 
 
 ta = TypeAdapter(MyModel)
 try:
-    v = ta.validate_json(
-        '{"a": 1, "b": ["12345", "12', experimental_allow_partial=True
-    )
+    v = ta.validate_json('{"a": 1, "b": ["12345", "12', experimental_allow_partial=True)
 except ValidationError as e:
     print(e)
     """
@@ -391,16 +376,18 @@ class Foobar(TypedDict, total=False):
 ta = TypeAdapter(Foobar)
 
 v = ta.validate_json(
-    '{"a": 1, "b": "12', experimental_allow_partial=True  # (1)!
+    '{"a": 1, "b": "12',
+    experimental_allow_partial=True,  # (1)!
 )
 print(v)
-#> {'a': 1}
+# > {'a': 1}
 
 v = ta.validate_json(
-    '{"a": 1, "b": "12"}', experimental_allow_partial=True  # (2)!
+    '{"a": 1, "b": "12"}',
+    experimental_allow_partial=True,  # (2)!
 )
 print(v)
-#> {'a': 1}
+# > {'a': 1}
 ```
 
 1. This will pass validation as expected although the last field will be omitted as it failed validation.
@@ -419,16 +406,16 @@ from annotated_types import Ge
 
 from pydantic import TypeAdapter
 
-ta = TypeAdapter(list[Annotated[int, Ge(10)]])
+ta = TypeAdapter(Sequence[Annotated[int, Ge(10)]])
 v = ta.validate_python([20, 30, 4], experimental_allow_partial=True)  # (1)!
 print(v)
-#> [20, 30]
+# > [20, 30]
 
-ta = TypeAdapter(list[int])
+ta = TypeAdapter(Sequence[int])
 
-v = ta.validate_python([1, 2, 'wrong'], experimental_allow_partial=True)  # (2)!
+v = ta.validate_python([1, 2, "wrong"], experimental_allow_partial=True)  # (2)!
 print(v)
-#> [1, 2]
+# > [1, 2]
 ```
 
 1. As you would expect, this will pass validation since Pydantic correctly ignores the error in the (truncated) last item.
@@ -436,7 +423,7 @@ print(v)
 
 ## Validation of a callable's arguments
 
-Pydantic provides the [`@validate_call`][pydantic.validate_call] decorator to perform validation on the provided
+Pydantic provides the [`@u.validate_call`][pydantic.u.validate_call] decorator to perform validation on the provided
 arguments (and additionally return type) of a callable. However, it only allows arguments to be provided
 by actually calling the decorated callable. In some situations, you may want to just _validate_ the arguments,
 such as when loading from other data sources such as JSON data.
@@ -455,13 +442,13 @@ def func(p: bool, *args: str, **kwargs: int) -> None: ...
 
 arguments_schema = generate_arguments_schema(func=func)
 
-val = SchemaValidator(arguments_schema, config={'coerce_numbers_to_str': True})
+val = SchemaValidator(arguments_schema, settings={"coerce_numbers_to_str": True})
 
 args, kwargs = val.validate_json(
     '{"p": true, "args": ["arg1", 1], "kwargs": {"extra": 1}}'
 )
 print(args, kwargs)  # (1)!
-#> (True, 'arg1', '1') {'extra': 1}
+# > (True, 'arg1', '1') {'extra': 1}
 ```
 
 1. If you want the validated arguments as a dictionary, you can use the [`Signature.bind()`][inspect.Signature.bind]
@@ -471,11 +458,11 @@ print(args, kwargs)  # (1)!
    from inspect import signature
 
    signature(func).bind(*args, **kwargs).arguments
-   #> {'p': True, 'args': ('arg1', '1'), 'kwargs': {'extra': 1}}
+   # > {'p': True, 'args': ('arg1', '1'), 'kwargs': {'extra': 1}}
    ```
 
 !!! note
-Unlike [`@validate_call`][pydantic.validate_call], this core schema will only validate the provided arguments;
+Unlike [`@u.validate_call`][pydantic.u.validate_call], this core schema will only validate the provided arguments;
 the underlying callable will _not_ be called.
 
 Additionally, you can ignore specific parameters by providing a callback, which is called for every parameter:
@@ -491,9 +478,9 @@ from pydantic.experimental.arguments_schema import generate_arguments_schema
 def func(p: bool, *args: str, **kwargs: int) -> None: ...
 
 
-def skip_first_parameter(index: int, name: str, annotation: Any) -> Any:
+def skip_first_parameter(index: int, name: str, annotation):
     if index == 0:
-        return 'skip'
+        return "skip"
 
 
 arguments_schema = generate_arguments_schema(
@@ -505,7 +492,7 @@ val = SchemaValidator(arguments_schema)
 
 args, kwargs = val.validate_json('{"args": ["arg1"], "kwargs": {"extra": 1}}')
 print(args, kwargs)
-#> ('arg1',) {'extra': 1}
+# > ('arg1',) {'extra': 1}
 ```
 
 ## `MISSING` sentinel
@@ -527,7 +514,7 @@ class Configuration(BaseModel):
 
 
 # configuration defaults, stored somewhere else:
-defaults = {'timeout': 200}
+defaults = {"timeout": 200}
 
 conf = Configuration()
 
@@ -536,12 +523,12 @@ conf.model_dump()
 # {}
 
 # The `MISSING` value doesn't appear in the JSON Schema:
-Configuration.model_json_schema()['properties']['timeout']
-#> {'anyOf': [{'type': 'integer'}, {'type': 'null'}], 'title': 'Timeout'}}
+Configuration.model_json_schema()["properties"]["timeout"]
+# > {'anyOf': [{'type': 'integer'}, {'type': 'null'}], 'title': 'Timeout'}}
 
 
 # `is` can be used to discriminate between the sentinel and other values:
-timeout = conf.timeout if conf.timeout is not MISSING else defaults['timeout']
+timeout = conf.timeout if conf.timeout is not MISSING else defaults["timeout"]
 ```
 
 This feature is marked as experimental because it relies on the draft [PEP 661](https://peps.python.org/pep-0661/), introducing sentinels in the standard library.

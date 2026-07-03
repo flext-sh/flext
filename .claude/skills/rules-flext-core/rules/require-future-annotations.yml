@@ -1,6 +1,0 @@
-id: require-future-annotations-core
-language: python
-rule:
-  pattern: from __future__ import annotations
-message: "Future annotations import found (tracking)"
-severity: warning

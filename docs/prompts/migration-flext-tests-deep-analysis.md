@@ -1,59 +1,5 @@
 # Prompt: Migração Profunda de flext_tests - Análise e Correção Completa
 
-
-<!-- TOC START -->
-- [Objetivo](#objetivo)
-- [Escopo](#escopo)
-  - [Projetos a Analisar](#projetos-a-analisar)
-  - [Diretórios a Verificar](#diretrios-a-verificar)
-  - [Arquivos a Verificar](#arquivos-a-verificar)
-- [Métodos Deprecados e Migrações Obrigatórias](#mtodos-deprecados-e-migraes-obrigatrias)
-  - [1. tm (FlextTestsMatchers) - Métodos Deprecados](#1-tm-flexttestsmatchers-mtodos-deprecados)
-  - [2. tt (FlextTestsFactories) - Métodos Deprecados](#2-tt-flexttestsfactories-mtodos-deprecados)
-  - [3. tf (FlextTestsFiles) - Métodos Deprecados](#3-tf-flexttestsfiles-mtodos-deprecados)
-  - [4. tv (FlextTestsValidator) - Verificar Uso Correto](#4-tv-flexttestsvalidator-verificar-uso-correto)
-  - [5. tb (FlextTestsBuilders) - Verificar Uso Correto](#5-tb-flexttestsbuilders-verificar-uso-correto)
-- [Padrões a Identificar e Corrigir](#padres-a-identificar-e-corrigir)
-  - [1. Imports Incorretos](#1-imports-incorretos)
-  - [2. Uso de Métodos Privados ou Internos](#2-uso-de-mtodos-privados-ou-internos)
-  - [3. Uso de Classes Aninhadas Deprecadas](#3-uso-de-classes-aninhadas-deprecadas)
-  - [4. Parâmetros Legacy/Deprecados](#4-parmetros-legacydeprecados)
-  - [5. Uso de Métodos Não Documentados](#5-uso-de-mtodos-no-documentados)
-- [Processo de Análise e Correção](#processo-de-anlise-e-correo)
-  - [Fase 1: Identificação Completa](#fase-1-identificao-completa)
-  - [Fase 2: Análise Contextual](#fase-2-anlise-contextual)
-  - [Fase 3: Correção Sistemática](#fase-3-correo-sistemtica)
-  - [Fase 4: Validação](#fase-4-validao)
-- [Checklist de Verificação](#checklist-de-verificao)
-  - [Para cada projeto](#para-cada-projeto)
-- [Exceções e Casos Especiais](#excees-e-casos-especiais)
-  - [1. Testes de Deprecation Warnings](#1-testes-de-deprecation-warnings)
-  - [2. Código de Compatibilidade](#2-cdigo-de-compatibilidade)
-  - [3. Métodos Internos Legítimos](#3-mtodos-internos-legtimos)
-- [Documentação de Progresso](#documentao-de-progresso)
-- [Resultado Esperado](#resultado-esperado)
-- [Comandos Úteis](#comandos-teis)
-  - [Buscar usos deprecados em um projeto](#buscar-usos-deprecados-em-um-projeto)
-  - [Executar testes de um projeto](#executar-testes-de-um-projeto)
-  - [Verificar warnings](#verificar-warnings)
-- [Estrutura e Organização de Testes](#estrutura-e-organizao-de-testes)
-  - [Regras Fundamentais de Estrutura](#regras-fundamentais-de-estrutura)
-- [Checklist de Estrutura e Organização](#checklist-de-estrutura-e-organizao)
-  - [Para cada projeto](#para-cada-projeto)
-- [Processo de Reorganização](#processo-de-reorganizao)
-  - [Fase 1: Identificação e Análise](#fase-1-identificao-e-anlise)
-  - [Fase 2: Consolidação](#fase-2-consolidao)
-  - [Fase 3: Reorganização de Testes](#fase-3-reorganizao-de-testes)
-  - [Fase 4: Automação](#fase-4-automao)
-  - [Fase 5: Limpeza](#fase-5-limpeza)
-- [Comandos Úteis de Reorganização](#comandos-teis-de-reorganizao)
-  - [Buscar estrutura atual](#buscar-estrutura-atual)
-  - [Reorganizar testes](#reorganizar-testes)
-  - [Verificar marcações](#verificar-marcaes)
-  - [Verificar nomenclatura](#verificar-nomenclatura)
-- [Notas Finais](#notas-finais)
-<!-- TOC END -->
-
 ## Objetivo
 
 Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os projetos** do ecossistema FLEXT para identificar e corrigir **TODOS os usos de funções de `flext_tests` que estão fora do padrão atual e não suportadas**.
@@ -81,7 +27,7 @@ Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os p
 
 ## Métodos Deprecados e Migrações Obrigatórias
 
-### 1. tm (FlextTestsMatchers) - Métodos Deprecados
+### 1. tm (TestsFlextMatchers) - Métodos Deprecados
 
 #### ❌ DEPRECADOS → ✅ MIGRAR PARA
 
@@ -133,14 +79,14 @@ tm.list_(items, contains="item", length=3)
 tm.that(items, has="item", length=3)
 ```
 
-### 2. tt (FlextTestsFactories) - Métodos Deprecados
+### 2. tt (TestsFlextFactories) - Métodos Deprecados
 
 #### ❌ DEPRECADOS → ✅ MIGRAR PARA
 
 | Método Deprecado                | Método Público Atual            | Exemplo de Migração                                                 |
 | ------------------------------- | ------------------------------- | ------------------------------------------------------------------- |
 | `tt.create_user(...)`           | `tt.model("user", ...)`         | `tt.create_user(name="John")` → `tt.model("user", name="John")`     |
-| `tt.create_config(...)`         | `tt.model("config", ...)`       | `tt.create_config(debug=True)` → `tt.model("config", debug=True)`   |
+| `tt.create_config(...)`         | `tt.model("settings", ...)`     | `tt.create_config(debug=True)` → `tt.model("settings", debug=True)` |
 | `tt.create_service(...)`        | `tt.model("service", ...)`      | `tt.create_service(type="api")` → `tt.model("service", type="api")` |
 | `tt.batch_users(count)`         | `tt.batch("user", count=count)` | `tt.batch_users(5)` → `tt.batch("user", count=5)`                   |
 | `tt.create_test_operation(...)` | `tt.op(kind, ...)`              | `tt.create_test_operation("simple")` → `tt.op("simple")`            |
@@ -148,27 +94,27 @@ tm.that(items, has="item", length=3)
 
 #### Classes Aninhadas Deprecadas (tb.\*)
 
-| Classe/Método Deprecado             | Método Público Atual            | Exemplo de Migração                                                    |
-| ----------------------------------- | ------------------------------- | ---------------------------------------------------------------------- |
-| `tb.Tests.Result.ok(value)`         | `tt.res("ok", value=value)`     | `tb.Tests.Result.ok("data")` → `tt.res("ok", value="data")`            |
-| `tb.Tests.Result.fail(error)`       | `tt.res("fail", error=error)`   | `tb.Tests.Result.fail("err")` → `tt.res("fail", error="err")`          |
-| `tb.Tests.Model.user(...)`          | `tt.model("user", ...)`         | `tb.Tests.Model.user(name="John")` → `tt.model("user", name="John")`   |
-| `tb.Tests.Model.config(...)`        | `tt.model("config", ...)`       | `tb.Tests.Model.config(debug=True)` → `tt.model("config", debug=True)` |
-| `tb.Tests.Model.batch_users(count)` | `tt.batch("user", count=count)` | `tb.Tests.Model.batch_users(5)` → `tt.batch("user", count=5)`          |
+| Classe/Método Deprecado             | Método Público Atual            | Exemplo de Migração                                                        |
+| ----------------------------------- | ------------------------------- | -------------------------------------------------------------------------- |
+| `tb.Tests.Result.ok(value)`         | `tt.res("ok", value=value)`     | `tb.Tests.Result.ok("data")` → `tt.res("ok", value="data")`                |
+| `tb.Tests.Result.fail(error)`       | `tt.res("fail", error=error)`   | `tb.Tests.Result.fail("err")` → `tt.res("fail", error="err")`              |
+| `tb.Tests.Model.user(...)`          | `tt.model("user", ...)`         | `tb.Tests.Model.user(name="John")` → `tt.model("user", name="John")`       |
+| `tb.Tests.Model.settings(...)`      | `tt.model("settings", ...)`     | `tb.Tests.Model.settings(debug=True)` → `tt.model("settings", debug=True)` |
+| `tb.Tests.Model.batch_users(count)` | `tt.batch("user", count=count)` | `tb.Tests.Model.batch_users(5)` → `tt.batch("user", count=5)`              |
 
-### 3. tf (FlextTestsFiles) - Métodos Deprecados
+### 3. tf (TestsFlextFiles) - Métodos Deprecados
 
 #### ❌ DEPRECADOS → ✅ MIGRAR PARA
 
-| Método Deprecado             | Método Público Atual                | Exemplo de Migração                                                             |
-| ---------------------------- | ----------------------------------- | ------------------------------------------------------------------------------- |
-| `tf.create_file_set(files)`  | `tf.files(files)` (context manager) | Ver exemplo abaixo                                                              |
-| `tf.get_file_info(path)`     | `tf.info(path)`                     | `tf.get_file_info(p)` → `tf.info(p).unwrap()`                                   |
-| `tf.create_text_file(...)`   | `tf.create(content, name)`          | `tf.create_text_file("text", "file.txt")` → `tf.create("text", "file.txt")`     |
-| `tf.create_binary_file(...)` | `tf.create(content, name)`          | `tf.create_binary_file(b"data", "file.bin")` → `tf.create(b"data", "file.bin")` |
-| `tf.create_empty_file(name)` | `tf.create("", name)`               | `tf.create_empty_file("empty.txt")` → `tf.create("", "empty.txt")`              |
-| `tf.create_config_file(...)` | `tf.create(content, name)`          | `tf.create_config_file("{}", "config.json")` → `tf.create("{}", "config.json")` |
-| `tf.temporary_files(files)`  | `tf.files(files)` (context manager) | Ver exemplo abaixo                                                              |
+| Método Deprecado             | Método Público Atual                | Exemplo de Migração                                                                 |
+| ---------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------- |
+| `tf.create_file_set(files)`  | `tf.files(files)` (context manager) | Ver exemplo abaixo                                                                  |
+| `tf.get_file_info(path)`     | `tf.info(path)`                     | `tf.get_file_info(p)` → `tf.info(p).unwrap()`                                       |
+| `tf.create_text_file(...)`   | `tf.create(content, name)`          | `tf.create_text_file("text", "file.txt")` → `tf.create("text", "file.txt")`         |
+| `tf.create_binary_file(...)` | `tf.create(content, name)`          | `tf.create_binary_file(b"data", "file.bin")` → `tf.create(b"data", "file.bin")`     |
+| `tf.create_empty_file(name)` | `tf.create("", name)`               | `tf.create_empty_file("empty.txt")` → `tf.create("", "empty.txt")`                  |
+| `tf.create_config_file(...)` | `tf.create(content, name)`          | `tf.create_config_file("{}", "settings.json")` → `tf.create("{}", "settings.json")` |
+| `tf.temporary_files(files)`  | `tf.files(files)` (context manager) | Ver exemplo abaixo                                                                  |
 
 #### Exemplos Detalhados de Migração
 
@@ -196,7 +142,7 @@ tm.ok(info_result)
 info = info_result.unwrap()
 ```
 
-### 4. tv (FlextTestsValidator) - Verificar Uso Correto
+### 4. tv (TestsFlextValidator) - Verificar Uso Correto
 
 - ✅ `tv.imports()` - Verificar se está sendo usado corretamente
 - ✅ `tv.types()` - Verificar se está sendo usado corretamente
@@ -206,11 +152,11 @@ info = info_result.unwrap()
 - ✅ `tv.layer()` - Verificar se está sendo usado corretamente
 - ✅ `tv.all()` - Verificar se está sendo usado corretamente
 
-### 5. tb (FlextTestsBuilders) - Verificar Uso Correto
+### 5. tb (TestsFlextBuilders) - Verificar Uso Correto
 
 - ✅ `tb()` - Instância do builder (correto)
 - ✅ `tb.with_users(count)` - Verificar se está sendo usado corretamente
-- ✅ `tb.with_configs(...)` - Verificar se está sendo usado corretamente
+- ✅ `tb.u.with_configs(...)` - Verificar se está sendo usado corretamente
 - ✅ `tb.build()` - Verificar se está sendo usado corretamente
 - ❌ `tb.Tests.*` - Classes aninhadas deprecadas (migrar para `tt.*`)
 
@@ -220,8 +166,9 @@ info = info_result.unwrap()
 
 ```python
 # ❌ ERRADO
-from flext_tests import FlextTestsMatchers
-tm = FlextTestsMatchers()
+from flext_tests import TestsFlextMatchers
+
+tm = TestsFlextMatchers()
 
 # ✅ CORRETO
 from flext_tests import tm
@@ -319,10 +266,10 @@ Qualquer método que não esteja na documentação pública deve ser investigado
 3. **Buscar imports incorretos:**
 
    ```bash
-   - from flext_tests import FlextTestsMatchers
-   - from flext_tests import FlextTestsFactories
-   - from flext_tests import FlextTestsFiles
-   - from flext_tests import FlextTestsBuilders
+   - from flext_tests import TestsFlextMatchers
+   - from flext_tests import TestsFlextFactories
+   - from flext_tests import TestsFlextFiles
+   - from flext_tests import TestsFlextBuilders
    ```
 
 4. **Buscar usos de métodos privados:**
@@ -515,6 +462,7 @@ Todos os testes devem ser marcados explicitamente:
 def test_user_creation():
     pass
 
+
 # ✅ CORRETO - Integration test
 @pytest.mark.integration
 def test_database_connection():
@@ -548,10 +496,12 @@ def test_database_connection():
 
    ```python
    # ~/flext/constants.py
-   from flext_tests.constants import FlextTestsConstants
+   from flext_tests import FlextTestsConstants
+
 
    class FlextConstants(FlextTestsConstants):
        """Constants base que estende flext_tests."""
+
        pass
    ```
 
@@ -560,7 +510,7 @@ def test_database_connection():
    ```python
    # Em cada projeto, criar namespaces fáceis:
    from flext.constants import c
-   from flext.models import FlextModels as m
+   from flext.models import m
    from flext.typings import t
    from flext.protocols import p
    from flext.utilities import u
@@ -576,23 +526,27 @@ def test_database_connection():
 
 ```python
 # ~/flext/models.py
-from flext_tests.models import FlextTestsModels
+from flext_tests import TestsFlextModels
 
-class FlextModels(FlextTestsModels):
+
+class FlextModels(TestsFlextModels):
     """Models base que estende flext_tests."""
 
     class TestsLdap:
         """Domínio de testes para flext-ldap."""
+
         class User:
             pass
 
     class TestsCli:
         """Domínio de testes para flext-cli."""
+
         class Command:
             pass
 
     class TestsCore:
         """Domínio de testes para flext-core."""
+
         class Service:
             pass
 ```
@@ -678,16 +632,21 @@ find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
 # tests/unit/test_user.py
 class TestsLdapUser:
     """Testes de unidade para User do flext-ldap."""
+
     pass
+
 
 # tests/unit/services/test_entry.py
 class TestsLdapServicesEntry:
     """Testes de unidade para Entry service do flext-ldap."""
+
     pass
+
 
 # tests/integration/test_sync.py
 class TestsLdapSync:
     """Testes de integração para Sync do flext-ldap."""
+
     pass
 ```
 
@@ -724,7 +683,7 @@ class TestsLdapSync:
    ```
    tests/unit/
    ├── test_user.py              # TestsLdapUser
-   ├── test_config.py            # TestsLdapConfig
+   ├── test_config.py            # TestsLdapSettings
    ├── services/
    │   └── test_entry.py         # TestsLdapServicesEntry
    └── adapters/
@@ -746,9 +705,11 @@ class TestsLdapSync:
 
 ```python
 # tests/fixtures/users.py
-def generate_user_data(count: int = 1) -> list[dict]:
+def generate_user_data(count: int = 1) -> t.SequenceOf[dict]:
     """Gera dados de usuário para testes."""
-    return [{"name": f"User {i}", "email": f"user{i}@example.com"} for i in range(count)]
+    return [
+        {"name": f"User {i}", "email": f"user{i}@example.com"} for i in range(count)
+    ]
 ```
 
 #### 8. Conftest Centralizado
@@ -759,7 +720,7 @@ def generate_user_data(count: int = 1) -> list[dict]:
 
 - ✅ Todas as inicializações globais
 - ✅ Fixtures compartilhadas
-- ✅ Configurações de conexões
+- ✅ Settingsurações de conexões
 - ✅ Containers de dependências
 - ✅ Classes base avançadas de pytest
 - ✅ Automação máxima para mínimo de código
@@ -771,11 +732,13 @@ def generate_user_data(count: int = 1) -> list[dict]:
 import pytest
 from flext_tests import tm, tt, tf, tv, tb
 
+
 @pytest.fixture(scope="session")
 def test_container():
     """Container de dependências para testes."""
     # Automação completa
     pass
+
 
 @pytest.fixture(autouse=True)
 def setup_test_environment():
@@ -911,7 +874,7 @@ def setup_test_environment():
 1. **Criar conftest centralizado:**
    - Consolidar todos os conftest.py em `~/flext/conftest.py`
    - Criar fixtures automáticas
-   - Configurar containers e conexões
+   - Settingsurar containers e conexões
 
 2. **Implementar classes base:**
    - Criar classes base avançadas de pytest

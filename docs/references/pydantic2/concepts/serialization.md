@@ -1,22 +1,3 @@
-<!-- TOC START -->
-- [Serializing data](#serializing-data)
-  - [Python mode](#python-mode)
-  - [JSON mode](#json-mode)
-- [Iterating over models](#iterating-over-models)
-- [Pickling support](#pickling-support)
-- [Serializers](#serializers)
-  - [Field serializers](#field-serializers)
-  - [Model serializers](#model-serializers)
-- [Serialization info](#serialization-info)
-  - [Serialization context](#serialization-context)
-- [Serializing subclasses](#serializing-subclasses)
-  - [Subclasses of supported types](#subclasses-of-supported-types)
-  - [Subclasses of model-like types](#subclasses-of-model-like-types)
-  - [Serializing with duck typing 🦆](#serializing-with-duck-typing)
-- [Field inclusion and exclusion](#field-inclusion-and-exclusion)
-  - [At the field level](#at-the-field-level)
-  - [As parameters to the serialization methods](#as-parameters-to-the-serialization-methods)
-<!-- TOC END -->
 
 Beyond accessing model attributes directly via their field names (e.g. `model.foobar`), models can be converted, dumped,
 serialized, and exported in a number of ways. Serialization can be customized for the whole model, or on a per-field
@@ -40,7 +21,7 @@ Want to quickly jump to the relevant serializer section?
 
     <div class="grid cards" markdown>
 
-    *   Field serializer
+    *   u.Field serializer
 
         ---
 
@@ -69,7 +50,7 @@ can be emulated).
 
 ### Python mode
 
-When using the Python mode, Pydantic models (and model-like types such as [dataclasses][]) (1) will be (recursively) converted to dictionaries. This is achievable by using the [`model_dump()`][pydantic.BaseModel.model_dump] method:
+When using the Python mode, Pydantic models (and model-like types such as dataclasses) (1) will be (recursively) converted to dictionaries. This is achievable by using the [`model_dump()`][pydantic.BaseModel.model_dump] method:
 { .annotate }
 
 1. With the exception of [root models](./models.md#rootmodel-and-custom-root-types), where the root value is dumped directly.
@@ -77,7 +58,7 @@ When using the Python mode, Pydantic models (and model-like types such as [datac
 ```python {group="python-dump"}
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class BarModel(BaseModel):
@@ -86,26 +67,26 @@ class BarModel(BaseModel):
 
 class FooBarModel(BaseModel):
     banana: Optional[float] = 1.1
-    foo: str = Field(serialization_alias='foo_alias')
+    foo: str = u.Field(serialization_alias="foo_alias")
     bar: BarModel
 
 
-m = FooBarModel(banana=3.14, foo='hello', bar={'whatever': (1, 2)})
+m = FooBarModel(banana=3.14, foo="hello", bar={"whatever": (1, 2)})
 
 # returns a dictionary:
 print(m.model_dump())
-#> {'banana': 3.14, 'foo': 'hello', 'bar': {'whatever': (1, 2)}}
+# > {'banana': 3.14, 'foo': 'hello', 'bar': {'whatever': (1, 2)}}
 
 print(m.model_dump(by_alias=True))
-#> {'banana': 3.14, 'foo_alias': 'hello', 'bar': {'whatever': (1, 2)}}
+# > {'banana': 3.14, 'foo_alias': 'hello', 'bar': {'whatever': (1, 2)}}
 ```
 
 Notice that the value of `whatever` was dumped as tuple, which isn't a known JSON type. The `mode` argument can be set to `'json'`
 to ensure JSON-compatible types are used:
 
 ```python {group="python-dump"}
-print(m.model_dump(mode='json'))
-#> {'banana': 3.14, 'foo': 'hello', 'bar': {'whatever': [1, 2]}}
+print(m.model_dump(mode="json"))
+# > {'banana': 3.14, 'foo': 'hello', 'bar': {'whatever': [1, 2]}}
 ```
 
 !!! info "See also"
@@ -136,7 +117,7 @@ class FooBarModel(BaseModel):
     bar: BarModel
 
 
-m = FooBarModel(foo=datetime(2032, 6, 1, 12, 13, 14), bar={'whatever': (1, 2)})
+m = FooBarModel(foo=datetime(2032, 6, 1, 12, 13, 14), bar={"whatever": (1, 2)})
 
 print(m.model_dump_json(indent=2))
 """
@@ -152,8 +133,8 @@ print(m.model_dump_json(indent=2))
 """
 ```
 
-In addition to the [supported types][JSON.JSONEncoder] by the standard library [`json`][] module, Pydantic supports a wide
-variety of types ([date and time types][datetime], [`UUID`][uuid.UUID] objects, [sets][set], etc). If an unsupported type
+In addition to the supported types by the standard library [`json`][] module, Pydantic supports a wide
+variety of types (date and time types, [`UUID`][uuid.UUID] objects, sets, etc). If an unsupported type
 is used and can't be serialized to JSON, a [`PydanticSerializationError`][pydantic_core.PydanticSerializationError] exception
 is raised.
 
@@ -184,20 +165,20 @@ class FooBarModel(BaseModel):
     bar: BarModel
 
 
-m = FooBarModel(banana=3.14, foo='hello', bar={'whatever': 123})
+m = FooBarModel(banana=3.14, foo="hello", bar={"whatever": 123})
 
 for name, value in m:
-    print(f'{name}: {value}')
-    #> banana: 3.14
-    #> foo: hello
-    #> bar: whatever=123
+    print(f"{name}: {value}")
+    # > banana: 3.14
+    # > foo: hello
+    # > bar: whatever=123
 ```
 
 This means that calling [`dict()`][dict] on a model can be used to construct a dictionary of the model:
 
 ```python {group="iterating-model"}
 print(dict(m))
-#> {'banana': 3.14, 'foo': 'hello', 'bar': BarModel(whatever=123)}
+# > {'banana': 3.14, 'foo': 'hello', 'bar': BarModel(whatever=123)}
 ```
 
 !!! note
@@ -225,15 +206,15 @@ class FooBarModel(BaseModel):
     b: int
 
 
-m = FooBarModel(a='hello', b=123)
+m = FooBarModel(a="hello", b=123)
 print(m)
-#> a='hello' b=123
+# > a='hello' b=123
 data = pickle.dumps(m)
 print(data[:20])
-#> b'\x80\x04\x95\x95\x00\x00\x00\x00\x00\x00\x00\x8c\x08__main_'
+# > b'\x80\x04\x95\x95\x00\x00\x00\x00\x00\x00\x00\x8c\x08__main_'
 m2 = pickle.loads(data)
 print(m2)
-#> a='hello' b=123
+# > a='hello' b=123
 ```
 
 <!-- old anchor added for backwards compatibility -->
@@ -250,12 +231,12 @@ control the serialization behavior.
 Only _one_ serializer can be defined per field/model. It is not possible to combine multiple serializers together
 (including _plain_ and _wrap_ serializers).
 
-### Field serializers
+### u.Field serializers
 
 ??? api "API Documentation"
 [`pydantic.functional_serializers.PlainSerializer`][pydantic.functional_serializers.PlainSerializer]<br>
 [`pydantic.functional_serializers.WrapSerializer`][pydantic.functional_serializers.WrapSerializer]<br>
-[`pydantic.functional_serializers.field_serializer`][pydantic.functional_serializers.field_serializer]<br>
+[`pydantic.functional_serializers.u.field_serializer`][pydantic.functional_serializers.u.field_serializer]<br>
 
 In its simplest form, a field serializer is a callable taking the value to be serialized as an argument and
 **returning the serialized value**.
@@ -265,7 +246,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
 
 **Two** different types of serializers can be used. They can all be defined using the
 [annotated pattern](./fields.md#the-annotated-pattern) or using the
-[`@field_serializer`][pydantic.field_serializer] decorator, applied on instance or [static methods][staticmethod].
+[`@u.field_serializer`][pydantic.u.field_serializer] decorator, applied on instance or static methods.
 
 - **_Plain_ serializers**: are called unconditionally to serialize a field. The serialization logic for types supported
   by Pydantic will _not_ be called. Using such serializers is also useful to specify the logic for arbitrary types.
@@ -279,7 +260,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
         from pydantic import BaseModel, PlainSerializer
 
 
-        def ser_number(value: Any) -> Any:
+        def ser_number(value):
             if isinstance(value, int):
                 return value * 2
             else:
@@ -291,11 +272,11 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
 
 
         print(Model(number=4).model_dump())
-        #> {'number': 8}
+        # > {'number': 8}
         m = Model(number=1)
-        m.number = 'invalid'
+        m.number = "invalid"
         print(m.model_dump())  # (1)!
-        #> {'number': 'invalid'}
+        # > {'number': 'invalid'}
         ```
 
         1. Pydantic will *not* validate that the serialized value complies with the `int` type.
@@ -305,14 +286,14 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
         ```python
         from typing import Any
 
-        from pydantic import BaseModel, field_serializer
+        from pydantic import BaseModel, u.field_serializer
 
 
         class Model(BaseModel):
             number: int
 
-            @field_serializer('number', mode='plain')  # (1)!
-            def ser_number(self, value: Any) -> Any:
+            @u.field_serializer("number", mode="plain")  # (1)!
+            def ser_number(self, value):
                 if isinstance(value, int):
                     return value * 2
                 else:
@@ -320,11 +301,11 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
 
 
         print(Model(number=4).model_dump())
-        #> {'number': 8}
+        # > {'number': 8}
         m = Model(number=1)
-        m.number = 'invalid'
+        m.number = "invalid"
         print(m.model_dump())  # (2)!
-        #> {'number': 'invalid'}
+        # > {'number': 'invalid'}
         ```
 
         1. `'plain'` is the default mode for the decorator, and can be omitted.
@@ -346,7 +327,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
         from pydantic import BaseModel, SerializerFunctionWrapHandler, WrapSerializer
 
 
-        def ser_number(value: Any, handler: SerializerFunctionWrapHandler) -> int:
+        def ser_number(value, handler: SerializerFunctionWrapHandler) -> int:
             return handler(value) + 1
 
 
@@ -355,7 +336,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
 
 
         print(Model(number=4).model_dump())
-        #> {'number': 5}
+        # > {'number': 5}
         ```
 
   === "Decorator"
@@ -363,21 +344,19 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
         ```python
         from typing import Any
 
-        from pydantic import BaseModel, SerializerFunctionWrapHandler, field_serializer
+        from pydantic import BaseModel, SerializerFunctionWrapHandler, u.field_serializer
 
 
         class Model(BaseModel):
             number: int
 
-            @field_serializer('number', mode='wrap')
-            def ser_number(
-                self, value: Any, handler: SerializerFunctionWrapHandler
-            ) -> int:
+            @u.field_serializer("number", mode="wrap")
+            def ser_number(self, value, handler: SerializerFunctionWrapHandler) -> int:
                 return handler(value) + 1
 
 
         print(Model(number=4).model_dump())
-        #> {'number': 5}
+        # > {'number': 5}
         ```
 
 <!-- Note: keep this section updated with [the validator one](./validators.md#which-validator-pattern-to-use) -->
@@ -394,7 +373,7 @@ serializers reusable:
 ```python
 from typing import Annotated
 
-from pydantic import BaseModel, Field, PlainSerializer
+from pydantic import BaseModel, u.Field, PlainSerializer
 
 DoubleNumber = Annotated[int, PlainSerializer(lambda v: v * 2)]
 
@@ -404,11 +383,11 @@ class Model1(BaseModel):
 
 
 class Model2(BaseModel):
-    other_number: Annotated[DoubleNumber, Field(description='My other number')]
+    other_number: Annotated[DoubleNumber, u.Field(description="My other number")]
 
 
 class Model3(BaseModel):
-    list_of_even_numbers: list[DoubleNumber]  # (1)!
+    list_of_even_numbers: t.SequenceOf[DoubleNumber]  # (1)!
 ```
 
 1. As mentioned in the [annotated pattern](./fields.md#the-annotated-pattern) documentation,
@@ -419,18 +398,18 @@ It is also easier to understand which serializers are applied to a type, by just
 
 ##### Using the decorator pattern
 
-One of the key benefits of using the [`@field_serializer`][pydantic.field_serializer] decorator is to apply
+One of the key benefits of using the [`@u.field_serializer`][pydantic.u.field_serializer] decorator is to apply
 the function to multiple fields:
 
 ```python
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel, u.field_serializer
 
 
 class Model(BaseModel):
     f1: str
     f2: str
 
-    @field_serializer('f1', 'f2', mode='plain')
+    @u.field_serializer("f1", "f2", mode="plain")
     def capitalize(self, value: str) -> str:
         return value.capitalize()
 ```
@@ -447,12 +426,12 @@ Here are a couple additional notes about the decorator usage:
 ### Model serializers
 
 ??? api "API Documentation"
-[`pydantic.functional_serializers.model_serializer`][pydantic.functional_serializers.model_serializer]<br>
+[`pydantic.functional_serializers.u.model_serializer`][pydantic.functional_serializers.u.model_serializer]<br>
 
-Serialization can also be customized on the entire model using the [`@model_serializer`][pydantic.model_serializer]
+Serialization can also be customized on the entire model using the [`@u.model_serializer`][pydantic.u.model_serializer]
 decorator.
 
-If the `return_type` argument is provided to the [`@model_serializer`][pydantic.model_serializer] decorator
+If the `return_type` argument is provided to the [`@u.model_serializer`][pydantic.u.model_serializer] decorator
 (or if a return type annotation is available on the serializer function), it will be used to build an extra serializer,
 to ensure that the serialized model value complies with this return type.
 
@@ -462,20 +441,20 @@ As with [field serializers](#field-serializers), **two** different types of mode
   {#model-plain-serializer}
 
   ```python
-  from pydantic import BaseModel, model_serializer
+  from pydantic import BaseModel, u.model_serializer
 
 
   class UserModel(BaseModel):
       username: str
       password: str
 
-      @model_serializer(mode='plain')  # (1)!
+      @u.model_serializer(mode="plain")  # (1)!
       def serialize_model(self) -> str:  # (2)!
-          return f'{self.username} - {self.password}'
+          return f"{self.username} - {self.password}"
 
 
-  print(UserModel(username='foo', password='bar').model_dump())
-  #> foo - bar
+  print(UserModel(username="foo", password="bar").model_dump())
+  # > foo - bar
   ```
 
       1. `'plain'` is the default mode for the decorator, and can be omitted.
@@ -490,24 +469,24 @@ As with [field serializers](#field-serializers), **two** different types of mode
   handler at all.
 
       ```python
-      from pydantic import BaseModel, SerializerFunctionWrapHandler, model_serializer
+      from pydantic import BaseModel, SerializerFunctionWrapHandler, u.model_serializer
 
 
       class UserModel(BaseModel):
           username: str
           password: str
 
-          @model_serializer(mode='wrap')
+          @u.model_serializer(mode="wrap")
           def serialize_model(
               self, handler: SerializerFunctionWrapHandler
-          ) -> dict[str, object]:
+          ) -> t.JsonMapping:
               serialized = handler(self)
-              serialized['fields'] = list(serialized)
+              serialized["fields"] = list(serialized)
               return serialized
 
 
-      print(UserModel(username='foo', password='bar').model_dump())
-      #> {'username': 'foo', 'password': 'bar', 'fields': ['username', 'password']}
+      print(UserModel(username="foo", password="bar").model_dump())
+      # > {'username': 'foo', 'password': 'bar', 'fields': ['username', 'password']}
       ```
 
 ## Serialization info
@@ -520,34 +499,34 @@ providing useful extra information, such as:
 - the various parameters set during serialization using the [serialization methods](#serializing-data)
   (e.g. [`exclude_unset`][pydantic.SerializationInfo.exclude_unset], [`serialize_as_any`][pydantic.SerializationInfo.serialize_as_any])
 - the current field name, if using a [field serializer](#field-serializers) (see the
-  [`field_name`][pydantic.FieldSerializationInfo.field_name] property).
+  [`field_name`][pydantic.u.FieldSerializationInfo.field_name] property).
 
 ### Serialization context
 
-You can pass a context object to the [serialization methods](#serializing-data), which can be accessed
+You can pass a context t.JsonValue to the [serialization methods](#serializing-data), which can be accessed
 inside the serializer functions using the [`context`][pydantic.SerializationInfo.context] property:
 
 ```python
-from pydantic import BaseModel, FieldSerializationInfo, field_serializer
+from pydantic import BaseModel, u.FieldSerializationInfo, u.field_serializer
 
 
 class Model(BaseModel):
     text: str
 
-    @field_serializer('text', mode='plain')
+    @u.field_serializer("text", mode="plain")
     @classmethod
-    def remove_stopwords(cls, v: str, info: FieldSerializationInfo) -> str:
+    def remove_stopwords(cls, v: str, info: u.FieldSerializationInfo) -> str:
         if isinstance(info.context, dict):
-            stopwords = info.context.get('stopwords', set())
-            v = ' '.join(w for w in v.split() if w.lower() not in stopwords)
+            stopwords = info.context.get("stopwords", set())
+            v = " ".join(w for w in v.split() if w.lower() not in stopwords)
         return v
 
 
-model = Model(text='This is an example document')
+model = Model(text="This is an example document")
 print(model.model_dump())  # no context
-#> {'text': 'This is an example document'}
-print(model.model_dump(context={'stopwords': ['this', 'is', 'an']}))
-#> {'text': 'example document'}
+# > {'text': 'This is an example document'}
+print(model.model_dump(context={"stopwords": ["this", "is", "an"]}))
+# > {'text': 'example document'}
 ```
 
 Similarly, you can [use a context for validation](../concepts/validators.md#validation-context).
@@ -572,7 +551,7 @@ from pydantic import BaseModel
 class MyDate(date):
     @property
     def my_date_format(self) -> str:
-        return self.strftime('%d/%m/%Y')
+        return self.strftime("%d/%m/%Y")
 
 
 class FooModel(BaseModel):
@@ -581,7 +560,7 @@ class FooModel(BaseModel):
 
 m = FooModel(date=MyDate(2023, 1, 1))
 print(m.model_dump_json())
-#> {"date":"2023-01-01"}
+# > {"date":"2023-01-01"}
 ```
 
 <!-- old anchor added for backwards compatibility -->
@@ -611,13 +590,13 @@ class OuterModel(BaseModel):
     user: User
 
 
-user = UserLogin(name='pydantic', password='hunter2')
+user = UserLogin(name="pydantic", password="hunter2")
 
 m = OuterModel(user=user)
 print(m)
-#> user=UserLogin(name='pydantic', password='hunter2')
+# > user=UserLogin(name='pydantic', password='hunter2')
 print(m.model_dump())  # (1)!
-#> {'user': {'name': 'pydantic'}}
+# > {'user': {'name': 'pydantic'}}
 ```
 
 1. Note: the password field is not included
@@ -626,7 +605,7 @@ print(m.model_dump())  # (1)!
 This behavior is different from how things worked in Pydantic V1, where we would always include
 all (subclass) fields when recursively serializing models to dictionaries. The motivation behind this change
 in behavior is that it helps ensure that you know precisely which fields could be included when serializing,
-even if subclasses get passed when instantiating the object. In particular, this can help prevent surprises
+even if subclasses get passed when instantiating the t.JsonValue. In particular, this can help prevent surprises
 when adding sensitive information like secrets as fields of subclasses. To enable the old V1 behavior, refer
 to the next section.
 
@@ -645,7 +624,7 @@ parent class, but rather use the value itself and preserve all of its fields.
 
 This behavior can be configured at the field level and at runtime, for a specific serialization call:
 
-- Field level: use the [`SerializeAsAny`][pydantic.functional_serializers.SerializeAsAny] annotation.
+- u.Field level: use the [`SerializeAsAny`][pydantic.functional_serializers.SerializeAsAny] annotation.
 - Runtime level: use the `serialize_as_any` argument when calling the [serialization methods](#serializing-data).
 
 We discuss these options below in more detail:
@@ -673,7 +652,7 @@ class OuterModel(BaseModel):
     as_user: User
 
 
-user = UserLogin(name='pydantic', password='password')
+user = UserLogin(name="pydantic", password="password")
 
 print(OuterModel(as_any=user, as_user=user).model_dump())
 """
@@ -712,7 +691,7 @@ class OuterModel(BaseModel):
     user2: User
 
 
-user = UserLogin(name='pydantic', password='password')
+user = UserLogin(name="pydantic", password="password")
 
 outer_model = OuterModel(user1=user, user2=user)
 print(outer_model.model_dump(serialize_as_any=True))  # (1)!
@@ -724,7 +703,7 @@ print(outer_model.model_dump(serialize_as_any=True))  # (1)!
 """
 
 print(outer_model.model_dump(serialize_as_any=False))  # (2)!
-#> {'user1': {'name': 'pydantic'}, 'user2': {'name': 'pydantic'}}
+# > {'user1': {'name': 'pydantic'}, 'user2': {'name': 'pydantic'}}
 ```
 
 1. With `serialize_as_any` set to `True`, the result matches that of V1.
@@ -743,11 +722,11 @@ is relevant. You may want to prefer using the `SerializeAsAny` annotation when r
 
 [](){#model-and-field-level-include-and-exclude}
 
-## Field inclusion and exclusion
+## u.Field inclusion and exclusion
 
 For serialization, field inclusion and exclusion can be configured in two ways:
 
-- at the field level, using the `exclude` and `exclude_if` parameters on [the `Field()` function](fields.md).
+- at the field level, using the `exclude` and `exclude_if` parameters on [the `u.Field()` function](fields.md).
 - using the various serialization parameters on the [serialization methods](#serializing-data).
 
 ### At the field level
@@ -755,17 +734,17 @@ For serialization, field inclusion and exclusion can be configured in two ways:
 At the field level, the `exclude` and `exclude_if` parameters can be used:
 
 ```python
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, u.Field
 
 
 class Transaction(BaseModel):
     id: int
-    private_id: int = Field(exclude=True)
-    value: int = Field(ge=0, exclude_if=lambda v: v == 0)
+    private_id: int = u.Field(exclude=True)
+    value: int = u.Field(ge=0, exclude_if=lambda v: v == 0)
 
 
 print(Transaction(id=1, private_id=2, value=0).model_dump())
-#> {'id': 1}
+# > {'id': 1}
 ```
 
 Exclusion at the field level takes priority over the `include` serialization parameter described below.
@@ -780,7 +759,7 @@ several parameters can be used to exclude or include fields.
 Consider the following models:
 
 ```python {group="simple-exclude-include"}
-from pydantic import BaseModel, Field, SecretStr
+from pydantic import BaseModel, u.Field, SecretStr
 
 
 class User(BaseModel):
@@ -791,15 +770,15 @@ class User(BaseModel):
 
 class Transaction(BaseModel):
     id: str
-    private_id: str = Field(exclude=True)
+    private_id: str = u.Field(exclude=True)
     user: User
     value: int
 
 
 t = Transaction(
-    id='1234567890',
-    private_id='123',
-    user=User(id=42, username='JohnDoe', password='hashedpassword'),
+    id="1234567890",
+    private_id="123",
+    user=User(id=42, username="JohnDoe", password="hashedpassword"),
     value=9876543210,
 )
 ```
@@ -809,16 +788,16 @@ using the `include` parameter.
 
 ```python {group="simple-exclude-include"}
 # using a set:
-print(t.model_dump(exclude={'user', 'value'}))
-#> {'id': '1234567890'}
+print(t.model_dump(exclude={"user", "value"}))
+# > {'id': '1234567890'}
 
 # using a dictionary:
-print(t.model_dump(exclude={'user': {'username', 'password'}, 'value': True}))
-#> {'id': '1234567890', 'user': {'id': 42}}
+print(t.model_dump(exclude={"user": {"username", "password"}, "value": True}))
+# > {'id': '1234567890', 'user': {'id': 42}}
 
 # same configuration using `include`:
-print(t.model_dump(include={'id': True, 'user': {'id'}}))
-#> {'id': '1234567890', 'user': {'id': 42}}
+print(t.model_dump(include={"id": True, "user": {"id"}}))
+# > {'id': '1234567890', 'user': {'id': 42}}
 ```
 
 Note that using `False` to _include_ a field in `exclude` (or to _exclude_ a field in `include`) is not supported.
@@ -835,17 +814,17 @@ class Hobby(BaseModel):
 
 
 class User(BaseModel):
-    hobbies: list[Hobby]
+    hobbies: t.SequenceOf[Hobby]
 
 
 user = User(
     hobbies=[
-        Hobby(name='Programming', info='Writing code and stuff'),
-        Hobby(name='Gaming', info='Hell Yeah!!!'),
+        Hobby(name="Programming", info="Writing code and stuff"),
+        Hobby(name="Gaming", info="Hell Yeah!!!"),
     ],
 )
 
-print(user.model_dump(exclude={'hobbies': {-1: {'info'}}}))  # (1)!
+print(user.model_dump(exclude={"hobbies": {-1: {"info"}}}))  # (1)!
 """
 {
     'hobbies': [
@@ -859,16 +838,14 @@ print(user.model_dump(exclude={'hobbies': {-1: {'info'}}}))  # (1)!
 1. The equivalent call with `include` would be:
 
    ```python {lint="skip" group="advanced-include-exclude"}
-   user.model_dump(
-      include={'hobbies': {0: True, -1: {'name'}}}
-   )
+   user.model_dump(include={"hobbies": {0: True, -1: {"name"}}})
    ```
 
 The special key `'__all__'` can be used to apply an exclusion/inclusion pattern to all members:
 
 ```python {group="advanced-include-exclude"}
-print(user.model_dump(exclude={'hobbies': {'__all__': {'info'}}}))
-#> {'hobbies': [{'name': 'Programming'}, {'name': 'Gaming'}]}
+print(user.model_dump(exclude={"hobbies": {"__all__": {"info"}}}))
+# > {'hobbies': [{'name': 'Programming'}, {'name': 'Gaming'}]}
 ```
 
 #### Excluding and including fields based on their value
@@ -892,12 +869,12 @@ using the following parameters:
       age: int = 18
 
 
-  user = UserModel(name='John')
+  user = UserModel(name="John")
   print(user.model_fields_set)
-  #> {'name'}
+  # > {'name'}
 
   print(user.model_dump(exclude_unset=True))
-  #> {'name': 'John'}
+  # > {'name': 'John'}
   ```
 
   Note that altering a field _after_ the instance has been created will remove it from the unset fields:
@@ -906,7 +883,7 @@ using the following parameters:
   user.age = 21
 
   print(user.model_dump(exclude_unset=True))
-  #> {'name': 'John', 'age': 21}
+  # > {'name': 'John', 'age': 21}
   ```
 
   !!! tip

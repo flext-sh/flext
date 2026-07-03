@@ -1,14 +1,19 @@
 # Security Guide
 
-
-<!-- TOC START -->
-- No sections found
-<!-- TOC END -->
-
 Security practices are governed by project-specific policies and central architecture ADRs.
 
 Primary references:
 
 - `docs/architecture/adr/README.md`
-- `.claude/skills/scripts-security/SKILL.md`
+- `.agents/skills/scripts-security/SKILL.md`
 - `flext-core/docs/architecture/clean-architecture.md`
+
+## Dependabot vulnerability governance
+
+- O inventário oficial de alertas de segurança está em:
+  - `docs/reports/dependabot-alerts-2026-06-24.md`
+- O plano atual cobre três frentes:
+  - inventariar alertas por gravidade e pacote,
+  - agrupar remediações em ondas (critical/high first),
+  - ampliar Dependabot para rastrear os módulos Python com `pyproject.toml` no monorepo.
+- A execução de segurança deve registrar evidência por ação (alerta, commit de correção e status de fechamento) no `bd`, sem "close" sem trilha.

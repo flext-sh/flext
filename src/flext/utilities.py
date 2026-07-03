@@ -1,0 +1,14 @@
+"""Auto-generated facade to enforce MRO namespace contracts."""
+
+from __future__ import annotations
+
+from flext_core import FlextUtilities
+
+
+class FlextRootUtilities(FlextUtilities):
+    """Flext utilities namespace."""
+
+
+u = FlextRootUtilities
+
+__all__: list[str] = ["FlextRootUtilities", "u"]
