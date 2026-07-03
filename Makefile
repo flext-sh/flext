@@ -505,7 +505,7 @@ _constraints: ## Rewrite dependency constraints from uv.lock (policy=floor). Use
 check: ## Quality gates (WHAT=all|scan|fmt|format|types|pyre|pol|cqrs|lint|pyrefly|mypy|pyright|markdown|silent-failure|loc-cap|boundary|coordination)
 	$(Q)$(FLEXT_MAKE_DISPATCH) check
 
-_check_default: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,type)
+_check_default: ## Run lint gates in all projects (CHECK_GATES=lint,format,pyrefly,mypy,pyright,security,markdown,smells,type)
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
 	$(Q)$(ORCHESTRATOR) --verb check \
 		$(if $(filter 1,$(FAIL_FAST)),--fail-fast) \

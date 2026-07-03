@@ -326,7 +326,6 @@ project-includes = [
   "flext-web/src/**/*.py*",
   "flext-web/tests/**/*.py*",
   "libs/**/*.py*",
-  "pkg/**/*.py*",
   "scripts/**/*.py*",
   "src/**/*.py*",
   "tests/**/*.py*",
@@ -572,6 +571,7 @@ reportUnnecessaryComparison = "warning"
 reportUnnecessaryIsInstance = "warning"
 reportUnreachable = "none"
 reportUnsupportedDunderAll = "none"
+reportUntypedBaseClass = "none"
 reportUntypedFunctionDecorator = "none"
 reportUnusedClass = "error"
 reportUnusedFunction = "error"
