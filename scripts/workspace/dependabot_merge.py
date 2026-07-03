@@ -198,7 +198,12 @@ def merge_pr(
         return True, False, False
 
     stderr = result.stderr.strip()
-    if "Required status check" in stderr or "checks" in stderr.lower():
+    if (
+        "Required status check" in stderr
+        or "checks" in stderr.lower()
+        or "add the `--auto` flag" in stderr
+        or "--auto" in stderr
+    ):
         auto_cmd = [*base_cmd, "--auto"]
         auto_result = run(auto_cmd, check=False)
         if auto_result.returncode == 0:
