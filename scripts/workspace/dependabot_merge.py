@@ -9,8 +9,8 @@ Examples:
     chore(deps): bump msgpack 1.1.2 → 1.2.1 [pip]
 
 Usage:
-    python scripts/workspace/dependabot_merge.py --base 0.12.0-dev
-    DRY_RUN=1 python scripts/workspace/dependabot_merge.py --base 0.12.0-dev
+    python scripts/workspace/dependabot_merge.py --base main
+    DRY_RUN=1 python scripts/workspace/dependabot_merge.py --base main
 
 """
 
@@ -22,6 +22,7 @@ import json
 import re
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 DEPENDABOT_AUTHOR = "dependabot[bot]"
@@ -29,6 +30,7 @@ DEPENDABOT_TITLE_RE = re.compile(
     r"bump\s+(?P<package>.+?)\s+from\s+(?P<old>\S+)\s+to\s+(?P<new>\S+)\s*$",
     re.IGNORECASE,
 )
+MAX_WORKERS = 4
 
 
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -123,15 +125,18 @@ def standard_message(title: str, head_ref: str) -> str | None:
     return f"chore(deps): bump {package} {old} → {new} [{eco}]"
 
 
-def merge_pr(slug: str, pr: dict[str, object], *, dry_run: bool) -> bool:
-    """Merge a single Dependabot PR using the standard commit schema."""
+def merge_pr(slug: str, pr: dict[str, object], *, dry_run: bool) -> tuple[bool, bool]:
+    """Merge a single Dependabot PR using the standard commit schema.
+
+    Returns (merged_or_enqueued, skipped).
+    """
     number = pr["number"]
     title = pr["title"]
     head_ref = pr["headRefName"]
     message = standard_message(title, head_ref)
     if message is None:
         print(f"  SKIP #{number}: title does not match bump schema: {title}")
-        return False
+        return False, True
 
     base_cmd = [
         "gh",
@@ -148,27 +153,51 @@ def merge_pr(slug: str, pr: dict[str, object], *, dry_run: bool) -> bool:
     print(f"  MERGE #{number}: {message}")
     if dry_run:
         print(f"    [dry-run] {' '.join(base_cmd)}")
-        return True
+        return True, False
 
-    # First attempt: direct squash merge. stdin=/dev/null prevents interactive prompts.
     result = run(base_cmd, check=False)
     if result.returncode == 0:
         print(f"  OK #{number}")
-        return True
+        return True, False
 
     stderr = result.stderr.strip()
-    # If required checks are pending/failing, enqueue via --auto so the PR merges
-    # as soon as GitHub checks complete successfully.
     if "Required status check" in stderr or "checks" in stderr.lower():
         auto_cmd = [*base_cmd, "--auto"]
         auto_result = run(auto_cmd, check=False)
         if auto_result.returncode == 0:
             print(f"  ENQUEUED #{number}: will merge when checks pass")
-            return True
+            return True, False
         stderr = auto_result.stderr.strip()
 
+    if "already merged" in stderr.lower() or "not found" in stderr.lower():
+        print(f"  ALREADY #{number}")
+        return True, False
+
     print(f"  FAIL #{number}: {stderr}", file=sys.stderr)
-    return False
+    return False, False
+
+
+def process_repo(slug: str, base: str, *, dry_run: bool) -> tuple[int, int, int]:
+    """Process all open Dependabot PRs for a single repository.
+
+    Returns (merged, skipped, failed).
+    """
+    print(f"==> {slug}")
+    prs = list_dependabot_prs(slug, base)
+    if not prs:
+        print("  no open dependabot PRs")
+        return 0, 0, 0
+
+    merged = skipped = failed = 0
+    for pr in prs:
+        ok, is_skip = merge_pr(slug, pr, dry_run=dry_run)
+        if is_skip:
+            skipped += 1
+        elif ok:
+            merged += 1
+        else:
+            failed += 1
+    return merged, skipped, failed
 
 
 def main() -> int:
@@ -176,6 +205,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Merge Dependabot PRs across FLEXT workspace")
     parser.add_argument("--base", default="main", help="target branch for PRs")
     parser.add_argument("--dry-run", action="store_true", help="preview only")
+    parser.add_argument("--workers", type=int, default=MAX_WORKERS, help="parallel repo workers")
     args = parser.parse_args()
 
     root = Path.cwd()
@@ -184,10 +214,7 @@ def main() -> int:
         print("No submodules discovered from .gitmodules")
         return 0
 
-    total_merged = 0
-    total_skipped = 0
-    total_failed = 0
-
+    slugs: list[str] = []
     for path in repos:
         submodule = root / path
         if not ((submodule / ".git").is_dir() or (submodule / ".git").is_file()):
@@ -197,18 +224,19 @@ def main() -> int:
         if not slug:
             print(f"SKIP {path}: cannot resolve GitHub slug")
             continue
+        slugs.append(slug)
 
-        print(f"==> {slug}")
-        prs = list_dependabot_prs(slug, args.base)
-        if not prs:
-            print("  no open dependabot PRs")
-            continue
-
-        for pr in prs:
-            if merge_pr(slug, pr, dry_run=args.dry_run):
-                total_merged += 1
-            else:
-                total_skipped += 1
+    total_merged = total_skipped = total_failed = 0
+    with ThreadPoolExecutor(max_workers=args.workers) as executor:
+        futures = {
+            executor.submit(process_repo, slug, args.base, args.dry_run): slug
+            for slug in slugs
+        }
+        for future in as_completed(futures):
+            merged, skipped, failed = future.result()
+            total_merged += merged
+            total_skipped += skipped
+            total_failed += failed
 
     print(
         f"\nSummary: merged={total_merged} skipped={total_skipped} failed={total_failed}"
