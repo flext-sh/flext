@@ -4,9 +4,11 @@ Canonical pre-work to enter ANY FLEXT project. Per AGENTS.md §9 Pre-requisites 
 
 ## 1. Read Governance First
 
-1. [`/flext/AGENTS.md`](../../AGENTS.md) — supreme engineering law.
-2. `~/.claude/AGENTS.md` — universal cross-project rules (if present).
-3. The target project's `pyproject.toml` for stack, version, dependencies.
+1. [`/flext/docs/GOVERNANCE.md`](../GOVERNANCE.md) — rule routing, ADRs,
+   validation surfaces, and ratified refactor gates.
+2. [`/flext/AGENTS.md`](../../AGENTS.md) — supreme engineering law.
+3. `~/.claude/AGENTS.md` — universal cross-project rules (if present).
+4. The target project's `pyproject.toml` for stack, version, dependencies.
 
 ## 2. Identify Project Slot Ownership
 
