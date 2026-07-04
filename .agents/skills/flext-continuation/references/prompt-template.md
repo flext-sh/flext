@@ -29,6 +29,8 @@ canônicas lidas no workspace são a verdade.
   coexistência old+new.
 - Uma mudança pública exige atualização atômica de todos os consumidores,
   exports, docs e testes na mesma batch.
+- Depois de qualquer edição, corrija o lint do codeset inteiro. O gate de lint
+  workspace é obrigatório e não substitui os gates estreitos da lane.
 - Em `flext-infra`, não adicione AST/RE. Rewrites estruturais usam Rope e os
   serviços/utilitários mnemônicos existentes; legado AST/RE encontrado vira
   migração fix-forward, nunca justificativa para manter mais do mesmo.
@@ -79,8 +81,8 @@ Antes de mexer em facade, classe pública, CLI ou export, rode census local por
 3. Edite batch de no máximo 5 arquivos, exceto quando uma mudança pública exige
    consumers/exports no mesmo lote para manter import e collection verdes.
 4. Após cada batch, rode import smoke do pacote tocado, `ruff check ... --no-fix`,
-   `pyrefly check ...`, `pyright ...`, testes escopados e gate funcional de CLI
-   quando houver entrypoint.
+   `pyrefly check ...`, `pyright ...`, testes escopados, gate funcional de CLI
+   quando houver entrypoint, e lint workspace completo.
 5. Se qualquer gate ficar vermelho, corrija fix-forward na mesma superfície e
    registre comando, exit code e saída decisiva no bead.
 6. Só avance para outra lane depois de commit com pathspec explícito, push
@@ -90,6 +92,7 @@ Antes de mexer em facade, classe pública, CLI ou export, rode census local por
 
 - `uv run python -c "import <package>; print(<package>.__name__)"`
 - `ruff check <touched-files> --no-fix`
+- `make check CHECK_GATES=lint`
 - `pyrefly check <touched-files>`
 - `pyright <touched-files-or-project>`
 - `make test PROJECT=<project> MATCH=<narrow-match>`
