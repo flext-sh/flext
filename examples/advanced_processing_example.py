@@ -99,7 +99,7 @@ class AdvancedProcessingExample:
         """Result of processing operation with metrics."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True
+            arbitrary_types_allowed=True,
         )
 
         operation_id: str = u.Field(description="Unique operation identifier")
@@ -120,7 +120,7 @@ class AdvancedProcessingExample:
         """Result of validation operation."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True
+            arbitrary_types_allowed=True,
         )
 
         item_id: str = u.Field(description="Unique item identifier")
@@ -167,7 +167,7 @@ class AdvancedProcessingExample:
                 else:
                     return r[PipelineStageData].fail(f"Unknown stage: {stage}")
             current_data: t.JsonMapping = t.json_mapping_adapter().validate_python({
-                "items": self.items
+                "items": self.items,
             })
             for operation in operations:
                 result = operation(current_data)

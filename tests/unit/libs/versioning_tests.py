@@ -3,13 +3,15 @@ from __future__ import annotations
 import importlib
 import sys
 from pathlib import Path
-
-import pytest
+from typing import TYPE_CHECKING
 
 from flext_tests import tm
 
 from ...infra.constants import c
 from ...infra.utilities import u
+
+if TYPE_CHECKING:
+    import pytest
 
 
 class TestVersioning:

@@ -29,8 +29,9 @@ canônicas lidas no workspace são a verdade.
   coexistência old+new.
 - Uma mudança pública exige atualização atômica de todos os consumidores,
   exports, docs e testes na mesma batch.
-- Depois de qualquer edição, corrija o lint do codeset inteiro. O gate de lint
-  workspace é obrigatório e não substitui os gates estreitos da lane.
+- Depois de qualquer edição, corrija todos os lints existentes e novos do
+  codeset inteiro. O gate de lint workspace é obrigatório e não substitui os
+  gates estreitos da lane.
 - Em `flext-infra`, não adicione AST/RE. Rewrites estruturais usam Rope e os
   serviços/utilitários mnemônicos existentes; legado AST/RE encontrado vira
   migração fix-forward, nunca justificativa para manter mais do mesmo.

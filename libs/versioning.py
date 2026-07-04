@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import tomllib
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import tomlkit
 from tomlkit.items import Table
 
 from flext_core import c
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 SEMVER_RE = c.PATTERN_SEMVER_RE
 

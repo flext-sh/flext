@@ -266,7 +266,11 @@ def merge_pr(
 
 
 def process_repo(
-    slug: str, base: str, *, dry_run: bool, close_on_conflict: bool = True
+    slug: str,
+    base: str,
+    *,
+    dry_run: bool,
+    close_on_conflict: bool = True,
 ) -> tuple[int, int, int, int]:
     """Process all open Dependabot PRs for a single repository.
 
@@ -284,7 +288,10 @@ def process_repo(
     merged = skipped = failed = closed = 0
     for pr in prs:
         ok, is_skip, was_closed = merge_pr(
-            slug, pr, dry_run=dry_run, close_on_conflict=close_on_conflict
+            slug,
+            pr,
+            dry_run=dry_run,
+            close_on_conflict=close_on_conflict,
         )
         if is_skip:
             skipped += 1
@@ -300,12 +307,15 @@ def process_repo(
 def main() -> int:
     """Entry point for the dependabot merge orchestrator."""
     parser = argparse.ArgumentParser(
-        description="Merge Dependabot PRs across FLEXT workspace"
+        description="Merge Dependabot PRs across FLEXT workspace",
     )
     parser.add_argument("--base", default="main", help="target branch for PRs")
     parser.add_argument("--dry-run", action="store_true", help="preview only")
     parser.add_argument(
-        "--workers", type=int, default=MAX_WORKERS, help="parallel repo workers"
+        "--workers",
+        type=int,
+        default=MAX_WORKERS,
+        help="parallel repo workers",
     )
     parser.add_argument(
         "--close-on-conflict",
@@ -360,7 +370,7 @@ def main() -> int:
 
     print(
         f"\nSummary: merged={total_merged} skipped={total_skipped} "
-        f"closed={total_closed} failed={total_failed}"
+        f"closed={total_closed} failed={total_failed}",
     )
     return 0 if total_failed == 0 else 1
 
