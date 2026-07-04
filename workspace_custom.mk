@@ -11,7 +11,7 @@
 # SSOT for the workspace base branch. All equalization/merge targets use this.
 WORKSPACE_BASE ?= 0.12.0-dev
 
-.PHONY: done-check workspace-docs-audit waza full-check workspace-status \
+.PHONY: done-check workspace-docs-audit full-check workspace-status \
         workspace-sync-base workspace-land-submodules dependabot-merge \
         workspace-merge-main workspace-main-sync workspace-dependabot-apply \
         workspace-check-changed workspace-fix-changed
@@ -36,12 +36,6 @@ workspace-docs-audit: ## Markdown lint for workspace docs
 	md_config=""; \
 	if [ -f ".markdownlint.json" ]; then md_config="--config .markdownlint.json"; fi; \
 	printf '%s\n' "$$md_files" | xargs -r markdownlint $$md_config
-
-waza: ## Waza readiness gate for .agents/skills (WHAT=check|optimize; default: check)
-	$(Q)case "$(WHAT)" in \
-	  optimize) APPLY=1 MAX_WORKERS=4 $(HOME)/.ai-hub/.venv/bin/python $(HOME)/.ai-hub/scripts/waza-optimize-batch.py --workspace $(CURDIR) --skills-dir .agents/skills ;; \
-	  *) WORKSPACE_ROOT=$(CURDIR) SKILLS_DIR=.agents/skills bash $(HOME)/.ai-hub/scripts/waza-check.sh ;; \
-	esac
 
 full-check: ## Run canonical full check path with explicit timeout
 	$(Q)timeout_s=$${FULL_CHECK_TIMEOUT:-1200}; \
