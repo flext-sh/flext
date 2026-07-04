@@ -17,16 +17,18 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import (
-    Callable,
-    MutableSequence,
-)
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
-from typing import Annotated, ClassVar
+from typing import TYPE_CHECKING, Annotated, ClassVar
 
 from examples import m, p, r, t, u
 from examples._constants import ExamplesWorkflowStage
+
+if TYPE_CHECKING:
+    from collections.abc import (
+        Callable,
+        MutableSequence,
+    )
 
 type CompleteWorkflowProcessingDict = t.JsonMapping
 type CompleteWorkflowContent = t.JsonMapping
@@ -53,7 +55,7 @@ class CompleteWorkflowExample:
         """Complete workflow context with correlation and metadata."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True
+            arbitrary_types_allowed=True,
         )
 
         workflow_id: str = u.Field(description="Unique workflow identifier")
@@ -81,7 +83,7 @@ class CompleteWorkflowExample:
         """Result of a workflow stage with comprehensive tracking."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True
+            arbitrary_types_allowed=True,
         )
 
         stage_name: str = u.Field(description="Name of the workflow stage")
@@ -109,7 +111,7 @@ class CompleteWorkflowExample:
         """Complete workflow result with all stages aggregated."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True
+            arbitrary_types_allowed=True,
         )
 
         workflow_id: str = u.Field(description="Unique workflow identifier")
@@ -272,7 +274,8 @@ class CompleteWorkflowExample:
                     return (
                         {**workflow_data.content}
                         if isinstance(
-                            workflow_data, CompleteWorkflowExample.WorkflowData
+                            workflow_data,
+                            CompleteWorkflowExample.WorkflowData,
                         )
                         else workflow_data
                     )
@@ -463,7 +466,8 @@ class CompleteWorkflowExample:
             """Setup workflow context with correlation tracking."""
             workflow_id = str(
                 self.workflow_settings.get(
-                    "workflow_id", f"workflow_{int(time.time())}"
+                    "workflow_id",
+                    f"workflow_{int(time.time())}",
                 ),
             )
             correlation_id = f"{workflow_id}_{int(time.time() * 1000)}"
@@ -476,10 +480,10 @@ class CompleteWorkflowExample:
                         self.workflow_settings.get("parallel", True),
                     ),
                     "max_workers": int(
-                        str(self.workflow_settings.get("max_workers", 4))
+                        str(self.workflow_settings.get("max_workers", 4)),
                     ),
                     "strict_mode": bool(
-                        self.workflow_settings.get("strict_mode", False)
+                        self.workflow_settings.get("strict_mode", False),
                     ),
                 },
             )

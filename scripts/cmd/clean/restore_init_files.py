@@ -87,7 +87,7 @@ def _validate_imports(workspace_root: Path) -> p.Result[bool]:
 def run() -> int:
     """Run the restore workflow."""
     workspace_root = Path(
-        u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd()))
+        u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd())),
     ).resolve()
     if Dispatch.surface_validation_enabled():
         print("SURFACE-VALIDATE: python -m scripts.cmd.clean.restore_init_files")
@@ -127,7 +127,7 @@ def run() -> int:
         restored += 1
 
     print(
-        f"SUMMARY total={total} restored={restored} skipped={skipped} failed={failed}"
+        f"SUMMARY total={total} restored={restored} skipped={skipped} failed={failed}",
     )
     if failed:
         return 1

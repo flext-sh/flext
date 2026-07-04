@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import os
-from collections.abc import Callable
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
+from typing import TYPE_CHECKING
 
 from flext_tests import c, m, t, u
 from scripts.lib.registry import CommandRegistry
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class SurfaceProbeRunner:
@@ -31,12 +34,12 @@ class SurfaceProbeRunner:
                     argv=(verb,),
                     env={c.Tests.MAKE_WHAT_PARAM: "help"},
                     expected_output=(f"make {verb} WHAT=<WHAT>",),
-                )
+                ),
             )
             commands_result = u.Tests.make_registry_commands(registry, verb)
             if commands_result.failure:
                 raise CommandRegistry.Error(
-                    commands_result.error or "registry lookup failed"
+                    commands_result.error or "registry lookup failed",
                 )
             for command in sorted(
                 commands_result.value.values(),
@@ -76,7 +79,7 @@ class SurfaceProbeRunner:
                 argv=(command.verb,),
                 env={**env, c.Tests.MAKE_HELP_PARAM: "1"},
                 expected_output=(f"make {command.verb} WHAT={command.what}",),
-            )
+            ),
         ]
         if command.mutates or command.mutates_when:
             mutation_env = SurfaceProbeRunner.mutation_env(command, env)
@@ -111,7 +114,7 @@ class SurfaceProbeRunner:
                         c.Tests.MAKE_DISPATCH_ENV_VALUE
                     ),
                 },
-            )
+            ),
         )
         return tuple(probes)
 
@@ -158,7 +161,7 @@ class SurfaceProbeRunner:
                 continue
             if result.returncode != 0:
                 failures.append(
-                    f"{probe.name}: exit {result.returncode}: {output.strip()}"
+                    f"{probe.name}: exit {result.returncode}: {output.strip()}",
                 )
                 continue
             missing = [
