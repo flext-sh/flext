@@ -73,7 +73,7 @@
     "!**/output/**"
   ],
   "mypy-type-checker.importStrategy": "fromEnvironment",
-  "mypy-type-checker.preferDaemon": false,
+  "mypy-type-checker.preferDaemon": true,
   "mypy-type-checker.reportingScope": "file",
   "[python]": {
     "defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
@@ -111,7 +111,7 @@
   ],
   "python.analysis.typeCheckingMode": "strict",
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-  "python.languageServer": "Default",
+  "python.languageServer": "Pylance",
   "python.pyrefly.diagnosticMode": "workspace",
   "python.pyrefly.displayTypeErrors": "default",
   "python.terminal.activateEnvInCurrentTerminal": true,
@@ -146,5 +146,11 @@
   ],
   "mypy-type-checker.args": [
     "--config-file=${workspaceFolder}/pyproject.toml"
-  ]
+  ],
+  "python.analysis.useNearestConfiguration": true,
+  "python.analysis.addExtraPathsForPythonProjects": true,
+  "python.analysis.addFoldersForPythonProjects": true,
+  "python.analysis.enableExternalTypeServer": true,
+  "python.analysis.findRefsInBackgroundThread": true,
+  "python.analysis.diagnosticMode": "workspace"
 }

@@ -740,7 +740,7 @@ def test_container():
     pass
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def setup_test_environment():
     """Setup automático para cada teste."""
     # Automação completa

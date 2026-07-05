@@ -204,7 +204,7 @@ extra_checks = true
 follow_imports = "normal"
 ignore_missing_imports = true
 local_partial_types = true
-mypy_path = [ ".", "src", "typings", "typings/generated" ]
+mypy_path = [ ".", "src" ]
 namespace_packages = true
 no_implicit_reexport = true
 overrides = [  ]
@@ -345,7 +345,7 @@ search-path = [
   "scripts",
   "src",
 ]
-site-package-path = [ "./typings", ".venv/lib/python3.13/site-packages" ]
+site-package-path = [ ".venv/lib/python3.13/site-packages" ]
 skip-interpreter-query = true
 use-ignore-files = false
 
@@ -459,8 +459,8 @@ exclude = [
   ".reports",
   ".venv",
 ]
-extraPaths = [ ".", "src", "typings", "typings/generated" ]
-ignore = [ "**/*.pyi", "typings", "typings/generated" ]
+extraPaths = [ ".", "src" ]
+ignore = [  ]
 include = [
   "examples",
   "flext-api/examples",
@@ -577,7 +577,6 @@ reportUnusedClass = "error"
 reportUnusedFunction = "error"
 reportUnusedImport = "error"
 reportUnusedVariable = "error"
-stubPath = "typings"
 typeCheckingMode = "strict"
 venv = ".venv"
 venvPath = "."
