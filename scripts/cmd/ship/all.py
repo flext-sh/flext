@@ -9,7 +9,7 @@
 # example = "make ship WHAT=all APPLY=Y"
 # target = "_rel"
 # mutates = true
-# aliases = []
+# aliases = ["rel"]
 # params = [
 #   { name = "APPLY", help = "Must be Y to mutate workspace/release", required = true, default = "N", choices = ["Y", "N"] },
 #   { name = "RELEASE_PHASE", help = "Release phase selector", required = false, default = "all", choices = ["all", "validate", "version", "build", "publish"] },

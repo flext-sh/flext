@@ -11,11 +11,11 @@ Use the root portal for workspace-level guidance only. Package-specific implemen
 ## Bootstrap the Workspace
 
 ```bash
-make boot
-make val VALIDATE_SCOPE=workspace
+make boot APPLY=Y
+make val
 ```
 
-`make boot` installs the selected projects into the shared workspace environment and then runs validation.
+`make boot APPLY=Y` installs the selected projects into the shared workspace environment and then runs validation.
 
 ## Navigate the Root Portal
 
@@ -43,6 +43,7 @@ make docs DOCS_PHASE=audit PROJECT=flext-infra
 
 ## Next Steps
 
+- Read [Make Commands](make-commands.md) for the full command reference
 - Read [Development](development.md) for the daily workflow
 - Read [Configuration](configuration.md) for `pyproject.toml` and docs metadata
 - Read [Testing](testing.md) for quality gates and docs validation
