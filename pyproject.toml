@@ -1209,7 +1209,6 @@ split-on-trailing-comma = true
 [tool.ruff.lint.per-file-ignores]
 "**/.vulture_whitelist.py" = [ "ALL" ]
 "**/*_pb2*.py" = [ "ALL" ]
-"**/reveal_mypy_test.py" = [ "F821" ]
 "**/*dispatcher*" = [  ]
 "**/*docs*" = [ "INP001", "S404", "S603", "T201" ]
 "**/*examples*" = [
@@ -1364,6 +1363,7 @@ split-on-trailing-comma = true
 "**/plugins/*.py" = [ "FBT001", "FBT002", "S404", "S603", "S607", "TID252" ]
 "**/protocol_impls/*.py" = [ "SLF001" ]
 "**/providers/*.py" = [ "S106", "S107" ]
+"**/reveal_mypy_test.py" = [ "F821" ]
 "**/services/prompts.py" = [ "D102", "D107" ]
 "**/settings.py" = [ "ANN401", "FBT001", "SLF001" ]
 "**/singer/*.py" = [ "S404", "S603" ]
