@@ -1040,6 +1040,7 @@ python_files = [ "*_test.py", "*_tests.py", "test_*.py" ]
 [tool.ruff]
 exclude = [
   "**/__pyrefly_virtual__/**",
+  ".beads",
   ".git",
   ".mypy_cache",
   ".pytest_cache",
@@ -1208,6 +1209,7 @@ split-on-trailing-comma = true
 [tool.ruff.lint.per-file-ignores]
 "**/.vulture_whitelist.py" = [ "ALL" ]
 "**/*_pb2*.py" = [ "ALL" ]
+"**/reveal_mypy_test.py" = [ "F821" ]
 "**/*dispatcher*" = [  ]
 "**/*docs*" = [ "INP001", "S404", "S603", "T201" ]
 "**/*examples*" = [
