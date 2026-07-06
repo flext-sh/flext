@@ -331,6 +331,7 @@ project-includes = [
   "src/**/*.py*",
   "tests/**/*.py*",
 ]
+python-interpreter-path = "./.venv/bin/python"
 python-version = "3.13"
 search-path = [
   ".",
@@ -460,7 +461,6 @@ exclude = [
   ".venv",
 ]
 extraPaths = [ ".", "src" ]
-ignore = [  ]
 include = [
   "examples",
   "flext-api/examples",
@@ -1040,7 +1040,6 @@ python_files = [ "*_test.py", "*_tests.py", "test_*.py" ]
 [tool.ruff]
 exclude = [
   "**/__pyrefly_virtual__/**",
-  ".beads",
   ".git",
   ".mypy_cache",
   ".pytest_cache",
@@ -1363,7 +1362,6 @@ split-on-trailing-comma = true
 "**/plugins/*.py" = [ "FBT001", "FBT002", "S404", "S603", "S607", "TID252" ]
 "**/protocol_impls/*.py" = [ "SLF001" ]
 "**/providers/*.py" = [ "S106", "S107" ]
-"**/reveal_mypy_test.py" = [ "F821" ]
 "**/services/prompts.py" = [ "D102", "D107" ]
 "**/settings.py" = [ "ANN401", "FBT001", "SLF001" ]
 "**/singer/*.py" = [ "S404", "S603" ]
