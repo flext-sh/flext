@@ -5,12 +5,12 @@ The root development workflow is governed by `AGENTS.md`. Treat this guide as th
 ## Baseline Workflow
 
 ```bash
-make check CHANGED_ONLY=1
+make workspace-check-changed
 make test PROJECT=flext-infra MATCH=docs
-make val VALIDATE_SCOPE=workspace
+make val
 ```
 
-Use `PROJECT`, `PROJECTS`, `FILE`, `FILES`, `MATCH`, and `CHECK_GATES` instead of ad hoc shell loops.
+Use `PROJECT`, `PROJECTS`, `FILE`, `FILES`, `MATCH`, and `CHECK_GATES` instead of ad hoc shell loops. See [Make Commands](make-commands.md) for the full command reference.
 
 ## Daily Sequence
 

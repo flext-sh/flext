@@ -17,8 +17,8 @@ Use these directories when the project owns tests:
 ```bash
 make test PROJECT=flext-infra
 make test PROJECT=flext-infra MATCH=docs
-make check PROJECT=flext-infra CHECK_GATES=lint,pyrefly
-make val VALIDATE_SCOPE=workspace
+make check PROJECT=flext-infra
+make val
 ```
 
 ## Docs Pipeline Validation
@@ -41,6 +41,7 @@ make docs DOCS_PHASE=validate PROJECT=flext-infra
 
 ## Related Guides
 
+- [Make Commands](make-commands.md)
 - [Development](development.md)
 - [Configuration](configuration.md)
 - [Troubleshooting](troubleshooting.md)
