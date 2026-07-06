@@ -32,7 +32,7 @@ PROJECT ?=
 PROJECTS ?=
 WHAT ?=
 PYTEST_ARGS ?=
-VALIDATE_SCOPE ?= project
+VALIDATE_SCOPE ?= all
 DOCS_PHASE ?= all
 FAIL_FAST ?=
 JOBS ?=
@@ -79,7 +79,7 @@ PR_CHECKPOINT ?= 1
 DEPS_REPORT ?= 1
 VERBOSE ?=
 
-PR_BRANCH ?= 0.12.0-dev
+PR_BRANCH ?= main
 
 Q := @
 ifdef VERBOSE
@@ -482,13 +482,13 @@ _mod: ## Modernize pyproject.toml files (standardize configs without lock/instal
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)echo "Modernizing pyproject.toml files..."; \
-	$(WORKSPACE_INFRA_DEPS) modernize --apply $(MODERNIZE_SELECTION_FLAGS); \
+	$(WORKSPACE_INFRA_DEPS) modernize --apply $(MODERNIZE_SELECTION_FLAGS) || exit 1; \
 	echo ""
 	$(Q)echo "Syncing dependency paths to workspace mode..."; \
-	$(WORKSPACE_INFRA_DEPS) path-sync --mode auto --apply $(MODERNIZE_SELECTION_FLAGS); \
+	$(WORKSPACE_INFRA_DEPS) path-sync --mode auto --apply $(MODERNIZE_SELECTION_FLAGS) || exit 1; \
 	echo ""
 	$(Q)echo "Formatting pyproject.toml files with taplo..."; \
-	taplo format --config "$(CURDIR)/.taplo.toml" $(WORKSPACE_MODERNIZE_PYPROJECTS); \
+	taplo format --config "$(CURDIR)/.taplo.toml" $(WORKSPACE_MODERNIZE_PYPROJECTS) || exit 1; \
 	echo ""
 	$(Q)echo "Formatting Python files (ruff)..."
 	$(Q)ruff format $(WORKSPACE_SELECTED_ROOTS) --quiet
@@ -735,43 +735,23 @@ $(if $(filter 1,$(FIX)),--make-arg "FIX=$(FIX)") \
 		$(ORCHESTRATOR_PROJECTS)
 endif
 
-_types: ## Run typings supply-chain (stubgen + stub_supply_chain + dependency report). Use PROJECT= or PROJECTS= to scope.
+_types: ## Validate typed dependencies/protocol contracts without generated stubs. Use PROJECT= or PROJECTS= to scope.
 	$(Q)$(PREPARE_RUNTIME_SELECTED_PROJECTS)
-	$(Q)echo "Regenerating typings/generated/ via stubgen (PEP 561 pre-check)..."
-	$(Q)gen_dir="$(CURDIR)/typings/generated"; \
-	tmp_dir=$$(mktemp -d); \
-	packages=$$(find "$$gen_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort); \
-	ok=0; fail=0; skip=0; \
-	if [ -n "$$packages" ]; then \
-		for pkg in $$packages; do \
-			pkg_mod=$$(echo "$$pkg" | tr '-' '_'); \
-			if $(PY) -c "import importlib.util,pathlib;s=importlib.util.find_spec('$$pkg_mod');exit(0 if s and s.origin and (pathlib.Path(s.origin).parent/'py.typed').exists() else 1)" 2>/dev/null; then \
-				echo "  skip: $$pkg (ships py.typed)"; \
-				skip=$$((skip + 1)); \
-				continue; \
-			fi; \
-			types_dash=$$(echo "$$pkg_mod" | tr '_' '-'); \
-			if $(PY) -c "import importlib.metadata;importlib.metadata.version('types-$$types_dash')" 2>/dev/null; then \
-				echo "  skip: $$pkg (types-$$types_dash installed)"; \
-				skip=$$((skip + 1)); \
-				continue; \
-			fi; \
-			if $(PY) -m mypy.stubgen -p "$$pkg" -o "$$tmp_dir" --include-private --export-less -q 2>/dev/null; then \
-				if [ -d "$$tmp_dir/$$pkg" ]; then \
-					rm -rf "$$gen_dir/$$pkg"; \
-					mv "$$tmp_dir/$$pkg" "$$gen_dir/$$pkg"; \
-					ok=$$((ok + 1)); \
-				fi; \
-			else \
-				fail=$$((fail + 1)); \
-				echo "  warning: stubgen failed for $$pkg (keeping existing)"; \
-			fi; \
-		done; \
-		echo "  stubgen: $$ok regenerated, $$skip skipped (typed), $$fail failed"; \
-	else \
-		echo "  no packages to regenerate"; \
-	fi; \
-	rm -rf "$$tmp_dir"
+	$(Q)echo "Validating typed dependency policy (no generated .pyi/stubgen route)..."
+	$(Q)if [ -d "$(CURDIR)/typings" ]; then \
+		echo "ERROR: root typings/ is forbidden; install types-* packages or model contracts in p.* protocols"; \
+		exit 1; \
+	fi
+	$(Q)stub_file=$$(find "$(CURDIR)" \
+		-path "$(CURDIR)/.git" -prune -o \
+		-path "$(CURDIR)/.venv" -prune -o \
+		-path "$(CURDIR)/.reports" -prune -o \
+		-name '*.pyi' -print -quit); \
+	if [ -n "$$stub_file" ]; then \
+		echo "ERROR: .pyi stub file is forbidden: $$stub_file"; \
+		echo "Install a types-* package or create the owning p.* protocol instead."; \
+		exit 1; \
+	fi
 	$(Q)$(WORKSPACE_INFRA_VALIDATE) stub-validate \
 		$(if $(SELECTED_PROJECT_FLAGS),$(SELECTED_PROJECT_FLAGS),--all)
 	$(Q)if [ "$(DEPS_REPORT)" != "0" ]; then \
@@ -851,7 +831,7 @@ _pyre: ## Authoritative repo-wide pyrefly report + policy gate -> .reports/pyref
 	echo ""; \
 	echo "OK: pyrefly + type policy gate passed"
 
-_stubs: ## Repo-wide stub supply-chain validation -> .reports/pyrefly
+_stubs: ## Repo-wide typed dependency/protocol validation -> .reports/pyrefly
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)mkdir -p .reports/pyrefly

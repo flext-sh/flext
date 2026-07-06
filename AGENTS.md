@@ -8,7 +8,7 @@ O sucesso do FLEXT é medido por: net-LOC negativo em refactors, zero `Any`/bypa
 
 ### Cadeia de governança inviolável (sempre ativa)
 
-Esta Meta e as regras universais abaixo governam **todas as ações de todos os agentes em todas as sessões**, sem exceção, atalho, ou flexibilização por conveniência, urgência ou trivialidade percebida. A cadeia é always-on via prelúdio do `~/.ai-hub/AGENTS.md` + hooks `aihub-hook.sh` (PreToolUse/PostToolUse/SessionStart/Stop) + carregamento deste arquivo:
+Esta Meta e as regras universais abaixo governam **todas as ações de todos os agentes em todas as sessões**, sem exceção, atalho, ou flexibilização por conveniência, urgência ou trivialidade percebida. A cadeia é always-on via prelúdio do `~/.ai-hub/AGENTS.md` + hooks `ai-hub-hook.sh` (PreToolUse/PostToolUse/SessionStart/Stop) + carregamento deste arquivo:
 
 1. **Meta do FLEXT** (acima) — o norte que toda decisão técnica serve.
 2. **Universal Agent Law** (abaixo, espelha `~/.ai-hub/AGENTS.md`) — R0–R15 invioláveis.

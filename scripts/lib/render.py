@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 from flext_tests import m, u
 from scripts.lib.registry import CommandRegistry
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 class CommandRenderer:

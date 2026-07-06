@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import os
 import sys
-from collections.abc import Sequence
+from typing import TYPE_CHECKING
 
 from flext_tests import c, t, u
 from scripts.lib.exec import CommandExecution
 from scripts.lib.registry import CommandRegistry
 from scripts.lib.render import CommandRenderer
 from scripts.lib.surface_validation import SurfaceValidator
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 class CommandCli:
@@ -20,7 +23,7 @@ class CommandCli:
     def main(argv: Sequence[str] | None = None) -> int:
         """Run the FLEXT scripts dispatcher."""
         args = tuple(
-            CommandCli.apply_env_from_args(sys.argv[1:] if argv is None else argv)
+            CommandCli.apply_env_from_args(sys.argv[1:] if argv is None else argv),
         )
         try:
             return CommandCli.route(args)
@@ -115,7 +118,7 @@ class CommandCli:
             print(CommandRenderer.verb_help(registry, requested_verb))
             return 0
         if CommandExecution.env_enabled(
-            c.Tests.MAKE_HELP_PARAM
+            c.Tests.MAKE_HELP_PARAM,
         ) or CommandExecution.env_enabled(c.Tests.MAKE_OPTIONS_PARAM):
             if len(what_values) == 1:
                 return CommandCli.print_command_or_verb_help(

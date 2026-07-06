@@ -40,7 +40,7 @@ class AclProcessingExample:
         """Represents an ACL entry with context and permissions."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True
+            arbitrary_types_allowed=True,
         )
 
         dn: str = u.Field(description="Distinguished name of the ACL entry")
@@ -53,7 +53,7 @@ class AclProcessingExample:
         """Result of ACL validation with detailed context."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True
+            arbitrary_types_allowed=True,
         )
 
         entry_dn: str = u.Field(description="Distinguished name of the entry")
@@ -296,11 +296,12 @@ class AclProcessingExample:
                 "processing_time_seconds": processing_time,
             }
             return r[t.JsonMapping].ok(
-                t.json_mapping_adapter().validate_python(result_data)
+                t.json_mapping_adapter().validate_python(result_data),
             )
 
         def _detect_servers(
-            self, entries: t.SequenceOf[t.JsonMapping]
+            self,
+            entries: t.SequenceOf[t.JsonMapping],
         ) -> p.Result[t.JsonMapping]:
             """Auto-detect server types for all entries."""
             detected_entries: MutableSequence[t.JsonMapping] = []
@@ -311,7 +312,7 @@ class AclProcessingExample:
                         t.json_mapping_adapter().validate_python({
                             "entry": entry,
                             "server_type": result.value,
-                        })
+                        }),
                     )
                 else:
                     return r[t.JsonMapping].fail(
@@ -324,7 +325,7 @@ class AclProcessingExample:
                 t.json_mapping_adapter().validate_python({
                     "entries": detected_entries,
                     "server_types": sorted(server_types_set),
-                })
+                }),
             )
 
         def _extract_acls(self, data: t.JsonMapping) -> p.Result[t.JsonMapping]:
@@ -388,7 +389,7 @@ class AclProcessingExample:
                 "total_acls": len(all_acls),
             }
             return r[t.JsonMapping].ok(
-                t.json_mapping_adapter().validate_python(result_data)
+                t.json_mapping_adapter().validate_python(result_data),
             )
 
         def _validate_batch(self, data: t.JsonMapping) -> p.Result[t.JsonMapping]:
@@ -431,7 +432,7 @@ class AclProcessingExample:
                 "total_warnings": sum(len(r.warnings) for r in validation_results),
             }
             return r[t.JsonMapping].ok(
-                t.json_mapping_adapter().validate_python(result_data)
+                t.json_mapping_adapter().validate_python(result_data),
             )
 
     @staticmethod

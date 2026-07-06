@@ -22,12 +22,15 @@ from __future__ import annotations
 
 import re
 import sys
-from collections.abc import Sequence
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from scripts.dispatch import Dispatch
 
 from flext_cli import c, u
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 class _DockerStandardizationChecker:
@@ -164,7 +167,7 @@ class _DockerStandardizationChecker:
         ]
         if scripts:
             print(
-                f"  WARNING: Found {len(scripts)} Docker-related shell script(s) outside docker/:"
+                f"  WARNING: Found {len(scripts)} Docker-related shell script(s) outside docker/:",
             )
             for p in scripts[:5]:
                 print(f"    - {p.relative_to(self.workspace_root)}")
@@ -186,7 +189,7 @@ class _DockerStandardizationChecker:
                 hits.append(p)
         if hits:
             print(
-                f"  WARNING: Found {len(hits)} file(s) using deprecated parallel_docker:"
+                f"  WARNING: Found {len(hits)} file(s) using deprecated parallel_docker:",
             )
             for p in hits[:5]:
                 print(f"    - {p.relative_to(self.workspace_root)}")
@@ -237,7 +240,7 @@ def run_command() -> int:
         print("SURFACE-VALIDATE: python -m scripts.cmd.check.docker_standardization")
         return 0
     workspace_root = Path(
-        u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd()))
+        u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd())),
     ).resolve()
     return _DockerStandardizationChecker(workspace_root).run()
 
