@@ -32,7 +32,7 @@ PROJECT ?=
 PROJECTS ?=
 WHAT ?=
 PYTEST_ARGS ?=
-VALIDATE_SCOPE ?= project
+VALIDATE_SCOPE ?= all
 DOCS_PHASE ?= all
 FAIL_FAST ?=
 JOBS ?=
@@ -688,7 +688,7 @@ $(if $(PYTEST_ARGS),--make-arg "PYTEST_ARGS=$(PYTEST_ARGS)") \
 		$(if $(filter 1,$(VERBOSE)),--make-arg "VERBOSE=$(VERBOSE)") \
 		$(ORCHESTRATOR_PROJECTS)
 
-val: ## Run validate gates (WHAT=all|project|workspace, VALIDATE_SCOPE=project|workspace, FIX=1)
+val: ## Run validate gates (WHAT=all|project|workspace, VALIDATE_SCOPE=all|project|workspace, FIX=1)
 	$(Q)$(FLEXT_MAKE_DISPATCH) val
 
 _val_project: ## Run project validation gates

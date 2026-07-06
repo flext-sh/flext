@@ -120,6 +120,26 @@ def test_unknown_what_raises(registry: Dispatch.Registry) -> None:
         _registry_command_or_raise(registry, "check", "no-such-what")
 
 
+@pytest.mark.parametrize(
+    ("alias", "canonical_verb"),
+    [
+        ("gen", "build"),
+        ("lint", "check"),
+        ("rel", "ship"),
+        ("validate", "val"),
+    ],
+)
+def test_verb_alias_resolves_to_canonical_verb(
+    registry: Dispatch.Registry,
+    alias: str,
+    canonical_verb: str,
+) -> None:
+    """Promoted verb aliases must resolve to their canonical verb."""
+    resolved = u.Tests.make_registry_resolve_verb(registry, alias)
+    assert resolved.success, resolved.error
+    assert resolved.value == canonical_verb
+
+
 def test_header_what_matches_file_stem(registry: Dispatch.Registry) -> None:
     for verb in u.Tests.make_registry_verbs(registry):
         commands = u.Tests.make_registry_commands(registry, verb).unwrap()

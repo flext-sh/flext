@@ -8,9 +8,9 @@
 # description = "Runs workspace and/or project validation depending on VALIDATE_SCOPE."
 # example = "make val WHAT=all"
 # mutates = false
-# aliases = []
+# aliases = ["validate"]
 # params = [
-#   { name = "VALIDATE_SCOPE", help = "project|workspace|all", required = false, default = "project", choices = ["project", "workspace", "all"] },
+#   { name = "VALIDATE_SCOPE", help = "project|workspace|all", required = false, default = "all", choices = ["project", "workspace", "all"] },
 #   { name = "WHAT", help = "Comando de validacao", required = false, default = "all", choices = ["all","project","workspace"] }
 # ]
 # rules = ["governance"]
@@ -41,13 +41,13 @@ class FlextRootValAllCommand:
         scope: Annotated[
             Literal["project", "workspace", "all"],
             u.Field(description="Validation scope to execute."),
-        ] = "project"
+        ] = "all"
 
         @u.field_validator("scope", mode="before")
         @classmethod
         def normalize_scope(cls, value: str | None) -> str:
             """Normalize the environment value before Literal validation."""
-            return (value or "project").strip().lower()
+            return (value or "all").strip().lower()
 
         @property
         def targets(self) -> tuple[str, ...]:
@@ -78,7 +78,7 @@ class FlextRootValAllCommand:
         """Validate environment-backed validation command options."""
         options: FlextRootValAllCommand.Options = (
             FlextRootValAllCommand.Options.model_validate({
-                "scope": Dispatch.env_value("VALIDATE_SCOPE", "project").lower(),
+                "scope": Dispatch.env_value("VALIDATE_SCOPE", "all").lower(),
             })
         )
         return options

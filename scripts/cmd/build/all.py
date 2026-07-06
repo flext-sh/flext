@@ -9,7 +9,7 @@
 # example = "make build WHAT=all"
 # target = "_build_default"
 # mutates = true
-# aliases = []
+# aliases = ["gen"]
 # params = [
 #   { name = "APPLY", help = "Must be Y to mutate workspace", required = true, default = "N", choices = ["Y", "N"] }
 # ]
