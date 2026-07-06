@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import sys
-from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from flext_tests import m, t, u
 from scripts.lib.exec import CommandExecution
 from scripts.lib.registry import CommandRegistry
 from scripts.lib.surface_probes import SurfaceProbeRunner
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class SurfaceValidator:
@@ -60,11 +63,11 @@ class SurfaceValidator:
         failures: list[str] = []
         if command.target and command.target not in targets:
             failures.append(
-                f"{command.verb} WHAT={command.what}: target ausente {command.target}"
+                f"{command.verb} WHAT={command.what}: target ausente {command.target}",
             )
         if not command.example.startswith(f"make {command.verb} "):
             failures.append(
-                f"{command.verb} WHAT={command.what}: exemplo nao usa make canonico"
+                f"{command.verb} WHAT={command.what}: exemplo nao usa make canonico",
             )
         return tuple(failures)
 

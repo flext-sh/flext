@@ -15,7 +15,6 @@ from pathlib import Path
 
 from flext_cli import cli
 
-
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -34,8 +33,7 @@ def main(what: str, files: list[str]) -> int:
     projects = {
         rel.parts[0]
         for raw in files
-        if (rel := _relative_to_workspace(raw)).parts
-        and rel.parts[0] in known
+        if (rel := _relative_to_workspace(raw)).parts and rel.parts[0] in known
     }
     if not projects:
         return 0

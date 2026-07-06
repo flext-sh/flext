@@ -1,17 +1,20 @@
 {
   "files.autoSave": "afterDelay",
   "files.exclude": {
-    "**/.flext-deps": true,
-    "**/.flext-deps/**": true,
+    "**/__pycache__": true,
+    "**/__pycache__/**": true,
+    "**/__pyrefly_virtual__": true,
+    "**/__pyrefly_virtual__/**": true,
     "**/.cache": true,
     "**/.cache/**": true,
     "**/.venv": true,
     "**/.venv/**": true,
-    "**/vendor": true,
-    "**/vendor/**": true,
     "**/dbt_packages": true,
     "**/dbt_packages/**": true,
-    "**/__pyrefly_virtual__/**": true
+    "**/node_modules": true,
+    "**/node_modules/**": true,
+    "**/vendor": true,
+    "**/vendor/**": true
   },
   "files.watcherExclude": {
     "__pycache__": true,
@@ -40,6 +43,7 @@
     "*.swp": true,
     "*.temp": true,
     "*.tmp": true,
+    "**/__pyrefly_virtual__/**": true,
     "*~": true,
     "build": true,
     "CVS": true,
@@ -53,32 +57,33 @@
     "tmp": true,
     "vectorbt.pro": true,
     "vendor": true,
-    "venv": true,
-    "**/__pyrefly_virtual__/**": true
+    "venv": true
   },
   "markdownlint.configFile": "${workspaceFolder}/.markdownlint.json",
   "markdownlint.lintWorkspaceGlobs": [
-    "**/*.{md,mkd,mdwn,mdown,markdown,markdn,mdtxt,mdtext,workbook}",
-    "!**/*.code-search",
-    "!**/bower_components/**",
-    "!**/node_modules/**",
     "!**/.git/**",
-    "!**/vendor/**",
     "!**/.planning/**",
     "!**/.reports/**",
     "!**/.venv/**",
-    "!**/dist/**",
+    "!**/*.code-search",
+    "!**/bower_components/**",
     "!**/build/**",
+    "!**/dist/**",
+    "!**/node_modules/**",
+    "!**/output/**",
     "!**/tmp/**",
-    "!**/output/**"
+    "!**/vendor/**",
+    "**/*.{md,mkd,mdwn,mdown,markdown,markdn,mdtxt,mdtext,workbook}"
+  ],
+  "mypy-type-checker.args": [
+    "--config-file=${workspaceFolder}/pyproject.toml"
   ],
   "mypy-type-checker.importStrategy": "fromEnvironment",
-  "mypy-type-checker.preferDaemon": false,
+  "mypy-type-checker.interpreter": [
+    "${workspaceFolder}/.venv/bin/python"
+  ],
+  "mypy-type-checker.preferDaemon": true,
   "mypy-type-checker.reportingScope": "file",
-  "[python]": {
-    "defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
-  },
-  "mypy-type-checker.enabled": false,
   "pylsp.plugins.autopep8.enabled": false,
   "pylsp.plugins.mccabe.enabled": false,
   "pylsp.plugins.pycodestyle.enabled": false,
@@ -96,22 +101,18 @@
       "path": "."
     }
   ],
-  "python-envs.terminal.autoActivationType": "shellStartup",
   "python-envs.workspaceSearchPaths": [
     "./.venv",
     "./**/.venv"
   ],
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportUntypedBaseClass": "none"
-  },
-  "python.analysis.exclude": [
-    "**/.flext-deps",
-    "**/.flext-deps/**",
-    "**/__pyrefly_virtual__/**"
-  ],
-  "python.analysis.typeCheckingMode": "strict",
+  "python.analysis.addExtraPathsForPythonProjects": true,
+  "python.analysis.addFoldersForPythonProjects": true,
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.enableExternalTypeServer": true,
+  "python.analysis.findRefsInBackgroundThread": true,
+  "python.analysis.useNearestConfiguration": true,
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-  "python.languageServer": "Default",
+  "python.languageServer": "Pylance",
   "python.pyrefly.diagnosticMode": "workspace",
   "python.pyrefly.displayTypeErrors": "default",
   "python.terminal.activateEnvInCurrentTerminal": true,
@@ -123,28 +124,13 @@
   "ruff.importStrategy": "fromEnvironment",
   "ruff.lint.preview": true,
   "ruff.nativeServer": "on",
-  "search.exclude": {
-    "**/__pyrefly_virtual__/**": true,
-    "**/.cache": true,
-    "**/.cache/**": true,
-    "**/.flext-deps": true,
-    "**/.flext-deps/**": true,
-    "**/.venv": true,
-    "**/.venv/**": true,
-    "**/dbt_packages": true,
-    "**/dbt_packages/**": true,
-    "**/vendor": true,
-    "**/vendor/**": true,
-  },
   "shellcheck.useWorkspaceRootAsCwd": true,
   "terminal.integrated.env.linux": {
     "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}",
     "VIRTUAL_ENV": "${workspaceFolder}/.venv"
   },
-  "mypy-type-checker.interpreter": [
-    "${workspaceFolder}/.venv/bin/python"
-  ],
-  "mypy-type-checker.args": [
-    "--config-file=${workspaceFolder}/pyproject.toml"
-  ]
+  "python.analysis.typeCheckingMode": "strict",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUntypedBaseClass": "none"
+  }
 }
