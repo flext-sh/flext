@@ -331,6 +331,7 @@ project-includes = [
   "src/**/*.py*",
   "tests/**/*.py*",
 ]
+python-interpreter-path = "./.venv/bin/python"
 python-version = "3.13"
 search-path = [
   ".",
@@ -460,7 +461,6 @@ exclude = [
   ".venv",
 ]
 extraPaths = [ ".", "src" ]
-ignore = [  ]
 include = [
   "examples",
   "flext-api/examples",
