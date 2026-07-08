@@ -82,8 +82,7 @@ bottom:
 from flext_cli import m, u
 
 
-class FlextPluginModels(m):
-    ...
+class FlextPluginModels(m): ...
 
 
 m = FlextPluginModels
