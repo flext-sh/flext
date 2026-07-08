@@ -20,17 +20,21 @@ Always `from flext_core import c, m, p, r, t, u, ...`.
 
 - **A:** `from flext_core import m, r, p, t`
 - **B:** `from flext_core import FlextDispatcher`
-- **C:** Inherit `FlextConstants`/`FlextProtocols` for extension
+- **C:** Facade owner modules inherit the upstream short alias for the facade being extended (`from flext_cli import c`; `class FlextPluginConstants(c): ...`; `c = FlextPluginConstants`)
 - **D:** Integration projects inherit parent facade (e.g., `FlextMeltanoModels, FlextDbOracleModels`), never `FlextModels` directly
 - **E:** Naming: `Flext<Tap|Target|Dbt><Domain><Models|Constants|Types|Utilities|Protocols>`
+- **F:** `base.py` inherits upstream runtime `s` and private MRO utility mixins, then publishes local `s` once.
+- **G:** `api.py` inherits the composed runtime facade class and publishes the package operational alias once.
 
 ### R4F: MRO parent import matrix
 
-| File | `m`/`u` source | others |
+| File | `c`/`t`/`p`/`m`/`u` source | others |
 |------|----------------|--------|
 | `models/*.py` | parent | own pkg |
 | `_utilities/*.py` | parent for `u` | own pkg |
-| facade files | parent for self alias | own pkg |
+| facade files | parent short alias for the facade being extended | own pkg |
+| `base.py` | upstream runtime `s` | own pkg plus private MRO mixins |
+| `api.py` | composed runtime facade class | own pkg |
 | services/servers/tests | own pkg | own pkg |
 
 Parent = most advanced MRO package; flext-core uses own package.
@@ -68,6 +72,12 @@ Use only for type-only symbols and `__init__.py` lazy loading. Do not hide cycle
 ### R11: No double-assignment of facade aliases
 
 Assign alias exactly once per facade.
+
+Facade owner modules are the sanctioned self-rebind shape: import the upstream
+short alias, use it as the MRO base, and publish the local alias once at module
+bottom. Do not replace it with long-class imports solely to satisfy Pylance.
+The same protection applies to `base.py` publishing local `s` and `api.py`
+publishing the package operational alias.
 
 ### R12: MRO composition
 

@@ -100,6 +100,9 @@ Any unresolved blocker at step 6 keeps the change incomplete.
 ### Naming and contracts
 
 - Keep aliases canonical: `c`, `m`, `t`, `p`, `u`, and operational aliases (`r`, `e`, `s`, `x`) from project facades.
+- Facade owner modules that extend upstream FLEXT facades by MRO import the upstream short alias and use it as the base class, then rebind the local public alias at the bottom, e.g. `from flext_cli import m, u`; `class FlextPluginModels(m): ...`; `m = FlextPluginModels`.
+- Project `base.py` may import upstream runtime `s` as the service base and rebind local `s` once, e.g. `from flext_core import s`; `class FlextDbOracleServiceBase(s, FlextDbOracleUtilitiesDbOracle): ...`; `s = FlextDbOracleServiceBase`.
+- Project `api.py` stays a thin MRO facade over the composed runtime class and publishes the package operational alias, e.g. `class FlextDbOracleApi(FlextDbOracleApiRuntime): ...`; `db_oracle = FlextDbOracleApi`.
 - Use `r[T]` for fallible app paths (avoid ad-hoc error dicts or raw exceptions for control flow).
 - Keep `__init__.py` as export-only.
 - Keep abstractions layered by project boundaries (`src` first, tests/examples/scripts are consumers).

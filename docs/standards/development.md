@@ -33,6 +33,52 @@ Use the facade aliases exposed by `flext_core` and project facades:
 
 **Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`, `FlextCliSettings`, `FlextTestsSettings`) have no short alias.
 
+Facade owner modules that compose an upstream FLEXT facade by MRO use the
+upstream short alias as the base class and then publish the local alias at the
+bottom:
+
+```python
+from flext_cli import m, u
+from flext_plugin import c, p, r, t
+
+
+class FlextPluginModels(m):
+    ...
+
+
+m = FlextPluginModels
+```
+
+This applies to `c`, `t`, `p`, `m`, and `u` facades. Pylance's
+`reportGeneralTypeIssues` workspace diagnostic is disabled because it flags this
+canonical self-rebound facade pattern; `pyright`, `pyrefly`, and `mypy` gates
+remain authoritative.
+
+`base.py` and `api.py` follow the same owner-facade rule:
+
+```python
+from flext_core import s
+from flext_db_oracle._utilities.db_oracle import FlextDbOracleUtilitiesDbOracle
+
+
+class FlextDbOracleServiceBase(s, FlextDbOracleUtilitiesDbOracle):
+    ...
+
+
+s = FlextDbOracleServiceBase
+```
+
+```python
+from flext_db_oracle.services.api_runtime import FlextDbOracleApiRuntime
+
+
+class FlextDbOracleApi(FlextDbOracleApiRuntime):
+    ...
+
+
+db_oracle = FlextDbOracleApi
+```
+
 Example:
 
 ```python

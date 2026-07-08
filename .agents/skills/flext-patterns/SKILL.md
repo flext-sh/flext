@@ -95,8 +95,12 @@ Allowed owner exceptions:
 
 - `__init__.py` may use `flext_core.lazy` for lazy exports.
 - `base.py` may import `flext_core.s`, `FlextContainer`, and upstream service
-  bases required by the project.
-- Facade modules may import upstream facade classes and private local mixins.
+  bases required by the project; when it owns the service facade it publishes
+  local `s` exactly once at module bottom.
+- Facade modules that extend upstream `c`, `t`, `p`, `m`, or `u` import the
+  upstream short alias and use it as the MRO base, then publish the local alias
+  once at module bottom.
+- Facade modules may import private local mixins.
 - `cli.py` may import `from flext_cli import cli` and local facades.
 - Adapters may import the external package they own as a boundary.
 
@@ -115,21 +119,23 @@ untyped external boundaries.
 
 ## API, Base, And Services
 
-`api.py` is a near-empty public MRO facade:
+`api.py` is a near-empty public MRO facade over the composed runtime class and
+publishes the package operational alias:
 
 ```python
-class Project(
-    ProjectPreflight,
-    ProjectScan,
-    ProjectExtract,
-    ProjectValidate,
-):
+from package.services.api_runtime import ProjectApiRuntime
+
+
+class ProjectApi(ProjectApiRuntime):
     """Public facade composed through cooperative MRO."""
+
+
+project = ProjectApi
 ```
 
 `base.py` owns shared behavior:
 
-- `class ProjectService(s[T])` with `s = ProjectService` at the bottom;
+- `class ProjectServiceBase(s, PrivateRuntimeMixin)` with `s = ProjectServiceBase` at the bottom;
 - `_container_type: ClassVar[p.ContainerType] = FlextContainer` when the project
   resolves ports through the container;
 - runtime bootstrap options point at the project settings type;
