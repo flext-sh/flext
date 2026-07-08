@@ -33,6 +33,8 @@ metadata:
 ## Critical rules
 
 - Prefer canonical sources.
+- Owner facade modules extend upstream `c`, `t`, `p`, `m`, or `u` using the upstream short alias as the MRO base and then publish the local alias exactly once at module bottom.
+- Project `base.py` extends upstream runtime `s` plus private MRO mixins and then publishes local `s`; project `api.py` extends the composed runtime facade and publishes the operational alias.
 - Require evidence.
 
 ## Example

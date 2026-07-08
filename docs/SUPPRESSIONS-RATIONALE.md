@@ -1,8 +1,8 @@
-# Política de supressões (mypy / pyright / pyrefly)
+# Política de supressões (mypy / pyright / pyrefly / Pylance)
 
 **Regras (AGENTS.md + decisão do repositório):**
 
-0. **Overrides** — Seguir sempre o modelo padrão de `pyproject.toml` sincronizado do repositório FLEXT por `make upgrade`. Não adicionar overrides de mypy/pyright fora desse padrão.
+0. **Overrides** — Seguir sempre o modelo padrão de `pyproject.toml` sincronizado do repositório FLEXT por `make upgrade`. Não adicionar overrides de mypy/pyright fora desse padrão. A exceção permitida é o override de UI em `.vscode/settings.json` para `python.analysis.diagnosticSeverityOverrides.reportGeneralTypeIssues = "none"`: Pylance marca falsamente como autorreferente o padrão canônico de facade MRO `from flext_cli import m`; `class FlextPluginModels(m): ...`; `m = FlextPluginModels`. Esse override não altera os gates CLI (`pyright`, `pyrefly`, `mypy`).
 
 1. **Any** — Uso de `Any` é **terminantemente proibido** sem exceções.
 

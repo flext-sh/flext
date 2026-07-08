@@ -37,6 +37,9 @@ Enforces import hygiene, alias conventions, and abstraction boundaries across th
 - Required header: `from __future__ import annotations` and `from collections.abc import Mapping, Sequence`.
 - Absolute imports only in `src/`; no relative imports, no wildcards.
 - Import `flext_core` via root namespace using canonical aliases (`c`, `m`, `p`, `r`, `t`, `u`, ...).
+- Facade owner modules that MRO-extend an upstream FLEXT facade import that upstream short alias directly and use it as the base class (`from flext_cli import m`; `class FlextPluginModels(m): ...`; `m = FlextPluginModels`).
+- Project `base.py` may import upstream runtime `s` as the service MRO base and publish local `s` exactly once.
+- Project `api.py` imports the composed runtime facade class and publishes the package operational alias.
 - Bridge external frameworks (pydantic, structlog, oracledb, ldap3, grpc, sqlalchemy) through `flext_core` or the project-specific wrapper; do not import them directly in consumers.
 - Use `TYPE_CHECKING` only for type-only symbols and `__init__.py` lazy loading; do not hide cycles.
 
@@ -75,11 +78,13 @@ Within each group: `import x` before `from x import y`, alphabetical, one per li
 
 ## MRO import matrix
 
-| File | `m`/`u` source | Others |
+| File | `c`/`t`/`p`/`m`/`u` source | Others |
 |------|----------------|--------|
 | `models/*.py` | parent | own package |
 | `_utilities/*.py` | parent for `u` | own package |
-| facade files | parent for self alias | own package |
+| facade files | parent short alias for the facade being extended | own package |
+| `base.py` | upstream runtime `s` | own package plus private MRO mixins |
+| `api.py` | composed runtime facade class | own package |
 | services/servers/tests | own package | own package |
 
 Parent = most advanced MRO package; `flext-core` uses its own package.

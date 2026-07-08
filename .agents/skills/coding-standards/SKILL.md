@@ -74,6 +74,30 @@ Use the project facade aliases. Do not rename or shadow them.
 
 Settings classes (`FlextSettings`, `FlextCliSettings`, etc.) have no short alias; import the class by name.
 
+Facade owner modules that compose an upstream FLEXT facade by MRO must use the
+upstream short alias as the base class and publish the local alias at the
+bottom:
+
+```python
+from flext_cli import m, u
+
+
+class FlextPluginModels(m):
+    ...
+
+
+m = FlextPluginModels
+```
+
+This applies to `c`, `t`, `p`, `m`, and `u`. Workspace Pylance disables
+`reportGeneralTypeIssues` for this false-positive shape; CLI gates remain
+authoritative.
+
+`base.py` may likewise import upstream runtime `s` as the MRO service base and
+publish local `s` exactly once. `api.py` remains a thin MRO facade over the
+composed runtime class and publishes the package operational alias (`plugin`,
+`db_oracle`, etc.).
+
 **Good:**
 
 ```python
