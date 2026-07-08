@@ -42,8 +42,7 @@ from flext_cli import m, u
 from flext_plugin import c, p, r, t
 
 
-class FlextPluginModels(m):
-    ...
+class FlextPluginModels(m): ...
 
 
 m = FlextPluginModels
@@ -61,8 +60,7 @@ from flext_core import s
 from flext_db_oracle._utilities.db_oracle import FlextDbOracleUtilitiesDbOracle
 
 
-class FlextDbOracleServiceBase(s, FlextDbOracleUtilitiesDbOracle):
-    ...
+class FlextDbOracleServiceBase(s, FlextDbOracleUtilitiesDbOracle): ...
 
 
 s = FlextDbOracleServiceBase
@@ -72,8 +70,7 @@ s = FlextDbOracleServiceBase
 from flext_db_oracle.services.api_runtime import FlextDbOracleApiRuntime
 
 
-class FlextDbOracleApi(FlextDbOracleApiRuntime):
-    ...
+class FlextDbOracleApi(FlextDbOracleApiRuntime): ...
 
 
 db_oracle = FlextDbOracleApi
