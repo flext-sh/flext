@@ -95,6 +95,9 @@ Realizes ADR-005 §7 (runtime objects). Foundation-first; TDD; single commit.
 - **Evidence:** RED test (`self.config` on a service returns the frozen
   `FlextConfig` singleton; `self.settings` unchanged) → GREEN; `make check`/`make
   test` green; no new import cycle (import smoke on `c/t/p/m/u`).
+- **Legacy removal (same cycle, ADR-005 §8):** delete `FlextSettings.apply_override`
+  (DEPRECATED shim) and migrate its only users (`test_settings.py`,
+  `ex_02_flext_settings.py`) to `update_global`. Net LOC negative; no orphan refs.
 
 ## Phase 2 — flext-cli: universal engine (amplifies core) — `mro-wkii.3`
 
