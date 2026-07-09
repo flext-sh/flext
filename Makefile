@@ -79,7 +79,7 @@ PR_CHECKPOINT ?= 1
 DEPS_REPORT ?= 1
 VERBOSE ?=
 
-PR_BRANCH ?= main
+PR_BRANCH ?= 0.12.0-dev
 
 Q := @
 ifdef VERBOSE
