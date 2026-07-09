@@ -72,6 +72,30 @@ Scope (core stays runtime-minimal, `c/t/p/m/u` only, stdlib only):
   unused in `src/`); verify with deptry + `make check`.
 - **Evidence:** `make check`/`make test` green on flext-core; deptry clean.
 
+## Phase 1.5 — flext-core: `FlextConfig` frozen singleton + dual accessor — `mro-wkii.9`
+
+Realizes ADR-005 §7 (runtime objects). Foundation-first; TDD; single commit.
+
+- **`FlextConfig` frozen sibling base** (`_config/_base_parts/…`): reuses the
+  per-class `_instance`/`_lock`/`__init_subclass__` machinery copied from
+  `FlextSettingsBase`, but `model_config = SettingsConfigDict(frozen=True,
+  extra="forbid")`, `fetch_global()` only (no `update_global`). Overrides
+  `settings_customise_sources` → `TomlConfigSettingsSource` (stdlib) for its local
+  `config/*`.
+- **`FlextConfig` facade** (`config.py`): MRO-composed, flat fields per namespace
+  (mirror `FlextSettings`); root alias `config`.
+- **Dual accessor:** add `config: p.Config` field to `m.ServiceRuntime` beside
+  `settings`; add a `config` lazy property to `FlextMixins` beside `settings`
+  (`self._get_runtime().config`); populate it via `FlextConfig.fetch_global()`.
+  `settings` and `config` stay independent — neither exposes the other.
+- **Root + facade aliases:** `from flext_core import settings, config`; optional
+  `u.settings()` / `u.config()` for non-service classes. Register both in the lazy
+  export map (never eager) — preserves zero import-time coupling.
+- **Do NOT** add `settings`/`config` to `EnforcedModel` (field-collision).
+- **Evidence:** RED test (`self.config` on a service returns the frozen
+  `FlextConfig` singleton; `self.settings` unchanged) → GREEN; `make check`/`make
+  test` green; no new import cycle (import smoke on `c/t/p/m/u`).
+
 ## Phase 2 — flext-cli: universal engine (amplifies core) — `mro-wkii.3`
 
 flext-cli imports the core contracts and provides the workspace engine:

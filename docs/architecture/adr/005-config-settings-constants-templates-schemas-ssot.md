@@ -79,7 +79,23 @@ matching schema in `schemas/` (same base name). This mirrors the already-accepte
 ai-hub **ADR-0009** (`~/.ai-hub/docs/adr/0009-config-ssot-yaml-split-and-router-only-mcp.md`),
 which is the reference instance of this workspace-wide standard.
 
-### 3. Config ≠ Settings (hard split)
+### 3. Config ≠ Settings — two independent runtime objects (hard split)
+
+`config` and `settings` are **two separate runtime singletons**, never one exposing
+the other:
+
+- **`FlextConfig`** = declarative **execution parametrization** loaded from the
+  package `config/` dir. **Frozen** (static, like constants), singleton, read-only
+  at runtime. Reached as `self.config` / root `config`.
+- **`FlextSettings`** = env-overridable runtime knobs. **Mutable** (`update_global`),
+  singleton. Reached as `self.settings` / root `settings`.
+- `self.settings` MUST NOT expose `config.*` and `self.config` MUST NOT expose
+  `settings.*` — two distinct classes, two distinct properties, two distinct
+  singletons.
+
+The settings-bound subset of parametrization is authored in a **separate file**
+(`config/settings.yaml`) so config and settings never mix in one file; `FlextConfig`
+reads the execution-config files, `FlextSettings` reads `config/settings.yaml` + env.
 
 - **config/** = declarative execution parametrization (this ADR's subject).
 - **settings** = the subset that flows into `FlextSettings` for env override.
@@ -135,6 +151,40 @@ config and settings never mix in one file.
 - a template body is inlined as a Python string instead of a `templates/*.j2`,
 - a config file lacks a matching `schemas/*.schema.json`,
 - config and settings are mixed in one file.
+
+### 7. Runtime objects: `settings` and `config` singletons, flat per library
+
+- **Two frozen-vs-mutable singletons.** `FlextConfig` is a **frozen** pydantic-
+  settings singleton (`frozen=True`, `fetch_global()` only, no `update_global`);
+  `FlextSettings` is the existing **mutable** singleton. `FlextConfig` is a
+  **sibling base** — it does NOT inherit `FlextSettingsBase` (which is mutation-
+  oriented); it reuses only the per-class `_instance`/`_lock`/`__init_subclass__`
+  singleton machinery.
+- **Config-file loading via pydantic-settings sources.** `FlextConfig` overrides
+  `settings_customise_sources` to read its local `config/*` files:
+  `TomlConfigSettingsSource` in flext-core (stdlib `tomllib`, no yaml/jsonschema);
+  the YAML-capable variant lives in flext-cli. Each namespace reads its own
+  `config/` dir.
+- **Dual accessor on the runtime, never on the model base.** `self.settings` and
+  `self.config` are two independent lazy properties on the service/runtime mixin
+  (`FlextMixins` → `ServiceRuntime.settings` / `ServiceRuntime.config`), each
+  returning its own singleton via `fetch_global()` at **access** time. They are
+  **not** added to the data-model base (`EnforcedModel`) to avoid field/property
+  collisions. Arbitrary non-service classes use root aliases (`from flext_core
+  import settings, config`) / `u.settings()` / `u.config()`.
+- **Zero import-time coupling (no cycle).** Access is lazy (`fetch_global()` inside
+  the property body), and the root facades (`c/t/p/m/u`, `settings`, `config`) are
+  installed via the lazy export map — so `c/t/p/m/u` never import
+  `settings`/`config` at module load. `settings`/`config` depend only on leaf
+  `_constants` (stdlib) + pydantic-settings; they never import `flext-cli`/
+  `flext-infra` at runtime.
+- **Flat per library, unique at root.** Separation between libraries is by
+  **namespace** (`FlextSettings` → `FlextCliSettings` → `AiHubSettings`; same for
+  `Config`). **Inside each namespace every field is flat** and composed via MRO,
+  so it is unique at that root object. Nested branch objects
+  (`settings.Cli.*`, `settings.AiHub.*`) are **replaced** by flat fields; a domain
+  **prefix** (`cli_output_format`, `mcp_gateway_port`) is **optional**, used only
+  to organize, never a required sub-namespace.
 
 ## Consequences
 
