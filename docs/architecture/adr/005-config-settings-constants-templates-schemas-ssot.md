@@ -101,21 +101,24 @@ config and settings never mix in one file.
 
 ### 5. Layered engine ownership (no runtime cycle)
 
-- **flext-core (Layer 0, runtime-minimal).** Provides only what core itself
-  needs to self-configure, expressed through its own `c/t/p/m/u`: minimal config
-  load/merge/env-override (stdlib `tomllib` + `string.Template`, **no Jinja2**),
-  `FlextSettings`, `FlextConstants`, and the base config/schema **contracts**
-  (`p.Config*`, `m.Config*`, `t.Config*`). `jinja2` is **removed** from
-  `flext-core` dependencies (declared-but-unused).
-- **flext-cli (Layer 1, universal base for all projects).** Imports the
-  core primitives and **amplifies** them into the universal file/config/
-  template/schema engine: `u.Cli.render_template` (Jinja2, `StrictUndefined`),
-  `u.Cli.config_load`/`config_load_dir` (multi-format YAML/TOML/JSON +
-  env-override + merge; YAML is the authoring default),
-  `u.Cli.yaml_validate_schema` (JSON Schema). All FLEXT packages and `~/.ai-hub`
-  `u.Cli.config_load` (multi-format YAML/TOML/JSON + env-override + merge),
-  `u.Cli.yaml_validate_schema` (JSON Schema). All FLEXT packages and `~/.ai-hub`
-  consume these; `flext-cli` owns all file, output, CLI, formatting, and
+- **Namespace convention (flat + prefix, no sub-namespaces).** All FLEXT namespaces stay
+  flat — `c/t/p/m/u.*` in flext-core (base), `c/t/p/m/u.<Namespace>.*` in consumers. The
+  config group is separated by **prefix only**: `config_` for methods/utilities on `u.*`
+  and `Config` for classes/models/protocols on `c/t/p/m`. Never a `Config`/`config`
+  sub-namespace object (use `u.config_load`, not `u.config.load`; `p.ConfigRecord`, not
+  `p.Config.Record`).
+- **flext-core (Layer 0, runtime-minimal).** Provides only what core itself needs to
+  self-configure, through its own `c/t/p/m/u`: minimal `u.config_load` / `u.config_merge` /
+  `u.config_env_override` (stdlib `tomllib` + `string.Template`, **no Jinja2**),
+  `FlextSettings`, `FlextConstants`, and the base config/schema **contracts** (`p.Config*`,
+  `m.Config*`, `t.Config*`). `jinja2` is **removed** from `flext-core` dependencies
+  (declared-but-unused).
+- **flext-cli (Layer 1, universal base for all projects).** Imports the core primitives and
+  **amplifies** them into the universal file/config/template/schema engine:
+  `u.Cli.template_render` (Jinja2, `StrictUndefined`), `u.Cli.config_load` /
+  `u.Cli.config_load_dir` (multi-format YAML/TOML/JSON + env-override + merge; YAML is the
+  authoring default), and `u.Cli.schema_validate` (JSON Schema). All FLEXT packages and
+  `~/.ai-hub` consume these; `flext-cli` owns all file, output, CLI, formatting, and
   advanced-interface routines.
 - **flext-infra (Layer 2, generation + enforcement).** Consumes the `flext-cli`
   base for generation and hosts the enforcement rules that keep the pattern
