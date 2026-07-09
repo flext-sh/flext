@@ -358,3 +358,6 @@ legado/
 __pycache__/
 base.mk
 !.pre-commit-config.yaml
+
+# codegen module-standardizer reject artifacts (ADR-005 §9)
+*.tpl.rej

@@ -99,6 +99,34 @@ Realizes ADR-005 §7 (runtime objects). Foundation-first; TDD; single commit.
   (DEPRECATED shim) and migrate its only users (`test_settings.py`,
   `ex_02_flext_settings.py`) to `update_global`. Net LOC negative; no orphan refs.
 
+## Phase 1.6 — scaffold: base + `config.tpl` only, distribute config — `mro-wkii.10`
+
+Minimal executable slice of ADR-005 §9 (the full hierarchical standardizer is
+deferred to bead `mro-wkii.11`). Reuses the flext-infra scaffolder (single
+owner); names resolved via `u.compose_namespace_config` + `u.read_project_constants`
+(SSOT, never parallel detection).
+
+- **flext-core reference first:** fix `from flext_core import config` (broken
+  today) — add `config` to the lazy facade discovery + `config = FlextConfig`
+  alias, `make gen`, verify `from flext_core import config` resolves.
+- **New `RUNTIME_MODULES` tuple** (`flext-infra/_constants/codegen.py`), applied to
+  the **package dir only** (never examples/scripts/tests):
+  `("config.py", "Config", "FlextConfig", "Runtime config")`.
+- **`config.tpl`:** emit `class FlextXConfig(FlextConfig)` + `config = FlextXConfig`
+  alias + standardized `__all__`.
+- **`config/` dir:** `_scaffold_project` creates `[project root]/config/` + a
+  commented `config/config.yaml` when missing (`DIR_CONFIG` constant; new
+  `.yaml`-writing branch — `_scaffold_dir` is `.py`-only).
+- **Non-destructive:** existing `config.py`/`config/` respected; on incompatibility
+  warn loudly + write `<module>.tpl.rej` (git-ignored) and continue; remove the
+  `.rej` on later success.
+- **Distribute:** run `flext_infra codegen scaffold --apply` across the 30
+  projects; `make gen` regenerates lazy `__init__` so `from flext_x import config`
+  resolves.
+- **Evidence:** `from flext_core import config` works; a sample project has
+  `config.py` + `config/config.yaml` and `from flext_ldap import config` resolves;
+  `make check`/`make test` green on touched projects.
+
 ## Phase 2 — flext-cli: universal engine (amplifies core) — `mro-wkii.3`
 
 flext-cli imports the core contracts and provides the workspace engine:
