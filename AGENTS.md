@@ -114,6 +114,15 @@ Any unresolved blocker at step 6 keeps the change incomplete.
 - Do not import abstracted framework libs directly from consumer projects; use FLEXT abstractions.
 - Reject speculative architecture migration without a concrete blocker and a scoped acceptance target.
 
+### Config / parametrization SSOT (ADR-005)
+
+- Five concerns, one owner each: `constants` = defaults/invariants (`c.*`); `config/` = execution parametrization; `settings` = env-override (`FlextSettings`); `templates/*.j2` = large strings (Jinja2 via `flext-cli`); sibling `schemas/*.schema.json` = validation.
+- Execution parametrization lives **only** under a package `config/` dir; no schema/config source outside it.
+- `config` ≠ `settings`: the settings-bound subset is a separate file (`config/settings.yaml`).
+- Large/derived structures are **generated** by `_constants/_generated.py` from `config/`; hardcoding a large structure in `_constants/` is a blocked defect.
+- Layering (no runtime cycle): `flext-core` runtime-minimal (stdlib only, no Jinja2, never imports cli/infra at runtime) → `flext-cli` owns the universal template/config/schema engine → `flext-infra` enforces.
+- Canonical: [`docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md) · plan [`docs/architecture/config-ssot-migration-plan.md`](docs/architecture/config-ssot-migration-plan.md) · beads `mro-wkii`.
+
 ## Project map
 
 - Governed packages: `flext-*`.

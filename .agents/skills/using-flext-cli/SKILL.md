@@ -31,6 +31,7 @@ Quick-reference for building CLI commands with `flext_cli`.
 ## Critical rules
 
 - Model-driven commands only; avoid ad-hoc Typer functions.
+- **ADR-005:** use `u.Cli.render_template` (Jinja2), `u.Cli.config_load`/`config_load_dir`, and `u.Cli.yaml_validate_schema` for all template/config/schema work; `flext-cli` is the SSOT owner. See `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
 - Use `FlextCliSettings.fetch_global()` for configuration; `s` is the service/runtime alias, not settings.
 - Command input models are plain `m.BaseModel` subclasses (`m.CliInput`/`m.CliOutput` do not exist).
 - `FlextCliCli.build_model_command` does not exist; the canonical method is `FlextCliCli.model_command(...)`.

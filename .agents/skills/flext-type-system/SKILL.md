@@ -34,6 +34,12 @@ metadata:
 
 - Prefer canonical sources.
 - Require evidence.
+- **ADR-005:** config carries typed contracts — `p.Config*` protocols,
+  `m.Config*` frozen Pydantic v2 records (config + schema-ref), and `t.Config*`
+  aliases originate in `flext-core` (runtime-minimal) and are amplified by
+  `flext-cli`. Type config payloads against these contracts, never `Any`/dict.
+  Canonical: `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
+- Require evidence.
 
 ## Example
 

@@ -35,6 +35,7 @@ Enforces import hygiene, alias conventions, and abstraction boundaries across th
 ## Critical rules
 
 - Required header: `from __future__ import annotations` and `from collections.abc import Mapping, Sequence`.
+- **ADR-005:** `flext-core` `src/` must **not** import `flext-cli`/`flext-infra` (runtime cycle-free `infra → cli → core`); no direct `jinja2`/`yaml`/`jsonschema` import in consumers — route through `u.Cli.*`. See `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
 - Absolute imports only in `src/`; no relative imports, no wildcards.
 - Import `flext_core` via root namespace using canonical aliases (`c`, `m`, `p`, `r`, `t`, `u`, ...).
 - Facade owner modules that MRO-extend an upstream FLEXT facade import that upstream short alias directly and use it as the base class (`from flext_cli import m`; `class FlextPluginModels(m): ...`; `m = FlextPluginModels`).
