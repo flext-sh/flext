@@ -33,6 +33,17 @@ metadata:
 
 - Prefer canonical sources.
 - Require evidence.
+- **ADR-005 (config SSOT):** `_constants/` holds **only** scalar defaults and
+  invariants — the values a caller need not pass. Execution parametrization
+  (ports, timeouts, routing/spawn tables, policy) lives under the package
+  `config/` dir, not in constants. Large or derived structures are **generated**
+  by `_constants/_generated.py` from `config/`; a hardcoded large literal
+  (mapping/sequence over threshold) in `_constants/` is a blocked defect.
+  Canonical: `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`
+  (beads `mro-wkii`).
+
+- Prefer canonical sources.
+- Require evidence.
 
 ## Example
 

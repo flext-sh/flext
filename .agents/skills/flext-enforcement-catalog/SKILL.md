@@ -34,6 +34,12 @@ metadata:
 
 - Prefer canonical sources.
 - Require evidence.
+- **ADR-005 rules (planned, `mro-wkii.4`):** `no-large-literal-in-constants`,
+  `config-only-under-config-dir`, `template-not-inlined`,
+  `config-requires-schema`, `config-settings-not-mixed` — staged
+  disabled→warn→error, registered in `c.ENFORCEMENT_CATALOG`.
+  Canonical: `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
+- Require evidence.
 
 ## Example
 

@@ -33,6 +33,14 @@ metadata:
 
 - Prefer canonical sources.
 - Require evidence.
+- **ADR-005:** `flext-cli` is the SSOT owner of the universal file/output/CLI/
+  formatting engine **and** of config/template/schema routines —
+  `u.Cli.render_template` (Jinja2), `u.Cli.config_load`/`config_load_dir`
+  (multi-format, YAML default, env-override + merge), `u.Cli.yaml_validate_schema`
+  (JSON Schema). Consumers must route these through `u.Cli.*`, never re-implement
+  yaml/toml/json/jinja2/jsonschema locally.
+  Canonical: `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
+- Require evidence.
 
 ## Example
 
