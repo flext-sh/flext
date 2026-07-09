@@ -210,6 +210,42 @@ sites migrated in the same change — no orphan references):
 Enforcement (§6) also fails the gate on any new `DEPRECATED`/compat/shim marker
 in the config/settings surface, so legacy cannot re-accrete.
 
+### 9. Hierarchical, idempotent module standardizer (scaffold)
+
+Standardized module shapes are generated/repaired by **one hierarchical
+standardizer** in `flext-infra` codegen (the same scaffold path that owns
+`constants/typings/protocols/models/utilities`), reused for every canonical
+module so “modules that must stay standardized” have a single owner. Config is
+the first new module through it; settings follows the same path.
+
+- **SSOT names, never parallel detection.** The namespace/class stem is **derived
+  from the project name** via `u.derive_class_stem` / `u.pascalize`; a **custom**
+  name is honored only as an exception from `[tool.flext.namespace]`. The
+  standardizer resolves names, aliases, and per-module import sources through
+  `u.compose_namespace_config(root)` + `u.read_project_constants(name)` — the
+  existing flext-core readers — and through nothing else.
+- **Hierarchical, per-module rules.** Each module is standardized to: a header
+  docstring (taken from the module's own existing docstring; if missing, **warn
+  loudly**), `from __future__ import annotations`, reorganized imports, and the
+  canonical facade imports for that module tier — e.g. `constants.py` imports
+  `c,t,p,m,u,e,x,r` from the **base project**; `typings.py` imports `t,p,m,u,e,x,r`
+  from the base project plus `c` from the own project; and so on down the tier
+  order (`constants → typings → protocols → models → base → config → settings →
+  utilities → _constants/* …`). Anything beyond the single canonical
+  `<Namespace><Kind><Name>` class + standardized `__all__`/aliases is **warned
+  loudly**.
+- **Non-destructive, diagnosable.** The standardizer only rewrites what it can
+  apply **without failure**; it never breaks existing code. On any incompatibility
+  it writes a `<module>.tpl.rej` next to the target (git-ignored) containing the
+  attempted output + the failure, and continues to the next module. When a
+  module's standardization later succeeds, its `.rej` is removed. Existing
+  `config.py`/`config/` are respected: the template is attempted and, if
+  incompatible, fails loud (warning + `.rej`) without overwrite.
+- **Config location (resolved).** Config is always `[project root]/config/*.yaml`,
+  auto-globbed and deep-merged, imported into the project namespace
+  (`config = FlextXConfig`). This is app-owned / CWD-relative by design (the
+  running project owns its config).
+
 ## Consequences
 
 ### Positive
