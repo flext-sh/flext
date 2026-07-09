@@ -186,6 +186,30 @@ config and settings never mix in one file.
   **prefix** (`cli_output_format`, `mcp_gateway_port`) is **optional**, used only
   to organize, never a required sub-namespace.
 
+### 8. No legacy, no compat — remove and use the correct method directly
+
+Every migration under this ADR **removes** the superseded/compatibility/abandoned
+code in the **same cycle** the replacement lands, and callers are switched to the
+correct method directly (AGENTS.md §3 Root-Cause-Only; net LOC negative). No
+compat wrapper, deprecated shim, dual-path, alias, or "kept until later" survives.
+
+Concrete removal targets in the config/settings scope (each removed with its call
+sites migrated in the same change — no orphan references):
+
+- **`FlextSettings.apply_override`** (`flext-core/src/flext_core/settings.py`) —
+  explicit `DEPRECATED` shim “kept until Phase 4.2 sweep”. Delete it; migrate the
+  only users (`flext-core` `test_settings.py`, `ex_02_flext_settings.py`) to
+  `update_global`.
+- **Nested settings branches** — `FlextCliSettings.CliSettings` (`settings.Cli.*`)
+  and `AiHubSettings.AiHubSettingsBranch` (`settings.AiHub.*`): removed and
+  replaced by flat MRO-composed fields (§7), callers repointed to the flat form.
+- **`AiHubConfig` bespoke TOML loader** (`~/.ai-hub/src/ai_hub/config.py`) —
+  superseded by `FlextConfig` + `u.Cli.config_load_dir`; removed once ai-hub
+  migrates (Phase 4), no parallel loader retained.
+
+Enforcement (§6) also fails the gate on any new `DEPRECATED`/compat/shim marker
+in the config/settings surface, so legacy cannot re-accrete.
+
 ## Consequences
 
 ### Positive
