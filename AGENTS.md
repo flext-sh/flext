@@ -17,6 +17,31 @@ Esta Meta e as regras universais abaixo governam **todas as ações de todos os 
 
 Se qualquer ação não puder servir à Meta nem obedecer às regras limpas, o agente PARA e pergunta ao operador — nunca desvia, contorna, ou executa às cegas.
 
+### Precedência absoluta de decisão (sempre ativa, inegociável)
+
+Quando camadas conflitam, a ordem abaixo decide — e o artefato de camada inferior é AJUSTADO para refletir a camada superior, nunca o contrário:
+
+1. **Pedido vivo do operador** — prioridade máxima. Sobrepõe beads, planos, ADRs, skills e documentação. Se um pedido conflita com qualquer artefato, o artefato (bead/plano/ADR/skill/doc) é corrigido para seguir o pedido.
+2. **Beads** — sobrepõem ADRs, skills e docs.
+3. **ADRs** — sobrepõem skills e docs.
+4. **Skills e docs** — base; cedem a qualquer camada acima.
+
+Em caso de dúvida, conflito ou ambiguidade, o agente PERGUNTA ao operador antes de agir — sempre.
+
+<!-- mro-wkii.14 (agent: codegen) — regras universais U2–U8 gravadas por pedido vivo; não remover sem ADR + pedido do operador. Base flext-core (runtime config/settings) em estabilização por outro agente — esta lane é governança + scaffold. -->
+
+### Regras universais FLEXT para config/settings, typing e MRO (sempre ativas, invioláveis)
+
+Estas regras (U2–U8) complementam a precedência (U1, acima) e a Universal Agent Law (R0–R18). Onde qualquer ADR/skill/doc conflitar, o artefato é AJUSTADO — nunca a regra.
+
+- **U2 — Acesso strict a config/settings (única forma).** `from <pkg> import config` / `from <pkg> import settings` → `config.<Namespace>.<domain>` / `settings.<Namespace>.<domain>` (ex.: `from ai_hub import config; config.AiHub.*`). Demais config/settings chegam por **MRO**. Proibido qualquer outro caminho (`self.settings`, dict solto, proxy fora de `u`).
+- **U3 — Modelado, nunca model-less no consumo.** Domínios são `BaseModel` validados (`frozen=True, extra="forbid"` por domínio; `Root` `frozen=True, extra="ignore"`); `model_validate` na borda; **nunca `dict`/`Any`/`object` no consumo**. Ingestão YAML model-less fica confinada à borda (`FlextConfig` lendo `config/*.yaml`).
+- **U4 — ConfigProxy só em `u`.** A capacidade de proxy/config_access vive somente como `ConfigProxy` tipado/lazy em `_utilities/{config,settings}.py`, composto em `u.<Namespace>` por MRO, resolvendo `<pkg>.config` via `importlib` (sem ciclo). Proibido `proxy.py`/`_config_access.py` solto.
+- **U5 — Import direction `c → t → p → m → u`.** Forward (alta consome baixa) em runtime; reverse SEMPRE via `TYPE_CHECKING`; cross-project (consumer → base upstream) livre em runtime; leaf config/settings nunca importam a facade `c/t/p/m/u` do próprio projeto em runtime; exceção cuidadosa documentada com prova de não-ciclo.
+- **U6 — Typing estrito.** Nunca `Any`/`object`. Anotar sempre com tipos (`t.*` aliases), nunca com classes. Composto usa alias de `t` (`t.MappingOf[K,V]`, `t.SequenceOf[T]`, …). Nullable sempre explícito `T | None` (fora, nunca implícito). Em `models`, importar `p` via `TYPE_CHECKING` (models fica Pydantic-only em runtime). Em `protocols`, importar `m` via `TYPE_CHECKING` (reverse obrigatório; tipa os `@property` com o modelo real).
+- **U7 — Zero helpers soltos / zero aliases de compat.** Nenhuma função helper fora do facade MRO; nenhum alias/shim/`DEPRECATED` de compatibilidade; remoção no mesmo ciclo (net-LOC ≤ 0).
+- **U8 — Comentário de coordenação por edição.** Toda edição em superfície compartilhada (`AGENTS.md`, ADRs, facades `c/t/p/m/u`, leaf config/settings, codegen, `__init__` gerado) leva comentário curto no trecho alterado indicando agente + bead + motivo, para evitar conflito entre agentes em paralelo.
+
 <!-- BEGIN UNIVERSAL AGENT LAW (portable; regenerable; do not edit inside) -->
 
 ## Universal Agent Law (portable core)
@@ -49,6 +74,7 @@ Fix every defect at the root in GitOps/source and verify green. No bypass, worka
 - R13: Change accountability — atomic, impact/risk declared, no compat shims.
 - R14: Dev/prod parity.
 - R15: Bead ledger discipline — continuous status and evidence.
+- R16: Operator-precedence + ask-when-unsure. A live operator/user request ALWAYS supersedes every bead, plan, ADR, skill, and doc; the strict precedence is **operator request > beads > ADRs > skills > docs**. When a request conflicts with any of these, the request wins and the conflicting artifact MUST be adjusted in the SAME cycle (update bead, edit ADR/plan/skill/doc, record SHA/evidence) — never refuse or defer a request by citing a lower artifact as authority. On ANY doubt or ambiguity, STOP and ASK the operator before acting — never guess or assume.
 - R17: Law binds EVERY agent (subagents included, any depth). Every delegation prompt MUST embed the Supreme Rule, Supreme Law, R18, and the exact validation commands. A subagent violation is the coordinator's violation.
 - R18: Continuous-green — tree importable/collectable at EVERY instant, not just mission end. Per edit batch (≤5 files): fresh-import smoke + `ruff --no-fix` + typecheck + scoped tests, all green before next batch. Facade/public member move/rename/removal updates ALL consumers (grep-proof, workspace-wide) in the SAME batch. Broken import/collection = active incident: stop everything, fix first.
 
@@ -122,6 +148,14 @@ Any unresolved blocker at step 6 keeps the change incomplete.
 - Large/derived structures are **generated** by `_constants/_generated.py` from `config/`; hardcoding a large structure in `_constants/` is a blocked defect.
 - Layering (no runtime cycle): `flext-core` runtime-minimal (stdlib only, no Jinja2, never imports cli/infra at runtime) → `flext-cli` owns the universal template/config/schema engine → `flext-infra` enforces.
 - Canonical: [`docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md) · plan [`docs/architecture/config-ssot-migration-plan.md`](docs/architecture/config-ssot-migration-plan.md) · beads `mro-wkii`.
+
+### Strict typing, import layering, config access (R16 — inviolable)
+
+- **Typing**: never `Any`/`object`; never annotate with a concrete class. Use `t.*` aliases and `p.*` protocols; composite types use a `t.*` alias with `| None` on the **outside** (`t.Foo | None`). Import `p` and `m` under `TYPE_CHECKING` to sharpen typing (protocol modules import `m` under `TYPE_CHECKING`).
+- **No loose helpers / no compat aliases**: no standalone functions or compatibility shims; everything flows through `c/t/p/m/u` composed by MRO.
+- **Import order** strict `c → t → p → m → u`: a later facade may import earlier ones at runtime; the reverse (earlier importing later, e.g. `c` importing `m`) must be `TYPE_CHECKING`-only. `m` may lazy-import `c`; internal modules may, with extreme care, import a sibling directly only to break a real cycle.
+- **Config/settings access is single-form**: always `from <namespace> import config, settings` then `config.<Ns>.*` / `settings.<Ns>.*` (e.g. `from ai_hub import config, settings` → `config.AiHub.*`). Namespace fields are modeled nested `BaseModel` classes with validation — never a model-less dict; this is the standardized delivery the old proxy provided. Other projects inherit via MRO. No other access form may exist.
+- **Edit-coordination comment**: when editing a file, add a short inline comment explaining the change *for the other agent* so concurrent agents don't conflict or re-revert each other.
 
 ## Project map
 
