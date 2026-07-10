@@ -78,7 +78,7 @@ Realizes ADR-005 §7 (runtime objects). Foundation-first; TDD; single commit.
 
 - **`FlextConfig` frozen sibling base** (`_config/_base_parts/…`): reuses the
   per-class `_instance`/`_lock`/`__init_subclass__` machinery copied from
-  `FlextSettingsBase`, but `model_config = SettingsConfigDict(frozen=True,
+  `FlextSettings`, but `model_config = SettingsConfigDict(frozen=True,
   extra="forbid")`, `fetch_global()` only (no `update_global`). Overrides
   `settings_customise_sources` → `TomlConfigSettingsSource` (stdlib) for its local
   `config/*`.
@@ -92,8 +92,8 @@ Realizes ADR-005 §7 (runtime objects). Foundation-first; TDD; single commit.
   `u.settings()` / `u.config()` for non-service classes. Register both in the lazy
   export map (never eager) — preserves zero import-time coupling.
 - **Do NOT** add `settings`/`config` to `EnforcedModel` (field-collision).
-- **Evidence:** RED test (`self.config` on a service returns the frozen
-  `FlextConfig` singleton; `self.settings` unchanged) → GREEN; `make check`/`make
+- **Evidence:** RED test (`config` on a service returns the frozen
+  `FlextConfig` singleton; `settings` unchanged) → GREEN; `make check`/`make
   test` green; no new import cycle (import smoke on `c/t/p/m/u`).
 - **Legacy removal (same cycle, ADR-005 §8):** delete `FlextSettings.apply_override`
   (DEPRECATED shim) and migrate its only users (`test_settings.py`,

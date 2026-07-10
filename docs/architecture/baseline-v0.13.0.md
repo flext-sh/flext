@@ -331,7 +331,7 @@ Application code must not touch `dependency_injector` directly.
 
 Application code must use:
 
-- `self.settings`
+- `settings`
 - `self.context`
 - `self.container`
 - `self.runtime`
