@@ -86,10 +86,10 @@ the other:
 
 - **`FlextConfig`** = declarative **execution parametrization** loaded from the
   package `config/` dir. **Frozen** (static, like constants), singleton, read-only
-  at runtime. Reached as `self.config` / root `config`.
+  at runtime. Reached as `config` / root `config`.
 - **`FlextSettings`** = env-overridable runtime knobs. **Mutable** (`update_global`),
-  singleton. Reached as `self.settings` / root `settings`.
-- `self.settings` MUST NOT expose `config.*` and `self.config` MUST NOT expose
+  singleton. Reached as `settings` / root `settings`.
+- `settings` MUST NOT expose `config.*` and `config` MUST NOT expose
   `settings.*` — two distinct classes, two distinct properties, two distinct
   singletons.
 
@@ -157,7 +157,7 @@ config and settings never mix in one file.
 - **Two frozen-vs-mutable singletons.** `FlextConfig` is a **frozen** pydantic-
   settings singleton (`frozen=True`, `fetch_global()` only, no `update_global`);
   `FlextSettings` is the existing **mutable** singleton. `FlextConfig` is a
-  **sibling base** — it does NOT inherit `FlextSettingsBase` (which is mutation-
+  **sibling base** — it does NOT inherit `FlextSettings` (which is mutation-
   oriented); it reuses only the per-class `_instance`/`_lock`/`__init_subclass__`
   singleton machinery.
 - **Config-file loading via pydantic-settings sources.** `FlextConfig` overrides
@@ -165,8 +165,8 @@ config and settings never mix in one file.
   `TomlConfigSettingsSource` in flext-core (stdlib `tomllib`, no yaml/jsonschema);
   the YAML-capable variant lives in flext-cli. Each namespace reads its own
   `config/` dir.
-- **Dual accessor on the runtime, never on the model base.** `self.settings` and
-  `self.config` are two independent lazy properties on the service/runtime mixin
+- **Dual accessor on the runtime, never on the model base.** `settings` and
+  `config` are two independent lazy properties on the service/runtime mixin
   (`FlextMixins` → `ServiceRuntime.settings` / `ServiceRuntime.config`), each
   returning its own singleton via `fetch_global()` at **access** time. They are
   **not** added to the data-model base (`EnforcedModel`) to avoid field/property

@@ -52,7 +52,6 @@ assert safe_divide(10, 0).failure
 ```python
 from flext_core import FlextSettings
 
-settings = FlextSettings.fetch_global()
 assert isinstance(settings.model_dump(), dict)
 ```
 
@@ -93,7 +92,6 @@ logger.info("user.created", user_id=42)
 ```python
 from flext_core import s, FlextSettings
 
-settings = FlextSettings.fetch_global()
 runtime = s(settings=settings)
 ```
 
