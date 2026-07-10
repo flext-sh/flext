@@ -8,6 +8,10 @@ Proposed
 Governance alignment (`mro-wkii.7`) lands before implementation Phase 1
 (`mro-wkii.2`) per operator decision.
 
+<!-- mro-wkii.14 (agent: codegen) — errata por pedido vivo (precedencia U1). -->
+
+> **ERRATA (2026-07-10) — §7 e §9 superseded parcialmente por `AGENTS.md` U2–U8.** Por pedido vivo do operador: (§7) config/settings **não** são "flat fields"; o acesso é **nested tipado** `config.<Namespace>.<domain>`/`settings.<Namespace>.<domain>` com domínios modelados (`extra="forbid"` no consumo; ingestão YAML model-less confinada à borda). (§9) o standardizer gera os **4 leaf × {config,settings}** (`_constants|_models|_protocols|_utilities/{config,settings}.py`) + `_config.py`/`_settings.py`, com import direction `c→t→p→m→u` (reverse via `TYPE_CHECKING`) e `ConfigProxy` em `u`. Regra completa em `AGENTS.md` (U2–U8); reescrita integral destas seções acompanha o standardizer (mro-wkii.11).
+
 ## Context
 
 Configuration knowledge is fragmented across every FLEXT package and the

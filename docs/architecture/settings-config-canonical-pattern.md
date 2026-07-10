@@ -4,6 +4,10 @@
 **SSOT**: this file defines the ONE way to declare, group, and consume settings/config.
 Any deviation is a defect. Reviewed 2026-07-09.
 
+<!-- mro-wkii.14 (agent: codegen) — errata por pedido vivo (precedencia U1). -->
+
+> **ERRATA (2026-07-10) — supersede parcial por `AGENTS.md` U2–U8.** Por pedido vivo do operador (precedência U1), as seções §1 ("no MRO composition") e §2 ("`FlextConfig` `extra=\"allow\"`") deste doc estão **SUPERSEDED**. Padrão vigente: acesso strict `from <pkg> import config`/`settings` → `config.<Namespace>.<domain>`/`settings.<Namespace>.<domain>` (U2); domínios **modelados** `frozen=True, extra="forbid"` com `model_validate` na borda, nunca `dict`/`Any`/`object` no consumo (U3); `ConfigProxy` tipado/lazy em `u.<Namespace>` (U4); MRO para demais config/settings (U5); typing estrito U6; zero helpers/aliases (U7). Referência viva: `cosmos-main/src/cosmos_main/` (`_constants|_models|_protocols|_utilities/{config,settings}.py` + `_config.py`/`_settings.py`). Reescrita integral deste doc fica na lane do standardizer (mro-wkii.11).
+
 ## 1. Law (non-negotiable)
 
 - `settings` and `config` are **pre-instantiated namespaced singletons**. Import them
