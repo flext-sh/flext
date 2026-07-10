@@ -42,6 +42,22 @@ Estas regras (U2–U8) complementam a precedência (U1, acima) e a Universal Age
 - **U7 — Zero helpers soltos / zero aliases de compat.** Nenhuma função helper fora do facade MRO; nenhum alias/shim/`DEPRECATED` de compatibilidade; remoção no mesmo ciclo (net-LOC ≤ 0).
 - **U8 — Comentário de coordenação por edição.** Toda edição em superfície compartilhada (`AGENTS.md`, ADRs, facades `c/t/p/m/u`, leaf config/settings, codegen, `__init__` gerado) leva comentário curto no trecho alterado indicando agente + bead + motivo, para evitar conflito entre agentes em paralelo.
 
+<!-- mro-wkii.14 (agent: codegen) — U9–U11 + lição anti-destruição gravadas por pedido vivo após incidente em que um agente destruiu o WIP pendente de todos os agentes; linguagem dura proposital; não remover sem ADR + pedido do operador. -->
+
+- **U9 — Nunca brigar com mudança de outro agente (inviolável).** Worktree é compartilhado. É PROIBIDO sobrescrever, reverter, desfazer, "limpar" ou misturar no próprio commit qualquer trabalho que não seja da sua lane (staged OU unstaged). Conflito real ⇒ coordenar por bead/U8, ajustar o SEU, ou PARAR e perguntar ao operador. Cada commit leva APENAS os pathspecs da sua lane (`git commit -- <paths explícitos>`); `git add .` e qualquer comando que puxe staging/worktree alheio são proibidos. Misturar WIP alheio no seu commit é brigar com outro agente — falha grave.
+- **U10 — Analisar se o comando é destrutivo ANTES de executar (inviolável).** Antes de qualquer comando, classificar o blast-radius: é destrutivo, irreversível ou de efeito amplo? Exemplos proibidos sem confirmação explícita do operador: `git reset`, `git checkout`, `git restore`, `git clean`, `git stash`, `git revert`, `git push --force`/`--force-with-lease`, `rm -rf`, sobrescrever arquivo com `Write` em cima de trabalho alheio, apagar branches/tags, qualquer push non-fast-forward. Destrutivo ou de escopo incerto ⇒ PARAR, mostrar o comando exato e o risco, e AGUARDAR confirmação. Rollback é sempre proibido (reforça R1): nunca desfazer trabalho — seu ou de outro — por conta própria.
+- **U11 — Gravar sempre, validar sempre, nunca deixar quebrado (inviolável).** Toda alteração é GRAVADA (commit + fast-forward push com SHA evidenciado no bead) e VALIDADA (gates verdes: import smoke + `ruff --no-fix` + typecheck + testes escopados) antes de seguir. O projeto NUNCA pode ficar quebrado por qualquer alteração: a árvore permanece importável/coletável a todo instante (reforça R18). Red gate ou tree quebrada = incidente ativo: parar tudo, corrigir na origem, só continuar verde. "Depois eu valido/commito" é proibido — nenhum trabalho fica solto, pendente ou vermelho.
+
+### Lição gravada — incidente de destruição de WIP multi-agente (não repetir)
+
+Um agente destruiu, de uma vez, todas as mudanças pendentes (staged/unstaged) de todos os agentes neste worktree compartilhado. Causa-raiz: comando de efeito amplo executado sem análise de blast-radius e sem pathspec, somado a trabalho solto (não gravado) e ausência de validação contínua. Esta sessão cometeu falhas da mesma família e as registra como autocrítica para não repeti-las:
+
+- Misturei WIP de outra lane no meu commit (commit parcial sem pathspec estrito ⇒ 43 arquivos/1319 linhas de `mro-wkii.13` entraram em `5c025e77`). Isso é brigar com outro agente (viola U9). Correção: commit SEMPRE com `-- <paths explícitos>`, nunca `git add .`.
+- Continuei a escrever em lane compartilhada enquanto havia WIP alheio no mesmo submódulo, ampliando a superfície de conflito. Correção: checar `bd list --status=in_progress` e `git status` antes de escrever; com agentes em paralelo, isolar por pathspec e comentário U8, ou parar e coordenar.
+- Li caminhos por pressa (path errado) em vez de verificar antes de agir. Correção: confirmar existência/conteúdo real (read-only) antes de qualquer escrita; nunca confiar só em memória/sumário.
+
+Mecanismos obrigatórios de prevenção (sempre ativos): (1) pathspec explícito em todo `git add`/`git commit`; (2) análise de blast-radius antes de cada comando (U10); (3) gravação e validação contínuas (U11) para que nenhum trabalho fique solto e destruível; (4) rollback absolutamente proibido (R1/U10); (5) em dúvida, parar e perguntar ao operador (R16).
+
 <!-- BEGIN UNIVERSAL AGENT LAW (portable; regenerable; do not edit inside) -->
 
 ## Universal Agent Law (portable core)
