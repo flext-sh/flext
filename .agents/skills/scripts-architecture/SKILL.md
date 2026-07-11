@@ -27,7 +27,10 @@ metadata:
 ## Workflow
 
 1. Identify the architecture invariant to enforce or analyze.
-2. Create or modify the script under `scripts/architecture/`.
+2. If it is a static enforcement rule, declare it as Pydantic-2-validated DATA in
+   `flext-infra/config/enforcement/*.yaml`, evaluated by the rope-semantic engine — never a bespoke
+   detector script (LAW1). `scripts/architecture/` may retain only read-only analysis/reporting
+   tooling, not rule logic.
 3. Test with `--help` and a dry-run mode first.
 
 ## Critical rules
