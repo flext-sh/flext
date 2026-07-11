@@ -1,5 +1,7 @@
 # FLEXT Documentation Index
 
+<!-- mro-wkii.17.7 (agent: codex) — route Make and workspace guidance to the conform SSOT. -->
+
 The root portal is intentionally small. It documents the FLEXT workspace itself, not every historical note or every non-FLEXT directory in the repository.
 
 ## Quick Start
@@ -29,15 +31,20 @@ The root portal is intentionally small. It documents the FLEXT workspace itself,
 
 ## Workspace tooling
 
-FLEXT participates in the `~/.ai-hub` distributed workspace base. The common
-thin-wrapper is included via `workspace_custom.mk` and exposes dispatcher verbs
-through `make cosmos-help`. Existing FLEXT targets (`make check`, `make test`,
-etc.) are unchanged. See [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md).
+`flext-infra codegen conform` is the sole owner of repository conformance and
+generated Makefiles. It consumes the universal `flext-cli` config, schema, and
+template engine and emits self-contained `workspace-root`, `workspace-member`,
+or `standalone` profiles. Workspace topology comes only from the validated
+manifest under `config/`; package metadata remains Git-and-branch sourced while
+root `setup` installs declared local members as editable distributions.
 
-The generic registry-driven Make framework is owned by `flext-tests` and exposed
-through `c/m/t/u.Tests`; `flext-infra` consumes it when rendering thin
-dispatcher-backed workspace Makefiles. See
-[ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md).
+The generated public Make surface contains thirteen targets: `help` plus the
+twelve operational verbs defined by ADR-004. Project-specific behavior is
+available only through validated private `custom.mk` handlers. See
+[ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) for
+topology and environments and
+[ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) for
+Make/codegen ownership.
 
 ## Scope Boundary
 
