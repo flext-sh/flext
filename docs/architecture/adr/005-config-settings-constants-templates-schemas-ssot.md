@@ -3,7 +3,8 @@
 - **Status:** Accepted
 - **Date:** 2026-07-11
 - **Scope:** runtime configuration, declarative generation inputs, schemas,
-  templates, and enforcement across FLEXT consumers.
+  templates, and enforcement across FLEXT consumers. Enforcement follows the
+  two laws in §6 (rules-as-data; rope-only static analysis).
 - **Tracking:** `mro-wkii`, `mro-wkii.17`
 
 <!-- mro-wkii.17.6 (agent: codex) — make config ownership and the conform pipeline unambiguous. -->
@@ -61,7 +62,7 @@ Across packages:
 - `flext-cli` is the universal owner of CLI, process, file, output, config,
   schema, and template behavior;
 - `flext-infra` consumes those public primitives for generation and
-  enforcement.
+  enforcement, and owns ALL static enforcement rules as config data (§6).
 
 Consumers use only `u.Cli.config_load`, `u.Cli.config_load_dir`,
 `u.Cli.yaml_validate_schema`, and `u.Cli.render_template` for the corresponding
@@ -111,6 +112,33 @@ negative net source lines and never retain a compatibility or fallback path.
   generated tree.
 - Runtime consumers remain typed and independent of rendering dependencies.
 - Configuration or managed-file drift fails before mutation.
+- Static enforcement rules have one provenance (`flext-infra/config/*.yaml`)
+  and one engine (rope-semantic fact base + closed operator set in `u.Infra`);
+  no rule logic lives in Python and no `ast`/`get_ast` path exists (§6).
+- `flext-core` carries runtime/beartype rules only; static rules cannot drift
+  into the runtime layer.
+
+## 6. Enforcement is declarative data over a rope-only engine
+
+<!-- mro-wkii.4.8 (agent) — operator laws 2026-07-12; coordinate with mro-wkii.4 / mro-wkii.17.6. -->
+
+**LAW1 — rules are data, never code.** 100% of static enforcement rules live ONLY
+under `flext-infra/config/*.yaml` as Pydantic-2-validated records — zero rule
+logic in Python. Bespoke per-rule detector classes and `ClassVar`
+banned/allowlist rule tables are invalid. The rule models are PURE DATA: full
+pydantic-2-way (`Field`/`Annotated`/discriminated unions/`computed_field`), with
+custom `field_validator`/`model_validator` only as a last resort, and NO methods
+of any kind. All behavior — the rope-semantic fact base and the closed operator
+set that evaluates rules — lives in `u.Infra`/services, never on a model.
+`flext-core` holds runtime/beartype rules only and is never the SSOT for a
+static rule.
+
+**LAW2 — static analysis is rope-semantic only.** Facts come only from rope's
+semantic model (`get_scope`/`get_defined_names`/`get_attributes`/
+`get_superclasses`/`PyName`). `import ast`, `ast.parse`, `ast.walk`,
+`ast.Module`, and `PyModule.get_ast()`/`walk_ast_nodes` are BANNED in the static
+path — `get_ast()` returns a stdlib `ast.Module`, which is AST. One shared
+`rope_project` per run serves both detection and fix.
 
 ## Verification contract
 
@@ -127,3 +155,4 @@ negative net source lines and never retain a compatibility or fallback path.
 - [ADR-003 — Manifest-owned topology and Git-first uv environments](./003-workspace-tooling-hub-distribution.md)
 - [ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`](./004-generic-make-framework-in-flext-tests.md)
 - [Migration plan](../config-ssot-migration-plan.md)
+- Enforcement hardening beads: `mro-wkii.4`, `mro-wkii.4.1`, `mro-wkii.4.8`; plan `flext-infra/.omo/plans/declarative-enforcement.md`.

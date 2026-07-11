@@ -1,7 +1,7 @@
 ---
 name: scripts-validation
 description: 'Use this skill to validation services — policy gates, automated checks,
-  ast-grep enforcement, and workspace validation. Use when using flext_infra.check
+  declarative rope-based enforcement, and workspace validation. Use when using flext_infra.check
   or editing scripts/validation/. DO NOT USE FOR: questions unrelated to scripts-validation
   creating projects or architecture from scratch'
 license: MIT
@@ -25,14 +25,20 @@ metadata:
 
 ## Workflow
 
-1. Identify the validation invariant to enforce.
-2. Add rules to the relevant skill's `rules.yml` (type: ast-grep or custom).
-3. Place ast-grep rule files in the skill's `rules/` directory.
+1. Identify the static validation invariant to enforce.
+2. Declare the rule as DATA in `flext-infra/config/enforcement/*.yaml` (Pydantic-2 validated);
+NEVER as Python rule logic and NEVER as an ast-grep rule file (LAW1).
+3. The rule is evaluated by the shared rope-semantic engine (`ctx.rope_project`);
+`ast`, `ast-grep`, and `PyModule.get_ast()` are forbidden (LAW2).
 
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
+- Static enforcement rules are 100% config DATA (`flext-infra/config/*.yaml`), never Python code
+  or ast-grep rule files (LAW1; memory:adr005-p3-rules-as-data-law).
+- Static analysis is rope-semantic ONLY; `ast`, `ast-grep`, and `PyModule.get_ast()` are banned
+  (LAW2; memory:adr005-p3-single-rope-loop). Canonical: `docs/architecture/adr/005-...md`.
 
 ## Example
 

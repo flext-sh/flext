@@ -207,13 +207,15 @@ must not revive old modules or add a compatibility wrapper.
 
 ## Flext-Infra Refactor Engine Rule
 
-In `flext-infra`, structural rewrite behavior is Rope-first. Use the repository
-Rope utilities, Rope services, and mnemonic service surfaces for source
-navigation, symbol ownership, moves, renames, imports, and rewrite application.
-AST or regular-expression rewrite paths are defects to migrate, not legacy paths
-to preserve. Do not add, keep, or bless AST/regex structural logic in
-`flext-infra`; migrate the implementation to the Rope layer and fail loud when
-the Rope owner cannot prove the rewrite.
+In `flext-infra`, ALL static analysis — both detection and structural rewrite — is Rope-only. Use the
+repository Rope utilities, Rope services, and mnemonic service surfaces for source navigation, symbol
+ownership, moves, renames, imports, fact extraction, and rewrite application. AST or regular-expression
+paths are defects to migrate, not legacy paths to preserve. Do not add, keep, or bless AST/regex/ast-grep
+logic in `flext-infra`; migrate the implementation to the Rope semantic layer and fail loud when the Rope
+owner cannot prove the operation. This ban includes `PyModule.get_ast()` / `walk_ast_nodes`: `get_ast()`
+returns a stdlib `ast.Module`, which is AST and therefore banned. Build facts only from Rope's semantic
+model (`get_scope`, `get_defined_names`, `get_attributes`, `get_superclasses`, `PyName`).
+(operator law 2026-07-12; memory:adr005-p3-single-rope-loop)
 
 ## Refactor Loop
 

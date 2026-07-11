@@ -19,7 +19,7 @@ This directory contains only project agent assets.
 
 - Scope routing and freshness rules live in `AGENTS.md` and `.agents/skills/code-navigation/SKILL.md`.
 - Serena setup expectations live in `AGENTS.md`, `.vscode/mcp.json`, and `.serena/project.yml`.
-- Structural propagation rules for `ast-grep` live in `AGENTS.md` and `.agents/skills/flext-refactoring-workflow/SKILL.md`.
+- Structural propagation and static enforcement in `flext-infra` are rope-semantic only (`ast`/`ast-grep`/`get_ast` banned; memory:adr005-p3-single-rope-loop). See `AGENTS.md` and `.agents/skills/flext-refactoring-workflow/SKILL.md`.
 - MCP routing expectations live in `AGENTS.md` and `.vscode/mcp.json`.
 
 ## Refactor Entry

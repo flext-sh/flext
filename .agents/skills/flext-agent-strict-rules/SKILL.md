@@ -28,7 +28,9 @@ metadata:
 
 1. Identify which operational cluster (1–5 above) applies to the change.
 2. Apply the canonical pattern without introducing compatibility layers.
-3. Update all impacted call sites/contracts via `ast-grep` (`AGENTS.md` §3.5).
+3. Update all impacted call sites/contracts via the rope-semantic model (rope rename/move + fact
+   base); ast-grep is a textual codemod aid only, never the enforcement or semantic source of truth
+   (`AGENTS.md` §3.5; LAW2: rope-only, `ast`/`get_ast` banned).
 
 ## Critical rules
 

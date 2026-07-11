@@ -27,13 +27,16 @@ metadata:
 ## Workflow
 
 1. Baseline: run the 3 pre-edit commands from `AGENTS.md` §0.0.
-2. Blast radius: use `scope`/`sg`/`grep` to map callers before first edit.
+2. Blast radius: map callers with the rope-semantic model (`scope`/rope) before first edit; `grep`/`sg`
+   are textual aids only, never the enforcement or semantic source of truth (LAW2: rope-only; `ast`/`get_ast` banned).
 3. Deletion pass: remove wrappers, compat aliases, dead code, duplicated fields/methods first.
 
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
+- Static enforcement of refactor invariants is config DATA in `flext-infra/config/*.yaml` over the
+  rope-semantic fact base (LAW1); this workflow never adds detector code or `ast`/`get_ast`-based checks (LAW2).
 
 ## Example
 

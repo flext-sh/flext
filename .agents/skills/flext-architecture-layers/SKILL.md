@@ -39,7 +39,10 @@ metadata:
   `flext-cli`/`flext-infra` at runtime** (examples/scripts/tests only).
   `flext-cli` owns the universal template/config/schema engine
   (`u.Cli.render_template`, `config_load`, `yaml_validate_schema`) and amplifies the
-  core contracts. `flext-infra` consumes cli and hosts enforcement. Direction:
+  core contracts. `flext-infra` consumes cli and hosts ALL static enforcement as Pydantic-2-validated
+  config data (`config/*.yaml`) evaluated by the rope-semantic engine (LAW1/LAW2: `ast`/`get_ast`
+  banned);
+  `flext-core` stays runtime/beartype-only with zero static rules. Direction:
   `flext-infra → flext-cli → flext-core`, no cycle.
   Canonical: `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
 
