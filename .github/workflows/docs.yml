@@ -46,14 +46,15 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Boot (advisory)
-        continue-on-error: true
-        run: make boot
+      # mro-o6h5 (agent: kimi) — root cause of the "No module named ruff"
+      # audit failures: `make boot` runs DRY-RUN without APPLY=Y (mutator
+      # guard), and `uv run`/`uv sync` defaults never install the root
+      # `dev` EXTRA where ruff/pytest live. Materialize the full workspace
+      # toolchain explicitly (same flags as the Makefile's
+      # ENSURE_WORKSPACE_RUNTIME), then verify the audit toolchain is present.
+      - name: Sync workspace toolchain
+        run: uv sync --all-packages --all-groups --all-extras
 
-      # mro-o6h5 (agent: kimi) — boot is advisory, so a partial sync used to
-      # surface as cryptic downstream crashes ("list index out of range" when
-      # python -m ruff was missing from the venv). Fail fast with a clear
-      # message when the toolchain the audit/validate steps need is absent.
       - name: Verify docs toolchain
         run: |
           .venv/bin/python -c "import flext_infra.docs"
