@@ -750,7 +750,6 @@ for more details).
 
 Here is an example using a generic Pydantic model to create an easily-reused HTTP response payload wrapper:
 
-<!-- TODO: tabs should be auto-generated if using Ruff (https://github.com/pydantic/pydantic/issues/10083) -->
 
 === "Python 3.9 and above"
 

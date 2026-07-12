@@ -703,7 +703,6 @@ The [`@warnings.deprecated`][warnings.deprecated] decorator (or the
 `typing_extensions` backport on Python
 3.12 and lower) can be used as an instance.
 
-<!-- TODO: tabs should be auto-generated if using Ruff (https://github.com/pydantic/pydantic/issues/10083) -->
 
 === "Python 3.9 and above"
 

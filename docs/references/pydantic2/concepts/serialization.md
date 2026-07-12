@@ -193,7 +193,6 @@ print(dict(m))
 
 Pydantic models support efficient pickling and unpickling.
 
-<!-- TODO need to get pickling doctest to work -->
 
 ```python {test="skip"}
 import pickle
