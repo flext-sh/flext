@@ -509,11 +509,11 @@ def test_database_connection():
 
    ```python
    # Em cada projeto, criar namespaces fáceis:
-   from flext.constants import c
-   from flext.models import m
-   from flext.typings import t
-   from flext.protocols import p
-   from flext.utilities import u
+   from flext import c
+   from flext import m
+   from flext import t
+   from flext import p
+   from flext import u
    ```
 
 3. **Domínios de teste por projeto:**
