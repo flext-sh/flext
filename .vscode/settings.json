@@ -99,8 +99,7 @@
     "./**/.venv"
   ],
   "python.analysis.addExtraPathsForPythonProjects": true,
-  "python.analysis.addFoldersForPythonProjects": true,
-  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.usePerProjectEnvironments": true,
   "python.analysis.enableExternalTypeServer": true,
   "python.analysis.findRefsInBackgroundThread": true,
   "python.analysis.useNearestConfiguration": true,
@@ -121,11 +120,6 @@
   "terminal.integrated.env.linux": {
     "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}",
     "VIRTUAL_ENV": "${workspaceFolder}/.venv"
-  },
-  "python.analysis.typeCheckingMode": "strict",
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportGeneralTypeIssues": "none",
-    "reportUntypedBaseClass": "none"
   },
   "python-envs.defaultEnvManager": "ms-python.python:system"
 }
