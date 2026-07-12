@@ -1,83 +1,64 @@
-:## Pydantic v2 Governance Summary
+## Pydantic v2 Governance Summary
 
-### Use `Annotated` for reusable field constraints
+<!-- mro-wkii.17 (agent: codex) — document boundary-once models without duplicate transports. -->
 
-```python
-from __future__ import annotations
+### Canonical flow
 
-from typing import Annotated
-from pydantic import Field
-
-NonEmptyStr = Annotated[str, Field(min_length=1)]
+```text
+external input
+→ flext-cli validates once into the owning m.* model
+→ the same instance crosses p.* contracts and MRO services
+→ r[m.Result]
+→ flext-cli serializes once at the true external egress
 ```
 
-### Mutable defaults via `default_factory`
+Pydantic two-way is the pair of external boundaries. It is never an internal
+dump-to-validate roundtrip.
 
-```python
-from __future__ import annotations
+### Model owner
 
-from pydantic import BaseModel, Field
+- Declare each model only in the owning `_models` facet.
+- Keep models field-only, frozen, strict, and `extra="forbid"` where applicable.
+- Use immutable defaults and declarative field constraints.
+- Do not add methods, validators, serializers, computed fields, private state,
+  factories, getters, or setters.
 
+### Protocol interface
 
-class Config(BaseModel):
-    tags: list[str] = Field(default_factory=list)
+- Expose each model shape through the owning `p.*` protocol.
+- Annotate service and facade interfaces with `p.*` or `t.*`, not concrete models.
+- Use `m.*` only to construct the canonical object at the boundary.
+- Pass the original instance through every internal call.
+
+### Direct upstream reuse
+
+When an upstream `m.*` model and `p.*` protocol already express the required
+semantics, import and use those facade members directly. A local alias,
+pass-through wrapper, name-only subclass, or shadow schema is a duplicate API.
+
+### Config and settings SSOT
+
+```text
+from package import config, settings
+
+project = config.Package.project
+runtime = settings.Package.runtime
 ```
 
-### Cache TypeAdapters
-
-```python
-from __future__ import annotations
-
-from functools import lru_cache
-from pydantic import TypeAdapter
-
-
-@lru_cache
-def _ids_adapter() -> TypeAdapter[list[int]]:
-    return TypeAdapter(list[int])
-```
-
-### Protocol vs ABC
-
-- Use `Protocol` for structural typing in `protocols.py`.
-- Use `ABC` only for shared implementation base classes.
-
-### `issubclass()` safety
-
-Always guard with `isinstance(x, type) and issubclass(x, BaseModel)`.
-
-### ConfigDict defaults
-
-```python
-from __future__ import annotations
-
-from pydantic import BaseModel, ConfigDict
-
-
-class MyModel(BaseModel):
-    model_config = ConfigDict(
-        strict=True,
-        frozen=False,
-        extra="forbid",
-        validate_assignment=True,
-    )
-```
-
-### Validation boundaries
-
-- Public entrypoints: `Model.model_validate(data)` or `Model.model_validate_json(json_bytes)`.
-- Internal payloads: cached `TypeAdapter[T].validate_python(data)`.
-- Never call `Model(**data)` directly.
+The namespaced singletons are already validated. Consumers never call a getter,
+proxy, loader, slice validator, or settings accessor.
 
 ### Anti-patterns
 
-- `cast()` — forbidden.
-- `Any` / bare `object` — forbidden.
-- `t.JsonValue` as model field — forbidden; use typed models.
-- `type()` for narrowing — forbidden; use `isinstance` / `TypeIs`.
-- Double `Field()` assignment — forbidden.
-- `Model(data)` with dict — forbidden; use `model_validate`.
+- `cast()`, `Any`, or bare `object`.
+- `dict`, `TypedDict`, dataclass, `NamedTuple`, `SimpleNamespace`, or JSON-shaped contracts.
+- Internal `model_dump` to `model_validate` reconstruction.
+- `model_copy` or TypeAdapter reconstruction used as transport.
+- Duplicate DTO/model/protocol or local alias for an unchanged upstream contract.
+- Custom model methods, validators, serializers, properties, or factories.
+- A second loader, writer, renderer, facade, or compatibility execution branch.
 
 ### Facade-only imports
 
-Consumers import Pydantic abstractions through `flext_core` (`u.BaseModel`, `u.Field`, `u.ConfigDict`). No direct `from pydantic import ...` in consumer projects.
+Consumer code imports project and upstream `c/t/p/m/u` members from package
+roots. Pydantic models are declared only inside the owning model facet.

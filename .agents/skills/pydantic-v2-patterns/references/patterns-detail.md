@@ -1,156 +1,92 @@
 ## Pydantic v2 Patterns Summary
 
-### Reusable `Annotated` aliases
+<!-- mro-wkii.17 (agent: codex) — prefer composition of source objects over local aliases and copies. -->
+
+### Declaration-only model owner
 
 ```python
 from __future__ import annotations
 
-from typing import Annotated
-from pydantic import BeforeValidator, Field
+from typing import Annotated, ClassVar
 
-NonEmptyStr = Annotated[
-    str, BeforeValidator(lambda v: v.strip() or None), Field(min_length=1)
-]
+from flext_core import m as core_m
+
+
+class ProjectModels(core_m):
+    class Request(core_m.FrozenModel):
+        model_config: ClassVar[core_m.ConfigDict] = core_m.ConfigDict(
+            strict=True,
+            frozen=True,
+            extra="forbid",
+        )
+
+        identifier: Annotated[str, core_m.Field(min_length=1)]
+
+    class ScopedRequest(core_m.FrozenModel):
+        model_config: ClassVar[core_m.ConfigDict] = core_m.ConfigDict(
+            strict=True,
+            frozen=True,
+            extra="forbid",
+        )
+
+        source: Request
+        project_scope: Annotated[str, core_m.Field(min_length=1)]
+
+
+m = ProjectModels
 ```
 
-### Field validators
+`ScopedRequest.source` retains the exact `Request` instance. The additional
+field is a documented domain delta; no source fields are flattened or copied.
+
+### Canonical source reuse
+
+Use the upstream model and protocol members directly when semantics are
+unchanged. Do not create `type` aliases, forwarding protocols, wrapper models,
+or package-local facade names for them. Compose a new model only when the local
+domain adds a real field, invariant, capability, or semantic change.
+
+### Protocol interface for the composed model
 
 ```python
 from __future__ import annotations
 
-from flext_core import t, u
+from typing import Protocol
+
+from flext_core import p as core_p
 
 
-@u.field_validator("email", mode="before")
-@classmethod
-def _normalize_email(cls, v: t.JsonValue) -> str:
-    return str(v).strip().lower()
+class ProjectProtocols(core_p):
+    class Source(Protocol):
+        @property
+        def identifier(self) -> str: ...
+
+    class ScopedRequest(Protocol):
+        @property
+        def source(self) -> ProjectProtocols.Source: ...
+
+        @property
+        def project_scope(self) -> str: ...
+
+
+p = ProjectProtocols
 ```
 
-### Cross-field model validator
+Service signatures use `p.ScopedRequest`; the runtime value remains the
+canonical model instance.
 
-```python
-from __future__ import annotations
+### Discriminated declarations
 
-from flext_core import u
-
-
-@u.model_validator(mode="after")
-def _check_dates(self):
-    if self.end < self.start:
-        raise ValueError("end must be >= start")
-    return self
-```
-
-### Computed fields
-
-```python
-from __future__ import annotations
-
-from flext_core import u
-
-
-@u.computed_field
-@property
-def display_name(self) -> str:
-    return f"{self.first} {self.last}"
-```
-
-### Discriminated unions
-
-```python
-from __future__ import annotations
-
-from typing import Literal
-
-from pydantic import BaseModel
-
-
-class Cat(BaseModel):
-    kind: Literal["cat"]
-    meows: int
-
-
-class Dog(BaseModel):
-    kind: Literal["dog"]
-    barks: int
-
-
-Pet = Cat | Dog
-```
-
-Use `Discriminator("kind")` for open unions.
-
-### Serializers
-
-```python
-from __future__ import annotations
-
-from datetime import datetime
-
-from flext_core import u
-
-
-@u.field_serializer("created_at", mode="plain")
-def _serialize_dt(self, dt: datetime) -> str:
-    return dt.isoformat()
-```
-
-### Strict + frozen boundaries
-
-```python
-from __future__ import annotations
-
-from pydantic import BaseModel, ConfigDict
-
-
-class Boundary(BaseModel):
-    model_config = ConfigDict(strict=True, frozen=True)
-```
-
-### TypeAdapter
-
-```python
-from __future__ import annotations
-
-from pydantic import BaseModel, TypeAdapter
-
-
-class MyModel(BaseModel):
-    id: int
-
-
-raw = [{"id": 1}]
-adapter = TypeAdapter(list[MyModel])
-items = adapter.validate_python(raw)
-json_out = adapter.dump_json(items)
-```
-
-Cache adapters at module level when reused.
-
-### RootModel
-
-```python
-from __future__ import annotations
-
-from pydantic import RootModel
-
-
-class Tags(RootModel[list[str]]):
-    pass
-```
-
-### PrivateAttr
-
-```python notest
-# Illustrative pattern — private cache attribute on a Pydantic model.
-class Service(BaseModel):
-    _cache: dict[str, Any] = PrivateAttr(default_factory=dict)
-```
+Use a field-only discriminated union only when alternatives have distinct
+domain semantics. The discriminator is declared with `Field(discriminator=...)`;
+consumers retain the selected model instance.
 
 ### General principles
 
-- Prefer validators over manual coercion.
-- Use `model_copy(update=...)` for immutable updates.
-- Validate `**kwargs` with `Model.model_validate(kwargs)`.
-- Keep boundary models strict; internal models permissive.
+- Keep every model field-only and immutable.
+- Put behavior and derivation in `u` or a service composed by MRO.
+- Prefer declarative constraints; custom validators are not part of the strict model path.
+- Validate once at ingress and retain object identity internally.
+- Reuse upstream `m.*` and `p.*` members directly.
+- Declare a new model only for a documented domain field, invariant, capability, or semantic change.
+- Remove parallel loaders, renderers, writers, convenience APIs, and compatibility branches.
