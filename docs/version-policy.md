@@ -8,7 +8,7 @@ The workspace develops on a named development branch per cycle
 (currently `0.12.0-dev`). Every package `pyproject.toml` carries the cycle
 version (`version = "0.12.0-dev"`) so the workspace is internally consistent
 at any commit. Release notes per cycle live under
-[docs/releases/](../releases/latest.md).
+`docs/releases/` (repo-only reference, e.g. `docs/releases/latest.md`).
 
 ## Package releases
 

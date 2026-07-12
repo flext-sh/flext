@@ -22,7 +22,7 @@
   - [1.3 Stakeholders](#13-stakeholders)
     - [1.3.1 Primary Stakeholders](#131-primary-stakeholders)
       - [Data Engineers](#data-engineers)
-      - [System Administrators](#system-REDACTED_LDAP_BIND_PASSWORDistrators)
+      - [System Administrators](#system-administrators)
       - [Business Users](#business-users)
       - [Developers](#developers)
     - [1.3.2 Secondary Stakeholders](#132-secondary-stakeholders)
