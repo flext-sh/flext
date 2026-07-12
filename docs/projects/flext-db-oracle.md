@@ -34,7 +34,7 @@ api = FlextDbOracleApi(settings)
 connected = api.connect()
 if connected.success:
     health = api.fetch_health_status()
-    tables = api.fetch_tables()          # r[StrSequence]
+    tables = api.fetch_tables()  # r[StrSequence]
     rows = api.execute_sql(
         "SELECT table_name FROM user_tables FETCH FIRST :n ROWS ONLY",
         {"n": 5},
