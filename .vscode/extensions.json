@@ -1,9 +1,11 @@
 {
-  // NOTE (multi-agent, mro-wkii.17.25): recommend one Python editor stack and keep full type gates in Make.
+  // NOTE (multi-agent, mro-wkii.17.25): keep Pylance as the language provider while dedicated tools report their own diagnostics.
   "recommendations": [
     "charliermarsh.ruff",
     "davidanson.vscode-markdownlint",
     "editorconfig.editorconfig",
+    "meta.pyrefly",
+    "ms-python.mypy-type-checker",
     "ms-python.python",
     "ms-python.vscode-pylance",
     "redhat.vscode-yaml",
@@ -11,9 +13,7 @@
   ],
   "unwantedRecommendations": [
     "donjayamanne.githistory",
-    "meta.pyrefly",
     "mhutchie.git-graph",
-    "ms-python.mypy-type-checker",
     "ms-python.vscode-python-envs",
     "waderyan.gitblame"
   ]
