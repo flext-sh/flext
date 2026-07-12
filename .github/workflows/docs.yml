@@ -82,6 +82,15 @@ jobs:
             exit 1
           }
 
+      # mro-o6h5 (agent: kimi) — root cause of the "missing required docs
+      # files: mkdocs.yml" validate FAILs: the docs contract requires
+      # GENERATED artifacts (project mkdocs.yml from flext-infra templates,
+      # docs/api-reference/generated/*.md), but validate ran on the raw
+      # checkout. Local worktrees pass because devs already generated them;
+      # CI must generate before validate, same as the build job does.
+      - name: Docs generate (materialize contract artifacts)
+        run: uv run --all-packages python -m flext_infra docs generate --workspace . --apply
+
       - name: Docs validate (blocking)
         run: |
           make docs DOCS_PHASE=validate || {
