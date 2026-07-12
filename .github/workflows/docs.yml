@@ -134,6 +134,15 @@ jobs:
         with:
           enable-cache: true
 
+      # mro-o6h5 (agent: kimi) — same root cause as the docs-quality ruff
+      # incident: `uv run` implicit-sync never installs the root `dev` EXTRA
+      # where the mkdocs plugin set lives (git-revision-date-localized,
+      # mermaid2, minify, ...). Materialize the full toolchain explicitly
+      # before generate/build, or mkdocs --strict aborts with
+      # "plugin is not installed".
+      - name: Sync workspace toolchain
+        run: uv sync --all-packages --all-groups --all-extras
+
       - name: Generate docs (engine SSOT, root scope included)
         # mro-jwop (agent: kimi) — engine direct call: the make orchestrator fans
         # out per project and never builds the root scope; the engine CLI at the
