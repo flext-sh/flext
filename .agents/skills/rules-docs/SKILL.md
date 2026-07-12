@@ -43,3 +43,10 @@ metadata:
 
 - Unclear scope → ask.
 - Missing context → state assumptions.
+
+## References
+
+<!-- mro-lo34 (agent: kimi) — canonical ADR refs added per docs-renaissance S1. -->
+- `docs/GOVERNANCE.md` — controls, ADR routing, canonical workflow
+- `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md` — template/config/schema SSOT the docs engine renders through
+- `make docs DOCS_PHASE=<generate|fix|audit|build|validate>` — flext-infra docs engine entrypoint

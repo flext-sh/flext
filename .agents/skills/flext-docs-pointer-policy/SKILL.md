@@ -43,3 +43,10 @@ metadata:
 ## Troubleshooting
 
 - Unclear scope → ask.
+
+## References
+
+<!-- mro-lo34 (agent: kimi) — canonical ADR refs added per docs-renaissance S1. -->
+- `docs/GOVERNANCE.md` — controls, ADR routing, canonical workflow
+- `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md` — SSOT concerns (constants/config/settings/templates/schemas)
+- `.agents/skills/flext-strict-refactoring/SKILL.md` — governance-surface cleanup rules

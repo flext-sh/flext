@@ -71,6 +71,9 @@ make check PROJECT=flext-core CHECK_GATES=pyrefly
 
 ## References
 
+<!-- mro-lo34 (agent: kimi) — canonical ADR refs added per docs-renaissance S1. -->
 - `.agents/skills/coding-standards/SKILL.md` — general coding standards
 - `.agents/skills/flext-development-workflow/SKILL.md` — workflow and CI/CD
+- `docs/architecture/adr/004-generic-make-framework-in-flext-tests.md` — make framework contract behind the gate verbs
+- `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md` — config/template SSOT
 - `AGENTS.md` — verification expectation

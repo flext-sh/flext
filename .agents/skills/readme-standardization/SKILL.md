@@ -43,3 +43,10 @@ metadata:
 ## Troubleshooting
 
 - Unclear scope → ask.
+
+## References
+
+<!-- mro-lo34 (agent: kimi) — canonical ADR refs added per docs-renaissance S1. -->
+- `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md` — READMEs are generated through the canonical template engine (SSOT)
+- `make docs DOCS_PHASE=generate` — flext-infra engine regenerates project READMEs deterministically
+- `docs/GOVERNANCE.md` — controls and ADR routing
