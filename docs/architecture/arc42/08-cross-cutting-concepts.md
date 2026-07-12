@@ -1,3 +1,92 @@
-# Cross-Cutting Concepts
+# 8. Cross-cutting Concepts
 
-This chapter centralizes cross-cutting concerns such as logging and security.
+**Reviewed**: 2026-07-12 | **Scope**: Concepts applied uniformly across the FLEXT workspace
+
+This chapter collects the concepts that apply to every building block instead
+of a single one. They are the invariants a reviewer can assume anywhere in
+any `flext-*` package.
+
+## Table of Contents
+
+- [8. Cross-cutting Concepts](#8-cross-cutting-concepts)
+  - [8.1 Result Railway](#81-result-railway)
+  - [8.2 Strict Typing](#82-strict-typing)
+  - [8.3 Configuration and Settings SSOT](#83-configuration-and-settings-ssot)
+  - [8.4 MRO Composition](#84-mro-composition)
+  - [8.5 Pydantic 2-way Boundary](#85-pydantic-2-way-boundary)
+  - [8.6 Enforcement as Data](#86-enforcement-as-data)
+  - [8.7 Continuous Green](#87-continuous-green)
+
+## 8.1 Result Railway
+
+Every fallible application path returns `r[T]` (`FlextResult`): success
+carries the typed payload, failure carries a typed error with context. Raw
+exceptions are never used for control flow inside the workspace; exceptions
+from external libraries are converted to `r.fail(...)` at the boundary. The
+railway composes with `map`/`and_then`-style chaining so error handling is
+structural, not scattered `try/except`.
+
+## 8.2 Strict Typing
+
+Python 3.13+ typing, modern forms only: builtin generics, `X | Y` unions,
+`type` statements, structural protocols. `Any` and bare `object` are
+forbidden. Composite types use `t.*` aliases (`t.MappingOf[K, V]`,
+`t.SequenceOf[T]`, …) with `| None` on the outside for nullability.
+Type-checking is a gate, not a suggestion: Ruff, Pyrefly, Pyright, and Mypy
+all run in CI.
+
+## 8.3 Configuration and Settings SSOT
+
+One access form, workspace-wide:
+
+```python
+from <namespace> import config, settings
+
+config.<Project>.<domain>    # validated, frozen, namespaced
+settings.<Project>.<domain>  # env-bound subset
+```
+
+The payload is validated exactly once — `Root.model_validate(...)` while the
+frozen singleton is constructed — and access never re-reads, re-validates, or
+passes through a getter/proxy. Schemas are declaration-only Pydantic models
+in `_models/config.py` (`frozen=True, extra="forbid"` per domain; `Root`
+uses `extra="ignore"`). Facets never re-derive, hardcode, or re-read a source
+that `config`/`settings` already own. Adding a config domain means one nested
+model and one `Root` field — nothing else.
+
+## 8.4 MRO Composition
+
+Shared behavior is composed through MRO mixins and facade inheritance, not
+through helper modules, compatibility wrappers, or duplicate utility chains.
+One canonical class/namespace owns each concern; consumers inherit or import
+the facade. Standalone "compat" aliases, pass-through proxies, and parallel
+old+new surfaces are removed in the same cycle they are replaced.
+
+## 8.5 Pydantic 2-way Boundary
+
+Every owned payload that crosses a boundary is a Pydantic model from the `m`
+facet: `model_validate(...)` on the way in, `model_dump(...)` /
+`model_dump_json(...)` on the way out. The round-trip is the contract.
+`dict`, `TypedDict`, `NamedTuple`, `dataclass`, and JSON-typed payloads are
+forbidden as data contracts. Custom validators are the last resort, used only
+when no declarative form exists; derived values are computed by a factory in
+`u` and stored as plain fields, keeping models behavior-free.
+
+## 8.6 Enforcement as Data
+
+Static enforcement rules are data, not code: 100% of them live as
+Pydantic-2-validated YAML records under `flext-infra/config/`. The evaluation
+engine is a rope-semantic fact base plus a closed operator set in
+`u.Infra` — there are no bespoke per-rule detector classes and no
+`ClassVar` banned/allowlist tables in Python. `flext-core` holds
+runtime/beartype rules only; `flext-cli` owns the template/config engine;
+`flext-infra` enforces.
+
+## 8.7 Continuous Green
+
+The tree is importable and collectable at every instant, not only at mission
+end. Every edit batch is validated before the next one: fresh-import smoke,
+`ruff --no-fix`, typecheck, and scoped tests — all green. A red gate is an
+active incident: work stops, the root cause is fixed at the source, and only
+then does work continue. Fixes are forward-only; rollbacks of existing work
+are forbidden.

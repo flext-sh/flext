@@ -18,8 +18,11 @@
 
 - `D203` - blank line before class docstring ✗ (not used)
 - `D213` - multi-line summary on line 2 ✗ (keep on line 1)
-- `D401` - imperative mood ✗ (not enforced)
-- `D417` - undocumented params ✗ (strict but ignored)
+
+**Enforced (zero workspace violations):**
+
+- `D401` - imperative mood ✓ (enforced)
+- `D417` - undocumented params ✓ (enforced)
 
 ---
 
@@ -531,8 +534,9 @@ ruff check --preview src/
 
 - D203: blank line before class summary (use pep257 style, no blank)
 - D213: multi-line summary on line 2 (keep on line 1)
-- D401: imperative mood not enforced
-- DOC201/202/402: undocumented return/raises/params don't fail (enforcement is soft)
+- DOC201/202/402/501/502: undocumented return/raises/params don't fail (soft set)
+
+Note: D401 (imperative mood) and D417 (undocumented params) are **enforced** workspace-wide — zero violations tolerated.
 
 ---
 
