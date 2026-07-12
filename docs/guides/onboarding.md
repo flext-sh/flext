@@ -6,13 +6,13 @@ Canonical pre-work to enter ANY FLEXT project. Per AGENTS.md §9 Pre-requisites 
 
 1. [`/flext/docs/GOVERNANCE.md`](../GOVERNANCE.md) — rule routing, ADRs,
    validation surfaces, and ratified refactor gates.
-2. [`/flext/AGENTS.md`](../../AGENTS.md) — supreme engineering law.
+2. `/flext/AGENTS.md` (repo root) — supreme engineering law.
 3. `~/.claude/AGENTS.md` — universal cross-project rules (if present).
 4. The target project's `pyproject.toml` for stack, version, dependencies.
 
 ## 2. Identify Project Slot Ownership
 
-Use the cross-project slot registry in [`.agents/skills/flext-mro-namespace-rules/SKILL.md`](../../.agents/skills/flext-mro-namespace-rules/SKILL.md). Confirm which `c.<Domain>`, `m.<Domain>`, `p.<Domain>`, `t.<Domain>`, `u.<Domain>` slots the target project owns BEFORE adding/renaming any symbol.
+Use the cross-project slot registry in `.agents/skills/flext-mro-namespace-rules/SKILL.md` (repo-only). Confirm which `c.<Domain>`, `m.<Domain>`, `p.<Domain>`, `t.<Domain>`, `u.<Domain>` slots the target project owns BEFORE adding/renaming any symbol.
 
 ## 3. Bootstrap Tooling
 
@@ -47,7 +47,7 @@ Default load order:
 5. `coding-standards` — quick-reference for daily Python work.
 6. Tier-specific: `pydantic-v2-governance`, `flext-strict-typing`, `flext-type-system`, `flext-constants-discipline`, `testing-patterns`.
 
-Path-scoped skills live in [`.agents/skills/`](../../.agents/skills/).
+Path-scoped skills live in `.agents/skills/` (repo-only).
 
 ## 6. Fundamental Packages
 

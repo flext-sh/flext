@@ -12,26 +12,26 @@ source to read first. The owning source still provides the actual rule.
 ## Authority Order
 
 1. Current operator request.
-1. Root [`AGENTS.md`](../AGENTS.md).
+1. Root `AGENTS.md` (repo root).
 1. Accepted ADRs in [`docs/architecture/adr/`](architecture/adr/README.md).
 1. Workspace baseline in
    [`docs/architecture/baseline-v0.13.0.md`](architecture/baseline-v0.13.0.md).
 1. Standards in [`docs/standards/`](standards/README.md).
 1. The active Bead issue and its child issues as the execution ledger for the
    scoped change.
-1. Path-scoped skills in [`.agents/skills/`](../.agents/skills/).
+1. Path-scoped skills in `.agents/skills/` (repo-only).
 
 ## Change Routing
 
 | Change type | First source | Validation surface |
 | --- | --- | --- |
-| Any code or architecture change | [`AGENTS.md`](../AGENTS.md) | Active Bead plus scoped gates |
+| Any code or architecture change | `AGENTS.md` (repo root) | Active Bead plus scoped gates |
 | Refactor, MRO, facade, namespace, or import work | [Architecture baseline](architecture/baseline-v0.13.0.md) and scoped skill | `ruff`, `pyrefly`, `pyright`, affected `pytest` |
 | Public API or interface change | Active Bead design and ADRs | Consumer grep/audit plus project gates |
 | Docs or generated docs | [Documentation standard](standards/documentation.md) | `make docs DOCS_PHASE=audit` or narrower markdown gate |
 | Docs audit policy or generated-doc exemptions | [Documentation standard](standards/documentation.md) and accepted ADRs | Full docs audit plus affected project audit; evidence must show stale generated symbols are still caught |
 | Workspace tooling or Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help`, `make check`, or touched generator tests |
-| Pydantic, settings, and strict typing | [Pydantic references](references/pydantic2/version-policy.md) and type-system docs | `pyrefly`, `pyright`, affected tests |
+| Pydantic, settings, and strict typing | Pydantic references (`docs/references/pydantic2/`, repo-only) and type-system docs | `pyrefly`, `pyright`, affected tests |
 | Testing behavior | [Testing standard](standards/testing.md) | `pytest` or `make test PROJECT=<project>` |
 
 ## Active ADRs

@@ -77,11 +77,14 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Generate docs (engine SSOT)
-        run: make docs DOCS_PHASE=generate APPLY=Y PROJECT=flext-infra
+      - name: Generate docs (engine SSOT, root scope included)
+        # mro-jwop (agent: kimi) — engine direct call: the make orchestrator fans
+        # out per project and never builds the root scope; the engine CLI at the
+        # workspace root always includes it (scopes = [root, *selected]).
+        run: uv run --all-packages python -m flext_infra docs generate --workspace . --apply
 
-      - name: Build site (mkdocs strict)
-        run: make docs DOCS_PHASE=build PROJECT=flext-infra
+      - name: Build site (mkdocs strict, root + flext-infra scopes)
+        run: uv run --all-packages python -m flext_infra docs build --workspace . --projects flext-infra
 
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0

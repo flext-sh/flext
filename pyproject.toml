@@ -153,10 +153,7 @@ pep621_dev_dependency_groups = [ "dev" ]
 exclude_docs = [
   "/README.md",
   "SUPPRESSIONS-RATIONALE.md",
-  "api-reference/foundation.md",
-  "api/types.md",
   "architecture/FLEXT_*.md",
-  "architecture/arc42/**",
   "architecture/c4-model/**",
   "architecture/clean-architecture.md",
   "architecture/data/**",
@@ -175,12 +172,10 @@ exclude_docs = [
   "reports/**",
   "roadmap/**",
   "scripts/**",
-  "standards/docstrings/**",
   "standards/link-management.md",
   "superpowers/**",
   "type-system-architecture.md",
   "utilities-guide.md",
-  "version-policy.md",
 ]
 site_title = "FLEXT Workspace"
 

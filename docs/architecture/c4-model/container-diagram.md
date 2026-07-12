@@ -187,7 +187,7 @@ graph TB
 - **Responsibilities**:
   - User interface for data pipeline management
   - Data quality dashboards and reports
-  - System REDACTED_LDAP_BIND_PASSWORDistration interface
+  - System Administration interface
   - Real-time monitoring and alerting
 
 ### API Layer
@@ -338,7 +338,7 @@ graph TB
 - **Responsibilities**:
   - Command-line interface for all operations
   - Pipeline configuration and management
-  - System REDACTED_LDAP_BIND_PASSWORDistration tasks
+  - System Administration tasks
   - Development and debugging tools
   - Batch operations and scripting
 
