@@ -12,12 +12,12 @@ This directory contains standards and guidance for writing Python docstrings acr
   - Real examples from FLEXT code
   - Ruff checklist and validation commands
 
-## Supporting Documents
+## Supporting Sections (in the primary reference)
 
-- **[Guidelines](./guidelines.md)** — Comprehensive style reference and patterns
-- **[Patterns](./patterns.md)** — Real patterns from codebase analysis
-- **[Examples](./examples.md)** — Before/after with actual code from FLEXT
-- **[Quick Reference](./quick-ref.md)** — Pre-commit checklist
+- **[Guidelines](./PEP257-GOOGLE-RUFF.md#rules)** — Comprehensive style rules per symbol kind
+- **[Patterns](./PEP257-GOOGLE-RUFF.md#document-when)** — What to document and what to skip
+- **[Examples](./PEP257-GOOGLE-RUFF.md#examples-from-flext-codebase)** — Real before/after from FLEXT code
+- **[Quick Reference](./PEP257-GOOGLE-RUFF.md#ruff-compliant-checklist)** — Pre-commit checklist
 
 ## Key Principle
 
@@ -77,9 +77,10 @@ This maintains docstring **quality and usefulness** instead of quantity.
 
 ---
 
-**Table of Contents**
+**Table of Contents** (all in [PEP257-GOOGLE-RUFF.md](./PEP257-GOOGLE-RUFF.md))
 
-- Guidelines — Full reference
-- Patterns — Structural analysis
-- Examples — Real before/after
-- Quick Reference — Pre-commit checklist
+- Rules — per-symbol style rules (module, class, function, property, exceptions, async)
+- Document When — what earns a docstring and what is skipped
+- Examples from FLEXT Codebase — real before/after
+- Ruff-Compliant Checklist — pre-commit validation
+- Ruff Integration — commands and expected ignores
