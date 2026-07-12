@@ -1505,3 +1505,8 @@ line_length = 88
 preserve_quotes = true
 section_whitelines = 1
 whitelines = 1
+
+[dependency-groups]
+dev = [
+    "code-review-graph[all,embeddings]==2.3.6",
+]
