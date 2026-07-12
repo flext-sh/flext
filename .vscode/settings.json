@@ -72,9 +72,9 @@
   "mypy-type-checker.interpreter": [
     "${workspaceFolder}/.venv/bin/python"
   ],
-  "mypy-type-checker.preferDaemon": false,
-  "mypy-type-checker.reportingScope": "file",
-  "pyrefly.lspPath": "${workspaceFolder}/.venv/bin/pyrefly",
+  "mypy-type-checker.preferDaemon": true,
+  "mypy-type-checker.reportingScope": "workspace",
+  "pyrefly.lspPath": ".venv/bin/pyrefly",
   "python.analysis.addExtraPathsForPythonProjects": false,
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": true,
@@ -104,9 +104,9 @@
   "python.analysis.userFileIndexingLimit": 2000,
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
   "python.languageServer": "Pylance",
-  "python.pyrefly.diagnosticMode": "openFilesOnly",
+  "python.pyrefly.diagnosticMode": "workspace",
   "python.pyrefly.disableLanguageServices": true,
-  "python.pyrefly.disableTypeErrors": true,
+  "python.pyrefly.disableTypeErrors": false,
   "python.pyrefly.syncNotebooks": false,
   "python.terminal.activateEnvInCurrentTerminal": true,
   "python.terminal.activateEnvironment": true,
@@ -146,5 +146,7 @@
   "terminal.integrated.env.linux": {
     "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}",
     "VIRTUAL_ENV": "${workspaceFolder}/.venv"
-  }
+  },
+  "ruff.lint.preview": true,
+  "ruff.format.preview": true
 }
