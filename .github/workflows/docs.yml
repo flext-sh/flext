@@ -52,13 +52,22 @@ jobs:
 
       # mro-o6h5 (agent: kimi) — failure diagnostics: per-project logs live under
       # .reports/workspace/docs/*.log and were invisible in CI ("0 errors" FAILs);
-      # dump them inline + upload as artifact so the real error is always reachable.
+      # dump them inline + per-project audit-report.md for non-zero issue counts +
+      # upload as artifact so the real error is always reachable.
       - name: Docs audit (blocking)
         run: |
           make docs DOCS_PHASE=audit || {
             for f in .reports/workspace/docs/*.log; do
               echo "=== $f ==="
               tail -60 "$f"
+            done
+            for r in */.reports/docs/audit-summary.json; do
+              [ -f "$r" ] || continue
+              n=$(grep -o '"issues": [0-9]*' "$r" | head -1 | grep -o '[0-9]*')
+              if [ "${n:-0}" -gt 0 ]; then
+                echo "=== $(dirname "$r")/audit-report.md ==="
+                cat "$(dirname "$r")/audit-report.md"
+              fi
             done
             exit 1
           }
@@ -73,6 +82,8 @@ jobs:
             exit 1
           }
 
+      # mro-o6h5 (agent: kimi) — include-hidden-files: .reports/ is a dot-dir and
+      # upload-artifact v4 skips hidden paths by default (artifact silently empty).
       - name: Upload docs reports on failure
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -80,6 +91,7 @@ jobs:
           name: docs-reports
           path: .reports/
           retention-days: 7
+          include-hidden-files: true
 
   build:
     name: build
