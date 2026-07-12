@@ -1,58 +1,69 @@
 # FLEXT Tap Oracle
 
-FLEXT Tap Oracle (v1.0.0 release prep) is the Singer tap for Oracle Database extraction within the FLEXT data mesh. It pairs flext-db-oracle connectivity with flext-meltano orchestration, implements the Singer SDK, and enforces Clean Architecture plus zero-tolerance policies.
+FLEXT Tap Oracle (`flext-tap-oracle`) is the Singer tap for Oracle Database extraction in the FLEXT data mesh. It uses `flext-db-oracle` for database connectivity and `flext-meltano` for the Singer tap contract, exposing discover and sync commands over typed Oracle streams with `r[T]` results on every fallible path.
 
-## Status & signals
+## Status & health
 
-- **Version**: 1.0.0 (Release Preparation)
+- **Version**: 0.12.0-dev (monorepo development cycle)
 - **Python**: 3.13+
-- **Status**: production-ready with 90%+ coverage and gating `make val` pipeline; documentation still expanding.
-- **Coverage**: 90%+ (see `reports/coverage-scan-*`, README badges)
-- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + dbt/test + docstring checks) is required before merging; `make lint`, `make type-check`, `make security`, and `make test` all run clean individually.
-- **Dependencies**: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, Singer SDK, `dbt-core`, `dbt-oracle`
-- **Zero tolerance**: no direct Singer SDK, SQLAlchemy, or native Oracle imports; every public API returns `r[T]`, no `Any`, no `cast`, no `TYPE_CHECKING`.
+- **Package**: `flext_tap_oracle` (namespace package, `py.typed` shipped)
+- **Location in this repo**: `flext-tap-oracle/` at the workspace root
+
+### Quality signals
+
+- Gates run through the workspace Make contract: `make check PROJECT=flext-tap-oracle`, `make test PROJECT=flext-tap-oracle`, `make val`.
+- Strict typing per workspace `AGENTS.md`: no `Any`/`object`, Pydantic 2-way models, `r[T]` on every fallible path; Oracle access goes through `flext-db-oracle`, Singer orchestration through `flext-meltano`.
+- No coverage or test-count metrics are asserted here; the gates above produce the authoritative numbers.
 
 ## Quick start
 
-```bash
-git clone https://github.com/flext-sh/flext-tap-oracle.git
-cd flext-tap-oracle
-poetry install
-make setup
-make check
-make val
-```
+Console entry points: `tap-oracle` and `flext-tap-oracle`.
 
 ```bash
-tap-oracle --config settings.json --discover > catalog.json
-tap-oracle --config settings.json --catalog catalog.json --state state.json
-flext-tap-oracle --config settings.json --catalog catalog.json --state state.json
+tap-oracle --discover > catalog.json
+tap-oracle --sync --catalog catalog.json --state state.json
 ```
 
-## Architecture overview
+Programmatically:
 
-- **Layered stack**: foundation modules (`constants`, `typings`, `protocols`), domain models/utilities, infrastructure services (`oracle_stream`, `tap`, `settings`), and application/CLI entry points.
-- **Core components**: `FlextTapOracle`, `OracleStream`, `TapOracleSettings`, `tap.py`, `cli.py`, `integration/` modules for telemetry.
-- **Integration**: uses `flext-db-oracle` for Oracle connectivity, `flext-meltano` for Singer tap scaffolding, `flext-core` for r/DI, and `flext-observability` for instrumentation.
-- **Performance**: Oracle-specific query hints, pagination, connection pooling, and streaming results minimize memory usage.
+```python
+from flext_tap_oracle import FlextTapOracleCli, FlextTapOracleSettings
 
-## Features & quality
+settings = FlextTapOracleSettings()  # namespaced under settings.TapOracle.*
+result = FlextTapOracleCli.handle_discover_command()
+```
 
-- **Oracle extraction**: Supports Oracle 11g→23c, incremental replication, schema discovery, and type-safe mapping (VARCHAR2, NUMBER, TIMESTAMP, LOBs).
-- **Singer compliance**: Catalog discovery, state management, and sync operations follow the Singer spec through `flext-meltano` adapters.
-- **Testing**: Unit, integration, Singer, and Oracle-specific test suites run via `make test`, `pytest -m oracle`, and `make val`.
-- **Security**: Bandit + pip-audit run through `make security`; CLI operations run under flext-cli conventions.
+The `settings.TapOracle.*` group carries `oracle_host`, `oracle_port`, `oracle_service_name`, `oracle_user`, `oracle_password`, `batch_size`, and `stream_prefix` (validated Pydantic fields).
 
-## Resources & references
+## Architecture & modules
+
+Source lives under `flext-tap-oracle/src/flext_tap_oracle/`:
+
+- `tap.py` — the CLI layer: `FlextTapOracleDiscoverCommand` and `FlextTapOracleSyncCommand` implement the two Singer operations, and `FlextTapOracleCli` dispatches `--discover` / `--sync`; `main()` is the console entry.
+- `streams.py` — `FlextTapOracleStreams`, a unified namespace with `OracleStream` (typed column metadata, safe identifier quoting, batched reads) and a `StreamFactory` that builds configured streams per table.
+- `api.py` — `FlextTapOracleService` (a `FlextMeltanoTapServiceBase`), exported as the operational alias `tap_oracle`.
+- `config/tap-oracle.yaml` — execution parametrization (SSOT per ADR-005); `rules.json` carries tap rules.
+- Canonical facet facades: `c`, `m`, `p`, `t`, `u`, plus `settings` (`FlextTapOracleSettings`); operational aliases `d`, `e`, `h`, `r`, `s`, `x` come from the parent chain (`flext_db_oracle`).
+
+### Key architectural patterns
+
+- Discover and sync are separate command classes with a thin CLI dispatcher; the service facade remains the only orchestration owner.
+- Oracle connectivity is never direct: all database access flows through `flext-db-oracle`, and Singer protocol types come from `flext-meltano` models.
+- Settings/config are the only parametrization source: `settings.TapOracle.*` is validated once at singleton construction.
+
+## Testing & quality
+
+- Scoped suites run via `make check PROJECT=flext-tap-oracle` and `make test PROJECT=flext-tap-oracle`; full workspace validation is `make val`.
+- Tests assert the public surface only (discover/sync commands, stream behavior, exported models) per the workspace testing law.
+
+## Resources
 
 - [Project README](../../flext-tap-oracle/README.md)
-- [Project AGENTS.md](../../flext-tap-oracle/AGENTS.md) for zero-tolerance policies and command guidance
-- `docs/` folder (getting started, architecture, configuration, testing, troubleshooting)
-- `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for validation evidence
-- Related projects: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, `flext-target-oracle`, `flext-dbt-oracle`
+- Source: `flext-tap-oracle/src/flext_tap_oracle/`
+- Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
+- Related packages: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, `flext-target-oracle`, `flext-dbt-oracle`
 
-## Support & contributions
+## Support & issues
 
-- GitHub issues: <https://github.com/flext-sh/flext-tap-oracle/issues>
-- Discussions: <https://github.com/flext-sh/flext-tap-oracle/discussions>
-- Follow `docs/standards/README.md` and the project AGENTS.md before editing docs or code so the portal remains aligned.
+- Issues: <https://github.com/flext-sh/flext/issues>
+- Follow the workspace `AGENTS.md` and the project README before editing code or docs so this page stays accurate.
