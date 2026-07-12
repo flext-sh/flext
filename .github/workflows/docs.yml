@@ -50,6 +50,15 @@ jobs:
         continue-on-error: true
         run: make boot
 
+      # mro-o6h5 (agent: kimi) — boot is advisory, so a partial sync used to
+      # surface as cryptic downstream crashes ("list index out of range" when
+      # python -m ruff was missing from the venv). Fail fast with a clear
+      # message when the toolchain the audit/validate steps need is absent.
+      - name: Verify docs toolchain
+        run: |
+          .venv/bin/python -c "import flext_infra.docs"
+          .venv/bin/python -m ruff --version
+
       # mro-o6h5 (agent: kimi) — failure diagnostics: per-project logs live under
       # .reports/workspace/docs/*.log and were invisible in CI ("0 errors" FAILs);
       # dump them inline + per-project audit-report.md for non-zero issue counts +
