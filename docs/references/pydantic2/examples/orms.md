@@ -50,4 +50,3 @@ print(pydantic_model.model_dump(by_alias=True))
 The example above works because aliases have priority over field names for
 field population. Accessing `SQLModel`'s `metadata` attribute would lead to a `ValidationError`.
 
-<!-- TODO: add examples for Django with Pydantic models -->

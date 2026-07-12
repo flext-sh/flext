@@ -5,7 +5,6 @@ When using [Visual Studio Code (VS Code)](https://code.visualstudio.com/), there
 
 This means that you will have **autocompletion** (or "IntelliSense") and **error checks** for types and required arguments even while creating new Pydantic model instances.
 
-![pydantic autocompletion in VS Code](../img/vs_code_01.png)
 
 ## Settingsure VS Code
 
@@ -36,15 +35,12 @@ You can enable type error checks from Pylance with these steps:
 - You will find an option under `Python › Analysis: Type Checking Mode`
 - Set it to `basic` or `strict` (by default it's `off`)
 
-![Type Checking Mode set to strict in VS Code](../img/vs_code_02.png)
 
 Now you will not only get autocompletion when creating new Pydantic model instances but also error checks for **required arguments**.
 
-![Required arguments error checks in VS Code](../img/vs_code_03.png)
 
 And you will also get error checks for **invalid data types**.
 
-![Invalid data types error checks in VS Code](../img/vs_code_04.png)
 
 !!! note "Technical Details"
 Pylance is the VS Code extension, it's closed source, but free to use. Underneath, Pylance uses an open source tool (also from Microsoft) called [Pyright](https://github.com/microsoft/pyright) that does all the heavy lifting.
@@ -64,7 +60,6 @@ To enable mypy in VS Code, do the following:
 - You will find an option under `Python › Linting: Mypy Enabled`
 - Check the box (by default it's unchecked)
 
-![mypy enabled in VS Code](../img/vs_code_05.png)
 
 ## Tips and tricks
 
@@ -78,7 +73,6 @@ And it will show **strict type error checks** about the data types passed in arg
 
 In this example you can see that it shows that a `str` of `'23'` is not a valid `int` for the argument `age`.
 
-![VS Code strict type errors](../img/vs_code_06.png)
 
 It would expect `age=23` instead of `age='23'`.
 
@@ -120,7 +114,6 @@ The type of the field `knight` is declared with the class `Knight` (a Pydantic m
 
 Nevertheless, it would be detected as a type error:
 
-![VS Code strict type errors with model](../img/vs_code_07.png)
 
 In those cases, there are several ways to disable or ignore strict errors in very specific places, while still preserving them in the rest of the code.
 
@@ -241,7 +234,6 @@ When using the second version to declare `frozen=True` (with **keyword arguments
 Pylance can use it to help you check in your code and **detect errors** when something is trying to set values
 in a model that is "frozen".
 
-![VS Code strict type errors with model](../img/vs_code_08.png)
 
 ## Adding a default with `u.Field`
 
