@@ -25,7 +25,7 @@ make check PROJECT=flext-dbt-oracle-wms       # lint + type gates
 ```python
 from flext_dbt_oracle_wms.simple_api import FlextDbtOracleWms
 
-api = FlextDbtOracleWms()          # settings resolved from the global singleton
+api = FlextDbtOracleWms()  # settings resolved from the global singleton
 
 health = api.validate_wms_connection()
 if health.success:

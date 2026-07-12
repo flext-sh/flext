@@ -8,3 +8,8 @@
 - Project classes: `domain`=5, `infra`=1, `integration`=14, `platform`=10, `test`=1
 
 Generated from workspace discovery, `pyproject.toml`, public exports, and docstrings.
+
+## Next Pages
+
+- [Workspace Module Pages](projects/index.md)
+- [Project Catalog](../../projects/generated/catalog.md)

@@ -25,7 +25,7 @@ make check PROJECT=flext-dbt-ldif      # lint + type gates
 ```python
 from flext_dbt_ldif import FlextDbtLdif
 
-api = FlextDbtLdif.fetch_instance()    # shared facade; settings from the global singleton
+api = FlextDbtLdif.fetch_instance()  # shared facade; settings from the global singleton
 
 # End-to-end: parse the LDIF export, generate dbt models, optionally run them.
 result = api.process_ldif_file(
