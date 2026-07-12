@@ -1,12 +1,20 @@
 {
+  // NOTE (multi-agent, mro-wkii.17.25): recommend one Python editor stack and keep full type gates in Make.
   "recommendations": [
+    "charliermarsh.ruff",
     "davidanson.vscode-markdownlint",
-    "foxundermoon.shell-format",
-    "mikestead.dotenv",
-    "ms-python.mypy-type-checker",
+    "editorconfig.editorconfig",
     "ms-python.python",
     "ms-python.vscode-pylance",
-    "pyrefly.pyrefly",
-    "tamasfe.even-better-toml",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml"
+  ],
+  "unwantedRecommendations": [
+    "donjayamanne.githistory",
+    "meta.pyrefly",
+    "mhutchie.git-graph",
+    "ms-python.mypy-type-checker",
+    "ms-python.vscode-python-envs",
+    "waderyan.gitblame"
   ]
 }
