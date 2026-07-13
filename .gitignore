@@ -30,7 +30,6 @@
 !.vscode/
 !.code-review-graph/
 !.claude/
-!/config/
 !/config/workspace.yaml
 !.claude/CLAUDE.md
 !.claude/settings.json
@@ -302,7 +301,6 @@ vendor/
 .internal.invalid
 .env.production
 .env.development
-**/.env
 
 # Credentials and keys
 *.key
@@ -310,7 +308,6 @@ vendor/
 *.p12
 *.pfx
 credentials.json
-**/credentials.json
 secrets.yaml
 secrets.yml
 **/.credentials*
@@ -364,3 +361,20 @@ legado/
 __pycache__/
 base.mk
 !.pre-commit-config.yaml
+!/config/
+!/config/**
+!/tests/
+!/tests/**
+!/templates/
+!/templates/**
+!/schemas/
+!/schemas/**
+!/examples/
+!/examples/**
+!/scripts/
+!/scripts/**
+**/.env
+**/*.key
+**/*.pem
+**/credentials.json
+**/secrets.y*ml
