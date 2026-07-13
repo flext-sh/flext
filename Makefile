@@ -83,7 +83,7 @@ PR_CHECKPOINT ?= 1
 DEPS_REPORT ?= 1
 VERBOSE ?=
 
-PR_BRANCH ?= 0.12.0-dev
+PR_BRANCH ?= 0.20.0-dev
 
 Q := @
 ifdef VERBOSE
@@ -189,6 +189,11 @@ endef
 define AUTO_SYNC_ALL_PROJECTS
 # mro-wkii.17.26 (codex): sync root and discovered children once, surfacing failures.
 $(WORKSPACE_INFRA_WORKSPACE) sync --workspace "$(CURDIR)" --apply || exit 1
+endef
+
+define CHECK_SYNC_ALL_PROJECTS
+# mro-wkii.17.26 (codex): validation reports generated drift without mutating source.
+$(WORKSPACE_INFRA_WORKSPACE) sync --workspace "$(CURDIR)" --dry-run || exit 1
 endef
 
 define PREPARE_SELECTED_PROJECTS
@@ -350,7 +355,7 @@ _boot_default: ## Install all projects into workspace .venv
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_WORKSPACE_RUNTIME)
 	$(Q)$(PREPARE_SELECTED_PROJECTS)
-	$(Q)$(AUTO_SYNC_ALL_PROJECTS)
+	# mro-wkii.17.26 (codex): setup never mutates source; codegen/sync runs only after a checkpoint.
 	$(Q)echo "Enforcing Python version guards..."; $(WORKSPACE_INFRA_MAINTENANCE) || exit 1
 	$(Q)total_steps=$$(( $(words $(SELECTED_PROJECTS)) + 1 )); \
 	echo "Starting workspace setup for $$total_steps item(s) ($(words $(SELECTED_PROJECTS)) projects + root)"; \
@@ -417,16 +422,7 @@ _boot_default: ## Install all projects into workspace .venv
 	fi
 	# mro-wkii.17.26 (codex): prove imports and mark the synced venv ready first.
 	$(Q)$(VERIFY_WORKSPACE_VENV)
-	# mro-wkii.17.26 (codex): isolate recursive Make so --dry-run cannot run setup.
-	$(Q)make_flags="$(firstword $(MAKEFLAGS))"; \
-	if [[ "$$make_flags" != --* && "$$make_flags" == *n* ]]; then \
-		echo "Skipping recursive workspace validation during make dry-run."; \
-	elif [ -n "$(BOOT_VALIDATE_PROJECTS)" ]; then \
-		echo "Validating workspace selection (validate VALIDATE_SCOPE=workspace)..."; \
-		$(MAKE) val WHAT=workspace VALIDATE_SCOPE=workspace PROJECTS="$(BOOT_VALIDATE_PROJECTS)" || { echo "FAIL: boot validation"; exit 1; }; \
-	else \
-		echo "Skipping workspace validation (no managed workspace projects selected)."; \
-	fi
+	# mro-wkii.17.26 (codex): setup ends after environment/import proof; validation is an explicit next verb.
 	$(Q)if git rev-parse --git-dir >/dev/null 2>&1 && [ -f .pre-commit-config.yaml ]; then \
 		echo "Installing pre-commit hooks (workspace root)..."; \
 		$(UV_BIN) run --no-sync --all-packages pre-commit install || exit 1; \
@@ -434,6 +430,7 @@ _boot_default: ## Install all projects into workspace .venv
 		echo "INFO: skipping pre-commit install (no git repository or config)"; \
 	fi
 
+# mro-45r9: resolve and maximize atomically; a conservative pre-lock can downgrade first.
 _up: ## Refresh workspace lock/install + rewrite dependency constraints + dependency report
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
@@ -441,22 +438,14 @@ _up: ## Refresh workspace lock/install + rewrite dependency constraints + depend
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
-	$(Q)$(AUTO_SYNC_ALL_PROJECTS)
+	$(Q)$(CHECK_SYNC_ALL_PROJECTS)
 	$(Q)echo "Enforcing Python version guards..."; $(WORKSPACE_INFRA_MAINTENANCE) || exit 1
 	$(Q)echo "Standardizing project metadata (make mod)..."
 	$(Q)$(MAKE) _mod $(MAKE_SELECTION_ARGS)
 	$(Q)echo "Upgrading workspace dependencies (uv workspace mode)..."; \
 	log_file="/tmp/flext-upgrade-workspace.log"; \
 	start_ts=$$(date +%s); \
-	printf " lock    ... "; \
-	if uv lock >"$$log_file" 2>&1; then \
-		echo "ok"; \
-	else \
-		echo "failed"; \
-		cat "$$log_file"; \
-		exit 1; \
-	fi; \
-	printf " update  ... "; \
+	printf " resolve ... "; \
 	if uv lock --upgrade >"$$log_file" 2>&1; then \
 		echo "ok"; \
 	else \
@@ -477,7 +466,7 @@ _up: ## Refresh workspace lock/install + rewrite dependency constraints + depend
 	echo "Upgrade summary: Upgraded=workspace Failed=0 Total=workspace"; \
 
 	$(Q)echo "Rewriting dependency constraints from uv.lock..."
-	$(Q)$(WORKSPACE_INFRA_DEPS) modernize --apply --rewrite-constraints --constraint-policy floor $(MODERNIZE_SELECTION_FLAGS)
+	$(Q)$(WORKSPACE_INFRA_DEPS) modernize --apply --rewrite-constraints --constraint-policy floor $(MODERNIZE_SELECTION_FLAGS) || exit 1
 
 	if [ "$(DEPS_REPORT)" != "0" ]; then \
 		printf "Dependency report (deptry + pip check)... "; \
@@ -515,7 +504,7 @@ _constraints: ## Rewrite dependency constraints from uv.lock (policy=floor). Use
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)echo "Rewriting dependency constraints from uv.lock..."; \
-	$(WORKSPACE_INFRA_DEPS) modernize --apply --rewrite-constraints --constraint-policy floor $(MODERNIZE_SELECTION_FLAGS); \
+	$(WORKSPACE_INFRA_DEPS) modernize --apply --rewrite-constraints --constraint-policy floor $(MODERNIZE_SELECTION_FLAGS) || exit 1; \
 	echo ""
 	$(Q)echo "Dependency constraint rewrite complete."
 

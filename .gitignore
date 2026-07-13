@@ -14,41 +14,49 @@
 # WHITELIST: Project Directories
 # ============================================================================
 # Allow all FLEXT ecosystem project directories
-!flext-*/
-
-# ============================================================================
-# WHITELIST: Workspace Directories
-# ============================================================================
-!docker/
-!docs/
-!examples/
-!.github/
-!src/
-!tests/
-!typings/
-!libs/
-!.vscode/
-!.code-review-graph/
+__pycache__/
+!.agents/
+!.agents/**
 !.claude/
-!/config/workspace.yaml
 !.claude/CLAUDE.md
 !.claude/settings.json
 !.claude/settings.local.json
-
-!.agents/
-!.agents/**
+!.code-review-graph/
+!.github/
+!.pre-commit-config.yaml
+!.vscode/
+!/config/
+!/config/**
+!/config/workspace.yaml
+!/examples/
+!/examples/**
+!/schemas/
+!/schemas/**
+!/scripts/
+!/scripts/**
+!/templates/
+!/templates/**
+!/tests/
+!/tests/**
+!/uv.lock
+!docker/
+!docs/
+!flext-*/
+!libs/
+!src/
+!typings/
 .agents/skills/*/report.json
+.direnv/
+.reports/
+.venv/
+**/.env
+**/*.key
+**/*.pem
+**/credentials.json
+**/secrets.y*ml
+base.mk
 
 # Dispatcher-based command surface (Make SSOT)
-!scripts/
-!scripts/cmd/
-!scripts/cmd/**
-scripts/*.py
-scripts/*.sh
-scripts/*.md
-scripts/maintenance/
-!scripts/dispatch.py
-!scripts/__init__.py
 
 # TRACK: Beads team config; keep Dolt data, runtime state, and JSONL exports local.
 # ============================================================================
@@ -179,7 +187,6 @@ scripts/maintenance/
 **/*.egg-info/
 **/dist/
 **/build/
-!scripts/cmd/build/
 **/.eggs/
 
 # Skill validation temporary reports
@@ -353,28 +360,3 @@ legado/
 
 # codegen module-standardizer reject artifacts (ADR-005 §9)
 *.tpl.rej
-
-# --- workspace-sync: required ignores (auto-managed) ---
-.direnv/
-.reports/
-.venv/
-__pycache__/
-base.mk
-!.pre-commit-config.yaml
-!/config/
-!/config/**
-!/tests/
-!/tests/**
-!/templates/
-!/templates/**
-!/schemas/
-!/schemas/**
-!/examples/
-!/examples/**
-!/scripts/
-!/scripts/**
-**/.env
-**/*.key
-**/*.pem
-**/credentials.json
-**/secrets.y*ml

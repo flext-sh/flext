@@ -35,7 +35,8 @@ license = "MIT"
 name = "flext"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
-version = "0.12.0-dev"
+# mro-wkii.17.26 (codex): the development branch publishes the 0.20 dev series.
+version = "0.20.0-dev0"
 
 [[project.authors]]
 email = "team@flext.sh"
@@ -1113,6 +1114,13 @@ workspace = true
 
 [tool.uv.sources.flext-web]
 workspace = true
+
+[tool.uv]
+# dbt-core (<=1.11.12, released) caps pathspec<0.13, but mypy>=1.20 requires
+# pathspec>=1.0.0. Force the newer pathspec so the uv workspace resolves; dbt
+# only uses pathspec for selector globbing, which pathspec 1.x still supports.
+override-dependencies = [ "pathspec>=1.0.0" ]
+
 
 [tool.uv.workspace]
 members = [
