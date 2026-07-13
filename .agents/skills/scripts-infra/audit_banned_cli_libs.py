@@ -7,7 +7,7 @@ and the `c, m, p, t, u, s, r, d, e, h, x` namespace aliases.
 
 Banned EVERYWHERE outside flext-cli/flext-core:
 - typer, click, argparse: use cli.create_app_with_common_params / cli.register_command
-- rich, tabulate: use cli.format_table / cli.show_table / cli.render_panel / cli.create_tree
+- rich, tabulate: use cli.format_table / cli.show_table / cli.render_panel / cli.render_table
 - colorama: use cli.print with c.Cli.MessageStyles
 - prompt_toolkit, tqdm: use cli.prompt / cli.display_progress
 - getpass: use cli.prompt_password
@@ -56,9 +56,9 @@ CLICK_BOUNDARY_PATTERNS = (
 # Library bans (zero exceptions)
 BANNED_LIBS = {
     "typer": "cli.create_app_with_common_params / cli.register_command",
-    "click": "flext_cli (cli, c.Cli.CliAbortError, c.Cli.CliCommandError)",
+    "click": "flext_cli.cli application, registration, execution, and invocation methods",
     "argparse": "cli.register_result_command + Pydantic model",
-    "rich": "cli.print / cli.display_message / cli.render_panel / cli.create_tree",
+    "rich": "cli.print / cli.display_message / cli.render_panel / cli.render_table",
     "tabulate": "cli.format_table / cli.show_table",
     "colorama": "cli.print with c.Cli.MessageStyles",
     "prompt_toolkit": "cli.prompt / cli.confirm / cli.prompt_choice / cli.prompt_password",
