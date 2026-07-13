@@ -15,11 +15,13 @@
 SHELL := /usr/bin/bash
 .DEFAULT_GOAL := help
 
-WORKSPACE_VENV := $(CURDIR)/.venv
+WORKSPACE_VENV ?= $(CURDIR)/.venv
+WORKSPACE_VENV_READY := $(WORKSPACE_VENV)/.flext-ready
 
 # Determine required python version from pyproject.toml and find matching executable
 PYTHON_REQ_VERSION := $(shell awk -F'"' '/requires-python/ {match($$2, /3\.[0-9]+/); print substr($$2, RSTART, RLENGTH)}' pyproject.toml)
 PYTHON_CMD := $(shell if command -v python$(PYTHON_REQ_VERSION) >/dev/null 2>&1; then echo python$(PYTHON_REQ_VERSION); elif command -v python3 >/dev/null 2>&1; then echo python3; else echo python; fi)
+UV_REQ_VERSION := $(shell awk -F'"' '/^uv = / {print $$2; exit}' .mise.toml)
 
 PY := $(WORKSPACE_VENV)/bin/python
 PIPX_BIN := $(WORKSPACE_VENV)/bin/pipx
@@ -119,7 +121,7 @@ WORKSPACE_PYTHONPATH := $(shell \
 		[ "$$skip" = "0" ] && [ -d "$(CURDIR)/$$d/src" ] && printf "$(CURDIR)/$$d/src:"; \
 	done)$(CURDIR)/src
 WORKSPACE_PYTHON := env -u PYTHONPATH -u MYPYPATH PYTHONPATH="$(WORKSPACE_PYTHONPATH)" $(PY)
-FLEXT_MAKE_DISPATCH := FLEXT_WORKSPACE_ROOT="$(CURDIR)" PROJECT="$(PROJECT)" PROJECTS="$(PROJECTS)" WHAT="$(WHAT)" PYTEST_ARGS="$(PYTEST_ARGS)" VALIDATE_SCOPE="$(VALIDATE_SCOPE)" DOCS_PHASE="$(DOCS_PHASE)" FAIL_FAST="$(FAIL_FAST)" JOBS="$(JOBS)" CHECK_GATES="$(CHECK_GATES)" VALIDATE_GATES="$(VALIDATE_GATES)" SCOPE="$(SCOPE)" NAMESPACE="$(NAMESPACE)" GATES="$(GATES)" PROPAGATE="$(PROPAGATE)" FIX="$(FIX)" FILE="$(FILE)" FILES="$(FILES)" CHANGED_ONLY="$(CHANGED_ONLY)" MATCH="$(MATCH)" RUFF_ARGS="$(RUFF_ARGS)" PYRIGHT_ARGS="$(PYRIGHT_ARGS)" CHECK_ONLY="$(CHECK_ONLY)" RELEASE_PHASE="$(RELEASE_PHASE)" INTERACTIVE="$(INTERACTIVE)" DRY_RUN="$(DRY_RUN)" PUSH="$(PUSH)" VERSION="$(VERSION)" MESSAGE="$(MESSAGE)" TAG="$(TAG)" BUMP="$(BUMP)" RELEASE_DEV_SUFFIX="$(RELEASE_DEV_SUFFIX)" RELEASE_NEXT_DEV="$(RELEASE_NEXT_DEV)" RELEASE_NEXT_BUMP="$(RELEASE_NEXT_BUMP)" CREATE_BRANCHES="$(CREATE_BRANCHES)" PR_ACTION="$(PR_ACTION)" PR_BASE="$(PR_BASE)" PR_HEAD="$(PR_HEAD)" PR_NUMBER="$(PR_NUMBER)" PR_TITLE="$(PR_TITLE)" PR_BODY="$(PR_BODY)" PR_DRAFT="$(PR_DRAFT)" PR_MERGE_METHOD="$(PR_MERGE_METHOD)" PR_AUTO="$(PR_AUTO)" PR_DELETE_BRANCH="$(PR_DELETE_BRANCH)" PR_CHECKS_STRICT="$(PR_CHECKS_STRICT)" PR_RELEASE_ON_MERGE="$(PR_RELEASE_ON_MERGE)" PR_INCLUDE_ROOT="$(PR_INCLUDE_ROOT)" PR_CHECKPOINT="$(PR_CHECKPOINT)" DEPS_REPORT="$(DEPS_REPORT)" VERBOSE="$(VERBOSE)" PR_BRANCH="$(PR_BRANCH)" PYTHONPATH="$(WORKSPACE_PYTHONPATH)" uv run --all-packages python -m scripts.dispatch
+FLEXT_MAKE_DISPATCH := FLEXT_WORKSPACE_ROOT="$(CURDIR)" PROJECT="$(PROJECT)" PROJECTS="$(PROJECTS)" WHAT="$(WHAT)" PYTEST_ARGS="$(PYTEST_ARGS)" VALIDATE_SCOPE="$(VALIDATE_SCOPE)" DOCS_PHASE="$(DOCS_PHASE)" FAIL_FAST="$(FAIL_FAST)" JOBS="$(JOBS)" CHECK_GATES="$(CHECK_GATES)" VALIDATE_GATES="$(VALIDATE_GATES)" SCOPE="$(SCOPE)" NAMESPACE="$(NAMESPACE)" GATES="$(GATES)" PROPAGATE="$(PROPAGATE)" FIX="$(FIX)" FILE="$(FILE)" FILES="$(FILES)" CHANGED_ONLY="$(CHANGED_ONLY)" MATCH="$(MATCH)" RUFF_ARGS="$(RUFF_ARGS)" PYRIGHT_ARGS="$(PYRIGHT_ARGS)" CHECK_ONLY="$(CHECK_ONLY)" RELEASE_PHASE="$(RELEASE_PHASE)" INTERACTIVE="$(INTERACTIVE)" DRY_RUN="$(DRY_RUN)" PUSH="$(PUSH)" VERSION="$(VERSION)" MESSAGE="$(MESSAGE)" TAG="$(TAG)" BUMP="$(BUMP)" RELEASE_DEV_SUFFIX="$(RELEASE_DEV_SUFFIX)" RELEASE_NEXT_DEV="$(RELEASE_NEXT_DEV)" RELEASE_NEXT_BUMP="$(RELEASE_NEXT_BUMP)" CREATE_BRANCHES="$(CREATE_BRANCHES)" PR_ACTION="$(PR_ACTION)" PR_BASE="$(PR_BASE)" PR_HEAD="$(PR_HEAD)" PR_NUMBER="$(PR_NUMBER)" PR_TITLE="$(PR_TITLE)" PR_BODY="$(PR_BODY)" PR_DRAFT="$(PR_DRAFT)" PR_MERGE_METHOD="$(PR_MERGE_METHOD)" PR_AUTO="$(PR_AUTO)" PR_DELETE_BRANCH="$(PR_DELETE_BRANCH)" PR_CHECKS_STRICT="$(PR_CHECKS_STRICT)" PR_RELEASE_ON_MERGE="$(PR_RELEASE_ON_MERGE)" PR_INCLUDE_ROOT="$(PR_INCLUDE_ROOT)" PR_CHECKPOINT="$(PR_CHECKPOINT)" DEPS_REPORT="$(DEPS_REPORT)" VERBOSE="$(VERBOSE)" PR_BRANCH="$(PR_BRANCH)" $(WORKSPACE_PYTHON) -m scripts.dispatch
 WORKSPACE_FLEXT_INFRA := FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(WORKSPACE_PYTHON) -m flext_infra
 WORKSPACE_INFRA_CHECK := $(WORKSPACE_FLEXT_INFRA) check
 WORKSPACE_INFRA_CODEGEN := $(WORKSPACE_FLEXT_INFRA) codegen
@@ -201,17 +203,9 @@ local_venvs=$$(for proj in $(ALL_PROJECTS); do \
 	if [ -d "$$proj/.venv" ]; then echo "$$proj/.venv"; fi; \
 done); \
 if [ -n "$$local_venvs" ]; then \
-	echo "Enforcing workspace venv by removing project-local .venv directories:"; \
+	echo "ERROR: project-local .venv directories violate the workspace environment contract:"; \
 	printf '%s\n' "$$local_venvs"; \
-	for venv_path in $$local_venvs; do rm -rf "$$venv_path"; done; \
-	echo "Project-local .venv directories removed."; \
-fi; \
-residual_venvs=$$(for proj in $(ALL_PROJECTS); do \
-	if [ -d "$$proj/.venv" ]; then echo "$$proj/.venv"; fi; \
-done); \
-if [ -n "$$residual_venvs" ]; then \
-	echo "ERROR: unable to remove some project-local .venv directories:"; \
-	printf '%s\n' "$$residual_venvs"; \
+	echo "Move those generated environments outside the workspace, then rerun 'make boot'."; \
 	exit 1; \
 fi
 endef
@@ -238,20 +232,54 @@ if [ ! -x "$(PY)" ]; then \
 	echo "    Run 'make boot' first to create the environment."; \
 	echo ""; \
 	exit 1; \
-fi
+fi; \
+if [ ! -f "$(WORKSPACE_VENV_READY)" ]; then \
+	echo "ERROR: workspace .venv is incomplete ($(WORKSPACE_VENV_READY) missing)."; \
+	echo "    Run 'make boot' to finish synchronization and import validation."; \
+	exit 1; \
+fi; \
+lock_hash=$$($(PYTHON_CMD) -c 'from hashlib import sha256; from pathlib import Path; print(sha256(Path("uv.lock").read_bytes()).hexdigest())'); \
+ready_hash=$$(cat "$(WORKSPACE_VENV_READY)"); \
+if [ "$$lock_hash" != "$$ready_hash" ]; then \
+	echo "ERROR: workspace .venv is stale (uv.lock changed after the last successful boot)."; \
+	echo "    Run 'make boot' to synchronize it."; \
+	exit 1; \
+fi; \
+$(PY) -c 'import sys; required = tuple(map(int, "$(PYTHON_REQ_VERSION)".split("."))); actual = sys.version_info[:2]; assert actual == required, f"expected Python {required}, found {actual}"' || { \
+	echo "ERROR: workspace .venv uses the wrong Python interpreter."; \
+	exit 1; \
+}
 mkdir -p "$(UV_CACHE_DIR)"
+endef
+
+define BOOTSTRAP_WORKSPACE_VENV
+if [ -z "$(UV_REQ_VERSION)" ]; then \
+	echo "ERROR: canonical uv version is missing from .mise.toml"; \
+	exit 1; \
+fi; \
+rm -f "$(WORKSPACE_VENV_READY)"; \
+echo "Creating or repairing $(WORKSPACE_VENV) with Python $(PYTHON_REQ_VERSION)..."; \
+$(PYTHON_CMD) -m venv --upgrade-deps "$(WORKSPACE_VENV)" || exit 1; \
+$(PY) -m pip install --disable-pip-version-check --upgrade "uv==$(UV_REQ_VERSION)" || exit 1; \
+$(UV_BIN) --version || exit 1
+endef
+
+define VERIFY_WORKSPACE_VENV
+echo "Verifying workspace package metadata and public imports..."; \
+$(PY) -c 'import importlib, importlib.metadata as metadata, pathlib, tomllib; root = pathlib.Path.cwd(); pyprojects = (root / "pyproject.toml", *sorted(root.glob("flext-*/pyproject.toml"))); projects = tuple((path.parent, tomllib.loads(path.read_text())["project"]) for path in pyprojects); installed = tuple((project, metadata.version(project["name"])) for _, project in projects); mismatches = tuple("{}: expected {}, installed {}".format(project["name"], project["version"], version) for project, version in installed if version != project["version"]); assert not mismatches, "; ".join(mismatches); modules = tuple(sorted({entry.name for project_dir, _ in projects for entry in (project_dir / "src").glob("flext_*") if entry.is_dir()})); tuple(importlib.import_module(module) for module in modules); print("Verified {} distributions and {} public imports".format(len(projects), len(modules)))' || exit 1; \
+$(PYTHON_CMD) -c 'from hashlib import sha256; from pathlib import Path; print(sha256(Path("uv.lock").read_bytes()).hexdigest())' > "$(WORKSPACE_VENV_READY)"
 endef
 
 define ENSURE_WORKSPACE_RUNTIME
 echo "Ensuring workspace runtime dependencies in .venv..."; \
 log_file="/tmp/flext-workspace-runtime-sync.log"; \
-if uv lock >"$$log_file" 2>&1; then \
+if $(UV_BIN) lock >"$$log_file" 2>&1; then \
 	:; \
 else \
 	cat "$$log_file"; \
 	exit 1; \
 fi; \
-if uv sync --all-packages --all-groups --all-extras >>"$$log_file" 2>&1; then \
+if $(UV_BIN) sync --all-packages --all-groups --all-extras >>"$$log_file" 2>&1; then \
 	:; \
 else \
 	cat "$$log_file"; \
@@ -282,13 +310,14 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help boot _boot_default build _build_default _up _mod _constraints docs _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination coordination makefile status _status test _test_default val clean _clean_default ship _rel _pr _save _tag _push _imp _stat
+.PHONY: help setup boot _boot_default build _build_default _up _mod _constraints docs _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination coordination makefile status _status test _test_default val clean _clean_default ship _rel _pr _save _tag _push _imp _stat
 
-help: ## Show registry-driven workspace verbs
-	$(Q)$(FLEXT_MAKE_DISPATCH) help
+help: ## Show workspace verbs without creating or synchronizing .venv
+	$(Q)awk 'BEGIN {FS = ":.*## "; print "FLEXT workspace commands:"} /^[a-zA-Z][a-zA-Z0-9_.-]+:.*## / {printf "  %-20s %s\n", $$1, $$2}' "$(firstword $(MAKEFILE_LIST))"
 
-boot: ## Bootstrap .venv + submodules (WHAT=all|venv|submodules|sync|stat|imp)
-	$(Q)$(FLEXT_MAKE_DISPATCH) boot
+setup: _boot_default ## Create and validate the complete workspace .venv
+
+boot: setup ## Alias for the complete workspace setup
 
 _boot_default: ## Install all projects into workspace .venv
 	$(Q)$(PREFLIGHT_CHECK)
@@ -308,15 +337,8 @@ _boot_default: ## Install all projects into workspace .venv
 		echo "Submodules ready."; \
 		fi; \
 	fi
-	$(Q)[ -d ".venv" ] || { \
-		echo "Creating .venv..."; \
-		$(PYTHON_CMD) -m venv .venv; \
-		echo "Installing pipx and uv inside .venv..."; \
-		.venv/bin/pip install -U pip pipx uv; \
-	}
+	$(Q)$(BOOTSTRAP_WORKSPACE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
-	$(Q)echo "Bootstrapping flext-core runtime dependencies..."; \
-	uv sync --directory flext-core --no-dev || exit 1
 	$(Q)$(ENSURE_WORKSPACE_RUNTIME)
 	$(Q)$(PREPARE_SELECTED_PROJECTS)
 	$(Q)$(AUTO_SYNC_ALL_PROJECTS)
@@ -340,7 +362,7 @@ _boot_default: ## Install all projects into workspace .venv
 				continue; \
 			fi; \
 			printf "     lock  ... "; \
-			if uv lock --directory "$$proj" >"$$log_file" 2>&1; then \
+			if $(UV_BIN) lock --directory "$$proj" >"$$log_file" 2>&1; then \
 				echo "ok"; \
 			else \
 				echo "failed"; \
@@ -369,7 +391,7 @@ _boot_default: ## Install all projects into workspace .venv
 		failed_projects="$$failed_projects root"; \
 	fi; \
 	printf "     lock  ... "; \
-	if uv lock >"$$log_file" 2>&1; then \
+	if $(UV_BIN) lock >"$$log_file" 2>&1; then \
 		echo "ok"; \
 		root_lock_ok=1; \
 	else \
@@ -380,7 +402,7 @@ _boot_default: ## Install all projects into workspace .venv
 	fi; \
 	if [ $$root_lock_ok -eq 1 ]; then \
 		printf "     install ... "; \
-		if uv sync --all-packages --all-groups --all-extras >>"$$log_file" 2>&1; then \
+		if $(UV_BIN) sync --all-packages --all-groups --all-extras >>"$$log_file" 2>&1; then \
 			elapsed=$$(( $$(date +%s) - start_ts )); \
 			echo "ok ($${elapsed}s)"; \
 			installed=$$((installed + 1)); \
@@ -408,10 +430,11 @@ _boot_default: ## Install all projects into workspace .venv
 	fi
 	$(Q)if git rev-parse --git-dir >/dev/null 2>&1 && [ -f .pre-commit-config.yaml ]; then \
 		echo "Installing pre-commit hooks (workspace root)..."; \
-		uv run --all-packages pre-commit install || exit 1; \
+		$(UV_BIN) run --no-sync --all-packages pre-commit install || exit 1; \
 	else \
 		echo "INFO: skipping pre-commit install (no git repository or config)"; \
 	fi
+	$(Q)$(VERIFY_WORKSPACE_VENV)
 
 _up: ## Refresh workspace lock/install + rewrite dependency constraints + dependency report
 	$(Q)$(REQUIRE_VENV)

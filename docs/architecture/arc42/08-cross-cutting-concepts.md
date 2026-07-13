@@ -62,6 +62,24 @@ One canonical class/namespace owns each concern; consumers inherit or import
 the facade. Standalone "compat" aliases, pass-through proxies, and parallel
 old+new surfaces are removed in the same cycle they are replaced.
 
+<!-- mro-wkii.17.26 (agent: codex) — make thin-domain-facade decomposition a cross-cutting MRO invariant. -->
+### 8.4.1 Facade Decomposition
+
+Composition modules remain thin regardless of layer. A `<domain>.py` facade
+owns the only external import path and composes small responsibility mixins from
+its adjacent `_<domain>/*.py` private package. This applies equally to facets,
+operational facades, services, codegen, refactor, dependency, validation, and
+tooling modules. Private package initializers use static explicit re-exports or
+remain empty; generated PEP 562 lazy exports are reserved for the production
+package root.
+
+Before a decomposition, Rope provides the semantic dependency graph and SCC
+evidence; `rg` and `sg` prove textual consumers, lazy maps, MRO bases, entry
+points, and `__all__`. The cutover moves behavior, updates all consumers, and
+deletes the superseded path atomically. Keeping `__unit__.py`, forwarding
+wrappers, compatibility aliases, duplicate implementations, or parallel
+old/new paths is forbidden.
+
 ## 8.5 Pydantic 2-way Boundary
 
 Every owned payload that crosses a boundary is a Pydantic model from the `m`
