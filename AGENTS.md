@@ -32,7 +32,7 @@ Em caso de dúvida, conflito ou ambiguidade, o agente PERGUNTA ao operador antes
 
 ### Regras universais FLEXT para config/settings, typing e MRO (sempre ativas, invioláveis)
 
-Estas regras (U2–U8) complementam a precedência (U1, acima) e a Universal Agent Law (R0–R18). Onde qualquer ADR/skill/doc conflitar, o artefato é AJUSTADO — nunca a regra.
+Estas regras (U2–U8) complementam a precedência (U1, acima) e a Universal Agent Law (R0–R19). Onde qualquer ADR/skill/doc conflitar, o artefato é AJUSTADO — nunca a regra.
 
 <!-- mro-i6nq.7 (agent: codex) — U2/U4 follow live U18: direct validated singletons only, with every intermediary removed. -->
 - **U2 — Strict config/settings access (single form).** Always use `from <namespace> import config, settings`, then consume `config.<Namespace>.<domain>` / `settings.<Namespace>.<domain>` directly (for example, `from ai_hub import config, settings` followed by `config.AiHub.*` / `settings.AiHub.*`). No MRO-provided access, instance attribute, alias, forwarding member, wrapper, proxy, or model-less mapping is permitted.
@@ -81,6 +81,9 @@ Mecanismos obrigatórios de prevenção (sempre ativos): (1) pathspec explícito
 <!-- mro-j47u (agent: codex) — U20 records the operator's universal MRO/lazy/tooling contract. -->
 - **U20 — MRO/OO, facade order, correct `TYPE_CHECKING`, and lazy public exports are universal invariants (inviolable; live operator order 2026-07-12).** Every project extends the canonical upstream aliases and owns nested namespaces in strict dependency order `c → t → p → m → u`; reverse edges exist only under `TYPE_CHECKING` when required by that order or a proven runtime cycle. Public objects are exported through the generated PEP 562 lazy map plus matching `TYPE_CHECKING` declarations; leaf code maximizes canonical namespaced aliases and never replaces this design with direct concrete imports or parallel facades. Generic lint/type defaults do not overrule the architecture. A diagnostic may be disabled globally only when a reproducible command proves that the specific tool cannot model this exact MRO/lazy construct, no project-side correction exists, the code is listed in the closed canonical tooling SSOT with an inline rationale, and the setting is propagated to every repository. Such exceptions are never generalized to adjacent codes, files, or real defects; per-file ignore hints remain forbidden.
 
+<!-- mro-j47u (agent: codex) — U21 records the operator's supreme responsibility order. -->
+- **U21 — Responsabilidade técnica total antes de qualquer mutação (inviolável; pedido vivo 2026-07-12).** Antes de editar, o agente compreende e prova o contrato completo, dono canônico, consumidores, superfícies geradas/deployadas, blast radius, cutover e validação real. Pressa, pressão, limite de contexto ou aparência de simplicidade NUNCA autorizam implementação simplista, parcial, opaca, descartável, especulativa ou não validada. Código, config, template, schema, documentação, migração e automação permanecem completos, produtivos, inspecionáveis e continuamente verdes. Placeholder/blob que esconde estrutura obrigatória, reescrita pela metade, teste/resultado fake, estado intermediário quebrado ou cutover antes de todos os consumidores serem provados é violação grave. Se a correção completa ainda não pode ser provada, PARAR, registrar evidência exata e perguntar — nunca improvisar nem correr.
+
 <!-- BEGIN UNIVERSAL AGENT LAW (portable; regenerable; do not edit inside) -->
 
 ## Universal Agent Law (portable core)
@@ -95,7 +98,13 @@ Honesty at 100%, always, backed by real evidence. "I could not" is always accept
 
 Fix every defect at the root in GitOps/source and verify green. No bypass, workaround, or suppression.
 
-### Core Rules (R0–R18)
+### Supreme Responsibility — Understand Completely, Then Change Safely
+
+Research the full contract, consumers, generated surfaces, blast radius, and
+real validation path before every mutation. Rushed, partial, simplistic,
+opaque, fake, incomplete, or broken artifacts are forbidden.
+
+### Core Rules (R0–R19)
 
 - R0: Zero-tolerance for bypass/fallback/hardcode/stub. Fix root cause generically.
 - R1: Fix-forward-only. Never `git checkout/restore/reset --hard/stash/revert` another's work.
@@ -116,6 +125,7 @@ Fix every defect at the root in GitOps/source and verify green. No bypass, worka
 - R16: Operator-precedence + ask-when-unsure. A live operator/user request ALWAYS supersedes every bead, plan, ADR, skill, and doc; the strict precedence is **operator request > beads > ADRs > skills > docs**. When a request conflicts with any of these, the request wins and the conflicting artifact MUST be adjusted in the SAME cycle (update bead, edit ADR/plan/skill/doc, record SHA/evidence) — never refuse or defer a request by citing a lower artifact as authority. On ANY doubt or ambiguity, STOP and ASK the operator before acting — never guess or assume.
 - R17: Law binds EVERY agent (subagents included, any depth). Every delegation prompt MUST embed the Supreme Rule, Supreme Law, R18, and the exact validation commands. A subagent violation is the coordinator's violation.
 - R18: Continuous-green — tree importable/collectable at EVERY instant, not just mission end. Per edit batch (≤5 files): fresh-import smoke + `ruff --no-fix` + typecheck + scoped tests, all green before next batch. Facade/public member move/rename/removal updates ALL consumers (grep-proof, workspace-wide) in the SAME batch. Broken import/collection = active incident: stop everything, fix first.
+- R19: Supreme responsibility — understand and prove the complete contract and all consumers before mutation; never rush or land partial, simplistic, opaque, fake, incomplete, or broken work.
 
 ### Context-Economy Directive
 
@@ -187,7 +197,7 @@ Any unresolved blocker at step 6 keeps the change incomplete.
 - `config` ≠ `settings`: the settings-bound subset is a separate file (`config/settings.yaml`).
 - Large/derived structures are **generated** by `_constants/_generated.py` from `config/`; hardcoding a large structure in `_constants/` is a blocked defect.
 - **Enforcement rules are DATA, not code (LAW1):** 100% of static enforcement rules live ONLY under `flext-infra/config/*.yaml` as Pydantic-2-validated records — zero rule logic in Python (no bespoke per-rule detector classes, no `ClassVar` banned/allowlist rule tables). `flext-core` holds runtime/beartype rules only. Engine = a rope-semantic fact base + a closed operator set, both in `u.Infra` (models stay pure data, zero methods).
-- **Static analysis is rope-semantic ONLY (LAW2):** use rope's semantic model (`get_scope`/`get_defined_names`/`get_attributes`/`get_superclasses`/`PyName`); `import ast`, `ast.parse`, `ast.walk`, `ast.Module`, and `PyModule.get_ast()`/`walk_ast_nodes` are BANNED in the static path.
+- **Static enforcement is rope-semantic ONLY (LAW2):** use rope's semantic model (`get_scope`/`get_defined_names`/`get_attributes`/`get_superclasses`/`PyName`); `import ast`, `ast.parse`, `ast.walk`, `ast.Module`, and `PyModule.get_ast()`/`walk_ast_nodes` are BANNED in the enforcement path. The ast-grep MCP is allowed only as a read-only navigation sensor under the newest operator order; it never owns rules, fixes, or acceptance.
 - Layering (no runtime cycle): `flext-core` runtime-minimal (stdlib only, no Jinja2, never imports cli/infra at runtime) — owns ONLY runtime/beartype rules → `flext-cli` owns the universal template/config/schema engine → `flext-infra` enforces (all static rules as config data, evaluated by the rope-semantic engine).
 - Canonical: [`docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md) · plan [`docs/architecture/config-ssot-migration-plan.md`](docs/architecture/config-ssot-migration-plan.md) · beads `mro-wkii`.
 
