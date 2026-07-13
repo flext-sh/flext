@@ -337,18 +337,15 @@ project-includes = [
 ]
 python-interpreter-path = "./.venv/bin/python"
 python-version = "3.13"
+# mro-45r9: only production roots participate in resolution; legado and
+# scratch fixtures are never import/type-check consumers.
 search-path = [
   ".",
-  "flext-cli/legado",
   "flext-cli/src",
   "flext-core/examples",
-  "flext-core/legado",
   "flext-core/scripts",
   "flext-core/src",
-  "flext-infra/legado",
   "flext-infra/src",
-  "flext-infra/tmp_flow_test",
-  "flext-tests/legado",
   "flext-tests/src",
   "scripts",
   "src",
