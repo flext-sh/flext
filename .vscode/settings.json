@@ -1,5 +1,4 @@
 {
-  // NOTE (multi-agent, mro-wkii.17.25): keep Python bounded while opening every FLEXT Git repository.
   "[python]": {
     "diffEditor.ignoreTrimWhitespace": true,
     "editor.defaultFormatter": "charliermarsh.ruff",
@@ -157,5 +156,9 @@
     "**/.forgejo/workflows/*.yml",
     "**/.forgejo/workflows/*.yaml",
     "file:///home/marlonsc/flext/flext-infra/src/flext_infra/config/codegen.yaml"
-  ]
+  ],
+  "python.analysis.typeCheckingMode": "strict",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUntypedBaseClass": "none"
+  }
 }
