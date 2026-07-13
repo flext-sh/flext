@@ -14,7 +14,6 @@
 # WHITELIST: Project Directories
 # ============================================================================
 # Allow all FLEXT ecosystem project directories
-__pycache__/
 !.agents/
 !.agents/**
 !.claude/
@@ -23,22 +22,8 @@ __pycache__/
 !.claude/settings.local.json
 !.code-review-graph/
 !.github/
-!.pre-commit-config.yaml
 !.vscode/
-!/config/
-!/config/**
 !/config/workspace.yaml
-!/examples/
-!/examples/**
-!/schemas/
-!/schemas/**
-!/scripts/
-!/scripts/**
-!/templates/
-!/templates/**
-!/tests/
-!/tests/**
-!/uv.lock
 !docker/
 !docs/
 !flext-*/
@@ -46,15 +31,6 @@ __pycache__/
 !src/
 !typings/
 .agents/skills/*/report.json
-.direnv/
-.reports/
-.venv/
-**/.env
-**/*.key
-**/*.pem
-**/credentials.json
-**/secrets.y*ml
-base.mk
 
 # Dispatcher-based command surface (Make SSOT)
 
@@ -178,10 +154,6 @@ base.mk
 # ============================================================================
 
 # Python artifacts inside allowed directories
-**/__pycache__/
-**/*.pyc
-**/*.pyo
-**/*.pyd
 **/*.so
 **/*.egg
 **/*.egg-info/
@@ -360,3 +332,30 @@ legado/
 
 # codegen module-standardizer reject artifacts (ADR-005 §9)
 *.tpl.rej
+
+# --- workspace-sync: required ignores (auto-managed) ---
+.direnv/
+.reports/
+.venv/
+base.mk
+!.pre-commit-config.yaml
+!/uv.lock
+!/config/
+!/config/**
+!/tests/
+!/tests/**
+!/templates/
+!/templates/**
+!/schemas/
+!/schemas/**
+!/examples/
+!/examples/**
+!/scripts/
+!/scripts/**
+**/__pycache__/
+**/*.py[cod]
+**/.env
+**/*.key
+**/*.pem
+**/credentials.json
+**/secrets.y*ml
