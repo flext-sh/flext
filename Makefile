@@ -318,7 +318,7 @@ define PREFLIGHT_CHECK
 	echo " OK: all required tools present"
 endef
 
-.PHONY: help setup boot _boot_default build _build_default _up _mod _constraints docs _docs _stubs _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination coordination makefile status _status test _test_default val clean _clean_default ship _rel _pr _save _tag _push _imp _stat
+.PHONY: help setup boot _boot_default build _build_default _up _mod _constraints docs _docs _stubs _grpc _gen _sync check _check_default _scan _fmt _types _pyre _pol _cqrs _coordination coordination makefile status _status test _test_default val clean _clean_default ship _rel _pr _save _tag _push _imp _stat
 
 help: ## Show workspace verbs without creating or synchronizing .venv
 	$(Q)awk 'BEGIN {FS = ":.*## "; print "FLEXT workspace commands:"} /^[a-zA-Z][a-zA-Z0-9_.-]+:.*## / {printf "  %-20s %s\n", $$1, $$2}' "$(firstword $(MAKEFILE_LIST))"
@@ -552,7 +552,7 @@ _status: ## Show Beads status
 _cqrs: ## Enforce strict CQRS/FlextModels patterns across ecosystem
 	$(Q).github/scripts/check-cqrs-compliance.sh
 
-build: ## Build/regen (WHAT=all|gen|mod|up|constraints|sync|docs|stubs)
+build: ## Build/regen (WHAT=all|gen|grpc|mod|up|constraints|sync|docs|stubs)
 	$(Q)$(FLEXT_MAKE_DISPATCH) build
 
 _build_default: ## Build/package all selected projects
@@ -1042,11 +1042,27 @@ _push: ## Push branches and tags for selected projects
 	fi; \
 	echo "Push: $$pushed pushed, $$failed failed"
 
-_gen: ## Recreate standardized pyproject.toml, base.mk, Makefile and __init__.py
+_grpc: ## Generate Python gRPC modules for projects that own proto schemas
+	$(Q)$(REQUIRE_VENV)
+	$(Q)$(ENFORCE_WORKSPACE_VENV)
+ifneq ($(HAS_EXPLICIT_PROJECT_SELECTION),)
+	$(Q)$(ENSURE_SELECTED_PROJECTS)
+	$(Q)$(ENSURE_PROJECTS_EXIST)
+	$(Q)for proj in $(SELECTED_PROJECTS); do \
+		$(WORKSPACE_INFRA_CODEGEN) grpc \
+			--workspace "$(CURDIR)/$$proj" --apply || exit 1; \
+	done
+else
+	$(Q)$(WORKSPACE_INFRA_CODEGEN) grpc --workspace "$(CURDIR)" --apply
+endif
+
+_gen: ## Recreate standardized metadata, gRPC modules, Makefiles and initializers
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENFORCE_WORKSPACE_VENV)
 	$(Q)echo "Recreating standardized pyproject.toml..."
 	$(Q)$(MAKE) --no-print-directory _mod $(MAKE_SELECTION_ARGS)
+	$(Q)echo "Regenerating package-owned gRPC modules..."
+	$(Q)$(MAKE) --no-print-directory _grpc $(MAKE_SELECTION_ARGS)
 	$(Q)echo "Recreating standardized base.mk/Makefile/__init__.py..."
 	$(Q)$(MAKE) --no-print-directory _sync $(MAKE_SELECTION_ARGS)
 	$(Q)echo "Generation complete."
