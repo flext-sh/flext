@@ -28,12 +28,20 @@ metadata:
 
 1. Assign each touched module to L0/L1/L2/L3 before editing.
 2. **For cross-project changes**: Identify the correct domain project using the Selection Rule above. NEVER guess.
-3. Inspect imports for outward dependencies.
+3. Identify the domain facade and its private responsibility package before moving behavior.
+4. Inspect imports for outward dependencies.
 
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
+<!-- mro-wkii.17.26 (agent: codex) — keep layer guidance aligned with the universal thin-domain-facade law. -->
+- Every layer uses one thin `<domain>.py` MRO/composition facade over focused
+  `_<domain>/*.py` implementation mixins when a module owns multiple
+  responsibilities. This applies to facets, services, codegen, refactor,
+  dependency, validation, and tooling modules. Consumers import the facade;
+  private package initializers are static/empty; root package lazy export is
+  the only lazy export surface. Remove the old path in the same atomic cutover.
 - **ADR-005 (config SSOT) layering:** `flext-core` is runtime-minimal — stdlib
   only (`tomllib` + `string.Template`), **no Jinja2**, and **never imports
   `flext-cli`/`flext-infra` at runtime** (examples/scripts/tests only).

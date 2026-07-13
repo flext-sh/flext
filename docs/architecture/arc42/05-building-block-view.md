@@ -55,8 +55,8 @@ flext-<name>/
 │   ├── utilities.py         # public `u` facade
 │   ├── config.py            # project config singleton (`config.<Ns>.*`)
 │   ├── settings.py          # env-bound settings singleton (`settings.<Ns>.*`)
-│   ├── services/            # behavior, composed by MRO
-│   └── _constants/ _models/ _protocols/ _typings/ _utilities/   # private facets
+│   ├── services/            # thin domain facades plus private `_domain/` parts
+│   └── _constants/ _models/ _protocols/ _typings/ _utilities/   # thin facet facades plus private domain parts
 ├── tests/                   # one unified conftest.py; unit/ integration/ e2e/; fixtures/
 ├── config/                  # execution parametrization (YAML, SSOT per ADR-005)
 ├── docs/                    # project documentation (hand-written + generated/)
@@ -88,6 +88,31 @@ Import direction is strict `c → t → p → m → u` (later may import earlier
 runtime; reverse is `TYPE_CHECKING`-only). Facade owner modules extend the
 upstream FLEXT facade by MRO and rebind the local alias at the bottom of the
 module.
+
+<!-- mro-wkii.17.26 (agent: codex) — document the universal thin-domain-facade building block requested by the operator. -->
+### 5.3.1 Thin Domain Facade
+
+Every module that owns more than one implementation responsibility is split
+into one thin MRO/composition facade and one matching private package of focused
+parts:
+
+```text
+<layer>/
+├── <domain>.py              # sole facade and external import path
+└── _<domain>/
+    ├── __init__.py          # static explicit re-exports or empty
+    ├── <responsibility_a>.py
+    └── <responsibility_b>.py
+```
+
+For example, `_utilities/rope.py` composes focused mixins from
+`_utilities/_rope/*.py`. The same shape governs `c/t/p/m/u`, operational
+facades, services, codegen, refactor, dependency, validation, and tooling
+domains. External consumers never import private parts. PEP 562 lazy export is
+generated only in the production package root; private and subdirectory
+initializers are static or empty. A move updates every consumer and removes the
+old path in one continuously green cutover, leaving no `__unit__.py`, wrapper,
+compatibility alias, duplicate implementation, or parallel path.
 
 ## 5.4 Operational Layer
 
