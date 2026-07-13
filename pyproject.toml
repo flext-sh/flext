@@ -624,6 +624,16 @@ extraPaths = [ "flext-grpc/src" ]
 reportPrivateUsage = "error"
 root = "flext-grpc/src"
 
+# NOTE (multi-agent, mro-f8vk / kimi): rope_patch holds intentional
+# monkey-patches of rope protected members — rope 1.14 has no public API to
+# register patched-AST handlers, and getattr-dispatch/Any is forbidden by the
+# FLEXT typing law. Scope reportPrivateUsage off for this subpackage only;
+# the most-specific root wins over flext-infra/src below.
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "flext-infra/src" ]
+reportPrivateUsage = "none"
+root = "flext-infra/src/flext_infra/_utilities/rope_patch"
+
 [[tool.pyright.executionEnvironments]]
 extraPaths = [ "flext-infra/src" ]
 reportPrivateUsage = "error"
