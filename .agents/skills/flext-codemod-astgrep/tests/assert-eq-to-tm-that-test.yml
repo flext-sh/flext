@@ -1,0 +1,6 @@
+id: assert-eq-to-tm-that
+valid:
+  - tm.that(value, eq=expected)
+  - result = value == expected
+invalid:
+  - assert value == expected
