@@ -6,7 +6,7 @@ description: 'Use this skill to use when running workspace-wide maintenance task
   unrelated to workspace-maintenance creating projects or architecture from scratch'
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 # Workspace Maintenance
 
@@ -25,15 +25,27 @@ metadata:
 
 ## Workflow
 
-1. Identify the maintenance concern (hygiene, dependabot, poetry, security).
-2. Run standard gates first: `make check` and `make val`.
-3. For cross-workspace tooling distribution, use `make workspaces WHAT=status` and `make workspaces WHAT=distribute APPLY=1` from `~/.ai-hub`.
-4. Run specific maintenance checker with `--help` first, then default (dry-run) mode.
+<!-- mro-wkii.17.26 (agent: codex) — make workspace discovery and transactions explicit. -->
+1. Discover the workspace root and load its declared project manifest.
+2. Include every declared FLEXT-technology member and open one shared Rope
+   semantic index. Use project mode only when workspace discovery proves that
+   the project is standalone.
+3. Establish a merge-clean, importable, four-lint, pytest-green baseline.
+4. Run maintenance through `flext-infra conform` in a temporary worktree:
+   dry-run, inspect the patch/cardinality, patch-check, import/breakage checks,
+   full scoped gates, then explicit apply.
+5. For structural sensors/codemods, consume the versioned cooperative catalog
+   at `~/.ai-hub/ast-grep-rules`; reconcile its proposals against Rope facts.
+6. For cross-workspace tooling distribution, use `make workspaces WHAT=status`
+   and the documented apply verb from `~/.ai-hub` only after dry-run proof.
 
 ## Critical rules
 
 - Prefer canonical sources.
 - Require evidence.
+- Writers are deterministic and serialized; read-only analysis may parallelize
+  only where the dependency/SCC plan proves independence.
+- A transaction is accepted only when its immediate second run plans no changes.
 
 ## Example
 

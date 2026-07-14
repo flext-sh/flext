@@ -7,7 +7,7 @@ description: 'Use this skill to step-by-step refactoring workflow with quality g
   creating projects or architecture from scratch'
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 # FLEXT Refactoring Workflow
 
@@ -32,6 +32,13 @@ metadata:
 3. Define one thin domain facade and focused private implementation parts before moving code.
 4. Deletion pass: remove wrappers, compat aliases, dead code, duplicated fields/methods first.
 5. Cut over every consumer and delete the superseded path in the same green batch.
+6. For a workspace, open one Rope project over the manifest and index every
+   FLEXT technology member. Project-only mode is valid only when no workspace
+   manifest/root can be discovered.
+7. Emit every codegen, Rope, template, and safe ast-grep change into one ordered
+   patch plan in a temporary worktree. Validate preimages, collisions, imports,
+   breakage, four type/lint gates, and pytest before apply; the next run must be
+   empty.
 
 ## Critical rules
 
@@ -46,6 +53,14 @@ metadata:
   as a wrapper or compatibility path.
 - Static enforcement of refactor invariants is config DATA in `flext-infra/config/*.yaml` over the
   rope-semantic fact base (LAW1); this workflow never adds detector code or `ast`/`get_ast`-based checks (LAW2).
+<!-- mro-wkii.17.26 (agent: codex) — bind ast-grep automation to the canonical cooperative catalog. -->
+- `~/.ai-hub/ast-grep-rules` is the cooperative SSOT for structural sensors and
+  proven-safe codemods. Each rule requires valid/invalid fixtures, cardinality,
+  deterministic preview, and idempotence. Ast-grep never owns semantic truth;
+  Rope facts and the conform transaction accept or reject its proposed edits.
+- Never run broad `ruff --fix`, regex rewrites, or Python AST rewrites after a
+  codemod. Formatting is a separate explicit planned change; semantic movement
+  remains Rope-owned.
 
 ## Example
 

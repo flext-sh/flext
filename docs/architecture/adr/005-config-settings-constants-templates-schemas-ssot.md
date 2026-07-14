@@ -140,6 +140,30 @@ semantic model (`get_scope`/`get_defined_names`/`get_attributes`/
 path — `get_ast()` returns a stdlib `ast.Module`, which is AST. One shared
 `rope_project` per run serves both detection and fix.
 
+## 7. Workspace conformance owns broad refactors
+
+<!-- mro-wkii.17.26 (agent: codex) — bind ADR-005 data ownership to the one-workspace transactional engine. -->
+
+`flext-infra codegen conform` is the sole broad-write pipeline for generated
+artifacts and structural migrations. In a declared workspace it opens one Rope
+session at the manifest owner, indexes every active FLEXT member, builds facts
+once per content hash, and evaluates config rules grouped by a closed operator
+set. A project selector may narrow reporting or the final plan, but never opens
+an incomplete project-local semantic universe. Project mode is valid only when
+no workspace manifest or Git superproject contract exists.
+
+Every accepted change is a typed planned change with an input fingerprint,
+semantic owner, dependencies, expected diagnostics, and output hash. The
+complete plan is rendered and tested in a temporary worktree before apply.
+Writer collisions, stale fingerprints, new import cycles, changed public
+reachability, patch-check failures, gate failures, or non-idempotence fail the
+transaction before the live tree is changed.
+
+Text and graph tools may supply candidate locations and blast-radius evidence.
+They do not own rule data, fixes, or acceptance. Static rules remain YAML data;
+new rule instances reuse the closed operators, while a genuinely new semantic
+operator requires a versioned implementation change and its own tests.
+
 ## Verification contract
 
 - Models prove Pydantic validation and dump round trips through public facades.
@@ -154,5 +178,6 @@ path — `get_ast()` returns a stdlib `ast.Module`, which is AST. One shared
 
 - [ADR-003 — Manifest-owned topology and Git-first uv environments](./003-workspace-tooling-hub-distribution.md)
 - [ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`](./004-generic-make-framework-in-flext-tests.md)
+- [ADR-007 — Operational kernel, universal CLI, and transactional conformance](./007-operational-kernel-cli-conform.md)
 - [Migration plan](../config-ssot-migration-plan.md)
 - Enforcement hardening beads: `mro-wkii.4`, `mro-wkii.4.1`, `mro-wkii.4.8`; plan `flext-infra/.omo/plans/declarative-enforcement.md`.

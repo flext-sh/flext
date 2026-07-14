@@ -7,7 +7,7 @@ description: 'Describes the end-to-end development workflow for the FLEXT monore
   creating projects or architecture from scratch'
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 # FLEXT Development Workflow
 
@@ -28,16 +28,26 @@ End-to-end development workflow for the FLEXT monorepo.
 
 ## Workflow
 
-1. Bootstrap workspace and dependencies.
-2. Edit code with skill/rule alignment.
-3. Run fast feedback (`make check`, `make test`).
-4. Use `make cosmos-help` to discover dispatcher verbs provided by the `~/.ai-hub` workspace base.
+<!-- mro-wkii.17.26 (agent: codex) — make a clean baseline precede automated refactoring. -->
+1. Align the active Beads, ADRs, governance, skills, and file ownership.
+2. Finish every active merge semantically and prove that the index has no
+   unmerged paths or conflict markers.
+3. Establish a clean baseline with fresh imports, Ruff check and format,
+   Pyrefly, Mypy, Pyright, and scoped pytest all at exit zero.
+4. Run broad refactors only through the `flext-infra conform` transactional
+   worktree: analyze, plan, patch-check, validate, preview, then apply.
+5. Re-run the same gates after every batch and prove a second conform pass is
+   empty before landing.
+6. Use `make cosmos-help` to discover dispatcher verbs provided by the
+   `~/.ai-hub` workspace base.
 
 ## Critical rules
 
 - Prefer `make` verbs over one-off scripts.
 - Claim work via `bd` before editing.
 - Keep bead notes current with command + output evidence.
+- Never run an auto-fix as an implicit gate. A fix must be an explicit planned
+  transaction whose patch is reviewed before application.
 
 ## Bootstrap
 
