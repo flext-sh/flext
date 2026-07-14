@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING, Annotated
 from flext_tests import FlextTestsModels
 from tests import u
 
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
+
 
 
 class TestsFlextRootModels(FlextTestsModels):

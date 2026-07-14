@@ -29,11 +29,8 @@ from __future__ import annotations
 
 import re
 import sys
+from collections.abc import Iterator
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 WORKSPACE = Path(__file__).resolve().parents[3]
 SKIP_PROJECTS = frozenset({"flext-cli", "flext-core"})

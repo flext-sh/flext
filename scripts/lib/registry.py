@@ -28,7 +28,7 @@ class CommandRegistry:
         if result.failure:
             raise CommandRegistry.Error(result.error or "registry discovery failed")
         value = result.value
-        if not isinstance(value, m.Tests.MakeRegistry):
+        if not value:
             msg = "registry discovery returned invalid model"
             raise CommandRegistry.Error(msg)
         return value
@@ -40,7 +40,7 @@ class CommandRegistry:
         if result.failure:
             raise CommandRegistry.Error(result.error or "command load failed")
         value = result.value
-        if not isinstance(value, m.Tests.MakeCommand):
+        if not value:
             msg = "command load returned invalid model"
             raise CommandRegistry.Error(msg)
         return value

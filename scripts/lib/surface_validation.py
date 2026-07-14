@@ -3,15 +3,12 @@
 from __future__ import annotations
 
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Callable
 
 from flext_tests import m, t, u
 from scripts.lib.exec import CommandExecution
 from scripts.lib.registry import CommandRegistry
 from scripts.lib.surface_probes import SurfaceProbeRunner
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 
 class SurfaceValidator:

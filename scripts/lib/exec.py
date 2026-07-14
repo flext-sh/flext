@@ -4,15 +4,13 @@ from __future__ import annotations
 
 import os
 import sys
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, NoReturn
+from typing import NoReturn
 
 from flext_cli import u
 from flext_tests import c, m, t
 from scripts.lib.registry import CommandRegistry
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
 
 
 class CommandExecution:

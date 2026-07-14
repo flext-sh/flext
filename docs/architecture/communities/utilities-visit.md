@@ -74,4 +74,4 @@ Community of 29 nodes
 - `flext-infra/src/flext_infra/_utilities/silent_failure_ast.py` (7 edge(s))
 - `flext-infra/src/flext_infra/detectors/silent_failure_detector.py::FlextInfraSilentFailureDetector.detect_file` (1 edge(s))
 - `flext-infra/src/flext_infra/detectors/silent_failure_detector.py::FlextInfraSilentFailureDetector.detect_violations` (1 edge(s))
-- `flext-infra/src/flext_infra/_utilities/rope_source.py::FlextInfraUtilitiesRopeSource.fix_silent_failure_sentinels` (1 edge(s))
+- `flext-infra/src/flext_infra/_utilities/rope_source.py::FlextInfraUtilitiesRopeSource.rope_fix_silent_failure_sentinels` (1 edge(s))
