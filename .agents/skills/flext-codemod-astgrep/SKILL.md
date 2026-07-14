@@ -4,7 +4,7 @@ description: >-
   Reusable, battle-tested ast-grep codemod library + authoring guide for FLEXT
   API-drift migrations (assert->tm matchers, settings import/base renames,
   namespaced-settings access, CLI-API refactors). Use when migrating any repo
-  (flext-*, gruponos-*, algar-*, or external consumers) to a new flext version,
+  (flext-*, projeto_b-*, projeto_a-*, or external consumers) to a new flext version,
   or when authoring/optimizing structural rewrites with ast-grep. DO NOT USE FOR
   questions unrelated to structural codemods or greenfield architecture.
 ---
@@ -125,11 +125,11 @@ fails. Rewrite whitespace-negation asserts to an explicit boolean, e.g.
 ## Cross-repo reuse
 
 These rules are location-independent. To run them against an external consumer
-repo (e.g. `../gruponos-meltano-native`, `../algar-oud-mig`):
+repo (e.g. `../projeto_b`, `../projeto_a`):
 ```bash
-ast-grep scan --rule /home/marlonsc/flext/.agents/skills/flext-codemod-astgrep/rules/settings-base-rename.yml ../gruponos-meltano-native/src
+ast-grep scan --rule /home/marlonsc/flext/.agents/skills/flext-codemod-astgrep/rules/settings-base-rename.yml ../projeto_b/src
 ```
-Non-flext-package repos (gruponos/algar) keep **raw `assert`** in their own
+Non-flext-package repos (projeto_b/projeto_a) keep **raw `assert`** in their own
 tests; only apply the assert->tm rule to `flext-*` package tests. Always apply
 the *import/base/accessor* rules to any consumer on the new flext version.
 

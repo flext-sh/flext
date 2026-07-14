@@ -28,7 +28,7 @@ commands.
    - local FLEXT packages (`flext-core`, `flext-cli`, `flext-tests`, and the
      target package);
    - the active package's own tests and architecture docs;
-   - `/home/marlonsc/algar-oud-mig` when the operator requests the Algar/FLEXT
+   - `/home/marlonsc/projeto_a` when the operator requests the projeto_a/FLEXT
      pattern as the comparison baseline.
 4. Prove real imports for the target package and its upstream FLEXT facades.
    Missing imports are blockers, not reasons to create local substitutes.

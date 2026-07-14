@@ -4,6 +4,8 @@
 #
 # Detection only. Replacing a call requires resolving its owning package,
 # namespace, and model field; a generic fix could silently change identity.
+# Calls and declarations owned by services/APIs/containers are intentionally
+# excluded: their lifecycle contract is unrelated to config/settings SSOT.
 id: config-settings-fetch-global
 language: python
 severity: error
@@ -14,9 +16,27 @@ ignores:
   - '**/legado/**'
 rule:
   any:
-    - pattern: $OWNER.fetch_global($$$ARGS)
-    - kind: function_definition
-      has:
-        kind: identifier
-        field: name
-        regex: '^fetch_global$'
+    - all:
+        - pattern: $OWNER.fetch_global($$$ARGS)
+        - regex: >-
+            (?i)(?:\b(?:config|settings)(?:_cls|_type)?|\b[A-Za-z_]\w*(?:Config|Settings))\.fetch_global\s*\(
+    - all:
+        - pattern: $OWNER.fetch_global($$$ARGS)
+        - inside:
+            stopBy: end
+            kind: class_definition
+            has:
+              field: name
+              regex: '(?:Config|Settings)$'
+    - all:
+        - kind: function_definition
+          has:
+            kind: identifier
+            field: name
+            regex: '^fetch_global$'
+        - inside:
+            stopBy: end
+            kind: class_definition
+            has:
+              field: name
+              regex: '(?:Config|Settings)$'

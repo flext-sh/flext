@@ -363,7 +363,7 @@ def configure(
     options: t.MappingKV[str, Any] | None = None,
     verbosity: int = 1,
 ) -> None:
-    """Settingsure processor behavior.
+    """Configure processor behavior.
 
     Args:
         mode: Processing mode ("strict", "lenient", or "auto").
