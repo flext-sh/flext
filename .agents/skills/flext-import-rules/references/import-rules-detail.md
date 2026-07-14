@@ -51,9 +51,14 @@ Only import lower tiers: constants/typings → runtime → protocols → models 
 
 Each facade exposes a lowercase alias (`c`, `m`, `p`, `r`, `t`, `u`, ...).
 
-### R8: TYPE_CHECKING
+### R8: TYPE_CHECKING and package initializers
 
-Use only for type-only symbols and `__init__.py` lazy loading. Do not hide cycles.
+Use `TYPE_CHECKING` only for type-only symbols and the generated PEP 562 map at
+the production package root. Every internal importable directory at arbitrary
+depth has a generated static `__init__.py` with relative same-name re-exports of
+direct sibling symbols and a sorted literal tuple `__all__`, including
+`__all__ = ()` when it owns no direct export. Internal initializers never flatten
+descendants and never use lazy loading. Do not hide cycles.
 
 ### R9: Ruff config
 
@@ -64,7 +69,7 @@ Use only for type-only symbols and `__init__.py` lazy loading. Do not hide cycle
 ### R10: Forbidden
 
 - `from flext_core import *`
-- Relative imports
+- Relative imports outside generated internal package initializers
 - `typing.List/Dict/Optional/Union`
 - `eval`, dynamic `getattr` for architecture
 - Shadowing aliases (e.g., `result` instead of `r`)
