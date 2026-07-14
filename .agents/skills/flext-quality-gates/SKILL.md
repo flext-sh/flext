@@ -7,7 +7,7 @@ description: 'Use when running or interpreting quality gates (lint, typecheck, t
   creating projects or architecture from scratch'
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 # FLEXT Quality Gates
 
@@ -28,23 +28,30 @@ Commands and thresholds for the FLEXT quality gates.
 
 ## Workflow
 
-1. First edit → `ruff check <file>`.
-2. Same slice → `pyrefly check <file>`.
-3. Same slice → narrow behavior gate (`pytest` or `make test PROJECT=<affected>`).
+<!-- mro-wkii.17.26 (agent: codex) — require the complete continuous-green slice. -->
+1. First edit → fresh-import smoke for every affected public module.
+2. Same slice → Ruff check without fixes and Ruff format check.
+3. Same slice → Pyrefly, Mypy, and Pyright with zero errors and warnings.
+4. Same slice → narrow real-behavior pytest or the project Make test verb.
+5. Same slice → `git diff --check`; record command, exit, and decisive output.
 
 ## Critical rules
 
-- `ruff` and `pyrefly` are the first gates for touched files.
+- Fresh imports and all four lint/type analyzers are mandatory for touched code.
 - Bare commands only; do not use `.venv/bin/` prefixes.
 - Keep failure evidence in Beads: command, output, and exit code.
+- Use check-only modes during validation. A mutating formatter/fixer is a
+  separate reviewed change, never a hidden part of a gate.
 
 ## Gate commands
 
 | Gate | Command |
 |------|---------|
-| Lint | `ruff check <file>` |
-| Format | `ruff format <file>` |
-| Typecheck | `pyrefly check <file>` |
+| Lint | `ruff check --no-fix <file>` |
+| Format | `ruff format --check <file>` |
+| Pyrefly | `pyrefly check <file>` |
+| Mypy | `mypy --no-incremental <file>` |
+| Pyright | `pyright <file>` |
 | Project test | `make test PROJECT=<proj> MATCH=<expr>` |
 | Workspace check | `make check CHANGED_ONLY=1` |
 | Full validation | `make val VALIDATE_SCOPE=workspace` |
@@ -67,6 +74,8 @@ make check PROJECT=flext-core CHECK_GATES=pyrefly
 |--------------|-----|
 | Run broad `make val` before narrow gates | start with `ruff check <file>` |
 | Use `.venv/bin/ruff` | use bare `ruff` |
+| Run `ruff --fix` inside a gate | emit and review an explicit fix transaction |
+| Treat one type checker as proof for all | run Pyrefly, Mypy, and Pyright |
 | Ignore gate output | paste command + exit code + output into the bead |
 
 ## References

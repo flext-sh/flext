@@ -6,7 +6,7 @@ description: 'Use this skill to use ALWAYS when working in any flext workspace p
   creating projects or architecture from scratch'
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 # flext-cli SSOT enforcement
 
@@ -25,9 +25,14 @@ metadata:
 
 ## Workflow
 
-1. Understand.
-2. Execute.
-3. Validate.
+<!-- mro-wkii.17.26 (agent: codex) — define the reusable operational CLI kernel. -->
+1. Validate external CLI/Make input exactly once into the owning request model.
+2. Resolve a statically generated command binding to a typed handler.
+3. Execute through the declared in-process or process adapter and preserve the
+   same model/result object across internal layers.
+4. Propagate `r[T]` failures unchanged; the terminal handler logs and renders an
+   error exactly once at the outermost CLI boundary.
+5. Validate native CLI and Make bindings against the same generated catalog.
 
 ## Critical rules
 
@@ -40,7 +45,16 @@ metadata:
   (JSON Schema). Consumers must route these through `u.Cli.*`, never re-implement
   yaml/toml/json/jinja2/jsonschema locally.
   Canonical: `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
-- Require evidence.
+- **ADR-007:** `flext-cli` owns the closed operational kernel for typed command
+  catalogs, handlers, process streaming, cancellation, mutation plans, and
+  terminal outcomes. Projects extend it with models, protocols, declarative
+  specs, policies, and handlers; config never carries callables or dotted
+  imports. `flext-infra` generates bindings and validates them but never owns
+  runtime command behavior.
+- Dry-run of a mutating command must produce a typed operation plan. Skipping
+  the handler and returning success is forbidden.
+- Require evidence from the public CLI/Make surface, exit code, emitted result,
+  and exactly-once terminal logging.
 
 ## Example
 

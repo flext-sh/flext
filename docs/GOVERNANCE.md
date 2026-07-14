@@ -31,6 +31,7 @@ source to read first. The owning source still provides the actual rule.
 | Docs or generated docs | [Documentation standard](standards/documentation.md) | `make docs DOCS_PHASE=audit` or narrower markdown gate |
 | Docs audit policy or generated-doc exemptions | [Documentation standard](standards/documentation.md) and accepted ADRs | Full docs audit plus affected project audit; evidence must show stale generated symbols are still caught |
 | Workspace tooling or Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help`, `make check`, or touched generator tests |
+| Operational kernel, CLI platform, or automated conformance | [ADR-007](architecture/adr/007-operational-kernel-cli-conform.md) | Clean-baseline gate, transactional conform proof, consumer gates |
 | Pydantic, settings, and strict typing | Pydantic references (`docs/references/pydantic2/`, repo-only) and type-system docs | `pyrefly`, `pyright`, affected tests |
 | Testing behavior | [Testing standard](standards/testing.md) | `pytest` or `make test PROJECT=<project>` |
 
@@ -62,13 +63,19 @@ total FLEXT refactor plan:
 
 ## Execution Rules
 
+<!-- mro-wkii.17.26 (agent: codex) — route every 0.20 stabilization through the ratified clean-baseline sequence. -->
+
 - Beads is the execution ledger. Claim the issue before writes and append
   command evidence after every meaningful step.
+- Stabilization is ordered: governance alignment, completion of every existing
+  merge, removal of conflicts and markers, a zero-error/zero-warning global
+  static and pytest baseline, and only then new architecture work.
 - Source changes are batched by ownership. A batch changes at most five files
   before import, lint, typecheck, and scoped test validation.
-- Rope-backed structural changes are required for automated refactors. AST may
-  classify and locate code, but structural rewrites must have idempotence and
-  dry-run/apply evidence.
+- `flext-infra codegen conform` is the only owner of broad structural writes.
+  Rope validates the complete workspace graph; AST-oriented tools, LSP, Scope,
+  and CRG may classify or propose, but cannot independently apply or accept a
+  live-tree rewrite.
 - No compatibility wrappers, fallback paths, public old-plus-new coexistence,
   suppressions, stubs, or hardcoded carve-outs are acceptable exits.
 - If the single source of truth for a rule is missing, fix the source or stop
