@@ -24,11 +24,11 @@ from typing import TYPE_CHECKING, Annotated, ClassVar
 from examples import m, p, r, t, u
 from examples._constants import ExamplesWorkflowStage
 
-if TYPE_CHECKING:
-    from collections.abc import (
-        Callable,
-        MutableSequence,
-    )
+from collections.abc import (
+    Callable,
+    MutableSequence,
+)
+
 
 type CompleteWorkflowProcessingDict = t.JsonMapping
 type CompleteWorkflowContent = t.JsonMapping

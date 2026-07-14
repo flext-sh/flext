@@ -22,15 +22,12 @@ from __future__ import annotations
 
 import re
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from scripts.dispatch import Dispatch
 
 from flext_cli import c, u
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 
 class _DockerStandardizationChecker:

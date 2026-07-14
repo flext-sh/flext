@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from collections.abc import Iterable
 
 from flext_tests import m, u
 from scripts.lib.registry import CommandRegistry
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
 
 
 class CommandRenderer:
@@ -27,7 +24,7 @@ class CommandRenderer:
         if result.failure:
             raise CommandRegistry.Error(result.error or "verb help render failed")
         value = result.value
-        if not isinstance(value, str):
+        if not value:
             msg = "verb help render returned invalid value"
             raise CommandRegistry.Error(msg)
         return value
@@ -43,7 +40,7 @@ class CommandRenderer:
         if result.failure:
             raise CommandRegistry.Error(result.error or "command help render failed")
         value = result.value
-        if not isinstance(value, str):
+        if not value:
             msg = "command help render returned invalid value"
             raise CommandRegistry.Error(msg)
         return value

@@ -3,15 +3,12 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Callable
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
-from typing import TYPE_CHECKING
 
 from flext_tests import c, m, t, u
 from scripts.lib.registry import CommandRegistry
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 
 class SurfaceProbeRunner:

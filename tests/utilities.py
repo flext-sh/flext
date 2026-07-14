@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING
 
 from flext_tests import FlextTestsUtilities
 
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
-    from tests.infra.typings import t
+from tests.infra.typings import t
+
 
 
 class TestsFlextTestUtilities(FlextTestsUtilities):

@@ -4,16 +4,13 @@ from __future__ import annotations
 
 import os
 import sys
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
 
 from flext_tests import c, t, u
 from scripts.lib.exec import CommandExecution
 from scripts.lib.registry import CommandRegistry
 from scripts.lib.render import CommandRenderer
 from scripts.lib.surface_validation import SurfaceValidator
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
 
 
 class CommandCli:

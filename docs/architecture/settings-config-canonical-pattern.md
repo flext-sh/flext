@@ -135,7 +135,7 @@ the generated `__init__.py`; run `flext-infra codegen` after adding the modules.
 - `u.Cli.config_load` / `config_load_dir` / `schema_validate`, `m.ConfigDocument`,
   `p.ConfigLoader`, `t.Config*`, `u.config_load/merge/env_override`, `c.CONFIG_*`.
 - `def settings(self) -> XSettings: return XSettings.fetch_global()` property overrides —
-  use the module singleton `from flext_x import settings` directly, never `self.settings`.
+  use the module singleton `from flext_x import settings` directly, never `settings`.
 - Importing `c`/`t`/`p`/`m`/`u` inside `_settings.py` / `_config.py`.
 
 ## 7. Propagation checklist (per project)
@@ -144,6 +144,6 @@ the generated `__init__.py`; run `flext-infra codegen` after adding the modules.
    model Field, export `settings = FlextXSettings.fetch_global()`.
 2. Add `_config.py` with `FlextXConfig(FlextConfig)` + `config = FlextXConfig.fetch_global()`.
 3. Create `config/` dir with `*.yaml` if the project ships declarative params.
-4. Delete every forbidden symbol (§6); rewrite `self.settings.*` → `settings.*`.
+4. Delete every forbidden symbol (§6); rewrite `settings.*` → `settings.*`.
 5. `flext-infra codegen` to publish `config`/`settings` at the package root.
 6. `make check && make test` green; commit.

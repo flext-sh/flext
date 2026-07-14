@@ -10,8 +10,8 @@ from flext_tests import tm
 from ...infra.constants import c
 from ...infra.utilities import u
 
-if TYPE_CHECKING:
-    import pytest
+import pytest
+
 
 
 class TestVersioning:
