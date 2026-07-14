@@ -50,7 +50,7 @@ Commands and thresholds for the FLEXT quality gates.
 | Lint | `ruff check --no-fix <file>` |
 | Format | `ruff format --check <file>` |
 | Pyrefly | `pyrefly check <file>` |
-| Mypy | `mypy --no-incremental <file>` |
+| Mypy | `make check PROJECT=<project> FILES="<source files>" CHECK_GATES=mypy` |
 | Pyright | `pyright <file>` |
 | Project test | `make test PROJECT=<proj> MATCH=<expr>` |
 | Workspace check | `make check CHANGED_ONLY=1` |
@@ -75,6 +75,7 @@ make check PROJECT=flext-core CHECK_GATES=pyrefly
 | Run broad `make val` before narrow gates | start with `ruff check <file>` |
 | Use `.venv/bin/ruff` | use bare `ruff` |
 | Run `ruff --fix` inside a gate | emit and review an explicit fix transaction |
+| Run `mypy --no-incremental` or pass test modules directly | use the cached Make gate on production source paths; validate tests with Ruff, Pyrefly, Pyright, and pytest |
 | Treat one type checker as proof for all | run Pyrefly, Mypy, and Pyright |
 | Ignore gate output | paste command + exit code + output into the bead |
 
