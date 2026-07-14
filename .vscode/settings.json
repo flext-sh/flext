@@ -1,8 +1,7 @@
 {
   "[python]": {
     "diffEditor.ignoreTrimWhitespace": true,
-    "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": false
   },
   "files.autoSave": "afterDelay",
   "files.exclude": {
@@ -23,6 +22,7 @@
     "**/.arbor/**": true,
     "**/.beads/**": true,
     "**/.cache/**": true,
+    "**/.worktrees/**": true,
     "**/.code-review-graph/**": true,
     "**/.git/**": true,
     "**/.hypothesis/**": true,
@@ -76,7 +76,7 @@
   "pyrefly.lspPath": ".venv/bin/pyrefly",
   "python.analysis.addExtraPathsForPythonProjects": false,
   "python.analysis.autoFormatStrings": true,
-  "python.analysis.autoImportCompletions": true,
+  "python.analysis.autoImportCompletions": false,
   "python.analysis.completeFunctionParens": true,
   "python.analysis.diagnosticMode": "workspace",
   "python.analysis.enableAsyncProgram": false,
@@ -90,7 +90,7 @@
   "python.analysis.includeAliasesFromUserFiles": false,
   "python.analysis.includeExtraPathSymbolsInSymbolSearch": false,
   "python.analysis.includeVenvInWorkspaceSymbols": false,
-  "python.analysis.indexing": true,
+  "python.analysis.indexing": false,
   "python.analysis.inlayHints.callArgumentNames": "off",
   "python.analysis.inlayHints.functionReturnTypes": false,
   "python.analysis.inlayHints.pytestParameters": false,
@@ -100,6 +100,7 @@
   "python.analysis.supportDocstringTemplate": true,
   "python.analysis.useNearestConfiguration": false,
   "python.analysis.usePerProjectEnvironments": false,
+  "python.analysis.userFileIndexFollowSymlinkedFolders": false,
   "python.analysis.userFileIndexingLimit": 2000,
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
   "python.languageServer": "Pylance",
@@ -155,10 +156,6 @@
     "**/.gitea/workflows/*.yaml",
     "**/.forgejo/workflows/*.yml",
     "**/.forgejo/workflows/*.yaml",
-    "file:///home/marlonsc/flext/flext-infra/src/flext_infra/config/codegen.yaml"
-  ],
-  "python.analysis.typeCheckingMode": "strict",
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportUntypedBaseClass": "none"
-  }
+    "**/codegen.yaml"
+  ]
 }

@@ -1,7 +1,7 @@
 # FLEXT test-standard migration: raw `assert` -> flext-tests `tm` matchers.
 #
 # Applies ONLY to flext-* package tests (S101 forbids raw assert there).
-# External consumer repos (gruponos-*, algar-*) keep raw assert in their own
+# External consumer repos (projeto_b-*, projeto_a-*) keep raw assert in their own
 # tests and MUST NOT run this rule.
 #
 # After --update-all: (1) inject `from flext_tests import tm` where tm is used

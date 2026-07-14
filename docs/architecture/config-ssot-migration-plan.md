@@ -102,7 +102,7 @@ Any missing, extra, or unclassified member is a hard inventory failure.
 
 ## Phase 5 — Conform standalone repositories
 
-Conform `.ai-hub`, Algar migration, GrupoNOS Meltano Native, and Cosmos Docgen
+Conform `.ai-hub`, projeto_a migration, projeto_b Meltano Native, and Cosmos Docgen
 as explicit standalone manifests. Classify each real capability under the
 canonical Make responsibility, delete competing automation surfaces, and test
 from temporary clones with no sibling directories.

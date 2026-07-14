@@ -10,9 +10,9 @@ canônicas lidas no workspace são a verdade.
 - **Skill principal:** `<SKILL_NAME>`
 - **Lane:** `<ROOT|FLEXT_INFRA|SUBMODULE_NAME>`
 - **Arquivos de escrita:** `<EXPLICIT_FILE_OWNERSHIP_MATRIX>`
-- **Projeto canônico de comparação:** `/home/marlonsc/algar-oud-mig`
+- **Projeto canônico de comparação:** `/home/marlonsc/projeto_a`
 - **Referências atuais obrigatórias:** liste `file:line` lidos nesta sessão antes
-  de editar, incluindo o alvo local e a referência algar equivalente.
+  de editar, incluindo o alvo local e a referência projeto_a equivalente.
 
 ## Contrato inviolável
 
@@ -38,20 +38,20 @@ canônicas lidas no workspace são a verdade.
 
 ## Padrão FLEXT a aplicar
 
-Use `/home/marlonsc/algar-oud-mig` como referência prática, validada contra o
+Use `/home/marlonsc/projeto_a` como referência prática, validada contra o
 código atual:
 
-- `src/algar_oud_mig/api.py:18` - uma facade pública MRO, sem lógica inline.
-- `src/algar_oud_mig/base.py:20` - service base sobre `s[...]` e `ABC`.
-- `src/algar_oud_mig/base.py:65` - `derive_command_params` combina settings e
+- `src/projeto/api.py:18` - uma facade pública MRO, sem lógica inline.
+- `src/projeto/base.py:20` - service base sobre `s[...]` e `ABC`.
+- `src/projeto/base.py:65` - `derive_command_params` combina settings e
   input via `flext_cli.cli.derive_model`.
-- `src/algar_oud_mig/cli.py:22` - CLI real como roteador fino, não wrapper.
-- `src/algar_oud_mig/cli.py:236` e `:343` - rotas declarativas com modelos
+- `src/projeto/cli.py:22` - CLI real como roteador fino, não wrapper.
+- `src/projeto/cli.py:236` e `:343` - rotas declarativas com modelos
   `m.*` e handlers tipados.
-- `src/algar_oud_mig/cli.py:363` - `main()` retorna exit code.
-- `src/algar_oud_mig/__init__.py:60` - lazy exports públicos; `__init__.py`
+- `src/projeto/cli.py:363` - `main()` retorna exit code.
+- `src/projeto/__init__.py:60` - lazy exports públicos; `__init__.py`
   é export-only.
-- `src/algar_oud_mig/models.py:15`, `constants.py:61`, `protocols.py:98`,
+- `src/projeto/models.py:15`, `constants.py:61`, `protocols.py:98`,
   `typings.py:122`, `utilities.py:147` - facades finas `m/c/p/t/u` compostas
   por MRO e namespaces aninhados.
 
@@ -110,4 +110,4 @@ não fazer rollback/discard. Achados longos vão para
 ## Próximo passo
 
 Invoque `<SKILL_NAME>`, leia o bead e o código atual, compare com as referências
-algar acima e execute apenas o próximo passo não finalizado com gates verdes.
+projeto_a acima e execute apenas o próximo passo não finalizado com gates verdes.
