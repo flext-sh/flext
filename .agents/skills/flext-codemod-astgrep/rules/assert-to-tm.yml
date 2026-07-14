@@ -1,0 +1,84 @@
+# FLEXT test-standard migration: raw `assert` -> flext-tests `tm` matchers.
+#
+# Applies ONLY to flext-* package tests (S101 forbids raw assert there).
+# External consumer repos (gruponos-*, algar-*) keep raw assert in their own
+# tests and MUST NOT run this rule.
+#
+# After --update-all: (1) inject `from flext_tests import tm` where tm is used
+# but unimported (respect multi-line import blocks — gotcha #6), (2) ruff --fix
+# for import order, (3) re-parse. Whitespace-only `lacks` is a KNOWN failure
+# (gotcha #4) — grep for `lacks="  ` / `lacks="\n` and rewrite by hand to an
+# explicit boolean (e.g. `tm.that(out.endswith("  \n"), eq=False)`).
+#
+# Each rule below is an independent document; ast-grep applies all in one pass.
+id: assert-eq-to-tm-that
+language: python
+rule:
+  pattern: assert $A == $B
+fix: tm.that($A, eq=$B)
+---
+id: assert-ne-to-tm-that
+language: python
+rule:
+  pattern: assert $A != $B
+fix: tm.that($A, ne=$B)
+---
+id: assert-is-not-none-to-tm-that
+language: python
+rule:
+  pattern: assert $A is not None
+fix: tm.that($A, none=False)
+---
+id: assert-is-none-to-tm-that
+language: python
+rule:
+  pattern: assert $A is None
+fix: tm.that($A, none=True)
+---
+id: assert-isinstance-to-tm-that
+language: python
+rule:
+  pattern: assert isinstance($A, $B)
+fix: tm.that($A, is_=$B)
+---
+id: assert-in-to-tm-that
+language: python
+rule:
+  pattern: assert $A in $B
+fix: tm.that($B, has=$A)
+---
+id: assert-not-in-to-tm-that
+language: python
+rule:
+  pattern: assert $A not in $B
+fix: tm.that($B, lacks=$A)
+---
+id: assert-result-success-to-tm-ok
+language: python
+rule:
+  pattern: assert $R.success
+fix: tm.ok($R)
+---
+id: assert-result-failure-to-tm-fail
+language: python
+rule:
+  pattern: assert $R.failure
+fix: tm.fail($R)
+---
+id: assert-not-result-success-to-tm-fail
+language: python
+rule:
+  pattern: assert not $R.success
+fix: tm.fail($R)
+---
+id: assert-is-true-to-tm-that
+language: python
+rule:
+  pattern: assert $A is True
+fix: tm.that($A, eq=True)
+---
+id: assert-is-false-to-tm-that
+language: python
+rule:
+  pattern: assert $A is False
+fix: tm.that($A, eq=False)

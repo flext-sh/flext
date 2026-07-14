@@ -11,6 +11,7 @@ ruleDirs:
   - .agents/skills/flext-patterns/rules
   - .agents/skills/flext-pyrefly-typecheck-fix/rules
   - .agents/skills/testing-patterns/rules
+  - .agents/skills/flext-codemod-astgrep/rules
 
 # testConfigs: directories containing test YAML files
 # Test files follow naming convention: {rule-id}-test.yml
@@ -28,3 +29,4 @@ testConfigs:
   - testDir: .agents/skills/flext-patterns/tests
   - testDir: .agents/skills/flext-pyrefly-typecheck-fix/tests
   - testDir: .agents/skills/testing-patterns/tests
+  - testDir: .agents/skills/flext-codemod-astgrep/tests
