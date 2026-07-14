@@ -22,6 +22,7 @@
     "**/.arbor/**": true,
     "**/.beads/**": true,
     "**/.cache/**": true,
+    "**/.claude/worktrees/**": true,
     "**/.worktrees/**": true,
     "**/.code-review-graph/**": true,
     "**/.git/**": true,
