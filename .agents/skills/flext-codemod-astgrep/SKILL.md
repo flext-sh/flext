@@ -132,3 +132,34 @@ ast-grep scan --rule /home/marlonsc/flext/.agents/skills/flext-codemod-astgrep/r
 Non-flext-package repos (gruponos/algar) keep **raw `assert`** in their own
 tests; only apply the assert->tm rule to `flext-*` package tests. Always apply
 the *import/base/accessor* rules to any consumer on the new flext version.
+
+## Safety protocol — VALIDATE the target before global apply
+
+> Learned the hard way: a `isinstance(x, m.SettingsValue)` ->
+> `isinstance(x, m.BaseModel)` rule was applied to 2 sites before verifying the
+> real base — but `FlextTestsSettings.Tests` actually inherits *raw*
+> `pydantic.BaseModel`, so BOTH the old and the new assertion were wrong. The
+> rule "worked" (matched + rewrote) yet the test still failed.
+
+Before promoting ANY rule from one-file to global `--update-all`:
+
+1. **Prove the target with the interpreter, not assumption.** For a base/type
+   swap, run `python -c "print(type(x).__mro__)"` on a real instance and
+   confirm the *new* symbol is actually in the MRO. Never infer the target
+   from the symbol name.
+2. **Detection-first for judgement rules.** If the correct replacement varies
+   per site (base class, result-combinator, error factory), ship the rule as
+   `severity: warning` **detection-only** (no `fix:`) so it surfaces candidates
+   a human/agent judges. Only add `fix:` when the rewrite is a *pure,
+   context-free token swap* proven on >=3 real sites.
+3. **Widen the test corpus.** The `tests/<rule-id>-test.yml` MUST include the
+   real-world variants that bit you: multi-import, alias, `is True` suffix,
+   already-migrated code (must NOT re-match).
+4. **Dry-run on the WHOLE target, grep the diff for surprises**, then apply to
+   ONE file, run its pytest, and only then `--update-all` the rest.
+5. **A green codemod is not a green test.** After apply, the pytest is the
+   real gate — a matched+rewritten line can still be semantically wrong.
+
+Rule maturity ladder: `detection-only (hint)` -> validated on 1 file + pytest
+green -> `detection+fix (warning)` with a widened test corpus -> global
+`--update-all`. Do not skip rungs.
