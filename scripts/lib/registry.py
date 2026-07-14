@@ -27,11 +27,7 @@ class CommandRegistry:
         result = u.Tests.make_discover(CommandRegistry.SCRIPTS_DIR)
         if result.failure:
             raise CommandRegistry.Error(result.error or "registry discovery failed")
-        value = result.value
-        if not isinstance(value, m.Tests.MakeRegistry):
-            msg = "registry discovery returned invalid model"
-            raise CommandRegistry.Error(msg)
-        return value
+        return result.value
 
     @staticmethod
     def load_command(path: Path, expected_verb: str) -> m.Tests.MakeCommand:
@@ -39,11 +35,7 @@ class CommandRegistry:
         result = u.Tests.make_load_command(path, expected_verb)
         if result.failure:
             raise CommandRegistry.Error(result.error or "command load failed")
-        value = result.value
-        if not isinstance(value, m.Tests.MakeCommand):
-            msg = "command load returned invalid model"
-            raise CommandRegistry.Error(msg)
-        return value
+        return result.value
 
     @staticmethod
     def header_data(path: Path) -> t.Tests.MakeTomlTable:
