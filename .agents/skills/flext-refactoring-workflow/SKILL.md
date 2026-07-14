@@ -48,7 +48,10 @@ metadata:
 - Decompose long modules universally as `<layer>/<domain>.py` (thin
   MRO/composition facade) plus `<layer>/_<domain>/*.py` (small responsibility
   mixins). Use Rope-semantic dependency/SCC evidence and `rg`/`sg` textual
-  proof, keep private `__init__.py` static/empty, and reserve generated PEP 562
+  proof. Generate every internal `__init__.py` at arbitrary depth with explicit
+  relative same-name re-exports of direct sibling symbols and a deterministic
+  literal tuple `__all__`, including an empty tuple when no direct symbol exists;
+  never flatten descendants or emit a docstring-only initializer. Reserve PEP 562
   lazy exports for the production package root. Never retain the former module
   as a wrapper or compatibility path.
 - Static enforcement of refactor invariants is config DATA in `flext-infra/config/*.yaml` over the

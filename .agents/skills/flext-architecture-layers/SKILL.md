@@ -40,8 +40,11 @@ metadata:
   `_<domain>/*.py` implementation mixins when a module owns multiple
   responsibilities. This applies to facets, services, codegen, refactor,
   dependency, validation, and tooling modules. Consumers import the facade;
-  private package initializers are static/empty; root package lazy export is
-  the only lazy export surface. Remove the old path in the same atomic cutover.
+  every internal package initializer is generated with explicit relative
+  same-name exports of direct siblings plus a deterministic literal tuple
+  `__all__` (empty tuple when needed); it is never empty, descendant-flattening,
+  or lazy. The production package root is the only PEP 562 lazy export surface.
+  Remove the old path in the same atomic cutover.
 - **ADR-005 (config SSOT) layering:** `flext-core` is runtime-minimal — stdlib
   only (`tomllib` + `string.Template`), **no Jinja2**, and **never imports
   `flext-cli`/`flext-infra` at runtime** (examples/scripts/tests only).

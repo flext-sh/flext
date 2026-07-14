@@ -36,13 +36,18 @@ Enforces import hygiene, alias conventions, and abstraction boundaries across th
 
 - Required header: `from __future__ import annotations` and `from collections.abc import Mapping, Sequence`.
 - **ADR-005:** `flext-core` `src/` must **not** import `flext-cli`/`flext-infra` (runtime cycle-free `infra → cli → core`); no direct `jinja2`/`yaml`/`jsonschema` import in consumers — route through `u.Cli.*`. See `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
-- Absolute imports only in `src/`; no relative imports, no wildcards.
+- Absolute imports are mandatory in implementation modules. The only relative-import
+  exception is a generated internal package `__init__.py`, which re-exports direct
+  sibling symbols with the exact same-name form `from .module import Name as Name`.
+  Wildcards remain forbidden everywhere.
 - Import `flext_core` via root namespace using canonical aliases (`c`, `m`, `p`, `r`, `t`, `u`, ...).
 - Facade owner modules that MRO-extend an upstream FLEXT facade import that upstream short alias directly and use it as the base class (`from flext_cli import m`; `class FlextPluginModels(m): ...`; `m = FlextPluginModels`).
 - Project `base.py` may import upstream runtime `s` as the service MRO base and publish local `s` exactly once.
 - Project `api.py` imports the composed runtime facade class and publishes the package operational alias.
 - Bridge external frameworks (pydantic, structlog, oracledb, ldap3, grpc, sqlalchemy) through `flext_core` or the project-specific wrapper; do not import them directly in consumers.
-- Use `TYPE_CHECKING` only for type-only symbols and `__init__.py` lazy loading; do not hide cycles.
+- Use `TYPE_CHECKING` only for type-only symbols and the generated PEP 562 map at
+  the production package root; internal package initializers are eager static
+  re-exports and never use `TYPE_CHECKING` to emulate lazy loading. Do not hide cycles.
 
 ## Good examples
 
@@ -51,16 +56,27 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from pydantic import BaseModel
-
 from flext_core import c, m, r, t, u
+```
+
+Generated internal initializer:
+
+```python
+# AUTO-GENERATED FILE — Regenerate with: make gen
+"""Services package."""
+
+from __future__ import annotations
+
+from .auth import FlextCliAuth as FlextCliAuth
+
+__all__: tuple[str, ...] = ("FlextCliAuth",)
 ```
 
 ## Bad examples
 
 ```python notest
 # Illustrative anti-patterns — these imports violate FLEXT import discipline.
-from .utils import helper  # relative import
+from .utils import helper  # relative import outside a generated internal initializer
 from flext_core import *  # wildcard
 from typing import Dict, List  # legacy typing
 import oracledb  # direct framework; use flext_db_oracle wrapper
@@ -101,8 +117,11 @@ constants/typings → runtime → protocols → models → utilities → logging
 ## Validation
 
 ```bash
-ruff check <file>
+ruff check --no-fix <file>
+ruff format --check <file>
 pyrefly check <file>
+mypy <file>
+pyright <file>
 ```
 
 ## References
