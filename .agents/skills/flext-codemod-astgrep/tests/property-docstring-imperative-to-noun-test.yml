@@ -1,0 +1,54 @@
+id: property-docstring-imperative-to-noun
+valid:
+  # not a property -> must NOT match
+  - |
+    def value() -> str:
+        """Return validation result."""
+        return "value"
+  # cached_property is not exact @property -> must NOT match
+  - |
+    @cached_property
+    def value(self) -> str:
+        """Return validation result."""
+        return self._value
+  # already a noun phrase -> must NOT match (idempotency)
+  - |
+    @property
+    def value(self) -> str:
+        """Validation result."""
+        return self._value
+  # verb appears later, not at docstring head -> must NOT match
+  - |
+    @property
+    def value(self) -> str:
+        """The value we return to the caller."""
+        return self._value
+invalid:
+  # canonical Return head under exact @property
+  - |
+    @property
+    def value(self) -> str:
+        """Return validation result."""
+        return self._value
+  # @computed_field sibling still owns exact @property, single-quote style
+  - |
+    @computed_field
+    @property
+    def value(self) -> str:
+        '''Compute the validated result.'''
+        return self._value
+  # Get head, capitalization of first retained char
+  - |
+    @property
+    def status(self) -> str:
+        """Get the current status."""
+        return self._status
+  # multiline: only the head verb is stripped, remaining paragraph preserved
+  - |
+    @property
+    def enabled(self) -> bool:
+        """Return whether the feature is enabled.
+
+        The second paragraph remains byte-for-byte unchanged.
+        """
+        return self._enabled

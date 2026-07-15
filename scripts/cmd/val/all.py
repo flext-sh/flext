@@ -51,7 +51,7 @@ class FlextRootValAllCommand:
 
         @property
         def targets(self) -> tuple[str, ...]:
-            """Return the private Make targets for the validated scope."""
+            """The private Make targets for the validated scope."""
             if self.scope == "workspace":
                 return ("_val_workspace",)
             if self.scope == "project":
