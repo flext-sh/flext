@@ -31,6 +31,7 @@ Objetivo: cada tipo de smell vira violação de arquitetura FLEXT com **detecç�
 ### A. flext-core — runtime + SSOT de regras (ENFORCE-067..074)
 
 **Novos dados (CONSTANTS-FIRST, tudo row-driven):**
+
 - `EnforcementSmellTag(StrEnum)` — 8 membros `smell_function_parameters, smell_function_complexity, smell_file_complexity, smell_return_statements, smell_nested_control_flow, smell_boolean_logic, smell_similar_code, smell_identical_code` (part_01).
 - `ENFORCEMENT_SMELL_THRESHOLDS: MappingProxyType[EnforcementSmellTag,int]` = {params:5, returns:5, nesting:4, function_complexity:14, file_complexity:49} — semântica documentada `violação quando observado > max` (reproduz qlty ≥15/≥50). + `ENFORCEMENT_SMELL_RULE_IDS: frozenset` ENFORCE-067..074 (part_04).
 - 8 rows (problem, fix) em `ENFORCEMENT_RULES_TEXT` (part_05 → **resplit via make gen**, 183/200). Textos FLEXT-law por tipo:
@@ -48,6 +49,7 @@ Objetivo: cada tipo de smell vira violação de arquitetura FLEXT com **detecç�
 **Warning class:** `FlextSmellViolation(FlextMroViolation)` em `_constants/enforcement.py` (após L36) + `FlextExceptions.SmellViolation` ClassVar (`exceptions.py:39`) + exports via `make gen` (root exports/typing parts/`__init__.pyi` — set gerado atômico). `emit()` (`enforcement_emit.py`): categoria = `FlextSmellViolation` quando `rule_id in c.ENFORCEMENT_SMELL_RULE_IDS`, senão `FlextMroViolation`; estender derivação `_BEARTYPE_TAG_TO_RULE`/anchor para rows CODE_SMELL (warning sempre carrega ENFORCE-NNN + anchor + Fix).
 
 **Predicate runtime `smell_function_parameters` (ATIVO — "todos, sempre"):**
+
 - SEM predicate kind novo: estender `MethodShapeParams += max_params: int = 0` (`_params.py:116-121`) + branch em `v_method_shape` (`_utilities/_beartype/method_visitor.py`): `inspect.getattr_static` + `__code__.co_argcount + co_kwonlyargcount` − offset self/cls (staticmethod 0, função/classmethod 1). Introspecção pura de code-object — beartype-style, zero leitura de source.
 - Exemptions LEGAIS (lei AGENTS.md, não silenciamento): dunders (`__*__`) e espelhos da API Pydantic (`model_*` — model_dump=13 espelha assinatura da lib, sem fix sancionado).
 - Binding row `"smell_function_parameters": (pk.METHOD_SHAPE, msp(max_params=c.ENFORCEMENT_SMELL_THRESHOLDS[...]))` em `enforcement_part_01.py` (**resplit obrigatório: já a 210 LOC**). Iterator: ampliar `case "no_accessor_methods" | "smell_function_parameters":` em `enforcement_collect_part_02.py:72`. Categoria NAMESPACE em part_04.
@@ -55,6 +57,7 @@ Objetivo: cada tipo de smell vira violação de arquitetura FLEXT com **detecç�
 - Demais 7 smells: catalog-only no runtime (impossível introspectar complexidade/clones em class-creation sem source) — warnings deles fluem SEMPRE pelo gate (canal B). Cobertura "todos, sempre" = união dos dois canais.
 
 **Não-supressibilidade:**
+
 - Guard test `test_enforcement_warning_visibility.py`: probe adicional `FlextSmellViolation`; assert presença no output do pytest sandboxed com filterwarnings reais.
 - Contrato subclass em `test_enforcement_reports.py`: `issubclass(FlextSmellViolation, FlextMroViolation)` — umbrella herdado.
 - `ensure_pytest.py`: sem mudança (MERGE só adiciona ignore de PytestCollectionWarning; nunca cala UserWarning descendants).
@@ -64,7 +67,7 @@ Objetivo: cada tipo de smell vira violação de arquitetura FLEXT com **detecç�
 - **NOVO** `gates/smells.py` (~95 LOC, template loc_cap.py): `FlextInfraSmellsGate` — `gate_id="smells"`, `can_fix=False`.
   - Resolver binário explícito: `shutil.which("qlty")` + fallback `Path.home()/".qlty/bin/qlty"` (constante). **Ausência = Issue visível severity NOTE/ERROR, nunca false-green** (base_gate._run mascara spawn-failure como exit 1/stdout vazio — tratar).
   - cwd = workspace root (config SSOT em `<workspace>/.qlty/`; projetos são submodules) — novo hook template `_check_cwd()` em `base_gate.py` (+7 LOC, default project_dir, zero mudança nos 10 gates existentes); comando `[QLTY_BINARY, "smells", "--all", "--sarif", "--include-tests", "--no-snippets", "--quiet", "--no-upgrade-check", <project_dir.name>]`.
-  - `_issues_from_sarif` classmethod PURO (testável com fixture literal): `u.Cli.json_parse` → `runs[0].results[]`; `ruleId "qlty:<type>"` → `Issue.code`; uri prefix-stripped; mensagem enriquecida = `"{sarif_text} — {problem}. Fix: {fix} [ENFORCE-NNN §anchor]"` via `c.Infra.SMELLS_RULE_TAGS` (ruleId→tag) + `from flext_core import c as core_c; core_c.ENFORCEMENT_RULES_TEXT[tag]` — **SSOT de textos = flext-core, infra só mapeia** (drift test).
+  - `_issues_from_sarif` classmethod PURO (testável com fixture literal): `u.Cli.json_parse` → `runs[0].results[]`; `ruleId "qlty:<type>"` → `Issue.code`; uri prefix-stripped; mensagem enriquecida = `"{sarif_text} — {problem}. Fix: {fix} [ENFORCE-NNN §anchor]"` via `c.Infra.SMELLS_RULE_TAGS` (ruleId→tag) + `from flext_core import c as c; c.ENFORCEMENT_RULES_TEXT[tag]` — **SSOT de textos = flext-core, infra só mapeia** (drift test).
   - **"Todos, sempre":** após parse, `warnings.warn(issue.formatted, FlextSmellViolation, stacklevel=2)` por finding — warnings emitidos em TODA execução do gate, independente do modo.
   - `passed = True` em `GateMode.WARN`, `not issues` em STRICT; severity WARNING→ERROR no flip.
 - Constantes (`_constants/check.py`, +~30 LOC): `GateMode(StrEnum)` WARN/STRICT; `SMELLS_GATE_MODE = GateMode.WARN` (**flip = esta linha**); `QLTY_BINARY`, `QLTY_BINARY_FALLBACK`, `SMELLS_QLTY_ARGS`, `SMELLS_RULE_PREFIX`, `SMELLS_RULE_TAGS` (MappingProxyType 8 rows); row `SARIF_TOOL_INFO["smells"] = ("Qlty Smells", "https://docs.qlty.sh/analysis/smells")`.

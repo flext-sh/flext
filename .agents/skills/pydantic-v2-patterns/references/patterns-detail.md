@@ -9,28 +9,28 @@ from __future__ import annotations
 
 from typing import Annotated, ClassVar
 
-from flext_core import m as core_m
+from flext_core import m as m
 
 
-class ProjectModels(core_m):
-    class Request(core_m.FrozenModel):
-        model_config: ClassVar[core_m.ConfigDict] = core_m.ConfigDict(
+class ProjectModels(m):
+    class Request(m.FrozenModel):
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             strict=True,
             frozen=True,
             extra="forbid",
         )
 
-        identifier: Annotated[str, core_m.Field(min_length=1)]
+        identifier: Annotated[str, m.Field(min_length=1)]
 
-    class ScopedRequest(core_m.FrozenModel):
-        model_config: ClassVar[core_m.ConfigDict] = core_m.ConfigDict(
+    class ScopedRequest(m.FrozenModel):
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             strict=True,
             frozen=True,
             extra="forbid",
         )
 
         source: Request
-        project_scope: Annotated[str, core_m.Field(min_length=1)]
+        project_scope: Annotated[str, m.Field(min_length=1)]
 
 
 m = ProjectModels
@@ -53,10 +53,10 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from flext_core import p as core_p
+from flext_core import p as p
 
 
-class ProjectProtocols(core_p):
+class ProjectProtocols(p):
     class Source(Protocol):
         @property
         def identifier(self) -> str: ...
