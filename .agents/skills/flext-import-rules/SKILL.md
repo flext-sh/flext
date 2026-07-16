@@ -79,7 +79,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from flext_core import c, m, r, t, u
+from flext_core import c, m, r, p, t, u
 ```
 
 Generated internal initializer:

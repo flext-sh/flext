@@ -11,7 +11,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from examples import m, t, u
+from examples import m, p, t, u
 
 
 class ValidationRules(m.BaseModel):

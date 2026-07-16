@@ -43,7 +43,7 @@ from flext_cli import config, settings
 ```python
 from __future__ import annotations
 
-from flext_cli import m, t
+from flext_cli import m, p, t
 from flext_cli.services.cli import FlextCliCli
 
 

@@ -65,7 +65,7 @@ aliases.
 ```python
 from __future__ import annotations
 
-from flext_cli import m, t
+from flext_cli import m, p, t
 from flext_cli.services.cli import FlextCliCli
 
 
@@ -102,7 +102,7 @@ from flext_cli import config, settings
 # Illustrative test sketch — real CLI tests require a Typer app, command group,
 # and runner assembled via FlextCliCli.create_app_with_common_params/create_group/
 # register_command/add_group/create_cli_runner.
-from flext_cli import m, t, u
+from flext_cli import m, p, t, u
 from flext_cli.services.cli import FlextCliCli
 
 

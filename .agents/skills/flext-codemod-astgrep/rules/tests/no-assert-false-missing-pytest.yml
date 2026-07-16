@@ -1,0 +1,40 @@
+# Detection-only companion of no-assert-false / no-assert-false-with-message.
+#
+# Flags `assert False` (with or without a message) in a test module that does
+# NOT import pytest via `import pytest`. The correct rewrite is `pytest.fail(...)`,
+# but emitting it here would reference an undefined name (Ruff F821 / NameError at
+# runtime). No `fix:` on purpose: add `import pytest` first, after which the
+# auto-fixing rules rewrite the assertion safely. A `from pytest import fail`
+# module is also flagged (the auto-fix rules emit the `pytest.fail` attribute form).
+id: no-assert-false-missing-pytest
+language: python
+severity: error
+files:
+  - "**/*.py"
+ignores:
+  - "**/.claude/**"
+  - "**/.git/**"
+  - "**/.venv/**"
+  - "**/legado/**"
+  - "**/legacy/**"
+  - "**/node_modules/**"
+rule:
+  any:
+    - pattern: "assert False"
+    - pattern: "assert False, $MSG"
+  inside:
+    stopBy: end
+    kind: module
+    not:
+      has:
+        stopBy: end
+        kind: import_statement
+        has:
+          stopBy: end
+          kind: dotted_name
+          regex: "^pytest$"
+message: >-
+  `assert False` must become `pytest.fail(...)`, but this module does not
+  `import pytest`. Add the import first, then the no-assert-false /
+  no-assert-false-with-message rules rewrite it. No auto-fix here to avoid
+  emitting an undefined name (Ruff F821 / runtime NameError).
