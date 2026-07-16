@@ -1,26 +1,26 @@
-# ADR-003 — Manifest-owned topology and Git-first uv environments
+# ADR-003 — Manifest-owned topology, root workspace, and autonomous Git libraries
 
-- **Status:** Accepted (amended 2026-07-11)
+- **Status:** Accepted (amended 2026-07-16)
 - **Date:** 2026-06-24
 - **Scope:** FLEXT, Cosmos, and standalone repository topology, dependency
   provenance, and development environments.
-- **Tracking:** `mro-wkii.17`
+- **Tracking:** `mro-qb4y`, `mro-wkii.17`
 
-<!-- mro-wkii.17.6 (agent: codex) — align topology and uv governance with the live operator decision. -->
+<!-- mro-qb4y (agent: codex) — separate publishable Git metadata from the root development workspace. -->
 
 ## Context
 
 Repository membership, dependency provenance, Make behavior, and local
 development overlays had several competing owners. External Make includes,
 implicit sibling discovery, and repository-local generators made a checkout
-depend on the operator's filesystem. Native uv workspace membership also
-requires member-local dependency provenance, which conflicts with the
-requirement that every published FLEXT dependency always retain its Git URL and
-branch in `pyproject.toml`.
+depend on the operator's filesystem. Member repositories also declared
+`workspace = true` in `tool.uv.sources`, so installing one library directly from
+Git incorrectly required the complete parent workspace to exist locally.
 
-The same member must work both inside its parent checkout and as an independent
-clone. A static dependency declaration therefore cannot be rewritten merely
-because a local checkout is available.
+The same member must work inside the root checkout and as an independent Git
+source. Standard dependency fields are the installable package contract;
+`tool.uv.sources` is a uv-specific development overlay and cannot be the only
+owner of transitive FLEXT provenance.
 
 ## Decision
 
@@ -40,36 +40,43 @@ Submodule metadata, generated dependency groups, Makefiles, and inventories are
 derived from that manifest. No other file may independently declare workspace
 membership.
 
-### 2. Package metadata is permanently Git-first
+### 2. Root workspace and library metadata have distinct responsibilities
 
-Every FLEXT source in every `pyproject.toml` is a Git URL pinned to the declared
-branch. Local paths, absolute paths, conditional source selection, index
-fallbacks, and native uv workspace membership are invalid source forms.
+The root `flext` project is the only native uv workspace. It owns the complete
+`tool.uv.workspace.members` list and one `tool.uv.sources.<member>` entry with
+`workspace = true` for every manifest member. Those entries select local,
+editable members only when work is orchestrated from the root.
 
-Every project owns a versioned lock and can provision an independent `.venv`.
-Workspace roots additionally own PEP 735 `dev`, `codegen`, and `workspace`
-groups; the `workspace` group lists every member through the same Git and branch
-provenance used by an independent clone.
+Every non-root FLEXT library is independently installable. Its internal FLEXT
+requirements in `project.dependencies`, `project.optional-dependencies`, and
+`dependency-groups` are PEP 508 direct Git references pinned to the repository
+URL and branch from `config/workspace.yaml`. Member and standalone projects do
+not declare managed internal `tool.uv.sources` entries or a native
+`tool.uv.workspace` table.
 
-Python `3.13.11` and uv `0.11.28` are pinned consistently in Mise,
-`.python-version`, and uv project metadata.
+uv applies the root source table to attached workspace members, replacing their
+direct Git requirements with the corresponding local members during root
+development. Outside the root, standard package metadata resolves the same
+distributions directly from Git without a sibling checkout or consumer-side
+manifest rewrite. Repository lock policy does not own dependency identity.
 
-### 3. Make orchestrates the editable development overlay
+Mise pins Python `3.13` and uv `0.9.21` for the root checkout. Generated
+profiles require Python `3.13.11` and uv `0.9.21` from the toolchain SSOT.
+
+### 3. Make orchestrates the root workspace environment
 
 The generated root `setup` handler:
 
 1. provisions the pinned toolchain;
 2. validates the manifest and submodule inventory;
-3. synchronizes the locked root groups;
-4. installs the root and all declared local members as no-dependency editable
-   distributions into the root `.venv`;
+3. synchronizes the root dependency groups;
+4. installs the root and declared workspace members into the root `.venv`;
 5. runs the package consistency check and validates `direct_url.json` for every
    member.
 
-This editable installation is an environment operation, never a metadata
-rewrite. An attached member delegates `setup` to the root. The same member in
-an independent clone uses its own lock, environment, and Git-sourced FLEXT
-dependencies.
+This local selection is an environment operation, never a metadata rewrite. An
+attached member delegates `setup` to the root. The same member in an independent
+clone uses its own environment and Git-sourced FLEXT dependencies.
 
 All other commands execute with `uv run --project <environment-owner>
 --no-sync`. Checks and tests therefore cannot synchronize, relock, rewrite
@@ -89,23 +96,23 @@ No profile depends on files outside its repository checkout.
 
 ## Consequences
 
-- Dependency provenance remains auditable and identical in attached and
-  independent operation.
-- Local source editing is enabled by the root environment without weakening
-  published metadata.
+- Dependency identity and Git provenance remain manifest-owned and auditable.
+- Local source editing is selected by the root workspace without weakening the
+  autonomous package metadata of any member.
 - A missing, extra, or misclassified member is a manifest validation error.
 - Any command other than the explicit environment/dependency operations is
   read-only with respect to locks, environments, generated files, and sources.
 
 ## Verification contract
 
-- Root `setup` proves every declared member is editable from its checkout.
-- Each member passes attached and independent-clone checks with no metadata
-  rewrite.
+- Root lock/setup proves every declared internal dependency resolves to its
+  workspace member.
+- Representative members install from their Git URLs into fresh virtual
+  environments with no parent workspace and no metadata rewrite.
 - Standalone repositories pass from temporary clones with no neighboring
   repositories.
-- Lock hashes, generated files, environments, and source declarations remain
-  unchanged across `check` and `test`.
+- Generated manifests are byte-idempotent; only the root contains managed
+  `workspace = true` entries.
 
 ## References
 
