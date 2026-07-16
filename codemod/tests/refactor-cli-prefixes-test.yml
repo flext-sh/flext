@@ -1,0 +1,51 @@
+id: refactor-cli-prefixes
+# valid: already domain-first targets must NOT be flagged.
+valid:
+  - yaml_read_files = 1
+  - yaml_read_files_model = 1
+  - yaml_read_files_model_chain = 1
+  - yaml_write_model = 1
+  - csv_write_files = 1
+  - csv_read_files_with_headers = 1
+  - json_read_files = 1
+  - json_read_first_files_model = 1
+  - json_read_files_lines_model = 1
+  - json_read_files_model = 1
+  - json_normalize_value = 1
+  - CSV_DEFAULT_DELIMITER = 1
+  - JSON_DEFAULT_INDENT = 1
+  - CSV_ERR_READ_FAILED = 1
+  - CSV_ERR_WRITE_FAILED = 1
+  - JSON_ERR_LOAD_FAILED = 1
+  - TEMPLATE_ERR_NOT_FOUND = 1
+  - TEMPLATE_ERR_OUTPUT_ESCAPE = 1
+  - TEMPLATE_ERR_RENDER_FAILED = 1
+  - CSV_FILE_FORMAT = 1
+  - JSON_FILE_FORMAT = 1
+  - TOML_FILE_FORMAT = 1
+  - YAML_FILE_FORMAT = 1
+# invalid: non-domain-first names must be flagged (and fixed).
+invalid:
+  - files_read_yaml = 1
+  - files_read_yaml_model = 1
+  - files_read_yaml_model_chain = 1
+  - write_yaml_model = 1
+  - files_write_csv = 1
+  - files_read_csv_with_headers = 1
+  - files_read_json = 1
+  - files_read_first_json_model = 1
+  - files_read_json_lines_model = 1
+  - files_read_json_model = 1
+  - normalize_json_value = 1
+  - DEFAULT_CSV_DELIMITER = 1
+  - DEFAULT_JSON_INDENT = 1
+  - ERR_CSV_READ_FAILED = 1
+  - ERR_CSV_WRITE_FAILED = 1
+  - ERR_JSON_LOAD_FAILED = 1
+  - ERR_TEMPLATE_NOT_FOUND = 1
+  - ERR_TEMPLATE_OUTPUT_ESCAPE = 1
+  - ERR_TEMPLATE_RENDER_FAILED = 1
+  - FILE_FORMAT_CSV = 1
+  - FILE_FORMAT_JSON = 1
+  - FILE_FORMAT_TOML = 1
+  - FILE_FORMAT_YAML = 1
