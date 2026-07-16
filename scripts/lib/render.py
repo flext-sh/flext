@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from flext_tests import u
+from flext_tests import p, u
 from scripts.lib.registry import CommandRegistry
 
 

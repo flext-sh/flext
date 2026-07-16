@@ -132,7 +132,7 @@ runtime = s(runtime_settings=settings)
 ## Good
 
 ```python
-from flext_core import c, m, r, t, u
+from flext_core import c, m, r, p, t, u
 ```
 
 ## Bad

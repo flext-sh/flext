@@ -79,7 +79,7 @@ db_oracle = FlextDbOracleApi
 Example:
 
 ```python
-from flext_core import c, m, r, t, u
+from flext_core import c, m, r, p, t, u
 
 
 def load(user_id: int) -> r[p.User]:

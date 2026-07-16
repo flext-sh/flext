@@ -1,0 +1,8 @@
+id: ban-dict-type-annotation
+snapshots:
+  'x: Dict[str, int] = {}':
+    labels:
+    - source: Dict[str, int]
+      style: primary
+      start: 3
+      end: 17

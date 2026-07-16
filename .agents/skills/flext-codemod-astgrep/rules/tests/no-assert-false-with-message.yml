@@ -1,0 +1,36 @@
+# `assert False, <msg>` in a test carries a real failure reason. The pytest idiom
+# preserves it: `pytest.fail(<msg>)`. This rule owns the message form; the bare
+# form (no message) is handled by no-assert-false. The existing message is kept
+# verbatim via $MSG, so no information is lost and no reason is fabricated.
+#
+# F821-safety guard: only rewrite when the module imports pytest via
+# `import pytest` (so `pytest.fail` resolves). Modules without that import are
+# flagged by the detection-only companion no-assert-false-missing-pytest.
+id: no-assert-false-with-message
+language: python
+severity: error
+files:
+  - "**/*.py"
+ignores:
+  - "**/.claude/**"
+  - "**/.git/**"
+  - "**/.venv/**"
+  - "**/legado/**"
+  - "**/legacy/**"
+  - "**/node_modules/**"
+rule:
+  pattern: "assert False, $MSG"
+  inside:
+    stopBy: end
+    kind: module
+    has:
+      stopBy: end
+      kind: import_statement
+      has:
+        stopBy: end
+        kind: dotted_name
+        regex: "^pytest$"
+fix: "pytest.fail($MSG)"
+message: >-
+  `assert False, <msg>` must be `pytest.fail(<msg>)`; the existing reason is
+  preserved, never replaced with a fabricated string.
