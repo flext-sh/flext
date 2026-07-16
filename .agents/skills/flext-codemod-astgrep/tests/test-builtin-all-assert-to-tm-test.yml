@@ -1,0 +1,31 @@
+id: test-builtin-all-assert-to-tm
+valid:
+  - |
+    from flext_tests import tm
+    def test_values(values):
+        tm.that(all(values), eq=True)
+  - |
+    def test_values(values):
+        assert all(values)
+  - |
+    from other import tm
+    def test_values(values):
+        assert all(values)
+  - |
+    from flext_tests import tm
+    def test_values(values):
+        assert all(values), "all values must pass"
+  - |
+    from flext_tests import tm
+    def test_values(values, all):
+        assert all(values)
+  - |
+    from flext_tests import tm
+    all = custom_all
+    def test_values(values):
+        assert all(values)
+invalid:
+  - |
+    from flext_tests import tm
+    def test_values(values):
+        assert all(values)

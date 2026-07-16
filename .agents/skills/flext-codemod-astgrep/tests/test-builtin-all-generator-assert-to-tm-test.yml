@@ -1,0 +1,27 @@
+id: test-builtin-all-generator-assert-to-tm
+valid:
+  - |
+    from flext_tests import tm
+    def test_values(values):
+        tm.that(all(item.ready for item in values), eq=True)
+  - |
+    from other import tm
+    def test_values(values):
+        assert all(item.ready for item in values)
+  - |
+    from flext_tests import tm
+    def test_values(values):
+        assert all(item.ready for item in values), "all must be ready"
+  - |
+    from flext_tests import tm
+    def test_values(values):
+        assert all(item.ready for item in values if item.enabled)
+  - |
+    from flext_tests import tm
+    def test_values(values, all):
+        assert all(item.ready for item in values)
+invalid:
+  - |
+    from flext_tests import tm
+    def test_values(values):
+        assert all(item.ready for item in values)

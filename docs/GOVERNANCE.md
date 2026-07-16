@@ -2,28 +2,27 @@
 
 ## Purpose
 
-This file is the root governance router for the FLEXT workspace. It does not
-duplicate the engineering law. It points each change type to the living source
-that owns the rule, validation surface, and escalation path.
+This file maps each change to its canonical owner. It does not restate
+engineering law or skill procedures.
 
-When this file conflicts with a lower-level guide, this file only decides which
-source to read first. The owning source still provides the actual rule.
+## Authority
 
-## Authority Order
+Apply the newest applicable source in this order:
 
-1. Current operator request.
-1. Root `AGENTS.md` (repo root).
-1. Accepted ADRs in [`docs/architecture/adr/`](architecture/adr/README.md).
-1. Workspace baseline in
-   [`docs/architecture/baseline-v0.13.0.md`](architecture/baseline-v0.13.0.md).
-1. Standards in [`docs/standards/`](standards/README.md).
-1. The active Bead issue and its child issues as the execution ledger for the
-   scoped change.
-1. Path-scoped skills in `.agents/skills/` (repo-only).
+1. Live operator request.
+2. Active Bead in the workspace-root tracker.
+3. Accepted ADRs in [`architecture/adr/`](architecture/adr/README.md).
+4. Root [`AGENTS.md`](../AGENTS.md).
+5. The owning skill or standard.
+6. Other documentation.
 
-## Change Routing
+When a higher source changes reality, update the affected lower sources in the
+same change. Ask before acting only when the conflict cannot be resolved from
+this order.
 
-| Change type | First source | Validation surface |
+## Owner Routing
+
+| Concern | Canonical owner | Decisive validation |
 | --- | --- | --- |
 | Any code or architecture change | `AGENTS.md` (repo root) | Active Bead plus scoped gates |
 | Refactor, MRO, facade, namespace, or import work | [Architecture baseline](architecture/baseline-v0.13.0.md) and scoped skill | `ruff`, `pyrefly`, `pyright`, affected `pytest` |
@@ -83,16 +82,17 @@ total FLEXT refactor plan:
 
 ## Baseline Commands
 
-Use the narrowest decisive command for the touched lane:
+Choose the narrowest decisive command from the quality-gates skill, then widen
+only after it passes:
 
 ```bash
 ruff check <path> --no-fix
 pyrefly check <path>
-pyright <path>
 pytest <path-or-project>/tests -q
-make check CHANGED_ONLY=1
+markdownlint-cli2 <path>
+make check PROJECT=<project> CHECK_GATES=<gates>
 make val VALIDATE_SCOPE=workspace
 ```
 
-When a command is red, keep the exact command, exit code, and decisive output in
-the active Bead before continuing.
+Record every red or green result with its exit code and decisive output in the
+active workspace-root Bead.

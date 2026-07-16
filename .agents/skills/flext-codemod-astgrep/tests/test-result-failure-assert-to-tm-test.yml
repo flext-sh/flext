@@ -1,0 +1,18 @@
+id: test-result-failure-assert-to-tm
+valid:
+  - |
+    from flext_tests import tm
+    def test_fail(result):
+        tm.fail(result)
+  - |
+    def test_fail(result):
+        assert result.failure
+  - |
+    from flext_tests import tm
+    def test_fail(result):
+        assert result.failure, "unexpected success"
+invalid:
+  - |
+    from flext_tests import tm
+    def test_fail(result):
+        assert result.failure

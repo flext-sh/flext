@@ -38,16 +38,19 @@ If any gate fails, FIX FORWARD per AGENTS.md §3.5. Never `git checkout`/`reset`
 
 ## 5. Load Skills Relevant to the Change Scope
 
-Default load order:
+The provider activates `flext-context-routing` first. That router selects only
+the smallest on-demand set declared by `.agents/provider.toml`:
 
-1. Scope skill: e.g. `rules-flext-core` for flext-core, `rules-src` for general src work.
-2. `flext-mro-namespace-rules` — ownership and naming.
-3. `flext-import-rules` — import discipline.
-4. `flext-patterns` — result/logging/DI patterns.
-5. `coding-standards` — quick-reference for daily Python work.
-6. Tier-specific: `pydantic-v2-governance`, `flext-strict-typing`, `flext-type-system`, `flext-constants-discipline`, `testing-patterns`.
+1. Load the one domain skill that owns the change, such as `lib-returns`,
+   `flext-import-rules`, or `pydantic-v2-governance`.
+2. Add a quality or workflow skill only when its procedure is needed.
+3. Use `coding-standards` as a concern index when the owner is unclear, not as
+   an always-loaded second specification.
+
+Do not maintain or load a fixed default skill bundle.
 
 Path-scoped skills live in `.agents/skills/` (repo-only).
+Their exported inventory is owned by `.agents/provider.toml`.
 
 ## 6. Fundamental Packages
 

@@ -1,0 +1,66 @@
+id: test-path-is-file-assert-to-tm-false
+snapshots:
+  ? |
+    from flext_infra import tm
+    def test_report() -> None:
+        assert not (workspace / "releases" / "latest.md").is_file()
+  : fixed: |
+      from flext_infra import tm
+      def test_report() -> None:
+          tm.that((workspace / "releases" / "latest.md").is_file(), eq=False)
+    labels:
+    - source: assert not (workspace / "releases" / "latest.md").is_file()
+      style: primary
+      start: 58
+      end: 117
+    - source: tm
+      style: secondary
+      start: 24
+      end: 26
+    - source: flext_infra
+      style: secondary
+      start: 5
+      end: 16
+    - source: from flext_infra import tm
+      style: secondary
+      start: 0
+      end: 26
+    - source: |
+        from flext_infra import tm
+        def test_report() -> None:
+            assert not (workspace / "releases" / "latest.md").is_file()
+      style: secondary
+      start: 0
+      end: 118
+  ? |
+    from flext_infra import tm
+    def test_report() -> None:
+        assert not (workspace / "report.md").is_file()
+  : fixed: |
+      from flext_infra import tm
+      def test_report() -> None:
+          tm.that((workspace / "report.md").is_file(), eq=False)
+    labels:
+    - source: assert not (workspace / "report.md").is_file()
+      style: primary
+      start: 58
+      end: 104
+    - source: tm
+      style: secondary
+      start: 24
+      end: 26
+    - source: flext_infra
+      style: secondary
+      start: 5
+      end: 16
+    - source: from flext_infra import tm
+      style: secondary
+      start: 0
+      end: 26
+    - source: |
+        from flext_infra import tm
+        def test_report() -> None:
+            assert not (workspace / "report.md").is_file()
+      style: secondary
+      start: 0
+      end: 105

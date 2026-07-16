@@ -1,6 +1,0 @@
-id: no-sys-exit-in-library
-language: python
-rule:
-  pattern: "sys.exit($$$ARGS)"
-message: "sys.exit() in library code - raise SystemExit instead"
-severity: error

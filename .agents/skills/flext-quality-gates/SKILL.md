@@ -1,30 +1,28 @@
 ---
 name: flext-quality-gates
-description: 'Use when running or interpreting quality gates (lint, typecheck, test,
-  val) in the FLEXT monorepo. Covers mandatory gate definitions, exact tool commands
-  (ruff, pyrefly, pyright, mypy, pytest), pass thresholds, and configuration sources
-  from base.mk and pyproject.toml. DO NOT USE FOR: questions unrelated to flext-quality-gates
-  creating projects or architecture from scratch'
+description: >-
+  Select and run the narrowest decisive FLEXT validation before widening to
+  project or workspace gates. Use for lint, formatting, typing, tests, docs,
+  provider catalogs, and interpreting gate failures.
 license: MIT
 metadata:
-  version: 1.1.0
+  version: 2.0.0
 ---
 # FLEXT Quality Gates
 
-**UTILITY SKILL**
+Gate commands validate the owning source. They do not define behavior,
+configuration, catalog membership, or project type.
 
-Commands and thresholds for the FLEXT quality gates.
+## Selection
 
-## USE FOR
-
-- Running lint, format, typecheck, or test gates.
-- Interpreting failures from `make check` or CI.
-- Choosing the narrowest gate for a changed file.
-
-## DO NOT USE FOR
-
-- Questions unrelated to FLEXT quality gates.
-- Creating projects or architecture from scratch.
+| Changed surface | First gate | Native widening gate |
+| --- | --- | --- |
+| Python source | `ruff check <path> --no-fix` then `pyrefly check <path>` | affected behavior test or project check |
+| Python formatting | `ruff format --check <path>` | project format gate |
+| Markdown or skill | `markdownlint-cli2 <path>` | `make docs DOCS_PHASE=audit` |
+| Provider TOML | typed parse plus exact declared-path inventory | provider projection probe |
+| Make or tooling | `make help` plus targeted verb | `make check` or `make val` |
+| Structural codemod | provider preview and exact expected cardinality | apply, rescan, and idempotence |
 
 ## Workflow
 
@@ -61,12 +59,15 @@ Commands and thresholds for the FLEXT quality gates.
 Common values for `CHECK_GATES`: `lint`, `format`, `pyrefly`, `mypy`, `pyright`, `markdown`, `go`, `loc-cap`, `boundary`, `coordination`.
 
 ```bash
-make check PROJECT=flext-core CHECK_GATES=pyrefly
+make help
+make check PROJECT=<project> CHECK_GATES=<gates>
+make test PROJECT=<project> MATCH=<expression>
+make docs DOCS_PHASE=<generate|fix|audit|build|validate>
+make val VALIDATE_SCOPE=workspace
 ```
 
-## Coverage
-
-`pyproject.toml` sets `fail_under = 45` for the consolidated workspace. Project-local targets may be higher.
+The root `Makefile`, shared make framework, and `pyproject.toml` own available
+verbs and thresholds. Do not mirror their changing values in this skill.
 
 ## Anti-patterns
 
@@ -74,16 +75,10 @@ make check PROJECT=flext-core CHECK_GATES=pyrefly
 |--------------|-----|
 | Run broad `make val` before narrow gates | start with `ruff check <file>` |
 | Use `.venv/bin/ruff` | use bare `ruff` |
-| Run `ruff --fix` inside a gate | emit and review an explicit fix transaction |
-| Run `mypy --no-incremental` or pass test modules directly | use the cached Make gate on production source paths; validate tests with Ruff, Pyrefly, Pyright, and pytest |
-| Treat one type checker as proof for all | run Pyrefly, Mypy, and Pyright |
 | Ignore gate output | paste command + exit code + output into the bead |
 
 ## References
 
-<!-- mro-lo34 (agent: kimi) — canonical ADR refs added per docs-renaissance S1. -->
-- `.agents/skills/coding-standards/SKILL.md` — general coding standards
-- `.agents/skills/flext-development-workflow/SKILL.md` — workflow and CI/CD
-- `docs/architecture/adr/004-generic-make-framework-in-flext-tests.md` — make framework contract behind the gate verbs
-- `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md` — config/template SSOT
-- `AGENTS.md` — verification expectation
+- [`flext-development-workflow`](../flext-development-workflow/SKILL.md)
+- [`docs/GOVERNANCE.md`](../../../docs/GOVERNANCE.md)
+- [`ADR-004`](../../../docs/architecture/adr/004-generic-make-framework-in-flext-tests.md)
