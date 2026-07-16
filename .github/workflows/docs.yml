@@ -9,9 +9,7 @@ on:
       - "docs/**"
       - "mkdocs.yml"
       - "pyproject.toml"
-      - "flext-*/docs/**"
-      - "flext-*/src/**"
-      - "flext-infra/**"
+      - "flext-*"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
