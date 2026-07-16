@@ -14,7 +14,7 @@ from flext_core import m as m
 
 class ProjectModels(m):
     class Request(m.FrozenModel):
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(
             strict=True,
             frozen=True,
             extra="forbid",
@@ -23,7 +23,7 @@ class ProjectModels(m):
         identifier: Annotated[str, m.Field(min_length=1)]
 
     class ScopedRequest(m.FrozenModel):
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(
             strict=True,
             frozen=True,
             extra="forbid",

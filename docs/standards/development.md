@@ -38,7 +38,7 @@ upstream short alias as the base class and then publish the local alias at the
 bottom:
 
 ```python
-from flext_cli import m, u
+from flext_cli import m, p, u
 from flext_plugin import c, p, r, t
 
 
@@ -82,7 +82,7 @@ Example:
 from flext_core import c, m, r, t, u
 
 
-def load(user_id: int) -> r[m.User]:
+def load(user_id: int) -> r[p.User]:
     return u.http_get(f"{c.API_BASE}/users/{user_id}")
 ```
 
@@ -112,7 +112,7 @@ Order:
 
 ```python
 from collections.abc import Mapping
-from flext_core import t
+from flext_core import p, t
 
 
 def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue: ...

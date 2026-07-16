@@ -8,7 +8,7 @@ from flext_tests import FlextTestsUtilities
 
 from pathlib import Path
 
-from tests.infra.typings import t
+from tests.infra.typings import p, t
 
 
 

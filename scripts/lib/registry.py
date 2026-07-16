@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_tests import c, m, t, u
+from flext_tests import c, m, p, t, u
 
 
 class CommandRegistry:
@@ -22,7 +22,7 @@ class CommandRegistry:
     SCRIPTS_DIR = ROOT / "scripts" / "cmd"
 
     @staticmethod
-    def discover() -> m.Tests.MakeRegistry:
+    def discover() -> p.Tests.MakeRegistry:
         """Discover and validate the promoted command registry."""
         result = u.Tests.make_discover(CommandRegistry.SCRIPTS_DIR)
         if result.failure:
@@ -34,7 +34,7 @@ class CommandRegistry:
         return value
 
     @staticmethod
-    def load_command(path: Path, expected_verb: str) -> m.Tests.MakeCommand:
+    def load_command(path: Path, expected_verb: str) -> p.Tests.MakeCommand:
         """Load one promoted command from its flext-command header."""
         result = u.Tests.make_load_command(path, expected_verb)
         if result.failure:
@@ -62,7 +62,7 @@ class CommandRegistry:
 
     @staticmethod
     def validate_invocation(
-        command: m.Tests.MakeCommand,
+        command: p.Tests.MakeCommand,
         *,
         require_required: bool = True,
     ) -> None:
@@ -77,8 +77,8 @@ class CommandRegistry:
 
     @staticmethod
     def param_value(
-        param: m.Tests.MakeParam,
-        command: m.Tests.MakeCommand,
+        param: p.Tests.MakeParam,
+        command: p.Tests.MakeCommand,
     ) -> str:
         """Return the current value for one promoted-command parameter."""
         value: str = u.Tests.make_param_value(param, command, u.Cli.process_env())

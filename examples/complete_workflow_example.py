@@ -43,7 +43,7 @@ class CompleteWorkflowExample:
     class WorkflowData(m.BaseModel):
         """Data container for workflow processing."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True,
             extra="allow",
         )
@@ -54,7 +54,7 @@ class CompleteWorkflowExample:
     class WorkflowContext(m.BaseModel):
         """Complete workflow context with correlation and metadata."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True,
         )
 
@@ -82,7 +82,7 @@ class CompleteWorkflowExample:
     class WorkflowStageResult(m.BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True,
         )
 
@@ -110,7 +110,7 @@ class CompleteWorkflowExample:
     class CompleteWorkflowResult(m.BaseModel):
         """Complete workflow result with all stages aggregated."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[p.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True,
         )
 

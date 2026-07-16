@@ -60,7 +60,7 @@ usage universe, excluding legado.
 
 ## Phase 3 — Collapse polymorphic interfaces → canonical model + protocol
 
-4 `: m.X` / `-> m.X` concrete-model signatures → `p.*` protocol types (no polymorphic
+4 `: p.X` / `-> p.X` concrete-model signatures → `p.*` protocol types (no polymorphic
 unions / shadow DTOs). Extend the local `p.TapOracleWms.*` facet if a protocol is missing.
 Models stay pure data; signatures depend on protocols (§3.2).
 

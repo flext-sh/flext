@@ -90,7 +90,7 @@ flext-ldap (depends on flext-core, flext-ldif)
 type ScalarLike = t.Scalar
 
 # Usage: keep values in strict canonical contracts
-result: m.Domain.ValueModel = json_value
+result: p.Domain.ValueModel = json_value
 ```
 
 ### Pattern 2: Domain Collection Type (Nested Namespace)
@@ -138,7 +138,7 @@ type ProgressCallback = (
     Callable[[int], None]
     | Callable[[int, int], None]
     | Callable[[int, int, str], None]
-    | Callable[[m.Cli.ProgressEventModel], None]
+    | Callable[[p.Cli.ProgressEventModel], None]
     | Callable[[Exception], None]
 )
 
@@ -148,7 +148,7 @@ type ProgressCallback = (
 class ProgressCallback(Protocol):
     """Flexible callback protocol for progress tracking."""
 
-    def __call__(self, event: m.Cli.ProgressEventModel) -> None:
+    def __call__(self, event: p.Cli.ProgressEventModel) -> None:
         """Accept any arguments for maximum flexibility."""
         ...
 ```
@@ -181,7 +181,7 @@ def process_data(provider: DataProvider) -> None:
 
 ```python
 # ✅ CORRECT: Use centralized TypeVars from flext-core
-from flext_core import t
+from flext_core import p, t
 
 T = T  # Generic type variable
 M = t.M  # Generic mapping type
@@ -212,7 +212,7 @@ class FlextTypes:
 
 # Usage
 result: t.Tests.Result[bool] = ok_result
-data: t.Utilities.SettingsData = {"key": m.Tests.SettingsEntryModel(value="value")}
+data: t.Utilities.SettingsData = {"key": p.Tests.SettingsEntryModel(value="value")}
 
 
 # ❌ WRONG: Over-nesting (3+ levels)
@@ -553,7 +553,7 @@ def track_progress(callback: ProgressCallback) -> None:
 ```python
 @runtime_checkable
 class ProgressCallback(Protocol):
-    def __call__(self, event: m.Cli.ProgressEventModel) -> None: ...
+    def __call__(self, event: p.Cli.ProgressEventModel) -> None: ...
 
 
 def track_progress(callback: ProgressCallback) -> None:
@@ -660,14 +660,14 @@ attributes = m.AttributeDict()  # NO
 # ✅ CORRECT: Use Models and Protocols
 def process_model(
     data: t.MappingKV[str, m.Domain.InputModel],
-) -> p.Result[m.Domain.OutputModel]:
+) -> p.Result[p.Domain.OutputModel]:
     return r.ok(SomeModel(data))
 
 
 # ❌ WRONG: cast() hides type issues
 def process_model(
     data: t.MappingKV[str, m.Domain.InputModel],
-) -> p.Result[m.Domain.OutputModel]:
+) -> p.Result[p.Domain.OutputModel]:
     return r.ok(cast(SomeModel, data))
 
 

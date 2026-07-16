@@ -29,7 +29,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from flext_core import t
+from flext_core import p, t
 
 type UserIds = list[t.AutoStr]
 type ConfigMap = Mapping[str, t.JsonValue]

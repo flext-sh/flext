@@ -55,6 +55,7 @@ the owning package facade.
 # Consumer violation: the consumer invents a parallel model boundary.
 from pydantic import BaseModel
 
+
 class LocalPayload(BaseModel):
     value: str
 ```
