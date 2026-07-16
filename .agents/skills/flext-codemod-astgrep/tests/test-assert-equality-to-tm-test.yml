@@ -5,7 +5,7 @@ valid:
     def test_value() -> None:
         tm.that(actual, eq=expected)
   - |
-    from flext_infra import m, r, t, u
+    from flext_infra import m, r, p, t, u
     def test_value() -> None:
         assert actual == expected
   - |
@@ -26,6 +26,6 @@ valid:
         assert actual != expected
 invalid:
   - |
-    from flext_infra import m, r, t, tm, p, u
+    from flext_infra import m, r, p, t, tm, p, u
     def test_value() -> None:
         assert actual == expected
