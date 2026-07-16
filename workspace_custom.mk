@@ -380,22 +380,32 @@ CODEMOD_EXTERNAL := ../algar-oud-mig ../algar-oud_mig ../gruponos-meltano-native
 # the inherited `project` default.
 CODEMOD_SCOPE := $(if $(filter-out project all,$(SCOPE)),$(filter-out project all,$(SCOPE)),$(wildcard flext-*) $(CODEMOD_EXTERNAL))
 CODEMOD_TARGETS := $(foreach d,$(CODEMOD_SCOPE),$(wildcard $(d)/src) $(wildcard $(d)/tests))
+# RULE=<id> runs a SINGLE rule (codemod/rules/**/<id>.yml) via --rule instead of the
+# whole sgconfig.yml suite. Empty RULE keeps --config (whole-suite, unchanged). Fails
+# loud if RULE is set but no matching rule file exists.
+CODEMOD_RULEFILE := $(if $(RULE),$(firstword $(wildcard codemod/rules/*/$(RULE).yml codemod/rules/$(RULE).yml)),)
+CODEMOD_RULEFLAG := $(if $(RULE),--rule $(CODEMOD_RULEFILE),--config $(CODEMOD_SGCONFIG))
 
-codemod: ## Codemod library: DETECT project (default) | TEST=1 validate rules | APPLY=Y rewrite scope
+codemod: ## Codemod library: DETECT (default) | TEST=1 validate | APPLY=Y rewrite | RULE=<id> single rule
+ifneq ($(RULE),)
+ifeq ($(CODEMOD_RULEFILE),)
+	$(Q)echo "ERROR: RULE='$(RULE)' matches no codemod/rules/**/$(RULE).yml"; exit 1
+endif
+endif
 ifeq ($(APPLY),Y)
-	$(Q)echo "==> codemod APPLY: rewriting scope in declared order"; \
+	$(Q)echo "==> codemod APPLY$(if $(RULE), [rule=$(RULE)],): rewriting scope in declared order"; \
 	for t in $(CODEMOD_TARGETS); do \
 	  [ -d "$$t" ] || continue; \
 	  echo "    apply -> $$t"; \
-	  ast-grep scan --config $(CODEMOD_SGCONFIG) --update-all "$$t" || exit 1; \
+	  ast-grep scan $(CODEMOD_RULEFLAG) --update-all "$$t" || exit 1; \
 	done
 else ifeq ($(TEST),1)
 	$(Q)echo "==> codemod TEST: validating detection rules against their test cases (ast-grep test)"; \
-	ast-grep test --skip-snapshot-tests
+	ast-grep test --skip-snapshot-tests $(if $(RULE),--filter $(RULE),)
 else
-	$(Q)echo "==> codemod DETECT: scanning project for violations across scope (read-only)"; \
+	$(Q)echo "==> codemod DETECT$(if $(RULE), [rule=$(RULE)],): scanning project for violations across scope (read-only)"; \
 	for t in $(CODEMOD_TARGETS); do \
 	  [ -d "$$t" ] || continue; \
-	  ast-grep scan --config $(CODEMOD_SGCONFIG) "$$t" || true; \
+	  ast-grep scan $(CODEMOD_RULEFLAG) "$$t" || true; \
 	done
 endif
