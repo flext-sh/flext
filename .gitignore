@@ -30,6 +30,7 @@
 !.vscode/
 !.code-review-graph/
 !.claude/
+!.claude-plugin/
 !/config/
 !/config/workspace.yaml
 !.claude/CLAUDE.md
@@ -115,6 +116,7 @@ scripts/maintenance/
 !libs/**
 !.vscode/**
 !.claude/**
+!.claude-plugin/**
 
 # ============================================================================
 # BLOCK: AI/Agent Local Data (NEVER track these)
