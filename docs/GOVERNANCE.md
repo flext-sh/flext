@@ -12,7 +12,7 @@ Apply the newest applicable source in this order:
 1. Live operator request.
 2. Active Bead in the workspace-root tracker.
 3. Accepted ADRs in [`architecture/adr/`](architecture/adr/README.md).
-4. Root [`AGENTS.md`](../AGENTS.md).
+4. Root `AGENTS.md`.
 5. The owning skill or standard.
 6. Other documentation.
 
@@ -24,11 +24,11 @@ this order.
 
 | Concern | Canonical owner | Decisive validation |
 | --- | --- | --- |
-| Provider activation and exported paths | [`.agents/provider.toml`](../.agents/provider.toml) | typed manifest and exact-path inventory validation |
-| Session routing | [`flext-context-routing`](../.agents/skills/flext-context-routing/SKILL.md) | marker and selected-skill evidence |
+| Provider activation and exported paths | `.agents/provider.toml` | typed manifest and exact-path inventory validation |
+| Session routing | `.agents/skills/flext-context-routing/SKILL.md` | marker and selected-skill evidence |
 | Architecture and public contracts | [ADR registry](architecture/adr/README.md) and owning source declaration | consumer audit plus affected project gates |
 | Runtime coding patterns | smallest matching skill under `.agents/skills/` | fresh import, lint, typecheck, behavior gate |
-| Quality commands | [`flext-quality-gates`](../.agents/skills/flext-quality-gates/SKILL.md) | exact command, exit code, decisive output |
+| Quality commands | `.agents/skills/flext-quality-gates/SKILL.md` | exact command, exit code, decisive output |
 | Documentation lifecycle | [`standards/documentation.md`](standards/documentation.md) | narrow markdown gate, then docs audit |
 | Workspace Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help` and affected dispatcher gate |
 | Enforcement catalog identity and routing | `flext-core` enforcement declarations | catalog census and public import |
