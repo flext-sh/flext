@@ -1,8 +1,0 @@
-id: detect-jsondict-legacy
-snapshots:
-  t.JsonMapping:
-    labels:
-    - source: t.JsonMapping
-      style: primary
-      start: 0
-      end: 13

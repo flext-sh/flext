@@ -1,9 +1,0 @@
-id: fix-jsondict-legacy
-snapshots:
-  t.JsonMapping:
-    fixed: t.JsonValue
-    labels:
-    - source: t.JsonMapping
-      style: primary
-      start: 0
-      end: 13
