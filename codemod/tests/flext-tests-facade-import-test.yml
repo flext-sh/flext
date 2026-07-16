@@ -1,0 +1,7 @@
+id: flext-tests-facade-import
+valid:
+  - from flext_tests import tm, tv, td
+  - from flext_tests import c, t, p, m, u
+invalid:
+  - from flext_tests import FlextTestsModels
+  - from flext_tests import tm as matcher

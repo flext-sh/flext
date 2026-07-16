@@ -1,0 +1,10 @@
+id: flext-facade-only-import
+valid:
+  - from flext_core import c, t, p, m, u
+  - from flext_cli import api
+  - from flext_ldif import r, x
+  - from collections.abc import Mapping
+invalid:
+  - from flext_core import c, t, FlextResult
+  - from flext_core import FlextResult as r
+  - from flext_core import c as infra_c

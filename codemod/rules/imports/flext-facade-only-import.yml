@@ -1,0 +1,21 @@
+# Import only canonical facade aliases from a flext package root; a concrete
+# class, private symbol, or `as`-alias bypasses the composed namespace/MRO
+# (AGENTS.md §19, U15/U20). Detection only. flext_tests handled by its sibling
+# rule. NO EXCEPTIONS: legado and flext-core-internal imports also reported.
+id: flext-facade-only-import
+language: python
+severity: error
+message: "Import only the canonical facade aliases from a flext package, never a concrete class, a private symbol, or an `as`-alias. Use `from flext_<ns> import c, t, p, m, u` (plus operational `r e x h d s` or entrypoints `api cli main base config settings`), e.g. `from flext_core import r`, never `from flext_core import FlextResult as r`."
+rule:
+  kind: import_from_statement
+  all:
+    - has: { field: module_name, regex: '^flext_[a-z0-9_]+$' }
+    - not: { has: { field: module_name, regex: '^flext_tests$' } }
+    - any:
+        - has: { stopBy: end, kind: aliased_import }
+        - has:
+            stopBy: end
+            kind: identifier
+            all:
+              - not: { regex: '^flext_' }
+              - not: { regex: '^(c|t|p|m|u|r|e|x|h|d|s|api|cli|main|base|config|settings)$' }
