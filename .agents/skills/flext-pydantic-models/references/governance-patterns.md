@@ -8,7 +8,7 @@
 external input
 → flext-cli validates once into the owning m.* model
 → the same instance crosses p.* contracts and MRO services
-→ r[m.Result]
+→ r[p.Result]
 → flext-cli serializes once at the true external egress
 ```
 

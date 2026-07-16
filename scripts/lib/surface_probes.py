@@ -7,7 +7,7 @@ from collections.abc import Callable
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 
-from flext_tests import c, m, t, u
+from flext_tests import c, m, p, t, u
 from scripts.lib.registry import CommandRegistry
 
 
@@ -15,9 +15,9 @@ class SurfaceProbeRunner:
     """Build and execute in-process dispatcher probes."""
 
     @staticmethod
-    def build(registry: m.Tests.MakeRegistry) -> t.SequenceOf[m.Tests.MakeSurfaceProbe]:
+    def build(registry: p.Tests.MakeRegistry) -> t.SequenceOf[p.Tests.MakeSurfaceProbe]:
         """Build command-line probes for every promoted verb and WHAT."""
-        probes: list[m.Tests.MakeSurfaceProbe] = [
+        probes: list[p.Tests.MakeSurfaceProbe] = [
             m.Tests.MakeSurfaceProbe(
                 name="global help",
                 argv=("help",),
@@ -66,11 +66,11 @@ class SurfaceProbeRunner:
 
     @staticmethod
     def command_probes(
-        command: m.Tests.MakeCommand,
-    ) -> t.SequenceOf[m.Tests.MakeSurfaceProbe]:
+        command: p.Tests.MakeCommand,
+    ) -> t.SequenceOf[p.Tests.MakeSurfaceProbe]:
         """Build help, dry-run, and execution-route probes for one command."""
         env = SurfaceProbeRunner.command_env(command)
-        probes: list[m.Tests.MakeSurfaceProbe] = [
+        probes: list[p.Tests.MakeSurfaceProbe] = [
             m.Tests.MakeSurfaceProbe(
                 name=f"{command.verb}/{command.what} help",
                 argv=(command.verb,),
@@ -116,7 +116,7 @@ class SurfaceProbeRunner:
         return tuple(probes)
 
     @staticmethod
-    def command_env(command: m.Tests.MakeCommand) -> t.StrMapping:
+    def command_env(command: p.Tests.MakeCommand) -> t.StrMapping:
         """Return safe parameter values for one command probe."""
         env: t.MutableStrMapping = {c.Tests.MAKE_WHAT_PARAM: command.what}
         for param in command.params:
@@ -130,7 +130,7 @@ class SurfaceProbeRunner:
 
     @staticmethod
     def mutation_env(
-        command: m.Tests.MakeCommand,
+        command: p.Tests.MakeCommand,
         env: t.MappingKV[str, str],
     ) -> t.StrMapping:
         """Return probe environment values that activate mutation conditions."""
@@ -141,7 +141,7 @@ class SurfaceProbeRunner:
 
     @staticmethod
     def run(
-        probes: t.SequenceOf[m.Tests.MakeSurfaceProbe],
+        probes: t.SequenceOf[p.Tests.MakeSurfaceProbe],
         dispatch_main: Callable[[tuple[str, ...]], int],
     ) -> t.StrSequence:
         """Run all surface probes and return failure messages."""
@@ -170,9 +170,9 @@ class SurfaceProbeRunner:
 
     @staticmethod
     def run_one(
-        probe: m.Tests.MakeSurfaceProbe,
+        probe: p.Tests.MakeSurfaceProbe,
         dispatch_main: Callable[[tuple[str, ...]], int],
-    ) -> m.Tests.MakeSurfaceProbeResult:
+    ) -> p.Tests.MakeSurfaceProbeResult:
         """Run one dispatcher probe in-process with an isolated environment."""
         return SurfaceProbeRunner.with_environment(
             probe.env,
@@ -183,7 +183,7 @@ class SurfaceProbeRunner:
     def with_environment(
         env: t.MappingKV[str, str],
         action: Callable[[], m.Tests.MakeSurfaceProbeResult],
-    ) -> m.Tests.MakeSurfaceProbeResult:
+    ) -> p.Tests.MakeSurfaceProbeResult:
         """Run an action with probe environment values, then restore environment."""
         original = os.environ.copy()
         try:
@@ -200,7 +200,7 @@ class SurfaceProbeRunner:
     def capture(
         dispatch_main: Callable[[tuple[str, ...]], int],
         argv: tuple[str, ...],
-    ) -> m.Tests.MakeSurfaceProbeResult:
+    ) -> p.Tests.MakeSurfaceProbeResult:
         """Capture stdout/stderr from one dispatcher invocation."""
         stdout = StringIO()
         stderr = StringIO()

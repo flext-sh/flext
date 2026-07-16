@@ -13,7 +13,7 @@ from itertools import islice
 from pathlib import Path
 from typing import Annotated, ClassVar
 
-from flext_infra import c, m, t, u
+from flext_infra import c, m, p, t, u
 
 
 class Ansi:
@@ -37,7 +37,7 @@ class SkillInfraError(Exception):
 class ScriptCheckResult(m.BaseModel):
     """ScriptCheckResult class."""
 
-    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(frozen=True)
+    model_config: ClassVar[p.ConfigDict] = m.ConfigDict(frozen=True)
 
     script: str = u.Field(description="Script file path")
     status: str = u.Field(description="Validation status (OK, UNOWNED, VIOLATION)")

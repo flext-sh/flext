@@ -26,6 +26,6 @@ valid:
         assert actual != expected
 invalid:
   - |
-    from flext_infra import m, r, t, tm, u
+    from flext_infra import m, r, t, tm, p, u
     def test_value() -> None:
         assert actual == expected

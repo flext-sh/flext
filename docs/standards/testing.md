@@ -59,7 +59,7 @@ import pytest
 
 
 @pytest.fixture
-def sample_user() -> m.User:
+def sample_user() -> p.User:
     return m.User(id=1, name="Ada")
 ```
 

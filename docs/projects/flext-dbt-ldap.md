@@ -58,7 +58,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldap/`:
 ## Testing & quality
 
 - Tests live in the project `tests/` tree and run through `make test PROJECT=flext-dbt-ldap`.
-- Warehouse sync paths need a reachable LDAP directory and a dbt target; without them, unit suites and static gates are the evidence of record.
+- Warehouse sync paths need a reachable LDAP directory and a dbt target; without them, p, unit suites and static gates are the evidence of record.
 - The authoritative quality verdict comes from `make check PROJECT=flext-dbt-ldap` and `make val`.
 
 ## Resources

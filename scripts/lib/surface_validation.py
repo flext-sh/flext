@@ -36,7 +36,7 @@ class SurfaceValidator:
         return 0
 
     @staticmethod
-    def validate_static(registry: m.Tests.MakeRegistry) -> t.StrSequence:
+    def validate_static(registry: p.Tests.MakeRegistry) -> t.StrSequence:
         """Validate registry metadata against the root Makefile surface."""
         failures: list[str] = []
         targets = CommandExecution.make_targets()
@@ -53,7 +53,7 @@ class SurfaceValidator:
 
     @staticmethod
     def validate_command(
-        command: m.Tests.MakeCommand,
+        command: p.Tests.MakeCommand,
         targets: frozenset[str],
     ) -> t.StrSequence:
         """Validate one command's static contract."""
@@ -93,7 +93,7 @@ class SurfaceValidator:
 
     @staticmethod
     def registry_commands(
-        registry: m.Tests.MakeRegistry,
+        registry: p.Tests.MakeRegistry,
         verb: str,
     ) -> t.MappingKV[str, m.Tests.MakeCommand]:
         """Return registry commands through the canonical flext-tests facade."""

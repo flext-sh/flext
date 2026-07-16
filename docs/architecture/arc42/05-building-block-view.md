@@ -70,7 +70,7 @@ re-derivation.
 
 ## 5.3 Facade Level
 
-The public surface of a package is exactly the alias set `c, m, t, p, u`
+The public surface of a package is exactly the alias set `c, m, p, t, p, u`
 (plus operational aliases, see 5.4), each a namespace class composed by MRO:
 
 - **`c` — constants**: defaults and invariants. Pure declaration

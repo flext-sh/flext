@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import NoReturn
 
 from flext_cli import u
-from flext_tests import c, m, t
+from flext_tests import c, p, t
 from scripts.lib.registry import CommandRegistry
 
 
@@ -17,7 +17,7 @@ class CommandExecution:
     """Run promoted commands through flext-cli process utilities."""
 
     @staticmethod
-    def run(command: m.Tests.MakeCommand) -> int:
+    def run(command: p.Tests.MakeCommand) -> int:
         """Run one promoted command through the canonical execution path."""
         if command.target:
             return CommandExecution.run_make(
@@ -72,7 +72,7 @@ class CommandExecution:
 
     @staticmethod
     def run_python(
-        command: m.Tests.MakeCommand,
+        command: p.Tests.MakeCommand,
         env: t.MappingKV[str, str],
     ) -> int:
         """Execute a promoted Python command under canonical dispatch env."""
@@ -113,7 +113,7 @@ class CommandExecution:
         return tuple(f"{name}={value}" for name, value in values.items())
 
     @staticmethod
-    def command_env(command: m.Tests.MakeCommand) -> t.StrMapping:
+    def command_env(command: p.Tests.MakeCommand) -> t.StrMapping:
         """Return canonical environment for a promoted command."""
         return u.Cli.process_env(
             overrides={

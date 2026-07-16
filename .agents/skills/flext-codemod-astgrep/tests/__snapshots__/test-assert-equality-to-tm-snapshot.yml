@@ -1,34 +1,34 @@
 id: test-assert-equality-to-tm
 snapshots:
   ? |
-    from flext_infra import m, r, t, tm, u
+    from flext_infra import m, r, t, tm, p, u
     def test_value() -> None:
         assert actual == expected
   : fixed: |
-      from flext_infra import m, r, t, tm, u
+      from flext_infra import m, r, t, tm, p, u
       def test_value() -> None:
           tm.that(actual, eq=expected)
     labels:
-    - source: assert actual == expected
-      style: primary
-      start: 69
-      end: 94
-    - source: tm
-      style: secondary
-      start: 33
-      end: 35
-    - source: flext_infra
-      style: secondary
-      start: 5
-      end: 16
-    - source: from flext_infra import m, r, t, tm, u
-      style: secondary
-      start: 0
-      end: 38
-    - source: |
-        from flext_infra import m, r, t, tm, u
-        def test_value() -> None:
-            assert actual == expected
-      style: secondary
-      start: 0
-      end: 95
+      - source: assert actual == expected
+        style: primary
+        start: 69
+        end: 94
+      - source: tm
+        style: secondary
+        start: 33
+        end: 35
+      - source: flext_infra
+        style: secondary
+        start: 5
+        end: 16
+      - source: from flext_infra import m, r, t, tm, p, u
+        style: secondary
+        start: 0
+        end: 38
+      - source: |
+          from flext_infra import m, r, t, tm, p, u
+          def test_value() -> None:
+              assert actual == expected
+        style: secondary
+        start: 0
+        end: 95

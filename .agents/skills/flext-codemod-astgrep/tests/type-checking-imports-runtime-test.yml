@@ -16,7 +16,7 @@ invalid:
     if TYPE_CHECKING:
         from pathlib import Path
   - |
-    from flext_sample import t
+    from flext_sample import p, t
 
     if t.TYPE_CHECKING:
         from flext_sample import p

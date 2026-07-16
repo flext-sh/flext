@@ -462,7 +462,7 @@ def run_raw(
     cwd: Path | None = None,
     timeout: int | None = None,
     env: t.StrMapping | None = None,
-) -> p.Result[m.Infra.CommandOutput]:
+) -> p.Result[p.Infra.CommandOutput]:
     """Run command without enforcing exit code.
 
     Executes subprocess and returns combined stdout/stderr regardless
