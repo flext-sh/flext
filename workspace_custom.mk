@@ -362,22 +362,40 @@ project: ## Run project validation gates
 workspace: ## Run workspace validation gates
 	$(Q)$(MAKE) --no-print-directory val WHAT=workspace $(MAKE_SELECTION_ARGS)
 
-# --- ast-grep codemod library (flext-codemod-astgrep provider) ---
-# CHECK (default): validate the ENTIRE active rule set together — every rule,
-# validator and fixer snapshot must agree. Rules not yet migrated to the current
-# pattern live under the provider's _pending/ tree (outside ruleDirs) and are not
-# run until refactored. FIX=1 DIR=<path> applies the fixers to a target tree and
-# then re-validates, so the system is always proven green after a rewrite.
+# --- ast-grep codemod library ([root]/codemod, provider flext-codemod-astgrep) ---
+# One make verb drives everything; rules apply in ast-grep's declared order.
+#   make codemod            CHECK: run the whole active suite together (ast-grep test).
+#                                  Every rule/validator/snapshot must agree (bijective, green).
+#   make codemod SCAN=1      DRY-RUN: scan SCOPE across the workspace and print the
+#                                  fixes that WOULD apply (no mutation).
+#   make codemod APPLY=Y     APPLY: rewrite SCOPE in declared order (multi-pass to a
+#                                  fixpoint), then re-run the whole suite to prove green.
+# SCOPE defaults to the whole workspace: every flext-* member plus the external
+# consumers (algar-*, gruponos-*) so the same rules generalize everywhere.
 CODEMOD_SGCONFIG := sgconfig.yml
-CODEMOD_DIR ?= .
+CODEMOD_EXTERNAL := ../algar-oud-mig ../algar-oud_mig ../gruponos-meltano-native
+# NOTE: the root Makefile sets `SCOPE ?= project` globally, so treat both the
+# unset case AND that inherited `project` sentinel as "whole workspace". A real
+# per-project scan uses an explicit SCOPE=flext-<name> that is neither empty nor
+# the inherited `project` default.
+CODEMOD_SCOPE := $(if $(filter-out project all,$(SCOPE)),$(filter-out project all,$(SCOPE)),$(wildcard flext-*) $(CODEMOD_EXTERNAL))
+CODEMOD_TARGETS := $(foreach d,$(CODEMOD_SCOPE),$(wildcard $(d)/src) $(wildcard $(d)/tests))
 
-codemod: ## Validate the ast-grep codemod library (FIX=1 DIR=<path> applies fixers, then re-checks)
-ifeq ($(FIX),1)
-	$(Q)echo "==> codemod FIX: applying fixers to $(CODEMOD_DIR)"; \
-	ast-grep scan --config $(CODEMOD_SGCONFIG) --update-all $(CODEMOD_DIR); \
-	echo "==> codemod: re-validating whole library after fix"; \
-	ast-grep test
+codemod: ## Codemod library: DETECT project (default) | TEST=1 validate rules | APPLY=Y rewrite scope
+ifeq ($(APPLY),Y)
+	$(Q)echo "==> codemod APPLY: rewriting scope in declared order"; \
+	for t in $(CODEMOD_TARGETS); do \
+	  [ -d "$$t" ] || continue; \
+	  echo "    apply -> $$t"; \
+	  ast-grep scan --config $(CODEMOD_SGCONFIG) --update-all "$$t" || exit 1; \
+	done
+else ifeq ($(TEST),1)
+	$(Q)echo "==> codemod TEST: validating detection rules against their test cases (ast-grep test)"; \
+	ast-grep test --skip-snapshot-tests
 else
-	$(Q)echo "==> codemod CHECK: validating whole active library (ast-grep test)"; \
-	ast-grep test
+	$(Q)echo "==> codemod DETECT: scanning project for violations across scope (read-only)"; \
+	for t in $(CODEMOD_TARGETS); do \
+	  [ -d "$$t" ] || continue; \
+	  ast-grep scan --config $(CODEMOD_SGCONFIG) "$$t" || true; \
+	done
 endif

@@ -103,7 +103,7 @@ fails. Rewrite whitespace-negation asserts to an explicit boolean, e.g.
 These rules are location-independent. To run them against an external consumer
 repo (e.g. `../projeto_b`, `../projeto_a`):
 ```bash
-ast-grep scan --rule /home/marlonsc/flext/.agents/skills/flext-codemod-astgrep/rules/settings-base-rename.yml ../projeto_b/src
+ast-grep scan --rule codemod/rules/settings-base-rename.yml ../projeto_b/src
 ```
 Non-flext-package repos (projeto_b/projeto_a) keep **raw `assert`** in their own
 tests; only apply the assert->tm rule to `flext-*` package tests. Always apply
