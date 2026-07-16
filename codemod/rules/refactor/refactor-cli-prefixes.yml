@@ -1,0 +1,535 @@
+# flext-cli DOMAIN-FIRST prefix refactor (reusable executor, with fix).
+#
+# WHY: flext-cli owns 11 canonical domains — Toml, Yaml, Csv, Json, Xlsx, Cli,
+# Tui, Run, Dag, Templates, Workflow. Every public symbol it provides must carry
+# its domain token FIRST (utilities snake `<domain>_<verb>_<rest>`, constants
+# UPPER `<DOMAIN>_<REST>`, types/models Pascal `<Domain><Rest>`). Symbols whose
+# real domain token is NOT first are refactored here so every downstream project
+# (including external repos) can re-apply the exact same rename.
+#
+# HOW (precision, zero false positives): each rename matches ONLY the closed set
+# of node kinds where an identifier legitimately appears — `identifier` (code),
+# `comment` (line/# comments) and `string_content` (docstrings/strings) — and is
+# gated by a word-boundary `\b<name>\b` regex so a shorter name can never touch a
+# longer one (`files_read_yaml` never rewrites `files_read_yaml_model`). The
+# `transform.replace` rewrites ONLY the bounded token inside the node, preserving
+# every surrounding character.
+#
+# FALSE POSITIVES intentionally excluded (domain token is a substring, not the
+# domain): CommandRunner / PromptRuntimeState (Run in Runner/Runtime), CmdService.
+# ALREADY-CORRECT (domain already first) are not listed: toml_*, yaml_*, csv_*,
+# json_*, run*, template_*, xlsx_*, Xlsx*.
+#
+# USAGE:  ast-grep scan --rule codemod/rules/refactor/refactor-cli-prefixes.yml --update-all <tree>
+# Applies across code + comments + docstrings.
+
+# ---------------------------------------------------------------------------
+# Utilities (snake_case) — domain token moved to first position.
+# ---------------------------------------------------------------------------
+id: cli-prefix-files-read-yaml
+language: python
+severity: warning
+message: "flext-cli domain-first: files_read_yaml -> yaml_read_files (Yaml domain)."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bfiles_read_yaml\b'
+  pattern: $T
+transform:
+  NEW:
+    replace: { source: $T, replace: '\bfiles_read_yaml\b', by: yaml_read_files }
+fix: $NEW
+---
+id: cli-prefix-files-read-yaml-model
+language: python
+severity: warning
+message: "flext-cli domain-first: files_read_yaml_model -> yaml_read_files_model."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bfiles_read_yaml_model\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bfiles_read_yaml_model\b'
+      by: yaml_read_files_model
+fix: $NEW
+---
+id: cli-prefix-files-read-yaml-model-chain
+language: python
+severity: warning
+message: "flext-cli domain-first: files_read_yaml_model_chain -> yaml_read_files_model_chain."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bfiles_read_yaml_model_chain\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bfiles_read_yaml_model_chain\b'
+      by: yaml_read_files_model_chain
+fix: $NEW
+---
+id: cli-prefix-write-yaml-model
+language: python
+severity: warning
+message: "flext-cli domain-first: write_yaml_model -> yaml_write_model (Yaml domain)."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bwrite_yaml_model\b'
+  pattern: $T
+transform:
+  NEW:
+    replace: { source: $T, replace: '\bwrite_yaml_model\b', by: yaml_write_model }
+fix: $NEW
+---
+id: cli-prefix-files-write-csv
+language: python
+severity: warning
+message: "flext-cli domain-first: files_write_csv -> csv_write_files (Csv domain)."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bfiles_write_csv\b'
+  pattern: $T
+transform:
+  NEW:
+    replace: { source: $T, replace: '\bfiles_write_csv\b', by: csv_write_files }
+fix: $NEW
+---
+id: cli-prefix-files-read-csv-with-headers
+language: python
+severity: warning
+message: "flext-cli domain-first: files_read_csv_with_headers -> csv_read_files_with_headers."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bfiles_read_csv_with_headers\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bfiles_read_csv_with_headers\b'
+      by: csv_read_files_with_headers
+fix: $NEW
+---
+id: cli-prefix-files-read-json
+language: python
+severity: warning
+message: "flext-cli domain-first: files_read_json -> json_read_files (Json domain)."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bfiles_read_json\b'
+  pattern: $T
+transform:
+  NEW:
+    replace: { source: $T, replace: '\bfiles_read_json\b', by: json_read_files }
+fix: $NEW
+---
+id: cli-prefix-files-read-first-json-model
+language: python
+severity: warning
+message: "flext-cli domain-first: files_read_first_json_model -> json_read_first_files_model."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bfiles_read_first_json_model\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bfiles_read_first_json_model\b'
+      by: json_read_first_files_model
+fix: $NEW
+---
+id: cli-prefix-files-read-json-lines-model
+language: python
+severity: warning
+message: "flext-cli domain-first: files_read_json_lines_model -> json_read_files_lines_model."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bfiles_read_json_lines_model\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bfiles_read_json_lines_model\b'
+      by: json_read_files_lines_model
+fix: $NEW
+---
+id: cli-prefix-files-read-json-model
+language: python
+severity: warning
+message: "flext-cli domain-first: files_read_json_model -> json_read_files_model."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bfiles_read_json_model\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bfiles_read_json_model\b'
+      by: json_read_files_model
+fix: $NEW
+---
+id: cli-prefix-normalize-json-value
+language: python
+severity: warning
+message: "flext-cli domain-first: normalize_json_value -> json_normalize_value (Json domain)."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bnormalize_json_value\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bnormalize_json_value\b'
+      by: json_normalize_value
+fix: $NEW
+---
+# ---------------------------------------------------------------------------
+# Constants (UPPER_SNAKE) — domain token moved to first position.
+# ---------------------------------------------------------------------------
+id: cli-prefix-default-csv-delimiter
+language: python
+severity: warning
+message: "flext-cli domain-first: DEFAULT_CSV_DELIMITER -> CSV_DEFAULT_DELIMITER."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bDEFAULT_CSV_DELIMITER\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bDEFAULT_CSV_DELIMITER\b'
+      by: CSV_DEFAULT_DELIMITER
+fix: $NEW
+---
+id: cli-prefix-default-json-indent
+language: python
+severity: warning
+message: "flext-cli domain-first: DEFAULT_JSON_INDENT -> JSON_DEFAULT_INDENT."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bDEFAULT_JSON_INDENT\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bDEFAULT_JSON_INDENT\b'
+      by: JSON_DEFAULT_INDENT
+fix: $NEW
+---
+id: cli-prefix-err-csv-read-failed
+language: python
+severity: warning
+message: "flext-cli domain-first: ERR_CSV_READ_FAILED -> CSV_ERR_READ_FAILED."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bERR_CSV_READ_FAILED\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bERR_CSV_READ_FAILED\b'
+      by: CSV_ERR_READ_FAILED
+fix: $NEW
+---
+id: cli-prefix-err-csv-write-failed
+language: python
+severity: warning
+message: "flext-cli domain-first: ERR_CSV_WRITE_FAILED -> CSV_ERR_WRITE_FAILED."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bERR_CSV_WRITE_FAILED\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bERR_CSV_WRITE_FAILED\b'
+      by: CSV_ERR_WRITE_FAILED
+fix: $NEW
+---
+id: cli-prefix-err-json-load-failed
+language: python
+severity: warning
+message: "flext-cli domain-first: ERR_JSON_LOAD_FAILED -> JSON_ERR_LOAD_FAILED."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bERR_JSON_LOAD_FAILED\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bERR_JSON_LOAD_FAILED\b'
+      by: JSON_ERR_LOAD_FAILED
+fix: $NEW
+---
+id: cli-prefix-err-template-not-found
+language: python
+severity: warning
+message: "flext-cli domain-first: ERR_TEMPLATE_NOT_FOUND -> TEMPLATE_ERR_NOT_FOUND."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bERR_TEMPLATE_NOT_FOUND\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bERR_TEMPLATE_NOT_FOUND\b'
+      by: TEMPLATE_ERR_NOT_FOUND
+fix: $NEW
+---
+id: cli-prefix-err-template-output-escape
+language: python
+severity: warning
+message: "flext-cli domain-first: ERR_TEMPLATE_OUTPUT_ESCAPE -> TEMPLATE_ERR_OUTPUT_ESCAPE."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bERR_TEMPLATE_OUTPUT_ESCAPE\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bERR_TEMPLATE_OUTPUT_ESCAPE\b'
+      by: TEMPLATE_ERR_OUTPUT_ESCAPE
+fix: $NEW
+---
+id: cli-prefix-err-template-render-failed
+language: python
+severity: warning
+message: "flext-cli domain-first: ERR_TEMPLATE_RENDER_FAILED -> TEMPLATE_ERR_RENDER_FAILED."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bERR_TEMPLATE_RENDER_FAILED\b'
+  pattern: $T
+transform:
+  NEW:
+    replace:
+      source: $T
+      replace: '\bERR_TEMPLATE_RENDER_FAILED\b'
+      by: TEMPLATE_ERR_RENDER_FAILED
+fix: $NEW
+---
+id: cli-prefix-file-format-csv
+language: python
+severity: warning
+message: "flext-cli domain-first: FILE_FORMAT_CSV -> CSV_FILE_FORMAT."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bFILE_FORMAT_CSV\b'
+  pattern: $T
+transform:
+  NEW:
+    replace: { source: $T, replace: '\bFILE_FORMAT_CSV\b', by: CSV_FILE_FORMAT }
+fix: $NEW
+---
+id: cli-prefix-file-format-json
+language: python
+severity: warning
+message: "flext-cli domain-first: FILE_FORMAT_JSON -> JSON_FILE_FORMAT."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bFILE_FORMAT_JSON\b'
+  pattern: $T
+transform:
+  NEW:
+    replace: { source: $T, replace: '\bFILE_FORMAT_JSON\b', by: JSON_FILE_FORMAT }
+fix: $NEW
+---
+id: cli-prefix-file-format-toml
+language: python
+severity: warning
+message: "flext-cli domain-first: FILE_FORMAT_TOML -> TOML_FILE_FORMAT."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bFILE_FORMAT_TOML\b'
+  pattern: $T
+transform:
+  NEW:
+    replace: { source: $T, replace: '\bFILE_FORMAT_TOML\b', by: TOML_FILE_FORMAT }
+fix: $NEW
+---
+id: cli-prefix-file-format-yaml
+language: python
+severity: warning
+message: "flext-cli domain-first: FILE_FORMAT_YAML -> YAML_FILE_FORMAT."
+files:
+  - "**/*.py"
+ignores:
+  - "**/legado/**"
+rule:
+  any:
+    - kind: identifier
+    - kind: comment
+    - kind: string_content
+  regex: '\bFILE_FORMAT_YAML\b'
+  pattern: $T
+transform:
+  NEW:
+    replace: { source: $T, replace: '\bFILE_FORMAT_YAML\b', by: YAML_FILE_FORMAT }
+fix: $NEW
