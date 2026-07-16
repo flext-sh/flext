@@ -5,7 +5,9 @@
 - **Scope:** runtime configuration, declarative generation inputs, schemas,
   templates, and enforcement across FLEXT consumers. Enforcement follows the
   two laws in §6 (rules-as-data; rope-only static analysis).
-- **Tracking:** `mro-wkii`, `mro-wkii.17`
+- **Tracking:** `mro-wkii`, `mro-wkii.17`, `mro-7akn`
+- **Implementation evidence:** Beads are authoritative for live delivery state;
+  this ADR records the decision only.
 
 <!-- mro-wkii.17.6 (agent: codex) — make config ownership and the conform pipeline unambiguous. -->
 

@@ -3,7 +3,9 @@
 This plan implements [ADR-003](adr/003-workspace-tooling-hub-distribution.md),
 [ADR-004](adr/004-generic-make-framework-in-flext-tests.md), and
 [ADR-005](adr/005-config-settings-constants-templates-schemas-ssot.md) under
-epic `mro-wkii.17`.
+epic `mro-wkii.17`. The live config/settings and runtime-policy cutover is
+tracked by `mro-7akn`; its Bead ledger, not this document, owns execution state
+and command evidence.
 
 <!-- mro-wkii.17.6 (agent: codex) — replace stale phased paths with the one live conform migration. -->
 
