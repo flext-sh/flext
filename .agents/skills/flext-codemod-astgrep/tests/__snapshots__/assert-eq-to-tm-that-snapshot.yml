@@ -1,9 +1,0 @@
-id: assert-eq-to-tm-that
-snapshots:
-  assert value == expected:
-    fixed: tm.that(value, eq=expected)
-    labels:
-    - source: assert value == expected
-      style: primary
-      start: 0
-      end: 24

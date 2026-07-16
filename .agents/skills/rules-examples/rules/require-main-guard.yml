@@ -1,8 +1,0 @@
-id: require-main-guard
-language: python
-rule:
-  pattern: |
-    if __name__ == "__main__":
-        $$$BODY
-message: "Main guard found (tracking)"
-severity: warning

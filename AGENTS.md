@@ -726,128 +726,18 @@ Any unresolved blocker at step 6 keeps the change incomplete.
 - Prefer `make`/`ruff`/`pyrefly` workflows over one-off scripts for broad refactors.
 - If a command is blocked or ambiguous, stop and surface evidence instead of inventing a workaround.
 
-## FLEXT architecture constraints (compact)
+## Workspace and Beads
 
-### Stack and style
+The root and all member projects use the Beads database at this workspace root.
+A nested repository initializes its own database only when it is an independent
+project rather than a member of this workspace. Claim the root-workspace Bead
+and record disjoint path ownership before writes; append exact state-change and
+validation evidence throughout the work.
 
-- Python 3.13+, Pydantic v2, Ruff, Pyrefly, Pyright, Mypy, Make.
-- Follow MRO namespace classes and project facades (`c/m/t/p/u`, etc.).
-- One canonical class/namespace owner per concern before adding new constructs.
-- Prefer composing via MRO + mixins over duplicate utilities.
+## Validation and Landing
 
-### Naming and contracts
-
-- Keep aliases canonical: `c`, `m`, `t`, `p`, `u`, and operational aliases (`r`, `e`, `s`, `x`) from project facades.
-- Facade owner modules that extend upstream FLEXT facades by MRO import the upstream short alias and use it as the base class, then rebind the local public alias at the bottom, e.g. `from flext_cli import m, u`; `class FlextPluginModels(m): ...`; `m = FlextPluginModels`.
-- Project `base.py` may import upstream runtime `s` as the service base and rebind local `s` once, e.g. `from flext_core import s`; `class FlextDbOracleServiceBase(s, FlextDbOracleUtilitiesDbOracle): ...`; `s = FlextDbOracleServiceBase`.
-- Project `api.py` stays a thin MRO facade over the composed runtime class and publishes the package operational alias, e.g. `class FlextDbOracleApi(FlextDbOracleApiRuntime): ...`; `db_oracle = FlextDbOracleApi`.
-- Use `r[T]` for fallible app paths (avoid ad-hoc error dicts or raw exceptions for control flow).
-- Keep `__init__.py` as export-only.
-- Keep abstractions layered by project boundaries (`src` first, tests/examples/scripts are consumers).
-
-### API/runtime constraints
-
-<!-- mro-wkii.17 (agent: codex) — validate once at the external CLI boundary and preserve object identity. -->
-- The `flext-cli` boundary validates dynamic external arguments exactly once into the canonical `m.*` request; internal services receive that same object through its `p.*` protocol.
-- Avoid raw `os.environ` in `src/` runtime; go through settings abstractions.
-- Do not import abstracted framework libs directly from consumer projects; use FLEXT abstractions.
-- Reject speculative architecture migration without a concrete blocker and a scoped acceptance target.
-
-### Config / parametrization SSOT (ADR-005)
-
-- Five concerns, one owner each: `constants` = defaults/invariants (`c.*`); `config/` = execution parametrization; `settings` = env-override (`FlextSettings`); `templates/*.j2` = large strings (Jinja2 via `flext-cli`); sibling `schemas/*.schema.json` = validation.
-- Execution parametrization lives **only** under a package `config/` dir; no schema/config source outside it.
-- `config` ≠ `settings`: the settings-bound subset is a separate file (`config/settings.yaml`).
-- Large/derived structures are **generated** by `_constants/_generated.py` from `config/`; hardcoding a large structure in `_constants/` is a blocked defect.
-- **Enforcement rules are DATA, not code (LAW1):** 100% of static enforcement rules live ONLY under `flext-infra/config/*.yaml` as Pydantic-2-validated records — zero rule logic in Python (no bespoke per-rule detector classes, no `ClassVar` banned/allowlist rule tables). `flext-core` holds runtime/beartype rules only. Engine = a rope-semantic fact base + a closed operator set, both in `u.Infra` (models stay pure data, zero methods).
-- **Static enforcement is rope-semantic ONLY (LAW2):** use rope's semantic model (`get_scope`/`get_defined_names`/`get_attributes`/`get_superclasses`/`PyName`); `import ast`, `ast.parse`, `ast.walk`, `ast.Module`, and `PyModule.get_ast()`/`walk_ast_nodes` are BANNED in the enforcement path. The ast-grep MCP is allowed only as a read-only navigation sensor under the newest operator order; it never owns rules, fixes, or acceptance.
-- Layering (no runtime cycle): `flext-core` runtime-minimal (stdlib only, no Jinja2, never imports cli/infra at runtime) — owns ONLY runtime/beartype rules → `flext-cli` owns the universal template/config/schema engine → `flext-infra` enforces (all static rules as config data, evaluated by the rope-semantic engine).
-- Canonical: [`docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`](docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md) · plan [`docs/architecture/config-ssot-migration-plan.md`](docs/architecture/config-ssot-migration-plan.md) · beads `mro-wkii`.
-
-### Strict typing, import layering, config access (R16 — inviolable)
-
-- **Typing**: never `Any`/`object`; never annotate with a concrete class. Use `t.*` aliases and `p.*` protocols; composite types use a `t.*` alias with `| None` on the **outside** (`t.Foo | None`). Import `p` and `m` under `TYPE_CHECKING` to sharpen typing (protocol modules import `m` under `TYPE_CHECKING`).
-- **No loose helpers / no compat aliases**: no standalone functions or compatibility shims; everything flows through `c/t/p/m/u` composed by MRO.
-- **Import order** strict `c → t → p → m → u`: a later facade may import earlier ones at runtime; the reverse (earlier importing later, e.g. `c` importing `m`) must be `TYPE_CHECKING`-only. `m` may lazy-import `c`; internal modules may, with extreme care, import a sibling directly only to break a real cycle.
-- **Config/settings access is single-form**: always `from <namespace> import config, settings` then `config.<Ns>.*` / `settings.<Ns>.*` (e.g. `from ai_hub import config, settings` → `config.AiHub.*`). Namespace fields are validated nested models, never model-less mappings. Every package root exports its exact namespaced singleton directly; MRO, proxies, instance attributes, forwarding members, and access wrappers never transport config/settings.
-- **Edit-coordination comment**: when editing a file, add a short inline comment explaining the change *for the other agent* so concurrent agents don't conflict or re-revert each other.
-
-## Project map
-
-- Governed packages: `flext-*`.
-- Root docs and onboarding: `docs/`.
-- Shared tests: `tests/` and project-local `tests/` trees.
-- Scripts/tools: `scripts/`, `workspace_custom.mk`, top-level `Makefile`.
-
-## Build, test, and local dev commands
-
-```bash
-make help
-make boot
-make check
-make check PROJECT=<proj> CHECK_GATES=<gates>
-make test PROJECT=<proj> MATCH=<expr>
-make docs DOCS_PHASE=<generate|fix|audit|build|validate> PROJECT=<proj>
-make val VALIDATE_SCOPE=workspace
-make ship WHAT=<save|tag|push|pr|rel>
-```
-
-Common gate values: `lint`, `format`, `pyrefly`, `mypy`, `pyright`, `markdown`, `go`, `loc-cap`, `boundary`, `coordination`.
-
-Recommended baseline for contribution work:
-
-- `make check CHANGED_ONLY=1`
-- `make test PROJECT=<proj> MATCH=docs`
-- `make val VALIDATE_SCOPE=workspace`
-
-## Testing and quality gates
-
-- `ruff` and `pyrefly` are the first gates for touched files.
-- For project-level contract changes, run project-local checks before wider propagation.
-- Keep failure evidence in Beads: command, output, and exit code.
-
-### Safe validation before production (universal)
-
-- Validations and tests must be REAL — they execute the actual code path — yet
-  must never mutate the active workspace or environment. Anything that would
-  write outside the bead lane runs in an isolated sandbox (`pytester`,
-  `tmp_path`, temp-dir synthetic packages); evidence artifacts under
-  `.beads/artifacts/` are the only permitted side effects.
-- Activating a behavior/enforcement change as the workspace or production
-  default is a SEPARATE, explicit final gate: allowed only after the full
-  validation chain (unit + E2E + read-only baseline) is green with recorded
-  evidence — never in the same edit that introduces the change.
-
-## Commit and PR behavior
-
-- Default profile is land-immediately: after scoped green validation, stage only
-  the active bead lane files, commit, push fast-forward, and record SHA/evidence
-  in Beads.
-- The operator grants durable authorization for normal scoped `git add`,
-  `git commit`, and fast-forward `git push`; do not stop at “needs
-  authorization” for routine landing.
-- Never use `git add .` in the shared worktree. Use explicit pathspecs and
-  coordinate overlaps through Beads before staging.
-- Escalate only destructive, non-fast-forward, history-rewrite, rollback, or
-  cross-lane ambiguity. A dirty worktree outside the bead is not a blocker when
-  explicit pathspecs can isolate the lane.
-- PRs/commits should state: scope, why, commands run, and remaining risk.
-
-## Tooling and agent workflow (ECC alignment)
-
-- Use repository skills: `.agents/skills/*` and `gd`/`scope`/`sg` where available.
-- `make` is the canonical execution lane; avoid direct `git`-wide scripts when a Make target exists.
-- FLEXT participates in the `~/.ai-hub` distributed workspace base: `make cosmos-help` exposes dispatcher verbs; the common base is maintained from `~/.ai-hub` via `make workspaces WHAT=distribute APPLY=1`.
-- Bead system (`bd`) is the mandatory work ledger.
-- Agent lanes (Claude, Codex, Gemini, and their subagents) claim work via `bd` (epics/tasks), keep child beads for disjoint scopes, and record evidence in bead notes rather than chat-only state.
-- Subagents write verbose findings to disk (`coordination/resultados/` or `.beads/artifacts/`) and update `bd` only with filepath and status.
-- Repeated cross-file edits require caller/audit validation before marking done.
-
-## Verification expectation
-
-A task is complete only with:
-
-- objective command evidence (command + exit code + output),
-- a scoped commit and fast-forward push, with SHA recorded in Beads,
-- no unresolved scoped smells in the touched lane,
-- bead notes updated with blocker status or completion evidence.
+Choose commands from
+[`flext-quality-gates`](.agents/skills/flext-quality-gates/SKILL.md). A green
+test never overrides a stale declaration or config; correct the owner first,
+then update the validator. Completion requires the affected native gates,
+explicit-path staging, a scoped commit, a fast-forward push, and Bead evidence.

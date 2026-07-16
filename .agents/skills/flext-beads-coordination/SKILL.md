@@ -1,56 +1,60 @@
 ---
 name: flext-beads-coordination
-description: 'Use this skill to coordinate parallel FLEXT work through Beads-first
-  task ownership, evidence ledgers, delegation contracts, and native gate landing.
-  DO NOT USE FOR: questions unrelated to FLEXT coordination, single-agent local
-  edits that already have an active bead, or architecture design from scratch'
+description: >-
+  Coordinate parallel FLEXT work in the single Beads tracker owned by the
+  workspace root. Use for ownership matrices, child lanes, evidence, handoffs,
+  and landing. Do not use to initialize a tracker inside a workspace member.
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 2.0.0
 ---
 # FLEXT Beads Coordination
 
-**UTILITY SKILL**
+## Use For
 
-## USE FOR
+- Claiming a root or child Bead before writes.
+- Splitting parallel work into disjoint path ownership.
+- Recording state changes, validation, blockers, commits, and pushes.
 
-- Coordinating multi-agent FLEXT work across root and submodule repositories.
-- Creating or reviewing file ownership matrices before writes.
-- Delegating implementation, research, or review work that must preserve AI Hub law.
-- Landing verified work with bead evidence, explicit pathspecs, commit, and fast-forward push.
+## Workspace Ownership
 
-## DO NOT USE FOR
+The workspace root owns the Beads database. Every member and submodule uses
+that same tracker, even when work targets only that member. Run `bd` from the
+root or pass it explicitly:
 
-- questions unrelated to FLEXT coordination.
-- single-agent local edits that already have an active bead and no delegation.
-- creating projects or architecture from scratch.
+```bash
+bd -C <workspace-root> show <id>
+bd -C <workspace-root> update <id> --append-notes '<evidence>'
+```
+
+Never run `bd init` in a member project. A separate tracker is correct only
+when the project is independent rather than a member of a larger workspace.
 
 ## Workflow
 
-1. Run `bd ready` or inspect the named bead, then claim the bead before substantive edits.
-2. Record target, impact, risk, and disjoint file ownership in the bead before writes.
-3. For delegated work, include the Supreme Rule, Supreme Law, R18, and exact validation commands in the delegation contract.
-4. Keep every worker scoped to its owned files; read-only audits may inspect broadly, but verbose findings go under `.beads/artifacts/<bead-id>/`.
-5. After each edit batch, run the affected import smoke, `ruff --no-fix`, typecheck, and scoped tests before continuing.
-6. Record command, exit code, and decisive output in the bead as evidence.
-7. Land only verified work with explicit pathspecs, one logical commit, fast-forward push, and final bead evidence.
+1. Resolve the workspace root and inspect the named Bead.
+2. Claim the issue and record target, impact, risk, and exact path ownership.
+3. Create child Beads in the same root tracker for independent parallel lanes.
+4. Keep writers inside owned paths; read-only audits may inspect broadly.
+5. After every state-changing step, append the command or edit summary, exit
+   code, decisive output, and next state.
+6. Run the narrowest affected gates, then the native project/workspace gate.
+7. Land with explicit pathspecs, one scoped commit, fast-forward push, and final
+   evidence in the same tracker.
 
-## Critical rules
+## Non-Negotiables
 
-- Beads is the sole plan and execution ledger; never edit `.beads/*.jsonl` by hand.
-- Fix root causes only; no bypasses, suppressions, compatibility wrappers, stubs, or hardcoded coexistence paths.
-- Preserve continuous-green: import and collection must not break between edit batches.
-- Use bare commands such as `uv run`, `make`, `ruff`, `pyrefly`, `pytest`, and `bd`; never use `.venv/bin/...`.
-- Accept other agents' work as current state; do not use rollback/reset/restore/stash/clean/revert flows.
-- Commit with explicit pathspecs and push only after native gates are green.
-
-## Example
-
-**Input:** coordinate two agents changing `flext-infra` and root skills.
-**Output:** claim the bead, declare ownership per path, validate each batch, and record evidence before commit/push.
+- Never edit `.beads/*.jsonl` directly.
+- Never create a nested database to work around missing context.
+- Never overwrite, reset, clean, stash, revert, or absorb another lane's work.
+- Resolve overlapping ownership in the root Bead before either writer proceeds.
+- A red gate remains an active incident with its exact evidence.
 
 ## Troubleshooting
 
-- Missing bead -> stop and create or claim the correct bead before editing.
-- Overlapping ownership -> resolve the ownership matrix in the bead before writes.
-- Red gate -> diagnose the root cause, record exact command/output, and continue only after the same surface is green.
+- `database not initialized` inside a member: rerun with
+  `bd -C <workspace-root>`; do not initialize locally.
+- Unknown claim flag during create: create the Bead, then claim it with the
+  supported `bd update` action.
+- Push rejection: stop, record the exact error and local/remote SHAs, and do not
+  rebase or force-push autonomously.
