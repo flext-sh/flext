@@ -1,7 +1,0 @@
-id: ban-mypy-ignore-comment
-language: python
-rule:
-  kind: comment
-  regex: "^#\\s*mypy:\\s*ignore"
-message: "mypy: ignore comment - fix the underlying type error"
-severity: warning
