@@ -32,14 +32,17 @@ Quick-reference for building CLI commands with `flext_cli`.
 
 - Model-driven commands only; avoid ad-hoc Typer functions.
 - **ADR-005:** use `u.Cli.render_template` (Jinja2), `u.Cli.config_load`/`config_load_dir`, and `u.Cli.yaml_validate_schema` for all template/config/schema work; `flext-cli` is the SSOT owner. See `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
-- Use `FlextCliSettings.fetch_global()` for configuration; `s` is the service/runtime alias, not settings.
+- Consume configuration only from the package-root singletons:
+  `from flext_cli import config, settings`. Consumers never import the private
+  settings module, instantiate the settings class, or call `fetch_global()`;
+  `s` is the service/runtime alias, not settings.
 - Command input models are plain `m.BaseModel` subclasses (`m.CliInput`/`m.CliOutput` do not exist).
 - `FlextCliCli.build_model_command` does not exist; the canonical method is `FlextCliCli.model_command(...)`.
 
 ## Aliases
 
 ```python
-from flext_cli import c, m, p, r, s, t, u
+from flext_cli import c, config, m, p, r, s, settings, t, u
 ```
 
 `flext_cli` reexports `d`, `e`, `h`, `r`, `x` from `flext_core`.
@@ -54,7 +57,8 @@ from flext_cli import c, m, p, r, s, t, u
 | `t` | typings |
 | `u` | utilities |
 
-Settings are accessed via `FlextCliSettings` (no short alias).
+`config` and `settings` are validated package-root singleton exports, not short
+aliases.
 
 ## Model-driven command
 
@@ -63,7 +67,6 @@ from __future__ import annotations
 
 from flext_cli import m, t
 from flext_cli.services.cli import FlextCliCli
-from flext_cli.settings import FlextCliSettings
 
 
 class GreetInput(m.BaseModel):
@@ -81,16 +84,16 @@ def greet_handler(model: GreetInput) -> t.JsonValue:
 command = FlextCliCli.model_command(
     model_cls=GreetInput,
     handler=greet_handler,
-    settings=settings,
 )
 ```
 
 ## Settings
 
-Import and use the existing settings class; do not redefine it:
+Import and use the existing validated singletons from the package root; do not
+redefine, instantiate, or privately import their classes:
 
 ```python
-from flext_cli.settings import FlextCliSettings
+from flext_cli import config, settings
 ```
 
 ## Testing
@@ -101,7 +104,6 @@ from flext_cli.settings import FlextCliSettings
 # register_command/add_group/create_cli_runner.
 from flext_cli import m, t, u
 from flext_cli.services.cli import FlextCliCli
-from flext_cli.settings import FlextCliSettings
 
 
 class GreetInput(m.BaseModel):
@@ -115,7 +117,6 @@ def greet_handler(model: GreetInput) -> t.JsonValue:
 command = FlextCliCli.model_command(
     model_cls=GreetInput,
     handler=greet_handler,
-    settings=settings,
 )
 _ = command
 ```
@@ -153,6 +154,7 @@ make test PROJECT=flext-cli MATCH=cli
 
 ## References
 
+- `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`
 - `docs/guides/using-flext-cli.md`
 - `.agents/skills/coding-standards/SKILL.md`
 - `.agents/skills/flext-quality-gates/SKILL.md`
