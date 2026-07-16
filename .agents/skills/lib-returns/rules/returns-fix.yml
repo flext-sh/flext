@@ -1,7 +1,0 @@
-id: fix-unwrap-to-value-or
-language: python
-rule:
-  pattern: $OBJ.unwrap()
-fix: $OBJ.value_or(None)
-message: "Rewrite .unwrap() -> .value_or(None)"
-severity: error

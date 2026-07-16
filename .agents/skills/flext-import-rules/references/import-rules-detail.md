@@ -1,88 +1,68 @@
-## Import Rules Summary
+# FLEXT import routing examples
 
-### R1: Required future annotations
+Load this reference only after identifying the declaration or runtime owner.
+Replace `flext_plugin` with the package proved by the target workspace.
+
+## Consumer imports
+
+Import shared and project-owned declarations from public roots:
 
 ```python
-from __future__ import annotations
-from collections.abc import Mapping, Sequence
+from flext_core import c, m, p, r, t, u
+from flext_plugin import config, settings
 ```
 
-### R2: Import order (ruff `I` rules)
+Do not bypass the root facade:
 
-Groups: future → stdlib → third-party → first-party (`flext_core.*`) → local.
-Within group: `import x` before `from x import y`, alphabetical, one per line.
+```python notest
+from ._models import PluginSettings
+from flext_plugin._utilities import PluginUtilities
+from flext_core import *
+```
 
-### R3: Import flext-core via root namespace
+## Facade owner
 
-Always `from flext_core import c, m, p, r, t, u, ...`.
+Only the local facade owner extends and republishes an upstream alias:
 
-### R4: Subproject patterns
+```python
+from flext_cli import m
 
-- **A:** `from flext_core import m, r, p, t`
-- **B:** `from flext_core import FlextDispatcher`
-- **C:** Facade owner modules inherit the upstream short alias for the facade being extended (`from flext_cli import c`; `class FlextPluginConstants(c): ...`; `c = FlextPluginConstants`)
-- **D:** Integration projects inherit parent facade (e.g., `FlextMeltanoModels, FlextDbOracleModels`), never `FlextModels` directly
-- **E:** Naming: `Flext<Tap|Target|Dbt><Domain><Models|Constants|Types|Utilities|Protocols>`
-- **F:** `base.py` inherits upstream runtime `s` and private MRO utility mixins, then publishes local `s` once.
-- **G:** `api.py` inherits the composed runtime facade class and publishes the package operational alias once.
 
-### R4F: MRO parent import matrix
+class FlextPluginModels(m):
+    """Plugin model namespace."""
 
-| File | `c`/`t`/`p`/`m`/`u` source | others |
-|------|----------------|--------|
-| `models/*.py` | parent | own pkg |
-| `_utilities/*.py` | parent for `u` | own pkg |
-| facade files | parent short alias for the facade being extended | own pkg |
-| `base.py` | upstream runtime `s` | own pkg plus private MRO mixins |
-| `api.py` | composed runtime facade class | own pkg |
-| services/servers/tests | own pkg | own pkg |
 
-Parent = most advanced MRO package; flext-core uses own package.
+m = FlextPluginModels
+```
 
-### R5: Tier enforcement
+Leaf consumers then use the local owner:
 
-Only import lower tiers: constants/typings → runtime → protocols → models → utilities → logging/container → dispatcher.
+```python
+from flext_plugin import m
+```
 
-### R6: Private modules
+Do not make each leaf reconstruct the inheritance chain or import an upstream
+private implementation.
 
-`_` modules are implementation details; only their facade may import them.
+## External bridge owner
 
-### R7: Facade aliases
+An external framework import belongs only in the package that owns its bridge.
+For example, the canonical model owner may import Pydantic to declare the
+validated public model; ordinary consumers retain that model object through
+the owning package facade.
 
-Each facade exposes a lowercase alias (`c`, `m`, `p`, `r`, `t`, `u`, ...).
+```python notest
+# Consumer violation: the consumer invents a parallel model boundary.
+from pydantic import BaseModel
 
-### R8: TYPE_CHECKING
 
-Use only for type-only symbols and `__init__.py` lazy loading. Do not hide cycles.
+class LocalPayload(BaseModel):
+    value: str
+```
 
-### R9: Ruff config
+## Runtime versus declaration-only imports
 
-- `target-version = "py313"`
-- `required-imports = ["from __future__ import annotations", "from collections.abc import Mapping, Sequence"]`
-- Enforces `I001`, `I002`.
-
-### R10: Forbidden
-
-- `from flext_core import *`
-- Relative imports
-- `typing.List/Dict/Optional/Union`
-- `eval`, dynamic `getattr` for architecture
-- Shadowing aliases (e.g., `result` instead of `r`)
-
-### R11: No double-assignment of facade aliases
-
-Assign alias exactly once per facade.
-
-Facade owner modules are the sanctioned self-rebind shape: import the upstream
-short alias, use it as the MRO base, and publish the local alias once at module
-bottom. Do not replace it with long-class imports solely to satisfy Pylance.
-The same protection applies to `base.py` publishing local `s` and `api.py`
-publishing the package operational alias.
-
-### R12: MRO composition
-
-Integration projects compose namespaces via inheritance, not name concatenation.
-
-### R13: Library abstraction boundaries
-
-Bridge external libs (pydantic, structlog, etc.) through `flext_core`. No direct framework imports in consumers.
+Use `TYPE_CHECKING` only when the imported symbol is absent from every runtime
+expression. If code instantiates, inherits, registers, dispatches, or performs
+an `isinstance` check with the symbol, keep the import at runtime. Moving it
+behind `TYPE_CHECKING` is a hidden-cycle bypass, not a cycle fix.

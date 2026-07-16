@@ -1,7 +1,0 @@
-id: no-breakpoint
-valid:
-  - "x = 1"
-  - "pass"
-invalid:
-  - "breakpoint()"
-  - "pdb.set_trace()"

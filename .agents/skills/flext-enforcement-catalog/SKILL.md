@@ -1,56 +1,57 @@
 ---
 name: flext-enforcement-catalog
-description: 'Use this skill for the canonical index of enforcement rules. flext-core
-  c.ENFORCEMENT_CATALOG holds ONLY runtime/beartype rows; ALL static-code rules are declarative
-  DATA in flext-infra/config/*.yaml (Pydantic-2 validated), evaluated by the shared rope-semantic
-  engine (ast/ast-grep/get_ast banned). Use when adding, retiring, or cross-referencing any
-  enforcement rule. DO NOT USE FOR: questions unrelated to flext-enforcement-catalog or creating
-  projects or architecture from scratch'
+description: >-
+  Route a FLEXT rule to its one canonical catalog: runtime enforcement,
+  declarative static policy, or deterministic structural codemod. Use when
+  adding, changing, retiring, or auditing rule ownership and identifiers.
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 2.0.0
 ---
 # FLEXT Enforcement Catalog
 
-**UTILITY SKILL**
+## Owners
 
-## USE FOR
+| Responsibility | Canonical owner |
+| --- | --- |
+| `ENFORCE-*` identity, metadata, routing, and executable descriptors | `flext-core` enforcement catalog declarations |
+| Declarative detector/refactor policy payloads | `flext-infra/src/flext_infra/rules/*.yml` |
+| Policy schemas and execution | `flext-infra` models and enforcement engine |
+| Structural source transformations | codemod provider referenced by `.agents/provider.toml` |
 
-- Requests about flext enforcement catalog.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to flext-enforcement-catalog.
-- creating projects or architecture from scratch.
+Each rule ID and policy fact has one owner. Engines consume validated
+declarations; they do not redefine rule catalogs in Python tables, tests,
+snapshots, or documentation.
 
 ## Workflow
 
-1. Understand.
-2. Execute.
-3. Validate.
+1. Classify the fact as catalog metadata, an engine policy payload, or a
+   structural transformation.
+2. Search every catalog and consumer for the ID and behavior.
+3. Change the single owning declaration and remove superseded copies.
+4. Update documentation and skill references to point at that owner.
+5. Run the owning engine's narrow validation, then its affected native gate.
+6. Record exact command, exit code, decisive output, and catalog census in the
+   active root-workspace Bead.
 
-## Critical rules
+## Boundaries
 
-- Prefer canonical sources.
-- Require evidence.
-- **ADR-005 static rules (planned, `mro-wkii.4` / `mro-wkii.4.8`):**
-  `no-large-literal-in-constants`, `config-only-under-config-dir`, `template-not-inlined`,
-  `config-requires-schema`, `config-settings-not-mixed` — declared as DATA in
-  `flext-infra/config/enforcement/*.yaml` (Pydantic-2 validated, loaded via
-  `u.Cli.config_load_dir`), NOT registered as Python rows in flext-core.
-- **flext-core catalog = runtime/beartype residue ONLY; flext-infra/config = 100% of static rules as
-  data** (memory:adr005-p3-core-runtime-only-split, memory:adr005-p3-rules-as-data-law).
-- **Static analysis is rope-semantic ONLY; `ast` / `ast-grep` / `PyModule.get_ast()` are banned**
-  (memory:adr005-p3-single-rope-loop).
-  Canonical: `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
+- Static policy describes violations; a codemod describes an approved rewrite.
+  Do not duplicate one as the other.
+- Rope-backed semantic enforcement in `flext-infra` and the external ast-grep
+  codemod provider are distinct engines with distinct catalogs.
+- Codemod IDs live only in the referenced codemod `provider.toml`.
+- Rule tests, snapshots, and scans validate the owner; they are never SSOT.
+- Unsafe generic rewrites and silent fallback behavior are forbidden.
 
-## Example
+## Validation Expectations
 
-**Input:** a request.
-**Output:** a concise response.
+Prove unique IDs, schema validity, owner-path existence, positive and negative
+behavior, exact preview cardinality for codemods, and idempotence after an
+approved rewrite. A missing owner or duplicate ID blocks completion.
 
-## Troubleshooting
+## References
 
-- Unclear scope → ask.
+- [`provider.toml`](../../provider.toml)
+- [`docs/GOVERNANCE.md`](../../../docs/GOVERNANCE.md)
+- [`ADR-005`](../../../docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md)

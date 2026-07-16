@@ -1,52 +1,50 @@
 ---
 name: flext-docs-pointer-policy
-description: 'Use this skill to use when creating or editing documentation across
-  AGENTS.md, skills, README files, or agent configs. Enforces the one-root-source
-  policy: single authoritative document with lightweight pointers everywhere else.
-  No duplication of governance across files. DO NOT USE FOR: questions unrelated to
-  flext-docs-pointer-policy creating projects or architecture from scratch'
+description: >-
+  Keep FLEXT docs, skills, agents, and catalogs synchronized through one owner
+  per fact and lightweight pointers elsewhere. Use whenever implementation or
+  governance changes can make an instruction surface stale.
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 2.0.0
 ---
-# Flext Docs Pointer Policy
+# FLEXT Docs Pointer Policy
 
-**UTILITY SKILL**
+## Ownership
 
-## USE FOR
+| Fact | Owner |
+| --- | --- |
+| Provider identity and exported paths | `.agents/provider.toml` |
+| Skill trigger and procedure | that skill's `SKILL.md` |
+| Architecture decision | accepted ADR and its registry |
+| Runtime/API behavior | owning source declaration or validated config |
+| Workspace routing | `docs/GOVERNANCE.md` |
+| Universal conduct | managed universal block in root `AGENTS.md` |
 
-- Requests about flext docs pointer policy.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to flext-docs-pointer-policy.
-- creating projects or architecture from scratch.
+Tests, snapshots, checks, reports, examples, and generated output are evidence
+or consumers. They are never the source of truth.
 
 ## Workflow
 
-1. **Pre-scan**: inventory pointer files and identify drift from canonical wording.
-2. **Remediation**: update references and remove duplicated policy content.
-3. **Propagation**: when AGENTS or a core skill/prompt becomes stricter, update remaining pointers in the same cycle.
+1. Inventory every docs, skill, agent, prompt, and catalog reference affected by
+   the change.
+2. Identify the single owner for each fact.
+3. Change the owner and replace repeated prose with a link in the same cycle.
+4. Delete obsolete aliases, copies, counts, and historical machine-state claims.
+5. If behavior did not change, verify affected pointers and owners are current.
+6. Run link/markdown/catalog validation and record exact evidence in the active
+   root-workspace Bead.
 
-## Critical rules
+## Non-Negotiables
 
-- Prefer canonical sources.
-- Require evidence.
-
-## Example
-
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- A pointer names the owner and purpose; it does not paraphrase the rule.
+- Do not encode dynamic counts or installed user tooling as project policy.
+- Do not keep old and new instruction surfaces for compatibility.
+- A stale instruction found in the touched domain is fixed at its owner before
+  completion.
 
 ## References
 
-<!-- mro-lo34 (agent: kimi) — canonical ADR refs added per docs-renaissance S1. -->
-- `docs/GOVERNANCE.md` — controls, ADR routing, canonical workflow
-- `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md` — SSOT concerns (constants/config/settings/templates/schemas)
-- `.agents/skills/flext-strict-refactoring/SKILL.md` — governance-surface cleanup rules
+- [`docs/GOVERNANCE.md`](../../../docs/GOVERNANCE.md)
+- [`provider.toml`](../../provider.toml)
+- [`ADR-005`](../../../docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md)

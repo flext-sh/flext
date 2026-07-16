@@ -1,42 +1,23 @@
-# .agents — Project Agent Assets
+# FLEXT Agent Provider
 
-Canonical instruction-loading policy for this repository is defined in:
+This directory is the Git-tracked FLEXT provider consumed by agent managers.
+It owns project-specific agent surfaces, not universal agent behavior.
 
-- `AGENTS.md` (normative governance)
-- `CLAUDE.md` (load-order pointer)
-- `.agents/INSTRUCTION_SURFACE.md` (single manifest for instruction sources)
-- `.github/prompts/flext-aggressive-scale-refactor.prompt.md` (task-mode prompt for broad simplification/refactor work)
+## Canonical Owners
 
-This directory contains only project agent assets.
+- [`provider.toml`](provider.toml) — provider identity, activation marker,
+  router, exported skill paths, and codemod provider path.
+- [`commands/flext-law.md`](commands/flext-law.md) — compact session router.
+- [`skills/*/SKILL.md`](skills/) — on-demand procedures and trigger metadata.
+- [`INSTRUCTION_SURFACE.md`](INSTRUCTION_SURFACE.md) — human-readable ownership
+  and drift contract.
+- [`docs/GOVERNANCE.md`](../docs/GOVERNANCE.md) — workspace concern routing.
 
-## Canonical Paths
+The structural codemod provider referenced by `provider.toml` owns codemod rule
+IDs and artifacts. Static enforcement policy remains with its validated domain
+declarations; neither surface duplicates the other.
 
-- Skills: `.agents/skills/`
-- Manifest: `.agents/INSTRUCTION_SURFACE.md`
-- Prompt: `.github/prompts/flext-aggressive-scale-refactor.prompt.md`
-
-## Required Tooling Surfaces
-
-- Scope routing and freshness rules live in `AGENTS.md` and `.agents/skills/code-navigation/SKILL.md`.
-- Serena setup expectations live in `AGENTS.md`, `.vscode/mcp.json`, and `.serena/project.yml`.
-- Structural propagation and static enforcement in `flext-infra` are rope-semantic only (`ast`/`ast-grep`/`get_ast` banned; memory:adr005-p3-single-rope-loop). See `AGENTS.md` and `.agents/skills/flext-refactoring-workflow/SKILL.md`.
-- MCP routing expectations live in `AGENTS.md` and `.vscode/mcp.json`.
-
-## Refactor Entry
-
-- Read `AGENTS.md` §0 first for execution law.
-- Run `qlty smells` first and close one offender only.
-- Reuse canonical origin before helpers.
-- Let owner `model_validate(kwargs)` / cached `TypeAdapter` own true option bags; keep fixed-shape APIs explicit and validate one packed payload.
-- Missing raw `ruff`/`pyrefly` output means incomplete work.
-
-## Non-Canonical Instruction Trees (must not be loaded)
-
-- `.claude/skills/**`
-- `.github/skills/**`
-- `vendor/**`
-- `.cache/**`
-- `.venv/**`
-- `**/dbt_packages/**`
-
-Keep files here pointer-and-assets only; do not duplicate governance text from `AGENTS.md`.
+When reality changes, update its owner and every affected docs, skill, agent,
+catalog, and consumer pointer in the same change. If behavior did not change,
+verify those surfaces are current. Tests and checks validate the owners; they
+never define provider identity, domain behavior, config, or fundamental rules.

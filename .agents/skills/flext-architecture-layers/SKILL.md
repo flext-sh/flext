@@ -1,67 +1,65 @@
 ---
 name: flext-architecture-layers
-description: 'Use this skill to layer map and dependency-direction contract for flext-core.
-  Use when adding modules, moving responsibilities, or reviewing imports. **Reviewed**:
-  2026-04-06 | **Scope**: Added mandatory FlextMeltano composition rule, alias set,
-  composition matrix, and. DO NOT USE FOR: questions unrelated to flext-architecture-layers
-  creating projects or architecture from scratch'
-license: MIT
-metadata:
-  version: 1.0.0
+description: >-
+  Route FLEXT declarations, configuration, runtime behavior, enforcement, and
+  structural codemods to their canonical project and facade owners. Use when
+  adding or moving modules, changing cross-project dependencies, reviewing MRO
+  composition, or deciding whether work belongs to core, cli, infra, or an
+  agent provider; do not use to impose a universal project scaffold.
 ---
-# Flext Architecture Layers
 
-**UTILITY SKILL**
+# FLEXT architecture ownership
 
-## USE FOR
+Derive the exact module layout from the target project's declarations,
+configuration, public facade, and `pyproject.toml`. This skill routes ownership;
+it does not define a fixed repository tree.
 
-- Requests about flext architecture layers.
-- Workflows described in this skill.
-- Operator tasks within this scope.
+## Project ownership
 
-## DO NOT USE FOR
+- `flext-core` owns shared runtime contracts and facades plus the canonical
+  enforcement identities, metadata, routing, and descriptors.
+- `flext-cli` owns CLI-facing configuration, template, and schema boundary
+  capabilities built on core contracts.
+- `flext-infra` consumes core and cli, owns declarative enforcement payloads and
+  schemas, and executes validation/refactor workflows.
+- `.agents/skills/flext-codemod-astgrep` owns FLEXT structural rule declarations
+  and provider metadata. The generic preview/apply engine is managed by
+  ai-hub.
+- A domain project owns only its domain declarations, validated configuration,
+  adapters, behavior, and public facade. Do not copy framework machinery into
+  it.
 
-- questions unrelated to flext-architecture-layers.
-- creating projects or architecture from scratch.
+Keep runtime package direction `flext-infra -> flext-cli -> flext-core`. Never
+introduce a reverse runtime import to reuse an implementation.
 
-## Workflow
+## Module ownership
 
-1. Assign each touched module to L0/L1/L2/L3 before editing.
-2. **For cross-project changes**: Identify the correct domain project using the Selection Rule above. NEVER guess.
-3. Identify the domain facade and its private responsibility package before moving behavior.
-4. Inspect imports for outward dependencies.
+1. Put fundamental names and contracts in the owning `c`, `t`, `p`, or `m`
+   declaration surface; put validated configuration in `config`/`settings`.
+2. Put behavior in the existing focused private responsibility owner.
+3. Keep the public domain module as a thin MRO/composition facade when multiple
+   focused mixins implement that responsibility.
+4. Compose public operations in the project's established service/API surface.
+5. Update all consumers atomically and remove the superseded path. Do not keep
+   old and new owners, aliases, wrappers, or fallbacks together.
 
-## Critical rules
+Do not create a module merely because this list names a possible layer. Prove
+the need from current declarations and consumers first.
 
-- Prefer canonical sources.
-- Require evidence.
-<!-- mro-wkii.17.26 (agent: codex) — keep layer guidance aligned with the universal thin-domain-facade law. -->
-- Every layer uses one thin `<domain>.py` MRO/composition facade over focused
-  `_<domain>/*.py` implementation mixins when a module owns multiple
-  responsibilities. This applies to facets, services, codegen, refactor,
-  dependency, validation, and tooling modules. Consumers import the facade;
-  private package initializers are static/empty; root package lazy export is
-  the only lazy export surface. Remove the old path in the same atomic cutover.
-- **ADR-005 (config SSOT) layering:** `flext-core` is runtime-minimal — stdlib
-  only (`tomllib` + `string.Template`), **no Jinja2**, and **never imports
-  `flext-cli`/`flext-infra` at runtime** (examples/scripts/tests only).
-  `flext-cli` owns the universal template/config/schema engine
-  (`u.Cli.render_template`, `config_load`, `yaml_validate_schema`) and amplifies the
-  core contracts. `flext-infra` consumes cli and hosts ALL static enforcement as Pydantic-2-validated
-  config data (`config/*.yaml`) evaluated by the rope-semantic engine (LAW1/LAW2: `ast`/`get_ast`
-  banned);
-  `flext-core` stays runtime/beartype-only with zero static rules. Direction:
-  `flext-infra → flext-cli → flext-core`, no cycle.
-  Canonical: `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
+## Procedure
 
-- Prefer canonical sources.
-- Require evidence.
+1. Read `pyproject.toml`, the package root exports, and the candidate canonical
+   owner.
+2. Classify each artifact as declaration, validated configuration, behavior,
+   enforcement payload, provider procedure, or validator.
+3. Move it to the single owner above and replace duplicated prose/code with a
+   reference.
+4. Check dependency direction and private-module reachability.
+5. Run the target repository's native static and runtime gates.
 
-## Example
+Tests, fixtures, snapshots, and examples validate the owner; they never define
+the declaration, configuration, or fundamental rule. Correct stale validators
+when they conflict with those sources.
 
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+For facade composition details, load
+[../flext-mro-namespace-rules/SKILL.md](../flext-mro-namespace-rules/SKILL.md).

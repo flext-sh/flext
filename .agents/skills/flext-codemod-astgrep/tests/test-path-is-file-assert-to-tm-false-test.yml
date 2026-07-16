@@ -1,0 +1,26 @@
+id: test-path-is-file-assert-to-tm-false
+valid:
+  - |
+    from flext_infra import tm
+    def test_report() -> None:
+        tm.that((workspace / "report.md").is_file(), eq=False)
+  - |
+    def test_report() -> None:
+        assert not (workspace / "report.md").is_file()
+  - |
+    from other import tm
+    def test_report() -> None:
+        assert not (workspace / "report.md").is_file()
+  - |
+    from flext_infra import tm
+    def test_report() -> None:
+        assert not report_path.is_file()
+invalid:
+  - |
+    from flext_infra import tm
+    def test_report() -> None:
+        assert not (workspace / "report.md").is_file()
+  - |
+    from flext_infra import tm
+    def test_report() -> None:
+        assert not (workspace / "releases" / "latest.md").is_file()

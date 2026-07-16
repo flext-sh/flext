@@ -28,8 +28,8 @@ in its default path.
 
 Canonical implementations in this repository:
 
-- Validator orchestrator: `scripts/core/skill_validate.py`
-- Fix orchestrator: `scripts/core/skill_fix.py`
+- Skill validator: `flext-infra validate skill-validate --skill <name>` (canonical CLI, one invocation per skill)
+- Enforcement fixer: `flext-infra codegen fix-enforcement` (dry-run by default; mutates only with `--apply`)
 
 ---
 
@@ -235,7 +235,7 @@ or for Python:
 
 ## Conformance Checking
 
-The contract validator (`scripts/core/check_script_gate_contract.py`) verifies:
+The contract validator (`.agents/skills/scripts-infra/validate_gate_contract.py`) verifies:
 
 1. **Owner-Skill marker** present in first 10 lines.
 2. **Shebang line** present (`#!/usr/bin/env bash` or `#!/usr/bin/env python3`).
@@ -253,9 +253,9 @@ exempt from gate contract validation but must still have Owner-Skill markers.
 
 ### Validator (python — skill-based)
 
-- `python3 scripts/core/skill_validate.py --skill flext-strict-typing` — discovers rules from `.agents/skills/flext-strict-typing/rules.yml`; accepts `--mode baseline|strict`; exits 0/1/2/3
-- `python3 scripts/core/skill_validate.py --skill lib-pydantic-v2` — same contract
-- `python3 scripts/core/skill_validate.py --all` — runs all discovered skills
+- `flext-infra validate skill-validate --skill flext-strict-typing` — discovers rules from `.agents/skills/flext-strict-typing/rules.yml`; accepts `--mode baseline|strict`; exits 0/1
+- `flext-infra validate skill-validate --skill flext-pydantic-models --mode strict` — same contract
+- one invocation per skill (see the Makefile `validate` targets); the retired `scripts/core/skill_validate.py --all` flag form no longer exists
 
 ### Validator (python — standalone)
 
