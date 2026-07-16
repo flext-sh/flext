@@ -1,6 +1,0 @@
-id: ban-print-in-src-structlog
-language: python
-rule:
-  pattern: "print($$$ARGS)"
-message: "print() in src code - use FlextLogger"
-severity: error

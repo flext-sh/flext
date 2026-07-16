@@ -18,5 +18,7 @@ message: >-
   namespace can now be a raw pydantic BaseModel. VERIFY the real MRO before
   rewriting; prefer `hasattr(x, "model_dump")` or the confirmed base. Detection
   only — do NOT auto-fix. See flext-codemod-astgrep SKILL.md safety protocol.
+ignores:
+  - "**/legado/**"
 rule:
   pattern: isinstance($X, m.SettingsValue)

@@ -1,165 +1,110 @@
 ---
 name: flext-codemod-astgrep
 description: >-
-  Reusable, battle-tested ast-grep codemod library + authoring guide for FLEXT
-  API-drift migrations (assert->tm matchers, settings import/base renames,
-  namespaced-settings access, CLI-API refactors). Use when migrating any repo
-  (flext-*, gruponos-*, algar-*, or external consumers) to a new flext version,
-  or when authoring/optimizing structural rewrites with ast-grep. DO NOT USE FOR
-  questions unrelated to structural codemods or greenfield architecture.
+  Operate and author the canonical FLEXT structural codemod provider through
+  the ai-hub managed exact-cardinality engine. Use for repeated, syntax-proven
+  FLEXT migrations in detected flext-core workspaces; do not use for semantic
+  redesign, greenfield architecture, or unrelated Python cleanup.
 ---
 
-# FLEXT ast-grep Codemod Library
+# FLEXT structural codemods
 
-Canonical, verified structural-rewrite recipes for FLEXT API migrations, plus a
-hard-won authoring guide so future migrations (in this repo and external
-consumer repos) reuse the same rules instead of re-deriving them.
+This skill explains how to operate the provider. It does not duplicate the
+provider catalog or define domain behavior.
 
-> Engine facts confirmed empirically (ast-grep CLI, this workspace, 2026-07):
-> the Rust regex engine backing `regex:` matchers **does not support
-> look-around** (`(?!...)`, `(?<=...)`); `field:` matching a `dotted_name`
-> needs `regex:` (a `pattern:` will not match a dotted module path); relational
-> `has:` for a nested field needs `stopBy: end`; a single `--pattern` cannot
-> span multiple statements.
+## Authority
 
-## When to use
+Authority is resolved in this order:
 
-- Migrating a repo to a new flext version and the same mechanical edit repeats
-  across many files (imports, base classes, accessors, matcher calls).
-- The change is **syntactic shape**, not string contents (use `rg` for strings).
-- You want a **safe, idempotent, parse-verified** rewrite instead of sed/regex.
+1. The owning domain objective, public declaration/model, validated
+   configuration, and fundamental rule define the required behavior.
+2. rules/*.yml declares each structural detection or rewrite.
+3. provider.toml declares the provider identity and the complete exported ID
+   set; sgconfig.yml declares how ast-grep loads it.
+4. This skill defines the safe operating procedure.
+5. tests/*-test.yml and tests/__snapshots__ only validate the declarations.
 
-## Quick start
+A fixture, snapshot, or green test is never SSOT. When validation conflicts
+with an owner above it, correct or remove the stale validator.
 
-```bash
-# dry-run (preview diffs) — ALWAYS do this first
-ast-grep scan --rule .agents/skills/flext-codemod-astgrep/rules/<rule>.yml <target-dir>
+The generic preview/apply engine is owned and managed by ai-hub. FLEXT owns
+only this provider data and procedure. A workspace receives this surface only
+after canonical pyproject metadata identifies flext-core usage.
 
-# apply
-ast-grep scan --rule .agents/skills/flext-codemod-astgrep/rules/<rule>.yml <target-dir> --update-all
-```
+## Managed execution
 
-Always follow an `--update-all` with: `ruff check <dir> --fix` (import order the
-rewrite disturbs) then re-parse every file with `ast.parse`.
+Run from the target workspace root. The generated Make surface supplies this
+provider's config, rules, and validators to the managed engine.
 
-## Rule catalog (rules/)
+    make workspace-codemod TEST=1
+    make workspace-codemod RULE=result-failure-rebind SCAN_DIR=src
+    make workspace-codemod STRICT=1 RULE=result-failure-rebind SCAN_DIR=src
 
-| Rule file | Migrates | Guard against |
-|-----------|----------|---------------|
-| `assert-to-tm.yml` | `assert x == y` -> `tm.that(x, eq=y)` + `.success`/`.failure` -> `tm.ok/fail` etc | whitespace-only `lacks` (gotcha #4) |
-| `settings-base-rename.yml` | `from flext_core.settings import FlextSettingsBase` -> `from flext_core import FlextSettings` | multi-import + `as`-alias data loss |
+Report mode is always the first mutation step. It prints the exact finding
+count, fixable count, sorted file set, and SHA-256 of the normalized JSON match
+manifest.
 
-Each rule has a sibling `tests/<rule-id>-test.yml` with `valid` (must not match)
-and `invalid` (must match) samples — the negative cases are the point.
+Apply exactly one rule against the unchanged preview:
 
-## Authoring guide — the 6 lessons that matter
+    make workspace-codemod APPLY=1 RULE=result-failure-rebind \
+      EXPECTED_FIXES=3 EXPECTED_FILES=src/a.py,src/b.py \
+      EXPECTED_MATCHES_SHA256=<preview-sha> SCAN_DIR=src
 
-### 1. Exact-string patterns OVER-MATCH — always add negative guards
-`pattern: from a.b import C` also matches `from a.b import C, D` (rewriting it
-drops `D` — silent data loss) and does NOT match `from a.b import C as X`.
-Fix: constrain the enclosing `kind` and negate the danger:
-```yaml
-rule:
-  kind: import_from_statement
-  all:
-    - has: { field: module_name, regex: '^a\.b$' }
-    - has: { field: name, regex: '^C$', stopBy: end }
-    - not: { regex: ',' }        # exclude multi-import
-    - not: { regex: ' as ' }     # exclude aliased import
-```
+Mutation is allowed only when all of these conditions hold:
 
-### 2. `field:` on a dotted path needs `regex:`, not `pattern:`
-`has: {field: module_name, pattern: flext_core.settings}` fails; the module is a
-`dotted_name`. Use `has: {field: module_name, regex: '^flext_core\.settings$'}`.
+1. RULE is one exact provider ID and that rule has an explicit fix.
+2. EXPECTED_FIXES is the positive exact preview cardinality.
+3. EXPECTED_FILES is the exact sorted preview file set.
+4. EXPECTED_MATCHES_SHA256 equals the unchanged normalized preview.
+5. No non-fixable finding is mixed into the selected application.
+6. The engine applies only the selected rule.
+7. A rescan finds zero remaining matches for that rule.
+8. Git diff checks and the target repository's native gates pass.
 
-### 3. Relational `has:` for a nested field needs `stopBy: end`
-The import `name` is nested under `import_from_statement`; without
-`stopBy: end`, `has: {field: name, ...}` returns "No matches found ... Try
-adding `stopBy: end`".
+There is no force mode, skip-verification mode, broad application, automatic
+rollback, or clean-tree assumption. A post-apply failure remains visible and
+is repaired forward within the same owned change.
 
-### 4. No look-around in `regex:`
-`^(?!Foo$).+` errors: `look-around ... is not supported`. Express "not X" with a
-`not:` rule node, never a negative-lookahead regex.
+## Rule authoring
 
-### 5. Multi-statement collapses are NOT ast-grep's job
-A 3-statement -> 1-statement collapse cannot be a single pattern. Use a small
-Python line-transform OR ast-grep `rewriters` + `transform` only when the nodes
-are siblings under one parent.
+- Start from a confirmed domain violation and target one AST node.
+- Add fix only when syntax proves the complete replacement. Domain judgment,
+  exception-factory choice, import synthesis, and ambiguous MRO changes remain
+  detection-only.
+- Prove every imported name, receiver, adjacent statement, and enclosing owner
+  on which a fix depends.
+- Constrain metavariables by kind or regex. Dotted module fields require regex;
+  relational ancestor/descendant searches usually require stopBy: end.
+- The ast-grep regex engine has no look-around. Express exclusions with not.
+- Preserve concrete syntax when comments or assertion messages matter.
+- Every rule document explicitly ignores `**/legado/**`. Archived code is not a
+  consumer or validation surface.
+- Never hide runtime imports or concrete methods behind TYPE_CHECKING. Put
+  declaration-only contracts in the canonical p.* Protocol owner.
+- Do not use ast-grep for multi-statement semantic collapse when one selected
+  node cannot prove the whole transformation.
 
-### 6. Import injection must respect multi-line `from (...)` blocks
-Auto-adding an import after "the last import line" breaks if that line is an
-unclosed `from x import (` opener — the injected line lands inside the paren
-group -> SyntaxError. Track paren depth; insert only at depth 0.
+## Validator policy
 
-## Matcher API map (assert -> tm)
+After the canonical rule is correct:
 
-Verified against `flext-tests` `tm.that` kwargs:
+1. Add one validator with the same ID.
+2. Include at least one matching invalid sample and one non-matching valid
+   boundary.
+3. Review actual ast-grep output against the rule declaration.
+4. Update that validator's snapshot only after the output is accepted.
+5. Run the tests again without snapshot mutation.
+6. Prove provider, rule, validator, and snapshot ID sets are bijective.
 
-| assert form | tm form |
-|-------------|---------|
-| `assert x == y` | `tm.that(x, eq=y)` |
-| `assert x != y` | `tm.that(x, ne=y)` |
-| `assert x is None` / `is not None` | `tm.that(x, none=True)` / `none=False` |
-| `assert isinstance(x, T)` | `tm.that(x, is_=T)` |
-| `assert x in y` / `x not in y` | `tm.that(y, has=x)` / `lacks=x` |
-| `assert r.success` / `r.failure` | `tm.ok(r)` / `tm.fail(r)` (returns the value) |
-| `assert x is True` / `is False` | `tm.that(x, eq=True)` / `eq=False` |
+Snapshot regeneration is validation maintenance, not source migration.
+Direct source mutation with ast-grep --update-all, bulk ruff --fix, sed, or a
+compensating script bypasses the managed engine and is prohibited.
 
-**Gotcha #4 detail**: the `has`/`lacks` matcher normalizes whitespace-only
-payloads to `""`, so `tm.that(out, lacks="  \n")` silently checks `""` and
-fails. Rewrite whitespace-negation asserts to an explicit boolean, e.g.
-`tm.that(out.endswith("  \n"), eq=False)`.
+## Evidence and maintenance
 
-## Migration playbook (per repo)
+Record preview, apply, idempotence, native gates, exit codes, and decisive
+output in the active workspace-root bead. Member projects use the root
+workspace Beads database; only an independent project owns another database.
 
-1. `git status` clean baseline; pick the smallest scoped dir.
-2. Dry-run each rule; read the diff — an unexpected match = tighten the guard.
-3. Apply -> `ruff --fix` -> `ruff format` -> re-parse.
-4. Run pytest; failures are *semantic* API drift (namespaced access, renamed
-   symbols) not codemod bugs — fix those by hand faithful to the current API
-   (use `crg`/`lsp`/`codegraph` to find the real symbol, never guess).
-5. Prefer the centralized `e` (FlextExceptions) + `r[T]` result flow when
-   touching error paths; do not hand-roll try/except.
-6. Commit with explicit pathspec (never `-A`), small and often.
-
-## Cross-repo reuse
-
-These rules are location-independent. To run them against an external consumer
-repo (e.g. `../gruponos-meltano-native`, `../algar-oud-mig`):
-```bash
-ast-grep scan --rule /home/marlonsc/flext/.agents/skills/flext-codemod-astgrep/rules/settings-base-rename.yml ../gruponos-meltano-native/src
-```
-Non-flext-package repos (gruponos/algar) keep **raw `assert`** in their own
-tests; only apply the assert->tm rule to `flext-*` package tests. Always apply
-the *import/base/accessor* rules to any consumer on the new flext version.
-
-## Safety protocol — VALIDATE the target before global apply
-
-> Learned the hard way: a `isinstance(x, m.SettingsValue)` ->
-> `isinstance(x, m.BaseModel)` rule was applied to 2 sites before verifying the
-> real base — but `FlextTestsSettings.Tests` actually inherits *raw*
-> `pydantic.BaseModel`, so BOTH the old and the new assertion were wrong. The
-> rule "worked" (matched + rewrote) yet the test still failed.
-
-Before promoting ANY rule from one-file to global `--update-all`:
-
-1. **Prove the target with the interpreter, not assumption.** For a base/type
-   swap, run `python -c "print(type(x).__mro__)"` on a real instance and
-   confirm the *new* symbol is actually in the MRO. Never infer the target
-   from the symbol name.
-2. **Detection-first for judgement rules.** If the correct replacement varies
-   per site (base class, result-combinator, error factory), ship the rule as
-   `severity: warning` **detection-only** (no `fix:`) so it surfaces candidates
-   a human/agent judges. Only add `fix:` when the rewrite is a *pure,
-   context-free token swap* proven on >=3 real sites.
-3. **Widen the test corpus.** The `tests/<rule-id>-test.yml` MUST include the
-   real-world variants that bit you: multi-import, alias, `is True` suffix,
-   already-migrated code (must NOT re-match).
-4. **Dry-run on the WHOLE target, grep the diff for surprises**, then apply to
-   ONE file, run its pytest, and only then `--update-all` the rest.
-5. **A green codemod is not a green test.** After apply, the pytest is the
-   real gate — a matched+rewritten line can still be semantically wrong.
-
-Rule maturity ladder: `detection-only (hint)` -> validated on 1 file + pytest
-green -> `detection+fix (warning)` with a widened test corpus -> global
-`--update-all`. Do not skip rungs.
+REFERENCE.md is a compact ownership map. The exact live inventory is read from
+provider.toml and rules/*.yml, never copied into prose.

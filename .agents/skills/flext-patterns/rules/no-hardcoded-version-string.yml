@@ -1,9 +1,0 @@
-id: no-hardcoded-version-string
-language: python
-rule:
-  pattern: __version__ = $VAL
-constraints:
-  VAL:
-    kind: string
-message: "Hardcoded __version__ string"
-severity: warning

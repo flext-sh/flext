@@ -1,83 +1,72 @@
 ---
 name: flext-development-workflow
-description: 'Describes the end-to-end development workflow for the FLEXT monorepo:
-  environment bootstrap, make targets, RTK command interception, lint/typecheck/test
-  gates, and CI/CD lifecycle. Use when setting up the dev environment, running make
-  check or make test. DO NOT USE FOR: questions unrelated to flext-development-workflow
-  creating projects or architecture from scratch'
+description: >-
+  Execute a FLEXT change from workspace-root Bead ownership through narrow
+  feedback, native Make gates, and scoped landing. Use for bootstrap, command
+  discovery, implementation flow, and CI-equivalent validation.
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 2.0.0
 ---
 # FLEXT Development Workflow
 
-**UTILITY SKILL**
+## Start
 
-End-to-end development workflow for the FLEXT monorepo.
+1. Resolve the workspace root and claim the active Bead there.
+2. Record exact path ownership before writes.
+3. Read `docs/GOVERNANCE.md`, then load only the skills selected by
+   `flext-context-routing`.
+4. Inspect the owning declaration/config and all affected consumers.
+5. Record which docs, skills, agent instructions, and provider entries are
+   impacted.
 
-## USE FOR
-
-- Setting up the development environment.
-- Discovering make targets and dispatcher verbs.
-- Understanding lint/typecheck/test/CI lifecycle.
-
-## DO NOT USE FOR
-
-- Questions unrelated to FLEXT workflow.
-- Creating projects or architecture from scratch.
-
-## Workflow
-
-1. Bootstrap workspace and dependencies.
-2. Edit code with skill/rule alignment.
-3. Run fast feedback (`make check`, `make test`).
-4. Use `make cosmos-help` to discover dispatcher verbs provided by the `~/.ai-hub` workspace base.
-
-## Critical rules
-
-- Prefer `make` verbs over one-off scripts.
-- Claim work via `bd` before editing.
-- Keep bead notes current with command + output evidence.
-
-## Bootstrap
+## Bootstrap and Discovery
 
 ```bash
+make help
 make boot
 ```
 
-## Common make targets
+`make help` is the current command inventory. Do not preserve a stale alias or
+external dispatcher name in documentation.
 
-| Target | Purpose |
-|--------|---------|
-| `make help` | List available targets |
-| `make boot` | Bootstrap workspace |
-| `make check` | Run gates on changed files |
-| `make check PROJECT=<proj> CHECK_GATES=<gates>` | Run specific gates on a project |
-| `make test PROJECT=<proj> MATCH=<expr>` | Run matching tests |
-| `make docs DOCS_PHASE=<generate\|fix\|audit\|build\|validate>` | Docs lifecycle |
-| `make val VALIDATE_SCOPE=workspace` | Full workspace validation |
-| `make ship WHAT=<save\|tag\|push\|pr\|rel>` | Release helpers |
-| `make cosmos-help` | `~/.ai-hub` dispatcher verbs |
+## Change Cycle
 
-## Per-task flow
+1. Make the smallest coherent root-cause change.
+2. Remove the superseded path in the same cycle.
+3. Run the narrowest read-only gate from `flext-quality-gates`.
+4. Update every affected consumer atomically.
+5. Update docs, skills, agents, and provider metadata when reality changed; if
+   not, verify impacted surfaces remain current.
+6. Append state and evidence to the root-workspace Bead.
+7. Widen to the affected Make gate only after narrow feedback is green.
 
-1. Confirm active bead with `bd ready` and `bd show <id>`.
-2. Read the relevant local scoped SKILL docs before editing.
-3. Run the narrowest smell/quality discovery first.
-4. Reuse canonical origin before adding helpers.
-5. Make the minimal fix, then run the first local validation gate.
-6. Update impacted callers in the same cycle.
-7. Record evidence and next step in Beads before any handoff.
+Tests validate public behavior but never define the contract or source of
+truth.
 
-## Commit behavior
+## Current Make Verbs
 
-- Stage only active bead lane files with explicit pathspecs.
-- Never use `git add .`.
-- Commit and push after scoped green validation.
-- Write commits as the user with no agent attribution.
+```bash
+make check PROJECT=<project> CHECK_GATES=<gates>
+make test PROJECT=<project> MATCH=<expression>
+make docs DOCS_PHASE=<generate|fix|audit|build|validate>
+make val VALIDATE_SCOPE=workspace
+make ship WHAT=<save|tag|push|pr|rel>
+```
+
+The root `Makefile` owns this surface. Verify `make help` whenever it changes.
+
+## Landing
+
+- Stage and commit only owned paths with explicit pathspecs.
+- Preserve all unrelated staged and unstaged work.
+- Push only fast-forward after scoped and native gates pass.
+- Record commit SHA, push output, and remaining risk in the same Bead.
+- On remote divergence, stop and report the exact rejection plus local and
+  remote SHAs; never rebase or force-push autonomously.
 
 ## References
 
-- `AGENTS.md` — root engineering law and verification expectation
-- `.agents/skills/coding-standards/SKILL.md` — coding standards
-- `.agents/skills/flext-quality-gates/SKILL.md` — gate commands
+- [`flext-quality-gates`](../flext-quality-gates/SKILL.md)
+- [`flext-beads-coordination`](../flext-beads-coordination/SKILL.md)
+- [`docs/GOVERNANCE.md`](../../../docs/GOVERNANCE.md)

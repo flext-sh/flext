@@ -1,46 +1,49 @@
 ---
 name: flext-agent-integration
-description: 'Use this skill to use when setting up agent tooling, configuring MCP
-  tools, or enabling automatic project-context routing across FLEXT and non-FLEXT
-  repositories. Covers skill discovery, tool priority ordering, session start protocols,
-  safe tool guardrails, and agent configuration. DO NOT USE FOR: questions unrelated
-  to flext-agent-integration creating projects or architecture from scratch'
+description: Integrate the FLEXT provider with an agent manager or audit its projection lifecycle. Use for provider discovery, workspace-local skill exposure, and stale projection removal. Do not use for FLEXT domain implementation or generic agent configuration.
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 2.0.0
 ---
 # FLEXT Agent Integration
 
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about flext agent integration.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to flext-agent-integration.
-- creating projects or architecture from scratch.
+Use this skill at the provider boundary. Domain behavior remains in the
+on-demand skill that owns it.
 
 ## Workflow
 
-1. Identify touched paths.
-2. Identify whether the request intent matches a workspace prompt.
-3. Check whether `scope` is available, whether Serena is configured/usable (`command -v serena`, `serena start-mcp-server --help`, `serena project health-check`), and whether `ast-grep` or MCP is required by the task.
-4. For common workspace verbs, prefer the `~/.ai-hub` distributed base (`make cosmos-help`) and update it from `~/.ai-hub` when the verb surface changes.
+1. Read `.agents/provider.toml` as the provider declaration.
+2. Detect eligibility only from `flext-core`-validated project metadata and the
+   declared `marker_distribution`.
+3. Expose the router and listed skills as workspace-local references to this
+   repository; do not copy their content into the manager.
+4. Load only `surfaces.always` at activation. Let `flext-context-routing`
+   select entries from `surfaces.on_demand`.
+5. Delegate structural rewrite configuration to the codemod provider referenced
+   by `.agents/provider.toml`; never duplicate its rule IDs.
+6. On deactivation or catalog change, remove only references previously managed
+   by this provider and verify no stale projection remains.
 
 ## Critical rules
 
-- Prefer canonical sources.
-- Require evidence.
+- The provider declaration owns availability; skill frontmatter owns routing
+  intent; the referenced file owns implementation guidance.
+- No machine-specific tool inventory, global FLEXT copy, compatibility alias,
+  or second catalog is allowed.
+- Tests and checks are validators, never SSOT.
+- Missing, duplicate, escaping, or unlisted paths block projection.
 
 ## Example
 
-**Input:** a request.
-**Output:** a concise response.
+**Input:** an agent manager enters a project whose validated dependencies include
+`flext-core`.
+
+**Output:** expose this provider locally, load `flext-context-routing`, and defer
+all other skills until task intent selects them.
 
 ## Troubleshooting
 
-- Unclear scope → ask.
+- Marker mismatch: keep the provider inactive and report the validated metadata.
+- Projection collision: stop and report both owners; never overwrite an
+  unmanaged surface.
+- Catalog drift: repair the declaration or owner before exposing the provider.

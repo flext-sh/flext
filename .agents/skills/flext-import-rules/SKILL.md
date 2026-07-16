@@ -1,111 +1,53 @@
 ---
 name: flext-import-rules
-description: 'Use this skill to enforce import ordering, alias conventions, and abstraction
-  boundaries for the FLEXT 33-project monorepo (PEP 623, TYPE_CHECKING rules, no bare
-  pydantic/structlog in consumers). Use when adding imports to any Python file, resolving
-  circular imports, auditing imports. DO NOT USE FOR: questions unrelated to flext-import-rules
-  creating projects or architecture from scratch'
-license: MIT
-metadata:
-  version: 1.0.0
+description: >-
+  Enforce canonical FLEXT import routing, public facade boundaries,
+  declaration-only imports, and cycle-free package direction. Use when adding
+  or moving imports, resolving cycles, reviewing external-library boundaries,
+  or composing c/m/p/r/t/u/s facades; do not use to invent a project layout.
 ---
-# FLEXT Import Rules
 
-**UTILITY SKILL**
+# FLEXT import routing
 
-Enforces import hygiene, alias conventions, and abstraction boundaries across the FLEXT monorepo.
+Treat imports as dependency declarations. Read the target package's public
+facade and dependency metadata before changing them; this skill is an
+operating procedure, not the declaration SSOT.
 
-## USE FOR
+## Procedure
 
-- Adding or reorganizing imports in any Python file.
-- Resolving circular imports.
-- Auditing imports for wildcard, relative, or direct-framework violations.
+1. Identify whether the file owns a facade/bridge or consumes one.
+2. Import consumers from the owning package root and its canonical short
+   aliases.
+3. Let only the facade or bridge owner import its private implementation or
+   external framework.
+4. Keep runtime dependencies at runtime; use `TYPE_CHECKING` only for symbols
+   needed solely by static declarations.
+5. Remove the superseded import path in the same change.
+6. Run the target repository's configured Ruff and type gates.
 
-## DO NOT USE FOR
+## Invariants
 
-- Questions unrelated to FLEXT import rules.
-- Creating projects or architecture from scratch.
+- Use absolute imports in production code. Do not use relative or wildcard
+  imports.
+- Import FLEXT consumers through public package roots, such as
+  `from flext_core import c, m, p, r, t, u`.
+- Import project-owned `config` and `settings` from that project's public root;
+  do not read environment variables or configuration files from leaf modules.
+- Let a facade owner import the upstream short alias it extends, compose the
+  local facade, and publish the local alias exactly once. Downstream consumers
+  import that local alias from the package root.
+- Let only the canonical bridge owner import Pydantic, Structlog, database
+  drivers, template engines, or other external frameworks. Consumers import
+  the validated model or wrapper from its owning FLEXT package.
+- Keep private implementation imports inside their public facade/composition
+  owner. A consumer importing a private module is an ownership violation.
+- Preserve runtime direction `flext-infra -> flext-cli -> flext-core`; core must
+  not import cli or infra at runtime.
+- Never use `TYPE_CHECKING` to hide a runtime class, method, side effect, or
+  dependency cycle. Move declaration-only contracts to their canonical
+  protocol/type owner and fix runtime ownership at the source.
+- Follow the repository's configured import ordering. Do not invent universal
+  required imports that its configuration does not declare.
 
-## Workflow
-
-1. Inventory current imports against the rules below.
-2. Rewrite to the canonical form.
-3. Run `ruff check <file>` and `pyrefly check <file>`.
-
-## Critical rules
-
-- Required header: `from __future__ import annotations` and `from collections.abc import Mapping, Sequence`.
-- **ADR-005:** `flext-core` `src/` must **not** import `flext-cli`/`flext-infra` (runtime cycle-free `infra → cli → core`); no direct `jinja2`/`yaml`/`jsonschema` import in consumers — route through `u.Cli.*`. See `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
-- Absolute imports only in `src/`; no relative imports, no wildcards.
-- Import `flext_core` via root namespace using canonical aliases (`c`, `m`, `p`, `r`, `t`, `u`, ...).
-- Facade owner modules that MRO-extend an upstream FLEXT facade import that upstream short alias directly and use it as the base class (`from flext_cli import m`; `class FlextPluginModels(m): ...`; `m = FlextPluginModels`).
-- Project `base.py` may import upstream runtime `s` as the service MRO base and publish local `s` exactly once.
-- Project `api.py` imports the composed runtime facade class and publishes the package operational alias.
-- Bridge external frameworks (pydantic, structlog, oracledb, ldap3, grpc, sqlalchemy) through `flext_core` or the project-specific wrapper; do not import them directly in consumers.
-- Use `TYPE_CHECKING` only for type-only symbols and `__init__.py` lazy loading; do not hide cycles.
-
-## Good examples
-
-```python
-from __future__ import annotations
-from collections.abc import Mapping, Sequence
-from pathlib import Path
-
-from pydantic import BaseModel
-
-from flext_core import c, m, r, t, u
-```
-
-## Bad examples
-
-```python notest
-# Illustrative anti-patterns — these imports violate FLEXT import discipline.
-from .utils import helper  # relative import
-from flext_core import *  # wildcard
-from typing import Dict, List  # legacy typing
-import oracledb  # direct framework; use flext_db_oracle wrapper
-```
-
-## Import order
-
-1. `from __future__ import annotations`
-2. `from collections.abc import Mapping, Sequence`
-3. stdlib
-4. third-party
-5. first-party (`flext_core.*`, `flext_*`)
-6. local package
-
-Within each group: `import x` before `from x import y`, alphabetical, one per line.
-
-## MRO import matrix
-
-| File | `c`/`t`/`p`/`m`/`u` source | Others |
-|------|----------------|--------|
-| `models/*.py` | parent | own package |
-| `_utilities/*.py` | parent for `u` | own package |
-| facade files | parent short alias for the facade being extended | own package |
-| `base.py` | upstream runtime `s` | own package plus private MRO mixins |
-| `api.py` | composed runtime facade class | own package |
-| services/servers/tests | own package | own package |
-
-Parent = most advanced MRO package; `flext-core` uses its own package.
-
-## Tier enforcement
-
-Only import lower tiers:
-
-```
-constants/typings → runtime → protocols → models → utilities → logging/container → dispatcher
-```
-
-## Validation
-
-```bash
-ruff check <file>
-pyrefly check <file>
-```
-
-## References
-
-- [references/import-rules-detail.md](references/import-rules-detail.md)
-- `.agents/skills/coding-standards/SKILL.md` — general coding standards quick-reference
+Read [references/import-rules-detail.md](references/import-rules-detail.md)
+only when concrete routing examples are needed.

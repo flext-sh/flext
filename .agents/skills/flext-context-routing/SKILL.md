@@ -1,45 +1,50 @@
 ---
 name: flext-context-routing
-description: 'Use this skill to use when selecting tools, prompts, MCP servers, and
-  skills automatically by project/session context. Triggers on requests about automation,
-  tool choice, simplification, deduplication, safe execution, context detection, and
-  cross-project routing. DO NOT USE FOR: questions unrelated to flext-context-routing
-  creating projects or architecture from scratch'
+description: Route an activated FLEXT workspace to the smallest relevant local skill set. Use after validated project metadata reports the flext-core dependency, or when auditing provider activation and context cost. Do not use in projects without that marker.
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 2.0.0
 ---
 # FLEXT Context Routing
 
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about flext context routing.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to flext-context-routing.
-- creating projects or architecture from scratch.
+This is the sole always-loaded FLEXT skill. It selects on-demand skills without
+restating their instructions.
 
 ## Workflow
 
-1. Identify touched paths and task intent.
-2. Detect project governance and stack markers.
-3. Check tool readiness: correct Scope root, `scope status`, Serena project/config availability, and configured MCP relevance.
+1. Consume project metadata validated by `flext-core`; never parse
+   `pyproject.toml` again or apply a filename heuristic.
+2. Require the normalized dependency marker `flext-core`. If absent, load no
+   FLEXT surface.
+3. Read `.agents/provider.toml` and root `docs/GOVERNANCE.md`.
+4. Match task intent and touched paths against skill frontmatter, then load at
+   most three entries from `surfaces.on_demand`.
+5. Resolve the Beads ledger at the workspace root. Member projects share that
+   ledger; only independent projects own a separate database.
+6. Include docs, skills, and agent instructions in impact analysis. Update an
+   owner when reality changes, or verify it remains current.
 
 ## Critical rules
 
-- Prefer canonical sources.
-- Require evidence.
+- Provider metadata declares what is available; skills own how to perform their
+  bounded task.
+- Global copies, alias skills, and eager loading of all FLEXT skills are
+  forbidden.
+- Tests and checks validate declarations; they never define the catalog or
+  project type.
+- An unlisted or missing skill path is catalog drift and blocks projection.
 
 ## Example
 
-**Input:** a request.
-**Output:** a concise response.
+**Input:** change result composition in a project that depends on `flext-core`.
+
+**Output:** load `coding-standards` and `using-flext-core`; do not load unrelated
+library, infrastructure, or documentation skills.
 
 ## Troubleshooting
 
-- Unclear scope → ask.
+- Marker absent: do not guess from package names; keep FLEXT surfaces unloaded.
+- More than three skills appear necessary: narrow the task or load another only
+  after proving a distinct responsibility.
+- Catalog mismatch: fix `.agents/provider.toml` and the owning skill in the same
+  change.

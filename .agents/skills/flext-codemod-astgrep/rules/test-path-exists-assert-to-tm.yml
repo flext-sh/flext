@@ -1,0 +1,154 @@
+id: test-path-exists-assert-to-tm-true
+language: python
+severity: hint
+files:
+  - "**/tests/**/*.py"
+  - "tests/**/*.py"
+ignores:
+  - "**/legado/**"
+message: >-
+  A pathlib-style existence assertion in a FLEXT test can use tm.that(...,
+  eq=True). Require a canonical tm import and a path-division receiver.
+rule:
+  kind: assert_statement
+  all:
+    - pattern: assert ($BASE / $RELATIVE).exists()
+    - not:
+        pattern: assert $CONDITION, $MESSAGE
+    - inside:
+        kind: module
+        stopBy: end
+        has:
+          kind: import_from_statement
+          stopBy: end
+          all:
+            - has: { pattern: tm, stopBy: end }
+            - has:
+                field: module_name
+                regex: "^flext(?:_[a-z0-9_]+)?$"
+fix: "tm.that(($BASE / $RELATIVE).exists(), eq=True)"
+---
+id: test-path-exists-assert-to-tm-false
+language: python
+severity: hint
+files:
+  - "**/tests/**/*.py"
+  - "tests/**/*.py"
+ignores:
+  - "**/legado/**"
+message: >-
+  A negated pathlib-style existence assertion in a FLEXT test can use
+  tm.that(..., eq=False). Require a canonical tm import and path division.
+rule:
+  kind: assert_statement
+  all:
+    - pattern: assert not ($BASE / $RELATIVE).exists()
+    - not:
+        pattern: assert $CONDITION, $MESSAGE
+    - inside:
+        kind: module
+        stopBy: end
+        has:
+          kind: import_from_statement
+          stopBy: end
+          all:
+            - has: { pattern: tm, stopBy: end }
+            - has:
+                field: module_name
+                regex: "^flext(?:_[a-z0-9_]+)?$"
+fix: "tm.that(($BASE / $RELATIVE).exists(), eq=False)"
+---
+id: test-path-is-file-assert-to-tm-true
+language: python
+severity: hint
+files:
+  - "**/tests/**/*.py"
+  - "tests/**/*.py"
+ignores:
+  - "**/legado/**"
+message: >-
+  A pathlib-style file assertion in a FLEXT test can use tm.that(..., eq=True).
+  Require a canonical tm import and a path-division receiver.
+rule:
+  kind: assert_statement
+  all:
+    - pattern: assert ($BASE / $RELATIVE).is_file()
+    - not:
+        pattern: assert $CONDITION, $MESSAGE
+    - inside:
+        kind: module
+        stopBy: end
+        has:
+          kind: import_from_statement
+          stopBy: end
+          all:
+            - has: { pattern: tm, stopBy: end }
+            - has:
+                field: module_name
+                regex: "^flext(?:_[a-z0-9_]+)?$"
+fix: "tm.that(($BASE / $RELATIVE).is_file(), eq=True)"
+---
+id: test-path-is-file-assert-to-tm-false
+language: python
+severity: hint
+files:
+  - "**/tests/**/*.py"
+  - "tests/**/*.py"
+ignores:
+  - "**/legado/**"
+message: >-
+  A negated pathlib-style file assertion in a FLEXT test can use tm.that(...,
+  eq=False). Require a canonical tm import and path division.
+rule:
+  kind: assert_statement
+  all:
+    - pattern: assert not ($BASE / $RELATIVE).is_file()
+    - not:
+        pattern: assert $CONDITION, $MESSAGE
+    - inside:
+        kind: module
+        stopBy: end
+        has:
+          kind: import_from_statement
+          stopBy: end
+          all:
+            - has: { pattern: tm, stopBy: end }
+            - has:
+                field: module_name
+                regex: "^flext(?:_[a-z0-9_]+)?$"
+fix: "tm.that(($BASE / $RELATIVE).is_file(), eq=False)"
+---
+id: test-path-variable-exists-assert-review
+language: python
+severity: warning
+files:
+  - "**/tests/**/*.py"
+  - "tests/**/*.py"
+ignores:
+  - "**/legado/**"
+message: >-
+  Review a raw .exists() assertion. Use tm.that only after type evidence proves
+  the receiver is pathlib-compatible. Detection only.
+rule:
+  kind: assert_statement
+  all:
+    - any:
+        - pattern: assert $PATH.exists()
+        - pattern: assert not $PATH.exists()
+    - not:
+        pattern: assert ($BASE / $RELATIVE).exists()
+    - not:
+        pattern: assert not ($BASE / $RELATIVE).exists()
+    - not:
+        pattern: assert $CONDITION, $MESSAGE
+    - inside:
+        kind: module
+        stopBy: end
+        has:
+          kind: import_from_statement
+          stopBy: end
+          all:
+            - has: { pattern: tm, stopBy: end }
+            - has:
+                field: module_name
+                regex: "^flext(?:_[a-z0-9_]+)?$"

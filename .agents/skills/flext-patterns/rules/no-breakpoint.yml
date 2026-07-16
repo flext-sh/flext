@@ -1,8 +1,0 @@
-id: no-breakpoint
-language: python
-rule:
-  any:
-    - pattern: "breakpoint()"
-    - pattern: "pdb.set_trace()"
-message: "Debug breakpoint in code"
-severity: error

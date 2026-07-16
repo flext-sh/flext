@@ -1,0 +1,26 @@
+id: test-path-exists-assert-to-tm-true
+valid:
+  - |
+    from flext_infra import tm
+    def test_report() -> None:
+        tm.that((workspace / "report.md").exists(), eq=True)
+  - |
+    def test_report() -> None:
+        assert (workspace / "report.md").exists()
+  - |
+    from other import tm
+    def test_report() -> None:
+        assert (workspace / "report.md").exists()
+  - |
+    from flext_infra import tm
+    def test_report() -> None:
+        assert report_path.exists()
+invalid:
+  - |
+    from flext_infra import tm
+    def test_report() -> None:
+        assert (workspace / "report.md").exists()
+  - |
+    from flext_infra import tm
+    def test_report() -> None:
+        assert (workspace / "reports" / "report.md").exists()

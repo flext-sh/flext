@@ -203,6 +203,7 @@ make check CHANGED_ONLY=1
 - `.agents/skills/coding-standards/SKILL.md` — quick-reference skill
 - `.agents/skills/flext-import-rules/SKILL.md` — import rules
 - `.agents/skills/flext-strict-typing/SKILL.md` — typing rules
-- `.agents/skills/flext-patterns/SKILL.md` — code patterns
+- `.agents/skills/lib-returns/SKILL.md` — Result composition
+- `.agents/skills/lib-structlog/SKILL.md` — structured logging
 - `.agents/skills/flext-quality-gates/SKILL.md` — gate commands
 - `.agents/skills/flext-development-workflow/SKILL.md` — workflow

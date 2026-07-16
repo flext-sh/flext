@@ -1,0 +1,40 @@
+id: test-builtin-all-generator-assert-to-tm
+snapshots:
+  ? |
+    from flext_tests import tm
+    def test_values(values):
+        assert all(item.ready for item in values)
+  : fixed: |
+      from flext_tests import tm
+      def test_values(values):
+          tm.that(all(item.ready for item in values), eq=True)
+    labels:
+    - source: assert all(item.ready for item in values)
+      style: primary
+      start: 56
+      end: 97
+    - source: tm
+      style: secondary
+      start: 24
+      end: 26
+    - source: flext_tests
+      style: secondary
+      start: 5
+      end: 16
+    - source: from flext_tests import tm
+      style: secondary
+      start: 0
+      end: 26
+    - source: |
+        from flext_tests import tm
+        def test_values(values):
+            assert all(item.ready for item in values)
+      style: secondary
+      start: 0
+      end: 98
+    - source: |-
+        def test_values(values):
+            assert all(item.ready for item in values)
+      style: secondary
+      start: 27
+      end: 97
