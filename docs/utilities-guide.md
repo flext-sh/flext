@@ -337,9 +337,8 @@ All utilities must meet:
 
 ## See Also
 
-- [Workspace Standards](../AGENTS.md) - Overall architecture patterns
-- [FLEXT Governance](../AGENTS.md) - Workspace implementation details
-- [Project README](../README.md) - General project information
+- `AGENTS.md` - Overall architecture patterns and workspace implementation details
+- `README.md` - General project information
 
 ---
 
