@@ -11,7 +11,7 @@
 # SSOT for the workspace base branch. All equalization/merge targets use this.
 WORKSPACE_BASE ?= 0.12.0-dev
 
-.PHONY: done-check workspace-docs-audit full-check workspace-status \
+.PHONY: done-check workspace-docs-audit full-check workspace-status codemod \
         workspace-sync-base workspace-land-submodules dependabot-merge \
         workspace-merge-main workspace-main-sync workspace-dependabot-apply \
         workspace-check-changed workspace-fix-changed
@@ -361,3 +361,23 @@ project: ## Run project validation gates
 
 workspace: ## Run workspace validation gates
 	$(Q)$(MAKE) --no-print-directory val WHAT=workspace $(MAKE_SELECTION_ARGS)
+
+# --- ast-grep codemod library (flext-codemod-astgrep provider) ---
+# CHECK (default): validate the ENTIRE active rule set together — every rule,
+# validator and fixer snapshot must agree. Rules not yet migrated to the current
+# pattern live under the provider's _pending/ tree (outside ruleDirs) and are not
+# run until refactored. FIX=1 DIR=<path> applies the fixers to a target tree and
+# then re-validates, so the system is always proven green after a rewrite.
+CODEMOD_SGCONFIG := sgconfig.yml
+CODEMOD_DIR ?= .
+
+codemod: ## Validate the ast-grep codemod library (FIX=1 DIR=<path> applies fixers, then re-checks)
+ifeq ($(FIX),1)
+	$(Q)echo "==> codemod FIX: applying fixers to $(CODEMOD_DIR)"; \
+	ast-grep scan --config $(CODEMOD_SGCONFIG) --update-all $(CODEMOD_DIR); \
+	echo "==> codemod: re-validating whole library after fix"; \
+	ast-grep test
+else
+	$(Q)echo "==> codemod CHECK: validating whole active library (ast-grep test)"; \
+	ast-grep test
+endif

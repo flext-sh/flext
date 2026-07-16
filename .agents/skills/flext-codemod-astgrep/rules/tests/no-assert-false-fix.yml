@@ -1,5 +1,0 @@
-id: no-assert-false-fix
-language: python
-rule:
-  pattern: assert False
-fix: 'pytest.fail("TODO: add failure reason")'

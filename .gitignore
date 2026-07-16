@@ -15,22 +15,19 @@
 # ============================================================================
 # Allow all FLEXT ecosystem project directories
 !.agents/
-!.agents/**
 !.claude/
 !.claude-plugin/
 !/config/
-!/config/workspace.yaml
 !.claude/CLAUDE.md
 !.claude/settings.json
 !.claude/settings.local.json
 !.code-review-graph/
 !.github/
 !.vscode/
-!/config/workspace.yaml
+!codemod/
 !docker/
 !docs/
 !flext-*/
-!libs/
 !src/
 !typings/
 .agents/skills/*/report.json
@@ -331,6 +328,13 @@ secrets.yml
 .beads-credential-key
 .worktrees/
 legado/
+
+# --- superseded ast-grep codemod rules kept for reference only ---
+# The flext-codemod-astgrep provider consolidates duplicate rule families into
+# generalized rules; the originals are archived under legacy/ and are never
+# loaded by ast-grep (outside ruleDirs) nor tracked by git.
+codemod/legacy/
+**/codemod/legacy/
 # --- ai-hub workspace local environment cache ---
 
 

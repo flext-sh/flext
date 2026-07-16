@@ -7,7 +7,13 @@
 # ruleDirs: directories containing rule YAML files
 # Each skill under .agents/skills/*/rules/ is discovered here.
 ruleDirs:
-  - .agents/skills/flext-codemod-astgrep/rules
+  - codemod/rules
+
+# utilDirs: global utility rules referenced by rules via `matches: <util-id>`.
+# One audited guard (e.g. tm-imported-from-flext) shared by the whole family,
+# instead of duplicating the block in every rule (SSOT for codemod guards).
+utilDirs:
+  - codemod/utils
 
 # testConfigs: directories containing test YAML files
 # Test files follow naming convention: {rule-id}-test.yml
@@ -21,4 +27,4 @@ ruleDirs:
 #       code: |
 #         code snippet to test
 testConfigs:
-  - testDir: .agents/skills/flext-codemod-astgrep/tests
+  - testDir: codemod/tests

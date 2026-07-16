@@ -1,9 +1,0 @@
-id: no-assert-false-fix
-snapshots:
-  assert False:
-    fixed: 'pytest.fail("TODO: add failure reason")'
-    labels:
-    - source: assert False
-      style: primary
-      start: 0
-      end: 12
