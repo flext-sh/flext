@@ -83,6 +83,17 @@ A faster command that produces a red lint/type/test gate is not acceptable. The
 transaction wrapper exists to detect breakage; any change that hides breakage
 is a regression, not an optimization.
 
+### 5. Generated-artifact linting is a single batched stage, not per template
+
+`flext-infra` lazy-init generation renders every `__init__.py` from a Jinja
+template. The renderer keeps a per-artifact `ruff format` pass because that
+output is the byte-canonical form the drift comparison relies on. The `ruff
+check` validation, by contrast, does not shape the bytes, so it runs once as a
+batched stage (`FlextInfraCodegenLazyInit.batch_lint_generated`) over the whole
+changed artifact set after generation, instead of spawning one cold `ruff
+check` subprocess per generated file. A generated artifact that fails the check
+is still reported and still fails generation; only the subprocess count drops.
+
 ## Consequences
 
 - First-pass changes (`mro-nij4`) reduced `codegen init --check-only` from
@@ -91,6 +102,12 @@ is a regression, not an optimization.
 - The remaining time is mostly inside the inner command, so deeper improvements
   must target Rope/indexing, subprocess scheduling, and import/model construction
   inside `flext-infra/codegen`.
+- Batched generated-artifact linting (`mro-96j2.4`) removes one cold `ruff
+  check` subprocess per generated `__init__.py`. For a full-workspace run that
+  generates ~225 initializers, the lint subprocess count drops from ~450
+  (format + check per file) to ~226 (format per file + one batched check),
+  proven byte-identical to the previous per-template output (`render_init`
+  output unchanged) with zero generated-file drift introduced.
 - All mutating commands that use the worktree transaction benefit from the
   parallel lint and plain-output fast paths automatically.
 - Future regressions in transaction time can be caught by comparing profiles
