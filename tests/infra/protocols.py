@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol, runtime_checkable
-
-from flext_tests import FlextTestsProtocols
-
 from importlib.machinery import ModuleSpec
 from pathlib import Path
 from types import ModuleType
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
+from flext_tests import FlextTestsProtocols
 
 
 class TestsFlextRootProtocols(FlextTestsProtocols):

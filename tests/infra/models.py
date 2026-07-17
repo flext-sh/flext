@@ -1,12 +1,10 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING, Annotated
 
 from flext_tests import FlextTestsModels
 from tests import u
-
-from pathlib import Path
-
 
 
 class TestsFlextRootModels(FlextTestsModels):

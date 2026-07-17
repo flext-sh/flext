@@ -5,13 +5,12 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import pytest
+
 from flext_tests import tm
 
 from ...infra.constants import c
 from ...infra.utilities import u
-
-import pytest
-
 
 
 class TestVersioning:
