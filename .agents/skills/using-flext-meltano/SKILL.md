@@ -30,7 +30,7 @@ description: >-
 
 | File | Content |
 |---|---|
-| `base.py` | `class Flext<Ns>ServiceBase(meltano.Tap|Target|Dbt): ...`; inject the domain facade as `self.<domain>` (PrivateAttr + `@property`). `s = Flext<Ns>ServiceBase`. |
+| `base.py` | `class Flext<Ns>ServiceBase(...)`; choose `meltano.Tap`, `meltano.Target`, or `meltano.Dbt` as the parent, inject the domain facade as `self.<domain>` (PrivateAttr + `@property`), and set `s = Flext<Ns>ServiceBase`. |
 | `api.py` | thin `Flext<Ns>Service(meltano.Tap)`; `create_tap_instance` -> `self.build_declarative_tap(u.<Ns>.tap_spec(), Flext<Ns>ExtractService())`. |
 | `cli.py` | `def main(args=None) -> int: return Flext<Ns>Service().cli_main(args)`. Console entry `<pkg>.cli:main`. |
 | `services/extract.py` | thin `RecordFetcher`: `fetch(m.Meltano.FetchRequest) -> r[m.Meltano.FetchResult]` — connect, search, `u.<Ns>.pack_entries`. |
@@ -47,10 +47,14 @@ from flext_meltano import m, meltano
 spec = m.Meltano.TapSpec(
     tap_name="tap-x",
     config_jsonschema=type(settings).model_json_schema(),
-    streams=(m.Meltano.StreamSpec(name="users", json_schema={...}, primary_keys=("dn",)),),
+    streams=(
+        m.Meltano.StreamSpec(name="users", json_schema={...}, primary_keys=("dn",)),
+    ),
 )
 # consumer implements p.Meltano.RecordFetcher.fetch(request) -> r[FetchResult]
-instance = FlextMeltanoDeclarativeTap.build(spec, fetcher)  # or self.build_declarative_tap(...)
+instance = FlextMeltanoDeclarativeTap.build(
+    spec, fetcher
+)  # or self.build_declarative_tap(...)
 ```
 
 - `p.Meltano.RecordFetcher.fetch(m.Meltano.FetchRequest) -> p.Result[m.Meltano.FetchResult]`
