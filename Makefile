@@ -37,6 +37,8 @@ DOCS_PHASE ?= all
 FAIL_FAST ?=
 JOBS ?=
 CHECK_GATES ?=
+MYPY_MEMORY_LIMIT_MB ?= 6144
+MYPY_TIMEOUT_SECONDS ?= 600
 VALIDATE_GATES ?=
 SCOPE ?= project
 NAMESPACE ?=
@@ -79,7 +81,7 @@ PR_CHECKPOINT ?= 1
 DEPS_REPORT ?= 1
 VERBOSE ?=
 
-PR_BRANCH ?= 0.12.0-dev
+PR_BRANCH ?= 0.12.0.rc0
 
 Q := @
 ifdef VERBOSE
@@ -119,7 +121,7 @@ WORKSPACE_PYTHONPATH := $(shell \
 		[ "$$skip" = "0" ] && [ -d "$(CURDIR)/$$d/src" ] && printf "$(CURDIR)/$$d/src:"; \
 	done)$(CURDIR)/src
 WORKSPACE_PYTHON := env -u PYTHONPATH -u MYPYPATH PYTHONPATH="$(WORKSPACE_PYTHONPATH)" $(PY)
-FLEXT_MAKE_DISPATCH := FLEXT_WORKSPACE_ROOT="$(CURDIR)" PROJECT="$(PROJECT)" PROJECTS="$(PROJECTS)" WHAT="$(WHAT)" PYTEST_ARGS="$(PYTEST_ARGS)" VALIDATE_SCOPE="$(VALIDATE_SCOPE)" DOCS_PHASE="$(DOCS_PHASE)" FAIL_FAST="$(FAIL_FAST)" JOBS="$(JOBS)" CHECK_GATES="$(CHECK_GATES)" VALIDATE_GATES="$(VALIDATE_GATES)" SCOPE="$(SCOPE)" NAMESPACE="$(NAMESPACE)" GATES="$(GATES)" PROPAGATE="$(PROPAGATE)" FIX="$(FIX)" FILE="$(FILE)" FILES="$(FILES)" CHANGED_ONLY="$(CHANGED_ONLY)" MATCH="$(MATCH)" RUFF_ARGS="$(RUFF_ARGS)" PYRIGHT_ARGS="$(PYRIGHT_ARGS)" CHECK_ONLY="$(CHECK_ONLY)" RELEASE_PHASE="$(RELEASE_PHASE)" INTERACTIVE="$(INTERACTIVE)" DRY_RUN="$(DRY_RUN)" PUSH="$(PUSH)" VERSION="$(VERSION)" MESSAGE="$(MESSAGE)" TAG="$(TAG)" BUMP="$(BUMP)" RELEASE_DEV_SUFFIX="$(RELEASE_DEV_SUFFIX)" RELEASE_NEXT_DEV="$(RELEASE_NEXT_DEV)" RELEASE_NEXT_BUMP="$(RELEASE_NEXT_BUMP)" CREATE_BRANCHES="$(CREATE_BRANCHES)" PR_ACTION="$(PR_ACTION)" PR_BASE="$(PR_BASE)" PR_HEAD="$(PR_HEAD)" PR_NUMBER="$(PR_NUMBER)" PR_TITLE="$(PR_TITLE)" PR_BODY="$(PR_BODY)" PR_DRAFT="$(PR_DRAFT)" PR_MERGE_METHOD="$(PR_MERGE_METHOD)" PR_AUTO="$(PR_AUTO)" PR_DELETE_BRANCH="$(PR_DELETE_BRANCH)" PR_CHECKS_STRICT="$(PR_CHECKS_STRICT)" PR_RELEASE_ON_MERGE="$(PR_RELEASE_ON_MERGE)" PR_INCLUDE_ROOT="$(PR_INCLUDE_ROOT)" PR_CHECKPOINT="$(PR_CHECKPOINT)" DEPS_REPORT="$(DEPS_REPORT)" VERBOSE="$(VERBOSE)" PR_BRANCH="$(PR_BRANCH)" PYTHONPATH="$(WORKSPACE_PYTHONPATH)" uv run --all-packages python -m scripts.dispatch
+FLEXT_MAKE_DISPATCH := FLEXT_WORKSPACE_ROOT="$(CURDIR)" PROJECT="$(PROJECT)" PROJECTS="$(PROJECTS)" WHAT="$(WHAT)" PYTEST_ARGS="$(PYTEST_ARGS)" VALIDATE_SCOPE="$(VALIDATE_SCOPE)" DOCS_PHASE="$(DOCS_PHASE)" FAIL_FAST="$(FAIL_FAST)" JOBS="$(JOBS)" CHECK_GATES="$(CHECK_GATES)" MYPY_MEMORY_LIMIT_MB="$(MYPY_MEMORY_LIMIT_MB)" MYPY_TIMEOUT_SECONDS="$(MYPY_TIMEOUT_SECONDS)" VALIDATE_GATES="$(VALIDATE_GATES)" SCOPE="$(SCOPE)" NAMESPACE="$(NAMESPACE)" GATES="$(GATES)" PROPAGATE="$(PROPAGATE)" FIX="$(FIX)" FILE="$(FILE)" FILES="$(FILES)" CHANGED_ONLY="$(CHANGED_ONLY)" MATCH="$(MATCH)" RUFF_ARGS="$(RUFF_ARGS)" PYRIGHT_ARGS="$(PYRIGHT_ARGS)" CHECK_ONLY="$(CHECK_ONLY)" RELEASE_PHASE="$(RELEASE_PHASE)" INTERACTIVE="$(INTERACTIVE)" DRY_RUN="$(DRY_RUN)" PUSH="$(PUSH)" VERSION="$(VERSION)" MESSAGE="$(MESSAGE)" TAG="$(TAG)" BUMP="$(BUMP)" RELEASE_DEV_SUFFIX="$(RELEASE_DEV_SUFFIX)" RELEASE_NEXT_DEV="$(RELEASE_NEXT_DEV)" RELEASE_NEXT_BUMP="$(RELEASE_NEXT_BUMP)" CREATE_BRANCHES="$(CREATE_BRANCHES)" PR_ACTION="$(PR_ACTION)" PR_BASE="$(PR_BASE)" PR_HEAD="$(PR_HEAD)" PR_NUMBER="$(PR_NUMBER)" PR_TITLE="$(PR_TITLE)" PR_BODY="$(PR_BODY)" PR_DRAFT="$(PR_DRAFT)" PR_MERGE_METHOD="$(PR_MERGE_METHOD)" PR_AUTO="$(PR_AUTO)" PR_DELETE_BRANCH="$(PR_DELETE_BRANCH)" PR_CHECKS_STRICT="$(PR_CHECKS_STRICT)" PR_RELEASE_ON_MERGE="$(PR_RELEASE_ON_MERGE)" PR_INCLUDE_ROOT="$(PR_INCLUDE_ROOT)" PR_CHECKPOINT="$(PR_CHECKPOINT)" DEPS_REPORT="$(DEPS_REPORT)" VERBOSE="$(VERBOSE)" PR_BRANCH="$(PR_BRANCH)" PYTHONPATH="$(WORKSPACE_PYTHONPATH)" uv run --all-packages python -m scripts.dispatch
 WORKSPACE_FLEXT_INFRA := FLEXT_WORKSPACE_ROOT="$(CURDIR)" $(WORKSPACE_PYTHON) -m flext_infra
 WORKSPACE_INFRA_CHECK := $(WORKSPACE_FLEXT_INFRA) check
 WORKSPACE_INFRA_CODEGEN := $(WORKSPACE_FLEXT_INFRA) codegen
@@ -326,16 +328,6 @@ _boot_default: ## Install all projects into workspace .venv
 			log_file="/tmp/flext-setup-$$proj.log"; \
 			start_ts=$$(date +%s); \
 			printf "[%2d/%2d] boot %s\n" $$step $$total_steps "$$proj"; \
-			if $(WORKSPACE_INFRA_DEPS) internal-sync --workspace "$$proj" >>"$$log_file" 2>&1; then \
-				:; \
-			else \
-				echo "     sync  ... failed"; \
-				cat "$$log_file"; \
-				failed=$$((failed + 1)); \
-				failed_projects="$$failed_projects $$proj"; \
-				step=$$((step + 1)); \
-				continue; \
-			fi; \
 			printf "     lock  ... "; \
 			if uv lock --directory "$$proj" >"$$log_file" 2>&1; then \
 				echo "ok"; \
@@ -359,12 +351,6 @@ _boot_default: ## Install all projects into workspace .venv
 	start_ts=$$(date +%s); \
 	root_lock_ok=0; \
 	printf "[%2d/%2d] boot %s\n" $$step $$total_steps "root"; \
-	if ! $(WORKSPACE_INFRA_DEPS) internal-sync --workspace . >"$$log_file" 2>&1; then \
-		echo "     sync  ... failed"; \
-		cat "$$log_file"; \
-		failed=$$((failed + 1)); \
-		failed_projects="$$failed_projects root"; \
-	fi; \
 	printf "     lock  ... "; \
 	if uv lock >"$$log_file" 2>&1; then \
 		echo "ok"; \
@@ -410,6 +396,7 @@ _boot_default: ## Install all projects into workspace .venv
 		echo "INFO: skipping pre-commit install (no git repository or config)"; \
 	fi
 
+# mro-45r9: resolve and maximize atomically; a conservative pre-lock can downgrade first.
 _up: ## Refresh workspace lock/install + rewrite dependency constraints + dependency report
 	$(Q)$(REQUIRE_VENV)
 	$(Q)$(ENSURE_NO_PROJECT_CONFLICT)
@@ -424,15 +411,7 @@ _up: ## Refresh workspace lock/install + rewrite dependency constraints + depend
 	$(Q)echo "Upgrading workspace dependencies (uv workspace mode)..."; \
 	log_file="/tmp/flext-upgrade-workspace.log"; \
 	start_ts=$$(date +%s); \
-	printf " lock    ... "; \
-	if uv lock >"$$log_file" 2>&1; then \
-		echo "ok"; \
-	else \
-		echo "failed"; \
-		cat "$$log_file"; \
-		exit 1; \
-	fi; \
-	printf " update  ... "; \
+	printf " resolve ... "; \
 	if uv lock --upgrade >"$$log_file" 2>&1; then \
 		echo "ok"; \
 	else \
@@ -453,7 +432,7 @@ _up: ## Refresh workspace lock/install + rewrite dependency constraints + depend
 	echo "Upgrade summary: Upgraded=workspace Failed=0 Total=workspace"; \
 
 	$(Q)echo "Rewriting dependency constraints from uv.lock..."
-	$(Q)$(WORKSPACE_INFRA_DEPS) modernize --apply --rewrite-constraints --constraint-policy floor $(MODERNIZE_SELECTION_FLAGS)
+	$(Q)$(WORKSPACE_INFRA_DEPS) modernize --apply --rewrite-constraints --constraint-policy floor $(MODERNIZE_SELECTION_FLAGS) || exit 1
 
 	if [ "$(DEPS_REPORT)" != "0" ]; then \
 		printf "Dependency report (deptry + pip check)... "; \
@@ -491,7 +470,7 @@ _constraints: ## Rewrite dependency constraints from uv.lock (policy=floor). Use
 	$(Q)$(ENSURE_SELECTED_PROJECTS)
 	$(Q)$(ENSURE_PROJECTS_EXIST)
 	$(Q)echo "Rewriting dependency constraints from uv.lock..."; \
-	$(WORKSPACE_INFRA_DEPS) modernize --apply --rewrite-constraints --constraint-policy floor $(MODERNIZE_SELECTION_FLAGS); \
+	$(WORKSPACE_INFRA_DEPS) modernize --apply --rewrite-constraints --constraint-policy floor $(MODERNIZE_SELECTION_FLAGS) || exit 1; \
 	echo ""
 	$(Q)echo "Dependency constraint rewrite complete."
 
