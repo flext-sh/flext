@@ -1,0 +1,34 @@
+id: test-assert-is-false-to-tm
+snapshots:
+  ? |
+    from flext_tests import tm
+    def test_value() -> None:
+        assert flag is False
+  : fixed: |
+      from flext_tests import tm
+      def test_value() -> None:
+          tm.that(flag, eq=False)
+    labels:
+    - source: assert flag is False
+      style: primary
+      start: 57
+      end: 77
+    - source: tm
+      style: secondary
+      start: 24
+      end: 26
+    - source: flext_tests
+      style: secondary
+      start: 5
+      end: 16
+    - source: from flext_tests import tm
+      style: secondary
+      start: 0
+      end: 26
+    - source: |
+        from flext_tests import tm
+        def test_value() -> None:
+            assert flag is False
+      style: secondary
+      start: 0
+      end: 78
