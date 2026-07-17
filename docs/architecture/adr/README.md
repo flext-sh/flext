@@ -12,5 +12,6 @@ This directory contains the accepted Architecture Decision Records that are curr
 - [ADR-004: Generated Make and codegen SSOT owned by `flext-infra`](004-generic-make-framework-in-flext-tests.md)
 - [ADR-005: Config, settings, constants, templates, and schemas SSOT](005-config-settings-constants-templates-schemas-ssot.md)
 - [ADR-006: Thin Domain Drivers over flext-meltano Bases + Action Libraries](006-thin-domain-drivers-over-meltano-bases.md) — _Accepted_
+- [ADR-007: Performance optimization of worktree transactions and mutating CLI commands](007-worktree-transaction-performance.md) — _Accepted_
 
 New ADRs should be added only when they represent a real architectural decision with an owning implementation path.

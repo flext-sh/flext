@@ -35,11 +35,13 @@ external dispatcher name in documentation.
 1. Make the smallest coherent root-cause change.
 2. Remove the superseded path in the same cycle.
 3. Run the narrowest read-only gate from `flext-quality-gates`.
-4. Update every affected consumer atomically.
-5. Update docs, skills, agents, and provider metadata when reality changed; if
+4. For performance changes, capture a `cProfile` baseline and an optimized
+   profile following `docs/standards/performance-profiling.md`.
+5. Update every affected consumer atomically.
+6. Update docs, skills, agents, and provider metadata when reality changed; if
    not, verify impacted surfaces remain current.
-6. Append state and evidence to the root-workspace Bead.
-7. Widen to the affected Make gate only after narrow feedback is green.
+7. Append state and evidence to the root-workspace Bead.
+8. Widen to the affected Make gate only after narrow feedback is green.
 
 Tests validate public behavior but never define the contract or source of
 truth.
@@ -70,3 +72,5 @@ The root `Makefile` owns this surface. Verify `make help` whenever it changes.
 - [`flext-quality-gates`](../flext-quality-gates/SKILL.md)
 - [`flext-beads-coordination`](../flext-beads-coordination/SKILL.md)
 - [`docs/GOVERNANCE.md`](../../../docs/GOVERNANCE.md)
+- [`ADR-007`](../../../docs/architecture/adr/007-worktree-transaction-performance.md)
+- [`docs/standards/performance-profiling.md`](../../../docs/standards/performance-profiling.md)
