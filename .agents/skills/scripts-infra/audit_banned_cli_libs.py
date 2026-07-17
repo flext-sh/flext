@@ -11,7 +11,7 @@ Banned EVERYWHERE outside flext-cli/flext-core:
 - colorama: use cli.print with c.Cli.MessageStyles
 - prompt_toolkit, tqdm: use cli.prompt / cli.display_progress
 - getpass: use cli.prompt_password
-- orjson, ujson, simplejson: use cli.read_json_file / cli.write_json_file / u.Cli.json_dumps
+- orjson, ujson, simplejson: use cli.json_read_file / cli.json_write_file / u.Cli.json_dumps
 - process module from stdlib: use cli.run / cli.capture / cli.run_raw / cli.run_checked / cli.run_to_file
 - json/yaml/csv direct usage: use cli.read_*_file / cli.write_*_file
 
@@ -61,9 +61,9 @@ BANNED_LIBS = {
     "prompt_toolkit": "cli.prompt / cli.confirm / cli.prompt_choice / cli.prompt_password",
     "tqdm": "cli.display_progress",
     "getpass": "cli.prompt_password",
-    "orjson": "cli.read_json_file / cli.write_json_file / u.Cli.json_dumps",
-    "ujson": "cli.read_json_file / cli.write_json_file / u.Cli.json_dumps",
-    "simplejson": "cli.read_json_file / cli.write_json_file / u.Cli.json_dumps",
+    "orjson": "cli.json_read_file / cli.json_write_file / u.Cli.json_dumps",
+    "ujson": "cli.json_read_file / cli.json_write_file / u.Cli.json_dumps",
+    "simplejson": "cli.json_read_file / cli.json_write_file / u.Cli.json_dumps",
 }
 
 PROC_MOD = "sub" + "process"  # avoid hook trigger
@@ -110,17 +110,17 @@ def _scan_file(py_file: Path, project_name: str) -> list[str]:
     if JSON_DIRECT_REGEX.search(text):
         violations.append(
             f"{py_file}: uses json.load/dump — "
-            "use cli.read_json_file / cli.write_json_file / u.Cli.json_dumps",
+            "use cli.json_read_file / cli.json_write_file / u.Cli.json_dumps",
         )
     if YAML_DIRECT_REGEX.search(text):
         violations.append(
             f"{py_file}: uses yaml.safe_load/dump — "
-            "use cli.read_yaml_file / cli.write_yaml_file",
+            "use cli.yaml_read_file / cli.yaml_write_file",
         )
     if CSV_DIRECT_REGEX.search(text):
         violations.append(
             f"{py_file}: uses csv.reader/writer — "
-            "use cli.read_csv_file_with_headers / cli.write_csv_file",
+            "use cli.csv_read_file_with_headers / cli.csv_write_file",
         )
     if PRINT_DIRECT_REGEX.search(text):
         violations.append(

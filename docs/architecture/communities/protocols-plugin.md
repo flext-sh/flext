@@ -87,7 +87,7 @@ No execution flows pass through this community.
 - `Response` (3 edge(s))
 - `Base` (3 edge(s))
 - `map` (3 edge(s))
-- `p.Model` (2 edge(s))
+- `p.BaseModel` (2 edge(s))
 
 ### Incoming
 

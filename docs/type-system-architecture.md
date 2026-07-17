@@ -311,7 +311,7 @@ m.Options                   # Generic options
 m.Cli                       # CLI domain
   .CliCommand               # Command model
   .CliSession               # Session model
-  .CliSettings                # CLI configuration
+  .Settings                # CLI configuration
   .SystemInfo               # System information (module alias available)
   .EnvironmentInfo          # Environment info (module alias available)
   .PathInfo                 # Path information (module alias available)
