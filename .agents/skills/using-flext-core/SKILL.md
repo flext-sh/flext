@@ -140,7 +140,7 @@ from flext_core import c, m, r, p, t, u
 ```python notest
 # Illustrative anti-patterns — these imports bypass the canonical facade.
 from flext_core._models.base import SomeModel  # bypass facade
-from flext_core.result import ok, fail  # bypass r alias
+from flext_core import ok, fail  # bypass r alias
 from flext_core import s as settings  # s is service/runtime, not settings
 ```
 

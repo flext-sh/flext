@@ -106,7 +106,7 @@ runtime = s(settings=settings)
 
 ```python
 from flext_core._models.base import SomeModel  # bypass facade
-from flext_core.result import ok, fail  # bypass r alias
+from flext_core import ok, fail  # bypass r alias
 from flext_core import s as settings  # wrong: s is service/runtime
 ```
 

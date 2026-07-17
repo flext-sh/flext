@@ -112,7 +112,7 @@ the canonical decision.
 FlextSettings.fetch_global().debug = True
 
 # Importing returns directly instead of using the r alias
-from returns.result import Success
+from returns import Success
 ```
 
 ## Related
