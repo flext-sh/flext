@@ -139,7 +139,7 @@ Suggested command baseline per cycle:
 - `ruff check <PATHS>`
 - `pyrefly check <PATHS>`
 - `pyright <PATHS>`
-- `mypy <PATHS>`
+- `MYPY_MEMORY_LIMIT_MB=6144 MYPY_TIMEOUT_SECONDS=600 make check WHAT=mypy PROJECT=<PROJECT>`
 - `pytest <TEST_PATHS>`
 
 Required output format per cycle:
