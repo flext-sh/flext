@@ -23,6 +23,18 @@ valid:
     def value(self) -> str:
         """The value we return to the caller."""
         return self._value
+  # Check if/whether is owned by property-docstring-check-to-whether (R2),
+  # NOT the strip rule -> R1 must NOT match it (no dangling "If" output)
+  - |
+    @property
+    def is_expired(self) -> bool:
+        """Check if the token is expired."""
+        return self._expired
+  - |
+    @property
+    def is_ready(self) -> bool:
+        """Determine whether the service is ready."""
+        return self._ready
 invalid:
   # canonical Return head under exact @property
   - |

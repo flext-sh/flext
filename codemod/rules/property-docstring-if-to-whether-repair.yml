@@ -1,0 +1,43 @@
+# ONE-TIME REPAIR rule (not a permanent suite member).
+#
+# An earlier revision of property-docstring-imperative-to-noun wrongly stripped
+# `Check` from `Check if X` under a @property, producing the dangling connective
+# `"""If X"""`. Verified: zero `"""If ` property docstrings existed in any repo
+# HEAD before that codemod, so every `"""If <X>"""` under an exact @property is
+# that mangled artifact. This rule rewrites it to the correct noun phrase
+# `"""Whether <X>"""`. Delete this file after the repair APPLY + validation.
+id: property-docstring-if-to-whether-repair
+language: python
+severity: hint
+files:
+  - "**/*.py"
+ignores:
+  - "**/.claude/**"
+  - "**/.git/**"
+  - "**/.venv/**"
+  - "**/legado/**"
+  - "**/legacy/**"
+  - "**/node_modules/**"
+  - "**/*_pb2.py"
+  - "**/*_pb2_grpc.py"
+message: >-
+  Repair: an imperative-strip codemod left a dangling `If` connective on a
+  boolean @property docstring. Rewrite `If X` into the noun phrase `Whether X`.
+rule:
+  all:
+    - pattern: $DOC
+    - kind: string
+    - regex: '^(?:"""|\x27\x27\x27)If\s+\S'
+    - inside:
+        kind: decorated_definition
+        has:
+          kind: decorator
+          regex: "^@property$"
+        stopBy: end
+transform:
+  FIXED:
+    replace:
+      source: $DOC
+      replace: '^((?:"""|\x27\x27\x27))If\s+'
+      by: '${1}Whether '
+fix: $FIXED
