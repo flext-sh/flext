@@ -1,0 +1,66 @@
+id: test-assert-is-true-to-tm
+snapshots:
+  ? |
+    from flext_infra import tm
+    def test_value() -> None:
+        assert result.value is True
+  : fixed: |
+      from flext_infra import tm
+      def test_value() -> None:
+          tm.that(result.value, eq=True)
+    labels:
+    - source: assert result.value is True
+      style: primary
+      start: 57
+      end: 84
+    - source: tm
+      style: secondary
+      start: 24
+      end: 26
+    - source: flext_infra
+      style: secondary
+      start: 5
+      end: 16
+    - source: from flext_infra import tm
+      style: secondary
+      start: 0
+      end: 26
+    - source: |
+        from flext_infra import tm
+        def test_value() -> None:
+            assert result.value is True
+      style: secondary
+      start: 0
+      end: 85
+  ? |
+    from flext_tests import tm
+    def test_value() -> None:
+        assert flag is True
+  : fixed: |
+      from flext_tests import tm
+      def test_value() -> None:
+          tm.that(flag, eq=True)
+    labels:
+    - source: assert flag is True
+      style: primary
+      start: 57
+      end: 76
+    - source: tm
+      style: secondary
+      start: 24
+      end: 26
+    - source: flext_tests
+      style: secondary
+      start: 5
+      end: 16
+    - source: from flext_tests import tm
+      style: secondary
+      start: 0
+      end: 26
+    - source: |
+        from flext_tests import tm
+        def test_value() -> None:
+            assert flag is True
+      style: secondary
+      start: 0
+      end: 77

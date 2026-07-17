@@ -1,0 +1,134 @@
+# FLEXT test-assert `is`-comparison codemods -> canonical tm matchers.
+#
+# Rewrite the unambiguous identity assertions a FLEXT test writes against
+# booleans and None into the canonical `tm` matcher, but ONLY when `tm` is
+# already imported from a flext facade. Message-bearing asserts are left for
+# contextual review. `is True/False` map to eq (the operand is a real bool in
+# these tests); `is None` / `is not None` map to the dedicated none matcher.
+id: test-assert-is-true-to-tm
+language: python
+severity: hint
+files:
+  - "**/tests/**/*.py"
+  - "tests/**/*.py"
+ignores:
+  - "**/legado/**"
+message: >-
+  An `is True` assertion in a FLEXT test can use the canonical tm matcher when
+  tm is already imported from a flext facade.
+rule:
+  kind: assert_statement
+  all:
+    - pattern: assert $EXPR is True
+    - not:
+        pattern: assert $CONDITION, $MESSAGE
+    - inside:
+        kind: module
+        stopBy: end
+        has:
+          kind: import_from_statement
+          stopBy: end
+          all:
+            - has:
+                pattern: tm
+                stopBy: end
+            - has:
+                field: module_name
+                regex: "^flext(?:_[a-z0-9_]+)?$"
+fix: "tm.that($EXPR, eq=True)"
+---
+id: test-assert-is-false-to-tm
+language: python
+severity: hint
+files:
+  - "**/tests/**/*.py"
+  - "tests/**/*.py"
+ignores:
+  - "**/legado/**"
+message: >-
+  An `is False` assertion in a FLEXT test can use the canonical tm matcher when
+  tm is already imported from a flext facade.
+rule:
+  kind: assert_statement
+  all:
+    - pattern: assert $EXPR is False
+    - not:
+        pattern: assert $CONDITION, $MESSAGE
+    - inside:
+        kind: module
+        stopBy: end
+        has:
+          kind: import_from_statement
+          stopBy: end
+          all:
+            - has:
+                pattern: tm
+                stopBy: end
+            - has:
+                field: module_name
+                regex: "^flext(?:_[a-z0-9_]+)?$"
+fix: "tm.that($EXPR, eq=False)"
+---
+id: test-assert-is-not-none-to-tm
+language: python
+severity: hint
+files:
+  - "**/tests/**/*.py"
+  - "tests/**/*.py"
+ignores:
+  - "**/legado/**"
+message: >-
+  An `is not None` assertion in a FLEXT test can use the canonical tm none
+  matcher when tm is already imported from a flext facade.
+rule:
+  kind: assert_statement
+  all:
+    - pattern: assert $EXPR is not None
+    - not:
+        pattern: assert $CONDITION, $MESSAGE
+    - inside:
+        kind: module
+        stopBy: end
+        has:
+          kind: import_from_statement
+          stopBy: end
+          all:
+            - has:
+                pattern: tm
+                stopBy: end
+            - has:
+                field: module_name
+                regex: "^flext(?:_[a-z0-9_]+)?$"
+fix: "tm.that($EXPR, none=False)"
+---
+id: test-assert-is-none-to-tm
+language: python
+severity: hint
+files:
+  - "**/tests/**/*.py"
+  - "tests/**/*.py"
+ignores:
+  - "**/legado/**"
+message: >-
+  An `is None` assertion in a FLEXT test can use the canonical tm none matcher
+  when tm is already imported from a flext facade.
+rule:
+  kind: assert_statement
+  all:
+    - pattern: assert $EXPR is None
+    - not:
+        pattern: assert $CONDITION, $MESSAGE
+    - inside:
+        kind: module
+        stopBy: end
+        has:
+          kind: import_from_statement
+          stopBy: end
+          all:
+            - has:
+                pattern: tm
+                stopBy: end
+            - has:
+                field: module_name
+                regex: "^flext(?:_[a-z0-9_]+)?$"
+fix: "tm.that($EXPR, none=True)"
