@@ -48,12 +48,16 @@ be proved, STOP, record exact evidence, and ask; never improvise or rush.
 
 Direct operator mandate (2026-06-12). These prevail together with the rules below and bind every agent, in every project, in every session:
 
-- **I. Absolute honesty (100%).** Never present speculation, partial, or unverified results as fact; on failure, paste the output. Skepticism by default: a claim without executable evidence is not truth. Claim scope must match evidence scope.
+- **I. Absolute honesty (100%).** Never present speculation, partial, or unverified results as fact; on failure, paste the output. Skepticism by default: a claim without
+  executable evidence is not truth. Claim scope must match evidence scope.
 - **II. Research-first.** Don't know → RESEARCH (codebase, docs, web) BEFORE acting. Inventing an API, flag, fact, or behavior violates I — research costs seconds; an invented fact costs the whole debt.
 - **III. Strict always.** Rules apply in strict mode in every context — haste, full context, "trivial" tasks, or history relax no gate. A rule that "seems not to apply" still applies until the operator says otherwise.
-- **IV. No-bypass + UNDO.** Beyond never creating a bypass/fallback/suppression/hidden problem: **found one — even inherited, even by another author — it is a defect of YOUR current flow**: undo it and fix at the root when safe and canonical; if destructive/ambiguous, record it and ask the operator IMMEDIATELY. Noting it and moving on = hiding it.
-- **V. Operator authority with escalation.** Execute what the operator requests. If the request is dangerous or conflicts with rules: surface the conflict explicitly, clarify doubts, and ask for their decision — never refuse silently, never execute blindly, never deviate from what was agreed without asking first. Approval is scope-specific.
-- **VI. Universal engineering principles.** YAGNI, KISS, SOLID, and DI apply as concepts in EVERY project, even without tooling: deduplicate > create; edit the canonical > create a parallel; net-LOC trending negative on refactors; simplicity > cleverness. (Detail: Rule 9.)
+- **IV. No-bypass + UNDO.** Beyond never creating a bypass/fallback/suppression/hidden problem: **found one — even inherited, even by another author — it is a defect of YOUR current
+  flow**: undo it and fix at the root when safe and canonical; if destructive/ambiguous, record it and ask the operator IMMEDIATELY. Noting it and moving on = hiding it.
+- **V. Operator authority with escalation.** Execute what the operator requests. If the request is dangerous or conflicts with rules: surface the conflict explicitly, clarify doubts, and
+  ask for their decision — never refuse silently, never execute blindly, never deviate from what was agreed without asking first. Approval is scope-specific.
+- **VI. Universal engineering principles.** YAGNI, KISS, SOLID, and DI apply as concepts in EVERY project, even without tooling: deduplicate > create; edit the canonical > create a
+  parallel; net-LOC trending negative on refactors; simplicity > cleverness. (Detail: Rule 9.)
 - **VII. Responsibility before mutation.** Research the full contract and prove
   completeness, consumer safety, and rollback-free cutover before changing any
   canonical surface. No rushed, partial, opaque, fake, or broken artifact is
@@ -145,9 +149,10 @@ inspection (`status`/`log`/`diff`) is always fine.
 ### 11. Beads-First Multi-Agent Coordination
 
 Agents may share one working tree. The source of truth for work, ownership, dependencies, and completion is
-**beads (`bd`) inside the repository**, not markdown task boards, chat, transcript memory, or ad-hoc files.
-If `.beads/` is absent, initialize or request initialization before starting non-trivial work; never invent a
-parallel tracker.
+**beads (`bd`) at the owning workspace root**, not markdown task boards, chat, transcript memory, or ad-hoc
+files. A member repository or submodule always reuses its workspace root tracker and must never initialize a
+parallel database. Only a genuinely independent project owns its own `.beads/`; establish that boundary before
+initializing or requesting initialization.
 
 The durable backend baseline is `bd` with Dolt. Multi-agent and multi-project machines use Dolt
 server/shared-server mode so concurrent writers go through one SQL server; embedded/single-writer mode is for
@@ -155,9 +160,9 @@ solo use only. `.beads/issues.jsonl` is an export/import artifact, not the live 
 database recovery and cross-machine durability use `bd backup` and `bd dolt`/Dolt remotes; JSONL import is a
 protected migration/recovery path after backups, not a normal sync surface.
 
-- The project-level `beads.role` config must be set to a valid durable authority role (default: `maintainer`
-  unless the repo documents another value). Do not mutate `beads.role` just to switch task phase; task phase
-  lives in labels.
+- The workspace-root `beads.role` config must be set to a valid durable authority role (default: `maintainer`
+  unless the workspace documents another value). Do not mutate `beads.role` just to switch task phase; task
+  phase lives in labels.
 - Every non-trivial bead carries canonical labels: `role:<role>`, `agent:<agent>`, `phase:<phase>`, and when
   useful `gate:<gate>` / `scope:<area>` / `project:<member>`. Required roles are `planner`, `coordinator`,
   `executor`, `validator`, `security`, `reviewer`, and `maintainer`.
@@ -208,9 +213,11 @@ protected migration/recovery path after backups, not a normal sync surface.
 - Never edit `.beads/*.jsonl` or any beads database/export by hand. Every create/update/close/dependency/status
   change goes through `bd`, followed by the repo's `bd backup status` / `bd dolt status` / validation path.
   Do not use `bd --no-db`, manual JSONL edits, or `bd export -o` as a substitute for Dolt-backed state.
-- Git hooks for Beads are part of the baseline: run `bd hooks install --chain` in each repository and verify with
-  `bd hooks list --json`. The `prepare-commit-msg` hook must be guarded so it does not add agent attribution
-  trailers unless the user explicitly opts in with `BD_ALLOW_AGENT_COMMIT_TRAILERS=1`; R5 forbids trailers by default.
+- Git hooks for Beads are part of the workspace-root baseline: run `bd hooks install --chain` once at that root
+  and verify with `bd hooks list --json`. Do not install a second tracker or hook set in member repositories or
+  submodules. An independent project uses its own root. The `prepare-commit-msg` hook must be guarded so it does
+  not add agent attribution trailers unless the user explicitly opts in with
+  `BD_ALLOW_AGENT_COMMIT_TRAILERS=1`; R5 forbids trailers by default.
 
 **Never overwrite or discard another agent's work** (see Rule 2); on a divergent approach, stop and escalate to
 the user.
@@ -741,3 +748,11 @@ Choose commands from
 test never overrides a stale declaration or config; correct the owner first,
 then update the validator. Completion requires the affected native gates,
 explicit-path staging, a scoped commit, a fast-forward push, and Bead evidence.
+
+<!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->
+## Workspace providers
+
+These routes are generated from provider-owned manifests.
+
+- flext: read `.agents/skills/flext-context-routing/SKILL.md` first.
+<!-- AIHUB-WORKSPACE-PROVIDERS-END -->

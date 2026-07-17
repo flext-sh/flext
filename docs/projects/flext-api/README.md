@@ -4,10 +4,10 @@ FLEXT API is the FLEXT platform's HTTP client layer: a typed REST client facade 
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (current development cycle)
+- **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+
 - **Project class**: `platform`
-- **Status**: Active development on the `0.12.0-dev` branch; the package builds and exports its full public surface.
+- **Status**: Active development on the `0.20.0-dev` branch; the package builds and exports its full public surface.
 - **Description** (from `pyproject.toml`): "FLEXT API - High-Performance REST API with FastAPI"
 - **Dependencies**: `flext-core`, `flext-web`
 

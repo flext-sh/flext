@@ -4,7 +4,7 @@ FLEXT DB Oracle is the enterprise Oracle Database operations library of the FLEX
 
 ## Status & health
 
-- **Version**: `0.12.0-dev` (active development cycle)
+- **Version**: `0.20.0-dev` (active development cycle)
 - **Python**: 3.13+
 - **Project class**: domain library
 - **Dependencies**: `flext-core`, `flext-cli`, `oracledb`, `pydantic`

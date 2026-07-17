@@ -2,9 +2,9 @@
 
 ## Status
 
-Proposed
+Accepted (tap pilot realized 2026-07-17)
 
-**Tracking:** beads lane `mro-rn88` (pilot: flext-dbt-oracle, flext-tap-oracle, flext-target-oracle). Rollout to the remaining `flext-(dbt|tap|target)-*` projects follows the pilot.
+**Tracking:** beads lane `mro-rn88` (dbt/target inventory) + `mro-6int.3` (tap declarative pilot: **flext-tap-ldap**, landed). Rollout to the remaining `flext-(dbt|tap|target)-*` projects follows the flext-tap-ldap pilot.
 
 **Depends:** builds on ADR-005 (config/settings SSOT) and the FLEXT law (`~/.ai-hub/commands/flext-law.md`) — §1.2 Pydantic-2 models everywhere, §3.2 types come from protocols `p.*` not concrete models, §3a JSON is Pydantic 2-way, §1.5 no duplicated declarations across projects.
 
@@ -56,6 +56,19 @@ Adopt the **Thin Domain Driver** contract for every `flext-(dbt|tap|target)-<dom
 - **Negative / risk:** touching the flext-meltano dbt base changes a contract shared by 4 dbt consumers — must land base + all 4 in the **same batch** (flext-law §4B.4). target-oracle's 861-line loader is the largest, riskiest cut; staged behind its own acceptance gate.
 - **Migration order (pilot):** (1) add `p.Meltano.DbtConnectionProfile` + retype the base; (2) dbt-oracle returns a direct model, delete its duplicated settings/model; (3) same for dbt-ldap/ldif/oracle-wms (same-batch consumers of the base); (4) tap-oracle gains a real base subclass, delete hand-rolled tap/streams; (5) target-oracle reuses `settings.DbOracle`, normalize its base, scope the loader cut separately. Each step: `uv run` per-file gate + `make check`/`make test` per project, net-LOC ≤ 0.
 
+## Realized mechanism — Declarative tap (flext-tap-ldap pilot, 2026-07-17)
+
+The tap pilot sharpened rule 1 into a **declarative** driver so the consumer declares data, never machinery. New inviolable rules (bind every `flext-(tap|target|dbt)-*`):
+
+1. **Only `flext-meltano` imports `singer_sdk`/`dbt`.** Each `flext-<domain>` library imports its own external lib; integration projects import ONLY flext-* libraries.
+2. **Consumers compose the base via `meltano.Tap` / `meltano.Target` / `meltano.Dbt`** (MRO facade `services/consumer_bases/facade.py`), never a private `consumer_bases` module import.
+3. **A tap driver declares a `m.Meltano.TapSpec`** (tap_name + `config_jsonschema` from the settings model + a tuple of `m.Meltano.StreamSpec`) and a `p.Meltano.RecordFetcher`. `flext-meltano` (`services/declarative_tap.py` `FlextMeltanoDeclarativeTap.build`) turns that into a real `singer_sdk` tap with a WORKING flat Singer CLI. This fixed a fleet-wide bug: the old `cli_main` pre-built the tap with `config=None`, crashing `singer_sdk` before it parsed `--config`.
+4. **Typed transport, packed once** — the consumer receives `m.Meltano.FetchRequest(stream_name, config)` and returns `p.Result[m.Meltano.FetchResult(records)]`. No dict/round-trip across the boundary; records stay in Singer-native `JsonMapping` (the wire shape).
+5. **Layering law:** `services/*` import only `c,t,p,m,u` + `s` from `base.py`; helpers live in `_utilities/*`; `utilities.py` is an MRO of `_utilities/*` mixins + composed library facades; services are thin orchestrators. `base.py` `s = meltano-service-base` with the domain facade injected (`self.ldap`, algar-oud-mig pattern).
+6. **Config/settings SSOT:** `config/` at PROJECT ROOT; `config.<Ns>.streams` typed via `_models/config.py` (`m.FrozenModel`, validated `cached_property`) = business rules; `settings.<Ns>.*` = every adjustable param (`.env`/env/local/CLI/API parametrize it), reusing the action library's `settings.<Domain>.*` by MRO. Console entry always `<pkg>.cli:main` → `Service().cli_main(args)`.
+
+**Pilot result (flext-tap-ldap):** src 3276 → 914 LOC (−72%); deleted `tap.py`/`client.py`/`streams.py`/`ldif_streams.py` + old `_utilities` mixins; real console `tap-ldap --config X --discover` exit 0 emits a 4-stream catalog (was a production crash); e2e runs the real console via the flext-cli SSOT runner (`u.Cli.capture`) with shared `c.Ldap.Tests.*` constants; 18 tests green. Commits: flext-meltano `71ddd336`/`1ed51f5c`/`0eb11578`, flext-tap-ldap `6cf7a75`/`714abc3`/`38829ba`/`0a47dac`/`9d68444`/`e2f8887`/`ebb47f3`.
+
 ## Evidence
 
-Explore sessions `ses_0b2e45133ffe` (meltano bases), `ses_0b2dd6a1cffe` (flext-db-oracle surface), `ses_0b2dcd20fffe` (3 pilots inventory); codegraph blast-radius on `connection_profile`/`create_tap_instance`/`create_sink` (4 dbt extenders, 0 real `connection_profile` consumers).
+Explore sessions `ses_0b2e45133ffe` (meltano bases), `ses_0b2dd6a1cffe` (flext-db-oracle surface), `ses_0b2dcd20fffe` (3 pilots inventory); codegraph blast-radius on `connection_profile`/`create_tap_instance`/`create_sink` (4 dbt extenders, 0 real `connection_profile` consumers). Tap declarative pilot verified 2026-07-17: real console exit 0 + 18 tests green (see commits above).

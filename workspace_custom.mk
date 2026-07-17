@@ -9,7 +9,7 @@
 # nothing is committed-ahead.
 
 # SSOT for the workspace base branch. All equalization/merge targets use this.
-WORKSPACE_BASE ?= 0.12.0-dev
+WORKSPACE_BASE ?= 0.20.0-dev
 
 .PHONY: done-check workspace-docs-audit full-check workspace-status codemod \
         workspace-sync-base workspace-land-submodules dependabot-merge \

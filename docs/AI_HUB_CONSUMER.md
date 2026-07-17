@@ -7,9 +7,9 @@ law or an ai-hub architecture specification.
 
 | Fact | Canonical owner |
 | --- | --- |
-| FLEXT provider identity, marker, and exported paths | [`.agents/provider.toml`](../.agents/provider.toml) |
-| FLEXT activation and skill selection | [`flext-context-routing`](../.agents/skills/flext-context-routing/SKILL.md) |
-| Provider projection lifecycle | [`flext-agent-integration`](../.agents/skills/flext-agent-integration/SKILL.md) |
+| FLEXT provider identity, marker, and exported paths | `.agents/provider.toml` |
+| FLEXT activation and skill selection | `.agents/skills/flext-context-routing/SKILL.md` |
+| Provider projection lifecycle | `.agents/skills/flext-agent-integration/SKILL.md` |
 | FLEXT runtime/API behavior | owning `flext-core` declaration |
 | ai-hub architecture and local policy | ai-hub source, validated config, root `AGENTS.md`, and `docs/GOVERNANCE.md` |
 

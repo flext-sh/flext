@@ -42,3 +42,8 @@ metadata:
 ## Troubleshooting
 
 - Unclear scope → ask.
+
+## Governance
+
+- `docs/GOVERNANCE.md` — controls, ADR routing, canonical workflow.
+- `docs/architecture/adr/003-workspace-tooling-hub-distribution.md` — the ADR governing workspace maintenance, health-check, and operational tooling distribution this skill operates within.

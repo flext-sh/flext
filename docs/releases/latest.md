@@ -1,13 +1,13 @@
-# Release 0.12.0-dev
+# Release 0.20.0-dev
 
 ## Status
 
-- Quality: Development (branch 0.12.0-dev)
+- Quality: Development (branch 0.20.0-dev)
 - Usage: Non-production
 
 ## Scope
 
-- Workspace development cycle: 0.12.0-dev
+- Workspace development cycle: 0.20.0-dev
 - Previous packaged release: v0.11.0 (see docs/releases/v0.11.0.md)
 - Projects in scope: 31
 

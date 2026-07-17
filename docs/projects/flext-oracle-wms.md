@@ -4,7 +4,7 @@ FLEXT Oracle WMS (`flext-oracle-wms`) is the enterprise client library for Oracl
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (monorepo development cycle)
+- **Version**: 0.20.0-dev (monorepo development cycle)
 - **Python**: 3.13+
 - **Package**: `flext_oracle_wms` (namespace package, `py.typed` shipped)
 - **Location in this repo**: `flext-oracle-wms/` at the workspace root

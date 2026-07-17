@@ -4,7 +4,7 @@ FLEXT Observability is the enterprise monitoring, metrics, and telemetry platfor
 
 ## Status & health
 
-- **Version**: 0.12.0-dev
+- **Version**: 0.20.0-dev
 - **Python**: 3.13+ only
 - **Project class**: platform (consumes `flext-core` and `flext-cli`)
 - **Facade**: `from flext_observability import observability` — the `FlextObservability` facade class with static factory methods

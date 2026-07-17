@@ -12,7 +12,6 @@ These pages are generated from public modules and their docstrings.
 - [flext_observability.services.context](services/context.md)
 - [flext_observability.services.custom_metrics](services/custom_metrics.md)
 - [flext_observability.services.error_handling](services/error_handling.md)
-- [flext_observability.services.fields](services/fields.md)
 - [flext_observability.services.health](services/health.md)
 - [flext_observability.services.http_client_instrumentation](services/http_client_instrumentation.md)
 - [flext_observability.services.http_instrumentation](services/http_instrumentation.md)

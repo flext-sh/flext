@@ -1,8 +1,8 @@
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-# flext_ldif.services.conversion_schema
+# flext_infra.base
 
-::: flext_ldif.services.conversion_schema
+::: flext_infra.base
     options:
       show_root_heading: true
       show_root_full_path: false
