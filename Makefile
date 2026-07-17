@@ -81,7 +81,7 @@ PR_CHECKPOINT ?= 1
 DEPS_REPORT ?= 1
 VERBOSE ?=
 
-PR_BRANCH ?= 0.12.0.rc0
+PR_BRANCH ?= 0.12.0rc0
 
 Q := @
 ifdef VERBOSE
