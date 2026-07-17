@@ -16,6 +16,39 @@ dev = [
 ]
 
 # [CUSTOM] project metadata
+workspace = [
+    "flext-api",
+    "flext-auth",
+    "flext-cli",
+    "flext-core",
+    "flext-db-oracle",
+    "flext-dbt-ldap",
+    "flext-dbt-ldif",
+    "flext-dbt-oracle",
+    "flext-dbt-oracle-wms",
+    "flext-grpc",
+    "flext-infra",
+    "flext-ldap",
+    "flext-ldif",
+    "flext-meltano",
+    "flext-observability",
+    "flext-oracle-oic",
+    "flext-oracle-wms",
+    "flext-plugin",
+    "flext-quality",
+    "flext-tap-ldap",
+    "flext-tap-ldif",
+    "flext-tap-oracle",
+    "flext-tap-oracle-oic",
+    "flext-tap-oracle-wms",
+    "flext-target-ldap",
+    "flext-target-ldif",
+    "flext-target-oracle",
+    "flext-target-oracle-oic",
+    "flext-target-oracle-wms",
+    "flext-tests",
+    "flext-web",
+]
 [project]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -39,8 +72,7 @@ license = "MIT"
 name = "flext"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
-# mro-wkii.17.26 (codex): the development branch publishes the 0.20 dev series.
-version = "0.20.0-dev0"
+version = "0.20.0.dev0"
 
 [[project.authors]]
 email = "team@flext.sh"
@@ -1141,6 +1173,8 @@ workspace = true
 workspace = true
 
 [tool.uv]
+link-mode = "copy"
+required-version = "==0.11.28"
 # dbt-core (<=1.11.12, released) caps pathspec<0.13, but mypy>=1.20 requires
 # pathspec>=1.0.0. Force the newer pathspec so the uv workspace resolves; dbt
 # only uses pathspec for selector globbing, which pathspec 1.x still supports.

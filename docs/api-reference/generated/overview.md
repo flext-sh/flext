@@ -2,7 +2,7 @@
 
 # FLEXT Workspace API Overview
 
-- Version: `0.12.0-dev`
+- Version: `0.20.0-dev`
 - Description: FLEXT - Enterprise Data Integration Platform - Workspace Manager
 - Governed projects: `31`
 - Project classes: `domain`=5, `infra`=1, `integration`=14, `platform`=10, `test`=1

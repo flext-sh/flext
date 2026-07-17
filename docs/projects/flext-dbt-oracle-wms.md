@@ -4,7 +4,7 @@ FLEXT dbt Oracle WMS is the integration project that transforms Oracle Warehouse
 
 ## Status & health
 
-- **Version**: `0.12.0-dev` (active development cycle)
+- **Version**: `0.20.0-dev` (active development cycle)
 - **Python**: 3.13+
 - **Project class**: integration
 - **Dependencies**: `flext-core`, `flext-meltano`, `flext-oracle-wms`, `click`, `pydantic`

@@ -4,7 +4,7 @@ FLEXT Auth is the multi-provider authentication and authorization service of the
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (current development cycle)
+- **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+ only
 - **Quality gate**: `make check PROJECT=flext-auth` (Ruff + type checks) and `make val` for the full pipeline
 - **Depends on**: `flext-core` (facades, result contract, container)

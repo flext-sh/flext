@@ -12,7 +12,7 @@ Apply the newest applicable source in this order:
 1. Live operator request.
 2. Active Bead in the workspace-root tracker.
 3. Accepted ADRs in [`architecture/adr/`](architecture/adr/README.md).
-4. Root [`AGENTS.md`](../AGENTS.md).
+4. Root `AGENTS.md`.
 5. The owning skill or standard.
 6. Other documentation.
 

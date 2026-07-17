@@ -4,7 +4,7 @@ FLEXT LDIF is the enterprise LDIF processing library of the FLEXT platform. It p
 
 ## Status & health
 
-- **Version**: 0.12.0-dev
+- **Version**: 0.20.0-dev
 - **Python**: 3.13+ only
 - **Project class**: domain (consumes `flext-core` and `flext-cli`)
 - **Facade**: `from flext_ldif import ldif` — the process-wide `FlextLdif` singleton

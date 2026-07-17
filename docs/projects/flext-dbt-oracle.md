@@ -4,7 +4,7 @@ FLEXT dbt Oracle is the integration project that runs dbt transformations agains
 
 ## Status & health
 
-- **Version**: `0.12.0-dev` (active development cycle)
+- **Version**: `0.20.0-dev` (active development cycle)
 - **Python**: 3.13+
 - **Project class**: integration
 - **Dependencies**: `flext-core`, `flext-db-oracle`, `flext-meltano`, `dbt-common`, `agate`, `pydantic`

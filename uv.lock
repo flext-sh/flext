@@ -1493,6 +1493,39 @@ dev = [
     { name = "pyrefly" },
     { name = "pytest-markdown-docs" },
 ]
+workspace = [
+    { name = "flext-api" },
+    { name = "flext-auth" },
+    { name = "flext-cli" },
+    { name = "flext-core" },
+    { name = "flext-db-oracle" },
+    { name = "flext-dbt-ldap" },
+    { name = "flext-dbt-ldif" },
+    { name = "flext-dbt-oracle" },
+    { name = "flext-dbt-oracle-wms" },
+    { name = "flext-grpc" },
+    { name = "flext-infra" },
+    { name = "flext-ldap" },
+    { name = "flext-ldif" },
+    { name = "flext-meltano" },
+    { name = "flext-observability" },
+    { name = "flext-oracle-oic" },
+    { name = "flext-oracle-wms" },
+    { name = "flext-plugin" },
+    { name = "flext-quality" },
+    { name = "flext-tap-ldap" },
+    { name = "flext-tap-ldif" },
+    { name = "flext-tap-oracle" },
+    { name = "flext-tap-oracle-oic" },
+    { name = "flext-tap-oracle-wms" },
+    { name = "flext-target-ldap" },
+    { name = "flext-target-ldif" },
+    { name = "flext-target-oracle" },
+    { name = "flext-target-oracle-oic" },
+    { name = "flext-target-oracle-wms" },
+    { name = "flext-tests" },
+    { name = "flext-web" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -1583,10 +1616,43 @@ dev = [
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pytest-markdown-docs", specifier = ">=0.9.2" },
 ]
+workspace = [
+    { name = "flext-api", editable = "flext-api" },
+    { name = "flext-auth", editable = "flext-auth" },
+    { name = "flext-cli", editable = "flext-cli" },
+    { name = "flext-core", editable = "flext-core" },
+    { name = "flext-db-oracle", editable = "flext-db-oracle" },
+    { name = "flext-dbt-ldap", editable = "flext-dbt-ldap" },
+    { name = "flext-dbt-ldif", editable = "flext-dbt-ldif" },
+    { name = "flext-dbt-oracle", editable = "flext-dbt-oracle" },
+    { name = "flext-dbt-oracle-wms", editable = "flext-dbt-oracle-wms" },
+    { name = "flext-grpc", editable = "flext-grpc" },
+    { name = "flext-infra", editable = "flext-infra" },
+    { name = "flext-ldap", editable = "flext-ldap" },
+    { name = "flext-ldif", editable = "flext-ldif" },
+    { name = "flext-meltano", editable = "flext-meltano" },
+    { name = "flext-observability", editable = "flext-observability" },
+    { name = "flext-oracle-oic", editable = "flext-oracle-oic" },
+    { name = "flext-oracle-wms", editable = "flext-oracle-wms" },
+    { name = "flext-plugin", editable = "flext-plugin" },
+    { name = "flext-quality", editable = "flext-quality" },
+    { name = "flext-tap-ldap", editable = "flext-tap-ldap" },
+    { name = "flext-tap-ldif", editable = "flext-tap-ldif" },
+    { name = "flext-tap-oracle", editable = "flext-tap-oracle" },
+    { name = "flext-tap-oracle-oic", editable = "flext-tap-oracle-oic" },
+    { name = "flext-tap-oracle-wms", editable = "flext-tap-oracle-wms" },
+    { name = "flext-target-ldap", editable = "flext-target-ldap" },
+    { name = "flext-target-ldif", editable = "flext-target-ldif" },
+    { name = "flext-target-oracle", editable = "flext-target-oracle" },
+    { name = "flext-target-oracle-oic", editable = "flext-target-oracle-oic" },
+    { name = "flext-target-oracle-wms", editable = "flext-target-oracle-wms" },
+    { name = "flext-tests", editable = "flext-tests" },
+    { name = "flext-web", editable = "flext-web" },
+]
 
 [[package]]
 name = "flext-api"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-api" }
 dependencies = [
     { name = "cbor2" },
@@ -1776,11 +1842,12 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-auth"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-auth" }
 dependencies = [
     { name = "bcrypt" },
     { name = "cryptography" },
+    { name = "flext-api" },
     { name = "flext-core" },
     { name = "pydantic" },
     { name = "pydantic-core" },
@@ -1876,6 +1943,7 @@ requires-dist = [
     { name = "django-stubs", marker = "extra == 'dev'", specifier = ">=5.2.2" },
     { name = "factory-boy", marker = "extra == 'dev'", specifier = ">=3.3.1" },
     { name = "faker", marker = "extra == 'dev'", specifier = ">=37.4" },
+    { name = "flext-api", editable = "flext-api" },
     { name = "flext-core", editable = "flext-core" },
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.125" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=6.0.1" },
@@ -1948,7 +2016,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-cli"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-cli" }
 dependencies = [
     { name = "cachetools" },
@@ -2150,7 +2218,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-core"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-core" }
 dependencies = [
     { name = "beartype" },
@@ -2364,7 +2432,7 @@ requires-dist = [
     { name = "types-setuptools", marker = "extra == 'dev'", specifier = ">=80.9" },
     { name = "types-tabulate", marker = "extra == 'dev'", specifier = ">=0.10" },
     { name = "types-toml", marker = "extra == 'dev'", specifier = ">=0.10.8.20240310" },
-    { name = "uv", marker = "extra == 'dev'", specifier = ">=0.11.8" },
+    { name = "uv", marker = "extra == 'dev'", specifier = ">=0.11.15" },
     { name = "vulture", marker = "extra == 'dev'", specifier = ">=2.13" },
     { name = "wrapt", specifier = ">=2.1.2" },
 ]
@@ -2378,7 +2446,7 @@ dev = [
 
 [[package]]
 name = "flext-db-oracle"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-db-oracle" }
 dependencies = [
     { name = "flext-cli" },
@@ -2548,12 +2616,13 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-dbt-ldap"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-dbt-ldap" }
 dependencies = [
     { name = "flext-cli" },
     { name = "flext-core" },
     { name = "flext-ldap" },
+    { name = "flext-ldif" },
     { name = "flext-meltano" },
     { name = "pydantic" },
     { name = "pydantic-core" },
@@ -2650,6 +2719,7 @@ requires-dist = [
     { name = "flext-cli", marker = "extra == 'dev'", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
     { name = "flext-ldap", editable = "flext-ldap" },
+    { name = "flext-ldif", editable = "flext-ldif" },
     { name = "flext-meltano", editable = "flext-meltano" },
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.125" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=6.0.1" },
@@ -2720,7 +2790,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-dbt-ldif"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-dbt-ldif" }
 dependencies = [
     { name = "flext-core" },
@@ -2888,7 +2958,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-dbt-oracle"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-dbt-oracle" }
 dependencies = [
     { name = "dbt-common" },
@@ -3058,7 +3128,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-dbt-oracle-wms"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-dbt-oracle-wms" }
 dependencies = [
     { name = "click" },
@@ -3228,7 +3298,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-grpc"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-grpc" }
 dependencies = [
     { name = "flext-cli" },
@@ -3418,7 +3488,6 @@ dependencies = [
     { name = "flext-cli" },
     { name = "flext-core" },
     { name = "gitpython" },
-    { name = "grpcio-tools" },
     { name = "libcst" },
     { name = "mkdocs" },
     { name = "mkdocs-exclude" },
@@ -3426,7 +3495,6 @@ dependencies = [
     { name = "mkdocs-section-index" },
     { name = "mkdocstrings" },
     { name = "mkdocstrings-python" },
-    { name = "protobuf" },
     { name = "rope" },
 ]
 
@@ -3522,7 +3590,6 @@ requires-dist = [
     { name = "flext-cli", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
     { name = "gitpython", specifier = ">=3.1.49" },
-    { name = "grpcio-tools", specifier = ">=1.80.0" },
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.125" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=6.0.1" },
     { name = "libcst", specifier = ">=1.8.6" },
@@ -3553,7 +3620,6 @@ requires-dist = [
     { name = "mkdocstrings-python", marker = "extra == 'dev'", specifier = ">=1.7" },
     { name = "pip-audit", marker = "extra == 'dev'", specifier = ">=2.7.3" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.6.0" },
-    { name = "protobuf", specifier = ">=6.33.6" },
     { name = "pylint", marker = "extra == 'dev'", specifier = ">=3.3" },
     { name = "pyrefly", marker = "extra == 'dev'", specifier = ">=1.1.1,<1.2.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4" },
@@ -3601,7 +3667,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-ldap"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-ldap" }
 dependencies = [
     { name = "cryptography" },
@@ -3707,7 +3773,7 @@ requires-dist = [
     { name = "flext-ldif", editable = "flext-ldif" },
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.125" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=6.0.1" },
-    { name = "ldap3", specifier = ">=2.10.2rc4" },
+    { name = "ldap3", specifier = ">=2.9.1" },
     { name = "matplotlib-stubs", marker = "extra == 'dev'", specifier = ">=0.3" },
     { name = "mkdocs", marker = "extra == 'dev'", specifier = ">=1.6" },
     { name = "mkdocs-awesome-pages-plugin", marker = "extra == 'dev'", specifier = ">=2.9" },
@@ -3777,7 +3843,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-ldif"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-ldif" }
 dependencies = [
     { name = "colorlog" },
@@ -3881,7 +3947,7 @@ requires-dist = [
     { name = "flext-core", editable = "flext-core" },
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.125" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=6.0.1" },
-    { name = "ldap3", specifier = ">=2.10.2rc4" },
+    { name = "ldap3", specifier = ">=2.9.1" },
     { name = "matplotlib-stubs", marker = "extra == 'dev'", specifier = ">=0.3" },
     { name = "mkdocs", marker = "extra == 'dev'", specifier = ">=1.6" },
     { name = "mkdocs-awesome-pages-plugin", marker = "extra == 'dev'", specifier = ">=2.9" },
@@ -3951,7 +4017,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-meltano"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-meltano" }
 dependencies = [
     { name = "alembic" },
@@ -4179,7 +4245,7 @@ dev = [
 
 [[package]]
 name = "flext-observability"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-observability" }
 dependencies = [
     { name = "flask" },
@@ -4369,9 +4435,11 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-oracle-oic"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-oracle-oic" }
 dependencies = [
+    { name = "flext-api" },
+    { name = "flext-auth" },
     { name = "flext-cli" },
     { name = "flext-core" },
     { name = "httpx" },
@@ -4470,6 +4538,8 @@ requires-dist = [
     { name = "django-stubs", marker = "extra == 'dev'", specifier = ">=5.2.2" },
     { name = "factory-boy", marker = "extra == 'dev'", specifier = ">=3.3.1" },
     { name = "faker", marker = "extra == 'dev'", specifier = ">=37.4" },
+    { name = "flext-api", editable = "flext-api" },
+    { name = "flext-auth", editable = "flext-auth" },
     { name = "flext-cli", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
     { name = "httpx", specifier = ">=0.28.1" },
@@ -4547,9 +4617,10 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-oracle-wms"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-oracle-wms" }
 dependencies = [
+    { name = "flext-api" },
     { name = "flext-cli" },
     { name = "flext-core" },
     { name = "pydantic" },
@@ -4644,6 +4715,7 @@ requires-dist = [
     { name = "django-stubs", marker = "extra == 'dev'", specifier = ">=5.2.2" },
     { name = "factory-boy", marker = "extra == 'dev'", specifier = ">=3.3.1" },
     { name = "faker", marker = "extra == 'dev'", specifier = ">=37.4" },
+    { name = "flext-api", editable = "flext-api" },
     { name = "flext-cli", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.125" },
@@ -4717,7 +4789,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-plugin"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-plugin" }
 dependencies = [
     { name = "anyio" },
@@ -4898,15 +4970,18 @@ dev = []
 
 [[package]]
 name = "flext-quality"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-quality" }
 dependencies = [
     { name = "aiohttp" },
     { name = "click" },
     { name = "fastapi" },
     { name = "fastmcp" },
+    { name = "flext-api" },
     { name = "flext-cli" },
     { name = "flext-core" },
+    { name = "flext-infra" },
+    { name = "flext-web" },
     { name = "gitpython" },
     { name = "httpx" },
     { name = "libcst" },
@@ -5016,8 +5091,11 @@ requires-dist = [
     { name = "faker", marker = "extra == 'dev'", specifier = ">=37.4" },
     { name = "fastapi", specifier = ">=0.136.1" },
     { name = "fastmcp", specifier = ">=3.2.4" },
+    { name = "flext-api", editable = "flext-api" },
     { name = "flext-cli", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
+    { name = "flext-infra", editable = "flext-infra" },
+    { name = "flext-web", editable = "flext-web" },
     { name = "gitpython", specifier = ">=3.1.49" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.125" },
@@ -5102,7 +5180,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-tap-ldap"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-tap-ldap" }
 dependencies = [
     { name = "flext-cli" },
@@ -5272,7 +5350,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-tap-ldif"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-tap-ldif" }
 dependencies = [
     { name = "flext-core" },
@@ -5442,7 +5520,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-tap-oracle"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-tap-oracle" }
 dependencies = [
     { name = "fastapi" },
@@ -5622,9 +5700,10 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-tap-oracle-oic"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-tap-oracle-oic" }
 dependencies = [
+    { name = "flext-api" },
     { name = "flext-cli" },
     { name = "flext-core" },
     { name = "flext-meltano" },
@@ -5721,6 +5800,7 @@ requires-dist = [
     { name = "django-stubs", marker = "extra == 'dev'", specifier = ">=5.2.2" },
     { name = "factory-boy", marker = "extra == 'dev'", specifier = ">=3.3.1" },
     { name = "faker", marker = "extra == 'dev'", specifier = ">=37.4" },
+    { name = "flext-api", editable = "flext-api" },
     { name = "flext-cli", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
     { name = "flext-meltano", editable = "flext-meltano" },
@@ -5796,7 +5876,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-tap-oracle-wms"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-tap-oracle-wms" }
 dependencies = [
     { name = "flext-cli" },
@@ -5970,7 +6050,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-target-ldap"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-target-ldap" }
 dependencies = [
     { name = "flext-cli" },
@@ -6138,7 +6218,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-target-ldif"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-target-ldif" }
 dependencies = [
     { name = "flext-core" },
@@ -6310,7 +6390,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-target-oracle"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-target-oracle" }
 dependencies = [
     { name = "click" },
@@ -6488,7 +6568,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-target-oracle-oic"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-target-oracle-oic" }
 dependencies = [
     { name = "flext-api" },
@@ -6672,7 +6752,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-target-oracle-wms"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-target-oracle-wms" }
 dependencies = [
     { name = "flext-cli" },
@@ -6850,7 +6930,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-tests"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-tests" }
 dependencies = [
     { name = "docker" },
@@ -7056,7 +7136,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "flext-web"
-version = "0.12.0"
+version = "0.20.0.dev0"
 source = { editable = "flext-web" }
 dependencies = [
     { name = "fastapi" },

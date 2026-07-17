@@ -178,7 +178,7 @@ operator requires a versioned implementation change and its own tests.
 
 ## References
 
-- [ADR-003 — Manifest-owned topology and Git-first uv environments](./003-workspace-tooling-hub-distribution.md)
+- [ADR-003 — Manifest-owned topology, root workspace, and autonomous Git libraries](./003-workspace-tooling-hub-distribution.md)
 - [ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`](./004-generic-make-framework-in-flext-tests.md)
 - [ADR-007 — Operational kernel, universal CLI, and transactional conformance](./007-operational-kernel-cli-conform.md)
 - [Migration plan](../config-ssot-migration-plan.md)

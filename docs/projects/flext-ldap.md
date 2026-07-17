@@ -4,7 +4,7 @@ FLEXT LDAP is the directory-services library of the FLEXT platform. It wraps `ld
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (current development cycle)
+- **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+ only
 - **Quality gate**: `make check PROJECT=flext-ldap` (Ruff + type checks) and `make val` for the full pipeline
 - **Depends on**: `flext-core`, `flext-ldif` (entry models and LDIF conversion)

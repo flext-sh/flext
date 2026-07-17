@@ -4,7 +4,7 @@ FLEXT Tap Oracle (`flext-tap-oracle`) is the Singer tap for Oracle Database extr
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (monorepo development cycle)
+- **Version**: 0.20.0-dev (monorepo development cycle)
 - **Python**: 3.13+
 - **Package**: `flext_tap_oracle` (namespace package, `py.typed` shipped)
 - **Location in this repo**: `flext-tap-oracle/` at the workspace root

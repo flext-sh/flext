@@ -4,7 +4,7 @@ FLEXT CLI is the command-line foundation of the FLEXT platform. It wraps Click, 
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (current development cycle)
+- **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+ only
 - **Quality gate**: `make check PROJECT=flext-cli` (Ruff + type checks) and `make val` for the full pipeline
 - **Depends on**: `flext-core` (facades, result contract, container)

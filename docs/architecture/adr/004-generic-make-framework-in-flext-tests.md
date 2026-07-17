@@ -123,5 +123,5 @@ an existing project with the same manifest.
 
 ## References
 
-- [ADR-003 — Manifest-owned topology and Git-first uv environments](./003-workspace-tooling-hub-distribution.md)
+- [ADR-003 — Manifest-owned topology, root workspace, and autonomous Git libraries](./003-workspace-tooling-hub-distribution.md)
 - [ADR-005 — Config, settings, constants, templates, and schemas SSOT](./005-config-settings-constants-templates-schemas-ssot.md)

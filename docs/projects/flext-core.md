@@ -4,7 +4,7 @@ FLEXT Core is the typed foundation library of the FLEXT platform. It provides th
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (current development cycle)
+- **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+ only
 - **Quality gate**: `make check PROJECT=flext-core` (Ruff + type checks) and `make val` for the full pipeline
 - **Role**: root of the dependency chain; no runtime dependency on any other `flext-*` package (stdlib-first design)
