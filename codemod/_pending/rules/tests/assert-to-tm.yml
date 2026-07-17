@@ -277,3 +277,47 @@ rule:
         has: { matches: tm-imported-from-flext, stopBy: end }
 fix: "tm.that($EXPR, eq=True)"
 message: "assert expr -> tm.that(expr, eq=True) (truthy fallback)."
+
+---
+id: assert-is-true-to-tm
+language: python
+severity: hint
+files:
+  - "**/tests/**/*.py"
+  - "tests/**/*.py"
+ignores:
+  - "**/legado/**"
+  - "**/legacy/**"
+rule:
+  kind: assert_statement
+  all:
+    - pattern: "assert $EXPR is True"
+    - not: { matches: assert-has-message }
+    - inside:
+        kind: module
+        stopBy: end
+        has: { matches: tm-imported-from-flext, stopBy: end }
+fix: "tm.that($EXPR, eq=True)"
+message: "assert x is True -> tm.that(x, eq=True) (explicit identity; assert-truthy excludes comparisons)."
+
+---
+id: assert-is-false-to-tm
+language: python
+severity: hint
+files:
+  - "**/tests/**/*.py"
+  - "tests/**/*.py"
+ignores:
+  - "**/legado/**"
+  - "**/legacy/**"
+rule:
+  kind: assert_statement
+  all:
+    - pattern: "assert $EXPR is False"
+    - not: { matches: assert-has-message }
+    - inside:
+        kind: module
+        stopBy: end
+        has: { matches: tm-imported-from-flext, stopBy: end }
+fix: "tm.that($EXPR, eq=False)"
+message: "assert x is False -> tm.that(x, eq=False) (explicit identity; assert-not covers 'not x')."
