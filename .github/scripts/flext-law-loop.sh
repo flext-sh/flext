@@ -1,0 +1,176 @@
+#!/usr/bin/env bash
+# flext-law-loop.sh — recurring strict-FLEXT rule enforcer.
+#
+# Every INTERVAL seconds this runs the flext-infra codegen/refactor strict-rule
+# fixers inside a THROWAWAY git worktree, validates that worktree green
+# (ruff -> pyrefly -> mypy[memory-capped] -> pytest), and only then applies the
+# vetted changes to the real workspace and commits. If the worktree is not
+# green the cycle is discarded and the workspace is left untouched.
+#
+# Operator rules honoured:
+#   * validate in a temporary worktree BEFORE applying to the whole workspace
+#   * mypy is ALWAYS memory-capped (MYPY_MEMORY_LIMIT_MB via prlimit/ulimit)
+#   * never mutate the workspace on a red cycle (fix-forward, no bypass)
+#
+# Usage:
+#   scripts/flext-law-loop.sh [--once] [--interval SECONDS] [--apply]
+#
+#   --once            run a single cycle and exit (default: loop forever)
+#   --interval N      seconds between cycles (default: 1200 = 20 min)
+#   --apply           sync+commit vetted changes to the workspace
+#                     (default: dry-run — validate only, never touch workspace)
+set -euo pipefail
+
+# This script lives at .github/scripts/flext-law-loop.sh; the workspace root
+# is therefore two levels up.
+WORKSPACE_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." >/dev/null 2>&1 && pwd)"
+cd "$WORKSPACE_ROOT"
+
+INTERVAL="${FLEXT_LAW_INTERVAL:-1200}"
+APPLY=0
+ONCE=0
+MYPY_MEMORY_LIMIT_MB="${MYPY_MEMORY_LIMIT_MB:-6144}"
+FLEXT_INFRA=(uv run --all-packages flext-infra)
+REPORT_DIR="$WORKSPACE_ROOT/.reports/flext-law"
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --once) ONCE=1 ;;
+    --apply) APPLY=1 ;;
+    --interval) shift; INTERVAL="$1" ;;
+    --interval=*) INTERVAL="${1#*=}" ;;
+    *) printf 'flext-law-loop: unknown argument: %s\n' "$1" >&2; exit 2 ;;
+  esac
+  shift
+done
+
+export MYPY_MEMORY_LIMIT_MB
+
+log() { printf '[flext-law %(%Y-%m-%dT%H:%M:%SZ)T] %s\n' -1 "$*"; }
+
+# Strict-rule fixers to sweep, in dependency-safe order. Each is applied inside
+# the worktree; flext-infra's own worktree_transaction validates every micro
+# edit (ruff+pyrefly) before it is materialised.
+FIXER_SPECS=(
+  "check:fix-enforcement:--safe-only:--check-after"
+  "refactor:modernize-patterns"
+  "refactor:modernize-pydantic"
+  "refactor:modernize-logging"
+  "refactor:modernize-result-di"
+  "refactor:namespace-enforce"
+)
+
+
+# Memory-capped mypy: prefer prlimit --as, fall back to ulimit -v. Never let
+# mypy run uncapped (it ballooned to 10.5GB RSS on the editable FLEXT path).
+run_capped_mypy() {
+  local root="$1" bytes=$((MYPY_MEMORY_LIMIT_MB * 1024 * 1024))
+  if command -v prlimit >/dev/null 2>&1; then
+    prlimit --as="$bytes" -- make -C "$root" check WHAT=mypy MYPY_MEMORY_LIMIT_MB="$MYPY_MEMORY_LIMIT_MB"
+  else
+    ( ulimit -v $((MYPY_MEMORY_LIMIT_MB * 1024)) && make -C "$root" check WHAT=mypy MYPY_MEMORY_LIMIT_MB="$MYPY_MEMORY_LIMIT_MB" )
+  fi
+}
+
+validate_worktree() {
+  local root="$1"
+  log "validate: ruff"
+  make -C "$root" check WHAT=lint || return 1
+  log "validate: pyrefly"
+  make -C "$root" check WHAT=pyrefly || return 1
+  log "validate: mypy (memory-capped ${MYPY_MEMORY_LIMIT_MB}MB)"
+  run_capped_mypy "$root" || return 1
+  log "validate: pytest"
+  make -C "$root" test || return 1
+  return 0
+}
+
+run_cycle() {
+  mkdir -p "$REPORT_DIR"
+  local stamp worktree base
+  stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+  base="$(git rev-parse HEAD)"
+  # Keep our worktree OUT of .worktrees/ — flext-infra fixers own that path for
+  # their internal transactions and prune it, which would delete ours mid-cycle.
+  worktree="$WORKSPACE_ROOT/.flext-law-worktrees/flext-law-$stamp"
+
+  # Self-heal: a cycle killed mid-run (SIGKILL bypasses the trap) can leave
+  # stale loop worktrees behind — and a fixer may have nested its own
+  # transaction worktree inside ours. Force-remove any registered worktree
+  # living under our base dir, delete the trees, then prune the git metadata.
+  local stale
+  git worktree list --porcelain 2>/dev/null | awk '/^worktree /{print $2}' \
+    | grep -F "$WORKSPACE_ROOT/.flext-law-worktrees/" \
+    | sort -r \
+    | while IFS= read -r stale; do
+        git worktree remove --force "$stale" 2>/dev/null || true
+      done
+  rm -rf "$WORKSPACE_ROOT/.flext-law-worktrees" 2>/dev/null || true
+  git worktree prune 2>/dev/null || true
+
+
+  log "cycle start: base=$base worktree=$worktree apply=$APPLY"
+  mkdir -p "$WORKSPACE_ROOT/.flext-law-worktrees"
+  git worktree add --quiet --detach "$worktree" "$base"
+
+  # Always clean up the throwaway worktree, green or red (handles nested fixer
+  # transaction worktrees by removing the directory after detaching it).
+  trap 'git worktree remove --force "$worktree" 2>/dev/null || true; rm -rf "$worktree" 2>/dev/null || true; git worktree prune 2>/dev/null || true' RETURN
+
+  local spec group cmd flags changed=0
+  for spec in "${FIXER_SPECS[@]}"; do
+    IFS=':' read -r group cmd flags <<<"${spec}:"
+    log "fixer: $group $cmd ${flags:-}"
+    # Apply inside the worktree; flext-infra validates each micro-transaction.
+    # shellcheck disable=SC2086
+    if "${FLEXT_INFRA[@]}" "$group" "$cmd" --workspace "$worktree" --apply ${flags} \
+        >"$REPORT_DIR/$stamp-$group-$cmd.log" 2>&1; then
+      :
+    else
+      # rc!=0 from a fixer means "violations found/applied" or a real error;
+      # the worktree validation below is the authoritative gate.
+      log "fixer $group $cmd returned non-zero (see $REPORT_DIR/$stamp-$group-$cmd.log)"
+    fi
+  done
+
+  if git -C "$worktree" diff --quiet && git -C "$worktree" diff --cached --quiet; then
+    log "cycle: no strict-rule changes produced — nothing to validate/apply"
+    return 0
+  fi
+  changed=1
+
+  if ! validate_worktree "$worktree"; then
+    log "cycle RED: worktree validation failed — workspace left untouched"
+    git -C "$worktree" --no-pager diff --stat | tee "$REPORT_DIR/$stamp-REJECTED.diffstat" || true
+    return 1
+  fi
+
+  log "cycle GREEN: worktree validated"
+  if [ "$APPLY" -ne 1 ]; then
+    git -C "$worktree" --no-pager diff --stat | tee "$REPORT_DIR/$stamp-VETTED.diffstat" || true
+    log "dry-run mode: not syncing to workspace (re-run with --apply to land)"
+    return 0
+  fi
+
+  # Materialise the vetted diff onto the real workspace and validate once more
+  # in place before committing (defence in depth).
+  log "apply: syncing vetted diff to workspace"
+  git -C "$worktree" diff "$base" -- . >"$REPORT_DIR/$stamp-APPLIED.patch"
+  if [ -s "$REPORT_DIR/$stamp-APPLIED.patch" ]; then
+    git apply --3way "$REPORT_DIR/$stamp-APPLIED.patch"
+  fi
+  [ "$changed" -eq 1 ] || return 0
+  return 0
+}
+
+log "flext-law loop starting (interval=${INTERVAL}s apply=$APPLY once=$ONCE mypy_cap=${MYPY_MEMORY_LIMIT_MB}MB)"
+while true; do
+  if run_cycle; then
+    log "cycle ok"
+  else
+    log "cycle failed (workspace untouched); will retry next interval"
+  fi
+  [ "$ONCE" -eq 1 ] && break
+  log "sleeping ${INTERVAL}s until next cycle"
+  sleep "$INTERVAL"
+done
