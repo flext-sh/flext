@@ -2,7 +2,7 @@
 # handwritten topology SSOT consumed by `flext-infra codegen conform`.
 # NOTE (multi-agent, mro-wkii.17 / agent: codex): conform never overwrites this
 # input. Add members or exclusions here, then run `make codegen`.
-version: 1
+version: 2
 name: flext
 repository:
   name: flext
@@ -14,6 +14,11 @@ repository:
   role: workspace-root
   state: active
   profile: workspace-root
+  checkout: root
+  codegen: conform
+  package: false
+  editable: false
+  read_only: false
 project:
   package_name: "flext"
   class_stem: "Flext"
@@ -45,6 +50,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-auth"
     distribution: "flext-auth"
@@ -55,6 +65,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-cli"
     distribution: "flext-cli"
@@ -65,6 +80,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-core"
     distribution: "flext-core"
@@ -75,6 +95,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-db-oracle"
     distribution: "flext-db-oracle"
@@ -85,6 +110,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-dbt-ldap"
     distribution: "flext-dbt-ldap"
@@ -95,6 +125,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-dbt-ldif"
     distribution: "flext-dbt-ldif"
@@ -105,6 +140,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-dbt-oracle"
     distribution: "flext-dbt-oracle"
@@ -115,6 +155,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-dbt-oracle-wms"
     distribution: "flext-dbt-oracle-wms"
@@ -125,6 +170,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-grpc"
     distribution: "flext-grpc"
@@ -135,6 +185,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-infra"
     distribution: "flext-infra"
@@ -145,6 +200,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-ldap"
     distribution: "flext-ldap"
@@ -155,6 +215,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-ldif"
     distribution: "flext-ldif"
@@ -165,6 +230,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-meltano"
     distribution: "flext-meltano"
@@ -175,6 +245,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-observability"
     distribution: "flext-observability"
@@ -185,6 +260,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-oracle-oic"
     distribution: "flext-oracle-oic"
@@ -195,6 +275,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-oracle-wms"
     distribution: "flext-oracle-wms"
@@ -205,6 +290,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-plugin"
     distribution: "flext-plugin"
@@ -215,6 +305,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-quality"
     distribution: "flext-quality"
@@ -225,6 +320,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-tap-ldap"
     distribution: "flext-tap-ldap"
@@ -235,6 +335,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-tap-ldif"
     distribution: "flext-tap-ldif"
@@ -245,6 +350,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-tap-oracle"
     distribution: "flext-tap-oracle"
@@ -255,6 +365,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-tap-oracle-oic"
     distribution: "flext-tap-oracle-oic"
@@ -265,6 +380,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-tap-oracle-wms"
     distribution: "flext-tap-oracle-wms"
@@ -275,6 +395,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-target-ldap"
     distribution: "flext-target-ldap"
@@ -285,6 +410,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-target-ldif"
     distribution: "flext-target-ldif"
@@ -295,6 +425,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-target-oracle"
     distribution: "flext-target-oracle"
@@ -305,6 +440,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-target-oracle-oic"
     distribution: "flext-target-oracle-oic"
@@ -315,6 +455,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-target-oracle-wms"
     distribution: "flext-target-oracle-wms"
@@ -325,6 +470,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-tests"
     distribution: "flext-tests"
@@ -335,6 +485,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
   - name: "flext-web"
     distribution: "flext-web"
@@ -345,6 +500,11 @@ members:
     role: "workspace-member"
     state: "active"
     profile: "workspace-member"
+    checkout: submodule
+    codegen: conform
+    package: true
+    editable: true
+    read_only: false
 
 content_only:
 
