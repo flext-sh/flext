@@ -9,7 +9,7 @@
 #
 # Operator rules honoured:
 #   * validate in a temporary worktree BEFORE applying to the whole workspace
-#   * mypy is ALWAYS memory-capped (MYPY_MEMORY_LIMIT_MB via prlimit/ulimit)
+#   * mypy ALWAYS inherits the canonical Make memory and wall-time ceilings
 #   * never mutate the workspace on a red cycle (fix-forward, no bypass)
 #
 # Usage:
@@ -30,6 +30,7 @@ INTERVAL="${FLEXT_LAW_INTERVAL:-1200}"
 APPLY=0
 ONCE=0
 MYPY_MEMORY_LIMIT_MB="${MYPY_MEMORY_LIMIT_MB:-6144}"
+MYPY_TIMEOUT_SECONDS="${MYPY_TIMEOUT_SECONDS:-600}"
 FLEXT_INFRA=(uv run --all-packages flext-infra)
 REPORT_DIR="$WORKSPACE_ROOT/.reports/flext-law"
 
@@ -44,7 +45,7 @@ while [ "$#" -gt 0 ]; do
   shift
 done
 
-export MYPY_MEMORY_LIMIT_MB
+export MYPY_MEMORY_LIMIT_MB MYPY_TIMEOUT_SECONDS
 
 log() { printf '[flext-law %(%Y-%m-%dT%H:%M:%SZ)T] %s\n' -1 "$*"; }
 
@@ -60,26 +61,16 @@ FIXER_SPECS=(
   "refactor:namespace-enforce"
 )
 
-
-# Memory-capped mypy: prefer prlimit --as, fall back to ulimit -v. Never let
-# mypy run uncapped (it ballooned to 10.5GB RSS on the editable FLEXT path).
-run_capped_mypy() {
-  local root="$1" bytes=$((MYPY_MEMORY_LIMIT_MB * 1024 * 1024))
-  if command -v prlimit >/dev/null 2>&1; then
-    prlimit --as="$bytes" -- make -C "$root" check WHAT=mypy MYPY_MEMORY_LIMIT_MB="$MYPY_MEMORY_LIMIT_MB"
-  else
-    ( ulimit -v $((MYPY_MEMORY_LIMIT_MB * 1024)) && make -C "$root" check WHAT=mypy MYPY_MEMORY_LIMIT_MB="$MYPY_MEMORY_LIMIT_MB" )
-  fi
-}
-
 validate_worktree() {
   local root="$1"
   log "validate: ruff"
   make -C "$root" check WHAT=lint || return 1
   log "validate: pyrefly"
   make -C "$root" check WHAT=pyrefly || return 1
-  log "validate: mypy (memory-capped ${MYPY_MEMORY_LIMIT_MB}MB)"
-  run_capped_mypy "$root" || return 1
+  log "validate: mypy (bounded ${MYPY_MEMORY_LIMIT_MB}MB/${MYPY_TIMEOUT_SECONDS}s)"
+  make -C "$root" check WHAT=mypy \
+    MYPY_MEMORY_LIMIT_MB="$MYPY_MEMORY_LIMIT_MB" \
+    MYPY_TIMEOUT_SECONDS="$MYPY_TIMEOUT_SECONDS" || return 1
   log "validate: pytest"
   make -C "$root" test || return 1
   return 0
@@ -163,7 +154,7 @@ run_cycle() {
   return 0
 }
 
-log "flext-law loop starting (interval=${INTERVAL}s apply=$APPLY once=$ONCE mypy_cap=${MYPY_MEMORY_LIMIT_MB}MB)"
+log "flext-law loop starting (interval=${INTERVAL}s apply=$APPLY once=$ONCE mypy_cap=${MYPY_MEMORY_LIMIT_MB}MB/${MYPY_TIMEOUT_SECONDS}s)"
 while true; do
   if run_cycle; then
     log "cycle ok"
