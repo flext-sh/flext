@@ -342,7 +342,7 @@ Para cada uso encontrado:
 
    ```bash
    ruff check .
-   mypy .
+   MYPY_MEMORY_LIMIT_MB=6144 MYPY_TIMEOUT_SECONDS=600 make check CHECK_GATES=mypy
    ```
 
 4. **Verificação final:**

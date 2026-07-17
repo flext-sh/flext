@@ -64,15 +64,6 @@
     "!**/vendor/**",
     "**/*.{md,mkd,mdwn,mdown,markdown,markdn,mdtxt,mdtext,workbook}"
   ],
-  "mypy-type-checker.args": [
-    "--config-file=${workspaceFolder}/pyproject.toml"
-  ],
-  "mypy-type-checker.importStrategy": "fromEnvironment",
-  "mypy-type-checker.interpreter": [
-    "${workspaceFolder}/.venv/bin/python"
-  ],
-  "mypy-type-checker.preferDaemon": true,
-  "mypy-type-checker.reportingScope": "workspace",
   "pyrefly.lspPath": ".venv/bin/pyrefly",
   "python.analysis.addExtraPathsForPythonProjects": false,
   "python.analysis.autoFormatStrings": true,
