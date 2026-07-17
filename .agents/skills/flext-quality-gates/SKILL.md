@@ -23,6 +23,7 @@ configuration, catalog membership, or project type.
 | Provider TOML | typed parse plus exact declared-path inventory | provider projection probe |
 | Make or tooling | `make help` plus targeted verb | `make check` or `make val` |
 | Structural codemod | provider preview and exact expected cardinality | apply, rescan, and idempotence |
+| Performance change | `cProfile` baseline + optimized comparison per `docs/standards/performance-profiling.md` | affected command gate plus full transaction path |
 
 ## Workflow
 
@@ -59,3 +60,5 @@ verbs and thresholds. Do not mirror their changing values in this skill.
 - [`flext-development-workflow`](../flext-development-workflow/SKILL.md)
 - [`docs/GOVERNANCE.md`](../../../docs/GOVERNANCE.md)
 - [`ADR-004`](../../../docs/architecture/adr/004-generic-make-framework-in-flext-tests.md)
+- [`ADR-007`](../../../docs/architecture/adr/007-worktree-transaction-performance.md)
+- [`docs/standards/performance-profiling.md`](../../../docs/standards/performance-profiling.md)

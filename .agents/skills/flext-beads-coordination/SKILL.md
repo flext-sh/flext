@@ -36,10 +36,13 @@ when the project is independent rather than a member of a larger workspace.
 2. Claim the issue and record target, impact, risk, and exact path ownership.
 3. Create child Beads in the same root tracker for independent parallel lanes.
 4. Keep writers inside owned paths; read-only audits may inspect broadly.
-5. After every state-changing step, append the command or edit summary, exit
+5. For shared files (e.g., `worktree_transaction.py`, `rope.py`, `cli.py`),
+   declare every line range owned in the Bead and reconcile overlaps before
+   writing.
+6. After every state-changing step, append the command or edit summary, exit
    code, decisive output, and next state.
-6. Run the narrowest affected gates, then the native project/workspace gate.
-7. Land with explicit pathspecs, one scoped commit, fast-forward push, and final
+7. Run the narrowest affected gates, then the native project/workspace gate.
+8. Land with explicit pathspecs, one scoped commit, fast-forward push, and final
    evidence in the same tracker.
 
 ## Non-Negotiables
