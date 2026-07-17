@@ -132,6 +132,8 @@ WORKSPACE_INFRA_REFACTOR := $(WORKSPACE_FLEXT_INFRA) refactor
 WORKSPACE_INFRA_RELEASE := $(WORKSPACE_FLEXT_INFRA) release run
 WORKSPACE_INFRA_VALIDATE := $(WORKSPACE_FLEXT_INFRA) validate
 WORKSPACE_INFRA_WORKSPACE := $(WORKSPACE_FLEXT_INFRA) workspace
+WORKSPACE_EDITABLE_REINSTALL_FLAGS := --reinstall-package "flext-api" --reinstall-package "flext-auth" --reinstall-package "flext-cli" --reinstall-package "flext-core" --reinstall-package "flext-db-oracle" --reinstall-package "flext-dbt-ldap" --reinstall-package "flext-dbt-ldif" --reinstall-package "flext-dbt-oracle" --reinstall-package "flext-dbt-oracle-wms" --reinstall-package "flext-grpc" --reinstall-package "flext-infra" --reinstall-package "flext-ldap" --reinstall-package "flext-ldif" --reinstall-package "flext-meltano" --reinstall-package "flext-observability" --reinstall-package "flext-oracle-oic" --reinstall-package "flext-oracle-wms" --reinstall-package "flext-plugin" --reinstall-package "flext-quality" --reinstall-package "flext-tap-ldap" --reinstall-package "flext-tap-ldif" --reinstall-package "flext-tap-oracle" --reinstall-package "flext-tap-oracle-oic" --reinstall-package "flext-tap-oracle-wms" --reinstall-package "flext-target-ldap" --reinstall-package "flext-target-ldif" --reinstall-package "flext-target-oracle" --reinstall-package "flext-target-oracle-oic" --reinstall-package "flext-target-oracle-wms" --reinstall-package "flext-tests" --reinstall-package "flext-web"
+WORKSPACE_VERIFY_ENVIRONMENT := $(WORKSPACE_INFRA_WORKSPACE) verify-environment --workspace "$(CURDIR)"
 ORCHESTRATOR := $(WORKSPACE_INFRA_WORKSPACE) orchestrate
 ORCHESTRATOR_PROJECTS := $(SELECTED_PROJECT_FLAGS)
 
@@ -237,7 +239,8 @@ if [ ! -x "$(PY)" ]; then \
 	echo "    Run 'make boot' first to create the environment."; \
 	echo ""; \
 	exit 1; \
-fi
+fi; \
+$(WORKSPACE_VERIFY_ENVIRONMENT) || exit 1
 mkdir -p "$(UV_CACHE_DIR)"
 endef
 
@@ -250,12 +253,13 @@ else \
 	cat "$$log_file"; \
 	exit 1; \
 fi; \
-if uv sync --all-packages --all-groups --all-extras >>"$$log_file" 2>&1; then \
+if uv sync --all-packages --all-groups --all-extras $(WORKSPACE_EDITABLE_REINSTALL_FLAGS) >>"$$log_file" 2>&1; then \
 	:; \
 else \
 	cat "$$log_file"; \
 	exit 1; \
 fi; \
+$(WORKSPACE_VERIFY_ENVIRONMENT) || { cat "$$log_file"; exit 1; }; \
 rm -f "$$log_file"
 endef
 
