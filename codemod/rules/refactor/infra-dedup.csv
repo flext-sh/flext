@@ -1,0 +1,5 @@
+old,new
+t.Infra.MutableInfraMapping,t.MutableJsonMapping
+t.Infra.InfraSequence,t.JsonList
+t.Infra.InfraMapping,t.JsonMapping
+t.Infra.InfraValue,t.JsonValue

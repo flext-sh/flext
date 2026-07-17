@@ -16,7 +16,7 @@ Banned EVERYWHERE outside flext-cli/flext-core:
 - json/yaml/csv direct usage: use cli.read_*_file / cli.write_*_file
 
 Banned EVERYWHERE except flext-infra (workspace orchestration):
-- tomllib, tomlkit: use cli.read_toml_file / u.Cli.toml_load
+- tomllib, tomlkit: use cli.toml_read_file / u.Cli.toml_load
 
 Also banned outside flext-cli/flext-core:
 - print() at top-level: use cli.print / cli.display_message
@@ -104,7 +104,7 @@ def _scan_file(py_file: Path, project_name: str) -> list[str]:
 
     if TOML_REGEX.search(text) and project_name not in TOML_ALLOWED:
         violations.append(
-            f"{py_file}: imports tomllib/tomlkit — use cli.read_toml_file (flext-infra exempt)",
+            f"{py_file}: imports tomllib/tomlkit — use cli.toml_read_file (flext-infra exempt)",
         )
 
     if JSON_DIRECT_REGEX.search(text):

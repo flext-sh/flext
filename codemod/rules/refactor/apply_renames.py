@@ -44,8 +44,21 @@ _SKIP_DIRS = {
 }
 # Binary / generated extensions never rewritten (regenerable, not source text).
 _SKIP_SUFFIXES = {
-    ".db", ".pyc", ".pyo", ".so", ".png", ".jpg", ".jpeg", ".gif", ".ico",
-    ".pdf", ".zip", ".gz", ".whl", ".lock", ".bak",
+    ".db",
+    ".pyc",
+    ".pyo",
+    ".so",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".ico",
+    ".pdf",
+    ".zip",
+    ".gz",
+    ".whl",
+    ".lock",
+    ".bak",
 }
 _ASTGREP = "ast-grep"
 
@@ -55,7 +68,9 @@ def _pairs(csv_path: Path) -> list[tuple[str, str]]:
     with csv_path.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
         if reader.fieldnames != ["old", "new"]:
-            message = f"{csv_path}: header must be exactly 'old,new', got {reader.fieldnames}"
+            message = (
+                f"{csv_path}: header must be exactly 'old,new', got {reader.fieldnames}"
+            )
             raise SystemExit(message)
         rows = [(r["old"].strip(), r["new"].strip()) for r in reader]
     for old, new in rows:

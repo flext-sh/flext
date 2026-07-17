@@ -190,7 +190,7 @@ R = t.R  # Generic result type
 E = t.E  # Generic exception type
 
 # ❌ WRONG: Creating redundant domain-specific TypeVars
-FlextCliCommandT = TypeVar("FlextCliCommandT", bound="CliCommand")  # NO - use generic T
+FlextCliCommandT = TypeVar("FlextCliCommandT", bound="Command")  # NO - use generic T
 FlextCliOutputT = TypeVar("FlextCliOutputT")  # NO - use generic R
 ```
 
@@ -275,7 +275,7 @@ t.Ldap.Protocol             # Infrastructure (ldap3 wrappers)
 m.Cli.SystemInfo  # CLI-specific system info model
 m.Cli.SessionStatistics  # CLI session statistics
 m.Cli.CommandStatistics  # CLI command statistics
-m.Cli.CliCommand  # CLI command model
+m.Cli.Command  # CLI command model
 m.Cli.CliSession  # CLI session model
 
 # ✅ CORRECT: Module-level aliases for common classes
@@ -309,7 +309,7 @@ m.Options                   # Generic options
 
 ```
 m.Cli                       # CLI domain
-  .CliCommand               # Command model
+  .Command               # Command model
   .CliSession               # Session model
   .Settings                # CLI configuration
   .SystemInfo               # System information (module alias available)
