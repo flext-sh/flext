@@ -378,34 +378,47 @@ CODEMOD_EXTERNAL := ../algar-oud-mig ../algar-oud_mig ../gruponos-meltano-native
 # unset case AND that inherited `project` sentinel as "whole workspace". A real
 # per-project scan uses an explicit SCOPE=flext-<name> that is neither empty nor
 # the inherited `project` default.
-CODEMOD_SCOPE := $(if $(filter-out project all,$(SCOPE)),$(filter-out project all,$(SCOPE)),$(wildcard flext-*) $(CODEMOD_EXTERNAL))
-CODEMOD_TARGETS := $(foreach d,$(CODEMOD_SCOPE),$(wildcard $(d)/src) $(wildcard $(d)/tests))
-# RULE=<id> runs a SINGLE rule (codemod/rules/**/<id>.yml) via --rule instead of the
-# whole sgconfig.yml suite. Empty RULE keeps --config (whole-suite, unchanged). Fails
-# loud if RULE is set but no matching rule file exists.
+CODEMOD_SCOPE := $(if $(filter-out project all,$(SCOPE)),$(filter-out project all,$(SCOPE)),. $(wildcard flext-*) $(CODEMOD_EXTERNAL))
+CODEMOD_TARGETS := $(foreach d,$(CODEMOD_SCOPE),$(wildcard $(d)/src) $(wildcard $(d)/tests) $(wildcard $(d)/examples) $(wildcard $(d)/scripts) $(wildcard $(d)/libs))
+# RULE=<id> runs a SINGLE rule instead of the whole sgconfig.yml suite.
+# It resolves to EITHER codemod/rules/**/<id>.csv (a from->to substitution list
+# driven by apply_cli_prefixes.py) OR codemod/rules/**/<id>.yml (an ast-grep rule).
+# Empty RULE keeps --config (whole-suite, unchanged). Fails loud if nothing matches.
+CODEMOD_CSV := $(if $(RULE),$(firstword $(wildcard codemod/rules/*/$(RULE).csv codemod/rules/$(RULE).csv)),)
+CODEMOD_CSV_RUNNER := codemod/rules/refactor/apply_renames.py
 CODEMOD_RULEFILE := $(if $(RULE),$(firstword $(wildcard codemod/rules/*/$(RULE).yml codemod/rules/$(RULE).yml)),)
 CODEMOD_RULEFLAG := $(if $(RULE),--rule $(CODEMOD_RULEFILE),--config $(CODEMOD_SGCONFIG))
 
 codemod: ## Codemod library: DETECT (default) | TEST=1 validate | APPLY=Y rewrite | RULE=<id> single rule
 ifneq ($(RULE),)
-ifeq ($(CODEMOD_RULEFILE),)
-	$(Q)echo "ERROR: RULE='$(RULE)' matches no codemod/rules/**/$(RULE).yml"; exit 1
+ifeq ($(CODEMOD_CSV)$(CODEMOD_RULEFILE),)
+	$(Q)echo "ERROR: RULE='$(RULE)' matches no codemod/rules/**/$(RULE).{csv,yml}"; exit 1
 endif
 endif
 ifeq ($(APPLY),Y)
+ifneq ($(CODEMOD_CSV),)
+	$(Q)echo "==> codemod APPLY [csv=$(RULE)]: rewriting scope from substitution list"; \
+	$(PY) $(CODEMOD_CSV_RUNNER) --csv $(CODEMOD_CSV) --apply $(CODEMOD_TARGETS)
+else
 	$(Q)echo "==> codemod APPLY$(if $(RULE), [rule=$(RULE)],): rewriting scope in declared order"; \
 	for t in $(CODEMOD_TARGETS); do \
 	  [ -d "$$t" ] || continue; \
 	  echo "    apply -> $$t"; \
 	  ast-grep scan $(CODEMOD_RULEFLAG) --update-all "$$t" || exit 1; \
 	done
+endif
 else ifeq ($(TEST),1)
 	$(Q)echo "==> codemod TEST: validating detection rules against their test cases (ast-grep test)"; \
 	ast-grep test --skip-snapshot-tests $(if $(RULE),--filter $(RULE),)
+else
+ifneq ($(CODEMOD_CSV),)
+	$(Q)echo "==> codemod DETECT [csv=$(RULE)]: scanning scope for substitution-list matches (read-only)"; \
+	$(PY) $(CODEMOD_CSV_RUNNER) --csv $(CODEMOD_CSV) --check $(CODEMOD_TARGETS) || true
 else
 	$(Q)echo "==> codemod DETECT$(if $(RULE), [rule=$(RULE)],): scanning project for violations across scope (read-only)"; \
 	for t in $(CODEMOD_TARGETS); do \
 	  [ -d "$$t" ] || continue; \
 	  ast-grep scan $(CODEMOD_RULEFLAG) "$$t" || true; \
 	done
+endif
 endif

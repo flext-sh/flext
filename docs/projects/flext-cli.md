@@ -25,7 +25,7 @@ pip install flext-cli
 ```python
 from flext_cli import cli
 
-result = cli.read_json_file("settings.json")
+result = cli.json_read_file("settings.json")
 
 if result.is_success:
     cli.print("Settings loaded", style="green")
