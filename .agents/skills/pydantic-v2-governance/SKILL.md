@@ -37,7 +37,7 @@ metadata:
 - Prefer canonical sources.
 - Validate exactly once at a true external boundary.
 - Pass the original validated model instance through protocol contracts.
-- Annotate public and internal interfaces with the owning `p.*` protocol, never a concrete `m.*` model.
+- Annotate `u`/`services`/`api` signatures (params and returns) and collaborator/DI fields with the owning `p.*` protocol, imported at runtime (ADR-011). Data/payload fields — including nested and composed (`list`/`dict` of models) — are concrete `m.*`, never a bare protocol (a protocol-typed data field cannot deserialize a dict or serialize). Never gate an annotation name under `TYPE_CHECKING`.
 - Never use internal dump/revalidate roundtrips or model-less payload contracts.
 - Redeclare only for a documented domain semantic change.
 - Do not create local aliases, wrapper APIs, or parallel execution branches for an unchanged upstream contract.

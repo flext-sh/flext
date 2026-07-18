@@ -19,7 +19,7 @@ Defines and enforces the FLEXT type hierarchy.
 
 - Writing or fixing type annotations.
 - Resolving `pyrefly` / `pyright` errors.
-- Choosing between `dict`, `Mapping`, `TypedDict`, Pydantic models, and `t.JsonValue`.
+- Choosing between `Mapping`, concrete `m.*` Pydantic models (data contracts), and `t.JsonValue` (`TypedDict` is not a data contract — ADR-011).
 - Enforcing no-`Any` policies.
 
 ## DO NOT USE FOR
@@ -87,7 +87,7 @@ def parse(data: dict[str, object]) -> dict[str, object]: ...
 |--------|------|
 | read-only contract | `Mapping[str, t.JsonValue]` |
 | mutating contract | `MutableMapping[str, t.JsonValue]` |
-| schema payload | Pydantic `BaseModel` or `TypedDict` |
+| schema payload / data contract | concrete `m.*` (`BaseModel` / `RootModel`) — never `TypedDict` (ADR-011) |
 | mutation hotspot | `dict[str, t.JsonValue]` (rare) |
 
 ## Result containers

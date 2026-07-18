@@ -6,7 +6,7 @@ Accepted (tap pilot realized 2026-07-17)
 
 **Tracking:** beads lane `mro-rn88` (dbt/target inventory) + `mro-6int.3` (tap declarative pilot: **flext-tap-ldap**, landed). Rollout to the remaining `flext-(dbt|tap|target)-*` projects follows the flext-tap-ldap pilot.
 
-**Depends:** builds on ADR-005 (config/settings SSOT) and the FLEXT law (`~/.ai-hub/commands/flext-law.md`) — §1.2 Pydantic-2 models everywhere, §3.2 types come from protocols `p.*` not concrete models, §3a JSON is Pydantic 2-way, §1.5 no duplicated declarations across projects.
+**Depends:** builds on ADR-005 (config/settings SSOT), ADR-011 (Runtime-Forward Annotation Law), and the FLEXT law (`~/.ai-hub/commands/flext-law.md`) — §1.2 Pydantic-2 models everywhere, §3.2 signatures and interfaces are typed by protocols `p.*` while data/payload fields stay concrete `m.*` (ADR-011 §3a-b), §3a JSON is Pydantic 2-way, §1.5 no duplicated declarations across projects.
 
 ## Context
 

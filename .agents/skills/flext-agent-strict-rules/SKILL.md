@@ -34,8 +34,11 @@ metadata:
    runtime `ast` and `get_ast` remain forbidden in the enforcement path.
 4. Preserve facade order `c -> t -> p -> m -> u`: use the canonical upstream
    alias as the MRO base and define one nested project namespace per concern.
-5. Use `TYPE_CHECKING` only for a reverse facade edge, a proven runtime cycle,
-   or the generated static declaration half of a PEP 562 lazy public export.
+5. Reverse facade edges are FORBIDDEN entirely (ADR-011): never under runtime and
+   never under `TYPE_CHECKING`. Every name in a runtime-evaluated annotation is a
+   top-level runtime import (facades are forward: `m` imports `p,t,c`; `u` imports
+   `m,p,t,c`). `TYPE_CHECKING` is reserved for the generated static-declaration
+   half of the root PEP 562 lazy public export only.
 6. Measure tool diagnostics against the canonical `flext-core`/`flext-cli`
    pattern. Keep only the closed, globally documented MRO/lazy incompatibility
    codes disabled and propagate them through the tooling SSOT.

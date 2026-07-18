@@ -14,5 +14,9 @@ This directory contains the accepted Architecture Decision Records that are curr
 - [ADR-005: Config, settings, constants, templates, and schemas SSOT](005-config-settings-constants-templates-schemas-ssot.md)
 - [ADR-006: Thin Domain Drivers over flext-meltano Bases + Action Libraries](006-thin-domain-drivers-over-meltano-bases.md) — _Accepted_
 - [ADR-007: Operational Kernel, Universal CLI, and Transactional Conformance](007-operational-kernel-cli-conform.md)
+- [ADR-008: Neutral consumer boundaries for docs, Office bytes, and artifact metadata](008-neutral-consumer-boundaries.md) — _Accepted_
+- [ADR-009: Ecosystem coordination and reusable-library evaluation](009-ecosystem-coordination-and-library-evaluation.md) — _Accepted (planning, `0.20.0-dev`)_
+- [ADR-010: Unified project standardization (Make, scripts, tests, structure) via codegen](010-unified-project-standardization-via-codegen.md) — _Accepted (planning, `0.20.0-dev`)_
+- [ADR-011: Runtime-Forward Annotation Law](011-runtime-forward-annotation-law.md) — _Accepted (rollout, `0.20.0-dev`)_
 
 New ADRs should be added only when they represent a real architectural decision with an owning implementation path.
