@@ -62,7 +62,10 @@ class LocalPayload(BaseModel):
 
 ### R8: TYPE_CHECKING and package initializers
 
-Use `TYPE_CHECKING` only for type-only symbols and the generated PEP 562 map at
+Use `TYPE_CHECKING` only for symbols used solely in static-only positions — never a
+name evaluated at runtime in an annotation (Pydantic field, PEP 526 assignment,
+beartype signature, PEP 695 `type` RHS), and never to hide a reverse facade edge,
+which is forbidden entirely (ADR-011) — plus the generated PEP 562 map at
 the production package root. Every internal importable directory at arbitrary
 depth has a generated static `__init__.py` with relative same-name re-exports of
 direct sibling symbols and a sorted literal tuple `__all__`, including

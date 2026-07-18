@@ -26,8 +26,9 @@ dump-to-validate roundtrip.
 ### Protocol interface
 
 - Expose each model shape through the owning `p.*` protocol.
-- Annotate service and facade interfaces with `p.*` or `t.*`, not concrete models.
-- Use `m.*` only to construct the canonical object at the boundary.
+- Annotate service/utility/api interfaces (params, returns) and collaborator/DI fields with `p.*` (or `t.*` scalars), imported at runtime — not concrete models, not under `TYPE_CHECKING` (ADR-011).
+- Data/payload fields, including nested and composed (`list`/`dict` of models), are concrete `m.*` — a bare protocol cannot validate or serialize a data field.
+- Use `m.*` to construct the canonical object at the boundary and pass the same instance through `p.*`.
 - Pass the original instance through every internal call.
 
 ### Direct upstream reuse

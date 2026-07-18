@@ -1,6 +1,6 @@
 # ADR-005 — Config, settings, constants, templates, and schemas SSOT
 
-- **Status:** Accepted
+- **Status:** Accepted (§2 amended by ADR-011)
 - **Date:** 2026-07-11
 - **Scope:** runtime configuration, declarative generation inputs, schemas,
   templates, and enforcement across FLEXT consumers. Enforcement follows the
@@ -48,14 +48,21 @@ settings.Namespace.domain
 
 Owned payloads cross boundaries as Pydantic v2 models, validated on input and
 dumped on output. Raw mappings, untyped values, direct environment access in a
-leaf module, and model-less configuration consumption are invalid.
+leaf module, and model-less configuration consumption are invalid. Settings and
+config **data-path delivery** (cache/config/data/state/work directories) is
+unified through `settings.py` using the namespaced XDG base-directory pattern
+per ADR-011 §7; `config.py` resolves its config-file directory from
+`settings.<Ns>.config_dir`, never from an independent CWD/package-relative resolver.
 
 ### 2. Facade and layer direction is strict
 
-Within a package, runtime dependencies follow `c -> t -> p -> m -> u`; reverse
-references are type-checking-only. Fallible operations return `r[T]`. Shared
-behavior is composed through the public facade and MRO, with no loose helper or
-compatibility alias.
+Within a package, runtime dependencies follow `c -> t -> p -> m -> u`. Forward
+references (a higher-index layer importing a lower one) are runtime imports;
+reverse references are forbidden entirely, not deferred under `TYPE_CHECKING`
+(amended by ADR-011, Runtime-Forward Annotation Law). Every name used in a
+runtime-evaluated annotation is a top-level runtime import. Fallible operations
+return `r[T]`. Shared behavior is composed through the public facade and MRO,
+with no loose helper or compatibility alias.
 
 Across packages:
 

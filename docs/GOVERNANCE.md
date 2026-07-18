@@ -25,13 +25,14 @@ this order.
 | Concern | Canonical owner | Decisive validation |
 | --- | --- | --- |
 | Any code or architecture change | `AGENTS.md` (repo root) | Active Bead plus scoped gates |
-| Refactor, MRO, facade, namespace, or import work | [Architecture baseline](architecture/baseline-v0.13.0.md) and scoped skill | `ruff`, `pyrefly`, `pyright`, affected `pytest` |
+| Refactor, MRO, facade, namespace, or import work | [Architecture baseline](architecture/baseline-v0.13.0.md), [ADR-011](architecture/adr/011-runtime-forward-annotation-law.md) (runtime-forward imports), and scoped skill | `ruff`, `pyrefly`, `pyright`, affected `pytest`, beartype claw import |
 | Public API or interface change | Active Bead design and ADRs | Consumer grep/audit plus project gates |
 | Docs or generated docs | [Documentation standard](standards/documentation.md) | `make docs DOCS_PHASE=audit` or narrower markdown gate |
 | Docs audit policy or generated-doc exemptions | [Documentation standard](standards/documentation.md) and accepted ADRs | Full docs audit plus affected project audit; evidence must show stale generated symbols are still caught |
 | Workspace tooling or Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help`, `make check`, or touched generator tests |
 | Operational kernel, CLI platform, or automated conformance | [ADR-007](architecture/adr/007-operational-kernel-cli-conform.md) | Clean-baseline gate, transactional conform proof, consumer gates |
-| Pydantic, settings, and strict typing | Pydantic references (`docs/references/pydantic2/`, repo-only) and type-system docs | `pyrefly`, `pyright`, affected tests |
+| Ecosystem coordination (internal + external projects) | [ADR-008](architecture/adr/008-neutral-consumer-boundaries.md), [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md), [ecosystem-coordination.md](architecture/ecosystem-coordination.md) | Reverse-dependency gate plus owner-local ADR consistency (`0.20.0-dev`) |
+| Pydantic, settings, and strict typing | Pydantic references (`docs/references/pydantic2/`, repo-only), type-system docs, and [ADR-011](architecture/adr/011-runtime-forward-annotation-law.md) (data=`m.*`, collaborators=`p.*`, no `model_rebuild`) | `pyrefly`, `pyright`, affected tests, beartype claw import |
 | Testing behavior | [Testing standard](standards/testing.md) | `pytest` or `make test PROJECT=<project>` |
 
 ## Active ADRs

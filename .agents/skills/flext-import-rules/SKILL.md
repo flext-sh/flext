@@ -20,8 +20,11 @@ operating procedure, not the declaration SSOT.
    aliases.
 3. Let only the facade or bridge owner import its private implementation or
    external framework.
-4. Keep runtime dependencies at runtime; use `TYPE_CHECKING` only for symbols
-   needed solely by static declarations.
+4. Keep runtime dependencies at runtime. Every name in a runtime-evaluated
+   annotation (Pydantic field, PEP 526 assignment, beartype signature, PEP 695
+   `type` RHS) is a runtime import. `TYPE_CHECKING` is reserved for symbols used
+   ONLY in static-only positions; it is NEVER a way to hide a reverse facade edge
+   (reverse edges are forbidden entirely — ADR-011).
 5. Remove the superseded import path in the same change.
 6. Run the target repository's configured Ruff and type gates.
 
@@ -68,9 +71,11 @@ operating procedure, not the declaration SSOT.
 - Project `base.py` may import upstream runtime `s` as the service MRO base and publish local `s` exactly once.
 - Project `api.py` imports the composed runtime facade class and publishes the package operational alias.
 - Bridge external frameworks (pydantic, structlog, oracledb, ldap3, grpc, sqlalchemy) through `flext_core` or the project-specific wrapper; do not import them directly in consumers.
-- Use `TYPE_CHECKING` only for type-only symbols and the generated PEP 562 map at
-  the production package root; internal package initializers are eager static
-  re-exports and never use `TYPE_CHECKING` to emulate lazy loading. Do not hide cycles.
+- Use `TYPE_CHECKING` only for symbols used solely in static-only positions (never
+  a name evaluated at runtime in an annotation — ADR-011) and the generated PEP 562
+  map at the production package root; internal package initializers are eager static
+  re-exports and never use `TYPE_CHECKING` to emulate lazy loading. Never gate an
+  annotation name or hide a reverse facade edge (reverse edges are forbidden). Do not hide cycles.
 
 ## Good examples
 

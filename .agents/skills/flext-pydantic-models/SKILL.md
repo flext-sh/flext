@@ -36,7 +36,7 @@ metadata:
 
 - Prefer canonical sources.
 - Models contain no custom methods, validators, computed fields, serializers, or private state.
-- Public and internal signatures use the owning `p.*` protocol; `m.*` constructs the canonical boundary object.
+- `u`/`services`/`api` signatures and collaborator/DI fields use the owning `p.*` protocol (imported at runtime, forward `u → p`); data/payload and nested/composed fields are concrete `m.*` (ADR-011). `m.*` constructs the canonical boundary object and is passed through `p.*` unchanged.
 - Internal layers pass the original validated model object through `p.*` protocols.
 - Internal `model_dump`/`model_validate` roundtrips and TypeAdapter copies are forbidden.
 - `dict`, JSON-shaped objects, `TypedDict`, dataclass, and duplicate DTO contracts are forbidden.
