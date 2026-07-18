@@ -7,7 +7,7 @@ metadata:
 ---
 # Using flext-core
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 Quick-reference for using `flext_core` in FLEXT projects.
 
@@ -32,7 +32,8 @@ Quick-reference for using `flext_core` in FLEXT projects.
 - Import via root aliases: `from flext_core import c, d, e, h, m, p, r, s, t, u, x`.
 - `s` is the **service/runtime** alias (`FlextService`), never settings.
 - Settings classes (`FlextSettings`, `FlextCliSettings`, `FlextTestsSettings`) have no short alias.
-- **ADR-005:** `flext-core` is runtime-minimal for config — stdlib `tomllib` + `string.Template` + `u.config_*` only, **no Jinja2**, and it must **never import `flext-cli`/`flext-infra` at runtime**. Template/schema/multi-format loaders live in `flext-cli`. See `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
+- **ADR-005:** `flext-core` is runtime-minimal for config — stdlib `tomllib` + `string.Template` + `u.config_*` only, **no Jinja2**, and it must **never import `flext-cli`/`flext-infra` at runtime**. Template/schema/multi-format loaders
+  live in `flext-cli`. See `docs/architecture/adr/005-config-settings-constants-templates-schemas-ssot.md`.
 - Use `r[T]` for fallible paths; never raw exceptions or ad-hoc error dicts for control flow.
 - Reset singletons in tests with `FlextSettings.reset_for_testing()` and `FlextContainer.reset_for_testing()`.
 

@@ -10,7 +10,7 @@ metadata:
 ---
 # Skill
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

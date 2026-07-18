@@ -11,7 +11,7 @@ metadata:
 ---
 # Scripts Infra
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

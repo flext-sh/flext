@@ -10,7 +10,7 @@ metadata:
 ---
 # flext-cli SSOT enforcement
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

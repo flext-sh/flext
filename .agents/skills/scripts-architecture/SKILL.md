@@ -11,7 +11,7 @@ metadata:
 ---
 # Scripts Architecture
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

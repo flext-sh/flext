@@ -11,7 +11,7 @@ metadata:
 ---
 # Pyrefly Type-Check Fix Rules
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

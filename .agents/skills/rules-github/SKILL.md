@@ -10,7 +10,7 @@ metadata:
 ---
 # Rules GitHub
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## Rules
 

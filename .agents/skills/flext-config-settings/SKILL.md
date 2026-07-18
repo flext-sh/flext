@@ -10,7 +10,7 @@ metadata:
 ---
 # Lib Pydantic Settings
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

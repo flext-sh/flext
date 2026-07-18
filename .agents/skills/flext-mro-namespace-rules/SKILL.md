@@ -11,7 +11,7 @@ metadata:
 ---
 # Flext MRO Namespace Rules
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

@@ -11,7 +11,7 @@ metadata:
 ---
 # Flext Automation Skill Pattern
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

@@ -7,7 +7,7 @@ metadata:
 ---
 # FLEXT Continuation
 
-**PROCESS SKILL**
+> **PROCESS SKILL**
 
 Resume interrupted FLEXT work from its single source of truth: the Bead ledger and its artifacts.
 

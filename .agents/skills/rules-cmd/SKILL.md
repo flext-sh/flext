@@ -11,7 +11,7 @@ metadata:
 ---
 # Rules Cmd
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## Rules
 

@@ -11,7 +11,7 @@ metadata:
 ---
 # Flext Agent Strict Rules
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

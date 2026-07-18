@@ -10,7 +10,7 @@ metadata:
 ---
 # Scripts Maintenance
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

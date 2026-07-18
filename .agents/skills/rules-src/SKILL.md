@@ -11,7 +11,7 @@ metadata:
 ---
 # Rules Src
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

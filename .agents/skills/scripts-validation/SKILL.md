@@ -10,7 +10,7 @@ metadata:
 ---
 # Scripts Validation
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

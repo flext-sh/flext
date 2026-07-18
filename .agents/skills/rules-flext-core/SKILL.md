@@ -11,7 +11,7 @@ metadata:
 ---
 # Rules Flext Core
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

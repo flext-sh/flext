@@ -10,7 +10,7 @@ metadata:
 ---
 # Pydantic v2 Patterns
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 <!-- mro-wkii.17 (agent: codex) — keep only declaration patterns compatible with direct protocol flow. -->
 
