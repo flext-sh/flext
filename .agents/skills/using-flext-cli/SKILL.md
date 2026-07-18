@@ -7,7 +7,7 @@ metadata:
 ---
 # Using flext-cli
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 Quick-reference for building CLI commands with `flext_cli`.
 

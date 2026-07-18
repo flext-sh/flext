@@ -11,7 +11,7 @@ metadata:
 ---
 # Flext Type System
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

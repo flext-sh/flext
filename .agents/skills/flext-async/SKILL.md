@@ -10,7 +10,7 @@ metadata:
 ---
 # Async Python Patterns
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## Rules
 

@@ -10,7 +10,7 @@ metadata:
 ---
 # Pydantic v2 Governance
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 <!-- mro-wkii.17 (agent: codex) — bind interfaces to protocols and preserve canonical model identity. -->
 

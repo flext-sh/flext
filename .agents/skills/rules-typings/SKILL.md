@@ -10,7 +10,7 @@ metadata:
 ---
 # Rules Typings
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

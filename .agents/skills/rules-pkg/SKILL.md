@@ -11,7 +11,7 @@ metadata:
 ---
 # Rules Pkg
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

@@ -10,7 +10,7 @@ metadata:
 ---
 # FLEXT Constants Discipline
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

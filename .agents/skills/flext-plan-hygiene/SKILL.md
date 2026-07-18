@@ -11,7 +11,7 @@ metadata:
 ---
 # Flext Plan Hygiene
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

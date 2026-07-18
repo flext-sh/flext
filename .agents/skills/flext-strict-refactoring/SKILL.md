@@ -11,7 +11,7 @@ metadata:
 ---
 # Flext Strict Refactoring
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

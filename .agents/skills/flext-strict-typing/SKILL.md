@@ -11,7 +11,7 @@ metadata:
 ---
 # FLEXT Strict Typing Rules
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 Defines and enforces the FLEXT type hierarchy.
 

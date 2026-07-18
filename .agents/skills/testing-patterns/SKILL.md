@@ -11,7 +11,7 @@ metadata:
 ---
 # Testing Patterns
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

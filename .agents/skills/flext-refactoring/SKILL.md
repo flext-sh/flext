@@ -11,7 +11,7 @@ metadata:
 ---
 # FLEXT Refactoring Workflow
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

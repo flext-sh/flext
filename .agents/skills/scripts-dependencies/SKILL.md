@@ -10,7 +10,7 @@ metadata:
 ---
 # Scripts Dependencies
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

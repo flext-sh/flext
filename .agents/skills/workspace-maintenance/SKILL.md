@@ -10,7 +10,7 @@ metadata:
 ---
 # Workspace Maintenance
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

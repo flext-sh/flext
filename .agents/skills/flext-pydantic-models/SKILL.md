@@ -11,7 +11,7 @@ metadata:
 
 <!-- mro-wkii.17 (agent: codex) — keep Pydantic guidance on one identity-preserving boundary path. -->
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

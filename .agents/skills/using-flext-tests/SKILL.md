@@ -7,7 +7,7 @@ metadata:
 ---
 # Using flext-tests
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 Quick-reference for using the `flext_tests` toolkit.
 

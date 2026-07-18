@@ -10,7 +10,7 @@ metadata:
 ---
 # FLEXT Namespace Rewrite Guard
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

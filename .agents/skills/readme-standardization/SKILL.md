@@ -11,7 +11,7 @@ metadata:
 ---
 # README Standardization Skill
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

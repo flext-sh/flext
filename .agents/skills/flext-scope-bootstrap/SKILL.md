@@ -11,7 +11,7 @@ metadata:
 ---
 # FLEXT Scope Bootstrap
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

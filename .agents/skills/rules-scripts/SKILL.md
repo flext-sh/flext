@@ -10,7 +10,7 @@ metadata:
 ---
 # Rules Scripts
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

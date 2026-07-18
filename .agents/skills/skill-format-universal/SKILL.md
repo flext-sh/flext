@@ -11,7 +11,7 @@ metadata:
 ---
 # Skill Format Universal
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

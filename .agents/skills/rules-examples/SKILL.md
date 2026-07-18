@@ -11,7 +11,7 @@ metadata:
 ---
 # Rules Examples
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

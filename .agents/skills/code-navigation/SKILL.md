@@ -11,7 +11,7 @@ metadata:
 ---
 # Scope — Code Intelligence for LLM Agents
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 

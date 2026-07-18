@@ -10,7 +10,7 @@ metadata:
 ---
 # Scripts Security
 
-**UTILITY SKILL**
+> **UTILITY SKILL**
 
 ## USE FOR
 
