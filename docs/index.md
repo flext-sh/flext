@@ -11,6 +11,7 @@ The root portal is intentionally small. It documents the FLEXT workspace itself,
 - [Onboarding (Collection Rules)](guides/onboarding.md) — required pre-work for ANY FLEXT project.
 - [Architecture baseline for v0.13.0](architecture/baseline-v0.13.0.md)
 - [ADR index](architecture/adr/README.md)
+- [Ecosystem coordination (internal + external projects, `0.20.0-dev`)](architecture/ecosystem-coordination.md)
 - [Migration guide](guides/migration-to-v0.13.0.md)
 - [Workspace project catalog](projects/generated/catalog.md)
 - [Workspace API overview](api-reference/generated/overview.md)

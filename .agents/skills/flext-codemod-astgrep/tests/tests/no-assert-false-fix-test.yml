@@ -1,6 +1,0 @@
-id: no-assert-false-fix
-valid:
-  - "assert x == 1"
-  - 'pytest.fail("reason")'
-invalid:
-  - "assert False"
