@@ -6,6 +6,7 @@ This directory contains the canonical architecture baseline for the FLEXT worksp
 
 - [Baseline v0.13.0](baseline-v0.13.0.md)
 - [ADR Index](adr/README.md)
+- [Ecosystem coordination (internal + external projects, `0.20.0-dev`)](ecosystem-coordination.md)
 - [Migration Guide](../guides/migration-to-v0.13.0.md)
 
 ## Interpretation Rule
