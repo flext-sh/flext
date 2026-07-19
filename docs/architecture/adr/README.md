@@ -18,5 +18,6 @@ This directory contains the accepted Architecture Decision Records that are curr
 - [ADR-009: Ecosystem coordination and reusable-library evaluation](009-ecosystem-coordination-and-library-evaluation.md) — _Accepted (planning, `0.20.0-dev`)_
 - [ADR-010: Unified project standardization (Make, scripts, tests, structure) via codegen](010-unified-project-standardization-via-codegen.md) — _Accepted (planning, `0.20.0-dev`)_
 - [ADR-011: Runtime-Forward Annotation Law](011-runtime-forward-annotation-law.md) — _Accepted (rollout, `0.20.0-dev`)_
+- [ADR-012: Performance optimization of worktree transactions and mutating CLI commands](012-worktree-transaction-performance.md) — _Accepted_
 
 New ADRs should be added only when they represent a real architectural decision with an owning implementation path.
