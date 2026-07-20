@@ -2,6 +2,65 @@
 
 This file provides instructions and context for AI coding agents working on this project.
 
+## Mandatory Governance Bootstrap
+
+Before any mutation, read in order:
+
+1. The newest operator request.
+2. `~/.agents/UNIVERSAL_CORE.md`.
+3. `~/.agents/skills/inviolable-rules/SKILL.md`.
+4. `~/.agents/skills/flext-law/SKILL.md`.
+5. This file, the active Bead, and the current durable plan.
+
+### Intent Card
+
+For every multi-step task, record before acting:
+
+- exact requested outcome;
+- active workspace/worktree and branch;
+- active parent and child Beads;
+- current phase and observable stop condition;
+- preserved WIP and concurrent writers;
+- in-scope paths and explicit exclusions;
+- required project-scoped and workspace-wide gates.
+
+Delegation and compaction must preserve this card verbatim. A new plan, traceback,
+subagent result, or status request may not silently replace the operator's outcome.
+
+### Exclusive Operational Ownership
+
+- One coordinator owns the requested project outcome through integration, validation, and closure.
+- Subagents receive disjoint, bounded scopes; they do not redefine acceptance, sequence, or completion.
+- Do not start overlapping mutation teams for the same phase.
+- A worker result, status report, locally green file, or elapsed time does not release ownership.
+- Verify every delegated path and claim against the live worktree before accepting it.
+
+### Continuous-Green Completion Contract
+
+The project must never be declared complete or left between tasks in a task-created
+broken or partial state. Before completing every task:
+
+1. The environment/bootstrap remains functional.
+2. Global Ruff lint and format pass through the root Make dispatcher.
+3. Global Pyrefly passes through the root Make dispatcher.
+4. Pyright and memory-capped Mypy pass for every changed project and affected consumer.
+5. Pytest passes for every changed project and affected integration surface.
+6. Relevant workspace validation and real public-surface behavior pass.
+7. Generated outputs are owner-driven and idempotent.
+8. Beads contains exact commands, exit codes, decisive output, blockers, and remaining scope.
+
+Project-scoped gates are iteration evidence, not substitutes for the final global Ruff,
+format, and Pyrefly baseline. No task closes with red imports, broken generation,
+uncollected tests, unvalidated WIP, or a workaround masking the defect.
+
+### Fix-Forward Worktree Law
+
+- The active worktree root is the execution root; never assume `/home/marlonsc/flext` is the mutation target when another worktree was selected.
+- Preserve all existing root and submodule WIP. Never reset, restore, checkout, clean, stash, or overwrite unknown changes.
+- Re-read mutable files before editing and commit only explicit owned paths when Git authority is granted.
+- Generated files change only through their canonical generator, config, schema, policy, or template owner.
+- Status is a checkpoint, not a stopping condition. Continue until the intent card's observable stop condition holds or one precise operator decision is required.
+
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:19cc25d9 -->
 ## Issue Tracking with bd (beads)
 
@@ -184,7 +243,7 @@ Precedence is unchanged in both modes: this root law + the AI-HUB managed Univer
 
 ## Build & Test
 
-**All commands run from the workspace root** (`/home/marlonsc/flext`), never from inside a submodule (the root dispatcher forwards to each project). Use `make`, never bare `uv`/`ruff`/`pytest`.
+**All commands run from the active workspace/worktree root**, never from inside a submodule (the root dispatcher forwards to each project). Use `make`, never bare `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
 
 ```bash
 # Environment (creates .venv, uv sync --all-packages, installs hooks)
@@ -212,6 +271,68 @@ make build WHAT=gen
 **Pinned toolchain** (`.default-python-packages`): Ruff `0.15.22`, mypy `2.3.0`, Pyright `1.1.411`, Pyrefly `1.1.1`. Python strictly `>=3.13,<3.14`.
 
 **Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy uncapped, it can blow up RAM; override with `make check WHAT=mypy MYPY_MEMORY_LIMIT_MB=8192`. Docs CI needs `uv sync --all-packages --all-groups --all-extras` for dev tools.
+
+## Inviolable Delivery Governance
+
+These rules are mandatory for every FLEXT task. They strengthen the universal
+law; no project-local instruction, Bead note, historical plan, agent, or
+concurrent work may weaken them.
+
+### Healthy environment is a completion condition
+
+- Never close, defer as complete, hand off as complete, commit as complete, or
+  claim success while the affected project is broken or left in unowned WIP.
+  A task remains `in_progress` until it is fixed forward or blocked by an
+  explicit external dependency recorded in its Bead.
+- Before closing an implementation task, manually exercise the changed public
+  surface: Make/CLI for workspace behavior, a minimal import/driver for a
+  library, or the applicable service/UI surface. Static gates alone do not
+  satisfy completion.
+- Validate after the final edit, not merely before it. Any post-validation
+  edit invalidates prior green evidence.
+- Do not lower coverage, suppress diagnostics, skip gates, or replace root
+  Make commands with direct tools to obtain a green result. Fix forward.
+
+### Required Python quality gates
+
+Run every command from the active workspace/worktree root using `make` only.
+
+1. **Global environment gates, after every implementation task:**
+   ```bash
+   make check CHECK_GATES=lint,pyrefly
+   ```
+   Ruff and Pyrefly must be healthy for the workspace. Existing debt is not a
+   reason to close new work: either resolve it in the owning Bead or keep the
+   current task open with a precise, linked blocker.
+2. **Changed-scope gates, after every implementation task:**
+   ```bash
+   make check PROJECT=<affected-project> CHECK_GATES=pyright,mypy
+   make test PROJECT=<affected-project>
+   ```
+   Use the narrowest supported root-Make target first, then widen to the
+   affected project when package boundaries, generated files, shared fixtures,
+   configuration, or public facades changed.
+3. **Final task gate:** repeat the global Ruff/Pyrefly command and all
+   changed-scope Pyright, mypy, and pytest commands after the final change.
+   Record command, cwd, exit code, and decisive output in the owning Bead.
+
+If a required gate cannot run because the environment itself is broken, stop
+the task, preserve the worktree, create or update one narrow Bead for the
+environment failure, and do not report the implementation as complete.
+
+### State ownership and handoff
+
+- Claim the live Bead before mutations. Beads are the sole task tracker;
+  `.beads/issues.jsonl` is never edited by hand.
+- Re-read `bd show <id> --json`, `git status`, and relevant submodule status
+  before a handoff or closure. Existing changes are provenance: do not reset,
+  restore, clean, stash, normalize, or silently include them.
+- Use explicit-path atomic commits only when the user authorizes commits.
+  Never use `git add -A`, amend, force-push, or push without explicit
+  authorization.
+- Handoffs must name changed paths, unresolved paths, exact validation status,
+  manual-QA result, active Bead, and the next root-Make command. A handoff is
+  not permission to leave an otherwise fixable broken environment behind.
 
 ## Architecture Overview
 
