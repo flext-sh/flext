@@ -9,12 +9,12 @@ engineering law or skill procedures.
 
 Apply the newest applicable source in this order:
 
-1. Live operator request.
-2. Active Bead in the workspace-root tracker.
-3. Accepted ADRs in [`architecture/adr/`](architecture/adr/README.md).
-4. Root `AGENTS.md`.
-5. The owning skill or standard.
-6. Other documentation.
+1. Newest operator request.
+2. `~/.agents` universal authority (`AGENTS.md`, `UNIVERSAL_CORE.md`, and universal skills).
+3. Project `AGENTS.md` and routed local skills.
+4. Bead execution and status SSOT.
+5. In-scope ADR in [`architecture/adr/`](architecture/adr/README.md).
+6. Supporting documentation.
 
 When a higher source changes reality, update the affected lower sources in the
 same change. Ask before acting only when the conflict cannot be resolved from
@@ -64,13 +64,12 @@ Choose the narrowest decisive command from the quality-gates skill, then widen
 only after it passes:
 
 ```bash
-ruff check <path> --no-fix
-pyrefly check <path>
-pytest <path-or-project>/tests -q
-markdownlint-cli2 <path>
 make check PROJECT=<project> CHECK_GATES=<gates>
 make val VALIDATE_SCOPE=workspace
 ```
+
+All FLEXT validation uses the root Make dispatcher; never run bare `ruff`,
+`pyrefly`, `pyright`, `mypy`, or `pytest` commands.
 
 Record every red or green result with its exit code and decisive output in the
 active workspace-root Bead.
