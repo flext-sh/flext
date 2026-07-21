@@ -54,10 +54,6 @@ full-check: ## Run canonical full check path with explicit timeout
 		exit $$code; \
 	fi
 
-# ~/.ai-hub workspace tooling thin-wrapper
-$(HOME)/.ai-hub/templates/workspace-wrapper.mk: ;
-include $(HOME)/.ai-hub/templates/workspace-wrapper.mk
-
 # Internal helpers -----------------------------------------------------------
 
 # Standardized commit message schema for workspace automation.
