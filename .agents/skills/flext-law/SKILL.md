@@ -1,44 +1,48 @@
 ---
 name: flext-law
-description: Apply the mandatory FLEXT engineering law before changing a flext-core workspace. Use for every FLEXT implementation, refactor, review, migration, or instruction-surface change; route detailed procedure to the smallest matching skill.
+description: Apply the mandatory FLEXT engineering law for every implementation, review, migration, refactor, validation, or instruction-surface change.
 ---
+
 # FLEXT Law
 
-## Mandatory baseline
+## Authority and scope
 
-Always apply FLEXT patterns, Python 3.13, object-oriented MRO composition,
-SSOT, YAGNI, DRY, SOLID, Clean Architecture, and Dependency Injection. Use
-these principles to reduce code and preserve complete, correct module behavior;
-never use them to justify a speculative abstraction or a parallel path.
+1. Read root `AGENTS.md` before touching FLEXT files.
+2. Treat the live Bead, validated configuration, public contract, and current
+   worktree as authority. Archives, backups, prior plans, and `0.12.0-dev` are
+   evidence only unless current project law explicitly adopts them.
+3. Claim the owning Bead before mutation. Preserve concurrent work and fix
+   forward only: never reset, restore, clean, stash, rebase, or normalize
+   shared work.
+4. Change one canonical owner, update its consumers in the same cycle, and
+   remove superseded paths. Do not add shims, aliases, fallbacks, suppression,
+   or old-plus-new coexistence.
 
-The source of truth is the objective, its owning domain declaration, validated
-configuration, or fundamental rule. Tests, fixtures, snapshots, examples,
-reports, and generated projections only validate or consume those owners; they
-never define behavior, catalogs, configuration, or project type.
+## Engineering law
 
-## Execution
+- Follow Python 3.13, Clean Architecture, MRO composition, dependency
+  direction, typed public contracts, Pydantic v2, SSOT, YAGNI, DRY, SOLID, and
+  dependency injection as defined by root `AGENTS.md`.
+- Declarations are data; behavior belongs in focused utilities, services,
+  facades, bases, or CLI layers.
+- Generated files and deployed projections are outputs, never source owners.
+  Change their canonical generator/configuration and regenerate through the
+  root Make surface.
+- Lint, type, and tooling exception lists (ruff `per-file-ignores`, mypy
+  `disabled-error-codes`, and equivalents) are code-generated from the
+  flext-infra codegen SSOT (`flext-infra/config/tooling.yaml`), never
+  hand-added to a consumer `pyproject.toml`. A required exception that the
+  SSOT lacks is a change to that SSOT plus a regenerate, not a local edit.
+- Never silence a lint, type error, or gate to make it pass: no `noqa`,
+  `type: ignore`, per-file-ignore, or config carve-out added by an agent on
+  its own authority. Fix the flagged code at its canonical owner. If a
+  finding is a genuine false positive, stop and get explicit operator
+  approval before adding any suppression, then encode it in the codegen SSOT.
+- Tests validate public behavior. Use existing fixture topology and imports;
+  do not create parallel test or configuration paths.
 
-1. Read root `AGENTS.md` and `docs/GOVERNANCE.md`.
-2. Resolve the workspace-root Bead and record ownership before writes.
-3. Identify the canonical declaration/configuration and every affected
-   consumer before changing behavior.
-4. Load `flext-context-routing`, then at most three specialized skills whose
-   frontmatter matches the task.
-5. Change the owner once, update all consumers atomically, and remove the
-   superseded path. Do not add a fallback, shim, alias, suppression, or
-   old-plus-new coexistence.
-6. Update affected docs, skills, agent instructions, and pointers when reality
-   changes; otherwise verify they remain current.
-7. Validate through the public facade and native production gates, then record
-   command, exit code, and decisive output in the Bead.
+## Completion discipline
 
-## Architecture boundary
-
-Use canonical public facades and protocols. Keep declarations in their owning
-facets, validated settings/configuration in their exported namespaced models,
-and behavior in focused MRO-composed utilities/services. Dependencies point
-inward; construction and external translation stay at boundaries.
-
-The skill catalog is the set of direct `.agents/skills/<name>/SKILL.md` files
-whose `name` equals the directory. Structural ast-grep declarations live only
-under `flext-codemod-astgrep/rules`; its tests and snapshots are validators.
+Use `.agents/skills/flext-inviolable-rules/SKILL.md` for every task closure.
+No task succeeds while the affected environment is broken, a required gate is
+failing, or the work is left as unowned WIP.

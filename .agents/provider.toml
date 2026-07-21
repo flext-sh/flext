@@ -2,13 +2,10 @@ source_project_id = "flext-sh/flext"
 marker_distribution = "flext-core"
 router_skill = "flext-context-routing"
 session_command = ".agents/commands/flext-law.md"
-codemod_provider = ".agents/skills/flext-codemod-astgrep/sgconfig.yml"
+codemod_provider = "sgconfig.yml"
 marketplaces_key = "extraKnownMarketplaces"
 enabled_plugins_key = "enabledPlugins"
-required_surfaces = [
-  ".claude-plugin/plugin.json",
-  ".claude-plugin/marketplace.json",
-]
+required_surfaces = ["sgconfig.yml"]
 
 [surfaces]
 always = [
@@ -33,6 +30,7 @@ on_demand = [
   ".agents/skills/flext-docs-pointer-policy/SKILL.md",
   ".agents/skills/flext-enforcement-catalog/SKILL.md",
   ".agents/skills/flext-import-rules/SKILL.md",
+  ".agents/skills/flext-inviolable-rules/SKILL.md",
   ".agents/skills/flext-law/SKILL.md",
   ".agents/skills/flext-logging/SKILL.md",
   ".agents/skills/flext-mro-namespace-rules/SKILL.md",
