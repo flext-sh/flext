@@ -14,7 +14,7 @@ WORKSPACE_BASE ?= 0.12.0-dev
 .PHONY: done-check workspace-docs-audit full-check workspace-status \
         workspace-sync-base workspace-land-submodules dependabot-merge \
         workspace-merge-main workspace-main-sync workspace-dependabot-apply \
-        workspace-check-changed workspace-fix-changed
+        workspace-check-changed workspace-fix-changed hooks post-boot
 
 done-check: ## Real-user/green-green check, scoped to committed changes vs upstream
 	$(Q)base=$$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo origin/main); \
@@ -26,6 +26,12 @@ done-check: ## Real-user/green-green check, scoped to committed changes vs upstr
 	n=$$(printf '%s\n' "$$files" | grep -c .); \
 	echo "done-check: ruff on $$n committed-vs-$$base .py file(s)"; \
 	printf '%s\n' "$$files" | xargs -r ruff check --quiet
+
+hooks: ## Install Beads git hooks + FLEXT agent-trailer guard (workspace root)
+	$(Q)bash .github/scripts/install-git-hooks.sh
+
+# Auto-provision git hooks after every `make boot` (verb-hook seam).
+post-boot: hooks ## Post-boot: ensure git hooks + agent-trailer guard are installed
 
 workspace-docs-audit: ## Markdown lint for workspace docs
 	$(Q)md_files=$$(find docs/ -type f -name '*.md' 2>/dev/null | sort); \
