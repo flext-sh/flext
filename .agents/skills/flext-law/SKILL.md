@@ -28,6 +28,16 @@ description: Apply the mandatory FLEXT engineering law for every implementation,
 - Generated files and deployed projections are outputs, never source owners.
   Change their canonical generator/configuration and regenerate through the
   root Make surface.
+- Lint, type, and tooling exception lists (ruff `per-file-ignores`, mypy
+  `disabled-error-codes`, and equivalents) are code-generated from the
+  flext-infra codegen SSOT (`flext-infra/config/tooling.yaml`), never
+  hand-added to a consumer `pyproject.toml`. A required exception that the
+  SSOT lacks is a change to that SSOT plus a regenerate, not a local edit.
+- Never silence a lint, type error, or gate to make it pass: no `noqa`,
+  `type: ignore`, per-file-ignore, or config carve-out added by an agent on
+  its own authority. Fix the flagged code at its canonical owner. If a
+  finding is a genuine false positive, stop and get explicit operator
+  approval before adding any suppression, then encode it in the codegen SSOT.
 - Tests validate public behavior. Use existing fixture topology and imports;
   do not create parallel test or configuration paths.
 
