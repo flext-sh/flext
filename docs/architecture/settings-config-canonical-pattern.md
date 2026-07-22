@@ -1,8 +1,9 @@
-# Canonical Settings & Config Pattern (ADR-005 — standardization)
+# Canonical Settings & Config Pattern (ADR-005 companion guide)
 
-**Status**: authoritative | **Scope**: every FLEXT project (`flext-*`, integrations, `ai-hub`)
-**SSOT**: this file defines the ONE way to declare, group, and consume settings/config.
-Any deviation is a defect. Reviewed 2026-07-09.
+**Status**: supporting guide | **Scope**: every FLEXT project (`flext-*`, integrations, `ai-hub`)
+**SSOT**: [ADR-005](adr/005-config-settings-constants-templates-schemas-ssot.md) defines the
+canonical configuration decision. This guide explains its settings/config usage
+patterns. Reviewed 2026-07-09.
 
 <!-- mro-wkii.14 (agent: codegen) — errata por pedido vivo (precedencia U1). -->
 

@@ -46,13 +46,12 @@ config.<Project>.<domain>    # validated, frozen, namespaced
 settings.<Project>.<domain>  # env-bound subset
 ```
 
-The payload is validated exactly once — `Root.model_validate(...)` while the
-frozen singleton is constructed — and access never re-reads, re-validates, or
-passes through a getter/proxy. Schemas are declaration-only Pydantic models
-in `_models/config.py` (`frozen=True, extra="forbid"` per domain; `Root`
-uses `extra="ignore"`). Facets never re-derive, hardcode, or re-read a source
-that `config`/`settings` already own. Adding a config domain means one nested
-model and one `Root` field — nothing else.
+The payload is validated exactly once while the frozen singleton is
+constructed, and access never re-reads, re-validates, or passes through a
+getter/proxy. This is the target configuration architecture described by
+[ADR-005](../adr/005-config-settings-constants-templates-schemas-ssot.md);
+individual packages adopt it as their config models land. Facets never
+re-derive, hardcode, or re-read a source that `config`/`settings` already own.
 
 ## 8.4 MRO Composition
 
@@ -92,13 +91,10 @@ when no declarative form exists; derived values are computed by a factory in
 
 ## 8.6 Enforcement as Data
 
-Static enforcement rules are data, not code: 100% of them live as
-Pydantic-2-validated YAML records under `flext-infra/config/`. The evaluation
-engine is a rope-semantic fact base plus a closed operator set in
-`u.Infra` — there are no bespoke per-rule detector classes and no
-`ClassVar` banned/allowlist tables in Python. `flext-core` holds
-runtime/beartype rules only; `flext-cli` owns the template/config engine;
-`flext-infra` enforces.
+Static enforcement is configured data, not ad-hoc per-rule code. The target
+owner is the `flext-infra` enforcement configuration and engine; this section
+describes the intended architecture rather than claiming that every package or
+configuration record is already present in the current checkout.
 
 ## 8.7 Continuous Green
 

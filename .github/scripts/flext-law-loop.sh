@@ -26,6 +26,16 @@ set -euo pipefail
 WORKSPACE_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." >/dev/null 2>&1 && pwd)"
 cd "$WORKSPACE_ROOT"
 
+# A loop owns the entire disposable-worktree namespace.  A non-blocking lock
+# prevents a second invocation from deleting an active cycle during startup
+# cleanup.
+GIT_COMMON_DIR="$(git rev-parse --git-common-dir)"
+exec 9>"$GIT_COMMON_DIR/flext-law-loop.lock"
+if ! flock -n 9; then
+  printf 'flext-law-loop: another loop instance is already active\n' >&2
+  exit 1
+fi
+
 INTERVAL="${FLEXT_LAW_INTERVAL:-1200}"
 APPLY=0
 ONCE=0
@@ -53,12 +63,12 @@ log() { printf '[flext-law %(%Y-%m-%dT%H:%M:%SZ)T] %s\n' -1 "$*"; }
 # the worktree; flext-infra's own worktree_transaction validates every micro
 # edit (ruff+pyrefly) before it is materialised.
 FIXER_SPECS=(
-  "check:fix-enforcement:--safe-only:--check-after"
-  "refactor:modernize-patterns"
-  "refactor:modernize-pydantic"
-  "refactor:modernize-logging"
-  "refactor:modernize-result-di"
-  "refactor:namespace-enforce"
+  "check fix-enforcement --safe-only --check-after"
+  "refactor modernize-patterns"
+  "refactor modernize-pydantic"
+  "refactor modernize-logging"
+  "refactor modernize-result-di"
+  "refactor namespace-enforce"
 )
 
 validate_worktree() {
@@ -108,13 +118,16 @@ run_cycle() {
   # transaction worktrees by removing the directory after detaching it).
   trap 'git worktree remove --force "$worktree" 2>/dev/null || true; rm -rf "$worktree" 2>/dev/null || true; git worktree prune 2>/dev/null || true' RETURN
 
-  local spec group cmd flags changed=0
+  local spec group cmd changed=0
+  local -a command_parts flags
   for spec in "${FIXER_SPECS[@]}"; do
-    IFS=':' read -r group cmd flags <<<"${spec}:"
-    log "fixer: $group $cmd ${flags:-}"
+    read -r -a command_parts <<<"$spec"
+    group="${command_parts[0]}"
+    cmd="${command_parts[1]}"
+    flags=("${command_parts[@]:2}")
+    log "fixer: $group $cmd ${flags[*]:-}"
     # Apply inside the worktree; flext-infra validates each micro-transaction.
-    # shellcheck disable=SC2086
-    if "${FLEXT_INFRA[@]}" "$group" "$cmd" --workspace "$worktree" --apply ${flags} \
+    if "${FLEXT_INFRA[@]}" "$group" "$cmd" --workspace "$worktree" --apply "${flags[@]}" \
         >"$REPORT_DIR/$stamp-$group-$cmd.log" 2>&1; then
       :
     else
@@ -124,7 +137,7 @@ run_cycle() {
     fi
   done
 
-  if git -C "$worktree" diff --quiet && git -C "$worktree" diff --cached --quiet; then
+  if [ -z "$(git -C "$worktree" status --porcelain)" ]; then
     log "cycle: no strict-rule changes produced — nothing to validate/apply"
     return 0
   fi
@@ -146,9 +159,20 @@ run_cycle() {
   # Materialise the vetted diff onto the real workspace and validate once more
   # in place before committing (defence in depth).
   log "apply: syncing vetted diff to workspace"
-  git -C "$worktree" diff "$base" -- . >"$REPORT_DIR/$stamp-APPLIED.patch"
+  git -C "$worktree" add --intent-to-add -- .
+  git -C "$worktree" diff --binary "$base" -- . >"$REPORT_DIR/$stamp-APPLIED.patch"
   if [ -s "$REPORT_DIR/$stamp-APPLIED.patch" ]; then
-    git apply --3way "$REPORT_DIR/$stamp-APPLIED.patch"
+    if [ -n "$(git status --porcelain)" ]; then
+      log "apply refused: workspace has existing changes"
+      return 1
+    fi
+    git apply --index --3way "$REPORT_DIR/$stamp-APPLIED.patch"
+    if ! validate_worktree "$WORKSPACE_ROOT"; then
+      log "apply RED: reverting only the vetted patch; workspace left unchanged"
+      git apply --index --reverse --3way "$REPORT_DIR/$stamp-APPLIED.patch"
+      return 1
+    fi
+    git commit -m "fix: apply validated flext-law sweep"
   fi
   [ "$changed" -eq 1 ] || return 0
   return 0

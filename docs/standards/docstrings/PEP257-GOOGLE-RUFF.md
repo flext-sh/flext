@@ -19,10 +19,10 @@
 - `D203` - blank line before class docstring ✗ (not used)
 - `D213` - multi-line summary on line 2 ✗ (keep on line 1)
 
-**Enforced (zero workspace violations):**
+**Not enforced by the current Ruff policy:**
 
-- `D401` - imperative mood ✓ (enforced)
-- `D417` - undocumented params ✓ (enforced)
+- `D401` - imperative mood (ignored as `non-imperative-mood`)
+- `D417` - undocumented params (ignored as `undocumented-param`)
 
 ---
 

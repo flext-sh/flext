@@ -42,9 +42,10 @@ jobs:
             TAG="$REF_NAME"
           fi
           # Accept final and PEP 440 pre/dev/post releases:
-          # v1.2.3, v1.2.3rc0, v1.2.3a1, v1.2.3b2, v1.2.3.dev0, v1.2.3.post1
-          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+((a|b|rc)[0-9]+)?(\.(dev|post)[0-9]+)?$ ]]; then
-            echo "Invalid release tag: $TAG (expected vMAJOR.MINOR.PATCH with optional PEP 440 pre/dev/post suffix)" >&2
+          # v1.2.3, v1.2.3-dev, v1.2.3rc0, v1.2.3a1, v1.2.3b2,
+          # v1.2.3.dev0, v1.2.3.post1
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-dev|((a|b|rc)[0-9]+)?(\.(dev|post)[0-9]+)?)$ ]]; then
+            echo "Invalid release tag: $TAG (expected vMAJOR.MINOR.PATCH with optional -dev or PEP 440 pre/dev/post suffix)" >&2
             exit 1
           fi
           VERSION="${TAG#v}"
@@ -224,6 +225,12 @@ jobs:
           ROOT_OID="$(git rev-parse HEAD)"
           if [ "$ROOT_OID" != "$RELEASE_ROOT_SHA" ]; then
             echo "checked-out root commit $ROOT_OID does not match event commit $RELEASE_ROOT_SHA" >&2
+            exit 1
+          fi
+          git fetch --force origin "refs/tags/${RELEASE_TAG}:refs/tags/${RELEASE_TAG}"
+          TAG_OID="$(git rev-list -n 1 "$RELEASE_TAG")"
+          if [ "$TAG_OID" != "$ROOT_OID" ]; then
+            echo "canary tag $RELEASE_TAG resolves to $TAG_OID, not $ROOT_OID" >&2
             exit 1
           fi
           CORE_OID="$(git rev-parse "${RELEASE_ROOT_SHA}:flext-core")"

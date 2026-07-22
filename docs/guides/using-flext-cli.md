@@ -56,6 +56,9 @@ from flext_cli.services.cli import FlextCliCli
 from flext_cli.settings import FlextCliSettings
 
 
+settings = FlextCliSettings.fetch_global()
+
+
 class GreetInput(m.BaseModel):
     name: str
     shout: bool = False

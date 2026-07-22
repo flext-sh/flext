@@ -19,7 +19,8 @@ FLEXT Auth is the multi-provider authentication and authorization service of the
 ## Quick start
 
 ```bash
-pip install flext-auth
+make boot
+make check PROJECT=flext-auth
 ```
 
 ```python

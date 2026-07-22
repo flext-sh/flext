@@ -1,17 +1,13 @@
 # ast-grep configuration for skill rule testing
 # Reference: https://ast-grep.github.io/guide/test-rule.html
 #
-# Canonical skill root: .agents/skills/ (see .agents/INSTRUCTION_SURFACE.md).
-# .claude/skills/** is non-canonical and MUST NOT be referenced here.
+# Rule collections are provisioned by the external ``~/.agents`` authority.
+# This repository deliberately does not mirror that mutable tool-home tree, so
+# no repository-local rule or test directory is declared here.
 
 # ruleDirs: directories containing rule YAML files
 # Each skill under .agents/skills/*/rules/ is discovered here.
-ruleDirs:
-  - .agents/skills/flext-strict-typing/rules
-  - .agents/skills/flext-patterns/rules
-  - .agents/skills/flext-pyrefly-typecheck-fix/rules
-  - .agents/skills/testing-patterns/rules
-  - .agents/skills/flext-codemod-astgrep/rules
+ruleDirs: []
 
 # testConfigs: directories containing test YAML files
 # Test files follow naming convention: {rule-id}-test.yml
@@ -24,9 +20,4 @@ ruleDirs:
 #       valid: true/false
 #       code: |
 #         code snippet to test
-testConfigs:
-  - testDir: .agents/skills/flext-strict-typing/tests
-  - testDir: .agents/skills/flext-patterns/tests
-  - testDir: .agents/skills/flext-pyrefly-typecheck-fix/tests
-  - testDir: .agents/skills/testing-patterns/tests
-  - testDir: .agents/skills/flext-codemod-astgrep/tests
+testConfigs: []
