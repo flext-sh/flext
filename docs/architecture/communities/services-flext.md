@@ -74,7 +74,6 @@ Community of 545 nodes
 - **fetch_one** (criticality: 0.77, depth: 4)
 - **traced_request** (criticality: 0.76, depth: 5)
 - **traced_async_request** (criticality: 0.76, depth: 5)
-- **traced_request** (criticality: 0.76, depth: 5)
 
 ## Dependencies
 
