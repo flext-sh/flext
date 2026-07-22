@@ -16,12 +16,6 @@ Community of 3956 nodes
 | bump_version | Function | libs/versioning.py | 32-42 |
 | current_workspace_version | Function | libs/versioning.py | 59-73 |
 | replace_project_version | Function | libs/versioning.py | 76-91 |
-| file_docstring | Function | .tmp/split_settings.py | 56-64 |
-| class_needs | Function | .tmp/split_settings.py | 87-110 |
-| strip_flext_settings_prefix | Function | .tmp/split_settings.py | 113-137 |
-| build_header | Function | .tmp/split_settings.py | 140-169 |
-| main | Function | .tmp/split_settings.py | 172-253 |
-| class_name | Function | .tmp/split_settings.py | 256-259 |
 | test_read_nonexistent_file | Test | flext-tests/tests/unit/_files_parts/read.py | 80-96 |
 | _find_project_root | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 24-32 |
 | project_metadata | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 36-38 |
