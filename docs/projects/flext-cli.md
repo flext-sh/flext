@@ -22,18 +22,16 @@ FLEXT CLI is the command-line foundation of the FLEXT platform. It wraps Click, 
 pip install flext-cli
 ```
 
-```python
-from flext_cli import cli
+Run the installed command's help first to discover the public commands exposed
+by the current package build:
 
-result = cli.read_json_file("settings.json")
-
-if result.is_success:
-    cli.print("Settings loaded", style="green")
-else:
-    cli.print(f"Settings error: {result.error}", style="red")
+```bash
+python -m flext_cli --help
 ```
 
-`cli` is a process-wide `FlextCli` singleton (`FlextCli.fetch_global()`); all helpers are methods on the facade itself, composed through MRO — there are no separate submodule objects to import.
+Programmatic examples belong to the public API reference and must be generated
+from the installed facade; this page intentionally does not advertise an
+unverified convenience method.
 
 ## Architecture & modules
 
