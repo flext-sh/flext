@@ -53,8 +53,7 @@ class User(BaseModel):
         .predicate(lambda x: x != "password"),  # (4)!
     ]
     favorite_number: Annotated[  # (5)!
-        int,
-        (validate_as(int) | validate_as(str).str_strip().validate_as(int)).gt(0),
+        int, (validate_as(int) | validate_as(str).str_strip().validate_as(int)).gt(0)
     ]
     friends: Annotated[Sequence[User], validate_as(...).len(0, 100)]  # (6)!
     bio: Annotated[
@@ -296,8 +295,7 @@ class MyModel(BaseModel):
 
 ta = TypeAdapter(Sequence[MyModel])
 v = ta.validate_json(
-    '[{"a": 1, "b": "12345"}, {"a": 1,',
-    experimental_allow_partial=True,
+    '[{"a": 1, "b": "12345"}, {"a": 1,', experimental_allow_partial=True
 )
 print(v)
 # > [MyModel(a=1, b='12345')]
@@ -483,8 +481,7 @@ def skip_first_parameter(index: int, name: str, annotation):
 
 
 arguments_schema = generate_arguments_schema(
-    func=func,
-    parameters_callback=skip_first_parameter,
+    func=func, parameters_callback=skip_first_parameter
 )
 
 val = SchemaValidator(arguments_schema)

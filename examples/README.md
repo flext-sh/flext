@@ -195,10 +195,7 @@ result = pipeline.execute_integrated_pipeline(
 ### Complete Workflow
 
 ```python
-from examples import (
-    ComprehensiveRailwayPattern,
-    CompleteWorkflowBuilder,
-)
+from examples import ComprehensiveRailwayPattern, CompleteWorkflowBuilder
 
 # Build workflow configuration
 settings = CompleteWorkflowBuilder.build_comprehensive_workflow(

@@ -25,9 +25,7 @@ pip install flext-ldap
 ```python
 from flext_ldap import ldap, m
 
-connected = ldap.connect(
-    m.Ldap.ConnectionConfig(host="ldap.example.com", port=389),
-)
+connected = ldap.connect(m.Ldap.ConnectionConfig(host="ldap.example.com", port=389))
 assert connected.is_success
 
 result = ldap.search(
@@ -35,7 +33,7 @@ result = ldap.search(
         base_dn="dc=example,dc=com",
         filter_str="(objectClass=person)",
         attributes=["uid", "cn", "mail"],
-    ),
+    )
 )
 
 if result.is_success:
