@@ -28,7 +28,11 @@ done-check: ## Real-user/green-green check, scoped to committed changes vs upstr
 	printf '%s\n' "$$files" | xargs -r ruff check --quiet
 
 hooks: ## Install Beads git hooks + FLEXT agent-trailer guard (workspace root)
-	$(Q)bash .github/scripts/install-git-hooks.sh
+	$(Q)if [ "$${CI:-}" = "true" ]; then \
+		echo "hooks: skipped in CI (no local commit hooks are needed)"; \
+	else \
+		bash .github/scripts/install-git-hooks.sh; \
+	fi
 
 # Auto-provision git hooks after every `make boot` (verb-hook seam).
 post-boot: hooks ## Post-boot: ensure git hooks + agent-trailer guard are installed
