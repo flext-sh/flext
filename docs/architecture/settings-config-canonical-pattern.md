@@ -100,9 +100,7 @@ class FlextXConfig(FlextConfig):
     """Project config: open YAML-loaded (config/*.yaml), frozen, ``X`` namespace."""
 
     model_config = SettingsConfigDict(
-        frozen=True,
-        extra="allow",
-        env_prefix="FLEXT_X_CONFIG_",
+        frozen=True, extra="allow", env_prefix="FLEXT_X_CONFIG_"
     )
 
     class XConfig(BaseModel):

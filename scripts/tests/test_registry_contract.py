@@ -122,17 +122,10 @@ def test_unknown_what_raises(registry: Dispatch.Registry) -> None:
 
 @pytest.mark.parametrize(
     ("alias", "canonical_verb"),
-    [
-        ("gen", "build"),
-        ("lint", "check"),
-        ("rel", "ship"),
-        ("validate", "val"),
-    ],
+    [("gen", "build"), ("lint", "check"), ("rel", "ship"), ("validate", "val")],
 )
 def test_verb_alias_resolves_to_canonical_verb(
-    registry: Dispatch.Registry,
-    alias: str,
-    canonical_verb: str,
+    registry: Dispatch.Registry, alias: str, canonical_verb: str
 ) -> None:
     """Promoted verb aliases must resolve to their canonical verb."""
     resolved = u.Tests.make_registry_resolve_verb(registry, alias)
@@ -206,10 +199,7 @@ def test_docs_fix_opt_in_reaches_private_docs_target(
 def test_status_reaches_private_status_target(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    keys = (
-        c.Tests.MAKE_SURFACE_VALIDATE_ENV,
-        c.Tests.MAKE_WHAT_PARAM,
-    )
+    keys = (c.Tests.MAKE_SURFACE_VALIDATE_ENV, c.Tests.MAKE_WHAT_PARAM)
     original = _snapshot_env(keys)
     try:
         os.environ[c.Tests.MAKE_SURFACE_VALIDATE_ENV] = c.Tests.MAKE_DISPATCH_ENV_VALUE
@@ -223,13 +213,8 @@ def test_status_reaches_private_status_target(
         _restore_env(original)
 
 
-def test_clean_without_apply_stays_dry_run(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    keys = (
-        c.Tests.MAKE_APPLY_PARAM,
-        c.Tests.MAKE_WHAT_PARAM,
-    )
+def test_clean_without_apply_stays_dry_run(capsys: pytest.CaptureFixture[str]) -> None:
+    keys = (c.Tests.MAKE_APPLY_PARAM, c.Tests.MAKE_WHAT_PARAM)
     original = _snapshot_env(keys)
     try:
         os.environ.pop(c.Tests.MAKE_APPLY_PARAM, None)
@@ -260,13 +245,7 @@ def test_clean_without_apply_stays_dry_run(
             True,
             (("DRY_RUN", "1"), ("TAG", "surface-validation")),
         ),
-        (
-            "ship",
-            "push",
-            "_push",
-            True,
-            (("DRY_RUN", "1"),),
-        ),
+        ("ship", "push", "_push", True, (("DRY_RUN", "1"),)),
     ],
 )
 def test_release_status_coordination_routes_reach_private_targets(
@@ -332,9 +311,7 @@ def test_ship_save_runs_python_command_directly(
 
 
 def _registry_command_or_raise(
-    registry: Dispatch.Registry,
-    verb: str,
-    what: str,
+    registry: Dispatch.Registry, verb: str, what: str
 ) -> Dispatch.Command:
     result = u.Tests.make_registry_command(registry, verb, what)
     if result.failure:

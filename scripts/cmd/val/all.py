@@ -18,12 +18,10 @@
 
 from __future__ import annotations
 
-import sys
 from typing import Annotated, Literal
 
-from scripts.dispatch import Dispatch
-
 from flext_tests import m, u
+from scripts.dispatch import Dispatch
 
 
 class FlextRootValAllCommand:
@@ -33,9 +31,7 @@ class FlextRootValAllCommand:
         """Validated validation command options."""
 
         model_config = m.ConfigDict(
-            extra="forbid",
-            frozen=True,
-            validate_assignment=True,
+            extra="forbid", frozen=True, validate_assignment=True
         )
 
         scope: Annotated[
@@ -63,8 +59,7 @@ class FlextRootValAllCommand:
         """Dispatch validation by VALIDATE_SCOPE."""
         try:
             options = FlextRootValAllCommand.options()
-        except ValueError as exc:
-            print(f"ERRO: {exc}", file=sys.stderr)
+        except ValueError:
             return 2
 
         for target in options.targets:
@@ -78,7 +73,7 @@ class FlextRootValAllCommand:
         """Validate environment-backed validation command options."""
         options: FlextRootValAllCommand.Options = (
             FlextRootValAllCommand.Options.model_validate({
-                "scope": Dispatch.env_value("VALIDATE_SCOPE", "all").lower(),
+                "scope": Dispatch.env_value("VALIDATE_SCOPE", "all").lower()
             })
         )
         return options

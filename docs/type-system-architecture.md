@@ -113,8 +113,7 @@ class FlextCliTypes:
 ```python
 # In typings.py (Tier 0)
 FlextFlextDemoMigrationEntryT = TypeVar(
-    "FlextFlextDemoMigrationEntryT",
-    bound="fldif.Ldif.Entry",
+    "FlextFlextDemoMigrationEntryT", bound="fldif.Ldif.Entry"
 )
 
 

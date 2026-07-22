@@ -21,7 +21,6 @@ import configparser
 import json
 import re
 import subprocess
-import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -41,11 +40,7 @@ RETRIES_ON_CONFLICT = 2
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
     """Run a subprocess command (stdin=/dev/null to avoid interactive prompts)."""
     return subprocess.run(
-        cmd,
-        check=check,
-        capture_output=True,
-        text=True,
-        stdin=subprocess.DEVNULL,
+        cmd, check=check, capture_output=True, text=True, stdin=subprocess.DEVNULL
     )
 
 
@@ -101,10 +96,6 @@ def list_dependabot_prs(slug: str, base: str) -> list[dict[str, object]]:
         check=False,
     )
     if result.returncode != 0:
-        print(
-            f"  WARN: cannot list PRs for {slug}: {result.stderr.strip()}",
-            file=sys.stderr,
-        )
         return []
     try:
         return json.loads(result.stdout or "[]")
@@ -148,10 +139,7 @@ def standard_message(title: str, head_ref: str) -> str | None:
 
 def update_pr_branch(slug: str, number: int) -> bool:
     """Update a PR branch from its base (rebase/merge) to resolve conflicts."""
-    result = run(
-        ["gh", "pr", "update-branch", str(number), "-R", slug],
-        check=False,
-    )
+    result = run(["gh", "pr", "update-branch", str(number), "-R", slug], check=False)
     if result.returncode == 0:
         return True
     # update-branch may report "Already up to date"; treat as success.
@@ -161,21 +149,15 @@ def update_pr_branch(slug: str, number: int) -> bool:
 def close_pr(slug: str, number: int, *, dry_run: bool, reason: str) -> bool:
     """Close a stale/conflicting Dependabot PR so it can be regenerated."""
     if dry_run:
-        print(f"    [dry-run] would close #{number}: {reason}")
         return True
     close_result = run(
-        ["gh", "pr", "close", str(number), "-R", slug, "--comment", reason],
-        check=False,
+        ["gh", "pr", "close", str(number), "-R", slug, "--comment", reason], check=False
     )
     return close_result.returncode == 0
 
 
 def merge_pr(
-    slug: str,
-    pr: dict[str, object],
-    *,
-    dry_run: bool,
-    close_on_conflict: bool = True,
+    slug: str, pr: dict[str, object], *, dry_run: bool, close_on_conflict: bool = True
 ) -> tuple[bool, bool, bool]:
     """Merge a single Dependabot PR using the standard commit schema.
 
@@ -186,7 +168,6 @@ def merge_pr(
     head_ref = pr["headRefName"]
     message = standard_message(title, head_ref)
     if message is None:
-        print(f"  SKIP #{number}: title does not match bump schema: {title}")
         return False, True, False
 
     base_cmd = [
@@ -201,14 +182,11 @@ def merge_pr(
         message,
         "--delete-branch",
     ]
-    print(f"  MERGE #{number}: {message}")
     if dry_run:
-        print(f"    [dry-run] {' '.join(base_cmd)}")
         return True, False, False
 
     result = run(base_cmd, check=False)
     if result.returncode == 0:
-        print(f"  OK #{number}")
         return True, False, False
 
     merge_stderr = result.stderr.strip()
@@ -222,12 +200,10 @@ def merge_pr(
         auto_cmd = [*base_cmd, "--auto"]
         auto_result = run(auto_cmd, check=False)
         if auto_result.returncode == 0:
-            print(f"  ENQUEUED #{number}: will merge when checks pass")
             return True, False, False
         stderr = auto_result.stderr.strip()
 
     if "already merged" in stderr.lower() or "not found" in stderr.lower():
-        print(f"  ALREADY #{number}")
         return True, False, False
 
     # Conflict: try to update the branch and retry a few times.
@@ -238,13 +214,11 @@ def merge_pr(
         "cannot be cleanly created",
     )
     if any(indicator in merge_stderr.lower() for indicator in conflict_indicators):
-        for attempt in range(1, RETRIES_ON_CONFLICT + 1):
-            print(f"  CONFLICT #{number}: updating branch (attempt {attempt})")
+        for _attempt in range(1, RETRIES_ON_CONFLICT + 1):
             if not update_pr_branch(slug, number):
                 break
             retry = run(base_cmd, check=False)
             if retry.returncode == 0:
-                print(f"  OK #{number} (after update)")
                 return True, False, False
             retry_stderr = retry.stderr.strip()
             if not any(
@@ -258,28 +232,20 @@ def merge_pr(
                 "Dependabot will recreate a fresh update if still needed."
             )
             if close_pr(slug, number, dry_run=dry_run, reason=reason):
-                print(f"  CLOSED #{number}: persistent merge conflict")
                 return False, False, True
 
-    print(f"  FAIL #{number}: {stderr}", file=sys.stderr)
     return False, False, False
 
 
 def process_repo(
-    slug: str,
-    base: str,
-    *,
-    dry_run: bool,
-    close_on_conflict: bool = True,
+    slug: str, base: str, *, dry_run: bool, close_on_conflict: bool = True
 ) -> tuple[int, int, int, int]:
     """Process all open Dependabot PRs for a single repository.
 
     Returns (merged, skipped, failed, closed).
     """
-    print(f"==> {slug}")
     prs = list_dependabot_prs(slug, base)
     if not prs:
-        print("  no open dependabot PRs")
         return 0, 0, 0, 0
 
     # Sort ascending so older PRs merge first, reducing lock-file conflicts.
@@ -288,10 +254,7 @@ def process_repo(
     merged = skipped = failed = closed = 0
     for pr in prs:
         ok, is_skip, was_closed = merge_pr(
-            slug,
-            pr,
-            dry_run=dry_run,
-            close_on_conflict=close_on_conflict,
+            slug, pr, dry_run=dry_run, close_on_conflict=close_on_conflict
         )
         if is_skip:
             skipped += 1
@@ -307,15 +270,12 @@ def process_repo(
 def main() -> int:
     """Entry point for the dependabot merge orchestrator."""
     parser = argparse.ArgumentParser(
-        description="Merge Dependabot PRs across FLEXT workspace",
+        description="Merge Dependabot PRs across FLEXT workspace"
     )
     parser.add_argument("--base", default="main", help="target branch for PRs")
     parser.add_argument("--dry-run", action="store_true", help="preview only")
     parser.add_argument(
-        "--workers",
-        type=int,
-        default=MAX_WORKERS,
-        help="parallel repo workers",
+        "--workers", type=int, default=MAX_WORKERS, help="parallel repo workers"
     )
     parser.add_argument(
         "--close-on-conflict",
@@ -334,18 +294,15 @@ def main() -> int:
     root = Path.cwd()
     repos = discover_repos(root)
     if not repos:
-        print("No submodules discovered from .gitmodules")
         return 0
 
     slugs: list[str] = []
     for path in repos:
         submodule = root / path
         if not ((submodule / ".git").is_dir() or (submodule / ".git").is_file()):
-            print(f"SKIP {path}: not a git submodule")
             continue
         slug = repo_slug_from_origin(submodule)
         if not slug:
-            print(f"SKIP {path}: cannot resolve GitHub slug")
             continue
         slugs.append(slug)
 
@@ -368,10 +325,6 @@ def main() -> int:
             total_failed += failed
             total_closed += closed
 
-    print(
-        f"\nSummary: merged={total_merged} skipped={total_skipped} "
-        f"closed={total_closed} failed={total_failed}",
-    )
     return 0 if total_failed == 0 else 1
 
 

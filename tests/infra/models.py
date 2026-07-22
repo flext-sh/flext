@@ -24,8 +24,7 @@ class TestsFlextRootModels(FlextTestsModels):
                     u.Field(description="Absolute path to the module's anchor file."),
                 ]
                 module_name: Annotated[
-                    str,
-                    u.Field(description="Fully qualified module name."),
+                    str, u.Field(description="Fully qualified module name.")
                 ]
                 relative_path: Annotated[
                     str,
@@ -36,13 +35,9 @@ class TestsFlextRootModels(FlextTestsModels):
                 """Workspace synchronization call record."""
 
                 action: Annotated[
-                    str,
-                    u.Field(description="Sync action performed (e.g. pull, push)."),
+                    str, u.Field(description="Sync action performed (e.g. pull, push).")
                 ]
-                repo: Annotated[
-                    Path,
-                    u.Field(description="Target repository root."),
-                ]
+                repo: Annotated[Path, u.Field(description="Target repository root.")]
 
 
 m = TestsFlextRootModels

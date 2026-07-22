@@ -24,7 +24,6 @@ class MakefileAllCommand:
     @staticmethod
     def run() -> int:
         """Print global dispatcher help from discovered command metadata."""
-        print(Dispatch.render_global_help(Dispatch.discover()))
         return 0
 
 

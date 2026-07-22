@@ -139,10 +139,7 @@ class Ex00UserProfile(m.Entity):
 
 ```python
 def process_data(
-    input_path: Path,
-    *,
-    validate: bool = True,
-    timeout: int | None = None,
+    input_path: Path, *, validate: bool = True, timeout: int | None = None
 ) -> t.MappingKV[str, Any]:
     """Process data from input file and return structured result.
 
@@ -192,10 +189,7 @@ def process_data(
 ```python
 @staticmethod
 def iter_directory_python_files(
-    directory: Path,
-    *,
-    pattern: str | None = None,
-    skip_pycache: bool = True,
+    directory: Path, *, pattern: str | None = None, skip_pycache: bool = True
 ) -> t.SequenceOf[Path]:
     """Iterate Python files in a single directory tree.
 
@@ -309,12 +303,7 @@ class DataProcessingError(Exception):
         data: Original data that caused the error.
     """
 
-    def __init__(
-        self,
-        message: str,
-        code: str = "UNKNOWN",
-        data: Any = None,
-    ) -> None:
+    def __init__(self, message: str, code: str = "UNKNOWN", data: Any = None) -> None:
         """Initialize error with message and optional code.
 
         Args:
@@ -359,9 +348,7 @@ async def fetch_data(url: str, timeout: int = 30) -> bytes:
 
 ```python
 def configure(
-    mode: str,
-    options: t.MappingKV[str, Any] | None = None,
-    verbosity: int = 1,
+    mode: str, options: t.MappingKV[str, Any] | None = None, verbosity: int = 1
 ) -> None:
     """Settingsure processor behavior.
 
@@ -488,9 +475,7 @@ def run_raw(
 ```python
 @staticmethod
 def create_checkpoint(
-    workspace_root: Path,
-    *,
-    label: str = "flext-checkpoint",
+    workspace_root: Path, *, label: str = "flext-checkpoint"
 ) -> p.Result[str]:
     """Create timestamped git stash checkpoint and return reference.
 

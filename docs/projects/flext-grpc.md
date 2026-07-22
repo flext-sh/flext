@@ -26,10 +26,7 @@ pip install flext-grpc
 from flext_grpc import grpc
 
 setup = grpc.create_complete_setup(
-    host="127.0.0.1",
-    port=50051,
-    service_name="Greeter",
-    methods=["SayHello"],
+    host="127.0.0.1", port=50051, service_name="Greeter", methods=["SayHello"]
 )
 assert setup.is_success
 
