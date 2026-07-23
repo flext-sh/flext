@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import cache
 from pathlib import Path
 
 from flext_tests import c, m, t, u
@@ -22,6 +23,7 @@ class CommandRegistry:
     SCRIPTS_DIR = ROOT / "scripts" / "cmd"
 
     @staticmethod
+    @cache
     def discover() -> m.Tests.MakeRegistry:
         """Discover and validate the promoted command registry."""
         result = u.Tests.make_discover(CommandRegistry.SCRIPTS_DIR)
