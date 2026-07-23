@@ -26,7 +26,8 @@ class CommandCli:
         )
         try:
             return CommandCli.route(args)
-        except CommandRegistry.Error:
+        except CommandRegistry.Error as exc:
+            print(str(exc), file=sys.stderr)
             return 2
 
     @staticmethod

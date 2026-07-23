@@ -120,6 +120,12 @@ def test_unknown_what_raises(registry: Dispatch.Registry) -> None:
         _registry_command_or_raise(registry, "check", "no-such-what")
 
 
+def test_main_reports_registry_errors(capsys: pytest.CaptureFixture[str]) -> None:
+    """Expose dispatcher contract failures instead of returning an opaque exit 2."""
+    assert Dispatch.main(("does-not-exist",)) == 2
+    assert "verb 'does-not-exist' unknown" in capsys.readouterr().err
+
+
 @pytest.mark.parametrize(
     ("alias", "canonical_verb"),
     [("gen", "build"), ("lint", "check"), ("rel", "ship"), ("validate", "val")],
