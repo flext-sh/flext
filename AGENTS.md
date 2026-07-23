@@ -61,9 +61,16 @@ operator instruction prevails and lower authority must be reconciled.
    claims quickly against live reality. Every change that produces new
    understanding or behavior updates the affected docs in the SAME change;
    stale docs are defects filed as beads, never worked around.
-15. **Tests reflect canonical reality.** Tests are executable checks of current
-    behavior, never a source of truth; a test that violates canonical policy is
-    corrected to match the policy, not accommodated. Performance optimization is
+15. **Runtime reality precedes implementation and tests.** Establish the correct
+    behavior from the official external contract and the real consumer first. For
+    generated or deployed artifacts, validate the staged artifact with that real
+    consumer before deployment, restart, tests, or static gates. Then align the
+    canonical implementation and models; only afterward may tests encode the
+    observed behavior. Tests and static analysis are subordinate confirmation,
+    never discovery authority, design input, a substitute for consumer validation,
+    or permission to publish a runtime-broken artifact. A test that contradicts
+    observed canonical behavior is corrected, never accommodated by production.
+    Performance optimization is
     evidence-first: profile with cProfile to find the hot path before changing
     anything, then optimize with the project's typed OO/MRO/lazy-import patterns;
     accelerate test selection with impact analysis (e.g. pytest-testmon) and
