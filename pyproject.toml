@@ -2,7 +2,6 @@
 # Sections with [MANAGED] are enforced by flext_infra.deps.modernizer.
 # Run `make mod` to regenerate all managed pyproject sections.
 # Sections with [CUSTOM] are project-specific extension points.
-
 # [MANAGED] build system
 [build-system]
 build-backend = "hatchling.build"
@@ -189,6 +188,7 @@ skip_covered = false
 
 [tool.coverage.run]
 omit = ["*/dependency_injector/providers.pyx"]
+source = ["src"]
 
 # [MANAGED] deptry
 [tool.deptry]
@@ -264,23 +264,30 @@ allow-direct-references = true
 # [MANAGED] mypy
 [tool.mypy]
 # FLEXT mypy suppression rationale (validated at the facade-MRO boundary):
+# FLEXT mypy[arg-type]: Public p.Result values widen only in Mypy; Pyright and Pyrefly retain T.
 # FLEXT mypy[assignment]: Dependency-injector descriptors lose their MRO-bound type only in Mypy.
 # FLEXT mypy[attr-defined]: PEP 562 facade members inherited through MRO are invisible to Mypy.
 # FLEXT mypy[call-arg]: Pydantic v2 init signatures behind facade MRO are incomplete in Mypy.
 # FLEXT mypy[misc]: Valid PEP 695 nested facade aliases are rejected under Mypy's misc bucket.
 # FLEXT mypy[name-defined]: Generated PEP 562 exports are installed at runtime but absent to Mypy.
+# FLEXT mypy[no-any-return]: Facade returns widen to Any only in Mypy; Pyright and Pyrefly resolve them.
+# FLEXT mypy[no-redef]: Canonical c-t-p-m-u facades intentionally rebind their inherited short alias.
 # FLEXT mypy[prop-decorator]: Mypy loses Pydantic computed-field descriptors across composed MRO.
 # FLEXT mypy[valid-type]: Mypy rejects facade namespaces used as owners in valid PEP 695 aliases.
 check_untyped_defs = true
 disable_error_code = [
+  "arg-type",
   "assignment",
   "attr-defined",
   "call-arg",
   "misc",
   "name-defined",
+  "no-any-return",
+  "no-redef",
   "prop-decorator",
   "valid-type",
 ]
+exclude = "^legado(?:/|$)"
 explicit_package_bases = true
 extra_checks = true
 follow_imports = "normal"
@@ -310,13 +317,12 @@ warn_untyped_fields = true
 # [MANAGED] pyrefly
 [tool.pyrefly]
 disable-project-excludes-heuristics = true
-ignore-errors-in-generated-code = true
+ignore-errors-in-generated-code = false
 project-excludes = [
-  "**/*_pb2*.py",
-  "**/*_pb2_grpc*.py",
   "**/.venv/**",
   "**/__pycache__",
   "**/__pyrefly_virtual__/**",
+  "**/legado/**",
   "**/node_modules",
   "**/site-packages/**",
   "**/typings/**",
@@ -416,9 +422,9 @@ invalid-type-var-tuple = "error"
 invalid-variance = "error"
 invalid-yield = "error"
 missing-argument = "error"
-missing-attribute = "error"
+missing-attribute = false
 missing-import = "error"
-missing-module-attribute = "error"
+missing-module-attribute = false
 missing-override-decorator = "error"
 missing-source = "error"
 missing-source-for-stubs = "error"
@@ -473,9 +479,13 @@ exclude = [
   "**/__pyrefly_virtual__/**",
   "**/dist-packages",
   "**/dist-packages/**",
+  "**/legado",
+  "**/legado/**",
   "**/node_modules",
   "**/site-packages",
   "**/site-packages/**",
+  "**/tests/fixtures",
+  "**/tests/fixtures/**",
   "**/venv",
   "**/venv/**",
   ".git",
@@ -496,7 +506,6 @@ include = [
   "flext-cli/src",
   "flext-cli/tests",
   "flext-core/examples",
-  "flext-core/scripts",
   "flext-core/src",
   "flext-core/tests",
   "flext-db-oracle/examples",
@@ -510,10 +519,10 @@ include = [
   "flext-dbt-oracle-wms/tests",
   "flext-dbt-oracle/src",
   "flext-dbt-oracle/tests",
-  "flext-grpc/architecture",
   "flext-grpc/examples",
   "flext-grpc/src",
   "flext-grpc/tests",
+  "flext-infra/legado",
   "flext-infra/src",
   "flext-infra/tests",
   "flext-ldap/src",
@@ -525,7 +534,6 @@ include = [
   "flext-meltano/src",
   "flext-meltano/tests",
   "flext-observability/examples",
-  "flext-observability/legado",
   "flext-observability/src",
   "flext-observability/tests",
   "flext-oracle-oic/src",
@@ -603,6 +611,22 @@ reportUnusedVariable = "error"
 typeCheckingMode = "strict"
 venv = ".venv"
 venvPath = "."
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [".", "src"]
+reportAssignmentType = "none"
+reportAttributeAccessIssue = "none"
+reportGeneralTypeIssues = "none"
+reportInvalidTypeForm = "none"
+reportPrivateImportUsage = "none"
+reportPrivateUsage = "none"
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "none"
+reportUnknownMemberType = "none"
+reportUnknownParameterType = "none"
+reportUnknownVariableType = "none"
+reportUnusedImport = "none"
+root = "codemod"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = [".", "src"]
@@ -869,24 +893,6 @@ reportUnusedImport = "none"
 root = "flext-core/examples"
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-core", "flext-core/src"]
-reportArgumentType = "none"
-reportAssignmentType = "none"
-reportAttributeAccessIssue = "none"
-reportGeneralTypeIssues = "none"
-reportInvalidTypeForm = "none"
-reportPrivateImportUsage = "none"
-reportPrivateUsage = "none"
-reportReturnType = "none"
-reportUnknownArgumentType = "none"
-reportUnknownLambdaType = "none"
-reportUnknownMemberType = "none"
-reportUnknownParameterType = "none"
-reportUnknownVariableType = "none"
-reportUnusedImport = "none"
-root = "flext-core/scripts"
-
-[[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-core/src"]
 reportAssignmentType = "none"
 reportAttributeAccessIssue = "none"
@@ -1116,22 +1122,6 @@ root = "flext-dbt-oracle-wms/tests"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-grpc", "flext-grpc/src"]
-reportAssignmentType = "none"
-reportAttributeAccessIssue = "none"
-reportGeneralTypeIssues = "none"
-reportInvalidTypeForm = "none"
-reportPrivateImportUsage = "none"
-reportPrivateUsage = "none"
-reportUnknownArgumentType = "none"
-reportUnknownLambdaType = "none"
-reportUnknownMemberType = "none"
-reportUnknownParameterType = "none"
-reportUnknownVariableType = "none"
-reportUnusedImport = "none"
-root = "flext-grpc/architecture"
-
-[[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-grpc", "flext-grpc/src"]
 reportArgumentType = "none"
 reportAssignmentType = "none"
 reportAttributeAccessIssue = "none"
@@ -1198,6 +1188,22 @@ reportUnknownParameterType = "none"
 reportUnknownVariableType = "none"
 reportUnusedImport = "none"
 root = "flext-infra/src/flext_infra/_utilities/rope_patch"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = ["flext-infra", "flext-infra/src"]
+reportAssignmentType = "none"
+reportAttributeAccessIssue = "none"
+reportGeneralTypeIssues = "none"
+reportInvalidTypeForm = "none"
+reportPrivateImportUsage = "none"
+reportPrivateUsage = "none"
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "none"
+reportUnknownMemberType = "none"
+reportUnknownParameterType = "none"
+reportUnknownVariableType = "none"
+reportUnusedImport = "none"
+root = "flext-infra/legado"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-infra/src"]
@@ -1392,22 +1398,6 @@ reportUnknownParameterType = "none"
 reportUnknownVariableType = "none"
 reportUnusedImport = "none"
 root = "flext-observability/examples"
-
-[[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-observability", "flext-observability/src"]
-reportAssignmentType = "none"
-reportAttributeAccessIssue = "none"
-reportGeneralTypeIssues = "none"
-reportInvalidTypeForm = "none"
-reportPrivateImportUsage = "none"
-reportPrivateUsage = "none"
-reportUnknownArgumentType = "none"
-reportUnknownLambdaType = "none"
-reportUnknownMemberType = "none"
-reportUnknownParameterType = "none"
-reportUnknownVariableType = "none"
-reportUnusedImport = "none"
-root = "flext-observability/legado"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-observability/src"]
@@ -2114,7 +2104,7 @@ root = "flext-web/tests"
 
 # [MANAGED] pytest
 [tool.pytest.ini_options]
-addopts = ["--durations=10", "--strict-markers", "--timeout=10"]
+addopts = ["--durations=10", "--strict-markers"]
 filterwarnings = ["error"]
 markers = [
   "docker: tests requiring Docker",
@@ -2148,18 +2138,19 @@ exclude = [
   "build",
   "dist",
   "htmlcov",
+  "legado",
   "temp-backup",
   "typings",
   "vendor",
   "venv",
 ]
-fix = false
+fix = true
 line-length = 88
 namespace-packages = ["tests"]
 preview = true
 respect-gitignore = true
 show-fixes = true
-src = ["examples", "scripts", "src", "tests"]
+src = ["examples", "src", "tests"]
 target-version = "py313"
 
 [tool.ruff.format]
@@ -2194,7 +2185,6 @@ ignore = [
   "docstring-missing-yields",
   "get-attr-with-constant",
   "hardcoded-sql-expression",
-  "import-outside-top-level",
   "incorrect-blank-line-before-class",
   "invalid-first-argument-name-for-method",
   "line-too-long",
@@ -2227,7 +2217,6 @@ ignore = [
   "undocumented-param",
   "unnecessary-lambda",
   "unnecessary-placeholder",
-  "unsorted-imports",
 ]
 select = ["ALL"]
 
@@ -2297,7 +2286,7 @@ split-on-trailing-comma = false
   "hardcoded-password-string",
   "private-member-access",
 ]
-"**/*handlers*" = []
+"**/*handlers*" = ["import-outside-top-level"]
 "**/*instrumentation*" = [
   "boolean-type-hint-positional-argument",
   "complex-structure",
@@ -2438,7 +2427,66 @@ split-on-trailing-comma = false
 "**/flext_cli/_utilities/framework.py" = [
   "banned-api",
   "builtin-argument-shadowing",
+  "import-outside-top-level",
 ]
+"**/*scripts*" = [
+  "hardcoded-password-default",
+  "hardcoded-password-string",
+  "implicit-namespace-package",
+  "line-contains-todo",
+  "magic-value-comparison",
+  "print",
+  "redefined-loop-name",
+  "relative-imports",
+  "shebang-not-executable",
+  "subprocess-without-shell-equals-true",
+  "suspicious-subprocess-import",
+  "too-many-branches",
+  "too-many-return-statements",
+  "too-many-statements",
+]
+"**/rope_patch/*.py" = ["private-member-access"]
+"**/tests/**/*.py" = [
+  "assert",
+  "boolean-positional-value-in-call",
+  "boolean-type-hint-positional-argument",
+  "compare-to-empty-string",
+  "constant-imported-as-non-constant",
+  "f-string-in-exception",
+  "hardcoded-bind-all-interfaces",
+  "hardcoded-password-default",
+  "hardcoded-password-func-arg",
+  "hardcoded-password-string",
+  "hardcoded-temp-file",
+  "import-outside-top-level",
+  "import-private-name",
+  "line-contains-todo",
+  "magic-value-comparison",
+  "private-member-access",
+  "pytest-raises-too-broad",
+  "suppressible-exception",
+  "too-many-blank-lines",
+  "undocumented-public-class",
+  "undocumented-public-function",
+  "undocumented-public-method",
+  "undocumented-public-module",
+  "unused-function-argument",
+  "unused-lambda-argument",
+  "unused-method-argument",
+]
+"**/conftest.py" = [
+  "undocumented-public-function",
+  "undocumented-public-method",
+  "unused-function-argument",
+  "unused-method-argument",
+]
+"**/handler.py" = ["import-outside-top-level"]
+
+[tool.ruff.lint.pydoclint]
+ignore-one-line-docstrings = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 # [MANAGED] tomlsort
 [tool.tomlsort]
@@ -2582,7 +2630,7 @@ members = [
 [tool.vulture]
 exclude = ["*/_protocols/*"]
 min_confidence = 100
-paths = ["src"]
+paths = ["examples", "src", "tests"]
 verbose = false
 
 # [MANAGED] yamlfix

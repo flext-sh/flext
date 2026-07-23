@@ -17,13 +17,10 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import (
-    Callable,
-    MutableSequence,
-)
+from collections.abc import Callable, MutableSequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Annotated, ClassVar
+from typing import Annotated, ClassVar
 
 from examples import m, p, r, t, u
 from examples._constants import ExamplesWorkflowStage
