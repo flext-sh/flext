@@ -73,3 +73,5 @@ All FLEXT validation uses the root Make dispatcher; never run bare `ruff`,
 
 Record every red or green result with its exit code and decisive output in the
 active workspace-root Bead.
+
+For the worker lane contract, see [`ways-of-working/worker-lane-contract.md`](ways-of-working/worker-lane-contract.md).
