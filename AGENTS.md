@@ -134,6 +134,9 @@ uncollected tests, unvalidated WIP, or a workaround masking the defect.
 - Generated files change only through their canonical generator, config, schema, policy, or template owner.
 - Status is a checkpoint, not a stopping condition. Continue until the intent card's observable stop condition holds or one precise operator decision is required.
 
+
+For the lane contract that governs light-worker execution, see [`docs/ways-of-working/worker-lane-contract.md`](docs/ways-of-working/worker-lane-contract.md).
+
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:19cc25d9 -->
 ## Issue Tracking with bd (beads)
 
