@@ -84,7 +84,12 @@ class SurfaceProbeRunner:
                 m.Tests.MakeSurfaceProbe(
                     name=f"{command.verb}/{command.what} dry-run",
                     argv=(command.verb,),
-                    env=mutation_env,
+                    env={
+                        **mutation_env,
+                        c.Tests.MAKE_SURFACE_VALIDATE_ENV: (
+                            c.Tests.MAKE_DISPATCH_ENV_VALUE
+                        ),
+                    },
                     expected_output=("DRY-RUN: nenhuma mutacao executada.",),
                 ),
                 m.Tests.MakeSurfaceProbe(
