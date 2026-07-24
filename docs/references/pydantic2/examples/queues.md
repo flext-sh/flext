@@ -34,7 +34,7 @@ QUEUE_NAME = "user_queue"
 def push_to_queue(user_data: User) -> None:
     serialized_data = user_data.model_dump_json()
     r.rpush(QUEUE_NAME, serialized_data)
-    print(f"Added to queue: {serialized_data}")
+    u.Cli.print(f"Added to queue: {serialized_data}")
 
 
 user1 = User(id=1, name="John Doe", email="john@example.com")
@@ -52,9 +52,9 @@ def pop_from_queue() -> None:
 
     if data:
         user = User.model_validate_json(data)
-        print(f"Validated user: {repr(user)}")
+        u.Cli.print(f"Validated user: {repr(user)}")
     else:
-        print("Queue is empty")
+        u.Cli.print("Queue is empty")
 
 
 pop_from_queue()
@@ -101,7 +101,7 @@ channel.queue_declare(queue=QUEUE_NAME)
 def push_to_queue(user_data: User) -> None:
     serialized_data = user_data.model_dump_json()
     channel.basic_publish(exchange="", routing_key=QUEUE_NAME, body=serialized_data)
-    print(f"Added to queue: {serialized_data}")
+    u.Cli.print(f"Added to queue: {serialized_data}")
 
 
 user1 = User(id=1, name="John Doe", email="john@example.com")
@@ -143,7 +143,7 @@ def main():
         body: bytes,
     ):
         user = User.model_validate_json(body)
-        print(f"Validated user: {repr(user)}")
+        u.Cli.print(f"Validated user: {repr(user)}")
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
     channel.basic_consume(queue=QUEUE_NAME, on_message_callback=process_message)
@@ -198,7 +198,7 @@ async def process_user(
     ctx: t.MappingKV[str, Any], user_data: t.MappingKV[str, Any]
 ) -> None:
     user = User(user_data)
-    print(f"Processing user: {repr(user)}")
+    u.Cli.print(f"Processing user: {repr(user)}")
 
 
 async def enqueue_jobs(redis):
@@ -206,10 +206,10 @@ async def enqueue_jobs(redis):
     user2 = User(id=2, name="Jane Doe", email="jane@example.com")
 
     await redis.enqueue_job("process_user", user1.model_dump())
-    print(f"Enqueued user: {repr(user1)}")
+    u.Cli.print(f"Enqueued user: {repr(user1)}")
 
     await redis.enqueue_job("process_user", user2.model_dump())
-    print(f"Enqueued user: {repr(user2)}")
+    u.Cli.print(f"Enqueued user: {repr(user2)}")
 
 
 class WorkerSettings:

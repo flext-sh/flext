@@ -95,7 +95,7 @@ assert result.exit_code == 0
 
 - Use plain `m.BaseModel` subclasses for command input.
 - Read settings via `FlextCliSettings.fetch_global()`; `s` is the service/runtime alias.
-- Avoid ad-hoc Typer functions and direct `print()`/`sys.exit()` in commands.
+- Avoid ad-hoc Typer functions and direct `u.Cli.print()`/`sys.exit()` in commands.
 
 ## Bad practices
 
@@ -104,7 +104,7 @@ import typer
 
 
 def main(name: str):  # ad-hoc command, no model
-    print(f"Hello, {name}")
+    u.Cli.print(f"Hello, {name}")
 ```
 
 ## Related

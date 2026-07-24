@@ -164,7 +164,7 @@ def process_data(
     Example:
         >>> result = process_data(Path("data.json"))
         >>> if result["errors"]:
-        ...     print(f"Found {len(result['errors'])} errors")
+        ...     u.Cli.print(f"Found {len(result['errors'])} errors")
     """
 ```
 

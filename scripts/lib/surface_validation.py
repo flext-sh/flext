@@ -26,16 +26,14 @@ class SurfaceValidator:
         ]
         if failures:
             for failure in failures:
-                print(f"ERRO: {failure}")
+                u.Cli.print(f"ERRO: {failure}")
             return 1
         command_count = sum(
             len(SurfaceValidator.registry_commands(registry, verb))
             for verb in u.Tests.make_registry_verbs(registry)
         )
         verb_count = len(u.Tests.make_registry_verbs(registry))
-        print(
-            f"Surface validated: {verb_count} verbs, {command_count} commands"
-        )
+        u.Cli.print(f"Surface validated: {verb_count} verbs, {command_count} commands")
         return 0
 
     @staticmethod

@@ -201,45 +201,45 @@ class Foobar(TypedDict):  # (1)!
 ta = TypeAdapter(Sequence[Foobar])
 
 v = ta.validate_json('[{"a": 1, "b"', experimental_allow_partial=True)  # (2)!
-print(v)
+u.Cli.print(v)
 # > [{'a': 1}]
 
 v = ta.validate_json(
     '[{"a": 1, "b": 1.0, "c": "abcd',
     experimental_allow_partial=True,  # (3)!
 )
-print(v)
+u.Cli.print(v)
 # > [{'a': 1, 'b': 1.0}]
 
 v = ta.validate_json(
     '[{"b": 1.0, "c": "abcde"',
     experimental_allow_partial=True,  # (4)!
 )
-print(v)
+u.Cli.print(v)
 # > []
 
 v = ta.validate_json(
     '[{"a": 1, "b": 1.0, "c": "abcde"},{"a": ', experimental_allow_partial=True
 )
-print(v)
+u.Cli.print(v)
 # > [{'a': 1, 'b': 1.0, 'c': 'abcde'}]
 
 v = ta.validate_python([{"a": 1}], experimental_allow_partial=True)  # (5)!
-print(v)
+u.Cli.print(v)
 # > [{'a': 1}]
 
 v = ta.validate_python(
     [{"a": 1, "b": 1.0, "c": "abcd"}],
     experimental_allow_partial=True,  # (6)!
 )
-print(v)
+u.Cli.print(v)
 # > [{'a': 1, 'b': 1.0}]
 
 v = ta.validate_json(
     '[{"a": 1, "b": 1.0, "c": "abcdefg',
     experimental_allow_partial="trailing-strings",  # (7)!
 )
-print(v)
+u.Cli.print(v)
 # > [{'a': 1, 'b': 1.0, 'c': 'abcdefg'}]
 ```
 
@@ -297,7 +297,7 @@ ta = TypeAdapter(Sequence[MyModel])
 v = ta.validate_json(
     '[{"a": 1, "b": "12345"}, {"a": 1,', experimental_allow_partial=True
 )
-print(v)
+u.Cli.print(v)
 # > [MyModel(a=1, b='12345')]
 ```
 
@@ -340,7 +340,7 @@ ta = TypeAdapter(MyModel)
 try:
     v = ta.validate_json('{"a": 1, "b": ["12345", "12', experimental_allow_partial=True)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for MyModel
     b.1
@@ -376,14 +376,14 @@ v = ta.validate_json(
     '{"a": 1, "b": "12',
     experimental_allow_partial=True,  # (1)!
 )
-print(v)
+u.Cli.print(v)
 # > {'a': 1}
 
 v = ta.validate_json(
     '{"a": 1, "b": "12"}',
     experimental_allow_partial=True,  # (2)!
 )
-print(v)
+u.Cli.print(v)
 # > {'a': 1}
 ```
 
@@ -405,13 +405,13 @@ from pydantic import TypeAdapter
 
 ta = TypeAdapter(Sequence[Annotated[int, Ge(10)]])
 v = ta.validate_python([20, 30, 4], experimental_allow_partial=True)  # (1)!
-print(v)
+u.Cli.print(v)
 # > [20, 30]
 
 ta = TypeAdapter(Sequence[int])
 
 v = ta.validate_python([1, 2, "wrong"], experimental_allow_partial=True)  # (2)!
-print(v)
+u.Cli.print(v)
 # > [1, 2]
 ```
 
@@ -444,7 +444,7 @@ val = SchemaValidator(arguments_schema, settings={"coerce_numbers_to_str": True}
 args, kwargs = val.validate_json(
     '{"p": true, "args": ["arg1", 1], "kwargs": {"extra": 1}}'
 )
-print(args, kwargs)  # (1)!
+u.Cli.print(args, kwargs)  # (1)!
 # > (True, 'arg1', '1') {'extra': 1}
 ```
 
@@ -487,7 +487,7 @@ arguments_schema = generate_arguments_schema(
 val = SchemaValidator(arguments_schema)
 
 args, kwargs = val.validate_json('{"args": ["arg1"], "kwargs": {"extra": 1}}')
-print(args, kwargs)
+u.Cli.print(args, kwargs)
 # > ('arg1',) {'extra': 1}
 ```
 

@@ -22,17 +22,17 @@ def repeat(s: str, count: int, *, separator: bytes = b"") -> bytes:
 
 
 a = repeat("hello", 3)
-print(a)
+u.Cli.print(a)
 # > b'hellohellohello'
 
 b = repeat("x", "4", separator=b" ")
-print(b)
+u.Cli.print(b)
 # > b'x x x x'
 
 try:
     c = repeat("hello", "wrong")
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for repeat
     1
@@ -96,7 +96,7 @@ using all possible parameter configurations and all possible combinations of the
         return f"a={a} b={b}"
 
 
-    print(pos_or_kw(1, b=3))
+    u.Cli.print(pos_or_kw(1, b=3))
     # > a=1 b=3
 
 
@@ -105,9 +105,9 @@ using all possible parameter configurations and all possible combinations of the
         return f"a={a} b={b}"
 
 
-    print(kw_only(a=1))
+    u.Cli.print(kw_only(a=1))
     # > a=1 b=2
-    print(kw_only(a=1, b=3))
+    u.Cli.print(kw_only(a=1, b=3))
     # > a=1 b=3
 
 
@@ -116,7 +116,7 @@ using all possible parameter configurations and all possible combinations of the
         return f"a={a} b={b}"
 
 
-    print(pos_only(1))
+    u.Cli.print(pos_only(1))
     # > a=1 b=2
 
 
@@ -125,9 +125,9 @@ using all possible parameter configurations and all possible combinations of the
         return str(args)
 
 
-    print(var_args(1))
+    u.Cli.print(var_args(1))
     # > (1,)
-    print(var_args(1, 2, 3))
+    u.Cli.print(var_args(1, 2, 3))
     # > (1, 2, 3)
 
 
@@ -136,9 +136,9 @@ using all possible parameter configurations and all possible combinations of the
         return str(kwargs)
 
 
-    print(var_kwargs(a=1))
+    u.Cli.print(var_kwargs(a=1))
     # > {'a': 1}
-    print(var_kwargs(a=1, b=2))
+    u.Cli.print(var_kwargs(a=1, b=2))
     # > {'a': 1, 'b': 2}
 
 
@@ -155,9 +155,9 @@ using all possible parameter configurations and all possible combinations of the
         return f"a={a} b={b} c={c} d={d} e={e} f={f}"
 
 
-    print(armageddon(1, 2, d=3))
+    u.Cli.print(armageddon(1, 2, d=3))
     # > a=1 b=2 c=() d=3 e=None f={}
-    print(armageddon(1, 2, 3, 4, 5, 6, d=8, e=9, f=10, spam=11))
+    u.Cli.print(armageddon(1, 2, 3, 4, 5, 6, d=8, e=9, f=10, spam=11))
     # > a=1 b=2 c=(3, 4, 5, 6) d=8 e=9 f={'f': 10, 'spam': 11}
     ```
 
@@ -211,7 +211,7 @@ def how_many(num: Annotated[int, u.Field(gt=10)]):
 try:
     how_many(1)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for how_many
     0
@@ -224,7 +224,7 @@ def return_value(value: str = u.Field(default="default value")):
     return value
 
 
-print(return_value())
+u.Cli.print(return_value())
 # > default value
 ```
 
@@ -260,11 +260,11 @@ def repeat(s: str, count: int, *, separator: bytes = b"") -> bytes:
 
 
 a = repeat("hello", 3)
-print(a)
+u.Cli.print(a)
 # > b'hellohellohello'
 
 b = repeat.raw_function("good bye", 2, separator=b", ")
-print(b)
+u.Cli.print(b)
 # > b'good bye, good bye'
 ```
 
@@ -297,12 +297,12 @@ async def get_user_email(user_id: PositiveInt):
 
 async def main():
     email = await get_user_email(123)
-    print(email)
+    u.Cli.print(email)
     # > testing@example.com
     try:
         await get_user_email(-4)
     except ValidationError as exc:
-        print(exc.errors())
+        u.Cli.print(exc.errors())
         """
         [
             {
@@ -353,13 +353,13 @@ def add_foobars(a: Foobar, b: Foobar):
 
 
 c = add_foobars(Foobar("a"), Foobar("b"))
-print(c)
+u.Cli.print(c)
 # > Foobar(a) + Foobar(b)
 
 try:
     add_foobars(1, 2)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for add_foobars
     0
@@ -389,7 +389,7 @@ def validate_foo(a: int, b: int):
 
 
 foo = validate_foo(a=1, b=2)
-print(foo())
+u.Cli.print(foo())
 # > 3
 ```
 

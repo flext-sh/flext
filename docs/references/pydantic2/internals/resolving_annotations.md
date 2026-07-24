@@ -41,7 +41,7 @@ class Foo(m.BaseModel):
 
 type MyType = int
 
-print(Foo.__annotations__)
+u.Cli.print(Foo.__annotations__)
 # > {'f': 'MyType'}
 ```
 

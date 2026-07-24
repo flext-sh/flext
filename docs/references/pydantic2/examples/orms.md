@@ -40,9 +40,9 @@ class MyTableModel(Base):
 sql_model = MyTableModel(metadata_={"key": "val"}, id=1)
 pydantic_model = MyModel(sql_model)
 
-print(pydantic_model.model_dump())
+u.Cli.print(pydantic_model.model_dump())
 # > {'metadata': {'key': 'val'}}
-print(pydantic_model.model_dump(by_alias=True))
+u.Cli.print(pydantic_model.model_dump(by_alias=True))
 # > {'metadata_': {'key': 'val'}}
 ```
 

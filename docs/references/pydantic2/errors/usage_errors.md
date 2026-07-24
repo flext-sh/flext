@@ -119,7 +119,7 @@ class Model(BaseModel):
         return json_schema
 
 
-print(Model.model_json_schema())
+u.Cli.print(Model.model_json_schema())
 """
 {'examples': ['example'], 'properties': {}, 'title': 'Model', 'type': 'object'}
 """

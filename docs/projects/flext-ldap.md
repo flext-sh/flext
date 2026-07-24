@@ -38,7 +38,7 @@ result = ldap.search(
 
 if result.is_success:
     for entry in result.value.entries:
-        print(entry.dn)
+        u.Cli.print(entry.dn)
 ```
 
 `ldap` is the process-wide `FlextLdap` singleton (`FlextLdap.fetch_global()`); `m.Ldap.SearchOptions` defaults `scope` and `filter_str` to the constants in `c.Ldap`. Use `FlextLdapEntryAdapter` to convert between `ldap3` entries and `flext-ldif` models.

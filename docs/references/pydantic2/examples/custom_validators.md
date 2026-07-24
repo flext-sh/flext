@@ -70,14 +70,14 @@ class MyDatetimeValidator:
 
 LA = "America/Los_Angeles"
 ta = TypeAdapter(Annotated[dt.datetime, MyDatetimeValidator(LA)])
-print(ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA))))
+u.Cli.print(ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA))))
 # > 2023-01-01 00:00:00-07:53
 
 LONDON = "Europe/London"
 try:
     ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LONDON)))
 except ValidationError as ve:
-    pprint(ve.errors(), width=100)
+    pu.Cli.print(ve.errors(), width=100)
     """
     [{'ctx': {'error': AssertionError('Invalid tzinfo: Europe/London, expected: America/Los_Angeles')},
     'input': datetime.datetime(2023, 1, 1, 0, 0, tzinfo=<DstTzInfo 'Europe/London' LMT-1 day, 23:59:00 STD>),
@@ -134,16 +134,16 @@ class MyDatetimeValidator:
 
 LA = "America/Los_Angeles"  # UTC-7 or UTC-8
 ta = TypeAdapter(Annotated[dt.datetime, MyDatetimeValidator(-10, -5)])
-print(ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA))))
+u.Cli.print(ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LA))))
 # > 2023-01-01 00:00:00-07:53
 
 LONDON = "Europe/London"
 try:
-    print(
+    u.Cli.print(
         ta.validate_python(dt.datetime(2023, 1, 1, 0, 0, tzinfo=pytz.timezone(LONDON)))
     )
 except ValidationError as e:
-    pprint(e.errors(), width=100)
+    pu.Cli.print(e.errors(), width=100)
     """
     [{'ctx': {'error': AssertionError('Value out of bounds')},
     'input': datetime.datetime(2023, 1, 1, 0, 0, tzinfo=<DstTzInfo 'Europe/London' LMT-1 day, 23:59:00 STD>),
@@ -199,7 +199,7 @@ data = {
 try:
     org = Organization(**data)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for Organization
       Value error, Password 123 is forbidden. Please choose another password for user Spartacat. [type=value_error, input_value={'forbidden_passwords': [...gh', 'password': '87'}]}, input_type=dict]
@@ -254,7 +254,7 @@ data = {
 try:
     org = Organization(data, context={})
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for Organization
     users.0.password

@@ -37,7 +37,7 @@ class Person(BaseModel):
 
 json_string = pathlib.Path("person.json").read_text()
 person = Person.model_validate_json(json_string)
-print(person)
+u.Cli.print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```
 
@@ -76,7 +76,7 @@ json_string = pathlib.Path("person.json").read_text()
 try:
     person = Person.model_validate_json(json_string)
 except ValidationError as err:
-    print(err)
+    u.Cli.print(err)
     """
     3 validation errors for Person
     name
@@ -126,7 +126,7 @@ person_list_adapter = TypeAdapter(Sequence[Person])  # (1)!
 
 json_string = pathlib.Path("people.json").read_text()
 people = person_list_adapter.validate_json(json_string)
-print(people)
+u.Cli.print(people)
 # > [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
 ```
 
@@ -161,7 +161,7 @@ class Person(BaseModel):
 
 json_lines = pathlib.Path("people.jsonl").read_text().splitlines()
 people = [Person.model_validate_json(line) for line in json_lines]
-print(people)
+u.Cli.print(people)
 # > [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
 ```
 
@@ -197,7 +197,7 @@ with open("people.csv") as f:
     reader = csv.DictReader(f)
     people = [Person(row) for row in reader]
 
-print(people)
+u.Cli.print(people)
 # > [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
 ```
 
@@ -231,7 +231,7 @@ with open("person.toml", "rb") as f:
     data = tomllib.load(f)
 
 person = Person(
-print(person)
+u.Cli.print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```
 
@@ -265,7 +265,7 @@ with open("person.yaml") as f:
     data = yaml.safe_load(f)
 
 person = Person(
-print(person)
+u.Cli.print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```
 
@@ -301,7 +301,7 @@ class Person(BaseModel):
 tree = ET.parse("person.xml").getroot()
 data = {child.tag: child.text for child in tree}
 person = Person(
-print(person)
+u.Cli.print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```
 
@@ -335,6 +335,6 @@ class Person(BaseModel):
 settings = configparser.SettingsParser()
 settings.read("person.ini")
 person = Person(])
-print(person)
+u.Cli.print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```

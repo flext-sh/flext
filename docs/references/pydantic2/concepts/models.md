@@ -196,7 +196,7 @@ class Model(BaseModel):
     c: str
 
 
-print(Model(a=3.000, b="2.72", c=b"binary data").model_dump())
+u.Cli.print(Model(a=3.000, b="2.72", c=b"binary data").model_dump())
 # > {'a': 3, 'b': 2.72, 'c': 'binary data'}
 ```
 
@@ -217,7 +217,7 @@ class Model(BaseModel):
     items: t.SequenceOf[int]  # (1)!
 
 
-print(Model(items=(1, 2, 3)))
+u.Cli.print(Model(items=(1, 2, 3)))
 # > items=[1, 2, 3]
 ```
 
@@ -308,11 +308,11 @@ class Spam(BaseModel):
 
 
 m = Spam(foo={"count": 4}, bars=[{"apple": "x1"}, {"apple": "x2"}])
-print(m)
+u.Cli.print(m)
 """
 foo=Foo(count=4, size=None) bars=[Bar(apple='x1', banana='y'), Bar(apple='x2', banana='y')]
 """
-print(m.model_dump())
+u.Cli.print(m.model_dump())
 """
 {
     'foo': {'count': 4, 'size': None},
@@ -343,7 +343,7 @@ class Foo(BaseModel):
 try:
     Foo.model_json_schema()
 except PydanticUserError as e:
-    print(e)
+    u.Cli.print(e)
     """
     `Foo` is not fully defined; you should define `Bar`, then call `Foo.model_rebuild()`.
 
@@ -356,7 +356,7 @@ class Bar(BaseModel):
 
 
 Foo.model_rebuild()
-print(Foo.model_json_schema())
+u.Cli.print(Foo.model_json_schema())
 """
 {
     '$defs': {'Bar': {'properties': {}, 'title': 'Bar', 'type': 'object'}},
@@ -423,10 +423,10 @@ class CompanyModel(BaseModel):
 
 
 co_orm = CompanyOrm(id=123, public_key="foobar", domains=["example.com", "foobar.com"])
-print(co_orm)
+u.Cli.print(co_orm)
 # > <__main__.CompanyOrm t.JsonValue at 0x0123456789ab>
 co_model = CompanyModel(co_orm)
-print(co_model)
+u.Cli.print(co_model)
 # > id=123 public_key='foobar' domains=['example.com', 'foobar.com']
 ```
 
@@ -473,7 +473,7 @@ bones = PetCls(name="Bones", species="dog")
 orion = PetCls(name="Orion", species="cat")
 anna = PersonCls(name="Anna", age=20, pets=[bones, orion])
 anna_model = Person(
-print(anna_model)
+u.Cli.print(anna_model)
 """
 name='Anna' age=20.0 pets=[Pet(name='Bones', species='dog'), Pet(name='Orion', species='cat')]
 """
@@ -504,7 +504,7 @@ data = dict(list_of_ints=["1", 2, "bad"], a_float="not a float")
 try:
     Model(**data)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for Model
     list_of_ints.2
@@ -540,26 +540,26 @@ class User(BaseModel):
 
 
 m = User(me": "James"})
-print(m)
+u.Cli.print(m)
 # > id=123 name='James' signup_ts=None
 
 try:
     User(ict"])
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for User
       Input should be a valid dictionary or instance of User [type=model_type, input_value=['not', 'a', 'dict'], input_type=list]
     """
 
 m = User.model_validate_json('{"id": 123, "name": "James"}')
-print(m)
+u.Cli.print(m)
 # > id=123 name='James' signup_ts=None
 
 try:
     m = User.model_validate_json('{"id": 123, "name": 123}')
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for User
     name
@@ -569,14 +569,14 @@ except ValidationError as e:
 try:
     m = User.model_validate_json("invalid JSON")
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for User
       Invalid JSON: expected value at line 1 column 1 [type=json_invalid, input_value='invalid JSON', input_type=str]
     """
 
 m = User.model_validate_strings({"id": "123", "name": "James"})
-print(m)
+u.Cli.print(m)
 # > id=123 name='James' signup_ts=None
 
 m = User.model_validate_strings({
@@ -584,7 +584,7 @@ m = User.model_validate_strings({
     "name": "James",
     "signup_ts": "2024-04-01T12:00:00",
 })
-print(m)
+u.Cli.print(m)
 # > id=123 name='James' signup_ts=datetime.datetime(2024, 4, 1, 12, 0)
 
 try:
@@ -592,7 +592,7 @@ try:
         {"id": "123", "name": "James", "signup_ts": "2024-04-01"}, strict=True
     )
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for User
     signup_ts
@@ -650,7 +650,7 @@ If you don't set this value, then validation will be skipped on model instances.
         try:
             m2 = Model(
         except ValidationError as e:
-            print(e)
+            u.Cli.print(e)
             """
             1 validation error for Model
             a
@@ -722,14 +722,14 @@ class FooBarModel(BaseModel):
 
 m = FooBarModel(banana=3.14, foo="hello", bar={"whatever": 123})
 
-print(m.model_copy(update={"banana": 0}))
+u.Cli.print(m.model_copy(update={"banana": 0}))
 # > banana=0 foo='hello' bar=BarModel(whatever=123)
 
 # normal copy gives the same t.JsonValue reference for bar:
-print(id(m.bar) == id(m.model_copy().bar))
+u.Cli.print(id(m.bar) == id(m.model_copy().bar))
 # > True
 # deep copy gives a new t.JsonValue reference for `bar`:
-print(id(m.bar) == id(m.model_copy(deep=True).bar))
+u.Cli.print(id(m.bar) == id(m.model_copy(deep=True).bar))
 # > False
 ```
 
@@ -762,20 +762,20 @@ Here is an example using a generic Pydantic model to create an easily-reused HTT
         data: DataT  # (3)!
 
 
-    print(Response[int](data=1))
+    u.Cli.print(Response[int](data=1))
     # > data=1
-    print(Response[str](data="value"))
+    u.Cli.print(Response[str](data="value"))
     # > data='value'
-    print(Response[str](data="value").model_dump())
+    u.Cli.print(Response[str](data="value").model_dump())
     # > {'data': 'value'}
 
     data = DataModel(number=1)
-    print(Response[DataModel](data=data).model_dump())
+    u.Cli.print(Response[DataModel](data=data).model_dump())
     # > {'data': {'number': 1}}
     try:
         Response[int](data="value")
     except ValidationError as e:
-        print(e)
+        u.Cli.print(e)
         """
         1 validation error for Response[int]
         data
@@ -803,20 +803,20 @@ Here is an example using a generic Pydantic model to create an easily-reused HTT
         data: DataT  # (2)!
 
 
-    print(Response[int](data=1))
+    u.Cli.print(Response[int](data=1))
     # > data=1
-    print(Response[str](data="value"))
+    u.Cli.print(Response[str](data="value"))
     # > data='value'
-    print(Response[str](data="value").model_dump())
+    u.Cli.print(Response[str](data="value").model_dump())
     # > {'data': 'value'}
 
     data = DataModel(number=1)
-    print(Response[DataModel](data=data).model_dump())
+    u.Cli.print(Response[DataModel](data=data).model_dump())
     # > {'data': {'number': 1}}
     try:
         Response[int](data="value")
     except ValidationError as e:
-        print(e)
+        u.Cli.print(e)
         """
         1 validation error for Response[int]
         data
@@ -862,7 +862,7 @@ class ChildClass(BaseClass[TypeX], Generic[TypeX]):
 
 
 # Parametrize `TypeX` with `int`:
-print(ChildClass[int](X=1))
+u.Cli.print(ChildClass[int](X=1))
 # > X=1
 ```
 
@@ -889,7 +889,7 @@ class ChildClass(BaseClass[int, TypeY], Generic[TypeY, TypeZ]):
 
 
 # Parametrize `TypeY` with `str`:
-print(ChildClass[str, int](x="1", y="y", z="3"))
+u.Cli.print(ChildClass[str, int](x="1", y="y", z="3"))
 # > x=1 y='y' z=3
 ```
 
@@ -912,9 +912,9 @@ class Response(BaseModel, Generic[DataT]):
         return f"{params[0].__name__.title()}Response"
 
 
-print(repr(Response[int](data=1)))
+u.Cli.print(repr(Response[int](data=1)))
 # > IntResponse(data=1)
-print(repr(Response[str](data="a")))
+u.Cli.print(repr(Response[str](data="a")))
 # > StrResponse(data='a')
 ```
 
@@ -945,7 +945,7 @@ class Order(BaseModel):
 product = Product(name="Apple", price=0.5)
 response = ResponseModel[Product](content=product)
 order = Order(id=1, product=response)
-print(repr(order))
+u.Cli.print(repr(order))
 """
 Order(id=1, product=ResponseModel[Product](content=Product(name='Apple', price=0.5)))
 """
@@ -971,12 +971,12 @@ class OuterT(BaseModel, Generic[T]):
 
 
 nested = InnerT[int](inner=1)
-print(OuterT[int](outer=1, nested=nested))
+u.Cli.print(OuterT[int](outer=1, nested=nested))
 # > outer=1 nested=InnerT[int](inner=1)
 try:
-    print(OuterT[int](outer="a", nested=InnerT(inner="a")))  # (1)!
+    u.Cli.print(OuterT[int](outer="a", nested=InnerT(inner="a")))  # (1)!
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for OuterT[int]
     outer
@@ -1025,7 +1025,7 @@ we will inspect the data, recognize that the input data is sort of a "loose" sub
         inner: GenericModel[Any]
 
 
-    print(repr(Model(ericModel[int](a=1)))))
+    u.Cli.print(repr(Model(ericModel[int](a=1)))))
     # > Model(inner=GenericModel[Any](a=1))
     ```
 
@@ -1049,7 +1049,7 @@ we will inspect the data, recognize that the input data is sort of a "loose" sub
 
         @u.model_validator(mode="after")
         def validate_after(self: Self) -> Self:
-            print("after validator running custom validation...")
+            u.Cli.print("after validator running custom validation...")
             return self
 
 
@@ -1060,7 +1060,7 @@ we will inspect the data, recognize that the input data is sort of a "loose" sub
     m = Model(ericModel[int](a=1)))
     # > after validator running custom validation...
     # > after validator running custom validation...
-    print(repr(m))
+    u.Cli.print(repr(m))
     # > Model(inner=GenericModel[Any](a=1))
     ```
 
@@ -1093,13 +1093,13 @@ class Model(BaseModel, Generic[T, U, V]):
     v: V
 
 
-print(Model(t="t", u=1, v="v"))
+u.Cli.print(Model(t="t", u=1, v="v"))
 # > t='t' u=1 v='v'
 
 try:
     Model(t="t", u="u", v=1)
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     2 validation errors for Model
     u
@@ -1135,10 +1135,10 @@ except ValidationError as exc:
     loaded_data = {"item": {"value": 1}}
 
 
-    print(ItemHolder(**loaded_data))  # (1)!
+    u.Cli.print(ItemHolder(**loaded_data))  # (1)!
     # > item=ItemBase()
 
-    print(ItemHolder[IntItem](**loaded_data))  # (2)!
+    u.Cli.print(ItemHolder[IntItem](**loaded_data))  # (2)!
     # > item=IntItem(value=1)
     ```
 
@@ -1222,7 +1222,7 @@ item_bound_explicit = ItemBound[IntValue](item=IntValue(value=3))
 item_no_bound_inferred = ItemNoBound(item=IntValue(value=3))
 item_no_bound_explicit = ItemNoBound[IntValue](item=IntValue(value=3))
 
-# calling `print(x.model_dump())` on any of the above instances results in the following:
+# calling `u.Cli.print(x.model_dump())` on any of the above instances results in the following:
 # > {'item': {'value': 3}}
 ```
 
@@ -1347,9 +1347,9 @@ BarModel = u.create_model(
     banana=(str, "yellow"),
     __base__=FooModel,
 )
-print(BarModel)
+u.Cli.print(BarModel)
 # > <class '__main__.BarModel'>
-print(BarModel.model_fields.keys())
+u.Cli.print(BarModel.model_fields.keys())
 # > dict_keys(['foo', 'bar', 'apple', 'banana'])
 ```
 
@@ -1371,13 +1371,13 @@ validators = {
 UserModel = u.create_model("UserModel", username=(str, ...), __validators__=validators)
 
 user = UserModel(username="scolvin")
-print(user)
+u.Cli.print(user)
 # > username='scolvin'
 
 try:
     UserModel(username="scolvi%n")
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for UserModel
     username
@@ -1417,22 +1417,22 @@ Pets = RootModel[t.StrSequence]
 PetsByName = RootModel[t.StrMapping]
 
 
-print(Pets(["dog", "cat"]))
+u.Cli.print(Pets(["dog", "cat"]))
 # > root=['dog', 'cat']
-print(Pets(["dog", "cat"]).model_dump_json())
+u.Cli.print(Pets(["dog", "cat"]).model_dump_json())
 # > ["dog","cat"]
-print(Pets()
+u.Cli.print(Pets()
 # > root=['dog', 'cat']
-print(Pets.model_json_schema())
+u.Cli.print(Pets.model_json_schema())
 """
 {'items': {'type': 'string'}, 'title': 'RootModel[t.StrSequence]', 'type': 'array'}
 """
 
-print(PetsByName({"Otis": "dog", "Milo": "cat"}))
+u.Cli.print(PetsByName({"Otis": "dog", "Milo": "cat"}))
 # > root={'Otis': 'dog', 'Milo': 'cat'}
-print(PetsByName({"Otis": "dog", "Milo": "cat"}).model_dump_json())
+u.Cli.print(PetsByName({"Otis": "dog", "Milo": "cat"}).model_dump_json())
 # > {"Otis":"dog","Milo":"cat"}
-print(PetsByName( "Milo": "cat"}))
+u.Cli.print(PetsByName( "Milo": "cat"}))
 # > root={'Otis': 'dog', 'Milo': 'cat'}
 ```
 
@@ -1454,9 +1454,9 @@ class Pets(RootModel):
 
 
 pets = Pets(
-print(pets[0])
+u.Cli.print(pets[0])
 # > dog
-print([pet for pet in pets])
+u.Cli.print([pet for pet in pets])
 # > ['dog', 'cat']
 ```
 
@@ -1473,7 +1473,7 @@ class Pets(RootModel[t.StrSequence]):
 
 my_pets = Pets(
 
-print(my_pets.describe())
+u.Cli.print(my_pets.describe())
 # > Pets: dog, cat
 ```
 
@@ -1506,19 +1506,19 @@ foobar = FooBarModel(a="hello", b={"apple": "pear"})
 try:
     foobar.a = "different"
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for FooBarModel
     a
       Instance is frozen [type=frozen_instance, input_value='different', input_type=str]
     """
 
-print(foobar.a)
+u.Cli.print(foobar.a)
 # > hello
-print(foobar.b)
+u.Cli.print(foobar.b)
 # > {'apple': 'pear'}
 foobar.b["apple"] = "grape"
-print(foobar.b)
+u.Cli.print(foobar.b)
 # > {'apple': 'grape'}
 ```
 
@@ -1565,17 +1565,17 @@ class Model(BaseModel):
     e: float
 
 
-print(Model.model_fields.keys())
+u.Cli.print(Model.model_fields.keys())
 # > dict_keys(['a', 'b', 'c', 'd', 'e'])
 m = Model(e=2, a=1)
-print(m.model_dump())
+u.Cli.print(m.model_dump())
 # > {'a': 1, 'b': 2, 'c': 1, 'd': 0, 'e': 2.0}
 try:
     Model(a="x", b="x", c="x", d="x", e="x")
 except ValidationError as err:
     error_locations = [e["loc"] for e in err.errors()]
 
-print(error_locations)
+u.Cli.print(error_locations)
 # > [('a',), ('b',), ('c',), ('d',), ('e',)]
 ```
 
@@ -1599,9 +1599,9 @@ class Model(BaseModel):
 
 
 m = Model()
-print(m)
+u.Cli.print(m)
 # > y=2
-print(Model.x)
+u.Cli.print(Model.x)
 # > 1
 ```
 
@@ -1634,9 +1634,9 @@ class TimeAwareModel(BaseModel):
 
 
 m = TimeAwareModel()
-print(m._processed_at)
+u.Cli.print(m._processed_at)
 # > 2032-01-02 03:04:05.000006
-print(m._secret_value)
+u.Cli.print(m._secret_value)
 # > 3
 ```
 
@@ -1660,7 +1660,7 @@ class FooModel(BaseModel):
     apple: int = u.Field(alias="pear")
 
 
-print(inspect.signature(FooModel))
+u.Cli.print(inspect.signature(FooModel))
 # > (*, id: int, name: str = None, description: str = 'Foo', pear: int) -> None
 ```
 
@@ -1683,7 +1683,7 @@ class MyModel(BaseModel):
         super().__init__(id=id, bar=bar, **data)
 
 
-print(inspect.signature(MyModel))
+u.Cli.print(inspect.signature(MyModel))
 # > (id: int = 1, *, bar: str, info: str = 'Foo') -> None
 ```
 
@@ -1713,11 +1713,11 @@ a = Pet(name="Bones", species="dog")
 match a:
     # match `species` to 'dog', declare and initialize `dog_name`
     case Pet(species="dog", name=dog_name):
-        print(f"{dog_name} is a dog")
+        u.Cli.print(f"{dog_name} is a dog")
     # > Bones is a dog
     # default case
     case _:
-        print("No dog matched")
+        u.Cli.print("No dog matched")
 ```
 
 !!! note
@@ -1752,7 +1752,7 @@ arr_orig = [1, 9, 10, 3]
 
 c1 = C1(arr_orig)
 c2 = C2(arr=arr_orig)
-print(f"{id(c1.arr) == id(c2.arr)=}")
+u.Cli.print(f"{id(c1.arr) == id(c2.arr)=}")
 # > id(c1.arr) == id(c2.arr)=False
 ```
 

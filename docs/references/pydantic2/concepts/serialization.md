@@ -74,10 +74,10 @@ class FooBarModel(BaseModel):
 m = FooBarModel(banana=3.14, foo="hello", bar={"whatever": (1, 2)})
 
 # returns a dictionary:
-print(m.model_dump())
+u.Cli.print(m.model_dump())
 # > {'banana': 3.14, 'foo': 'hello', 'bar': {'whatever': (1, 2)}}
 
-print(m.model_dump(by_alias=True))
+u.Cli.print(m.model_dump(by_alias=True))
 # > {'banana': 3.14, 'foo_alias': 'hello', 'bar': {'whatever': (1, 2)}}
 ```
 
@@ -85,7 +85,7 @@ Notice that the value of `whatever` was dumped as tuple, which isn't a known JSO
 to ensure JSON-compatible types are used:
 
 ```python {group="python-dump"}
-print(m.model_dump(mode="json"))
+u.Cli.print(m.model_dump(mode="json"))
 # > {'banana': 3.14, 'foo': 'hello', 'bar': {'whatever': [1, 2]}}
 ```
 
@@ -119,7 +119,7 @@ class FooBarModel(BaseModel):
 
 m = FooBarModel(foo=datetime(2032, 6, 1, 12, 13, 14), bar={"whatever": (1, 2)})
 
-print(m.model_dump_json(indent=2))
+u.Cli.print(m.model_dump_json(indent=2))
 """
 {
   "foo": "2032-06-01T12:13:14",
@@ -168,7 +168,7 @@ class FooBarModel(BaseModel):
 m = FooBarModel(banana=3.14, foo="hello", bar={"whatever": 123})
 
 for name, value in m:
-    print(f"{name}: {value}")
+    u.Cli.print(f"{name}: {value}")
     # > banana: 3.14
     # > foo: hello
     # > bar: whatever=123
@@ -177,7 +177,7 @@ for name, value in m:
 This means that calling [`dict()`][dict] on a model can be used to construct a dictionary of the model:
 
 ```python {group="iterating-model"}
-print(dict(m))
+u.Cli.print(dict(m))
 # > {'banana': 3.14, 'foo': 'hello', 'bar': BarModel(whatever=123)}
 ```
 
@@ -206,13 +206,13 @@ class FooBarModel(BaseModel):
 
 
 m = FooBarModel(a="hello", b=123)
-print(m)
+u.Cli.print(m)
 # > a='hello' b=123
 data = pickle.dumps(m)
-print(data[:20])
+u.Cli.print(data[:20])
 # > b'\x80\x04\x95\x95\x00\x00\x00\x00\x00\x00\x00\x8c\x08__main_'
 m2 = pickle.loads(data)
-print(m2)
+u.Cli.print(m2)
 # > a='hello' b=123
 ```
 
@@ -270,11 +270,11 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
             number: Annotated[int, PlainSerializer(ser_number)]
 
 
-        print(Model(number=4).model_dump())
+        u.Cli.print(Model(number=4).model_dump())
         # > {'number': 8}
         m = Model(number=1)
         m.number = "invalid"
-        print(m.model_dump())  # (1)!
+        u.Cli.print(m.model_dump())  # (1)!
         # > {'number': 'invalid'}
         ```
 
@@ -299,11 +299,11 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
                     return value
 
 
-        print(Model(number=4).model_dump())
+        u.Cli.print(Model(number=4).model_dump())
         # > {'number': 8}
         m = Model(number=1)
         m.number = "invalid"
-        print(m.model_dump())  # (2)!
+        u.Cli.print(m.model_dump())  # (2)!
         # > {'number': 'invalid'}
         ```
 
@@ -334,7 +334,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
             number: Annotated[int, WrapSerializer(ser_number)]
 
 
-        print(Model(number=4).model_dump())
+        u.Cli.print(Model(number=4).model_dump())
         # > {'number': 5}
         ```
 
@@ -354,7 +354,7 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
                 return handler(value) + 1
 
 
-        print(Model(number=4).model_dump())
+        u.Cli.print(Model(number=4).model_dump())
         # > {'number': 5}
         ```
 
@@ -452,7 +452,7 @@ As with [field serializers](#field-serializers), **two** different types of mode
           return f"{self.username} - {self.password}"
 
 
-  print(UserModel(username="foo", password="bar").model_dump())
+  u.Cli.print(UserModel(username="foo", password="bar").model_dump())
   # > foo - bar
   ```
 
@@ -484,7 +484,7 @@ As with [field serializers](#field-serializers), **two** different types of mode
               return serialized
 
 
-      print(UserModel(username="foo", password="bar").model_dump())
+      u.Cli.print(UserModel(username="foo", password="bar").model_dump())
       # > {'username': 'foo', 'password': 'bar', 'fields': ['username', 'password']}
       ```
 
@@ -522,9 +522,9 @@ class Model(BaseModel):
 
 
 model = Model(text="This is an example document")
-print(model.model_dump())  # no context
+u.Cli.print(model.model_dump())  # no context
 # > {'text': 'This is an example document'}
-print(model.model_dump(context={"stopwords": ["this", "is", "an"]}))
+u.Cli.print(model.model_dump(context={"stopwords": ["this", "is", "an"]}))
 # > {'text': 'example document'}
 ```
 
@@ -558,7 +558,7 @@ class FooModel(BaseModel):
 
 
 m = FooModel(date=MyDate(2023, 1, 1))
-print(m.model_dump_json())
+u.Cli.print(m.model_dump_json())
 # > {"date":"2023-01-01"}
 ```
 
@@ -592,9 +592,9 @@ class OuterModel(BaseModel):
 user = UserLogin(name="pydantic", password="hunter2")
 
 m = OuterModel(user=user)
-print(m)
+u.Cli.print(m)
 # > user=UserLogin(name='pydantic', password='hunter2')
-print(m.model_dump())  # (1)!
+u.Cli.print(m.model_dump())  # (1)!
 # > {'user': {'name': 'pydantic'}}
 ```
 
@@ -653,7 +653,7 @@ class OuterModel(BaseModel):
 
 user = UserLogin(name="pydantic", password="password")
 
-print(OuterModel(as_any=user, as_user=user).model_dump())
+u.Cli.print(OuterModel(as_any=user, as_user=user).model_dump())
 """
 {
     'as_any': {'name': 'pydantic', 'password': 'password'},
@@ -693,7 +693,7 @@ class OuterModel(BaseModel):
 user = UserLogin(name="pydantic", password="password")
 
 outer_model = OuterModel(user1=user, user2=user)
-print(outer_model.model_dump(serialize_as_any=True))  # (1)!
+u.Cli.print(outer_model.model_dump(serialize_as_any=True))  # (1)!
 """
 {
     'user1': {'name': 'pydantic', 'password': 'password'},
@@ -701,7 +701,7 @@ print(outer_model.model_dump(serialize_as_any=True))  # (1)!
 }
 """
 
-print(outer_model.model_dump(serialize_as_any=False))  # (2)!
+u.Cli.print(outer_model.model_dump(serialize_as_any=False))  # (2)!
 # > {'user1': {'name': 'pydantic'}, 'user2': {'name': 'pydantic'}}
 ```
 
@@ -742,7 +742,7 @@ class Transaction(BaseModel):
     value: int = u.Field(ge=0, exclude_if=lambda v: v == 0)
 
 
-print(Transaction(id=1, private_id=2, value=0).model_dump())
+u.Cli.print(Transaction(id=1, private_id=2, value=0).model_dump())
 # > {'id': 1}
 ```
 
@@ -787,15 +787,15 @@ using the `include` parameter.
 
 ```python {group="simple-exclude-include"}
 # using a set:
-print(t.model_dump(exclude={"user", "value"}))
+u.Cli.print(t.model_dump(exclude={"user", "value"}))
 # > {'id': '1234567890'}
 
 # using a dictionary:
-print(t.model_dump(exclude={"user": {"username", "password"}, "value": True}))
+u.Cli.print(t.model_dump(exclude={"user": {"username", "password"}, "value": True}))
 # > {'id': '1234567890', 'user': {'id': 42}}
 
 # same configuration using `include`:
-print(t.model_dump(include={"id": True, "user": {"id"}}))
+u.Cli.print(t.model_dump(include={"id": True, "user": {"id"}}))
 # > {'id': '1234567890', 'user': {'id': 42}}
 ```
 
@@ -823,7 +823,7 @@ user = User(
     ]
 )
 
-print(user.model_dump(exclude={"hobbies": {-1: {"info"}}}))  # (1)!
+u.Cli.print(user.model_dump(exclude={"hobbies": {-1: {"info"}}}))  # (1)!
 """
 {
     'hobbies': [
@@ -843,7 +843,7 @@ print(user.model_dump(exclude={"hobbies": {-1: {"info"}}}))  # (1)!
 The special key `'__all__'` can be used to apply an exclusion/inclusion pattern to all members:
 
 ```python {group="advanced-include-exclude"}
-print(user.model_dump(exclude={"hobbies": {"__all__": {"info"}}}))
+u.Cli.print(user.model_dump(exclude={"hobbies": {"__all__": {"info"}}}))
 # > {'hobbies': [{'name': 'Programming'}, {'name': 'Gaming'}]}
 ```
 
@@ -869,10 +869,10 @@ using the following parameters:
 
 
   user = UserModel(name="John")
-  print(user.model_fields_set)
+  u.Cli.print(user.model_fields_set)
   # > {'name'}
 
-  print(user.model_dump(exclude_unset=True))
+  u.Cli.print(user.model_dump(exclude_unset=True))
   # > {'name': 'John'}
   ```
 
@@ -881,7 +881,7 @@ using the following parameters:
   ```python {group="exclude-unset"}
   user.age = 21
 
-  print(user.model_dump(exclude_unset=True))
+  u.Cli.print(user.model_dump(exclude_unset=True))
   # > {'name': 'John', 'age': 21}
   ```
 

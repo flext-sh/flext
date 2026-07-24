@@ -35,7 +35,7 @@ class User(BaseModel):
 
 
 user = User({"names": ["John", "Doe"]})  # (1)!
-print(user)
+u.Cli.print(user)
 # > first_name='John' last_name='Doe'
 ```
 
@@ -58,10 +58,10 @@ class User(BaseModel):
 
 
 user = User(", "lname": "Doe"})  # (1)!
-print(user)
+u.Cli.print(user)
 # > first_name='John' last_name='Doe'
 user = User("John", "lname": "Doe"})  # (2)!
-print(user)
+u.Cli.print(user)
 # > first_name='John' last_name='Doe'
 ```
 
@@ -85,13 +85,13 @@ class User(BaseModel):
 
 
 user = User("John", "last_name": "Doe"})
-print(user)
+u.Cli.print(user)
 # > first_name='John' last_name='Doe'
 user = User(n", "Doe"]})
-print(user)
+u.Cli.print(user)
 # > first_name='John' last_name='Doe'
 user = User(n"], "last_name": "Doe"})
-print(user)
+u.Cli.print(user)
 # > first_name='John' last_name='Doe'
 ```
 
@@ -126,7 +126,7 @@ class Tree(BaseModel):
 
 
 t = Tree(IGHT": 1.2, "KIND": "oak"})
-print(t.model_dump(by_alias=True))
+u.Cli.print(t.model_dump(by_alias=True))
 # > {'AGE': 12, 'HEIGHT': 1.2, 'KIND': 'oak'}
 ```
 
@@ -162,7 +162,7 @@ class Tree(BaseModel):
 
 
 t = Tree(IGHT": 1.2, "KIND": "oak"})
-print(t.model_dump(by_alias=True))
+u.Cli.print(t.model_dump(by_alias=True))
 # > {'Age': 12, 'Height': 1.2, 'Kind': 'oak'}
 ```
 
@@ -186,9 +186,9 @@ class Voice(BaseModel):
 
 
 voice = Voice(Name="Filiz", lang="tr-TR")
-print(voice.language_code)
+u.Cli.print(voice.language_code)
 # > tr-TR
-print(voice.model_dump(by_alias=True))
+u.Cli.print(voice.model_dump(by_alias=True))
 # > {'Name': 'Filiz', 'lang': 'tr-TR'}
 ```
 
@@ -236,7 +236,7 @@ When validating data, you can enable population of attributes by attribute name,
         model_config = ConfigDict(validate_by_alias=True, validate_by_name=False)
 
 
-    print(repr(Model(my_alias="foo")))  # (1)!
+    u.Cli.print(repr(Model(my_alias="foo")))  # (1)!
     # > Model(my_field='foo')
     ```
 
@@ -254,7 +254,7 @@ When validating data, you can enable population of attributes by attribute name,
         model_config = ConfigDict(validate_by_alias=False, validate_by_name=True)
 
 
-    print(repr(Model(my_field="foo")))  # (1)!
+    u.Cli.print(repr(Model(my_field="foo")))  # (1)!
     # > Model(my_field='foo')
     ```
 
@@ -272,10 +272,10 @@ When validating data, you can enable population of attributes by attribute name,
         model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
 
-    print(repr(Model(my_alias="foo")))  # (1)!
+    u.Cli.print(repr(Model(my_alias="foo")))  # (1)!
     # > Model(my_field='foo')
 
-    print(repr(Model(my_field="foo")))  # (2)!
+    u.Cli.print(repr(Model(my_field="foo")))  # (2)!
     # > Model(my_field='foo')
     ```
 
@@ -303,7 +303,7 @@ class Model(BaseModel):
 
 
 m = Model(my_field="foo")
-print(m.model_dump())  # (1)!
+u.Cli.print(m.model_dump())  # (1)!
 # > {'my_alias': 'foo'}
 ```
 
@@ -346,7 +346,7 @@ By default:
         by_alias=True,
         by_name=False,
     )
-    print(repr(m))
+    u.Cli.print(repr(m))
     # > Model(my_field='foo')
     ```
 
@@ -367,7 +367,7 @@ By default:
         by_alias=False,
         by_name=True,  # (1)!
     )
-    print(repr(m))
+    u.Cli.print(repr(m))
     # > Model(my_field='foo')
     ```
 
@@ -388,7 +388,7 @@ By default:
         by_alias=True,
         by_name=True,  # (1)!
     )
-    print(repr(m))
+    u.Cli.print(repr(m))
     # > Model(my_field='foo')
 
     m = Model(
@@ -396,7 +396,7 @@ By default:
         by_alias=True,
         by_name=True,  # (2)!
     )
-    print(repr(m))
+    u.Cli.print(repr(m))
     # > Model(my_field='foo')
     ```
 
@@ -425,7 +425,7 @@ class Model(BaseModel):
 
 
 m = Model(my_field="foo")
-print(m.model_dump(by_alias=True))  # (1)!
+u.Cli.print(m.model_dump(by_alias=True))  # (1)!
 # > {'my_alias': 'foo'}
 ```
 

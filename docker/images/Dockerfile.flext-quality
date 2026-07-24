@@ -30,7 +30,7 @@ RUN pip install --no-cache-dir \
 
 # Run comprehensive functionality validation
 RUN echo "🧪 VALIDATING FLEXT QUALITY..." && \
-    python -c "from flext_quality import FlextQuality, FlextQualityCliService; quality = FlextQuality.get_instance(); print(f'✅ Status keys: {sorted(quality.get_status())}')" && \
+    python -c "from flext_quality import FlextQuality, FlextQualityCliService; quality = FlextQuality.get_instance(); u.Cli.print(f'✅ Status keys: {sorted(quality.get_status())}')" && \
     flext-quality status > /dev/null && \
     flext-quality validate . > /dev/null && \
     python -m pytest tests/unit --tb=short -q --maxfail=5 && \
@@ -48,10 +48,10 @@ USER appuser
 
 # Health check for comprehensive functionality
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD python -c "from flext_quality import FlextQuality; FlextQuality.get_instance(); print('✅ FLEXT Quality functional')" || exit 1
+    CMD python -c "from flext_quality import FlextQuality; FlextQuality.get_instance(); u.Cli.print('✅ FLEXT Quality functional')" || exit 1
 
 # Expose port for web interface
 EXPOSE 8000
 
 # Default command - can be overridden for different use cases
-CMD ["python", "-c", "print('🚀 FLEXT Quality container ready!'); print('Available commands:'); print('  - flext-quality status'); print('  - flext-quality check .'); print('  - flext-quality validate .'); print('  - python -m pytest tests/unit -q')"]
+CMD ["python", "-c", "u.Cli.print('🚀 FLEXT Quality container ready!'); u.Cli.print('Available commands:'); u.Cli.print('  - flext-quality status'); u.Cli.print('  - flext-quality check .'); u.Cli.print('  - flext-quality validate .'); u.Cli.print('  - python -m pytest tests/unit -q')"]
