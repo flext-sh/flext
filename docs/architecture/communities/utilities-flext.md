@@ -11,7 +11,7 @@ Community of 3956 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | parse_semver | Function | libs/versioning.py | 19-29 |
 | bump_version | Function | libs/versioning.py | 32-42 |
 | current_workspace_version | Function | libs/versioning.py | 59-73 |

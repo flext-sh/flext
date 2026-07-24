@@ -1,6 +1,8 @@
 # Development Standards
 
-Quick-reference for daily development in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For automated enforcement details, see `.agents/skills/coding-standards/SKILL.md` and child skills.
+Quick-reference for daily development in the FLEXT monorepo. For the root
+engineering law, see `AGENTS.md`. For automated enforcement details, see
+`.agents/skills/coding-standards/SKILL.md` and child skills.
 
 ## Required file header
 
@@ -31,7 +33,8 @@ Use the facade aliases exposed by `flext_core` and project facades:
 | `u` | utilities |
 | `x` | mixins / execution |
 
-**Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`, `FlextCliSettings`, `FlextTestsSettings`) have no short alias.
+**Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`,
+`FlextCliSettings`, `FlextTestsSettings`) have no short alias.
 
 Facade owner modules that compose an upstream FLEXT facade by MRO use the
 upstream short alias as the base class and then publish the local alias at the
@@ -92,7 +95,8 @@ def load(user_id: int) -> r[m.User]:
 - No wildcard imports.
 - No relative imports.
 - No legacy typing imports (`typing.Dict`, `typing.List`, etc.).
-- No direct imports of abstracted frameworks (pydantic, structlog, typer, returns) in consumer projects; use the project facade.
+- No direct imports of abstracted frameworks (pydantic, structlog, typer, returns)
+  in consumer projects; use the project facade.
 
 Order:
 

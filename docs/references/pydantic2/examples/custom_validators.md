@@ -9,9 +9,13 @@ the flexibility and power of Pydantic's validation system.
 In this example, we'll construct a custom validator, attached to an [`Annotated`][typing.Annotated] type,
 that ensures a [`datetime`][datetime.datetime] t.JsonValue adheres to a given timezone constraint.
 
-The custom validator supports string specification of the timezone, and will raise an error if the [`datetime`][datetime.datetime] t.JsonValue does not have the correct timezone.
+The custom validator supports string specification of the timezone, and will raise an error if the
+[`datetime`][datetime.datetime] t.JsonValue does not have the correct timezone.
 
-We use `__get_pydantic_core_schema__` in the validator to customize the schema of the annotated type (in this case, [`datetime`][datetime.datetime]), which allows us to add custom validation logic. Notably, we use a `wrap` validator function so that we can perform operations both before and after the default `pydantic` validation of a [`datetime`][datetime.datetime].
+We use `__get_pydantic_core_schema__` in the validator to customize the schema of the annotated type (in this case,
+[`datetime`][datetime.datetime]), which allows us to add custom validation logic. Notably, we use a `wrap` validator
+function so that we can perform operations both before and after the default `pydantic` validation of a
+[`datetime`][datetime.datetime].
 
 ```python
 import datetime as dt
@@ -91,7 +95,8 @@ except ValidationError as ve:
 1. The `handler` function is what we call to validate the input with standard `pydantic` validation
 2. We call the `handler` function to validate the input with standard `pydantic` validation in this wrap validator
 
-We can also enforce UTC offset constraints in a similar way. Assuming we have a `lower_bound` and an `upper_bound`, we can create a custom validator to ensure our `datetime` has a UTC offset that is inclusive within the boundary we define:
+We can also enforce UTC offset constraints in a similar way. Assuming we have a `lower_bound` and an `upper_bound`, we
+can create a custom validator to ensure our `datetime` has a UTC offset that is inclusive within the boundary we define:
 
 ```python
 import datetime as dt
@@ -156,9 +161,11 @@ except ValidationError as e:
 
 ## Validating Nested Model u.Fields
 
-Here, we demonstrate two ways to validate a field of a nested model, where the validator utilizes data from the parent model.
+Here, we demonstrate two ways to validate a field of a nested model, where the validator utilizes data from the parent
+model.
 
-In this example, we construct a validator that checks that each user's password is not in a list of forbidden passwords specified by the parent model.
+In this example, we construct a validator that checks that each user's password is not in a list of forbidden passwords
+specified by the parent model.
 
 One way to do this is to place a custom validator on the outer model:
 
@@ -206,10 +213,12 @@ except ValidationError as e:
     """
 ```
 
-Alternatively, a custom validator can be used in the nested model class (`User`), with the forbidden passwords data from the parent model being passed in via validation context.
+Alternatively, a custom validator can be used in the nested model class (`User`), with the forbidden passwords data from
+the parent model being passed in via validation context.
 
 !!! warning
-The ability to mutate the context within a validator adds a lot of power to nested validation, but can also lead to confusing or hard-to-debug code. Use this approach at your own risk!
+The ability to mutate the context within a validator adds a lot of power to nested validation, but can also lead to
+confusing or hard-to-debug code. Use this approach at your own risk!
 
 ```python
 from pydantic import BaseModel, ValidationError, ValidationInfo, u.field_validator
@@ -262,6 +271,9 @@ except ValidationError as e:
     """
 ```
 
-Note that if the context property is not included in `model_validate`, then `info.context` will be `None` and the forbidden passwords list will not get added to the context in the above implementation. As such, `validate_user_passwords` would not carry out the desired password validation.
+Note that if the context property is not included in `model_validate`, then `info.context` will be `None` and the
+forbidden passwords list will not get added to the context in the above implementation. As such,
+`validate_user_passwords` would not carry out the desired password validation.
 
-More details about validation context can be found in the [validators documentation](../concepts/validators.md#validation-context).
+More details about validation context can be found in the [validators
+documentation](../concepts/validators.md#validation-context).

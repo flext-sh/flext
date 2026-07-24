@@ -11,7 +11,7 @@ Community of 34 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | FlextInfraRefactorTypingUnificationRule | Class | flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py | 13-26 |
 | **init** | Function | flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py | 14-15 |
 | apply | Function | flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py | 17-26 |
@@ -57,7 +57,8 @@ No execution flows pass through this community.
 
 - `any` (12 edge(s))
 - `Path` (5 edge(s))
-- `flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py::TestsFlextInfraRefactorInfraRefactorTypingUnifier.test_skips_duplicate_t_import_in_parenthesized_import_block` (3 edge(s))
+- `flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py::TestsFlextInfraRefactorInfraRefactorTypingUnifier.test_skips_duplicate_t_import_in_parenthesized_import_block`
+  (3 edge(s))
 - `apply_to_source` (1 edge(s))
 - `flext-infra/src/flext_infra/transformers/typing_unifier.py::FlextInfraRefactorTypingUnifier` (1 edge(s))
 - `flext-quality/src/flext_quality/docs/dashboard.py::FlextQualityDocumentationDashboard.index` (1 edge(s))
@@ -67,5 +68,6 @@ No execution flows pass through this community.
 - `any` (12 edge(s))
 - `Path` (5 edge(s))
 - `flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py` (2 edge(s))
-- `flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py::TestsFlextInfraRefactorInfraRefactorTypingUnifier.test_skips_duplicate_t_import_in_parenthesized_import_block` (2 edge(s))
+- `flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py::TestsFlextInfraRefactorInfraRefactorTypingUnifier.test_skips_duplicate_t_import_in_parenthesized_import_block`
+  (2 edge(s))
 - `index` (1 edge(s))

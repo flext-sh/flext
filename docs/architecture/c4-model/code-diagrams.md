@@ -23,7 +23,8 @@
 
 ## Overview
 
-This document provides detailed code-level diagrams showing the implementation structure of key components in the FLEXT platform,
+This document provides detailed code-level diagrams showing the implementation structure of key components in the FLEXT
+platform,
 including class diagrams, entity relationship diagrams, and sequence diagrams.
 
 ## 1. r[T] Class Diagram
@@ -122,16 +123,16 @@ classDiagram
         +datetime created_at
         +datetime updated_at
         +bool is_deleted
-        +__eq__(other) bool
-        +__hash__() int
+        +**eq**(other) bool
+        +**hash**() int
         +to_dict() Dict
         +from_dict(data) Entity
     }
 
     class Value {
         <<Abstract Base Class>>
-        +__eq__(other) bool
-        +__hash__() int
+        +**eq**(other) bool
+        +**hash**() int
         +to_dict() Dict
         +from_dict(data) Value
     }
@@ -166,7 +167,7 @@ classDiagram
     class Email {
         +str address
         +validate() bool
-        +__str__() str
+        +**str**() str
     }
 
     class Role {
@@ -181,7 +182,7 @@ classDiagram
         +str name
         +str resource
         +str action
-        +__str__() str
+        +**str**() str
     }
 
     FlextModels --> Entity

@@ -1,6 +1,8 @@
 # FLEXT CLI
 
-FLEXT CLI is the command-line foundation of the FLEXT platform. It wraps Click, Rich, and Tabulate behind the FLEXT facade/alias discipline so every downstream project shares the same CLI contracts, file helpers, prompt/format utilities, and `r[T]` error handling. Package description: "FLEXT CLI — Developer Command Line Interface".
+FLEXT CLI is the command-line foundation of the FLEXT platform. It wraps Click, Rich, and Tabulate behind the FLEXT
+facade/alias discipline so every downstream project shares the same CLI contracts, file helpers, prompt/format
+utilities, and `r[T]` error handling. Package description: "FLEXT CLI — Developer Command Line Interface".
 
 ## Status & health
 
@@ -37,16 +39,24 @@ unverified convenience method.
 
 `src/flext_cli/` follows the FLEXT tiered layout:
 
-- **Foundation**: `constants.py`, `typings.py`, `protocols.py` (+ `_constants/`, `_typings/`, `_protocols/`) — CLI-specific constants, type aliases, and protocols.
+- **Foundation**: `constants.py`, `typings.py`, `protocols.py` (+ `_constants/`, `_typings/`, `_protocols/`) — CLI-
+  specific constants, type aliases, and protocols.
 - **Domain**: `models.py` (`_models/`) — Pydantic v2 models for CLI payloads.
-- **Services**: `services/` — `cli.py` (command definitions), `cmd.py` (command execution), `cli_params.py` (shared parameters), `file_tools.py` (JSON/YAML/CSV read/write, atomic writes), `formatters.py` (Rich-safe printing, panels, rules), `output.py`, `pipeline.py`, `prompts.py`, `rules.py`, `runtime.py`, `tables.py`.
-- **Entry point**: `api.py` defines `FlextCli` as an MRO composition of `FlextCliAuth`, `FlextCliCli`, `FlextCliCmd`, `FlextCliCommonParams`, `FlextCliFileTools`, `FlextCliFormatters`, `FlextCliOutput`, `FlextCliPipeline`, `FlextCliPrompts`, `FlextCliRules`, `FlextCliRuntime`, and `FlextCliTables`; `__init__.py` exports it plus the standard aliases (`c`, `m`, `t`, `p`, `u`, `r`, `s`, `e`, `x`, `d`, `h`) and `config`/`settings`.
+- **Services**: `services/` — `cli.py` (command definitions), `cmd.py` (command execution), `cli_params.py` (shared
+  parameters), `file_tools.py` (JSON/YAML/CSV read/write, atomic writes), `formatters.py` (Rich-safe printing, panels,
+  rules), `output.py`, `pipeline.py`, `prompts.py`, `rules.py`, `runtime.py`, `tables.py`.
+- **Entry point**: `api.py` defines `FlextCli` as an MRO composition of `FlextCliAuth`, `FlextCliCli`, `FlextCliCmd`,
+  `FlextCliCommonParams`, `FlextCliFileTools`, `FlextCliFormatters`, `FlextCliOutput`, `FlextCliPipeline`,
+  `FlextCliPrompts`, `FlextCliRules`, `FlextCliRuntime`, and `FlextCliTables`; `__init__.py` exports it plus the
+  standard aliases (`c`, `m`, `t`, `p`, `u`, `r`, `s`, `e`, `x`, `d`, `h`) and `config`/`settings`.
 
 ### Key architectural patterns
 
 - **MRO facade**: one `FlextCli` class composed from service mixins — no standalone helpers, no proxy objects.
-- **Framework containment**: Click/Rich/Tabulate are imported only inside the designated service modules; everything downstream consumes `cli.*`.
-- **Railway discipline**: file tools and command services return `r[T]`, so CLI flows chain `.map`/`.flat_map` instead of try/except.
+- **Framework containment**: Click/Rich/Tabulate are imported only inside the designated service modules; everything
+  downstream consumes `cli.*`.
+- **Railway discipline**: file tools and command services return `r[T]`, so CLI flows chain `.map`/`.flat_map` instead
+  of try/except.
 - **Config/settings SSOT**: runtime values come only from the validated `config`/`settings` singletons.
 
 ## Testing & quality
@@ -66,4 +76,5 @@ unverified convenience method.
 ## Support & issues
 
 - GitHub issues: <https://github.com/flext-sh/flext-cli/issues>
-- Follow the workspace `AGENTS.md` before proposing doc or code changes so this page stays aligned with the engineering portal.
+- Follow the workspace `AGENTS.md` before proposing doc or code changes so this page stays aligned with the engineering
+  portal.

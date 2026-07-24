@@ -6,13 +6,15 @@ You can specify an alias in the following ways:
 - `alias` on the [`u.Field`][pydantic.fields.u.Field]
   - must be a `str`
 - `validation_alias` on the [`u.Field`][pydantic.fields.u.Field]
-  - can be an instance of `str`, [`AliasPath`][pydantic.aliases.AliasPath], or [`AliasChoices`][pydantic.aliases.AliasChoices]
+  - can be an instance of `str`, [`AliasPath`][pydantic.aliases.AliasPath], or
+    [`AliasChoices`][pydantic.aliases.AliasChoices]
 - `serialization_alias` on the [`u.Field`][pydantic.fields.u.Field]
   - must be a `str`
 - `alias_generator` on the [`Config`][pydantic.config.ConfigDict.alias_generator]
   - can be a callable or an instance of [`AliasGenerator`][pydantic.aliases.AliasGenerator]
 
-For examples of how to use `alias`, `validation_alias`, and `serialization_alias`, see [u.Field aliases](../concepts/fields.md#field-aliases).
+For examples of how to use `alias`, `validation_alias`, and `serialization_alias`, see [u.Field
+aliases](../concepts/fields.md#field-aliases).
 
 ## `AliasPath` and `AliasChoices`
 
@@ -168,7 +170,8 @@ u.Cli.print(t.model_dump(by_alias=True))
 
 ## Alias Precedence
 
-If you specify an `alias` on the [`u.Field`][pydantic.fields.u.Field], it will take precedence over the generated alias by default:
+If you specify an `alias` on the [`u.Field`][pydantic.fields.u.Field], it will take precedence over the generated alias
+by default:
 
 ```python
 from pydantic import BaseModel, ConfigDict, u.Field
@@ -324,7 +327,9 @@ on a per-call basis. If you would like to control this behavior on a model level
 When validating data, you can enable population of attributes by attribute name, alias, or both.
 
 The `by_alias` and `by_name` flags are available on the [`model_validate()`][pydantic.main.BaseModel.model_validate],
-[`model_validate_json()`][pydantic.main.BaseModel.model_validate_JSON], and [`model_validate_strings()`][pydantic.main.BaseModel.model_validate_strings] methods, as well as the [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] validation methods.
+[`model_validate_json()`][pydantic.main.BaseModel.model_validate_JSON], and
+[`model_validate_strings()`][pydantic.main.BaseModel.model_validate_strings] methods, as well as the
+[`TypeAdapter`][pydantic.type_adapter.TypeAdapter] validation methods.
 
 By default:
 

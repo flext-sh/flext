@@ -46,7 +46,7 @@ The FLEXT type system provides a unified, composable type architecture across th
 
 ### Project Dependency Order
 
-```
+```text
 flext-core (Foundation - No dependencies)
     ↓
 flext-cli (depends on flext-core)
@@ -147,7 +147,7 @@ type ProgressCallback = (
 class ProgressCallback(Protocol):
     """Flexible callback protocol for progress tracking."""
 
-    def __call__(self, event: m.Cli.ProgressEventModel) -> None:
+    def **call**(self, event: m.Cli.ProgressEventModel) -> None:
         """Accept any arguments for maximum flexibility."""
         ...
 ```
@@ -226,7 +226,7 @@ class FlextTypes:
 
 **flext-core**:
 
-```
+```text
 t.Tests                      # Foundation (Result, Settings, Handler)
 t.Utilities                 # Reusable (Json, Collection, Validation)
 t.Exceptions                # Error types
@@ -236,7 +236,7 @@ t.Decorators                # Type decorators
 
 **flext-cli**:
 
-```
+```text
 t.Cli                       # CLI-specific
   .Data                     # Data structures (Tables, Progress)
   .Output                   # Output formats (Table, JSON, YAML)
@@ -245,7 +245,7 @@ t.Cli                       # CLI-specific
 
 **flext-ldif**:
 
-```
+```text
 t.Ldif                      # LDIF domain
   .Entry                    # Entry types
   .Attribute                # Attribute types
@@ -255,7 +255,7 @@ t.Ldif                      # LDIF domain
 
 **flext-ldap**:
 
-```
+```text
 t.Ldap                      # LDAP operations
   .Client                   # Client types
   .Connection               # Connection types
@@ -297,7 +297,7 @@ m.Statistics  # Ambiguous - which domain?
 
 **flext-core**:
 
-```
+```text
 m.Settings                    # Configuration models
 m.ProcessingSettings          # Processing-specific settings
 m.RuntimeScopeOptions       # Runtime options
@@ -306,7 +306,7 @@ m.Options                   # Generic options
 
 **flext-cli**:
 
-```
+```text
 m.Cli                       # CLI domain
   .CliCommand               # Command model
   .CliSession               # Session model
@@ -321,7 +321,7 @@ m.Cli                       # CLI domain
 
 **flext-ldif**:
 
-```
+```text
 m.Ldif                      # LDIF domain
   .Entry                    # LDIF entry
   .Attribute                # LDIF attribute
@@ -330,7 +330,7 @@ m.Ldif                      # LDIF domain
 
 **flext-ldap**:
 
-```
+```text
 m.Ldap                      # LDAP domain
   .Connection               # Connection model
   .Operation                # Operation model
@@ -552,7 +552,7 @@ def track_progress(callback: ProgressCallback) -> None:
 ```python
 @runtime_checkable
 class ProgressCallback(Protocol):
-    def __call__(self, event: m.Cli.ProgressEventModel) -> None: ...
+    def **call**(self, event: m.Cli.ProgressEventModel) -> None: ...
 
 
 def track_progress(callback: ProgressCallback) -> None:
@@ -740,7 +740,7 @@ t.Ldif.Entry.Transformation  # NO: 4 levels!
 
 ### Validation Results
 
-```
+```text
 flext-core:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-cli:       Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-ldif:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
@@ -761,7 +761,8 @@ The FLEXT type system provides a **unified, composable, and extensible** archite
 6. **Complete type safety** - No `cast()`, tipagem frouxa, ou blocos `TYPE_CHECKING`
 7. **Comprehensive validation** - All projects pass type checking and linting
 
-This architecture enables maintainable, type-safe code across the entire FLEXT ecosystem while supporting future extensions and domain-specific requirements.
+This architecture enables maintainable, type-safe code across the entire FLEXT ecosystem while supporting future
+extensions and domain-specific requirements.
 
 ---
 

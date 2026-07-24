@@ -29,7 +29,8 @@ providing a comprehensive view of the system architecture at different levels of
 
 ### 2. [Container Diagram](./container-diagram.md)
 
-**Level 2** - Shows the high-level shape of the FLEXT architecture and how responsibilities are distributed across containers.
+**Level 2** - Shows the high-level shape of the FLEXT architecture and how responsibilities are distributed across
+containers.
 
 ### 3. [Component Diagrams](./component-diagrams.md)
 

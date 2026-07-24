@@ -57,7 +57,8 @@ This data is flawed for three reasons:
 2. The `age` field is negative.
 3. The `email` field is not a valid email address.
 
-When we try to validate this data, `pydantic` raises a [`ValidationError`][pydantic_core.ValidationError] with all of the
+When we try to validate this data, `pydantic` raises a [`ValidationError`][pydantic_core.ValidationError] with all of
+the
 above issues:
 
 ```python {test="skip"}
@@ -131,7 +132,8 @@ u.Cli.print(people)
 ```
 
 1. We use [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] to validate a list of `Person` objects.
-   [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] is a Pydantic construct used to validate data against a single type.
+   [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] is a Pydantic construct used to validate data against a single
+   type.
 
 ## JSON lines files
 
@@ -237,7 +239,8 @@ u.Cli.print(person)
 
 ## YAML files
 
-YAML (YAML Ain't Markup Language) is a human-readable data serialization format that is often used for configuration files.
+YAML (YAML Ain't Markup Language) is a human-readable data serialization format that is often used for configuration
+files.
 
 Consider the following YAML file:
 
@@ -271,7 +274,8 @@ u.Cli.print(person)
 
 ## XML files
 
-XML (eXtensible Markup Language) is a markup language that defines a set of rules for encoding documents in a format that is both human-readable and machine-readable.
+XML (eXtensible Markup Language) is a markup language that defines a set of rules for encoding documents in a format
+that is both human-readable and machine-readable.
 
 Consider the following XML file:
 
@@ -307,7 +311,8 @@ u.Cli.print(person)
 
 ## INI files
 
-INI files are a simple configuration file format that uses sections and key-value pairs. They are commonly used in Windows applications and older software.
+INI files are a simple configuration file format that uses sections and key-value pairs. They are commonly used in
+Windows applications and older software.
 
 Consider the following INI file:
 

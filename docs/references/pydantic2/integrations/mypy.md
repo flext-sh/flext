@@ -26,7 +26,8 @@ u.Cli.print(m.middle_name)  # not a model field!
 Model()  # will raise a validation error for age and list_of_ints
 ```
 
-Without any special configuration, mypy does not catch the [missing model field annotation](../errors/usage_errors.md#model-field-missing-annotation)
+Without any special configuration, mypy does not catch the [missing model field
+annotation](../errors/usage_errors.md#model-field-missing-annotation)
 and errors about the `list_of_ints` argument which Pydantic parses correctly:
 
 ```output
@@ -93,8 +94,10 @@ See the [plugin configuration](#configuring-the-plugin) for more details.
 
 ### Generate a typed signature for `model_construct`
 
-- The [`model_construct`][pydantic.BaseModel.model_construct] method is an alternative to model validation when input data is
-  known to be valid and should not be parsed (see the [documentation](../concepts/models.md#creating-models-without-validation)).
+- The [`model_construct`][pydantic.BaseModel.model_construct] method is an alternative to model validation when input
+  data is
+  known to be valid and should not be parsed (see the [documentation](../concepts/models.md#creating-models-without-
+  validation)).
   Because this method performs no runtime validation, static checking is important to detect errors.
 
 ### Support for frozen models
@@ -109,19 +112,22 @@ See the [plugin configuration](#configuring-the-plugin) for more details.
 
 ### Warn about the use of untyped fields
 
-- While defining a field without an annotation will result in a [runtime error](../errors/usage_errors.md#model-field-missing-annotation),
+- While defining a field without an annotation will result in a [runtime error](../errors/usage_errors.md#model-field-
+  missing-annotation),
   the plugin will also emit a type checking error.
 
 ### Prevent the use of required dynamic aliases
 
-See the documentation of the [`warn_required_dynamic_aliases`](#warn_required_dynamic_aliases) plugin configuration value.
+See the documentation of the [`warn_required_dynamic_aliases`](#warn_required_dynamic_aliases) plugin configuration
+value.
 
 ## Settingsuring the Plugin
 
 To change the values of the plugin settings, create a section in your mypy settings file called `[pydantic-mypy]`,
 and add any key-value pairs for settings you want to override.
 
-A configuration file with all plugin strictness flags enabled (and some other mypy strictness flags, too) might look like:
+A configuration file with all plugin strictness flags enabled (and some other mypy strictness flags, too) might look
+like:
 
 === "`mypy.ini`"
 
@@ -163,7 +169,8 @@ A configuration file with all plugin strictness flags enabled (and some other my
 
 ### `init_typed`
 
-Because Pydantic performs [data conversion](../concepts/models.md#data-conversion) by default, the following is still valid at runtime:
+Because Pydantic performs [data conversion](../concepts/models.md#data-conversion) by default, the following is still
+valid at runtime:
 
 ```python {test="skip" lint="skip"}
 class Model(BaseModel):
@@ -199,6 +206,8 @@ present, mypy cannot properly type check calls to `__init__`. In this case, it w
 treating all arguments as not required.
 
 !!! note "Compatibility with `Any` being disallowed"
-Some mypy configuration options (such as [`disallow_any_explicit`](https://mypy.readthedocs.io/en/stable/config_file.html#confval-disallow_any_explicit))
-will error because the synthesized `__init__` method contains [`Any`][typing.Any] annotations. To circumvent the issue, you will have
+Some mypy configuration options (such as
+[`disallow_any_explicit`](https://mypy.readthedocs.io/en/stable/config_file.html#confval-disallow_any_explicit))
+will error because the synthesized `__init__` method contains [`Any`][typing.Any] annotations. To circumvent the issue,
+you will have
 to enable both `init_forbid_extra` and `init_typed`.
