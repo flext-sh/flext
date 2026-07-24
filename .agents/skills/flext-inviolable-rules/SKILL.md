@@ -39,6 +39,9 @@ public facades. Never invoke bare `pytest`, `ruff`, `pyrefly`, `pyright`,
 - Re-run all required gates after any corrective edit.
 - Manually use the changed public surface. Record the observed behavior,
   command, cwd, exit code, and decisive output in the Bead.
+- A test pinned to a config-owned value that breaks on a legitimate
+  config/settings change is a TEST DEFECT, never a reason to freeze config:
+  fix the test to read the SSOT or the generator round-trip (cosmos-main-hr9e).
 
 ## Handoff and landing
 
