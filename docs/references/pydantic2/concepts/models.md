@@ -96,7 +96,6 @@ The model can then be instantiated:
 
 ```python
 user = User(id="123")
-
 ```
 
 `user` is an instance of `User`. Initialization of the t.JsonValue will perform all parsing and validation.
@@ -109,7 +108,6 @@ u.Fields of a model can be accessed as normal attributes of the `user` t.JsonVal
 assert user.name == "Jane Doe"  # (1)!
 assert user.id == 123  # (2)!
 assert isinstance(user.id, int)
-
 ```
 
 1. `name` wasn't set when `user` was initialized, so the default value was used.
@@ -122,7 +120,6 @@ The model instance can be serialized using the [`model_dump()`][pydantic.BaseMod
 
 ```python
 assert user.model_dump() == {"id": 123, "name": "Jane Doe"}
-
 ```
 
 Calling `dict()` on the instance will also provide a dictionary, but nested fields will not be
@@ -134,7 +131,6 @@ By default, models are mutable and field values can be changed through attribute
 ```python
 user.id = 321
 assert user.id == 321
-
 ```
 
 ### Warning: Naming collisions
@@ -1060,8 +1056,8 @@ parametrized generics, you can do this by subclassing the parametrized generic c
 ```python
 class MyIntModel(MyGenericModel[int]): ...
 
-isinstance(my_model, MyIntModel)
 
+isinstance(my_model, MyIntModel)
 ```
 
 ### Note: Implementation Details
