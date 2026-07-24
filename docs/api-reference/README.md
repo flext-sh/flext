@@ -11,7 +11,8 @@ Generated API reference comes from:
 3. exported public symbols
 4. module, class, and function docstrings
 
-If the generated API output is wrong, fix the code, the exports, or the docstrings. Do not write duplicate API prose at the root.
+If the generated API output is wrong, fix the code, the exports, or the docstrings. Do not write duplicate API prose at
+the root.
 
 ## Root Outputs
 

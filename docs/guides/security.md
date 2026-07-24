@@ -16,4 +16,5 @@ Primary references:
   - inventariar alertas por gravidade e pacote,
   - agrupar remediações em ondas (critical/high first),
   - ampliar Dependabot para rastrear os módulos Python com `pyproject.toml` no monorepo.
-- A execução de segurança deve registrar evidência por ação (alerta, commit de correção e status de fechamento) no `bd`, sem "close" sem trilha.
+- A execução de segurança deve registrar evidência por ação (alerta, commit de correção e status de fechamento) no `bd`,
+  sem "close" sem trilha.

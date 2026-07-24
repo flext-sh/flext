@@ -11,7 +11,7 @@ from flext_cli import c, m, p, r, s, t, u
 `flext_cli` reexports `d`, `e`, `h`, `r`, `x` from `flext_core`.
 
 | Alias | Purpose |
-|-------|---------|
+| ------- | --------- |
 | `c` | constants |
 | `m` | models |
 | `p` | protocols |

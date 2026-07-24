@@ -15,7 +15,7 @@ code-review-graph update && code-review-graph wiki
 ```
 
 | Community | Size | Link |
-|---|---|---|
+| --- | --- | --- |
 | utilities-flext | 3956 | [utilities-flext.md](utilities-flext.md) |
 | protocols-plugin | 1715 | [protocols-plugin.md](protocols-plugin.md) |
 | check-flext | 3 | [check-flext.md](check-flext.md) |
