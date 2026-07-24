@@ -20,7 +20,7 @@ class User:
 
 
 user = User(id="42", signup_ts="2032-06-21T12:00")
-print(user)
+u.Cli.print(user)
 """
 User(id=42, name='John Doe', signup_ts=datetime.datetime(2032, 6, 21, 12, 0))
 """
@@ -74,7 +74,7 @@ class User:
 
 
 user = User(id="42", height="250")
-print(user)
+u.Cli.print(user)
 # > User(id=42, name='John Doe', friends=[0], age=None, height=250)
 ```
 
@@ -149,13 +149,13 @@ class X(Y):
 
 
 foo = X(x=b"1", y="2", z="3")
-print(foo)
+u.Cli.print(foo)
 # > X(z=3, y=2, x=1)
 
 try:
     X(z="pika")
 except pydantic.ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for X
     z
@@ -177,7 +177,7 @@ class A:
 
 
 PydanticA = pydantic.dataclasses.dataclass(A)
-print(PydanticA(a="1"))
+u.Cli.print(PydanticA(a="1"))
 # > A(a=1)
 ```
 
@@ -208,14 +208,14 @@ class Foo(BaseModel):
 
 # nothing is validated as expected:
 user = User(name=["not", "a", "string"])
-print(user)
+u.Cli.print(user)
 # > User(name=['not', 'a', 'string'])
 
 
 try:
     Foo(user=user)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for Foo
     user.name
@@ -226,7 +226,7 @@ foo = Foo(user=User(name="pika"))
 try:
     foo.user.name = "bulbi"
 except dataclasses.FrozenInstanceError as e:
-    print(e)
+    u.Cli.print(e)
     # > cannot assign to field 'name'
 ```
 
@@ -271,7 +271,7 @@ try:
     Model(dc=my_dc, other="other")
 
 except PydanticSchemaGenerationError as e:
-    print(e.message)
+    u.Cli.print(e.message)
     """
     Unable to generate pydantic-core schema for <class '__main__.ArbitraryType'>. Set `arbitrary_types_allowed=True` in the model_config to ignore this error or implement `__get_pydantic_core_schema__` on your type to fully support it.
 
@@ -288,7 +288,7 @@ class Model(BaseModel):
 
 
 m = Model(dc=my_dc, other="other")
-print(repr(m))
+u.Cli.print(repr(m))
 # > Model(dc=DC(a=ArbitraryType(value=3), b='qwe'), other='other')
 ```
 
@@ -311,14 +311,14 @@ class StdLibDataclass:
 
 PydanticDataclass = pydantic.dataclasses.dataclass(StdLibDataclass)
 
-print(dataclasses.is_dataclass(StdLibDataclass))
+u.Cli.print(dataclasses.is_dataclass(StdLibDataclass))
 # > True
-print(pydantic.dataclasses.is_pydantic_dataclass(StdLibDataclass))
+u.Cli.print(pydantic.dataclasses.is_pydantic_dataclass(StdLibDataclass))
 # > False
 
-print(dataclasses.is_dataclass(PydanticDataclass))
+u.Cli.print(dataclasses.is_dataclass(PydanticDataclass))
 # > True
-print(pydantic.dataclasses.is_pydantic_dataclass(PydanticDataclass))
+u.Cli.print(pydantic.dataclasses.is_pydantic_dataclass(PydanticDataclass))
 # > True
 ```
 
@@ -343,9 +343,9 @@ class DemoDataclass:
         return v
 
 
-print(DemoDataclass(product_id="01234"))
+u.Cli.print(DemoDataclass(product_id="01234"))
 # > DemoDataclass(product_id='01234')
-print(DemoDataclass(product_id=2468))
+u.Cli.print(DemoDataclass(product_id=2468))
 # > DemoDataclass(product_id='02468')
 ```
 
@@ -378,7 +378,7 @@ be called between the calls to _before_ and _after_ model validators.
         @u.model_validator(mode="before")
         @classmethod
         def before(cls, values: ArgsKwargs) -> ArgsKwargs:
-            print(f"First: {values}")  # (1)!
+            u.Cli.print(f"First: {values}")  # (1)!
             """
             First: ArgsKwargs((), {'birth': {'year': 1995, 'month': 3, 'day': 2}})
             """
@@ -386,12 +386,12 @@ be called between the calls to _before_ and _after_ model validators.
 
         @u.model_validator(mode="after")
         def after(self) -> Self:
-            print(f"Third: {self}")
+            u.Cli.print(f"Third: {self}")
             # > Third: User(birth=Birth(year=1995, month=3, day=2))
             return self
 
         def __post_init__(self):
-            print(f"Second: {self.birth}")
+            u.Cli.print(f"Second: {self.birth}")
             # > Second: Birth(year=1995, month=3, day=2)
 
 

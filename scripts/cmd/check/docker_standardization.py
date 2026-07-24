@@ -109,7 +109,7 @@ class _DockerStandardizationChecker:
 
     def check_tk_importable(self) -> None:
         result = u.Cli.run_checked(
-            [sys.executable, "-c", "from flext_tests import tk; print('OK')"],
+            [sys.executable, "-c", "from flext_tests import tk; u.Cli.print('OK')"],
             cwd=self.workspace_root,
         )
         if result.success:
@@ -126,7 +126,7 @@ class _DockerStandardizationChecker:
             "postgres_container",
             "redis_container",
         )
-        code = "from flext_tests import " + ", ".join(names) + "; print('OK')"
+        code = "from flext_tests import " + ", ".join(names) + "; u.Cli.print('OK')"
         result = u.Cli.run_checked(
             [sys.executable, "-c", code], cwd=self.workspace_root
         )

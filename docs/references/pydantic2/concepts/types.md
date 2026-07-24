@@ -35,13 +35,13 @@ PositiveInt = Annotated[int, u.Field(gt=0)]  # (1)!
 
 ta = TypeAdapter(PositiveInt)
 
-print(ta.validate_python(1))
+u.Cli.print(ta.validate_python(1))
 # > 1
 
 try:
     ta.validate_python(-1)
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for constrained-int
       Input should be greater than 0 [type=greater_than, input_value=-1, input_type=int]
@@ -113,7 +113,7 @@ assert v == [1, 2, 3, 4]
 try:
     ta.validate_python([1, 2, 3, 4, 5])
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for t.SequenceOf[int]
       List should have at most 4 items after validation, not 5 [type=too_long, input_value=[1, 2, 3, 4, 5], input_type=list]
@@ -131,7 +131,7 @@ assert type(v[0]) is float
 try:
     ta.validate_python([-1.0])
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for t.SequenceOf[constrained-float]
     0
@@ -171,7 +171,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
         y: PositiveIntList
 
 
-    print(Model.model_json_schema())  # (1)!
+    u.Cli.print(Model.model_json_schema())  # (1)!
     """
     {
         '$defs': {
@@ -211,7 +211,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
         y: PositiveIntList
 
 
-    print(Model.model_json_schema())  # (1)!
+    u.Cli.print(Model.model_json_schema())  # (1)!
     """
     {
         '$defs': {
@@ -334,7 +334,7 @@ For instance, here is an example definition of a JSON type:
     )
 
     ta = TypeAdapter(Json)
-    print(ta.json_schema())
+    u.Cli.print(ta.json_schema())
     """
     {
         '$defs': {
@@ -369,7 +369,7 @@ For instance, here is an example definition of a JSON type:
     type Json = t.MappingKV[str, Json] | t.SequenceOf[Json] | t.Primitives | None  # (1)!
 
     ta = TypeAdapter(Json)
-    print(ta.json_schema())
+    u.Cli.print(ta.json_schema())
     """
     {
         '$defs': {
@@ -590,7 +590,7 @@ assert m.model_dump() == {"third_party_type": 10}
 try:
     Model(third_party_type="a")
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for Model
     third_party_type.is-instance[ThirdPartyType]
@@ -759,7 +759,7 @@ model = Model(
     car_owner=Owner(name="John", item=Car(color="black")),
     home_owner=Owner(name="James", item=House(rooms=3)),
 )
-print(model)
+u.Cli.print(model)
 """
 car_owner=Owner(name='John', item=Car(color='black')) home_owner=Owner(name='James', item=House(rooms=3))
 """
@@ -771,7 +771,7 @@ try:
         home_owner=Owner(name="James", item=Car(color="black")),
     )
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for Model
     wine
@@ -784,7 +784,7 @@ except ValidationError as e:
 model = Model.model_validate_json(
     '{"car_owner":{"name":"John","item":{"color":"black"}},"home_owner":{"name":"James","item":{"rooms":3}}}'
 )
-print(model)
+u.Cli.print(model)
 """
 car_owner=Owner(name='John', item=Car(color='black')) home_owner=Owner(name='James', item=House(rooms=3))
 """
@@ -794,7 +794,7 @@ try:
         '{"car_owner":{"name":"John","item":{"rooms":3}},"home_owner":{"name":"James","item":{"color":"black"}}}'
     )
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for Model
     car_owner.item.color
@@ -857,9 +857,9 @@ class M(BaseModel):
 
 
 m = M()
-print(m)
+u.Cli.print(m)
 # > s1=<__main__.MySequence t.JsonValue at 0x0123456789ab>
-print(m.s1.v)
+u.Cli.print(m.s1.v)
 # > [3]
 
 
@@ -871,7 +871,7 @@ M(s1=[1])
 try:
     M(s1=["a"])
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     2 validation errors for M
     s1.is-instance[MySequence]
@@ -925,7 +925,7 @@ class MyModel(BaseModel):
 
 
 m = MyModel(my_field=1)
-print(m.my_field)
+u.Cli.print(m.my_field)
 # > CustomType<1 'my_field'>
 ```
 
@@ -946,6 +946,6 @@ class MyModel(BaseModel):
 
 
 m = MyModel(my_field=1)
-print(m.my_field)
+u.Cli.print(m.my_field)
 # > <1 'my_field'>
 ```

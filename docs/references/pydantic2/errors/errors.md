@@ -71,7 +71,7 @@ data = {
 try:
     Model(**data)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     5 validation errors for Model
     is_required
@@ -89,7 +89,7 @@ except ValidationError as e:
 try:
     Model(**data)
 except ValidationError as e:
-    print(e.errors())
+    u.Cli.print(e.errors())
     """
     [
         {
@@ -182,7 +182,7 @@ try:
     Model(a="wrong", b="ftp://example.com")
 except ValidationError as e:
     errors = convert_errors(e, CUSTOM_MESSAGES)
-    print(errors)
+    u.Cli.print(errors)
     """
     [
         {
@@ -251,7 +251,7 @@ data = {"items": [{"key": "foo", "value": "bar"}, {"key": "baz"}]}
 try:
     TestModel(data)
 except ValidationError as e:
-    print(e.errors())  # (1)!
+    u.Cli.print(e.errors())  # (1)!
     """
     [
         {
@@ -264,7 +264,7 @@ except ValidationError as e:
     ]
     """
     pretty_errors = convert_errors(e)
-    print(pretty_errors)  # (2)!
+    u.Cli.print(pretty_errors)  # (2)!
     """
     [
         {

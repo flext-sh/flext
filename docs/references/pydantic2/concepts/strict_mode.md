@@ -30,13 +30,13 @@ class MyModel(BaseModel):
     x: int
 
 
-print(MyModel({"x": "123"}))  # lax mode
+u.Cli.print(MyModel({"x": "123"}))  # lax mode
 # > x=123
 
 try:
     MyModel(trict=True)  # strict mode
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for MyModel
     x
@@ -66,14 +66,14 @@ from datetime import date
 
 from pydantic import TypeAdapter, ValidationError
 
-print(TypeAdapter(date).validate_python("2000-01-01"))  # OK: lax
+u.Cli.print(TypeAdapter(date).validate_python("2000-01-01"))  # OK: lax
 # > 2000-01-01
 
 try:
     # Not OK: strict:
     TypeAdapter(date).validate_python("2000-01-01", strict=True)
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for date
       Input should be a valid date [type=date_type, input_value='2000-01-01', input_type=str]
@@ -106,14 +106,14 @@ class User(BaseModel):
 
 
 user = User(name="John", age=42)
-print(user)
+u.Cli.print(user)
 # > name='John' age=42
 
 
 try:
     another_user = User(name="John", age="42")
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for User
     age
@@ -176,6 +176,6 @@ class User(BaseModel):
     age: int = u.Field(strict=False)
 
 
-print(User(name="John", age="18"))
+u.Cli.print(User(name="John", age="18"))
 # > name='John' age=18
 ```

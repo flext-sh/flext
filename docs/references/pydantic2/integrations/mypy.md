@@ -22,7 +22,7 @@ class Model(BaseModel):
 
 
 m = Model(age=42, list_of_ints=[1, "2", b"3"])
-print(m.middle_name)  # not a model field!
+u.Cli.print(m.middle_name)  # not a model field!
 Model()  # will raise a validation error for age and list_of_ints
 ```
 

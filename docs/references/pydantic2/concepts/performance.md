@@ -171,7 +171,7 @@ With a simple benchmark, `TypedDict` is about ~2.5x faster than nested models:
     ta = TypeAdapter(TypedModel)
     result1 = timeit(lambda: ta.validate_python({"a": {"a": "a", "b": 2}}), number=10000)
     result2 = timeit(lambda: Model({"b": {"a": "a", "b": 2}}), number=10000)
-    print(result2 / result1)
+    u.Cli.print(result2 / result1)
     ```
 
 ## Avoid wrap validators if you really care about performance
@@ -195,7 +195,7 @@ ta = TypeAdapter(Annotated[Sequence[bool], FailFast()])
 try:
     ta.validate_python([True, "invalid", False, "also invalid"])
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for t.SequenceOf[bool]
     1

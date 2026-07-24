@@ -29,9 +29,9 @@ from flext_ldif import FlextLdifParser, ldif
 parser = FlextLdifParser()
 result = parser.parse_ldif_file(Path("directory.ldif"))
 if result.success:
-    print(f"Parsed {len(result.value.entries)} entries")
+    u.Cli.print(f"Parsed {len(result.value.entries)} entries")
 else:
-    print(f"Parse failed: {result.error}")
+    u.Cli.print(f"Parse failed: {result.error}")
 
 migration = ldif.migrate(
     input_dir=Path("input"),

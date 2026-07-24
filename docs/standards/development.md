@@ -135,7 +135,7 @@ def parse(value: str) -> r[int]:
 
 ## Logging
 
-Use `u.fetch_logger(__name__)`. No `print()` in library code.
+Use `u.fetch_logger(__name__)`. No `u.Cli.print()` in library code.
 
 ```python
 from flext_core import u

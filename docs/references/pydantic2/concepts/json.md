@@ -29,13 +29,13 @@ class Event(BaseModel):
 
 
 json_data = '{"when": "1987-01-28", "where": [51, -1]}'
-print(Event.model_validate_json(json_data))  # (1)!
+u.Cli.print(Event.model_validate_json(json_data))  # (1)!
 # > when=datetime.date(1987, 1, 28) where=(51, -1)
 
 try:
     Event({"when": "1987-01-28", "where": [51, -1]})  # (2)!
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for Event
     when
@@ -68,11 +68,11 @@ partial_json_data = '["aa", "bb", "c'  # (1)!
 try:
     result = u.from_json(partial_json_data, allow_partial=False)
 except ValueError as e:
-    print(e)  # (2)!
+    u.Cli.print(e)  # (2)!
     # > EOF while parsing a string at line 1 column 15
 
 result = u.from_json(partial_json_data, allow_partial=True)
-print(result)  # (3)!
+u.Cli.print(result)  # (3)!
 # > ['aa', 'bb']
 ```
 
@@ -89,7 +89,7 @@ partial_dog_json = (
     '{"breed": "lab", "name": "fluffy", "friends": ["buddy", "spot", "rufus"], "age'
 )
 dog_dict = u.from_json(partial_dog_json, allow_partial=True)
-print(dog_dict)
+u.Cli.print(dog_dict)
 # > {'breed': 'lab', 'name': 'fluffy', 'friends': ['buddy', 'spot', 'rufus']}
 ```
 
@@ -119,7 +119,7 @@ partial_dog_json = (
     '{"breed": "lab", "name": "fluffy", "friends": ["buddy", "spot", "rufus"], "age'
 )
 dog = Dog(al_dog_json, allow_partial=True))
-print(repr(dog))
+u.Cli.print(repr(dog))
 # > Dog(breed='lab', name='fluffy', friends=['buddy', 'spot', 'rufus'])
 ```
 
@@ -170,7 +170,7 @@ Check out the following example for a more in-depth look at how to use default v
     m = MyModel(
         pydantic_core.u.from_json('{"foo": "x", "bar": ["world",', allow_partial=True)
     )
-    print(repr(m))
+    u.Cli.print(repr(m))
     # > MyModel(foo='x', bar=None, nested=None)
 
 
@@ -179,7 +179,7 @@ Check out the following example for a more in-depth look at how to use default v
             '{"foo": "x", "bar": ["world", 1], "nested": {"x":', allow_partial=True
         )
     )
-    print(repr(m))
+    u.Cli.print(repr(m))
     # > MyModel(foo='x', bar=('world', 1), nested=None)
     ```
 

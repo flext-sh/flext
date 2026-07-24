@@ -26,7 +26,7 @@ response = httpx.get(url)
 response.raise_for_status()
 
 user = User(response.json())
-print(repr(user))
+u.Cli.print(repr(user))
 # > User(id=1, name='Leanne Graham', email='Sincere@april.biz')
 ```
 
@@ -55,7 +55,7 @@ response.raise_for_status()
 users_list_adapter = TypeAdapter(Sequence[User])
 
 users = users_list_adapter.validate_python(response.json())
-pprint([u.name for u in users])
+pu.Cli.print([u.name for u in users])
 """
 ['Leanne Graham',
  'Ervin Howell',

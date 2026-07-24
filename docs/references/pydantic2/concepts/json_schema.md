@@ -82,7 +82,7 @@ class MainModel(BaseModel):
 
 
 main_model_schema = MainModel.model_json_schema()  # (1)!
-print(json.dumps(main_model_schema, indent=2))  # (2)!
+u.Cli.print(json.dumps(main_model_schema, indent=2))  # (2)!
 """
 {
   "$defs": {
@@ -169,7 +169,7 @@ Here's an example of generating JSON schema from a [`TypeAdapter`][pydantic.type
 from pydantic import TypeAdapter
 
 adapter = TypeAdapter(Sequence[int])
-print(adapter.json_schema())
+u.Cli.print(adapter.json_schema())
 # > {'items': {'type': 'integer'}, 'type': 'array'}
 ```
 
@@ -195,7 +195,7 @@ class Dog(BaseModel):
 
 ta = TypeAdapter(Union[Cat, Dog])
 ta_schema = ta.json_schema()
-print(json.dumps(ta_schema, indent=2))
+u.Cli.print(json.dumps(ta_schema, indent=2))
 """
 {
   "$defs": {
@@ -272,7 +272,7 @@ class Model(BaseModel):
     a: Decimal = Decimal("12.34")
 
 
-print(Model.model_json_schema(mode="validation"))
+u.Cli.print(Model.model_json_schema(mode="validation"))
 """
 {
     'properties': {
@@ -293,7 +293,7 @@ print(Model.model_json_schema(mode="validation"))
 }
 """
 
-print(Model.model_json_schema(mode="serialization"))
+u.Cli.print(Model.model_json_schema(mode="serialization"))
 """
 {
     'properties': {
@@ -361,7 +361,7 @@ class User(BaseModel):
     )
 
 
-print(json.dumps(User.model_json_schema(), indent=2))
+u.Cli.print(json.dumps(User.model_json_schema(), indent=2))
 """
 {
   "properties": {
@@ -421,7 +421,7 @@ try:
         foo: PositiveInt = u.Field(lt=10)
 
 except ValueError as e:
-    print(e)
+    u.Cli.print(e)
 
 
 # if you find yourself needing this, an alternative is to declare
@@ -433,7 +433,7 @@ class ModelB(BaseModel):
     foo: int = u.Field(gt=0, lt=10)
 
 
-print(ModelB.model_json_schema())
+u.Cli.print(ModelB.model_json_schema())
 """
 {
     'properties': {
@@ -466,7 +466,7 @@ class Foo(BaseModel):
     name: Annotated[str, u.Field(max_length=256)] = u.Field("Bar", title="CustomName")
 
 
-print(json.dumps(Foo.model_json_schema(), indent=2))
+u.Cli.print(json.dumps(Foo.model_json_schema(), indent=2))
 """
 {
   "properties": {
@@ -509,7 +509,7 @@ class Person(BaseModel):
     age: int = u.Field(field_title_generator=make_title)
 
 
-print(json.dumps(Person.model_json_schema(), indent=2))
+u.Cli.print(json.dumps(Person.model_json_schema(), indent=2))
 """
 {
   "properties": {
@@ -565,7 +565,7 @@ class Model(BaseModel):
     model_config = ConfigDict(json_schema_extra={"examples": [{"a": "Foo"}]})
 
 
-print(json.dumps(Model.model_json_schema(), indent=2))
+u.Cli.print(json.dumps(Model.model_json_schema(), indent=2))
 """
 {
   "examples": [
@@ -606,7 +606,7 @@ class Model(BaseModel):
     a: int = u.Field(default=1, json_schema_extra=pop_default)
 
 
-print(json.dumps(Model.model_json_schema(), indent=2))
+u.Cli.print(json.dumps(Model.model_json_schema(), indent=2))
 """
 {
   "properties": {
@@ -642,7 +642,7 @@ from pydantic import u.Field, TypeAdapter
 ExternalType: TypeAlias = Annotated[int, u.Field(json_schema_extra={"key1": "value1"})]
 
 ta = TypeAdapter(Annotated[ExternalType, u.Field(json_schema_extra={"key2": "value2"})])
-print(json.dumps(ta.json_schema(), indent=2))
+u.Cli.print(json.dumps(ta.json_schema(), indent=2))
 """
 {
   "key1": "value1",
@@ -684,7 +684,7 @@ class Model(BaseModel):
     a: MyInt
 
 
-print(json.dumps(Model.model_json_schema(), indent=2))
+u.Cli.print(json.dumps(Model.model_json_schema(), indent=2))
 """
 {
   "properties": {
@@ -784,7 +784,7 @@ class MyModel(BaseModel):
     value: CompressedString
 
 
-print(MyModel.model_json_schema())
+u.Cli.print(MyModel.model_json_schema())
 """
 {
     'properties': {'value': {'title': 'Value', 'type': 'string'}},
@@ -793,12 +793,12 @@ print(MyModel.model_json_schema())
     'type': 'object',
 }
 """
-print(MyModel(value="fox fox fox dog fox"))
+u.Cli.print(MyModel(value="fox fox fox dog fox"))
 """
 value = CompressedString(dictionary={0: 'fox', 1: 'dog'}, text=[0, 0, 0, 1, 0])
 """
 
-print(MyModel(value="fox fox fox dog fox").model_dump(mode="json"))
+u.Cli.print(MyModel(value="fox fox fox dog fox").model_dump(mode="json"))
 # > {'value': 'fox fox fox dog fox'}
 ```
 
@@ -843,7 +843,7 @@ class MyModel(BaseModel):
     value: Annotated[str, RestrictCharacters("ABC")]
 
 
-print(MyModel.model_json_schema())
+u.Cli.print(MyModel.model_json_schema())
 """
 {
     'properties': {'value': {'title': 'Value', 'type': 'string'}},
@@ -852,13 +852,13 @@ print(MyModel.model_json_schema())
     'type': 'object',
 }
 """
-print(MyModel(value="CBA"))
+u.Cli.print(MyModel(value="CBA"))
 # > value='CBA'
 
 try:
     MyModel(value="XYZ")
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for MyModel
     value
@@ -895,7 +895,7 @@ class MyModel(BaseModel):
 try:
     MyModel(value="too long!!!!!")
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for MyModel
     value
@@ -939,7 +939,7 @@ class Model(BaseModel):
     f: Annotated[Foo, AllowAnySubclass()]
 
 
-print(Model(f=Foo()))
+u.Cli.print(Model(f=Foo()))
 # > f=None
 
 
@@ -950,7 +950,7 @@ class NotFoo:
 try:
     Model(f=NotFoo())
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for Model
     f
@@ -1003,7 +1003,7 @@ class Person:
         return json_schema
 
 
-print(json.dumps(TypeAdapter(Person).json_schema(), indent=2))
+u.Cli.print(json.dumps(TypeAdapter(Person).json_schema(), indent=2))
 """
 {
   "examples": [
@@ -1053,7 +1053,7 @@ class Person(BaseModel):
     age: int
 
 
-print(json.dumps(Person.model_json_schema(), indent=2))
+u.Cli.print(json.dumps(Person.model_json_schema(), indent=2))
 """
 {
   "properties": {
@@ -1099,7 +1099,7 @@ class Person(BaseModel):
     age: int
 
 
-print(json.dumps(Person.model_json_schema(), indent=2))
+u.Cli.print(json.dumps(Person.model_json_schema(), indent=2))
 """
 {
   "properties": {
@@ -1163,7 +1163,7 @@ class Bar(BaseModel):
 _, top_level_schema = models_json_schema(
     [(Model, "validation"), (Bar, "validation")], title="My Schema"
 )
-print(json.dumps(top_level_schema, indent=2))
+u.Cli.print(json.dumps(top_level_schema, indent=2))
 """
 {
   "$defs": {
@@ -1240,7 +1240,7 @@ class MyModel(BaseModel):
     x: int
 
 
-print(MyModel.model_json_schema(schema_generator=MyGenerateJsonSchema))
+u.Cli.print(MyModel.model_json_schema(schema_generator=MyGenerateJsonSchema))
 """
 {
     'properties': {'x': {'title': 'X', 'type': 'integer'}},
@@ -1284,7 +1284,7 @@ instance_example = Example()
 validation_schema = instance_example.model_json_schema(
     schema_generator=MyGenerateJsonSchema, mode="validation"
 )
-print(validation_schema)
+u.Cli.print(validation_schema)
 """
 {
     'properties': {
@@ -1327,7 +1327,7 @@ class Bar(BaseModel):
 
 
 json_schema = Bar.model_json_schema(schema_generator=MyGenerateJsonSchema)
-print(json.dumps(json_schema, indent=2))
+u.Cli.print(json.dumps(json_schema, indent=2))
 """
 {
   "type": "object",
@@ -1383,7 +1383,7 @@ class Model(BaseModel):
 
 adapter = TypeAdapter(Model)
 
-print(
+u.Cli.print(
     json.dumps(
         adapter.json_schema(ref_template="#/components/schemas/{model}"), indent=2
     )

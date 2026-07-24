@@ -26,7 +26,7 @@ from flext_observability import flext_monitor_function, observability
 
 metric = observability.flext_metric("cpu_usage", 42.0, "percent")
 if metric.success:
-    print(metric.value.name, metric.value.value)
+    u.Cli.print(metric.value.name, metric.value.value)
 
 
 @flext_monitor_function(metric_name="data.work")

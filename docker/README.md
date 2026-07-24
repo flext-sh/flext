@@ -115,13 +115,13 @@ docker_mgr = tk(workspace_root=Path.home() / "flext")
 # Start container
 result = docker_mgr.start_container("flext-postgres-test")
 if result.is_success:
-    print("Container started successfully")
+    u.Cli.print("Container started successfully")
 
 # Get container status
 status = docker_mgr.get_container_status("flext-postgres-test")
 if status.is_success:
     container_info = status.unwrap()
-    print(f"Ports: {container_info.ports}")
+    u.Cli.print(f"Ports: {container_info.ports}")
 
 # Stop container (or let it persist for next use)
 docker_mgr.stop_container("flext-postgres-test")

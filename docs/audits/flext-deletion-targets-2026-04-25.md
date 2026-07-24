@@ -93,7 +93,7 @@ census = FlextInfraRefactorCensus(
 report = census.execute().unwrap()  # Rope walk — slow (~minutes per project)
 collisions = census.parent_alias_collisions(report)
 for obj, parent_paths in collisions:
-    print(
+    u.Cli.print(
         f"{obj.kind} {obj.name} @ {obj.file_path}:{obj.line} — {len(parent_paths)} parents"
     )
 ```

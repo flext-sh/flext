@@ -45,15 +45,15 @@ class User(BaseModel):
     id: Union[str, int] = u.Field(union_mode="left_to_right")
 
 
-print(User(id=123))
+u.Cli.print(User(id=123))
 # > id=123
-print(User(id="hello"))
+u.Cli.print(User(id="hello"))
 # > id='hello'
 
 try:
     User(id=[])
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for User
     id.str
@@ -75,9 +75,9 @@ class User(BaseModel):
     id: Union[int, str] = u.Field(union_mode="left_to_right")
 
 
-print(User(id=123))  # (1)
+u.Cli.print(User(id=123))  # (1)
 # > id=123
-print(User(id="456"))  # (2)
+u.Cli.print(User(id="456"))  # (2)
 # > id=456
 ```
 
@@ -156,22 +156,22 @@ class User(BaseModel):
 
 
 user_01 = User(id=123, name="John Doe")
-print(user_01)
+u.Cli.print(user_01)
 # > id=123 name='John Doe'
-print(user_01.id)
+u.Cli.print(user_01.id)
 # > 123
 user_02 = User(id="1234", name="John Doe")
-print(user_02)
+u.Cli.print(user_02)
 # > id='1234' name='John Doe'
-print(user_02.id)
+u.Cli.print(user_02.id)
 # > 1234
 user_03_uuid = UUID("cf57432e-809e-4353-adbd-9d5c0d733868")
 user_03 = User(id=user_03_uuid, name="John Doe")
-print(user_03)
+u.Cli.print(user_03)
 # > id=UUID('cf57432e-809e-4353-adbd-9d5c0d733868') name='John Doe'
-print(user_03.id)
+u.Cli.print(user_03.id)
 # > cf57432e-809e-4353-adbd-9d5c0d733868
-print(user_03_uuid.int)
+u.Cli.print(user_03_uuid.int)
 # > 275603287559914445491632874575877060712
 ```
 
@@ -222,12 +222,12 @@ class Model(BaseModel):
     n: int
 
 
-print(Model(pet={"pet_type": "dog", "barks": 3.14}, n=1))
+u.Cli.print(Model(pet={"pet_type": "dog", "barks": 3.14}, n=1))
 # > pet=Dog(pet_type='dog', barks=3.14) n=1
 try:
     Model(pet={"pet_type": "dog"}, n=1)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for Model
     pet.dog.barks
@@ -295,7 +295,7 @@ class ThanksgivingDinner(BaseModel):
 apple_variation = ThanksgivingDinner({
     "dessert": {"fruit": "apple", "time_to_cook": 60, "num_ingredients": 8}
 })
-print(repr(apple_variation))
+u.Cli.print(repr(apple_variation))
 """
 ThanksgivingDinner(dessert=ApplePie(time_to_cook=60, num_ingredients=8, fruit='apple'))
 """
@@ -307,7 +307,7 @@ pumpkin_variation = ThanksgivingDinner(
         "num_ingredients": 6,
     }
 })
-print(repr(pumpkin_variation))
+u.Cli.print(repr(pumpkin_variation))
 """
 ThanksgivingDinner(dessert=PumpkinPie(time_to_cook=40, num_ingredients=6, filling='pumpkin'))
 """
@@ -349,18 +349,18 @@ class DiscriminatedModel(BaseModel):
 
 model_data = {"value": {"value": 1}}
 m = DiscriminatedModel(
-print(m)
+u.Cli.print(m)
 # > value=SpecialValue(value=1)
 
 int_data = {"value": 123}
 m = DiscriminatedModel(
-print(m)
+u.Cli.print(m)
 # > value=123
 
 try:
     DiscriminatedModel(an int or a model"})
 except ValidationError as e:
-    print(e)  # (1)!
+    u.Cli.print(e)  # (1)!
     """
     1 validation error for DiscriminatedModel
     value
@@ -438,12 +438,12 @@ class Model(BaseModel):
 
 
 m = Model(pet={"pet_type": "cat", "color": "black", "black_name": "felix"}, n=1)
-print(m)
+u.Cli.print(m)
 # > pet=BlackCat(pet_type='cat', color='black', black_name='felix') n=1
 try:
     Model(pet={"pet_type": "cat", "color": "red"}, n="1")
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for Model
     pet.cat
@@ -452,7 +452,7 @@ except ValidationError as e:
 try:
     Model(pet={"pet_type": "cat", "color": "black"}, n="1")
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for Model
     pet.cat.black.black_name
@@ -473,7 +473,7 @@ If you want to validate data against a union, and solely a union, you can use py
         "color": "black",
         "black_name": "felix",
     })
-    print(repr(pet))
+    u.Cli.print(repr(pet))
     # > BlackCat(pet_type='cat', color='black', black_name='felix')
     ```
 
@@ -503,7 +503,7 @@ class Model(BaseModel):
 try:
     Model(": 1}}})
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     4 validation errors for Model
     x.str
@@ -519,7 +519,7 @@ except ValidationError as e:
 try:
     Model(": {}}}})
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     4 validation errors for Model
     x.str
@@ -559,7 +559,7 @@ class DiscriminatedModel(BaseModel):
 try:
     DiscriminatedModel(": 1}}})
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for DiscriminatedModel
     x.model.x.model.x
@@ -569,7 +569,7 @@ except ValidationError as e:
 try:
     DiscriminatedModel(": {}}}})
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for DiscriminatedModel
     x.model.x.model.x.model.x
@@ -579,7 +579,7 @@ except ValidationError as e:
 # The data is still handled properly when valid:
 data = {"x": {"x": {"x": "a"}}}
 m = DiscriminatedModel(
-print(m.model_dump())
+u.Cli.print(m.model_dump())
 # > {'x': {'x': {'x': 'a'}}}
 ```
 
@@ -605,7 +605,7 @@ adapter = TypeAdapter(Union[DoubledList, StringsMap])
 try:
     adapter.validate_python(["a"])
 except ValidationError as exc_info:
-    print(exc_info)
+    u.Cli.print(exc_info)
     """
     2 validation errors for union[function-after[<lambda>(), t.SequenceOf[int]],Mapping[str,str]]
     function-after[<lambda>(), t.SequenceOf[int]].0
@@ -624,7 +624,7 @@ tag_adapter = TypeAdapter(
 try:
     tag_adapter.validate_python(["a"])
 except ValidationError as exc_info:
-    print(exc_info)
+    u.Cli.print(exc_info)
     """
     2 validation errors for union[DoubledList,StringsMap]
     DoubledList.0

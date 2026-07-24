@@ -29,7 +29,7 @@ from flext_quality import quality
 
 rules = quality.load_rules(Path("rules/default.yaml"))
 if rules.success:
-    print(f"{len(rules.value)} rules loaded")
+    u.Cli.print(f"{len(rules.value)} rules loaded")
 
 status = quality.fetch_status()
 ```

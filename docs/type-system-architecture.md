@@ -465,7 +465,7 @@ class Entry(Protocol):
 
 # Can now use isinstance() at runtime
 if isinstance(obj, Entry):
-    print(f"DN: {obj.dn}")
+    u.Cli.print(f"DN: {obj.dn}")
 ```
 
 **Rule 4**: Self Type for Method Chaining
@@ -681,13 +681,13 @@ if TYPE_CHECKING:
 # ✅ CORRECT: Mapping for read-only
 def read_attributes(attrs: t.MappingKV[str, t.StrSequence]) -> None:
     for key, values in attrs.items():
-        print(f"{key}: {values}")
+        u.Cli.print(f"{key}: {values}")
 
 
 # ❌ WRONG: dict for read-only (invariant)
 def read_attributes(attrs: t.MappingKV[str, t.StrSequence]) -> None:
     for key, values in attrs.items():
-        print(f"{key}: {values}")
+        u.Cli.print(f"{key}: {values}")
 ```
 
 ### 4. TypeVar with Proper Bounds

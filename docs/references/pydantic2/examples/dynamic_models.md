@@ -184,7 +184,7 @@ class Model(BaseModel):
 ModelOptional = make_fields_optional(Model)
 
 m = ModelOptional()
-print(m.a)
+u.Cli.print(m.a)
 # > None
 ```
 

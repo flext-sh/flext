@@ -35,7 +35,7 @@ result = api.get("https://api.example.com/users")
 if result.success:
     response = result.unwrap()
 else:
-    print(result.error_message)
+    u.Cli.print(result.error_message)
 ```
 
 `FlextApi` exposes `get`, `post`, `put`, `patch`, `delete`, `request`, and `execute`; each returns `p.Result[m.Api.HttpResponse]`. The underlying `FlextApiClient` is reachable through the `client` property.

@@ -27,7 +27,7 @@ from flext_plugin import plugin
 api = plugin()
 result = api.discover_plugins(["./plugins"])
 if result.success:
-    print(f"{len(result.value)} plugins discovered")
+    u.Cli.print(f"{len(result.value)} plugins discovered")
 
 loaded = api.load_plugin("./plugins/my_plugin.py")
 ```
