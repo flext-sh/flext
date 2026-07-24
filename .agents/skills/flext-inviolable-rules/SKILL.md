@@ -47,9 +47,36 @@ public facades. Never invoke bare `pytest`, `ruff`, `pyrefly`, `pyright`,
   cosmos-main-hr9e). This applies to all test tiers, markdown examples, and
   docstring snippets validated by the pytest plugin.
 
+## Continuous green checkpoints
+
+- Keep checkpoints short and complete. After every state-changing stage, append
+  the current status, orientation, owned paths, remaining scope, and exact
+  command evidence to the Bead; never defer Beads metadata or evidence until
+  handoff.
+- Resolve ordinary uncertainty from evidence and continue. Do not accumulate
+  hypothesis loops or leave completed, validated work only in the local tree.
+- A checkpoint is green only after every applicable canonical root-Make gate
+  passes with zero lint errors and its manual public-surface check is recorded.
+  Never commit or push a red, partial, or incompletely evidenced checkpoint.
+- When push authority exists, stage explicit owned paths, commit the completed
+  green checkpoint, and immediately fast-forward push the worker branch. Workers
+  never rebase, force-push, merge, or promote main; reviewed promotion belongs to
+  the orchestrator.
+- Send the orchestrator a concise progress heartbeat at least every five minutes
+  while work remains active, naming the stage, latest evidence, next action, and
+  any changed risk or blocker. Reporting never pauses execution.
+- Before any critical decision, stop, record the pending decision, options, and
+  consequences in the Bead, and ask the operator one precise confirmation
+  question. The minimum critical set is destructive or irreversible action,
+  competing public-contract or architecture outcomes, security or privacy,
+  production/release/main promotion, authority conflict, and material scope or
+  acceptance change. Never infer critical intent.
+
 ## Handoff and landing
 
 Before a handoff, report the active Bead, changed paths, preserved concurrent
 paths, manual-QA outcome, full required gate results, and the next exact
-root-Make command. Do not commit or push without user authorization. If
-authorized, stage explicit paths only and never include unrelated work.
+root-Make command. Without push authority, stop before committing or pushing and
+record the blocker. With authority, do not hand off completed local WIP: land the
+green checkpoint through an explicit-path commit and immediate fast-forward push,
+then append the commit SHA and push evidence to the Bead.
