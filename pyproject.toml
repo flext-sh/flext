@@ -2315,6 +2315,7 @@ split-on-trailing-comma = false
   "undocumented-public-init",
   "unused-import",
 ]
+"scripts/cmd/**/*.py" = ["invalid-module-name"]
 "**/tests/**" = [
   "assert",
   "compare-to-empty-string",

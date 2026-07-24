@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Merge open Dependabot PRs across the FLEXT workspace with a standard commit schema.
 
 Schema (single, non-repeating, conventional):
@@ -16,13 +15,15 @@ Usage:
 
 from __future__ import annotations
 
-import argparse
 import configparser
 import json
 import re
-import subprocess
+import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+from typing import Annotated
+
+from flext_cli import m, p, u
 
 DEPENDABOT_AUTHOR = "dependabot[bot]"
 DEPENDABOT_TITLE_RE = re.compile(
@@ -35,13 +36,30 @@ DEPENDABOT_GROUP_RE = re.compile(
 )
 MAX_WORKERS = 4
 RETRIES_ON_CONFLICT = 2
+PR_LIST_LIMIT = 100
+
+_BASE_VALUE_REQUIRED = "--base requires a value"
+_WORKERS_VALUE_REQUIRED = "--workers requires a value"
 
 
-def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
-    """Run a subprocess command (stdin=/dev/null to avoid interactive prompts)."""
-    return subprocess.run(
-        cmd, check=check, capture_output=True, text=True, stdin=subprocess.DEVNULL
+class MergeOptions(m.Value):
+    """Validated command-line options for the dependabot merge orchestrator."""
+
+    model_config = m.ConfigDict(extra="forbid")
+
+    base: Annotated[str, m.Field(description="Target branch for PRs")] = "main"
+    dry_run: Annotated[bool, m.Field(description="Preview only")] = False
+    workers: Annotated[int, m.Field(description="Parallel repo workers")] = MAX_WORKERS
+    close_on_conflict: Annotated[bool, m.Field(description="Close conflicting PRs")] = (
+        True
     )
+
+
+def _run_cmd(
+    cmd: list[str], *, cwd: Path | None = None
+) -> p.Result[p.Cli.CommandOutput]:
+    """Run a subprocess command with closed stdin to avoid interactive prompts."""
+    return u.Cli.run_raw(cmd, cwd=cwd, input_data="")
 
 
 def discover_repos(root: Path) -> list[str]:
@@ -62,10 +80,10 @@ def discover_repos(root: Path) -> list[str]:
 
 def repo_slug_from_origin(path: Path) -> str | None:
     """Resolve owner/repo from a submodule's origin remote URL."""
-    result = run(["git", "-C", str(path), "remote", "get-url", "origin"], check=False)
-    if result.returncode != 0:
+    result = _run_cmd(["git", "-C", str(path), "remote", "get-url", "origin"])
+    if result.failure or result.value.exit_code != 0:
         return None
-    url = result.stdout.strip()
+    url = result.value.stdout.strip()
     if url.startswith("git@github.com:"):
         return url.replace("git@github.com:", "").replace(".git", "")
     if "github.com/" in url:
@@ -75,30 +93,27 @@ def repo_slug_from_origin(path: Path) -> str | None:
 
 def list_dependabot_prs(slug: str, base: str) -> list[dict[str, int | str]]:
     """List open Dependabot PRs targeting the given base branch."""
-    result = run(
-        [
-            "gh",
-            "pr",
-            "list",
-            "-R",
-            slug,
-            "--state",
-            "open",
-            "--author",
-            DEPENDABOT_AUTHOR,
-            "--base",
-            base,
-            "--json",
-            "number,title,headRefName,url",
-            "--limit",
-            "100",
-        ],
-        check=False,
-    )
-    if result.returncode != 0:
+    result = _run_cmd([
+        "gh",
+        "pr",
+        "list",
+        "-R",
+        slug,
+        "--state",
+        "open",
+        "--author",
+        DEPENDABOT_AUTHOR,
+        "--base",
+        base,
+        "--json",
+        "number,title,headRefName,url",
+        "--limit",
+        str(PR_LIST_LIMIT),
+    ])
+    if result.failure or result.value.exit_code != 0:
         return []
     try:
-        return json.loads(result.stdout or "[]")
+        return json.loads(result.value.stdout or "[]")
     except json.JSONDecodeError:
         return []
 
@@ -139,21 +154,32 @@ def standard_message(title: str, head_ref: str) -> str | None:
 
 def update_pr_branch(slug: str, number: int) -> bool:
     """Update a PR branch from its base (rebase/merge) to resolve conflicts."""
-    result = run(["gh", "pr", "update-branch", str(number), "-R", slug], check=False)
-    if result.returncode == 0:
+    result = _run_cmd(["gh", "pr", "update-branch", str(number), "-R", slug])
+    if result.failure:
+        return False
+    if result.value.exit_code == 0:
         return True
     # update-branch may report "Already up to date"; treat as success.
-    return "already up to date" in result.stderr.lower()
+    return "already up to date" in result.value.stderr.lower()
 
 
 def close_pr(slug: str, number: int, *, dry_run: bool, reason: str) -> bool:
     """Close a stale/conflicting Dependabot PR so it can be regenerated."""
     if dry_run:
         return True
-    close_result = run(
-        ["gh", "pr", "close", str(number), "-R", slug, "--comment", reason], check=False
-    )
-    return close_result.returncode == 0
+    result = _run_cmd([
+        "gh",
+        "pr",
+        "close",
+        str(number),
+        "-R",
+        slug,
+        "--comment",
+        reason,
+    ])
+    if result.failure:
+        return False
+    return result.value.exit_code == 0
 
 
 def merge_pr(
@@ -189,11 +215,13 @@ def merge_pr(
     if dry_run:
         return True, False, False
 
-    result = run(base_cmd, check=False)
-    if result.returncode == 0:
+    result = _run_cmd(base_cmd)
+    if result.failure:
+        return False, False, False
+    if result.value.exit_code == 0:
         return True, False, False
 
-    merge_stderr = result.stderr.strip()
+    merge_stderr = result.value.stderr.strip()
     stderr = merge_stderr
     if (
         "Required status check" in stderr
@@ -201,11 +229,10 @@ def merge_pr(
         or "add the `--auto` flag" in stderr
         or "--auto" in stderr
     ):
-        auto_cmd = [*base_cmd, "--auto"]
-        auto_result = run(auto_cmd, check=False)
-        if auto_result.returncode == 0:
+        auto_result = _run_cmd([*base_cmd, "--auto"])
+        if not auto_result.failure and auto_result.value.exit_code == 0:
             return True, False, False
-        stderr = auto_result.stderr.strip()
+        stderr = auto_result.value.stderr.strip() if not auto_result.failure else ""
 
     if "already merged" in stderr.lower() or "not found" in stderr.lower():
         return True, False, False
@@ -221,10 +248,10 @@ def merge_pr(
         for _attempt in range(1, RETRIES_ON_CONFLICT + 1):
             if not update_pr_branch(slug, number):
                 break
-            retry = run(base_cmd, check=False)
-            if retry.returncode == 0:
+            retry = _run_cmd(base_cmd)
+            if not retry.failure and retry.value.exit_code == 0:
                 return True, False, False
-            retry_stderr = retry.stderr.strip()
+            retry_stderr = retry.value.stderr.strip() if not retry.failure else ""
             if not any(
                 indicator in retry_stderr.lower() for indicator in conflict_indicators
             ):
@@ -271,30 +298,46 @@ def process_repo(
     return merged, skipped, failed, closed
 
 
-def main() -> int:
-    """Entry point for the dependabot merge orchestrator."""
-    parser = argparse.ArgumentParser(
-        description="Merge Dependabot PRs across FLEXT workspace"
-    )
-    parser.add_argument("--base", default="main", help="target branch for PRs")
-    parser.add_argument("--dry-run", action="store_true", help="preview only")
-    parser.add_argument(
-        "--workers", type=int, default=MAX_WORKERS, help="parallel repo workers"
-    )
-    parser.add_argument(
-        "--close-on-conflict",
-        action="store_true",
-        default=True,
-        help="close Dependabot PRs that cannot be merged due to persistent conflicts",
-    )
-    parser.add_argument(
-        "--no-close-on-conflict",
-        dest="close_on_conflict",
-        action="store_false",
-        help="leave conflicting PRs open for manual resolution",
-    )
-    args = parser.parse_args()
+def _parse_options(argv: list[str] | None = None) -> MergeOptions:
+    """Parse command-line options into a validated model."""
+    raw_args = list(sys.argv[1:] if argv is None else argv)
+    raw: dict[str, str | bool | int] = {
+        "base": "main",
+        "dry_run": False,
+        "workers": MAX_WORKERS,
+        "close_on_conflict": True,
+    }
+    i = 0
+    while i < len(raw_args):
+        arg = raw_args[i]
+        if arg == "--base":
+            i += 1
+            if i >= len(raw_args):
+                raise SystemExit(_BASE_VALUE_REQUIRED)
+            raw["base"] = raw_args[i]
+        elif arg == "--dry-run":
+            raw["dry_run"] = True
+        elif arg == "--workers":
+            i += 1
+            if i >= len(raw_args):
+                raise SystemExit(_WORKERS_VALUE_REQUIRED)
+            raw["workers"] = int(raw_args[i])
+        elif arg == "--close-on-conflict":
+            raw["close_on_conflict"] = True
+        elif arg == "--no-close-on-conflict":
+            raw["close_on_conflict"] = False
+        elif arg in {"-h", "--help"}:
+            raise SystemExit(__doc__ or "Usage: ...")
+        else:
+            unknown_arg = f"Unknown argument: {arg}"
+            raise SystemExit(unknown_arg)
+        i += 1
+    return MergeOptions.model_validate(raw)
 
+
+def main(argv: list[str] | None = None) -> int:
+    """Entry point for the dependabot merge orchestrator."""
+    options = _parse_options(argv)
     root = Path.cwd()
     repos = discover_repos(root)
     if not repos:
@@ -311,14 +354,14 @@ def main() -> int:
         slugs.append(slug)
 
     total_merged = total_skipped = total_failed = total_closed = 0
-    with ThreadPoolExecutor(max_workers=args.workers) as executor:
+    with ThreadPoolExecutor(max_workers=options.workers) as executor:
         futures = {
             executor.submit(
                 process_repo,
                 slug,
-                args.base,
-                dry_run=args.dry_run,
-                close_on_conflict=args.close_on_conflict,
+                options.base,
+                dry_run=options.dry_run,
+                close_on_conflict=options.close_on_conflict,
             ): slug
             for slug in slugs
         }

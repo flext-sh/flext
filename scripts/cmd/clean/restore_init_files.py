@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Restore modified __init__.py files across workspace git repositories.
 
 Equivalent to the legacy ``restore_init_files.sh`` helper. Finds every git
