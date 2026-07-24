@@ -41,7 +41,9 @@ public facades. Never invoke bare `pytest`, `ruff`, `pyrefly`, `pyright`,
   command, cwd, exit code, and decisive output in the Bead.
 - A test pinned to a config-owned value that breaks on a legitimate
   config/settings change is a TEST DEFECT, never a reason to freeze config:
-  fix the test to read the SSOT or the generator round-trip (cosmos-main-hr9e).
+  fix the test to read the SSOT or the generator round-trip (P0 —
+  cosmos-main-hr9e). This applies to all test tiers, markdown examples, and
+  docstring snippets validated by the pytest plugin.
 
 ## Handoff and landing
 

@@ -60,17 +60,20 @@ safe, deterministic source transformations. Neither duplicates the other.
 
 ## Universal test contract (P0)
 
-Tests must validate any change to config and settings. They are never allowed to
-hardcode the values that happen to exist today.
+Tests must validate any change to config and settings by construction. They are
+never allowed to hardcode the values that happen to exist today.
 
 - The canonical owner of a fact is `config/*.yaml` and `settings`; tests and
-golden files only validate that owner.
+  golden files only validate that owner.
+- Expected config-owned values must be read from the same typed SSOT production
+  reads, or proven through a generator/consumer round-trip.
 - When config or settings change, tests must adapt automatically or fail with a
-clear message pointing back to the config source.
+  clear message pointing back to the config source.
 - A test that requires a rewrite to accommodate a legitimate config change is a
-defect in the test, not a reason to freeze the configuration.
+  defect in the test, not a reason to freeze the configuration.
 - This rule applies to all test tiers, markdown examples, and docstring snippets
-validated by the pytest plugin.
+  validated by the pytest plugin.
+- Literal expectations are reserved for immutable external protocol contracts.
 
 ## Baseline Commands
 

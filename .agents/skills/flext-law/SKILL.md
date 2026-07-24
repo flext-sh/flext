@@ -40,12 +40,16 @@ description: Apply the mandatory FLEXT engineering law for every implementation,
   approval before adding any suppression, then encode it in the codegen SSOT.
 - Tests validate public behavior. Use existing fixture topology and imports;
   do not create parallel test or configuration paths.
-- Tests validate config/settings CONTRACTS, never frozen values: any expected
-  value that config owns (versions, verbs, paths, URLs, profiles) is read from
-  the same SSOT production reads (codegen.yaml/tooling.yaml/models) or proven
-  via generator round-trip. A test that breaks on a legitimate config change
-  is a test defect; golden files pin STRUCTURE only and are regenerated via
-  the canonical make verb (operator law 2026-07-24, cosmos-main-hr9e).
+- **P0 — Tests validate config/settings changes by construction.** Tests
+  validate config/settings CONTRACTS, never frozen values: any expected value
+  that config owns (versions, verbs, paths, URLs, profiles, defaults) is read
+  from the same SSOT production reads (codegen.yaml/tooling.yaml/models) or
+  proven via generator round-trip. A test that breaks on a legitimate
+  config/settings change is a test defect; fix the test, never freeze the
+  configuration. Golden files pin STRUCTURE only and are regenerated via the
+  canonical make verb. This rule applies to all test tiers, markdown examples,
+  and docstring snippets validated by the pytest plugin (operator law
+  2026-07-24, cosmos-main-hr9e).
 
 ## Completion discipline
 
