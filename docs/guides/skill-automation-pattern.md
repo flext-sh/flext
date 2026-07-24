@@ -77,7 +77,8 @@ The generic runner `scripts/core/skill_validate.py` discovers and executes every
 
 **Generic runner**:
 
-- `scripts/core/skill_validate.py` — runs the rope-semantic engine over the rules declared in `flext-infra/config/enforcement/*.yaml`
+- `scripts/core/skill_validate.py` — runs the rope-semantic engine over the rules declared in `flext-
+  infra/config/enforcement/*.yaml`
 
 ## Verification Commands
 
@@ -90,4 +91,5 @@ python3 scripts/core/skill_validate.py --all
 
 ## Adoption Rule
 
-For future automation work, do not introduce manual-only procedures. Ship scripts + skill + docs together in the same change.
+For future automation work, do not introduce manual-only procedures. Ship scripts + skill + docs together in the same
+change.

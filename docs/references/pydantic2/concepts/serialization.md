@@ -50,10 +50,12 @@ can be emulated).
 
 ### Python mode
 
-When using the Python mode, Pydantic models (and model-like types such as dataclasses) (1) will be (recursively) converted to dictionaries. This is achievable by using the [`model_dump()`][pydantic.BaseModel.model_dump] method:
+When using the Python mode, Pydantic models (and model-like types such as dataclasses) (1) will be (recursively)
+converted to dictionaries. This is achievable by using the [`model_dump()`][pydantic.BaseModel.model_dump] method:
 { .annotate }
 
-1. With the exception of [root models](./models.md#rootmodel-and-custom-root-types), where the root value is dumped directly.
+1. With the exception of [root models](./models.md#rootmodel-and-custom-root-types), where the root value is dumped
+   directly.
 
 ```python {group="python-dump"}
 from typing import Optional
@@ -81,7 +83,8 @@ u.Cli.print(m.model_dump(by_alias=True))
 # > {'banana': 3.14, 'foo_alias': 'hello', 'bar': {'whatever': (1, 2)}}
 ```
 
-Notice that the value of `whatever` was dumped as tuple, which isn't a known JSON type. The `mode` argument can be set to `'json'`
+Notice that the value of `whatever` was dumped as tuple, which isn't a known JSON type. The `mode` argument can be set
+to `'json'`
 to ensure JSON-compatible types are used:
 
 ```python {group="python-dump"}
@@ -90,7 +93,8 @@ u.Cli.print(m.model_dump(mode="json"))
 ```
 
 !!! info "See also"
-The [`TypeAdapter.dump_python()`][pydantic.TypeAdapter.dump_Python] method, useful when _not_ dealing with Pydantic models.
+The [`TypeAdapter.dump_python()`][pydantic.TypeAdapter.dump_Python] method, useful when _not_ dealing with Pydantic
+models.
 
 <!-- old anchor added for backwards compatibility -->
 <!-- markdownlint-disable-next-line no-empty-links -->
@@ -99,7 +103,8 @@ The [`TypeAdapter.dump_python()`][pydantic.TypeAdapter.dump_Python] method, usef
 
 ### JSON mode
 
-Pydantic allows data to be serialized directly to a JSON-encoded string, by trying its best to convert Python values to valid
+Pydantic allows data to be serialized directly to a JSON-encoded string, by trying its best to convert Python values to
+valid
 JSON data. This is achievable by using the [`model_dump_json()`][pydantic.BaseModel.model_dump_JSON] method:
 
 ```python
@@ -135,7 +140,8 @@ u.Cli.print(m.model_dump_json(indent=2))
 
 In addition to the supported types by the standard library [`json`][] module, Pydantic supports a wide
 variety of types (date and time types, [`UUID`][uuid.UUID] objects, sets, etc). If an unsupported type
-is used and can't be serialized to JSON, a [`PydanticSerializationError`][pydantic_core.PydanticSerializationError] exception
+is used and can't be serialized to JSON, a [`PydanticSerializationError`][pydantic_core.PydanticSerializationError]
+exception
 is raised.
 
 !!! info "See also"
@@ -222,7 +228,8 @@ u.Cli.print(m2)
 
 ## Serializers
 
-Similar to [custom validators](./validators.md), you can leverage custom serializers at the field and model levels to further
+Similar to [custom validators](./validators.md), you can leverage custom serializers at the field and model levels to
+further
 control the serialization behavior.
 
 !!! warning
@@ -239,7 +246,8 @@ Only _one_ serializer can be defined per field/model. It is not possible to comb
 In its simplest form, a field serializer is a callable taking the value to be serialized as an argument and
 **returning the serialized value**.
 
-If the `return_type` argument is provided to the serializer (or if a return type annotation is available on the serializer function),
+If the `return_type` argument is provided to the serializer (or if a return type annotation is available on the
+serializer function),
 it will be used to build an extra serializer, to ensure that the serialized field value complies with this return type.
 
 **Two** different types of serializers can be used. They can all be defined using the
@@ -309,12 +317,15 @@ it will be used to build an extra serializer, to ensure that the serialized fiel
         1. `'plain'` is the default mode for the decorator, and can be omitted.
         2. Pydantic will *not* validate that the serialized value complies with the `int` type.
 
-- **_Wrap_ serializers**: give more flexibility to customize the serialization behavior. You can run code before or after
+- **_Wrap_ serializers**: give more flexibility to customize the serialization behavior. You can run code before or
+  after
   the Pydantic serialization logic.
   {#field-wrap-serializer}
 
-  Such serializers must be defined with a **mandatory** extra _handler_ parameter: a callable taking the value to be serialized
-  as an argument. Internally, this handler will delegate serialization of the value to Pydantic. You are free to _not_ call the
+  Such serializers must be defined with a **mandatory** extra _handler_ parameter: a callable taking the value to be
+  serialized
+  as an argument. Internally, this handler will delegate serialization of the value to Pydantic. You are free to _not_
+  call the
   handler at all.
 
   === "Annotated pattern"
@@ -458,12 +469,15 @@ As with [field serializers](#field-serializers), **two** different types of mode
       1. `'plain'` is the default mode for the decorator, and can be omitted.
       2. You are free to return a value that *isn't* a dictionary.
 
-- **_Wrap_ serializers**: give more flexibility to customize the serialization behavior. You can run code before or after
+- **_Wrap_ serializers**: give more flexibility to customize the serialization behavior. You can run code before or
+  after
   the Pydantic serialization logic.
   {#model-wrap-serializer}
 
-  Such serializers must be defined with a **mandatory** extra _handler_ parameter: a callable taking the instance of the model
-  as an argument. Internally, this handler will delegate serialization of the model to Pydantic. You are free to _not_ call the
+  Such serializers must be defined with a **mandatory** extra _handler_ parameter: a callable taking the instance of the
+  model
+  as an argument. Internally, this handler will delegate serialization of the model to Pydantic. You are free to _not_
+  call the
   handler at all.
 
       ```python
@@ -493,9 +507,11 @@ Both the field and model serializers callables (in all modes) can optionally tak
 providing useful extra information, such as:
 
 - [user defined context](#serialization-context)
-- the current serialization mode: either `'python'` or `'json'` (see the [`mode`][pydantic.SerializationInfo.mode] property)
+- the current serialization mode: either `'python'` or `'json'` (see the [`mode`][pydantic.SerializationInfo.mode]
+  property)
 - the various parameters set during serialization using the [serialization methods](#serializing-data)
-  (e.g. [`exclude_unset`][pydantic.SerializationInfo.exclude_unset], [`serialize_as_any`][pydantic.SerializationInfo.serialize_as_any])
+  (e.g. [`exclude_unset`][pydantic.SerializationInfo.exclude_unset],
+  [`serialize_as_any`][pydantic.SerializationInfo.serialize_as_any])
 - the current field name, if using a [field serializer](#field-serializers) (see the
   [`field_name`][pydantic.u.FieldSerializationInfo.field_name] property).
 
@@ -668,9 +684,12 @@ which is where the name comes from.
 
 #### `serialize_as_any` runtime setting
 
-The `serialize_as_any` runtime setting can be used to serialize model data with or without duck typed serialization behavior.
-`serialize_as_any` can be passed as a keyword argument to the various [serialization methods](#serializing-data) (such as
-[`model_dump()`][pydantic.BaseModel.model_dump] and [`model_dump_json()`][pydantic.BaseModel.model_dump_JSON] on Pydantic models).
+The `serialize_as_any` runtime setting can be used to serialize model data with or without duck typed serialization
+behavior.
+`serialize_as_any` can be passed as a keyword argument to the various [serialization methods](#serializing-data) (such
+as
+[`model_dump()`][pydantic.BaseModel.model_dump] and [`model_dump_json()`][pydantic.BaseModel.model_dump_JSON] on
+Pydantic models).
 
 ```python
 from pydantic import BaseModel
@@ -885,5 +904,6 @@ using the following parameters:
   ```
 
   !!! tip
-  The experimental [`MISSING` sentinel](./experimental.md#missing-sentinel) can be used as an alternative to `exclude_unset`.
+  The experimental [`MISSING` sentinel](./experimental.md#missing-sentinel) can be used as an alternative to
+  `exclude_unset`.
   Any field with `MISSING` as a value is automatically excluded from the serialization output.

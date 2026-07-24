@@ -521,7 +521,10 @@ ruff check --preview src/
 - D213: multi-line summary on line 2 (keep on line 1)
 - DOC201/202/402/501/502: undocumented return/raises/params don't fail (soft set)
 
-Note: D401 (imperative mood) and D417 (undocumented params) are **not enforced** — they are ignored via `non-imperative-mood` and `undocumented-param` in `[tool.ruff.lint].ignore` (pyproject.toml is the SSOT; see the "Not enforced by the current Ruff policy" section above).
+Note: D401 (imperative mood) and D417 (undocumented params) are **not enforced**
+— they are ignored via `non-imperative-mood` and `undocumented-param` in
+`[tool.ruff.lint].ignore` (pyproject.toml is the SSOT; see the "Not enforced by
+the current Ruff policy" section above).
 
 ---
 
@@ -529,7 +532,7 @@ Note: D401 (imperative mood) and D417 (undocumented params) are **not enforced**
 
 ❌ **WRONG** (comment outside docstring):
 
-```python
+```python notest
 # Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Module description."""
 ```

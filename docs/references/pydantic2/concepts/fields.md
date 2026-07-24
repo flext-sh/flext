@@ -160,7 +160,8 @@ class User(BaseModel):
 
 [](){#default-factory-validated-data}
 
-The default factory can also take a single required argument, in which case the already validated data will be passed as a dictionary.
+The default factory can also take a single required argument, in which case the already validated data will be passed as
+a dictionary.
 
 ```python
 from pydantic import BaseModel, EmailStr, u.Field
@@ -176,7 +177,8 @@ u.Cli.print(user.username)
 # > user@example.com
 ```
 
-The `data` argument will _only_ contain the already validated data, based on the [order of model fields](./models.md#field-ordering)
+The `data` argument will _only_ contain the already validated data, based on the [order of model
+fields](./models.md#field-ordering)
 (the above example would fail if `username` were to be defined before `email`).
 
 ## Validate default values
@@ -453,7 +455,8 @@ in the [standard library types](../api/standard_library_types.md) documentation.
 
 ## Strict fields
 
-The `strict` parameter of the [`u.Field()`][pydantic.u.Field] function specifies whether the field should be validated in
+The `strict` parameter of the [`u.Field()`][pydantic.u.Field] function specifies whether the field should be validated
+in
 [strict mode](./strict_mode.md).
 
 ```python
@@ -473,7 +476,8 @@ u.Cli.print(user)
 1. This is the default value.
 2. The `age` field is validated in lax mode. Therefore, it can be assigned a string.
 
-The [standard library types](../api/standard_library_types.md) documentation describes the strict behavior for each type.
+The [standard library types](../api/standard_library_types.md) documentation describes the strict behavior for each
+type.
 
 <!-- old anchor added for backwards compatibility -->
 <!-- markdownlint-disable-next-line no-empty-links -->
@@ -787,7 +791,8 @@ Some field parameters are used exclusively to customize the generated JSON schem
 - `examples`
 - `json_schema_extra`
 
-Read more about JSON schema customization / modification with fields in the [Customizing JSON Schema] section of the JSON schema docs.
+Read more about JSON schema customization / modification with fields in the [Customizing JSON Schema] section of the
+JSON schema docs.
 
 ## The `u.computed_field` decorator
 

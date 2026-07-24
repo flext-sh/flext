@@ -48,10 +48,12 @@ Some differences between Pydantic dataclasses and models include:
 
 Similarly to Pydantic models, arguments used to instantiate the dataclass are [copied](./models.md#attribute-copies).
 
-To make use of the [various methods](./models.md#model-methods-and-properties) to validate, dump and generate a JSON Schema,
+To make use of the [various methods](./models.md#model-methods-and-properties) to validate, dump and generate a JSON
+Schema,
 you can wrap the dataclass with a [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] and make use of its methods.
 
-You can use both the Pydantic's [`u.Field()`][pydantic.u.Field] and the stdlib's [`field()`][dataclasses.field] functions:
+You can use both the Pydantic's [`u.Field()`][pydantic.u.Field] and the stdlib's [`field()`][dataclasses.field]
+functions:
 
 ```python
 import dataclasses
@@ -78,7 +80,8 @@ u.Cli.print(user)
 # > User(id=42, name='John Doe', friends=[0], age=None, height=250)
 ```
 
-The Pydantic [`@dataclass`][pydantic.dataclasses.dataclass] decorator accepts the same arguments as the standard decorator,
+The Pydantic [`@dataclass`][pydantic.dataclasses.dataclass] decorator accepts the same arguments as the standard
+decorator,
 with the addition of a `settings` parameter.
 
 ## Dataclass settings
@@ -117,7 +120,8 @@ There is also no way to provide validation [using the `__pydantic_extra__` attri
 
 ## Rebuilding dataclass schema
 
-The [`rebuild_dataclass()`][pydantic.dataclasses.rebuild_dataclass] function can be used to rebuild the core schema of the dataclass.
+The [`rebuild_dataclass()`][pydantic.dataclasses.rebuild_dataclass] function can be used to rebuild the core schema of
+the dataclass.
 See the [rebuilding model schema](./models.md#rebuilding-model-schema) section for more details.
 
 ## Stdlib dataclasses and Pydantic dataclasses
@@ -183,8 +187,10 @@ u.Cli.print(PydanticA(a="1"))
 
 ### Usage of stdlib dataclasses with `BaseModel`
 
-When a standard library dataclass is used within a Pydantic model, a Pydantic dataclass or a [`TypeAdapter`][pydantic.TypeAdapter],
-validation will be applied (and the [configuration](#dataclass-settings) stays the same). This means that using a stdlib or a Pydantic
+When a standard library dataclass is used within a Pydantic model, a Pydantic dataclass or a
+[`TypeAdapter`][pydantic.TypeAdapter],
+validation will be applied (and the [configuration](#dataclass-settings) stays the same). This means that using a stdlib
+or a Pydantic
 dataclass as a field annotation is functionally equivalent.
 
 ```python

@@ -7,19 +7,27 @@ patterns. Reviewed 2026-07-09.
 
 <!-- mro-wkii.14 (agent: codegen) — errata por pedido vivo (precedencia U1). -->
 
-> **ERRATA (2026-07-10) — supersede parcial por `AGENTS.md` U2–U8.** Por pedido vivo do operador (precedência U1), as seções §1 ("no MRO composition") e §2 ("`FlextConfig` `extra=\"allow\"`") deste doc estão **SUPERSEDED**. Padrão vigente: acesso strict `from <pkg> import config`/`settings` → `config.<Namespace>.<domain>`/`settings.<Namespace>.<domain>` (U2); domínios **modelados** `frozen=True, extra="forbid"` com `model_validate` na borda, nunca `dict`/`Any`/`object` no consumo (U3); `ConfigProxy` tipado/lazy em `u.<Namespace>` (U4); MRO para demais config/settings (U5); typing estrito U6; zero helpers/aliases (U7). Referência viva: `cosmos-main/src/cosmos_main/` (`_constants|_models|_protocols|_utilities/{config,settings}.py` + `_config.py`/`_settings.py`). Reescrita integral deste doc fica na lane do standardizer (mro-wkii.11).
+> **ERRATA (2026-07-10) — supersede parcial por `AGENTS.md` U2–U8.** Por pedido vivo do operador (precedência U1), as
+seções §1 ("no MRO composition") e §2 ("`FlextConfig` `extra=\"allow\"`") deste doc estão **SUPERSEDED**. Padrão
+vigente: acesso strict `from <pkg> import config`/`settings` →
+`config.<Namespace>.<domain>`/`settings.<Namespace>.<domain>` (U2); domínios **modelados**
+`frozen=True, extra="forbid"` com `model_validate` na borda, nunca `dict`/`Any`/`object` no consumo (U3); `ConfigProxy`
+tipado/lazy em `u.<Namespace>` (U4); MRO para demais config/settings (U5); typing estrito U6; zero helpers/aliases
+(U7). Referência viva: `cosmos-main/src/cosmos_main/` (`_constants|_models|_protocols|_utilities/{config,settings}.py`
+
++ `_config.py`/`_settings.py`). Reescrita integral deste doc fica na lane do standardizer (mro-wkii.11).
 
 ## 1. Law (non-negotiable)
 
-- `settings` and `config` are **pre-instantiated namespaced singletons**. Import them
++ `settings` and `config` are **pre-instantiated namespaced singletons**. Import them
   directly and use them directly: `from flext_x import settings, config`.
-- Each project subclasses the single base (`FlextSettings` / `FlextConfig`) **directly** —
++ Each project subclasses the single base (`FlextSettings` / `FlextConfig`) **directly** —
   there is no `FlextSettingsBase`, no field mixins, no MRO composition.
-- Grouped namespaces are **plain Pydantic-2 nested-model Fields** (`settings.Cli.*`), never a
-  custom `__getattr__` or a registry.
-- Layer-0 purity: `_settings.py` / `_config.py` import **only** stdlib + pydantic /
++ Grouped namespaces are **plain Pydantic-2 nested-model Fields** (`settings.Cli.*`), never a
+  custom `**getattr**` or a registry.
++ Layer-0 purity: `_settings.py` / `_config.py` import **only** stdlib + pydantic /
   pydantic-settings. No import of `c`/`t`/`p`/`m`/`u` or any project module.
-- Zero legacy: no `apply_override`, no `config_load`/`u.Cli.config_load`, no namespace
++ Zero legacy: no `apply_override`, no `config_load`/`u.Cli.config_load`, no namespace
   registry, no `for_context`, no compatibility shims. Removed in the same cycle.
 
 ## 2. Minimal base surface (flext-core)
@@ -27,7 +35,7 @@ patterns. Reviewed 2026-07-09.
 `FlextSettings` (mutable) and `FlextConfig` (frozen) expose ONLY:
 
 | Member | Purpose |
-|---|---|
+| --- | --- |
 | `fetch_global()` | return the per-class singleton (lazy, thread-safe) — the accessor projects call |
 | `update_global(**overrides)` | Pydantic-2 `model_copy(update=…)` mutation of the singleton (settings only) |
 | `clone(**overrides)` | deep-copy + revalidate for isolated injection snapshots |
@@ -41,7 +49,7 @@ declared fields) and auto-loads `config/*.yaml`.
 ## 3. Canonical project SETTINGS module — `<project>/settings.py`
 
 ```python
-from __future__ import annotations
+from **future** import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
@@ -79,15 +87,15 @@ settings = FlextXSettings.fetch_global()
 ```
 
 Consumers: `from flext_x import settings` → `settings.debug` (root) and
-`settings.X.endpoint` (namespace group). Env: `FLEXT_X_DEBUG`, `FLEXT_X_X__ENDPOINT`
-(nested delimiter `__`).
+`settings.X.endpoint` (namespace group). Env: `FLEXT_X_DEBUG`, `FLEXT_X_X**ENDPOINT`
+(nested delimiter `**`).
 
 ## 4. Canonical project CONFIG module — `<project>/_config.py`
 
 Identical shape, frozen + open, namespaced the same way:
 
 ```python
-from __future__ import annotations
+from **future** import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
@@ -119,23 +127,23 @@ config = FlextXConfig.fetch_global()
 Config files live at `<project root>/config/*.yaml`, auto-globbed + deep-merged (app-owned,
 CWD-relative).
 
-## 5. Root export (`<project>/__init__.py`)
+## 5. Root export (`<project>/**init**.py`)
 
-`config`/`settings` are emitted by codegen into the package root from the module `__all__`
-(`__all__ = ["FlextXSettings", "settings"]` / `["FlextXConfig", "config"]`). Never hand-edit
-the generated `__init__.py`; run `flext-infra codegen` after adding the modules.
+`config`/`settings` are emitted by codegen into the package root from the module `**all**`
+(`**all** = ["FlextXSettings", "settings"]` / `["FlextXConfig", "config"]`). Never hand-edit
+the generated `**init**.py`; run `flext-infra codegen` after adding the modules.
 
 ## 6. Forbidden (remove on sight)
 
-- `FlextSettingsBase` and any `FlextSettings{Core,Database,Dispatcher,Infrastructure,DI,Registry,Context}` mixin.
-- `register_namespace` / `auto_register` / `fetch_namespace` / `resolve_namespace_settings` /
-  `registered_namespaces` / `_namespace_registry` / settings `__getattr__`.
-- `apply_override`, `for_context`, `clone_for_injection`, `resolve_di_settings_provider`.
-- `u.Cli.config_load` / `config_load_dir` / `schema_validate`, `m.ConfigDocument`,
++ `FlextSettingsBase` and any `FlextSettings{Core,Database,Dispatcher,Infrastructure,DI,Registry,Context}` mixin.
++ `register_namespace` / `auto_register` / `fetch_namespace` / `resolve_namespace_settings` /
+  `registered_namespaces` / `_namespace_registry` / settings `**getattr**`.
++ `apply_override`, `for_context`, `clone_for_injection`, `resolve_di_settings_provider`.
++ `u.Cli.config_load` / `config_load_dir` / `schema_validate`, `m.ConfigDocument`,
   `p.ConfigLoader`, `t.Config*`, `u.config_load/merge/env_override`, `c.CONFIG_*`.
-- `def settings(self) -> XSettings: return XSettings.fetch_global()` property overrides —
++ `def settings(self) -> XSettings: return XSettings.fetch_global()` property overrides —
   use the module singleton `from flext_x import settings` directly, never `self.settings`.
-- Importing `c`/`t`/`p`/`m`/`u` inside `_settings.py` / `_config.py`.
++ Importing `c`/`t`/`p`/`m`/`u` inside `_settings.py` / `_config.py`.
 
 ## 7. Propagation checklist (per project)
 

@@ -28,7 +28,8 @@ u.Cli.print(Model(a="1"))
 As shown in the following sections, forward annotations are useful when you want to reference
 a type that is not yet defined in your code.
 
-The internal logic to resolve forward annotations is described in detail in [this section](../internals/resolving_annotations.md).
+The internal logic to resolve forward annotations is described in detail in [this
+section](../internals/resolving_annotations.md).
 
 ## Self-referencing (or "Recursive") Models
 

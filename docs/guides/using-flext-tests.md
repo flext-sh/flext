@@ -2,7 +2,8 @@
 
 <!-- mro-wkii.17.7 (agent: codex) — keep test-toolkit guidance separate from Make/codegen ownership. -->
 
-`flext_tests` is the shared test toolkit. It provides fixtures, matchers, file helpers, and a test runtime that binds the canonical aliases.
+`flext_tests` is the shared test toolkit. It provides fixtures, matchers, file helpers, and a test runtime that binds
+the canonical aliases.
 
 ## Aliases
 
@@ -10,10 +11,11 @@
 from flext_tests import c, e, m, p, r, s, t, u
 ```
 
-`flext_tests` reexports `d`, `e`, `h`, `r`, `x` from `flext_infra` and exposes domain helpers (`tk`, `td`, `tf`, `tv`, `tm`).
+`flext_tests` reexports `d`, `e`, `h`, `r`, `x` from `flext_infra` and exposes domain helpers (`tk`, `td`, `tf`, `tv`,
+`tm`).
 
 | Alias | Purpose |
-|-------|---------|
+| ------- | --------- |
 | `c` | constants |
 | `e` | errors / exceptions (reexported) |
 | `m` | models |
@@ -23,14 +25,15 @@ from flext_tests import c, e, m, p, r, s, t, u
 | `t` | typings |
 | `u` | utilities |
 
-**Important:** `s` is the service/test-runtime alias. Test settings are accessed via `FlextTestsSettings` (no short alias).
+**Important:** `s` is the service/test-runtime alias. Test settings are accessed via `FlextTestsSettings` (no short
+alias).
 
 ## Essential fixtures
 
 Add `flext_tests` to your project test dependencies and use these fixtures in `conftest.py` or directly in tests:
 
 | Fixture | Purpose |
-|---------|---------|
+| --------- | --------- |
 | `reset_settings` | Resets `FlextSettings`, `FlextTestsSettings`, and `FlextContainer` singletons between tests (autouse). |
 | `test_runtime` | Binds aliases (`c`, `e`, `m`, `p`, `r`, `s`, `t`, `u`) and `service`/`settings`/`logger` on class instances (autouse). |
 | `settings` | Clean `FlextTestsSettings(debug=True, trace=False)`. |
@@ -107,7 +110,7 @@ the canonical decision.
 
 ## Bad practices
 
-```python
+```python notest
 # Mutating global singleton without resetting
 FlextSettings.fetch_global().debug = True
 

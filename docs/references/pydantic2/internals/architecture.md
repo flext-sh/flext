@@ -20,7 +20,8 @@ Usage of the Pydantic library can be divided into two parts:
 Whenever a Pydantic [`BaseModel`][pydantic.main.BaseModel] is defined, the metaclass
 will analyze the body of the model to collect a number of elements:
 
-- Defined annotations to build model fields (collected in the [`model_fields`][pydantic.main.BaseModel.model_fields] attribute).
+- Defined annotations to build model fields (collected in the [`model_fields`][pydantic.main.BaseModel.model_fields]
+  attribute).
 - Model configuration, set with [`model_config`][pydantic.main.BaseModel.model_config].
 - Additional validators/serializers.
 - Private attributes, class variables, identification of generic parametrization, etc.
@@ -137,10 +138,12 @@ and will return the following JSON Schema:
     [Implementing `__get_pydantic_json_schema__`](../concepts/json_schema.md#implementing-__get_pydantic_json_schema__)
 
 While the `GenerateSchema` and [`GenerateJsonSchema`][pydantic.JSON_schema.GenerateJsonSchema] classes handle
-the creation of the corresponding schemas, Pydantic offers a way to customize them in some cases, following a wrapper pattern.
+the creation of the corresponding schemas, Pydantic offers a way to customize them in some cases, following a wrapper
+pattern.
 This customization is done through the `__get_pydantic_core_schema__` and `__get_pydantic_json_schema__` methods.
 
-To understand this wrapper pattern, we will take the example of metadata classes used with [`Annotated`][typing.Annotated],
+To understand this wrapper pattern, we will take the example of metadata classes used with
+[`Annotated`][typing.Annotated],
 where the `__get_pydantic_core_schema__` method can be used:
 
 ```python
@@ -182,11 +185,13 @@ create an instance of a `GetCoreSchemaHandler` to be passed to the `MyGt.__get_p
 { .annotate }
 
 1. In the case of our [`Annotated`][typing.Annotated] pattern, the `GetCoreSchemaHandler` is defined in a nested way.
-   Calling it will recursively call the other `__get_pydantic_core_schema__` methods until it reaches the `int` annotation,
+   Calling it will recursively call the other `__get_pydantic_core_schema__` methods until it reaches the `int`
+   annotation,
    where a simple `{'type': 'int'}` schema is returned.
 
 The `source` argument depends on the core schema generation pattern. In the case of [`Annotated`][typing.Annotated],
-the `source` will be the type being annotated. When [defining a custom type](../concepts/types.md#as-a-method-on-a-custom-type),
+the `source` will be the type being annotated. When [defining a custom type](../concepts/types.md#as-a-method-on-a-
+custom-type),
 the `source` will be the actual class where `__get_pydantic_core_schema__` is defined.
 
 ## Model validation and serialization
