@@ -157,7 +157,11 @@ def close_pr(slug: str, number: int, *, dry_run: bool, reason: str) -> bool:
 
 
 def merge_pr(
-    slug: str, pr: dict[str, int | str], *, dry_run: bool, close_on_conflict: bool = True
+    slug: str,
+    pr: dict[str, int | str],
+    *,
+    dry_run: bool,
+    close_on_conflict: bool = True,
 ) -> tuple[bool, bool, bool]:
     """Merge a single Dependabot PR using the standard commit schema.
 
