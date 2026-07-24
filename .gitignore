@@ -88,6 +88,8 @@ scripts/maintenance/
 !AGENTS.md
 !codex.md
 !.markdownlint.json
+!.markdownlintignore
+!.shellcheckrc
 
 # Git configuration
 !.gitignore
