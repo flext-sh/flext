@@ -24,12 +24,14 @@
 ## File Structure (pilot: flext-tap-ldap)
 
 flext-meltano (SSOT, W0):
+
 - `_models/declarative_tap.py` CREATE: `m.Meltano.StreamSpec` (name, json_schema, primary_keys, replication_key) + `m.Meltano.TapSpec` (tap_name, config_jsonschema, streams).
 - `_protocols/singer.py` MODIFY: add `p.Meltano.RecordFetcher` (`fetch(stream_name, config)->r[Sequence[JsonMapping]]`).
 - `services/declarative_tap.py` CREATE: singer_sdk builder — from `TapSpec` + `RecordFetcher` build a real `singer_sdk.Tap` + dynamic `Stream` subclasses whose `get_records` delegate to the fetcher.
 - `services/consumer_bases/tap_service_base.py` MODIFY: concrete `create_tap_instance()` (declarative) + `cli_main()` threads `--config`; fix the config=None crash.
 
 flext-tap-ldap (pilot, W1) target (~5 files, was 18):
+
 - `api.py`: thin `FlextTapLdapService(FlextMeltanoTapServiceBase)` — `tap_name`, `tap_spec` property (streams from config business rules), `fetch_records` delegating to `services/extract.py`.
 - `cli.py`: `def main(args=None)->int: return FlextTapLdapService().cli_main(args)`; console `flext_tap_ldap.cli:main`.
 - `services/extract.py`: `FlextTapLdapExtractService(s)` fetch via flext-ldap `FlextLdap` (imports only c,t,p,m,u + s).

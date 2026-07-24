@@ -10,7 +10,6 @@ Pyrefly gives you IDE features such as go-to-definition and autocomplete on your
 
 Here’s an example of signature help, powered by Pyrefly’s understanding of the Pydantic-specific `validation_alias` keyword:
 
-
 As you type `Model()`, Pyrefly hints that you need to use the name `x_` to populate the `x` field.
 
 ## Type checker

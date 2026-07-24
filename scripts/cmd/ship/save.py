@@ -84,7 +84,7 @@ def run() -> int:
         return 1
 
     if Dispatch.surface_validation_enabled():
-        u.Cli.print("SURFACE-VALIDATE: python -m scripts.cmd.ship.save")
+        u.Cli.emit_raw("SURFACE-VALIDATE: python -m scripts.cmd.ship.save\n")
         return 0
 
     if not Dispatch.env_enabled("APPLY"):

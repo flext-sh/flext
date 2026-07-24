@@ -5,7 +5,6 @@ When using [Visual Studio Code (VS Code)](https://code.visualstudio.com/), there
 
 This means that you will have **autocompletion** (or "IntelliSense") and **error checks** for types and required arguments even while creating new Pydantic model instances.
 
-
 ## Settingsure VS Code
 
 To take advantage of these features, you need to make sure you configure VS Code correctly, using the recommended settings.
@@ -35,12 +34,9 @@ You can enable type error checks from Pylance with these steps:
 - You will find an option under `Python › Analysis: Type Checking Mode`
 - Set it to `basic` or `strict` (by default it's `off`)
 
-
 Now you will not only get autocompletion when creating new Pydantic model instances but also error checks for **required arguments**.
 
-
 And you will also get error checks for **invalid data types**.
-
 
 !!! note "Technical Details"
 Pylance is the VS Code extension, it's closed source, but free to use. Underneath, Pylance uses an open source tool (also from Microsoft) called [Pyright](https://github.com/microsoft/pyright) that does all the heavy lifting.
@@ -60,7 +56,6 @@ To enable mypy in VS Code, do the following:
 - You will find an option under `Python › Linting: Mypy Enabled`
 - Check the box (by default it's unchecked)
 
-
 ## Tips and tricks
 
 Here are some additional tips and tricks to improve your developer experience when using VS Code with Pydantic.
@@ -72,7 +67,6 @@ The way this additional editor support works is that Pylance will treat your Pyd
 And it will show **strict type error checks** about the data types passed in arguments when creating a new Pydantic model instance.
 
 In this example you can see that it shows that a `str` of `'23'` is not a valid `int` for the argument `age`.
-
 
 It would expect `age=23` instead of `age='23'`.
 
@@ -113,7 +107,6 @@ quest = Quest(
 The type of the field `knight` is declared with the class `Knight` (a Pydantic model) and the code is passing a literal `dict` instead. This is still valid for Pydantic, and the `dict` would be automatically converted to a `Knight` instance.
 
 Nevertheless, it would be detected as a type error:
-
 
 In those cases, there are several ways to disable or ignore strict errors in very specific places, while still preserving them in the rest of the code.
 
@@ -233,7 +226,6 @@ It prevents other code from changing a model instance once it's created, keeping
 When using the second version to declare `frozen=True` (with **keyword arguments** in the class definition),
 Pylance can use it to help you check in your code and **detect errors** when something is trying to set values
 in a model that is "frozen".
-
 
 ## Adding a default with `u.Field`
 

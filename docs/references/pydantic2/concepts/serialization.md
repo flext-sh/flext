@@ -193,7 +193,6 @@ u.Cli.print(dict(m))
 
 Pydantic models support efficient pickling and unpickling.
 
-
 ```python {test="skip"}
 import pickle
 

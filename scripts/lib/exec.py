@@ -50,7 +50,7 @@ class CommandExecution:
                 *make_args,
                 *CommandExecution.make_variable_args(extra_env),
             ))
-            u.Cli.print(f"SURFACE-VALIDATE: {rendered}")
+            u.Cli.emit_raw(f"SURFACE-VALIDATE: {rendered}\n")
             return 0
         return CommandExecution.run_process((
             "make",
@@ -106,7 +106,7 @@ class CommandExecution:
         result = u.Cli.run_raw(command, cwd=CommandRegistry.ROOT, env=extra_env)
         if result.failure:
             if result.error:
-                u.Cli.print(result.error, file=sys.stderr)
+                sys.stderr.write(f"{result.error}\n")
             return 1
         output = result.value
         if output.stdout:

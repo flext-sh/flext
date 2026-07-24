@@ -49,4 +49,3 @@ u.Cli.print(pydantic_model.model_dump(by_alias=True))
 !!! note
 The example above works because aliases have priority over field names for
 field population. Accessing `SQLModel`'s `metadata` attribute would lead to a `ValidationError`.
-

@@ -28,7 +28,7 @@ class CommandCli:
         try:
             return CommandCli.route(args)
         except CommandRegistry.Error as exc:
-            u.Cli.print(f"ERRO: {exc}", file=sys.stderr)
+            sys.stderr.write(f"ERRO: {exc}\n")
             return 2
 
     @staticmethod
@@ -70,7 +70,7 @@ class CommandCli:
             return CommandCli.print_command_or_verb_help(registry, verb, what)
         if requested:
             return CommandCli.print_verb_help(registry, requested)
-        u.Cli.print(CommandRenderer.global_help(registry))
+        u.Cli.emit_raw(f"{CommandRenderer.global_help(registry)}\n")
         return 0
 
     @staticmethod
@@ -78,13 +78,13 @@ class CommandCli:
         registry: CommandRegistry.Registry, verb: str, what: str
     ) -> int:
         """Print help for one command."""
-        u.Cli.print(CommandRenderer.command_help(registry, verb, what))
+        u.Cli.emit_raw(f"{CommandRenderer.command_help(registry, verb, what)}\n")
         return 0
 
     @staticmethod
     def print_verb_help(registry: CommandRegistry.Registry, requested_verb: str) -> int:
         """Print help for one verb."""
-        u.Cli.print(CommandRenderer.verb_help(registry, requested_verb))
+        u.Cli.emit_raw(f"{CommandRenderer.verb_help(registry, requested_verb)}\n")
         return 0
 
     @staticmethod
@@ -128,7 +128,9 @@ class CommandCli:
                 command, require_required=not is_dry_run
             )
             if is_dry_run:
-                u.Cli.print(CommandRenderer.dry_run(command, requested_verb, what))
+                u.Cli.emit_raw(
+                    f"{CommandRenderer.dry_run(command, requested_verb, what)}\n"
+                )
                 continue
             child_code = CommandExecution.run(command)
             if child_code != 0:
