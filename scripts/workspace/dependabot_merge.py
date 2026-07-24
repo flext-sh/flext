@@ -73,7 +73,7 @@ def repo_slug_from_origin(path: Path) -> str | None:
     return None
 
 
-def list_dependabot_prs(slug: str, base: str) -> list[dict[str, object]]:
+def list_dependabot_prs(slug: str, base: str) -> list[dict[str, int | str]]:
     """List open Dependabot PRs targeting the given base branch."""
     result = run(
         [
@@ -157,15 +157,15 @@ def close_pr(slug: str, number: int, *, dry_run: bool, reason: str) -> bool:
 
 
 def merge_pr(
-    slug: str, pr: dict[str, object], *, dry_run: bool, close_on_conflict: bool = True
+    slug: str, pr: dict[str, int | str], *, dry_run: bool, close_on_conflict: bool = True
 ) -> tuple[bool, bool, bool]:
     """Merge a single Dependabot PR using the standard commit schema.
 
     Returns (merged_or_enqueued, skipped, closed).
     """
-    number = pr["number"]
-    title = pr["title"]
-    head_ref = pr["headRefName"]
+    number = int(pr["number"])
+    title = str(pr["title"])
+    head_ref = str(pr["headRefName"])
     message = standard_message(title, head_ref)
     if message is None:
         return False, True, False
