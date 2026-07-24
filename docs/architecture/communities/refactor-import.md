@@ -13,7 +13,7 @@ Community of 34 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextInfraRefactorTypingUnificationRule | Class | flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py | 13-26 |
-| __init__ | Function | flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py | 14-15 |
+| **init** | Function | flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py | 14-15 |
 | apply | Function | flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py | 17-26 |
 | TestsFlextInfraRefactorInfraRefactorTypingUnifier | Class | flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py | 29-513 |
 | test_converts_typealias_to_pep695 | Test | flext-infra/tests/unit/refactor/test_infra_refactor_typing_unifier.py | 32-47 |

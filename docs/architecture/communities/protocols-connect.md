@@ -38,7 +38,7 @@ Community of 31 nodes
 | _request_content_body | Function | flext-api/src/flext_api/_protocols/_transports_request.py | 127-144 |
 | _response_model | Function | flext-api/src/flext_api/_protocols/_transports_request.py | 147-154 |
 | FlextWebTransport | Class | flext-api/src/flext_api/_protocols/transports.py | 31-102 |
-| __init__ | Function | flext-api/src/flext_api/_protocols/transports.py | 39-41 |
+| **init** | Function | flext-api/src/flext_api/_protocols/transports.py | 39-41 |
 | connect | Function | flext-api/src/flext_api/_protocols/transports.py | 44-59 |
 | disconnect | Function | flext-api/src/flext_api/_protocols/transports.py | 62-71 |
 | send | Function | flext-api/src/flext_api/_protocols/transports.py | 74-95 |

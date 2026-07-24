@@ -22,7 +22,7 @@ Community of 3956 nodes
 | project_tool_flext | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 42-44 |
 | project_namespace_config | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 48-50 |
 | MarkdownCodeBlockItem | Class | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 41-85 |
-| __init__ | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 44-51 |
+| **init** | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 44-51 |
 | runtest | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 54-70 |
 | repr_failure | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 73-80 |
 | reportinfo | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 83-85 |

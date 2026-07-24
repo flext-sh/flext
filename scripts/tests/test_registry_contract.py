@@ -132,7 +132,7 @@ def test_run_shell_mirrors_captured_output(capsys: pytest.CaptureFixture[str]) -
     code = Dispatch.run_shell((
         sys.executable,
         "-c",
-        "import sys; u.Cli.print('child-out'); u.Cli.print('child-err', file=sys.stderr)",
+        "import sys; u.Cli.emit_raw('child-out\\n'); sys.stderr.write('child-err\\n')",
     ))
 
     captured = capsys.readouterr()

@@ -14,14 +14,14 @@ Community of 289 nodes
 |------|------|------|-------|
 | Tests | Class | flext-infra/tests/utilities.py | 41-1302 |
 | DeptrySelector | Class | flext-infra/tests/utilities.py | 44-69 |
-| __init__ | Function | flext-infra/tests/utilities.py | 49-53 |
+| **init** | Function | flext-infra/tests/utilities.py | 49-53 |
 | resolve_projects | Function | flext-infra/tests/utilities.py | 57-69 |
 | TomlReaderSequence | Class | flext-infra/tests/utilities.py | 180-203 |
 | read_plain | Function | flext-infra/tests/utilities.py | 191-203 |
 | infra_mapping | Function | flext-infra/tests/utilities.py | 265-268 |
 | infra_mapping_result | Function | flext-infra/tests/utilities.py | 271-276 |
 | MigratorDiscovery | Class | flext-infra/tests/utilities.py | 329-348 |
-| __init__ | Function | flext-infra/tests/utilities.py | 332-339 |
+| **init** | Function | flext-infra/tests/utilities.py | 332-339 |
 | is_docker_available | Function | flext-infra/tests/utilities.py | 368-369 |
 | is_project_valid | Function | flext-infra/tests/utilities.py | 372-382 |
 | create_github_workspace | Function | flext-infra/tests/utilities.py | 465-501 |
@@ -42,9 +42,9 @@ Community of 289 nodes
 | write_migrator_project | Function | flext-infra/tests/utilities.py | 1108-1120 |
 | make_issue | Function | flext-infra/tests/utilities.py | 1143-1158 |
 | DetectorReportStub | Class | flext-infra/tests/utilities.py | 1222-1229 |
-| __init__ | Function | flext-infra/tests/utilities.py | 1225-1226 |
+| **init** | Function | flext-infra/tests/utilities.py | 1225-1226 |
 | DetectorDepsStub | Class | flext-infra/tests/utilities.py | 1231-1302 |
-| __init__ | Function | flext-infra/tests/utilities.py | 1237-1241 |
+| **init** | Function | flext-infra/tests/utilities.py | 1237-1241 |
 | discover_project_paths | Function | flext-infra/tests/utilities.py | 1244-1253 |
 | run_deptry | Function | flext-infra/tests/utilities.py | 1256-1268 |
 | build_project_report | Function | flext-infra/tests/utilities.py | 1271-1277 |
