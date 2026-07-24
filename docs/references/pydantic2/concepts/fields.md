@@ -4,7 +4,7 @@
 
 In this section, we will go through the available mechanisms to customize Pydantic model fields:
 [default values](#default-values), [JSON Schema metadata](#customizing-json-schema),
-[constraints](#u-field-constraints), etc.
+[constraints](#ufield-constraints), etc.
 
 To do so, the [`u.Field()`][pydantic.fields.u.Field] function is used a lot, and behaves the same way as
 the standard library [`field()`][dataclasses.field] function for dataclasses – by assigning to the
@@ -63,7 +63,7 @@ However, note that certain arguments to the [`u.Field()`][pydantic.fields.u.Fiel
 assignment form instead.
 
 > **Tip:** The annotated pattern can also be used to add metadata to specific parts of the type. For instance,
-> [validation constraints](#u-field-constraints) can be added this way:
+> [validation constraints](#ufield-constraints) can be added this way:
 >
 > ```python
 > from typing import Annotated
@@ -77,7 +77,7 @@ assignment form instead.
 >     # Invalid: [-1, 2]
 > ```
 >
-> Be careful not mixing *field* and *type* metadata:
+> Be careful not mixing _field_ and _type_ metadata:
 >
 > ```python
 > class Model(BaseModel):
@@ -321,8 +321,8 @@ u.Cli.print(user.model_dump(by_alias=True))  # (2)!
 > If you provide a value for the
 > [`alias_generator`][pydantic.config.ConfigDict.alias_generator] model setting, you can control the order
 > of precedence for field alias and generated aliases via the `alias_priority` field parameter. You can
-> read more about alias precedence [here](../concepts/alias.md#alias-precedence).
-
+> read more about [alias precedence](../concepts/alias.md#alias-precedence).
+>
 > **Tip:** Static type checking/IDE support
 >
 > If you provide a value for the `alias` field parameter, static type checkers will use this alias instead
@@ -358,7 +358,7 @@ u.Cli.print(user.model_dump(by_alias=True))  # (2)!
 > user = User(name="johndoe")  # (1)!
 > ```
 >
-> 1. *Not* accepted by type checkers.
+> 1. _Not_ accepted by type checkers.
 >
 > If you still want type checkers to use the field name and not the alias, the
 > [annotated pattern](#the-annotated-pattern) can be used (which is only understood by Pydantic):
@@ -380,7 +380,7 @@ u.Cli.print(user.model_dump(by_alias=True))  # (2)!
 > ```
 >
 > 1. Accepted by type checkers.
-> 2. *Not* accepted by type checkers.
+> 2. _Not_ accepted by type checkers.
 >
 > ### Validation Alias
 >
@@ -779,7 +779,7 @@ The property will also be taken into account in the JSON Schema (in serializatio
 
 > **Note:** Properties can be useful for fields that are computed from other fields, or for fields that
 > are expensive to be computed (and thus, are cached if using [`cached_property`][functools.cached_property]).
-> However, note that Pydantic will *not* perform any additional logic on the wrapped property
+> However, note that Pydantic will _not_ perform any additional logic on the wrapped property
 > (validation, cache invalidation, etc.).
 
 Here's an example of the JSON schema (in serialization mode) generated for a model with a computed field:

@@ -359,8 +359,8 @@ u.Cli.print(DemoDataclass(product_id=2468))
 # > DemoDataclass(product_id='02468')
 ```
 
-The dataclass [`__post_init__()`][dataclasses.__post_init__] method is also supported, and will
-be called between the calls to _before_ and _after_ model validators.
+The dataclass [`__post_init__()`][dataclasses-post_init] method is also supported, and will
+be called between the calls to *before* and *after* model validators.
 
 ### Example
 
@@ -407,3 +407,5 @@ user = User(**{"birth": {"year": 1995, "month": 3, "day": 2}})
 ```
 
 Unlike Pydantic models, the `values` parameter is of type [`ArgsKwargs`][pydantic_core.ArgsKwargs].
+
+[dataclasses-post_init]: <https://docs.python.org/3/library/dataclasses.html#dataclasses.__post_init__>
