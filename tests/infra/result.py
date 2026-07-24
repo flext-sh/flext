@@ -1,3 +1,5 @@
+"""FLEXT infra test helpers for result."""
+
 from __future__ import annotations
 
 from flext_core import r as _r

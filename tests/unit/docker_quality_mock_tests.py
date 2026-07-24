@@ -1,3 +1,5 @@
+"""FLEXT infra test helpers for docker_quality_mock_tests."""
+
 from __future__ import annotations
 
 from pathlib import Path
