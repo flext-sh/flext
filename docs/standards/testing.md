@@ -86,6 +86,24 @@ When output is stable and reviewable, prefer golden-file examples. Store them un
 `tests/fixtures/` or the project-local equivalent. Update golden files
 deliberately, never as a side effect of unrelated changes.
 
+## Config and settings as the test SSOT (P0)
+
+Tests must derive their expectations from the project's canonical `config/*.yaml`
+and `settings` objects. They must **not** hardcode values that can change in
+configuration, environment variables, or CLI knobs.
+
+- Load expected values through `config.<Ns>.*` / `settings.<Ns>.*` fixtures, not
+  literal constants copied from today's YAML.
+- When a config or setting changes, the test must either adapt automatically or
+  fail with a message that points to the config source.
+- Do not assert against snapshots, golden files, or string constants that encode
+  config values unless those snapshots are regenerated from the same config.
+- Validation rules, allowed lists, timeouts, paths, and naming conventions are all
+  config-driven; tests must exercise the config boundary, not memorize it.
+
+This is a universal rule. Any test that becomes stale because of a config
+change is a test defect and must be fixed at its root.
+
 ## Parametrization
 
 Use `@pytest.mark.parametrize` for multi-case checks.
