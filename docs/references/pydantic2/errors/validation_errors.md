@@ -654,7 +654,8 @@ This error is also raised for strict fields when the input value is not an insta
 
 ## `decimal_whole_digits`
 
-This error is raised when the value provided for a `Decimal` has more digits before the decimal point than `max_digits` - `decimal_places` (as long as both are specified):
+This error is raised when the value provided for a `Decimal` has more digits before the decimal point
+than `max_digits` - `decimal_places` (as long as both are specified):
 
 ```python
 from decimal import Decimal
@@ -675,7 +676,8 @@ except ValidationError as exc:
 
 ## `default_factory_not_called`
 
-This error is raised when a [default factory taking validated data](../concepts/fields.md#default-factory-validated-data)
+This error is raised when a [default factory taking
+validated data](../concepts/fields.md#default-factory-validated-data)
 can't be called, because validation failed on previous fields:
 
 ```python
@@ -856,7 +858,8 @@ except ValidationError as exc:
 
 ## `frozen_instance`
 
-This error is raised when `frozen` is set in the [configuration](../concepts/settings.md) and you attempt to delete or assign a new value to
+This error is raised when `frozen` is set in the [configuration](../concepts/settings.md) and you attempt to delete or
+assign a new value to
 any of the fields:
 
 ```python
@@ -1434,7 +1437,8 @@ except ValidationError as exc:
 
 ## `model_attributes_type`
 
-This error is raised when the input value is not a valid dictionary, model instance, or instance that fields can be extracted from:
+This error is raised when the input value is not a valid dictionary, model instance, or instance that fields can be
+extracted from:
 
 ```python
 from pydantic import BaseModel, ValidationError
@@ -1538,7 +1542,8 @@ except ValidationError as exc:
 
 ## `needs_python_object`
 
-This type of error is raised when validation is attempted from a format that cannot be converted to a Python t.JsonValue.
+This type of error is raised when validation is attempted from a format that cannot be converted to a Python
+t.JsonValue.
 For example, we cannot check `isinstance` or `issubclass` from JSON:
 
 ```python
@@ -1599,23 +1604,24 @@ except ValidationError as exc:
     # > 'none_required'
 ```
 
-!!! note
-You may encounter this error when there is a naming collision in your model between a field name and its type. More specifically, this error is likely to be thrown when the default value of that field is `None`.
-
-    For example, the following would yield the `none_required` validation error since the field `int` is set to a default value of `None` and has the exact same name as its type, which causes problems with validation.
-
-    ```python {test="skip"}
-    from typing import Optional
-
-    from pydantic import BaseModel
-
-
-    class M1(BaseModel):
-        int: Optional[int] = None
-
-
-    m = M1(int=123)  # errors
-    ```
+> **Note:** You may encounter this error when there is a naming collision in your model between a field name and its type.
+> More specifically, this error is likely to be thrown when the default value of that field is `None`.
+>
+> For example, the following would yield the `none_required` validation error since the field `int` is set to a
+> default value of `None` and has the exact same name as its type, which causes problems with validation.
+>
+> ```python {test="skip"}
+> from typing import Optional
+>
+> from pydantic import BaseModel
+>
+>
+> class M1(BaseModel):
+>     int: Optional[int] = None
+>
+>
+> m = M1(int=123)  # errors
+> ```
 
 ## `recursion_loop`
 

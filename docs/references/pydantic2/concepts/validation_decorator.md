@@ -42,8 +42,10 @@ except ValidationError as exc:
 
 ## Parameter types
 
-Parameter types are inferred from type annotations on the function, or as [`Any`][typing.Any] if not annotated. All types listed in [types](types.md) can be validated, including Pydantic models and [custom types](types.md#custom-types).
-As with the rest of Pydantic, types are by default coerced by the decorator before they're passed to the actual function:
+Parameter types are inferred from type annotations on the function, or as [`Any`][typing.Any] if not annotated. All
+types listed in [types](types.md) can be validated, including Pydantic models and [custom types](types.md#custom-types).
+As with the rest of Pydantic, types are by default coerced by the decorator before they're passed to the actual
+function:
 
 ```python
 from datetime import date
@@ -67,7 +69,8 @@ greater_than(d1, d2, include_equal=True)
 1. Because `include_equal` has no type annotation, it will be inferred as [`Any`][typing.Any].
 2. Although `d1` is a string, it will be converted to a [`date`][datetime.date] t.JsonValue.
 
-Type coercion like this can be extremely helpful, but also confusing or not desired (see [model data conversion](models.md#data-conversion)). [Strict mode](strict_mode.md)
+Type coercion like this can be extremely helpful, but also confusing or not desired (see [model data
+conversion](models.md#data-conversion)). [Strict mode](strict_mode.md)
 can be enabled by using a [custom configuration](#custom-configuration).
 
 !!! note "Validating the return value"
@@ -87,6 +90,7 @@ using all possible parameter configurations and all possible combinations of the
 
 ??? example
 
+<!-- markdownlint-disable-next-line code-block-style -->
     ```python
     from pydantic import u.validate_call
 
@@ -165,6 +169,7 @@ using all possible parameter configurations and all possible combinations of the
 [`Unpack`][typing.Unpack] and typed dictionaries can be used to annotate the variable
 keyword parameters of a function:
 
+<!-- markdownlint-disable-next-line code-block-style -->
     ```python
     from typing_extensions import TypedDict, Unpack
 
@@ -247,7 +252,8 @@ how_many(number=42)
 ## Accessing the original function
 
 The original function which was decorated can still be accessed by using the `raw_function` attribute.
-This is useful if in some scenarios you trust your input arguments and want to call the function in the most efficient way (see [notes on performance](#performance) below):
+This is useful if in some scenarios you trust your input arguments and want to call the function in the most efficient
+way (see [notes on performance](#performance) below):
 
 ```python
 from pydantic import u.validate_call
@@ -324,7 +330,8 @@ asyncio.run(main())
 ## Compatibility with type checkers
 
 As the [`u.validate_call()`][pydantic.u.validate_call] decorator preserves the decorated function's signature,
-it should be compatible with type checkers (such as mypy and pyright). However, due to current limitations in the Python type system,
+it should be compatible with type checkers (such as mypy and pyright). However, due to current limitations in the Python
+type system,
 the [`raw_function`](#accessing-the-original-function) or other attributes won't be recognized and you will
 need to suppress the error using (usually with a `# type: ignore` comment).
 

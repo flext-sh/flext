@@ -4,21 +4,26 @@ In most cases Pydantic won't be your bottle neck, only follow this if you're sur
 
 ## In general, use `model_validate_json()` not `model_validate(json.loads(...))`
 
-On `model_validate(json.loads(...))`, the JSON is parsed in Python, then converted to a dict, then it's validated internally.
+On `model_validate(json.loads(...))`, the JSON is parsed in Python, then converted to a dict, then it's validated
+internally.
 On the other hand, `model_validate_json()` already performs the validation internally.
 
-There are a few cases where `model_validate(json.loads(...))` may be faster. Specifically, when using a `'before'` or `'wrap'` validator
+There are a few cases where `model_validate(json.loads(...))` may be faster. Specifically, when using a `'before'` or
+`'wrap'` validator
 on a model, validation may be faster with the two step method. You can read more about these special cases in
 [this discussion](https://github.com/pydantic/pydantic/discussions/6388#discussioncomment-8193105).
 
 Many performance improvements are currently in the works for `pydantic-core`, see
 [this discussion](https://github.com/pydantic/pydantic/discussions/6388#discussioncomment-8194048).
-Once these changes are merged, we should be at the point where `model_validate_json()` is always faster than `model_validate(json.loads(...))`.
+Once these changes are merged, we should be at the point where `model_validate_json()` is always faster than
+`model_validate(json.loads(...))`.
 
 ## `TypeAdapter` instantiated once
 
-The idea here is to avoid constructing validators and serializers more than necessary. Each time a `TypeAdapter` is instantiated,
-it will construct a new validator and serializer. If you're using a `TypeAdapter` in a function, it will be instantiated each time
+The idea here is to avoid constructing validators and serializers more than necessary. Each time a `TypeAdapter` is
+instantiated,
+it will construct a new validator and serializer. If you're using a `TypeAdapter` in a function, it will be instantiated
+each time
 the function is called. Instead, instantiate it once, and reuse it.
 
 === ":x: Bad"
@@ -182,8 +187,10 @@ for complex validation logic, but if you're looking for the best performance, yo
 
 ## Failing early with `FailFast`
 
-Starting in v2.8+, you can apply the `FailFast` annotation to sequence types to fail early if any item in the sequence fails validation.
-If you use this annotation, you won't get validation errors for the rest of the items in the sequence if one fails, so you're effectively
+Starting in v2.8+, you can apply the `FailFast` annotation to sequence types to fail early if any item in the sequence
+fails validation.
+If you use this annotation, you won't get validation errors for the rest of the items in the sequence if one fails, so
+you're effectively
 trading off visibility for performance.
 
 ```python

@@ -11,7 +11,7 @@ Community of 31 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | TestsFlextApiTransportsCharacterization | Class | flext-api/tests/unit/test_transports_characterization.py | 20-151 |
 | transport | Function | flext-api/tests/unit/test_transports_characterization.py | 24-26 |
 | test_connect_rejects_empty_url | Test | flext-api/tests/unit/test_transports_characterization.py | 28-35 |

@@ -5,7 +5,8 @@
 
 ## Context
 
-FLEXT needs one consistent contract for fallible operations across packages. The platform should make success and failure explicit in signatures and keep error handling composable.
+FLEXT needs one consistent contract for fallible operations across packages. The platform should make success and
+failure explicit in signatures and keep error handling composable.
 
 ## Decision
 

@@ -1,6 +1,8 @@
 # Testing Standards
 
-Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `.agents/skills/flext-quality-gates/SKILL.md`.
+Guidelines for writing tests in the FLEXT monorepo. For the root engineering law,
+see `AGENTS.md`. For gate commands, see
+`.agents/skills/flext-quality-gates/SKILL.md`.
 
 ## Mindset
 
@@ -24,7 +26,8 @@ def test_user_creation() -> None:
 
 ## Imports in tests
 
-Use the same aliases as production code. Test facades may be named `TestsFlext<Project><Tier>` when the project exposes one.
+Use the same aliases as production code. Test facades may be named
+`TestsFlext<Project><Tier>` when the project exposes one.
 
 ```python
 from __future__ import annotations
@@ -52,7 +55,8 @@ def test_load_user() -> None:
 
 ## Fixtures
 
-Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it to the canonical `conftest.py` for the affected tier.
+Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it to
+the canonical `conftest.py` for the affected tier.
 
 ```python
 import pytest
@@ -78,7 +82,9 @@ FlextContainer.reset_for_testing()
 
 ## Golden files and examples
 
-When output is stable and reviewable, prefer golden-file examples. Store them under `tests/fixtures/` or the project-local equivalent. Update golden files deliberately, never as a side effect of unrelated changes.
+When output is stable and reviewable, prefer golden-file examples. Store them under
+`tests/fixtures/` or the project-local equivalent. Update golden files
+deliberately, never as a side effect of unrelated changes.
 
 ## Parametrization
 
@@ -95,13 +101,13 @@ def test_parse_int(raw: str, expected: int) -> None:
 
 ## What to avoid
 
-| Anti-pattern | Fix |
+|Anti-pattern|Fix|
 |--------------|-----|
-| Testing private methods | test public behavior |
-| Heavy mocking without real-flow fallback | prefer real dependencies or fakes |
-| `assert True` smoke tests | assert a real invariant |
-| Ignoring enforcement warnings | treat warnings as failures |
-| Shared mutable fixtures | return fresh objects or use factories |
+|Testing private methods|test public behavior|
+|Heavy mocking without real-flow fallback|prefer real dependencies or fakes|
+|`assert True` smoke tests|assert a real invariant|
+|Ignoring enforcement warnings|treat warnings as failures|
+|Shared mutable fixtures|return fresh objects or use factories|
 
 ## Running tests
 
@@ -115,7 +121,9 @@ make test PROJECT=<proj>
 
 ## Coverage
 
-`pyproject.toml` sets `fail_under = 45` for the consolidated workspace. Project-local targets may be higher. Do not lower the threshold to make a build pass.
+`pyproject.toml` sets `fail_under = 45` for the consolidated workspace.
+Project-local targets may be higher. Do not lower the threshold to make a build
+pass.
 
 ## Related
 
