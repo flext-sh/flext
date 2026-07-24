@@ -29,7 +29,7 @@ Community of 308 nodes
 | main | Function | flext-auth/examples/basic_auth_05.py | 21-44 |
 | _emit | Function | flext-auth/examples/basic_refactored_usage_06.py | 21-23 |
 | FlextAuthDemo | Class | flext-auth/examples/basic_refactored_usage_06.py | 26-150 |
-| __init__ | Function | flext-auth/examples/basic_refactored_usage_06.py | 29-32 |
+| **init** | Function | flext-auth/examples/basic_refactored_usage_06.py | 29-32 |
 | demo_user_authentication | Function | flext-auth/examples/basic_refactored_usage_06.py | 34-45 |
 | demo_user_registration | Function | flext-auth/examples/basic_refactored_usage_06.py | 47-59 |
 | _print_token_info | Function | flext-auth/examples/basic_refactored_usage_06.py | 61-64 |

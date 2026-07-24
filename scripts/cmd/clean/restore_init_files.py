@@ -69,7 +69,7 @@ def _validate_imports(workspace_root: Path) -> p.Result[bool]:
         [
             sys.executable,
             "-c",
-            "import flext_infra, flext_core, flext_cli, flext_tests; u.Cli.print('ok')",
+            "import flext_infra, flext_core, flext_cli, flext_tests; u.Cli.emit_raw('ok\\n')",
         ],
         cwd=workspace_root,
         env=env,
@@ -82,7 +82,9 @@ def run() -> int:
         u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd()))
     ).resolve()
     if Dispatch.surface_validation_enabled():
-        u.Cli.print("SURFACE-VALIDATE: python -m scripts.cmd.clean.restore_init_files")
+        u.Cli.emit_raw(
+            "SURFACE-VALIDATE: python -m scripts.cmd.clean.restore_init_files\n"
+        )
         return 0
     if not Dispatch.env_enabled("APPLY"):
         return 0
