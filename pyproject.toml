@@ -2331,9 +2331,9 @@ in_place = true
 sort_first = ["build-system", "dependency-groups", "project", "tool"]
 
 [tool.uv]
-constraint-dependencies = ["uv==0.11.29"]
+constraint-dependencies = ["uv>=0.11.29"]
 link-mode = "copy"
-required-version = "==0.11.29"
+required-version = ">=0.11.29"
 
 [tool.uv.sources.flext-api]
 workspace = true

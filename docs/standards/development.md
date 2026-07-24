@@ -15,6 +15,22 @@ from collections.abc import Mapping, Sequence
 
 `ruff` enforces this via `I002`.
 
+## Config and settings are the SSOT (P0)
+
+All configuration and runtime settings come from `from <ns> import config, settings`
+and are consumed through `config.<Ns>.*` and `settings.<Ns>.*`. No code, test, or
+script may embed a value that the SSOT owns.
+
+- Tests must be able to validate any change to config or settings without being
+  rewritten. Expectations come from the config/settings objects, not from
+  hardcoded literals copied from today's files.
+- A test that fails only because a config value changed is a test defect; fix
+  the test to read from the SSOT.
+- This rule applies to every tier: unit, integration, and e2e tests, plus
+  markdown examples and docstring snippets validated by the pytest plugin.
+
+See `docs/standards/testing.md` for the test-side enforcement of this rule.
+
 ## Canonical aliases
 
 Use the facade aliases exposed by `flext_core` and project facades:
