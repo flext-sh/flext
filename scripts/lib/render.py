@@ -34,9 +34,7 @@ class CommandRenderer:
 
     @staticmethod
     def command_help(
-        registry: p.Tests.MakeRegistry,
-        requested_verb: str,
-        what: str,
+        registry: p.Tests.MakeRegistry, requested_verb: str, what: str
     ) -> str:
         """Render help for one promoted command."""
         result = u.Tests.make_render_command_help(registry, requested_verb, what)
@@ -52,10 +50,7 @@ class CommandRenderer:
     def dry_run(command: p.Tests.MakeCommand, requested_verb: str, what: str) -> str:
         """Render dry-run output for one mutating command."""
         rendered: str = u.Tests.make_render_dry_run(
-            command,
-            requested_verb,
-            what,
-            u.Cli.process_env(),
+            command, requested_verb, what, u.Cli.process_env()
         )
         return rendered
 

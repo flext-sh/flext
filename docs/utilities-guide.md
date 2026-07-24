@@ -82,9 +82,7 @@ from flext_core import FlextUtilitiesConversion
 ```python
 @staticmethod
 def to_str_list_safe(
-    value: p.Tests.ListInputModel,
-    *,
-    filter_list_like: bool = True,
+    value: p.Tests.ListInputModel, *, filter_list_like: bool = True
 ) -> t.StrSequence:
     """Convert value to t.StrSequence with safe nested list handling."""
 ```
@@ -121,9 +119,7 @@ result = u.to_str_list_safe(["a", ["b"]], filter_list_like=False)
 
 ```python
 @staticmethod
-def to_str_list_truthy(
-    value: p.Tests.ListInputModel,
-) -> t.StrSequence:
+def to_str_list_truthy(value: p.Tests.ListInputModel) -> t.StrSequence:
     """Convert value to t.StrSequence filtering out falsy values."""
 ```
 
@@ -160,8 +156,7 @@ result = u.to_str_list_truthy(None)
 ```python
 @staticmethod
 def find_callable[T](
-    callables: t.MappingKV[str, _Predicate[T]],
-    value: T,
+    callables: t.MappingKV[str, _Predicate[T]], value: T
 ) -> str | None:
     """Find first matching callable key from dict of predicates."""
 ```

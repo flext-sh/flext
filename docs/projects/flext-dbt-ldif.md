@@ -29,9 +29,7 @@ api = FlextDbtLdif.fetch_instance()  # shared facade; settings from the global s
 
 # End-to-end: parse the LDIF export, generate dbt models, optionally run them.
 result = api.process_ldif_file(
-    "exports/directory.ldif",
-    generate_models=True,
-    run_transformations=False,
+    "exports/directory.ldif", generate_models=True, run_transformations=False
 )
 if result.success:
     quality = api.validate_ldif_quality("exports/directory.ldif")

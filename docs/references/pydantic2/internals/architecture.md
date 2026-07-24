@@ -73,10 +73,7 @@ class Model(m.BaseModel):
 The core schema for the `foo` field will look like:
 
 ```python
-{
-    "type": "bool",
-    "strict": True,
-}
+{"type": "bool", "strict": True}
 ```
 
 As seen in the [`BoolSchema`][pydantic_core.core_schema.bool_schema] definition,

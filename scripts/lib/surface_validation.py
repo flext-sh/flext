@@ -56,18 +56,17 @@ class SurfaceValidator:
 
     @staticmethod
     def validate_command(
-        command: p.Tests.MakeCommand,
-        targets: frozenset[str],
+        command: p.Tests.MakeCommand, targets: frozenset[str]
     ) -> t.StrSequence:
         """Validate one command's static contract."""
         failures: list[str] = []
         if command.target and command.target not in targets:
             failures.append(
-                f"{command.verb} WHAT={command.what}: target ausente {command.target}",
+                f"{command.verb} WHAT={command.what}: target ausente {command.target}"
             )
         if not command.example.startswith(f"make {command.verb} "):
             failures.append(
-                f"{command.verb} WHAT={command.what}: exemplo nao usa make canonico",
+                f"{command.verb} WHAT={command.what}: exemplo nao usa make canonico"
             )
         return tuple(failures)
 
@@ -96,8 +95,7 @@ class SurfaceValidator:
 
     @staticmethod
     def registry_commands(
-        registry: p.Tests.MakeRegistry,
-        verb: str,
+        registry: p.Tests.MakeRegistry, verb: str
     ) -> t.MappingKV[str, m.Tests.MakeCommand]:
         """Return registry commands through the canonical flext-tests facade."""
         result = u.Tests.make_registry_commands(registry, verb)

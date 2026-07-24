@@ -28,9 +28,7 @@ from flext_auth import FlextAuth
 auth = FlextAuth.quick_start(create_admin_user=False)
 
 created = auth.register_user(
-    username="demo",
-    email="demo@example.com",
-    password="secure123",
+    username="demo", email="demo@example.com", password="secure123"
 )
 assert created.is_success
 

@@ -41,11 +41,7 @@ RETRIES_ON_CONFLICT = 2
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
     """Run a subprocess command (stdin=/dev/null to avoid interactive prompts)."""
     return subprocess.run(
-        cmd,
-        check=check,
-        capture_output=True,
-        text=True,
-        stdin=subprocess.DEVNULL,
+        cmd, check=check, capture_output=True, text=True, stdin=subprocess.DEVNULL
     )
 
 
@@ -148,10 +144,7 @@ def standard_message(title: str, head_ref: str) -> str | None:
 
 def update_pr_branch(slug: str, number: int) -> bool:
     """Update a PR branch from its base (rebase/merge) to resolve conflicts."""
-    result = run(
-        ["gh", "pr", "update-branch", str(number), "-R", slug],
-        check=False,
-    )
+    result = run(["gh", "pr", "update-branch", str(number), "-R", slug], check=False)
     if result.returncode == 0:
         return True
     # update-branch may report "Already up to date"; treat as success.
@@ -164,18 +157,13 @@ def close_pr(slug: str, number: int, *, dry_run: bool, reason: str) -> bool:
         print(f"    [dry-run] would close #{number}: {reason}")
         return True
     close_result = run(
-        ["gh", "pr", "close", str(number), "-R", slug, "--comment", reason],
-        check=False,
+        ["gh", "pr", "close", str(number), "-R", slug, "--comment", reason], check=False
     )
     return close_result.returncode == 0
 
 
 def merge_pr(
-    slug: str,
-    pr: dict[str, object],
-    *,
-    dry_run: bool,
-    close_on_conflict: bool = True,
+    slug: str, pr: dict[str, object], *, dry_run: bool, close_on_conflict: bool = True
 ) -> tuple[bool, bool, bool]:
     """Merge a single Dependabot PR using the standard commit schema.
 
@@ -266,11 +254,7 @@ def merge_pr(
 
 
 def process_repo(
-    slug: str,
-    base: str,
-    *,
-    dry_run: bool,
-    close_on_conflict: bool = True,
+    slug: str, base: str, *, dry_run: bool, close_on_conflict: bool = True
 ) -> tuple[int, int, int, int]:
     """Process all open Dependabot PRs for a single repository.
 
@@ -288,10 +272,7 @@ def process_repo(
     merged = skipped = failed = closed = 0
     for pr in prs:
         ok, is_skip, was_closed = merge_pr(
-            slug,
-            pr,
-            dry_run=dry_run,
-            close_on_conflict=close_on_conflict,
+            slug, pr, dry_run=dry_run, close_on_conflict=close_on_conflict
         )
         if is_skip:
             skipped += 1
@@ -307,15 +288,12 @@ def process_repo(
 def main() -> int:
     """Entry point for the dependabot merge orchestrator."""
     parser = argparse.ArgumentParser(
-        description="Merge Dependabot PRs across FLEXT workspace",
+        description="Merge Dependabot PRs across FLEXT workspace"
     )
     parser.add_argument("--base", default="main", help="target branch for PRs")
     parser.add_argument("--dry-run", action="store_true", help="preview only")
     parser.add_argument(
-        "--workers",
-        type=int,
-        default=MAX_WORKERS,
-        help="parallel repo workers",
+        "--workers", type=int, default=MAX_WORKERS, help="parallel repo workers"
     )
     parser.add_argument(
         "--close-on-conflict",
@@ -370,7 +348,7 @@ def main() -> int:
 
     print(
         f"\nSummary: merged={total_merged} skipped={total_skipped} "
-        f"closed={total_closed} failed={total_failed}",
+        f"closed={total_closed} failed={total_failed}"
     )
     return 0 if total_failed == 0 else 1
 

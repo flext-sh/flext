@@ -820,7 +820,7 @@ user = User(
     hobbies=[
         Hobby(name="Programming", info="Writing code and stuff"),
         Hobby(name="Gaming", info="Hell Yeah!!!"),
-    ],
+    ]
 )
 
 print(user.model_dump(exclude={"hobbies": {-1: {"info"}}}))  # (1)!

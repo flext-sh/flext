@@ -59,10 +59,7 @@ def greet_handler(model: GreetInput) -> t.JsonValue:
     return {"message": message}
 
 
-command = FlextCliCli.model_command(
-    model_cls=GreetInput,
-    handler=greet_handler,
-)
+command = FlextCliCli.model_command(model_cls=GreetInput, handler=greet_handler)
 ```
 
 **Common mistakes to avoid:**

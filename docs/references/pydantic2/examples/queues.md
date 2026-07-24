@@ -100,11 +100,7 @@ channel.queue_declare(queue=QUEUE_NAME)
 
 def push_to_queue(user_data: User) -> None:
     serialized_data = user_data.model_dump_json()
-    channel.basic_publish(
-        exchange="",
-        routing_key=QUEUE_NAME,
-        body=serialized_data,
-    )
+    channel.basic_publish(exchange="", routing_key=QUEUE_NAME, body=serialized_data)
     print(f"Added to queue: {serialized_data}")
 
 

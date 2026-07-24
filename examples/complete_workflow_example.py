@@ -39,8 +39,7 @@ class CompleteWorkflowExample:
         """Data container for workflow processing."""
 
         model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
-            extra="allow",
+            arbitrary_types_allowed=True, extra="allow"
         )
         content: t.JsonMapping = u.Field(default_factory=dict)
 
@@ -50,7 +49,7 @@ class CompleteWorkflowExample:
         """Complete workflow context with correlation and metadata."""
 
         model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
+            arbitrary_types_allowed=True
         )
 
         workflow_id: str = u.Field(description="Unique workflow identifier")
@@ -78,7 +77,7 @@ class CompleteWorkflowExample:
         """Result of a workflow stage with comprehensive tracking."""
 
         model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
+            arbitrary_types_allowed=True
         )
 
         stage_name: str = u.Field(description="Name of the workflow stage")
@@ -90,12 +89,10 @@ class CompleteWorkflowExample:
         items_failed: int = u.Field(description="Items that failed")
         processing_time: float = u.Field(description="Time taken to process stage")
         errors: t.StrSequence = u.Field(
-            default_factory=list,
-            description="List of errors encountered",
+            default_factory=list, description="List of errors encountered"
         )
         warnings: t.StrSequence = u.Field(
-            default_factory=list,
-            description="List of warnings encountered",
+            default_factory=list, description="List of warnings encountered"
         )
         stage_metadata: t.JsonMapping = u.Field(
             default_factory=lambda: MappingProxyType({}),
@@ -106,7 +103,7 @@ class CompleteWorkflowExample:
         """Complete workflow result with all stages aggregated."""
 
         model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
+            arbitrary_types_allowed=True
         )
 
         workflow_id: str = u.Field(description="Unique workflow identifier")
@@ -115,12 +112,11 @@ class CompleteWorkflowExample:
         completed_stages: int = u.Field(description="Number of completed stages")
         failed_stages: int = u.Field(description="Number of failed stages")
         total_processing_time: float = u.Field(
-            description="Total workflow processing time",
+            description="Total workflow processing time"
         )
         stage_results: t.SequenceOf[CompleteWorkflowExample.WorkflowStageResult] = (
             u.Field(
-                default_factory=list,
-                description="Results from each workflow stage",
+                default_factory=list, description="Results from each workflow stage"
             )
         )
         aggregated_metrics: t.JsonMapping = u.Field(
@@ -128,10 +124,7 @@ class CompleteWorkflowExample:
             description="Aggregated metrics across all stages",
         )
         workflow_status: Annotated[
-            str,
-            u.Field(
-                description="Overall workflow status",
-            ),
+            str, u.Field(description="Overall workflow status")
         ] = "unknown"
 
     class WorkflowOrchestrator(m.BaseModel):
@@ -139,10 +132,10 @@ class CompleteWorkflowExample:
 
         auto_execute: bool = True
         data: t.SequenceOf[CompleteWorkflowProcessingDict] = u.Field(
-            default_factory=tuple,
+            default_factory=tuple
         )
         workflow_settings: t.ScalarMapping = u.Field(
-            default_factory=lambda: MappingProxyType({}),
+            default_factory=lambda: MappingProxyType({})
         )
 
         def execute(self) -> p.Result[CompleteWorkflowExample.WorkflowData]:
@@ -174,11 +167,11 @@ class CompleteWorkflowExample:
                     CompleteWorkflowExample.Stage.AGGREGATION,
                     context,
                     lambda _i: {"final_score": final_score},
-                ),
+                )
             }
-            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
-                {"content": content_payload},
-            )
+            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate({
+                "content": content_payload
+            })
             return r.ok(workflow_data)
 
         def _aggregate_workflow_metrics(
@@ -222,21 +215,19 @@ class CompleteWorkflowExample:
                     CompleteWorkflowExample.Stage.ANALYSIS,
                     context,
                     lambda _i: {"complexity_score": len(str(item)) * 0.1},
-                ),
+                )
             }
-            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
-                {"content": content_payload},
-            )
+            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate({
+                "content": content_payload
+            })
             return r.ok(workflow_data)
 
         def _cleanup_context(
-            self,
-            context: CompleteWorkflowExample.WorkflowContext,
+            self, context: CompleteWorkflowExample.WorkflowContext
         ) -> None:
             """Cleanup workflow context and log completion."""
             total_time = time.time() - context.start_time
             context.performance_metrics["total_workflow_time"] = total_time
-            print(f"Workflow {context.workflow_id} completed in {total_time:.3f}s")
 
         def _execute_stage_parallel(
             self,
@@ -269,8 +260,7 @@ class CompleteWorkflowExample:
                     return (
                         {**workflow_data.content}
                         if isinstance(
-                            workflow_data,
-                            CompleteWorkflowExample.WorkflowData,
+                            workflow_data, CompleteWorkflowExample.WorkflowData
                         )
                         else workflow_data
                     )
@@ -332,17 +322,14 @@ class CompleteWorkflowExample:
                 stage_func = stage_functions.get(stage_name)
                 if not stage_func:
                     return r[CompleteWorkflowExample.WorkflowData].fail(
-                        f"Unknown stage: {stage_name}",
+                        f"Unknown stage: {stage_name}"
                     )
                 result = self._execute_stage_parallel(
-                    stage_name,
-                    current_data,
-                    stage_func,
-                    context,
+                    stage_name, current_data, stage_func, context
                 )
                 if result.failure:
                     return r[CompleteWorkflowExample.WorkflowData].fail(
-                        f"Stage {stage_name} failed: {result.error}",
+                        f"Stage {stage_name} failed: {result.error}"
                     )
                 stage_result = result.value
                 stage_results.append(stage_result)
@@ -360,8 +347,7 @@ class CompleteWorkflowExample:
                 current_data = current_data[: stage_result.items_succeeded]
             total_time = time.time() - context.start_time
             aggregated_metrics = self._aggregate_workflow_metrics(
-                stage_results,
-                total_time,
+                stage_results, total_time
             )
             aggregated_metrics_payload: t.MutableJsonMapping = {}
             for key, value in aggregated_metrics.items():
@@ -394,9 +380,9 @@ class CompleteWorkflowExample:
                 })
             )
             summary_content: CompleteWorkflowContent = {**summary}
-            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
-                {"content": summary_content},
-            )
+            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate({
+                "content": summary_content
+            })
             return r.ok(workflow_data)
 
         def _process_items(
@@ -411,11 +397,11 @@ class CompleteWorkflowExample:
                     CompleteWorkflowExample.Stage.PROCESSING,
                     context,
                     lambda _i: {"processed_at": time.time()},
-                ),
+                )
             }
-            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
-                {"content": content_payload},
-            )
+            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate({
+                "content": content_payload
+            })
             return r.ok(workflow_data)
 
         def _process_stage(
@@ -423,10 +409,7 @@ class CompleteWorkflowExample:
             item: CompleteWorkflowProcessingDict,
             stage: CompleteWorkflowExample.Stage,
             context: CompleteWorkflowExample.WorkflowContext,
-            extra_logic: Callable[
-                [CompleteWorkflowProcessingDict],
-                t.JsonMapping,
-            ]
+            extra_logic: Callable[[CompleteWorkflowProcessingDict], t.JsonMapping]
             | None = None,
         ) -> CompleteWorkflowProcessingDict:
             """Generic stage processing helper."""
@@ -445,9 +428,7 @@ class CompleteWorkflowExample:
                 case CompleteWorkflowExample.Stage.AGGREGATION:
                     add_field = "aggregated"
             time.sleep(sleep_time)
-            result: t.MutableJsonMapping = {
-                **item,
-            }
+            result: t.MutableJsonMapping = {**item}
             result[add_field] = True
             result["workflow_context"] = {
                 "workflow_id": context.workflow_id,
@@ -461,9 +442,8 @@ class CompleteWorkflowExample:
             """Setup workflow context with correlation tracking."""
             workflow_id = str(
                 self.workflow_settings.get(
-                    "workflow_id",
-                    f"workflow_{int(time.time())}",
-                ),
+                    "workflow_id", f"workflow_{int(time.time())}"
+                )
             )
             correlation_id = f"{workflow_id}_{int(time.time() * 1000)}"
             return CompleteWorkflowExample.WorkflowContext(
@@ -472,13 +452,13 @@ class CompleteWorkflowExample:
                 start_time=time.time(),
                 metadata={
                     "parallel_enabled": bool(
-                        self.workflow_settings.get("parallel", True),
+                        self.workflow_settings.get("parallel", True)
                     ),
                     "max_workers": int(
-                        str(self.workflow_settings.get("max_workers", 4)),
+                        str(self.workflow_settings.get("max_workers", 4))
                     ),
                     "strict_mode": bool(
-                        self.workflow_settings.get("strict_mode", False),
+                        self.workflow_settings.get("strict_mode", False)
                     ),
                 },
             )
@@ -495,11 +475,11 @@ class CompleteWorkflowExample:
                     CompleteWorkflowExample.Stage.VALIDATION,
                     context,
                     lambda _i: {"valid": bool(item.get("id") and item.get("name"))},
-                ),
+                )
             }
-            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate(
-                {"content": content_payload},
-            )
+            workflow_data = CompleteWorkflowExample.WorkflowData.model_validate({
+                "content": content_payload
+            })
             return r.ok(workflow_data)
 
     @staticmethod
@@ -541,8 +521,4 @@ class CompleteWorkflowExample:
         orchestrator = CompleteWorkflowExample.WorkflowOrchestrator()
         orchestrator.data = sample_data
         orchestrator.workflow_settings = workflow_settings
-        result = orchestrator.execute()
-        if result.success:
-            print("Workflow completed successfully")
-        else:
-            print(f"Workflow failed: {result.error}")
+        orchestrator.execute()

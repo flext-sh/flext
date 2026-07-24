@@ -42,11 +42,7 @@ class _DockerStandardizationChecker:
         self.warnings = 0
 
     def _find(
-        self,
-        pattern: str,
-        *,
-        excluded: Sequence[str] = (),
-        file_only: bool = True,
+        self, pattern: str, *, excluded: Sequence[str] = (), file_only: bool = True
     ) -> list[Path]:
         matches: list[Path] = []
         for path in self.workspace_root.rglob(pattern):
@@ -90,17 +86,11 @@ class _DockerStandardizationChecker:
 
     def check_duplicate_compose(self) -> None:
         self._check_no_outside_files(
-            "docker-compose file(s)",
-            "docker-compose*.yml",
-            ("docker",),
+            "docker-compose file(s)", "docker-compose*.yml", ("docker",)
         )
 
     def check_duplicate_dockerfiles(self) -> None:
-        self._check_no_outside_files(
-            "Dockerfile(s)",
-            "Dockerfile*",
-            ("docker/images",),
-        )
+        self._check_no_outside_files("Dockerfile(s)", "Dockerfile*", ("docker/images",))
 
     def check_duplicate_fixtures(self) -> None:
         self._check_no_outside_files(
@@ -150,8 +140,7 @@ class _DockerStandardizationChecker:
         )
         code = "from flext_tests import " + ", ".join(names) + "; print('OK')"
         result = u.Cli.run_checked(
-            [sys.executable, "-c", code],
-            cwd=self.workspace_root,
+            [sys.executable, "-c", code], cwd=self.workspace_root
         )
         if result.success:
             print("  PASSED: Centralized fixtures are importable")
@@ -167,7 +156,7 @@ class _DockerStandardizationChecker:
         ]
         if scripts:
             print(
-                f"  WARNING: Found {len(scripts)} Docker-related shell script(s) outside docker/:",
+                f"  WARNING: Found {len(scripts)} Docker-related shell script(s) outside docker/:"
             )
             for p in scripts[:5]:
                 print(f"    - {p.relative_to(self.workspace_root)}")
@@ -177,7 +166,7 @@ class _DockerStandardizationChecker:
 
     def check_deprecated_parallel_docker(self) -> None:
         pattern = re.compile(
-            r"(?:from\s+flext_tests\.parallel_docker|import\s+.*\bparallel_docker\b|from\s+\S+\s+import\s+.*\bparallel_docker\b)",
+            r"(?:from\s+flext_tests\.parallel_docker|import\s+.*\bparallel_docker\b|from\s+\S+\s+import\s+.*\bparallel_docker\b)"
         )
         hits: list[Path] = []
         for p in self._find("*.py"):
@@ -189,7 +178,7 @@ class _DockerStandardizationChecker:
                 hits.append(p)
         if hits:
             print(
-                f"  WARNING: Found {len(hits)} file(s) using deprecated parallel_docker:",
+                f"  WARNING: Found {len(hits)} file(s) using deprecated parallel_docker:"
             )
             for p in hits[:5]:
                 print(f"    - {p.relative_to(self.workspace_root)}")
@@ -240,7 +229,7 @@ def run_command() -> int:
         print("SURFACE-VALIDATE: python -m scripts.cmd.check.docker_standardization")
         return 0
     workspace_root = Path(
-        u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd())),
+        u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd()))
     ).resolve()
     return _DockerStandardizationChecker(workspace_root).run()
 

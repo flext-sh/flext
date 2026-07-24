@@ -422,11 +422,7 @@ class CompanyModel(BaseModel):
     domains: t.SequenceOf[Annotated[str, StringConstraints(max_length=255)]]
 
 
-co_orm = CompanyOrm(
-    id=123,
-    public_key="foobar",
-    domains=["example.com", "foobar.com"],
-)
+co_orm = CompanyOrm(id=123, public_key="foobar", domains=["example.com", "foobar.com"])
 print(co_orm)
 # > <__main__.CompanyOrm t.JsonValue at 0x0123456789ab>
 co_model = CompanyModel(co_orm)
@@ -503,10 +499,7 @@ class Model(BaseModel):
     a_float: float
 
 
-data = dict(
-    list_of_ints=["1", 2, "bad"],
-    a_float="not a float",
-)
+data = dict(list_of_ints=["1", 2, "bad"], a_float="not a float")
 
 try:
     Model(**data)
@@ -1183,28 +1176,21 @@ class MyErrorDetails(ErrorDetails):
 
 # serialized as Any
 error = Error(
-    message="We just had an error",
-    details=MyErrorDetails(foo="var", bar="var2"),
+    message="We just had an error", details=MyErrorDetails(foo="var", bar="var2")
 )
 assert error.model_dump() == {
     "message": "We just had an error",
-    "details": {
-        "foo": "var",
-        "bar": "var2",
-    },
+    "details": {"foo": "var", "bar": "var2"},
 }
 
 # serialized using the concrete parametrization
 # note that `'bar': 'var2'` is missing
 error = Error[ErrorDetails](
-    message="We just had an error",
-    details=ErrorDetails(foo="var"),
+    message="We just had an error", details=ErrorDetails(foo="var")
 )
 assert error.model_dump() == {
     "message": "We just had an error",
-    "details": {
-        "foo": "var",
-    },
+    "details": {"foo": "var"},
 }
 ```
 
@@ -1271,14 +1257,11 @@ class MyErrorDetails(ErrorDetails):
 
 # serialized using the default's serializer
 error = Error(
-    message="We just had an error",
-    details=MyErrorDetails(foo="var", bar="var2"),
+    message="We just had an error", details=MyErrorDetails(foo="var", bar="var2")
 )
 assert error.model_dump() == {
     "message": "We just had an error",
-    "details": {
-        "foo": "var",
-    },
+    "details": {"foo": "var"},
 }
 # If `ErrorDataT` was using an upper bound, `bar` would be present in `details`.
 
@@ -1290,15 +1273,11 @@ class SerializeAsAnyError(BaseModel, Generic[ErrorDataT]):
 
 # serialized as Any
 error = SerializeAsAnyError(
-    message="We just had an error",
-    details=MyErrorDetails(foo="var", bar="baz"),
+    message="We just had an error", details=MyErrorDetails(foo="var", bar="baz")
 )
 assert error.model_dump() == {
     "message": "We just had an error",
-    "details": {
-        "foo": "var",
-        "bar": "baz",
-    },
+    "details": {"foo": "var", "bar": "baz"},
 }
 ```
 
