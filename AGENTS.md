@@ -506,8 +506,24 @@ Run every command from the active workspace/worktree root using `make` only.
    Record command, cwd, exit code, and decisive output in the owning Bead.
 
 If a required gate cannot run because the environment itself is broken, stop
-the task, preserve the worktree, create or update one narrow Bead for the
+.the task, preserve the worktree, create or update one narrow Bead for the
 environment failure, and do not report the implementation as complete.
+
+### Tests must validate config and settings changes (P0)
+
+Tests are consumers of the config/settings SSOT, not frozen copies of it.
+Any expected value owned by config or settings (versions, paths, URLs, verbs,
+profiles, allowed lists, timeouts) must be read from the same source production
+uses or proven through a generator round-trip.
+
+- A test that breaks on a legitimate config change is a test defect.
+- Golden files and snapshots may pin structure only; they are regenerated via
+the canonical make verb when config-driven values change.
+- This rule applies to unit, integration, and e2e tests, plus markdown examples
+and docstring snippets validated by the pytest plugin.
+
+See `docs/standards/testing.md` and `docs/standards/development.md` for the
+detailed contract.
 
 ### State ownership and handoff
 
