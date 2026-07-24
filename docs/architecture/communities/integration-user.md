@@ -34,7 +34,7 @@ Community of 25 nodes
 | test_container_resolves_bound_services_functionally | Test | flext-core/tests/integration/test_service.py | 172-207 |
 | test_external_service_processes_user_email | Test | flext-core/tests/integration/test_service.py | 212-225 |
 | FunctionalExternalService | Class | flext-core/tests/_utilities/contracts.py | 59-91 |
-| __init__ | Function | flext-core/tests/_utilities/contracts.py | 66-69 |
+| **init** | Function | flext-core/tests/_utilities/contracts.py | 66-69 |
 | process | Function | flext-core/tests/_utilities/contracts.py | 71-87 |
 | get_call_count | Function | flext-core/tests/_utilities/contracts.py | 89-91 |
 

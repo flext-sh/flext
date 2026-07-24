@@ -16,7 +16,7 @@ Community of 114 nodes
 | fetch_settings | Function | flext-target-ldap/tests/base.py | 18-20 |
 | _runtime_bootstrap_options | Function | flext-target-ldap/tests/base.py | 24-25 |
 | ProcessTarget | Class | flext-target-ldap/tests/utilities.py | 52-70 |
-| __init__ | Function | flext-target-ldap/tests/utilities.py | 55-60 |
+| **init** | Function | flext-target-ldap/tests/utilities.py | 55-60 |
 | process_record | Function | flext-target-ldap/tests/utilities.py | 63-70 |
 | client | Function | flext-target-ldap/tests/unit/test_client.py | 17-20 |
 | TestsFlextTargetLdapClient | Class | flext-target-ldap/tests/unit/test_client.py | 23-174 |
@@ -44,7 +44,7 @@ Community of 114 nodes
 | extract_attribute_mapping | Function | flext-target-ldap/src/flext_target_ldap/utilities.py | 89-102 |
 | extract_object_classes | Function | flext-target-ldap/src/flext_target_ldap/utilities.py | 105-114 |
 | FlextTargetLdap | Class | flext-target-ldap/src/flext_target_ldap/api.py | 37-267 |
-| __init__ | Function | flext-target-ldap/src/flext_target_ldap/api.py | 47-56 |
+| **init** | Function | flext-target-ldap/src/flext_target_ldap/api.py | 47-56 |
 | orchestrator | Function | flext-target-ldap/src/flext_target_ldap/api.py | 59-64 |
 | singer_catalog | Function | flext-target-ldap/src/flext_target_ldap/api.py | 67-69 |
 | get_sink | Function | flext-target-ldap/src/flext_target_ldap/api.py | 71-79 |

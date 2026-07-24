@@ -14,7 +14,7 @@ Community of 29 nodes
 |------|------|------|-------|
 | _SilentFailureFinding | Class | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 16-22 |
 | _SilentFailureAstVisitor | Class | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 25-328 |
-| __init__ | Function | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 35-40 |
+| **init** | Function | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 35-40 |
 | analyze | Function | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 42-49 |
 | _enclosing_function | Function | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 51-60 |
 | _result_inner_type | Function | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 62-76 |

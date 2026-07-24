@@ -211,7 +211,6 @@ uncollected tests, unvalidated WIP, or a workaround masking the defect.
 - Generated files change only through their canonical generator, config, schema, policy, or template owner.
 - Status is a checkpoint, not a stopping condition. Continue until the intent card's observable stop condition holds or one precise operator decision is required.
 
-
 For the lane contract that governs light-worker execution, see [`docs/ways-of-working/worker-lane-contract.md`](docs/ways-of-working/worker-lane-contract.md).
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:19cc25d9 -->
@@ -280,10 +279,12 @@ bd close bd-42 --reason "Completed" --json
 5. **Complete**: `bd close <id> --reason "Done"`
 
 ### Quality
+
 - Use `--acceptance` and `--design` fields when creating issues
 - Use `--validate` to check description completeness
 
 ### Lifecycle
+
 - `bd defer <id>` / `bd supersede <id>` for issue management
 - `bd stale` / `bd orphans` / `bd lint` for hygiene
 - `bd human <id>` to flag for human decisions
@@ -297,7 +298,7 @@ bd stores issue history in Dolt:
 - Use `bd dolt push`/`bd dolt pull` for remote sync
 - Do not treat `.beads/issues.jsonl` as the sync protocol
 
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
+**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See <https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md> for details and anti-patterns.
 
 ### Important Rules
 
@@ -327,6 +328,7 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 2. **Run quality gates** (if code changed) - Tests, linters, builds
 3. **Update issue status** - Close finished work, update in-progress items
 4. **Handle git/sync by active profile**:
+
    ```bash
    # Conservative/minimal/default: report status and proposed commands; wait for approval.
    git status
@@ -337,9 +339,11 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
    git push
    git status
    ```
+
 5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
 
 **Critical rules:**
+
 - Explicit user or orchestrator instructions override this Beads block.
 - Do not commit or push without clear authority from the active profile or the current user request.
 - If a required sync or push is blocked, stop and report the exact command and error.
@@ -374,11 +378,13 @@ Each submodule's `AGENTS.md` links back to this file. Which link to follow depen
 
 - **Workspace mode** (submodule sits inside this superproject): read the sibling **[`../AGENTS.md`](../AGENTS.md)** — the working copy on your current branch.
 - **Standalone / independent mode** (the package was cloned on its own, imported as a dependency, or vendored — no parent workspace exists, so `../AGENTS.md` does not resolve): read the **raw file on GitHub on the same branch/release** the project is on:
+
   ```
   https://raw.githubusercontent.com/flext-sh/flext/<branch-or-tag>/AGENTS.md
   # current working line:
   https://raw.githubusercontent.com/flext-sh/flext/0.12.0-dev/AGENTS.md
   ```
+
   Always pin `<branch-or-tag>` to the SAME branch/release the package is built from (e.g. `0.12.0-dev`, or the release tag), never `main`/`master` — the governance law is versioned with the code.
 
 Precedence is unchanged in both modes: this root law + the AI-HUB managed Universal Agent Law block override submodule-local notes; the submodule file only *adds* domain specifics.
@@ -451,17 +457,21 @@ concurrent work may weaken them.
 Run every command from the active workspace/worktree root using `make` only.
 
 1. **Global environment gates, after every implementation task:**
+
    ```bash
    make check CHECK_GATES=lint,pyrefly
    ```
+
    Ruff and Pyrefly must be healthy for the workspace. Existing debt is not a
    reason to close new work: either resolve it in the owning Bead or keep the
    current task open with a precise, linked blocker.
 2. **Changed-scope gates, after every implementation task:**
+
    ```bash
    make check PROJECT=<affected-project> CHECK_GATES=pyright,mypy
    make test PROJECT=<affected-project>
    ```
+
    Use the narrowest supported root-Make target first, then widen to the
    affected project when package boundaries, generated files, shared fixtures,
    configuration, or public facades changed.
@@ -497,10 +507,12 @@ environment failure, and do not report the implementation as complete.
 - Each package exposes exactly one public `api.py` (thin MRO facade) + optional `cli.py`; internals live under `_constants/_typings/_protocols/_models/_utilities`.
 
 **Config/settings are the layer-0 SSOT** consumed BY the facades (ADR-005). Access is single-form only:
+
 ```python
 from <namespace> import config, settings   # e.g. from flext_core import config, settings
 config.<Namespace>.*      settings.<Namespace>.*
 ```
+
 Config = business rules (`config/*.yaml`, validated); settings = env/CLI-tunable knobs. Facades never hardcode values the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream base — never a project facade (zero-cycle).
 
 **Dependency direction:** `flext-core` ← everything. `flext-cli` owns CLI domains (Toml/Yaml/Csv/Json/Cli/Tui/Run/Dag/Templates/Workflow). Singer connectors are thin drivers over `flext-meltano` (ADR-006). `flext-infra` is build/tooling — reached via its CLI + pytest plugin, **never imported at runtime**.
