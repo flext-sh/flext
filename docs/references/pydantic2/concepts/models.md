@@ -1,5 +1,6 @@
 
 ### API Documentation
+
 [`pydantic.main.BaseModel`][pydantic.main.BaseModel]<br>
 
 One of the primary ways of defining schema in Pydantic is via models. Models are simply classes which inherit from
@@ -19,7 +20,8 @@ of the resultant model instance will conform to the field types defined on the m
 
 ### TL;DR
 
-We use the term "validation" to refer to the process of instantiating a model (or other type) that adheres to specified types and
+We use the term "validation" to refer to the process of instantiating a model (or other type) that adheres to specified
+types and
 constraints. This task, which Pydantic is well known for, is most widely recognized as "validation" in colloquial terms,
 even though in other contexts the term "validation" may be more restrictive.
 
@@ -31,10 +33,12 @@ The potential confusion around the term "validation" arises from the fact that, 
 primary focus doesn't align precisely with the dictionary definition of "validation":
 
 > ### validation
+>
 > _noun_
 > the action of checking or proving the validity or accuracy of something.
 
-In Pydantic, the term "validation" refers to the process of instantiating a model (or other type) that adheres to specified
+In Pydantic, the term "validation" refers to the process of instantiating a model (or other type) that adheres to
+specified
 types and constraints. Pydantic guarantees the types and constraints of the output, not the input data.
 This distinction becomes apparent when considering that Pydantic's `ValidationError` is raised
 when data cannot be successfully parsed into a model instance.
@@ -49,14 +53,16 @@ In essence, Pydantic's primary goal is to assure that the resulting structure po
 precisely conforms to the applied type hints. Given the widespread adoption of "validation" as the colloquial term
 for this process, we will consistently use it in our documentation.
 
-While the terms "parse" and "validation" were previously used interchangeably, moving forward, we aim to exclusively employ "validate",
+While the terms "parse" and "validation" were previously used interchangeably, moving forward, we aim to exclusively
+employ "validate",
 with "parse" reserved specifically for discussions related to [JSON parsing](../concepts/json.md).
 
 ## Basic model usage
 
-### Note
+### Note: Python typing constructs
 
-Pydantic relies heavily on the existing Python typing constructs to define models. If you are not familiar with those, the following resources
+Pydantic relies heavily on the existing Python typing constructs to define models. If you are not familiar with those,
+the following resources
 can be useful:
 
 * The [Type System Guides](https://typing.readthedocs.io/en/latest/guides/index.html)
@@ -70,6 +76,7 @@ id: int
 name: str = "Jane Doe"
 
 model_config = ConfigDict(str_max_length=10)  # (1)!
+
 ```
 
 1. Pydantic models support a variety of [configuration values](./settings.md)
@@ -89,6 +96,7 @@ The model can then be instantiated:
 
 ```python
 user = User(id="123")
+
 ```
 
 `user` is an instance of `User`. Initialization of the t.JsonValue will perform all parsing and validation.
@@ -101,6 +109,7 @@ u.Fields of a model can be accessed as normal attributes of the `user` t.JsonVal
 assert user.name == "Jane Doe"  # (1)!
 assert user.id == 123  # (2)!
 assert isinstance(user.id, int)
+
 ```
 
 1. `name` wasn't set when `user` was initialized, so the default value was used.
@@ -113,6 +122,7 @@ The model instance can be serialized using the [`model_dump()`][pydantic.BaseMod
 
 ```python
 assert user.model_dump() == {"id": 123, "name": "Jane Doe"}
+
 ```
 
 Calling `dict()` on the instance will also provide a dictionary, but nested fields will not be
@@ -124,9 +134,11 @@ By default, models are mutable and field values can be changed through attribute
 ```python
 user.id = 321
 assert user.id == 321
+
 ```
 
-### Warning
+### Warning: Naming collisions
+
 When defining your models, watch out for naming collisions between your field name and its type annotation.
 
 For example, the following will not behave as expected and would yield a validation error:
@@ -140,9 +152,11 @@ class Boo(BaseModel):
 int: Optional[int] = None
 
 m = Boo(int=123)  # Will fail to validate.
+
 ```
 
-Because of how Python evaluates [annotated assignment statements][annassign], the statement is equivalent to `int: None = None`, thus
+Because of how Python evaluates [annotated assignment statements][annassign], the statement is equivalent to
+`int: None = None`, thus
 leading to a validation error.
 
 ### Model methods and properties
@@ -180,11 +194,13 @@ Models possess the following methods and attributes:
   recursive generic models.
   See [Rebuilding model schema](#rebuilding-model-schema).
 
-### Note
+### Note: API documentation
+
 See the API documentation of [`BaseModel`][pydantic.main.BaseModel] for the class definition including a full list of
 methods and attributes.
 
 ### Tip
+
 See [Changes to `pydantic.BaseModel`](../migration.md#changes-to-pydanticbasemodel) in the
 [Migration Guide](../migration.md) for details on changes from Pydantic V1.
 
@@ -205,6 +221,7 @@ c: str
 u.Cli.print(Model(a=3.000, b="2.72", c=b"binary data").model_dump())
 
 # > {'a': 3, 'b': 2.72, 'c': 'binary data'}
+
 ```
 
 This is a deliberate decision of Pydantic, and is frequently the most useful approach. See
@@ -225,6 +242,7 @@ items: t.SequenceOf[int]  # (1)!
 u.Cli.print(Model(items=(1, 2, 3)))
 
 # > items=[1, 2, 3]
+
 ```
 
 1. In this case, you might be tempted to use the abstract [`Sequence`][collections.abc.Sequence] type
@@ -250,6 +268,7 @@ x: int
 
 m = Model(x=1, y="a")
 assert m.model_dump() == {"x": 1}
+
 ```
 
 The [`extra`][pydantic.ConfigDict.extra] configuration value can be used to control this behavior:
@@ -265,6 +284,7 @@ model_config = ConfigDict(extra="allow")
 m = Model(x=1, y="a")  # (1)!
 assert m.model_dump() == {"x": 1, "y": "a"}
 assert m.__pydantic_extra__ == {"y": "a"}
+
 ```
 
 1. If [`extra`][pydantic.ConfigDict.extra] was set to `'forbid'`, this would fail.
@@ -318,6 +338,7 @@ u.Cli.print(m.model_dump())
 'bars': [{'apple': 'x1', 'banana': 'y'}, {'apple': 'x2', 'banana': 'y'}],
 }
 """
+
 ```
 
 Self-referencing models are supported. For more details, see the documentation related to
@@ -364,6 +385,7 @@ u.Cli.print(Foo.model_json_schema())
 'type': 'object',
 }
 """
+
 ```
 
 1. `Bar` is not yet defined when the `Foo` class is being created. For this reason,
@@ -429,6 +451,7 @@ co_model = CompanyModel(co_orm)
 u.Cli.print(co_model)
 
 # > id=123 public_key='foobar' domains=['example.com', 'foobar.com']
+
 ```
 
 ### Nested attributes
@@ -473,6 +496,7 @@ u.Cli.print(anna_model)
 """
 name='Anna' age=20.0 pets=[Pet(name='Bones', species='dog'), Pet(name='Orion', species='cat')]
 """
+
 ```
 
 ## Error handling
@@ -507,6 +531,7 @@ list_of_ints.2
 a_float
   Input should be a valid number, unable to parse string as a number [type=float_parsing, input_value='not a float', input_type=str]
 """
+
 ```
 
 ## Validating data
@@ -600,15 +625,18 @@ u.Cli.print(e)
 """
 1 validation error for User
 signup_ts
-  Input should be a valid datetime, invalid datetime separator, expected `T`, `t`, `_` or space [type=datetime_parsing, input_value='2024-04-01', input_type=str]
+  Input should be a valid datetime, invalid datetime separator, expected `T`, `t`, `_` or space
+  [type=datetime_parsing, input_value='2024-04-01', input_type=str]
 """
+
 ```
 
 If you want to validate serialized data in a format other than JSON, you should load the data into a dictionary yourself
 and
 then pass it to [`model_validate`][pydantic.main.BaseModel.model_validate].
 
-### Note
+### Note: Validation behavior
+
 Depending on the types and model configs involved, [`model_validate`][pydantic.main.BaseModel.model_validate]
 and [`model_validate_json`][pydantic.main.BaseModel.model_validate_JSON] may have different validation behavior.
 If you have data coming from a non-JSON source, but want the same validation
@@ -617,13 +645,15 @@ our recommendation for now is to use either use `model_validate_json(json.dumps(
 [`model_validate_strings`][pydantic.main.BaseModel.model_validate_strings] if the data takes the form of a (potentially
 nested) dictionary with string keys and values.
 
-### Note
+### Note: Revalidate instances
+
 If you're passing in an instance of a model to [`model_validate`][pydantic.main.BaseModel.model_validate], you will want
 to consider setting
 [`revalidate_instances`][pydantic.ConfigDict.revalidate_instances] in the model's settings.
 If you don't set this value, then validation will be skipped on model instances. See the below example:
 
-=== ":x: `revalidate_instances='never'`"
+### :x: `revalidate_instances='never'`
+
 ```python
 from pydantic import BaseModel
 
@@ -637,9 +667,11 @@ m.a = "not an int"
 
 # doesn't raise a validation error even though m is invalid
 m2 = Model(
+
 ```
 
-=== ":white_check_mark: `revalidate_instances='always'`"
+### :white_check_mark: `revalidate_instances='always'`
+
 ```python
 from pydantic import BaseModel, ConfigDict, ValidationError
 
@@ -662,6 +694,7 @@ u.Cli.print(e)
 a
   Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='not an int', input_type=str]
 """
+
 ```
 
 ### Creating models without validation
@@ -674,12 +707,14 @@ This can be useful in at least a few cases:
 * when one or more of the validator functions are non-idempotent
 * when one or more of the validator functions have side effects that you don't want to be triggered.
 
-### Warning
+### Warning: model_construct
+
 [`model_construct()`][pydantic.main.BaseModel.model_construct] does not do any validation, meaning it can create
 models which are invalid. **You should only ever use the [`model_construct()`][pydantic.main.BaseModel.model_construct]
 method with data which has already been validated, or that you definitely trust.**
 
-### Note
+### Note: Performance
+
 In Pydantic V2, the performance gap between validation (either with direct instantiation or the `model_validate*`
 methods)
 and [`model_construct()`][pydantic.main.BaseModel.model_construct] has been narrowed
@@ -718,6 +753,7 @@ not stored in `__pydantic_extra__` or `__dict__` on the instance.
 ## Model copy
 
 ### API Documentation
+
 [`pydantic.main.BaseModel.model_copy`][pydantic.main.BaseModel.model_copy]<br>
 
 The [`model_copy()`][pydantic.BaseModel.model_copy] method allows models to be duplicated (with optional updates),
@@ -744,10 +780,12 @@ u.Cli.print(m.model_copy(update={"banana": 0}))
 u.Cli.print(id(m.bar) == id(m.model_copy().bar))
 
 # > True
+
 # deep copy gives a new t.JsonValue reference for `bar`:
 u.Cli.print(id(m.bar) == id(m.model_copy(deep=True).bar))
 
 # > False
+
 ```
 
 ## Generic models
@@ -798,6 +836,7 @@ u.Cli.print(e)
 data
   Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='value', input_type=str]
 """
+
 ```
 
 1. Declare one or more [type variables][typing.TypeVar] to use to parameterize your model.
@@ -840,12 +879,14 @@ u.Cli.print(e)
 data
   Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='value', input_type=str]
 """
+
 ```
 
 1. Declare a Pydantic model and add the list of type variables as type parameters.
 2. Use the type variables as annotations where you will want to replace them with other types.
 
-### Warning
+### Warning: Parametrized generics
+
 When parametrizing a model with a concrete type, Pydantic **does not** validate that the provided type
 is assignable to the type variable if it has an upper bound.
 
@@ -856,7 +897,8 @@ a model class. Any custom methods or attributes will also be inherited.
 Generic models also integrate properly with type checkers, so you get all the type checking
 you would expect if you were to declare a distinct type for each parametrization.
 
-### Note
+### Note: Subclass caching
+
 Internally, Pydantic creates subclasses of the generic model at runtime when the generic model class is parametrized.
 These classes are cached, so there should be minimal overhead introduced by the use of generics models.
 
@@ -880,6 +922,7 @@ pass
 u.Cli.print(ChildClass[int](X=1))
 
 # > X=1
+
 ```
 
 You can also create a generic subclass of a model that partially or fully replaces the type variables in the
@@ -905,6 +948,7 @@ z: TypeZ
 u.Cli.print(ChildClass[str, int](x="1", y="y", z="3"))
 
 # > x=1 y='y' z=3
+
 ```
 
 If the name of the concrete subclasses is important, you can also override the default name generation
@@ -930,6 +974,7 @@ u.Cli.print(repr(Response[int](data=1)))
 u.Cli.print(repr(Response[str](data="a")))
 
 # > StrResponse(data='a')
+
 ```
 
 You can use parametrized generic models as types in other models:
@@ -959,6 +1004,7 @@ u.Cli.print(repr(order))
 """
 Order(id=1, product=ResponseModel[Product](content=Product(name='Apple', price=0.5)))
 """
+
 ```
 
 Using the same type variable in nested models allows you to enforce typing relationships at different points in your
@@ -993,26 +1039,33 @@ outer
 nested.inner
   Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='a', input_type=str]
 """
+
 ```
 
 1. The `OuterT` model is parametrized with `int`, but the data associated with the the `T` annotations during validation
    is of type `str`, leading to validation errors.
 
-### Warning
+### Warning: isinstance checks
+
 While it may not raise an error, we strongly advise against using parametrized generics in
 [`isinstance()`](https://docs.python.org/3/library/functions.html#isinstance) checks.
 
-For example, you should not do `isinstance(my_model, MyGenericModel[int])`. However, it is fine to do `isinstance(my_model, MyGenericModel)` (note that, for standard generics, it would raise an error to do a subclass check with a parameterized generic class).
+For example, you should not do `isinstance(my_model, MyGenericModel[int])`. However, it is fine to do
+`isinstance(my_model, MyGenericModel)` (note that, for standard generics, it would raise an error to do a subclass
+check with a parameterized generic class).
 
-If you need to perform [`isinstance()`](https://docs.python.org/3/library/functions.html#isinstance) checks against parametrized generics, you can do this by subclassing the parametrized generic class:
+If you need to perform [`isinstance()`](https://docs.python.org/3/library/functions.html#isinstance) checks against
+parametrized generics, you can do this by subclassing the parametrized generic class:
 
 ```python
 class MyIntModel(MyGenericModel[int]): ...
 
 isinstance(my_model, MyIntModel)
+
 ```
 
 ### Note: Implementation Details
+
 When using nested generic models, Pydantic sometimes performs revalidation in an attempt to produce the most intuitive
 validation result.
 Specifically, if you have a field of type `GenericModel[SomeType]` and you validate data like
@@ -1038,12 +1091,17 @@ inner: GenericModel[Any]
 u.Cli.print(repr(Model(ericModel[int](a=1)))))
 
 # > Model(inner=GenericModel[Any](a=1))
+
 ```
 
-Note, validation will still fail if you, for example are validating against `GenericModel[int]` and pass in an instance `GenericModel[str](a='not an int')`.
+Note, validation will still fail if you, for example are validating against `GenericModel[int]` and pass in an instance
+`GenericModel[str](a='not an int')`.
 
-It's also worth noting that this pattern will re-trigger any custom validation as well, like additional model validators and the like.
-Validators will be called once on the first pass, validating directly against `GenericModel[Any]`. That validation fails, as `GenericModel[int]` is not a subclass of `GenericModel[Any]`. This relates to the warning above about the complications of using parametrized generics in `isinstance()` and `issubclass()` checks.
+It's also worth noting that this pattern will re-trigger any custom validation as well, like additional model
+validators and the like.
+Validators will be called once on the first pass, validating directly against `GenericModel[Any]`. That validation
+fails, as `GenericModel[int]` is not a subclass of `GenericModel[Any]`. This relates to the warning above about the
+complications of using parametrized generics in `isinstance()` and `issubclass()` checks.
 Then, the validators will be called again on the second pass, during more lax force-revalidation phase, which succeeds.
 To better understand this consequence, see below:
 
@@ -1068,10 +1126,12 @@ inner: GenericModel[Any]
 m = Model(ericModel[int](a=1)))
 
 # > after validator running custom validation...
+
 # > after validator running custom validation...
 u.Cli.print(repr(m))
 
 # > Model(inner=GenericModel[Any](a=1))
+
 ```
 
 ### Validation of unparametrized type variables
@@ -1119,11 +1179,14 @@ u
 v
   Input should be a valid string [type=string_type, input_value=1, input_type=int]
 """
+
 ```
 
-### Warning
+### Warning: Data loss
 
-In some cases, validation against an unparametrized generic model can lead to data loss. Specifically, if a subtype of the type variable upper bound, constraints, or default is being used and the model isn't explicitly parametrized, the resulting type **will not be** the one being provided:
+In some cases, validation against an unparametrized generic model can lead to data loss. Specifically, if a subtype of
+the type variable upper bound, constraints, or default is being used and the model isn't explicitly parametrized, the
+resulting type **will not be** the one being provided:
 
 ```python
 from typing import Generic, TypeVar
@@ -1149,6 +1212,7 @@ u.Cli.print(ItemHolder(**loaded_data))  # (1)!
 u.Cli.print(ItemHolder[IntItem](**loaded_data))  # (2)!
 
 # > item=IntItem(value=1)
+
 ```
 
 1. When the generic isn't parametrized, the input data is validated against the `ItemT` upper bound.
@@ -1193,6 +1257,7 @@ assert error.model_dump() == {
 }
 
 # serialized using the concrete parametrization
+
 # note that `'bar': 'var2'` is missing
 error = Error[ErrorDetails](
 message="We just had an error", details=ErrorDetails(foo="var")
@@ -1201,6 +1266,7 @@ assert error.model_dump() == {
 "message": "We just had an error",
 "details": {"foo": "var"},
 }
+
 ```
 
 Here's another example of the above behavior, enumerating all permutations regarding bound specification and generic
@@ -1229,7 +1295,9 @@ item_no_bound_inferred = ItemNoBound(item=IntValue(value=3))
 item_no_bound_explicit = ItemNoBound[IntValue](item=IntValue(value=3))
 
 # calling `u.Cli.print(x.model_dump())` on any of the above instances results in the following:
+
 # > {'item': {'value': 3}}
+
 ```
 
 However, if [constraints](<https://typing.readthedocs.io/en/latest/reference/generics.html#type-variables-with->
@@ -1282,11 +1350,13 @@ assert error.model_dump() == {
 "message": "We just had an error",
 "details": {"foo": "var", "bar": "baz"},
 }
+
 ```
 
 ## Dynamic model creation
 
 ### API Documentation
+
 [`pydantic.main.u.create_model`][pydantic.main.u.create_model]<br>
 
 There are some occasions where it is desirable to create a model using runtime information to specify the fields.
@@ -1302,6 +1372,7 @@ DynamicFoobarModel = u.create_model("DynamicFoobarModel", foo=str, bar=(int, 123
 class StaticFoobarModel(BaseModel):
 foo: str
 bar: int = 123
+
 ```
 
 u.Field definitions are specified as keyword arguments, and should either be:
@@ -1328,6 +1399,7 @@ class StaticModel(BaseModel):
 foo: str = u.Field(alias="FOO")
 bar: Annotated[str, u.Field(description="Bar field")]
 _private: int = u.PrivateAttr(default=1)
+
 ```
 
 The special keyword arguments `__config__` and `__base__` can be used to customize the new model.
@@ -1352,6 +1424,7 @@ u.Cli.print(BarModel)
 u.Cli.print(BarModel.model_fields.keys())
 
 # > dict_keys(['foo', 'bar', 'apple', 'banana'])
+
 ```
 
 You can also add validators by passing a dictionary to the `__validators__` argument.
@@ -1383,6 +1456,7 @@ u.Cli.print(e)
 username
   Assertion failed, must be alphanumeric [type=assertion_error, input_value='scolvi%n', input_type=str]
 """
+
 ```
 
 1. Make sure that the validators names do not clash with any of the field names as
@@ -1390,7 +1464,8 @@ username
    creation of a class using the [`types` module utilities](<https://docs.python.org/3/library/types.html#dynamic-type->
    creation).
 
-### Note
+### Note: Pickle requirements
+
 To pickle a dynamically created model:
 
 * the model must be defined globally
@@ -1402,6 +1477,7 @@ from another one.
 ## `RootModel` and custom root types
 
 ### API Documentation
+
 [`pydantic.root_model.RootModel`][pydantic.root_model.RootModel]<br>
 
 Pydantic models can be defined with a "custom root type" by subclassing [`pydantic.RootModel`][pydantic.RootModel].
@@ -1441,6 +1517,7 @@ u.Cli.print(PetsByName({"Otis": "dog", "Milo": "cat"}).model_dump_json())
 u.Cli.print(PetsByName( "Milo": "cat"}))
 
 # > root={'Otis': 'dog', 'Milo': 'cat'}
+
 ```
 
 If you want to access items in the `root` field directly or to iterate over the items, you can implement
@@ -1465,6 +1542,7 @@ u.Cli.print(pets[0])
 u.Cli.print([pet for pet in pets])
 
 # > ['dog', 'cat']
+
 ```
 
 You can also create subclasses of the parametrized root model directly:
@@ -1481,6 +1559,7 @@ my_pets = Pets(
 u.Cli.print(my_pets.describe())
 
 # > Pets: dog, cat
+
 ```
 
 ## Faux immutability
@@ -1488,11 +1567,13 @@ u.Cli.print(my_pets.describe())
 Models can be configured to be immutable via `model_config['frozen'] = True`. When this is set, attempting to change the
 values of instance attributes will raise errors. See the API reference for more details.
 
-### Note
+### Note: RootModel iteration
+
 This behavior was achieved in Pydantic V1 via the settings setting `allow_mutation = False`.
 This settings flag is deprecated in Pydantic V2, and has been replaced with `frozen`.
 
-### Warning
+### Warning: Frozen mutability
+
 In Python, immutability is not enforced. Developers have the ability to modify objects
 that are conventionally considered "immutable" if they choose to do so.
 
@@ -1527,6 +1608,7 @@ foobar.b["apple"] = "grape"
 u.Cli.print(foobar.b)
 
 # > {'apple': 'grape'}
+
 ```
 
 Trying to change `a` caused an error, and `a` remains unchanged. However, the dict `b` is mutable, and the
@@ -1549,6 +1631,7 @@ b: int
 @abc.abstractmethod
 def my_abstract_method(self):
 pass
+
 ```
 
 ## u.Field ordering
@@ -1584,6 +1667,7 @@ error_locations = [e["loc"] for e in err.errors()]
 u.Cli.print(error_locations)
 
 # > [('a',), ('b',), ('c',), ('d',), ('e',)]
+
 ```
 
 ## Automatically excluded attributes
@@ -1611,11 +1695,13 @@ u.Cli.print(m)
 u.Cli.print(Model.x)
 
 # > 1
+
 ```
 
 ### Private model attributes
 
 ### API Documentation
+
 [`pydantic.fields.u.PrivateAttr`][pydantic.fields.u.PrivateAttr]<br>
 
 Attributes whose name has a leading underscore are not treated as fields by Pydantic, and are not included in the
@@ -1647,6 +1733,7 @@ u.Cli.print(m._processed_at)
 u.Cli.print(m._secret_value)
 
 # > 3
+
 ```
 
 Private attribute names must start with underscore to prevent conflicts with model fields. However, dunder names
@@ -1670,6 +1757,7 @@ apple: int = u.Field(alias="pear")
 u.Cli.print(inspect.signature(FooModel))
 
 # > (*, id: int, name: str = None, description: str = 'Foo', pear: int) -> None
+
 ```
 
 An accurate signature is useful for introspection purposes and libraries like `FastAPI` or `hypothesis`.
@@ -1692,6 +1780,7 @@ super().__init__(id=id, bar=bar, **data)
 u.Cli.print(inspect.signature(MyModel))
 
 # > (id: int = 1, *, bar: str, info: str = 'Foo') -> None
+
 ```
 
 To be included in the signature, a field's alias or name must be a valid Python identifier.
@@ -1724,12 +1813,15 @@ case Pet(species="dog", name=dog_name):
 u.Cli.print(f"{dog_name} is a dog")
 
 # > Bones is a dog
+
 # default case
 case _:
 u.Cli.print("No dog matched")
+
 ```
 
-### Note
+### Note: Class variables
+
 A match-case statement may seem as if it creates a new model, but don't be fooled;
 it is just syntactic sugar for getting an attribute and either comparing it or declaring and initializing it.
 
@@ -1760,9 +1852,11 @@ c2 = C2(arr=arr_orig)
 u.Cli.print(f"{id(c1.arr) == id(c2.arr)=}")
 
 # > id(c1.arr) == id(c2.arr)=False
+
 ```
 
-### Note
+### Note: Private attributes
+
 There are some situations where Pydantic does not copy attributes, such as when passing models &mdash; we use the
 model as is. You can override this behaviour by setting
 [`model_config['revalidate_instances'] = 'always'`](../api/settings.md#pydantic.config.ConfigDict).

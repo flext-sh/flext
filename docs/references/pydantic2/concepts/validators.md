@@ -308,7 +308,7 @@ u.Cli.print(Model(number="invalid"))  # (1)!
 *Wrap* validators are the most flexible of all. You can run code before or after Pydantic and other validators process
 the input, or you can terminate validation immediately, either by returning the value early or by raising an error.
 
-Such validators must be defined with a **mandatory** extra _handler_ parameter: a callable taking the value to be
+Such validators must be defined with a **mandatory** extra *handler* parameter: a callable taking the value to be
 validated as an argument. Internally, this handler will delegate validation of the value to Pydantic. You are free to
 wrap the call to the handler in a
 [`try..except`](https://docs.python.org/3/tutorial/errors.html#handling-exceptions) block, or not call it at all.

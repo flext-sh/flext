@@ -1,5 +1,3 @@
-<!-- markdownlint-disable MD046 -->
-
 Unions are fundamentally different to all other types Pydantic validates - instead of requiring all fields/items/values
 to be valid, unions require only one member to be valid.
 
@@ -133,10 +131,10 @@ all other types, we use solely exactness.
 For `exactness`, Pydantic scores a match of a union member into one of the following three
 groups (from highest score to lowest score):
 
-* An exact type match, for example an `int` input to a `float | int` union validation is an
+- An exact type match, for example an `int` input to a `float | int` union validation is an
   exact type match for the `int` member
-* Validation would have succeeded in [`strict` mode](../concepts/strict_mode.md)
-* Validation would have succeeded in lax mode
+- Validation would have succeeded in [`strict` mode](../concepts/strict_mode.md)
+- Validation would have succeeded in lax mode
 
 The union match which produced the highest exactness score will be considered the best
 match.
@@ -154,8 +152,10 @@ In smart mode, the following steps are taken to try to select the best match for
 
 ##### All other data types
 
-1. Union members are attempted left to right, with any successful matches scored into one of the three exactness categories described above.
-   * If validation succeeds with an exact type match, that member is returned immediately and following members will not be attempted.
+1. Union members are attempted left to right, with any successful matches scored into one of the three
+   exactness categories described above.
+   - If validation succeeds with an exact type match, that member is returned immediately and following
+     members will not be attempted.
 2. If validation succeeded on at least one member as a "strict" match, the leftmost of those "strict" matches is returned.
 3. If validation succeeded on at least one member in "lax" mode, the leftmost match is returned.
 4. Validation failed on all the members, return all the errors.
