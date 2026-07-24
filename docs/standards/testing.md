@@ -88,13 +88,7 @@ Use `@pytest.mark.parametrize` for multi-case checks.
 import pytest
 
 
-@pytest.mark.parametrize(
-    ("raw", "expected"),
-    [
-        ("1", 1),
-        ("42", 42),
-    ],
-)
+@pytest.mark.parametrize(("raw", "expected"), [("1", 1), ("42", 42)])
 def test_parse_int(raw: str, expected: int) -> None:
     assert parse_int(raw) == expected
 ```

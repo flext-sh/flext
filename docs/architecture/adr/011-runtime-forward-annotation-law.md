@@ -303,6 +303,7 @@ class FlextSettings(BaseSettings):
         )
         root = Path(override) if override else _platform_cache_root()
         return root / self._current_app_namespace()
+
     # config_dir / data_dir / state_dir / work_dir / runtime_dir: same shape,
     # each over its own _platform_*_root(). Defined ONCE here at the root only.
 

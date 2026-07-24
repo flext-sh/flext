@@ -62,24 +62,17 @@ class CommandRegistry:
 
     @staticmethod
     def validate_invocation(
-        command: p.Tests.MakeCommand,
-        *,
-        require_required: bool = True,
+        command: p.Tests.MakeCommand, *, require_required: bool = True
     ) -> None:
         """Validate environment-backed parameter values for one invocation."""
         result = u.Tests.make_validate_invocation(
-            command,
-            u.Cli.process_env(),
-            require_required=require_required,
+            command, u.Cli.process_env(), require_required=require_required
         )
         if result.failure:
             raise CommandRegistry.Error(result.error or "invocation validation failed")
 
     @staticmethod
-    def param_value(
-        param: p.Tests.MakeParam,
-        command: p.Tests.MakeCommand,
-    ) -> str:
+    def param_value(param: p.Tests.MakeParam, command: p.Tests.MakeCommand) -> str:
         """Return the current value for one promoted-command parameter."""
         value: str = u.Tests.make_param_value(param, command, u.Cli.process_env())
         return value

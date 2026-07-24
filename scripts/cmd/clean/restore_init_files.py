@@ -31,10 +31,9 @@ from flext_cli import p, u
 
 
 def _is_git_repo(path: Path) -> bool:
-    return u.Cli.run_checked(
-        ["git", "rev-parse", "--git-dir"],
-        cwd=path,
-    ).unwrap_or(False)
+    return u.Cli.run_checked(["git", "rev-parse", "--git-dir"], cwd=path).unwrap_or(
+        False
+    )
 
 
 def _changed_init_files(repo: Path) -> list[str]:
@@ -54,8 +53,7 @@ def _changed_init_files(repo: Path) -> list[str]:
 
 def _restore_files(repo: Path, files: list[str]) -> p.Result[bool]:
     return u.Cli.run_checked(
-        ["git", "restore", "--staged", "--worktree", "--", *files],
-        cwd=repo,
+        ["git", "restore", "--staged", "--worktree", "--", *files], cwd=repo
     )
 
 
@@ -64,14 +62,9 @@ def _validate_imports(workspace_root: Path) -> p.Result[bool]:
         overrides={
             "PYTHONPATH": ":".join(
                 str(workspace_root / proj / "src")
-                for proj in (
-                    "flext-core",
-                    "flext-cli",
-                    "flext-tests",
-                    "flext-infra",
-                )
-            ),
-        },
+                for proj in ("flext-core", "flext-cli", "flext-tests", "flext-infra")
+            )
+        }
     )
     return u.Cli.run_checked(
         [
@@ -87,7 +80,7 @@ def _validate_imports(workspace_root: Path) -> p.Result[bool]:
 def run() -> int:
     """Run the restore workflow."""
     workspace_root = Path(
-        u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd())),
+        u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd()))
     ).resolve()
     if Dispatch.surface_validation_enabled():
         print("SURFACE-VALIDATE: python -m scripts.cmd.clean.restore_init_files")
@@ -127,7 +120,7 @@ def run() -> int:
         restored += 1
 
     print(
-        f"SUMMARY total={total} restored={restored} skipped={skipped} failed={failed}",
+        f"SUMMARY total={total} restored={restored} skipped={skipped} failed={failed}"
     )
     if failed:
         return 1

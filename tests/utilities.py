@@ -26,15 +26,11 @@ class TestsFlextTestUtilities(FlextTestsUtilities):
 
             @staticmethod
             def load_module(
-                module_name: str,
-                relative_path: str,
-                *,
-                anchor_file: Path,
+                module_name: str, relative_path: str, *, anchor_file: Path
             ) -> t.Workspace.Tests.LoadedModule:
                 module_path = (
                     TestsFlextTestUtilities.Workspace.Tests.resolve_module_path(
-                        anchor_file=anchor_file,
-                        relative_path=relative_path,
+                        anchor_file=anchor_file, relative_path=relative_path
                     )
                 )
                 spec = importlib.util.spec_from_file_location(module_name, module_path)

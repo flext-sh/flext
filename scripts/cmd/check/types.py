@@ -37,8 +37,7 @@ class CheckTypesCommand:
         )
         if "pyrefly" in gates:
             return Dispatch.run_make(
-                "_check_default",
-                extra_env={"CHECK_GATES": "pyrefly"},
+                "_check_default", extra_env={"CHECK_GATES": "pyrefly"}
             )
         return 0
 

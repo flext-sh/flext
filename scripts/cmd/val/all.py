@@ -33,9 +33,7 @@ class FlextRootValAllCommand:
         """Validated validation command options."""
 
         model_config = m.ConfigDict(
-            extra="forbid",
-            frozen=True,
-            validate_assignment=True,
+            extra="forbid", frozen=True, validate_assignment=True
         )
 
         scope: Annotated[
@@ -78,7 +76,7 @@ class FlextRootValAllCommand:
         """Validate environment-backed validation command options."""
         options: FlextRootValAllCommand.Options = (
             FlextRootValAllCommand.Options.model_validate({
-                "scope": Dispatch.env_value("VALIDATE_SCOPE", "all").lower(),
+                "scope": Dispatch.env_value("VALIDATE_SCOPE", "all").lower()
             })
         )
         return options

@@ -22,36 +22,18 @@ if _t.TYPE_CHECKING:
     from tests.unit.libs.versioning_tests import TestVersioning
     from tests.utilities import TestsFlextTestUtilities, u
 _LAZY_IMPORTS = merge_lazy_imports(
-    (
-        ".infra",
-        ".unit",
-    ),
-    build_lazy_import_map(
-        {
-            ".infra.constants": ("TestsFlextRootConstants",),
-            ".infra.models": ("TestsFlextRootModels",),
-            ".infra.protocols": ("TestsFlextRootProtocols",),
-            ".infra.typings": ("TestsFlextRootTypes",),
-            ".infra.utilities": ("TestsFlextRootUtilities",),
-            ".unit.docker_quality_mock_tests": ("TestDockerQualityDockerfiles",),
-            ".unit.libs.versioning_tests": ("TestVersioning",),
-            ".utilities": (
-                "TestsFlextTestUtilities",
-                "u",
-            ),
-            "flext": (
-                "c",
-                "d",
-                "e",
-                "h",
-                "m",
-                "p",
-                "r",
-                "t",
-                "x",
-            ),
-        },
-    ),
+    (".infra", ".unit"),
+    build_lazy_import_map({
+        ".infra.constants": ("TestsFlextRootConstants",),
+        ".infra.models": ("TestsFlextRootModels",),
+        ".infra.protocols": ("TestsFlextRootProtocols",),
+        ".infra.typings": ("TestsFlextRootTypes",),
+        ".infra.utilities": ("TestsFlextRootUtilities",),
+        ".unit.docker_quality_mock_tests": ("TestDockerQualityDockerfiles",),
+        ".unit.libs.versioning_tests": ("TestVersioning",),
+        ".utilities": ("TestsFlextTestUtilities", "u"),
+        "flext": ("c", "d", "e", "h", "m", "p", "r", "t", "x"),
+    }),
     exclude_names=(
         "cleanup_submodule_namespace",
         "install_lazy_exports",

@@ -46,10 +46,9 @@ def _selected_projects(workspace_root: Path) -> list[str]:
 
 
 def _is_git_repo(path: Path) -> bool:
-    return u.Cli.run_checked(
-        ["git", "rev-parse", "--git-dir"],
-        cwd=path,
-    ).unwrap_or(False)
+    return u.Cli.run_checked(["git", "rev-parse", "--git-dir"], cwd=path).unwrap_or(
+        False
+    )
 
 
 def _has_changes(repo: Path) -> bool:
@@ -59,16 +58,7 @@ def _has_changes(repo: Path) -> bool:
 
 def _stage_and_commit(repo: Path, message: str) -> p.Result[bool]:
     stage = u.Cli.capture(
-        [
-            "git",
-            "ls-files",
-            "-m",
-            "-d",
-            "-o",
-            "--exclude-standard",
-            "-z",
-        ],
-        cwd=repo,
+        ["git", "ls-files", "-m", "-d", "-o", "--exclude-standard", "-z"], cwd=repo
     )
     if stage.failure:
         return r[bool].fail(stage.error or "failed to list changed files")

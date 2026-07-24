@@ -38,9 +38,7 @@ class FlextRootDocsAllCommand:
         """Validated docs command options."""
 
         model_config = m.ConfigDict(
-            extra="forbid",
-            frozen=True,
-            validate_assignment=True,
+            extra="forbid", frozen=True, validate_assignment=True
         )
 
         phase: Annotated[
@@ -48,12 +46,10 @@ class FlextRootDocsAllCommand:
             u.Field(description="Documentation pipeline phase."),
         ] = "all"
         apply: Annotated[
-            Literal["Y", "N"],
-            u.Field(description="Mutation opt-in for docs phases."),
+            Literal["Y", "N"], u.Field(description="Mutation opt-in for docs phases.")
         ] = "N"
         fix: Annotated[
-            Literal["0", "1"],
-            u.Field(description="Docs fix opt-in flag."),
+            Literal["0", "1"], u.Field(description="Docs fix opt-in flag.")
         ] = "0"
 
         @u.field_validator("phase", mode="before")
@@ -96,9 +92,10 @@ class FlextRootDocsAllCommand:
         @property
         def target_env(self) -> t.MappingKV[str, str]:
             """Explicit Make variables for the private docs target."""
-            env: t.MappingKV[str, str] = MappingProxyType(
-                {"DOCS_PHASE": self.phase, "FIX": self.fix},
-            )
+            env: t.MappingKV[str, str] = MappingProxyType({
+                "DOCS_PHASE": self.phase,
+                "FIX": self.fix,
+            })
             return env
 
         @property
@@ -126,10 +123,7 @@ class FlextRootDocsAllCommand:
             for line in options.dry_run_lines:
                 print(line)
             return 0
-        return Dispatch.run_make(
-            "_docs",
-            extra_env=options.target_env,
-        )
+        return Dispatch.run_make("_docs", extra_env=options.target_env)
 
     @staticmethod
     def options() -> Options:

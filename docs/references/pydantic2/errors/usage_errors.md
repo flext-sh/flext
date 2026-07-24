@@ -373,8 +373,7 @@ try:
 
     class DiscriminatedModel(BaseModel):
         x: Annotated[
-            Union[str, "DiscriminatedModel"],
-            Discriminator(model_x_discriminator),
+            Union[str, "DiscriminatedModel"], Discriminator(model_x_discriminator)
         ]
 
 except PydanticUserError as exc_info:

@@ -65,12 +65,7 @@ Pydantic exports:
 ```python
 from typing import Annotated
 
-from pydantic import (
-    AfterValidator,
-    PlainSerializer,
-    TypeAdapter,
-    WithJsonSchema,
-)
+from pydantic import AfterValidator, PlainSerializer, TypeAdapter, WithJsonSchema
 
 TruncatedFloat = Annotated[
     float,
@@ -524,9 +519,7 @@ class ThirdPartyType:
 class _ThirdPartyTypePydanticAnnotation:
     @classmethod
     def __get_pydantic_core_schema__(
-        cls,
-        _source_type,
-        _handler: GetCoreSchemaHandler,
+        cls, _source_type, _handler: GetCoreSchemaHandler
     ) -> core_schema.CoreSchema:
         """
         We return a pydantic_core.CoreSchema that behaves in the following ways:

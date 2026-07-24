@@ -677,10 +677,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, WithJsonSchema
 
-MyInt = Annotated[
-    int,
-    WithJsonSchema({"type": "integer", "examples": [1, 0, -1]}),
-]
+MyInt = Annotated[int, WithJsonSchema({"type": "integer", "examples": [1, 0, -1]})]
 
 
 class Model(BaseModel):
@@ -764,9 +761,7 @@ class CompressedString:
             cls._validate,
             core_schema.str_schema(),
             serialization=core_schema.plain_serializer_function_ser_schema(
-                cls._serialize,
-                info_arg=False,
-                return_schema=core_schema.str_schema(),
+                cls._serialize, info_arg=False, return_schema=core_schema.str_schema()
             ),
         )
 
@@ -836,10 +831,7 @@ class RestrictCharacters:
         schema = handler(source)  # get the CoreSchema from the type / inner constraints
         if schema["type"] != "str":
             raise TypeError("RestrictCharacters can only be applied to strings")
-        return core_schema.no_info_after_validator_function(
-            self.validate,
-            schema,
-        )
+        return core_schema.no_info_after_validator_function(self.validate, schema)
 
     def validate(self, value: str) -> str:
         if any(c not in self.alphabet for c in value):
@@ -888,9 +880,7 @@ from pydantic import BaseModel, GetCoreSchemaHandler
 
 class SmallString:
     def __get_pydantic_core_schema__(
-        self,
-        source: type[Any],
-        handler: GetCoreSchemaHandler,
+        self, source: type[Any], handler: GetCoreSchemaHandler
     ) -> core_schema.CoreSchema:
         schema = handler(source)
         assert schema["type"] == "str"
@@ -997,12 +987,10 @@ class Person:
     def __get_pydantic_core_schema__(
         cls, source_type, handler: GetCoreSchemaHandler
     ) -> cs.CoreSchema:
-        return cs.typed_dict_schema(
-            {
-                "name": cs.typed_dict_field(cs.str_schema()),
-                "age": cs.typed_dict_field(cs.int_schema()),
-            },
-        )
+        return cs.typed_dict_schema({
+            "name": cs.typed_dict_field(cs.str_schema()),
+            "age": cs.typed_dict_field(cs.int_schema()),
+        })
 
     @classmethod
     def __get_pydantic_json_schema__(
@@ -1010,12 +998,7 @@ class Person:
     ) -> JsonSchemaValue:
         json_schema = handler(core_schema)
         json_schema = handler.resolve_ref_schema(json_schema)
-        json_schema["examples"] = [
-            {
-                "name": "John Doe",
-                "age": 25,
-            }
-        ]
+        json_schema["examples"] = [{"name": "John Doe", "age": 25}]
         json_schema["title"] = "Person"
         return json_schema
 
@@ -1402,8 +1385,7 @@ adapter = TypeAdapter(Model)
 
 print(
     json.dumps(
-        adapter.json_schema(ref_template="#/components/schemas/{model}"),
-        indent=2,
+        adapter.json_schema(ref_template="#/components/schemas/{model}"), indent=2
     )
 )
 """
