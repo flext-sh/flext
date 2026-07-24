@@ -51,6 +51,23 @@ description: Apply the mandatory FLEXT engineering law for every implementation,
   and docstring snippets validated by the pytest plugin (operator law
   2026-07-24, cosmos-main-hr9e).
 
+## Automated adjustments and synchronization
+
+- Any automated adjustment — sync, codegen round-trip, auto-fix, or upstream
+  merge — is a code change and must pass the same gates as a manual change.
+- Before claiming an automated adjustment is done, run the affected root-Make
+  gates (`make check` and `make test` for the touched projects) and record the
+  exact command, exit code, and decisive output in the owning Bead.
+- Automated adjustments must be atomic within the lane: one coherent commit or
+  an explicit pathspec-bound set of commits, never open-ended `fixes` commits
+  that accumulate unrelated changes.
+- Before merging the lane into the original branch (e.g. `0.12.0-dev`), run a
+  pre-merge validation of the whole lane against the current target: `make
+  check` and `make test` for every affected project. Do not merge if any gate
+  is red; fix forward inside the lane and re-validate.
+- A merge from upstream/external into the lane must also be validated in the
+  lane context before it is considered absorbed.
+
 ## Completion discipline
 
 Use `.agents/skills/flext-inviolable-rules/SKILL.md` for every task closure.

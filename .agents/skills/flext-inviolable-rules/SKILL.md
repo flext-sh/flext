@@ -36,7 +36,9 @@ public facades. Never invoke bare `pytest`, `ruff`, `pyrefly`, `pyright`,
   failure harmless without current command evidence and an owning linked Bead.
 - If the environment is broken, fix it forward in the task or create one
   narrow `discovered-from` blocker; do not close the implementation as done.
-- Re-run all required gates after any corrective edit.
+- If an automated adjustment (sync, codegen, auto-fix, upstream merge) is
+  part of the task, validate it through the same root-Make gates and record
+  evidence in the Bead before closing.
 - Manually use the changed public surface. Record the observed behavior,
   command, cwd, exit code, and decisive output in the Bead.
 - A test pinned to a config-owned value that breaks on a legitimate
