@@ -18,7 +18,7 @@ WORKSPACE_BASE ?= 0.12.0-dev
 
 done-check: ## Real-user/green-green check, scoped to committed changes vs upstream
 	$(Q)base=$$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo origin/main); \
-	files=$$(git diff --name-only --diff-filter=d "$$base"...HEAD -- '*.py' 2>/dev/null || true); \
+	files=$$(git diff --name-only --diff-filter=d "$$base"...HEAD -- '*.py') || { echo "ERROR: git diff against $$base failed" >&2; exit 1; }; \
 	if [ -z "$$files" ]; then \
 		echo "done-check: no committed .py changes vs $$base — green/green"; \
 		exit 0; \
@@ -172,7 +172,7 @@ workspace-sync-base: ## Equalize all submodules to origin/$(WORKSPACE_BASE)
 			echo "  $$path -> $$(cd "$$path" && git rev-parse --short HEAD)"; \
 		fi; \
 	done; \
-	git add $(MANAGED_PROJECTS) >/dev/null 2>&1 || true; \
+	git add $(MANAGED_PROJECTS) || { echo "ERROR: git add failed for $(MANAGED_PROJECTS)" >&2; exit 1; }; \
 	if ! git diff --cached --quiet; then \
 		msg=$$(printf '%s' "$(call workspace_commit_message,chore,equalize submodules,origin/$$base,workspace-sync-base)"); \
 		git commit -m "$$msg"; \
@@ -226,7 +226,7 @@ workspace-merge-main: ## Merge $(WORKSPACE_BASE) into main for every submodule a
 	done; \
 	$(MAKE) --no-print-directory workspace-sync-base; \
 	git fetch origin main >/dev/null 2>&1; \
-	git checkout main >/dev/null 2>&1 || true; \
+	git checkout main >/dev/null 2>&1 || { echo "ERROR: cannot checkout main in root; refusing to merge into the wrong branch" >&2; exit 1; }; \
 	git merge --no-ff "origin/$$base" -m "$$(printf '%s' "$(call workspace_commit_message,merge,root,merge $$base into main,workspace-merge-main)")" || { echo "ERROR: failed to merge root"; failed=1; }; \
 	$(if $(DRY_RUN),echo "[dry-run] would push root main",git push origin main); \
 	exit $$failed
@@ -249,7 +249,7 @@ workspace-main-sync: ## Pull origin/main into $(WORKSPACE_BASE) to absorb releas
 	done; \
 	$(MAKE) --no-print-directory workspace-sync-base; \
 	git fetch origin main >/dev/null 2>&1; \
-	git checkout "$$base" >/dev/null 2>&1 || true; \
+	git checkout "$$base" >/dev/null 2>&1 || { echo "ERROR: cannot checkout $$base in root; refusing to sync into the wrong branch" >&2; exit 1; }; \
 	git merge --ff-only origin/main >/dev/null 2>&1 || { echo "ERROR: failed to sync root"; failed=1; }; \
 	git push origin "$$base"; \
 	exit $$failed
@@ -435,12 +435,12 @@ else ifeq ($(TEST),1)
 else
 ifneq ($(CODEMOD_CSV),)
 	$(Q)echo "==> codemod DETECT [csv=$(RULE)]: scanning scope (read-only)"; \
-	$(UV_RUN) python $(CODEMOD_CSV_RUNNER) --csv $(CODEMOD_CSV) --check $(CODEMOD_TARGETS) || true
+	$(UV_RUN) python $(CODEMOD_CSV_RUNNER) --csv $(CODEMOD_CSV) --check $(CODEMOD_TARGETS)
 else
 	$(Q)echo "==> codemod DETECT$(if $(RULE), [rule=$(RULE)],): scanning scope (read-only)"; \
 	for t in $(CODEMOD_TARGETS); do \
 	  [ -d "$$t" ] || continue; \
-	  ast-grep scan $(CODEMOD_RULEFLAG) "$$t" || true; \
+	  ast-grep scan $(CODEMOD_RULEFLAG) "$$t" || exit $$?; \
 	done
 endif
 endif
