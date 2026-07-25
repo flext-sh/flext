@@ -73,6 +73,7 @@ scripts/maintenance/
 # mise toolchain pinning
 !.mise.toml
 !.default-python-packages
+!.python-version
 
 # Docker configuration
 !.dockerignore

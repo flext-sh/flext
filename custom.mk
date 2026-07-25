@@ -403,9 +403,14 @@ roots = u.Infra.discover_external_workspace_roots(pathlib.Path.cwd())
 print(" ".join(str(root) for root in roots))
 endef
 export CODEMOD_ATTACHED_PY
-CODEMOD_ATTACHED := $(shell $(UV_RUN) python -c "$$CODEMOD_ATTACHED_PY" 2>/dev/null)
-CODEMOD_SCOPE := $(if $(filter-out project all,$(SCOPE)),$(filter-out project all,$(SCOPE)),. $(WORKSPACE_MEMBERS) $(CODEMOD_ATTACHED))
-CODEMOD_TARGETS := $(foreach d,$(CODEMOD_SCOPE),$(wildcard $(d)/src) $(wildcard $(d)/tests) $(wildcard $(d)/examples) $(wildcard $(d)/scripts))
+# Lazy `=` on purpose: `:=` is expanded while GNU Make PARSES the file, so an
+# interpreter here is started by every invocation (`make help` included) and
+# once more per sub-make the verb dispatcher spawns for hook probing. Deferring
+# the expansion keeps the discovery identical but charges it only to the codemod
+# recipe that actually reads these variables.
+CODEMOD_ATTACHED = $(shell $(UV_RUN) python -c "$$CODEMOD_ATTACHED_PY" 2>/dev/null)
+CODEMOD_SCOPE = $(if $(filter-out project all,$(SCOPE)),$(filter-out project all,$(SCOPE)),. $(WORKSPACE_MEMBERS) $(CODEMOD_ATTACHED))
+CODEMOD_TARGETS = $(foreach d,$(CODEMOD_SCOPE),$(wildcard $(d)/src) $(wildcard $(d)/tests) $(wildcard $(d)/examples) $(wildcard $(d)/scripts))
 CODEMOD_CSV := $(if $(RULE),$(firstword $(wildcard $(CODEMOD_HOME)/rules/*/$(RULE).csv $(CODEMOD_HOME)/rules/$(RULE).csv)),)
 CODEMOD_CSV_RUNNER := $(CODEMOD_HOME)/rules/refactor/apply_renames.py
 CODEMOD_RULEFILE := $(if $(RULE),$(firstword $(wildcard $(CODEMOD_HOME)/rules/*/$(RULE).yml $(CODEMOD_HOME)/rules/$(RULE).yml)),)
