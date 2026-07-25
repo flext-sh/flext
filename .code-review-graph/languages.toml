@@ -1,5 +1,5 @@
 # code-review-graph global custom languages - AI-HUB SSOT
-# Managed by ai_hub.cli.sync_crg_workspaces for every registered workspace.
+# Managed by ai-hub sync-crg-workspaces for every registered workspace.
 
 [languages.yaml]
 extensions = [".yaml", ".yml"]
