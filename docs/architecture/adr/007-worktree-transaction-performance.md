@@ -11,7 +11,7 @@
 
 ## Context
 
-`flext-infra codegen init` and similar mutating commands execute inside a
+`make build WHAT=artifacts` and similar mutating commands execute inside a
 complete isolated Git worktree before any source change is applied. Profiling
 showed that the wall-clock time was dominated by:
 
