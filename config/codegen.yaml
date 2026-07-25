@@ -1022,6 +1022,14 @@ Infra:
         package: true
         editable: true
         read_only: false
+        extra_verbs:
+          - { name: charts, default_what: all }
+          - { name: chart-release, default_what: all }
+          - { name: bead, default_what: all }
+        script_dispatch:
+          dispatcher: scripts/dispatch.py
+          roots:
+            - scripts
       - name: cosmos-gitops
         distribution: cosmos-gitops
         provider: datacosmos-br
@@ -1036,6 +1044,13 @@ Infra:
         package: true
         editable: true
         read_only: false
+        extra_verbs:
+          - { name: gitops, default_what: all }
+          - { name: bead, default_what: all }
+        script_dispatch:
+          dispatcher: scripts/dispatch.py
+          roots:
+            - scripts
       - name: cosmos-old
         distribution: cosmos-old
         provider: datacosmos-br
