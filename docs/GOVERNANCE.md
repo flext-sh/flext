@@ -29,7 +29,7 @@ this order.
 | Architecture and public contracts | [ADR registry](architecture/adr/README.md) and owning source declaration | consumer audit plus affected project gates |
 | Ecosystem coordination (internal + external projects) | [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md) and [ecosystem-coordination.md](architecture/ecosystem-coordination.md) | reverse-dependency gate plus owner-local ADR consistency (`0.20.0-dev`) |
 | Runtime coding patterns | smallest matching skill under `~/.agents/skills/` | fresh import, lint, typecheck, behavior gate |
-| Quality commands | `~/.agents/skills/flext-quality-gates/SKILL.md` | exact command, exit code, decisive output |
+| Quality commands | `~/.agents/skills/flext-inviolable-rules/SKILL.md` | exact command, exit code, decisive output |
 | Documentation lifecycle | [`standards/documentation.md`](standards/documentation.md) | narrow markdown gate, then docs audit |
 | Workspace Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help` and affected dispatcher gate |
 | Enforcement catalog identity and routing | `flext-core` enforcement declarations | catalog census and public import |
