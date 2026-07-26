@@ -210,8 +210,33 @@ _builtin_help_usage:
 		fi; \
 	fi
 
+# A project owns the sources it declares. Setup makes the tree exactly what the
+# manifest declares, using nothing outside the tree: every declared submodule is
+# initialised recursively at its recorded gitlink and placed on the branch
+# declared in .gitmodules. It is a no-op when the project declares no
+# submodules, and it converges on re-run. It never moves a branch that holds
+# work the superproject does not record: that is an error, never a warning, so
+# setup can never report success over a tree that is not what it declares.
+_builtin_setup_submodules:
+	@set -eu; \
+	if [ ! -f "$(PROJECT_ROOT)/.gitmodules" ]; then exit 0; fi; \
+	git -C "$(PROJECT_ROOT)" submodule sync --recursive --quiet; \
+	git -C "$(PROJECT_ROOT)" submodule update --init --recursive; \
+	git -C "$(PROJECT_ROOT)" submodule foreach --recursive --quiet ' \
+		branch=$$(git config -f "$$toplevel/.gitmodules" "submodule.$$name.branch" || true); \
+		if [ -z "$$branch" ]; then exit 0; fi; \
+		if ! git rev-parse --verify --quiet "refs/heads/$$branch" >/dev/null; then \
+			git checkout --quiet -b "$$branch"; \
+		elif [ "$$(git rev-parse "refs/heads/$$branch")" = "$$(git rev-parse HEAD)" ]; then \
+			git checkout --quiet "$$branch"; \
+		else \
+			printf "ERROR: %s: branch %s is at %s but the superproject records %s\n" "$$name" "$$branch" "$$(git rev-parse --short "refs/heads/$$branch")" "$$(git rev-parse --short HEAD)" >&2; \
+			printf "Reconcile that branch with the recorded gitlink, then re-run setup\n" >&2; \
+			exit 1; \
+		fi'
+
 ifeq ($(MAKE_PROFILE),workspace-root)
-_builtin_setup_environment:
+_builtin_setup_environment: _builtin_setup_submodules
 	@uv sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS)
 	@uv pip install --python "$(PROJECT_ROOT)/.venv/bin/python" --no-deps --editable "$(PROJECT_ROOT)" --link-mode "$(UV_LINK_MODE)"
 	@set -eu; for member in $(WORKSPACE_MEMBERS); do \
@@ -220,14 +245,14 @@ _builtin_setup_environment:
 	@uv pip check --python "$(PROJECT_ROOT)/.venv/bin/python"
 else ifeq ($(MAKE_PROFILE),workspace-member)
 ifeq ($(ATTACHED_MEMBER),Y)
-_builtin_setup_environment:
+_builtin_setup_environment: _builtin_setup_submodules
 	@$(MAKE) --no-print-directory -C "$(RUNTIME_ROOT)" setup WHAT=environment
 else
-_builtin_setup_environment:
+_builtin_setup_environment: _builtin_setup_submodules
 	@uv sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS)
 endif
 else
-_builtin_setup_environment:
+_builtin_setup_environment: _builtin_setup_submodules
 	@uv sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS)
 endif
 
