@@ -272,9 +272,6 @@ workspace-dependabot-apply: ## dependabot-merge + merge result into main
         save tag push rel pr project workspace
 
 # build / regenerate
-%-shortcut-build:
-	@:
-
 gen: ## Regenerate standardized project files (dry-run; APPLY=Y to execute)
 	$(Q)$(MAKE) --no-print-directory build WHAT=gen $(MAKE_SELECTION_ARGS)
 
