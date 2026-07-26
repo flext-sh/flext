@@ -94,19 +94,11 @@
   "pylsp.plugins.rope_completion.enabled": true,
   "pylsp.plugins.yapf.enabled": false,
   "pyrefly.lspPath": ".venv/bin/pyrefly",
-  "python-envs.pythonProjects": [
-    {
-      "envManager": "ms-python.python:system",
-      "packageManager": "ms-python.python:pip",
-      "path": "."
-    }
-  ],
   "python-envs.workspaceSearchPaths": [
     "./.venv",
     "./**/.venv"
   ],
   "python.analysis.addExtraPathsForPythonProjects": true,
-  "python.analysis.addFoldersForPythonProjects": true,
   "python.analysis.diagnosticMode": "workspace",
   "python.analysis.enableExternalTypeServer": true,
   "python.analysis.findRefsInBackgroundThread": true,
@@ -129,8 +121,5 @@
     "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}",
     "VIRTUAL_ENV": "${workspaceFolder}/.venv"
   },
-  "python.analysis.typeCheckingMode": "strict",
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportUntypedBaseClass": "none"
-  }
+  "python-envs.defaultEnvManager": "ms-python.python:system"
 }
