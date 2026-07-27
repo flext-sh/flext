@@ -81,7 +81,11 @@ Top offenders:
 | flext-auth | 4 | 4 |
 | flext-oracle-wms | 4 | 3 |
 
-**Phase 3 action**: run `python -m flext_infra codegen auto-fix --apply` at workspace scope to land the 51 auto-fixable violations; the remaining 60 require human triage. ~~Note: the CLI route currently crashes (`u.Cli.output_message_payload` missing in `flext-cli/services/output.py:38`) — the in-process API works. Bug ownership: flext-cli maintainer / A-CH execution-pattern hub remit.~~ *(Resolved 2026-06-27: `u.Cli.output_message_payload` is available and `FlextCliOutput.display_message` runs without error.)*
+**Phase 3 action**: run `python -m flext_infra codegen auto-fix --apply` at workspace scope to land the 51
+auto-fixable violations; the remaining 60 require human triage. ~~Note: the CLI route currently crashes
+(`u.Cli.output_message_payload` missing in `flext-cli/services/output.py:38`) — the in-process API works.
+Bug ownership: flext-cli maintainer / A-CH execution-pattern hub remit.~~ *(Resolved 2026-06-27:
+`u.Cli.output_message_payload` is available and `FlextCliOutput.display_message` runs without error.)*
 
 Source: `/tmp/phase2-codegen-census.txt`.
 
@@ -126,7 +130,16 @@ project / one module at a time) — which is the design intent.
 
 1. Identify the consumer's local symbol via `parent_alias_collisions` for the affected scope.
 2. Verify the parent symbol's API is a strict superset of the consumer's local definition.
-3. Run `python -m flext_infra refactor accessor-migrate --workspace . --project <consumer> --module <consumer.module> --target-alias <parent.path>` to delete the local definition + rewrite all consumers to the parent alias.
+3. Delete the local definition + rewrite all consumers to the parent alias by running:
+
+   ```bash
+   python -m flext_infra refactor accessor-migrate \
+       --workspace . \
+       --project <consumer> \
+       --module <consumer.module> \
+       --target-alias <parent.path>
+   ```
+
 4. Verify net-negative LOC delta and 0 ruff + 0 pyrefly post-change (verb's safety gate enforces this).
 
 ## Section 3 — Service-responsibility duplicates

@@ -6,7 +6,7 @@
 
 - [FLEXT Code Diagrams](#flext-code-diagrams)
   - [Overview](#overview)
-  - [1. r[T] Class Diagram](#1-flextresultt-class-diagram)
+  - [1. r[T] Class Diagram](#1-rt-class-diagram)
   - [2. FlextContainer Class Diagram](#2-flextcontainer-class-diagram)
   - [3. FlextModels Domain Model](#3-flextmodels-domain-model)
   - [4. LDAP Service Entity Relationship Diagram](#4-ldap-service-entity-relationship-diagram)

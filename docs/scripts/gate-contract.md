@@ -141,11 +141,11 @@ All artifacts follow: `<skill>--<kind>--<slug>.<ext>`
 
 ### Report Locations
 
-| Type          | Path pattern                                                                                         | Example                                                      |
-| ------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Latest report | `.reports/validate/<gate>/<project>.txt` (workspace) or `~/.agents/skills/<skill>/report.json` (skill) | `.reports/validate/type-check/flext-core.txt`                |
-| Baseline      | `~/.agents/skills/<skill>/baseline.json`                                                               | `~/.agents/skills/flext-strict-typing/baseline.json`           |
-| Fix report    | `~/.agents/skills/<skill>/fix-report.json`                                                             | `~/.agents/skills/flext-pyrefly-typecheck-fix/fix-report.json` |
+|Type|Path pattern|Example|
+|-------------|----------------------------------------------------------------------------------------------------|------------------------------------------------------------|
+|Latest report|`.reports/validate/<gate>/<project>.txt` (workspace) or `~/.agents/skills/<skill>/report.json` (skill)|`.reports/validate/type-check/flext-core.txt`|
+|Baseline|`~/.agents/skills/<skill>/baseline.json`|`~/.agents/skills/flext-strict-typing/baseline.json`|
+|Fix report|`~/.agents/skills/<skill>/fix-report.json`|`~/.agents/skills/flext-pyrefly-typecheck-fix/fix-report.json`|
 
 Do not write validation artifacts to `.sisyphus/`.
 

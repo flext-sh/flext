@@ -25,6 +25,8 @@ type DataValue = t.JsonValue
 type ItemDict = t.JsonMapping
 type StageOperation = Callable[[t.JsonMapping], r[PipelineStageData]]
 
+MAX_VALUE_LENGTH = 100
+
 
 def _new_data_value_map() -> t.JsonMapping:
     return {}
@@ -311,7 +313,7 @@ class AdvancedProcessingExample:
             if not name or not isinstance(name, str):
                 violations.append("Missing or invalid name field")
             value = item.get("value", "")
-            if isinstance(value, str) and len(value) > 100:
+            if isinstance(value, str) and len(value) > MAX_VALUE_LENGTH:
                 warnings.append("Value field is very long")
             return r[AdvancedProcessingExample.ValidationResult].ok(
                 AdvancedProcessingExample.ValidationResult(
