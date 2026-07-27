@@ -25,7 +25,7 @@ managed-file drift that `conform --mode apply` should close.
 ## Finding 2 — settings/config exposure convention split
 
 Canonical FLEXT pattern (core/cli/api/dcdoc): private `_settings.py`/`_config.py`
-re-exported through `__init__` as `settings`/`config`.
+re-exported through `**init**` as `settings`/`config`.
 
 Divergences:
 

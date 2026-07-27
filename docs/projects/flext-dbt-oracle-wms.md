@@ -50,7 +50,8 @@ Use `make check PROJECT=flext-dbt-oracle-wms` and
 - [Project README](../../flext-dbt-oracle-wms/README.md)
 - [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law
 - [Workspace API overview](../api-reference/generated/flext-dbt-oracle-wms.md)
-- Related projects: `flext-core`, `flext-oracle-wms`, `flext-meltano`, `flext-tap-oracle-wms`, `flext-target-oracle-wms`, `flext-dbt-oracle`
+- Related projects: `flext-core`, `flext-oracle-wms`, `flext-meltano`, `flext-tap-oracle-wms`, `flext-target-oracle-
+  wms`, `flext-dbt-oracle`
 
 ## Support & issues
 

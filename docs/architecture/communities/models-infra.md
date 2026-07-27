@@ -11,7 +11,7 @@ Community of 27 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | Infra | Class | flext-infra/src/flext_infra/models.py | 34-52 |
 | FlextInfraModelsDeps | Class | flext-infra/src/flext_infra/_models/deps.py | 17-329 |
 | FlextInfraModelsMixins | Class | flext-infra/src/flext_infra/_models/mixins.py | 14-322 |

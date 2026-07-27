@@ -11,10 +11,10 @@ Community of 29 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | _SilentFailureFinding | Class | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 16-22 |
 | _SilentFailureAstVisitor | Class | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 25-328 |
-| __init__ | Function | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 35-40 |
+| **init** | Function | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 35-40 |
 | analyze | Function | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 42-49 |
 | _enclosing_function | Function | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 51-60 |
 | _result_inner_type | Function | flext-infra/src/flext_infra/_utilities/silent_failure_ast.py | 62-76 |
@@ -72,6 +72,9 @@ Community of 29 nodes
 ### Incoming
 
 - `flext-infra/src/flext_infra/_utilities/silent_failure_ast.py` (7 edge(s))
-- `flext-infra/src/flext_infra/detectors/silent_failure_detector.py::FlextInfraSilentFailureDetector.detect_file` (1 edge(s))
-- `flext-infra/src/flext_infra/detectors/silent_failure_detector.py::FlextInfraSilentFailureDetector.detect_violations` (1 edge(s))
-- `flext-infra/src/flext_infra/_utilities/rope_source.py::FlextInfraUtilitiesRopeSource.fix_silent_failure_sentinels` (1 edge(s))
+- `flext-infra/src/flext_infra/detectors/silent_failure_detector.py::FlextInfraSilentFailureDetector.detect_file`
+  (1 edge(s))
+- `flext-infra/src/flext_infra/detectors/silent_failure_detector.py::FlextInfraSilentFailureDetector.detect_violations`
+  (1 edge(s))
+- `flext-infra/src/flext_infra/_utilities/rope_source.py::FlextInfraUtilitiesRopeSource.fix_silent_failure_sentinels`
+  (1 edge(s))
