@@ -1,63 +1,48 @@
 # FLEXT Oracle WMS
 
-FLEXT Oracle WMS (v0.9.9 RC) is the Oracle Warehouse Management System integration framework that stands ready to join the FLEXT ecosystem once the compliance refactor finishes. It already defines the full LGF v10/legacy API catalog, configuration helpers, and instrumentation wiring, but connectivity validation, OAuth2 authentication, and Flext-compliant imports are still outstanding.
+FLEXT Oracle WMS is the domain package for Oracle Warehouse Management System
+(WMS) integration. Its executable source lives under
+`flext-oracle-wms/src/flext_oracle_wms/`.
 
-## Status & metrics
+## Status & health
 
-- **Version**: 0.9.9 RC (Phase 1 modernization) with 1.0.0 release preparation in progress
-- **Python**: 3.13+ only
-- **Tests**: ~481 functions across ~40 files; they currently rely on fake URLs and expect connectivity failures, so the Pryfly/pytest pipeline is noted as blocked until FlextCore integration happens
-- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is marked as blocked because of structural compliance issues (HTTPX imports, class architecture, lack of flext-auth/flext-cli integration)
-- **Coverage**: Architecture target is 90%+, but the current reporting reflects the blocking issues described in the README
-- **Type safety**: Pyrefly/MyPy strict modes run clean; zero `Any`, no `cast`, no `# type: ignore`; r flows saturate every layer
-- **Security**: Bandit/pip-audit gates are defined but deferred until the FlextCore import cleanup completes
+- **Version**: 0.12.0-dev (monorepo development cycle)
+- **Python**: 3.13+
+- **Package**: `flext_oracle_wms`
+- **Location in this repo**: `flext-oracle-wms/` at the workspace root
+
+### Quality signals
+
+- Run `make check PROJECT=flext-oracle-wms` and
+  `make test PROJECT=flext-oracle-wms` through the workspace root.
 
 ## Quick start
 
-```bash
-git clone https://github.com/flext-sh/flext-oracle-wms.git
-cd flext-oracle-wms
-poetry install
-make setup
-make val  # currently blocked (see README for the required FlextCore refactoring)
-```
+Use the generated API reference for verified public imports and method
+signatures.
 
-```python
-from flext_oracle_wms import FlextOracleWmsClient, FlextOracleWmsClientSettings
+## Architecture & modules
 
-settings = FlextOracleWmsClientSettings.for_testing()
-with FlextOracleWmsClient(settings) as client:
-    result = client.test_connection()
-    if result.is_failure:
-        print("Expected failure due to test URL")
-```
+The project uses the canonical tiered layout: `api.py` is the public facade;
+`_utilities/` contains implementation details; and `config/` is the
+configuration source of truth.
 
-Replace the `for_testing()` helpers with real Oracle WMS Cloud credentials once the compliance phase replaces the fake URLs and adds OAuth2 support.
+### Key architectural patterns
 
-## Architecture & compliance snapshot
+- One public facade, Pydantic boundary models, and the workspace
+  config/settings SSOT define the package contract.
 
-- **Layered modules**: `constants.py`, `typings.py`, `protocols.py` define the foundation; `api.py` exposes `FlextOracleWms` services; `services/`, `integration/`, `auth/`, and `cli/` map to the Flext tiers.
-- **API catalog**: 25+ endpoints (setup, automation, data extract, entity management) already defined, including the 2025 LGF v10 APIs for entity extracts, bulk updates, and t.JsonValue store exports.
-- **Compliance gaps**: README calls out httpx -> flext-api migration needs, consolidation from 133 classes to unified classes per module, flext-auth/flext-cli integration, and OAuth2 authentication coverage.
-- **r discipline**: every operation returns `r`, and the README explicitly forbids exception-based error handling, `Any`, or type ignores.
+## Testing & quality
 
-## Key features & blockers
+The root Make gates provide current quality evidence.
 
-- **Oracle WMS framework**: configuration scaffolding, entity discovery, data extraction, automation operations, and staging/transit endpoints already have typed definitions.
-- **Testing structure**: 25+ API tests, entity discovery validations, authentication checks, and Docker-based workloads exist but currently expect connectivity failures; real Oracle WMS credentials and OAuth2 flows remain to be wired.
-- **Roadmap**: Phase 1 (foundation compliance) covers httpx migration, class consolidation, flext-auth integration; Phase 2 covers adding missing LGF v10 APIs, establishing real Oracle WMS connectivity, and validating modern operations.
-- **Enterprise configuration**: environment variables (`FLEXT_ORACLE_WMS_BASE_URL`, credentials, auth method, timeouts, caches) plus programmatic helpers highlight how deployments should behave once the blocked quality pipeline reopens.
-
-## Resources & references
+## Resources
 
 - [Project README](../../flext-oracle-wms/README.md)
-- [Project AGENTS.md](../../flext-oracle-wms/AGENTS.md) for zero-tolerance error handling, r promises, and command guidance
-- `docs/` folder inside the project for architectural overviews, guides, and roadmap notes
-- `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` once `make val` finishes
-- Related projects: `flext-core`, `flext-api`, `flext-auth`, `flext-cli`, `flext-db-oracle`, `flext-tap-oracle-wms`, `flext-target-oracle-wms`, `flext-dbt-oracle-wms`
+- Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
+- Related packages: `flext-core`, `flext-api`, `flext-db-oracle`, `flext-meltano`
 
-## Support & contributions
+## Support & issues
 
-- Issues: <https://github.com/flext-sh/flext-oracle-wms/issues>
-- Discussions: <https://github.com/flext-sh/flext-oracle-wms/discussions>
-- Follow `docs/standards/README.md`, this project’s AGENTS file, and the portal checklist before editing docs or tests so the brief stays accurate.
+- Issues: <https://github.com/flext-sh/flext/issues>
+- Follow the workspace `AGENTS.md` and the project README before editing code or docs so this page stays accurate.

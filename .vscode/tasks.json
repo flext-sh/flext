@@ -1,256 +1,47 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "Patch project_metadata alias mapping",
-			"type": "shell",
-			"command": "python",
-			"args": [
-				"-c",
-				"print('noop')"
-			],
-			"isBackground": false,
-			"problemMatcher": []
-		},
-		{
-			"label": "Audit flext-core docs",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" make docs DOCS_PHASE=audit"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Audit flext-core railway guide",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" make docs DOCS_PHASE=audit"
-			],
-			"isBackground": false
-		},
-		{
-			"label": "Inspect railway guide codeblocks",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && ${workspaceFolder}/.venv/bin/python3 - <<'PY'\nfrom pathlib import Path\nimport re\nimport subprocess\n\npath = Path('docs/guides/railway-oriented-programming.md')\ncontent = path.read_text(encoding='utf-8')\nblocks = list(re.finditer(r\"```python\\n(?P<body>.*?)```\", content, re.S))\nfor idx in (8, 11):\n    body = blocks[idx].group('body')\n    print(f'=== block {idx} ===')\n    proc = subprocess.run(\n        [\n            '${workspaceFolder}/.venv/bin/ruff',\n            'check',\n            '--stdin-filename',\n            f'{path}#block{idx}.py',\n            '-',\n        ],\n        input=body.encode('utf-8'),\n        stdout=subprocess.PIPE,\n        stderr=subprocess.STDOUT,\n        check=False,\n    )\n    print(proc.stdout.decode('utf-8'))\n    print(f'exit={proc.returncode}')\nPY"
-			],
-			"isBackground": false
-		},
-		{
-			"label": "Audit flext-core docs now",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" make docs DOCS_PHASE=audit"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Ruff documented patterns test",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" ${workspaceFolder}/.venv/bin/ruff check tests/integration/test_documented_patterns.py"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Pyrefly documented patterns test",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" ${workspaceFolder}/.venv/bin/pyrefly check tests/integration/test_documented_patterns.py"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Pytest documented patterns test",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" ${workspaceFolder}/.venv/bin/pytest tests/integration/test_documented_patterns.py -x"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Ruff documented patterns test rerun",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" ${workspaceFolder}/.venv/bin/ruff check tests/integration/test_documented_patterns.py"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Pyrefly documented patterns test rerun",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" ${workspaceFolder}/.venv/bin/pyrefly check tests/integration/test_documented_patterns.py"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Pytest documented patterns test rerun",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" ${workspaceFolder}/.venv/bin/pytest tests/integration/test_documented_patterns.py -x"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Pytest documented patterns no cov",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" ${workspaceFolder}/.venv/bin/pytest tests/integration/test_documented_patterns.py -x --no-cov"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Classify flext-core docs codeblock lint rules",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" ${workspaceFolder}/.venv/bin/python3 - <<'PY'\nfrom __future__ import annotations\n\nimport json\nimport re\nimport subprocess\nfrom collections import Counter, defaultdict\nfrom pathlib import Path\n\nreport = Path('.reports/docs/audit-summary.json')\nissues = json.loads(report.read_text())['issues']\npattern = re.compile(r'^```python\\s*\\n(?P<body>.*?)^```\\s*$', re.MULTILINE | re.DOTALL)\nrule_counts: Counter[str] = Counter()\nfile_rules: dict[str, Counter[str]] = defaultdict(Counter)\nexamples: dict[str, str] = {}\nfor issue in issues:\n    if issue['issue_type'] != 'python_codeblock':\n        continue\n    file_path = Path(issue['file'])\n    text = file_path.read_text(encoding='utf-8')\n    blocks = list(pattern.finditer(text))\n    msg = issue['message']\n    match = re.search(r'block #(\\d+)', msg)\n    if not match:\n        continue\n    idx = int(match.group(1))\n    if idx >= len(blocks):\n        continue\n    body = blocks[idx].group('body')\n    proc = subprocess.run(\n        [\n            '${workspaceFolder}/.venv/bin/ruff',\n            'check',\n            '--stdin-filename',\n            f'{file_path}#block{idx}.py',\n            '-',\n        ],\n        input=body.encode(),\n        stdout=subprocess.PIPE,\n        stderr=subprocess.STDOUT,\n        check=False,\n    )\n    output = proc.stdout.decode()\n    codes = set(re.findall(r'error\\[([A-Z]+\\d+)\\]', output))\n    if not codes and proc.returncode != 0:\n        codes = {'UNKNOWN'}\n    for code in codes:\n        rule_counts[code] += 1\n        file_rules[str(file_path)][code] += 1\n        examples.setdefault(code, output.strip().splitlines()[0] if output.strip() else msg)\nprint('RULE_COUNTS')\nfor code, count in rule_counts.most_common():\n    print(f'{code}\\t{count}\\t{examples.get(code, \"\")}')\nprint('TOP_FILES')\nfor path, counts in sorted(file_rules.items(), key=lambda item: sum(item[1].values()), reverse=True)[:20]:\n    print(f'{path}\\t{sum(counts.values())}\\t' + ','.join(f'{code}:{count}' for code, count in counts.most_common()))\nPY"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Run flext-core docs rule classifier",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" ${workspaceFolder}/.venv/bin/python3 .tmp/docs_rule_classifier.py"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Audit flext-core docs after markdown-block ignores",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" make docs DOCS_PHASE=audit"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Validate docs audit root-cause fixes",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"source ${workspaceFolder}/.venv/bin/activate && cd ${workspaceFolder} && ${workspaceFolder}/.venv/bin/ruff check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/tests/unit/docs/auditor_codeblocks_tests.py && ${workspaceFolder}/.venv/bin/pyrefly check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/tests/unit/docs/auditor_codeblocks_tests.py && cd ${workspaceFolder}/flext-infra && ${workspaceFolder}/.venv/bin/pytest tests/unit/docs/auditor_codeblocks_tests.py --no-cov"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Inspect Ruff output for docs snippet",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"source ${workspaceFolder}/.venv/bin/activate && cd ${workspaceFolder} && cat <<'EOF' | ${workspaceFolder}/.venv/bin/ruff check --extend-ignore D100,D101,D102,D103,S101 --stdin-filename docs/snippet.md#block0.py -\nfrom __future__ import annotations\n\ndef double(value: int) -> int:\n    return value * 2\n\nassert double(2) == 4\nEOF"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Revalidate docs audit root-cause fixes",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"source ${workspaceFolder}/.venv/bin/activate && cd ${workspaceFolder} && ${workspaceFolder}/.venv/bin/ruff check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/tests/unit/docs/auditor_codeblocks_tests.py && ${workspaceFolder}/.venv/bin/pyrefly check flext-infra/src/flext_infra/_constants/docs.py flext-infra/src/flext_infra/_utilities/docs_audit.py flext-infra/src/flext_infra/_utilities/docs_api.py flext-infra/tests/unit/docs/auditor_codeblocks_tests.py && cd ${workspaceFolder}/flext-infra && ${workspaceFolder}/.venv/bin/pytest tests/unit/docs/auditor_codeblocks_tests.py --no-cov"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Re-run flext-core docs audit current state",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" make docs DOCS_PHASE=audit"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Classify remaining flext-core docs rules",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" ${workspaceFolder}/.venv/bin/python3 .tmp/docs_rule_classifier.py"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Validate flext-core docs audit after snippet fixes",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" make docs DOCS_PHASE=audit"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Validate flext-core docs audit final",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" make docs DOCS_PHASE=audit"
-			],
-			"isBackground": false,
-			"group": "test"
-		},
-		{
-			"label": "Validate flext-core docs audit final rerun",
-			"type": "shell",
-			"command": "bash",
-			"args": [
-				"-lc",
-				"cd ${workspaceFolder}/flext-core && PATH=\"${workspaceFolder}/.venv/bin:$PATH\" make docs DOCS_PHASE=audit"
-			],
-			"isBackground": false,
-			"group": "test"
-		}
-	]
+  // NOTE (multi-agent, mro-wkii.17.25): expose only canonical Make verbs in editor tasks.
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "FLEXT: Check",
+      "type": "process",
+      "command": "make",
+      "args": [
+        "check"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "FLEXT: Test",
+      "type": "process",
+      "command": "make",
+      "args": [
+        "test"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "FLEXT: Status",
+      "type": "process",
+      "command": "make",
+      "args": [
+        "status"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ]
 }

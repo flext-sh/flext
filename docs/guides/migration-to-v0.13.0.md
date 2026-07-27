@@ -4,7 +4,8 @@
 
 This guide describes how to migrate the FLEXT workspace to the `0.13.0` platform baseline.
 
-It is organized by project category so teams can move in a controlled order without reintroducing the patterns being removed.
+It is organized by project category so teams can move in a controlled order without reintroducing the patterns being
+removed.
 
 ## Migration Order
 

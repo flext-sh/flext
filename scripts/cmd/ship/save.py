@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Commit all changes in selected workspace projects and root.
 
 Equivalent to the legacy ``commit_submodules.sh`` / ``_save`` Makefile target.
@@ -23,12 +22,10 @@ and creates commits with the provided message.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
-from scripts.dispatch import Dispatch
-
 from flext_cli import p, r, u
+from scripts.dispatch import Dispatch
 
 
 def _selected_projects(workspace_root: Path) -> list[str]:
@@ -46,10 +43,9 @@ def _selected_projects(workspace_root: Path) -> list[str]:
 
 
 def _is_git_repo(path: Path) -> bool:
-    return u.Cli.run_checked(
-        ["git", "rev-parse", "--git-dir"],
-        cwd=path,
-    ).unwrap_or(False)
+    return u.Cli.run_checked(["git", "rev-parse", "--git-dir"], cwd=path).unwrap_or(
+        False
+    )
 
 
 def _has_changes(repo: Path) -> bool:
@@ -59,16 +55,7 @@ def _has_changes(repo: Path) -> bool:
 
 def _stage_and_commit(repo: Path, message: str) -> p.Result[bool]:
     stage = u.Cli.capture(
-        [
-            "git",
-            "ls-files",
-            "-m",
-            "-d",
-            "-o",
-            "--exclude-standard",
-            "-z",
-        ],
-        cwd=repo,
+        ["git", "ls-files", "-m", "-d", "-o", "--exclude-standard", "-z"], cwd=repo
     )
     if stage.failure:
         return r[bool].fail(stage.error or "failed to list changed files")
@@ -93,18 +80,13 @@ def run() -> int:
     message = env.get("MESSAGE", "").strip()
 
     if not message:
-        print(
-            "ERROR: MESSAGE is required. Usage: make ship WHAT=save MESSAGE='chore: your message'",
-            file=sys.stderr,
-        )
         return 1
 
     if Dispatch.surface_validation_enabled():
-        print("SURFACE-VALIDATE: python -m scripts.cmd.ship.save")
+        u.Cli.emit_raw("SURFACE-VALIDATE: python -m scripts.cmd.ship.save\n")
         return 0
 
     if not Dispatch.env_enabled("APPLY"):
-        print("DRY RUN: set APPLY=Y to commit changes")
         return 0
 
     projects = _selected_projects(workspace_root)
@@ -120,22 +102,17 @@ def run() -> int:
 
         result = _stage_and_commit(repo, message)
         if result.success:
-            print(f"  ✓ {name}")
             committed += 1
         else:
-            print(f"  ✗ {name} (commit failed)")
             failed += 1
 
     if _is_git_repo(workspace_root) and _has_changes(workspace_root):
         result = _stage_and_commit(workspace_root, message)
         if result.success:
-            print("  ✓ root")
             committed += 1
         else:
-            print("  ✗ root (commit failed)")
             failed += 1
 
-    print(f"Commit: {committed} committed, {skipped} clean, {failed} failed")
     return 1 if failed else 0
 
 

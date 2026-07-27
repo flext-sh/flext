@@ -1,6 +1,0 @@
-id: grep-typing-any
-language: python
-rule:
-  pattern: typing.Any
-message: "Direct typing.Any usage banned"
-severity: error

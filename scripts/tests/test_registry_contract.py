@@ -7,6 +7,7 @@ They import only the public namespace (`scripts.dispatch.Dispatch`).
 from __future__ import annotations
 
 import os
+import sys
 
 import pytest
 
@@ -120,19 +121,32 @@ def test_unknown_what_raises(registry: Dispatch.Registry) -> None:
         _registry_command_or_raise(registry, "check", "no-such-what")
 
 
+def test_main_reports_registry_errors(capsys: pytest.CaptureFixture[str]) -> None:
+    """Expose dispatcher contract failures instead of returning an opaque exit 2."""
+    assert Dispatch.main(("does-not-exist",)) == 2
+    assert "verb 'does-not-exist' unknown" in capsys.readouterr().err
+
+
+def test_run_shell_mirrors_captured_output(capsys: pytest.CaptureFixture[str]) -> None:
+    """Mirror child stdout and stderr while preserving its exit code."""
+    code = Dispatch.run_shell((
+        sys.executable,
+        "-c",
+        "import sys; u.Cli.emit_raw('child-out\\n'); sys.stderr.write('child-err\\n')",
+    ))
+
+    captured = capsys.readouterr()
+    assert code == 0
+    assert "child-out" in captured.out
+    assert "child-err" in captured.err
+
+
 @pytest.mark.parametrize(
     ("alias", "canonical_verb"),
-    [
-        ("gen", "build"),
-        ("lint", "check"),
-        ("rel", "ship"),
-        ("validate", "val"),
-    ],
+    [("gen", "build"), ("lint", "check"), ("rel", "ship"), ("validate", "val")],
 )
 def test_verb_alias_resolves_to_canonical_verb(
-    registry: Dispatch.Registry,
-    alias: str,
-    canonical_verb: str,
+    registry: Dispatch.Registry, alias: str, canonical_verb: str
 ) -> None:
     """Promoted verb aliases must resolve to their canonical verb."""
     resolved = u.Tests.make_registry_resolve_verb(registry, alias)
@@ -206,10 +220,7 @@ def test_docs_fix_opt_in_reaches_private_docs_target(
 def test_status_reaches_private_status_target(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    keys = (
-        c.Tests.MAKE_SURFACE_VALIDATE_ENV,
-        c.Tests.MAKE_WHAT_PARAM,
-    )
+    keys = (c.Tests.MAKE_SURFACE_VALIDATE_ENV, c.Tests.MAKE_WHAT_PARAM)
     original = _snapshot_env(keys)
     try:
         os.environ[c.Tests.MAKE_SURFACE_VALIDATE_ENV] = c.Tests.MAKE_DISPATCH_ENV_VALUE
@@ -223,13 +234,8 @@ def test_status_reaches_private_status_target(
         _restore_env(original)
 
 
-def test_clean_without_apply_stays_dry_run(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    keys = (
-        c.Tests.MAKE_APPLY_PARAM,
-        c.Tests.MAKE_WHAT_PARAM,
-    )
+def test_clean_without_apply_stays_dry_run(capsys: pytest.CaptureFixture[str]) -> None:
+    keys = (c.Tests.MAKE_APPLY_PARAM, c.Tests.MAKE_WHAT_PARAM)
     original = _snapshot_env(keys)
     try:
         os.environ.pop(c.Tests.MAKE_APPLY_PARAM, None)
@@ -260,13 +266,7 @@ def test_clean_without_apply_stays_dry_run(
             True,
             (("DRY_RUN", "1"), ("TAG", "surface-validation")),
         ),
-        (
-            "ship",
-            "push",
-            "_push",
-            True,
-            (("DRY_RUN", "1"),),
-        ),
+        ("ship", "push", "_push", True, (("DRY_RUN", "1"),)),
     ],
 )
 def test_release_status_coordination_routes_reach_private_targets(
@@ -274,6 +274,7 @@ def test_release_status_coordination_routes_reach_private_targets(
     verb: str,
     what: str,
     target: str,
+    *,
     requires_apply: bool,
     env_updates: tuple[tuple[str, str], ...],
 ) -> None:
@@ -332,9 +333,7 @@ def test_ship_save_runs_python_command_directly(
 
 
 def _registry_command_or_raise(
-    registry: Dispatch.Registry,
-    verb: str,
-    what: str,
+    registry: Dispatch.Registry, verb: str, what: str
 ) -> Dispatch.Command:
     result = u.Tests.make_registry_command(registry, verb, what)
     if result.failure:

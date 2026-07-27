@@ -18,8 +18,11 @@
 
 - `D203` - blank line before class docstring ✗ (not used)
 - `D213` - multi-line summary on line 2 ✗ (keep on line 1)
-- `D401` - imperative mood ✗ (not enforced)
-- `D417` - undocumented params ✗ (strict but ignored)
+
+**Not enforced by the current Ruff policy:**
+
+- `D401` - imperative mood (ignored as `non-imperative-mood`)
+- `D417` - undocumented params (ignored as `undocumented-param`)
 
 ---
 
@@ -136,10 +139,7 @@ class Ex00UserProfile(m.Entity):
 
 ```python
 def process_data(
-    input_path: Path,
-    *,
-    validate: bool = True,
-    timeout: int | None = None,
+    input_path: Path, *, validate: bool = True, timeout: int | None = None
 ) -> t.MappingKV[str, Any]:
     """Process data from input file and return structured result.
 
@@ -164,7 +164,7 @@ def process_data(
     Example:
         >>> result = process_data(Path("data.json"))
         >>> if result["errors"]:
-        ...     print(f"Found {len(result['errors'])} errors")
+        ...     u.Cli.print(f"Found {len(result['errors'])} errors")
     """
 ```
 
@@ -189,10 +189,7 @@ def process_data(
 ```python
 @staticmethod
 def iter_directory_python_files(
-    directory: Path,
-    *,
-    pattern: str | None = None,
-    skip_pycache: bool = True,
+    directory: Path, *, pattern: str | None = None, skip_pycache: bool = True
 ) -> t.SequenceOf[Path]:
     """Iterate Python files in a single directory tree.
 
@@ -306,12 +303,7 @@ class DataProcessingError(Exception):
         data: Original data that caused the error.
     """
 
-    def __init__(
-        self,
-        message: str,
-        code: str = "UNKNOWN",
-        data: Any = None,
-    ) -> None:
+    def __init__(self, message: str, code: str = "UNKNOWN", data: Any = None) -> None:
         """Initialize error with message and optional code.
 
         Args:
@@ -356,9 +348,7 @@ async def fetch_data(url: str, timeout: int = 30) -> bytes:
 
 ```python
 def configure(
-    mode: str,
-    options: t.MappingKV[str, Any] | None = None,
-    verbosity: int = 1,
+    mode: str, options: t.MappingKV[str, Any] | None = None, verbosity: int = 1
 ) -> None:
     """Settingsure processor behavior.
 
@@ -485,9 +475,7 @@ def run_raw(
 ```python
 @staticmethod
 def create_checkpoint(
-    workspace_root: Path,
-    *,
-    label: str = "flext-checkpoint",
+    workspace_root: Path, *, label: str = "flext-checkpoint"
 ) -> p.Result[str]:
     """Create timestamped git stash checkpoint and return reference.
 
@@ -531,8 +519,12 @@ ruff check --preview src/
 
 - D203: blank line before class summary (use pep257 style, no blank)
 - D213: multi-line summary on line 2 (keep on line 1)
-- D401: imperative mood not enforced
-- DOC201/202/402: undocumented return/raises/params don't fail (enforcement is soft)
+- DOC201/202/402/501/502: undocumented return/raises/params don't fail (soft set)
+
+Note: D401 (imperative mood) and D417 (undocumented params) are **not enforced**
+— they are ignored via `non-imperative-mood` and `undocumented-param` in
+`[tool.ruff.lint].ignore` (pyproject.toml is the SSOT; see the "Not enforced by
+the current Ruff policy" section above).
 
 ---
 

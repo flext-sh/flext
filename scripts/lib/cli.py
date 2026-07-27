@@ -23,12 +23,12 @@ class CommandCli:
     def main(argv: Sequence[str] | None = None) -> int:
         """Run the FLEXT scripts dispatcher."""
         args = tuple(
-            CommandCli.apply_env_from_args(sys.argv[1:] if argv is None else argv),
+            CommandCli.apply_env_from_args(sys.argv[1:] if argv is None else argv)
         )
         try:
             return CommandCli.route(args)
         except CommandRegistry.Error as exc:
-            print(f"ERRO: {exc}", file=sys.stderr)
+            sys.stderr.write(f"ERRO: {exc}\n")
             return 2
 
     @staticmethod
@@ -37,15 +37,7 @@ class CommandCli:
         if args and args[0] in {"help", "--help", "-h"}:
             return CommandCli.print_help("")
         if not args:
-            requested = (
-                u.Cli
-                .process_env()
-                .get(
-                    c.Tests.MAKE_WHAT_PARAM,
-                    "",
-                )
-                .strip()
-            )
+            requested = u.Cli.process_env().get(c.Tests.MAKE_WHAT_PARAM, "").strip()
             return CommandCli.print_help(requested)
         if args[0] == "--validate":
             CommandRegistry.discover()
@@ -78,26 +70,21 @@ class CommandCli:
             return CommandCli.print_command_or_verb_help(registry, verb, what)
         if requested:
             return CommandCli.print_verb_help(registry, requested)
-        print(CommandRenderer.global_help(registry))
+        u.Cli.emit_raw(f"{CommandRenderer.global_help(registry)}\n")
         return 0
 
     @staticmethod
     def print_command_or_verb_help(
-        registry: CommandRegistry.Registry,
-        verb: str,
-        what: str,
+        registry: CommandRegistry.Registry, verb: str, what: str
     ) -> int:
         """Print help for one command."""
-        print(CommandRenderer.command_help(registry, verb, what))
+        u.Cli.emit_raw(f"{CommandRenderer.command_help(registry, verb, what)}\n")
         return 0
 
     @staticmethod
-    def print_verb_help(
-        registry: CommandRegistry.Registry,
-        requested_verb: str,
-    ) -> int:
+    def print_verb_help(registry: CommandRegistry.Registry, requested_verb: str) -> int:
         """Print help for one verb."""
-        print(CommandRenderer.verb_help(registry, requested_verb))
+        u.Cli.emit_raw(f"{CommandRenderer.verb_help(registry, requested_verb)}\n")
         return 0
 
     @staticmethod
@@ -115,16 +102,13 @@ class CommandCli:
         what_values = CommandCli.normalize_what(requested)
 
         if requested == "help":
-            print(CommandRenderer.verb_help(registry, requested_verb))
-            return 0
+            return CommandCli.print_verb_help(registry, requested_verb)
         if CommandExecution.env_enabled(
-            c.Tests.MAKE_HELP_PARAM,
+            c.Tests.MAKE_HELP_PARAM
         ) or CommandExecution.env_enabled(c.Tests.MAKE_OPTIONS_PARAM):
             if len(what_values) == 1:
                 return CommandCli.print_command_or_verb_help(
-                    registry,
-                    requested_verb,
-                    what_values[0],
+                    registry, requested_verb, what_values[0]
                 )
             CommandCli.print_verbosity_help(registry, requested_verb, what_values)
             return 0
@@ -141,11 +125,12 @@ class CommandCli:
                 != c.Tests.MAKE_DISPATCH_ENV_VALUE
             )
             CommandRegistry.validate_invocation(
-                command,
-                require_required=not is_dry_run,
+                command, require_required=not is_dry_run
             )
             if is_dry_run:
-                print(CommandRenderer.dry_run(command, requested_verb, what))
+                u.Cli.emit_raw(
+                    f"{CommandRenderer.dry_run(command, requested_verb, what)}\n"
+                )
                 continue
             child_code = CommandExecution.run(command)
             if child_code != 0:
@@ -177,9 +162,8 @@ class CommandCli:
     ) -> None:
         """Print detailed help for one WHAT value or the parent verb."""
         if len(what_values) != 1:
-            print(CommandRenderer.verb_help(registry, requested_verb))
             return
-        print(CommandRenderer.command_help(registry, requested_verb, what_values[0]))
+        CommandCli.print_command_or_verb_help(registry, requested_verb, what_values[0])
 
 
 __all__: list[str] = ["CommandCli"]

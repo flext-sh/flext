@@ -26,7 +26,7 @@ class MyModel(BaseModel):
 try:
     MyModel({"field": "invalid"})
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'arguments_type'
 ```
 
@@ -51,7 +51,7 @@ class Model(BaseModel):
 try:
     Model(x=-1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'assertion_error'
 ```
 
@@ -72,7 +72,7 @@ Model(x="true")  # OK
 try:
     Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'bool_parsing'
 ```
 
@@ -91,7 +91,7 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'bool_type'
 ```
 
@@ -114,7 +114,7 @@ class Model(BaseModel):
 try:
     Model(x=b"a")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'bytes_invalid_encoding'
 ```
 
@@ -133,7 +133,7 @@ class Model(BaseModel):
 try:
     Model(x=b"test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'bytes_too_long'
 ```
 
@@ -152,7 +152,7 @@ class Model(BaseModel):
 try:
     Model(x=b"t")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'bytes_too_short'
 ```
 
@@ -171,7 +171,7 @@ class Model(BaseModel):
 try:
     Model(x=123)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'bytes_type'
 ```
 
@@ -196,7 +196,7 @@ Model(x="math:cos")  # OK
 try:
     Model(x="os.path")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'callable_type'
 ```
 
@@ -218,7 +218,7 @@ try:
     # This value `abc` is not a valid complex string.
     Model.model_validate_json('{"num": "abc"}')
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'complex_str_parsing'
 ```
 
@@ -237,7 +237,7 @@ class Model(BaseModel):
 try:
     Model(num=False)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'complex_type'
 ```
 
@@ -257,15 +257,15 @@ class MyDataclass:
 
 adapter = TypeAdapter(MyDataclass)
 
-print(adapter.validate_python(MyDataclass(x="test"), strict=True))
+u.Cli.print(adapter.validate_python(MyDataclass(x="test"), strict=True))
 # > MyDataclass(x='test')
-print(adapter.validate_python({"x": "test"}))
+u.Cli.print(adapter.validate_python({"x": "test"}))
 # > MyDataclass(x='test')
 
 try:
     adapter.validate_python({"x": "test"}, strict=True)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'dataclass_exact_type'
 ```
 
@@ -292,7 +292,7 @@ Outer(y=Inner(x=1))  # OK
 try:
     Outer(y=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'dataclass_type'
 ```
 
@@ -317,7 +317,7 @@ Model(x=datetime(2023, 1, 1))  # OK
 try:
     Model(x=datetime(2023, 1, 1, 12))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'date_from_datetime_inexact'
 ```
 
@@ -338,7 +338,7 @@ class Model(BaseModel):
 try:
     Model(x="XX1494012000")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'date_from_datetime_parsing'
 ```
 
@@ -359,7 +359,7 @@ class Model(BaseModel):
 try:
     Model(x=date(2000, 1, 1))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'date_future'
 ```
 
@@ -381,7 +381,7 @@ class Model(BaseModel):
 try:
     Model.model_validate_json(json.dumps({"x": "1"}))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'date_parsing'
 ```
 
@@ -402,7 +402,7 @@ class Model(BaseModel):
 try:
     Model(x=date.today() + timedelta(1))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'date_past'
 ```
 
@@ -423,7 +423,7 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'date_type'
 ```
 
@@ -447,7 +447,7 @@ try:
     # there is no 13th month
     Model(x="2023-13-01")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'datetime_from_date_parsing'
 ```
 
@@ -468,7 +468,7 @@ class Model(BaseModel):
 try:
     Model(x=datetime(2000, 1, 1))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'datetime_future'
 ```
 
@@ -496,7 +496,7 @@ class Model(BaseModel):
 try:
     Model(x=datetime(2023, 1, 1, tzinfo=CustomTz()))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'datetime_object_invalid'
 ```
 
@@ -518,7 +518,7 @@ class Model(BaseModel):
 try:
     Model.model_validate_json(json.dumps({"x": "not a datetime"}))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'datetime_parsing'
 ```
 
@@ -539,7 +539,7 @@ class Model(BaseModel):
 try:
     Model(x=datetime.now() + timedelta(100))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'datetime_past'
 ```
 
@@ -560,7 +560,7 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'datetime_type'
 ```
 
@@ -583,7 +583,7 @@ class Model(BaseModel):
 try:
     Model(x="42.1234")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'decimal_max_digits'
 ```
 
@@ -604,7 +604,7 @@ class Model(BaseModel):
 try:
     Model(x="42.1234")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'decimal_max_places'
 ```
 
@@ -625,7 +625,7 @@ class Model(BaseModel):
 try:
     Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'decimal_parsing'
 ```
 
@@ -646,7 +646,7 @@ class Model(BaseModel):
 try:
     Model(x=[1, 2, 3])
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'decimal_type'
 ```
 
@@ -654,7 +654,8 @@ This error is also raised for strict fields when the input value is not an insta
 
 ## `decimal_whole_digits`
 
-This error is raised when the value provided for a `Decimal` has more digits before the decimal point than `max_digits` - `decimal_places` (as long as both are specified):
+This error is raised when the value provided for a `Decimal` has more digits before the decimal point
+than `max_digits` - `decimal_places` (as long as both are specified):
 
 ```python
 from decimal import Decimal
@@ -669,13 +670,14 @@ class Model(BaseModel):
 try:
     Model(x="12345.6")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'decimal_whole_digits'
 ```
 
 ## `default_factory_not_called`
 
-This error is raised when a [default factory taking validated data](../concepts/fields.md#default-factory-validated-data)
+This error is raised when a [default factory taking
+validated data](../concepts/fields.md#default-factory-validated-data)
 can't be called, because validation failed on previous fields:
 
 ```python
@@ -690,7 +692,7 @@ class Model(BaseModel):
 try:
     Model(a=1)
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     2 validation errors for Model
     a
@@ -698,7 +700,7 @@ except ValidationError as exc:
     b
       The default factory uses validated data, but at least one validation error occurred [type=default_factory_not_called]
     """
-    print(repr(exc.errors()[1]["type"]))
+    u.Cli.print(repr(exc.errors()[1]["type"]))
     # > 'default_factory_not_called'
 ```
 
@@ -717,7 +719,7 @@ class Model(BaseModel):
 try:
     Model(x=["1", "2"])
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'dict_type'
 ```
 
@@ -742,7 +744,7 @@ class Model(BaseModel):
 try:
     Model(x="other_option")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'enum'
 ```
 
@@ -763,7 +765,7 @@ class Model(BaseModel):
 try:
     Model(x="test", y="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'extra_forbidden'
 ```
 
@@ -785,7 +787,7 @@ class Model(BaseModel):
 try:
     Model(x=2.2250738585072011e308)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'finite_number'
 ```
 
@@ -804,7 +806,7 @@ class Model(BaseModel):
 try:
     Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'float_parsing'
 ```
 
@@ -823,7 +825,7 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'float_type'
 ```
 
@@ -844,19 +846,20 @@ model = Model()
 try:
     model.x = "test1"
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'frozen_field'
 
 try:
     del model.x
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'frozen_field'
 ```
 
 ## `frozen_instance`
 
-This error is raised when `frozen` is set in the [configuration](../concepts/settings.md) and you attempt to delete or assign a new value to
+This error is raised when `frozen` is set in the [configuration](../concepts/settings.md) and you attempt to delete or
+assign a new value to
 any of the fields:
 
 ```python
@@ -874,13 +877,13 @@ m = Model(x=1)
 try:
     m.x = 2
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'frozen_instance'
 
 try:
     del m.x
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'frozen_instance'
 ```
 
@@ -899,7 +902,7 @@ class Model(BaseModel):
 try:
     model = Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'frozen_set_type'
 ```
 
@@ -930,7 +933,7 @@ class Model(BaseModel):
 try:
     Model(
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'get_attribute_error'
 ```
 
@@ -949,7 +952,7 @@ class Model(BaseModel):
 try:
     Model(x=10)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'greater_than'
 ```
 
@@ -968,7 +971,7 @@ class Model(BaseModel):
 try:
     Model(x=9)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'greater_than_equal'
 ```
 
@@ -987,7 +990,7 @@ class Model(BaseModel):
 try:
     Model(x=0.5)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'int_from_float'
 ```
 
@@ -1006,7 +1009,7 @@ class Model(BaseModel):
 try:
     Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'int_parsing'
 ```
 
@@ -1032,14 +1035,14 @@ too_long = "1" * 4_301
 try:
     Model(x=too_long)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'int_parsing_size'
 
 # from JSON
 try:
     Model.model_validate_json(json.dumps({"x": too_long}))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'int_parsing_size'
 ```
 
@@ -1058,7 +1061,7 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'int_type'
 ```
 
@@ -1079,7 +1082,7 @@ class Model(BaseModel):
 try:
     Model(2})
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'invalid_key'
 ```
 
@@ -1104,7 +1107,7 @@ class Model(BaseModel):
 try:
     Model(y="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'is_instance_of'
 ```
 
@@ -1127,7 +1130,7 @@ class Model(BaseModel):
 try:
     Model(y="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'is_subclass_of'
 ```
 
@@ -1148,7 +1151,7 @@ class Model(BaseModel):
 try:
     Model(y=123)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'iterable_type'
 ```
 
@@ -1172,7 +1175,7 @@ class Model(BaseModel):
 try:
     Model(x=gen())
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'iteration_error'
 ```
 
@@ -1191,7 +1194,7 @@ class Model(BaseModel):
 try:
     Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'json_invalid'
 ```
 
@@ -1210,7 +1213,7 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'json_type'
 ```
 
@@ -1229,7 +1232,7 @@ class Model(BaseModel):
 try:
     Model(x=10)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'less_than'
 ```
 
@@ -1248,7 +1251,7 @@ class Model(BaseModel):
 try:
     Model(x=11)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'less_than_equal'
 ```
 
@@ -1267,7 +1270,7 @@ class Model(BaseModel):
 try:
     Model(x=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'list_type'
 ```
 
@@ -1290,7 +1293,7 @@ Model(x="a")  # OK
 try:
     Model(x="c")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'literal_error'
 ```
 
@@ -1326,7 +1329,7 @@ class Model(BaseModel):
 try:
     Model(x=BadMapping())
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'mapping_type'
 ```
 
@@ -1345,7 +1348,7 @@ class Model(BaseModel):
 try:
     Model()
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'missing'
 ```
 
@@ -1366,7 +1369,7 @@ def foo(a: int):
 try:
     foo()
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'missing_argument'
 ```
 
@@ -1386,7 +1389,7 @@ def foo(*, a: int):
 try:
     foo()
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'missing_keyword_only_argument'
 ```
 
@@ -1407,7 +1410,7 @@ def foo(a: int, /):
 try:
     foo()
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'missing_positional_only_argument'
 ```
 
@@ -1428,13 +1431,14 @@ class Model(BaseModel):
 try:
     Model(f=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'missing_sentinel_error'
 ```
 
 ## `model_attributes_type`
 
-This error is raised when the input value is not a valid dictionary, model instance, or instance that fields can be extracted from:
+This error is raised when the input value is not a valid dictionary, model instance, or instance that fields can be
+extracted from:
 
 ```python
 from pydantic import BaseModel, ValidationError
@@ -1446,7 +1450,7 @@ class Model(BaseModel):
 
 
 # simply validating a dict
-print(Model(}))
+u.Cli.print(Model(}))
 # > a=1 b=2
 
 
@@ -1457,13 +1461,13 @@ class CustomObj:
 
 
 # using from attributes to extract fields from an objects
-print(Model(, from_attributes=True))
+u.Cli.print(Model(, from_attributes=True))
 # > a=3 b=4
 
 try:
     Model(, from_attributes=True)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'model_attributes_type'
 ```
 
@@ -1482,17 +1486,17 @@ class Model(BaseModel):
 
 # simply validating a dict
 m = Model(})
-print(m)
+u.Cli.print(m)
 # > a=1 b=2
 
 # validating an existing model instance
-print(Model(
+u.Cli.print(Model(
 # > a=1 b=2
 
 try:
     Model()
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'model_type'
 ```
 
@@ -1513,7 +1517,7 @@ def foo(a: int):
 try:
     foo(1, a=2)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'multiple_argument_values'
 ```
 
@@ -1532,13 +1536,14 @@ class Model(BaseModel):
 try:
     Model(x=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'multiple_of'
 ```
 
 ## `needs_python_object`
 
-This type of error is raised when validation is attempted from a format that cannot be converted to a Python t.JsonValue.
+This type of error is raised when validation is attempted from a format that cannot be converted to a Python
+t.JsonValue.
 For example, we cannot check `isinstance` or `issubclass` from JSON:
 
 ```python
@@ -1554,7 +1559,7 @@ class Model(BaseModel):
 try:
     Model.model_validate_json(json.dumps({"bm": "not a basemodel class"}))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'needs_python_object'
 ```
 
@@ -1576,7 +1581,7 @@ m = MyDataclass(x=1)
 try:
     m.y = 10
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'no_such_attribute'
 ```
 
@@ -1595,27 +1600,28 @@ class Model(BaseModel):
 try:
     Model(x=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'none_required'
 ```
 
-!!! note
-You may encounter this error when there is a naming collision in your model between a field name and its type. More specifically, this error is likely to be thrown when the default value of that field is `None`.
-
-    For example, the following would yield the `none_required` validation error since the field `int` is set to a default value of `None` and has the exact same name as its type, which causes problems with validation.
-
-    ```python {test="skip"}
-    from typing import Optional
-
-    from pydantic import BaseModel
-
-
-    class M1(BaseModel):
-        int: Optional[int] = None
-
-
-    m = M1(int=123)  # errors
-    ```
+> **Note:** You may encounter this error when there is a naming collision in your model between a field name and its type.
+> More specifically, this error is likely to be thrown when the default value of that field is `None`.
+>
+> For example, the following would yield the `none_required` validation error since the field `int` is set to a
+> default value of `None` and has the exact same name as its type, which causes problems with validation.
+>
+> ```python {test="skip"}
+> from typing import Optional
+>
+> from pydantic import BaseModel
+>
+>
+> class M1(BaseModel):
+>     int: Optional[int] = None
+>
+>
+> m = M1(int=123)  # errors
+> ```
 
 ## `recursion_loop`
 
@@ -1634,7 +1640,7 @@ d["x"].append(d)
 try:
     Model(**d)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'recursion_loop'
 ```
 
@@ -1657,9 +1663,9 @@ class Unhashable:
 try:
     Model(x=[{"a": "b"}, Unhashable()])
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'set_item_not_hashable'
-    print(repr(exc.errors()[1]["type"]))
+    u.Cli.print(repr(exc.errors()[1]["type"]))
     # > 'set_item_not_hashable'
 ```
 
@@ -1678,7 +1684,7 @@ class Model(BaseModel):
 try:
     Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'set_type'
 ```
 
@@ -1697,7 +1703,7 @@ class Model(BaseModel):
 try:
     Model(x="1")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'string_pattern_mismatch'
 ```
 
@@ -1722,7 +1728,7 @@ class Model(BaseModel):
 try:
     Model(x=MyEnum.foo)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'string_sub_type'
 ```
 
@@ -1741,7 +1747,7 @@ class Model(BaseModel):
 try:
     Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'string_too_long'
 ```
 
@@ -1760,7 +1766,7 @@ class Model(BaseModel):
 try:
     Model(x="t")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'string_too_short'
 ```
 
@@ -1779,7 +1785,7 @@ class Model(BaseModel):
 try:
     Model(x=1)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'string_type'
 ```
 
@@ -1800,7 +1806,7 @@ class Model(BaseModel):
 try:
     Model(x=b"\x81")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'string_unicode'
 ```
 
@@ -1821,7 +1827,7 @@ class Model(BaseModel):
 try:
     Model(x="t")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'time_delta_parsing'
 ```
 
@@ -1842,7 +1848,7 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'time_delta_type'
 ```
 
@@ -1865,7 +1871,7 @@ class Model(BaseModel):
 try:
     Model(x="25:20:30.400")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'time_parsing'
 ```
 
@@ -1886,7 +1892,7 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'time_type'
 ```
 
@@ -1910,7 +1916,7 @@ class Model(BaseModel):
 try:
     Model(x=datetime.now())
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'timezone_aware'
 ```
 
@@ -1932,7 +1938,7 @@ class Model(BaseModel):
 try:
     Model(x=datetime.now(tz=timezone.utc))
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'timezone_naive'
 ```
 
@@ -1951,7 +1957,7 @@ class Model(BaseModel):
 try:
     Model(x=[1, 2, 3, 4])
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'too_long'
 ```
 
@@ -1970,7 +1976,7 @@ class Model(BaseModel):
 try:
     Model(x=[1, 2])
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'too_short'
 ```
 
@@ -1989,7 +1995,7 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'tuple_type'
 ```
 
@@ -2012,7 +2018,7 @@ def foo(a: int, /):
 try:
     foo(a=2)
 except ValidationError as exc:
-    print(repr(exc.errors()[1]["type"]))
+    u.Cli.print(repr(exc.errors()[1]["type"]))
     # > 'unexpected_keyword_argument'
 ```
 
@@ -2031,7 +2037,7 @@ class Foo:
 try:
     TypeAdapter(Foo).validate_python({"bar": 1, "foobar": 2})
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'unexpected_keyword_argument'
 ```
 
@@ -2052,7 +2058,7 @@ def foo(*, a: int):
 try:
     foo(2)
 except ValidationError as exc:
-    print(repr(exc.errors()[1]["type"]))
+    u.Cli.print(repr(exc.errors()[1]["type"]))
     # > 'unexpected_positional_argument'
 ```
 
@@ -2081,7 +2087,7 @@ class Model(BaseModel):
 try:
     Model(cat={"pet_type": "dog"})
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'union_tag_invalid'
 ```
 
@@ -2110,7 +2116,7 @@ class Model(BaseModel):
 try:
     Model(cat={"name": "blackcat"})
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'union_tag_not_found'
 ```
 
@@ -2129,7 +2135,7 @@ class Model(BaseModel):
 try:
     Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'url_parsing'
 ```
 
@@ -2148,7 +2154,7 @@ class Model(BaseModel):
 try:
     Model(x="ftp://example.com")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'url_scheme'
 ```
 
@@ -2167,7 +2173,7 @@ class Model(BaseModel):
 try:
     Model(x="http:////example.com")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'url_syntax_violation'
 ```
 
@@ -2186,7 +2192,7 @@ class Model(BaseModel):
 try:
     Model(x="x" * 2084)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'url_too_long'
 ```
 
@@ -2205,7 +2211,7 @@ class Model(BaseModel):
 try:
     Model(x=None)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'url_type'
 ```
 
@@ -2226,7 +2232,7 @@ class Model(BaseModel):
 try:
     Model(u="12345678-124-1234-1234-567812345678")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'uuid_parsing'
 ```
 
@@ -2247,7 +2253,7 @@ class Model(BaseModel):
 try:
     Model(u=1234567812412341234567812345678)
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'uuid_type'
 ```
 
@@ -2266,7 +2272,7 @@ class Model(BaseModel):
 try:
     Model(u="a6cc5730-2261-11ee-9c43-2eb5a363657c")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'uuid_version'
 ```
 
@@ -2290,6 +2296,6 @@ class Model(BaseModel):
 try:
     Model(x="test")
 except ValidationError as exc:
-    print(repr(exc.errors()[0]["type"]))
+    u.Cli.print(repr(exc.errors()[0]["type"]))
     # > 'value_error'
 ```

@@ -7,13 +7,14 @@
 
 ## Overview
 
-This guide documents the centralized utilities system in the FLEXT ecosystem. All generic utility functionality is centralized in `flext-core`, with domain-specific utilities added in each project library.
+This guide documents the centralized utilities system in the FLEXT ecosystem. All generic utility functionality is
+centralized in `flext-core`, with domain-specific utilities added in each project library.
 
 ## Utilities Architecture
 
 ### Inheritance Hierarchy
 
-```
+```text
 FlextUtilities (flext-core) - Foundation utilities
    ↓
 FlextLdifUtilities (flext-ldif) - Extends with LDIF-specific utilities
@@ -82,9 +83,7 @@ from flext_core import FlextUtilitiesConversion
 ```python
 @staticmethod
 def to_str_list_safe(
-    value: m.Tests.ListInputModel,
-    *,
-    filter_list_like: bool = True,
+    value: m.Tests.ListInputModel, *, filter_list_like: bool = True
 ) -> t.StrSequence:
     """Convert value to t.StrSequence with safe nested list handling."""
 ```
@@ -121,9 +120,7 @@ result = u.to_str_list_safe(["a", ["b"]], filter_list_like=False)
 
 ```python
 @staticmethod
-def to_str_list_truthy(
-    value: m.Tests.ListInputModel,
-) -> t.StrSequence:
+def to_str_list_truthy(value: m.Tests.ListInputModel) -> t.StrSequence:
     """Convert value to t.StrSequence filtering out falsy values."""
 ```
 
@@ -160,8 +157,7 @@ result = u.to_str_list_truthy(None)
 ```python
 @staticmethod
 def find_callable[T](
-    callables: t.MappingKV[str, _Predicate[T]],
-    value: T,
+    callables: t.MappingKV[str, _Predicate[T]], value: T
 ) -> str | None:
     """Find first matching callable key from dict of predicates."""
 ```
@@ -298,7 +294,7 @@ Add utility method to flext-core when:
 
 1. **Choose appropriate class**: Add to existing `FlextUtilities*` class
 2. **Follow patterns**: Use `@staticmethod`, proper typing, error handling
-3. **Add to `__all__`**: Export from the module
+3. **Add to `**all**`**: Export from the module
 4. **Test**: Create tests in `tests/unit/`
 5. **Update this guide**: Document in "New Methods" section
 
@@ -317,7 +313,7 @@ class FlextUtilitiesConversion:
         except Exception as e:
             return r[str].fail(f"Error: {e}")
 
-    # __all__: list[str] = ["FlextUtilitiesConversion"]  # Already exported
+    # **all**: list[str] = ["FlextUtilitiesConversion"]  # Already exported
 ```
 
 ---
@@ -337,9 +333,8 @@ All utilities must meet:
 
 ## See Also
 
-- [Workspace Standards](../AGENTS.md) - Overall architecture patterns
-- [FLEXT Governance](../AGENTS.md) - Workspace implementation details
-- [Project README](../README.md) - General project information
+- `AGENTS.md` - Overall architecture patterns and workspace implementation details
+- `README.md` - General project information
 
 ---
 

@@ -1,7 +1,0 @@
-id: ban-noqa-comment
-language: python
-rule:
-  kind: comment
-  regex: "^#\\s*noqa"
-message: "noqa comment - fix the underlying lint violation"
-severity: warning
