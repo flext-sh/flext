@@ -11,7 +11,7 @@ Community of 114 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | TestsFlextTargetLdapServiceBase | Class | flext-target-ldap/tests/base.py | 13-25 |
 | fetch_settings | Function | flext-target-ldap/tests/base.py | 18-20 |
 | _runtime_bootstrap_options | Function | flext-target-ldap/tests/base.py | 24-25 |
@@ -86,7 +86,8 @@ Community of 114 nodes
 - `debug` (8 edge(s))
 - `assert_called_once` (7 edge(s))
 - `append` (6 edge(s))
-- `flext-infra/src/flext_infra/_models/deps_toml.py::FlextInfraModelsDepsToml.Deps.Toml.PhaseConfig.Builder.list` (5 edge(s))
+- `flext-infra/src/flext_infra/_models/deps_toml.py::FlextInfraModelsDepsToml.Deps.Toml.PhaseConfig.Builder.list`
+  (5 edge(s))
 - `model_validate` (5 edge(s))
 
 ### Incoming

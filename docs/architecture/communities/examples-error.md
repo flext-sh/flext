@@ -11,7 +11,7 @@ Community of 30 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | validate_user_input | Function | flext-grpc/examples/03_error_handling_patterns.py | 29-48 |
 | _raise_username_error | Function | flext-grpc/examples/03_error_handling_patterns.py | 32-34 |
 | _raise_email_error | Function | flext-grpc/examples/03_error_handling_patterns.py | 36-38 |

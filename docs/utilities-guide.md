@@ -7,13 +7,14 @@
 
 ## Overview
 
-This guide documents the centralized utilities system in the FLEXT ecosystem. All generic utility functionality is centralized in `flext-core`, with domain-specific utilities added in each project library.
+This guide documents the centralized utilities system in the FLEXT ecosystem. All generic utility functionality is
+centralized in `flext-core`, with domain-specific utilities added in each project library.
 
 ## Utilities Architecture
 
 ### Inheritance Hierarchy
 
-```
+```text
 FlextUtilities (flext-core) - Foundation utilities
    ↓
 FlextLdifUtilities (flext-ldif) - Extends with LDIF-specific utilities
@@ -293,7 +294,7 @@ Add utility method to flext-core when:
 
 1. **Choose appropriate class**: Add to existing `FlextUtilities*` class
 2. **Follow patterns**: Use `@staticmethod`, proper typing, error handling
-3. **Add to `__all__`**: Export from the module
+3. **Add to `**all**`**: Export from the module
 4. **Test**: Create tests in `tests/unit/`
 5. **Update this guide**: Document in "New Methods" section
 
@@ -312,7 +313,7 @@ class FlextUtilitiesConversion:
         except Exception as e:
             return r[str].fail(f"Error: {e}")
 
-    # __all__: list[str] = ["FlextUtilitiesConversion"]  # Already exported
+    # **all**: list[str] = ["FlextUtilitiesConversion"]  # Already exported
 ```
 
 ---

@@ -182,9 +182,7 @@ u.Cli.print(Model.model_config)
 
 !!! warning
 If your model inherits from multiple bases, Pydantic currently _doesn't_ follow the
-[MRO]. For more details, see [this issue](https://github.com/pydantic/pydantic/issues/9992).
-
-    [MRO]: https://docs.python.org/3/glossary.html#term-method-resolution-order
+[MRO](https://docs.python.org/3/glossary.html#term-method-resolution-order). For more details, see [this issue](https://github.com/pydantic/pydantic/issues/9992).
 
 ## Configuration propagation
 

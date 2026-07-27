@@ -1,6 +1,7 @@
 # Onboarding (Collection Rules / regras de coletas)
 
-Canonical pre-work to enter ANY FLEXT project. Per AGENTS.md §9 Pre-requisites + the auto-generated per-project Collection Rules in each `<project>/docs/index.md`.
+Canonical pre-work to enter ANY FLEXT project. Per AGENTS.md §9 Pre-requisites + the auto-generated per-project
+Collection Rules in each `<project>/docs/index.md`.
 
 ## 1. Read Governance First
 
@@ -60,14 +61,16 @@ Their exported inventory is owned by that provider configuration.
 Before writing code, know the three shared packages most projects consume:
 
 | Package | What it provides | Quick guide | Skill |
-|---------|------------------|-------------|-------|
+| --------- | ------------------ | ------------- | ------- |
 | `flext_core` | Result flow, settings, container, dispatcher | [Using flext-core](using-flext-core.md) | `using-flext-core` |
 | `flext_cli` | Model-driven Typer CLI abstraction | [Using flext-cli](using-flext-cli.md) | `using-flext-cli` |
 | `flext_tests` | Shared fixtures, matchers, test runtime | [Using flext-tests](using-flext-tests.md) | `using-flext-tests` |
 
 ## 7. Per-Project Collection Rules
 
-Every project ships an auto-generated `docs/index.md` with Collection Rules tailored to its parent MRO chain, abstracted libraries, owned slot registry, and quality gates. Open `<project>/docs/index.md` and follow the project-specific list before editing.
+Every project ships an auto-generated `docs/index.md` with Collection Rules tailored to its parent MRO chain, abstracted
+libraries, owned slot registry, and quality gates. Open `<project>/docs/index.md` and follow the project-specific list
+before editing.
 
 To regenerate stale per-project docs:
 

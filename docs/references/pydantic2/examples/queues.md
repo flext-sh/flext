@@ -7,7 +7,8 @@ we'll explore how to validate / serialize data with various queue systems.
 
 Redis is a popular in-memory data structure store.
 
-In order to run this example locally, you'll first need to [install Redis](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/)
+In order to run this example locally, you'll first need to [install
+Redis](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/)
 and start your server up locally.
 
 Here's a simple example of how you can use Pydantic to:
@@ -71,7 +72,8 @@ pop_from_queue()
 
 RabbitMQ is a popular message broker that implements the AMQP protocol.
 
-In order to run this example locally, you'll first need to [install RabbitMQ](https://www.rabbitmq.com/download.html) and start your server.
+In order to run this example locally, you'll first need to [install RabbitMQ](https://www.rabbitmq.com/download.html)
+and start your server.
 
 Here's a simple example of how you can use Pydantic to:
 
@@ -167,7 +169,8 @@ To test this example:
 ARQ is a fast Redis-based job queue for Python.
 It's built on top of Redis and provides a simple way to handle background tasks.
 
-In order to run this example locally, you’ll need to [Install Redis](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/) and start your server.
+In order to run this example locally, you’ll need to [Install
+Redis](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/) and start your server.
 
 Here's a simple example of how you can use Pydantic with ARQ to:
 

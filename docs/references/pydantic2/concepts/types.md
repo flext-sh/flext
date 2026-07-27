@@ -5,7 +5,9 @@ Pydantic uses types to define how validation and serialization should be perform
 can be controlled and constraints can be applied on them.
 
 On top of these, Pydantic provides extra types, either [directly in the library](../api/types.md)
-(e.g. [`SecretStr`][pydantic.types.SecretStr]) or in the [`pydantic-extra-types`](https://github.com/pydantic/pydantic-extra-types)
+(e.g. [`SecretStr`][pydantic.types.SecretStr]) or in the [`pydantic-extra-
+types`](<https://github.com/pydantic/pydantic->
+extra-types)
 external library. These are implemented using the patterns described in the [custom types](#custom-types) section.
 Strictness and constraints _can't_ be applied on them.
 
@@ -153,160 +155,157 @@ two reasons:
 By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest/spec/aliases.html#type-statement)
 (introduced in [PEP 695](https://peps.python.org/pep-0695/)), you can define aliases as follows:
 
-=== "Python 3.9 and above"
+#### Python 3.9 and above
 
-    ```python
-    from typing import Annotated
+```python
+from typing import Annotated
 
-    from annotated_types import Gt
-    from typing_extensions import TypeAliasType
+from annotated_types import Gt
+from typing_extensions import TypeAliasType
 
-    from pydantic import BaseModel
+from pydantic import BaseModel
 
-    PositiveIntList = TypeAliasType("PositiveIntList", t.SequenceOf[Annotated[int, Gt(0)]])
-
-
-    class Model(BaseModel):
-        x: PositiveIntList
-        y: PositiveIntList
+PositiveIntList = TypeAliasType("PositiveIntList", t.SequenceOf[Annotated[int, Gt(0)]])
 
 
-    u.Cli.print(Model.model_json_schema())  # (1)!
-    """
-    {
-        '$defs': {
-            'PositiveIntList': {
-                'items': {'exclusiveMinimum': 0, 'type': 'integer'},
-                'type': 'array',
-            }
-        },
-        'properties': {
-            'x': {'$ref': '#/$defs/PositiveIntList'},
-            'y': {'$ref': '#/$defs/PositiveIntList'},
-        },
-        'required': ['x', 'y'],
-        'title': 'Model',
-        'type': 'object',
-    }
-    """
-    ```
-
-    1. If `PositiveIntList` were to be defined as an implicit type alias, its definition
-       would have been duplicated in both `'x'` and `'y'`.
-
-=== "Python 3.12 and above (new syntax)"
-
-    ```python {requires="3.12" upgrade="skip" lint="skip"}
-    from typing import Annotated
-
-    from annotated_types import Gt
-
-    from pydantic import BaseModel
-
-    type PositiveIntList = t.SequenceOf[Annotated[int, Gt(0)]]
+class Model(BaseModel):
+    x: PositiveIntList
+    y: PositiveIntList
 
 
-    class Model(BaseModel):
-        x: PositiveIntList
-        y: PositiveIntList
+u.Cli.print(Model.model_json_schema())  # (1)!
+"""
+{
+    '$defs': {
+        'PositiveIntList': {
+            'items': {'exclusiveMinimum': 0, 'type': 'integer'},
+            'type': 'array',
+        }
+    },
+    'properties': {
+        'x': {'$ref': '#/$defs/PositiveIntList'},
+        'y': {'$ref': '#/$defs/PositiveIntList'},
+    },
+    'required': ['x', 'y'],
+    'title': 'Model',
+    'type': 'object',
+}
+"""
+```
+
+1. If `PositiveIntList` were to be defined as an implicit type alias, its definition
+   would have been duplicated in both `'x'` and `'y'`.
+
+#### Python 3.12 and above (new syntax)
+
+```python {requires="3.12" upgrade="skip" lint="skip"}
+from typing import Annotated
+
+from annotated_types import Gt
+
+from pydantic import BaseModel
+
+type PositiveIntList = t.SequenceOf[Annotated[int, Gt(0)]]
 
 
-    u.Cli.print(Model.model_json_schema())  # (1)!
-    """
-    {
-        '$defs': {
-            'PositiveIntList': {
-                'items': {'exclusiveMinimum': 0, 'type': 'integer'},
-                'type': 'array',
-            }
-        },
-        'properties': {
-            'x': {'$ref': '#/$defs/PositiveIntList'},
-            'y': {'$ref': '#/$defs/PositiveIntList'},
-        },
-        'required': ['x', 'y'],
-        'title': 'Model',
-        'type': 'object',
-    }
-    """
-    ```
-
-    1. If `PositiveIntList` were to be defined as an implicit type alias, its definition
-       would have been duplicated in both `'x'` and `'y'`.
-
-<!-- markdownlint-disable-next-line no-empty-links -->
-
-[](){#metadata-type-alias-warning}
-
-!!! warning "When to use named type aliases"
-
-    While (named) PEP 695 and implicit type aliases are meant to be equivalent for static type checkers,
-    Pydantic will *not* understand field-specific metadata inside named aliases. That is, metadata such as
-    `alias`, `default`, `deprecated`, *cannot* be used:
-
-    === "Python 3.9 and above"
-
-        ```python {test="skip"}
-        from typing import Annotated
-
-        from typing_extensions import TypeAliasType
-
-        from pydantic import BaseModel, u.Field
-
-        MyAlias = TypeAliasType("MyAlias", Annotated[int, u.Field(default=1)])
+class Model(BaseModel):
+    x: PositiveIntList
+    y: PositiveIntList
 
 
-        class Model(BaseModel):
-            x: MyAlias  # This is not allowed
-        ```
+u.Cli.print(Model.model_json_schema())  # (1)!
+"""
+{
+    '$defs': {
+        'PositiveIntList': {
+            'items': {'exclusiveMinimum': 0, 'type': 'integer'},
+            'type': 'array',
+        }
+    },
+    'properties': {
+        'x': {'$ref': '#/$defs/PositiveIntList'},
+        'y': {'$ref': '#/$defs/PositiveIntList'},
+    },
+    'required': ['x', 'y'],
+    'title': 'Model',
+    'type': 'object',
+}
+"""
+```
 
-    === "Python 3.12 and above (new syntax)"
+1. If `PositiveIntList` were to be defined as an implicit type alias, its definition
+   would have been duplicated in both `'x'` and `'y'`.
 
-        ```python {requires="3.12" upgrade="skip" lint="skip" test="skip"}
-        from typing import Annotated
+#### When to use named type aliases
 
-        from pydantic import BaseModel, u.Field
+While (named) PEP 695 and implicit type aliases are meant to be equivalent for static type checkers,
+Pydantic will _not_ understand field-specific metadata inside named aliases. That is, metadata such as
+`alias`, `default`, `deprecated`, _cannot_ be used:
 
-        type MyAlias = Annotated[int, u.Field(default=1)]
+##### Python 3.9 and above
+
+```python {test="skip"}
+from typing import Annotated
+
+from typing_extensions import TypeAliasType
+
+from pydantic import BaseModel, u.Field
+
+MyAlias = TypeAliasType("MyAlias", Annotated[int, u.Field(default=1)])
 
 
-        class Model(BaseModel):
-            x: MyAlias  # This is not allowed
-        ```
+class Model(BaseModel):
+    x: MyAlias  # This is not allowed
+```
 
-    Only metadata that can be applied to the annotated type itself is allowed
-    (e.g. [validation constraints](./fields.md#field-constraints) and JSON metadata).
-    Trying to support field-specific metadata would require eagerly inspecting the
-    type alias's [`__value__`][typing.TypeAliasType.__value__], and as such Pydantic
-    wouldn't be able to have the alias stored as a JSON Schema definition.
+##### Python 3.12 and above (new syntax)
 
-!!! note
+```python {requires="3.12" upgrade="skip" lint="skip" test="skip"}
+from typing import Annotated
+
+from pydantic import BaseModel, u.Field
+
+type MyAlias = Annotated[int, u.Field(default=1)]
+
+
+class Model(BaseModel):
+    x: MyAlias  # This is not allowed
+```
+
+Only metadata that can be applied to the annotated type itself is allowed
+(e.g. [validation constraints](./fields.md#field-constraints) and JSON metadata).
+Trying to support field-specific metadata would require eagerly inspecting the
+type alias's [`__value__`][typing.TypeAliasType.__value__], and as such Pydantic
+wouldn't be able to have the alias stored as a JSON Schema definition.
+
+#### Note
+
 As with implicit type aliases, type variables can also be used inside the generic alias:
 
-    === "Python 3.9 and above"
+##### Python 3.9 and above
 
-        ```python
-        from typing import Annotated, TypeVar
+```python
+from typing import Annotated, TypeVar
 
-        from annotated_types import Len
-        from typing_extensions import TypeAliasType
+from annotated_types import Len
+from typing_extensions import TypeAliasType
 
-        T = TypeVar("T")
+T = TypeVar("T")
 
-        ShortList = TypeAliasType(
-            "ShortList", Annotated[Sequence[T], Len(max_length=4)], type_params=(T,)
-        )
-        ```
+ShortList = TypeAliasType(
+    "ShortList", Annotated[Sequence[T], Len(max_length=4)], type_params=(T,)
+)
+```
 
-    === "Python 3.12 and above (new syntax)"
+##### Python 3.12 and above (new syntax)
 
-        ```python {requires="3.12" upgrade="skip" lint="skip"}
-        from typing import Annotated, TypeVar
+```python {requires="3.12" upgrade="skip" lint="skip"}
+from typing import Annotated, TypeVar
 
-        from annotated_types import Len
+from annotated_types import Len
 
-        type ShortList[T] = Annotated[Sequence[T], Len(max_length=4)]
-        ```
+type ShortList[T] = Annotated[Sequence[T], Len(max_length=4)]
+```
 
 #### Named recursive types
 
@@ -319,102 +318,106 @@ Named type aliases should be used whenever you need to define recursive type ali
 
 For instance, here is an example definition of a JSON type:
 
-=== "Python 3.9 and above"
+##### Python 3.9 and above
 
-    ```python
-    from typing import Union
+```python
+from typing import Union
 
-    from typing_extensions import TypeAliasType
+from typing_extensions import TypeAliasType
 
-    from pydantic import TypeAdapter
+from pydantic import TypeAdapter
 
-    Json = TypeAliasType(
-        "Json",
-        "Union[Mapping[str, Json], t.SequenceOf[Json], str, int, float, bool, None]",  # (1)!
-    )
+Json = TypeAliasType(
+    "Json",
+    "Union[Mapping[str, Json], t.SequenceOf[Json], str, int, float, bool, None]",  # (1)!
+)
 
-    ta = TypeAdapter(Json)
-    u.Cli.print(ta.json_schema())
-    """
-    {
-        '$defs': {
-            'Json': {
-                'anyOf': [
-                    {
-                        'additionalProperties': {'$ref': '#/$defs/Json'},
-                        'type': 'object',
-                    },
-                    {'items': {'$ref': '#/$defs/Json'}, 'type': 'array'},
-                    {'type': 'string'},
-                    {'type': 'integer'},
-                    {'type': 'number'},
-                    {'type': 'boolean'},
-                    {'type': 'null'},
-                ]
-            }
-        },
-        '$ref': '#/$defs/Json',
-    }
-    """
-    ```
+ta = TypeAdapter(Json)
+u.Cli.print(ta.json_schema())
+"""
+{
+    '$defs': {
+        'Json': {
+            'anyOf': [
+                {
+                    'additionalProperties': {'$ref': '#/$defs/Json'},
+                    'type': 'object',
+                },
+                {'items': {'$ref': '#/$defs/Json'}, 'type': 'array'},
+                {'type': 'string'},
+                {'type': 'integer'},
+                {'type': 'number'},
+                {'type': 'boolean'},
+                {'type': 'null'},
+            ]
+        }
+    },
+    '$ref': '#/$defs/Json',
+}
+"""
+```
 
-    1. Wrapping the annotation in quotes is necessary as it is eagerly evaluated
-       (and `Json` has yet to be defined).
+1. Wrapping the annotation in quotes is necessary as it is eagerly evaluated
+   (and `Json` has yet to be defined).
 
-=== "Python 3.12 and above (new syntax)"
+##### Python 3.12 and above (new syntax)
 
-    ```python {requires="3.12" upgrade="skip" lint="skip"}
-    from pydantic import TypeAdapter
+```python {requires="3.12" upgrade="skip" lint="skip"}
+from pydantic import TypeAdapter
 
-    type Json = t.MappingKV[str, Json] | t.SequenceOf[Json] | t.Primitives | None  # (1)!
+type Json = t.MappingKV[str, Json] | t.SequenceOf[Json] | t.Primitives | None  # (1)!
 
-    ta = TypeAdapter(Json)
-    u.Cli.print(ta.json_schema())
-    """
-    {
-        '$defs': {
-            'Json': {
-                'anyOf': [
-                    {
-                        'additionalProperties': {'$ref': '#/$defs/Json'},
-                        'type': 'object',
-                    },
-                    {'items': {'$ref': '#/$defs/Json'}, 'type': 'array'},
-                    {'type': 'string'},
-                    {'type': 'integer'},
-                    {'type': 'number'},
-                    {'type': 'boolean'},
-                    {'type': 'null'},
-                ]
-            }
-        },
-        '$ref': '#/$defs/Json',
-    }
-    """
-    ```
+ta = TypeAdapter(Json)
+u.Cli.print(ta.json_schema())
+"""
+{
+    '$defs': {
+        'Json': {
+            'anyOf': [
+                {
+                    'additionalProperties': {'$ref': '#/$defs/Json'},
+                    'type': 'object',
+                },
+                {'items': {'$ref': '#/$defs/Json'}, 'type': 'array'},
+                {'type': 'string'},
+                {'type': 'integer'},
+                {'type': 'number'},
+                {'type': 'boolean'},
+                {'type': 'null'},
+            ]
+        }
+    },
+    '$ref': '#/$defs/Json',
+}
+"""
+```
 
-    1. The value of a named type alias is lazily evaluated, so there's no need to use forward annotations.
+1. The value of a named type alias is lazily evaluated, so there's no need to use forward annotations.
 
-!!! tip
-Pydantic defines a [`object`][pydantic.types.t.JsonValue] type as a convenience.
+> __Tip:__ Pydantic defines a [`object`][pydantic.types.t.JsonValue] type as a convenience.
 
-### Customizing validation with `__get_pydantic_core_schema__` <a name="customizing_validation_with_get_pydantic_core_schema"></a>
+### Customizing validation with `__get_pydantic_core_schema__`
 
 To do more extensive customization of how Pydantic handles custom classes, and in particular when you have access to the
-class or can subclass it, you can implement a special `__get_pydantic_core_schema__` to tell Pydantic how to generate the
+class or can subclass it, you can implement a special `__get_pydantic_core_schema__` to tell Pydantic how to generate
+the
 `pydantic-core` schema.
 
-While `pydantic` uses `pydantic-core` internally to handle validation and serialization, it is a new API for Pydantic V2,
+While `pydantic` uses `pydantic-core` internally to handle validation and serialization, it is a new API for Pydantic
+V2,
 thus it is one of the areas most likely to be tweaked in the future and you should try to stick to the built-in
 constructs like those provided by `annotated-types`, `pydantic.u.Field`, or `m.BeforeValidator` and so on.
 
-You can implement `__get_pydantic_core_schema__` both on a custom type and on metadata intended to be put in `Annotated`.
+You can implement `__get_pydantic_core_schema__` both on a custom type and on metadata intended to be put in
+`Annotated`.
 In both cases the API is middleware-like and similar to that of "wrap" validators: you get a `source_type` (which isn't
 necessarily the same as the class, in particular for generics) and a `handler` that you can call with a type to either
 call the next metadata in `Annotated` or call into Pydantic's internal schema generation.
 
-The simplest no-op implementation calls the handler with the type you are given, then returns that as the result. You can
-also choose to modify the type before calling the handler, modify the core schema returned by the handler, or not call the
+The simplest no-op implementation calls the handler with the type you are given, then returns that as the result. You
+can
+also choose to modify the type before calling the handler, modify the core schema returned by the handler, or not call
+the
 handler at all.
 
 #### As a method on a custom type
@@ -448,9 +451,12 @@ See [JSON Schema](../concepts/json_schema.md) for more details on how to customi
 
 #### As an annotation
 
-Often you'll want to parametrize your custom type by more than just generic type parameters (which you can do via the type system and will be discussed later). Or you may not actually care (or want to) make an instance of your subclass; you actually want the original type, just with some extra validation done.
+Often you'll want to parametrize your custom type by more than just generic type parameters (which you can do via the
+type system and will be discussed later). Or you may not actually care (or want to) make an instance of your subclass;
+you actually want the original type, just with some extra validation done.
 
-For example, if you were to implement `pydantic.AfterValidator` (see [Adding validation and serialization](#adding-validation-and-serialization)) yourself, you'd do something similar to the following:
+For example, if you were to implement `pydantic.AfterValidator` (see [Adding validation and serialization](#adding-
+validation-and-serialization)) yourself, you'd do something similar to the following:
 
 ```python
 from dataclasses import dataclass
@@ -483,8 +489,10 @@ class Model(BaseModel):
 assert Model(name="ABC").name == "abc"  # (2)!
 ```
 
-1. The `frozen=True` specification makes `MyAfterValidator` hashable. Without this, a union such as `Username | None` will raise an error.
-2. Notice that type checkers will not complain about assigning `'ABC'` to `Username` like they did in the previous example because they do not consider `Username` to be a distinct type from `str`.
+1. The `frozen=True` specification makes `MyAfterValidator` hashable. Without this, a union such as `Username | None`
+   will raise an error.
+2. Notice that type checkers will not complain about assigning `'ABC'` to `Username` like they did in the previous
+   example because they do not consider `Username` to be a distinct type from `str`.
 
 #### Handling third-party types
 
@@ -614,8 +622,7 @@ You can use this approach to e.g. define behavior for Pandas or Numpy types.
 
 #### Using `GetPydanticSchema` to reduce boilerplate
 
-??? api "API Documentation"
-[`pydantic.types.GetPydanticSchema`][pydantic.types.GetPydanticSchema]<br>
+> __API Documentation:__ [`pydantic.types.GetPydanticSchema`][pydantic.types.GetPydanticSchema]
 
 You may notice that the above examples where we create a marker class require a good amount of boilerplate.
 For many simple cases you can greatly minimize this by using `pydantic.GetPydanticSchema`:
@@ -646,15 +653,16 @@ assert Model(y="ab").y == "abab"
 
 Let's recap:
 
-1. Pydantic provides high level hooks to customize types via `Annotated` like `AfterValidator` and `u.Field`. Use these when possible.
-2. Under the hood these use `pydantic-core` to customize validation, and you can hook into that directly using `GetPydanticSchema` or a marker class with `__get_pydantic_core_schema__`.
+1. Pydantic provides high level hooks to customize types via `Annotated` like `AfterValidator` and `u.Field`. Use these
+   when possible.
+2. Under the hood these use `pydantic-core` to customize validation, and you can hook into that directly using
+   `GetPydanticSchema` or a marker class with `__get_pydantic_core_schema__`.
 3. If you really want a custom type you can implement `__get_pydantic_core_schema__` on the type itself.
 
 ### Handling custom generic classes
 
-!!! warning
-This is an advanced technique that you might not need in the beginning. In most of
-the cases you will probably be fine with standard Pydantic models.
+> __Warning:__ This is an advanced technique that you might not need in the beginning. In most of
+> the cases you will probably be fine with standard Pydantic models.
 
 You can use
 [Generic Classes](https://docs.python.org/3/library/typing.html#typing.Generic) as
@@ -665,7 +673,8 @@ If the Generic class that you are using as a sub-type has a classmethod
 `__get_pydantic_core_schema__`, you don't need to use
 [`arbitrary_types_allowed`][pydantic.config.ConfigDict.arbitrary_types_allowed] for it to work.
 
-Because the `source_type` parameter is not the same as the `cls` parameter, you can use `typing.get_args` (or `typing_extensions.get_args`) to extract the generic parameters.
+Because the `source_type` parameter is not the same as the `cls` parameter, you can use `typing.get_args` (or
+`typing_extensions.get_args`) to extract the generic parameters.
 Then you can use the `handler` to generate a schema for them by calling `handler.generate_schema`.
 Note that we do not do something like `handler(get_args(source_type)[0])` because we want to generate an unrelated
 schema for that generic parameter, not one that is influenced by the current context of `Annotated` metadata and such.
@@ -775,7 +784,8 @@ except ValidationError as e:
     """
     2 validation errors for Model
     wine
-      Input should be a valid number, unable to parse string as a number [type=float_parsing, input_value='Kinda good', input_type=str]
+      Input should be a valid number, unable to parse string as a number [type=float_parsing,
+      input_value='Kinda good', input_type=str]
     cheese
       Input should be a valid boolean, unable to interpret input [type=bool_parsing, input_value='yeah', input_type=str]
     """
@@ -883,8 +893,8 @@ except ValidationError as exc:
 
 ### Access to field name
 
-!!!note
-This was not possible with Pydantic V2 to V2.3, it was [re-added](https://github.com/pydantic/pydantic/pull/7542) in Pydantic V2.4.
+> __Note:__ This was not possible with Pydantic V2 to V2.3, it was
+> [re-added](https://github.com/pydantic/pydantic/pull/7542) in Pydantic V2.4.
 
 As of Pydantic V2.4, you can access the field name via the `handler.field_name` within `__get_pydantic_core_schema__`
 and thereby set the field name which will be available from `info.field_name`.
@@ -929,7 +939,8 @@ u.Cli.print(m.my_field)
 # > CustomType<1 'my_field'>
 ```
 
-You can also access `field_name` from the markers used with `Annotated`, like [`AfterValidator`][pydantic.functional_validators.AfterValidator].
+You can also access `field_name` from the markers used with `Annotated`, like
+[`AfterValidator`][pydantic.functional_validators.AfterValidator].
 
 ```python
 from typing import Annotated

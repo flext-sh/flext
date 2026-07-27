@@ -11,7 +11,7 @@ Community of 28 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | Result | Class | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 32-182 |
 | error | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 43-43 |
 | error_code | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 47-47 |

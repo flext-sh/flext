@@ -6,7 +6,8 @@ Pydantic is instrumental in many web frameworks and libraries, such as FastAPI, 
 ## `httpx` requests
 
 [`httpx`](https://www.python-httpx.org/) is an HTTP client for Python 3 with synchronous and asynchronous APIs.
-In the below example, we query the [JSONPlaceholder API](https://jsonplaceholder.typicode.com/) to get a user's data and validate it with a Pydantic model.
+In the below example, we query the [JSONPlaceholder API](https://jsonplaceholder.typicode.com/) to get a user's data and
+validate it with a Pydantic model.
 
 ```python {test="skip"}
 import httpx

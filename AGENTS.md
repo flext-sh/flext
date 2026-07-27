@@ -9,6 +9,23 @@
 it but never competes with it. Project law may be stricter; the newest explicit
 operator instruction prevails and lower authority must be reconciled.
 
+### P0 — Tests validate config/settings changes by construction
+
+Tests, golden files, and executable documentation (including markdown examples and
+docstring snippets) must remain valid when config or settings change. They are
+never allowed to hardcode, freeze, or implicitly assume the values that exist today.
+
+- The canonical owner of every configurable fact is `config/*.yaml`, `settings`,
+  or the generator that derives from them. Tests only validate that owner.
+- Expected values owned by config/settings must be read from the same typed SSOT
+  production reads, or proven through a generator/consumer round-trip.
+- A test that breaks on a legitimate config/settings change is a test defect.
+  Fix the test; never freeze the configuration to keep the test green.
+- This rule applies to all test tiers, markdown examples, and docstring snippets
+  validated by the pytest plugin.
+- Literal expectations in tests are reserved for immutable external protocol
+  contracts, not for values the project owns through config/settings.
+
 1. **Truth with evidence.** Claims require the exact command, working directory,
    exit status, decisive output, and bounded scope.
 2. **Research before mutation.** Read current authority, intent, owner Bead,
@@ -75,6 +92,11 @@ operator instruction prevails and lower authority must be reconciled.
     anything, then optimize with the project's typed OO/MRO/lazy-import patterns;
     accelerate test selection with impact analysis (e.g. pytest-testmon) and
     parallelism (pytest-xdist) rather than deleting or weakening coverage.
+    See P0 above: tests of `config`/`settings` validate contracts and behavior
+    for arbitrary valid values and read expected config-owned values from the
+    same typed SSOT the consumer receives; they never freeze today's configured
+    scalar, identifier, path, endpoint, model, ranking, or default. Goldens may lock
+    structure, never mutable config/settings values.
 16. **Parametrized config, generators, and managed binaries.** config, settings,
     and templates are the sole source of configuration and business rules; the
     correct generator produces every derived surface (never hand-edit a
@@ -205,18 +227,23 @@ uncollected tests, unvalidated WIP, or a workaround masking the defect.
 
 ### Fix-Forward Worktree Law
 
-- The active worktree root is the execution root; never assume `/home/marlonsc/flext` is the mutation target when another worktree was selected.
-- Preserve all existing root and submodule WIP. Never reset, restore, checkout, clean, stash, or overwrite unknown changes.
+- The active worktree root is the execution root; never assume `/home/marlonsc/flext` is the mutation target when
+  another worktree was selected.
+- Preserve all existing root and submodule WIP. Never reset, restore, checkout, clean, stash, or overwrite unknown
+  changes.
 - Re-read mutable files before editing and commit only explicit owned paths when Git authority is granted.
 - Generated files change only through their canonical generator, config, schema, policy, or template owner.
-- Status is a checkpoint, not a stopping condition. Continue until the intent card's observable stop condition holds or one precise operator decision is required.
+- Status is a checkpoint, not a stopping condition. Continue until the intent card's observable stop condition holds or
+  one precise operator decision is required.
 
-For the lane contract that governs light-worker execution, see [`docs/ways-of-working/worker-lane-contract.md`](docs/ways-of-working/worker-lane-contract.md).
+For the lane contract that governs light-worker execution, see
+[`docs/ways-of-working/worker-lane-contract.md`](docs/ways-of-working/worker-lane-contract.md).
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:19cc25d9 -->
 ## Issue Tracking with bd (beads)
 
-**IMPORTANT**: This project uses **bd (beads)** for ALL issue tracking. Do NOT use markdown TODOs, task lists, or other tracking methods.
+**IMPORTANT**: This project uses **bd (beads)** for ALL issue tracking. Do NOT use markdown TODOs, task lists, or other
+tracking methods.
 
 ### Why bd?
 
@@ -298,7 +325,9 @@ bd stores issue history in Dolt:
 - Use `bd dolt push`/`bd dolt pull` for remote sync
 - Do not treat `.beads/issues.jsonl` as the sync protocol
 
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See <https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md> for details and anti-patterns.
+**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote;
+`.beads/issues.jsonl` is a passive export. See <https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md>
+for details and anti-patterns.
 
 ### Important Rules
 
@@ -314,15 +343,20 @@ For more details, see README.md and docs/QUICKSTART.md.
 
 ## Agent Context Profiles
 
-The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator instructions.
+The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator
+instructions.
 
-- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
-- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
-- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
+- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync
+  unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
+- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless
+  active instructions say otherwise.
+- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit,
+  and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
 
 ## Session Completion
 
-This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and orchestrator instructions.
+This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and
+orchestrator instructions.
 
 1. **File issues for remaining work** - Create beads for anything that needs follow-up
 2. **Run quality gates** (if code changed) - Tests, linters, builds
@@ -338,6 +372,7 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
    bd dolt push
    git push
    git status
+
    ```
 
 5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
@@ -352,11 +387,13 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 
 ## Overview
 
-FLEXT is a **multi-package Python 3.13 workspace** (git superproject + 31 `flext-*` git submodules) for enterprise data integration, platform tooling, and operational connectors. Every package follows one canonical Clean-Architecture shape built on `flext-core`. Branch `0.12.0-dev`; forward baseline `0.13.0`.
+FLEXT is a **multi-package Python 3.13 workspace** (git superproject + 31 `flext-*` git submodules) for enterprise data
+integration, platform tooling, and operational connectors. Every package follows one canonical Clean-Architecture shape
+built on `flext-core`. Branch `0.12.0-dev`; forward baseline `0.13.0`.
 
 ## Structure
 
-```
+```text
 flext/                     # superproject: workspace manager + governance + docs
 ├── src/flext/             # flext-workspace CLI (thin orchestrator over flext-cli) — AUTO-GENERATED facets
 ├── config/                # workspace.yaml topology SSOT (codegen/conform input; never overwrite)
@@ -370,29 +407,35 @@ flext/                     # superproject: workspace manager + governance + docs
 └── flext-{tap,target,dbt}-*/ # Singer ecosystem: 5 taps, 5 targets, 4 dbt (built on flext-meltano)
 ```
 
-Each submodule is an **independent git repo**. This root `AGENTS.md` is the canonical SSOT; submodule `AGENTS.md` files point here and add only domain-specific notes.
+Each submodule is an **independent git repo**. This root `AGENTS.md` is the canonical SSOT; submodule `AGENTS.md` files
+point here and add only domain-specific notes.
 
 ### How each submodule references this root (two working modes)
 
 Each submodule's `AGENTS.md` links back to this file. Which link to follow depends on how the package is checked out:
 
-- **Workspace mode** (submodule sits inside this superproject): read the sibling **[`../AGENTS.md`](../AGENTS.md)** — the working copy on your current branch.
-- **Standalone / independent mode** (the package was cloned on its own, imported as a dependency, or vendored — no parent workspace exists, so `../AGENTS.md` does not resolve): read the **raw file on GitHub on the same branch/release** the project is on:
+- **Workspace mode** (submodule sits inside this superproject): read the sibling **[`../AGENTS.md`](../AGENTS.md)** —
+  the working copy on your current branch.
+- **Standalone / independent mode** (the package was cloned on its own, imported as a dependency, or vendored — no
+    parent workspace exists, so `../AGENTS.md` does not resolve): read the **raw file on GitHub on the same
+  branch/release** the project is on:
 
-  ```
-  https://raw.githubusercontent.com/flext-sh/flext/<branch-or-tag>/AGENTS.md
+```text
+  <https://raw.githubusercontent.com/flext-sh/flext/><branch-or-tag>/AGENTS.md
   # current working line:
-  https://raw.githubusercontent.com/flext-sh/flext/0.12.0-dev/AGENTS.md
-  ```
+  <https://raw.githubusercontent.com/flext-sh/flext/0.12.0-dev/AGENTS.md>
+```
 
-  Always pin `<branch-or-tag>` to the SAME branch/release the package is built from (e.g. `0.12.0-dev`, or the release tag), never `main`/`master` — the governance law is versioned with the code.
+  Always pin `<branch-or-tag>` to the SAME branch/release the package is built from
+(e.g. `0.12.0-dev`, or the release tag), never `main`/`master` — the governance law is versioned with the code.
 
-Precedence is unchanged in both modes: this root law + the AI-HUB managed Universal Agent Law block override submodule-local notes; the submodule file only *adds* domain specifics.
+Precedence is unchanged in both modes: this root law + the AI-HUB managed Universal Agent Law block override
+submodule-local notes; the submodule file only *adds* domain specifics.
 
 ## Where to Look
 
 | Task | Location | Notes |
-|------|----------|-------|
+| ------ | ---------- | ------- |
 | Foundation facades / result / DI | `flext-core/src/flext_core/` | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base |
 | Build/codegen/enforcement | `flext-infra/src/flext_infra/` | drives `make gen`, conform, lint rules |
 | Test fixtures & builders | `flext-tests/src/flext_tests/` | `tm,tv,tt`; unified `conftest.py` pattern |
@@ -402,7 +445,8 @@ Precedence is unchanged in both modes: this root law + the AI-HUB managed Univer
 
 ## Build & Test
 
-**All commands run from the active workspace/worktree root**, never from inside a submodule (the root dispatcher forwards to each project). Use `make`, never bare `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
+**All commands run from the active workspace/worktree root**, never from inside a submodule
+(the root dispatcher forwards to each project). Use `make`, never bare `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
 
 ```bash
 # Environment (creates .venv, uv sync --all-packages, installs hooks)
@@ -427,9 +471,12 @@ make boot  PROJECT=flext-meltano
 make build WHAT=gen
 ```
 
-**Pinned toolchain** (`.default-python-packages`): Ruff `0.15.22`, mypy `2.3.0`, Pyright `1.1.411`, Pyrefly `1.1.1`. Python strictly `>=3.13,<3.14`.
+**Pinned toolchain** (`.default-python-packages`): Ruff `0.15.22`, mypy `2.3.0`, Pyright `1.1.411`, Pyrefly `1.1.1`.
+Python strictly `>=3.13,<3.14`.
 
-**Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy uncapped, it can blow up RAM; override with `make check WHAT=mypy MYPY_MEMORY_LIMIT_MB=8192`. Docs CI needs `uv sync --all-packages --all-groups --all-extras` for dev tools.
+**Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy uncapped, it can blow up RAM;
+override with `make check WHAT=mypy MYPY_MEMORY_LIMIT_MB=8192`. Docs CI needs
+`uv sync --all-packages --all-groups --all-extras` for dev tools.
 
 ## Inviolable Delivery Governance
 
@@ -460,6 +507,7 @@ Run every command from the active workspace/worktree root using `make` only.
 
    ```bash
    make check CHECK_GATES=lint,pyrefly
+
    ```
 
    Ruff and Pyrefly must be healthy for the workspace. Existing debt is not a
@@ -480,8 +528,24 @@ Run every command from the active workspace/worktree root using `make` only.
    Record command, cwd, exit code, and decisive output in the owning Bead.
 
 If a required gate cannot run because the environment itself is broken, stop
-the task, preserve the worktree, create or update one narrow Bead for the
+.the task, preserve the worktree, create or update one narrow Bead for the
 environment failure, and do not report the implementation as complete.
+
+### Tests must validate config and settings changes (P0)
+
+Tests are consumers of the config/settings SSOT, not frozen copies of it.
+Any expected value owned by config or settings (versions, paths, URLs, verbs,
+profiles, allowed lists, timeouts) must be read from the same source production
+uses or proven through a generator round-trip.
+
+- A test that breaks on a legitimate config change is a test defect.
+- Golden files and snapshots may pin structure only; they are regenerated via
+the canonical make verb when config-driven values change.
+- This rule applies to unit, integration, and e2e tests, plus markdown examples
+and docstring snippets validated by the pytest plugin.
+
+See `docs/standards/testing.md` and `docs/standards/development.md` for the
+detailed contract.
 
 ### State ownership and handoff
 
@@ -502,9 +566,12 @@ environment failure, and do not report the implementation as complete.
 **Facade layering (strict order `c -> t -> p -> m -> u`)** composed via MRO from `flext-core`:
 
 - `c` constants · `t` typings · `p` protocols · `m` models (Pydantic-2) · `u` utilities
-- Operational: `r` FlextResult · `e` FlextExceptions · `x` FlextMixins · `h` FlextHandlers · `d` FlextDecorators · `s` FlextService
-- Forward imports (higher→lower) may be runtime; **reverse imports are `TYPE_CHECKING`-only**. `c` never imports `m` at runtime.
-- Each package exposes exactly one public `api.py` (thin MRO facade) + optional `cli.py`; internals live under `_constants/_typings/_protocols/_models/_utilities`.
+- Operational: `r` FlextResult · `e` FlextExceptions · `x` FlextMixins · `h` FlextHandlers · `d` FlextDecorators · `s`
+  FlextService
+- Forward imports (higher→lower) may be runtime; **reverse imports are `TYPE_CHECKING`-only**. `c` never imports `m` at
+  runtime.
+- Each package exposes exactly one public `api.py` (thin MRO facade) + optional `cli.py`; internals live under
+  `_constants/_typings/_protocols/_models/_utilities`.
 
 **Config/settings are the layer-0 SSOT** consumed BY the facades (ADR-005). Access is single-form only:
 
@@ -513,21 +580,33 @@ from <namespace> import config, settings   # e.g. from flext_core import config,
 config.<Namespace>.*      settings.<Namespace>.*
 ```
 
-Config = business rules (`config/*.yaml`, validated); settings = env/CLI-tunable knobs. Facades never hardcode values the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream base — never a project facade (zero-cycle).
+Config = business rules (`config/*.yaml`, validated); settings = env/CLI-tunable knobs. Facades never hardcode values
+the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream base — never a project facade (zero-cycle).
 
-**Dependency direction:** `flext-core` ← everything. `flext-cli` owns CLI domains (Toml/Yaml/Csv/Json/Cli/Tui/Run/Dag/Templates/Workflow). Singer connectors are thin drivers over `flext-meltano` (ADR-006). `flext-infra` is build/tooling — reached via its CLI + pytest plugin, **never imported at runtime**.
+**Dependency direction:** `flext-core` ← everything. `flext-cli` owns CLI domains
+(Toml/Yaml/Csv/Json/Cli/Tui/Run/Dag/Templates/Workflow). Singer connectors are thin drivers over `flext-meltano`
+(ADR-006). `flext-infra` is build/tooling — reached via its CLI + pytest plugin, **never imported at runtime**.
 
 ## Conventions & Patterns
 
-- **`__init__.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED** (`# AUTO-GENERATED FILE — Regenerate with: make gen`). Never hand-edit; change the codegen source in `flext-infra` + run `make build WHAT=gen`.
-- **Root `pyproject.toml` `[MANAGED]` sections** are generated by `flext_infra.deps.modernizer` — edit generator policy then `make build WHAT=mod`, never by hand.
-- **Declaration layers are pure data:** models/protocols/constants/typings/settings/config carry ZERO methods (only Pydantic Field/validators/computed_field). Behavior lives only in `u`/services/`api`/`base`/`cli`.
-- **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as a data contract.
-- **Typing:** never `Any`/`object`/concrete-class annotations; type via `t.*` aliases and `p.*` protocols; `T | None` (never `Optional`). A model is never a type.
-- **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers, or suppression (`# type: ignore`/`# noqa`) without documented justification. Remove superseded code the same cycle.
+- **`**init**.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED**
+    (`# AUTO-GENERATED FILE — Regenerate with: make gen`). Never hand-edit; change the codegen source in `flext-infra`
+  - run `make build WHAT=gen`.
+- **Root `pyproject.toml` `[MANAGED]` sections** are generated by `flext_infra.deps.modernizer` — edit generator policy
+  then `make build WHAT=mod`, never by hand.
+- **Declaration layers are pure data:** models/protocols/constants/typings/settings/config carry ZERO methods
+  (only Pydantic Field/validators/computed_field). Behavior lives only in `u`/services/`api`/`base`/`cli`.
+- **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No
+  `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as a data contract.
+- **Typing:** never `Any`/`object`/concrete-class annotations; type via `t.*` aliases and `p.*` protocols; `T | None`
+  (never `Optional`). A model is never a type.
+- **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers, or suppression
+  (`# type: ignore`/`# noqa`) without documented justification. Remove superseded code the same cycle.
 - **English-only** in all code, comments, docstrings, log strings, and `.j2` templates.
-- **Tests** (`flext-tests`): behavior-only through public facades, NO mocks/`patch`, one unified `conftest.py`, typed fixtures in `tests/fixtures/`, layout `tests/{unit,integration,e2e}/`, thin single nested `Tests<Unit>` class.
-- **Multi-agent tree:** fix-forward only, never `git reset/checkout/restore/clean/stash` shared work; commit by explicit paths (never `git add -A`); coordinate via beads (`bd`).
+- **Tests** (`flext-tests`): behavior-only through public facades, NO mocks/`patch`, one unified `conftest.py`, typed
+  fixtures in `tests/fixtures/`, layout `tests/{unit,integration,e2e}/`, thin single nested `Tests<Unit>` class.
+- **Multi-agent tree:** fix-forward only, never `git reset/checkout/restore/clean/stash` shared work; commit by
+  explicit paths (never `git add -A`); coordinate via beads (`bd`).
 - **≤200 logical LOC per module**; net-negative LOC on refactors.
 - Toolchain: `uv` + `.venv` only, always via `make`.
 
