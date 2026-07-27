@@ -129,9 +129,9 @@ CWD-relative).
 
 ## 5. Root export (`<project>/**init**.py`)
 
-`config`/`settings` are emitted by codegen into the package root from the module `**all**`
+`config`/`settings` are emitted into the package root from the module `**all**`
 (`**all** = ["FlextXSettings", "settings"]` / `["FlextXConfig", "config"]`). Never hand-edit
-the generated `**init**.py`; run `flext-infra codegen` after adding the modules.
+the generated `**init**.py`; run `make build WHAT=artifacts` after adding the modules.
 
 ## 6. Forbidden (remove on sight)
 
@@ -152,5 +152,5 @@ the generated `**init**.py`; run `flext-infra codegen` after adding the modules.
 2. Add `_config.py` with `FlextXConfig(FlextConfig)` + `config = FlextXConfig.fetch_global()`.
 3. Create `config/` dir with `*.yaml` if the project ships declarative params.
 4. Delete every forbidden symbol (§6); rewrite `self.settings.*` → `settings.*`.
-5. `flext-infra codegen` to publish `config`/`settings` at the package root.
-6. `make check && make test` green; commit.
+5. `make build WHAT=artifacts` to publish `config`/`settings` at the package root.
+6. `make check WHAT=all` and `make test WHAT=all` green; commit.
