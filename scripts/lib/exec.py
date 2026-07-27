@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import runpy
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, NoReturn
@@ -27,6 +28,8 @@ class CommandExecution:
             )
         env = CommandExecution.command_env(command)
         if command.path.suffix == ".py":
+            if CommandExecution.surface_validation_enabled():
+                return CommandExecution.run_python_probe(command, env)
             return CommandExecution.run_python(command, env)
         return CommandExecution.run_process(("bash", str(command.path)), extra_env=env)
 
@@ -41,12 +44,13 @@ class CommandExecution:
         if CommandExecution.surface_validation_enabled():
             if not CommandExecution.make_target_exists(target):
                 return 2
-            " ".join((
+            rendered = " ".join((
                 "make",
                 target,
                 *make_args,
                 *CommandExecution.make_variable_args(extra_env),
             ))
+            u.Cli.emit_raw(f"SURFACE-VALIDATE: {rendered}\n")
             return 0
         return CommandExecution.run_process((
             "make",
@@ -78,14 +82,37 @@ class CommandExecution:
         )
 
     @staticmethod
+    def run_python_probe(
+        command: m.Tests.MakeCommand, env: t.MappingKV[str, str]
+    ) -> int:
+        """Run one Python command safely in-process for surface validation."""
+        previous = os.environ.copy()
+        try:
+            os.environ.update(env)
+            try:
+                runpy.run_path(str(command.path), run_name="__main__")
+            except SystemExit as exc:
+                return exc.code if isinstance(exc.code, int) else 1
+        finally:
+            os.environ.clear()
+            os.environ.update(previous)
+        return 0
+
+    @staticmethod
     def run_process(
         command: Sequence[str], *, extra_env: t.MappingKV[str, str] | None = None
     ) -> int:
         """Run one process through flext-cli and mirror captured output."""
         result = u.Cli.run_raw(command, cwd=CommandRegistry.ROOT, env=extra_env)
         if result.failure:
+            if result.error:
+                sys.stderr.write(f"{result.error}\n")
             return 1
         output = result.value
+        if output.stdout:
+            sys.stdout.write(output.stdout)
+        if output.stderr:
+            sys.stderr.write(output.stderr)
         exit_code: int = output.exit_code
         return exit_code
 

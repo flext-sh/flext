@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Run lint/type quality gates through the workspace orchestrator."""
 # /// flext-command
 # verb = "check"

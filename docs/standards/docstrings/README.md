@@ -2,7 +2,9 @@
 
 **Approach**: Document based on **why code was built this way**, not generic templates.
 
-This directory contains standards and guidance for writing Python docstrings across the FLEXT monorepo using Google-style PEP 257 conventions, validated against Ruff strict mode (select=["ALL"], preview=true).
+This directory contains standards and guidance for writing Python docstrings across
+the FLEXT monorepo using Google-style PEP 257 conventions, validated against Ruff
+strict mode (select=["ALL"], preview=true).
 
 ## Primary Reference
 

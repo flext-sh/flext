@@ -39,7 +39,8 @@ The root Make gates provide current quality evidence.
 
 - [Project README](../../flext-tap-oracle/README.md)
 - Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
-- Related packages: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, `flext-target-oracle`, `flext-dbt-oracle`
+- Related packages: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, `flext-target-oracle`,
+  `flext-dbt-oracle`
 
 ## Support & issues
 

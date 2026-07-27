@@ -17,8 +17,8 @@ RUN pip install --no-cache-dir \
 
 # Test basic functionality
 RUN echo "🧪 Testing imports..." && \
-    python -c "from flext_quality import FlextQuality, FlextQualityCliService, c, m, p, t, u; print('✅ flext_quality imports')" && \
-    python -c "from flext_core import FlextContainer, FlextLogger, r; print('✅ flext_core imports')" && \
+    python -c "from flext_quality import FlextQuality, FlextQualityCliService, c, m, p, t, u; u.Cli.print('✅ flext_quality imports')" && \
+    python -c "from flext_core import FlextContainer, FlextLogger, r; u.Cli.print('✅ flext_core imports')" && \
     flext-quality status > /dev/null && \
     echo "✅ All imports successful!"
 
