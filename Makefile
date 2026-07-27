@@ -211,7 +211,31 @@ _builtin_help_usage:
 	fi
 
 ifeq ($(MAKE_PROFILE),workspace-root)
-_builtin_setup_environment:
+# The workspace owns its members: setup initialises every declared submodule at
+# the recorded gitlink and attaches its HEAD to the branch declared in
+# .gitmodules (the topology SSOT), so a fresh worktree is self-contained and no
+# state outside it is required. A member branch that already exists at another
+# commit carries unmerged work: it is reported, never moved.
+_builtin_setup_submodules:
+	@set -eu; \
+	if [ ! -f "$(PROJECT_ROOT)/.gitmodules" ]; then exit 0; fi; \
+	git -C "$(PROJECT_ROOT)" submodule sync --recursive --quiet; \
+	git -C "$(PROJECT_ROOT)" submodule update --init --recursive; \
+	git -C "$(PROJECT_ROOT)" submodule foreach --recursive --quiet ' \
+		branch=$$(git config -f "$$toplevel/.gitmodules" "submodule.$$name.branch" 2>/dev/null || true); \
+		if [ -z "$$branch" ]; then exit 0; fi; \
+		head=$$(git rev-parse HEAD); \
+		if git rev-parse --verify --quiet "refs/heads/$$branch" >/dev/null 2>&1; then \
+			if [ "$$(git rev-parse "refs/heads/$$branch")" = "$$head" ]; then \
+				git checkout --quiet "$$branch"; \
+			else \
+				printf "WARNING: %s branch %s holds unmerged work; left at gitlink %s\\n" "$$name" "$$branch" "$$head" >&2; \
+			fi; \
+		else \
+			git checkout --quiet -b "$$branch"; \
+		fi'
+
+_builtin_setup_environment: _builtin_setup_submodules
 	@uv sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS)
 	@uv pip install --python "$(PROJECT_ROOT)/.venv/bin/python" --no-deps --editable "$(PROJECT_ROOT)" --link-mode "$(UV_LINK_MODE)"
 	@set -eu; for member in $(WORKSPACE_MEMBERS); do \
