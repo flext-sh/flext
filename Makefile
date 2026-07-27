@@ -210,12 +210,14 @@ _builtin_help_usage:
 		fi; \
 	fi
 
-ifeq ($(MAKE_PROFILE),workspace-root)
-# The workspace owns its members: setup initialises every declared submodule at
-# the recorded gitlink and attaches its HEAD to the branch declared in
-# .gitmodules (the topology SSOT), so a fresh worktree is self-contained and no
-# state outside it is required. A member branch that already exists at another
-# commit carries unmerged work: it is reported, never moved.
+# A project owns the sources it declares: setup initialises every declared
+# submodule at its recorded gitlink and attaches its HEAD to the branch declared
+# in .gitmodules (the topology SSOT), so a freshly cloned repository or worktree
+# is self-contained and needs no state outside itself. The step is profile
+# independent, is a no-op when the project declares no submodules, and is
+# idempotent: re-running it converges without moving work. A member branch that
+# already exists at another commit carries unmerged work: it is reported, never
+# moved.
 _builtin_setup_submodules:
 	@set -eu; \
 	if [ ! -f "$(PROJECT_ROOT)/.gitmodules" ]; then exit 0; fi; \
@@ -235,6 +237,7 @@ _builtin_setup_submodules:
 			git checkout --quiet -b "$$branch"; \
 		fi'
 
+ifeq ($(MAKE_PROFILE),workspace-root)
 _builtin_setup_environment: _builtin_setup_submodules
 	@uv sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS)
 	@uv pip install --python "$(PROJECT_ROOT)/.venv/bin/python" --no-deps --editable "$(PROJECT_ROOT)" --link-mode "$(UV_LINK_MODE)"
@@ -244,14 +247,14 @@ _builtin_setup_environment: _builtin_setup_submodules
 	@uv pip check --python "$(PROJECT_ROOT)/.venv/bin/python"
 else ifeq ($(MAKE_PROFILE),workspace-member)
 ifeq ($(ATTACHED_MEMBER),Y)
-_builtin_setup_environment:
+_builtin_setup_environment: _builtin_setup_submodules
 	@$(MAKE) --no-print-directory -C "$(RUNTIME_ROOT)" setup WHAT=environment
 else
-_builtin_setup_environment:
+_builtin_setup_environment: _builtin_setup_submodules
 	@uv sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS)
 endif
 else
-_builtin_setup_environment:
+_builtin_setup_environment: _builtin_setup_submodules
 	@uv sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS)
 endif
 
