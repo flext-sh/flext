@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Commit all changes in selected workspace projects and root.
 
 Equivalent to the legacy ``commit_submodules.sh`` / ``_save`` Makefile target.

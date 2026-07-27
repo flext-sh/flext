@@ -274,6 +274,7 @@ def test_release_status_coordination_routes_reach_private_targets(
     verb: str,
     what: str,
     target: str,
+    *,
     requires_apply: bool,
     env_updates: tuple[tuple[str, str], ...],
 ) -> None:

@@ -51,6 +51,50 @@ description: Apply the mandatory FLEXT engineering law for every implementation,
   and docstring snippets validated by the pytest plugin (operator law
   2026-07-24, cosmos-main-hr9e).
 
+## Automated adjustments and synchronization
+
+- Any automated adjustment — sync, codegen round-trip, auto-fix, or upstream
+  merge — is a code change and must pass the same gates as a manual change.
+- Before claiming an automated adjustment is done, run the affected root-Make
+  gates (`make check` and `make test` for the touched projects) and record the
+  exact command, exit code, and decisive output in the owning Bead.
+- Automated adjustments must be atomic within the lane: one coherent commit or
+  an explicit pathspec-bound set of commits, never open-ended `fixes` commits
+  that accumulate unrelated changes.
+- Before merging the lane into the original branch (e.g. `0.12.0-dev`), run a
+  pre-merge validation of the whole lane against the current target: `make
+  check` and `make test` for every affected project. Do not merge if any gate
+  is red; fix forward inside the lane and re-validate.
+- A merge from upstream/external into the lane must also be validated in the
+  lane context before it is considered absorbed.
+
+## Green checkpoint protocol
+
+- Work in short, complete checkpoints. After every state-changing stage, update
+  the Bead with current status, orientation, owned paths, remaining scope, and
+  exact evidence; Beads stays continuous execution truth, not an end-of-task
+  summary.
+- Resolve ordinary uncertainty promptly from current evidence. Do not accumulate
+  speculative hypotheses or validated local WIP while a checkpoint can be
+  completed and landed.
+- A green checkpoint requires every applicable canonical root-Make gate to pass,
+  including zero lint errors. A red, partial, or incompletely evidenced state is
+  never committed or pushed as a checkpoint.
+- Once a checkpoint is green and push authority exists, commit only explicit
+  owned paths and immediately fast-forward push the current worker branch. Do
+  not rebase, force-push, merge, or promote the main branch; reviewed promotion
+  remains orchestrator work.
+- While work is active, send the orchestrator a concise progress heartbeat at
+  least every five minutes without pausing execution. Include the current stage,
+  latest evidence, next action, and any changed risk or blocker.
+- At every critical decision point, stop before acting, record the pending
+  decision, options, and consequences in the Bead, and ask the operator one
+  precise confirmation question. Critical decisions include destructive or
+  irreversible actions, competing public-contract or architecture outcomes,
+  security or privacy choices, production/release/main promotion, authority
+  conflicts, and material scope or acceptance changes. Never infer critical
+  intent; evidence-resolve ordinary uncertainty without unnecessary interruption.
+
 ## Completion discipline
 
 Use `.agents/skills/flext-inviolable-rules/SKILL.md` for every task closure.

@@ -18,8 +18,13 @@ WHAT ?=
 
 PROJECT_ROOT := $(shell pwd -P)
 PUBLIC_VERBS := help setup deps build check test format run status docs clean release codegen
-RUFF_PATHS := $(PROJECT_ROOT)/src $(PROJECT_ROOT)/tests
-MYPY_PATHS := $(PROJECT_ROOT)/src $(PROJECT_ROOT)/tests
+# A workspace root orchestrates its members, so its lint and type scope is the
+# union of every member's source and tests. Members are expanded from the
+# manifest SSOT, never listed by hand, and the paths stay existence-filtered so
+# a member without one of the trees cannot break the gate.
+WORKSPACE_CHECK_PATHS := $(wildcard $(PROJECT_ROOT)/flext-api/src) $(wildcard $(PROJECT_ROOT)/flext-api/tests) $(wildcard $(PROJECT_ROOT)/flext-auth/src) $(wildcard $(PROJECT_ROOT)/flext-auth/tests) $(wildcard $(PROJECT_ROOT)/flext-cli/src) $(wildcard $(PROJECT_ROOT)/flext-cli/tests) $(wildcard $(PROJECT_ROOT)/flext-core/src) $(wildcard $(PROJECT_ROOT)/flext-core/tests) $(wildcard $(PROJECT_ROOT)/flext-db-oracle/src) $(wildcard $(PROJECT_ROOT)/flext-db-oracle/tests) $(wildcard $(PROJECT_ROOT)/flext-dbt-ldap/src) $(wildcard $(PROJECT_ROOT)/flext-dbt-ldap/tests) $(wildcard $(PROJECT_ROOT)/flext-dbt-ldif/src) $(wildcard $(PROJECT_ROOT)/flext-dbt-ldif/tests) $(wildcard $(PROJECT_ROOT)/flext-dbt-oracle/src) $(wildcard $(PROJECT_ROOT)/flext-dbt-oracle/tests) $(wildcard $(PROJECT_ROOT)/flext-dbt-oracle-wms/src) $(wildcard $(PROJECT_ROOT)/flext-dbt-oracle-wms/tests) $(wildcard $(PROJECT_ROOT)/flext-grpc/src) $(wildcard $(PROJECT_ROOT)/flext-grpc/tests) $(wildcard $(PROJECT_ROOT)/flext-infra/src) $(wildcard $(PROJECT_ROOT)/flext-infra/tests) $(wildcard $(PROJECT_ROOT)/flext-ldap/src) $(wildcard $(PROJECT_ROOT)/flext-ldap/tests) $(wildcard $(PROJECT_ROOT)/flext-ldif/src) $(wildcard $(PROJECT_ROOT)/flext-ldif/tests) $(wildcard $(PROJECT_ROOT)/flext-meltano/src) $(wildcard $(PROJECT_ROOT)/flext-meltano/tests) $(wildcard $(PROJECT_ROOT)/flext-observability/src) $(wildcard $(PROJECT_ROOT)/flext-observability/tests) $(wildcard $(PROJECT_ROOT)/flext-oracle-oic/src) $(wildcard $(PROJECT_ROOT)/flext-oracle-oic/tests) $(wildcard $(PROJECT_ROOT)/flext-oracle-wms/src) $(wildcard $(PROJECT_ROOT)/flext-oracle-wms/tests) $(wildcard $(PROJECT_ROOT)/flext-plugin/src) $(wildcard $(PROJECT_ROOT)/flext-plugin/tests) $(wildcard $(PROJECT_ROOT)/flext-quality/src) $(wildcard $(PROJECT_ROOT)/flext-quality/tests) $(wildcard $(PROJECT_ROOT)/flext-tap-ldap/src) $(wildcard $(PROJECT_ROOT)/flext-tap-ldap/tests) $(wildcard $(PROJECT_ROOT)/flext-tap-ldif/src) $(wildcard $(PROJECT_ROOT)/flext-tap-ldif/tests) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle/src) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle/tests) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle-oic/src) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle-oic/tests) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle-wms/src) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle-wms/tests) $(wildcard $(PROJECT_ROOT)/flext-target-ldap/src) $(wildcard $(PROJECT_ROOT)/flext-target-ldap/tests) $(wildcard $(PROJECT_ROOT)/flext-target-ldif/src) $(wildcard $(PROJECT_ROOT)/flext-target-ldif/tests) $(wildcard $(PROJECT_ROOT)/flext-target-oracle/src) $(wildcard $(PROJECT_ROOT)/flext-target-oracle/tests) $(wildcard $(PROJECT_ROOT)/flext-target-oracle-oic/src) $(wildcard $(PROJECT_ROOT)/flext-target-oracle-oic/tests) $(wildcard $(PROJECT_ROOT)/flext-target-oracle-wms/src) $(wildcard $(PROJECT_ROOT)/flext-target-oracle-wms/tests) $(wildcard $(PROJECT_ROOT)/flext-tests/src) $(wildcard $(PROJECT_ROOT)/flext-tests/tests) $(wildcard $(PROJECT_ROOT)/flext-web/src) $(wildcard $(PROJECT_ROOT)/flext-web/tests)
+RUFF_PATHS := $(PROJECT_ROOT)/src $(PROJECT_ROOT)/tests $(WORKSPACE_CHECK_PATHS)
+MYPY_PATHS := $(PROJECT_ROOT)/src $(PROJECT_ROOT)/tests $(WORKSPACE_CHECK_PATHS)
 
 # === MYPY RESOURCE LIMIT ===
 # mro-0ftd.3.11: every Mypy process inherits validated memory and time caps.
@@ -66,6 +71,12 @@ ATTACHED_MEMBER := N
 RUNTIME_ROOT := $(PROJECT_ROOT)
 endif
 
+RUNTIME_VENV := $(RUNTIME_ROOT)/.venv
+override UV_PROJECT := $(RUNTIME_ROOT)
+override UV_PROJECT_ENVIRONMENT := $(RUNTIME_VENV)
+override VIRTUAL_ENV := $(RUNTIME_VENV)
+export UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV
+
 ifeq ($(MAKE_PROFILE),workspace-root)
 CODEGEN_SCOPE := all
 ALLOWED_PROJECTS := . $(WORKSPACE_MEMBERS)
@@ -74,12 +85,22 @@ CODEGEN_SCOPE := self
 ALLOWED_PROJECTS := .
 endif
 
+# Workspace-root gate verbs fan out across declared members through the generic
+# `flext-infra workspace orchestrate` primitive (verb allowlist + CLI group come
+# from the constants SSOT, never hardcoded here). Members and standalone projects
+# run the gate locally. FAIL_FAST forwards the stop-on-first-failure policy.
+WORKSPACE_ORCHESTRATE := $(UV_RUN) python -m flext_infra workspace orchestrate
+ORCHESTRATED_VERBS := build check clean docs scan test val
+
 UV_RUN := uv run --project "$(RUNTIME_ROOT)" --no-sync
 # mro-j47u (codex): scaffold dev tools live in the validated optional dev
 # profile; a fresh project must create its lock before later check-mode locks.
 UV_SYNC_FLAGS := --all-packages --all-extras --all-groups
 
 
+# The custom Make surface is the single extension point for every profile: it
+# carries the project's own commands, WHATs and hooks. Its name comes from the
+# constants SSOT, so there is no per-profile variant and no second surface.
 -include custom.mk
 
 _BUILTIN_HANDLERS := \
@@ -221,20 +242,16 @@ _builtin_deps_upgrade:
 	$(call _require_apply)
 	$(call _run_for_selected_projects,--upgrade)
 
+
 _builtin_build_artifacts:
-	@uv build --project "$(PROJECT_ROOT)"
+	@$(WORKSPACE_ORCHESTRATE) --verb build $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
 _builtin_check_all:
-	@$(UV_RUN) ruff check --no-fix $(RUFF_PATHS)
-	@$(UV_RUN) ruff format --check $(RUFF_PATHS)
-	@$(UV_RUN) pyrefly check
-	@$(VALIDATE_MYPY_LIMITS); $(MYPY_BOUNDED) $(UV_RUN) mypy $(MYPY_PATHS) || { $(REPORT_MYPY_FAILURE); exit $$code; }
-	@$(UV_RUN) pyright
-	@# NOTE (multi-agent, mro-j47u): Vulture reads its scope from generated pyproject.
-	@$(UV_RUN) vulture
+	@$(WORKSPACE_ORCHESTRATE) --verb check $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
 _builtin_test_all:
-	@$(UV_RUN) pytest "$(PROJECT_ROOT)/tests"
+	@$(WORKSPACE_ORCHESTRATE) --verb test $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+
 
 _builtin_format_check:
 	@$(UV_RUN) ruff check --no-fix $(RUFF_PATHS)
@@ -258,16 +275,14 @@ _builtin_status_diagnostics:
 	fi
 	@git -C "$(PROJECT_ROOT)" status --short
 
+
 _builtin_docs_check:
-	@test -s "$(PROJECT_ROOT)/README.md"
+	@$(WORKSPACE_ORCHESTRATE) --verb docs $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
 _builtin_clean_generated:
 	$(call _require_apply)
-	@find "$(PROJECT_ROOT)" -type d \
-		\( -name __pycache__ -o -name .mypy_cache -o -name .pytest_cache -o -name .ruff_cache \) \
-		-prune -exec rm -rf {} +
-	@rm -rf "$(PROJECT_ROOT)/build" "$(PROJECT_ROOT)/dist" "$(PROJECT_ROOT)/htmlcov"
-	@rm -f "$(PROJECT_ROOT)/.coverage"
+	@$(WORKSPACE_ORCHESTRATE) --verb clean $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+
 
 _builtin_release_status:
 	@uv lock --project "$(PROJECT_ROOT)" --check
@@ -275,8 +290,8 @@ _builtin_release_status:
 	@git -C "$(PROJECT_ROOT)" diff --cached --quiet
 
 _builtin_codegen_check:
-	@$(UV_RUN) flext-infra codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode check
+	@$(UV_RUN) python -m flext_infra codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode check
 
 _builtin_codegen_apply:
 	$(call _require_apply)
-	@$(UV_RUN) flext-infra codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode apply
+	@$(UV_RUN) python -m flext_infra codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode apply
