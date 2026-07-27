@@ -26,29 +26,29 @@ it will construct a new validator and serializer. If you're using a `TypeAdapter
 each time
 the function is called. Instead, instantiate it once, and reuse it.
 
-=== ":x: Bad"
+### Bad
 
-    ```python {lint="skip"}
-    from pydantic import TypeAdapter
+```python
+from pydantic import TypeAdapter
 
 
-    def my_func():
-        adapter = TypeAdapter(Sequence[int])
-        # do something with adapter
-    ```
-
-=== ":white_check_mark: Good"
-
-    ```python {lint="skip"}
-    from pydantic import TypeAdapter
-
+def my_func():
     adapter = TypeAdapter(Sequence[int])
+    # do something with adapter
+```
+
+### Good
+
+```python
+from pydantic import TypeAdapter
+
+adapter = TypeAdapter(Sequence[int])
 
 
-    def my_func():
-        ...
-        # do something with adapter
-    ```
+def my_func():
+    ...
+    # do something with adapter
+```
 
 ## `Sequence` vs `list` or `tuple` with `Mapping` vs `dict`
 
@@ -78,31 +78,31 @@ model = Model(a=1)
 
 ## Avoid extra information via subclasses of primitives
 
-=== "Don't do this"
+### Don't do this
 
-    ```python
-    class CompletedStr(str):
-        def __init__(self, s: str):
-            self.s = s
-            self.done = False
-    ```
+```python
+class CompletedStr(str):
+    def __init__(self, s: str):
+        self.s = s
+        self.done = False
+```
 
-=== "Do this"
+### Do this
 
-    ```python
-    from pydantic import BaseModel
+```python
+from pydantic import BaseModel
 
 
-    class CompletedModel(BaseModel):
-        s: str
-        done: bool = False
-    ```
+class CompletedModel(BaseModel):
+    s: str
+    done: bool = False
+```
 
 ## Use tagged union, not union
 
 Tagged union (or discriminated union) is a union with a field that indicates which type it is.
 
-```python {test="skip"}
+```python
 from typing import Any, Literal
 
 from pydantic import BaseModel, u.Field
@@ -144,40 +144,41 @@ See [Discriminated Unions] for more details.
 
 Instead of using nested models, use `TypedDict` to define the structure of the data.
 
-??? info "Performance comparison"
+### Performance comparison
+
 With a simple benchmark, `TypedDict` is about ~2.5x faster than nested models:
 
-    ```python {test="skip"}
-    from timeit import timeit
+```python
+from timeit import timeit
 
-    from typing_extensions import TypedDict
+from typing_extensions import TypedDict
 
-    from pydantic import BaseModel, TypeAdapter
-
-
-    class A(TypedDict):
-        a: str
-        b: int
+from pydantic import BaseModel, TypeAdapter
 
 
-    class TypedModel(TypedDict):
-        a: A
+class A(TypedDict):
+    a: str
+    b: int
 
 
-    class B(BaseModel):
-        a: str
-        b: int
+class TypedModel(TypedDict):
+    a: A
 
 
-    class Model(BaseModel):
-        b: B
+class B(BaseModel):
+    a: str
+    b: int
 
 
-    ta = TypeAdapter(TypedModel)
-    result1 = timeit(lambda: ta.validate_python({"a": {"a": "a", "b": 2}}), number=10000)
-    result2 = timeit(lambda: Model({"b": {"a": "a", "b": 2}}), number=10000)
-    u.Cli.print(result2 / result1)
-    ```
+class Model(BaseModel):
+    b: B
+
+
+ta = TypeAdapter(TypedModel)
+result1 = timeit(lambda: ta.validate_python({"a": {"a": "a", "b": 2}}), number=10000)
+result2 = timeit(lambda: Model({"b": {"a": "a", "b": 2}}), number=10000)
+u.Cli.print(result2 / result1)
+```
 
 ## Avoid wrap validators if you really care about performance
 

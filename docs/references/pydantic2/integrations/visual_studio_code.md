@@ -51,7 +51,7 @@ And you will also get error checks for **invalid data types**.
 Pylance is the VS Code extension, it's closed source, but free to use. Underneath, Pylance uses an open source tool
 (also from Microsoft) called [Pyright](https://github.com/microsoft/pyright) that does all the heavy lifting.
 
-    You can read more about it in the [Pylance Frequently Asked Questions](https://github.com/microsoft/pylance-release/blob/main/FAQ.md#what-is-the-relationship-between-pylance-pyright-and-the-python-extension).
+You can read more about it in the [Pylance Frequently Asked Questions](https://github.com/microsoft/pylance-release/blob/main/FAQ.md#what-is-the-relationship-between-pylance-pyright-and-the-python-extension).
 
 ### Settingsure mypy
 
@@ -276,7 +276,7 @@ This is a limitation of dataclass transforms and cannot be fixed in pydantic.
 !!! warning
 As a Pydantic user, you don't need the details below. Feel free to skip the rest of this section.
 
-    These details are only useful for other library authors, etc.
+These details are only useful for other library authors, etc.
 
 This additional editor support works by making use of the [`@dataclass_transform`
 decorator](https://typing.python.org/en/latest/spec/dataclasses.html#the-dataclass-transform-decorator)

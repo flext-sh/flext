@@ -9,6 +9,23 @@
 it but never competes with it. Project law may be stricter; the newest explicit
 operator instruction prevails and lower authority must be reconciled.
 
+### P0 — Tests validate config/settings changes by construction
+
+Tests, golden files, and executable documentation (including markdown examples and
+docstring snippets) must remain valid when config or settings change. They are
+never allowed to hardcode, freeze, or implicitly assume the values that exist today.
+
+- The canonical owner of every configurable fact is `config/*.yaml`, `settings`,
+  or the generator that derives from them. Tests only validate that owner.
+- Expected values owned by config/settings must be read from the same typed SSOT
+  production reads, or proven through a generator/consumer round-trip.
+- A test that breaks on a legitimate config/settings change is a test defect.
+  Fix the test; never freeze the configuration to keep the test green.
+- This rule applies to all test tiers, markdown examples, and docstring snippets
+  validated by the pytest plugin.
+- Literal expectations in tests are reserved for immutable external protocol
+  contracts, not for values the project owns through config/settings.
+
 1. **Truth with evidence.** Claims require the exact command, working directory,
    exit status, decisive output, and bounded scope.
 2. **Research before mutation.** Read current authority, intent, owner Bead,
@@ -75,6 +92,11 @@ operator instruction prevails and lower authority must be reconciled.
     anything, then optimize with the project's typed OO/MRO/lazy-import patterns;
     accelerate test selection with impact analysis (e.g. pytest-testmon) and
     parallelism (pytest-xdist) rather than deleting or weakening coverage.
+    See P0 above: tests of `config`/`settings` validate contracts and behavior
+    for arbitrary valid values and read expected config-owned values from the
+    same typed SSOT the consumer receives; they never freeze today's configured
+    scalar, identifier, path, endpoint, model, ranking, or default. Goldens may lock
+    structure, never mutable config/settings values.
 16. **Parametrized config, generators, and managed binaries.** config, settings,
     and templates are the sole source of configuration and business rules; the
     correct generator produces every derived surface (never hand-edit a
@@ -506,8 +528,24 @@ Run every command from the active workspace/worktree root using `make` only.
    Record command, cwd, exit code, and decisive output in the owning Bead.
 
 If a required gate cannot run because the environment itself is broken, stop
-the task, preserve the worktree, create or update one narrow Bead for the
+.the task, preserve the worktree, create or update one narrow Bead for the
 environment failure, and do not report the implementation as complete.
+
+### Tests must validate config and settings changes (P0)
+
+Tests are consumers of the config/settings SSOT, not frozen copies of it.
+Any expected value owned by config or settings (versions, paths, URLs, verbs,
+profiles, allowed lists, timeouts) must be read from the same source production
+uses or proven through a generator round-trip.
+
+- A test that breaks on a legitimate config change is a test defect.
+- Golden files and snapshots may pin structure only; they are regenerated via
+the canonical make verb when config-driven values change.
+- This rule applies to unit, integration, and e2e tests, plus markdown examples
+and docstring snippets validated by the pytest plugin.
+
+See `docs/standards/testing.md` and `docs/standards/development.md` for the
+detailed contract.
 
 ### State ownership and handoff
 

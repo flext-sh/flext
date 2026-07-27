@@ -90,6 +90,7 @@ using all possible parameter configurations and all possible combinations of the
 
 ??? example
 
+<!-- markdownlint-disable-next-line code-block-style -->
     ```python
     from pydantic import u.validate_call
 
@@ -168,6 +169,7 @@ using all possible parameter configurations and all possible combinations of the
 [`Unpack`][typing.Unpack] and typed dictionaries can be used to annotate the variable
 keyword parameters of a function:
 
+<!-- markdownlint-disable-next-line code-block-style -->
     ```python
     from typing_extensions import TypedDict, Unpack
 

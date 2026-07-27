@@ -209,7 +209,9 @@ except ValidationError as e:
     u.Cli.print(e)
     """
     1 validation error for Organization
-      Value error, Password 123 is forbidden. Please choose another password for user Spartacat. [type=value_error, input_value={'forbidden_passwords': [...gh', 'password': '87'}]}, input_type=dict]
+      Value error, Password 123 is forbidden. Please choose another password for user Spartacat.
+      [type=value_error, input_value={'forbidden_passwords': [...gh', 'password': '87'}]},
+      input_type=dict]
     """
 ```
 

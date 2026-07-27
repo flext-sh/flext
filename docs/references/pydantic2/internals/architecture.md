@@ -44,7 +44,7 @@ It is not possible to define a custom core schema. A core schema needs to be und
 This is also part of the reason why the `GenerateSchema` isn't truly exposed and properly
 documented.
 
-    The core schema definitions can be found in the [`pydantic_core.core_schema`][] module.
+The core schema definitions can be found in the [`pydantic_core.core_schema`][] module.
 
 In the case of a Pydantic model, a core schema will be constructed and set as the
 [`__pydantic_core_schema__`][pydantic.main.BaseModel.**pydantic_core_schema**] attribute.
@@ -132,10 +132,8 @@ and will return the following JSON Schema:
 
 !!! abstract "Usage Documentation"
 [Custom types](../concepts/types.md#custom-types)
-
-    [Implementing `__get_pydantic_core_schema__`](../concepts/json_schema.md#implementing-__get_pydantic_core_schema__)
-
-    [Implementing `__get_pydantic_json_schema__`](../concepts/json_schema.md#implementing-__get_pydantic_json_schema__)
+[Implementing `__get_pydantic_core_schema__`](../concepts/json_schema.md#implementing-__get_pydantic_core_schema__)
+[Implementing `__get_pydantic_json_schema__`](../concepts/json_schema.md#implementing-__get_pydantic_json_schema__)
 
 While the `GenerateSchema` and [`GenerateJsonSchema`][pydantic.JSON_schema.GenerateJsonSchema] classes handle
 the creation of the corresponding schemas, Pydantic offers a way to customize them in some cases, following a wrapper
