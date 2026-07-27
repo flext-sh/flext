@@ -1,6 +1,7 @@
 # Guides Index
 
-Guides are curated documents for workflow, migration, and day-to-day maintenance. They complement generated API reference; they do not duplicate it.
+Guides are curated documents for workflow, migration, and day-to-day maintenance. They complement generated API
+reference; they do not duplicate it.
 
 ## Canonical Guides
 

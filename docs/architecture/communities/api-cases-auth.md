@@ -11,7 +11,7 @@ Community of 308 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | _emit | Function | flext-observability/examples/01_functional.py | 24-26 |
 | _emit | Function | flext-observability/examples/02_solid_observability_demo.py | 30-32 |
 | formatters_print | Function | flext-cli/src/flext_cli/_utilities/formatters.py | 33-35 |

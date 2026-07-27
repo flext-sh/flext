@@ -1,6 +1,7 @@
 # Testing
 
-The workspace test taxonomy is standardized. Root guidance stays short; project-specific test details stay local to each project.
+The workspace test taxonomy is standardized. Root guidance stays short; project-specific test details stay local to each
+project.
 
 ## Canonical Test Layout
 

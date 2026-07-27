@@ -1,9 +1,9 @@
 
-??? api "API Documentation"
-[`pydantic.types.Strict`][pydantic.types.Strict]<br>
+> **API Documentation:** [`pydantic.types.Strict`][pydantic.types.Strict]
 
 By default, Pydantic will attempt to coerce values to the desired type when possible.
-For example, you can pass the string `'123'` as the input for the [`int` number type](../api/standard_library_types.md#integers),
+For example, you can pass the string `'123'` as the input for the [`int` number
+type](../api/standard_library_types.md#integers),
 and it will be converted to the value `123`.
 This coercion behavior is useful in many scenarios — think: UUIDs, URL parameters, HTTP headers, environment variables,
 dates, etc.
@@ -14,10 +14,12 @@ To better support this use case, Pydantic provides a "strict mode". When strict 
 less lenient when coercing data, and will instead error if the data is not of the correct type.
 
 Most of the time, strict mode will only allow instances of the type to be provided, although looser rules may apply
-to JSON input (for instance, the [date and time types](../api/standard_library_types.md#date-and-time-types) allow strings
+to JSON input (for instance, the [date and time types](../api/standard_library_types.md#date-and-time-types) allow
+strings
 even in strict mode).
 
-The strict behavior for each type can be found in the [standard library types](../api/standard_library_types.md) documentation,
+The strict behavior for each type can be found in the [standard library types](../api/standard_library_types.md)
+documentation,
 and is summarized in the [conversion table](./conversion_table.md).
 
 Here is a brief example showing the validation behavior difference in strict and the default lax mode:
@@ -46,20 +48,17 @@ except ValidationError as exc:
 
 Strict mode can be enabled in various ways:
 
-- [As a validation parameter](#as-a-validation-parameter), such as when using [`model_validate()`][pydantic.BaseModel.model_validate],
+- [As a validation parameter](#as-a-validation-parameter), such as when using
+  [`model_validate()`][pydantic.BaseModel.model_validate],
   on Pydantic models.
 - [At the field level](#at-the-field-level).
 - [At the configuration level](#as-a-configuration-value) (with the possibility to override at the field level).
 
-<!-- old anchor added for backwards compatibility -->
-<!-- markdownlint-disable-next-line no-empty-links -->
-
-[](){#strict-mode-in-method-calls}
-
 ## As a validation parameter
 
-Strict mode can be enaled on a per-validation-call basis, when using the [validation methods](./models.md#validating-data)
-on [Pydantic models](./models.md) and [type adapters](./type_adapter.md).
+Strict mode can be enabled on a per-validation-call basis, when using the
+[validation methods](./models.md#validating-data) on [Pydantic models](./models.md) and
+[type adapters](./type_adapter.md).
 
 ```python
 from datetime import date
@@ -84,11 +83,6 @@ TypeAdapter(date).validate_json('"2000-01-01"', strict=True)  # (1)!
 ```
 
 1. As mentioned, strict mode is looser when validating from JSON.
-
-<!-- old anchor added for backwards compatibility -->
-<!-- markdownlint-disable-next-line no-empty-links -->
-
-[](){#strict-mode-with-field}
 
 ## At the field level
 
@@ -124,20 +118,16 @@ except ValidationError as e:
 1. The strict constraint can also be applied using the [annotated pattern](./fields.md#the-annotated-pattern):
    `Annotated[int, u.Field(strict=True)]`
 
-<!-- old anchor added for backwards compatibility -->
-<!-- markdownlint-disable-next-line no-empty-links -->
-
-[](){#strict-mode-with-annotated-strict}
-
 ### Using the `Strict()` metadata class
 
-??? api "API Documentation"
-[`pydantic.types.Strict`][pydantic.types.Strict]<br>
+> **API Documentation:** [`pydantic.types.Strict`][pydantic.types.Strict]
 
-As an alternative to the [`u.Field()`][pydantic.u.Field] function, Pydantic provides the [`Strict`][pydantic.types.Strict]
+As an alternative to the [`u.Field()`][pydantic.u.Field] function, Pydantic provides the
+[`Strict`][pydantic.types.Strict]
 metadata class, meant to be used with the [annotated pattern](./fields.md#the-annotated-pattern). It also provides
 convenience aliases for the most common types (namely [`StrictBool`][pydantic.types.StrictBool],
-[`StrictInt`][pydantic.types.StrictInt], [`StrictFloat`][pydantic.types.StrictFloat], [`StrictStr`][pydantic.types.StrictStr]
+[`StrictInt`][pydantic.types.StrictInt], [`StrictFloat`][pydantic.types.StrictFloat],
+[`StrictStr`][pydantic.types.StrictStr]
 and [`StrictBytes`][pydantic.types.StrictBytes]).
 
 ```python
@@ -153,11 +143,6 @@ class User(BaseModel):
 ```
 
 1. Equivalent to `Annotated[int, Strict()]`.
-
-<!-- old anchor added for backwards compatibility -->
-<!-- markdownlint-disable-next-line no-empty-links -->
-
-[](){#strict-mode-with-configdict}
 
 ## As a configuration value
 

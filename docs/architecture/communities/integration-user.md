@@ -11,7 +11,7 @@ Community of 25 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | mock_external_service | Function | flext-core/tests/conftest.py | 40-42 |
 | TestsFlextUserServiceEntity | Class | flext-core/tests/integration/service_fixtures.py | 22-28 |
 | TestsFlextUserQueryService | Class | flext-core/tests/integration/service_fixtures.py | 31-73 |
