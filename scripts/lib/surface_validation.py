@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import sys
 from typing import TYPE_CHECKING
 
 from flext_tests import m, t, u
@@ -26,16 +25,17 @@ class SurfaceValidator:
             *SurfaceProbeRunner.run(SurfaceProbeRunner.build(registry), dispatch_main),
         ]
         if failures:
-            print("surface validation failed:", file=sys.stderr)
             for failure in failures:
-                print(f"  - {failure}", file=sys.stderr)
+                u.Cli.emit_raw(f"ERRO: {failure}\n")
             return 1
         command_count = sum(
             len(SurfaceValidator.registry_commands(registry, verb))
             for verb in u.Tests.make_registry_verbs(registry)
         )
         verb_count = len(u.Tests.make_registry_verbs(registry))
-        print(f"surface validation ok: {verb_count} verbs, {command_count} WHATs")
+        u.Cli.emit_raw(
+            f"Surface validated: {verb_count} verbs, {command_count} commands\n"
+        )
         return 0
 
     @staticmethod
@@ -56,18 +56,17 @@ class SurfaceValidator:
 
     @staticmethod
     def validate_command(
-        command: m.Tests.MakeCommand,
-        targets: frozenset[str],
+        command: m.Tests.MakeCommand, targets: frozenset[str]
     ) -> t.StrSequence:
         """Validate one command's static contract."""
         failures: list[str] = []
         if command.target and command.target not in targets:
             failures.append(
-                f"{command.verb} WHAT={command.what}: target ausente {command.target}",
+                f"{command.verb} WHAT={command.what}: target ausente {command.target}"
             )
         if not command.example.startswith(f"make {command.verb} "):
             failures.append(
-                f"{command.verb} WHAT={command.what}: exemplo nao usa make canonico",
+                f"{command.verb} WHAT={command.what}: exemplo nao usa make canonico"
             )
         return tuple(failures)
 
@@ -96,8 +95,7 @@ class SurfaceValidator:
 
     @staticmethod
     def registry_commands(
-        registry: m.Tests.MakeRegistry,
-        verb: str,
+        registry: m.Tests.MakeRegistry, verb: str
     ) -> t.MappingKV[str, m.Tests.MakeCommand]:
         """Return registry commands through the canonical flext-tests facade."""
         result = u.Tests.make_registry_commands(registry, verb)

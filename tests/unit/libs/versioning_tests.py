@@ -1,3 +1,5 @@
+"""FLEXT infra test helpers for versioning_tests."""
+
 from __future__ import annotations
 
 import importlib
@@ -7,8 +9,8 @@ from typing import TYPE_CHECKING
 
 from flext_tests import tm
 
-from ...infra.constants import c
-from ...infra.utilities import u
+from tests.infra.constants import c
+from tests.infra.utilities import u
 
 if TYPE_CHECKING:
     import pytest
@@ -57,8 +59,7 @@ flext-core = "0.11.0-dev"
         tm.that(updated, has='flext-core = "0.11.0-dev"')
 
     def test_current_workspace_version_reads_project_version(
-        self,
-        tmp_path: Path,
+        self, tmp_path: Path
     ) -> None:
         mod = u.Workspace.Tests.load_module(
             "libs_versioning_current",
@@ -77,8 +78,7 @@ version = "0.10.0-dev"
         tm.that(mod.current_workspace_version(tmp_path), eq="0.10.0")
 
     def test_libs_package_exports_versioning_helpers(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
+        self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         root = Path(__file__).resolve().parents[3]
         for relative_path in (

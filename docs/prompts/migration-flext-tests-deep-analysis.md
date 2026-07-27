@@ -2,7 +2,8 @@
 
 ## Objetivo
 
-Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os projetos** do ecossistema FLEXT para identificar e corrigir **TODOS os usos de funções de `flext_tests` que estão fora do padrão atual e não suportadas**.
+Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os projetos** do ecossistema FLEXT para
+identificar e corrigir **TODOS os usos de funções de `flext_tests` que estão fora do padrão atual e não suportadas**.
 
 ## Escopo
 
@@ -342,7 +343,7 @@ Para cada uso encontrado:
 
    ```bash
    ruff check .
-   mypy .
+   MYPY_MEMORY_LIMIT_MB=6144 MYPY_TIMEOUT_SECONDS=600 make check CHECK_GATES=mypy
    ```
 
 4. **Verificação final:**
@@ -480,7 +481,7 @@ def test_database_connection():
 
 **Estrutura Centralizada em `~/flext`:**
 
-```
+```text
 ~/flext/
 ├── conftest.py          # ÚNICO conftest.py do ecossistema
 ├── constants.py         # Estende flext_tests.constants
@@ -509,11 +510,11 @@ def test_database_connection():
 
    ```python
    # Em cada projeto, criar namespaces fáceis:
-   from flext.constants import c
-   from flext.models import m
-   from flext.typings import t
-   from flext.protocols import p
-   from flext.utilities import u
+   from flext import c
+   from flext import m
+   from flext import t
+   from flext import p
+   from flext import u
    ```
 
 3. **Domínios de teste por projeto:**
@@ -576,7 +577,8 @@ class FlextModels(TestsFlextModels):
 
 ```bash
 # Buscar classes base duplicadas
-find . -name "constants.py" -o -name "models.py" -o -name "typings.py" -o -name "protocols.py" -o -name "utilities.py" | grep -v "~/flext"
+find . -name "constants.py" -o -name "models.py" -o -name "typings.py" \
+  -o -name "protocols.py" -o -name "utilities.py" | grep -v "~/flext"
 find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
 ```
 
@@ -584,7 +586,7 @@ find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
 
 **Estrutura obrigatória:**
 
-```
+```text
 <projeto>/
 ├── tests/
 │   ├── conftest.py          # ❌ NÃO PERMITIDO (usar ~/flext/conftest.py)
@@ -680,7 +682,7 @@ class TestsLdapSync:
 
 4. **Estrutura de diretórios:**
 
-   ```
+   ```text
    tests/unit/
    ├── test_user.py              # TestsLdapUser
    ├── test_config.py            # TestsLdapSettings

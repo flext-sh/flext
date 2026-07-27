@@ -22,10 +22,10 @@ class ValidationRules(m.BaseModel):
     """
 
     required_permissions: t.StrSequence = u.Field(
-        description="List of permissions that must be present in valid ACL entries",
+        description="List of permissions that must be present in valid ACL entries"
     )
     forbidden_combinations: t.SequenceOf[t.StrSequence] = u.Field(
-        description="Permission combinations that are not allowed together",
+        description="Permission combinations that are not allowed together"
     )
 
 

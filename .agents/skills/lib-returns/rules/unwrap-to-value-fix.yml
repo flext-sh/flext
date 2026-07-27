@@ -1,5 +1,0 @@
-id: unwrap-to-value-fix
-language: python
-rule:
-  pattern: "$RESULT.unwrap()"
-fix: "$RESULT.value_or(None)"

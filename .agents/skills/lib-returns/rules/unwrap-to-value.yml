@@ -1,6 +1,0 @@
-id: ban-unwrap-call
-language: python
-rule:
-  pattern: $RESULT.unwrap()
-message: ".unwrap() is deprecated — use .value instead"
-severity: warning

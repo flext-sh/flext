@@ -15,28 +15,12 @@ if _t.TYPE_CHECKING:
     )
     from examples.complete_workflow_example import CompleteWorkflowExample
     from flext import c, d, e, h, m, p, r, t, u, x
-_LAZY_IMPORTS = build_lazy_import_map(
-    {
-        ".acl_processing_example": ("AclProcessingExample",),
-        ".advanced_processing_example": (
-            "AdvancedProcessingExample",
-            "PipelineStageData",
-        ),
-        ".complete_workflow_example": ("CompleteWorkflowExample",),
-        "flext": (
-            "c",
-            "d",
-            "e",
-            "h",
-            "m",
-            "p",
-            "r",
-            "t",
-            "u",
-            "x",
-        ),
-    },
-)
+_LAZY_IMPORTS = build_lazy_import_map({
+    ".acl_processing_example": ("AclProcessingExample",),
+    ".advanced_processing_example": ("AdvancedProcessingExample", "PipelineStageData"),
+    ".complete_workflow_example": ("CompleteWorkflowExample",),
+    "flext": ("c", "d", "e", "h", "m", "p", "r", "t", "u", "x"),
+})
 
 
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)

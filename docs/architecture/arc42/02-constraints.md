@@ -141,7 +141,7 @@
 
 #### Authentication and Authorization
 
-- **Multi-Factor Authentication**: Required for all REDACTED_LDAP_BIND_PASSWORDistrative access
+- **Multi-Factor Authentication**: Required for all administrative access
   - **Constraint**: Must integrate with enterprise MFA systems
   - **Impact**: Requires additional infrastructure and complexity
 

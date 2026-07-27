@@ -11,7 +11,7 @@ from flext_core import c, d, e, h, m, p, r, s, t, u, x
 ```
 
 | Alias | Purpose |
-|-------|---------|
+| ------- | --------- |
 | `c` | constants / constants namespace |
 | `d` | decorators |
 | `e` | errors / exceptions |
@@ -24,7 +24,8 @@ from flext_core import c, d, e, h, m, p, r, s, t, u, x
 | `u` | utilities |
 | `x` | mixins / execution |
 
-**Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`, `FlextCliSettings`, `FlextTestsSettings`) have no short alias.
+**Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`, `FlextCliSettings`,
+`FlextTestsSettings`) have no short alias.
 
 ## Result flow
 

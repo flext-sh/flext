@@ -11,12 +11,10 @@ from flext_core.lazy import (
 
 _LAZY_IMPORTS = merge_lazy_imports(
     (".libs",),
-    build_lazy_import_map(
-        {
-            ".docker_quality_mock_tests": ("TestDockerQualityDockerfiles",),
-            ".libs.versioning_tests": ("TestVersioning",),
-        },
-    ),
+    build_lazy_import_map({
+        ".docker_quality_mock_tests": ("TestDockerQualityDockerfiles",),
+        ".libs.versioning_tests": ("TestVersioning",),
+    }),
     exclude_names=(
         "cleanup_submodule_namespace",
         "install_lazy_exports",

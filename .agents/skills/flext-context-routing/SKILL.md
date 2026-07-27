@@ -1,45 +1,25 @@
 ---
 name: flext-context-routing
-description: 'Use this skill to use when selecting tools, prompts, MCP servers, and
-  skills automatically by project/session context. Triggers on requests about automation,
-  tool choice, simplification, deduplication, safe execution, context detection, and
-  cross-project routing. DO NOT USE FOR: questions unrelated to flext-context-routing
-  creating projects or architecture from scratch'
-license: MIT
-metadata:
-  version: 1.0.0
+description: Route FLEXT Python repository and workspace tasks after flext-core dependency detection. Use for FLEXT workspace detection, local skill selection, MRO facade work, governance, imports, or shared test fixtures.
 ---
+
 # FLEXT Context Routing
 
-**UTILITY SKILL**
+Read this skill first. It is the sole always-loaded local FLEXT surface and
+selects only the on-demand law needed for the current task.
 
-## USE FOR
+## Routing
 
-- Requests about flext context routing.
-- Workflows described in this skill.
-- Operator tasks within this scope.
+- Load `flext-law` for FLEXT implementation, review, migration, refactoring,
+  validation, generated surfaces, or architecture work.
+- Load `flext-inviolable-rules` for governance, Beads coordination, shared
+  worktree safety, completion gates, evidence, handoff, commit, or closure.
+- Load both when FLEXT-law work also changes repository state.
 
-## DO NOT USE FOR
+## Workspace Rules
 
-- questions unrelated to flext-context-routing.
-- creating projects or architecture from scratch.
-
-## Workflow
-
-1. Identify touched paths and task intent.
-2. Detect project governance and stack markers.
-3. Check tool readiness: correct Scope root, `scope status`, Serena project/config availability, and configured MCP relevance.
-
-## Critical rules
-
-- Prefer canonical sources.
-- Require evidence.
-
-## Example
-
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- Preserve facade direction `c -> t -> p -> m -> u`.
+- Reverse imports are declaration-only and must remain under `TYPE_CHECKING`.
+- `flext-tests` owns generic fixtures; do not create package-local duplicates.
+- Do not load a local skill that is absent from `surfaces.on_demand` in
+  `.agents/provider.toml`.

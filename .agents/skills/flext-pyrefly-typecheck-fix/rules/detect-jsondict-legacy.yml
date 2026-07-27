@@ -1,4 +1,0 @@
-id: detect-jsondict-legacy
-language: python
-rule:
-  pattern: t.JsonMapping

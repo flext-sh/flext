@@ -28,8 +28,8 @@ in its default path.
 
 Canonical implementations in this repository:
 
-- Validator orchestrator: `scripts/core/skill_validate.py`
-- Fix orchestrator: `scripts/core/skill_fix.py`
+- Skill validator: `flext-infra validate skill-validate --skill <name>` (canonical CLI, one invocation per skill)
+- Enforcement fixer: `flext-infra codegen fix-enforcement` (dry-run by default; mutates only with `--apply`)
 
 ---
 
@@ -141,11 +141,11 @@ All artifacts follow: `<skill>--<kind>--<slug>.<ext>`
 
 ### Report Locations
 
-| Type          | Path pattern                                                                                         | Example                                                      |
-| ------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Latest report | `.reports/validate/<gate>/<project>.txt` (workspace) or `.agents/skills/<skill>/report.json` (skill) | `.reports/validate/type-check/flext-core.txt`                |
-| Baseline      | `.agents/skills/<skill>/baseline.json`                                                               | `.agents/skills/flext-strict-typing/baseline.json`           |
-| Fix report    | `.agents/skills/<skill>/fix-report.json`                                                             | `.agents/skills/flext-pyrefly-typecheck-fix/fix-report.json` |
+|Type|Path pattern|Example|
+|-------------|----------------------------------------------------------------------------------------------------|------------------------------------------------------------|
+|Latest report|`.reports/validate/<gate>/<project>.txt` (workspace) or `~/.agents/skills/<skill>/report.json` (skill)|`.reports/validate/type-check/flext-core.txt`|
+|Baseline|`~/.agents/skills/<skill>/baseline.json`|`~/.agents/skills/flext-strict-typing/baseline.json`|
+|Fix report|`~/.agents/skills/<skill>/fix-report.json`|`~/.agents/skills/flext-pyrefly-typecheck-fix/fix-report.json`|
 
 Do not write validation artifacts to `.sisyphus/`.
 
@@ -153,7 +153,7 @@ Do not write validation artifacts to `.sisyphus/`.
 
 ## Skill Rule Contract
 
-- Skill rules are loaded only from `.agents/skills/*/rules.yml`.
+- Skill rules are loaded only from the active `~/.agents/skills/*/rules.yml`.
 - Rule fix metadata must use flat keys only: `fix_auto`, `fix_type`, `fix_file`, `fix_script`, `fix_instruction`, `fix_description`.
 - Nested `fix:` metadata in `rules.yml` is invalid.
 - If `fix_auto: true`, the fix mechanism must be executable and target files must exist.
@@ -220,14 +220,14 @@ Every gate script must include these elements in its first 10 lines:
 
 ```bash
 #!/usr/bin/env bash
-# Owner-Skill: .agents/skills/<skill-name>/SKILL.md
+# Owner-Skill: ~/.agents/skills/<skill-name>/SKILL.md
 ```
 
 or for Python:
 
 ```python
 #!/usr/bin/env python3
-# Owner-Skill: .agents/skills/<skill-name>/SKILL.md
+# Owner-Skill: ~/.agents/skills/<skill-name>/SKILL.md
 """One-line description of what this gate checks."""
 ```
 
@@ -235,7 +235,7 @@ or for Python:
 
 ## Conformance Checking
 
-The contract validator (`scripts/core/check_script_gate_contract.py`) verifies:
+The contract validator (`flext-infra validate skill-validate --skill <name>`) verifies:
 
 1. **Owner-Skill marker** present in first 10 lines.
 2. **Shebang line** present (`#!/usr/bin/env bash` or `#!/usr/bin/env python3`).
@@ -253,11 +253,15 @@ exempt from gate contract validation but must still have Owner-Skill markers.
 
 ### Validator (python — skill-based)
 
-- `python3 scripts/core/skill_validate.py --skill flext-strict-typing` — discovers rules from `.agents/skills/flext-strict-typing/rules.yml`; accepts `--mode baseline|strict`; exits 0/1/2/3
-- `python3 scripts/core/skill_validate.py --skill lib-pydantic-v2` — same contract
-- `python3 scripts/core/skill_validate.py --all` — runs all discovered skills
+- `flext-infra validate skill-validate --skill flext-strict-typing` — discovers
+  rules from the active `~/.agents` provider; accepts `--mode baseline|strict`;
+  exits 0/1
+- `flext-infra validate skill-validate --skill flext-pydantic-models --mode strict`
+  — same contract
+- one invocation per skill (see the Makefile `validate` targets); the retired
+  `scripts/core/skill_validate.py --all` flag form no longer exists
 
 ### Validator (python — standalone)
 
-- `.agents/skills/scripts-infra/validate_ownership.py --root .` — exits 0/1; produces JSON report
-- `.agents/skills/scripts-infra/validate_artifact_naming.py --root .` — exits 0/1; produces JSON report
+- `flext-infra validate skill-validate --skill <name>` — validates owner and
+  artifact metadata through the canonical provider; exits 0/1

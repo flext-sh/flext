@@ -1,58 +1,88 @@
 # FLEXT gRPC
 
-FLEXT gRPC (v0.9.0) is the gRPC communication foundation for the FLEXT platform. It abstracts grpcio/protobuf concerns, delivers r-based services, and enforces Clean Architecture across server/client lifecycles while the team ramps coverage toward 90%.
+FLEXT gRPC is the gRPC communication foundation of the FLEXT platform. It wraps grpcio/protobuf concerns behind typed
+Pydantic models and the `r[T]` contract, and exposes a single `FlextGrpc` facade (`grpc` alias) for building servers,
+clients, channels, and services with validated inputs. Package description: "FLEXT gRPC — High-Performance gRPC
+Services".
 
-## Status & metrics
+## Status & health
 
-- **Version**: 0.9.0 (Development; core functionality operational)
-- **Python**: 3.13+
-- **Tests**: 18 018 lines in multiple suites; the README reports 28 failing tests that block full validation.
-- **Coverage**: 39% actual (target 90%); coverage gates flagged in `pyproject.toml` and README.
-- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) remains blocked until coverage/test issues are resolved; `make lint`, `make type-check`, `make security`, `make test`, `poetry run pytest` commands currently pass individually.
-- **Type discipline**: MyPy strict, zero `Any`/`cast`/`TYPE_CHECKING`; every public API returns `r[T]` with consistent error handling.
+- **Version**: 0.12.0-dev (current development cycle)
+- **Python**: 3.13+ only
+- **Quality gate**: `make check PROJECT=flext-grpc` (Ruff + type checks) and `make val` for the full pipeline
+- **Depends on**: `flext-core` (facades, result contract, container)
+
+### Quality signals
+
+- grpcio/protobuf imports are contained behind the facade and utilities; consumers work with typed models only
+- Strict typing per workspace policy: no `Any`, no `cast` shortcuts
+- Every public operation returns `r[T]` with consistent error handling
+- Facets `c`/`t`/`p`/`m` stay declaration-only (root `AGENTS.md` U17)
 
 ## Quick start
 
 ```bash
-git clone https://github.com/flext-sh/flext-grpc.git
-cd flext-grpc
-poetry install
-make setup
-make check       # lint + type
-make val    # runs lint, type, security, tests, coverage (currently blocked)
+pip install flext-grpc
 ```
 
-```bash
-poetry run pytest tests/unit/test_config.py::TestFlextGrpcSettings::test_create_valid_config_with_defaults -v
-poetry run pytest tests/unit/test_config.py --cov=src/flext_grpc --cov-report=term
-poetry run mypy src/
-poetry run ruff check src/
+```python
+from flext_grpc import grpc
+
+setup = grpc.create_complete_setup(
+    host="127.0.0.1", port=50051, service_name="Greeter", methods=["SayHello"]
+)
+assert setup.is_success
+
+server = setup.value.server
+client = setup.value.client
 ```
 
-## Architecture & integration
+The facade also exposes granular builders — `create_server`, `create_client`, `create_channel`, `create_service` — plus
+`parse_address` and `validate_target` helpers; all return `r[T]`.
 
-- **Core layers**: Tier-0 (`constants.py`, `typings.py`, `protocols.py`), Tier-1 (`models`, `utilities`), Tier-2 (`services`, `platform`, `settings`), Tier-3 (`api.py`, `service_impls`, `streaming`). Each tier only imports lower layers.
-- **Responsibilities**: gRPC abstraction (unary/bidirectional streams), service management (FlextGrpcService, FlextGrpcPlatform), client/server lifecycle, configuration (FlextGrpcSettings), instrumentation (FlextLogger, FlextObservability).
-- **Integration**: Depends on `flext-core` for r/FlextContainer/FlextLogger, plugs into `flext-cli` for CLI flows, aligned with `flext-observability` for telemetry, and provides gRPC wiring for other FLEXT services.
-- **Code status**: 4,923 source lines + 18 018 test lines; core imports (protobuf) verified after the latest fixes.
+## Architecture & modules
 
-## Quality & operations
+`src/flext_grpc/` follows the FLEXT tiered layout:
 
-- **Validation commands**: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make val` (currently blocked by coverage/test gaps).
-- **Testing**: 28 failing tests noted in README, 39% coverage; scope includes single-file settings tests, service/test_config, integration stubs.
-- **Security**: Bandit + pip-audit invoked through `make security`; zero tolerance for SQL injection or dynamic code.
-- **Next steps**: raise coverage from 39% → 90%, fix failing tests, verify protobuf integrations, and mature TLS/auth features.
+- **Foundation**: `constants.py`, `typings.py`, `protocols.py` — network/service defaults, type aliases, and gRPC
+  protocols; `errors.py` carries the error taxonomy.
+- **Domain**: `models.py` — Pydantic v2 models for servers, clients, channels, services, and the `CompleteSetup`
+  aggregate.
+- **Services**: `services/` — `api_runtime.py` (facade runtime behavior), `server.py`, `client.py`,
+  `connection_pool.py`, `stream.py`, `metrics.py`.
+- **Proto**: `proto/stubs.py` — protobuf stub integration.
+- **Entry point**: `api.py` defines `FlextGrpc` as the MRO composition of `FlextGrpcApiRuntime`, `FlextGrpcServer`,
+  `FlextGrpcClient`, `FlextGrpcConnectionPool`, `FlextGrpcStream`, and `FlextGrpcMetrics`; `grpc =
+  FlextGrpc.fetch_global()` is the shared singleton; `__init__.py` exports the facade plus the standard aliases and
+  `config`/`settings`.
 
-## Resources & references
+### Key architectural patterns
 
-- [Project README](../../flext-grpc/README.md)
-- [Project AGENTS.md](../../flext-grpc/AGENTS.md) for zero tolerance (r-only, 75%+ coverage, no `Any`)
-- `docs/` (getting started, architecture, API reference, configuration, integration guides)
-- `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for QA evidence
-- Related projects: `flext-core`, `flext-cli`, `flext-observability`, `flext-api`, `flext-grpc` clients/servers across FLEXT services
+- **Functional composition**: `create_complete_setup` chains `create_server` → `create_client` → `create_service`,
+  short-circuiting on the first failed result.
+- **Typed boundaries**: raw grpcio objects never cross the public surface; validated `m.Grpc.*` models do.
+- **MRO facade**: server/client/pool/stream/metrics capabilities compose into one `FlextGrpc` class — no standalone
+  helpers.
+- **Config/settings SSOT**: host, port, and worker defaults come from `c.Grpc.*` constants and the validated `settings`
+  singleton.
 
-## Support & contributions
+## Testing & quality
+
+- `make check PROJECT=flext-grpc`: Ruff linting plus type checks
+- `make test PROJECT=flext-grpc`: pytest suite (latest evidence under `reports/pytest/`)
+- `make val`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
+- Tests target the public facade and exported models only, per workspace testing law (U16)
+
+## Resources
+
+- [Project README](../../flext-grpc/README.md) (auto-generated module map and operation flow)
+- [Workspace AGENTS.md](../../AGENTS.md) — layering and zero-tolerance rules
+- `flext-grpc/docs/api-reference/` — generated API documentation
+- Related projects: `flext-core`, `flext-cli`, `flext-auth`
+- Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
+
+## Support & issues
 
 - GitHub issues: <https://github.com/flext-sh/flext-grpc/issues>
-- Discussions: <https://github.com/flext-sh/flext-grpc/discussions>
-- Follow `docs/standards/README.md` and the project AGENTS.md before touching code or docs so the portal remains consistent.
+- Follow the workspace `AGENTS.md` before proposing doc or code changes so this page stays aligned with the engineering
+  portal.
