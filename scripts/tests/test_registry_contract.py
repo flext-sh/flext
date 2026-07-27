@@ -7,6 +7,7 @@ They import only the public namespace (`scripts.dispatch.Dispatch`).
 from __future__ import annotations
 
 import os
+import sys
 
 import pytest
 
@@ -124,6 +125,24 @@ def test_main_reports_registry_errors(capsys: pytest.CaptureFixture[str]) -> Non
     """Expose dispatcher contract failures instead of returning an opaque exit 2."""
     assert Dispatch.main(("does-not-exist",)) == 2
     assert "verb 'does-not-exist' unknown" in capsys.readouterr().err
+
+
+def test_run_shell_mirrors_captured_output(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Mirror child stdout and stderr while preserving its exit code."""
+    code = Dispatch.run_shell(
+        (
+            sys.executable,
+            "-c",
+            "import sys; print('child-out'); print('child-err', file=sys.stderr)",
+        )
+    )
+
+    captured = capsys.readouterr()
+    assert code == 0
+    assert "child-out" in captured.out
+    assert "child-err" in captured.err
 
 
 @pytest.mark.parametrize(
