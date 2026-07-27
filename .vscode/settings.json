@@ -38,7 +38,9 @@
     "**/.turbo": true,
     "**/.venv.*": true,
     "**/site": true,
-    "**/target": true
+    "**/target": true,
+    "**/.direnv": true,
+    "**/.hypothesis": true
   },
   "files.watcherExclude": {
     "**/__pycache__/**": true,
@@ -77,7 +79,8 @@
     "**/.trash/**": true,
     "**/.turbo/**": true,
     "**/.venv.*/**": true,
-    "**/target/**": true
+    "**/target/**": true,
+    "**/.direnv/**": true
   },
   "git.autoRepositoryDetection": "subFolders",
   "git.detectSubmodules": true,
@@ -184,7 +187,9 @@
     "**/.turbo": true,
     "**/.venv.*": true,
     "**/site": true,
-    "**/target": true
+    "**/target": true,
+    "**/.direnv": true,
+    "**/.hypothesis": true
   },
   "shellcheck.useWorkspaceRootAsCwd": true,
   "terminal.integrated.env.linux": {

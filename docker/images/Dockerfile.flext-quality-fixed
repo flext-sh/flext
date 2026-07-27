@@ -34,7 +34,7 @@ RUN pip install --no-cache-dir \
 # Run COMPREHENSIVE enterprise validation
 RUN echo "🧪 ENTERPRISE VALIDATION STARTING..." && \
     echo "1️⃣ Testing core imports and functionality..." && \
-    python -c "from flext_quality import FlextQuality, FlextQualityCliService, FlextQualityRulesLoader; quality = FlextQuality.get_instance(); print('✅ Core imports successful'); print(f\"✅ Status keys: {sorted(quality.get_status())}\")" && \
+    python -c "from flext_quality import FlextQuality, FlextQualityCliService, FlextQualityRulesLoader; quality = FlextQuality.get_instance(); u.Cli.print('✅ Core imports successful'); u.Cli.print(f\"✅ Status keys: {sorted(quality.get_status())}\")" && \
     echo "2️⃣ Testing CLI functionality..." && \
     flext-quality status > /dev/null && \
     flext-quality check . > /dev/null && \
@@ -50,7 +50,7 @@ USER appuser
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD python -c "from flext_quality import FlextQuality; FlextQuality.get_instance(); print('✅ Health OK')" || exit 1
+    CMD python -c "from flext_quality import FlextQuality; FlextQuality.get_instance(); u.Cli.print('✅ Health OK')" || exit 1
 
 # Default command with comprehensive functionality demonstration
-CMD ["python", "-c", "print('🚀 FLEXT Quality validated container ready!'); print(''); print('Available commands:'); print('  flext-quality status'); print('  flext-quality check .'); print('  flext-quality validate .'); print('  python -m pytest tests/unit -q')"]
+CMD ["python", "-c", "u.Cli.print('🚀 FLEXT Quality validated container ready!'); u.Cli.print(''); u.Cli.print('Available commands:'); u.Cli.print('  flext-quality status'); u.Cli.print('  flext-quality check .'); u.Cli.print('  flext-quality validate .'); u.Cli.print('  python -m pytest tests/unit -q')"]

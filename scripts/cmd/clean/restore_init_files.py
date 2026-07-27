@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Restore modified __init__.py files across workspace git repositories.
 
 Equivalent to the legacy ``restore_init_files.sh`` helper. Finds every git
@@ -69,7 +68,7 @@ def _validate_imports(workspace_root: Path) -> p.Result[bool]:
         [
             sys.executable,
             "-c",
-            "import flext_infra, flext_core, flext_cli, flext_tests; print('ok')",
+            "import flext_infra, flext_core, flext_cli, flext_tests; u.Cli.emit_raw('ok\\n')",
         ],
         cwd=workspace_root,
         env=env,
@@ -82,6 +81,9 @@ def run() -> int:
         u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd()))
     ).resolve()
     if Dispatch.surface_validation_enabled():
+        u.Cli.emit_raw(
+            "SURFACE-VALIDATE: python -m scripts.cmd.clean.restore_init_files\n"
+        )
         return 0
     if not Dispatch.env_enabled("APPLY"):
         return 0
