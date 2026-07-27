@@ -1,39 +1,42 @@
 # Validation Errors
 
-Pydantic will raise a [`ValidationError`][pydantic_core.ValidationError] whenever it finds an error in the data it's validating.
+Pydantic will raise a [`ValidationError`][pydantic_core.ValidationError] whenever it finds an error in the data it's
+validating.
 
-!!! note
-Validation code should not raise the [`ValidationError`][pydantic_core.ValidationError] itself,
-but rather raise a [`ValueError`][] or a [`AssertionError`][] (or subclass thereof) which will
-be caught and used to populate the final [`ValidationError`][pydantic_core.ValidationError].
+> **Note:** Validation code should not raise the [`ValidationError`][pydantic_core.ValidationError] itself,
+> but rather raise a [`ValueError`][] or a [`AssertionError`][] (or subclass thereof) which will
+> be caught and used to populate the final [`ValidationError`][pydantic_core.ValidationError].
+>
+> For more details, refer to the [dedicated section](../concepts/validators.md#raising-validation-errors)
+> of the validators documentation.
 
-    For more details, refer to the [dedicated section](../concepts/validators.md#raising-validation-errors)
-    of the validators documentation.
-
-That [`ValidationError`][pydantic_core.ValidationError] will contain information about all the errors and how they happened.
+That [`ValidationError`][pydantic_core.ValidationError] will contain information about all the errors and how they
+happened.
 
 You can access these errors in several ways:
 
-| Method                                                       | Description                                                                                    |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| [`errors()`][pydantic_core.ValidationError.errors]           | Returns a list of [`ErrorDetails`][pydantic_core.ErrorDetails] errors found in the input data. |
-| [`error_count()`][pydantic_core.ValidationError.error_count] | Returns the number of errors.                                                                  |
-| [`json()`][pydantic_core.ValidationError.JSON]               | Returns a JSON representation of the list errors.                                              |
-| `str(e)`                                                     | Returns a human-readable representation of the errors.                                         |
+| Method | Description |
+| --- | --- |
+| [`errors()`][pydantic_core.ValidationError.errors] | Returns a list of [`ErrorDetails`][pydantic_core.ErrorDetails] errors found in the input data. |
+| [`error_count()`][pydantic_core.ValidationError.error_count] | Returns the number of errors. |
+| [`json()`][pydantic_core.ValidationError.JSON] | Returns a JSON representation of the list errors. |
+| `str(e)` | Returns a human-readable representation of the errors. |
 
 The [`ErrorDetails`][pydantic_core.ErrorDetails] t.JsonValue is a dictionary. It contains the following:
 
-| Property                                    | Description                                                                                  |
-| ------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [`ctx`][pydantic_core.ErrorDetails.ctx]     | An optional t.JsonValue which contains values required to render the error message. |
-| [`input`][pydantic_core.ErrorDetails.input] | The input provided for validation.                                                           |
-| [`loc`][pydantic_core.ErrorDetails.loc]     | The error's location as a list.                                                              |
-| [`msg`][pydantic_core.ErrorDetails.msg]     | A human-readable explanation of the error.                                                   |
-| [`type`][pydantic_core.ErrorDetails.type]   | A computer-readable identifier of the error type.                                            |
-| [`url`][pydantic_core.ErrorDetails.url]     | The documentation URL giving information about the error.                                    |
+| Property | Description |
+| --- | --- |
+| [`ctx`][pydantic_core.ErrorDetails.ctx] | An optional t.JsonValue which contains values required to render the error message. |
+| [`input`][pydantic_core.ErrorDetails.input] | The input provided for validation. |
+| [`loc`][pydantic_core.ErrorDetails.loc] | The error's location as a list. |
+| [`msg`][pydantic_core.ErrorDetails.msg] | A human-readable explanation of the error. |
+| [`type`][pydantic_core.ErrorDetails.type] | A computer-readable identifier of the error type. |
+| [`url`][pydantic_core.ErrorDetails.url] | The documentation URL giving information about the error. |
 
-The first item in the [`loc`][pydantic_core.ErrorDetails.loc] list will be the field where the error occurred, and if the field is a
-[sub-model](../concepts/models.md#nested-models), subsequent items will be present to indicate the nested location of the error.
+The first item in the [`loc`][pydantic_core.ErrorDetails.loc] list will be the field where the error occurred, and if
+the field is a
+[sub-model](../concepts/models.md#nested-models), subsequent items will be present to indicate the nested location of
+the error.
 
 As a demonstration:
 
@@ -71,7 +74,7 @@ data = {
 try:
     Model(**data)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     5 validation errors for Model
     is_required
@@ -89,7 +92,7 @@ except ValidationError as e:
 try:
     Model(**data)
 except ValidationError as e:
-    print(e.errors())
+    u.Cli.print(e.errors())
     """
     [
         {
@@ -182,7 +185,7 @@ try:
     Model(a="wrong", b="ftp://example.com")
 except ValidationError as e:
     errors = convert_errors(e, CUSTOM_MESSAGES)
-    print(errors)
+    u.Cli.print(errors)
     """
     [
         {
@@ -251,7 +254,7 @@ data = {"items": [{"key": "foo", "value": "bar"}, {"key": "baz"}]}
 try:
     TestModel(data)
 except ValidationError as e:
-    print(e.errors())  # (1)!
+    u.Cli.print(e.errors())  # (1)!
     """
     [
         {
@@ -264,7 +267,7 @@ except ValidationError as e:
     ]
     """
     pretty_errors = convert_errors(e)
-    print(pretty_errors)  # (2)!
+    u.Cli.print(pretty_errors)  # (2)!
     """
     [
         {

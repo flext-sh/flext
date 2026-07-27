@@ -22,17 +22,17 @@ def repeat(s: str, count: int, *, separator: bytes = b"") -> bytes:
 
 
 a = repeat("hello", 3)
-print(a)
+u.Cli.print(a)
 # > b'hellohellohello'
 
 b = repeat("x", "4", separator=b" ")
-print(b)
+u.Cli.print(b)
 # > b'x x x x'
 
 try:
     c = repeat("hello", "wrong")
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for repeat
     1
@@ -42,8 +42,10 @@ except ValidationError as exc:
 
 ## Parameter types
 
-Parameter types are inferred from type annotations on the function, or as [`Any`][typing.Any] if not annotated. All types listed in [types](types.md) can be validated, including Pydantic models and [custom types](types.md#custom-types).
-As with the rest of Pydantic, types are by default coerced by the decorator before they're passed to the actual function:
+Parameter types are inferred from type annotations on the function, or as [`Any`][typing.Any] if not annotated. All
+types listed in [types](types.md) can be validated, including Pydantic models and [custom types](types.md#custom-types).
+As with the rest of Pydantic, types are by default coerced by the decorator before they're passed to the actual
+function:
 
 ```python
 from datetime import date
@@ -67,7 +69,8 @@ greater_than(d1, d2, include_equal=True)
 1. Because `include_equal` has no type annotation, it will be inferred as [`Any`][typing.Any].
 2. Although `d1` is a string, it will be converted to a [`date`][datetime.date] t.JsonValue.
 
-Type coercion like this can be extremely helpful, but also confusing or not desired (see [model data conversion](models.md#data-conversion)). [Strict mode](strict_mode.md)
+Type coercion like this can be extremely helpful, but also confusing or not desired (see [model data
+conversion](models.md#data-conversion)). [Strict mode](strict_mode.md)
 can be enabled by using a [custom configuration](#custom-configuration).
 
 !!! note "Validating the return value"
@@ -87,6 +90,7 @@ using all possible parameter configurations and all possible combinations of the
 
 ??? example
 
+<!-- markdownlint-disable-next-line code-block-style -->
     ```python
     from pydantic import u.validate_call
 
@@ -96,7 +100,7 @@ using all possible parameter configurations and all possible combinations of the
         return f"a={a} b={b}"
 
 
-    print(pos_or_kw(1, b=3))
+    u.Cli.print(pos_or_kw(1, b=3))
     # > a=1 b=3
 
 
@@ -105,9 +109,9 @@ using all possible parameter configurations and all possible combinations of the
         return f"a={a} b={b}"
 
 
-    print(kw_only(a=1))
+    u.Cli.print(kw_only(a=1))
     # > a=1 b=2
-    print(kw_only(a=1, b=3))
+    u.Cli.print(kw_only(a=1, b=3))
     # > a=1 b=3
 
 
@@ -116,7 +120,7 @@ using all possible parameter configurations and all possible combinations of the
         return f"a={a} b={b}"
 
 
-    print(pos_only(1))
+    u.Cli.print(pos_only(1))
     # > a=1 b=2
 
 
@@ -125,9 +129,9 @@ using all possible parameter configurations and all possible combinations of the
         return str(args)
 
 
-    print(var_args(1))
+    u.Cli.print(var_args(1))
     # > (1,)
-    print(var_args(1, 2, 3))
+    u.Cli.print(var_args(1, 2, 3))
     # > (1, 2, 3)
 
 
@@ -136,9 +140,9 @@ using all possible parameter configurations and all possible combinations of the
         return str(kwargs)
 
 
-    print(var_kwargs(a=1))
+    u.Cli.print(var_kwargs(a=1))
     # > {'a': 1}
-    print(var_kwargs(a=1, b=2))
+    u.Cli.print(var_kwargs(a=1, b=2))
     # > {'a': 1, 'b': 2}
 
 
@@ -155,9 +159,9 @@ using all possible parameter configurations and all possible combinations of the
         return f"a={a} b={b} c={c} d={d} e={e} f={f}"
 
 
-    print(armageddon(1, 2, d=3))
+    u.Cli.print(armageddon(1, 2, d=3))
     # > a=1 b=2 c=() d=3 e=None f={}
-    print(armageddon(1, 2, 3, 4, 5, 6, d=8, e=9, f=10, spam=11))
+    u.Cli.print(armageddon(1, 2, 3, 4, 5, 6, d=8, e=9, f=10, spam=11))
     # > a=1 b=2 c=(3, 4, 5, 6) d=8 e=9 f={'f': 10, 'spam': 11}
     ```
 
@@ -165,6 +169,7 @@ using all possible parameter configurations and all possible combinations of the
 [`Unpack`][typing.Unpack] and typed dictionaries can be used to annotate the variable
 keyword parameters of a function:
 
+<!-- markdownlint-disable-next-line code-block-style -->
     ```python
     from typing_extensions import TypedDict, Unpack
 
@@ -211,7 +216,7 @@ def how_many(num: Annotated[int, u.Field(gt=10)]):
 try:
     how_many(1)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for how_many
     0
@@ -224,7 +229,7 @@ def return_value(value: str = u.Field(default="default value")):
     return value
 
 
-print(return_value())
+u.Cli.print(return_value())
 # > default value
 ```
 
@@ -247,7 +252,8 @@ how_many(number=42)
 ## Accessing the original function
 
 The original function which was decorated can still be accessed by using the `raw_function` attribute.
-This is useful if in some scenarios you trust your input arguments and want to call the function in the most efficient way (see [notes on performance](#performance) below):
+This is useful if in some scenarios you trust your input arguments and want to call the function in the most efficient
+way (see [notes on performance](#performance) below):
 
 ```python
 from pydantic import u.validate_call
@@ -260,11 +266,11 @@ def repeat(s: str, count: int, *, separator: bytes = b"") -> bytes:
 
 
 a = repeat("hello", 3)
-print(a)
+u.Cli.print(a)
 # > b'hellohellohello'
 
 b = repeat.raw_function("good bye", 2, separator=b", ")
-print(b)
+u.Cli.print(b)
 # > b'good bye, good bye'
 ```
 
@@ -297,12 +303,12 @@ async def get_user_email(user_id: PositiveInt):
 
 async def main():
     email = await get_user_email(123)
-    print(email)
+    u.Cli.print(email)
     # > testing@example.com
     try:
         await get_user_email(-4)
     except ValidationError as exc:
-        print(exc.errors())
+        u.Cli.print(exc.errors())
         """
         [
             {
@@ -324,7 +330,8 @@ asyncio.run(main())
 ## Compatibility with type checkers
 
 As the [`u.validate_call()`][pydantic.u.validate_call] decorator preserves the decorated function's signature,
-it should be compatible with type checkers (such as mypy and pyright). However, due to current limitations in the Python type system,
+it should be compatible with type checkers (such as mypy and pyright). However, due to current limitations in the Python
+type system,
 the [`raw_function`](#accessing-the-original-function) or other attributes won't be recognized and you will
 need to suppress the error using (usually with a `# type: ignore` comment).
 
@@ -353,13 +360,13 @@ def add_foobars(a: Foobar, b: Foobar):
 
 
 c = add_foobars(Foobar("a"), Foobar("b"))
-print(c)
+u.Cli.print(c)
 # > Foobar(a) + Foobar(b)
 
 try:
     add_foobars(1, 2)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for add_foobars
     0
@@ -389,7 +396,7 @@ def validate_foo(a: int, b: int):
 
 
 foo = validate_foo(a=1, b=2)
-print(foo())
+u.Cli.print(foo())
 # > 3
 ```
 

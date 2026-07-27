@@ -1,6 +1,7 @@
 # Architecture Index
 
-This directory contains the canonical architecture baseline for the FLEXT workspace plus the ADR set that records formal platform decisions.
+This directory contains the canonical architecture baseline for the FLEXT workspace plus the ADR set that records formal
+platform decisions.
 
 ## Canonical Documents
 
@@ -11,6 +12,8 @@ This directory contains the canonical architecture baseline for the FLEXT worksp
 
 ## Interpretation Rule
 
-If an older architecture document conflicts with the baseline, the baseline wins until that older document is rewritten or retired.
+If an older architecture document conflicts with the baseline, the baseline wins until that older document is rewritten
+or retired.
 
-Historical architecture files may still exist in this tree, but they are supporting context only. They are not the current platform contract.
+Historical architecture files may still exist in this tree, but they are supporting context only. They are not the
+current platform contract.

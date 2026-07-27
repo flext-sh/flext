@@ -1,3 +1,5 @@
+"""FLEXT infra test helpers for versioning_tests."""
+
 from __future__ import annotations
 
 import importlib
