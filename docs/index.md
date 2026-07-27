@@ -2,7 +2,8 @@
 
 <!-- mro-wkii.17.7 (agent: codex) — route Make and workspace guidance to the conform SSOT. -->
 
-The root portal is intentionally small. It documents the FLEXT workspace itself, not every historical note or every non-FLEXT directory in the repository.
+The root portal is intentionally small. It documents the FLEXT workspace itself, not every historical note or every
+non-FLEXT directory in the repository.
 
 ## Quick Start
 
@@ -49,4 +50,5 @@ Make/codegen ownership.
 
 ## Scope Boundary
 
-The root portal governs only FLEXT packages and shared FLEXT infrastructure. If another internal directory lives in the same repository but is not a FLEXT package, it must be documented in its own local tree and is not part of this portal.
+The root portal governs only FLEXT packages and shared FLEXT infrastructure. If another internal directory lives in the
+same repository but is not a FLEXT package, it must be documented in its own local tree and is not part of this portal.

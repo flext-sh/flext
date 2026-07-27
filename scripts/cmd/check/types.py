@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Run typing supply-chain checks and optional pyrefly gate."""
 # /// flext-command
 # verb = "check"

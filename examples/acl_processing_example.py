@@ -81,6 +81,7 @@ class AclProcessingExample:
             "active_directory": ["ntSecurityDescriptor"],
             "apache_ds": ["accessControlSubentry"],
         }
+        MAX_RECOMMENDED_PERMISSIONS: ClassVar[int] = 10
 
     @staticmethod
     def _parse_acl_permissions(acl_value: str) -> MutableSequence[str]:
@@ -203,7 +204,10 @@ class AclProcessingExample:
             and AclProcessingExample.Permission.UNKNOWN.value in permissions
         ):
             violations.append("Unknown permissions not allowed in strict mode")
-        if len(permissions) > 10:
+        if (
+            len(permissions)
+            > AclProcessingExample.Constants.MAX_RECOMMENDED_PERMISSIONS
+        ):
             warnings.append(
                 "Excessive permissions - consider principle of least privilege"
             )

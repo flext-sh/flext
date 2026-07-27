@@ -10,25 +10,23 @@
     - [4. [Class Diagrams](./class-diagrams/)](#4-class-diagramsclass-diagrams)
     - [5. [Deployment Diagrams](./deployment-diagrams/)](#5-deployment-diagramsdeployment-diagrams)
     - [6. [Data Flow Diagrams](./data-flow-diagrams/)](#6-data-flow-diagramsdata-flow-diagrams)
-  - [🎯 FLEXT Architecture Overview](#flext-architecture-overview)
-  - [🏗️ Key Architectural Components](#key-architectural-components)
+  - [🎯 FLEXT Architecture Overview](#-flext-architecture-overview)
+  - [🏗 Key Architectural Components](#-key-architectural-components)
     - [Foundation Layer (flext-core)](#foundation-layer-flext-core)
     - [Application Layer](#application-layer)
     - [Infrastructure Layer](#infrastructure-layer)
     - [Data Integration Layer (Singer Platform)](#data-integration-layer-singer-platform)
     - [Runtime Layer](#runtime-layer)
-  - [📊 Diagram Types](#diagram-types)
+  - [📊 Diagram Types](#-diagram-types)
     - [System Architecture Diagrams](#system-architecture-diagrams)
     - [Component Diagrams](#component-diagrams)
     - [Sequence Diagrams](#sequence-diagrams)
     - [Class Diagrams](#class-diagrams)
     - [Deployment Diagrams](#deployment-diagrams)
     - [Data Flow Diagrams](#data-flow-diagrams)
-  - [🔧 PlantUML Usage](#plantuml-usage)
+  - [🔧 PlantUML Usage](#-plantuml-usage)
     - [Prerequisites](#prerequisites)
     - [Local Installation](#local-installation)
-      - [Install PlantUML](#install-plantuml)
-      - [Generate diagrams](#generate-diagrams)
   - [Online Usage](#online-usage)
   - [VS Code Integration](#vs-code-integration)
   - [📚 Diagram Standards](#-diagram-standards)
@@ -80,7 +78,7 @@ FLEXT is built using modern architectural patterns:
 - **CQRS** and **Event Sourcing** for data processing
 - **Microservices** architecture with Python services
 
-## 🏗️ Key Architectural Components
+## 🏗 Key Architectural Components
 
 ### Foundation Layer (flext-core)
 
