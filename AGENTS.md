@@ -9,7 +9,7 @@
 it but never competes with it. Project law may be stricter; the newest explicit
 operator instruction prevails and lower authority must be reconciled.
 
-## P0 — Tests validate config/settings changes by construction
+### P0 — Tests validate config/settings changes by construction
 
 Tests, golden files, and executable documentation (including markdown examples and
 docstring snippets) must remain valid when config or settings change. They are
@@ -92,7 +92,11 @@ never allowed to hardcode, freeze, or implicitly assume the values that exist to
     anything, then optimize with the project's typed OO/MRO/lazy-import patterns;
     accelerate test selection with impact analysis (e.g. pytest-testmon) and
     parallelism (pytest-xdist) rather than deleting or weakening coverage.
-    See P0 above: tests must not hardcode config-owned values.
+    See P0 above: tests of `config`/`settings` validate contracts and behavior
+    for arbitrary valid values and read expected config-owned values from the
+    same typed SSOT the consumer receives; they never freeze today's configured
+    scalar, identifier, path, endpoint, model, ranking, or default. Goldens may lock
+    structure, never mutable config/settings values.
 16. **Parametrized config, generators, and managed binaries.** config, settings,
     and templates are the sole source of configuration and business rules; the
     correct generator produces every derived surface (never hand-edit a

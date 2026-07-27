@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Validate FLEXT Docker standardization.
 
 Equivalent to the legacy ``docker/validate_docker_standardization.sh`` script.
@@ -31,6 +30,9 @@ from scripts.dispatch import Dispatch
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+EXPECTED_CENTRALIZED_COMPOSE_COUNT = 15
+EXPECTED_CENTRALIZED_DOCKERFILE_COUNT = 20
+
 
 class _DockerStandardizationChecker:
     """Run the Docker standardization checks and report results."""
@@ -57,7 +59,7 @@ class _DockerStandardizationChecker:
 
     def _check_no_outside_files(
         self,
-        name: str,
+        _name: str,
         pattern: str,
         allowed_prefixes: Sequence[str],
         *,
@@ -98,13 +100,13 @@ class _DockerStandardizationChecker:
     def check_centralized_compose_count(self) -> None:
         docker_dir = self.workspace_root / "docker"
         count = len(list(docker_dir.glob("docker-compose*.yml")))
-        if count < 15:
+        if count < EXPECTED_CENTRALIZED_COMPOSE_COUNT:
             self.errors += 1
 
     def check_centralized_dockerfile_count(self) -> None:
         images_dir = self.workspace_root / "docker" / "images"
         count = len(list(images_dir.glob("Dockerfile.*")))
-        if count < 20:
+        if count < EXPECTED_CENTRALIZED_DOCKERFILE_COUNT:
             self.errors += 1
 
     def check_tk_importable(self) -> None:
@@ -165,7 +167,7 @@ class _DockerStandardizationChecker:
             if pattern.search(text):
                 hits.append(p)
         if hits:
-            for p in hits[:5]:
+            for _p in hits[:5]:
                 pass
             self.warnings += 1
 
