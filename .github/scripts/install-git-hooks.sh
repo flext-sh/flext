@@ -28,10 +28,10 @@ set -euo pipefail
 
 VERBOSE="${1:-}"
 WORKSPACE_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-cd "$WORKSPACE_ROOT"
+cd "${WORKSPACE_ROOT}"
 
 _log() {
-	if [[ "$VERBOSE" == "--verbose" ]]; then
+	if [[ "${VERBOSE}" == "--verbose" ]]; then
 		echo "[INFO] $*"
 	fi
 }
@@ -43,14 +43,14 @@ fail() {
 
 command -v bd >/dev/null 2>&1 || fail "bd is not installed; install Beads before provisioning hooks"
 
-_log "Installing Beads git hooks (chained) at $WORKSPACE_ROOT"
+_log "Installing Beads git hooks (chained) at ${WORKSPACE_ROOT}"
 bd hooks install --chain >/dev/null || fail "bd hooks install --chain failed"
 
 hook_path="$(git rev-parse --git-path hooks/prepare-commit-msg)"
-[ -f "$hook_path" ] || fail "prepare-commit-msg hook missing after bd hooks install"
+[ -f "${hook_path}" ] || fail "prepare-commit-msg hook missing after bd hooks install"
 
-_log "Applying FLEXT agent-trailer guard to $hook_path"
-GUARD_TOKEN="BD_ALLOW_AGENT_COMMIT_TRAILERS" python3 - "$hook_path" <<'PY'
+_log "Applying FLEXT agent-trailer guard to ${hook_path}"
+GUARD_TOKEN="BD_ALLOW_AGENT_COMMIT_TRAILERS" python3 - "${hook_path}" <<'PY'
 import os
 import pathlib
 import sys
@@ -92,9 +92,9 @@ lines[insert_at:insert_at] = [guard]
 path.write_text("".join(lines))
 PY
 
-grep -q 'BD_ALLOW_AGENT_COMMIT_TRAILERS' "$hook_path" \
+grep -q 'BD_ALLOW_AGENT_COMMIT_TRAILERS' "${hook_path}" \
 	|| fail "guard token missing after injection"
-grep -q 'bd hooks run prepare-commit-msg' "$hook_path" \
+grep -q 'bd hooks run prepare-commit-msg' "${hook_path}" \
 	|| fail "bd delegation missing; refusing to leave hook without beads integration"
 
 echo "install-git-hooks: prepare-commit-msg guarded (BD_ALLOW_AGENT_COMMIT_TRAILERS opt-in)"

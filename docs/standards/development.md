@@ -1,6 +1,8 @@
 # Development Standards
 
-Quick-reference for daily development in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For automated enforcement details, see `.agents/skills/coding-standards/SKILL.md` and child skills.
+Quick-reference for daily development in the FLEXT monorepo. For the root
+engineering law, see `AGENTS.md`. For automated enforcement details, see
+`.agents/skills/coding-standards/SKILL.md` and child skills.
 
 ## Required file header
 
@@ -13,25 +15,42 @@ from collections.abc import Mapping, Sequence
 
 `ruff` enforces this via `I002`.
 
+## Config and settings are the SSOT (P0)
+
+All configuration and runtime settings come from `from <ns> import config, settings`
+and are consumed through `config.<Ns>.*` and `settings.<Ns>.*`. No code, test, or
+script may embed a value that the SSOT owns.
+
+- Tests must be able to validate any change to config or settings without being
+  rewritten. Expectations come from the config/settings objects, not from
+  hardcoded literals copied from today's files.
+- A test that fails only because a config value changed is a test defect; fix
+  the test to read from the SSOT.
+- This rule applies to every tier: unit, integration, and e2e tests, plus
+  markdown examples and docstring snippets validated by the pytest plugin.
+
+See `docs/standards/testing.md` for the test-side enforcement of this rule.
+
 ## Canonical aliases
 
 Use the facade aliases exposed by `flext_core` and project facades:
 
-| Alias | Purpose |
+|Alias|Purpose|
 |-------|---------|
-| `c` | constants / constants namespace |
-| `d` | decorators |
-| `e` | errors / exceptions |
-| `h` | handlers |
-| `m` | models |
-| `p` | protocols |
-| `r` | result (`FlextResult`) |
-| `s` | service / runtime |
-| `t` | typings |
-| `u` | utilities |
-| `x` | mixins / execution |
+|`c`|constants / constants namespace|
+|`d`|decorators|
+|`e`|errors / exceptions|
+|`h`|handlers|
+|`m`|models|
+|`p`|protocols|
+|`r`|result (`FlextResult`)|
+|`s`|service / runtime|
+|`t`|typings|
+|`u`|utilities|
+|`x`|mixins / execution|
 
-**Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`, `FlextCliSettings`, `FlextTestsSettings`) have no short alias.
+**Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`,
+`FlextCliSettings`, `FlextTestsSettings`) have no short alias.
 
 Facade owner modules that compose an upstream FLEXT facade by MRO use the
 upstream short alias as the base class and then publish the local alias at the
@@ -92,7 +111,8 @@ def load(user_id: int) -> r[m.User]:
 - No wildcard imports.
 - No relative imports.
 - No legacy typing imports (`typing.Dict`, `typing.List`, etc.).
-- No direct imports of abstracted frameworks (pydantic, structlog, typer, returns) in consumer projects; use the project facade.
+- No direct imports of abstracted frameworks (pydantic, structlog, typer, returns)
+  in consumer projects; use the project facade.
 
 Order:
 
@@ -135,7 +155,7 @@ def parse(value: str) -> r[int]:
 
 ## Logging
 
-Use `u.fetch_logger(__name__)`. No `print()` in library code.
+Use `u.fetch_logger(__name__)`. No `u.Cli.print()` in library code.
 
 ```python
 from flext_core import u
@@ -169,18 +189,18 @@ class FlextCliSettings(FlextSettings):
 
 ## Anti-patterns
 
-| Anti-pattern | Fix |
+|Anti-pattern|Fix|
 |--------------|-----|
-| `from typing import Any` | use a concrete type or `t.JsonValue` |
-| `isinstance(x, dict)` | `isinstance(x, Mapping)` |
-| `default_factory=dict` | explicit factory or Pydantic model |
-| `sys.exit()` in library code | raise an exception |
-| `breakpoint()` / `import pdb` | remove before committing |
-| `TODO/FIXME/HACK` comments | resolve or create a bead |
-| `# type: ignore` / `# noqa` | fix root cause |
-| relative imports | absolute imports |
-| wildcard imports | explicit imports |
-| `s` used for settings | `s` is service/runtime; use `FlextSettings` by name |
+|`from typing import Any`|use a concrete type or `t.JsonValue`|
+|`isinstance(x, dict)`|`isinstance(x, Mapping)`|
+|`default_factory=dict`|explicit factory or Pydantic model|
+|`sys.exit()` in library code|raise an exception|
+|`breakpoint()` / `import pdb`|remove before committing|
+|`TODO/FIXME/HACK` comments|resolve or create a bead|
+|`# type: ignore` / `# noqa`|fix root cause|
+|relative imports|absolute imports|
+|wildcard imports|explicit imports|
+|`s` used for settings|`s` is service/runtime; use `FlextSettings` by name|
 
 ## Local validation
 

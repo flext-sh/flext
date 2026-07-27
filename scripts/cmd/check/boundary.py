@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Run the boundary quality gate through the workspace orchestrator."""
 # /// flext-command
 # verb = "check"

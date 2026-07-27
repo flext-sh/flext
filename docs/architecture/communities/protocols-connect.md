@@ -11,7 +11,7 @@ Community of 31 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | TestsFlextApiTransportsCharacterization | Class | flext-api/tests/unit/test_transports_characterization.py | 20-151 |
 | transport | Function | flext-api/tests/unit/test_transports_characterization.py | 24-26 |
 | test_connect_rejects_empty_url | Test | flext-api/tests/unit/test_transports_characterization.py | 28-35 |
@@ -38,7 +38,7 @@ Community of 31 nodes
 | _request_content_body | Function | flext-api/src/flext_api/_protocols/_transports_request.py | 127-144 |
 | _response_model | Function | flext-api/src/flext_api/_protocols/_transports_request.py | 147-154 |
 | FlextWebTransport | Class | flext-api/src/flext_api/_protocols/transports.py | 31-102 |
-| __init__ | Function | flext-api/src/flext_api/_protocols/transports.py | 39-41 |
+| **init** | Function | flext-api/src/flext_api/_protocols/transports.py | 39-41 |
 | connect | Function | flext-api/src/flext_api/_protocols/transports.py | 44-59 |
 | disconnect | Function | flext-api/src/flext_api/_protocols/transports.py | 62-71 |
 | send | Function | flext-api/src/flext_api/_protocols/transports.py | 74-95 |

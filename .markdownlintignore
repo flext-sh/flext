@@ -1,0 +1,29 @@
+# Generated/tooling directories (not project documentation)
+.omo/**
+.beads/**
+.tmp/**
+.claude/**
+.vscode/**
+.codegraph/**
+.code-review-graph/**
+.snapshots/**
+.benchmarks/**
+.hypothesis/**
+.mypy_cache/**
+.pytest_cache/**
+.ruff_cache/**
+.venv/**
+__pycache__/**
+node_modules/**
+.reports/**
+dist/**
+build/**
+htmlcov/**
+legado/**
+
+# GitHub generated templates (maintained by flext-infra workflows, not docs)
+# Keep .github/** if it should be linted; comment out if needed.
+.github/**
+
+# MkDocs generated site
+site/**
