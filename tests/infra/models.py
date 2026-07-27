@@ -1,3 +1,5 @@
+"""FLEXT infra test helpers for models."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated

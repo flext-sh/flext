@@ -11,7 +11,7 @@ Community of 28 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | Result | Class | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 32-182 |
 | error | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 43-43 |
 | error_code | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 47-47 |
@@ -20,9 +20,9 @@ Community of 28 nodes
 | exception | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 59-59 |
 | failure | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 63-63 |
 | value | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 67-67 |
-| __enter__ | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 70-70 |
-| __exit__ | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 73-78 |
-| __or__ | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 87-87 |
+| **enter** | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 70-70 |
+| **exit** | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 73-78 |
+| **or** | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 87-87 |
 | unwrap | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 90-90 |
 | unwrap_or | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 93-93 |
 | unwrap_or_else | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 96-96 |
@@ -38,8 +38,8 @@ Community of 28 nodes
 | filter | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 159-162 |
 | recover | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 165-168 |
 | to_model | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 171-174 |
-| __bool__ | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 177-177 |
-| __repr__ | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 180-182 |
+| **bool** | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 177-177 |
+| **repr** | Function | flext-core/src/flext_core/_protocols/_result_parts/flextprotocolsresult_part_02.py | 180-182 |
 
 ## Execution Flows
 

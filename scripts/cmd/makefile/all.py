@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Render the promoted command surface from the scripts registry."""
 # /// flext-command
 # verb = "makefile"

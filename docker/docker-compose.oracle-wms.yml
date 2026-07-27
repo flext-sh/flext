@@ -61,7 +61,7 @@ services:
           "run",
           "python",
           "-c",
-          "from flext_oracle_wms import FlextOracleWmsClient; print('✅ Oracle WMS Client available')",
+          "from flext_oracle_wms import FlextOracleWmsClient; u.Cli.print('✅ Oracle WMS Client available')",
         ]
       interval: 30s
       timeout: 10s

@@ -53,9 +53,9 @@ The skill must follow the canonical format from `skill-format-universal` and inc
    (closed operator set over the rope-semantic fact base); NEVER Python rule logic, ast-grep,
    or a per-skill `rules/` directory. `flext-core` holds runtime/beartype rules only.
 3. Initialize baseline with `python3 scripts/core/skill_validate.py --skill <name> --update-baseline`.
-5. Write or update skill doc with exact commands.
-6. Add or update a docs guide in `docs/guides/` (if cross-cutting).
-7. Run `python3 scripts/core/skill_validate.py --all` to verify integration.
+4. Write or update skill doc with exact commands.
+5. Add or update a docs guide in `docs/guides/` (if cross-cutting).
+6. Run `python3 scripts/core/skill_validate.py --all` to verify integration.
 
 ## Example (Current Pattern)
 
@@ -77,7 +77,8 @@ The generic runner `scripts/core/skill_validate.py` discovers and executes every
 
 **Generic runner**:
 
-- `scripts/core/skill_validate.py` — runs the rope-semantic engine over the rules declared in `flext-infra/config/enforcement/*.yaml`
+- `scripts/core/skill_validate.py` — runs the rope-semantic engine over the rules declared in `flext-
+  infra/config/enforcement/*.yaml`
 
 ## Verification Commands
 
@@ -90,4 +91,5 @@ python3 scripts/core/skill_validate.py --all
 
 ## Adoption Rule
 
-For future automation work, do not introduce manual-only procedures. Ship scripts + skill + docs together in the same change.
+For future automation work, do not introduce manual-only procedures. Ship scripts + skill + docs together in the same
+change.

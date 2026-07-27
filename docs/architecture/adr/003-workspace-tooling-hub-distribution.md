@@ -117,4 +117,5 @@ No profile depends on files outside its repository checkout.
 ## References
 
 - [ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`](./004-generic-make-framework-in-flext-tests.md)
-- [ADR-005 — Config, settings, constants, templates, and schemas SSOT](./005-config-settings-constants-templates-schemas-ssot.md)
+- [ADR-005 — Config, settings, constants, templates, and schemas
+  SSOT](./005-config-settings-constants-templates-schemas-ssot.md)
