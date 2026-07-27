@@ -1,3 +1,5 @@
+"""FLEXT infra test helpers for typings."""
+
 from __future__ import annotations
 
 from collections.abc import MutableSequence

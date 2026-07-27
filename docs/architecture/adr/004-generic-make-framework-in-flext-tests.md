@@ -66,7 +66,7 @@ verbs, daemon targets, and alternative dispatch routes are invalid.
 The meanings are fixed:
 
 | Verb | Responsibility |
-|---|---|
+| --- | --- |
 | `setup` | provision the pinned toolchain and environment |
 | `deps` | validate, create, or explicitly update locks |
 | `build` | produce project artifacts |
@@ -123,5 +123,7 @@ an existing project with the same manifest.
 
 ## References
 
-- [ADR-003 — Manifest-owned topology, root workspace, and autonomous Git libraries](./003-workspace-tooling-hub-distribution.md)
-- [ADR-005 — Config, settings, constants, templates, and schemas SSOT](./005-config-settings-constants-templates-schemas-ssot.md)
+- [ADR-003 — Manifest-owned topology, root workspace, and autonomous Git
+  libraries](./003-workspace-tooling-hub-distribution.md)
+- [ADR-005 — Config, settings, constants, templates, and schemas
+  SSOT](./005-config-settings-constants-templates-schemas-ssot.md)

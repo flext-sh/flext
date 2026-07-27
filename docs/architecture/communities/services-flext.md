@@ -11,7 +11,7 @@ Community of 545 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | main | Function | flext-web/examples/01_basic_service.py | 8-27 |
 | TestsFlextWebSettings | Class | flext-web/tests/settings.py | 10-11 |
 | TestsFlextWebApi | Class | flext-web/tests/unit/test_api.py | 11-85 |

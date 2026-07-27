@@ -9,6 +9,23 @@
 it but never competes with it. Project law may be stricter; the newest explicit
 operator instruction prevails and lower authority must be reconciled.
 
+### P0 — Tests validate config/settings changes by construction
+
+Tests, golden files, and executable documentation (including markdown examples and
+docstring snippets) must remain valid when config or settings change. They are
+never allowed to hardcode, freeze, or implicitly assume the values that exist today.
+
+- The canonical owner of every configurable fact is `config/*.yaml`, `settings`,
+  or the generator that derives from them. Tests only validate that owner.
+- Expected values owned by config/settings must be read from the same typed SSOT
+  production reads, or proven through a generator/consumer round-trip.
+- A test that breaks on a legitimate config/settings change is a test defect.
+  Fix the test; never freeze the configuration to keep the test green.
+- This rule applies to all test tiers, markdown examples, and docstring snippets
+  validated by the pytest plugin.
+- Literal expectations in tests are reserved for immutable external protocol
+  contracts, not for values the project owns through config/settings.
+
 1. **Truth with evidence.** Claims require the exact command, working directory,
    exit status, decisive output, and bounded scope.
 2. **Research before mutation.** Read current authority, intent, owner Bead,
@@ -27,7 +44,13 @@ operator instruction prevails and lower authority must be reconciled.
    broken, partially migrated, dirty from task WIP, ahead of remote, missing
    real-use QA, or carrying stale generated output or docs. Run native global
    and changed-scope gates; Python requires Ruff, Pyrefly, Pyright, Mypy, and
-   Pytest coverage plus applicable build and integrated validation.
+   Pytest coverage plus applicable build and integrated validation. Lint and
+   type gates cover `examples/`, `scripts/`, and `tests/` with the same rigor
+   as production source: blanket `per-file-ignores`/exclude patterns that
+   hide violations in those trees are prohibited (operator law 2026-07-20).
+   The only permitted exceptions are test-idiom rules explicitly justified
+   per rule (e.g. `S101` assert usage, `PT` pytest conventions). Every
+   violation in those trees is fixed at its root, never masked.
 8. **Beads is execution truth.** Beads owns work, plans, memory, dependencies,
    status, evidence, and closure. GitHub is its continuous external coordination,
    PR, review, and CI mirror after the orchestrator organizes Beads completely.
@@ -55,20 +78,96 @@ operator instruction prevails and lower authority must be reconciled.
    claims quickly against live reality. Every change that produces new
    understanding or behavior updates the affected docs in the SAME change;
    stale docs are defects filed as beads, never worked around.
-15. **Tests reflect canonical reality.** Tests are executable checks of current
-    behavior, never a source of truth; a test that violates canonical policy is
-    corrected to match the policy, not accommodated. Performance optimization is
+15. **Runtime reality precedes implementation and tests.** Establish the correct
+    behavior from the official external contract and the real consumer first. For
+    generated or deployed artifacts, validate the staged artifact with that real
+    consumer before deployment, restart, tests, or static gates. Then align the
+    canonical implementation and models; only afterward may tests encode the
+    observed behavior. Tests and static analysis are subordinate confirmation,
+    never discovery authority, design input, a substitute for consumer validation,
+    or permission to publish a runtime-broken artifact. A test that contradicts
+    observed canonical behavior is corrected, never accommodated by production.
+    Performance optimization is
     evidence-first: profile with cProfile to find the hot path before changing
     anything, then optimize with the project's typed OO/MRO/lazy-import patterns;
     accelerate test selection with impact analysis (e.g. pytest-testmon) and
     parallelism (pytest-xdist) rather than deleting or weakening coverage.
+    See P0 above: tests of `config`/`settings` validate contracts and behavior
+    for arbitrary valid values and read expected config-owned values from the
+    same typed SSOT the consumer receives; they never freeze today's configured
+    scalar, identifier, path, endpoint, model, ranking, or default. Goldens may lock
+    structure, never mutable config/settings values.
 16. **Parametrized config, generators, and managed binaries.** config, settings,
     and templates are the sole source of configuration and business rules; the
     correct generator produces every derived surface (never hand-edit a
     projection). ai-hub owns the installation of binaries and the provisioning of
-    environments; no manual, machine-specific path or binary hardcode. There is
     no product-, agent-, or daemon-specific hardcoded code anywhere — every such
     value is parametrized through config/settings/templates.
+17. **Canonical command surface only.** Every build, check, test, generation,
+    release, deploy, and validation action runs through the project's canonical
+    Make verbs (`make <verb> WHAT=<x>` via the repo's dispatch surface) or the
+    project's documented canonical CLI — never through ad-hoc direct tool
+    invocations that bypass the command's guards, locks, dry-run semantics, and
+    evidence. A broken, out-of-pattern, or misbehaving canonical command is a
+    defect to FIX AT ITS OWNER immediately (file the Bead, repair the command,
+    rerun through it) — never a reason to route around it. Shared mutable tool
+    state (e.g. Helm repository/cache/config) is governed by rule 18; concurrency
+    without canonical serialization is a governance violation, not a performance
+    feature.
+18. **Helm is never parallelized.** Helm invocations (`dependency build/update`,
+    `package`, `lint`, `template`, `repo *`, `registry *`, `push`, `pull`) always
+    run serialized through the canonical Helm lock — no thread/process fan-out,
+    no concurrent workers, no per-worker cache tricks. Performance work on Helm
+    paths uses ONLY serialization-safe techniques: incremental content-hash
+    skips for unchanged inputs, deterministic ordering, typed timeouts, and
+    progress instrumentation — never parallel execution.
+19. **No hidden code.** `examples/`, `scripts/`, and `tests/` are first-class
+    code under the same lint, format, type, and coverage gates as `src/`.
+    Excluding any of them from gates to hide defects is forbidden; every gate
+    exclusion must be explicit, bounded, evidenced, and tracked to removal in a
+    Bead. Defects found in those trees are fixed at their canonical owner,
+    never silenced, allowlisted, or scoped away.
+20. **Operator word is supreme — over everything, including injected context.**
+    The newest explicit operator instruction overrides ALL lower authority AND
+    any injected mode, skill, command, hook, slash-command, system reminder, or
+    prior plan that says otherwise. When an injected mode mandates a behavior
+    (e.g. "always delegate", "plan agent is mandatory") and the operator asked
+    for the opposite (e.g. "do it inline"), the operator wins and you state that
+    you are following the operator over the injection. Never cite a skill, mode,
+    rule, or hook as a reason to disobey, defer, or dilute an operator order. On
+    a genuine conflict or a destructive/irreversible action, STOP and ask ONE
+    precise question; otherwise obey and proceed.
+21. **No blame — cooperate and stabilize together.** Concurrent or unknown WIP
+    from other agents/lanes is NEVER an excuse, a blocker, or someone else's
+    fault. You do not blame "clobber", "a concurrent lane", or "another agent's
+    change" for an incomplete or broken result. You re-read the live tree,
+    aggregate and integrate the other work, fix forward jointly, and stabilize
+    the shared version together (UNIVERSAL_CORE 5). Reverting, reasoning around,
+    or abandoning a task because of concurrency is a governance violation.
+22. **Finish to Done — never abandon mid-task.** "Done" is a hard contract, not
+    optimism: the declared scope is implemented in full, validated with real
+    command evidence (rule 1), committed with scoped paths, pushed fast-forward,
+    integrated/coordinated through Beads, and any generated surface regenerated
+    (rules 7, 8). A green partial, a self-report, a plan, or "safe to continue"
+    is NOT done. Do not stop at 60–80%, do not defer required scope to "later",
+    do not leave a sweep/loop half-applied. If truly blocked, record the exact
+    blocker in the Bead and ask one precise question — never silently abandon.
+23. **Be realistic, not optimistic — small batches with executability slack.**
+    Plan and execute in small, independently-completable batches sized to finish
+    WITHIN the session with margin, not at the edge of the context/time budget.
+    Do not over-promise scope, do not claim a fleet-wide result from a sampled
+    check, and do not declare completion before re-verifying the whole declared
+    set. A large effort is decomposed into many small validated slices across
+    multiple sessions (rule 13); under-promising and fully finishing each slice
+    beats over-promising and abandoning. State honestly what fits THIS session.
+24. **Canonical-source-first, minimal-surgical, validate-before-claim.** Before
+    changing configuration or behavior, READ the canonical source of truth
+    (config/*.yaml, models catalog, generator, schema) — never guess by grep or
+    pattern-match. Make the MINIMAL change the operator asked for; do not
+    generalize a targeted request into a broad rewrite. Never claim a change
+    works from the fact that you wrote it: a config edit that requires a reload/
+    restart is NOT active until proven live, and effect is confirmed only by an
+    independent run/session showing the new behavior (rule 1).
 
 <!-- /UNIVERSAL-GOVERNANCE -->
 <!-- END AI-HUB MANAGED UNIVERSAL CORE -->
@@ -128,19 +227,23 @@ uncollected tests, unvalidated WIP, or a workaround masking the defect.
 
 ### Fix-Forward Worktree Law
 
-- The active worktree root is the execution root; never assume `/home/marlonsc/flext` is the mutation target when another worktree was selected.
-- Preserve all existing root and submodule WIP. Never reset, restore, checkout, clean, stash, or overwrite unknown changes.
+- The active worktree root is the execution root; never assume `/home/marlonsc/flext` is the mutation target when
+  another worktree was selected.
+- Preserve all existing root and submodule WIP. Never reset, restore, checkout, clean, stash, or overwrite unknown
+  changes.
 - Re-read mutable files before editing and commit only explicit owned paths when Git authority is granted.
 - Generated files change only through their canonical generator, config, schema, policy, or template owner.
-- Status is a checkpoint, not a stopping condition. Continue until the intent card's observable stop condition holds or one precise operator decision is required.
+- Status is a checkpoint, not a stopping condition. Continue until the intent card's observable stop condition holds or
+  one precise operator decision is required.
 
-
-For the lane contract that governs light-worker execution, see [`docs/ways-of-working/worker-lane-contract.md`](docs/ways-of-working/worker-lane-contract.md).
+For the lane contract that governs light-worker execution, see
+[`docs/ways-of-working/worker-lane-contract.md`](docs/ways-of-working/worker-lane-contract.md).
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:19cc25d9 -->
 ## Issue Tracking with bd (beads)
 
-**IMPORTANT**: This project uses **bd (beads)** for ALL issue tracking. Do NOT use markdown TODOs, task lists, or other tracking methods.
+**IMPORTANT**: This project uses **bd (beads)** for ALL issue tracking. Do NOT use markdown TODOs, task lists, or other
+tracking methods.
 
 ### Why bd?
 
@@ -203,10 +306,12 @@ bd close bd-42 --reason "Completed" --json
 5. **Complete**: `bd close <id> --reason "Done"`
 
 ### Quality
+
 - Use `--acceptance` and `--design` fields when creating issues
 - Use `--validate` to check description completeness
 
 ### Lifecycle
+
 - `bd defer <id>` / `bd supersede <id>` for issue management
 - `bd stale` / `bd orphans` / `bd lint` for hygiene
 - `bd human <id>` to flag for human decisions
@@ -220,7 +325,9 @@ bd stores issue history in Dolt:
 - Use `bd dolt push`/`bd dolt pull` for remote sync
 - Do not treat `.beads/issues.jsonl` as the sync protocol
 
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
+**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote;
+`.beads/issues.jsonl` is a passive export. See <https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md>
+for details and anti-patterns.
 
 ### Important Rules
 
@@ -236,20 +343,26 @@ For more details, see README.md and docs/QUICKSTART.md.
 
 ## Agent Context Profiles
 
-The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator instructions.
+The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator
+instructions.
 
-- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
-- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
-- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
+- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync
+  unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
+- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless
+  active instructions say otherwise.
+- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit,
+  and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
 
 ## Session Completion
 
-This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and orchestrator instructions.
+This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and
+orchestrator instructions.
 
 1. **File issues for remaining work** - Create beads for anything that needs follow-up
 2. **Run quality gates** (if code changed) - Tests, linters, builds
 3. **Update issue status** - Close finished work, update in-progress items
 4. **Handle git/sync by active profile**:
+
    ```bash
    # Conservative/minimal/default: report status and proposed commands; wait for approval.
    git status
@@ -259,10 +372,13 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
    bd dolt push
    git push
    git status
+
    ```
+
 5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
 
 **Critical rules:**
+
 - Explicit user or orchestrator instructions override this Beads block.
 - Do not commit or push without clear authority from the active profile or the current user request.
 - If a required sync or push is blocked, stop and report the exact command and error.
@@ -271,11 +387,13 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 
 ## Overview
 
-FLEXT is a **multi-package Python 3.13 workspace** (git superproject + 31 `flext-*` git submodules) for enterprise data integration, platform tooling, and operational connectors. Every package follows one canonical Clean-Architecture shape built on `flext-core`. Branch `0.12.0-dev`; forward baseline `0.13.0`.
+FLEXT is a **multi-package Python 3.13 workspace** (git superproject + 31 `flext-*` git submodules) for enterprise data
+integration, platform tooling, and operational connectors. Every package follows one canonical Clean-Architecture shape
+built on `flext-core`. Branch `0.12.0-dev`; forward baseline `0.13.0`.
 
 ## Structure
 
-```
+```text
 flext/                     # superproject: workspace manager + governance + docs
 ├── src/flext/             # flext-workspace CLI (thin orchestrator over flext-cli) — AUTO-GENERATED facets
 ├── config/                # workspace.yaml topology SSOT (codegen/conform input; never overwrite)
@@ -289,27 +407,35 @@ flext/                     # superproject: workspace manager + governance + docs
 └── flext-{tap,target,dbt}-*/ # Singer ecosystem: 5 taps, 5 targets, 4 dbt (built on flext-meltano)
 ```
 
-Each submodule is an **independent git repo**. This root `AGENTS.md` is the canonical SSOT; submodule `AGENTS.md` files point here and add only domain-specific notes.
+Each submodule is an **independent git repo**. This root `AGENTS.md` is the canonical SSOT; submodule `AGENTS.md` files
+point here and add only domain-specific notes.
 
 ### How each submodule references this root (two working modes)
 
 Each submodule's `AGENTS.md` links back to this file. Which link to follow depends on how the package is checked out:
 
-- **Workspace mode** (submodule sits inside this superproject): read the sibling **[`../AGENTS.md`](../AGENTS.md)** — the working copy on your current branch.
-- **Standalone / independent mode** (the package was cloned on its own, imported as a dependency, or vendored — no parent workspace exists, so `../AGENTS.md` does not resolve): read the **raw file on GitHub on the same branch/release** the project is on:
-  ```
-  https://raw.githubusercontent.com/flext-sh/flext/<branch-or-tag>/AGENTS.md
-  # current working line:
-  https://raw.githubusercontent.com/flext-sh/flext/0.12.0-dev/AGENTS.md
-  ```
-  Always pin `<branch-or-tag>` to the SAME branch/release the package is built from (e.g. `0.12.0-dev`, or the release tag), never `main`/`master` — the governance law is versioned with the code.
+- **Workspace mode** (submodule sits inside this superproject): read the sibling **[`../AGENTS.md`](../AGENTS.md)** —
+  the working copy on your current branch.
+- **Standalone / independent mode** (the package was cloned on its own, imported as a dependency, or vendored — no
+    parent workspace exists, so `../AGENTS.md` does not resolve): read the **raw file on GitHub on the same
+  branch/release** the project is on:
 
-Precedence is unchanged in both modes: this root law + the AI-HUB managed Universal Agent Law block override submodule-local notes; the submodule file only *adds* domain specifics.
+```text
+  <https://raw.githubusercontent.com/flext-sh/flext/><branch-or-tag>/AGENTS.md
+  # current working line:
+  <https://raw.githubusercontent.com/flext-sh/flext/0.12.0-dev/AGENTS.md>
+```
+
+  Always pin `<branch-or-tag>` to the SAME branch/release the package is built from
+(e.g. `0.12.0-dev`, or the release tag), never `main`/`master` — the governance law is versioned with the code.
+
+Precedence is unchanged in both modes: this root law + the AI-HUB managed Universal Agent Law block override
+submodule-local notes; the submodule file only *adds* domain specifics.
 
 ## Where to Look
 
 | Task | Location | Notes |
-|------|----------|-------|
+| ------ | ---------- | ------- |
 | Foundation facades / result / DI | `flext-core/src/flext_core/` | `c,t,p,m,u` + `r,e,x,h,d,s`; every pkg's base |
 | Build/codegen/enforcement | `flext-infra/src/flext_infra/` | drives `make gen`, conform, lint rules |
 | Test fixtures & builders | `flext-tests/src/flext_tests/` | `tm,tv,tt`; unified `conftest.py` pattern |
@@ -319,7 +445,8 @@ Precedence is unchanged in both modes: this root law + the AI-HUB managed Univer
 
 ## Build & Test
 
-**All commands run from the active workspace/worktree root**, never from inside a submodule (the root dispatcher forwards to each project). Use `make`, never bare `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
+**All commands run from the active workspace/worktree root**, never from inside a submodule
+(the root dispatcher forwards to each project). Use `make`, never bare `uv`/`ruff`/`pyrefly`/`mypy`/`pyright`/`pytest`.
 
 ```bash
 # Environment (creates .venv, uv sync --all-packages, installs hooks)
@@ -344,9 +471,12 @@ make boot  PROJECT=flext-meltano
 make build WHAT=gen
 ```
 
-**Pinned toolchain** (`.default-python-packages`): Ruff `0.15.22`, mypy `2.3.0`, Pyright `1.1.411`, Pyrefly `1.1.1`. Python strictly `>=3.13,<3.14`.
+**Pinned toolchain** (`.default-python-packages`): Ruff `0.15.22`, mypy `2.3.0`, Pyright `1.1.411`, Pyrefly `1.1.1`.
+Python strictly `>=3.13,<3.14`.
 
-**Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy uncapped, it can blow up RAM; override with `make check WHAT=mypy MYPY_MEMORY_LIMIT_MB=8192`. Docs CI needs `uv sync --all-packages --all-groups --all-extras` for dev tools.
+**Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy uncapped, it can blow up RAM;
+override with `make check WHAT=mypy MYPY_MEMORY_LIMIT_MB=8192`. Docs CI needs
+`uv sync --all-packages --all-groups --all-extras` for dev tools.
 
 ## Inviolable Delivery Governance
 
@@ -374,17 +504,22 @@ concurrent work may weaken them.
 Run every command from the active workspace/worktree root using `make` only.
 
 1. **Global environment gates, after every implementation task:**
+
    ```bash
    make check CHECK_GATES=lint,pyrefly
+
    ```
+
    Ruff and Pyrefly must be healthy for the workspace. Existing debt is not a
    reason to close new work: either resolve it in the owning Bead or keep the
    current task open with a precise, linked blocker.
 2. **Changed-scope gates, after every implementation task:**
+
    ```bash
    make check PROJECT=<affected-project> CHECK_GATES=pyright,mypy
    make test PROJECT=<affected-project>
    ```
+
    Use the narrowest supported root-Make target first, then widen to the
    affected project when package boundaries, generated files, shared fixtures,
    configuration, or public facades changed.
@@ -393,8 +528,24 @@ Run every command from the active workspace/worktree root using `make` only.
    Record command, cwd, exit code, and decisive output in the owning Bead.
 
 If a required gate cannot run because the environment itself is broken, stop
-the task, preserve the worktree, create or update one narrow Bead for the
+.the task, preserve the worktree, create or update one narrow Bead for the
 environment failure, and do not report the implementation as complete.
+
+### Tests must validate config and settings changes (P0)
+
+Tests are consumers of the config/settings SSOT, not frozen copies of it.
+Any expected value owned by config or settings (versions, paths, URLs, verbs,
+profiles, allowed lists, timeouts) must be read from the same source production
+uses or proven through a generator round-trip.
+
+- A test that breaks on a legitimate config change is a test defect.
+- Golden files and snapshots may pin structure only; they are regenerated via
+the canonical make verb when config-driven values change.
+- This rule applies to unit, integration, and e2e tests, plus markdown examples
+and docstring snippets validated by the pytest plugin.
+
+See `docs/standards/testing.md` and `docs/standards/development.md` for the
+detailed contract.
 
 ### State ownership and handoff
 
@@ -415,30 +566,47 @@ environment failure, and do not report the implementation as complete.
 **Facade layering (strict order `c -> t -> p -> m -> u`)** composed via MRO from `flext-core`:
 
 - `c` constants · `t` typings · `p` protocols · `m` models (Pydantic-2) · `u` utilities
-- Operational: `r` FlextResult · `e` FlextExceptions · `x` FlextMixins · `h` FlextHandlers · `d` FlextDecorators · `s` FlextService
-- Forward imports (higher→lower) may be runtime; **reverse imports are `TYPE_CHECKING`-only**. `c` never imports `m` at runtime.
-- Each package exposes exactly one public `api.py` (thin MRO facade) + optional `cli.py`; internals live under `_constants/_typings/_protocols/_models/_utilities`.
+- Operational: `r` FlextResult · `e` FlextExceptions · `x` FlextMixins · `h` FlextHandlers · `d` FlextDecorators · `s`
+  FlextService
+- Forward imports (higher→lower) may be runtime; **reverse imports are `TYPE_CHECKING`-only**. `c` never imports `m` at
+  runtime.
+- Each package exposes exactly one public `api.py` (thin MRO facade) + optional `cli.py`; internals live under
+  `_constants/_typings/_protocols/_models/_utilities`.
 
 **Config/settings are the layer-0 SSOT** consumed BY the facades (ADR-005). Access is single-form only:
+
 ```python
 from <namespace> import config, settings   # e.g. from flext_core import config, settings
 config.<Namespace>.*      settings.<Namespace>.*
 ```
-Config = business rules (`config/*.yaml`, validated); settings = env/CLI-tunable knobs. Facades never hardcode values the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream base — never a project facade (zero-cycle).
 
-**Dependency direction:** `flext-core` ← everything. `flext-cli` owns CLI domains (Toml/Yaml/Csv/Json/Cli/Tui/Run/Dag/Templates/Workflow). Singer connectors are thin drivers over `flext-meltano` (ADR-006). `flext-infra` is build/tooling — reached via its CLI + pytest plugin, **never imported at runtime**.
+Config = business rules (`config/*.yaml`, validated); settings = env/CLI-tunable knobs. Facades never hardcode values
+the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream base — never a project facade (zero-cycle).
+
+**Dependency direction:** `flext-core` ← everything. `flext-cli` owns CLI domains
+(Toml/Yaml/Csv/Json/Cli/Tui/Run/Dag/Templates/Workflow). Singer connectors are thin drivers over `flext-meltano`
+(ADR-006). `flext-infra` is build/tooling — reached via its CLI + pytest plugin, **never imported at runtime**.
 
 ## Conventions & Patterns
 
-- **`__init__.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED** (`# AUTO-GENERATED FILE — Regenerate with: make gen`). Never hand-edit; change the codegen source in `flext-infra` + run `make build WHAT=gen`.
-- **Root `pyproject.toml` `[MANAGED]` sections** are generated by `flext_infra.deps.modernizer` — edit generator policy then `make build WHAT=mod`, never by hand.
-- **Declaration layers are pure data:** models/protocols/constants/typings/settings/config carry ZERO methods (only Pydantic Field/validators/computed_field). Behavior lives only in `u`/services/`api`/`base`/`cli`.
-- **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as a data contract.
-- **Typing:** never `Any`/`object`/concrete-class annotations; type via `t.*` aliases and `p.*` protocols; `T | None` (never `Optional`). A model is never a type.
-- **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers, or suppression (`# type: ignore`/`# noqa`) without documented justification. Remove superseded code the same cycle.
+- **`**init**.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED**
+    (`# AUTO-GENERATED FILE — Regenerate with: make gen`). Never hand-edit; change the codegen source in `flext-infra`
+  - run `make build WHAT=gen`.
+- **Root `pyproject.toml` `[MANAGED]` sections** are generated by `flext_infra.deps.modernizer` — edit generator policy
+  then `make build WHAT=mod`, never by hand.
+- **Declaration layers are pure data:** models/protocols/constants/typings/settings/config carry ZERO methods
+  (only Pydantic Field/validators/computed_field). Behavior lives only in `u`/services/`api`/`base`/`cli`.
+- **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No
+  `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as a data contract.
+- **Typing:** never `Any`/`object`/concrete-class annotations; type via `t.*` aliases and `p.*` protocols; `T | None`
+  (never `Optional`). A model is never a type.
+- **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers, or suppression
+  (`# type: ignore`/`# noqa`) without documented justification. Remove superseded code the same cycle.
 - **English-only** in all code, comments, docstrings, log strings, and `.j2` templates.
-- **Tests** (`flext-tests`): behavior-only through public facades, NO mocks/`patch`, one unified `conftest.py`, typed fixtures in `tests/fixtures/`, layout `tests/{unit,integration,e2e}/`, thin single nested `Tests<Unit>` class.
-- **Multi-agent tree:** fix-forward only, never `git reset/checkout/restore/clean/stash` shared work; commit by explicit paths (never `git add -A`); coordinate via beads (`bd`).
+- **Tests** (`flext-tests`): behavior-only through public facades, NO mocks/`patch`, one unified `conftest.py`, typed
+  fixtures in `tests/fixtures/`, layout `tests/{unit,integration,e2e}/`, thin single nested `Tests<Unit>` class.
+- **Multi-agent tree:** fix-forward only, never `git reset/checkout/restore/clean/stash` shared work; commit by
+  explicit paths (never `git add -A`); coordinate via beads (`bd`).
 - **≤200 logical LOC per module**; net-negative LOC on refactors.
 - Toolchain: `uv` + `.venv` only, always via `make`.
 

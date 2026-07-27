@@ -76,3 +76,19 @@ Do not repeat these:
 - Running bare-tool gate commands outside the Make dispatcher.
 - `git add -A` commits sweeping foreign WIP.
 - Treating idle-after-report as failure.
+
+## 8. Automated adjustments and pre-merge validation
+
+Any automated adjustment — sync, codegen round-trip, auto-fix, or upstream
+merge — must be treated as a code change:
+
+- Validate it through the root-Make gates for the affected projects before
+  reporting it done.
+- Keep it atomic within the lane: one coherent commit or an explicit pathspec-bound
+  set of commits. Do not leave open-ended `fixes` commits stacking unrelated
+  changes.
+- Before the lead merges the lane into `0.12.0-dev`, the lane must pass a
+  pre-merge validation: `make check` and `make test` for every affected project.
+  A red gate blocks the merge; fix forward inside the lane and re-validate.
+- An upstream/external merge into the lane is only absorbed after the same
+  lane-context validation passes.
