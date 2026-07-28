@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from flext_tests import tm
-
 from tests.infra.constants import c
 from tests.infra.utilities import u
 
