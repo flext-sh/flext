@@ -45,7 +45,7 @@ name = "FLEXT Team"
 [project.optional-dependencies]
 dev = [
   "autoflake>=2.3.1",
-  "bandit>=1.8",
+  "bandit>=1.9.4",
   "black>=26.5.1",
   "blacken-docs>=1.20.0",
   "codespell>=2.3",
