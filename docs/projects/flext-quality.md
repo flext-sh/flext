@@ -1,72 +1,91 @@
 # FLEXT Quality
 
-FLEXT Quality (v0.9.9) is the centralized code quality analysis framework for the FLEXT ecosystem. It runs static analysis, metrics collection, reporting, and quality gates so every other project can validate architecture, tests, and security through a common protocol.
+FLEXT Quality is the unified orchestration platform for Claude Code tooling in the FLEXT ecosystem. It combines a YAML-
+driven declarative rules engine, Claude Code hook management, an MCP server (tools and resources), and integrations for
+Claude context, memory, and code execution behind one railway-oriented facade and CLI.
 
-## Status & metrics
+## Status & health
 
-- **Version**: 0.9.9; 1.0.0 release prep focuses on accessibility/integration fixes
+- **Version**: 0.12.0-dev
 - **Python**: 3.13+ only
-- **Tests**: ~250 total (unit, integration, CLI); running `make test` is currently blocked by `flext-core` import issues (FlextModels.BaseModel missing)
-- **Coverage**: 96% target per README, but automated coverage gates cannot run until the import blockers are resolved
-- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is blocked by import/accessibility errors; lint/type/security commands individually succeed
-- **Type safety**: Pyrefly/MyPy strict modes are enforced; zero `Any`/`cast`/`# type: ignore` allowed
-- **Security**: Bandit and pip-audit scans configured; pipeline currently defers final auditing until the FlextCore dependency stabilizes
+- **Project class**: platform (consumes `flext-core` and `flext-cli`)
+- **Facade**: `from flext_quality import quality` — the process-wide `FlextQuality` singleton
+- **CLI**: `flext-quality` console script (`flext_quality.services.cli:main`)
+- **Short aliases**: `c`, `m`, `p`, `r`, `t`, `u` plus operational `s`, `d`, `e`, `h`, `x`, and `settings`
+
+### Quality signals
+
+- Lint, type-check, security, and tests run through the canonical `make` verbs; current status is produced by the gates,
+  not restated here.
+- Run `make check PROJECT=flext-quality` (lint + type-check) and `make val` for the full gate chain.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/flext-sh/flext-quality.git
-cd flext-quality
-make setup
-make check      # lint + type-check are expected to pass
-make val   # currently blocked until FlextModels imports are available
+pip install flext-quality
 ```
 
 ```python
-from flext_quality import FlextQualityService
+from pathlib import Path
 
-service = FlextQualityService()
-result = service.create_project(
-    name="my_project",
-    project_path="/src/my_project",
-    _min_coverage=80.0,
-    _max_complexity=10,
-)
+from flext_quality import quality
 
-if result.is_success:
-    project = result.value
-    print(project.name, project.min_coverage)
+rules = quality.load_rules(Path("rules/default.yaml"))
+if rules.success:
+    u.Cli.print(f"{len(rules.value)} rules loaded")
 
-from flext_quality import FlextQualityCodeAnalyzer  # accessible via direct import
-
-analyzer = FlextQualityCodeAnalyzer("/src/my_project")
-analyzer.analyze_project()
+status = quality.fetch_status()
 ```
 
-## Architecture & patterns
+The facade also exposes `execute_hook(...)`, `process_stdin_hook()`, `format_hook_output(...)`,
+`fetch_hook_config_json()`, `load_rules_from_config()`, and `validate_configuration()` — the operations the CLI and the
+Claude Code hook pipeline drive. The `flext-quality` command runs the same flows from the shell, including stdin-based
+hook processing.
 
-- **Facade**: `FlextQualityService`/`FlextQualityCliService` expose CLI status/check/validate commands balanced with the registry-based rules engine.
-- **Core layers**: Tier 0 (`constants`, `typings`, `protocols`); Tier 1 (`models`, `utilities`); Tier 2 (`integrations`, `rules`, `hooks`, `rules.engine`); Tier 3 (`api`, `services`, `cli`, `mcp`). Import discipline ensures lower tiers never depend on higher ones.
-- **Rules engine**: YAML-driven ACA (Architecture/command Analysis) registry with 11 categories, providing consistent patterns for dangerous commands, type verification, and code quality violations plus hooks for Claude integrations.
-- **Integration**: depends on `flext-core` (r, FlextContainer, FlextModels), connects to `flext-cli` for consistent output, and feeds `flext-web` dashboards once the CLI stabilizes.
+## Architecture & modules
 
-## Quality & compliance
+- **Facade**: `api.py` defines `FlextQuality` over `FlextQualityServiceBase`, publishing the `quality` singleton;
+  `cli.py` and `services/cli.py` implement the command surface with `main(args)` entry points.
+- **Rules engine** (`rules/`): `FlextQualityRulesEngine` validates against declarative YAML rule definitions loaded by
+  `FlextQualityRulesLoader`, with `validators` for the individual checks; rules are data (`m.Quality.RuleDefinition`
+  models), not code.
+- **Hooks** (`hooks/`): `FlextQualityHookManager` orchestrates Claude Code hooks over the `FlextQualityBaseHook`
+  contract.
+- **MCP** (`mcp/`): `FlextQualityMcpServer`, `FlextQualityMcpTools`, and `FlextQualityMcpResources` expose the platform
+  through the Model Context Protocol.
+- **Integrations** (`integrations/`): `claude_context`, `claude_mem`, `code_execution`, and `mcp_client` adapters for
+  the Claude tooling ecosystem.
 
-- **Validation commands**: `make lint`, `make type-check`, `make security`, `make check`, `make val`, `make quality-analysis`, `make report`, `make diagnose`.
-- **Zero-tolerance policy**: No `Any`, no `cast`, no `TYPE_CHECKING`, no exception-based results anywhere; all APIs return `r[T]` (r alias `r`).
-- **Testing**: Unit + integration + CLI tests exist, but `pytest` runs fail because FlextModels.BaseModel isn’t accessible; these failures are noted in the README and block `make val`.
-- **Security**: Bandit + pip-audit configured, plus `flext-quality` supplies hooks/validators to enforce dangerous-command detection, type rules, and architecture compliance in other workspaces.
+### Key architectural patterns
 
-## Resources & references
+- **Declarative rules as data**: rule definitions are YAML files validated into Pydantic models; the engine is a generic
+  evaluator, so new rules never require new detector code.
+- **Railway everywhere**: rule loading, hook execution, and status reporting return `r[T]`; the CLI maps failures to
+  exit codes at the boundary only.
+- **Service-base composition**: `FlextQuality` and `FlextQualityCli` build on the `s` service base from `flext-core`,
+  keeping state in private attributes and the public surface uniform.
+- **Pydantic 2-way models**: rule definitions, hook payloads, and MCP messages are `m.Quality.*` models that round-trip
+  through `model_validate` / `model_dump`.
 
-- [Project README](../../flext-quality/README.md) for status, architecture, and roadmap
-- [Project AGENTS.md](../../flext-quality/AGENTS.md) for zero-tolerance directives and command guidance
-- `flext-quality/docs/` for getting started, architecture, guides, and troubleshooting (mirrors doc comments in README)
-- `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` once blocked gates reopen
-- Related projects: `flext-core`, `flext-cli`, `flext-web`, `flext-observability`, `flext-quality/rules`, Singer-based `flext-tap-*` / `flext-target-*`
+## Testing & quality
 
-## Support & contributions
+- `make check PROJECT=flext-quality` — Ruff + type-check on the project lane.
+- `make test PROJECT=flext-quality` — unit and integration suites through the shared `flext-tests` helpers.
+- `make val` — full workspace validation chain (lint, types, security, tests, docs).
+- Typing is strict (no `Any`/`object`); all owned payloads are `m.Quality.*` Pydantic models and all fallible paths
+  return `r[T]`.
+
+## Resources
+
+- [Project README](../../flext-quality/README.md)
+- [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
+  quality.md`
+- Project documentation under `flext-quality/docs/`
+- Related projects: `flext-core`, `flext-cli`, `flext-observability`, `flext-web`, `flext-infra`
+
+## Support & issues
 
 - GitHub issues: <https://github.com/flext-sh/flext-quality/issues>
 - Discussions: <https://github.com/flext-sh/flext-quality/discussions>
-- Follow `docs/standards/README.md`, the workspace AGENTS.md, and the central portal checklist before touching docs or code so the portal stays accurate.
+- Follow the workspace `AGENTS.md` and the project's own `AGENTS.md` before proposing doc or code changes so this page
+  stays aligned with the portal.

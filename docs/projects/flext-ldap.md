@@ -1,81 +1,97 @@
 # FLEXT LDAP
 
-FLEXT LDAP (v0.10.3) is the universal directory-services foundation that every FLEXT project uses for LDAP operations. It wraps `ldap3`, r, p, and the flext-ldif converters in a clean architecture stack so teams can rely on server-specific implementations (OpenLDAP, Oracle OID/OUD, Active Directory, generic LDAP) without copying code.
+FLEXT LDAP is the directory-services library of the FLEXT platform. It wraps `ldap3` behind typed Pydantic models and
+the `r[T]` contract, providing connection management, CRUD/search operations, entry synchronization, and server-type
+detection through a single `FlextLdap` facade (`ldap` alias). Package description: "Enterprise LDAP Operations Library
+for FLEXT Framework".
 
-## Status & signals
+## Status & health
 
-- **Version**: 0.10.3 (production ready)
+- **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Tests**: ~80+ unit/integration/e2e suites (42% coverage target; all existing suites pass) plus Docker-backed LDAP scenarios
-- **Quality gate**: `make val` (ruff, pyrefly, Bandit, type checks, tests, coverage, docstring checks); zero Ruff/MyPy/Pyrefly errors documented
-- **Security**: Bandit reports zero high/medium findings in `reports/lint-output/*`
-- **Type discipline**: no `Any`, `cast`, `TYPE_CHECKING`, or `# type: ignore`; strict layering ensures lower tiers never import higher
+- **Quality gate**: `make check PROJECT=flext-ldap` (Ruff + type checks) and `make val` for the full pipeline
+- **Depends on**: `flext-core`, `flext-ldif` (entry models and LDIF conversion)
+
+### Quality signals
+
+- `ldap3` imports are contained in the adapter layer; consumers work with `m.Ldap.*` models only
+- Strict typing per workspace policy: no `Any`, no `cast` shortcuts
+- Every public operation returns `r[T]` with consistent error handling
+- Facets `c`/`t`/`p`/`m` stay declaration-only (root `AGENTS.md` U17)
 
 ## Quick start
 
 ```bash
-poetry add flext-ldap          # install for production
-pip install flext-ldap         # also supported
+pip install flext-ldap
 ```
-
-Development flow:
-
-```bash
-git clone https://github.com/flext-sh/flext-ldap.git
-cd flext-ldap
-make setup                    # install deps, pre-commit hooks
-make val                 # run lint/type/security/test pipeline
-```
-
-Python usage:
 
 ```python
-from flext_ldap import m
+from flext_ldap import ldap, m
 
-api = ldap()
-result = api.search_entries(
-    m.SearchOptions(
+connected = ldap.connect(m.Ldap.ConnectionConfig(host="ldap.example.com", port=389))
+assert connected.is_success
+
+result = ldap.search(
+    m.Ldap.SearchOptions(
         base_dn="dc=example,dc=com",
         filter_str="(objectClass=person)",
-        scope="subtree",
         attributes=["uid", "cn", "mail"],
-    ),
+    )
 )
 
 if result.is_success:
-    for entry in result.unwrap():
-        print(entry.dn.value)
-else:
-    raise RuntimeError(f"LDAP search failed: {result.error}")
+    for entry in result.value.entries:
+        u.Cli.print(entry.dn)
 ```
 
-Use `FlextLdapEntryAdapter` when converting between `ldap3` and `flext-ldif`, and call server-specific operations (`flext_ldap.servers.OpenLDAP2Operations`, `.OracleOIDOperations`, etc.) for schema discovery or ACL management.
+`ldap` is the process-wide `FlextLdap` singleton (`FlextLdap.fetch_global()`); `m.Ldap.SearchOptions` defaults `scope`
+and `filter_str` to the constants in `c.Ldap`. Use `FlextLdapEntryAdapter` to convert between `ldap3` entries and
+`flext-ldif` models.
 
-## Architecture highlights
+## Architecture & modules
 
-- **Layered modules**: Tier 0 (`constants.py`, `protocols.py`, `typings.py`), Tier 1 (`models`, `domain`, `utilities`), Tier 2 (`clients`, `entry_adapter`, `servers_integration`, `servers/*`), Tier 3 (`services`, `handlers`, `api`). Each tier only imports lower tiers per AGENTS rules.
-- **FlextXxx namespaces**: every module exposes a single namespace class (`FlextLdapClients`, `FlextLdapModels`, `FlextLdapServices`, etc.) with nested helpers for authentication, search, ACLs, schema, and conversions.
-- **Server implementations**: production-ready adapters for OpenLDAP 2.x/1.x, Oracle OID/OUD, Active Directory, plus a generic fallback and detector; operation facades live under `servers/` and are wired through `api.py`.
-- **Integration points**: `flext-core` (r, container, logger, short aliases), `flext-ldif` (entry models, servers, adapters), `flext-auth` (LDAP authentication provider), and `flext-meltano`/Singer taps for data export.
-- **Clean architecture**: application → domain → infrastructure → protocol layers enforced by documentation, with zero duplication and architecture-specific best practices in `AGENTS.md`.
+`src/flext_ldap/` follows the FLEXT tiered layout:
 
-## Quality & operations
+- **Foundation**: `constants.py`, `typings.py`, `protocols.py` — LDAP defaults (ports, scopes, filters), type aliases,
+  and protocols.
+- **Domain**: `models.py` (`_models/`) — Pydantic v2 models: `ConnectionConfig`, `SearchOptions`, `SearchResult`, and
+  operation results.
+- **Adapters**: `adapters/` — `ldap3.py` (`_ldap3/`) wraps the `ldap3` library; `entry.py` (`FlextLdapEntryAdapter`)
+  converts entries to/from `flext-ldif` models.
+- **Services**: `services/` — `connection.py` (connect/disconnect with optional retry and post-bind server detection),
+  `operations.py` (`add`, `modify`, `delete`, `search`, `upsert`, `batch_upsert`), `detection.py`
+  (`FlextLdapServerDetector`), `sync.py` (`FlextLdapSync`), `api_runtime.py`.
+- **Entry point**: `api.py` defines `FlextLdap(FlextLdapConnection, FlextLdapSync, FlextLdapApiRuntime)` via MRO;
+  `__init__.py` exports the facade plus the standard aliases and `config`/`settings`.
 
-- **Testing**: `make test`, `make test-unit`, `make test-integration` (Docker LDAP server `flext-ldap-test-server`), `make test-fast`, `pytest -m ldap`, etc.
-- **Validation**: `make lint`, `make type-check`, `make security`, `make coverage-html`, `make val` ensures zero Ruff/MyPy/Pyrefly failures and enforces 42% coverage target toward 100%.
-- **Zero‑tolerance rules**: no `TYPE_CHECKING`, no `.py` fixtures, no root aliases; constants files only hold StrEnum/Final/Literal; `cast()` forbidden, short alias usage mandated via `ruff-shared.toml` (PYI042 ignored globally).
-- **Docker helpers**: `make ldap-start/stop/health/reset` manage the osixia/openldap:1.5.0 container for integration runs.
+### Key architectural patterns
 
-## Resources & references
+- **Adapter containment**: all `ldap3` interaction lives in `adapters/ldap3.py`; the rest of the package is transport-
+  agnostic.
+- **MRO facade**: connection lifecycle, sync, and runtime behavior compose into one `FlextLdap` class — no standalone
+  helpers.
+- **Server detection**: after a successful bind, `FlextLdapServerDetector` identifies the server type so operations can
+  apply server-specific behavior.
+- **Config/settings SSOT**: host/port defaults come from `FlextLdapSettings` (env prefix `FLEXT_LDAP_`) and `c.Ldap.*`
+  constants.
 
-- [Project README](../../flext-ldap/README.md)
-- [AGENTS instructions](../../flext-ldap/AGENTS.md) detailing layering, import rules, and zero-tolerance policies
-- `flext-ldap/docs/` (architecture, API reference, development, configuration, testing, troubleshooting, guides) for deep dives
-- Reports: `reports/pytest/*`, `reports/lint-output/*`, `reports/coverage-scan-*`
-- Related projects: `flext-core`, `flext-ldif`, `flext-auth`, `flext-meltano`
+## Testing & quality
 
-## Support & contributions
+- `make check PROJECT=flext-ldap`: Ruff linting plus type checks
+- `make test PROJECT=flext-ldap`: pytest suite (latest evidence under `reports/pytest/`)
+- `make val`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
+- Tests target the public facade and exported models only, per workspace testing law (U16)
 
-- Issues: <https://github.com/flext-sh/flext-ldap/issues>
-- Discussions: <https://github.com/flext-sh/flext-ldap/discussions>
-- Follow `docs/standards/README.md` and this project’s AGENTS when changing code or docs so the portal stays aligned.
+## Resources
+
+- [Project README](../../flext-ldap/README.md) (auto-generated module map and operation flow)
+- [Workspace AGENTS.md](../../AGENTS.md) — layering and zero-tolerance rules
+- `flext-ldap/docs/api-reference/` — generated API documentation
+- Related projects: `flext-core`, `flext-ldif`, `flext-auth` (LDAP auth provider)
+- Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
+
+## Support & issues
+
+- GitHub issues: <https://github.com/flext-sh/flext-ldap/issues>
+- Follow the workspace `AGENTS.md` before proposing doc or code changes so this page stays aligned with the engineering
+  portal.

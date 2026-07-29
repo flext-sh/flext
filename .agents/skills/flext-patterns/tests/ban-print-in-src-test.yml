@@ -1,7 +1,0 @@
-id: ban-print-in-src
-valid:
-  - 'logger.info("hello")'
-  - 'logger.debug("msg")'
-invalid:
-  - 'print("hello")'
-  - 'print("x", "y", sep=",")'

@@ -1,6 +1,7 @@
 # Development
 
-The root development workflow is governed by `AGENTS.md`. Treat this guide as the operational summary, not as a parallel policy source.
+The root development workflow is governed by `AGENTS.md`. Treat this guide as the operational summary, not as a parallel
+policy source.
 
 ## Baseline Workflow
 
@@ -10,7 +11,8 @@ make test PROJECT=flext-infra MATCH=docs
 make val
 ```
 
-Use `PROJECT`, `PROJECTS`, `FILE`, `FILES`, `MATCH`, and `CHECK_GATES` instead of ad hoc shell loops. See [Make Commands](make-commands.md) for the full command reference.
+Use `PROJECT`, `PROJECTS`, `FILE`, `FILES`, `MATCH`, and `CHECK_GATES` instead of ad hoc shell loops. See [Make
+Commands](make-commands.md) for the full command reference.
 
 ## Daily Sequence
 

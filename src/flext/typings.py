@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from flext_core import FlextTypes
+from flext_core import t
 
 
-class FlextRootTypes(FlextTypes):
+class FlextRootTypes(t):
     """Flext types namespace."""
 
 

@@ -33,7 +33,7 @@ Authoritative references, in mandatory load order:
 10. [FLEXT Strict Typing](../../.agents/skills/flext-strict-typing/SKILL.md)
 11. [FLEXT Patterns](../../.agents/skills/flext-patterns/SKILL.md)
 12. [Testing Patterns](../../.agents/skills/testing-patterns/SKILL.md)
-13. [FLEXT Quality Gates](../../.agents/skills/flext-quality-gates/SKILL.md)
+13. [FLEXT Quality Gates](../../.agents/skills/flext-inviolable-rules/SKILL.md)
 
 Mandatory operating rules:
 
@@ -139,7 +139,7 @@ Suggested command baseline per cycle:
 - `ruff check <PATHS>`
 - `pyrefly check <PATHS>`
 - `pyright <PATHS>`
-- `mypy <PATHS>`
+- `MYPY_MEMORY_LIMIT_MB=6144 MYPY_TIMEOUT_SECONDS=600 make check WHAT=mypy PROJECT=<PROJECT>`
 - `pytest <TEST_PATHS>`
 
 Required output format per cycle:

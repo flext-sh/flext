@@ -1,60 +1,85 @@
 # FLEXT Tap LDAP
 
-FLEXT Tap LDAP v1.0.0 (release preparation) is the Singer tap that streams LDAP directory and LDIF data into the FLEXT data mesh. It combines stringent flext-core, flext-ldap, and flext-meltano integrations with Clean Architecture and Singer compliance so every extraction workflow is reusable and testable.
+FLEXT Tap LDAP (`flext-tap-ldap`) is the Singer tap that extracts LDAP directory entries — and, optionally, LDIF files —
+into the FLEXT data mesh. It is built on `flext-ldap` for directory connectivity and `flext-meltano` for the Singer tap
+contract, so discovery, catalog, and sync flows follow the Singer specification while every fallible operation returns
+`r[T]`.
 
 ## Status & health
 
-- **Version**: 1.0.0 (Release Preparation)
+- **Version**: 0.12.0-dev (monorepo development cycle)
 - **Python**: 3.13+
-- **Tests**: ~339+ unit/integration/e2e methods; the README reports 90%+ coverage and all suites pass in the blocked validation pipeline
-- **Quality gates**: `make check`, `make test`, and `make val` are the current project gates; use `make check CHECK_GATES=...` when you need a narrower lint, type, or security pass
-- **Dependencies**: `flext-core`, `flext-cli`, `flext-ldap`, `flext-meltano`, Singer SDK, `dbt`/Meltano workflows
-- **Zero tolerance**: no direct `singer-sdk`, `ldap3`, or Click/Rich imports; everything flows through the mandated projects and returns `r[T]`
+- **Package**: `flext_tap_ldap` (namespace package, `py.typed` shipped)
+- **Location in this repo**: `flext-tap-ldap/` at the workspace root
+
+### Quality signals
+
+- Gates run through the workspace Make contract: `make check PROJECT=flext-tap-ldap`, `make test PROJECT=flext-tap-
+  ldap`, `make val`.
+- Strict typing per workspace `AGENTS.md`: no `Any`/`object`, Pydantic 2-way models, `r[T]` on every fallible path; LDAP
+  access goes through `flext-ldap`, Singer orchestration through `flext-meltano`.
+- No coverage or test-count metrics are asserted here; the gates above produce the authoritative numbers.
 
 ## Quick start
 
-```bash
-poetry add flext-tap-ldap
-# or for development
-git clone https://github.com/flext-sh/flext-tap-ldap.git
-cd flext-tap-ldap
-make setup
-make check
-make test
-make val
-```
+Console entry points: `tap-ldap` and `flext-tap-ldap`.
 
 ```bash
 tap-ldap --config settings.json --discover > catalog.json
 tap-ldap --config settings.json --catalog catalog.json --state state.json
 ```
 
-Configuration reference and example JSON live under `docs/` and the README (host, bind credentials, LDIF toggles, custom streams, page sizing, etc.).
+Programmatically:
 
-## Architecture & patterns
+```python
+from flext_tap_ldap import FlextTapLdapSettings, FlextTapLdapTap
 
-- **Clean Architecture**: Domain (`domain/`), application (`application/`), infrastructure (`infrastructure/`), and protocol (`streams.py`, `ldif_stream.py`) layers; only lower tiers import via short aliases (`m`, `u`, `r`).
-- **Singer streams**: Users, Groups, OrganizationalUnits, Schema, Custom, LDIF, and LDIFAnalysis streams all implement Singer tap contracts while converting LDAP/LDIF entries through `r` orchestrators.
-- **Configuration models**: `settings.py` exposes Pydantic `FlextTapLdapSettings` with strict validation, including LDAP connection settings, LDIF toggles, Melro (Meltano) integration, and security tokens.
-- **Zero tolerance governance**: `AGENTS.md` enforces mandatory usage of `flext-ldap`, `flext-meltano`, `flext-core`, and `flext-cli`; forbids direct `ldap3`, `singer-sdk`, `click`, `rich`, `Any`, `cast`, or `TYPE_CHECKING`.
+settings = FlextTapLdapSettings()  # namespaced under settings.TapLdap.*
+tap = FlextTapLdapTap()
+streams = tap.discover_streams()
+```
 
-## Quality & operations
+The `settings.TapLdap.*` group carries `host`, `port`, `use_ssl`, `timeout`, and `page_size` (validated Pydantic
+fields).
 
-- **Validation pipeline**: `make check`, `make test`, and `make val` are the current standard gates; use `CHECK_GATES=` selectors on `make check` when you need a narrower lint, type, or security run.
-- **Testing organization**: `tests/e2e/ldif`, `tests/test_client.py`, `tests/test_streams.py`, `tests/test_tap.py`, integration groups, and Docker-based LDAP testing (`make ldap-test`) support 90% coverage.
-- **Singer commands**: `make discover`, `make catalog`, `make run`, `make sync`, and `make validate-config` align with the tap-specific flows defined in `custom.mk`.
-- **LDAP helpers**: `make ldap-test`, `make ldap-discover`, `make ldap-query`, plus Docker Compose `openldap` for local integration.
+## Architecture & modules
 
-## Resources & references
+Source lives under `flext-tap-ldap/src/flext_tap_ldap/`:
 
-- [Project README](../../flext-tap-ldap/README.md) for narrative, features, and configuration
-- [Project AGENTS.md](../../flext-tap-ldap/AGENTS.md) for zero-tolerance policies and command conventions
-- `flext-tap-ldap/docs/` (getting started, configuration, architecture, API reference, testing, troubleshooting, examples)
-- `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` (alignment with make val when unblocked)
-- Related projects: `flext-ldap`, `flext-ldif`, `flext-meltano`, `flext-core`, `flext-cli`, `flext-observability`, plus matching targets like `flext-target-ldap`
+- `tap.py` — `FlextTapLdapTap`, the Singer tap (built on `FlextMeltanoAbstractions`). `discover_streams()` yields the
+  LDAP streams plus the LDIF streams; `execute()` runs the tap and returns a `p.Result`.
+- `streams.py` — `FlextTapLdapStreams`, a unified namespace of nested stream classes: `UsersStream`, `GroupsStream`,
+  `OrganizationalUnitsStream`, `SchemaStream`, over the shared `LDAPBaseStream` (paged LDAP reads through `flext-ldap`).
+- `ldif_streams.py` — `FlextTapLdapLdifStreams` with `LdifStream` and `LdifAnalysisStream` for LDIF file extraction.
+- `client.py` — `FlextTapLdapClient`, the directory client wrapper.
+- `api.py` — `FlextTapLdapService` (a `FlextMeltanoTapServiceBase`), exported as the operational alias `tap_ldap`.
+- `config/` — execution parametrization (SSOT per ADR-005).
+- Canonical facet facades: `c`, `m`, `p`, `t`, `u`, plus `settings` (`FlextTapLdapSettings`); operational aliases `d`,
+  `e`, `h`, `r`, `s`, `x` come from the parent chain (`flext_ldap`).
 
-## Support & contributions
+### Key architectural patterns
 
-- GitHub issues: <https://github.com/flext-sh/flext-tap-ldap/issues>
-- Discussions: <https://github.com/flext-sh/flext-tap-ldap/discussions>
-- Follow `docs/standards/README.md`, this project’s `AGENTS.md`, and the portal index checklist before editing docs or code to keep the ecosystem synchronized.
+- One tap class and one service facade per package, composed by MRO over `flext-meltano` bases; streams are nested
+  inside a single streams namespace per responsibility.
+- Settings/config are the only parametrization source: `settings.TapLdap.*` is validated once at singleton construction.
+- LDAP protocol access is never direct — it flows through `flext-ldap`; Singer protocol types come from `flext-meltano`
+  models.
+
+## Testing & quality
+
+- Scoped suites run via `make check PROJECT=flext-tap-ldap` and `make test PROJECT=flext-tap-ldap`; full workspace
+  validation is `make val`.
+- Tests assert the public surface only (tap discovery/execution, exported models, stream behavior) per the workspace
+  testing law.
+
+## Resources
+
+- [Project README](../../flext-tap-ldap/README.md)
+- Source: `flext-tap-ldap/src/flext_tap_ldap/`
+- Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
+- Related packages: `flext-ldap`, `flext-ldif`, `flext-meltano`, `flext-core`, `flext-cli`, `flext-target-ldap`
+
+## Support & issues
+
+- Issues: <https://github.com/flext-sh/flext/issues>
+- Follow the workspace `AGENTS.md` and the project README before editing code or docs so this page stays accurate.

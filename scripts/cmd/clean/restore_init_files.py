@@ -25,16 +25,14 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from scripts.dispatch import Dispatch
-
 from flext_cli import p, u
+from scripts.dispatch import Dispatch
 
 
 def _is_git_repo(path: Path) -> bool:
-    return u.Cli.run_checked(
-        ["git", "rev-parse", "--git-dir"],
-        cwd=path,
-    ).unwrap_or(False)
+    return u.Cli.run_checked(["git", "rev-parse", "--git-dir"], cwd=path).unwrap_or(
+        False
+    )
 
 
 def _changed_init_files(repo: Path) -> list[str]:
@@ -54,8 +52,7 @@ def _changed_init_files(repo: Path) -> list[str]:
 
 def _restore_files(repo: Path, files: list[str]) -> p.Result[bool]:
     return u.Cli.run_checked(
-        ["git", "restore", "--staged", "--worktree", "--", *files],
-        cwd=repo,
+        ["git", "restore", "--staged", "--worktree", "--", *files], cwd=repo
     )
 
 
@@ -64,14 +61,9 @@ def _validate_imports(workspace_root: Path) -> p.Result[bool]:
         overrides={
             "PYTHONPATH": ":".join(
                 str(workspace_root / proj / "src")
-                for proj in (
-                    "flext-core",
-                    "flext-cli",
-                    "flext-tests",
-                    "flext-infra",
-                )
-            ),
-        },
+                for proj in ("flext-core", "flext-cli", "flext-tests", "flext-infra")
+            )
+        }
     )
     return u.Cli.run_checked(
         [
@@ -87,13 +79,12 @@ def _validate_imports(workspace_root: Path) -> p.Result[bool]:
 def run() -> int:
     """Run the restore workflow."""
     workspace_root = Path(
-        u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd())),
+        u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd()))
     ).resolve()
     if Dispatch.surface_validation_enabled():
         print("SURFACE-VALIDATE: python -m scripts.cmd.clean.restore_init_files")
         return 0
     if not Dispatch.env_enabled("APPLY"):
-        print("DRY RUN: set APPLY=Y to restore __init__.py files")
         return 0
 
     repos = [workspace_root] + [
@@ -106,38 +97,27 @@ def run() -> int:
     for repo in repos:
         total += 1
         if not _is_git_repo(repo):
-            print(f"SKIP  {repo} (not a git repository)")
             skipped += 1
             continue
 
         init_files = _changed_init_files(repo)
         if not init_files:
-            print(f"OK    {repo} (no __init__.py changes)")
             skipped += 1
             continue
 
-        print(f"WORK  {repo}: {len(init_files)} file(s)")
         restore_result = _restore_files(repo, init_files)
         if restore_result.failure:
-            print(f"FAIL  {repo} ({restore_result.error})")
             failed += 1
             continue
 
-        print(f"DONE  {repo}")
         restored += 1
 
-    print(
-        f"SUMMARY total={total} restored={restored} skipped={skipped} failed={failed}",
-    )
     if failed:
         return 1
 
-    print("VALIDATING core imports...")
     validation = _validate_imports(workspace_root)
     if validation.failure:
-        print(f"FAIL  import validation ({validation.error})")
         return 1
-    print("OK    core imports")
     return 0
 
 

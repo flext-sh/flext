@@ -1,136 +1,154 @@
-# ============================================================================
-# FLEXT WORKSPACE - STANDARDIZED GIT SUBMODULES CONFIGURATION
-# Organized by organization and project category
-# Last Updated: 2025-08-23 - STANDARDIZED CONFIGURATION
-# ============================================================================
-
-# ============================================================================
-# FLEXT-SH ORGANIZATION - Core Platform Projects
-# ============================================================================
-
-# ── Foundation & Core Services ──
-[submodule "flext-core"]
-	path = flext-core
-	url = https://github.com/flext-sh/flext-core.git
-
 [submodule "flext-api"]
 	path = flext-api
 	url = https://github.com/flext-sh/flext-api.git
+	branch = 0.12.0-dev
 
 [submodule "flext-auth"]
 	path = flext-auth
 	url = https://github.com/flext-sh/flext-auth.git
+	branch = 0.12.0-dev
 
 [submodule "flext-cli"]
 	path = flext-cli
 	url = https://github.com/flext-sh/flext-cli.git
+	branch = 0.12.0-dev
 
-[submodule "flext-web"]
-	path = flext-web
-	url = https://github.com/flext-sh/flext-web.git
+[submodule "flext-core"]
+	path = flext-core
+	url = https://github.com/flext-sh/flext-core.git
+	branch = 0.12.0-dev
 
-[submodule "flext-observability"]
-	path = flext-observability
-	url = https://github.com/flext-sh/flext-observability.git
-
-[submodule "flext-quality"]
-	path = flext-quality
-	url = https://github.com/flext-sh/flext-quality.git
-
-# ── Infrastructure & Integration Services ──
 [submodule "flext-db-oracle"]
 	path = flext-db-oracle
 	url = https://github.com/flext-sh/flext-db-oracle.git
+	branch = 0.12.0-dev
 
-[submodule "flext-ldap"]
-	path = flext-ldap
-	url = https://github.com/flext-sh/flext-ldap.git
-
-[submodule "flext-ldif"]
-	path = flext-ldif
-	url = https://github.com/flext-sh/flext-ldif.git
-
-[submodule "flext-oracle-wms"]
-	path = flext-oracle-wms
-	url = https://github.com/flext-sh/flext-oracle-wms.git
-
-[submodule "flext-oracle-oic"]
-	path = flext-oracle-oic
-	url = https://github.com/flext-sh/flext-oracle-oic.git
-
-[submodule "flext-grpc"]
-	path = flext-grpc
-	url = https://github.com/flext-sh/flext-grpc.git
-
-[submodule "flext-meltano"]
-	path = flext-meltano
-	url = https://github.com/flext-sh/flext-meltano.git
-
-[submodule "flext-plugin"]
-	path = flext-plugin
-	url = https://github.com/flext-sh/flext-plugin.git
-
-# ── Singer Ecosystem: Taps (Data Extractors) ──
-[submodule "flext-tap-ldap"]
-	path = flext-tap-ldap
-	url = https://github.com/flext-sh/flext-tap-ldap.git
-
-[submodule "flext-tap-ldif"]
-	path = flext-tap-ldif
-	url = https://github.com/flext-sh/flext-tap-ldif.git
-
-[submodule "flext-tap-oracle"]
-	path = flext-tap-oracle
-	url = https://github.com/flext-sh/flext-tap-oracle.git
-
-[submodule "flext-tap-oracle-oic"]
-	path = flext-tap-oracle-oic
-	url = https://github.com/flext-sh/flext-tap-oracle-oic.git
-
-[submodule "flext-tap-oracle-wms"]
-	path = flext-tap-oracle-wms
-	url = https://github.com/flext-sh/flext-tap-oracle-wms.git
-
-# ── Singer Ecosystem: Targets (Data Loaders) ──
-[submodule "flext-target-ldap"]
-	path = flext-target-ldap
-	url = https://github.com/flext-sh/flext-target-ldap.git
-
-[submodule "flext-target-ldif"]
-	path = flext-target-ldif
-	url = https://github.com/flext-sh/flext-target-ldif.git
-
-[submodule "flext-target-oracle"]
-	path = flext-target-oracle
-	url = https://github.com/flext-sh/flext-target-oracle.git
-
-[submodule "flext-target-oracle-oic"]
-	path = flext-target-oracle-oic
-	url = https://github.com/flext-sh/flext-target-oracle-oic.git
-
-[submodule "flext-target-oracle-wms"]
-	path = flext-target-oracle-wms
-	url = https://github.com/flext-sh/flext-target-oracle-wms.git
-
-# ── DBT Projects (Data Transformers) ──
 [submodule "flext-dbt-ldap"]
 	path = flext-dbt-ldap
 	url = https://github.com/flext-sh/flext-dbt-ldap.git
+	branch = 0.12.0-dev
 
 [submodule "flext-dbt-ldif"]
 	path = flext-dbt-ldif
 	url = https://github.com/flext-sh/flext-dbt-ldif.git
+	branch = 0.12.0-dev
 
 [submodule "flext-dbt-oracle"]
 	path = flext-dbt-oracle
 	url = https://github.com/flext-sh/flext-dbt-oracle.git
+	branch = 0.12.0-dev
 
 [submodule "flext-dbt-oracle-wms"]
 	path = flext-dbt-oracle-wms
 	url = https://github.com/flext-sh/flext-dbt-oracle-wms.git
+	branch = 0.12.0-dev
+
+[submodule "flext-grpc"]
+	path = flext-grpc
+	url = https://github.com/flext-sh/flext-grpc.git
+	branch = 0.12.0-dev
+
 [submodule "flext-infra"]
 	path = flext-infra
 	url = https://github.com/flext-sh/flext-infra.git
+	branch = 0.12.0-dev
+
+[submodule "flext-ldap"]
+	path = flext-ldap
+	url = https://github.com/flext-sh/flext-ldap.git
+	branch = 0.12.0-dev
+
+[submodule "flext-ldif"]
+	path = flext-ldif
+	url = https://github.com/flext-sh/flext-ldif.git
+	branch = 0.12.0-dev
+
+[submodule "flext-meltano"]
+	path = flext-meltano
+	url = https://github.com/flext-sh/flext-meltano.git
+	branch = 0.12.0-dev
+
+[submodule "flext-observability"]
+	path = flext-observability
+	url = https://github.com/flext-sh/flext-observability.git
+	branch = 0.12.0-dev
+
+[submodule "flext-oracle-oic"]
+	path = flext-oracle-oic
+	url = https://github.com/flext-sh/flext-oracle-oic.git
+	branch = 0.12.0-dev
+
+[submodule "flext-oracle-wms"]
+	path = flext-oracle-wms
+	url = https://github.com/flext-sh/flext-oracle-wms.git
+	branch = 0.12.0-dev
+
+[submodule "flext-plugin"]
+	path = flext-plugin
+	url = https://github.com/flext-sh/flext-plugin.git
+	branch = 0.12.0-dev
+
+[submodule "flext-quality"]
+	path = flext-quality
+	url = https://github.com/flext-sh/flext-quality.git
+	branch = 0.12.0-dev
+
+[submodule "flext-tap-ldap"]
+	path = flext-tap-ldap
+	url = https://github.com/flext-sh/flext-tap-ldap.git
+	branch = 0.12.0-dev
+
+[submodule "flext-tap-ldif"]
+	path = flext-tap-ldif
+	url = https://github.com/flext-sh/flext-tap-ldif.git
+	branch = 0.12.0-dev
+
+[submodule "flext-tap-oracle"]
+	path = flext-tap-oracle
+	url = https://github.com/flext-sh/flext-tap-oracle.git
+	branch = 0.12.0-dev
+
+[submodule "flext-tap-oracle-oic"]
+	path = flext-tap-oracle-oic
+	url = https://github.com/flext-sh/flext-tap-oracle-oic.git
+	branch = 0.12.0-dev
+
+[submodule "flext-tap-oracle-wms"]
+	path = flext-tap-oracle-wms
+	url = https://github.com/flext-sh/flext-tap-oracle-wms.git
+	branch = 0.12.0-dev
+
+[submodule "flext-target-ldap"]
+	path = flext-target-ldap
+	url = https://github.com/flext-sh/flext-target-ldap.git
+	branch = 0.12.0-dev
+
+[submodule "flext-target-ldif"]
+	path = flext-target-ldif
+	url = https://github.com/flext-sh/flext-target-ldif.git
+	branch = 0.12.0-dev
+
+[submodule "flext-target-oracle"]
+	path = flext-target-oracle
+	url = https://github.com/flext-sh/flext-target-oracle.git
+	branch = 0.12.0-dev
+
+[submodule "flext-target-oracle-oic"]
+	path = flext-target-oracle-oic
+	url = https://github.com/flext-sh/flext-target-oracle-oic.git
+	branch = 0.12.0-dev
+
+[submodule "flext-target-oracle-wms"]
+	path = flext-target-oracle-wms
+	url = https://github.com/flext-sh/flext-target-oracle-wms.git
+	branch = 0.12.0-dev
+
 [submodule "flext-tests"]
 	path = flext-tests
 	url = https://github.com/flext-sh/flext-tests.git
+	branch = 0.12.0-dev
+
+[submodule "flext-web"]
+	path = flext-web
+	url = https://github.com/flext-sh/flext-web.git
+	branch = 0.12.0-dev

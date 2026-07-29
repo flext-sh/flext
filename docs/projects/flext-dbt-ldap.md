@@ -1,64 +1,89 @@
-# FLEXT DBT LDAP
+# FLEXT dbt LDAP
 
-FLEXT DBT LDAP (v1.0.0) is the dbt Core transformation suite that turns LDAP/Active Directory data into analytics-ready marts using the CLEAN ARCHITECTURE patterns from the FLEXT ecosystem.
+FLEXT dbt LDAP is the integration project that turns LDAP/Active Directory data into analytics-ready warehouse tables.
+It composes `flext-ldap` (directory transport), `flext-meltano` (dbt orchestration), and `flext-core` (result contracts,
+settings SSOT) behind one MRO facade so extraction, transformation, sync, and quality validation share identical
+patterns.
 
-## Status & metrics
+## Status & health
 
-- **Version**: 1.0.0 (Release preparation)
-- **Python**: 3.13+ with Poetry-managed deps
-- **Tests**: 90%+ coverage across Python tests and dbt suites
-- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + dbt test + coverage)
-- **Dependencies**: `flext-core`, `flext-ldap`, `flext-meltano`, `dbt-core` (>=1.6), DuckDB/PostgreSQL adapters
-- **Documentation**: full docs under `flext-dbt-ldap/docs/` (getting-started, architecture, guides)
+- **Version**: `0.12.0-dev` (active development cycle)
+- **Python**: 3.13+
+- **Project class**: integration
+- **Dependencies**: `flext-core`, `flext-cli`, `flext-ldap`, `flext-meltano`, `pydantic`
+
+### Quality signals
+
+- All operations return `r[T]` (`p.Result[...]`) with typed payload models under `m.DbtLdap.*`.
+- Settings are validated Pydantic models (`FlextDbtLdapSettings`); no direct environment reads in runtime code.
+- Gates: `make check PROJECT=flext-dbt-ldap`, `make test PROJECT=flext-dbt-ldap`, and `make val` produce the
+  authoritative evidence.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/flext-sh/flext.git
-cd flext-dbt-ldap
-poetry install
-cp profiles.yml.example profiles.yml  # fill in the PostgreSQL or DuckDB target
-dbt deps
-dbt run
+make boot                              # workspace bootstrap (once)
+make check PROJECT=flext-dbt-ldap      # lint + type gates
 ```
 
-```bash
-make val          # run lint/type/security/test/dbt checks
-dbt docs generate
-dbt docs serve --port 8080
+```python
+from flext_dbt_ldap import FlextDbtLdap
+
+# With no override, the facade resolves the global FlextDbtLdapSettings singleton.
+api = FlextDbtLdap()
+
+# Full pipeline: extract entries via flext-ldap, transform via flext-meltano dbt.
+result = api.run_full_pipeline()
+if result.success:
+    sync = api.run_full_data_warehouse_sync(incremental=True)
+    quality = api.validate_warehouse_data_quality()
 ```
 
-## Architecture & layers
+Granular entry points on the same facade include `extract_ldap_entries(...)`, `transform_with_dbt(...)`,
+`sync_users_to_warehouse(...)`, `sync_groups_to_warehouse(...)`, `sync_memberships_to_warehouse(...)`,
+`run_dbt_models(...)`, and `generate_analytics_report(...)`.
 
-- **Facade**: `src/flext_dbt_ldap/simple_api.py` and `api.py` expose `FlextDbtLdap` with methods to run models, tests, and macros while keeping SQLAlchemy/dbt internals isolated.
-- **Model tiers**: `models/` follows staging → intermediate → marts (dims/facts) → snapshots; macros handle LDAP DN parsing and attribute normalization.
-- **Python domain**: `src/flext_dbt_ldap/ldap_integration.py`, `models.py`, and `dbt_services.py` provide r-friendly services that orchestrate macro rendering, dbt invocation, and metadata reporting.
-- **Zero tolerance**: registry of `flext-meltano` for all dbt operations and `flext-ldap` for all LDAP transports; direct imports of dbt/ldap3 are forbidden (see `AGENTS.md`).
+## Architecture & modules
 
-## Key features
+The package follows the canonical FLEXT layout under `src/flext_dbt_ldap/`:
 
-- LDAP-specific macros (`parse_dn`, `generate_hierarchy_path`, `normalize_array_field`, `ldap_timestamp_to_timestamp`).
-- Data models for users, groups, memberships, and organizational hierarchy with incremental performance options.
-- dbt snapshots plus historical tracking, anomaly detection tests, and analytics-focused marts (e.g., `dim_users`, `dim_groups`, `fact_memberships`).
-- Integration with dbt docs/CI pipelines, including `make dbt-run`, `make dbt-test`, `make dbt-docs`, and `make dbt-clean`.
+- `api.py` — `FlextDbtLdap` (also exported as `dbt_ldap`), the unified MRO facade. All extraction, transformation, sync,
+  and validation behavior arrives through mixins; there are no wrapper or delegation methods.
+- `services/client.py` — client mixin: `create_ldap_api`, `extract_ldap_entries`, `transform_with_dbt`,
+  `validate_ldap_data`, `run_full_pipeline`.
+- `services/sync.py` — `FlextDbtLdapSyncMixin`: warehouse sync for users/groups/memberships, dbt model runs, full
+  warehouse sync, data-quality validation, analytics reports, with bookmark state persisted under `history/`.
+- `base.py` — service base (`s`) over `flext-meltano`'s dbt service base.
+- `_settings.py` / `config/` — settings SSOT (`FlextDbtLdapSettings`), consumed as `from flext_dbt_ldap import
+  settings`.
+- `_constants/`, `_models/`, `_utilities/`, `constants.py`, `models.py`, `typings.py`, `protocols.py`, `utilities.py` —
+  `c/m/t/p/u` facet declarations and behavior.
+
+### Key architectural patterns
+
+- **MRO composition**: one public facade class per project; behavior lives in service mixins, never in loose helper
+  functions.
+- **Zero direct dbt/ldap imports**: directory access goes through `flext-ldap`; dbt execution goes through `flext-
+  meltano`.
+- **Settings SSOT**: `FlextDbtLdapSettings.fetch_global()` supplies configuration when the caller passes no override.
+- **Typed payloads**: sync results, run status, and analytics reports are `m.DbtLdap.*` Pydantic models, not raw
+  dictionaries.
 
 ## Testing & quality
 
-- `make val` runs Pett, Pyrefly, Ruff, Bandit, coverage, and dbt tests (unit + integration + dbt compilation).
-- dbt tests cover staging/intermediate/mart models plus LDAP macros (`dbt test --select staging`).
-- Python tests run via `pytest tests/` with markers for `unit`, `integration`, `dbt`, `ldap`, and `validation`.
-- `reports/coverage-scan-*`, `reports/lint-output/*`, and `reports/pytest/*` contain the artifacts referenced in the portal.
+- Tests live in the project `tests/` tree and run through `make test PROJECT=flext-dbt-ldap`.
+- Warehouse sync paths need a reachable LDAP directory and a dbt target; without them, unit suites and static gates are
+  the evidence of record.
+- The authoritative quality verdict comes from `make check PROJECT=flext-dbt-ldap` and `make val`.
 
-## Resources & references
+## Resources
 
-- [Project README](../../flext-dbt-ldap/README.md)
-- [AGENTS governance](../../flext-dbt-ldap/AGENTS.md) – zero tolerance rules and workflow commands
-- `flext-dbt-ldap/docs/` – quick start, configuration, architecture, troubleshooting, and integration guides
-- Related artifacts: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
-- Related projects: `flext-core`, `flext-ldap`, `flext-meltano`, `flext-tap-ldap`, `flext-target-ldap`
+- [Project README](../../flext-dbt-ldap/README.md) (auto-generated module map and integration pointers)
+- [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law
+- Generated API overview: `flext-dbt-ldap/docs/api-reference/generated/overview.md`
+- Related projects: `flext-core`, `flext-ldap`, `flext-meltano`, `flext-tap-ldap`, `flext-target-ldap`, `flext-dbt-ldif`
 
-## Support & contributions
+## Support & issues
 
-- GitHub issues: <https://github.com/flext-sh/flext-dbt-ldap/issues>
-- Discussions: <https://github.com/flext-sh/flext-dbt-ldap/discussions>
-- Follow `docs/standards/README.md` and workspace AGENTS.md instructions before editing docs or code to keep the portal trustworthy.
+- Issues and discussions: <https://github.com/flext-sh/flext> (monorepo)
+- Before contributing, read the workspace `AGENTS.md` and run `make check PROJECT=flext-dbt-ldap` on your change.
