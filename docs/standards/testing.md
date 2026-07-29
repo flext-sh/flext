@@ -78,7 +78,9 @@ FlextContainer.reset_for_testing()
 
 ## Golden files and examples
 
-When output is stable and reviewable, prefer golden-file examples. Store them under `tests/fixtures/` or the project-local equivalent. Update golden files deliberately, never as a side effect of unrelated changes.
+When output is stable and reviewable, prefer golden-file examples. Store them under
+`tests/fixtures/` or the project-local equivalent. Update golden files
+deliberately, never as a side effect of unrelated changes.
 
 ## Parametrization
 

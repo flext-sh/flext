@@ -1,5 +1,6 @@
 
-> **API Documentation:** [`pydantic.types.Strict`][pydantic.types.Strict]
+??? api "API Documentation"
+[`pydantic.types.Strict`][pydantic.types.Strict]<br>
 
 By default, Pydantic will attempt to coerce values to the desired type when possible.
 For example, you can pass the string `'123'` as the input for the [`int` number
@@ -54,11 +55,16 @@ Strict mode can be enabled in various ways:
 - [At the field level](#at-the-field-level).
 - [At the configuration level](#as-a-configuration-value) (with the possibility to override at the field level).
 
+<!-- old anchor added for backwards compatibility -->
+<!-- markdownlint-disable-next-line no-empty-links -->
+
+[](){#strict-mode-in-method-calls}
+
 ## As a validation parameter
 
-Strict mode can be enabled on a per-validation-call basis, when using the
-[validation methods](./models.md#validating-data) on [Pydantic models](./models.md) and
-[type adapters](./type_adapter.md).
+Strict mode can be enaled on a per-validation-call basis, when using the [validation methods](./models.md#validating-
+data)
+on [Pydantic models](./models.md) and [type adapters](./type_adapter.md).
 
 ```python
 from datetime import date
@@ -83,6 +89,11 @@ TypeAdapter(date).validate_json('"2000-01-01"', strict=True)  # (1)!
 ```
 
 1. As mentioned, strict mode is looser when validating from JSON.
+
+<!-- old anchor added for backwards compatibility -->
+<!-- markdownlint-disable-next-line no-empty-links -->
+
+[](){#strict-mode-with-field}
 
 ## At the field level
 
@@ -118,9 +129,15 @@ except ValidationError as e:
 1. The strict constraint can also be applied using the [annotated pattern](./fields.md#the-annotated-pattern):
    `Annotated[int, u.Field(strict=True)]`
 
+<!-- old anchor added for backwards compatibility -->
+<!-- markdownlint-disable-next-line no-empty-links -->
+
+[](){#strict-mode-with-annotated-strict}
+
 ### Using the `Strict()` metadata class
 
-> **API Documentation:** [`pydantic.types.Strict`][pydantic.types.Strict]
+??? api "API Documentation"
+[`pydantic.types.Strict`][pydantic.types.Strict]<br>
 
 As an alternative to the [`u.Field()`][pydantic.u.Field] function, Pydantic provides the
 [`Strict`][pydantic.types.Strict]
@@ -143,6 +160,11 @@ class User(BaseModel):
 ```
 
 1. Equivalent to `Annotated[int, Strict()]`.
+
+<!-- old anchor added for backwards compatibility -->
+<!-- markdownlint-disable-next-line no-empty-links -->
+
+[](){#strict-mode-with-configdict}
 
 ## As a configuration value
 
