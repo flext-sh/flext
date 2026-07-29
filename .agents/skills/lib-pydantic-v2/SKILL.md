@@ -1,27 +1,11 @@
 ---
 name: lib-pydantic-v2
-description: 'Use this skill to pydantic v2 model, validation, and serialization patterns
-  used across FLEXT. Use when creating models, adding validators, using ConfigDict,
-  TypeAdapter, or model_validate/model_dump. DO NOT USE FOR: questions unrelated to
-  lib-pydantic-v2 creating projects or architecture from scratch'
+description: 'Pydantic v2 model, validation, and serialization patterns used across FLEXT. Use when creating models, adding validators, using ConfigDict, TypeAdapter, or model_validate/model_dump.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # Lib Pydantic V2 — Models, Validators, and Adapters
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about lib pydantic v2.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to lib-pydantic-v2.
-- creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -29,16 +13,10 @@ metadata:
 2. Use `ConfigDict` (never `class Config:`) with explicit `extra=` and `validate_assignment=`
 3. Add `u.Field(description=...)` on all public fields
 
-## Critical rules
+## Enforced contracts
 
-- Prefer canonical sources.
-- Require evidence.
-
-## Example
-
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- Auto-fixable Pydantic v1 APIs: .dict(), parse_obj(), parse_raw(), .json().
+- CRITICAL: model_rebuild() is strictly prohibited — resolve type references at definition time or use Protocols.
+- Pydantic v1 from_orm() is banned.
+- Pydantic v1 @validator decorator is banned.
+- Pydantic v1 @root_validator decorator is banned.

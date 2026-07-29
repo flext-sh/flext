@@ -1,30 +1,13 @@
 ---
 name: flext-quality-gates
-description: 'Use when running or interpreting quality gates (lint, typecheck, test,
-  val) in the FLEXT monorepo. Covers mandatory gate definitions, exact tool commands
-  (ruff, pyrefly, pyright, mypy, pytest), pass thresholds, and configuration sources
-  from base.mk and pyproject.toml. DO NOT USE FOR: questions unrelated to flext-quality-gates
-  creating projects or architecture from scratch'
+description: 'Guidance for running or interpreting quality gates (lint, typecheck, test, val) in the FLEXT monorepo. Covers mandatory gate definitions, exact tool commands (ruff, pyrefly, pyright, mypy, pytest), pass thresholds, and configuration sources from base.mk and pyproject.toml.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # FLEXT Quality Gates
 
-**UTILITY SKILL**
-
 Commands and thresholds for the FLEXT quality gates.
-
-## USE FOR
-
-- Running lint, format, typecheck, or test gates.
-- Interpreting failures from `make check` or CI.
-- Choosing the narrowest gate for a changed file.
-
-## DO NOT USE FOR
-
-- Questions unrelated to FLEXT quality gates.
-- Creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -59,7 +42,8 @@ make check PROJECT=flext-core CHECK_GATES=pyrefly
 
 ## Coverage
 
-`pyproject.toml` sets `fail_under = 45` for the consolidated workspace. Project-local targets may be higher.
+Read the active threshold from the owning `pyproject.toml`/generated gate model. Skills
+and tests must not copy today's configured percentage into prose or assertions.
 
 ## Anti-patterns
 

@@ -26,10 +26,9 @@ composable by the orchestrator and safe for CI.
 A script is exactly ONE role. A single script must never combine validate + fix
 in its default path.
 
-Canonical implementations in this repository:
-
-- Validator orchestrator: `scripts/core/skill_validate.py`
-- Fix orchestrator: `scripts/core/skill_fix.py`
+Canonical implementations are the typed `flext-infra` validation/fix services,
+consumed through the root Make dispatcher. Root scripts and skill directories must
+not recreate those orchestrators.
 
 ---
 
@@ -235,7 +234,7 @@ or for Python:
 
 ## Conformance Checking
 
-The contract validator (`scripts/core/check_script_gate_contract.py`) verifies:
+The `flext-infra` script-contract service, invoked by workspace validation, verifies:
 
 1. **Owner-Skill marker** present in first 10 lines.
 2. **Shebang line** present (`#!/usr/bin/env bash` or `#!/usr/bin/env python3`).
@@ -251,13 +250,16 @@ exempt from gate contract validation but must still have Owner-Skill markers.
 
 ## Examples of Conforming Scripts
 
-### Validator (python — skill-based)
+### Canonical skill validation
 
-- `python3 scripts/core/skill_validate.py --skill flext-strict-typing` — discovers rules from `.agents/skills/flext-strict-typing/rules.yml`; accepts `--mode baseline|strict`; exits 0/1/2/3
-- `python3 scripts/core/skill_validate.py --skill lib-pydantic-v2` — same contract
-- `python3 scripts/core/skill_validate.py --all` — runs all discovered skills
+Skill directories remain declarative. The typed loader, rule models, scanners,
+reports, and exit-code mapping belong to `flext-infra` and are invoked through the
+workspace validation route:
 
-### Validator (python — standalone)
+```bash
+make val VALIDATE_SCOPE=workspace
+```
 
-- `.agents/skills/scripts-infra/validate_ownership.py --root .` — exits 0/1; produces JSON report
-- `.agents/skills/scripts-infra/validate_artifact_naming.py --root .` — exits 0/1; produces JSON report
+Do not recreate removed `scripts/core/*validate*.py` entry points, execute scripts
+inside a skill directory, or invoke direct scanners from CI. New validation behavior
+is added to the `flext-infra` service and promoted through the Make dispatcher.

@@ -1,27 +1,11 @@
 ---
 name: lib-pydantic-settings
-description: 'Use this skill to pydantic ConfigDict and singleton settings patterns
-  across FLEXT subprojects. Use when editing settings.py models, env bindings, or
-  configuration validation behavior. DO NOT USE FOR: questions unrelated to lib-pydantic-settings
-  creating projects or architecture from scratch'
+description: 'Pydantic ConfigDict and singleton settings patterns across FLEXT subprojects. Use when editing settings.py models, env bindings, or configuration validation behavior.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # Lib Pydantic Settings
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about lib pydantic settings.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to lib-pydantic-settings.
-- creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -29,16 +13,13 @@ metadata:
 2. Define `model_config = m.SettingsConfigDict(env_prefix="FLEXT_<PROJECT>_", extra="ignore")`.
 3. Declare ONLY project-specific fields (rule-3 isolation; redeclare root-like
 
-## Critical rules
+## Enforced contracts
 
-- Prefer canonical sources.
-- Require evidence.
+- Legacy Pydantic class Config is banned in settings modules.
+- Settings modules should define env_prefix explicitly.
 
-## Example
+## Resources
 
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- [`rules/legacy-config-fix.yml`](rules/legacy-config-fix.yml)
+- [`rules/legacy-config.yml`](rules/legacy-config.yml)
+- [`rules/require-env-prefix.yml`](rules/require-env-prefix.yml)

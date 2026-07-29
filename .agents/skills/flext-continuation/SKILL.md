@@ -11,18 +11,6 @@ metadata:
 
 Resume interrupted FLEXT work from its single source of truth: the Bead ledger and its artifacts.
 
-## USE FOR
-
-- Retaking a bead after session compaction, tool failure, or handoff.
-- Continuing a multi-step plan stored in a bead.
-- Executing the remaining steps of an in-progress bead.
-
-## DO NOT USE FOR
-
-- Starting a new task without a bead.
-- Bypassing `AGENTS.md` or bead discipline.
-- Questions unrelated to bead continuation.
-
 ## Workflow
 
 1. **Identify the active bead**

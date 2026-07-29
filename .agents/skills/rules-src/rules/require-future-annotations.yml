@@ -1,8 +1,6 @@
-id: require-future-annotations-src
+id: require-future-annotations
 language: python
 rule:
   pattern: from __future__ import annotations
-
-from collections.abc import Mapping, Sequence
-message: "Future annotations import found (tracking)"
-severity: warning
+message: "Python module must enable postponed annotations"
+severity: error

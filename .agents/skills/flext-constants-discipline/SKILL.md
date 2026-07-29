@@ -1,44 +1,20 @@
 ---
 name: flext-constants-discipline
-description: 'Use this skill to canonical constants layout using StrEnum, IntEnum,
-  Literal, frozenset, MappingProxyType, tuple and Final. Use when adding or refactoring
-  any c.* constant across the workspace. DO NOT USE FOR: questions unrelated to flext-constants-discipline
-  creating projects or architecture from scratch'
+description: 'Canonical constants layout using StrEnum, IntEnum, Literal, frozenset, MappingProxyType, tuple and Final. Use when adding or refactoring any c.* constant across the workspace.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # FLEXT Constants Discipline
 
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about flext constants discipline.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to flext-constants-discipline.
-- creating projects or architecture from scratch.
-
 ## Workflow
 
 1. Grep for raw module-scope collections in the target project:
-2. For each hit, pick the canonical form from Rules.
+2. For each hit, choose the immutable form that matches the runtime contract.
 3. Relocate into the `c.<Project>.<Category>` namespace.
 
-## Critical rules
+## Contracts
 
-- Prefer canonical sources.
-- Require evidence.
-
-## Example
-
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- Use `StrEnum` or `IntEnum` for closed runtime choices and `Literal` for static alternatives.
+- Use immutable containers (`tuple`, `frozenset`, `MappingProxyType`) and annotate module constants with `Final`.
+- Expose constants through the owning `c` namespace; do not duplicate values in consumers.

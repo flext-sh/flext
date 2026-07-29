@@ -13,35 +13,25 @@ from collections.abc import Mapping, Sequence
 
 `ruff` enforces this via `I002`.
 
-## Canonical aliases
+## Structural facades and runtime surfaces
 
-Use the facade aliases exposed by `flext_core` and project facades:
+The only structural facade aliases are:
 
 | Alias | Purpose |
-|-------|---------|
-| `c` | constants / constants namespace |
-| `d` | decorators |
-| `e` | errors / exceptions |
-| `h` | handlers |
-| `m` | models |
-| `p` | protocols |
-| `r` | result (`FlextResult`) |
-| `s` | service / runtime |
-| `t` | typings |
-| `u` | utilities |
-| `x` | mixins / execution |
+| --- | --- |
+| `c` | immutable constants and namespaces |
+| `t` | type aliases and generic relationships |
+| `p` | behavioral protocols |
+| `m` | Pydantic models and schema contracts |
+| `u` | stateless utilities and framework bridges |
 
-**Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`, `FlextCliSettings`, `FlextTestsSettings`) have no short alias.
+`r[T]` is the success/failure contract. `FlextRuntime`, `FlextDi`,
+`FlextContainer`, `FlextContext`, `FlextLogger`, `s`, `FlextDispatcher`,
+`FlextHandler`, `FlextCatalog`, and `d` are narrow runtime surfaces defined by the
+v0.13 baseline; they are not additional structural facade families.
 
-Example:
-
-```python
-from flext_core import c, m, r, t, u
-
-
-def load(user_id: int) -> r[m.User]:
-    return u.http_get(f"{c.API_BASE}/users/{user_id}")
-```
+Do not add new responsibility to `x`, `h`, generic registries, or other migration-era
+aliases. Settings classes have no short alias.
 
 ## Imports
 

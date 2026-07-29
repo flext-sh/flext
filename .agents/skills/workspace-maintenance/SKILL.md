@@ -1,27 +1,11 @@
 ---
 name: workspace-maintenance
-description: 'Use this skill to use when running workspace-wide maintenance tasks
-  across all FLEXT submodules. Covers hygiene checks, dependabot settings standardization,
-  Poetry health validation, and security enforcement automation. DO NOT USE FOR: questions
-  unrelated to workspace-maintenance creating projects or architecture from scratch'
+description: 'Guidance for workspace-wide maintenance tasks across all FLEXT submodules. Covers hygiene checks, dependabot settings standardization, Poetry health validation, and security enforcement automation.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # Workspace Maintenance
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about workspace maintenance.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to workspace-maintenance.
-- creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -30,16 +14,10 @@ metadata:
 3. For cross-workspace tooling distribution, use `make workspaces WHAT=status` and `make workspaces WHAT=distribute APPLY=1` from `~/.ai-hub`.
 4. Run specific maintenance checker with `--help` first, then default (dry-run) mode.
 
-## Critical rules
+## Enforced contracts
 
-- Prefer canonical sources.
-- Require evidence.
+- Workspace maintenance scripts must declare Owner-Skill marker.
 
-## Example
+## Resources
 
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- [`rules/require-owner-skill-marker.yml`](rules/require-owner-skill-marker.yml)

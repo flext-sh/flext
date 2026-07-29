@@ -1,28 +1,11 @@
 ---
 name: flext-type-system
-description: 'Use this skill to canonical FLEXT type-system map for aliases, generics,
-  result interplay, and settings contracts. Use when changing shared typing primitives.
-  **Reviewed**: 2026-04-20 | **Scope**: Type-system map — aliases, generics, result
-  interplay, settings contracts, p.* protocols. DO NOT USE FOR: questions unrelated
-  to flext-type-system creating projects or architecture from scratch'
+description: 'Canonical FLEXT type-system map for aliases, generics, result interplay, and settings contracts. Use when changing shared typing primitives.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # Flext Type System
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about flext type system.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to flext-type-system.
-- creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -30,16 +13,13 @@ metadata:
 2. Extend or refine canonical alias in `typings.py`.
 3. Validate impacted consumers in result/settings/protocol modules.
 
-## Critical rules
+## Enforced contracts
 
-- Prefer canonical sources.
-- Require evidence.
+- Bare dict return annotations are discouraged in favor of explicit aliases/contracts.
+- Define shared aliases in `t`, runtime protocols in `p`, models in `m`, and fallible results as `r[T]`.
+- Keep generic parameters explicit and preserve error types across result composition.
+- Change shared typing primitives only with consumer-wide Pyrefly, Pyright, Mypy, and test evidence.
 
-## Example
+## Resources
 
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- [`rules/ban-bare-dict-return.yml`](rules/ban-bare-dict-return.yml)

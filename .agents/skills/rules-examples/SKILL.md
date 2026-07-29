@@ -1,28 +1,11 @@
 ---
 name: rules-examples
-description: 'Use this skill to rules for runnable examples in `examples/` so they
-  stay aligned with current APIs and tooling. Use when editing or adding example scripts.
-  **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule alignment.
-  DO NOT USE FOR: questions unrelated to rules-examples creating projects or architecture
-  from scratch'
+description: 'Rules for runnable examples in `examples/` so they stay aligned with current APIs and tooling. Use when editing or adding example scripts.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # Rules Examples
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about rules examples.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to rules-examples.
-- creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -30,17 +13,12 @@ metadata:
 2. Update script with current public imports and behavior.
 3. Verify script syntax and invocation.
 
-## Critical rules
+## Enforced contracts
 
-- Prefer canonical sources.
-- Require evidence before claiming success.
+- Examples should be directly runnable via a __main__ guard.
+- Examples should opt into postponed annotations for consistency.
 
-## Example
+## Resources
 
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
-- Missing context → state assumptions.
+- [`rules/require-future-annotations.yml`](rules/require-future-annotations.yml)
+- [`rules/require-main-guard.yml`](rules/require-main-guard.yml)

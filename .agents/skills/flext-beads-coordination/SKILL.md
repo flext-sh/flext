@@ -1,56 +1,47 @@
 ---
 name: flext-beads-coordination
-description: 'Use this skill to coordinate parallel FLEXT work through Beads-first
-  task ownership, evidence ledgers, delegation contracts, and native gate landing.
-  DO NOT USE FOR: questions unrelated to FLEXT coordination, single-agent local
-  edits that already have an active bead, or architecture design from scratch'
+description: 'Use when coordinating parallel FLEXT work through Beads or an equivalent active ledger, with disjoint ownership, dependency-aware lanes, evidence, integration review, and scoped landing.'
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 2.0.0
 ---
-# FLEXT Beads Coordination
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Coordinating multi-agent FLEXT work across root and submodule repositories.
-- Creating or reviewing file ownership matrices before writes.
-- Delegating implementation, research, or review work that must preserve AI Hub law.
-- Landing verified work with bead evidence, explicit pathspecs, commit, and fast-forward push.
-
-## DO NOT USE FOR
-
-- questions unrelated to FLEXT coordination.
-- single-agent local edits that already have an active bead and no delegation.
-- creating projects or architecture from scratch.
+# FLEXT Coordination Ledger
 
 ## Workflow
 
-1. Run `bd ready` or inspect the named bead, then claim the bead before substantive edits.
-2. Record target, impact, risk, and disjoint file ownership in the bead before writes.
-3. For delegated work, include the Supreme Rule, Supreme Law, R18, and exact validation commands in the delegation contract.
-4. Keep every worker scoped to its owned files; read-only audits may inspect broadly, but verbose findings go under `.beads/artifacts/<bead-id>/`.
-5. After each edit batch, run the affected import smoke, `ruff --no-fix`, typecheck, and scoped tests before continuing.
-6. Record command, exit code, and decisive output in the bead as evidence.
-7. Land only verified work with explicit pathspecs, one logical commit, fast-forward push, and final bead evidence.
+1. Inspect the active Bead when `bd` is available; otherwise maintain the same intent
+   and evidence explicitly in the current task and report the tool limitation.
+2. Record the target, authority, live/target owner, exclusions, risks, dependencies,
+   acceptance gates, and stop condition before assigning writes.
+3. Split work by disjoint path ownership and dependency order. Parallelize read-only
+   audits before freezing the implementation contract.
+4. Give every lane its writable paths, read-only context, required output, exact gates,
+   and prohibition on hidden scope expansion.
+5. Review returned findings and diffs against live shared state. Reconcile overlaps
+   before staging and validate the combined result, not only lane-local results.
+6. Record commands, exit status, decisive output, commit SHA, and remaining risk.
 
-## Critical rules
+## Lane states
 
-- Beads is the sole plan and execution ledger; never edit `.beads/*.jsonl` by hand.
-- Fix root causes only; no bypasses, suppressions, compatibility wrappers, stubs, or hardcoded coexistence paths.
-- Preserve continuous-green: import and collection must not break between edit batches.
-- Use bare commands such as `uv run`, `make`, `ruff`, `pyrefly`, `pytest`, and `bd`; never use `.venv/bin/...`.
-- Accept other agents' work as current state; do not use rollback/reset/restore/stash/clean/revert flows.
-- Commit with explicit pathspecs and push only after native gates are green.
+`ready → claimed → implementing → validating → integrated → landed`
 
-## Example
+A lane returns to `implementing` when combined validation exposes a defect. `blocked`
+requires an external decision or unavailable owner, not merely a red gate that can be
+fixed within the lane.
 
-**Input:** coordinate two agents changing `flext-infra` and root skills.
-**Output:** claim the bead, declare ownership per path, validate each batch, and record evidence before commit/push.
+## Coordination contracts
 
-## Troubleshooting
+- One outcome has one coordinator and one frozen target contract.
+- One writable path has one active implementation owner at a time.
+- Read-only audits may overlap; write lanes may not silently edit shared files.
+- Workers do not merge, close coordinator-owned work, or create compatibility paths.
+- The coordinator alone reconciles shared files, orders integration, and declares the
+  combined acceptance gates complete.
+- Long evidence belongs in `.beads/artifacts/<bead-id>/` when Beads is available;
+  ledger notes retain the concise result and path.
 
-- Missing bead -> stop and create or claim the correct bead before editing.
-- Overlapping ownership -> resolve the ownership matrix in the bead before writes.
-- Red gate -> diagnose the root cause, record exact command/output, and continue only after the same surface is green.
+## Recovery
+
+If a tool or session ends, reload the active ledger, Git state, mutable files, lane
+ownership, last green evidence, and next dependency-ready action. Never recover by
+resetting, stashing, or discarding shared work.

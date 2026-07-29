@@ -1,26 +1,13 @@
 ---
 name: using-flext-cli
-description: 'Use when building or testing FLEXT CLI commands. Covers the model-driven Typer abstraction, CLI settings, output formatting, and CliRunner testing. DO NOT USE FOR: questions unrelated to flext-cli or creating projects/architecture from scratch.'
+description: 'Guidance for building or testing FLEXT CLI commands. Covers the model-driven Typer abstraction, CLI settings, output formatting, and CliRunner testing.'
 license: MIT
 metadata:
   version: 1.1.0
 ---
 # Using flext-cli
 
-**UTILITY SKILL**
-
 Quick-reference for building CLI commands with `flext_cli`.
-
-## USE FOR
-
-- Writing or testing FLEXT CLI commands.
-- Using the model-driven Typer abstraction.
-- Configuring CLI settings.
-
-## DO NOT USE FOR
-
-- Questions unrelated to `flext_cli`.
-- Creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -41,7 +28,7 @@ Quick-reference for building CLI commands with `flext_cli`.
 from flext_cli import c, m, p, r, s, t, u
 ```
 
-`flext_cli` reexports `d`, `e`, `h`, `r`, `x` from `flext_core`.
+`flext_cli` may still expose migration-era operational names in the live API. Do not add new dependencies on `h` or `x`; target the v0.13 owners when refactoring.
 
 | Alias | Purpose |
 |-------|---------|
@@ -64,18 +51,15 @@ from flext_cli import m, t
 from flext_cli.services.cli import FlextCliCli
 from flext_cli.settings import FlextCliSettings
 
-
 class GreetInput(m.BaseModel):
     name: str
     shout: bool = False
-
 
 def greet_handler(model: GreetInput) -> t.JsonValue:
     message = f"Hello, {model.name}!"
     if model.shout:
         message = message.upper()
     return {"message": message}
-
 
 settings = FlextCliSettings.fetch_global()
 command = FlextCliCli.model_command(
@@ -105,14 +89,11 @@ from flext_cli import m, t, u
 from flext_cli.services.cli import FlextCliCli
 from flext_cli.settings import FlextCliSettings
 
-
 class GreetInput(m.BaseModel):
     name: str
 
-
 def greet_handler(model: GreetInput) -> t.JsonValue:
     return {"message": f"Hello, {model.name}!"}
-
 
 settings = FlextCliSettings.fetch_global()
 command = FlextCliCli.model_command(
@@ -130,7 +111,6 @@ from __future__ import annotations
 
 from flext_cli import m
 
-
 class GreetInput(m.BaseModel):
     name: str
 ```
@@ -140,7 +120,6 @@ class GreetInput(m.BaseModel):
 ```python notest
 # Illustrative anti-pattern: ad-hoc typer function instead of model-driven command.
 import typer
-
 
 def main(name: str):
     print(f"Hello, {name}")

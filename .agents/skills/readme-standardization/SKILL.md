@@ -1,28 +1,11 @@
 ---
 name: readme-standardization
-description: 'Use this skill to use when creating, updating, or auditing README.md
-  files across the FLEXT ecosystem. Covers required sections, structure templates,
-  badge standards, and tooling for consistent README generation and maintenance. DO
-  NOT USE FOR: questions unrelated to readme-standardization creating projects or
-  architecture from scratch'
+description: 'Guidance for creating and auditing README.md files across the FLEXT ecosystem. Covers required sections, structure templates, badge standards, and tooling for consistent README generation and maintenance.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # README Standardization Skill
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about readme standardization.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to readme-standardization.
-- creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -30,16 +13,12 @@ metadata:
 2. Confirm the project's parent MRO chain, abstracted libraries, and primary skills before drafting the Collection Rules section.
 3. Apply safe automatic fixes via `make docs DOCS_PHASE=fix`, then manual content adjustments only where the auto-generator cannot derive content (purpose, onboarding narrative, operation flow).
 
-## Critical rules
+## Contracts
 
-- Prefer canonical sources.
-- Require evidence.
-
-## Example
-
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- Derive project identity, version, package metadata, and repository links from the
+  same typed metadata owner used by the documentation generator.
+- Keep purpose, installation, usage, architecture, contribution, and license content
+  discoverable without freezing today's generated values in this skill.
+- Link ecosystem packages to the canonical `flext-sh/flext` portal.
+- Change generator-owned structure at its template/model owner and prove a second
+  generation run is empty; do not hand-edit generated README projections.

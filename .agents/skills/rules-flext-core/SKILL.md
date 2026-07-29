@@ -1,28 +1,11 @@
 ---
 name: rules-flext-core
-description: 'Use this skill to authoritative rules for `flext-core` architecture,
-  typing, result flow, DI, and logging boundaries. Use when modifying files under
-  `flext-core/`. **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh
-  and rule alignment. DO NOT USE FOR: questions unrelated to rules-flext-core creating
-  projects or architecture from scratch'
+description: 'Guidance for authoritative rules for `flext-core` architecture, typing, result flow, DI, and logging boundaries. Use when modifying files under `flext-core/`.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # Rules Flext Core
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about rules flext core.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to rules-flext-core.
-- creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -30,16 +13,16 @@ metadata:
 2. Apply minimal change aligned with local pattern.
 3. Verify imports/exports and boundary integrity.
 
-## Critical rules
+## Enforced contracts
 
-- Prefer canonical sources.
-- Require evidence.
+- Python modules should enable postponed annotation evaluation.
+- Service boundaries should prefer r-based result flow.
+- Standardize test helper aliases to tm/tt/u/c/p naming.
+- Subproject constants.py should import FlextConstants from flext_core.
 
-## Example
+## Resources
 
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- [`rules/require-flext-constants-import.yml`](rules/require-flext-constants-import.yml)
+- [`rules/require-flext-result-pattern.yml`](rules/require-flext-result-pattern.yml)
+- [`rules/require-future-annotations.yml`](rules/require-future-annotations.yml)
+- [`rules/test-alias-fix.yml`](rules/test-alias-fix.yml)

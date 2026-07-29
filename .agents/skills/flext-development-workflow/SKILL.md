@@ -1,30 +1,13 @@
 ---
 name: flext-development-workflow
-description: 'Describes the end-to-end development workflow for the FLEXT monorepo:
-  environment bootstrap, make targets, RTK command interception, lint/typecheck/test
-  gates, and CI/CD lifecycle. Use when setting up the dev environment, running make
-  check or make test. DO NOT USE FOR: questions unrelated to flext-development-workflow
-  creating projects or architecture from scratch'
+description: 'Describes the end-to-end development workflow for the FLEXT monorepo: environment bootstrap, make targets, RTK command interception, lint/typecheck/test gates, and CI/CD lifecycle. Use when setting up the dev environment, running make check or make test.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # FLEXT Development Workflow
 
-**UTILITY SKILL**
-
 End-to-end development workflow for the FLEXT monorepo.
-
-## USE FOR
-
-- Setting up the development environment.
-- Discovering make targets and dispatcher verbs.
-- Understanding lint/typecheck/test/CI lifecycle.
-
-## DO NOT USE FOR
-
-- Questions unrelated to FLEXT workflow.
-- Creating projects or architecture from scratch.
 
 ## Workflow
 

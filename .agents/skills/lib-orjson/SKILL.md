@@ -1,27 +1,11 @@
 ---
 name: lib-orjson
-description: 'Use this skill to deterministic high-performance JSON serialization
-  with orjson in flext_core utilities. Use when editing sort keys, cache normalization,
-  or JSON boundary conversion logic. DO NOT USE FOR: questions unrelated to lib-orjson
-  creating projects or architecture from scratch'
+description: 'Deterministic high-performance JSON serialization with orjson in flext_core utilities. Use when editing sort keys, cache normalization, or JSON boundary conversion logic.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # Skill
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about lib orjson.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to lib-orjson.
-- creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -29,16 +13,12 @@ metadata:
 2. Confirm deterministic options (`OPT_SORT_KEYS`) remain present.
 3. Confirm decoded text output remains `str` for tuple sorting and key comparison.
 
-## Critical rules
+## Enforced contracts
 
-- Prefer canonical sources.
-- Require evidence.
+- json.dumps usage in validation utilities should remain a fallback path behind orjson.dumps.
+- orjson serialization must include OPT_SORT_KEYS for deterministic ordering.
 
-## Example
+## Resources
 
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- [`rules/prefer-orjson-dumps.yml`](rules/prefer-orjson-dumps.yml)
+- [`rules/require-sort-keys.yml`](rules/require-sort-keys.yml)

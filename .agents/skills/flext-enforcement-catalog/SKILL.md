@@ -1,45 +1,21 @@
 ---
 name: flext-enforcement-catalog
-description: 'Use this skill to canonical index of cross-layer enforcement rules exposed
-  as c.ENFORCEMENT_CATALOG (typed Pydantic SSOT in flext-core) and driven by the flext-tests
-  pytest dispatcher. Use when adding, retiring, or cross-referencing any workspace
-  enforcement rule, or when wiring a. DO NOT USE FOR: questions unrelated to flext-enforcement-catalog
-  creating projects or architecture from scratch'
+description: 'Use when adding, changing, retiring, or auditing a cross-layer enforcement rule registered in the typed `c.ENFORCEMENT_CATALOG` and executed by the flext-tests dispatcher.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # FLEXT Enforcement Catalog
 
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about flext enforcement catalog.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to flext-enforcement-catalog.
-- creating projects or architecture from scratch.
-
 ## Workflow
 
-1. Understand.
-2. Execute.
-3. Validate.
+1. Locate the existing invariant, owner skill, rule identifier, and dispatcher route.
+2. Change the typed catalog entry and implementation together.
+3. Add a positive and negative real fixture for the dispatcher.
+4. Run the focused enforcement test and the catalog consistency gate.
 
-## Critical rules
+## Contracts
 
-- Prefer canonical sources.
-- Require evidence.
-
-## Example
-
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- Register each cross-layer rule once in `c.ENFORCEMENT_CATALOG`.
+- Keep rule identifiers, severity, owner skill, scan scope, and remediation typed and synchronized.
+- Add or retire the dispatcher integration and its real fixture in the same change.

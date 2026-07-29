@@ -1,27 +1,11 @@
 ---
 name: scripts-maintenance
-description: 'Use this skill to maintenance services — health checks, workspace status,
-  git cleanup, and operational tooling. Use when using flext_infra.maintenance or
-  editing scripts/maintenance/ or scripts/git/. DO NOT USE FOR: questions unrelated
-  to scripts-maintenance creating projects or architecture from scratch'
+description: 'Guidance for maintenance services — health checks, workspace status, git cleanup, and operational tooling. Use when using flext_infra.maintenance or editing scripts/maintenance/ or scripts/git/.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # Scripts Maintenance
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about scripts maintenance.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to scripts-maintenance.
-- creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -29,16 +13,12 @@ metadata:
 2. Create or modify the script under `scripts/maintenance/` or `scripts/git/`.
 3. Test with `--help` and `--dry-run` first.
 
-## Critical rules
+## Enforced contracts
 
-- Prefer canonical sources.
-- Require evidence.
+- Every maintenance script must declare Owner-Skill marker.
+- Maintenance scripts should include a module docstring.
 
-## Example
+## Resources
 
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- [`rules/require-docstring.yml`](rules/require-docstring.yml)
+- [`rules/require-owner-skill-marker.yml`](rules/require-owner-skill-marker.yml)

@@ -32,37 +32,17 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Boot (advisory)
-        continue-on-error: true
+      - name: Boot (blocking)
         run: make boot
 
       - name: Check changed files (blocking)
-        env:
-          DIFF_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: |
-          if [ -f .gitmodules ]; then
-            echo "workspace root: changed-file gate runs in each project's CI"
-            exit 0
-          fi
-          if [ -z "$DIFF_BASE" ] || ! git cat-file -e "$DIFF_BASE" 2>/dev/null; then
-            echo "no usable diff base; skipping changed-files gate"
-            exit 0
-          fi
-          files=$(git diff --name-only --diff-filter=ACMRTUXB "$DIFF_BASE...HEAD" -- '*.py' | tr '\n' ' ')
-          if [ -n "$(echo "$files" | tr -d ' ')" ]; then
-            make check FILES="$files"
-          else
-            echo "no python changes"
-          fi
+        run: make check CHANGED_ONLY=1
 
-      - name: Check (advisory)
-        continue-on-error: true
+      - name: Check (blocking)
         run: make check
 
-      - name: Test (advisory)
-        continue-on-error: true
+      - name: Test (blocking)
         run: make test
 
-      - name: Val (advisory)
-        continue-on-error: true
-        run: make val
+      - name: Val (blocking)
+        run: make val VALIDATE_SCOPE=workspace

@@ -1,26 +1,13 @@
 ---
 name: using-flext-tests
-description: 'Use when writing FLEXT tests. Covers fixtures, singleton reset, test runtime aliases, and asserting result flows. DO NOT USE FOR: questions unrelated to flext-tests or creating projects/architecture from scratch.'
+description: 'Guidance for writing FLEXT tests. Covers fixtures, singleton reset, test runtime aliases, and asserting result flows.'
 license: MIT
 metadata:
   version: 1.1.0
 ---
 # Using flext-tests
 
-**UTILITY SKILL**
-
 Quick-reference for using the `flext_tests` toolkit.
-
-## USE FOR
-
-- Writing tests for FLEXT projects.
-- Using shared fixtures, matchers, or file helpers.
-- Resetting singletons between tests.
-
-## DO NOT USE FOR
-
-- Questions unrelated to `flext_tests`.
-- Creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -41,7 +28,7 @@ Quick-reference for using the `flext_tests` toolkit.
 from flext_tests import c, e, m, p, r, s, t, u
 ```
 
-`flext_tests` reexports `d`, `e`, `h`, `r`, `x` from `flext_infra` and exposes `tk`, `td`, `tf`, `tv`, `tm` for domain helpers.
+`flext_tests` may still expose migration-era operational names in the live API. Do not extend `h` or `x`; use its documented test facades and the v0.13 runtime owners.
 
 | Alias | Purpose |
 |-------|---------|
@@ -72,7 +59,6 @@ from __future__ import annotations
 from flext_core import FlextSettings
 from flext_tests import FlextTestsSettings
 
-
 def test_settings_isolation(settings: FlextTestsSettings) -> None:
     settings.debug = True
     # Next test receives a fresh singleton via reset_settings
@@ -86,12 +72,10 @@ from __future__ import annotations
 
 from flext_core import r
 
-
 def safe_divide(a: float, b: float) -> r[float]:
     if b == 0:
         return r.from_failure(ValueError("division by zero"))
     return r.from_value(a / b)
-
 
 def test_safe_divide() -> None:
     result = safe_divide(10, 2)
@@ -123,7 +107,6 @@ FlextContainer.reset_for_testing()
 from __future__ import annotations
 
 from flext_tests import settings_factory
-
 
 def test_create_user(settings_factory) -> None:
     from flext_api.settings import FlextApiSettings

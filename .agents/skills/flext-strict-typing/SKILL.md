@@ -1,31 +1,13 @@
 ---
 name: flext-strict-typing
-description: 'Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 695
-  type aliases, r[T] result containers, and isinstance/TypeGuard narrowing. Use when
-  writing type annotations, fixing pyrefly or pyright errors, working with t.JsonValue
-  or t.Scalar, enforcing no-Any. DO NOT USE FOR: questions unrelated to flext-strict-typing
-  creating projects or architecture from scratch'
+description: 'Defines and enforces the FLEXT type hierarchy: t.* contracts, PEP 695 type aliases, r[T] result containers, and isinstance/TypeGuard narrowing. Use when writing type annotations, fixing pyrefly or pyright errors, working with t.JsonValue or t.Scalar, enforcing no-Any.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # FLEXT Strict Typing Rules
 
-**UTILITY SKILL**
-
 Defines and enforces the FLEXT type hierarchy.
-
-## USE FOR
-
-- Writing or fixing type annotations.
-- Resolving `pyrefly` / `pyright` errors.
-- Choosing between `dict`, `Mapping`, `TypedDict`, Pydantic models, and `t.JsonValue`.
-- Enforcing no-`Any` policies.
-
-## DO NOT USE FOR
-
-- Questions unrelated to FLEXT typing.
-- Creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -49,7 +31,6 @@ from __future__ import annotations
 from collections.abc import Mapping
 from flext_core import r, t
 
-
 def parse(data: Mapping[str, t.JsonValue]) -> r[int]: ...
 ```
 
@@ -57,10 +38,8 @@ def parse(data: Mapping[str, t.JsonValue]) -> r[int]: ...
 # Illustrative TypeGuard pattern — runtime narrowing requires an unconstrained input.
 from typing import TypeGuard
 
-
 class User:
     pass
-
 
 def is_user(value: object) -> TypeGuard[User]:
     return isinstance(value, User)
@@ -71,7 +50,6 @@ def is_user(value: object) -> TypeGuard[User]:
 ```python notest
 # Illustrative anti-pattern: legacy typing and bare Any.
 from typing import Any, Dict
-
 
 def parse(data: Dict[str, Any]) -> Any: ...
 ```
@@ -98,7 +76,6 @@ Fallible paths return `r[T]` from `returns`:
 from __future__ import annotations
 
 from flext_core import r
-
 
 def load(user_id: int) -> r[str]: ...
 ```

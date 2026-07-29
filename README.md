@@ -2,7 +2,7 @@
 
 FLEXT is a multi-package Python workspace for data integration, platform tooling, and operational connectors.
 
-**Mission:** The FLEXT goal, success metrics, and inviolable governance chain are codified in [`AGENTS.md` § Meta do FLEXT](AGENTS.md) — the always-loaded engineering law that governs every agent action in every session.
+**Mission:** The platform mission, engineering constraints, and completion contract are maintained in the root [`AGENTS.md`](AGENTS.md).
 
 The root documentation in this repository governs only the FLEXT platform and the `flext-*` packages. If this repository also contains non-FLEXT directories, they are documented locally in their own trees and are out of scope for the root portal.
 

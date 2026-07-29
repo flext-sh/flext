@@ -1,27 +1,11 @@
 ---
 name: scripts-security
-description: 'Use this skill to security scripts — secrets management, vault operations,
-  and security auditing. Use when editing scripts/security/. Good (primary — Make
-  verbs for security gates):. DO NOT USE FOR: questions unrelated to scripts-security
-  creating projects or architecture from scratch'
+description: 'Use when editing security automation for secret handling, vault operations, dependency auditing, credential-safe output, or canonical security Make gates.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # Scripts Security
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about scripts security.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to scripts-security.
-- creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -29,16 +13,12 @@ metadata:
 2. Create or modify the script under `scripts/security/`.
 3. Ensure the script extends `_base_security_script.py` if applicable.
 
-## Critical rules
+## Enforced contracts
 
-- Prefer canonical sources.
-- Require evidence.
+- Every security script must declare Owner-Skill marker.
+- Security scripts should include a module docstring.
 
-## Example
+## Resources
 
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- [`rules/require-docstring.yml`](rules/require-docstring.yml)
+- [`rules/require-owner-skill-marker.yml`](rules/require-owner-skill-marker.yml)

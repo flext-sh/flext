@@ -1,13 +1,17 @@
 skill: scripts-validation
-description: "Enforce script quality: bash strict mode, no interactive prompts, Python
-  main guards"
+description: Enforce the common script contract in the accepted automation taxonomy.
 scan_targets:
   include:
+    - scripts/analysis/**/*.sh
+    - scripts/analysis/**/*.py
+    - scripts/migration/**/*.sh
+    - scripts/migration/**/*.py
     - scripts/validation/**/*.sh
-    - scripts/core/*.py
+    - scripts/validation/**/*.py
+    - scripts/maintenance/**/*.sh
+    - scripts/maintenance/**/*.py
   exclude:
-    - scripts/core/__init__.py
-    - scripts/core/artifact_naming.py
+    - "**/__init__.py"
   projects:
     - .
 rules:
@@ -17,28 +21,26 @@ rules:
     severity: warning
     group: bash_strict_mode
     count_by: rule_id
-    description: Bash scripts must use set -euo pipefail
+    description: Bash validators and fixers use strict mode.
     fix_auto: false
-    fix_instruction: Add 'set -euo pipefail' after shebang line.
+    fix_instruction: Add set -euo pipefail after the shebang.
   - id: no-interactive-prompts
     type: ast-grep
     file: rules/no-interactive.yml
     severity: error
     group: no_interactive
     count_by: aggregate
-    description: Interactive prompts (read -p) are forbidden by default
+    description: Automation is non-interactive unless an explicit mode owns prompting.
     fix_auto: false
-    fix_instruction: Remove read -p and gate behind --interactive flag, or use environment
-      variable for input.
+    fix_instruction: Remove interactive reads from the default path.
   - id: python-main-guard
     type: ast-grep
     file: rules/python-main-guard.yml
     severity: warning
     group: python_main_guard
     count_by: rule_id
-    description: Python scripts should have if __name__ == '__main__' guard
+    description: Standalone Python automation has a main guard.
     fix_auto: false
-    fix_instruction: 'Add ''if __name__ == "__main__": sys.exit(main())'' at end of
-      script.'
+    fix_instruction: Add a typed main entry point and guard to standalone automation.
 baseline:
   strategy: total

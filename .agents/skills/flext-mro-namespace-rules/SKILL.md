@@ -1,45 +1,37 @@
 ---
 name: flext-mro-namespace-rules
-description: 'Use this skill to canonical MRO namespace rules for facade naming, organic
-  nested-domain access, and same-project import boundaries. Use when editing `constants.py`,
-  `models.py`, `protocols.py`, `typings.py`, `utilities.py`, `tests/`, or any `models/`
-  and `_utilities/` mixin tree. DO NOT USE FOR: questions unrelated to flext-mro-namespace-rules
-  creating projects or architecture from scratch'
+description: 'Use when editing structural `c/t/p/m/u` facades, their internal family composition classes, nested domain namespaces, or same-package MRO imports and exports.'
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 2.0.0
 ---
-# Flext MRO Namespace Rules
+# FLEXT MRO Namespace Rules
 
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about flext mro namespace rules.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to flext-mro-namespace-rules.
-- creating projects or architecture from scratch.
+Internal family composition classes remain valid implementation structure. The root
+facade is the public navigation surface; a skill must not invent a workspace-wide
+rename or purge that is absent from an accepted baseline or ADR.
 
 ## Workflow
 
-1. Identify the public facade and its single local namespace root.
-2. Purge flat nested wrapper classes that only restate a private mixin.
-3. Rename legacy test facades to `TestsFlext<Project><Tier>` and update consumers.
+1. Identify the root structural facade, internal family owner, MRO parents, and exports.
+2. Confirm the concept has one nested namespace owner and no sibling collision.
+3. Keep implementation imports inside the package and consumer imports on the public
+   facade.
+4. Preserve intentional MRO order and update every export/caller with a public rename.
+5. Validate namespace collisions, import cycles, facade exports, and direct consumers.
 
-## Critical rules
+## Contracts
 
-- Prefer canonical sources.
-- Require evidence.
+- Only `c/t/p/m/u` are structural facade families.
+- Root facades contain composition and navigation, not application orchestration.
+- Internal `FlextConstants*`, `FlextTypes*`, `FlextProtocols*`, `FlextModels*`, and
+  `FlextUtilities*` classes may compose the public family but are not runtime primitives.
+- Nested domains use direct nouns and one owner; sibling mixins must not expose the
+  same public path.
+- Tests may use project test facades where the owning test standard defines them;
+  no universal rename is implied.
 
-## Example
+## References
 
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- [`docs/architecture/baseline-v0.13.0.md`](../../../docs/architecture/baseline-v0.13.0.md)
+- [`flext-architecture-layers`](../flext-architecture-layers/SKILL.md)

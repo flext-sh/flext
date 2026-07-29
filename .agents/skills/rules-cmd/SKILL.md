@@ -1,17 +1,11 @@
 ---
 name: rules-cmd
-description: 'Use this skill to rules for command entrypoints under `cmd/` and their
-  package wiring. Use when modifying command bootstrap files, CLI wrappers, or command-path
-  docs. **Reviewed**: 2026-02-17 | **Scope**: Evidence-backed skill refresh and rule
-  alignment. DO NOT USE FOR: questions unrelated to rules-cmd creating projects or
-  architecture from scratch'
+description: 'Rules for command entrypoints under `cmd/` and their package wiring. Use when modifying command bootstrap files, CLI wrappers, or command-path docs.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # Rules Cmd
-
-**UTILITY SKILL**
 
 ## Rules
 
@@ -33,16 +27,6 @@ metadata:
 2. Verify invocation path from repository root.
 3. Apply minimal bootstrap-level changes.
 
-## Examples
-
-Good:
-
-Why good: explicit command path and predictable root-relative invocation.
-
-Bad:
-
-Why bad: ambiguous instruction that cannot be executed or validated.
-
 ## Verification
 
 Make gates:
@@ -54,29 +38,3 @@ File checks:
 - `ls -la cmd`
 - `rg -n "cmd/" docs README.md .agents/skills/*/SKILL.md`
 - `rg -n "TODO|FIXME" cmd || true`
-
-## USE FOR
-
-- Requests about rules cmd.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to rules-cmd.
-- creating projects or architecture from scratch.
-
-## Critical rules
-
-- Prefer canonical sources.
-- Require evidence before claiming success.
-
-## Example
-
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
-- Missing context → state assumptions.

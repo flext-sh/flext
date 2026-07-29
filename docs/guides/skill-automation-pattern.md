@@ -19,19 +19,14 @@ For each new automation family, deliver all items below:
 
 ## Standard Skill Contract
 
-Skills are validated by the generic runner:
+Skills are validated by the canonical workspace service:
 
 ```bash
-python3 scripts/core/skill_validate.py --skill <name>
-python3 scripts/core/skill_validate.py --skill <name> --mode strict
-python3 scripts/core/skill_validate.py --skill <name> --update-baseline
+make val VALIDATE_SCOPE=workspace
 ```
 
-The runner auto-discovers all skills:
-
-```bash
-python3 scripts/core/skill_validate.py --all
-```
+`flext-infra` owns discovery, typed manifest parsing, rule execution, baselines,
+reports, and stable exit mapping. A skill folder does not own a CLI or scanner.
 
 ## Standard Skill Format
 
@@ -50,17 +45,18 @@ The skill must follow the canonical format from `skill-format-universal` and inc
 1. Define the invariant (policy or quality requirement).
 2. Create `rules.yml` with detection rules (ast-grep, ripgrep, or custom).
 3. Place ast-grep rule files in skill `rules/` directory.
-4. Initialize baseline with `python3 scripts/core/skill_validate.py --skill <name> --update-baseline`.
+4. Register the rule with the typed enforcement catalog and generate its baseline
+   through the canonical `flext-infra` validation service.
 5. Write or update skill doc with exact commands.
 6. Add or update a docs guide in `docs/guides/` (if cross-cutting).
-7. Run `python3 scripts/core/skill_validate.py --all` to verify integration.
+7. Run `make val VALIDATE_SCOPE=workspace` to verify integration.
 
 ## Example (Current Pattern)
 
-Current repository implementation uses the **self-contained skill architecture**. Each skill
-folder (`.agents/skills/<skill>/`) owns its own `rules.yml`, `rules/` ast-grep files,
-`baseline.json`, and `report.json`. The generic runner `scripts/core/skill_validate.py`
-discovers and executes everything.
+Current repository implementation uses **declarative skill packages**. Each skill
+folder owns documentation, `rules.yml`, structural rule assets, and fixtures. Typed
+discovery, execution, baselines, and reports remain in `flext-infra` and are reached
+through the Make dispatcher.
 
 **Dict/Any Policy Gate**:
 
@@ -78,15 +74,13 @@ discovers and executes everything.
 
 **Generic runner**:
 
-- `scripts/core/skill_validate.py` — auto-discovers `.agents/skills/*/rules.yml`
+- `flext-infra` validation services — discover typed skill/rule contracts and are
+  consumed through the workspace Make dispatcher.
 
 ## Verification Commands
 
 ```bash
-python3 scripts/core/skill_validate.py --list-skills
-python3 scripts/core/skill_validate.py --skill flext-strict-typing
-python3 scripts/core/skill_validate.py --skill lib-pydantic-v2
-python3 scripts/core/skill_validate.py --all
+make val VALIDATE_SCOPE=workspace
 ```
 
 ## Adoption Rule

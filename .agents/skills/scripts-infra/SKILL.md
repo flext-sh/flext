@@ -1,28 +1,11 @@
 ---
 name: scripts-infra
-description: 'Use this skill to core infrastructure services — validation, inventory,
-  scanning, and skill orchestration. Use when using flext_infra.core or editing scripts/lib/,
-  scripts/core/, scripts/settings/, scripts/makefiles/, or scripts/common.py. DO NOT
-  USE FOR: questions unrelated to scripts-infra creating projects or architecture
-  from scratch'
+description: 'Guidance for core infrastructure services — validation, inventory, scanning, and skill orchestration. Use when using flext_infra.core or editing scripts/lib/, scripts/core/, scripts/settings/, scripts/makefiles/, or scripts/common.py.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # Scripts Infra
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about scripts infra.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to scripts-infra.
-- creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -30,16 +13,14 @@ metadata:
 2. Check which scripts source/import it via `rg 'source.*common.sh' scripts/` or `rg 'from.*core.*import' scripts/`.
 3. Apply minimal change.
 
-## Critical rules
+## Enforced contracts
 
-- Prefer canonical sources.
-- Require evidence.
+- Every script must have Owner-Skill marker.
+- Scripts should use portable shebang.
+- Gate scripts should use standard exit codes (0/1/2/3).
 
-## Example
+## Resources
 
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- [`rules/gate-contract-exit-codes.yml`](rules/gate-contract-exit-codes.yml)
+- [`rules/owner-skill-marker.yml`](rules/owner-skill-marker.yml)
+- [`rules/shebang-env-bash.yml`](rules/shebang-env-bash.yml)

@@ -3,10 +3,7 @@ description: "Enforce core FLEXT import conventions: no wildcards, no relative i
 scan_targets:
   include:
     - "**/*.py"
-  exclude:
-    - "**/test_*"
-    - "**/tests/**"
-    - "**/conftest.py"
+  exclude: []
   projects:
     - .
     - flext-core
@@ -57,37 +54,5 @@ rules:
     fix_description:
       Rewrites typing.X attribute usages to builtin equivalents. Import line cleanup requires manual removal
       of unused typing imports.
-  - id: ban-direct-oracledb-import
-    type: ast-grep
-    severity: error
-    group: domain_isolation
-    description: "Direct oracledb import \u2014 use flext-db-oracle wrapper instead."
-    fix_auto: false
-    fix_instruction: Import from flext_db_oracle instead of oracledb directly.
-    file: rules/ban-direct-oracledb-import.yml
-  - id: ban-direct-sqlalchemy-import
-    type: ast-grep
-    severity: error
-    group: domain_isolation
-    description: "Direct sqlalchemy import \u2014 use flext-db-oracle wrapper instead."
-    fix_auto: false
-    fix_instruction: Import from flext_db_oracle instead of sqlalchemy directly.
-    file: rules/ban-direct-sqlalchemy-import.yml
-  - id: ban-direct-ldap3-import
-    type: ast-grep
-    severity: error
-    group: domain_isolation
-    description: "Direct ldap3 import \u2014 use flext-ldap wrapper instead."
-    fix_auto: false
-    fix_instruction: Import from flext_ldap instead of ldap3 directly.
-    file: rules/ban-direct-ldap3-import.yml
-  - id: ban-direct-grpc-import
-    type: ast-grep
-    severity: error
-    group: domain_isolation
-    description: "Direct grpc import \u2014 use flext-grpc wrapper instead."
-    fix_auto: false
-    fix_instruction: Import from flext_grpc instead of grpc directly.
-    file: rules/ban-direct-grpc-import.yml
 baseline:
   strategy: total

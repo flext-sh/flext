@@ -1,30 +1,13 @@
 ---
 name: flext-import-rules
-description: 'Use this skill to enforce import ordering, alias conventions, and abstraction
-  boundaries for the FLEXT 33-project monorepo (PEP 623, TYPE_CHECKING rules, no bare
-  pydantic/structlog in consumers). Use when adding imports to any Python file, resolving
-  circular imports, auditing imports. DO NOT USE FOR: questions unrelated to flext-import-rules
-  creating projects or architecture from scratch'
+description: 'Use when adding or reviewing Python imports, resolving cycles, composing MRO facades, or enforcing framework abstraction boundaries in any FLEXT package or first-class test/example/script.'
 license: MIT
 metadata:
   version: 1.0.0
 ---
 # FLEXT Import Rules
 
-**UTILITY SKILL**
-
 Enforces import hygiene, alias conventions, and abstraction boundaries across the FLEXT monorepo.
-
-## USE FOR
-
-- Adding or reorganizing imports in any Python file.
-- Resolving circular imports.
-- Auditing imports for wildcard, relative, or direct-framework violations.
-
-## DO NOT USE FOR
-
-- Questions unrelated to FLEXT import rules.
-- Creating projects or architecture from scratch.
 
 ## Workflow
 
@@ -46,8 +29,6 @@ Enforces import hygiene, alias conventions, and abstraction boundaries across th
 from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
-
-from pydantic import BaseModel
 
 from flext_core import c, m, r, t, u
 ```

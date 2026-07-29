@@ -26,20 +26,6 @@ rules:
 # =========================================================================
 # Cluster 2: p.Result[t.JsonValue] type erasure
 # =========================================================================
-- id: detect-result-t.JsonValue
-  type: ast-grep
-  file: rules/detect-result-t.JsonValue.yml
-  severity: error
-  group: result_type_erasure
-  count_by: rule_id
-  description: "r[t.JsonValue] uses type erasure — prefer r[t.JsonValue]."
-  fix_auto: true
-  fix_type: ast-grep
-  fix_file: rules/fix-result-t.JsonValue.yml
-  fix_instruction: "Rewrite r[t.JsonValue] to r[t.JsonValue] at boundaries."
-  fix_imports:
-  - from flext_core import t
-
 - id: detect-jsondict-legacy
   type: ast-grep
   file: rules/detect-jsondict-legacy.yml

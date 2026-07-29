@@ -23,9 +23,9 @@ rules:
     group: examples_runnable
     description: Examples should opt into postponed annotations for consistency.
     fix_auto: false
-    fix_instruction: Add 'from __future__ import annotations
-
-from collections.abc import Mapping, Sequence' near the top of each example.
+    fix_instruction: >-
+      Add `from __future__ import annotations` near the top of each example and
+      import collection contracts from `collections.abc` only when used.
     file: rules/require-future-annotations.yml
 baseline:
   strategy: total

@@ -15,9 +15,9 @@ rules:
     group: flext_core_style
     description: Python modules should enable postponed annotation evaluation.
     fix_auto: false
-    fix_instruction: Add 'from __future__ import annotations
-
-from collections.abc import Mapping, Sequence' near the top of each module.
+    fix_instruction: >-
+      Add `from __future__ import annotations` near the top of each module and
+      import collection contracts from `collections.abc` only when used.
     file: rules/require-future-annotations.yml
   - id: require-flext-result-pattern
     type: ast-grep

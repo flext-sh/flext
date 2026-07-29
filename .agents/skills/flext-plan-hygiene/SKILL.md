@@ -1,45 +1,25 @@
 ---
 name: flext-plan-hygiene
-description: 'Use this skill to use when managing implementation plans across sessions
-  to prevent plan proliferation. Covers consolidation, deduplication, and archival
-  protocols for maintaining single-source-of-truth task tracking in Beads. Load before
-  spawning new tasks or resuming multi-session work. DO NOT USE FOR: questions unrelated
-  to flext-plan-hygiene creating projects or architecture from scratch'
+description: 'Use before creating, splitting, resuming, or consolidating multi-session FLEXT plans so one execution ledger owns the outcome, dependencies, lanes, evidence, and stop condition.'
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 2.0.0
 ---
-# Flext Plan Hygiene
-
-**UTILITY SKILL**
-
-## USE FOR
-
-- Requests about flext plan hygiene.
-- Workflows described in this skill.
-- Operator tasks within this scope.
-
-## DO NOT USE FOR
-
-- questions unrelated to flext-plan-hygiene.
-- creating projects or architecture from scratch.
+# FLEXT Plan Hygiene
 
 ## Workflow
 
-1. **Before Creating a Plan**:
-2. **When Consolidating Work**:
-3. **When Archiving Legacy Plans**:
+1. Search the active ledger for the same outcome, public contract, or writable paths.
+2. Extend the existing owner when intent matches; create a new unit only for a distinct
+   independently acceptable outcome.
+3. Split oversized work by dependency-ready deliverables, not arbitrary file counts.
+4. Give each step an owner, paths, prerequisites, acceptance evidence, and stop condition.
+5. Replace superseded narrative with a pointer and preserve only durable decisions.
 
-## Critical rules
+## Contracts
 
-- Prefer canonical sources.
-- Require evidence.
-
-## Example
-
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- One outcome has one executable plan and one current target contract.
+- Plans distinguish discovery, decision, implementation, validation, and landing.
+- Parallel lanes are explicit, disjoint for writes, and joined by an integration gate.
+- A completed step records objective evidence; a status label alone is insufficient.
+- Resumption starts from live code and ledger state, never an old chat summary.

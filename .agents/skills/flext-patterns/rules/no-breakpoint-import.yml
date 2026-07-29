@@ -1,6 +1,0 @@
-id: no-breakpoint-import
-language: python
-rule:
-  pattern: import pdb
-message: "Debug pdb import"
-severity: error

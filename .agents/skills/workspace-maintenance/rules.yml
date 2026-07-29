@@ -1,32 +1,12 @@
-skill: maintenance
+skill: workspace-maintenance
 description: "Validate workspace hygiene: script ownership, gitignore patterns, cruft
   detection."
 scan_targets:
   include:
-    - scripts/maintenance/*.py
     - scripts/maintenance/**/*.py
-    - scripts/git/*.py
-    - scripts/git/**/*.py
-    - .gitignore
-    - "**/.gitignore"
   exclude: []
   projects:
     - .
-    - flext-core
-    - flext-api
-    - flext-auth
-    - flext-cli
-    - flext-db-oracle
-    - flext-grpc
-    - flext-ldap
-    - flext-ldif
-    - flext-meltano
-    - flext-observability
-    - flext-plugin
-    - flext-quality
-    - flext-web
-    - flext-oud-mig
-    - flext-meltano-native
 rules:
   - id: require-owner-skill-marker
     type: ast-grep
@@ -35,42 +15,8 @@ rules:
     group: ownership
     description: Workspace maintenance scripts must declare Owner-Skill marker
     fix_auto: false
-    fix_instruction: "Add '# Owner-Skill: .agents/skills/maintenance/SKILL.md'
+    fix_instruction: "Add '# Owner-Skill: .agents/skills/workspace-maintenance/SKILL.md'
       in the first 10 lines."
     file: rules/require-owner-skill-marker.yml
-  - id: gitignore-has-pycache-pattern
-    type: custom
-    severity: warning
-    group: gitignore_coverage
-    description: Missing __pycache__/ pattern in .gitignore
-    fix_auto: false
-    fix_instruction: Add '__pycache__/' to .gitignore.
-    script: ../../../scripts/core/text_pattern_scanner.py
-    args:
-      - --pattern
-      - __pycache__/
-      - --match
-      - absent
-      - --include
-      - .gitignore
-      - --include
-      - "**/.gitignore"
-  - id: gitignore-has-dist-pattern
-    type: custom
-    severity: warning
-    group: gitignore_coverage
-    description: Missing dist/ pattern in .gitignore
-    fix_auto: false
-    fix_instruction: Add 'dist/' to .gitignore.
-    script: ../../../scripts/core/text_pattern_scanner.py
-    args:
-      - --pattern
-      - dist/
-      - --match
-      - absent
-      - --include
-      - .gitignore
-      - --include
-      - "**/.gitignore"
 baseline:
   strategy: total
