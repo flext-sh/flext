@@ -20,13 +20,15 @@
 !.claude/
 !.claude-plugin/
 !/config/
-!/config/workspace.yaml
 !.claude/CLAUDE.md
 !.claude/settings.json
 !.claude/settings.local.json
 !.agents/
 !.agents/**
 .agents/skills/*/report.json
+
+# Workspace manifest (superproject root only)
+!/config/workspace.yaml
 
 # Dispatcher-based command surface (Make SSOT)
 !scripts/
@@ -35,9 +37,11 @@
 scripts/*.py
 scripts/*.sh
 scripts/*.md
-scripts/maintenance/
 !scripts/dispatch.py
 !scripts/__init__.py
+
+# Workspace maintenance tooling (superproject root only)
+scripts/maintenance/
 
 # TRACK: Beads team config; keep Dolt data, runtime state, and JSONL exports local.
 !.beads/
@@ -76,8 +80,10 @@ scripts/maintenance/
 
 # Git configuration
 !.gitignore
-!.gitmodules
 !.gitattributes
+
+# Submodule catalog (superproject root only)
+!.gitmodules
 
 # direnv environment (no secrets — venv activation only)
 !.envrc
@@ -88,8 +94,10 @@ scripts/maintenance/
 !.env.example
 !.env.template
 
-# WHITELIST: Contents Inside Allowed Directories
+# Member contents allowlist (superproject root only)
 !flext-*/**
+
+# WHITELIST: Contents Inside Allowed Directories
 !docker/**
 !docs/**
 !examples/**
@@ -295,15 +303,17 @@ secrets.yml
 # --- workspace-migrate: required ignores (auto-managed) ---
 !base.mk
 
-# FINAL BEADS TRACKING POLICY
+# Beads/Dolt coordination state (superproject root only)
 !.beads/
 .beads/*
 .beads/.*
 !.beads/config.yaml
 .beads/proxieddb/
 .dolt/
-*.db
 .beads-credential-key
+
+# FINAL BEADS TRACKING POLICY
+*.db
 .worktrees/
 legado/
 
