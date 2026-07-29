@@ -1,8 +1,6 @@
 # Testing Standards
 
-Guidelines for writing tests in the FLEXT monorepo. For the root engineering law,
-see `AGENTS.md`. For gate commands, see
-`.agents/skills/flext-quality-gates/SKILL.md`.
+Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `.agents/skills/flext-inviolable-rules/SKILL.md`.
 
 ## Mindset
 
@@ -26,8 +24,7 @@ def test_user_creation() -> None:
 
 ## Imports in tests
 
-Use the same aliases as production code. Test facades may be named
-`TestsFlext<Project><Tier>` when the project exposes one.
+Use the same aliases as production code. Test facades may be named `TestsFlext<Project><Tier>` when the project exposes one.
 
 ```python
 from __future__ import annotations
@@ -55,8 +52,7 @@ def test_load_user() -> None:
 
 ## Fixtures
 
-Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it to
-the canonical `conftest.py` for the affected tier.
+Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it to the canonical `conftest.py` for the affected tier.
 
 ```python
 import pytest
@@ -96,7 +92,7 @@ import pytest
 
 @pytest.mark.parametrize(("raw", "expected"), [("1", 1), ("42", 42)])
 def test_parse_int(raw: str, expected: int) -> None:
-    assert parse_int(raw) == expected
+    assert int(raw) == expected
 ```
 
 ## What to avoid
@@ -121,13 +117,11 @@ make test PROJECT=<proj>
 
 ## Coverage
 
-`pyproject.toml` sets `fail_under = 45` for the consolidated workspace.
-Project-local targets may be higher. Do not lower the threshold to make a build
-pass.
+`pyproject.toml` sets `fail_under = 45` for the consolidated workspace. Project-local targets may be higher. Do not lower the threshold to make a build pass.
 
 ## Related
 
 - `AGENTS.md` — root engineering law
-- `.agents/skills/flext-quality-gates/SKILL.md` — gate commands
+- `.agents/skills/flext-inviolable-rules/SKILL.md` — gate commands
 - `.agents/skills/coding-standards/SKILL.md` — general coding standards
 - `.agents/skills/flext-development-workflow/SKILL.md` — CI/CD lifecycle

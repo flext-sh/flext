@@ -28,7 +28,7 @@ class CommandCli:
         try:
             return CommandCli.route(args)
         except CommandRegistry.Error as exc:
-            sys.stderr.write(f"ERRO: {exc}\n")
+            print(f"ERRO: {exc}", file=sys.stderr)
             return 2
 
     @staticmethod
@@ -70,7 +70,7 @@ class CommandCli:
             return CommandCli.print_command_or_verb_help(registry, verb, what)
         if requested:
             return CommandCli.print_verb_help(registry, requested)
-        u.Cli.emit_raw(f"{CommandRenderer.global_help(registry)}\n")
+        print(CommandRenderer.global_help(registry))
         return 0
 
     @staticmethod
@@ -78,13 +78,13 @@ class CommandCli:
         registry: CommandRegistry.Registry, verb: str, what: str
     ) -> int:
         """Print help for one command."""
-        u.Cli.emit_raw(f"{CommandRenderer.command_help(registry, verb, what)}\n")
+        print(CommandRenderer.command_help(registry, verb, what))
         return 0
 
     @staticmethod
     def print_verb_help(registry: CommandRegistry.Registry, requested_verb: str) -> int:
         """Print help for one verb."""
-        u.Cli.emit_raw(f"{CommandRenderer.verb_help(registry, requested_verb)}\n")
+        print(CommandRenderer.verb_help(registry, requested_verb))
         return 0
 
     @staticmethod
@@ -128,9 +128,7 @@ class CommandCli:
                 command, require_required=not is_dry_run
             )
             if is_dry_run:
-                u.Cli.emit_raw(
-                    f"{CommandRenderer.dry_run(command, requested_verb, what)}\n"
-                )
+                print(CommandRenderer.dry_run(command, requested_verb, what))
                 continue
             child_code = CommandExecution.run(command)
             if child_code != 0:
@@ -163,7 +161,9 @@ class CommandCli:
         """Print detailed help for one WHAT value or the parent verb."""
         if len(what_values) != 1:
             return
-        CommandCli.print_command_or_verb_help(registry, requested_verb, what_values[0])
+        CommandCli.print_command_or_verb_help(
+            registry, requested_verb, what_values[0]
+        )
 
 
 __all__: list[str] = ["CommandCli"]

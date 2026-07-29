@@ -225,5 +225,5 @@ make check CHANGED_ONLY=1
 - `.agents/skills/flext-strict-typing/SKILL.md` — typing rules
 - `.agents/skills/lib-returns/SKILL.md` — Result composition
 - `.agents/skills/lib-structlog/SKILL.md` — structured logging
-- `.agents/skills/flext-quality-gates/SKILL.md` — gate commands
+- `.agents/skills/flext-inviolable-rules/SKILL.md` — gate commands
 - `.agents/skills/flext-development-workflow/SKILL.md` — workflow
