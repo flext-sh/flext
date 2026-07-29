@@ -14,37 +14,14 @@ if _t.TYPE_CHECKING:
     from flext.typings import FlextRootTypes, t
     from flext.utilities import FlextRootUtilities, u
     from flext_core import d, e, h, r, x
-_LAZY_IMPORTS = build_lazy_import_map(
-    {
-        ".constants": (
-            "FlextRootConstants",
-            "c",
-        ),
-        ".models": (
-            "FlextRootModels",
-            "m",
-        ),
-        ".protocols": (
-            "FlextRootProtocols",
-            "p",
-        ),
-        ".typings": (
-            "FlextRootTypes",
-            "t",
-        ),
-        ".utilities": (
-            "FlextRootUtilities",
-            "u",
-        ),
-        "flext_core": (
-            "d",
-            "e",
-            "h",
-            "r",
-            "x",
-        ),
-    },
-)
+_LAZY_IMPORTS = build_lazy_import_map({
+    ".constants": ("FlextRootConstants", "c"),
+    ".models": ("FlextRootModels", "m"),
+    ".protocols": ("FlextRootProtocols", "p"),
+    ".typings": ("FlextRootTypes", "t"),
+    ".utilities": ("FlextRootUtilities", "u"),
+    "flext_core": ("d", "e", "h", "r", "x"),
+})
 
 
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)

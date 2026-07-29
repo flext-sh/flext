@@ -78,7 +78,8 @@ In other cases, the error message should indicate how to rebuild the class with 
 
 ## Custom JSON Schema {#custom-JSON-schema}
 
-The `__modify_schema__` method is no longer supported in V2. You should use the `__get_pydantic_json_schema__` method instead.
+The `__modify_schema__` method is no longer supported in V2. You should use the `__get_pydantic_json_schema__` method
+instead.
 
 The `__modify_schema__` used to receive a single argument representing the JSON schema. See the example below:
 
@@ -97,7 +98,8 @@ except PydanticUserError as exc_info:
 ```
 
 The new method `__get_pydantic_json_schema__` receives two arguments: the first is a dictionary denoted as `CoreSchema`,
-and the second a callable `handler` that receives a `CoreSchema` as parameter, and returns a JSON schema. See the example
+and the second a callable `handler` that receives a `CoreSchema` as parameter, and returns a JSON schema. See the
+example
 below:
 
 ```python {title="New way"}
@@ -119,7 +121,7 @@ class Model(BaseModel):
         return json_schema
 
 
-print(Model.model_json_schema())
+u.Cli.print(Model.model_json_schema())
 """
 {'examples': ['example'], 'properties': {}, 'title': 'Model', 'type': 'object'}
 """
@@ -373,8 +375,7 @@ try:
 
     class DiscriminatedModel(BaseModel):
         x: Annotated[
-            Union[str, "DiscriminatedModel"],
-            Discriminator(model_x_discriminator),
+            Union[str, "DiscriminatedModel"], Discriminator(model_x_discriminator)
         ]
 
 except PydanticUserError as exc_info:
@@ -629,7 +630,8 @@ except PydanticUserError as exc_info:
     assert exc_info.code == "create-model-field-definitions"
 ```
 
-The fields definition syntax can be found in the [dynamic model creation](../concepts/models.md#dynamic-model-creation) documentation.
+The fields definition syntax can be found in the [dynamic model creation](../concepts/models.md#dynamic-model-creation)
+documentation.
 
 ## Validator with no fields {#validator-no-fields}
 
@@ -1073,7 +1075,8 @@ except PydanticUserError as exc_info:
 
 ## Cannot evaluate type annotation {#unevaluable-type-annotation}
 
-Because type annotations are evaluated _after_ assignments, you might get unexpected results when using a type annotation name
+Because type annotations are evaluated _after_ assignments, you might get unexpected results when using a type
+annotation name
 that clashes with one of your fields. We raise an error in the following case:
 
 ```python {test="skip"}
@@ -1125,7 +1128,8 @@ This combination is not allowed.
 
 ## Incompatible `init` and `init_var` settings on `dataclass` field {#clashing-init-and-init-var}
 
-The `init=False` and `init_var=True` settings are mutually exclusive. Doing so results in the `PydanticUserError` shown in the example below.
+The `init=False` and `init_var=True` settings are mutually exclusive. Doing so results in the `PydanticUserError` shown
+in the example below.
 
 ```python {test="skip"}
 from pydantic import u.Field
@@ -1160,7 +1164,8 @@ except PydanticUserError as exc_info:
 
 ## [`u.with_config`][pydantic.config.u.with_config] is used on a `BaseModel` subclass {#with-settings-on-model}
 
-This error is raised when the [`u.with_config`][pydantic.config.u.with_config] decorator is used on a class which is already a Pydantic model (use the `model_config` attribute instead).
+This error is raised when the [`u.with_config`][pydantic.config.u.with_config] decorator is used on a class which is
+already a Pydantic model (use the `model_config` attribute instead).
 
 ```python
 from pydantic import BaseModel, PydanticUserError, u.with_config
@@ -1196,9 +1201,12 @@ except PydanticUserError as exc_info:
 
 ## Unsupported type for `u.validate_call` {#validate-call-type}
 
-`u.validate_call` has some limitations on the callables it can validate. This error is raised when you try to use it with an unsupported callable.
-Currently the supported callables are functions (including lambdas, but not built-ins) and methods and instances of [`partial`][functools.partial].
-In the case of [`partial`][functools.partial], the function being partially applied must be one of the supported callables.
+`u.validate_call` has some limitations on the callables it can validate. This error is raised when you try to use it
+with an unsupported callable.
+Currently the supported callables are functions (including lambdas, but not built-ins) and methods and instances of
+[`partial`][functools.partial].
+In the case of [`partial`][functools.partial], the function being partially applied must be one of the supported
+callables.
 
 ### `@classmethod`, `@staticmethod`, and `@property`
 
@@ -1227,7 +1235,9 @@ def f2(cls): ...
 
 ### Classes
 
-While classes are callables themselves, `u.validate_call` can't be applied on them, as it needs to know about which method to use (`__init__` or `__new__`) to fetch type annotations. If you want to validate the constructor of a class, you should put `u.validate_call` on top of the appropriate method instead.
+While classes are callables themselves, `u.validate_call` can't be applied on them, as it needs to know about which
+method to use (`__init__` or `__new__`) to fetch type annotations. If you want to validate the constructor of a class,
+you should put `u.validate_call` on top of the appropriate method instead.
 
 ```python
 from pydantic import PydanticUserError, u.validate_call
@@ -1253,7 +1263,8 @@ class A2:
 
 ### Callable instances
 
-Although instances can be callable by implementing a `__call__` method, currently the instances of these types cannot be validated with `u.validate_call`.
+Although instances can be callable by implementing a `__call__` method, currently the instances of these types cannot be
+validated with `u.validate_call`.
 This may change in the future, but for now, you should use `u.validate_call` explicitly on `__call__` instead.
 
 ```python
@@ -1279,7 +1290,8 @@ class A2:
 
 ### Invalid signature
 
-This is generally less common, but a possible reason is that you are trying to validate a method that doesn't have at least one argument (usually `self`).
+This is generally less common, but a possible reason is that you are trying to validate a method that doesn't have at
+least one argument (usually `self`).
 
 ```python
 from pydantic import PydanticUserError, u.validate_call
@@ -1343,12 +1355,15 @@ except PydanticUserError as exc_info:
     assert exc_info.code == "overlapping-unpack-typed-dict"
 ```
 
-[related specification section]: https://typing.readthedocs.io/en/latest/spec/callables.html#unpack-for-keyword-arguments
-[PEP 692]: https://peps.python.org/pep-0692/
+[related specification section]: https://typing.readthedocs.io/en/latest/spec/callables.html#unpack-for-keyword-
+arguments
+[PEP 692]: <https://peps.python.org/pep-0692/>
 
 ## Invalid `Self` type {#invalid-self-type}
 
-Currently, [`Self`][typing.Self] can only be used to annotate a field of a class (specifically, subclasses of [`BaseModel`][pydantic.BaseModel], [`NamedTuple`][typing.NamedTuple], [`TypedDict`][typing.TypedDict], or dataclasses). Attempting to use [`Self`][typing.Self] in any other ways will raise this error.
+Currently, [`Self`][typing.Self] can only be used to annotate a field of a class (specifically, subclasses of
+[`BaseModel`][pydantic.BaseModel], [`NamedTuple`][typing.NamedTuple], [`TypedDict`][typing.TypedDict], or dataclasses).
+Attempting to use [`Self`][typing.Self] in any other ways will raise this error.
 
 ```python
 from typing_extensions import Self
@@ -1365,7 +1380,8 @@ except PydanticUserError as exc_info:
     assert exc_info.code == "invalid-self-type"
 ```
 
-The following example of [`u.validate_call()`][pydantic.u.validate_call] will also raise this error, even though it is correct from a type-checking perspective. This may be supported in the future.
+The following example of [`u.validate_call()`][pydantic.u.validate_call] will also raise this error, even though it is
+correct from a type-checking perspective. This may be supported in the future.
 
 ```python
 from typing_extensions import Self

@@ -20,7 +20,8 @@ It replaces vague or stale architecture narratives with direct rules for:
 - workspace taxonomy
 - migration direction
 
-If this document conflicts with older architecture overviews, project-level architecture notes, or legacy refactoring plans, this baseline wins until the conflicting document is migrated.
+If this document conflicts with older architecture overviews, project-level architecture notes, or legacy refactoring
+plans, this baseline wins until the conflicting document is migrated.
 
 ## Governed Scope
 
@@ -34,7 +35,8 @@ This baseline governs the FLEXT workspace by project group.
 | Integrations               | all `flext-tap-*`, `flext-target-*`, `flext-dbt-*` projects                                                               |
 | Shared testing and tooling | `flext-tests`, `flext-infra`, `flext-quality`                                                                             |
 
-Non-FLEXT directories that may exist in the repository are outside the root FLEXT portal and must be documented locally in their own trees.
+Non-FLEXT directories that may exist in the repository are outside the root FLEXT portal and must be documented locally
+in their own trees.
 
 ## Authority
 
@@ -85,7 +87,8 @@ The workspace currently exports many family composition classes from underscored
 - `FlextTypes*`
 - `FlextUtilities*`
 
-These classes remain valid for namespace composition and MRO assembly inside the family facades, but they are not forward runtime primitives. The forward architecture baseline is defined by the root public classes in the matrix above.
+These classes remain valid for namespace composition and MRO assembly inside the family facades, but they are not
+forward runtime primitives. The forward architecture baseline is defined by the root public classes in the matrix above.
 
 Application and orchestration code should target:
 
@@ -331,7 +334,7 @@ Application code must not touch `dependency_injector` directly.
 
 Application code must use:
 
-- `self.settings`
+- `settings`
 - `self.context`
 - `self.container`
 - `self.runtime`
@@ -357,7 +360,8 @@ Rules:
 - orchestration belongs outside the structural aliases
 - application code targets the local facade alias, not underscored internals
 
-Operational aliases are not part of the forward structural baseline. They may continue to exist during migration, but they must not accumulate new architectural responsibilities.
+Operational aliases are not part of the forward structural baseline. They may continue to exist during migration, but
+they must not accumulate new architectural responsibilities.
 
 ## Extension Baseline
 
@@ -440,7 +444,8 @@ The only forward script taxonomy is:
 Rules:
 
 - scripts are automation only
-- if code is reused by `src/`, `tests/`, or `examples/`, it belongs in `u` or a governed project package, not in `scripts/`
+- if code is reused by `src/`, `tests/`, or `examples/`, it belongs in `u` or a governed project package, not in
+  `scripts/`
 
 ## Expansion Rules
 

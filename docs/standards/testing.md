@@ -1,6 +1,6 @@
 # Testing Standards
 
-Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `.agents/skills/flext-quality-gates/SKILL.md`.
+Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `.agents/skills/flext-inviolable-rules/SKILL.md`.
 
 ## Mindset
 
@@ -78,7 +78,9 @@ FlextContainer.reset_for_testing()
 
 ## Golden files and examples
 
-When output is stable and reviewable, prefer golden-file examples. Store them under `tests/fixtures/` or the project-local equivalent. Update golden files deliberately, never as a side effect of unrelated changes.
+When output is stable and reviewable, prefer golden-file examples. Store them under
+`tests/fixtures/` or the project-local equivalent. Update golden files
+deliberately, never as a side effect of unrelated changes.
 
 ## Parametrization
 
@@ -88,15 +90,9 @@ Use `@pytest.mark.parametrize` for multi-case checks.
 import pytest
 
 
-@pytest.mark.parametrize(
-    ("raw", "expected"),
-    [
-        ("1", 1),
-        ("42", 42),
-    ],
-)
+@pytest.mark.parametrize(("raw", "expected"), [("1", 1), ("42", 42)])
 def test_parse_int(raw: str, expected: int) -> None:
-    assert parse_int(raw) == expected
+    assert int(raw) == expected
 ```
 
 ## What to avoid
@@ -126,6 +122,6 @@ make test PROJECT=<proj>
 ## Related
 
 - `AGENTS.md` — root engineering law
-- `.agents/skills/flext-quality-gates/SKILL.md` — gate commands
+- `.agents/skills/flext-inviolable-rules/SKILL.md` — gate commands
 - `.agents/skills/coding-standards/SKILL.md` — general coding standards
 - `.agents/skills/flext-development-workflow/SKILL.md` — CI/CD lifecycle

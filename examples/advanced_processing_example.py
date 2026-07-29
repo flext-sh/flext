@@ -14,13 +14,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import (
-    Callable,
-    Mapping,
-    MutableMapping,
-    MutableSequence,
-    Sequence,
-)
+from collections.abc import Callable, Mapping, MutableMapping, MutableSequence, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
@@ -30,6 +24,8 @@ from examples._constants import ExamplesStage
 type DataValue = t.JsonValue
 type ItemDict = t.JsonMapping
 type StageOperation = Callable[[t.JsonMapping], r[PipelineStageData]]
+
+MAX_VALUE_LENGTH = 100
 
 
 def _new_data_value_map() -> t.JsonMapping:
@@ -67,22 +63,20 @@ class PipelineStageData(m.BaseModel):
     """Data container for pipeline stage processing."""
 
     model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-        arbitrary_types_allowed=True,
-        extra="allow",
+        arbitrary_types_allowed=True, extra="allow"
     )
 
     class PipelinePayload(m.BaseModel):
         """Pipeline payload container."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
-            extra="allow",
+            arbitrary_types_allowed=True, extra="allow"
         )
 
         values: t.JsonMapping = u.Field(default_factory=_new_data_value_map)
 
     data: PipelinePayload = u.Field(
-        default_factory=lambda: PipelineStageData.PipelinePayload(values={}),
+        default_factory=lambda: PipelineStageData.PipelinePayload(values={})
     )
 
 
@@ -99,7 +93,7 @@ class AdvancedProcessingExample:
         """Result of processing operation with metrics."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
+            arbitrary_types_allowed=True
         )
 
         operation_id: str = u.Field(description="Unique operation identifier")
@@ -108,36 +102,29 @@ class AdvancedProcessingExample:
         items_failed: int = u.Field(description="Items that failed")
         processing_time: float = u.Field(description="Time taken for processing")
         errors: t.StrSequence = u.Field(
-            default_factory=tuple,
-            description="List of errors encountered",
+            default_factory=tuple, description="List of errors encountered"
         )
         metadata: t.JsonMapping = u.Field(
-            default_factory=_new_scalar_dict,
-            description="Operation metadata",
+            default_factory=_new_scalar_dict, description="Operation metadata"
         )
 
     class ValidationResult(m.BaseModel):
         """Result of validation operation."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
+            arbitrary_types_allowed=True
         )
 
         item_id: str = u.Field(description="Unique item identifier")
         valid: bool = u.Field(description="Whether the item is valid")
         violations: t.StrSequence = u.Field(
-            default_factory=tuple,
-            description="List of validation violations",
+            default_factory=tuple, description="List of validation violations"
         )
         warnings: t.StrSequence = u.Field(
-            default_factory=tuple,
-            description="List of validation warnings",
+            default_factory=tuple, description="List of validation warnings"
         )
         validation_time: Annotated[
-            float,
-            u.Field(
-                description="Time taken for validation",
-            ),
+            float, u.Field(description="Time taken for validation")
         ] = 0.0
 
     class FlextLdifProcessingPipeline(m.BaseModel):
@@ -150,8 +137,7 @@ class AdvancedProcessingExample:
         def execute(self) -> p.Result[PipelineStageData]:
             """Execute processing pipeline using declarative stages."""
             stage_functions: t.MappingKV[
-                str,
-                Callable[[t.JsonMapping], p.Result[PipelineStageData]],
+                str, Callable[[t.JsonMapping], p.Result[PipelineStageData]]
             ] = {
                 "validate": self._validate_batch,
                 "process": self._process_parallel,
@@ -167,7 +153,7 @@ class AdvancedProcessingExample:
                 else:
                     return r[PipelineStageData].fail(f"Unknown stage: {stage}")
             current_data: t.JsonMapping = t.json_mapping_adapter().validate_python({
-                "items": self.items,
+                "items": self.items
             })
             for operation in operations:
                 result = operation(current_data)
@@ -175,18 +161,15 @@ class AdvancedProcessingExample:
                     return result
                 current_data = result.value.data.values
             payload = PipelineStageData.PipelinePayload.model_validate({
-                "values": current_data,
+                "values": current_data
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
-        def _analyze_results(
-            self,
-            data: t.JsonMapping,
-        ) -> p.Result[PipelineStageData]:
+        def _analyze_results(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
             """Analyze processing results."""
             processed_items = _json_mapping_sequence(data.get("processed_items", []))
             validation_results = _json_mapping_sequence(
-                data.get("validation_results", []),
+                data.get("validation_results", [])
             )
             field_counts: MutableMapping[int, int] = {}
             complexity_scores: MutableSequence[float] = []
@@ -234,14 +217,11 @@ class AdvancedProcessingExample:
                 "analysis": analysis,
             })
             payload = PipelineStageData.PipelinePayload.model_validate({
-                "values": result_data,
+                "values": result_data
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
-        def _process_parallel(
-            self,
-            data: t.JsonMapping,
-        ) -> p.Result[PipelineStageData]:
+        def _process_parallel(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
             """Process items in parallel."""
             items_to_process = _json_mapping_sequence(data.get("items", []))
             if not items_to_process:
@@ -279,14 +259,11 @@ class AdvancedProcessingExample:
                 else 0,
             })
             payload = PipelineStageData.PipelinePayload.model_validate({
-                "values": result_data,
+                "values": result_data
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
-        def _validate_batch(
-            self,
-            data: t.JsonMapping,
-        ) -> p.Result[PipelineStageData]:
+        def _validate_batch(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
             """Validate batch of items."""
             items_to_validate = _json_mapping_sequence(data.get("items", []))
             if not items_to_validate:
@@ -300,7 +277,7 @@ class AdvancedProcessingExample:
                     validation_results.append(result.value)
                 else:
                     return r[PipelineStageData].fail(
-                        f"Validation failed: {result.error}",
+                        f"Validation failed: {result.error}"
                     )
             result_data: t.JsonMapping = t.json_mapping_adapter().validate_python({
                 **data,
@@ -318,13 +295,12 @@ class AdvancedProcessingExample:
                 "invalid_count": sum(1 for r in validation_results if not r.valid),
             })
             payload = PipelineStageData.PipelinePayload.model_validate({
-                "values": result_data,
+                "values": result_data
             })
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
         def _validate_single_item(
-            self,
-            item: ItemDict,
+            self, item: ItemDict
         ) -> p.Result[AdvancedProcessingExample.ValidationResult]:
             """Validate a single item."""
             start_time = time.time()
@@ -337,7 +313,7 @@ class AdvancedProcessingExample:
             if not name or not isinstance(name, str):
                 violations.append("Missing or invalid name field")
             value = item.get("value", "")
-            if isinstance(value, str) and len(value) > 100:
+            if isinstance(value, str) and len(value) > MAX_VALUE_LENGTH:
                 warnings.append("Value field is very long")
             return r[AdvancedProcessingExample.ValidationResult].ok(
                 AdvancedProcessingExample.ValidationResult(
@@ -346,7 +322,7 @@ class AdvancedProcessingExample:
                     violations=tuple(violations),
                     warnings=tuple(warnings),
                     validation_time=time.time() - start_time,
-                ),
+                )
             )
 
     @staticmethod

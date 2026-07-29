@@ -1,9 +1,7 @@
-# Provider manifest: flext OWNS these skills (SSOT); ai-hub only distributes them.
-# Every path below is verified to exist in this checkout at generation time.
 source_project_id = "flext-sh/flext"
 marker_distribution = "flext-core"
 router_skill = "flext-context-routing"
-session_command = ".agents/INSTRUCTION_SURFACE.md"
+session_command = ".agents/commands/flext-law.md"
 codemod_provider = "sgconfig.yml"
 marketplaces_key = "extraKnownMarketplaces"
 enabled_plugins_key = "enabledPlugins"
@@ -14,63 +12,6 @@ always = [
   ".agents/skills/flext-context-routing/SKILL.md",
 ]
 on_demand = [
-  ".agents/skills/async-python-patterns/SKILL.md",
-  ".agents/skills/code-navigation/SKILL.md",
-  ".agents/skills/coding-standards/SKILL.md",
-  ".agents/skills/flext-agent-integration/SKILL.md",
-  ".agents/skills/flext-agent-strict-rules/SKILL.md",
-  ".agents/skills/flext-architecture-layers/SKILL.md",
-  ".agents/skills/flext-automation-skill-pattern/SKILL.md",
-  ".agents/skills/flext-beads-coordination/SKILL.md",
-  ".agents/skills/flext-cli-ssot-enforcement/SKILL.md",
-  ".agents/skills/flext-constants-discipline/SKILL.md",
-  ".agents/skills/flext-continuation/SKILL.md",
-  ".agents/skills/flext-development-workflow/SKILL.md",
-  ".agents/skills/flext-docs-pointer-policy/SKILL.md",
-  ".agents/skills/flext-enforcement-catalog/SKILL.md",
-  ".agents/skills/flext-import-rules/SKILL.md",
-  ".agents/skills/flext-mro-namespace-rules/SKILL.md",
-  ".agents/skills/flext-namespace-rewrite-guard/SKILL.md",
-  ".agents/skills/flext-patterns/SKILL.md",
-  ".agents/skills/flext-plan-hygiene/SKILL.md",
-  ".agents/skills/flext-pyrefly-typecheck-fix/SKILL.md",
-  ".agents/skills/flext-quality-gates/SKILL.md",
-  ".agents/skills/flext-refactoring-workflow/SKILL.md",
-  ".agents/skills/flext-scope-bootstrap/SKILL.md",
-  ".agents/skills/flext-strict-refactoring/SKILL.md",
-  ".agents/skills/flext-strict-typing/SKILL.md",
-  ".agents/skills/flext-type-system/SKILL.md",
-  ".agents/skills/lib-dependency-injector/SKILL.md",
-  ".agents/skills/lib-orjson/SKILL.md",
-  ".agents/skills/lib-pydantic-settings/SKILL.md",
-  ".agents/skills/lib-pydantic-v2/SKILL.md",
-  ".agents/skills/lib-pyyaml/SKILL.md",
-  ".agents/skills/lib-returns/SKILL.md",
-  ".agents/skills/lib-structlog/SKILL.md",
-  ".agents/skills/pydantic-v2-governance/SKILL.md",
-  ".agents/skills/pydantic-v2-patterns/SKILL.md",
-  ".agents/skills/readme-standardization/SKILL.md",
-  ".agents/skills/rules-cmd/SKILL.md",
-  ".agents/skills/rules-docker/SKILL.md",
-  ".agents/skills/rules-docs/SKILL.md",
-  ".agents/skills/rules-examples/SKILL.md",
-  ".agents/skills/rules-flext-core/SKILL.md",
-  ".agents/skills/rules-github/SKILL.md",
-  ".agents/skills/rules-pkg/SKILL.md",
-  ".agents/skills/rules-scripts/SKILL.md",
-  ".agents/skills/rules-src/SKILL.md",
-  ".agents/skills/rules-typings/SKILL.md",
-  ".agents/skills/scripts-architecture/SKILL.md",
-  ".agents/skills/scripts-dependencies/SKILL.md",
-  ".agents/skills/scripts-infra/SKILL.md",
-  ".agents/skills/scripts-maintenance/SKILL.md",
-  ".agents/skills/scripts-security/SKILL.md",
-  ".agents/skills/scripts-testing/SKILL.md",
-  ".agents/skills/scripts-validation/SKILL.md",
-  ".agents/skills/skill-format-universal/SKILL.md",
-  ".agents/skills/testing-patterns/SKILL.md",
-  ".agents/skills/using-flext-cli/SKILL.md",
-  ".agents/skills/using-flext-core/SKILL.md",
-  ".agents/skills/using-flext-tests/SKILL.md",
-  ".agents/skills/workspace-maintenance/SKILL.md",
+  ".agents/skills/flext-law/SKILL.md",
+  ".agents/skills/flext-inviolable-rules/SKILL.md",
 ]

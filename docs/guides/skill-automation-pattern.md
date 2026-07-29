@@ -12,8 +12,9 @@ For each new automation family, deliver all items below:
 
 1. One skill folder: `.agents/skills/<automation-name>/` containing:
    - `SKILL.md` — canonical skill document
-   - `rules.yml` — detection rules (ast-grep, ripgrep, or custom)
-   - `rules/` — ast-grep rule files (if any)
+   - static enforcement rules are DATA in `flext-infra/config/enforcement/*.yaml`
+     (Pydantic-2-validated), evaluated by the shared rope-semantic engine — NOT
+     per-skill `rules.yml`, NOT ast-grep/ripgrep/bespoke detector files (LAW1/LAW2)
    - `baseline.json` — violation baseline (auto-generated)
 2. One docs page in `docs/guides/` (if cross-cutting)
 
@@ -48,37 +49,36 @@ The skill must follow the canonical format from `skill-format-universal` and inc
 ## Implementation Checklist
 
 1. Define the invariant (policy or quality requirement).
-2. Create `rules.yml` with detection rules (ast-grep, ripgrep, or custom).
-3. Place ast-grep rule files in skill `rules/` directory.
-4. Initialize baseline with `python3 scripts/core/skill_validate.py --skill <name> --update-baseline`.
-5. Write or update skill doc with exact commands.
-6. Add or update a docs guide in `docs/guides/` (if cross-cutting).
-7. Run `python3 scripts/core/skill_validate.py --all` to verify integration.
+2. Declare the rule as Pydantic-2-validated DATA in `flext-infra/config/enforcement/*.yaml`
+   (closed operator set over the rope-semantic fact base); NEVER Python rule logic, ast-grep,
+   or a per-skill `rules/` directory. `flext-core` holds runtime/beartype rules only.
+3. Initialize baseline with `python3 scripts/core/skill_validate.py --skill <name> --update-baseline`.
+4. Write or update skill doc with exact commands.
+5. Add or update a docs guide in `docs/guides/` (if cross-cutting).
+6. Run `python3 scripts/core/skill_validate.py --all` to verify integration.
 
 ## Example (Current Pattern)
 
-Current repository implementation uses the **self-contained skill architecture**. Each skill
-folder (`.agents/skills/<skill>/`) owns its own `rules.yml`, `rules/` ast-grep files,
-`baseline.json`, and `report.json`. The generic runner `scripts/core/skill_validate.py`
-discovers and executes everything.
+Current repository implementation routes ALL static enforcement rules to
+`flext-infra/config/enforcement/*.yaml` as Pydantic-2-validated data, evaluated by the shared
+rope-semantic engine (`ctx.rope_project`; `ast`/`ast-grep`/`get_ast` banned per LAW2). Skills
+document intent and point at the config SSOT; they do not own rule data or detector code.
+The generic runner `scripts/core/skill_validate.py` discovers and executes everything.
 
 **Dict/Any Policy Gate**:
 
-- Skill: `.agents/skills/flext-strict-typing/SKILL.md`
-- Rules: `.agents/skills/flext-strict-typing/rules.yml` (10 rules: 8 ast-grep + 2 ripgrep)
-- AST rules: `.agents/skills/flext-strict-typing/rules/*.yml`
-- Baseline: `.agents/skills/flext-strict-typing/baseline.json`
+- Skill: `.agents/skills/flext-strict-typing/SKILL.md` (documents intent; points at config SSOT)
+- Rules: declared as data in `flext-infra/config/enforcement/*.yaml`, evaluated rope-semantically
 
 **Pydantic v2 Policy Gate**:
 
-- Skill: `.agents/skills/lib-pydantic-v2/SKILL.md`
-- Rules: `.agents/skills/lib-pydantic-v2/rules.yml` (8 ast-grep rules)
-- AST rules: `.agents/skills/lib-pydantic-v2/rules/*.yml`
-- Baseline: `.agents/skills/lib-pydantic-v2/baseline.json`
+- Skill: `.agents/skills/lib-pydantic-v2/SKILL.md` (documents intent; points at config SSOT)
+- Rules: declared as data in `flext-infra/config/enforcement/*.yaml`, evaluated rope-semantically
 
 **Generic runner**:
 
-- `scripts/core/skill_validate.py` — auto-discovers `.agents/skills/*/rules.yml`
+- `scripts/core/skill_validate.py` — runs the rope-semantic engine over the rules declared in `flext-
+  infra/config/enforcement/*.yaml`
 
 ## Verification Commands
 
@@ -91,4 +91,5 @@ python3 scripts/core/skill_validate.py --all
 
 ## Adoption Rule
 
-For future automation work, do not introduce manual-only procedures. Ship scripts + skill + docs together in the same change.
+For future automation work, do not introduce manual-only procedures. Ship scripts + skill + docs together in the same
+change.
