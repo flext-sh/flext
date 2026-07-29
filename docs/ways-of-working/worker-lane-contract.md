@@ -77,18 +77,41 @@ Do not repeat these:
 - `git add -A` commits sweeping foreign WIP.
 - Treating idle-after-report as failure.
 
-## 8. Automated adjustments and pre-merge validation
+## 8. Three-boundary validation contract
 
-Any automated adjustment — sync, codegen round-trip, auto-fix, or upstream
-merge — must be treated as a code change:
+Any edit or automated adjustment — sync, codegen round-trip, auto-fix, or
+upstream merge — is a code change. Keep automated corrections atomic within the
+lane: one coherent commit or an explicit pathspec-bound set of commits.
 
-- Validate it through the root-Make gates for the affected projects before
-  reporting it done.
-- Keep it atomic within the lane: one coherent commit or an explicit pathspec-bound
-  set of commits. Do not leave open-ended `fixes` commits stacking unrelated
-  changes.
-- Before the lead merges the lane into `0.12.0-dev`, the lane must pass a
-  pre-merge validation: `make check` and `make test` for every affected project.
-  A red gate blocks the merge; fix forward inside the lane and re-validate.
-- An upstream/external merge into the lane is only absorbed after the same
-  lane-context validation passes.
+The following fresh evidence is mandatory at every boundary:
+
+- `make check CHECK_GATES=lint,format,pyrefly` for the global workspace;
+- `make check PROJECT=<affected> CHECK_GATES=pyright,mypy` for every affected
+  project and consumer;
+- `make test PROJECT=<affected>` for every affected project and integration
+  surface;
+- real public-surface QA for the changed behavior; and
+- generator/consumer idempotence when generated outputs are involved.
+
+### 8.1 Final worker lane
+
+After the final lane edit or automated adjustment, the worker runs the complete
+boundary above and records exact commands, cwd, exit codes, and decisive output.
+
+### 8.2 Updated worker lane before merge
+
+Before reporting `READY_FOR_REVIEW`, the worker must non-destructively merge the
+latest `origin/0.12.0-dev` into the lane, resolve any resulting issues without
+discarding WIP, and rerun the complete boundary above. An upstream merge is
+absorbed only after this lane-context validation passes.
+
+### 8.3 Original target after integration
+
+After the lead/orchestrator integrates the lane into the original target, the
+orchestrator reruns the complete boundary on that target and performs the real
+public-surface QA. This is post-integration evidence, not worker evidence, and
+must not be claimed before integration.
+
+Any red, inconclusive, timed-out without a verdict, zero-project, partial-scope,
+or stale-HEAD result blocks review or integration. Only complete, fresh green
+evidence at the applicable boundary permits `READY_FOR_REVIEW`.
