@@ -2,7 +2,7 @@
 #
 # Every hook routes through the canonical `uv run --all-packages python -m flext_infra`
 # workspace monopoly; no standalone scripts and no bare tool invocations
-# (AGENTS.md §5 Make Contract).
+# (AGENTS.md `Build & Test`).
 # Enable locally with `pre-commit install` from the workspace root.
 repos:
   - repo: local
