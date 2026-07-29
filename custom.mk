@@ -267,7 +267,7 @@ workspace-dependabot-apply: ## dependabot-merge + merge result into main
 # passed explicitly.
 
 .PHONY: gen mod sync up stubs constraints \
-        fmt format lint types pyrefly mypy pyright scan markdown loc-cap \
+        format lint types pyrefly mypy pyright scan markdown loc-cap \
         boundary cqrs check-coordination silent-failure go docker_standardization pol pyre \
         save tag push rel pr project workspace
 
@@ -291,9 +291,6 @@ constraints: ## Rewrite dependency constraints (dry-run; APPLY=Y to execute)
 	$(Q)$(MAKE) --no-print-directory build WHAT=constraints $(MAKE_SELECTION_ARGS)
 
 # check / quality
-fmt: ## Run formatting gates (dry-run; APPLY=Y to fix)
-	$(Q)$(MAKE) --no-print-directory check WHAT=fmt $(MAKE_SELECTION_ARGS)
-
 lint: ## Run default lint/type gates
 	$(Q)$(MAKE) --no-print-directory check WHAT=lint $(MAKE_SELECTION_ARGS)
 
