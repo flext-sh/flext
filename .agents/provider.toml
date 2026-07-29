@@ -13,5 +13,4 @@ always = [
 ]
 on_demand = [
   ".agents/skills/flext-law/SKILL.md",
-  ".agents/skills/flext-inviolable-rules/SKILL.md",
 ]
