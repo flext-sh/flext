@@ -654,8 +654,9 @@ This error is also raised for strict fields when the input value is not an insta
 
 ## `decimal_whole_digits`
 
-This error is raised when the value provided for a `Decimal` has more digits before the decimal point
-than `max_digits` - `decimal_places` (as long as both are specified):
+This error is raised when the value provided for a `Decimal` has more digits before the decimal point than `max_digits`
+
+- `decimal_places` (as long as both are specified):
 
 ```python
 from decimal import Decimal
@@ -676,8 +677,8 @@ except ValidationError as exc:
 
 ## `default_factory_not_called`
 
-This error is raised when a [default factory taking
-validated data](../concepts/fields.md#default-factory-validated-data)
+This error is raised when a [default factory taking validated data](../concepts/fields.md#default-factory-validated-
+data)
 can't be called, because validation failed on previous fields:
 
 ```python
@@ -1604,24 +1605,24 @@ except ValidationError as exc:
     # > 'none_required'
 ```
 
-> **Note:** You may encounter this error when there is a naming collision in your model between a field name and its type.
-> More specifically, this error is likely to be thrown when the default value of that field is `None`.
->
-> For example, the following would yield the `none_required` validation error since the field `int` is set to a
-> default value of `None` and has the exact same name as its type, which causes problems with validation.
->
-> ```python {test="skip"}
-> from typing import Optional
->
-> from pydantic import BaseModel
->
->
-> class M1(BaseModel):
->     int: Optional[int] = None
->
->
-> m = M1(int=123)  # errors
-> ```
+!!! note
+You may encounter this error when there is a naming collision in your model between a field name and its type. More
+specifically, this error is likely to be thrown when the default value of that field is `None`.
+
+    For example, the following would yield the `none_required` validation error since the field `int` is set to a default value of `None` and has the exact same name as its type, which causes problems with validation.
+
+    ```python {test="skip"}
+    from typing import Optional
+
+    from pydantic import BaseModel
+
+
+    class M1(BaseModel):
+        int: Optional[int] = None
+
+
+    m = M1(int=123)  # errors
+    ```
 
 ## `recursion_loop`
 
