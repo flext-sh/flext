@@ -213,7 +213,6 @@
   "python-envs.workspaceSearchPaths": [
     "./.venv",
     "./*/.venv",
-    "./apps/*/.venv",
     "./flext-api/.venv",
     "./flext-auth/.venv",
     "./flext-cli/.venv",
