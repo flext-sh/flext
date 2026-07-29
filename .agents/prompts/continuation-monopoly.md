@@ -12,7 +12,10 @@ Read, in order:
 2. `/home/marlonsc/.agents/UNIVERSAL_CORE.md`
 3. `/home/marlonsc/flext/AGENTS.md`
 4. `/home/marlonsc/flext/.agents/skills/flext-law/SKILL.md`
-5. `/home/marlonsc/flext/.agents/skills/flext-inviolable-rules/SKILL.md`
+5. `/home/marlonsc/.agents/skills/inviolable-rules/SKILL.md`
+6. `/home/marlonsc/.agents/skills/make-check/SKILL.md`
+7. `/home/marlonsc/.agents/skills/verification-loop/SKILL.md`
+<!-- Why: cutover to exact global generic skills after the local flext-inviolable-rules removal (mro-1o6t.1.1) -->
 
 ## Operating contract
 
