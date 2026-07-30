@@ -42,6 +42,7 @@ members = [
     "flext-tests",
     "flext-web",
 ]
+constraints = [{ name = "uv", specifier = ">=0.11.0" }]
 
 [[package]]
 name = "actionlint-py"
@@ -1577,6 +1578,7 @@ dev = [
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
     { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -1592,6 +1594,7 @@ dev = [
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
     { name = "ruff", specifier = ">=0.12.3" },
+    { name = "ruff", specifier = ">=0.15.12" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -1614,6 +1617,8 @@ dev = [
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20260518" },
     { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
+    { name = "yamlfix", specifier = ">=1.19.1" },
     { name = "yamlfix", specifier = ">=1.19.1,<2" },
 ]
 workspace = [
