@@ -127,17 +127,13 @@ def test_main_reports_registry_errors(capsys: pytest.CaptureFixture[str]) -> Non
     assert "verb 'does-not-exist' unknown" in capsys.readouterr().err
 
 
-def test_run_shell_mirrors_captured_output(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
+def test_run_shell_mirrors_captured_output(capsys: pytest.CaptureFixture[str]) -> None:
     """Mirror child stdout and stderr while preserving its exit code."""
-    code = Dispatch.run_shell(
-        (
-            sys.executable,
-            "-c",
-            "import sys; print('child-out'); print('child-err', file=sys.stderr)",
-        )
-    )
+    code = Dispatch.run_shell((
+        sys.executable,
+        "-c",
+        "import sys; print('child-out'); print('child-err', file=sys.stderr)",
+    ))
 
     captured = capsys.readouterr()
     assert code == 0

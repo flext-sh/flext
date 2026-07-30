@@ -117,8 +117,8 @@ class FlextRootDocsAllCommand:
             return 2
 
         if not options.can_execute:
-            for line in options.dry_run_lines:
-                print(line)
+            for _line in options.dry_run_lines:
+                pass
             return 0
         return Dispatch.run_make("_docs", extra_env=options.target_env)
 
