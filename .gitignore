@@ -348,10 +348,13 @@ __pyrefly_virtual__/
 .venv.*/
 *.egg-info/
 build/
+context_test/
 dist/
 node_modules/
+rope_ws/
 site/
 target/
+tmp_flow_test/
 .pyrefly_cache/
 .tox/
 .flext-deps/

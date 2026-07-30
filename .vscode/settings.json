@@ -40,7 +40,11 @@
     "**/site": true,
     "**/target": true,
     "**/.direnv": true,
-    "**/.hypothesis": true
+    "**/.hypothesis": true,
+    "**/.worktrees": true,
+    "**/context_test": true,
+    "**/rope_ws": true,
+    "**/tmp_flow_test": true
   },
   "files.watcherExclude": {
     "**/__pycache__/**": true,
@@ -80,7 +84,11 @@
     "**/.turbo/**": true,
     "**/.venv.*/**": true,
     "**/target/**": true,
-    "**/.direnv/**": true
+    "**/.direnv/**": true,
+    "**/.worktrees/**": true,
+    "**/context_test/**": true,
+    "**/rope_ws/**": true,
+    "**/tmp_flow_test/**": true
   },
   "git.autoRepositoryDetection": "subFolders",
   "git.detectSubmodules": true,
@@ -189,7 +197,11 @@
     "**/site": true,
     "**/target": true,
     "**/.direnv": true,
-    "**/.hypothesis": true
+    "**/.hypothesis": true,
+    "**/.worktrees": true,
+    "**/context_test": true,
+    "**/rope_ws": true,
+    "**/tmp_flow_test": true
   },
   "shellcheck.useWorkspaceRootAsCwd": true,
   "terminal.integrated.env.linux": {
