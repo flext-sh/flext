@@ -82,7 +82,6 @@ def run() -> int:
         u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd()))
     ).resolve()
     if Dispatch.surface_validation_enabled():
-        print("SURFACE-VALIDATE: python -m scripts.cmd.clean.restore_init_files")
         return 0
     if not Dispatch.env_enabled("APPLY"):
         return 0
