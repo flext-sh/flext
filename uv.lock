@@ -3736,14 +3736,11 @@ dependencies = [
     { name = "mkdocs-section-index" },
     { name = "mkdocstrings" },
     { name = "mkdocstrings-python" },
-    { name = "pyrefly" },
     { name = "rope" },
-    { name = "ruff" },
 ]
 
 [package.dev-dependencies]
 dev = [
-    { name = "actionlint-py" },
     { name = "autoflake" },
     { name = "bandit" },
     { name = "black" },
@@ -3775,12 +3772,10 @@ dev = [
     { name = "mkdocs-versioning" },
     { name = "mkdocstrings" },
     { name = "mkdocstrings-python" },
-    { name = "mypy" },
     { name = "pip-audit" },
     { name = "pre-commit" },
     { name = "pylint" },
     { name = "pyrefly" },
-    { name = "pyright" },
     { name = "pytest" },
     { name = "pytest-benchmark" },
     { name = "pytest-clarity" },
@@ -3805,7 +3800,6 @@ dev = [
     { name = "types-flask" },
     { name = "types-jsonschema" },
     { name = "types-ldap3" },
-    { name = "types-openpyxl" },
     { name = "types-paramiko" },
     { name = "types-protobuf" },
     { name = "types-psutil" },
@@ -3837,14 +3831,11 @@ requires-dist = [
     { name = "mkdocs-section-index", specifier = ">=0.3.12" },
     { name = "mkdocstrings", specifier = ">=1.0.4" },
     { name = "mkdocstrings-python", specifier = ">=2.0.3" },
-    { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "rope", specifier = ">=1.14.0" },
-    { name = "ruff", specifier = ">=0.15.12" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "actionlint-py", specifier = ">=1.7.12.24" },
     { name = "autoflake", specifier = ">=2.3.1" },
     { name = "bandit", specifier = ">=1.8" },
     { name = "black", specifier = ">=25.1" },
@@ -3876,14 +3867,11 @@ dev = [
     { name = "mkdocs-versioning", specifier = ">=0.2" },
     { name = "mkdocstrings", specifier = ">=0.24" },
     { name = "mkdocstrings-python", specifier = ">=1.7" },
-    { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
     { name = "pre-commit", specifier = ">=4.6.0" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
-    { name = "pyright", specifier = ">=1.1.411" },
     { name = "pytest", specifier = ">=8.4" },
-    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -3899,7 +3887,6 @@ dev = [
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
     { name = "ruff", specifier = ">=0.12.3" },
-    { name = "ruff", specifier = ">=0.15.12" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -3908,7 +3895,6 @@ dev = [
     { name = "types-flask", specifier = ">=1.1.6" },
     { name = "types-jsonschema", specifier = ">=4.26" },
     { name = "types-ldap3", specifier = ">=2.9.13.20250622" },
-    { name = "types-openpyxl", specifier = ">=3.1.5.20260518" },
     { name = "types-paramiko", specifier = ">=4.0" },
     { name = "types-protobuf", specifier = ">=6.30.2.20250703" },
     { name = "types-psutil", specifier = ">=7" },
@@ -3923,7 +3909,6 @@ dev = [
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
     { name = "vulture", specifier = ">=2.13" },
-    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
