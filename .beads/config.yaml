@@ -18,6 +18,10 @@ dolt:
   database: mro
   auto-commit: off
 
+# Shared-server backups are explicit to avoid a backup sync on every bd command.
+backup:
+  enabled: false
+
 # Enable JSON output by default
 # json: false
 

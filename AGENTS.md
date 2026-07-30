@@ -113,7 +113,18 @@ never allowed to hardcode, freeze, or implicitly assume the values that exist to
     rerun through it) — never a reason to route around it. Shared mutable tool
     state (e.g. Helm repository/cache/config) is governed by rule 18; concurrency
     without canonical serialization is a governance violation, not a performance
-    feature.
+    feature. **This binds DIAGNOSIS and VALIDATION exactly as it binds mutation.**
+    Establishing a fact about the workspace — which verbs exist, whether a gate
+    passes, whether two generated files agree, how a tool behaves — is itself a
+    validation action and MUST run through the canonical verb or the documented
+    CLI reading the SSOT. Ad-hoc `make -n`, `md5sum`/`diff` sweeps over generated
+    files, `grep` over a generated projection to infer a contract, and throwaway
+    reproduction scripts under `/tmp` are PROHIBITED as evidence: they read a
+    projection instead of its source, they are not reproducible by anyone else,
+    and they silently drift from the SSOT. When the fact you need has no canonical
+    command, that absence is the defect: add the verb/WHAT (or the CLI subcommand)
+    at its owner, land it with a test, and obtain the fact through it. Evidence
+    produced outside the canonical surface does not count as evidence.
 18. **Helm is never parallelized.** Helm invocations (`dependency build/update`,
     `package`, `lint`, `template`, `repo *`, `registry *`, `push`, `pull`) always
     run serialized through the canonical Helm lock — no thread/process fan-out,
