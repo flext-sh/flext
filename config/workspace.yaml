@@ -2,18 +2,16 @@
 # handwritten topology SSOT consumed by `flext-infra codegen conform`.
 # NOTE (multi-agent, mro-wkii.17 / agent: codex): conform never overwrites this
 # input. Add members or exclusions here, then run `make codegen`.
-version: 2
+version: 3
 name: flext
 repository:
   name: flext
   distribution: flext
   provider: flext-sh
   url: https://github.com/flext-sh/flext.git
-  branch: 0.12.0-dev
   path: .
   role: workspace-root
   state: active
-  profile: workspace-root
   checkout: root
   codegen: conform
   package: false
@@ -45,11 +43,9 @@ members:
     distribution: "flext-api"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-api.git"
-    branch: "0.12.0-dev"
     path: "flext-api"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -60,11 +56,9 @@ members:
     distribution: "flext-auth"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-auth.git"
-    branch: "0.12.0-dev"
     path: "flext-auth"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -75,11 +69,9 @@ members:
     distribution: "flext-cli"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-cli.git"
-    branch: "0.12.0-dev"
     path: "flext-cli"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -90,11 +82,9 @@ members:
     distribution: "flext-core"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-core.git"
-    branch: "0.12.0-dev"
     path: "flext-core"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -105,11 +95,9 @@ members:
     distribution: "flext-db-oracle"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-db-oracle.git"
-    branch: "0.12.0-dev"
     path: "flext-db-oracle"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -120,11 +108,9 @@ members:
     distribution: "flext-dbt-ldap"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-dbt-ldap.git"
-    branch: "0.12.0-dev"
     path: "flext-dbt-ldap"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -135,11 +121,9 @@ members:
     distribution: "flext-dbt-ldif"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-dbt-ldif.git"
-    branch: "0.12.0-dev"
     path: "flext-dbt-ldif"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -150,11 +134,9 @@ members:
     distribution: "flext-dbt-oracle"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-dbt-oracle.git"
-    branch: "0.12.0-dev"
     path: "flext-dbt-oracle"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -165,11 +147,9 @@ members:
     distribution: "flext-dbt-oracle-wms"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-dbt-oracle-wms.git"
-    branch: "0.12.0-dev"
     path: "flext-dbt-oracle-wms"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -180,11 +160,9 @@ members:
     distribution: "flext-grpc"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-grpc.git"
-    branch: "0.12.0-dev"
     path: "flext-grpc"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -195,11 +173,9 @@ members:
     distribution: "flext-infra"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-infra.git"
-    branch: "0.12.0-dev"
     path: "flext-infra"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -210,11 +186,9 @@ members:
     distribution: "flext-ldap"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-ldap.git"
-    branch: "0.12.0-dev"
     path: "flext-ldap"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -225,11 +199,9 @@ members:
     distribution: "flext-ldif"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-ldif.git"
-    branch: "0.12.0-dev"
     path: "flext-ldif"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -240,11 +212,9 @@ members:
     distribution: "flext-meltano"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-meltano.git"
-    branch: "0.12.0-dev"
     path: "flext-meltano"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -255,11 +225,9 @@ members:
     distribution: "flext-observability"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-observability.git"
-    branch: "0.12.0-dev"
     path: "flext-observability"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -270,11 +238,9 @@ members:
     distribution: "flext-oracle-oic"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-oracle-oic.git"
-    branch: "0.12.0-dev"
     path: "flext-oracle-oic"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -285,11 +251,9 @@ members:
     distribution: "flext-oracle-wms"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-oracle-wms.git"
-    branch: "0.12.0-dev"
     path: "flext-oracle-wms"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -300,11 +264,9 @@ members:
     distribution: "flext-plugin"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-plugin.git"
-    branch: "0.12.0-dev"
     path: "flext-plugin"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -315,11 +277,9 @@ members:
     distribution: "flext-quality"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-quality.git"
-    branch: "0.12.0-dev"
     path: "flext-quality"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -330,11 +290,9 @@ members:
     distribution: "flext-tap-ldap"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-tap-ldap.git"
-    branch: "0.12.0-dev"
     path: "flext-tap-ldap"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -345,11 +303,9 @@ members:
     distribution: "flext-tap-ldif"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-tap-ldif.git"
-    branch: "0.12.0-dev"
     path: "flext-tap-ldif"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -360,11 +316,9 @@ members:
     distribution: "flext-tap-oracle"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-tap-oracle.git"
-    branch: "0.12.0-dev"
     path: "flext-tap-oracle"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -375,11 +329,9 @@ members:
     distribution: "flext-tap-oracle-oic"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-tap-oracle-oic.git"
-    branch: "0.12.0-dev"
     path: "flext-tap-oracle-oic"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -390,11 +342,9 @@ members:
     distribution: "flext-tap-oracle-wms"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-tap-oracle-wms.git"
-    branch: "0.12.0-dev"
     path: "flext-tap-oracle-wms"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -405,11 +355,9 @@ members:
     distribution: "flext-target-ldap"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-target-ldap.git"
-    branch: "0.12.0-dev"
     path: "flext-target-ldap"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -420,11 +368,9 @@ members:
     distribution: "flext-target-ldif"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-target-ldif.git"
-    branch: "0.12.0-dev"
     path: "flext-target-ldif"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -435,11 +381,9 @@ members:
     distribution: "flext-target-oracle"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-target-oracle.git"
-    branch: "0.12.0-dev"
     path: "flext-target-oracle"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -450,11 +394,9 @@ members:
     distribution: "flext-target-oracle-oic"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-target-oracle-oic.git"
-    branch: "0.12.0-dev"
     path: "flext-target-oracle-oic"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -465,11 +407,9 @@ members:
     distribution: "flext-target-oracle-wms"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-target-oracle-wms.git"
-    branch: "0.12.0-dev"
     path: "flext-target-oracle-wms"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -480,11 +420,9 @@ members:
     distribution: "flext-tests"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-tests.git"
-    branch: "0.12.0-dev"
     path: "flext-tests"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
@@ -495,20 +433,15 @@ members:
     distribution: "flext-web"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-web.git"
-    branch: "0.12.0-dev"
     path: "flext-web"
     role: "workspace-member"
     state: "active"
-    profile: "workspace-member"
     checkout: submodule
     codegen: conform
     package: true
     editable: true
     read_only: false
 
-content_only:
-
-    []
 exclusions:
 
     []
