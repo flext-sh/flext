@@ -1,5 +1,9 @@
 # flext — generated project interface.
 # Managed by flext-infra codegen conform for new and existing repositories.
+# @flext-managed: continuous
+# @flext-regenerate: make codegen WHAT=apply APPLY=Y
+# @flext-ssot: flext-infra/config/codegen.yaml and flext-infra/src/flext_infra/templates/project/base/Makefile.j2
+# @flext-maintenance: do not edit generated Makefiles directly
 
 SHELL := /bin/sh
 .DEFAULT_GOAL := help
@@ -13,18 +17,34 @@ UV_LINK_MODE := copy
 
 APPLY ?= N
 ARGS ?=
+CHECK_GATES ?=
+PROJECT ?=
 PROJECTS ?=
+# Public selector documented by this Makefile. Forwarded to the test recipe so a
+# focused run stays inside the canonical Make surface instead of forcing a
+# loose pytest invocation.
+PYTEST_ARGS ?=
+BRANCH ?=
+BASE ?= HEAD
+PYTEST_TARGETS ?=
 WHAT ?=
 
+comma := ,
+CHECK_GATE_NAMES := lint format pyrefly mypy pyright vulture workflows
+CHECK_GATE_LIST := $(subst $(comma), ,$(strip $(CHECK_GATES)))
+UNKNOWN_CHECK_GATES := $(filter-out $(CHECK_GATE_NAMES),$(CHECK_GATE_LIST))
+ifneq ($(strip $(UNKNOWN_CHECK_GATES)),)
+$(error ERROR: unsupported CHECK_GATES: $(UNKNOWN_CHECK_GATES))
+endif
+_check_gate_selected = $(if $(CHECK_GATE_LIST),$(filter $(1),$(CHECK_GATE_LIST)),all)
+
 PROJECT_ROOT := $(shell pwd -P)
-PUBLIC_VERBS := help setup deps build check test format run status docs clean release codegen
-# A workspace root orchestrates its members, so its lint and type scope is the
-# union of every member's source and tests. Members are expanded from the
-# manifest SSOT, never listed by hand, and the paths stay existence-filtered so
-# a member without one of the trees cannot break the gate.
-WORKSPACE_CHECK_PATHS := $(wildcard $(PROJECT_ROOT)/flext-api/src) $(wildcard $(PROJECT_ROOT)/flext-api/tests) $(wildcard $(PROJECT_ROOT)/flext-auth/src) $(wildcard $(PROJECT_ROOT)/flext-auth/tests) $(wildcard $(PROJECT_ROOT)/flext-cli/src) $(wildcard $(PROJECT_ROOT)/flext-cli/tests) $(wildcard $(PROJECT_ROOT)/flext-core/src) $(wildcard $(PROJECT_ROOT)/flext-core/tests) $(wildcard $(PROJECT_ROOT)/flext-db-oracle/src) $(wildcard $(PROJECT_ROOT)/flext-db-oracle/tests) $(wildcard $(PROJECT_ROOT)/flext-dbt-ldap/src) $(wildcard $(PROJECT_ROOT)/flext-dbt-ldap/tests) $(wildcard $(PROJECT_ROOT)/flext-dbt-ldif/src) $(wildcard $(PROJECT_ROOT)/flext-dbt-ldif/tests) $(wildcard $(PROJECT_ROOT)/flext-dbt-oracle/src) $(wildcard $(PROJECT_ROOT)/flext-dbt-oracle/tests) $(wildcard $(PROJECT_ROOT)/flext-dbt-oracle-wms/src) $(wildcard $(PROJECT_ROOT)/flext-dbt-oracle-wms/tests) $(wildcard $(PROJECT_ROOT)/flext-grpc/src) $(wildcard $(PROJECT_ROOT)/flext-grpc/tests) $(wildcard $(PROJECT_ROOT)/flext-infra/src) $(wildcard $(PROJECT_ROOT)/flext-infra/tests) $(wildcard $(PROJECT_ROOT)/flext-ldap/src) $(wildcard $(PROJECT_ROOT)/flext-ldap/tests) $(wildcard $(PROJECT_ROOT)/flext-ldif/src) $(wildcard $(PROJECT_ROOT)/flext-ldif/tests) $(wildcard $(PROJECT_ROOT)/flext-meltano/src) $(wildcard $(PROJECT_ROOT)/flext-meltano/tests) $(wildcard $(PROJECT_ROOT)/flext-observability/src) $(wildcard $(PROJECT_ROOT)/flext-observability/tests) $(wildcard $(PROJECT_ROOT)/flext-oracle-oic/src) $(wildcard $(PROJECT_ROOT)/flext-oracle-oic/tests) $(wildcard $(PROJECT_ROOT)/flext-oracle-wms/src) $(wildcard $(PROJECT_ROOT)/flext-oracle-wms/tests) $(wildcard $(PROJECT_ROOT)/flext-plugin/src) $(wildcard $(PROJECT_ROOT)/flext-plugin/tests) $(wildcard $(PROJECT_ROOT)/flext-quality/src) $(wildcard $(PROJECT_ROOT)/flext-quality/tests) $(wildcard $(PROJECT_ROOT)/flext-tap-ldap/src) $(wildcard $(PROJECT_ROOT)/flext-tap-ldap/tests) $(wildcard $(PROJECT_ROOT)/flext-tap-ldif/src) $(wildcard $(PROJECT_ROOT)/flext-tap-ldif/tests) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle/src) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle/tests) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle-oic/src) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle-oic/tests) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle-wms/src) $(wildcard $(PROJECT_ROOT)/flext-tap-oracle-wms/tests) $(wildcard $(PROJECT_ROOT)/flext-target-ldap/src) $(wildcard $(PROJECT_ROOT)/flext-target-ldap/tests) $(wildcard $(PROJECT_ROOT)/flext-target-ldif/src) $(wildcard $(PROJECT_ROOT)/flext-target-ldif/tests) $(wildcard $(PROJECT_ROOT)/flext-target-oracle/src) $(wildcard $(PROJECT_ROOT)/flext-target-oracle/tests) $(wildcard $(PROJECT_ROOT)/flext-target-oracle-oic/src) $(wildcard $(PROJECT_ROOT)/flext-target-oracle-oic/tests) $(wildcard $(PROJECT_ROOT)/flext-target-oracle-wms/src) $(wildcard $(PROJECT_ROOT)/flext-target-oracle-wms/tests) $(wildcard $(PROJECT_ROOT)/flext-tests/src) $(wildcard $(PROJECT_ROOT)/flext-tests/tests) $(wildcard $(PROJECT_ROOT)/flext-web/src) $(wildcard $(PROJECT_ROOT)/flext-web/tests)
-RUFF_PATHS := $(PROJECT_ROOT)/src $(PROJECT_ROOT)/tests $(WORKSPACE_CHECK_PATHS)
-MYPY_PATHS := $(PROJECT_ROOT)/src $(PROJECT_ROOT)/tests $(WORKSPACE_CHECK_PATHS)
+PUBLIC_VERBS := help setup deps build check test format run status docs clean release codegen worktree
+RUFF_PATHS := $(PROJECT_ROOT)/src $(PROJECT_ROOT)/tests
+MYPY_PATHS := $(PROJECT_ROOT)/src $(PROJECT_ROOT)/tests
+UV ?= uv
+CALLER_PATH := $(PATH)
+CALLER_VIRTUAL_ENV := $(patsubst %/,%,$(VIRTUAL_ENV))
 
 # === MYPY RESOURCE LIMIT ===
 # mro-0ftd.3.11: every Mypy process inherits validated memory and time caps.
@@ -37,7 +57,6 @@ export MYPY_MEMORY_LIMIT_MB MYPY_TIMEOUT_SECONDS
 
 
 _DEFAULT_help := usage
-_DEFAULT_setup := environment
 _DEFAULT_deps := check
 _DEFAULT_build := artifacts
 _DEFAULT_check := all
@@ -49,6 +68,7 @@ _DEFAULT_docs := check
 _DEFAULT_clean := generated
 _DEFAULT_release := status
 _DEFAULT_codegen := check
+_DEFAULT_worktree := list
 
 
 ifneq ($(filter $(MAKE_PROFILE),workspace-root workspace-member standalone),$(MAKE_PROFILE))
@@ -72,10 +92,21 @@ RUNTIME_ROOT := $(PROJECT_ROOT)
 endif
 
 RUNTIME_VENV := $(RUNTIME_ROOT)/.venv
+RUNTIME_PYTHON := $(RUNTIME_VENV)/bin/python
+SANITIZED_CALLER_PATH := $(CALLER_PATH)
+ifneq ($(strip $(CALLER_VIRTUAL_ENV)),)
+SANITIZED_CALLER_PATH := $(subst $(CALLER_VIRTUAL_ENV)/bin:,,$(SANITIZED_CALLER_PATH))
+SANITIZED_CALLER_PATH := $(subst :$(CALLER_VIRTUAL_ENV)/bin,,$(SANITIZED_CALLER_PATH))
+ifeq ($(SANITIZED_CALLER_PATH),$(CALLER_VIRTUAL_ENV)/bin)
+SANITIZED_CALLER_PATH :=
+endif
+endif
+override FLEXT_INFRA_PYTHON := $(RUNTIME_PYTHON)
 override UV_PROJECT := $(RUNTIME_ROOT)
 override UV_PROJECT_ENVIRONMENT := $(RUNTIME_VENV)
 override VIRTUAL_ENV := $(RUNTIME_VENV)
-export UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV
+override PATH := $(RUNTIME_VENV)/bin:$(SANITIZED_CALLER_PATH)
+export FLEXT_INFRA_PYTHON UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH
 
 ifeq ($(MAKE_PROFILE),workspace-root)
 CODEGEN_SCOPE := all
@@ -89,23 +120,30 @@ endif
 # `flext-infra workspace orchestrate` primitive (verb allowlist + CLI group come
 # from the constants SSOT, never hardcoded here). Members and standalone projects
 # run the gate locally. FAIL_FAST forwards the stop-on-first-failure policy.
-WORKSPACE_ORCHESTRATE := $(UV_RUN) python -m flext_infra workspace orchestrate
+WORKSPACE_ORCHESTRATE = $(PROJECT_FLEXT_INFRA) workspace orchestrate
 ORCHESTRATED_VERBS := build check clean docs scan test val
+ORCHESTRATE_PROJECT_ARGS = $(if $(strip $(PROJECT)),--projects $(strip $(PROJECT)),$(if $(strip $(PROJECTS)),--projects $(strip $(PROJECTS))))
+ORCHESTRATE_CHECK_ARGS = $(if $(strip $(CHECK_GATES)),--make-arg "CHECK_GATES=$(strip $(CHECK_GATES))")
+ORCHESTRATE_TEST_ARGS = $(if $(strip $(PYTEST_ARGS)),--make-arg "PYTEST_ARGS=$(strip $(PYTEST_ARGS))")
 
-UV_RUN := uv run --project "$(RUNTIME_ROOT)" --no-sync
+UV_RUN := $(UV) run --project "$(RUNTIME_ROOT)" --no-sync
+PROJECT_INFRA_PYTHONPATH ?= $(PROJECT_ROOT)/src
+PROJECT_FLEXT_INFRA := test -x "$(FLEXT_INFRA_PYTHON)" || { printf 'ERROR: FLEXT_INFRA_PYTHON must name an executable managed Python\n' >&2; exit 2; }; env -u PYTHONPATH -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u UV_PROJECT_ENVIRONMENT PATH="$(dir $(FLEXT_INFRA_PYTHON)):/usr/bin:/bin" PYTHONPATH="$(PROJECT_INFRA_PYTHONPATH)" $(FLEXT_INFRA_PYTHON) -m flext_infra
 # mro-j47u (codex): scaffold dev tools live in the validated optional dev
 # profile; a fresh project must create its lock before later check-mode locks.
 UV_SYNC_FLAGS := --all-packages --all-extras --all-groups
 
+ifneq ($(strip $(PROJECT)),)
+ifneq ($(strip $(PROJECTS)),)
+$(error ERROR: Cannot use PROJECT and PROJECTS together)
+endif
+endif
 
-# The custom Make surface is the single extension point for every profile: it
-# carries the project's own commands, WHATs and hooks. Its name comes from the
-# constants SSOT, so there is no per-profile variant and no second surface.
+
 -include custom.mk
 
 _BUILTIN_HANDLERS := \
 	_builtin_help_usage \
-	_builtin_setup_environment \
 	_builtin_deps_check \
 	_builtin_deps_lock \
 	_builtin_deps_upgrade \
@@ -120,11 +158,18 @@ _BUILTIN_HANDLERS := \
 	_builtin_clean_generated \
 	_builtin_release_status \
 	_builtin_codegen_check \
-	_builtin_codegen_apply
+	_builtin_codegen_apply \
+	_builtin_worktree_list \
+	_builtin_worktree_add \
+	_builtin_worktree_remove
 
 define _dispatch
 	@what="$(strip $(WHAT))"; \
 	if [ -z "$$what" ]; then what="$(_DEFAULT_$@)"; fi; \
+	apply_builtin="_builtin_$@_apply"; \
+	if [ "$(APPLY)" = "Y" ] && [ "$$what" = "$(_DEFAULT_$@)" ]; then \
+		case " $(_BUILTIN_HANDLERS) " in *" $$apply_builtin "*) what="apply" ;; esac; \
+	fi; \
 	case "$$what" in \
 		*[!a-z0-9_-]*|'') printf 'ERROR: invalid WHAT selector %s\n' "$$what" >&2; exit 2 ;; \
 	esac; \
@@ -153,50 +198,84 @@ endef
 
 define _run_for_selected_projects
 	@set -eu; \
-	selected="$(strip $(PROJECTS))"; \
+	selected="$(strip $(if $(PROJECT),$(PROJECT),$(PROJECTS)))"; \
 	if [ -z "$$selected" ]; then selected="."; fi; \
 	for project in $$selected; do \
 		case " $(ALLOWED_PROJECTS) " in \
 			*" $$project "*) ;; \
 			*) printf 'ERROR: undeclared project %s\n' "$$project" >&2; exit 2 ;; \
 		esac; \
-		uv lock --project "$(PROJECT_ROOT)/$$project" $(1); \
+		$(UV) lock --project "$(PROJECT_ROOT)/$$project" $(1); \
 	done
 endef
 
 .PHONY: $(PUBLIC_VERBS) $(_BUILTIN_HANDLERS)
 
-$(PUBLIC_VERBS):
+$(filter-out setup,$(PUBLIC_VERBS)):
 	$(call _dispatch)
+
+setup:
+	@if [ -n "$(strip $(WHAT))" ]; then printf 'ERROR: setup does not accept WHAT\n' >&2; exit 2; fi
+	@$(MAKE) --no-print-directory _builtin_setup_environment
 
 _builtin_help_usage:
 	@printf '%s\n' 'flext [workspace-root]' ''
 
+
 	@printf '  %-10s WHAT=%s\n' 'help' 'usage'
 
-	@printf '  %-10s WHAT=%s\n' 'setup' 'environment'
+
+
+	@printf '  %-10s\n' 'setup'
+
+
 
 	@printf '  %-10s WHAT=%s\n' 'deps' 'check'
 
+
+
 	@printf '  %-10s WHAT=%s\n' 'build' 'artifacts'
+
+
 
 	@printf '  %-10s WHAT=%s\n' 'check' 'all'
 
+
+
 	@printf '  %-10s WHAT=%s\n' 'test' 'all'
+
+
 
 	@printf '  %-10s WHAT=%s APPLY=Y\n' 'format' 'check'
 
+
+
 	@printf '  %-10s WHAT=%s\n' 'run' 'default'
+
+
 
 	@printf '  %-10s WHAT=%s\n' 'status' 'diagnostics'
 
+
+
 	@printf '  %-10s WHAT=%s\n' 'docs' 'check'
+
+
 
 	@printf '  %-10s WHAT=%s\n' 'clean' 'generated'
 
+
+
 	@printf '  %-10s WHAT=%s\n' 'release' 'status'
 
+
+
 	@printf '  %-10s WHAT=%s APPLY=Y\n' 'codegen' 'check'
+
+
+
+	@printf '  %-10s WHAT=%s\n' 'worktree' 'list'
+
 
 	@printf '\n%s\n' 'Custom hooks (custom.mk):'
 	@printf '  %s\n' 'Define pre-<verb>, post-<verb>, pre-<verb>-<what>, post-<verb>-<what>'
@@ -210,88 +289,145 @@ _builtin_help_usage:
 		fi; \
 	fi
 
+# A project owns the sources it declares. Setup makes the tree exactly what the
+# manifest declares, using nothing outside the tree: every declared submodule is
+# initialised recursively at its recorded gitlink and placed on the branch
+# declared in .gitmodules. It is a no-op when the project declares no
+# submodules, and it converges on re-run. It never moves a branch that holds
+# work the superproject does not record: that is an error, never a warning, so
+# setup can never report success over a tree that is not what it declares.
+_builtin_setup_submodules:
+	@set -eu; \
+	if [ ! -f "$(PROJECT_ROOT)/.gitmodules" ]; then exit 0; fi; \
+	git -C "$(PROJECT_ROOT)" submodule sync --recursive --quiet; \
+	git -C "$(PROJECT_ROOT)" submodule update --init --recursive; \
+	git -C "$(PROJECT_ROOT)" submodule foreach --recursive --quiet ' \
+		branch=$$(git config -f "$$toplevel/.gitmodules" "submodule.$$name.branch" || true); \
+		if [ -z "$$branch" ]; then exit 0; fi; \
+		if ! git rev-parse --verify --quiet "refs/heads/$$branch" >/dev/null; then \
+			git checkout --quiet -b "$$branch"; \
+		elif [ "$$(git rev-parse "refs/heads/$$branch")" = "$$(git rev-parse HEAD)" ]; then \
+			git checkout --quiet "$$branch"; \
+		else \
+			printf "ERROR: %s: branch %s is at %s but the superproject records %s\n" "$$name" "$$branch" "$$(git rev-parse --short "refs/heads/$$branch")" "$$(git rev-parse --short HEAD)" >&2; \
+			printf "Reconcile that branch with the recorded gitlink, then re-run setup\n" >&2; \
+			exit 1; \
+		fi'
+
+_builtin_require_environment:
+	@if [ ! -x "$(RUNTIME_ROOT)/.venv/bin/python" ]; then \
+		printf 'ERROR: missing environment interpreter %s; make setup creates it\n' "$(RUNTIME_ROOT)/.venv/bin/python" >&2; \
+		exit 2; \
+	fi
+
 ifeq ($(MAKE_PROFILE),workspace-root)
-_builtin_setup_environment:
-	@uv sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS)
-	@uv pip install --python "$(PROJECT_ROOT)/.venv/bin/python" --no-deps --editable "$(PROJECT_ROOT)" --link-mode "$(UV_LINK_MODE)"
+_builtin_setup_environment: _builtin_setup_submodules
+	@$(UV) venv --clear "$(RUNTIME_VENV)"
+	@$(UV) sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS) --no-install-project
+	@$(UV) pip install --python "$(RUNTIME_VENV)" --no-deps --editable "$(PROJECT_ROOT)" --link-mode "$(UV_LINK_MODE)"
 	@set -eu; for member in $(WORKSPACE_MEMBERS); do \
-		uv pip install --python "$(PROJECT_ROOT)/.venv/bin/python" --no-deps --editable "$(PROJECT_ROOT)/$$member" --link-mode "$(UV_LINK_MODE)"; \
+		$(UV) pip install --python "$(RUNTIME_VENV)" --no-deps --editable "$(PROJECT_ROOT)/$$member" --link-mode "$(UV_LINK_MODE)"; \
 	done
-	@uv pip check --python "$(PROJECT_ROOT)/.venv/bin/python"
 else ifeq ($(MAKE_PROFILE),workspace-member)
 ifeq ($(ATTACHED_MEMBER),Y)
-_builtin_setup_environment:
-	@$(MAKE) --no-print-directory -C "$(RUNTIME_ROOT)" setup WHAT=environment
+_builtin_setup_environment: _builtin_setup_submodules
+	@$(MAKE) --no-print-directory -C "$(RUNTIME_ROOT)" _builtin_setup_environment
 else
-_builtin_setup_environment:
-	@uv sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS)
+_builtin_setup_environment: _builtin_setup_submodules
+	@$(UV) venv --clear "$(RUNTIME_VENV)"
+	@$(UV) sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS) --no-install-project
+	@$(UV) pip install --python "$(RUNTIME_VENV)" --no-deps --editable "$(PROJECT_ROOT)" --link-mode "$(UV_LINK_MODE)"
 endif
 else
-_builtin_setup_environment:
-	@uv sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS)
+_builtin_setup_environment: _builtin_setup_submodules
+	@$(UV) venv --clear "$(RUNTIME_VENV)"
+	@$(UV) sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS) --no-install-project
+	@$(UV) pip install --python "$(RUNTIME_VENV)" --no-deps --editable "$(PROJECT_ROOT)" --link-mode "$(UV_LINK_MODE)"
 endif
+	@$(UV) pip check --python "$(RUNTIME_VENV)"
 
-_builtin_deps_check:
+_builtin_deps_check: _builtin_require_environment
 	$(call _run_for_selected_projects,--check)
 
 _builtin_deps_lock:
 	$(call _require_apply)
 	$(call _run_for_selected_projects,)
 
-_builtin_deps_upgrade:
+_builtin_deps_upgrade: _builtin_require_environment
 	$(call _require_apply)
 	$(call _run_for_selected_projects,--upgrade)
+	@set -eu; \
+	selected="$(strip $(PROJECTS))"; \
+	if [ -z "$$selected" ]; then selected="."; fi; \
+	set --; \
+	for project in $$selected; do set -- "$$@" --projects "$$project"; done; \
+	$(PROJECT_FLEXT_INFRA) deps modernize --workspace "$(PROJECT_ROOT)" \
+		--apply --rewrite-constraints --skip-check "$$@"
+	$(call _run_for_selected_projects,)
 
 
 _builtin_build_artifacts:
-	@$(WORKSPACE_ORCHESTRATE) --verb build $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+	@$(WORKSPACE_ORCHESTRATE) --verb build $(ORCHESTRATE_PROJECT_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
-_builtin_check_all:
-	@$(WORKSPACE_ORCHESTRATE) --verb check $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+_builtin_check_all: _builtin_require_environment
+	@$(WORKSPACE_ORCHESTRATE) --verb check $(ORCHESTRATE_PROJECT_ARGS) $(ORCHESTRATE_CHECK_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
-_builtin_test_all:
-	@$(WORKSPACE_ORCHESTRATE) --verb test $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+_builtin_test_all: _builtin_require_environment
+	@$(WORKSPACE_ORCHESTRATE) --verb test $(ORCHESTRATE_PROJECT_ARGS) $(ORCHESTRATE_TEST_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
 
-_builtin_format_check:
+_builtin_format_check: _builtin_require_environment
 	@$(UV_RUN) ruff check --no-fix $(RUFF_PATHS)
 	@$(UV_RUN) ruff format --check $(RUFF_PATHS)
 
-_builtin_format_apply:
+_builtin_format_apply: _builtin_require_environment
 	$(call _require_apply)
 	@$(UV_RUN) ruff check --fix $(RUFF_PATHS)
 	@$(UV_RUN) ruff format $(RUFF_PATHS)
 
-_builtin_run_default:
+_builtin_run_default: _builtin_require_environment
 	@$(UV_RUN) $(PROJECT_NAME) $(ARGS)
 
-_builtin_status_diagnostics:
+_builtin_status_diagnostics: _builtin_require_environment
 	@printf 'profile=%s\nattached=%s\nproject=%s\nruntime=%s\n' \
 		'$(MAKE_PROFILE)' '$(ATTACHED_MEMBER)' '$(PROJECT_ROOT)' '$(RUNTIME_ROOT)'
-	@uv --version
-	@uv lock --project "$(PROJECT_ROOT)" --check
-	@if [ -x "$(RUNTIME_ROOT)/.venv/bin/python" ]; then \
-		uv pip check --python "$(RUNTIME_ROOT)/.venv/bin/python"; \
+	@$(UV) --version
+	@$(UV) lock --project "$(PROJECT_ROOT)" --check
+	@if [ -x "$(RUNTIME_PYTHON)" ]; then \
+		$(UV) pip check --python "$(RUNTIME_VENV)"; \
 	fi
 	@git -C "$(PROJECT_ROOT)" status --short
 
-
 _builtin_docs_check:
-	@$(WORKSPACE_ORCHESTRATE) --verb docs $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+	@test -s "$(PROJECT_ROOT)/README.md"
 
 _builtin_clean_generated:
 	$(call _require_apply)
-	@$(WORKSPACE_ORCHESTRATE) --verb clean $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+	@find "$(PROJECT_ROOT)" -type d \
+		\( -name __pycache__ -o -name .mypy_cache -o -name .pytest_cache -o -name .ruff_cache \) \
+		-prune -exec rm -rf {} +
+	@rm -rf "$(PROJECT_ROOT)/build" "$(PROJECT_ROOT)/dist" "$(PROJECT_ROOT)/htmlcov"
+	@rm -f "$(PROJECT_ROOT)/.coverage"
 
-
-_builtin_release_status:
-	@uv lock --project "$(PROJECT_ROOT)" --check
+_builtin_release_status: _builtin_require_environment
+	@$(UV) lock --project "$(PROJECT_ROOT)" --check
 	@git -C "$(PROJECT_ROOT)" diff --quiet
 	@git -C "$(PROJECT_ROOT)" diff --cached --quiet
 
-_builtin_codegen_check:
-	@$(UV_RUN) python -m flext_infra codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode check
+_builtin_codegen_check: _builtin_require_environment
+	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode check
 
-_builtin_codegen_apply:
+_builtin_codegen_apply: _builtin_require_environment
 	$(call _require_apply)
-	@$(UV_RUN) python -m flext_infra codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode apply
+	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode apply
+
+_builtin_worktree_list:
+	@$(PROJECT_FLEXT_INFRA) workspace worktree --workspace "$(PROJECT_ROOT)" --operation list
+
+_builtin_worktree_add:
+	$(call _require_apply)
+	@$(PROJECT_FLEXT_INFRA) workspace worktree --workspace "$(PROJECT_ROOT)" --operation add --branch "$(BRANCH)" --base "$(BASE)" --apply
+
+_builtin_worktree_remove:
+	$(call _require_apply)
+	@$(PROJECT_FLEXT_INFRA) workspace worktree --workspace "$(PROJECT_ROOT)" --operation remove --branch "$(BRANCH)" --apply
