@@ -301,12 +301,7 @@ secrets.yml
 # --- workspace-migrate: required ignores (auto-managed) ---
 !base.mk
 
-# FINAL BEADS TRACKING POLICY
-!.beads/
-.beads/*
-.beads/.*
-!.beads/config.yaml
-.beads/proxieddb/
+# FINAL LOCAL STATE POLICY
 .dolt/
 *.db
 .beads-credential-key
@@ -326,7 +321,9 @@ base.mk
 
 # Derived build and tool artifacts
 __pyrefly_virtual__/
+.archive/
 .benchmarks/
+.bin/
 .cache/
 .codegraph/
 .dolt_dropped_databases/
@@ -343,18 +340,16 @@ __pyrefly_virtual__/
 .sisyphus/
 .state/
 .superpowers/
+.tools/
 .trash/
 .turbo/
 .venv.*/
 *.egg-info/
 build/
-context_test/
 dist/
 node_modules/
-rope_ws/
 site/
 target/
-tmp_flow_test/
 .pyrefly_cache/
 .tox/
 .flext-deps/

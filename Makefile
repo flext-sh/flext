@@ -14,6 +14,7 @@ WORKSPACE_ROOT_REL := .
 WORKSPACE_MEMBERS := flext-api flext-auth flext-cli flext-core flext-db-oracle flext-dbt-ldap flext-dbt-ldif flext-dbt-oracle flext-dbt-oracle-wms flext-grpc flext-infra flext-ldap flext-ldif flext-meltano flext-observability flext-oracle-oic flext-oracle-wms flext-plugin flext-quality flext-tap-ldap flext-tap-ldif flext-tap-oracle flext-tap-oracle-oic flext-tap-oracle-wms flext-target-ldap flext-target-ldif flext-target-oracle flext-target-oracle-oic flext-target-oracle-wms flext-tests flext-web
 WORKSPACE_EDITABLES := $(PROJECT_NAME):. flext-api:flext-api flext-auth:flext-auth flext-cli:flext-cli flext-core:flext-core flext-db-oracle:flext-db-oracle flext-dbt-ldap:flext-dbt-ldap flext-dbt-ldif:flext-dbt-ldif flext-dbt-oracle:flext-dbt-oracle flext-dbt-oracle-wms:flext-dbt-oracle-wms flext-grpc:flext-grpc flext-infra:flext-infra flext-ldap:flext-ldap flext-ldif:flext-ldif flext-meltano:flext-meltano flext-observability:flext-observability flext-oracle-oic:flext-oracle-oic flext-oracle-wms:flext-oracle-wms flext-plugin:flext-plugin flext-quality:flext-quality flext-tap-ldap:flext-tap-ldap flext-tap-ldif:flext-tap-ldif flext-tap-oracle:flext-tap-oracle flext-tap-oracle-oic:flext-tap-oracle-oic flext-tap-oracle-wms:flext-tap-oracle-wms flext-target-ldap:flext-target-ldap flext-target-ldif:flext-target-ldif flext-target-oracle:flext-target-oracle flext-target-oracle-oic:flext-target-oracle-oic flext-target-oracle-wms:flext-target-oracle-wms flext-tests:flext-tests flext-web:flext-web
 UV_LINK_MODE := copy
+UV_VERSION := 0.11.32
 MISE_VERSION := 2026.7.16
 
 APPLY ?= N
@@ -379,6 +380,7 @@ _builtin_setup_tools:
 	mise="$(MISE)"; \
 	mise_data_dir="$(MISE_DATA_DIR)"; \
 	mise_version="$(MISE_VERSION)"; \
+	uv_version="$(UV_VERSION)"; \
 	current=""; \
 	if [ -x "$$mise" ]; then \
 		current=$$("$$mise" --version 2>/dev/null | cut -d ' ' -f 1 || true); \
@@ -418,7 +420,7 @@ _builtin_setup_tools:
 			exit 2; \
 		}; \
 	fi; \
-	$(MISE) install --yes uv
+	$(MISE) install --yes "uv@$$uv_version"
 
 .PHONY: _builtin_setup_submodules
 
@@ -427,7 +429,6 @@ _builtin_setup_submodules:
 	root="$(PROJECT_ROOT)"; \
 	selected=""; \
 	if [ ! -f "$$root/.gitmodules" ]; then exit 0; fi; \
-	git -C "$(PROJECT_ROOT)" submodule update --init --recursive; \
 	setup_selected() { \
 		candidate="$$1"; \
 		if [ -z "$$selected" ]; then return 0; fi; \
