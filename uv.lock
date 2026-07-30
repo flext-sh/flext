@@ -3743,6 +3743,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "actionlint-py" },
     { name = "autoflake" },
     { name = "bandit" },
     { name = "black" },
@@ -3774,10 +3775,12 @@ dev = [
     { name = "mkdocs-versioning" },
     { name = "mkdocstrings" },
     { name = "mkdocstrings-python" },
+    { name = "mypy" },
     { name = "pip-audit" },
     { name = "pre-commit" },
     { name = "pylint" },
     { name = "pyrefly" },
+    { name = "pyright" },
     { name = "pytest" },
     { name = "pytest-benchmark" },
     { name = "pytest-clarity" },
@@ -3840,6 +3843,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "actionlint-py", specifier = ">=1.7.12.24" },
     { name = "autoflake", specifier = ">=2.3.1" },
     { name = "bandit", specifier = ">=1.8" },
     { name = "black", specifier = ">=25.1" },
@@ -3871,10 +3875,12 @@ dev = [
     { name = "mkdocs-versioning", specifier = ">=0.2" },
     { name = "mkdocstrings", specifier = ">=0.24" },
     { name = "mkdocstrings-python", specifier = ">=1.7" },
+    { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
     { name = "pre-commit", specifier = ">=4.6.0" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
+    { name = "pyright", specifier = ">=1.1.411" },
     { name = "pytest", specifier = ">=8.4" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
