@@ -72,13 +72,13 @@ class CommandCli:
 
     @staticmethod
     def print_command_or_verb_help(
-        registry: CommandRegistry.Registry, verb: str, what: str
+        _registry: CommandRegistry.Registry, _verb: str, _what: str
     ) -> int:
         """Print help for one command."""
         return 0
 
     @staticmethod
-    def print_verb_help(registry: CommandRegistry.Registry, requested_verb: str) -> int:
+    def print_verb_help(_registry: CommandRegistry.Registry, _requested_verb: str) -> int:
         """Print help for one verb."""
         return 0
 

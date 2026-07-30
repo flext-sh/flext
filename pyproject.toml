@@ -79,6 +79,7 @@ dev = [
   "types-flask>=1.1.6",
   "types-jsonschema>=4.26",
   "types-ldap3>=2.9.13.20250622",
+  "types-openpyxl>=3.1.5.20260518",
   "types-paramiko>=4.0",
   "types-protobuf>=6.30.2.20250703",
   "types-psutil>=7",
@@ -2349,7 +2350,7 @@ in_place = true
 sort_first = ["build-system", "dependency-groups", "project", "tool"]
 
 [tool.uv]
-constraint-dependencies = ["uv>=0.11.0"]
+constraint-dependencies = ["uv==0.11.32"]
 link-mode = "copy"
 required-version = ">=0.11.0"
 
