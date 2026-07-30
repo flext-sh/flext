@@ -115,8 +115,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libldap2-dev libsasl2-dev libssl-dev
 
-      - name: Boot workspace
-        run: make boot
+      - name: Setup workspace
+        run: make setup
 
       - name: Run release pipeline
         shell: bash
