@@ -47,7 +47,8 @@
     "**/tmp_flow_test": true,
     "**/.bin": true,
     "**/.tools": true,
-    "**/.archive": true
+    "**/.archive": true,
+    "**/.bkp": true
   },
   "files.watcherExclude": {
     "**/__pycache__/**": true,
@@ -94,7 +95,8 @@
     "**/tmp_flow_test/**": true,
     "**/.bin/**": true,
     "**/.tools/**": true,
-    "**/.archive/**": true
+    "**/.archive/**": true,
+    "**/.bkp/**": true
   },
   "git.autoRepositoryDetection": "subFolders",
   "git.detectSubmodules": true,
@@ -210,7 +212,8 @@
     "**/tmp_flow_test": true,
     "**/.bin": true,
     "**/.tools": true,
-    "**/.archive": true
+    "**/.archive": true,
+    "**/.bkp": true
   },
   "shellcheck.useWorkspaceRootAsCwd": true,
   "terminal.integrated.env.linux": {
