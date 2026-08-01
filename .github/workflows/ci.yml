@@ -36,7 +36,7 @@ jobs:
         run: make boot
 
       - name: Check changed files (blocking)
-        run: make check CHANGED_ONLY=1
+        run: make check CHANGED_ONLY=1 CHANGED_BASE=${{ github.event.pull_request.base.sha || github.event.before }}
 
       - name: Check (blocking)
         run: make check
