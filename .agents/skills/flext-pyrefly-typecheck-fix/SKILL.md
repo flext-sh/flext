@@ -16,7 +16,6 @@ metadata:
 ## Enforced contracts
 
 - r.ok(None) is a runtime bug — ok() rejects None values.
-- r[t.JsonValue] uses type erasure — prefer r[t.JsonValue].
 - Legacy t.JsonMapping annotation — normalize to t.JsonValue alias.
 - BindableLogger annotation lacks logging method signatures — use p.Logger.
 - dict(rootmodel_instance) causes no-matching-overload — use .root instead.
