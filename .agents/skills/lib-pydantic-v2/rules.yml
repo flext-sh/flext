@@ -22,10 +22,7 @@ rules:
   type: ast-grep
   severity: error
   group: pydantic_critical
-  description: "CRITICAL: model_rebuild() is prohibited — resolve type references at definition time or use protocols."
-  fix_auto: false
-  fix_instruction: "Remove model_rebuild() call entirely. Resolve forward references with from __future__ import annotations from collections.abc import Mapping, Sequence or protocol-based decoupling."
-  file: rules/pydantic-model-rebuild-critical.yml
+  fix_instruction: "Remove model_rebuild() call entirely. Resolve type references at definition time (e.g., enable postponed annotations with 'from __future__ import annotations') or decouple the cycle with protocols."
 - id: pydantic-v1-from-orm
   type: ast-grep
   severity: error
