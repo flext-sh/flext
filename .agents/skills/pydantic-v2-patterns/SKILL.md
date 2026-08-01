@@ -15,8 +15,4 @@ metadata:
 
 ## References
 
-- [references/patterns-detail.md](references/patterns-detail.md)
-
-## Resources
-
 - [`references/patterns-detail.md`](references/patterns-detail.md)
