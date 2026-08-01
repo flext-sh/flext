@@ -34,6 +34,7 @@ UV_LINK_MODE := copy
 APPLY ?= N
 ARGS ?=
 CHECK_GATES ?=
+DEPENDENCY ?=
 FAIL_FAST ?= 0
 FILE ?=
 FIX ?= 0
@@ -43,16 +44,42 @@ PROJECTS ?=
 BASE ?=
 BRANCH ?=
 PYTEST_ARGS ?=
-PYTEST_TARGETS ?= $(PROJECT_ROOT)/tests
 PYTEST_DIAG_ARGS ?= -rA --durations=0 --tb=long --showlocals
 PYTEST_REPORT_ARGS ?= -ra --durations=25 --durations-min=0.001 --tb=short
+PYTEST_PROCESS_TIMEOUT_SECONDS ?= 60
+# mro-99ae: the pytest process inherits a hard wall-clock boundary, mirroring
+# MYPY_BOUNDED, so a hung run is terminated even if the typed runner stalls.
+PYTEST_BOUNDED = timeout --signal=TERM --kill-after=5s "$(PYTEST_PROCESS_TIMEOUT_SECONDS)s"
 PYTEST_REPORTS_DIR ?= .reports/tests
+override PYTEST_CASE_TIMEOUT_SECONDS := 30
+override PYTEST_RUN_TIMEOUT_SECONDS := 300
+override PYTEST_TERMINATION_GRACE_SECONDS := 2
+override PYTEST_TIMEOUT_EXIT_CODE := 124
+override PYTEST_ENFORCEMENT_PLUGIN := flext_tests_enforcement
+override PYTEST_PROGRESS_ARGS := --verbose
+override PYTEST_REPORT_ARGS := -ra --durations=25 --durations-min=0.001 --tb=short
+override PYTEST_DIAG_ARGS := -rA --durations=0 --tb=long --showlocals
+override PYTEST_PARALLEL_WORKERS := 4
+override PYTEST_PARALLEL_DISTRIBUTION := worksteal
+override PYTEST_PROFILE_SORT := cumulative
+override PYTEST_PROFILE_LIMIT := 50
+override PROCESS_TIMEOUT_COMMAND := timeout
+override export FLEXT_PYTEST_ARGS_RAW := $(value PYTEST_ARGS)
+override export FLEXT_PYTEST_FILE_RAW := $(value FILE)
+override export FLEXT_PYTEST_FILES_RAW := $(value FILES)
+override export FLEXT_PYTEST_MATCH_RAW := $(value MATCH)
+override export FLEXT_PYTEST_DIAG_RAW := $(value DIAG)
+override export FLEXT_PYTEST_FAIL_FAST_RAW := $(value FAIL_FAST)
+override export FLEXT_PYTEST_REPORTS_RAW := $(value PYTEST_REPORTS_DIR)
+override export FLEXT_PYTEST_WHAT_RAW := $(value WHAT)
+override export FLEXT_PYTEST_VERBOSE_RAW := $(value VERBOSE)
 WHAT ?=
 # End SECTION: user overrides
 
 # === SECTION: derived paths (managed) ===
 # Source: computed (git rev-parse, pwd, abspath)
 PROJECT_ROOT := $(shell pwd -P)
+override export FLEXT_PYTEST_TARGET_RAW := tests
 SELF_MAKEFILE := $(abspath $(firstword $(MAKEFILE_LIST)))
 MAKEFILE_ROOT := $(patsubst %/,%,$(dir $(SELF_MAKEFILE)))
 WORKSPACE ?= $(PROJECT_ROOT)
@@ -63,7 +90,7 @@ WORKSPACE ?= $(PROJECT_ROOT)
 # environment WORKSPACE_ROOT (e.g. a leaked .envrc export from a foreign checkout)
 # must never redirect verbs to another working tree.
 ifeq ($(filter command line override,$(origin WORKSPACE_ROOT)),)
-WORKSPACE_ROOT := $(shell git rev-parse --show-superproject-working-tree 2>/dev/null || git rev-parse --show-toplevel 2>/dev/null || pwd -P)
+WORKSPACE_ROOT := $(shell root=$$(git rev-parse --show-superproject-working-tree 2>/dev/null); if [ -n "$$root" ]; then printf '%s\n' "$$root"; else git rev-parse --show-toplevel 2>/dev/null || pwd -P; fi)
 endif
 # End SECTION: WORKSPACE_ROOT isolation
 
@@ -92,6 +119,7 @@ CALLER_PATH := $(PATH)
 CALLER_VIRTUAL_ENV := $(patsubst %/,%,$(VIRTUAL_ENV))
 FLEXT_INFRA_BOOTSTRAP_REQUIREMENT := flext-infra @ git+https://github.com/flext-sh/flext-infra.git@0.12.0-dev
 FLEXT_INFRA_SOURCE_ROOT_REL := flext-infra
+UV_BOOTSTRAP_FLAGS := --isolated --all-groups --all-extras
 # End SECTION: infra bootstrap
 
 # === MYPY RESOURCE LIMIT ===
@@ -119,11 +147,21 @@ _DEFAULT_gen := check
 _DEFAULT_worktree := list
 
 
-ifneq ($(filter $(MAKE_PROFILE),workspace-root standalone),$(MAKE_PROFILE))
+# === SECTION: profile routing (managed) ===
+# Source: config:workspace manifest (role), computed (WORKSPACE_ROOT)
+# Rule: workspace-member delegates runtime to the principal (RUNTIME_ROOT is
+# the governing workspace root); workspace-root and standalone own their
+# runtime locally. An attached member is never promoted to a local runtime.
+ifneq ($(filter $(MAKE_PROFILE),workspace-root workspace-member standalone),$(MAKE_PROFILE))
 $(error Invalid MAKE_PROFILE '$(MAKE_PROFILE)')
 endif
 
+ifeq ($(MAKE_PROFILE),workspace-member)
+RUNTIME_ROOT := $(WORKSPACE_ROOT)
+else
 RUNTIME_ROOT := $(PROJECT_ROOT)
+endif
+# End SECTION: profile routing
 
 RUNTIME_VENV := $(RUNTIME_ROOT)/.venv
 FLEXT_INFRA_RUNTIME_ROOT := $(if $(filter $(MAKEFILE_ROOT),$(PROJECT_ROOT)),$(RUNTIME_ROOT),$(MAKEFILE_ROOT))
@@ -164,10 +202,10 @@ export FLEXT_INFRA_PYTHON UV UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH
 
 ifneq ($(strip $(FLEXT_INFRA_SOURCE_ROOT_REL)),)
 FLEXT_INFRA_SOURCE_ROOT := $(abspath $(PROJECT_ROOT)/$(FLEXT_INFRA_SOURCE_ROOT_REL))
-FLEXT_INFRA_BOOTSTRAP := env -u PYTHONPATH -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u UV_PROJECT_ENVIRONMENT PATH="$(SANITIZED_CALLER_PATH)" $(UV) run --no-project --with-editable "$(FLEXT_INFRA_SOURCE_ROOT)" python -m flext_infra
+FLEXT_INFRA_BOOTSTRAP := env -u PYTHONPATH -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u UV_PROJECT_ENVIRONMENT PATH="$(SANITIZED_CALLER_PATH)" $(UV) run --project "$(PROJECT_ROOT)" $(UV_BOOTSTRAP_FLAGS) --with-editable "$(FLEXT_INFRA_SOURCE_ROOT)" python -m flext_infra
 else
 FLEXT_INFRA_SOURCE_ROOT :=
-FLEXT_INFRA_BOOTSTRAP := env -u PYTHONPATH -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u UV_PROJECT_ENVIRONMENT PATH="$(SANITIZED_CALLER_PATH)" $(UV) run --no-project --with "$(FLEXT_INFRA_BOOTSTRAP_REQUIREMENT)" python -m flext_infra
+FLEXT_INFRA_BOOTSTRAP := env -u PYTHONPATH -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u UV_PROJECT_ENVIRONMENT PATH="$(SANITIZED_CALLER_PATH)" $(UV) run --project "$(PROJECT_ROOT)" $(UV_BOOTSTRAP_FLAGS) --with "$(FLEXT_INFRA_BOOTSTRAP_REQUIREMENT)" python -m flext_infra
 endif
 
 ifeq ($(MAKE_PROFILE),workspace-root)
@@ -184,16 +222,13 @@ endif
 # run the gate locally. FAIL_FAST forwards the stop-on-first-failure policy.
 WORKSPACE_ORCHESTRATE = $(UV_RUN) python -m flext_infra workspace orchestrate
 REQUESTED_PROJECTS := $(strip $(if $(PROJECT),$(PROJECT),$(PROJECTS)))
-FILE_MEMBER := $(firstword $(foreach member,$(WORKSPACE_MEMBERS),$(if $(filter $(member)/%,$(FILE)),$(member))))
-FILE_PROJECT := $(if $(strip $(FILE_MEMBER)),$(FILE_MEMBER),.)
-FILE_RELATIVE := $(if $(filter .,$(FILE_PROJECT)),$(FILE),$(patsubst $(FILE_PROJECT)/%,%,$(FILE)))
 DEFAULT_PROJECTS := $(WORKSPACE_MEMBERS) .
-SELECTED_PROJECTS := $(if $(strip $(FILE)),$(FILE_PROJECT),$(if $(strip $(REQUESTED_PROJECTS)),$(REQUESTED_PROJECTS),$(DEFAULT_PROJECTS)))
+SELECTED_PROJECTS := $(if $(strip $(REQUESTED_PROJECTS)),$(REQUESTED_PROJECTS),$(DEFAULT_PROJECTS))
 WORKSPACE_PROJECT_ARGS := $(foreach project,$(SELECTED_PROJECTS),--projects $(project))
 WORKSPACE_CHECK_ARGS := $(if $(strip $(CHECK_GATES)),--make-arg "CHECK_GATES=$(strip $(CHECK_GATES))")
-WORKSPACE_TEST_ARGS := $(if $(strip $(FILE)),--make-arg "FILE=$(FILE_RELATIVE)") $(if $(strip $(MATCH)),--make-arg "MATCH=$(MATCH)") $(if $(strip $(PYTEST_ARGS)),--make-arg "PYTEST_ARGS=$(strip $(PYTEST_ARGS))")
+WORKSPACE_TEST_ARGS := $(if $(strip $(FLEXT_PYTEST_FILE_RAW)),--file "$${FLEXT_PYTEST_FILE_RAW}") $(if $(strip $(FLEXT_PYTEST_MATCH_RAW)),--match "$${FLEXT_PYTEST_MATCH_RAW}") $(if $(strip $(FLEXT_PYTEST_WHAT_RAW)),--what "$${FLEXT_PYTEST_WHAT_RAW}")
 DOCS_PROJECT_ARGS := $(foreach project,$(REQUESTED_PROJECTS),--projects $(project))
-ORCHESTRATED_VERBS := build check clean docs scan test val
+ORCHESTRATED_VERBS := build check clean docs fmt scan test val
 
 UV_RUN := env -u PYTHONPATH -u MYPYPATH $(UV) run --project "$(RUNTIME_ROOT)" --no-sync
 PROJECT_INFRA_PYTHONPATH ?= $(MAKEFILE_ROOT)/src
@@ -278,7 +313,9 @@ define _run_for_selected_projects
 			*" $$project "*) ;; \
 			*) printf 'ERROR: undeclared project %s\n' "$$project" >&2; exit 2 ;; \
 		esac; \
-		$(UV) lock --project "$(PROJECT_ROOT)/$$project" $(1); \
+		if [ "$$project" = "." ]; then project_root="$(PROJECT_ROOT)"; \
+		else project_root="$(PROJECT_ROOT)/$$project"; fi; \
+		$(UV) lock --project "$$project_root" $(1); \
 	done
 endef
 
@@ -310,8 +347,19 @@ _serialized_gen:
 
 
 
+# `setup` keeps its own recipe (it must not require the environment it is about
+# to build), but it still runs the pre-/post-setup lifecycle hooks so a project
+# declaring them in the custom handler surface is actually honoured.
 setup:
+	@for hook in "pre-setup"; do \
+		$(SELF_MAKE) -q "$$hook" >/dev/null 2>&1; rc=$$?; \
+		if [ "$$rc" -ne 2 ]; then $(SELF_MAKE) "$$hook" || exit $$?; fi; \
+	done
 	@$(SELF_MAKE) _builtin_setup_environment
+	@for hook in "post-setup"; do \
+		$(SELF_MAKE) -q "$$hook" >/dev/null 2>&1; rc=$$?; \
+		if [ "$$rc" -ne 2 ]; then $(SELF_MAKE) "$$hook" || exit $$?; fi; \
+	done
 
 _builtin_help_usage:
 	@printf '%s\n' 'flext [workspace-root]' '';
@@ -521,10 +569,18 @@ _builtin_require_environment:
 		exit 2; \
 	fi
 
-# Operator contract (mro-e9j0.6 C7): setup PROVISIONS tooling only — mise,
-	# venv, dependencies. It never generates, conforms, or mutates project code;
-# `make gen` (APPLY=Y) is the single public conformance/generation surface.
-ifeq ($(MAKE_PROFILE),workspace-root)
+# === SECTION: setup environment (managed) ===
+# Source: computed (MAKE_PROFILE routing) + operator contract (mro-e9j0.6 C7)
+# Operator contract: setup PROVISIONS tooling only — mise, venv, dependencies.
+# It never generates, conforms, or mutates project code; `make gen` (APPLY=Y)
+# is the single public conformance/generation surface.
+# Profile routing: workspace-member delegates the environment to the
+# principal (the uv workspace venv lives at RUNTIME_ROOT); workspace-root and
+# standalone build their own environment locally.
+ifeq ($(MAKE_PROFILE),workspace-member)
+_builtin_setup_environment: _builtin_setup_submodules
+	@$(MAKE) -C "$(RUNTIME_ROOT)" _builtin_setup_environment
+else ifeq ($(MAKE_PROFILE),workspace-root)
 _builtin_setup_environment: _builtin_setup_submodules
 	@$(UV) venv --clear "$(RUNTIME_VENV)"
 	@$(UV) sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS) --link-mode "$(UV_LINK_MODE)"
@@ -534,6 +590,7 @@ _builtin_setup_environment: _builtin_setup_submodules
 	@$(UV) venv --clear "$(RUNTIME_VENV)"
 	@$(UV) sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS) --link-mode "$(UV_LINK_MODE)"
 endif
+# End SECTION: setup environment
 
 _builtin_deps_check: _builtin_require_environment
 	$(call _run_for_selected_projects,--check)
@@ -544,7 +601,15 @@ _builtin_deps_lock:
 
 _builtin_deps_upgrade: _builtin_require_environment
 	$(call _require_apply)
-	$(call _run_for_selected_projects,--upgrade)
+	@dependency="$(strip $(DEPENDENCY))"; \
+	if [ -n "$$dependency" ]; then \
+		case "$$dependency" in \
+			[-._]*|*[!A-Za-z0-9._-]*) \
+				printf 'ERROR: DEPENDENCY must be one normalized distribution name\n' >&2; \
+				exit 2 ;; \
+		esac; \
+	fi
+	$(call _run_for_selected_projects,$(if $(strip $(DEPENDENCY)),--upgrade-package "$(strip $(DEPENDENCY))",--upgrade))
 	@set -eu; \
 	selected="$(strip $(PROJECTS))"; \
 	if [ -z "$$selected" ]; then selected="."; fi; \
@@ -564,15 +629,13 @@ _builtin_check_all: _builtin_require_environment
 _builtin_test_all: _builtin_require_environment
 	@$(WORKSPACE_ORCHESTRATE) --verb test $(WORKSPACE_PROJECT_ARGS) $(WORKSPACE_TEST_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
-
 _builtin_fmt_check: _builtin_require_environment
-	@$(UV_RUN) ruff check --no-fix $(RUFF_PATHS)
-	@$(UV_RUN) ruff format --check $(RUFF_PATHS)
+	@$(WORKSPACE_ORCHESTRATE) --verb fmt $(WORKSPACE_PROJECT_ARGS) --make-arg "WHAT=check" $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
 _builtin_fmt_apply: _builtin_require_environment
 	$(call _require_apply)
-	@$(UV_RUN) ruff check --fix $(RUFF_PATHS)
-	@$(UV_RUN) ruff format $(RUFF_PATHS)
+	@$(WORKSPACE_ORCHESTRATE) --verb fmt $(WORKSPACE_PROJECT_ARGS) --make-arg "WHAT=apply" --make-arg "APPLY=Y" $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+
 
 _builtin_run_default: _builtin_require_environment
 	@$(UV_RUN) $(PROJECT_NAME) $(ARGS)

@@ -19,11 +19,8 @@ Mandatory load order:
 8. [Pydantic v2 Patterns](../../.agents/skills/pydantic-v2-patterns/SKILL.md)
 9. [FLEXT Strict Typing](../../.agents/skills/flext-strict-typing/SKILL.md)
 10. [FLEXT Patterns](../../.agents/skills/flext-patterns/SKILL.md)
-11. [Global Inviolable Rules](/home/marlonsc/.agents/skills/inviolable-rules/SKILL.md)
-12. [Global Make Check](/home/marlonsc/.agents/skills/make-check/SKILL.md)
-13. [Global Verification Loop](/home/marlonsc/.agents/skills/verification-loop/SKILL.md)
-<!-- Why: cutover to exact global generic skills after the local flext-inviolable-rules removal (mro-1o6t.1.1) -->
-14. [Testing Patterns](../../.agents/skills/testing-patterns/SKILL.md) when tests are touched
+11. [FLEXT Quality Gates](../../.agents/skills/flext-inviolable-rules/SKILL.md)
+12. [Testing Patterns](../../.agents/skills/testing-patterns/SKILL.md) when tests are touched
 
 Session recovery protocol:
 
