@@ -17,6 +17,7 @@ metadata:
 
 - [references/governance-patterns.md](references/governance-patterns.md)
 
-## Resources
+
+
 
 - [`references/governance-patterns.md`](references/governance-patterns.md)
