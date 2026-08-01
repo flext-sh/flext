@@ -10,7 +10,7 @@ are authoritative.
 - **Primary skill:** `<SKILL_NAME>`
 - **Lane:** `<ROOT|FLEXT_INFRA|SUBMODULE_NAME>`
 - **Writable files:** `<EXPLICIT_FILE_OWNERSHIP_MATRIX>`
-- **Reference project:** `/home/marlonsc/algar-oud-mig`
+- **Reference project:** resolve the canonical comparison project path from the live workspace (e.g. `git rev-parse --show-toplevel` sibling lookup) rather than hard-coding a machine-specific absolute path
 - **Current references:** list every inspected `file:line` before editing.
 
 ## Resume procedure
