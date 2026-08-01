@@ -1,6 +1,6 @@
 ---
 name: skill-format-universal
-description: 'Canonical format for project SKILL.md files using Anthropic standards and FLEXT evidence. Use when creating or rewriting any skill.'
+description: 'Canonical single-sentence format for project SKILL.md files using Anthropic standards and FLEXT evidence, used when creating or rewriting any skill.'
 license: MIT
 metadata:
   version: 1.0.0
