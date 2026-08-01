@@ -15,6 +15,7 @@ editing consumers; never simulate the target with compatibility wrappers.
 | Surface | Contract |
 | --- | --- |
 | `c/t/p/m/u` | structural constants, types, protocols, models, and utilities |
+| `e` | structured error taxonomy |
 | `r[T]` | typed success/failure flow |
 | `FlextSettings` | typed configuration root |
 | `FlextDi` | dependency-injector bridge and graph wiring |
