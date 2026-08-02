@@ -175,7 +175,41 @@ extra_checks = true
 follow_imports = "normal"
 ignore_missing_imports = true
 local_partial_types = true
-mypy_path = [".", "src"]
+mypy_path = [
+  "src",
+  ".",
+  "flext-api/src",
+  "flext-auth/src",
+  "flext-cli/src",
+  "flext-core/src",
+  "flext-db-oracle/src",
+  "flext-dbt-ldap/src",
+  "flext-dbt-ldif/src",
+  "flext-dbt-oracle-wms/src",
+  "flext-dbt-oracle/src",
+  "flext-grpc/src",
+  "flext-infra/src",
+  "flext-ldap/src",
+  "flext-ldif/src",
+  "flext-meltano/src",
+  "flext-observability/src",
+  "flext-oracle-oic/src",
+  "flext-oracle-wms/src",
+  "flext-plugin/src",
+  "flext-quality/src",
+  "flext-tap-ldap/src",
+  "flext-tap-ldif/src",
+  "flext-tap-oracle-oic/src",
+  "flext-tap-oracle-wms/src",
+  "flext-tap-oracle/src",
+  "flext-target-ldap/src",
+  "flext-target-ldif/src",
+  "flext-target-oracle-oic/src",
+  "flext-target-oracle-wms/src",
+  "flext-target-oracle/src",
+  "flext-tests/src",
+  "flext-web/src",
+]
 namespace_packages = true
 no_implicit_reexport = true
 plugins = ["pydantic.mypy"]
@@ -195,6 +229,7 @@ disable_error_code = ["unreachable"]
 module = ["dcdoc._utilities._charts._matplotlib_renderer._renders_spec"]
 
 # [MANAGED] pydantic-mypy
+
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
@@ -228,6 +263,7 @@ project-includes = [
 ]
 python-version = "3.13"
 search-path = [
+  "src",
   ".",
   "flext-api/src",
   "flext-auth/src",
@@ -260,7 +296,6 @@ search-path = [
   "flext-target-oracle/src",
   "flext-tests/src",
   "flext-web/src",
-  "src",
 ]
 use-ignore-files = false
 
@@ -516,6 +551,70 @@ reportUnknownParameterType = "none"
 reportUnknownVariableType = "none"
 reportUnusedImport = "none"
 root = "examples"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [".", "src"]
+reportAssignmentType = "none"
+reportAttributeAccessIssue = "none"
+reportGeneralTypeIssues = "none"
+reportInvalidTypeForm = "none"
+reportPrivateImportUsage = "none"
+reportPrivateUsage = "none"
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "none"
+reportUnknownMemberType = "none"
+reportUnknownParameterType = "none"
+reportUnknownVariableType = "none"
+reportUnusedImport = "none"
+root = "flext-infra-transaction-577535c7cbba41ca81ce45f7aeb6fa0f"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [".", "src"]
+reportAssignmentType = "none"
+reportAttributeAccessIssue = "none"
+reportGeneralTypeIssues = "none"
+reportInvalidTypeForm = "none"
+reportPrivateImportUsage = "none"
+reportPrivateUsage = "none"
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "none"
+reportUnknownMemberType = "none"
+reportUnknownParameterType = "none"
+reportUnknownVariableType = "none"
+reportUnusedImport = "none"
+root = "flext-infra-transaction-a0e97767b5474bd0a1b92334ca9c4f5c"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [".", "src"]
+reportAssignmentType = "none"
+reportAttributeAccessIssue = "none"
+reportGeneralTypeIssues = "none"
+reportInvalidTypeForm = "none"
+reportPrivateImportUsage = "none"
+reportPrivateUsage = "none"
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "none"
+reportUnknownMemberType = "none"
+reportUnknownParameterType = "none"
+reportUnknownVariableType = "none"
+reportUnusedImport = "none"
+root = "flext-infra-transaction-a16fad64d6374091a21cc68126671355"
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [".", "src"]
+reportAssignmentType = "none"
+reportAttributeAccessIssue = "none"
+reportGeneralTypeIssues = "none"
+reportInvalidTypeForm = "none"
+reportPrivateImportUsage = "none"
+reportPrivateUsage = "none"
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "none"
+reportUnknownMemberType = "none"
+reportUnknownParameterType = "none"
+reportUnknownVariableType = "none"
+reportUnusedImport = "none"
+root = "flext-infra-transaction-f07fd7e389a446aa9b8c7e5d6aa3a65a"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = [".", "src"]
@@ -2008,6 +2107,7 @@ reportUnusedImport = "none"
 root = "flext-web/tests"
 
 # [MANAGED] pytest
+
 [tool.pytest.ini_options]
 addopts = [
   "--benchmark-disable",
