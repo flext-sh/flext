@@ -76,7 +76,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
           ref: ${{ github.sha }}
-          submodules: recursive
+          submodules: {{ checkout_submodules }}
 
       - name: Verify immutable release source
         shell: bash
@@ -221,7 +221,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
           ref: ${{ github.sha }}
-          submodules: recursive
+          submodules: {{ checkout_submodules }}
 
       - name: Verify immutable canary source
         id: source
