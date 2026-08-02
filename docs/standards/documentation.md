@@ -13,10 +13,10 @@ it is added to the flext-infra engine, never beside it.
 The canonical entry point is the `docs` verb of the root `Makefile`:
 
 ```bash
-make docs DOCS_PHASE=generate PROJECT=flext-core APPLY=Y   # regenerate derived docs (mutating)
-make docs DOCS_PHASE=build    PROJECT=flext-core           # mkdocs strict build -> .reports/docs/site
-make docs DOCS_PHASE=validate PROJECT=flext-core           # link/nav/reference validation
-make docs DOCS_PHASE=audit    PROJECT=flext-core           # docstring + content audit
+make docs WHAT=generate PROJECT=flext-core APPLY=Y  # regenerate derived docs (mutating)
+make docs WHAT=build PROJECT=flext-core             # strict build -> .reports/docs/site
+make docs WHAT=validate PROJECT=flext-core          # link/nav/reference validation
+make docs WHAT=audit PROJECT=flext-core             # docstring + content audit
 ```
 
 - `generate` is the only mutating phase and **requires `APPLY=Y`**; without it
@@ -93,7 +93,7 @@ The workspace documentation site is published to **docs.flext.sh**:
 - **Facts, not vibes.** Version numbers, test counts, and capability claims in
   docs must trace to the project metadata or a command output. When a fact
   cannot be verified cheaply, omit it and point at the gate that produces it
-  (`make val`, `make check`, `make docs DOCS_PHASE=audit`).
+  (`make codegen WHAT=check`, `make check`, `make docs WHAT=audit`).
 - **One home per topic.** A subject has exactly one canonical page; everything
   else links to it. No duplicated standards across `docs/`, `README.md`, and
   skills — pointers only.
@@ -103,9 +103,9 @@ The workspace documentation site is published to **docs.flext.sh**:
 A documentation change is complete only with:
 
 ```bash
-make docs DOCS_PHASE=build              # strict build, 0 errors
-make docs DOCS_PHASE=validate           # links/nav green
-make docs DOCS_PHASE=audit              # no new placeholder/stale findings
+make docs WHAT=build              # strict build, 0 errors
+make docs WHAT=validate           # links/nav green
+make docs WHAT=audit              # no new placeholder/stale findings
 ```
 
 and, for generator or template changes under `flext-infra`, the scoped project

@@ -7,9 +7,11 @@ stay consistent with each owner-local ADR. It coordinates internal FLEXT
 packages and the independent external applications and platforms; it never makes
 an external repository a FLEXT dependency.
 
-**Target line:** FLEXT `0.20.0-dev` (early development and planning). This is a
-forward planning contract for `0.20.0-dev`; it does not retro-fit the
-`0.12.0-dev` release line. Every coordination Bead is labelled
+**Target line:** FLEXT `0.20.0-dev` (early development and planning) owns this
+document's broad ecosystem and application-architecture work. The only
+`0.12.0-dev` subset is ADR-010's release-blocking manifest, capability, Make,
+codegen, and external-compatibility contract; it does not import the remaining
+coordination scope. Forward coordination Beads stay labelled
 `branch:0.20.0-dev`.
 
 ## Projects and owners
@@ -121,15 +123,11 @@ evidence.
 
 ## Project standardization (ADR-010)
 
-All projects — root, internal members, loose internal (independent), and
-external applications — share one generated base owned by `flext-infra` codegen
-with `flext-tests`: identical Make verbs, `.venv`/mise/direnv/`pyproject` setup,
-directory layout, `__init__.py` facades, `c/t/p/m/u` facade files and
-`_constants/*`/`_utilities/*` private namespaces, `api.py`/`base.py`/
-`_settings.py`/`_config.py`, and canonical module/class/prefix naming for `src`,
-`tests`, `examples`, `scripts`. Rollout is validation-first, then refactoring,
-then declarative enforcement. SSOT: `codegen.yaml` + `tooling.yaml` +
-`flext-tests`. See
+The release-blocking `0.12.0-dev` subset standardizes only the consumer-owned
+manifest, declared capabilities, twelve-verb Make grammar, deterministic
+codegen, and external compatibility proof. The broader directory layout,
+facades, naming, runtime-directory behavior, and structural enforcement remain
+part of this document's forward `0.20.0-dev` coordination scope. See
 [ADR-010](adr/010-unified-project-standardization-via-codegen.md).
 
 ## Extraction gate for any new `flext-*`
