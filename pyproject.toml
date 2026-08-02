@@ -2476,7 +2476,7 @@ dev = [
   "bandit>=1.8",
   "black>=25.1",
   "blacken-docs>=1.19",
-  "code-review-graph[all,embeddings]==2.3.6",
+  "code-review-graph[all,embeddings]==2.3.7",
   "codespell>=2.3",
   "deptry>=0.23",
   "django-stubs>=6.0.6",
