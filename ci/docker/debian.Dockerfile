@@ -12,7 +12,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Source: template (distro-specific package list)
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-       bash ca-certificates curl git make build-essential \
+       bash ca-certificates curl git make build-essential libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 # End SECTION: base packages
 
@@ -39,22 +39,6 @@ COPY . .
 # Source: computed (reads .mise.toml from copied workspace)
 RUN mise trust .mise.toml && mise install --yes
 # End SECTION: mise install
-
-# === SECTION: bootstrap soft-pass (managed) ===
-# Source: template (external uv.lock/flext-core blocker policy)
-# Bootstrap to the external uv.lock boundary: only the known flext-core lock
-# soft-passes; any real infra failure fails the image build.
-RUN set +e; \
-    output="$(make setup 2>&1)"; status=$?; \
-    printf '%s\n' "$output"; \
-    if [ "$status" -ne 0 ]; then \
-      if printf '%s' "$output" | grep -qi 'uv\.lock\|flext-core'; then \
-        echo "EXTERNAL BLOCKER (flext-core lock) — soft-passing bootstrap"; \
-      else \
-        exit "$status"; \
-      fi; \
-    fi
-# End SECTION: bootstrap soft-pass
 
 ENTRYPOINT []
 CMD ["make", "help"]
