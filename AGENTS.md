@@ -15,8 +15,6 @@
 
 # Project Instructions for AI Agents
 
-
-
 ## Authority
 
 Newest operator instruction wins. Layers (non-competing):
@@ -261,6 +259,7 @@ make build WHAT=artifacts
 - Pydantic-2-way only; type via `t.*` / `p.*`; no `Any`; no compat shims; English-only.
 - Tests (`flext-tests`): public facades, no mocks, unified `conftest.py`, `tests/{unit,integration,e2e}/`.
 - Fix-forward git; scoped `git add` (never `-A`); track work with `bd`; ≤200 LOC/module; `uv` + `.venv` via `make`.
+
 ## Learned User Preferences
 
 - Deduplicate via MRO / `m`; atomic consumer updates; keep Ruff + Pyrefly clean.
