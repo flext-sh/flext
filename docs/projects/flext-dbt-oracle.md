@@ -23,7 +23,7 @@ than hand-rolled profiles.
 ## Quick start
 
 ```bash
-make boot                                # workspace bootstrap (once)
+make setup                                # workspace bootstrap (once)
 make check PROJECT=flext-dbt-oracle      # lint + type gates
 ```
 

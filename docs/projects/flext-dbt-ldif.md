@@ -23,7 +23,7 @@ data quality.
 ## Quick start
 
 ```bash
-make boot                              # workspace bootstrap (once)
+make setup                              # workspace bootstrap (once)
 make check PROJECT=flext-dbt-ldif      # lint + type gates
 ```
 

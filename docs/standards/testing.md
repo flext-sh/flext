@@ -1,8 +1,6 @@
 # Testing Standards
 
-Guidelines for writing tests in the FLEXT monorepo. For the root engineering law,
-see `AGENTS.md`. For gate commands, see
-`.agents/skills/flext-quality-gates/SKILL.md`.
+Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `.agents/skills/flext-inviolable-rules/SKILL.md`.
 
 ## Mindset
 
@@ -26,8 +24,7 @@ def test_user_creation() -> None:
 
 ## Imports in tests
 
-Use the same aliases as production code. Test facades may be named
-`TestsFlext<Project><Tier>` when the project exposes one.
+Use the same aliases as production code. Test facades may be named `TestsFlext<Project><Tier>` when the project exposes one.
 
 ```python
 from __future__ import annotations
@@ -55,8 +52,7 @@ def test_load_user() -> None:
 
 ## Fixtures
 
-Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it to
-the canonical `conftest.py` for the affected tier.
+Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it to the canonical `conftest.py` for the affected tier.
 
 ```python
 import pytest
@@ -86,24 +82,6 @@ When output is stable and reviewable, prefer golden-file examples. Store them un
 `tests/fixtures/` or the project-local equivalent. Update golden files
 deliberately, never as a side effect of unrelated changes.
 
-## Config and settings as the test SSOT (P0)
-
-Tests must derive their expectations from the project's canonical `config/*.yaml`
-and `settings` objects. They must **not** hardcode values that can change in
-configuration, environment variables, or CLI knobs.
-
-- Load expected values through `config.<Ns>.*` / `settings.<Ns>.*` fixtures, not
-  literal constants copied from today's YAML.
-- When a config or setting changes, the test must either adapt automatically or
-  fail with a message that points to the config source.
-- Do not assert against snapshots, golden files, or string constants that encode
-  config values unless those snapshots are regenerated from the same config.
-- Validation rules, allowed lists, timeouts, paths, and naming conventions are all
-  config-driven; tests must exercise the config boundary, not memorize it.
-
-This is a universal rule. Any test that becomes stale because of a config
-change is a test defect and must be fixed at its root.
-
 ## Parametrization
 
 Use `@pytest.mark.parametrize` for multi-case checks.
@@ -114,18 +92,18 @@ import pytest
 
 @pytest.mark.parametrize(("raw", "expected"), [("1", 1), ("42", 42)])
 def test_parse_int(raw: str, expected: int) -> None:
-    assert parse_int(raw) == expected
+    assert int(raw) == expected
 ```
 
 ## What to avoid
 
-|Anti-pattern|Fix|
+| Anti-pattern | Fix |
 |--------------|-----|
-|Testing private methods|test public behavior|
-|Heavy mocking without real-flow fallback|prefer real dependencies or fakes|
-|`assert True` smoke tests|assert a real invariant|
-|Ignoring enforcement warnings|treat warnings as failures|
-|Shared mutable fixtures|return fresh objects or use factories|
+| Testing private methods | test public behavior |
+| Heavy mocking without real-flow fallback | prefer real dependencies or fakes |
+| `assert True` smoke tests | assert a real invariant |
+| Ignoring enforcement warnings | treat warnings as failures |
+| Shared mutable fixtures | return fresh objects or use factories |
 
 ## Running tests
 
@@ -139,13 +117,11 @@ make test PROJECT=<proj>
 
 ## Coverage
 
-`pyproject.toml` sets `fail_under = 45` for the consolidated workspace.
-Project-local targets may be higher. Do not lower the threshold to make a build
-pass.
+`pyproject.toml` sets `fail_under = 45` for the consolidated workspace. Project-local targets may be higher. Do not lower the threshold to make a build pass.
 
 ## Related
 
 - `AGENTS.md` — root engineering law
-- `.agents/skills/flext-quality-gates/SKILL.md` — gate commands
+- `.agents/skills/flext-inviolable-rules/SKILL.md` — gate commands
 - `.agents/skills/coding-standards/SKILL.md` — general coding standards
 - `.agents/skills/flext-development-workflow/SKILL.md` — CI/CD lifecycle

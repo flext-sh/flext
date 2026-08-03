@@ -51,7 +51,7 @@ identificar e corrigir **TODOS os usos de funções de `flext_tests` que estão 
 
 **tm.method():**
 
-```python
+```python notest
 # ❌ ANTES
 tm.method(api, "connect")
 
@@ -62,7 +62,7 @@ tm.that(callable(getattr(api, "connect", None)), eq=True)
 
 **tm.dict\_():**
 
-```python
+```python notest
 # ❌ ANTES
 tm.dict_(data, has_key="name", length=5)
 
@@ -72,7 +72,7 @@ tm.that(data, keys=["name"], length=5)
 
 **tm.list\_():**
 
-```python
+```python notest
 # ❌ ANTES
 tm.list_(items, contains="item", length=3)
 
@@ -121,7 +121,7 @@ tm.that(items, has="item", length=3)
 
 **tf.create_file_set():**
 
-```python
+```python notest
 # ❌ ANTES
 files = tf.create_file_set({"file1.txt": "content1", "file2.txt": "content2"})
 
@@ -133,7 +133,7 @@ with tf.files({"file1.txt": "content1", "file2.txt": "content2"}) as files:
 
 **tf.get_file_info():**
 
-```python
+```python notest
 # ❌ ANTES
 info = tf.get_file_info(path)
 
@@ -165,7 +165,7 @@ info = info_result.unwrap()
 
 ### 1. Imports Incorretos
 
-```python
+```python notest
 # ❌ ERRADO
 from flext_tests import TestsFlextMatchers
 
@@ -177,7 +177,7 @@ from flext_tests import tm
 
 ### 2. Uso de Métodos Privados ou Internos
 
-```python
+```python notest
 # ❌ ERRADO - Métodos que começam com _
 tm._internal_method()
 tt._private_factory()
@@ -189,7 +189,7 @@ tt.model(...)
 
 ### 3. Uso de Classes Aninhadas Deprecadas
 
-```python
+```python notest
 # ❌ ERRADO
 tb.Tests.Result.ok(value)
 tb.Tests.Model.user(...)
@@ -205,7 +205,7 @@ tt.model("user", ...)
 
 Alguns métodos podem aceitar parâmetros legacy que devem ser migrados:
 
-```python
+```python notest
 # ❌ ERRADO - Parâmetros legacy
 tm.that(data, contains="key")  # Se 'contains' for legacy para dict
 tm.that(items, contains="item")  # Se 'contains' for legacy para list

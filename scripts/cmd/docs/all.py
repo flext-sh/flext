@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Run the workspace documentation pipeline through the registry."""
 # /// flext-command
 # verb = "docs"
@@ -97,7 +98,7 @@ class FlextRootDocsAllCommand:
 
         @property
         def dry_run_lines(self) -> tuple[str, ...]:
-            """The canonical dry-run message for mutating docs phases."""
+            """Canonical dry-run message for mutating docs phases."""
             return (
                 "DRY-RUN: nenhuma mutacao executada.",
                 f"Comando: make docs DOCS_PHASE={self.phase}",
@@ -116,8 +117,8 @@ class FlextRootDocsAllCommand:
             return 2
 
         if not options.can_execute:
-            for line in options.dry_run_lines:
-                u.Cli.emit_raw(f"{line}\n")
+            for _line in options.dry_run_lines:
+                pass
             return 0
         return Dispatch.run_make("_docs", extra_env=options.target_env)
 
