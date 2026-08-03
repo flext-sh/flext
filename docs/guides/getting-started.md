@@ -1,6 +1,7 @@
 # Getting Started
 
-Use the root portal for workspace-level guidance only. Package-specific implementation details stay in each `flext-*` project.
+Use the root portal for workspace-level guidance only. Package-specific implementation details stay in each `flext-*`
+project.
 
 ## Prerequisites
 
@@ -11,11 +12,11 @@ Use the root portal for workspace-level guidance only. Package-specific implemen
 ## Bootstrap the Workspace
 
 ```bash
-make boot APPLY=Y
+make setup APPLY=Y
 make val
 ```
 
-`make boot APPLY=Y` installs the selected projects into the shared workspace environment and then runs validation.
+`make setup APPLY=Y` installs the selected projects into the shared workspace environment and then runs validation.
 
 ## Navigate the Root Portal
 

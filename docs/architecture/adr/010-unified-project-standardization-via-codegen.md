@@ -9,7 +9,7 @@
   coordinates — root workspace, internal FLEXT packages, loose internal projects
   (treated as independent), and external/independent applications (`dcdoc`,
   DataOP, DcBackup) — covering Make verbs, scripts, tests, `.venv`/mise/direnv
-  setup, `pyproject.toml`, package `__init__.py` facades, directory layout, and
+  setup, `pyproject.toml`, package `**init**.py` facades, directory layout, and
   canonical module/class/prefix naming for `src`, `tests`, `examples`, `scripts`.
 - **Tracking:** ecosystem-standardization epic and children (labelled
   `branch:0.20.0-dev`).
@@ -84,7 +84,7 @@ The generated base fixes one structure for `src`, `tests`, `examples`,
   `_protocols/*`, `_models/*`, `_utilities/*`, `_settings.py`, `_config.py`.
 - Composition: `api.py` is the thin MRO facade; `base.py` holds the shared MRO
   base and Result helpers; `cli.py` holds declarative routes.
-- `__init__.py` are generated from `static_package_init.py.j2` /
+- `**init**.py` are generated from `static_package_init.py.j2` /
   `lazy_init_root.py.j2` — never hand-written re-export sprawl.
 - Naming is one scheme, rendered/validated by codegen: class prefix per project
   namespace (e.g. `Flext<Project>`, `DataOP<Concern>`, `DcBackup<Concern>`,
@@ -156,7 +156,7 @@ are tracked in Beads.
 
 1. **Validation-first.** `flext-infra codegen conform --mode check` plus a
    standardization audit reports every drift (missing verbs, non-standard
-   layout, wrong facade/`__init__`, naming violations, toolchain/pyproject
+   layout, wrong facade/`**init**`, naming violations, toolchain/pyproject
    drift, non-standard tests/scripts/examples) across all projects, with zero
    writes. Output is evidence, not a rewrite.
 2. **Refactoring.** `flext-infra codegen conform --mode apply` (and the
@@ -181,7 +181,7 @@ is generation and validation, not runtime composition.
 
 - One base setup (venv/mise/direnv/pyproject) and one verb surface work in every
   project, forever, from a single SSOT.
-- Structure, facades, `__init__.py`, and naming are generated and enforced, not
+- Structure, facades, `**init**.py`, and naming are generated and enforced, not
   re-invented per project.
 - Drift is caught before it lands; the base cannot silently fork again.
 - Independent and external projects get the same standard without any reverse
@@ -192,7 +192,7 @@ is generation and validation, not runtime composition.
 1. `flext-infra codegen conform --mode check --scope all` is green (byte-idempotent)
    on the standardized set; every managed file matches the rendered SSOT.
 2. The standardization audit reports zero drift for verbs, layout, facades,
-   `__init__.py`, toolchain/pyproject, and naming on enforced projects.
+   `**init**.py`, toolchain/pyproject, and naming on enforced projects.
 3. Enforcement rules exist as `flext-infra/config/enforcement/*.yaml` data and a
    naming/structure violation fails `check`/`val`.
 4. `flext-tests` base yields identical generic `test` behavior across projects.
@@ -204,7 +204,8 @@ is generation and validation, not runtime composition.
 - [ADR-003 — Manifest-owned topology, profiles](003-workspace-tooling-hub-distribution.md)
 - [ADR-004 — Generated Make and codegen SSOT](004-generic-make-framework-in-flext-tests.md)
 - [ADR-005 — Config/settings/constants/templates/schemas SSOT](005-config-settings-constants-templates-schemas-ssot.md)
-- [ADR-007 — Operational kernel, CLI, transactional conform](007-operational-kernel-cli-conform.md)
+- [ADR-007 — Performance optimization of worktree transactions and mutating CLI
+  commands](007-worktree-transaction-performance.md)
 - [ADR-008 — Neutral consumer boundaries](008-neutral-consumer-boundaries.md)
 - [ADR-009 — Ecosystem coordination](009-ecosystem-coordination-and-library-evaluation.md)
 - [Ecosystem coordination](../ecosystem-coordination.md)

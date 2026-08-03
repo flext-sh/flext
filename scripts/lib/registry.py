@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+from functools import cache
 from pathlib import Path
 
-from flext_tests import c, m, p, t, u
+from flext_tests import c, m, t, u
 
 
 class CommandRegistry:
@@ -22,28 +23,21 @@ class CommandRegistry:
     SCRIPTS_DIR = ROOT / "scripts" / "cmd"
 
     @staticmethod
-    def discover() -> p.Tests.MakeRegistry:
+    @cache
+    def discover() -> m.Tests.MakeRegistry:
         """Discover and validate the promoted command registry."""
         result = u.Tests.make_discover(CommandRegistry.SCRIPTS_DIR)
         if result.failure:
             raise CommandRegistry.Error(result.error or "registry discovery failed")
-        value = result.value
-        if not value:
-            msg = "registry discovery returned invalid model"
-            raise CommandRegistry.Error(msg)
-        return value
+        return result.value
 
     @staticmethod
-    def load_command(path: Path, expected_verb: str) -> p.Tests.MakeCommand:
+    def load_command(path: Path, expected_verb: str) -> m.Tests.MakeCommand:
         """Load one promoted command from its flext-command header."""
         result = u.Tests.make_load_command(path, expected_verb)
         if result.failure:
             raise CommandRegistry.Error(result.error or "command load failed")
-        value = result.value
-        if not value:
-            msg = "command load returned invalid model"
-            raise CommandRegistry.Error(msg)
-        return value
+        return result.value
 
     @staticmethod
     def header_data(path: Path) -> t.Tests.MakeTomlTable:
@@ -62,7 +56,7 @@ class CommandRegistry:
 
     @staticmethod
     def validate_invocation(
-        command: p.Tests.MakeCommand, *, require_required: bool = True
+        command: m.Tests.MakeCommand, *, require_required: bool = True
     ) -> None:
         """Validate environment-backed parameter values for one invocation."""
         result = u.Tests.make_validate_invocation(
@@ -72,7 +66,7 @@ class CommandRegistry:
             raise CommandRegistry.Error(result.error or "invocation validation failed")
 
     @staticmethod
-    def param_value(param: p.Tests.MakeParam, command: p.Tests.MakeCommand) -> str:
+    def param_value(param: m.Tests.MakeParam, command: m.Tests.MakeCommand) -> str:
         """Return the current value for one promoted-command parameter."""
         value: str = u.Tests.make_param_value(param, command, u.Cli.process_env())
         return value

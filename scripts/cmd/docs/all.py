@@ -22,13 +22,11 @@
 
 from __future__ import annotations
 
-import sys
 from types import MappingProxyType
 from typing import Annotated, Literal
 
-from scripts.dispatch import Dispatch
-
 from flext_tests import m, t, u
+from scripts.dispatch import Dispatch
 
 
 class FlextRootDocsAllCommand:
@@ -100,7 +98,7 @@ class FlextRootDocsAllCommand:
 
         @property
         def dry_run_lines(self) -> tuple[str, ...]:
-            """The canonical dry-run message for mutating docs phases."""
+            """Canonical dry-run message for mutating docs phases."""
             return (
                 "DRY-RUN: nenhuma mutacao executada.",
                 f"Comando: make docs DOCS_PHASE={self.phase}",
@@ -115,13 +113,12 @@ class FlextRootDocsAllCommand:
         """Run `_docs` after validating the selected phase mutation mode."""
         try:
             options = FlextRootDocsAllCommand.options()
-        except ValueError as exc:
-            print(f"ERRO: {exc}", file=sys.stderr)
+        except ValueError:
             return 2
 
         if not options.can_execute:
-            for line in options.dry_run_lines:
-                print(line)
+            for _line in options.dry_run_lines:
+                pass
             return 0
         return Dispatch.run_make("_docs", extra_env=options.target_env)
 

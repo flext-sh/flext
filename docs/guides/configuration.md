@@ -1,6 +1,7 @@
 # Configuration
 
-The docs pipeline should read as much as possible from `pyproject.toml`. Root JSON policy exists only for values that cannot be inferred from project metadata.
+The docs pipeline should read as much as possible from `pyproject.toml`. Root JSON policy exists only for values that
+cannot be inferred from project metadata.
 
 ## Source of Truth Order
 
@@ -66,4 +67,5 @@ make docs DOCS_PHASE=generate PROJECT=flext-infra
 make docs DOCS_PHASE=validate PROJECT=flext-infra
 ```
 
-Use [Troubleshooting](troubleshooting.md) when a project is missing package metadata or generated pages do not match the code.
+Use [Troubleshooting](troubleshooting.md) when a project is missing package metadata or generated pages do not match the
+code.

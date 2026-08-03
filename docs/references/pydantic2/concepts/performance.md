@@ -4,46 +4,51 @@ In most cases Pydantic won't be your bottle neck, only follow this if you're sur
 
 ## In general, use `model_validate_json()` not `model_validate(json.loads(...))`
 
-On `model_validate(json.loads(...))`, the JSON is parsed in Python, then converted to a dict, then it's validated internally.
+On `model_validate(json.loads(...))`, the JSON is parsed in Python, then converted to a dict, then it's validated
+internally.
 On the other hand, `model_validate_json()` already performs the validation internally.
 
-There are a few cases where `model_validate(json.loads(...))` may be faster. Specifically, when using a `'before'` or `'wrap'` validator
+There are a few cases where `model_validate(json.loads(...))` may be faster. Specifically, when using a `'before'` or
+`'wrap'` validator
 on a model, validation may be faster with the two step method. You can read more about these special cases in
 [this discussion](https://github.com/pydantic/pydantic/discussions/6388#discussioncomment-8193105).
 
 Many performance improvements are currently in the works for `pydantic-core`, see
 [this discussion](https://github.com/pydantic/pydantic/discussions/6388#discussioncomment-8194048).
-Once these changes are merged, we should be at the point where `model_validate_json()` is always faster than `model_validate(json.loads(...))`.
+Once these changes are merged, we should be at the point where `model_validate_json()` is always faster than
+`model_validate(json.loads(...))`.
 
 ## `TypeAdapter` instantiated once
 
-The idea here is to avoid constructing validators and serializers more than necessary. Each time a `TypeAdapter` is instantiated,
-it will construct a new validator and serializer. If you're using a `TypeAdapter` in a function, it will be instantiated each time
+The idea here is to avoid constructing validators and serializers more than necessary. Each time a `TypeAdapter` is
+instantiated,
+it will construct a new validator and serializer. If you're using a `TypeAdapter` in a function, it will be instantiated
+each time
 the function is called. Instead, instantiate it once, and reuse it.
 
-=== ":x: Bad"
+### Bad
 
-    ```python {lint="skip"}
-    from pydantic import TypeAdapter
+```python
+from pydantic import TypeAdapter
 
 
-    def my_func():
-        adapter = TypeAdapter(Sequence[int])
-        # do something with adapter
-    ```
-
-=== ":white_check_mark: Good"
-
-    ```python {lint="skip"}
-    from pydantic import TypeAdapter
-
+def my_func():
     adapter = TypeAdapter(Sequence[int])
+    # do something with adapter
+```
+
+### Good
+
+```python
+from pydantic import TypeAdapter
+
+adapter = TypeAdapter(Sequence[int])
 
 
-    def my_func():
-        ...
-        # do something with adapter
-    ```
+def my_func():
+    ...
+    # do something with adapter
+```
 
 ## `Sequence` vs `list` or `tuple` with `Mapping` vs `dict`
 
@@ -73,31 +78,31 @@ model = Model(a=1)
 
 ## Avoid extra information via subclasses of primitives
 
-=== "Don't do this"
+### Don't do this
 
-    ```python
-    class CompletedStr(str):
-        def __init__(self, s: str):
-            self.s = s
-            self.done = False
-    ```
+```python
+class CompletedStr(str):
+    def __init__(self, s: str):
+        self.s = s
+        self.done = False
+```
 
-=== "Do this"
+### Do this
 
-    ```python
-    from pydantic import BaseModel
+```python
+from pydantic import BaseModel
 
 
-    class CompletedModel(BaseModel):
-        s: str
-        done: bool = False
-    ```
+class CompletedModel(BaseModel):
+    s: str
+    done: bool = False
+```
 
 ## Use tagged union, not union
 
 Tagged union (or discriminated union) is a union with a field that indicates which type it is.
 
-```python {test="skip"}
+```python
 from typing import Any, Literal
 
 from pydantic import BaseModel, u.Field
@@ -139,40 +144,41 @@ See [Discriminated Unions] for more details.
 
 Instead of using nested models, use `TypedDict` to define the structure of the data.
 
-??? info "Performance comparison"
+### Performance comparison
+
 With a simple benchmark, `TypedDict` is about ~2.5x faster than nested models:
 
-    ```python {test="skip"}
-    from timeit import timeit
+```python
+from timeit import timeit
 
-    from typing_extensions import TypedDict
+from typing_extensions import TypedDict
 
-    from pydantic import BaseModel, TypeAdapter
-
-
-    class A(TypedDict):
-        a: str
-        b: int
+from pydantic import BaseModel, TypeAdapter
 
 
-    class TypedModel(TypedDict):
-        a: A
+class A(TypedDict):
+    a: str
+    b: int
 
 
-    class B(BaseModel):
-        a: str
-        b: int
+class TypedModel(TypedDict):
+    a: A
 
 
-    class Model(BaseModel):
-        b: B
+class B(BaseModel):
+    a: str
+    b: int
 
 
-    ta = TypeAdapter(TypedModel)
-    result1 = timeit(lambda: ta.validate_python({"a": {"a": "a", "b": 2}}), number=10000)
-    result2 = timeit(lambda: Model({"b": {"a": "a", "b": 2}}), number=10000)
-    print(result2 / result1)
-    ```
+class Model(BaseModel):
+    b: B
+
+
+ta = TypeAdapter(TypedModel)
+result1 = timeit(lambda: ta.validate_python({"a": {"a": "a", "b": 2}}), number=10000)
+result2 = timeit(lambda: Model({"b": {"a": "a", "b": 2}}), number=10000)
+u.Cli.print(result2 / result1)
+```
 
 ## Avoid wrap validators if you really care about performance
 
@@ -182,8 +188,10 @@ for complex validation logic, but if you're looking for the best performance, yo
 
 ## Failing early with `FailFast`
 
-Starting in v2.8+, you can apply the `FailFast` annotation to sequence types to fail early if any item in the sequence fails validation.
-If you use this annotation, you won't get validation errors for the rest of the items in the sequence if one fails, so you're effectively
+Starting in v2.8+, you can apply the `FailFast` annotation to sequence types to fail early if any item in the sequence
+fails validation.
+If you use this annotation, you won't get validation errors for the rest of the items in the sequence if one fails, so
+you're effectively
 trading off visibility for performance.
 
 ```python
@@ -195,7 +203,7 @@ ta = TypeAdapter(Annotated[Sequence[bool], FailFast()])
 try:
     ta.validate_python([True, "invalid", False, "also invalid"])
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for t.SequenceOf[bool]
     1

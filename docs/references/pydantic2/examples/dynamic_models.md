@@ -1,10 +1,14 @@
 
-Models can be [created dynamically](../concepts/models.md#dynamic-model-creation) using the [`u.create_model()`][pydantic.u.create_model]
+Models can be [created dynamically](../concepts/models.md#dynamic-model-creation) using the
+[`u.create_model()`][pydantic.u.create_model]
 factory function.
 
-In this example, we will show how to dynamically derive a model from an existing one, making every field optional. To achieve this,
-we will make use of the [`model_fields`][pydantic.main.BaseModel.model_fields] model class attribute, and derive new annotations
-from the field definitions to be passed to the [`u.create_model()`][pydantic.u.create_model] factory. Of course, this example can apply
+In this example, we will show how to dynamically derive a model from an existing one, making every field optional. To
+achieve this,
+we will make use of the [`model_fields`][pydantic.main.BaseModel.model_fields] model class attribute, and derive new
+annotations
+from the field definitions to be passed to the [`u.create_model()`][pydantic.u.create_model] factory. Of course, this
+example can apply
 to any use case where you need to derive a new model from another (remove default values, add aliases, etc).
 
 === "Python 3.9"
@@ -38,7 +42,8 @@ to any use case where you need to derive a new model from another (remove defaul
         )
     ```
 
-    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed fields](../concepts/fields.md#the-u.computed_field-decorator), etc.
+    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed
+       fields](../concepts/fields.md#the-u.computed_field-decorator), etc.
     The parent fields are overridden by the ones we define.
 
 === "Python 3.10"
@@ -72,7 +77,8 @@ to any use case where you need to derive a new model from another (remove defaul
         )
     ```
 
-    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed fields](../concepts/fields.md#the-u.computed_field-decorator), etc.
+    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed
+       fields](../concepts/fields.md#the-u.computed_field-decorator), etc.
     The parent fields are overridden by the ones we define.
 
 === "Python 3.11 and above"
@@ -104,7 +110,8 @@ to any use case where you need to derive a new model from another (remove defaul
         )
     ```
 
-    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed fields](../concepts/fields.md#the-u.computed_field-decorator), etc.
+    1. Using the original model as a base will inherit the [validators](../concepts/validators.md), [computed
+       fields](../concepts/fields.md#the-u.computed_field-decorator), etc.
     The parent fields are overridden by the ones we define.
 
 For each field, we generate a dictionary representation of the [`u.FieldInfo`][pydantic.fields.u.FieldInfo] instance
@@ -122,7 +129,8 @@ class Model(BaseModel):
 The [`u.FieldInfo`][pydantic.fields.u.FieldInfo] instance of `f` will have three items in its dictionary representation:
 
 - `annotation`: `int`.
-- `metadata`: A list containing the type-specific constraints and other metadata: `[Gt(1), WithJsonSchema({'extra': 'data'})]`.
+- `metadata`: A list containing the type-specific constraints and other metadata: `[Gt(1), WithJsonSchema({'extra':
+  'data'})]`.
 - `attributes`: The remaining field-specific attributes: `{'title': 'F'}`.
 
 With that in mind, we can recreate an annotation that "simulates" the one from the original model:
@@ -169,7 +177,8 @@ With that in mind, we can recreate an annotation that "simulates" the one from t
     3. We specify the field-specific attributes by using the [`u.Field()`][pydantic.u.Field] function
        (in our previous example, this is equivalent to `u.Field(title='F')`).
 
-and specify `None` as a default value (the second element of the tuple for the field definition accepted by [`u.create_model()`][pydantic.u.create_model]).
+and specify `None` as a default value (the second element of the tuple for the field definition accepted by
+[`u.create_model()`][pydantic.u.create_model]).
 
 Here is a demonstration of our factory function:
 
@@ -184,13 +193,14 @@ class Model(BaseModel):
 ModelOptional = make_fields_optional(Model)
 
 m = ModelOptional()
-print(m.a)
+u.Cli.print(m.a)
 # > None
 ```
 
 A couple notes on the implementation:
 
-- Our `make_fields_optional()` function is defined as returning an arbitrary Pydantic model class (`-> type[BaseModel]`).
+- Our `make_fields_optional()` function is defined as returning an arbitrary Pydantic model class (`->
+  type[BaseModel]`).
   An alternative solution can be to use a type variable to preserve the input class:
 
   === "Python 3.9 and above"
@@ -212,7 +222,8 @@ A couple notes on the implementation:
 
   However, note that static type checkers _won't_ be able to understand that all fields are now optional.
 
-- The experimental [`MISSING` sentinel](../concepts/experimental.md#missing-sentinel) can be used as an alternative to `None`
+- The experimental [`MISSING` sentinel](../concepts/experimental.md#missing-sentinel) can be used as an alternative to
+  `None`
   for the default values. Simply replace `None` by `MISSING` in the new annotation and default value.
 
 - You might be tempted to make a copy of the original [`u.FieldInfo`][pydantic.fields.u.FieldInfo] instances, add a

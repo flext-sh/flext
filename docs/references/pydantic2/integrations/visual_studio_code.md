@@ -1,26 +1,33 @@
 
 Pydantic works well with any editor or IDE out of the box because it's made on top of standard Python type annotations.
 
-When using [Visual Studio Code (VS Code)](https://code.visualstudio.com/), there are some **additional editor features** supported, comparable to the ones provided by the [PyCharm plugin](../integrations/pycharm.md).
+When using [Visual Studio Code (VS Code)](https://code.visualstudio.com/), there are some **additional editor features**
+supported, comparable to the ones provided by the [PyCharm plugin](../integrations/pycharm.md).
 
-This means that you will have **autocompletion** (or "IntelliSense") and **error checks** for types and required arguments even while creating new Pydantic model instances.
-
+This means that you will have **autocompletion** (or "IntelliSense") and **error checks** for types and required
+arguments even while creating new Pydantic model instances.
 
 ## Configure VS Code
 
-To take advantage of these features, you need to make sure you configure VS Code correctly, using the recommended settings.
+To take advantage of these features, you need to make sure you configure VS Code correctly, using the recommended
+settings.
 
 In case you have a different configuration, here's a short overview of the steps.
 
 ### Install Pylance
 
-You should use the [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) extension for VS Code. It is the recommended, next-generation, official VS Code plug-in for Python.
+You should use the [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) extension for
+VS Code. It is the recommended, next-generation, official VS Code plug-in for Python.
 
-Pylance is installed as part of the [Python Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) by default, so it should probably just work. Otherwise, you can double check it's installed and enabled in your editor.
+Pylance is installed as part of the [Python Extension for VS
+Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) by default, so it should probably just work.
+Otherwise, you can double check it's installed and enabled in your editor.
 
 ### Configure your environment
 
-Then you need to make sure your editor knows the [Python environment](https://code.visualstudio.com/docs/python/python-tutorial#_install-and-use-packages) (probably a virtual environment) for your Python project.
+Then you need to make sure your editor knows the [Python
+environment](<https://code.visualstudio.com/docs/python/python->
+tutorial#_install-and-use-packages) (probably a virtual environment) for your Python project.
 
 This would be the environment in where you installed Pydantic.
 
@@ -35,21 +42,21 @@ You can enable type error checks from Pylance with these steps:
 - You will find an option under `Python › Analysis: Type Checking Mode`
 - Set it to `basic` or `strict` (by default it's `off`)
 
-
-Now you will not only get autocompletion when creating new Pydantic model instances but also error checks for **required arguments**.
-
+Now you will not only get autocompletion when creating new Pydantic model instances but also error checks for **required
+arguments**.
 
 And you will also get error checks for **invalid data types**.
 
-
 !!! note "Technical Details"
-Pylance is the VS Code extension, it's closed source, but free to use. Underneath, Pylance uses an open source tool (also from Microsoft) called [Pyright](https://github.com/microsoft/pyright) that does all the heavy lifting.
+Pylance is the VS Code extension, it's closed source, but free to use. Underneath, Pylance uses an open source tool
+(also from Microsoft) called [Pyright](https://github.com/microsoft/pyright) that does all the heavy lifting.
 
-    You can read more about it in the [Pylance Frequently Asked Questions](https://github.com/microsoft/pylance-release/blob/main/FAQ.md#what-is-the-relationship-between-pylance-pyright-and-the-python-extension).
+You can read more about it in the [Pylance Frequently Asked Questions](https://github.com/microsoft/pylance-release/blob/main/FAQ.md#what-is-the-relationship-between-pylance-pyright-and-the-python-extension).
 
 ### Configure mypy
 
-You might also want to configure mypy in VS Code to get mypy error checks inline in your editor (alternatively/additionally to Pylance).
+You might also want to configure mypy in VS Code to get mypy error checks inline in your editor
+(alternatively/additionally to Pylance).
 
 This would include the errors detected by the [Pydantic mypy plugin](../integrations/mypy.md), if you configured it.
 
@@ -60,19 +67,19 @@ To enable mypy in VS Code, do the following:
 - You will find an option under `Python › Linting: Mypy Enabled`
 - Check the box (by default it's unchecked)
 
-
 ## Tips and tricks
 
 Here are some additional tips and tricks to improve your developer experience when using VS Code with Pydantic.
 
 ### Strict errors
 
-The way this additional editor support works is that Pylance will treat your Pydantic models as if they were Python's pure `dataclasses`.
+The way this additional editor support works is that Pylance will treat your Pydantic models as if they were Python's
+pure `dataclasses`.
 
-And it will show **strict type error checks** about the data types passed in arguments when creating a new Pydantic model instance.
+And it will show **strict type error checks** about the data types passed in arguments when creating a new Pydantic
+model instance.
 
 In this example you can see that it shows that a `str` of `'23'` is not a valid `int` for the argument `age`.
-
 
 It would expect `age=23` instead of `age='23'`.
 
@@ -80,13 +87,15 @@ Nevertheless, the design, and one of the main features of Pydantic, is that it i
 
 It will actually accept the `str` with value `'23'` and will convert it to an `int` with value `23`.
 
-These strict error checks are **very useful** most of the time and can help you **detect many bugs early**. But there are cases, like with `age='23'`, where they could be inconvenient by reporting a "false positive" error.
+These strict error checks are **very useful** most of the time and can help you **detect many bugs early**. But there
+are cases, like with `age='23'`, where they could be inconvenient by reporting a "false positive" error.
 
 ---
 
 This example above with `age='23'` is intentionally simple, to show the error and the differences in types.
 
-But more common cases where these strict errors would be inconvenient would be when using more sophisticated data types, like `int` values for `datetime` fields, or `dict` values for Pydantic sub-models.
+But more common cases where these strict errors would be inconvenient would be when using more sophisticated data types,
+like `int` values for `datetime` fields, or `dict` values for Pydantic sub-models.
 
 For example, this is valid for Pydantic:
 
@@ -110,12 +119,14 @@ quest = Quest(
 )
 ```
 
-The type of the field `knight` is declared with the class `Knight` (a Pydantic model) and the code is passing a literal `dict` instead. This is still valid for Pydantic, and the `dict` would be automatically converted to a `Knight` instance.
+The type of the field `knight` is declared with the class `Knight` (a Pydantic model) and the code is passing a literal
+`dict` instead. This is still valid for Pydantic, and the `dict` would be automatically converted to a `Knight`
+instance.
 
 Nevertheless, it would be detected as a type error:
 
-
-In those cases, there are several ways to disable or ignore strict errors in very specific places, while still preserving them in the rest of the code.
+In those cases, there are several ways to disable or ignore strict errors in very specific places, while still
+preserving them in the rest of the code.
 
 Below are several techniques to achieve it.
 
@@ -140,7 +151,8 @@ that way Pylance and mypy will ignore errors in that line.
 
 **Pros**: it's a simple change in that line to remove errors there.
 
-**Cons**: any other error in that line will also be omitted, including type checks, misspelled arguments, required arguments not provided, etc.
+**Cons**: any other error in that line will also be omitted, including type checks, misspelled arguments, required
+arguments not provided, etc.
 
 #### Override the type of a variable
 
@@ -162,9 +174,11 @@ age_str = "23"
 lancelot = Knight(title="Sir Lancelot", age=age_str)
 ```
 
-that way Pylance and mypy will interpret the variable `age_str` as if they didn't know its type, instead of knowing it has a type of `str` when an `int` was expected (and then showing the corresponding error).
+that way Pylance and mypy will interpret the variable `age_str` as if they didn't know its type, instead of knowing it
+has a type of `str` when an `int` was expected (and then showing the corresponding error).
 
-**Pros**: errors will be ignored only for a specific value, and you will still see any additional errors for the other arguments.
+**Pros**: errors will be ignored only for a specific value, and you will still see any additional errors for the other
+arguments.
 
 **Cons**: it requires importing `Any` and a new variable in a new line for each argument that needs ignoring errors.
 
@@ -189,13 +203,16 @@ class Knight(m.BaseModel):
 lancelot = Knight(title="Sir Lancelot", age=cast(Any, "23"))
 ```
 
-`cast(Any, '23')` doesn't affect the value, it's still just `'23'`, but now Pylance and mypy will assume it is of type `Any`, which means, they will act as if they didn't know the type of the value.
+`cast(Any, '23')` doesn't affect the value, it's still just `'23'`, but now Pylance and mypy will assume it is of type
+`Any`, which means, they will act as if they didn't know the type of the value.
 
 So, this is the equivalent of the previous example, without the additional variable.
 
-**Pros**: errors will be ignored only for a specific value, and you will still see any additional errors for the other arguments. There's no need for additional variables.
+**Pros**: errors will be ignored only for a specific value, and you will still see any additional errors for the other
+arguments. There's no need for additional variables.
 
-**Cons**: it requires importing `Any` and `cast`, and if you are not used to using `cast()`, it could seem strange at first.
+**Cons**: it requires importing `Any` and `cast`, and if you are not used to using `cast()`, it could seem strange at
+first.
 
 ### Settings in class arguments
 
@@ -234,7 +251,6 @@ When using the second version to declare `frozen=True` (with **keyword arguments
 Pylance can use it to help you check in your code and **detect errors** when something is trying to set values
 in a model that is "frozen".
 
-
 ## Adding a default with `u.Field`
 
 Pylance/pyright requires `default` to be a keyword argument to `u.Field` in order to infer that the field is optional.
@@ -260,9 +276,11 @@ This is a limitation of dataclass transforms and cannot be fixed in pydantic.
 !!! warning
 As a Pydantic user, you don't need the details below. Feel free to skip the rest of this section.
 
-    These details are only useful for other library authors, etc.
+These details are only useful for other library authors, etc.
 
-This additional editor support works by making use of the [`@dataclass_transform` decorator](https://typing.python.org/en/latest/spec/dataclasses.html#the-dataclass-transform-decorator)
+This additional editor support works by making use of the [`@dataclass_transform`
+decorator](https://typing.python.org/en/latest/spec/dataclasses.html#the-dataclass-transform-decorator)
 (introduced by [PEP 681](https://peps.python.org/pep-0681/)).
 
-The standard provides a way for libraries like Pydantic and others to tell editors and tools that they (the editors) should treat these libraries (e.g. Pydantic) as if they were dataclasses, providing autocompletion, type checks, etc.
+The standard provides a way for libraries like Pydantic and others to tell editors and tools that they (the editors)
+should treat these libraries (e.g. Pydantic) as if they were dataclasses, providing autocompletion, type checks, etc.

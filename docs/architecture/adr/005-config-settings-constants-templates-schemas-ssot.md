@@ -28,7 +28,7 @@ generated artifacts, while preserving the runtime dependency direction
 ### 1. Each concern has exactly one owner
 
 | Concern | Canonical owner |
-|---|---|
+| --- | --- |
 | invariants and scalar defaults | private constant modules exposed through `c` |
 | execution parametrization and repository manifests | validated files under `config/` |
 | environment-overridable runtime values | typed `settings.<Namespace>.*` models |
@@ -185,8 +185,10 @@ operator requires a versioned implementation change and its own tests.
 
 ## References
 
-- [ADR-003 — Manifest-owned topology, root workspace, and autonomous Git libraries](./003-workspace-tooling-hub-distribution.md)
+- [ADR-003 — Manifest-owned topology, root workspace, and autonomous Git
+  libraries](./003-workspace-tooling-hub-distribution.md)
 - [ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`](./004-generic-make-framework-in-flext-tests.md)
 - [ADR-007 — Operational kernel, universal CLI, and transactional conformance](./007-operational-kernel-cli-conform.md)
 - [Migration plan](../config-ssot-migration-plan.md)
-- Enforcement hardening beads: `mro-wkii.4`, `mro-wkii.4.1`, `mro-wkii.4.8`; plan `flext-infra/.omo/plans/declarative-enforcement.md`.
+- Enforcement hardening beads: `mro-wkii.4`, `mro-wkii.4.1`, `mro-wkii.4.8`; plan
+  `flext-infra/.omo/plans/declarative-enforcement.md`.

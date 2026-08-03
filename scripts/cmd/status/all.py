@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "status"
@@ -6,7 +5,7 @@
 # domain = "governance"
 # summary = "Show Beads status"
 # description = "Shows bead runtime status and health checks."
-# example = "make status WHAT=all"
+# example = "make status"
 # target = "_status"
 # mutates = false
 # aliases = []

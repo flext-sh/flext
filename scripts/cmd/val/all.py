@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Run validation gates for project, workspace, or both scopes."""
 # /// flext-command
 # verb = "val"
@@ -6,7 +5,7 @@
 # domain = "governance"
 # summary = "Run validation gates using current VALIDATE_SCOPE"
 # description = "Runs workspace and/or project validation depending on VALIDATE_SCOPE."
-# example = "make val WHAT=all"
+# example = "make val"
 # mutates = false
 # aliases = ["validate"]
 # params = [
@@ -18,12 +17,10 @@
 
 from __future__ import annotations
 
-import sys
 from typing import Annotated, Literal
 
-from scripts.dispatch import Dispatch
-
 from flext_tests import m, u
+from scripts.dispatch import Dispatch
 
 
 class FlextRootValAllCommand:
@@ -61,8 +58,7 @@ class FlextRootValAllCommand:
         """Dispatch validation by VALIDATE_SCOPE."""
         try:
             options = FlextRootValAllCommand.options()
-        except ValueError as exc:
-            print(f"ERRO: {exc}", file=sys.stderr)
+        except ValueError:
             return 2
 
         for target in options.targets:

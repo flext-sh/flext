@@ -11,24 +11,18 @@ Community of 3956 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | parse_semver | Function | libs/versioning.py | 19-29 |
 | bump_version | Function | libs/versioning.py | 32-42 |
 | current_workspace_version | Function | libs/versioning.py | 59-73 |
 | replace_project_version | Function | libs/versioning.py | 76-91 |
-| file_docstring | Function | .tmp/split_settings.py | 56-64 |
-| class_needs | Function | .tmp/split_settings.py | 87-110 |
-| strip_flext_settings_prefix | Function | .tmp/split_settings.py | 113-137 |
-| build_header | Function | .tmp/split_settings.py | 140-169 |
-| main | Function | .tmp/split_settings.py | 172-253 |
-| class_name | Function | .tmp/split_settings.py | 256-259 |
 | test_read_nonexistent_file | Test | flext-tests/tests/unit/_files_parts/read.py | 80-96 |
 | _find_project_root | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 24-32 |
 | project_metadata | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 36-38 |
 | project_tool_flext | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 42-44 |
 | project_namespace_config | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 48-50 |
 | MarkdownCodeBlockItem | Class | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 41-85 |
-| __init__ | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 44-51 |
+| **init** | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 44-51 |
 | runtest | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 54-70 |
 | repr_failure | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 73-80 |
 | reportinfo | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 83-85 |

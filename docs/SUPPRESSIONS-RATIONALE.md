@@ -2,15 +2,24 @@
 
 **Regras (AGENTS.md + decisão do repositório):**
 
-0. **Overrides** — Seguir sempre o modelo padrão de `pyproject.toml` sincronizado do repositório FLEXT por `make upgrade`. Não adicionar overrides de mypy/pyright fora desse padrão. A exceção permitida é o override de UI em `.vscode/settings.json` para `python.analysis.diagnosticSeverityOverrides.reportGeneralTypeIssues = "none"`: Pylance marca falsamente como autorreferente o padrão canônico de facade MRO `from flext_cli import m`; `class FlextPluginModels(m): ...`; `m = FlextPluginModels`. Esse override não altera os gates CLI (`pyright`, `pyrefly`, `mypy`).
+0. **Overrides** — Seguir sempre o modelo padrão de `pyproject.toml` sincronizado do repositório FLEXT por
+      `make upgrade`. Não adicionar overrides de mypy/pyright fora desse padrão. A exceção permitida é o override de UI
+      em `.vscode/settings.json` para `python.analysis.diagnosticSeverityOverrides.reportUntypedBaseClass = "none"`:
+      Pylance marca falsamente como autorreferente o padrão canônico de facade MRO `from flext_cli import m`;
+      `class FlextPluginModels(m): ...`; `m = FlextPluginModels`. Esse override não altera os gates CLI
+   (`pyright`, `pyrefly`, `mypy`).
 
 1. **Any** — Uso de `Any` é **terminantemente proibido** sem exceções.
 
-2. **Unreachable** — Não suprimir `unreachable`. flext-core não usa override para isso; corrigir o fluxo no código (estrutura de validadores/ramificações) em vez de desligar a regra.
+2. **Unreachable** — Não suprimir `unreachable`. flext-core não usa override para isso; corrigir o fluxo no código
+   (estrutura de validadores/ramificações) em vez de desligar a regra.
 
-3. **Supressões inline** — Não usar `# pyright: ignore`, `# pyrefly: ignore` ou equivalentes para contornar o linter. Corrigir pela **causa raiz** usando os padrões e skills do flext e as regras de AGENTS.md.
+3. **Supressões inline** — Não usar `# pyright: ignore`, `# pyrefly: ignore` ou equivalentes para contornar o linter.
+   Corrigir pela **causa raiz** usando os padrões e skills do flext e as regras de AGENTS.md.
 
-4. **Dict em create*for*\*** — Não usar contratos de dicionário genérico para settings. Usar modelos Pydantic de boundary (`m.SettingsOverridesModel`) e materializar `dict(...)` apenas no ponto local de mutação antes de `model_validate(...)`, alinhado ao padrão de flext-core (`from_kwargs`, `merge_defaults`).
+4. **Dict em create*for*\*** — Não usar contratos de dicionário genérico para settings. Usar modelos Pydantic de
+      boundary (`m.SettingsOverridesModel`) e materializar `dict(...)` apenas no ponto local de mutação antes de
+   `model_validate(...)`, alinhado ao padrão de flext-core (`from_kwargs`, `merge_defaults`).
 
 ---
 
@@ -18,28 +27,41 @@
 
 - **flext-dbt-ldap**
   - Removido `[[tool.mypy.overrides]]` por completo.
-  - `reportUntypedBaseClass`: base tipada em flext-core; em `protocols.py` passamos a usar `p_core.Service[...]` (import de `flext_core.protocols.FlextProtocols`) em vez de `p_ldap.Service[...]`, para o pyright resolver o tipo da base.
+  - `reportUntypedBaseClass`: base tipada em flext-core; em `protocols.py` passamos a usar `p_core.Service[...]`
+        (import de `flext_core.protocols.FlextProtocols`) em vez de `p_ldap.Service[...]`, para o pyright resolver o
+    tipo da base.
 
 - **flext-tap-ldif**
   - Removido override de mypy em `pyproject.toml`.
-  - Settings: `create_for_development` / `create_for_production` / `create_for_testing` passam a usar `overrides: p.SettingsOverridesModel` e defaults em modelos explícitos, mantendo `model_validate(...)` sem interfaces genéricas.
-  - Utilities: erro pyrefly “bad-assignment / breaking cycles” resolvido na raiz extraindo a construção do record para `build_record_from_lines()` com tipagem forte; sem supressão inline e sem promover fronteiras genéricas.
+  - Settings: `create_for_development` / `create_for_production` / `create_for_testing` passam a usar
+        `overrides: m.SettingsOverridesModel` e defaults em modelos explícitos, mantendo `model_validate(...)` sem
+    interfaces genéricas.
+  - Utilities: erro pyrefly “bad-assignment / breaking cycles” resolvido na raiz extraindo a construção do record para
+    `build_record_from_lines()` com tipagem forte; sem supressão inline e sem promover fronteiras genéricas.
 
 - **typings**
-  - Corrigido stub `typings/generated/sqlalchemy/sql/visitors.pyi`: parâmetros duplicados `self` em `__call__` substituídos por nomes únicos (`visitable`, `target`) para mypy não falhar ao analisar dependentes.
+  - Corrigido stub `typings/generated/sqlalchemy/sql/visitors.pyi`: parâmetros duplicados `self` em `**call**`
+    substituídos por nomes únicos (`visitable`, `target`) para mypy não falhar ao analisar dependentes.
 
 ---
 
 ## Atualizações (continuação do plano)
 
 - **flext-core**
-  - **FlextSettings.**init****: Removida abordagem permissiva de cast em fronteira de biblioteca; fronteira segue contrato de modelo explícito e validação direta.
+  - **FlextSettings.**init****: Removida abordagem permissiva de cast em fronteira de biblioteca; fronteira segue
+    contrato de modelo explícito e validação direta.
 - **flext-dbt-ldap**
-  - **Unreachable**: Helper `_entry_attrs_mapping(entry)` no módulo; `normalize_attributes` / `_get_object_classes` e `dbt_client._matches_schema` usam esse helper. Import de `_entry_attrs_mapping` movido para o topo de `dbt_client.py` (lint PLC0415).
-  - **Fronteira Pydantic (SSOT)**: Um único `[[tool.mypy.overrides]]` em `pyproject.toml` para `module = "flext_dbt_ldap.models"` com `disallow_any_explicit = false`. Causa: membro sintético `__mypy-replace` na cadeia Value → BaseModel; limitação conhecida mypy/Pydantic. Override documentado no próprio `pyproject.toml` e aqui; não adicionar outros overrides fora desse padrão.
+  - **Unreachable**: Helper `_entry_attrs_mapping(entry)` no módulo; `normalize_attributes` / `_get_object_classes` e
+        `dbt_client._matches_schema` usam esse helper. Import de `_entry_attrs_mapping` movido para o topo de
+    `dbt_client.py` (lint PLC0415).
+  - **Fronteira Pydantic (SSOT)**: Um único `[[tool.mypy.overrides]]` em `pyproject.toml` para
+        `module = "flext_dbt_ldap.models"` com `disallow_any_explicit = false`. Causa: membro sintético
+        `**mypy-replace` na cadeia Value → BaseModel; limitação conhecida mypy/Pydantic. Override documentado no
+    próprio `pyproject.toml` e aqui; não adicionar outros overrides fora desse padrão.
 - **flext-tap-ldif**
-  - **Unreachable**: removido `return` inalcançável em `ldif_processor.py`. **tests**: `t` em `__all__` de `tests/typings.py`. **Singer\*Message**: `model_validate({...})` em `utilities.py`. **Stub**: `typings/generated/singer_sdk/__init__.pyi` com `Stream`, `Tap` e `Tap.cli`. **Check script**: `MYPYPATH` com `ROOT/typings/generated` para o stub ser usado. Check passa sem override adicional.
-- **flext-infra (gerador de config — mro-wkii.17.26.2.20.8)**
-  - **`reportUntypedBaseClass`**: removido o override `= "none"` na fonte geradora — `config/tooling.yaml` (`tools.pyright.extended-settings`, que propaga para `[tool.pyright]` de todos os projetos) e `workspace/vscode.py` (`apply_diagnostic_overrides`, que gerava `python.analysis.diagnosticSeverityOverrides` em `.vscode/settings.json`). Não era supressão sancionada (apenas `reportGeneralTypeIssues` é override Pylance-only permitido pela regra 0): o alias de facade sob `TYPE_CHECKING` resolve a base tipada, tornando a supressão morta. As duas constantes órfãs em `_constants/workspace.py` foram removidas. Aplicação do sync na frota (32 `pyproject`/`.vscode`) exige dry-run transacional restrito + prova Pyright serial por projeto antes do apply.
+  - **Unreachable**: removido `return` inalcançável em `ldif_processor.py`. **tests**: `t` em `**all**` de
+        `tests/typings.py`. **Singer\*Message**: `model_validate({...})` em `utilities.py`. **Stub**:
+        `typings/generated/singer_sdk/**init**.pyi` com `Stream`, `Tap` e `Tap.cli`. **Check script**: `MYPYPATH` com
+    `ROOT/typings/generated` para o stub ser usado. Check passa sem override adicional.
 
 Regra: qualquer novo override deve seguir o padrão (módulo específico, comentário de fronteira, registro aqui).

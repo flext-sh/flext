@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "boot"
@@ -6,7 +5,7 @@
 # domain = "workspace"
 # summary = "Detect/fix import violations"
 # description = "Runs the canonical _imp target to detect and optionally fix import violations."
-# example = "make boot WHAT=imp APPLY=Y"
+# example = "make setup WHAT=imp APPLY=Y"
 # target = "_imp"
 # mutates = true
 # aliases = []

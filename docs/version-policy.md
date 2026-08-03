@@ -5,9 +5,12 @@
 ## Workspace cycle
 
 The workspace develops on a named development branch per cycle
-(currently `0.20.0-dev`). Every package `pyproject.toml` carries the cycle
-version (`version = "0.20.0-dev"`) so the workspace is internally consistent
-at any commit. Release notes per cycle live under
+(currently `0.12.0-dev`). Member package `pyproject.toml` files carry the
+development-cycle version (`version = "0.12.0-dev"`), while the root workspace
+manifest and `config/workspace.yaml` carry the release-candidate coordination
+version (`0.12.0rc0`). This distinction keeps package development metadata
+stable while the workspace release lane prepares a candidate.
+Release notes per cycle live under
 `docs/releases/` (repo-only reference, e.g. `docs/releases/latest.md`).
 
 ## Package releases
@@ -35,5 +38,5 @@ at any commit. Release notes per cycle live under
 
 ## Development status
 
-The `0.20.0-dev` cycle is non-production. Quality status per cycle is stated
+The `0.12.0-dev` cycle is non-production. Quality status per cycle is stated
 in the release notes; production adoption tracks packaged releases only.

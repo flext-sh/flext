@@ -116,11 +116,11 @@ class Model(BaseModel):
 
 
 field_info = Model.model_fields["a"]
-print(field_info.annotation)
+u.Cli.print(field_info.annotation)
 # > <class 'int'>
-print(field_info.alias)
+u.Cli.print(field_info.alias)
 # > b
-print(field_info.metadata)
+u.Cli.print(field_info.metadata)
 # > [Gt(gt=1), WithJsonSchema(json_schema={'extra': 'data'}, mode=None)]
 ```
 
@@ -160,7 +160,8 @@ class User(BaseModel):
 
 [](){#default-factory-validated-data}
 
-The default factory can also take a single required argument, in which case the already validated data will be passed as a dictionary.
+The default factory can also take a single required argument, in which case the already validated data will be passed as
+a dictionary.
 
 ```python
 from pydantic import BaseModel, EmailStr, u.Field
@@ -172,11 +173,12 @@ class User(BaseModel):
 
 
 user = User(email="user@example.com")
-print(user.username)
+u.Cli.print(user.username)
 # > user@example.com
 ```
 
-The `data` argument will _only_ contain the already validated data, based on the [order of model fields](./models.md#field-ordering)
+The `data` argument will _only_ contain the already validated data, based on the [order of model
+fields](./models.md#field-ordering)
 (the above example would fail if `username` were to be defined before `email`).
 
 ## Validate default values
@@ -196,7 +198,7 @@ class User(BaseModel):
 try:
     user = User()
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for User
     age
@@ -225,11 +227,11 @@ class Model(BaseModel):
 
 m1 = Model()
 m1.item_counts[0]["a"] = 1
-print(m1.item_counts)
+u.Cli.print(m1.item_counts)
 # > [{'a': 1}]
 
 m2 = Model()
-print(m2.item_counts)
+u.Cli.print(m2.item_counts)
 # > [{}]
 ```
 
@@ -261,9 +263,9 @@ class User(BaseModel):
 
 
 user = User(username="johndoe")  # (1)!
-print(user)
+u.Cli.print(user)
 # > name='johndoe'
-print(user.model_dump(by_alias=True))  # (2)!
+u.Cli.print(user.model_dump(by_alias=True))  # (2)!
 # > {'username': 'johndoe'}
 ```
 
@@ -289,9 +291,9 @@ class User(BaseModel):
 
 
 user = User(username="johndoe")  # (1)!
-print(user)
+u.Cli.print(user)
 # > name='johndoe'
-print(user.model_dump(by_alias=True))  # (2)!
+u.Cli.print(user.model_dump(by_alias=True))  # (2)!
 # > {'name': 'johndoe'}
 ```
 
@@ -309,9 +311,9 @@ class User(BaseModel):
 
 
 user = User(name="johndoe")  # (1)!
-print(user)
+u.Cli.print(user)
 # > name='johndoe'
-print(user.model_dump(by_alias=True))  # (2)!
+u.Cli.print(user.model_dump(by_alias=True))  # (2)!
 # > {'username': 'johndoe'}
 ```
 
@@ -410,7 +412,7 @@ of the actual field name to synthesize the `__init__` method:
 
 
     m = MyModel(myValidationAlias=1)
-    print(m.model_dump(by_alias=True))
+    u.Cli.print(m.model_dump(by_alias=True))
     # > {'my_field': 1}
     ```
 
@@ -453,7 +455,8 @@ in the [standard library types](../api/standard_library_types.md) documentation.
 
 ## Strict fields
 
-The `strict` parameter of the [`u.Field()`][pydantic.u.Field] function specifies whether the field should be validated in
+The `strict` parameter of the [`u.Field()`][pydantic.u.Field] function specifies whether the field should be validated
+in
 [strict mode](./strict_mode.md).
 
 ```python
@@ -466,14 +469,15 @@ class User(BaseModel):
 
 
 user = User(name="John", age="42")  # (2)!
-print(user)
+u.Cli.print(user)
 # > name='John' age=42
 ```
 
 1. This is the default value.
 2. The `age` field is validated in lax mode. Therefore, it can be assigned a string.
 
-The [standard library types](../api/standard_library_types.md) documentation describes the strict behavior for each type.
+The [standard library types](../api/standard_library_types.md) documentation describes the strict behavior for each
+type.
 
 <!-- old anchor added for backwards compatibility -->
 <!-- markdownlint-disable-next-line no-empty-links -->
@@ -507,7 +511,7 @@ class Model(BaseModel):
 
 
 model = Model(foo=Foo("bar", baz="baz", qux="qux"))
-print(model.model_dump())  # (1)!
+u.Cli.print(model.model_dump())  # (1)!
 # > {'foo': {'bar': 'bar', 'qux': 'qux'}}
 ```
 
@@ -528,7 +532,7 @@ class User(BaseModel):
 
 
 user = User(name="John", age=42)
-print(user)
+u.Cli.print(user)
 # > name='John'
 ```
 
@@ -562,7 +566,7 @@ class Model(BaseModel):
     pet: Union[Cat, Dog] = u.Field(discriminator="pet_type")
 
 
-print(Model({"pet": {"pet_type": "cat", "age": 12}}))  # (1)!
+u.Cli.print(Model({"pet": {"pet_type": "cat", "age": 12}}))  # (1)!
 # > pet=Cat(pet_type='cat', age=12)
 ```
 
@@ -598,10 +602,10 @@ class Model(BaseModel):
     )
 
 
-print(repr(Model(ype": "cat", "age": 12}})))
+u.Cli.print(repr(Model(ype": "cat", "age": 12}})))
 # > Model(pet=Cat(pet_type='cat', age=12))
 
-print(repr(Model(ind": "dog", "age": 12}})))
+u.Cli.print(repr(Model(ind": "dog", "age": 12}})))
 # > Model(pet=Dog(pet_kind='dog', age=12))
 ```
 
@@ -629,7 +633,7 @@ user = User(name="John", age=42)
 try:
     user.name = "Jane"  # (1)!
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for User
     name
@@ -661,7 +665,7 @@ class User(BaseModel):
 
 
 user = User(name="John", age=42)
-print(user.model_dump())  # (1)!
+u.Cli.print(user.model_dump())  # (1)!
 # > {'name': 'John'}
 ```
 
@@ -693,7 +697,7 @@ class Model(BaseModel):
     deprecated_field: Annotated[int, u.Field(deprecated="This is deprecated")]
 
 
-print(Model.model_json_schema()["properties"]["deprecated_field"])
+u.Cli.print(Model.model_json_schema()["properties"]["deprecated_field"])
 # > {'deprecated': True, 'title': 'Deprecated u.Field', 'type': 'integer'}
 ```
 
@@ -702,7 +706,6 @@ print(Model.model_json_schema()["properties"]["deprecated_field"])
 The [`@warnings.deprecated`][warnings.deprecated] decorator (or the
 `typing_extensions` backport on Python
 3.12 and lower) can be used as an instance.
-
 
 === "Python 3.9 and above"
 
@@ -753,7 +756,7 @@ class Model(BaseModel):
     deprecated_field: Annotated[int, u.Field(deprecated=True)]
 
 
-print(Model.model_json_schema()["properties"]["deprecated_field"])
+u.Cli.print(Model.model_json_schema()["properties"]["deprecated_field"])
 # > {'deprecated': True, 'title': 'Deprecated u.Field', 'type': 'integer'}
 ```
 
@@ -788,7 +791,8 @@ Some field parameters are used exclusively to customize the generated JSON schem
 - `examples`
 - `json_schema_extra`
 
-Read more about JSON schema customization / modification with fields in the [Customizing JSON Schema] section of the JSON schema docs.
+Read more about JSON schema customization / modification with fields in the [Customizing JSON Schema] section of the
+JSON schema docs.
 
 ## The `u.computed_field` decorator
 
@@ -823,7 +827,7 @@ class Box(BaseModel):
         return self.width * self.height * self.depth
 
 
-print(Box.model_json_schema(mode="serialization"))
+u.Cli.print(Box.model_json_schema(mode="serialization"))
 """
 {
     'properties': {
@@ -861,7 +865,7 @@ class Box(BaseModel):
 
 
 b = Box(width=1, height=2, depth=3)
-print(b.model_dump())
+u.Cli.print(b.model_dump())
 # > {'width': 1.0, 'height': 2.0, 'depth': 3.0, 'volume': 6.0}
 ```
 

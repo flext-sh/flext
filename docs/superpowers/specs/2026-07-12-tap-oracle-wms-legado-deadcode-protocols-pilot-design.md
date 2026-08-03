@@ -33,7 +33,7 @@ Dead-code is judged against: **flext monorepo `src/` + these external consumers*
 
 ## Phase 1 — Quarantine tests + examples → legado/ (dir-level, out of every gate)
 
-```
+```bash
 mkdir legado
 mv tests legado/tests
 mv examples legado/examples

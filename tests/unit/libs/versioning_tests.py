@@ -1,14 +1,18 @@
+"""FLEXT infra test helpers for versioning_tests."""
+
 from __future__ import annotations
 
 import importlib
 import sys
 from pathlib import Path
-
-import pytest
+from typing import TYPE_CHECKING
 
 from flext_tests import tm
 from tests.infra.constants import c
 from tests.infra.utilities import u
+
+if TYPE_CHECKING:
+    import pytest
 
 
 class TestVersioning:

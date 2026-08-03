@@ -27,7 +27,7 @@ and command evidence.
 ## Canonical ownership
 
 | Surface | Sole owner |
-|---|---|
+| --- | --- |
 | repository catalog and workspace manifest | validated data under `flext-infra/config/` and each workspace `config/` |
 | universal config/schema/template/file/process operations | public `u.Cli.*` facades in `flext-cli` |
 | typed conformance plan, enforcement, and transaction | `flext-infra codegen conform` |

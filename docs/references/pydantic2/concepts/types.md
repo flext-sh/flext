@@ -5,7 +5,9 @@ Pydantic uses types to define how validation and serialization should be perform
 can be controlled and constraints can be applied on them.
 
 On top of these, Pydantic provides extra types, either [directly in the library](../api/types.md)
-(e.g. [`SecretStr`][pydantic.types.SecretStr]) or in the [`pydantic-extra-types`](https://github.com/pydantic/pydantic-extra-types)
+(e.g. [`SecretStr`][pydantic.types.SecretStr]) or in the [`pydantic-extra-
+types`](<https://github.com/pydantic/pydantic->
+extra-types)
 external library. These are implemented using the patterns described in the [custom types](#custom-types) section.
 Strictness and constraints _can't_ be applied on them.
 
@@ -35,13 +37,13 @@ PositiveInt = Annotated[int, u.Field(gt=0)]  # (1)!
 
 ta = TypeAdapter(PositiveInt)
 
-print(ta.validate_python(1))
+u.Cli.print(ta.validate_python(1))
 # > 1
 
 try:
     ta.validate_python(-1)
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for constrained-int
       Input should be greater than 0 [type=greater_than, input_value=-1, input_type=int]
@@ -113,7 +115,7 @@ assert v == [1, 2, 3, 4]
 try:
     ta.validate_python([1, 2, 3, 4, 5])
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for t.SequenceOf[int]
       List should have at most 4 items after validation, not 5 [type=too_long, input_value=[1, 2, 3, 4, 5], input_type=list]
@@ -131,7 +133,7 @@ assert type(v[0]) is float
 try:
     ta.validate_python([-1.0])
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for t.SequenceOf[constrained-float]
     0
@@ -171,7 +173,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
         y: PositiveIntList
 
 
-    print(Model.model_json_schema())  # (1)!
+    u.Cli.print(Model.model_json_schema())  # (1)!
     """
     {
         '$defs': {
@@ -211,7 +213,7 @@ By leveraging the new [`type` statement](https://typing.readthedocs.io/en/latest
         y: PositiveIntList
 
 
-    print(Model.model_json_schema())  # (1)!
+    u.Cli.print(Model.model_json_schema())  # (1)!
     """
     {
         '$defs': {
@@ -334,7 +336,7 @@ For instance, here is an example definition of a JSON type:
     )
 
     ta = TypeAdapter(Json)
-    print(ta.json_schema())
+    u.Cli.print(ta.json_schema())
     """
     {
         '$defs': {
@@ -369,7 +371,7 @@ For instance, here is an example definition of a JSON type:
     type Json = t.MappingKV[str, Json] | t.SequenceOf[Json] | t.Primitives | None  # (1)!
 
     ta = TypeAdapter(Json)
-    print(ta.json_schema())
+    u.Cli.print(ta.json_schema())
     """
     {
         '$defs': {
@@ -401,20 +403,25 @@ Pydantic defines a [`object`][pydantic.types.t.JsonValue] type as a convenience.
 ### Customizing validation with `__get_pydantic_core_schema__` <a name="customizing_validation_with_get_pydantic_core_schema"></a>
 
 To do more extensive customization of how Pydantic handles custom classes, and in particular when you have access to the
-class or can subclass it, you can implement a special `__get_pydantic_core_schema__` to tell Pydantic how to generate the
+class or can subclass it, you can implement a special `__get_pydantic_core_schema__` to tell Pydantic how to generate
+the
 `pydantic-core` schema.
 
-While `pydantic` uses `pydantic-core` internally to handle validation and serialization, it is a new API for Pydantic V2,
+While `pydantic` uses `pydantic-core` internally to handle validation and serialization, it is a new API for Pydantic
+V2,
 thus it is one of the areas most likely to be tweaked in the future and you should try to stick to the built-in
 constructs like those provided by `annotated-types`, `pydantic.u.Field`, or `m.BeforeValidator` and so on.
 
-You can implement `__get_pydantic_core_schema__` both on a custom type and on metadata intended to be put in `Annotated`.
+You can implement `__get_pydantic_core_schema__` both on a custom type and on metadata intended to be put in
+`Annotated`.
 In both cases the API is middleware-like and similar to that of "wrap" validators: you get a `source_type` (which isn't
 necessarily the same as the class, in particular for generics) and a `handler` that you can call with a type to either
 call the next metadata in `Annotated` or call into Pydantic's internal schema generation.
 
-The simplest no-op implementation calls the handler with the type you are given, then returns that as the result. You can
-also choose to modify the type before calling the handler, modify the core schema returned by the handler, or not call the
+The simplest no-op implementation calls the handler with the type you are given, then returns that as the result. You
+can
+also choose to modify the type before calling the handler, modify the core schema returned by the handler, or not call
+the
 handler at all.
 
 #### As a method on a custom type
@@ -448,9 +455,12 @@ See [JSON Schema](../concepts/json_schema.md) for more details on how to customi
 
 #### As an annotation
 
-Often you'll want to parametrize your custom type by more than just generic type parameters (which you can do via the type system and will be discussed later). Or you may not actually care (or want to) make an instance of your subclass; you actually want the original type, just with some extra validation done.
+Often you'll want to parametrize your custom type by more than just generic type parameters (which you can do via the
+type system and will be discussed later). Or you may not actually care (or want to) make an instance of your subclass;
+you actually want the original type, just with some extra validation done.
 
-For example, if you were to implement `pydantic.AfterValidator` (see [Adding validation and serialization](#adding-validation-and-serialization)) yourself, you'd do something similar to the following:
+For example, if you were to implement `pydantic.AfterValidator` (see [Adding validation and serialization](#adding-
+validation-and-serialization)) yourself, you'd do something similar to the following:
 
 ```python
 from dataclasses import dataclass
@@ -483,8 +493,10 @@ class Model(BaseModel):
 assert Model(name="ABC").name == "abc"  # (2)!
 ```
 
-1. The `frozen=True` specification makes `MyAfterValidator` hashable. Without this, a union such as `Username | None` will raise an error.
-2. Notice that type checkers will not complain about assigning `'ABC'` to `Username` like they did in the previous example because they do not consider `Username` to be a distinct type from `str`.
+1. The `frozen=True` specification makes `MyAfterValidator` hashable. Without this, a union such as `Username | None`
+   will raise an error.
+2. Notice that type checkers will not complain about assigning `'ABC'` to `Username` like they did in the previous
+   example because they do not consider `Username` to be a distinct type from `str`.
 
 #### Handling third-party types
 
@@ -590,7 +602,7 @@ assert m.model_dump() == {"third_party_type": 10}
 try:
     Model(third_party_type="a")
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for Model
     third_party_type.is-instance[ThirdPartyType]
@@ -646,8 +658,10 @@ assert Model(y="ab").y == "abab"
 
 Let's recap:
 
-1. Pydantic provides high level hooks to customize types via `Annotated` like `AfterValidator` and `u.Field`. Use these when possible.
-2. Under the hood these use `pydantic-core` to customize validation, and you can hook into that directly using `GetPydanticSchema` or a marker class with `__get_pydantic_core_schema__`.
+1. Pydantic provides high level hooks to customize types via `Annotated` like `AfterValidator` and `u.Field`. Use these
+   when possible.
+2. Under the hood these use `pydantic-core` to customize validation, and you can hook into that directly using
+   `GetPydanticSchema` or a marker class with `__get_pydantic_core_schema__`.
 3. If you really want a custom type you can implement `__get_pydantic_core_schema__` on the type itself.
 
 ### Handling custom generic classes
@@ -665,7 +679,8 @@ If the Generic class that you are using as a sub-type has a classmethod
 `__get_pydantic_core_schema__`, you don't need to use
 [`arbitrary_types_allowed`][pydantic.config.ConfigDict.arbitrary_types_allowed] for it to work.
 
-Because the `source_type` parameter is not the same as the `cls` parameter, you can use `typing.get_args` (or `typing_extensions.get_args`) to extract the generic parameters.
+Because the `source_type` parameter is not the same as the `cls` parameter, you can use `typing.get_args` (or
+`typing_extensions.get_args`) to extract the generic parameters.
 Then you can use the `handler` to generate a schema for them by calling `handler.generate_schema`.
 Note that we do not do something like `handler(get_args(source_type)[0])` because we want to generate an unrelated
 schema for that generic parameter, not one that is influenced by the current context of `Annotated` metadata and such.
@@ -759,7 +774,7 @@ model = Model(
     car_owner=Owner(name="John", item=Car(color="black")),
     home_owner=Owner(name="James", item=House(rooms=3)),
 )
-print(model)
+u.Cli.print(model)
 """
 car_owner=Owner(name='John', item=Car(color='black')) home_owner=Owner(name='James', item=House(rooms=3))
 """
@@ -771,7 +786,7 @@ try:
         home_owner=Owner(name="James", item=Car(color="black")),
     )
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for Model
     wine
@@ -784,7 +799,7 @@ except ValidationError as e:
 model = Model.model_validate_json(
     '{"car_owner":{"name":"John","item":{"color":"black"}},"home_owner":{"name":"James","item":{"rooms":3}}}'
 )
-print(model)
+u.Cli.print(model)
 """
 car_owner=Owner(name='John', item=Car(color='black')) home_owner=Owner(name='James', item=House(rooms=3))
 """
@@ -794,7 +809,7 @@ try:
         '{"car_owner":{"name":"John","item":{"rooms":3}},"home_owner":{"name":"James","item":{"color":"black"}}}'
     )
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for Model
     car_owner.item.color
@@ -857,9 +872,9 @@ class M(BaseModel):
 
 
 m = M()
-print(m)
+u.Cli.print(m)
 # > s1=<__main__.MySequence t.JsonValue at 0x0123456789ab>
-print(m.s1.v)
+u.Cli.print(m.s1.v)
 # > [3]
 
 
@@ -871,7 +886,7 @@ M(s1=[1])
 try:
     M(s1=["a"])
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     2 validation errors for M
     s1.is-instance[MySequence]
@@ -884,7 +899,8 @@ except ValidationError as exc:
 ### Access to field name
 
 !!!note
-This was not possible with Pydantic V2 to V2.3, it was [re-added](https://github.com/pydantic/pydantic/pull/7542) in Pydantic V2.4.
+This was not possible with Pydantic V2 to V2.3, it was [re-added](https://github.com/pydantic/pydantic/pull/7542) in
+Pydantic V2.4.
 
 As of Pydantic V2.4, you can access the field name via the `handler.field_name` within `__get_pydantic_core_schema__`
 and thereby set the field name which will be available from `info.field_name`.
@@ -925,11 +941,12 @@ class MyModel(BaseModel):
 
 
 m = MyModel(my_field=1)
-print(m.my_field)
+u.Cli.print(m.my_field)
 # > CustomType<1 'my_field'>
 ```
 
-You can also access `field_name` from the markers used with `Annotated`, like [`AfterValidator`][pydantic.functional_validators.AfterValidator].
+You can also access `field_name` from the markers used with `Annotated`, like
+[`AfterValidator`][pydantic.functional_validators.AfterValidator].
 
 ```python
 from typing import Annotated
@@ -946,6 +963,6 @@ class MyModel(BaseModel):
 
 
 m = MyModel(my_field=1)
-print(m.my_field)
+u.Cli.print(m.my_field)
 # > <1 'my_field'>
 ```

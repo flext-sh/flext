@@ -46,7 +46,7 @@ The FLEXT type system provides a unified, composable type architecture across th
 
 ### Project Dependency Order
 
-```
+```text
 flext-core (Foundation - No dependencies)
     ↓
 flext-cli (depends on flext-core)
@@ -90,7 +90,7 @@ flext-ldap (depends on flext-core, flext-ldif)
 type ScalarLike = t.Scalar
 
 # Usage: keep values in strict canonical contracts
-result: p.Domain.ValueModel = json_value
+result: m.Domain.ValueModel = json_value
 ```
 
 ### Pattern 2: Domain Collection Type (Nested Namespace)
@@ -137,7 +137,7 @@ type ProgressCallback = (
     Callable[[int], None]
     | Callable[[int, int], None]
     | Callable[[int, int, str], None]
-    | Callable[[p.Cli.ProgressEventModel], None]
+    | Callable[[m.Cli.ProgressEventModel], None]
     | Callable[[Exception], None]
 )
 
@@ -147,7 +147,7 @@ type ProgressCallback = (
 class ProgressCallback(Protocol):
     """Flexible callback protocol for progress tracking."""
 
-    def __call__(self, event: p.Cli.ProgressEventModel) -> None:
+    def **call**(self, event: m.Cli.ProgressEventModel) -> None:
         """Accept any arguments for maximum flexibility."""
         ...
 ```
@@ -180,7 +180,7 @@ def process_data(provider: DataProvider) -> None:
 
 ```python
 # ✅ CORRECT: Use centralized TypeVars from flext-core
-from flext_core import p, t
+from flext_core import t
 
 T = T  # Generic type variable
 M = t.M  # Generic mapping type
@@ -189,7 +189,7 @@ R = t.R  # Generic result type
 E = t.E  # Generic exception type
 
 # ❌ WRONG: Creating redundant domain-specific TypeVars
-FlextCliCommandT = TypeVar("FlextCliCommandT", bound="Command")  # NO - use generic T
+FlextCliCommandT = TypeVar("FlextCliCommandT", bound="CliCommand")  # NO - use generic T
 FlextCliOutputT = TypeVar("FlextCliOutputT")  # NO - use generic R
 ```
 
@@ -211,7 +211,7 @@ class FlextTypes:
 
 # Usage
 result: t.Tests.Result[bool] = ok_result
-data: t.Utilities.SettingsData = {"key": p.Tests.SettingsEntryModel(value="value")}
+data: t.Utilities.SettingsData = {"key": m.Tests.SettingsEntryModel(value="value")}
 
 
 # ❌ WRONG: Over-nesting (3+ levels)
@@ -226,7 +226,7 @@ class FlextTypes:
 
 **flext-core**:
 
-```
+```text
 t.Tests                      # Foundation (Result, Settings, Handler)
 t.Utilities                 # Reusable (Json, Collection, Validation)
 t.Exceptions                # Error types
@@ -236,7 +236,7 @@ t.Decorators                # Type decorators
 
 **flext-cli**:
 
-```
+```text
 t.Cli                       # CLI-specific
   .Data                     # Data structures (Tables, Progress)
   .Output                   # Output formats (Table, JSON, YAML)
@@ -245,7 +245,7 @@ t.Cli                       # CLI-specific
 
 **flext-ldif**:
 
-```
+```text
 t.Ldif                      # LDIF domain
   .Entry                    # Entry types
   .Attribute                # Attribute types
@@ -255,7 +255,7 @@ t.Ldif                      # LDIF domain
 
 **flext-ldap**:
 
-```
+```text
 t.Ldap                      # LDAP operations
   .Client                   # Client types
   .Connection               # Connection types
@@ -274,7 +274,7 @@ t.Ldap.Protocol             # Infrastructure (ldap3 wrappers)
 m.Cli.SystemInfo  # CLI-specific system info model
 m.Cli.SessionStatistics  # CLI session statistics
 m.Cli.CommandStatistics  # CLI command statistics
-m.Cli.Command  # CLI command model
+m.Cli.CliCommand  # CLI command model
 m.Cli.CliSession  # CLI session model
 
 # ✅ CORRECT: Module-level aliases for common classes
@@ -297,7 +297,7 @@ m.Statistics  # Ambiguous - which domain?
 
 **flext-core**:
 
-```
+```text
 m.Settings                    # Configuration models
 m.ProcessingSettings          # Processing-specific settings
 m.RuntimeScopeOptions       # Runtime options
@@ -306,11 +306,11 @@ m.Options                   # Generic options
 
 **flext-cli**:
 
-```
+```text
 m.Cli                       # CLI domain
-  .Command               # Command model
+  .CliCommand               # Command model
   .CliSession               # Session model
-  .Settings                # CLI configuration
+  .CliSettings                # CLI configuration
   .SystemInfo               # System information (module alias available)
   .EnvironmentInfo          # Environment info (module alias available)
   .PathInfo                 # Path information (module alias available)
@@ -321,7 +321,7 @@ m.Cli                       # CLI domain
 
 **flext-ldif**:
 
-```
+```text
 m.Ldif                      # LDIF domain
   .Entry                    # LDIF entry
   .Attribute                # LDIF attribute
@@ -330,7 +330,7 @@ m.Ldif                      # LDIF domain
 
 **flext-ldap**:
 
-```
+```text
 m.Ldap                      # LDAP domain
   .Connection               # Connection model
   .Operation                # Operation model
@@ -465,7 +465,7 @@ class Entry(Protocol):
 
 # Can now use isinstance() at runtime
 if isinstance(obj, Entry):
-    print(f"DN: {obj.dn}")
+    u.Cli.print(f"DN: {obj.dn}")
 ```
 
 **Rule 4**: Self Type for Method Chaining
@@ -552,7 +552,7 @@ def track_progress(callback: ProgressCallback) -> None:
 ```python
 @runtime_checkable
 class ProgressCallback(Protocol):
-    def __call__(self, event: p.Cli.ProgressEventModel) -> None: ...
+    def **call**(self, event: m.Cli.ProgressEventModel) -> None: ...
 
 
 def track_progress(callback: ProgressCallback) -> None:
@@ -659,14 +659,14 @@ attributes = m.AttributeDict()  # NO
 # ✅ CORRECT: Use Models and Protocols
 def process_model(
     data: t.MappingKV[str, m.Domain.InputModel],
-) -> p.Result[p.Domain.OutputModel]:
+) -> p.Result[m.Domain.OutputModel]:
     return r.ok(SomeModel(data))
 
 
 # ❌ WRONG: cast() hides type issues
 def process_model(
     data: t.MappingKV[str, m.Domain.InputModel],
-) -> p.Result[p.Domain.OutputModel]:
+) -> p.Result[m.Domain.OutputModel]:
     return r.ok(cast(SomeModel, data))
 
 
@@ -681,13 +681,13 @@ if TYPE_CHECKING:
 # ✅ CORRECT: Mapping for read-only
 def read_attributes(attrs: t.MappingKV[str, t.StrSequence]) -> None:
     for key, values in attrs.items():
-        print(f"{key}: {values}")
+        u.Cli.print(f"{key}: {values}")
 
 
 # ❌ WRONG: dict for read-only (invariant)
 def read_attributes(attrs: t.MappingKV[str, t.StrSequence]) -> None:
     for key, values in attrs.items():
-        print(f"{key}: {values}")
+        u.Cli.print(f"{key}: {values}")
 ```
 
 ### 4. TypeVar with Proper Bounds
@@ -721,12 +721,12 @@ t.Ldif.Entry.Transformation  # NO: 4 levels!
 
 ### ✅ Completed Projects
 
-| Project           | Tier 0 | Tier 1 | Tier 2 | Status                  |
-| ----------------- | ------ | ------ | ------ | ----------------------- |
-| **flext-core**    | ✅      | ✅      | ✅      | Reference template      |
-| **flext-cli**     | ✅      | ✅      | ✅      | Consolidated namespaces |
-| **flext-ldif**    | ✅      | ✅      | ✅      | Validated               |
-| **flext-ldap**    | ✅      | ✅      | ✅      | Variance fixed          |
+| Project        | Tier 0 | Tier 1 | Tier 2 | Status                  |
+| -------------- | ------ | ------ | ------ | ----------------------- |
+| **flext-core** | ✅     | ✅     | ✅     | Reference template      |
+| **flext-cli**  | ✅     | ✅     | ✅     | Consolidated namespaces |
+| **flext-ldif** | ✅     | ✅     | ✅     | Validated               |
+| **flext-ldap** | ✅     | ✅     | ✅     | Variance fixed          |
 
 ### Type System Metrics
 
@@ -740,7 +740,7 @@ t.Ldif.Entry.Transformation  # NO: 4 levels!
 
 ### Validation Results
 
-```
+```text
 flext-core:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-cli:       Pyright: 0 errors | Ruff: ✅ | Tests: ✅
 flext-ldif:      Pyright: 0 errors | Ruff: ✅ | Tests: ✅
@@ -761,7 +761,8 @@ The FLEXT type system provides a **unified, composable, and extensible** archite
 6. **Complete type safety** - No `cast()`, tipagem frouxa, ou blocos `TYPE_CHECKING`
 7. **Comprehensive validation** - All projects pass type checking and linting
 
-This architecture enables maintainable, type-safe code across the entire FLEXT ecosystem while supporting future extensions and domain-specific requirements.
+This architecture enables maintainable, type-safe code across the entire FLEXT ecosystem while supporting future
+extensions and domain-specific requirements.
 
 ---
 

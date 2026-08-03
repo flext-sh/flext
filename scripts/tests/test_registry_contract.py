@@ -7,6 +7,7 @@ They import only the public namespace (`scripts.dispatch.Dispatch`).
 from __future__ import annotations
 
 import os
+import sys
 
 import pytest
 
@@ -120,6 +121,26 @@ def test_unknown_what_raises(registry: Dispatch.Registry) -> None:
         _registry_command_or_raise(registry, "check", "no-such-what")
 
 
+def test_main_reports_registry_errors(capsys: pytest.CaptureFixture[str]) -> None:
+    """Expose dispatcher contract failures instead of returning an opaque exit 2."""
+    assert Dispatch.main(("does-not-exist",)) == 2
+    assert "verb 'does-not-exist' unknown" in capsys.readouterr().err
+
+
+def test_run_shell_mirrors_captured_output(capsys: pytest.CaptureFixture[str]) -> None:
+    """Mirror child stdout and stderr while preserving its exit code."""
+    code = Dispatch.run_shell((
+        sys.executable,
+        "-c",
+        "import sys; print('child-out'); print('child-err', file=sys.stderr)",
+    ))
+
+    captured = capsys.readouterr()
+    assert code == 0
+    assert "child-out" in captured.out
+    assert "child-err" in captured.err
+
+
 @pytest.mark.parametrize(
     ("alias", "canonical_verb"),
     [("gen", "build"), ("lint", "check"), ("rel", "ship"), ("validate", "val")],
@@ -224,7 +245,7 @@ def test_clean_without_apply_stays_dry_run(capsys: pytest.CaptureFixture[str]) -
 
         output = capsys.readouterr().out
         assert "DRY-RUN: nenhuma mutacao executada." in output
-        assert "make clean WHAT=all" in output
+        assert "make clean" in output
     finally:
         _restore_env(original)
 
@@ -253,6 +274,7 @@ def test_release_status_coordination_routes_reach_private_targets(
     verb: str,
     what: str,
     target: str,
+    *,
     requires_apply: bool,
     env_updates: tuple[tuple[str, str], ...],
 ) -> None:

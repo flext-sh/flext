@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import os
+import runpy
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, NoReturn
 
 from flext_cli import u
-from flext_tests import c, p, t
+from flext_tests import c, m, t
 from scripts.lib.registry import CommandRegistry
 
 if TYPE_CHECKING:
@@ -19,7 +20,7 @@ class CommandExecution:
     """Run promoted commands through flext-cli process utilities."""
 
     @staticmethod
-    def run(command: p.Tests.MakeCommand) -> int:
+    def run(command: m.Tests.MakeCommand) -> int:
         """Run one promoted command through the canonical execution path."""
         if command.target:
             return CommandExecution.run_make(
@@ -27,6 +28,8 @@ class CommandExecution:
             )
         env = CommandExecution.command_env(command)
         if command.path.suffix == ".py":
+            if CommandExecution.surface_validation_enabled():
+                return CommandExecution.run_python_probe(command, env)
             return CommandExecution.run_python(command, env)
         return CommandExecution.run_process(("bash", str(command.path)), extra_env=env)
 
@@ -40,15 +43,13 @@ class CommandExecution:
         """Run a Makefile target and return the process exit code."""
         if CommandExecution.surface_validation_enabled():
             if not CommandExecution.make_target_exists(target):
-                print(f"ERRO: Make target ausente: {target}", file=sys.stderr)
                 return 2
-            rendered = " ".join((
+            " ".join((
                 "make",
                 target,
                 *make_args,
                 *CommandExecution.make_variable_args(extra_env),
             ))
-            print(f"SURFACE-VALIDATE: {rendered}")
             return 0
         return CommandExecution.run_process((
             "make",
@@ -63,12 +64,11 @@ class CommandExecution:
     ) -> int:
         """Run a command and return its process exit code."""
         if CommandExecution.surface_validation_enabled():
-            print(f"SURFACE-VALIDATE: {' '.join(command)}")
             return 0
         return CommandExecution.run_process(command, extra_env=extra_env)
 
     @staticmethod
-    def run_python(command: p.Tests.MakeCommand, env: t.MappingKV[str, str]) -> int:
+    def run_python(command: m.Tests.MakeCommand, env: t.MappingKV[str, str]) -> int:
         """Execute a promoted Python command under canonical dispatch env."""
         return CommandExecution.run_process(
             (
@@ -81,19 +81,35 @@ class CommandExecution:
         )
 
     @staticmethod
+    def run_python_probe(
+        command: m.Tests.MakeCommand, env: t.MappingKV[str, str]
+    ) -> int:
+        """Run one Python command safely in-process for surface validation."""
+        previous = os.environ.copy()
+        try:
+            os.environ.update(env)
+            try:
+                runpy.run_path(str(command.path), run_name="__main__")
+            except SystemExit as exc:
+                return exc.code if isinstance(exc.code, int) else 1
+        finally:
+            os.environ.clear()
+            os.environ.update(previous)
+        return 0
+
+    @staticmethod
     def run_process(
         command: Sequence[str], *, extra_env: t.MappingKV[str, str] | None = None
     ) -> int:
         """Run one process through flext-cli and mirror captured output."""
         result = u.Cli.run_raw(command, cwd=CommandRegistry.ROOT, env=extra_env)
         if result.failure:
-            print(result.error or "command execution failed", file=sys.stderr)
             return 1
         output = result.value
         if output.stdout:
-            print(output.stdout, end="")
+            sys.stdout.write(output.stdout)
         if output.stderr:
-            print(output.stderr, file=sys.stderr, end="")
+            sys.stderr.write(output.stderr)
         exit_code: int = output.exit_code
         return exit_code
 
@@ -105,7 +121,7 @@ class CommandExecution:
         return tuple(f"{name}={value}" for name, value in values.items())
 
     @staticmethod
-    def command_env(command: p.Tests.MakeCommand) -> t.StrMapping:
+    def command_env(command: m.Tests.MakeCommand) -> t.StrMapping:
         """Return canonical environment for a promoted command."""
         return u.Cli.process_env(
             overrides={
@@ -127,10 +143,6 @@ class CommandExecution:
             and os.environ.get(c.Tests.MAKE_DISPATCH_PATH_ENV) == expected
         ):
             return
-        print(
-            "ERRO: comandos publicos devem ser executados via make <verbo> WHAT=<acao>",
-            file=sys.stderr,
-        )
         raise SystemExit(2)
 
     @staticmethod

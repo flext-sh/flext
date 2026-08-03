@@ -1,3 +1,5 @@
+"""FLEXT infra test helpers for protocols."""
+
 from __future__ import annotations
 
 from importlib.machinery import ModuleSpec

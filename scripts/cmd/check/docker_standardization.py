@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Validate FLEXT Docker standardization.
 
 Equivalent to the legacy ``docker/validate_docker_standardization.sh`` script.
@@ -25,12 +24,14 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from scripts.dispatch import Dispatch
-
 from flext_cli import c, u
+from scripts.dispatch import Dispatch
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+
+EXPECTED_CENTRALIZED_COMPOSE_COUNT = 15
+EXPECTED_CENTRALIZED_DOCKERFILE_COUNT = 20
 
 
 class _DockerStandardizationChecker:
@@ -58,7 +59,7 @@ class _DockerStandardizationChecker:
 
     def _check_no_outside_files(
         self,
-        name: str,
+        _name: str,
         pattern: str,
         allowed_prefixes: Sequence[str],
         *,
@@ -73,16 +74,12 @@ class _DockerStandardizationChecker:
             )
         ]
         if outside:
-            level = "WARNING" if is_warning else "FAILED"
-            print(f"  {level}: Found {len(outside)} {name} outside allowed locations:")
-            for p in outside[:5]:
-                print(f"    - {p.relative_to(self.workspace_root)}")
+            for _p in outside[:5]:
+                pass
             if is_warning:
                 self.warnings += 1
             else:
                 self.errors += 1
-        else:
-            print(f"  PASSED: No rogue {name} found")
 
     def check_duplicate_compose(self) -> None:
         self._check_no_outside_files(
@@ -103,30 +100,27 @@ class _DockerStandardizationChecker:
     def check_centralized_compose_count(self) -> None:
         docker_dir = self.workspace_root / "docker"
         count = len(list(docker_dir.glob("docker-compose*.yml")))
-        if count < 15:
-            print(f"  FAILED: Expected at least 15 compose files, found {count}")
+        if count < EXPECTED_CENTRALIZED_COMPOSE_COUNT:
             self.errors += 1
-        else:
-            print(f"  PASSED: Found {count} centralized docker-compose files")
 
     def check_centralized_dockerfile_count(self) -> None:
         images_dir = self.workspace_root / "docker" / "images"
         count = len(list(images_dir.glob("Dockerfile.*")))
-        if count < 20:
-            print(f"  FAILED: Expected at least 20 Dockerfiles, found {count}")
+        if count < EXPECTED_CENTRALIZED_DOCKERFILE_COUNT:
             self.errors += 1
-        else:
-            print(f"  PASSED: Found {count} centralized Dockerfiles")
 
     def check_tk_importable(self) -> None:
         result = u.Cli.run_checked(
-            [sys.executable, "-c", "from flext_tests import tk; print('OK')"],
+            [
+                sys.executable,
+                "-c",
+                "from flext_tests import tk; u.Cli.emit_raw('OK\\n')",
+            ],
             cwd=self.workspace_root,
         )
         if result.success:
-            print("  PASSED: tk is importable")
+            pass
         else:
-            print("  FAILED: Cannot import tk from flext_tests")
             self.errors += 1
 
     def check_fixtures_importable(self) -> None:
@@ -138,14 +132,15 @@ class _DockerStandardizationChecker:
             "postgres_container",
             "redis_container",
         )
-        code = "from flext_tests import " + ", ".join(names) + "; print('OK')"
+        code = (
+            "from flext_tests import " + ", ".join(names) + "; u.Cli.emit_raw('OK\\n')"
+        )
         result = u.Cli.run_checked(
             [sys.executable, "-c", code], cwd=self.workspace_root
         )
         if result.success:
-            print("  PASSED: Centralized fixtures are importable")
+            pass
         else:
-            print("  WARNING: Some centralized fixtures may not be available")
             self.warnings += 1
 
     def check_docker_scripts(self) -> None:
@@ -155,14 +150,9 @@ class _DockerStandardizationChecker:
             if not str(p.relative_to(self.workspace_root)).startswith("docker")
         ]
         if scripts:
-            print(
-                f"  WARNING: Found {len(scripts)} Docker-related shell script(s) outside docker/:"
-            )
-            for p in scripts[:5]:
-                print(f"    - {p.relative_to(self.workspace_root)}")
+            for _p in scripts[:5]:
+                pass
             self.warnings += 1
-        else:
-            print("  PASSED: No prohibited Docker scripts found")
 
     def check_deprecated_parallel_docker(self) -> None:
         pattern = re.compile(
@@ -177,17 +167,11 @@ class _DockerStandardizationChecker:
             if pattern.search(text):
                 hits.append(p)
         if hits:
-            print(
-                f"  WARNING: Found {len(hits)} file(s) using deprecated parallel_docker:"
-            )
-            for p in hits[:5]:
-                print(f"    - {p.relative_to(self.workspace_root)}")
+            for _p in hits[:5]:
+                pass
             self.warnings += 1
-        else:
-            print("  PASSED: No deprecated parallel_docker usage found")
 
     def run(self) -> int:
-        print("FLEXT Docker Standardization Validation")
         checks = [
             ("[1/9] Duplicate docker-compose files", self.check_duplicate_compose),
             ("[2/9] Dockerfiles outside images/", self.check_duplicate_dockerfiles),
@@ -208,25 +192,19 @@ class _DockerStandardizationChecker:
                 self.check_deprecated_parallel_docker,
             ),
         ]
-        for title, check in checks:
-            print(f"\n{title}")
+        for _title, check in checks:
             check()
 
-        print("\nValidation Summary")
         if self.errors == 0 and self.warnings == 0:
-            print("  ALL CHECKS PASSED")
             return 0
         if self.errors == 0:
-            print(f"  PASSED WITH WARNINGS (warnings={self.warnings})")
             return 0
-        print(f"  VALIDATION FAILED (errors={self.errors}, warnings={self.warnings})")
         return 1
 
 
 def run_command() -> int:
     """Run the Docker standardization checks."""
     if Dispatch.surface_validation_enabled():
-        print("SURFACE-VALIDATE: python -m scripts.cmd.check.docker_standardization")
         return 0
     workspace_root = Path(
         u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd()))

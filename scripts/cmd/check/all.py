@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Run the default check pipeline through promoted Make targets."""
 # /// flext-command
 # verb = "check"
@@ -6,7 +5,7 @@
 # domain = "quality"
 # summary = "Run quick default checks"
 # description = "Runs lint and pyrefly gates using the lightweight default profile."
-# example = "make check WHAT=all"
+# example = "make check"
 # mutates = false
 # aliases = ["lint"]
 # params = [

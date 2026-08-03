@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "test"
@@ -6,7 +5,7 @@
 # domain = "quality"
 # summary = "Run tests in selected projects"
 # description = "Runs the canonical _test_default target via orchestrator."
-# example = "make test WHAT=all PROJECT=flext-infra MATCH=test_foo"
+# example = "make test PROJECT=flext-infra MATCH=test_foo"
 # target = "_test_default"
 # mutates = false
 # aliases = []

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "boot"
@@ -6,7 +5,7 @@
 # domain = "workspace"
 # summary = "Bootstrap workspace .venv + submodules"
 # description = "Installs all projects into workspace .venv and initializes submodules."
-# example = "make boot WHAT=all"
+# example = "make setup"
 # target = "_boot_default"
 # mutates = true
 # aliases = []

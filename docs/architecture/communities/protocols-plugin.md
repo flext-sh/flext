@@ -11,11 +11,11 @@ Community of 1715 nodes
 ## Members
 
 | Name | Kind | File | Lines |
-|------|------|------|-------|
+| ------ | ------ | ------ | ------- |
 | EntityFactory | Class | flext-tests/src/flext_tests/_protocols/valuefactory.py | 17-32 |
-| __call__ | Function | flext-tests/src/flext_tests/_protocols/valuefactory.py | 25-32 |
+| **call** | Function | flext-tests/src/flext_tests/_protocols/valuefactory.py | 25-32 |
 | ValueFactory | Class | flext-tests/src/flext_tests/_protocols/valuefactory.py | 35-45 |
-| __call__ | Function | flext-tests/src/flext_tests/_protocols/valuefactory.py | 43-45 |
+| **call** | Function | flext-tests/src/flext_tests/_protocols/valuefactory.py | 43-45 |
 | EnforcementBuildContext | Class | flext-tests/src/flext_tests/_protocols/enforcement.py | 21-41 |
 | infra_report | Function | flext-tests/src/flext_tests/_protocols/enforcement.py | 29-31 |
 | validator_targets | Function | flext-tests/src/flext_tests/_protocols/enforcement.py | 34-36 |
@@ -42,8 +42,8 @@ Community of 1715 nodes
 | workspace_index | Function | flext-infra/src/flext_infra/_protocols/rope.py | 59-59 |
 | refresh | Function | flext-infra/src/flext_infra/_protocols/rope.py | 61-66 |
 | reload | Function | flext-infra/src/flext_infra/_protocols/rope.py | 68-68 |
-| __enter__ | Function | flext-infra/src/flext_infra/_protocols/rope.py | 70-70 |
-| __exit__ | Function | flext-infra/src/flext_infra/_protocols/rope.py | 72-77 |
+| **enter** | Function | flext-infra/src/flext_infra/_protocols/rope.py | 70-70 |
+| **exit** | Function | flext-infra/src/flext_infra/_protocols/rope.py | 72-77 |
 | close | Function | flext-infra/src/flext_infra/_protocols/rope.py | 79-79 |
 | resource | Function | flext-infra/src/flext_infra/_protocols/rope.py | 81-84 |
 | module | Function | flext-infra/src/flext_infra/_protocols/rope.py | 86-89 |
@@ -60,7 +60,7 @@ Community of 1715 nodes
 | semantic | Function | flext-infra/src/flext_infra/_protocols/rope.py | 143-146 |
 | exports | Function | flext-infra/src/flext_infra/_protocols/rope.py | 148-153 |
 | RopePostHook | Class | flext-infra/src/flext_infra/_protocols/rope.py | 156-166 |
-| __call__ | Function | flext-infra/src/flext_infra/_protocols/rope.py | 159-166 |
+| **call** | Function | flext-infra/src/flext_infra/_protocols/rope.py | 159-166 |
 | PatchingASTWalker | Class | flext-infra/src/flext_infra/_protocols/rope.py | 169-205 |
 
 *... and 1665 more members.*

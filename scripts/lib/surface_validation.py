@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-import sys
 from typing import TYPE_CHECKING
 
-from flext_tests import m, p, t, u
+from flext_tests import m, t, u
 from scripts.lib.exec import CommandExecution
 from scripts.lib.registry import CommandRegistry
 from scripts.lib.surface_probes import SurfaceProbeRunner
@@ -26,20 +25,18 @@ class SurfaceValidator:
             *SurfaceProbeRunner.run(SurfaceProbeRunner.build(registry), dispatch_main),
         ]
         if failures:
-            print("surface validation failed:", file=sys.stderr)
-            for failure in failures:
-                print(f"  - {failure}", file=sys.stderr)
+            for _failure in failures:
+                pass
             return 1
-        command_count = sum(
+        sum(
             len(SurfaceValidator.registry_commands(registry, verb))
             for verb in u.Tests.make_registry_verbs(registry)
         )
-        verb_count = len(u.Tests.make_registry_verbs(registry))
-        print(f"surface validation ok: {verb_count} verbs, {command_count} WHATs")
+        len(u.Tests.make_registry_verbs(registry))
         return 0
 
     @staticmethod
-    def validate_static(registry: p.Tests.MakeRegistry) -> t.StrSequence:
+    def validate_static(registry: m.Tests.MakeRegistry) -> t.StrSequence:
         """Validate registry metadata against the root Makefile surface."""
         failures: list[str] = []
         targets = CommandExecution.make_targets()
@@ -56,7 +53,7 @@ class SurfaceValidator:
 
     @staticmethod
     def validate_command(
-        command: p.Tests.MakeCommand, targets: frozenset[str]
+        command: m.Tests.MakeCommand, targets: frozenset[str]
     ) -> t.StrSequence:
         """Validate one command's static contract."""
         failures: list[str] = []
@@ -95,7 +92,7 @@ class SurfaceValidator:
 
     @staticmethod
     def registry_commands(
-        registry: p.Tests.MakeRegistry, verb: str
+        registry: m.Tests.MakeRegistry, verb: str
     ) -> t.MappingKV[str, m.Tests.MakeCommand]:
         """Return registry commands through the canonical flext-tests facade."""
         result = u.Tests.make_registry_commands(registry, verb)

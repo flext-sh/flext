@@ -1,9 +1,14 @@
 # FLEXT session router
 
-Read `.agents/skills/flext-context-routing/SKILL.md` first. It is the sole
-always-loaded FLEXT skill and selects the applicable entries from
-`surfaces.on_demand` in `.agents/provider.toml`.
+Compose these exact authorities in order:
 
-Load `.agents/skills/flext-law/SKILL.md` for FLEXT-law work and
-`.agents/skills/flext-inviolable-rules/SKILL.md` for governance. Do not eagerly
-load undeclared local surfaces.
+1. `~/.agents/skills/inviolable-rules/SKILL.md`
+2. `~/.agents/skills/make-check/SKILL.md`
+3. `.agents/skills/flext-context-routing/SKILL.md`
+4. `.agents/skills/flext-law/SKILL.md`
+5. `~/.agents/skills/verification-loop/SKILL.md` at each completion boundary
+
+The three global skills own generic execution governance. FLEXT owns the local
+`flext-law` domain delta. AI Hub may distribute these surfaces but may not
+redefine either owner. Fail closed when an exact path is missing; never resolve
+an identically named skill from another catalog or branch.

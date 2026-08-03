@@ -25,6 +25,8 @@ type DataValue = t.JsonValue
 type ItemDict = t.JsonMapping
 type StageOperation = Callable[[t.JsonMapping], r[PipelineStageData]]
 
+MAX_VALUE_LENGTH = 100
+
 
 def _new_data_value_map() -> t.JsonMapping:
     return {}
@@ -60,14 +62,14 @@ def _string_sequence(value: t.JsonValue) -> t.StrSequence:
 class PipelineStageData(m.BaseModel):
     """Data container for pipeline stage processing."""
 
-    model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+    model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
         arbitrary_types_allowed=True, extra="allow"
     )
 
     class PipelinePayload(m.BaseModel):
         """Pipeline payload container."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True, extra="allow"
         )
 
@@ -90,7 +92,7 @@ class AdvancedProcessingExample:
     class ProcessingResult(m.BaseModel):
         """Result of processing operation with metrics."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -109,7 +111,7 @@ class AdvancedProcessingExample:
     class ValidationResult(m.BaseModel):
         """Result of validation operation."""
 
-        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -311,7 +313,7 @@ class AdvancedProcessingExample:
             if not name or not isinstance(name, str):
                 violations.append("Missing or invalid name field")
             value = item.get("value", "")
-            if isinstance(value, str) and len(value) > 100:
+            if isinstance(value, str) and len(value) > MAX_VALUE_LENGTH:
                 warnings.append("Value field is very long")
             return r[AdvancedProcessingExample.ValidationResult].ok(
                 AdvancedProcessingExample.ValidationResult(

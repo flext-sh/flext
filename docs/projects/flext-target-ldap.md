@@ -1,6 +1,8 @@
 # FLEXT Target LDAP
 
-FLEXT Target LDAP is the Singer target that loads records into LDAP directories. It consumes Singer JSONL messages on stdin, resolves distinguished names, and writes entries through `flext-ldap`, composing the FLEXT facades with `flext-meltano` (Singer target base) behind `r[T]` contracts.
+FLEXT Target LDAP is the Singer target that loads records into LDAP directories. It consumes Singer JSONL messages on
+stdin, resolves distinguished names, and writes entries through `flext-ldap`, composing the FLEXT facades with `flext-
+meltano` (Singer target base) behind `r[T]` contracts.
 
 ## Status & health
 
@@ -12,8 +14,10 @@ FLEXT Target LDAP is the Singer target that loads records into LDAP directories.
 
 ### Quality signals
 
-- Quality gates run through the workspace Make contract: `make check PROJECT=flext-target-ldap`, `make test PROJECT=flext-target-ldap`, and `make val`.
-- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output rather than static claims in this page.
+- Quality gates run through the workspace Make contract: `make check PROJECT=flext-target-ldap`, `make test
+  PROJECT=flext-target-ldap`, and `make val`.
+- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
+  rather than static claims in this page.
 
 ## Quick start
 
@@ -23,7 +27,8 @@ poetry install
 make check PROJECT=flext-target-ldap
 ```
 
-The target consumes Singer JSONL on stdin and echoes STATE lines to stdout. Run it from a Singer pipeline (for example via Meltano) or programmatically:
+The target consumes Singer JSONL on stdin and echoes STATE lines to stdout. Run it from a Singer pipeline (for example
+via Meltano) or programmatically:
 
 ```python
 from flext_target_ldap import FlextTargetLdap, target_ldap
@@ -35,7 +40,7 @@ from flext_target_ldap import FlextTargetLdap, target_ldap
 
 ## Architecture & modules
 
-```
+```text
 src/flext_target_ldap/
 ├── api.py                # FlextTargetLdap target (target_ldap alias) + run_cli
 ├── target.py             # Target wiring
@@ -54,14 +59,20 @@ src/flext_target_ldap/
 
 ### Key architectural patterns
 
-- **Singer target contract**: `FlextTargetLdap` binds `config_class = FlextTargetLdapSettings`, resolves sinks per stream via `get_sink_class`, and processes SCHEMA/RECORD/STATE messages through `run_cli` (bound as the `cli` class attribute).
-- **Orchestration**: `FlextTargetLdapOrchestrator` in `application/orchestrator.py` coordinates the load flow; `FlextTargetLdapSink` in `_models/sinks.py` models sink state.
-- **DN construction**: record messages are normalized into LDAP distinguished names before being handed to the `flext-ldap` client.
-- **Facade exports**: the package root lazily exports the canonical aliases `c`, `m`, `p`, `t`, `u`, and `settings`, plus `d/e/h/r/s/x` re-exported from `flext_ldap`.
+- **Singer target contract**: `FlextTargetLdap` binds `config_class = FlextTargetLdapSettings`, resolves sinks per
+  stream via `get_sink_class`, and processes SCHEMA/RECORD/STATE messages through `run_cli` (bound as the `cli` class
+  attribute).
+- **Orchestration**: `FlextTargetLdapOrchestrator` in `application/orchestrator.py` coordinates the load flow;
+  `FlextTargetLdapSink` in `_models/sinks.py` models sink state.
+- **DN construction**: record messages are normalized into LDAP distinguished names before being handed to the `flext-
+  ldap` client.
+- **Facade exports**: the package root lazily exports the canonical aliases `c`, `m`, `p`, `t`, `u`, and `settings`,
+  plus `d/e/h/r/s/x` re-exported from `flext_ldap`.
 
 ## Testing & quality
 
-- Tests live under the project `tests/` tree and run via `make test PROJECT=flext-target-ldap`; Singer behavior is exercised through the stdin JSONL contract.
+- Tests live under the project `tests/` tree and run via `make test PROJECT=flext-target-ldap`; Singer behavior is
+  exercised through the stdin JSONL contract.
 - Pre-merge verification: `make check PROJECT=flext-target-ldap` (lint + typing + security selectors) and `make val`.
 
 ## Resources

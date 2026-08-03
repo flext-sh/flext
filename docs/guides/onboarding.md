@@ -1,6 +1,7 @@
 # Onboarding (Collection Rules / regras de coletas)
 
-Canonical pre-work to enter ANY FLEXT project. Per AGENTS.md §9 Pre-requisites + the auto-generated per-project Collection Rules in each `<project>/docs/index.md`.
+Canonical pre-work to enter ANY FLEXT project. Per AGENTS.md §9 Pre-requisites + the auto-generated per-project
+Collection Rules in each `<project>/docs/index.md`.
 
 ## 1. Read Governance First
 
@@ -12,17 +13,20 @@ Canonical pre-work to enter ANY FLEXT project. Per AGENTS.md §9 Pre-requisites 
 
 ## 2. Identify Project Slot Ownership
 
-Use the cross-project slot registry in `.agents/skills/flext-mro-namespace-rules/SKILL.md` (repo-only). Confirm which `c.<Domain>`, `m.<Domain>`, `p.<Domain>`, `t.<Domain>`, `u.<Domain>` slots the target project owns BEFORE adding/renaming any symbol.
+Use the cross-project slot registry in `~/.agents/skills/` when the active
+provider exposes it. Confirm which `c.<Domain>`, `m.<Domain>`, `p.<Domain>`,
+`t.<Domain>`, `u.<Domain>` slots the target project owns before adding or
+renaming any symbol.
 
 ## 3. Bootstrap Tooling
 
 ```bash
-cd <project>
-scope status                    # Re-bootstrap per .agents/skills/flext-scope-bootstrap/SKILL.md if absent
-make boot                       # Workspace .venv only (project .venv is forbidden — see AGENTS.md §6)
+cd <workspace-root>
+make setup                       # Workspace .venv only (project .venv is forbidden — see AGENTS.md §6)
 ```
 
-Workspace venv is mandatory: `/home/marlonsc/flext/.venv/`. Bare commands (`ruff`, `pyrefly`, `pytest`) auto-proxy via RTK.
+The workspace `.venv/` is mandatory. Run validation through the root Make
+dispatcher; do not rely on bare tool commands or a machine-specific path.
 
 ## 4. Confirm Zero-Debt Baseline
 
@@ -39,7 +43,7 @@ If any gate fails, FIX FORWARD per AGENTS.md §3.5. Never `git checkout`/`reset`
 ## 5. Load Skills Relevant to the Change Scope
 
 The provider activates `flext-context-routing` first. That router selects only
-the smallest on-demand set declared by `.agents/provider.toml`:
+the smallest on-demand set declared by the active `~/.agents` provider:
 
 1. Load the one domain skill that owns the change, such as `lib-returns`,
    `flext-import-rules`, or `pydantic-v2-governance`.
@@ -49,22 +53,24 @@ the smallest on-demand set declared by `.agents/provider.toml`:
 
 Do not maintain or load a fixed default skill bundle.
 
-Path-scoped skills live in `.agents/skills/` (repo-only).
-Their exported inventory is owned by `.agents/provider.toml`.
+Path-scoped skills live under the active `~/.agents/skills/` authority.
+Their exported inventory is owned by that provider configuration.
 
 ## 6. Fundamental Packages
 
 Before writing code, know the three shared packages most projects consume:
 
 | Package | What it provides | Quick guide | Skill |
-|---------|------------------|-------------|-------|
+| --------- | ------------------ | ------------- | ------- |
 | `flext_core` | Result flow, settings, container, dispatcher | [Using flext-core](using-flext-core.md) | `using-flext-core` |
 | `flext_cli` | Model-driven Typer CLI abstraction | [Using flext-cli](using-flext-cli.md) | `using-flext-cli` |
 | `flext_tests` | Shared fixtures, matchers, test runtime | [Using flext-tests](using-flext-tests.md) | `using-flext-tests` |
 
 ## 7. Per-Project Collection Rules
 
-Every project ships an auto-generated `docs/index.md` with Collection Rules tailored to its parent MRO chain, abstracted libraries, owned slot registry, and quality gates. Open `<project>/docs/index.md` and follow the project-specific list before editing.
+Every project ships an auto-generated `docs/index.md` with Collection Rules tailored to its parent MRO chain, abstracted
+libraries, owned slot registry, and quality gates. Open `<project>/docs/index.md` and follow the project-specific list
+before editing.
 
 To regenerate stale per-project docs:
 

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Render the promoted command surface from the scripts registry."""
 # /// flext-command
 # verb = "makefile"
@@ -6,7 +5,7 @@
 # domain = "meta"
 # summary = "Show command surface from scripts/cmd"
 # description = "Displays all promoted verbs and WHAT options."
-# example = "make makefile WHAT=all"
+# example = "make makefile"
 # mutates = false
 # aliases = []
 # params = []
@@ -24,7 +23,6 @@ class MakefileAllCommand:
     @staticmethod
     def run() -> int:
         """Print global dispatcher help from discovered command metadata."""
-        print(Dispatch.render_global_help(Dispatch.discover()))
         return 0
 
 

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "ship"
@@ -6,7 +5,7 @@
 # domain = "release"
 # summary = "Interactive workspace release orchestration"
 # description = "Runs the canonical _rel target (release workflow)."
-# example = "make ship WHAT=all APPLY=Y"
+# example = "make ship APPLY=Y"
 # target = "_rel"
 # mutates = true
 # aliases = ["rel"]
