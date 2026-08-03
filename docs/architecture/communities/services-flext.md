@@ -104,7 +104,7 @@ Community of 545 nodes
 - `create_web_config` (16 edge(s))
 - `Dict` (14 edge(s))
 - `FlextWebSettings` (14 edge(s))
-- `flext-core/src/flext_core/_models/_base_parts/flextmodelsbase_part_01.py` (13 edge(s))
+- `flext-core/src/flext_core/_models/_base/flextmodelsbase_part_01.py` (13 edge(s))
 - `flext-observability/examples/02_solid_observability_demo.py` (12 edge(s))
 - `flext-observability/src/flext_observability/api.py` (12 edge(s))
 - `flext-observability/examples/01_functional.py` (10 edge(s))
