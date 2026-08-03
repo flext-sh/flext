@@ -51,11 +51,11 @@ full-check: ## Run canonical full check path with explicit timeout
 	$(Q)timeout_s=$${FULL_CHECK_TIMEOUT:-1200}; \
 	if ! command -v timeout >/dev/null 2>&1; then \
 		echo "WARN: timeout utility unavailable; running without timeout"; \
-		$(MAKE) --no-print-directory check WHAT=all $(MAKE_SELECTION_ARGS); \
+		$(MAKE) --no-print-directory check $(MAKE_SELECTION_ARGS); \
 		code=$$?; \
 		exit $$code; \
 	else \
-		timeout "$$timeout_s"s $(MAKE) --no-print-directory check WHAT=all $(MAKE_SELECTION_ARGS); \
+		timeout "$$timeout_s"s $(MAKE) --no-print-directory check $(MAKE_SELECTION_ARGS); \
 		code=$$?; \
 		if [ "$$code" -eq 124 ]; then \
 			echo "ERRO: full-check atingiu o timeout de $$timeout_s s"; \
