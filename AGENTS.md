@@ -445,6 +445,41 @@ Python strictly `>=3.13,<3.14`.
 override with `make check WHAT=mypy MYPY_MEMORY_LIMIT_MB=8192`. Docs CI needs
 `uv sync --all-packages --all-groups --all-extras` for dev tools.
 
+### Bootstrap contract (blocking)
+
+A fresh `git clone` followed by `make setup` MUST exit 0 with no manual `git
+submodule` step and leave the tree byte-clean. `make setup` provisions an
+absent governed gitlink and attaches a detached HEAD to its declared branch,
+but never writes to a present, on-branch checkout.
+
+**Evidence rule — a completion claim is void without it.** Any change touching
+`Makefile`, the `flext-infra` `.j2` templates, `.gitmodules`, `custom.mk`,
+`pyproject.toml`, `uv.lock`, or `.beads/` is proven ONLY by:
+
+```bash
+git clone <origin-url> /tmp/verify && cd /tmp/verify/flext
+make setup            # exit 0
+git status --short    # empty
+```
+
+Run it against a clone of **origin**, never your own working copy. Evidence
+from an unpushed tree is not evidence: the artifact the operator receives is
+what `origin` serves, so validating local edits and reporting "done" is a
+false completion (rule 1 truth-with-evidence, rule 22 finish-to-Done).
+Commit and push BEFORE claiming the work lands.
+
+**Warnings are failures.** A verb that exits 0 while printing `WARNING`,
+`warning:`, or a remediation hint is not green. Fix the warning at its owner
+or record it in the Bead with the exact command and output — never let it
+scroll by. A dirty tree after a provisioning verb is likewise a defect, not
+an acceptable leftover to hand to the next session.
+
+**Generated surfaces have owners.** `Makefile`, `pyproject.toml` `[MANAGED]`
+sections, `.beads/config.yaml`, `ci/`, and `.github/workflows/` carry
+`@flext-managed` / `@flext-ssot` headers. Change the SSOT and regenerate
+through `make gen`; never hand-write a projection, and never let a foreign
+tool (e.g. `bd init`) rewrite one.
+
 ## Architecture Overview
 
 **Facade layering (strict order `c -> t -> p -> m -> u`)** composed via MRO from `flext-core`:
