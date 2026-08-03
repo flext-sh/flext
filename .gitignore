@@ -42,6 +42,7 @@ scripts/maintenance/
 !.beads/
 .beads/*
 !.beads/config.yaml
+!.beads/metadata.json
 
 # Python configuration
 !pyproject.toml
@@ -307,6 +308,9 @@ secrets.yml
 .worktrees/
 legado/
 
+# Beads ledger identity (workspace-root only; see mro-9wv8)
+!.beads/metadata.json
+
 # codegen module-standardizer reject artifacts (ADR-005 §9)
 *.tpl.rej
 
@@ -372,14 +376,16 @@ CLAUDE.local.md
 !.github/scripts/check-cqrs-compliance.sh
 !.github/scripts/flext-law-loop.sh
 !.github/scripts/install-git-hooks.sh
-!ci/
-!ci/docker/
-!ci/docker/alpine.Dockerfile
-!ci/docker/arch.Dockerfile
-!ci/docker/debian.Dockerfile
-!ci/docker/fedora.Dockerfile
-!ci/docker/ubuntu.Dockerfile
+!tests/fixtures/
+!tests/fixtures/ci/
+!tests/fixtures/ci/docker/
+!tests/fixtures/ci/docker/alpine.Dockerfile
+!tests/fixtures/ci/docker/arch.Dockerfile
+!tests/fixtures/ci/docker/debian.Dockerfile
+!tests/fixtures/ci/docker/fedora.Dockerfile
+!tests/fixtures/ci/docker/ubuntu.Dockerfile
 !.github/workflows/
+!.github/workflows/ci-matrix.yml
 !.github/workflows/ci.yml
 !.github/workflows/docs.yml
 !.github/workflows/release.yml

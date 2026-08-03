@@ -16,7 +16,7 @@ workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locai
 
 | Verbo | Domínio | Resumo | Exemplo |
 | --- | --- | --- | --- |
-| `make boot` | workspace | Bootstrap de `.venv` + submódulos | `make boot APPLY=Y` |
+| `make setup` | workspace | Bootstrap de `.venv` + submódulos | `make setup APPLY=Y` |
 | `make build` | build | Build/regen padronizado | `make build WHAT=gen APPLY=Y` |
 | `make check` | quality | Quality gates | `make check` |
 | `make clean` | workspace | Limpeza de artefatos | `make clean APPLY=Y` |
@@ -110,7 +110,7 @@ make clean APPLY=Y           # executa
 
 ```bash
 # Bootstrap inicial
-make boot APPLY=Y
+make setup APPLY=Y
 
 # Checagem rápida padrão (ruff + pyrefly)
 make check

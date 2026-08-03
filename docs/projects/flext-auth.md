@@ -22,7 +22,7 @@ Auth — Enterprise Authentication & Authorization Service".
 ## Quick start
 
 ```bash
-make boot
+make setup
 make check PROJECT=flext-auth
 ```
 
