@@ -229,7 +229,6 @@ disable_error_code = ["unreachable"]
 module = ["dcdoc._utilities._charts._matplotlib_renderer._renders_spec"]
 
 # [MANAGED] pydantic-mypy
-
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
@@ -413,7 +412,7 @@ exclude = [
   ".venv",
   "vendor",
 ]
-extraPaths = [".", "src"]
+extraPaths = ["src", "."]
 include = [
   "examples",
   "flext-api/examples",
@@ -2043,7 +2042,6 @@ reportUnusedImport = "none"
 root = "flext-web/tests"
 
 # [MANAGED] pytest
-
 [tool.pytest.ini_options]
 addopts = [
   "--benchmark-disable",
@@ -2262,6 +2260,48 @@ sort_first = ["build-system", "dependency-groups", "project", "tool"]
 [tool.uv]
 link-mode = "copy"
 
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-infra"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-tests"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-core"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-infra"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-core"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-tests"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-core"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-cli"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-cli"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-infra"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-cli"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-core"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-tests"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-infra"
+
 [tool.uv.sources.flext-api]
 workspace = true
 
@@ -2412,7 +2452,7 @@ dev = [
   "bandit>=1.8",
   "black>=25.1",
   "blacken-docs>=1.19",
-  "code-review-graph[all,embeddings]==2.3.6",
+  "code-review-graph[all,embeddings]==2.3.7",
   "codespell>=2.3",
   "deptry>=0.23",
   "django-stubs>=6.0.6",

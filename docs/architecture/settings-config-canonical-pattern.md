@@ -153,4 +153,4 @@ the generated `**init**.py`; run `make build WHAT=artifacts` after adding the mo
 3. Create `config/` dir with `*.yaml` if the project ships declarative params.
 4. Delete every forbidden symbol (§6); rewrite `self.settings.*` → `settings.*`.
 5. `make build WHAT=artifacts` to publish `config`/`settings` at the package root.
-6. `make check WHAT=all` and `make test WHAT=all` green; commit.
+6. `make check` and `make test` green; commit.

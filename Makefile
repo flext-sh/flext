@@ -79,20 +79,28 @@ WHAT ?=
 # End SECTION: user overrides
 
 # === SECTION: derived paths (managed) ===
-# Source: computed (git rev-parse, pwd, abspath)
-PROJECT_ROOT := $(shell pwd -P)
-override export FLEXT_PYTEST_TARGET_RAW := tests
+# Source: computed (git rev-parse, MAKEFILE_LIST, abspath)
+# Rule: PROJECT_ROOT is the checkout that OWNS this Makefile, never the caller's
+# CWD. Deriving it from `pwd -P` made a member validate whatever tree the
+# caller happened to stand in: `make -f <member>/Makefile` invoked from the
+# superproject resolved RUFF_PATHS to the SUPERPROJECT's src/tests, so the
+# member linted files it does not even contain. With many shared worktrees that
+# silently validates the wrong tree.
 SELF_MAKEFILE := $(abspath $(firstword $(MAKEFILE_LIST)))
 MAKEFILE_ROOT := $(patsubst %/,%,$(dir $(SELF_MAKEFILE)))
+PROJECT_ROOT := $(MAKEFILE_ROOT)
+override export FLEXT_PYTEST_TARGET_RAW := tests
 WORKSPACE ?= $(PROJECT_ROOT)
 # === SECTION: WORKSPACE_ROOT isolation (managed) ===
 # Source: computed (rule: derive from current checkout unless caller overrides)
 # Rule: WORKSPACE_ROOT is always derived from the current checkout unless the
 # caller passed it on the command line or via an override origin. An inherited
 # environment WORKSPACE_ROOT (e.g. a leaked .envrc export from a foreign checkout)
-# must never redirect verbs to another working tree.
+# must never redirect verbs to another working tree. The git queries therefore
+# run inside MAKEFILE_ROOT: run from a foreign CWD they would report THAT
+# checkout's topology and redirect the verb to the wrong tree.
 ifeq ($(filter command line override,$(origin WORKSPACE_ROOT)),)
-WORKSPACE_ROOT := $(shell root=$$(git rev-parse --show-superproject-working-tree 2>/dev/null); if [ -n "$$root" ]; then printf '%s\n' "$$root"; else git rev-parse --show-toplevel 2>/dev/null || pwd -P; fi)
+WORKSPACE_ROOT := $(shell cd "$(MAKEFILE_ROOT)" && root=$$(git rev-parse --show-superproject-working-tree 2>/dev/null); if [ -n "$$root" ]; then printf '%s\n' "$$root"; else git rev-parse --show-toplevel 2>/dev/null || printf '%s\n' "$(MAKEFILE_ROOT)"; fi)
 endif
 # End SECTION: WORKSPACE_ROOT isolation
 
@@ -102,27 +110,28 @@ endif
 PUBLIC_VERBS := help setup deps build check test fmt fix run status docs clean release gen worktree
 BUILTIN_VERBS := help setup deps build check test fmt fix run status docs clean release gen worktree
 SCRIPT_VERBS :=
-_ALLOWED_WHATS_help := usage
-_ALLOWED_WHATS_setup := environment
-_ALLOWED_WHATS_deps := check lock upgrade
-_ALLOWED_WHATS_build := artifacts
-_ALLOWED_WHATS_check := all
-_ALLOWED_WHATS_test := all
-_ALLOWED_WHATS_fmt := check all
-_ALLOWED_WHATS_fix := check all
-_ALLOWED_WHATS_run := default
-_ALLOWED_WHATS_status := diagnostics
-_ALLOWED_WHATS_docs := all generate fix audit build validate
-_ALLOWED_WHATS_clean := generated
-_ALLOWED_WHATS_release := status
-_ALLOWED_WHATS_gen := check all
-_ALLOWED_WHATS_worktree := list add update remove
+
+_ALLOWED_WHATS_help := usage $(shell sed -n 's/^_custom_help_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_setup := environment $(shell sed -n 's/^_custom_setup_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_deps := check lock upgrade $(shell sed -n 's/^_custom_deps_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_build := artifacts $(shell sed -n 's/^_custom_build_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_check := all $(shell sed -n 's/^_custom_check_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_test := all $(shell sed -n 's/^_custom_test_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_fmt := check all $(shell sed -n 's/^_custom_fmt_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_fix := check all $(shell sed -n 's/^_custom_fix_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_run := default $(shell sed -n 's/^_custom_run_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_status := diagnostics $(shell sed -n 's/^_custom_status_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_docs := all generate fix audit build validate $(shell sed -n 's/^_custom_docs_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_clean := generated $(shell sed -n 's/^_custom_clean_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_release := status $(shell sed -n 's/^_custom_release_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_gen := check all $(shell sed -n 's/^_custom_gen_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_worktree := list add update remove $(shell sed -n 's/^_custom_worktree_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
 
 CHECK_GATES_ALLOWED := lint format pyrefly mypy pyright security markdown smells
 CHECK_GATES_DEFAULT := lint pyrefly mypy pyright security markdown smells
 DOCS_ACTIONS := generate fix audit build validate
-SERIALIZED_VERBS := check test gen fmt fix
-SERIALIZED_TARGETS := _serialized_check _serialized_test _serialized_gen _serialized_fmt _serialized_fix
+SERIALIZED_VERBS := check test gen fmt fix deps clean worktree
+SERIALIZED_TARGETS := _serialized_check _serialized_test _serialized_gen _serialized_fmt _serialized_fix _serialized_deps _serialized_clean _serialized_worktree
 # End SECTION: verb dispatch
 
 # === SECTION: lint/type paths (managed) ===
@@ -167,9 +176,13 @@ _DEFAULT_release := status
 _DEFAULT_gen := check
 _DEFAULT_worktree := list
 
+_APPLY_WHAT_deps := upgrade
 _APPLY_WHAT_fmt := all
 _APPLY_WHAT_fix := all
+_APPLY_WHAT_run := default
+_APPLY_WHAT_clean := generated
 _APPLY_WHAT_gen := all
+_APPLY_WHAT_worktree := update
 
 
 # === SECTION: profile routing (managed) ===
@@ -245,12 +258,28 @@ endif
 # `flext-infra workspace orchestrate` primitive (verb allowlist + CLI group come
 # from the constants SSOT, never hardcoded here). Members and standalone projects
 # run the gate locally. FAIL_FAST forwards the stop-on-first-failure policy.
+# Provisioning is a probe-then-repair pair, declared once and shared by every
+# profile so the two branches below can never drift apart. `uv sync --check`
+# reports drift without touching the tree; only a non-zero exit escalates to a
+# real `uv sync`. Creating a missing venv is provisioning, so it is allowed;
+# clearing a present one is destruction, so it never happens.
+SETUP_ENVIRONMENT_RECIPE = set -eu; \
+	if [ ! -x "$(RUNTIME_PYTHON)" ]; then \
+		$(UV) venv "$(RUNTIME_VENV)"; \
+	fi; \
+	if ! $(UV) sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS) --link-mode "$(UV_LINK_MODE)" --check >/dev/null 2>&1; then \
+		$(UV) sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS) --link-mode "$(UV_LINK_MODE)"; \
+	fi
+
 WORKSPACE_ORCHESTRATE = $(UV_RUN) python -m flext_infra workspace orchestrate
 REQUESTED_PROJECTS := $(strip $(if $(PROJECT),$(PROJECT),$(PROJECTS)))
 # A workspace root owns no local gate implementation: its verbs fan out to the
-# declared members. Selecting the root here would make it orchestrate itself.
+# declared members. Selecting the root (PROJECT=.) would make it orchestrate
+# itself forever; map `.` to WORKSPACE_MEMBERS instead of failing closed mid-CI.
 DEFAULT_PROJECTS := $(WORKSPACE_MEMBERS)
-SELECTED_PROJECTS := $(if $(strip $(REQUESTED_PROJECTS)),$(REQUESTED_PROJECTS),$(DEFAULT_PROJECTS))
+
+SELECTED_PROJECTS := $(if $(strip $(REQUESTED_PROJECTS)),$(if $(filter .,$(REQUESTED_PROJECTS)),$(WORKSPACE_MEMBERS),$(REQUESTED_PROJECTS)),$(DEFAULT_PROJECTS))
+
 WORKSPACE_PROJECT_ARGS := $(foreach project,$(SELECTED_PROJECTS),--projects $(project))
 WORKSPACE_CHECK_ARGS := $(if $(strip $(CHECK_GATES)),--make-arg "CHECK_GATES=$(strip $(CHECK_GATES))")
 WORKSPACE_TEST_ARGS := $(if $(strip $(FLEXT_PYTEST_FILE_RAW)),--file "$${FLEXT_PYTEST_FILE_RAW}") $(if $(strip $(FLEXT_PYTEST_MATCH_RAW)),--match "$${FLEXT_PYTEST_MATCH_RAW}") $(if $(strip $(FLEXT_PYTEST_WHAT_RAW)),--what "$${FLEXT_PYTEST_WHAT_RAW}")
@@ -262,7 +291,15 @@ PROJECT_INFRA_PYTHONPATH ?= $(MAKEFILE_ROOT)/src
 PROJECT_FLEXT_INFRA := test -x "$(FLEXT_INFRA_PYTHON)" || { printf 'ERROR: FLEXT_INFRA_PYTHON must name an executable managed Python\n' >&2; exit 2; }; env -u PYTHONPATH -u MYPYPATH -u VIRTUAL_ENV -u UV_PROJECT -u UV_PROJECT_ENVIRONMENT PATH="$(dir $(FLEXT_INFRA_PYTHON)):$(SANITIZED_CALLER_PATH)" PYTHONPATH="$(PROJECT_INFRA_PYTHONPATH)" $(FLEXT_INFRA_PYTHON) -m flext_infra
 # mro-j47u (codex): scaffold dev tools live in the validated optional dev
 # profile; a fresh project must create its lock before later check-mode locks.
-UV_SYNC_FLAGS := --all-packages --all-extras --all-groups
+# Keyed on the environment's OWNER, not on the caller's profile. A member has
+# no local venv -- RUNTIME_VENV is RUNTIME_ROOT/.venv -- so every checkout that
+# provisions a shared environment must describe the same contents. A member
+# syncing without --all-packages treats the siblings already installed there as
+# surplus and uninstalls them, undoing the root's provisioning and leaving
+# `uv sync --check` permanently divergent. A standalone project owns its venv
+# alone and has no workspace packages to include.
+SHARED_RUNTIME := $(if $(filter-out $(PROJECT_ROOT),$(RUNTIME_ROOT)),1,$(if $(strip $(WORKSPACE_MEMBERS)),1,))
+UV_SYNC_FLAGS := $(if $(SHARED_RUNTIME),--all-packages ,)--all-extras --all-groups
 
 ifneq ($(strip $(PROJECT)),)
 ifneq ($(strip $(PROJECTS)),)
@@ -290,16 +327,24 @@ define _dispatch
 	case "$$what" in \
 		*[!a-z0-9_-]*|'') printf 'ERROR: invalid WHAT selector %s\n' "$$what" >&2; exit 2 ;; \
 	esac; \
-	case " $(_ALLOWED_WHATS_$(1)) " in \
-		*" $$what "*) ;; \
-		*) printf 'ERROR: unsupported %s WHAT=%s (allowed:%s)\n' "$(1)" "$$what" "$(_ALLOWED_WHATS_$(1))" >&2; exit 2 ;; \
-	esac; \
+	custom="_custom_$(1)_$$what"; \
+	$(SELF_MAKE) -q "$$custom" >/dev/null 2>&1; custom_rc=$$?; \
+	if [ "$$custom_rc" -eq 2 ]; then \
+		case " $(_ALLOWED_WHATS_$(1)) " in \
+			*" $$what "*) ;; \
+			*) printf 'ERROR: unsupported %s WHAT=%s (allowed:%s)\n' "$(1)" "$$what" "$(_ALLOWED_WHATS_$(1))" >&2; exit 2 ;; \
+		esac; \
+	fi; \
 	builtin="_builtin_$(1)_$$what"; \
 	for hook in "pre-$(1)" "pre-$(1)-$$what"; do \
 		$(SELF_MAKE) -q "$$hook" >/dev/null 2>&1; rc=$$?; \
 		if [ "$$rc" -ne 2 ]; then $(SELF_MAKE) "$$hook" || exit $$?; fi; \
 	done; \
-	$(SELF_MAKE) "$$builtin" || exit $$?; \
+	if [ "$$custom_rc" -ne 2 ]; then \
+		$(SELF_MAKE) "$$custom" || exit $$?; \
+	else \
+		$(SELF_MAKE) "$$builtin" || exit $$?; \
+	fi; \
 	for hook in "post-$(1)-$$what" "post-$(1)"; do \
 		$(SELF_MAKE) -q "$$hook" >/dev/null 2>&1; rc=$$?; \
 		if [ "$$rc" -ne 2 ]; then $(SELF_MAKE) "$$hook" || exit $$?; fi; \
@@ -369,6 +414,27 @@ _serialized_fix:
 	$(call _dispatch,fix)
 
 
+deps: _builtin_require_environment
+	@$(PROJECT_FLEXT_INFRA) workspace serialize-make --workspace "$(PROJECT_ROOT)" --makefile "$(SELF_MAKEFILE)" --verb "deps" --selector-value "$(WHAT)" --apply-token "$(APPLY)"
+
+_serialized_deps:
+	$(call _dispatch,deps)
+
+
+clean: _builtin_require_environment
+	@$(PROJECT_FLEXT_INFRA) workspace serialize-make --workspace "$(PROJECT_ROOT)" --makefile "$(SELF_MAKEFILE)" --verb "clean" --selector-value "$(WHAT)" --apply-token "$(APPLY)"
+
+_serialized_clean:
+	$(call _dispatch,clean)
+
+
+worktree: _builtin_require_environment
+	@$(PROJECT_FLEXT_INFRA) workspace serialize-make --workspace "$(PROJECT_ROOT)" --makefile "$(SELF_MAKEFILE)" --verb "worktree" --selector-value "$(WHAT)" --apply-token "$(APPLY)"
+
+_serialized_worktree:
+	$(call _dispatch,worktree)
+
+
 
 # `setup` keeps its own recipe (it must not require the environment it is about
 # to build), but it still runs the pre-/post-setup lifecycle hooks so a project
@@ -388,7 +454,7 @@ _builtin_help_usage:
 	@printf '%s\n' 'flext [workspace-root]' '';
 
 
-	@printf '  %-10s WHAT=%s\n' 'help' 'usage';
+	@printf '  %-10s WHAT=%s\n' 'help' "$$(printf '%s' '$(_ALLOWED_WHATS_help)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
@@ -396,55 +462,55 @@ _builtin_help_usage:
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'deps' 'check|lock|upgrade';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'deps' "$$(printf '%s' '$(_ALLOWED_WHATS_deps)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'build' 'artifacts';
+	@printf '  %-10s WHAT=%s\n' 'build' "$$(printf '%s' '$(_ALLOWED_WHATS_build)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'check' 'all';
+	@printf '  %-10s WHAT=%s\n' 'check' "$$(printf '%s' '$(_ALLOWED_WHATS_check)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'test' 'all';
+	@printf '  %-10s WHAT=%s\n' 'test' "$$(printf '%s' '$(_ALLOWED_WHATS_test)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s APPLY=Y\n' 'fmt' 'check|all';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'fmt' "$$(printf '%s' '$(_ALLOWED_WHATS_fmt)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s APPLY=Y\n' 'fix' 'check|all';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'fix' "$$(printf '%s' '$(_ALLOWED_WHATS_fix)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'run' 'default';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'run' "$$(printf '%s' '$(_ALLOWED_WHATS_run)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'status' 'diagnostics';
+	@printf '  %-10s WHAT=%s\n' 'status' "$$(printf '%s' '$(_ALLOWED_WHATS_status)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'docs' 'all|generate|fix|audit|build|validate';
+	@printf '  %-10s WHAT=%s\n' 'docs' "$$(printf '%s' '$(_ALLOWED_WHATS_docs)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'clean' 'generated';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'clean' "$$(printf '%s' '$(_ALLOWED_WHATS_clean)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'release' 'status';
+	@printf '  %-10s WHAT=%s\n' 'release' "$$(printf '%s' '$(_ALLOWED_WHATS_release)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s APPLY=Y\n' 'gen' 'check|all';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'gen' "$$(printf '%s' '$(_ALLOWED_WHATS_gen)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'worktree' 'list|add|update|remove';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'worktree' "$$(printf '%s' '$(_ALLOWED_WHATS_worktree)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 	@printf '  %-10s %s\n' 'WORKSPACE' 'target repository (default: current project)';
@@ -452,8 +518,9 @@ _builtin_help_usage:
 	@printf '\n%s\n' 'Custom hooks (custom.mk):';
 	@printf '  %s\n' 'Define pre-<verb>, post-<verb>, pre-<verb>-<what>, post-<verb>-<what>';
 	@printf '  %s\n' 'in custom.mk to wrap one declared handler.';
+	@printf '  %s\n' 'Add _custom_<verb>_<what> to define a new WHAT.';
 	@if [ -f custom.mk ]; then \
-		hooks=$$(grep -oE '^(pre|post)-[a-z][a-z0-9-]*' custom.mk 2>/dev/null | sort -u); \
+		hooks=$$(grep -oE '^(pre|post)-[a-z][a-z0-9-]*|^_custom_[a-z][a-z0-9_-]*' custom.mk 2>/dev/null | sort -u); \
 		if [ -n "$$hooks" ]; then \
 			printf '  %s\n' 'Defined in this project:'; \
 			for hook in $$hooks; do printf '    %s\n' "$$hook"; done; \
@@ -470,10 +537,14 @@ _builtin_help_usage:
 # Source: template (submodule_setup_recipe.j2)
 # Computed: workspace-root uses WORKSPACE_MEMBERS from config; standalone discovers
 #           submodules with flext-managed=true from .gitmodules at runtime.
-# Rule: all managed submodules are synced and initialized recursively before
-#       branch validation; unmanaged submodules are never touched. Local changes
-#       on the declared branch are preserved. Nested submodules inside managed
-#       trees are validated recursively.
+# Rule: setup PROVISIONS an absent governed gitlink and VERIFIES a present one.
+#       An absent checkout holds no work, so setup initializes it at the recorded
+#       gitlink. A present checkout is never destroyed: git checkout and git reset
+#       are forbidden. Detached HEAD is attached via branch + symbolic-ref so dirty
+#       work is carried. Pin validity is HEAD contains gitlink — origin may lag the
+#       pin without failing verify. Declared branch is the named integration line;
+#       legacy branch=. still resolves to the superproject named branch if present.
+#       Fetch skips when local already contains pin and origin tip.
 # Free: no
 # End SECTION: submodule setup
 _builtin_setup_submodules:
@@ -499,10 +570,19 @@ _builtin_setup_submodules:
 	fi; \
 	managed=$$(printf '%s' "$$managed" | tr ' ' '\n' | sort -u | tr '\n' ' '); \
 	if [ -z "$$managed" ]; then exit 0; fi; \
-	git -C "$$root" submodule sync --recursive --quiet; \
-	for child_path in $$managed; do \
-		git -C "$$root" submodule update --init --recursive -- "$$child_path"; \
-	done; \
+	attach_branch_at_head() { \
+		child_root="$$1"; \
+		branch="$$2"; \
+		git -C "$$child_root" branch --quiet -f "$$branch" HEAD || { \
+			printf 'ERROR: %s: could not create branch %s at HEAD\n' "$$child_root" "$$branch" >&2; \
+			exit 1; \
+		}; \
+		git -C "$$child_root" symbolic-ref HEAD "refs/heads/$$branch" || { \
+			printf 'ERROR: %s: could not attach HEAD to %s without moving the tree\n' "$$child_root" "$$branch" >&2; \
+			exit 1; \
+		}; \
+		git -C "$$child_root" branch --quiet --set-upstream-to "origin/$$branch" "$$branch" >/dev/null 2>&1 || :; \
+	}; \
 	validate_submodule() { \
 		superproject="$$1"; \
 		child_path="$$2"; \
@@ -539,42 +619,57 @@ _builtin_setup_submodules:
 			printf 'ERROR: %s: invalid declared branch %s\n' "$$child_path" "$$branch" >&2; \
 			exit 1; \
 		}; \
-		git -C "$$child_root" fetch --quiet origin "$$branch" || { \
-			printf 'ERROR: %s: fetch origin %s failed\n' "$$child_path" "$$branch" >&2; \
-			exit 1; \
-		}; \
 		gitlink=$$(git -C "$$superproject" ls-files --stage -- "$$child_path" | awk '$$1 == "160000" {print $$2}'); \
 		if [ -z "$$gitlink" ]; then \
 			printf 'ERROR: governed gitlink is absent from the index: %s\n' "$$child_path" >&2; \
 			exit 2; \
 		fi; \
+		if [ ! -e "$$child_root/.git" ]; then \
+			git -C "$$superproject" submodule update --init -- "$$child_path" || { \
+				printf 'ERROR: %s: could not initialize the governed gitlink\n' "$$child_path" >&2; \
+				exit 1; \
+			}; \
+			attach_branch_at_head "$$child_root" "$$branch"; \
+		fi; \
+		remote_ref="refs/remotes/origin/$$branch"; \
 		current=$$(git -C "$$child_root" branch --show-current); \
 		head=$$(git -C "$$child_root" rev-parse HEAD); \
 		if [ -n "$$current" ] && [ "$$current" != "$$branch" ]; then \
-			printf 'ERROR: %s: conflicting branch %s; expected %s\n' "$$child_path" "$$current" "$$branch" >&2; \
+			printf 'ERROR: %s: conflicting branch %s; expected %s (setup never runs checkout/reset; switch it yourself while keeping dirty)\n' "$$child_path" "$$current" "$$branch" >&2; \
 			exit 1; \
 		fi; \
-		if [ -z "$$current" ] && [ "$$head" != "$$gitlink" ]; then \
-			printf 'ERROR: %s: detached HEAD diverges from recorded gitlink %s\n' "$$child_path" "$$gitlink" >&2; \
+		need_fetch=1; \
+		if git -C "$$child_root" rev-parse --verify "$$remote_ref" >/dev/null 2>&1 && \
+		   git -C "$$child_root" merge-base --is-ancestor "$$gitlink" HEAD && \
+		   git -C "$$child_root" merge-base --is-ancestor "$$remote_ref" HEAD; then \
+			need_fetch=0; \
+		fi; \
+		if [ "$$need_fetch" -eq 1 ]; then \
+			git -C "$$child_root" fetch --quiet origin "$$branch" || { \
+				printf 'ERROR: %s: fetch origin %s failed\n' "$$child_path" "$$branch" >&2; \
+				exit 1; \
+			}; \
+		fi; \
+		current=$$(git -C "$$child_root" branch --show-current); \
+		head=$$(git -C "$$child_root" rev-parse HEAD); \
+		if [ -n "$$current" ] && [ "$$current" != "$$branch" ]; then \
+			printf 'ERROR: %s: conflicting branch %s; expected %s (setup never runs checkout/reset; switch it yourself while keeping dirty)\n' "$$child_path" "$$current" "$$branch" >&2; \
 			exit 1; \
 		fi; \
 		if [ -z "$$current" ]; then \
-			if git -C "$$child_root" rev-parse --verify --quiet "refs/heads/$$branch" >/dev/null; then \
-				git -C "$$child_root" merge-base --is-ancestor "$$gitlink" "refs/heads/$$branch" || { \
-					printf 'ERROR: %s: local branch %s diverges from gitlink %s\n' "$$child_path" "$$branch" "$$gitlink" >&2; \
-					exit 1; \
-				}; \
-				git -C "$$child_root" checkout --quiet "$$branch"; \
+			if git -C "$$child_root" merge-base --is-ancestor "$$gitlink" HEAD; then \
+				attach_branch_at_head "$$child_root" "$$branch"; \
+			elif git -C "$$child_root" rev-parse --verify "$$remote_ref" >/dev/null 2>&1 && \
+			     git -C "$$child_root" merge-base --is-ancestor "$$head" "$$remote_ref"; then \
+				attach_branch_at_head "$$child_root" "$$branch"; \
 			else \
-				git -C "$$child_root" checkout --quiet -b "$$branch"; \
+				printf 'ERROR: %s: detached HEAD %s is not on the recorded gitlink and not contained in origin/%s; reconcile it yourself (setup never discards commits)\n' "$$child_path" "$$head" "$$branch" >&2; \
+				exit 1; \
 			fi; \
+			current="$$branch"; \
 		fi; \
-		git -C "$$child_root" pull --ff-only --quiet origin "$$branch" || { \
-			printf 'ERROR: %s: fast-forward pull of origin/%s failed\n' "$$child_path" "$$branch" >&2; \
-			exit 1; \
-		}; \
 		if ! git -C "$$child_root" merge-base --is-ancestor "$$gitlink" HEAD; then \
-			printf 'ERROR: %s: branch %s diverges from recorded gitlink %s\n' "$$child_path" "$$branch" "$$gitlink" >&2; \
+			printf 'ERROR: %s: branch %s diverges from recorded gitlink %s (setup never runs checkout/reset; advance or switch it yourself while keeping dirty)\n' "$$child_path" "$$branch" "$$gitlink" >&2; \
 			exit 1; \
 		fi; \
 		if [ -f "$$child_root/.gitmodules" ]; then \
@@ -600,21 +695,36 @@ _builtin_require_environment:
 # Operator contract: setup PROVISIONS tooling only — mise, venv, dependencies.
 # It never generates, conforms, or mutates project code; `make gen` (APPLY=Y)
 # is the single public conformance/generation surface.
+# Every verb invokes setup, so it must be cheap when the tooling already
+# matches the lock and must repair it when it does not. `uv sync --check` is
+# that probe: it compares the live venv against the resolved lock and exits
+# non-zero on any drift, so it can never report a broken environment as good.
+# The venv is disposable and is rebuilt whenever it is missing; it is never
+# cleared while present, because a concurrent lane may be running against it.
 # Profile routing: workspace-member delegates the environment to the
 # principal (the uv workspace venv lives at RUNTIME_ROOT); workspace-root and
 # standalone build their own environment locally.
+# The delegation only means something when the principal is another checkout.
+# An isolated `git worktree` of a member has no superproject, so WORKSPACE_ROOT
+# falls back to the worktree itself and RUNTIME_ROOT equals PROJECT_ROOT -- while
+# MAKE_PROFILE stays workspace-member, because it is fixed at generation time.
+# Delegating there re-entered Make on the same target, which Make treats as
+# already satisfied: setup exited 0 having created nothing, and the next verb
+# failed with "missing environment interpreter". Provision locally instead.
 ifeq ($(MAKE_PROFILE),workspace-member)
 _builtin_setup_environment: _builtin_setup_submodules
-	@$(MAKE) -C "$(RUNTIME_ROOT)" _builtin_setup_environment
+	@if [ "$(RUNTIME_ROOT)" = "$(PROJECT_ROOT)" ]; then \
+		$(SETUP_ENVIRONMENT_RECIPE); \
+	else \
+		$(MAKE) -C "$(RUNTIME_ROOT)" _builtin_setup_environment; \
+	fi
 else ifeq ($(MAKE_PROFILE),workspace-root)
 _builtin_setup_environment: _builtin_setup_submodules
-	@$(UV) venv --clear "$(RUNTIME_VENV)"
-	@$(UV) sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS) --link-mode "$(UV_LINK_MODE)"
+	@$(SETUP_ENVIRONMENT_RECIPE)
 	@$(UV) pip check --python "$(RUNTIME_VENV)"
 else
 _builtin_setup_environment: _builtin_setup_submodules
-	@$(UV) venv --clear "$(RUNTIME_VENV)"
-	@$(UV) sync --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS) --link-mode "$(UV_LINK_MODE)"
+	@$(SETUP_ENVIRONMENT_RECIPE)
 endif
 # End SECTION: setup environment
 
@@ -652,7 +762,7 @@ _builtin_build_artifacts:
 # Read-only by contract in every profile: mutation belongs to `make fix
 # APPLY=Y` / `make fmt APPLY=Y`, which run BEFORE check.
 _builtin_check_all: _builtin_require_environment
-	@if [ -n "$(strip $(APPLY))" ]; then \
+	@if [ -n "$(strip $(APPLYING))" ]; then \
 		printf 'ERROR: check is read-only; use `make fix APPLY=Y` / `make fmt APPLY=Y` first\n' >&2; exit 2; \
 	fi
 	@$(WORKSPACE_ORCHESTRATE) --verb check $(WORKSPACE_PROJECT_ARGS) $(WORKSPACE_CHECK_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
@@ -730,16 +840,25 @@ _builtin_release_status: _builtin_require_environment
 	@git -C "$(PROJECT_ROOT)" diff --quiet
 	@git -C "$(PROJECT_ROOT)" diff --cached --quiet
 
+# Every command here writes to the SAME root, derived from the invocation
+# point. `deps modernize`/`extra-paths` used to receive WORKSPACE_ROOT while
+# `conform` received PROJECT_ROOT, so a gen run inside one member rewrote the
+# pyproject of ~30 siblings and left each dirty. Because gen runs inside check
+# and check runs in the pre-commit hook, one commit in any lane dirtied every
+# sibling -- the "workspace changed during serialized Make check" abort. It
+# also kept the fixed point out of reach: each run rewrote the siblings, so
+# the next run found a difference again. At the workspace root PROJECT_ROOT is
+# already the workspace, so fan-out survives exactly where it belongs.
 _builtin_gen_check: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode check
-	@$(PROJECT_FLEXT_INFRA) deps modernize --workspace "$(WORKSPACE_ROOT)" --check
-	@$(PROJECT_FLEXT_INFRA) deps extra-paths --workspace "$(WORKSPACE_ROOT)" --check
+	@$(PROJECT_FLEXT_INFRA) deps modernize --workspace "$(PROJECT_ROOT)" --check
+	@$(PROJECT_FLEXT_INFRA) deps extra-paths --workspace "$(PROJECT_ROOT)" --check
 
 _builtin_gen_all: _builtin_require_environment
 	$(call _require_apply)
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode apply
-	@$(PROJECT_FLEXT_INFRA) deps modernize --workspace "$(WORKSPACE_ROOT)" --apply
-	@$(PROJECT_FLEXT_INFRA) deps extra-paths --workspace "$(WORKSPACE_ROOT)" --apply
+	@$(PROJECT_FLEXT_INFRA) deps modernize --workspace "$(PROJECT_ROOT)" --apply
+	@$(PROJECT_FLEXT_INFRA) deps extra-paths --workspace "$(PROJECT_ROOT)" --apply
 
 _builtin_worktree_list:
 	@$(PROJECT_FLEXT_INFRA) workspace worktree --workspace "$(WORKSPACE)" --operation list
