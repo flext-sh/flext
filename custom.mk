@@ -8,7 +8,9 @@
 # other lanes' uncommitted/untracked changes never pollute or brick it. Green when
 # nothing is committed-ahead.
 
-# SSOT for the workspace base branch. All equalization/merge targets use this.
+# SSOT: config/workspace.yaml integration.branch (flext-infra provider overlay).
+# Falls back to flext-sh provider default when the overlay field is absent.
+WORKSPACE_BASE ?= $(shell awk '/^integration:/{f=1; next} f && /^  branch:/{gsub(/["'"'"']/, "", $$2); print $$2; exit} ' config/workspace.yaml 2>/dev/null)
 WORKSPACE_BASE ?= 0.12.0-dev
 
 .PHONY: done-check workspace-docs-audit full-check workspace-status \

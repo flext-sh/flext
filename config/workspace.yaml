@@ -35,6 +35,11 @@ project:
   documentation: "https://docs.flext.sh"
   workspace_root_rel: "."
   year: 2026
+# Workspace overlay adjusting flext-infra provider defaults (branch/github).
+# Package version stays on project.version above.
+integration:
+  provider: flext-sh
+  branch: 0.12.0-dev
 # NOTE (multi-agent, mro-wkii.17 / agent: codex): the typed manifest context is
 # the sole topology owner; every declared member/exclusion round-trips here.
 members:
