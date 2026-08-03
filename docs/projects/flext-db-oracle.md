@@ -21,7 +21,7 @@ targets, dbt adapters — reuses one typed connection, query, and schema-introsp
 ## Quick start
 
 ```bash
-make boot                                  # workspace bootstrap (once)
+make setup                                  # workspace bootstrap (once)
 make check PROJECT=flext-db-oracle         # lint + type gates
 ```
 
