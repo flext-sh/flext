@@ -12,11 +12,11 @@ project.
 ## Bootstrap the Workspace
 
 ```bash
-make boot APPLY=Y
+make setup APPLY=Y
 make val
 ```
 
-`make boot APPLY=Y` installs the selected projects into the shared workspace environment and then runs validation.
+`make setup APPLY=Y` installs the selected projects into the shared workspace environment and then runs validation.
 
 ## Navigate the Root Portal
 
