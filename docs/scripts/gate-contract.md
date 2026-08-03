@@ -1,5 +1,9 @@
 # Gate Contract
 
+> This is the canonical gate-contract document. Workspace validation uses the
+> root dispatcher (`make check WHAT=<action>`); script-specific CLI examples
+> remain explicit where no verified Make route exists.
+
 > Canonical specification for all validator and fixer scripts in the FLEXT repository.
 >
 > **Status**: Active | **Reviewed**: 2026-02-18
