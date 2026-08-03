@@ -412,7 +412,7 @@ exclude = [
   ".venv",
   "vendor",
 ]
-extraPaths = [".", "src"]
+extraPaths = ["src", "."]
 include = [
   "examples",
   "flext-api/examples",
