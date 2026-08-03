@@ -22,7 +22,7 @@ renaming any symbol.
 
 ```bash
 cd <workspace-root>
-make boot                       # Workspace .venv only (project .venv is forbidden — see AGENTS.md §6)
+make setup                       # Workspace .venv only (project .venv is forbidden — see AGENTS.md §6)
 ```
 
 The workspace `.venv/` is mandatory. Run validation through the root Make
