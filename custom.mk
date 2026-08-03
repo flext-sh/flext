@@ -36,7 +36,7 @@ hooks: ## Install Beads git hooks + FLEXT agent-trailer guard (workspace root)
 		bash .github/scripts/install-git-hooks.sh; \
 	fi
 
-# Auto-provision git hooks after every `make boot` (verb-hook seam).
+# Auto-provision git hooks after every `make setup` (verb-hook seam).
 post-boot: hooks ## Post-boot: ensure git hooks + agent-trailer guard are installed
 
 workspace-docs-audit: ## Markdown lint for workspace docs

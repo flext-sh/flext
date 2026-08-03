@@ -20,7 +20,7 @@ System (WMS) transformations with dbt. Its executable source lives in
 ## Quick start
 
 ```bash
-make boot
+make setup
 make check PROJECT=flext-dbt-oracle-wms
 make test PROJECT=flext-dbt-oracle-wms
 ```
