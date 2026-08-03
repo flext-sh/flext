@@ -50,6 +50,7 @@ scripts/maintenance/
 !.taplo.toml
 !pyrefly.toml
 !poetry.lock
+!uv.lock
 !ruff-shared.toml
 !uv.lock
 
@@ -104,6 +105,8 @@ scripts/maintenance/
 
 # BLOCK: AI/Agent Local Data (NEVER track these)
 .claude/*
+
+# WHITELIST: Agent skills owned by the workspace root
 !.agents/skills/
 !.agents/skills/**
 
@@ -178,6 +181,14 @@ fix-report.json
 **/.coverage.*
 **/coverage.xml
 **/*.cover
+
+# Docs verb report artifacts inside docs trees
+**/docs/generate-report.md
+**/docs/generate-summary.json
+**/docs/fix-report.md
+**/docs/fix-summary.json
+**/docs/audit-report.md
+**/docs/audit-summary.json
 
 # Virtual environments inside allowed directories (should never be committed)
 **/.venv/
@@ -348,13 +359,10 @@ __pyrefly_virtual__/
 .venv.*/
 *.egg-info/
 build/
-context_test/
 dist/
 node_modules/
-rope_ws/
 site/
 target/
-tmp_flow_test/
 .pyrefly_cache/
 .tox/
 .flext-sync.lock

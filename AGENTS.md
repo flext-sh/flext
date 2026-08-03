@@ -184,6 +184,7 @@ make build WHAT=artifacts
 - `flext-infra` defaults via project/workspace `config/` overlays — not forked defaults.
 - Provisioning adjusts and never destroys dirty work; no `git checkout` / `git reset` in setup or member sync.
 - `make gen APPLY=Y` must be idempotent (following `make gen` reports no drift).
+- `flext-infra` codegen owns fleet CI and hook projections; update its config/templates, then regenerate consumers.
 
 <!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->
 ## Workspace providers
