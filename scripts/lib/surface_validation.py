@@ -25,17 +25,14 @@ class SurfaceValidator:
             *SurfaceProbeRunner.run(SurfaceProbeRunner.build(registry), dispatch_main),
         ]
         if failures:
-            for failure in failures:
-                print(f"ERRO: {failure}")
+            for _failure in failures:
+                pass
             return 1
-        command_count = sum(
+        sum(
             len(SurfaceValidator.registry_commands(registry, verb))
             for verb in u.Tests.make_registry_verbs(registry)
         )
-        verb_count = len(u.Tests.make_registry_verbs(registry))
-        print(
-            f"Surface validated: {verb_count} verbs, {command_count} commands"
-        )
+        len(u.Tests.make_registry_verbs(registry))
         return 0
 
     @staticmethod

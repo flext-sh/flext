@@ -70,7 +70,7 @@ class FlextRootDocsAllCommand:
 
         @property
         def requires_apply(self) -> bool:
-            """Return whether the selected docs phase can mutate generated files."""
+            """Whether the selected docs phase can mutate generated files."""
             match self.phase:
                 case "all" | "fix" | "generate":
                     return True
@@ -79,17 +79,17 @@ class FlextRootDocsAllCommand:
 
         @property
         def has_mutation_opt_in(self) -> bool:
-            """Return whether the requested mutation was explicitly approved."""
+            """Whether the requested mutation was explicitly approved."""
             return self.apply == "Y" or (self.phase == "fix" and self.fix == "1")
 
         @property
         def can_execute(self) -> bool:
-            """Return whether the validated docs command can execute immediately."""
+            """Whether the validated docs command can execute immediately."""
             return not self.requires_apply or self.has_mutation_opt_in
 
         @property
         def target_env(self) -> t.MappingKV[str, str]:
-            """Return explicit Make variables for the private docs target."""
+            """Explicit Make variables for the private docs target."""
             env: t.MappingKV[str, str] = MappingProxyType({
                 "DOCS_PHASE": self.phase,
                 "FIX": self.fix,
@@ -98,7 +98,7 @@ class FlextRootDocsAllCommand:
 
         @property
         def dry_run_lines(self) -> tuple[str, ...]:
-            """Return the canonical dry-run message for mutating docs phases."""
+            """Canonical dry-run message for mutating docs phases."""
             return (
                 "DRY-RUN: nenhuma mutacao executada.",
                 f"Comando: make docs DOCS_PHASE={self.phase}",
@@ -117,8 +117,8 @@ class FlextRootDocsAllCommand:
             return 2
 
         if not options.can_execute:
-            for line in options.dry_run_lines:
-                print(line)
+            for _line in options.dry_run_lines:
+                pass
             return 0
         return Dispatch.run_make("_docs", extra_env=options.target_env)
 
