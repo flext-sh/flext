@@ -23,6 +23,7 @@ portal.
 - [ADR-009: Ecosystem coordination and reusable-library evaluation](009-ecosystem-coordination-and-library-evaluation.md)
   — _Accepted (planning, `0.20.0-dev`)_
 - [ADR-010: Unified project standardization (Make, scripts, tests, structure) via
-  codegen](010-unified-project-standardization-via-codegen.md) — _Accepted (planning, `0.20.0-dev`)_
+  codegen](010-unified-project-standardization-via-codegen.md) — _Accepted (0.12
+  compatibility subset; forward architecture on `0.20.0-dev`)_
 
 New ADRs should be added only when they represent a real architectural decision with an owning implementation path.

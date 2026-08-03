@@ -26,15 +26,11 @@ owner of transitive FLEXT provenance.
 
 ### 1. A typed manifest owns repository topology
 
-Each orchestrated workspace has one validated manifest under `config/`. It
-declares members, exclusions, repository URL, branch, relative checkout path,
-role, profile, and lifecycle state. A typed repository catalog covers:
-
-- FLEXT repositories at `https://github.com/flext-sh/<repo>.git` on
-  `0.12.0-dev`;
-- Cosmos repositories at `https://github.com/datacosmos-br/<repo>.git` on
-  `main`;
-- explicitly declared standalone repositories, with no sibling discovery.
+Each consumer has one validated `config/workspace.yaml`. It declares its own
+members, independent projects, exclusions with justification, repository URLs,
+branches, relative checkout paths, topology profile, capabilities, and command
+discovery roots. No catalog in `flext-infra` duplicates consumer identities or
+topology.
 
 Submodule metadata, generated dependency groups, Makefiles, and inventories are
 derived from that manifest. No other file may independently declare workspace
