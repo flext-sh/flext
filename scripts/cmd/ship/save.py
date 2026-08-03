@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Commit all changes in selected workspace projects and root.
 
 Equivalent to the legacy ``commit_submodules.sh`` / ``_save`` Makefile target.
@@ -83,7 +84,6 @@ def run() -> int:
         return 1
 
     if Dispatch.surface_validation_enabled():
-        u.Cli.emit_raw("SURFACE-VALIDATE: python -m scripts.cmd.ship.save\n")
         return 0
 
     if not Dispatch.env_enabled("APPLY"):

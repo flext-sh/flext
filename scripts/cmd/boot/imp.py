@@ -5,7 +5,7 @@
 # domain = "workspace"
 # summary = "Detect/fix import violations"
 # description = "Runs the canonical _imp target to detect and optionally fix import violations."
-# example = "make boot WHAT=imp APPLY=Y"
+# example = "make setup WHAT=imp APPLY=Y"
 # target = "_imp"
 # mutates = true
 # aliases = []

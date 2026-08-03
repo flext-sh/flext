@@ -110,7 +110,7 @@ the canonical decision.
 
 ## Bad practices
 
-```python
+```python notest
 # Mutating global singleton without resetting
 FlextSettings.fetch_global().debug = True
 
