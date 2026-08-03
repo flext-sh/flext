@@ -1,25 +1,32 @@
 ---
 name: flext-context-routing
-description: Route FLEXT Python repository and workspace tasks after flext-core dependency detection. Use for FLEXT workspace detection, local skill selection, MRO facade work, governance, imports, or shared test fixtures.
+description: Route FLEXT repositories through global execution skills and the branch-matched local flext-law domain delta after flext-core dependency detection.
 ---
 
 # FLEXT Context Routing
 
-Read this skill first. It is the sole always-loaded local FLEXT surface and
-selects only the on-demand law needed for the current task.
+This is the sole always-loaded local FLEXT surface. It selects the exact
+branch-matched FLEXT law without duplicating universal execution governance.
 
-## Routing
+## Required composition
 
-- Load `flext-law` for FLEXT implementation, review, migration, refactoring,
-  validation, generated surfaces, or architecture work.
-- Load `flext-inviolable-rules` for governance, Beads coordination, shared
-  worktree safety, completion gates, evidence, handoff, commit, or closure.
-- Load both when FLEXT-law work also changes repository state.
+1. Read `~/.agents/skills/inviolable-rules/SKILL.md`.
+2. Before build, generation, docs, checks, tests, or diagnosis, read
+   `~/.agents/skills/make-check/SKILL.md`.
+3. For every FLEXT task, read the exact local
+   `.agents/skills/flext-law/SKILL.md`.
+4. At every completion boundary, read
+   `~/.agents/skills/verification-loop/SKILL.md`.
 
-## Workspace Rules
+Fail closed if a required file is absent. Never resolve `flext-law` by an
+unqualified catalog name, from `main`, or from another checkout.
 
-- Preserve facade direction `c -> t -> p -> m -> u`.
-- Reverse imports are declaration-only and must remain under `TYPE_CHECKING`.
-- `flext-tests` owns generic fixtures; do not create package-local duplicates.
-- Do not load a local skill that is absent from `surfaces.on_demand` in
-  `.agents/provider.toml`.
+## Detection and scope
+
+- Activate when the workspace provider marker or dependency graph contains
+  `flext-core`.
+- In workspace mode, use the active workspace root and its checked-out law.
+- In standalone mode, use the FLEXT root law pinned to the same branch or
+  release; never fall back to `main`.
+- Load only local surfaces declared in `.agents/provider.toml`. Global skills
+  remain owned by `~/.agents` and are not copied into the local provider.

@@ -3,9 +3,6 @@
 /*/
 !/LICENSE
 
-# Allow all FLEXT ecosystem project directories
-!flext-*/
-
 # WHITELIST: Workspace Directories
 !docker/
 !docs/
@@ -20,13 +17,15 @@
 !.claude/
 !.claude-plugin/
 !/config/
-!/config/workspace.yaml
 !.claude/CLAUDE.md
 !.claude/settings.json
 !.claude/settings.local.json
 !.agents/
 !.agents/**
 .agents/skills/*/report.json
+
+# Workspace topology manifest
+!/config/workspace.yaml
 
 # Dispatcher-based command surface (Make SSOT)
 !scripts/
@@ -43,14 +42,17 @@ scripts/maintenance/
 !.beads/
 .beads/*
 !.beads/config.yaml
+!.beads/metadata.json
 
 # Python configuration
 !pyproject.toml
+!uv.lock
 !.taplo.toml
 !pyrefly.toml
 !poetry.lock
 !uv.lock
 !ruff-shared.toml
+!uv.lock
 
 # mise toolchain pinning
 !.mise.toml
@@ -89,7 +91,6 @@ scripts/maintenance/
 !.env.template
 
 # WHITELIST: Contents Inside Allowed Directories
-!flext-*/**
 !docker/**
 !docs/**
 !examples/**
@@ -292,7 +293,7 @@ secrets.yml
 .devcontainer/.env
 .github/*.rej
 
-# --- workspace-migrate: required ignores (auto-managed) ---
+# --- codegen conform: tracked owner inputs ---
 !base.mk
 
 # FINAL BEADS TRACKING POLICY
@@ -307,13 +308,18 @@ secrets.yml
 .worktrees/
 legado/
 
+# Beads ledger identity (workspace-root only; see mro-9wv8)
+!.beads/metadata.json
+
 # codegen module-standardizer reject artifacts (ADR-005 §9)
 *.tpl.rej
 
-# --- workspace-sync: required ignores (auto-managed) ---
+# --- codegen conform: generated runtime ignores ---
 .direnv/
 .reports/
 .venv/
+.bin/
+.tools/
 __pycache__/
 base.mk
 !.pre-commit-config.yaml
@@ -321,6 +327,7 @@ base.mk
 # Derived build and tool artifacts
 __pyrefly_virtual__/
 .benchmarks/
+.bkp/
 .cache/
 .codegraph/
 .dolt_dropped_databases/
@@ -348,7 +355,6 @@ site/
 target/
 .pyrefly_cache/
 .tox/
-.flext-deps/
 .flext-sync.lock
 .sync.lock
 .planning/
@@ -356,3 +362,36 @@ skill-create-output/
 .debug-journal.md
 .mcp.json
 CLAUDE.local.md
+
+# Tracked managed artifacts
+!.github/ci-template/
+!.github/ci-template/ci.yml
+!.github/copilot-instructions.md
+!.github/dependabot.yml
+!.github/prompts/
+!.github/prompts/flext-aggressive-scale-refactor.prompt.md
+!.github/prompts/flext-strict-jsonvalue-session-continuation.prompt.md
+!.github/scripts/
+!.github/scripts/check-beads-policy.sh
+!.github/scripts/check-cqrs-compliance.sh
+!.github/scripts/flext-law-loop.sh
+!.github/scripts/install-git-hooks.sh
+!tests/fixtures/
+!tests/fixtures/ci/
+!tests/fixtures/ci/docker/
+!tests/fixtures/ci/docker/alpine.Dockerfile
+!tests/fixtures/ci/docker/arch.Dockerfile
+!tests/fixtures/ci/docker/debian.Dockerfile
+!tests/fixtures/ci/docker/fedora.Dockerfile
+!tests/fixtures/ci/docker/ubuntu.Dockerfile
+!.github/workflows/
+!.github/workflows/ci-matrix.yml
+!.github/workflows/ci.yml
+!.github/workflows/docs.yml
+!.github/workflows/release.yml
+!sgconfig.yml
+!.vscode/settings.json
+!LICENSE
+!config/
+!config/workspace.yaml
+!custom.mk

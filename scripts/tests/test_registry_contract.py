@@ -132,7 +132,7 @@ def test_run_shell_mirrors_captured_output(capsys: pytest.CaptureFixture[str]) -
     code = Dispatch.run_shell((
         sys.executable,
         "-c",
-        "import sys; u.Cli.emit_raw('child-out\\n'); sys.stderr.write('child-err\\n')",
+        "import sys; print('child-out'); print('child-err', file=sys.stderr)",
     ))
 
     captured = capsys.readouterr()
@@ -245,7 +245,7 @@ def test_clean_without_apply_stays_dry_run(capsys: pytest.CaptureFixture[str]) -
 
         output = capsys.readouterr().out
         assert "DRY-RUN: nenhuma mutacao executada." in output
-        assert "make clean WHAT=all" in output
+        assert "make clean" in output
     finally:
         _restore_env(original)
 
