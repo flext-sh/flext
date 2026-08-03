@@ -1,30 +1,25 @@
-# ADR-010 — Unified project standardization (Make, scripts, tests, structure) via flext-infra codegen and flext-tests
+# ADR-010 — Unified project standardization via flext-infra codegen and flext-tests
 
-- **Status:** Accepted (planning) — targets the `0.20.0-dev` line
+- **Status:** Accepted — split delivery across `0.12.0-dev` and `0.20.0-dev`
 - **Date:** 2026-07-18
-- **Target line:** FLEXT `0.20.0-dev` (early development and planning). This is a
-  forward standardization contract; it does not retro-fit the `0.12.0-dev`
-  release line.
-- **Scope:** One common, generated base for every project the workspace
-  coordinates — root workspace, internal FLEXT packages, loose internal projects
-  (treated as independent), and external/independent applications (`dcdoc`,
-  DataOP, DcBackup) — covering Make verbs, scripts, tests, `.venv`/mise/direnv
-  setup, `pyproject.toml`, package `**init**.py` facades, directory layout, and
-  canonical module/class/prefix naming for `src`, `tests`, `examples`, `scripts`.
-- **Tracking:** ecosystem-standardization epic and children (labelled
-  `branch:0.20.0-dev`).
+- **Amended:** 2026-07-28
+- **Target lines:** `0.12.0-dev` receives the release-blocking generic
+  manifest, capability, Make, codegen, and external-compatibility contract.
+  Facade, naming, runtime-directory, layout, and structural-enforcement
+  refactors remain forward-only on `0.20.0-dev`.
+- **Tracking:** `mro-p68a`, external-compatibility gate `mro-p68a.12`, and the
+  forward ecosystem-standardization epic.
 - **Complements:** ADR-003 (topology/profiles), ADR-004 (Make/codegen SSOT
   ownership), ADR-005 (config/settings/constants/templates/schemas SSOT and
   facade layering), ADR-007 (operational kernel/CLI/transactional conform),
   ADR-008 (neutral consumer boundaries), ADR-009 (ecosystem coordination).
 
-This ADR does not create a new owner. It unifies and hardens the existing
-`flext-infra codegen` pipeline (SSOT `codegen.yaml` with `tooling.yaml`) and the
-`flext-tests` shared base, so one generated base works for every project forever.
+This ADR does not create a new owner. It separates the compatibility contract
+needed to stabilize `flext-infra 0.12.0` from unrelated forward architecture.
 
 ## Context
 
-The workspace already has the right owners:
+The workspace already has the right generic owners:
 
 - `flext-infra codegen conform` is the sole conformance/generation interface
   (ADR-004), rendering managed files from `codegen.yaml`/`tooling.yaml` and the
@@ -32,172 +27,137 @@ The workspace already has the right owners:
   `project/base/{Makefile,pyproject.toml,.mise.toml,python-version,custom.mk}.j2`,
   `module_skeleton.py.j2`, `static_package_init.py.j2`, `lazy_init_root.py.j2`).
 - `flext-tests` owns the shared test base and generic Make test behavior.
-- ADR-005 fixes facade layering `c -> t -> p -> m -> u` and the one-owner rule
-  for `constants.py`/`utilities.py`/`api.py`/`base.py`/`_settings.py`/`_config.py`
-  and their `_constants/*`, `_utilities/*` private namespaces.
+- each consumer owns its topology and capabilities in its local
+  `config/workspace.yaml`;
+- `flext-tests` owns shared Python test behavior, but it does not own Make
+  routing.
 
-What is missing is not another tool. It is three things: a single validated standard that
-every project — including loose internal projects and external applications — is
-measured against; a validation-first rollout that reports drift before it
-rewrites; and enforcement so the base cannot silently diverge again.
+The former text treated all standardization as `0.20.0-dev` work and presented
+`boot`, `fmt`, and `val` beside the ADR-004 grammar. That contradicted the
+release requirement: an isolated `flext-infra` artifact must provide one real,
+generic Make/codegen surface to all release consumers before `0.12.0` can ship.
 
 ## Decision
 
-Adopt one generated, enforced standardization base owned by `flext-infra`
-codegen + `flext-tests`, applied to every project through three ordered phases.
+Adopt one generated base with two explicitly separated delivery scopes.
 
-### 1. Single standardization surface (SSOT)
+### 1. The `0.12.0-dev` stabilization subset is release-blocking
 
-The standard is data, not prose. It lives only in:
+`0.12.0-dev` receives all of the following before release:
 
-- `flext-infra/.../config/codegen.yaml` — `toolchain`, `profiles`, `make.verbs`,
-  `managed_files`, `scaffold`, `templates`, `repositories`, `workspaces`.
-- `flext-infra/.../config/tooling.yaml` — tool versions and tool config
-  (ruff, pyrefly, pyright, mypy, pytest) rendered into `pyproject.toml`.
-- `flext-tests` — shared fixtures, `conftest` base, and generic test verbs.
+- a consumer-owned, typed `config/workspace.yaml`;
+- separate topology (`workspace-root`, `workspace-member`, or `standalone`) and
+  declared capabilities (Python, Go, Node/frontend, Helm/GitOps, Docker,
+  documents/content, and scripts);
+- declared command-discovery roots and validated discovery from
+  `scripts/<verb>/<what>.*` metadata;
+- one generated Make surface and one deterministic codegen transaction;
+- proof from an isolated candidate wheel across all 51 executable consumer
+  surfaces.
 
-No project hand-maintains these facts. Any per-project need is expressed through
-validated `custom.mk` handlers (ADR-004) or declared config, never a fork of the
-base.
+The consumer manifest is the sole topology authority. `flext-infra`
+`codegen.yaml` and schemas contain only generic profiles, capability contracts,
+defaults, policies, and templates. They must not contain AI Hub, Cosmos, or
+other consumer identities, branches, members, or exclusions, and conformance
+must not compare a local manifest with a duplicated product catalog.
 
-### 2. Common verb surface for every project
+### 2. The public Make grammar is singular
 
-Every project — root, member, loose internal (independent), and external —
-exposes the same public Make verbs from `base_verbs.mk`: `help`, `boot`,
-`build`, `check`, `fmt`, `scan`, `docs`, `docs-serve`, `test`, `val`, and
-`fix-enforcement`, plus the operational verbs defined by ADR-004. Loose internal
-projects use the `standalone` profile and behave exactly like independent
-projects: they own only themselves and never inspect neighbors (ADR-003).
+Every surface exposes `help` plus exactly the twelve ADR-004 verbs:
 
-`setup`/`boot` provisions the identical environment everywhere: mise-pinned
-Python `3.13` and uv `0.9.21`, `.venv` via uv, direnv (`.envrc`), and
-`pyproject.toml`/`.mise.toml`/`.python-version` rendered from the toolchain SSOT.
+```text
+setup deps build check test format run status docs clean release codegen
+```
 
-### 3. Canonical structure, facades, and naming (measured, then enforced)
+`make <verb> WHAT=help` lists the choices actually discovered for that
+consumer. `PROJECT`, `CHECK_GATES`, `FILE`, `MATCH`, `FAIL_FAST`, and `ARGS`
+have uniform meanings. `APPLY=Y` is the only authorization for mutation.
+Unknown verbs, selectors, projects, and capabilities fail precisely. A declared
+but non-applicable operation reports typed non-applicability; it never becomes
+empty success or an implicit fallback.
 
-The generated base fixes one structure for `src`, `tests`, `examples`,
-`scripts`:
+Capabilities provide concrete handlers only for applicable operations.
+`custom.mk` is limited to private `_custom_<verb>_<what>` and `pre/post-*`
+hooks. It cannot define public targets, replace environment ownership, or patch
+the generator. Legacy `boot`, `fmt`, and `val` aliases and competing Taskfile or
+handwritten dispatchers are removed after each consumer completes its cutover.
 
-- Package facades: `constants.py`, `typings.py`, `protocols.py`, `models.py`,
-  `utilities.py`, `settings.py`, `config.py`, exposing `c/t/p/m/u` (+ operational
-  `r/e/x/h/d/s`); private declarations in `_constants/*`, `_typings/*`,
-  `_protocols/*`, `_models/*`, `_utilities/*`, `_settings.py`, `_config.py`.
-- Composition: `api.py` is the thin MRO facade; `base.py` holds the shared MRO
-  base and Result helpers; `cli.py` holds declarative routes.
-- `**init**.py` are generated from `static_package_init.py.j2` /
-  `lazy_init_root.py.j2` — never hand-written re-export sprawl.
-- Naming is one scheme, rendered/validated by codegen: class prefix per project
-  namespace (e.g. `Flext<Project>`, `DataOP<Concern>`, `DcBackup<Concern>`,
-  `Dcdoc<Verb>Service`), sub-prefixes per concern, canonical subdirectory names,
-  and module names matching the facet they own.
+### 3. Conformance is artifact-isolated and reaches a fixed point
 
-Naming and structure are first reported as drift, then rewritten, then enforced
-(phases below). No parallel/legacy structural branch survives a green cycle.
+The release candidate is built with `uv build --no-sources`, installed into an
+empty environment, and executed without a source checkout, `PYTHONPATH`,
+editable link, or workspace cache. It must support ordinary clones, worktrees,
+workspace roots, attached members, and standalone repositories.
 
-### 3a. Namespaced runtime directories via `settings`
+For every selected surface:
 
-Every project resolves its filesystem roots only through `settings`, never
-through ad-hoc `Path.home()`/`os.environ` derivations. `flext-core`
-`FlextSettings` (layer-0) exposes five XDG-aware directories:
+- check mode performs no writes;
+- apply requires `APPLY=Y` and writes the complete validated selection;
+- `check -> apply -> check` converges, and the second check has no diff;
+- staged output is validated by its real Make consumer before any live
+  activation, upload, service restart, or cluster rollout.
 
-| Field | Linux default | Purpose |
-| --- | --- | --- |
-| `work_dir` | `$XDG_CACHE_HOME` or `~/.cache/<ns>` | scratch/cache |
-| `data_dir` | `$XDG_DATA_HOME` or `~/.local/share/<ns>` | durable data |
-| `config_dir` | `$XDG_CONFIG_HOME` or `~/.config/<ns>` | configuration |
-| `state_dir` | `$XDG_STATE_HOME` or `~/.local/state/<ns>` | state |
-| `runtime_dir` | `$XDG_RUNTIME_DIR/<ns>` or `<work_dir>/run` | ephemeral sockets/PIDs |
+### 4. The external compatibility matrix is a predecessor gate
 
-macOS and Windows map to their native equivalents (`~/Library/...`,
-`%LOCALAPPDATA%`/`%APPDATA%`). Consumers read `settings.data_dir` etc.; deriving
-these paths by hand is drift that Phase 3 enforcement rejects.
+The 51 executable surfaces are:
 
-**`<ns>` is the consuming application's namespace, not the library's.** The
-segment `<ns>` MUST be the namespace of the running application — the project
-that uses `flext-core` as its entrypoint — and is shared by every library and
-function call at runtime. When `flext-tap-oracle` runs, all directories are
-`~/.cache/flext-tap-oracle/…`, `~/.config/flext-tap-oracle/…`, etc., even when a
-`flext-cli`, `flext-meltano`, or `flext-core` function resolves a path
-internally. A library MUST NEVER use its own name (`flext-cli`) for the
-directory segment; it uses the running app's namespace.
+- FLEXT root plus 31 projects;
+- `.ai-hub`;
+- `cosmos-main` root plus 12 independent subprojects;
+- `cosmos-docgen` root plus four document subprojects.
 
-**Resolution rule (owned by `flext-core` `FlextSettings`).** Two things stay
-separate:
+Every surface passes `make help`, `make status`, applicable
+`make <verb> WHAT=help`, and `make codegen WHAT=check`. Capability-specific
+gates then exercise Python, Go, Node/frontend, serialized Helm/GitOps,
+Docker/config/scripts, or document build/stage behavior. Upload and deployment
+paths remain dry-run unless separately authorized with `APPLY=Y`; the release
+gate never activates AI Hub services, uploads to Google Drive, or rolls out a
+cluster.
 
-- Normal settings fields keep the per-subclass namespaced pattern (each project
-  reads its own `settings` singleton and its own namespaced sections).
-- The directory properties (`cache_dir`, `work_dir`, `data_dir`, `config_dir`,
-  `state_dir`, `runtime_dir`) are NOT per-subclass. They ALWAYS resolve from the
-  **root project namespace held by the settings root singleton** — a single
-  shared source — never from the `env_prefix` of the subclass that happens to
-  access them. A `flext-cli`/`flext-meltano`/`flext-core` call under application
-  X therefore returns `~/.<root>/X/…`; a library MUST NEVER use its own name for
-  the directory segment.
+`flext-infra 0.12.0` release preparation and publication remain blocked until
+this matrix is green against the exact candidate artifact SHA. Representative
+profiles also run on Ubuntu, macOS, and Windows. Helm is always serialized.
 
-Namespace precedence for that root value, registration being **optional**:
+### 5. Forward-only `0.20.0-dev` architecture
 
-1. `FlextSettings.set_app_namespace("flext-tap-oracle")` — an entrypoint may
-   declare the application identity once (first-wins).
-2. `FLEXT_APP_NAMESPACE` — environment override when no bootstrap ran.
-3. **Root project namespace (default)** — otherwise the running project's own
-   namespace prevails; registration is never mandatory.
+The historical broader standardization decision remains accepted for
+`0.20.0-dev`. It covers:
 
-Per-application overrides use `<APPNS>_<NAME>_DIR`
-(e.g. `FLEXT_TAP_ORACLE_WORK_DIR`); namespaces that are not a single safe path
-segment are rejected.
+- canonical package facades, MRO composition, and generated `__init__.py`;
+- module, class, and namespace naming;
+- canonical `src`, `tests`, `examples`, and `scripts` layout;
+- application-namespaced runtime directories and `FlextSettings` root-singleton
+  resolution;
+- declarative structural and naming enforcement.
 
-**Implementation ownership.** The `flext-core` `FlextSettings` change that binds
-the `*_dir` resolution to the settings root singleton is implemented by the
-`flext-core` maintenance lane, not by this standardization work. This ADR only
-fixes the contract every consumer must follow; consumer adoption and enforcement
-are tracked in Beads.
-
-### 4. Three ordered phases (same strategy as ADR-020/008/009)
-
-1. **Validation-first.** `flext-infra codegen conform --mode check` plus a
-   standardization audit reports every drift (missing verbs, non-standard
-   layout, wrong facade/`**init**`, naming violations, toolchain/pyproject
-   drift, non-standard tests/scripts/examples) across all projects, with zero
-   writes. Output is evidence, not a rewrite.
-2. **Refactoring.** `flext-infra codegen conform --mode apply` (and the
-   `flext-tests` base) migrates each project to the standard in bounded,
-   ownership-scoped batches, deletion-first (ADR-005 §5), one cut per concern,
-   no compatibility shim, each batch validated (`ruff`/`pyrefly`/`pytest`).
-3. **Enforcement.** The standard becomes declarative enforcement data in
-   `flext-infra/config/enforcement/*.yaml` evaluated by the rope-semantic engine
-   (ADR-005 §6), so drift fails a gate instead of returning silently. Every
-   project runs the same `check`/`val` gates.
-
-### 5. Applicability to independent and external projects
-
-Loose internal projects and external applications (`dcdoc`, DataOP, DcBackup)
-consume the same generated base through the `standalone` profile and their own
-`flext-infra` invocation. This never changes the dependency law of ADR-008/009:
-`flext-infra` is invoked as external tooling and never imported by an
-application, and no `flext-*` package depends on an application. Standardization
-is generation and validation, not runtime composition.
+None of these forward refactors is a prerequisite for `0.12.0`. Their existing
+planning and drift reports remain historical evidence for the `0.20.0-dev`
+lanes and must not be used to expand the stabilization release.
 
 ## Consequences
 
-- One base setup (venv/mise/direnv/pyproject) and one verb surface work in every
-  project, forever, from a single SSOT.
-- Structure, facades, `**init**.py`, and naming are generated and enforced, not
-  re-invented per project.
-- Drift is caught before it lands; the base cannot silently fork again.
-- Independent and external projects get the same standard without any reverse
-  dependency.
+- The 0.12 release proves generic generation against real consumers instead of
+  a `flext-infra` product catalog.
+- Topology and technological capability are independent typed dimensions.
+- Every consumer has the same public grammar without pretending every operation
+  applies to every stack.
+- Forward architecture remains sequenced on `0.20.0-dev`, without being pulled
+  into release stabilization.
 
 ## Verification contract
 
-1. `flext-infra codegen conform --mode check --scope all` is green (byte-idempotent)
-   on the standardized set; every managed file matches the rendered SSOT.
-2. The standardization audit reports zero drift for verbs, layout, facades,
-   `**init**.py`, toolchain/pyproject, and naming on enforced projects.
-3. Enforcement rules exist as `flext-infra/config/enforcement/*.yaml` data and a
-   naming/structure violation fails `check`/`val`.
-4. `flext-tests` base yields identical generic `test` behavior across projects.
-5. Independent/external projects pass the same gates with no `flext-*`
-   reverse dependency (ADR-008 gate stays green).
+1. Valid, invalid, incomplete, and unknown-capability manifests fail or pass
+   through the typed local-manifest contract as specified.
+2. Command discovery has no duplicated `WHAT` catalog, and every public help or
+   invalid-selection path reports the real discovered surface.
+3. An isolated wheel proves no source-checkout dependency and reaches the
+   codegen fixed point.
+4. All 51 Linux surfaces and representative cross-platform profiles pass their
+   applicable public Make gates with no introduced warning, skip, suppression,
+   fallback, or stale generated output.
+5. Exact artifact SHA, consumer SHA, command, working directory, exit code,
+   decisive output, and public QA evidence are recorded in `mro-p68a.12`.
+6. Forward-only structural gates remain tracked on `0.20.0-dev`.
 
 ## References
 

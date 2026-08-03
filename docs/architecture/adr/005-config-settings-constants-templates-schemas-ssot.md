@@ -71,11 +71,12 @@ implementations in `flext-infra` are invalid.
 
 ### 3. Repository conformance is data-driven
 
-The typed repository catalog and each workspace manifest under `config/` are
-the only topology inputs. `flext-infra codegen conform` maps them into typed
-models including repository references, workspace specification, Make
-specification, uv environment plan, conform request, codegen plan, and codegen
-result.
+Each consumer's validated `config/workspace.yaml` is its only topology input.
+`flext-infra` owns generic schemas, profiles, capabilities, policies, and
+templates, but no external product catalog. `flext-infra codegen conform` maps
+the manifest into typed models including repository references, workspace
+specification, Make specification, uv environment plan, conform request,
+codegen plan, and codegen result.
 
 Project creation and existing-project conformance call that same pipeline. The
 pipeline supports only the three Make profiles defined by ADR-004 and uses one

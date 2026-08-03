@@ -82,7 +82,7 @@ only after it passes:
 
 ```bash
 make check PROJECT=<project> CHECK_GATES=<gates>
-make val VALIDATE_SCOPE=workspace
+make codegen WHAT=check PROJECT=<project>
 ```
 
 All FLEXT validation uses the root Make dispatcher; never run bare `ruff`,
