@@ -23,6 +23,7 @@ workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locai
 | `make coordination` | governance | Diagnósticos de coordenação Beads | `make coordination` |
 | `make docs` | documentation | Pipeline de documentação | `make docs DOCS_PHASE=validate` |
 | `make makefile` | meta | Mostra a superfície de comandos | `make makefile` |
+| `make work` | lane lifecycle | Saga bead+GitFlow+worktree+PR | `make work WHAT=start BEAD=<id> KIND=feature NAME=<slug> APPLY=Y` |
 | `make ship` | release | Orquestração de release | `make ship WHAT=rel APPLY=Y` |
 | `make status` | governance | Status dos Beads | `make status` |
 | `make test` | quality | Testes pytest | `make test PROJECT=flext-infra MATCH=docs` |
