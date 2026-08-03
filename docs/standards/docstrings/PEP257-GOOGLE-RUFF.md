@@ -532,7 +532,7 @@ the current Ruff policy" section above).
 
 ❌ **WRONG** (comment outside docstring):
 
-```python
+```python notest
 # Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Module description."""
 ```

@@ -8,7 +8,9 @@
 # other lanes' uncommitted/untracked changes never pollute or brick it. Green when
 # nothing is committed-ahead.
 
-# SSOT for the workspace base branch. All equalization/merge targets use this.
+# SSOT: config/workspace.yaml integration.branch (flext-infra provider overlay).
+# Falls back to flext-sh provider default when the overlay field is absent.
+WORKSPACE_BASE ?= $(shell awk '/^integration:/{f=1; next} f && /^  branch:/{gsub(/["'"'"']/, "", $$2); print $$2; exit} ' config/workspace.yaml 2>/dev/null)
 WORKSPACE_BASE ?= 0.12.0-dev
 
 .PHONY: done-check workspace-docs-audit full-check workspace-status \
@@ -34,7 +36,7 @@ hooks: ## Install Beads git hooks + FLEXT agent-trailer guard (workspace root)
 		bash .github/scripts/install-git-hooks.sh; \
 	fi
 
-# Auto-provision git hooks after every `make boot` (verb-hook seam).
+# Auto-provision git hooks after every `make setup` (verb-hook seam).
 post-boot: hooks ## Post-boot: ensure git hooks + agent-trailer guard are installed
 
 workspace-docs-audit: ## Markdown lint for workspace docs
@@ -51,11 +53,11 @@ full-check: ## Run canonical full check path with explicit timeout
 	$(Q)timeout_s=$${FULL_CHECK_TIMEOUT:-1200}; \
 	if ! command -v timeout >/dev/null 2>&1; then \
 		echo "WARN: timeout utility unavailable; running without timeout"; \
-		$(MAKE) --no-print-directory check WHAT=all $(MAKE_SELECTION_ARGS); \
+		$(MAKE) --no-print-directory check $(MAKE_SELECTION_ARGS); \
 		code=$$?; \
 		exit $$code; \
 	else \
-		timeout "$$timeout_s"s $(MAKE) --no-print-directory check WHAT=all $(MAKE_SELECTION_ARGS); \
+		timeout "$$timeout_s"s $(MAKE) --no-print-directory check $(MAKE_SELECTION_ARGS); \
 		code=$$?; \
 		if [ "$$code" -eq 124 ]; then \
 			echo "ERRO: full-check atingiu o timeout de $$timeout_s s"; \
@@ -257,113 +259,6 @@ workspace-main-sync: ## Pull origin/main into $(WORKSPACE_BASE) to absorb releas
 workspace-dependabot-apply: ## dependabot-merge + merge result into main
 	$(Q)$(MAKE) --no-print-directory dependabot-merge && \
 	$(MAKE) --no-print-directory workspace-merge-main
-
-# =============================================================================
-# Convenience aliases for promoted registry commands
-# =============================================================================
-# These targets map common action names to `make <verb> WHAT=<action>` so the
-# dispatcher surface stays registry-driven while day-to-day commands remain
-# short and predictable. Mutating aliases run in dry-run unless APPLY=Y is
-# passed explicitly.
-
-.PHONY: gen mod sync up stubs constraints \
-        fmt format lint types pyrefly mypy pyright scan markdown loc-cap \
-        boundary cqrs check-coordination silent-failure go docker_standardization pol pyre \
-        save tag push rel pr project workspace
-
-# build / regenerate
-gen: ## Regenerate standardized project files (dry-run; APPLY=Y to execute)
-	$(Q)$(MAKE) --no-print-directory build WHAT=gen $(MAKE_SELECTION_ARGS)
-
-mod: ## Modernize pyproject.toml files (dry-run; APPLY=Y to execute)
-	$(Q)$(MAKE) --no-print-directory build WHAT=mod $(MAKE_SELECTION_ARGS)
-
-sync: ## Sync project Makefiles from pyproject.toml (dry-run; APPLY=Y to execute)
-	$(Q)$(MAKE) --no-print-directory build WHAT=sync $(MAKE_SELECTION_ARGS)
-
-up: ## Upgrade workspace dependencies (dry-run; APPLY=Y to execute)
-	$(Q)$(MAKE) --no-print-directory build WHAT=up $(MAKE_SELECTION_ARGS)
-
-stubs: ## Run repo-wide stub supply-chain validation
-	$(Q)$(MAKE) --no-print-directory build WHAT=stubs $(MAKE_SELECTION_ARGS)
-
-constraints: ## Rewrite dependency constraints (dry-run; APPLY=Y to execute)
-	$(Q)$(MAKE) --no-print-directory build WHAT=constraints $(MAKE_SELECTION_ARGS)
-
-# check / quality
-fmt: ## Run formatting gates (dry-run; APPLY=Y to fix)
-	$(Q)$(MAKE) --no-print-directory check WHAT=fmt $(MAKE_SELECTION_ARGS)
-
-lint: ## Run default lint/type gates
-	$(Q)$(MAKE) --no-print-directory check WHAT=lint $(MAKE_SELECTION_ARGS)
-
-types: ## Run typing supply chain
-	$(Q)$(MAKE) --no-print-directory check WHAT=types $(MAKE_SELECTION_ARGS)
-
-pyrefly: ## Run pyrefly scoped type check
-	$(Q)$(MAKE) --no-print-directory check WHAT=pyrefly $(MAKE_SELECTION_ARGS)
-
-mypy: ## Run mypy quality gate
-	$(Q)$(MAKE) --no-print-directory check WHAT=mypy $(MAKE_SELECTION_ARGS)
-
-pyright: ## Run pyright quality gate
-	$(Q)$(MAKE) --no-print-directory check WHAT=pyright $(MAKE_SELECTION_ARGS)
-
-pyre: ## Run pyrefly repository type check
-	$(Q)$(MAKE) --no-print-directory check WHAT=pyre $(MAKE_SELECTION_ARGS)
-
-scan: ## Run security scan gates
-	$(Q)$(MAKE) --no-print-directory check WHAT=scan $(MAKE_SELECTION_ARGS)
-
-markdown: ## Run Markdown quality gate
-	$(Q)$(MAKE) --no-print-directory check WHAT=markdown $(MAKE_SELECTION_ARGS)
-
-loc-cap: ## Run loc-cap gate
-	$(Q)$(MAKE) --no-print-directory check WHAT=loc-cap $(MAKE_SELECTION_ARGS)
-
-boundary: ## Run boundary gate
-	$(Q)$(MAKE) --no-print-directory check WHAT=boundary $(MAKE_SELECTION_ARGS)
-
-cqrs: ## Run CQRS compliance gate
-	$(Q)$(MAKE) --no-print-directory check WHAT=cqrs $(MAKE_SELECTION_ARGS)
-
-check-coordination: ## Run coordination governance checks
-	$(Q)$(MAKE) --no-print-directory check WHAT=coordination $(MAKE_SELECTION_ARGS)
-
-silent-failure: ## Run silent-failure quality gate
-	$(Q)$(MAKE) --no-print-directory check WHAT=silent-failure $(MAKE_SELECTION_ARGS)
-
-go: ## Run Go quality gate
-	$(Q)$(MAKE) --no-print-directory check WHAT=go $(MAKE_SELECTION_ARGS)
-
-docker_standardization: ## Validate Docker artifact centralization
-	$(Q)$(MAKE) --no-print-directory check WHAT=docker_standardization $(MAKE_SELECTION_ARGS)
-
-pol: ## Run typing policy gate
-	$(Q)$(MAKE) --no-print-directory check WHAT=pol $(MAKE_SELECTION_ARGS)
-
-# ship / release
-save: ## Commit all changes in selected projects (dry-run; APPLY=Y to execute)
-	$(Q)$(MAKE) --no-print-directory ship WHAT=save $(MAKE_SELECTION_ARGS)
-
-tag: ## Create git tags for selected projects (dry-run; APPLY=Y to execute)
-	$(Q)$(MAKE) --no-print-directory ship WHAT=tag $(MAKE_SELECTION_ARGS)
-
-push: ## Push branches and tags for selected projects (dry-run; APPLY=Y to execute)
-	$(Q)$(MAKE) --no-print-directory ship WHAT=push $(MAKE_SELECTION_ARGS)
-
-rel: ## Interactive workspace release orchestration (dry-run; APPLY=Y to execute)
-	$(Q)$(MAKE) --no-print-directory ship WHAT=rel $(MAKE_SELECTION_ARGS)
-
-pr: ## Manage pull requests for selected projects (dry-run; APPLY=Y to execute)
-	$(Q)$(MAKE) --no-print-directory ship WHAT=pr $(MAKE_SELECTION_ARGS)
-
-# val / governance
-project: ## Run project validation gates
-	$(Q)$(MAKE) --no-print-directory val WHAT=project $(MAKE_SELECTION_ARGS)
-
-workspace: ## Run workspace validation gates
-	$(Q)$(MAKE) --no-print-directory val WHAT=workspace $(MAKE_SELECTION_ARGS)
 
 # =============================================================================
 # ast-grep codemod library ([root]/codemod)

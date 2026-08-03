@@ -1,4 +1,6 @@
-> **Note:** This section is part of the _internals_ documentation, and is partly targeted to contributors.
+
+!!! note
+This section is part of the _internals_ documentation, and is partly targeted to contributors.
 
 Pydantic heavily relies on type hints at runtime to build schemas for validation, serialization, etc.
 
@@ -6,7 +8,7 @@ While type hints were primarily introduced for static type checkers (such as [My
 accessible (and sometimes evaluated) at runtime. This means that the following would fail at runtime,
 because `Node` has yet to be defined in the current module:
 
-```python
+```python {test="skip" lint="skip"}
 class Node:
     """Binary tree node."""
 
@@ -23,7 +25,7 @@ with the `from **future** import annotations
 
 from collections.abc import Mapping, Sequence` [future statement], type hints are stringified by default:
 
-```python
+```python {requires="3.12" lint="skip"}
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
@@ -45,7 +47,7 @@ u.Cli.print(Foo.__annotations__)
 
 ## The challenges of runtime evaluation
 
-Static type checkers make use of the Abstract Syntax Tree (AST) to analyze the defined annotations.
+Static type checkers make use of the <abbr title="Abstract Syntax Tree">AST</abbr> to analyze the defined annotations.
 Regarding the previous example, this has the benefit of being able to understand what `MyType` refers to when analyzing
 the class definition of `Foo`, even if `MyType` isn't yet defined at runtime.
 
@@ -72,7 +74,7 @@ sections below.
 
 The following example will be used as a reference throughout this section:
 
-```python
+```python {test="skip" lint="skip"}
 # module1.py:
 type MyType = int
 
@@ -139,6 +141,8 @@ The following table lists the resolved type annotations for every field, once th
 
 While the namespace fetching logic is trying to be as accurate as possible, we still face some limitations:
 
+<div class="annotate" markdown>
+
 - The locals of the current class (`cls.__dict__`) may include irrelevant entries, most of them being dunder attributes.
   This means that the following annotation: `f: '__doc__'` will successfully (and unexpectedly) be resolved.
 - When the `Model` class is being created inside a function, we keep a copy of the locals of the frame.
@@ -146,28 +150,30 @@ While the namespace fetching logic is trying to be as accurate as possible, we s
   included
   (and will **not be** if doing a model rebuild at a later point!).
   - To avoid memory leaks, we use weak references to the locals of the function, meaning some forward references might
-    not resolve outside the function [^2].
+    not resolve outside the function (1).
   - Locals of the function are only taken into account for Pydantic models, but this pattern does not apply to
     dataclasses, typed
     dictionaries or named tuples.
 
-[^2]: Here is an example:
+</div>
 
-    ```python
-    def func():
-        A = int
+1. Here is an example:
 
-        class Model(m.BaseModel):
-            f: "A | Forward"
+   ```python {test="skip" lint="skip"}
+   def func():
+       A = int
 
-        return Model
+       class Model(m.BaseModel):
+           f: "A | Forward"
+
+       return Model
 
 
-    Model = func()
+   Model = func()
 
-    Model.model_rebuild(_types_namespace={"Forward": str})
-    # pydantic.errors.PydanticUndefinedAnnotation: name 'A' is not defined
-    ```
+   Model.model_rebuild(_types_namespace={"Forward": str})
+   # pydantic.errors.PydanticUndefinedAnnotation: name 'A' is not defined
+   ```
 
 For backwards compatibility reasons, and to be able to support valid use cases without having to rebuild models,
 the namespace logic described above is a bit different when it comes to core schema generation.
@@ -199,39 +205,40 @@ _not_ the case: `Bar` is being created, so it is not "assigned" to the current m
 To avoid having to call [`model_rebuild()`][pydantic.BaseModel.model_rebuild] on `Bar`, both the parent namespace
 (if `Bar` was to be defined inside a function, and the namespace provided during a model rebuild)
 and the `{Bar.__name__: Bar}` namespace are included in the locals during annotations evaluation of `Foo`
-(with the lowest priority) [^3].
+(with the lowest priority) (1).
+{ .annotate }
 
-[^3]: This backwards compatibility logic can introduce some inconsistencies, such as the following:
+1. This backwards compatibility logic can introduce some inconsistencies, such as the following:
 
-    ```python
-    from dataclasses import dataclass
+   ```python {lint="skip"}
+   from dataclasses import dataclass
 
-    from pydantic import BaseModel
-
-
-    @dataclass
-    class Foo:
-        # `a` and `b` shouldn't resolve:
-        a: "Model"
-        b: "Inner"
+   from pydantic import BaseModel
 
 
-    def func():
-        Inner = int
+   @dataclass
+   class Foo:
+       # `a` and `b` shouldn't resolve:
+       a: "Model"
+       b: "Inner"
 
-        class Model(m.BaseModel):
-            foo: Foo
 
-        Model.__pydantic_complete__
-        # > True, should be False.
-    ```
+   def func():
+       Inner = int
+
+       class Model(m.BaseModel):
+           foo: Foo
+
+       Model.__pydantic_complete__
+       # > True, should be False.
+   ```
 
 ## Resolving annotations when rebuilding a model
 
 When a forward reference fails to evaluate, Pydantic will silently fail and stop the core schema
 generation process. This can be seen by inspecting the `__pydantic_core_schema__` of a model class:
 
-```python
+```python {lint="skip"}
 from pydantic import BaseModel
 
 
@@ -245,7 +252,7 @@ Foo.__pydantic_core_schema__
 
 If you then properly define `MyType`, you can rebuild the model:
 
-```python
+```python {test="skip" lint="skip"}
 type MyType = int
 
 Foo.model_rebuild()

@@ -5,7 +5,7 @@
 # domain = "workspace"
 # summary = "Bootstrap workspace submodules"
 # description = "Runs the canonical bootstrap target for submodule initialization."
-# example = "make boot WHAT=submodules"
+# example = "make setup WHAT=submodules"
 # target = "_boot_submodules"
 # mutates = true
 # aliases = []

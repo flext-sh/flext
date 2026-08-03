@@ -5,7 +5,7 @@
 # domain = "workspace"
 # summary = "Clean build/test/type artifacts"
 # description = "Runs the canonical _clean_default target to remove caches and orchestrated clean artifacts."
-# example = "make clean WHAT=all"
+# example = "make clean"
 # target = "_clean_default"
 # mutates = true
 # aliases = []
