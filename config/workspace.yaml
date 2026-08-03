@@ -4,6 +4,14 @@
 # input. Add members or exclusions here, then run `make codegen`.
 version: 3
 name: flext
+# Beads ledger identity (SSOT for .beads/config.yaml issue-prefix + dolt database).
+# Declared explicitly because it diverges from `name`: the shared Dolt server on
+# :3308 hosts this workspace's tracker as `mro`, not `flext`. Without this key
+# conform falls back to the project name and rebinds bd to a non-existent
+# `flext` database, losing the live tracker (see mro-6fca).
+ledger_id: mro
+# Issue namespace override: live tracker issues are mro-*, not flext-* (mro-6fca).
+ledger_prefix: mro
 repository:
   name: flext
   distribution: flext
