@@ -426,7 +426,7 @@ make check CHECK_GATES=lint,format,pyrefly,mypy,pyright
 
 # Tests / validation (advisory in CI)
 make test
-make check WHAT=all
+make check
 
 # Scope a single submodule with PROJECT=
 make check PROJECT=flext-core

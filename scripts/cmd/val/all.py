@@ -5,7 +5,7 @@
 # domain = "governance"
 # summary = "Run validation gates using current VALIDATE_SCOPE"
 # description = "Runs workspace and/or project validation depending on VALIDATE_SCOPE."
-# example = "make val WHAT=all"
+# example = "make val"
 # mutates = false
 # aliases = ["validate"]
 # params = [

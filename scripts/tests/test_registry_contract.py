@@ -245,7 +245,7 @@ def test_clean_without_apply_stays_dry_run(capsys: pytest.CaptureFixture[str]) -
 
         output = capsys.readouterr().out
         assert "DRY-RUN: nenhuma mutacao executada." in output
-        assert "make clean WHAT=all" in output
+        assert "make clean" in output
     finally:
         _restore_env(original)
 
