@@ -42,6 +42,15 @@ members = [
     "flext-tests",
     "flext-web",
 ]
+excludes = [
+    { package = { name = "flext-cli" }, dependencies = ["flext-core"] },
+    { package = { name = "flext-core" }, dependencies = ["flext-cli"] },
+    { package = { name = "flext-infra" }, dependencies = ["flext-cli"] },
+    { package = { name = "flext-infra" }, dependencies = ["flext-core"] },
+    { package = { name = "flext-infra" }, dependencies = ["flext-tests"] },
+    { package = { name = "flext-tests" }, dependencies = ["flext-core"] },
+    { package = { name = "flext-tests" }, dependencies = ["flext-infra"] },
+]
 
 [[package]]
 name = "actionlint-py"
@@ -598,19 +607,20 @@ wheels = [
 
 [[package]]
 name = "code-review-graph"
-version = "2.3.6"
+version = "2.3.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "fastmcp" },
     { name = "mcp" },
     { name = "networkx" },
+    { name = "pyyaml" },
     { name = "tree-sitter" },
     { name = "tree-sitter-language-pack" },
     { name = "watchdog" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1c/29/002537342840a09e90961e1c2eee33b87225720173bbbb4aa7096e0d3719/code_review_graph-2.3.6.tar.gz", hash = "sha256:047d4d8a13f0515c5a9ad73716af1e04d5833637d6ddcc4f1b780171b8702105", size = 354942, upload-time = "2026-06-10T18:30:20.525Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/02/b3/e202da5d2bc15975cb94153f071474be9d35121b76475c87ade7381a392a/code_review_graph-2.3.7.tar.gz", hash = "sha256:5a44440fd87607761b2fb06341aaab48ad1767c14b3eb98aa7ee2e357da867b8", size = 455605, upload-time = "2026-07-18T00:34:12.608Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/66/c7/01cc7fa8cc574f26118ce3050d8e01d4303d673bf439b1d8d3e009287605/code_review_graph-2.3.6-py3-none-any.whl", hash = "sha256:001c8604d0e22a1b8aa61a24824ab25ef2db81d5ef8d3770a3de0f62704845c7", size = 334774, upload-time = "2026-06-10T18:30:18.815Z" },
+    { url = "https://files.pythonhosted.org/packages/f3/8f/2df3fcca285b489d195706b09cefda3e57e7158185cb83905200d7b27199/code_review_graph-2.3.7-py3-none-any.whl", hash = "sha256:12196dce3e673bdec7fba97ae5c4dff7589adee73a721374f62efae76e0fdd88", size = 426655, upload-time = "2026-07-18T00:34:11.05Z" },
 ]
 
 [package.optional-dependencies]
@@ -1544,7 +1554,7 @@ dev = [
     { name = "bandit", specifier = ">=1.8" },
     { name = "black", specifier = ">=25.1" },
     { name = "blacken-docs", specifier = ">=1.19" },
-    { name = "code-review-graph", extras = ["all", "embeddings"], specifier = "==2.3.6" },
+    { name = "code-review-graph", extras = ["all", "embeddings"], specifier = "==2.3.7" },
     { name = "codespell", specifier = ">=2.3" },
     { name = "deptry", specifier = ">=0.23" },
     { name = "django-stubs", specifier = ">=6.0.6" },
@@ -2068,7 +2078,6 @@ dependencies = [
     { name = "cachetools" },
     { name = "click" },
     { name = "defusedxml" },
-    { name = "flext-core" },
     { name = "jinja2" },
     { name = "jsonschema" },
     { name = "openpyxl" },
@@ -2325,7 +2334,6 @@ dev = [
     { name = "django-stubs" },
     { name = "factory-boy" },
     { name = "faker" },
-    { name = "flext-cli" },
     { name = "flext-infra" },
     { name = "flext-tests" },
     { name = "hypothesis" },
@@ -3691,8 +3699,6 @@ source = { editable = "flext-infra" }
 dependencies = [
     { name = "defusedxml" },
     { name = "filelock" },
-    { name = "flext-cli" },
-    { name = "flext-core" },
     { name = "gitpython" },
     { name = "libcst" },
     { name = "mkdocs" },
@@ -3718,7 +3724,6 @@ dev = [
     { name = "django-stubs" },
     { name = "factory-boy" },
     { name = "faker" },
-    { name = "flext-tests" },
     { name = "hypothesis" },
     { name = "isort" },
     { name = "matplotlib-stubs" },
@@ -7558,8 +7563,6 @@ dependencies = [
     { name = "factory-boy" },
     { name = "faker" },
     { name = "flext-cli" },
-    { name = "flext-core" },
-    { name = "flext-infra" },
     { name = "hypothesis" },
     { name = "pytest" },
     { name = "pytest-benchmark" },
@@ -7577,9 +7580,6 @@ dependencies = [
 ]
 
 [package.dev-dependencies]
-codegen = [
-    { name = "flext-infra" },
-]
 dev = [
     { name = "actionlint-py" },
     { name = "autoflake" },

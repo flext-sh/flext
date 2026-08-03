@@ -104,6 +104,8 @@ scripts/maintenance/
 
 # BLOCK: AI/Agent Local Data (NEVER track these)
 .claude/*
+
+# WHITELIST: Agent skills owned by the workspace root
 !.agents/skills/
 !.agents/skills/**
 
