@@ -99,7 +99,7 @@ assert result.exit_code == 0
 
 ## Bad practices
 
-```python
+```python notest
 import typer
 
 

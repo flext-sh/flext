@@ -8,10 +8,5 @@ enabled_plugins_key = "enabledPlugins"
 required_surfaces = ["sgconfig.yml"]
 
 [surfaces]
-always = [
-  ".agents/skills/flext-context-routing/SKILL.md",
-]
-on_demand = [
-  ".agents/skills/flext-law/SKILL.md",
-  ".agents/skills/flext-inviolable-rules/SKILL.md",
-]
+always = [".agents/skills/flext-context-routing/SKILL.md"]
+on_demand = [".agents/skills/flext-law/SKILL.md"]

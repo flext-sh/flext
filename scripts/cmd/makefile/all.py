@@ -5,7 +5,7 @@
 # domain = "meta"
 # summary = "Show command surface from scripts/cmd"
 # description = "Displays all promoted verbs and WHAT options."
-# example = "make makefile WHAT=all"
+# example = "make makefile"
 # mutates = false
 # aliases = []
 # params = []
