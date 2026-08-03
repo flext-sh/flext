@@ -301,13 +301,15 @@ secrets.yml
 .beads/*
 .beads/.*
 !.beads/config.yaml
-!.beads/metadata.json
 .beads/proxieddb/
 .dolt/
 *.db
 .beads-credential-key
 .worktrees/
 legado/
+
+# Beads ledger identity (workspace-root only; see mro-9wv8)
+!.beads/metadata.json
 
 # codegen module-standardizer reject artifacts (ADR-005 §9)
 *.tpl.rej
