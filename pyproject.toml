@@ -175,10 +175,44 @@ extra_checks = true
 follow_imports = "normal"
 ignore_missing_imports = true
 local_partial_types = true
-mypy_path = [".", "src"]
+mypy_path = [
+  "src",
+  ".",
+  "flext-api/src",
+  "flext-auth/src",
+  "flext-cli/src",
+  "flext-core/src",
+  "flext-db-oracle/src",
+  "flext-dbt-ldap/src",
+  "flext-dbt-ldif/src",
+  "flext-dbt-oracle-wms/src",
+  "flext-dbt-oracle/src",
+  "flext-grpc/src",
+  "flext-infra/src",
+  "flext-ldap/src",
+  "flext-ldif/src",
+  "flext-meltano/src",
+  "flext-observability/src",
+  "flext-oracle-oic/src",
+  "flext-oracle-wms/src",
+  "flext-plugin/src",
+  "flext-quality/src",
+  "flext-tap-ldap/src",
+  "flext-tap-ldif/src",
+  "flext-tap-oracle-oic/src",
+  "flext-tap-oracle-wms/src",
+  "flext-tap-oracle/src",
+  "flext-target-ldap/src",
+  "flext-target-ldif/src",
+  "flext-target-oracle-oic/src",
+  "flext-target-oracle-wms/src",
+  "flext-target-oracle/src",
+  "flext-tests/src",
+  "flext-web/src",
+]
 namespace_packages = true
 no_implicit_reexport = true
-plugins = ["pydantic.mypy", "returns.contrib.mypy.returns_plugin"]
+plugins = ["pydantic.mypy"]
 python_version = "3.13"
 strict_equality = true
 warn_redundant_casts = true
@@ -228,6 +262,7 @@ project-includes = [
 ]
 python-version = "3.13"
 search-path = [
+  "src",
   ".",
   "flext-api/src",
   "flext-auth/src",
@@ -260,7 +295,6 @@ search-path = [
   "flext-target-oracle/src",
   "flext-tests/src",
   "flext-web/src",
-  "src",
 ]
 use-ignore-files = false
 
@@ -378,7 +412,7 @@ exclude = [
   ".venv",
   "vendor",
 ]
-extraPaths = [".", "src"]
+extraPaths = ["src", "."]
 include = [
   "examples",
   "flext-api/examples",
@@ -2011,13 +2045,10 @@ root = "flext-web/tests"
 [tool.pytest.ini_options]
 addopts = [
   "--benchmark-disable",
-  "--dist=worksteal",
   "--durations=10",
   "--markdown-docs",
-  "--session-timeout=300",
   "--strict-markers",
   "--timeout=30",
-  "-n=4",
 ]
 filterwarnings = [
   "error",
@@ -2043,8 +2074,10 @@ testpaths = [".", "docs", "examples", "scripts", "src", "tests"]
 # [MANAGED] ruff
 [tool.ruff]
 exclude = [
+  "**/.archive/**",
   "**/__pyrefly_virtual__/**",
   ".archive",
+  ".archive/**",
   ".git",
   ".mypy_cache",
   ".pytest_cache",
@@ -2215,7 +2248,8 @@ split-on-trailing-comma = false
   "undocumented-public-function",
   "undocumented-public-method",
 ]
-"scripts/cmd/**/*.py" = ["invalid-module-name"]
+"scripts/cmd/**/*.py" = ["invalid-module-name", "shebang-not-executable"]
+"**/examples/**/*.py" = ["invalid-module-name", "shebang-not-executable"]
 
 # [MANAGED] tomlsort
 [tool.tomlsort]
@@ -2225,6 +2259,48 @@ sort_first = ["build-system", "dependency-groups", "project", "tool"]
 
 [tool.uv]
 link-mode = "copy"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-infra"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-tests"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-core"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-infra"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-core"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-tests"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-core"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-cli"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-cli"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-infra"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-cli"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-core"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-tests"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-infra"
 
 [tool.uv.sources.flext-api]
 workspace = true
@@ -2376,7 +2452,7 @@ dev = [
   "bandit>=1.8",
   "black>=25.1",
   "blacken-docs>=1.19",
-  "code-review-graph[all,embeddings]==2.3.6",
+  "code-review-graph[all,embeddings]==2.3.7",
   "codespell>=2.3",
   "deptry>=0.23",
   "django-stubs>=6.0.6",
@@ -2426,6 +2502,7 @@ dev = [
   "pyupgrade>=3.19",
   "radon>=6.0.1",
   "ruff>=0.12.3",
+  "rumdl>=0.2.46",
   "types-cachetools>=6.2",
   "types-cffi>=2.0",
   "types-click>=7.1",
@@ -2434,6 +2511,7 @@ dev = [
   "types-flask>=1.1.6",
   "types-jsonschema>=4.26",
   "types-ldap3>=2.9.13.20250622",
+  "types-openpyxl>=3.1.5.20260518",
   "types-paramiko>=4.0",
   "types-protobuf>=6.30.2.20250703",
   "types-psutil>=7",
@@ -2448,7 +2526,7 @@ dev = [
   "types-tabulate>=0.10",
   "types-toml>=0.10.8.20260518",
   "vulture>=2.13",
-  "yamlfix>=1.19.1,<2",
+  "yamlfix>=1.19.1",
 ]
 workspace = [
   "flext-api",

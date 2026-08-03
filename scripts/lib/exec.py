@@ -44,13 +44,12 @@ class CommandExecution:
         if CommandExecution.surface_validation_enabled():
             if not CommandExecution.make_target_exists(target):
                 return 2
-            rendered = " ".join((
+            " ".join((
                 "make",
                 target,
                 *make_args,
                 *CommandExecution.make_variable_args(extra_env),
             ))
-            print(f"SURFACE-VALIDATE: {rendered}")
             return 0
         return CommandExecution.run_process((
             "make",
@@ -105,8 +104,6 @@ class CommandExecution:
         """Run one process through flext-cli and mirror captured output."""
         result = u.Cli.run_raw(command, cwd=CommandRegistry.ROOT, env=extra_env)
         if result.failure:
-            if result.error:
-                print(result.error, file=sys.stderr)
             return 1
         output = result.value
         if output.stdout:

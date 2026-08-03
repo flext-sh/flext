@@ -3,9 +3,6 @@
 /*/
 !/LICENSE
 
-# Allow all FLEXT ecosystem project directories
-!flext-*/
-
 # WHITELIST: Workspace Directories
 !docker/
 !docs/
@@ -45,6 +42,7 @@ scripts/maintenance/
 !.beads/
 .beads/*
 !.beads/config.yaml
+!.beads/metadata.json
 
 # Python configuration
 !pyproject.toml
@@ -104,9 +102,6 @@ scripts/maintenance/
 !.vscode/**
 !.claude/**
 !.claude-plugin/**
-
-# Workspace member contents
-!flext-*/**
 
 # BLOCK: AI/Agent Local Data (NEVER track these)
 .claude/*
@@ -298,7 +293,7 @@ secrets.yml
 .devcontainer/.env
 .github/*.rej
 
-# --- workspace-migrate: required ignores (auto-managed) ---
+# --- codegen conform: tracked owner inputs ---
 !base.mk
 
 # FINAL BEADS TRACKING POLICY
@@ -313,13 +308,18 @@ secrets.yml
 .worktrees/
 legado/
 
+# Beads ledger identity (workspace-root only; see mro-9wv8)
+!.beads/metadata.json
+
 # codegen module-standardizer reject artifacts (ADR-005 §9)
 *.tpl.rej
 
-# --- workspace-sync: required ignores (auto-managed) ---
+# --- codegen conform: generated runtime ignores ---
 .direnv/
 .reports/
 .venv/
+.bin/
+.tools/
 __pycache__/
 base.mk
 !.pre-commit-config.yaml
@@ -327,6 +327,7 @@ base.mk
 # Derived build and tool artifacts
 __pyrefly_virtual__/
 .benchmarks/
+.bkp/
 .cache/
 .codegraph/
 .dolt_dropped_databases/
@@ -357,7 +358,6 @@ target/
 tmp_flow_test/
 .pyrefly_cache/
 .tox/
-.flext-deps/
 .flext-sync.lock
 .sync.lock
 .planning/
@@ -367,16 +367,32 @@ skill-create-output/
 CLAUDE.local.md
 
 # Tracked managed artifacts
-!ci/
-!ci/docker/
-!ci/docker/alpine.Dockerfile
-!ci/docker/arch.Dockerfile
-!ci/docker/debian.Dockerfile
-!ci/docker/fedora.Dockerfile
-!ci/docker/ubuntu.Dockerfile
+!.github/ci-template/
+!.github/ci-template/ci.yml
+!.github/copilot-instructions.md
+!.github/dependabot.yml
+!.github/prompts/
+!.github/prompts/flext-aggressive-scale-refactor.prompt.md
+!.github/prompts/flext-strict-jsonvalue-session-continuation.prompt.md
+!.github/scripts/
+!.github/scripts/check-beads-policy.sh
+!.github/scripts/check-cqrs-compliance.sh
+!.github/scripts/flext-law-loop.sh
+!.github/scripts/install-git-hooks.sh
+!tests/fixtures/
+!tests/fixtures/ci/
+!tests/fixtures/ci/docker/
+!tests/fixtures/ci/docker/alpine.Dockerfile
+!tests/fixtures/ci/docker/arch.Dockerfile
+!tests/fixtures/ci/docker/debian.Dockerfile
+!tests/fixtures/ci/docker/fedora.Dockerfile
+!tests/fixtures/ci/docker/ubuntu.Dockerfile
 !.github/workflows/
 !.github/workflows/ci-matrix.yml
 !.github/workflows/ci.yml
+!.github/workflows/docs.yml
+!.github/workflows/release.yml
+!sgconfig.yml
 !.vscode/settings.json
 !LICENSE
 !config/

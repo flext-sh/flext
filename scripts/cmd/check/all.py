@@ -5,7 +5,7 @@
 # domain = "quality"
 # summary = "Run quick default checks"
 # description = "Runs lint and pyrefly gates using the lightweight default profile."
-# example = "make check WHAT=all"
+# example = "make check"
 # mutates = false
 # aliases = ["lint"]
 # params = [

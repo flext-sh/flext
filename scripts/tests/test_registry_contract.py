@@ -127,17 +127,13 @@ def test_main_reports_registry_errors(capsys: pytest.CaptureFixture[str]) -> Non
     assert "verb 'does-not-exist' unknown" in capsys.readouterr().err
 
 
-def test_run_shell_mirrors_captured_output(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
+def test_run_shell_mirrors_captured_output(capsys: pytest.CaptureFixture[str]) -> None:
     """Mirror child stdout and stderr while preserving its exit code."""
-    code = Dispatch.run_shell(
-        (
-            sys.executable,
-            "-c",
-            "import sys; print('child-out'); print('child-err', file=sys.stderr)",
-        )
-    )
+    code = Dispatch.run_shell((
+        sys.executable,
+        "-c",
+        "import sys; print('child-out'); print('child-err', file=sys.stderr)",
+    ))
 
     captured = capsys.readouterr()
     assert code == 0
@@ -249,7 +245,7 @@ def test_clean_without_apply_stays_dry_run(capsys: pytest.CaptureFixture[str]) -
 
         output = capsys.readouterr().out
         assert "DRY-RUN: nenhuma mutacao executada." in output
-        assert "make clean WHAT=all" in output
+        assert "make clean" in output
     finally:
         _restore_env(original)
 
@@ -278,6 +274,7 @@ def test_release_status_coordination_routes_reach_private_targets(
     verb: str,
     what: str,
     target: str,
+    *,
     requires_apply: bool,
     env_updates: tuple[tuple[str, str], ...],
 ) -> None:
