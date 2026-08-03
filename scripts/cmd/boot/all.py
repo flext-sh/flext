@@ -5,7 +5,7 @@
 # domain = "workspace"
 # summary = "Bootstrap workspace .venv + submodules"
 # description = "Installs all projects into workspace .venv and initializes submodules."
-# example = "make boot"
+# example = "make setup"
 # target = "_boot_default"
 # mutates = true
 # aliases = []

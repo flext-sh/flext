@@ -5,7 +5,7 @@
 # domain = "workspace"
 # summary = "Sync project Makefiles and lazy imports"
 # description = "Runs the canonical _sync target to refresh project Makefiles and __init__.py lazy imports."
-# example = "make boot WHAT=sync"
+# example = "make setup WHAT=sync"
 # target = "_sync"
 # mutates = true
 # aliases = []

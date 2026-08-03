@@ -5,7 +5,7 @@
 # domain = "workspace"
 # summary = "Bootstrap workspace virtualenv"
 # description = "Runs the canonical bootstrap target for workspace environment setup."
-# example = "make boot WHAT=venv"
+# example = "make setup WHAT=venv"
 # target = "_boot_venv"
 # mutates = true
 # aliases = []
