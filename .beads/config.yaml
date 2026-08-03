@@ -12,12 +12,12 @@
 issue-prefix: "flext"
 
 # Dolt shared-server connection (machine-wide shared server on :3308).
-# The `flext` database lives there; a repository-local server is never used.
+# The `mro` database lives there; a repository-local server is never used.
 dolt:
   mode: server
   shared-server: true
   host: 127.0.0.1
   port: 3308
   user: root
-  database: flext
+  database: mro
   auto-commit: "on"
