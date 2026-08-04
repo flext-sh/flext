@@ -118,11 +118,11 @@ make test PROJECT=<proj> MATCH=<expr>
 make test PROJECT=<proj>```
 ## Coverage
 
-- `make test` never owns coverage; it uses pytest-testmon incremental selection.
-- `make cov` is the only coverage verb: full suite, fail-under from tooling SSOT,
-  XML report required, and `FILE`/`MATCH` rejected.
-- Run `make cov` locally before `make work WHAT=land`. Do not put coverage in CI
-  or pre-push workflows.
+- `make test` always uses pytest-testmon.
+- Local full-suite `make test` also owns coverage (fail-under + `coverage.xml`)
+  unless `CI=Y`. Focused `FILE=`/`MATCH=` keeps testmon and skips coverage.
+- CI jobs set `CI=Y` so coverage is off; do not reintroduce a public `cov` verb.
+- Cache WHATs: `cache-status`, `cache-clear` (`APPLY=Y`), `cache-checkpoint`.
 - Keep `.testmondata` (and `-wal`/`-shm`) gitignored; `make clean` must preserve them.
 
 
