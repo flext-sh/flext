@@ -14,7 +14,7 @@ OAuth2 client-credentials authentication, and paginated REST access to integrati
 ### Quality signals
 
 - Lint, formatting, and type gates run through the workspace Make contract:
-  `make check PROJECT=flext-oracle-oic`, `make test PROJECT=flext-oracle-oic`, `make val`.
+  `make check PROJECT=flext-oracle-oic`, `make test PROJECT=flext-oracle-oic`, `make check`.
 - Strict typing policy per workspace `AGENTS.md`: no `Any`/`object`, Pydantic 2-way models for owned payloads, `r[T]`
   contracts on every fallible path.
 - No health metrics (coverage or test counts) are asserted on this page; the gates above produce the authoritative
@@ -70,7 +70,7 @@ Source lives under `flext-oracle-oic/src/flext_oracle_oic/`:
 ## Testing & quality
 
 - Run the scoped suites through the workspace gates: `make check PROJECT=flext-oracle-oic` and `make test PROJECT=flext-
-  oracle-oic`; full workspace validation is `make val`.
+  oracle-oic`; full workspace validation is `make check`.
 - Tests exercise the public surface only (facade methods, exported models, CLI behavior) per the workspace testing law.
 
 ## Resources

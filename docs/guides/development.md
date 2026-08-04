@@ -8,7 +8,7 @@ policy source.
 ```bash
 make workspace-check-changed
 make test PROJECT=flext-infra MATCH=docs
-make val
+make check
 ```
 
 Use `PROJECT`, `PROJECTS`, `FILE`, `FILES`, `MATCH`, and `CHECK_GATES` instead of ad hoc shell loops. See [Make
@@ -32,11 +32,11 @@ Commands](make-commands.md) for the full command reference.
 Use the docs phases through the canonical entrypoint:
 
 ```bash
-make docs DOCS_PHASE=generate PROJECT=flext-infra
-make docs DOCS_PHASE=fix PROJECT=flext-infra FIX=1
-make docs DOCS_PHASE=audit PROJECT=flext-infra
-make docs DOCS_PHASE=build PROJECT=flext-infra
-make docs DOCS_PHASE=validate PROJECT=flext-infra
+make docs WHAT=generate PROJECT=flext-infra
+make docs WHAT=fix PROJECT=flext-infra FIX=1
+make docs WHAT=audit PROJECT=flext-infra
+make docs WHAT=build PROJECT=flext-infra
+make docs WHAT=validate PROJECT=flext-infra
 ```
 
 ## Rules That Matter Here

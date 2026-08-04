@@ -214,7 +214,7 @@ make test PROJECT=<proj> MATCH=<expr>
 For several files:
 
 ```bash
-make check CHANGED_ONLY=1
+make workspace-check-changed
 ```
 
 ## Related
@@ -225,5 +225,5 @@ make check CHANGED_ONLY=1
 - `.agents/skills/flext-strict-typing/SKILL.md` — typing rules
 - `.agents/skills/lib-returns/SKILL.md` — Result composition
 - `.agents/skills/lib-structlog/SKILL.md` — structured logging
-- `.agents/skills/flext-inviolable-rules/SKILL.md` — gate commands
-- `.agents/skills/flext-development-workflow/SKILL.md` — workflow
+- `.agents/skills/inviolable-rules/SKILL.md` — gate commands
+- `AGENTS.md` Learned Workspace Facts — CI policy and `make gen APPLY=Y` workflow regeneration

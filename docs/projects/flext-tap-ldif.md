@@ -14,7 +14,7 @@ state, sync) is built on `flext-meltano`, and every fallible operation returns `
 ### Quality signals
 
 - Gates run through the workspace Make contract: `make check PROJECT=flext-tap-ldif`, `make test PROJECT=flext-tap-
-  ldif`, `make val`.
+  ldif`, `make check`.
 - Strict typing per workspace `AGENTS.md`: no `Any`/`object`, Pydantic 2-way models, `r[T]` on every fallible path.
 - No coverage or test-count metrics are asserted here; the gates above produce the authoritative numbers.
 
@@ -64,7 +64,7 @@ Source lives under `flext-tap-ldif/src/flext_tap_ldif/`:
 ## Testing & quality
 
 - Scoped suites run via `make check PROJECT=flext-tap-ldif` and `make test PROJECT=flext-tap-ldif`; full workspace
-  validation is `make val`.
+  validation is `make check`.
 - Tests assert the public surface only (tap discovery, CLI exit codes, exported models) per the workspace testing law.
 
 ## Resources

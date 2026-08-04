@@ -6,9 +6,9 @@ and tests.
 ## Quick Checks
 
 ```bash
-make check CHANGED_ONLY=1
-make val VALIDATE_SCOPE=workspace
-make docs DOCS_PHASE=build PROJECT=flext-infra
+make workspace-check-changed
+make check
+make docs WHAT=build PROJECT=flext-infra
 ```
 
 ## Common Docs Failures
@@ -24,9 +24,9 @@ Typical causes:
 Run:
 
 ```bash
-make docs DOCS_PHASE=fix PROJECT=flext-infra FIX=1
-make docs DOCS_PHASE=audit PROJECT=flext-infra
-make docs DOCS_PHASE=build PROJECT=flext-infra
+make docs WHAT=fix PROJECT=flext-infra FIX=1
+make docs WHAT=audit PROJECT=flext-infra
+make docs WHAT=build PROJECT=flext-infra
 ```
 
 ### Generated API docs are wrong
