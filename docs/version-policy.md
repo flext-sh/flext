@@ -18,9 +18,7 @@ Release notes per cycle live under
 - Packages are independently versioned but released together at the end of a
   cycle; the packaged release tag follows the cycle name (previous packaged
   release: `v0.11.0`).
-- Releases are cut through the canonical lane only: `make ship WHAT=tag` and
-  `make ship WHAT=rel` — never by hand-editing versions in individual
-  packages.
+- Releases are cut through the canonical lane only: `make release` (status/gates). Do not use retired `make ship`, and never hand-edit versions in individual packages.
 - Version bumps are driven from the root so all `flext-*` packages move as
   one consistent set; internal dependencies between packages always reference
   the same cycle version.

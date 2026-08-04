@@ -14,6 +14,9 @@ workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locai
 
 ## Verbos canônicos
 
+> **Verbos retirados da superfície atual:** `ship`, `coordination`, `makefile`, `val` não estão em `PUBLIC_VERBS`. Release usa `make release`. Lane PR owner é `make work WHAT=land`, não `make ship WHAT=pr`.
+> Para `make work`, o default de WHAT é `status` (não `all`).
+
 | Verbo | Domínio | Resumo | Exemplo |
 | --- | --- | --- | --- |
 | `make setup` | workspace | Bootstrap de `.venv` + submódulos | `make setup APPLY=Y` |
@@ -23,7 +26,8 @@ workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locai
 | `make coordination` | governance | Diagnósticos de coordenação Beads | `make coordination` |
 | `make docs` | documentation | Pipeline de documentação | `make docs DOCS_PHASE=validate` |
 | `make makefile` | meta | Mostra a superfície de comandos | `make makefile` |
-| `make ship` | release | Orquestração de release | `make ship WHAT=rel APPLY=Y` |
+| `make work` | lane lifecycle | Saga bead+GitFlow+worktree+PR | `make work WHAT=start BEAD=<id> KIND=feature NAME=<slug> APPLY=Y` |
+| ~~`make ship`~~ | retired | Use `make release` / `make work` | — |
 | `make status` | governance | Status dos Beads | `make status` |
 | `make test` | quality | Testes pytest | `make test PROJECT=flext-infra MATCH=docs` |
 | `make val` | governance | Validação de gates | `make val` |
@@ -62,6 +66,45 @@ workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locai
 | `scan` | `make scan` | Security scan gates |
 | `silent-failure` | `make silent-failure` | Silent-failure gate |
 | `types` | `make types` | Typing supply chain |
+
+
+## Ações de `work` (`make work WHAT=<acao>`)
+
+Saga pública de lane: bead + GitFlow branch + worktree registrada + PR.
+`FlextInfraWorktreeService` continua como motor interno; a superfície pública
+não expõe `WHAT=worktree`.
+
+| Ação | Muta? | Descrição |
+| --- | --- | --- |
+| `start` | sim (`APPLY=Y`) | Cria branch `KIND/NAME`, worktree registrada e grava metadata no bead |
+| `status` | não | Reporta branch/worktree/`head_oid`/PR do bead |
+| `land` | sim (`APPLY=Y`) | Sync→push→abre/observa PR; exige lane limpa, `head_oid` e bind metadata↔registry |
+| `finish` | sim (`APPLY=Y`) | Após PR merged: remove worktree, apaga ref local (CAS) e marca `worktree=removed` |
+
+Seletores:
+
+| Variável | Função |
+| --- | --- |
+| `BEAD` | id do bead dono da lane (obrigatório em start/land/finish) |
+| `KIND` / `NAME` | GitFlow kind (`feature`/`bugfix`/…) e slug kebab-case (start) |
+| `BASE` | override opcional da integration base (start) |
+| `WORKSPACE` | checkout git alvo (default: projeto atual) |
+| `PROJECT` | em workspace-root, se `WORKSPACE` não for passado na CLI, mapeia para `$(PROJECT_ROOT)/$(PROJECT)` |
+
+Controles de segurança (land/finish):
+
+- metadata `worktree` deve coincidir com a lane registrada no git primary
+- branches permanentes (`main`/`master`/integration base) são recusadas
+- `metadata.head_oid` é obrigatório para CAS em land e em finish quando a lane existe
+
+```bash
+make work WHAT=start PROJECT=flext-infra BEAD=mro-xxxx KIND=feature NAME=my-lane APPLY=Y
+make work WHAT=status PROJECT=flext-infra BEAD=mro-xxxx
+make work WHAT=land PROJECT=flext-infra BEAD=mro-xxxx APPLY=Y
+make work WHAT=finish PROJECT=flext-infra BEAD=mro-xxxx APPLY=Y
+```
+
+`make ship WHAT=pr` não é dono de lane; land é o owner do PR da lane.
 
 ## Ações de `ship` (`make ship WHAT=<acao>`)
 
@@ -126,6 +169,9 @@ make test PROJECT=flext-infra MATCH=docs
 
 # Validar workspace completo
 make val
+
+# Lane saga em um membro
+make work WHAT=status PROJECT=flext-infra BEAD=mro-xxxx
 
 # Sincronizar Makefiles após mudar pyproject.toml
 make sync APPLY=Y

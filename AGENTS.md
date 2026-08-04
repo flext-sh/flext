@@ -1,16 +1,16 @@
 <!-- AIHUB-INVIOLABLE-LAW-PRELUDE v1 -->
 # AI Hub Inviolable Law — Strict Prelude
 
-1. Truth: Never claim done, green, or resolved without command, exit code, and decisive output.
-2. Root cause: No bypass, fallback, shim, suppression, stub, hardcode, or old+new coexistence.
-3. Beads first: Claim or update the bead before any file write, shell command, or multi-step task sequence, and update it after each discrete step that changes repository state.
-4. Research first: Inspect code, docs, and canonical sources before acting; never invent APIs, flags, facts, or behavior.
-5. FLEXT first (ai-hub Python): Use the project facades backed by flext-core and flext-cli; do not reimplement primitives locally.
-6. Gate discipline: If a gate blocks, stop and escalate with the exact command/edit; never route around it.
-7. Landing: Land verified work with native gates, commit, fast-forward push, and bead evidence.
-8. Push rejection handling: If a fast-forward push is rejected because the remote has diverged, stop immediately, do not rebase or force-push autonomously, and escalate to the operator with the exact git error message and the local vs. remote commit SHAs.
-9. Escalation clarity: If a rule is technically impossible to satisfy, stop and report the exact error. If two rules conflict, stop and present the conflict to the operator with the specific rule numbers. If a rule is unclear in context, ask a targeted clarification question before proceeding.
-10. Precedence (UNIVERSAL, INVIOLABLE): NEWEST supersedes OLDEST. USER REQUEST > BEADS > ADRs > SKILLs > DOCS > default behavior. On conflict, ADJUST the lower/older artifact (bead, plan, ADR, skill, doc) to match the higher/newer — never override the user or a higher/newer directive to fit a stale one. In ANY doubt, ASK THE USER FIRST — never guess.
+1. Truth: never claim done/green/resolved without command, exit code, decisive output.
+2. Root cause: no bypass, fallback, shim, suppression, stub, hardcode, or old+new coexistence.
+3. Beads first: claim/update bead before file write, shell, or multi-step work; update after every repo-state change.
+4. Research first: inspect code, docs, canonical sources before acting; never invent APIs, flags, facts, or behavior.
+5. Owner first: use the project's declared facades/primitives; do not reimplement them locally.
+6. Gate discipline: if a gate blocks, stop and escalate with the exact command/edit; never route around it.
+7. Landing: native gates, commit, fast-forward push, bead evidence.
+8. Push rejection: FF push rejected on divergence → stop; no autonomous rebase/force-push; escalate with git error + local vs remote SHAs.
+9. Escalation: impossible rule → exact error. Rule conflict → present both with numbers. Unclear → one targeted question. Never guess.
+10. Precedence: NEWEST > OLDEST. USER REQUEST > BEADS > ADRs > SKILLs > DOCS > default. Adjust lower/older to higher/newer. Doubt → ASK USER FIRST.
 <!-- /AIHUB-INVIOLABLE-LAW-PRELUDE -->
 
 # Project Instructions for AI Agents
@@ -144,6 +144,9 @@ make check CHECK_GATES=lint,format,pyrefly,mypy,pyright
 make test
 make check PROJECT=flext-core
 make build WHAT=artifacts
+make work WHAT=start PROJECT=flext-infra BEAD=<id> KIND=feature NAME=<slug> APPLY=Y
+make work WHAT=land PROJECT=flext-infra BEAD=<id> APPLY=Y
+make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 ```
 
 - Toolchain: Python `>=3.13,<3.14`; pins in `.default-python-packages`.
@@ -174,17 +177,23 @@ make build WHAT=artifacts
 
 ## Learned User Preferences
 
-- Deduplicate via MRO / `m`; atomic consumer updates; keep Ruff + Pyrefly clean.
+- Deduplicate via MRO / `m`; atomic consumer updates with direct uses and no compatibility shims; keep Ruff + Pyrefly clean after every edit.
 - Fix known failures; Make verbs must be idempotent; prefer standardized shape over transitional forms.
-- Land fixes in upstream `flext-infra` on the workspace line, not local workarounds.
+- Land fixes in upstream `flext-infra` codegen/config overlays on the workspace line, not local workarounds.
+- Adopt, validate, commit, and push together; finish WIP end-to-end; do not invent blockers or re-confirm settled facts.
+- Prefer lean, structured AGENTS.md that cross-links skills and docs over long prose.
+- Keep pre-commit inline and enforceable before commit/push; do not skip hooks to land work.
 
 ## Learned Workspace Facts
 
 - Branch / version / GitHub defaults live in one workspace overlay; `make setup` follows that line for all members.
+- Workspace and member checkouts stay on `0.12.0-dev` unless the operator names another line.
 - `flext-infra` defaults via project/workspace `config/` overlays — not forked defaults.
 - Provisioning adjusts and never destroys dirty work; no `git checkout` / `git reset` in setup or member sync.
 - `make gen APPLY=Y` must be idempotent (following `make gen` reports no drift).
-- `flext-infra` codegen owns fleet CI and hook projections; update its config/templates, then regenerate consumers.
+- `flext-infra` codegen owns fleet CI and hook projections; remove duplicate custom CI and regenerate consumers from its config/templates.
+- CI policy: draft PRs run no CI; integration pushes run blocking `CI` only; `ci-matrix` auto-runs only on push to `main` for workspace-root/standalone (workspace-member = manual `workflow_dispatch` only); CodeQL default setup is a GitHub repo setting outside Jinja; other branches skip.
+- Agent/skill surfaces on governed branches must be real files, not symlinks; `~/.ai-hub` materializes them per its application config.
 
 <!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->
 ## Workspace providers

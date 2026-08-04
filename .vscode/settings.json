@@ -150,7 +150,7 @@
   "python.analysis.usePerProjectEnvironments": false,
   "python.analysis.userFileIndexingLimit": 2000,
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-  "python.languageServer": "Pylance",
+  "python.languageServer": "None",
   "python.pyrefly.diagnosticMode": "workspace",
   "python.pyrefly.disableLanguageServices": true,
   "python.pyrefly.disableTypeErrors": false,
@@ -268,5 +268,14 @@
     "./flext-target-oracle-wms/.venv",
     "./flext-tests/.venv",
     "./flext-web/.venv"
-  ]
+  ],
+  "cursorpyright.analysis.diagnosticMode": "workspace",
+  "cursorpyright.analysis.fileEnumerationTimeout": 60,
+  "cursorpyright.analysis.typeCheckingMode": "strict",
+  "cursorpyright.analysis.useTypingExtensions": true,
+  "cursorpyright.shouldImportPylanceSettings": "never",
+  "cursorpyright.analysis.inlayHints.callArgumentNames": true,
+  "cursorpyright.analysis.inlayHints.callArgumentNamesMatching": true,
+  "cursorpyright.analysis.inlayHints.functionReturnTypes": true,
+  "cursorpyright.analysis.inlayHints.variableTypes": true
 }
