@@ -143,12 +143,12 @@ def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue: ...
 Fallible paths return `r[T]` (`FlextResult`) annotated as `p.Result[T]`. Construct with `r[T].ok` / `r[T].fail`; convert with `from_result` / `from_failure`. Do not use ad-hoc error dicts or raw exceptions for control flow.
 
 ```python
-from flext_core import r
+from flext_core import p, r
 
 
-def parse(value: str) -> r[int]:
+def parse(value: str) -> p.Result[int]:
     try:
-        return r.ok(int(value))
+        return r[int].ok(int(value))
     except ValueError as exc:
         return r[int].fail("invalid_integer", exception=exc)
 ```
