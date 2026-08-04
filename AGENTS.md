@@ -181,9 +181,11 @@ make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 - Deduplicate via MRO / `m`; atomic consumer updates with direct uses and no compatibility shims; keep Ruff + Pyrefly clean after every edit.
 - Fix known failures; Make verbs must be idempotent; prefer standardized shape over transitional forms.
 - Land fixes in upstream `flext-infra` codegen/config overlays on the workspace line, not local workarounds.
-- Adopt, validate, commit, and push together; finish WIP end-to-end; do not invent blockers or re-confirm settled facts.
+- Adopt, validate, commit, and push together; finish WIP through merge on the active DEV line (`0.12.0-dev`) unless the operator asks to promote to `main`; absorb fast-forward/merge fallout; remaining lint/test failures stay owned until green; do not invent blockers or re-confirm settled facts.
 - Prefer lean, structured AGENTS.md that cross-links skills and docs over long prose.
 - Keep pre-commit inline and enforceable before commit/push; do not skip hooks to land work.
+- Maximize flext-core/cli/infra facades (`c`/`t`/`p`/`m`/`u`, pydantic-2-way, SSOT/DI) instead of reimplementing local equivalents.
+- In result internals, ban regressive lazy imports of concrete `FlextResult`; type against abstract `p.Result`.
 
 ## Learned Workspace Facts
 
@@ -195,6 +197,8 @@ make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 - `flext-infra` codegen owns fleet CI and hook projections; remove duplicate custom CI and regenerate consumers from its config/templates.
 - CI policy: draft PRs run no CI; integration pushes (`dev`/`develop`/`0.12.0-dev`) run blocking ubuntu `CI` only; `ci-matrix` is projected only for workspace-root/standalone and auto-runs only on push to `main` (plus optional `workflow_dispatch`); workspace-member projects must not receive or auto-run `ci-matrix` (`codegen.yaml` profiles exclude them; `make gen WHAT=apply APPLY=Y` prunes orphan member copies); CodeQL default setup is a GitHub repo setting outside Jinja; other branches skip.
 - Agent/skill surfaces on governed branches must be real files, not symlinks; `config.AiHub.paths.ai_hub` materializes them per its application config.
+- Project markdown docs centralize under `docs/` (root keeps only standardized files); `.agents/*` and `data/*` are special; external-docs follow `docs/reference/` patterns; validate via `make check` markdown gates and flext-infra docs generation.
+- Lane lifecycle is the `make work` verb (beads, worktrees, gh/PR, gitflow) owned by flext-infra Makefile/codegen — not a separate ad-hoc worktree command surface.
 
 <!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->
 ## Workspace providers
