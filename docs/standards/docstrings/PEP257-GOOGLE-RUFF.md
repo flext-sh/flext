@@ -1,5 +1,50 @@
 # FLEXT Docstring Standards — PEP 257 + Google Style + Ruff Compliant
 
+<!-- TOC START -->
+- [Module Level Docstring](#module-level-docstring)
+  - [Format](#format)
+  - [Rules](#rules)
+  - [Real Example from Project](#real-example-from-project)
+- [Class Docstring](#class-docstring)
+  - [Format](#format)
+  - [Rules](#rules)
+  - [Real Example from Project](#real-example-from-project)
+- [Function / Method Docstring](#function-method-docstring)
+  - [Format](#format)
+  - [Rules](#rules)
+  - [Real Example from Project](#real-example-from-project)
+- [Private Function (`_func`)](#private-function-func)
+  - [When to Document](#when-to-document)
+  - [Examples](#examples)
+- [Property](#property)
+  - [Format](#format)
+  - [Rules](#rules)
+- [Magic Methods (`__init__`, `__str__`, etc.)](#magic-methods-init-str-etc)
+  - [`__init__`](#init)
+  - [`__str__` / `__repr__`](#str-repr)
+  - [Others](#others)
+- [Exception Class](#exception-class)
+  - [Format](#format)
+- [Async Function](#async-function)
+  - [Format](#format)
+- [Multi-line Parameter Description](#multi-line-parameter-description)
+  - [Format](#format)
+- [Ruff-Compliant Checklist](#ruff-compliant-checklist)
+- [Private vs Public](#private-vs-public)
+  - [Skip docstring (private)](#skip-docstring-private)
+  - [Document (public)](#document-public)
+- [Document When](#document-when)
+- [Examples from FLEXT Codebase](#examples-from-flext-codebase)
+  - [Good: Utility Method](#good-utility-method)
+  - [Good: Idempotent Operation](#good-idempotent-operation)
+- [Ruff Integration](#ruff-integration)
+  - [Check conformance](#check-conformance)
+  - [Expected ignores (from pyproject.toml)](#expected-ignores-from-pyprojecttoml)
+- [Copyright Placement](#copyright-placement)
+- [Testing Docstring Quality](#testing-docstring-quality)
+- [Summary](#summary)
+<!-- TOC END -->
+
 **Compliance**:
 
 - PEP 257 (Python Docstring Conventions)
@@ -532,7 +577,7 @@ the current Ruff policy" section above).
 
 ❌ **WRONG** (comment outside docstring):
 
-```python notest
+```python
 # Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Module description."""
 ```

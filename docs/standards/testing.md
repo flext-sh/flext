@@ -50,7 +50,6 @@ def test_load_user() -> None:
     assert failure.failure
 ```
 
-
 ## DIP in tests
 
 Type results as `p.Result[T]` in tests. Assert only public shape (`.success`, `.failure`, `.unwrap()`, error metadata).
