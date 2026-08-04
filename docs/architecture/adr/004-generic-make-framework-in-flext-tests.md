@@ -68,7 +68,7 @@ checkout. `gen` performs conformance explicitly; `check` is read-only and
 The public surface is `help` plus the operational verbs discovered by `make help`:
 
 ```text
-setup deps build check test fmt fix run status docs clean release gen work
+setup deps build check test cov fmt fix run status docs clean release gen work
 ```
 
 `help` only describes the surface. Every operation maps to exactly one public
@@ -83,7 +83,8 @@ The meanings are fixed:
 | `deps` | validate, create, or explicitly update locks |
 | `build` | produce project artifacts |
 | `check` | run static and policy gates |
-| `test` | execute real behavior tests |
+| `test` | execute incremental behavior tests via pytest-testmon (no coverage) |
+| `cov` | execute full-suite coverage locally (no testmon; not CI/pre-push; required before land) |
 | `fmt` | check by default; modify only with `APPLY=Y` |
 | `fix` | auto-fix check/apply (`APPLY=Y` for mutate) |
 | `run` | execute declared project capabilities |
@@ -118,6 +119,10 @@ The same declarative input must produce byte-identical output. A second apply
 has an empty plan and a new project must converge to the same generated tree as
 an existing project with the same manifest.
 
+- `make test` is always incremental (`pytest-testmon`) and never owns coverage.
+- `make cov` is the sole coverage verb: full suite, rejects FILE/MATCH, local-only,
+  and is required before `make work WHAT=land`.
+
 ## Consequences
 
 - `flext-tests` tests public behavior but owns no Make registry or dispatcher.
@@ -133,7 +138,7 @@ an existing project with the same manifest.
 - Schema tests reject public custom targets and handler collisions.
 - Conformance check performs no writes; apply is atomic and idempotent.
 - Public-surface discovery reports only `help` and the operational verbs from
-  live `make help` (currently fifteen: setup deps build check test fmt fix run
+  live `make help` (currently sixteen: setup deps build check test cov fmt fix run
   status docs clean release gen work), with one handler per `(verb, WHAT)` pair.
 
 ## References

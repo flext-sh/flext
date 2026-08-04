@@ -118,7 +118,13 @@ make test PROJECT=<proj> MATCH=<expr>
 make test PROJECT=<proj>```
 ## Coverage
 
-`pyproject.toml` sets `fail_under = 45` for the consolidated workspace. Project-local targets may be higher. Do not lower the threshold to make a build pass.
+- `make test` never owns coverage; it uses pytest-testmon incremental selection.
+- `make cov` is the only coverage verb: full suite, fail-under from tooling SSOT,
+  XML report required, and `FILE`/`MATCH` rejected.
+- Run `make cov` locally before `make work WHAT=land`. Do not put coverage in CI
+  or pre-push workflows.
+- Keep `.testmondata` (and `-wal`/`-shm`) gitignored; `make clean` must preserve them.
+
 
 ## Related
 
