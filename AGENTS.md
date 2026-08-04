@@ -191,9 +191,9 @@ make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 - Workspace and member checkouts stay on `0.12.0-dev` unless the operator names another line.
 - `flext-infra` defaults via project/workspace `config/` overlays — not forked defaults.
 - Provisioning adjusts and never destroys dirty work; no `git checkout` / `git reset` in setup or member sync.
-- `make gen APPLY=Y` must be idempotent (following `make gen` reports no drift).
+- `make gen WHAT=apply APPLY=Y` must be idempotent (following `make gen` reports no drift).
 - `flext-infra` codegen owns fleet CI and hook projections; remove duplicate custom CI and regenerate consumers from its config/templates.
-- CI policy: draft PRs run no CI; integration pushes (`dev`/`develop`/`0.12.0-dev`) run blocking ubuntu `CI` only; `ci-matrix` is projected only for workspace-root/standalone and auto-runs only on push to `main` (plus optional `workflow_dispatch`); workspace-member projects must not receive or auto-run `ci-matrix` (`codegen.yaml` profiles exclude them; `make gen APPLY=Y` prunes orphan member copies); CodeQL default setup is a GitHub repo setting outside Jinja; other branches skip.
+- CI policy: draft PRs run no CI; integration pushes (`dev`/`develop`/`0.12.0-dev`) run blocking ubuntu `CI` only; `ci-matrix` is projected only for workspace-root/standalone and auto-runs only on push to `main` (plus optional `workflow_dispatch`); workspace-member projects must not receive or auto-run `ci-matrix` (`codegen.yaml` profiles exclude them; `make gen WHAT=apply APPLY=Y` prunes orphan member copies); CodeQL default setup is a GitHub repo setting outside Jinja; other branches skip.
 - Agent/skill surfaces on governed branches must be real files, not symlinks; `~/.ai-hub` materializes them per its application config.
 
 <!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->
