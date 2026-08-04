@@ -1,7 +1,6 @@
 {
   "default": true,
   "MD001": false,
-  "MD012": false,
   "MD013": {
     "line_length": 800,
     "heading_line_length": 200,
@@ -26,11 +25,8 @@
   "MD041": false,
   "MD042": false,
   "MD046": false,
-  "MD050": false,
   "MD051": false,
   "MD057": false,
   "MD060": false,
-  "MD064": false,
-  "MD075": false,
   "MD076": false
 }

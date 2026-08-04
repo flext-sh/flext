@@ -1,3 +1,5 @@
+> **HISTORICAL / SUPERSEDED** — retained for provenance only; live Beads is authoritative.
+
 # FLEXT Beads Governance Reorganization — Autonomous Handoff Plan
 
 > Status: intentionally not executed by the author of this handoff.
