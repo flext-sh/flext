@@ -1,50 +1,58 @@
 # Docs centralization disposition ledger
 
-Updated: 2026-08-04T12:23:37Z
-Bead: `mro-z89e.33` / `mro-z89e.34`
-Status: **done** on `0.12.0-dev`
+Updated: 2026-08-04T13:17:49Z
+Bead: `mro-z89e.35`
+Status: **engine_fixed_pending_land** (local WIP on `563cfbfbda0b`)
 
 ## Summary
 
-- Project docs centralized under `docs/` across flext members
-- Markdown gate validated via `make check PROJECT=<p> CHECK_GATES=markdown`
-- Leftover code/test patches landed (`mro-z89e.34`)
-- Dependabot workflow bumps into `0.12.0-dev` admin-merged where mergeable
-- Superproject gitlinks re-pinned after closeout
+- Docs owner fix: lazy `__all__ = tuple(_PUBLIC_EXPORTS)` discovery + ADR required_skills aligned to live provider skills
+- Evidence: `make docs WHAT=audit` completed; generate then re-generate with `changes:0` fleet-wide; `make docs WHAT=validate` OK all scopes
+- Not done until exact integrated SHA has green CI + Docs and clean gitlinks
+
+## Source
+
+Typed disposition rows: `docs/references/docs-centralization-ledger.json` (39 trees).
+This Markdown file is a projection.
 
 ## Members
 
-- `flext-api`: done (merged to `0.12.0-dev`)
-- `flext-auth`: done (merged to `0.12.0-dev`)
-- `flext-cli`: done (merged to `0.12.0-dev`)
-- `flext-core`: done (merged to `0.12.0-dev`)
-- `flext-db-oracle`: done (merged to `0.12.0-dev`)
-- `flext-dbt-ldap`: done (merged to `0.12.0-dev`)
-- `flext-dbt-ldif`: done (merged to `0.12.0-dev`)
-- `flext-dbt-oracle`: done (merged to `0.12.0-dev`)
-- `flext-dbt-oracle-wms`: done (merged to `0.12.0-dev`)
-- `flext-grpc`: done (merged to `0.12.0-dev`)
-- `flext-infra`: done (merged to `0.12.0-dev`)
-- `flext-ldap`: done (merged to `0.12.0-dev`)
-- `flext-ldif`: done (merged to `0.12.0-dev`)
-- `flext-meltano`: done (merged to `0.12.0-dev`)
-- `flext-observability`: done (merged to `0.12.0-dev`)
-- `flext-oracle-oic`: done (merged to `0.12.0-dev`)
-- `flext-oracle-wms`: done (merged to `0.12.0-dev`)
-- `flext-plugin`: done (merged to `0.12.0-dev`)
-- `flext-quality`: done (merged to `0.12.0-dev`)
-- `flext-tap-ldap`: done (merged to `0.12.0-dev`)
-- `flext-tap-ldif`: done (merged to `0.12.0-dev`)
-- `flext-tap-oracle`: done (merged to `0.12.0-dev`)
-- `flext-tap-oracle-oic`: done (merged to `0.12.0-dev`)
-- `flext-tap-oracle-wms`: done (merged to `0.12.0-dev`)
-- `flext-target-ldap`: done (merged to `0.12.0-dev`)
-- `flext-target-ldif`: done (merged to `0.12.0-dev`)
-- `flext-target-oracle`: done (merged to `0.12.0-dev`)
-- `flext-target-oracle-oic`: done (merged to `0.12.0-dev`)
-- `flext-target-oracle-wms`: done (merged to `0.12.0-dev`)
-- `flext-tests`: done (merged to `0.12.0-dev`)
-- `flext-web`: done (merged to `0.12.0-dev`)
-- `flext` root: done (gitlink pin + markdownlint SSOT)
-- `libs`: review deferred (not a governed flext member submodule in this closeout)
-
+- `flext`: engine_fixed_pending_land
+- `flext-api`: engine_fixed_pending_land
+- `flext-auth`: engine_fixed_pending_land
+- `flext-cli`: engine_fixed_pending_land
+- `flext-core`: engine_fixed_pending_land
+- `flext-db-oracle`: engine_fixed_pending_land
+- `flext-dbt-ldap`: engine_fixed_pending_land
+- `flext-dbt-ldif`: engine_fixed_pending_land
+- `flext-dbt-oracle`: engine_fixed_pending_land
+- `flext-dbt-oracle-wms`: engine_fixed_pending_land
+- `flext-grpc`: engine_fixed_pending_land
+- `flext-infra`: engine_fixed_pending_land
+- `flext-ldap`: engine_fixed_pending_land
+- `flext-ldif`: engine_fixed_pending_land
+- `flext-meltano`: engine_fixed_pending_land
+- `flext-observability`: engine_fixed_pending_land
+- `flext-oracle-oic`: engine_fixed_pending_land
+- `flext-oracle-wms`: engine_fixed_pending_land
+- `flext-plugin`: engine_fixed_pending_land
+- `flext-quality`: engine_fixed_pending_land
+- `flext-tap-ldap`: engine_fixed_pending_land
+- `flext-tap-ldif`: engine_fixed_pending_land
+- `flext-tap-oracle`: engine_fixed_pending_land
+- `flext-tap-oracle-oic`: engine_fixed_pending_land
+- `flext-tap-oracle-wms`: engine_fixed_pending_land
+- `flext-target-ldap`: engine_fixed_pending_land
+- `flext-target-ldif`: engine_fixed_pending_land
+- `flext-target-oracle`: engine_fixed_pending_land
+- `flext-target-oracle-oic`: engine_fixed_pending_land
+- `flext-target-oracle-wms`: engine_fixed_pending_land
+- `flext-tests`: engine_fixed_pending_land
+- `flext-web`: engine_fixed_pending_land
+- `ai-hub`: engine_fixed_pending_land
+- `cosmos-docgen`: engine_fixed_pending_land
+- `cosmos-main`: engine_fixed_pending_land
+- `cosmos-charts`: engine_fixed_pending_land
+- `cosmos-gitops`: engine_fixed_pending_land
+- `invest`: engine_fixed_pending_land
+- `neptor`: engine_fixed_pending_land

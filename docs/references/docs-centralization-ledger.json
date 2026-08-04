@@ -212,10 +212,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -333,10 +340,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -483,10 +497,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -613,10 +634,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -778,10 +806,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -924,10 +959,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -1075,10 +1117,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -1231,10 +1280,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -1382,10 +1438,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -1496,10 +1559,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -1657,10 +1727,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -1728,10 +1805,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -1900,10 +1984,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -2057,10 +2148,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -2250,10 +2348,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -2359,10 +2464,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -2518,10 +2630,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -2664,10 +2783,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -2798,10 +2924,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -2951,10 +3084,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -3101,10 +3241,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -3247,10 +3394,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -3393,10 +3547,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -3539,10 +3700,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -3675,10 +3843,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -3821,10 +3996,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -3967,10 +4149,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -4095,10 +4284,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -4241,10 +4437,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -4387,10 +4590,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -4444,10 +4654,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -4604,10 +4821,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -4741,10 +4965,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -4841,10 +5072,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -5017,10 +5255,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -5099,10 +5344,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -5170,10 +5422,17 @@
     ],
     "has_mkdocs": true,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -5275,10 +5534,17 @@
     ],
     "has_mkdocs": false,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   },
   {
@@ -5333,10 +5599,17 @@
     ],
     "has_mkdocs": false,
     "closeout": {
-      "status": "done",
+      "status": "engine_fixed_pending_land",
       "branch": "0.12.0-dev",
       "bead": "mro-z89e.33/mro-z89e.34",
-      "updated_at": "2026-08-04T12:23:50Z"
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
     }
   }
 ]

@@ -37,3 +37,6 @@ unqualified catalog name, from `main`, or from another checkout.
 - Index: `.cursor/hooks/state/continual-learning-index.json`.
 - MCP via ai-hub gateway: see `${config.AiHub.paths.ai_hub}/docs/MCP_AGENT_GUIDE.md` (beads/memory/CRG/ast-grep; Make for Done).
 
+## ADR boundary
+
+Architecture decisions remain in `docs/architecture/adr/`. This skill routes to law; it does not replace ADR ownership.
