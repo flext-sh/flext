@@ -71,7 +71,9 @@ class SurfaceValidator:
     def make_dispatch_wrappers() -> frozenset[str]:
         """Return public Make targets delegated to the registry dispatcher."""
         lines = (
-            (CommandRegistry.ROOT / "Makefile").read_text(encoding="utf-8").splitlines()
+            (CommandRegistry.ROOT / "Makefile")
+            .read_text(encoding=c.DEFAULT_ENCODING)
+            .splitlines()
         )
         wrappers: set[str] = set()
         current_target = ""

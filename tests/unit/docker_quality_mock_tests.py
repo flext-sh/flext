@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from tests import c
+
 
 class TestDockerQualityDockerfiles:
     QUALITY_DOCKERFILES = (
@@ -24,7 +26,9 @@ class TestDockerQualityDockerfiles:
     def test_quality_dockerfiles_install_workspace_packages(self) -> None:
         repository_root = Path(__file__).resolve().parents[2]
         for dockerfile in self.QUALITY_DOCKERFILES:
-            content = (repository_root / dockerfile).read_text(encoding="utf-8")
+            content = (repository_root / dockerfile).read_text(
+                encoding=c.DEFAULT_ENCODING
+            )
             assert "WORKDIR /app/flext-quality" in content
             for install_target in self.REQUIRED_WORKSPACE_INSTALLS:
                 assert install_target in content
@@ -32,6 +36,8 @@ class TestDockerQualityDockerfiles:
     def test_quality_dockerfiles_do_not_copy_mock_packages(self) -> None:
         repository_root = Path(__file__).resolve().parents[2]
         for dockerfile in self.QUALITY_DOCKERFILES:
-            content = (repository_root / dockerfile).read_text(encoding="utf-8")
+            content = (repository_root / dockerfile).read_text(
+                encoding=c.DEFAULT_ENCODING
+            )
             for forbidden_copy in self.FORBIDDEN_MOCK_COPIES:
                 assert forbidden_copy not in content
