@@ -63,8 +63,8 @@ Typical fields:
 ## Validation
 
 ```bash
-make docs DOCS_PHASE=generate PROJECT=flext-infra
-make docs DOCS_PHASE=validate PROJECT=flext-infra
+make docs WHAT=generate PROJECT=flext-infra
+make docs WHAT=validate PROJECT=flext-infra
 ```
 
 Use [Troubleshooting](troubleshooting.md) when a project is missing package metadata or generated pages do not match the

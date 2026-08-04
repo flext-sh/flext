@@ -69,7 +69,7 @@ Every surface exposes `help` plus exactly the twelve ADR-004 verbs:
 setup deps build check test format run status docs clean release codegen
 ```
 
-`make <verb> WHAT=help` lists the choices actually discovered for that
+`make help` lists the choices actually discovered for that
 consumer. `PROJECT`, `CHECK_GATES`, `FILE`, `MATCH`, `FAIL_FAST`, and `ARGS`
 have uniform meanings. `APPLY=Y` is the only authorization for mutation.
 Unknown verbs, selectors, projects, and capabilities fail precisely. A declared
@@ -107,7 +107,7 @@ The 51 executable surfaces are:
 - `cosmos-docgen` root plus four document subprojects.
 
 Every surface passes `make help`, `make status`, applicable
-`make <verb> WHAT=help`, and `make codegen WHAT=check`. Capability-specific
+`make help`, and `make gen WHAT=check`. Capability-specific
 gates then exercise Python, Go, Node/frontend, serialized Helm/GitOps,
 Docker/config/scripts, or document build/stage behavior. Upload and deployment
 paths remain dry-run unless separately authorized with `APPLY=Y`; the release
@@ -169,5 +169,5 @@ lanes and must not be used to expand the stabilization release.
 - [ADR-008 — Neutral consumer boundaries](008-neutral-consumer-boundaries.md)
 - [ADR-009 — Ecosystem coordination](009-ecosystem-coordination-and-library-evaluation.md)
 - [Ecosystem coordination](../ecosystem-coordination.md)
-- SSOT: `flext-infra/src/flext_infra/config/codegen.yaml`, `tooling.yaml`;
+- SSOT: `flext-infra/config/codegen.yaml`, `tooling.yaml`;
   templates under `flext_infra/templates/`.

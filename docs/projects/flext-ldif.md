@@ -17,7 +17,7 @@ through a normalized RFC representation.
 
 - Lint, type-check, security, and tests run through the canonical `make` verbs; current status is produced by the gates,
   not restated here.
-- Run `make check PROJECT=flext-ldif` (lint + type-check) and `make val` for the full gate chain.
+- Run `make check PROJECT=flext-ldif` (lint + type-check) and `make check` for the full gate chain.
 
 ## Quick start
 
@@ -78,7 +78,7 @@ migration compose with the same railway discipline.
 
 - `make check PROJECT=flext-ldif` — Ruff + type-check on the project lane.
 - `make test PROJECT=flext-ldif` — unit and integration suites through the shared `flext-tests` helpers.
-- `make val` — full workspace validation chain (lint, types, security, tests, docs).
+- `make check` — full workspace validation chain (lint, types, security, tests, docs).
 - Typing is strict (no `Any`/`object`); all owned payloads are `m.Ldif.*` Pydantic models and all fallible paths return
   `r[T]`.
 

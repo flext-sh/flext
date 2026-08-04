@@ -15,7 +15,7 @@ contracts, Pydantic-validated settings, and the canonical `c/m/p/t/u` facade lay
 ### Quality signals
 
 - Quality gates run through the workspace Make contract: `make check PROJECT=flext-api`, `make test PROJECT=flext-api`,
-  and `make val`.
+  and `make check`.
 - Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
   rather than static claims in this page.
 
@@ -78,7 +78,7 @@ src/flext_api/
 ## Testing & quality
 
 - Tests live under the project `tests/` tree and run via `make test PROJECT=flext-api`.
-- Pre-merge verification: `make check PROJECT=flext-api` (lint + typing + security selectors) and `make val`.
+- Pre-merge verification: `make check PROJECT=flext-api` (lint + typing + security selectors) and `make check`.
 
 ## Resources
 

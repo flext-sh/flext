@@ -25,16 +25,17 @@ this order.
 | Concern | Canonical owner | Decisive validation |
 | --- | --- | --- |
 | Provider activation and exported paths | `~/.agents` provider authority | typed manifest and exact-path inventory validation |
-| Session routing | `~/.agents/skills/flext-context-routing/SKILL.md` | marker and selected-skill evidence |
+| Session routing | `.agents/skills/flext-context-routing/SKILL.md` | marker and selected-skill evidence |
 | Architecture and public contracts | [ADR registry](architecture/adr/README.md) and owning source declaration | consumer audit plus affected project gates |
 | Ecosystem coordination (internal + external projects) | [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md) and [ecosystem-coordination.md](architecture/ecosystem-coordination.md) | reverse-dependency gate plus owner-local ADR consistency (`0.20.0-dev`) |
 | Runtime coding patterns | smallest matching skill under `~/.agents/skills/` | fresh import, lint, typecheck, behavior gate |
-| Quality commands | `~/.agents/skills/flext-inviolable-rules/SKILL.md` | exact command, exit code, decisive output |
+| Quality commands | `~/.agents/skills/inviolable-rules/SKILL.md` | exact command, exit code, decisive output |
 | Documentation lifecycle | [`standards/documentation.md`](standards/documentation.md) | narrow markdown gate, then docs audit |
 | Workspace Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help` and affected dispatcher gate |
 | Enforcement catalog identity and routing | `flext-core` enforcement declarations | catalog census and public import |
 | Declarative enforcement payloads and execution | `flext-infra` rules, schemas, and engine | enforcement engine result |
 | Structural codemods | provider referenced by the `~/.agents` authority | preview, exact cardinality, apply, idempotence |
+| Fleet GitHub Actions (`CI`, `ci-matrix`, docs, release) | `flext-infra` codegen (`config/codegen.yaml` + `templates/project/base/.github/workflows/*.j2`); regenerate with `make gen APPLY=Y` | members have no auto `ci-matrix`; root/standalone matrix push=`main` only; integration pushes use blocking `CI` only; CodeQL is not Jinja-owned |
 
 The owning declaration, validated config, or fundamental rule is the source of
 truth. Tests and checks validate it; they never define the contract, catalog,
@@ -82,7 +83,7 @@ only after it passes:
 
 ```bash
 make check PROJECT=<project> CHECK_GATES=<gates>
-make codegen WHAT=check PROJECT=<project>
+make gen WHAT=check PROJECT=<project>
 ```
 
 All FLEXT validation uses the root Make dispatcher; never run bare `ruff`,

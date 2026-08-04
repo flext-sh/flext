@@ -17,7 +17,7 @@ Claude context, memory, and code execution behind one railway-oriented facade an
 
 - Lint, type-check, security, and tests run through the canonical `make` verbs; current status is produced by the gates,
   not restated here.
-- Run `make check PROJECT=flext-quality` (lint + type-check) and `make val` for the full gate chain.
+- Run `make check PROJECT=flext-quality` (lint + type-check) and `make check` for the full gate chain.
 
 ## Quick start
 
@@ -71,7 +71,7 @@ hook processing.
 
 - `make check PROJECT=flext-quality` — Ruff + type-check on the project lane.
 - `make test PROJECT=flext-quality` — unit and integration suites through the shared `flext-tests` helpers.
-- `make val` — full workspace validation chain (lint, types, security, tests, docs).
+- `make check` — full workspace validation chain (lint, types, security, tests, docs).
 - Typing is strict (no `Any`/`object`); all owned payloads are `m.Quality.*` Pydantic models and all fallible paths
   return `r[T]`.
 

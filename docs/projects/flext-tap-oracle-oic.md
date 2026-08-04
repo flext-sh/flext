@@ -17,7 +17,7 @@ meltano` (Singer tap base) behind `r[T]` contracts and the canonical `c/m/p/t/u`
 ### Quality signals
 
 - Quality gates run through the workspace Make contract: `make check PROJECT=flext-tap-oracle-oic`, `make test
-  PROJECT=flext-tap-oracle-oic`, and `make val`.
+  PROJECT=flext-tap-oracle-oic`, and `make check`.
 - Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
   rather than static claims in this page.
 
@@ -81,7 +81,7 @@ src/flext_tap_oracle_oic/
 
 - Tests live under the project `tests/` tree and run via `make test PROJECT=flext-tap-oracle-oic`; Singer behavior is
   exercised through the tap CLI and discovery flow.
-- Pre-merge verification: `make check PROJECT=flext-tap-oracle-oic` (lint + typing + security selectors) and `make val`.
+- Pre-merge verification: `make check PROJECT=flext-tap-oracle-oic` (lint + typing + security selectors) and `make check`.
 
 ## Resources
 
