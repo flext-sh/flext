@@ -175,7 +175,7 @@ class CommandExecution:
         """Return target names declared in the root Makefile."""
         targets: set[str] = set()
         makefile = CommandRegistry.ROOT / "Makefile"
-        for raw_line in makefile.read_text(encoding="utf-8").splitlines():
+        for raw_line in makefile.read_text(encoding=c.DEFAULT_ENCODING).splitlines():
             if not raw_line or raw_line.startswith(("\t", " ", "#", ".")):
                 continue
             head, marker, _tail = raw_line.partition(":")
