@@ -2504,6 +2504,7 @@ dev = [
   "pytest-sugar>=1.1.1",
   "pytest-timeout>=2.4.0",
   "pytest-xdist>=3.8.0",
+  "pytest-testmon>=2.2.0",
   "pyupgrade>=3.21.2",
   "radon>=6.0.1",
   "ruff>=0.16.1",
