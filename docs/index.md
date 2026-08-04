@@ -40,8 +40,9 @@ or `standalone` profiles. Workspace topology comes only from the validated
 manifest under `config/`; package metadata remains Git-and-branch sourced while
 root `setup` installs declared local members as editable distributions.
 
-The generated public Make surface contains thirteen targets: `help` plus the
-twelve operational verbs defined by ADR-004. Project-specific behavior is
+The generated public Make surface contains `help` plus the operational verbs
+from live `make help` (currently fifteen: setup deps build check test fmt fix
+run status docs clean release gen work), as defined by ADR-004. Project-specific behavior is
 available only through validated private `custom.mk` handlers. See
 [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) for
 topology and environments and

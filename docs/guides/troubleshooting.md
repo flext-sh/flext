@@ -6,7 +6,8 @@ and tests.
 ## Quick Checks
 
 ```bash
-make workspace-check-changed
+# Optional custom.mk helper (not a PUBLIC_VERBS target from `make help`):
+# make workspace-check-changed
 make check
 make docs WHAT=build PROJECT=flext-infra
 ```
@@ -24,7 +25,7 @@ Typical causes:
 Run:
 
 ```bash
-make docs WHAT=fix PROJECT=flext-infra FIX=1
+make docs WHAT=fix PROJECT=flext-infra APPLY=Y
 make docs WHAT=audit PROJECT=flext-infra
 make docs WHAT=build PROJECT=flext-infra
 ```

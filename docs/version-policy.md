@@ -45,11 +45,10 @@ Root `pyproject.toml` `[tool.uv] constraint-dependencies` pins fleet-wide floors
 for transitive advisories (currently `transformers>=5.5.0` and
 `cryptography>=50.0.0`). Change the floor in the SSOT, regenerate/lock through
 `make deps`, and keep day-to-day landing on `0.12.0-dev`. Dependabot merge
-helpers that target `main` are operator-gated and are not the default ULW path.
+helpers that target `main` are operator-gated and are not the default land/finish path on 0.12.0-dev.
 
 ## Integration branch
 
 The active development line is `0.12.0-dev`. Promote to `main` only when the
 operator explicitly requests a release promote — not as part of ordinary
 bugfix/docs closeout.
-
