@@ -1,5 +1,16 @@
 # Using flext-cli
 
+<!-- TOC START -->
+- [Aliases](#aliases)
+- [Purpose](#purpose)
+- [Settings](#settings)
+- [Model-driven command](#model-driven-command)
+- [Testing a command](#testing-a-command)
+- [Good practices](#good-practices)
+- [Bad practices](#bad-practices)
+- [Related](#related)
+<!-- TOC END -->
+
 `flext_cli` provides a unified Typer abstraction for model-driven CLI applications.
 
 ## Aliases
@@ -99,7 +110,7 @@ assert result.exit_code == 0
 
 ## Bad practices
 
-```python notest
+```python
 import typer
 
 

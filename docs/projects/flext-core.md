@@ -17,7 +17,7 @@ builds on. Package description: "Enterprise Foundation Framework — Modern Pyth
 - Strict typing enforced by project policy: no `Any`, no bare `object`; boundary `cast` only where
   the Result DIP reifies `p.Result[T]` from concrete `FlextResult` factories (never to silence errors)
 - Facets `c`/`t`/`p`/`m` are declaration-only; behavior lives in `u`, `cli`, `api`, `base`, and `services/*` (see root
-  `AGENTS.md` U17)
+  `AGENTS.md` Architecture / Conventions)
 - Config and settings are validated singletons (`config.<Ns>.*`, `settings.<Ns>.*`) consumed directly — no proxies or
   forwarding accessors
 - Generated documentation and module maps live under `flext-core/docs/api-reference/`
@@ -85,19 +85,19 @@ chain with `.map` / `.flat_map` instead of raising.
 ## Testing & quality
 
 - `make check PROJECT=flext-core`: Ruff linting plus type checks (pyrefly/mypy)
-- `make test PROJECT=flext-core`: pytest suite (see `.reports/tests/` for the latest run evidence)
-- `make check`: full validation pipeline; consult `.reports/` coverage artifacts for the current coverage snapshot rather than
+- `make test PROJECT=flext-core`: pytest suite (see `flext-core/.reports/tests/` for the latest run evidence)
+- `make check`: full validation pipeline; consult member `.reports/` coverage artifacts for the current coverage snapshot rather than
   trusting any fixed number in docs
 - Tests exercise only the public surface (facade aliases and exported classes), per the workspace testing law in
-  `AGENTS.md` (U16)
+  `AGENTS.md` Conventions
 
 ## Resources
 
 - [Project README](../../flext-core/README.md) (auto-generated module map and operation flow)
-- [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law (U2–U18)
+- [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law
 - `flext-core/examples/` — runnable examples for results, settings, logging, and dispatching
 - `flext-core/docs/api-reference/` — generated API documentation
-- Reports: `.reports/` coverage artifacts, `reports/lint-output/*`, `reports/pytest/*`
+- Reports: `flext-core/.reports/` (tests, check, docs audit/build artifacts)
 
 ## Support & issues
 
@@ -112,7 +112,6 @@ Public construction and transforms are typed as `p.Result` / `r[...]`. Factories
 - Copy/normalize: `from_result`, `copy_from_result`, `from_failure`
 - Pipeline: `flow_through` normalizes foreign result-like values onto the concrete facade
 - Empty failures (`fail(None)` / `fail("")`) stay failed Results through combinators
-- Auto-extracted exception metadata into `error_data` redacts `c.SENSITIVE_ERROR_DATA_KEYS` and the exception's `excluded_context_keys`
+- `fail()` redacts `c.SENSITIVE_ERROR_DATA_KEYS` (and exception `excluded_context_keys`) for both auto-extracted and explicit `error_data=`
 
 Evidence: `make test PROJECT=flext-core FILE=flext-core/tests/unit/test_result_factory_dip.py`
-
