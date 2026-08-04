@@ -85,14 +85,13 @@ must not compare a local manifest with a duplicated product catalog.
 Every surface exposes `help` plus the ADR-004 operational verbs (see `make help`):
 
 ```text
-setup deps build check test cov fmt fix run status docs clean release gen work
+setup deps build check test fmt fix run status docs clean release gen work
 ```
 
-`make test` always runs incremental selection via pytest-testmon without
-coverage. `make cov` is the dedicated full-suite coverage verb (local only;
-not CI or pre-push; rejects FILE/MATCH; required before `make work WHAT=land`).
-No public aliases such as `coverage`, `test-full`, or `WHAT=coverage` are
-allowed.
+`make test` always runs pytest-testmon. Locally it also collects coverage;
+`CI=Y` disables coverage (`--no-cov`) for CI jobs. Cache maintenance uses
+`WHAT=cache-status|cache-clear|cache-checkpoint` (`cache-clear` needs
+`APPLY=Y`). No public `cov` verb or aliases such as `coverage` / `test-full`.
 
 
 `make help` lists the choices actually discovered for that

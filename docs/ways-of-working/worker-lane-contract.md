@@ -57,12 +57,12 @@ the dispatcher:
 make check CHECK_GATES=lint,format,pyrefly
 make check PROJECT=<affected> CHECK_GATES=pyright,mypy
 make test PROJECT=<affected>
-make cov PROJECT=<affected>
+make test CI=Y PROJECT=<affected>
 make gen WHAT=check PROJECT=<affected>
 ```
 
-`make cov` is required before `make work WHAT=land`. `make test` is incremental
-(testmon) and does not produce coverage.
+Local `make test` (without `CI=Y`) must be green with coverage for the affected
+project before `make work WHAT=land`. `CI=Y` is the CI path (testmon, no cov).
 
 Run the narrowest changed-scope gate first; widen only after it passes.
 
@@ -83,7 +83,7 @@ bead state.
 
 Done means all of the following:
 
-- `make cov` is green for the affected project when tests changed
+- local `make test` (coverage enabled) is green for the affected project when tests changed
 
 - RED→GREEN proof exists for the change.
 - Exact Make-gate evidence is recorded: command, cwd, exit code, decisive line.
