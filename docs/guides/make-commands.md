@@ -14,6 +14,9 @@ workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locai
 
 ## Verbos canônicos
 
+> **Verbos retirados da superfície atual:** `ship`, `coordination`, `makefile`, `val` não estão em `PUBLIC_VERBS`. Release usa `make release`. Lane PR owner é `make work WHAT=land`, não `make ship WHAT=pr`.
+> Para `make work`, o default de WHAT é `status` (não `all`).
+
 | Verbo | Domínio | Resumo | Exemplo |
 | --- | --- | --- | --- |
 | `make setup` | workspace | Bootstrap de `.venv` + submódulos | `make setup APPLY=Y` |
@@ -24,7 +27,7 @@ workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locai
 | `make docs` | documentation | Pipeline de documentação | `make docs DOCS_PHASE=validate` |
 | `make makefile` | meta | Mostra a superfície de comandos | `make makefile` |
 | `make work` | lane lifecycle | Saga bead+GitFlow+worktree+PR | `make work WHAT=start BEAD=<id> KIND=feature NAME=<slug> APPLY=Y` |
-| `make ship` | release | Orquestração de release | `make ship WHAT=rel APPLY=Y` |
+| ~~`make ship`~~ | retired | Use `make release` / `make work` | — |
 | `make status` | governance | Status dos Beads | `make status` |
 | `make test` | quality | Testes pytest | `make test PROJECT=flext-infra MATCH=docs` |
 | `make val` | governance | Validação de gates | `make val` |
