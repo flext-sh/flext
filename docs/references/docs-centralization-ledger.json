@@ -39,131 +39,163 @@
       },
       {
         "path": "flext-api",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-auth",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-cli",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-core",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-db-oracle",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-dbt-ldap",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-dbt-ldif",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-dbt-oracle",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-dbt-oracle-wms",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-grpc",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-infra",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-ldap",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-ldif",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-meltano",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-observability",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-oracle-oic",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-oracle-wms",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-plugin",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-quality",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-tap-ldap",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-tap-ldif",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-tap-oracle",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-tap-oracle-oic",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-tap-oracle-wms",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-target-ldap",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-target-ldif",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-target-oracle",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-target-oracle-oic",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-target-oracle-wms",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-tests",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "flext-web",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "libs",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "scripts",
@@ -178,7 +210,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -209,37 +247,51 @@
       {
         "path": "TODOS.md",
         "disposition": "move",
-        "target": "docs/TODOS.md"
+        "target": "docs/TODOS.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "overview.md",
         "disposition": "move",
-        "target": "docs/overview.md"
+        "target": "docs/overview.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api",
         "disposition": "move",
-        "target": "docs/api"
+        "target": "docs/api",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -252,17 +304,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -273,7 +331,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -308,52 +372,72 @@
       {
         "path": "REFACTOR_STATUS.md",
         "disposition": "move",
-        "target": "docs/REFACTOR_STATUS.md"
+        "target": "docs/REFACTOR_STATUS.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "config",
@@ -370,17 +454,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -391,7 +481,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -427,27 +523,37 @@
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "config",
@@ -464,27 +570,37 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "notebook",
         "disposition": "move",
-        "target": "docs/notebook"
+        "target": "docs/notebook",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "refactoring",
         "disposition": "move",
-        "target": "docs/refactoring"
+        "target": "docs/refactoring",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -495,7 +611,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -528,7 +650,9 @@
       {
         "path": "CONTRACT_BUDGET.md",
         "disposition": "move",
-        "target": "docs/CONTRACT_BUDGET.md"
+        "target": "docs/CONTRACT_BUDGET.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "CONTRIBUTING.md",
@@ -537,7 +661,9 @@
       {
         "path": "DOCUMENTATION_UPDATE_SUMMARY.md",
         "disposition": "move",
-        "target": "docs/DOCUMENTATION_UPDATE_SUMMARY.md"
+        "target": "docs/DOCUMENTATION_UPDATE_SUMMARY.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "README.md",
@@ -546,26 +672,35 @@
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "quick-start.md",
         "disposition": "move",
-        "target": "docs/quick-start.md"
+        "target": "docs/quick-start.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "__pycache__",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "config",
@@ -574,7 +709,9 @@
       {
         "path": "development",
         "disposition": "move",
-        "target": "docs/development"
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -587,27 +724,37 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "improvements",
         "disposition": "move",
-        "target": "docs/improvements"
+        "target": "docs/improvements",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "refactor",
         "disposition": "move",
-        "target": "docs/refactor"
+        "target": "docs/refactor",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "scripts",
@@ -620,14 +767,22 @@
       {
         "path": "standards",
         "disposition": "move",
-        "target": "docs/standards"
+        "target": "docs/standards",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "tests",
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -662,52 +817,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -720,17 +895,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -741,7 +922,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -776,52 +963,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -834,21 +1041,28 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "logs",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -859,7 +1073,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -894,56 +1114,77 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "dbt_packages",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -956,21 +1197,28 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "profiles",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -981,7 +1229,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -1021,52 +1275,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -1079,17 +1353,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -1100,7 +1380,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -1133,17 +1419,23 @@
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development",
         "disposition": "move",
-        "target": "docs/development"
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -1156,31 +1448,42 @@
       {
         "path": "getting-started",
         "disposition": "move",
-        "target": "docs/getting-started"
+        "target": "docs/getting-started",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "integration",
         "disposition": "move",
-        "target": "docs/integration"
+        "target": "docs/integration",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "models",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -1191,7 +1494,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -1227,57 +1536,79 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "integration.md",
         "disposition": "move",
-        "target": "docs/integration.md"
+        "target": "docs/integration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -1290,22 +1621,30 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "maintenance",
         "disposition": "move",
-        "target": "docs/maintenance"
+        "target": "docs/maintenance",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -1316,7 +1655,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -1347,7 +1692,8 @@
       },
       {
         "path": "__pycache__",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "config",
@@ -1360,12 +1706,16 @@
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -1376,7 +1726,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -1416,62 +1772,86 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api",
         "disposition": "move",
-        "target": "docs/api"
+        "target": "docs/api",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development",
         "disposition": "move",
-        "target": "docs/development"
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -1484,22 +1864,30 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "maintenance",
         "disposition": "move",
-        "target": "docs/maintenance"
+        "target": "docs/maintenance",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -1510,7 +1898,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -1549,52 +1943,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "adr",
         "disposition": "move",
-        "target": "docs/adr"
+        "target": "docs/adr",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "diagrams",
         "disposition": "move",
-        "target": "docs/diagrams"
+        "target": "docs/diagrams",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -1607,22 +2021,30 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "refactoring",
         "disposition": "move",
-        "target": "docs/refactoring"
+        "target": "docs/refactoring",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -1633,7 +2055,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -1669,65 +2097,89 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "c4-model.md",
         "disposition": "move",
-        "target": "docs/c4-model.md"
+        "target": "docs/c4-model.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "__pycache__",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "b-pipeline",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "config",
@@ -1735,7 +2187,8 @@
       },
       {
         "path": "debug-pipeline",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -1747,30 +2200,39 @@
       },
       {
         "path": "exec-pipeline",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "noexec-pipeline",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "probe",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -1778,14 +2240,21 @@
       },
       {
         "path": "status-pipeline",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "tests",
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -1813,22 +2282,30 @@
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api",
         "disposition": "move",
-        "target": "docs/api"
+        "target": "docs/api",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -1841,21 +2318,28 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "legado",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -1864,14 +2348,22 @@
       {
         "path": "standards",
         "disposition": "move",
-        "target": "docs/standards"
+        "target": "docs/standards",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "tests",
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -1907,61 +2399,84 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "integration.md",
         "disposition": "move",
-        "target": "docs/integration.md"
+        "target": "docs/integration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "ast-grep-rules",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -1974,17 +2489,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -1995,7 +2516,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -2034,50 +2561,68 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "ast-grep-rules",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "complete_pipeline_results",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -2090,17 +2635,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -2111,7 +2662,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -2143,41 +2700,56 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "ast-grep-rules",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -2190,17 +2762,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -2209,14 +2787,22 @@
       {
         "path": "standards",
         "disposition": "move",
-        "target": "docs/standards"
+        "target": "docs/standards",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "tests",
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -2247,17 +2833,23 @@
       {
         "path": "DUPLICATION-DETECTION.md",
         "disposition": "move",
-        "target": "docs/DUPLICATION-DETECTION.md"
+        "target": "docs/DUPLICATION-DETECTION.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "HOOK_WARNINGS.md",
         "disposition": "move",
-        "target": "docs/HOOK_WARNINGS.md"
+        "target": "docs/HOOK_WARNINGS.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "PLUGIN-ARCHITECTURE.md",
         "disposition": "move",
-        "target": "docs/PLUGIN-ARCHITECTURE.md"
+        "target": "docs/PLUGIN-ARCHITECTURE.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "README.md",
@@ -2266,42 +2858,58 @@
       {
         "path": "RULE_MODIFICATION.md",
         "disposition": "move",
-        "target": "docs/RULE_MODIFICATION.md"
+        "target": "docs/RULE_MODIFICATION.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "TESTING_WARNING_SYSTEM.md",
         "disposition": "move",
-        "target": "docs/TESTING_WARNING_SYSTEM.md"
+        "target": "docs/TESTING_WARNING_SYSTEM.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development",
         "disposition": "move",
-        "target": "docs/development"
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -2314,17 +2922,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -2335,7 +2949,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -2370,52 +2990,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "config",
@@ -2432,17 +3072,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -2453,7 +3099,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -2488,52 +3140,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -2546,17 +3218,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -2567,7 +3245,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -2602,52 +3286,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -2660,17 +3364,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -2681,7 +3391,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -2716,52 +3432,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -2774,17 +3510,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -2795,7 +3537,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -2827,42 +3575,58 @@
       {
         "path": "TODO.md",
         "disposition": "move",
-        "target": "docs/TODO.md"
+        "target": "docs/TODO.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development",
         "disposition": "move",
-        "target": "docs/development"
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -2875,17 +3639,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -2894,14 +3664,22 @@
       {
         "path": "standards",
         "disposition": "move",
-        "target": "docs/standards"
+        "target": "docs/standards",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "tests",
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -2936,52 +3714,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -2994,17 +3792,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -3015,7 +3819,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -3050,52 +3860,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -3108,17 +3938,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -3129,7 +3965,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -3167,37 +4009,51 @@
       {
         "path": "TODO.md",
         "disposition": "move",
-        "target": "docs/TODO.md"
+        "target": "docs/TODO.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -3210,17 +4066,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -3231,7 +4093,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -3266,52 +4134,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -3324,17 +4212,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -3345,7 +4239,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -3380,52 +4280,72 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -3438,17 +4358,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -3459,7 +4385,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -3490,12 +4422,16 @@
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -3506,7 +4442,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "flext",
@@ -3541,62 +4483,86 @@
       {
         "path": "api-reference.md",
         "disposition": "move",
-        "target": "docs/api-reference.md"
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture.md",
         "disposition": "move",
-        "target": "docs/architecture.md"
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration.md",
         "disposition": "move",
-        "target": "docs/configuration.md"
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development.md",
         "disposition": "move",
-        "target": "docs/development.md"
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "getting-started.md",
         "disposition": "move",
-        "target": "docs/getting-started.md"
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "index.md",
         "disposition": "move",
-        "target": "docs/index.md"
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "testing.md",
         "disposition": "move",
-        "target": "docs/testing.md"
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "troubleshooting.md",
         "disposition": "move",
-        "target": "docs/troubleshooting.md"
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "api-reference",
         "disposition": "move",
-        "target": "docs/api-reference"
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "architecture",
         "disposition": "move",
-        "target": "docs/architecture"
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "configuration",
         "disposition": "move",
-        "target": "docs/configuration"
+        "target": "docs/configuration",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "development",
         "disposition": "move",
-        "target": "docs/development"
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docs",
@@ -3609,17 +4575,23 @@
       {
         "path": "guides",
         "disposition": "move",
-        "target": "docs/guides"
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "releases",
         "disposition": "move",
-        "target": "docs/releases"
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "roadmap",
         "disposition": "move",
-        "target": "docs/roadmap"
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -3630,7 +4602,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "ai-hub",
@@ -3649,7 +4627,8 @@
     "dispositions": [
       {
         "path": ".debug-journal.md",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "AGENTS.md",
@@ -3681,15 +4660,18 @@
       },
       {
         "path": "ast-grep-rule-tests",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "ast-grep-rules",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "bin",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "config",
@@ -3705,31 +4687,38 @@
       },
       {
         "path": "evals",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "mcp",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "openclaw",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "opencode",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "rules",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "run",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "skills",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -3737,7 +4726,8 @@
       },
       {
         "path": "templates",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "tests",
@@ -3745,10 +4735,17 @@
       },
       {
         "path": "tools",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "cosmos-docgen",
@@ -3786,16 +4783,21 @@
       {
         "path": "cosmos-docgen_FLEXT_BEADS_LANE_REORGANIZATION_PLAN.md",
         "disposition": "move",
-        "target": "docs/cosmos-docgen_FLEXT_BEADS_LANE_REORGANIZATION_PLAN.md"
+        "target": "docs/cosmos-docgen_FLEXT_BEADS_LANE_REORGANIZATION_PLAN.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "assets",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "authoring",
         "disposition": "move",
-        "target": "docs/authoring"
+        "target": "docs/authoring",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "config",
@@ -3815,11 +4817,13 @@
       },
       {
         "path": "layouts",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "skills",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -3827,14 +4831,21 @@
       },
       {
         "path": "templates",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "tests",
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "cosmos-main",
@@ -3856,7 +4867,8 @@
     "dispositions": [
       {
         "path": ".debug-journal.md",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "AGENTS.md",
@@ -3888,7 +4900,8 @@
       },
       {
         "path": "QODER.md",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "README.md",
@@ -3900,15 +4913,18 @@
       },
       {
         "path": "apps",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "bin",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "build",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "ci",
@@ -3920,15 +4936,18 @@
       },
       {
         "path": "coordination",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "cosmos",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "cosmos_main.egg-info",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "docker",
@@ -3940,23 +4959,28 @@
       },
       {
         "path": "evals",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "legado",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "mro",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "policy",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "scratchpad",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "scripts",
@@ -3964,11 +4988,13 @@
       },
       {
         "path": "site",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "skills",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "src",
@@ -3976,7 +5002,8 @@
       },
       {
         "path": "templates",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "tests",
@@ -3984,10 +5011,17 @@
       },
       {
         "path": "work",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "cosmos-main",
@@ -4003,7 +5037,8 @@
     "dispositions": [
       {
         "path": ".debug-journal.md",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "AGENTS.md",
@@ -4023,11 +5058,13 @@
       },
       {
         "path": "build",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "charts",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "config",
@@ -4039,11 +5076,13 @@
       },
       {
         "path": "images",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "legado",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "scripts",
@@ -4058,7 +5097,13 @@
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "cosmos-main",
@@ -4089,7 +5134,8 @@
       },
       {
         "path": "build",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "config",
@@ -4101,7 +5147,8 @@
       },
       {
         "path": "repo",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "scripts",
@@ -4113,14 +5160,21 @@
       },
       {
         "path": "tenants",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "tests",
         "disposition": "canonical_dir"
       }
     ],
-    "has_mkdocs": true
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "invest",
@@ -4136,7 +5190,8 @@
     "dispositions": [
       {
         "path": ".aider.chat.history.md",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "AGENTS.md",
@@ -4156,7 +5211,8 @@
       },
       {
         "path": "ansible",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "config",
@@ -4180,19 +5236,23 @@
       },
       {
         "path": "logs",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "mt5docker",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "mt5linux",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "neptor",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "scripts",
@@ -4204,14 +5264,22 @@
       },
       {
         "path": "typings",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       },
       {
         "path": "vectorbt.pro",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       }
     ],
-    "has_mkdocs": false
+    "has_mkdocs": false,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   },
   {
     "tree": "invest",
@@ -4259,9 +5327,16 @@
       },
       {
         "path": "typings",
-        "disposition": "review"
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
       }
     ],
-    "has_mkdocs": false
+    "has_mkdocs": false,
+    "closeout": {
+      "status": "done",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T12:23:50Z"
+    }
   }
 ]
