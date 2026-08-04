@@ -41,7 +41,7 @@ the dispatcher:
 make check CHECK_GATES=lint,format,pyrefly
 make check PROJECT=<affected> CHECK_GATES=pyright,mypy
 make test PROJECT=<affected>
-make codegen WHAT=check PROJECT=<affected>
+make gen WHAT=check PROJECT=<affected>
 ```
 
 Run the narrowest changed-scope gate first; widen only after it passes.

@@ -205,25 +205,17 @@ class FlextCliSettings(FlextSettings):
 ## Local validation
 
 ```bash
-ruff check <file>
-ruff format <file>
-pyrefly check <file>
+make check PROJECT=<proj> CHECK_GATES=lint,format,pyrefly
+make check PROJECT=<proj> CHECK_GATES=pyright,mypy
 make test PROJECT=<proj> MATCH=<expr>
 ```
 
-For several files:
-
-```bash
-make workspace-check-changed
-```
+Scope with `PROJECT=` / `CHECK_GATES=` / `FILE=` / `MATCH=` — never bare ruff/pyrefly/mypy.
 
 ## Related
 
 - `AGENTS.md` — root engineering law
-- `.agents/skills/coding-standards/SKILL.md` — quick-reference skill
-- `.agents/skills/flext-import-rules/SKILL.md` — import rules
-- `.agents/skills/flext-strict-typing/SKILL.md` — typing rules
-- `.agents/skills/lib-returns/SKILL.md` — Result composition
-- `.agents/skills/lib-structlog/SKILL.md` — structured logging
-- `.agents/skills/inviolable-rules/SKILL.md` — gate commands
+- `.agents/skills/flext-law/SKILL.md` — FLEXT domain law
+- `~/.agents/skills/inviolable-rules/SKILL.md` — gate commands
+- `~/.agents/skills/make-check/SKILL.md` — canonical Make verbs
 - `AGENTS.md` Learned Workspace Facts — CI policy and `make gen APPLY=Y` workflow regeneration

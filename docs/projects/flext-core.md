@@ -14,7 +14,8 @@ builds on. Package description: "Enterprise Foundation Framework — Modern Pyth
 
 ### Quality signals
 
-- Strict typing enforced by project policy: no `Any`, no bare `object`, no `cast` shortcuts
+- Strict typing enforced by project policy: no `Any`, no bare `object`; boundary `cast` only where
+  the Result DIP reifies `p.Result[T]` from concrete `FlextResult` factories (never to silence errors)
 - Facets `c`/`t`/`p`/`m` are declaration-only; behavior lives in `u`, `cli`, `api`, `base`, and `services/*` (see root
   `AGENTS.md` U17)
 - Config and settings are validated singletons (`config.<Ns>.*`, `settings.<Ns>.*`) consumed directly — no proxies or
@@ -63,8 +64,10 @@ core/examples/` (`ex_01_flext_result.py` through dispatcher and settings walkthr
 
 ### Key architectural patterns
 
-- **`r[T]` railway contract**: `FlextResult` with `r[T].ok(value)` / `r[T].fail(error)`; every fallible public path
-  returns a result instead of raising.
+- **`r[T]` railway contract**: public annotations use `p.Result[T]`; concrete instances are `FlextResult` built via
+  `r[T].ok` / `r[T].fail` / factories (`from_result`, `from_failure`, `fail_op`, …) without lazy facade imports under
+  `_result/`. Empty failures (`fail(None)` / `fail("")`) stay failed railway values; exception `error_data` redacts
+  `c.SENSITIVE_ERROR_DATA_KEYS` before exposure.
 - **Facade aliases**: one canonical alias per responsibility (`m` models, `u` utilities, `p` protocols, …); downstream
   projects subclass these via MRO to compose their own facades.
 - **Lazy exports**: `lazy.py` (`build_lazy_import_map`, `install_lazy_exports`) keeps `import flext_core` cheap while
@@ -75,8 +78,8 @@ core/examples/` (`ex_01_flext_result.py` through dispatcher and settings walkthr
 ## Testing & quality
 
 - `make check PROJECT=flext-core`: Ruff linting plus type checks (pyrefly/mypy)
-- `make test PROJECT=flext-core`: pytest suite (see `reports/pytest/` for the latest run evidence)
-- `make check`: full validation pipeline; consult `reports/coverage-scan-*` for the current coverage snapshot rather than
+- `make test PROJECT=flext-core`: pytest suite (see `.reports/tests/` for the latest run evidence)
+- `make check`: full validation pipeline; consult `.reports/` coverage artifacts for the current coverage snapshot rather than
   trusting any fixed number in docs
 - Tests exercise only the public surface (facade aliases and exported classes), per the workspace testing law in
   `AGENTS.md` (U16)
@@ -87,10 +90,22 @@ core/examples/` (`ex_01_flext_result.py` through dispatcher and settings walkthr
 - [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law (U2–U18)
 - `flext-core/examples/` — runnable examples for results, settings, logging, and dispatching
 - `flext-core/docs/api-reference/` — generated API documentation
-- Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
+- Reports: `.reports/` coverage artifacts, `reports/lint-output/*`, `reports/pytest/*`
 
 ## Support & issues
 
 - GitHub issues: <https://github.com/flext-sh/flext-core/issues>
 - Keep this page aligned with the workspace governance in root `AGENTS.md` and `docs/GOVERNANCE.md` when proposing doc
   changes.
+
+## Result railway (DIP)
+
+Public construction and transforms are typed as `p.Result` / `r[...]`. Factories live under `src/flext_core/_result/` (`construction`, `transforms`, …); the structural protocol is `src/flext_core/_protocols/result.py`.
+
+- Copy/normalize: `from_result`, `copy_from_result`, `from_failure`
+- Pipeline: `flow_through` normalizes foreign result-like values onto the concrete facade
+- Empty failures (`fail(None)` / `fail("")`) stay failed Results through combinators
+- Auto-extracted exception metadata into `error_data` redacts `c.SENSITIVE_ERROR_DATA_KEYS` and the exception's `excluded_context_keys`
+
+Evidence: `make test PROJECT=flext-core FILE=flext-core/tests/unit/test_result_factory_dip.py`
+
