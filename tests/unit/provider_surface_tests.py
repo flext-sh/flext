@@ -5,8 +5,9 @@ from __future__ import annotations
 import tomllib
 from pathlib import Path
 
-from flext_tests import tm
 from packaging.requirements import Requirement
+
+from flext_tests import tm
 
 
 def test_provider_owned_paths_exist() -> None:
@@ -29,10 +30,7 @@ def test_provider_owned_paths_exist() -> None:
             if isinstance(value, str)
         ),
     )
-    tm.that(
-        len(owned_paths),
-        eq=len(required_surfaces or ()) + 2,
-    )
+    tm.that(len(owned_paths), eq=len(required_surfaces or ()) + 2)
     for relative_path in owned_paths:
         tm.that((root / relative_path).is_file(), eq=True)
 
