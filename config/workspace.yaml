@@ -34,7 +34,7 @@ project:
   alias: "flext"
   environment_prefix: "FLEXT_"
   description: "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
-  version: "0.12.0"
+  version: "0.12.0rc1"
   license: "MIT"
   author_name: "FLEXT Team"
   author_email: "team@flext.sh"
@@ -187,7 +187,7 @@ members:
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-infra.git"
     extra_verbs:
-      - { name: basemk, default_what: generate, whats: [generate] }
+      - {name: basemk, default_what: generate, whats: [generate]}
     path: "flext-infra"
     role: "workspace-member"
     state: "active"
