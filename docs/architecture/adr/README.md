@@ -27,3 +27,7 @@ portal.
   compatibility subset; forward architecture on `0.20.0-dev`)_
 
 New ADRs should be added only when they represent a real architectural decision with an owning implementation path.
+
+## Make work lane saga
+
+Public lane lifecycle is `make work WHAT=start|status|land|finish` (flext-infra `FlextInfraWorkService`). Worktree add/update/remove remains an internal engine only. Operator guide: [make-commands.md](../../guides/make-commands.md#ações-de-work-make-work-whatação).
