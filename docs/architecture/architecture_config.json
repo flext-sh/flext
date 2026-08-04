@@ -76,10 +76,8 @@
   },
   "docs_validation": {
     "required_skills": [
-      "rules-docs",
-      "scripts-maintenance",
-      "readme-standardization",
-      "flext-docs-pointer-policy"
+      "flext-law",
+      "flext-context-routing"
     ],
     "gate_contract": {
       "max_violations": 0

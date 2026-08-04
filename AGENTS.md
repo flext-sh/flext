@@ -17,7 +17,14 @@
 
 ## Authority
 
-Newest operator instruction wins. Layers (non-competing):
+Newest operator instruction wins. Apply this sequence (Beads never override higher law):
+
+1. Newest operator request
+2. Universal law (`UNIVERSAL_CORE.md` + `inviolable-rules` / `make-check` / `verification-loop`)
+3. Branch-matched FLEXT law (this file + `.agents/skills/flext-law/SKILL.md`)
+4. Scope delta (nearest member `AGENTS.md`)
+5. Active Bead (execution intent, ownership, evidence, stop)
+6. In-scope ADR, then supporting docs
 
 | Layer | Owner | Content |
 | --- | --- | --- |
@@ -25,10 +32,12 @@ Newest operator instruction wins. Layers (non-competing):
 | FLEXT | this file + `.agents/skills/flext-law/SKILL.md` | architecture, Make, generation, fleet |
 | Scope | nearest member `AGENTS.md` | domain facts / exclusions only |
 | Execution | active Bead | intent, ownership, evidence, stop |
+| ADR/docs | `docs/architecture/adr/` then supporting docs | decisions and rationale |
 
 - Entry: `.agents/skills/flext-context-routing/SKILL.md` → `.agents/commands/flext-law.md`.
 - Fail closed on missing/mismatched law; never fall back to `main` or another checkout.
 - AI Hub projects managed sections; it is not Global/FLEXT authority.
+- Autonomous rebase is forbidden unless the operator explicitly requests it (prelude rule 8 wins over Beads session-close examples).
 
 Docs: [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) ·
 [`docs/architecture/adr/`](docs/architecture/adr/) ·
@@ -95,7 +104,7 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 ## Overview
 
 Multi-package Python 3.13 workspace (superproject + 31 `flext-*` submodules) for data
-integration and connectors. Clean Architecture on `flext-core`. Branch `0.12.0-dev`; forward `0.13.0`.
+integration and connectors. Clean Architecture on `flext-core`. Branch `0.12.0-dev`; platform baseline `0.13.0`; forward integration line `0.20.0-dev`.
 
 ## Structure
 
@@ -199,7 +208,7 @@ make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 - `flext-infra` codegen owns fleet CI and hook projections; remove duplicate custom CI and regenerate consumers from its config/templates.
 - CI policy: draft PRs run no CI; integration pushes (`dev`/`develop`/`0.12.0-dev`) run blocking ubuntu `CI` only; `ci-matrix` is projected only for workspace-root/standalone and auto-runs only on push to `main` (plus optional `workflow_dispatch`); workspace-member projects must not receive or auto-run `ci-matrix` (`codegen.yaml` profiles exclude them; `make gen WHAT=apply APPLY=Y` prunes orphan member copies); CodeQL default setup is a GitHub repo setting outside Jinja; other branches skip.
 - Agent/skill surfaces on governed branches must be real files, not symlinks; `config.AiHub.paths.ai_hub` materializes them per its application config.
-- Project markdown docs centralize under `docs/` (root keeps only standardized files); `.agents/*` and `data/*` are special; external-docs follow `docs/reference/` patterns; validate via `make check` markdown gates and flext-infra docs generation.
+- Project markdown docs centralize under `docs/` (root keeps only standardized files); `.agents/*` and `data/*` are special; external-docs follow `docs/references/` patterns; validate via `make check` markdown gates and flext-infra docs generation.
 - Lane lifecycle is the `make work` verb (beads, worktrees, gh/PR, gitflow) owned by flext-infra Makefile/codegen on `0.12.0-dev`; AI Hub consumes the same surface without duplicating gitflow.
 - Default `make test` is testmon-incremental fleet-wide; coverage stays out of default CI (`CI=Y` skips cov); GitHub Actions testmon cache warms until green, then renews only on success within quota.
 - Enforcement split: flext-core runtime (beartype rules), flext-infra static engines, flext-tests pytest automation harness (`tm`/`tv`/`tt`) for all projects.
