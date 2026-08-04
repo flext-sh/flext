@@ -138,6 +138,6 @@ from flext_core import s as settings  # wrong: s is service/runtime
 ## Related
 
 - `.agents/skills/flext-law/SKILL.md`
-- `~/.agents/skills/make-check/SKILL.md`
-- `~/.agents/skills/inviolable-rules/SKILL.md`
+- `${config.AiHub.paths.agents_home}/skills/make-check/SKILL.md`
+- `${config.AiHub.paths.agents_home}/skills/inviolable-rules/SKILL.md`
 - `flext-core/src/flext_core/README.md`

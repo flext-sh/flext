@@ -10,7 +10,7 @@ engineering law or skill procedures.
 Apply the newest applicable source in this order:
 
 1. Newest operator request.
-2. `~/.agents` universal authority (`AGENTS.md`, `UNIVERSAL_CORE.md`, and universal skills).
+2. `config.AiHub.paths.agents_home` universal authority (`AGENTS.md`, `UNIVERSAL_CORE.md`, and universal skills).
 3. Project `AGENTS.md` and routed local skills.
 4. Bead execution and status SSOT.
 5. In-scope ADR in [`architecture/adr/`](architecture/adr/README.md).
@@ -24,17 +24,17 @@ this order.
 
 | Concern | Canonical owner | Decisive validation |
 | --- | --- | --- |
-| Provider activation and exported paths | `~/.agents` provider authority | typed manifest and exact-path inventory validation |
+| Provider activation and exported paths | `config.AiHub.paths.agents_home` provider authority | typed manifest and exact-path inventory validation |
 | Session routing | `.agents/skills/flext-context-routing/SKILL.md` | marker and selected-skill evidence |
 | Architecture and public contracts | [ADR registry](architecture/adr/README.md) and owning source declaration | consumer audit plus affected project gates |
 | Ecosystem coordination (internal + external projects) | [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md) and [ecosystem-coordination.md](architecture/ecosystem-coordination.md) | reverse-dependency gate plus owner-local ADR consistency (`0.20.0-dev`) |
-| Runtime coding patterns | smallest matching skill under `~/.agents/skills/` | fresh import, lint, typecheck, behavior gate |
-| Quality commands | `~/.agents/skills/inviolable-rules/SKILL.md` | exact command, exit code, decisive output |
+| Runtime coding patterns | smallest matching skill under `${config.AiHub.paths.agents_home}/skills/` | fresh import, lint, typecheck, behavior gate |
+| Quality commands | `${config.AiHub.paths.agents_home}/skills/inviolable-rules/SKILL.md` | exact command, exit code, decisive output |
 | Documentation lifecycle | [`standards/documentation.md`](standards/documentation.md) | narrow markdown gate, then docs audit |
 | Workspace Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help` and affected dispatcher gate |
 | Enforcement catalog identity and routing | `flext-core` enforcement declarations | catalog census and public import |
 | Declarative enforcement payloads and execution | `flext-infra` rules, schemas, and engine | enforcement engine result |
-| Structural codemods | provider referenced by the `~/.agents` authority | preview, exact cardinality, apply, idempotence |
+| Structural codemods | provider referenced by the `config.AiHub.paths.agents_home` authority | preview, exact cardinality, apply, idempotence |
 | Fleet GitHub Actions (`CI`, `ci-matrix`, docs, release) | `flext-infra` codegen (`config/codegen.yaml` + `templates/project/base/.github/workflows/*.j2`); regenerate with `make gen WHAT=apply APPLY=Y` | members never receive/auto-run `ci-matrix` (profiles + prune); root/standalone matrix = push `main` + `workflow_dispatch` only (no `pull_request`; never bind integration-line variable); integration pushes use blocking `CI` only; CodeQL is GitHub default-setup outside Jinja |
 
 The owning declaration, validated config, or fundamental rule is the source of

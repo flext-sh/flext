@@ -147,9 +147,9 @@ All artifacts follow: `<skill>--<kind>--<slug>.<ext>`
 
 |Type|Path pattern|Example|
 |-------------|----------------------------------------------------------------------------------------------------|------------------------------------------------------------|
-|Latest report|`.reports/validate/<gate>/<project>.txt` (workspace) or `~/.agents/skills/<skill>/report.json` (skill)|`.reports/validate/type-check/flext-core.txt`|
-|Baseline|`~/.agents/skills/<skill>/baseline.json`|`~/.agents/skills/flext-strict-typing/baseline.json`|
-|Fix report|`~/.agents/skills/<skill>/fix-report.json`|`~/.agents/skills/flext-pyrefly-typecheck-fix/fix-report.json`|
+|Latest report|`.reports/validate/<gate>/<project>.txt` (workspace) or `${config.AiHub.paths.agents_home}/skills/<skill>/report.json` (skill)|`.reports/validate/type-check/flext-core.txt`|
+|Baseline|`${config.AiHub.paths.agents_home}/skills/<skill>/baseline.json`|`${config.AiHub.paths.agents_home}/skills/flext-strict-typing/baseline.json`|
+|Fix report|`${config.AiHub.paths.agents_home}/skills/<skill>/fix-report.json`|`${config.AiHub.paths.agents_home}/skills/flext-pyrefly-typecheck-fix/fix-report.json`|
 
 Do not write validation artifacts to `.sisyphus/`.
 
@@ -157,7 +157,7 @@ Do not write validation artifacts to `.sisyphus/`.
 
 ## Skill Rule Contract
 
-- Skill rules are loaded only from the active `~/.agents/skills/*/rules.yml`.
+- Skill rules are loaded only from the active `${config.AiHub.paths.agents_home}/skills/*/rules.yml`.
 - Rule fix metadata must use flat keys only: `fix_auto`, `fix_type`, `fix_file`, `fix_script`, `fix_instruction`, `fix_description`.
 - Nested `fix:` metadata in `rules.yml` is invalid.
 - If `fix_auto: true`, the fix mechanism must be executable and target files must exist.
@@ -224,14 +224,14 @@ Every gate script must include these elements in its first 10 lines:
 
 ```bash
 #!/usr/bin/env bash
-# Owner-Skill: ~/.agents/skills/<skill-name>/SKILL.md
+# Owner-Skill: ${config.AiHub.paths.agents_home}/skills/<skill-name>/SKILL.md
 ```
 
 or for Python:
 
 ```python
 #!/usr/bin/env python3
-# Owner-Skill: ~/.agents/skills/<skill-name>/SKILL.md
+# Owner-Skill: ${config.AiHub.paths.agents_home}/skills/<skill-name>/SKILL.md
 """One-line description of what this gate checks."""
 ```
 
@@ -258,7 +258,7 @@ exempt from gate contract validation but must still have Owner-Skill markers.
 ### Validator (python — skill-based)
 
 - `flext-infra validate skill-validate --skill flext-strict-typing` — discovers
-  rules from the active `~/.agents` provider; accepts `--mode baseline|strict`;
+  rules from the active `config.AiHub.paths.agents_home` provider; accepts `--mode baseline|strict`;
   exits 0/1
 - `flext-infra validate skill-validate --skill flext-pydantic-models --mode strict`
   — same contract
