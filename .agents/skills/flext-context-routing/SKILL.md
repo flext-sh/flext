@@ -10,13 +10,13 @@ branch-matched FLEXT law without duplicating universal execution governance.
 
 ## Required composition
 
-1. Read `~/.agents/skills/inviolable-rules/SKILL.md`.
+1. Read `${config.AiHub.paths.agents_home}/skills/inviolable-rules/SKILL.md`.
 2. Before build, generation, docs, checks, tests, or diagnosis, read
-   `~/.agents/skills/make-check/SKILL.md`.
+   `${config.AiHub.paths.agents_home}/skills/make-check/SKILL.md`.
 3. For every FLEXT task, read the exact local
    `.agents/skills/flext-law/SKILL.md`.
 4. At every completion boundary, read
-   `~/.agents/skills/verification-loop/SKILL.md`.
+   `${config.AiHub.paths.agents_home}/skills/verification-loop/SKILL.md`.
 
 Fail closed if a required file is absent. Never resolve `flext-law` by an
 unqualified catalog name, from `main`, or from another checkout.
@@ -29,11 +29,11 @@ unqualified catalog name, from `main`, or from another checkout.
 - In standalone mode, use the FLEXT root law pinned to the same branch or
   release; never fall back to `main`.
 - Load only local surfaces declared in `.agents/provider.toml`. Global skills
-  remain owned by `~/.agents` and are not copied into the local provider.
+  remain owned by `config.AiHub.paths.agents_home` and are not copied into the local provider.
 
 ## Memory and MCP
 
 - `AGENTS.md` Learned sections: continual-learning only (≤12 bullets/section, high-signal; never promote law).
 - Index: `.cursor/hooks/state/continual-learning-index.json`.
-- MCP via ai-hub gateway: see `~/.ai-hub/docs/MCP_AGENT_GUIDE.md` (beads/memory/CRG/ast-grep; Make for Done).
+- MCP via ai-hub gateway: see `${config.AiHub.paths.ai_hub}/docs/MCP_AGENT_GUIDE.md` (beads/memory/CRG/ast-grep; Make for Done).
 

@@ -8,8 +8,8 @@ Read the canonical authorities first; this file only adds lane discipline.
 - Project law and routed skills: [`AGENTS.md`][agents-md]
 - Governance router: [`GOVERNANCE.md`][governance-md]
 - Local skills: [`flext-law`][flext-law]
-- Universal skills: `~/.agents/skills/inviolable-rules/SKILL.md`,
-  `~/.agents/skills/make-check/SKILL.md`, `~/.agents/skills/verification-loop/SKILL.md`
+- Universal skills: `${config.AiHub.paths.agents_home}/skills/inviolable-rules/SKILL.md`,
+  `${config.AiHub.paths.agents_home}/skills/make-check/SKILL.md`, `${config.AiHub.paths.agents_home}/skills/verification-loop/SKILL.md`
 - Config/settings SSOT: [ADR-005][adr-005]
 
 [agents-md]: ../../AGENTS.md

@@ -8,12 +8,12 @@ Collection Rules in each `<project>/docs/index.md`.
 1. [`/flext/docs/GOVERNANCE.md`](../GOVERNANCE.md) — rule routing, ADRs,
    validation surfaces, and ratified refactor gates.
 2. `/flext/AGENTS.md` (repo root) — supreme engineering law.
-3. `~/.claude/AGENTS.md` — universal cross-project rules (if present).
+3. `${config.AiHub.agents.agents.claude.home}/AGENTS.md` — universal cross-project rules (if present).
 4. The target project's `pyproject.toml` for stack, version, dependencies.
 
 ## 2. Identify Project Slot Ownership
 
-Use the cross-project slot registry in `~/.agents/skills/` when the active
+Use the cross-project slot registry in `${config.AiHub.paths.agents_home}/skills/` when the active
 provider exposes it. Confirm which `c.<Domain>`, `m.<Domain>`, `p.<Domain>`,
 `t.<Domain>`, `u.<Domain>` slots the target project owns before adding or
 renaming any symbol.
@@ -42,7 +42,7 @@ If any gate fails, FIX FORWARD per AGENTS.md §3.5. Never `git checkout`/`reset`
 ## 5. Load Skills Relevant to the Change Scope
 
 The provider activates `flext-context-routing` first. That router selects only
-the smallest on-demand set declared by the active `~/.agents` provider:
+the smallest on-demand set declared by the active `config.AiHub.paths.agents_home` provider:
 
 1. Load the one domain skill that owns the change, such as `lib-returns`,
    `flext-import-rules`, or `pydantic-v2-governance`.
@@ -52,7 +52,7 @@ the smallest on-demand set declared by the active `~/.agents` provider:
 
 Do not maintain or load a fixed default skill bundle.
 
-Path-scoped skills live under the active `~/.agents/skills/` authority.
+Path-scoped skills live under the active `${config.AiHub.paths.agents_home}/skills/` authority.
 Their exported inventory is owned by that provider configuration.
 
 ## 6. Fundamental Packages
