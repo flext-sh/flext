@@ -21,7 +21,7 @@ Newest operator instruction wins. Layers (non-competing):
 
 | Layer | Owner | Content |
 | --- | --- | --- |
-| Global | `~/.agents/UNIVERSAL_CORE.md` + `inviolable-rules` / `make-check` / `verification-loop` | conduct, evidence, completion |
+| Global | `${config.AiHub.paths.agents_home}/UNIVERSAL_CORE.md` + `inviolable-rules` / `make-check` / `verification-loop` | conduct, evidence, completion |
 | FLEXT | this file + `.agents/skills/flext-law/SKILL.md` | architecture, Make, generation, fleet |
 | Scope | nearest member `AGENTS.md` | domain facts / exclusions only |
 | Execution | active Bead | intent, ownership, evidence, stop |
@@ -194,7 +194,7 @@ make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 - `make gen WHAT=apply APPLY=Y` must be idempotent (following `make gen` reports no drift).
 - `flext-infra` codegen owns fleet CI and hook projections; remove duplicate custom CI and regenerate consumers from its config/templates.
 - CI policy: draft PRs run no CI; integration pushes (`dev`/`develop`/`0.12.0-dev`) run blocking ubuntu `CI` only; `ci-matrix` is projected only for workspace-root/standalone and auto-runs only on push to `main` (plus optional `workflow_dispatch`); workspace-member projects must not receive or auto-run `ci-matrix` (`codegen.yaml` profiles exclude them; `make gen WHAT=apply APPLY=Y` prunes orphan member copies); CodeQL default setup is a GitHub repo setting outside Jinja; other branches skip.
-- Agent/skill surfaces on governed branches must be real files, not symlinks; `~/.ai-hub` materializes them per its application config.
+- Agent/skill surfaces on governed branches must be real files, not symlinks; `config.AiHub.paths.ai_hub` materializes them per its application config.
 
 <!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->
 ## Workspace providers
