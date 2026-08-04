@@ -50,6 +50,12 @@ def test_load_user() -> None:
     assert failure.failure
 ```
 
+
+## DIP in tests
+
+Type results as `p.Result[T]` in tests. Assert only public shape (`.success`, `.failure`, `.unwrap()`, error metadata).
+See `flext-core/tests/unit/test_result_factory_dip.py` for factory/protocol contracts.
+
 ## Fixtures
 
 Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it to the canonical `conftest.py` for the affected tier.
