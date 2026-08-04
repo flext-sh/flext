@@ -1,3 +1,10 @@
+<!-- HISTORICAL / SUPERSEDED — 2026-08-04 -->
+> **Status: historical / superseded.** Live execution SSOT is Beads (`mro-z89e` and children),
+> not this plan. Do not treat tool versions, worktree paths, `bd` versions, `rtk` mandates,
+> or active-leaf IDs in this file as current law. Prefer branch-matched
+> `.agents/skills/flext-law/SKILL.md` and the active Bead.
+> Superseded by Governance and Reality Repair (`mro-z89e.35`).
+
 # FLEXT Beads Governance Reorganization — Autonomous Handoff Plan
 
 > Status: intentionally not executed by the author of this handoff.

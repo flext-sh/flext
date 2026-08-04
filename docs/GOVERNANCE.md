@@ -19,11 +19,14 @@ engineering law or skill procedures.
 Apply the newest applicable source in this order:
 
 1. Newest operator request.
-2. `config.AiHub.paths.agents_home` universal authority (`AGENTS.md`, `UNIVERSAL_CORE.md`, and universal skills).
-3. Project `AGENTS.md` and routed local skills.
-4. Bead execution and status SSOT.
-5. In-scope ADR in [`architecture/adr/`](architecture/adr/README.md).
-6. Supporting documentation.
+2. Universal law (`UNIVERSAL_CORE.md` and universal skills under
+   `config.AiHub.paths.agents_home`).
+3. Branch-matched FLEXT law (project `AGENTS.md` + routed local skills such as
+   `flext-law`).
+4. Scope delta (nearest member `AGENTS.md`).
+5. Active Bead (execution intent and evidence SSOT; never overrides higher law).
+6. In-scope ADR in [`architecture/adr/`](architecture/adr/README.md), then
+   supporting documentation.
 
 When a higher source changes reality, update the affected lower sources in the
 same change. Ask before acting only when the conflict cannot be resolved from
@@ -87,7 +90,7 @@ never allowed to hardcode the values that happen to exist today.
 
 ## Baseline Commands
 
-Choose the narrowest decisive command from the quality-gates skill, then widen
+Choose the narrowest decisive command from the `make-check` skill, then widen
 only after it passes:
 
 ```bash
