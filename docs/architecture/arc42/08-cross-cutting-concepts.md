@@ -26,6 +26,13 @@ from external libraries are converted to `r.fail(...)` at the boundary. The
 railway composes with `map`/`flat_map`-style chaining so error handling is
 structural, not scattered `try/except`.
 
+**Result DIP (dependency inversion):** annotate fallible signatures as
+`p.Result[T]` (the protocol); construct and normalize with `r[T].ok` /
+`r[T].fail`, `from_result`, and `from_failure`. Internal `_result/*`
+helpers type against `p.Result` and build via `cls(...)` — never lazy-import
+`FlextResult` under `_result/`. Combinators chain with `.map` / `.flat_map`;
+use `.success` / `.failure`, not legacy `is_success`.
+
 ## 8.2 Strict Typing
 
 Python 3.13+ typing, modern forms only: builtin generics, `X | Y` unions,
