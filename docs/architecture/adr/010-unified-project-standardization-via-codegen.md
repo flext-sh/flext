@@ -33,7 +33,7 @@ The workspace already has the right generic owners:
   routing.
 
 The former text treated all standardization as `0.20.0-dev` work and presented
-`boot`, `fmt`, and `val` beside the ADR-004 grammar. That contradicted the
+`boot`, `format`, and `val` beside the ADR-004 grammar. That contradicted the
 release requirement: an isolated `flext-infra` artifact must provide one real,
 generic Make/codegen surface to all release consumers before `0.12.0` can ship.
 
@@ -69,10 +69,10 @@ must not compare a local manifest with a duplicated product catalog.
 
 ### 2. The public Make grammar is singular
 
-Every surface exposes `help` plus exactly the twelve ADR-004 verbs:
+Every surface exposes `help` plus the ADR-004 operational verbs (see `make help`):
 
 ```text
-setup deps build check test format run status docs clean release codegen
+setup deps build check test fmt fix run status docs clean release gen work
 ```
 
 `make help` lists the choices actually discovered for that
@@ -85,7 +85,7 @@ empty success or an implicit fallback.
 Capabilities provide concrete handlers only for applicable operations.
 `custom.mk` is limited to private `_custom_<verb>_<what>` and `pre/post-*`
 hooks. It cannot define public targets, replace environment ownership, or patch
-the generator. Legacy `boot`, `fmt`, and `val` aliases and competing Taskfile or
+the generator. Legacy `boot`, `format`, and `val` aliases and competing Taskfile or
 handwritten dispatchers are removed after each consumer completes its cutover.
 
 ### 3. Conformance is artifact-isolated and reaches a fixed point

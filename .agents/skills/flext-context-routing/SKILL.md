@@ -36,4 +36,3 @@ unqualified catalog name, from `main`, or from another checkout.
 - `AGENTS.md` Learned sections: continual-learning only (≤12 bullets/section, high-signal; never promote law).
 - Index: `.cursor/hooks/state/continual-learning-index.json`.
 - MCP via ai-hub gateway: see `~/.ai-hub/docs/MCP_AGENT_GUIDE.md` (beads/memory/CRG/ast-grep; Make for Done).
-
