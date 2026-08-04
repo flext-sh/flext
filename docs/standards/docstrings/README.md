@@ -63,7 +63,7 @@ ruff check --select=D,DOC --preview flext-core/src
 **Audit workflow** (guided manual improvement):
 
 ```bash
-make build WHAT=docs DOCS_PHASE=audit PROJECT=flext-core
+make docs WHAT=audit PROJECT=flext-core
 ```
 
 ## Philosophy

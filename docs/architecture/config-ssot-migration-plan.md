@@ -62,7 +62,7 @@ Acceptance:
 1. Generate one self-contained Makefile for `workspace-root`,
    `workspace-member`, and `standalone` from the same template layer.
 2. Validate `custom.mk` as private `_custom_<verb>_<what>` handlers only.
-3. Expose `help` plus the twelve operational verbs defined by ADR-004, with one
+3. Expose `help` plus the operational verbs from live `make help` (ADR-004), with one
    selector and handler per action.
 4. Generate permanent Git-and-branch FLEXT sources, versioned locks, pinned
    Python/uv toolchain metadata, and root PEP 735 groups.

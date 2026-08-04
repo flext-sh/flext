@@ -556,7 +556,7 @@ SPDX-License-Identifier: MIT
 ruff check --select=D,DOC --preview flext-core/src
 
 # Audit with guidance
-make build WHAT=docs DOCS_PHASE=audit PROJECT=flext-core
+make docs WHAT=audit PROJECT=flext-core
 
 # Ruff strict check
 ruff check --select=D,DOC --preview flext-core/src
