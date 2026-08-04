@@ -9,7 +9,7 @@ for FLEXT Framework".
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: `make check PROJECT=flext-ldap` (Ruff + type checks) and `make val` for the full pipeline
+- **Quality gate**: `make check PROJECT=flext-ldap` (Ruff + type checks) and `make check` for the full pipeline
 - **Depends on**: `flext-core`, `flext-ldif` (entry models and LDIF conversion)
 
 ### Quality signals
@@ -79,7 +79,7 @@ and `filter_str` to the constants in `c.Ldap`. Use `FlextLdapEntryAdapter` to co
 
 - `make check PROJECT=flext-ldap`: Ruff linting plus type checks
 - `make test PROJECT=flext-ldap`: pytest suite (latest evidence under `reports/pytest/`)
-- `make val`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
+- `make check`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
 - Tests target the public facade and exported models only, per workspace testing law (U16)
 
 ## Resources

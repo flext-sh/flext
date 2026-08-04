@@ -1,7 +1,7 @@
 # Getting Started
 
-Use the root portal for workspace-level guidance only. Package-specific implementation details stay in each `flext-*`
-project.
+Use the root portal for workspace-level guidance only. Package-specific
+implementation details stay in each `flext-*` project.
 
 ## Prerequisites
 
@@ -12,11 +12,17 @@ project.
 ## Bootstrap the Workspace
 
 ```bash
-make setup APPLY=Y
-make val
+make setup
+make check
+make test PROJECT=flext-core
 ```
 
-`make setup APPLY=Y` installs the selected projects into the shared workspace environment and then runs validation.
+`make setup` provisions the shared environment and governed gitlinks. It does
+not take `APPLY=Y`. A member on the wrong branch fails closed without
+destructive checkout/reset — switch the member yourself while keeping dirty
+work, then re-run setup.
+
+There is no `make val` verb; use `make check` / `make test`.
 
 ## Navigate the Root Portal
 
@@ -28,12 +34,10 @@ make val
 
 ## Work on One Project
 
-Use the standard workspace selectors instead of ad hoc commands:
-
 ```bash
 make check PROJECT=flext-infra
-make test PROJECT=flext-infra MATCH=docs
-make docs DOCS_PHASE=audit PROJECT=flext-infra
+make test PROJECT=flext-infra FILE=tests/unit/...
+make docs WHAT=audit PROJECT=flext-infra
 ```
 
 ## Documentation Model

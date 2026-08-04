@@ -66,7 +66,7 @@ Done means all of the following:
 - Exact Make-gate evidence is recorded: command, cwd, exit code, decisive line.
 - No new lint, type, or test failures are injected.
 - Changed files are clean and scoped.
-- Nothing reaches `0.12.0-dev` except through the lead's PR #20 merge after the
+- Nothing reaches `0.12.0-dev` except through the lead's `origin/0.12.0-dev` merge after the
   whole fleet is green.
 
 ## 6. Coordination protocol
@@ -123,3 +123,10 @@ must not be claimed before integration.
 Any red, inconclusive, timed-out without a verdict, zero-project, partial-scope,
 or stale-HEAD result blocks review or integration. Only complete, fresh green
 evidence at the applicable boundary permits `READY_FOR_REVIEW`.
+
+## Integration line
+
+Land worker lanes onto `origin/0.12.0-dev` via `make work WHAT=land` / fast-forward
+merge. Do not run `workspace-merge-main` or otherwise promote to `main` unless the
+operator explicitly requests a release promote.
+

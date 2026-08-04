@@ -17,7 +17,7 @@ than hand-rolled profiles.
 - All service operations return `r[T]` (`p.Result[...]`) inherited from the `flext-meltano` dbt service contract.
 - Settings are validated Pydantic models: `FlextDbtOracleSettings` extends both `FlextDbOracleSettings` and
   `FlextMeltanoSettings`.
-- Gates: `make check PROJECT=flext-dbt-oracle`, `make test PROJECT=flext-dbt-oracle`, and `make val` produce the
+- Gates: `make check PROJECT=flext-dbt-oracle`, `make test PROJECT=flext-dbt-oracle`, and `make check` produce the
   authoritative evidence.
 
 ## Quick start
@@ -76,7 +76,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_oracle/`:
 - Tests live in the project `tests/` tree and run through `make test PROJECT=flext-dbt-oracle`.
 - dbt run paths need a reachable Oracle instance and a configured target; without one, unit suites and static gates are
   the evidence of record.
-- The authoritative quality verdict comes from `make check PROJECT=flext-dbt-oracle` and `make val`.
+- The authoritative quality verdict comes from `make check PROJECT=flext-dbt-oracle` and `make check`.
 
 ## Resources
 

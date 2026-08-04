@@ -38,3 +38,18 @@ Release notes per cycle live under
 
 The `0.12.0-dev` cycle is non-production. Quality status per cycle is stated
 in the release notes; production adoption tracks packaged releases only.
+
+## Dependency security floors
+
+Root `pyproject.toml` `[tool.uv] constraint-dependencies` pins fleet-wide floors
+for transitive advisories (currently `transformers>=5.5.0` and
+`cryptography>=50.0.0`). Change the floor in the SSOT, regenerate/lock through
+`make deps`, and keep day-to-day landing on `0.12.0-dev`. Dependabot merge
+helpers that target `main` are operator-gated and are not the default ULW path.
+
+## Integration branch
+
+The active development line is `0.12.0-dev`. Promote to `main` only when the
+operator explicitly requests a release promote — not as part of ordinary
+bugfix/docs closeout.
+

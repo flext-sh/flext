@@ -8,7 +8,7 @@ utilities, and `r[T]` error handling. Package description: "FLEXT CLI — Develo
 
 - **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: `make check PROJECT=flext-cli` (Ruff + type checks) and `make val` for the full pipeline
+- **Quality gate**: `make check PROJECT=flext-cli` (Ruff + type checks) and `make check` for the full pipeline
 - **Depends on**: `flext-core` (facades, result contract, container)
 
 ### Quality signals
@@ -63,7 +63,7 @@ unverified convenience method.
 
 - `make check PROJECT=flext-cli`: Ruff linting plus type checks
 - `make test PROJECT=flext-cli`: pytest suite (latest evidence under `reports/pytest/`)
-- `make val`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
+- `make check`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
 - Tests target the public `cli` facade surface only, per workspace testing law (U16)
 
 ## Resources
