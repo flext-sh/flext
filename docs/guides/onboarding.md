@@ -33,7 +33,6 @@ dispatcher; do not rely on bare tool commands or a machine-specific path.
 ```bash
 cd <project>
 make check                                    # ruff + pyrefly + mypy + pyright must exit 0
-make val VALIDATE_SCOPE=project               # complexity + docstring gates must exit 0
 make test                                     # pytest must exit 0 with project coverage threshold
 make docs DOCS_PHASE=audit                    # docs audit must report zero issues
 ```

@@ -69,7 +69,7 @@ hand-maintained copies:
 The workspace documentation site is published to **docs.flext.sh**:
 
 - Deployment is driven by the GitHub Pages workflow
-  (`.github/workflows/docs-pages.yml`), which runs the same `build` phase in
+  (`.github/workflows/docs.yml`), which runs the same `build` phase in
   strict mode and uploads `.reports/docs/site`.
 - The site domain is fixed by the `CNAME` file in the deployed artifact.
 - The root site nav is rendered from
@@ -93,7 +93,7 @@ The workspace documentation site is published to **docs.flext.sh**:
 - **Facts, not vibes.** Version numbers, test counts, and capability claims in
   docs must trace to the project metadata or a command output. When a fact
   cannot be verified cheaply, omit it and point at the gate that produces it
-  (`make codegen WHAT=check`, `make check`, `make docs WHAT=audit`).
+  (`make gen WHAT=check`, `make check`, `make docs WHAT=audit`).
 - **One home per topic.** A subject has exactly one canonical page; everything
   else links to it. No duplicated standards across `docs/`, `README.md`, and
   skills — pointers only.

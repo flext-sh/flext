@@ -1,6 +1,6 @@
 # Testing Standards
 
-Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `.agents/skills/flext-inviolable-rules/SKILL.md`.
+Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `~/.agents/skills/inviolable-rules/SKILL.md`.
 
 ## Mindset
 
@@ -122,6 +122,6 @@ make test PROJECT=<proj>
 ## Related
 
 - `AGENTS.md` — root engineering law
-- `.agents/skills/flext-inviolable-rules/SKILL.md` — gate commands
-- `.agents/skills/coding-standards/SKILL.md` — general coding standards
-- `.agents/skills/flext-development-workflow/SKILL.md` — CI/CD lifecycle
+- `~/.agents/skills/inviolable-rules/SKILL.md` — gate commands
+- `.agents/skills/flext-law/SKILL.md` — FLEXT domain law
+- `AGENTS.md` Learned Workspace Facts — CI policy (blocking `CI` on integration; `ci-matrix` main-only for root/standalone; members pruned; CodeQL outside Jinja)
