@@ -6,20 +6,22 @@
 # Multi-environment CI base: proves the project bootstrap and canonical Make
 # verbs work identically across distros, macOS, and Windows. The CI invokes
 # the project's own Make surface; it never reimplements bootstrap.
-# Runs only on main (direct push or non-draft PR targeting main).
+# Projected only for workspace-root/standalone. Auto-runs on push to main only
+# (plus workflow_dispatch). Workspace members are covered by the root matrix;
+# conform/make gen APPLY=Y prunes orphan member copies. Never bind triggers to
+# the integration-line variable.
 ---
 name: ci-matrix
 
 # === SECTION: triggers (managed) ===
-# Source: main promotion only (integration branch uses blocking ci.yml alone)
+# Source: post-merge main only (no pull_request; no integration-line binding)
 "on":
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch: {}
 # End SECTION: triggers
+
+
 
 # === SECTION: permissions (managed) ===
 # Source: template (minimal read-only permissions)
@@ -41,7 +43,6 @@ jobs:
     # Clean-machine proof per distro: build the distro image (which runs the
     # full project bootstrap at image-build time), then smoke the verb surface
     # inside the built container.
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -66,7 +67,6 @@ jobs:
   # === SECTION: macos (managed) ===
   # Source: template + config:github_actions.checkout/setup-python/mise/setup-uv
   macos:
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -91,7 +91,6 @@ jobs:
   # === SECTION: windows (managed) ===
   # Source: template + config:github_actions.checkout/setup-python/mise/setup-uv
   windows:
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1

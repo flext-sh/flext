@@ -35,7 +35,7 @@ this order.
 | Enforcement catalog identity and routing | `flext-core` enforcement declarations | catalog census and public import |
 | Declarative enforcement payloads and execution | `flext-infra` rules, schemas, and engine | enforcement engine result |
 | Structural codemods | provider referenced by the `~/.agents` authority | preview, exact cardinality, apply, idempotence |
-| Fleet GitHub Actions (`CI`, `ci-matrix`, docs, release) | `flext-infra` codegen (`config/codegen.yaml` + `templates/project/base/.github/workflows/*.j2`); regenerate with `make gen APPLY=Y` | members have no auto `ci-matrix`; root/standalone matrix push=`main` only; integration pushes use blocking `CI` only; CodeQL is not Jinja-owned |
+| Fleet GitHub Actions (`CI`, `ci-matrix`, docs, release) | `flext-infra` codegen (`config/codegen.yaml` + `templates/project/base/.github/workflows/*.j2`); regenerate with `make gen WHAT=apply APPLY=Y` | members never receive/auto-run `ci-matrix` (profiles + prune); root/standalone matrix = push `main` + `workflow_dispatch` only (no `pull_request`; never bind integration-line variable); integration pushes use blocking `CI` only; CodeQL is GitHub default-setup outside Jinja |
 
 The owning declaration, validated config, or fundamental rule is the source of
 truth. Tests and checks validate it; they never define the contract, catalog,

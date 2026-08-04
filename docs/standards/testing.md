@@ -130,4 +130,4 @@ make test PROJECT=<proj>
 - `AGENTS.md` — root engineering law
 - `~/.agents/skills/inviolable-rules/SKILL.md` — gate commands
 - `.agents/skills/flext-law/SKILL.md` — FLEXT domain law
-- `AGENTS.md` Learned Workspace Facts — CI policy (blocking `CI` on integration; `ci-matrix` main-only for root/standalone; members pruned; CodeQL outside Jinja)
+- `AGENTS.md` Learned Workspace Facts — CI policy (blocking `CI` on integration; `ci-matrix` main-only for root/standalone; members pruned; CodeQL outside Jinja). Owner: `flext-infra` codegen; regenerate/prune with `make gen WHAT=apply APPLY=Y`.

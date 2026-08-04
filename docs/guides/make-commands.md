@@ -42,12 +42,17 @@ Edit SSOT under `flext-infra/config/codegen.yaml` and
 make gen WHAT=apply APPLY=Y
 ```
 
-Contracts locked by `flext-infra` tests (`test_review_mro_vw2w_template_contracts.py`):
+Contracts locked by `flext-infra` tests (`test_review_mro_vw2w_template_contracts.py`,
+`test_codegen_ci_matrix.py`, `workflow_orphan_guard_tests.py`):
 
 - Bootstrap pins `flext-infra` to the recorded gitlink OID when resolvable (`FLEXT_INFRA_BOOTSTRAP_REF`), else the integration branch
 - `make deps WHAT=upgrade APPLY=Y PROJECT=...` modernizes via `SELECTED_PROJECTS` (honors `PROJECT`)
 - CI failure artifacts upload only `junit.xml` / `coverage.xml` / `coverage.json` (no raw logs)
 - TestPyPI release: root/tag verify → `make setup` → flext-core gitlink verify → publish
+- `ci-matrix` projected only for `workspace-root` / `standalone`; never for `workspace-member`
+- `ci-matrix` auto-runs on push to `main` plus `workflow_dispatch` only (no `pull_request`; never bind the integration-line variable)
+- `make gen WHAT=apply APPLY=Y` prunes orphan member `.github/workflows/ci-matrix.yml` copies
+- `codeql.yml` is not Jinja-projected (CodeQL default setup stays a GitHub repo setting)
 
 ## Integration line (operator gate)
 

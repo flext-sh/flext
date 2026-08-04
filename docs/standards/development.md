@@ -218,4 +218,4 @@ Scope with `PROJECT=` / `CHECK_GATES=` / `FILE=` / `MATCH=` — never bare ruff/
 - `.agents/skills/flext-law/SKILL.md` — FLEXT domain law
 - `~/.agents/skills/inviolable-rules/SKILL.md` — gate commands
 - `~/.agents/skills/make-check/SKILL.md` — canonical Make verbs
-- `AGENTS.md` Learned Workspace Facts — CI policy and `make gen APPLY=Y` workflow regeneration
+- `AGENTS.md` Learned Workspace Facts — CI policy and `make gen WHAT=apply APPLY=Y` workflow regeneration/prune (owner: `flext-infra` codegen)
