@@ -72,7 +72,7 @@ flext-core = "0.11.0-dev"
 name = "demo"
 version = "0.10.0-dev"
 """.strip(),
-            encoding="utf-8",
+            encoding=c.DEFAULT_ENCODING,
         )
         tm.that(mod.current_workspace_version(tmp_path), eq="0.10.0")
 
