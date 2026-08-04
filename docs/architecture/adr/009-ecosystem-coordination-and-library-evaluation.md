@@ -1,5 +1,21 @@
 # ADR-009 — Ecosystem coordination and reusable-library evaluation across internal and external projects
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. Four coordination planes](#1-four-coordination-planes)
+  - [2. Dependency direction is one-way and enforced](#2-dependency-direction-is-one-way-and-enforced)
+  - [3. Ownership matrix (authoritative)](#3-ownership-matrix-authoritative)
+  - [4. Coordination flow across all projects](#4-coordination-flow-across-all-projects)
+  - [5. Neutral integration contract](#5-neutral-integration-contract)
+  - [6. Platform selection (ecosystem-wide)](#6-platform-selection-ecosystem-wide)
+  - [7. Open libraries and possible new `flext-*` packages](#7-open-libraries-and-possible-new-flext-packages)
+  - [8. Extraction gate for any new `flext-*` package](#8-extraction-gate-for-any-new-flext-package)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
+
 - **Status:** Accepted (planning) — targets the `0.20.0-dev` line
 - **Date:** 2026-07-18
 - **Target line:** FLEXT `0.20.0-dev`, an early development and planning branch.

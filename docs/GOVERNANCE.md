@@ -1,5 +1,14 @@
 # FLEXT Governance Router
 
+<!-- TOC START -->
+- [Purpose](#purpose)
+- [Authority](#authority)
+- [Owner Routing](#owner-routing)
+- [Execution Contract](#execution-contract)
+- [Universal test contract (P0)](#universal-test-contract-p0)
+- [Baseline Commands](#baseline-commands)
+<!-- TOC END -->
+
 ## Purpose
 
 This file maps each change to its canonical owner. It does not restate
@@ -28,8 +37,8 @@ this order.
 | Session routing | `.agents/skills/flext-context-routing/SKILL.md` | marker and selected-skill evidence |
 | Architecture and public contracts | [ADR registry](architecture/adr/README.md) and owning source declaration | consumer audit plus affected project gates |
 | Ecosystem coordination (internal + external projects) | [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md) and [ecosystem-coordination.md](architecture/ecosystem-coordination.md) | reverse-dependency gate plus owner-local ADR consistency (`0.20.0-dev`) |
-| Runtime coding patterns | smallest matching skill under `${config.AiHub.paths.agents_home}/skills/` | fresh import, lint, typecheck, behavior gate |
-| Quality commands | `${config.AiHub.paths.agents_home}/skills/inviolable-rules/SKILL.md` | exact command, exit code, decisive output |
+| Runtime coding patterns | smallest matching skill under `~/.agents/skills/` | fresh import, lint, typecheck, behavior gate |
+| Quality commands | `~/.agents/skills/inviolable-rules/SKILL.md` | exact command, exit code, decisive output |
 | Documentation lifecycle | [`standards/documentation.md`](standards/documentation.md) | narrow markdown gate, then docs audit |
 | Workspace Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help` and affected dispatcher gate |
 | Enforcement catalog identity and routing | `flext-core` enforcement declarations | catalog census and public import |

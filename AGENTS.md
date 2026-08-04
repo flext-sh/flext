@@ -21,7 +21,7 @@ Newest operator instruction wins. Layers (non-competing):
 
 | Layer | Owner | Content |
 | --- | --- | --- |
-| Global | `${config.AiHub.paths.agents_home}/UNIVERSAL_CORE.md` + `inviolable-rules` / `make-check` / `verification-loop` | conduct, evidence, completion |
+| Global | `~/.agents/UNIVERSAL_CORE.md` + `inviolable-rules` / `make-check` / `verification-loop` | conduct, evidence, completion |
 | FLEXT | this file + `.agents/skills/flext-law/SKILL.md` | architecture, Make, generation, fleet |
 | Scope | nearest member `AGENTS.md` | domain facts / exclusions only |
 | Execution | active Bead | intent, ownership, evidence, stop |

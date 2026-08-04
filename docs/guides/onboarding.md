@@ -1,5 +1,16 @@
 # Onboarding (Collection Rules / regras de coletas)
 
+<!-- TOC START -->
+- [1. Read Governance First](#1-read-governance-first)
+- [2. Identify Project Slot Ownership](#2-identify-project-slot-ownership)
+- [3. Bootstrap Tooling](#3-bootstrap-tooling)
+- [4. Confirm Zero-Debt Baseline](#4-confirm-zero-debt-baseline)
+- [5. Load Skills Relevant to the Change Scope](#5-load-skills-relevant-to-the-change-scope)
+- [6. Fundamental Packages](#6-fundamental-packages)
+- [7. Per-Project Collection Rules](#7-per-project-collection-rules)
+- [8. Cross-References](#8-cross-references)
+<!-- TOC END -->
+
 Canonical pre-work to enter ANY FLEXT project. Per root `AGENTS.md` (Make + Conventions) and the auto-generated per-project
 Collection Rules in each `<project>/docs/index.md`.
 
@@ -8,12 +19,12 @@ Collection Rules in each `<project>/docs/index.md`.
 1. [`/flext/docs/GOVERNANCE.md`](../GOVERNANCE.md) — rule routing, ADRs,
    validation surfaces, and ratified refactor gates.
 2. `/flext/AGENTS.md` (repo root) — supreme engineering law.
-3. `${config.AiHub.agents.agents.claude.home}/AGENTS.md` — universal cross-project rules (if present).
+3. `~/.agents/AGENTS.md` — universal cross-project rules (if present).
 4. The target project's `pyproject.toml` for stack, version, dependencies.
 
 ## 2. Identify Project Slot Ownership
 
-Use the cross-project slot registry in `${config.AiHub.paths.agents_home}/skills/` when the active
+Use the cross-project slot registry in `~/.agents/skills/` when the active
 provider exposes it. Confirm which `c.<Domain>`, `m.<Domain>`, `p.<Domain>`,
 `t.<Domain>`, `u.<Domain>` slots the target project owns before adding or
 renaming any symbol.
@@ -52,7 +63,7 @@ the smallest on-demand set declared by the active `config.AiHub.paths.agents_hom
 
 Do not maintain or load a fixed default skill bundle.
 
-Path-scoped skills live under the active `${config.AiHub.paths.agents_home}/skills/` authority.
+Path-scoped skills live under the active `~/.agents/skills/` authority.
 Their exported inventory is owned by that provider configuration.
 
 ## 6. Fundamental Packages

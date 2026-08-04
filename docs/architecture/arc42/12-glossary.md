@@ -1,5 +1,13 @@
 # 12. Glossary
 
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [12.1 Structure Terms](#121-structure-terms)
+- [12.2 Facade Aliases](#122-facade-aliases)
+- [12.3 Runtime Terms](#123-runtime-terms)
+- [12.4 Process Terms](#124-process-terms)
+<!-- TOC END -->
+
 **Reviewed**: 2026-07-12 | **Scope**: Canonical terms used across FLEXT documentation
 
 Terms are defined once here; other documents link instead of redefining.

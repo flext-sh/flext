@@ -1,5 +1,20 @@
 # Development Standards
 
+<!-- TOC START -->
+- [Required file header](#required-file-header)
+- [Config and settings are the SSOT (P0)](#config-and-settings-are-the-ssot-p0)
+- [Canonical aliases](#canonical-aliases)
+- [Imports](#imports)
+- [Typing](#typing)
+- [Result flow](#result-flow)
+- [Logging](#logging)
+- [Error handling](#error-handling)
+- [Models and settings](#models-and-settings)
+- [Anti-patterns](#anti-patterns)
+- [Local validation](#local-validation)
+- [Related](#related)
+<!-- TOC END -->
+
 Quick-reference for daily development in the FLEXT monorepo. For the root
 engineering law, see `AGENTS.md`. For automated enforcement details, see
 `.agents/skills/coding-standards/SKILL.md` and child skills.
@@ -9,10 +24,7 @@ engineering law, see `AGENTS.md`. For automated enforcement details, see
 Every Python file must start with:
 
 ```python
-from __future__ import annotations
-from collections.abc import Mapping, Sequence
-```
-
+from __future__ import annotations```
 `ruff` enforces this via `I002`.
 
 ## Config and settings are the SSOT (P0)
@@ -57,16 +69,13 @@ upstream short alias as the base class and then publish the local alias at the
 bottom:
 
 ```python
-from flext_cli import m, u
-from flext_plugin import c, p, r, t
+from flext_cli import m
 
 
 class FlextPluginModels(m): ...
 
 
-m = FlextPluginModels
-```
-
+m = FlextPluginModels```
 This applies to `c`, `t`, `p`, `m`, and `u` facades. Pylance's
 `reportGeneralTypeIssues` workspace diagnostic is disabled because it flags this
 canonical self-rebound facade pattern; `pyright`, `pyrefly`, and `mypy` gates
@@ -82,9 +91,7 @@ from flext_db_oracle._utilities.db_oracle import FlextDbOracleUtilitiesDbOracle
 class FlextDbOracleServiceBase(s, FlextDbOracleUtilitiesDbOracle): ...
 
 
-s = FlextDbOracleServiceBase
-```
-
+s = FlextDbOracleServiceBase```
 ```python
 from flext_db_oracle.services.api_runtime import FlextDbOracleApiRuntime
 
@@ -92,19 +99,15 @@ from flext_db_oracle.services.api_runtime import FlextDbOracleApiRuntime
 class FlextDbOracleApi(FlextDbOracleApiRuntime): ...
 
 
-db_oracle = FlextDbOracleApi
-```
-
+db_oracle = FlextDbOracleApi```
 Example:
 
 ```python
-from flext_core import c, m, r, t, u
+from flext_core import c, m, r, u
 
 
 def load(user_id: int) -> r[m.User]:
-    return u.http_get(f"{c.API_BASE}/users/{user_id}")
-```
-
+    return u.http_get(f"{c.API_BASE}/users/{user_id}")```
 ## Imports
 
 - Absolute imports only in `src/`.
@@ -135,9 +138,7 @@ from collections.abc import Mapping
 from flext_core import t
 
 
-def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue: ...
-```
-
+def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue: ...```
 ## Result flow
 
 Fallible paths return `r[T]` (`FlextResult`) annotated as `p.Result[T]`. Construct with `r[T].ok` / `r[T].fail`; convert with `from_result` / `from_failure`. Do not use ad-hoc error dicts or raw exceptions for control flow.
@@ -150,9 +151,7 @@ def parse(value: str) -> p.Result[int]:
     try:
         return r[int].ok(int(value))
     except ValueError as exc:
-        return r[int].fail("invalid_integer", exception=exc)
-```
-
+        return r[int].fail("invalid_integer", exception=exc)```
 ## Logging
 
 Use `u.fetch_logger(__name__)`. No `u.Cli.print()` in library code.
@@ -161,9 +160,7 @@ Use `u.fetch_logger(__name__)`. No `u.Cli.print()` in library code.
 from flext_core import u
 
 logger = u.fetch_logger(__name__)
-logger.info("event.name", key=value)
-```
-
+logger.info("event.name", key=value)```
 ## Error handling
 
 Catch specific exceptions. No bare `except:`. No empty `except/pass` blocks.
@@ -172,9 +169,7 @@ Catch specific exceptions. No bare `except:`. No empty `except/pass` blocks.
 try:
     value = int(raw)
 except ValueError as exc:
-    raise e.ValidationError("invalid integer") from exc
-```
-
+    raise e.ValidationError("invalid integer") from exc```
 ## Models and settings
 
 Use Pydantic v2 `BaseModel` and `m.SettingsConfigDict` for settings branches.
@@ -184,9 +179,7 @@ from flext_core import FlextSettings, m
 
 
 class FlextCliSettings(FlextSettings):
-    model_config = m.SettingsConfigDict(env_prefix="FLEXT_CLI_", extra="ignore")
-```
-
+    model_config = m.SettingsConfigDict(env_prefix="FLEXT_CLI_", extra="ignore")```
 ## Anti-patterns
 
 |Anti-pattern|Fix|
@@ -207,15 +200,13 @@ class FlextCliSettings(FlextSettings):
 ```bash
 make check PROJECT=<proj> CHECK_GATES=lint,format,pyrefly
 make check PROJECT=<proj> CHECK_GATES=pyright,mypy
-make test PROJECT=<proj> MATCH=<expr>
-```
-
+make test PROJECT=<proj> MATCH=<expr>```
 Scope with `PROJECT=` / `CHECK_GATES=` / `FILE=` / `MATCH=` — never bare ruff/pyrefly/mypy.
 
 ## Related
 
 - `AGENTS.md` — root engineering law
 - `.agents/skills/flext-law/SKILL.md` — FLEXT domain law
-- `${config.AiHub.paths.agents_home}/skills/inviolable-rules/SKILL.md` — gate commands
-- `${config.AiHub.paths.agents_home}/skills/make-check/SKILL.md` — canonical Make verbs
+- `~/.agents/skills/inviolable-rules/SKILL.md` — gate commands
+- `~/.agents/skills/make-check/SKILL.md` — canonical Make verbs
 - `AGENTS.md` Learned Workspace Facts — CI policy and `make gen WHAT=apply APPLY=Y` workflow regeneration/prune (owner: `flext-infra` codegen)

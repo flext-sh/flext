@@ -1,5 +1,15 @@
 # Canonical Settings & Config Pattern (ADR-005 companion guide)
 
+<!-- TOC START -->
+- [1. Law (non-negotiable)](#1-law-non-negotiable)
+- [2. Minimal base surface (flext-core)](#2-minimal-base-surface-flext-core)
+- [3. Canonical project SETTINGS module — `<project>/settings.py`](#3-canonical-project-settings-module-projectsettingspy)
+- [4. Canonical project CONFIG module — `<project>/_config.py`](#4-canonical-project-config-module-projectconfigpy)
+- [5. Root export (`<project>/**init**.py`)](#5-root-export-projectinitpy)
+- [6. Forbidden (remove on sight)](#6-forbidden-remove-on-sight)
+- [7. Propagation checklist (per project)](#7-propagation-checklist-per-project)
+<!-- TOC END -->
+
 **Status**: supporting guide | **Scope**: every FLEXT project (`flext-*`, integrations, `ai-hub`)
 **SSOT**: [ADR-005](adr/005-config-settings-constants-templates-schemas-ssot.md) defines the
 canonical configuration decision. This guide explains its settings/config usage
@@ -83,9 +93,7 @@ class FlextXSettings(FlextSettings):
 
 
 # Exported pre-instantiated singleton — ALWAYS this line:
-settings = FlextXSettings.fetch_global()
-```
-
+settings = FlextXSettings.fetch_global()```
 Consumers: `from flext_x import settings` → `settings.debug` (root) and
 `settings.X.endpoint` (namespace group). Env: `FLEXT_X_DEBUG`, `FLEXT_X_X**ENDPOINT`
 (nested delimiter `**`).
@@ -121,9 +129,7 @@ class FlextXConfig(FlextConfig):
         X: XConfig = Field(default_factory=XConfig, description="X config namespace.")
 
 
-config = FlextXConfig.fetch_global()
-```
-
+config = FlextXConfig.fetch_global()```
 Config files live at `<project root>/config/*.yaml`, auto-globbed + deep-merged (app-owned,
 CWD-relative).
 
