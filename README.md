@@ -37,7 +37,7 @@ Documentation automation is implemented in `flext-infra` and is pyproject-first:
 
 - package metadata comes from `pyproject.toml`
 - project-specific docs metadata can live under `[tool.flext.docs]`
-- `docs/docs_settings.json` is intentionally minimal and only covers policy that cannot be deduced from project metadata
+- `docs/docs_config.json` is intentionally minimal and only covers policy that cannot be deduced from project metadata
 - generated API docs use public exports and real docstrings as the SSOT
 
 ## Repository Direction
