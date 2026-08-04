@@ -36,7 +36,7 @@ There is no `make val` verb; use `make check` / `make test`.
 
 ```bash
 make check PROJECT=flext-infra
-make test PROJECT=flext-infra FILE=tests/unit/...
+make test PROJECT=flext-infra FILE=flext-infra/tests/unit/...
 make docs WHAT=audit PROJECT=flext-infra
 ```
 

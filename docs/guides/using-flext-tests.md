@@ -1,5 +1,16 @@
 # Using flext-tests
 
+<!-- TOC START -->
+- [Aliases](#aliases)
+- [Essential fixtures](#essential-fixtures)
+- [Resetting singletons manually](#resetting-singletons-manually)
+- [Testing result flows](#testing-result-flows)
+- [Good practices](#good-practices)
+- [Make/codegen boundary](#makecodegen-boundary)
+- [Bad practices](#bad-practices)
+- [Related](#related)
+<!-- TOC END -->
+
 <!-- mro-wkii.17.7 (agent: codex) — keep test-toolkit guidance separate from Make/codegen ownership. -->
 
 `flext_tests` is the shared test toolkit. It provides fixtures, matchers, file helpers, and a test runtime that binds
@@ -110,7 +121,7 @@ the canonical decision.
 
 ## Bad practices
 
-```python notest
+```python
 # Mutating global singleton without resetting
 FlextSettings.fetch_global().debug = True
 
