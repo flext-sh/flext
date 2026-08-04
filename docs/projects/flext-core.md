@@ -24,27 +24,34 @@ builds on. Package description: "Enterprise Foundation Framework — Modern Pyth
 
 ## Quick start
 
+From the workspace root (not a standalone `pip install`):
+
 ```bash
-pip install flext-core
+make setup
+make check PROJECT=flext-core
+make test PROJECT=flext-core
 ```
+
+Result-first railway (annotate with `p.Result`, construct with `r`):
 
 ```python
-from flext_core import FlextDispatcher, p, r
+from flext_core import p, r
 
 
-class CreateUserHandler:
-    def handle(self, message: p.Routable) -> p.Result[str]:
-        return r[str].ok(f"created:{message.username}")
+def create_user(username: str) -> p.Result[str]:
+    if not username:
+        return r[str].fail("username_required")
+    return r[str].ok(f"created:{username}")
 
 
-dispatcher = FlextDispatcher()
-registered = dispatcher.register_handler(CreateUserHandler())
-assert registered.is_success
+ok = create_user("ada")
+assert ok.success
+assert ok.value == "created:ada"
+assert create_user("").failure
 ```
 
-The dispatcher routes a message to the registered handler whose declared `message_type` matches, and every fallible step
-returns `r[T]` so callers chain with `.map`/`.flat_map` instead of raising. More bootstrap examples live in `flext-
-core/examples/` (`ex_01_flext_result.py` through dispatcher and settings walkthroughs).
+Dispatcher wiring needs a declared `message_type` (see `flext-core/examples/ex_04_flext_dispatcher.py`). Fallible steps
+chain with `.map` / `.flat_map` instead of raising.
 
 ## Architecture & modules
 
