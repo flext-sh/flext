@@ -1,5 +1,13 @@
 # Testing
 
+<!-- TOC START -->
+- [Canonical Test Layout](#canonical-test-layout)
+- [Common Commands](#common-commands)
+- [Docs Pipeline Validation](#docs-pipeline-validation)
+- [Expectations](#expectations)
+- [Related Guides](#related-guides)
+<!-- TOC END -->
+
 The workspace test taxonomy is standardized. Root guidance stays short; project-specific test details stay local to each
 project.
 

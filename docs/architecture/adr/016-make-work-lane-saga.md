@@ -1,5 +1,11 @@
 # ADR-0016 — Public make work lane saga
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+- [Consequences](#consequences)
+<!-- TOC END -->
+
 - **Status:** Accepted
 - **Date:** 2026-08-03
 - **Scope:** flext-infra `FlextInfraWorkService` + generated Make `work` verb

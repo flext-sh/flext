@@ -1,5 +1,14 @@
 # FLEXT Make command surface
 
+<!-- TOC START -->
+- [Conventions](#conventions)
+- [Public verbs (`PUBLIC_VERBS`)](#public-verbs-publicverbs)
+- [`gen` (codegen SSOT)](#gen-codegen-ssot)
+- [Integration line (operator gate)](#integration-line-operator-gate)
+- [`work` saga](#work-saga)
+- [Quick recipes](#quick-recipes)
+<!-- TOC END -->
+
 Canonical reference for the workspace Make control plane on `0.12.0-dev`.
 Discover live verbs with `make help` only. Do not invent retired verbs.
 

@@ -1,5 +1,17 @@
 # ADR-003 — Manifest-owned topology, root workspace, and autonomous Git libraries
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. A typed manifest owns repository topology](#1-a-typed-manifest-owns-repository-topology)
+  - [2. Root workspace and library metadata have distinct responsibilities](#2-root-workspace-and-library-metadata-have-distinct-responsibilities)
+  - [3. Make orchestrates the root workspace environment](#3-make-orchestrates-the-root-workspace-environment)
+  - [4. Generated profiles define attachment behavior](#4-generated-profiles-define-attachment-behavior)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
+
 - **Status:** Accepted (amended 2026-07-16)
 - **Date:** 2026-06-24
 - **Scope:** FLEXT, Cosmos, and standalone repository topology, dependency

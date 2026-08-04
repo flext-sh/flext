@@ -1,5 +1,14 @@
 # Getting Started
 
+<!-- TOC START -->
+- [Prerequisites](#prerequisites)
+- [Bootstrap the Workspace](#bootstrap-the-workspace)
+- [Navigate the Root Portal](#navigate-the-root-portal)
+- [Work on One Project](#work-on-one-project)
+- [Documentation Model](#documentation-model)
+- [Next Steps](#next-steps)
+<!-- TOC END -->
+
 Use the root portal for workspace-level guidance only. Package-specific
 implementation details stay in each `flext-*` project.
 

@@ -6,7 +6,7 @@
 
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-- Version: `0.12.0rc0`
+- Version: `0.12.0`
 - Description: FLEXT - Enterprise Data Integration Platform - Workspace Manager
 - Governed projects: `31`
 - Project classes: `domain`=5, `infra`=1, `integration`=14, `platform`=10,

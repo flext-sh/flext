@@ -1,5 +1,17 @@
 # 8. Cross-cutting Concepts
 
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [8.1 Result Railway](#81-result-railway)
+- [8.2 Strict Typing](#82-strict-typing)
+- [8.3 Configuration and Settings SSOT](#83-configuration-and-settings-ssot)
+- [8.4 MRO Composition](#84-mro-composition)
+  - [8.4.1 Facade Decomposition](#841-facade-decomposition)
+- [8.5 Pydantic 2-way Boundary](#85-pydantic-2-way-boundary)
+- [8.6 Enforcement as Data](#86-enforcement-as-data)
+- [8.7 Continuous Green](#87-continuous-green)
+<!-- TOC END -->
+
 **Reviewed**: 2026-07-12 | **Scope**: Concepts applied uniformly across the FLEXT workspace
 
 This chapter collects the concepts that apply to every building block instead
@@ -50,9 +62,7 @@ One access form, workspace-wide:
 from <namespace> import config, settings
 
 config.<Project>.<domain>    # validated, frozen, namespaced
-settings.<Project>.<domain>  # env-bound subset
-```
-
+settings.<Project>.<domain>  # env-bound subset```
 The payload is validated exactly once while the frozen singleton is
 constructed, and access never re-reads, re-validates, or passes through a
 getter/proxy. This is the target configuration architecture described by

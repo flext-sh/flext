@@ -1,5 +1,18 @@
 # ADR-010 — Unified project standardization via flext-infra codegen and flext-tests
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. The `0.12.0-dev` stabilization subset is release-blocking](#1-the-0120-dev-stabilization-subset-is-release-blocking)
+  - [2. The public Make grammar is singular](#2-the-public-make-grammar-is-singular)
+  - [3. Conformance is artifact-isolated and reaches a fixed point](#3-conformance-is-artifact-isolated-and-reaches-a-fixed-point)
+  - [4. The external compatibility matrix is a predecessor gate](#4-the-external-compatibility-matrix-is-a-predecessor-gate)
+  - [5. Forward-only `0.20.0-dev` architecture](#5-forward-only-0200-dev-architecture)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
+
 - **Status:** Accepted — split delivery across `0.12.0-dev` and `0.20.0-dev`
 - **Date:** 2026-07-18
 - **Amended:** 2026-07-28

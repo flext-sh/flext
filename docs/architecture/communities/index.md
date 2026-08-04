@@ -1,5 +1,9 @@
 # Code Communities
 
+<!-- TOC START -->
+- No sections found
+<!-- TOC END -->
+
 Structural communities of the FLEXT workspace, detected from the code knowledge graph
 (call/import graph, Leiden community detection). Each page lists the member symbols of
 one cohesive cluster — use it to navigate the architecture by responsibility instead of

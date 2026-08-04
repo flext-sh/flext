@@ -1411,7 +1411,7 @@ wheels = [
 
 [[package]]
 name = "flext"
-version = "0.12.0rc0"
+version = "0.12.0"
 source = { editable = "." }
 dependencies = [
     { name = "flext-core" },
@@ -1670,7 +1670,7 @@ workspace = [
 
 [[package]]
 name = "flext-api"
-version = "0.12.0rc0"
+version = "0.12.0"
 source = { editable = "flext-api" }
 dependencies = [
     { name = "cbor2" },
@@ -2298,7 +2298,7 @@ dev = [
 
 [[package]]
 name = "flext-core"
-version = "0.12.0rc0"
+version = "0.12.0"
 source = { editable = "flext-core" }
 dependencies = [
     { name = "beartype" },
@@ -3495,7 +3495,7 @@ dev = [
 
 [[package]]
 name = "flext-grpc"
-version = "0.12.0rc0"
+version = "0.12.0"
 source = { editable = "flext-grpc" }
 dependencies = [
     { name = "flext-cli" },
@@ -4748,7 +4748,7 @@ dev = [
 
 [[package]]
 name = "flext-oracle-oic"
-version = "0.12.0rc0"
+version = "0.12.0"
 source = { editable = "flext-oracle-oic" }
 dependencies = [
     { name = "flext-api" },

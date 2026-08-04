@@ -1,5 +1,15 @@
 # Documentation Standards
 
+<!-- TOC START -->
+- [Pipeline](#pipeline)
+- [Docstrings](#docstrings)
+- [Generation from code](#generation-from-code)
+- [External site](#external-site)
+- [Authoring rules](#authoring-rules)
+- [Validation before landing](#validation-before-landing)
+- [Layout centralization](#layout-centralization)
+<!-- TOC END -->
+
 **Single source of truth for how FLEXT documentation is authored, generated, validated, and published.**
 
 All documentation automation lives in **one engine**: the docs services inside
@@ -111,3 +121,21 @@ make docs WHAT=audit              # no new placeholder/stale findings
 and, for generator or template changes under `flext-infra`, the scoped project
 gates (`make check PROJECT=flext-infra`, `make test PROJECT=flext-infra
 MATCH=docs`).
+
+## Layout centralization
+
+Product Markdown lives under ``docs/``. Root allowlist is
+``layout.canonical_root_files`` in flext-infra ``config/codegen.yaml``
+(``README.md``, ``CHANGELOG.md``, ``CONTRIBUTING.md``, ``AGENTS.md``,
+``CLAUDE.md``, ``LICENSE``, ``mkdocs.yml``, plus build files). Extra root
+Markdown stays only via ``layout.project_overrides.<project>.keep_root_files``.
+
+Specials: ``.agents/**`` (agent law, skipped as dotdir), ``data/**``
+(``special_root_dirs``), and ``external-docs/**`` (``reference_root_dirs``,
+same class as ``docs/references/**`` — excluded from published MkDocs via
+``exclude_docs``).
+
+Cross-repo links use absolute GitHub URLs with the working-line branch from
+``make.docs.github_repos``. Relative ``../../flext-*`` links are rejected by
+audit. Run ``make docs WHAT=fix APPLY=Y`` then ``audit`` / ``validate`` /
+``build``.
