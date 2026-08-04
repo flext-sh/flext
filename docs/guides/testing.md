@@ -28,7 +28,7 @@ Use the docs phases directly when you are changing documentation tooling or gene
 
 ```bash
 make docs WHAT=generate PROJECT=flext-infra
-make docs WHAT=fix PROJECT=flext-infra FIX=1
+make docs WHAT=fix PROJECT=flext-infra APPLY=Y
 make docs WHAT=audit PROJECT=flext-infra
 make docs WHAT=build PROJECT=flext-infra
 make docs WHAT=validate PROJECT=flext-infra

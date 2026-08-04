@@ -2,7 +2,7 @@
 
 - **Status:** Accepted (replaces the former Make registry decision)
 - **Date:** 2026-06-28
-- **Amended:** 2026-07-11
+- **Amended:** 2026-07-11, 2026-08-03 (public verb names `fmt`/`fix`/`gen`/`work`)
 - **Scope:** generated Makefiles, repository conformance, command routing, and
   custom project handlers.
 - **Tracking:** `mro-wkii.17`
@@ -50,13 +50,13 @@ rendering path.
 One template layer emits the complete versioned Makefile for the
 `workspace-root`, `workspace-member`, or `standalone` profile. Make never
 regenerates itself and never includes a shared implementation from another
-checkout. `codegen` performs conformance explicitly; `check` is read-only and
+checkout. `gen` performs conformance explicitly; `check` is read-only and
 `apply` requires `APPLY=Y`.
 
-The public surface is `help` plus exactly twelve operational verbs:
+The public surface is `help` plus the operational verbs discovered by `make help`:
 
 ```text
-setup deps build check test format run status docs clean release codegen
+setup deps build check test fmt fix run status docs clean release gen work
 ```
 
 `help` only describes the surface. Every operation maps to exactly one public
@@ -73,12 +73,14 @@ The meanings are fixed:
 | `check` | run static and policy gates |
 | `test` | execute real behavior tests |
 | `fmt` | check by default; modify only with `APPLY=Y` |
+| `fix` | auto-fix check/apply (`APPLY=Y` for mutate) |
 | `run` | execute declared project capabilities |
 | `status` | report read-only diagnostics |
 | `docs` | validate or build documentation |
 | `clean` | remove declared generated/runtime artifacts only when apply-gated |
 | `release` | perform the selected tag, PR, publish, or deploy operation |
-| `codegen` | check conformance by default; modify only with `APPLY=Y` |
+| `gen` | check conformance by default; modify only with `APPLY=Y` |
+| `work` | bead + GitFlow lane saga (`start`/`status`/`land`/`finish`; mutate with `APPLY=Y`) |
 
 ### 3. `custom.mk` is a narrow private extension surface
 
@@ -118,8 +120,9 @@ an existing project with the same manifest.
 - Parse and `help` validation cover every generated profile.
 - Schema tests reject public custom targets and handler collisions.
 - Conformance check performs no writes; apply is atomic and idempotent.
-- Public-surface discovery reports only `help` and the twelve operational
-  verbs, with one handler per `(verb, WHAT)` pair.
+- Public-surface discovery reports only `help` and the operational verbs from
+  live `make help` (currently fifteen: setup deps build check test fmt fix run
+  status docs clean release gen work), with one handler per `(verb, WHAT)` pair.
 
 ## References
 
