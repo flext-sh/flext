@@ -7,7 +7,7 @@ law or an ai-hub architecture specification.
 
 | Fact | Canonical owner |
 | --- | --- |
-| FLEXT provider identity, marker, and exported paths | active `~/.agents` provider authority |
+| FLEXT provider identity, marker, and exported paths | active `config.AiHub.paths.agents_home` provider authority |
 | FLEXT activation and skill selection | `.agents/skills/flext-context-routing/SKILL.md` |
 | Provider projection lifecycle | [Governance router](GOVERNANCE.md) |
 | FLEXT runtime/API behavior | owning `flext-core` declaration |
