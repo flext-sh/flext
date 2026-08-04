@@ -7,4 +7,4 @@
 
 Full notes: `docs/releases/v0.11.0.md`
 
-This file is managed by `make docs DOCS_PHASE=generate`.
+This file is managed by `make docs WHAT=generate APPLY=Y`.

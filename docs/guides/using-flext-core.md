@@ -1,5 +1,18 @@
 # Using flext-core
 
+<!-- TOC START -->
+- [Aliases](#aliases)
+- [Result flow](#result-flow)
+- [Result DIP (`p.Result` + `r`)](#result-dip-presult-r)
+- [Settings](#settings)
+- [Container](#container)
+- [Logging](#logging)
+- [Service runtime](#service-runtime)
+- [Good practices](#good-practices)
+- [Bad practices](#bad-practices)
+- [Related](#related)
+<!-- TOC END -->
+
 `flext_core` is the base package for result flow, settings, container wiring, logging, and service runtime.
 
 ## Aliases
@@ -47,7 +60,6 @@ assert safe_divide(10, 2).success
 assert safe_divide(10, 2).value == 5.0
 assert safe_divide(10, 0).failure
 ```
-
 
 ## Result DIP (`p.Result` + `r`)
 
@@ -117,7 +129,7 @@ runtime = s(settings=settings)
 
 ## Bad practices
 
-```python notest
+```python
 from flext_core._models.base import SomeModel  # bypass facade
 from flext_core.result import ok, fail  # bypass r alias
 from flext_core import s as settings  # wrong: s is service/runtime
