@@ -7,17 +7,25 @@ Read the canonical authorities first; this file only adds lane discipline.
 
 - Project law and routed skills: [`AGENTS.md`][agents-md]
 - Governance router: [`GOVERNANCE.md`][governance-md]
-- Local skills: [`flext-law`][flext-law], [`flext-inviolable-rules`][flext-inviolable-rules]
-- Universal skills: `~/.agents/skills/make-check/SKILL.md`, `~/.agents/skills/verification-loop/SKILL.md`
+- Local skills: [`flext-law`][flext-law]
+- Universal skills: `~/.agents/skills/inviolable-rules/SKILL.md`,
+  `~/.agents/skills/make-check/SKILL.md`, `~/.agents/skills/verification-loop/SKILL.md`
 - Config/settings SSOT: [ADR-005][adr-005]
 
 [agents-md]: ../../AGENTS.md
 [governance-md]: ../GOVERNANCE.md
 [flext-law]: ../../.agents/skills/flext-law/SKILL.md
-[flext-inviolable-rules]: ../../.agents/skills/flext-inviolable-rules/SKILL.md
 [adr-005]: ../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md
 
 ## 1. One lane, one bead, one worktree
+
+Open the lane with the public saga (not ad-hoc worktree commands):
+
+```bash
+make work WHAT=start PROJECT=<member> BEAD=<id> KIND=feature NAME=<slug> APPLY=Y
+make work WHAT=land PROJECT=<member> BEAD=<id> APPLY=Y
+make work WHAT=finish PROJECT=<member> BEAD=<id> APPLY=Y
+```
 
 Claim exactly one bead and stay inside the worktree created for it. Do not edit
 paths outside your declared scope; do not borrow files from another lane. If
