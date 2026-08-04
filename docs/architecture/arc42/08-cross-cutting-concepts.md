@@ -23,7 +23,7 @@ Every fallible application path returns `r[T]` (`FlextResult`): success
 carries the typed payload, failure carries a typed error with context. Raw
 exceptions are never used for control flow inside the workspace; exceptions
 from external libraries are converted to `r.fail(...)` at the boundary. The
-railway composes with `map`/`and_then`-style chaining so error handling is
+railway composes with `map`/`flat_map`-style chaining so error handling is
 structural, not scattered `try/except`.
 
 ## 8.2 Strict Typing

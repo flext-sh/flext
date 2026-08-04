@@ -18,7 +18,7 @@ from flext_core import c, d, e, h, m, p, r, s, t, u, x
 | `h` | handlers |
 | `m` | models / Pydantic helpers |
 | `p` | protocols |
-| `r` | result (`FlextResult`) |
+| `r` | result factory (`FlextResult`); annotate returns as `p.Result[T]` |
 | `s` | service / runtime (`FlextService`) |
 | `t` | typings |
 | `u` | utilities |
@@ -34,19 +34,29 @@ Fallible paths return `r[T]`. Avoid raw exceptions or ad-hoc error dicts for con
 ```python
 from __future__ import annotations
 
-from flext_core import r
+from flext_core import p, r
 
 
-def safe_divide(a: float, b: float) -> r[float]:
+def safe_divide(a: float, b: float) -> p.Result[float]:
     if b == 0:
         return r[float].fail("division_by_zero")
-    return r.ok(a / b)
+    return r[float].ok(a / b)
 
 
 assert safe_divide(10, 2).success
 assert safe_divide(10, 2).value == 5.0
 assert safe_divide(10, 0).failure
 ```
+
+
+## Result DIP (`p.Result` + `r`)
+
+- Annotate fallible returns as `p.Result[T]` (protocol).
+- Construct with the `r` / `FlextResult` facade: `r[T].ok`, `r[T].fail`, `fail_op`, `from_validation`, `create_from_callable`.
+- Convert between result-like values with `r.from_result` / `r[T].from_failure` / `r.copy_from_result`.
+- Empty failures (`fail(None)` / `fail("")`) remain failed railway values; exception-derived `error_data` redacts
+  `c.SENSITIVE_ERROR_DATA_KEYS`.
+- Do not import `FlextResult` lazily inside `_result/` factories, and do not use the retired `returns` mypy plugin.
 
 ## Settings
 
@@ -115,6 +125,7 @@ from flext_core import s as settings  # wrong: s is service/runtime
 
 ## Related
 
-- `.agents/skills/using-flext-core/SKILL.md`
-- `.agents/skills/coding-standards/SKILL.md`
+- `.agents/skills/flext-law/SKILL.md`
+- `~/.agents/skills/make-check/SKILL.md`
+- `~/.agents/skills/inviolable-rules/SKILL.md`
 - `flext-core/src/flext_core/README.md`

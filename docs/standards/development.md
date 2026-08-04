@@ -140,7 +140,7 @@ def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue: ...
 
 ## Result flow
 
-Fallible paths return `r[T]` from `FlextResult`. Do not use ad-hoc error dicts or raw exceptions for control flow.
+Fallible paths return `r[T]` (`FlextResult`) annotated as `p.Result[T]`. Construct with `r[T].ok` / `r[T].fail`; convert with `from_result` / `from_failure`. Do not use ad-hoc error dicts or raw exceptions for control flow.
 
 ```python
 from flext_core import r
