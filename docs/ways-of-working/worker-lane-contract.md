@@ -22,6 +22,7 @@ Read the canonical authorities first; this file only adds lane discipline.
 Open the lane with the public saga (not ad-hoc worktree commands):
 
 ```bash
+make work WHAT=status PROJECT=<member> BEAD=<id>
 make work WHAT=start PROJECT=<member> BEAD=<id> KIND=feature NAME=<slug> APPLY=Y
 make work WHAT=land PROJECT=<member> BEAD=<id> APPLY=Y
 make work WHAT=finish PROJECT=<member> BEAD=<id> APPLY=Y
