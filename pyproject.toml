@@ -179,41 +179,7 @@ extra_checks = true
 follow_imports = "normal"
 ignore_missing_imports = true
 local_partial_types = true
-mypy_path = [
-  "src",
-  ".",
-  "flext-api/src",
-  "flext-auth/src",
-  "flext-cli/src",
-  "flext-core/src",
-  "flext-db-oracle/src",
-  "flext-dbt-ldap/src",
-  "flext-dbt-ldif/src",
-  "flext-dbt-oracle-wms/src",
-  "flext-dbt-oracle/src",
-  "flext-grpc/src",
-  "flext-infra/src",
-  "flext-ldap/src",
-  "flext-ldif/src",
-  "flext-meltano/src",
-  "flext-observability/src",
-  "flext-oracle-oic/src",
-  "flext-oracle-wms/src",
-  "flext-plugin/src",
-  "flext-quality/src",
-  "flext-tap-ldap/src",
-  "flext-tap-ldif/src",
-  "flext-tap-oracle-oic/src",
-  "flext-tap-oracle-wms/src",
-  "flext-tap-oracle/src",
-  "flext-target-ldap/src",
-  "flext-target-ldif/src",
-  "flext-target-oracle-oic/src",
-  "flext-target-oracle-wms/src",
-  "flext-target-oracle/src",
-  "flext-tests/src",
-  "flext-web/src",
-]
+mypy_path = ["src", "."]
 namespace_packages = true
 no_implicit_reexport = true
 plugins = ["pydantic.mypy"]
@@ -265,41 +231,7 @@ project-includes = [
   "tests/**/*.py*",
 ]
 python-version = "3.13"
-search-path = [
-  "src",
-  ".",
-  "flext-api/src",
-  "flext-auth/src",
-  "flext-cli/src",
-  "flext-core/src",
-  "flext-db-oracle/src",
-  "flext-dbt-ldap/src",
-  "flext-dbt-ldif/src",
-  "flext-dbt-oracle-wms/src",
-  "flext-dbt-oracle/src",
-  "flext-grpc/src",
-  "flext-infra/src",
-  "flext-ldap/src",
-  "flext-ldif/src",
-  "flext-meltano/src",
-  "flext-observability/src",
-  "flext-oracle-oic/src",
-  "flext-oracle-wms/src",
-  "flext-plugin/src",
-  "flext-quality/src",
-  "flext-tap-ldap/src",
-  "flext-tap-ldif/src",
-  "flext-tap-oracle-oic/src",
-  "flext-tap-oracle-wms/src",
-  "flext-tap-oracle/src",
-  "flext-target-ldap/src",
-  "flext-target-ldif/src",
-  "flext-target-oracle-oic/src",
-  "flext-target-oracle-wms/src",
-  "flext-target-oracle/src",
-  "flext-tests/src",
-  "flext-web/src",
-]
+search-path = ["src", "."]
 use-ignore-files = false
 
 [tool.pyrefly.errors]
@@ -443,7 +375,7 @@ include = [
   "flext-dbt-oracle-wms/tests",
   "flext-dbt-oracle/src",
   "flext-dbt-oracle/tests",
-  "flext-grpc/architecture",
+  "flext-grpc/docs",
   "flext-grpc/examples",
   "flext-grpc/src",
   "flext-grpc/tests",
@@ -458,7 +390,6 @@ include = [
   "flext-meltano/src",
   "flext-meltano/tests",
   "flext-observability/examples",
-  "flext-observability/legado",
   "flext-observability/src",
   "flext-observability/tests",
   "flext-oracle-oic/src",
@@ -1061,7 +992,7 @@ reportUnknownMemberType = "none"
 reportUnknownParameterType = "none"
 reportUnknownVariableType = "none"
 reportUnusedImport = "none"
-root = "flext-grpc/architecture"
+root = "flext-grpc/docs"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-grpc", "flext-grpc/src"]
@@ -1115,22 +1046,6 @@ reportUnknownParameterType = "none"
 reportUnknownVariableType = "none"
 reportUnusedImport = "none"
 root = "flext-grpc/tests"
-
-[[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-infra/src"]
-reportAssignmentType = "none"
-reportAttributeAccessIssue = "none"
-reportGeneralTypeIssues = "none"
-reportInvalidTypeForm = "none"
-reportPrivateImportUsage = "none"
-reportPrivateUsage = "none"
-reportUnknownArgumentType = "none"
-reportUnknownLambdaType = "none"
-reportUnknownMemberType = "none"
-reportUnknownParameterType = "none"
-reportUnknownVariableType = "none"
-reportUnusedImport = "none"
-root = "flext-infra/src/flext_infra/_utilities/rope_patch"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-infra/src"]
@@ -1325,22 +1240,6 @@ reportUnknownParameterType = "none"
 reportUnknownVariableType = "none"
 reportUnusedImport = "none"
 root = "flext-observability/examples"
-
-[[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-observability", "flext-observability/src"]
-reportAssignmentType = "none"
-reportAttributeAccessIssue = "none"
-reportGeneralTypeIssues = "none"
-reportInvalidTypeForm = "none"
-reportPrivateImportUsage = "none"
-reportPrivateUsage = "none"
-reportUnknownArgumentType = "none"
-reportUnknownLambdaType = "none"
-reportUnknownMemberType = "none"
-reportUnknownParameterType = "none"
-reportUnknownVariableType = "none"
-reportUnusedImport = "none"
-root = "flext-observability/legado"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-observability/src"]
@@ -2502,9 +2401,9 @@ dev = [
   "pytest-mock>=3.15.1",
   "pytest-randomly>=4.1.0",
   "pytest-sugar>=1.1.1",
+  "pytest-testmon>=2.2.0",
   "pytest-timeout>=2.4.0",
   "pytest-xdist>=3.8.0",
-  "pytest-testmon>=2.2.0",
   "pyupgrade>=3.21.2",
   "radon>=6.0.1",
   "ruff>=0.16.1",
