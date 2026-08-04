@@ -16,7 +16,7 @@ and the canonical `c/m/p/t/u` facade layout.
 ### Quality signals
 
 - Quality gates run through the workspace Make contract: `make check PROJECT=flext-tap-oracle-wms`, `make test
-  PROJECT=flext-tap-oracle-wms`, and `make val`.
+  PROJECT=flext-tap-oracle-wms`, and `make check`.
 - Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
   rather than static claims in this page.
 
@@ -77,7 +77,7 @@ src/flext_tap_oracle_wms/
 
 - Tests live under the project `tests/` tree and run via `make test PROJECT=flext-tap-oracle-wms`; Singer behavior is
   exercised through the tap CLI and discovery flow.
-- Pre-merge verification: `make check PROJECT=flext-tap-oracle-wms` (lint + typing + security selectors) and `make val`.
+- Pre-merge verification: `make check PROJECT=flext-tap-oracle-wms` (lint + typing + security selectors) and `make check`.
 
 ## Resources
 

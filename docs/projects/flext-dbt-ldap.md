@@ -16,7 +16,7 @@ patterns.
 
 - All operations return `r[T]` (`p.Result[...]`) with typed payload models under `m.DbtLdap.*`.
 - Settings are validated Pydantic models (`FlextDbtLdapSettings`); no direct environment reads in runtime code.
-- Gates: `make check PROJECT=flext-dbt-ldap`, `make test PROJECT=flext-dbt-ldap`, and `make val` produce the
+- Gates: `make check PROJECT=flext-dbt-ldap`, `make test PROJECT=flext-dbt-ldap`, and `make check` produce the
   authoritative evidence.
 
 ## Quick start
@@ -74,7 +74,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldap/`:
 - Tests live in the project `tests/` tree and run through `make test PROJECT=flext-dbt-ldap`.
 - Warehouse sync paths need a reachable LDAP directory and a dbt target; without them, unit suites and static gates are
   the evidence of record.
-- The authoritative quality verdict comes from `make check PROJECT=flext-dbt-ldap` and `make val`.
+- The authoritative quality verdict comes from `make check PROJECT=flext-dbt-ldap` and `make check`.
 
 ## Resources
 

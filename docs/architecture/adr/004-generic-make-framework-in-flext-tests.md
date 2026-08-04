@@ -72,7 +72,7 @@ The meanings are fixed:
 | `build` | produce project artifacts |
 | `check` | run static and policy gates |
 | `test` | execute real behavior tests |
-| `format` | check by default; modify only with `APPLY=Y` |
+| `fmt` | check by default; modify only with `APPLY=Y` |
 | `run` | execute declared project capabilities |
 | `status` | report read-only diagnostics |
 | `docs` | validate or build documentation |
