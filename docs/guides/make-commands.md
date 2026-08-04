@@ -28,7 +28,8 @@ Discover live verbs with `make help` only. Do not invent retired verbs.
 | `deps` | `check` | `check` / `lock` / `upgrade`; mutators need `APPLY=Y` | `make deps WHAT=upgrade APPLY=Y PROJECT=flext-core` |
 | `build` | `artifacts` | Build/package orchestration | `make build` |
 | `check` | `all` | Read-only quality gates; optional `CHECK_GATES=` | `make check PROJECT=flext-infra CHECK_GATES=lint,format,pyrefly` |
-| `test` | `all` | Pytest via Make; optional `FILE=` / `MATCH=` | `make test PROJECT=flext-infra FILE=flext-infra/tests/unit/...` |
+| `test` | `all` | Incremental pytest-testmon (`--testmon --no-cov`); optional `FILE=` / `MATCH=` | `make test PROJECT=flext-infra` |
+| `cov` | `all` | Full-suite coverage locally; rejects `FILE`/`MATCH`; not CI/pre-push; required before land | `make cov PROJECT=flext-infra` |
 | `fmt` | `check` | Format check/apply (`APPLY=Y` for mutate) | `make fmt WHAT=apply APPLY=Y` |
 | `fix` | `check` | Auto-fix apply (`APPLY=Y`) | `make fix WHAT=apply APPLY=Y` |
 | `run` | `default` | Run project entry | `make run` |

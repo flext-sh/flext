@@ -26,9 +26,14 @@ Use these directories when the project owns tests:
 ```bash
 make test PROJECT=flext-infra
 make test PROJECT=flext-infra MATCH=docs
+make cov PROJECT=flext-infra
 make check PROJECT=flext-infra
 make check
 ```
+
+`make test` always runs incremental selection via pytest-testmon without coverage.
+`make cov` runs the full suite with coverage and rejects `FILE`/`MATCH`. Coverage is
+a local gate before `make work WHAT=land`; it is not part of blocking CI.
 
 ## Docs Pipeline Validation
 

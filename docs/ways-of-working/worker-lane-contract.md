@@ -57,8 +57,12 @@ the dispatcher:
 make check CHECK_GATES=lint,format,pyrefly
 make check PROJECT=<affected> CHECK_GATES=pyright,mypy
 make test PROJECT=<affected>
+make cov PROJECT=<affected>
 make gen WHAT=check PROJECT=<affected>
 ```
+
+`make cov` is required before `make work WHAT=land`. `make test` is incremental
+(testmon) and does not produce coverage.
 
 Run the narrowest changed-scope gate first; widen only after it passes.
 
@@ -78,6 +82,8 @@ bead state.
 ## 5. Definition of done
 
 Done means all of the following:
+
+- `make cov` is green for the affected project when tests changed
 
 - RED→GREEN proof exists for the change.
 - Exact Make-gate evidence is recorded: command, cwd, exit code, decisive line.
