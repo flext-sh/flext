@@ -1,3 +1,5 @@
+> **HISTORICAL / SUPERSEDED** — retained for provenance only; live Beads is authoritative.
+
 # FLEXT 0.12.0-dev Governance and Beads Execution Continuation
 
 | Field | Current value |

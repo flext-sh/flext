@@ -443,7 +443,7 @@ include = [
   "flext-dbt-oracle-wms/tests",
   "flext-dbt-oracle/src",
   "flext-dbt-oracle/tests",
-  "flext-grpc/architecture",
+  "flext-grpc/docs",
   "flext-grpc/examples",
   "flext-grpc/src",
   "flext-grpc/tests",
@@ -458,7 +458,6 @@ include = [
   "flext-meltano/src",
   "flext-meltano/tests",
   "flext-observability/examples",
-  "flext-observability/legado",
   "flext-observability/src",
   "flext-observability/tests",
   "flext-oracle-oic/src",
@@ -1061,7 +1060,7 @@ reportUnknownMemberType = "none"
 reportUnknownParameterType = "none"
 reportUnknownVariableType = "none"
 reportUnusedImport = "none"
-root = "flext-grpc/architecture"
+root = "flext-grpc/docs"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-grpc", "flext-grpc/src"]
@@ -1325,22 +1324,6 @@ reportUnknownParameterType = "none"
 reportUnknownVariableType = "none"
 reportUnusedImport = "none"
 root = "flext-observability/examples"
-
-[[tool.pyright.executionEnvironments]]
-extraPaths = ["flext-observability", "flext-observability/src"]
-reportAssignmentType = "none"
-reportAttributeAccessIssue = "none"
-reportGeneralTypeIssues = "none"
-reportInvalidTypeForm = "none"
-reportPrivateImportUsage = "none"
-reportPrivateUsage = "none"
-reportUnknownArgumentType = "none"
-reportUnknownLambdaType = "none"
-reportUnknownMemberType = "none"
-reportUnknownParameterType = "none"
-reportUnknownVariableType = "none"
-reportUnusedImport = "none"
-root = "flext-observability/legado"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-observability/src"]
@@ -2502,9 +2485,9 @@ dev = [
   "pytest-mock>=3.15.1",
   "pytest-randomly>=4.1.0",
   "pytest-sugar>=1.1.1",
+  "pytest-testmon>=2.2.0",
   "pytest-timeout>=2.4.0",
   "pytest-xdist>=3.8.0",
-  "pytest-testmon>=2.2.0",
   "pyupgrade>=3.21.2",
   "radon>=6.0.1",
   "ruff>=0.16.1",
