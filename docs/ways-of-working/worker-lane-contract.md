@@ -127,7 +127,4 @@ evidence at the applicable boundary permits `READY_FOR_REVIEW`.
 
 ## Integration line
 
-Land worker lanes onto `origin/0.12.0-dev` via `make work WHAT=land` / fast-forward
-merge. Do not run `workspace-merge-main` or otherwise promote to `main` unless the
-operator explicitly requests a release promote.
-
+Land worker lanes onto `origin/0.12.0-dev` by `make work WHAT=land` (opens/updates the PR into config `integration.branch`, currently `0.12.0-dev`); merge is separate; `make work WHAT=finish` removes the registered lane after the PR is merged. Do not run `workspace-merge-main` or otherwise promote to `main` unless the operator explicitly requests a release promote.

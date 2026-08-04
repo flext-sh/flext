@@ -28,7 +28,7 @@ Discover live verbs with `make help` only. Do not invent retired verbs.
 | `clean` | `generated` | Requires `APPLY=Y` | `make clean APPLY=Y` |
 | `release` | `status` | Release status surface | `make release` |
 | `gen` | `check` | Codegen conform; mutate with `WHAT=apply APPLY=Y` | `make gen WHAT=apply APPLY=Y` |
-| `work` | `status` | Bead + GitFlow lane saga | `make work WHAT=start BEAD=<id> KIND=bugfix NAME=<slug> APPLY=Y` |
+| `work` | `status` | Bead + GitFlow lane saga | `make work WHAT=start PROJECT=<member> BEAD=<id> KIND=bugfix NAME=<slug> APPLY=Y` |
 
 Retired / not public: `val`, `codegen`, `format`, `boot`, `ship`, `coordination`, `makefile`, `DOCS_PHASE`, `CHANGED_ONLY`.
 
@@ -62,11 +62,13 @@ must not be treated as default ULW closeout.
 
 ## `work` saga
 
+On a workspace-root Makefile, when `PROJECT` names a `WORKSPACE_MEMBERS` entry and `WORKSPACE` is not a command-line override, `WORKSPACE` becomes `$(PROJECT_ROOT)/$(PROJECT)` so land/finish use the member git primary.
+
 | WHAT | Mutates? | Description |
 | --- | --- | --- |
 | `start` | yes (`APPLY=Y`) | Branch `KIND/NAME`, registered worktree, bead metadata |
 | `status` | no | Branch / worktree / head / PR for the bead |
-| `land` | yes (`APPLY=Y`) | Open/update PR into the integration base |
+| `land` | yes (`APPLY=Y`) | Sync registered lane to integration base, push head, open (or reuse open) PR; does not merge |
 | `finish` | yes (`APPLY=Y`) | Close lane after merge |
 
 ## Quick recipes
@@ -76,5 +78,5 @@ make setup
 make check
 make test PROJECT=flext-core
 make gen WHAT=apply APPLY=Y
-make work WHAT=land BEAD=<id> APPLY=Y
+make work WHAT=land PROJECT=<member> BEAD=<id> APPLY=Y
 ```

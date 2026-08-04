@@ -43,5 +43,5 @@ Conform from Git+manifest. Mise binaries; no `uv`/Python patch pins (`3.13.*`). 
 
 ### `make work` lane saga
 
-Public WHAT is only `start|status|land|finish`. `FlextInfraWorktreeService` is an internal engine — do not expose `WHAT=worktree`. Use `PROJECT=<member>` (or `WORKSPACE=`) so land/finish resolve the member git primary. Land owns the lane PR; finish requires merged PR + metadata↔registry bind + `head_oid` CAS.
+Public WHAT is only `start|status|land|finish`. `FlextInfraWorktreeService` is an internal engine — do not expose `WHAT=worktree`. Use `PROJECT=<member>` (or `WORKSPACE=`) so land/finish resolve the member git primary. Land owns the lane PR; finish binds `metadata.worktree` to `registered_lane`, refuses permanent/primary lanes, requires `head_oid` CAS when the lane still exists, and requires a merged PR when `metadata.pr_number` is set (otherwise refuses an open PR on the branch).
 Guide: `docs/guides/make-commands.md` · ADR-0016.
