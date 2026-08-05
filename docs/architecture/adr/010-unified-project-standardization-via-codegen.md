@@ -67,10 +67,11 @@ Adopt one generated base with two explicitly separated delivery scopes.
 - one generated Make surface and one deterministic codegen transaction;
 - fleet GitHub Actions from the same codegen SSOT: blocking `CI` on the
   integration line; `ci-matrix` only for `workspace-root`/`standalone`,
-  auto-run on push to `main` plus `workflow_dispatch` (no `pull_request`;
-  never bind the integration-line variable); workspace-member projects do
-  not receive `ci-matrix` and orphan copies are pruned on apply; CodeQL
-  default setup stays outside Jinja;
+  defaulting to `workflow_dispatch` only (`repository_policy_overlays.ci_matrix_auto_run`
+  opts into push-to-`main` auto-run; no `pull_request`; never bind the
+  integration-line variable); workspace-member projects do not receive
+  `ci-matrix` and orphan copies are pruned on apply; CodeQL default setup
+  stays outside Jinja;
 - proof from an isolated candidate wheel across all 51 executable consumer
   surfaces.
 
