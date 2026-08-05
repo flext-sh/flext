@@ -23,7 +23,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Annotated
 
-from flext_cli import m, p, u
+from flext_cli import m, p, u as cli_u
+from flext_infra import u
 
 DEPENDABOT_AUTHOR = "dependabot[bot]"
 DEPENDABOT_TITLE_RE = re.compile(
@@ -59,7 +60,7 @@ def _run_cmd(
     cmd: list[str], *, cwd: Path | None = None
 ) -> p.Result[p.Cli.CommandOutput]:
     """Run a subprocess command with closed stdin to avoid interactive prompts."""
-    return u.Cli.run_raw(cmd, cwd=cwd, input_data="")
+    return cli_u.Cli.run_raw(cmd, cwd=cwd, input_data="")
 
 
 def discover_repos(root: Path) -> list[str]:
@@ -80,7 +81,7 @@ def discover_repos(root: Path) -> list[str]:
 
 def repo_slug_from_origin(path: Path) -> str | None:
     """Resolve owner/repo from a submodule's origin remote URL."""
-    result = _run_cmd(["git", "-C", str(path), "remote", "get-url", "origin"])
+    result = u.Infra.git_run(path, ("remote", "get-url", "origin"))
     if result.failure or result.value.exit_code != 0:
         return None
     url = result.value.stdout.strip()

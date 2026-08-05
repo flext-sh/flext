@@ -25,13 +25,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_cli import p, r, u
+from flext_cli import p, r, u as cli_u
+from flext_infra import u
 from scripts.dispatch import Dispatch
 
 
 def _selected_projects(workspace_root: Path) -> list[str]:
     """Return the project list from env or discover git repositories."""
-    env = u.Cli.process_env()
+    env = cli_u.Cli.process_env()
     if project := env.get("PROJECT", "").strip():
         return [project]
     if projects := env.get("PROJECTS", "").strip():
@@ -44,19 +45,18 @@ def _selected_projects(workspace_root: Path) -> list[str]:
 
 
 def _is_git_repo(path: Path) -> bool:
-    return u.Cli.run_checked(["git", "rev-parse", "--git-dir"], cwd=path).unwrap_or(
-        False
-    )
+    checked = u.Infra.git_run(path, ("rev-parse", "--git-dir"))
+    return checked.success and checked.value.exit_code == 0
 
 
 def _has_changes(repo: Path) -> bool:
-    result = u.Cli.capture(["git", "status", "--porcelain"], cwd=repo)
+    result = u.Infra.git_capture(repo, ("status", "--porcelain"))
     return result.success and bool(result.value.strip())
 
 
 def _stage_and_commit(repo: Path, message: str) -> p.Result[bool]:
-    stage = u.Cli.capture(
-        ["git", "ls-files", "-m", "-d", "-o", "--exclude-standard", "-z"], cwd=repo
+    stage = u.Infra.git_capture(
+        repo, ("ls-files", "-m", "-d", "-o", "--exclude-standard", "-z")
     )
     if stage.failure:
         return r[bool].fail(stage.error or "failed to list changed files")
@@ -67,16 +67,27 @@ def _stage_and_commit(repo: Path, message: str) -> p.Result[bool]:
     if not files:
         return r[bool].ok(True)
 
-    add_result = u.Cli.run_checked(["git", "add", "--", *files], cwd=repo)
-    if add_result.failure:
-        return add_result
-
-    return u.Cli.run_checked(["git", "commit", "-m", message], cwd=repo)
+    added = u.Infra.git_run(repo, ("add", "--", *files))
+    if added.failure:
+        return r[bool].fail(added.error or "git add failed")
+    if added.value.exit_code != 0:
+        return r[bool].fail(
+            (added.value.stderr or added.value.stdout).strip() or "git add failed"
+        )
+    committed = u.Infra.git_run(repo, ("commit", "-m", message))
+    if committed.failure:
+        return r[bool].fail(committed.error or "git commit failed")
+    if committed.value.exit_code != 0:
+        return r[bool].fail(
+            (committed.value.stderr or committed.value.stdout).strip()
+            or "git commit failed"
+        )
+    return r[bool].ok(True)
 
 
 def run() -> int:
     """Run the save (commit) workflow."""
-    env = u.Cli.process_env()
+    env = cli_u.Cli.process_env()
     workspace_root = Path(env.get("WORKSPACE_ROOT", str(Path.cwd()))).resolve()
     message = env.get("MESSAGE", "").strip()
 
