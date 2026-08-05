@@ -2179,7 +2179,7 @@ sort_first = ["build-system", "dependency-groups", "project", "tool"]
 
 [tool.uv]
 constraint-dependencies = ["transformers>=5.5.0", "cryptography>=50.0.0"]
-exclude-newer = "7 days"
+exclude-newer = "14 days"
 link-mode = "copy"
 
 [[tool.uv.exclude-dependencies]]
