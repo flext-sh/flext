@@ -59,7 +59,7 @@ Contracts locked by `flext-infra` tests (`test_review_mro_vw2w_template_contract
 - CI failure artifacts upload only `junit.xml` / `coverage.xml` / `coverage.json` (no raw logs)
 - TestPyPI release: root/tag verify → `make setup` → flext-core gitlink verify → publish
 - `ci-matrix` projected only for `workspace-root` / `standalone`; never for `workspace-member`
-- `ci-matrix` auto-runs on push to `main` plus `workflow_dispatch` only (no `pull_request`; never bind the integration-line variable)
+- `ci-matrix` defaults to `workflow_dispatch` only; set `repository_policy_overlays.ci_matrix_auto_run: true` to also auto-run on push to `main` (no `pull_request`; never bind the integration-line variable)
 - `make gen WHAT=apply APPLY=Y` prunes orphan member `.github/workflows/ci-matrix.yml` copies
 - `codeql.yml` is not Jinja-projected (CodeQL default setup stays a GitHub repo setting)
 
