@@ -23,7 +23,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Annotated
 
-from flext_cli import m, p, u
+from flext_cli import m, p, u as cli_u
+from flext_infra import u as infra_u
 
 DEPENDABOT_AUTHOR = "dependabot[bot]"
 DEPENDABOT_TITLE_RE = re.compile(
@@ -59,7 +60,7 @@ def _run_cmd(
     cmd: list[str], *, cwd: Path | None = None
 ) -> p.Result[p.Cli.CommandOutput]:
     """Run a subprocess command with closed stdin to avoid interactive prompts."""
-    return u.Cli.run_raw(cmd, cwd=cwd, input_data="")
+    return cli_u.Cli.run_raw(cmd, cwd=cwd, input_data="")
 
 
 def discover_repos(root: Path) -> list[str]:
@@ -80,10 +81,12 @@ def discover_repos(root: Path) -> list[str]:
 
 def repo_slug_from_origin(path: Path) -> str | None:
     """Resolve owner/repo from a submodule's origin remote URL."""
-    result = _run_cmd(["git", "-C", str(path), "remote", "get-url", "origin"])
-    if result.failure or result.value.exit_code != 0:
+    result = infra_u.Infra.git_remote_url(
+        m.Infra.GitRemoteUrlRequest(repo_root=path, remote="origin")
+    )
+    if result.failure:
         return None
-    url = result.value.stdout.strip()
+    url = result.value.text.strip()
     if url.startswith("git@github.com:"):
         return url.replace("git@github.com:", "").replace(".git", "")
     if "github.com/" in url:

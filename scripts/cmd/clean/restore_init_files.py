@@ -25,39 +25,41 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from flext_cli import p, u
+from flext_cli import p, r, u as cli_u
+from flext_infra import m, u as infra_u
 from scripts.dispatch import Dispatch
 
 
 def _is_git_repo(path: Path) -> bool:
-    return u.Cli.run_checked(["git", "rev-parse", "--git-dir"], cwd=path).unwrap_or(
-        False
-    )
+    return infra_u.Infra.git_show_toplevel(
+        m.Infra.GitRepoRequest(repo_root=path)
+    ).success
 
 
 def _changed_init_files(repo: Path) -> list[str]:
+    """List ``__init__.py`` files that differ from HEAD (staged or unstaged)."""
+    status = infra_u.Infra.git_status(m.Infra.GitStatusRequest(repo_root=repo))
+    if status.failure:
+        return []
     changed: set[str] = set()
-    for flag in ("--cached", None):
-        cmd = ["git", "diff", "--name-only"]
-        if flag:
-            cmd.append(flag)
-        cmd.extend(("--", "**/__init__.py"))
-        result = u.Cli.capture(cmd, cwd=repo)
-        if result.success:
-            changed.update(
-                line.strip() for line in result.value.splitlines() if line.strip()
-            )
+    for line in status.value.porcelain.splitlines():
+        path_text = line.split(" ", 1)[-1].strip()
+        if path_text.endswith("__init__.py"):
+            changed.add(path_text)
     return sorted(changed)
 
 
 def _restore_files(repo: Path, files: list[str]) -> p.Result[bool]:
-    return u.Cli.run_checked(
-        ["git", "restore", "--staged", "--worktree", "--", *files], cwd=repo
+    restored = infra_u.Infra.git_restore_paths(
+        m.Infra.GitCheckoutPathsRequest(repo_root=repo, paths=files)
     )
+    if restored.failure:
+        return r[bool].fail(restored.error or "git restore failed")
+    return r[bool].ok(True)
 
 
 def _validate_imports(workspace_root: Path) -> p.Result[bool]:
-    env = u.Cli.process_env(
+    env = cli_u.Cli.process_env(
         overrides={
             "PYTHONPATH": ":".join(
                 str(workspace_root / proj / "src")
@@ -65,7 +67,7 @@ def _validate_imports(workspace_root: Path) -> p.Result[bool]:
             )
         }
     )
-    return u.Cli.run_checked(
+    return cli_u.Cli.run_checked(
         [
             sys.executable,
             "-c",
@@ -79,7 +81,7 @@ def _validate_imports(workspace_root: Path) -> p.Result[bool]:
 def run() -> int:
     """Run the restore workflow."""
     workspace_root = Path(
-        u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd()))
+        cli_u.Cli.process_env().get("WORKSPACE_ROOT", str(Path.cwd()))
     ).resolve()
     if Dispatch.surface_validation_enabled():
         return 0
