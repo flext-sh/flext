@@ -1,0 +1,2191 @@
+{
+  "updated": "2026-08-05T13:49:34Z",
+  "program": "FLEXT Three-Owner Enforcement and Test Automation",
+  "plan_ref": "~/.cursor/plans/flext_three_owner_enforcement_749c8d6f.plan.md",
+  "beads_ssot": true,
+  "line_forward": "0.20.0-dev",
+  "status": "P0_COMPLETE_LEDGER_RESTORED",
+  "handoff": "docs/superpowers/plans/2026-08-05-three-owner-p0-handoff.md",
+  "program_epic": "mro-wshr",
+  "bead_ids": {
+    "t0_operator_gate": "mro-hsiu.1",
+    "d0_cutover": "mro-53ne",
+    "d0_validate": "mro-5k2b",
+    "v0_dogfood": "mro-b0p0",
+    "v0_validate": "mro-biwz",
+    "d0_implement": "mro-hidn",
+    "v0_cutover": "mro-m3nw",
+    "v0_implement": "mro-o0oi",
+    "e6_dogfood": "mro-s5wk",
+    "d0_dogfood": "mro-w8bt",
+    "e2": "mro-00ka",
+    "e2_dogfood": "mro-04s9",
+    "ec_validate": "mro-07fp",
+    "et_dogfood": "mro-0c9o",
+    "e5_implement": "mro-0sgl",
+    "e1_dogfood": "mro-0xw4",
+    "e0_dogfood": "mro-1ha3",
+    "ec_cutover": "mro-2lqu",
+    "e6": "mro-43ng",
+    "e3_validate": "mro-4jhx",
+    "e1_cutover": "mro-4ta4",
+    "et_cutover": "mro-5hzi",
+    "e2_cutover": "mro-654e",
+    "e5_cutover": "mro-6rr7",
+    "e4": "mro-6s34",
+    "e4_validate": "mro-6wvz",
+    "e4_implement": "mro-a1ie",
+    "e4_cutover": "mro-ajuq",
+    "e0_cutover": "mro-ajur",
+    "e1": "mro-b0eg",
+    "e6_validate": "mro-fosq",
+    "e3": "mro-he00",
+    "e5_dogfood": "mro-j8tz",
+    "et_validate": "mro-jtmq",
+    "t0_validate": "mro-k4qs",
+    "e2_implement": "mro-k5yb",
+    "t0_implement": "mro-k60y",
+    "e2_validate": "mro-m1oj",
+    "t0_dogfood": "mro-meyo",
+    "e0_implement": "mro-ml19",
+    "e1_implement": "mro-n2ns",
+    "v0": "mro-now1",
+    "e1_validate": "mro-pfry",
+    "e4_dogfood": "mro-pkfj",
+    "e3_dogfood": "mro-pqcd",
+    "ec_implement": "mro-q4wu",
+    "e5_validate": "mro-qdse",
+    "ec_dogfood": "mro-qq3d",
+    "t0_cutover": "mro-qyxr",
+    "d0": "mro-s5zp",
+    "e3_cutover": "mro-shkd",
+    "e6_implement": "mro-w3cz",
+    "e0_validate": "mro-wgo7",
+    "e3_implement": "mro-wjph",
+    "e5": "mro-wt0l",
+    "et_implement": "mro-xbxz",
+    "e6_cutover": "mro-yg2m",
+    "et": "mro-0kl7",
+    "e0": "mro-buxn",
+    "ec": "mro-ehid",
+    "t0": "mro-hsiu",
+    "prog": "mro-wshr",
+    "p0": "mro-ylo0",
+    "p0_implement": "mro-05rh",
+    "p0_validate": "mro-m2h9",
+    "p0_cutover": "mro-nr9y",
+    "p0_dogfood": "mro-gn1z"
+  },
+  "gates": {
+    "P0_complete_requires": [
+      "program epic + 13 child epics created under mro-wkii",
+      "all implement/validate/cutover/dogfood beads created with resume notes",
+      "ownership/delete ledger written",
+      "operator_declared_012_final_sha recorded OR explicitly deferred to T0 start"
+    ],
+    "T0_blocked_until": [
+      "0.12.0 release published",
+      "operator requests execution of epic mro-wkii / T0",
+      "operator_declared_012_final_sha set",
+      "close operator gate bead mro-hsiu.1"
+    ],
+    "t0_operator_gate": "mro-hsiu.1",
+    "t0_start_requires_operator": true,
+    "t0_start_instructions": [
+      "Publish 0.12.0 release",
+      "Operator explicitly requests execution of mro-wkii / T0",
+      "Set census.operator_declared_012_final_sha in this ledger",
+      "Close mro-hsiu.1 (orchestrator)",
+      "Claim mro-k60y (T0.I); absorb mro-dxrp DoD",
+      "Primary checkout origin/0.20.0-dev; make work lane; merge declared SHA; preserve 0.20 overlays"
+    ],
+    "p0_gap_2026-08-05": "Ledger files were missing from disk (never committed after P0). Restored during handoff from live bd + u.build_canonical_catalog()."
+  },
+  "census": {
+    "workspace_sha": "c59d2e61b7022ece3dbf9f1a3de162cec6e83ba7",
+    "flext_core_sha": "f17751e861a698b495be910ba0131a1ddb8b7b30",
+    "flext_infra_sha": "1773269231947e41491845287e0216c8ad832d54",
+    "flext_tests_sha": "85faddfe67f1a4ae7bc024a9e7420a4bcfa717a3",
+    "origin_012": "c59d2e61b7022ece3dbf9f1a3de162cec6e83ba7",
+    "origin_020": "a5ed5b80e64edf1c055304c02558cb380925a1dc",
+    "divergence_note": "0.12.0-dev and origin/0.20.0-dev diverge; T0 is merge-forward not FF. Re-verify counts at T0.",
+    "operator_declared_012_final_sha": null,
+    "catalog_version": 1,
+    "total_rules": 92,
+    "by_source_kind": {
+      "flext_infra_detector": 36,
+      "flext_tests_validator": 7,
+      "runtime_warning": 1,
+      "ruff": 4,
+      "skill_pointer": 13,
+      "beartype": 24,
+      "code_smell": 7
+    },
+    "by_future_owner": {
+      "flext-infra": 67,
+      "flext-core": 25
+    },
+    "root_conftest_count": 31,
+    "all_conftest_count": 95
+  },
+  "rules": [
+    {
+      "rule_id": "ENFORCE-001",
+      "description": "Loose object detected at module level \u2014 every public symbol must be nested inside its facade family.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "loose_objects",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "relocate_loose_object",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-002",
+      "description": "Import alias source is wrong \u2014 alias imported from a non-canonical module.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "import_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "rewrite_noncanonical_import",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-003",
+      "description": "Namespace source violation \u2014 canonical alias imported from a project that does not own that slot.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "namespace_source_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_namespace_source",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-004",
+      "description": "Internal (private) module import reaches outside its owning package boundary.",
+      "severity": "MEDIUM",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "internal_import_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_internal_import_boundary",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-005",
+      "description": "Manual Protocol class declared outside protocols.py / _protocols/ tree.",
+      "severity": "MEDIUM",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "manual_protocol_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "move_protocol_to_tree",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-006",
+      "description": "Cyclic import detected between modules.",
+      "severity": "CRITICAL",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "cyclic_imports",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "break_cyclic_import",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-007",
+      "description": "Runtime alias (c/p/t/m/u/r/s/x/d/e/h) rebound in a module that should not own it.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "runtime_alias_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_runtime_alias_rebind",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-008",
+      "description": "Python module missing `from __future__ import annotations`.",
+      "severity": "MEDIUM",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "future_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "future_import",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-009",
+      "description": "Manual typing alias declared outside typings.py / _typings/ tree.",
+      "severity": "MEDIUM",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "manual_typing_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "move_typing_to_tree",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-010",
+      "description": "Backwards-compatibility alias retained after refactor \u2014 should be removed.",
+      "severity": "LOW",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "compatibility_alias_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "rope",
+        "target": "rewrite_compatibility_alias",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-080",
+      "description": "Canonical alias imported from flext_core when the current project re-exports the same slot locally. Use from <proj>.constants import c etc. Violates AGENTS.md \u00a74 (Import Law).",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "foreign_canonical_alias_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "rewrite_foreign_canonical_alias",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-011",
+      "description": "Class placed in the wrong facade layer (e.g. Protocol in models.py).",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "class_placement_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "relocate_class_to_layer",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-012",
+      "description": "MRO composition incomplete \u2014 facade does not compose all its domain mixin trees.",
+      "severity": "CRITICAL",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "mro_completeness_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "complete_mro_composition",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-013",
+      "description": "Source file failed to parse during enforcement.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "parse_failures",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_parse_failure",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-014",
+      "description": "Canonical facade family is missing (no constants.py / models.py / typings.py / protocols.py / utilities.py).",
+      "severity": "CRITICAL",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "facade_statuses",
+        "match_missing": true
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "create_facade_files",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-026",
+      "description": "Bare `except:` clause swallows all exceptions including SystemExit.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "bare_except_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "pattern",
+        "params": {
+          "patterns": [
+            {
+              "regex": "^(?P<indent>\\s*)except\\s*:(?P<trail>.*)$",
+              "replacement": "\\g<indent>except Exception:\\g<trail>",
+              "change_message": "Rewrote bare except to except Exception",
+              "flags": [
+                "MULTILINE"
+              ]
+            }
+          ]
+        },
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-027",
+      "description": "`u.Cli.print()` call in source code \u2014 use structured logging.",
+      "severity": "MEDIUM",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "print_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "pattern",
+        "params": {
+          "patterns": [
+            {
+              "regex": "\\bprint\\s*\\(\\s*(?P<args>[^)]*)\\s*\\)",
+              "replacement": "u.fetch_logger(__name__).info(\\g<args>)",
+              "change_message": "Rewrote u.Cli.print() to u.fetch_logger(__name__).info()"
+            }
+          ],
+          "required_alias": "u"
+        },
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-028",
+      "description": "`breakpoint()` / pdb left in code.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "breakpoint_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "pattern",
+        "params": {
+          "patterns": [
+            {
+              "regex": "^[ \\t]*breakpoint\\s*\\(\\s*\\)\\s*[;\\n]",
+              "replacement": "\n",
+              "change_message": "Removed debugger statement",
+              "flags": [
+                "MULTILINE"
+              ]
+            },
+            {
+              "regex": "^[ \\t]*import\\s+pdb\\s*;\\s*pdb\\.set_trace\\s*\\(\\s*\\)\\s*[;\\n]",
+              "replacement": "\n",
+              "change_message": "Removed debugger statement",
+              "flags": [
+                "MULTILINE"
+              ]
+            }
+          ]
+        },
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-029",
+      "description": "`open()` without explicit encoding.",
+      "severity": "MEDIUM",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "open_encoding_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "open_encoding",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-030",
+      "description": "`dict` in type annotation \u2014 prefer Mapping / MutableMapping / TypedDict.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "dict_annotation_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "typing_unifier",
+        "params": {
+          "targets": [
+            "dict"
+          ]
+        },
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-031",
+      "description": "`typing.Dict` attribute usage \u2014 use collections.abc.Mapping family.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "typing_dict_attr_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "typing_dict_import",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-032",
+      "description": "`from typing import Dict` \u2014 banned in favor of dict / Mapping.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "typing_dict_import_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "typing_dict_attr",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-033",
+      "description": "Hardcoded `__version__` string \u2014 use importlib.metadata.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "hardcoded_version_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "hardcoded_version",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-091",
+      "description": "`from typing import List` \u2014 banned in favor of list / t.SequenceOf.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "typing_list_import_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "pattern",
+        "params": {
+          "patterns": [
+            {
+              "regex": "\\bList\\s*\\[",
+              "replacement": "t.SequenceOf[",
+              "change_message": "Rewrote List[...] to t.SequenceOf[...]"
+            }
+          ],
+          "required_alias": "t"
+        },
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-092",
+      "description": "`typing.List` attribute usage \u2014 use t.SequenceOf or collections.abc.Sequence.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "typing_list_attr_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "pattern",
+        "params": {
+          "patterns": [
+            {
+              "regex": "\\btyping\\s*\\.\\s*List\\s*\\[",
+              "replacement": "t.SequenceOf[",
+              "change_message": "Rewrote typing.List[...] to t.SequenceOf[...]"
+            }
+          ],
+          "required_alias": "t"
+        },
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-093",
+      "description": "Bare pydantic import \u2014 use m.BaseModel, m.ConfigDict, m.TypeAdapter, u.Field, u.field_validator, u.model_validator, u.computed_field, u.PrivateAttr.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "direct_pydantic_import_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "import_modernizer",
+        "params": {
+          "imports_to_remove": [
+            "pydantic"
+          ],
+          "symbols_to_replace": {
+            "BaseModel": "m.BaseModel",
+            "ConfigDict": "m.ConfigDict",
+            "Field": "u.Field",
+            "PrivateAttr": "u.PrivateAttr",
+            "TypeAdapter": "m.TypeAdapter",
+            "computed_field": "u.computed_field",
+            "field_validator": "u.field_validator",
+            "model_validator": "u.model_validator"
+          },
+          "runtime_aliases": [
+            "m",
+            "u"
+          ],
+          "blocked_aliases": []
+        },
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-094",
+      "description": "Bare structlog import \u2014 use u.fetch_logger(__name__) from the project facade.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "direct_structlog_import_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "pattern",
+        "params": {
+          "patterns": [
+            {
+              "regex": "\\bstructlog\\s*\\.\\s*get_logger\\s*\\(\\s*\\)",
+              "replacement": "u.fetch_logger(__name__)",
+              "change_message": "Rewrote structlog.get_logger() to u.fetch_logger(__name__)"
+            },
+            {
+              "regex": "\\bstructlog\\s*\\.\\s*get_logger\\s*\\(\\s*['\\\"](?P<name>[^'\\\"]*)['\\\"]\\s*\\)",
+              "replacement": "u.fetch_logger(\"\\g<name>\")",
+              "change_message": "Rewrote structlog.get_logger(name) to u.fetch_logger(name)"
+            }
+          ],
+          "required_alias": "u"
+        },
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-095",
+      "description": "Bare oracledb import \u2014 route through flext-db-oracle / flext-oracle-* facades.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "direct_oracledb_import_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "route_oracledb_import",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-096",
+      "description": "Bare ldap3 import \u2014 route through flext-ldap / flext-target-ldap facades.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "direct_ldap3_import_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "route_ldap3_import",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-081",
+      "description": "Inline or lazy import declared inside a function body or dynamic importlib.import_module call.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "inline_import_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "rope",
+        "target": "hoist_inline_import",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-082",
+      "description": "Exception-silencing pattern (contextlib.suppress, except...: pass, broad except, unwrap_or sentinel, or sentinel return on failure branch).",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "silent_failure_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "rope",
+        "target": "fix_silent_failure_sentinels",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-083",
+      "description": "`# type: ignore` comment silences type checker \u2014 remove the bypass and fix the type error.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "type_ignore_violations",
+        "match_missing": true
+      },
+      "fix_action": {
+        "kind": "gate",
+        "target": "smells",
+        "params": {
+          "smell_tag": "type_ignore"
+        },
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-084",
+      "description": "`# noqa` comment silences lint \u2014 remove the bypass and fix the underlying issue.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "noqa_violations",
+        "match_missing": true
+      },
+      "fix_action": {
+        "kind": "gate",
+        "target": "smells",
+        "params": {
+          "smell_tag": "noqa"
+        },
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-090",
+      "description": "Hand-written `.pyi` stub file detected \u2014 source type hints are the SSOT; stubs are prohibited.",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "stub_file_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "rope",
+        "target": "remove_stub_file",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-097",
+      "description": "Magic number or string literal used where a named constant exists or should exist.",
+      "severity": "MEDIUM",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "magic_literal_violations",
+        "match_missing": false
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "extract_magic_literal",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-098",
+      "description": "Module-level test_* function outside a Tests* class \u2014 nest it in one Tests<Module> class (one nested class per test module).",
+      "severity": "HIGH",
+      "source_kind": "flext_infra_detector",
+      "source": {
+        "kind": "flext_infra_detector",
+        "violation_field": "loose_test_function_violations",
+        "match_missing": false
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "tach|import-linter|rope|ast-grep",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-015",
+      "description": "Import discipline violation \u2014 lazy imports, TYPE_CHECKING misuse, sys.path manipulation, or non-root flext-* imports.",
+      "severity": "HIGH",
+      "source_kind": "flext_tests_validator",
+      "source": {
+        "kind": "flext_tests_validator",
+        "method": "imports",
+        "rule_ids": [
+          "IMPORT-001",
+          "IMPORT-002",
+          "IMPORT-003",
+          "IMPORT-004",
+          "IMPORT-006"
+        ]
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_import_discipline",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "ast-grep|tach|rope (test-policy)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-016",
+      "description": "Type-system violation \u2014 Any/object/legacy typing or type: ignore bypass.",
+      "severity": "HIGH",
+      "source_kind": "flext_tests_validator",
+      "source": {
+        "kind": "flext_tests_validator",
+        "method": "types",
+        "rule_ids": [
+          "TYPE-001",
+          "TYPE-002",
+          "TYPE-003"
+        ]
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "typing_unifier",
+        "params": {
+          "targets": [
+            "dict"
+          ]
+        },
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "ast-grep|tach|rope (test-policy)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-017",
+      "description": "Bypass pattern \u2014 noqa, pragma: no cover (unapproved), or exception swallowing.",
+      "severity": "HIGH",
+      "source_kind": "flext_tests_validator",
+      "source": {
+        "kind": "flext_tests_validator",
+        "method": "bypass",
+        "rule_ids": [
+          "BYPASS-001",
+          "BYPASS-002",
+          "BYPASS-003"
+        ]
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "remove_bypass",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "ast-grep|tach|rope (test-policy)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-018",
+      "description": "Layer violation \u2014 lower layer importing an upper layer.",
+      "severity": "CRITICAL",
+      "source_kind": "flext_tests_validator",
+      "source": {
+        "kind": "flext_tests_validator",
+        "method": "layer",
+        "rule_ids": [
+          "LAYER-001"
+        ]
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_layer_violation",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "ast-grep|tach|rope (test-policy)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-019",
+      "description": "Test pattern violation \u2014 monkeypatch, Mock/MagicMock, or @patch usage.",
+      "severity": "MEDIUM",
+      "source_kind": "flext_tests_validator",
+      "source": {
+        "kind": "flext_tests_validator",
+        "method": "tests",
+        "rule_ids": [
+          "TEST-001",
+          "TEST-002",
+          "TEST-003"
+        ]
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_test_pattern",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "ast-grep|tach|rope (test-policy)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-020",
+      "description": "pyproject.toml deviation \u2014 mypy ignore_errors, unapproved ruff ignores, or incomplete type strictness.",
+      "severity": "HIGH",
+      "source_kind": "flext_tests_validator",
+      "source": {
+        "kind": "flext_tests_validator",
+        "method": "validate_config",
+        "rule_ids": [
+          "CONFIG-001",
+          "CONFIG-003",
+          "CONFIG-004",
+          "CONFIG-005"
+        ]
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_pyproject_config",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "ast-grep|tach|rope (test-policy)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-021",
+      "description": "Markdown code block validation \u2014 syntax, forbidden typings, missing future annotations, object as type.",
+      "severity": "MEDIUM",
+      "source_kind": "flext_tests_validator",
+      "source": {
+        "kind": "flext_tests_validator",
+        "method": "markdown",
+        "rule_ids": [
+          "MD-001",
+          "MD-002",
+          "MD-003",
+          "MD-004"
+        ]
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_markdown_block",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "ast-grep|tach|rope (test-policy)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-022",
+      "description": "FlextMroViolation emitted by the flext-core enforcement engine at class-definition time.",
+      "severity": "HIGH",
+      "source_kind": "runtime_warning",
+      "source": {
+        "kind": "runtime_warning",
+        "category": "flext_core._constants.enforcement.FlextMroViolation"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_runtime_mro_violation",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-023",
+      "description": "Dynamic Any usage (ruff ANN401) \u2014 enforced at lint time by `make lint`; listed here for cross-reference.",
+      "severity": "HIGH",
+      "source_kind": "ruff",
+      "source": {
+        "kind": "ruff",
+        "rule_code": "ANN401"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "remove_dynamic_any",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "ruff (catalog row moves to infra)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-024",
+      "description": "Missing specific rule code on pyright/pygrep suppressions (ruff PGH003).",
+      "severity": "MEDIUM",
+      "source_kind": "ruff",
+      "source": {
+        "kind": "ruff",
+        "rule_code": "PGH003"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "add_suppression_justification",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "ruff (catalog row moves to infra)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-025",
+      "description": "Relative import (ruff TID252) \u2014 prefer absolute imports.",
+      "severity": "MEDIUM",
+      "source_kind": "ruff",
+      "source": {
+        "kind": "ruff",
+        "rule_code": "TID252"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "convert_relative_import",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "ruff (catalog row moves to infra)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-034",
+      "description": "Accessor method (get_*, set_*) forbidden \u2014 expose as field or @u.computed_field (AGENTS.md \u00a73.1).",
+      "severity": "HIGH",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "pydantic-v2-governance",
+        "anchor": "no-accessor-methods"
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-035",
+      "description": "Settings models must inherit FlextSettings, not BaseModel or BaseSettings (AGENTS.md \u00a72.6).",
+      "severity": "HIGH",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "lib-pydantic-settings",
+        "anchor": "settings-baseline"
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-036",
+      "description": "Never call `model_rebuild()` as a fix strategy \u2014 resolve forward refs via proper imports/annotations.",
+      "severity": "MEDIUM",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "pydantic-v2-governance",
+        "anchor": ""
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-037",
+      "description": "No `os.environ` / `os.getenv` in src/ \u2014 use settings + constants contracts.",
+      "severity": "HIGH",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "lib-pydantic-settings",
+        "anchor": ""
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-038",
+      "description": "Never flatten organic namespace paths \u2014 preserve `m.TargetOracle.ExecuteResult` etc., don't rebind to `m.ExecuteResult`.",
+      "severity": "HIGH",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "flext-mro-namespace-rules",
+        "anchor": ""
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-065",
+      "description": "api.py must contain exactly one ClassDef whose body is Pass-only and exactly one eager alias assignment. Logic in api.py or module-level mutable instance (e.g., `api = FlextApi()`) violates AGENTS.md \u00a72.5 (Services Pattern facade purity).",
+      "severity": "HIGH",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "flext-mro-namespace-rules",
+        "anchor": "facade-purity"
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-057",
+      "description": "Classes in services/*.py must end MRO at the project's Flext<X>ServiceBase (which itself ends at FlextService/s[T]). Plain classes lacking the canonical service base violate AGENTS.md \u00a72.5 (Services Pattern services/* shape).",
+      "severity": "HIGH",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "flext-mro-namespace-rules",
+        "anchor": "service-mixin-inheritance"
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-058",
+      "description": "Pydantic 2 data models must contain only fields, model_config, field_validator/model_validator/computed_field, and essential dunders. Methods named get_*/to_*/from_*/is_*/with_* on data models violate AGENTS.md \u00a73.1 (Pydantic v2 Mastery) \u2014 relocate to a service mixin or @computed_field. Carve-out: infrastructure base classes (FlextSettings, FlextService, Flext<X>ServiceBase) may expose singleton/clone/factory kernel methods. Extends ENFORCE-034 (get_/set_) to to_/from_/is_/with_ family.",
+      "severity": "HIGH",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "pydantic-v2-governance",
+        "anchor": "models-have-no-helpers"
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-059",
+      "description": "Public method parameters and return types in services/*.py and api.py must be Pydantic 2 models, p.* Protocols, r[T] of those, or PEP 604 unions thereof. Bare `dict`, `list[primitive]`, `tuple[primitive...]`, `set`, `TypedDict`, `Mapping[str, Any]`, `Sequence[primitive]` are loose data crossings and violate AGENTS.md \u00a73.1.",
+      "severity": "HIGH",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "pydantic-v2-governance",
+        "anchor": "data-boundaries-are-models"
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-060",
+      "description": "Sequence `model_dump()` -> dict ops -> `model_validate(...)` in the same scope is round-trip validation and violates AGENTS.md \u00a73.1. Use `model_copy(update={...})` directly. JSON roundtrips: use `model_dump(mode='json')` / `model_dump_json()` / `model_validate_json()` \u2014 never `json.loads(model.model_dump_json())`.",
+      "severity": "HIGH",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "pydantic-v2-patterns",
+        "anchor": "no-round-trip-validation"
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-061",
+      "description": "Methods overriding a parent method must carry `@typing.override` (PEP 698). Missing decorator weakens static refactoring guarantees and violates AGENTS.md \u00a73.1 (Python 3.13 idioms).",
+      "severity": "MEDIUM",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "flext-strict-typing",
+        "anchor": "override-decorator-required"
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-062",
+      "description": "`match value:` over a discriminated union or finite type set must include `case _: assert_never(value)` as default. Missing exhaustiveness guard violates AGENTS.md \u00a73.1 (Python 3.13 idioms \u2014 typing.assert_never).",
+      "severity": "HIGH",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "flext-strict-typing",
+        "anchor": "match-exhaustiveness-assert-never"
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-063",
+      "description": "Flext<X>{Constants,Models,Protocols,Utilities} must extend the immediately-preceding project's facade in the dependency chain (flext-core -> flext-cli -> flext-infra -> flext-{ldap,ldif,...} -> flext-{tap,target,dbt}-* -> end-user), not skip to FlextX root when an intermediate parent project is depended on. Violates AGENTS.md \u00a72.3 (MRO Cascade) by redeclaring symbols already inheritable.",
+      "severity": "HIGH",
+      "source_kind": "skill_pointer",
+      "source": {
+        "kind": "skill_pointer",
+        "skill": "flext-mro-namespace-rules",
+        "anchor": "constants-chain-inheritance"
+      },
+      "fix_action": null,
+      "enabled": false,
+      "future_owner": "flext-infra",
+      "survivor_engine": "docs/skill gate (static)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-039",
+      "description": "cast() call outside flext-core result internals violates AGENTS.md \u00a73.2 (Strict Types).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "deprecated_syntax"
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "cast_remover",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-040",
+      "description": "Linter ignore directive without inline justification violates AGENTS.md \u00a73.5 (Linter Zero Tolerance + Suppressions).",
+      "severity": "MEDIUM",
+      "source_kind": "ruff",
+      "source": {
+        "kind": "ruff",
+        "rule_code": "PGH003"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "add_suppression_justification",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "ruff (catalog row moves to infra)",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-041",
+      "description": "model_rebuild() call indicates unresolved forward refs and violates AGENTS.md \u00a73.4 (Tools/Modules/Env).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "deprecated_syntax"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "resolve_forward_refs",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-042",
+      "description": "Settings class missing FlextSettings base or wrong env_prefix violates AGENTS.md \u00a72.6 (Settings Law). Reuses the existing check_settings_inheritance hook \u2014 no new detection code per SSOT/DRY.",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "loose_symbol"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "inherit_flext_settings",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-043",
+      "description": "Pass-through wrapper (single-statement return delegating to another callable with identical args) violates AGENTS.md \u00a73.5.",
+      "severity": "MEDIUM",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "wrapper"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "inline_or_relocate_wrapper",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-044",
+      "description": "hasattr/getattr/setattr probing of private attributes (single-underscore names) violates AGENTS.md \u00a73.6.",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "deprecated_syntax"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "remove_private_attr_probe",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-045",
+      "description": "Direct 'from pydantic import ...' in a consumer project (outside its own '_' base pyramid) violates AGENTS.md \u00a72.7 (Library Abstraction Boundaries) + \u00a73.1 (Pydantic v2 Mastery \u2014 facade-only access).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "import_blacklist"
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "import_modernizer",
+        "params": {
+          "imports_to_remove": [
+            "pydantic"
+          ],
+          "symbols_to_replace": {
+            "BaseModel": "m.BaseModel",
+            "ConfigDict": "m.ConfigDict",
+            "Field": "u.Field",
+            "PrivateAttr": "u.PrivateAttr",
+            "TypeAdapter": "m.TypeAdapter",
+            "computed_field": "u.computed_field",
+            "field_validator": "u.field_validator",
+            "model_validator": "u.model_validator"
+          },
+          "runtime_aliases": [
+            "m",
+            "u"
+          ],
+          "blocked_aliases": []
+        },
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-046",
+      "description": "Canonical facade files (constants/models/protocols/typings/utilities) must import only c/m/p/t/u aliases from parent \u2014 never bare FlextXxx concrete classes (unless Pattern-B peer). Violates AGENTS.md \u00a74 (Import Law).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "import_blacklist"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "remove_blacklisted_import",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-047",
+      "description": "Facade-class first base must be an alias (c/m/p/t/u) or a Pattern-B peer FlextXxx \u2014 never an arbitrary Flext* concrete class. Violates AGENTS.md \u00a72.2 (One Facade Rule + Pattern-A/B).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "mro_shape"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_facade_base_order",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-048",
+      "description": "Inner namespace class with empty body that re-inherits from outer (e.g. 'class Cli(FlextCliTypes): pass') is redundant \u2014 parent already exposes the namespace. Violates AGENTS.md \u00a72.3 (Single Root Nested Namespace).",
+      "severity": "MEDIUM",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "mro_shape"
+      },
+      "fix_action": {
+        "kind": "transformer",
+        "target": "mro_remover",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-049",
+      "description": "Multi-parent facade class must list canonical alias (c/m/p/t/u) as FIRST base \u2014 required for C3 MRO linearization. Violates AGENTS.md \u00a72.2 (Pattern-B facade ordering).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "mro_shape"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "reorder_facade_bases",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-050",
+      "description": "Canonical facade module must rebind its alias at end-of-file (e.g. 't = FlextXxxTypes') \u2014 establishes the public contract surface. Violates AGENTS.md \u00a74 (Aliases \u2014 assigned once at module bottom).",
+      "severity": "MEDIUM",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "alias_rebind"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "add_alias_rebind",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-051",
+      "description": "Canonical facade files must NOT import c/m/p/t/u from their own package \u2014 must import from the parent MRO package to avoid lazy-load circular initialization. Violates AGENTS.md \u00a74 (No Same-Project Cross-Facade Runtime Imports).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "alias_rebind"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "remove_local_alias_import",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-052",
+      "description": "Sibling _models/* imports referenced only in annotations must live under 'if TYPE_CHECKING:' to avoid circular runtime imports. Violates AGENTS.md \u00a74 (Circular Import Resolution \u2014 TYPE_CHECKING for annotation-only siblings).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "alias_rebind"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "move_to_type_checking",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-053",
+      "description": "Multi-parent utilities.py facade must list explicit PARENT class as first base (not alias 'u') to allow pyrefly to resolve the MRO when 'u' is rebound to the local class. Violates AGENTS.md \u00a72.3 (MRO Cascade).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "mro_shape"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_utility_parent_base",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-054",
+      "description": "Deprecated test namespace path '.Core.Tests' is forbidden in tests/examples/scripts. Use flat c/p/t/m/u.Tests.* access only.",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "deprecated_syntax"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "remove_core_tests_path",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-055",
+      "description": "Wrapper alias imports in tests/examples/scripts must come from wrapper root package (`from tests|examples|scripts import ...`). Submodule alias imports are forbidden outside `__init__.py`.",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "deprecated_syntax"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "fix_wrapper_alias_import",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-064",
+      "description": "Long facade class name import must use the canonical short alias (e.g. `from flext_core import FlextConstants` \u2192 `from flext_core import c`). Violates AGENTS.md \u00a74 (Import Law).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "compatibility_alias"
+      },
+      "fix_action": {
+        "kind": "rope",
+        "target": "rewrite_compatibility_alias",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-066",
+      "description": "Module-level CapWords alias (`LegacyName = NewName` rename shim or nested-class hoist `X = Facade.Domain.X`) is a backwards-compat alias. Violates AGENTS.md \u00a72.4 (No Backward-Compat Aliases).",
+      "severity": "MEDIUM",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "module_alias"
+      },
+      "fix_action": {
+        "kind": "rope",
+        "target": "rewrite_compatibility_alias",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-067",
+      "description": "Module declares more than one top-level class (Warning subclasses exempt \u2014 filterwarnings needs module-level categories). Violates AGENTS.md \u00a73.1 / NS-000 (one class per module).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "loc_cap"
+      },
+      "fix_action": {
+        "kind": "rope",
+        "target": "one_class_per_module",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-068",
+      "description": "Import of a class defined in a private facade tree (_constants/_models/_protocols/_typings/_utilities) from a non-facade, non-private, nested module \u2014 or from ANY module of another project \u2014 bypasses the canonical facades. Violates AGENTS.md \u00a74 (Import Law).",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "import_blacklist"
+      },
+      "fix_action": {
+        "kind": "rope",
+        "target": "rewrite_private_import_bypass",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-069",
+      "description": "Namespace nesting deeper than facade\u2192domain\u2192leaf (class-in-class-in-class; Enum leaves exempt) breaks the flat single-nesting law. Violates AGENTS.md \u00a72.3.",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "class_placement"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "deep_namespace_refactor",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-070",
+      "description": "External library imported outside its owning abstraction project (ENFORCEMENT_LIBRARY_OWNERS SSOT: pydantic/structlog/dependency_injector\u2192flext-core, rich/click\u2192flext-cli, ldap3\u2192flext-ldap, singer_sdk\u2192flext-meltano, sqlalchemy/oracledb\u2192flext-db-oracle, grpc\u2192flext-grpc, fastapi\u2192flext-web, httpx\u2192flext-api, rope\u2192flext-infra). Violates AGENTS.md \u00a72.7.",
+      "severity": "HIGH",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "library_import"
+      },
+      "fix_action": {
+        "kind": "rope",
+        "target": "rewrite_library_abstraction",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-079",
+      "description": "ClassVar constant declared outside a _constants module; move to the canonical constants surface and re-export via c.*.",
+      "severity": "MEDIUM",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "classvar_constant"
+      },
+      "fix_action": {
+        "kind": "rope",
+        "target": "classvar_relocation",
+        "params": {},
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-071",
+      "description": "Function parameter count exceeds FLEXT threshold; decompose or use a domain context object.",
+      "severity": "MEDIUM",
+      "source_kind": "beartype",
+      "source": {
+        "kind": "beartype",
+        "predicate_kind": "method_shape"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "decompose_function_parameters",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-core",
+      "survivor_engine": "beartype-runtime",
+      "cutover_epic": "EC"
+    },
+    {
+      "rule_id": "ENFORCE-072",
+      "description": "Function has too many return statements; prefer a single result path.",
+      "severity": "MEDIUM",
+      "source_kind": "code_smell",
+      "source": {
+        "kind": "code_smell",
+        "smell_tag": "smell_return_statements"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "reduce_return_statements",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "radon|qlty-non-complexity",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-073",
+      "description": "Function nesting depth exceeds FLEXT threshold; flatten with helpers.",
+      "severity": "MEDIUM",
+      "source_kind": "code_smell",
+      "source": {
+        "kind": "code_smell",
+        "smell_tag": "smell_nested_control_flow"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "flatten_nested_control_flow",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "radon|qlty-non-complexity",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-074",
+      "description": "Boolean-logic complexity exceeds FLEXT threshold; simplify or name predicates.",
+      "severity": "MEDIUM",
+      "source_kind": "code_smell",
+      "source": {
+        "kind": "code_smell",
+        "smell_tag": "smell_boolean_logic"
+      },
+      "fix_action": {
+        "kind": "gate",
+        "target": "smells",
+        "params": {
+          "smell_tag": "smell_boolean_logic"
+        },
+        "safe": true
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "radon|qlty-non-complexity",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-075",
+      "description": "Function cyclomatic complexity exceeds FLEXT threshold; decompose.",
+      "severity": "MEDIUM",
+      "source_kind": "code_smell",
+      "source": {
+        "kind": "code_smell",
+        "smell_tag": "smell_function_complexity"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "reduce_function_complexity",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "radon|qlty-non-complexity",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-076",
+      "description": "Module cyclomatic complexity exceeds FLEXT threshold; split the module.",
+      "severity": "MEDIUM",
+      "source_kind": "code_smell",
+      "source": {
+        "kind": "code_smell",
+        "smell_tag": "smell_file_complexity"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "split_complex_module",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "radon|qlty-non-complexity",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-077",
+      "description": "Identical code blocks detected across the workspace; extract shared helpers.",
+      "severity": "LOW",
+      "source_kind": "code_smell",
+      "source": {
+        "kind": "code_smell",
+        "smell_tag": "smell_identical_code"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "extract_identical_code_block",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "radon|qlty-non-complexity",
+      "cutover_epic": "E2"
+    },
+    {
+      "rule_id": "ENFORCE-078",
+      "description": "Similar code blocks detected across the workspace; refactor to shared abstractions.",
+      "severity": "LOW",
+      "source_kind": "code_smell",
+      "source": {
+        "kind": "code_smell",
+        "smell_tag": "smell_similar_code"
+      },
+      "fix_action": {
+        "kind": "manual",
+        "target": "extract_similar_code_abstraction",
+        "params": {},
+        "safe": false
+      },
+      "enabled": true,
+      "future_owner": "flext-infra",
+      "survivor_engine": "radon|qlty-non-complexity",
+      "cutover_epic": "E2"
+    }
+  ],
+  "delete_paths": {
+    "flext-core": [
+      "src/flext_core/_constants/_enforcement_catalog_rows_parts/",
+      "static catalog builder exports (u.build_canonical_catalog static path)",
+      "static source kinds: flext_infra_detector, flext_tests_validator, ruff, code_smell, skill_pointer",
+      "static-only warning categories"
+    ],
+    "flext-infra": [
+      "src/flext_infra/_enforcement/ (custom scanners after engine cutover)",
+      "src/flext_infra/refactor/namespace_enforcer*.py",
+      "src/flext_infra/refactor/declarative_enforcement.py",
+      "pytest_runner / pytest_diag / pytest_selector / _pytest_entry (move to flext-tests then delete)",
+      "rope pep695 monkeypatch after fork pin",
+      "pylint / pylintrc; qlty complexity overlap with radon"
+    ],
+    "flext-tests": [
+      "static TEST-* validators that migrate to infra test-policy",
+      "runtime imports of flext_infra implementation",
+      "stale tt documentation aliases"
+    ],
+    "members": [
+      "31 root flext-*/conftest.py bootstraps (delete after pytest11 early-load)",
+      "duplicated marker/settings/container hooks; keep domain fixtures only"
+    ]
+  },
+  "root_conftests": [
+    "flext-api/conftest.py",
+    "flext-auth/conftest.py",
+    "flext-cli/conftest.py",
+    "flext-core/conftest.py",
+    "flext-db-oracle/conftest.py",
+    "flext-dbt-ldap/conftest.py",
+    "flext-dbt-ldif/conftest.py",
+    "flext-dbt-oracle/conftest.py",
+    "flext-dbt-oracle-wms/conftest.py",
+    "flext-grpc/conftest.py",
+    "flext-infra/conftest.py",
+    "flext-ldap/conftest.py",
+    "flext-ldif/conftest.py",
+    "flext-meltano/conftest.py",
+    "flext-observability/conftest.py",
+    "flext-oracle-oic/conftest.py",
+    "flext-oracle-wms/conftest.py",
+    "flext-plugin/conftest.py",
+    "flext-quality/conftest.py",
+    "flext-tap-ldap/conftest.py",
+    "flext-tap-ldif/conftest.py",
+    "flext-tap-oracle/conftest.py",
+    "flext-tap-oracle-oic/conftest.py",
+    "flext-tap-oracle-wms/conftest.py",
+    "flext-target-ldap/conftest.py",
+    "flext-target-ldif/conftest.py",
+    "flext-target-oracle/conftest.py",
+    "flext-target-oracle-oic/conftest.py",
+    "flext-target-oracle-wms/conftest.py",
+    "flext-tests/conftest.py",
+    "flext-web/conftest.py"
+  ],
+  "related_beads": {
+    "parent": "mro-wkii",
+    "closed_folded_p3": "mro-wkii.4",
+    "existing_transition_task": "mro-dxrp",
+    "deferred_beartype_warnings": "mro-31mj",
+    "program": "mro-wshr",
+    "p0_epic": "mro-ylo0",
+    "t0_epic": "mro-hsiu",
+    "t0_operator_gate": "mro-hsiu.1"
+  },
+  "dependency_order": [
+    "P0.V -> T0.V -> E0.V",
+    "after E0: EC.1/EC.2, ET.1/ET.2, E1, E2 parallel on disjoint git roots",
+    "E2.V -> EC.3",
+    "E1.V + E2.V -> E4",
+    "E2.V -> E3",
+    "ET.2.V -> ET.2.C; E3.C + E4.C + ET.2.C -> E5",
+    "E5 strict/zero -> EC.4 STRICT",
+    "EC.C + ET.C + E5.C -> E6 -> V0 -> D0"
+  ],
+  "bd_graph_edge_lesson": "bd create --graph edges type=blocks use from_key=BLOCKED to_key=BLOCKER (same orientation as parent-child child->parent). Prefer bd dep <blocker> --blocks <blocked> after create. First P0 graph applied inverted edges; fixed with dep remove+re-add."
+}
