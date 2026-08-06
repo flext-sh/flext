@@ -2,7 +2,7 @@
 
 Gerado do dump da plataforma Semgrep (deployment `datacosmos`, 2026-08-06).
 
-Bead de rastreio: `mro-p57t.1`
+Bead: `mro-p57t.1`
 
 ## Resumo
 
@@ -17,70 +17,993 @@ Confiança: high 35, medium 0, low 17
 | `yaml.docker-compose.security.exposing-docker-socket-volume.exposing-docker-socket-volume` | 1 |
 | `package_managers.uv.uv-missing-dependency-cooldown.uv-missing-dependency-cooldown` | 1 |
 
+## Como usar
+
+Cada finding traz a **mensagem completa da regra** (o Semgrep descreve o problema e frequentemente o fix), o **código real** (linha `>>>`), classe de vulnerabilidade, CWE/OWASP.
+**Decisão**: `corrigir` / `falso-positivo` (`nosemgrep` ou `.semgrepignore` com justificativa) / `risco-aceito`. Priorizar high com confidence=high.
+
 ## Findings
 
-Coluna **Decisão** a preencher: `corrigir` / `falso-positivo` / `risco-aceito`.
+### 1 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:4`
 
-| # | sev | conf | regra | arquivo | linha | Decisão |
-|---|---|---|---|---|---|---|
-| 1 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 4 | |
-| 2 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 11 | |
-| 3 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 18 | |
-| 4 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 26 | |
-| 5 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 34 | |
-| 6 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 42 | |
-| 7 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 50 | |
-| 8 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 58 | |
-| 9 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 66 | |
-| 10 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 74 | |
-| 11 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 82 | |
-| 12 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 90 | |
-| 13 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 98 | |
-| 14 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 106 | |
-| 15 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 114 | |
-| 16 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 122 | |
-| 17 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 130 | |
-| 18 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 138 | |
-| 19 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 146 | |
-| 20 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 154 | |
-| 21 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 162 | |
-| 22 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 170 | |
-| 23 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 178 | |
-| 24 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 186 | |
-| 25 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 194 | |
-| 26 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 202 | |
-| 27 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 210 | |
-| 28 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 218 | |
-| 29 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 226 | |
-| 30 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 234 | |
-| 31 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 242 | |
-| 32 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 250 | |
-| 33 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 258 | |
-| 34 | medium | high | `dependabot-missing-cooldown` | `.github/dependabot.yml` | 266 | |
-| 35 | medium | low | `no-new-privileges` | `docker/docker-compose.db-oracle.yml` | 4 | |
-| 36 | medium | low | `writable-filesystem-service` | `docker/docker-compose.db-oracle.yml` | 4 | |
-| 37 | medium | low | `no-new-privileges` | `docker/docker-compose.db-oracle.yml` | 22 | |
-| 38 | medium | low | `writable-filesystem-service` | `docker/docker-compose.db-oracle.yml` | 22 | |
-| 39 | medium | low | `no-new-privileges` | `docker/docker-compose.flext-auth.yml` | 5 | |
-| 40 | medium | low | `writable-filesystem-service` | `docker/docker-compose.flext-auth.yml` | 5 | |
-| 41 | medium | low | `no-new-privileges` | `docker/docker-compose.flext-auth.yml` | 26 | |
-| 42 | medium | low | `writable-filesystem-service` | `docker/docker-compose.flext-auth.yml` | 26 | |
-| 43 | medium | low | `exposing-docker-socket-volume` | `docker/docker-compose.meltano-test.yml` | 8 | |
-| 44 | medium | low | `no-new-privileges` | `docker/docker-compose.meltano-test.yml` | 60 | |
-| 45 | medium | low | `writable-filesystem-service` | `docker/docker-compose.meltano-test.yml` | 60 | |
-| 46 | medium | low | `no-new-privileges` | `docker/docker-compose.meltano-test.yml` | 71 | |
-| 47 | medium | low | `writable-filesystem-service` | `docker/docker-compose.meltano-test.yml` | 71 | |
-| 48 | medium | low | `no-new-privileges` | `docker/docker-compose.meltano-test.yml` | 78 | |
-| 49 | medium | low | `writable-filesystem-service` | `docker/docker-compose.meltano-test.yml` | 78 | |
-| 50 | medium | low | `no-new-privileges` | `docker/docker-compose.tap-oracle-test.yml` | 4 | |
-| 51 | medium | low | `writable-filesystem-service` | `docker/docker-compose.tap-oracle-test.yml` | 4 | |
-| 52 | medium | high | `uv-missing-dependency-cooldown` | `pyproject.toml` | 2180 | |
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
 
-## Como triar
+```yaml
+        1  # Generated by `flext-infra codegen conform` for flext — DO NOT EDIT.
+        2  version: 2
+        3  updates:
+>>>     4    - package-ecosystem: github-actions
+        5      directory: /
+        6      schedule:
+        7        interval: weekly
+        8      open-pull-requests-limit: 5
+```
 
-1. Abrir `arquivo:linha` e seguir o fluxo até o sink.
-2. Classificar: **corrigir** (entrada externa alcança o sink), **falso-positivo** (registrar via `nosemgrep` ou `.semgrepignore` com justificativa), **risco-aceito** (com prazo de revisão).
-3. Priorizar findings high com confidence=high.
+**Decisão**: 
 
-Dados brutos: `~/semgrep-violations/by-repo/flext-sh__flext.json`
+### 2 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:11`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+        7        interval: weekly
+        8      open-pull-requests-limit: 5
+        9      labels: [dependencies, github-actions]
+       10  
+>>>    11    - package-ecosystem: devcontainers
+       12      directory: /
+       13      schedule:
+       14        interval: weekly
+       15      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 3 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:18`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+       14        interval: weekly
+       15      open-pull-requests-limit: 5
+       16      labels: [dependencies, devcontainers]
+       17  
+>>>    18    - package-ecosystem: pip
+       19      directory: /
+       20      schedule:
+       21        interval: weekly
+       22      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 4 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:26`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+       22      open-pull-requests-limit: 5
+       23      labels: [dependencies, python]
+       24  
+       25  
+>>>    26    - package-ecosystem: pip
+       27      directory: /flext-api
+       28      schedule:
+       29        interval: weekly
+       30      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 5 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:34`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+       30      open-pull-requests-limit: 5
+       31      labels: [dependencies, python]
+       32  
+       33  
+>>>    34    - package-ecosystem: pip
+       35      directory: /flext-auth
+       36      schedule:
+       37        interval: weekly
+       38      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 6 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:42`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+       38      open-pull-requests-limit: 5
+       39      labels: [dependencies, python]
+       40  
+       41  
+>>>    42    - package-ecosystem: pip
+       43      directory: /flext-cli
+       44      schedule:
+       45        interval: weekly
+       46      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 7 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:50`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+       46      open-pull-requests-limit: 5
+       47      labels: [dependencies, python]
+       48  
+       49  
+>>>    50    - package-ecosystem: pip
+       51      directory: /flext-core
+       52      schedule:
+       53        interval: weekly
+       54      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 8 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:58`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+       54      open-pull-requests-limit: 5
+       55      labels: [dependencies, python]
+       56  
+       57  
+>>>    58    - package-ecosystem: pip
+       59      directory: /flext-db-oracle
+       60      schedule:
+       61        interval: weekly
+       62      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 9 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:66`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+       62      open-pull-requests-limit: 5
+       63      labels: [dependencies, python]
+       64  
+       65  
+>>>    66    - package-ecosystem: pip
+       67      directory: /flext-dbt-ldap
+       68      schedule:
+       69        interval: weekly
+       70      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 10 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:74`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+       70      open-pull-requests-limit: 5
+       71      labels: [dependencies, python]
+       72  
+       73  
+>>>    74    - package-ecosystem: pip
+       75      directory: /flext-dbt-ldif
+       76      schedule:
+       77        interval: weekly
+       78      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 11 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:82`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+       78      open-pull-requests-limit: 5
+       79      labels: [dependencies, python]
+       80  
+       81  
+>>>    82    - package-ecosystem: pip
+       83      directory: /flext-dbt-oracle
+       84      schedule:
+       85        interval: weekly
+       86      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 12 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:90`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+       86      open-pull-requests-limit: 5
+       87      labels: [dependencies, python]
+       88  
+       89  
+>>>    90    - package-ecosystem: pip
+       91      directory: /flext-dbt-oracle-wms
+       92      schedule:
+       93        interval: weekly
+       94      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 13 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:98`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+       94      open-pull-requests-limit: 5
+       95      labels: [dependencies, python]
+       96  
+       97  
+>>>    98    - package-ecosystem: pip
+       99      directory: /flext-grpc
+      100      schedule:
+      101        interval: weekly
+      102      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 14 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:106`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      102      open-pull-requests-limit: 5
+      103      labels: [dependencies, python]
+      104  
+      105  
+>>>   106    - package-ecosystem: pip
+      107      directory: /flext-infra
+      108      schedule:
+      109        interval: weekly
+      110      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 15 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:114`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      110      open-pull-requests-limit: 5
+      111      labels: [dependencies, python]
+      112  
+      113  
+>>>   114    - package-ecosystem: pip
+      115      directory: /flext-ldap
+      116      schedule:
+      117        interval: weekly
+      118      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 16 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:122`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      118      open-pull-requests-limit: 5
+      119      labels: [dependencies, python]
+      120  
+      121  
+>>>   122    - package-ecosystem: pip
+      123      directory: /flext-ldif
+      124      schedule:
+      125        interval: weekly
+      126      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 17 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:130`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      126      open-pull-requests-limit: 5
+      127      labels: [dependencies, python]
+      128  
+      129  
+>>>   130    - package-ecosystem: pip
+      131      directory: /flext-meltano
+      132      schedule:
+      133        interval: weekly
+      134      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 18 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:138`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      134      open-pull-requests-limit: 5
+      135      labels: [dependencies, python]
+      136  
+      137  
+>>>   138    - package-ecosystem: pip
+      139      directory: /flext-observability
+      140      schedule:
+      141        interval: weekly
+      142      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 19 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:146`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      142      open-pull-requests-limit: 5
+      143      labels: [dependencies, python]
+      144  
+      145  
+>>>   146    - package-ecosystem: pip
+      147      directory: /flext-oracle-oic
+      148      schedule:
+      149        interval: weekly
+      150      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 20 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:154`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      150      open-pull-requests-limit: 5
+      151      labels: [dependencies, python]
+      152  
+      153  
+>>>   154    - package-ecosystem: pip
+      155      directory: /flext-oracle-wms
+      156      schedule:
+      157        interval: weekly
+      158      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 21 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:162`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      158      open-pull-requests-limit: 5
+      159      labels: [dependencies, python]
+      160  
+      161  
+>>>   162    - package-ecosystem: pip
+      163      directory: /flext-plugin
+      164      schedule:
+      165        interval: weekly
+      166      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 22 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:170`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      166      open-pull-requests-limit: 5
+      167      labels: [dependencies, python]
+      168  
+      169  
+>>>   170    - package-ecosystem: pip
+      171      directory: /flext-quality
+      172      schedule:
+      173        interval: weekly
+      174      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 23 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:178`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      174      open-pull-requests-limit: 5
+      175      labels: [dependencies, python]
+      176  
+      177  
+>>>   178    - package-ecosystem: pip
+      179      directory: /flext-tap-ldap
+      180      schedule:
+      181        interval: weekly
+      182      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 24 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:186`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      182      open-pull-requests-limit: 5
+      183      labels: [dependencies, python]
+      184  
+      185  
+>>>   186    - package-ecosystem: pip
+      187      directory: /flext-tap-ldif
+      188      schedule:
+      189        interval: weekly
+      190      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 25 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:194`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      190      open-pull-requests-limit: 5
+      191      labels: [dependencies, python]
+      192  
+      193  
+>>>   194    - package-ecosystem: pip
+      195      directory: /flext-tap-oracle
+      196      schedule:
+      197        interval: weekly
+      198      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 26 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:202`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      198      open-pull-requests-limit: 5
+      199      labels: [dependencies, python]
+      200  
+      201  
+>>>   202    - package-ecosystem: pip
+      203      directory: /flext-tap-oracle-oic
+      204      schedule:
+      205        interval: weekly
+      206      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 27 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:210`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      206      open-pull-requests-limit: 5
+      207      labels: [dependencies, python]
+      208  
+      209  
+>>>   210    - package-ecosystem: pip
+      211      directory: /flext-tap-oracle-wms
+      212      schedule:
+      213        interval: weekly
+      214      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 28 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:218`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      214      open-pull-requests-limit: 5
+      215      labels: [dependencies, python]
+      216  
+      217  
+>>>   218    - package-ecosystem: pip
+      219      directory: /flext-target-ldap
+      220      schedule:
+      221        interval: weekly
+      222      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 29 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:226`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      222      open-pull-requests-limit: 5
+      223      labels: [dependencies, python]
+      224  
+      225  
+>>>   226    - package-ecosystem: pip
+      227      directory: /flext-target-ldif
+      228      schedule:
+      229        interval: weekly
+      230      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 30 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:234`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      230      open-pull-requests-limit: 5
+      231      labels: [dependencies, python]
+      232  
+      233  
+>>>   234    - package-ecosystem: pip
+      235      directory: /flext-target-oracle
+      236      schedule:
+      237        interval: weekly
+      238      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 31 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:242`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      238      open-pull-requests-limit: 5
+      239      labels: [dependencies, python]
+      240  
+      241  
+>>>   242    - package-ecosystem: pip
+      243      directory: /flext-target-oracle-oic
+      244      schedule:
+      245        interval: weekly
+      246      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 32 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:250`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      246      open-pull-requests-limit: 5
+      247      labels: [dependencies, python]
+      248  
+      249  
+>>>   250    - package-ecosystem: pip
+      251      directory: /flext-target-oracle-wms
+      252      schedule:
+      253        interval: weekly
+      254      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 33 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:258`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      254      open-pull-requests-limit: 5
+      255      labels: [dependencies, python]
+      256  
+      257  
+>>>   258    - package-ecosystem: pip
+      259      directory: /flext-tests
+      260      schedule:
+      261        interval: weekly
+      262      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 34 · 🟡 MEDIUM · conf high · `package_managers.dependabot.dependabot-missing-cooldown.dependabot-missing-cooldown`
+**Classe**: Insecure Configuration · **Local**: `.github/dependabot.yml:266`
+
+> This Dependabot configuration does not set a cooldown period. Newly published packages can be malicious or unstable. Add a `cooldown` block with `default-days: 7` to each `package-ecosystem` entry under `updates` to wait 7 days before proposing updates to newly published package versions. Reference: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-option
+
+```yaml
+      262      open-pull-requests-limit: 5
+      263      labels: [dependencies, python]
+      264  
+      265  
+>>>   266    - package-ecosystem: pip
+      267      directory: /flext-web
+      268      schedule:
+      269        interval: weekly
+      270      open-pull-requests-limit: 5
+```
+
+**Decisão**: 
+
+### 35 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.no-new-privileges.no-new-privileges`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.db-oracle.yml:4`
+
+> Service 'oracle-xe' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
+
+```yaml
+        1  version: "3.8"
+        2  
+        3  services:
+>>>     4    oracle-xe:
+        5      image: gvenzl/oracle-xe:21-slim
+        6      container_name: flext-oracle-test
+        7      ports:
+        8        - "1521:1521"
+```
+
+**Decisão**: 
+
+### 36 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.db-oracle.yml:4`
+
+> Service 'oracle-xe' is running with a writable root filesystem. This may allow malicious applications to download and run additional payloads, or modify container files. If an application inside a container has to save something temporarily consider using a tmpfs. Add 'read_only: true' to this service to prevent this.
+
+```yaml
+        1  version: "3.8"
+        2  
+        3  services:
+>>>     4    oracle-xe:
+        5      image: gvenzl/oracle-xe:21-slim
+        6      container_name: flext-oracle-test
+        7      ports:
+        8        - "1521:1521"
+```
+
+**Decisão**: 
+
+### 37 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.no-new-privileges.no-new-privileges`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.db-oracle.yml:22`
+
+> Service 'oracle-setup' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
+
+```yaml
+       18        retries: 5
+       19      networks:
+       20        - oracle-net
+       21  
+>>>    22    oracle-setup:
+       23      image: gvenzl/oracle-xe:21-slim
+       24      container_name: flext-oracle-setup
+       25      depends_on:
+       26        oracle-xe:
+```
+
+**Decisão**: 
+
+### 38 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.db-oracle.yml:22`
+
+> Service 'oracle-setup' is running with a writable root filesystem. This may allow malicious applications to download and run additional payloads, or modify container files. If an application inside a container has to save something temporarily consider using a tmpfs. Add 'read_only: true' to this service to prevent this.
+
+```yaml
+       18        retries: 5
+       19      networks:
+       20        - oracle-net
+       21  
+>>>    22    oracle-setup:
+       23      image: gvenzl/oracle-xe:21-slim
+       24      container_name: flext-oracle-setup
+       25      depends_on:
+       26        oracle-xe:
+```
+
+**Decisão**: 
+
+### 39 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.no-new-privileges.no-new-privileges`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.flext-auth.yml:5`
+
+> Service 'postgres' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
+
+```yaml
+        1  version: "3.8"
+        2  
+        3  services:
+        4    # PostgreSQL Database
+>>>     5    postgres:
+        6      image: postgres:15
+        7      container_name: flext_auth_db
+        8      environment:
+        9        POSTGRES_DB: flext_auth
+```
+
+**Decisão**: 
+
+### 40 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.flext-auth.yml:5`
+
+> Service 'postgres' is running with a writable root filesystem. This may allow malicious applications to download and run additional payloads, or modify container files. If an application inside a container has to save something temporarily consider using a tmpfs. Add 'read_only: true' to this service to prevent this.
+
+```yaml
+        1  version: "3.8"
+        2  
+        3  services:
+        4    # PostgreSQL Database
+>>>     5    postgres:
+        6      image: postgres:15
+        7      container_name: flext_auth_db
+        8      environment:
+        9        POSTGRES_DB: flext_auth
+```
+
+**Decisão**: 
+
+### 41 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.no-new-privileges.no-new-privileges`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.flext-auth.yml:26`
+
+> Service 'redis' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
+
+```yaml
+       22        timeout: 5s
+       23        retries: 5
+       24  
+       25    # Redis (for caching and sessions)
+>>>    26    redis:
+       27      image: redis:7-alpine
+       28      container_name: flext_auth_redis
+       29      ports:
+       30        - "6379:6379"
+```
+
+**Decisão**: 
+
+### 42 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.flext-auth.yml:26`
+
+> Service 'redis' is running with a writable root filesystem. This may allow malicious applications to download and run additional payloads, or modify container files. If an application inside a container has to save something temporarily consider using a tmpfs. Add 'read_only: true' to this service to prevent this.
+
+```yaml
+       22        timeout: 5s
+       23        retries: 5
+       24  
+       25    # Redis (for caching and sessions)
+>>>    26    redis:
+       27      image: redis:7-alpine
+       28      container_name: flext_auth_redis
+       29      ports:
+       30        - "6379:6379"
+```
+
+**Decisão**: 
+
+### 43 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.exposing-docker-socket-volume.exposing-docker-socket-volume`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.meltano-test.yml:8`
+
+> Exposing host's Docker socket to containers via a volume. The owner of this socket is root. Giving someone access to it is equivalent to giving unrestricted root access to your host. Remove 'docker.sock' from volumes to prevent this.
+
+```yaml
+        4    flext-meltano-test:
+        5      build:
+        6        context: .
+        7        dockerfile: Dockerfile.test
+>>>     8      volumes:
+        9        - .:/app
+       10        - /var/run/docker.sock:/var/run/docker.sock # Enable Docker-in-Docker
+       11      working_dir: /app
+       12      environment:
+```
+
+**Decisão**: 
+
+### 44 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.no-new-privileges.no-new-privileges`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.meltano-test.yml:60`
+
+> Service 'postgres-test' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
+
+```yaml
+       56        - postgres-test
+       57        - redis-test
+       58        - oracle-test
+       59  
+>>>    60    postgres-test:
+       61      image: postgres:17
+       62      environment:
+       63        POSTGRES_DB: flext_test
+       64        POSTGRES_USER: flext_test
+```
+
+**Decisão**: 
+
+### 45 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.meltano-test.yml:60`
+
+> Service 'postgres-test' is running with a writable root filesystem. This may allow malicious applications to download and run additional payloads, or modify container files. If an application inside a container has to save something temporarily consider using a tmpfs. Add 'read_only: true' to this service to prevent this.
+
+```yaml
+       56        - postgres-test
+       57        - redis-test
+       58        - oracle-test
+       59  
+>>>    60    postgres-test:
+       61      image: postgres:17
+       62      environment:
+       63        POSTGRES_DB: flext_test
+       64        POSTGRES_USER: flext_test
+```
+
+**Decisão**: 
+
+### 46 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.no-new-privileges.no-new-privileges`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.meltano-test.yml:71`
+
+> Service 'redis-test' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
+
+```yaml
+       67        - "5433:5432"
+       68      volumes:
+       69        - postgres_test_data:/var/lib/postgresql/data
+       70  
+>>>    71    redis-test:
+       72      image: redis:7-alpine
+       73      ports:
+       74        - "6380:6379"
+       75      volumes:
+```
+
+**Decisão**: 
+
+### 47 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.meltano-test.yml:71`
+
+> Service 'redis-test' is running with a writable root filesystem. This may allow malicious applications to download and run additional payloads, or modify container files. If an application inside a container has to save something temporarily consider using a tmpfs. Add 'read_only: true' to this service to prevent this.
+
+```yaml
+       67        - "5433:5432"
+       68      volumes:
+       69        - postgres_test_data:/var/lib/postgresql/data
+       70  
+>>>    71    redis-test:
+       72      image: redis:7-alpine
+       73      ports:
+       74        - "6380:6379"
+       75      volumes:
+```
+
+**Decisão**: 
+
+### 48 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.no-new-privileges.no-new-privileges`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.meltano-test.yml:78`
+
+> Service 'oracle-test' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
+
+```yaml
+       74        - "6380:6379"
+       75      volumes:
+       76        - redis_test_data:/data
+       77  
+>>>    78    oracle-test:
+       79      image: gvenzl/oracle-xe:21-slim
+       80      container_name: flext-meltano-oracle-test
+       81      ports:
+       82        - "1522:1521" # Using different port to avoid conflicts
+```
+
+**Decisão**: 
+
+### 49 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.meltano-test.yml:78`
+
+> Service 'oracle-test' is running with a writable root filesystem. This may allow malicious applications to download and run additional payloads, or modify container files. If an application inside a container has to save something temporarily consider using a tmpfs. Add 'read_only: true' to this service to prevent this.
+
+```yaml
+       74        - "6380:6379"
+       75      volumes:
+       76        - redis_test_data:/data
+       77  
+>>>    78    oracle-test:
+       79      image: gvenzl/oracle-xe:21-slim
+       80      container_name: flext-meltano-oracle-test
+       81      ports:
+       82        - "1522:1521" # Using different port to avoid conflicts
+```
+
+**Decisão**: 
+
+### 50 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.no-new-privileges.no-new-privileges`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.tap-oracle-test.yml:4`
+
+> Service 'oracle-db' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.
+
+```yaml
+        1  version: "3.8"
+        2  
+        3  services:
+>>>     4    oracle-db:
+        5      image: gvenzl/oracle-xe:21.3.0-slim
+        6      environment:
+        7        ORACLE_PASSWORD: oracle123
+        8        ORACLE_DATABASE: TESTDB
+```
+
+**Decisão**: 
+
+### 51 · 🟡 MEDIUM · conf low · `yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service`
+**Classe**: Improper Authorization · **Local**: `docker/docker-compose.tap-oracle-test.yml:4`
+
+> Service 'oracle-db' is running with a writable root filesystem. This may allow malicious applications to download and run additional payloads, or modify container files. If an application inside a container has to save something temporarily consider using a tmpfs. Add 'read_only: true' to this service to prevent this.
+
+```yaml
+        1  version: "3.8"
+        2  
+        3  services:
+>>>     4    oracle-db:
+        5      image: gvenzl/oracle-xe:21.3.0-slim
+        6      environment:
+        7        ORACLE_PASSWORD: oracle123
+        8        ORACLE_DATABASE: TESTDB
+```
+
+**Decisão**: 
+
+### 52 · 🟡 MEDIUM · conf high · `package_managers.uv.uv-missing-dependency-cooldown.uv-missing-dependency-cooldown`
+**Classe**: Insecure Configuration · **Local**: `pyproject.toml:2180`
+
+> This pyproject.toml configures uv but does not set a dependency cooldown. Newly published packages can be malicious or unstable. Add `exclude-newer = "7 days"` under `[tool.uv]` to wait 7 days before resolving newly published package versions. Added in: 0.9.17 Reference: https://docs.astral.sh/uv/concepts/resolution/#dependency-cooldowns
+
+```toml
+     2176  all = true
+     2177  in_place = true
+     2178  sort_first = ["build-system", "dependency-groups", "project", "tool"]
+     2179  
+>>>  2180  [tool.uv]
+     2181  constraint-dependencies = ["transformers>=5.5.0", "cryptography>=50.0.0"]
+     2182  exclude-newer = "7 days"
+     2183  link-mode = "copy"
+     2184  
+```
+
+**Decisão**: 
 
