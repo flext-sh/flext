@@ -33,6 +33,7 @@ portal.
 - [ADR-011: Public make work lane saga](011-make-work-lane-saga.md) — _Accepted_
 - [ADR-012: Settings and config canonical pattern](012-settings-config-canonical-pattern.md) — _Accepted_
 - [ADR-013: Config SSOT migration plan](013-config-ssot-migration-plan.md) — _Accepted_
+- [ADR-014: Codemod governance — ast-grep + make mod + CRG as universal refactoring law](014-codemod-governance.md) — _Accepted_
 
 New ADRs should be added only when they represent a real architectural decision with an owning implementation path.
 

@@ -176,6 +176,15 @@ make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
   `flext-infra` via CLI/plugin only — never runtime import.
 - Full law: `.agents/skills/flext-law/SKILL.md`.
 
+## Codemod Governance (ADR-014)
+
+- ast-grep + `make mod` + CRG is the sole official refactoring method.
+- Codemod rules are package data (importlib.resources), not disk projections.
+- `make gen` does not project `ast-grep-rules/` to submodules.
+- Codemod bans are error gates in `make check`, not warnings.
+- Pre-commit and pre-push hooks are installed and enforced.
+- Zero compatibility shims: refactoring removes the old pattern completely.
+
 ## Conventions
 
 - Facet roots AUTO-GENERATED — edit `flext-infra`, then `make build WHAT=artifacts`.
