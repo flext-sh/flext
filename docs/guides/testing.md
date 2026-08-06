@@ -26,16 +26,18 @@ Use these directories when the project owns tests:
 ```bash
 make test PROJECT=flext-infra
 make test PROJECT=flext-infra MATCH=docs
-make test CI=Y PROJECT=flext-infra
+make test COV=Y PROJECT=flext-infra
 make test WHAT=cache-status PROJECT=flext-infra
 make test WHAT=cache-clear APPLY=Y PROJECT=flext-infra
 make check PROJECT=flext-infra
 make check
 ```
 
-`make test` always uses pytest-testmon. Without `CI=Y` it also writes
-`coverage.xml`. With `CI=Y` coverage is disabled. Use `WHAT=cache-*` to inspect,
-clear (`APPLY=Y`), or checkpoint the local `.testmondata` cache.
+`make test` always uses pytest-testmon without coverage (incremental selection).
+`COV=Y` disables testmon and runs a full-suite coverage measurement that writes
+`coverage.xml`. `CI=Y` forbids `make test` entirely (CI workflows own other
+gates). Use `WHAT=cache-*` to inspect, clear (`APPLY=Y`), or checkpoint the
+local `.testmondata` cache.
 
 ## Docs Pipeline Validation
 

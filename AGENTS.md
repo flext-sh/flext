@@ -188,14 +188,14 @@ make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 ## Learned User Preferences
 
 - Deduplicate via MRO / `m`; atomic consumer updates with direct uses and no compatibility shims; keep Ruff + Pyrefly clean after every edit.
-- Fix known failures; Make verbs must be idempotent; prefer standardized shape over transitional forms.
-- Land fixes in upstream `flext-infra` codegen/config overlays on the workspace line, not local workarounds.
+- Fix every error and warning at root cause — nothing is pre-existing or cosmetic; Make verbs must be idempotent; prefer standardized shape over transitional forms; prove green on canonical Make paths before closing beads.
+- Land fixes in upstream `flext-infra` codegen/config overlays on the workspace line, not local workarounds; consumers attach domain scripts only via `custom.mk` `_custom_*` hooks — Make public verbs stay a flext-infra monopoly.
 - Adopt, validate, commit, and push together; finish WIP through merge on the active DEV line (`0.12.0-dev`) unless the operator asks to promote to `main`; absorb fast-forward/merge fallout; remaining lint/test failures stay owned until green; do not invent blockers or re-confirm settled facts.
 - Do mutating fleet work in a `make work` worktree on a dedicated branch; keep the primary flext checkout on `0.12.0-dev` clean.
 - Prefer lean, structured AGENTS.md that cross-links skills and docs over long prose.
 - Keep pre-commit inline and enforceable before commit/push; do not skip hooks to land work.
-- Maximize flext-core/cli/infra/tests facades and declarative enforcers (tach, import-linter, rope, ast-grep) via SSOT rules — never reimplement local equivalents or custom validators.
-- In result internals, ban regressive lazy imports of concrete `FlextResult`; type against abstract `p.Result`.
+- Maximize flext-core/cli/infra/tests facades and declarative enforcers (tach, import-linter, rope, ast-grep) via SSOT rules — never reimplement local equivalents or custom validators; callers use public `c`/`t`/`p`/`m`/`u` and flext-infra facades only, never private modules directly.
+- In result internals, ban regressive lazy imports of concrete `FlextResult`; type against abstract `p.Result`; ban `r[None]` / bare `object` returns — `FlextResult` must fail closed on `None`.
 - Structure large programs as beads epic → sub-epics → per-phase enforcement and validation beads before any code phase.
 
 ## Learned Workspace Facts
@@ -204,13 +204,13 @@ make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 - Workspace and member checkouts stay on `0.12.0-dev` unless the operator names another line.
 - `flext-infra` defaults via project/workspace `config/` overlays — not forked defaults.
 - Provisioning adjusts and never destroys dirty work; no `git checkout` / `git reset` in setup or member sync.
-- `make gen WHAT=apply APPLY=Y` must be idempotent (following `make gen` reports no drift).
-- `flext-infra` codegen owns fleet CI and hook projections; remove duplicate custom CI and regenerate consumers from its config/templates.
-- CI policy: draft PRs run no CI; integration pushes (`dev`/`develop`/`0.12.0-dev`) run blocking ubuntu `CI` only; `ci-matrix` is projected only for workspace-root/standalone and defaults to `workflow_dispatch` only (`repository_policy_overlays.ci_matrix_auto_run: true` opts into push-to-`main` auto-run); workspace-member projects must not receive or auto-run `ci-matrix` (`codegen.yaml` profiles exclude them; `make gen WHAT=apply APPLY=Y` prunes orphan member copies); CodeQL default setup is a GitHub repo setting outside Jinja; other branches skip.
+- `make gen WHAT=apply APPLY=Y` must be idempotent (following `make gen` reports no drift); generated outputs must be path-pure (no absolute or cross-project relative paths except SSOT `.gitmodules` and Make fanout/workspace maintenance).
+- `flext-infra` codegen owns fleet CI and hook projections; remove duplicate custom CI and regenerate consumers from its config/templates; external FLEXT consumers stay green via the same Make monopoly plus their `config/` overlays.
+- CI policy: draft PRs run no CI; integration pushes (`dev`/`develop`/`0.12.0-dev`) run blocking ubuntu `CI` only; `CI=Y` skips cov and makes `make check` skip ruff/pyright/pyrefly (CI workflows already own those gates); `ci-matrix` is projected only for workspace-root/standalone, defaults to `workflow_dispatch` only, and must not run `make test`; workspace-member projects must not receive or auto-run `ci-matrix`; CodeQL is a GitHub repo setting outside Jinja.
 - Agent/skill surfaces on governed branches must be real files, not symlinks; `config.AiHub.paths.ai_hub` materializes them per its application config.
 - Project markdown docs centralize under `docs/` (root keeps only standardized files); `.agents/*` and `data/*` are special; external-docs follow `docs/references/` patterns; validate via `make check` markdown gates and flext-infra docs generation.
-- Lane lifecycle is the `make work` verb (beads, worktrees, gh/PR, gitflow) owned by flext-infra Makefile/codegen on `0.12.0-dev`; AI Hub consumes the same surface without duplicating gitflow.
-- Default `make test` is testmon-incremental fleet-wide; coverage stays out of default CI (`CI=Y` skips cov); GitHub Actions testmon cache warms until green, then renews only on success within quota.
+- Lane lifecycle is the `make work` verb (beads, worktrees, gh/PR, gitflow) owned by flext-infra on `0.12.0-dev`; every maintained lane runs `make setup`; lane `.venv` is a symlink to the primary shared `.venv` (never a second uv sync target); AI Hub consumes the same surface without duplicating gitflow.
+- Default `make test` is testmon-incremental fleet-wide; coverage stays out of default CI; tests that need external/docker services skip when unreachable, and `CI=Y` skips remote/docker tests entirely; GitHub Actions testmon cache warms until green, then renews only on success within quota.
 - Enforcement split: flext-core runtime (beartype rules), flext-infra static engines, flext-tests pytest automation harness (`tm`/`tv`/`tt`) for all projects.
 
 <!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->

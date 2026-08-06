@@ -14,7 +14,7 @@ def test_provider_owned_paths_exist() -> None:
     """Every provider-owned path resolves from the provider repository root."""
     root = Path(__file__).resolve().parents[2]
     manifest = tomllib.loads(
-        (root / ".agents" / "provider.toml").read_text(encoding=c.DEFAULT_ENCODING)
+        (root / ".agents" / "provider.toml").read_text(encoding="utf-8")
     )
     required_surfaces = manifest.get("required_surfaces")
     session_command = manifest.get("session_command")
@@ -39,11 +39,9 @@ def test_provider_marker_distribution_is_declared() -> None:
     """The provider activates from a real root project dependency."""
     root = Path(__file__).resolve().parents[2]
     manifest = tomllib.loads(
-        (root / ".agents" / "provider.toml").read_text(encoding=c.DEFAULT_ENCODING)
+        (root / ".agents" / "provider.toml").read_text(encoding="utf-8")
     )
-    pyproject = tomllib.loads(
-        (root / "pyproject.toml").read_text(encoding=c.DEFAULT_ENCODING)
-    )
+    pyproject = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
     marker_distribution = manifest.get("marker_distribution")
     project = pyproject.get("project")
     tm.that(isinstance(marker_distribution, str), eq=True)

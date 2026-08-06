@@ -2179,7 +2179,7 @@ sort_first = ["build-system", "dependency-groups", "project", "tool"]
 
 [tool.uv]
 constraint-dependencies = ["transformers>=5.5.0", "cryptography>=50.0.0"]
-exclude-newer = "14 days"
+exclude-newer = "7 days"
 link-mode = "copy"
 
 [[tool.uv.exclude-dependencies]]
@@ -2223,6 +2223,9 @@ dependencies = ["flext-tests"]
 
 [tool.uv.exclude-dependencies.package]
 name = "flext-infra"
+
+[tool.uv.exclude-newer-package]
+cryptography = false
 
 [tool.uv.sources.flext-api]
 workspace = true
@@ -2379,9 +2382,9 @@ dev = [
   "deptry>=0.25.1",
   "django-stubs>=6.0.7",
   "factory-boy>=3.3.3",
-  "faker>=40.36.0",
+  "faker>=40.32.0",
   "flext-tests",
-  "hypothesis>=6.164.0",
+  "hypothesis>=6.163.0",
   "isort>=8.0.1",
   "matplotlib-stubs>=0.3.11",
   "mkdocs>=1.6.1",
