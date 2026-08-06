@@ -17,7 +17,7 @@
 
 Quick-reference for daily development in the FLEXT monorepo. For the root
 engineering law, see `AGENTS.md`. For automated enforcement details, see
-`.agents/skills/coding-standards/SKILL.md` and child skills.
+`.agents/skills/flext-law/SKILL.md` and `.agents/skills/flext-context-routing/SKILL.md`.
 
 ## Required file header
 

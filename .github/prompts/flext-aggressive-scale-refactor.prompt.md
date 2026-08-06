@@ -23,17 +23,7 @@ Authoritative references, in mandatory load order:
 
 1. [AGENTS.md](../../AGENTS.md)
 2. [FLEXT Context Routing](../../.agents/skills/flext-context-routing/SKILL.md)
-3. Path-relevant `rules-*` skill for the touched files
-4. [FLEXT Agent Strict Rules](../../.agents/skills/flext-agent-strict-rules/SKILL.md)
-5. [FLEXT MRO Namespace Rules](../../.agents/skills/flext-mro-namespace-rules/SKILL.md)
-6. [FLEXT Import Rules](../../.agents/skills/flext-import-rules/SKILL.md)
-7. [FLEXT Constants Discipline](../../.agents/skills/flext-constants-discipline/SKILL.md)
-8. [Pydantic v2 Governance](../../.agents/skills/pydantic-v2-governance/SKILL.md)
-9. [Pydantic v2 Patterns](../../.agents/skills/pydantic-v2-patterns/SKILL.md)
-10. [FLEXT Strict Typing](../../.agents/skills/flext-strict-typing/SKILL.md)
-11. [FLEXT Patterns](../../.agents/skills/flext-patterns/SKILL.md)
-12. [Testing Patterns](../../.agents/skills/testing-patterns/SKILL.md)
-13. [FLEXT Law](../../.agents/skills/flext-law/SKILL.md) (composes `inviolable-rules` / `make-check` / `verification-loop` from agents_home)
+3. [FLEXT Law](../../.agents/skills/flext-law/SKILL.md) (composes `inviolable-rules` / `make-check` / `verification-loop` from agents_home)
 
 Mandatory operating rules:
 

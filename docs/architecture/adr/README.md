@@ -23,7 +23,6 @@ portal.
   Libraries](006-thin-domain-drivers-over-meltano-bases.md) — _Accepted_
 - [ADR-007: Performance optimization of worktree transactions and mutating CLI
   commands](007-worktree-transaction-performance.md) — _Accepted_
-- [ADR-0016: Public make work lane saga](016-make-work-lane-saga.md) — _Accepted_
 - [ADR-008: Neutral consumer boundaries for docs, Office bytes, and artifact
   metadata](008-neutral-consumer-boundaries.md) — _Accepted_
 - [ADR-009: Ecosystem coordination and reusable-library evaluation](009-ecosystem-coordination-and-library-evaluation.md)
@@ -31,6 +30,9 @@ portal.
 - [ADR-010: Unified project standardization (Make, scripts, tests, structure) via
   codegen](010-unified-project-standardization-via-codegen.md) — _Accepted (0.12
   compatibility subset; forward architecture on `0.20.0-dev`)_
+- [ADR-011: Public make work lane saga](011-make-work-lane-saga.md) — _Accepted_
+- [ADR-012: Settings and config canonical pattern](012-settings-config-canonical-pattern.md) — _Accepted_
+- [ADR-013: Config SSOT migration plan](013-config-ssot-migration-plan.md) — _Accepted_
 
 New ADRs should be added only when they represent a real architectural decision with an owning implementation path.
 
