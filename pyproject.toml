@@ -226,6 +226,7 @@ project-excludes = [
 ]
 project-includes = [
   "examples/**/*.py*",
+  "libs/**/*.py*",
   "scripts/**/*.py*",
   "src/**/*.py*",
   "tests/**/*.py*",
@@ -430,6 +431,7 @@ include = [
   "flext-web/examples",
   "flext-web/src",
   "flext-web/tests",
+  "libs",
   "scripts",
   "src",
   "tests",
