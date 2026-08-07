@@ -318,6 +318,8 @@ secrets.yml
 .beads-credential-key
 .worktrees/
 legado/
+.beads.gate.lock
+*.gate.lock
 
 # Beads ledger identity (workspace-root and standalone; see mro-9wv8)
 !.beads/metadata.json
