@@ -1061,7 +1061,7 @@ reportUnknownMemberType = "none"
 reportUnknownParameterType = "none"
 reportUnknownVariableType = "none"
 reportUnusedImport = "none"
-root = "flext-infra/src/flext_infra/_utilities/rope_patch"
+root = "flext-infra/src/flext_infra/_utilities/_rope"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = ["flext-infra/src"]
