@@ -21,7 +21,7 @@ class Node:
 To circumvent this issue, forward references can be used (by wrapping the annotation in quotes).
 
 In Python 3.7, [PEP 563] introduced the concept of _postponed evaluation of annotations_, meaning
-with the `from **future** import annotations
+with the `from __future__ import annotations
 
 from collections.abc import Mapping, Sequence` [future statement], type hints are stringified by default:
 

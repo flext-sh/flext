@@ -59,7 +59,7 @@ declared fields) and auto-loads `config/*.yaml`.
 ## 3. Canonical project SETTINGS module — `<project>/settings.py`
 
 ```python
-from **future** import annotations
+from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
@@ -103,7 +103,7 @@ Consumers: `from flext_x import settings` → `settings.debug` (root) and
 Identical shape, frozen + open, namespaced the same way:
 
 ```python
-from **future** import annotations
+from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
