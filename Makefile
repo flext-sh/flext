@@ -432,7 +432,11 @@ endef
 
 .PHONY: $(PUBLIC_VERBS) _builtin_help_usage _builtin_setup_environment _builtin_deps_check _builtin_deps_lock _builtin_deps_upgrade _builtin_build_artifacts _builtin_check_all _builtin_test_all _builtin_test_full _builtin_test_cache-status _builtin_test_cache-clear _builtin_test_cache-checkpoint _builtin_fmt_check _builtin_fmt_all _builtin_fmt_apply _builtin_fix_check _builtin_fix_all _builtin_fix_apply _builtin_run_default _builtin_status_diagnostics _builtin_docs_all _builtin_docs_generate _builtin_docs_fix _builtin_docs_audit _builtin_docs_build _builtin_docs_validate _builtin_clean_status _builtin_clean_generated _builtin_release_status _builtin_release_rel _builtin_gen_check _builtin_gen_all _builtin_gen_apply _builtin_work_start _builtin_work_status _builtin_work_land _builtin_work_finish _builtin_mod_check _builtin_mod_all _builtin_mod_apply
 
-$(filter-out setup,$(PUBLIC_VERBS)):
+# Every public verb except `setup` (which builds the environment it would
+# otherwise require) dispatches straight into its private builtin. The verbs
+# that used to round-trip through the Python serializer keep the environment
+# prerequisite that round-trip carried.
+$(filter-out setup,$(PUBLIC_VERBS)): _builtin_require_environment
 	$(call _dispatch,$@)
 
 
@@ -446,8 +450,11 @@ all: _builtin_require_environment
 	@$(SELF_MAKE) fmt APPLY=Y
 	@$(SELF_MAKE) fmt APPLY=Y
 	@$(SELF_MAKE) fix APPLY=Y
-	@$(SELF_MAKE) check
-	@$(SELF_MAKE) test
+	@# check/test are read-only verbs. Clear APPLY and the CI token so an
+	@# inherited APPLY=Y/CI=Y from the caller environment cannot reach them:
+	@# check rejects APPLY, and pytest is forbidden under the CI token.
+	@$(SELF_MAKE) check APPLY=
+	@env -u CI $(SELF_MAKE) test APPLY=
 
 .PHONY: all
 
