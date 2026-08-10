@@ -2314,7 +2314,7 @@ dev = [
 
 [[package]]
 name = "flext-core"
-version = "0.12.0"
+version = "0.12.0rc1"
 source = { editable = "flext-core" }
 dependencies = [
     { name = "beartype" },
