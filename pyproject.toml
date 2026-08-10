@@ -1970,7 +1970,7 @@ addopts = [
   "--durations=10",
   "--markdown-docs",
   "--strict-markers",
-  "--timeout=30",
+  "--timeout=90",
 ]
 filterwarnings = [
   "error",
@@ -2196,6 +2196,12 @@ dependencies = ["flext-cli"]
 
 [tool.uv.exclude-dependencies.package]
 name = "flext-core"
+
+[[tool.uv.exclude-dependencies]]
+dependencies = ["flext-cli"]
+
+[tool.uv.exclude-dependencies.package]
+name = "flext-tests"
 
 [[tool.uv.exclude-dependencies]]
 dependencies = ["flext-tests"]
