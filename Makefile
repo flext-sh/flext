@@ -809,7 +809,8 @@ _builtin_build_artifacts:
 
 # Read-only by contract in every profile: mutation belongs to `make fix
 # APPLY=Y` / `make fmt APPLY=Y`, which run BEFORE check. CI=Y
-# omits make.ci.check_gates_skip before orchestrating members (same contract as
+# runs the positive gate set make.ci.check_gates (RULING 2: rules not
+# skip-list) before orchestrating members (same contract as
 # standalone/member Makefiles and flext_infra check run). APPLY=Y is silently
 # ignored on read-only verbs (check, test, run, status, build, help, setup,
 # release) — it only activates mutation on mutation verbs.
@@ -819,19 +820,8 @@ _builtin_check_all: _builtin_require_environment
 	if [ -z "$$gates" ]; then gates="$$(printf '%s' '$(CHECK_GATES_DEFAULT)' | tr ' ' ',')"; fi; \
 	gates="$$(printf '%s' "$$gates" | tr -d '[:space:]')"; \
 	if [ "$(strip $(CI))" = "Y" ]; then \
-		filtered=""; \
-		for gate in $$(printf '%s' "$$gates" | tr ',' ' '); do \
-			skip=0; \
-			if [ "$$gate" = "lint" ]; then skip=1; fi; \
-			if [ "$$gate" = "format" ]; then skip=1; fi; \
-			if [ "$$gate" = "pyrefly" ]; then skip=1; fi; \
-			if [ "$$gate" = "markdown" ]; then skip=1; fi; \
-			if [ "$$skip" -eq 0 ]; then \
-				if [ -n "$$filtered" ]; then filtered="$$filtered,$$gate"; else filtered="$$gate"; fi; \
-			fi; \
-		done; \
-		gates="$$filtered"; \
-		printf 'INFO: CI=Y omits check gates: lint format pyrefly markdown\n'; \
+		gates="mypy,pyright,security,markdown,smells"; \
+		printf 'INFO: CI=Y runs check gates: mypy pyright security markdown smells\n'; \
 	fi; \
 	if [ -z "$$gates" ]; then \
 		printf 'ERROR: no check gates remain after CI=Y filtering\n' >&2; \
