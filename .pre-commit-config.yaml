@@ -15,8 +15,12 @@ repos:
       # ternary: only the exact value Y disables coverage and
       # narrows CHECK_GATES, so N keeps every gate and the
       # complete pytest+coverage run.
-      # Every shell also clears inherited Make selectors before invoking the
-      # declared step, so callers cannot override its WHAT or APPLY contract.
+      # Every hook step owns a shell because Git exports repository-local state,
+      # including GIT_INDEX_FILE during pre-commit. A member hook that delegates
+      # setup to its workspace root must clear those variables first or the root
+      # reads the member's temporary index and reports governed gitlinks missing.
+      # WHAT/MAKEFLAGS/APPLY are cleared in the same prefix so caller selectors
+      # and write intent cannot leak into an independently declared hook step.
       # A step declaring gates_skip (mro-ucxgl) narrows CHECK_GATES for the hook
       # context only: local `make check` keeps the full set.
 
@@ -24,7 +28,7 @@ repos:
         name: make setup
         language: system
         entry: >-
-          bash -eu -o pipefail -c 'unset $(git rev-parse --local-env-vars); unset WHAT MAKEFLAGS APPLY; CI=Y make setup'
+          bash -eu -o pipefail -c 'unset WHAT MAKEFLAGS APPLY; unset $(git rev-parse --local-env-vars); CI=Y make setup'
         pass_filenames: false
         always_run: true
         stages: [pre-commit]
@@ -33,7 +37,7 @@ repos:
         name: make gen APPLY=Y
         language: system
         entry: >-
-          bash -eu -o pipefail -c 'unset $(git rev-parse --local-env-vars); unset WHAT MAKEFLAGS APPLY; CI=Y make gen APPLY=Y'
+          bash -eu -o pipefail -c 'unset WHAT MAKEFLAGS APPLY; unset $(git rev-parse --local-env-vars); CI=Y make gen APPLY=Y'
         pass_filenames: false
         always_run: true
         stages: [pre-commit]
@@ -42,7 +46,7 @@ repos:
         name: make fmt APPLY=Y
         language: system
         entry: >-
-          bash -eu -o pipefail -c 'unset $(git rev-parse --local-env-vars); unset WHAT MAKEFLAGS APPLY; CI=Y make fmt APPLY=Y'
+          bash -eu -o pipefail -c 'unset WHAT MAKEFLAGS APPLY; unset $(git rev-parse --local-env-vars); CI=Y make fmt APPLY=Y'
         pass_filenames: false
         always_run: true
         stages: [pre-commit]
@@ -51,7 +55,7 @@ repos:
         name: make fix APPLY=Y
         language: system
         entry: >-
-          bash -eu -o pipefail -c 'unset $(git rev-parse --local-env-vars); unset WHAT MAKEFLAGS APPLY; CI=Y make fix APPLY=Y'
+          bash -eu -o pipefail -c 'unset WHAT MAKEFLAGS APPLY; unset $(git rev-parse --local-env-vars); CI=Y make fix APPLY=Y'
         pass_filenames: false
         always_run: true
         stages: [pre-commit]
@@ -60,7 +64,7 @@ repos:
         name: make check
         language: system
         entry: >-
-          bash -eu -o pipefail -c 'unset $(git rev-parse --local-env-vars); unset WHAT MAKEFLAGS APPLY; CI=Y make check'
+          bash -eu -o pipefail -c 'unset WHAT MAKEFLAGS APPLY; unset $(git rev-parse --local-env-vars); CI=Y make check'
         pass_filenames: false
         always_run: true
         stages: [pre-commit]
