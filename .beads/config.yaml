@@ -9,16 +9,20 @@
 # toolchain.beads.server (machine-wide shared Dolt server facts).
 # Owned ledger config: the workspace root owns this tracker; conform
 # initializes and verifies it against the pinned binary.
-issue-prefix: "flext"
-
+issue-prefix: 
 # Dolt shared-server connection (Gas Town central Dolt server on :3307,
 # managed by `gt dolt start`; GT_DOLT_PASSWORD supplies the password).
 # The `flext` database lives there; a repository-local server is never used.
 dolt:
-  mode: server
-  shared-server: true
-  host: 127.0.0.1
-  port: 3307
-  user: root
-  database: flext
-  auto-commit: "on"
+    mode: server
+    shared-server: true
+    host: 127.0.0.1
+    port: 3307
+    user: root
+    database: flext
+    auto-commit: "on"
+prefix: 
+dolt.idle-timeout: "0"
+export.auto: "false"
+routing:
+    mode: explicit

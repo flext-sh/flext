@@ -412,3 +412,12 @@ CLAUDE.local.md
 !config/
 !config/workspace.yaml
 !custom.mk
+
+# Gas Town (added by gt)
+.runtime/
+.claude/
+.opencode/
+.logs/
+state.json
+CLAUDE.md
+GEMINI.md
