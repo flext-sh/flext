@@ -3,6 +3,7 @@
 <!-- TOC START -->
 - [Conventions](#conventions)
 - [Public verbs (`PUBLIC_VERBS`)](#public-verbs-publicverbs)
+- [Gas Town CLI surface](#gas-town-cli-surface)
 - [`gen` (codegen SSOT)](#gen-codegen-ssot)
 - [Integration line (operator gate)](#integration-line-operator-gate)
 - [`work` saga](#work-saga)
@@ -11,6 +12,12 @@
 
 Canonical reference for the workspace Make control plane on `0.12.0-dev`.
 Discover live verbs with `make help` only. Do not invent retired verbs.
+
+The Gas Town CLI (`gt`) is the worker dispatch surface. See the
+[worker lane contract](../../ways-of-working/worker-lane-contract.md#6-gas-town-cli-surface)
+for the full `gt` command reference. The Make verbs below are the operator
+control plane; `gt` commands are the worker execution surface — complementary,
+not interchangeable.
 
 ## Conventions
 
@@ -79,6 +86,15 @@ On a workspace-root Makefile, when `PROJECT` names a `WORKSPACE_MEMBERS` entry a
 | `status` | no | Branch / worktree / head / PR for the bead |
 | `land` | yes (`APPLY=Y`) | Sync registered lane to integration base, push head, open (or reuse open) PR; does not merge |
 | `finish` | yes (`APPLY=Y`) | Close lane after merge |
+
+Workers use the Gas Town CLI for the same lifecycle:
+
+| Make verb | Gas Town CLI | Notes |
+| --- | --- | --- |
+| `make work WHAT=start` | `gt sling <bead> <rig>` | Dispatch + spawn polecat |
+| `make work WHAT=status` | `gt hook` or `gt work` | Show hook status |
+| `make work WHAT=land` | `gt done` | Submit to merge queue |
+| `make work WHAT=finish` | `gt done` | Same — refinery closes lane after merge |
 
 ## Quick recipes
 
