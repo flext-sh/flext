@@ -92,11 +92,32 @@ Done means all of the following:
 - Nothing reaches `0.12.0-dev` except through the lead's `origin/0.12.0-dev` merge after the
   whole fleet is green.
 
-## 6. Coordination protocol
+## 6. Gas Town CLI surface
 
-Talk only through `team_send_message`. Report to the lead, then go idle;
-idle-after-report is correct. When blocked, message the lead the exact blocker
-and stop. Do not wander to other beads.
+The Make verbs (`make work`, `make check`, `make test`) are the operator surface.
+Workers use the Gas Town CLI for lane dispatch, tracking, and completion:
+
+| Intent | Command | Notes |
+|--------|---------|-------|
+| Start work on a bead | `gt sling <bead> <rig>` | Hooks + spawns; auto-creates convoy |
+| Attach without spawning | `gt hook <bead>` or `gt work <bead>` | Just attaches to hook |
+| Check hook status | `gt hook` or `gt work` | Shows current assignment |
+| Submit and exit | `gt done` | Pushes branch, submits MR, exits session |
+| Check convoy progress | `gt convoy status <id>` | Batch tracking across rigs |
+| Check ready work | `gt ready` | Unblocked work across town |
+| Hand off to fresh session | `gt handoff <bead>` | Hooks + restarts with fresh context |
+| Restore context | `gt prime` | Loads role context after compaction |
+| Message another worker | `gt nudge <target> "msg"` | Ephemeral, no Dolt cost |
+| Durable message | `gt mail send <rig>/<role> -s "subj" -m "msg"` | Persistent bead record |
+
+`gt work` is an alias for `gt hook`; there is no separate `gt work` command group.
+The Make `work` verb (`make work WHAT=start|land|finish|status`) and the Gas Town
+CLI (`gt sling`, `gt done`, `gt hook`) are complementary surfaces, not substitutes.
+
+## 7. Coordination protocol
+
+Talk only through `gt nudge` (ephemeral) or `gt mail send` (durable). Report to the lead, then go idle;
+idle-after-report is correct. When blocked, nudge the lead the exact blocker and stop. Do not wander to other beads.
 
 ## 7. Anti-patterns that burned us
 
