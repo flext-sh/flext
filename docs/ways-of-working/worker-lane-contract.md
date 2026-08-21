@@ -7,12 +7,13 @@
 - [3. Cooperative git](#3-cooperative-git)
 - [4. Beads evidence only](#4-beads-evidence-only)
 - [5. Definition of done](#5-definition-of-done)
-- [6. Coordination protocol](#6-coordination-protocol)
-- [7. Anti-patterns that burned us](#7-anti-patterns-that-burned-us)
-- [8. Three-boundary validation contract](#8-three-boundary-validation-contract)
-  - [8.1 Final worker lane](#81-final-worker-lane)
-  - [8.2 Updated worker lane before merge](#82-updated-worker-lane-before-merge)
-  - [8.3 Original target after integration](#83-original-target-after-integration)
+- [6. Gas Town CLI surface](#6-gas-town-cli-surface)
+- [7. Coordination protocol](#7-coordination-protocol)
+- [8. Anti-patterns that burned us](#8-anti-patterns-that-burned-us)
+- [9. Three-boundary validation contract](#9-three-boundary-validation-contract)
+  - [9.1 Final worker lane](#91-final-worker-lane)
+  - [9.2 Updated worker lane before merge](#92-updated-worker-lane-before-merge)
+  - [9.3 Original target after integration](#93-original-target-after-integration)
 - [Integration line](#integration-line)
 <!-- TOC END -->
 
@@ -92,13 +93,34 @@ Done means all of the following:
 - Nothing reaches `0.12.0-dev` except through the lead's `origin/0.12.0-dev` merge after the
   whole fleet is green.
 
-## 6. Coordination protocol
+## 6. Gas Town CLI surface
 
-Talk only through `team_send_message`. Report to the lead, then go idle;
-idle-after-report is correct. When blocked, message the lead the exact blocker
-and stop. Do not wander to other beads.
+The Make verbs (`make work`, `make check`, `make test`) are the operator surface.
+Workers use the Gas Town CLI for lane dispatch, tracking, and completion:
 
-## 7. Anti-patterns that burned us
+| Intent | Command | Notes |
+|--------|---------|-------|
+| Start work on a bead | `gt sling <bead> <rig>` | Hooks + spawns; auto-creates convoy |
+| Attach without spawning | `gt hook <bead>` or `gt work <bead>` | Just attaches to hook |
+| Check hook status | `gt hook` or `gt work` | Shows current assignment |
+| Submit and exit | `gt done` | Pushes branch, submits MR, exits session |
+| Check convoy progress | `gt convoy status <id>` | Batch tracking across rigs |
+| Check ready work | `gt ready` | Unblocked work across town |
+| Hand off to fresh session | `gt handoff <bead>` | Hooks + restarts with fresh context |
+| Restore context | `gt prime` | Loads role context after compaction |
+| Message another worker | `gt nudge <target> "msg"` | Ephemeral, no Dolt cost |
+| Durable message | `gt mail send <rig>/<role> -s "subj" -m "msg"` | Persistent bead record |
+
+`gt work` is an alias for `gt hook`; there is no separate `gt work` command group.
+The Make `work` verb (`make work WHAT=start|land|finish|status`) and the Gas Town
+CLI (`gt sling`, `gt done`, `gt hook`) are complementary surfaces, not substitutes.
+
+## 7. Coordination protocol
+
+Talk only through `gt nudge` (ephemeral) or `gt mail send` (durable). Report to the lead, then go idle;
+idle-after-report is correct. When blocked, nudge the lead the exact blocker and stop. Do not wander to other beads.
+
+## 8. Anti-patterns that burned us
 
 Do not repeat these:
 
@@ -108,7 +130,7 @@ Do not repeat these:
 - `git add -A` commits sweeping foreign WIP.
 - Treating idle-after-report as failure.
 
-## 8. Three-boundary validation contract
+## 9. Three-boundary validation contract
 
 Any edit or automated adjustment — sync, codegen round-trip, auto-fix, or
 upstream merge — is a code change. Keep automated corrections atomic within the
@@ -124,19 +146,19 @@ The following fresh evidence is mandatory at every boundary:
 - real public-surface QA for the changed behavior; and
 - generator/consumer idempotence when generated outputs are involved.
 
-### 8.1 Final worker lane
+### 9.1 Final worker lane
 
 After the final lane edit or automated adjustment, the worker runs the complete
 boundary above and records exact commands, cwd, exit codes, and decisive output.
 
-### 8.2 Updated worker lane before merge
+### 9.2 Updated worker lane before merge
 
 Before reporting `READY_FOR_REVIEW`, the worker must non-destructively merge the
 latest `origin/0.12.0-dev` into the lane, resolve any resulting issues without
 discarding WIP, and rerun the complete boundary above. An upstream merge is
 absorbed only after this lane-context validation passes.
 
-### 8.3 Original target after integration
+### 9.3 Original target after integration
 
 After the lead/orchestrator integrates the lane into the original target, the
 orchestrator reruns the complete boundary on that target and performs the real

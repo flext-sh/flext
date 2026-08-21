@@ -36,4 +36,4 @@ New ADRs should be added only when they represent a real architectural decision 
 
 ## Make work lane saga
 
-Public lane lifecycle is `make work WHAT=start|status|land|finish` (flext-infra `FlextInfraWorkService`). Worktree add/update/remove remains an internal engine only. Operator guide: [make-commands.md](../../guides/make-commands.md#work-saga).
+Public lane lifecycle is `make work WHAT=start|status|land|finish` (flext-infra `FlextInfraWorkService`). Workers dispatch via `gt sling`/`gt done`/`gt hook`. Worktree add/update/remove remains an internal engine only. Operator guide: [make-commands.md](../../guides/make-commands.md#work-saga). Worker contract: [worker-lane-contract.md](../../ways-of-working/worker-lane-contract.md#6-gas-town-cli-surface).
