@@ -99,6 +99,10 @@ We will standardize the workspace layout for:
 
 The baseline applies to FLEXT platform packages, domain packages, integrations, and future FLEXT packages.
 
+Workspace execution uses one lifecycle owner: Gas Town. Make remains the
+generated build, generation, validation, and release control plane. It does not
+own worker lanes, worktrees, pull-request submission, or handoff.
+
 ## Consequences
 
 ### Positive Consequences

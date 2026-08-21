@@ -21,11 +21,12 @@ Apply the newest applicable source in this order:
 1. Newest operator request.
 2. Universal law (`UNIVERSAL_CORE.md` and universal skills under
    `config.AiHub.paths.agents_home`).
-3. Branch-matched FLEXT law (project `AGENTS.md` + routed local skills such as
+3. Gas Town rig governance for lane lifecycle and worker coordination.
+4. Branch-matched FLEXT law (project `AGENTS.md` + routed local skills such as
    `flext-law`).
-4. Scope delta (nearest member `AGENTS.md`).
-5. Active Bead (execution intent and evidence SSOT; never overrides higher law).
-6. In-scope ADR in [`architecture/adr/`](architecture/adr/README.md), then
+5. Scope delta (nearest member `AGENTS.md`).
+6. Active Bead (execution intent and evidence SSOT; never overrides higher law).
+7. In-scope ADR in [`architecture/adr/`](architecture/adr/README.md), then
    supporting documentation.
 
 When a higher source changes reality, update the affected lower sources in the
@@ -38,6 +39,7 @@ this order.
 | --- | --- | --- |
 | Provider activation and exported paths | `config.AiHub.paths.agents_home` provider authority | typed manifest and exact-path inventory validation |
 | Session routing | `.agents/skills/flext-context-routing/SKILL.md` | marker and selected-skill evidence |
+| Lane lifecycle | Gas Town rig `flext` | `gt hook status`, convoy state, Refinery merge evidence |
 | Architecture and public contracts | [ADR registry](architecture/adr/README.md) and owning source declaration | consumer audit plus affected project gates |
 | Ecosystem coordination (internal + external projects) | [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md) and [ecosystem-coordination.md](architecture/ecosystem-coordination.md) | reverse-dependency gate plus owner-local ADR consistency (`0.20.0-dev`) |
 | Runtime coding patterns | smallest matching skill under `~/.agents/skills/` | fresh import, lint, typecheck, behavior gate |
@@ -64,6 +66,8 @@ or routing decision.
   it does not, verify the impacted surfaces are current.
 - Keep one owner per fact. Delete replaced prose, aliases, wrappers, fallbacks,
   and parallel paths in the same change.
+- Use Gas Town for dispatch, lanes, merge queue, and handoff. Make does not own
+  lane lifecycle.
 - Land only after narrow gates and the affected native gate pass. Use explicit
   pathspecs, a scoped commit, a fast-forward push, and Bead evidence.
 

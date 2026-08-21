@@ -120,7 +120,8 @@ make check && make test
 
 ### F1-F8 (resto do plano)
 
-- F1: Abrir lane `make work`
+- F1 historical disposition: the original Make lane command is retired and is
+  not current operational guidance. Use the Gas Town `flext` rig.
 - F2: Governança universal (ADR-012 + AGENTS.md + hooks instalados)
 - F3: 7 ast-grep error gates
 - F4: Rewire 14 imports privados
