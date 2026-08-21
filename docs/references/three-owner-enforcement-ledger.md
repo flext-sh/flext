@@ -106,8 +106,9 @@ Program epic: `mro-wshr`
 1. Set census.operator_declared_012_final_sha in this ledger
 1. Close mro-hsiu.1 (orchestrator)
 1. Claim mro-k60y (T0.I); absorb mro-dxrp DoD
-1. Historical record only: the original lane command is retired. Current
-   execution uses Gas Town and preserves the declared SHA and overlays.
+1. Historical record only: the original lane command is retired. The operator
+   must declare the final SHA before T0. Gas Town then preserves that declared
+   SHA and the overlays.
 
 ## Dependency order
 

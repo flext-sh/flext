@@ -42,8 +42,9 @@ Open and complete the lane through Gas Town:
 ```bash
 gt sling <id> flext
 gt hook status
+gt convoy status <convoy-id>
+# Choose one completion path:
 gt done
-gt convoy status
 gt handoff <id>
 ```
 
@@ -64,7 +65,9 @@ make test CI=Y PROJECT=<affected>
 make gen WHAT=check PROJECT=<affected>
 ```
 
-Local `make test` must be green for the affected project before `gt done`.
+The complete applicable validation boundary, including coverage when required,
+must be green before `gt done`. `gt done` submits a validated lane; it does not
+authorize integration.
 
 Run the narrowest changed-scope gate first; widen only after it passes.
 
@@ -169,6 +172,7 @@ evidence at the applicable boundary permits `READY_FOR_REVIEW`.
 
 ## Integration line
 
-Submit worker lanes to Refinery with `gt done`. Refinery integrates into
-`origin/0.12.0-dev` and closes the lane after merge. Promotion to `main` is a
-separate operator-authorized release action.
+Submit worker lanes to Refinery with `gt done` only after the readiness boundary
+is green. Refinery integrates into `origin/0.12.0-dev` only after fleet-wide
+validation and lead authorization, then closes the lane after merge. Promotion
+to `main` is a separate operator-authorized release action.

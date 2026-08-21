@@ -21,7 +21,9 @@ Apply the newest applicable source in this order:
 1. Newest operator request.
 2. Universal law (`UNIVERSAL_CORE.md` and universal skills under
    `config.AiHub.paths.agents_home`).
-3. Gas Town rig governance for lane lifecycle and worker coordination.
+3. Gas Town rig governance for dispatch, lane state, merge queue, and handoff
+   only. It cannot override branch-matched FLEXT law or repository rules
+   outside that scope.
 4. Branch-matched FLEXT law (project `AGENTS.md` + routed local skills such as
    `flext-law`).
 5. Scope delta (nearest member `AGENTS.md`).

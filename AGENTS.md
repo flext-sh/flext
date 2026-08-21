@@ -213,5 +213,7 @@ make build WHAT=artifacts
 - Gas Town owns lane lifecycle on the `flext` rig. Make owns build, generation,
   validation, and release surfaces only. AI Hub consumes provider metadata and
   generated files; it does not duplicate lane lifecycle.
+- Lane evidence requires `gt hook status`, convoy state, and Refinery merge
+  evidence. Make evidence is restricted to build and validation.
 - Default `make test` is testmon-incremental fleet-wide; coverage stays out of default CI; tests that need external/docker services skip when unreachable, and `CI=Y` skips remote/docker tests entirely; GitHub Actions testmon cache warms until green, then renews only on success within quota.
 - Enforcement split: flext-core runtime (beartype rules), flext-infra static engines, flext-tests pytest automation harness (`tm`/`tv`/`tt`) for all projects.
