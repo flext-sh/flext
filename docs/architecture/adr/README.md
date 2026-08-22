@@ -23,7 +23,7 @@ portal.
   Libraries](006-thin-domain-drivers-over-meltano-bases.md) — _Accepted_
 - [ADR-007: Performance optimization of worktree transactions and mutating CLI
   commands](007-worktree-transaction-performance.md) — _Accepted_
-- [ADR-0016: Retire the Make lane lifecycle](016-make-work-lane-saga.md) — _Superseded; Gas Town is the sole current owner_
+- [ADR-0016: Public make work lane saga](016-make-work-lane-saga.md) — _Accepted_
 - [ADR-008: Neutral consumer boundaries for docs, Office bytes, and artifact
   metadata](008-neutral-consumer-boundaries.md) — _Accepted_
 - [ADR-009: Ecosystem coordination and reusable-library evaluation](009-ecosystem-coordination-and-library-evaluation.md)
@@ -36,6 +36,4 @@ New ADRs should be added only when they represent a real architectural decision 
 
 ## Make work lane saga
 
-Current lane lifecycle is Gas Town only. ADR-0016 records the retired Make
-surface. Operator guidance: [make-commands.md](../../guides/make-commands.md).
-Worker contract: [worker-lane-contract.md](../../ways-of-working/worker-lane-contract.md).
+Public lane lifecycle is `make work WHAT=start|status|land|finish` (flext-infra `FlextInfraWorkService`). Worktree add/update/remove remains an internal engine only. Operator guide: [make-commands.md](../../guides/make-commands.md#work-saga).

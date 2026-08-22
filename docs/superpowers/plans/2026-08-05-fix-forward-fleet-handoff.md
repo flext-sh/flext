@@ -9,7 +9,6 @@ Depois o usuário pediu para migrar o `detector.py` para usar GitPython (`_git/`
 ## O que já foi feito (completo)
 
 ### 1. flext-infra — branch + commit + push parcial
-
 - `flext-infra` está em `0.12.0-dev` (checkout feito)
 - 5 commits locais não-pushed:
   - `735a20c1` chore: codegen conform — pyproject drift
@@ -20,7 +19,6 @@ Depois o usuário pediu para migrar o `detector.py` para usar GitPython (`_git/`
 - Push **bloqueado**: pre-push hook roda `make gen APPLY=Y` que falha com "workspace member gitlink is missing: flext-infra" porque `GIT_DIR` está setado pelo pre-commit
 
 ### 2. Superprojeto — gitlink atualizado
-
 - Gitlink do `flext-infra` atualizado para `ed81b480` e pushed (`3c612c22a`)
 - Isso desbloqueia o push do flext-infra **mas** o pre-push hook ainda falha por causa do detector.py
 
@@ -36,23 +34,19 @@ Depois o usuário pediu para migrar o `detector.py` para usar GitPython (`_git/`
 - `src/flext_infra/_models/_git/identity.py` — adicionado campo `is_inside_work_tree` ao `GitIdentityReport`
 
 **O que falta na migração:**
-
 - `src/flext_infra/workspace/detector.py` — **ainda tem 12 chamadas `u.Cli.capture`/`u.Cli.run_raw`** (subprocess git). Precisa ser migrado para usar `u.Infra.git_*`.
 - Testes ainda falham (34 falhas na última rodada) — principalmente por causa do detector.py não migrado e problemas de modelo.
 
 ### 4. Estado da frota
 
 **Submódulos divergentes (gitlink do superprojeto desatualizado):**
-
 - `flext-cli`, `flext-dbt-ldap`, `flext-grpc`, `flext-oracle-wms`, `flext-plugin`, `flext-tap-oracle-wms`, `flext-target-ldap`, `flext-target-oracle` — todos em `0.12.0-dev`, 0/0 vs origin, dirty leve (codegen drift)
 - `flext-ldap`, `flext-quality`, `flext-tests` — também divergentes agora (novos desde a última análise)
 
 **Submódulos com dirty (codegen drift):**
-
 - Todos os 22+ submódulos têm dirty — projections antigas do SSOT do flext-infra
 
 **Superprojeto dirty:**
-
 - 12 gitlinks para atualizar
 - `.beads/config.yaml`, `.github/dependabot.yml`, `.github/workflows/`, `.gitignore`, `.pre-commit-config.yaml`, `AGENTS.md`, `Makefile`, `docs/guides/`, `pyproject.toml`, `scripts/lib/surface_validation.py`, `tests/unit/provider_surface_tests.py`, `uv.lock`
 - 4 untracked: `docs/references/2026-08-05-docs-centralization-handoff.md`, `docs/references/three-owner-enforcement-ledger.json`, `docs/references/three-owner-enforcement-ledger.md`, `docs/superpowers/plans/2026-08-05-three-owner-p0-handoff.md`

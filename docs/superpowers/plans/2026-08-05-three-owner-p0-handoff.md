@@ -87,9 +87,7 @@ Beads design/notes on every program bead carry the full RESUME block (architectu
    - `docs/references/three-owner-enforcement-ledger.md`
    - `docs/superpowers/plans/2026-08-05-three-owner-p0-handoff.md`
 2. **Stop.** Do not claim T0/E0/EC/…
-3. **Historical disposition:** this 2026-08-05 instruction used the now-retired
-   Make lane lifecycle. It is not operational guidance. Current work uses Gas
-   Town and the active Bead.
+3. **When operator unblocks T0:** follow ledger `gates.t0_start_instructions` — set SHA, close `mro-hsiu.1`, claim `mro-k60y`, open `0.20.0-dev` lane via `make work`, merge-forward (not FF), preserve 0.20 overlays, three-boundary validation, absorb `mro-dxrp`.
 
 ## Skills for resume
 
