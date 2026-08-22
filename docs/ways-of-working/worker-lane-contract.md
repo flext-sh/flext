@@ -27,6 +27,7 @@ Read the canonical authorities first; this file only adds lane discipline.
 - Local skills: [`flext-law`][flext-law]
 - Universal skills: `~/.agents/skills/inviolable-rules/SKILL.md`,
   `~/.agents/skills/make-check/SKILL.md`, `~/.agents/skills/verification-loop/SKILL.md`
+- Gas Town rig: `gt prime` / `gt rig status flext` / `gt sling` / `gt convoy`
 - Config/settings SSOT: [ADR-005][adr-005]
 
 [agents-md]: ../../AGENTS.md
@@ -36,13 +37,15 @@ Read the canonical authorities first; this file only adds lane discipline.
 
 ## 1. One lane, one bead, one worktree
 
-Open the lane with the public saga (not ad-hoc worktree commands):
+Open and complete the lane through Gas Town:
 
 ```bash
-make work WHAT=status PROJECT=<member> BEAD=<id>
-make work WHAT=start PROJECT=<member> BEAD=<id> KIND=feature NAME=<slug> APPLY=Y
-make work WHAT=land PROJECT=<member> BEAD=<id> APPLY=Y
-make work WHAT=finish PROJECT=<member> BEAD=<id> APPLY=Y
+gt sling <id> flext
+gt hook status
+gt convoy status <convoy-id>
+# Choose one completion path:
+gt done
+gt handoff <id>
 ```
 
 Claim exactly one bead and stay inside the worktree created for it. Do not edit
@@ -62,8 +65,9 @@ make test CI=Y PROJECT=<affected>
 make gen WHAT=check PROJECT=<affected>
 ```
 
-Local `make test` (without `CI=Y`) must be green with coverage for the affected
-project before `make work WHAT=land`. `CI=Y` is the CI path (testmon, no cov).
+The complete applicable validation boundary, including coverage when required,
+must be green before `gt done`. `gt done` submits a validated lane; it does not
+authorize integration.
 
 Run the narrowest changed-scope gate first; widen only after it passes.
 
@@ -95,8 +99,7 @@ Done means all of the following:
 
 ## 6. Gas Town CLI surface
 
-The Make verbs (`make work`, `make check`, `make test`) are the operator surface.
-Workers use the Gas Town CLI for lane dispatch, tracking, and completion:
+Make owns build and validation. Gas Town owns lane dispatch, tracking, and completion:
 
 | Intent | Command | Notes |
 |--------|---------|-------|
@@ -112,8 +115,6 @@ Workers use the Gas Town CLI for lane dispatch, tracking, and completion:
 | Durable message | `gt mail send <rig>/<role> -s "subj" -m "msg"` | Persistent bead record |
 
 `gt work` is an alias for `gt hook`; there is no separate `gt work` command group.
-The Make `work` verb (`make work WHAT=start|land|finish|status`) and the Gas Town
-CLI (`gt sling`, `gt done`, `gt hook`) are complementary surfaces, not substitutes.
 
 ## 7. Coordination protocol
 
@@ -171,4 +172,7 @@ evidence at the applicable boundary permits `READY_FOR_REVIEW`.
 
 ## Integration line
 
-Land worker lanes onto `origin/0.12.0-dev` by `make work WHAT=land` (opens/updates the PR into config `integration.branch`, currently `0.12.0-dev`); merge is separate; `make work WHAT=finish` removes the registered lane after the PR is merged. Do not run `workspace-merge-main` or otherwise promote to `main` unless the operator explicitly requests a release promote.
+Submit worker lanes to Refinery with `gt done` only after the readiness boundary
+is green. Refinery integrates into `origin/0.12.0-dev` only after fleet-wide
+validation and lead authorization, then closes the lane after merge. Promotion
+to `main` is a separate operator-authorized release action.
