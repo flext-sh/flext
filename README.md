@@ -12,7 +12,7 @@ the root portal.
 
 ## Workspace Status
 
-- Current workspace code version: `0.12.0-dev`
+- Current workspace code version: `0.20.0-dev`
 - Forward architecture baseline: `0.13.0`
 - Latest tagged release documented at root: `v0.11.0`
 

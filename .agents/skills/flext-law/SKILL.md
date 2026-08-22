@@ -7,7 +7,7 @@ description: Apply the FLEXT-only architecture, workspace, generation, import, a
 
 ## Composition
 
-Sole `flext-law` owner. Globals: `inviolable-rules`, `make-check`, `verification-loop`. Load via `flext-context-routing` only.
+Sole `flext-law` owner. Globals: `inviolable-rules`, `make-check`, `verification-loop`. Load via `flext-context-routing` only. Gas Town rig `flext` is the authoritative workflow surface.
 
 ## Architecture and imports
 
@@ -41,7 +41,11 @@ Typed inventory+Beads. `0.12.0-dev` ancestor of `main`/`0.20.0-dev`/required bra
 
 Conform from Git+manifest. Mise binaries; no `uv`/Python patch pins (`3.13.*`). Ruff+Pyrefly; changed Pyright/Mypy/Pytest. Helm serialized. Release = `flext-infra` Make release/version. `ast-grep` for systemic transforms.
 
-### `make work` lane saga
+### Gas Town-native lane lifecycle
+
+Preferred workflow: `gt sling` / `gt convoy` / `gt mol` / `gt done` / `gt handoff` for rig `flext`.
+
+### `make work` lane saga (legacy/internal)
 
 Public WHAT is only `start|status|land|finish`. `FlextInfraWorkService` is an internal engine — do not expose `WHAT=worktree`. Use `PROJECT=<member>` (or `WORKSPACE=`) so land/finish resolve the member git primary. Land owns the lane PR; finish binds `metadata.worktree` to `registered_lane`, refuses permanent/primary lanes, requires `head_oid` CAS when the lane still exists, and requires a merged PR when `metadata.pr_number` is set (otherwise refuses an open PR on the branch).
 Guide: `docs/guides/make-commands.md` · ADR-0016.

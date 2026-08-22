@@ -2,8 +2,6 @@
   "database": "dolt",
   "backend": "dolt",
   "dolt_mode": "server",
-  "dolt_server_host": "127.0.0.1",
   "dolt_server_port": 3307,
-  "dolt_database": "flext",
-  "project_id": "f292a82f-a3a7-4a66-adbf-93affcddc0ac"
+  "dolt_database": "flext"
 }

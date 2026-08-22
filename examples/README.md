@@ -125,7 +125,7 @@ Extensive use of parallel processing throughout:
 
 Full type safety with modern Python features:
 
-- `from **future** import annotations
+- `from __future__ import annotations
 
 from collections.abc import Mapping, Sequence` for forward references
 

@@ -237,8 +237,7 @@
     "**/.gitea/workflows/*.yml",
     "**/.gitea/workflows/*.yaml",
     "**/.forgejo/workflows/*.yml",
-    "**/.forgejo/workflows/*.yaml",
-    "file:///home/marlonsc/flext/flext-infra/config/codegen.yaml"
+    "**/.forgejo/workflows/*.yaml"
   ],
   "python.analysis.typeCheckingMode": "strict",
   "python.analysis.diagnosticSeverityOverrides": {

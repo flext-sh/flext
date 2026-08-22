@@ -150,7 +150,7 @@ project / one module at a time) — which is the design intent.
        --target-alias <parent.path>
    ```
 
-1. Verify net-negative LOC delta and 0 ruff + 0 pyrefly post-change (verb's safety gate enforces this).
+4. Verify net-negative LOC delta and 0 ruff + 0 pyrefly post-change (verb's safety gate enforces this).
 
 ## Section 3 — Service-responsibility duplicates
 

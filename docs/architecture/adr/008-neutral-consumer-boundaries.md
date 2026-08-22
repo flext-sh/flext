@@ -14,6 +14,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-07-18
+- **Target line:** FLEXT `0.20.0-dev`
 - **Scope:** FLEXT contracts consumed by independent Cosmos applications
 - **Tracking:** `mro-ib6t`
 
@@ -52,7 +53,8 @@ validate_links` tooling entrypoint, which stay valid.
 Every application may depend downward on public FLEXT packages. No `flext-*`
 package may import or declare a dependency on `dcdoc`/`cosmos-docgen`, DataOP,
 or DcBackup. `dcdoc` also does not import `flext-infra`; its repository invokes
-that tool as a separate process.
+that tool as a separate process. This preserves the ratified runtime direction
+`flext-infra -> flext-cli -> flext-core`.
 
 ### Static consumer documentation
 
@@ -79,9 +81,9 @@ deletes more code/dependencies than it adds.
 - MkDocs through `flext-infra` remains the single FLEXT documentation engine;
   Sphinx or another engine requires a measured migration decision rather than
   parallel adoption.
-- ADR-018 Office work stays in `flext-cli`, with no domain literals or raw
-  library objects crossing the boundary.
-- `flext-docs` is not created.
+- Office work stays in `flext-cli`, with no domain literals or raw library
+  objects crossing the boundary (Cosmos `dcdoc` ADR-018).
+- `flext-docs` (generation library) is not created.
 - Cosmos applications integrate with each other through files, manifests,
   APIs, events, or orchestration, not through FLEXT reverse dependencies.
 

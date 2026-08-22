@@ -27,7 +27,7 @@ This pilot proves the complete template on ONE uncontested, fully-green, leaf pr
 ## Usage universe (SSOT — memory:flext-external-consumer-universe)
 
 Dead-code is judged against: **flext monorepo `src/` + these external consumers**:
-`../algar-oud-mig` (88), `../cosmos-main` (60), `../cosmos-docgen` (58), `../.ai-hub` (25).
+`../projeto_a` (88), `../cosmos-main` (60), `../cosmos-docgen` (58), `../.ai-hub` (25).
 `legado/` is **excluded from every search** (archival false-consumers). `meltano/` dir = 0 code imports.
 `flext-(tap|target|dbt)-*` are **end-users validated via their public CLI**, not by external refs.
 
@@ -60,7 +60,7 @@ usage universe, excluding legado.
 
 ## Phase 3 — Collapse polymorphic interfaces → canonical model + protocol
 
-4 `: m.X` / `-> m.X` concrete-model signatures → `p.*` protocol types (no polymorphic
+4 `: p.X` / `-> p.X` concrete-model signatures → `p.*` protocol types (no polymorphic
 unions / shadow DTOs). Extend the local `p.TapOracleWms.*` facet if a protocol is missing.
 Models stay pure data; signatures depend on protocols (§3.2).
 

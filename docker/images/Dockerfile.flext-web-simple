@@ -1,7 +1,7 @@
 # FLEXT Web Interface - Simple Docker Image
 # Single-stage build for testing without external dependencies
 
-FROM python:3.13-slim
+FROM python:3.13-alpine
 
 # Set metadata
 LABEL maintainer="FLEXT Development Team"

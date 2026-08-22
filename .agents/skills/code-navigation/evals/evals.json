@@ -1,0 +1,39 @@
+{
+  "skill_name": "code-navigation",
+  "evals": [
+    {
+      "id": "scope-status-check",
+      "prompt": "Is Scope CLI available in this project? How should I start exploring the codebase structure?",
+      "expected_output": "Run `scope status` first to check if `.scope/` exists. If yes, use `scope map` for architecture overview. If not, initialize with `scope init`. Do not use grep or find for structural navigation.",
+      "files": [],
+      "assertions": [
+        "mentions `scope status` as first step",
+        "mentions `scope map` for architecture overview",
+        "does NOT suggest using grep or find for structural navigation",
+        "mentions .scope/ directory"
+      ]
+    },
+    {
+      "id": "find-class-callers",
+      "prompt": "Find all places that call the `parse_entry` function in flext-ldif.",
+      "expected_output": "Use `scope callers parse_entry` to get the caller chain in ~200 tokens. Do not use grep or rg for this.",
+      "files": [],
+      "assertions": [
+        "uses `scope callers` command",
+        "does NOT recommend grepping source files",
+        "output is structural, not raw text search"
+      ]
+    },
+    {
+      "id": "class-structure-without-reading",
+      "prompt": "What methods does FlextLdifModels have? I don't want to read the whole file.",
+      "expected_output": "Use `scope sketch FlextLdifModels` to get a class outline with method signatures in ~200 tokens without reading the full source file.",
+      "files": [],
+      "assertions": [
+        "uses `scope sketch` or equivalent structural command",
+        "explicitly avoids reading the full file",
+        "returns method signatures without body content"
+      ]
+    }
+  ]
+}

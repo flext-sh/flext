@@ -21,14 +21,16 @@ Newest operator instruction wins. Apply this sequence (Beads never override high
 
 1. Newest operator request
 2. Universal law (`UNIVERSAL_CORE.md` + `inviolable-rules` / `make-check` / `verification-loop`)
-3. Branch-matched FLEXT law (this file + `.agents/skills/flext-law/SKILL.md`)
-4. Scope delta (nearest member `AGENTS.md`)
-5. Active Bead (execution intent, ownership, evidence, stop)
-6. In-scope ADR, then supporting docs
+3. Gas Town rig governance (`gt prime`, `gt rig status flext`, `gt sling`, `gt convoy`, `gt mol`, `gt done`, `gt handoff`)
+4. Branch-matched FLEXT law (this file + `.agents/skills/flext-law/SKILL.md`)
+5. Scope delta (nearest member `AGENTS.md`)
+6. Active Bead (execution intent, ownership, evidence, stop)
+7. In-scope ADR, then supporting docs
 
 | Layer | Owner | Content |
 | --- | --- | --- |
 | Global | `~/.agents/UNIVERSAL_CORE.md` + `inviolable-rules` / `make-check` / `verification-loop` | conduct, evidence, completion |
+| Gas Town | `gt prime` injected context + rig `flext` state | workflow, identity, dispatch, handoff |
 | FLEXT | this file + `.agents/skills/flext-law/SKILL.md` | architecture, Make, generation, fleet |
 | Scope | nearest member `AGENTS.md` | domain facts / exclusions only |
 | Execution | active Bead | intent, ownership, evidence, stop |
@@ -46,13 +48,14 @@ Docs: [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) ·
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:f84d1039 -->
 ## Beads Issue Tracker
 
-This project uses **bd (beads)** for issue tracking. Run `bd prime` to see full workflow context and commands.
+This project uses **bd (beads)** for issue tracking. Run `gt prime` / `bd prime` to see full workflow context and commands.
 
 ### Quick Reference
 
 ```bash
-bd ready              # Find available work
-bd show <id>          # View issue details
+gt ready              # Find work ready across town/rig
+gt sling              # Assign work to an agent (unified dispatch)
+gt show <id>          # View issue details
 bd update <id> --claim  # Claim work
 bd close <id>         # Complete work
 ```
@@ -62,6 +65,7 @@ bd close <id>         # Complete work
 - Use `bd` for ALL task tracking — do NOT use TodoWrite, TaskCreate, or markdown TODO lists
 - Run `bd prime` for detailed command reference and session close protocol
 - Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
+- Prefer `gt sling` / `gt convoy` / `gt mol` / `gt done` / `gt handoff` for Gas Town-native workflow instead of legacy `make work` patterns
 
 **Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See <https://github.com/gastownhall/beads/blob/main/docs/core-concepts/sync-concepts.md> for details and anti-patterns.
 
@@ -153,10 +157,6 @@ make check CHECK_GATES=lint,format,pyrefly,mypy,pyright
 make test
 make check PROJECT=flext-core
 make build WHAT=artifacts
-make work WHAT=status PROJECT=flext-infra BEAD=<id>
-make work WHAT=start PROJECT=flext-infra BEAD=<id> KIND=feature NAME=<slug> APPLY=Y
-make work WHAT=land PROJECT=flext-infra BEAD=<id> APPLY=Y
-make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 ```
 
 - Toolchain: Python `>=3.13,<3.14`; pins in `.default-python-packages`.
@@ -165,6 +165,7 @@ make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
   clone **origin** → `make setup` exit 0 → `git status --short` empty.
 - Warnings and dirty trees after provisioning are failures.
 - Generated (`@flext-managed` / `@flext-ssot`): change SSOT, then `make gen` — never hand-edit projections.
+- Lane lifecycle is managed by Gas Town (`gt sling` / `gt convoy` / `gt mol` / `gt done` / `gt handoff`). Legacy `make work` patterns are retired from the public surface.
 
 ## Architecture
 
@@ -191,7 +192,7 @@ make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 - Fix every error and warning at root cause — nothing is pre-existing or cosmetic; Make verbs must be idempotent; prefer standardized shape over transitional forms; prove green on canonical Make paths before closing beads.
 - Land fixes in upstream `flext-infra` codegen/config overlays on the workspace line, not local workarounds; consumers attach domain scripts only via `custom.mk` `_custom_*` hooks — Make public verbs stay a flext-infra monopoly.
 - Adopt, validate, commit, and push together; finish WIP through merge on the active DEV line (`0.12.0-dev`) unless the operator asks to promote to `main`; absorb fast-forward/merge fallout; remaining lint/test failures stay owned until green; do not invent blockers or re-confirm settled facts.
-- Do mutating fleet work in a `make work` worktree on a dedicated branch; keep the primary flext checkout on `0.12.0-dev` clean.
+- Do mutating fleet work in a Gas Town lane (`gt sling` / `gt convoy`) on a dedicated branch; keep the primary flext checkout on `0.12.0-dev` clean.
 - Prefer lean, structured AGENTS.md that cross-links skills and docs over long prose.
 - Keep pre-commit inline and enforceable before commit/push; do not skip hooks to land work.
 - Maximize flext-core/cli/infra/tests facades and declarative enforcers (tach, import-linter, rope, ast-grep) via SSOT rules — never reimplement local equivalents or custom validators; callers use public `c`/`t`/`p`/`m`/`u` and flext-infra facades only, never private modules directly.
@@ -209,6 +210,6 @@ make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 - CI policy: draft PRs run no CI; integration pushes (`dev`/`develop`/`0.12.0-dev`) run blocking ubuntu `CI` only; `CI=Y` skips cov and makes `make check` skip ruff/pyright/pyrefly (CI workflows already own those gates); `ci-matrix` is projected only for workspace-root/standalone, defaults to `workflow_dispatch` only, and must not run `make test`; workspace-member projects must not receive or auto-run `ci-matrix`; CodeQL is a GitHub repo setting outside Jinja.
 - Agent/skill surfaces on governed branches must be real files, not symlinks; `config.AiHub.paths.ai_hub` materializes them per its application config.
 - Project markdown docs centralize under `docs/` (root keeps only standardized files); `.agents/*` and `data/*` are special; external-docs follow `docs/references/` patterns; validate via `make check` markdown gates and flext-infra docs generation.
-- Lane lifecycle is the `make work` verb (beads, worktrees, gh/PR, gitflow) owned by flext-infra on `0.12.0-dev`; every maintained lane runs `make setup`; lane `.venv` is a symlink to the primary shared `.venv` (never a second uv sync target); AI Hub consumes the same surface without duplicating gitflow.
+- Lane lifecycle is the `make work` verb (beads, worktrees, gh/PR, gitflow) owned by flext-infra on `0.12.0-dev`; every maintained lane runs `make setup`; lane `.venv` is a symlink to the primary shared `.venv` (never a second uv sync target); AI Hub consumes the same surface without duplicating gitflow. The lane lifecycle is now managed by Gas Town (`gt sling` / `gt convoy` / `gt mol` / `gt done` / `gt handoff`); `make work` remains as a backward-compatible internal surface only.
 - Default `make test` is testmon-incremental fleet-wide; coverage stays out of default CI; tests that need external/docker services skip when unreachable, and `CI=Y` skips remote/docker tests entirely; GitHub Actions testmon cache warms until green, then renews only on success within quota.
 - Enforcement split: flext-core runtime (beartype rules), flext-infra static engines, flext-tests pytest automation harness (`tm`/`tv`/`tt`) for all projects.

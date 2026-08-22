@@ -5,12 +5,12 @@
 version: 3
 name: flext
 # Beads ledger identity (SSOT for .beads/config.yaml issue-prefix + dolt database).
-# Declared explicitly because it diverges from `name`: the shared Dolt server on
-# :3308 hosts this workspace's tracker as `mro`, not `flext`. Without this key
+# Declared explicitly because it diverges from `name`: the Gas Town shared Dolt server on
+# :3307 hosts this workspace's tracker as `flext`. Without this key
 # conform falls back to the project name and rebinds bd to a non-existent
-# `flext` database, losing the live tracker (see mro-6fca).
+# `mro` database, losing the live tracker (see flext-6fca).
 ledger_id: flext
-# Issue namespace override: live tracker issues are mro-*, not flext-* (mro-6fca).
+# Issue namespace override: live tracker issues are flext-*, not mro-* (flext-6fca).
 ledger_prefix: flext
 repository:
   name: flext
@@ -51,6 +51,7 @@ integration:
 # NOTE (multi-agent, mro-wkii.17 / agent: codex): the typed manifest context is
 # the sole topology owner; every declared member/exclusion round-trips here.
 members:
+
   - name: "flext-api"
     distribution: "flext-api"
     provider: "flext-sh"
@@ -456,4 +457,6 @@ members:
     editable: true
     read_only: false
 
-exclusions: []
+exclusions:
+
+    []

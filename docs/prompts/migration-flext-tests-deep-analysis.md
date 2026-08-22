@@ -565,7 +565,7 @@ def test_database_connection():
    # Em cada projeto, criar namespaces fáceis:
    from flext import c
    from flext import m
-   from flext import t
+   from flext import p, t
    from flext import p
    from flext import u
    ```

@@ -133,34 +133,29 @@ Program epic: `mro-wshr`
 ## Delete summary
 
 ### flext-core
-
 - src/flext_core/_constants/_enforcement_catalog_rows_parts/
 - static catalog builder exports (u.build_canonical_catalog static path)
 - static source kinds: flext_infra_detector, flext_tests_validator, ruff, code_smell, skill_pointer
 - static-only warning categories
 
 ### flext-infra
-
 - src/flext_infra/_enforcement/ (custom scanners after engine cutover)
 - src/flext_infra/refactor/namespace_enforcer*.py
 - src/flext_infra/refactor/declarative_enforcement.py
-- pytest_runner / pytest_diag / pytest_selector /_pytest_entry (move to flext-tests then delete)
+- pytest_runner / pytest_diag / pytest_selector / _pytest_entry (move to flext-tests then delete)
 - rope pep695 monkeypatch after fork pin
 - pylint / pylintrc; qlty complexity overlap with radon
 
 ### flext-tests
-
 - static TEST-* validators that migrate to infra test-policy
 - runtime imports of flext_infra implementation
 - stale tt documentation aliases
 
 ### members
-
 - 31 root flext-*/conftest.py bootstraps (delete after pytest11 early-load)
 - duplicated marker/settings/container hooks; keep domain fixtures only
 
 ## Rules flext-core (25)
-
 - `ENFORCE-022` (runtime_warning)
 - `ENFORCE-039` (beartype)
 - `ENFORCE-041` (beartype)
@@ -189,3 +184,4 @@ Program epic: `mro-wshr`
 
 ## Rules flext-infra (67) ids
 `ENFORCE-001`, `ENFORCE-002`, `ENFORCE-003`, `ENFORCE-004`, `ENFORCE-005`, `ENFORCE-006`, `ENFORCE-007`, `ENFORCE-008`, `ENFORCE-009`, `ENFORCE-010`, `ENFORCE-080`, `ENFORCE-011`, `ENFORCE-012`, `ENFORCE-013`, `ENFORCE-014`, `ENFORCE-026`, `ENFORCE-027`, `ENFORCE-028`, `ENFORCE-029`, `ENFORCE-030`, `ENFORCE-031`, `ENFORCE-032`, `ENFORCE-033`, `ENFORCE-091`, `ENFORCE-092`, `ENFORCE-093`, `ENFORCE-094`, `ENFORCE-095`, `ENFORCE-096`, `ENFORCE-081`, `ENFORCE-082`, `ENFORCE-083`, `ENFORCE-084`, `ENFORCE-090`, `ENFORCE-097`, `ENFORCE-098`, `ENFORCE-015`, `ENFORCE-016`, `ENFORCE-017`, `ENFORCE-018`, `ENFORCE-019`, `ENFORCE-020`, `ENFORCE-021`, `ENFORCE-023`, `ENFORCE-024`, `ENFORCE-025`, `ENFORCE-034`, `ENFORCE-035`, `ENFORCE-036`, `ENFORCE-037`, `ENFORCE-038`, `ENFORCE-065`, `ENFORCE-057`, `ENFORCE-058`, `ENFORCE-059`, `ENFORCE-060`, `ENFORCE-061`, `ENFORCE-062`, `ENFORCE-063`, `ENFORCE-040`, `ENFORCE-072`, `ENFORCE-073`, `ENFORCE-074`, `ENFORCE-075`, `ENFORCE-076`, `ENFORCE-077`, `ENFORCE-078`
+

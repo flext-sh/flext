@@ -3,7 +3,6 @@
 <!-- TOC START -->
 - [Conventions](#conventions)
 - [Public verbs (`PUBLIC_VERBS`)](#public-verbs-publicverbs)
-- [Gas Town CLI surface](#gas-town-cli-surface)
 - [`gen` (codegen SSOT)](#gen-codegen-ssot)
 - [Integration line (operator gate)](#integration-line-operator-gate)
 - [`work` saga](#work-saga)
@@ -13,17 +12,16 @@
 Canonical reference for the workspace Make control plane on `0.12.0-dev`.
 Discover live verbs with `make help` only. Do not invent retired verbs.
 
-The Gas Town CLI (`gt`) is the worker dispatch surface. See the
-[worker lane contract](../../ways-of-working/worker-lane-contract.md#6-gas-town-cli-surface)
-for the full `gt` command reference. The Make verbs below are the operator
-control plane; `gt` commands are the worker execution surface — complementary,
-not interchangeable.
+This project is registered as a Gas Town rig named `flext`. Lane lifecycle is
+managed by Gas Town (`gt sling` / `gt convoy` / `gt mol` / `gt done` /
+`gt handoff`). The `work` verb remains as a backward-compatible internal
+surface only.
 
 ## Conventions
 
 - Format: `make <verb> [WHAT=<action>] [PROJECT=<member>] [APPLY=Y]`
 - Discovery: `make help` (there is no `WHAT=help` on most verbs)
-- Mutation: verbs that change the tree require `APPLY=Y` (`deps` upgrade/lock, `fmt`/`fix` apply, `gen` apply, `docs` generate/fix, `clean`, `work` start/land/finish)
+- Mutation: verbs that change the tree require `APPLY=Y` (`deps` upgrade/lock, `fmt`/`fix` apply, `gen` apply, `docs` generate/fix, `clean`)
 - Scope: omit `PROJECT`/`PROJECTS` to fan out across declared workspace members from the root
 
 ## Public verbs (`PUBLIC_VERBS`)
@@ -35,7 +33,7 @@ not interchangeable.
 | `deps` | `check` | `check` / `lock` / `upgrade`; mutators need `APPLY=Y` | `make deps WHAT=upgrade APPLY=Y PROJECT=flext-core` |
 | `build` | `artifacts` | Build/package orchestration | `make build` |
 | `check` | `all` | Read-only quality gates; optional `CHECK_GATES=` | `make check PROJECT=flext-infra CHECK_GATES=lint,format,pyrefly` |
-| `test` | `all` | Default `--testmon` without coverage; `COV=Y` full coverage without testmon; `WHAT=cache-status|cache-clear|cache-checkpoint`; optional`FILE=` / `MATCH=` | `make test PROJECT=flext-infra` / `make test COV=Y PROJECT=flext-infra` |
+| `test` | `all` | Default `--testmon` without coverage; `COV=Y` full coverage without testmon; `WHAT=cache-status|cache-clear|cache-checkpoint`; optional `FILE=` / `MATCH=` | `make test PROJECT=flext-infra` / `make test COV=Y PROJECT=flext-infra` |
 | `fmt` | `check` | Format check/apply (`APPLY=Y` for mutate) | `make fmt WHAT=apply APPLY=Y` |
 | `fix` | `check` | Auto-fix apply (`APPLY=Y`) | `make fix WHAT=apply APPLY=Y` |
 | `run` | `default` | Run project entry | `make run` |
@@ -87,14 +85,7 @@ On a workspace-root Makefile, when `PROJECT` names a `WORKSPACE_MEMBERS` entry a
 | `land` | yes (`APPLY=Y`) | Sync registered lane to integration base, push head, open (or reuse open) PR; does not merge |
 | `finish` | yes (`APPLY=Y`) | Close lane after merge |
 
-Workers use the Gas Town CLI for the same lifecycle:
-
-| Make verb | Gas Town CLI | Notes |
-| --- | --- | --- |
-| `make work WHAT=start` | `gt sling <bead> <rig>` | Dispatch + spawn polecat |
-| `make work WHAT=status` | `gt hook` or `gt work` | Show hook status |
-| `make work WHAT=land` | `gt done` | Submit to merge queue |
-| `make work WHAT=finish` | `gt done` | Same — refinery closes lane after merge |
+Gas Town-native equivalent: use `gt sling` / `gt convoy` / `gt mol` / `gt done` / `gt handoff` for rig `flext`. The public Make `work` verb is retained for backward compatibility only.
 
 ## Quick recipes
 
