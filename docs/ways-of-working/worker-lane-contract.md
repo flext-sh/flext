@@ -1,5 +1,21 @@
 # FLEXT Worker Lane Contract
 
+<!-- TOC START -->
+- [Canonical authorities](#canonical-authorities)
+- [1. One lane, one bead, one worktree](#1-one-lane-one-bead-one-worktree)
+- [2. Gates only through root Make verbs](#2-gates-only-through-root-make-verbs)
+- [3. Cooperative git](#3-cooperative-git)
+- [4. Beads evidence only](#4-beads-evidence-only)
+- [5. Definition of done](#5-definition-of-done)
+- [6. Coordination protocol](#6-coordination-protocol)
+- [7. Anti-patterns that burned us](#7-anti-patterns-that-burned-us)
+- [8. Three-boundary validation contract](#8-three-boundary-validation-contract)
+  - [8.1 Final worker lane](#81-final-worker-lane)
+  - [8.2 Updated worker lane before merge](#82-updated-worker-lane-before-merge)
+  - [8.3 Original target after integration](#83-original-target-after-integration)
+- [Integration line](#integration-line)
+<!-- TOC END -->
+
 Every light worker owns exactly one bead in one branch and one dedicated worktree.
 Read the canonical authorities first; this file only adds lane discipline.
 
@@ -7,17 +23,26 @@ Read the canonical authorities first; this file only adds lane discipline.
 
 - Project law and routed skills: [`AGENTS.md`][agents-md]
 - Governance router: [`GOVERNANCE.md`][governance-md]
-- Local skills: [`flext-law`][flext-law], [`flext-inviolable-rules`][flext-inviolable-rules]
-- Universal skills: `~/.agents/skills/make-check/SKILL.md`, `~/.agents/skills/verification-loop/SKILL.md`
+- Local skills: [`flext-law`][flext-law]
+- Universal skills: `~/.agents/skills/inviolable-rules/SKILL.md`,
+  `~/.agents/skills/make-check/SKILL.md`, `~/.agents/skills/verification-loop/SKILL.md`
 - Config/settings SSOT: [ADR-005][adr-005]
 
 [agents-md]: ../../AGENTS.md
 [governance-md]: ../GOVERNANCE.md
 [flext-law]: ../../.agents/skills/flext-law/SKILL.md
-[flext-inviolable-rules]: ../../.agents/skills/flext-inviolable-rules/SKILL.md
 [adr-005]: ../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md
 
 ## 1. One lane, one bead, one worktree
+
+Open the lane with the public saga (not ad-hoc worktree commands):
+
+```bash
+make work WHAT=status PROJECT=<member> BEAD=<id>
+make work WHAT=start PROJECT=<member> BEAD=<id> KIND=feature NAME=<slug> APPLY=Y
+make work WHAT=land PROJECT=<member> BEAD=<id> APPLY=Y
+make work WHAT=finish PROJECT=<member> BEAD=<id> APPLY=Y
+```
 
 Claim exactly one bead and stay inside the worktree created for it. Do not edit
 paths outside your declared scope; do not borrow files from another lane. If
@@ -32,8 +57,12 @@ the dispatcher:
 make check CHECK_GATES=lint,format,pyrefly
 make check PROJECT=<affected> CHECK_GATES=pyright,mypy
 make test PROJECT=<affected>
-make val WHAT=workspace
+make test CI=Y PROJECT=<affected>
+make gen WHAT=check PROJECT=<affected>
 ```
+
+Local `make test` (without `CI=Y`) must be green with coverage for the affected
+project before `make work WHAT=land`. `CI=Y` is the CI path (testmon, no cov).
 
 Run the narrowest changed-scope gate first; widen only after it passes.
 
@@ -54,11 +83,13 @@ bead state.
 
 Done means all of the following:
 
+- local `make test` (coverage enabled) is green for the affected project when tests changed
+
 - RED→GREEN proof exists for the change.
 - Exact Make-gate evidence is recorded: command, cwd, exit code, decisive line.
 - No new lint, type, or test failures are injected.
 - Changed files are clean and scoped.
-- Nothing reaches `0.12.0-dev` except through the lead's PR #20 merge after the
+- Nothing reaches `0.12.0-dev` except through the lead's `origin/0.12.0-dev` merge after the
   whole fleet is green.
 
 ## 6. Coordination protocol
@@ -115,3 +146,7 @@ must not be claimed before integration.
 Any red, inconclusive, timed-out without a verdict, zero-project, partial-scope,
 or stale-HEAD result blocks review or integration. Only complete, fresh green
 evidence at the applicable boundary permits `READY_FOR_REVIEW`.
+
+## Integration line
+
+Land worker lanes onto `origin/0.12.0-dev` by `make work WHAT=land` (opens/updates the PR into config `integration.branch`, currently `0.12.0-dev`); merge is separate; `make work WHAT=finish` removes the registered lane after the PR is merged. Do not run `workspace-merge-main` or otherwise promote to `main` unless the operator explicitly requests a release promote.

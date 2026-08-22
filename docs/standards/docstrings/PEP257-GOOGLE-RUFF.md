@@ -1,5 +1,50 @@
 # FLEXT Docstring Standards — PEP 257 + Google Style + Ruff Compliant
 
+<!-- TOC START -->
+- [Module Level Docstring](#module-level-docstring)
+  - [Format](#format)
+  - [Rules](#rules)
+  - [Real Example from Project](#real-example-from-project)
+- [Class Docstring](#class-docstring)
+  - [Format](#format)
+  - [Rules](#rules)
+  - [Real Example from Project](#real-example-from-project)
+- [Function / Method Docstring](#function-method-docstring)
+  - [Format](#format)
+  - [Rules](#rules)
+  - [Real Example from Project](#real-example-from-project)
+- [Private Function (`_func`)](#private-function-_func)
+  - [When to Document](#when-to-document)
+  - [Examples](#examples)
+- [Property](#property)
+  - [Format](#format)
+  - [Rules](#rules)
+- [Magic Methods (`__init__`, `__str__`, etc.)](#magic-methods-__init__-__str__-etc)
+  - [`__init__`](#__init__)
+  - [`__str__` / `__repr__`](#__str__-__repr__)
+  - [Others](#others)
+- [Exception Class](#exception-class)
+  - [Format](#format)
+- [Async Function](#async-function)
+  - [Format](#format)
+- [Multi-line Parameter Description](#multi-line-parameter-description)
+  - [Format](#format)
+- [Ruff-Compliant Checklist](#ruff-compliant-checklist)
+- [Private vs Public](#private-vs-public)
+  - [Skip docstring (private)](#skip-docstring-private)
+  - [Document (public)](#document-public)
+- [Document When](#document-when)
+- [Examples from FLEXT Codebase](#examples-from-flext-codebase)
+  - [Good: Utility Method](#good-utility-method)
+  - [Good: Idempotent Operation](#good-idempotent-operation)
+- [Ruff Integration](#ruff-integration)
+  - [Check conformance](#check-conformance)
+  - [Expected ignores (from pyproject.toml)](#expected-ignores-from-pyprojecttoml)
+- [Copyright Placement](#copyright-placement)
+- [Testing Docstring Quality](#testing-docstring-quality)
+- [Summary](#summary)
+<!-- TOC END -->
+
 **Compliance**:
 
 - PEP 257 (Python Docstring Conventions)
@@ -46,11 +91,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
 
-# Rest of file follows
-```
-
+# Rest of file follows```
 ### Rules
 
 - `"""` on first line (not line 2)
@@ -73,9 +115,7 @@ and event collection.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-"""
-```
-
+"""```
 ---
 
 ## Class Docstring
@@ -101,9 +141,8 @@ class MyClass(BaseClass):
     Example:
         >>> obj = MyClass(name="test")
         >>> obj.process()
-    """
-```
 
+    """```
 ### Rules
 
 - Summary on first line, ends with period
@@ -128,9 +167,7 @@ class Ex00UserProfile(m.Entity):
         """Activate user once."""
         if self.status == c.Status.ACTIVE:
             return r[None].fail("Already active")
-        return r.ok(None)
-```
-
+        return r.ok(None)```
 ---
 
 ## Function / Method Docstring
@@ -165,9 +202,8 @@ def process_data(
         >>> result = process_data(Path("data.json"))
         >>> if result["errors"]:
         ...     u.Cli.print(f"Found {len(result['errors'])} errors")
-    """
-```
 
+    """```
 ### Rules
 
 - Summary on first line, ends with period
@@ -204,6 +240,7 @@ def iter_directory_python_files(
     Returns:
         Sorted list of matching file paths. Empty list if directory
         does not exist.
+
     """
     if not directory.is_dir():
         return []
@@ -211,9 +248,7 @@ def iter_directory_python_files(
     files = sorted(directory.rglob(effective_pattern))
     if skip_pycache:
         return [f for f in files if "__pycache__" not in f.parts]
-    return files
-```
-
+    return files```
 ---
 
 ## Private Function (`_func`)
@@ -233,9 +268,7 @@ def _parse_value(text: str) -> int:
 
 def _looks_like_project(path: Path) -> bool:
     # Skip docstring HERE—obvious from name
-    return (path / "Makefile").exists() or (path / "pyproject.toml").exists()
-```
-
+    return (path / "Makefile").exists() or (path / "pyproject.toml").exists()```
 ---
 
 ## Property
@@ -246,9 +279,7 @@ def _looks_like_project(path: Path) -> bool:
 @property
 def computed_value(self) -> float:
     """Return the computed value for this instance."""
-    return self.value * self._factor
-```
-
+    return self.value * self._factor```
 ### Rules
 
 - One-line summary, ends with period (usually)
@@ -271,17 +302,14 @@ def __init__(self, name: str, timeout: int = 30):
 
     Raises:
         ValueError: If timeout is negative.
-    """
-```
 
+    """```
 ### `__str__` / `__repr__`
 
 ```python
 def __str__(self) -> str:
     """Return '{ClassName}(field1=value, field2=value)' representation."""
-    return f"{self.__class__.__name__}(name={self.name!r}, count={self.count})"
-```
-
+    return f"{self.__class__.__name__}(name={self.name!r}, count={self.count})"```
 ### Others
 
 - Document if behavior is non-obvious
@@ -301,6 +329,7 @@ class DataProcessingError(Exception):
         message: Human-readable error description.
         code: Error code for categorization (e.g., "PARSE_ERROR").
         data: Original data that caused the error.
+
     """
 
     def __init__(self, message: str, code: str = "UNKNOWN", data: Any = None) -> None:
@@ -310,13 +339,12 @@ class DataProcessingError(Exception):
             message: Error description.
             code: Error category (defaults to "UNKNOWN").
             data: Original problematic data (for debugging).
+
         """
         super().__init__(message)
         self.message = message
         self.code = code
-        self.data = data
-```
-
+        self.data = data```
 ---
 
 ## Async Function
@@ -337,9 +365,8 @@ async def fetch_data(url: str, timeout: int = 30) -> bytes:
     Raises:
         ConnectionError: If network request fails.
         TimeoutError: If operation exceeds timeout.
-    """
-```
 
+    """```
 ---
 
 ## Multi-line Parameter Description
@@ -358,9 +385,8 @@ def configure(
         options: Configuration options passed to underlying library.
             Reserved keys: \"_timeout\", \"_retries\".
         verbosity: Output verbosity level (0=silent, 1=normal, 2=verbose).
-    """
-```
 
+    """```
 ---
 
 ## Ruff-Compliant Checklist
@@ -384,9 +410,7 @@ Run validation:
 
 ```bash
 ruff check --select=D --preview src/
-ruff check --select=D,DOC --preview src/
-```
-
+ruff check --select=D,DOC --preview src/```
 ---
 
 ## Private vs Public
@@ -401,9 +425,7 @@ def _internal_helper(x: int) -> int:
 
 def _validate_email(addr: str) -> bool:
     # Skip if implementation self-documenting
-    return "@" in addr and "." in addr.split("@")[1]
-```
-
+    return "@" in addr and "." in addr.split("@")[1]```
 ### Document (public)
 
 ```python
@@ -412,9 +434,7 @@ def search(query: str, limit: int = 10) -> t.SequenceOf[Result]:
 
 
 def validate_settings(cfg: dict) -> bool:
-    """Validate configuration against schema."""
-```
-
+    """Validate configuration against schema."""```
 ---
 
 ## Document When
@@ -467,9 +487,8 @@ def run_raw(
 
     Raises:
         None (errors captured in Result.fail()).
-    """
-```
 
+    """```
 ### Good: Idempotent Operation
 
 ```python
@@ -495,9 +514,8 @@ def create_checkpoint(
 
     Raises:
         None (errors captured in Result.fail()).
-    """
-```
 
+    """```
 ---
 
 ## Ruff Integration
@@ -512,9 +530,7 @@ ruff check --select=D --preview src/
 ruff format --preview src/
 
 # Full check including preview rules
-ruff check --preview src/
-```
-
+ruff check --preview src/```
 ### Expected ignores (from pyproject.toml)
 
 - D203: blank line before class summary (use pep257 style, no blank)
@@ -532,11 +548,9 @@ the current Ruff policy" section above).
 
 ❌ **WRONG** (comment outside docstring):
 
-```python notest
+```python
 # Copyright (c) 2025 FLEXT Team. All rights reserved.
-"""Module description."""
-```
-
+"""Module description."""```
 ✅ **RIGHT** (inside docstring):
 
 ```python
@@ -544,9 +558,7 @@ the current Ruff policy" section above).
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-"""
-```
-
+"""```
 ---
 
 ## Testing Docstring Quality
@@ -556,12 +568,10 @@ SPDX-License-Identifier: MIT
 ruff check --select=D,DOC --preview flext-core/src
 
 # Audit with guidance
-make build WHAT=docs DOCS_PHASE=audit PROJECT=flext-core
+make docs WHAT=audit PROJECT=flext-core
 
 # Ruff strict check
-ruff check --select=D,DOC --preview flext-core/src
-```
-
+ruff check --select=D,DOC --preview flext-core/src```
 ---
 
 ## Summary

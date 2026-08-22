@@ -1,5 +1,17 @@
 # ADR-003 — Manifest-owned topology, root workspace, and autonomous Git libraries
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. A typed manifest owns repository topology](#1-a-typed-manifest-owns-repository-topology)
+  - [2. Root workspace and library metadata have distinct responsibilities](#2-root-workspace-and-library-metadata-have-distinct-responsibilities)
+  - [3. Make orchestrates the root workspace environment](#3-make-orchestrates-the-root-workspace-environment)
+  - [4. Generated profiles define attachment behavior](#4-generated-profiles-define-attachment-behavior)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
+
 - **Status:** Accepted (amended 2026-07-16)
 - **Date:** 2026-06-24
 - **Scope:** FLEXT, Cosmos, and standalone repository topology, dependency
@@ -26,15 +38,11 @@ owner of transitive FLEXT provenance.
 
 ### 1. A typed manifest owns repository topology
 
-Each orchestrated workspace has one validated manifest under `config/`. It
-declares members, exclusions, repository URL, branch, relative checkout path,
-role, profile, and lifecycle state. A typed repository catalog covers:
-
-- FLEXT repositories at `https://github.com/flext-sh/<repo>.git` on
-  `0.20.0-dev`;
-- Cosmos repositories at `https://github.com/datacosmos-br/<repo>.git` on
-  `main`;
-- explicitly declared standalone repositories, with no sibling discovery.
+Each consumer has one validated `config/workspace.yaml`. It declares its own
+members, independent projects, exclusions with justification, repository URLs,
+branches, relative checkout paths, topology profile, capabilities, and command
+discovery roots. No catalog in `flext-infra` duplicates consumer identities or
+topology.
 
 Submodule metadata, generated dependency groups, Makefiles, and inventories are
 derived from that manifest. No other file may independently declare workspace

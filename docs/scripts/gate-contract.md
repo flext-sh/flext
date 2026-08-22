@@ -258,7 +258,7 @@ exempt from gate contract validation but must still have Owner-Skill markers.
 ### Validator (python — skill-based)
 
 - `flext-infra validate skill-validate --skill flext-strict-typing` — discovers
-  rules from the active `~/.agents` provider; accepts `--mode baseline|strict`;
+  rules from the active `config.AiHub.paths.agents_home` provider; accepts `--mode baseline|strict`;
   exits 0/1
 - `flext-infra validate skill-validate --skill flext-pydantic-models --mode strict`
   — same contract

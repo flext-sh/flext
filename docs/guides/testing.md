@@ -1,5 +1,13 @@
 # Testing
 
+<!-- TOC START -->
+- [Canonical Test Layout](#canonical-test-layout)
+- [Common Commands](#common-commands)
+- [Docs Pipeline Validation](#docs-pipeline-validation)
+- [Expectations](#expectations)
+- [Related Guides](#related-guides)
+<!-- TOC END -->
+
 The workspace test taxonomy is standardized. Root guidance stays short; project-specific test details stay local to each
 project.
 
@@ -18,20 +26,29 @@ Use these directories when the project owns tests:
 ```bash
 make test PROJECT=flext-infra
 make test PROJECT=flext-infra MATCH=docs
+make test COV=Y PROJECT=flext-infra
+make test WHAT=cache-status PROJECT=flext-infra
+make test WHAT=cache-clear APPLY=Y PROJECT=flext-infra
 make check PROJECT=flext-infra
-make val
+make check
 ```
+
+`make test` always uses pytest-testmon without coverage (incremental selection).
+`COV=Y` disables testmon and runs a full-suite coverage measurement that writes
+`coverage.xml`. `CI=Y` forbids `make test` entirely (CI workflows own other
+gates). Use `WHAT=cache-*` to inspect, clear (`APPLY=Y`), or checkpoint the
+local `.testmondata` cache.
 
 ## Docs Pipeline Validation
 
 Use the docs phases directly when you are changing documentation tooling or generated docs:
 
 ```bash
-make docs DOCS_PHASE=generate PROJECT=flext-infra
-make docs DOCS_PHASE=fix PROJECT=flext-infra FIX=1
-make docs DOCS_PHASE=audit PROJECT=flext-infra
-make docs DOCS_PHASE=build PROJECT=flext-infra
-make docs DOCS_PHASE=validate PROJECT=flext-infra
+make docs WHAT=generate PROJECT=flext-infra
+make docs WHAT=fix PROJECT=flext-infra APPLY=Y
+make docs WHAT=audit PROJECT=flext-infra
+make docs WHAT=build PROJECT=flext-infra
+make docs WHAT=validate PROJECT=flext-infra
 ```
 
 ## Expectations

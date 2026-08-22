@@ -1,8 +1,20 @@
 # ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. `flext-infra codegen conform` is the sole owner](#1-flext-infra-codegen-conform-is-the-sole-owner)
+  - [2. The Makefile is a self-contained generated artifact](#2-the-makefile-is-a-self-contained-generated-artifact)
+  - [3. `custom.mk` is a narrow private extension surface](#3-custommk-is-a-narrow-private-extension-surface)
+  - [4. Conformance is deterministic and fail-closed](#4-conformance-is-deterministic-and-fail-closed)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
+
 - **Status:** Accepted (replaces the former Make registry decision)
 - **Date:** 2026-06-28
-- **Amended:** 2026-07-11
+- **Amended:** 2026-07-11, 2026-08-03 (public verb names `fmt`/`fix`/`gen`/`work`)
 - **Scope:** generated Makefiles, repository conformance, command routing, and
   custom project handlers.
 - **Tracking:** `mro-wkii.17`
@@ -50,13 +62,13 @@ rendering path.
 One template layer emits the complete versioned Makefile for the
 `workspace-root`, `workspace-member`, or `standalone` profile. Make never
 regenerates itself and never includes a shared implementation from another
-checkout. `codegen` performs conformance explicitly; `check` is read-only and
+checkout. `gen` performs conformance explicitly; `check` is read-only and
 `apply` requires `APPLY=Y`.
 
-The public surface is `help` plus exactly twelve operational verbs:
+The public surface is `help` plus the operational verbs discovered by `make help`:
 
 ```text
-setup deps build check test format run status docs clean release codegen
+setup deps build check test fmt fix run status docs clean release gen work
 ```
 
 `help` only describes the surface. Every operation maps to exactly one public
@@ -71,14 +83,16 @@ The meanings are fixed:
 | `deps` | validate, create, or explicitly update locks |
 | `build` | produce project artifacts |
 | `check` | run static and policy gates |
-| `test` | execute real behavior tests |
-| `format` | check by default; modify only with `APPLY=Y` |
+| `test` | execute tests via pytest-testmon; coverage on locally; `CI=Y` disables coverage; `WHAT=cache-*` maintains `.testmondata` |
+| `fmt` | check by default; modify only with `APPLY=Y` |
+| `fix` | auto-fix check/apply (`APPLY=Y` for mutate) |
 | `run` | execute declared project capabilities |
 | `status` | report read-only diagnostics |
 | `docs` | validate or build documentation |
 | `clean` | remove declared generated/runtime artifacts only when apply-gated |
 | `release` | perform the selected tag, PR, publish, or deploy operation |
-| `codegen` | check conformance by default; modify only with `APPLY=Y` |
+| `gen` | check conformance by default; modify only with `APPLY=Y` |
+| `work` | bead + GitFlow lane saga (`start`/`status`/`land`/`finish`; mutate with `APPLY=Y`) |
 
 ### 3. `custom.mk` is a narrow private extension surface
 
@@ -104,6 +118,13 @@ The same declarative input must produce byte-identical output. A second apply
 has an empty plan and a new project must converge to the same generated tree as
 an existing project with the same manifest.
 
+- `make test` always uses pytest-testmon for every project.
+- Local `make test` also collects coverage (`coverage.xml`) unless `CI=Y`
+  (exact Make token from codegen SSOT). Focused `FILE=`/`MATCH=` keeps testmon
+  and disables coverage.
+- Maintenance WHATs: `cache-status`, `cache-clear` (requires `APPLY=Y`),
+  `cache-checkpoint`. There is no public `cov` verb.
+
 ## Consequences
 
 - `flext-tests` tests public behavior but owns no Make registry or dispatcher.
@@ -118,8 +139,9 @@ an existing project with the same manifest.
 - Parse and `help` validation cover every generated profile.
 - Schema tests reject public custom targets and handler collisions.
 - Conformance check performs no writes; apply is atomic and idempotent.
-- Public-surface discovery reports only `help` and the twelve operational
-  verbs, with one handler per `(verb, WHAT)` pair.
+- Public-surface discovery reports only `help` and the operational verbs from
+  live `make help` (currently fifteen: setup deps build check test fmt fix run
+  status docs clean release gen work), with one handler per `(verb, WHAT)` pair.
 
 ## References
 

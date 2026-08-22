@@ -1,6 +1,6 @@
 # Forward Annotations
 
-Forward annotations (wrapped in quotes) or using the `from **future** import annotations
+Forward annotations (wrapped in quotes) or using the `from __future__ import annotations
 
 from collections.abc import Mapping, Sequence` [future statement]
 (as introduced in [PEP563](https://www.python.org/dev/peps/pep-0563/)) are supported:
@@ -35,7 +35,7 @@ section](../internals/resolving_annotations.md).
 
 Models with self-referencing fields are also supported. These annotations will be resolved during model creation.
 
-Within the model, you can either add the `from **future** import annotations
+Within the model, you can either add the `from __future__ import annotations
 
 from collections.abc import Mapping, Sequence` import or wrap the annotation
 in a string:

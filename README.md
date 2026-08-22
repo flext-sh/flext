@@ -3,7 +3,7 @@
 FLEXT is a multi-package Python workspace for data integration, platform tooling, and operational connectors.
 
 **Mission:** The FLEXT goal, success metrics, and inviolable governance chain are codified in
-[`AGENTS.md` § Meta do FLEXT](AGENTS.md) — the always-loaded engineering law that governs every agent action in every
+[`AGENTS.md` (Make / Authority sections)](AGENTS.md) — the always-loaded engineering law that governs every agent action in every
 session.
 
 The root documentation in this repository governs only the FLEXT platform and the `flext-*` packages. If this
@@ -37,7 +37,7 @@ Documentation automation is implemented in `flext-infra` and is pyproject-first:
 
 - package metadata comes from `pyproject.toml`
 - project-specific docs metadata can live under `[tool.flext.docs]`
-- `docs/docs_settings.json` is intentionally minimal and only covers policy that cannot be deduced from project metadata
+- `docs/docs_config.json` is intentionally minimal and only covers policy that cannot be deduced from project metadata
 - generated API docs use public exports and real docstrings as the SSOT
 
 ## Repository Direction

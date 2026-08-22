@@ -105,6 +105,8 @@ scripts/maintenance/
 
 # BLOCK: AI/Agent Local Data (NEVER track these)
 .claude/*
+
+# WHITELIST: Agent skills owned by the workspace root
 !.agents/skills/
 !.agents/skills/**
 
@@ -180,7 +182,16 @@ fix-report.json
 **/coverage.xml
 **/*.cover
 
+# Docs verb report artifacts inside docs trees
+**/docs/generate-report.md
+**/docs/generate-summary.json
+**/docs/fix-report.md
+**/docs/fix-summary.json
+**/docs/audit-report.md
+**/docs/audit-summary.json
+
 # Virtual environments inside allowed directories (should never be committed)
+**/.venv
 **/.venv/
 **/venv/
 **/env/
@@ -307,8 +318,10 @@ secrets.yml
 .beads-credential-key
 .worktrees/
 legado/
+.beads.gate.lock
+*.gate.lock*
 
-# Beads ledger identity (workspace-root only; see mro-9wv8)
+# Beads ledger identity (all Beads-participating profiles; see mro-9wv8, mro-cdzxf)
 !.beads/metadata.json
 
 # codegen module-standardizer reject artifacts (ADR-005 §9)
@@ -317,6 +330,7 @@ legado/
 # --- codegen conform: generated runtime ignores ---
 .direnv/
 .reports/
+.venv
 .venv/
 .bin/
 .tools/
@@ -337,6 +351,9 @@ __pyrefly_virtual__/
 .omo/
 .pylance_cache/
 .pytest_cache/
+.testmondata
+.testmondata-wal
+.testmondata-shm
 .ropeproject/
 .ruff_cache/
 .scope/

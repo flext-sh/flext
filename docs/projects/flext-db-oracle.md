@@ -15,7 +15,7 @@ targets, dbt adapters — reuses one typed connection, query, and schema-introsp
 
 - All fallible operations return `r[T]` (`p.Result[T]`); no exceptions cross the public API as control flow.
 - Settings are validated Pydantic models (`FlextDbOracleSettings`, env prefix `ORACLE_`, nested delimiter `__`).
-- Gates: `make check PROJECT=flext-db-oracle`, `make test PROJECT=flext-db-oracle`, and `make val` produce the
+- Gates: `make check PROJECT=flext-db-oracle`, `make test PROJECT=flext-db-oracle`, and `make check` produce the
   authoritative lint/type/test evidence — see those outputs rather than any number stated here.
 
 ## Quick start
@@ -80,7 +80,7 @@ The package follows the canonical FLEXT layout under `src/flext_db_oracle/`:
   workspace gates.
 - Oracle-backed integration paths require a reachable Oracle instance; without one, unit suites and static gates are the
   evidence of record.
-- The authoritative quality verdict comes from `make check PROJECT=flext-db-oracle` and `make val` — consult their
+- The authoritative quality verdict comes from `make check PROJECT=flext-db-oracle` and `make check` — consult their
   output for current lint, typing, and test status.
 
 ## Resources

@@ -1,14 +1,27 @@
 # Troubleshooting
 
+<!-- TOC START -->
+- [Quick Checks](#quick-checks)
+- [Common Docs Failures](#common-docs-failures)
+  - [MkDocs strict build fails](#mkdocs-strict-build-fails)
+  - [Generated API docs are wrong](#generated-api-docs-are-wrong)
+  - [Root docs mention non-FLEXT projects](#root-docs-mention-non-flext-projects)
+  - [Audit flags stale architecture symbols](#audit-flags-stale-architecture-symbols)
+- [Common Metadata Problems](#common-metadata-problems)
+- [When to Edit JSON Policy](#when-to-edit-json-policy)
+- [Related Guides](#related-guides)
+<!-- TOC END -->
+
 Use this page for workspace-level diagnostics. If the failure is project-specific, continue in that project’s local docs
 and tests.
 
 ## Quick Checks
 
 ```bash
-make check CHANGED_ONLY=1
-make val VALIDATE_SCOPE=workspace
-make docs DOCS_PHASE=build PROJECT=flext-infra
+# Optional custom.mk helper (not a PUBLIC_VERBS target from `make help`):
+# make workspace-check-changed
+make check
+make docs WHAT=build PROJECT=flext-infra
 ```
 
 ## Common Docs Failures
@@ -24,9 +37,9 @@ Typical causes:
 Run:
 
 ```bash
-make docs DOCS_PHASE=fix PROJECT=flext-infra FIX=1
-make docs DOCS_PHASE=audit PROJECT=flext-infra
-make docs DOCS_PHASE=build PROJECT=flext-infra
+make docs WHAT=fix PROJECT=flext-infra APPLY=Y
+make docs WHAT=audit PROJECT=flext-infra
+make docs WHAT=build PROJECT=flext-infra
 ```
 
 ### Generated API docs are wrong

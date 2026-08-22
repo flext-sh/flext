@@ -15,7 +15,7 @@ meltano` (Singer target base) behind `r[T]` contracts.
 ### Quality signals
 
 - Quality gates run through the workspace Make contract: `make check PROJECT=flext-target-ldap`, `make test
-  PROJECT=flext-target-ldap`, and `make val`.
+  PROJECT=flext-target-ldap`, and `make check`.
 - Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
   rather than static claims in this page.
 
@@ -73,7 +73,7 @@ src/flext_target_ldap/
 
 - Tests live under the project `tests/` tree and run via `make test PROJECT=flext-target-ldap`; Singer behavior is
   exercised through the stdin JSONL contract.
-- Pre-merge verification: `make check PROJECT=flext-target-ldap` (lint + typing + security selectors) and `make val`.
+- Pre-merge verification: `make check PROJECT=flext-target-ldap` (lint + typing + security selectors) and `make check`.
 
 ## Resources
 

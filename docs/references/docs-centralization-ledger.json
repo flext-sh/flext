@@ -1,0 +1,5615 @@
+[
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext",
+    "logical": "flext",
+    "root_mds": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "README.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docker",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "flext-api",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-auth",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-cli",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-core",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-db-oracle",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-dbt-ldap",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-dbt-ldif",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-dbt-oracle",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-dbt-oracle-wms",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-grpc",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-infra",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-ldap",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-ldif",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-meltano",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-observability",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-oracle-oic",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-oracle-wms",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-plugin",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-quality",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-tap-ldap",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-tap-ldif",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-tap-oracle",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-tap-oracle-oic",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-tap-oracle-wms",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-target-ldap",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-target-ldif",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-target-oracle",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-target-oracle-oic",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-target-oracle-wms",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-tests",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "flext-web",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "libs",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "scripts",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-api",
+    "logical": "flext-api",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "TODOS.md",
+      "index.md",
+      "overview.md",
+      "testing.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "TODOS.md",
+        "disposition": "move",
+        "target": "docs/TODOS.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "overview.md",
+        "disposition": "move",
+        "target": "docs/overview.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api",
+        "disposition": "move",
+        "target": "docs/api",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-auth",
+    "logical": "flext-auth",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "REFACTOR_STATUS.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "REFACTOR_STATUS.md",
+        "disposition": "move",
+        "target": "docs/REFACTOR_STATUS.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-cli",
+    "logical": "flext-cli",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "README.md",
+      "architecture.md",
+      "development.md",
+      "getting-started.md",
+      "index.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "notebook",
+        "disposition": "move",
+        "target": "docs/notebook",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "refactoring",
+        "disposition": "move",
+        "target": "docs/refactoring",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-core",
+    "logical": "flext-core",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "CONTRACT_BUDGET.md",
+      "CONTRIBUTING.md",
+      "DOCUMENTATION_UPDATE_SUMMARY.md",
+      "README.md",
+      "index.md",
+      "quick-start.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CONTRACT_BUDGET.md",
+        "disposition": "move",
+        "target": "docs/CONTRACT_BUDGET.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "CONTRIBUTING.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "DOCUMENTATION_UPDATE_SUMMARY.md",
+        "disposition": "move",
+        "target": "docs/DOCUMENTATION_UPDATE_SUMMARY.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "quick-start.md",
+        "disposition": "move",
+        "target": "docs/quick-start.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "__pycache__",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "development",
+        "disposition": "move",
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "improvements",
+        "disposition": "move",
+        "target": "docs/improvements",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "refactor",
+        "disposition": "move",
+        "target": "docs/refactor",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "scripts",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "standards",
+        "disposition": "move",
+        "target": "docs/standards",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-db-oracle",
+    "logical": "flext-db-oracle",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-dbt-ldap",
+    "logical": "flext-dbt-ldap",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "logs",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-dbt-ldif",
+    "logical": "flext-dbt-ldif",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "dbt_packages",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "profiles",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-dbt-oracle",
+    "logical": "flext-dbt-oracle",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-dbt-oracle-wms",
+    "logical": "flext-dbt-oracle-wms",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "README.md",
+      "index.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development",
+        "disposition": "move",
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "getting-started",
+        "disposition": "move",
+        "target": "docs/getting-started",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "integration",
+        "disposition": "move",
+        "target": "docs/integration",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "models",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-grpc",
+    "logical": "flext-grpc",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "integration.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "integration.md",
+        "disposition": "move",
+        "target": "docs/integration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "maintenance",
+        "disposition": "move",
+        "target": "docs/maintenance",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-infra",
+    "logical": "flext-infra",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "README.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "__pycache__",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-ldap",
+    "logical": "flext-ldap",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api",
+        "disposition": "move",
+        "target": "docs/api",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development",
+        "disposition": "move",
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "maintenance",
+        "disposition": "move",
+        "target": "docs/maintenance",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-ldif",
+    "logical": "flext-ldif",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "adr",
+        "disposition": "move",
+        "target": "docs/adr",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "diagrams",
+        "disposition": "move",
+        "target": "docs/diagrams",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "refactoring",
+        "disposition": "move",
+        "target": "docs/refactoring",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-meltano",
+    "logical": "flext-meltano",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "c4-model.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "c4-model.md",
+        "disposition": "move",
+        "target": "docs/c4-model.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "__pycache__",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "b-pipeline",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "debug-pipeline",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "exec-pipeline",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "noexec-pipeline",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "probe",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "status-pipeline",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-observability",
+    "logical": "flext-observability",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "index.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api",
+        "disposition": "move",
+        "target": "docs/api",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "legado",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "standards",
+        "disposition": "move",
+        "target": "docs/standards",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-oracle-oic",
+    "logical": "flext-oracle-oic",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "integration.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "integration.md",
+        "disposition": "move",
+        "target": "docs/integration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "ast-grep-rules",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-oracle-wms",
+    "logical": "flext-oracle-wms",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "ast-grep-rules",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "complete_pipeline_results",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-plugin",
+    "logical": "flext-plugin",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "development.md",
+      "getting-started.md",
+      "index.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "ast-grep-rules",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "standards",
+        "disposition": "move",
+        "target": "docs/standards",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-quality",
+    "logical": "flext-quality",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "DUPLICATION-DETECTION.md",
+      "HOOK_WARNINGS.md",
+      "PLUGIN-ARCHITECTURE.md",
+      "README.md",
+      "RULE_MODIFICATION.md",
+      "TESTING_WARNING_SYSTEM.md",
+      "api-reference.md",
+      "getting-started.md",
+      "index.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "DUPLICATION-DETECTION.md",
+        "disposition": "move",
+        "target": "docs/DUPLICATION-DETECTION.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "HOOK_WARNINGS.md",
+        "disposition": "move",
+        "target": "docs/HOOK_WARNINGS.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "PLUGIN-ARCHITECTURE.md",
+        "disposition": "move",
+        "target": "docs/PLUGIN-ARCHITECTURE.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "RULE_MODIFICATION.md",
+        "disposition": "move",
+        "target": "docs/RULE_MODIFICATION.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "TESTING_WARNING_SYSTEM.md",
+        "disposition": "move",
+        "target": "docs/TESTING_WARNING_SYSTEM.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development",
+        "disposition": "move",
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-tap-ldap",
+    "logical": "flext-tap-ldap",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-tap-ldif",
+    "logical": "flext-tap-ldif",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-tap-oracle",
+    "logical": "flext-tap-oracle",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-tap-oracle-oic",
+    "logical": "flext-tap-oracle-oic",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-tap-oracle-wms",
+    "logical": "flext-tap-oracle-wms",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "TODO.md",
+      "api-reference.md",
+      "architecture.md",
+      "getting-started.md",
+      "index.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "TODO.md",
+        "disposition": "move",
+        "target": "docs/TODO.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development",
+        "disposition": "move",
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "standards",
+        "disposition": "move",
+        "target": "docs/standards",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-target-ldap",
+    "logical": "flext-target-ldap",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-target-ldif",
+    "logical": "flext-target-ldif",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-target-oracle",
+    "logical": "flext-target-oracle",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CONTRIBUTING.md",
+      "README.md",
+      "TODO.md",
+      "api-reference.md",
+      "architecture.md",
+      "development.md",
+      "getting-started.md",
+      "index.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CONTRIBUTING.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "TODO.md",
+        "disposition": "move",
+        "target": "docs/TODO.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-target-oracle-oic",
+    "logical": "flext-target-oracle-oic",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-target-oracle-wms",
+    "logical": "flext-target-oracle-wms",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-tests",
+    "logical": "flext-tests",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "flext",
+    "project": "/home/marlonsc/flext/flext-web",
+    "logical": "flext-web",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "api-reference.md",
+      "architecture.md",
+      "configuration.md",
+      "development.md",
+      "getting-started.md",
+      "index.md",
+      "testing.md",
+      "troubleshooting.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "api-reference.md",
+        "disposition": "move",
+        "target": "docs/api-reference.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture.md",
+        "disposition": "move",
+        "target": "docs/architecture.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration.md",
+        "disposition": "move",
+        "target": "docs/configuration.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development.md",
+        "disposition": "move",
+        "target": "docs/development.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "getting-started.md",
+        "disposition": "move",
+        "target": "docs/getting-started.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "index.md",
+        "disposition": "move",
+        "target": "docs/index.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "testing.md",
+        "disposition": "move",
+        "target": "docs/testing.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "troubleshooting.md",
+        "disposition": "move",
+        "target": "docs/troubleshooting.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "api-reference",
+        "disposition": "move",
+        "target": "docs/api-reference",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "architecture",
+        "disposition": "move",
+        "target": "docs/architecture",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "configuration",
+        "disposition": "move",
+        "target": "docs/configuration",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "development",
+        "disposition": "move",
+        "target": "docs/development",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "examples",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "guides",
+        "disposition": "move",
+        "target": "docs/guides",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "releases",
+        "disposition": "move",
+        "target": "docs/releases",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "roadmap",
+        "disposition": "move",
+        "target": "docs/roadmap",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "ai-hub",
+    "project": "/home/marlonsc/.ai-hub",
+    "logical": "ai-hub",
+    "root_mds": [
+      ".debug-journal.md",
+      "AGENTS.md",
+      "CATALOG.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "ECOSYSTEM.md",
+      "README.md",
+      "UNIVERSAL_CORE.md"
+    ],
+    "dispositions": [
+      {
+        "path": ".debug-journal.md",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CATALOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "ECOSYSTEM.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "UNIVERSAL_CORE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "ast-grep-rule-tests",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "ast-grep-rules",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "bin",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "dist",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "evals",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "mcp",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "openclaw",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "opencode",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "rules",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "run",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "skills",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "templates",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tools",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "cosmos-docgen",
+    "project": "/home/marlonsc/cosmos-docgen",
+    "logical": "cosmos-docgen",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "ECOSYSTEM.md",
+      "README.md",
+      "cosmos-docgen_FLEXT_BEADS_LANE_REORGANIZATION_PLAN.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "ECOSYSTEM.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "cosmos-docgen_FLEXT_BEADS_LANE_REORGANIZATION_PLAN.md",
+        "disposition": "move",
+        "target": "docs/cosmos-docgen_FLEXT_BEADS_LANE_REORGANIZATION_PLAN.md",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "assets",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "authoring",
+        "disposition": "move",
+        "target": "docs/authoring",
+        "status": "applied",
+        "note": "centralized under docs/ on 0.12.0-dev via mro-z89e.33 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "data",
+        "disposition": "special"
+      },
+      {
+        "path": "dist",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "layouts",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "skills",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "templates",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "cosmos-main",
+    "project": "/home/marlonsc/cosmos-main",
+    "logical": "cosmos-main",
+    "root_mds": [
+      ".debug-journal.md",
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "ECOSYSTEM.md",
+      "LICENSE-3RD-PARTY.md",
+      "LICENSE.quick-reference.md",
+      "ONBOARDING.md",
+      "QODER.md",
+      "README.md",
+      "SECURITY.md"
+    ],
+    "dispositions": [
+      {
+        "path": ".debug-journal.md",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "ECOSYSTEM.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "LICENSE-3RD-PARTY.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "LICENSE.quick-reference.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "ONBOARDING.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "QODER.md",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "SECURITY.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "apps",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "bin",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "build",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "ci",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "coordination",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "cosmos",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "cosmos_main.egg-info",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "docker",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "evals",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "legado",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "mro",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "policy",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "scratchpad",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "scripts",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "site",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "skills",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "templates",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "work",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "cosmos-main",
+    "project": "/home/marlonsc/cosmos-main/apps/cosmos-charts",
+    "logical": "cosmos-charts",
+    "root_mds": [
+      ".debug-journal.md",
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "README.md"
+    ],
+    "dispositions": [
+      {
+        "path": ".debug-journal.md",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "build",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "charts",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "images",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "legado",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "scripts",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "cosmos-main",
+    "project": "/home/marlonsc/cosmos-main/apps/cosmos-gitops",
+    "logical": "cosmos-gitops",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "README.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "build",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "repo",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "scripts",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tenants",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      }
+    ],
+    "has_mkdocs": true,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "invest",
+    "project": "/home/marlonsc/invest",
+    "logical": "invest",
+    "root_mds": [
+      ".aider.chat.history.md",
+      "AGENTS.md",
+      "BEADS_WORKFLOW.md",
+      "CLAUDE.md",
+      "GEMINI.md"
+    ],
+    "dispositions": [
+      {
+        "path": ".aider.chat.history.md",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "BEADS_WORKFLOW.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "GEMINI.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "ansible",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "config",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "data",
+        "disposition": "special"
+      },
+      {
+        "path": "docker",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "external-docs",
+        "disposition": "special"
+      },
+      {
+        "path": "logs",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "mt5docker",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "mt5linux",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "neptor",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "scripts",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "typings",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      },
+      {
+        "path": "vectorbt.pro",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      }
+    ],
+    "has_mkdocs": false,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  },
+  {
+    "tree": "invest",
+    "project": "/home/marlonsc/invest/neptor",
+    "logical": "neptor",
+    "root_mds": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "CONTRIBUTING.md",
+      "README.md"
+    ],
+    "dispositions": [
+      {
+        "path": "AGENTS.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CHANGELOG.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CLAUDE.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "CONTRIBUTING.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "README.md",
+        "disposition": "keep"
+      },
+      {
+        "path": "docs",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "src",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "tests",
+        "disposition": "canonical_dir"
+      },
+      {
+        "path": "typings",
+        "disposition": "done",
+        "note": "merged to 0.12.0-dev via mro-z89e.33/34 @ 2026-08-04T12:23:50Z"
+      }
+    ],
+    "has_mkdocs": false,
+    "closeout": {
+      "status": "engine_fixed_pending_land",
+      "branch": "0.12.0-dev",
+      "bead": "mro-z89e.33/mro-z89e.34",
+      "updated_at": "2026-08-04T13:17:49Z",
+      "evidence_sha": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_run": "https://github.com/flext-sh/flext/actions/runs/30908936197",
+      "note": "Owner fix in flext-infra export discovery + required_skills=flext-law/flext-context-routing. Ledger not done until landed SHA has green CI+Docs.",
+      "evidence_sha_local_wip": "563cfbfbda0b5548529603e6d6a48f0068264b9f",
+      "docs_validate": "make docs WHAT=validate exit 0 (all scopes OK) 2026-08-04",
+      "docs_generate_fixed_point": "second make docs WHAT=generate APPLY=Y reported changes:0 all scopes",
+      "docs_audit": "make docs WHAT=audit completed successfully (WARN budgets remain)"
+    }
+  }
+]

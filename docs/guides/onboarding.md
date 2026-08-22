@@ -1,6 +1,17 @@
 # Onboarding (Collection Rules / regras de coletas)
 
-Canonical pre-work to enter ANY FLEXT project. Per AGENTS.md §9 Pre-requisites + the auto-generated per-project
+<!-- TOC START -->
+- [1. Read Governance First](#1-read-governance-first)
+- [2. Identify Project Slot Ownership](#2-identify-project-slot-ownership)
+- [3. Bootstrap Tooling](#3-bootstrap-tooling)
+- [4. Confirm Zero-Debt Baseline](#4-confirm-zero-debt-baseline)
+- [5. Load Skills Relevant to the Change Scope](#5-load-skills-relevant-to-the-change-scope)
+- [6. Fundamental Packages](#6-fundamental-packages)
+- [7. Per-Project Collection Rules](#7-per-project-collection-rules)
+- [8. Cross-References](#8-cross-references)
+<!-- TOC END -->
+
+Canonical pre-work to enter ANY FLEXT project. Per root `AGENTS.md` (Make + Conventions) and the auto-generated per-project
 Collection Rules in each `<project>/docs/index.md`.
 
 ## 1. Read Governance First
@@ -8,7 +19,7 @@ Collection Rules in each `<project>/docs/index.md`.
 1. [`/flext/docs/GOVERNANCE.md`](../GOVERNANCE.md) — rule routing, ADRs,
    validation surfaces, and ratified refactor gates.
 2. `/flext/AGENTS.md` (repo root) — supreme engineering law.
-3. `~/.claude/AGENTS.md` — universal cross-project rules (if present).
+3. `~/.agents/AGENTS.md` — universal cross-project rules (if present).
 4. The target project's `pyproject.toml` for stack, version, dependencies.
 
 ## 2. Identify Project Slot Ownership
@@ -22,7 +33,7 @@ renaming any symbol.
 
 ```bash
 cd <workspace-root>
-make setup                       # Workspace .venv only (project .venv is forbidden — see AGENTS.md §6)
+make setup                       # Workspace .venv only (project .venv is forbidden — see AGENTS.md Conventions)
 ```
 
 The workspace `.venv/` is mandatory. Run validation through the root Make
@@ -33,17 +44,16 @@ dispatcher; do not rely on bare tool commands or a machine-specific path.
 ```bash
 cd <project>
 make check                                    # ruff + pyrefly + mypy + pyright must exit 0
-make val VALIDATE_SCOPE=project               # complexity + docstring gates must exit 0
 make test                                     # pytest must exit 0 with project coverage threshold
-make docs DOCS_PHASE=audit                    # docs audit must report zero issues
+make docs WHAT=audit                          # docs audit must report zero issues
 ```
 
-If any gate fails, FIX FORWARD per AGENTS.md §3.5. Never `git checkout`/`reset`/`revert` to recover.
+If any gate fails, fix forward per AGENTS.md Conventions. Never `git checkout`/`reset`/`revert` to recover.
 
 ## 5. Load Skills Relevant to the Change Scope
 
 The provider activates `flext-context-routing` first. That router selects only
-the smallest on-demand set declared by the active `~/.agents` provider:
+the smallest on-demand set declared by the active `config.AiHub.paths.agents_home` provider:
 
 1. Load the one domain skill that owns the change, such as `lib-returns`,
    `flext-import-rules`, or `pydantic-v2-governance`.
@@ -76,9 +86,9 @@ To regenerate stale per-project docs:
 
 ```bash
 cd <project>
-make docs DOCS_PHASE=generate    # re-renders docs/index.md, api-reference/generated/*
-make docs DOCS_PHASE=fix         # safe automated docs remediation
-make docs DOCS_PHASE=audit       # re-confirm zero issues
+make docs WHAT=generate APPLY=Y  # re-renders docs/index.md, api-reference/generated/*
+make docs WHAT=fix APPLY=Y       # safe automated docs remediation
+make docs WHAT=audit             # re-confirm zero issues
 ```
 
 ## 8. Cross-References

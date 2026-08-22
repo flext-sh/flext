@@ -17,7 +17,7 @@ data quality.
 - All operations return `r[T]` (`p.Result[...]`) with typed payload models under `m.DbtLdif.*`.
 - Settings are validated Pydantic models (`FlextDbtLdifSettings`); configuration is consumed only through the settings
   SSOT.
-- Gates: `make check PROJECT=flext-dbt-ldif`, `make test PROJECT=flext-dbt-ldif`, and `make val` produce the
+- Gates: `make check PROJECT=flext-dbt-ldif`, `make test PROJECT=flext-dbt-ldif`, and `make check` produce the
   authoritative evidence.
 
 ## Quick start
@@ -73,7 +73,7 @@ The package follows the canonical FLEXT layout under `src/flext_dbt_ldif/`:
 
 - Tests live in the project `tests/` tree and run through `make test PROJECT=flext-dbt-ldif`.
 - Workflow tests use synthetic LDIF fixtures; dbt execution paths need a configured dbt target.
-- The authoritative quality verdict comes from `make check PROJECT=flext-dbt-ldif` and `make val`.
+- The authoritative quality verdict comes from `make check PROJECT=flext-dbt-ldif` and `make check`.
 
 ## Resources
 

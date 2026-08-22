@@ -1,17 +1,26 @@
 # Development
 
+<!-- TOC START -->
+- [Baseline Workflow](#baseline-workflow)
+- [Daily Sequence](#daily-sequence)
+- [Workspace Structure](#workspace-structure)
+- [Documentation Workflow](#documentation-workflow)
+- [Rules That Matter Here](#rules-that-matter-here)
+- [Related Guides](#related-guides)
+<!-- TOC END -->
+
 The root development workflow is governed by `AGENTS.md`. Treat this guide as the operational summary, not as a parallel
 policy source.
 
 ## Baseline Workflow
 
 ```bash
-make workspace-check-changed
+make status
 make test PROJECT=flext-infra MATCH=docs
-make val
+make check
 ```
 
-Use `PROJECT`, `PROJECTS`, `FILE`, `FILES`, `MATCH`, and `CHECK_GATES` instead of ad hoc shell loops. See [Make
+Use `PROJECT`, `PROJECTS`, `FILE`, `MATCH`, and `CHECK_GATES` instead of ad hoc shell loops. See [Make
 Commands](make-commands.md) for the full command reference.
 
 ## Daily Sequence
@@ -32,11 +41,11 @@ Commands](make-commands.md) for the full command reference.
 Use the docs phases through the canonical entrypoint:
 
 ```bash
-make docs DOCS_PHASE=generate PROJECT=flext-infra
-make docs DOCS_PHASE=fix PROJECT=flext-infra FIX=1
-make docs DOCS_PHASE=audit PROJECT=flext-infra
-make docs DOCS_PHASE=build PROJECT=flext-infra
-make docs DOCS_PHASE=validate PROJECT=flext-infra
+make docs WHAT=generate PROJECT=flext-infra APPLY=Y
+make docs WHAT=fix PROJECT=flext-infra APPLY=Y
+make docs WHAT=audit PROJECT=flext-infra
+make docs WHAT=build PROJECT=flext-infra
+make docs WHAT=validate PROJECT=flext-infra
 ```
 
 ## Rules That Matter Here

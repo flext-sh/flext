@@ -1,146 +1,91 @@
-# Comandos Make do FLEXT
+# FLEXT Make command surface
 
-Este guia é a referência canônica para a superfície de comando `make` do monorepo FLEXT. As regras aqui valem para o
-workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locais (`make check`, `make test`, etc.).
+<!-- TOC START -->
+- [Conventions](#conventions)
+- [Public verbs (`PUBLIC_VERBS`)](#public-verbs-publicverbs)
+- [`gen` (codegen SSOT)](#gen-codegen-ssot)
+- [Integration line (operator gate)](#integration-line-operator-gate)
+- [`work` saga](#work-saga)
+- [Quick recipes](#quick-recipes)
+<!-- TOC END -->
 
-## Convenções
+Canonical reference for the workspace Make control plane on `0.12.0-dev`.
+Discover live verbs with `make help` only. Do not invent retired verbs.
 
-- **Poucos verbos, muitas ações**: o formato é `make <verbo> WHAT=<acao>`. Cada verbo agrupa um domínio.
-- **`all` é o padrão**: se `WHAT` for omitido, o comando executa a ação `all` daquele verbo.
-- **Projetos default = todos**: se `PROJECT` ou `PROJECTS` forem omitidos, o comando abrange todos os projetos do
-  workspace.
-- **Mutadores são dry-run por padrão**: comandos que alteram arquivos exigem `APPLY=Y` para executar de verdade.
-- **Ajuda embutida**: `make <verbo> WHAT=help` lista as ações disponíveis.
+## Conventions
 
-## Verbos canônicos
+- Format: `make <verb> [WHAT=<action>] [PROJECT=<member>] [APPLY=Y]`
+- Discovery: `make help` (there is no `WHAT=help` on most verbs)
+- Mutation: verbs that change the tree require `APPLY=Y` (`deps` upgrade/lock, `fmt`/`fix` apply, `gen` apply, `docs` generate/fix, `clean`, `work` start/land/finish)
+- Scope: omit `PROJECT`/`PROJECTS` to fan out across declared workspace members from the root
 
-| Verbo | Domínio | Resumo | Exemplo |
+## Public verbs (`PUBLIC_VERBS`)
+
+| Verb | Default WHAT | Notes | Example |
 | --- | --- | --- | --- |
-| `make setup` | workspace | Bootstrap de `.venv` + submódulos | `make setup APPLY=Y` |
-| `make build` | build | Build/regen padronizado | `make build WHAT=gen APPLY=Y` |
-| `make check` | quality | Quality gates | `make check` |
-| `make clean` | workspace | Limpeza de artefatos | `make clean APPLY=Y` |
-| `make coordination` | governance | Diagnósticos de coordenação Beads | `make coordination` |
-| `make docs` | documentation | Pipeline de documentação | `make docs DOCS_PHASE=validate` |
-| `make makefile` | meta | Mostra a superfície de comandos | `make makefile` |
-| `make ship` | release | Orquestração de release | `make ship WHAT=rel APPLY=Y` |
-| `make status` | governance | Status dos Beads | `make status` |
-| `make test` | quality | Testes pytest | `make test PROJECT=flext-infra MATCH=docs` |
-| `make val` | governance | Validação de gates | `make val` |
+| `help` | `usage` | Lists the live surface | `make help` |
+| `setup` | (none) | Provision `.venv` + governed gitlinks; no `APPLY` gate | `make setup` |
+| `deps` | `check` | `check` / `lock` / `upgrade`; mutators need `APPLY=Y` | `make deps WHAT=upgrade APPLY=Y PROJECT=flext-core` |
+| `build` | `artifacts` | Build/package orchestration | `make build` |
+| `check` | `all` | Read-only quality gates; optional `CHECK_GATES=` | `make check PROJECT=flext-infra CHECK_GATES=lint,format,pyrefly` |
+| `test` | `all` | Default `--testmon` without coverage; `COV=Y` full coverage without testmon; `WHAT=cache-status|cache-clear|cache-checkpoint`; optional `FILE=` / `MATCH=` | `make test PROJECT=flext-infra` / `make test COV=Y PROJECT=flext-infra` |
+| `fmt` | `check` | Format check/apply (`APPLY=Y` for mutate) | `make fmt WHAT=apply APPLY=Y` |
+| `fix` | `check` | Auto-fix apply (`APPLY=Y`) | `make fix WHAT=apply APPLY=Y` |
+| `run` | `default` | Run project entry | `make run` |
+| `status` | `diagnostics` | Profile/attached/runtime + lock/pip checks | `make status` |
+| `docs` | `all` | `all|generate|fix|audit|build|validate` | `make docs WHAT=audit` |
+| `clean` | `generated` | Requires `APPLY=Y` | `make clean APPLY=Y` |
+| `release` | `status` | Release status surface | `make release` |
+| `gen` | `check` | Codegen conform; mutate with `WHAT=apply APPLY=Y` | `make gen WHAT=apply APPLY=Y` |
+| `work` | `status` | Bead + GitFlow lane saga | `make work WHAT=start PROJECT=<member> BEAD=<id> KIND=bugfix NAME=<slug> APPLY=Y` |
 
-## Ações de `build` (`make build WHAT=<acao>`)
+Retired / not public: `val`, `codegen`, `format`, `boot`, `ship`, `coordination`, `makefile`, `DOCS_PHASE`, `CHANGED_ONLY`.
 
-| Ação | Alias curto | Muta? | Descrição |
-| --- | --- | --- | --- |
-| `all` | — | sim | Build/package em todos os projetos selecionados |
-| `constraints` | — | sim | Reescreve constraints de dependências |
-| `docs` | — | sim | Roda o pipeline de docs |
-| `gen` | `make gen` | sim | Regenera arquivos padronizados de projeto |
-| `mod` | `make mod` | sim | Moderniza `pyproject.toml` |
-| `stubs` | `make stubs` | não | Validação da cadeia de stubs |
-| `sync` | `make sync` | sim | Sincroniza Makefiles a partir do `pyproject.toml` |
-| `up` | `make up` | sim | Upgrade de dependências do workspace |
+## `gen` (codegen SSOT)
 
-## Ações de `check` (`make check WHAT=<acao>`)
-
-| Ação | Alias curto | Descrição |
-| --- | --- | --- |
-| `all` | `make lint` | Default rápido: `lint` + `pyrefly` |
-| `boundary` | `make boundary` | Boundary gate |
-| `cqrs` | `make cqrs` | CQRS compliance gate |
-| `docker_standardization` | `make docker_standardization` | Centralização de artefatos Docker |
-| `fmt` / `format` | `make fmt` / `make format` | Formatação (ruff + markdown) |
-| `go` | `make go` | Go quality gate |
-| `lint` | `make lint` | Lint + type gates |
-| `loc-cap` | `make loc-cap` | Loc-cap gate |
-| `markdown` | `make markdown` | Markdown quality gate |
-| `mypy` | `make mypy` | mypy gate |
-| `pol` | `make pol` | Typing policy gate |
-| `pyre` | `make pyre` | Pyrefly repository type check |
-| `pyrefly` | `make pyrefly` | Pyrefly scoped type check |
-| `pyright` | `make pyright` | Pyright gate |
-| `scan` | `make scan` | Security scan gates |
-| `silent-failure` | `make silent-failure` | Silent-failure gate |
-| `types` | `make types` | Typing supply chain |
-
-## Ações de `ship` (`make ship WHAT=<acao>`)
-
-| Ação | Alias curto | Muta? | Descrição |
-| --- | --- | --- | --- |
-| `all` / `rel` | `make rel` | sim | Release workflow |
-| `pr` | `make pr` | sim | Gerenciamento de PRs |
-| `push` | `make push` | sim | Push de branches/tags |
-| `save` | `make save` | sim | Commit de alterações |
-| `tag` | `make tag` | sim | Criação de tags |
-
-## Ações de `val` (`make val WHAT=<acao>`)
-
-| Ação | Alias curto | Descrição |
-| --- | --- | --- |
-| `all` | — | Roda `project` + `workspace` (padrão) |
-| `project` | `make project` | Validação ao nível de projeto |
-| `workspace` | `make workspace` | Validação ao nível de workspace |
-
-> O `VALIDATE_SCOPE` default é `all`, então `make val` já executa ambos os escopos.
-
-## Seletores de escopo
-
-Use `PROJECT` para um projeto, `PROJECTS` para vários, ou omita para todos:
+Edit SSOT under `flext-infra/config/codegen.yaml` and
+`flext-infra/src/flext_infra/templates/project/base/` (`Makefile.j2`,
+`.github/workflows/*.j2`), then regenerate:
 
 ```bash
-make check PROJECT=flext-infra
-make test PROJECTS="flext-core flext-cli" MATCH=docs
-make build WHAT=gen APPLY=Y              # todos os projetos
+make gen WHAT=apply APPLY=Y
 ```
 
-Não use `PROJECT` e `PROJECTS` juntos.
+Contracts locked by `flext-infra` tests (`test_review_mro_vw2w_template_contracts.py`,
+`test_codegen_ci_matrix.py`, `workflow_orphan_guard_tests.py`):
 
-## Dry-run e mutação
+- Bootstrap pins `flext-infra` to the recorded gitlink OID when resolvable (`FLEXT_INFRA_BOOTSTRAP_REF`), else the integration branch
+- `make deps WHAT=upgrade APPLY=Y PROJECT=...` modernizes via `SELECTED_PROJECTS` (honors `PROJECT`)
+- CI failure artifacts upload only `junit.xml` / `coverage.xml` / `coverage.json` (no raw logs)
+- TestPyPI release: root/tag verify → `make setup` → flext-core gitlink verify → publish
+- `ci-matrix` projected only for `workspace-root` / `standalone`; never for `workspace-member`
+- `ci-matrix` defaults to `workflow_dispatch` only; set `repository_policy_overlays.ci_matrix_auto_run: true` to also auto-run on push to `main` (no `pull_request`; never bind the integration-line variable)
+- `make gen WHAT=apply APPLY=Y` prunes orphan member `.github/workflows/ci-matrix.yml` copies
+- `codeql.yml` is not Jinja-projected (CodeQL default setup stays a GitHub repo setting)
 
-Comandos que alteram o workspace (build, clean, ship, boot, etc.) exibem um dry-run a menos que `APPLY=Y` seja passado:
+## Integration line (operator gate)
+
+Day-to-day land line is `0.12.0-dev`. Absorbing `main` into `0.12.0-dev` or promoting
+`0.12.0-dev` into `main` is operator-gated (`custom.mk` workspace sync helpers) and
+must not be treated as default land/finish closeout on 0.12.0-dev.
+
+## `work` saga
+
+On a workspace-root Makefile, when `PROJECT` names a `WORKSPACE_MEMBERS` entry and `WORKSPACE` is not a command-line override, `WORKSPACE` becomes `$(PROJECT_ROOT)/$(PROJECT)` so land/finish use the member git primary.
+
+| WHAT | Mutates? | Description |
+| --- | --- | --- |
+| `start` | yes (`APPLY=Y`) | Branch `KIND/NAME`, registered worktree, bead metadata |
+| `status` | no | Branch / worktree / head / PR for the bead |
+| `land` | yes (`APPLY=Y`) | Sync registered lane to integration base, push head, open (or reuse open) PR; does not merge |
+| `finish` | yes (`APPLY=Y`) | Close lane after merge |
+
+## Quick recipes
 
 ```bash
-make build WHAT=gen          # dry-run
-make build WHAT=gen APPLY=Y  # executa
-make clean                   # dry-run
-make clean APPLY=Y           # executa
-```
-
-## Exemplos do dia a dia
-
-```bash
-# Bootstrap inicial
-make setup APPLY=Y
-
-# Checagem rápida padrão (ruff + pyrefly)
+make setup
 make check
-
-# Checagem em um projeto específico
-make check PROJECT=flext-infra
-
-# Regenerar arquivos padronizados
-make gen APPLY=Y
-
-# Rodar testes de um projeto
-make test PROJECT=flext-infra MATCH=docs
-
-# Validar workspace completo
-make val
-
-# Sincronizar Makefiles após mudar pyproject.toml
-make sync APPLY=Y
+make test PROJECT=flext-core
+make gen WHAT=apply APPLY=Y
+make work WHAT=land PROJECT=<member> BEAD=<id> APPLY=Y
 ```
-
-## Descoberta
-
-```bash
-make help                  # lista todos os verbos
-make build WHAT=help       # lista ações de build
-make build WHAT=gen/help   # ajuda detalhada de gen
-```
-
-## Veja também
-
-- [Development](development.md) — workflow diário.
-- [Testing](testing.md) — gates de teste.
-- [Getting Started](getting-started.md) — bootstrap do workspace.

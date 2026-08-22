@@ -1,8 +1,15 @@
+<!-- HISTORICAL / SUPERSEDED — 2026-08-04 -->
+> **Status: historical / superseded.** Live execution SSOT is Beads (`mro-z89e` and children),
+> not this plan. Do not treat tool versions, worktree paths, `bd` versions, `rtk` mandates,
+> or active-leaf IDs in this file as current law. Prefer branch-matched
+> `.agents/skills/flext-law/SKILL.md` and the active Bead.
+> Superseded by Governance and Reality Repair (`mro-z89e.35`).
+
 # FLEXT 0.12.0-dev Governance and Beads Execution Continuation
 
 | Field | Current value |
 | --- | --- |
-| Status | Paused only for an operator-requested session transfer |
+| Status | HISTORICAL / SUPERSEDED — do not execute |
 | Date | 2026-07-29 |
 | Program | `flext-012-conform-beads-docs` |
 | Program epic | `mro-z89e` |
@@ -15,11 +22,10 @@
 | Durable program plan | `docs/superpowers/plans/2026-07-29-flext-beads-governance-reorganization-handoff.md` |
 | This handoff | `docs/superpowers/plans/2026-07-29-flext-governance-beads-execution-continuation.md` |
 
-This file is the authoritative session-transfer checkpoint for the execution
-state described below. It does not replace Beads or the durable program plan.
-The next session must verify mutable state before acting, update the active Bead
-after every state-changing slice, and continue from the first unfinished action
-rather than restarting the audit.
+This entire file is historical context only. Do not execute its instructions,
+tool pins, worktree paths, or “next session” actions. Live execution SSOT is
+Beads (`mro-z89e` / `mro-z89e.35`) plus branch-matched `.agents/skills/flext-law/SKILL.md`.
+The narrative below is preserved only as an audit trail of the 2026-07-29 state.
 
 ## 1. Exact operator outcome
 

@@ -23,7 +23,7 @@ scan outputs.
 
 ## Keeping Reports Fresh
 
-1. Run `make val` or the narrower `make check` targets before updating
+1. Run `make check` (and `make test` when behavior claims need evidence) before updating
    documentation references that claim a certain scan exists.
 2. After the run, copy the resulting artifact into `reports/` so the portal can
    still point to a real file.

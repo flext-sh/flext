@@ -9,41 +9,49 @@ builds on. Package description: "Enterprise Foundation Framework — Modern Pyth
 
 - **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: `make check PROJECT=flext-core` (Ruff + type checks) and `make val` for the full pipeline
+- **Quality gate**: `make check PROJECT=flext-core` (Ruff + type checks) and `make check` for the full pipeline
 - **Role**: root of the dependency chain; no runtime dependency on any other `flext-*` package (stdlib-first design)
 
 ### Quality signals
 
-- Strict typing enforced by project policy: no `Any`, no bare `object`, no `cast` shortcuts
+- Strict typing enforced by project policy: no `Any`, no bare `object`; boundary `cast` only where
+  the Result DIP reifies `p.Result[T]` from concrete `FlextResult` factories (never to silence errors)
 - Facets `c`/`t`/`p`/`m` are declaration-only; behavior lives in `u`, `cli`, `api`, `base`, and `services/*` (see root
-  `AGENTS.md` U17)
+  `AGENTS.md` Architecture / Conventions)
 - Config and settings are validated singletons (`config.<Ns>.*`, `settings.<Ns>.*`) consumed directly — no proxies or
   forwarding accessors
 - Generated documentation and module maps live under `flext-core/docs/api-reference/`
 
 ## Quick start
 
+From the workspace root (not a standalone `pip install`):
+
 ```bash
-pip install flext-core
+make setup
+make check PROJECT=flext-core
+make test PROJECT=flext-core
 ```
+
+Result-first railway (annotate with `p.Result`, construct with `r`):
 
 ```python
-from flext_core import FlextDispatcher, p, r
+from flext_core import p, r
 
 
-class CreateUserHandler:
-    def handle(self, message: p.Routable) -> p.Result[str]:
-        return r[str].ok(f"created:{message.username}")
+def create_user(username: str) -> p.Result[str]:
+    if not username:
+        return r[str].fail("username_required")
+    return r[str].ok(f"created:{username}")
 
 
-dispatcher = FlextDispatcher()
-registered = dispatcher.register_handler(CreateUserHandler())
-assert registered.is_success
+ok = create_user("ada")
+assert ok.success
+assert ok.value == "created:ada"
+assert create_user("").failure
 ```
 
-The dispatcher routes a message to the registered handler whose declared `message_type` matches, and every fallible step
-returns `r[T]` so callers chain with `.map`/`.flat_map` instead of raising. More bootstrap examples live in `flext-
-core/examples/` (`ex_01_flext_result.py` through dispatcher and settings walkthroughs).
+Dispatcher wiring needs a declared `message_type` (see `flext-core/examples/ex_04_flext_dispatcher.py`). Fallible steps
+chain with `.map` / `.flat_map` instead of raising.
 
 ## Architecture & modules
 
@@ -63,8 +71,10 @@ core/examples/` (`ex_01_flext_result.py` through dispatcher and settings walkthr
 
 ### Key architectural patterns
 
-- **`r[T]` railway contract**: `FlextResult` with `r[T].ok(value)` / `r[T].fail(error)`; every fallible public path
-  returns a result instead of raising.
+- **`r[T]` railway contract**: public annotations use `p.Result[T]`; concrete instances are `FlextResult` built via
+  `r[T].ok` / `r[T].fail` / factories (`from_result`, `from_failure`, `fail_op`, …) without lazy facade imports under
+  `_result/`. Empty failures (`fail(None)` / `fail("")`) stay failed railway values; exception `error_data` redacts
+  `c.SENSITIVE_ERROR_DATA_KEYS` before exposure.
 - **Facade aliases**: one canonical alias per responsibility (`m` models, `u` utilities, `p` protocols, …); downstream
   projects subclass these via MRO to compose their own facades.
 - **Lazy exports**: `lazy.py` (`build_lazy_import_map`, `install_lazy_exports`) keeps `import flext_core` cheap while
@@ -75,22 +85,33 @@ core/examples/` (`ex_01_flext_result.py` through dispatcher and settings walkthr
 ## Testing & quality
 
 - `make check PROJECT=flext-core`: Ruff linting plus type checks (pyrefly/mypy)
-- `make test PROJECT=flext-core`: pytest suite (see `reports/pytest/` for the latest run evidence)
-- `make val`: full validation pipeline; consult `reports/coverage-scan-*` for the current coverage snapshot rather than
+- `make test PROJECT=flext-core`: pytest suite (see `flext-core/.reports/tests/` for the latest run evidence)
+- `make check`: full validation pipeline; consult member `.reports/` coverage artifacts for the current coverage snapshot rather than
   trusting any fixed number in docs
 - Tests exercise only the public surface (facade aliases and exported classes), per the workspace testing law in
-  `AGENTS.md` (U16)
+  `AGENTS.md` Conventions
 
 ## Resources
 
 - [Project README](../../flext-core/README.md) (auto-generated module map and operation flow)
-- [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law (U2–U18)
+- [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law
 - `flext-core/examples/` — runnable examples for results, settings, logging, and dispatching
 - `flext-core/docs/api-reference/` — generated API documentation
-- Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
+- Reports: `flext-core/.reports/` (tests, check, docs audit/build artifacts)
 
 ## Support & issues
 
 - GitHub issues: <https://github.com/flext-sh/flext-core/issues>
 - Keep this page aligned with the workspace governance in root `AGENTS.md` and `docs/GOVERNANCE.md` when proposing doc
   changes.
+
+## Result railway (DIP)
+
+Public construction and transforms are typed as `p.Result` / `r[...]`. Factories live under `src/flext_core/_result/` (`construction`, `transforms`, …); the structural protocol is `src/flext_core/_protocols/result.py`.
+
+- Copy/normalize: `from_result`, `copy_from_result`, `from_failure`
+- Pipeline: `flow_through` normalizes foreign result-like values onto the concrete facade
+- Empty failures (`fail(None)` / `fail("")`) stay failed Results through combinators
+- `fail()` redacts `c.SENSITIVE_ERROR_DATA_KEYS` (and exception `excluded_context_keys`) for both auto-extracted and explicit `error_data=`
+
+Evidence: `make test PROJECT=flext-core FILE=flext-core/tests/unit/test_result_factory_dip.py`

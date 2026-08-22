@@ -1,11 +1,20 @@
 # Make/codegen, configuration, and uv SSOT migration plan
 
+<!-- TOC START -->
+- [Delivery rules](#delivery-rules)
+- [Canonical ownership](#canonical-ownership)
+- [Phase 1 — Consolidate the engine](#phase-1-consolidate-the-engine)
+- [Phase 2 — Generate the complete Make and uv contract](#phase-2-generate-the-complete-make-and-uv-contract)
+- [Phase 3 — Conform the FLEXT fleet](#phase-3-conform-the-flext-fleet)
+- [Phase 4 — Conform Cosmos](#phase-4-conform-cosmos)
+- [Phase 5 — Conform standalone repositories](#phase-5-conform-standalone-repositories)
+- [Phase 6 — Fleet acceptance and deletion proof](#phase-6-fleet-acceptance-and-deletion-proof)
+<!-- TOC END -->
+
 This plan implements [ADR-003](adr/003-workspace-tooling-hub-distribution.md),
 [ADR-004](adr/004-generic-make-framework-in-flext-tests.md), and
 [ADR-005](adr/005-config-settings-constants-templates-schemas-ssot.md) under
-epic `mro-wkii.17`. The live config/settings and runtime-policy cutover is
-tracked by `mro-7akn`; its Bead ledger, not this document, owns execution state
-and command evidence.
+epic `mro-wkii.17`.
 
 <!-- mro-wkii.17.6 (agent: codex) — replace stale phased paths with the one live conform migration. -->
 
@@ -28,7 +37,8 @@ and command evidence.
 
 | Surface | Sole owner |
 | --- | --- |
-| repository catalog and workspace manifest | validated data under `flext-infra/config/` and each workspace `config/` |
+| consumer topology and capabilities | each consumer's validated `config/workspace.yaml` |
+| generic manifest schema, defaults, profiles, and capability policies | `flext-infra/config/` |
 | universal config/schema/template/file/process operations | public `u.Cli.*` facades in `flext-cli` |
 | typed conformance plan, enforcement, and transaction | `flext-infra codegen conform` |
 | generated Makefiles | the single `flext-infra` template layer |
@@ -43,7 +53,8 @@ and command evidence.
    process, and output primitives before adding consumer logic.
 3. Define the typed repository, workspace, Make, uv environment, request, plan,
    and result models through the FLEXT facades.
-4. Move catalog and manifest rows into validated config plus matching schemas.
+4. Validate each consumer-owned manifest against the generic schema; do not
+   duplicate consumer identities or topology inside `flext-infra`.
 5. Implement the single `codegen conform` check/apply transaction by composing
    the existing project generator and migration capabilities.
 6. Make project creation emit the initial manifest and invoke conformance.
@@ -62,7 +73,7 @@ Acceptance:
 1. Generate one self-contained Makefile for `workspace-root`,
    `workspace-member`, and `standalone` from the same template layer.
 2. Validate `custom.mk` as private `_custom_<verb>_<what>` handlers only.
-3. Expose `help` plus the twelve operational verbs defined by ADR-004, with one
+3. Expose `help` plus the operational verbs from live `make help` (ADR-004), with one
    selector and handler per action.
 4. Generate permanent Git-and-branch FLEXT sources, versioned locks, pinned
    Python/uv toolchain metadata, and root PEP 735 groups.
@@ -97,17 +108,18 @@ Any missing, extra, or unclassified member is a hard inventory failure.
 
 1. Conform the Cosmos root as `workspace-root`.
 2. Conform Charts and GitOps as members that also pass in independent clones.
-3. Mark content-only repositories explicitly and remove invalid inventory
-   entries rather than treating them as package members.
+3. Declare each repository's real Go, Node/frontend, Helm/GitOps, Docker,
+   config, document/content, or script capabilities; do not use
+   `content-only` as a substitute for executable metadata.
 4. Preserve real chart release behavior behind the canonical commit and push
    checks, including the clean-commit prerequisite.
 
 ## Phase 5 — Conform standalone repositories
 
-Conform `.ai-hub`, projeto_a migration, projeto_b Meltano Native, and Cosmos Docgen
-as explicit standalone manifests. Classify each real capability under the
-canonical Make responsibility, delete competing automation surfaces, and test
-from temporary clones with no sibling directories.
+Conform `.ai-hub`, `cosmos-docgen`, and its four document subprojects through
+their explicit manifests. Classify each real capability under the canonical
+Make responsibility, delete competing automation surfaces, and test from
+temporary clones with no sibling directories.
 
 ## Phase 6 — Fleet acceptance and deletion proof
 

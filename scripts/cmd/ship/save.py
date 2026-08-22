@@ -25,13 +25,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_cli import p, r, u
+from flext_cli import p, r, u as cli_u
+from flext_infra import m, u as infra_u
 from scripts.dispatch import Dispatch
 
 
 def _selected_projects(workspace_root: Path) -> list[str]:
     """Return the project list from env or discover git repositories."""
-    env = u.Cli.process_env()
+    env = cli_u.Cli.process_env()
     if project := env.get("PROJECT", "").strip():
         return [project]
     if projects := env.get("PROJECTS", "").strip():
@@ -44,39 +45,42 @@ def _selected_projects(workspace_root: Path) -> list[str]:
 
 
 def _is_git_repo(path: Path) -> bool:
-    return u.Cli.run_checked(["git", "rev-parse", "--git-dir"], cwd=path).unwrap_or(
-        False
-    )
+    return infra_u.Infra.git_show_toplevel(
+        m.Infra.GitRepoRequest(repo_root=path)
+    ).success
 
 
 def _has_changes(repo: Path) -> bool:
-    result = u.Cli.capture(["git", "status", "--porcelain"], cwd=repo)
-    return result.success and bool(result.value.strip())
+    result = infra_u.Infra.git_status(m.Infra.GitStatusRequest(repo_root=repo))
+    return result.success and result.value.dirty
 
 
 def _stage_and_commit(repo: Path, message: str) -> p.Result[bool]:
-    stage = u.Cli.capture(
-        ["git", "ls-files", "-m", "-d", "-o", "--exclude-standard", "-z"], cwd=repo
-    )
-    if stage.failure:
-        return r[bool].fail(stage.error or "failed to list changed files")
-    raw_files: list[str] = (
-        stage.value.strip("\x00").split("\x00") if stage.value else []
-    )
-    files = [f for f in raw_files if f]
+    """Stage modified/deleted/untracked files and commit via typed Git facade."""
+    status = infra_u.Infra.git_status(m.Infra.GitStatusRequest(repo_root=repo))
+    if status.failure:
+        return r[bool].fail(status.error or "failed to read git status")
+    porcelain = status.value.porcelain
+    files = [line.split(" ", 1)[-1] for line in porcelain.splitlines() if line.strip()]
     if not files:
         return r[bool].ok(True)
 
-    add_result = u.Cli.run_checked(["git", "add", "--", *files], cwd=repo)
-    if add_result.failure:
-        return add_result
-
-    return u.Cli.run_checked(["git", "commit", "-m", message], cwd=repo)
+    added = infra_u.Infra.git_add_paths(
+        m.Infra.GitPathsRequest(repo_root=repo, paths=files)
+    )
+    if added.failure:
+        return r[bool].fail(added.error or "git add failed")
+    committed = infra_u.Infra.git_commit(
+        m.Infra.GitCommitRequest(repo_root=repo, message=message)
+    )
+    if committed.failure:
+        return r[bool].fail(committed.error or "git commit failed")
+    return r[bool].ok(True)
 
 
 def run() -> int:
     """Run the save (commit) workflow."""
-    env = u.Cli.process_env()
+    env = cli_u.Cli.process_env()
     workspace_root = Path(env.get("WORKSPACE_ROOT", str(Path.cwd()))).resolve()
     message = env.get("MESSAGE", "").strip()
 

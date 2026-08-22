@@ -7,6 +7,13 @@ resolution-markers = [
     "sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 
+[options]
+exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for backwards compatibility when using relative exclude-newer values.
+exclude-newer-span = "P7D"
+
+[options.exclude-newer-package]
+cryptography = false
+
 [manifest]
 members = [
     "flext",
@@ -41,6 +48,20 @@ members = [
     "flext-target-oracle-wms",
     "flext-tests",
     "flext-web",
+]
+constraints = [
+    { name = "cryptography", specifier = ">=50.0.0" },
+    { name = "transformers", specifier = ">=5.5.0" },
+]
+excludes = [
+    { package = { name = "flext-cli" }, dependencies = ["flext-core"] },
+    { package = { name = "flext-core" }, dependencies = ["flext-cli"] },
+    { package = { name = "flext-infra" }, dependencies = ["flext-cli"] },
+    { package = { name = "flext-infra" }, dependencies = ["flext-core"] },
+    { package = { name = "flext-infra" }, dependencies = ["flext-tests"] },
+    { package = { name = "flext-tests" }, dependencies = ["flext-cli"] },
+    { package = { name = "flext-tests" }, dependencies = ["flext-core"] },
+    { package = { name = "flext-tests" }, dependencies = ["flext-infra"] },
 ]
 
 [[package]]
@@ -598,19 +619,20 @@ wheels = [
 
 [[package]]
 name = "code-review-graph"
-version = "2.3.6"
+version = "2.3.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "fastmcp" },
     { name = "mcp" },
     { name = "networkx" },
+    { name = "pyyaml" },
     { name = "tree-sitter" },
     { name = "tree-sitter-language-pack" },
     { name = "watchdog" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1c/29/002537342840a09e90961e1c2eee33b87225720173bbbb4aa7096e0d3719/code_review_graph-2.3.6.tar.gz", hash = "sha256:047d4d8a13f0515c5a9ad73716af1e04d5833637d6ddcc4f1b780171b8702105", size = 354942, upload-time = "2026-06-10T18:30:20.525Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/02/b3/e202da5d2bc15975cb94153f071474be9d35121b76475c87ade7381a392a/code_review_graph-2.3.7.tar.gz", hash = "sha256:5a44440fd87607761b2fb06341aaab48ad1767c14b3eb98aa7ee2e357da867b8", size = 455605, upload-time = "2026-07-18T00:34:12.608Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/66/c7/01cc7fa8cc574f26118ce3050d8e01d4303d673bf439b1d8d3e009287605/code_review_graph-2.3.6-py3-none-any.whl", hash = "sha256:001c8604d0e22a1b8aa61a24824ab25ef2db81d5ef8d3770a3de0f62704845c7", size = 334774, upload-time = "2026-06-10T18:30:18.815Z" },
+    { url = "https://files.pythonhosted.org/packages/f3/8f/2df3fcca285b489d195706b09cefda3e57e7158185cb83905200d7b27199/code_review_graph-2.3.7-py3-none-any.whl", hash = "sha256:12196dce3e673bdec7fba97ae5c4dff7589adee73a721374f62efae76e0fdd88", size = 426655, upload-time = "2026-07-18T00:34:11.05Z" },
 ]
 
 [package.optional-dependencies]
@@ -717,39 +739,39 @@ wheels = [
 
 [[package]]
 name = "cryptography"
-version = "49.0.0"
+version = "50.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cffi", marker = "platform_python_implementation != 'PyPy'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1f/99/d1c90d6041656cc6ee229dc99cd67fd0cd5aec3c5f7d72fffc27cc750054/cryptography-49.0.0.tar.gz", hash = "sha256:f89660a348f4f78a92366240a61404e337586ef7f5909a2fef59ca88ef505493", size = 854345, upload-time = "2026-06-12T20:02:30.512Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/de/41/6cbdcf9142d00fe82836fbb51e503e58088575cf7a0fe1dbff6695bf0840/cryptography-50.0.0.tar.gz", hash = "sha256:eeac2acb5a20ed25e0ad6d1df9891a520b78b404266b6d11778f25d5d691a6c9", size = 880201, upload-time = "2026-07-31T14:25:10.11Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9b/22/adf66990e63584a68dfb50c24f48a125c07b1699899381c8151e63ed458c/cryptography-49.0.0-cp311-abi3-macosx_11_0_arm64.whl", hash = "sha256:966fe0e9c67490071f14c0d2b1cb2dfb3023c5ce39457343931415f08382f2db", size = 4032100, upload-time = "2026-06-12T20:02:32.143Z" },
-    { url = "https://files.pythonhosted.org/packages/09/41/3797cfaf69cae04a13ee78ebd83f0678d9c02b4779d21ce24445326f1a69/cryptography-49.0.0-cp311-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:36d1709f992593689b45bda411498d62c6e365f2ca00b84657d4dadd24de16db", size = 4692978, upload-time = "2026-06-12T20:01:21.305Z" },
-    { url = "https://files.pythonhosted.org/packages/e6/8b/43011f7ebe515a8aa20d61f290a326cd890c2e738e16e59eaff8d9c3a412/cryptography-49.0.0-cp311-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:0e959b578856a3924bc0cbb710fc12c387b9412a951389f3ca61704a9e25f325", size = 4716422, upload-time = "2026-06-12T20:01:48.566Z" },
-    { url = "https://files.pythonhosted.org/packages/4a/91/01ce7303a4579e6d3a6abef01bd322848e9ea7a219adcabc5048b9033571/cryptography-49.0.0-cp311-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:53ecee2e23f7169b6117e99fc8a944e5e50f79e69758a83b52a00cb98ab2b2d2", size = 4700503, upload-time = "2026-06-12T20:02:47.091Z" },
-    { url = "https://files.pythonhosted.org/packages/62/99/a2c95cf8293f07491e9e27c20cc4dcd18176d944e674679adeb1d0173fd6/cryptography-49.0.0-cp311-abi3-manylinux_2_28_ppc64le.whl", hash = "sha256:2eda353d8a27bcbcaa4cbed18994a74ab4d19a2ca897db188ea269ab9b71419b", size = 5309779, upload-time = "2026-06-12T20:02:08.987Z" },
-    { url = "https://files.pythonhosted.org/packages/20/2c/0622f20ff02b2ef32558733443805dc82fd4c275be01b2d19d14676f3a1b/cryptography-49.0.0-cp311-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:2afe9051da7ae7bd5905da5a949280c7d2bb75682e188f650a9d0f2756b834c6", size = 4749683, upload-time = "2026-06-12T20:02:03.335Z" },
-    { url = "https://files.pythonhosted.org/packages/a3/5b/c5246635d5fd3b64e0d45ae10e99fd32fe9676a79915ccfe5a61ba9af1a5/cryptography-49.0.0-cp311-abi3-manylinux_2_31_armv7l.whl", hash = "sha256:0b82e28ee398a386f0807bba7884d30f25218855690f45115831bcce5d90822c", size = 4337874, upload-time = "2026-06-12T20:02:54.323Z" },
-    { url = "https://files.pythonhosted.org/packages/6d/88/05563c7fe2e914e87d1a536d06fe83e66b4e1d95cb593e05aea375531da8/cryptography-49.0.0-cp311-abi3-manylinux_2_34_aarch64.whl", hash = "sha256:ccac2bfebc306b862133e3bb71f3f6ee8bb525240089b2d952e4144b3a6d5da7", size = 4700283, upload-time = "2026-06-12T20:01:34.822Z" },
-    { url = "https://files.pythonhosted.org/packages/c4/b6/d7696e4e890d6ae1469935164c9e5215c557671cb78d6e3f458ccceaa632/cryptography-49.0.0-cp311-abi3-manylinux_2_34_ppc64le.whl", hash = "sha256:d0527ce944105f257f605a827d6ebead966c752038b6e8656abb9c5edee6fc68", size = 5265844, upload-time = "2026-06-12T20:01:24.09Z" },
-    { url = "https://files.pythonhosted.org/packages/a9/3c/f3ad17eecc1a57b0ba236dc01f90e783c51f4a2f35f64777cc4f47a184b2/cryptography-49.0.0-cp311-abi3-manylinux_2_34_x86_64.whl", hash = "sha256:cbc77da8c523d5abd028635ba850a6966fcee2c82e2bf65a41d1d8afe0f98be9", size = 4749290, upload-time = "2026-06-12T20:01:30.848Z" },
-    { url = "https://files.pythonhosted.org/packages/4f/01/339573cf1023163a400b0b5d16f6d507de413b9f60be6fd1b77feeaf6737/cryptography-49.0.0-cp311-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:b87e65d263b3e5d3bb92a57e2a6638e2f31110fa7aa890c7b2dbba42248d0a3f", size = 4834612, upload-time = "2026-06-12T20:01:29.246Z" },
-    { url = "https://files.pythonhosted.org/packages/71/fd/577302e213a1be9468f92d1afef66fcf1ef83d516819d9992ca547f592bd/cryptography-49.0.0-cp311-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:66ec79c3904820572d7e987abdf304281f141d37ad9a489b8e97066e7b9b6459", size = 4980804, upload-time = "2026-06-12T20:01:42.853Z" },
-    { url = "https://files.pythonhosted.org/packages/1f/09/f42b1d190c5ba75f72062a387f8030d1d75f6ab035788f1d9c4b01de6525/cryptography-49.0.0-cp311-abi3-win_amd64.whl", hash = "sha256:e5dfc1e64de5677cec922ffa8da89c546d0415bf6efdf081842e5d44c84e1f0e", size = 3810026, upload-time = "2026-06-12T20:02:39.262Z" },
-    { url = "https://files.pythonhosted.org/packages/19/2a/5bb823f5bedcf80718cea7fbc95ec5515cca3769633c4b01a32be7f30e7c/cryptography-49.0.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:ec5e529fb80935c94fe7b729f9972b50e351a0e6b50aa294fd5cabb109fcc29a", size = 4025947, upload-time = "2026-06-12T20:01:25.745Z" },
-    { url = "https://files.pythonhosted.org/packages/3d/df/40577043ca124e17012f408ddddaeb213b856336ac82ddb3bc915f39e29f/cryptography-49.0.0-cp39-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:f78ff2c9ed8dc2d036b0f4d640e22522213d047c1b14e61205a7e55c80a494d4", size = 4692429, upload-time = "2026-06-12T20:01:53.628Z" },
-    { url = "https://files.pythonhosted.org/packages/2c/99/2d13299eb3dd27b02dcfaafcc91d6b5cb3329f7cbd6d8f51921acd566c1a/cryptography-49.0.0-cp39-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:35b151772baff2c74cba7fa290ceaff4c3b11c0c881eb93eb5dbc05a7cfbba18", size = 4700968, upload-time = "2026-06-12T20:02:45.383Z" },
-    { url = "https://files.pythonhosted.org/packages/a5/4d/9c0cd02f95e2602dd5e563da149ee0830abef3537be8b34dc56281ebe27a/cryptography-49.0.0-cp39-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:0f21641cf4b30fca7aee061ced0ec7ad7b073518088b7c9969a297c0ae796c69", size = 4697758, upload-time = "2026-06-12T20:01:41.13Z" },
-    { url = "https://files.pythonhosted.org/packages/24/01/186c825898477d77e2324d5360fefe622ff1d8d1963ec0554e2cada8ec77/cryptography-49.0.0-cp39-abi3-manylinux_2_28_ppc64le.whl", hash = "sha256:9e82dcc8e56052715fb18b2429e3bca4823b1629136a2084fc45a9a5cecb9b64", size = 5298863, upload-time = "2026-06-12T20:02:24.579Z" },
-    { url = "https://files.pythonhosted.org/packages/b8/7b/62cbbab75d0659865bf0273790031544a0b16c8072d258f9428dcd8190dc/cryptography-49.0.0-cp39-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:6f2debedf9ca60cf1d5bd466475638af5130f89965605cd818484d19987d3a21", size = 4735983, upload-time = "2026-06-12T20:01:50.14Z" },
-    { url = "https://files.pythonhosted.org/packages/6c/72/3e798c064bc39e471008075d0f9bc9daf77a80879c092e4a8e170c585ed4/cryptography-49.0.0-cp39-abi3-manylinux_2_31_armv7l.whl", hash = "sha256:8c25ceb16df5b9435f3f6a9829204985b0e0cbee3b48aacd432c7d2c850b44d9", size = 4334173, upload-time = "2026-06-12T20:01:44.743Z" },
-    { url = "https://files.pythonhosted.org/packages/f0/ee/6fca21d1ac73e06f8bef71940abfd4d2f6472b4bca284d770f32bd4086f6/cryptography-49.0.0-cp39-abi3-manylinux_2_34_aarch64.whl", hash = "sha256:28d8b15e6275f12c8a207dc309dfa957903c927d08d0cc937ee3f63f200693cc", size = 4697298, upload-time = "2026-06-12T20:02:20.918Z" },
-    { url = "https://files.pythonhosted.org/packages/67/d0/a5fcd3515f0bae49a7b6d0413cc1bdccdcc1fc0047037a0d480642cdc5d6/cryptography-49.0.0-cp39-abi3-manylinux_2_34_ppc64le.whl", hash = "sha256:6fc361c34fb6aac015ce19435876635e5c6d21db31998b0920f675f131e043b8", size = 5254338, upload-time = "2026-06-12T20:02:22.737Z" },
-    { url = "https://files.pythonhosted.org/packages/a0/84/84fe36f19caf857d61cb7fc9c63035a47ffabd84ea12d1d393148efa3615/cryptography-49.0.0-cp39-abi3-manylinux_2_34_x86_64.whl", hash = "sha256:2400ef9c9e2299a25614eb1dea3db54a69b1349efd043bfac9c67630d136df36", size = 4735650, upload-time = "2026-06-12T20:02:41.389Z" },
-    { url = "https://files.pythonhosted.org/packages/6c/a0/db537264e234f7273a73ec020873d6d6b39dfd8a53db78b550ca8320440e/cryptography-49.0.0-cp39-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:67e1d20ad9ef3a563c59ef22e7a8a0b8210bd26604369ea4a30a7c66aefe504e", size = 4834820, upload-time = "2026-06-12T20:01:51.847Z" },
-    { url = "https://files.pythonhosted.org/packages/93/77/8df9eb486495979bccecd1062e2eaf435250e84437040295b57d09048b0b/cryptography-49.0.0-cp39-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:42b0684e0e40cf26122427802486f6d93aea593612603a94fbf260c7eb1e9c1b", size = 4967968, upload-time = "2026-06-12T20:02:12.524Z" },
-    { url = "https://files.pythonhosted.org/packages/c2/e6/f60198ea8d9dfa15fff9ed4ca02ce362f6eadd9ba757dcc50634c4257b63/cryptography-49.0.0-cp39-abi3-win_amd64.whl", hash = "sha256:026ac7423e6fa66872d3bf889be5974507da3944f866f704fa200eadacd00001", size = 3785547, upload-time = "2026-06-12T20:02:26.847Z" },
+    { url = "https://files.pythonhosted.org/packages/c5/5c/59086b4aac5e879d38ddbcf74e4be7ade89cebc3eb199a55da998c3bb46a/cryptography-50.0.0-cp311-abi3-macosx_11_0_arm64.whl", hash = "sha256:031e2d5dd4bb9caa3ca9c82e5a197fd8ae680232cee62603d1a813f3f07e3d03", size = 4001252, upload-time = "2026-07-31T14:23:33.331Z" },
+    { url = "https://files.pythonhosted.org/packages/57/ef/8f2df13c7216bcad3e1c74e07f6e193d93e998e114f524a53877c9af27ad/cryptography-50.0.0-cp311-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:fd9192b7b70c573d7f214eb1ae35e00d359f6f5e4b27c7e21e30de1fc6204645", size = 4719554, upload-time = "2026-07-31T14:23:35.611Z" },
+    { url = "https://files.pythonhosted.org/packages/d9/41/029086c34d91052fc3b88bcc8056f709a7c915c7a23b235a54eb800b1c97/cryptography-50.0.0-cp311-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:06a32a980526a6ab9a4b9bf8f7385800791e2bb960903cb6b530e4817509a3b7", size = 4702130, upload-time = "2026-07-31T14:23:37.635Z" },
+    { url = "https://files.pythonhosted.org/packages/7d/ff/b6ce0954962e7f7b969f850a883744197bb3910bdfd7b6da162eab7d9f68/cryptography-50.0.0-cp311-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:a1b30560f2acc95aa8b2e06e716a13dbfc97314747b80d9707e307f77b40d6b3", size = 4725244, upload-time = "2026-07-31T14:23:39.471Z" },
+    { url = "https://files.pythonhosted.org/packages/06/1e/63a1027cb7fec360a182208e1b7767d5aa1fe57be3d6aa856e69a321edc0/cryptography-50.0.0-cp311-abi3-manylinux_2_28_ppc64le.whl", hash = "sha256:8d89f3976b10b4ce31118de72329025f70d2c6ead14a8217c5514dd2c6d5a78f", size = 5342265, upload-time = "2026-07-31T14:23:41.286Z" },
+    { url = "https://files.pythonhosted.org/packages/6b/72/a1116d683a6d7ece94590013882515de087edf9ef0e6292aae615a44df73/cryptography-50.0.0-cp311-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:b42a28c1844fd9de8f3f7d540e36b66f3a9c83fceac7170ebc7a6a19edd9dcae", size = 4734609, upload-time = "2026-07-31T14:23:43.139Z" },
+    { url = "https://files.pythonhosted.org/packages/15/37/36a9c479bbe49acea2636c7fd3360d20f7b7e079c300352011c44850b181/cryptography-50.0.0-cp311-abi3-manylinux_2_31_armv7l.whl", hash = "sha256:900131fafd8aead39ac7dd3a7e833be754c17a95cfd91221636949fe4eb0aa8a", size = 4356517, upload-time = "2026-07-31T14:23:44.939Z" },
+    { url = "https://files.pythonhosted.org/packages/32/98/8a151d64367204cbc63ec65d37502f1d9c53cf4bfc6ec3c532614dbec60d/cryptography-50.0.0-cp311-abi3-manylinux_2_34_aarch64.whl", hash = "sha256:07949c449a1abcf60d1ee6e88956d89404c7df3c8258f46589e912988e551987", size = 4724529, upload-time = "2026-07-31T14:23:46.93Z" },
+    { url = "https://files.pythonhosted.org/packages/22/f6/ec13b470172126464a86bf54d2294a46d29837fc51ba3e45d4047946fb5e/cryptography-50.0.0-cp311-abi3-manylinux_2_34_ppc64le.whl", hash = "sha256:f89831ef99dd7dd169ab06d63a831adb9e20a87aac6d380266bbda5823349169", size = 5299852, upload-time = "2026-07-31T14:23:48.851Z" },
+    { url = "https://files.pythonhosted.org/packages/da/3a/f05e32c99d440c9bb891ea0e36c9091891e36be5a9a87ab2ee6ea20729f6/cryptography-50.0.0-cp311-abi3-manylinux_2_34_x86_64.whl", hash = "sha256:82148ec5bddac30b51a5b3c1945075f896fa022cb93f8e4a01e9f6ee95292c5f", size = 4734462, upload-time = "2026-07-31T14:23:50.861Z" },
+    { url = "https://files.pythonhosted.org/packages/ca/dc/bd72b26be8953f80625f63151efd38eee71c76ca6cf591c08ff34615a79e/cryptography-50.0.0-cp311-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:1489e263a8048bb8b6a8bac662eb2d402ea5d2b7b4699b72f385f1e2772db105", size = 4852708, upload-time = "2026-07-31T14:23:52.715Z" },
+    { url = "https://files.pythonhosted.org/packages/27/20/c930314a2ab476d15dec966ec87e2e9637bb02b06106b12c0396c57bb603/cryptography-50.0.0-cp311-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:7cec5b856506da6defb290f30c9ee687d5f5e8cb0bd3f6459dde43b0b4fa40ef", size = 5004179, upload-time = "2026-07-31T14:23:54.887Z" },
+    { url = "https://files.pythonhosted.org/packages/32/2e/c9db68a0c4bfa28e310707527c0ee3a2bd254104d2e02e68f368e197aa4c/cryptography-50.0.0-cp311-abi3-win_amd64.whl", hash = "sha256:bd1c592e4d5974f0d08d4888e432157adba757c66da0246918e43677fafa2d30", size = 3840395, upload-time = "2026-07-31T14:23:56.677Z" },
+    { url = "https://files.pythonhosted.org/packages/03/37/73d005be173aff344af30e9fd2a576575cb2391a7101d9cd3842e1fa8cce/cryptography-50.0.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:ccdc4a71a4dabae05de219404f9f4abc38e3b58422177ff93d0da05967dafa07", size = 4036009, upload-time = "2026-07-31T14:24:24.122Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/c6/7a6202a534e32103a285b7834a120869557fe198d51d7cfe59754c8bda9c/cryptography-50.0.0-cp39-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:910e1d2668e7de9648f2bcee30e180db2a6b15c30f887d7c4c93ddf96e3992e3", size = 4745252, upload-time = "2026-07-31T14:24:26.118Z" },
+    { url = "https://files.pythonhosted.org/packages/85/4f/0fa8c2f4428198f15d9ff8d63400e27afbf94ce833f6108da1eb3753f945/cryptography-50.0.0-cp39-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:a91296cb61e8df6f86d0c19cc4068228da256bf59bf86049fbd821084565327f", size = 4728939, upload-time = "2026-07-31T14:24:27.994Z" },
+    { url = "https://files.pythonhosted.org/packages/d1/63/54dd723490ba2dc09b299682c10b38db38f159728bcaae8c591b8af2f22d/cryptography-50.0.0-cp39-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:e722f16708d854fe924790e051061f6704a472c3bac347b6fd88033ea8dd0dc5", size = 4748483, upload-time = "2026-07-31T14:24:30.254Z" },
+    { url = "https://files.pythonhosted.org/packages/1d/dd/7c77d26285cc7f6991efce64a0f5b4f9383bfa5dd8c5033003eaf7db4cdb/cryptography-50.0.0-cp39-abi3-manylinux_2_28_ppc64le.whl", hash = "sha256:d764dcf130c428ef66786f866dd750f53182bc608813489915e9fc106bb0c82f", size = 5367599, upload-time = "2026-07-31T14:24:32.457Z" },
+    { url = "https://files.pythonhosted.org/packages/46/c9/f60aed34c013f317f92817b6c171c2d22a78270fa41109bd4b08af26b194/cryptography-50.0.0-cp39-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:105110f43a471dbd0060b9c9516cb8a6a79233631a04cc2ba16f28323ac6e025", size = 4762647, upload-time = "2026-07-31T14:24:34.599Z" },
+    { url = "https://files.pythonhosted.org/packages/be/f3/f9a0173b139372c3a48ed98154b45cc6b9de17c789d5ab552e621c293609/cryptography-50.0.0-cp39-abi3-manylinux_2_31_armv7l.whl", hash = "sha256:828743d939e9629bc267b8e2d08d8bb67cd4319c771a33d4b18b22dd8fb7440a", size = 4385197, upload-time = "2026-07-31T14:24:36.647Z" },
+    { url = "https://files.pythonhosted.org/packages/d8/36/83bb81f6e569bc38e1e4a7bc80f29b46bb9601920bc455fc8e888f5d5742/cryptography-50.0.0-cp39-abi3-manylinux_2_34_aarch64.whl", hash = "sha256:2a8183b489dc1f7f80f135780fadc1108f14b31b8a40411c7a5b17425f65f28b", size = 4748095, upload-time = "2026-07-31T14:24:39.493Z" },
+    { url = "https://files.pythonhosted.org/packages/6b/16/d3008eff98c764979865834c3d386d4fd041b5f52e7f34fc29ac1a5eb515/cryptography-50.0.0-cp39-abi3-manylinux_2_34_ppc64le.whl", hash = "sha256:6e7d61120573a7f2cd94cc095f9e81f6967c61ccdf194285aa143ecec8e0b708", size = 5325948, upload-time = "2026-07-31T14:24:41.556Z" },
+    { url = "https://files.pythonhosted.org/packages/9c/f8/d97f9603efda3888187bfdb893f26c41be4735c10631d05d284ee6b047c4/cryptography-50.0.0-cp39-abi3-manylinux_2_34_x86_64.whl", hash = "sha256:37fdb0d0111f1e2ff07139dfb79f1b49531f8e213c46f1163dd7642979b58c47", size = 4762400, upload-time = "2026-07-31T14:24:43.636Z" },
+    { url = "https://files.pythonhosted.org/packages/64/a2/4615c8f7d81a00b1d6e6afe19f694e1543582349fb5f4076f6cb5dc36485/cryptography-50.0.0-cp39-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:c87f62a3d3b9888ed0fdde100ec06aa61ca9cd44bad9057d1dff9a516b5f5bb9", size = 4878208, upload-time = "2026-07-31T14:24:45.522Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/1a/efcfb02f91407149a0dacffffab791f7e19bf6385f63b3666dc8b5e5c9c8/cryptography-50.0.0-cp39-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:65c2c3add92b45fd0709db8594536aea39c2a67af0e27ffcf049c498501140b7", size = 5037050, upload-time = "2026-07-31T14:24:47.697Z" },
+    { url = "https://files.pythonhosted.org/packages/57/30/4a22984d4f1bdfb8c054f07a92bc176b97a3134cc1d6c4b3bffb1f3688b4/cryptography-50.0.0-cp39-abi3-win_amd64.whl", hash = "sha256:d24fead1d4d076e1bfb006dcec392074a3cd8d7b4fc8a595aa64073b2b7a96ba", size = 3874135, upload-time = "2026-07-31T14:24:50.085Z" },
 ]
 
 [[package]]
@@ -853,7 +875,7 @@ wheels = [
 
 [[package]]
 name = "cyclopts"
-version = "4.22.3"
+version = "4.22.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
@@ -861,9 +883,9 @@ dependencies = [
     { name = "rich" },
     { name = "rich-rst" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/13/55/119aaed705f1a05cf0fde86b921f837cafd049136013f381ed1014f381d9/cyclopts-4.22.3.tar.gz", hash = "sha256:6c366f32604c23db83819a0411c0e30b398a6fcbc718191ea39f7119ce725d8e", size = 194617, upload-time = "2026-07-30T16:36:23.671Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/69/98/ca72a91d5c25a2ae1baf19d27b31f12288cb9d8a3168b65b3cd54d40d277/cyclopts-4.22.2.tar.gz", hash = "sha256:0721e90e7209885e78f7637cfba255c12e89206b633e35d185305e349ba20ecd", size = 194511, upload-time = "2026-07-24T20:53:08.739Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e4/75/2013521356f5e85a4b03ddbf5c14425be288512d431a4fa0e1e9b51c78ad/cyclopts-4.22.3-py3-none-any.whl", hash = "sha256:e03b9676c0f7495a9a7d51179222133938538984184b3a2ac50f26aab35b6970", size = 234005, upload-time = "2026-07-30T16:36:21.8Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/75/a11bfb5045e58b4ef69337b848985918e829fe9a90572a761d17c1a992f5/cyclopts-4.22.2-py3-none-any.whl", hash = "sha256:9c2cdf6a621886cd0af631a67437eb7d0084f33f9e8fba2d2562a1aecf75f2ff", size = 233906, upload-time = "2026-07-24T20:53:07.064Z" },
 ]
 
 [[package]]
@@ -1283,7 +1305,7 @@ wheels = [
 
 [[package]]
 name = "fastapi"
-version = "0.141.1"
+version = "0.140.13"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "annotated-doc" },
@@ -1292,9 +1314,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "typing-inspection" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8a/02/91e3416a8fdd715abb903a952a6bec7cdd8d14eed55d415fc8595524c319/fastapi-0.141.1.tar.gz", hash = "sha256:e8822fc40db1e1858054d7a949a888695bc9bdce70139178e33bd2871a453ca1", size = 425799, upload-time = "2026-07-29T17:18:05.568Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2f/cb/7a4d2c2eb5a5d8a91763c05b7383d72917862e32f780daa0e27ffbb34cc6/fastapi-0.140.13.tar.gz", hash = "sha256:500172a08cf1459901f90b05c37d93060dada3b573fec8f0862445db52ba6b4b", size = 424843, upload-time = "2026-07-28T15:37:00.805Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cb/03/10388a42375ee7e4ac9b94eb2c5c569c8b5795e377e701c9ac3ad63de890/fastapi-0.141.1-py3-none-any.whl", hash = "sha256:bfb91aa2d334c61cb35ba9a116fc123b3d3df31640b801cf57a7a78ec3f603b3", size = 131954, upload-time = "2026-07-29T17:18:04.364Z" },
+    { url = "https://files.pythonhosted.org/packages/84/4e/f9e8c762ef5e05c40482131e3d5e8b36bca13fa127578261f1d6b35a25d4/fastapi-0.140.13-py3-none-any.whl", hash = "sha256:8b017110e1e9f30a95e8bdb8f71fbe2f0fe3af5717109e5b14f9e069df54f6d4", size = 131222, upload-time = "2026-07-28T15:37:02.124Z" },
 ]
 
 [[package]]
@@ -1371,11 +1393,11 @@ server = [
 
 [[package]]
 name = "filelock"
-version = "3.32.2"
+version = "3.32.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/f6/57/3ba6e6cb097f85b855b00163d169f35365f44277df044dcf96d55b8f62a3/filelock-3.32.2.tar.gz", hash = "sha256:c33351e1f49cae33414acbc6d56784e6ecee82514ec90795da1161fc4836b5b8", size = 217172, upload-time = "2026-07-29T22:46:04.895Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c0/80/8232b582c4b318b817cf1274ba74976b07b34d35ef439b3eb948f98645a1/filelock-3.32.0.tar.gz", hash = "sha256:7be2ad23a14607ccc71808e68fe30848aeace7058ace17852f68e2a68e310402", size = 213757, upload-time = "2026-07-21T13:17:42.898Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c1/e8/72f8cef9fdfeffe06213fe8508039396ee48daa0e3259457ed766173bfd6/filelock-3.32.2-py3-none-any.whl", hash = "sha256:87dd94cf281e586d135fa51132b8e3d9a598b316e90377a288663c9321036c82", size = 98830, upload-time = "2026-07-29T22:46:03.52Z" },
+    { url = "https://files.pythonhosted.org/packages/06/79/b4c714bef36bc4ec2beeae1e0c124f0223888cd8c6feb1cdc56038116920/filelock-3.32.0-py3-none-any.whl", hash = "sha256:d396bea984af47333ef05e50eae7eff88c84256de6112aea0ec48a233c064fe3", size = 97732, upload-time = "2026-07-21T13:17:41.55Z" },
 ]
 
 [[package]]
@@ -1397,7 +1419,7 @@ wheels = [
 
 [[package]]
 name = "flext"
-version = "0.12.0rc0"
+version = "0.12.0"
 source = { editable = "." }
 dependencies = [
     { name = "flext-core" },
@@ -1462,6 +1484,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -1533,91 +1556,92 @@ requires-dist = [
     { name = "flext-infra", editable = "flext-infra" },
     { name = "flext-tests", editable = "flext-tests" },
     { name = "importlib-resources", specifier = ">=7.1.0" },
-    { name = "pydantic", specifier = ">=2.13.3" },
+    { name = "pydantic", specifier = ">=2.13.4" },
 ]
 
 [package.metadata.requires-dev]
 codegen = [{ name = "flext-infra", editable = "flext-infra" }]
 dev = [
     { name = "actionlint-py", specifier = ">=1.7.12.24" },
-    { name = "autoflake", specifier = ">=2.3.1" },
+    { name = "autoflake", specifier = ">=2.3.3" },
     { name = "bandit", specifier = ">=1.8" },
-    { name = "black", specifier = ">=25.1" },
-    { name = "blacken-docs", specifier = ">=1.19" },
-    { name = "code-review-graph", extras = ["all", "embeddings"], specifier = "==2.3.6" },
-    { name = "codespell", specifier = ">=2.3" },
-    { name = "deptry", specifier = ">=0.23" },
-    { name = "django-stubs", specifier = ">=6.0.6" },
-    { name = "factory-boy", specifier = ">=3.3.1" },
-    { name = "faker", specifier = ">=37.4" },
+    { name = "black", specifier = ">=26.5.1" },
+    { name = "blacken-docs", specifier = ">=1.20.0" },
+    { name = "code-review-graph", extras = ["all", "embeddings"], specifier = ">=2.3.7" },
+    { name = "codespell", specifier = ">=2.4.3" },
+    { name = "deptry", specifier = ">=0.25.1" },
+    { name = "django-stubs", specifier = ">=6.0.7" },
+    { name = "factory-boy", specifier = ">=3.3.3" },
+    { name = "faker", specifier = ">=40.32.0" },
     { name = "flext-tests", editable = "flext-tests" },
-    { name = "hypothesis", specifier = ">=6.157.2" },
+    { name = "hypothesis", specifier = ">=6.163.0" },
     { name = "isort", specifier = ">=8.0.1" },
-    { name = "matplotlib-stubs", specifier = ">=0.3" },
-    { name = "mkdocs", specifier = ">=1.6" },
-    { name = "mkdocs-awesome-pages-plugin", specifier = ">=2.9" },
-    { name = "mkdocs-encryptcontent-plugin", specifier = ">=2" },
+    { name = "matplotlib-stubs", specifier = ">=0.3.11" },
+    { name = "mkdocs", specifier = ">=1.6.1" },
+    { name = "mkdocs-awesome-pages-plugin", specifier = ">=2.10.1" },
+    { name = "mkdocs-encryptcontent-plugin", specifier = ">=3.1.0" },
     { name = "mkdocs-exclude", specifier = ">=1.0.2" },
-    { name = "mkdocs-get-deps", specifier = ">=0.2" },
-    { name = "mkdocs-git-revision-date-localized-plugin", specifier = ">=1.2" },
-    { name = "mkdocs-literate-nav", specifier = ">=0.6" },
-    { name = "mkdocs-macros-plugin", specifier = ">=1" },
-    { name = "mkdocs-material", specifier = ">=9.5" },
+    { name = "mkdocs-get-deps", specifier = ">=0.2.2" },
+    { name = "mkdocs-git-revision-date-localized-plugin", specifier = ">=1.5.3" },
+    { name = "mkdocs-literate-nav", specifier = ">=0.6.3" },
+    { name = "mkdocs-macros-plugin", specifier = ">=1.5.0" },
+    { name = "mkdocs-material", specifier = ">=9.7.7" },
     { name = "mkdocs-material-extensions", specifier = ">=1.3.1" },
-    { name = "mkdocs-mermaid2-plugin", specifier = ">=1.1" },
-    { name = "mkdocs-minify-plugin", specifier = ">=0.7" },
-    { name = "mkdocs-print-site-plugin", specifier = ">=0.8" },
-    { name = "mkdocs-redirects", specifier = ">=1.2" },
+    { name = "mkdocs-mermaid2-plugin", specifier = ">=1.2.3" },
+    { name = "mkdocs-minify-plugin", specifier = ">=0.8.0" },
+    { name = "mkdocs-print-site-plugin", specifier = ">=2.8" },
+    { name = "mkdocs-redirects", specifier = ">=1.2.3" },
     { name = "mkdocs-section-index", specifier = ">=0.3.12" },
-    { name = "mkdocs-versioning", specifier = ">=0.2" },
-    { name = "mkdocstrings", specifier = ">=0.24" },
-    { name = "mkdocstrings-python", specifier = ">=1.7" },
+    { name = "mkdocs-versioning", specifier = ">=0.4.0" },
+    { name = "mkdocstrings", specifier = ">=1.0.6" },
+    { name = "mkdocstrings-python", specifier = ">=2.0.5" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.10.1" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
-    { name = "pylint", specifier = ">=3.3" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
+    { name = "pylint", specifier = ">=4.0.6" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
-    { name = "pytest-benchmark", specifier = ">=5.1" },
+    { name = "pytest", specifier = ">=9.0.3" },
+    { name = "pytest-benchmark", specifier = ">=5.2.3" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
-    { name = "pytest-codeblocks", specifier = ">=0.17.0" },
-    { name = "pytest-cov", specifier = ">=6.2" },
-    { name = "pytest-deadfixtures", specifier = ">=2.2.1" },
-    { name = "pytest-env", specifier = ">=1.1.5" },
+    { name = "pytest-codeblocks", specifier = ">=0.18.0" },
+    { name = "pytest-cov", specifier = ">=7.1.0" },
+    { name = "pytest-deadfixtures", specifier = ">=3.1.0" },
+    { name = "pytest-env", specifier = ">=1.7.0" },
     { name = "pytest-markdown-docs", specifier = ">=0.9.2" },
-    { name = "pytest-mock", specifier = ">=3.14" },
-    { name = "pytest-randomly", specifier = ">=3.16" },
-    { name = "pytest-sugar", specifier = ">=1" },
-    { name = "pytest-timeout", specifier = ">=2.4" },
-    { name = "pytest-xdist", specifier = ">=3.8" },
-    { name = "pyupgrade", specifier = ">=3.19" },
+    { name = "pytest-mock", specifier = ">=3.15.1" },
+    { name = "pytest-randomly", specifier = ">=4.1.0" },
+    { name = "pytest-sugar", specifier = ">=1.1.1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
+    { name = "pytest-timeout", specifier = ">=2.4.0" },
+    { name = "pytest-xdist", specifier = ">=3.8.0" },
+    { name = "pyupgrade", specifier = ">=3.21.2" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
-    { name = "types-cachetools", specifier = ">=6.2" },
-    { name = "types-cffi", specifier = ">=2.0" },
-    { name = "types-click", specifier = ">=7.1" },
-    { name = "types-defusedxml", specifier = ">=0.7" },
-    { name = "types-docker", specifier = ">=7.2.0.20260720" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
+    { name = "types-cachetools", specifier = ">=7.0.0.20260713" },
+    { name = "types-cffi", specifier = ">=2.0.0.20260518" },
+    { name = "types-click", specifier = ">=7.1.8" },
+    { name = "types-defusedxml", specifier = ">=0.7.0.20260504" },
+    { name = "types-docker", specifier = ">=7.2.0.20260728" },
     { name = "types-flask", specifier = ">=1.1.6" },
-    { name = "types-jsonschema", specifier = ">=4.26" },
-    { name = "types-ldap3", specifier = ">=2.9.13.20250622" },
-    { name = "types-openpyxl", specifier = ">=3.1.5.20260518" },
-    { name = "types-paramiko", specifier = ">=4.0" },
-    { name = "types-protobuf", specifier = ">=6.30.2.20250703" },
-    { name = "types-psutil", specifier = ">=7" },
-    { name = "types-psycopg2", specifier = ">=2.9.21.20250718" },
-    { name = "types-pyasn1", specifier = ">=0.6" },
-    { name = "types-pyopenssl", specifier = ">=24.1" },
-    { name = "types-python-dateutil", specifier = ">=2.9" },
-    { name = "types-pyyaml", specifier = ">=6.0.12.20260518" },
-    { name = "types-redis", specifier = ">=4.6" },
-    { name = "types-requests", specifier = ">=2.32.4" },
-    { name = "types-setuptools", specifier = ">=80.9" },
-    { name = "types-tabulate", specifier = ">=0.10" },
+    { name = "types-jsonschema", specifier = ">=4.26.0.20260518" },
+    { name = "types-ldap3", specifier = ">=2.9.13.20260518" },
+    { name = "types-openpyxl", specifier = ">=3.1.5.20260724" },
+    { name = "types-paramiko", specifier = ">=5.0.0.20260724" },
+    { name = "types-protobuf", specifier = ">=7.34.1.20260518" },
+    { name = "types-psutil", specifier = ">=7.2.2.20260518" },
+    { name = "types-psycopg2", specifier = ">=2.9.21.20260724" },
+    { name = "types-pyasn1", specifier = ">=0.6.0.20260724" },
+    { name = "types-pyopenssl", specifier = ">=24.1.0.20240722" },
+    { name = "types-python-dateutil", specifier = ">=2.9.0.20260716" },
+    { name = "types-pyyaml", specifier = ">=6.0.12.20260724" },
+    { name = "types-redis", specifier = ">=4.6.0.20241004" },
+    { name = "types-requests", specifier = ">=2.33.0.20260712" },
+    { name = "types-setuptools", specifier = ">=83.0.0.20260724" },
+    { name = "types-tabulate", specifier = ">=0.10.0.20260508" },
     { name = "types-toml", specifier = ">=0.10.8.20260518" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 workspace = [
@@ -1656,7 +1680,7 @@ workspace = [
 
 [[package]]
 name = "flext-api"
-version = "0.12.0rc0"
+version = "0.12.0"
 source = { editable = "flext-api" }
 dependencies = [
     { name = "cbor2" },
@@ -1729,6 +1753,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -1816,11 +1841,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -1831,12 +1856,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -1859,7 +1885,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -1932,6 +1958,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -1967,7 +1994,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "bcrypt", specifier = ">=5.0.0" },
-    { name = "cryptography", specifier = ">=47.0.0" },
+    { name = "cryptography", specifier = ">=50.0.0" },
     { name = "flext-api", editable = "flext-api" },
     { name = "flext-core", editable = "flext-core" },
     { name = "pydantic", specifier = ">=2.13.3" },
@@ -2013,11 +2040,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -2028,12 +2055,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -2056,7 +2084,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -2068,7 +2096,6 @@ dependencies = [
     { name = "cachetools" },
     { name = "click" },
     { name = "defusedxml" },
-    { name = "flext-core" },
     { name = "jinja2" },
     { name = "jsonschema" },
     { name = "openpyxl" },
@@ -2142,6 +2169,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -2176,7 +2204,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "cachetools", specifier = ">=6.2,<7.0" },
+    { name = "cachetools", specifier = ">=6.2,<8.0" },
     { name = "click", specifier = ">=8.3.3" },
     { name = "defusedxml", specifier = ">=0.7.1" },
     { name = "flext-core", editable = "flext-core" },
@@ -2191,7 +2219,7 @@ requires-dist = [
     { name = "python-docx", specifier = ">=1.1.2" },
     { name = "python-pptx", specifier = ">=1.0.2" },
     { name = "pyyaml", specifier = ">=6.0.3" },
-    { name = "rich", specifier = ">=14,<15" },
+    { name = "rich", specifier = ">=14,<16" },
     { name = "ruamel-yaml", specifier = ">=0.18.16" },
     { name = "tabulate", specifier = ">=0.10.0" },
     { name = "tomlkit", specifier = ">=0.14.0" },
@@ -2235,12 +2263,12 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "psutil", specifier = ">=7.2.2" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -2251,12 +2279,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -2279,13 +2308,13 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
 [[package]]
 name = "flext-core"
-version = "0.12.0rc0"
+version = "0.12.0rc1"
 source = { editable = "flext-core" }
 dependencies = [
     { name = "beartype" },
@@ -2325,7 +2354,6 @@ dev = [
     { name = "django-stubs" },
     { name = "factory-boy" },
     { name = "faker" },
-    { name = "flext-cli" },
     { name = "flext-infra" },
     { name = "flext-tests" },
     { name = "hypothesis" },
@@ -2368,6 +2396,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -2404,7 +2433,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "beartype", specifier = ">=0.22.9,<0.23" },
-    { name = "cachetools", specifier = ">=6.2,<7.0" },
+    { name = "cachetools", specifier = ">=6.2,<8.0" },
     { name = "dependency-injector", specifier = ">=4.49.0" },
     { name = "docker", specifier = ">=7.1.0" },
     { name = "limits", specifier = ">=5.8.0" },
@@ -2464,13 +2493,13 @@ dev = [
     { name = "mkdocs-versioning", specifier = ">=0.2" },
     { name = "mkdocstrings", specifier = ">=0.24" },
     { name = "mkdocstrings-python", specifier = ">=1.7" },
-    { name = "mypy", specifier = ">=1.20.2" },
+    { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -2481,13 +2510,14 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
     { name = "rope", specifier = ">=1.14.0" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -2581,6 +2611,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -2660,11 +2691,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -2675,12 +2706,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -2703,7 +2735,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -2776,6 +2808,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -2857,11 +2890,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -2872,12 +2905,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -2900,7 +2934,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -2970,6 +3004,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -3048,11 +3083,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -3063,12 +3098,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -3091,7 +3127,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -3162,6 +3198,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -3241,11 +3278,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -3256,12 +3293,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -3284,7 +3322,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -3355,6 +3393,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -3434,11 +3473,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -3449,12 +3488,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -3477,13 +3517,13 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
 [[package]]
 name = "flext-grpc"
-version = "0.12.0rc0"
+version = "0.12.0"
 source = { editable = "flext-grpc" }
 dependencies = [
     { name = "flext-cli" },
@@ -3553,6 +3593,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -3637,11 +3678,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -3652,12 +3693,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -3680,7 +3722,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -3691,8 +3733,6 @@ source = { editable = "flext-infra" }
 dependencies = [
     { name = "defusedxml" },
     { name = "filelock" },
-    { name = "flext-cli" },
-    { name = "flext-core" },
     { name = "gitpython" },
     { name = "libcst" },
     { name = "mkdocs" },
@@ -3718,7 +3758,6 @@ dev = [
     { name = "django-stubs" },
     { name = "factory-boy" },
     { name = "faker" },
-    { name = "flext-tests" },
     { name = "hypothesis" },
     { name = "isort" },
     { name = "matplotlib-stubs" },
@@ -3757,6 +3796,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -3811,7 +3851,7 @@ requires-dist = [
 dev = [
     { name = "actionlint-py", specifier = ">=1.7.12.24" },
     { name = "autoflake", specifier = ">=2.3.3" },
-    { name = "bandit", specifier = ">=1.9.4" },
+    { name = "bandit", specifier = ">=1.8" },
     { name = "black", specifier = ">=26.5.1" },
     { name = "blacken-docs", specifier = ">=1.20.0" },
     { name = "codespell", specifier = ">=2.4.3" },
@@ -3847,7 +3887,7 @@ dev = [
     { name = "pylint", specifier = ">=4.0.6" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=9.1.1" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.2.3" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.18.0" },
@@ -3858,12 +3898,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.15.1" },
     { name = "pytest-randomly", specifier = ">=4.1.0" },
     { name = "pytest-sugar", specifier = ">=1.1.1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4.0" },
     { name = "pytest-xdist", specifier = ">=3.8.0" },
     { name = "pyupgrade", specifier = ">=3.21.2" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.16.0" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=7.0.0.20260713" },
     { name = "types-cffi", specifier = ">=2.0.0.20260518" },
     { name = "types-click", specifier = ">=7.1.8" },
@@ -3959,6 +4000,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -3993,7 +4035,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "cryptography", specifier = ">=47.0.0" },
+    { name = "cryptography", specifier = ">=50.0.0" },
     { name = "flext-cli", editable = "flext-cli" },
     { name = "flext-core", editable = "flext-core" },
     { name = "flext-ldif", editable = "flext-ldif" },
@@ -4041,11 +4083,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -4056,12 +4098,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -4084,7 +4127,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -4157,6 +4200,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -4238,11 +4282,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -4253,12 +4297,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -4281,7 +4326,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -4374,6 +4419,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -4475,12 +4521,12 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "psycopg2", specifier = ">=2.9.12" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -4491,13 +4537,14 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
     { name = "redis", specifier = ">=7.4.0" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -4520,7 +4567,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -4601,6 +4648,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -4647,7 +4695,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.13.3" },
     { name = "pydantic-core", specifier = ">=2.46.3" },
     { name = "pydantic-settings", specifier = ">=2.14.0" },
-    { name = "rich", specifier = ">=14,<14.4" },
+    { name = "rich", specifier = ">=14,<15.1" },
     { name = "starlette", specifier = ">=1.0.0" },
     { name = "structlog", specifier = ">=25.5.0" },
     { name = "typer", specifier = ">=0.25.1" },
@@ -4690,11 +4738,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -4705,12 +4753,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -4733,13 +4782,13 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
 [[package]]
 name = "flext-oracle-oic"
-version = "0.12.0rc0"
+version = "0.12.0"
 source = { editable = "flext-oracle-oic" }
 dependencies = [
     { name = "flext-api" },
@@ -4810,6 +4859,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -4895,11 +4945,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -4910,12 +4960,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -4938,7 +4989,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -5010,6 +5061,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -5090,11 +5142,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -5105,12 +5157,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -5133,7 +5186,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -5207,6 +5260,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -5249,7 +5303,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.13.3" },
     { name = "pydantic-core", specifier = ">=2.46.3" },
     { name = "pydantic-settings", specifier = ">=2.14.0" },
-    { name = "watchdog", specifier = ">=4.0.0,<6" },
+    { name = "watchdog", specifier = ">=4.0.0,<7" },
 ]
 
 [package.metadata.requires-dev]
@@ -5289,11 +5343,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -5304,12 +5358,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -5332,7 +5387,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -5350,7 +5405,6 @@ dependencies = [
     { name = "flext-core" },
     { name = "flext-infra" },
     { name = "flext-web" },
-    { name = "gitpython" },
     { name = "httpx" },
     { name = "libcst" },
     { name = "mypy" },
@@ -5421,6 +5475,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -5466,7 +5521,6 @@ requires-dist = [
     { name = "flext-core", editable = "flext-core" },
     { name = "flext-infra", editable = "flext-infra" },
     { name = "flext-web", editable = "flext-web" },
-    { name = "gitpython", specifier = ">=3.1.49" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "libcst", specifier = ">=1.8.6" },
     { name = "mypy", specifier = ">=1.20.2" },
@@ -5476,7 +5530,7 @@ requires-dist = [
     { name = "pyright", specifier = ">=1.1.411" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "referencing", specifier = ">=0.37.0" },
-    { name = "rich", specifier = ">=14,<14.4" },
+    { name = "rich", specifier = ">=14,<15.1" },
     { name = "schedule", specifier = ">=1.2.2" },
     { name = "typer", specifier = ">=0.25.1" },
     { name = "uvicorn", specifier = ">=0.51.0" },
@@ -5520,11 +5574,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=2.0.5" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.10.1" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.2.3" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.18.0" },
@@ -5535,14 +5589,15 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.15.1" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.21.2" },
     { name = "radon", specifier = ">=6.0.1" },
     { name = "refurb", specifier = ">=2" },
     { name = "rope", specifier = ">=1.11" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0.0.20260518" },
     { name = "types-click", specifier = ">=7.1" },
@@ -5565,7 +5620,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20260518" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -5636,6 +5691,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -5715,11 +5771,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -5730,12 +5786,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -5758,7 +5815,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -5829,6 +5886,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -5908,11 +5966,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -5923,12 +5981,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -5951,7 +6010,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -6027,6 +6086,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -6111,11 +6171,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -6126,12 +6186,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -6154,7 +6215,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -6228,6 +6289,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -6310,11 +6372,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -6325,12 +6387,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -6353,7 +6416,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -6426,6 +6489,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -6507,11 +6571,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -6522,12 +6586,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -6550,7 +6615,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -6620,6 +6685,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -6698,11 +6764,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -6713,12 +6779,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -6741,7 +6808,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -6813,6 +6880,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -6893,11 +6961,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -6908,12 +6976,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -6936,7 +7005,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -7011,6 +7080,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -7054,7 +7124,7 @@ requires-dist = [
     { name = "pydantic-core", specifier = ">=2.46.3" },
     { name = "pydantic-settings", specifier = ">=2.14.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },
-    { name = "rich", specifier = ">=14,<14.4" },
+    { name = "rich", specifier = ">=14,<15.1" },
 ]
 
 [package.metadata.requires-dev]
@@ -7094,11 +7164,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -7109,12 +7179,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -7137,7 +7208,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -7215,6 +7286,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -7301,11 +7373,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -7316,12 +7388,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -7344,7 +7417,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -7419,6 +7492,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -7502,11 +7576,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -7517,12 +7591,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -7545,7 +7620,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -7557,9 +7632,6 @@ dependencies = [
     { name = "docker" },
     { name = "factory-boy" },
     { name = "faker" },
-    { name = "flext-cli" },
-    { name = "flext-core" },
-    { name = "flext-infra" },
     { name = "hypothesis" },
     { name = "pytest" },
     { name = "pytest-benchmark" },
@@ -7571,15 +7643,13 @@ dependencies = [
     { name = "pytest-randomly" },
     { name = "pytest-reportlog" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "python-on-whales" },
 ]
 
 [package.dev-dependencies]
-codegen = [
-    { name = "flext-infra" },
-]
 dev = [
     { name = "actionlint-py" },
     { name = "autoflake" },
@@ -7630,6 +7700,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -7681,6 +7752,7 @@ requires-dist = [
     { name = "pytest-randomly", specifier = ">=4.1.0" },
     { name = "pytest-reportlog", specifier = ">=1.0.0" },
     { name = "pytest-sugar", specifier = ">=1.1.1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4.0" },
     { name = "pytest-xdist", specifier = ">=3.8.0" },
     { name = "python-on-whales", specifier = ">=0.7" },
@@ -7721,13 +7793,13 @@ dev = [
     { name = "mkdocs-versioning", specifier = ">=0.2" },
     { name = "mkdocstrings", specifier = ">=0.24" },
     { name = "mkdocstrings-python", specifier = ">=1.7" },
-    { name = "mypy", specifier = ">=1.20.2" },
+    { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -7738,12 +7810,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -7766,7 +7839,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -7840,6 +7913,7 @@ dev = [
     { name = "pytest-mock" },
     { name = "pytest-randomly" },
     { name = "pytest-sugar" },
+    { name = "pytest-testmon" },
     { name = "pytest-timeout" },
     { name = "pytest-xdist" },
     { name = "pyupgrade" },
@@ -7922,11 +7996,11 @@ dev = [
     { name = "mkdocstrings-python", specifier = ">=1.7" },
     { name = "mypy", specifier = ">=2.3.0" },
     { name = "pip-audit", specifier = ">=2.7.3" },
-    { name = "pre-commit", specifier = ">=4.6.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pylint", specifier = ">=3.3" },
     { name = "pyrefly", specifier = ">=1.1.1" },
     { name = "pyright", specifier = ">=1.1.411" },
-    { name = "pytest", specifier = ">=8.4" },
+    { name = "pytest", specifier = ">=9.0.3" },
     { name = "pytest-benchmark", specifier = ">=5.1" },
     { name = "pytest-clarity", specifier = ">=1.0.1" },
     { name = "pytest-codeblocks", specifier = ">=0.17.0" },
@@ -7937,12 +8011,13 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.14" },
     { name = "pytest-randomly", specifier = ">=3.16" },
     { name = "pytest-sugar", specifier = ">=1" },
+    { name = "pytest-testmon", specifier = ">=2.2.0" },
     { name = "pytest-timeout", specifier = ">=2.4" },
     { name = "pytest-xdist", specifier = ">=3.8" },
     { name = "pyupgrade", specifier = ">=3.19" },
     { name = "radon", specifier = ">=6.0.1" },
-    { name = "ruff", specifier = ">=0.12.3" },
-    { name = "rumdl", specifier = ">=0.2.46" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "rumdl", specifier = ">=0.2.45" },
     { name = "types-cachetools", specifier = ">=6.2" },
     { name = "types-cffi", specifier = ">=2.0" },
     { name = "types-click", specifier = ">=7.1" },
@@ -7965,7 +8040,7 @@ dev = [
     { name = "types-setuptools", specifier = ">=80.9" },
     { name = "types-tabulate", specifier = ">=0.10" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
-    { name = "vulture", specifier = ">=2.13" },
+    { name = "vulture", specifier = ">=2.16" },
     { name = "yamlfix", specifier = ">=1.19.1" },
 ]
 
@@ -8258,52 +8333,53 @@ wheels = [
 
 [[package]]
 name = "huggingface-hub"
-version = "0.36.2"
+version = "1.16.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "filelock" },
     { name = "fsspec" },
-    { name = "hf-xet", marker = "platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64'" },
+    { name = "hf-xet", marker = "platform_machine == 'AMD64' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64'" },
+    { name = "httpx" },
     { name = "packaging" },
     { name = "pyyaml" },
-    { name = "requests" },
     { name = "tqdm" },
+    { name = "typer" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7c/b7/8cb61d2eece5fb05a83271da168186721c450eb74e3c31f7ef3169fa475b/huggingface_hub-0.36.2.tar.gz", hash = "sha256:1934304d2fb224f8afa3b87007d58501acfda9215b334eed53072dd5e815ff7a", size = 649782, upload-time = "2026-02-06T09:24:13.098Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/48/0f/ed994dbade67a54407c28cab96ef845e0e6d25500be56aca6394f8bfc9dd/huggingface_hub-1.16.1.tar.gz", hash = "sha256:7f1dc4c5ec21aed69be630ad0c3378616be16f3de1a47b141c0e812965d9c832", size = 792534, upload-time = "2026-05-21T18:40:00.908Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a8/af/48ac8483240de756d2438c380746e7130d1c6f75802ef22f3c6d49982787/huggingface_hub-0.36.2-py3-none-any.whl", hash = "sha256:48f0c8eac16145dfce371e9d2d7772854a4f591bcb56c9cf548accf531d54270", size = 566395, upload-time = "2026-02-06T09:24:11.133Z" },
+    { url = "https://files.pythonhosted.org/packages/49/79/621a7dbb80c70974f73a597275351ebe03ce5bc65cb5f8f4acb5859252bc/huggingface_hub-1.16.1-py3-none-any.whl", hash = "sha256:64340de934b9ce37857ef85a82de72f5629e8a270f9119eabb12bf495eb53c22", size = 668176, upload-time = "2026-05-21T18:39:58.596Z" },
 ]
 
 [[package]]
 name = "hypothesis"
-version = "6.164.0"
+version = "6.163.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "sortedcontainers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7a/ac/7b76103bd74d8457e4de0c6a6c3a26ac6327016438bde125e0a3de83a5b8/hypothesis-6.164.0.tar.gz", hash = "sha256:5d63d263d8c71b571638c18d9591f6e34b836c60a12469e9d9105c1c785f00f1", size = 492022, upload-time = "2026-07-30T12:39:49.085Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/61/08/4cbfa0327e9df00f57fc67f91847add2f0dd6c23408935273b095ee9a9f1/hypothesis-6.163.0.tar.gz", hash = "sha256:520480d4bd3a17557616c25923640953e360332c89d012fffcebd69857e674a9", size = 490145, upload-time = "2026-07-28T07:16:46.026Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7c/fe/d5b75a55892b33e72945f82efc71f645d29c0bfdb9f00727f7535a52edcc/hypothesis-6.164.0-cp310-abi3-macosx_10_12_x86_64.whl", hash = "sha256:14b861ac3353f8643b82a3ba76b8a0a54d2a06160c32b9a1f64a8ab41b179089", size = 771561, upload-time = "2026-07-30T12:39:00.404Z" },
-    { url = "https://files.pythonhosted.org/packages/1c/b0/2f01e9efc7267446bad0e2a68f7472daa174a72553d213b16aefe44b2bda/hypothesis-6.164.0-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:3d8c8bb00a4b86ae90b9ad41f3e1c99d016ec3e64c0ff9d676a4bb7be4f56948", size = 767079, upload-time = "2026-07-30T12:39:23.123Z" },
-    { url = "https://files.pythonhosted.org/packages/c3/26/d7bcd26b58e1df2bd39116b924b2a72676215d9650e68cbff9a629c3ce30/hypothesis-6.164.0-cp310-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e80e3ba8eaf37664eaa0f2625cef120b330b128a7df570210cf8be4f5ae65aaa", size = 1096364, upload-time = "2026-07-30T12:38:49.972Z" },
-    { url = "https://files.pythonhosted.org/packages/9d/17/99fe7ea866935da83444c3ef7885a14fc7349d96ff61c6faebd37ef4edf2/hypothesis-6.164.0-cp310-abi3-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:8cdf70f821e2d2f3a0bccaab29830aea8aefb63a77806e7e91246fb65a10c8d3", size = 1124963, upload-time = "2026-07-30T12:39:13.1Z" },
-    { url = "https://files.pythonhosted.org/packages/38/e8/df08be6296cbc1271d44e81f8ff9dcd6267a07552fb768e0fdc166e93d40/hypothesis-6.164.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bcc3743e22b3cffa7267b4bc74d03628606e4a115495728e986a7be220987315", size = 1145886, upload-time = "2026-07-30T12:39:45.612Z" },
-    { url = "https://files.pythonhosted.org/packages/4e/72/d5cf6fbfac40891d4281f630e16a6eb217ff56f97e350a06e0fd9322aa6a/hypothesis-6.164.0-cp310-abi3-manylinux_2_31_riscv64.whl", hash = "sha256:730f09d4afcd8a918b3d589bfb6421e3b41c057aa57652a773ef4f512cc60836", size = 1101181, upload-time = "2026-07-30T12:39:05.194Z" },
-    { url = "https://files.pythonhosted.org/packages/fb/ff/7ceb002329febffb678b65835ca6e9479a916325d088aadb0210d07f8252/hypothesis-6.164.0-cp310-abi3-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:9651cb48cb5a995295b442138d15d381547b935dcb0066fca7148a7955347400", size = 1137970, upload-time = "2026-07-30T12:39:16.076Z" },
-    { url = "https://files.pythonhosted.org/packages/7c/8f/c12c697b73ca9ca24d8a913879e3e0a9db86479754c7221554247c701565/hypothesis-6.164.0-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:51d161d2655dd86143b370c577267b5b7b4c2e8fcb8a3f22c1a787572aad707c", size = 1270184, upload-time = "2026-07-30T12:38:54.436Z" },
-    { url = "https://files.pythonhosted.org/packages/0e/2f/93f1c850c794fc9c80f5e61b3b20652126b865e6f57b348ae530446aadc7/hypothesis-6.164.0-cp310-abi3-musllinux_1_2_armv7l.whl", hash = "sha256:e8a250552390128b57e3afe55035ce2c2cb1f6f0919817657854244f071bc5be", size = 1397987, upload-time = "2026-07-30T12:38:21.113Z" },
-    { url = "https://files.pythonhosted.org/packages/c5/b8/bab2546325e15e87c8518dfbca263c81dbc35d566c516d66c9da98a38b77/hypothesis-6.164.0-cp310-abi3-musllinux_1_2_riscv64.whl", hash = "sha256:570cd51944e1cc3443847d8afa3d17fcf8aac475a1f744c9e7318a5ad7ef5c9f", size = 1270755, upload-time = "2026-07-30T12:38:51.571Z" },
-    { url = "https://files.pythonhosted.org/packages/6a/4e/ea97dd39678a42dc5a24e3e2a64d3b950fad9fb1dcce8d7be5afb52a0335/hypothesis-6.164.0-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:3a423e543055b3de5af7a7624c4285422541658367211fa293a3a57dd0ad01ba", size = 1312888, upload-time = "2026-07-30T12:38:30.847Z" },
-    { url = "https://files.pythonhosted.org/packages/44/84/a6f2d5b12b23d65f16eb398750e430065f9d1f40f4418569e3b87ef58d23/hypothesis-6.164.0-cp310-abi3-win32.whl", hash = "sha256:f5e51490b2ce64c66138f24477d83c71b6224ab0ef65700da10187c464b54e94", size = 657401, upload-time = "2026-07-30T12:39:11.581Z" },
-    { url = "https://files.pythonhosted.org/packages/f5/d3/c5ee410daa594cac2d3fe1fbe5473f2390e35f4369e168a817e43341ce2f/hypothesis-6.164.0-cp310-abi3-win_amd64.whl", hash = "sha256:c9059dfbb039342b6590bbce207f90e0f9a80fdf45a404c68c2d3e598be78ab3", size = 663566, upload-time = "2026-07-30T12:39:30.27Z" },
-    { url = "https://files.pythonhosted.org/packages/ba/b4/729697380a22dc2ce8feae3c64b08bf3bd3c27e99c3706cb9bdac40c6fc8/hypothesis-6.164.0-cp313-cp313-macosx_10_12_x86_64.whl", hash = "sha256:29e7cb48974cb9fd87602e20625c890385793c6b56c18a957085a9c291f56ef8", size = 773046, upload-time = "2026-07-30T12:39:40.473Z" },
-    { url = "https://files.pythonhosted.org/packages/38/35/72374f02d90dfda198afd8aac6b1e7d1184506f97e62ebcf3d2c1e5bf761/hypothesis-6.164.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:1ff8c3819345be8dd15ee6588ee9383869a54c9a3d2232cce5e26b456424135d", size = 764659, upload-time = "2026-07-30T12:38:55.896Z" },
-    { url = "https://files.pythonhosted.org/packages/6e/75/fb26388915d71e5949b98ccd0c9d95edcbe6b45d0370f177d43633d81ae2/hypothesis-6.164.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:33e88be13fac3ff7cb789a0b4cc43d99fb297db085f529fbb363188141c7d5bf", size = 1095078, upload-time = "2026-07-30T12:38:34.677Z" },
-    { url = "https://files.pythonhosted.org/packages/be/63/f6da6e39667d39a1e44c5df82fbe6cff070c29aaffa9beb62a5322e7d8ae/hypothesis-6.164.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d2e296d03a77355ce2e1c32e85a636b555edf0ddaaef277f98f1b84fe38a4595", size = 1145015, upload-time = "2026-07-30T12:39:26.487Z" },
-    { url = "https://files.pythonhosted.org/packages/88/c7/55ba09727da3d9a60628c50e31e6083a36f403cb230f5e1a7bd1749a5c39/hypothesis-6.164.0-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:53698a1b246714539dd0ecc2d556cde613d74e9f7385ec4109e0651ab2d382d6", size = 1268027, upload-time = "2026-07-30T12:38:25.676Z" },
-    { url = "https://files.pythonhosted.org/packages/ff/35/4789cade332f799b0e8f2f7ea0fe2aae6157a85e60f74497e316dd17a7e3/hypothesis-6.164.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:004c92c4b869f8e258f0641101b7743cae8420436f4465383f681c086ef95c9d", size = 1311895, upload-time = "2026-07-30T12:39:14.621Z" },
-    { url = "https://files.pythonhosted.org/packages/12/8a/18d85e624f8631aec42daa8a2f07c6edcedb7385b2c0f375ba8a30cbd065/hypothesis-6.164.0-cp313-cp313-win_amd64.whl", hash = "sha256:4878f81fa92a580d3e16b53e64e01a9d9fe1dca5973783558493a003138dbd36", size = 660656, upload-time = "2026-07-30T12:38:37.696Z" },
+    { url = "https://files.pythonhosted.org/packages/89/b1/3eea7a422de342bd0095a9672c3e03fe0466e4561a55499a1e01b4a9f098/hypothesis-6.163.0-cp310-abi3-macosx_10_12_x86_64.whl", hash = "sha256:331906cb029b6b360b8ebac3ec00c3cfa720037fe2efb294a503a1979c9a9a8f", size = 769898, upload-time = "2026-07-28T07:15:19.323Z" },
+    { url = "https://files.pythonhosted.org/packages/bc/24/45b5c948c76c16ecf1e4ad1ca4a4a3fce55b3317ee172bc8230ff2956ae1/hypothesis-6.163.0-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:b4ad2134405d5345434c22dea96bbc12c85abcfc3c253a8063dbc9ff01164555", size = 765438, upload-time = "2026-07-28T07:16:04.69Z" },
+    { url = "https://files.pythonhosted.org/packages/0f/72/7725039a75b3679dc445a169026b11860a0e67a600c4ffed49a42040a000/hypothesis-6.163.0-cp310-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:50073f8e63c1e7d3403899755657a990d8bba7b5b5bff66b1c56796d4969bb28", size = 1094699, upload-time = "2026-07-28T07:15:56.668Z" },
+    { url = "https://files.pythonhosted.org/packages/dd/fa/bcfa3879f303a302ec6e5f4d35b583924867a0821b42fa275f440f3b8dab/hypothesis-6.163.0-cp310-abi3-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:8c5d1e6bad47edf6fb1d7406cf6d67314ac08325c63a49550d782a4596ea302b", size = 1123315, upload-time = "2026-07-28T07:16:40.381Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/7f/e7fe2f0658db5182bb1d4b266d17f8f81cf3db82eeba27677ddfea13ac09/hypothesis-6.163.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c0ec3b709508ccd835d8ded1db025b7800618f2289a22a6bfd4927da5f4eb33c", size = 1144220, upload-time = "2026-07-28T07:15:20.617Z" },
+    { url = "https://files.pythonhosted.org/packages/90/14/c26f93a4693bfd83d7ba14b7043d986458026f6635d1b157bc2f1c56a59e/hypothesis-6.163.0-cp310-abi3-manylinux_2_31_riscv64.whl", hash = "sha256:7cb3d927360fe73f9a06d646e6082237142ee39c24679c7133d22bf06dd03b45", size = 1099527, upload-time = "2026-07-28T07:16:17.955Z" },
+    { url = "https://files.pythonhosted.org/packages/ea/f5/4c1dde28d2e18e169dd6c471ef4bcf12abf3c6a3f4a1744bdabdbdf411ba/hypothesis-6.163.0-cp310-abi3-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:3f3cceb4720a39127622fbf3bcebe1775b894372c53b5edddfdef10bbdeef9ec", size = 1136272, upload-time = "2026-07-28T07:16:38.182Z" },
+    { url = "https://files.pythonhosted.org/packages/3a/5b/54153509ed42cc17e1b65efe34a0c781f42fb04c902dc5f25486c537ec88/hypothesis-6.163.0-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:59f5fdb8addb44c17520a60d50542d9db6ceba577bbf54efefa9c10ee20be140", size = 1268518, upload-time = "2026-07-28T07:15:42.991Z" },
+    { url = "https://files.pythonhosted.org/packages/81/86/f86f0d15d91b9cbff3546c1b8891950b2b08c0527e7494133fb2180e1b8b/hypothesis-6.163.0-cp310-abi3-musllinux_1_2_armv7l.whl", hash = "sha256:f1fe222f50a1898e87a1e7323ab35f9e956278efabe4dd55a1342808206d05ad", size = 1396357, upload-time = "2026-07-28T07:15:26.696Z" },
+    { url = "https://files.pythonhosted.org/packages/46/3a/c096b6b272f15e17e8e65c6ccfb2e1d167456ff5bbd9db33dca3185199f6/hypothesis-6.163.0-cp310-abi3-musllinux_1_2_riscv64.whl", hash = "sha256:56ed585baab75cb98462c57ca88bbdc6a9d935a14118dd572fb476c3ecec2a06", size = 1269128, upload-time = "2026-07-28T07:16:11.902Z" },
+    { url = "https://files.pythonhosted.org/packages/bb/9f/0807445874b3083a22c9a14a0ffc31bd0060ef3b408ce4cb31c20779cdf8/hypothesis-6.163.0-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:2849c23b2e0fe2eef4c1ec336b01eac7ad7397c49fca43c264f59ec1e6046eac", size = 1311189, upload-time = "2026-07-28T07:16:08.545Z" },
+    { url = "https://files.pythonhosted.org/packages/d6/de/3319aa8fcffd1641defc1c5eea1ad646a33d1b62528ef487a89752bc8079/hypothesis-6.163.0-cp310-abi3-win32.whl", hash = "sha256:b2ddcdaf6691101e06dc4a5add7b8c8fdf1e68daba599255a281f3f3550d3331", size = 655743, upload-time = "2026-07-28T07:16:30.966Z" },
+    { url = "https://files.pythonhosted.org/packages/8e/48/36bc72910451e6e88b75e59a6ddbf0db34ff61a3b11c9439801dfd5fec20/hypothesis-6.163.0-cp310-abi3-win_amd64.whl", hash = "sha256:4ab0dadc09c537d4ac57e564039dfe7daf09c98375306d54bfc0fd6c218efcca", size = 661902, upload-time = "2026-07-28T07:16:34.407Z" },
+    { url = "https://files.pythonhosted.org/packages/58/69/c474a3fa1c33d9a6e059e820221275d9c60eb10085f6164212c291856157/hypothesis-6.163.0-cp313-cp313-macosx_10_12_x86_64.whl", hash = "sha256:a16ebce774755a7a652bd44c62101dc914372ed1a98935969624848c9627b4a4", size = 771335, upload-time = "2026-07-28T07:15:14.988Z" },
+    { url = "https://files.pythonhosted.org/packages/54/27/8951688de58314780ba0af5bf2675709009dcc1fb568d244f2a03c4de8e9/hypothesis-6.163.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:40dfab6fe6a02a80abef81aebf88e53cd529e3f2f6ba3486b674a67b1f4a3512", size = 763020, upload-time = "2026-07-28T07:15:25.218Z" },
+    { url = "https://files.pythonhosted.org/packages/8b/d7/9eb7451400507f4b5c972c81c2bc57d0009597ea37295519a9645963a50e/hypothesis-6.163.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f28ad27193c1fbcfb52ef2ee63d2b721563525089e80962b4268b306dac45507", size = 1093415, upload-time = "2026-07-28T07:16:27.408Z" },
+    { url = "https://files.pythonhosted.org/packages/24/cc/c12c780676c7a4a4051d05e7b278a94bf1bb496ef31882881160f16866c9/hypothesis-6.163.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8aac96db8a6c7ee43aba2ee0d3c43893da1fb7c38ed54790c1be2b6d8fd87b96", size = 1143356, upload-time = "2026-07-28T07:16:01.571Z" },
+    { url = "https://files.pythonhosted.org/packages/4b/c1/61c5ebdb77a3f259803e60a12f56de35f8b6d641a6219f798dcfa69dece3/hypothesis-6.163.0-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:9d23f0f3a14bb6e6f99c793d340196dba4af95ba25bfcab624d1794f540f5e27", size = 1266375, upload-time = "2026-07-28T07:15:11.353Z" },
+    { url = "https://files.pythonhosted.org/packages/a2/53/f3a89b4d21d89098d1dec749632aa0fece04f5d17a9e7e91c7f10596d55a/hypothesis-6.163.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:b123b4995a7612f1130e2b2362c9a5d0568df887bf7e7bdb45c23af8cd5423c9", size = 1310257, upload-time = "2026-07-28T07:16:42.213Z" },
+    { url = "https://files.pythonhosted.org/packages/06/e7/88e71c4cec0df68aa7a2fb251083c544f30697bd90fb4b1ed19de493ab81/hypothesis-6.163.0-cp313-cp313-win_amd64.whl", hash = "sha256:b268211e625cd550e361fc387bf1db5deb1e9cae0ce4041116f0a0aafeef7c06", size = 658983, upload-time = "2026-07-28T07:16:10.289Z" },
 ]
 
 [[package]]
@@ -8705,20 +8781,29 @@ wheels = [
 
 [[package]]
 name = "libcst"
-version = "1.9.0"
+version = "1.8.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyyaml-ft" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/02/c0/098e5c91ff1537f00c85a6438b6cb1863d17144680cc91f47c87f104a200/libcst-1.9.0.tar.gz", hash = "sha256:087b58a9afe076bb08e2d726478e1f16cb928d67ffa9092817e033c335de522a", size = 914739, upload-time = "2026-07-29T21:28:43.153Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/de/cd/337df968b38d94c5aabd3e1b10630f047a2b345f6e1d4456bd9fe7417537/libcst-1.8.6.tar.gz", hash = "sha256:f729c37c9317126da9475bdd06a7208eb52fcbd180a6341648b45a56b4ba708b", size = 891354, upload-time = "2025-11-03T22:33:30.621Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f2/b1/befc0544283bb3923a928accf79ed685e5a725524bdb3491826670affc07/libcst-1.9.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:b8b9df30f524317b097dc53065b25dda33d6a4cc3c7c8bf4fc83ca7559c58cc0", size = 2043754, upload-time = "2026-07-29T19:24:59.885Z" },
-    { url = "https://files.pythonhosted.org/packages/45/50/fef7c172a8457c95894edf5fb04805024899cdfea41fa01b0636587b79e1/libcst-1.9.0-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:e465a7bc9c2b9533eb9e06d2391f8819f811b5112919d4064c9fb8565aaafa08", size = 2203548, upload-time = "2026-07-29T19:25:01.323Z" },
-    { url = "https://files.pythonhosted.org/packages/18/ff/764cd2be1fd99d774fc44039c319dc0ed1d9d9afeaa02759a05121cccd4b/libcst-1.9.0-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:8504b422c95676a8c27b517e1ac01413ece91bf356865c587ca9bdcd5708a2f7", size = 2255274, upload-time = "2026-07-29T19:25:02.764Z" },
-    { url = "https://files.pythonhosted.org/packages/34/a7/474748a27a02fa83e3556b260d5f5236ca48164fa7beffecf3b2cad24dca/libcst-1.9.0-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:bcb9f9d4fcfe2ec7a40d2c26e03a538d5d9dc189c38551eb3f94ab661afee7c0", size = 2269126, upload-time = "2026-07-29T19:25:04.158Z" },
-    { url = "https://files.pythonhosted.org/packages/8a/b7/655e45363b8cf87b91e41e060b21c89e5316c7ef36eb14a1a498b27bb71e/libcst-1.9.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:e8d671c39a431c309476099b8ec811e412503ec0f4465f6fc907cb51c70e8e6b", size = 2378602, upload-time = "2026-07-29T19:25:06.424Z" },
-    { url = "https://files.pythonhosted.org/packages/db/13/6da63f0902ece43bf9d737017251ad7ad06edd9d3c4e1856450403cb4473/libcst-1.9.0-cp313-cp313-win_amd64.whl", hash = "sha256:4d382fba04077eb556a1ea4295a4482e192aa93639c5a07ba0885841965ea0c0", size = 2103486, upload-time = "2026-07-29T19:25:07.979Z" },
-    { url = "https://files.pythonhosted.org/packages/fd/ff/dccb1a55e38b4e47256a97242d61d2bef5366c744faf88fb087d4fa0f995/libcst-1.9.0-cp313-cp313-win_arm64.whl", hash = "sha256:a621e261990148c1cfbe26c1798bd2375c131cf358a44a7a4659fc41c1a336e1", size = 1979907, upload-time = "2026-07-29T19:25:09.532Z" },
+    { url = "https://files.pythonhosted.org/packages/90/01/723cd467ec267e712480c772aacc5aa73f82370c9665162fd12c41b0065b/libcst-1.8.6-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:7445479ebe7d1aff0ee094ab5a1c7718e1ad78d33e3241e1a1ec65dcdbc22ffb", size = 2206386, upload-time = "2025-11-03T22:32:27.422Z" },
+    { url = "https://files.pythonhosted.org/packages/17/50/b944944f910f24c094f9b083f76f61e3985af5a376f5342a21e01e2d1a81/libcst-1.8.6-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:4fc3fef8a2c983e7abf5d633e1884c5dd6fa0dcb8f6e32035abd3d3803a3a196", size = 2083945, upload-time = "2025-11-03T22:32:28.847Z" },
+    { url = "https://files.pythonhosted.org/packages/36/a1/bd1b2b2b7f153d82301cdaddba787f4a9fc781816df6bdb295ca5f88b7cf/libcst-1.8.6-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:1a3a5e4ee870907aa85a4076c914ae69066715a2741b821d9bf16f9579de1105", size = 2235818, upload-time = "2025-11-03T22:32:30.504Z" },
+    { url = "https://files.pythonhosted.org/packages/b9/ab/f5433988acc3b4d188c4bb154e57837df9488cc9ab551267cdeabd3bb5e7/libcst-1.8.6-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:6609291c41f7ad0bac570bfca5af8fea1f4a27987d30a1fa8b67fe5e67e6c78d", size = 2301289, upload-time = "2025-11-03T22:32:31.812Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/57/89f4ba7a6f1ac274eec9903a9e9174890d2198266eee8c00bc27eb45ecf7/libcst-1.8.6-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:25eaeae6567091443b5374b4c7d33a33636a2d58f5eda02135e96fc6c8807786", size = 2299230, upload-time = "2025-11-03T22:32:33.242Z" },
+    { url = "https://files.pythonhosted.org/packages/f2/36/0aa693bc24cce163a942df49d36bf47a7ed614a0cd5598eee2623bc31913/libcst-1.8.6-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:04030ea4d39d69a65873b1d4d877def1c3951a7ada1824242539e399b8763d30", size = 2408519, upload-time = "2025-11-03T22:32:34.678Z" },
+    { url = "https://files.pythonhosted.org/packages/db/18/6dd055b5f15afa640fb3304b2ee9df8b7f72e79513814dbd0a78638f4a0e/libcst-1.8.6-cp313-cp313-win_amd64.whl", hash = "sha256:8066f1b70f21a2961e96bedf48649f27dfd5ea68be5cd1bed3742b047f14acde", size = 2119853, upload-time = "2025-11-03T22:32:36.287Z" },
+    { url = "https://files.pythonhosted.org/packages/c9/ed/5ddb2a22f0b0abdd6dcffa40621ada1feaf252a15e5b2733a0a85dfd0429/libcst-1.8.6-cp313-cp313-win_arm64.whl", hash = "sha256:c188d06b583900e662cd791a3f962a8c96d3dfc9b36ea315be39e0a4c4792ebf", size = 1999808, upload-time = "2025-11-03T22:32:38.1Z" },
+    { url = "https://files.pythonhosted.org/packages/25/d3/72b2de2c40b97e1ef4a1a1db4e5e52163fc7e7740ffef3846d30bc0096b5/libcst-1.8.6-cp313-cp313t-macosx_10_13_x86_64.whl", hash = "sha256:c41c76e034a1094afed7057023b1d8967f968782433f7299cd170eaa01ec033e", size = 2190553, upload-time = "2025-11-03T22:32:39.819Z" },
+    { url = "https://files.pythonhosted.org/packages/0d/20/983b7b210ccc3ad94a82db54230e92599c4a11b9cfc7ce3bc97c1d2df75c/libcst-1.8.6-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:5432e785322aba3170352f6e72b32bea58d28abd141ac37cc9b0bf6b7c778f58", size = 2074717, upload-time = "2025-11-03T22:32:41.373Z" },
+    { url = "https://files.pythonhosted.org/packages/13/f2/9e01678fedc772e09672ed99930de7355757035780d65d59266fcee212b8/libcst-1.8.6-cp313-cp313t-manylinux_2_28_aarch64.whl", hash = "sha256:85b7025795b796dea5284d290ff69de5089fc8e989b25d6f6f15b6800be7167f", size = 2225834, upload-time = "2025-11-03T22:32:42.716Z" },
+    { url = "https://files.pythonhosted.org/packages/4a/0d/7bed847b5c8c365e9f1953da274edc87577042bee5a5af21fba63276e756/libcst-1.8.6-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:536567441182a62fb706e7aa954aca034827b19746832205953b2c725d254a93", size = 2287107, upload-time = "2025-11-03T22:32:44.549Z" },
+    { url = "https://files.pythonhosted.org/packages/02/f0/7e51fa84ade26c518bfbe7e2e4758b56d86a114c72d60309ac0d350426c4/libcst-1.8.6-cp313-cp313t-musllinux_1_2_aarch64.whl", hash = "sha256:2f04d3672bde1704f383a19e8f8331521abdbc1ed13abb349325a02ac56e5012", size = 2288672, upload-time = "2025-11-03T22:32:45.867Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/cd/15762659a3f5799d36aab1bc2b7e732672722e249d7800e3c5f943b41250/libcst-1.8.6-cp313-cp313t-musllinux_1_2_x86_64.whl", hash = "sha256:7f04febcd70e1e67917be7de513c8d4749d2e09206798558d7fe632134426ea4", size = 2392661, upload-time = "2025-11-03T22:32:47.232Z" },
+    { url = "https://files.pythonhosted.org/packages/e4/6b/b7f9246c323910fcbe021241500f82e357521495dcfe419004dbb272c7cb/libcst-1.8.6-cp313-cp313t-win_amd64.whl", hash = "sha256:1dc3b897c8b0f7323412da3f4ad12b16b909150efc42238e19cbf19b561cc330", size = 2105068, upload-time = "2025-11-03T22:32:49.145Z" },
+    { url = "https://files.pythonhosted.org/packages/a6/0b/4fd40607bc4807ec2b93b054594373d7fa3d31bb983789901afcb9bcebe9/libcst-1.8.6-cp313-cp313t-win_arm64.whl", hash = "sha256:44f38139fa95e488db0f8976f9c7ca39a64d6bc09f2eceef260aa1f6da6a2e42", size = 1985181, upload-time = "2025-11-03T22:32:50.597Z" },
 ]
 
 [[package]]
@@ -8849,11 +8934,11 @@ wheels = [
 
 [[package]]
 name = "markdown"
-version = "3.10.3"
+version = "3.10.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/29/6f/da4c6aea59b3001f2e8c0ec7497475aadaf3b021c10cab5b2858f0f32b26/markdown-3.10.3.tar.gz", hash = "sha256:3589362618f743188b4d955b874402bc814f4f83f544dc207719f4baa7d9c45f", size = 372596, upload-time = "2026-07-30T19:05:29.005Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2b/f4/69fa6ed85ae003c2378ffa8f6d2e3234662abd02c10d216c0ba96081a238/markdown-3.10.2.tar.gz", hash = "sha256:994d51325d25ad8aa7ce4ebaec003febcce822c3f8c911e3b17c52f7f589f950", size = 368805, upload-time = "2026-02-09T14:57:26.942Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/64/69/4a5af2bc115a9a33fefe51709749de8262be3f9ba063d1753a837cdbc49c/markdown-3.10.3-py3-none-any.whl", hash = "sha256:fa6c92a00a4a3c98b22728c64a935ae1928250ae65058a6ded814d2cc29a4cea", size = 110757, upload-time = "2026-07-30T19:05:27.883Z" },
+    { url = "https://files.pythonhosted.org/packages/de/1f/77fa3081e4f66ca3576c896ae5d31c3002ac6607f9747d2e3aa49227e464/markdown-3.10.2-py3-none-any.whl", hash = "sha256:e91464b71ae3ee7afd3017d9f358ef0baf158fd9a298db92f1d4761133824c36", size = 108180, upload-time = "2026-02-09T14:57:25.787Z" },
 ]
 
 [[package]]
@@ -9987,11 +10072,11 @@ wheels = [
 
 [[package]]
 name = "pip"
-version = "26.2"
+version = "26.1.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/db/96/e6f8e9d9d7b9cc4457092712a7e919c3186aa2c2fa9ffed2c5d29cc947e8/pip-26.2.tar.gz", hash = "sha256:2d8542afcc84cdd8e846c2b36b2861fad1da376dd98f8e7113e9108a3c331690", size = 1848845, upload-time = "2026-07-29T21:57:56.407Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/91/47e7d486260f618783899587af63ccf7980fb60245c3e63dd4571c6b57ad/pip-26.1.2.tar.gz", hash = "sha256:f49cd134c61cf2fd75e0ce2676db03e4054504a5a4986d00f8299ae632dc4605", size = 1840799, upload-time = "2026-05-31T17:33:58.56Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/62/36/a3aed958d60531cb442b7ab4596cda7b3621cfb916f8ae1d6769795c7dc1/pip-26.2-py3-none-any.whl", hash = "sha256:931c303696af6fa3417112103b1cad26890e5a07eccb5b99783700e33f2b8aad", size = 1816475, upload-time = "2026-07-29T21:57:54.763Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/95/6b5cb3461ea5673ba0995989746db58eb18b91b54dbf331e72f569540946/pip-26.1.2-py3-none-any.whl", hash = "sha256:382ff9f685ee3bc25864f820aa50505825f10f5458ffff07e30a6d96e5715cab", size = 1813144, upload-time = "2026-05-31T17:33:56.772Z" },
 ]
 
 [[package]]
@@ -10711,6 +10796,19 @@ wheels = [
 ]
 
 [[package]]
+name = "pytest-testmon"
+version = "2.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "coverage" },
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4d/1d/3e4230cc67cd6205bbe03c3527500c0ccaf7f0c78b436537eac71590ee4a/pytest_testmon-2.2.0.tar.gz", hash = "sha256:01f488e955ed0e0049777bee598bf1f647dd524e06f544c31a24e68f8d775a51", size = 23108, upload-time = "2025-12-01T07:30:24.76Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/61/55/ebb3c2f59fb089f08d00f764830d35780fc4e4c41dffcadafa3264682b65/pytest_testmon-2.2.0-py3-none-any.whl", hash = "sha256:2604ca44a54d61a2e830d9ce828b41a837075e4ebc1f81b148add8e90d34815b", size = 25199, upload-time = "2025-12-01T07:30:23.623Z" },
+]
+
+[[package]]
 name = "pytest-timeout"
 version = "2.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -11019,11 +11117,11 @@ wheels = [
 
 [[package]]
 name = "redis"
-version = "8.1.0"
+version = "8.0.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a8/99/604f0b666d4c616d891cf77ebb9db6bb21601344c051aebf1b72b9ff915f/redis-8.1.0.tar.gz", hash = "sha256:6e1a19beef9225c83efd689c7e6b7da2d5215b1f42cd13b7fc3714d0a09c7b25", size = 5254356, upload-time = "2026-07-30T08:51:00.269Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cc/c3/928b290c2c0ca99ab96eea5b4ff8f30be8112b075301a7d3ba214a3c8c12/redis-8.0.1.tar.gz", hash = "sha256:afc5a7a2f5a084f5b1880dec548dd45be17db7e43c82a30d84f952aefb05cfb0", size = 5114170, upload-time = "2026-06-23T14:52:37.728Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/66/9d/c5731f6e3608663d4d3656fd8d3aecee8b509c3082818f5a13eae925baea/redis-8.1.0-py3-none-any.whl", hash = "sha256:a4fe1aac3d3b3cc791d4b3d5931c5a956045dc951ee74d1c913ee3ac4d2ee9fb", size = 560618, upload-time = "2026-07-30T08:50:58.497Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/0a/c2345ebf1ebe70840ce3f6c6ee612f8fa749cfbd1b03069c53bf0c62aaad/redis-8.0.1-py3-none-any.whl", hash = "sha256:47daa35a058c23468d6437f17a8c76882cb316b838ef763036af99b96cedd743", size = 502406, upload-time = "2026-06-23T14:52:36.137Z" },
 ]
 
 [[package]]
@@ -11190,42 +11288,42 @@ wheels = [
 
 [[package]]
 name = "ruff"
-version = "0.16.1"
+version = "0.16.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/70/25/7113f6d5498888c5fb7db34081cba7d5971c4cb1bfb26819966eee68f003/ruff-0.16.1.tar.gz", hash = "sha256:fedad7c801dabd3fb9741d76aca39246e6ddd9ca446a015875207bf19f1e6bc7", size = 4877500, upload-time = "2026-07-30T19:37:01.379Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4d/94/1e5e4967626faf12fa56999cd6222dff6992ceb086ad7945756baf70c7a7/ruff-0.16.0.tar.gz", hash = "sha256:e460aafd5495ec89efaa6ced2e4a9a581116451e1c88b9d37ef497e0f8e93982", size = 4790557, upload-time = "2026-07-23T19:11:30.981Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1b/bd/694da69368e0973de65df2ddc73ab18d43c469d5963d9b150911de6bc513/ruff-0.16.1-py3-none-linux_armv6l.whl", hash = "sha256:58edb313b88f0c5460a26adf5f39a37a3be789494a15e3e411e35fa78b89f9a0", size = 10839126, upload-time = "2026-07-30T19:36:13.697Z" },
-    { url = "https://files.pythonhosted.org/packages/3f/f0/b626e5d5bd0dd9576263658ef12885e2288afd1029a48e26ffed65ec1ac1/ruff-0.16.1-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:fde5a99e2f97479af66edd6622c6d5a2a7592c77cf4153d9e4428f5eeb55b60c", size = 11070253, upload-time = "2026-07-30T19:36:17.14Z" },
-    { url = "https://files.pythonhosted.org/packages/83/63/f40acfb6b35b88623e71684942b552c3edd96035f5d98f313815f7b277de/ruff-0.16.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:e0d4c20532fca4f7fa609369161d968dd28f65d83dabbd61d8e9c7edbf7001f6", size = 10561425, upload-time = "2026-07-30T19:36:20.04Z" },
-    { url = "https://files.pythonhosted.org/packages/aa/dd/14ec0e9c2b4d315547dd38765004b4863e354e1b52cb308272215d9f6f6d/ruff-0.16.1-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:30affbcedf59ad5703d9c91f82266e02b47739f797e1a7b6e158e5526a6dae38", size = 10948879, upload-time = "2026-07-30T19:36:22.476Z" },
-    { url = "https://files.pythonhosted.org/packages/33/e9/9d870cbae575030fdef595f04b4b97573c525b5497cce4f4498cf2f85446/ruff-0.16.1-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:24e9c631573cbca9d20f1283f8f479b2afa4a8503504822bd71a293889f16743", size = 10643691, upload-time = "2026-07-30T19:36:24.914Z" },
-    { url = "https://files.pythonhosted.org/packages/c4/09/12743d544e2173f53ecd27217c65f90d2bc0f8424a66a60339e56bbc0457/ruff-0.16.1-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b41bdd48fb420987a9b5212e4957c26ad4abce401fa9ea9d4d85843727945f4f", size = 11435354, upload-time = "2026-07-30T19:36:28.447Z" },
-    { url = "https://files.pythonhosted.org/packages/7f/89/a1652b2daee52083c9554a6333b678a8b01d0400f976827bb87857f9449a/ruff-0.16.1-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:b0d1e1393b7648079e13669de1c1f4fde06d4583e84d8fd5c1551e0a77a2aa75", size = 12259033, upload-time = "2026-07-30T19:36:31.326Z" },
-    { url = "https://files.pythonhosted.org/packages/16/96/ecdcb8c54ee7b123b487f807eb014e6e019155a0b81dfb669acd52f28ce3/ruff-0.16.1-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:07bf434b1c95f4e093be4532068ef4fcf00924eb2ade8796075980902d6fd54a", size = 11667981, upload-time = "2026-07-30T19:36:34.394Z" },
-    { url = "https://files.pythonhosted.org/packages/cd/90/c52e12e0d862e9572f2a33aa227409143520abe53111e9a6babbac7b4af8/ruff-0.16.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:39897739f112253ee4fdd2e8aa9a4f9ded99fb2be367d5f31dfa4ded6025584c", size = 11468183, upload-time = "2026-07-30T19:36:37.339Z" },
-    { url = "https://files.pythonhosted.org/packages/2c/6b/4ffb7ad1d83eb16cf8cbb3c8815d3f11c88460fd162d4b372a2059be1c2a/ruff-0.16.1-py3-none-manylinux_2_31_riscv64.whl", hash = "sha256:82ae3c0c0d74daf17b968a10b7b3bb3ef297ab7de0c1f749646b25e690ccb150", size = 11470071, upload-time = "2026-07-30T19:36:39.91Z" },
-    { url = "https://files.pythonhosted.org/packages/9c/72/32ae7db4c0b5e32ab611787caa19d1546800676d79f7483b7100a3561bf4/ruff-0.16.1-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:4d5f2ed10f8242d83fc08d521301089364e3375375705356f20c0e31606ef3ef", size = 10919503, upload-time = "2026-07-30T19:36:42.65Z" },
-    { url = "https://files.pythonhosted.org/packages/f7/ca/3d901ba6ad6fc38da39c3448fc6c59ac945679293a17c3ceb6d6c1cba13e/ruff-0.16.1-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:a4665b309891f83f3e3c25447935f1213e9abbd4b5640af7a1f2def9f8d413c1", size = 10649861, upload-time = "2026-07-30T19:36:45.18Z" },
-    { url = "https://files.pythonhosted.org/packages/92/79/894ef1ced26552d5f8c9cf6d85b0687840e1128c55aeab7b9c2d54a0d880/ruff-0.16.1-py3-none-musllinux_1_2_i686.whl", hash = "sha256:26e9ca5c9bc3971f20d3cf18a957f52ffd6a5f6564ff15c4912a144dcac22494", size = 11148137, upload-time = "2026-07-30T19:36:47.936Z" },
-    { url = "https://files.pythonhosted.org/packages/2d/69/3609a09fa1cb46cc28b762363e440a354204e5dff01bd0c8d7437874d6b9/ruff-0.16.1-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:67e1e1e3fa4f0c82f0e36d4cd61e661f6e7a6196cb1aa92fe0828fa7b8f257cd", size = 11559211, upload-time = "2026-07-30T19:36:50.448Z" },
-    { url = "https://files.pythonhosted.org/packages/fc/8a/fb22af2fd78a736e241fabf67e30ce1799a64244026377a49e133af90762/ruff-0.16.1-py3-none-win32.whl", hash = "sha256:d31765e131295b8445caf301e3e8a85b34d1b9b211b4109b7ba457888b051806", size = 10838258, upload-time = "2026-07-30T19:36:53.298Z" },
-    { url = "https://files.pythonhosted.org/packages/d4/35/e57fd9fb5d423961df087a00b12d42c0a830288dc2f3b45ecca299158b4f/ruff-0.16.1-py3-none-win_amd64.whl", hash = "sha256:09b05e8b90c2cb06ad63464350e7a45e8e44a2dfe52072ebfba6666ca8d3f596", size = 11961111, upload-time = "2026-07-30T19:36:56.107Z" },
-    { url = "https://files.pythonhosted.org/packages/cb/46/240ea004bf6dc4feb40e9832f2205a476a47dd5b8a3f8211a5fc5f95e20e/ruff-0.16.1-py3-none-win_arm64.whl", hash = "sha256:dbaadaac38c70239f056d306b7476f246b0bf000fa6b3876402acbf5b227eaf8", size = 11309414, upload-time = "2026-07-30T19:36:58.79Z" },
+    { url = "https://files.pythonhosted.org/packages/4b/81/1c8818fee7ce1a04cd7d1b3172e0a8f8e4f1dc4feb7fc390e16daa8af323/ruff-0.16.0-py3-none-linux_armv6l.whl", hash = "sha256:e5115729eb08c585e5121978ba5d5b60caeae394ce21b9fb5e6cd33a1c6c9b1e", size = 10754633, upload-time = "2026-07-23T19:10:46.415Z" },
+    { url = "https://files.pythonhosted.org/packages/23/df/beaf59c09d68db84304d555f188b276a77132a5d5b0b67a5c762aa143628/ruff-0.16.0-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:3c954b1d580bfa035b41654f7858cc7e71d5fc3ac5b723dd62bd9133830ed522", size = 10969164, upload-time = "2026-07-23T19:10:50.271Z" },
+    { url = "https://files.pythonhosted.org/packages/42/ce/741cd197496a1abbf51352710fd15ed995d2a2be87189c1da26a450d6e83/ruff-0.16.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:e01c21d10eb1b29f47b7454e1f4056db9a3f0260c646aa88457c610291db9f81", size = 10488846, upload-time = "2026-07-23T19:10:52.639Z" },
+    { url = "https://files.pythonhosted.org/packages/52/2a/a2db8e88cade358f5cdcb05674a917751074109315d014eb6352d9a893f7/ruff-0.16.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:6e364e5ed22ed8dc05082fd78e35308618260907ac2d3c1d637b2e682415b6c9", size = 10889729, upload-time = "2026-07-23T19:10:54.89Z" },
+    { url = "https://files.pythonhosted.org/packages/42/65/62a771694ebd63029dc953e27dbad40e1588bd4860ff9fe881018fddaa49/ruff-0.16.0-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:d327b8fc113a1d4421a04f3839d3752057c8dd1ee320223a6f3f52d04ada462a", size = 10568275, upload-time = "2026-07-23T19:10:56.993Z" },
+    { url = "https://files.pythonhosted.org/packages/3f/e2/ced249fe8af5f086c5c58cc21cc3356d50f32f7401c5df87050c999620a7/ruff-0.16.0-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:a9b50c55e263103586b3dcf5f73d479eb8cb5fdb6098fec59a62891dab653717", size = 11385112, upload-time = "2026-07-23T19:10:59.615Z" },
+    { url = "https://files.pythonhosted.org/packages/87/0b/05154977a8fd69eeb6c103271f55403bfd8711f5c0f8ed07489d95a504e7/ruff-0.16.0-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:0ff4a79ce3ec0172f3241943835de1c4cb4e2dcd07f0f8c2d02603dbbbee4b17", size = 12207008, upload-time = "2026-07-23T19:11:02.154Z" },
+    { url = "https://files.pythonhosted.org/packages/fb/29/98225831a3a1eab0e02f4acc6ca6559a98611dcc68b6965ff4b7234627c1/ruff-0.16.0-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:e95c448fca1fb2a18372a9440926c5a6ee789639bb975c72e7ae6d0b04218ab4", size = 11650842, upload-time = "2026-07-23T19:11:04.557Z" },
+    { url = "https://files.pythonhosted.org/packages/91/66/6bd3cf90500653d55dc0ffc8507aa8300bd49d0214b2e8cb4d3fef2943ba/ruff-0.16.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4f11a8d11010301d0a398a2fdef67691feca7294da6aef55e2150e8fa2cd520b", size = 11400718, upload-time = "2026-07-23T19:11:09.233Z" },
+    { url = "https://files.pythonhosted.org/packages/8e/a2/a54eb4eae05d66364050a5d3b8a9c5ef88196531b3cbe7109d873f87f819/ruff-0.16.0-py3-none-manylinux_2_31_riscv64.whl", hash = "sha256:48044c678e9cb8698246c99b14aaccfa6601dea7379eb48a6f8f73f7a6d86cd0", size = 11426177, upload-time = "2026-07-23T19:11:11.994Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/be/16e3eea4b2a478a496919f5e36f17c4559e54620bd3bbac5d6affa068006/ruff-0.16.0-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:7aa0959bad8eb8bef50340154fc9b58678dae31fa4293afa38b44b6e552c0213", size = 10856126, upload-time = "2026-07-23T19:11:14.221Z" },
+    { url = "https://files.pythonhosted.org/packages/a2/84/252eb8b868a16eec7257c14f504f77537e734b2d69c762e639e588e304a3/ruff-0.16.0-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:28ea2b7df8ebf7f9da6b7d47b230ab48f387c0a29be3b474c4d0740e197bb9af", size = 10571208, upload-time = "2026-07-23T19:11:16.378Z" },
+    { url = "https://files.pythonhosted.org/packages/21/09/817a482f542f7570cbb4554b26e896610c7114f539b1d9e2d2145bf6bef6/ruff-0.16.0-py3-none-musllinux_1_2_i686.whl", hash = "sha256:33a3dfac8c35f81498dea9181bccc2f4c4bc8f1521a1dd9406e77643e0f0fb09", size = 11063329, upload-time = "2026-07-23T19:11:19.173Z" },
+    { url = "https://files.pythonhosted.org/packages/2e/23/9403c180ca1cb9b1f7335f5c3e5305c09d49ea5b345196682a36028bde4a/ruff-0.16.0-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:a5237a0bda500d30d81b8e07a6973a5cbc772864cbf746ae2f4e8a2e01c9f4ed", size = 11489751, upload-time = "2026-07-23T19:11:21.74Z" },
+    { url = "https://files.pythonhosted.org/packages/b2/1d/1b2ef7bcde851c78d7f17f1cca13fd6dc695fc4b3d6197941e72cae5b132/ruff-0.16.0-py3-none-win32.whl", hash = "sha256:7fab76fa065c873f41ff744347c6e77bcc3dfec4bcc754dc26b63d23c0f7f5fb", size = 10785885, upload-time = "2026-07-23T19:11:23.947Z" },
+    { url = "https://files.pythonhosted.org/packages/b2/a3/d5e4ef7a56be3f928ffb90b94c25ba7d3cb9c7fe0736aeaaedf361770712/ruff-0.16.0-py3-none-win_amd64.whl", hash = "sha256:429c117f022bf481fabd9d551e7a3952b24c65e6ef44337ea09d90bebef14472", size = 11923141, upload-time = "2026-07-23T19:11:26.409Z" },
+    { url = "https://files.pythonhosted.org/packages/cb/9a/8415f2657cbe200f41a4531ccededf135505a92d4a012229121f885b26f9/ruff-0.16.0-py3-none-win_arm64.whl", hash = "sha256:14296fedcd2705c77ab8235439278bbb38f285cf7da5528b00b3e330c3d4872d", size = 11273407, upload-time = "2026-07-23T19:11:28.705Z" },
 ]
 
 [[package]]
 name = "rumdl"
-version = "0.2.47"
+version = "0.2.46"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ee/73/106082a37ca7e87cb7b0fbf51881a1ced2cd473089912ed74ceac7795c56/rumdl-0.2.47.tar.gz", hash = "sha256:4df9dd1c72b358b530e300b0ceec473e3a5afacbc08315df8fa1279c05000f01", size = 3056028, upload-time = "2026-07-31T00:08:25.965Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/54/3b/194f66a79e1a2d74b2e6f278f958ce3b80135b13c395114dc9fcd2ce6993/rumdl-0.2.46.tar.gz", hash = "sha256:99036f4268f4fad4915ff603618d36ba62aa585374f60b2d55bbfe0f10680bd3", size = 3034309, upload-time = "2026-07-29T21:33:24.575Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8f/92/ca6438be73d5e2f19dafc5999c16873498176bb094eaf9180546cd66aa1a/rumdl-0.2.47-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:43e19b33cdecde1da79ff1ca201b336defafb38010bb8303645153fa9588b18d", size = 6240793, upload-time = "2026-07-31T00:08:16.216Z" },
-    { url = "https://files.pythonhosted.org/packages/1e/03/ca147ab742dc904dc5c38bb5ea1c848d9ec6fa6f66c41a0a7d72ae1bebd2/rumdl-0.2.47-py3-none-macosx_11_0_arm64.whl", hash = "sha256:e99c54b8de1b630745ef9f16633d2b3225c83f8d53ae5400768161de258d0f54", size = 5890145, upload-time = "2026-07-31T00:08:08.651Z" },
-    { url = "https://files.pythonhosted.org/packages/81/96/d43851585d4f3f7781815fa8e9b1da3dca364190b6c7649d2f608a217691/rumdl-0.2.47-py3-none-manylinux_2_28_aarch64.whl", hash = "sha256:bca364c611209c1405f6308258ba74d284c24e91f25f0de7f7ae453a7418196c", size = 6030016, upload-time = "2026-07-31T00:08:11.526Z" },
-    { url = "https://files.pythonhosted.org/packages/05/4b/0b6cee575e6d8ab0676e5519937be6e656c414e5300444f0b476480516c4/rumdl-0.2.47-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:012b8d0ae68ad9450b621fb8014d87572f479bdf86812c80e5c12d3e6fd27633", size = 6424167, upload-time = "2026-07-31T00:08:20.722Z" },
-    { url = "https://files.pythonhosted.org/packages/08/5c/05daf5fdfcc1b56a1ec20ab2d6f654d5a43307868d8705db6d270847df34/rumdl-0.2.47-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:c8a301885616568369ee505649192f87acdaa1d14e0da27f1b984be5c5500275", size = 6020932, upload-time = "2026-07-31T00:08:13.891Z" },
-    { url = "https://files.pythonhosted.org/packages/92/05/92e08c366c8a5bbc99c43ecb319ffdb3d0a1968861021e9a98fb730b9180/rumdl-0.2.47-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:d6ac0a3a119863e7d140890f2c419c9c47c5a880176c9a47448ed067dec31b0f", size = 6404588, upload-time = "2026-07-31T00:08:23.83Z" },
-    { url = "https://files.pythonhosted.org/packages/18/c4/c0e0d7b0926074dbd74174ebe9249962f929e9384dce12dbd13774734191/rumdl-0.2.47-py3-none-win_amd64.whl", hash = "sha256:456283c68e53f3203dd106cfdec2722b5eedbd20117dc1ed780c398bf657df99", size = 6353117, upload-time = "2026-07-31T00:08:18.372Z" },
+    { url = "https://files.pythonhosted.org/packages/32/7f/01f3e6a9217e6d1a5882f43cfdadaa5832895485276edbf395d69370f1e0/rumdl-0.2.46-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:9954f53219b63f434613b7f66cba98c8b08bfea2ee544b184b1af78348ed94ac", size = 6239220, upload-time = "2026-07-29T21:33:17.048Z" },
+    { url = "https://files.pythonhosted.org/packages/f9/b7/57e92263f1fe44737eafa3c02d4b211f837d97a689ef7e9da757ff263192/rumdl-0.2.46-py3-none-macosx_11_0_arm64.whl", hash = "sha256:8f28d90e1ca6bdbbb3b20f66333a6aeb120699d01f41d1685c026b15064aac84", size = 5884922, upload-time = "2026-07-29T21:33:10.465Z" },
+    { url = "https://files.pythonhosted.org/packages/84/c7/9e9a9eae876c631a1df63d352841858056ae45381d31daaa70c595c13a1d/rumdl-0.2.46-py3-none-manylinux_2_28_aarch64.whl", hash = "sha256:5580ff36a95030c83e103c652e0e36f565e6ab117599ba45a3fff7d6ad5a2d79", size = 6015338, upload-time = "2026-07-29T21:33:12.974Z" },
+    { url = "https://files.pythonhosted.org/packages/f4/82/8a14a86290ce859b9a821bf36a73253ab9301015431dbe90f819a27d932d/rumdl-0.2.46-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:65f16f4902a3748fffa2948264cd8ef31e258b3ae4cb294b448c8ed5882fe259", size = 6422204, upload-time = "2026-07-29T21:33:20.956Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/d7/454efa369dcc2343710a49e50f69b7679fe0378024042045ead20015f55b/rumdl-0.2.46-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:9337b2a16d2a8c7a53f0a26c1d6af9ac6f21713eb2a86e754327ed497ebcf6a4", size = 6014307, upload-time = "2026-07-29T21:33:14.991Z" },
+    { url = "https://files.pythonhosted.org/packages/68/7d/a3443db44cd3a2337e82fb656f763eb77682ca3752d82e44a9805dd15d60/rumdl-0.2.46-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:b44fa1c0bb27b59c22714b7ff01894b6127a3ae5827caf2add291846cee37e66", size = 6406369, upload-time = "2026-07-29T21:33:22.795Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/5d/5e95e629a2e47f0b2d524f3d9b79488fcb5593a0af539133b1798ed32079/rumdl-0.2.46-py3-none-win_amd64.whl", hash = "sha256:5757fb0211377ab8b87490a77dd9dc9079ee13170017c53ff842acd79fb11857", size = 6339300, upload-time = "2026-07-29T21:33:18.865Z" },
 ]
 
 [[package]]
@@ -11340,20 +11438,21 @@ wheels = [
 
 [[package]]
 name = "sentence-transformers"
-version = "3.4.1"
+version = "5.6.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "huggingface-hub" },
-    { name = "pillow" },
+    { name = "numpy" },
     { name = "scikit-learn" },
     { name = "scipy" },
     { name = "torch" },
     { name = "tqdm" },
     { name = "transformers" },
+    { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/16/74/aca6f8a2b8d62b4daf8c9a0c49d2aa573381caf47dc35cbb343389229376/sentence_transformers-3.4.1.tar.gz", hash = "sha256:68daa57504ff548340e54ff117bd86c1d2f784b21e0fb2689cf3272b8937b24b", size = 223898, upload-time = "2025-01-29T14:25:55.982Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/75/80/573ab31b77bdfa8f18051188adff3405e928386287cd6f756eff5777dd82/sentence_transformers-5.6.1.tar.gz", hash = "sha256:16af5d682ef66672b076d58599a23905800e850ec2bfb1865938306bf684ad72", size = 452185, upload-time = "2026-07-23T14:40:41.589Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/05/89/7eb147a37b7f31d3c815543df539d8b8d0425e93296c875cc87719d65232/sentence_transformers-3.4.1-py3-none-any.whl", hash = "sha256:e026dc6d56801fd83f74ad29a30263f401b4b522165c19386d8bc10dcca805da", size = 275896, upload-time = "2025-01-29T14:25:53.614Z" },
+    { url = "https://files.pythonhosted.org/packages/c1/ad/8f73f512dc7ad4031d2b64cbb67f70bdfb355756afbe0db610a5146415c1/sentence_transformers-5.6.1-py3-none-any.whl", hash = "sha256:cefbb17b6325a982a4732c8c49fb013375392687049d1de3d435c4b04060680b", size = 596677, upload-time = "2026-07-23T14:40:40.312Z" },
 ]
 
 [[package]]
@@ -11763,23 +11862,22 @@ wheels = [
 
 [[package]]
 name = "transformers"
-version = "4.57.6"
+version = "5.14.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "filelock" },
     { name = "huggingface-hub" },
     { name = "numpy" },
     { name = "packaging" },
     { name = "pyyaml" },
     { name = "regex" },
-    { name = "requests" },
     { name = "safetensors" },
     { name = "tokenizers" },
     { name = "tqdm" },
+    { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c4/35/67252acc1b929dc88b6602e8c4a982e64f31e733b804c14bc24b47da35e6/transformers-4.57.6.tar.gz", hash = "sha256:55e44126ece9dc0a291521b7e5492b572e6ef2766338a610b9ab5afbb70689d3", size = 10134912, upload-time = "2026-01-16T10:38:39.284Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5a/fb/2a2ba88f325e68a921d8b69ff63b477830b2e73ade9a3c8c8cab2f06d741/transformers-5.14.1.tar.gz", hash = "sha256:60d196c27781eacf8637e2b533f517582907ad6f9ae142046d6b69431a5b2173", size = 9295927, upload-time = "2026-07-16T09:41:57.773Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/03/b8/e484ef633af3887baeeb4b6ad12743363af7cce68ae51e938e00aaa0529d/transformers-4.57.6-py3-none-any.whl", hash = "sha256:4c9e9de11333ddfe5114bc872c9f370509198acf0b87a832a0ab9458e2bd0550", size = 11993498, upload-time = "2026-01-16T10:38:31.289Z" },
+    { url = "https://files.pythonhosted.org/packages/6f/67/8d85ca2323233ae3c0365a659c4e52ee1f587b440e4bc577e7d8e4416d0f/transformers-5.14.1-py3-none-any.whl", hash = "sha256:9db974c4079ede2d1a3ea7ca5a240df33f2cc26fc2b36ba64c5f2a4f43b6e725", size = 11625234, upload-time = "2026-07-16T09:41:54.143Z" },
 ]
 
 [[package]]
@@ -12276,7 +12374,7 @@ wheels = [
 
 [[package]]
 name = "virtualenv"
-version = "21.7.1"
+version = "21.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "distlib" },
@@ -12284,9 +12382,9 @@ dependencies = [
     { name = "platformdirs" },
     { name = "python-discovery" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ea/fa/18004e5cb15541ad2a68ff219c755233b012b12d4ec8663d06a258082bec/virtualenv-21.7.1.tar.gz", hash = "sha256:d0dbfaa5483487baea28d7210ef8d24c9d1bd0f10f449eeb215568825a9b334e", size = 5525237, upload-time = "2026-07-30T15:40:36.36Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fe/25/e367a7229b0914772ca8d81b41fde012d9feda68523b52644a571bb21ce8/virtualenv-21.7.0.tar.gz", hash = "sha256:7f9519b9432ff11b6e1a3e94061664efc2ff99ea21780e3cf4f6bd0a5da8b37c", size = 5527510, upload-time = "2026-07-21T13:12:14.109Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4b/a7/ded126c19495158a05c7202b3389139839d4cf78d622d453867778e0f7a8/virtualenv-21.7.1-py3-none-any.whl", hash = "sha256:6394973f990536e34c05157179146c020284c42fe01da1dfeb0ba16c345280d9", size = 5504576, upload-time = "2026-07-30T15:40:34.512Z" },
+    { url = "https://files.pythonhosted.org/packages/a5/7a/ae29312b1e88a22e81f5d21fc11526d2a114089776c2550d2b205b6c2a47/virtualenv-21.7.0-py3-none-any.whl", hash = "sha256:a8370c1c5530fbabf955e40b8fbbc68a431648b10f9433faa587db30a06e51dd", size = 5507078, upload-time = "2026-07-21T13:12:12.136Z" },
 ]
 
 [[package]]
@@ -12378,31 +12476,28 @@ wheels = [
 
 [[package]]
 name = "websockets"
-version = "17.0.1"
+version = "16.1.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/f7/96/e01084f83a64bcb3a27994bd0cb0db68ff29d9c6707fae37ec19b18ba990/websockets-17.0.1.tar.gz", hash = "sha256:5baa9bc0dfbae8c507e51c8cf1b6d4628086f7a87bbd3a9952bd5f035451f1cc", size = 183298, upload-time = "2026-07-31T11:31:27.665Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/21/f7/bc3a25c5ec26ce62ce487690becc2f3710bbc7b33338f005ad390db0b986/websockets-16.1.1.tar.gz", hash = "sha256:db234eda965dcce15df96bb9709f587cd87d4d52aaf0e80e2f34ec04c7670c57", size = 182204, upload-time = "2026-07-17T22:51:05.858Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ba/a8/79c577bc2f874ee22f6f5ccdab97ba9ce6b96806be3fcc3a6d8490f88a21/websockets-17.0.1-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:55b12e47dcee83673a40d07686cfb6f9d6dfc285976ade9463f61d2bef3fad22", size = 212593, upload-time = "2026-07-31T11:29:56.518Z" },
-    { url = "https://files.pythonhosted.org/packages/db/99/e1cfaf419bb3b2fcfd6792a846f1d936293132b0b9a56530ced016c83c7b/websockets-17.0.1-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:c1c118a6b0e25bfc9a6802075d748fa6321714ffbdf3c88d29d9a0e3c7386c75", size = 210280, upload-time = "2026-07-31T11:29:57.768Z" },
-    { url = "https://files.pythonhosted.org/packages/a2/ef/cc994494bf7d97e41833f6ff55c24f535e4d527a10370b9631737e9c2f00/websockets-17.0.1-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:734d20364dc2cfe03674883cafcf580b6e431c5ce42b476312b9285310230cf9", size = 210538, upload-time = "2026-07-31T11:29:59.021Z" },
-    { url = "https://files.pythonhosted.org/packages/87/32/fbf2d132f63ba3e67f675bccf333469786a24e0418969ce1d8e6ff9e6f02/websockets-17.0.1-cp313-cp313-manylinux1_i686.manylinux_2_28_i686.manylinux_2_5_i686.whl", hash = "sha256:9493314a99e599163c854fb5900ad7f7ea38c5cb9d9103aa30b3c6b8181c01fa", size = 219925, upload-time = "2026-07-31T11:30:00.298Z" },
-    { url = "https://files.pythonhosted.org/packages/16/50/64eee3d25a47fe744a9490e0627cc373dca096755db740f91c28bd61cd35/websockets-17.0.1-cp313-cp313-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:18ded646ce98cdd3c0235825b3252f1df55765ba49b616bb10282f758667b4d0", size = 220206, upload-time = "2026-07-31T11:30:01.52Z" },
-    { url = "https://files.pythonhosted.org/packages/15/56/10ed4bc4dd75f204e3c62bd4898e44a8742a27773c80b188cfa7888aad2d/websockets-17.0.1-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:c1bec5d6a19f5fbe87e4940739cfc65e7bb53d8b353e1029b8037a1653b321bc", size = 221445, upload-time = "2026-07-31T11:30:02.788Z" },
-    { url = "https://files.pythonhosted.org/packages/bf/be/bb14328614c068ab09569962fbf218fc00413ce3febc6d2684c764b6f37e/websockets-17.0.1-cp313-cp313-manylinux2014_armv7l.manylinux_2_17_armv7l.manylinux_2_31_armv7l.whl", hash = "sha256:872273e629ca7e3d35f16a2dc6ede84e1d5c831e616b8277de6e4f83114e7c58", size = 222887, upload-time = "2026-07-31T11:30:03.943Z" },
-    { url = "https://files.pythonhosted.org/packages/32/1b/4cb0eec2fee310007104687493175af190019f705940c864f9c523fe9f6f/websockets-17.0.1-cp313-cp313-manylinux2014_ppc64le.manylinux_2_17_ppc64le.manylinux_2_28_ppc64le.whl", hash = "sha256:1df81d174c1561292de9e40b141cafc04f69077272f6c352afe1d743e20810df", size = 222072, upload-time = "2026-07-31T11:30:05.258Z" },
-    { url = "https://files.pythonhosted.org/packages/6c/9c/14e6391de777ddb39c439c450deb551406d445e25a5877d6fa25c49d4544/websockets-17.0.1-cp313-cp313-manylinux2014_s390x.manylinux_2_17_s390x.manylinux_2_28_s390x.whl", hash = "sha256:759adeb5b0c5775b563254ec63b5b79089fc0045b479143a0b1b8c0ebaae1253", size = 220826, upload-time = "2026-07-31T11:30:06.53Z" },
-    { url = "https://files.pythonhosted.org/packages/cb/57/96e94e384442247bbed5d3ab67381c7257355c2d66b62c3ad33a17f5d385/websockets-17.0.1-cp313-cp313-manylinux_2_31_riscv64.manylinux_2_39_riscv64.whl", hash = "sha256:4d1d99db29b5444e3982f1ce2ba8a833508ad44b2f1fbd0bd99e81d825c0b461", size = 218107, upload-time = "2026-07-31T11:30:07.766Z" },
-    { url = "https://files.pythonhosted.org/packages/c0/8c/9c9dedd14c3919435df9b35cdee7111268c751252b87652f3a6a4f56e760/websockets-17.0.1-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:02ed63bf26dda9fa27df730a41f6664586c4ee05972c8fb667ce1725b3fd13d3", size = 220889, upload-time = "2026-07-31T11:30:09.035Z" },
-    { url = "https://files.pythonhosted.org/packages/94/4d/ca73c2ac82c00f50c529784bacb323e42da4816333211bc1543d90c9cf11/websockets-17.0.1-cp313-cp313-musllinux_1_2_armv7l.whl", hash = "sha256:eab6de8a98b9a7772cf686d00b4de439fc7efb8ab05ae106ef227291d06f87c5", size = 219486, upload-time = "2026-07-31T11:30:10.289Z" },
-    { url = "https://files.pythonhosted.org/packages/5b/da/fb37ac09dcd7c69dd73bac979ed393df35f78a3c232e293d1ff3bd586d24/websockets-17.0.1-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:2a855b6dfe21c4d3420be265ae031829ba8ba0be0ea350d9f7c3ef30ae63ebe2", size = 220258, upload-time = "2026-07-31T11:30:11.605Z" },
-    { url = "https://files.pythonhosted.org/packages/fc/04/9693f191d968a93f37326a17301a101d49580889c688f466699f89ecdee1/websockets-17.0.1-cp313-cp313-musllinux_1_2_ppc64le.whl", hash = "sha256:7002d5f9e1c3ddd991cdfdbfee18cc8c8b196b2445022892badacd6cb338bbbc", size = 221358, upload-time = "2026-07-31T11:30:12.858Z" },
-    { url = "https://files.pythonhosted.org/packages/cf/29/ad0d85c01db5dcf22898d51648bd2c25af0dd0a4a41c550b11acddeeeba7/websockets-17.0.1-cp313-cp313-musllinux_1_2_riscv64.whl", hash = "sha256:c395bda8e7d8f51a02e80261fb57127979e5c472675d9a96b2860619ad47da48", size = 218921, upload-time = "2026-07-31T11:30:14.064Z" },
-    { url = "https://files.pythonhosted.org/packages/18/3b/bf8e855e495dcca63f2b8aa019cf2ada3160e1fa66d833c7417f3b1f7f38/websockets-17.0.1-cp313-cp313-musllinux_1_2_s390x.whl", hash = "sha256:aadc298969ad229d8e3029fc5cc751fdad286696230f9cf014e90ff9cd8e6ea0", size = 219871, upload-time = "2026-07-31T11:30:15.358Z" },
-    { url = "https://files.pythonhosted.org/packages/3b/db/c7abd6639a93a40279cd1ddc57e09e1c4f8381c4cfccdb775aa5aac9770a/websockets-17.0.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:f11a398d8170b7ac5000baf7f258dcda579ef3ea744e0cc6a165e0dfbc0d3198", size = 220154, upload-time = "2026-07-31T11:30:16.96Z" },
-    { url = "https://files.pythonhosted.org/packages/f6/2a/25a9f8f2e5a6ef34e911d2f55d9f756bdeb92b4c28cfb77b8430bbc73cb1/websockets-17.0.1-cp313-cp313-win32.whl", hash = "sha256:846a4a8b0833e3cad57523d9e3bd50ec8ea05ab9d06c582f82a1340ba096af5f", size = 213038, upload-time = "2026-07-31T11:30:18.434Z" },
-    { url = "https://files.pythonhosted.org/packages/81/2f/ea1380f72bb11b64fc5bc7ae0d42de5bbf3e6dc13b965706b2a1d4e17cdf/websockets-17.0.1-cp313-cp313-win_amd64.whl", hash = "sha256:409d93efcaa14f7a99592c5baaef5ec6ca94fba0f5aec1a86f693977c69c9c1c", size = 213348, upload-time = "2026-07-31T11:30:19.693Z" },
-    { url = "https://files.pythonhosted.org/packages/e6/c7/b956ed9151c3c74530ebc62d716fbfdbde7507a6acc6423a64f9ecfb6b8a/websockets-17.0.1-cp313-cp313-win_arm64.whl", hash = "sha256:90246fa9e6cb192a778ce6ce024057ec54317a894db7899c922dcdc1f4cbf6a5", size = 213282, upload-time = "2026-07-31T11:30:21.045Z" },
-    { url = "https://files.pythonhosted.org/packages/09/ce/3929538b2b9918f5eee623fbf3346893973191f6df93f19bbda097bd7bb7/websockets-17.0.1-py3-none-any.whl", hash = "sha256:c6be9cba65c65cc76dfa3d4619e359ff02a4476c74e179b215236c11a0b32345", size = 206718, upload-time = "2026-07-31T11:31:26.037Z" },
+    { url = "https://files.pythonhosted.org/packages/ce/fd/6ec6c6d2850aea25b1b2aa9901a016980bb87d01e89b3eb00470b1b5d471/websockets-16.1.1-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:ab59169ace05dcb49a1d4118f0bde139557adf45091bd85747e36bf5de984dd1", size = 179587, upload-time = "2026-07-17T22:49:38.959Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/d8/1d299d2dd34087db39831a34cc645ef8a6f89d78efada6983093513cd81c/websockets-16.1.1-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:5e3b7d601f6f84156b08cc4a5e541c2b50ad7b36cfc302b657a12477c904a5df", size = 177272, upload-time = "2026-07-17T22:49:40.293Z" },
+    { url = "https://files.pythonhosted.org/packages/3d/86/0a70d3ae2f0f2256bb41302d9804dbca65d4360281e7feb3e1f94102ac46/websockets-16.1.1-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:cd2ca96a082a36964aca83e992f72abeb61b7306c1a6cba4c7d06a7b93750cac", size = 177530, upload-time = "2026-07-17T22:49:41.786Z" },
+    { url = "https://files.pythonhosted.org/packages/b5/c2/c676c69444d9db448b3f0a55a98dcc534affce0bce961d9d2f0b8499b10a/websockets-16.1.1-cp313-cp313-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:f5d497865f05bb222cab7016c6034542e84e5f29f49c6fd3f4939cda7197b5b8", size = 187197, upload-time = "2026-07-17T22:49:43.658Z" },
+    { url = "https://files.pythonhosted.org/packages/0b/13/88137fbaf726ebe29d62c1117fa11fa2bbb6209dc79d4ad738efbe36a2aa/websockets-16.1.1-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:bae954c382e013d5ea5b190d2830526bfa45ad121c326da0049b8c769f185db6", size = 188433, upload-time = "2026-07-17T22:49:45.147Z" },
+    { url = "https://files.pythonhosted.org/packages/01/6d/46c2f2ce6751cb26f39293e1ecbf8544cb01321397cd476c2756b98c216d/websockets-16.1.1-cp313-cp313-manylinux2014_armv7l.manylinux_2_17_armv7l.manylinux_2_31_armv7l.whl", hash = "sha256:e09f753a169951eb4f28c2c774f71069304f66e7277e0f5a2892423599cfa854", size = 189868, upload-time = "2026-07-17T22:49:46.581Z" },
+    { url = "https://files.pythonhosted.org/packages/29/2b/170a9e8097636cfde4dc3c592b6e00b18a44a2f5407606d96ca542dd5838/websockets-16.1.1-cp313-cp313-manylinux2014_ppc64le.manylinux_2_17_ppc64le.manylinux_2_28_ppc64le.whl", hash = "sha256:024193f8551a2b0eafbdd160911012c4e6c228c28430c84433253299a9e42d6a", size = 189059, upload-time = "2026-07-17T22:49:47.972Z" },
+    { url = "https://files.pythonhosted.org/packages/a7/48/f0d4ebc9ab4b473b8861b9e20fdb663d515d42f7befdf62cdb60fee7a1ec/websockets-16.1.1-cp313-cp313-manylinux2014_s390x.manylinux_2_17_s390x.manylinux_2_28_s390x.whl", hash = "sha256:aabe464bfd13bd25f4821faf111da6fefdc389f870265a53105580e45b0a2e49", size = 187814, upload-time = "2026-07-17T22:49:49.344Z" },
+    { url = "https://files.pythonhosted.org/packages/d5/ba/39a41d3ae8e72696a9492581900611c5a91e2b07563b0bcd2523adea9854/websockets-16.1.1-cp313-cp313-manylinux_2_31_riscv64.manylinux_2_39_riscv64.whl", hash = "sha256:a28fcbc9b6baf54a2e23f8655f308e4ccc6afdd7266f8fe7954f320dcda0f785", size = 185229, upload-time = "2026-07-17T22:49:50.787Z" },
+    { url = "https://files.pythonhosted.org/packages/3c/36/ac15b604f850d1907f0a85ed721cefe47cd45034b3620069b829746cccbe/websockets-16.1.1-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:79eace538c6a97e96d0d03d4f9d314f9677f5ed85a8a984992ffd90b13cb8a56", size = 187874, upload-time = "2026-07-17T22:49:52.228Z" },
+    { url = "https://files.pythonhosted.org/packages/a8/f3/3fbd5d71d59299c3770faa5884d4f45070236ca5a35ab3a61830812c409a/websockets-16.1.1-cp313-cp313-musllinux_1_2_armv7l.whl", hash = "sha256:496af849a472b531f758dbd4d61338f5000538cb1a7b3d20d9d32a264517f509", size = 186469, upload-time = "2026-07-17T22:49:53.776Z" },
+    { url = "https://files.pythonhosted.org/packages/b4/fc/dd90349bba58af2a53ef2ddd9c32716c81eb6d59a0687939fff561860878/websockets-16.1.1-cp313-cp313-musllinux_1_2_ppc64le.whl", hash = "sha256:5283810d2646741a0d8da2aa733d6aefa0545809afccb2a5d105a26bc45125f1", size = 188347, upload-time = "2026-07-17T22:49:55.202Z" },
+    { url = "https://files.pythonhosted.org/packages/4c/f3/f73ba86427682da59b78c11d77ba56d5b801c32e84afe79b274bbd6a9bb2/websockets-16.1.1-cp313-cp313-musllinux_1_2_riscv64.whl", hash = "sha256:4e3b680b1e0a27457e727a0d572fd81dffa87b6dbf8b228ab57da64f7d85aead", size = 185903, upload-time = "2026-07-17T22:49:56.75Z" },
+    { url = "https://files.pythonhosted.org/packages/34/7c/f95eb20e80104173b3a0a092291f89ea4047ef6e608e0a57ca06eb14eecb/websockets-16.1.1-cp313-cp313-musllinux_1_2_s390x.whl", hash = "sha256:69159730a823dde3ea8d08783e8d47ef135a6d7e8d44eb127e32b321c9db8e3e", size = 186855, upload-time = "2026-07-17T22:49:58.467Z" },
+    { url = "https://files.pythonhosted.org/packages/b0/35/dd875b3e050ff232d60fa377707f890e369f74d134f1be32e8f68879747c/websockets-16.1.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:ed5bb271084b46530ee2ddc0410537a9961152c5ccba2fc98c5276d992ccba87", size = 187140, upload-time = "2026-07-17T22:50:00.016Z" },
+    { url = "https://files.pythonhosted.org/packages/e8/dc/5cbfcb41824502f6af93b8f3943a4d06c67c23c7d2e31eb18748c4a5b2a7/websockets-16.1.1-cp313-cp313-win32.whl", hash = "sha256:cfb70b4eb56cac4da0a83588f3ad50d46beb0690391082f3d4e2d488c70b68ea", size = 179928, upload-time = "2026-07-17T22:50:01.685Z" },
+    { url = "https://files.pythonhosted.org/packages/b0/c1/71e5deb5b7f8f226997ab64908c184ac3105c0155ce2d486f318e5dd08a8/websockets-16.1.1-cp313-cp313-win_amd64.whl", hash = "sha256:d9531d9cbeac99af6f038fb1bc351403531f7d634a2c2e10e2f7c854c6ed5b68", size = 180242, upload-time = "2026-07-17T22:50:03.117Z" },
+    { url = "https://files.pythonhosted.org/packages/be/4d/2d0d67834092e354d2b0498f014a41249a89556bc406cf86f3e1557bb463/websockets-16.1.1-py3-none-any.whl", hash = "sha256:6abbd3e82c731c8e531714466acd5d87b5e88ac3243465337ba71d68e23ae7e3", size = 173814, upload-time = "2026-07-17T22:51:04.184Z" },
 ]
 
 [[package]]

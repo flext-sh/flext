@@ -1,5 +1,14 @@
 # Configuration
 
+<!-- TOC START -->
+- [Source of Truth Order](#source-of-truth-order)
+- [Root Policy File](#root-policy-file)
+- [Project Metadata](#project-metadata)
+- [`tool.flext.docs`](#toolflextdocs)
+- [Docs Generation Contract](#docs-generation-contract)
+- [Validation](#validation)
+<!-- TOC END -->
+
 The docs pipeline should read as much as possible from `pyproject.toml`. Root JSON policy exists only for values that
 cannot be inferred from project metadata.
 
@@ -63,8 +72,8 @@ Typical fields:
 ## Validation
 
 ```bash
-make docs DOCS_PHASE=generate PROJECT=flext-infra
-make docs DOCS_PHASE=validate PROJECT=flext-infra
+make docs WHAT=generate PROJECT=flext-infra
+make docs WHAT=validate PROJECT=flext-infra
 ```
 
 Use [Troubleshooting](troubleshooting.md) when a project is missing package metadata or generated pages do not match the

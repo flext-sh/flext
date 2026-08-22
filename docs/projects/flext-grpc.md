@@ -9,7 +9,7 @@ Services".
 
 - **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+ only
-- **Quality gate**: `make check PROJECT=flext-grpc` (Ruff + type checks) and `make val` for the full pipeline
+- **Quality gate**: `make check PROJECT=flext-grpc` (Ruff + type checks) and `make check` for the full pipeline
 - **Depends on**: `flext-core` (facades, result contract, container)
 
 ### Quality signals
@@ -70,7 +70,7 @@ The facade also exposes granular builders — `create_server`, `create_client`, 
 
 - `make check PROJECT=flext-grpc`: Ruff linting plus type checks
 - `make test PROJECT=flext-grpc`: pytest suite (latest evidence under `reports/pytest/`)
-- `make val`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
+- `make check`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
 - Tests target the public facade and exported models only, per workspace testing law (U16)
 
 ## Resources

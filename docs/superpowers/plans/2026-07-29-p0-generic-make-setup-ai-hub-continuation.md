@@ -286,7 +286,7 @@ rtk make setup
 rtk make check CHECK_GATES=lint,format,pyrefly
 rtk make check CHECK_GATES=pyright,mypy
 rtk make test
-rtk make codegen WHAT=check
+rtk make gen WHAT=check
 ```
 
 Use narrower `FILE=`/`MATCH=` checks while iterating, but do not use them to evade

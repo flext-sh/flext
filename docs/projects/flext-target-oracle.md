@@ -16,7 +16,7 @@ canonical `c/m/p/t/u` facade layout.
 ### Quality signals
 
 - Quality gates run through the workspace Make contract: `make check PROJECT=flext-target-oracle`, `make test
-  PROJECT=flext-target-oracle`, and `make val`.
+  PROJECT=flext-target-oracle`, and `make check`.
 - Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
   rather than static claims in this page.
 
@@ -80,7 +80,7 @@ src/flext_target_oracle/
 
 - Tests live under the project `tests/` tree and run via `make test PROJECT=flext-target-oracle`; Singer behavior is
   exercised through the CLI and sink flow.
-- Pre-merge verification: `make check PROJECT=flext-target-oracle` (lint + typing + security selectors) and `make val`.
+- Pre-merge verification: `make check PROJECT=flext-target-oracle` (lint + typing + security selectors) and `make check`.
 
 ## Resources
 

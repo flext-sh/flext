@@ -1,5 +1,21 @@
 # FLEXT arc42 Architecture Documentation
 
+<!-- TOC START -->
+- [Template Structure](#template-structure)
+- [FLEXT Architecture Overview](#flext-architecture-overview)
+- [Key Architectural Principles](#key-architectural-principles)
+  - [1. Clean Architecture](#1-clean-architecture)
+  - [2. Domain-Driven Design](#2-domain-driven-design)
+  - [3. Railway-Oriented Programming](#3-railway-oriented-programming)
+  - [4. Single Source of Truth](#4-single-source-of-truth)
+- [Quality Attributes](#quality-attributes)
+  - [Reliability](#reliability)
+  - [Security](#security)
+  - [Maintainability](#maintainability)
+- [Related Documentation](#related-documentation)
+- [Additional Resources](#additional-resources)
+<!-- TOC END -->
+
 **Reviewed**: 2026-07-12 | **Scope**: arc42 index and architecture overview
 
 This directory documents the FLEXT workspace architecture following the

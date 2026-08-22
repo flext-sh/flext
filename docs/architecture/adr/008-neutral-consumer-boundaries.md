@@ -1,5 +1,17 @@
 # ADR-008 — Neutral consumer boundaries for docs, Office bytes, and artifact metadata
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [Ownership](#ownership)
+  - [Dependency direction](#dependency-direction)
+  - [Static consumer documentation](#static-consumer-documentation)
+  - [Neutral artifact metadata](#neutral-artifact-metadata)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
+
 - **Status:** Accepted
 - **Date:** 2026-07-18
 - **Target line:** FLEXT `0.20.0-dev`

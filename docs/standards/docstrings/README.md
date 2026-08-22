@@ -1,5 +1,16 @@
 # FLEXT Python Docstring Standards
 
+<!-- TOC START -->
+- [Primary Reference](#primary-reference)
+- [Supporting Sections (in the primary reference)](#supporting-sections-in-the-primary-reference)
+- [Key Principle](#key-principle)
+- [Quick Start](#quick-start)
+  - [For Code Review](#for-code-review)
+  - [For Implementation](#for-implementation)
+- [Tools](#tools)
+- [Philosophy](#philosophy)
+<!-- TOC END -->
+
 **Approach**: Document based on **why code was built this way**, not generic templates.
 
 This directory contains standards and guidance for writing Python docstrings across
@@ -63,7 +74,7 @@ ruff check --select=D,DOC --preview flext-core/src
 **Audit workflow** (guided manual improvement):
 
 ```bash
-make build WHAT=docs DOCS_PHASE=audit PROJECT=flext-core
+make docs WHAT=audit PROJECT=flext-core
 ```
 
 ## Philosophy

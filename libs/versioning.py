@@ -56,7 +56,7 @@ def release_tag_from_branch(branch: str) -> str | None:
 def current_workspace_version(root: Path) -> str:
     """Read current workspace version from root pyproject.toml."""
     pyproject = root / "pyproject.toml"
-    raw_data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    raw_data = tomllib.loads(pyproject.read_text(encoding=c.DEFAULT_ENCODING))
     data_map = dict(raw_data.items())
     project_value = data_map.get("project")
     if not isinstance(project_value, dict):

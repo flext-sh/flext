@@ -1,6 +1,22 @@
 # Testing Standards
 
-Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `.agents/skills/flext-inviolable-rules/SKILL.md`.
+<!-- TOC START -->
+- [Mindset](#mindset)
+- [Structure (AAA)](#structure-aaa)
+- [Imports in tests](#imports-in-tests)
+- [Asserting results](#asserting-results)
+- [DIP in tests](#dip-in-tests)
+- [Fixtures](#fixtures)
+- [Singleton reset](#singleton-reset)
+- [Golden files and examples](#golden-files-and-examples)
+- [Parametrization](#parametrization)
+- [What to avoid](#what-to-avoid)
+- [Running tests](#running-tests)
+- [Coverage](#coverage)
+- [Related](#related)
+<!-- TOC END -->
+
+Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `~/.agents/skills/inviolable-rules/SKILL.md`.
 
 ## Mindset
 
@@ -19,36 +35,29 @@ def test_user_creation() -> None:
     user = m.User.model_validate(data)
 
     # Assert
-    assert user.name == "Ada"
-```
-
+    assert user.name == "Ada"```
 ## Imports in tests
 
 Use the same aliases as production code. Test facades may be named `TestsFlext<Project><Tier>` when the project exposes one.
 
 ```python
-from __future__ import annotations
-from collections.abc import Mapping, Sequence
-
-from flext_core import m, r
-```
-
+from __future__ import annotations```
 ## Asserting results
 
 Use public API assertions. For `r[T]` results, assert on the public shape rather than private internals.
 
 ```python
-from flext_core import r
-
-
 def test_load_user() -> None:
     result = load_user(1)
     assert result.success
     assert result.unwrap().id == 1
 
     failure = load_user(-1)
-    assert failure.failure
-```
+    assert failure.failure```
+## DIP in tests
+
+Type results as `p.Result[T]` in tests. Assert only public shape (`.success`, `.failure`, `.unwrap()`, error metadata).
+See `flext-core/tests/unit/test_result_factory_dip.py` for factory/protocol contracts.
 
 ## Fixtures
 
@@ -59,10 +68,8 @@ import pytest
 
 
 @pytest.fixture
-def sample_user() -> p.User:
-    return m.User(id=1, name="Ada")
-```
-
+def sample_user() -> m.User:
+    return m.User(id=1, name="Ada")```
 ## Singleton reset
 
 Rely on the autouse `reset_settings` fixture from `flext_tests`. When manual reset is required:
@@ -73,9 +80,7 @@ from flext_tests import FlextTestsSettings
 
 FlextSettings.reset_for_testing()
 FlextTestsSettings.reset_for_testing()
-FlextContainer.reset_for_testing()
-```
-
+FlextContainer.reset_for_testing()```
 ## Golden files and examples
 
 When output is stable and reviewable, prefer golden-file examples. Store them under
@@ -92,9 +97,7 @@ import pytest
 
 @pytest.mark.parametrize(("raw", "expected"), [("1", 1), ("42", 42)])
 def test_parse_int(raw: str, expected: int) -> None:
-    assert int(raw) == expected
-```
-
+    assert int(raw) == expected```
 ## What to avoid
 
 | Anti-pattern | Fix |
@@ -112,16 +115,20 @@ def test_parse_int(raw: str, expected: int) -> None:
 make test PROJECT=<proj> MATCH=<expr>
 
 # broad
-make test PROJECT=<proj>
-```
-
+make test PROJECT=<proj>```
 ## Coverage
 
-`pyproject.toml` sets `fail_under = 45` for the consolidated workspace. Project-local targets may be higher. Do not lower the threshold to make a build pass.
+- `make test` always uses pytest-testmon.
+- Local full-suite `make test` also owns coverage (fail-under + `coverage.xml`)
+  unless `CI=Y`. Focused `FILE=`/`MATCH=` keeps testmon and skips coverage.
+- CI jobs set `CI=Y` so coverage is off; do not reintroduce a public `cov` verb.
+- Cache WHATs: `cache-status`, `cache-clear` (`APPLY=Y`), `cache-checkpoint`.
+- Keep `.testmondata` (and `-wal`/`-shm`) gitignored; `make clean` must preserve them.
+
 
 ## Related
 
 - `AGENTS.md` — root engineering law
-- `.agents/skills/flext-inviolable-rules/SKILL.md` — gate commands
-- `.agents/skills/coding-standards/SKILL.md` — general coding standards
-- `.agents/skills/flext-development-workflow/SKILL.md` — CI/CD lifecycle
+- `~/.agents/skills/inviolable-rules/SKILL.md` — gate commands
+- `.agents/skills/flext-law/SKILL.md` — FLEXT domain law
+- `AGENTS.md` Learned Workspace Facts — CI policy (blocking `CI` on integration; `ci-matrix` main-only for root/standalone; members pruned; CodeQL outside Jinja). Owner: `flext-infra` codegen; regenerate/prune with `make gen WHAT=apply APPLY=Y`.

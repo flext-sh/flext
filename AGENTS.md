@@ -1,23 +1,30 @@
 <!-- AIHUB-INVIOLABLE-LAW-PRELUDE v1 -->
 # AI Hub Inviolable Law — Strict Prelude
 
-1. Truth: Never claim done, green, or resolved without command, exit code, and decisive output.
-2. Root cause: No bypass, fallback, shim, suppression, stub, hardcode, or old+new coexistence.
-3. Beads first: Claim or update the bead before any file write, shell command, or multi-step task sequence, and update it after each discrete step that changes repository state.
-4. Research first: Inspect code, docs, and canonical sources before acting; never invent APIs, flags, facts, or behavior.
-5. FLEXT first (ai-hub Python): Use the project facades backed by flext-core and flext-cli; do not reimplement primitives locally.
-6. Gate discipline: If a gate blocks, stop and escalate with the exact command/edit; never route around it.
-7. Landing: Land verified work with native gates, commit, fast-forward push, and bead evidence.
-8. Push rejection handling: If a fast-forward push is rejected because the remote has diverged, stop immediately, do not rebase or force-push autonomously, and escalate to the operator with the exact git error message and the local vs. remote commit SHAs.
-9. Escalation clarity: If a rule is technically impossible to satisfy, stop and report the exact error. If two rules conflict, stop and present the conflict to the operator with the specific rule numbers. If a rule is unclear in context, ask a targeted clarification question before proceeding.
-10. Precedence (UNIVERSAL, INVIOLABLE): NEWEST supersedes OLDEST. USER REQUEST > BEADS > ADRs > SKILLs > DOCS > default behavior. On conflict, ADJUST the lower/older artifact (bead, plan, ADR, skill, doc) to match the higher/newer — never override the user or a higher/newer directive to fit a stale one. In ANY doubt, ASK THE USER FIRST — never guess.
+1. Truth: never claim done/green/resolved without command, exit code, decisive output.
+2. Root cause: no bypass, fallback, shim, suppression, stub, hardcode, or old+new coexistence.
+3. Beads first: claim/update bead before file write, shell, or multi-step work; update after every repo-state change.
+4. Research first: inspect code, docs, canonical sources before acting; never invent APIs, flags, facts, or behavior.
+5. Owner first: use the project's declared facades/primitives; do not reimplement them locally.
+6. Gate discipline: if a gate blocks, stop and escalate with the exact command/edit; never route around it.
+7. Landing: native gates, commit, fast-forward push, bead evidence.
+8. Divergence: FF push rejected → integrate by cooperation: `git merge --no-ff` the integration base into your lane, resolve conflicts, revalidate, land. Never rebase or force-push a shared branch; never discard another actor's work.
+9. Escalation: impossible rule → exact error. Rule conflict → present both with numbers. Unclear → one targeted question. Never guess.
+10. Precedence: NEWEST > OLDEST. USER REQUEST > BEADS > ADRs > SKILLs > DOCS > default. Adjust lower/older to higher/newer. Doubt → ASK USER FIRST.
 <!-- /AIHUB-INVIOLABLE-LAW-PRELUDE -->
 
 # Project Instructions for AI Agents
 
 ## Authority
 
-Newest operator instruction wins. Layers (non-competing):
+Newest operator instruction wins. Apply this sequence (Beads never override higher law):
+
+1. Newest operator request
+2. Universal law (`UNIVERSAL_CORE.md` + `inviolable-rules` / `make-check` / `verification-loop`)
+3. Branch-matched FLEXT law (this file + `.agents/skills/flext-law/SKILL.md`)
+4. Scope delta (nearest member `AGENTS.md`)
+5. Active Bead (execution intent, ownership, evidence, stop)
+6. In-scope ADR, then supporting docs
 
 | Layer | Owner | Content |
 | --- | --- | --- |
@@ -25,10 +32,12 @@ Newest operator instruction wins. Layers (non-competing):
 | FLEXT | this file + `.agents/skills/flext-law/SKILL.md` | architecture, Make, generation, fleet |
 | Scope | nearest member `AGENTS.md` | domain facts / exclusions only |
 | Execution | active Bead | intent, ownership, evidence, stop |
+| ADR/docs | `docs/architecture/adr/` then supporting docs | decisions and rationale |
 
 - Entry: `.agents/skills/flext-context-routing/SKILL.md` → `.agents/commands/flext-law.md`.
 - Fail closed on missing/mismatched law; never fall back to `main` or another checkout.
 - AI Hub projects managed sections; it is not Global/FLEXT authority.
+- Autonomous rebase is forbidden unless the operator explicitly requests it (prelude rule 8 wins over Beads session-close examples).
 
 Docs: [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) ·
 [`docs/architecture/adr/`](docs/architecture/adr/) ·
@@ -95,7 +104,7 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 ## Overview
 
 Multi-package Python 3.13 workspace (superproject + 31 `flext-*` submodules) for data
-integration and connectors. Clean Architecture on `flext-core`. Branch `0.12.0-dev`; forward `0.13.0`.
+integration and connectors. Clean Architecture on `flext-core`. Branch `0.12.0-dev`; platform baseline `0.13.0`; forward integration line `0.20.0-dev`.
 
 ## Structure
 
@@ -144,6 +153,10 @@ make check CHECK_GATES=lint,format,pyrefly,mypy,pyright
 make test
 make check PROJECT=flext-core
 make build WHAT=artifacts
+make work WHAT=status PROJECT=flext-infra BEAD=<id>
+make work WHAT=start PROJECT=flext-infra BEAD=<id> KIND=feature NAME=<slug> APPLY=Y
+make work WHAT=land PROJECT=flext-infra BEAD=<id> APPLY=Y
+make work WHAT=finish PROJECT=flext-infra BEAD=<id> APPLY=Y
 ```
 
 - Toolchain: Python `>=3.13,<3.14`; pins in `.default-python-packages`.
@@ -174,21 +187,28 @@ make build WHAT=artifacts
 
 ## Learned User Preferences
 
-- Deduplicate via MRO / `m`; atomic consumer updates; keep Ruff + Pyrefly clean.
-- Fix known failures; Make verbs must be idempotent; prefer standardized shape over transitional forms.
-- Land fixes in upstream `flext-infra` on the workspace line, not local workarounds.
+- Deduplicate via MRO / `m`; atomic consumer updates with direct uses and no compatibility shims; keep Ruff + Pyrefly clean after every edit.
+- Fix every error and warning at root cause — nothing is pre-existing or cosmetic; Make verbs must be idempotent; prefer standardized shape over transitional forms; prove green on canonical Make paths before closing beads.
+- Land fixes in upstream `flext-infra` codegen/config overlays on the workspace line, not local workarounds; consumers attach domain scripts only via `custom.mk` `_custom_*` hooks — Make public verbs stay a flext-infra monopoly.
+- Adopt, validate, commit, and push together; finish WIP through merge on the active DEV line (`0.12.0-dev`) unless the operator asks to promote to `main`; absorb fast-forward/merge fallout; remaining lint/test failures stay owned until green; do not invent blockers or re-confirm settled facts.
+- Do mutating fleet work in a `make work` worktree on a dedicated branch; keep the primary flext checkout on `0.12.0-dev` clean.
+- Prefer lean, structured AGENTS.md that cross-links skills and docs over long prose.
+- Keep pre-commit inline and enforceable before commit/push; do not skip hooks to land work.
+- Maximize flext-core/cli/infra/tests facades and declarative enforcers (tach, import-linter, rope, ast-grep) via SSOT rules — never reimplement local equivalents or custom validators; callers use public `c`/`t`/`p`/`m`/`u` and flext-infra facades only, never private modules directly.
+- In result internals, ban regressive lazy imports of concrete `FlextResult`; type against abstract `p.Result`; ban `r[None]` / bare `object` returns — `FlextResult` must fail closed on `None`.
+- Structure large programs as beads epic → sub-epics → per-phase enforcement and validation beads before any code phase.
 
 ## Learned Workspace Facts
 
 - Branch / version / GitHub defaults live in one workspace overlay; `make setup` follows that line for all members.
+- Workspace and member checkouts stay on `0.12.0-dev` unless the operator names another line.
 - `flext-infra` defaults via project/workspace `config/` overlays — not forked defaults.
 - Provisioning adjusts and never destroys dirty work; no `git checkout` / `git reset` in setup or member sync.
-- `make gen APPLY=Y` must be idempotent (following `make gen` reports no drift).
-
-<!-- AIHUB-WORKSPACE-PROVIDERS-BEGIN -->
-## Workspace providers
-
-These routes are generated from provider-owned manifests.
-
-- flext: read `.agents/skills/flext-context-routing/SKILL.md` first.
-<!-- AIHUB-WORKSPACE-PROVIDERS-END -->
+- `make gen WHAT=apply APPLY=Y` must be idempotent (following `make gen` reports no drift); generated outputs must be path-pure (no absolute or cross-project relative paths except SSOT `.gitmodules` and Make fanout/workspace maintenance).
+- `flext-infra` codegen owns fleet CI and hook projections; remove duplicate custom CI and regenerate consumers from its config/templates; external FLEXT consumers stay green via the same Make monopoly plus their `config/` overlays.
+- CI policy: draft PRs run no CI; integration pushes (`dev`/`develop`/`0.12.0-dev`) run blocking ubuntu `CI` only; `CI=Y` skips cov and makes `make check` skip ruff/pyright/pyrefly (CI workflows already own those gates); `ci-matrix` is projected only for workspace-root/standalone, defaults to `workflow_dispatch` only, and must not run `make test`; workspace-member projects must not receive or auto-run `ci-matrix`; CodeQL is a GitHub repo setting outside Jinja.
+- Agent/skill surfaces on governed branches must be real files, not symlinks; `config.AiHub.paths.ai_hub` materializes them per its application config.
+- Project markdown docs centralize under `docs/` (root keeps only standardized files); `.agents/*` and `data/*` are special; external-docs follow `docs/references/` patterns; validate via `make check` markdown gates and flext-infra docs generation.
+- Lane lifecycle is the `make work` verb (beads, worktrees, gh/PR, gitflow) owned by flext-infra on `0.12.0-dev`; every maintained lane runs `make setup`; lane `.venv` is a symlink to the primary shared `.venv` (never a second uv sync target); AI Hub consumes the same surface without duplicating gitflow.
+- Default `make test` is testmon-incremental fleet-wide; coverage stays out of default CI; tests that need external/docker services skip when unreachable, and `CI=Y` skips remote/docker tests entirely; GitHub Actions testmon cache warms until green, then renews only on success within quota.
+- Enforcement split: flext-core runtime (beartype rules), flext-infra static engines, flext-tests pytest automation harness (`tm`/`tv`/`tt`) for all projects.

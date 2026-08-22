@@ -1,5 +1,13 @@
 # FLEXT Documentation Index
 
+<!-- TOC START -->
+- [Quick Start](#quick-start)
+- [Current Versioning Context](#current-versioning-context)
+- [Canonical Sections](#canonical-sections)
+- [Workspace tooling](#workspace-tooling)
+- [Scope Boundary](#scope-boundary)
+<!-- TOC END -->
+
 <!-- mro-wkii.17.7 (agent: codex) — route Make and workspace guidance to the conform SSOT. -->
 
 The root portal is intentionally small. It documents the FLEXT workspace itself, not every historical note or every
@@ -40,8 +48,9 @@ or `standalone` profiles. Workspace topology comes only from the validated
 manifest under `config/`; package metadata remains Git-and-branch sourced while
 root `setup` installs declared local members as editable distributions.
 
-The generated public Make surface contains thirteen targets: `help` plus the
-twelve operational verbs defined by ADR-004. Project-specific behavior is
+The generated public Make surface contains `help` plus the operational verbs
+from live `make help` (currently fifteen: setup deps build check test fmt fix
+run status docs clean release gen work), as defined by ADR-004. Project-specific behavior is
 available only through validated private `custom.mk` handlers. See
 [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) for
 topology and environments and
