@@ -13,15 +13,15 @@
   - [Format](#format)
   - [Rules](#rules)
   - [Real Example from Project](#real-example-from-project)
-- [Private Function (`_func`)](#private-function-func)
+- [Private Function (`_func`)](#private-function-_func)
   - [When to Document](#when-to-document)
   - [Examples](#examples)
 - [Property](#property)
   - [Format](#format)
   - [Rules](#rules)
-- [Magic Methods (`__init__`, `__str__`, etc.)](#magic-methods-init-str-etc)
-  - [`__init__`](#init)
-  - [`__str__` / `__repr__`](#str-repr)
+- [Magic Methods (`__init__`, `__str__`, etc.)](#magic-methods-__init__-__str__-etc)
+  - [`__init__`](#__init__)
+  - [`__str__` / `__repr__`](#__str__-__repr__)
   - [Others](#others)
 - [Exception Class](#exception-class)
   - [Format](#format)
@@ -377,7 +377,7 @@ async def fetch_data(url: str, timeout: int = 30) -> bytes:
 def configure(
     mode: str, options: t.MappingKV[str, Any] | None = None, verbosity: int = 1
 ) -> None:
-    """Settingsure processor behavior.
+    """Configure processor behavior.
 
     Args:
         mode: Processing mode ("strict", "lenient", or "auto").
@@ -469,7 +469,7 @@ def run_raw(
     cwd: Path | None = None,
     timeout: int | None = None,
     env: t.StrMapping | None = None,
-) -> p.Result[m.Infra.CommandOutput]:
+) -> p.Result[p.Infra.CommandOutput]:
     """Run command without enforcing exit code.
 
     Executes subprocess and returns combined stdout/stderr regardless

@@ -7,7 +7,7 @@ Auth — Enterprise Authentication & Authorization Service".
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (current development cycle)
+- **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+ only
 - **Quality gate**: `make check PROJECT=flext-auth` (Ruff + type checks) and `make check` for the full pipeline
 - **Depends on**: `flext-core` (facades, result contract, container)

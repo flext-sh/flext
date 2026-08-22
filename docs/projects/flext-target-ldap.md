@@ -6,9 +6,9 @@ meltano` (Singer target base) behind `r[T]` contracts.
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (current development cycle)
+- **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+
-- **Status**: Active development on the `0.12.0-dev` branch; the package builds and exports its full public surface.
+- **Status**: Active development on the `0.20.0-dev` branch; the package builds and exports its full public surface.
 - **Description** (from `pyproject.toml`): "FLEXT Target for LDAP directory loading"
 - **Dependencies**: `flext-core`, `flext-cli`, `flext-ldap`, `flext-meltano`
 

@@ -6,9 +6,9 @@ meltano` (Singer tap base) behind `r[T]` contracts and the canonical `c/m/p/t/u`
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (current development cycle)
+- **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+
-- **Status**: Active development on the `0.12.0-dev` branch; the package builds and exports its full public surface.
+- **Status**: Active development on the `0.20.0-dev` branch; the package builds and exports its full public surface.
 - **Description** (from `pyproject.toml`): "FLEXT Tap Oracle OIC - Singer Tap for Oracle Integration Cloud"
 - **Dependencies**: `flext-core`, `flext-cli`, `flext-meltano`, `flext-oracle-oic`
 - **Console scripts**: `tap-oracle-oic` and `flext-tap-oracle-oic` (both bound to

@@ -6,7 +6,7 @@ OAuth2 client-credentials authentication, and paginated REST access to integrati
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (monorepo development cycle)
+- **Version**: 0.20.0-dev (monorepo development cycle)
 - **Python**: 3.13+
 - **Package**: `flext_oracle_oic` (namespace package, `py.typed` shipped)
 - **Location in this repo**: `flext-oracle-oic/` at the workspace root
