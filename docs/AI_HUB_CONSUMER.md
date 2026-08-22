@@ -16,6 +16,7 @@ law or an ai-hub architecture specification.
 | FLEXT provider identity, marker, and exported paths | active `config.AiHub.paths.agents_home` provider authority |
 | FLEXT activation and skill selection | `.agents/skills/flext-context-routing/SKILL.md` |
 | Provider projection lifecycle | [Governance router](GOVERNANCE.md) |
+| FLEXT lane lifecycle | Gas Town rig `flext` |
 | FLEXT runtime/API behavior | owning `flext-core` declaration |
 | ai-hub architecture and local policy | ai-hub source, validated config, root `AGENTS.md`, and `docs/GOVERNANCE.md` |
 
@@ -34,6 +35,8 @@ by its active provider authority.
 - Each independent workspace records work in its own root Beads database.
   Member projects use their workspace-root tracker and never initialize a
   nested database.
+- ai-hub does not consume or reproduce a FLEXT Make lane lifecycle. Gas Town
+  owns dispatch, lane state, handoff, and merge-queue integration.
 
 ## Drift Discipline
 
