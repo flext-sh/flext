@@ -6,7 +6,7 @@ FLEXT Oracle WMS is the domain package for Oracle Warehouse Management System
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (monorepo development cycle)
+- **Version**: 0.20.0-dev (monorepo development cycle)
 - **Python**: 3.13+
 - **Package**: `flext_oracle_wms`
 - **Location in this repo**: `flext-oracle-wms/` at the workspace root

@@ -1,4 +1,4 @@
-# ADR-007 — Performance optimization of worktree transactions and mutating CLI commands
+# ADR-012 — Performance optimization of worktree transactions and mutating CLI commands
 
 <!-- TOC START -->
 - [Context](#context)

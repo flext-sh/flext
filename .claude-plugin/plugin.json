@@ -1,0 +1,20 @@
+{
+  "name": "flext",
+  "version": "0.20.0-dev",
+  "description": "FLEXT - Enterprise Data Integration Platform - Workspace Manager",
+  "author": {
+    "name": "FLEXT Team"
+  },
+  "repository": "https://github.com/flext-sh/flext",
+  "keywords": [
+    "flext",
+    "agents",
+    "skills",
+    "rules",
+    "governance",
+    "workspace"
+  ],
+  "skills": [
+    "./.agents/skills/"
+  ]
+}

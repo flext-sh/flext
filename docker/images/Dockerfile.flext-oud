@@ -10,14 +10,14 @@ LABEL description="Oracle Unified Directory configured for FLEXT migration testi
 LABEL version="1.0"
 
 # Environment variables for OUD configuration
-ENV ORACLE_PWD="iDm55OID"
+ENV ORACLE_PWD="senhainv"
 ENV OUD_INSTANCE_NAME="flext_oud_test"
 ENV BASE_DN="dc=network,dc=invaliddc"
 ENV ADMIN_CONNECTOR_PORT=4449
 ENV LDAP_PORT=3389
 ENV LDAPS_PORT=3639
 ENV ROOT_USER_DN="cn=Directory Manager"
-ENV ROOT_USER_PASSWORD="iDm55OID"
+ENV ROOT_USER_PASSWORD="senhainv"
 
 # Create necessary directories
 RUN mkdir -p /opt/oracle/oud/instances/${OUD_INSTANCE_NAME} \
@@ -40,7 +40,7 @@ RUN chmod +x /opt/oracle/oud/scripts/*.sh
 # Set up OUD instance with FLEXT-specific configuration
 RUN /opt/oracle/oud/scripts/setup-oud.sh
 
-# Settingsure OUD for FLEXT migration requirements
+# Configure OUD for FLEXT migration requirements
 RUN /opt/oracle/oud/scripts/configure-oud.sh
 
 # Health check

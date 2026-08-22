@@ -1,0 +1,29 @@
+{
+  "name": "flext",
+  "owner": {
+    "name": "FLEXT Team"
+  },
+  "metadata": {
+    "description": "FLEXT workspace governance provider - skills, rules, and agent surfaces sourced from flext-core"
+  },
+  "plugins": [
+    {
+      "name": "flext",
+      "source": "./",
+      "description": "FLEXT - Enterprise Data Integration Platform - Workspace Manager",
+      "version": "0.20.0-dev",
+      "author": {
+        "name": "FLEXT Team"
+      },
+      "repository": "https://github.com/flext-sh/flext",
+      "keywords": [
+        "flext",
+        "agents",
+        "skills",
+        "rules",
+        "governance",
+        "workspace"
+      ]
+    }
+  ]
+}

@@ -6,7 +6,7 @@ Claude context, memory, and code execution behind one railway-oriented facade an
 
 ## Status & health
 
-- **Version**: 0.12.0-dev
+- **Version**: 0.20.0-dev
 - **Python**: 3.13+ only
 - **Project class**: platform (consumes `flext-core` and `flext-cli`)
 - **Facade**: `from flext_quality import quality` — the process-wide `FlextQuality` singleton

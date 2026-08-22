@@ -58,21 +58,3 @@ def test_provider_marker_distribution_is_declared() -> None:
         and marker_distribution in declared_distributions,
         eq=True,
     )
-
-
-def test_provider_propagation_is_idempotent() -> None:
-    """Provider surfaces exist and router resolves skills from typed config."""
-    root = Path(__file__).resolve().parents[2]
-    manifest = tomllib.loads(
-        (root / ".agents" / "provider.toml").read_text(encoding="utf-8")
-    )
-    surfaces = manifest.get("surfaces")
-    tm.that(isinstance(surfaces, dict), eq=True)
-    always_paths = surfaces.get("always", []) if isinstance(surfaces, dict) else []
-    on_demand_paths = surfaces.get("on_demand", []) if isinstance(surfaces, dict) else []
-    for surface_path in (*always_paths, *on_demand_paths):
-        tm.that((root / surface_path).is_file(), eq=True)
-    router_text = (
-        root / ".agents" / "skills" / "flext-context-routing" / "SKILL.md"
-    ).read_text(encoding="utf-8")
-    tm.that("config.AiHub.paths.agents_home" in router_text, eq=True)

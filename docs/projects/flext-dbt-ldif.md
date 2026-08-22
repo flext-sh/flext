@@ -7,7 +7,7 @@ data quality.
 
 ## Status & health
 
-- **Version**: `0.12.0-dev` (active development cycle)
+- **Version**: `0.20.0-dev` (active development cycle)
 - **Python**: 3.13+
 - **Project class**: integration
 - **Dependencies**: `flext-core`, `flext-ldif`, `flext-meltano`, `pydantic`
