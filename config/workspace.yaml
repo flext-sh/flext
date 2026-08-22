@@ -9,9 +9,9 @@ name: flext
 # :3308 hosts this workspace's tracker as `mro`, not `flext`. Without this key
 # conform falls back to the project name and rebinds bd to a non-existent
 # `flext` database, losing the live tracker (see mro-6fca).
-ledger_id: mro
+ledger_id: flext
 # Issue namespace override: live tracker issues are mro-*, not flext-* (mro-6fca).
-ledger_prefix: mro
+ledger_prefix: flext
 repository:
   name: flext
   distribution: flext
@@ -51,7 +51,6 @@ integration:
 # NOTE (multi-agent, mro-wkii.17 / agent: codex): the typed manifest context is
 # the sole topology owner; every declared member/exclusion round-trips here.
 members:
-
   - name: "flext-api"
     distribution: "flext-api"
     provider: "flext-sh"
@@ -457,6 +456,4 @@ members:
     editable: true
     read_only: false
 
-exclusions:
-
-    []
+exclusions: []

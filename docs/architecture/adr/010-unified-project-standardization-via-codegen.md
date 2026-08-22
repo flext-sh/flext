@@ -94,7 +94,6 @@ setup deps build check test fmt fix run status docs clean release gen work
 `WHAT=cache-status|cache-clear|cache-checkpoint` (`cache-clear` needs
 `APPLY=Y`). No public `cov` verb or aliases such as `coverage` / `test-full`.
 
-
 `make help` lists the choices actually discovered for that
 consumer. `PROJECT`, `CHECK_GATES`, `FILE`, `MATCH`, `FAIL_FAST`, and `ARGS`
 have uniform meanings. `APPLY=Y` is the only authorization for mutation.

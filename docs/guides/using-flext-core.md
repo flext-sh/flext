@@ -1,16 +1,17 @@
 # Using flext-core
 
 <!-- TOC START -->
-- [Aliases](#aliases)
-- [Result flow](#result-flow)
-- [Result DIP (`p.Result` + `r`)](#result-dip-presult-r)
-- [Settings](#settings)
-- [Container](#container)
-- [Logging](#logging)
-- [Service runtime](#service-runtime)
-- [Good practices](#good-practices)
-- [Bad practices](#bad-practices)
-- [Related](#related)
+- [Using flext-core](#using-flext-core)
+  - [Aliases](#aliases)
+  - [Result flow](#result-flow)
+  - [Result DIP (`p.Result` + `r`)](#result-dip-presult--r)
+  - [Settings](#settings)
+  - [Container](#container)
+  - [Logging](#logging)
+  - [Service runtime](#service-runtime)
+  - [Good practices](#good-practices)
+  - [Bad practices](#bad-practices)
+  - [Related](#related)
 <!-- TOC END -->
 
 `flext_core` is the base package for result flow, settings, container wiring, logging, and service runtime.
@@ -21,6 +22,7 @@ Import canonical aliases from the package root:
 
 ```python
 ```
+
 | Alias | Purpose |
 | ------- | --------- |
 | `c` | constants / constants namespace |
