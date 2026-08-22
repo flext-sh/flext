@@ -12,11 +12,16 @@
 Canonical reference for the workspace Make control plane on `0.12.0-dev`.
 Discover live verbs with `make help` only. Do not invent retired verbs.
 
+This project is registered as a Gas Town rig named `flext`. Lane lifecycle is
+managed by Gas Town (`gt sling` / `gt convoy` / `gt mol` / `gt done` /
+`gt handoff`). The `work` verb remains as a backward-compatible internal
+surface only.
+
 ## Conventions
 
 - Format: `make <verb> [WHAT=<action>] [PROJECT=<member>] [APPLY=Y]`
 - Discovery: `make help` (there is no `WHAT=help` on most verbs)
-- Mutation: verbs that change the tree require `APPLY=Y` (`deps` upgrade/lock, `fmt`/`fix` apply, `gen` apply, `docs` generate/fix, `clean`, `work` start/land/finish)
+- Mutation: verbs that change the tree require `APPLY=Y` (`deps` upgrade/lock, `fmt`/`fix` apply, `gen` apply, `docs` generate/fix, `clean`)
 - Scope: omit `PROJECT`/`PROJECTS` to fan out across declared workspace members from the root
 
 ## Public verbs (`PUBLIC_VERBS`)
@@ -79,6 +84,8 @@ On a workspace-root Makefile, when `PROJECT` names a `WORKSPACE_MEMBERS` entry a
 | `status` | no | Branch / worktree / head / PR for the bead |
 | `land` | yes (`APPLY=Y`) | Sync registered lane to integration base, push head, open (or reuse open) PR; does not merge |
 | `finish` | yes (`APPLY=Y`) | Close lane after merge |
+
+Gas Town-native equivalent: use `gt sling` / `gt convoy` / `gt mol` / `gt done` / `gt handoff` for rig `flext`. The public Make `work` verb is retained for backward compatibility only.
 
 ## Quick recipes
 

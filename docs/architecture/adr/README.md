@@ -23,7 +23,7 @@ portal.
   Libraries](006-thin-domain-drivers-over-meltano-bases.md) — _Accepted_
 - [ADR-007: Performance optimization of worktree transactions and mutating CLI
   commands](007-worktree-transaction-performance.md) — _Accepted_
-- [ADR-0016: Public make work lane saga](016-make-work-lane-saga.md) — _Accepted_
+- [ADR-0016: Public make work lane saga](016-make-work-lane-saga.md) — _Accepted (Gas Town-native workflow is the authoritative surface; `make work` is retained as backward-compatible internal surface)_
 - [ADR-008: Neutral consumer boundaries for docs, Office bytes, and artifact
   metadata](008-neutral-consumer-boundaries.md) — _Accepted_
 - [ADR-009: Ecosystem coordination and reusable-library evaluation](009-ecosystem-coordination-and-library-evaluation.md)

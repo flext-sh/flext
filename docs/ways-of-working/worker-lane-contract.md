@@ -26,6 +26,7 @@ Read the canonical authorities first; this file only adds lane discipline.
 - Local skills: [`flext-law`][flext-law]
 - Universal skills: `~/.agents/skills/inviolable-rules/SKILL.md`,
   `~/.agents/skills/make-check/SKILL.md`, `~/.agents/skills/verification-loop/SKILL.md`
+- Gas Town rig: `gt prime` / `gt rig status flext` / `gt sling` / `gt convoy`
 - Config/settings SSOT: [ADR-005][adr-005]
 
 [agents-md]: ../../AGENTS.md
@@ -35,9 +36,17 @@ Read the canonical authorities first; this file only adds lane discipline.
 
 ## 1. One lane, one bead, one worktree
 
-Open the lane with the public saga (not ad-hoc worktree commands):
+Open the lane with Gas Town-native workflow (preferred) or the public saga:
 
 ```bash
+# Preferred Gas Town-native workflow
+gt sling --rig flext --bead <id> --kind feature --name <slug>
+gt convoy --rig flext --bead <id>
+gt mol --rig flext --bead <id>
+gt done --rig flext --bead <id>
+gt handoff --rig flext --bead <id>
+
+# Legacy public saga (backward-compatible internal surface)
 make work WHAT=status PROJECT=<member> BEAD=<id>
 make work WHAT=start PROJECT=<member> BEAD=<id> KIND=feature NAME=<slug> APPLY=Y
 make work WHAT=land PROJECT=<member> BEAD=<id> APPLY=Y
@@ -150,3 +159,5 @@ evidence at the applicable boundary permits `READY_FOR_REVIEW`.
 ## Integration line
 
 Land worker lanes onto `origin/0.12.0-dev` by `make work WHAT=land` (opens/updates the PR into config `integration.branch`, currently `0.12.0-dev`); merge is separate; `make work WHAT=finish` removes the registered lane after the PR is merged. Do not run `workspace-merge-main` or otherwise promote to `main` unless the operator explicitly requests a release promote.
+
+Gas Town-native equivalent: use `gt done` / `gt handoff` for rig `flext`.

@@ -9,15 +9,14 @@
 # toolchain.beads.server (machine-wide shared Dolt server facts).
 # Owned ledger config: the workspace root owns this tracker; conform
 # initializes and verifies it against the pinned binary.
-issue-prefix: "mro"
-
-# Dolt shared-server connection (machine-wide shared server on :3308).
-# The `mro` database lives there; a repository-local server is never used.
+issue-prefix: "flext"
+# Dolt shared-server connection (Gas Town shared Dolt server on :3307).
+# The `flext` database lives there; a repository-local server is never used.
 dolt:
-  mode: server
-  shared-server: true
-  host: 127.0.0.1
-  port: 3308
-  user: root
-  database: mro
-  auto-commit: "on"
+    mode: server
+    shared-server: false
+    host: 127.0.0.1
+    port: 3307
+    user: root
+    database: flext
+    auto-commit: "on"
