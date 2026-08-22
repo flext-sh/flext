@@ -342,25 +342,3 @@ else
 endif
 endif
 
-# Why (mro-5j8p): Workspace Release CI called bare `make rel`, which is not a
-# PUBLIC_VERBS target. Domain release orchestration attaches as
-# `_custom_release_rel` and is invoked via `make release WHAT=rel APPLY=Y`.
-.PHONY: _custom_release_rel
-_custom_release_rel: ## Run flext-infra release orchestrator (RELEASE_PHASE/VERSION/TAG)
-	$(call _require_apply)
-	@push_flag=--no-push; \
-	if [ "$${PUSH:-0}" = "1" ]; then push_flag=--push; fi; \
-	projects_args=""; \
-	if [ -n "$${PROJECTS:-}" ]; then projects_args="--projects $${PROJECTS}"; \
-	elif [ -n "$(PROJECT)" ] && [ "$(PROJECT)" != "." ]; then projects_args="--projects $(PROJECT)"; fi; \
-	$(PROJECT_FLEXT_INFRA) release run \
-		--workspace "$(PROJECT_ROOT)" \
-		--apply \
-		--no-dry-run \
-		--phase "$${RELEASE_PHASE:-all}" \
-		--version "$${VERSION}" \
-		--tag "$${TAG}" \
-		--interactive "$${INTERACTIVE:-0}" \
-		--create-branches "$${CREATE_BRANCHES:-0}" \
-		$$push_flag \
-		$$projects_args

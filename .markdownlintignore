@@ -1,4 +1,3 @@
-# Generated/tooling directories (not project documentation)
 .omo/**
 .beads/**
 .tmp/**
@@ -6,6 +5,7 @@
 .vscode/**
 .codegraph/**
 .code-review-graph/**
+.serena/**
 .snapshots/**
 .benchmarks/**
 .hypothesis/**
@@ -20,10 +20,5 @@ dist/**
 build/**
 htmlcov/**
 legado/**
-
-# GitHub generated templates (maintained by flext-infra workflows, not docs)
-# Keep .github/** if it should be linted; comment out if needed.
 .github/**
-
-# MkDocs generated site
 site/**

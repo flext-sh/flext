@@ -21,7 +21,7 @@ class Node:
 To circumvent this issue, forward references can be used (by wrapping the annotation in quotes).
 
 In Python 3.7, [PEP 563] introduced the concept of _postponed evaluation of annotations_, meaning
-with the `from **future** import annotations
+with the `from __future__ import annotations
 
 from collections.abc import Mapping, Sequence` [future statement], type hints are stringified by default:
 
@@ -148,7 +148,7 @@ While the namespace fetching logic is trying to be as accurate as possible, we s
 - When the `Model` class is being created inside a function, we keep a copy of the locals of the frame.
   This copy only includes the symbols defined in the locals when `Model` is being defined, meaning `InnerType2` won't be
   included
-  (and will **not be** if doing a model rebuild at a later point!).
+  (and will __not be__ if doing a model rebuild at a later point!).
   - To avoid memory leaks, we use weak references to the locals of the function, meaning some forward references might
     not resolve outside the function (1).
   - Locals of the function are only taken into account for Pydantic models, but this pattern does not apply to
