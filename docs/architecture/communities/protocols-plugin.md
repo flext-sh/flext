@@ -88,7 +88,7 @@ No execution flows pass through this community.
 - `str` (9 edge(s))
 - `FlextProtocolsBase.Base` (7 edge(s))
 - `setenv` (7 edge(s))
-- `p.Base` (5 edge(s))
+- `p.BaseModel` (5 edge(s))
 - `ABC` (5 edge(s))
 - `ValueError` (5 edge(s))
 - `settings_snapshot` (5 edge(s))
@@ -96,7 +96,7 @@ No execution flows pass through this community.
 - `Response` (3 edge(s))
 - `Base` (3 edge(s))
 - `map` (3 edge(s))
-- `p.Model` (2 edge(s))
+- `p.BaseModel` (2 edge(s))
 
 ### Incoming
 

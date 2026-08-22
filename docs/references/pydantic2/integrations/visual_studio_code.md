@@ -7,7 +7,7 @@ supported, comparable to the ones provided by the [PyCharm plugin](../integratio
 This means that you will have **autocompletion** (or "IntelliSense") and **error checks** for types and required
 arguments even while creating new Pydantic model instances.
 
-## Settingsure VS Code
+## Configure VS Code
 
 To take advantage of these features, you need to make sure you configure VS Code correctly, using the recommended
 settings.
@@ -23,7 +23,7 @@ Pylance is installed as part of the [Python Extension for VS
 Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) by default, so it should probably just work.
 Otherwise, you can double check it's installed and enabled in your editor.
 
-### Settingsure your environment
+### Configure your environment
 
 Then you need to make sure your editor knows the [Python
 environment](<https://code.visualstudio.com/docs/python/python->
@@ -31,7 +31,7 @@ tutorial#_install-and-use-packages) (probably a virtual environment) for your Py
 
 This would be the environment in where you installed Pydantic.
 
-### Settingsure Pylance
+### Configure Pylance
 
 With the default configurations, you will get support for autocompletion, but Pylance might not check for type errors.
 
@@ -53,7 +53,7 @@ Pylance is the VS Code extension, it's closed source, but free to use. Underneat
 
 You can read more about it in the [Pylance Frequently Asked Questions](https://github.com/microsoft/pylance-release/blob/main/FAQ.md#what-is-the-relationship-between-pylance-pyright-and-the-python-extension).
 
-### Settingsure mypy
+### Configure mypy
 
 You might also want to configure mypy in VS Code to get mypy error checks inline in your editor
 (alternatively/additionally to Pylance).

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Settingsure OUD for testing with production-like settings
+# Configure OUD for testing with production-like settings
 # Based on ansible roles/oracle_oud_14/tasks/schema_configuration.yml
 
 set -e

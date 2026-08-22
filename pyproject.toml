@@ -185,7 +185,6 @@ namespace_packages = true
 no_implicit_reexport = true
 plugins = ["pydantic.mypy"]
 python_version = "3.13"
-show_traceback = true
 strict_equality = true
 warn_redundant_casts = true
 warn_return_any = true
@@ -228,85 +227,6 @@ project-excludes = [
 ]
 project-includes = [
   "examples/**/*.py*",
-  "flext-api/examples/**/*.py*",
-  "flext-api/src/**/*.py*",
-  "flext-api/tests/**/*.py*",
-  "flext-auth/examples/**/*.py*",
-  "flext-auth/src/**/*.py*",
-  "flext-auth/tests/**/*.py*",
-  "flext-cli/examples/**/*.py*",
-  "flext-cli/src/**/*.py*",
-  "flext-cli/tests/**/*.py*",
-  "flext-core/examples/**/*.py*",
-  "flext-core/scripts/**/*.py*",
-  "flext-core/src/**/*.py*",
-  "flext-core/tests/**/*.py*",
-  "flext-db-oracle/examples/**/*.py*",
-  "flext-db-oracle/src/**/*.py*",
-  "flext-db-oracle/tests/**/*.py*",
-  "flext-dbt-ldap/src/**/*.py*",
-  "flext-dbt-ldap/tests/**/*.py*",
-  "flext-dbt-ldif/src/**/*.py*",
-  "flext-dbt-ldif/tests/**/*.py*",
-  "flext-dbt-oracle-wms/src/**/*.py*",
-  "flext-dbt-oracle-wms/tests/**/*.py*",
-  "flext-dbt-oracle/src/**/*.py*",
-  "flext-dbt-oracle/tests/**/*.py*",
-  "flext-grpc/docs/**/*.py*",
-  "flext-grpc/examples/**/*.py*",
-  "flext-grpc/src/**/*.py*",
-  "flext-grpc/tests/**/*.py*",
-  "flext-infra/src/**/*.py*",
-  "flext-infra/tests/**/*.py*",
-  "flext-ldap/src/**/*.py*",
-  "flext-ldap/tests/**/*.py*",
-  "flext-ldif/examples/**/*.py*",
-  "flext-ldif/src/**/*.py*",
-  "flext-ldif/tests/**/*.py*",
-  "flext-meltano/examples/**/*.py*",
-  "flext-meltano/src/**/*.py*",
-  "flext-meltano/tests/**/*.py*",
-  "flext-observability/examples/**/*.py*",
-  "flext-observability/src/**/*.py*",
-  "flext-observability/tests/**/*.py*",
-  "flext-oracle-oic/src/**/*.py*",
-  "flext-oracle-oic/tests/**/*.py*",
-  "flext-oracle-wms/examples/**/*.py*",
-  "flext-oracle-wms/src/**/*.py*",
-  "flext-oracle-wms/tests/**/*.py*",
-  "flext-plugin/examples/**/*.py*",
-  "flext-plugin/src/**/*.py*",
-  "flext-plugin/tests/**/*.py*",
-  "flext-quality/src/**/*.py*",
-  "flext-quality/tests/**/*.py*",
-  "flext-tap-ldap/src/**/*.py*",
-  "flext-tap-ldap/tests/**/*.py*",
-  "flext-tap-ldif/src/**/*.py*",
-  "flext-tap-ldif/tests/**/*.py*",
-  "flext-tap-oracle-oic/src/**/*.py*",
-  "flext-tap-oracle-oic/tests/**/*.py*",
-  "flext-tap-oracle-wms/examples/**/*.py*",
-  "flext-tap-oracle-wms/src/**/*.py*",
-  "flext-tap-oracle-wms/tests/**/*.py*",
-  "flext-tap-oracle/src/**/*.py*",
-  "flext-tap-oracle/tests/**/*.py*",
-  "flext-target-ldap/src/**/*.py*",
-  "flext-target-ldap/tests/**/*.py*",
-  "flext-target-ldif/src/**/*.py*",
-  "flext-target-ldif/tests/**/*.py*",
-  "flext-target-oracle-oic/src/**/*.py*",
-  "flext-target-oracle-oic/tests/**/*.py*",
-  "flext-target-oracle-wms/examples/**/*.py*",
-  "flext-target-oracle-wms/src/**/*.py*",
-  "flext-target-oracle-wms/tests/**/*.py*",
-  "flext-target-oracle/examples/**/*.py*",
-  "flext-target-oracle/src/**/*.py*",
-  "flext-target-oracle/tests/**/*.py*",
-  "flext-tests/src/**/*.py*",
-  "flext-tests/tests/**/*.py*",
-  "flext-web/examples/**/*.py*",
-  "flext-web/src/**/*.py*",
-  "flext-web/tests/**/*.py*",
   "libs/**/*.py*",
   "scripts/**/*.py*",
   "src/**/*.py*",
@@ -2054,7 +1974,6 @@ filterwarnings = [
   "error",
   "module::flext_core._constants.enforcement.FlextMroViolation",
 ]
-flext_slow_timeout_seconds = "60"
 markers = [
   "docker: tests requiring Docker",
   "e2e: end-to-end integration tests",
@@ -2202,6 +2121,8 @@ known-first-party = [
 split-on-trailing-comma = false
 
 [tool.ruff.lint.per-file-ignores]
+"**/.vulture_whitelist.py" = ["ALL"]
+"**/*_pb2*.py" = ["ALL"]
 "**/__init__.py" = [
   "any-type",
   "builtin-import-shadowing",
@@ -2287,7 +2208,7 @@ dependencies = ["flext-tests"]
 name = "flext-infra"
 
 [tool.uv.exclude-newer-package]
-mypy = "2026-08-15T03:04:00Z"
+cryptography = false
 
 [tool.uv.sources.flext-api]
 workspace = true
@@ -2467,7 +2388,7 @@ dev = [
   "mkdocs-versioning>=0.4.0",
   "mkdocstrings>=1.0.6",
   "mkdocstrings-python>=2.0.5",
-  "mypy>=2.3.1",
+  "mypy>=2.3.0",
   "pip-audit>=2.10.1",
   "pre-commit>=4.6.1",
   "pylint>=4.0.6",

@@ -79,22 +79,26 @@ re-derivation.
 
 ## 5.3 Facade Level
 
-The public surface of a package is exactly the alias set `c, m, t, p, u`
+The public surface of a package is exactly the alias set `c, m, p, t, p, u`
 (plus operational aliases, see 5.4), each a namespace class composed by MRO:
 
 - **`c` — constants**: defaults and invariants. Pure declaration
   (`StrEnum`/`IntEnum`/`Literal`/`Final`/immutable containers); no behavior.
 - **`t` — typings**: type aliases and generic contracts. Pure declaration.
 - **`p` — protocols**: structural contracts (`Protocol`). Declaration only;
-  imports `m` under `TYPE_CHECKING` (reverse direction).
+  NEVER imports `m` (reverse edge forbidden — ADR-011). Bounds generics/members
+  with `p.BaseModel`; imports `t,c` at runtime.
 - **`m` — models**: Pydantic 2-way models only — `model_validate` in,
-  `model_dump` out. Fields only; no methods. Imports `p` under
-  `TYPE_CHECKING`.
+  `model_dump` out. Fields only; no methods. Imports `p,t,c` at RUNTIME (forward).
+  Data/payload and nested/composed fields are concrete `m.*`; collaborator/DI
+  fields are `p.*`.
 - **`u` — utilities**: all behavior of the declaration facets. Functions and
   classes that compute, transform, and validate live here, never in `c/t/p/m`.
 
-Import direction is strict `c → t → p → m → u` (later may import earlier at
-runtime; reverse is `TYPE_CHECKING`-only). Facade owner modules extend the
+Import direction is strict `c → t → p → m → u`: a higher-index layer imports a
+lower one at RUNTIME; reverse edges are forbidden entirely (not runtime, not
+`TYPE_CHECKING` — ADR-011). Every name in a runtime-evaluated annotation is a
+top-level runtime import. Facade owner modules extend the
 upstream FLEXT facade by MRO and rebind the local alias at the bottom of the
 module.
 

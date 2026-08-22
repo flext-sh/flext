@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
-from flext_core import c, t
+from typing import TYPE_CHECKING
+
+from flext_core import c
+
+if TYPE_CHECKING:
+    from flext_core import t
 
 
 class FlextRootConstants(c):

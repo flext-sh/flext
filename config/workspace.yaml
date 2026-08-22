@@ -51,6 +51,7 @@ integration:
 # NOTE (multi-agent, mro-wkii.17 / agent: codex): the typed manifest context is
 # the sole topology owner; every declared member/exclusion round-trips here.
 members:
+
   - name: "flext-api"
     distribution: "flext-api"
     provider: "flext-sh"
@@ -456,4 +457,6 @@ members:
     editable: true
     read_only: false
 
-exclusions: []
+exclusions:
+
+    []

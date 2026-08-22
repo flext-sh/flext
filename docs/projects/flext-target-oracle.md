@@ -6,9 +6,9 @@ canonical `c/m/p/t/u` facade layout.
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (current development cycle)
+- **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+
-- **Status**: Active development on the `0.12.0-dev` branch; the package builds and exports its full public surface.
+- **Status**: Active development on the `0.20.0-dev` branch; the package builds and exports its full public surface.
 - **Description** (from `pyproject.toml`): "FLEXT Target Oracle - Singer Target for Oracle Database Data Loading"
 - **Dependencies**: `flext-core`, `flext-cli`, `flext-db-oracle`, `flext-meltano`
 - **Console scripts**: `target-oracle` and `flext-target-oracle` (both bound to `flext_target_oracle.cli:main`)

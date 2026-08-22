@@ -48,24 +48,36 @@ BRANCH ?=
 PYTEST_ARGS ?=
 PYTEST_DIAG_ARGS ?= -rA --durations=0 --tb=long --showlocals
 PYTEST_REPORT_ARGS ?= -ra --durations=25 --durations-min=0.001 --tb=short
-PYTEST_PROCESS_TIMEOUT_SECONDS ?= 360
+PYTEST_PROCESS_TIMEOUT_SECONDS ?= 180
 # mro-99ae: the pytest process inherits a hard wall-clock boundary, mirroring
 # MYPY_BOUNDED, so a hung run is terminated even if the typed runner stalls.
 PYTEST_BOUNDED = timeout --signal=TERM --kill-after=5s "$(PYTEST_PROCESS_TIMEOUT_SECONDS)s"
 PYTEST_REPORTS_DIR ?= .reports/tests
 override PYTEST_CASE_TIMEOUT_SECONDS := 10
-override PYTEST_RUN_TIMEOUT_SECONDS := 300
+override PYTEST_RUN_TIMEOUT_SECONDS := 120
 override PYTEST_TERMINATION_GRACE_SECONDS := 2
 override PYTEST_TIMEOUT_EXIT_CODE := 124
 override PYTEST_ENFORCEMENT_PLUGIN := flext_tests_enforcement
 override PYTEST_PROGRESS_ARGS := --verbose
 override PYTEST_REPORT_ARGS := -ra --durations=25 --durations-min=0.001 --tb=short
 override PYTEST_DIAG_ARGS := -rA --durations=0 --tb=long --showlocals
-override PYTEST_PARALLEL_WORKERS := 12
+override PYTEST_PARALLEL_WORKERS := 8
 override PYTEST_PARALLEL_DISTRIBUTION := worksteal
 override PYTEST_PROFILE_SORT := cumulative
 override PYTEST_PROFILE_LIMIT := 50
 override PROCESS_TIMEOUT_COMMAND := timeout
+<<<<<<< HEAD
+=======
+override export FLEXT_PYTEST_ARGS_RAW := $(value PYTEST_ARGS)
+override export FLEXT_PYTEST_FILE_RAW := $(value FILE)
+override export FLEXT_PYTEST_FILES_RAW := $(value FILES)
+override export FLEXT_PYTEST_MATCH_RAW := $(value MATCH)
+override export FLEXT_PYTEST_DIAG_RAW := $(value DIAG)
+override export FLEXT_PYTEST_FAIL_FAST_RAW := $(value FAIL_FAST)
+override export FLEXT_PYTEST_REPORTS_RAW := $(value PYTEST_REPORTS_DIR)
+override export FLEXT_PYTEST_WHAT_RAW := $(value WHAT)
+override export FLEXT_PYTEST_VERBOSE_RAW := $(value VERBOSE)
+>>>>>>> refs/remotes/origin/0.12.0-dev
 WHAT ?=
 # End SECTION: user overrides
 
@@ -82,6 +94,17 @@ MAKEFILE_ROOT := $(patsubst %/,%,$(dir $(SELF_MAKEFILE)))
 PROJECT_ROOT := $(MAKEFILE_ROOT)
 override export FLEXT_PYTEST_TARGET_RAW := tests
 WORKSPACE ?= $(PROJECT_ROOT)
+# make work targets a member checkout when PROJECT names a workspace member and
+# WORKSPACE was not overridden on the command line. PROJECT alone used to keep
+# WORKSPACE at the workspace root, so finish looked up lanes in the wrong git
+# primary and failed with "worktree branch is not registered".
+ifeq ($(filter command line override,$(origin WORKSPACE)),)
+ifneq ($(strip $(PROJECT)),)
+ifneq ($(filter $(PROJECT),$(WORKSPACE_MEMBERS)),)
+override WORKSPACE := $(PROJECT_ROOT)/$(PROJECT)
+endif
+endif
+endif
 # === SECTION: WORKSPACE_ROOT isolation (managed) ===
 # Source: computed (rule: derive from current checkout unless caller overrides)
 # Rule: WORKSPACE_ROOT is always derived from the current checkout unless the
@@ -94,18 +117,6 @@ ifeq ($(filter command line override,$(origin WORKSPACE_ROOT)),)
 WORKSPACE_ROOT := $(shell cd "$(MAKEFILE_ROOT)" && root=$$(git rev-parse --show-superproject-working-tree 2>/dev/null); if [ -n "$$root" ]; then printf '%s\n' "$$root"; else git rev-parse --show-toplevel 2>/dev/null || printf '%s\n' "$(MAKEFILE_ROOT)"; fi)
 endif
 # End SECTION: WORKSPACE_ROOT isolation
-# A workspace lane is always registered at the workspace root. Other verbs may
-# select a member through PROJECT, but `make work` keeps WORKSPACE at the root
-# so one Git worktree owns the complete project matrix.
-ifneq ($(filter work,$(MAKECMDGOALS)),work)
-ifeq ($(filter command line override,$(origin WORKSPACE)),)
-ifneq ($(strip $(PROJECT)),)
-ifneq ($(filter $(PROJECT),$(WORKSPACE_MEMBERS)),)
-override WORKSPACE := $(WORKSPACE_ROOT)/$(PROJECT)
-endif
-endif
-endif
-endif
 
 # === SECTION: verb dispatch (managed) ===
 # Source: config:make.verbs[*].whats, config:make.check_gates_allowed,
@@ -119,7 +130,7 @@ _ALLOWED_WHATS_setup := environment $(shell sed -n 's/^_custom_setup_\([a-z0-9_-
 _ALLOWED_WHATS_deps := check lock upgrade $(shell sed -n 's/^_custom_deps_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
 _ALLOWED_WHATS_build := artifacts $(shell sed -n 's/^_custom_build_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
 _ALLOWED_WHATS_check := all $(shell sed -n 's/^_custom_check_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
-_ALLOWED_WHATS_test := all full profile cache-status cache-clear cache-checkpoint $(shell sed -n 's/^_custom_test_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_test := all full cache-status cache-clear cache-checkpoint $(shell sed -n 's/^_custom_test_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
 _ALLOWED_WHATS_fmt := check all apply $(shell sed -n 's/^_custom_fmt_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
 _ALLOWED_WHATS_fix := check all apply $(shell sed -n 's/^_custom_fix_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
 _ALLOWED_WHATS_run := default $(shell sed -n 's/^_custom_run_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
@@ -129,7 +140,7 @@ _ALLOWED_WHATS_release := status rel $(shell sed -n 's/^_custom_release_\([a-z0-
 _ALLOWED_WHATS_gen := check all apply $(shell sed -n 's/^_custom_gen_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
 _ALLOWED_WHATS_mod := check all apply $(shell sed -n 's/^_custom_mod_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
 
-CHECK_GATES_ALLOWED := lint pyrefly mypy pyright security markdown smells
+CHECK_GATES_ALLOWED := lint format pyrefly mypy pyright security markdown smells
 CHECK_GATES_DEFAULT := lint pyrefly mypy pyright security markdown smells
 # End SECTION: verb dispatch
 
@@ -334,6 +345,29 @@ endif
 endif
 
 
+<<<<<<< HEAD
+=======
+# mro-ga9q (custom.mk blacklist): member projects may define ANY custom
+# verb/WHAT through _custom_<verb>_<what> handlers and (pre|post)-<verb>[-<what>]
+# hooks EXCEPT the reserved verbs/WHATs below, which stay a flext-infra
+# monopoly. Parse-time guard: every make invocation fails loud when custom.mk
+# redefines a reserved target; every other target is permitted.
+# R12 moved the public verbs out of base.mk into this projection, but the guard
+# stayed behind — and a generated project never includes base.mk, so the
+# monopoly was unenforced in every real checkout. The guard belongs with the
+# verbs it protects.
+CUSTOM_MK_RESERVED_TARGETS := _custom_build_artifacts _custom_check_all _custom_clean_generated _custom_clean_status _custom_deps_check _custom_deps_lock _custom_deps_upgrade _custom_fix_all _custom_fix_apply _custom_fix_check _custom_fmt_all _custom_fmt_apply _custom_fmt_check _custom_gen_all _custom_gen_apply _custom_gen_check _custom_help_usage _custom_mod_all _custom_mod_apply _custom_mod_check _custom_release_rel _custom_release_status _custom_run_default _custom_setup_environment _custom_status_diagnostics _custom_test_all _custom_test_cache-checkpoint _custom_test_cache-clear _custom_test_cache-status _custom_test_full _custom_work_finish _custom_work_land _custom_work_start _custom_work_status build check clean deps fix fmt gen help mod release run setup status test work
+ifneq ($(wildcard custom.mk),)
+# Target definitions at column 0, excluding assignments (=) and dot-directives.
+# $(shell) converts the newline-separated results to space-separated lists.
+_CUSTOM_MK_DEFINED := $(shell awk '/^[A-Za-z_][A-Za-z0-9_-]*([ \t]+[A-Za-z_][A-Za-z0-9_-]*)*[ \t]*:/ && index($$0, "=") == 0 { line = $$0; sub(/:.*/, "", line); count = split(line, names, /[ \t]+/); for (i = 1; i <= count; i++) print names[i] }' custom.mk | sort -u)
+_CUSTOM_MK_OFFENDERS := $(shell printf '%s\n' $(_CUSTOM_MK_DEFINED) | grep -xF $(foreach target,$(CUSTOM_MK_RESERVED_TARGETS),-e $(target)))
+ifneq ($(_CUSTOM_MK_OFFENDERS),)
+$(error custom.mk redefines reserved flext-infra target(s): $(_CUSTOM_MK_OFFENDERS) - reserved verbs/WHATs are a flext-infra monopoly; use _custom_<verb>_<what> with a non-reserved WHAT or (pre|post)-<verb>[-<what>] hooks)
+endif
+endif
+
+>>>>>>> refs/remotes/origin/0.12.0-dev
 -include custom.mk
 SELF_MAKE := $(MAKE) --no-print-directory -f "$(SELF_MAKEFILE)"
 
@@ -382,7 +416,11 @@ define _run_for_selected_projects
 	done
 endef
 
+<<<<<<< HEAD
 .PHONY: $(PUBLIC_VERBS) _builtin_help_usage _builtin_setup_environment _builtin_deps_check _builtin_deps_lock _builtin_deps_upgrade _builtin_build_artifacts _builtin_check_all _builtin_test_all _builtin_test_full _builtin_test_profile _builtin_test_cache-status _builtin_test_cache-clear _builtin_test_cache-checkpoint _builtin_fmt_check _builtin_fmt_all _builtin_fmt_apply _builtin_fix_check _builtin_fix_all _builtin_fix_apply _builtin_run_default _builtin_status_diagnostics _builtin_clean_status _builtin_clean_generated _builtin_release_status _builtin_release_rel _builtin_gen_check _builtin_gen_all _builtin_gen_apply _builtin_mod_check _builtin_mod_all _builtin_mod_apply
+=======
+.PHONY: $(PUBLIC_VERBS) _builtin_help_usage _builtin_setup_environment _builtin_deps_check _builtin_deps_lock _builtin_deps_upgrade _builtin_build_artifacts _builtin_check_all _builtin_test_all _builtin_test_full _builtin_test_cache-status _builtin_test_cache-clear _builtin_test_cache-checkpoint _builtin_fmt_check _builtin_fmt_all _builtin_fmt_apply _builtin_fix_check _builtin_fix_all _builtin_fix_apply _builtin_run_default _builtin_status_diagnostics _builtin_clean_status _builtin_clean_generated _builtin_release_status _builtin_release_rel _builtin_gen_check _builtin_gen_all _builtin_gen_apply _builtin_work_start _builtin_work_status _builtin_work_land _builtin_work_finish _builtin_mod_check _builtin_mod_all _builtin_mod_apply
+>>>>>>> refs/remotes/origin/0.12.0-dev
 
 # Every public verb dispatches straight into its private builtin. The verbs
 # that used to round-trip through the Python serializer keep the environment
@@ -522,9 +560,6 @@ _builtin_help_usage:
 #       work is carried. Pin validity is HEAD contains gitlink — origin may lag the
 #       pin without failing verify. Declared branch is the named integration line;
 #       legacy branch=. still resolves to the superproject named branch if present.
-#       A checkout is also accepted on the superproject current branch (workspace
-#       lane): that lane branch then becomes the verified branch, and its fetch is
-#       skipped when origin carries no counterpart. Any third branch still fails.
 #       Fetch skips when local already contains pin and origin tip.
 # Free: no
 # End SECTION: submodule setup
@@ -589,18 +624,12 @@ _builtin_setup_submodules:
 			printf 'ERROR: governed gitlink has no declared branch: %s\n' "$$child_path" >&2; \
 			exit 2; \
 		fi; \
-		super_branch=$$(git -C "$$superproject" branch --show-current); \
 		if [ "$$branch" = "." ]; then \
-			branch="$$super_branch"; \
+			branch=$$(git -C "$$superproject" branch --show-current); \
 			if [ -z "$$branch" ]; then \
 				printf 'ERROR: %s: branch = . requires a named superproject branch\n' "$$child_path" >&2; \
 				exit 1; \
 			fi; \
-		fi; \
-		declared_branch="$$branch"; \
-		accepted_branches="$$declared_branch"; \
-		if [ -n "$$super_branch" ] && [ "$$super_branch" != "$$declared_branch" ]; then \
-			accepted_branches="$$declared_branch or $$super_branch"; \
 		fi; \
 		git check-ref-format --branch "$$branch" >/dev/null || { \
 			printf 'ERROR: %s: invalid declared branch %s\n' "$$child_path" "$$branch" >&2; \
@@ -618,15 +647,11 @@ _builtin_setup_submodules:
 			}; \
 			attach_branch_at_head "$$child_root" "$$branch"; \
 		fi; \
-		current=$$(git -C "$$child_root" branch --show-current); \
-		if [ -n "$$current" ] && [ "$$current" != "$$declared_branch" ] && \
-		   [ -n "$$super_branch" ] && [ "$$current" = "$$super_branch" ]; then \
-			branch="$$super_branch"; \
-		fi; \
 		remote_ref="refs/remotes/origin/$$branch"; \
+		current=$$(git -C "$$child_root" branch --show-current); \
 		head=$$(git -C "$$child_root" rev-parse HEAD); \
 		if [ -n "$$current" ] && [ "$$current" != "$$branch" ]; then \
-			printf 'ERROR: %s: conflicting branch %s; expected %s (setup never runs checkout/reset; switch it yourself while keeping dirty)\n' "$$child_path" "$$current" "$$accepted_branches" >&2; \
+			printf 'ERROR: %s: conflicting branch %s; expected %s (setup never runs checkout/reset; switch it yourself while keeping dirty)\n' "$$child_path" "$$current" "$$branch" >&2; \
 			exit 1; \
 		fi; \
 		need_fetch=1; \
@@ -642,22 +667,15 @@ _builtin_setup_submodules:
 			fi; \
 		fi; \
 		if [ "$$need_fetch" -eq 1 ]; then \
-			fetch_allowed=1; \
-			if [ "$$branch" != "$$declared_branch" ] && \
-			   ! git -C "$$child_root" ls-remote --exit-code --heads origin "$$branch" >/dev/null 2>&1; then \
-				fetch_allowed=0; \
-			fi; \
-			if [ "$$fetch_allowed" -eq 1 ]; then \
-				git -C "$$child_root" fetch --quiet origin "$$branch" || { \
-					printf 'ERROR: %s: fetch origin %s failed\n' "$$child_path" "$$branch" >&2; \
-					exit 1; \
-				}; \
-			fi; \
+			git -C "$$child_root" fetch --quiet origin "$$branch" || { \
+				printf 'ERROR: %s: fetch origin %s failed\n' "$$child_path" "$$branch" >&2; \
+				exit 1; \
+			}; \
 		fi; \
 		current=$$(git -C "$$child_root" branch --show-current); \
 		head=$$(git -C "$$child_root" rev-parse HEAD); \
 		if [ -n "$$current" ] && [ "$$current" != "$$branch" ]; then \
-			printf 'ERROR: %s: conflicting branch %s; expected %s (setup never runs checkout/reset; switch it yourself while keeping dirty)\n' "$$child_path" "$$current" "$$accepted_branches" >&2; \
+			printf 'ERROR: %s: conflicting branch %s; expected %s (setup never runs checkout/reset; switch it yourself while keeping dirty)\n' "$$child_path" "$$current" "$$branch" >&2; \
 			exit 1; \
 		fi; \
 		if [ -z "$$current" ]; then \
@@ -772,7 +790,7 @@ _builtin_deps_upgrade: _builtin_require_environment
 	set --; \
 	for project in $$selected; do set -- "$$@" --projects "$$project"; done; \
 	$(PROJECT_FLEXT_INFRA) deps modernize --workspace "$(PROJECT_ROOT)" \
-		--apply $(if $(strip $(DEPENDENCY)),,--rewrite-constraints) --skip-check "$$@"
+		--apply --rewrite-constraints --skip-check "$$@"
 	$(call _run_for_selected_projects,)
 
 
@@ -790,7 +808,15 @@ _builtin_check_all: _builtin_require_environment
 	@set -eu; \
 	gates="$(strip $(CHECK_GATES))"; \
 	if [ -z "$$gates" ]; then gates="$$(printf '%s' '$(CHECK_GATES_DEFAULT)' | tr ' ' ',')"; fi; \
+<<<<<<< HEAD
 	gates="$$(printf '%s" "$$gates" | tr -d '[:space:]')"; \
+=======
+	gates="$$(printf '%s' "$$gates" | tr -d '[:space:]')"; \
+	if [ "$(strip $(CI))" = "Y" ]; then \
+		gates="mypy,pyright,security,markdown,smells"; \
+		printf 'INFO: CI=Y runs check gates: mypy pyright security markdown smells\n'; \
+	fi; \
+>>>>>>> refs/remotes/origin/0.12.0-dev
 	if [ -z "$$gates" ]; then \
 		printf 'ERROR: no check gates remain\n' >&2; \
 		exit 2; \
@@ -803,9 +829,6 @@ _builtin_test_all: _builtin_require_environment
 
 _builtin_test_full: _builtin_require_environment
 	@$(WORKSPACE_ORCHESTRATE) --verb test $(WORKSPACE_PROJECT_ARGS) --what full $(WORKSPACE_TEST_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
-
-_builtin_test_profile: _builtin_require_environment
-	@$(WORKSPACE_ORCHESTRATE) --verb test $(WORKSPACE_PROJECT_ARGS) --what profile $(WORKSPACE_TEST_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
 _builtin_test_cache-status: _builtin_require_environment
 	@$(WORKSPACE_ORCHESTRATE) --verb test $(WORKSPACE_PROJECT_ARGS) --what cache-status $(WORKSPACE_TEST_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
@@ -892,16 +915,17 @@ _builtin_release_rel: _builtin_require_environment
 		$$push_flag \
 		$$projects_args
 
-# Generation has one owner. Conform preserves the caller's scope and applies
-# the complete dependency/tooling projection before it verifies its fixed point.
-# Dependency upgrades remain a separate explicit verb because they rewrite lock
-# floors; gen must never run a second pyproject writer over conform's result.
+# Generation preserves the caller's scope. Conform owns analyzer roots in the
+# rendered tooling context; dependency modernization owns only dependency
+# settings that conform does not render.
 _builtin_gen_check: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode check
+	@$(PROJECT_FLEXT_INFRA) deps modernize --workspace "$(PROJECT_ROOT)" --check
 
 _builtin_gen_all: _builtin_require_environment
 	$(call _require_apply)
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode apply
+	@$(PROJECT_FLEXT_INFRA) deps modernize --workspace "$(PROJECT_ROOT)" --apply
 
 _builtin_gen_apply: _builtin_gen_all
 
