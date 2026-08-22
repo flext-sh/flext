@@ -48,8 +48,9 @@ Preferred workflow: `gt sling` / `gt convoy` / `gt mol` / `gt done` / `gt handof
 Gas Town is the sole lane lifecycle owner. The retired Make lane lifecycle must
 not appear in current commands, generated guidance, or consumer documentation.
 Disposition: ADR-0016.
-Lane completion evidence includes hook status, convoy state, and Refinery merge
-evidence. Make evidence covers build and validation only.
+Before `gt done`, lane evidence includes hook status, convoy state, and the full
+applicable Make validation boundary. Refinery merge evidence is recorded only
+after authorized integration. Make evidence covers build and validation only.
 
 ## Documentation and ADRs
 

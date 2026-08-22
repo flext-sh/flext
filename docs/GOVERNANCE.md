@@ -41,7 +41,7 @@ this order.
 | --- | --- | --- |
 | Provider activation and exported paths | `config.AiHub.paths.agents_home` provider authority | typed manifest and exact-path inventory validation |
 | Session routing | `.agents/skills/flext-context-routing/SKILL.md` | marker and selected-skill evidence |
-| Lane lifecycle | Gas Town rig `flext` | `gt hook status`, convoy state, Refinery merge evidence |
+| Lane lifecycle | Gas Town rig `flext` | Before submission: `gt hook status` and convoy state. After authorized integration: Refinery merge evidence. |
 | Architecture and public contracts | [ADR registry](architecture/adr/README.md) and owning source declaration | consumer audit plus affected project gates |
 | Ecosystem coordination (internal + external projects) | [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md) and [ecosystem-coordination.md](architecture/ecosystem-coordination.md) | reverse-dependency gate plus owner-local ADR consistency (`0.20.0-dev`) |
 | Runtime coding patterns | smallest matching skill under `~/.agents/skills/` | fresh import, lint, typecheck, behavior gate |

@@ -34,9 +34,10 @@ The repository is the Gas Town rig `flext`.
 ```bash
 gt sling <bead> flext
 gt hook status
+gt convoy status <convoy-id>
+# Choose one completion path:
 gt done
-gt convoy status
-gt handoff
+gt handoff <bead>
 ```
 
 See the [worker lane contract](../ways-of-working/worker-lane-contract.md).
@@ -47,7 +48,7 @@ Edit the owning configuration and templates in `flext-infra`, then run the
 generated fixed point:
 
 ```bash
-make gen APPLY=Y
+make gen WHAT=apply APPLY=Y
 ```
 
 Generated Makefiles, workflows, hooks, and project guidance are projections.
@@ -65,5 +66,5 @@ policy and required checks satisfied.
 make setup
 make check CHECK_GATES=markdown
 make test FILE=<changed-test-file>
-make gen APPLY=Y
+make gen WHAT=apply APPLY=Y
 ```
