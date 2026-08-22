@@ -66,8 +66,6 @@ override PYTEST_PARALLEL_DISTRIBUTION := worksteal
 override PYTEST_PROFILE_SORT := cumulative
 override PYTEST_PROFILE_LIMIT := 50
 override PROCESS_TIMEOUT_COMMAND := timeout
-<<<<<<< HEAD
-=======
 override export FLEXT_PYTEST_ARGS_RAW := $(value PYTEST_ARGS)
 override export FLEXT_PYTEST_FILE_RAW := $(value FILE)
 override export FLEXT_PYTEST_FILES_RAW := $(value FILES)
@@ -77,7 +75,6 @@ override export FLEXT_PYTEST_FAIL_FAST_RAW := $(value FAIL_FAST)
 override export FLEXT_PYTEST_REPORTS_RAW := $(value PYTEST_REPORTS_DIR)
 override export FLEXT_PYTEST_WHAT_RAW := $(value WHAT)
 override export FLEXT_PYTEST_VERBOSE_RAW := $(value VERBOSE)
->>>>>>> refs/remotes/origin/0.12.0-dev
 WHAT ?=
 # End SECTION: user overrides
 
@@ -345,8 +342,6 @@ endif
 endif
 
 
-<<<<<<< HEAD
-=======
 # mro-ga9q (custom.mk blacklist): member projects may define ANY custom
 # verb/WHAT through _custom_<verb>_<what> handlers and (pre|post)-<verb>[-<what>]
 # hooks EXCEPT the reserved verbs/WHATs below, which stay a flext-infra
@@ -367,7 +362,6 @@ $(error custom.mk redefines reserved flext-infra target(s): $(_CUSTOM_MK_OFFENDE
 endif
 endif
 
->>>>>>> refs/remotes/origin/0.12.0-dev
 -include custom.mk
 SELF_MAKE := $(MAKE) --no-print-directory -f "$(SELF_MAKEFILE)"
 
@@ -416,11 +410,7 @@ define _run_for_selected_projects
 	done
 endef
 
-<<<<<<< HEAD
-.PHONY: $(PUBLIC_VERBS) _builtin_help_usage _builtin_setup_environment _builtin_deps_check _builtin_deps_lock _builtin_deps_upgrade _builtin_build_artifacts _builtin_check_all _builtin_test_all _builtin_test_full _builtin_test_profile _builtin_test_cache-status _builtin_test_cache-clear _builtin_test_cache-checkpoint _builtin_fmt_check _builtin_fmt_all _builtin_fmt_apply _builtin_fix_check _builtin_fix_all _builtin_fix_apply _builtin_run_default _builtin_status_diagnostics _builtin_clean_status _builtin_clean_generated _builtin_release_status _builtin_release_rel _builtin_gen_check _builtin_gen_all _builtin_gen_apply _builtin_mod_check _builtin_mod_all _builtin_mod_apply
-=======
 .PHONY: $(PUBLIC_VERBS) _builtin_help_usage _builtin_setup_environment _builtin_deps_check _builtin_deps_lock _builtin_deps_upgrade _builtin_build_artifacts _builtin_check_all _builtin_test_all _builtin_test_full _builtin_test_cache-status _builtin_test_cache-clear _builtin_test_cache-checkpoint _builtin_fmt_check _builtin_fmt_all _builtin_fmt_apply _builtin_fix_check _builtin_fix_all _builtin_fix_apply _builtin_run_default _builtin_status_diagnostics _builtin_clean_status _builtin_clean_generated _builtin_release_status _builtin_release_rel _builtin_gen_check _builtin_gen_all _builtin_gen_apply _builtin_work_start _builtin_work_status _builtin_work_land _builtin_work_finish _builtin_mod_check _builtin_mod_all _builtin_mod_apply
->>>>>>> refs/remotes/origin/0.12.0-dev
 
 # Every public verb dispatches straight into its private builtin. The verbs
 # that used to round-trip through the Python serializer keep the environment
@@ -808,15 +798,11 @@ _builtin_check_all: _builtin_require_environment
 	@set -eu; \
 	gates="$(strip $(CHECK_GATES))"; \
 	if [ -z "$$gates" ]; then gates="$$(printf '%s' '$(CHECK_GATES_DEFAULT)' | tr ' ' ',')"; fi; \
-<<<<<<< HEAD
-	gates="$$(printf '%s" "$$gates" | tr -d '[:space:]')"; \
-=======
 	gates="$$(printf '%s' "$$gates" | tr -d '[:space:]')"; \
 	if [ "$(strip $(CI))" = "Y" ]; then \
 		gates="mypy,pyright,security,markdown,smells"; \
 		printf 'INFO: CI=Y runs check gates: mypy pyright security markdown smells\n'; \
 	fi; \
->>>>>>> refs/remotes/origin/0.12.0-dev
 	if [ -z "$$gates" ]; then \
 		printf 'ERROR: no check gates remain\n' >&2; \
 		exit 2; \
