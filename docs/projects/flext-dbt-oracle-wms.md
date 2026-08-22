@@ -6,7 +6,7 @@ System (WMS) transformations with dbt. Its executable source lives in
 
 ## Status & health
 
-- **Version**: `0.12.0-dev` (active development cycle)
+- **Version**: `0.20.0-dev` (active development cycle)
 - **Python**: 3.13+
 - **Project class**: integration
 - **Dependencies**: `flext-core`, `flext-meltano`, `flext-oracle-wms`, `click`, `pydantic`

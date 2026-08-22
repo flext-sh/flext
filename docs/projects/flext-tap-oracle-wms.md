@@ -6,9 +6,9 @@ and the canonical `c/m/p/t/u` facade layout.
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (current development cycle)
+- **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+
-- **Status**: Active development on the `0.12.0-dev` branch; the package builds and exports its full public surface.
+- **Status**: Active development on the `0.20.0-dev` branch; the package builds and exports its full public surface.
 - **Description** (from `pyproject.toml`): "FLEXT Tap Oracle WMS - Singer Tap for Oracle Warehouse Management System"
 - **Dependencies**: `flext-core`, `flext-cli`, `flext-meltano`, `flext-oracle-wms`
 - **Console scripts**: `tap-oracle-wms` and `flext-tap-oracle-wms` (both bound to `flext_tap_oracle_wms.cli:main`)

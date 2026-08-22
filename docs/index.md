@@ -27,7 +27,7 @@ non-FLEXT directory in the repository.
 
 ## Current Versioning Context
 
-- Current workspace code: `0.12.0-dev`
+- Current workspace code: `0.20.0-dev`
 - Forward baseline: `0.13.0`
 - Latest tagged release documented here: `v0.11.0`
 

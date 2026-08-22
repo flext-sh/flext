@@ -4,14 +4,10 @@ from __future__ import annotations
 
 import importlib.util
 import sys
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 from flext_tests import FlextTestsUtilities
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from tests.infra.typings import t
+from tests.infra.typings import t
 
 
 class TestsFlextRootUtilities(FlextTestsUtilities):

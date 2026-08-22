@@ -7,7 +7,7 @@ builds on. Package description: "Enterprise Foundation Framework — Modern Pyth
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (current development cycle)
+- **Version**: 0.20.0-dev (current development cycle)
 - **Python**: 3.13+ only
 - **Quality gate**: `make check PROJECT=flext-core` (Ruff + type checks) and `make check` for the full pipeline
 - **Role**: root of the dependency chain; no runtime dependency on any other `flext-*` package (stdlib-first design)

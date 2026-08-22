@@ -134,7 +134,7 @@ The baseline applies to FLEXT platform packages, domain packages, integrations, 
   - guards in `flext-infra`
   - taxonomy checks
   - public API checks
-  - import direction checks
+  - import direction checks (runtime-forward per ADR-011)
 - Non-FLEXT directories in the same repository are out of scope for the root portal and must be documented locally.
 
 ## References

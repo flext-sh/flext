@@ -5,7 +5,7 @@ executable source lives under `flext-tap-oracle/src/flext_tap_oracle/`.
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (monorepo development cycle)
+- **Version**: 0.20.0-dev (monorepo development cycle)
 - **Python**: 3.13+
 - **Package**: `flext_tap_oracle`
 - **Location in this repo**: `flext-tap-oracle/` at the workspace root

@@ -7,7 +7,7 @@ contract, so discovery, catalog, and sync flows follow the Singer specification 
 
 ## Status & health
 
-- **Version**: 0.12.0-dev (monorepo development cycle)
+- **Version**: 0.20.0-dev (monorepo development cycle)
 - **Python**: 3.13+
 - **Package**: `flext_tap_ldap` (namespace package, `py.typed` shipped)
 - **Location in this repo**: `flext-tap-ldap/` at the workspace root
