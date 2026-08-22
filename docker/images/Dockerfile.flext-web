@@ -2,7 +2,7 @@
 # Multi-stage build for optimized production container
 
 # Build stage
-FROM python:3.13-slim AS builder
+FROM python:3.13-alpine AS builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -26,7 +26,7 @@ RUN poetry settings virtualenvs.create false
 RUN poetry install --without=dev
 
 # Production stage
-FROM python:3.13-slim
+FROM python:3.13-alpine
 
 # Set metadata
 LABEL maintainer="FLEXT Development Team"

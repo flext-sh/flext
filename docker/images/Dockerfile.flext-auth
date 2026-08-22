@@ -1,4 +1,4 @@
-FROM python:3.13-slim as builder
+FROM python:3.13-alpine as builder
 
 # Build arguments
 ARG BUILD_ENV=production
@@ -36,7 +36,7 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-dev --no-root && rm -rf $POETRY_CACHE_DIR
 
 # Production image
-FROM python:3.13-slim as production
+FROM python:3.13-alpine as production
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \

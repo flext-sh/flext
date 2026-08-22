@@ -4,7 +4,7 @@
 # Docker container for complete Oracle WMS functionality validation
 # Includes all dependencies, testing framework, and real Oracle WMS integration
 
-FROM python:3.13-slim
+FROM python:3.13-alpine
 
 # Set working directory
 WORKDIR /app

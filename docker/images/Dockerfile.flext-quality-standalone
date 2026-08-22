@@ -2,7 +2,7 @@
 # This version works without local flext-core and flext-observability dependencies
 
 # Build stage with correct Python version
-FROM python:3.13-slim as builder
+FROM python:3.13-alpine as builder
 
 # Install system dependencies for building
 RUN apt-get update && apt-get install -y \
@@ -42,7 +42,7 @@ RUN mv pyproject.standalone.toml pyproject.toml && \
     poetry install --no-root
 
 # Production stage with correct Python version
-FROM python:3.13-slim as production
+FROM python:3.13-alpine as production
 
 # Create app user
 RUN groupadd -r appuser && useradd -r -g appuser appuser
