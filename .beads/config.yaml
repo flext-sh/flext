@@ -10,7 +10,7 @@
 # Owned ledger config: the workspace root owns this tracker; conform
 # initializes and verifies it against the pinned binary.
 issue-prefix: "flext"
-# Dolt shared-server connection (Gas Town shared Dolt server on :3307).
+# Dolt server connection (Gas Town town server on :3307).
 # The `flext` database lives there; a repository-local server is never used.
 dolt:
     mode: server
@@ -20,3 +20,10 @@ dolt:
     user: root
     database: flext
     auto-commit: "on"
+prefix: "flext"
+dolt.idle-timeout: "0"
+export.auto: "off"
+types.custom: "agent,role,rig,convoy,slot,queue,event,message,molecule,gate,merge-request"
+types.infra: "agent,role,message"
+sync:
+    remote: "git+https://github.com/flext-sh/flext.git"

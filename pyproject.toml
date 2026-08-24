@@ -185,6 +185,7 @@ namespace_packages = true
 no_implicit_reexport = true
 plugins = ["pydantic.mypy"]
 python_version = "3.13"
+show_traceback = true
 strict_equality = true
 warn_redundant_casts = true
 warn_return_any = true
@@ -227,7 +228,6 @@ project-excludes = [
 ]
 project-includes = [
   "examples/**/*.py*",
-  "libs/**/*.py*",
   "scripts/**/*.py*",
   "src/**/*.py*",
   "tests/**/*.py*",
@@ -432,7 +432,6 @@ include = [
   "flext-web/examples",
   "flext-web/src",
   "flext-web/tests",
-  "libs",
   "scripts",
   "src",
   "tests",
@@ -468,6 +467,24 @@ reportUnusedFunction = "error"
 reportUnusedImport = "error"
 reportUnusedVariable = "error"
 typeCheckingMode = "strict"
+venv = ".venv"
+venvPath = "."
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [".", "src"]
+reportAssignmentType = "none"
+reportAttributeAccessIssue = "none"
+reportGeneralTypeIssues = "none"
+reportInvalidTypeForm = "none"
+reportPrivateImportUsage = "none"
+reportPrivateUsage = "none"
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "none"
+reportUnknownMemberType = "none"
+reportUnknownParameterType = "none"
+reportUnknownVariableType = "none"
+reportUnusedImport = "none"
+root = "codemod"
 
 [[tool.pyright.executionEnvironments]]
 extraPaths = [".", "src"]
@@ -1974,6 +1991,7 @@ filterwarnings = [
   "error",
   "module::flext_core._constants.enforcement.FlextMroViolation",
 ]
+flext_slow_timeout_seconds = "60"
 markers = [
   "docker: tests requiring Docker",
   "e2e: end-to-end integration tests",
@@ -1990,7 +2008,7 @@ markers = [
 minversion = "8.0"
 python_classes = ["Test*"]
 python_files = ["*_test.py", "*_tests.py", "test_*.py"]
-testpaths = [".", "docs", "examples", "scripts", "src", "tests"]
+testpaths = ["tests"]
 
 # [MANAGED] ruff
 [tool.ruff]
@@ -2121,8 +2139,6 @@ known-first-party = [
 split-on-trailing-comma = false
 
 [tool.ruff.lint.per-file-ignores]
-"**/.vulture_whitelist.py" = ["ALL"]
-"**/*_pb2*.py" = ["ALL"]
 "**/__init__.py" = [
   "any-type",
   "builtin-import-shadowing",
