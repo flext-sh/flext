@@ -3728,7 +3728,7 @@ dev = [
 
 [[package]]
 name = "flext-infra"
-version = "0.12.0rc0"
+version = "0.12.0"
 source = { editable = "flext-infra" }
 dependencies = [
     { name = "defusedxml" },
