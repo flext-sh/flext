@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: 1.0.0
 ---
+
 # Scripts Architecture
 
 **UTILITY SKILL**

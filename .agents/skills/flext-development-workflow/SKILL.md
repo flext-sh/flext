@@ -8,9 +8,11 @@ license: MIT
 metadata:
   version: 2.0.0
 ---
+
 # FLEXT Development Workflow
 
 ## Start
+
 1. Resolve the workspace root and claim the active Bead there.
 2. Record exact path ownership before writes.
 3. Read `docs/GOVERNANCE.md`, then load only the skills selected by

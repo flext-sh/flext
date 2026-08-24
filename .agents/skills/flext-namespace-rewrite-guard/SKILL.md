@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: 1.0.0
 ---
+
 # FLEXT Namespace Rewrite Guard
 
 **UTILITY SKILL**

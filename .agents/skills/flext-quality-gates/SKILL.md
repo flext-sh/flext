@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: 2.0.0
 ---
+
 # FLEXT Quality Gates
 
 Gate commands validate the owning source. They do not define behavior,

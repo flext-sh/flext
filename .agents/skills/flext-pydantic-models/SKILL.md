@@ -7,6 +7,7 @@ license: MIT
 metadata:
   version: 1.0.0
 ---
+
 # Lib Pydantic V2 — Canonical Models and Boundary Adapters
 
 <!-- mro-wkii.17 (agent: codex) — keep Pydantic guidance on one identity-preserving boundary path. -->

@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: 1.0.0
 ---
+
 # FLEXT Strict Typing Rules
 
 **UTILITY SKILL**

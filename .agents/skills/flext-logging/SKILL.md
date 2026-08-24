@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: 2.0.0
 ---
+
 # FLEXT Structured Logging
 
 ## Contract

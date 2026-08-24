@@ -5,6 +5,7 @@ license: MIT
 metadata:
   version: 2.0.0
 ---
+
 # FLEXT Agent Integration
 
 Use this skill at the provider boundary. Domain behavior remains in the

@@ -9,6 +9,7 @@ license: MIT
 metadata:
   version: 1.0.0
 ---
+
 # Pyrefly Type-Check Fix Rules
 
 **UTILITY SKILL**

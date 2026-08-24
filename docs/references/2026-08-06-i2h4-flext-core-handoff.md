@@ -19,6 +19,7 @@ Epic: `mro-sb3q.1` (P1, OPEN)
 Parent: `mro-sb3q` (codemod governance)
 
 **P(-1) — PRIORIDADE MÁXIMA (P0):**
+
 - `mro-sb3q.1.7` — Empacotar flext-infra codemod rules como package data
 - `mro-sb3q.1.8` — Discovery cascata importlib.resources
 - `mro-sb3q.1.9` — make mod usa cascata
@@ -27,6 +28,7 @@ Parent: `mro-sb3q` (codemod governance)
 - `mro-sb3q.1.12` — Validar make mod sem projeção
 
 **W1-W6 (P1):**
+
 - `mro-sb3q.1.1` — W1: ADRs arrumados + docs atualizadas
 - `mro-sb3q.1.2` — W2: ast-grep enforcement rules (error gates)
 - `mro-sb3q.1.3` — W3: Rewire 11 imports privados (atômico)
@@ -45,6 +47,7 @@ Parent: `mro-sb3q` (codemod governance)
 | outros 27 | 0.12.0-dev | — | ✓ sincronizados |
 
 **Mudanças pendentes no root:**
+
 - `M flext-cli`, `M flext-dbt-ldap`, `M flext-grpc`, `M flext-infra`, etc. (gitlink drift)
 - `M uv.lock`
 - 4 arquivos novos não tracked (docs references + superpowers plans)
@@ -142,23 +145,27 @@ make check && make test
 | `_handlers_parts/` | 3 (`_utilities.handler`) | `u` |
 
 ### Dead code candidates
+
 - `_fixtures/__init__.py` — vazio
 - `_utilities/dispatcher_execute.py` — 1 ref (mover para dispatcher.py)
 - `FLEXT_SERVICE_ARCHITECTURE.md` — dead doc
 
 ### ADRs
+
 - ADR-016 → renumerar para ADR-011
 - `settings-config-canonical-pattern.md` → ADR-012 (estender)
 - `config-ssot-migration-plan.md` → ADR-013
 - Deletar: FLEXT_SERVICE_ARCHITECTURE.md, clean-architecture.md pointer
 
 ### Market research 2025-2026
+
 - Services são funções (Prefect, Dagster, Airflow, Temporal, Celery)
 - Config é model Pydantic compartilhado
 - DI via container, não singleton
 - FLEXT `r`/`p`/`u` já ahead do mercado
 
 ### Lean libraries
+
 - Adotar: cached_property+computed_field, AliasGenerator, NoDecode+BeforeValidator, syrupy, dirty-equals, time-machine
 - Rejeitar: dishka/svcs/rodi, returns, msgspec, anyio/trio, bowler, fixit, freezegun
 

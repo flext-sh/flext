@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: 2.0.0
 ---
+
 # FLEXT Coding Standards
 
 This is a compact decision index, not a second architecture specification.

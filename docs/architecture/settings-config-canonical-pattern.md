@@ -25,19 +25,19 @@ vigente: acesso strict `from <pkg> import config`/`settings` →
 tipado/lazy em `u.<Namespace>` (U4); MRO para demais config/settings (U5); typing estrito U6; zero helpers/aliases
 (U7). Referência viva: `cosmos-main/src/cosmos_main/` (`_constants|_models|_protocols|_utilities/{config,settings}.py`
 
-+ `_config.py`/`_settings.py`). Reescrita integral deste doc fica na lane do standardizer (mro-wkii.11).
+- `_config.py`/`_settings.py`). Reescrita integral deste doc fica na lane do standardizer (mro-wkii.11).
 
 ## 1. Law (non-negotiable)
 
-+ `settings` and `config` are **pre-instantiated namespaced singletons**. Import them
+- `settings` and `config` are **pre-instantiated namespaced singletons**. Import them
   directly and use them directly: `from flext_x import settings, config`.
-+ Each project subclasses the single base (`FlextSettings` / `FlextConfig`) **directly** —
+- Each project subclasses the single base (`FlextSettings` / `FlextConfig`) **directly** —
   there is no `FlextSettingsBase`, no field mixins, no MRO composition.
-+ Grouped namespaces are **plain Pydantic-2 nested-model Fields** (`settings.Cli.*`), never a
+- Grouped namespaces are **plain Pydantic-2 nested-model Fields** (`settings.Cli.*`), never a
   custom `**getattr**` or a registry.
-+ Layer-0 purity: `_settings.py` / `_config.py` import **only** stdlib + pydantic /
+- Layer-0 purity: `_settings.py` / `_config.py` import **only** stdlib + pydantic /
   pydantic-settings. No import of `c`/`t`/`p`/`m`/`u` or any project module.
-+ Zero legacy: no `apply_override`, no `config_load`/`u.Cli.config_load`, no namespace
+- Zero legacy: no `apply_override`, no `config_load`/`u.Cli.config_load`, no namespace
   registry, no `for_context`, no compatibility shims. Removed in the same cycle.
 
 ## 2. Minimal base surface (flext-core)

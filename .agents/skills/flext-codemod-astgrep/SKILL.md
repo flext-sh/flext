@@ -24,7 +24,7 @@ Authority is resolved in this order:
 3. provider.toml declares the provider identity and the complete exported ID
    set; sgconfig.yml declares how ast-grep loads it.
 4. This skill defines the safe operating procedure.
-5. tests/*-test.yml and tests/__snapshots__ only validate the declarations.
+5. tests/*-test.yml and tests/**snapshots** only validate the declarations.
 
 A fixture, snapshot, or green test is never SSOT. When validation conflicts
 with an owner above it, correct or remove the stale validator.

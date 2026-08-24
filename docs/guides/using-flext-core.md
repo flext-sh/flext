@@ -21,6 +21,7 @@ Import canonical aliases from the package root:
 
 ```python
 ```
+
 | Alias | Purpose |
 | ------- | --------- |
 | `c` | constants / constants namespace |

@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: 1.1.0
 ---
+
 # flext-cli SSOT enforcement
 
 **UTILITY SKILL**

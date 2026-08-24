@@ -8,6 +8,7 @@ license: MIT
 metadata:
   version: 1.0.0
 ---
+
 # Lib Pydantic Settings
 
 **UTILITY SKILL**
