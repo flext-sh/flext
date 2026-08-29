@@ -173,8 +173,6 @@ members:
     distribution: "flext-infra"
     provider: "flext-sh"
     url: "https://github.com/flext-sh/flext-infra.git"
-    extra_verbs:
-      - { name: basemk, default_what: generate }
     path: "flext-infra"
     role: "workspace-member"
     state: "active"
