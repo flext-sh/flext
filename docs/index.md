@@ -43,8 +43,8 @@ non-FLEXT directory in the repository.
 
 `flext-infra codegen conform` is the sole owner of repository conformance and
 generated Makefiles. It consumes the universal `flext-cli` config, schema, and
-template engine and emits self-contained `workspace-root`, `workspace-member`,
-or `standalone` profiles. Workspace topology comes only from the validated
+template engine and emits self-contained `workspace` or `standalone`
+profiles (`.gitmodules` present vs absent). Workspace topology comes only from the validated
 manifest under `config/`; package metadata remains Git-and-branch sourced while
 root `setup` installs declared local members as editable distributions.
 

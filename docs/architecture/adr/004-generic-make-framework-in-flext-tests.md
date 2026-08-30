@@ -59,7 +59,7 @@ rendering path.
 ### 2. The Makefile is a self-contained generated artifact
 
 One template layer emits the complete versioned Makefile for the
-`workspace-root`, `workspace-member`, or `standalone` profile. Make never
+`workspace` or `standalone` profile. Make never
 regenerates itself and never includes a shared implementation from another
 checkout. `codegen` performs conformance explicitly; `check` is read-only and
 `apply` requires `APPLY=Y`.

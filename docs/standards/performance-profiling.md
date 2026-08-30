@@ -84,7 +84,7 @@ or neutral optimizations "for later".
 
 ## Recording evidence
 
-Append the following to the active workspace-root Bead:
+Append the following to the active workspace Bead:
 
 - exact capture command;
 - baseline total time and profile path;
