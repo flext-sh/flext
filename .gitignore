@@ -47,7 +47,9 @@ scripts/maintenance/
 !.taplo.toml
 !pyrefly.toml
 !poetry.lock
+!uv.lock
 !ruff-shared.toml
+!uv.lock
 
 # mise toolchain pinning
 !.mise.toml
@@ -299,20 +301,22 @@ secrets.yml
 .devcontainer/.env
 .github/*.rej
 
+# --- codegen conform: tracked owner inputs ---
+!base.mk
+
 # FINAL BEADS TRACKING POLICY
 !.beads/
 .beads/*
 .beads/.*
 !.beads/config.yaml
 .beads/proxieddb/
-.beads.gate.lock
 .dolt/
 *.db
 .beads-credential-key
 .worktrees/
 legado/
 
-# Beads ledger identity (workspace and standalone)
+# Beads ledger identity (workspace and standalone; see mro-9wv8)
 !.beads/metadata.json
 
 # codegen module-standardizer reject artifacts (ADR-005 §9)
@@ -326,6 +330,7 @@ legado/
 .bin/
 .tools/
 __pycache__/
+base.mk
 !.pre-commit-config.yaml
 
 # Derived build and tool artifacts
@@ -341,7 +346,6 @@ __pyrefly_virtual__/
 .omo/
 .pylance_cache/
 .pytest_cache/
-.test-tmp/
 .testmondata
 .testmondata-wal
 .testmondata-shm
@@ -380,7 +384,10 @@ CLAUDE.local.md
 !.github/prompts/flext-aggressive-scale-refactor.prompt.md
 !.github/prompts/flext-strict-jsonvalue-session-continuation.prompt.md
 !.github/scripts/
+!.github/scripts/check-beads-policy.sh
 !.github/scripts/check-cqrs-compliance.sh
+!.github/scripts/flext-law-loop.sh
+!.github/scripts/install-git-hooks.sh
 !tests/fixtures/
 !tests/fixtures/ci/
 !tests/fixtures/ci/docker/
@@ -394,9 +401,9 @@ CLAUDE.local.md
 !.github/workflows/ci.yml
 !.github/workflows/docs.yml
 !.github/workflows/release.yml
-!config/
-!config/beads.yaml
 !sgconfig.yml
 !.vscode/settings.json
 !LICENSE
+!config/
+!config/workspace.yaml
 !custom.mk
