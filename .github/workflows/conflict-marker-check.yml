@@ -3,6 +3,9 @@ name: conflict-marker-check
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   conflict-markers:
     runs-on: ubuntu-latest
