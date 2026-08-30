@@ -269,7 +269,7 @@ workspace-dependabot-apply: ## dependabot-merge + merge result into main
 #   make codemod RULE=<id>    Restrict to ONE rule ($(CODEMOD_HOME)/rules/**/<id>.{yml,csv}).
 #   make codemod SCOPE=<dir>  Restrict to one project instead of the workspace.
 #
-# SCOPE is derived from the workspace manifest SSOT (WORKSPACE_MEMBERS) plus any
+# SCOPE is derived from the workspace manifest SSOT (WORKSPACE_SUBPROJECTS) plus any
 # sibling that declares `[tool.flext.workspace] attached = true` in its own
 # pyproject. No consumer directory is ever named here: the engine stays generic.
 # The codemod library is OWNED BY flext-infra (the tooling engine), never by
@@ -299,7 +299,7 @@ export CODEMOD_ATTACHED_PY
 # the expansion keeps the discovery identical but charges it only to the codemod
 # recipe that actually reads these variables.
 CODEMOD_ATTACHED = $(shell $(UV_RUN) python -c "$$CODEMOD_ATTACHED_PY" 2>/dev/null)
-CODEMOD_SCOPE = $(if $(filter-out project all,$(SCOPE)),$(filter-out project all,$(SCOPE)),. $(WORKSPACE_MEMBERS) $(CODEMOD_ATTACHED))
+CODEMOD_SCOPE = $(if $(filter-out project all,$(SCOPE)),$(filter-out project all,$(SCOPE)),. $(WORKSPACE_SUBPROJECTS) $(CODEMOD_ATTACHED))
 CODEMOD_TARGETS = $(foreach d,$(CODEMOD_SCOPE),$(wildcard $(d)/src) $(wildcard $(d)/tests) $(wildcard $(d)/examples) $(wildcard $(d)/scripts))
 CODEMOD_CSV := $(if $(RULE),$(firstword $(wildcard $(CODEMOD_HOME)/rules/*/$(RULE).csv $(CODEMOD_HOME)/rules/$(RULE).csv)),)
 CODEMOD_CSV_RUNNER := $(CODEMOD_HOME)/rules/refactor/apply_renames.py
