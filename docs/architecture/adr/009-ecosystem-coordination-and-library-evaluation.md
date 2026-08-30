@@ -134,7 +134,7 @@ producer extensions and never leak into FLEXT libraries.
 | MkDocs via `flext-infra` | Adopt after static-consumer gate (`mro-ib6t.1`) | Existing owner for site/search/nav/build/audit |
 | Sphinx + MyST | Do not add in parallel | Duplicates the site owner; no measured gap justifies it |
 | Pandoc | Keep, use directly | Mature conversion already used by `dcdoc` |
-| Quarto | Corpus bake-off only (`bd-bhg1.2`) | Unproven for rich editable Office fidelity |
+| Quarto | Corpus bake-off only (`dcdoc-bhg1.2`) | Unproven for rich editable Office fidelity |
 | Antora | Conditional future migration | Only if multi-repo/multi-version docs dominate |
 | Docusaurus | Reject for current requirements | Adds React/MDX/Node without demonstrated need |
 | Backstage TechDocs | Future reader/catalog | Consumes MkDocs static output |
@@ -193,6 +193,6 @@ reason to create a package.
 
 - [ADR-008 — Neutral consumer boundaries](008-neutral-consumer-boundaries.md)
 - [Ecosystem coordination](../ecosystem-coordination.md)
-- Cosmos ADR-020 (`bd-bhg1`)
+- Cosmos ADR-020 (`dcdoc-bhg1`)
 - DataOP ADR-001 (`data-organization-pipeline-4dt`)
 - DcBackup ADR-001 (`datacosmos-backup-o6w`)
