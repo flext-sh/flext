@@ -30,7 +30,7 @@ by its active provider authority.
   consumer boundary. ai-hub changes update their owner in the independent
   ai-hub workspace and verify provider projection.
 - Each independent workspace records work in its own root Beads database.
-  Member projects use their workspace-root tracker and never initialize a
+  Member projects use their workspace tracker and never initialize a
   nested database.
 
 ## Drift Discipline

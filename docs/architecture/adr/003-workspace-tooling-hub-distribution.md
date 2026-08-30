@@ -96,12 +96,11 @@ an explicit, apply-gated `deps` operation followed by `setup`.
 
 ### 4. Generated profiles define attachment behavior
 
-The sole template layer supports exactly three profiles:
+The sole template layer supports exactly two profiles, derived from the
+checkout itself:
 
-- `workspace-root` — owns the shared environment and declared member fleet;
-- `workspace-member` — delegates environment provisioning when attached and
-  remains independently provisionable when detached;
-- `standalone` — owns only itself and never inspects neighboring directories.
+- `workspace` — the tree has `.gitmodules`;
+- `standalone` — the tree does not.
 
 No profile depends on files outside its repository checkout.
 

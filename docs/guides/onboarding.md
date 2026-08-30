@@ -32,7 +32,7 @@ renaming any symbol.
 ## 3. Bootstrap Tooling
 
 ```bash
-cd <workspace-root>
+cd <workspace>
 make boot                       # Workspace .venv only (project .venv is forbidden — see AGENTS.md §6)
 ```
 

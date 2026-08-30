@@ -51,7 +51,7 @@ or routing decision.
 
 ## Execution Contract
 
-- Use the workspace-root Beads database for the root and every member project.
+- Use the workspace Beads database for the root and every member project.
   Only an independent project owns a separate tracker.
 - Claim and record disjoint path ownership before writes. Append evidence after
   every state-changing step.
@@ -98,6 +98,6 @@ All FLEXT validation uses the root Make dispatcher; never run bare `ruff`,
 `pyrefly`, `pyright`, `mypy`, or `pytest` commands.
 
 Record every red or green result with its exit code and decisive output in the
-active workspace-root Bead.
+active workspace Bead.
 
 For the worker lane contract, see [`ways-of-working/worker-lane-contract.md`](ways-of-working/worker-lane-contract.md).
