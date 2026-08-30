@@ -1,5 +1,50 @@
 # FLEXT Docstring Standards — PEP 257 + Google Style + Ruff Compliant
 
+<!-- TOC START -->
+- [Module Level Docstring](#module-level-docstring)
+  - [Format](#format)
+  - [Rules](#rules)
+  - [Real Example from Project](#real-example-from-project)
+- [Class Docstring](#class-docstring)
+  - [Format](#format)
+  - [Rules](#rules)
+  - [Real Example from Project](#real-example-from-project)
+- Function / Method Docstring
+  - [Format](#format)
+  - [Rules](#rules)
+  - [Real Example from Project](#real-example-from-project)
+- [Private Function (`_func`)](#private-function-_func)
+  - [When to Document](#when-to-document)
+  - [Examples](#examples)
+- [Property](#property)
+  - [Format](#format)
+  - [Rules](#rules)
+- [Magic Methods (`__init__`, `__str__`, etc.)](#magic-methods-__init__-__str__-etc)
+  - [`__init__`](#__init__)
+  - `__str__` / `__repr__`
+  - [Others](#others)
+- [Exception Class](#exception-class)
+  - [Format](#format)
+- [Async Function](#async-function)
+  - [Format](#format)
+- [Multi-line Parameter Description](#multi-line-parameter-description)
+  - [Format](#format)
+- [Ruff-Compliant Checklist](#ruff-compliant-checklist)
+- [Private vs Public](#private-vs-public)
+  - [Skip docstring (private)](#skip-docstring-private)
+  - [Document (public)](#document-public)
+- [Document When](#document-when)
+- [Examples from FLEXT Codebase](#examples-from-flext-codebase)
+  - [Good: Utility Method](#good-utility-method)
+  - [Good: Idempotent Operation](#good-idempotent-operation)
+- [Ruff Integration](#ruff-integration)
+  - [Check conformance](#check-conformance)
+  - [Expected ignores (from pyproject.toml)](#expected-ignores-from-pyprojecttoml)
+- [Copyright Placement](#copyright-placement)
+- [Testing Docstring Quality](#testing-docstring-quality)
+- [Summary](#summary)
+<!-- TOC END -->
+
 **Compliance**:
 
 - PEP 257 (Python Docstring Conventions)
@@ -46,7 +91,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
 
 # Rest of file follows
 ```
@@ -101,6 +145,7 @@ class MyClass(BaseClass):
     Example:
         >>> obj = MyClass(name="test")
         >>> obj.process()
+
     """
 ```
 
@@ -165,6 +210,7 @@ def process_data(
         >>> result = process_data(Path("data.json"))
         >>> if result["errors"]:
         ...     u.Cli.print(f"Found {len(result['errors'])} errors")
+
     """
 ```
 
@@ -204,6 +250,7 @@ def iter_directory_python_files(
     Returns:
         Sorted list of matching file paths. Empty list if directory
         does not exist.
+
     """
     if not directory.is_dir():
         return []
@@ -271,6 +318,7 @@ def __init__(self, name: str, timeout: int = 30):
 
     Raises:
         ValueError: If timeout is negative.
+
     """
 ```
 
@@ -301,6 +349,7 @@ class DataProcessingError(Exception):
         message: Human-readable error description.
         code: Error code for categorization (e.g., "PARSE_ERROR").
         data: Original data that caused the error.
+
     """
 
     def __init__(self, message: str, code: str = "UNKNOWN", data: Any = None) -> None:
@@ -310,6 +359,7 @@ class DataProcessingError(Exception):
             message: Error description.
             code: Error category (defaults to "UNKNOWN").
             data: Original problematic data (for debugging).
+
         """
         super().__init__(message)
         self.message = message
@@ -337,6 +387,7 @@ async def fetch_data(url: str, timeout: int = 30) -> bytes:
     Raises:
         ConnectionError: If network request fails.
         TimeoutError: If operation exceeds timeout.
+
     """
 ```
 
@@ -358,6 +409,7 @@ def configure(
         options: Configuration options passed to underlying library.
             Reserved keys: \"_timeout\", \"_retries\".
         verbosity: Output verbosity level (0=silent, 1=normal, 2=verbose).
+
     """
 ```
 
@@ -467,6 +519,7 @@ def run_raw(
 
     Raises:
         None (errors captured in Result.fail()).
+
     """
 ```
 
@@ -495,6 +548,7 @@ def create_checkpoint(
 
     Raises:
         None (errors captured in Result.fail()).
+
     """
 ```
 
@@ -532,7 +586,7 @@ the current Ruff policy" section above).
 
 ❌ **WRONG** (comment outside docstring):
 
-```python notest
+```python
 # Copyright (c) 2025 FLEXT Team. All rights reserved.
 """Module description."""
 ```

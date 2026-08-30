@@ -1,6 +1,22 @@
 # Testing Standards
 
-Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `.agents/skills/flext-inviolable-rules/SKILL.md`.
+<!-- TOC START -->
+- [Mindset](#mindset)
+- [Structure (AAA)](#structure-aaa)
+- [Imports in tests](#imports-in-tests)
+- [Asserting results](#asserting-results)
+- [Fixtures](#fixtures)
+- [Singleton reset](#singleton-reset)
+- [Golden files and examples](#golden-files-and-examples)
+- [Parametrization](#parametrization)
+- [What to avoid](#what-to-avoid)
+- [Running tests](#running-tests)
+- [Coverage](#coverage)
+- [Related](#related)
+<!-- TOC END -->
+
+Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands,
+see `.agents/skills/flext-inviolable-rules/SKILL.md`.
 
 ## Mindset
 
@@ -24,13 +40,11 @@ def test_user_creation() -> None:
 
 ## Imports in tests
 
-Use the same aliases as production code. Test facades may be named `TestsFlext<Project><Tier>` when the project exposes one.
+Use the same aliases as production code. Test facades may be named `TestsFlext<Project><Tier>` when the project exposes
+one.
 
 ```python
 from __future__ import annotations
-from collections.abc import Mapping, Sequence
-
-from flext_core import m, r
 ```
 
 ## Asserting results
@@ -38,9 +52,6 @@ from flext_core import m, r
 Use public API assertions. For `r[T]` results, assert on the public shape rather than private internals.
 
 ```python
-from flext_core import r
-
-
 def test_load_user() -> None:
     result = load_user(1)
     assert result.success
@@ -52,7 +63,8 @@ def test_load_user() -> None:
 
 ## Fixtures
 
-Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it to the canonical `conftest.py` for the affected tier.
+Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it to the canonical `conftest.py` for the
+affected tier.
 
 ```python
 import pytest
@@ -117,7 +129,8 @@ make test PROJECT=<proj>
 
 ## Coverage
 
-`pyproject.toml` sets `fail_under = 45` for the consolidated workspace. Project-local targets may be higher. Do not lower the threshold to make a build pass.
+`pyproject.toml` sets `fail_under = 45` for the consolidated workspace. Project-local targets may be higher. Do not
+lower the threshold to make a build pass.
 
 ## Related
 

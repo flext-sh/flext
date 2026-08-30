@@ -1,5 +1,20 @@
 # Development Standards
 
+<!-- TOC START -->
+- [Required file header](#required-file-header)
+- [Config and settings are the SSOT (P0)](#config-and-settings-are-the-ssot-p0)
+- [Canonical aliases](#canonical-aliases)
+- [Imports](#imports)
+- [Typing](#typing)
+- [Result flow](#result-flow)
+- [Logging](#logging)
+- [Error handling](#error-handling)
+- [Models and settings](#models-and-settings)
+- [Anti-patterns](#anti-patterns)
+- [Local validation](#local-validation)
+- [Related](#related)
+<!-- TOC END -->
+
 Quick-reference for daily development in the FLEXT monorepo. For the root
 engineering law, see `AGENTS.md`. For automated enforcement details, see
 `.agents/skills/coding-standards/SKILL.md` and child skills.
@@ -10,7 +25,6 @@ Every Python file must start with:
 
 ```python
 from __future__ import annotations
-from collections.abc import Mapping, Sequence
 ```
 
 `ruff` enforces this via `I002`.
@@ -57,8 +71,7 @@ upstream short alias as the base class and then publish the local alias at the
 bottom:
 
 ```python
-from flext_cli import m, u
-from flext_plugin import c, p, r, t
+from flext_cli import m
 
 
 class FlextPluginModels(m): ...
@@ -98,7 +111,7 @@ db_oracle = FlextDbOracleApi
 Example:
 
 ```python
-from flext_core import c, m, r, t, u
+from flext_core import c, m, r, u
 
 
 def load(user_id: int) -> r[m.User]:

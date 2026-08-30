@@ -31,6 +31,16 @@ type CompleteWorkflowProcessingDict = t.JsonMapping
 type CompleteWorkflowContent = t.JsonMapping
 
 
+def _json_mapping() -> t.JsonMapping:
+    """Return a typed immutable empty JSON mapping."""
+    return MappingProxyType({})
+
+
+def _scalar_mapping() -> t.ScalarMapping:
+    """Return a typed immutable empty scalar mapping."""
+    return MappingProxyType({})
+
+
 class CompleteWorkflowExample:
     """Complete workflow example demonstrating FLEXT enterprise data integration capabilities."""
 
@@ -67,7 +77,7 @@ class CompleteWorkflowExample:
             description="List of workflow stages to execute",
         )
         metadata: t.JsonMapping = u.Field(
-            default_factory=lambda: MappingProxyType({}),
+            default_factory=_json_mapping,
             description="Workflow metadata key-value pairs",
         )
         performance_metrics: t.MutableJsonMapping = u.Field(
@@ -97,7 +107,7 @@ class CompleteWorkflowExample:
             default_factory=list, description="List of warnings encountered"
         )
         stage_metadata: t.JsonMapping = u.Field(
-            default_factory=lambda: MappingProxyType({}),
+            default_factory=_json_mapping,
             description="Stage-specific metadata",
         )
 
@@ -122,7 +132,7 @@ class CompleteWorkflowExample:
             )
         )
         aggregated_metrics: t.JsonMapping = u.Field(
-            default_factory=lambda: MappingProxyType({}),
+            default_factory=_json_mapping,
             description="Aggregated metrics across all stages",
         )
         workflow_status: Annotated[
@@ -137,7 +147,7 @@ class CompleteWorkflowExample:
             default_factory=tuple
         )
         workflow_settings: t.ScalarMapping = u.Field(
-            default_factory=lambda: MappingProxyType({})
+            default_factory=_scalar_mapping
         )
 
         def execute(self) -> p.Result[CompleteWorkflowExample.WorkflowData]:

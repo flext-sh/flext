@@ -119,12 +119,10 @@ using the [`asdict()`][pydantic.fields.u.FieldInfo.asdict] method, containing th
 
 With the following model:
 
-```python {lint="skip" test="skip"}
-class Model(BaseModel):
-    f: Annotated[
-        int, u.Field(gt=1), WithJsonSchema({"extra": "data"}), u.Field(title="F")
-    ] = 1
-```
+    class Model(BaseModel):
+        f: Annotated[
+            int, u.Field(gt=1), WithJsonSchema({"extra": "data"}), u.Field(title="F")
+        ] = 1
 
 The [`u.FieldInfo`][pydantic.fields.u.FieldInfo] instance of `f` will have three items in its dictionary representation:
 
@@ -182,20 +180,18 @@ and specify `None` as a default value (the second element of the tuple for the f
 
 Here is a demonstration of our factory function:
 
-```python {lint="skip" test="skip"}
-from pydantic import BaseModel, u.Field
+    from pydantic import BaseModel, u.Field
 
 
-class Model(BaseModel):
-    a: Annotated[int, u.Field(gt=1)]
+    class Model(BaseModel):
+        a: Annotated[int, u.Field(gt=1)]
 
 
-ModelOptional = make_fields_optional(Model)
+    ModelOptional = make_fields_optional(Model)
 
-m = ModelOptional()
-u.Cli.print(m.a)
-# > None
-```
+    m = ModelOptional()
+    u.Cli.print(m.a)
+    # > None
 
 A couple notes on the implementation:
 

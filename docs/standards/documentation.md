@@ -1,5 +1,14 @@
 # Documentation Standards
 
+<!-- TOC START -->
+- [Pipeline](#pipeline)
+- [Docstrings](#docstrings)
+- [Generation from code](#generation-from-code)
+- [External site](#external-site)
+- [Authoring rules](#authoring-rules)
+- [Validation before landing](#validation-before-landing)
+<!-- TOC END -->
+
 **Single source of truth for how FLEXT documentation is authored, generated, validated, and published.**
 
 All documentation automation lives in **one engine**: the docs services inside

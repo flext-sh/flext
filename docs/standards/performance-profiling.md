@@ -1,5 +1,15 @@
 # Performance profiling standard
 
+<!-- TOC START -->
+- [When this applies](#when-this-applies)
+- [Baseline command](#baseline-command)
+- [Required analysis](#required-analysis)
+- [Minimum improvement threshold](#minimum-improvement-threshold)
+- [Recording evidence](#recording-evidence)
+- [Invalidation for cached/fast-path work](#invalidation-for-cachedfast-path-work)
+- [No profiling-only commits](#no-profiling-only-commits)
+<!-- TOC END -->
+
 This standard defines the minimal evidence required for performance-related
 changes in FLEXT, especially for mutating commands that execute through the
 worktree transaction path.

@@ -4,11 +4,11 @@
 # what = "all"
 # domain = "release"
 # summary = "Interactive workspace release orchestration"
-# description = "Runs the canonical _rel target (release workflow)."
+# description = "Runs the canonical release run handler."
 # example = "make ship WHAT=all APPLY=Y"
-# target = "_rel"
+# target = "_builtin_release_run"
 # mutates = true
-# aliases = ["rel"]
+# aliases = []
 # params = [
 #   { name = "APPLY", help = "Must be Y to mutate workspace/release", required = true, default = "N", choices = ["Y", "N"] },
 #   { name = "RELEASE_PHASE", help = "Release phase selector", required = false, default = "all", choices = ["all", "validate", "version", "build", "publish"] },

@@ -1,5 +1,23 @@
 # Ecosystem Coordination — FLEXT, Cosmos applications, and external platforms
 
+<!-- TOC START -->
+- [Projects and owners](#projects-and-owners)
+- [Dependency law](#dependency-law)
+- [End-to-end coordination flow](#end-to-end-coordination-flow)
+- [Per-project responsibilities](#per-project-responsibilities)
+  - [`dcdoc` (cosmos-docgen)](#dcdoc-cosmos-docgen)
+  - [DataOP](#dataop)
+  - [DcBackup](#dcbackup)
+  - [`flext-cli`](#flext-cli)
+  - [`flext-infra`](#flext-infra)
+  - [`flext-core`](#flext-core)
+- [External platforms](#external-platforms)
+- Open libraries and possible new `flext-*` (gated)
+- [Project standardization (ADR-010)](#project-standardization-adr-010)
+- Extraction gate for any new `flext-*`
+- [Coordination Beads](#coordination-beads)
+<!-- TOC END -->
+
 This document is the consultable coordination reference for the whole Cosmos
 ecosystem from the FLEXT workspace. It is governed by
 [ADR-009](adr/009-ecosystem-coordination-and-library-evaluation.md) and must

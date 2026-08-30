@@ -12,7 +12,7 @@
     - [5. Data Quality](#5-data-quality)
     - [6. Data Governance](#6-data-governance)
   - [🎯 FLEXT Data Architecture Overview](#-flext-data-architecture-overview)
-  - [🏗️ Key Data Architecture Principles](#️-key-data-architecture-principles)
+  - 🏗️ Key Data Architecture Principles
     - [1. Data as a Product](#1-data-as-a-product)
     - [2. Event-Driven Data Architecture](#2-event-driven-data-architecture)
     - [3. Data Integration Patterns](#3-data-integration-patterns)
@@ -28,7 +28,7 @@
     - [2. ELT (Extract, Load, Transform)](#2-elt-extract-load-transform)
     - [3. Stream Processing](#3-stream-processing)
     - [4. Event-Driven Processing](#4-event-driven-processing)
-  - [🗄️ Data Storage Strategies](#️-data-storage-strategies)
+  - 🗄️ Data Storage Strategies
     - [1. PostgreSQL (Primary Database)](#1-postgresql-primary-database)
     - [2. Redis (Cache and Sessions)](#2-redis-cache-and-sessions)
     - [3. File Storage (LDIF and Configuration)](#3-file-storage-ldif-and-configuration)

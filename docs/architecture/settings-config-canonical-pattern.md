@@ -1,5 +1,15 @@
 # Canonical Settings & Config Pattern (ADR-005 companion guide)
 
+<!-- TOC START -->
++ [1. Law (non-negotiable)](#1-law-non-negotiable)
++ [2. Minimal base surface (flext-core)](#2-minimal-base-surface-flext-core)
++ 3. Canonical project SETTINGS module — `<project>/settings.py`
++ 4. Canonical project CONFIG module — `<project>/_config.py`
++ [5. Root export (`<project>/**init**.py`)](#5-root-export-projectinitpy)
++ [6. Forbidden (remove on sight)](#6-forbidden-remove-on-sight)
++ [7. Propagation checklist (per project)](#7-propagation-checklist-per-project)
+<!-- TOC END -->
+
 **Status**: supporting guide | **Scope**: every FLEXT project (`flext-*`, integrations, `ai-hub`)
 **SSOT**: [ADR-005](adr/005-config-settings-constants-templates-schemas-ssot.md) defines the
 canonical configuration decision. This guide explains its settings/config usage

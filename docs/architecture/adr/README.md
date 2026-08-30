@@ -1,5 +1,9 @@
 # ADR Index
 
+<!-- TOC START -->
+- [Published ADRs](#published-adrs)
+<!-- TOC END -->
+
 <!-- mro-wkii.17.7 (agent: codex) — keep ADR pointers aligned with the accepted conform architecture. -->
 
 This directory contains the accepted Architecture Decision Records that are currently published in the root FLEXT

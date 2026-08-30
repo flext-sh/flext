@@ -1,5 +1,12 @@
 # Version Policy
 
+<!-- TOC START -->
+- [Workspace cycle](#workspace-cycle)
+- [Package releases](#package-releases)
+- [Compatibility contract](#compatibility-contract)
+- [Development status](#development-status)
+<!-- TOC END -->
+
 **How FLEXT versions its workspace and packages.**
 
 ## Workspace cycle

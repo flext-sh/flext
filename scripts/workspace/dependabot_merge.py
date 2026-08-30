@@ -280,7 +280,10 @@ def process_repo(
         return 0, 0, 0, 0
 
     # Sort ascending so older PRs merge first, reducing lock-file conflicts.
-    prs.sort(key=lambda p: int(p["number"]))
+    def pr_number(pr: dict[str, int | str]) -> int:
+        return int(pr["number"])
+
+    prs.sort(key=pr_number)
 
     merged = skipped = failed = closed = 0
     for pr in prs:

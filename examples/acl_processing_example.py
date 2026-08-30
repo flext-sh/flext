@@ -132,12 +132,13 @@ class AclProcessingExample:
         for attr_name in acl_attrs:
             if attr_name in attributes:
                 acl_values = attributes.get(attr_name)
+                values_list: Sequence[str]
                 if isinstance(acl_values, str):
                     values_list = [acl_values]
                 elif isinstance(acl_values, Sequence) and not isinstance(
                     acl_values, (str, bytes, bytearray)
                 ):
-                    values_list = acl_values
+                    values_list = [str(value) for value in acl_values]
                 else:
                     continue
                 for i, acl_value in enumerate(values_list):

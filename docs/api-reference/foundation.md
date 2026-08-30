@@ -1,5 +1,10 @@
 # Foundation
 
+<!-- TOC START -->
+- [What it provides](#what-it-provides)
+- [Boundary rules](#boundary-rules)
+<!-- TOC END -->
+
 **The `flext-core` foundation layer: what every FLEXT package builds on.**
 
 `flext-core` is the runtime-minimal root of the dependency chain

@@ -1,5 +1,17 @@
 # Using flext-core
 
+<!-- TOC START -->
+- [Aliases](#aliases)
+- [Result flow](#result-flow)
+- [Settings](#settings)
+- [Container](#container)
+- [Logging](#logging)
+- [Service runtime](#service-runtime)
+- [Good practices](#good-practices)
+- [Bad practices](#bad-practices)
+- [Related](#related)
+<!-- TOC END -->
+
 `flext_core` is the base package for result flow, settings, container wiring, logging, and service runtime.
 
 ## Aliases
@@ -7,7 +19,7 @@
 Import canonical aliases from the package root:
 
 ```python
-from flext_core import c, d, e, h, m, p, r, s, t, u, x
+
 ```
 
 | Alias | Purpose |
@@ -107,10 +119,8 @@ runtime = s(settings=settings)
 
 ## Bad practices
 
-```python notest
-from flext_core._models.base import SomeModel  # bypass facade
-from flext_core.result import ok, fail  # bypass r alias
-from flext_core import s as settings  # wrong: s is service/runtime
+```python
+
 ```
 
 ## Related

@@ -48,7 +48,11 @@
     "**/.bin": true,
     "**/.tools": true,
     "**/.archive": true,
-    "**/.bkp": true
+    "**/.bkp": true,
+    "**/.test-tmp": true,
+    "**/.testmondata": true,
+    "**/.testmondata-wal": true,
+    "**/.testmondata-shm": true
   },
   "files.watcherExclude": {
     "**/__pycache__/**": true,
@@ -96,7 +100,11 @@
     "**/.bin/**": true,
     "**/.tools/**": true,
     "**/.archive/**": true,
-    "**/.bkp/**": true
+    "**/.bkp/**": true,
+    "**/.test-tmp/**": true,
+    "**/.testmondata/**": true,
+    "**/.testmondata-wal/**": true,
+    "**/.testmondata-shm/**": true
   },
   "git.autoRepositoryDetection": "subFolders",
   "git.detectSubmodules": true,
@@ -213,7 +221,11 @@
     "**/.bin": true,
     "**/.tools": true,
     "**/.archive": true,
-    "**/.bkp": true
+    "**/.bkp": true,
+    "**/.test-tmp": true,
+    "**/.testmondata": true,
+    "**/.testmondata-wal": true,
+    "**/.testmondata-shm": true
   },
   "shellcheck.useWorkspaceRootAsCwd": true,
   "terminal.integrated.env.linux": {
@@ -236,37 +248,6 @@
   },
   "python-envs.workspaceSearchPaths": [
     "./.venv",
-    "./*/.venv",
-    "./flext-api/.venv",
-    "./flext-auth/.venv",
-    "./flext-cli/.venv",
-    "./flext-core/.venv",
-    "./flext-db-oracle/.venv",
-    "./flext-dbt-ldap/.venv",
-    "./flext-dbt-ldif/.venv",
-    "./flext-dbt-oracle/.venv",
-    "./flext-dbt-oracle-wms/.venv",
-    "./flext-grpc/.venv",
-    "./flext-infra/.venv",
-    "./flext-ldap/.venv",
-    "./flext-ldif/.venv",
-    "./flext-meltano/.venv",
-    "./flext-observability/.venv",
-    "./flext-oracle-oic/.venv",
-    "./flext-oracle-wms/.venv",
-    "./flext-plugin/.venv",
-    "./flext-quality/.venv",
-    "./flext-tap-ldap/.venv",
-    "./flext-tap-ldif/.venv",
-    "./flext-tap-oracle/.venv",
-    "./flext-tap-oracle-oic/.venv",
-    "./flext-tap-oracle-wms/.venv",
-    "./flext-target-ldap/.venv",
-    "./flext-target-ldif/.venv",
-    "./flext-target-oracle/.venv",
-    "./flext-target-oracle-oic/.venv",
-    "./flext-target-oracle-wms/.venv",
-    "./flext-tests/.venv",
-    "./flext-web/.venv"
+    "./*/.venv"
   ]
 }

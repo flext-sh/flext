@@ -101,12 +101,16 @@ change between Pydantic minor releases to allow for improvements in both perform
 
 !!! note
 
-    We reserve the right to tweak the internal `smart` matching algorithm in future versions of Pydantic. If you rely on very specific
-    matching behavior, it's recommended to use `union_mode='left_to_right'` or [discriminated unions](#discriminated-unions).
+```text
+We reserve the right to tweak the internal `smart` matching algorithm in future versions of Pydantic. If you rely on very specific
+matching behavior, it's recommended to use `union_mode='left_to_right'` or [discriminated unions](#discriminated-unions).
+```
 
 ??? info "Smart Mode Algorithm"
 
-    The smart mode algorithm uses two metrics to determine the best match for the input:
+```text
+The smart mode algorithm uses two metrics to determine the best match for the input:
+```
 
     1. The number of valid fields set (relevant for models, dataclasses, and typed dicts)
     2. The exactness of the match (relevant for all types)
@@ -265,13 +269,17 @@ When you're designing callable discriminators, remember that you might have to a
 for both `dict` and model type inputs. This pattern is similar to that of `mode='before'` validators,
 where you have to anticipate various forms of input.
 
-    But wait! You ask, I only anticipate passing in `dict` types, why do I need to account for models?
-    Pydantic uses callable discriminators for serialization as well, at which point the input to your callable is
-    very likely to be a model instance.
+```text
+But wait! You ask, I only anticipate passing in `dict` types, why do I need to account for models?
+Pydantic uses callable discriminators for serialization as well, at which point the input to your callable is
+very likely to be a model instance.
+```
 
-    In the following examples, you'll see that the callable discriminators are designed to handle both `dict` and model inputs.
-    If you don't follow this practice, it's likely that you'll, in the best case, get warnings during serialization,
-    and in the worst case, get runtime errors during validation.
+```text
+In the following examples, you'll see that the callable discriminators are designed to handle both `dict` and model inputs.
+If you don't follow this practice, it's likely that you'll, in the best case, get warnings during serialization,
+and in the worst case, get runtime errors during validation.
+```
 
 ```python
 from typing import Annotated, Any, Literal, Union
@@ -411,8 +419,10 @@ the `Union` and `discriminator` information. See the next example for more detai
 !!! warning
 Discriminated unions cannot be used with only a single variant, such as `Union[Cat]`.
 
-    Python changes `Union[T]` into `T` at interpretation time, so it is not possible for `pydantic` to
-    distinguish fields of `Union[T]` from `T`.
+```text
+Python changes `Union[T]` into `T` at interpretation time, so it is not possible for `pydantic` to
+distinguish fields of `Union[T]` from `T`.
+```
 
 ### Nested Discriminated Unions
 
@@ -480,7 +490,9 @@ except ValidationError as e:
 If you want to validate data against a union, and solely a union, you can use pydantic's
 [`TypeAdapter`](../concepts/type_adapter.md) construct instead of inheriting from the standard `BaseModel`.
 
-    In the context of the previous example, we have the following:
+```text
+In the context of the previous example, we have the following:
+```
 
     ```python {lint="skip" test="skip"}
     type_adapter = TypeAdapter(Pet)

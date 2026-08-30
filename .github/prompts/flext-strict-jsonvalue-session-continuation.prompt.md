@@ -10,20 +10,11 @@ You are continuing an in-progress FLEXT simplification/refactoring session. Do n
 Mandatory load order:
 
 1. [AGENTS.md](../../AGENTS.md)
-2. [FLEXT Context Routing](../../.agents/skills/flext-context-routing/SKILL.md)
-3. Path-relevant `rules-*` skill for the touched files
-4. [FLEXT Agent Strict Rules](../../.agents/skills/flext-agent-strict-rules/SKILL.md)
-5. [FLEXT MRO Namespace Rules](../../.agents/skills/flext-mro-namespace-rules/SKILL.md)
-6. [FLEXT Import Rules](../../.agents/skills/flext-import-rules/SKILL.md)
-7. [Pydantic v2 Governance](../../.agents/skills/pydantic-v2-governance/SKILL.md)
-8. [Pydantic v2 Patterns](../../.agents/skills/pydantic-v2-patterns/SKILL.md)
-9. [FLEXT Strict Typing](../../.agents/skills/flext-strict-typing/SKILL.md)
-10. [FLEXT Patterns](../../.agents/skills/flext-patterns/SKILL.md)
-11. [Global Inviolable Rules](/home/marlonsc/.agents/skills/inviolable-rules/SKILL.md)
-12. [Global Make Check](/home/marlonsc/.agents/skills/make-check/SKILL.md)
-13. [Global Verification Loop](/home/marlonsc/.agents/skills/verification-loop/SKILL.md)
-<!-- Why: cutover to exact global generic skills after the local flext-inviolable-rules removal (mro-1o6t.1.1) -->
-14. [Testing Patterns](../../.agents/skills/testing-patterns/SKILL.md) when tests are touched
+2. [FLEXT Development](../../.agents/skills/flext-development/SKILL.md)
+3. Path-relevant projected skills for the touched files
+4. [Python Development](../../.agents/skills/python-development/SKILL.md)
+5. [Data Modeling Analysis](../../.agents/skills/data-modeling-analysis/SKILL.md) when typed model boundaries are touched
+6. [TDD Workflow](../../.agents/skills/tdd-workflow/SKILL.md) when tests are touched
 
 Session recovery protocol:
 
@@ -45,7 +36,7 @@ Primary priorities in strict order:
 7. Prefer `Sequence` and `Mapping` in parameters. Only use mutable concrete forms when mutation is part of the actual public contract.
 8. Remove local JSON carriers, ad-hoc recursive aliases, raw `dict[str, Any]`, and helper families such as `as_dict`, `as_list`, `as_map`, `to_dict`, `normalize_*`, and trivial `ensure_*` wrappers when canonical validation can absorb the work.
 9. Remove `cast`, `Any`, bare `object`, `model_rebuild()`, direct consumer-side `pydantic` imports, and compatibility shims.
-10. Preserve canonical aliases and organic MRO namespaces: `c`, `m`, `p`, `t`, `u`, `r`, `e`, `h`, `s`, `d`, `x`.
+10. Preserve canonical aliases and organic FLEXT namespaces: `c`, `m`, `p`, `t`, `u`, `r`, `e`, `h`, `s`, `d`, `x`.
 
 Implementation rules:
 

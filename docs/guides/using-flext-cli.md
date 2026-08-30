@@ -1,11 +1,22 @@
 # Using flext-cli
 
+<!-- TOC START -->
+- [Aliases](#aliases)
+- [Purpose](#purpose)
+- [Settings](#settings)
+- [Model-driven command](#model-driven-command)
+- [Testing a command](#testing-a-command)
+- [Good practices](#good-practices)
+- [Bad practices](#bad-practices)
+- [Related](#related)
+<!-- TOC END -->
+
 `flext_cli` provides a unified Typer abstraction for model-driven CLI applications.
 
 ## Aliases
 
 ```python
-from flext_cli import c, m, p, r, s, t, u
+
 ```
 
 `flext_cli` reexports `d`, `e`, `h`, `r`, `x` from `flext_core`.
@@ -33,7 +44,7 @@ from flext_cli import c, m, p, r, s, t, u
 Import the existing settings class; do not redefine it:
 
 ```python
-from flext_cli.settings import FlextCliSettings
+
 ```
 
 If you need a project-specific subclass, extend `FlextSettings` (or `FlextCliSettings`) with `m.SettingsConfigDict`:
@@ -99,10 +110,7 @@ assert result.exit_code == 0
 
 ## Bad practices
 
-```python notest
-import typer
-
-
+```python
 def main(name: str):  # ad-hoc command, no model
     u.Cli.print(f"Hello, {name}")
 ```

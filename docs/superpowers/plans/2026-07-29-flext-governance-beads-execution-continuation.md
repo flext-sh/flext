@@ -644,7 +644,8 @@ result: eight stale direct documentation/prompt references identified
 Ast-grep:
 
 ```text
-command: rtk ast-grep scan --config flext-infra/src/flext_infra/codemod/sgconfig.yml --rule flext-infra/src/flext_infra/codemod/rules/hardcoded-ssot-literal.yml .agents .github AGENTS.md
+command: rtk ast-grep scan --config flext-infra/src/flext_infra/codemod/sgconfig.yml --rule
+flext-infra/src/flext_infra/codemod/rules/hardcoded-ssot-literal.yml .agents .github AGENTS.md
 cwd: /home/marlonsc/flext/.worktrees/flext-0.12.0-dev
 exit: 0
 result: no structural hardcoded-SSOT finding in the changed instruction surfaces
