@@ -96,7 +96,7 @@ deletes more code/dependencies than it adds.
 
 ## References
 
-- Cosmos ADR-020 (`bd-bhg1`)
+- Cosmos ADR-020 (`dcdoc-bhg1`)
 - DataOP ADR-001 (`data-organization-pipeline-4dt`)
 - DcBackup ADR-001 (`datacosmos-backup-o6w`)
 - [ADR-003 — Manifest-owned topology](003-workspace-tooling-hub-distribution.md)
