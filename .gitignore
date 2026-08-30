@@ -40,6 +40,7 @@ scripts/maintenance/
 .beads/*
 !.beads/config.yaml
 !.beads/metadata.json
+!.beads/identity.toml
 
 # Python configuration
 !pyproject.toml
@@ -318,6 +319,7 @@ legado/
 
 # Beads ledger identity (workspace and standalone; see mro-9wv8)
 !.beads/metadata.json
+!.beads/identity.toml
 
 # codegen module-standardizer reject artifacts (ADR-005 §9)
 *.tpl.rej
