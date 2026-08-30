@@ -7,6 +7,9 @@ description: Apply the FLEXT-only architecture, workspace, generation, import, a
 
 ## Composition
 
+Architecture decisions are recorded under `docs/architecture/adr/`; the
+ADR records there are the durable rationale this law enforces.
+
 This repository is the sole owner of the skill named `flext-law`. AI Hub
 projects it but does not author it. Generic conduct, lane safety, evidence,
 Make-command selection, and completion gates remain owned by:
