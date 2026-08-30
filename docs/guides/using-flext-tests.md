@@ -1,5 +1,16 @@
 # Using flext-tests
 
+<!-- TOC START -->
+- [Aliases](#aliases)
+- [Essential fixtures](#essential-fixtures)
+- [Resetting singletons manually](#resetting-singletons-manually)
+- [Testing result flows](#testing-result-flows)
+- [Good practices](#good-practices)
+- [Make/codegen boundary](#makecodegen-boundary)
+- [Bad practices](#bad-practices)
+- [Related](#related)
+<!-- TOC END -->
+
 <!-- mro-wkii.17.7 (agent: codex) — keep test-toolkit guidance separate from Make/codegen ownership. -->
 
 `flext_tests` is the shared test toolkit. It provides fixtures, matchers, file helpers, and a test runtime that binds
@@ -8,7 +19,7 @@ the canonical aliases.
 ## Aliases
 
 ```python
-from flext_tests import c, e, m, p, r, s, t, u
+
 ```
 
 `flext_tests` reexports `d`, `e`, `h`, `r`, `x` from `flext_infra` and exposes domain helpers (`tk`, `td`, `tf`, `tv`,
@@ -71,9 +82,6 @@ FlextContainer.reset_for_testing()
 Use the `r` alias instead of importing from `returns` directly:
 
 ```python
-from flext_core import r
-
-
 def test_safe_divide() -> None:
     result = safe_divide(10, 2)
     assert result.success
@@ -110,12 +118,11 @@ the canonical decision.
 
 ## Bad practices
 
-```python notest
+```python
 # Mutating global singleton without resetting
 FlextSettings.fetch_global().debug = True
 
 # Importing returns directly instead of using the r alias
-from returns.result import Success
 ```
 
 ## Related

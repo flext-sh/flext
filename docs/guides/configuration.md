@@ -1,5 +1,14 @@
 # Configuration
 
+<!-- TOC START -->
+- [Source of Truth Order](#source-of-truth-order)
+- [Root Policy File](#root-policy-file)
+- [Project Metadata](#project-metadata)
+- [`tool.flext.docs`](#toolflextdocs)
+- [Docs Generation Contract](#docs-generation-contract)
+- [Validation](#validation)
+<!-- TOC END -->
+
 The docs pipeline should read as much as possible from `pyproject.toml`. Root JSON policy exists only for values that
 cannot be inferred from project metadata.
 

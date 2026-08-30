@@ -1,5 +1,58 @@
 # Prompt: Migração Profunda de flext_tests - Análise e Correção Completa
 
+<!-- TOC START -->
+- [Objetivo](#objetivo)
+- [Escopo](#escopo)
+  - [Projetos a Analisar](#projetos-a-analisar)
+  - Diretórios a Verificar
+  - [Arquivos a Verificar](#arquivos-a-verificar)
+- Métodos Deprecados e Migrações Obrigatórias
+  - 1. tm (TestsFlextMatchers) - Métodos Deprecados
+  - 2. tt (TestsFlextFactories) - Métodos Deprecados
+  - 3. tf (TestsFlextFiles) - Métodos Deprecados
+  - 4. tv (TestsFlextValidator) - Verificar Uso Correto
+  - 5. tb (TestsFlextBuilders) - Verificar Uso Correto
+- Padrões a Identificar e Corrigir
+  - [1. Imports Incorretos](#1-imports-incorretos)
+  - 2. Uso de Métodos Privados ou Internos
+  - [3. Uso de Classes Aninhadas Deprecadas](#3-uso-de-classes-aninhadas-deprecadas)
+  - 4. Parâmetros Legacy/Deprecados
+  - 5. Uso de Métodos Não Documentados
+- Processo de Análise e Correção
+  - Fase 1: Identificação Completa
+  - Fase 2: Análise Contextual
+  - Fase 3: Correção Sistemática
+  - Fase 4: Validação
+- Checklist de Verificação
+  - [Para cada projeto](#para-cada-projeto)
+- Exceções e Casos Especiais
+  - [1. Testes de Deprecation Warnings](#1-testes-de-deprecation-warnings)
+  - 2. Código de Compatibilidade
+  - 3. Métodos Internos Legítimos
+- Documentação de Progresso
+- [Resultado Esperado](#resultado-esperado)
+- Comandos Úteis
+  - [Buscar usos deprecados em um projeto](#buscar-usos-deprecados-em-um-projeto)
+  - [Executar testes de um projeto](#executar-testes-de-um-projeto)
+  - [Verificar warnings](#verificar-warnings)
+- Estrutura e Organização de Testes
+  - [Regras Fundamentais de Estrutura](#regras-fundamentais-de-estrutura)
+- Checklist de Estrutura e Organização
+  - [Para cada projeto](#para-cada-projeto)
+- Processo de Reorganização
+  - Fase 1: Identificação e Análise
+  - Fase 2: Consolidação
+  - Fase 3: Reorganização de Testes
+  - Fase 4: Automação
+  - [Fase 5: Limpeza](#fase-5-limpeza)
+- Comandos Úteis de Reorganização
+  - [Buscar estrutura atual](#buscar-estrutura-atual)
+  - [Reorganizar testes](#reorganizar-testes)
+  - Verificar marcações
+  - [Verificar nomenclatura](#verificar-nomenclatura)
+- [Notas Finais](#notas-finais)
+<!-- TOC END -->
+
 ## Objetivo
 
 Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os projetos** do ecossistema FLEXT para
@@ -51,7 +104,7 @@ identificar e corrigir **TODOS os usos de funções de `flext_tests` que estão 
 
 **tm.method():**
 
-```python notest
+```python
 # ❌ ANTES
 tm.method(api, "connect")
 
@@ -62,7 +115,7 @@ tm.that(callable(getattr(api, "connect", None)), eq=True)
 
 **tm.dict\_():**
 
-```python notest
+```python
 # ❌ ANTES
 tm.dict_(data, has_key="name", length=5)
 
@@ -72,7 +125,7 @@ tm.that(data, keys=["name"], length=5)
 
 **tm.list\_():**
 
-```python notest
+```python
 # ❌ ANTES
 tm.list_(items, contains="item", length=3)
 
@@ -121,7 +174,7 @@ tm.that(items, has="item", length=3)
 
 **tf.create_file_set():**
 
-```python notest
+```python
 # ❌ ANTES
 files = tf.create_file_set({"file1.txt": "content1", "file2.txt": "content2"})
 
@@ -133,7 +186,7 @@ with tf.files({"file1.txt": "content1", "file2.txt": "content2"}) as files:
 
 **tf.get_file_info():**
 
-```python notest
+```python
 # ❌ ANTES
 info = tf.get_file_info(path)
 
@@ -165,7 +218,7 @@ info = info_result.unwrap()
 
 ### 1. Imports Incorretos
 
-```python notest
+```python
 # ❌ ERRADO
 from flext_tests import TestsFlextMatchers
 
@@ -177,7 +230,7 @@ from flext_tests import tm
 
 ### 2. Uso de Métodos Privados ou Internos
 
-```python notest
+```python
 # ❌ ERRADO - Métodos que começam com _
 tm._internal_method()
 tt._private_factory()
@@ -189,7 +242,7 @@ tt.model(...)
 
 ### 3. Uso de Classes Aninhadas Deprecadas
 
-```python notest
+```python
 # ❌ ERRADO
 tb.Tests.Result.ok(value)
 tb.Tests.Model.user(...)
@@ -205,7 +258,7 @@ tt.model("user", ...)
 
 Alguns métodos podem aceitar parâmetros legacy que devem ser migrados:
 
-```python notest
+```python
 # ❌ ERRADO - Parâmetros legacy
 tm.that(data, contains="key")  # Se 'contains' for legacy para dict
 tm.that(items, contains="item")  # Se 'contains' for legacy para list

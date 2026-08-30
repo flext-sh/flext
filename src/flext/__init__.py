@@ -76,6 +76,26 @@ _PUBLIC_EXPORTS: tuple[str, ...] = (
     "x",
 )
 
-__all__: tuple[str, ...] = tuple(_PUBLIC_EXPORTS)
+__all__: tuple[str, ...] = (
+    "FlextRootConstants",
+    "FlextRootDev",
+    "FlextRootDocs",
+    "FlextRootModels",
+    "FlextRootProtocols",
+    "FlextRootTypes",
+    "FlextRootUtilities",
+    "FlextRootWorkspace",
+    "c",
+    "d",
+    "e",
+    "h",
+    "m",
+    "p",
+    "r",
+    "s",
+    "t",
+    "u",
+    "x",
+)
 
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)

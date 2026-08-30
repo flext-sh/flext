@@ -4,9 +4,9 @@
 # what = "rel"
 # domain = "release"
 # summary = "Interactive workspace release orchestration"
-# description = "Runs the canonical _rel target."
+# description = "Runs the canonical release run handler."
 # example = "make ship WHAT=rel APPLY=Y"
-# target = "_rel"
+# target = "_builtin_release_run"
 # mutates = true
 # aliases = []
 # params = [

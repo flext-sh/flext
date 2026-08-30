@@ -1,5 +1,16 @@
 # Onboarding (Collection Rules / regras de coletas)
 
+<!-- TOC START -->
+- [1. Read Governance First](#1-read-governance-first)
+- [2. Identify Project Slot Ownership](#2-identify-project-slot-ownership)
+- [3. Bootstrap Tooling](#3-bootstrap-tooling)
+- [4. Confirm Zero-Debt Baseline](#4-confirm-zero-debt-baseline)
+- [5. Load Skills Relevant to the Change Scope](#5-load-skills-relevant-to-the-change-scope)
+- [6. Fundamental Packages](#6-fundamental-packages)
+- [7. Per-Project Collection Rules](#7-per-project-collection-rules)
+- [8. Cross-References](#8-cross-references)
+<!-- TOC END -->
+
 Canonical pre-work to enter ANY FLEXT project. Per AGENTS.md §9 Pre-requisites + the auto-generated per-project
 Collection Rules in each `<project>/docs/index.md`.
 

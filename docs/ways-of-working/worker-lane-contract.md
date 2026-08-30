@@ -1,5 +1,20 @@
 # FLEXT Worker Lane Contract
 
+<!-- TOC START -->
+- [Canonical authorities](#canonical-authorities)
+- [1. One lane, one bead, one worktree](#1-one-lane-one-bead-one-worktree)
+- [2. Gates only through root Make verbs](#2-gates-only-through-root-make-verbs)
+- [3. Cooperative git](#3-cooperative-git)
+- [4. Beads evidence only](#4-beads-evidence-only)
+- [5. Definition of done](#5-definition-of-done)
+- [6. Coordination protocol](#6-coordination-protocol)
+- [7. Anti-patterns that burned us](#7-anti-patterns-that-burned-us)
+- [8. Three-boundary validation contract](#8-three-boundary-validation-contract)
+  - [8.1 Final worker lane](#81-final-worker-lane)
+  - [8.2 Updated worker lane before merge](#82-updated-worker-lane-before-merge)
+  - [8.3 Original target after integration](#83-original-target-after-integration)
+<!-- TOC END -->
+
 Every light worker owns exactly one bead in one branch and one dedicated worktree.
 Read the canonical authorities first; this file only adds lane discipline.
 
@@ -7,14 +22,13 @@ Read the canonical authorities first; this file only adds lane discipline.
 
 - Project law and routed skills: [`AGENTS.md`][agents-md]
 - Governance router: [`GOVERNANCE.md`][governance-md]
-- Local skills: [`flext-law`][flext-law], [`flext-inviolable-rules`][flext-inviolable-rules]
+- Local skills: [`flext-law`][flext-law], `inviolable-rules`
 - Universal skills: `~/.agents/skills/make-check/SKILL.md`, `~/.agents/skills/verification-loop/SKILL.md`
 - Config/settings SSOT: [ADR-005][adr-005]
 
 [agents-md]: ../../AGENTS.md
 [governance-md]: ../GOVERNANCE.md
 [flext-law]: ../../.agents/skills/flext-law/SKILL.md
-[flext-inviolable-rules]: ../../.agents/skills/flext-inviolable-rules/SKILL.md
 [adr-005]: ../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md
 
 ## 1. One lane, one bead, one worktree

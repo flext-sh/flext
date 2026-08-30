@@ -1,5 +1,22 @@
 # ADR-002: v0.13.0 Platform Baseline
 
+<!-- TOC START -->
+- [Status](#status)
+- [Context](#context)
+- [Decision](#decision)
+  - [Public Class Naming](#public-class-naming)
+  - [Dependency Injection](#dependency-injection)
+  - [Extension Storage](#extension-storage)
+  - [Public Runtime Surface](#public-runtime-surface)
+  - [Workspace Taxonomy](#workspace-taxonomy)
+- [Consequences](#consequences)
+  - [Positive Consequences](#positive-consequences)
+  - [Negative Consequences](#negative-consequences)
+- [Alternatives Considered](#alternatives-considered)
+- [Implementation Notes](#implementation-notes)
+- [References](#references)
+<!-- TOC END -->
+
 ## Status
 
 Accepted

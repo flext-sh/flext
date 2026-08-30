@@ -1,5 +1,14 @@
 # Development
 
+<!-- TOC START -->
+- [Baseline Workflow](#baseline-workflow)
+- [Daily Sequence](#daily-sequence)
+- [Workspace Structure](#workspace-structure)
+- [Documentation Workflow](#documentation-workflow)
+- [Rules That Matter Here](#rules-that-matter-here)
+- [Related Guides](#related-guides)
+<!-- TOC END -->
+
 The root development workflow is governed by `AGENTS.md`. Treat this guide as the operational summary, not as a parallel
 policy source.
 

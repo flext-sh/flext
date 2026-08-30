@@ -256,8 +256,8 @@ def test_clean_without_apply_stays_dry_run(capsys: pytest.CaptureFixture[str]) -
         ("clean", "all", "_clean_default", True, ()),
         ("coordination", "all", "_coordination", False, ()),
         ("status", "all", "_status", False, ()),
-        ("ship", "all", "_rel", True, ()),
-        ("ship", "rel", "_rel", True, ()),
+        ("ship", "all", "_builtin_release_run", True, ()),
+        ("ship", "rel", "_builtin_release_run", True, ()),
         ("ship", "pr", "_pr", True, ()),
         (
             "ship",

@@ -1,5 +1,15 @@
 # ADR-007 — Performance optimization of worktree transactions and mutating CLI commands
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. Transaction wrapper stages run in parallel when independent](#1-transaction-wrapper-stages-run-in-parallel-when-independent)
+  - [2. Large machine-readable output bypasses Rich styling](#2-large-machine-readable-output-bypasses-rich-styling)
+  - [3. Future optimizations must be evidence-driven and non-breaking](#3-future-optimizations-must-be-evidence-driven-and-non-breaking)
+  - [4. No optimization may bypass gates or suppress diagnostics](#4-no-optimization-may-bypass-gates-or-suppress-diagnostics)
+  - [5. Generated-artifact linting is a single batched stage, not per template](#5-generated-artifact-linting-is-a-single-batched-stage-not-per-template)
+- [Consequences](#consequences)
+<!-- TOC END -->
 - **Status:** Accepted
 - **Date:** 2026-07-17
 - **Scope:** `flext-infra` worktree transaction executor, `flext-cli` output

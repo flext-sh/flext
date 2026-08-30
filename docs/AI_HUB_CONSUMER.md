@@ -1,5 +1,11 @@
 # ai-hub as a FLEXT Provider Consumer
 
+<!-- TOC START -->
+- [Ownership](#ownership)
+- [Boundary Contract](#boundary-contract)
+- [Drift Discipline](#drift-discipline)
+<!-- TOC END -->
+
 This document records the integration boundary only. It is not a second FLEXT
 law or an ai-hub architecture specification.
 

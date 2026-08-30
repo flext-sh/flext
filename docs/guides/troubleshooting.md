@@ -1,5 +1,17 @@
 # Troubleshooting
 
+<!-- TOC START -->
+- [Quick Checks](#quick-checks)
+- [Common Docs Failures](#common-docs-failures)
+  - [MkDocs strict build fails](#mkdocs-strict-build-fails)
+  - [Generated API docs are wrong](#generated-api-docs-are-wrong)
+  - [Root docs mention non-FLEXT projects](#root-docs-mention-non-flext-projects)
+  - [Audit flags stale architecture symbols](#audit-flags-stale-architecture-symbols)
+- [Common Metadata Problems](#common-metadata-problems)
+- [When to Edit JSON Policy](#when-to-edit-json-policy)
+- [Related Guides](#related-guides)
+<!-- TOC END -->
+
 Use this page for workspace-level diagnostics. If the failure is project-specific, continue in that project’s local docs
 and tests.
 

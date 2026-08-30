@@ -8,8 +8,10 @@ Validation code should not raise the [`ValidationError`][pydantic_core.Validatio
 but rather raise a [`ValueError`][] or a [`AssertionError`][] (or subclass thereof) which will
 be caught and used to populate the final [`ValidationError`][pydantic_core.ValidationError].
 
-    For more details, refer to the [dedicated section](../concepts/validators.md#raising-validation-errors)
-    of the validators documentation.
+```text
+For more details, refer to the [dedicated section](../concepts/validators.md#raising-validation-errors)
+of the validators documentation.
+```
 
 That [`ValidationError`][pydantic_core.ValidationError] will contain information about all the errors and how they
 happened.

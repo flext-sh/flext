@@ -1,5 +1,18 @@
 # ADR-010 — Unified project standardization (Make, scripts, tests, structure) via flext-infra codegen and flext-tests
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. Single standardization surface (SSOT)](#1-single-standardization-surface-ssot)
+  - [2. Common verb surface for every project](#2-common-verb-surface-for-every-project)
+  - [3. Canonical structure, facades, and naming (measured, then enforced)](#3-canonical-structure-facades-and-naming-measured-then-enforced)
+  - [3a. Namespaced runtime directories via `settings`](#3a-namespaced-runtime-directories-via-settings)
+  - [4. Three ordered phases (same strategy as ADR-020/008/009)](#4-three-ordered-phases-same-strategy-as-adr-020008009)
+  - [5. Applicability to independent and external projects](#5-applicability-to-independent-and-external-projects)
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
 - **Status:** Accepted (planning) — targets the `0.20.0-dev` line
 - **Date:** 2026-07-18
 - **Target line:** FLEXT `0.20.0-dev` (early development and planning). This is a

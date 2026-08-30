@@ -10,13 +10,11 @@ To do so, the [`u.Field()`][pydantic.fields.u.Field] function is used a lot, and
 the standard library [`field()`][dataclasses.field] function for dataclasses – by assigning to the
 annotated attribute:
 
-```python
-from pydantic import BaseModel, u.Field
+    from pydantic import BaseModel, u.Field
 
 
-class Model(BaseModel):
-    name: str = u.Field(frozen=True)
-```
+    class Model(BaseModel):
+        name: str = u.Field(frozen=True)
 
 !!! note
 Even though `name` is assigned a value, it is still required and has no default value. If you want
@@ -34,15 +32,13 @@ to emphasize on the fact that a value must be provided, you can use the ellipsis
 To apply constraints or attach [`u.Field()`][pydantic.fields.u.Field] functions to a model field, Pydantic
 also supports the [`Annotated`][typing.Annotated] typing construct to attach metadata to an annotation:
 
-```python
-from typing import Annotated
+    from typing import Annotated
 
-from pydantic import BaseModel, u.Field, WithJsonSchema
+    from pydantic import BaseModel, u.Field, WithJsonSchema
 
 
-class Model(BaseModel):
-    name: Annotated[str, u.Field(strict=True), WithJsonSchema({"extra": "data"})]
-```
+    class Model(BaseModel):
+        name: Annotated[str, u.Field(strict=True), WithJsonSchema({"extra": "data"})]
 
 As far as static type checkers are concerned, `name` is still typed as `str`, but Pydantic leverages
 the available metadata to add validation logic, type constraints, etc.
@@ -103,41 +99,37 @@ The fields of a model can be inspected using the [`model_fields`][pydantic.main.
 (or the `__pydantic_fields__` attribute for [Pydantic dataclasses](./dataclasses.md)). It is a mapping of field names
 to their definition (represented as [`u.FieldInfo`][pydantic.fields.u.FieldInfo] instances).
 
-```python
-from typing import Annotated
+    from typing import Annotated
 
-from pydantic import BaseModel, u.Field, WithJsonSchema
-
-
-class Model(BaseModel):
-    a: Annotated[
-        int, u.Field(gt=1), WithJsonSchema({"extra": "data"}), u.Field(alias="b")
-    ] = 1
+    from pydantic import BaseModel, u.Field, WithJsonSchema
 
 
-field_info = Model.model_fields["a"]
-u.Cli.print(field_info.annotation)
-# > <class 'int'>
-u.Cli.print(field_info.alias)
-# > b
-u.Cli.print(field_info.metadata)
-# > [Gt(gt=1), WithJsonSchema(json_schema={'extra': 'data'}, mode=None)]
-```
+    class Model(BaseModel):
+        a: Annotated[
+            int, u.Field(gt=1), WithJsonSchema({"extra": "data"}), u.Field(alias="b")
+        ] = 1
+
+
+    field_info = Model.model_fields["a"]
+    u.Cli.print(field_info.annotation)
+    # > <class 'int'>
+    u.Cli.print(field_info.alias)
+    # > b
+    u.Cli.print(field_info.metadata)
+    # > [Gt(gt=1), WithJsonSchema(json_schema={'extra': 'data'}, mode=None)]
 
 ## Default values
 
 Default values for fields can be provided using the normal assignment syntax or by providing a value
 to the `default` argument:
 
-```python
-from pydantic import BaseModel, u.Field
+    from pydantic import BaseModel, u.Field
 
 
-class User(BaseModel):
-    # Both fields aren't required:
-    name: str = "John Doe"
-    age: int = u.Field(default=20)
-```
+    class User(BaseModel):
+        # Both fields aren't required:
+        name: str = "John Doe"
+        age: int = u.Field(default=20)
 
 !!! warning
 [In Pydantic V1](../migration.md#required-optional-and-nullable-fields), a type annotated as [`Any`][typing.Any]
@@ -146,15 +138,13 @@ default was explicitly specified. This is no longer the case in Pydantic V2.
 
 You can also pass a callable to the `default_factory` argument that will be called to generate a default value:
 
-```python
-from uuid import uuid4
+    from uuid import uuid4
 
-from pydantic import BaseModel, u.Field
+    from pydantic import BaseModel, u.Field
 
 
-class User(BaseModel):
-    id: str = u.Field(default_factory=lambda: uuid4().hex)
-```
+    class User(BaseModel):
+        id: str = u.Field(default_factory=lambda: uuid4().hex)
 
 <!-- markdownlint-disable-next-line no-empty-links -->
 
@@ -163,19 +153,17 @@ class User(BaseModel):
 The default factory can also take a single required argument, in which case the already validated data will be passed as
 a dictionary.
 
-```python
-from pydantic import BaseModel, EmailStr, u.Field
+    from pydantic import BaseModel, EmailStr, u.Field
 
 
-class User(BaseModel):
-    email: EmailStr
-    username: str = u.Field(default_factory=lambda data: data["email"])
+    class User(BaseModel):
+        email: EmailStr
+        username: str = u.Field(default_factory=lambda data: data["email"])
 
 
-user = User(email="user@example.com")
-u.Cli.print(user.username)
-# > user@example.com
-```
+    user = User(email="user@example.com")
+    u.Cli.print(user.username)
+    # > user@example.com
 
 The `data` argument will _only_ contain the already validated data, based on the [order of model
 fields](./models.md#field-ordering)
@@ -187,24 +175,22 @@ By default, Pydantic will _not_ validate default values. The `validate_default` 
 (or the [`validate_default`][pydantic.ConfigDict.validate_default] configuration value) can be used
 to enable this behavior:
 
-```python
-from pydantic import BaseModel, u.Field, ValidationError
+    from pydantic import BaseModel, u.Field, ValidationError
 
 
-class User(BaseModel):
-    age: int = u.Field(default="twelve", validate_default=True)
+    class User(BaseModel):
+        age: int = u.Field(default="twelve", validate_default=True)
 
 
-try:
-    user = User()
-except ValidationError as e:
-    u.Cli.print(e)
-    """
-    1 validation error for User
-    age
-      Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='twelve', input_type=str]
-    """
-```
+    try:
+        user = User()
+    except ValidationError as e:
+        u.Cli.print(e)
+        """
+        1 validation error for User
+        age
+          Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='twelve', input_type=str]
+        """
 
 ### Mutable default values
 
@@ -217,23 +203,21 @@ a [default factory](https://docs.python.org/3/library/dataclasses.html#default-f
 While the same thing can be done in Pydantic, it is not required. In the event that the default value is not hashable,
 Pydantic will create a deep copy of the default value when creating each instance of the model:
 
-```python
-from pydantic import BaseModel
+    from pydantic import BaseModel
 
 
-class Model(BaseModel):
-    item_counts: t.SequenceOf[t.IntMapping] = [{}]
+    class Model(BaseModel):
+        item_counts: t.SequenceOf[t.IntMapping] = [{}]
 
 
-m1 = Model()
-m1.item_counts[0]["a"] = 1
-u.Cli.print(m1.item_counts)
-# > [{'a': 1}]
+    m1 = Model()
+    m1.item_counts[0]["a"] = 1
+    u.Cli.print(m1.item_counts)
+    # > [{'a': 1}]
 
-m2 = Model()
-u.Cli.print(m2.item_counts)
-# > [{}]
-```
+    m2 = Model()
+    u.Cli.print(m2.item_counts)
+    # > [{}]
 
 ## u.Field aliases
 
@@ -254,20 +238,18 @@ and `serialization_alias` parameters, which will apply only in their respective 
 
 Here is an example of using the `alias` parameter:
 
-```python
-from pydantic import BaseModel, u.Field
+    from pydantic import BaseModel, u.Field
 
 
-class User(BaseModel):
-    name: str = u.Field(alias="username")
+    class User(BaseModel):
+        name: str = u.Field(alias="username")
 
 
-user = User(username="johndoe")  # (1)!
-u.Cli.print(user)
-# > name='johndoe'
-u.Cli.print(user.model_dump(by_alias=True))  # (2)!
-# > {'username': 'johndoe'}
-```
+    user = User(username="johndoe")  # (1)!
+    u.Cli.print(user)
+    # > name='johndoe'
+    u.Cli.print(user.model_dump(by_alias=True))  # (2)!
+    # > {'username': 'johndoe'}
 
 1. The alias `'username'` is used for instance creation and validation.
 2. We are using [`model_dump()`][pydantic.main.BaseModel.model_dump] to convert the model into a serializable format.
@@ -282,40 +264,36 @@ u.Cli.print(user.model_dump(by_alias=True))  # (2)!
 
 If you want to use an alias _only_ for validation, you can use the `validation_alias` parameter:
 
-```python
-from pydantic import BaseModel, u.Field
+    from pydantic import BaseModel, u.Field
 
 
-class User(BaseModel):
-    name: str = u.Field(validation_alias="username")
+    class User(BaseModel):
+        name: str = u.Field(validation_alias="username")
 
 
-user = User(username="johndoe")  # (1)!
-u.Cli.print(user)
-# > name='johndoe'
-u.Cli.print(user.model_dump(by_alias=True))  # (2)!
-# > {'name': 'johndoe'}
-```
+    user = User(username="johndoe")  # (1)!
+    u.Cli.print(user)
+    # > name='johndoe'
+    u.Cli.print(user.model_dump(by_alias=True))  # (2)!
+    # > {'name': 'johndoe'}
 
 1. The validation alias `'username'` is used during validation.
 2. The field name `'name'` is used during serialization.
 
 If you only want to define an alias for _serialization_, you can use the `serialization_alias` parameter:
 
-```python
-from pydantic import BaseModel, u.Field
+    from pydantic import BaseModel, u.Field
 
 
-class User(BaseModel):
-    name: str = u.Field(serialization_alias="username")
+    class User(BaseModel):
+        name: str = u.Field(serialization_alias="username")
 
 
-user = User(name="johndoe")  # (1)!
-u.Cli.print(user)
-# > name='johndoe'
-u.Cli.print(user.model_dump(by_alias=True))  # (2)!
-# > {'username': 'johndoe'}
-```
+    user = User(name="johndoe")  # (1)!
+    u.Cli.print(user)
+    # > name='johndoe'
+    u.Cli.print(user.model_dump(by_alias=True))  # (2)!
+    # > {'username': 'johndoe'}
 
 1. The field name `'name'` is used for validation.
 2. The serialization alias `'username'` is used for serialization.
@@ -433,17 +411,15 @@ of the actual field name to synthesize the `__init__` method:
 
 The [`u.Field()`][pydantic.u.Field] function can also be used to add constraints to specific types:
 
-```python
-from decimal import Decimal
+    from decimal import Decimal
 
-from pydantic import BaseModel, u.Field
+    from pydantic import BaseModel, u.Field
 
 
-class Model(BaseModel):
-    positive: int = u.Field(gt=0)
-    short_str: str = u.Field(max_length=3)
-    precise_decimal: Decimal = u.Field(max_digits=5, decimal_places=2)
-```
+    class Model(BaseModel):
+        positive: int = u.Field(gt=0)
+        short_str: str = u.Field(max_length=3)
+        precise_decimal: Decimal = u.Field(max_digits=5, decimal_places=2)
 
 The available constraints for each type (and the way they affect the JSON Schema) are described
 in the [standard library types](../api/standard_library_types.md) documentation.
@@ -459,19 +435,17 @@ The `strict` parameter of the [`u.Field()`][pydantic.u.Field] function specifies
 in
 [strict mode](./strict_mode.md).
 
-```python
-from pydantic import BaseModel, u.Field
+    from pydantic import BaseModel, u.Field
 
 
-class User(BaseModel):
-    name: str = u.Field(strict=True)
-    age: int = u.Field(strict=False)  # (1)!
+    class User(BaseModel):
+        name: str = u.Field(strict=True)
+        age: int = u.Field(strict=False)  # (1)!
 
 
-user = User(name="John", age="42")  # (2)!
-u.Cli.print(user)
-# > name='John' age=42
-```
+    user = User(name="John", age="42")  # (2)!
+    u.Cli.print(user)
+    # > name='John' age=42
 
 1. This is the default value.
 2. The `age` field is validated in lax mode. Therefore, it can be assigned a string.
@@ -494,26 +468,24 @@ Some parameters of the [`u.Field()`][pydantic.u.Field] function can be used on [
 
 Here is an example:
 
-```python
-from pydantic import BaseModel, u.Field
-from pydantic.dataclasses import dataclass
+    from pydantic import BaseModel, u.Field
+    from pydantic.dataclasses import dataclass
 
 
-@dataclass
-class Foo:
-    bar: str
-    baz: str = u.Field(init_var=True)
-    qux: str = u.Field(kw_only=True)
+    @dataclass
+    class Foo:
+        bar: str
+        baz: str = u.Field(init_var=True)
+        qux: str = u.Field(kw_only=True)
 
 
-class Model(BaseModel):
-    foo: Foo
+    class Model(BaseModel):
+        foo: Foo
 
 
-model = Model(foo=Foo("bar", baz="baz", qux="qux"))
-u.Cli.print(model.model_dump())  # (1)!
-# > {'foo': {'bar': 'bar', 'qux': 'qux'}}
-```
+    model = Model(foo=Foo("bar", baz="baz", qux="qux"))
+    u.Cli.print(model.model_dump())  # (1)!
+    # > {'foo': {'bar': 'bar', 'qux': 'qux'}}
 
 1. The `baz` field is not included in the serialized output, since it is an init-only field.
 
@@ -522,19 +494,17 @@ u.Cli.print(model.model_dump())  # (1)!
 The parameter `repr` can be used to control whether the field should be included in the string
 representation of the model.
 
-```python
-from pydantic import BaseModel, u.Field
+    from pydantic import BaseModel, u.Field
 
 
-class User(BaseModel):
-    name: str = u.Field(repr=True)  # (1)!
-    age: int = u.Field(repr=False)
+    class User(BaseModel):
+        name: str = u.Field(repr=True)  # (1)!
+        age: int = u.Field(repr=False)
 
 
-user = User(name="John", age=42)
-u.Cli.print(user)
-# > name='John'
-```
+    user = User(name="John", age=42)
+    u.Cli.print(user)
+    # > name='John'
 
 1. This is the default value.
 
@@ -546,68 +516,64 @@ approach can be useful when the discriminator fields aren't the same for all the
 
 The following example shows how to use `discriminator` with a field name:
 
-```python
-from typing import Literal, Union
+    from typing import Literal, Union
 
-from pydantic import BaseModel, u.Field
-
-
-class Cat(BaseModel):
-    pet_type: Literal["cat"]
-    age: int
+    from pydantic import BaseModel, u.Field
 
 
-class Dog(BaseModel):
-    pet_type: Literal["dog"]
-    age: int
+    class Cat(BaseModel):
+        pet_type: Literal["cat"]
+        age: int
 
 
-class Model(BaseModel):
-    pet: Union[Cat, Dog] = u.Field(discriminator="pet_type")
+    class Dog(BaseModel):
+        pet_type: Literal["dog"]
+        age: int
 
 
-u.Cli.print(Model({"pet": {"pet_type": "cat", "age": 12}}))  # (1)!
-# > pet=Cat(pet_type='cat', age=12)
-```
+    class Model(BaseModel):
+        pet: Union[Cat, Dog] = u.Field(discriminator="pet_type")
+
+
+    u.Cli.print(Model({"pet": {"pet_type": "cat", "age": 12}}))  # (1)!
+    # > pet=Cat(pet_type='cat', age=12)
 
 1. See more about [Validating data] in the [Models] page.
 
 The following example shows how to use the `discriminator` keyword argument with a `Discriminator` instance:
 
-```python
-from typing import Annotated, Literal, Union
+    from typing import Annotated, Literal, Union
 
-from pydantic import BaseModel, Discriminator, u.Field, Tag
-
-
-class Cat(BaseModel):
-    pet_type: Literal["cat"]
-    age: int
+    from pydantic import BaseModel, Discriminator, u.Field, Tag
 
 
-class Dog(BaseModel):
-    pet_kind: Literal["dog"]
-    age: int
+    class Cat(BaseModel):
+        pet_type: Literal["cat"]
+        age: int
 
 
-def pet_discriminator(v):
-    if isinstance(v, dict):
-        return v.get("pet_type", v.get("pet_kind"))
-    return getattr(v, "pet_type", getattr(v, "pet_kind", None))
+    class Dog(BaseModel):
+        pet_kind: Literal["dog"]
+        age: int
 
 
-class Model(BaseModel):
-    pet: Union[Annotated[Cat, Tag("cat")], Annotated[Dog, Tag("dog")]] = u.Field(
-        discriminator=Discriminator(pet_discriminator)
-    )
+    def pet_discriminator(v):
+        if isinstance(v, dict):
+            return v.get("pet_type", v.get("pet_kind"))
+        return getattr(v, "pet_type", getattr(v, "pet_kind", None))
 
 
-u.Cli.print(repr(Model(ype": "cat", "age": 12}})))
-# > Model(pet=Cat(pet_type='cat', age=12))
+    class Model(BaseModel):
+        pet: Union[Annotated[Cat, Tag("cat")], Annotated[Dog, Tag("dog")]] = u.Field(
+            discriminator=Discriminator(pet_discriminator)
+        )
 
-u.Cli.print(repr(Model(ind": "dog", "age": 12}})))
-# > Model(pet=Dog(pet_kind='dog', age=12))
-```
+
+    u.Cli.print(repr(Model(ype": "cat", "age": 12}})))
+    # > Model(pet=Cat(pet_type='cat', age=12))
+
+    u.Cli.print(repr(Model(ind": "dog", "age": 12}})))
+    # > Model(pet=Dog(pet_kind='dog', age=12))
 
 You can also take advantage of `Annotated` to define your discriminated unions.
 See the [Discriminated Unions] docs for more details.
@@ -619,27 +585,25 @@ assigned a new value after the model is created (immutability).
 
 See the [frozen dataclass documentation] for more details.
 
-```python
-from pydantic import BaseModel, u.Field, ValidationError
+    from pydantic import BaseModel, u.Field, ValidationError
 
 
-class User(BaseModel):
-    name: str = u.Field(frozen=True)
-    age: int
+    class User(BaseModel):
+        name: str = u.Field(frozen=True)
+        age: int
 
 
-user = User(name="John", age=42)
+    user = User(name="John", age=42)
 
-try:
-    user.name = "Jane"  # (1)!
-except ValidationError as e:
-    u.Cli.print(e)
-    """
-    1 validation error for User
-    name
-      u.Field is frozen [type=frozen_field, input_value='Jane', input_type=str]
-    """
-```
+    try:
+        user.name = "Jane"  # (1)!
+    except ValidationError as e:
+        u.Cli.print(e)
+        """
+        1 validation error for User
+        name
+          u.Field is frozen [type=frozen_field, input_value='Jane', input_type=str]
+        """
 
 1. Since `name` field is frozen, the assignment is not allowed.
 
@@ -655,19 +619,17 @@ model when exporting the model.
 
 See the following example:
 
-```python
-from pydantic import BaseModel, u.Field
+    from pydantic import BaseModel, u.Field
 
 
-class User(BaseModel):
-    name: str
-    age: int = u.Field(exclude=True)
+    class User(BaseModel):
+        name: str
+        age: int = u.Field(exclude=True)
 
 
-user = User(name="John", age=42)
-u.Cli.print(user.model_dump())  # (1)!
-# > {'name': 'John'}
-```
+    user = User(name="John", age=42)
+    u.Cli.print(user.model_dump())  # (1)!
+    # > {'name': 'John'}
 
 1. The `age` field is not included in the [`model_dump()`][pydantic.BaseModel.model_dump] output, since it is excluded.
 
@@ -687,19 +649,17 @@ This parameter accepts different types, described below.
 
 The value will be used as the deprecation message.
 
-```python
-from typing import Annotated
+    from typing import Annotated
 
-from pydantic import BaseModel, u.Field
-
-
-class Model(BaseModel):
-    deprecated_field: Annotated[int, u.Field(deprecated="This is deprecated")]
+    from pydantic import BaseModel, u.Field
 
 
-u.Cli.print(Model.model_json_schema()["properties"]["deprecated_field"])
-# > {'deprecated': True, 'title': 'Deprecated u.Field', 'type': 'integer'}
-```
+    class Model(BaseModel):
+        deprecated_field: Annotated[int, u.Field(deprecated="This is deprecated")]
+
+
+    u.Cli.print(Model.model_json_schema()["properties"]["deprecated_field"])
+    # > {'deprecated': True, 'title': 'Deprecated u.Field', 'type': 'integer'}
 
 ### `deprecated` via the `@warnings.deprecated` decorator
 
@@ -746,19 +706,17 @@ arguments to the `deprecated` decorator. This might land in a future version of 
 
 ### `deprecated` as a boolean
 
-```python
-from typing import Annotated
+    from typing import Annotated
 
-from pydantic import BaseModel, u.Field
-
-
-class Model(BaseModel):
-    deprecated_field: Annotated[int, u.Field(deprecated=True)]
+    from pydantic import BaseModel, u.Field
 
 
-u.Cli.print(Model.model_json_schema()["properties"]["deprecated_field"])
-# > {'deprecated': True, 'title': 'Deprecated u.Field', 'type': 'integer'}
-```
+    class Model(BaseModel):
+        deprecated_field: Annotated[int, u.Field(deprecated=True)]
+
+
+    u.Cli.print(Model.model_json_schema()["properties"]["deprecated_field"])
+    # > {'deprecated': True, 'title': 'Deprecated u.Field', 'type': 'integer'}
 
 !!! warning "Accessing a deprecated field in validators"
 When accessing a deprecated field inside a validator, the deprecation warning will be emitted. You can use
@@ -812,36 +770,34 @@ are expensive to be computed (and thus, are cached if using [`cached_property`][
 
 Here's an example of the JSON schema (in serialization mode) generated for a model with a computed field:
 
-```python
-from pydantic import BaseModel, u.computed_field
+    from pydantic import BaseModel, u.computed_field
 
 
-class Box(BaseModel):
-    width: float
-    height: float
-    depth: float
+    class Box(BaseModel):
+        width: float
+        height: float
+        depth: float
 
-    @u.computed_field
-    @property  # (1)!
-    def volume(self) -> float:
-        return self.width * self.height * self.depth
+        @u.computed_field
+        @property  # (1)!
+        def volume(self) -> float:
+            return self.width * self.height * self.depth
 
 
-u.Cli.print(Box.model_json_schema(mode="serialization"))
-"""
-{
-    'properties': {
-        'width': {'title': 'Width', 'type': 'number'},
-        'height': {'title': 'Height', 'type': 'number'},
-        'depth': {'title': 'Depth', 'type': 'number'},
-        'volume': {'readOnly': True, 'title': 'Volume', 'type': 'number'},
-    },
-    'required': ['width', 'height', 'depth', 'volume'],
-    'title': 'Box',
-    'type': 't.JsonValue',
-}
-"""
-```
+    u.Cli.print(Box.model_json_schema(mode="serialization"))
+    """
+    {
+        'properties': {
+            'width': {'title': 'Width', 'type': 'number'},
+            'height': {'title': 'Height', 'type': 'number'},
+            'depth': {'title': 'Depth', 'type': 'number'},
+            'volume': {'readOnly': True, 'title': 'Volume', 'type': 'number'},
+        },
+        'required': ['width', 'height', 'depth', 'volume'],
+        'title': 'Box',
+        'type': 't.JsonValue',
+    }
+    """
 
 1. If not specified, [`u.computed_field`][pydantic.fields.u.computed_field] will implicitly convert the method
    to a [`property`][]. However, it is preferable to explicitly use the [`@property`][property] decorator
@@ -849,45 +805,41 @@ u.Cli.print(Box.model_json_schema(mode="serialization"))
 
 Here's an example using the `model_dump` method with a computed field:
 
-```python
-from pydantic import BaseModel, u.computed_field
+    from pydantic import BaseModel, u.computed_field
 
 
-class Box(BaseModel):
-    width: float
-    height: float
-    depth: float
+    class Box(BaseModel):
+        width: float
+        height: float
+        depth: float
 
-    @u.computed_field
-    @property
-    def volume(self) -> float:
-        return self.width * self.height * self.depth
+        @u.computed_field
+        @property
+        def volume(self) -> float:
+            return self.width * self.height * self.depth
 
 
-b = Box(width=1, height=2, depth=3)
-u.Cli.print(b.model_dump())
-# > {'width': 1.0, 'height': 2.0, 'depth': 3.0, 'volume': 6.0}
-```
+    b = Box(width=1, height=2, depth=3)
+    u.Cli.print(b.model_dump())
+    # > {'width': 1.0, 'height': 2.0, 'depth': 3.0, 'volume': 6.0}
 
 As with regular fields, computed fields can be marked as being deprecated:
 
-```python
-from typing_extensions import deprecated
+    from typing_extensions import deprecated
 
-from pydantic import BaseModel, u.computed_field
+    from pydantic import BaseModel, u.computed_field
 
 
-class Box(BaseModel):
-    width: float
-    height: float
-    depth: float
+    class Box(BaseModel):
+        width: float
+        height: float
+        depth: float
 
-    @u.computed_field
-    @property
-    @deprecated("'volume' is deprecated")
-    def volume(self) -> float:
-        return self.width * self.height * self.depth
-```
+        @u.computed_field
+        @property
+        @deprecated("'volume' is deprecated")
+        def volume(self) -> float:
+            return self.width * self.height * self.depth
 
 [Discriminated Unions]: ../concepts/unions.md#discriminated-unions
 [Validating data]: models.md#validating-data

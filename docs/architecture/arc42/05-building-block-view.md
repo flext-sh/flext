@@ -1,5 +1,14 @@
 # 5. Building Block View
 
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [5.1 Workspace Level](#51-workspace-level)
+- [5.2 Package Level](#52-package-level)
+- [5.3 Facade Level](#53-facade-level)
+  - [5.3.1 Thin Domain Facade](#531-thin-domain-facade)
+- [5.4 Operational Layer](#54-operational-layer)
+<!-- TOC END -->
+
 **Reviewed**: 2026-07-12 | **Scope**: Static structure of the FLEXT workspace
 
 This chapter describes the static decomposition of the FLEXT monorepo: the

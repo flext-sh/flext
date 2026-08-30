@@ -1,5 +1,19 @@
 # Comandos Make do FLEXT
 
+<!-- TOC START -->
+- Convenções
+- Verbos canônicos
+- Ações de `build` (`make build WHAT=<acao>`)
+- Ações de `check` (`make check WHAT=<acao>`)
+- Ações de `ship` (`make ship WHAT=<acao>`)
+- Ações de `val` (`make val WHAT=<acao>`)
+- [Seletores de escopo](#seletores-de-escopo)
+- Dry-run e mutação
+- [Exemplos do dia a dia](#exemplos-do-dia-a-dia)
+- [Descoberta](#descoberta)
+- Veja também
+<!-- TOC END -->
+
 Este guia é a referência canônica para a superfície de comando `make` do monorepo FLEXT. As regras aqui valem para o
 workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locais (`make check`, `make test`, etc.).
 

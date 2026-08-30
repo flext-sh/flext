@@ -1,5 +1,14 @@
 # FLEXT Governance Router
 
+<!-- TOC START -->
+- [Purpose](#purpose)
+- [Authority](#authority)
+- [Owner Routing](#owner-routing)
+- [Execution Contract](#execution-contract)
+- [Universal test contract (P0)](#universal-test-contract-p0)
+- [Baseline Commands](#baseline-commands)
+<!-- TOC END -->
+
 ## Purpose
 
 This file maps each change to its canonical owner. It does not restate

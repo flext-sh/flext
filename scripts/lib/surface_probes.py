@@ -39,9 +39,10 @@ class SurfaceProbeRunner:
                 raise CommandRegistry.Error(
                     commands_result.error or "registry lookup failed"
                 )
-            for command in sorted(
-                commands_result.value.values(), key=lambda item: item.what
-            ):
+            def command_what(command: m.Tests.MakeCommand) -> str:
+                return command.what
+
+            for command in sorted(commands_result.value.values(), key=command_what):
                 probes.extend(SurfaceProbeRunner.command_probes(command))
         probes.extend((
             m.Tests.MakeSurfaceProbe(

@@ -2,17 +2,12 @@
 
 from __future__ import annotations
 
-import importlib
-import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
+import libs
 from flext_tests import tm
 from tests.infra.constants import c
 from tests.infra.utilities import u
-
-if TYPE_CHECKING:
-    import pytest
 
 
 class TestVersioning:
@@ -76,19 +71,5 @@ version = "0.10.0-dev"
         )
         tm.that(mod.current_workspace_version(tmp_path), eq="0.10.0")
 
-    def test_libs_package_exports_versioning_helpers(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        root = Path(__file__).resolve().parents[3]
-        for relative_path in (
-            "src",
-            "flext-core/src",
-            "flext-cli/src",
-            "flext-tests/src",
-        ):
-            monkeypatch.syspath_prepend(str(root / relative_path))
-        importlib.invalidate_caches()
-        for module_name in ("libs", "libs.versioning"):
-            _ = sys.modules.pop(module_name, None)
-        libs = importlib.import_module("libs")
+    def test_libs_package_exports_versioning_helpers(self) -> None:
         tm.that(libs.parse_semver("1.2.3"), eq=(1, 2, 3))

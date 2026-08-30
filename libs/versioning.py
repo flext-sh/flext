@@ -2,18 +2,17 @@
 
 from __future__ import annotations
 
+import re
 import tomllib
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Final
 
 import tomlkit
 from tomlkit.items import Table
 
-from flext_core import c
-
 if TYPE_CHECKING:
     from pathlib import Path
 
-SEMVER_RE = c.PATTERN_SEMVER_RE
+SEMVER_RE: Final[re.Pattern[str]] = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
 
 
 def parse_semver(version: str) -> tuple[int, int, int]:
@@ -22,11 +21,7 @@ def parse_semver(version: str) -> tuple[int, int, int]:
     if not match:
         msg = f"invalid semver version: {version}"
         raise ValueError(msg)
-    return (
-        int(match.group("major")),
-        int(match.group("minor")),
-        int(match.group("patch")),
-    )
+    return (int(match.group(1)), int(match.group(2)), int(match.group(3)))
 
 
 def bump_version(current_version: str, bump: str) -> str:

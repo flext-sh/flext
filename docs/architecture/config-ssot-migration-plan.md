@@ -1,5 +1,16 @@
 # Make/codegen, configuration, and uv SSOT migration plan
 
+<!-- TOC START -->
+- [Delivery rules](#delivery-rules)
+- [Canonical ownership](#canonical-ownership)
+- Phase 1 — Consolidate the engine
+- Phase 2 — Generate the complete Make and uv contract
+- Phase 3 — Conform the FLEXT fleet
+- Phase 4 — Conform Cosmos
+- Phase 5 — Conform standalone repositories
+- Phase 6 — Fleet acceptance and deletion proof
+<!-- TOC END -->
+
 This plan implements [ADR-003](adr/003-workspace-tooling-hub-distribution.md),
 [ADR-004](adr/004-generic-make-framework-in-flext-tests.md), and
 [ADR-005](adr/005-config-settings-constants-templates-schemas-ssot.md) under
