@@ -16,6 +16,14 @@
 !.code-review-graph/
 !.claude/
 !.claude-plugin/
+!.codex/
+!.codex/**
+!.cursor/
+!.cursor/**
+!.gemini/
+!.gemini/**
+!.opencode/
+!.opencode/**
 !/config/
 !.claude/CLAUDE.md
 !.claude/settings.json
@@ -40,6 +48,7 @@ scripts/maintenance/
 .beads/*
 !.beads/config.yaml
 !.beads/metadata.json
+!.beads/identity.toml
 
 # Python configuration
 !pyproject.toml
@@ -63,6 +72,10 @@ scripts/maintenance/
 !Makefile
 !Makefile.flext-docker
 !*.mk
+!.mise.toml
+!mise.lock
+!bin/mise
+!bin/mise.cmd
 
 # Documentation
 !README.md
@@ -101,7 +114,13 @@ scripts/maintenance/
 !.claude-plugin/**
 
 # BLOCK: AI/Agent Local Data (NEVER track these)
-.claude/*
+.claude/local/
+.claude/history/
+.claude/todos/
+.claude/statsig/
+.claude/projects/
+.claude/shell-snapshots/
+.claude/settings.local.json.bak
 
 # WHITELIST: Agent skills owned by the workspace root
 !.agents/skills/
@@ -117,7 +136,6 @@ scripts/maintenance/
 **/.aider/
 
 # Other AI assistants
-.cursor/
 .copilot/
 .codeium/
 
@@ -318,6 +336,7 @@ legado/
 
 # Beads ledger identity (workspace and standalone; see mro-9wv8)
 !.beads/metadata.json
+!.beads/identity.toml
 
 # codegen module-standardizer reject artifacts (ADR-005 §9)
 *.tpl.rej
@@ -328,6 +347,10 @@ legado/
 .venv
 .venv/
 .bin/
+!/bin/
+/bin/*
+!/bin/mise
+!/bin/mise.cmd
 .tools/
 __pycache__/
 base.mk
