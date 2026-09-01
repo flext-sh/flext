@@ -86,34 +86,34 @@ backend = "github:marlon-costa-dc/gascity"
 specifiers = ["1.4.1-fc2"]
 
 [tools."github:marlon-costa-dc/gascity"."platforms.linux-arm64"]
-checksum = "sha256:ed08744bf0ecf88f659de9cfeba860b632eab34f4972a0ea3e6c02baad5d0fcc"
-url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gc_1.4.1-fc2_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538510265"
+checksum = "sha256:3f2e869b890ff1bea4d25f336645fa6edf096d34e5187ebbe9d7a2d276db0531"
+url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gascity_1.4.1-fc2_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538755507"
 
 [tools."github:marlon-costa-dc/gascity"."platforms.linux-arm64-musl"]
-checksum = "sha256:ed08744bf0ecf88f659de9cfeba860b632eab34f4972a0ea3e6c02baad5d0fcc"
-url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gc_1.4.1-fc2_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538510265"
+checksum = "sha256:3f2e869b890ff1bea4d25f336645fa6edf096d34e5187ebbe9d7a2d276db0531"
+url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gascity_1.4.1-fc2_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538755507"
 
 [tools."github:marlon-costa-dc/gascity"."platforms.linux-x64"]
-checksum = "sha256:72f5c76f01f9a3cff2494d94ba91de31db2d42a88c1ab881794a532dcac38816"
-url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gc_1.4.1-fc2_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538510269"
+checksum = "sha256:ac1fa5edbaf944c4c9e221d18f320b3513dd304f887b143014967406b762a6d9"
+url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gascity_1.4.1-fc2_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538755527"
 
 [tools."github:marlon-costa-dc/gascity"."platforms.linux-x64-musl"]
-checksum = "sha256:72f5c76f01f9a3cff2494d94ba91de31db2d42a88c1ab881794a532dcac38816"
-url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gc_1.4.1-fc2_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538510269"
+checksum = "sha256:ac1fa5edbaf944c4c9e221d18f320b3513dd304f887b143014967406b762a6d9"
+url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gascity_1.4.1-fc2_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538755527"
 
 [tools."github:marlon-costa-dc/gascity"."platforms.macos-arm64"]
-checksum = "sha256:bcc96fb371095b725103aaec8b1868d9c266556cb4a107ff832e13eb9620ac03"
-url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gc_1.4.1-fc2_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538510267"
+checksum = "sha256:17b91338e5c3ed7274786b17a6169d6301dda7b36656d5cb6b915afd0eea0b8b"
+url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gascity_1.4.1-fc2_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538755508"
 
 [tools."github:marlon-costa-dc/gascity"."platforms.macos-x64"]
-checksum = "sha256:9c5d384fbcd87f11bd75eaad880394809c0941cb146d5079ff414b232ef16394"
-url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gc_1.4.1-fc2_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538510262"
+checksum = "sha256:84f8dba0220b6381f26a1922a65e0e732e82524f390def16b027a6113207bdcb"
+url = "https://github.com/marlon-costa-dc/gascity/releases/download/v1.4.1-fc2/gascity_1.4.1-fc2_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/marlon-costa-dc/gascity/releases/assets/538755516"
 
 [[tools."github:qltysh/qlty"]]
 version = "0.642.0"
@@ -428,37 +428,30 @@ backend = "aqua:tamasfe/taplo"
 specifiers = ["0.10"]
 
 [tools.taplo."platforms.linux-arm64"]
-checksum = "sha256:033681d01eec8376c3fd38fa3703c79316f5e14bb013d859943b60a07bccdcc3"
 url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-linux-aarch64.gz"
 url_api = "https://api.github.com/repos/tamasfe/taplo/releases/assets/257322597"
 
 [tools.taplo."platforms.linux-arm64-musl"]
-checksum = "sha256:033681d01eec8376c3fd38fa3703c79316f5e14bb013d859943b60a07bccdcc3"
 url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-linux-aarch64.gz"
 url_api = "https://api.github.com/repos/tamasfe/taplo/releases/assets/257322597"
 
 [tools.taplo."platforms.linux-x64"]
-checksum = "sha256:8fe196b894ccf9072f98d4e1013a180306e17d244830b03986ee5e8eabeb6156"
 url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-linux-x86_64.gz"
 url_api = "https://api.github.com/repos/tamasfe/taplo/releases/assets/257322600"
 
 [tools.taplo."platforms.linux-x64-musl"]
-checksum = "sha256:8fe196b894ccf9072f98d4e1013a180306e17d244830b03986ee5e8eabeb6156"
 url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-linux-x86_64.gz"
 url_api = "https://api.github.com/repos/tamasfe/taplo/releases/assets/257322600"
 
 [tools.taplo."platforms.macos-arm64"]
-checksum = "sha256:713734314c3e71894b9e77513c5349835eefbd52908445a0d73b0c7dc469347d"
 url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-darwin-aarch64.gz"
 url_api = "https://api.github.com/repos/tamasfe/taplo/releases/assets/257323110"
 
 [tools.taplo."platforms.macos-x64"]
-checksum = "sha256:898122cde3a0b1cd1cbc2d52d3624f23338218c91b5ddb71518236a4c2c10ef2"
 url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-darwin-x86_64.gz"
 url_api = "https://api.github.com/repos/tamasfe/taplo/releases/assets/257323116"
 
 [tools.taplo."platforms.windows-x64"]
-checksum = "sha256:1615eed140039bd58e7089109883b1c434de5d6de8f64a993e6e8c80ca57bdf9"
 url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-windows-x86_64.zip"
 url_api = "https://api.github.com/repos/tamasfe/taplo/releases/assets/257323062"
 
