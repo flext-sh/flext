@@ -14,7 +14,8 @@ WORKSPACE_BASE ?= 0.12.0-dev
 .PHONY: done-check workspace-docs-audit full-check workspace-status \
         workspace-sync-base workspace-land-submodules dependabot-merge \
         workspace-merge-main workspace-main-sync workspace-dependabot-apply \
-        workspace-check-changed workspace-fix-changed hooks post-boot
+        workspace-check-changed workspace-fix-changed hooks post-boot \
+        duplication
 
 done-check: ## Real-user/green-green check, scoped to committed changes vs upstream
 	$(Q)base=$$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo origin/main); \
@@ -257,6 +258,14 @@ workspace-main-sync: ## Pull origin/main into $(WORKSPACE_BASE) to absorb releas
 workspace-dependabot-apply: ## dependabot-merge + merge result into main
 	$(Q)$(MAKE) --no-print-directory dependabot-merge && \
 	$(MAKE) --no-print-directory workspace-merge-main
+
+duplication: ## Run jscpd duplicate-code detector on FLEXT foundation packages
+	$(Q)if ! command -v npx >/dev/null 2>&1; then \
+		echo "ERROR: npx (Node.js) is required for jscpd duplication detection"; \
+		exit 1; \
+	fi; \
+	echo "==> duplication: running jscpd on flext-core, flext-cli, flext-infra, flext-tests"; \
+	npx jscpd --config .jscpd.json --reporters console 2>&1 || true
 
 # =============================================================================
 # ast-grep codemod library ([root]/codemod)

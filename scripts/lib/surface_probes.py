@@ -39,6 +39,7 @@ class SurfaceProbeRunner:
                 raise CommandRegistry.Error(
                     commands_result.error or "registry lookup failed"
                 )
+
             def command_what(command: m.Tests.MakeCommand) -> str:
                 return command.what
 
