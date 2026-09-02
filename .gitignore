@@ -72,6 +72,8 @@ scripts/maintenance/
 !Makefile
 !Makefile.flext-docker
 !*.mk
+!.jscpd.json
+!*.mk
 !.mise.toml
 !mise.lock
 !bin/mise
@@ -369,6 +371,8 @@ __pyrefly_virtual__/
 .omo/
 .pylance_cache/
 .pytest_cache/
+.test-tmp/
+.test-runtime/
 .testmondata
 .testmondata-wal
 .testmondata-shm

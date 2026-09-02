@@ -8,12 +8,7 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_core import d as d
-    from flext_core import e as e
-    from flext_core import h as h
-    from flext_core import r as r
-    from flext_core import s as s
-    from flext_core import x as x
+    from flext_core import d as d, e as e, h as h, r as r, s as s, x as x
 
     from .constants import FlextRootConstants as FlextRootConstants
 

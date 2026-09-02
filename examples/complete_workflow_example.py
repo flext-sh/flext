@@ -107,8 +107,7 @@ class CompleteWorkflowExample:
             default_factory=list, description="List of warnings encountered"
         )
         stage_metadata: t.JsonMapping = u.Field(
-            default_factory=_json_mapping,
-            description="Stage-specific metadata",
+            default_factory=_json_mapping, description="Stage-specific metadata"
         )
 
     class CompleteWorkflowResult(m.BaseModel):
@@ -146,9 +145,7 @@ class CompleteWorkflowExample:
         data: t.SequenceOf[CompleteWorkflowProcessingDict] = u.Field(
             default_factory=tuple
         )
-        workflow_settings: t.ScalarMapping = u.Field(
-            default_factory=_scalar_mapping
-        )
+        workflow_settings: t.ScalarMapping = u.Field(default_factory=_scalar_mapping)
 
         def execute(self) -> p.Result[CompleteWorkflowExample.WorkflowData]:
             """Execute complete workflow with automatic resource management."""
