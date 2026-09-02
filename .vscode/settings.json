@@ -52,7 +52,8 @@
     "**/.test-tmp": true,
     "**/.testmondata": true,
     "**/.testmondata-wal": true,
-    "**/.testmondata-shm": true
+    "**/.testmondata-shm": true,
+    "**/.test-runtime": true
   },
   "files.watcherExclude": {
     "**/__pycache__/**": true,
@@ -104,7 +105,8 @@
     "**/.test-tmp/**": true,
     "**/.testmondata/**": true,
     "**/.testmondata-wal/**": true,
-    "**/.testmondata-shm/**": true
+    "**/.testmondata-shm/**": true,
+    "**/.test-runtime/**": true
   },
   "git.autoRepositoryDetection": "subFolders",
   "git.detectSubmodules": true,
@@ -225,7 +227,8 @@
     "**/.test-tmp": true,
     "**/.testmondata": true,
     "**/.testmondata-wal": true,
-    "**/.testmondata-shm": true
+    "**/.testmondata-shm": true,
+    "**/.test-runtime": true
   },
   "shellcheck.useWorkspaceRootAsCwd": true,
   "terminal.integrated.env.linux": {
