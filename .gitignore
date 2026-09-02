@@ -73,6 +73,7 @@ scripts/maintenance/
 !Makefile.flext-docker
 !*.mk
 !.jscpd.json
+!*.mk
 !.mise.toml
 !mise.lock
 !bin/mise
