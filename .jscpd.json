@@ -1,8 +1,8 @@
 {
   "//": "jscpd configuration for FLEXT workspace. Detects code duplication across Python source trees.",
   "absolute": true,
-  "no-tips": true,
-  "no-colors": true, 
+  "noTips": true,
+  "colors": false,
   "mode": "strict",
   "ignore": [
     "**/__pycache__/**",
@@ -27,5 +27,5 @@
     "LICENSE.md"
   ],
   "reporters": ["console"],
-  "min-lines": 20
+  "minLines": 20
 }

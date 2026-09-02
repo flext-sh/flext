@@ -265,7 +265,7 @@ duplication: ## Run jscpd duplicate-code detector on FLEXT foundation packages
 		exit 1; \
 	fi; \
 	echo "==> duplication: running jscpd on flext-core, flext-cli, flext-infra, flext-tests"; \
-	npx jscpd --config .jscpd.json --reporters console flext-core/src flext-cli/src flext-infra/src flext-tests/src
+	npx --yes jscpd@4 --no-gitignore --config .jscpd.json --reporters console flext-core/src flext-cli/src flext-infra/src flext-tests/src
 
 # =============================================================================
 # ast-grep codemod library ([root]/codemod)
