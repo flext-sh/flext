@@ -1,5 +1,5 @@
 {
-  "//": "jscpd configuration for FLEXT workspace. Detects code duplication across Python source trees.",
+  "//": "jscpd configuration for FLEXT workspace. Detects code duplication across all Python/YAML source trees.",
   "absolute": true,
   "noTips": true,
   "colors": false,

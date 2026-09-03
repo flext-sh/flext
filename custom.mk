@@ -259,13 +259,18 @@ workspace-dependabot-apply: ## dependabot-merge + merge result into main
 	$(Q)$(MAKE) --no-print-directory dependabot-merge && \
 	$(MAKE) --no-print-directory workspace-merge-main
 
-duplication: ## Run jscpd duplicate-code detector on FLEXT foundation packages
+duplication: ## Run jscpd duplicate-code detector on all FLEXT workspace submodules
 	$(Q)if ! command -v npx >/dev/null 2>&1; then \
 		echo "ERROR: npx (Node.js) is required for jscpd duplication detection"; \
 		exit 1; \
 	fi; \
-	echo "==> duplication: running jscpd on flext-core, flext-cli, flext-infra, flext-tests"; \
-	npx --yes jscpd@4 --no-gitignore --config .jscpd.json --reporters console flext-core/src flext-cli/src flext-infra/src flext-tests/src
+	sc_paths=""; \
+	for sub in $(WORKSPACE_SUBPROJECTS); do \
+		if [ -d "$$sub/src" ]; then sc_paths="$$sc_paths $$sub/src"; fi; \
+	done; \
+	if [ -d "src" ]; then sc_paths="$$sc_paths src"; fi; \
+	echo "==> duplication: running jscpd on all workspace submodules"; \
+	npx --yes jscpd@4 --no-gitignore --config .jscpd.json --reporters console $$sc_paths
 
 # =============================================================================
 # ast-grep codemod library ([root]/codemod)
