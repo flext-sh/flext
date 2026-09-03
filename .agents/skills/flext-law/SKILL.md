@@ -14,9 +14,9 @@ This repository is the sole owner of the skill named `flext-law`. AI Hub
 projects it but does not author it. Generic conduct, lane safety, evidence,
 Make-command selection, and completion gates remain owned by:
 
-- `~/.agents/skills/inviolable-rules/SKILL.md`
-- `~/.agents/skills/make-check/SKILL.md`
-- `~/.agents/skills/verification-loop/SKILL.md`
+- `~/.agents/AGENTS.md`
+- `~/.agents/skills/agent-wide/personal/make-check/SKILL.md`
+- `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
 
 Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 

@@ -193,7 +193,7 @@ four non-competing layers:
 
 | Layer | Canonical owner | Permitted content |
 | --- | --- | --- |
-| Global | `~/.agents/UNIVERSAL_CORE.md` and global `inviolable-rules`, `make-check`, and `verification-loop` skills | universal conduct, execution safety, command selection, evidence, and completion |
+| Global | `~/.agents/AGENTS.md` and the global `flext-development`, `make-check`, and `verification-loop` skills | universal conduct, execution safety, command selection, evidence, and completion |
 | FLEXT | this root file and `.agents/skills/flext-law/SKILL.md` | FLEXT architecture, imports, MRO/lazy exports, workspace Make control plane, generation, and fleet boundaries |
 | Scope | the nearest member or standalone `AGENTS.md` | only narrower domain facts, public surfaces, and explicit exclusions |
 | Execution | the active Bead | current intent, ownership, dependencies, phase, evidence, and stop condition |
