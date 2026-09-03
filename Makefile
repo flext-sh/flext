@@ -48,10 +48,6 @@ APPLYING := $(if $(filter-out N,$(strip $(APPLY))),$(strip $(APPLY)))
 ARGS ?=
 CHECK_GATES ?=
 DEPENDENCY ?=
-# Y forces `deps upgrade` to refresh cached uv source metadata for DEPENDENCY
-# (--refresh-package <DEPENDENCY>), or for every package when DEPENDENCY is
-# empty (--refresh); any other non-N value is an error.
-DEPS_REFRESH ?= N
 FAIL_FAST ?= 0
 FILE ?=
 MATCH ?=
@@ -76,8 +72,7 @@ override PYTEST_ENFORCEMENT_PLUGIN := flext_tests_enforcement
 override PYTEST_PROGRESS_ARGS := --verbose
 override PYTEST_REPORT_ARGS := -ra --durations=25 --durations-min=0.001 --tb=short
 override PYTEST_DIAG_ARGS := -rA --durations=0 --tb=long --showlocals
-override PYTEST_PARALLEL_WORKERS := 16
-override PYTEST_PARALLEL_WORKER_MEMORY_GB := 2
+override PYTEST_PARALLEL_WORKERS := 2
 override PYTEST_PARALLEL_DISTRIBUTION := worksteal
 override PYTEST_PROFILE_SORT := cumulative
 override PYTEST_PROFILE_LIMIT := 50
@@ -92,9 +87,7 @@ override export FLEXT_PYTEST_REPORTS_RAW := $(value PYTEST_REPORTS_DIR)
 override export FLEXT_PYTEST_WHAT_RAW := $(value WHAT)
 override export FLEXT_PYTEST_VERBOSE_RAW := $(value VERBOSE)
 override export FLEXT_PYTEST_COV_RAW := $(value COV)
-override export FLEXT_PYTEST_PROFILE_RAW := $(value PROFILE)
 WHAT ?=
-PROFILE ?=
 # End SECTION: user overrides
 
 # === SECTION: derived paths (managed) ===
@@ -627,8 +620,6 @@ _builtin_help_usage:
 	@printf '  %-10s %s\n' 'WORKSPACE' 'target repository (default: current project)';
 	@printf '  %-10s %s\n' 'BEAD' 'tracker item bound to a checkpoint';
 	@printf '  %-10s %s\n' 'BASE' 'integration branch used by checkpoint';
-	@printf '  %-10s %s\n' 'DEPENDENCY' 'deps upgrade: one distribution name (default: every package)';
-	@printf '  %-10s %s\n' 'DEPS_REFRESH' 'Y refreshes uv source cache on deps upgrade';
 	@printf '\n%s\n' 'Custom hooks (custom.mk):';
 	@printf '  %s\n' 'Define pre-<verb>, post-<verb>, pre-<verb>-<what>, post-<verb>-<what>';
 	@printf '  %s\n' 'in custom.mk to wrap one declared handler.';
@@ -829,12 +820,8 @@ _builtin_deps_upgrade: _builtin_require_environment
 				printf 'ERROR: DEPENDENCY must be one normalized distribution name\n' >&2; \
 				exit 2 ;; \
 		esac; \
-	fi; \
-	case "$(strip $(DEPS_REFRESH))" in \
-		N|Y) ;; \
-		*) printf 'ERROR: DEPS_REFRESH must be Y when set\n' >&2; exit 2 ;; \
-	esac
-	$(call _run_for_selected_projects,$(if $(strip $(DEPENDENCY)),--upgrade-package "$(strip $(DEPENDENCY))",--upgrade)$(if $(filter Y,$(DEPS_REFRESH)),$(if $(strip $(DEPENDENCY)), --refresh-package "$(strip $(DEPENDENCY))", --refresh)))
+	fi
+	$(call _run_for_selected_projects,$(if $(strip $(DEPENDENCY)),--upgrade-package "$(strip $(DEPENDENCY))",--upgrade))
 	@set -eu; \
 	selected="$(strip $(SELECTED_PROJECTS))"; \
 	if [ -z "$$selected" ]; then selected="."; fi; \
@@ -1144,7 +1131,6 @@ endef
 
 _builtin_gen_check: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode check
-	@$(PROJECT_FLEXT_INFRA) codegen lazy-init --workspace "$(PROJECT_ROOT)" --check
 	$(call _generated_docs,--check)
 	$(call _mise_artifacts_check)
 
@@ -1157,7 +1143,6 @@ _builtin_gen_all:
 	$(call _require_apply)
 	@: "$${MISE_GITHUB_CREDENTIAL_COMMAND:?ERROR: make gen apply requires MISE_GITHUB_CREDENTIAL_COMMAND}"
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode apply
-	@$(PROJECT_FLEXT_INFRA) codegen lazy-init --workspace "$(PROJECT_ROOT)" --apply
 	$(call _generated_docs,--apply)
 	$(call _mise_launcher_apply)
 	$(call _mise_lock_apply)

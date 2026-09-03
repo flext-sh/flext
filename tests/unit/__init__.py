@@ -1,70 +1,41 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Tests.unit package."""
+"""Unit package."""
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
-from types import MappingProxyType
-
-from flext_core.lazy import build_lazy_import_map, install_lazy_exports
-
-if TYPE_CHECKING:
-    from . import libs as libs
-    from flext_tests import c, d, e, h, m, p, r, s, t, td, tf, tk, tm, tv, u, x
-
-    from .docker_quality_mock_tests import TestDockerQualityDockerfiles
-    from .release_packaging_tests import TestReleasePackaging
-__all__: tuple[str, ...] = (
-    "TestDockerQualityDockerfiles",
-    "TestReleasePackaging",
-    "c",
-    "d",
-    "e",
-    "h",
-    "libs",
-    "m",
-    "p",
-    "r",
-    "s",
-    "t",
-    "td",
-    "tf",
-    "tk",
-    "tm",
-    "tv",
-    "u",
-    "x",
+from flext_core.lazy import (
+    build_lazy_import_map,
+    install_lazy_exports,
+    merge_lazy_imports,
 )
 
-_LAZY_IMPORTS = MappingProxyType(
-    build_lazy_import_map(
-        MappingProxyType({
-            ".docker_quality_mock_tests": ("TestDockerQualityDockerfiles",),
-            ".libs": ("libs",),
-            ".release_packaging_tests": ("TestReleasePackaging",),
-            "flext_tests": (
-                "c",
-                "d",
-                "e",
-                "h",
-                "m",
-                "p",
-                "r",
-                "s",
-                "t",
-                "td",
-                "tf",
-                "tk",
-                "tm",
-                "tv",
-                "u",
-                "x",
-            ),
-        }),
-        alias_groups=MappingProxyType({}),
-        sort_keys=False,
-    )
+_LAZY_IMPORTS = merge_lazy_imports(
+    (".libs",),
+    build_lazy_import_map({
+        ".docker_quality_mock_tests": ("TestDockerQualityDockerfiles",),
+        ".libs.versioning_tests": ("TestVersioning",),
+    }),
+    exclude_names=(
+        "cleanup_submodule_namespace",
+        "install_lazy_exports",
+        "lazy_getattr",
+        "logger",
+        "merge_lazy_imports",
+        "output",
+        "output_reporting",
+        "pytest_addoption",
+        "pytest_collect_file",
+        "pytest_collection_modifyitems",
+        "pytest_configure",
+        "pytest_runtest_setup",
+        "pytest_runtest_teardown",
+        "pytest_sessionfinish",
+        "pytest_sessionstart",
+        "pytest_terminal_summary",
+        "pytest_warning_recorded",
+    ),
+    module_name=__name__,
 )
 
-install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)
+
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, publish_all=False)
