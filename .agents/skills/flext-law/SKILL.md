@@ -26,6 +26,17 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   conform, codegen, and policy; it is never a runtime dependency.
 - Facades compose in strict order `c -> t -> p -> m -> u`, with operational
   `r/e/x/h/d/s`. Reverse imports are `TYPE_CHECKING`-only.
+- The canonical responsibility map is: `c` constants, `t` type aliases, `p`
+  dependency protocols, `m` Pydantic v2 data models, and `u` pure utilities.
+  `settings` owns external inputs, `config` owns validated derivation, `base`
+  owns reusable foundations, `services` owns use cases, `api` is the sole
+  composition root, and `cli` is a thin transport adapter when the project
+  declares a CLI. Do not create competing long-name or alias layers.
+- Dependencies cross use-case boundaries through `p` protocols and are
+  provided explicitly by `api`. A service may not construct infrastructure,
+  read process-global configuration, or resolve a dependency by string,
+  reflection, service locator, hidden singleton, or module global. A container
+  owned by `flext-core` may wire the graph only at the composition root.
 - Each package has one thin `api.py` MRO facade and one simple generated root
   `__init__.py` with automatic lazy public exports. Custom import routers,
   eager alternatives, compatibility aliases, and duplicate facades are
@@ -37,6 +48,34 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 - Declaration layers are pure data. Behavior belongs in utilities, services,
   bases, facades, or CLI layers. Owned data crosses boundaries through typed
   Pydantic v2 models and project `t.*`/`p.*` contracts.
+
+## Runtime and language floor
+
+- Every first-party FLEXT source, test, example, script, template, and generated
+  surface targets the exact Python floor declared by the workspace toolchain;
+  the current FLEXT floor is Python 3.13 with Pydantic 2.
+- Use precise annotations and the strongest native language features available
+  at that floor. Downgrading syntax, importing compatibility typing layers, or
+  weakening an owned type to `Any`, `object`, an unparameterized collection, or
+  an unchecked mapping is forbidden.
+- Runtime-floor changes start at the workspace toolchain and dependency SSOT,
+  then update templates, generated config, static analyzers, tests, CI, build,
+  and deployment as one atomic migration. Consumers never select a lower floor.
+
+## Release, deployment, and activation
+
+- Development produces one immutable, typed candidate through the workspace
+  Make owner. Release identifies that candidate by version and digest; deploy
+  associates it with one declared environment and configuration projection;
+  activation atomically switches the runtime to that already-validated
+  candidate. These stages are distinct and may not rebuild one another's input.
+- `settings` reads deployment inputs, `config` validates and derives runtime
+  configuration, `services` execute use cases, `api` wires dependencies, and
+  `cli` only translates command input and propagates the first failure.
+- Staging validates the exact artifact with the shipped public surface before
+  activation. Runtime evidence must prove artifact digest, environment
+  association, configuration identity, process or endpoint health, and rollback
+  target. A successful build or test is not deployment evidence.
 
 ## Sources, generation, and commands
 
@@ -58,8 +97,12 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 - First-party FLEXT members and standalone repositories consume the same
   branch-matched law, Make control plane, and generated conventions.
 - Third-party forks and content-only repositories are not FLEXT members: do
-  not mutate, lint, generate, or manage them. Required interaction is declared
-  as typed metadata or a bounded `config/` overlay.
+  not impose FLEXT architecture, dependency injection, typing modernization,
+  language features, lint, generation, or package layout on them. Follow the
+  upstream architecture, style, runtime floor, toolchain, build, release, and
+  deployment protocol. Local governance is limited to typed provenance,
+  association, credentials, artifact identity, environment ownership, and
+  runtime verification metadata in a bounded `config/` overlay.
 - Workspace and standalone CI are generated once by `flext-infra conform`.
   Exceptions are configuration overlays, never duplicate pipelines or custom
   implementations.
