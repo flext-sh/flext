@@ -2,155 +2,105 @@
 
 <!-- TOC START -->
 - Convenções
-- Verbos canônicos
-- Ações de `build` (`make build WHAT=<acao>`)
-- Ações de `check` (`make check WHAT=<acao>`)
-- Ações de `ship` (`make ship WHAT=<acao>`)
-- Ações de `val` (`make val WHAT=<acao>`)
+- [Verbos canônicos](#verbos-canônicos)
+- Knobs declarados
+- [Custom hooks](#custom-hooks)
 - [Seletores de escopo](#seletores-de-escopo)
-- Dry-run e mutação
 - [Exemplos do dia a dia](#exemplos-do-dia-a-dia)
 - [Descoberta](#descoberta)
 - Veja também
 <!-- TOC END -->
 
-Este guia é a referência canônica para a superfície de comando `make` do monorepo FLEXT. As regras aqui valem para o
-workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locais (`make check`, `make test`, etc.).
+Este guia é a referência canônica para a superfície de comando `make` do workspace FLEXT. A fonte da verdade
+desta superfície é o próprio `make help`; este guia documenta o mesmo contrato em prosa. As regras valem para
+o workspace raiz; cada projeto `flext-*` possui seus próprios targets locais gerados pelo mesmo template.
 
 ## Convenções
 
 - **Poucos verbos, muitas ações**: o formato é `make <verbo> WHAT=<acao>`. Cada verbo agrupa um domínio.
-- **`all` é o padrão**: se `WHAT` for omitido, o comando executa a ação `all` daquele verbo.
-- **Projetos default = todos**: se `PROJECT` ou `PROJECTS` forem omitidos, o comando abrange todos os projetos do
-  workspace.
 - **Mutadores são dry-run por padrão**: comandos que alteram arquivos exigem `APPLY=Y` para executar de verdade.
-- **Ajuda embutida**: `make <verbo> WHAT=help` lista as ações disponíveis.
+- **Gates por escopo**: `PROJECT=<name>` restringe o gate a um membro; sem `PROJECT`, o verbo percorre o workspace.
+- **Ajuda embutida**: `make help` lista todos os verbos e knobs.
 
 ## Verbos canônicos
 
-| Verbo | Domínio | Resumo | Exemplo |
+Saída de `make help` (perfil workspace):
+
+| Verbo | Domínio | Ações (`WHAT=`) | Exemplo |
 | --- | --- | --- | --- |
-| `make boot` | workspace | Bootstrap de `.venv` + submódulos | `make boot APPLY=Y` |
-| `make build` | build | Build/regen padronizado | `make build WHAT=gen APPLY=Y` |
-| `make check` | quality | Quality gates | `make check` |
-| `make clean` | workspace | Limpeza de artefatos | `make clean APPLY=Y` |
-| `make coordination` | governance | Diagnósticos de coordenação Beads | `make coordination` |
-| `make docs` | documentation | Pipeline de documentação | `make docs DOCS_PHASE=validate` |
-| `make makefile` | meta | Mostra a superfície de comandos | `make makefile` |
-| `make ship` | release | Orquestração de release | `make ship WHAT=rel APPLY=Y` |
-| `make status` | governance | Status dos Beads | `make status` |
-| `make test` | quality | Testes pytest | `make test PROJECT=flext-infra MATCH=docs` |
-| `make val` | governance | Validação de gates | `make val` |
+| `help` | meta | `usage` | `make help` |
+| `setup` | ambiente | — | `make setup` |
+| `deps` | dependências | `check`, `lock`, `upgrade` | `make deps WHAT=upgrade DEPENDENCY=flext-infra APPLY=Y` |
+| `build` | build | `artifacts` | `make build WHAT=artifacts` |
+| `check` | quality | `all`, `lint`, `pyrefly`, `mypy`, `pyright`, `security`, `markdown`, `smells`, `direnv` | `make check WHAT=lint PROJECT=flext-infra` |
+| `test` | quality | `all`, `full`, `cache-status`, `cache-clear`, `cache-checkpoint` | `make test PROJECT=flext-infra` |
+| `fmt` | formatação | `check`, `all`, `apply` | `make fmt WHAT=apply APPLY=Y` |
+| `fix` | correção | `check`, `all`, `apply` | `make fix WHAT=apply APPLY=Y` |
+| `run` | runtime | `default` | `make run WHAT=default APPLY=Y` |
+| `status` | diagnósticos | `diagnostics` | `make status` |
+| `docs` | documentação | `all`, `generate`, `fix`, `audit`, `build`, `validate` | `make docs WHAT=validate` |
+| `clean` | limpeza | `status`, `generated` | `make clean WHAT=generated APPLY=Y` |
+| `release` | release | `status` | `make release WHAT=status` |
+| `gen` | geração | `check`, `all`, `apply`, `init` | `make gen WHAT=apply APPLY=Y` |
+| `mod` | modernização | `check`, `all`, `apply` | `make mod WHAT=all APPLY=Y` |
 
-## Ações de `build` (`make build WHAT=<acao>`)
+## Knobs declarados
 
-| Ação | Alias curto | Muta? | Descrição |
-| --- | --- | --- | --- |
-| `all` | — | sim | Build/package em todos os projetos selecionados |
-| `constraints` | — | sim | Reescreve constraints de dependências |
-| `docs` | — | sim | Roda o pipeline de docs |
-| `gen` | `make gen` | sim | Regenera arquivos padronizados de projeto |
-| `mod` | `make mod` | sim | Moderniza `pyproject.toml` |
-| `stubs` | `make stubs` | não | Validação da cadeia de stubs |
-| `sync` | `make sync` | sim | Sincroniza Makefiles a partir do `pyproject.toml` |
-| `up` | `make up` | sim | Upgrade de dependências do workspace |
-
-## Ações de `check` (`make check WHAT=<acao>`)
-
-| Ação | Alias curto | Descrição |
+| Knob | Verbo | Efeito |
 | --- | --- | --- |
-| `all` | `make lint` | Default rápido: `lint` + `pyrefly` |
-| `boundary` | `make boundary` | Boundary gate |
-| `cqrs` | `make cqrs` | CQRS compliance gate |
-| `docker_standardization` | `make docker_standardization` | Centralização de artefatos Docker |
-| `fmt` / `format` | `make fmt` / `make format` | Formatação (ruff + markdown) |
-| `go` | `make go` | Go quality gate |
-| `lint` | `make lint` | Lint + type gates |
-| `loc-cap` | `make loc-cap` | Loc-cap gate |
-| `markdown` | `make markdown` | Markdown quality gate |
-| `mypy` | `make mypy` | mypy gate |
-| `pol` | `make pol` | Typing policy gate |
-| `pyre` | `make pyre` | Pyrefly repository type check |
-| `pyrefly` | `make pyrefly` | Pyrefly scoped type check |
-| `pyright` | `make pyright` | Pyright gate |
-| `scan` | `make scan` | Security scan gates |
-| `silent-failure` | `make silent-failure` | Silent-failure gate |
-| `types` | `make types` | Typing supply chain |
+| `WORKSPACE` | geral | repositório alvo (default: projeto atual) |
+| `BEAD` | geral | item do tracker vinculado a um checkpoint |
+| `BASE` | geral | branch de integração usada pelo checkpoint |
+| `DEPENDENCY` | `deps upgrade` | um nome de distribuição (default: todos os pacotes) |
+| `DEPS_REFRESH` | `deps upgrade` | `Y` renova o cache de fontes uv |
+| `PROJECT` | gates | restringe o verbo a um membro declarado |
+| `APPLY=Y` | mutadores | executa a mutação (sem ele, dry-run) |
 
-## Ações de `ship` (`make ship WHAT=<acao>`)
+## Custom hooks
 
-| Ação | Alias curto | Muta? | Descrição |
-| --- | --- | --- | --- |
-| `all` / `rel` | `make rel` | sim | Release workflow |
-| `pr` | `make pr` | sim | Gerenciamento de PRs |
-| `push` | `make push` | sim | Push de branches/tags |
-| `save` | `make save` | sim | Commit de alterações |
-| `tag` | `make tag` | sim | Criação de tags |
+`custom.mk` estende a superfície sem duplicá-la:
 
-## Ações de `val` (`make val WHAT=<acao>`)
+- `pre-<verb>`, `post-<verb>`, `pre-<verb>-<what>`, `post-<verb>-<what>` envolvem um handler declarado.
+- `_custom_<verb>_<what>` define um novo `WHAT` para um verbo existente.
 
-| Ação | Alias curto | Descrição |
-| --- | --- | --- |
-| `all` | — | Roda `project` + `workspace` (padrão) |
-| `project` | `make project` | Validação ao nível de projeto |
-| `workspace` | `make workspace` | Validação ao nível de workspace |
-
-> O `VALIDATE_SCOPE` default é `all`, então `make val` já executa ambos os escopos.
+Definidos neste projeto: `post-boot`.
 
 ## Seletores de escopo
 
-Use `PROJECT` para um projeto, `PROJECTS` para vários, ou omita para todos:
+Use `PROJECT` para um projeto; omita para o workspace inteiro:
 
 ```bash
-make check PROJECT=flext-infra
-make test PROJECTS="flext-core flext-cli" MATCH=docs
-make build WHAT=gen APPLY=Y              # todos os projetos
-```
-
-Não use `PROJECT` e `PROJECTS` juntos.
-
-## Dry-run e mutação
-
-Comandos que alteram o workspace (build, clean, ship, boot, etc.) exibem um dry-run a menos que `APPLY=Y` seja passado:
-
-```bash
-make build WHAT=gen          # dry-run
-make build WHAT=gen APPLY=Y  # executa
-make clean                   # dry-run
-make clean APPLY=Y           # executa
+make check WHAT=lint PROJECT=flext-infra
+make test PROJECT=flext-infra
+make check WHAT=mypy PROJECT=flext-ldif
 ```
 
 ## Exemplos do dia a dia
 
 ```bash
 # Bootstrap inicial
-make boot APPLY=Y
+make setup
 
-# Checagem rápida padrão (ruff + pyrefly)
+# Checagem rápida padrão
 make check
 
 # Checagem em um projeto específico
-make check PROJECT=flext-infra
+make check WHAT=lint PROJECT=flext-infra
 
-# Regenerar arquivos padronizados
-make gen APPLY=Y
+# Regenerar projeções (conform + lazy-init + docs + mise)
+make gen WHAT=apply APPLY=Y
 
 # Rodar testes de um projeto
-make test PROJECT=flext-infra MATCH=docs
+make test PROJECT=flext-infra
 
-# Validar workspace completo
-make val
-
-# Sincronizar Makefiles após mudar pyproject.toml
-make sync APPLY=Y
+# Validar documentação
+make docs WHAT=validate
 ```
 
 ## Descoberta
 
 ```bash
-make help                  # lista todos os verbos
-make build WHAT=help       # lista ações de build
-make build WHAT=gen/help   # ajuda detalhada de gen
+make help                  # lista todos os verbos e knobs
 ```
 
 ## Veja também

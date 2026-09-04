@@ -27,7 +27,7 @@ Use these directories when the project owns tests:
 make test PROJECT=flext-infra
 make test PROJECT=flext-infra MATCH=docs
 make check PROJECT=flext-infra
-make val
+make check
 ```
 
 ## Docs Pipeline Validation
