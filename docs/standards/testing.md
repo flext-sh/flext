@@ -16,7 +16,7 @@
 <!-- TOC END -->
 
 Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands,
-see `.agents/skills/flext-inviolable-rules/SKILL.md`.
+see `~/.agents/skills/agent-wide/personal/make-check/SKILL.md`.
 
 ## Mindset
 
@@ -135,6 +135,5 @@ lower the threshold to make a build pass.
 ## Related
 
 - `AGENTS.md` — root engineering law
-- `.agents/skills/flext-inviolable-rules/SKILL.md` — gate commands
-- `.agents/skills/coding-standards/SKILL.md` — general coding standards
-- `.agents/skills/flext-development-workflow/SKILL.md` — CI/CD lifecycle
+- `~/.agents/skills/agent-wide/personal/make-check/SKILL.md` — gate commands
+- `.agents/skills/flext-law/SKILL.md` — FLEXT domain law

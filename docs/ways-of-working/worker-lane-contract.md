@@ -22,8 +22,8 @@ Read the canonical authorities first; this file only adds lane discipline.
 
 - Project law and routed skills: [`AGENTS.md`][agents-md]
 - Governance router: [`GOVERNANCE.md`][governance-md]
-- Local skills: [`flext-law`][flext-law], `inviolable-rules`
-- Universal skills: `~/.agents/skills/make-check/SKILL.md`, `~/.agents/skills/verification-loop/SKILL.md`
+- Local skills: [`flext-law`][flext-law]
+- Universal skills: `~/.agents/skills/agent-wide/personal/make-check/SKILL.md`, `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
 - Config/settings SSOT: [ADR-005][adr-005]
 
 [agents-md]: ../../AGENTS.md
@@ -43,10 +43,11 @@ Never invoke bare `ruff`, `pyrefly`, `pyright`, `mypy`, `pytest`, or `uv`. Use
 the dispatcher:
 
 ```bash
-make check CHECK_GATES=lint,format,pyrefly
-make check PROJECT=<affected> CHECK_GATES=pyright,mypy
+make check WHAT=lint PROJECT=<affected>
+make check WHAT=pyrefly PROJECT=<affected>
+make check WHAT=pyright PROJECT=<affected>
 make test PROJECT=<affected>
-make val WHAT=workspace
+make gen WHAT=check
 ```
 
 Run the narrowest changed-scope gate first; widen only after it passes.
@@ -60,7 +61,7 @@ status`, leave it untouched and ask the lead. Fix forward only.
 
 ## 4. Beads evidence only
 
-Append truthful notes with `bd update <id> --append-notes '...'`. Never change
+Append truthful notes with `bd comment <id> '...'`. Never change
 bead status, assignee, dependency, priority, or close/merge beads. The lead owns
 bead state.
 
@@ -72,14 +73,18 @@ Done means all of the following:
 - Exact Make-gate evidence is recorded: command, cwd, exit code, decisive line.
 - No new lint, type, or test failures are injected.
 - Changed files are clean and scoped.
-- Nothing reaches `0.12.0-dev` except through the lead's PR #20 merge after the
-  whole fleet is green.
+- Nothing reaches `0.12.0-dev` except through the lane's own reviewed PR: one
+  bead -> one branch -> PR against `0.12.0-dev` -> green native gates -> PR
+  Sheriff gate (`~/.agents/skills/tool/pr-sheriff/scripts/pr_triage.py gate
+  <owner/repo> <pr> --base 0.12.0-dev --head <oid>`) -> independent review or
+  operator-authorized administrative merge -> merge commit -> post-merge
+  runtime proof -> bead evidence -> branch cleanup.
 
 ## 6. Coordination protocol
 
-Talk only through `team_send_message`. Report to the lead, then go idle;
-idle-after-report is correct. When blocked, message the lead the exact blocker
-and stop. Do not wander to other beads.
+Coordinate only through the bead (`bd comment <id>`) and the PR thread. Report
+to the lead, then go idle; idle-after-report is correct. When blocked, message
+the lead the exact blocker and stop. Do not wander to other beads.
 
 ## 7. Anti-patterns that burned us
 
@@ -99,9 +104,9 @@ lane: one coherent commit or an explicit pathspec-bound set of commits.
 
 The following fresh evidence is mandatory at every boundary:
 
-- `make check CHECK_GATES=lint,format,pyrefly` for the global workspace;
-- `make check PROJECT=<affected> CHECK_GATES=pyright,mypy` for every affected
-  project and consumer;
+- `make check WHAT=lint PROJECT=<affected>` for the global workspace;
+- `make check WHAT=pyright PROJECT=<affected>` and `make check WHAT=mypy
+  PROJECT=<affected>` for every affected project and consumer;
 - `make test PROJECT=<affected>` for every affected project and integration
   surface;
 - real public-surface QA for the changed behavior; and

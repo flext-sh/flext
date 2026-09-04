@@ -22,7 +22,7 @@ project.
 
 ```bash
 make boot APPLY=Y
-make val
+make check
 ```
 
 `make boot APPLY=Y` installs the selected projects into the shared workspace environment and then runs validation.
