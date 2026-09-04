@@ -34,14 +34,10 @@
 
 # Dispatcher-based command surface (Make SSOT)
 !scripts/
-!scripts/cmd/
-!scripts/cmd/**
 scripts/*.py
 scripts/*.sh
 scripts/*.md
 scripts/maintenance/
-!scripts/dispatch.py
-!scripts/__init__.py
 
 # TRACK: Beads team config; keep Dolt data, runtime state, and JSONL exports local.
 !.beads/
@@ -173,7 +169,6 @@ scripts/maintenance/
 **/*.egg-info/
 **/dist/
 **/build/
-!scripts/cmd/build/
 **/.eggs/
 
 # Skill validation temporary reports

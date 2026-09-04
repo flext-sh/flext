@@ -233,10 +233,7 @@ make check CHANGED_ONLY=1
 ## Related
 
 - `AGENTS.md` — root engineering law
-- `.agents/skills/coding-standards/SKILL.md` — quick-reference skill
-- `.agents/skills/flext-import-rules/SKILL.md` — import rules
-- `.agents/skills/flext-strict-typing/SKILL.md` — typing rules
-- `.agents/skills/lib-returns/SKILL.md` — Result composition
-- `.agents/skills/lib-structlog/SKILL.md` — structured logging
-- `.agents/skills/flext-inviolable-rules/SKILL.md` — gate commands
-- `.agents/skills/flext-development-workflow/SKILL.md` — workflow
+- `.agents/skills/flext-law/SKILL.md` — FLEXT domain law (imports, typing, MRO)
+- `~/.agents/skills/framework/flext-development/SKILL.md` — global FLEXT development procedure
+- `~/.agents/skills/agent-wide/personal/make-check/SKILL.md` — gate commands
+- `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md` — completion evidence

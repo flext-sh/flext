@@ -10,13 +10,13 @@ branch-matched FLEXT law without duplicating universal execution governance.
 
 ## Required composition
 
-1. Read `~/.agents/skills/inviolable-rules/SKILL.md`.
+1. Read `~/.agents/AGENTS.md`.
 2. Before build, generation, docs, checks, tests, or diagnosis, read
-   `~/.agents/skills/make-check/SKILL.md`.
+   `~/.agents/skills/agent-wide/personal/make-check/SKILL.md`.
 3. For every FLEXT task, read the exact local
    `.agents/skills/flext-law/SKILL.md`.
 4. At every completion boundary, read
-   `~/.agents/skills/verification-loop/SKILL.md`.
+   `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`.
 
 Fail closed if a required file is absent. Never resolve `flext-law` by an
 unqualified catalog name, from `main`, or from another checkout.

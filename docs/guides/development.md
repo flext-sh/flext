@@ -17,7 +17,7 @@ policy source.
 ```bash
 make workspace-check-changed
 make test PROJECT=flext-infra MATCH=docs
-make val
+make check
 ```
 
 Use `PROJECT`, `PROJECTS`, `FILE`, `FILES`, `MATCH`, and `CHECK_GATES` instead of ad hoc shell loops. See [Make
