@@ -264,8 +264,26 @@ duplication: ## Run jscpd duplicate-code detector on FLEXT foundation packages
 		echo "ERROR: npx (Node.js) is required for jscpd duplication detection"; \
 		exit 1; \
 	fi; \
-	echo "==> duplication: running jscpd on flext-core, flext-cli, flext-infra, flext-tests"; \
-	npx --yes jscpd@4 --no-gitignore --config .jscpd.json --reporters console flext-core/src flext-cli/src flext-infra/src flext-tests/src
+	if [ "$(WHAT)" = "baseline" ]; then \
+		echo "==> duplication: updating reviewed baseline"; \
+		npx --yes jscpd@5.1.2 --no-gitignore --config .jscpd.json \
+			--baseline .jscpd-baseline.json --update-baseline \
+			--output .reports/jscpd --reporters console,json \
+			flext-core/src flext-cli/src flext-infra/src flext-tests/src; \
+	elif [ -n "$(strip $(WHAT))" ]; then \
+		echo "ERROR: duplication supports WHAT=baseline or the default regression gate" >&2; \
+		exit 2; \
+	else \
+		if [ ! -f .jscpd-baseline.json ]; then \
+			echo "ERROR: missing .jscpd-baseline.json; run make duplication WHAT=baseline after triage" >&2; \
+			exit 2; \
+		fi; \
+		echo "==> duplication: enforcing zero new clones at 8 lines"; \
+		npx --yes jscpd@5.1.2 --no-gitignore --config .jscpd.json \
+			--baseline .jscpd-baseline.json --fail-on-new-clones 0 \
+			--output .reports/jscpd --reporters console,json \
+			flext-core/src flext-cli/src flext-infra/src flext-tests/src; \
+	fi
 
 # =============================================================================
 # ast-grep codemod library ([root]/codemod)
