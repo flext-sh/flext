@@ -1,75 +1,64 @@
 # Troubleshooting
 
-<!-- TOC START -->
-- [Quick Checks](#quick-checks)
-- [Common Docs Failures](#common-docs-failures)
-  - [MkDocs strict build fails](#mkdocs-strict-build-fails)
-  - [Generated API docs are wrong](#generated-api-docs-are-wrong)
-  - [Root docs mention non-FLEXT projects](#root-docs-mention-non-flext-projects)
-  - [Audit flags stale architecture symbols](#audit-flags-stale-architecture-symbols)
-- [Common Metadata Problems](#common-metadata-problems)
-- [When to Edit JSON Policy](#when-to-edit-json-policy)
-- [Related Guides](#related-guides)
-<!-- TOC END -->
+Troubleshooting preserves the same command, ownership, and failure contracts as
+normal development. Diagnose from the workspace root and keep the first raw
+traceback or non-zero exit as the causal evidence.
 
-Use this page for workspace-level diagnostics. If the failure is project-specific, continue in that project’s local docs
-and tests.
-
-## Quick Checks
+## Establish the command surface
 
 ```bash
-make check CHANGED_ONLY=1
-make val VALIDATE_SCOPE=workspace
-make docs DOCS_PHASE=build PROJECT=flext-infra
+make help
 ```
 
-## Common Docs Failures
+Use the exact declared root verb. Do not invoke an underlying linter, type
+checker, test runner, generator, or ad-hoc script, and do not attach project,
+file, pattern, changed-only, fix, or phase selectors.
 
-### MkDocs strict build fails
+## Repair at the owner
 
-Typical causes:
+- Generated output is evidence, not an edit target. Correct config, settings,
+  templates, or generator ownership first.
+- A broken or missing Make verb is a defect in the root dispatcher. Repair that
+  owner before resuming the workflow.
+- Do not catch, retry, fall back, normalize, suppress, skip, or partially apply a
+  failing operation.
+- Warnings, skipped checks, empty output, and missing tools remain failures until
+  their owner is corrected.
 
-- broken internal links
-- root docs referencing excluded files
-- stale generated files that were not regenerated
-
-Run:
+After correcting the source, use only the applicable canonical verbs:
 
 ```bash
-make docs DOCS_PHASE=fix PROJECT=flext-infra FIX=1
-make docs DOCS_PHASE=audit PROJECT=flext-infra
-make docs DOCS_PHASE=build PROJECT=flext-infra
+make gen APPLY=Y
+make mod APPLY=Y
+make gen APPLY=Y
+make gen APPLY=Y
+make fix APPLY=Y
+make fmt APPLY=Y
+make check APPLY=Y
+make test APPLY=Y
+make conform APPLY=Y
 ```
 
-### Generated API docs are wrong
+Test diagnosis still runs through `make test APPLY=Y`, with the retained Testmon
+cache. Direct or cache-clearing test runs do not count as evidence.
 
-Do not patch the generated Markdown first. Check:
+## Documentation failures
 
-1. `pyproject.toml`
-2. `[tool.flext.docs]`
-3. `src/<package>/__init__.py`
-4. module and symbol docstrings
+For stale member guides, change the matching root file under `docs/guides/` and
+run `make gen APPLY=Y`. Generated member guides carry their source and exact
+regeneration command in the header; never patch those projections.
 
-### Root docs mention non-FLEXT projects
+For a docs audit failure, remove the invalid command or test-double example at
+the canonical root source. Do not add an allowlist or weaken the audit.
 
-That is a root portal scope violation. Root docs must stay FLEXT-only.
+## Test failures
 
-### Audit flags stale architecture symbols
+Tests must observe public facades and use `tm`, the unified `conftest.py`, and
+typed shared fixtures. Replace mocks, fakes, stubs, patching, monkeypatch
+mutation, private construction, and hardcoded project values at their owning
+test infrastructure.
 
-Fix the forward-guidance document unless the file is an explicit migration or baseline exception.
-
-## Common Metadata Problems
-
-- missing `[project]` name, version, description, or urls
-- wrong `tool.flext.docs.package_name`
-- wrong `tool.flext.docs.project_class`
-- unnecessary data duplicated in `docs/docs_config.json`
-
-## When to Edit JSON Policy
-
-Edit `docs/docs_config.json` only when the value cannot be derived from project metadata, paths, or code.
-
-## Related Guides
+## Related guides
 
 - [Configuration](configuration.md)
 - [Testing](testing.md)

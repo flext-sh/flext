@@ -1,105 +1,82 @@
-# Onboarding (Collection Rules / regras de coletas)
+# Onboarding
 
-<!-- TOC START -->
-- [1. Read Governance First](#1-read-governance-first)
-- [2. Identify Project Slot Ownership](#2-identify-project-slot-ownership)
-- [3. Bootstrap Tooling](#3-bootstrap-tooling)
-- [4. Confirm Zero-Debt Baseline](#4-confirm-zero-debt-baseline)
-- [5. Load Skills Relevant to the Change Scope](#5-load-skills-relevant-to-the-change-scope)
-- [6. Fundamental Packages](#6-fundamental-packages)
-- [7. Per-Project Collection Rules](#7-per-project-collection-rules)
-- [8. Cross-References](#8-cross-references)
-<!-- TOC END -->
+Use this sequence before changing any FLEXT package. All actions start at the
+workspace root.
 
-Canonical pre-work to enter ANY FLEXT project. Per AGENTS.md §9 Pre-requisites + the auto-generated per-project
-Collection Rules in each `<project>/docs/index.md`.
+## Resolve authority
 
-## 1. Read Governance First
+Read, in order:
 
-1. [`/flext/docs/GOVERNANCE.md`](../GOVERNANCE.md) — rule routing, ADRs,
-   validation surfaces, and ratified refactor gates.
-2. `/flext/AGENTS.md` (repo root) — supreme engineering law.
-3. `~/.claude/AGENTS.md` — universal cross-project rules (if present).
-4. The target project's `pyproject.toml` for stack, version, dependencies.
+1. the workspace root `AGENTS.md`;
+2. the branch-matched `flext-law` skill;
+3. the nearest package `AGENTS.md`;
+4. the active Bead and its current evidence.
 
-## 2. Identify Project Slot Ownership
+Confirm the package's canonical config, settings, public API, and owned `c`, `t`,
+`p`, `m`, and `u` surfaces before adding or moving a symbol.
 
-Use the cross-project slot registry in `~/.agents/skills/` when the active
-provider exposes it. Confirm which `c.<Domain>`, `m.<Domain>`, `p.<Domain>`,
-`t.<Domain>`, `u.<Domain>` slots the target project owns before adding or
-renaming any symbol.
-
-## 3. Bootstrap Tooling
+## Prepare and discover
 
 ```bash
-cd <workspace>
-make boot                       # Workspace .venv only (project .venv is forbidden — see AGENTS.md §6)
+make setup APPLY=Y
+make help
 ```
 
-The workspace `.venv/` is mandatory. Run validation through the root Make
-dispatcher; do not rely on bare tool commands or a machine-specific path.
+The workspace virtual environment and root dispatcher are the only command
+surface. Never enter a member directory to run a parallel tool command.
 
-## 4. Confirm Zero-Debt Baseline
+## Establish the baseline
 
 ```bash
-cd <project>
-make check                                    # ruff + pyrefly + mypy + pyright must exit 0
-make val VALIDATE_SCOPE=project               # complexity + docstring gates must exit 0
-make test                                     # pytest must exit 0 with project coverage threshold
-make docs DOCS_PHASE=audit                    # docs audit must report zero issues
+make gen APPLY=Y
+make fix APPLY=Y
+make fmt APPLY=Y
+make check APPLY=Y
+make test APPLY=Y
+make conform APPLY=Y
 ```
 
-If any gate fails, FIX FORWARD per AGENTS.md §3.5. Never `git checkout`/`reset`/`revert` to recover.
+Tests run only through the retained Testmon cache. Warnings, skips, empty
+collection, missing tools, and suppressed failures are red.
 
-## 5. Load Skills Relevant to the Change Scope
+## Change safely
 
-The provider activates `flext-context-routing` first. That router selects only
-the smallest on-demand set declared by the active `~/.agents` provider:
+- Use semantic refactoring automation for hierarchy discovery and rewiring.
+- Put generic reusable behavior in canonical `c`, `t`, `p`, `m`, or `u`
+  ownership.
+- Exercise only public facades with `tm`, the unified `conftest.py`, and typed
+  shared fixtures.
+- Do not use mocks, fakes, stubs, patching, monkeypatch mutation, private
+  construction, or hardcoded project values.
+- Remove the old owner after every consumer is rewired; leave no compatibility
+  path or duplicate registry.
 
-1. Load the one domain skill that owns the change, such as `lib-returns`,
-   `flext-import-rules`, or `pydantic-v2-governance`.
-2. Add a quality or workflow skill only when its procedure is needed.
-3. Use `coding-standards` as a concern index when the owner is unclear, not as
-   an always-loaded second specification.
+## Generated surfaces
 
-Do not maintain or load a fixed default skill bundle.
-
-Path-scoped skills live under the active `~/.agents/skills/` authority.
-Their exported inventory is owned by that provider configuration.
-
-## 6. Fundamental Packages
-
-Before writing code, know the three shared packages most projects consume:
-
-| Package | What it provides | Quick guide | Skill |
-| --------- | ------------------ | ------------- | ------- |
-| `flext_core` | Result flow, settings, container, dispatcher | [Using flext-core](using-flext-core.md) | `using-flext-core` |
-| `flext_cli` | Model-driven Typer CLI abstraction | [Using flext-cli](using-flext-cli.md) | `using-flext-cli` |
-| `flext_tests` | Shared fixtures, matchers, test runtime | [Using flext-tests](using-flext-tests.md) | `using-flext-tests` |
-
-## 7. Per-Project Collection Rules
-
-Every project ships an auto-generated `docs/index.md` with Collection Rules tailored to its parent MRO chain, abstracted
-libraries, owned slot registry, and quality gates. Open `<project>/docs/index.md` and follow the project-specific list
-before editing.
-
-To regenerate stale per-project docs:
+Change the source owner, then regenerate and prove the fixed point:
 
 ```bash
-cd <project>
-make docs DOCS_PHASE=generate    # re-renders docs/index.md, api-reference/generated/*
-make docs DOCS_PHASE=fix         # safe automated docs remediation
-make docs DOCS_PHASE=audit       # re-confirm zero issues
+make gen APPLY=Y
+make mod APPLY=Y
+make gen APPLY=Y
+make gen APPLY=Y
 ```
 
-## 8. Cross-References
+Generated member guides identify their root source and exact regeneration rule.
+Never edit those projections by hand.
 
-- [Getting Started](getting-started.md) — workspace bootstrap.
-- [Development](development.md) — daily workflow.
-- [Configuration](configuration.md) — `pyproject.toml` and docs metadata.
-- [Testing](testing.md) — quality gates and docs validation.
-- [Using flext-core](using-flext-core.md) — base package usage.
-- [Using flext-cli](using-flext-cli.md) — CLI abstraction usage.
-- [Using flext-tests](using-flext-tests.md) — shared test toolkit usage.
-- [Workspace API overview](../api-reference/generated/overview.md) — auto-generated cross-project surface.
-- [Project catalog](../projects/generated/catalog.md) — full project registry.
+## Command grammar
+
+Do not add project, file, pattern, phase, fix, or changed-only selectors to the
+standard verbs. If `make help` does not expose a required workflow, repair its
+canonical Make owner before continuing.
+
+## Related guides
+
+- [Getting started](getting-started.md)
+- [Development](development.md)
+- [Configuration](configuration.md)
+- [Testing](testing.md)
+- [Using flext-core](using-flext-core.md)
+- [Using flext-cli](using-flext-cli.md)
+- [Using flext-tests](using-flext-tests.md)
