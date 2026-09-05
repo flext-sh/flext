@@ -168,19 +168,26 @@ are tracked in Beads.
 ### 3b. Semantic discovery and automated rewiring
 
 Class and symbol movement is derived from live sources: typed module paths,
-AST/Rope identities, CRG hierarchy and impact relationships, and LSP reference
-resolution. A checked-in list that maps individual classes, files, confidence
-labels, or rewrite targets is a second owner and is prohibited. Unknown or
-ambiguous ownership fails at the classifier; it never falls back to a guessed
-namespace or an inert/manual-review entry.
+AST/Rope identities, and LSP reference resolution. A checked-in list that maps
+individual classes, files, confidence labels, or rewrite targets is a second
+owner and is prohibited. Unknown or ambiguous ownership fails at the
+classifier; it never falls back to a guessed namespace or an inert/manual-review
+entry.
 
 `make mod APPLY=Y` owns this cutover. It inventories every governed repository,
 applies safe ast-grep rewrites, performs semantic consumer rewiring, removes the
-superseded owner, and then validates Ruff, Pyrefly, LSP, and CRG before accepting
-the fixed point. Detection-only findings keep the invocation red but do not
+superseded owner, and then validates Ruff, Pyrefly, and local LSP diagnostics
+before accepting the fixed point. Detection-only findings keep the invocation red but do not
 prevent independent actionable rewrites from being applied first. Every phase
 emits causal progress in less than 60 seconds; quiet, truncated, capped, or
 warning-suppressing evidence is invalid.
+
+Git repositories and local Git operations are owned by `flext-infra`; GitHub
+and the CRG runtime are owned by ai-hub. FLEXT may consume public ai-hub
+commands, hooks, MCP routes, or `ai-hub-*` daemons as optional discovery
+enrichment. It never imports ai-hub or CRG as a library. Absence of that optional
+host runtime does not fail the deterministic local cutover; if an available
+integration is selected, its first error propagates without normalization.
 
 ### 4. Three ordered phases (same strategy as ADR-020/008/009)
 
@@ -224,7 +231,9 @@ facades on foreign code.
 2. The standardization audit reports zero drift for verbs, layout, facades,
    `**init**.py`, toolchain/pyproject, and naming on enforced projects.
 3. `make mod APPLY=Y` reports zero actionable and detection-only findings after
-   AST/semantic rewire and zero Ruff, Pyrefly, LSP, or CRG diagnostics.
+   AST/semantic rewire and zero Ruff, Pyrefly, or local LSP diagnostics. When an
+   ai-hub CRG/LSP route is available and selected, its distinct runtime evidence
+   is recorded without making host availability a FLEXT prerequisite.
 4. `make test APPLY=Y` retains the canonical testmon cache, and `flext-tests`
    supplies identical public behavior fixtures across projects.
 5. Independent FLEXT projects pass the same gates; non-FLEXT projects preserve

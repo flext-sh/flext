@@ -92,17 +92,23 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
 - Invoke the standard Make verbs directly. Mutating verbs use only `APPLY=Y`;
   agents never add `WHAT=` or `PROJECT=` to setup, generation, repair,
   formatting, checking, or testing.
-- Structural rewires run through `make mod APPLY=Y`. Its canonical engine
-  composes `ast-grep` rewrites, Code Review Graph CLI impact/refactor analysis,
-  and real `pyright-langserver` diagnostics before the fixed point is accepted.
+- Structural rewires run through `make mod APPLY=Y`. Its canonical FLEXT engine
+  composes `ast-grep` rewrites, Rope semantic refactors, and real
+  `pyright-langserver` diagnostics before the fixed point is accepted.
   Repetitive manual call-site editing is prohibited; change the codemod or its
   typed automation owner and let that pipeline propagate the cutover.
 - Symbol placement and nesting are discovered from the live typed module path,
-  AST/Rope identities, CRG relationships, and LSP references. Hand-maintained
-  symbol/class mapping catalogs, copied path registries, inert entries, and
-  review-only confidence lists are forbidden; ambiguity fails at the discovery
-  owner instead of selecting a fallback. The reusable classifier or planner
-  survives only on the appropriate public `c/t/p/m/u` facade.
+  AST/Rope identities, and LSP references. Hand-maintained symbol/class mapping
+  catalogs, copied path registries, inert entries, and review-only confidence
+  lists are forbidden; ambiguity fails at the discovery owner instead of
+  selecting a fallback. The reusable classifier or planner survives only on
+  the appropriate public `c/t/p/m/u` facade.
+- Git repositories and local Git operations belong to `flext-infra`. GitHub and
+  CRG belong to ai-hub. When ai-hub publishes commands, hooks, MCP routes, or
+  `ai-hub-*` daemons, FLEXT may consume those public runtime protocols as
+  optional enrichment; it never imports ai-hub or CRG as a library. An absent
+  optional host runtime is not a FLEXT error. Once an available integration is
+  selected, its first failure remains visible and is never normalized.
 - A detection-only AST finding keeps the final gate red but never blocks safe
   actionable rewrites in the same `make mod APPLY=Y` invocation. Apply the
   mechanical cut, perform the semantic rewire, delete the superseded owner, and
