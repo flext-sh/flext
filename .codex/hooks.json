@@ -4,7 +4,7 @@
       {
         "hooks": [
           {
-            "command": "export PATH=\"$HOME/go/bin:$HOME/.local/bin:$PATH\" && gc --city '/home/marlonsc/gc' handoff --auto --hook-format codex \"context cycle\"",
+            "command": "export PATH=\"$HOME/go/bin:$HOME/.local/bin:$PATH\" && gc --city '/home/marlonsc/gc' hook run --when-managed-session -- handoff --auto --hook-format codex \"context cycle\"",
             "type": "command"
           }
         ],
