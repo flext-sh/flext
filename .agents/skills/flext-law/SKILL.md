@@ -89,8 +89,21 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   through the active workspace root Make dispatcher. A missing or broken verb
   is repaired generically in `flext-infra`, then reused by workspace and
   standalone projects; it is never bypassed.
+- Invoke the standard Make verbs directly. Mutating verbs use only `APPLY=Y`;
+  agents never add `WHAT=` or `PROJECT=` to setup, generation, repair,
+  formatting, checking, or testing.
+- Structural rewires run through `make mod APPLY=Y`. Its canonical engine
+  composes `ast-grep` rewrites, Code Review Graph CLI impact/refactor analysis,
+  and real `pyright-langserver` diagnostics before the fixed point is accepted.
+  Repetitive manual call-site editing is prohibited; change the codemod or its
+  typed automation owner and let that pipeline propagate the cutover.
 - `flext-tests` owns reusable fixtures and behavior helpers. Packages consume
   them through public facades rather than creating local copies.
+- FLEXT tests exercise only public facades and observable runtime behavior.
+  They use `tm`, canonical `c/t/p/m/u` contracts, the unified `conftest.py`, and
+  typed shared fixtures instead of mocks, internal assertions, copied setup, or
+  hardcoded project-owned values. Every test run retains the canonical testmon
+  cache, including an explicitly requested full run.
 
 ## Fleet boundary
 

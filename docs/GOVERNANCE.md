@@ -86,15 +86,15 @@ never allowed to hardcode the values that happen to exist today.
 
 ## Baseline Commands
 
-Choose the narrowest decisive command from the quality-gates skill, then widen
-only after it passes:
+Use the standard workspace commands; mutation is selected only with `APPLY=Y`:
 
 ```bash
-make check PROJECT=<project> WHAT=<gate>
-make test PROJECT=<project>
+make check APPLY=Y
+make test APPLY=Y
 ```
 
-All FLEXT validation uses the root Make dispatcher; never run bare `ruff`,
+All FLEXT validation uses the root Make dispatcher and every Python test run
+retains the canonical testmon cache; never run bare `ruff`,
 `pyrefly`, `pyright`, `mypy`, or `pytest` commands.
 
 Record every red or green result with its exit code and decisive output in the

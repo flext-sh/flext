@@ -3,15 +3,15 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from types import MappingProxyType
+from typing import TYPE_CHECKING
 
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_tests import FlextTestsConstants, d, e, h, s, td, tf, tk, tm, tv, x
     from typing import Final
+
+    from flext_tests import FlextTestsConstants, d, e, h, s, td, tf, tk, tm, tv, x
 
     from .constants import TestsFlextRootConstants, TestsFlextRootConstants as c
     from .models import TestsFlextRootModels, TestsFlextRootModels as m

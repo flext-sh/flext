@@ -22,8 +22,7 @@ from collections.abc import Mapping, MutableSequence, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
-from examples import m, p, r, t, u
-from examples._constants import ExamplesPermission, ExamplesServerType
+from examples import ExamplesPermission, ExamplesServerType, m, p, r, t, u
 
 
 class AclProcessingExample:

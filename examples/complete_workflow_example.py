@@ -21,8 +21,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar
 
-from examples import m, p, r, t, u
-from examples._constants import ExamplesWorkflowStage
+from examples import ExamplesWorkflowStage, m, p, r, t, u
 
 if TYPE_CHECKING:
     from collections.abc import Callable, MutableSequence
@@ -262,23 +261,9 @@ class CompleteWorkflowExample:
 
             def process_single_item(
                 item: CompleteWorkflowProcessingDict,
-            ) -> CompleteWorkflowProcessingDict | None:
-                try:
-                    result = stage_func(item, context)
-                    workflow_data = result.map_or(None)
-                    return (
-                        {**workflow_data.content}
-                        if isinstance(
-                            workflow_data, CompleteWorkflowExample.WorkflowData
-                        )
-                        else workflow_data
-                    )
-                except Exception as e:
-                    err: CompleteWorkflowProcessingDict = {
-                        "error": str(e),
-                        "item": str(item),
-                    }
-                    return err
+            ) -> CompleteWorkflowProcessingDict:
+                workflow_data = stage_func(item, context).unwrap()
+                return {**workflow_data.content}
 
             processed_results: MutableSequence[CompleteWorkflowProcessingDict] = []
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -286,9 +271,7 @@ class CompleteWorkflowExample:
                     executor.submit(process_single_item, item): item for item in items
                 }
                 for future in as_completed(future_to_item):
-                    result = future.result()
-                    if result is not None:
-                        processed_results.append(result)
+                    processed_results.append(future.result())
             processing_time = time.time() - stage_start
             stage_result = CompleteWorkflowExample.WorkflowStageResult(
                 stage_name=stage_name,

@@ -49,3 +49,11 @@ class ExamplesWorkflowStage(StrEnum):
     PROCESSING = "processing"
     ANALYSIS = "analysis"
     AGGREGATION = "aggregation"
+
+
+__all__: list[str] = [
+    "ExamplesPermission",
+    "ExamplesServerType",
+    "ExamplesStage",
+    "ExamplesWorkflowStage",
+]

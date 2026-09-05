@@ -3,21 +3,16 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from types import MappingProxyType
+from typing import TYPE_CHECKING
 
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from . import libs as libs
     from flext_tests import c, d, e, h, m, p, r, s, t, td, tf, tk, tm, tv, u, x
 
-    from .docker_quality_mock_tests import TestDockerQualityDockerfiles
-    from .release_packaging_tests import TestReleasePackaging
+    from . import libs as libs
 __all__: tuple[str, ...] = (
-    "TestDockerQualityDockerfiles",
-    "TestReleasePackaging",
     "c",
     "d",
     "e",
@@ -40,9 +35,7 @@ __all__: tuple[str, ...] = (
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
-            ".docker_quality_mock_tests": ("TestDockerQualityDockerfiles",),
             ".libs": ("libs",),
-            ".release_packaging_tests": ("TestReleasePackaging",),
             "flext_tests": (
                 "c",
                 "d",
