@@ -11,14 +11,13 @@ from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 if TYPE_CHECKING:
     from typing import Final
 
-    from flext_tests import FlextTestsConstants, d, e, h, s, td, tf, tk, tm, tv, x
+    from flext_tests import FlextTestsConstants, d, e, h, s, td, tf, tk, tm, tv, u, x
 
     from .constants import TestsFlextRootConstants, TestsFlextRootConstants as c
     from .models import TestsFlextRootModels, TestsFlextRootModels as m
     from .protocols import TestsFlextRootProtocols, TestsFlextRootProtocols as p
     from .result import TestsFlextRootResult, r
     from .typings import TestsFlextRootTypes, TestsFlextRootTypes as t
-    from .utilities import TestsFlextRootUtilities, TestsFlextRootUtilities as u
 __all__: tuple[str, ...] = (
     "Final",
     "FlextTestsConstants",
@@ -27,7 +26,6 @@ __all__: tuple[str, ...] = (
     "TestsFlextRootProtocols",
     "TestsFlextRootResult",
     "TestsFlextRootTypes",
-    "TestsFlextRootUtilities",
     "c",
     "d",
     "e",
@@ -54,7 +52,6 @@ _LAZY_IMPORTS = MappingProxyType(
             ".protocols": ("TestsFlextRootProtocols", "p"),
             ".result": ("TestsFlextRootResult", "r"),
             ".typings": ("TestsFlextRootTypes", "t"),
-            ".utilities": ("TestsFlextRootUtilities", "u"),
             "flext_tests": (
                 "FlextTestsConstants",
                 "d",
@@ -66,6 +63,7 @@ _LAZY_IMPORTS = MappingProxyType(
                 "tk",
                 "tm",
                 "tv",
+                "u",
                 "x",
             ),
             "typing": ("Final",),
