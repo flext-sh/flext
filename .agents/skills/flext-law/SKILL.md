@@ -97,6 +97,20 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   and real `pyright-langserver` diagnostics before the fixed point is accepted.
   Repetitive manual call-site editing is prohibited; change the codemod or its
   typed automation owner and let that pipeline propagate the cutover.
+- Symbol placement and nesting are discovered from the live typed module path,
+  AST/Rope identities, CRG relationships, and LSP references. Hand-maintained
+  symbol/class mapping catalogs, copied path registries, inert entries, and
+  review-only confidence lists are forbidden; ambiguity fails at the discovery
+  owner instead of selecting a fallback. The reusable classifier or planner
+  survives only on the appropriate public `c/t/p/m/u` facade.
+- A detection-only AST finding keeps the final gate red but never blocks safe
+  actionable rewrites in the same `make mod APPLY=Y` invocation. Apply the
+  mechanical cut, perform the semantic rewire, delete the superseded owner, and
+  repeat until both classes are zero. Never stop before apply merely because a
+  later semantic finding still requires repair.
+- Long native phases emit causal progress at intervals below 60 seconds.
+  Piping through `tail`, truncating/capping output, quiet flags, warning filters,
+  and wrappers that hide the first traceback are forbidden evidence paths.
 - `flext-tests` owns reusable fixtures and behavior helpers. Packages consume
   them through public facades rather than creating local copies.
 - FLEXT tests exercise only public facades and observable runtime behavior.

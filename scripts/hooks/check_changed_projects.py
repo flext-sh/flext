@@ -12,7 +12,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from flext_cli import cli
+from flext_cli import cli, p
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 MIN_POSITIONAL_ARGS = 2
@@ -56,7 +56,8 @@ def main(what: str, files: list[str]) -> int:
     )
     if outcome.failure:
         return 1
-    return outcome.value.exit_code
+    command: p.Cli.CommandOutput = outcome.value
+    return command.exit_code
 
 
 def _relative_to_workspace(raw: str) -> Path:
