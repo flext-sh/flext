@@ -32,7 +32,7 @@ project:
   upstream: "flext_core"
   homepage: "https://github.com/flext-sh/flext"
   documentation: "https://docs.flext.sh"
-  workspace_root_rel: "."
+  repository_root_rel: "."
   year: 2026
 # NOTE (multi-agent, mro-wkii.17 / agent: codex): the typed manifest context is
 # the sole topology owner; every declared member/exclusion round-trips here.
