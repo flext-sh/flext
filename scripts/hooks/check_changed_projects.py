@@ -70,4 +70,4 @@ if __name__ == "__main__":
     if len(sys.argv) < MIN_POSITIONAL_ARGS:
         msg = "usage: check_changed_projects.py <boundary|loc-cap> [file ...]"
         raise SystemExit(msg)
-    sys.exit(main(sys.argv[1], sys.argv[2:]))
+    cli.exit(main(sys.argv[1], sys.argv[2:]))

@@ -138,6 +138,14 @@ class CompleteWorkflowExample:
         ] = "unknown"
 
     class WorkflowOrchestrator(m.BaseModel):
+        """Workflow orchestrator coordinating the full stage pipeline."""
+
+        STAGE_PARAMS: ClassVar[t.Mapping[ExamplesWorkflowStage, tuple[float, str]]] = {
+            ExamplesWorkflowStage.VALIDATION: (0.005, "validated"),
+            ExamplesWorkflowStage.PROCESSING: (0.01, "processed"),
+            ExamplesWorkflowStage.ANALYSIS: (0.005, "analyzed"),
+            ExamplesWorkflowStage.AGGREGATION: (0.0, "aggregated"),
+        }
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
