@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
-from flext_tests import FlextTestsModels
-from tests import u
+from flext_tests import FlextTestsModels, u
 
 if TYPE_CHECKING:
     from pathlib import Path
