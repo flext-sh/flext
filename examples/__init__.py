@@ -3,29 +3,26 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from types import MappingProxyType
+from typing import TYPE_CHECKING
 
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
     from flext import c, d, e, h, m, p, r, s, t, u, x
 
-    from ._models import ValidationRules
-    from .acl_processing_example import AclProcessingExample
-    from .advanced_processing_example import (
-        AdvancedProcessingExample,
-        MAX_VALUE_LENGTH,
-        PipelineStageData,
+    from ._constants import (
+        ExamplesPermission,
+        ExamplesServerType,
+        ExamplesStage,
+        ExamplesWorkflowStage,
     )
-    from .complete_workflow_example import CompleteWorkflowExample
+    from ._models import ValidationRules
 __all__: tuple[str, ...] = (
-    "MAX_VALUE_LENGTH",
-    "AclProcessingExample",
-    "AdvancedProcessingExample",
-    "CompleteWorkflowExample",
-    "PipelineStageData",
+    "ExamplesPermission",
+    "ExamplesServerType",
+    "ExamplesStage",
+    "ExamplesWorkflowStage",
     "ValidationRules",
     "c",
     "d",
@@ -43,14 +40,13 @@ __all__: tuple[str, ...] = (
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
-            "._models": ("ValidationRules",),
-            ".acl_processing_example": ("AclProcessingExample",),
-            ".advanced_processing_example": (
-                "AdvancedProcessingExample",
-                "MAX_VALUE_LENGTH",
-                "PipelineStageData",
+            "._constants": (
+                "ExamplesPermission",
+                "ExamplesServerType",
+                "ExamplesStage",
+                "ExamplesWorkflowStage",
             ),
-            ".complete_workflow_example": ("CompleteWorkflowExample",),
+            "._models": ("ValidationRules",),
             "flext": ("c", "d", "e", "h", "m", "p", "r", "s", "t", "u", "x"),
         }),
         alias_groups=MappingProxyType({}),

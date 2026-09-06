@@ -43,14 +43,13 @@ Never invoke bare `ruff`, `pyrefly`, `pyright`, `mypy`, `pytest`, or `uv`. Use
 the dispatcher:
 
 ```bash
-make check WHAT=lint PROJECT=<affected>
-make check WHAT=pyrefly PROJECT=<affected>
-make check WHAT=pyright PROJECT=<affected>
-make test PROJECT=<affected>
-make gen WHAT=check
+make gen APPLY=Y
+make check APPLY=Y
+make test APPLY=Y
 ```
 
-Run the narrowest changed-scope gate first; widen only after it passes.
+Every Python test run retains the canonical testmon cache. Agents do not clear,
+replace, or bypass it and do not add selector variables to this standard flow.
 
 ## 3. Cooperative git
 
@@ -104,11 +103,9 @@ lane: one coherent commit or an explicit pathspec-bound set of commits.
 
 The following fresh evidence is mandatory at every boundary:
 
-- `make check WHAT=lint PROJECT=<affected>` for the global workspace;
-- `make check WHAT=pyright PROJECT=<affected>` and `make check WHAT=mypy
-  PROJECT=<affected>` for every affected project and consumer;
-- `make test PROJECT=<affected>` for every affected project and integration
-  surface;
+- `make check APPLY=Y` for the workspace;
+- `make test APPLY=Y`, retaining the canonical testmon cache, for every
+  affected project and integration surface;
 - real public-surface QA for the changed behavior; and
 - generator/consumer idempotence when generated outputs are involved.
 

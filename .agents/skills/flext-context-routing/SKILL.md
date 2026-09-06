@@ -23,8 +23,14 @@ unqualified catalog name, from `main`, or from another checkout.
 
 ## Detection and scope
 
-- Activate when the workspace provider marker or dependency graph contains
-  `flext-core`.
+- Read the typed AI Hub project association before dependency detection. A
+  `third_party_fork` profile never activates FLEXT law, even when the upstream
+  dependency graph contains `flext-core`; route it through upstream governance.
+- Otherwise activate when the workspace provider marker declares
+  `internal_flext` or the dependency graph contains `flext-core`.
+- Conflicting profile evidence, a fork without upstream identity, or a detected
+  FLEXT dependency paired with an `internal` profile fails closed before skill
+  distribution. Never guess a profile from directory names.
 - In workspace mode, use the active workspace root and its checked-out law.
 - In standalone mode, use the FLEXT root law pinned to the same branch or
   release; never fall back to `main`.

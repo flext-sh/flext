@@ -1,63 +1,64 @@
 # Development
 
-<!-- TOC START -->
-- [Baseline Workflow](#baseline-workflow)
-- [Daily Sequence](#daily-sequence)
-- [Workspace Structure](#workspace-structure)
-- [Documentation Workflow](#documentation-workflow)
-- [Rules That Matter Here](#rules-that-matter-here)
-- [Related Guides](#related-guides)
-<!-- TOC END -->
+The root `AGENTS.md`, branch-matched `flext-law`, nearest package scope, and
+active Bead define the development contract. This page is the executable
+summary, not a second policy owner.
 
-The root development workflow is governed by `AGENTS.md`. Treat this guide as the operational summary, not as a parallel
-policy source.
+## Start at the workspace root
 
-## Baseline Workflow
+Discover and prepare the declared command surface before changing code:
 
 ```bash
-make workspace-check-changed
-make test PROJECT=flext-infra MATCH=docs
-make check
+make setup
+make help
 ```
 
-Use `PROJECT`, `PROJECTS`, `FILE`, `FILES`, `MATCH`, and `CHECK_GATES` instead of ad hoc shell loops. See [Make
-Commands](make-commands.md) for the full command reference.
+Use only verbs printed by `make help`. Do not add project, file, pattern,
+changed-only, fix, or phase selectors to narrow a standard verb.
 
-## Daily Sequence
+## Forward workflow
 
-1. Read the relevant local project files and existing docs before editing.
-2. Make the smallest forward fix that keeps the architecture intact.
-3. Run the relevant `make` targets immediately.
-4. Keep generated docs and curated docs aligned before moving on.
-
-## Workspace Structure
-
-- `flext-*` directories are the governed FLEXT packages
-- `docs/` is the curated root documentation portal
-- each project owns its own `README.md`, `AGENTS.md`, and local `docs/`
-
-## Documentation Workflow
-
-Use the docs phases through the canonical entrypoint:
+1. Read the canonical config, settings, generator, public facade, consumers,
+   tests, and docs for the bounded change.
+2. Use the semantic refactoring owner instead of manually rewiring consumers.
+3. Remove the superseded owner in the same change and prove zero residue.
+4. Regenerate every managed projection from its source.
+5. Run the native gates without bypassing their orchestration.
 
 ```bash
-make docs DOCS_PHASE=generate PROJECT=flext-infra
-make docs DOCS_PHASE=fix PROJECT=flext-infra FIX=1
-make docs DOCS_PHASE=audit PROJECT=flext-infra
-make docs DOCS_PHASE=build PROJECT=flext-infra
-make docs DOCS_PHASE=validate PROJECT=flext-infra
+make gen APPLY=Y
+make mod APPLY=Y
+make gen APPLY=Y
+make gen APPLY=Y
+make fix APPLY=Y
+make fmt APPLY=Y
+make check APPLY=Y
+make test APPLY=Y
+make conform APPLY=Y
 ```
 
-## Rules That Matter Here
+The final generation run proves the fixed point. The test verb always retains
+and uses Testmon; a direct test-runner invocation is invalid evidence.
 
-- workspace guidance stays in root `docs/`
-- project implementation guidance stays local to each project
-- generated API docs come from code, exports, and docstrings
-- root docs do not document non-FLEXT projects
+## Architecture and tests
 
-## Related Guides
+- Generic reusable behavior survives in canonical `c`, `t`, `p`, `m`, or `u`
+  ownership, with runtime behavior in `u`, services, `api.py`, or `cli.py`.
+- Tests use public facades, `tm`, the unified `conftest.py`, and typed shared
+  fixtures.
+- Mocks, fakes, stubs, patching, private construction, duplicated setup, and
+  hardcoded project-owned values are prohibited.
+- Failures and warnings are corrected at their owning source, never suppressed,
+  retried, normalized, or bypassed.
 
-- [Getting Started](getting-started.md)
+## Documentation ownership
+
+Root guides are the writable source for generated member guides. Update the
+root source, then use `make gen APPLY=Y`; never hand-edit generated copies.
+
+## Related guides
+
+- [Getting started](getting-started.md)
 - [Configuration](configuration.md)
 - [Testing](testing.md)
 - [Troubleshooting](troubleshooting.md)

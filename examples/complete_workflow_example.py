@@ -21,8 +21,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, ClassVar
 
-from examples import m, p, r, t, u
-from examples._constants import ExamplesWorkflowStage
+from examples import ExamplesWorkflowStage, m, p, r, t, u
 
 if TYPE_CHECKING:
     from collections.abc import Callable, MutableSequence
@@ -50,7 +49,7 @@ class CompleteWorkflowExample:
     class WorkflowData(m.BaseModel):
         """Data container for workflow processing."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True, extra="allow"
         )
         content: t.JsonMapping = u.Field(default_factory=dict)
@@ -60,7 +59,7 @@ class CompleteWorkflowExample:
     class WorkflowContext(m.BaseModel):
         """Complete workflow context with correlation and metadata."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -88,7 +87,7 @@ class CompleteWorkflowExample:
     class WorkflowStageResult(m.BaseModel):
         """Result of a workflow stage with comprehensive tracking."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -113,7 +112,7 @@ class CompleteWorkflowExample:
     class CompleteWorkflowResult(m.BaseModel):
         """Complete workflow result with all stages aggregated."""
 
-        model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
+        model_config: ClassVar[t.ConfigDict] = m.ConfigDict(
             arbitrary_types_allowed=True
         )
 
@@ -139,6 +138,16 @@ class CompleteWorkflowExample:
         ] = "unknown"
 
     class WorkflowOrchestrator(m.BaseModel):
+        """Workflow orchestrator coordinating the full stage pipeline."""
+
+        STAGE_PARAMS: ClassVar[
+            t.MappingKV[ExamplesWorkflowStage, tuple[float, str]]
+        ] = {
+            ExamplesWorkflowStage.VALIDATION: (0.005, "validated"),
+            ExamplesWorkflowStage.PROCESSING: (0.01, "processed"),
+            ExamplesWorkflowStage.ANALYSIS: (0.005, "analyzed"),
+            ExamplesWorkflowStage.AGGREGATION: (0.0, "aggregated"),
+        }
         """Resource-managed workflow orchestrator with automatic context lifecycle."""
 
         auto_execute: bool = True
@@ -262,23 +271,9 @@ class CompleteWorkflowExample:
 
             def process_single_item(
                 item: CompleteWorkflowProcessingDict,
-            ) -> CompleteWorkflowProcessingDict | None:
-                try:
-                    result = stage_func(item, context)
-                    workflow_data = result.map_or(None)
-                    return (
-                        {**workflow_data.content}
-                        if isinstance(
-                            workflow_data, CompleteWorkflowExample.WorkflowData
-                        )
-                        else workflow_data
-                    )
-                except Exception as e:
-                    err: CompleteWorkflowProcessingDict = {
-                        "error": str(e),
-                        "item": str(item),
-                    }
-                    return err
+            ) -> CompleteWorkflowProcessingDict:
+                workflow_data = stage_func(item, context).unwrap()
+                return {**workflow_data.content}
 
             processed_results: MutableSequence[CompleteWorkflowProcessingDict] = []
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -286,9 +281,7 @@ class CompleteWorkflowExample:
                     executor.submit(process_single_item, item): item for item in items
                 }
                 for future in as_completed(future_to_item):
-                    result = future.result()
-                    if result is not None:
-                        processed_results.append(result)
+                    processed_results.append(future.result())
             processing_time = time.time() - stage_start
             stage_result = CompleteWorkflowExample.WorkflowStageResult(
                 stage_name=stage_name,
@@ -371,13 +364,10 @@ class CompleteWorkflowExample:
                     "failed_stages": 0,
                     "total_processing_time": total_time,
                     "stage_results": stage_results,
-                    "aggregated_metrics": aggregated_metrics_payload,
+                    "aggregated_metrics": aggregated_metrics,
                     "workflow_status": "completed",
                 })
             )
-            perf_summary_raw: t.MutableJsonMapping = {}
-            for key, value in aggregated_metrics.items():
-                perf_summary_raw[key] = value
             summary: CompleteWorkflowProcessingDict = (
                 t.json_mapping_adapter().validate_python({
                     "workflow_id": workflow_result.workflow_id,
@@ -385,7 +375,7 @@ class CompleteWorkflowExample:
                     "total_stages": workflow_result.total_stages,
                     "completed_stages": workflow_result.completed_stages,
                     "total_processing_time": workflow_result.total_processing_time,
-                    "performance_summary": perf_summary_raw,
+                    "performance_summary": dict(aggregated_metrics),
                 })
             )
             summary_content: CompleteWorkflowContent = {**summary}
@@ -422,20 +412,7 @@ class CompleteWorkflowExample:
             | None = None,
         ) -> CompleteWorkflowProcessingDict:
             """Generic stage processing helper."""
-            sleep_time = 0.0
-            add_field = "aggregated"
-            match stage:
-                case CompleteWorkflowExample.Stage.VALIDATION:
-                    sleep_time = 0.005
-                    add_field = "validated"
-                case CompleteWorkflowExample.Stage.PROCESSING:
-                    sleep_time = 0.01
-                    add_field = "processed"
-                case CompleteWorkflowExample.Stage.ANALYSIS:
-                    sleep_time = 0.005
-                    add_field = "analyzed"
-                case CompleteWorkflowExample.Stage.AGGREGATION:
-                    add_field = "aggregated"
+            sleep_time, add_field = self.STAGE_PARAMS[stage]
             time.sleep(sleep_time)
             result: t.MutableJsonMapping = {**item}
             result[add_field] = True

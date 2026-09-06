@@ -1,99 +1,37 @@
 # FLEXT Python Docstring Standards
 
-<!-- TOC START -->
-- [Primary Reference](#primary-reference)
-- [Supporting Sections (in the primary reference)](#supporting-sections-in-the-primary-reference)
-- [Key Principle](#key-principle)
-- [Quick Start](#quick-start)
-  - [For Code Review](#for-code-review)
-  - [For Implementation](#for-implementation)
-- [Tools](#tools)
-- [Philosophy](#philosophy)
-<!-- TOC END -->
+This directory defines the public Python docstring contract for the FLEXT
+workspace.
 
-**Approach**: Document based on **why code was built this way**, not generic templates.
+## Canonical reference
 
-This directory contains standards and guidance for writing Python docstrings across
-the FLEXT monorepo using Google-style PEP 257 conventions, validated against Ruff
-strict mode (select=["ALL"], preview=true).
+[PEP 257, Google style, and Ruff](PEP257-GOOGLE-RUFF.md) is the single detailed
+reference. The typed Ruff configuration owns the exact enabled and ignored
+rules; this documentation never duplicates that registry.
 
-## Primary Reference
+## Principles
 
-- **[PEP257-GOOGLE-RUFF.md](./PEP257-GOOGLE-RUFF.md)** — **Main reference** for standards
-  - PEP 257 + Google Style + Ruff compliance
-  - Copyright placeholder and placement
-  - Real examples from FLEXT code
-  - Ruff checklist and validation commands
+- Explain why a public symbol exists, its boundary, and meaningful failure
+  conditions.
+- Do not repeat the symbol name, signature, annotations, or implementation.
+- Keep summaries imperative, concise, and specific.
+- Document public parameters, returns, yields, and raised exceptions when they
+  add information beyond the type contract.
+- Keep module copyright and SPDX text inside the module docstring.
+- Remove stale prose when behavior or ownership changes.
 
-## Supporting Sections (in the primary reference)
+## Canonical validation
 
-- **[Guidelines](./PEP257-GOOGLE-RUFF.md#rules)** — Comprehensive style rules per symbol kind
-- **[Patterns](./PEP257-GOOGLE-RUFF.md#document-when)** — What to document and what to skip
-- **[Examples](./PEP257-GOOGLE-RUFF.md#examples-from-flext-codebase)** — Real before/after from FLEXT code
-- **[Quick Reference](./PEP257-GOOGLE-RUFF.md#ruff-compliant-checklist)** — Pre-commit checklist
-
-## Key Principle
-
-**Good docstrings answer:**
-
-1. **Why does this class/method exist?** (domain/responsibility)
-2. **How does it differ from similar methods?** (contrast)
-3. **What are the constraints or edge cases?** (boundaries)
-4. **When will this function fail?** (error conditions)
-
-**Skip docstrings that:**
-
-- Repeat the method name
-- Describe implementation details
-- Document type hints already clear from signature
-
-## Quick Start
-
-### For Code Review
+Run documentation and code validation only from the workspace root:
 
 ```bash
-# Check which files need docstrings
-ruff check --select=D,DOC --preview <path/to/files>
+make fix APPLY=Y
+make fmt APPLY=Y
+make check APPLY=Y
+make test APPLY=Y
+make conform APPLY=Y
 ```
 
-### For Implementation
-
-1. Read the code to understand **WHY** it was built that way
-2. Check if similar methods exist—document what makes this one different
-3. Add 1-3 sentence docstring explaining the non-obvious part
-4. Skip generic documentation on obvious methods
-
-## Tools
-
-**Validation** (identify gaps):
-
-```bash
-ruff check --select=D,DOC --preview flext-core/src
-```
-
-**Audit workflow** (guided manual improvement):
-
-```bash
-make build WHAT=docs DOCS_PHASE=audit PROJECT=flext-core
-```
-
-## Philosophy
-
-Rather than auto-generating docstrings across 2,500+ files:
-
-1. Identify truly confusing code
-2. Read it to understand business intent
-3. Add minimal, useful documentation
-4. Use as template for similar patterns
-
-This maintains docstring **quality and usefulness** instead of quantity.
-
----
-
-**Table of Contents** (all in [PEP257-GOOGLE-RUFF.md](./PEP257-GOOGLE-RUFF.md))
-
-- Rules — per-symbol style rules (module, class, function, property, exceptions, async)
-- Document When — what earns a docstring and what is skipped
-- Examples from FLEXT Codebase — real before/after
-- Ruff-Compliant Checklist — pre-commit validation
-- Ruff Integration — commands and expected ignores
+Do not invoke Ruff or another underlying tool directly. Do not add project,
+file, pattern, action, phase, fix, or changed-only selectors. Test execution
+retains the canonical Testmon cache.
