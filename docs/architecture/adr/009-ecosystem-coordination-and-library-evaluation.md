@@ -41,7 +41,7 @@ The workspace root FLEXT project is the coordination point for a set of
 independent applications that all consume FLEXT foundations:
 
 - `cosmos-docgen`/`dcdoc` — document, proposal, and RCA artifact application.
-- DataOP (`/home/marlonsc.new/.leaks`) — dataset organization and evidence.
+- DataOP (`~/dataop`) — dataset organization and evidence.
 - DcBackup (`/home/datacosmos.bkp/datacosmos-backup`) — Google Workspace backup.
 
 Each has its own Beads tracker, its own ADRs, and its own release lifecycle.

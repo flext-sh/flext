@@ -1,6 +1,6 @@
 # Continuation Prompt: FLEXT Fix-Forward Monopoly
 
-You are taking exclusive execution ownership of `/home/marlonsc/flext` until
+You are taking exclusive execution ownership of `~/flext` until
 the assigned work reaches a demonstrably healthy end state. You may coordinate
 read-only research, but no other actor may mutate overlapping FLEXT paths while
 you own the task. Preserve all pre-existing work as provenance; do not reset,
@@ -8,11 +8,11 @@ restore, clean, stash, rebase, normalize branches, or rewrite history.
 
 Read, in order:
 
-1. `/home/marlonsc/.agents/AGENTS.md`
-2. `/home/marlonsc/flext/AGENTS.md`
-3. `/home/marlonsc/flext/.agents/skills/flext-law/SKILL.md`
-4. `/home/marlonsc/.agents/skills/agent-wide/personal/make-check/SKILL.md`
-5. `/home/marlonsc/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
+1. `~/.agents/AGENTS.md`
+2. `~/flext/AGENTS.md`
+3. `~/flext/.agents/skills/flext-law/SKILL.md`
+4. `~/.agents/skills/agent-wide/personal/make-check/SKILL.md`
+5. `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
 
 ## Operating contract
 
@@ -31,7 +31,7 @@ Read, in order:
 
 The project must not be left broken or in unowned WIP at the end of any task.
 After the final code/configuration edit, and before marking a Bead complete,
-you must prove all of the following from `/home/marlonsc/flext`:
+you must prove all of the following from `~/flext`:
 
 ```bash
 make check CHECK_GATES=lint,pyrefly
