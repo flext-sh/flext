@@ -12,7 +12,7 @@ repository:
   path: .
   role: workspace
   state: active
-  checkout: root
+  kind: internal_flext
   codegen: conform
   package: false
   editable: false
@@ -45,7 +45,7 @@ members:
     path: "flext-api"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -58,7 +58,7 @@ members:
     path: "flext-auth"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -71,7 +71,7 @@ members:
     path: "flext-cli"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -84,7 +84,7 @@ members:
     path: "flext-core"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -97,7 +97,7 @@ members:
     path: "flext-db-oracle"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -110,7 +110,7 @@ members:
     path: "flext-dbt-ldap"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -123,7 +123,7 @@ members:
     path: "flext-dbt-ldif"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -136,7 +136,7 @@ members:
     path: "flext-dbt-oracle"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -149,7 +149,7 @@ members:
     path: "flext-dbt-oracle-wms"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -162,7 +162,7 @@ members:
     path: "flext-grpc"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -175,7 +175,7 @@ members:
     path: "flext-infra"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -188,7 +188,7 @@ members:
     path: "flext-ldap"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -201,7 +201,7 @@ members:
     path: "flext-ldif"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -214,7 +214,7 @@ members:
     path: "flext-meltano"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -227,7 +227,7 @@ members:
     path: "flext-observability"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -240,7 +240,7 @@ members:
     path: "flext-oracle-oic"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -253,7 +253,7 @@ members:
     path: "flext-oracle-wms"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -266,7 +266,7 @@ members:
     path: "flext-plugin"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -279,7 +279,7 @@ members:
     path: "flext-quality"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -292,7 +292,7 @@ members:
     path: "flext-tap-ldap"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -305,7 +305,7 @@ members:
     path: "flext-tap-ldif"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -318,7 +318,7 @@ members:
     path: "flext-tap-oracle"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -331,7 +331,7 @@ members:
     path: "flext-tap-oracle-oic"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -344,7 +344,7 @@ members:
     path: "flext-tap-oracle-wms"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -357,7 +357,7 @@ members:
     path: "flext-target-ldap"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -370,7 +370,7 @@ members:
     path: "flext-target-ldif"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -383,7 +383,7 @@ members:
     path: "flext-target-oracle"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -396,7 +396,7 @@ members:
     path: "flext-target-oracle-oic"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -409,7 +409,7 @@ members:
     path: "flext-target-oracle-wms"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -422,7 +422,7 @@ members:
     path: "flext-tests"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
@@ -435,7 +435,7 @@ members:
     path: "flext-web"
     role: standalone
     state: "active"
-    checkout: submodule
+    kind: internal_flext
     codegen: conform
     package: true
     editable: true
