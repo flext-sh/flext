@@ -1,5 +1,13 @@
 # FLEXT Documentation Index
 
+<!-- TOC START -->
+- [Quick Start](#quick-start)
+- [Current Versioning Context](#current-versioning-context)
+- [Canonical Sections](#canonical-sections)
+- [Workspace tooling](#workspace-tooling)
+- [Scope Boundary](#scope-boundary)
+<!-- TOC END -->
+
 <!-- mro-wkii.17.7 (agent: codex) — route Make and workspace guidance to the conform SSOT. -->
 
 The root portal is intentionally small. It documents the FLEXT workspace itself, not every historical note or every
@@ -35,8 +43,8 @@ non-FLEXT directory in the repository.
 
 `flext-infra codegen conform` is the sole owner of repository conformance and
 generated Makefiles. It consumes the universal `flext-cli` config, schema, and
-template engine and emits self-contained `workspace-root`, `workspace-member`,
-or `standalone` profiles. Workspace topology comes only from the validated
+template engine and emits self-contained `workspace` or `standalone`
+profiles (`.gitmodules` present vs absent). Workspace topology comes only from the validated
 manifest under `config/`; package metadata remains Git-and-branch sourced while
 root `setup` installs declared local members as editable distributions.
 

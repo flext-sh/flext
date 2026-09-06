@@ -1,5 +1,37 @@
 # FLEXT Workspace Baseline v0.13.0
 
+<!-- TOC START -->
+- [Status](#status)
+- [Purpose](#purpose)
+- [Governed Scope](#governed-scope)
+- [Authority](#authority)
+- [Forward Public Surface](#forward-public-surface)
+  - [Core Class Matrix](#core-class-matrix)
+  - [Namespace Composition Classes](#namespace-composition-classes)
+- [Core Class Contracts](#core-class-contracts)
+  - [FlextRuntime](#flextruntime)
+  - [FlextDi](#flextdi)
+  - [FlextLogger](#flextlogger)
+  - [FlextContext](#flextcontext)
+  - [FlextContainer](#flextcontainer)
+  - [s](#s)
+  - [FlextDispatcher](#flextdispatcher)
+  - [FlextHandler](#flexthandler)
+  - [FlextCatalog](#flextcatalog)
+  - [d](#d)
+- [DI Baseline](#di-baseline)
+- [Alias Baseline](#alias-baseline)
+- [Extension Baseline](#extension-baseline)
+- [Project Naming Baseline](#project-naming-baseline)
+- [Workspace Taxonomy](#workspace-taxonomy)
+  - [Tests](#tests)
+  - [Examples](#examples)
+  - [Scripts](#scripts)
+- [Expansion Rules](#expansion-rules)
+- [Migration Entry Points](#migration-entry-points)
+- [References](#references)
+<!-- TOC END -->
+
 ## Status
 
 - Version: `0.13.0`

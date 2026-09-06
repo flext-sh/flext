@@ -1,5 +1,23 @@
 # Ecosystem Coordination — FLEXT, Cosmos applications, and external platforms
 
+<!-- TOC START -->
+- [Projects and owners](#projects-and-owners)
+- [Dependency law](#dependency-law)
+- [End-to-end coordination flow](#end-to-end-coordination-flow)
+- [Per-project responsibilities](#per-project-responsibilities)
+  - [`dcdoc` (cosmos-docgen)](#dcdoc-cosmos-docgen)
+  - [DataOP](#dataop)
+  - [DcBackup](#dcbackup)
+  - [`flext-cli`](#flext-cli)
+  - [`flext-infra`](#flext-infra)
+  - [`flext-core`](#flext-core)
+- [External platforms](#external-platforms)
+- Open libraries and possible new `flext-*` (gated)
+- [Project standardization (ADR-010)](#project-standardization-adr-010)
+- Extraction gate for any new `flext-*`
+- [Coordination Beads](#coordination-beads)
+<!-- TOC END -->
+
 This document is the consultable coordination reference for the whole Cosmos
 ecosystem from the FLEXT workspace. It is governed by
 [ADR-009](adr/009-ecosystem-coordination-and-library-evaluation.md) and must
@@ -19,7 +37,7 @@ forward planning contract for `0.20.0-dev`; it does not retro-fit the
 | `flext-core` | FLEXT library | `flext-core` | ADR-002/005/008 |
 | `flext-cli` | FLEXT library | `flext-cli` | ADR-008, `mro-ib6t.2` |
 | `flext-infra` | FLEXT tooling | `flext-infra` | ADR-003/004/008, `mro-ib6t.1` |
-| `dcdoc` | External application | `cosmos-docgen` | ADR-020 (`bd-bhg1`) |
+| `dcdoc` | External application | `cosmos-docgen` | ADR-020 (`dcdoc-bhg1`) |
 | DataOP | External application | `/home/marlonsc.new/.leaks` | DataOP ADR-001 (`data-organization-pipeline-4dt`) |
 | DcBackup | External application | `/home/datacosmos.bkp/datacosmos-backup` | DcBackup ADR-001 (`datacosmos-backup-o6w`) |
 
@@ -116,7 +134,7 @@ evidence.
 | `flext-gworkspace` | Rejected in current form | Deployed DMS owner + neutral Google contract + 2 consumers |
 | Backup shared library | Not created | DcBackup primitive proven reusable by a second consumer |
 | Static-consumer docs mode | Accepted, to build | Immediate — `mro-ib6t.1` |
-| Generic Office byte completion | Accepted, to build | Immediate — `mro-ib6t.2` / `bd-gsnp` |
+| Generic Office byte completion | Accepted, to build | Immediate — `mro-ib6t.2` / `dcdoc-gsnp` |
 | Neutral artifact-envelope model | Deferred | Two consumers need the identical neutral contract |
 
 ## Project standardization (ADR-010)
@@ -145,6 +163,6 @@ then declarative enforcement. SSOT: `codegen.yaml` + `tooling.yaml` +
 - FLEXT boundaries: `mro-ib6t` (+ `mro-ib6t.1`, `mro-ib6t.2`).
 - Ecosystem coordination epic and open-library candidates: see the epic linked
   from ADR-009.
-- Cosmos: `bd-bhg1` (+ `bd-bhg1.1`, `bd-bhg1.2`), `bd-gsnp`.
+- Cosmos: `dcdoc-bhg1` (+ `dcdoc-bhg1.1`, `dcdoc-bhg1.2`), `dcdoc-gsnp`.
 - DataOP: `data-organization-pipeline-4dt`.
 - DcBackup: `datacosmos-backup-o6w` (+ `datacosmos-backup-o6w.1`).

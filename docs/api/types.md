@@ -1,5 +1,10 @@
 # Types
 
+<!-- TOC START -->
+- [Rules](#rules)
+- [Where the aliases live](#where-the-aliases-live)
+<!-- TOC END -->
+
 **The canonical typing surface of the FLEXT workspace.**
 
 FLEXT has one typing contract, exposed through the `t` facade of every

@@ -16,14 +16,13 @@ Usage:
 from __future__ import annotations
 
 import configparser
-import json
 import re
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Annotated
 
-from flext_cli import m, p, u
+from flext_cli import m, p, t, u
 
 DEPENDABOT_AUTHOR = "dependabot[bot]"
 DEPENDABOT_TITLE_RE = re.compile(
@@ -91,6 +90,17 @@ def repo_slug_from_origin(path: Path) -> str | None:
     return None
 
 
+def _pr_row(value: t.JsonValue) -> dict[str, int | str]:
+    """Narrow one gh PR row to its declared (number, title, headRefName, url) contract."""
+    row = u.Cli.json_as_mapping(value)
+    return {
+        "number": u.Cli.json_nested_int(row, "number"),
+        "title": u.Cli.json_pick_str(row, "title"),
+        "headRefName": u.Cli.json_pick_str(row, "headRefName"),
+        "url": u.Cli.json_pick_str(row, "url"),
+    }
+
+
 def list_dependabot_prs(slug: str, base: str) -> list[dict[str, int | str]]:
     """List open Dependabot PRs targeting the given base branch."""
     result = _run_cmd([
@@ -112,10 +122,9 @@ def list_dependabot_prs(slug: str, base: str) -> list[dict[str, int | str]]:
     ])
     if result.failure or result.value.exit_code != 0:
         return []
-    try:
-        return json.loads(result.value.stdout or "[]")
-    except json.JSONDecodeError:
-        return []
+    parsed = u.Cli.json_parse(result.value.stdout or "[]")
+    rows = u.Cli.json_as_sequence(parsed.unwrap())
+    return [_pr_row(row) for row in rows]
 
 
 def ecosystem_from_head_ref(head_ref: str) -> str:
@@ -280,7 +289,10 @@ def process_repo(
         return 0, 0, 0, 0
 
     # Sort ascending so older PRs merge first, reducing lock-file conflicts.
-    prs.sort(key=lambda p: int(p["number"]))
+    def pr_number(pr: dict[str, int | str]) -> int:
+        return int(pr["number"])
+
+    prs.sort(key=pr_number)
 
     merged = skipped = failed = closed = 0
     for pr in prs:

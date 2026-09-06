@@ -1,71 +1,50 @@
 # Configuration
 
-The docs pipeline should read as much as possible from `pyproject.toml`. Root JSON policy exists only for values that
-cannot be inferred from project metadata.
+Configuration has one writable authority. Prefer typed `config/*.yaml` and
+settings; use `pyproject.toml` only for package and tool metadata that it owns.
+Derived files are generated projections.
 
-## Source of Truth Order
+## Ownership order
 
-1. project `pyproject.toml`
-2. `[tool.flext.docs]` inside each project `pyproject.toml`
-3. minimal root policy in `docs/docs_config.json`
+1. Typed config and settings own business rules, operational values, and
+   environment-tunable behavior.
+2. `pyproject.toml` owns package metadata and declared tool configuration.
+3. Generators derive managed code, docs, CI, and workspace projections.
 
-If a value can be derived from `pyproject.toml`, it should not be duplicated in JSON.
+Never duplicate an owned value in tests, examples, JSON side files, templates,
+or local registries. Tests read the same typed owner as production.
 
-## Root Policy File
+## Documentation configuration
 
-`docs/docs_config.json` is intentionally small. It currently centralizes only:
+Public API documentation is derived from declared public exports and docstrings.
+Project descriptions, versions, package names, and URLs come from canonical
+package metadata. Docs-only policy exists only when it cannot be derived from a
+typed owner.
 
-- root scope exclusions
-- placeholder audit terms
-- stale forward-guidance symbols
-- stale-symbol exempt paths for migration and baseline docs
+Root files under `docs/guides/` own generated member guides. Change the root
+source, never the member projection.
 
-## Project Metadata
+## Apply and validate
 
-Project docs automation should prefer these values from `pyproject.toml`:
-
-- `[project].name`
-- `[project].description`
-- `[project].version`
-- `[project].urls`
-- wheel package paths under the build backend
-
-## `tool.flext.docs`
-
-Use `[tool.flext.docs]` only for metadata that is specific to the docs pipeline and cannot be safely inferred:
-
-```toml
-[tool.flext.docs]
-project_class = "platform"
-site_title = "FLEXT API"
-package_name = "flext_api"
-exclude_docs = ["references/**"]
-module_include = ["flext_api.api"]
-module_exclude = ["flext_api._internal"]
-```
-
-Typical fields:
-
-- `project_class`
-- `site_title`
-- `package_name`
-- `enabled`
-- `exclude_docs`
-- `module_include`
-- `module_exclude`
-
-## Docs Generation Contract
-
-- generated API pages come from public exports and docstrings
-- mkdocs settings is generated from project metadata plus minimal docs overrides
-- curated guides must not duplicate generated API descriptions
-
-## Validation
+Run configuration propagation and validation from the workspace root:
 
 ```bash
-make docs DOCS_PHASE=generate PROJECT=flext-infra
-make docs DOCS_PHASE=validate PROJECT=flext-infra
+make gen APPLY=Y
+make gen APPLY=Y
+make check APPLY=Y
+make test APPLY=Y
+make conform APPLY=Y
 ```
 
-Use [Troubleshooting](troubleshooting.md) when a project is missing package metadata or generated pages do not match the
-code.
+The second generation run must be a fixed point. Test validation retains the
+canonical Testmon cache. Do not invoke underlying tools or add project, file,
+pattern, phase, fix, or changed-only selectors.
+
+Warnings, missing tools, stale projections, and empty output are failures. Fix
+their canonical owner and rerun the same root verb.
+
+## Related guides
+
+- [Development](development.md)
+- [Testing](testing.md)
+- [Troubleshooting](troubleshooting.md)

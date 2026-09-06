@@ -1,5 +1,16 @@
 # Make/codegen, configuration, and uv SSOT migration plan
 
+<!-- TOC START -->
+- [Delivery rules](#delivery-rules)
+- [Canonical ownership](#canonical-ownership)
+- Phase 1 — Consolidate the engine
+- Phase 2 — Generate the complete Make and uv contract
+- Phase 3 — Conform the FLEXT fleet
+- Phase 4 — Conform Cosmos
+- Phase 5 — Conform standalone repositories
+- Phase 6 — Fleet acceptance and deletion proof
+<!-- TOC END -->
+
 This plan implements [ADR-003](adr/003-workspace-tooling-hub-distribution.md),
 [ADR-004](adr/004-generic-make-framework-in-flext-tests.md), and
 [ADR-005](adr/005-config-settings-constants-templates-schemas-ssot.md) under
@@ -57,8 +68,8 @@ Acceptance:
 
 ## Phase 2 — Generate the complete Make and uv contract
 
-1. Generate one self-contained Makefile for `workspace-root`,
-   `workspace-member`, and `standalone` from the same template layer.
+1. Generate one self-contained Makefile for `workspace` or `standalone`
+   from the same template layer (`.gitmodules` present vs absent).
 2. Validate `custom.mk` as private `_custom_<verb>_<what>` handlers only.
 3. Expose `help` plus the twelve operational verbs defined by ADR-004, with one
    selector and handler per action.
@@ -93,7 +104,7 @@ Any missing, extra, or unclassified member is a hard inventory failure.
 
 ## Phase 4 — Conform Cosmos
 
-1. Conform the Cosmos root as `workspace-root`.
+1. Conform the Cosmos root as `workspace`.
 2. Conform Charts and GitOps as members that also pass in independent clones.
 3. Mark content-only repositories explicitly and remove invalid inventory
    entries rather than treating them as package members.

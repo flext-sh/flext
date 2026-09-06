@@ -1,5 +1,20 @@
 # FLEXT Worker Lane Contract
 
+<!-- TOC START -->
+- [Canonical authorities](#canonical-authorities)
+- [1. One lane, one bead, one worktree](#1-one-lane-one-bead-one-worktree)
+- [2. Gates only through root Make verbs](#2-gates-only-through-root-make-verbs)
+- [3. Cooperative git](#3-cooperative-git)
+- [4. Beads evidence only](#4-beads-evidence-only)
+- [5. Definition of done](#5-definition-of-done)
+- [6. Coordination protocol](#6-coordination-protocol)
+- [7. Anti-patterns that burned us](#7-anti-patterns-that-burned-us)
+- [8. Three-boundary validation contract](#8-three-boundary-validation-contract)
+  - [8.1 Final worker lane](#81-final-worker-lane)
+  - [8.2 Updated worker lane before merge](#82-updated-worker-lane-before-merge)
+  - [8.3 Original target after integration](#83-original-target-after-integration)
+<!-- TOC END -->
+
 Every light worker owns exactly one bead in one branch and one dedicated worktree.
 Read the canonical authorities first; this file only adds lane discipline.
 
@@ -7,14 +22,13 @@ Read the canonical authorities first; this file only adds lane discipline.
 
 - Project law and routed skills: [`AGENTS.md`][agents-md]
 - Governance router: [`GOVERNANCE.md`][governance-md]
-- Local skills: [`flext-law`][flext-law], [`flext-inviolable-rules`][flext-inviolable-rules]
-- Universal skills: `~/.agents/skills/make-check/SKILL.md`, `~/.agents/skills/verification-loop/SKILL.md`
+- Local skills: [`flext-law`][flext-law]
+- Universal skills: `~/.agents/skills/agent-wide/personal/make-check/SKILL.md`, `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
 - Config/settings SSOT: [ADR-005][adr-005]
 
 [agents-md]: ../../AGENTS.md
 [governance-md]: ../GOVERNANCE.md
 [flext-law]: ../../.agents/skills/flext-law/SKILL.md
-[flext-inviolable-rules]: ../../.agents/skills/flext-inviolable-rules/SKILL.md
 [adr-005]: ../architecture/adr/005-config-settings-constants-templates-schemas-ssot.md
 
 ## 1. One lane, one bead, one worktree
@@ -29,13 +43,13 @@ Never invoke bare `ruff`, `pyrefly`, `pyright`, `mypy`, `pytest`, or `uv`. Use
 the dispatcher:
 
 ```bash
-make check CHECK_GATES=lint,format,pyrefly
-make check PROJECT=<affected> CHECK_GATES=pyright,mypy
-make test PROJECT=<affected>
-make val WHAT=workspace
+make gen APPLY=Y
+make check APPLY=Y
+make test APPLY=Y
 ```
 
-Run the narrowest changed-scope gate first; widen only after it passes.
+Every Python test run retains the canonical testmon cache. Agents do not clear,
+replace, or bypass it and do not add selector variables to this standard flow.
 
 ## 3. Cooperative git
 
@@ -46,7 +60,7 @@ status`, leave it untouched and ask the lead. Fix forward only.
 
 ## 4. Beads evidence only
 
-Append truthful notes with `bd update <id> --append-notes '...'`. Never change
+Append truthful notes with `bd comment <id> '...'`. Never change
 bead status, assignee, dependency, priority, or close/merge beads. The lead owns
 bead state.
 
@@ -58,14 +72,18 @@ Done means all of the following:
 - Exact Make-gate evidence is recorded: command, cwd, exit code, decisive line.
 - No new lint, type, or test failures are injected.
 - Changed files are clean and scoped.
-- Nothing reaches `0.12.0-dev` except through the lead's PR #20 merge after the
-  whole fleet is green.
+- Nothing reaches `0.12.0-dev` except through the lane's own reviewed PR: one
+  bead -> one branch -> PR against `0.12.0-dev` -> green native gates -> PR
+  Sheriff gate (`~/.agents/skills/tool/pr-sheriff/scripts/pr_triage.py gate
+  <owner/repo> <pr> --base 0.12.0-dev --head <oid>`) -> independent review or
+  operator-authorized administrative merge -> merge commit -> post-merge
+  runtime proof -> bead evidence -> branch cleanup.
 
 ## 6. Coordination protocol
 
-Talk only through `team_send_message`. Report to the lead, then go idle;
-idle-after-report is correct. When blocked, message the lead the exact blocker
-and stop. Do not wander to other beads.
+Coordinate only through the bead (`bd comment <id>`) and the PR thread. Report
+to the lead, then go idle; idle-after-report is correct. When blocked, message
+the lead the exact blocker and stop. Do not wander to other beads.
 
 ## 7. Anti-patterns that burned us
 
@@ -85,11 +103,9 @@ lane: one coherent commit or an explicit pathspec-bound set of commits.
 
 The following fresh evidence is mandatory at every boundary:
 
-- `make check CHECK_GATES=lint,format,pyrefly` for the global workspace;
-- `make check PROJECT=<affected> CHECK_GATES=pyright,mypy` for every affected
-  project and consumer;
-- `make test PROJECT=<affected>` for every affected project and integration
-  surface;
+- `make check APPLY=Y` for the workspace;
+- `make test APPLY=Y`, retaining the canonical testmon cache, for every
+  affected project and integration surface;
 - real public-surface QA for the changed behavior; and
 - generator/consumer idempotence when generated outputs are involved.
 

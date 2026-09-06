@@ -1,5 +1,14 @@
 # FLEXT Governance Router
 
+<!-- TOC START -->
+- [Purpose](#purpose)
+- [Authority](#authority)
+- [Owner Routing](#owner-routing)
+- [Execution Contract](#execution-contract)
+- [Universal test contract (P0)](#universal-test-contract-p0)
+- [Baseline Commands](#baseline-commands)
+<!-- TOC END -->
+
 ## Purpose
 
 This file maps each change to its canonical owner. It does not restate
@@ -10,7 +19,7 @@ engineering law or skill procedures.
 Apply the newest applicable source in this order:
 
 1. Newest operator request.
-2. `~/.agents` universal authority (`AGENTS.md`, `UNIVERSAL_CORE.md`, and universal skills).
+2. `~/.agents` universal authority (`AGENTS.md` and universal skills).
 3. Project `AGENTS.md` and routed local skills.
 4. Bead execution and status SSOT.
 5. In-scope ADR in [`architecture/adr/`](architecture/adr/README.md).
@@ -25,16 +34,19 @@ this order.
 | Concern | Canonical owner | Decisive validation |
 | --- | --- | --- |
 | Provider activation and exported paths | `~/.agents` provider authority | typed manifest and exact-path inventory validation |
-| Session routing | `~/.agents/skills/flext-context-routing/SKILL.md` | marker and selected-skill evidence |
+| Session routing | `.agents/skills/flext-context-routing/SKILL.md` | marker and selected-skill evidence |
 | Architecture and public contracts | [ADR registry](architecture/adr/README.md) and owning source declaration | consumer audit plus affected project gates |
 | Ecosystem coordination (internal + external projects) | [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md) and [ecosystem-coordination.md](architecture/ecosystem-coordination.md) | reverse-dependency gate plus owner-local ADR consistency (`0.20.0-dev`) |
 | Runtime coding patterns | smallest matching skill under `~/.agents/skills/` | fresh import, lint, typecheck, behavior gate |
-| Quality commands | `~/.agents/skills/flext-inviolable-rules/SKILL.md` | exact command, exit code, decisive output |
+| Quality commands | `~/.agents/skills/agent-wide/personal/make-check/SKILL.md` | exact command, exit code, decisive output |
 | Documentation lifecycle | [`standards/documentation.md`](standards/documentation.md) | narrow markdown gate, then docs audit |
 | Workspace Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help` and affected dispatcher gate |
 | Enforcement catalog identity and routing | `flext-core` enforcement declarations | catalog census and public import |
 | Declarative enforcement payloads and execution | `flext-infra` rules, schemas, and engine | enforcement engine result |
-| Structural codemods | provider referenced by the `~/.agents` authority | preview, exact cardinality, apply, idempotence |
+| Git repositories and local Git operations | `flext-infra` public facades | local repository behavior and native gates |
+| GitHub operations and credentials | ai-hub public runtime surface | ai-hub command, hook, MCP, or daemon evidence |
+| CRG runtime, database, watcher, and graph services | ai-hub validated config and runtime | ai-hub public health and routing evidence |
+| Structural codemods | `flext-infra` ast-grep/Rope/LSP pipeline | preview, exact cardinality, apply, idempotence |
 
 The owning declaration, validated config, or fundamental rule is the source of
 truth. Tests and checks validate it; they never define the contract, catalog,
@@ -42,7 +54,7 @@ or routing decision.
 
 ## Execution Contract
 
-- Use the workspace-root Beads database for the root and every member project.
+- Use the workspace Beads database for the root and every member project.
   Only an independent project owns a separate tracker.
 - Claim and record disjoint path ownership before writes. Append evidence after
   every state-changing step.
@@ -57,6 +69,9 @@ or routing decision.
 Static enforcement and structural codemods are separate responsibilities.
 Declarative enforcement data owns policy; the referenced codemod provider owns
 safe, deterministic source transformations. Neither duplicates the other.
+Public ai-hub runtime services may enrich discovery when available, but FLEXT
+never imports them as libraries and their absence does not invalidate its local
+deterministic path. A selected, available integration still fails causally.
 
 ## Universal test contract (P0)
 
@@ -77,18 +92,18 @@ never allowed to hardcode the values that happen to exist today.
 
 ## Baseline Commands
 
-Choose the narrowest decisive command from the quality-gates skill, then widen
-only after it passes:
+Use the standard workspace commands; mutation is selected only with `APPLY=Y`:
 
 ```bash
-make check PROJECT=<project> CHECK_GATES=<gates>
-make val VALIDATE_SCOPE=workspace
+make check APPLY=Y
+make test APPLY=Y
 ```
 
-All FLEXT validation uses the root Make dispatcher; never run bare `ruff`,
+All FLEXT validation uses the root Make dispatcher and every Python test run
+retains the canonical testmon cache; never run bare `ruff`,
 `pyrefly`, `pyright`, `mypy`, or `pytest` commands.
 
 Record every red or green result with its exit code and decisive output in the
-active workspace-root Bead.
+active workspace Bead.
 
 For the worker lane contract, see [`ways-of-working/worker-lane-contract.md`](ways-of-working/worker-lane-contract.md).

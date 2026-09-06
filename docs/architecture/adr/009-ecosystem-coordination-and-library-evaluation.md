@@ -1,5 +1,20 @@
 # ADR-009 — Ecosystem coordination and reusable-library evaluation across internal and external projects
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. Four coordination planes](#1-four-coordination-planes)
+  - [2. Dependency direction is one-way and enforced](#2-dependency-direction-is-one-way-and-enforced)
+  - [3. Ownership matrix (authoritative)](#3-ownership-matrix-authoritative)
+  - [4. Coordination flow across all projects](#4-coordination-flow-across-all-projects)
+  - [5. Neutral integration contract](#5-neutral-integration-contract)
+  - [6. Platform selection (ecosystem-wide)](#6-platform-selection-ecosystem-wide)
+  - 7. Open libraries and possible new `flext-*` packages
+  - 8. Extraction gate for any new `flext-*` package
+- [Consequences](#consequences)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
 - **Status:** Accepted (planning) — targets the `0.20.0-dev` line
 - **Date:** 2026-07-18
 - **Target line:** FLEXT `0.20.0-dev`, an early development and planning branch.
@@ -119,7 +134,7 @@ producer extensions and never leak into FLEXT libraries.
 | MkDocs via `flext-infra` | Adopt after static-consumer gate (`mro-ib6t.1`) | Existing owner for site/search/nav/build/audit |
 | Sphinx + MyST | Do not add in parallel | Duplicates the site owner; no measured gap justifies it |
 | Pandoc | Keep, use directly | Mature conversion already used by `dcdoc` |
-| Quarto | Corpus bake-off only (`bd-bhg1.2`) | Unproven for rich editable Office fidelity |
+| Quarto | Corpus bake-off only (`dcdoc-bhg1.2`) | Unproven for rich editable Office fidelity |
 | Antora | Conditional future migration | Only if multi-repo/multi-version docs dominate |
 | Docusaurus | Reject for current requirements | Adds React/MDX/Node without demonstrated need |
 | Backstage TechDocs | Future reader/catalog | Consumes MkDocs static output |
@@ -178,6 +193,6 @@ reason to create a package.
 
 - [ADR-008 — Neutral consumer boundaries](008-neutral-consumer-boundaries.md)
 - [Ecosystem coordination](../ecosystem-coordination.md)
-- Cosmos ADR-020 (`bd-bhg1`)
+- Cosmos ADR-020 (`dcdoc-bhg1`)
 - DataOP ADR-001 (`data-organization-pipeline-4dt`)
 - DcBackup ADR-001 (`datacosmos-backup-o6w`)

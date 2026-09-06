@@ -3,15 +3,26 @@ name: conflict-marker-check
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   conflict-markers:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Check for merge conflict markers
         run: |
-          markers=$(git grep -l '<<<<<<< HEAD\|=======$' -- \
-            $(git ls-files | grep -vE '\.venv/|node_modules/|dist/|build/|\.cache/|_vendor/' | tr '\n' ' ') 2>/dev/null || true)
+          set -euo pipefail
+          status=0
+          markers=$(git grep -lE "^<<<<<<< |^>>>>>>> " -- \
+            ":(exclude).venv/" ":(exclude)node_modules/" \
+            ":(exclude)dist/" ":(exclude)build/" \
+            ":(exclude).cache/" ":(exclude)_vendor/") || status=$?
+          if [ "$status" -gt 1 ]; then
+            echo "::error::git grep failed with exit status $status"
+            exit "$status"
+          fi
           if [ -n "$markers" ]; then
             echo "::error::Merge conflict markers found in tracked files:"
             echo "$markers"

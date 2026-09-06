@@ -1,48 +1,56 @@
 # Testing
 
-The workspace test taxonomy is standardized. Root guidance stays short; project-specific test details stay local to each
-project.
+FLEXT tests prove observable runtime behavior through public package facades. The
+workspace root `AGENTS.md` and the nearest package scope remain authoritative.
 
-## Canonical Test Layout
+## Test design
 
-Use these directories when the project owns tests:
+- Exercise only public `api.py` surfaces and canonical `c`, `t`, `p`, `m`, and
+  `u` facades.
+- Put shared setup in the unified `conftest.py` and typed fixtures under
+  `tests/fixtures/`.
+- Use `tm` matchers and shared `flext-tests` builders for assertions and test
+  data.
+- Read project-owned values from typed config or settings. Never freeze current
+  defaults in tests, examples, or golden files.
+- Use real, bounded dependencies. Mocks, fakes, stubs, patching, monkeypatch
+  mutation, and assertions about private construction are prohibited.
+- Treat warnings, skips, empty collection, and suppressed failures as red.
 
-- `tests/unit`
-- `tests/integration`
-- `tests/architecture`
-- `tests/performance`
-- `tests/fixtures`
+## Canonical execution
 
-## Common Commands
-
-```bash
-make test PROJECT=flext-infra
-make test PROJECT=flext-infra MATCH=docs
-make check PROJECT=flext-infra
-make val
-```
-
-## Docs Pipeline Validation
-
-Use the docs phases directly when you are changing documentation tooling or generated docs:
+Run tests only through the dispatcher at the workspace root:
 
 ```bash
-make docs DOCS_PHASE=generate PROJECT=flext-infra
-make docs DOCS_PHASE=fix PROJECT=flext-infra FIX=1
-make docs DOCS_PHASE=audit PROJECT=flext-infra
-make docs DOCS_PHASE=build PROJECT=flext-infra
-make docs DOCS_PHASE=validate PROJECT=flext-infra
+make test APPLY=Y
 ```
 
-## Expectations
+The test verb owns test selection and the retained Testmon cache. Never clear or
+bypass that cache, and never invoke the underlying test runner directly.
 
-- generated API docs must come from public exports and docstrings
-- root docs must stay FLEXT-only
-- lint and type gates stay clean after each docs-tooling change
+Run the complete verification gate through the same dispatcher:
 
-## Related Guides
+```bash
+make check APPLY=Y
+```
 
-- [Make Commands](make-commands.md)
+Selectors such as project names, file names, patterns, or changed-only flags are
+not part of this command surface. If a required workflow is missing, repair the
+root Make owner and rerun its declared verb.
+
+## Generated documentation
+
+Member copies of this guide are generated projections. Change this root source
+and regenerate from the workspace root:
+
+```bash
+make gen APPLY=Y
+```
+
+Do not edit a member projection by hand.
+
+## Related guides
+
 - [Development](development.md)
-- [Configuration](configuration.md)
 - [Troubleshooting](troubleshooting.md)
+- [Testing standards](../standards/testing.md)

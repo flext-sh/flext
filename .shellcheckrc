@@ -1,5 +1,5 @@
 # FLEXT shellcheck configuration
-# SSOT for shell script static analysis across the workspace.
+# SSOT for shell script static analysis in this physical repository.
 
 shell=bash
 enable=add-default-case
@@ -12,7 +12,7 @@ enable=ensure-find-exec-subst
 enable=quote-safe-variables
 enable=require-variable-braces
 
-# Disabled by design for workspace scripts
+# Disabled by design for repository scripts
 disable=SC1090  # sourced files may be dynamic
-disable=SC1091  # sourced files may be outside workspace
+disable=SC1091  # sourced files may be outside the repository
 disable=SC2154  # variables may be assigned in sourced files

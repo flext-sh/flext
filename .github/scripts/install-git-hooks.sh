@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Owner-Skill: .agents/skills/scripts-validation/SKILL.md
-# install-git-hooks.sh — Install the Beads git hooks at the workspace root and
+# install-git-hooks.sh — Install the Beads git hooks at the composition root and
 # apply the FLEXT agent-trailer guard.
 #
 # Canonical owner of git-hook provisioning for this workspace. Reproducible and
@@ -12,7 +12,7 @@
 #   trailers, so it must be gated behind an explicit opt-in:
 #       BD_ALLOW_AGENT_COMMIT_TRAILERS=1
 #   `.github/scripts/check-beads-policy.sh` enforces the guard text is present
-#   in the installed hook; `make check WHAT=coordination` fails without it.
+#   in the installed hook; the complete `make check APPLY=Y` gate fails without it.
 #
 # Mechanism:
 #   `bd hooks install --chain` writes bd-managed sections between markers and
@@ -42,6 +42,12 @@ fail() {
 }
 
 command -v bd >/dev/null 2>&1 || fail "bd is not installed; install Beads before provisioning hooks"
+
+# Stage gates (operator law 2026-08-24): install only the stages the config
+# SSOT enables (make.pre_commit / make.pre_push). Both disabled means no
+# pre-commit framework install at all; Beads provisioning still runs.
+
+_log "Git-hook stages disabled by config gate; skipping pre-commit install"
 
 _log "Installing Beads git hooks (chained) at ${WORKSPACE_ROOT}"
 bd hooks install --chain >/dev/null || fail "bd hooks install --chain failed"
@@ -96,5 +102,7 @@ grep -q 'BD_ALLOW_AGENT_COMMIT_TRAILERS' "${hook_path}" \
 	|| fail "guard token missing after injection"
 grep -q 'bd hooks run prepare-commit-msg' "${hook_path}" \
 	|| fail "bd delegation missing; refusing to leave hook without beads integration"
+
+
 
 echo "install-git-hooks: prepare-commit-msg guarded (BD_ALLOW_AGENT_COMMIT_TRAILERS opt-in)"

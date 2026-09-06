@@ -1,5 +1,18 @@
 # ADR-005 — Config, settings, constants, templates, and schemas SSOT
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+  - [1. Each concern has exactly one owner](#1-each-concern-has-exactly-one-owner)
+  - [2. Facade and layer direction is strict](#2-facade-and-layer-direction-is-strict)
+  - [3. Repository conformance is data-driven](#3-repository-conformance-is-data-driven)
+  - [4. Rendering and application are deterministic transactions](#4-rendering-and-application-are-deterministic-transactions)
+  - [5. Migration is deletion-first](#5-migration-is-deletion-first)
+- [Consequences](#consequences)
+- [6. Enforcement is declarative data over a rope-only engine](#6-enforcement-is-declarative-data-over-a-rope-only-engine)
+- [Verification contract](#verification-contract)
+- [References](#references)
+<!-- TOC END -->
 - **Status:** Accepted
 - **Date:** 2026-07-11
 - **Scope:** runtime configuration, declarative generation inputs, schemas,

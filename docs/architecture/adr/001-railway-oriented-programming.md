@@ -1,5 +1,14 @@
 # ADR-001: Railway-Oriented Programming with `r[T]`
 
+<!-- TOC START -->
+- [Context](#context)
+- [Decision](#decision)
+- [Consequences](#consequences)
+  - [Positive](#positive)
+  - [Negative](#negative)
+- [Related Documents](#related-documents)
+<!-- TOC END -->
+
 **Status**: Accepted  
 **Reviewed**: 2026-02-17
 

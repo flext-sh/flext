@@ -4,9 +4,9 @@
 
 - [Key Features](#key-features)
   - [Examples Overview](#examples-overview)
-  - [1. ACL Processing Example (`acl_processing_example.py`)](#1-acl-processing-example-aclprocessingexamplepy)
-  - [2. Advanced Processing Example (`advanced_processing_example.py`)](#2-advanced-processing-example-advancedprocessingexamplepy)
-  - [3. Complete Workflow Example (`complete_workflow_example.py`)](#3-complete-workflow-example-completeworkflowexamplepy)
+  - 1. ACL Processing Example (`acl_processing_example.py`)
+  - 2. Advanced Processing Example (`advanced_processing_example.py`)
+  - 3. Complete Workflow Example (`complete_workflow_example.py`)
 - [Architecture Patterns Demonstrated](#architecture-patterns-demonstrated)
   - [Railway Pattern](#railway-pattern)
   - [Parallel Processing](#parallel-processing)
@@ -43,12 +43,13 @@ Part of the [FLEXT](https://github.com/flext-sh/flext) ecosystem.
 
 ### 1. ACL Processing Example (`acl_processing_example.py`)
 
-**Advanced ACL Processing with Railway Pattern**
+### Advanced ACL Processing with Railway Pattern
 
 Demonstrates comprehensive Access Control List (ACL) processing capabilities:
 
 - **Parallel Batch Processing**: Using `ThreadPoolExecutor` for concurrent ACL operations.
-- **Intelligent Server Auto-detection**: Automatic detection of LDAP server types (OpenLDAP, Oracle OID, Oracle Unified Directory, Active Directory, Apache DS).
+- **Intelligent Server Auto-detection**: Automatic detection of LDAP server types (OpenLDAP, Oracle OID, Oracle Unified
+  Directory, Active Directory, Apache DS).
 - **Integrated ACL Validation**: Complex context-based validation with custom rules per server type.
 - **Railway Pattern**: Failure-resistant pipeline that follows functional error handling principles.
 - **Performance Analytics**: Comprehensive metrics and throughput analysis.
@@ -63,7 +64,7 @@ Demonstrates comprehensive Access Control List (ACL) processing capabilities:
 
 ### 2. Advanced Processing Example (`advanced_processing_example.py`)
 
-**Advanced Processing with Current APIs**
+### Advanced Processing with Current APIs
 
 Demonstrates modern processing capabilities with updated APIs:
 
@@ -83,7 +84,7 @@ Demonstrates modern processing capabilities with updated APIs:
 
 ### 3. Complete Workflow Example (`complete_workflow_example.py`)
 
-**Complete Workflow Integration**
+### Complete Workflow Integration
 
 Demonstrates the complete FLEXT enterprise workflow with all capabilities integrated:
 
@@ -242,7 +243,7 @@ These examples demonstrate integration with the complete FLEXT ecosystem:
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](../docs/CONTRIBUTING.md) for details.
+We welcome contributions! Please see our Contributing Guide for details.
 
 ## License
 

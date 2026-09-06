@@ -1,127 +1,78 @@
 # Testing Standards
 
-Guidelines for writing tests in the FLEXT monorepo. For the root engineering law, see `AGENTS.md`. For gate commands, see `.agents/skills/flext-inviolable-rules/SKILL.md`.
+Tests confirm current observable behavior; they do not own the product contract
+or its configuration. Establish runtime reality first, then encode it through a
+public facade.
 
-## Mindset
+## Public boundary
 
-- Tests protect behavior, not implementation.
-- Prefer real flows over mocks when the cost is acceptable.
-- A failing quality gate is a P0 incident; fix the root cause, do not suppress.
+- Import the package's public `api.py` facade and canonical `c`, `t`, `p`, `m`,
+  and `u` surfaces.
+- Never import private modules or assert class construction, call routing,
+  internal state, or implementation order.
+- Validate owned inputs and outputs with Pydantic models and typed protocols.
+- Keep the canonical thin `Tests<Unit>` nesting and the standard
+  `tests/{unit,integration,e2e}` layout.
 
-## Structure (AAA)
+## Fixtures and assertions
 
-```python
-def test_user_creation() -> None:
-    # Arrange
-    data = {"name": "Ada"}
+- Use `tm` for assertions and shared builders from `flext-tests`.
+- Put suite wiring in one `conftest.py` and reusable typed fixtures in
+  `tests/fixtures/`.
+- Prefer fixture factories that create fresh values from typed config, settings,
+  constants, models, or public utilities.
+- Use public `u` context utilities for environment, filesystem, clock, and
+  process boundaries.
+- Keep tests deterministic without mocks, fakes, stubs, patching, monkeypatch
+  mutation, hidden globals, or copied setup.
 
-    # Act
-    user = m.User.model_validate(data)
+## Configuration independence
 
-    # Assert
-    assert user.name == "Ada"
-```
+Project-owned paths, identifiers, endpoints, thresholds, versions, and defaults
+come from their typed config or settings owner. Tests and golden files validate
+structure and behavior for valid values; they never preserve today's configured
+scalar as an expected literal.
 
-## Imports in tests
+Immutable external protocol facts may be literal only when the external
+contract, not FLEXT configuration, owns them.
 
-Use the same aliases as production code. Test facades may be named `TestsFlext<Project><Tier>` when the project exposes one.
+## Failure semantics
 
-```python
-from __future__ import annotations
-from collections.abc import Mapping, Sequence
+- The first exception and raw traceback escape.
+- Warnings, skips, empty collection, missing tools, and suppressed failures are
+  red.
+- No retry, fallback, catch-based normalization, compatibility path, or partial
+  execution may turn a failure green.
+- A failing test is repaired at the runtime owner or, when the test contradicts
+  observed behavior, at the test owner.
 
-from flext_core import m, r
-```
+## Canonical execution
 
-## Asserting results
-
-Use public API assertions. For `r[T]` results, assert on the public shape rather than private internals.
-
-```python
-from flext_core import r
-
-
-def test_load_user() -> None:
-    result = load_user(1)
-    assert result.success
-    assert result.unwrap().id == 1
-
-    failure = load_user(-1)
-    assert failure.failure
-```
-
-## Fixtures
-
-Prefer project fixtures over ad-hoc setup. If a fixture does not exist, add it to the canonical `conftest.py` for the affected tier.
-
-```python
-import pytest
-
-
-@pytest.fixture
-def sample_user() -> m.User:
-    return m.User(id=1, name="Ada")
-```
-
-## Singleton reset
-
-Rely on the autouse `reset_settings` fixture from `flext_tests`. When manual reset is required:
-
-```python
-from flext_core import FlextContainer, FlextSettings
-from flext_tests import FlextTestsSettings
-
-FlextSettings.reset_for_testing()
-FlextTestsSettings.reset_for_testing()
-FlextContainer.reset_for_testing()
-```
-
-## Golden files and examples
-
-When output is stable and reviewable, prefer golden-file examples. Store them under
-`tests/fixtures/` or the project-local equivalent. Update golden files
-deliberately, never as a side effect of unrelated changes.
-
-## Parametrization
-
-Use `@pytest.mark.parametrize` for multi-case checks.
-
-```python
-import pytest
-
-
-@pytest.mark.parametrize(("raw", "expected"), [("1", 1), ("42", 42)])
-def test_parse_int(raw: str, expected: int) -> None:
-    assert int(raw) == expected
-```
-
-## What to avoid
-
-| Anti-pattern | Fix |
-|--------------|-----|
-| Testing private methods | test public behavior |
-| Heavy mocking without real-flow fallback | prefer real dependencies or fakes |
-| `assert True` smoke tests | assert a real invariant |
-| Ignoring enforcement warnings | treat warnings as failures |
-| Shared mutable fixtures | return fresh objects or use factories |
-
-## Running tests
+Every test run starts at the workspace root and flows through the retained
+Testmon cache:
 
 ```bash
-# narrow
-make test PROJECT=<proj> MATCH=<expr>
-
-# broad
-make test PROJECT=<proj>
+make test APPLY=Y
 ```
 
-## Coverage
+Never invoke the underlying test runner, clear Testmon state, or add project,
+file, pattern, changed-only, fix, or phase selectors. Run the complete quality
+gate through its root owner:
 
-`pyproject.toml` sets `fail_under = 45` for the consolidated workspace. Project-local targets may be higher. Do not lower the threshold to make a build pass.
+```bash
+make check APPLY=Y
+```
+
+If either verb is missing or broken, repair the dispatcher owner and rerun the
+same canonical command.
+
+## Generated copies
+
+Generated member guides are projections of root documentation. Change the root
+source and regenerate with `make gen APPLY=Y`; never edit a projection directly.
 
 ## Related
 
-- `AGENTS.md` — root engineering law
-- `.agents/skills/flext-inviolable-rules/SKILL.md` — gate commands
-- `.agents/skills/coding-standards/SKILL.md` — general coding standards
-- `.agents/skills/flext-development-workflow/SKILL.md` — CI/CD lifecycle
+- `AGENTS.md` — workspace engineering law
+- `.agents/skills/flext-law/SKILL.md` — FLEXT architecture law
+- [Testing guide](../guides/testing.md)

@@ -1,5 +1,13 @@
 # 12. Glossary
 
+<!-- TOC START -->
+- [Table of Contents](#table-of-contents)
+- [12.1 Structure Terms](#121-structure-terms)
+- [12.2 Facade Aliases](#122-facade-aliases)
+- [12.3 Runtime Terms](#123-runtime-terms)
+- [12.4 Process Terms](#124-process-terms)
+<!-- TOC END -->
+
 **Reviewed**: 2026-07-12 | **Scope**: Canonical terms used across FLEXT documentation
 
 Terms are defined once here; other documents link instead of redefining.
@@ -48,7 +56,7 @@ Terms are defined once here; other documents link instead of redefining.
 | **Config singleton** | The frozen, validated `config.<Project>.*` object built once at composition time. |
 | **Settings singleton** | The env-bound `settings.<Project>.*` object; the settings-bound subset of configuration. |
 | **MRO composition** | Behavior shared through class inheritance order (mixins + facades), never through helper modules. |
-| **Code community** | A cluster of related code entities detected by the code-review-graph (Leiden algorithm); used for architecture pages and review scoping. |
+| **Code community** | A cluster of related code entities projected by the ai-hub-owned CRG runtime for optional architecture and review enrichment; it is not a FLEXT library or local source of truth. |
 | **Execution flow** | A call chain from an entry point (HTTP handler, CLI command, test) used for impact analysis. |
 
 ## 12.4 Process Terms

@@ -3,33 +3,27 @@
 
 from __future__ import annotations
 
-import typing as _t
+from types import MappingProxyType
+from typing import TYPE_CHECKING
 
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
-if _t.TYPE_CHECKING:
-    from examples.acl_processing_example import AclProcessingExample
-    from examples.advanced_processing_example import (
-        AdvancedProcessingExample,
-        PipelineStageData,
+if TYPE_CHECKING:
+    from flext import c, d, e, h, m, p, r, s, t, u, x
+
+    from ._constants import (
+        ExamplesPermission,
+        ExamplesServerType,
+        ExamplesStage,
+        ExamplesWorkflowStage,
     )
-    from examples.complete_workflow_example import CompleteWorkflowExample
-    from flext import c, d, e, h, m, p, r, t, u, x
-_LAZY_IMPORTS = build_lazy_import_map({
-    ".acl_processing_example": ("AclProcessingExample",),
-    ".advanced_processing_example": ("AdvancedProcessingExample", "PipelineStageData"),
-    ".complete_workflow_example": ("CompleteWorkflowExample",),
-    "flext": ("c", "d", "e", "h", "m", "p", "r", "t", "u", "x"),
-})
-
-
-install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
-
-__all__: list[str] = [
-    "AclProcessingExample",
-    "AdvancedProcessingExample",
-    "CompleteWorkflowExample",
-    "PipelineStageData",
+    from ._models import ValidationRules
+__all__: tuple[str, ...] = (
+    "ExamplesPermission",
+    "ExamplesServerType",
+    "ExamplesStage",
+    "ExamplesWorkflowStage",
+    "ValidationRules",
     "c",
     "d",
     "e",
@@ -37,7 +31,27 @@ __all__: list[str] = [
     "m",
     "p",
     "r",
+    "s",
     "t",
     "u",
     "x",
-]
+)
+
+_LAZY_IMPORTS = MappingProxyType(
+    build_lazy_import_map(
+        MappingProxyType({
+            "._constants": (
+                "ExamplesPermission",
+                "ExamplesServerType",
+                "ExamplesStage",
+                "ExamplesWorkflowStage",
+            ),
+            "._models": ("ValidationRules",),
+            "flext": ("c", "d", "e", "h", "m", "p", "r", "s", "t", "u", "x"),
+        }),
+        alias_groups=MappingProxyType({}),
+        sort_keys=False,
+    )
+)
+
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)
