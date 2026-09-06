@@ -329,7 +329,9 @@ class AclProcessingExample:
                     if isinstance(entry_with_server_raw, Mapping)
                 )
             except m.ValidationError as exc:
-                return r[t.JsonMapping].fail(f"Invalid entries format: {exc}", exception=exc)
+                return r[t.JsonMapping].fail(
+                    f"Invalid entries format: {exc}", exception=exc
+                )
 
             if not entries_with_servers:
                 return r[t.JsonMapping].fail("No valid entries to extract")

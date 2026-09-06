@@ -455,11 +455,10 @@ duplication: _require-environment
 
 
 setup:
-	$(call REQUIRE_APPLY)
 	@SETUP_BOOTSTRAP_ONLY=Y $(SELF_MAKE) _bootstrap-setup-tools
 
 _require-environment:
-	@if [ ! -x "$(RUNTIME_PYTHON)" ]; then printf 'ERROR: missing environment interpreter %s; run make setup APPLY=Y\n' "$(RUNTIME_PYTHON)" >&2; exit 2; fi
+	@if [ ! -x "$(RUNTIME_PYTHON)" ]; then printf 'ERROR: missing environment interpreter %s; run make setup\n' "$(RUNTIME_PYTHON)" >&2; exit 2; fi
 	@mkdir -p "$(PROJECT_SCRATCH_ROOT)" "$(TESTMON_STATE_ROOT)" "$(PYTHONPYCACHEPREFIX)"
 
 _setup-lifecycle: _setup-submodules
@@ -605,7 +604,7 @@ _builtin-initialize:
 	@$(PROJECT_FLEXT_INFRA) codegen lazy-init --workspace "$(PROJECT_ROOT)" --check
 
 _builtin-mod:
-	@$(PROJECT_FLEXT_INFRA) refactor mod --workspace "$(PROJECT_ROOT)" --apply
+	@cd "$(PROJECT_ROOT)" && $(PROJECT_FLEXT_INFRA) refactor mod --apply
 
 _builtin-waza:
 	@cd "$(PROJECT_ROOT)" && "$(SETUP_MISE)" exec -- waza check --no-update-check

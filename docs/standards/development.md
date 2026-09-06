@@ -59,7 +59,7 @@ verb.
 Start at the workspace root:
 
 ```bash
-make setup APPLY=Y
+make setup
 make help
 make gen APPLY=Y
 make mod APPLY=Y
