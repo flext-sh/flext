@@ -13,7 +13,7 @@
 <!-- TOC END -->
 
 **Generated**: 2026-04-25
-**Workspace**: `/home/marlonsc/flext`
+**Workspace**: `~/flext`
 **Baseline**: ruff 0, pyrefly 0 across 33 projects (Phase 2.0d gate)
 **LOC baseline**: 354,880 LOC across 2,317 files (`/tmp/flext-loc-baseline-phase2-*.txt`)
 
@@ -44,7 +44,7 @@ allowlist.
 Source: `/tmp/phase2-tier-whitelist-violations.txt`. Re-run via:
 
 ```bash
-python -m flext_infra validate tier-whitelist --workspace /home/marlonsc/flext
+python -m flext_infra validate tier-whitelist --workspace ~/flext
 ```
 
 ### 1.2 — Silent-failure violations
@@ -111,7 +111,7 @@ from pathlib import Path
 from flext_infra import FlextInfraRefactorCensus
 
 census = FlextInfraRefactorCensus(
-    workspace=str(Path("/home/marlonsc/flext")),
+    workspace=str(Path("~/flext")),
     projects=["flext-cli"],  # or omit for workspace
     include_local_scopes=False,
 )

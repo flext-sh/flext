@@ -744,7 +744,7 @@ A realidade do código foi verificada via:
 
 | Worktree | Branch | Commit | Bead associada | Status |
 |---|---|---|---|---|
-| `/home/marlonsc/flext` | `fix/flext-1sm3w-guidance-paths` | `735ba203` | `flext-1sm3w` + `flext-8c1ci` | **ACTIVE** (avançado) |
+| `~/flext` | `fix/flext-1sm3w-guidance-paths` | `735ba203` | `flext-1sm3w` + `flext-8c1ci` | **ACTIVE** (avançado) |
 | `flext-worktrees/final-runtime-190` | `fix/final-runtime-190-gen-drift` | `de8abdaa` | `flext-bl2e7` (fleet checkpoint) | **ACTIVE** (avançado) |
 | `flext-worktrees/gen-check` | `fix/flext-h17i0-gen-check-ancestry` | `d434c555` | `flext-h17i0` | At merge base (investigação inicial) |
 | `flext-worktrees/jscpd-dedupe` | `refactor/jscpd-integration-dedupe` | `d434c555` | (jscpd, related to `flext-1sm3w`) | Dormant (at merge base) |
