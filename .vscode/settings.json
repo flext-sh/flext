@@ -111,7 +111,7 @@
     "!**/vendor/**",
     "**/*.{md,mkd,mdwn,mdown,markdown,markdn,mdtxt,mdtext,workbook}"
   ],
-  "pyrefly.lspPath": ".venv/bin/pyrefly",
+  "pyrefly.lspPath": "${workspaceFolder}/.venv/bin/pyrefly",
   "python.analysis.addExtraPathsForPythonProjects": false,
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": true,
