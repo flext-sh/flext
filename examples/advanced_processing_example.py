@@ -235,7 +235,7 @@ class AdvancedProcessingExample:
                     result: t.MutableJsonMapping = {**item}
                     result["processed"] = True
                     result["processing_timestamp"] = time.time()
-                    return result
+                    return result  # noqa: TRY300
                 except (KeyError, ValueError, TypeError):
                     return None
 
