@@ -1,11 +1,12 @@
-# Generated/tooling directories (not project documentation)
+# @flext-managed: continuous
+# @flext-regenerate: make gen APPLY=Y
+# @flext-ssot: flext-infra/config/tooling.yaml
+# @flext-maintenance: do not edit generated projections; edit the SSOT and regenerate
 .omo/**
-.beads/**
 .tmp/**
 .claude/**
 .vscode/**
-.codegraph/**
-.code-review-graph/**
+.serena/**
 .snapshots/**
 .benchmarks/**
 .hypothesis/**
@@ -20,10 +21,5 @@ dist/**
 build/**
 htmlcov/**
 legado/**
-
-# GitHub generated templates (maintained by flext-infra workflows, not docs)
-# Keep .github/** if it should be linted; comment out if needed.
 .github/**
-
-# MkDocs generated site
 site/**
