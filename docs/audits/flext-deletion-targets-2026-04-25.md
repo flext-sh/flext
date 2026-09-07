@@ -44,7 +44,7 @@ allowlist.
 Source: `/tmp/phase2-tier-whitelist-violations.txt`. Re-run via:
 
 ```bash
-python -m flext_infra validate tier-whitelist --workspace /home/marlonsc/flext
+python -m flext_infra validate tier-whitelist --repository /home/marlonsc/flext
 ```
 
 ### 1.2 — Silent-failure violations
@@ -146,7 +146,7 @@ project / one module at a time) — which is the design intent.
 
    ```bash
    python -m flext_infra refactor accessor-migrate \
-       --workspace . \
+       --repository . \
        --project <consumer> \
        --module <consumer.module> \
        --target-alias <parent.path>
