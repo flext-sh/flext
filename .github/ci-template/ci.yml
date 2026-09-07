@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup
-        run: make setup APPLY=Y
+        run: make setup
 
       - name: Check
         run: make check APPLY=Y
