@@ -115,11 +115,11 @@ dataop, dc_backup (309/…/145 py files). Findings:
   `~/.cache`, `expanduser`) in `src/` — zero hits. Good baseline.
 - However, each project defines its OWN directory fields instead of consuming the
   root-singleton `settings.*_dir` contract (ADR-010 §3a):
-  - **dataop** `WorkspaceSettings`: own `data_dir`, `workspace_root`,
+  - **dataop** `WorkspaceSettings`: own `data_dir`, `repository_root`,
     `state_root`, `temp_dir`, plus `ClickHouseSettings.user_files_path` — own
     derivation, not the root-singleton `*_dir`.
-  - **dc_backup** `DcBackupSettings`: `workspace_root = Path.cwd()` and
-    `backup_root = workspace_root/"backup"` — derives from CWD, not from the
+  - **dc_backup** `DcBackupSettings`: `repository_root = Path.cwd()` and
+    `backup_root = repository_root/"backup"` — derives from CWD, not from the
     XDG root-singleton namespace.
   - **dcdoc**: own runtime settings; does not consume `settings.*_dir`.
 

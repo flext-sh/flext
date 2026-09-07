@@ -3,14 +3,13 @@
 
 from __future__ import annotations
 
-from types import MappingProxyType
 from typing import TYPE_CHECKING
+
+from types import MappingProxyType
 
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from typing import Final
-
     from flext_tests import FlextTestsConstants, d, e, h, s, td, tf, tk, tm, tv, u, x
 
     from .constants import TestsFlextRootConstants, TestsFlextRootConstants as c
@@ -19,7 +18,6 @@ if TYPE_CHECKING:
     from .result import TestsFlextRootResult, r
     from .typings import TestsFlextRootTypes, TestsFlextRootTypes as t
 __all__: tuple[str, ...] = (
-    "Final",
     "FlextTestsConstants",
     "TestsFlextRootConstants",
     "TestsFlextRootModels",
@@ -66,7 +64,6 @@ _LAZY_IMPORTS = MappingProxyType(
                 "u",
                 "x",
             ),
-            "typing": ("Final",),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
