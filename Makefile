@@ -893,26 +893,26 @@ _builtin_build_artifacts:
 # keeps make.ci.check_gates before orchestrating members (same contract as
 # standalone/member Makefiles and flext_infra check run).
 _builtin_check_all: _builtin_require_environment
-	@$(WORKSPACE_ORCHESTRATE) --verb check $(WORKSPACE_PROJECT_ARGS) --make-arg "APPLY=Y" $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+	@$(WORKSPACE_ORCHESTRATE) --verb check $(WORKSPACE_PROJECT_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
 _builtin_test_all: _builtin_require_environment
-	@$(WORKSPACE_ORCHESTRATE) --verb test $(WORKSPACE_PROJECT_ARGS) --make-arg "APPLY=Y" $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+	@$(WORKSPACE_ORCHESTRATE) --verb test $(WORKSPACE_PROJECT_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
 _builtin_fmt_all: _builtin_require_environment
 	$(call _require_apply)
-	@$(WORKSPACE_ORCHESTRATE) --verb fmt $(WORKSPACE_PROJECT_ARGS) --make-arg "APPLY=Y" $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+	@$(WORKSPACE_ORCHESTRATE) --verb fmt $(WORKSPACE_PROJECT_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
 _builtin_fmt_apply: _builtin_fmt_all
 
 _builtin_fix_all: _builtin_require_environment
 	$(call _require_apply)
-	@$(WORKSPACE_ORCHESTRATE) --verb fix $(WORKSPACE_PROJECT_ARGS) --make-arg "APPLY=Y" $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+	@$(WORKSPACE_ORCHESTRATE) --verb fix $(WORKSPACE_PROJECT_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
 _builtin_fix_apply: _builtin_fix_all
 
 _builtin_fix_enforcement: _builtin_require_environment
 	$(call _require_apply)
-	@$(WORKSPACE_ORCHESTRATE) --verb fix-enforcement $(WORKSPACE_PROJECT_ARGS) --make-arg "APPLY=Y" $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
+	@$(WORKSPACE_ORCHESTRATE) --verb fix-enforcement $(WORKSPACE_PROJECT_ARGS) $(if $(filter 1,$(FAIL_FAST)),--fail-fast)
 
 
 _builtin_run_default: _builtin_require_environment
