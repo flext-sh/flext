@@ -5,8 +5,6 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, github-actions]
 
@@ -14,8 +12,6 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -24,8 +20,6 @@ updates:
     directory: /flext-api
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -34,8 +28,6 @@ updates:
     directory: /flext-auth
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -44,8 +36,6 @@ updates:
     directory: /flext-cli
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -54,8 +44,6 @@ updates:
     directory: /flext-core
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -64,8 +52,6 @@ updates:
     directory: /flext-db-oracle
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -74,8 +60,6 @@ updates:
     directory: /flext-dbt-ldap
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -84,8 +68,6 @@ updates:
     directory: /flext-dbt-ldif
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -94,8 +76,6 @@ updates:
     directory: /flext-dbt-oracle
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -104,8 +84,6 @@ updates:
     directory: /flext-dbt-oracle-wms
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -114,8 +92,6 @@ updates:
     directory: /flext-grpc
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -124,8 +100,6 @@ updates:
     directory: /flext-infra
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -134,8 +108,6 @@ updates:
     directory: /flext-ldap
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -144,8 +116,6 @@ updates:
     directory: /flext-ldif
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -154,8 +124,6 @@ updates:
     directory: /flext-meltano
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -164,8 +132,6 @@ updates:
     directory: /flext-observability
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -174,8 +140,6 @@ updates:
     directory: /flext-oracle-oic
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -184,8 +148,6 @@ updates:
     directory: /flext-oracle-wms
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -194,8 +156,6 @@ updates:
     directory: /flext-plugin
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -204,8 +164,6 @@ updates:
     directory: /flext-quality
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -214,8 +172,6 @@ updates:
     directory: /flext-tap-ldap
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -224,8 +180,6 @@ updates:
     directory: /flext-tap-ldif
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -234,8 +188,6 @@ updates:
     directory: /flext-tap-oracle
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -244,8 +196,6 @@ updates:
     directory: /flext-tap-oracle-oic
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -254,8 +204,6 @@ updates:
     directory: /flext-tap-oracle-wms
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -264,8 +212,6 @@ updates:
     directory: /flext-target-ldap
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -274,8 +220,6 @@ updates:
     directory: /flext-target-ldif
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -284,8 +228,6 @@ updates:
     directory: /flext-target-oracle
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -294,8 +236,6 @@ updates:
     directory: /flext-target-oracle-oic
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -304,8 +244,6 @@ updates:
     directory: /flext-target-oracle-wms
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -314,8 +252,6 @@ updates:
     directory: /flext-tests
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
 
@@ -324,7 +260,5 @@ updates:
     directory: /flext-web
     schedule:
       interval: weekly
-    cooldown:
-      default-days: 7
     open-pull-requests-limit: 5
     labels: [dependencies, python]
