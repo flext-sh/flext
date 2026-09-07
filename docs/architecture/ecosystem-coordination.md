@@ -38,7 +38,7 @@ forward planning contract for `0.20.0-dev`; it does not retro-fit the
 | `flext-cli` | FLEXT library | `flext-cli` | ADR-008, `mro-ib6t.2` |
 | `flext-infra` | FLEXT tooling | `flext-infra` | ADR-003/004/008, `mro-ib6t.1` |
 | `dcdoc` | External application | `cosmos-docgen` | ADR-020 (`dcdoc-bhg1`) |
-| DataOP | External application | `/home/marlonsc.new/.leaks` | DataOP ADR-001 (`data-organization-pipeline-4dt`) |
+| DataOP | External application | `~/dataop` | DataOP ADR-001 (`data-organization-pipeline-4dt`) |
 | DcBackup | External application | `/home/datacosmos.bkp/datacosmos-backup` | DcBackup ADR-001 (`datacosmos-backup-o6w`) |
 
 ## Dependency law
