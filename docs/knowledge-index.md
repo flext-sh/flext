@@ -44,10 +44,10 @@ authoring standards. These are hand-written and reviewed.
 | Architecture Index | [architecture/README.md](architecture/README.md) | Canonical architecture baseline + ADR index |
 | arc42 | [architecture/arc42/README.md](architecture/arc42/README.md) | 12-chapter architecture template |
 | ADRs | [architecture/adr/README.md](architecture/adr/README.md) | 10 formal decision records |
-| Code Communities | [architecture/communities/README.md](architecture/communities/README.md) | CRG community wiki index |
+| Code Communities | [architecture/communities/index.md](architecture/communities/index.md) | CRG community wiki index |
 | Guides Index | [guides/README.md](guides/README.md) | Workflow, migration, day-to-day guides |
 | Standards | [standards/README.md](standards/README.md) | Cross-workspace authoring standards |
-| Governance | [GOVERNANCE.md](../GOVERNMENT.md) | Active rule routing and validation surfaces |
+| Governance | [GOVERNANCE.md](https://github.com/flext-sh/flext/blob/0.12.0-dev/AGENTS.md) | Active rule routing and validation surfaces |
 | Version Policy | [version-policy.md](version-policy.md) | Versioning and release policy |
 
 ### 2. Community Wiki (CRG)
@@ -71,7 +71,7 @@ clusters exist in the full CRG wiki.
 | `services-context` | 169 | flext-core/cli | [services-context.md](architecture/communities/services-context.md) |
 | `matchers-validate` | 155 | flext-quality | [matchers-validate.md](architecture/communities/matchers-validate.md) |
 
-See the [full community index](architecture/communities/README.md) for all 50
+See the [full community index](architecture/communities/index.md) for all 50
 published clusters.
 
 ### 3. Auto-Generated API Reference
@@ -92,37 +92,37 @@ project.
 <!-- AUTO-GENERATED TABLE: commence -->
 | Package | Class | Docs Portal | API Reference | Top Community |
 | --- | --- | --- | --- | --- |
-| flext-api | platform | [flext-api/docs/index.md](flext-api/docs/index.md) | [generated/flext-api.md](api-reference/generated/flext-api.md) | services-server |
-| flext-auth | platform | [flext-auth/docs/index.md](flext-auth/docs/index.md) | [generated/flext-auth.md](api-reference/generated/flext-auth.md) | api-cases-auth |
-| flext-cli | platform | [flext-cli/docs/index.md](flext-cli/docs/index.md) | [generated/flext-cli.md](api-reference/generated/flext-cli.md) | utilities-flext |
-| flext-core | platform | [flext-core/docs/index.md](flext-core/docs/index.md) | [generated/flext-core.md](api-reference/generated/flext-core.md) | flext-core-container |
-| flext-db-oracle | domain | [flext-db-oracle/docs/index.md](flext-db-oracle/docs/index.md) | [generated/flext-db-oracle.md](api-reference/generated/flext-db-oracle.md) | services-oracle |
-| flext-dbt-ldap | integration | [flext-dbt-ldap/docs/index.md](flext-dbt-ldap/docs/index.md) | [generated/flext-dbt-ldap.md](api-reference/generated/flext-dbt-ldap.md) | flext-meltano-pipeline |
-| flext-dbt-ldif | integration | [flext-dbt-ldif/docs/index.md](flext-dbt-ldif/docs/index.md) | [generated/flext-dbt-ldif.md](api-reference/generated/flext-dbt-ldif.md) | unit-ldif |
-| flext-dbt-oracle | integration | [flext-dbt-oracle/docs/index.md](flext-dbt-oracle/docs/index.md) | [generated/flext-dbt-oracle.md](api-reference/generated/flext-dbt-oracle.md) | services-oracle |
-| flext-dbt-oracle-wms | integration | [flext-dbt-oracle-wms/docs/index.md](flext-dbt-oracle-wms/docs/index.md) | [generated/flext-dbt-oracle-wms.md](api-reference/generated/flext-dbt-oracle-wms.md) | services-server-grpc |
-| flext-grpc | platform | [flext-grpc/docs/index.md](flext-grpc/docs/index.md) | [generated/flext-grpc.md](api-reference/generated/flext-grpc.md) | services-server-grpc |
-| flext-infra | infra | [flext-infra/docs/index.md](flext-infra/docs/index.md) | [generated/flext-infra.md](api-reference/generated/flext-infra.md) | codegen-infra |
-| flext-ldap | domain | [flext-ldap/docs/index.md](flext-ldap/docs/index.md) | [generated/flext-ldap.md](api-reference/generated/flext-ldap.md) | utilities-dn |
-| flext-ldif | domain | [flext-ldif/docs/index.md](flext-ldif/docs/index.md) | [generated/flext-ldif.md](api-reference/generated/flext-ldif.md) | services-ldif |
-| flext-meltano | platform | [flext-meltano/docs/index.md](flext-meltano/docs/index.md) | [generated/flext-meltano.md](api-reference/generated/flext-meltano.md) | flext-meltano-pipeline |
-| flext-observability | platform | [flext-observability/docs/index.md](flext-observability/docs/index.md) | [generated/flext-observability.md](api-reference/generated/flext-observability.md) | utilities-output |
-| flext-oracle-oic | domain | [flext-oracle-oic/docs/index.md](flext-oracle-oic/docs/index.md) | [generated/flext-oracle-oic.md](api-reference/generated/flext-oracle-oic.md) | services-oracle |
-| flext-oracle-wms | domain | [flext-oracle-wms/docs/index.md](flext-oracle-wms/docs/index.md) | [generated/flext-oracle-wms.md](api-reference/generated/flext-oracle-wms.md) | flext-tap-oracle-wms-tap |
-| flext-plugin | platform | [flext-plugin/docs/index.md](flext-plugin/docs/index.md) | [generated/flext-plugin.md](api-reference/generated/flext-plugin.md) | utilities-plugin |
-| flext-quality | platform | [flext-quality/docs/index.md](flext-quality/docs/index.md) | [generated/flext-quality.md](api-reference/generated/flext-quality.md) | matchers-validate |
-| flext-tap-ldap | integration | [flext-tap-ldap/docs/index.md](flext-tap-ldap/docs/index.md) | [generated/flext-tap-ldap.md](api-reference/generated/flext-tap-ldap.md) | utilities-dn |
-| flext-tap-ldif | integration | [flext-tap-ldif/docs/index.md](flext-tap-ldif/docs/index.md) | [generated/flext-tap-ldif.md](api-reference/generated/flext-tap-ldif.md) | services-ldif |
-| flext-tap-oracle | integration | [flext-tap-oracle/docs/index.md](flext-tap-oracle/docs/index.md) | [generated/flext-tap-oracle.md](api-reference/generated/flext-tap-oracle.md) | services-oracle |
-| flext-tap-oracle-oic | integration | [flext-tap-oracle-oic/docs/index.md](flext-tap-oracle-oic/docs/index.md) | [generated/flext-tap-oracle-oic.md](api-reference/generated/flext-tap-oracle-oic.md) | services-oracle |
-| flext-tap-oracle-wms | integration | [flext-tap-oracle-wms/docs/index.md](flext-tap-oracle-wms/docs/index.md) | [generated/flext-tap-oracle-wms.md](api-reference/generated/flext-tap-oracle-wms.md) | flext-tap-oracle-wms-tap |
-| flext-target-ldap | integration | [flext-target-ldap/docs/index.md](flext-target-ldap/docs/index.md) | [generated/flext-target-ldap.md](api-reference/generated/flext-target-ldap.md) | utilities-dn |
-| flext-target-ldif | integration | [flext-target-ldif/docs/index.md](flext-target-ldif/docs/index.md) | [generated/flext-target-ldif.md](api-reference/generated/flext-target-ldif.md) | flext-target-ldif-record |
-| flext-target-oracle | integration | [flext-target-oracle/docs/index.md](flext-target-oracle/docs/index.md) | [generated/flext-target-oracle.md](api-reference/generated/flext-target-oracle.md) | services-oracle |
-| flext-target-oracle-oic | integration | [flext-target-oracle-oic/docs/index.md](flext-target-oracle-oic/docs/index.md) | [generated/flext-target-oracle-oic.md](api-reference/generated/flext-target-oracle-oic.md) | services-oracle |
-| flext-target-oracle-wms | integration | [flext-target-oracle-wms/docs/index.md](flext-target-oracle-wms/docs/index.md) | [generated/flext-target-oracle-wms.md](api-reference/generated/flext-target-oracle-wms.md) | flext-tap-oracle-wms-tap |
-| flext-tests | test | [flext-tests/README.md](flext-tests/README.md) | [generated/flext-tests.md](api-reference/generated/flext-tests.md) | flext-tests-compose |
-| flext-web | platform | [flext-web/docs/index.md](flext-web/docs/index.md) | [generated/flext-web.md](api-reference/generated/flext-web.md) | services-server |
+| flext-api | platform | [flext-api/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-api/docs) | [generated/flext-api.md](api-reference/generated/flext-api.md) | services-server |
+| flext-auth | platform | [flext-auth/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-auth/docs) | [generated/flext-auth.md](api-reference/generated/flext-auth.md) | api-cases-auth |
+| flext-cli | platform | [flext-cli/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-cli/docs) | [generated/flext-cli.md](api-reference/generated/flext-cli.md) | utilities-flext |
+| flext-core | platform | [flext-core/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-core/docs) | [generated/flext-core.md](api-reference/generated/flext-core.md) | flext-core-container |
+| flext-db-oracle | domain | [flext-db-oracle/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-db-oracle/docs) | [generated/flext-db-oracle.md](api-reference/generated/flext-db-oracle.md) | services-oracle |
+| flext-dbt-ldap | integration | [flext-dbt-ldap/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-dbt-ldap/docs) | [generated/flext-dbt-ldap.md](api-reference/generated/flext-dbt-ldap.md) | flext-meltano-pipeline |
+| flext-dbt-ldif | integration | [flext-dbt-ldif/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-dbt-ldif/docs) | [generated/flext-dbt-ldif.md](api-reference/generated/flext-dbt-ldif.md) | unit-ldif |
+| flext-dbt-oracle | integration | [flext-dbt-oracle/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-dbt-oracle/docs) | [generated/flext-dbt-oracle.md](api-reference/generated/flext-dbt-oracle.md) | services-oracle |
+| flext-dbt-oracle-wms | integration | [flext-dbt-oracle-wms/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-dbt-oracle-wms/docs) | [generated/flext-dbt-oracle-wms.md](api-reference/generated/flext-dbt-oracle-wms.md) | services-server-grpc |
+| flext-grpc | platform | [flext-grpc/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-grpc/docs) | [generated/flext-grpc.md](api-reference/generated/flext-grpc.md) | services-server-grpc |
+| flext-infra | infra | [flext-infra/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-infra/docs) | [generated/flext-infra.md](api-reference/generated/flext-infra.md) | codegen-infra |
+| flext-ldap | domain | [flext-ldap/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-ldap/docs) | [generated/flext-ldap.md](api-reference/generated/flext-ldap.md) | utilities-dn |
+| flext-ldif | domain | [flext-ldif/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-ldif/docs) | [generated/flext-ldif.md](api-reference/generated/flext-ldif.md) | services-ldif |
+| flext-meltano | platform | [flext-meltano/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-meltano/docs) | [generated/flext-meltano.md](api-reference/generated/flext-meltano.md) | flext-meltano-pipeline |
+| flext-observability | platform | [flext-observability/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-observability/docs) | [generated/flext-observability.md](api-reference/generated/flext-observability.md) | utilities-output |
+| flext-oracle-oic | domain | [flext-oracle-oic/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-oracle-oic/docs) | [generated/flext-oracle-oic.md](api-reference/generated/flext-oracle-oic.md) | services-oracle |
+| flext-oracle-wms | domain | [flext-oracle-wms/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-oracle-wms/docs) | [generated/flext-oracle-wms.md](api-reference/generated/flext-oracle-wms.md) | flext-tap-oracle-wms-tap |
+| flext-plugin | platform | [flext-plugin/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-plugin/docs) | [generated/flext-plugin.md](api-reference/generated/flext-plugin.md) | utilities-plugin |
+| flext-quality | platform | [flext-quality/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-quality/docs) | [generated/flext-quality.md](api-reference/generated/flext-quality.md) | matchers-validate |
+| flext-tap-ldap | integration | [flext-tap-ldap/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-tap-ldap/docs) | [generated/flext-tap-ldap.md](api-reference/generated/flext-tap-ldap.md) | utilities-dn |
+| flext-tap-ldif | integration | [flext-tap-ldif/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-tap-ldif/docs) | [generated/flext-tap-ldif.md](api-reference/generated/flext-tap-ldif.md) | services-ldif |
+| flext-tap-oracle | integration | [flext-tap-oracle/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-tap-oracle/docs) | [generated/flext-tap-oracle.md](api-reference/generated/flext-tap-oracle.md) | services-oracle |
+| flext-tap-oracle-oic | integration | [flext-tap-oracle-oic/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-tap-oracle-oic/docs) | [generated/flext-tap-oracle-oic.md](api-reference/generated/flext-tap-oracle-oic.md) | services-oracle |
+| flext-tap-oracle-wms | integration | [flext-tap-oracle-wms/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-tap-oracle-wms/docs) | [generated/flext-tap-oracle-wms.md](api-reference/generated/flext-tap-oracle-wms.md) | flext-tap-oracle-wms-tap |
+| flext-target-ldap | integration | [flext-target-ldap/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-target-ldap/docs) | [generated/flext-target-ldap.md](api-reference/generated/flext-target-ldap.md) | utilities-dn |
+| flext-target-ldif | integration | [flext-target-ldif/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-target-ldif/docs) | [generated/flext-target-ldif.md](api-reference/generated/flext-target-ldif.md) | flext-target-ldif-record |
+| flext-target-oracle | integration | [flext-target-oracle/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-target-oracle/docs) | [generated/flext-target-oracle.md](api-reference/generated/flext-target-oracle.md) | services-oracle |
+| flext-target-oracle-oic | integration | [flext-target-oracle-oic/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-target-oracle-oic/docs) | [generated/flext-target-oracle-oic.md](api-reference/generated/flext-target-oracle-oic.md) | services-oracle |
+| flext-target-oracle-wms | integration | [flext-target-oracle-wms/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-target-oracle-wms/docs) | [generated/flext-target-oracle-wms.md](api-reference/generated/flext-target-oracle-wms.md) | flext-tap-oracle-wms-tap |
+| flext-tests | test | [flext-tests/README](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-tests) | [generated/flext-tests.md](api-reference/generated/flext-tests.md) | flext-tests-compose |
+| flext-web | platform | [flext-web/docs](https://github.com/flext-sh/flext/tree/0.12.0-dev/flext-web/docs) | [generated/flext-web.md](api-reference/generated/flext-web.md) | services-server |
 <!-- AUTO-GENERATED TABLE: end -->
 
 ## Cross-Reference Map
@@ -161,7 +161,7 @@ make gen APPLY=Y
 ## See Also
 
 - [Architecture Index](architecture/README.md)
-- [Code Communities Index](architecture/communities/README.md)
+- [Code Communities Index](architecture/communities/index.md)
 - [API Reference Index](api-reference/README.md)
 - [Projects Index](projects/README.md)
 - [Guides Index](guides/README.md)

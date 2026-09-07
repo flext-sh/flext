@@ -131,6 +131,7 @@ exclude_docs = [
   "architecture/FLEXT_*.md",
   "architecture/c4-model/**",
   "architecture/clean-architecture.md",
+  "architecture/communities/README.md",
   "architecture/data/**",
   "architecture/deployment/**",
   "architecture/flext-*-architecture.md",

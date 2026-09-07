@@ -36,7 +36,7 @@ non-FLEXT directory in the repository.
 
 - [Knowledge Index](knowledge-index.md) — bridge between manual docs, CRG code wiki, and auto-generated API reference
 - [Architecture](architecture/README.md)
-- [Code Communities](architecture/communities/README.md) — CRG knowledge graph communities
+- [Code Communities](architecture/communities/index.md) — CRG knowledge graph communities
 - [Guides](guides/README.md)
 - [Projects](projects/README.md)
 - [API Reference](api-reference/README.md)
