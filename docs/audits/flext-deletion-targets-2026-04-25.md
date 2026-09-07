@@ -1,13 +1,13 @@
 # FLEXT Deletion-Target Catalog — Phase 2.4 (A-TS)
 
 <!-- TOC START -->
-- Section 1 — Pattern violations (Phase 2.1)
-  - 1.1 — Tier-whitelist (banned-lib imports outside flext-core)
-  - 1.2 — Silent-failure violations
-  - 1.3 — Codegen census (namespace violations)
-- Section 2 — Upstream-symbol duplicates (Phase 2.3)
-- Section 3 — Service-responsibility duplicates
-- Section 4 — Pre-existing complexity (Phase 2.5 exit-gate)
+- [Section 1 — Pattern violations (Phase 2.1)](#section-1-pattern-violations-phase-21)
+  - [1.1 — Tier-whitelist (banned-lib imports outside flext-core)](#11-tier-whitelist-banned-lib-imports-outside-flext-core)
+  - [1.2 — Silent-failure violations](#12-silent-failure-violations)
+  - [1.3 — Codegen census (namespace violations)](#13-codegen-census-namespace-violations)
+- [Section 2 — Upstream-symbol duplicates (Phase 2.3)](#section-2-upstream-symbol-duplicates-phase-23)
+- [Section 3 — Service-responsibility duplicates](#section-3-service-responsibility-duplicates)
+- [Section 4 — Pre-existing complexity (Phase 2.5 exit-gate)](#section-4-pre-existing-complexity-phase-25-exit-gate)
 - [Bugs surfaced during audit (informational)](#bugs-surfaced-during-audit-informational)
 - [Phase 2.4 exit gate](#phase-24-exit-gate)
 <!-- TOC END -->
@@ -44,7 +44,7 @@ allowlist.
 Source: `/tmp/phase2-tier-whitelist-violations.txt`. Re-run via:
 
 ```bash
-python -m flext_infra validate tier-whitelist --workspace /home/marlonsc/flext
+python -m flext_infra validate tier-whitelist --repository /home/marlonsc/flext
 ```
 
 ### 1.2 — Silent-failure violations
@@ -146,7 +146,7 @@ project / one module at a time) — which is the design intent.
 
    ```bash
    python -m flext_infra refactor accessor-migrate \
-       --workspace . \
+       --repository . \
        --project <consumer> \
        --module <consumer.module> \
        --target-alias <parent.path>

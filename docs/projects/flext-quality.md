@@ -1,5 +1,17 @@
 # FLEXT Quality
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Quality is the unified orchestration platform for Claude Code tooling in the FLEXT ecosystem. It combines a YAML-
 driven declarative rules engine, Claude Code hook management, an MCP server (tools and resources), and integrations for
 Claude context, memory, and code execution behind one railway-oriented facade and CLI.

@@ -1,5 +1,17 @@
 # FLEXT Plugin
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Plugin is the plugin system of the FLEXT platform. It provides discovery, registration, lifecycle management,
 execution, and hot-reload monitoring of plugins through a single railway-oriented service facade, so every FLEXT service
 loads and manages extensions the same way.

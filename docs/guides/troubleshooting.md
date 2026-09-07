@@ -1,5 +1,14 @@
 # Troubleshooting
 
+
+<!-- TOC START -->
+- [Establish the command surface](#establish-the-command-surface)
+- [Repair at the owner](#repair-at-the-owner)
+- [Documentation failures](#documentation-failures)
+- [Test failures](#test-failures)
+- [Related guides](#related-guides)
+<!-- TOC END -->
+
 Troubleshooting preserves the same command, ownership, and failure contracts as
 normal development. Diagnose from the workspace root and keep the first raw
 traceback or non-zero exit as the causal evidence.

@@ -110,7 +110,7 @@ from flext_tests import tk
 from pathlib import Path
 
 # Initialize with workspace root
-docker_mgr = tk(workspace_root=Path.home() / "flext")
+docker_mgr = tk(repository_root=Path.home() / "flext")
 
 # Start container
 result = docker_mgr.start_container("flext-postgres-test")

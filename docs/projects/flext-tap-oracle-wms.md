@@ -1,5 +1,17 @@
 # FLEXT Tap Oracle WMS
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Tap Oracle WMS is the Singer tap that extracts data from Oracle Warehouse Management System (WMS). It composes the
 FLEXT facades with `flext-oracle-wms` (WMS connectivity) and `flext-meltano` (Singer tap base) behind `r[T]` contracts
 and the canonical `c/m/p/t/u` facade layout.

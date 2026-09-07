@@ -1,5 +1,17 @@
 # FLEXT Tap LDAP
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Tap LDAP (`flext-tap-ldap`) is the Singer tap that extracts LDAP directory entries — and, optionally, LDIF files —
 into the FLEXT data mesh. It is built on `flext-ldap` for directory connectivity and `flext-meltano` for the Singer tap
 contract, so discovery, catalog, and sync flows follow the Singer specification while every fallible operation returns

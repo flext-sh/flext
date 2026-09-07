@@ -1,5 +1,17 @@
 # FLEXT LDIF
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT LDIF is the enterprise LDIF processing library of the FLEXT platform. It provides RFC-based LDIF parsing and
 writing, a registry of server-specific dialect handlers (RFC, OID, OUD, OpenLDAP, Active Directory, 389 DS, Apache DS,
 Novell, Tivoli, and a relaxed mode), and migration/conversion pipelines that move entries between server dialects
