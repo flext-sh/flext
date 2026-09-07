@@ -116,7 +116,7 @@ ifneq ($(.SHELLSTATUS),0)
 $(error Failed to inspect custom Make targets in $(CUSTOM_MAKEFILE))
 endif
 endif
-DOCS_ACTIONS := generate fix audit build validate
+DOCS_ACTIONS := analyze generate fix audit build validate
  # End SECTION: verb dispatch
 
 # === SECTION: lint/type paths (managed) ===
