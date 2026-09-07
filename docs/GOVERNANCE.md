@@ -43,7 +43,10 @@ this order.
 | Workspace Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help` and affected dispatcher gate |
 | Enforcement catalog identity and routing | `flext-core` enforcement declarations | catalog census and public import |
 | Declarative enforcement payloads and execution | `flext-infra` rules, schemas, and engine | enforcement engine result |
-| Structural codemods | provider referenced by the `~/.agents` authority | preview, exact cardinality, apply, idempotence |
+| Git repositories and local Git operations | `flext-infra` public facades | local repository behavior and native gates |
+| GitHub operations and credentials | ai-hub public runtime surface | ai-hub command, hook, MCP, or daemon evidence |
+| CRG runtime, database, watcher, and graph services | ai-hub validated config and runtime | ai-hub public health and routing evidence |
+| Structural codemods | `flext-infra` ast-grep/Rope/LSP pipeline | preview, exact cardinality, apply, idempotence |
 
 The owning declaration, validated config, or fundamental rule is the source of
 truth. Tests and checks validate it; they never define the contract, catalog,
@@ -66,6 +69,9 @@ or routing decision.
 Static enforcement and structural codemods are separate responsibilities.
 Declarative enforcement data owns policy; the referenced codemod provider owns
 safe, deterministic source transformations. Neither duplicates the other.
+Public ai-hub runtime services may enrich discovery when available, but FLEXT
+never imports them as libraries and their absence does not invalidate its local
+deterministic path. A selected, available integration still fails causally.
 
 ## Universal test contract (P0)
 
@@ -86,15 +92,15 @@ never allowed to hardcode the values that happen to exist today.
 
 ## Baseline Commands
 
-Choose the narrowest decisive command from the quality-gates skill, then widen
-only after it passes:
+Use the standard workspace commands; mutation is selected only with `APPLY=Y`:
 
 ```bash
-make check PROJECT=<project> WHAT=<gate>
-make test PROJECT=<project>
+make check APPLY=Y
+make test APPLY=Y
 ```
 
-All FLEXT validation uses the root Make dispatcher; never run bare `ruff`,
+All FLEXT validation uses the root Make dispatcher and every Python test run
+retains the canonical testmon cache; never run bare `ruff`,
 `pyrefly`, `pyright`, `mypy`, or `pytest` commands.
 
 Record every red or green result with its exit code and decisive output in the

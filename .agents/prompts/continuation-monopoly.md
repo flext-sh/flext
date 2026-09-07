@@ -34,14 +34,12 @@ After the final code/configuration edit, and before marking a Bead complete,
 you must prove all of the following from `/home/marlonsc/flext`:
 
 ```bash
-make check CHECK_GATES=lint,pyrefly
-make check PROJECT=<affected-project> CHECK_GATES=pyright,mypy
-make test PROJECT=<affected-project>
+make check APPLY=Y
+make test APPLY=Y
 ```
 
-Run supported targeted Make tests first, then the required project-level gates.
-If the change crosses packages, generated files, fixtures, configuration, or
-public facades, widen the scope. Manually use the changed public surface
+Every Python test selection retains the canonical testmon cache; never bypass,
+clear, or replace it, including for an explicit full run. Manually use the changed public surface
 (Make/CLI for workspace behavior, import/driver for libraries, or live service
 surface where applicable).
 

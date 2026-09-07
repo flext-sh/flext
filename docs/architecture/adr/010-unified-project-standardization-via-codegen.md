@@ -7,25 +7,26 @@
   - [2. Common verb surface for every project](#2-common-verb-surface-for-every-project)
   - [3. Canonical structure, facades, and naming (measured, then enforced)](#3-canonical-structure-facades-and-naming-measured-then-enforced)
   - [3a. Namespaced runtime directories via `settings`](#3a-namespaced-runtime-directories-via-settings)
+  - [3b. Semantic discovery and automated rewiring](#3b-semantic-discovery-and-automated-rewiring)
   - [4. Three ordered phases (same strategy as ADR-020/008/009)](#4-three-ordered-phases-same-strategy-as-adr-020008009)
   - [5. Applicability to independent and external projects](#5-applicability-to-independent-and-external-projects)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)
 <!-- TOC END -->
-- **Status:** Accepted (planning) — targets the `0.20.0-dev` line
+- **Status:** Accepted and active
 - **Date:** 2026-07-18
-- **Target line:** FLEXT `0.20.0-dev` (early development and planning). This is a
-  forward standardization contract; it does not retro-fit the `0.12.0-dev`
-  release line.
+- **Last updated:** 2026-09-05
+- **Target line:** FLEXT `0.12.0-dev`, with `0.13.0` as the forward baseline.
 - **Scope:** One common, generated base for every project the workspace
   coordinates — root workspace, internal FLEXT packages, loose internal projects
   (treated as independent), and external/independent applications (`dcdoc`,
   DataOP, DcBackup) — covering Make verbs, scripts, tests, `.venv`/mise/direnv
   setup, `pyproject.toml`, package `**init**.py` facades, directory layout, and
   canonical module/class/prefix naming for `src`, `tests`, `examples`, `scripts`.
-- **Tracking:** ecosystem-standardization epic and children (labelled
-  `branch:0.20.0-dev`).
+  Third-party repositories remain outside the FLEXT architecture boundary and
+  retain their upstream layout and commands.
+- **Tracking:** the active branch-matched Bead and its dependencies.
 - **Complements:** ADR-003 (topology/profiles), ADR-004 (Make/codegen SSOT
   ownership), ADR-005 (config/settings/constants/templates/schemas SSOT and
   facade layering), ADR-007 (operational kernel/CLI/transactional conform),
@@ -75,15 +76,14 @@ base.
 
 ### 2. Common verb surface for every project
 
-Every project — root, member, loose internal (independent), and external —
-exposes the same public Make verbs from `base_verbs.mk`: `help`, `boot`,
-`build`, `check`, `fmt`, `scan`, `docs`, `docs-serve`, `test`, `val`, and
-`fix-enforcement`, plus the operational verbs defined by ADR-004. Loose internal
-projects use the `standalone` profile and behave exactly like independent
-projects: they own only themselves and never inspect neighbors (ADR-003).
+Every managed project exposes the root-dispatched standard verbs declared by
+`make help`, including `setup`, `gen`, `fix`, `fmt`, `check`, `test`, `conform`,
+`mod`, `waza`, and publication. Mutation uses only `APPLY=Y`; callers do not
+invent selectors. Standalone FLEXT projects own only themselves and never
+inspect neighbors (ADR-003).
 
-`setup`/`boot` provisions the identical environment everywhere: mise-pinned
-Python `3.13` and uv `0.9.21`, `.venv` via uv, direnv (`.envrc`), and
+`setup` provisions the identical environment everywhere: mise-pinned Python
+`3.13`, `.venv` via uv, direnv (`.envrc`), and
 `pyproject.toml`/`.mise.toml`/`.python-version` rendered from the toolchain SSOT.
 
 ### 3. Canonical structure, facades, and naming (measured, then enforced)
@@ -165,6 +165,30 @@ the `*_dir` resolution to the settings root singleton is implemented by the
 fixes the contract every consumer must follow; consumer adoption and enforcement
 are tracked in Beads.
 
+### 3b. Semantic discovery and automated rewiring
+
+Class and symbol movement is derived from live sources: typed module paths,
+AST/Rope identities, and LSP reference resolution. A checked-in list that maps
+individual classes, files, confidence labels, or rewrite targets is a second
+owner and is prohibited. Unknown or ambiguous ownership fails at the
+classifier; it never falls back to a guessed namespace or an inert/manual-review
+entry.
+
+`make mod APPLY=Y` owns this cutover. It inventories every governed repository,
+applies safe ast-grep rewrites, performs semantic consumer rewiring, removes the
+superseded owner, and then validates Ruff, Pyrefly, and local LSP diagnostics
+before accepting the fixed point. Detection-only findings keep the invocation red but do not
+prevent independent actionable rewrites from being applied first. Every phase
+emits causal progress in less than 60 seconds; quiet, truncated, capped, or
+warning-suppressing evidence is invalid.
+
+Git repositories and local Git operations are owned by `flext-infra`; GitHub
+and the CRG runtime are owned by ai-hub. FLEXT may consume public ai-hub
+commands, hooks, MCP routes, or `ai-hub-*` daemons as optional discovery
+enrichment. It never imports ai-hub or CRG as a library. Absence of that optional
+host runtime does not fail the deterministic local cutover; if an available
+integration is selected, its first error propagates without normalization.
+
 ### 4. Three ordered phases (same strategy as ADR-020/008/009)
 
 1. **Validation-first.** `flext-infra codegen conform --mode check` plus a
@@ -183,12 +207,12 @@ are tracked in Beads.
 
 ### 5. Applicability to independent and external projects
 
-Loose internal projects and external applications (`dcdoc`, DataOP, DcBackup)
-consume the same generated base through the `standalone` profile and their own
-`flext-infra` invocation. This never changes the dependency law of ADR-008/009:
-`flext-infra` is invoked as external tooling and never imported by an
-application, and no `flext-*` package depends on an application. Standardization
-is generation and validation, not runtime composition.
+Standalone first-party FLEXT projects consume the same generated base through
+the `standalone` profile. Third-party and non-FLEXT repositories instead follow
+their upstream architecture, toolchain, runtime floor, release, and deployment
+contracts; FLEXT may govern only neutral association/provenance metadata around
+them. This preserves ADR-008/009 dependency direction without imposing FLEXT
+facades on foreign code.
 
 ## Consequences
 
@@ -202,15 +226,18 @@ is generation and validation, not runtime composition.
 
 ## Verification contract
 
-1. `flext-infra codegen conform --mode check --scope all` is green (byte-idempotent)
-   on the standardized set; every managed file matches the rendered SSOT.
+1. Two consecutive root `make gen APPLY=Y` runs are green and byte-idempotent on
+   the standardized set; every managed file matches the rendered SSOT.
 2. The standardization audit reports zero drift for verbs, layout, facades,
    `**init**.py`, toolchain/pyproject, and naming on enforced projects.
-3. Enforcement rules exist as `flext-infra/config/enforcement/*.yaml` data and a
-   naming/structure violation fails `check`/`val`.
-4. `flext-tests` base yields identical generic `test` behavior across projects.
-5. Independent/external projects pass the same gates with no `flext-*`
-   reverse dependency (ADR-008 gate stays green).
+3. `make mod APPLY=Y` reports zero actionable and detection-only findings after
+   AST/semantic rewire and zero Ruff, Pyrefly, or local LSP diagnostics. When an
+   ai-hub CRG/LSP route is available and selected, its distinct runtime evidence
+   is recorded without making host availability a FLEXT prerequisite.
+4. `make test APPLY=Y` retains the canonical testmon cache, and `flext-tests`
+   supplies identical public behavior fixtures across projects.
+5. Independent FLEXT projects pass the same gates; non-FLEXT projects preserve
+   upstream conventions with no reverse `flext-*` dependency (ADR-008).
 
 ## References
 

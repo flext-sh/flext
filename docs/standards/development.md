@@ -1,239 +1,86 @@
 # Development Standards
 
-<!-- TOC START -->
-- [Required file header](#required-file-header)
-- [Config and settings are the SSOT (P0)](#config-and-settings-are-the-ssot-p0)
-- [Canonical aliases](#canonical-aliases)
-- [Imports](#imports)
-- [Typing](#typing)
-- [Result flow](#result-flow)
-- [Logging](#logging)
-- [Error handling](#error-handling)
-- [Models and settings](#models-and-settings)
-- [Anti-patterns](#anti-patterns)
-- [Local validation](#local-validation)
-- [Related](#related)
-<!-- TOC END -->
-
-Quick-reference for daily development in the FLEXT monorepo. For the root
-engineering law, see `AGENTS.md`. For automated enforcement details, see
-`.agents/skills/coding-standards/SKILL.md` and child skills.
-
-## Required file header
-
-Every Python file must start with:
-
-```python
-from __future__ import annotations
-```
-
-`ruff` enforces this via `I002`.
-
-## Config and settings are the SSOT (P0)
-
-All configuration and runtime settings come from `from <ns> import config, settings`
-and are consumed through `config.<Ns>.*` and `settings.<Ns>.*`. No code, test, or
-script may embed a value that the SSOT owns.
-
-- Tests must be able to validate any change to config or settings without being
-  rewritten. Expectations come from the config/settings objects, not from
-  hardcoded literals copied from today's files.
-- A test that fails only because a config value changed is a test defect; fix
-  the test to read from the SSOT.
-- This rule applies to every tier: unit, integration, and e2e tests, plus
-  markdown examples and docstring snippets validated by the pytest plugin.
-
-See `docs/standards/testing.md` for the test-side enforcement of this rule.
-
-## Canonical aliases
-
-Use the facade aliases exposed by `flext_core` and project facades:
-
-|Alias|Purpose|
-|-------|---------|
-|`c`|constants / constants namespace|
-|`d`|decorators|
-|`e`|errors / exceptions|
-|`h`|handlers|
-|`m`|models|
-|`p`|protocols|
-|`r`|result (`FlextResult`)|
-|`s`|service / runtime|
-|`t`|typings|
-|`u`|utilities|
-|`x`|mixins / execution|
-
-**Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`,
-`FlextCliSettings`, `FlextTestsSettings`) have no short alias.
-
-Facade owner modules that compose an upstream FLEXT facade by MRO use the
-upstream short alias as the base class and then publish the local alias at the
-bottom:
-
-```python
-from flext_cli import m
-
-
-class FlextPluginModels(m): ...
-
-
-m = FlextPluginModels
-```
-
-This applies to `c`, `t`, `p`, `m`, and `u` facades. Pylance's
-`reportGeneralTypeIssues` workspace diagnostic is disabled because it flags this
-canonical self-rebound facade pattern; `pyright`, `pyrefly`, and `mypy` gates
-remain authoritative.
-
-`base.py` and `api.py` follow the same owner-facade rule:
-
-```python
-from flext_core import s
-from flext_db_oracle._utilities.db_oracle import FlextDbOracleUtilitiesDbOracle
-
-
-class FlextDbOracleServiceBase(s, FlextDbOracleUtilitiesDbOracle): ...
-
-
-s = FlextDbOracleServiceBase
-```
-
-```python
-from flext_db_oracle.services.api_runtime import FlextDbOracleApiRuntime
-
-
-class FlextDbOracleApi(FlextDbOracleApiRuntime): ...
-
-
-db_oracle = FlextDbOracleApi
-```
-
-Example:
-
-```python
-from flext_core import c, m, r, u
-
-
-def load(user_id: int) -> r[m.User]:
-    return u.http_get(f"{c.API_BASE}/users/{user_id}")
-```
-
-## Imports
-
-- Absolute imports only in `src/`.
-- No wildcard imports.
-- No relative imports.
-- No legacy typing imports (`typing.Dict`, `typing.List`, etc.).
-- No direct imports of abstracted frameworks (pydantic, structlog, typer, returns)
-  in consumer projects; use the project facade.
-
-Order:
-
-1. `from __future__ import annotations`
-2. `from collections.abc import Mapping, Sequence`
-3. stdlib
-4. third-party
-5. first-party (`flext_core`, `flext_*`)
-6. local package
-
-## Typing
-
-- Use `Mapping` / `MutableMapping` for contracts instead of `dict`.
-- Use `t.JsonValue` for unknown JSON instead of `Any`.
-- Use Pydantic v2 `BaseModel` for schema-bearing payloads.
-- Avoid `typing.Any`, bare `object`, and `# type: ignore`.
-
-```python
-from collections.abc import Mapping
-from flext_core import t
-
-
-def normalize(data: Mapping[str, t.JsonValue]) -> t.JsonValue: ...
-```
-
-## Result flow
-
-Fallible paths return `r[T]` from `FlextResult`. Do not use ad-hoc error dicts or raw exceptions for control flow.
-
-```python
-from flext_core import r
-
-
-def parse(value: str) -> r[int]:
-    try:
-        return r.ok(int(value))
-    except ValueError as exc:
-        return r[int].fail("invalid_integer", exception=exc)
-```
-
-## Logging
-
-Use `u.fetch_logger(__name__)`. No `u.Cli.print()` in library code.
-
-```python
-from flext_core import u
-
-logger = u.fetch_logger(__name__)
-logger.info("event.name", key=value)
-```
-
-## Error handling
-
-Catch specific exceptions. No bare `except:`. No empty `except/pass` blocks.
-
-```python
-try:
-    value = int(raw)
-except ValueError as exc:
-    raise e.ValidationError("invalid integer") from exc
-```
-
-## Models and settings
-
-Use Pydantic v2 `BaseModel` and `m.SettingsConfigDict` for settings branches.
-
-```python
-from flext_core import FlextSettings, m
-
-
-class FlextCliSettings(FlextSettings):
-    model_config = m.SettingsConfigDict(env_prefix="FLEXT_CLI_", extra="ignore")
-```
-
-## Anti-patterns
-
-|Anti-pattern|Fix|
-|--------------|-----|
-|`from typing import Any`|use a concrete type or `t.JsonValue`|
-|`isinstance(x, dict)`|`isinstance(x, Mapping)`|
-|`default_factory=dict`|explicit factory or Pydantic model|
-|`sys.exit()` in library code|raise an exception|
-|`breakpoint()` / `import pdb`|remove before committing|
-|`TODO/FIXME/HACK` comments|resolve or create a bead|
-|`# type: ignore` / `# noqa`|fix root cause|
-|relative imports|absolute imports|
-|wildcard imports|explicit imports|
-|`s` used for settings|`s` is service/runtime; use `FlextSettings` by name|
-
-## Local validation
+This standard summarizes the root `AGENTS.md` and branch-matched `flext-law`.
+Those authorities, the nearest package scope, and the active Bead own execution.
+
+## Ownership and architecture
+
+- Read the canonical owner and every consumer before mutation.
+- Keep the strict `settings -> config -> c -> t -> p -> m -> u -> base ->
+  services -> api -> cli` direction.
+- Put generic reusable declarations and behavior in the package's canonical
+  `c`, `t`, `p`, `m`, or `u` facade.
+- Wire dependencies once through typed `p` protocols at the public composition
+  root.
+- Remove replaced owners after every consumer is rewired. Compatibility aliases,
+  duplicate registries, fallback paths, and temporary bridges are prohibited.
+
+## Configuration and types
+
+- Typed config and settings own operational and project-controlled values.
+- Tests, examples, templates, and docs read the same owner; they never copy
+  today's value.
+- Parse owned payloads with Pydantic 2 models and expose boundaries through
+  `t` aliases and `p` protocols.
+- Avoid `Any`, bare `object`, optional compatibility shapes, and untyped mapping
+  contracts.
+- Declaration layers contain data only. Runtime behavior belongs in `u`, base,
+  services, `api.py`, or `cli.py`.
+
+## Imports and modules
+
+- Import config and settings in their canonical single form.
+- Consume short facades from the public package boundary.
+- Forward imports may be runtime; reverse imports are type-checking only.
+- Use one public `api.py`, a thin optional `cli.py`, one class per internal
+  module, and no more than 200 logical lines per module.
+- Never hand-edit generated facade roots, initializers, managed sections, or
+  generated docs.
+
+## Failure semantics
+
+The first exception, traceback, and causal non-zero exit propagate. Do not catch
+to normalize, retry, fall back, suppress, skip, or partially complete a failed
+operation. Warnings, missing tools, empty output, and stale generated files are
+red until their owner is corrected.
+
+## Tests
+
+Tests exercise observable behavior only through public facades. They use `tm`,
+the unified `conftest.py`, and typed shared fixtures. Mocks, fakes, stubs,
+patching, monkeypatch mutation, private construction, copied setup, and
+hardcoded project values are prohibited.
+
+Every test run stays inside the retained Testmon cache owned by the root test
+verb.
+
+## Canonical workflow
+
+Start at the workspace root:
 
 ```bash
-ruff check <file>
-ruff format <file>
-pyrefly check <file>
-make test PROJECT=<proj> MATCH=<expr>
+make setup
+make help
+make gen APPLY=Y
+make mod APPLY=Y
+make gen APPLY=Y
+make gen APPLY=Y
+make fix APPLY=Y
+make fmt APPLY=Y
+make check APPLY=Y
+make test APPLY=Y
+make conform APPLY=Y
+make waza APPLY=Y
 ```
 
-For several files:
-
-```bash
-make check CHANGED_ONLY=1
-```
+The final generation pass proves the fixed point. Use only verbs declared by
+`make help`, with `APPLY=Y` exactly when the typed Make config requires it. Do
+not attach project, file, pattern, action, phase, fix, or changed-only selectors,
+and do not invoke underlying tools directly.
 
 ## Related
 
-- `AGENTS.md` — root engineering law
-- `.agents/skills/flext-law/SKILL.md` — FLEXT domain law (imports, typing, MRO)
-- `~/.agents/skills/framework/flext-development/SKILL.md` — global FLEXT development procedure
-- `~/.agents/skills/agent-wide/personal/make-check/SKILL.md` — gate commands
-- `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md` — completion evidence
+- `AGENTS.md`
+- `.agents/skills/flext-law/SKILL.md`
+- [Testing standards](testing.md)
+- [Documentation standards](documentation.md)
