@@ -1,5 +1,17 @@
 # FLEXT Auth
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Auth is the multi-provider authentication and authorization service of the FLEXT platform. It exposes a registry-
 centric facade (`FlextAuth` / `auth`) backed by provider services for JWT, OAuth2, OIDC, SAML, API key, basic auth,
 client certificates, LDAP, and Kerberos, all behind the same `r[T]` validation pipeline. Package description: "FLEXT

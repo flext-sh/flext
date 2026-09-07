@@ -23,6 +23,7 @@ non-FLEXT directory in the repository.
 - [Ecosystem coordination (internal + external projects, `0.20.0-dev`)](architecture/ecosystem-coordination.md)
 - [Migration guide](guides/migration-to-v0.13.0.md)
 - [Workspace project catalog](projects/generated/catalog.md)
+- [Documentation Knowledge Index](knowledge-index.md) — navigate by topic or responsibility
 - [Workspace API overview](api-reference/generated/overview.md)
 
 ## Current Versioning Context
@@ -33,7 +34,9 @@ non-FLEXT directory in the repository.
 
 ## Canonical Sections
 
+- [Knowledge Index](knowledge-index.md) — bridge between manual docs, CRG code wiki, and auto-generated API reference
 - [Architecture](architecture/README.md)
+- [Code Communities](architecture/communities/README.md) — CRG knowledge graph communities
 - [Guides](guides/README.md)
 - [Projects](projects/README.md)
 - [API Reference](api-reference/README.md)

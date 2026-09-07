@@ -1,5 +1,17 @@
 # FLEXT dbt LDAP
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT dbt LDAP is the integration project that turns LDAP/Active Directory data into analytics-ready warehouse tables.
 It composes `flext-ldap` (directory transport), `flext-meltano` (dbt orchestration), and `flext-core` (result contracts,
 settings SSOT) behind one MRO facade so extraction, transformation, sync, and quality validation share identical

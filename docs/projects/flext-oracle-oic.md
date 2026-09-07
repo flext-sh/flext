@@ -1,5 +1,17 @@
 # FLEXT Oracle OIC
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Oracle OIC (`flext-oracle-oic`) is the Oracle Integration Cloud (OIC) extension library of the FLEXT platform. It
 provides a typed, `r[T]`-based API facade for OIC integration lifecycle management (create, activate, run, monitor),
 OAuth2 client-credentials authentication, and paginated REST access to integrations, connections, lookups, and packages.

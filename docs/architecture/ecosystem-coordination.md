@@ -12,9 +12,9 @@
   - [`flext-infra`](#flext-infra)
   - [`flext-core`](#flext-core)
 - [External platforms](#external-platforms)
-- Open libraries and possible new `flext-*` (gated)
+- [Open libraries and possible new `flext-*` (gated)](#open-libraries-and-possible-new-flext--gated)
 - [Project standardization (ADR-010)](#project-standardization-adr-010)
-- Extraction gate for any new `flext-*`
+- [Extraction gate for any new `flext-*`](#extraction-gate-for-any-new-flext-)
 - [Coordination Beads](#coordination-beads)
 <!-- TOC END -->
 

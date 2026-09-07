@@ -1,5 +1,6 @@
 # utilities-flext
 
+
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -11,111 +12,117 @@
 
 ## Overview
 
-Community of 3956 nodes
+Community of 590 nodes
 
-- **Size**: 3956 nodes
-- **Cohesion**: 0.3414
+- **Size**: 590 nodes
+- **Cohesion**: 0.1590
 - **Dominant Language**: python
 
 ## Members
 
 | Name | Kind | File | Lines |
-| ------ | ------ | ------ | ------- |
-| parse_semver | Function | libs/versioning.py | 19-29 |
-| bump_version | Function | libs/versioning.py | 32-42 |
-| current_workspace_version | Function | libs/versioning.py | 59-73 |
-| replace_project_version | Function | libs/versioning.py | 76-91 |
-| test_read_nonexistent_file | Test | flext-tests/tests/unit/_files_parts/read.py | 80-96 |
-| _find_project_root | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 24-32 |
-| project_metadata | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 36-38 |
-| project_tool_flext | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 42-44 |
-| project_namespace_config | Function | flext-tests/src/flext_tests/_fixtures/project_metadata.py | 48-50 |
-| MarkdownCodeBlockItem | Class | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 41-85 |
-| **init** | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 44-51 |
-| runtest | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 54-70 |
-| repr_failure | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 73-80 |
-| reportinfo | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 83-85 |
-| pytest_collect_file | Function | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 103-114 |
-| MarkdownValidationError | Class | flext-tests/src/flext_tests/_fixtures/markdown_validation.py | 117-118 |
-| FlextTestsFixturesDSLMixin | Class | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 17-126 |
-| _root | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 41-45 |
-| _resolve_path | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 48-51 |
-| path | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 54-58 |
-| load | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 61-62 |
-| exists | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 65-66 |
-| servers | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 69-73 |
-| kinds | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 76-89 |
-| for_group | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 92-94 |
-| for_kind | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 97-103 |
-| all_fixtures | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 106-108 |
-| pytest_params | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 111-117 |
-| all_pytest_params | Function | flext-tests/src/flext_tests/_utilities/fixtures_dsl.py | 120-126 |
-| FlextTestsValidatorUtilitiesMixin | Class | flext-tests/src/flext_tests/_utilities/validator.py | 15-205 |
-| create_violation | Function | flext-tests/src/flext_tests/_utilities/validator.py | 19-50 |
-| find_line_number | Function | flext-tests/src/flext_tests/_utilities/validator.py | 53-58 |
-| split_import_targets | Function | flext-tests/src/flext_tests/_utilities/validator.py | 61-69 |
-| approved | Function | flext-tests/src/flext_tests/_utilities/validator.py | 72-96 |
-| code_match | Function | flext-tests/src/flext_tests/_utilities/validator.py | 99-144 |
-| real_comment | Function | flext-tests/src/flext_tests/_utilities/validator.py | 147-163 |
-| except_block_only_pass | Function | flext-tests/src/flext_tests/_utilities/validator.py | 166-205 |
-| FlextValidatorBypass | Class | flext-tests/src/flext_tests/_validator/bypass.py | 23-149 |
-| _check_exception_swallowing | Function | flext-tests/src/flext_tests/_validator/bypass.py | 32-67 |
-| _check_noqa | Function | flext-tests/src/flext_tests/_validator/bypass.py | 70-92 |
-| _check_pragma_no_cover | Function | flext-tests/src/flext_tests/_validator/bypass.py | 95-121 |
-| _scan_file | Function | flext-tests/src/flext_tests/_validator/bypass.py | 125-149 |
-| FlextValidatorImports | Class | flext-tests/src/flext_tests/_validator/imports.py | 23-198 |
-| _check_import_error_handling | Function | flext-tests/src/flext_tests/_validator/imports.py | 29-51 |
+|------|------|------|-------|
+| test_config_load_yaml_expands_env | Test | flext-cli/tests/unit/test_config_engine.py | 106-119 |
+| FlextDecoratorsLogging | Class | flext-core/src/flext_core/_decorators/_logging.py | 23-156 |
+| log_operation | Function | flext-core/src/flext_core/_decorators/_logging.py | 27-76 |
+| decorator | Function | flext-core/src/flext_core/_decorators/_logging.py | 146-154 |
+| wrapper | Function | flext-core/src/flext_core/_decorators/_logging.py | 150-152 |
+| _resolve_correlation_id | Function | flext-core/src/flext_core/_decorators/_logging.py | 79-84 |
+| _execute_logged_call | Function | flext-core/src/flext_core/_decorators/_logging.py | 87-138 |
+| with_correlation | Function | flext-core/src/flext_core/_decorators/_logging.py | 141-156 |
+| ContextRuntimeState | Class | flext-core/src/flext_core/_models/_context/__scope_parts/flextmodelscontextscope_part_02.py | 24-165 |
+| create_default | Function | flext-core/src/flext_core/_models/_context/__scope_parts/flextmodelscontextscope_part_02.py | 87-112 |
+| resolve_scope_var | Function | flext-core/src/flext_core/_models/_context/__scope_parts/flextmodelscontextscope_part_02.py | 114-133 |
+| with_operation_update | Function | flext-core/src/flext_core/_models/_context/__scope_parts/flextmodelscontextscope_part_02.py | 135-165 |
+| GuardCheckSpec | Class | flext-core/src/flext_core/_models/collections.py | 23-145 |
+| _MappingRootBase | Class | flext-core/src/flext_core/_models/containers.py | 51-111 |
+| __getitem__ | Function | flext-core/src/flext_core/_models/containers.py | 60-61 |
+| __setitem__ | Function | flext-core/src/flext_core/_models/containers.py | 63-64 |
+| __delitem__ | Function | flext-core/src/flext_core/_models/containers.py | 66-67 |
+| __contains__ | Function | flext-core/src/flext_core/_models/containers.py | 69-70 |
+| __len__ | Function | flext-core/src/flext_core/_models/containers.py | 72-73 |
+| __bool__ | Function | flext-core/src/flext_core/_models/containers.py | 75-76 |
+| keys | Function | flext-core/src/flext_core/_models/containers.py | 78-79 |
+| values | Function | flext-core/src/flext_core/_models/containers.py | 81-82 |
+| items | Function | flext-core/src/flext_core/_models/containers.py | 84-85 |
+| get | Function | flext-core/src/flext_core/_models/containers.py | 87-90 |
+| update | Function | flext-core/src/flext_core/_models/containers.py | 92-95 |
+| clear | Function | flext-core/src/flext_core/_models/containers.py | 97-98 |
+| pop | Function | flext-core/src/flext_core/_models/containers.py | 100-103 |
+| popitem | Function | flext-core/src/flext_core/_models/containers.py | 105-106 |
+| setdefault | Function | flext-core/src/flext_core/_models/containers.py | 108-111 |
+| ConfigMap | Class | flext-core/src/flext_core/_models/containers.py | 121-127 |
+| ObjectList | Class | flext-core/src/flext_core/_models/containers.py | 129-144 |
+| __len__ | Function | flext-core/src/flext_core/_models/containers.py | 140-141 |
+| __bool__ | Function | flext-core/src/flext_core/_models/containers.py | 143-144 |
+| Entry | Class | flext-core/src/flext_core/_models/domain_event.py | 29-56 |
+| Entity | Class | flext-core/src/flext_core/_models/entity.py | 37-74 |
+| __eq__ | Function | flext-core/src/flext_core/_models/entity.py | 60-64 |
+| __hash__ | Function | flext-core/src/flext_core/_models/entity.py | 66-68 |
+| model_post_init | Function | flext-core/src/flext_core/_models/entity.py | 71-74 |
+| HasModelDump | Class | flext-core/src/flext_core/_protocols/result.py | 173-176 |
+| model_dump | Function | flext-core/src/flext_core/_protocols/result.py | 174-176 |
+| FlextResultBase | Class | flext-core/src/flext_core/_result/base.py | 28-96 |
+| reject_banned_result_parameterization | Function | flext-core/src/flext_core/_result/base.py | 42-54 |
+| reject_banned_success_payload | Function | flext-core/src/flext_core/_result/base.py | 57-62 |
+| validate_error_data | Function | flext-core/src/flext_core/_result/base.py | 65-73 |
+| __init__ | Function | flext-core/src/flext_core/_result/base.py | 75-96 |
+| FlextRuntimeContainer | Class | flext-core/src/flext_core/_runtime/_container.py | 33-175 |
+| _is_registerable_runtime_service | Function | flext-core/src/flext_core/_runtime/_container.py | 37-43 |
+| _normalize_payload_item | Function | flext-core/src/flext_core/_runtime/_container.py | 46-83 |
+| normalize_registerable_service | Function | flext-core/src/flext_core/_runtime/_container.py | 86-121 |
+| validate_callable_input | Function | flext-core/src/flext_core/_runtime/_container.py | 124-129 |
 
-*... and 3906 more members.*
+*... and 540 more members.*
 
 ## Execution Flows
 
-- **execute** (criticality: 0.91, depth: 10)
-- **fetch_integration** (criticality: 0.89, depth: 9)
-- **execute** (criticality: 0.88, depth: 9)
-- **get** (criticality: 0.87, depth: 5)
-- **post** (criticality: 0.87, depth: 5)
-- **_execute_test_command** (criticality: 0.87, depth: 8)
-- **execute** (criticality: 0.87, depth: 9)
-- **check** (criticality: 0.87, depth: 5)
-- **_execute_tap_command** (criticality: 0.86, depth: 8)
-- **auth_headers** (criticality: 0.86, depth: 5)
-- *... and 140 more flows.*
+- **__hash__** (criticality: 0.69, depth: 1)
+- **normalize_domain_event_data** (criticality: 0.68, depth: 3)
+- **main** (criticality: 0.67, depth: 9)
+- **_merge_deep** (criticality: 0.61, depth: 4)
+- **_merge_append** (criticality: 0.60, depth: 3)
+- **client** (criticality: 0.60, depth: 6)
+- **discover_streams** (criticality: 0.58, depth: 6)
+- **_parse_try_model** (criticality: 0.57, depth: 1)
+- **validate_metadata_attributes** (criticality: 0.57, depth: 2)
+- **run** (criticality: 0.57, depth: 7)
+- *... and 3 more flows.*
 
 ## Dependencies
 
 ### Outgoing
 
-- `append` (662 edge(s))
-- `that` (661 edge(s))
-- `len` (554 edge(s))
-- `write_text` (519 edge(s))
-- `isinstance` (502 edge(s))
-- `str` (426 edge(s))
-- `tuple` (402 edge(s))
-- `get` (383 edge(s))
-- `getattr` (381 edge(s))
-- `strip` (328 edge(s))
-- `ok` (310 edge(s))
-- `fail` (272 edge(s))
-- `startswith` (255 edge(s))
-- `extend` (223 edge(s))
-- `mkdir` (217 edge(s))
+- `that` (208 edge(s))
+- `isinstance` (135 edge(s))
+- `ok` (104 edge(s))
+- `str` (57 edge(s))
+- `validate_python` (52 edge(s))
+- `len` (43 edge(s))
+- `model_validate` (41 edge(s))
+- `ConfigMap` (40 edge(s))
+- `items` (39 edge(s))
+- `fail` (38 edge(s))
+- `TypeAdapter` (37 edge(s))
+- `get` (33 edge(s))
+- `dict` (30 edge(s))
+- `pop` (28 edge(s))
+- `getattr` (27 edge(s))
 
 ### Incoming
 
-- `that` (660 edge(s))
-- `write_text` (428 edge(s))
-- `mkdir` (166 edge(s))
-- `len` (118 edge(s))
-- `read_text` (80 edge(s))
-- `flext-infra/src/flext_infra/_constants/source_code.py` (74 edge(s))
-- `exists` (63 edge(s))
-- `isinstance` (61 edge(s))
-- `ok` (61 edge(s))
-- `flext-infra/src/flext_infra/utilities.py` (48 edge(s))
-- `detect_file` (47 edge(s))
-- `DetectorContext` (47 edge(s))
-- `apply_to_source` (43 edge(s))
-- `flext-ldif/src/flext_ldif/_constants/base.py` (41 edge(s))
-- `Path` (36 edge(s))
+- `that` (208 edge(s))
+- `ok` (49 edge(s))
+- `ConfigMap` (38 edge(s))
+- `len` (32 edge(s))
+- `pop` (27 edge(s))
+- `validate_python` (23 edge(s))
+- `flext-core/tests/unit/test_models_container.py::TestsFlextCoreModelsContainer` (23 edge(s))
+- `flext-core/tests/unit/test_runtime.py::TestsFlextCoreRuntime` (21 edge(s))
+- `generate` (20 edge(s))
+- `str` (17 edge(s))
+- `fail` (15 edge(s))
+- `flext-core/tests/unit/test_typings_new.py::TestsFlextCoreTypingsNew` (15 edge(s))
+- `write_text` (14 edge(s))
+- `flext-core/tests/unit/_utilities/test_guards.py::TestsFlextCoreGuards` (13 edge(s))
+- `get` (13 edge(s))

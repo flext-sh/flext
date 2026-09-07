@@ -1,5 +1,17 @@
 # FLEXT dbt Oracle WMS
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT dbt Oracle WMS is the integration package for Oracle Warehouse Management
 System (WMS) transformations with dbt. Its executable source lives in
 `flext-dbt-oracle-wms/src/flext_dbt_oracle_wms/`.

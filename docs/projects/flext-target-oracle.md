@@ -1,5 +1,17 @@
 # FLEXT Target Oracle
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Target Oracle is the Singer target that loads data into Oracle databases. It composes the FLEXT facades with
 `flext-db-oracle` (Oracle connectivity) and `flext-meltano` (Singer target base) behind `r[T]` contracts and the
 canonical `c/m/p/t/u` facade layout.

@@ -3,12 +3,12 @@
 <!-- TOC START -->
 - [Delivery rules](#delivery-rules)
 - [Canonical ownership](#canonical-ownership)
-- Phase 1 — Consolidate the engine
-- Phase 2 — Generate the complete Make and uv contract
-- Phase 3 — Conform the FLEXT fleet
-- Phase 4 — Conform Cosmos
-- Phase 5 — Conform standalone repositories
-- Phase 6 — Fleet acceptance and deletion proof
+- [Phase 1 — Consolidate the engine](#phase-1-consolidate-the-engine)
+- [Phase 2 — Generate the complete Make and uv contract](#phase-2-generate-the-complete-make-and-uv-contract)
+- [Phase 3 — Conform the FLEXT fleet](#phase-3-conform-the-flext-fleet)
+- [Phase 4 — Conform Cosmos](#phase-4-conform-cosmos)
+- [Phase 5 — Conform standalone repositories](#phase-5-conform-standalone-repositories)
+- [Phase 6 — Fleet acceptance and deletion proof](#phase-6-fleet-acceptance-and-deletion-proof)
 <!-- TOC END -->
 
 This plan implements [ADR-003](adr/003-workspace-tooling-hub-distribution.md),

@@ -9,8 +9,8 @@
   - [4. Coordination flow across all projects](#4-coordination-flow-across-all-projects)
   - [5. Neutral integration contract](#5-neutral-integration-contract)
   - [6. Platform selection (ecosystem-wide)](#6-platform-selection-ecosystem-wide)
-  - 7. Open libraries and possible new `flext-*` packages
-  - 8. Extraction gate for any new `flext-*` package
+  - [7. Open libraries and possible new `flext-*` packages](#7-open-libraries-and-possible-new-flext--packages)
+  - [8. Extraction gate for any new `flext-*` package](#8-extraction-gate-for-any-new-flext--package)
 - [Consequences](#consequences)
 - [Verification contract](#verification-contract)
 - [References](#references)

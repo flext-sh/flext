@@ -1,5 +1,17 @@
 # FLEXT Core
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Core is the typed foundation library of the FLEXT platform. It provides the railway-oriented result contract
 (`r[T]`), the canonical short-alias facades (`c`, `m`, `t`, `p`, `u`, `r`, `s`, `e`, `x`, `d`, `h`), the DI container,
 the CQRS dispatcher, and the shared Pydantic models, protocols, and utilities that every downstream `flext-*` project

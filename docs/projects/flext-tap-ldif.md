@@ -1,5 +1,17 @@
 # FLEXT Tap LDIF
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Tap LDIF (`flext-tap-ldif`) is the Singer tap that extracts records from LDIF files into the FLEXT data mesh.
 Parsing and validation of the LDIF format are delegated to `flext-ldif`; Singer orchestration (discovery, catalog,
 state, sync) is built on `flext-meltano`, and every fallible operation returns `r[T]`.

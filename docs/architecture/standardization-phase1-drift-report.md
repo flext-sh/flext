@@ -2,14 +2,14 @@
 
 <!-- TOC START -->
 - [Method](#method)
-- Finding 1 — `.python-version` missing on ~10 FLEXT members
-- Finding 2 — settings/config exposure convention split
-- Finding 3 — dc_backup structural drift (highest)
-- Finding 4 — external/standalone managed-file gaps
-- Finding 5 — class-prefix naming
+- [Finding 1 — `.python-version` missing on ~10 FLEXT members](#finding-1-python-version-missing-on-10-flext-members)
+- [Finding 2 — settings/config exposure convention split](#finding-2-settingsconfig-exposure-convention-split)
+- [Finding 3 — dc_backup structural drift (highest)](#finding-3-dc-backup-structural-drift-highest)
+- [Finding 4 — external/standalone managed-file gaps](#finding-4-externalstandalone-managed-file-gaps)
+- [Finding 5 — class-prefix naming](#finding-5-class-prefix-naming)
 - [Phase 2 input (ordered, deletion-first, no writes here)](#phase-2-input-ordered-deletion-first-no-writes-here)
 - [Verification of this report](#verification-of-this-report)
-- Addendum — settings `*_dir` audit (Bead mro-377y.6, read-only)
+- [Addendum — settings `*_dir` audit (Bead mro-377y.6, read-only)](#addendum-settings-dir-audit-bead-mro-377y6-read-only)
   - [Phase 2/3 input for mro-377y.6](#phase-23-input-for-mro-377y6)
 <!-- TOC END -->
 

@@ -1,5 +1,14 @@
 # Development
 
+
+<!-- TOC START -->
+- [Start at the workspace root](#start-at-the-workspace-root)
+- [Forward workflow](#forward-workflow)
+- [Architecture and tests](#architecture-and-tests)
+- [Documentation ownership](#documentation-ownership)
+- [Related guides](#related-guides)
+<!-- TOC END -->
+
 The root `AGENTS.md`, branch-matched `flext-law`, nearest package scope, and
 active Bead define the development contract. This page is the executable
 summary, not a second policy owner.

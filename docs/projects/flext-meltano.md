@@ -1,5 +1,17 @@
 # FLEXT Meltano
 
+
+<!-- TOC START -->
+- [Status & health](#status-health)
+  - [Quality signals](#quality-signals)
+- [Quick start](#quick-start)
+- [Architecture & modules](#architecture-modules)
+  - [Key architectural patterns](#key-architectural-patterns)
+- [Testing & quality](#testing-quality)
+- [Resources](#resources)
+- [Support & issues](#support-issues)
+<!-- TOC END -->
+
 FLEXT Meltano is the enterprise data integration platform of FLEXT. It wraps Meltano, the Singer protocol (taps,
 targets, streams, sinks), and dbt behind the FLEXT facade and railway discipline, so ELT pipelines are declared,
 orchestrated, and executed through one typed surface.

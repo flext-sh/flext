@@ -3,12 +3,12 @@
 <!-- TOC START -->
 - [Status](#status)
 - [Context](#context)
-  - The duplication / anti-patterns (verified, file:line)
+  - [The duplication / anti-patterns (verified, file:line)](#the-duplication-anti-patterns-verified-fileline)
 - [Decision](#decision)
   - [Rules (inviolable for these projects)](#rules-inviolable-for-these-projects)
   - [Uniform connection seam](#uniform-connection-seam)
 - [Consequences](#consequences)
-- Realized mechanism — Declarative tap (flext-tap-ldap pilot, 2026-07-17)
+- [Realized mechanism — Declarative tap (flext-tap-ldap pilot, 2026-07-17)](#realized-mechanism-declarative-tap-flext-tap-ldap-pilot-2026-07-17)
 - [Evidence](#evidence)
 <!-- TOC END -->
 
