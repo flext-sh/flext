@@ -55,7 +55,7 @@ override PYTEST_CASE_TIMEOUT_SECONDS := 10
 override PYTEST_RUN_TIMEOUT_SECONDS := 600
 override PYTEST_TERMINATION_GRACE_SECONDS := 2
 override PYTEST_TIMEOUT_EXIT_CODE := 124
-override PYTEST_ENFORCEMENT_PLUGIN := flext_tests_enforcement
+override PYTEST_ENFORCEMENT_PLUGIN := flext_tests.enforcement_plugin
 override PYTEST_PROGRESS_ARGS := --verbose
 override PYTEST_REPORT_ARGS := -ra --durations=25 --durations-min=0.001 --tb=short
 override PYTEST_DIAG_ARGS := -rA --durations=0 --tb=long --showlocals
@@ -349,7 +349,7 @@ mise_exec() { \
 "GIT_CEILING_DIRECTORIES=$$project_parent" \
 			"MISE_CEILING_PATHS=$$project_parent" \
 			"MISE_TRUSTED_CONFIG_PATHS=$$project_root" \
-"PATH=$$caller_path" \
+$${caller_path:+"PATH=$$caller_path"} \
 $${caller_comspec:+"COMSPEC=$$caller_comspec"} \
 $${caller_pathext:+"PATHEXT=$$caller_pathext"} \
 $${caller_systemroot:+"SYSTEMROOT=$$caller_systemroot"} \
