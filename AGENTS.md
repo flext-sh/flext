@@ -473,6 +473,10 @@ the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream bas
   (only Pydantic Field/validators/computed_field). Behavior lives only in `u`/services/`api`/`base`/`cli`.
 - **Pydantic-2-way only** for owned payloads (`model_validate` in, `model_dump` out). No
   `dict`/`TypedDict`/`dataclass`/`NamedTuple`/`m.Dict` as a data contract.
+- **Pydantic law:** every model extends an `m.*` preset (never a raw base at consumers);
+  declarations resolve strictly (no `model_rebuild`); JSON enters via `model_validate_json`;
+  failures leave as `r.Fail` at the `e`/`u` boundary. Full reference: `pydantic-development`
+  skill (declaration/boundary/catalog parts) with the good/bad-practice and removal catalog.
 - **Typing:** never `Any`/`object`/concrete-class annotations; type via `t.*` aliases and `p.*` protocols; `T | None`
   (never `Optional`). A model is never a type.
 - **No compat surface:** no shims, legacy branches, dual old+new paths, loose helpers, or suppression
