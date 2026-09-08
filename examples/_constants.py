@@ -12,7 +12,7 @@ from enum import StrEnum, unique
 @unique
 class ExamplesPermission(StrEnum):
     """Permission enumeration used across ACL examples."""
-    
+
     @unique
     class ExamplesServerType(StrEnum):
         """Server type enumeration used across directory-service examples."""
@@ -23,7 +23,7 @@ class ExamplesPermission(StrEnum):
         ACTIVE_DIRECTORY = "active_directory"
         APACHE_DS = "apache_ds"
         UNKNOWN = "unknown"
-    
+
     @unique
     class ExamplesStage(StrEnum):
         """Processing stage enumeration used across pipeline examples."""
@@ -31,7 +31,7 @@ class ExamplesPermission(StrEnum):
         VALIDATE = "validate"
         PROCESS = "process"
         ANALYZE = "analyze"
-    
+
     @unique
     class ExamplesWorkflowStage(StrEnum):
         """Processing stage enumeration used across complete-workflow examples."""
@@ -48,7 +48,4 @@ class ExamplesPermission(StrEnum):
     UNKNOWN = "unknown"
 
 
-__all__: list[str] = [
-    "ExamplesPermission",
-    
-]
+__all__: list[str] = ["ExamplesPermission"]
