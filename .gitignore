@@ -56,6 +56,10 @@ scripts/maintenance/
 # mise toolchain pinning
 !.mise.toml
 !.python-version
+mise.lock
+.mise.lock
+**/mise.lock
+**/.mise.lock
 
 # Docker configuration
 !.dockerignore
@@ -365,6 +369,9 @@ legado/
 *.tpl.rej
 
 # --- codegen conform: generated runtime ignores ---
+mise.lock
+.mise.lock
+**/.mise.lock
 .direnv/
 .reports/
 .venv
