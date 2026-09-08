@@ -293,6 +293,7 @@ mise_exec() { \
 'LC_ALL=C' \
 'MISE_SAFE=1' \
 'MISE_PARANOID=true' \
+'MISE_QUIET=1' \
 'MISE_NO_ENV=1' \
 'MISE_NO_HOOKS=1' \
 'MISE_AUTO_ENV=false' \
@@ -462,7 +463,6 @@ SETUP_ENVIRONMENT_RECIPE = set -eu; \
 		fi; \
 		$(UV) sync --frozen --project "$(PROJECT_ROOT)" $(UV_SYNC_FLAGS) --link-mode "$(UV_LINK_MODE)"; \
 	fi; \
-	$(BORROW_RUNTIME_VENV_RECIPE); \
 	XDG_DATA_HOME="$${SETUP_DIRENV_XDG_DATA_HOME:?missing persistent direnv data home}" \
 		"$${SETUP_DIRENV:?missing Mise-resolved direnv executable}" allow "$(PROJECT_ROOT)"
 
