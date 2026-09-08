@@ -47,7 +47,10 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   alternative service-base import.
 - Declaration layers are pure data. Behavior belongs in utilities, services,
   bases, facades, or CLI layers. Owned data crosses boundaries through typed
-  Pydantic v2 models and project `t.*`/`p.*` contracts.
+  Pydantic v2 models and project `t.*`/`p.*` contracts. Pydantic practice —
+  model MRO presets, `p`/`r` contracts, conversions, validation,
+  serialization, and the removal catalog — follows the `pydantic-development`
+  skill; symbols reach consumers only through `m`/`t`/`u`.
 
 ## Runtime and language floor
 
