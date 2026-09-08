@@ -428,8 +428,7 @@ make check APPLY=Y
 make test APPLY=Y
 ```
 
-**Pinned toolchain** (`.default-python-packages`): Ruff `0.15.22`, mypy `2.3.0`, Pyright `1.1.411`, Pyrefly `1.1.1`.
-Python strictly `>=3.13,<3.14`.
+**Pinned toolchain**: versions declared in `config/codegen.yaml` scaffold.project.dev (ruff, mypy, pyright, pyrefly, pytest, etc.). Python strictly `>=3.13,<3.14`. The `.default-python-packages` file was removed; tool versions resolve through the cooldown-constrained SSOT.
 
 **Gotchas:** mypy is memory-capped (`MYPY_MEMORY_LIMIT_MB=6144`, 600s) — never run mypy uncapped, it can blow up RAM.
 Docs CI needs
