@@ -82,9 +82,9 @@ Every managed project exposes the root-dispatched standard verbs declared by
 invent selectors. Standalone FLEXT projects own only themselves and never
 inspect neighbors (ADR-003).
 
-`setup` provisions the identical environment everywhere: mise-pinned Python
-`3.13`, `.venv` via uv, direnv (`.envrc`), and
-`pyproject.toml`/`.mise.toml`/`.python-version` rendered from the toolchain SSOT.
+`setup` provisions the declared toolchain, `.venv` via uv, and environment
+integration. `gen` owns rendering managed `pyproject.toml`, `.mise.toml`, and
+`.python-version` from the toolchain SSOT; setup is not a competing renderer.
 
 ### 3. Canonical structure, facades, and naming (measured, then enforced)
 
@@ -98,7 +98,8 @@ The generated base fixes one structure for `src`, `tests`, `examples`,
 - Composition: `api.py` is the thin MRO facade; `base.py` holds the shared MRO
   base and Result helpers; `cli.py` holds declarative routes.
 - `**init**.py` are generated from `static_package_init.py.j2` /
-  `lazy_init_root.py.j2` — never hand-written re-export sprawl.
+  `lazy_init_root.py.j2`, preserving lazy public exports and ADR-005's model/import
+  contract; never hand-written re-export sprawl.
 - Naming is one scheme, rendered/validated by codegen: class prefix per project
   namespace (e.g. `Flext<Project>`, `DataOP<Concern>`, `DcBackup<Concern>`,
   `Dcdoc<Verb>Service`), sub-prefixes per concern, canonical subdirectory names,
@@ -191,19 +192,19 @@ integration is selected, its first error propagates without normalization.
 
 ### 4. Three ordered phases (same strategy as ADR-020/008/009)
 
-1. **Validation-first.** `flext-infra codegen conform --mode check` plus a
-   standardization audit reports every drift (missing verbs, non-standard
+1. **Validation-first.** The declared root validation interface and
+   standardization audit report every drift (missing verbs, non-standard
    layout, wrong facade/`**init**`, naming violations, toolchain/pyproject
    drift, non-standard tests/scripts/examples) across all projects, with zero
    writes. Output is evidence, not a rewrite.
-2. **Refactoring.** `flext-infra codegen conform --mode apply` (and the
-   `flext-tests` base) migrates each project to the standard in bounded,
+2. **Refactoring.** `make gen APPLY=Y` and `make mod APPLY=Y`, with the
+   `flext-tests` base, migrate each project to the standard in bounded,
    ownership-scoped batches, deletion-first (ADR-005 §5), one cut per concern,
    no compatibility shim, each batch validated (`ruff`/`pyrefly`/`pytest`).
 3. **Enforcement.** The standard becomes declarative enforcement data in
    `flext-infra/config/enforcement/*.yaml` evaluated by the rope-semantic engine
    (ADR-005 §6), so drift fails a gate instead of returning silently. Every
-   project runs the same `check`/`val` gates.
+   project runs the declared root validation gates.
 
 ### 5. Applicability to independent and external projects
 
@@ -238,6 +239,12 @@ facades on foreign code.
    supplies identical public behavior fixtures across projects.
 5. Independent FLEXT projects pass the same gates; non-FLEXT projects preserve
    upstream conventions with no reverse `flext-*` dependency (ADR-008).
+
+These zero-drift/no-findings conditions describe completed standardization. The
+0.12.0 checkpoint may retain individually evidenced nonfunctional debt under the
+[release contract](../../releases/latest.md). Findings and remediation Beads stay
+open, and gate results are never normalized. Generation fixed point and functional
+release evidence remain blocking.
 
 ## References
 

@@ -51,6 +51,9 @@ Read those skills and root `AGENTS.md`; this file adds only FLEXT domain law.
   model MRO presets, `p`/`r` contracts, conversions, validation,
   serialization, and the removal catalog — follows the `pydantic-development`
   skill; symbols reach consumers only through `m`/`t`/`u`.
+- Model annotations must resolve at their declaring owner through runtime-safe
+  imports. Preserve generated lazy exports and facade direction; `model_rebuild`,
+  eager-export rewrites, and compatibility aliases are not import-cycle repairs.
 
 ## Runtime and language floor
 
