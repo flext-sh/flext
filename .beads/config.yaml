@@ -17,3 +17,5 @@ types.custom: molecule,convoy,message,event,gate,merge-request,agent,role,rig,se
 dolt:
   mode: server
   disable-event-flush: true
+issue-prefix: flext
+dolt.mode: server

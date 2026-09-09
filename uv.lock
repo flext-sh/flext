@@ -1857,6 +1857,7 @@ codegen = [
 dev = [
     { name = "actionlint-py" },
     { name = "bandit" },
+    { name = "deptry" },
     { name = "flext-tests" },
     { name = "mkdocs" },
     { name = "mkdocs-autorefs" },
@@ -1874,6 +1875,7 @@ dev = [
     { name = "pyrefly" },
     { name = "pyright" },
     { name = "pytest" },
+    { name = "pytest-asyncio" },
     { name = "pytest-benchmark" },
     { name = "pytest-cov" },
     { name = "pytest-markdown-docs" },
@@ -1927,6 +1929,7 @@ codegen = [{ name = "flext-infra", editable = "flext-infra" }]
 dev = [
     { name = "actionlint-py", specifier = ">=1.7.12.24" },
     { name = "bandit", specifier = ">=1.9.4" },
+    { name = "deptry" },
     { name = "flext-tests", editable = "flext-tests" },
     { name = "mkdocs" },
     { name = "mkdocs-autorefs" },
@@ -1944,6 +1947,7 @@ dev = [
     { name = "pyrefly", specifier = ">=1.2.0" },
     { name = "pyright", specifier = ">=1.1.411" },
     { name = "pytest", specifier = ">=9.1.1" },
+    { name = "pytest-asyncio" },
     { name = "pytest-benchmark" },
     { name = "pytest-cov" },
     { name = "pytest-markdown-docs" },
