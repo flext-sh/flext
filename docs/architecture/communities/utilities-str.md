@@ -1,6 +1,5 @@
 # utilities-str
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)

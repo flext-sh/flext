@@ -1,6 +1,5 @@
 # utilities-plugin
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -25,12 +24,12 @@ Community of 88 nodes
 | Rules | Class | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 21-44 |
 | validate_business_rules | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 25-44 |
 | PluginExecution | Class | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 46-90 |
-| __init__ | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 49-65 |
+| **init** | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 49-65 |
 | create | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 68-75 |
 | mark_completed | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 77-85 |
 | mark_started | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 87-90 |
 | PluginRegistry | Class | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 92-199 |
-| __init__ | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 98-100 |
+| **init** | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 98-100 |
 | create | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 103-120 |
 | get | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 122-135 |
 | list_plugins | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 137-155 |
@@ -43,7 +42,7 @@ Community of 88 nodes
 | PluginPlatformService | Class | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 215-703 |
 | _to_general_mapping | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 238-245 |
 | _loader_payload_mapping | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 248-271 |
-| __init__ | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 273-283 |
+| **init** | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 273-283 |
 | with_discovery | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 285-288 |
 | with_loader | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 290-293 |
 | with_executor | Function | flext-plugin/src/flext_plugin/_utilities/plugin_platform.py | 295-298 |

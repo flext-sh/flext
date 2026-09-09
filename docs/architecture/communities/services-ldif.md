@@ -1,6 +1,5 @@
 # services-ldif
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,7 +22,7 @@ Community of 93 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextDbtLdif | Class | flext-dbt-ldif/src/flext_dbt_ldif/api.py | 21-91 |
-| __init__ | Function | flext-dbt-ldif/src/flext_dbt_ldif/api.py | 34-39 |
+| **init** | Function | flext-dbt-ldif/src/flext_dbt_ldif/api.py | 34-39 |
 | fetch_instance | Function | flext-dbt-ldif/src/flext_dbt_ldif/api.py | 42-46 |
 | service | Function | flext-dbt-ldif/src/flext_dbt_ldif/api.py | 49-51 |
 | execute | Function | flext-dbt-ldif/src/flext_dbt_ldif/api.py | 53-55 |
@@ -31,20 +30,20 @@ Community of 93 nodes
 | process_ldif_file | Function | flext-dbt-ldif/src/flext_dbt_ldif/api.py | 73-85 |
 | validate_ldif_quality | Function | flext-dbt-ldif/src/flext_dbt_ldif/api.py | 87-91 |
 | Client | Class | flext-dbt-ldif/src/flext_dbt_ldif/services/client.py | 19-111 |
-| __init__ | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/client.py | 24-26 |
+| **init** | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/client.py | 24-26 |
 | settings | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/client.py | 29-31 |
 | parse_ldif_file | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/client.py | 33-46 |
 | run_full_pipeline | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/client.py | 48-71 |
 | transform_with_dbt | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/client.py | 73-89 |
 | validate_ldif_data | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/client.py | 91-111 |
 | Service | Class | flext-dbt-ldif/src/flext_dbt_ldif/services/service.py | 17-126 |
-| __init__ | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/service.py | 20-35 |
+| **init** | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/service.py | 20-35 |
 | generate_and_write_models | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/service.py | 37-57 |
 | parse_and_validate_ldif | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/service.py | 59-78 |
 | run_complete_workflow | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/service.py | 80-120 |
 | run_data_quality_assessment | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/service.py | 122-126 |
 | UnifiedService | Class | flext-dbt-ldif/src/flext_dbt_ldif/services/unified_service.py | 14-86 |
-| __init__ | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/unified_service.py | 27-40 |
+| **init** | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/unified_service.py | 27-40 |
 | execute | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/unified_service.py | 43-50 |
 | generate_analytics_models | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/unified_service.py | 52-68 |
 | generate_staging_models | Function | flext-dbt-ldif/src/flext_dbt_ldif/services/unified_service.py | 70-86 |

@@ -1,6 +1,5 @@
 # providers-validate
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,38 +22,38 @@ Community of 56 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextAuthApiKeyProvider | Class | flext-auth/src/flext_auth/providers/apikey.py | 19-49 |
-| __init__ | Function | flext-auth/src/flext_auth/providers/apikey.py | 25-27 |
+| **init** | Function | flext-auth/src/flext_auth/providers/apikey.py | 25-27 |
 | authenticate | Function | flext-auth/src/flext_auth/providers/apikey.py | 30-33 |
 | supports | Function | flext-auth/src/flext_auth/providers/apikey.py | 36-43 |
 | validate | Function | flext-auth/src/flext_auth/providers/apikey.py | 46-49 |
 | FlextAuthBasicProvider | Class | flext-auth/src/flext_auth/providers/basic.py | 18-57 |
-| __init__ | Function | flext-auth/src/flext_auth/providers/basic.py | 24-26 |
+| **init** | Function | flext-auth/src/flext_auth/providers/basic.py | 24-26 |
 | authenticate | Function | flext-auth/src/flext_auth/providers/basic.py | 29-32 |
 | get_rfc_version | Function | flext-auth/src/flext_auth/providers/basic.py | 34-41 |
 | supports | Function | flext-auth/src/flext_auth/providers/basic.py | 44-51 |
 | validate | Function | flext-auth/src/flext_auth/providers/basic.py | 54-57 |
 | FlextAuthCertificateProvider | Class | flext-auth/src/flext_auth/providers/certificate.py | 17-71 |
-| __init__ | Function | flext-auth/src/flext_auth/providers/certificate.py | 22-24 |
+| **init** | Function | flext-auth/src/flext_auth/providers/certificate.py | 22-24 |
 | authenticate | Function | flext-auth/src/flext_auth/providers/certificate.py | 27-30 |
 | supports | Function | flext-auth/src/flext_auth/providers/certificate.py | 33-40 |
 | validate | Function | flext-auth/src/flext_auth/providers/certificate.py | 43-58 |
 | validate_token | Function | flext-auth/src/flext_auth/providers/certificate.py | 60-71 |
 | FlextAuthJwtProvider | Class | flext-auth/src/flext_auth/providers/jwt.py | 18-74 |
-| __init__ | Function | flext-auth/src/flext_auth/providers/jwt.py | 21-23 |
+| **init** | Function | flext-auth/src/flext_auth/providers/jwt.py | 21-23 |
 | authenticate | Function | flext-auth/src/flext_auth/providers/jwt.py | 26-29 |
 | get_rfc_version | Function | flext-auth/src/flext_auth/providers/jwt.py | 31-38 |
 | supports | Function | flext-auth/src/flext_auth/providers/jwt.py | 41-48 |
 | validate | Function | flext-auth/src/flext_auth/providers/jwt.py | 51-61 |
 | validate_token | Function | flext-auth/src/flext_auth/providers/jwt.py | 63-74 |
 | FlextAuthJwtTokenValidator | Class | flext-auth/src/flext_auth/providers/jwt_token_validator.py | 16-45 |
-| __init__ | Function | flext-auth/src/flext_auth/providers/jwt_token_validator.py | 23-25 |
+| **init** | Function | flext-auth/src/flext_auth/providers/jwt_token_validator.py | 23-25 |
 | validate_token | Function | flext-auth/src/flext_auth/providers/jwt_token_validator.py | 27-45 |
 | FlextAuthLdapProvider | Class | flext-auth/src/flext_auth/providers/ldap.py | 15-66 |
 | authenticate | Function | flext-auth/src/flext_auth/providers/ldap.py | 31-42 |
 | supports | Function | flext-auth/src/flext_auth/providers/ldap.py | 45-52 |
 | validate | Function | flext-auth/src/flext_auth/providers/ldap.py | 55-66 |
 | FlextAuthOAuth2Provider | Class | flext-auth/src/flext_auth/providers/oauth2.py | 13-66 |
-| __init__ | Function | flext-auth/src/flext_auth/providers/oauth2.py | 16-56 |
+| **init** | Function | flext-auth/src/flext_auth/providers/oauth2.py | 16-56 |
 | get_rfc_version | Function | flext-auth/src/flext_auth/providers/oauth2.py | 59-66 |
 | FlextAuthOidcProvider | Class | flext-auth/src/flext_auth/providers/oidc.py | 19-80 |
 | authenticate | Function | flext-auth/src/flext_auth/providers/oidc.py | 35-46 |
@@ -62,7 +61,7 @@ Community of 56 nodes
 | supports | Function | flext-auth/src/flext_auth/providers/oidc.py | 59-66 |
 | validate | Function | flext-auth/src/flext_auth/providers/oidc.py | 69-80 |
 | FlextAuthRfcProvider | Class | flext-auth/src/flext_auth/providers/rfc.py | 21-132 |
-| __init__ | Function | flext-auth/src/flext_auth/providers/rfc.py | 37-39 |
+| **init** | Function | flext-auth/src/flext_auth/providers/rfc.py | 37-39 |
 | project_to_scalar_config | Function | flext-auth/src/flext_auth/providers/rfc.py | 42-57 |
 | get_rfc_version | Function | flext-auth/src/flext_auth/providers/rfc.py | 59-68 |
 | supports_rfc_feature | Function | flext-auth/src/flext_auth/providers/rfc.py | 70-84 |

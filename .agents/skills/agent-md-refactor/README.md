@@ -2,7 +2,7 @@
 
 A skill that transforms bloated agent instruction files into clean, organized documentation using progressive disclosure principles.
 
-Based on https://x.com/mattpocockuk/status/2012906065856270504 (Matt Pocock's Prompt Idea)
+Based on <https://x.com/mattpocockuk/status/2012906065856270504> (Matt Pocock's Prompt Idea)
 
 ## Purpose
 

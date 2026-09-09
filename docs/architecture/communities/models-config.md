@@ -1,6 +1,5 @@
 # models-config
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)

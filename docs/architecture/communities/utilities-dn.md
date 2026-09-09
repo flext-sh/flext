@@ -1,6 +1,5 @@
 # utilities-dn
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,7 +22,7 @@ Community of 89 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextLdifUtilitiesNormalizeDnTransformer | Class | flext-ldif/src/flext_ldif/_utilities/_transformer_dn.py | 12-92 |
-| __init__ | Function | flext-ldif/src/flext_ldif/_utilities/_transformer_dn.py | 19-30 |
+| **init** | Function | flext-ldif/src/flext_ldif/_utilities/_transformer_dn.py | 19-30 |
 | validate_dn_components | Function | flext-ldif/src/flext_ldif/_utilities/_transformer_dn.py | 33-47 |
 | apply | Function | flext-ldif/src/flext_ldif/_utilities/_transformer_dn.py | 50-82 |
 | validate_dn | Function | flext-ldif/src/flext_ldif/_utilities/_transformer_dn.py | 60-68 |

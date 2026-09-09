@@ -1,6 +1,5 @@
 # flext-meltano-pipeline
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,7 +22,7 @@ Community of 102 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextMeltanoCli | Class | flext-meltano/src/flext_meltano/cli.py | 13-293 |
-| __init__ | Function | flext-meltano/src/flext_meltano/cli.py | 19-26 |
+| **init** | Function | flext-meltano/src/flext_meltano/cli.py | 19-26 |
 | run | Function | flext-meltano/src/flext_meltano/cli.py | 28-30 |
 | _register_commands | Function | flext-meltano/src/flext_meltano/cli.py | 32-39 |
 | _register_version_command | Function | flext-meltano/src/flext_meltano/cli.py | 41-48 |
@@ -50,7 +49,7 @@ Community of 102 nodes
 | _handle_pipeline_delete | Function | flext-meltano/src/flext_meltano/cli.py | 290-293 |
 | main | Function | flext-meltano/src/flext_meltano/cli.py | 296-299 |
 | FlextMeltanoPipelineManager | Class | flext-meltano/src/flext_meltano/pipeline_mgr.py | 26-319 |
-| __init__ | Function | flext-meltano/src/flext_meltano/pipeline_mgr.py | 31-44 |
+| **init** | Function | flext-meltano/src/flext_meltano/pipeline_mgr.py | 31-44 |
 | fetch_fresh_settings | Function | flext-meltano/src/flext_meltano/pipeline_mgr.py | 47-58 |
 | _pipelines_root | Function | flext-meltano/src/flext_meltano/pipeline_mgr.py | 60-67 |
 | _pipeline_dir | Function | flext-meltano/src/flext_meltano/pipeline_mgr.py | 69-70 |

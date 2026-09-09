@@ -1,6 +1,5 @@
 # FLEXT Tap Oracle WMS
 
-
 <!-- TOC START -->
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)

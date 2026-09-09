@@ -1,6 +1,5 @@
 # tests-deps
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,7 +22,7 @@ Community of 110 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextInfraDependencyDetectionService | Class | flext-infra/src/flext_infra/deps/detection.py | 15-132 |
-| __init__ | Function | flext-infra/src/flext_infra/deps/detection.py | 20-24 |
+| **init** | Function | flext-infra/src/flext_infra/deps/detection.py | 20-24 |
 | _read_plain | Function | flext-infra/src/flext_infra/deps/detection.py | 27-36 |
 | _run_raw | Function | flext-infra/src/flext_infra/deps/detection.py | 39-50 |
 | classify_issues | Function | flext-infra/src/flext_infra/deps/detection.py | 53-81 |
@@ -67,7 +66,7 @@ Community of 110 nodes
 | TestsFlextInfraDepsDetectionPipCheck | Class | flext-infra/tests/unit/deps/test_detection_pip_check.py | 18-62 |
 | test_run_pip_check | Test | flext-infra/tests/unit/deps/test_detection_pip_check.py | 36-62 |
 | _StubToml | Class | flext-infra/tests/unit/deps/test_detection_typings.py | 15-25 |
-| __init__ | Function | flext-infra/tests/unit/deps/test_detection_typings.py | 16-18 |
+| **init** | Function | flext-infra/tests/unit/deps/test_detection_typings.py | 16-18 |
 | read_plain | Function | flext-infra/tests/unit/deps/test_detection_typings.py | 20-25 |
 | TestsFlextInfraDepsDetectionTypings | Class | flext-infra/tests/unit/deps/test_detection_typings.py | 28-79 |
 | test_success | Test | flext-infra/tests/unit/deps/test_detection_typings.py | 31-37 |

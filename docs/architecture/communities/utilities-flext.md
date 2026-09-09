@@ -1,6 +1,5 @@
 # utilities-flext
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -36,12 +35,12 @@ Community of 590 nodes
 | with_operation_update | Function | flext-core/src/flext_core/_models/_context/__scope_parts/flextmodelscontextscope_part_02.py | 135-165 |
 | GuardCheckSpec | Class | flext-core/src/flext_core/_models/collections.py | 23-145 |
 | _MappingRootBase | Class | flext-core/src/flext_core/_models/containers.py | 51-111 |
-| __getitem__ | Function | flext-core/src/flext_core/_models/containers.py | 60-61 |
-| __setitem__ | Function | flext-core/src/flext_core/_models/containers.py | 63-64 |
-| __delitem__ | Function | flext-core/src/flext_core/_models/containers.py | 66-67 |
-| __contains__ | Function | flext-core/src/flext_core/_models/containers.py | 69-70 |
-| __len__ | Function | flext-core/src/flext_core/_models/containers.py | 72-73 |
-| __bool__ | Function | flext-core/src/flext_core/_models/containers.py | 75-76 |
+| **getitem** | Function | flext-core/src/flext_core/_models/containers.py | 60-61 |
+| **setitem** | Function | flext-core/src/flext_core/_models/containers.py | 63-64 |
+| **delitem** | Function | flext-core/src/flext_core/_models/containers.py | 66-67 |
+| **contains** | Function | flext-core/src/flext_core/_models/containers.py | 69-70 |
+| **len** | Function | flext-core/src/flext_core/_models/containers.py | 72-73 |
+| **bool** | Function | flext-core/src/flext_core/_models/containers.py | 75-76 |
 | keys | Function | flext-core/src/flext_core/_models/containers.py | 78-79 |
 | values | Function | flext-core/src/flext_core/_models/containers.py | 81-82 |
 | items | Function | flext-core/src/flext_core/_models/containers.py | 84-85 |
@@ -53,12 +52,12 @@ Community of 590 nodes
 | setdefault | Function | flext-core/src/flext_core/_models/containers.py | 108-111 |
 | ConfigMap | Class | flext-core/src/flext_core/_models/containers.py | 121-127 |
 | ObjectList | Class | flext-core/src/flext_core/_models/containers.py | 129-144 |
-| __len__ | Function | flext-core/src/flext_core/_models/containers.py | 140-141 |
-| __bool__ | Function | flext-core/src/flext_core/_models/containers.py | 143-144 |
+| **len** | Function | flext-core/src/flext_core/_models/containers.py | 140-141 |
+| **bool** | Function | flext-core/src/flext_core/_models/containers.py | 143-144 |
 | Entry | Class | flext-core/src/flext_core/_models/domain_event.py | 29-56 |
 | Entity | Class | flext-core/src/flext_core/_models/entity.py | 37-74 |
-| __eq__ | Function | flext-core/src/flext_core/_models/entity.py | 60-64 |
-| __hash__ | Function | flext-core/src/flext_core/_models/entity.py | 66-68 |
+| **eq** | Function | flext-core/src/flext_core/_models/entity.py | 60-64 |
+| **hash** | Function | flext-core/src/flext_core/_models/entity.py | 66-68 |
 | model_post_init | Function | flext-core/src/flext_core/_models/entity.py | 71-74 |
 | HasModelDump | Class | flext-core/src/flext_core/_protocols/result.py | 173-176 |
 | model_dump | Function | flext-core/src/flext_core/_protocols/result.py | 174-176 |
@@ -66,7 +65,7 @@ Community of 590 nodes
 | reject_banned_result_parameterization | Function | flext-core/src/flext_core/_result/base.py | 42-54 |
 | reject_banned_success_payload | Function | flext-core/src/flext_core/_result/base.py | 57-62 |
 | validate_error_data | Function | flext-core/src/flext_core/_result/base.py | 65-73 |
-| __init__ | Function | flext-core/src/flext_core/_result/base.py | 75-96 |
+| **init** | Function | flext-core/src/flext_core/_result/base.py | 75-96 |
 | FlextRuntimeContainer | Class | flext-core/src/flext_core/_runtime/_container.py | 33-175 |
 | _is_registerable_runtime_service | Function | flext-core/src/flext_core/_runtime/_container.py | 37-43 |
 | _normalize_payload_item | Function | flext-core/src/flext_core/_runtime/_container.py | 46-83 |
@@ -77,7 +76,7 @@ Community of 590 nodes
 
 ## Execution Flows
 
-- **__hash__** (criticality: 0.69, depth: 1)
+- ****hash**** (criticality: 0.69, depth: 1)
 - **normalize_domain_event_data** (criticality: 0.68, depth: 3)
 - **main** (criticality: 0.67, depth: 9)
 - **_merge_deep** (criticality: 0.61, depth: 4)

@@ -1,6 +1,5 @@
 # transformers-import
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -48,7 +47,7 @@ Community of 169 nodes
 | rewrite_private_import_bypass_violations | Function | flext-infra/src/flext_infra/_utilities/rope_imports.py | 776-852 |
 | rewrite_foreign_canonical_alias_violations | Function | flext-infra/src/flext_infra/_utilities/rope_imports.py | 855-900 |
 | FlextInfraTransformerFixerAdapter | Class | flext-infra/src/flext_infra/fixers/transformer_fixer.py | 39-421 |
-| __init__ | Function | flext-infra/src/flext_infra/fixers/transformer_fixer.py | 48-50 |
+| **init** | Function | flext-infra/src/flext_infra/fixers/transformer_fixer.py | 48-50 |
 | can_fix | Function | flext-infra/src/flext_infra/fixers/transformer_fixer.py | 110-115 |
 | fix_project | Function | flext-infra/src/flext_infra/fixers/transformer_fixer.py | 118-192 |
 | _is_owned_library_exempt | Function | flext-infra/src/flext_infra/fixers/transformer_fixer.py | 195-216 |

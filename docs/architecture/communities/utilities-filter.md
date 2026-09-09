@@ -1,6 +1,5 @@
 # utilities-filter
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,7 +22,7 @@ Community of 71 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | Filter | Class | flext-oracle-wms/src/flext_oracle_wms/_utilities/filtering.py | 19-374 |
-| __init__ | Function | flext-oracle-wms/src/flext_oracle_wms/_utilities/filtering.py | 24-46 |
+| **init** | Function | flext-oracle-wms/src/flext_oracle_wms/_utilities/filtering.py | 24-46 |
 | create_filter | Function | flext-oracle-wms/src/flext_oracle_wms/_utilities/filtering.py | 49-53 |
 | filter_by_field | Function | flext-oracle-wms/src/flext_oracle_wms/_utilities/filtering.py | 56-74 |
 | filter_by_id_range | Function | flext-oracle-wms/src/flext_oracle_wms/_utilities/filtering.py | 77-97 |

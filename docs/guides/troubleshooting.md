@@ -1,6 +1,5 @@
 # Troubleshooting
 
-
 <!-- TOC START -->
 - [Establish the command surface](#establish-the-command-surface)
 - [Repair at the owner](#repair-at-the-owner)

@@ -1,6 +1,5 @@
 # base-attribute
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,8 +22,8 @@ Community of 109 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextLdifServersBaseSchema | Class | flext-ldif/src/flext_ldif/servers/_base/schema.py | 13-600 |
-| __new__ | Function | flext-ldif/src/flext_ldif/servers/_base/schema.py | 78-89 |
-| __init__ | Function | flext-ldif/src/flext_ldif/servers/_base/schema.py | 91-106 |
+| **new** | Function | flext-ldif/src/flext_ldif/servers/_base/schema.py | 78-89 |
+| **init** | Function | flext-ldif/src/flext_ldif/servers/_base/schema.py | 91-106 |
 | _extract_metadata_extensions | Function | flext-ldif/src/flext_ldif/servers/_base/schema.py | 111-131 |
 | _preserve_formatting | Function | flext-ldif/src/flext_ldif/servers/_base/schema.py | 134-140 |
 | _resolve_server_type | Function | flext-ldif/src/flext_ldif/servers/_base/schema.py | 143-152 |
@@ -62,7 +61,7 @@ Community of 109 nodes
 | _write_attribute | Function | flext-ldif/src/flext_ldif/servers/_base/schema.py | 592-595 |
 | _write_objectclass | Function | flext-ldif/src/flext_ldif/servers/_base/schema.py | 597-600 |
 | FlextLdifServersOidSchema | Class | flext-ldif/src/flext_ldif/servers/_oid/schema.py | 14-498 |
-| __init__ | Function | flext-ldif/src/flext_ldif/servers/_oid/schema.py | 19-42 |
+| **init** | Function | flext-ldif/src/flext_ldif/servers/_oid/schema.py | 19-42 |
 | extract_schemas_from_ldif | Function | flext-ldif/src/flext_ldif/servers/_oid/schema.py | 45-57 |
 | _add_target_metadata | Function | flext-ldif/src/flext_ldif/servers/_oid/schema.py | 59-90 |
 | _capture_attribute_values | Function | flext-ldif/src/flext_ldif/servers/_oid/schema.py | 92-102 |

@@ -1,6 +1,5 @@
 # utilities-oracle
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,7 +22,7 @@ Community of 78 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextTargetOracle | Class | flext-target-oracle/src/flext_target_oracle/_utilities/client.py | 15-266 |
-| __init__ | Function | flext-target-oracle/src/flext_target_oracle/_utilities/client.py | 20-26 |
+| **init** | Function | flext-target-oracle/src/flext_target_oracle/_utilities/client.py | 20-26 |
 | discover_catalog | Function | flext-target-oracle/src/flext_target_oracle/_utilities/client.py | 28-63 |
 | execute | Function | flext-target-oracle/src/flext_target_oracle/_utilities/client.py | 65-77 |
 | _ready_result | Function | flext-target-oracle/src/flext_target_oracle/_utilities/client.py | 79-88 |
@@ -58,7 +57,7 @@ Community of 78 nodes
 | _sdc_columns | Function | flext-target-oracle/src/flext_target_oracle/_utilities/loader.py | 219-234 |
 | _ordered_columns | Function | flext-target-oracle/src/flext_target_oracle/_utilities/loader.py | 236-296 |
 | by_name | Function | flext-target-oracle/src/flext_target_oracle/_utilities/loader.py | 250-251 |
-| __init__ | Function | flext-target-oracle/src/flext_target_oracle/_utilities/loader.py | 298-304 |
+| **init** | Function | flext-target-oracle/src/flext_target_oracle/_utilities/loader.py | 298-304 |
 | _init_oracle_loader | Function | flext-target-oracle/src/flext_target_oracle/_utilities/loader.py | 306-326 |
 | oracle_api | Function | flext-target-oracle/src/flext_target_oracle/_utilities/loader.py | 329-331 |
 | record_buffers | Function | flext-target-oracle/src/flext_target_oracle/_utilities/loader.py | 334-338 |

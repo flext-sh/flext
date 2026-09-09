@@ -1,6 +1,5 @@
 # Configuration
 
-
 <!-- TOC START -->
 - [Ownership order](#ownership-order)
 - [Documentation configuration](#documentation-configuration)

@@ -1,6 +1,5 @@
 # flext-tap-oracle-wms-tap
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,7 +22,7 @@ Community of 129 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextMeltanoSingerTapAdapter | Class | flext-meltano/src/flext_meltano/services/singer_sdk.py | 15-81 |
-| __init__ | Function | flext-meltano/src/flext_meltano/services/singer_sdk.py | 18-20 |
+| **init** | Function | flext-meltano/src/flext_meltano/services/singer_sdk.py | 18-20 |
 | settings | Function | flext-meltano/src/flext_meltano/services/singer_sdk.py | 23-39 |
 | _normalize_recursive | Function | flext-meltano/src/flext_meltano/services/singer_sdk.py | 42-62 |
 | run_cli | Function | flext-meltano/src/flext_meltano/services/singer_sdk.py | 64-72 |
@@ -38,7 +37,7 @@ Community of 129 nodes
 | FlextTapOracleWmsError | Class | flext-tap-oracle-wms/src/flext_tap_oracle_wms/errors.py | 8-9 |
 | FlextTapOracleWmsConfigurationError | Class | flext-tap-oracle-wms/src/flext_tap_oracle_wms/errors.py | 16-17 |
 | FlextTapOracleWmsStream | Class | flext-tap-oracle-wms/src/flext_tap_oracle_wms/streams.py | 22-303 |
-| __init__ | Function | flext-tap-oracle-wms/src/flext_tap_oracle_wms/streams.py | 38-71 |
+| **init** | Function | flext-tap-oracle-wms/src/flext_tap_oracle_wms/streams.py | 38-71 |
 | schema | Function | flext-tap-oracle-wms/src/flext_tap_oracle_wms/streams.py | 75-80 |
 | client | Function | flext-tap-oracle-wms/src/flext_tap_oracle_wms/streams.py | 83-93 |
 | page_size | Function | flext-tap-oracle-wms/src/flext_tap_oracle_wms/streams.py | 101-107 |

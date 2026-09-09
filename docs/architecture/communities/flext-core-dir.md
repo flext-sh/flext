@@ -1,6 +1,5 @@
 # flext-core-dir
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -24,13 +23,13 @@ Community of 60 nodes
 |------|------|------|-------|
 | _UniqueKeySafeLoader | Class | flext-core/src/flext_core/_config.py | 48-49 |
 | StrictYamlConfigSource | Class | flext-core/src/flext_core/_config.py | 80-178 |
-| __init__ | Function | flext-core/src/flext_core/_config.py | 89-106 |
-| __call__ | Function | flext-core/src/flext_core/_config.py | 109-114 |
+| **init** | Function | flext-core/src/flext_core/_config.py | 89-106 |
+| **call** | Function | flext-core/src/flext_core/_config.py | 109-114 |
 | _read_file | Function | flext-core/src/flext_core/_config.py | 117-130 |
 | _read_files | Function | flext-core/src/flext_core/_config.py | 133-162 |
 | _deep_merge_lists | Function | flext-core/src/flext_core/_config.py | 165-178 |
 | FlextConfig | Class | flext-core/src/flext_core/_config.py | 181-352 |
-| __init_subclass__ | Function | flext-core/src/flext_core/_config.py | 202-206 |
+| **init_subclass** | Function | flext-core/src/flext_core/_config.py | 202-206 |
 | _package_namespace | Function | flext-core/src/flext_core/_config.py | 209-218 |
 | _config_dir | Function | flext-core/src/flext_core/_config.py | 221-249 |
 | _user_config_dir | Function | flext-core/src/flext_core/_config.py | 252-259 |
@@ -50,8 +49,8 @@ Community of 60 nodes
 | _namespace_dir_name | Function | flext-core/src/flext_core/_settings.py | 158-164 |
 | FlextSettings | Class | flext-core/src/flext_core/_settings.py | 167-439 |
 | _resolve_env_file | Function | flext-core/src/flext_core/_settings.py | 186-188 |
-| __init_subclass__ | Function | flext-core/src/flext_core/_settings.py | 205-209 |
-| __new__ | Function | flext-core/src/flext_core/_settings.py | 211-224 |
+| **init_subclass** | Function | flext-core/src/flext_core/_settings.py | 205-209 |
+| **new** | Function | flext-core/src/flext_core/_settings.py | 211-224 |
 | _initialized_instance | Function | flext-core/src/flext_core/_settings.py | 227-236 |
 | singleton_disabled | Function | flext-core/src/flext_core/_settings.py | 240-248 |
 | fetch_global | Function | flext-core/src/flext_core/_settings.py | 251-272 |

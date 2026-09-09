@@ -1,6 +1,5 @@
 # FLEXT Tap LDIF
 
-
 <!-- TOC START -->
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)

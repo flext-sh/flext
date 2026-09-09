@@ -1,6 +1,5 @@
 # flext-db-oracle-operation
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,7 +22,7 @@ Community of 65 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextDbOracleClient | Class | flext-db-oracle/src/flext_db_oracle/client.py | 21-561 |
-| __init__ | Function | flext-db-oracle/src/flext_db_oracle/client.py | 47-51 |
+| **init** | Function | flext-db-oracle/src/flext_db_oracle/client.py | 47-51 |
 | oracle_config | Function | flext-db-oracle/src/flext_db_oracle/client.py | 54-56 |
 | run_cli_command | Function | flext-db-oracle/src/flext_db_oracle/client.py | 59-69 |
 | _run_cli_command | Function | flext-db-oracle/src/flext_db_oracle/client.py | 72-88 |

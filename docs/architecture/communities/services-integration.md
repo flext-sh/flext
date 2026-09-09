@@ -1,6 +1,5 @@
 # services-integration
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,9 +22,9 @@ Community of 106 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextOracleOicClient | Class | flext-oracle-oic/src/flext_oracle_oic/ext_client.py | 25-426 |
-| __init__ | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py | 33-49 |
-| __enter__ | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py | 51-53 |
-| __exit__ | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py | 55-66 |
+| **init** | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py | 33-49 |
+| **enter** | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py | 51-53 |
+| **exit** | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py | 55-66 |
 | create_connection | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py | 68-73 |
 | create_integration | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py | 75-81 |
 | encode_client_credentials | Function | flext-oracle-oic/src/flext_oracle_oic/ext_client.py | 83-88 |
@@ -59,9 +58,9 @@ Community of 106 nodes
 | refresh_auth_token | Function | flext-oracle-oic/src/flext_oracle_oic/services/auth.py | 20-37 |
 | validate_auth_token | Function | flext-oracle-oic/src/flext_oracle_oic/services/auth.py | 39-59 |
 | FlextOracleOicServiceBase | Class | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 26-276 |
-| __init__ | Function | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 36-50 |
-| __enter__ | Function | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 52-54 |
-| __exit__ | Function | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 56-62 |
+| **init** | Function | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 36-50 |
+| **enter** | Function | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 52-54 |
+| **exit** | Function | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 56-62 |
 | _as_text | Function | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 65-74 |
 | _to_general_value | Function | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 77-93 |
 | _build_integration_info | Function | flext-oracle-oic/src/flext_oracle_oic/services/base.py | 95-109 |

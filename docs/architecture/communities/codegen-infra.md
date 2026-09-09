@@ -1,6 +1,5 @@
 # codegen-infra
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -65,7 +64,7 @@ Community of 688 nodes
 | _apply_gitignore_append | Function | flext-infra/src/flext_infra/codegen/_layout_gitignore.py | 61-90 |
 | _managed_profile | Function | flext-infra/src/flext_infra/codegen/_layout_gitignore.py | 93-110 |
 | FlextInfraCodegenTransaction | Class | flext-infra/src/flext_infra/codegen/codegen_transaction.py | 29-724 |
-| __init__ | Function | flext-infra/src/flext_infra/codegen/codegen_transaction.py | 32-38 |
+| **init** | Function | flext-infra/src/flext_infra/codegen/codegen_transaction.py | 32-38 |
 | validate | Function | flext-infra/src/flext_infra/codegen/codegen_transaction.py | 40-47 |
 | validate_locked | Function | flext-infra/src/flext_infra/codegen/codegen_transaction.py | 49-82 |
 | validate_phase_analysis_locked | Function | flext-infra/src/flext_infra/codegen/codegen_transaction.py | 85-89 |

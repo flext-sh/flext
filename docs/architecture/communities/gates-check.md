@@ -1,6 +1,5 @@
 # gates-check
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,7 +22,7 @@ Community of 290 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextInfraGateRegistry | Class | flext-infra/src/flext_infra/check/workspace_check_gates.py | 37-111 |
-| __init__ | Function | flext-infra/src/flext_infra/check/workspace_check_gates.py | 40-67 |
+| **init** | Function | flext-infra/src/flext_infra/check/workspace_check_gates.py | 40-67 |
 | _gate_classes | Function | flext-infra/src/flext_infra/check/workspace_check_gates.py | 70-93 |
 | get | Function | flext-infra/src/flext_infra/check/workspace_check_gates.py | 95-97 |
 | create | Function | flext-infra/src/flext_infra/check/workspace_check_gates.py | 99-106 |
@@ -70,7 +69,7 @@ Community of 290 nodes
 | fixable_kinds | Function | flext-infra/src/flext_infra/detectors/silent_failure_detector.py | 70-72 |
 | _rope_module_ast | Function | flext-infra/src/flext_infra/detectors/silent_failure_detector.py | 75-81 |
 | FlextInfraGateFixerAdapter | Class | flext-infra/src/flext_infra/fixers/gate_fixer.py | 22-215 |
-| __init__ | Function | flext-infra/src/flext_infra/fixers/gate_fixer.py | 32-34 |
+| **init** | Function | flext-infra/src/flext_infra/fixers/gate_fixer.py | 32-34 |
 | _registry | Function | flext-infra/src/flext_infra/fixers/gate_fixer.py | 36-38 |
 
 *... and 240 more members.*

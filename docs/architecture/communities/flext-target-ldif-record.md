@@ -1,6 +1,5 @@
 # flext-target-ldif-record
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,10 +22,10 @@ Community of 64 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextTargetLdifWriterError | Class | flext-target-ldif/src/flext_target_ldif/errors.py | 14-28 |
-| __init__ | Function | flext-target-ldif/src/flext_target_ldif/errors.py | 19-23 |
-| __str__ | Function | flext-target-ldif/src/flext_target_ldif/errors.py | 26-28 |
+| **init** | Function | flext-target-ldif/src/flext_target_ldif/errors.py | 19-23 |
+| **str** | Function | flext-target-ldif/src/flext_target_ldif/errors.py | 26-28 |
 | Sink | Class | flext-target-ldif/src/flext_target_ldif/models.py | 125-243 |
-| __init__ | Function | flext-target-ldif/src/flext_target_ldif/models.py | 132-148 |
+| **init** | Function | flext-target-ldif/src/flext_target_ldif/models.py | 132-148 |
 | ldif_writer | Function | flext-target-ldif/src/flext_target_ldif/models.py | 151-153 |
 | logger | Function | flext-target-ldif/src/flext_target_ldif/models.py | 156-160 |
 | clean_up | Function | flext-target-ldif/src/flext_target_ldif/models.py | 162-173 |
@@ -35,9 +34,9 @@ Community of 64 nodes
 | _get_ldif_writer | Function | flext-target-ldif/src/flext_target_ldif/models.py | 195-224 |
 | _get_output_file | Function | flext-target-ldif/src/flext_target_ldif/models.py | 226-243 |
 | FlextTargetLdifWriter | Class | flext-target-ldif/src/flext_target_ldif/writer.py | 31-257 |
-| __init__ | Function | flext-target-ldif/src/flext_target_ldif/writer.py | 35-66 |
-| __enter__ | Function | flext-target-ldif/src/flext_target_ldif/writer.py | 68-71 |
-| __exit__ | Function | flext-target-ldif/src/flext_target_ldif/writer.py | 73-80 |
+| **init** | Function | flext-target-ldif/src/flext_target_ldif/writer.py | 35-66 |
+| **enter** | Function | flext-target-ldif/src/flext_target_ldif/writer.py | 68-71 |
+| **exit** | Function | flext-target-ldif/src/flext_target_ldif/writer.py | 73-80 |
 | record_count | Function | flext-target-ldif/src/flext_target_ldif/writer.py | 83-85 |
 | close | Function | flext-target-ldif/src/flext_target_ldif/writer.py | 87-106 |
 | _run_close | Function | flext-target-ldif/src/flext_target_ldif/writer.py | 90-100 |

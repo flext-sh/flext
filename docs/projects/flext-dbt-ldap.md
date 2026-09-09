@@ -1,6 +1,5 @@
 # FLEXT dbt LDAP
 
-
 <!-- TOC START -->
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)

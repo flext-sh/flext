@@ -1,6 +1,5 @@
 # check-project
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -25,7 +24,7 @@ Community of 57 nodes
 | test_format_error_template_interpolates_placeholder | Test | flext-cli/tests/unit/test_constants.py | 165-168 |
 | test_port_out_of_range_message_formats_with_named_fields | Test | flext-db-oracle/tests/unit/test_constants.py | 250-256 |
 | FlextInfraWorkspaceChecker | Class | flext-infra/src/flext_infra/check/workspace_check.py | 19-205 |
-| __init__ | Function | flext-infra/src/flext_infra/check/workspace_check.py | 30-50 |
+| **init** | Function | flext-infra/src/flext_infra/check/workspace_check.py | 30-50 |
 | parse_tool_args | Function | flext-infra/src/flext_infra/check/workspace_check.py | 53-57 |
 | resolve_gates | Function | flext-infra/src/flext_infra/check/workspace_check.py | 60-71 |
 | execute | Function | flext-infra/src/flext_infra/check/workspace_check.py | 74-76 |

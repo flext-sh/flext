@@ -1,6 +1,5 @@
 # services-context
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -24,7 +23,7 @@ Community of 169 nodes
 |------|------|------|-------|
 | FlextObservabilityAdvancedContext | Class | flext-observability/src/flext_observability/services/advanced_context.py | 24-278 |
 | Context | Class | flext-observability/src/flext_observability/services/advanced_context.py | 53-235 |
-| __init__ | Function | flext-observability/src/flext_observability/services/advanced_context.py | 56-61 |
+| **init** | Function | flext-observability/src/flext_observability/services/advanced_context.py | 56-61 |
 | clear | Function | flext-observability/src/flext_observability/services/advanced_context.py | 63-77 |
 | baggage | Function | flext-observability/src/flext_observability/services/advanced_context.py | 80-87 |
 | metadata | Function | flext-observability/src/flext_observability/services/advanced_context.py | 90-97 |
@@ -59,7 +58,7 @@ Community of 169 nodes
 | to_headers | Function | flext-observability/src/flext_observability/services/context.py | 356-392 |
 | FlextObservabilityCustomMetrics | Class | flext-observability/src/flext_observability/services/custom_metrics.py | 26-399 |
 | Registry | Class | flext-observability/src/flext_observability/services/custom_metrics.py | 62-327 |
-| __init__ | Function | flext-observability/src/flext_observability/services/custom_metrics.py | 65-71 |
+| **init** | Function | flext-observability/src/flext_observability/services/custom_metrics.py | 65-71 |
 | clear_metrics | Function | flext-observability/src/flext_observability/services/custom_metrics.py | 73-86 |
 | _clear_metrics | Function | flext-observability/src/flext_observability/services/custom_metrics.py | 88-101 |
 | resolve_metrics | Function | flext-observability/src/flext_observability/services/custom_metrics.py | 103-120 |

@@ -1,6 +1,5 @@
 # ldap3-entry
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -59,7 +58,7 @@ Community of 91 nodes
 | convert_value_to_strings | Function | flext-ldap/src/flext_ldap/adapters/entry.py | 62-65 |
 | is_base64_encoded | Function | flext-ldap/src/flext_ldap/adapters/entry.py | 68-73 |
 | normalize_original_attr_value | Function | flext-ldap/src/flext_ldap/adapters/entry.py | 76-81 |
-| __init__ | Function | flext-ldap/src/flext_ldap/adapters/entry.py | 85-93 |
+| **init** | Function | flext-ldap/src/flext_ldap/adapters/entry.py | 85-93 |
 | _build_conversion_metadata | Function | flext-ldap/src/flext_ldap/adapters/entry.py | 96-105 |
 | _track_conversion_differences | Function | flext-ldap/src/flext_ldap/adapters/entry.py | 108-122 |
 | execute | Function | flext-ldap/src/flext_ldap/adapters/entry.py | 125-149 |
@@ -69,7 +68,7 @@ Community of 91 nodes
 | _convert_ldap3_value_to_list | Function | flext-ldap/src/flext_ldap/adapters/entry.py | 290-339 |
 | FlextLdapLdap3Adapter | Class | flext-ldap/src/flext_ldap/adapters/ldap3.py | 30-203 |
 | _is_bound | Function | flext-ldap/src/flext_ldap/adapters/ldap3.py | 41-44 |
-| __init__ | Function | flext-ldap/src/flext_ldap/adapters/ldap3.py | 55-59 |
+| **init** | Function | flext-ldap/src/flext_ldap/adapters/ldap3.py | 55-59 |
 | connection | Function | flext-ldap/src/flext_ldap/adapters/ldap3.py | 62-64 |
 | is_connected | Function | flext-ldap/src/flext_ldap/adapters/ldap3.py | 67-71 |
 

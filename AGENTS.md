@@ -463,7 +463,7 @@ the SSOT holds. Config/settings modules import only stdlib/pydantic/upstream bas
 ## Conventions & Patterns
 
 - **`**init**.py`, `constants.py`, `models.py`, etc. facet roots are AUTO-GENERATED**
-(`# AUTO-GENERATED FILE — regenerate through `make gen APPLY=Y`). Never hand-edit; change the codegen source in
+(`# AUTO-GENERATED FILE — regenerate through`make gen APPLY=Y`). Never hand-edit; change the codegen source in
   `flext-infra`
   - run `make gen APPLY=Y`.
 - **Root `pyproject.toml` `[MANAGED]` sections** are rendered from

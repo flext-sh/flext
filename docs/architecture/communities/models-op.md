@@ -1,6 +1,5 @@
 # models-op
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -40,7 +39,7 @@ Community of 74 nodes
 | RemoveOp | Class | flext-infra/src/flext_infra/_models/deps_toml.py | 58-72 |
 | PhaseConfig | Class | flext-infra/src/flext_infra/_models/deps_toml.py | 78-251 |
 | Builder | Class | flext-infra/src/flext_infra/_models/deps_toml.py | 101-251 |
-| __init__ | Function | flext-infra/src/flext_infra/_models/deps_toml.py | 104-109 |
+| **init** | Function | flext-infra/src/flext_infra/_models/deps_toml.py | 104-109 |
 | build | Function | flext-infra/src/flext_infra/_models/deps_toml.py | 112-117 |
 | _nested_operations | Function | flext-infra/src/flext_infra/_models/deps_toml.py | 120-147 |
 | operation | Function | flext-infra/src/flext_infra/_models/deps_toml.py | 149-169 |

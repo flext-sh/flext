@@ -1,6 +1,5 @@
 # FLEXT DB Oracle
 
-
 <!-- TOC START -->
 - [Status & health](#status-health)
   - [Quality signals](#quality-signals)

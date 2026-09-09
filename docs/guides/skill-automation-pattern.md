@@ -1,6 +1,5 @@
 # Skill Automation Pattern
 
-
 <!-- TOC START -->
 - [Ownership](#ownership)
 - [Required change shape](#required-change-shape)

@@ -1,6 +1,5 @@
 # utilities-output
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)

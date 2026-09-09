@@ -1,6 +1,5 @@
 # services-server
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -26,8 +25,8 @@ Community of 317 nodes
 | intelligent_schema_building | Function | flext-ldif/examples/05_schema_operations.py | 24-88 |
 | railway_schema_pipeline | Function | flext-ldif/examples/05_schema_operations.py | 334-436 |
 | FlextLdif | Class | flext-ldif/src/flext_ldif/api.py | 27-283 |
-| __init__ | Function | flext-ldif/src/flext_ldif/api.py | 46-60 |
-| __call__ | Function | flext-ldif/src/flext_ldif/api.py | 62-71 |
+| **init** | Function | flext-ldif/src/flext_ldif/api.py | 46-60 |
+| **call** | Function | flext-ldif/src/flext_ldif/api.py | 62-71 |
 | categorization | Function | flext-ldif/src/flext_ldif/api.py | 73-109 |
 | filter_entry_attributes | Function | flext-ldif/src/flext_ldif/api.py | 111-121 |
 | filter_schema_attribute_values | Function | flext-ldif/src/flext_ldif/api.py | 123-132 |
@@ -53,8 +52,8 @@ Community of 317 nodes
 | _get_priority | Function | flext-ldif/src/flext_ldif/servers/_base/mixins.py | 72-76 |
 | _get_server_type | Function | flext-ldif/src/flext_ldif/servers/_base/mixins.py | 78-80 |
 | FlextLdifServersRfcAcl | Class | flext-ldif/src/flext_ldif/servers/_rfc/acl.py | 13-196 |
-| __new__ | Function | flext-ldif/src/flext_ldif/servers/_rfc/acl.py | 16-48 |
-| __call__ | Function | flext-ldif/src/flext_ldif/servers/_rfc/acl.py | 87-122 |
+| **new** | Function | flext-ldif/src/flext_ldif/servers/_rfc/acl.py | 16-48 |
+| **call** | Function | flext-ldif/src/flext_ldif/servers/_rfc/acl.py | 87-122 |
 | can_handle_acl | Function | flext-ldif/src/flext_ldif/servers/_rfc/acl.py | 125-128 |
 | can_handle_attribute | Function | flext-ldif/src/flext_ldif/servers/_rfc/acl.py | 131-134 |
 | can_handle_objectclass | Function | flext-ldif/src/flext_ldif/servers/_rfc/acl.py | 137-140 |
@@ -65,11 +64,11 @@ Community of 317 nodes
 | _preserve_unsupported_feature | Function | flext-ldif/src/flext_ldif/servers/_rfc/acl.py | 177-182 |
 | _supports_feature | Function | flext-ldif/src/flext_ldif/servers/_rfc/acl.py | 185-187 |
 | _write_acl | Function | flext-ldif/src/flext_ldif/servers/_rfc/acl.py | 190-196 |
-| __call__ | Function | flext-ldif/src/flext_ldif/servers/_rfc/schema.py | 132-170 |
+| **call** | Function | flext-ldif/src/flext_ldif/servers/_rfc/schema.py | 132-170 |
 | _ensure_trailing_newline | Function | flext-ldif/src/flext_ldif/servers/base.py | 17-19 |
 | FlextLdifServersBase | Class | flext-ldif/src/flext_ldif/servers/base.py | 22-494 |
-| __init__ | Function | flext-ldif/src/flext_ldif/servers/base.py | 31-53 |
-| __init_subclass__ | Function | flext-ldif/src/flext_ldif/servers/base.py | 55-73 |
+| **init** | Function | flext-ldif/src/flext_ldif/servers/base.py | 31-53 |
+| **init_subclass** | Function | flext-ldif/src/flext_ldif/servers/base.py | 55-73 |
 | acl | Function | flext-ldif/src/flext_ldif/servers/base.py | 76-79 |
 | acl_server | Function | flext-ldif/src/flext_ldif/servers/base.py | 82-85 |
 

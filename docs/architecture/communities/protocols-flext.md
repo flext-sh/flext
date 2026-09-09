@@ -1,6 +1,5 @@
 # protocols-flext
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -34,9 +33,9 @@ Community of 114 nodes
 | exception | Function | flext-core/src/flext_core/_protocols/result.py | 73-73 |
 | failure | Function | flext-core/src/flext_core/_protocols/result.py | 75-75 |
 | value | Function | flext-core/src/flext_core/_protocols/result.py | 77-77 |
-| __enter__ | Function | flext-core/src/flext_core/_protocols/result.py | 79-79 |
-| __exit__ | Function | flext-core/src/flext_core/_protocols/result.py | 81-86 |
-| __or__ | Function | flext-core/src/flext_core/_protocols/result.py | 88-88 |
+| **enter** | Function | flext-core/src/flext_core/_protocols/result.py | 79-79 |
+| **exit** | Function | flext-core/src/flext_core/_protocols/result.py | 81-86 |
+| **or** | Function | flext-core/src/flext_core/_protocols/result.py | 88-88 |
 | unwrap | Function | flext-core/src/flext_core/_protocols/result.py | 90-90 |
 | unwrap_or | Function | flext-core/src/flext_core/_protocols/result.py | 91-91 |
 | unwrap_or_else | Function | flext-core/src/flext_core/_protocols/result.py | 92-92 |
@@ -52,7 +51,7 @@ Community of 114 nodes
 | filter | Function | flext-core/src/flext_core/_protocols/result.py | 136-138 |
 | recover | Function | flext-core/src/flext_core/_protocols/result.py | 140-142 |
 | to_model | Function | flext-core/src/flext_core/_protocols/result.py | 144-146 |
-| __bool__ | Function | flext-core/src/flext_core/_protocols/result.py | 148-148 |
+| **bool** | Function | flext-core/src/flext_core/_protocols/result.py | 148-148 |
 | _peer_first_allowed | Function | flext-core/src/flext_core/_utilities/_beartype/_class_visitor_parts/_parts/class_visitor_part_02_01.py | 15-33 |
 | _requires_alias_first | Function | flext-core/src/flext_core/_utilities/_beartype/_class_visitor_parts/_parts/class_visitor_part_02_01.py | 36-53 |
 | alias_first_violation | Function | flext-core/src/flext_core/_utilities/_beartype/_class_visitor_parts/_parts/class_visitor_part_02_01.py | 56-159 |

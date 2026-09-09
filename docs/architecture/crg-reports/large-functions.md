@@ -15,15 +15,15 @@
 
 Found 50 node(s) with >= 100 lines (kind=Function):
    401 lines | Function | __mise_bootstrap (flext-api/bin/mise:4)
-   401 lines | Function | __mise_bootstrap (flext-auth/bin/mise:4)
+   401 lines | Function |__mise_bootstrap (flext-auth/bin/mise:4)
    401 lines | Function | __mise_bootstrap (flext-cli/bin/mise:4)
-   401 lines | Function | __mise_bootstrap (flext-core/bin/mise:4)
+   401 lines | Function |__mise_bootstrap (flext-core/bin/mise:4)
    401 lines | Function | __mise_bootstrap (flext-db-oracle/bin/mise:4)
-   401 lines | Function | __mise_bootstrap (flext-dbt-ldap/bin/mise:4)
+   401 lines | Function |__mise_bootstrap (flext-dbt-ldap/bin/mise:4)
    401 lines | Function | __mise_bootstrap (flext-dbt-ldif/bin/mise:4)
-   401 lines | Function | __mise_bootstrap (flext-dbt-oracle/bin/mise:4)
+   401 lines | Function |__mise_bootstrap (flext-dbt-oracle/bin/mise:4)
    401 lines | Function | __mise_bootstrap (flext-dbt-oracle-wms/bin/mise:4)
-   401 lines | Function | __mise_bootstrap (flext-grpc/bin/mise:4)
+   401 lines | Function |__mise_bootstrap (flext-grpc/bin/mise:4)
   ... and 40 more
 
 ## Total Found

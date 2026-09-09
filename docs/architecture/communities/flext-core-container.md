@@ -1,6 +1,5 @@
 # flext-core-container
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,7 +22,7 @@ Community of 203 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextContainer | Class | flext-core/src/flext_core/container.py | 41-637 |
-| __new__ | Function | flext-core/src/flext_core/container.py | 83-91 |
+| **new** | Function | flext-core/src/flext_core/container.py | 83-91 |
 | settings | Function | flext-core/src/flext_core/container.py | 95-97 |
 | context | Function | flext-core/src/flext_core/container.py | 101-103 |
 | provide | Function | flext-core/src/flext_core/container.py | 107-110 |
@@ -49,7 +48,7 @@ Community of 203 nodes
 | drop | Function | flext-core/src/flext_core/container.py | 482-499 |
 | wire | Function | flext-core/src/flext_core/container.py | 502-512 |
 | dispatcher | Function | flext-core/src/flext_core/container.py | 515-526 |
-| __init__ | Function | flext-core/src/flext_core/container.py | 528-541 |
+| **init** | Function | flext-core/src/flext_core/container.py | 528-541 |
 | shared | Function | flext-core/src/flext_core/container.py | 544-562 |
 | _resolve_caller_module | Function | flext-core/src/flext_core/container.py | 565-570 |
 | _auto_register_module_factories | Function | flext-core/src/flext_core/container.py | 573-584 |

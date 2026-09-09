@@ -1,6 +1,5 @@
 # FLEXT Make Commands
 
-
 <!-- TOC START -->
 - [Discover commands](#discover-commands)
 - [Canonical workflow](#canonical-workflow)

@@ -1,6 +1,5 @@
 # models-validate
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,10 +22,10 @@ Community of 75 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | Attributes | Class | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 24-168 |
-| __getitem__ | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 48-61 |
-| __setitem__ | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 63-71 |
-| __len__ | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 73-75 |
-| __contains__ | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 77-79 |
+| **getitem** | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 48-61 |
+| **setitem** | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 63-71 |
+| **len** | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 73-75 |
+| **contains** | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 77-79 |
 | add_attribute | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 81-93 |
 | get | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 95-113 |
 | has_attribute | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 115-125 |
@@ -37,7 +36,7 @@ Community of 75 nodes
 | values | Function | flext-ldif/src/flext_ldif/_models/domain_attributes.py | 163-168 |
 | DN | Class | flext-ldif/src/flext_ldif/_models/domain_dn.py | 119-186 |
 | _validate_dn_components | Function | flext-ldif/src/flext_ldif/_models/domain_dn.py | 145-167 |
-| __str__ | Function | flext-ldif/src/flext_ldif/_models/domain_dn.py | 170-172 |
+| **str** | Function | flext-ldif/src/flext_ldif/_models/domain_dn.py | 170-172 |
 | from_value | Function | flext-ldif/src/flext_ldif/_models/domain_dn.py | 175-181 |
 | empty | Function | flext-ldif/src/flext_ldif/_models/domain_dn.py | 184-186 |
 | Entry | Class | flext-ldif/src/flext_ldif/_models/domain_entry.py | 306-1010 |

@@ -1,6 +1,5 @@
 # unit-handler
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,17 +22,17 @@ Community of 92 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | ConcreteTestHandler | Class | flext-core/tests/unit/_handlers_support.py | 20-92 |
-| __init__ | Function | flext-core/tests/unit/_handlers_support.py | 23-24 |
+| **init** | Function | flext-core/tests/unit/_handlers_support.py | 23-24 |
 | dispatch_message | Function | flext-core/tests/unit/_handlers_support.py | 27-68 |
 | execute | Function | flext-core/tests/unit/_handlers_support.py | 71-78 |
 | handle | Function | flext-core/tests/unit/_handlers_support.py | 81-84 |
 | validate_message | Function | flext-core/tests/unit/_handlers_support.py | 87-92 |
 | ValidationTestHandler | Class | flext-core/tests/unit/_handlers_support.py | 94-110 |
-| __init__ | Function | flext-core/tests/unit/_handlers_support.py | 97-98 |
+| **init** | Function | flext-core/tests/unit/_handlers_support.py | 97-98 |
 | validate_message | Function | flext-core/tests/unit/_handlers_support.py | 101-106 |
 | handle | Function | flext-core/tests/unit/_handlers_support.py | 109-110 |
 | FailingTestHandler | Class | flext-core/tests/unit/_handlers_support.py | 112-122 |
-| __init__ | Function | flext-core/tests/unit/_handlers_support.py | 115-116 |
+| **init** | Function | flext-core/tests/unit/_handlers_support.py | 115-116 |
 | handle | Function | flext-core/tests/unit/_handlers_support.py | 119-122 |
 | TestsFlextHandlersDispatch | Class | flext-core/tests/unit/test_handlers_dispatch.py | 20-171 |
 | _command_settings | Function | flext-core/tests/unit/test_handlers_dispatch.py | 24-30 |

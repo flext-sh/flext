@@ -1,6 +1,5 @@
 # services-oracle
 
-
 <!-- TOC START -->
 - [Overview](#overview)
 - [Members](#members)
@@ -23,12 +22,12 @@ Community of 198 nodes
 | Name | Kind | File | Lines |
 |------|------|------|-------|
 | FlextDbOracleApi | Class | flext-db-oracle/src/flext_db_oracle/api.py | 21-28 |
-| __init__ | Function | flext-db-oracle/src/flext_db_oracle/api.py | 24-28 |
+| **init** | Function | flext-db-oracle/src/flext_db_oracle/api.py | 24-28 |
 | FlextDbOracleApiRuntime | Class | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 28-427 |
-| __init__ | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 36-44 |
-| __repr__ | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 47-50 |
-| __enter__ | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 52-58 |
-| __exit__ | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 60-71 |
+| **init** | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 36-44 |
+| **repr** | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 47-50 |
+| **enter** | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 52-58 |
+| **exit** | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 60-71 |
 | _dispatch_enabled | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 74-76 |
 | settings | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 80-82 |
 | connection | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 85-87 |
@@ -70,7 +69,7 @@ Community of 198 nodes
 | _convert_to_query_result | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 387-421 |
 | _execute_query_sql | Function | flext-db-oracle/src/flext_db_oracle/services/api_runtime.py | 423-427 |
 | FlextDbOracleServices | Class | flext-db-oracle/src/flext_db_oracle/services/facade.py | 16-40 |
-| __init__ | Function | flext-db-oracle/src/flext_db_oracle/services/facade.py | 27-29 |
+| **init** | Function | flext-db-oracle/src/flext_db_oracle/services/facade.py | 27-29 |
 | settings | Function | flext-db-oracle/src/flext_db_oracle/services/facade.py | 33-35 |
 
 *... and 148 more members.*

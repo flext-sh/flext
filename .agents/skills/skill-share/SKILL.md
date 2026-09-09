@@ -15,6 +15,7 @@ metadata:
 ## When to use this skill
 
 Use this skill when you need to:
+
 - **Create new agent skills** with proper structure and metadata
 - **Generate skill packages** ready for distribution
 - **Automatically share created skills** on Slack channels for team visibility
@@ -22,9 +23,11 @@ Use this skill when you need to:
 - **Package and distribute** skills to your team
 
 Also use this skill when:
+
 - **User says he wants to create/share his skill**
 
 This skill is ideal for:
+
 - Creating skills as part of team workflows
 - Building internal tools that need skill creation + team notification
 - Automating the skill development pipeline
@@ -33,22 +36,26 @@ This skill is ideal for:
 ## Key Features
 
 ### 1. Skill Creation
+
 - Creates properly structured skill directories with SKILL.md
 - Generates standardized scripts/, references/, and assets/ directories
 - Auto-generates YAML frontmatter with required metadata
 - Enforces naming conventions (hyphen-case)
 
 ### 2. Skill Validation
+
 - Validates SKILL.md format and required fields
 - Checks naming conventions
 - Ensures metadata completeness before packaging
 
 ### 3. Skill Packaging
+
 - Creates distributable zip files
 - Includes all skill assets and documentation
 - Runs validation automatically before packaging
 
 ### 4. Slack Integration via Rube
+
 - Automatically sends created skill information to designated Slack channels
 - Shares skill metadata (name, description, link)
 - Posts skill summary for team discovery
@@ -76,6 +83,7 @@ When you ask Kilo to create a skill called "pdf-analyzer":
 ## Integration with Rube
 
 This skill leverages Rube for:
+
 - **SLACK_SEND_MESSAGE**: Posts skill information to team channels
 - **SLACK_POST_MESSAGE_WITH_BLOCKS**: Shares rich formatted skill metadata
 - **SLACK_FIND_CHANNELS**: Discovers target channels for skill announcements
