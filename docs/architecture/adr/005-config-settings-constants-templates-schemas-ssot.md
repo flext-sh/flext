@@ -40,8 +40,8 @@ generated artifacts, while preserving the runtime dependency direction
 
 | Concern | Canonical owner |
 | --- | --- |
-| invariants and scalar defaults | private constant modules exposed through `c` |
-| execution parametrization and repository manifests | validated files under `config/` |
+| immutable invariants | private constant modules exposed through `c` |
+| configurable policy/defaults, generation inputs, and repository manifests | validated files under `config/` |
 | environment-overridable runtime values | typed `settings.<Namespace>.*` models |
 | generated bodies | `templates/*.j2` rendered only through `flext-cli` |
 | validation contracts | matching `schemas/*.schema.json` files |
@@ -67,6 +67,10 @@ Within a package, runtime dependencies follow `c -> t -> p -> m -> u`; reverse
 references are type-checking-only. Fallible operations return `r[T]`. Shared
 behavior is composed through the public facade and MRO, with no loose helper or
 compatibility alias.
+
+Preserve generated lazy exports through `__init__.py`. Model annotations resolve
+at their declaring owner through runtime-safe imports. Eager-export rewrites,
+compatibility aliases, and `model_rebuild` are not import-cycle repairs.
 
 Across packages:
 
@@ -109,6 +113,10 @@ Conformance performs these stages in order:
 
 Check mode never writes. Apply mode never writes a partial selection. Repeated
 application of unchanged input is byte-idempotent and produces no diff.
+
+File mutation uses the existing FilePlan/publication/journal owner and CLI
+atomic-I/O primitives. Compare both content and mode for CAS; never add a
+parallel writer or weaken recovery checks to make generation pass.
 
 ### 5. Migration is deletion-first
 
