@@ -22,10 +22,10 @@ dependencies = [
   "flext-tests",
   "importlib-resources>=7.1.0",
   "packaging>=26.3",
-  "pydantic>=2.13.4",
+  "pydantic>=2.13.5",
   "pydantic-settings>=2.15.0",
   "pyyaml>=6.0.3",
-  "structlog>=26.1.0",
+  "structlog>=25.5.0",
   "typing-extensions>=4.16.0",
 ]
 description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
@@ -60,7 +60,9 @@ codegen = ["flext-infra"]
 dev = [
   "actionlint-py>=1.7.12.24",
   "bandit>=1.9.4",
+  "deptry",
   "flext-tests",
+  "hypothesis",
   "mkdocs",
   "mkdocs-autorefs",
   "mkdocs-exclude>=1.0.2",
@@ -77,6 +79,7 @@ dev = [
   "pyrefly>=1.2.0",
   "pyright>=1.1.411",
   "pytest>=9.1.1",
+  "pytest-asyncio",
   "pytest-benchmark",
   "pytest-cov",
   "pytest-markdown-docs",
@@ -275,7 +278,6 @@ disable_error_code = ["unreachable"]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
-warn_untyped_fields = true
 
 [tool.pyrefly]
 disable-project-excludes-heuristics = true
@@ -483,6 +485,7 @@ addopts = [
   "--timeout=10",
 ]
 flext_slow_timeout_seconds = "60"
+asyncio_default_fixture_loop_scope = "function"
 filterwarnings = [
   "error",
   "module::flext_core._constants.enforcement.FlextMroViolation",
@@ -678,6 +681,7 @@ whitelines = 1
 [tool.uv]
 link-mode = "copy"
 exclude-newer = "0 days"
+constraint-dependencies = ["structlog<26"]
 environments = ["sys_platform == 'linux'", "sys_platform == 'darwin'"]
 
 [[tool.uv.exclude-dependencies]]
