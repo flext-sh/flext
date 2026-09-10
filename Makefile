@@ -1,7 +1,7 @@
 # @flext-generated: continuous
 # @flext-owner: flext-infra/config/codegen.yaml + flext-infra/src/flext_infra/templates/project/base/Makefile.j2
 # @flext-adjust: edit the owner configuration or template; never this projection
-# @flext-regenerate: make gen
+# @flext-regenerate: make gen APPLY=Y
 # flext — selector-free generated project interface.
 # Managed by flext-infra codegen conform for new and existing repositories.
 # === SECTION: header (managed) ===
@@ -221,7 +221,7 @@ _bootstrap_setup_tools:
 	@set -eu; \
 	uv_selector="latest"; \
 	if [ ! -f "$(SETUP_MISE)" ]; then \
-		printf 'ERROR: missing generated mise launcher: %s; run make gen APPLY=Y\n' "$(SETUP_MISE)" >&2; \
+		printf 'ERROR: missing generated mise launcher: %s; run make gen\n' "$(SETUP_MISE)" >&2; \
 		exit 2; \
 	fi; \
 	project_root="$(PROJECT_ROOT)"; \
