@@ -1459,7 +1459,7 @@ dev = [
 requires-dist = [
     { name = "annotated-types", specifier = ">=0.8.0" },
     { name = "beartype", specifier = ">=0.22.9" },
-    { name = "click", specifier = ">=8.3.3,<8.4" },
+    { name = "click", specifier = ">=8.3.3" },
     { name = "defusedxml", specifier = ">=0.7.1" },
     { name = "dependency-injector", specifier = ">=4.49.1" },
     { name = "flext-core", editable = "flext-core" },
@@ -2730,7 +2730,7 @@ requires-dist = [
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "rope", specifier = ">=1.14.0" },
-    { name = "structlog", specifier = ">=25.5.0" },
+    { name = "structlog", specifier = ">=25.5.0,<26" },
     { name = "types-markdown", marker = "extra == 'typings'" },
     { name = "typing-extensions", specifier = ">=4.16.0" },
 ]
