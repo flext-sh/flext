@@ -134,8 +134,10 @@ Sweep não está "feito" quando minha Lane fica verde; está feito quando o ambi
 
 ## 7. Codificação durável (~/agents — para o padrão se repetir certo)
 
-- **Skill `fleet-lane-discipline`** (`.agents/skills/project-wide/coordination/`): nova seção "Conformance sweep sobre superprojetos" — rollup de gitlink com ancestry-proof, `env -u BEADS_DOLT_SERVER_DATABASE` para mudar de banco, retirada de lane com `--is-ancestor` antes de remover, prova de regrowth só via gate/geração (não find manual), não invadir reforma ativa (absorver pós-pouso), fechamento de bead cita escopo exato verde no momento do fechamento, fleet-ping antes de reivindicar tema compartilhado.
-- **Memória flext `bd remember`**: lição condensada (1 linha) para `bd prime`.
+- **Skill `fleet-lane-discipline`** (fonte em `agents/skills/project-wide/coordination/`): nova seção "Conformance sweep over superprojects" (rollup gitlink com ancestry-proof, store do tracker por projeto, retirada de lane no mesmo ciclo, prova de regrowth só via gerador, não invadir reforma ativa, fleet-ping, fechamento de bead com escopo exato, rerun pós admin-merge, bulk edit com dono, budget ADR p/ índice novo). Commit agents `c387a9c5`.
+- **Fix-forward** no WIP de outro ator: `conformance-sweep-loop` frontmatter corrigido para a gramática canônica (`decision:ADR-0014`, tags ordenadas, `usage:on-demand`, descrição ≤96) — no mesmo commit.
+- **Débito registrado**: `make propagate` (render das projeções `.agents/`) está RED por cascade de **14 SKILL.md modifications de atores editando ao vivo** (09:22–09:28) — após o pouso dessas ondas, rerun `make propagate APPLY=Y` + `make check APPLY=Y` no repo agents.
+- **Memória flext `bd remember`**: lição condensada para `bd prime`. PENDING nesta sessão (registrar após rerun).
 - **Não criei nova skill/rule/command** em `~/agents/`: cápsula de governança está em **9.477/9.488 de orçamento** (folga ~11 chars) — toda entrada nova exige ADR de budget; atualização do CORPO de skill existente não cresce a cápsula. Expansão de índice = ADR própria com operador.
 
 ---
