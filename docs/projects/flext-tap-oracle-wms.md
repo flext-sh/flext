@@ -1,57 +1,92 @@
 # FLEXT Tap Oracle WMS
 
-FLEXT Tap Oracle WMS (v1.0.0 release preparation) is the Singer tap that continuously extracts Oracle Warehouse Management System data with enterprise-grade telemetry, instrumentation, and documentation. The project is production-ready, but a major refactor is ongoing to simplify the architecture and unblock disabled tests.
+FLEXT Tap Oracle WMS is the Singer tap that extracts data from Oracle Warehouse Management System (WMS). It composes the
+FLEXT facades with `flext-oracle-wms` (WMS connectivity) and `flext-meltano` (Singer tap base) behind `r[T]` contracts
+and the canonical `c/m/p/t/u` facade layout.
 
 ## Status & health
 
-- **Version**: 1.0.0 release preparation
+- **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+
-- **Status**: Production-ready core features (10 working streams) while refactoring (26 files → 6‑8 target) and reopening disabled tests (27% of tests currently disabled)
-- **Coverage goal**: 90%+ target; reporting shows coverage is limited while refactor completes
-- **Quality gates**: `make check`, `make test`, and `make val` are the current project gates; use `make check CHECK_GATES=...` when you need a narrower lint, type, or security pass.
-- **Zero tolerance**: No direct Singer SDK, Oracle WMS SDK, or SQLAlchemy imports; rely on flext-core/flext-oracle-wms/flext-db-oracle; everything returns `r[T]`
+- **Status**: Active development on the `0.12.0-dev` branch; the package builds and exports its full public surface.
+- **Description** (from `pyproject.toml`): "FLEXT Tap Oracle WMS - Singer Tap for Oracle Warehouse Management System"
+- **Dependencies**: `flext-core`, `flext-cli`, `flext-meltano`, `flext-oracle-wms`
+- **Console scripts**: `tap-oracle-wms` and `flext-tap-oracle-wms` (both bound to `flext_tap_oracle_wms.cli:main`)
+
+### Quality signals
+
+- Quality gates run through the workspace Make contract: `make check PROJECT=flext-tap-oracle-wms`, `make test
+  PROJECT=flext-tap-oracle-wms`, and `make val`.
+- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
+  rather than static claims in this page.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/flext-sh/flext-tap-oracle-wms.git
 cd flext-tap-oracle-wms
 poetry install
-make setup
-make check     # standard lint, type, and security gate set
-make test
-make val
+make check PROJECT=flext-tap-oracle-wms
 ```
+
+Singer discovery and sync through the console script:
 
 ```bash
 tap-oracle-wms --config settings.json --discover > catalog.json
 tap-oracle-wms --config settings.json --catalog catalog.json --state state.json
 ```
 
-## Architecture & integration
+Programmatic use via the public facade:
 
-- **Clean architecture**: 6‑8 simplified modules (target) replacing 26 current files; modules include API, CLI, services, connectors, models, and utilities.
-- **Singer compliance**: Singer-spec discovery, state, catalog, and run helpers integrate with `flext-meltano` and Singer pipelines.
-- **Oracle WMS focus**: 10 streams covering inventory, orders, shipments, tasks, and locations plus Singer instrumentation, retry/backoff, and dynamic pagination.
-- **Integration**: depends on `flext-oracle-wms` for WMS API, `flext-db-oracle` for Oracle connections, `flext-core` for r/DI patterns, and `flext-observability` for telemetry.
+```python
+from flext_tap_oracle_wms import FlextTapOracleWmsService, tap_oracle_wms
 
-## Quality & operations
+# tap_oracle_wms is the operational alias for FlextTapOracleWmsService
+service = tap_oracle_wms()
+```
 
-- **Validation commands**: `make check`, `make test`, `make val`, `make discover`, `make catalog`, `make run`, `make sync`, `make validate-config`, and `make wms-test`.
-- **Testing**: 37 MyPy errors noted (regression), 27% of tests disabled, 8,179 lines marked for simplification; tests include Singer, integration, and WMS connectivity scenarios.
-- **Security**: Security gates run through `make check CHECK_GATES=security`; zero tolerance remains for insecure default credentials.
-- **Documentation**: TODO, architecture, and standards docs describe the refactor plan, quality principles, and simplification roadmap.
+## Architecture & modules
 
-## Resources & references
+```text
+src/flext_tap_oracle_wms/
+├── api.py        # FlextTapOracleWmsService (tap_oracle_wms alias)
+├── cli.py        # main entry point
+├── tap.py        # FlextTapOracleWms tap class
+├── streams.py    # FlextTapOracleWmsStream (dynamic WMS entity stream)
+├── _settings.py  # FlextTapOracleWmsSettings + settings singleton
+├── config/       # Execution parametrization (YAML)
+├── constants.py  # c facade
+├── models.py     # m facade
+├── protocols.py  # p facade
+├── typings.py    # t facade
+└── utilities.py  # u facade
+```
 
-- [Project README](../../flext-tap-oracle-wms/docs/README.md)
-- [Project AGENTS.md](../../flext-tap-oracle-wms/AGENTS.md) for zero tolerance policies and commands
-- `docs/` (architecture, TODO/refactor plan, standards, quality checklists)
-- Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
-- Related projects: `flext-oracle-wms`, `flext-db-oracle`, `flext-meltano`, `flext-observability`, `flext-tap-oracle`, `flext-target-oracle-wms`, `flext-dbt-oracle-wms`
+### Key architectural patterns
 
-## Support & contributions
+- **Meltano tap service**: `FlextTapOracleWmsService` extends `FlextMeltanoTapServiceBase`, which provides CLI dispatch
+  (`cli_main`), catalog discovery (`run_discover`), and sync execution (`run_sync`) via MRO. Its `create_tap_instance`
+  wraps `FlextTapOracleWms` in the `FlextMeltanoSingerTapAdapter`.
+- **Dynamic stream model**: `FlextTapOracleWmsStream` extends `m.Meltano.SingerStreamBase` and adapts generically to any
+  Oracle WMS entity, so entity coverage is configuration-driven instead of one class per entity.
+- **Facade exports**: the package root lazily exports the canonical aliases `c`, `m`, `p`, `t`, `u`, and `settings`,
+  plus `d/e/h/r/s/x` re-exported from `flext_meltano`.
+- **Result contracts**: fallible paths return `r[T]`; WMS API concerns stay inside `flext-oracle-wms`, never in direct
+  third-party imports.
+
+## Testing & quality
+
+- Tests live under the project `tests/` tree and run via `make test PROJECT=flext-tap-oracle-wms`; Singer behavior is
+  exercised through the tap CLI and discovery flow.
+- Pre-merge verification: `make check PROJECT=flext-tap-oracle-wms` (lint + typing + security selectors) and `make val`.
+
+## Resources
+
+- [Project README](../../flext-tap-oracle-wms/README.md)
+- [Project docs portal](../../flext-tap-oracle-wms/docs/index.md)
+- Related projects: `flext-oracle-wms`, `flext-meltano`, `flext-target-oracle-wms`, `flext-core`
+
+## Support & issues
 
 - GitHub issues: <https://github.com/flext-sh/flext-tap-oracle-wms/issues>
 - Discussions: <https://github.com/flext-sh/flext-tap-oracle-wms/discussions>
-- Follow `docs/standards/README.md`, this project’s `AGENTS.md`, and the portal checklist before editing docs or code so the portal stays synchronized.
+- Follow the workspace `AGENTS.md` and the project `AGENTS.md` before editing docs or code.

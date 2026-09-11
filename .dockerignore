@@ -100,3 +100,15 @@ internal.invalid.*
 *.tmp
 *.temp
 .cache/
+
+# Re-include bootstrap surface required by clean-machine setup (last-match-wins).
+!Makefile
+!*.mk
+!pyproject.toml
+!uv.lock
+!.mise.toml
+!.python-version
+!.default-python-packages
+!config/
+!scripts/dispatch.py
+!ci/docker/

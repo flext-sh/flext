@@ -1,54 +1,88 @@
 # FLEXT Target LDAP
 
-FLEXT Target LDAP (v1.0.0 release preparation) is the Singer target that loads LDAP/LDIF data into authoritative LDAP directories. It provides real-time loading, comprehensive authentication, retries, and performance tuning while absorbing the r and Clean Architecture practices.
+FLEXT Target LDAP is the Singer target that loads records into LDAP directories. It consumes Singer JSONL messages on
+stdin, resolves distinguished names, and writes entries through `flext-ldap`, composing the FLEXT facades with `flext-
+meltano` (Singer target base) behind `r[T]` contracts.
 
 ## Status & health
 
-- **Version**: 1.0.0 (Release Preparation)
-- **Status**: Production ready—official docs confirm coverage and features—while developer docs are still expanding.
-- **Coverage**: 90%+ (per the docs and coverage scan artifacts)
-- **Quality gates**: `make check`, `make test`, and `make val` are the current project gates; use `make check CHECK_GATES=...` when you need a narrower lint, type, or security pass.
-- **Dependencies**: `flext-core`, `flext-ldif`, Singer SDK, `flext-cli`, `flext-observability`, and mission-critical connectors.
+- **Version**: 0.12.0-dev (current development cycle)
+- **Python**: 3.13+
+- **Status**: Active development on the `0.12.0-dev` branch; the package builds and exports its full public surface.
+- **Description** (from `pyproject.toml`): "FLEXT Target for LDAP directory loading"
+- **Dependencies**: `flext-core`, `flext-cli`, `flext-ldap`, `flext-meltano`
+
+### Quality signals
+
+- Quality gates run through the workspace Make contract: `make check PROJECT=flext-target-ldap`, `make test
+  PROJECT=flext-target-ldap`, and `make val`.
+- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
+  rather than static claims in this page.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/flext-sh/flext-target-ldap.git
 cd flext-target-ldap
 poetry install
-make setup
-make check
-make test
-make val
+make check PROJECT=flext-target-ldap
 ```
 
-```bash
-target-ldap --config settings.json --state state.json --catalog catalog.json
+The target consumes Singer JSONL on stdin and echoes STATE lines to stdout. Run it from a Singer pipeline (for example
+via Meltano) or programmatically:
+
+```python
+from flext_target_ldap import FlextTargetLdap, target_ldap
+
+# target_ldap is the operational alias for FlextTargetLdap;
+# config_class is FlextTargetLdapSettings.
+# FlextTargetLdap.run_cli(settings_path) reads Singer JSONL from stdin.
 ```
 
-## Architecture & patterns
+## Architecture & modules
 
-- **Layered architecture**: architecture docs show Clean Architecture breakdown (overview, API reference, patterns) with one-way dependencies prominently enforced.
-- **Core components**: target loader, authentication modules, Singer-compatible services, configuration models, and instrumentation hooking into flext-observability.
-- **Design patterns**: documented patterns include command handlers, strategy/factory for connectors, and data transformers for LDAP attribute normalization.
-- **Integration**: reuses flext-ldif for parsing/validation, flext-cli for CLI flows, flext-core for DI/r, and Singer protocols for compatibility with Meltano.
+```text
+src/flext_target_ldap/
+├── api.py                # FlextTargetLdap target (target_ldap alias) + run_cli
+├── target.py             # Target wiring
+├── application/          # FlextTargetLdapOrchestrator
+├── _settings.py          # FlextTargetLdapSettings + settings singleton
+├── config/               # Execution parametrization (YAML)
+├── _constants/           # Private constants
+├── _models/              # Private models incl. FlextTargetLdapSink
+├── _utilities/           # Private utilities
+├── constants.py          # c facade
+├── models.py             # m facade
+├── protocols.py          # p facade
+├── typings.py            # t facade
+└── utilities.py          # u facade
+```
 
-## Quality & operations
+### Key architectural patterns
 
-- **Validation commands**: `make check`, `make test`, and `make val` are the current documented project gates; no additional target-specific `discover`, `run`, or settings-validation wrappers are defined in this project Makefile.
-- **Testing**: quick start docs emphasize testing strategies (unit/integration/troubleshooting modules) and Singer compliance; tests run under `pytest` with markers for integration and Singer.
-- **Performance**: includes batch processing, connection pooling, retry logic, error recovery, and instrumentation for metrics/performance analysis.
+- **Singer target contract**: `FlextTargetLdap` binds `config_class = FlextTargetLdapSettings`, resolves sinks per
+  stream via `get_sink_class`, and processes SCHEMA/RECORD/STATE messages through `run_cli` (bound as the `cli` class
+  attribute).
+- **Orchestration**: `FlextTargetLdapOrchestrator` in `application/orchestrator.py` coordinates the load flow;
+  `FlextTargetLdapSink` in `_models/sinks.py` models sink state.
+- **DN construction**: record messages are normalized into LDAP distinguished names before being handed to the `flext-
+  ldap` client.
+- **Facade exports**: the package root lazily exports the canonical aliases `c`, `m`, `p`, `t`, `u`, and `settings`,
+  plus `d/e/h/r/s/x` re-exported from `flext_ldap`.
 
-## Resources & references
+## Testing & quality
+
+- Tests live under the project `tests/` tree and run via `make test PROJECT=flext-target-ldap`; Singer behavior is
+  exercised through the stdin JSONL contract.
+- Pre-merge verification: `make check PROJECT=flext-target-ldap` (lint + typing + security selectors) and `make val`.
+
+## Resources
 
 - [Project README](../../flext-target-ldap/README.md)
-- [Project AGENTS.md](../../flext-target-ldap/AGENTS.md) for zero-tolerance rules, quality gating, and command checklists
-- `docs/` (getting started, architecture, API reference, design patterns, development, testing, troubleshooting)
-- `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for QA evidence
-- Related projects: `flext-ldif`, `flext-tap-ldap`, `flext-dbt-ldif`, `flext-core`, `flext-meltano`, `flext-observability`
+- [Project docs portal](../../flext-target-ldap/docs/index.md)
+- Related projects: `flext-ldap`, `flext-ldif`, `flext-tap-ldap`, `flext-meltano`, `flext-core`
 
-## Support & contributions
+## Support & issues
 
 - GitHub issues: <https://github.com/flext-sh/flext-target-ldap/issues>
 - Discussions: <https://github.com/flext-sh/flext-target-ldap/discussions>
-- Follow `docs/standards/README.md` and this project’s `AGENTS.md` before editing docs or code so the portal stays accurate.
+- Follow the workspace `AGENTS.md` and the project `AGENTS.md` before editing docs or code.

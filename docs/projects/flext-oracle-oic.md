@@ -1,69 +1,87 @@
 # FLEXT Oracle OIC
 
-FLEXT Oracle OIC v0.9.9 is the Oracle Integration Cloud (OIC) client library for the FLEXT ecosystem. It implements OAuth2/IDCS authentication, integration pattern execution, and enterprise-grade connectors using s-inspired architecture, yet remains in early development while the compliance refactor finishes.
+FLEXT Oracle OIC (`flext-oracle-oic`) is the Oracle Integration Cloud (OIC) extension library of the FLEXT platform. It
+provides a typed, `r[T]`-based API facade for OIC integration lifecycle management (create, activate, run, monitor),
+OAuth2 client-credentials authentication, and paginated REST access to integrations, connections, lookups, and packages.
 
-## Status & metrics
+## Status & health
 
-- **Version**: 0.9.9 (early development / 1.0.0 prep)
-- **Python support**: 3.13+
-- **Tests**: 21% unit coverage today; integration/contract suites pending completion once s refactor lands
-- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstrings) is blocked until FlextCore imports are refactored; lint/type/security currently green
-- **Type safety**: Pyrefly strict mode + MyPy strict mode with zero `Any`/`cast`/`# type: ignore` enforced via the project AGENTS.md
-- **Security**: SaaS credential management, token lifecycle, circuit breaker/ retry patterns requiring completion
+- **Version**: 0.12.0-dev (monorepo development cycle)
+- **Python**: 3.13+
+- **Package**: `flext_oracle_oic` (namespace package, `py.typed` shipped)
+- **Location in this repo**: `flext-oracle-oic/` at the workspace root
+
+### Quality signals
+
+- Lint, formatting, and type gates run through the workspace Make contract:
+  `make check PROJECT=flext-oracle-oic`, `make test PROJECT=flext-oracle-oic`, `make val`.
+- Strict typing policy per workspace `AGENTS.md`: no `Any`/`object`, Pydantic 2-way models for owned payloads, `r[T]`
+  contracts on every fallible path.
+- No health metrics (coverage or test counts) are asserted on this page; the gates above produce the authoritative
+  numbers.
 
 ## Quick start
 
-```bash
-git clone https://github.com/flext-sh/flext-oracle-oic.git
-cd flext-oracle-oic
-poetry install --with dev,test
-make setup
-```
+The package is developed inside the FLEXT monorepo; the console entry points are `flext-oracle-oic` and `oracle-oic-
+ext`.
 
 ```python
-from flext_oracle_oic import (
-    OracleOicExtensionSettings,
-    FlextOracleOicConnectionSettings,
-    FlextOracleOicAuthSettings,
-)
+from flext_oracle_oic import FlextOracleOicApi, FlextOracleOicSettings
 
-settings = OracleOicExtensionSettings(
-    connection=FlextOracleOicConnectionSettings(
-        base_url="https://instance.integration.ocp.oraclecloud.com", api_version="v1"
-    ),
-    auth=FlextOracleOicAuthSettings(
-        oauth_client_id="id",
-        oauth_client_secret="secret",
-        oauth_token_url="https://idcs.identity.oraclecloud.com/oauth2/v1/token",
-    ),
-)
+settings = FlextOracleOicSettings()  # namespaced under settings.OracleOic.*
+api = FlextOracleOicApi(settings)
 
-# Production-ready service is still in refactor; current helpers expose configuration
+result = api.test_connection()
+if result.is_success:
+    integrations = api.list_integrations()
 ```
 
-## Architecture snapshot
+The `settings.OracleOic.*` group carries `base_url`, `api_version`, `request_timeout`, `max_retries`, SSL toggles, and
+the OAuth2 fields (`oauth_client_id`, `oauth_client_secret`, `oauth_token_url`, `oauth_scope`, `oauth_client_aud`).
 
-- **s compliance**: currently partial (`r` 65% coverage, `s` and `FlextContainer` still pending). Refactor plan enforces single-service-per-module discipline and removes direct `httpx`/`typer` dependencies.
-- **Modules**: `services/` (integration patterns, retries), `auth/` (OAuth2/IDCS flows), `cli/` (pending `flext-cli` wiring), `api.py` facade, `constants/`, `typings/`, `protocols/` for short alias discipline.
-- **Integration points**: depends on `flext-core`, `flext-api`, `flext-cli`, and supplies functionality to `flext-tap-oracle-oic`/`flext-target-oracle-oic` and other Oracle flavor packages.
+## Architecture & modules
 
-## Quality & compliance
+Source lives under `flext-oracle-oic/src/flext_oracle_oic/`:
 
-- `make lint`, `make type-check`, `make security` pass; `make val` currently blocked by the outstanding FlextCore refactor.
-- Project AGENTS.md enforces zero `Any`, zero `cast`, zero `TYPE_CHECKING`, pure r flows, and forbids direct `httpx`/`typer` usage outside the designated adapters.
-- Coverage target is 70%+ with contract/integration suites; currently at 21% while the team adds tests for OAuth2 flows, circuit breakers, and service helpers.
-- Security posture highlights OAuth2 Gen3 compliance, encrypted secrets storage, and safe token lifecycle helpers.
+- `api.py` — `FlextOracleOicApi`, the public MRO facade over the composed service; exported as the operational alias
+  `oracle_oic`. Operations include `test_connection`, integration CRUD and lifecycle (`create_integration`,
+  `activate_integration`, `deactivate_integration`, `update_integration`, `delete_integration`, `list_integrations`,
+  `fetch_integration`), execution entry points (`execute_app_driven_orchestration`, `execute_scheduled_orchestration`,
+  `execute_file_transfer`), monitoring (`fetch_health_status`, `fetch_performance_metrics`), and auth helpers
+  (`fetch_auth_context`, `refresh_auth_token`, `validate_auth_token`).
+- `service.py` / `services/` — the composed service class assembled from focused mixins: `auth`, `integration_crud`,
+  `integration_lifecycle`, `monitoring`, `orchestration`, over a shared `base`.
+- `ext_client.py` — `FlextOracleOicClient`, the lower-level OIC REST client: OAuth client-credentials flow, connections,
+  lookups, packages, and paginated request handling built on the FLEXT API abstraction.
+- `main.py` / `__main__.py` — CLI entry point (`FlextOracleOicCli`, `main`).
+- `config/oracle-oic.yaml` — execution parametrization (SSOT per ADR-005).
+- Canonical facet facades: `c`, `m`, `p`, `t`, `u`, `s`, plus `settings`/`config` singletons; operational aliases `d`,
+  `e`, `h`, `r`, `x` come from the parent chain (`flext_auth`).
 
-## Resources & references
+### Key architectural patterns
+
+- Single public facade per responsibility, composed by MRO; all fallible operations return `p.Result[...]` (`r[T]`)
+  instead of raising.
+- Settings and config are the only source of parametrization: `settings.OracleOic.*` validated once at singleton
+  construction; facets never re-read the environment.
+- Private implementation modules (`_settings`, `_config`, `_utilities`) stay declaration-only; behavior lives in
+  `services/`, `utilities.py`, `api.py`, and `main.py`.
+
+## Testing & quality
+
+- Run the scoped suites through the workspace gates: `make check PROJECT=flext-oracle-oic` and `make test PROJECT=flext-
+  oracle-oic`; full workspace validation is `make val`.
+- Tests exercise the public surface only (facade methods, exported models, CLI behavior) per the workspace testing law.
+
+## Resources
 
 - [Project README](../../flext-oracle-oic/README.md)
-- [Project AGENTS.md](../../flext-oracle-oic/AGENTS.md) for zero-tolerance rules and quality checkpoints
-- `docs/` folder for getting-started, architecture, API reference, configuration, and roadmap notes
-- Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` (once `make val` finishes)
-- Related projects: `flext-core`, `flext-api`, `flext-cli`, `flext-tap-oracle-oic`, `flext-target-oracle-oic`
+- Source: `flext-oracle-oic/src/flext_oracle_oic/`
+- Workspace governance: [AGENTS.md](../../AGENTS.md), [GOVERNANCE.md](../GOVERNANCE.md)
+- Related packages: `flext-core`, `flext-cli`, `flext-auth`, `flext-api`, `flext-tap-oracle-oic`, `flext-target-oracle-
+  oic`
 
-## Support & contributions
+## Support & issues
 
-- GitHub issues: <https://github.com/flext-sh/flext-oracle-oic/issues>
-- Discussions: <https://github.com/flext-sh/flext-oracle-oic/discussions>
-- Follow `docs/standards/README.md` and this project’s AGENTS before editing code or docs so the portal entry stays accurate.
+- Issues: <https://github.com/flext-sh/flext/issues>
+- Follow the workspace `AGENTS.md` and the project README before editing code or docs so this page stays accurate.

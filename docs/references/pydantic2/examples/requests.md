@@ -6,7 +6,8 @@ Pydantic is instrumental in many web frameworks and libraries, such as FastAPI, 
 ## `httpx` requests
 
 [`httpx`](https://www.python-httpx.org/) is an HTTP client for Python 3 with synchronous and asynchronous APIs.
-In the below example, we query the [JSONPlaceholder API](https://jsonplaceholder.typicode.com/) to get a user's data and validate it with a Pydantic model.
+In the below example, we query the [JSONPlaceholder API](https://jsonplaceholder.typicode.com/) to get a user's data and
+validate it with a Pydantic model.
 
 ```python {test="skip"}
 import httpx
@@ -26,7 +27,7 @@ response = httpx.get(url)
 response.raise_for_status()
 
 user = User(response.json())
-print(repr(user))
+u.Cli.print(repr(user))
 # > User(id=1, name='Leanne Graham', email='Sincere@april.biz')
 ```
 
@@ -55,7 +56,7 @@ response.raise_for_status()
 users_list_adapter = TypeAdapter(Sequence[User])
 
 users = users_list_adapter.validate_python(response.json())
-pprint([u.name for u in users])
+pu.Cli.print([u.name for u in users])
 """
 ['Leanne Graham',
  'Ervin Howell',

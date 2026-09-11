@@ -41,7 +41,7 @@ class Foo(m.BaseModel):
 
 type MyType = int
 
-print(Foo.__annotations__)
+u.Cli.print(Foo.__annotations__)
 # > {'f': 'MyType'}
 ```
 
@@ -58,8 +58,10 @@ being re-implemented in Pydantic with improved support for edge cases.
 
 As Pydantic as grown, it's adapted to support many edge cases requiring irregular patterns for annotation evaluation.
 Some of these use cases aren't necessarily sound from a static type checking perspective. In v2.10, the internal
-logic was refactored in an attempt to simplify and standardize annotation evaluation. Admittedly, backwards compatibility
-posed some challenges, and there is still some noticeable scar tissue in the codebase because of this.There's a hope that
+logic was refactored in an attempt to simplify and standardize annotation evaluation. Admittedly, backwards
+compatibility
+posed some challenges, and there is still some noticeable scar tissue in the codebase because of this.There's a hope
+that
 [PEP 649] (introduced in Python 3.14) will greatly simplify the process, especially when it comes to dealing with locals
 of a function.
 
@@ -113,7 +115,8 @@ following logic is applied:
    the built-in [`eval()`][eval] function. This function takes two `globals` and `locals` arguments:
    - The current module's `__dict__` is naturally used as `globals`. For `Base`, this will be
      `sys.modules['module1'].__dict__`.
-   - For the `locals` argument, Pydantic will try to resolve symbols in the following namespaces, sorted by highest priority:
+   - For the `locals` argument, Pydantic will try to resolve symbols in the following namespaces, sorted by highest
+     priority:
      - A namespace created on the fly, containing the current class name (`{cls.__name__: cls}`). This is done
        in order to support recursive references.
      - The locals of the current class (i.e. `cls.__dict__`). For `Model`, this will include `LocalType`.
@@ -143,11 +146,13 @@ While the namespace fetching logic is trying to be as accurate as possible, we s
 - The locals of the current class (`cls.__dict__`) may include irrelevant entries, most of them being dunder attributes.
   This means that the following annotation: `f: '__doc__'` will successfully (and unexpectedly) be resolved.
 - When the `Model` class is being created inside a function, we keep a copy of the locals of the frame.
-  This copy only includes the symbols defined in the locals when `Model` is being defined, meaning `InnerType2` won't be included
+  This copy only includes the symbols defined in the locals when `Model` is being defined, meaning `InnerType2` won't be
+  included
   (and will **not be** if doing a model rebuild at a later point!).
   - To avoid memory leaks, we use weak references to the locals of the function, meaning some forward references might
     not resolve outside the function (1).
-  - Locals of the function are only taken into account for Pydantic models, but this pattern does not apply to dataclasses, typed
+  - Locals of the function are only taken into account for Pydantic models, but this pattern does not apply to
+    dataclasses, typed
     dictionaries or named tuples.
 
 </div>
@@ -191,8 +196,10 @@ class Bar(m.BaseModel):
 
 Once the fields for `Bar` have been collected (meaning annotations resolved), the `GenerateSchema` class converts
 every field into a core schema. When it encounters another class-like field type (such as a dataclass), it will
-try to evaluate annotations, following roughly the same logic as [described above](#resolving-annotations-at-class-definition).
-However, to evaluate the `'Bar | None'` annotation, `Bar` needs to be present in the globals or locals, which is normally
+try to evaluate annotations, following roughly the same logic as [described above](#resolving-annotations-at-class-
+definition).
+However, to evaluate the `'Bar | None'` annotation, `Bar` needs to be present in the globals or locals, which is
+normally
 _not_ the case: `Bar` is being created, so it is not "assigned" to the current module's `__dict__` at that point.
 
 To avoid having to call [`model_rebuild()`][pydantic.BaseModel.model_rebuild] on `Bar`, both the parent namespace
@@ -253,12 +260,14 @@ Foo.__pydantic_core_schema__
 # > {'type': 'model', 'schema': {...}, ...}
 ```
 
-The [`model_rebuild()`][pydantic.BaseModel.model_rebuild] method uses a _rebuild namespace_, with the following semantics:
+The [`model_rebuild()`][pydantic.BaseModel.model_rebuild] method uses a _rebuild namespace_, with the following
+semantics:
 
 - If an explicit `_types_namespace` argument is provided, it is used as the rebuild namespace.
 - If no namespace is provided, the namespace where the method is called will be used as the rebuild namespace.
 
-This _rebuild namespace_ will be merged with the model's parent namespace (if it was defined in a function) and used as is
+This _rebuild namespace_ will be merged with the model's parent namespace (if it was defined in a function) and used as
+is
 (see the backwards compatibility logic described above).
 
 [Mypy]: https://www.mypy-lang.org/

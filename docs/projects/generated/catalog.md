@@ -5,7 +5,7 @@
 Project links resolve to the generated root API reference for each governed FLEXT package.
 
 | project | class | package | description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | [flext-api](../../api-reference/generated/flext-api.md) | platform | `flext_api` | FLEXT API - High-Performance REST API with FastAPI |
 | [flext-auth](../../api-reference/generated/flext-auth.md) | platform | `flext_auth` | FLEXT Auth - Enterprise Authentication & Authorization Service |
 | [flext-cli](../../api-reference/generated/flext-cli.md) | platform | `flext_cli` | FLEXT CLI - Developer Command Line Interface |

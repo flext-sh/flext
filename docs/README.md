@@ -9,7 +9,8 @@ Use it for:
 - migration guidance
 - generated workspace catalogs
 
-Do not treat this directory as the source of truth for every project detail. Project-specific implementation guidance stays in each package's own `README.md`, `AGENTS.md`, and local `docs/` tree.
+Do not treat this directory as the source of truth for every project detail. Project-specific implementation guidance
+stays in each package's own `README.md`, `AGENTS.md`, and local `docs/` tree.
 
 ## Start Here
 

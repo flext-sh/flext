@@ -1,3 +1,5 @@
+"""FLEXT infra test helpers for docker_quality_mock_tests."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -17,10 +19,7 @@ class TestDockerQualityDockerfiles:
         "-e /app/flext-tests",
         "-e /app/flext-quality",
     )
-    FORBIDDEN_MOCK_COPIES = (
-        "src/flext_core/",
-        "src/flext_observability/",
-    )
+    FORBIDDEN_MOCK_COPIES = ("src/flext_core/", "src/flext_observability/")
 
     def test_quality_dockerfiles_install_workspace_packages(self) -> None:
         repository_root = Path(__file__).resolve().parents[2]

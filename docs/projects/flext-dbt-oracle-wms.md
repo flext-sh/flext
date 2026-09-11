@@ -1,60 +1,60 @@
 # FLEXT dbt Oracle WMS
 
-FLEXT dbt Oracle WMS (v2.1.0) is the enterprise dbt project for Oracle Warehouse Management System data transformations. It blends flext-db-oracle and flext-oracle-wms connectivity with flext-meltano orchestration so every analyst can deliver WMS dashboards with Singer, dbt, and Clean Architecture patterns.
+FLEXT dbt Oracle WMS is the integration package for Oracle Warehouse Management
+System (WMS) transformations with dbt. Its executable source lives in
+`flext-dbt-oracle-wms/src/flext_dbt_oracle_wms/`.
 
 ## Status & health
 
-- **Version**: 2.1.0 (Production-ready)
+- **Version**: `0.12.0-dev` (active development cycle)
 - **Python**: 3.13+
-- **Tests**: ~339+ unit/integration/e2e methods; `make val` (ruff + pyrefly + bandit + pytest + dbt tests + coverage) is the QA gate before merging.
-- **Coverage**: 90%+ per README + coverage reports (`reports/coverage-scan-*`).
-- **Dependencies**: `flext-core`, `flext-db-oracle`, `flext-oracle-wms`, `flext-meltano`, `flext-cli`, `flext-observability`, `dbt-core`, `dbt-oracle`, `Singer SDK`.
-- **Zero tolerance**: no direct dbt/oracle/Singer imports; always route through flext-\* adapters, return `r[T]`, avoid `Any`/`cast`/`TYPE_CHECKING`, and keep CLI logic in flext-
+- **Project class**: integration
+- **Dependencies**: `flext-core`, `flext-meltano`, `flext-oracle-wms`, `click`, `pydantic`
+
+### Quality signals
+
+- The implementation follows the workspace config/settings SSOT and
+  thin-driver architecture.
+- Authoritative evidence comes from the project-scoped root Make gates.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/flext-sh/flext-dbt-oracle-wms.git
-cd flext-dbt-oracle-wms
-poetry install
-make setup
-make val
+make boot
+make check PROJECT=flext-dbt-oracle-wms
+make test PROJECT=flext-dbt-oracle-wms
 ```
 
-```bash
-dbt deps
-dbt debug --target dev
-dbt run --target dev
-dbt test --target dev
-dbt docs generate --target dev
-dbt docs serve --port 8080
-```
+Use the generated API reference for public imports and method signatures; this
+page deliberately avoids stale hand-maintained call examples.
 
-## Architecture & integration
+## Architecture & modules
 
-- **Layered data flow**: Oracle WMS → Singer tap (flext-tap-oracle-wms) → raw tables → dbt staging/intermediate/marts → analytics dashboards.
-- **Clean architecture enforcement**: foundation modules (`constants.py`, `typings.py`, `protocols.py`) feed into domain, service, and adapter layers; each layer only imports lower tiers per AGENTS guidance.
-- **Model organization**: staging models handle cleansing (`stg_wms__*`), marts produce operational, analytical, and metrics tables (`marts/operational`, `marts/analytical`, `marts/metrics`), and `analyses/` houses ad-hoc queries.
-- **Integration contracts**: depends on `flext-oracle-wms` for WMS definitions, `flext-db-oracle` for loader/pooling, `flext-meltano` for dbt orchestration, and `flext-core` for DI/logging.
+The package uses the canonical `c -> t -> p -> m -> u` layout, with the public
+facade in `api.py`, CLI adapter in `cli.py`, service implementations in
+`services/`, and project configuration under `config/`.
 
-## Features & quality
+### Key architectural patterns
 
-- **Oracle WMS analytics**: allocation, inventory, order, location, task, and wave models plus KPI dashboards.
-- **Macros**: helper macros for allocation efficiency, inventory turnover, ABC classification, SLA compliance, and labor productivity.
-- **Testing & quality**: schema tests, data tests, Python component tests, and coverage checks run via `make val`; 90%+ coverage enforced.
-- **Performance**: incremental models, partitioning, clustering, and query optimization tuned for enterprise WMS datasets.
-- **Instrumentation**: integrates with `flext-observability` and `flext-cli` for telemetry and consistent CLI behavior.
+- **Thin driver**: WMS access is owned by `flext-oracle-wms`; dbt
+  orchestration is owned by `flext-meltano`.
+- **Typed boundary**: payloads use Pydantic models and `r[T]` result flow.
 
-## Resources & references
+## Testing & quality
+
+Use `make check PROJECT=flext-dbt-oracle-wms` and
+`make test PROJECT=flext-dbt-oracle-wms` for project evidence.
+
+## Resources
 
 - [Project README](../../flext-dbt-oracle-wms/README.md)
-- [Project AGENTS.md](../../flext-dbt-oracle-wms/AGENTS.md) for zero-tolerance rules and command checklists
-- `docs/` subfolders for getting started, architecture, models, integration, development, and troubleshooting
-- `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for the QA claims
-- Related projects: `flext-core`, `flext-db-oracle`, `flext-oracle-wms`, `flext-meltano`, `flext-tap-oracle-wms`, `flext-target-oracle-wms`, `flext-observability`
+- [Workspace AGENTS.md](../../AGENTS.md) — FLEXT engineering law
+- [Workspace API overview](../api-reference/generated/flext-dbt-oracle-wms.md)
+- Related projects: `flext-core`, `flext-oracle-wms`, `flext-meltano`, `flext-tap-oracle-wms`, `flext-target-oracle-
+  wms`, `flext-dbt-oracle`
 
-## Support & contributions
+## Support & issues
 
-- GitHub issues: <https://github.com/flext-sh/flext-dbt-oracle-wms/issues>
-- Discussions: <https://github.com/flext-sh/flext-dbt-oracle-wms/discussions>
-- Follow `docs/standards/README.md`, this project’s AGENTS, and the portal checklist before editing docs or code to keep the ecosystem synchronized.
+- Issues and discussions: <https://github.com/flext-sh/flext> (monorepo)
+- Before contributing, read the workspace `AGENTS.md` and run the project
+  gates through the root Make dispatcher.

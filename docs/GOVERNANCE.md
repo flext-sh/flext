@@ -2,90 +2,93 @@
 
 ## Purpose
 
-This file is the root governance router for the FLEXT workspace. It does not
-duplicate the engineering law. It points each change type to the living source
-that owns the rule, validation surface, and escalation path.
+This file maps each change to its canonical owner. It does not restate
+engineering law or skill procedures.
 
-When this file conflicts with a lower-level guide, this file only decides which
-source to read first. The owning source still provides the actual rule.
+## Authority
 
-## Authority Order
+Apply the newest applicable source in this order:
 
-1. Current operator request.
-1. Root [`AGENTS.md`](../AGENTS.md).
-1. Accepted ADRs in [`docs/architecture/adr/`](architecture/adr/README.md).
-1. Workspace baseline in
-   [`docs/architecture/baseline-v0.13.0.md`](architecture/baseline-v0.13.0.md).
-1. Standards in [`docs/standards/`](standards/README.md).
-1. The active Bead issue and its child issues as the execution ledger for the
-   scoped change.
-1. Path-scoped skills in [`.agents/skills/`](../.agents/skills/).
+1. Newest operator request.
+2. `~/.agents` universal authority (`AGENTS.md`, `UNIVERSAL_CORE.md`, and universal skills).
+3. Project `AGENTS.md` and routed local skills.
+4. Bead execution and status SSOT.
+5. In-scope ADR in [`architecture/adr/`](architecture/adr/README.md).
+6. Supporting documentation.
 
-## Change Routing
+When a higher source changes reality, update the affected lower sources in the
+same change. Ask before acting only when the conflict cannot be resolved from
+this order.
 
-| Change type | First source | Validation surface |
+## Owner Routing
+
+| Concern | Canonical owner | Decisive validation |
 | --- | --- | --- |
-| Any code or architecture change | [`AGENTS.md`](../AGENTS.md) | Active Bead plus scoped gates |
-| Refactor, MRO, facade, namespace, or import work | [Architecture baseline](architecture/baseline-v0.13.0.md) and scoped skill | `ruff`, `pyrefly`, `pyright`, affected `pytest` |
-| Public API or interface change | Active Bead design and ADRs | Consumer grep/audit plus project gates |
-| Docs or generated docs | [Documentation standard](standards/documentation.md) | `make docs DOCS_PHASE=audit` or narrower markdown gate |
-| Docs audit policy or generated-doc exemptions | [Documentation standard](standards/documentation.md) and accepted ADRs | Full docs audit plus affected project audit; evidence must show stale generated symbols are still caught |
-| Workspace tooling or Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help`, `make check`, or touched generator tests |
-| Pydantic, settings, and strict typing | [Pydantic references](references/pydantic2/version-policy.md) and type-system docs | `pyrefly`, `pyright`, affected tests |
-| Testing behavior | [Testing standard](standards/testing.md) | `pytest` or `make test PROJECT=<project>` |
+| Provider activation and exported paths | `~/.agents` provider authority | typed manifest and exact-path inventory validation |
+| Session routing | `~/.agents/skills/flext-context-routing/SKILL.md` | marker and selected-skill evidence |
+| Architecture and public contracts | [ADR registry](architecture/adr/README.md) and owning source declaration | consumer audit plus affected project gates |
+| Ecosystem coordination (internal + external projects) | [ADR-009](architecture/adr/009-ecosystem-coordination-and-library-evaluation.md) and [ecosystem-coordination.md](architecture/ecosystem-coordination.md) | reverse-dependency gate plus owner-local ADR consistency (`0.20.0-dev`) |
+| Runtime coding patterns | smallest matching skill under `~/.agents/skills/` | fresh import, lint, typecheck, behavior gate |
+| Quality commands | `~/.agents/skills/flext-inviolable-rules/SKILL.md` | exact command, exit code, decisive output |
+| Documentation lifecycle | [`standards/documentation.md`](standards/documentation.md) | narrow markdown gate, then docs audit |
+| Workspace Make behavior | [ADR-003](architecture/adr/003-workspace-tooling-hub-distribution.md) and [ADR-004](architecture/adr/004-generic-make-framework-in-flext-tests.md) | `make help` and affected dispatcher gate |
+| Enforcement catalog identity and routing | `flext-core` enforcement declarations | catalog census and public import |
+| Declarative enforcement payloads and execution | `flext-infra` rules, schemas, and engine | enforcement engine result |
+| Structural codemods | provider referenced by the `~/.agents` authority | preview, exact cardinality, apply, idempotence |
 
-## Active ADRs
+The owning declaration, validated config, or fundamental rule is the source of
+truth. Tests and checks validate it; they never define the contract, catalog,
+or routing decision.
 
-The canonical ADR registry is
-[`docs/architecture/adr/README.md`](architecture/adr/README.md). Do not mirror
-the ADR list here; update the registry when an ADR is added, superseded, or
-retired.
+## Execution Contract
 
-## Ratified Refactor Gates
+- Use the workspace-root Beads database for the root and every member project.
+  Only an independent project owns a separate tracker.
+- Claim and record disjoint path ownership before writes. Append evidence after
+  every state-changing step.
+- Inspect the real owner and all affected consumers before changing behavior.
+- Update docs, skills, agents, and provider metadata when reality changes; when
+  it does not, verify the impacted surfaces are current.
+- Keep one owner per fact. Delete replaced prose, aliases, wrappers, fallbacks,
+  and parallel paths in the same change.
+- Land only after narrow gates and the affected native gate pass. Use explicit
+  pathspecs, a scoped commit, a fast-forward push, and Bead evidence.
 
-These Onda 0 decisions were ratified by the operator on 2026-07-04 for the
-total FLEXT refactor plan:
+Static enforcement and structural codemods are separate responsibilities.
+Declarative enforcement data owns policy; the referenced codemod provider owns
+safe, deterministic source transformations. Neither duplicates the other.
 
-- G1: Current and newly ratified patterns are live through this router and the
-  sources it points to; stale backup files are not authority by themselves.
-- G2: Additive structural work is allowed only at track scope with a named
-  deletion budget that makes the track net-negative or explicitly records the
-  remaining debt in Beads.
-- G3: `flext-core` is the kernel and is excluded from downstream `base.py`
-  service-handler scaffolding; improve existing kernel modules instead.
-- G4: Work that conflicts with an active Bead constraint must hand off,
-  supersede, or split the Bead before changing the constrained interface.
-- G5: External clusters are absorbed through Beads as owned lanes; do not mix
-  unrelated ownership inside a batch.
-- G6: After scoped green validation, use explicit pathspecs to commit and
-  fast-forward push, then record the SHA and evidence in Beads.
+## Universal test contract (P0)
 
-## Execution Rules
+Tests must validate any change to config and settings by construction. They are
+never allowed to hardcode the values that happen to exist today.
 
-- Beads is the execution ledger. Claim the issue before writes and append
-  command evidence after every meaningful step.
-- Source changes are batched by ownership. A batch changes at most five files
-  before import, lint, typecheck, and scoped test validation.
-- Rope-backed structural changes are required for automated refactors. AST may
-  classify and locate code, but structural rewrites must have idempotence and
-  dry-run/apply evidence.
-- No compatibility wrappers, fallback paths, public old-plus-new coexistence,
-  suppressions, stubs, or hardcoded carve-outs are acceptable exits.
-- If the single source of truth for a rule is missing, fix the source or stop
-  and record the blocker. Do not infer a hidden rule from stale artifacts.
+- The canonical owner of a fact is `config/*.yaml` and `settings`; tests and
+  golden files only validate that owner.
+- Expected config-owned values must be read from the same typed SSOT production
+  reads, or proven through a generator/consumer round-trip.
+- When config or settings change, tests must adapt automatically or fail with a
+  clear message pointing back to the config source.
+- A test that requires a rewrite to accommodate a legitimate config change is a
+  defect in the test, not a reason to freeze the configuration.
+- This rule applies to all test tiers, markdown examples, and docstring snippets
+  validated by the pytest plugin.
+- Literal expectations are reserved for immutable external protocol contracts.
 
 ## Baseline Commands
 
-Use the narrowest decisive command for the touched lane:
+Choose the narrowest decisive command from the quality-gates skill, then widen
+only after it passes:
 
 ```bash
-ruff check <path> --no-fix
-pyrefly check <path>
-pyright <path>
-pytest <path-or-project>/tests -q
-make check CHANGED_ONLY=1
+make check PROJECT=<project> CHECK_GATES=<gates>
 make val VALIDATE_SCOPE=workspace
 ```
 
-When a command is red, keep the exact command, exit code, and decisive output in
-the active Bead before continuing.
+All FLEXT validation uses the root Make dispatcher; never run bare `ruff`,
+`pyrefly`, `pyright`, `mypy`, or `pytest` commands.
+
+Record every red or green result with its exit code and decisive output in the
+active workspace-root Bead.
+
+For the worker lane contract, see [`ways-of-working/worker-lane-contract.md`](ways-of-working/worker-lane-contract.md).

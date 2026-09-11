@@ -1,72 +1,95 @@
 # FLEXT Target Oracle
 
-FLEXT Target Oracle is the Singer target that loads data into Oracle databases while enforcing the FLEXT platform's zero-tolerance rules. Status is release-prep (v0.9.9/1.0.0), documentation is complete, but production deployment is blocked until the critical SQL injection and Singer compliance gaps are fixed.
+FLEXT Target Oracle is the Singer target that loads data into Oracle databases. It composes the FLEXT facades with
+`flext-db-oracle` (Oracle connectivity) and `flext-meltano` (Singer target base) behind `r[T]` contracts and the
+canonical `c/m/p/t/u` facade layout.
 
-## Status & signals
+## Status & health
 
-- **Version**: 0.9.9 (1.0.0 Release Preparation)
+- **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+
-- **Status**: Documentation ready, implementation blocked (critical SQL injection vulnerability in `loader.py`, missing Singer SDK standard methods, DDL/DML mixups, transaction gaps)
-- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is configured but cannot fully pass until the security fixes land; `make lint`, `make type-check`, `make security`, and `make test` currently run but warning on the blockers
-- **Coverage**: >90% per README but the final gate waits for migration/transaction fixes
-- **Security**: SQL injection fix, exception consolidation, Singer compliance, and transaction management are documented with blocking warnings (see `docs/TODO.md`)
-- **Type discipline**: MyPy + Pyrefly strict, zero `Any`/`cast`/`# type: ignore`; every API returns `r[T]`
+- **Status**: Active development on the `0.12.0-dev` branch; the package builds and exports its full public surface.
+- **Description** (from `pyproject.toml`): "FLEXT Target Oracle - Singer Target for Oracle Database Data Loading"
+- **Dependencies**: `flext-core`, `flext-cli`, `flext-db-oracle`, `flext-meltano`
+- **Console scripts**: `target-oracle` and `flext-target-oracle` (both bound to `flext_target_oracle.cli:main`)
+
+### Quality signals
+
+- Quality gates run through the workspace Make contract: `make check PROJECT=flext-target-oracle`, `make test
+  PROJECT=flext-target-oracle`, and `make val`.
+- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
+  rather than static claims in this page.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/flext-sh/flext-target-oracle.git
 cd flext-target-oracle
 poetry install
-make setup
-make val  # currently blocked until security fixes land
+make check PROJECT=flext-target-oracle
 ```
+
+Pipe Singer JSONL into the target through the console script:
+
+```bash
+tap-oracle --config tap.json | target-oracle --config target.json
+```
+
+Programmatic use via the public facade:
 
 ```python
-from flext_target_oracle import FlextOracleTarget, FlextOracleTargetSettings, LoadMethod
+from flext_target_oracle import FlextTargetOracleService, target_oracle
 
-settings = FlextOracleTargetSettings(
-    oracle_host="localhost",
-    oracle_port=1521,
-    oracle_service="XE",
-    oracle_user="singer_user",
-    oracle_password="password",
-    default_target_schema="SINGER_DATA",
-    load_method=LoadMethod.BULK_INSERT,
-    batch_size=1000,
-    use_bulk_operations=True,
-)
-
-target = FlextOracleTarget(settings)
-result = target.write_record({"id": 1, "name": "Admin"})
-if result.is_failure:
-    print("Record write failed", result.error)
+# target_oracle is the operational alias for FlextTargetOracleService.
+# The service exposes create_sink, run_about, run_load, and run_validate;
+# each command verb takes its typed command model and returns p.Result[str].
+service = target_oracle()
 ```
 
-## Architecture & patterns
+## Architecture & modules
 
-- **Clean Architecture**: `constants.py`, `typings.py`, `protocols.py` (Tier 0); `models.py`, `utilities.py` (Tier 1); `settings.py`, `target.py`, `loader.py`, `exceptions.py` (Tier 2/3) follow strict layering. Lower tiers never import higher modules.
-- **Flext integration**: depends on `flext-core` (r, FlextContainer, logging), `flext-meltano` (Singer integration), `flext-db-oracle` (connection/pooling), and exposes interfaces for `flext-target-` Wish list.
-- **Data flow**: Singer tap schema/record/state messages pass through `FlextOracleTarget`, orchestrate `OracleLoader`, and land in Oracle with batched commits and `r` chaining.
-- **Issue tracking**: README/`docs/TODO.md` list critical blockers (SQL injection, exception duplication, missing Singer methods, DDL vs DML misuse, transaction support, schema evolution) that must be resolved before production readiness.
+```text
+src/flext_target_oracle/
+├── api.py        # FlextTargetOracleService (target_oracle alias)
+├── cli.py        # FlextTargetOracleCli + main entry point
+├── _settings.py  # FlextTargetOracleSettings + settings singleton
+├── config/       # Execution parametrization (YAML)
+├── _constants/   # Private constants
+├── _models/      # Private models
+├── _protocols/   # Private protocols
+├── _typings/     # Private typings
+├── _utilities/   # Private utilities
+├── constants.py  # c facade
+├── models.py     # m facade
+├── protocols.py  # p facade
+├── typings.py    # t facade
+└── utilities.py  # u facade (also exports FlextTargetOracle)
+```
 
-## Quality & concerns
+### Key architectural patterns
 
-- `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make val` exist; the final gate stops at the security warnings.
-- Coverage is ~90% but gating scripts flag the blockers; the team tracks them under priority 1-4 targets in the README.
-- Security status: SQL injection in `loader.py` is red-flagged with remediation steps in `docs/TODO.md`; production deployment is blocked until the analyzer/transaction code is hardened.
-- Pre-commit hooks ensure no `singer-sdk`/`sqlalchemy/oracledb` imports outside allowed adapters and enforce zero tolerance for `Any` or `cast`.
+- **Meltano target service**: `FlextTargetOracleService` extends `FlextMeltanoTargetServiceBase` and implements
+  `create_sink`, plus the operational verbs `run_about`, `run_load`, and `run_validate` that the CLI dispatches.
+- **CLI composition**: `FlextTargetOracleCli.run_cli` parses arguments and returns `p.Result[str]`, with
+  `finalize_cli_result` mapping the result to the process exit code.
+- **Facade exports**: the package root lazily exports the canonical aliases `c`, `m`, `p`, `t`, `u`, and `settings`,
+  plus `d/e/h/r/s/x` re-exported from `flext_db_oracle`.
+- **Result contracts**: fallible paths return `r[T]`; Oracle driver concerns stay inside `flext-db-oracle`, never in
+  direct third-party imports.
 
-## Resources & references
+## Testing & quality
+
+- Tests live under the project `tests/` tree and run via `make test PROJECT=flext-target-oracle`; Singer behavior is
+  exercised through the CLI and sink flow.
+- Pre-merge verification: `make check PROJECT=flext-target-oracle` (lint + typing + security selectors) and `make val`.
+
+## Resources
 
 - [Project README](../../flext-target-oracle/README.md)
-- [Project AGENTS.md](../../flext-target-oracle/AGENTS.md) (zero-tolerance rules, command checklist)
-- `docs/` folder (architecture, development, Singer integration guides, TODO/security tracker)
-- `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` once the blocked gates finish
-- Related projects: `flext-core`, `flext-db-oracle`, `flext-meltano`, `flext-target-ldap`, `flext-dbt-oracle`, `flext-web`, `flext-quality`
+- [Project docs portal](../../flext-target-oracle/docs/index.md)
+- Related projects: `flext-db-oracle`, `flext-meltano`, `flext-tap-oracle`, `flext-core`
 
-## Support & contributions
+## Support & issues
 
 - GitHub issues: <https://github.com/flext-sh/flext-target-oracle/issues>
 - Discussions: <https://github.com/flext-sh/flext-target-oracle/discussions>
-- Follow `docs/standards/README.md`, this project’s `AGENTS.md`, and the portal checklist before editing so the updates stay accurate.
+- Follow the workspace `AGENTS.md` and the project `AGENTS.md` before editing docs or code.

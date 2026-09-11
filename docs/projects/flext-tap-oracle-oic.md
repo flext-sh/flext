@@ -1,57 +1,96 @@
 # FLEXT Tap Oracle OIC
 
-FLEXT Tap Oracle OIC (v1.0.0 release prep) is the Singer tap that extracts metadata, configurations, and streams from Oracle Integration Cloud (OIC). It pairs the flext-core patterns with flext-oracle-oic and flext-meltano to deliver OAuth2/IDCS authentication, retrying stream discovery, and error recovery inside a clean architecture shell.
+FLEXT Tap Oracle OIC is the Singer tap that extracts integrations, connections, packages, and related entities from
+Oracle Integration Cloud (OIC). It composes the FLEXT facades with `flext-oracle-oic` (OIC connectivity) and `flext-
+meltano` (Singer tap base) behind `r[T]` contracts and the canonical `c/m/p/t/u` facade layout.
 
-## Status & signals
+## Status & health
 
-- **Version**: 1.0.0 (Release Preparation)
+- **Version**: 0.12.0-dev (current development cycle)
 - **Python**: 3.13+
-- **Status**: production-ready but documentation still being finalized; quality gates succeed while README notes remaining docs work.
-- **Coverage**: 90%+ (see `reports/coverage-scan-*`)
-- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring + Singer tests) is enforced before merges; `make lint`, `make type-check`, `make security`, `make test`, and Singer helper commands operate cleanly.
-- **Dependencies**: `flext-core`, `flext-oracle-oic`, `flext-meltano`, `flext-observability`, Singer SDK, Oracle OIC OAuth2 endpoints
-- **Zero tolerance**: no direct Singer SDK, httpx, or Oracle OIC imports; rely on flext-oracle-oic for connectors, flext-meltano for orchestration, and `r[T]` for flow control.
+- **Status**: Active development on the `0.12.0-dev` branch; the package builds and exports its full public surface.
+- **Description** (from `pyproject.toml`): "FLEXT Tap Oracle OIC - Singer Tap for Oracle Integration Cloud"
+- **Dependencies**: `flext-core`, `flext-cli`, `flext-meltano`, `flext-oracle-oic`
+- **Console scripts**: `tap-oracle-oic` and `flext-tap-oracle-oic` (both bound to
+  `flext_tap_oracle_oic.tap:TapOracleOic.cli`)
+
+### Quality signals
+
+- Quality gates run through the workspace Make contract: `make check PROJECT=flext-tap-oracle-oic`, `make test
+  PROJECT=flext-tap-oracle-oic`, and `make val`.
+- Lint, typing, and security verdicts are produced by the gates (ruff, pyrefly, mypy, pyright); consult the gate output
+  rather than static claims in this page.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/flext-sh/flext-tap-oracle-oic.git
 cd flext-tap-oracle-oic
 poetry install
-make setup
-make check
-make val
+make check PROJECT=flext-tap-oracle-oic
 ```
+
+Singer discovery and sync through the console script:
 
 ```bash
 tap-oracle-oic --config settings.json --discover > catalog.json
 tap-oracle-oic --config settings.json --catalog catalog.json --state state.json
 ```
 
-## Architecture & patterns
+Programmatic use via the public facade:
 
-- **Clean layers**: Tier 0 (`constants`, `typings`, `protocols`), Tier 1 (`models`, `utilities`), Tier 2 (`client`, `auth`, `streams`), Tier 3 (`api`, `tap`, CLI). Each tier only imports lower-level functionality.
-- **Auth & streaming**: `OicAuth` handles OAuth2/IDCS flows, `OicBaseStream` powers OIC entity streams, `TapOracleOic` implements the Singer tap entry point, and `settings.py` centralizes settings.
-- **Integration**: uses `flext-oracle-oic` for API calls, `flext-core` for r DI, and `flext-meltano` to integrate with Singer orchestration; instrumentation reuses `flext-observability` helpers.
-- **Stream coverage**: 12+ entity types (integrations, connections, packages, etc.) with built-in pagination, retry, rate-limit awareness, and backoff.
+```python
+from flext_tap_oracle_oic import FlextTapOracleOicService, tap_oracle_oic
 
-## Quality & operations
+# tap_oracle_oic is the operational alias for FlextTapOracleOicService
+service = tap_oracle_oic()
+```
 
-- Validation commands: `make lint`, `make type-check`, `make security`, `make test`, `make coverage-html`, `make val`, plus Singer-specific commands (`make discover`, `make run`, `make sync`).
-- Testing: unit/integration/Singer tests (authentication, streams, errors) run via `pytest -m singer`, `make test-singer`, and the `tap-oracle-oic` CLI.
-- Security: Bandit and pip-audit enforced in `make security`; zero tolerance for unverified HTTP calls or exception-based flows.
-- Observability: integrated with `flext-observability` for instrumentation, traces, and metrics.
+## Architecture & modules
 
-## Resources & references
+```text
+src/flext_tap_oracle_oic/
+├── api.py           # FlextTapOracleOicService (tap_oracle_oic alias)
+├── cli.py           # FlextTapOracleOicCli + main entry point
+├── tap.py           # FlextTapOracleOic, FlextTapOracleOicClient, FlextOracleOicAuthenticator
+├── tap_streams.py   # FlextTapOracleOicPaginator
+├── _settings.py     # FlextTapOracleOicSettings + settings singleton
+├── config/          # Execution parametrization (YAML)
+├── _models/         # Private models incl. stream definitions (ALL_STREAMS)
+├── constants.py     # c facade
+├── models.py        # m facade
+├── protocols.py     # p facade
+├── typings.py       # t facade
+└── utilities.py     # u facade
+```
+
+### Key architectural patterns
+
+- **Meltano tap service**: `FlextTapOracleOicService` extends `FlextMeltanoTapServiceBase`, which provides CLI dispatch
+  (`cli_main`), catalog discovery (`run_discover`), sync execution (`run_sync`), and connection lifecycle via MRO. This
+  tap overrides `create_tap_instance` to raise `TypeError` on purpose: it dispatches through the CLI instead of a
+  `singer_sdk.Tap` instance.
+- **Dynamic stream discovery**: `FlextTapOracleOic.discover_oic_streams()` builds stream instances from `ALL_STREAMS`,
+  the stream-name → stream-class mapping in `_models/streams.py`. The mapping currently covers integrations,
+  connections, packages, lookups, libraries, certificates, adapters, projects, executions, and metrics.
+- **Facade exports**: the package root lazily exports the canonical aliases `c`, `m`, `p`, `t`, `u`, and `settings`,
+  plus `d/e/h/r/s/x` re-exported from `flext_oracle_oic`.
+- **Result contracts**: fallible paths return `r[T]`; HTTP concerns stay inside `flext-oracle-oic` and `flext-meltano`,
+  never in direct third-party imports.
+
+## Testing & quality
+
+- Tests live under the project `tests/` tree and run via `make test PROJECT=flext-tap-oracle-oic`; Singer behavior is
+  exercised through the tap CLI and discovery flow.
+- Pre-merge verification: `make check PROJECT=flext-tap-oracle-oic` (lint + typing + security selectors) and `make val`.
+
+## Resources
 
 - [Project README](../../flext-tap-oracle-oic/README.md)
-- [Project AGENTS.md](../../flext-tap-oracle-oic/AGENTS.md) for zero-tolerance policies and commands
-- `docs/` (getting started, architecture, configuration, testing, troubleshooting)
-- Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
-- Related projects: `flext-oracle-oic`, `flext-meltano`, `flext-dbt-oracle-wms`, `flext-target-oracle-oic`, `flext-observability`
+- [Project docs portal](../../flext-tap-oracle-oic/docs/index.md)
+- Related projects: `flext-oracle-oic`, `flext-meltano`, `flext-target-oracle-oic`, `flext-core`
 
-## Support & contributions
+## Support & issues
 
 - GitHub issues: <https://github.com/flext-sh/flext-tap-oracle-oic/issues>
 - Discussions: <https://github.com/flext-sh/flext-tap-oracle-oic/discussions>
-- Follow `docs/standards/README.md` and the project AGENTS.md before editing docs or code so the portal stays accurate.
+- Follow the workspace `AGENTS.md` and the project `AGENTS.md` before editing docs or code.

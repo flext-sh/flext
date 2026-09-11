@@ -87,9 +87,9 @@ try:
     from flext_quality import CodeAnalyzer
     from flext_quality import QualityMetrics
     from flext_quality import QualityReport
-    print('✅ Core imports successful')
+    u.Cli.print('✅ Core imports successful')
 except Exception as e:
-    print(f'❌ Import failed: {e}')
+    u.Cli.print(f'❌ Import failed: {e}')
     sys.exit(1)
 
 # Test basic functionality
@@ -98,12 +98,12 @@ try:
     results = analyzer.analyze_project()
     score = analyzer.get_quality_score()
     grade = analyzer.get_quality_grade()
-    print(f'✅ Analysis functional: {grade} ({score:.1f})')
+    u.Cli.print(f'✅ Analysis functional: {grade} ({score:.1f})')
 except Exception as e:
-    print(f'❌ Analysis failed: {e}')
+    u.Cli.print(f'❌ Analysis failed: {e}')
     sys.exit(1)
 
-print('✅ Standalone validation successful!')
+u.Cli.print('✅ Standalone validation successful!')
 "
 
 # Validate examples functionality (with mock flext-core imports)
@@ -122,12 +122,12 @@ sys.modules['flext_core'] = mock_flext_core
 
 # Mock flext_observability
 mock_observability = ModuleType('flext_observability')
-mock_observability.flext_create_metric = lambda **kwargs: print(f'Mock metric: {kwargs}')
-mock_observability.flext_create_trace = lambda **kwargs: print(f'Mock trace: {kwargs}')
-mock_observability.flext_create_log_entry = lambda **kwargs: print(f'Mock log: {kwargs}')
+mock_observability.flext_create_metric = lambda **kwargs: u.Cli.print(f'Mock metric: {kwargs}')
+mock_observability.flext_create_trace = lambda **kwargs: u.Cli.print(f'Mock trace: {kwargs}')
+mock_observability.flext_create_log_entry = lambda **kwargs: u.Cli.print(f'Mock log: {kwargs}')
 sys.modules['flext_observability'] = mock_observability
 
-print('✅ Mock dependencies created for examples')
+u.Cli.print('✅ Mock dependencies created for examples')
 " && \
     echo "✅ Examples validation prepared (will run at runtime)"
 
@@ -149,10 +149,10 @@ def run_cli_help(args: t.StringList) -> int:
             return int(getattr(exc, 'code', 0) or 0)
 
 rc_help = run_cli_help(['--help'])
-print('✅ CLI help working' if rc_help in (0, 2) else f'⚠️ CLI help exit code: {rc_help}')
+u.Cli.print('✅ CLI help working' if rc_help in (0, 2) else f'⚠️ CLI help exit code: {rc_help}')
 rc_analyze = run_cli_help(['analyze', '--help'])
-print('✅ CLI analyze help working' if rc_analyze in (0, 2) else f'⚠️ CLI analyze help exit code: {rc_analyze}')
-print('✅ CLI validation completed')
+u.Cli.print('✅ CLI analyze help working' if rc_analyze in (0, 2) else f'⚠️ CLI analyze help exit code: {rc_analyze}')
+u.Cli.print('✅ CLI validation completed')
 PY
 
 # Create validation report
@@ -173,7 +173,7 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 import sys; sys.path.insert(0, '/app/src')
 from flext_quality import CodeAnalyzer
 from flext_quality import QualityMetrics
-print('✅ FLEXT Quality functional')
+u.Cli.print('✅ FLEXT Quality functional')
 " || exit 1
 
 # Expose port for potential web interface
@@ -181,19 +181,19 @@ EXPOSE 8000
 
 # Default command with comprehensive validation
 CMD ["python", "-c", "
-print('🚀 FLEXT Quality Standalone Enterprise Container Ready!')
-print('')
-print('Available commands:')
-print('  🔍 Analysis: python -m flext_quality.cli analyze <path>')
-print('  📊 Examples: cd examples/basic/simple_analysis && python example.py')
-print('  🧪 Tests: python -m pytest tests/ -v')
-print('')
-print('Container Features:')
-print('  ✅ Python 3.13 with essential dependencies')
-print('  ✅ Core FLEXT Quality functionality')
-print('  ✅ Standalone operation (no external deps)')
-print('  ✅ Enterprise-grade validation')
-print('')
-print('Starting interactive shell...')
+u.Cli.print('🚀 FLEXT Quality Standalone Enterprise Container Ready!')
+u.Cli.print('')
+u.Cli.print('Available commands:')
+u.Cli.print('  🔍 Analysis: python -m flext_quality.cli analyze <path>')
+u.Cli.print('  📊 Examples: cd examples/basic/simple_analysis && python example.py')
+u.Cli.print('  🧪 Tests: python -m pytest tests/ -v')
+u.Cli.print('')
+u.Cli.print('Container Features:')
+u.Cli.print('  ✅ Python 3.13 with essential dependencies')
+u.Cli.print('  ✅ Core FLEXT Quality functionality')
+u.Cli.print('  ✅ Standalone operation (no external deps)')
+u.Cli.print('  ✅ Enterprise-grade validation')
+u.Cli.print('')
+u.Cli.print('Starting interactive shell...')
 exec('/bin/bash')
 "]

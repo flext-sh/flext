@@ -1,117 +1,129 @@
-# ADR-004 — Generic Make Framework Owned by `flext-tests`
+# ADR-004 — Generated Make and codegen SSOT owned by `flext-infra`
 
-- **Status:** Accepted
+- **Status:** Accepted (replaces the former Make registry decision)
 - **Date:** 2026-06-28
-- **Scope:** root `Makefile`, `workspace_custom.mk`, `scripts/dispatch.py`,
-  `scripts/cmd/**`, `flext-tests`, and `flext-infra` Makefile generation.
-- **Supersedes:** Make registry logic owned directly by `scripts/lib/parsing.py`
-  or by `flext-infra` constants/templates.
+- **Amended:** 2026-07-11
+- **Scope:** generated Makefiles, repository conformance, command routing, and
+  custom project handlers.
+- **Tracking:** `mro-wkii.17`
+
+<!-- mro-wkii.17.6 (agent: codex) — replace competing Make owners with the single conform pipeline. -->
 
 ## Context
 
-FLEXT uses promoted Make verbs backed by `scripts/cmd/<verb>/<what>.py` files
-with `# /// flext-command` TOML headers. The first migration attempt duplicated
-that contract in script-local dataclasses and a `flext_tests.make` package. That
-violated the FLEXT namespace model because it bypassed the public `c/m/t/u`
-facades and created a second source of truth for command metadata.
+The workspace accumulated generated and handwritten Make surfaces, a testing
+library command registry, external includes, script dispatchers, bootstrap
+generators, and repository-specific migration paths. Several public targets
+performed the same action, while generated files could regenerate themselves
+during normal Make execution.
 
-The operator also clarified that the generic Make framework must be reusable by
-any workspace. Therefore `flext-infra` can generate FLEXT workspace artifacts,
-but it must not own the generic command registry library.
+Those paths cannot be made deterministic by coordination alone. A generated
+contract needs one declarative input, one validated renderer, and one public
+handler for each action.
 
 ## Decision
 
-- `flext-tests` owns the generic Make command framework.
-- Public access goes through canonical facades:
-  - `c.Tests.MAKE_*` for constants.
-  - `t.Tests.MakeToml*` for TOML/header typing.
-  - `m.Tests.Make*` for Pydantic command, registry, and probe models.
-  - `u.Tests.make_*` for discovery, parsing, validation, and help rendering.
-- `scripts/lib` is a CLI adapter only. Its modules expose one namespace class
-  each (`CommandRegistry`, `CommandRenderer`, `CommandExecution`,
-  `SurfaceValidator`, and `CommandCli`), and `scripts.dispatch.Dispatch` is the
-  public entrypoint namespace consumed by promoted command scripts.
-- `flext-tests/src/flext_tests/_utilities` keeps the Make domain split by
-  responsibility: `make_parsing`, `make_contract`, `make_registry`, and
-  `make_rendering`. The composed public facade remains `u.Tests.make_*`.
-- Surface probes are isolated in `scripts.lib.surface_probes.SurfaceProbeRunner`
-  so static Makefile validation is not coupled to in-process route execution.
-- `flext-infra` remains a consumer that renders/syncs the root Makefile from
-  templates. It does not discover undeclared projects by dependency heuristics.
-- The root `Makefile` public verbs are thin wrappers. They call
-  `uv run --all-packages python -m scripts.dispatch <verb>` through the
-  generated `FLEXT_MAKE_DISPATCH` variable and do not contain `WHAT` `case`
-  catalogs.
-- Heavy shell recipes remain private Make targets such as `_check_default`,
-  `_test_default`, `_docs`, and `_clean_default`. Promoted command metadata may
-  point to those private targets with `target = "..."`.
-- A promoted command that declares `target = "..."` is metadata-only: no
-  executable Python body may appear after the `flext-command` header. The
-  generic `flext-tests` Make contract validates this so root scripts stay thin.
-- Commands that mutate only for specific parameter values declare those
-  predicates with `mutates_when`; the generic `flext-tests` registry validates
-  the referenced params and renders them as conditional mutation in help.
-- Governance/read-only shell sequences also go through private targets, for
-  example `_status` and `_coordination`, rather than duplicating process lists
-  in promoted scripts.
-- `make docs DOCS_PHASE=<phase>` is a first-class registry-backed public verb.
-  `make build WHAT=docs` remains a build-domain route to the same private
-  `_docs` recipe.
-- `FLEXT_MAKE_DISPATCH` is intentionally distinct from hub wrapper variables
-  such as `WORKSPACE_DISPATCH` so the optional `workspace_custom.mk` include
-  cannot override the FLEXT command path. It forwards declared workspace
-  variables consumed by promoted commands, including the generated `PR_BRANCH`.
-- Workspace project inventory is computed only from declared sources:
-  `.gitmodules`, `tool.flext.workspace.members`, and
-  `tool.uv.workspace.members`.
-- `flext-infra check --what <gate>` is generic workspace tooling. When no
-  explicit `--projects` value is provided, it calculates the project list from
-  the declared workspace inventory above. A caller that needs a smaller scope
-  must pass that scope explicitly.
-- The root `.pre-commit-config.yaml` is a tracked generated artifact owned by
-  `flext-infra` sync. Its hooks call
-  `uv run --all-packages python -m flext_infra` for boundary, LOC cap, and
-  manual-command validation; hooks must not call ad-hoc scripts or direct tool
-  binaries.
-- Superseded Make targets are removed from the active surface.
-  Their removed body can be retained only under ignored `legado/` for local
-  audit.
-- `make test` keeps coverage enabled for full project runs. Focused runs
-  selected by `FILE`, `FILES`, or `MATCH` omit `--cov` because their coverage
-  percentage is not a project quality signal.
+### 1. `flext-infra codegen conform` is the sole owner
+
+The only repository conformance interface is:
+
+```text
+flext-infra codegen conform --root <path> --scope self|members|all --mode check|apply
+```
+
+`flext-infra` owns typed planning, profile selection, policy enforcement, and
+the write transaction. `flext-cli` owns the universal config, schema, template,
+file, process, and output primitives consumed by the pipeline. `flext-core`
+remains runtime-minimal. The dependency direction is always:
+
+```text
+flext-infra -> flext-cli -> flext-core
+```
+
+Project creation writes only the initial manifest and invokes `conform`.
+Existing and new projects use the same models, schemas, context, renderer, and
+templates. There is no separate migration, bootstrap, workspace, or legacy
+rendering path.
+
+### 2. The Makefile is a self-contained generated artifact
+
+One template layer emits the complete versioned Makefile for the
+`workspace-root`, `workspace-member`, or `standalone` profile. Make never
+regenerates itself and never includes a shared implementation from another
+checkout. `codegen` performs conformance explicitly; `check` is read-only and
+`apply` requires `APPLY=Y`.
+
+The public surface is `help` plus exactly twelve operational verbs:
+
+```text
+setup deps build check test format run status docs clean release codegen
+```
+
+`help` only describes the surface. Every operation maps to exactly one public
+verb, one `WHAT` selector, and one canonical handler. Public aliases, duplicate
+verbs, daemon targets, and alternative dispatch routes are invalid.
+
+The meanings are fixed:
+
+| Verb | Responsibility |
+| --- | --- |
+| `setup` | provision the pinned toolchain and environment |
+| `deps` | validate, create, or explicitly update locks |
+| `build` | produce project artifacts |
+| `check` | run static and policy gates |
+| `test` | execute real behavior tests |
+| `format` | check by default; modify only with `APPLY=Y` |
+| `run` | execute declared project capabilities |
+| `status` | report read-only diagnostics |
+| `docs` | validate or build documentation |
+| `clean` | remove declared generated/runtime artifacts only when apply-gated |
+| `release` | perform the selected tag, PR, publish, or deploy operation |
+| `codegen` | check conformance by default; modify only with `APPLY=Y` |
+
+### 3. `custom.mk` is a narrow private extension surface
+
+A versioned `custom.mk` may contain only private handlers named
+`_custom_<verb>_<what>`. Its schema rejects public targets, aliases, help or
+toolchain ownership, setup logic, generated-target redefinition, and a handler
+whose verb is outside the canonical surface.
+
+Project-specific capabilities are classified under the canonical verb whose
+meaning they implement. They do not create a new public command. For Cosmos
+Charts, the existing release helper remains behind `check WHAT=commit` and
+`check WHAT=push`; the push check requires the commit check and a clean commit.
+
+### 4. Conformance is deterministic and fail-closed
+
+The pipeline loads and validates the complete selected manifest, builds the
+complete typed plan, renders every selected output, and validates the rendered
+set before any write. Unrecognized edits in a managed file abort the apply.
+There is no partial write, rollback path, compatibility mode, or coexistence of
+old and new generated surfaces.
+
+The same declarative input must produce byte-identical output. A second apply
+has an empty plan and a new project must converge to the same generated tree as
+an existing project with the same manifest.
 
 ## Consequences
 
-- The Make registry can be reused by any workspace that depends on
-  `flext-tests`, not only this FLEXT monorepo.
-- The active Makefile no longer attaches top-level projects just because their
-  `pyproject.toml` depends on `flext-core`.
-- External project names are not part of the workspace catalog, docs, templates,
-  or promoted command helpers.
-- Workspace pre-commit validation is reproducible in any declared workspace
-  because hook project scope is computed from workspace metadata, not from
-  hardcoded project names.
-- Mutation remains explicit: command metadata must declare required `APPLY` for
-  mutating commands or `mutates_when` predicates for conditional mutation, and
-  the CLI boundary converts failed validations to exit 2.
-- Static Make validation now checks that every public registry verb delegates to
-  the dispatcher wrapper and that every declared private target exists. It no
-  longer accepts or requires `WHAT` `case` blocks in the Makefile.
+- `flext-tests` tests public behavior but owns no Make registry or dispatcher.
+- Repository-local scripts may implement private handlers but cannot redefine
+  routing or generation.
+- Replaced generators, templates, dispatchers, and public targets are deleted
+  in the same migration slice.
+- CI invokes the same canonical verbs and cannot suppress a failing result.
 
-## Verification
+## Verification contract
 
-- `u.Tests.make_discover(Path("scripts/cmd"))` returns a valid registry.
-- `scripts.dispatch.Dispatch.discover()` delegates to `flext-tests` and exposes
-  the same promoted verbs.
-- `rg` finds no removed project-inventory variable names, heuristic
-  undeclared-project text, or removed project names in the active workspace
-  surface. Declared `.gitmodules` submodules remain canonical workspace
-  inventory, not undeclared-project discovery.
-- `uv run --all-packages python -m flext_infra check --what boundary` and
-  `uv run --all-packages python -m flext_infra check --what loc-cap` must pass
-  without requiring hardcoded project names.
-- `pre-commit run --config .pre-commit-config.yaml --all-files` must execute
-  only the generated `flext_infra` hooks.
-- `make help`, `make makefile WHAT=all`, `make check WHAT=help`,
-  `make test PROJECT=flext-tests MATCH=<existing-test>`, and dispatcher surface
-  validation must pass before closing the migration.
+- Parse and `help` validation cover every generated profile.
+- Schema tests reject public custom targets and handler collisions.
+- Conformance check performs no writes; apply is atomic and idempotent.
+- Public-surface discovery reports only `help` and the twelve operational
+  verbs, with one handler per `(verb, WHAT)` pair.
+
+## References
+
+- [ADR-003 — Manifest-owned topology, root workspace, and autonomous Git
+  libraries](./003-workspace-tooling-hub-distribution.md)
+- [ADR-005 — Config, settings, constants, templates, and schemas
+  SSOT](./005-config-settings-constants-templates-schemas-ssot.md)

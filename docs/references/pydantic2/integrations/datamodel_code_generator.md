@@ -1,6 +1,7 @@
 # Code Generation with datamodel-code-generator
 
-The [datamodel-code-generator](https://github.com/koxudaxi/datamodel-code-generator/) project is a library and command-line utility to generate pydantic models from just about any data source, including:
+The [datamodel-code-generator](https://github.com/koxudaxi/datamodel-code-generator/) project is a library and command-
+line utility to generate pydantic models from just about any data source, including:
 
 - OpenAPI 3 (YAML/JSON)
 - JSON Schema
@@ -8,7 +9,8 @@ The [datamodel-code-generator](https://github.com/koxudaxi/datamodel-code-genera
 - Python dictionary (which will be converted to JSON Schema)
 - GraphQL schema
 
-Whenever you find yourself with any data convertible JSON but without pydantic models, this tool will allow you to generate type-safe model hierarchies on demand.
+Whenever you find yourself with any data convertible JSON but without pydantic models, this tool will allow you to
+generate type-safe model hierarchies on demand.
 
 ## Installation
 

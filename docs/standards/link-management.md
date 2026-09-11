@@ -6,7 +6,9 @@
 
 ## Overview
 
-This document defines the standards and procedures for managing links and cross-references across the FLEXT ecosystem documentation. It ensures consistency, maintainability, and accuracy of all documentation links.
+This document defines the standards and procedures for managing links and
+cross-references across the FLEXT ecosystem documentation. It ensures
+consistency, maintainability, and accuracy of all documentation links.
 
 ## Link Reference Standards
 
@@ -104,8 +106,12 @@ All major documentation files must include a "Related Documentation" section at 
 
 **Across Projects**:
 
-- [flext-core Foundation](https://github.com/organization/flext/tree/main/flext-core/docs/architecture/overview.md) - Clean architecture and CQRS patterns
-- [flext-core Service Patterns](https://github.com/organization/flext/tree/main/flext-core/docs/guides/service-patterns.md) - Service patterns and dependency injection
+- [flext-core
+  Foundation](https://github.com/organization/flext/tree/main/flext-core/docs/architecture/overview.md)
+  - Clean architecture and CQRS patterns
+- [flext-core Service
+  Patterns](https://github.com/organization/flext/tree/main/flext-core/docs/guides/service-patterns.md)
+  - Service patterns and dependency injection
 
 **External Resources**:
 
@@ -133,7 +139,8 @@ Add "Related Documentation" sections to:
 
 ### Principle
 
-When document A references document B, consider adding a reciprocal reference in document B to document A where it makes sense contextually.
+When document A references document B, consider adding a reciprocal reference in
+document B to document A where it makes sense contextually.
 
 ### Guidelines
 
@@ -316,7 +323,9 @@ For now, maintain awareness of key cross-project relationships:
 
 **Across Projects**:
 
-- [flext-core Documentation Standards](https://github.com/organization/flext/tree/main/flext-core/docs/standards/documentation.md) - Core documentation patterns
+- [flext-core Documentation
+  Standards](https://github.com/organization/flext/tree/main/flext-core/docs/standards/documentation.md)
+  - Core documentation patterns
 - [FLEXT Workspace Documentation](../README.md) - Workspace-level documentation
 
 **External Resources**:

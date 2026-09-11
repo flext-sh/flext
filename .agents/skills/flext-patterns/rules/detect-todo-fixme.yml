@@ -1,7 +1,0 @@
-id: detect-todo-fixme
-language: python
-rule:
-  kind: comment
-  regex: "^#\\s*(TODO|FIXME|HACK|XXX)"
-message: "TODO/FIXME comment found"
-severity: warning

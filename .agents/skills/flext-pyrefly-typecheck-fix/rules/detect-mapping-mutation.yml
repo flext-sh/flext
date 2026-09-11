@@ -1,9 +1,0 @@
-id: detect-mapping-mutation
-language: python
-rule:
-  any:
-    - pattern: "$VAR.setdefault($$$)"
-    - pattern: "$VAR[$KEY] = $VAL"
-  inside:
-    kind: expression_statement
-    stopBy: end

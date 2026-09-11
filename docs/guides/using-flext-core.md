@@ -11,7 +11,7 @@ from flext_core import c, d, e, h, m, p, r, s, t, u, x
 ```
 
 | Alias | Purpose |
-|-------|---------|
+| ------- | --------- |
 | `c` | constants / constants namespace |
 | `d` | decorators |
 | `e` | errors / exceptions |
@@ -24,7 +24,8 @@ from flext_core import c, d, e, h, m, p, r, s, t, u, x
 | `u` | utilities |
 | `x` | mixins / execution |
 
-**Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`, `FlextCliSettings`, `FlextTestsSettings`) have no short alias.
+**Important:** `s` is the service/runtime alias. Settings classes (`FlextSettings`, `FlextCliSettings`,
+`FlextTestsSettings`) have no short alias.
 
 ## Result flow
 
@@ -106,7 +107,7 @@ runtime = s(settings=settings)
 
 ## Bad practices
 
-```python
+```python notest
 from flext_core._models.base import SomeModel  # bypass facade
 from flext_core.result import ok, fail  # bypass r alias
 from flext_core import s as settings  # wrong: s is service/runtime

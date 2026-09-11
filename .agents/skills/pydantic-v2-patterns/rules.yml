@@ -1,9 +1,0 @@
-skill: pydantic-v2-patterns
-description: "Knowledge-only skill — advisory patterns, no automated enforcement."
-scan_targets:
-  include: []
-  exclude: []
-  projects: []
-rules: []
-baseline:
-  strategy: total

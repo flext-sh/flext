@@ -1,5 +1,6 @@
 
-Unions are fundamentally different to all other types Pydantic validates - instead of requiring all fields/items/values to be valid, unions require only one member to be valid.
+Unions are fundamentally different to all other types Pydantic validates - instead of requiring all fields/items/values
+to be valid, unions require only one member to be valid.
 
 This leads to some nuance around how to validate unions:
 
@@ -10,8 +11,10 @@ Validating unions feels like adding another orthogonal dimension to the validati
 
 To solve these problems, Pydantic supports three fundamental approaches to validating unions:
 
-1. [left to right mode](#left-to-right-mode) - the simplest approach, each member of the union is tried in order and the first match is returned
-2. [smart mode](#smart-mode) - similar to "left to right mode" members are tried in order; however, validation will proceed past the first match to attempt to find a better match, this is the default mode for most union validation
+1. [left to right mode](#left-to-right-mode) - the simplest approach, each member of the union is tried in order and the
+   first match is returned
+2. [smart mode](#smart-mode) - similar to "left to right mode" members are tried in order; however, validation will
+   proceed past the first match to attempt to find a better match, this is the default mode for most union validation
 3. [discriminated unions](#discriminated-unions) - only one member of the union is tried, based on a discriminator
 
 !!! tip
@@ -27,13 +30,16 @@ To solve these problems, Pydantic supports three fundamental approaches to valid
 ### Left to Right Mode
 
 !!! note
-Because this mode often leads to unexpected validation results, it is not the default in Pydantic >=2, instead `union_mode='smart'` is the default.
+Because this mode often leads to unexpected validation results, it is not the default in Pydantic >=2, instead
+`union_mode='smart'` is the default.
 
-With this approach, validation is attempted against each member of the union in their order they're defined, and the first successful validation is accepted as input.
+With this approach, validation is attempted against each member of the union in their order they're defined, and the
+first successful validation is accepted as input.
 
 If validation fails on all members, the validation error includes the errors from all members of the union.
 
-`union_mode='left_to_right'` must be set as a [`u.Field`](../concepts/fields.md) parameter on union fields where you want to use it.
+`union_mode='left_to_right'` must be set as a [`u.Field`](../concepts/fields.md) parameter on union fields where you
+want to use it.
 
 ```python {title="Union with left to right mode"}
 from typing import Union
@@ -45,15 +51,15 @@ class User(BaseModel):
     id: Union[str, int] = u.Field(union_mode="left_to_right")
 
 
-print(User(id=123))
+u.Cli.print(User(id=123))
 # > id=123
-print(User(id="hello"))
+u.Cli.print(User(id="hello"))
 # > id='hello'
 
 try:
     User(id=[])
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     2 validation errors for User
     id.str
@@ -75,9 +81,9 @@ class User(BaseModel):
     id: Union[int, str] = u.Field(union_mode="left_to_right")
 
 
-print(User(id=123))  # (1)
+u.Cli.print(User(id=123))  # (1)
 # > id=123
-print(User(id="456"))  # (2)
+u.Cli.print(User(id="456"))  # (2)
 # > id=456
 ```
 
@@ -87,9 +93,11 @@ print(User(id="456"))  # (2)
 
 ### Smart Mode
 
-Because of the potentially surprising results of `union_mode='left_to_right'`, in Pydantic >=2 the default mode for `Union` validation is `union_mode='smart'`.
+Because of the potentially surprising results of `union_mode='left_to_right'`, in Pydantic >=2 the default mode for
+`Union` validation is `union_mode='smart'`.
 
-In this mode, pydantic attempts to select the best match for the input from the union members. The exact algorithm may change between Pydantic minor releases to allow for improvements in both performance and accuracy.
+In this mode, pydantic attempts to select the best match for the input from the union members. The exact algorithm may
+change between Pydantic minor releases to allow for improvements in both performance and accuracy.
 
 !!! note
 
@@ -119,7 +127,8 @@ In this mode, pydantic attempts to select the best match for the input from the 
 
     For `exactness`, Pydantic scores a match of a union member into one of the following three groups (from highest score to lowest score):
 
-    * An exact type match, for example an `int` input to a `float | int` union validation is an exact type match for the `int` member
+    * An exact type match, for example an `int` input to a `float | int` union validation is an exact type match for the
+      `int` member
     * Validation would have succeeded in [`strict` mode](../concepts/strict_mode.md)
     * Validation would have succeeded in lax mode
 
@@ -129,17 +138,22 @@ In this mode, pydantic attempts to select the best match for the input from the 
 
     === "`BaseModel`, `dataclass`, and `TypedDict`"
 
-        1. Union members are attempted left to right, with any successful matches scored into one of the three exactness categories described above,
+        1. Union members are attempted left to right, with any successful matches scored into one of the three exactness
+           categories described above,
         with the valid fields set count also tallied.
         2. After all members have been evaluated, the member with the highest "valid fields set" count is returned.
-        3. If there's a tie for the highest "valid fields set" count, the exactness score is used as a tiebreaker, and the member with the highest exactness score is returned.
+        3. If there's a tie for the highest "valid fields set" count, the exactness score is used as a tiebreaker, and
+           the member with the highest exactness score is returned.
         4. If validation failed on all the members, return all the errors.
 
     === "All other data types"
 
-        1. Union members are attempted left to right, with any successful matches scored into one of the three exactness categories described above.
-            * If validation succeeds with an exact type match, that member is returned immediately and following members will not be attempted.
-        2. If validation succeeded on at least one member as a "strict" match, the leftmost of those "strict" matches is returned.
+        1. Union members are attempted left to right, with any successful matches scored into one of the three exactness
+           categories described above.
+            * If validation succeeds with an exact type match, that member is returned immediately and following members
+              will not be attempted.
+        2. If validation succeeded on at least one member as a "strict" match, the leftmost of those "strict" matches is
+           returned.
         3. If validation succeeded on at least one member in "lax" mode, the leftmost match is returned.
         4. Validation failed on all the members, return all the errors.
 
@@ -156,22 +170,22 @@ class User(BaseModel):
 
 
 user_01 = User(id=123, name="John Doe")
-print(user_01)
+u.Cli.print(user_01)
 # > id=123 name='John Doe'
-print(user_01.id)
+u.Cli.print(user_01.id)
 # > 123
 user_02 = User(id="1234", name="John Doe")
-print(user_02)
+u.Cli.print(user_02)
 # > id='1234' name='John Doe'
-print(user_02.id)
+u.Cli.print(user_02.id)
 # > 1234
 user_03_uuid = UUID("cf57432e-809e-4353-adbd-9d5c0d733868")
 user_03 = User(id=user_03_uuid, name="John Doe")
-print(user_03)
+u.Cli.print(user_03)
 # > id=UUID('cf57432e-809e-4353-adbd-9d5c0d733868') name='John Doe'
-print(user_03.id)
+u.Cli.print(user_03.id)
 # > cf57432e-809e-4353-adbd-9d5c0d733868
-print(user_03_uuid.int)
+u.Cli.print(user_03_uuid.int)
 # > 275603287559914445491632874575877060712
 ```
 
@@ -179,11 +193,13 @@ print(user_03_uuid.int)
 
 **Discriminated unions are sometimes referred to as "Tagged Unions".**
 
-We can use discriminated unions to more efficiently validate `Union` types, by choosing which member of the union to validate against.
+We can use discriminated unions to more efficiently validate `Union` types, by choosing which member of the union to
+validate against.
 
 This makes validation more efficient and also avoids a proliferation of errors when validation fails.
 
-Adding discriminator to unions also means the generated JSON schema implements the [associated OpenAPI specification](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#discriminator-t.JsonValue).
+Adding discriminator to unions also means the generated JSON schema implements the [associated OpenAPI
+specification](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#discriminator-t.JsonValue).
 
 ### Discriminated Unions with `str` discriminators
 
@@ -222,12 +238,12 @@ class Model(BaseModel):
     n: int
 
 
-print(Model(pet={"pet_type": "dog", "barks": 3.14}, n=1))
+u.Cli.print(Model(pet={"pet_type": "dog", "barks": 3.14}, n=1))
 # > pet=Dog(pet_type='dog', barks=3.14) n=1
 try:
     Model(pet={"pet_type": "dog"}, n=1)
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for Model
     pet.dog.barks
@@ -295,7 +311,7 @@ class ThanksgivingDinner(BaseModel):
 apple_variation = ThanksgivingDinner({
     "dessert": {"fruit": "apple", "time_to_cook": 60, "num_ingredients": 8}
 })
-print(repr(apple_variation))
+u.Cli.print(repr(apple_variation))
 """
 ThanksgivingDinner(dessert=ApplePie(time_to_cook=60, num_ingredients=8, fruit='apple'))
 """
@@ -307,7 +323,7 @@ pumpkin_variation = ThanksgivingDinner(
         "num_ingredients": 6,
     }
 })
-print(repr(pumpkin_variation))
+u.Cli.print(repr(pumpkin_variation))
 """
 ThanksgivingDinner(dessert=PumpkinPie(time_to_cook=40, num_ingredients=6, filling='pumpkin'))
 """
@@ -349,18 +365,18 @@ class DiscriminatedModel(BaseModel):
 
 model_data = {"value": {"value": 1}}
 m = DiscriminatedModel(
-print(m)
+u.Cli.print(m)
 # > value=SpecialValue(value=1)
 
 int_data = {"value": 123}
 m = DiscriminatedModel(
-print(m)
+u.Cli.print(m)
 # > value=123
 
 try:
     DiscriminatedModel(an int or a model"})
 except ValidationError as e:
-    print(e)  # (1)!
+    u.Cli.print(e)  # (1)!
     """
     1 validation error for DiscriminatedModel
     value
@@ -438,12 +454,12 @@ class Model(BaseModel):
 
 
 m = Model(pet={"pet_type": "cat", "color": "black", "black_name": "felix"}, n=1)
-print(m)
+u.Cli.print(m)
 # > pet=BlackCat(pet_type='cat', color='black', black_name='felix') n=1
 try:
     Model(pet={"pet_type": "cat", "color": "red"}, n="1")
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for Model
     pet.cat
@@ -452,7 +468,7 @@ except ValidationError as e:
 try:
     Model(pet={"pet_type": "cat", "color": "black"}, n="1")
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for Model
     pet.cat.black.black_name
@@ -461,7 +477,8 @@ except ValidationError as e:
 ```
 
 !!! tip
-If you want to validate data against a union, and solely a union, you can use pydantic's [`TypeAdapter`](../concepts/type_adapter.md) construct instead of inheriting from the standard `BaseModel`.
+If you want to validate data against a union, and solely a union, you can use pydantic's
+[`TypeAdapter`](../concepts/type_adapter.md) construct instead of inheriting from the standard `BaseModel`.
 
     In the context of the previous example, we have the following:
 
@@ -473,7 +490,7 @@ If you want to validate data against a union, and solely a union, you can use py
         "color": "black",
         "black_name": "felix",
     })
-    print(repr(pet))
+    u.Cli.print(repr(pet))
     # > BlackCat(pet_type='cat', color='black', black_name='felix')
     ```
 
@@ -503,7 +520,7 @@ class Model(BaseModel):
 try:
     Model(": 1}}})
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     4 validation errors for Model
     x.str
@@ -519,7 +536,7 @@ except ValidationError as e:
 try:
     Model(": {}}}})
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     4 validation errors for Model
     x.str
@@ -559,7 +576,7 @@ class DiscriminatedModel(BaseModel):
 try:
     DiscriminatedModel(": 1}}})
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for DiscriminatedModel
     x.model.x.model.x
@@ -569,7 +586,7 @@ except ValidationError as e:
 try:
     DiscriminatedModel(": {}}}})
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for DiscriminatedModel
     x.model.x.model.x.model.x
@@ -579,7 +596,7 @@ except ValidationError as e:
 # The data is still handled properly when valid:
 data = {"x": {"x": {"x": "a"}}}
 m = DiscriminatedModel(
-print(m.model_dump())
+u.Cli.print(m.model_dump())
 # > {'x': {'x': {'x': 'a'}}}
 ```
 
@@ -605,7 +622,7 @@ adapter = TypeAdapter(Union[DoubledList, StringsMap])
 try:
     adapter.validate_python(["a"])
 except ValidationError as exc_info:
-    print(exc_info)
+    u.Cli.print(exc_info)
     """
     2 validation errors for union[function-after[<lambda>(), t.SequenceOf[int]],Mapping[str,str]]
     function-after[<lambda>(), t.SequenceOf[int]].0
@@ -624,7 +641,7 @@ tag_adapter = TypeAdapter(
 try:
     tag_adapter.validate_python(["a"])
 except ValidationError as exc_info:
-    print(exc_info)
+    u.Cli.print(exc_info)
     """
     2 validation errors for union[DoubledList,StringsMap]
     DoubledList.0

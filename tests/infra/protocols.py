@@ -1,3 +1,5 @@
+"""FLEXT infra test helpers for protocols."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
@@ -35,11 +37,7 @@ class TestsFlextRootProtocols(FlextTestsProtocols):
                 """Protocol for module resolution callables."""
 
                 def __call__(
-                    self,
-                    module_name: str,
-                    relative_path: str,
-                    *,
-                    anchor_file: Path,
+                    self, module_name: str, relative_path: str, *, anchor_file: Path
                 ) -> ModuleType: ...
 
             @runtime_checkable

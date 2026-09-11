@@ -11,7 +11,7 @@ from flext_cli import c, m, p, r, s, t, u
 `flext_cli` reexports `d`, `e`, `h`, `r`, `x` from `flext_core`.
 
 | Alias | Purpose |
-|-------|---------|
+| ------- | --------- |
 | `c` | constants |
 | `m` | models |
 | `p` | protocols |
@@ -34,8 +34,6 @@ Import the existing settings class; do not redefine it:
 
 ```python
 from flext_cli.settings import FlextCliSettings
-
-settings = FlextCliSettings.fetch_global()
 ```
 
 If you need a project-specific subclass, extend `FlextSettings` (or `FlextCliSettings`) with `m.SettingsConfigDict`:
@@ -58,6 +56,9 @@ from flext_cli.services.cli import FlextCliCli
 from flext_cli.settings import FlextCliSettings
 
 
+settings = FlextCliSettings.fetch_global()
+
+
 class GreetInput(m.BaseModel):
     name: str
     shout: bool = False
@@ -70,11 +71,8 @@ def greet_handler(model: GreetInput) -> t.JsonValue:
     return {"message": message}
 
 
-settings = FlextCliSettings.fetch_global()
 command = FlextCliCli.model_command(
-    model_cls=GreetInput,
-    handler=greet_handler,
-    settings=settings,
+    model_cls=GreetInput, handler=greet_handler, settings=settings
 )
 ```
 
@@ -97,16 +95,16 @@ assert result.exit_code == 0
 
 - Use plain `m.BaseModel` subclasses for command input.
 - Read settings via `FlextCliSettings.fetch_global()`; `s` is the service/runtime alias.
-- Avoid ad-hoc Typer functions and direct `print()`/`sys.exit()` in commands.
+- Avoid ad-hoc Typer functions and direct `u.Cli.print()`/`sys.exit()` in commands.
 
 ## Bad practices
 
-```python
+```python notest
 import typer
 
 
 def main(name: str):  # ad-hoc command, no model
-    print(f"Hello, {name}")
+    u.Cli.print(f"Hello, {name}")
 ```
 
 ## Related

@@ -11,22 +11,22 @@ BASE_DN="${BASE_DN:-dc=network,dc=invaliddc}"
 echo "=== FLEXT OUD Setup Starting ==="
 
 # Check if OUD instance already exists
-if [ ! -f "$INSTANCE_PATH/OUD/settings/settings.ldif" ]; then
+if [ ! -f "${INSTANCE_PATH}/OUD/settings/settings.ldif" ]; then
 	echo "Setting up new OUD instance..."
 
-	$OUD_SETUP \
+	${OUD_SETUP} \
 		--cli \
 		--no-prompt \
 		--doNotStart \
-		--instancePath "$INSTANCE_PATH" \
+		--instancePath "${INSTANCE_PATH}" \
 		--REDACTED_LDAP_BIND_PASSWORDConnectorPort 4444 \
 		--ldapPort 1389 \
 		--ldapsPort 1636 \
 		--generateSelfSignedCertificate \
 		--enableStartTLS \
 		--rootUserDN "cn=Directory Manager" \
-		--rootUserPassword "$ADMIN_PWD" \
-		--baseDN "$BASE_DN" \
+		--rootUserPassword "${ADMIN_PWD}" \
+		--baseDN "${BASE_DN}" \
 		--sampleData 0
 
 	echo "OUD setup completed successfully"
@@ -36,7 +36,7 @@ fi
 
 # Start OUD server
 echo "Starting OUD server..."
-"$INSTANCE_PATH/OUD/bin/start-ds"
+"${INSTANCE_PATH}/OUD/bin/start-ds"
 
 # Wait for server to start
 echo "Waiting for OUD server to be ready..."
@@ -44,10 +44,10 @@ sleep 10
 
 # Settingsure single structural objectclass behavior
 echo "Settingsuring OUD settings..."
-"$INSTANCE_PATH/OUD/bin/dsconfig" \
+"${INSTANCE_PATH}/OUD/bin/dsconfig" \
 	-h localhost -p 4444 \
 	-D "cn=Directory Manager" \
-	-w "$ADMIN_PWD" \
+	-w "${ADMIN_PWD}" \
 	--no-prompt \
 	--trustAll \
 	set-global-configuration-prop \
@@ -57,18 +57,18 @@ echo "Settingsuring OUD settings..."
 echo "Creating base LDAP hierarchy..."
 ldapadd -x -H ldap://localhost:1389 \
 	-D "cn=Directory Manager" \
-	-w "$ADMIN_PWD" <<EOF || echo "Hierarchy may already exist"
-dn: cn=Users,$BASE_DN
+	-w "${ADMIN_PWD}" <<EOF || echo "Hierarchy may already exist"
+dn: cn=Users,${BASE_DN}
 objectClass: container
 objectClass: top
 cn: Users
 
-dn: cn=PERFIS,$BASE_DN
+dn: cn=PERFIS,${BASE_DN}
 objectClass: container
 objectClass: top
 cn: PERFIS
 
-dn: ou=especial,cn=Users,$BASE_DN
+dn: ou=especial,cn=Users,${BASE_DN}
 objectClass: organizationalUnit
 objectClass: top
 ou: especial
@@ -78,8 +78,8 @@ EOF
 echo "Creating test users..."
 ldapadd -x -H ldap://localhost:1389 \
 	-D "cn=Directory Manager" \
-	-w "$ADMIN_PWD" <<EOF || echo "Test users may already exist"
-dn: cn=ORCLADMIN,$BASE_DN
+	-w "${ADMIN_PWD}" <<EOF || echo "Test users may already exist"
+dn: cn=ORCLADMIN,${BASE_DN}
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -89,7 +89,7 @@ sn: Administrator
 uid: orclREDACTED_LDAP_BIND_PASSWORD
 userPassword: invalid_password
 
-dn: cn=FLEXTDEPLOY,ou=especial,cn=Users,$BASE_DN
+dn: cn=FLEXTDEPLOY,ou=especial,cn=Users,${BASE_DN}
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -102,12 +102,12 @@ EOF
 
 echo "=== FLEXT OUD Setup Complete ==="
 echo "LDAP URL: ldap://localhost:1389"
-echo "Base DN: $BASE_DN"
+echo "Base DN: ${BASE_DN}"
 echo "Admin: cn=Directory Manager"
 
 # Keep container running by tailing server logs
-if [ -f "$INSTANCE_PATH/OUD/logs/server.out" ]; then
-	tail -f "$INSTANCE_PATH/OUD/logs/server.out"
+if [ -f "${INSTANCE_PATH}/OUD/logs/server.out" ]; then
+	tail -f "${INSTANCE_PATH}/OUD/logs/server.out"
 else
 	echo "Keeping container alive..."
 	tail -f /dev/null

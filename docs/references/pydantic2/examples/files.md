@@ -37,7 +37,7 @@ class Person(BaseModel):
 
 json_string = pathlib.Path("person.json").read_text()
 person = Person.model_validate_json(json_string)
-print(person)
+u.Cli.print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```
 
@@ -57,7 +57,8 @@ This data is flawed for three reasons:
 2. The `age` field is negative.
 3. The `email` field is not a valid email address.
 
-When we try to validate this data, `pydantic` raises a [`ValidationError`][pydantic_core.ValidationError] with all of the
+When we try to validate this data, `pydantic` raises a [`ValidationError`][pydantic_core.ValidationError] with all of
+the
 above issues:
 
 ```python {test="skip"}
@@ -76,7 +77,7 @@ json_string = pathlib.Path("person.json").read_text()
 try:
     person = Person.model_validate_json(json_string)
 except ValidationError as err:
-    print(err)
+    u.Cli.print(err)
     """
     3 validation errors for Person
     name
@@ -86,7 +87,8 @@ except ValidationError as err:
     Input should be greater than 0 [type=greater_than, input_value=-30, input_type=int]
         For further information visit https://errors.pydantic.dev/2.10/v/greater_than
     email
-    value is not a valid email address: An email address must have an @-sign. [type=value_error, input_value='not-an-email-address', input_type=str]
+    value is not a valid email address: An email address must have an @-sign.
+        [type=value_error, input_value='not-an-email-address', input_type=str]
     """
 ```
 
@@ -126,12 +128,13 @@ person_list_adapter = TypeAdapter(Sequence[Person])  # (1)!
 
 json_string = pathlib.Path("people.json").read_text()
 people = person_list_adapter.validate_json(json_string)
-print(people)
+u.Cli.print(people)
 # > [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
 ```
 
 1. We use [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] to validate a list of `Person` objects.
-   [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] is a Pydantic construct used to validate data against a single type.
+   [`TypeAdapter`][pydantic.type_adapter.TypeAdapter] is a Pydantic construct used to validate data against a single
+   type.
 
 ## JSON lines files
 
@@ -161,7 +164,7 @@ class Person(BaseModel):
 
 json_lines = pathlib.Path("people.jsonl").read_text().splitlines()
 people = [Person.model_validate_json(line) for line in json_lines]
-print(people)
+u.Cli.print(people)
 # > [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
 ```
 
@@ -197,7 +200,7 @@ with open("people.csv") as f:
     reader = csv.DictReader(f)
     people = [Person(row) for row in reader]
 
-print(people)
+u.Cli.print(people)
 # > [Person(name='John Doe', age=30, email='john@example.com'), Person(name='Jane Doe', age=25, email='jane@example.com')]
 ```
 
@@ -231,13 +234,14 @@ with open("person.toml", "rb") as f:
     data = tomllib.load(f)
 
 person = Person(
-print(person)
+u.Cli.print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```
 
 ## YAML files
 
-YAML (YAML Ain't Markup Language) is a human-readable data serialization format that is often used for configuration files.
+YAML (YAML Ain't Markup Language) is a human-readable data serialization format that is often used for configuration
+files.
 
 Consider the following YAML file:
 
@@ -265,13 +269,14 @@ with open("person.yaml") as f:
     data = yaml.safe_load(f)
 
 person = Person(
-print(person)
+u.Cli.print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```
 
 ## XML files
 
-XML (eXtensible Markup Language) is a markup language that defines a set of rules for encoding documents in a format that is both human-readable and machine-readable.
+XML (eXtensible Markup Language) is a markup language that defines a set of rules for encoding documents in a format
+that is both human-readable and machine-readable.
 
 Consider the following XML file:
 
@@ -301,13 +306,14 @@ class Person(BaseModel):
 tree = ET.parse("person.xml").getroot()
 data = {child.tag: child.text for child in tree}
 person = Person(
-print(person)
+u.Cli.print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```
 
 ## INI files
 
-INI files are a simple configuration file format that uses sections and key-value pairs. They are commonly used in Windows applications and older software.
+INI files are a simple configuration file format that uses sections and key-value pairs. They are commonly used in
+Windows applications and older software.
 
 Consider the following INI file:
 
@@ -335,6 +341,6 @@ class Person(BaseModel):
 settings = configparser.SettingsParser()
 settings.read("person.ini")
 person = Person(])
-print(person)
+u.Cli.print(person)
 # > name='John Doe' age=30 email='john@example.com'
 ```

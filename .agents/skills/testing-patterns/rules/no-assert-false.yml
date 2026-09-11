@@ -1,7 +1,0 @@
-id: no-assert-false
-language: python
-rule:
-  pattern: "assert False"
-message: "assert False - use pytest.fail() with reason"
-severity: error
-fix: 'pytest.fail("TODO: add failure reason")'

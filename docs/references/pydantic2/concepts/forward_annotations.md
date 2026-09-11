@@ -21,14 +21,15 @@ class Model(BaseModel):
     # a: 'MyInt'
 
 
-print(Model(a="1"))
+u.Cli.print(Model(a="1"))
 # > a=1
 ```
 
 As shown in the following sections, forward annotations are useful when you want to reference
 a type that is not yet defined in your code.
 
-The internal logic to resolve forward annotations is described in detail in [this section](../internals/resolving_annotations.md).
+The internal logic to resolve forward annotations is described in detail in [this
+section](../internals/resolving_annotations.md).
 
 ## Self-referencing (or "Recursive") Models
 
@@ -50,9 +51,9 @@ class Foo(BaseModel):
     sibling: "Optional[Foo]" = None
 
 
-print(Foo())
+u.Cli.print(Foo())
 # > a=123 sibling=None
-print(Foo(sibling={"a": "321"}))
+u.Cli.print(Foo(sibling={"a": "321"}))
 # > a=123 sibling=Foo(a=321, sibling=None)
 ```
 
@@ -81,13 +82,13 @@ class ModelB(BaseModel):
 
 cyclic_data = {}
 cyclic_data["a"] = {"b": cyclic_data}
-print(cyclic_data)
+u.Cli.print(cyclic_data)
 # > {'a': {'b': {...}}}
 
 try:
     ModelB(cyclic_data)
 except ValidationError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     1 validation error for ModelB
     a.b
@@ -149,7 +150,7 @@ class Node(BaseModel):
 node_data = {"id": 1, "children": [{"id": 2, "children": [{"id": 3}]}]}
 node_data["children"][0]["children"][0]["children"] = [node_data]
 
-print(Node(
+u.Cli.print(Node(
 # > id=1 children=[Node(id=2, children=[Node(id=3, children=[])])]
 ```
 
@@ -167,7 +168,7 @@ try:
     # Try serializing the circular reference as JSON
     TypeAdapter(dict).dump_json(node_data)
 except ValueError as exc:
-    print(exc)
+    u.Cli.print(exc)
     """
     Error serializing to JSON: ValueError: Circular reference detected (id repeated)
     """
@@ -228,11 +229,11 @@ nodes[0].children.append(nodes[1])
 nodes[1].children.append(nodes[2])
 nodes[2].children.append(nodes[0])
 
-print(nodes[0])
+u.Cli.print(nodes[0])
 # > Node(id=1, children=[Node(id=2, children=[Node(id=3, children=[...])])])
 
 # Serialize the cyclic graph:
-print(TypeAdapter(Node).dump_python(nodes[0]))
+u.Cli.print(TypeAdapter(Node).dump_python(nodes[0]))
 """
 {
     'id': 1,

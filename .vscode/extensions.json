@@ -1,12 +1,19 @@
 {
+  // NOTE (multi-agent, mro-wkii.17.25): keep Pylance as the language provider while dedicated tools report their own diagnostics.
   "recommendations": [
+    "charliermarsh.ruff",
     "davidanson.vscode-markdownlint",
-    "foxundermoon.shell-format",
-    "mikestead.dotenv",
-    "ms-python.mypy-type-checker",
+    "editorconfig.editorconfig",
+    "meta.pyrefly",
     "ms-python.python",
     "ms-python.vscode-pylance",
-    "pyrefly.pyrefly",
-    "tamasfe.even-better-toml",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml"
+  ],
+  "unwantedRecommendations": [
+    "donjayamanne.githistory",
+    "mhutchie.git-graph",
+    "ms-python.vscode-python-envs",
+    "waderyan.gitblame"
   ]
 }

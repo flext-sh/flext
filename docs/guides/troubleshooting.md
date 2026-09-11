@@ -1,6 +1,7 @@
 # Troubleshooting
 
-Use this page for workspace-level diagnostics. If the failure is project-specific, continue in that project’s local docs and tests.
+Use this page for workspace-level diagnostics. If the failure is project-specific, continue in that project’s local docs
+and tests.
 
 ## Quick Checks
 

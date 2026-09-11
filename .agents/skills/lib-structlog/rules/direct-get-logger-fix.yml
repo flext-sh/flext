@@ -1,5 +1,0 @@
-id: direct-get-logger-fix
-language: python
-rule:
-  pattern: "structlog.get_logger($$$ARGS)"
-fix: "FlextLogger.create_module_logger($$$ARGS)"

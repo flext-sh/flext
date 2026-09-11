@@ -9,7 +9,7 @@
     - [3. [Component Diagrams](./component-diagrams.md)](#3-component-diagramscomponent-diagramsmd)
     - [4. [Code Diagrams](./code-diagrams.md)](#4-code-diagramscode-diagramsmd)
   - [🎯 FLEXT Architecture Overview](#-flext-architecture-overview)
-  - [🏗️ Key Architectural Patterns](#-key-architectural-patterns)
+  - [🏗 Key Architectural Patterns](#-key-architectural-patterns)
     - [Foundation Layer (flext-core)](#foundation-layer-flext-core)
     - [Application Layer](#application-layer)
     - [Infrastructure Layer](#infrastructure-layer)
@@ -29,7 +29,8 @@ providing a comprehensive view of the system architecture at different levels of
 
 ### 2. [Container Diagram](./container-diagram.md)
 
-**Level 2** - Shows the high-level shape of the FLEXT architecture and how responsibilities are distributed across containers.
+**Level 2** - Shows the high-level shape of the FLEXT architecture and how responsibilities are distributed across
+containers.
 
 ### 3. [Component Diagrams](./component-diagrams.md)
 
@@ -50,7 +51,7 @@ FLEXT is an enterprise-grade data integration platform built with:
 - **Dependency Injection** for loose coupling
 - **Microservices** architecture with Python services
 
-## 🏗️ Key Architectural Patterns
+## 🏗 Key Architectural Patterns
 
 ### Foundation Layer (flext-core)
 

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Run the default check pipeline through promoted Make targets."""
 # /// flext-command
 # verb = "check"

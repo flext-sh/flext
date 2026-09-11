@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from flext_core import FlextProtocols
+from flext_core import p
 
 
-class FlextRootProtocols(FlextProtocols):
+class FlextRootProtocols(p):
     """Flext protocols namespace."""
 
 

@@ -1,6 +1,0 @@
-id: no-assert-false
-valid:
-  - "assert x == False"
-  - "assert not x"
-invalid:
-  - "assert False"

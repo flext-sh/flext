@@ -1,9 +1,0 @@
-id: ban-wildcard-import
-language: python
-rule:
-  kind: import_from_statement
-  has:
-    kind: wildcard_import
-    stopBy: end
-message: "Wildcard import banned"
-severity: error

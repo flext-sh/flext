@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Header-only promoted command; dispatcher executes the declared target."""
 # /// flext-command
 # verb = "status"

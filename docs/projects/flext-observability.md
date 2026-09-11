@@ -1,70 +1,93 @@
 # FLEXT Observability
 
-FLEXT Observability (v0.9.0) is the platform-wide monitoring, metrics, tracing, and alerting foundation. The architecture is complete, but the quality pipeline remains blocked by a `flext-core` import issue, so status calls out the blockers while still describing the ready entities, services, and instruments the project ships.
+FLEXT Observability is the enterprise monitoring, metrics, and telemetry platform of FLEXT. It models every
+observability signal — metrics, traces, alerts, health checks, and log entries — as validated Pydantic entities, and
+records them through railway-oriented services, decorators, and instrumentation helpers shared by all downstream FLEXT
+projects.
 
-## Status & metrics
+## Status & health
 
-- **Version**: 0.9.0 (architecture complete, quality checks blocked)
-- **Tests**: 481 functions across 40 files, currently failing because of import errors; quality validation cannot run until `flext-core` exports are unblocked
-- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks) is blocked by the import failure noted in the README
-- **Coverage**: 100% architecture target (currently blocked)
-- **Type safety**: Pyrefly strict mode + MyPy strict mode are configured to read-level discipline (zero `Any`, no `TYPE_CHECKING`, no `cast`, no `# type: ignore`)
-- **Security**: Bandit + pip-audit gates defined but not executed until the `flext-core` dependency stabilizes
+- **Version**: 0.12.0-dev
+- **Python**: 3.13+ only
+- **Project class**: platform (consumes `flext-core` and `flext-cli`)
+- **Facade**: `from flext_observability import observability` — the `FlextObservability` facade class with static
+  factory methods
+- **Short aliases**: `c`, `m`, `p`, `r`, `t`, `u` plus operational `s`, `d`, `e`, `h`, `x`, and `settings`
+
+### Quality signals
+
+- Lint, type-check, security, and tests run through the canonical `make` verbs; current status is produced by the gates,
+  not restated here.
+- Run `make check PROJECT=flext-observability` (lint + type-check) and `make val` for the full gate chain.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/flext-sh/flext-observability.git
-cd flext-observability
-poetry install
-make setup
-make check
+pip install flext-observability
 ```
 
 ```python
-from flext_observability import (
-    flext_create_metric,
-    flext_create_trace,
-    flext_monitor_function,
-)
+from flext_observability import flext_monitor_function, observability
 
-metric = flext_create_metric("cpu_usage", 42.0, "percent")
-trace = flext_create_trace("order.process", "processing")
+metric = observability.flext_metric("cpu_usage", 42.0, "percent")
+if metric.success:
+    u.Cli.print(metric.value.name, metric.value.value)
 
 
-@flext_monitor_function("data.work")
-def work(data):
+@flext_monitor_function(metric_name="data.work")
+def work(data: str) -> str:
     return data
 
 
 work("payload")
 ```
 
-## Architecture snapshot
+The `flext_metric`, `flext_trace`, `flext_alert`, `flext_health_check`, and `flext_log_entry` factories return `r[...]`
+results wrapping the corresponding entity model. `flext_monitor_function` is exported at the package root and
+instruments any callable with execution metrics.
 
-- **Layers**: clean architecture stack (Domain → Application → Infrastructure) with tiered modules that never import upward. `constants.py`, `typings.py`, `protocols.py` stay isolated from higher tiers.
-- **Modules**: `entities/` (FlextMetric, FlextTrace, FlextAlert, FlextHealthCheck, FlextLogEntry), `services/`, `decorators/`, `api.py` (factory functions), and `integration/` modules for Prometheus/Grafana/OTLP planning.
-- **Integration**: The project integrates with `flext-core` (r, container, context, decorators, logger), `flext-cli` (command helpers), and downstream services (API, Auth, Web) via shared instrumentation helpers.
-- **Decorators**: `flext_monitor_function` automatically instruments functions for metrics/traces/log entries, and the pattern is ready to extend to distributed tracing (Jaeger/OTLP) once the blocking issue is resolved.
+## Architecture & modules
 
-## Key features
+- **Facade**: `api.py` defines `FlextObservability` with nested entity models (`Metric`, `Trace`, `Alert`,
+  `HealthCheck`, `LogEntry`), static factory methods, and the singleton services for recording each signal;
+  `observability` rebinds the class at the package root.
+- **Service layer** (`services/`): `monitoring` (the `FlextObservabilityMonitor` and its `flext_monitor_function`
+  decorator), `health`, `logging_integration`, `http_instrumentation`, `http_client_instrumentation`, `performance`,
+  `sampling`, `custom_metrics`, `error_handling`, `context`, `advanced_context`, and `fields`.
+- **Flat core modules**: `constants.py`, `typings.py`, `protocols.py`, `models.py`, `utilities.py` provide the
+  `c/m/p/t/u` facades; execution parametrization lives under `config/` and is consumed through the SSOT `settings`
+  access form.
 
-- Domain models for every observability signal (metrics, traces, alerts, health checks, log entries) with Pydantic v2 validation.
-- Services that record metrics, traces, alerts, and health checks through r-based APIs.
-- Monitoring decorators, instrumentation utilities, and configuration hints for OpenTelemetry and Prometheus.
-- Pre-built test suite (481 functions) organized by unit/integration/monitoring, currently unable to run due to `flext-core` import compatibility.
-- Clear next steps: instrumentation stack integration, correlation IDs, distributed tracing, and SLA/SLO dashboards.
+### Key architectural patterns
 
-## Resources & references
+- **Entities as models**: every signal is a frozen Pydantic model owned by the `m` facet; factories validate inputs with
+  `model_validate` before anything is recorded.
+- **Railway everywhere**: factories and services return `r[T]`, so instrumentation composes with the rest of the FLEXT
+  stack without exceptions as control flow.
+- **Decorator instrumentation**: `flext_monitor_function` wraps callables to record execution metrics through the same
+  monitor service used directly.
+- **Integration-ready**: HTTP client/server instrumentation, logging integration, and sampling services provide the
+  hooks downstream projects (API, auth, web) use for shared telemetry.
+
+## Testing & quality
+
+- `make check PROJECT=flext-observability` — Ruff + type-check on the project lane.
+- `make test PROJECT=flext-observability` — unit and integration suites through the shared `flext-tests` helpers.
+- `make val` — full workspace validation chain (lint, types, security, tests, docs).
+- Typing is strict (no `Any`/`object`); all owned payloads are `m.Observability.*` Pydantic models and all fallible
+  paths return `r[T]`.
+
+## Resources
 
 - [Project README](../../flext-observability/README.md)
-- [AGENTS guidance](../../flext-observability/AGENTS.md) with zero-tolerance rules and quality gate steps
-- `flext-observability/docs/` for docs, architecture, guides, and troubleshooting
-- Reports: `reports/pytest/*`, `reports/lint-output/*`, `reports/coverage-scan/*` (when the pipeline unblocks)
-- Related projects: `flext-core`, `flext-cli`, `flext-api`, `flext-auth`, `flext-ldap`, `flext-ldif`, `flext-quality`
+- [Project catalog](generated/catalog.md) entry and generated API reference under `docs/api-reference/generated/flext-
+  observability.md`
+- Project documentation under `flext-observability/docs/`
+- Related projects: `flext-core`, `flext-cli`, `flext-api`, `flext-auth`, `flext-web`, `flext-quality`
 
-## Support & contributions
+## Support & issues
 
 - GitHub issues: <https://github.com/flext-sh/flext-observability/issues>
 - Discussions: <https://github.com/flext-sh/flext-observability/discussions>
-- Follow `docs/standards/README.md` and the workspace-level AGENTS when altering the architecture or docs so this brief stays accurate.
+- Follow the workspace `AGENTS.md` and the project's own `AGENTS.md` before proposing doc or code changes so this page
+  stays aligned with the portal.

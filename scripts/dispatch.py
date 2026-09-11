@@ -30,7 +30,7 @@ class Dispatch:
     run_make = staticmethod(CommandExecution.run_make)
     run_shell = staticmethod(CommandExecution.run_shell)
     surface_validation_enabled = staticmethod(
-        CommandExecution.surface_validation_enabled,
+        CommandExecution.surface_validation_enabled
     )
 
 

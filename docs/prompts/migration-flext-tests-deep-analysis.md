@@ -2,7 +2,8 @@
 
 ## Objetivo
 
-Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os projetos** do ecossistema FLEXT para identificar e corrigir **TODOS os usos de funções de `flext_tests` que estão fora do padrão atual e não suportadas**.
+Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os projetos** do ecossistema FLEXT para
+identificar e corrigir **TODOS os usos de funções de `flext_tests` que estão fora do padrão atual e não suportadas**.
 
 ## Escopo
 
@@ -50,7 +51,7 @@ Realizar uma análise profunda e sistemática de **TODOS os testes de TODOS os p
 
 **tm.method():**
 
-```python
+```python notest
 # ❌ ANTES
 tm.method(api, "connect")
 
@@ -61,7 +62,7 @@ tm.that(callable(getattr(api, "connect", None)), eq=True)
 
 **tm.dict\_():**
 
-```python
+```python notest
 # ❌ ANTES
 tm.dict_(data, has_key="name", length=5)
 
@@ -71,7 +72,7 @@ tm.that(data, keys=["name"], length=5)
 
 **tm.list\_():**
 
-```python
+```python notest
 # ❌ ANTES
 tm.list_(items, contains="item", length=3)
 
@@ -120,7 +121,7 @@ tm.that(items, has="item", length=3)
 
 **tf.create_file_set():**
 
-```python
+```python notest
 # ❌ ANTES
 files = tf.create_file_set({"file1.txt": "content1", "file2.txt": "content2"})
 
@@ -132,7 +133,7 @@ with tf.files({"file1.txt": "content1", "file2.txt": "content2"}) as files:
 
 **tf.get_file_info():**
 
-```python
+```python notest
 # ❌ ANTES
 info = tf.get_file_info(path)
 
@@ -164,7 +165,7 @@ info = info_result.unwrap()
 
 ### 1. Imports Incorretos
 
-```python
+```python notest
 # ❌ ERRADO
 from flext_tests import TestsFlextMatchers
 
@@ -176,7 +177,7 @@ from flext_tests import tm
 
 ### 2. Uso de Métodos Privados ou Internos
 
-```python
+```python notest
 # ❌ ERRADO - Métodos que começam com _
 tm._internal_method()
 tt._private_factory()
@@ -188,7 +189,7 @@ tt.model(...)
 
 ### 3. Uso de Classes Aninhadas Deprecadas
 
-```python
+```python notest
 # ❌ ERRADO
 tb.Tests.Result.ok(value)
 tb.Tests.Model.user(...)
@@ -204,7 +205,7 @@ tt.model("user", ...)
 
 Alguns métodos podem aceitar parâmetros legacy que devem ser migrados:
 
-```python
+```python notest
 # ❌ ERRADO - Parâmetros legacy
 tm.that(data, contains="key")  # Se 'contains' for legacy para dict
 tm.that(items, contains="item")  # Se 'contains' for legacy para list
@@ -342,7 +343,7 @@ Para cada uso encontrado:
 
    ```bash
    ruff check .
-   mypy .
+   MYPY_MEMORY_LIMIT_MB=6144 MYPY_TIMEOUT_SECONDS=600 make check CHECK_GATES=mypy
    ```
 
 4. **Verificação final:**
@@ -480,7 +481,7 @@ def test_database_connection():
 
 **Estrutura Centralizada em `~/flext`:**
 
-```
+```text
 ~/flext/
 ├── conftest.py          # ÚNICO conftest.py do ecossistema
 ├── constants.py         # Estende flext_tests.constants
@@ -509,11 +510,11 @@ def test_database_connection():
 
    ```python
    # Em cada projeto, criar namespaces fáceis:
-   from flext.constants import c
-   from flext.models import m
-   from flext.typings import t
-   from flext.protocols import p
-   from flext.utilities import u
+   from flext import c
+   from flext import m
+   from flext import t
+   from flext import p
+   from flext import u
    ```
 
 3. **Domínios de teste por projeto:**
@@ -576,7 +577,8 @@ class FlextModels(TestsFlextModels):
 
 ```bash
 # Buscar classes base duplicadas
-find . -name "constants.py" -o -name "models.py" -o -name "typings.py" -o -name "protocols.py" -o -name "utilities.py" | grep -v "~/flext"
+find . -name "constants.py" -o -name "models.py" -o -name "typings.py" \
+  -o -name "protocols.py" -o -name "utilities.py" | grep -v "~/flext"
 find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
 ```
 
@@ -584,7 +586,7 @@ find . -name "conftest.py" | wc -l  # Deve retornar 1 (apenas em ~/flext)
 
 **Estrutura obrigatória:**
 
-```
+```text
 <projeto>/
 ├── tests/
 │   ├── conftest.py          # ❌ NÃO PERMITIDO (usar ~/flext/conftest.py)
@@ -680,7 +682,7 @@ class TestsLdapSync:
 
 4. **Estrutura de diretórios:**
 
-   ```
+   ```text
    tests/unit/
    ├── test_user.py              # TestsLdapUser
    ├── test_config.py            # TestsLdapSettings

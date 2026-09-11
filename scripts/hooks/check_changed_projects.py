@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Scope workspace-wide pre-commit checks to the FLEXT projects that changed.
 
 Pre-commit passes the staged file paths as positional arguments. This helper
@@ -16,6 +15,7 @@ from pathlib import Path
 from flext_cli import cli
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
+MIN_POSITIONAL_ARGS = 2
 
 
 def _known_projects() -> frozenset[str]:
@@ -67,7 +67,7 @@ def _relative_to_workspace(raw: str) -> Path:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    if len(sys.argv) < MIN_POSITIONAL_ARGS:
         msg = "usage: check_changed_projects.py <boundary|loc-cap> [file ...]"
         raise SystemExit(msg)
     sys.exit(main(sys.argv[1], sys.argv[2:]))

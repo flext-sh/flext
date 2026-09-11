@@ -1,9 +1,0 @@
-id: ban-relative-import
-language: python
-rule:
-  kind: import_from_statement
-  has:
-    kind: relative_import
-    stopBy: end
-message: "Relative import banned"
-severity: error

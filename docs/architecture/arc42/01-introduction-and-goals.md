@@ -22,7 +22,7 @@
   - [1.3 Stakeholders](#13-stakeholders)
     - [1.3.1 Primary Stakeholders](#131-primary-stakeholders)
       - [Data Engineers](#data-engineers)
-      - [System Administrators](#system-REDACTED_LDAP_BIND_PASSWORDistrators)
+      - [System Administrators](#system-administrators)
       - [Business Users](#business-users)
       - [Developers](#developers)
     - [1.3.2 Secondary Stakeholders](#132-secondary-stakeholders)
@@ -46,7 +46,8 @@ The FLEXT Enterprise Data Integration Platform must provide:
 
 #### Data Integration Capabilities
 
-- **Multi-Source Data Extraction**: Extract data from LDAP directories, Oracle databases, file systems, and other enterprise sources
+- **Multi-Source Data Extraction**: Extract data from LDAP directories, Oracle databases, file systems, and other
+  enterprise sources
 - **Data Transformation**: Transform data according to business rules using DBT transformations
 - **Multi-Destination Loading**: Load processed data into various target systems
 - **Real-time and Batch Processing**: Support both real-time streaming and batch processing workflows

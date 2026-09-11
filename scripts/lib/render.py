@@ -26,36 +26,23 @@ class CommandRenderer:
         result = u.Tests.make_render_verb_help(registry, requested_verb)
         if result.failure:
             raise CommandRegistry.Error(result.error or "verb help render failed")
-        value = result.value
-        if not isinstance(value, str):
-            msg = "verb help render returned invalid value"
-            raise CommandRegistry.Error(msg)
-        return value
+        return result.value
 
     @staticmethod
     def command_help(
-        registry: m.Tests.MakeRegistry,
-        requested_verb: str,
-        what: str,
+        registry: m.Tests.MakeRegistry, requested_verb: str, what: str
     ) -> str:
         """Render help for one promoted command."""
         result = u.Tests.make_render_command_help(registry, requested_verb, what)
         if result.failure:
             raise CommandRegistry.Error(result.error or "command help render failed")
-        value = result.value
-        if not isinstance(value, str):
-            msg = "command help render returned invalid value"
-            raise CommandRegistry.Error(msg)
-        return value
+        return result.value
 
     @staticmethod
     def dry_run(command: m.Tests.MakeCommand, requested_verb: str, what: str) -> str:
         """Render dry-run output for one mutating command."""
         rendered: str = u.Tests.make_render_dry_run(
-            command,
-            requested_verb,
-            what,
-            u.Cli.process_env(),
+            command, requested_verb, what, u.Cli.process_env()
         )
         return rendered
 

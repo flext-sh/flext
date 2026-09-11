@@ -1,6 +1,7 @@
 # Getting Started
 
-Use the root portal for workspace-level guidance only. Package-specific implementation details stay in each `flext-*` project.
+Use the root portal for workspace-level guidance only. Package-specific implementation details stay in each `flext-*`
+project.
 
 ## Prerequisites
 

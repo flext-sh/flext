@@ -16,7 +16,8 @@ The recurring issues are:
 - inconsistent naming across files, classes, tests, examples, and scripts
 - unstable documentation where old architecture narratives conflict with current and target direction
 
-These issues already appear across `flext-core` and are amplified in downstream FLEXT packages such as `flext-ldif`, `flext-auth`, `flext-api`, and `flext-cli`.
+These issues already appear across `flext-core` and are amplified in downstream FLEXT packages such as `flext-ldif` ,
+`flext-auth` , `flext-api` , and `flext-cli` .
 
 ## Decision
 

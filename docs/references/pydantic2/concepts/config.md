@@ -23,7 +23,7 @@ On Pydantic models, configuration can be specified in two ways:
   try:
       m = Model(v="abcdef")
   except ValidationError as e:
-      print(e)
+      u.Cli.print(e)
       """
       1 validation error for Model
       v
@@ -69,7 +69,7 @@ user = User(name="John Doe")
 try:
     user.name = "x" * 20
 except ValidationError as e:
-    print(e)
+    u.Cli.print(e)
     """
     1 validation error for User
     name
@@ -87,7 +87,7 @@ from pydantic import ConfigDict, TypeAdapter
 
 ta = TypeAdapter(t.StrSequence, settings=ConfigDict(coerce_numbers_to_str=True))
 
-print(ta.validate_python([1, 2]))
+u.Cli.print(ta.validate_python([1, 2]))
 # > ['1', '2']
 ```
 
@@ -153,7 +153,7 @@ class Model(Parent):
 
 
 m = Model(x="foo", y="bar")
-print(m.model_dump())
+u.Cli.print(m.model_dump())
 # > {'x': 'foo', 'y': 'bar'}
 ```
 
@@ -174,17 +174,15 @@ class Model(Parent):
 
 
 m = Model(x="FOO", y="bar")
-print(m.model_dump())
+u.Cli.print(m.model_dump())
 # > {'x': 'foo', 'y': 'bar'}
-print(Model.model_config)
+u.Cli.print(Model.model_config)
 # > {'extra': 'allow', 'str_to_lower': True}
 ```
 
 !!! warning
 If your model inherits from multiple bases, Pydantic currently _doesn't_ follow the
-[MRO]. For more details, see [this issue](https://github.com/pydantic/pydantic/issues/9992).
-
-    [MRO]: https://docs.python.org/3/glossary.html#term-method-resolution-order
+[MRO](https://docs.python.org/3/glossary.html#term-method-resolution-order). For more details, see [this issue](https://github.com/pydantic/pydantic/issues/9992).
 
 ## Configuration propagation
 
@@ -207,7 +205,7 @@ When using types that support configuration as field annotations, configuration 
       model_config = ConfigDict(str_to_lower=True)
 
 
-  print(Parent(user={"name": "JOHN"}))
+  u.Cli.print(Parent(user={"name": "JOHN"}))
   # > user=User(name='JOHN')
   ```
 
@@ -238,6 +236,6 @@ When using types that support configuration as field annotations, configuration 
       model_config = ConfigDict(str_to_lower=True)
 
 
-  print(Parent(user_1={"name": "JOHN"}, user_2={"name": "JOHN"}))
+  u.Cli.print(Parent(user_1={"name": "JOHN"}, user_2={"name": "JOHN"}))
   # > user_1=UserWithoutConfig(name='john') user_2=UserWithConfig(name='JOHN')
   ```

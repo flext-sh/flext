@@ -1,5 +1,0 @@
-id: fix-jsondict-legacy
-language: python
-rule:
-  pattern: t.JsonMapping
-fix: t.JsonValue

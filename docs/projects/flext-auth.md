@@ -1,65 +1,93 @@
 # FLEXT Auth
 
-FLEXT Auth v2.0.0 is the generic, multi-provider authentication foundation for the FLEXT ecosystem. It exposes a registry-centric API (`FlextAuth`, `FlextAuthRegistry`, `FlextAuthBaseProvider`) that lets every project plug in JWT, OAuth2, OIDC, SAML, API key, LDAP, Kerberos, or custom transports behind the same validation pipeline.
+FLEXT Auth is the multi-provider authentication and authorization service of the FLEXT platform. It exposes a registry-
+centric facade (`FlextAuth` / `auth`) backed by provider services for JWT, OAuth2, OIDC, SAML, API key, basic auth,
+client certificates, LDAP, and Kerberos, all behind the same `r[T]` validation pipeline. Package description: "FLEXT
+Auth — Enterprise Authentication & Authorization Service".
 
-## Status & metrics
+## Status & health
 
-- **Version**: 2.0.0 Foundation Complete (Dec 2025)
-- **Python support**: 3.13+
-- **Tests**: 558 tests in total; 228 passing (40.9%), 319 failing (57.2%), 11 errors (2.0%) [see `reports/pytest/` snapshots]
-- **Coverage**: ~70% as captured in `reports/coverage-scan-*`
-- **Quality gate**: `make val` (ruff + pyrefly + bandit + pytest + coverage + docstring checks)
-- **Type safety**: Pyrefly strict mode and MyPy strict mode run clean; no `Any`, no `cast`, no `# type:` ignores allowed
-- **Security posture**: bcrypt (12 rounds) + JWT (HS256) plus planned phase 2 providers
+- **Version**: 0.12.0-dev (current development cycle)
+- **Python**: 3.13+ only
+- **Quality gate**: `make check PROJECT=flext-auth` (Ruff + type checks) and `make val` for the full pipeline
+- **Depends on**: `flext-core` (facades, result contract, container)
+
+### Quality signals
+
+- Provider orchestration goes through `FlextAuthRegistry`; the facade never imports provider internals directly
+- Strict typing per workspace policy: no `Any`, no `cast` shortcuts
+- Every public operation returns `r[T]`; failures carry context instead of raising
+- Facets `c`/`t`/`p`/`m` stay declaration-only (root `AGENTS.md` U17)
 
 ## Quick start
 
 ```bash
-cd flext-auth
-poetry install
+make boot
+make check PROJECT=flext-auth
 ```
 
 ```python
-from flext_auth import FlextAuth, FlextAuthModels
+from flext_auth import FlextAuth
 
-auth = FlextAuth.quick_start(create_REDACTED_LDAP_BIND_PASSWORD=False)
+auth = FlextAuth.quick_start(create_admin_user=False)
 
-result = auth.register_user(
+created = auth.register_user(
     username="demo", email="demo@example.com", password="secure123"
 )
+assert created.is_success
 
-if result.is_success:
-    session = auth.authenticate_user("demo", "secure123")
-    assert session.is_success
+session = auth.authenticate_user("demo", "secure123")
+assert session.is_success
 ```
 
-For provider registration, import `FlextAuthRegistry` + `FlextAuthJwtProvider` or any custom provider that implements `FlextAuthBaseProvider` and pass it into `FlextAuth.with_provider` or `with_registry`.
+`FlextAuth.quick_start()` builds the facade with the built-in provider set; `FlextAuth.fetch_global()` returns the
+process-wide singleton (`auth` alias). Providers implement the provider mixin/protocol and are registered through
+`FlextAuthRegistry`.
 
-## Architecture snapshot
+## Architecture & modules
 
-- **Facade & registry**: `api.py` provides the sole `FlextAuth` entry point and delegates to `FlextAuthRegistry`/`FlextAuthBaseProvider` for every authentication flow.
-- **Protocols**: `providers/base.py` defines `BaseProvider` mixin/protocol, and every transport resolves through the registry (JWT provider already production-ready, OAuth2/OIDC/SAML pending in later phases).
-- **Transports**: `transports/http.py`, `transports/grpc.py`, `transports/websocket.py` layer the project on top of `flext-api`, `flext-grpc`, and websockets; new transports follow the same registry path.
-- **Phased modules**: `providers/`, `protocol_handlers/`, `credentials/`, `tokens/`, and `sessions/` each implement one slice of the multi-phase roadmap while honoring the zero-tolerance rules from `AGENTS.md` (no direct provider imports, registry-only orchestration, r for failures).
+`src/flext_auth/` follows the FLEXT tiered layout:
 
-## Key features & challenges
+- **Foundation**: `constants.py`, `typings.py`, `protocols.py` (+ `_constants/`, `_protocols/`) — auth constants (roles,
+  token settings), type aliases, and provider protocols.
+- **Domain**: `models.py` (`_models/`) — Pydantic v2 models for identities, tokens, and sessions.
+- **Providers**: `providers/` — `jwt.py` + `jwt_token_validator.py`, `oauth2.py` (+ `oauth2_config.py`,
+  `oauth2_introspection.py`, `oauth2_tokens.py`), `oidc.py`, `saml.py`, `apikey.py`, `basic.py`, `certificate.py`,
+  `ldap.py`, `kerberos.py` (+ `kerberos_support.py`), `rfc.py`, and the shared `mixin.py`.
+- **Services**: `services/` — `auth_service.py` (`authenticate`, `authenticate_user`, `register_user`, `create_token`),
+  `identity_service.py`, `provider_service.py`, `session_service.py`, `token_service.py`.
+- **Registry & entry point**: `registry.py` (`_registry/`) holds `FlextAuthRegistry`; `api.py` defines `FlextAuth` as
+  the MRO facade over the application service; `__init__.py` exports the facade, providers, services, and the standard
+  aliases plus `config`/`settings`.
 
-- **Provider extensibility**: register new providers and query their capabilities at runtime via `FlextAuthRegistry`.
-- **Protocol handlers**: REST, SOAP, and GraphQL handlers live under `protocol_handlers/` with consistent error/result handling.
-- **Multi-transport support**: HTTP (mandatory), gRPC (mandatory), WebSocket, plus future transports all reuse the same `FlextAuth` facade.
-- **Railway discipline**: every public surface returns `r[T]` and chains via `.flat_map`/`.map`.
-- **Quality signal**: currently ~40% tests passing, so every release cycle must prioritize the failing suites before expanding provider coverage.
+### Key architectural patterns
+
+- **Registry-first**: providers declare capabilities and resolve through `FlextAuthRegistry`; adding a provider means
+  implementing the mixin and registering it — no facade changes.
+- **Service decomposition**: identity, session, token, and provider concerns are separate services composed into the
+  facade via MRO.
+- **Railway discipline**: authentication, registration, and token issuance all return `r[T]`, chaining via
+  `.map`/`.flat_map`.
+- **Config/settings SSOT**: token expiry and session lifetimes come from the validated `settings` singleton
+  (`settings.Auth.*`), never from ad-hoc reads.
+
+## Testing & quality
+
+- `make check PROJECT=flext-auth`: Ruff linting plus type checks
+- `make test PROJECT=flext-auth`: pytest suite (latest evidence under `reports/pytest/`)
+- `make val`: full pipeline; see `reports/coverage-scan-*` for the current coverage snapshot
+- Tests target the public facade and exported models only, per workspace testing law (U16)
 
 ## Resources
 
-- [Project README](../../flext-auth/README.md)
-- [AGENTS instructions](../../AGENTS.md) (registry rules, zero tolerance constraints)
-- `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*` for evidencing the mentioned gates
-- `docs/getting-started.md`, `docs/api-reference.md`, and the project’s `docs/` folder for boarding guides and extension notes
-- Related integration libraries: `flext-core`, `flext-api`, `flext-grpc`, `flext-ldap`, `flext-web`
+- [Project README](../../flext-auth/README.md) (auto-generated module map and operation flow)
+- [Workspace AGENTS.md](../../AGENTS.md) — layering and zero-tolerance rules
+- `flext-auth/docs/api-reference/` — generated API documentation
+- Related projects: `flext-core`, `flext-ldap` (LDAP provider backend), `flext-grpc`
+- Reports: `reports/coverage-scan-*`, `reports/lint-output/*`, `reports/pytest/*`
 
-## Support & contributions
+## Support & issues
 
 - GitHub issues: <https://github.com/flext-sh/flext-auth/issues>
-- Discussions: <https://github.com/flext-sh/flext-auth/discussions>
-- Follow `docs/standards/README.md` and the workspace `AGENTS.md` zero-tolerance checklist before editing source or docs to keep alignment with the portal.
+- Follow the workspace `AGENTS.md` before proposing doc or code changes so this page stays aligned with the engineering
+  portal.

@@ -1,45 +1,32 @@
 ---
 name: flext-context-routing
-description: 'Use this skill to use when selecting tools, prompts, MCP servers, and
-  skills automatically by project/session context. Triggers on requests about automation,
-  tool choice, simplification, deduplication, safe execution, context detection, and
-  cross-project routing. DO NOT USE FOR: questions unrelated to flext-context-routing
-  creating projects or architecture from scratch'
-license: MIT
-metadata:
-  version: 1.0.0
+description: Route FLEXT repositories through global execution skills and the branch-matched local flext-law domain delta after flext-core dependency detection.
 ---
+
 # FLEXT Context Routing
 
-**UTILITY SKILL**
+This is the sole always-loaded local FLEXT surface. It selects the exact
+branch-matched FLEXT law without duplicating universal execution governance.
 
-## USE FOR
+## Required composition
 
-- Requests about flext context routing.
-- Workflows described in this skill.
-- Operator tasks within this scope.
+1. Read `~/.agents/skills/inviolable-rules/SKILL.md`.
+2. Before build, generation, docs, checks, tests, or diagnosis, read
+   `~/.agents/skills/make-check/SKILL.md`.
+3. For every FLEXT task, read the exact local
+   `.agents/skills/flext-law/SKILL.md`.
+4. At every completion boundary, read
+   `~/.agents/skills/verification-loop/SKILL.md`.
 
-## DO NOT USE FOR
+Fail closed if a required file is absent. Never resolve `flext-law` by an
+unqualified catalog name, from `main`, or from another checkout.
 
-- questions unrelated to flext-context-routing.
-- creating projects or architecture from scratch.
+## Detection and scope
 
-## Workflow
-
-1. Identify touched paths and task intent.
-2. Detect project governance and stack markers.
-3. Check tool readiness: correct Scope root, `scope status`, Serena project/config availability, and configured MCP relevance.
-
-## Critical rules
-
-- Prefer canonical sources.
-- Require evidence.
-
-## Example
-
-**Input:** a request.
-**Output:** a concise response.
-
-## Troubleshooting
-
-- Unclear scope → ask.
+- Activate when the workspace provider marker or dependency graph contains
+  `flext-core`.
+- In workspace mode, use the active workspace root and its checked-out law.
+- In standalone mode, use the FLEXT root law pinned to the same branch or
+  release; never fall back to `main`.
+- Load only local surfaces declared in `.agents/provider.toml`. Global skills
+  remain owned by `~/.agents` and are not copied into the local provider.

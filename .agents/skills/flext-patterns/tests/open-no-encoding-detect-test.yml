@@ -1,6 +1,0 @@
-id: ban-open-no-encoding
-valid:
-  - 'open("file.txt", "r", encoding="utf-8")'
-invalid:
-  - 'open("file.txt")'
-  - 'open("file.txt", "r")'

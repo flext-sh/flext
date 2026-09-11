@@ -18,11 +18,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import time
-from collections.abc import (
-    Mapping,
-    MutableSequence,
-    Sequence,
-)
+from collections.abc import Mapping, MutableSequence, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, ClassVar
 
@@ -40,7 +36,7 @@ class AclProcessingExample:
         """Represents an ACL entry with context and permissions."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
+            arbitrary_types_allowed=True
         )
 
         dn: str = u.Field(description="Distinguished name of the ACL entry")
@@ -53,24 +49,19 @@ class AclProcessingExample:
         """Result of ACL validation with detailed context."""
 
         model_config: ClassVar[m.ConfigDict] = m.ConfigDict(
-            arbitrary_types_allowed=True,
+            arbitrary_types_allowed=True
         )
 
         entry_dn: str = u.Field(description="Distinguished name of the entry")
         valid: bool = u.Field(description="Whether the ACL entry is valid")
         violations: t.StrSequence = u.Field(
-            default_factory=tuple,
-            description="List of validation violations",
+            default_factory=tuple, description="List of validation violations"
         )
         warnings: t.StrSequence = u.Field(
-            default_factory=tuple,
-            description="List of validation warnings",
+            default_factory=tuple, description="List of validation warnings"
         )
         processing_time: Annotated[
-            float,
-            u.Field(
-                description="Time taken for validation",
-            ),
+            float, u.Field(description="Time taken for validation")
         ] = 0.0
 
     class Constants:
@@ -90,6 +81,7 @@ class AclProcessingExample:
             "active_directory": ["ntSecurityDescriptor"],
             "apache_ds": ["accessControlSubentry"],
         }
+        MAX_RECOMMENDED_PERMISSIONS: ClassVar[int] = 10
 
     @staticmethod
     def _parse_acl_permissions(acl_value: str) -> MutableSequence[str]:
@@ -120,24 +112,22 @@ class AclProcessingExample:
 
     @staticmethod
     def extract_acls_from_entry(
-        entry: t.JsonMapping,
-        server_type: str,
+        entry: t.JsonMapping, server_type: str
     ) -> p.Result[Sequence[AclProcessingExample.AclEntry]]:
         """Extract ACLs using server-specific attribute detection."""
         start_time = time.time()
         acl_attrs = AclProcessingExample.Constants.SERVER_ACL_ATTRIBUTES.get(
-            server_type,
-            [],
+            server_type, []
         )
         if not acl_attrs:
             return r[Sequence[AclProcessingExample.AclEntry]].fail(
-                f"No ACL attributes defined for server type: {server_type}",
+                f"No ACL attributes defined for server type: {server_type}"
             )
         extracted_acls: MutableSequence[AclProcessingExample.AclEntry] = []
         attributes = entry.get("attributes", {})
         if not isinstance(attributes, Mapping):
             return r[Sequence[AclProcessingExample.AclEntry]].fail(
-                "Invalid attributes format",
+                "Invalid attributes format"
             )
         for attr_name in acl_attrs:
             if attr_name in attributes:
@@ -145,8 +135,7 @@ class AclProcessingExample:
                 if isinstance(acl_values, str):
                     values_list = [acl_values]
                 elif isinstance(acl_values, Sequence) and not isinstance(
-                    acl_values,
-                    (str, bytes, bytearray),
+                    acl_values, (str, bytes, bytearray)
                 ):
                     values_list = acl_values
                 else:
@@ -156,7 +145,7 @@ class AclProcessingExample:
                         dn=str(entry.get("dn", "")),
                         acl_attribute=attr_name,
                         permissions=AclProcessingExample._parse_acl_permissions(
-                            acl_value,
+                            acl_value
                         ),
                         context={
                             "index": i,
@@ -171,8 +160,7 @@ class AclProcessingExample:
 
     @staticmethod
     def validate_acl_entry(
-        acl_entry: t.JsonMapping,
-        context: t.JsonMapping,
+        acl_entry: t.JsonMapping, context: t.JsonMapping
     ) -> p.Result[AclProcessingExample.AclValidationResult]:
         """Validate ACL entry with complex context evaluation."""
         start_time = time.time()
@@ -201,12 +189,10 @@ class AclProcessingExample:
             forbidden_combinations = ["write|delete"]
 
         if required_permissions:
-            missing_perms: set[str] = set(required_permissions) - set(
-                permissions,
-            )
+            missing_perms: set[str] = set(required_permissions) - set(permissions)
             if missing_perms:
                 violations.append(
-                    f"Missing required permissions: {tuple(missing_perms)}",
+                    f"Missing required permissions: {tuple(missing_perms)}"
                 )
             violations.extend(
                 f"Forbidden permission combination: {combo}"
@@ -218,9 +204,12 @@ class AclProcessingExample:
             and AclProcessingExample.Permission.UNKNOWN.value in permissions
         ):
             violations.append("Unknown permissions not allowed in strict mode")
-        if len(permissions) > 10:
+        if (
+            len(permissions)
+            > AclProcessingExample.Constants.MAX_RECOMMENDED_PERMISSIONS
+        ):
             warnings.append(
-                "Excessive permissions - consider principle of least privilege",
+                "Excessive permissions - consider principle of least privilege"
             )
         if not dn:
             warnings.append("Empty DN may indicate configuration issue")
@@ -231,7 +220,7 @@ class AclProcessingExample:
                 violations=violations,
                 warnings=warnings,
                 processing_time=time.time() - start_time,
-            ),
+            )
         )
 
     class AclProcessor(m.BaseModel):
@@ -296,12 +285,11 @@ class AclProcessingExample:
                 "processing_time_seconds": processing_time,
             }
             return r[t.JsonMapping].ok(
-                t.json_mapping_adapter().validate_python(result_data),
+                t.json_mapping_adapter().validate_python(result_data)
             )
 
         def _detect_servers(
-            self,
-            entries: t.SequenceOf[t.JsonMapping],
+            self, entries: t.SequenceOf[t.JsonMapping]
         ) -> p.Result[t.JsonMapping]:
             """Auto-detect server types for all entries."""
             detected_entries: MutableSequence[t.JsonMapping] = []
@@ -312,11 +300,11 @@ class AclProcessingExample:
                         t.json_mapping_adapter().validate_python({
                             "entry": entry,
                             "server_type": result.value,
-                        }),
+                        })
                     )
                 else:
                     return r[t.JsonMapping].fail(
-                        f"Server detection failed: {result.error}",
+                        f"Server detection failed: {result.error}"
                     )
             server_types_set: set[str] = {
                 str(item.get("server_type", "")) for item in detected_entries
@@ -325,7 +313,7 @@ class AclProcessingExample:
                 t.json_mapping_adapter().validate_python({
                     "entries": detected_entries,
                     "server_types": sorted(server_types_set),
-                }),
+                })
             )
 
         def _extract_acls(self, data: t.JsonMapping) -> p.Result[t.JsonMapping]:
@@ -366,7 +354,7 @@ class AclProcessingExample:
             for result in extraction_results:
                 if result.failure:
                     return r[t.JsonMapping].fail(
-                        f"ACL extraction failed: {result.error}",
+                        f"ACL extraction failed: {result.error}"
                     )
                 all_acls.extend(result.value)
 
@@ -389,7 +377,7 @@ class AclProcessingExample:
                 "total_acls": len(all_acls),
             }
             return r[t.JsonMapping].ok(
-                t.json_mapping_adapter().validate_python(result_data),
+                t.json_mapping_adapter().validate_python(result_data)
             )
 
         def _validate_batch(self, data: t.JsonMapping) -> p.Result[t.JsonMapping]:
@@ -405,14 +393,13 @@ class AclProcessingExample:
             ]
             for acl in acl_entries:
                 result = AclProcessingExample.validate_acl_entry(
-                    acl,
-                    t.json_mapping_adapter().validate_python({"strict_mode": True}),
+                    acl, t.json_mapping_adapter().validate_python({"strict_mode": True})
                 )
                 if result.success:
                     validation_results.append(result.value)
                 else:
                     return r[t.JsonMapping].fail(
-                        f"ACL validation failed: {result.error}",
+                        f"ACL validation failed: {result.error}"
                     )
             result_data = {
                 **data,
@@ -432,7 +419,7 @@ class AclProcessingExample:
                 "total_warnings": sum(len(r.warnings) for r in validation_results),
             }
             return r[t.JsonMapping].ok(
-                t.json_mapping_adapter().validate_python(result_data),
+                t.json_mapping_adapter().validate_python(result_data)
             )
 
     @staticmethod
@@ -445,19 +432,19 @@ class AclProcessingExample:
                     "olcAccess": [
                         '{0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" read',
                         "{1}to attrs=userPassword by self write",
-                    ],
+                    ]
                 },
             },
             {
                 "dn": "ou=users,dc=example,dc=com",
                 "attributes": {
-                    "aci": '(target="ldap:///ou=users,dc=example,dc=com")(targetattr="*")(version 3.0; acl "Allow read access"; allow (read,search,compare)(userdn="ldap:///cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com");)',
+                    "aci": '(target="ldap:///ou=users,dc=example,dc=com")(targetattr="*")(version 3.0; acl "Allow read access"; allow (read,search,compare)(userdn="ldap:///cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=com");)'
                 },
             },
             {
                 "dn": "cn=settings",
                 "attributes": {
-                    "orclACI": 'orclACI: access to attr=(userPassword) by dn="cn=Directory Manager" (read,write)',
+                    "orclACI": 'orclACI: access to attr=(userPassword) by dn="cn=Directory Manager" (read,write)'
                 },
             },
         ]

@@ -171,7 +171,7 @@ result = pipeline.process_acls_with_pipeline(
 if result.is_success:
     summary = result.unwrap()
     # Access comprehensive processing results
-    print(f"Processed {summary['acls_extracted']} ACLs")
+    u.Cli.print(f"Processed {summary['acls_extracted']} ACLs")
 ```
 
 ### Advanced Processing Pipeline
@@ -195,10 +195,7 @@ result = pipeline.execute_integrated_pipeline(
 ### Complete Workflow
 
 ```python
-from examples import (
-    ComprehensiveRailwayPattern,
-    CompleteWorkflowBuilder,
-)
+from examples import ComprehensiveRailwayPattern, CompleteWorkflowBuilder
 
 # Build workflow configuration
 settings = CompleteWorkflowBuilder.build_comprehensive_workflow(

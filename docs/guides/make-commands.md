@@ -1,19 +1,21 @@
 # Comandos Make do FLEXT
 
-Este guia é a referência canônica para a superfície de comando `make` do monorepo FLEXT. As regras aqui valem para o workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locais (`make check`, `make test`, etc.).
+Este guia é a referência canônica para a superfície de comando `make` do monorepo FLEXT. As regras aqui valem para o
+workspace raiz; cada projeto `flext-*` ainda possui seus próprios targets locais (`make check`, `make test`, etc.).
 
 ## Convenções
 
 - **Poucos verbos, muitas ações**: o formato é `make <verbo> WHAT=<acao>`. Cada verbo agrupa um domínio.
 - **`all` é o padrão**: se `WHAT` for omitido, o comando executa a ação `all` daquele verbo.
-- **Projetos default = todos**: se `PROJECT` ou `PROJECTS` forem omitidos, o comando abrange todos os projetos do workspace.
+- **Projetos default = todos**: se `PROJECT` ou `PROJECTS` forem omitidos, o comando abrange todos os projetos do
+  workspace.
 - **Mutadores são dry-run por padrão**: comandos que alteram arquivos exigem `APPLY=Y` para executar de verdade.
 - **Ajuda embutida**: `make <verbo> WHAT=help` lista as ações disponíveis.
 
 ## Verbos canônicos
 
 | Verbo | Domínio | Resumo | Exemplo |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `make boot` | workspace | Bootstrap de `.venv` + submódulos | `make boot APPLY=Y` |
 | `make build` | build | Build/regen padronizado | `make build WHAT=gen APPLY=Y` |
 | `make check` | quality | Quality gates | `make check` |
@@ -29,7 +31,7 @@ Este guia é a referência canônica para a superfície de comando `make` do mon
 ## Ações de `build` (`make build WHAT=<acao>`)
 
 | Ação | Alias curto | Muta? | Descrição |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `all` | — | sim | Build/package em todos os projetos selecionados |
 | `constraints` | — | sim | Reescreve constraints de dependências |
 | `docs` | — | sim | Roda o pipeline de docs |
@@ -42,7 +44,7 @@ Este guia é a referência canônica para a superfície de comando `make` do mon
 ## Ações de `check` (`make check WHAT=<acao>`)
 
 | Ação | Alias curto | Descrição |
-|---|---|---|
+| --- | --- | --- |
 | `all` | `make lint` | Default rápido: `lint` + `pyrefly` |
 | `boundary` | `make boundary` | Boundary gate |
 | `cqrs` | `make cqrs` | CQRS compliance gate |
@@ -64,7 +66,7 @@ Este guia é a referência canônica para a superfície de comando `make` do mon
 ## Ações de `ship` (`make ship WHAT=<acao>`)
 
 | Ação | Alias curto | Muta? | Descrição |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `all` / `rel` | `make rel` | sim | Release workflow |
 | `pr` | `make pr` | sim | Gerenciamento de PRs |
 | `push` | `make push` | sim | Push de branches/tags |
@@ -74,7 +76,7 @@ Este guia é a referência canônica para a superfície de comando `make` do mon
 ## Ações de `val` (`make val WHAT=<acao>`)
 
 | Ação | Alias curto | Descrição |
-|---|---|---|
+| --- | --- | --- |
 | `all` | — | Roda `project` + `workspace` (padrão) |
 | `project` | `make project` | Validação ao nível de projeto |
 | `workspace` | `make workspace` | Validação ao nível de workspace |
