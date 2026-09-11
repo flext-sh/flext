@@ -156,3 +156,43 @@ Ordem ADR-010-conforme (cada gate fecha até o próximo abrir):
 - Beads: `flext-3cabz` recebeu o mapeamento ADR-010↔SLA↔piloto como aceite.
 
 *Fim da reconciliação. Próximo agente: seção 6 do handoff v1 continua válida como ordem de retomada; a cadeia 9.3 substitui qualquer leitura de Reds como "fora de alcance".*
+
+---
+
+## 10. FUSÃO — handoff flext-gov (sessão irmão) × este handoff (13:05 UTC)
+
+Fonte fundida: `~/flext-work/flext-gov-super/docs/plans/2026-09-11-flext-gov-handoff.md` (SKA a853d3e599) — programa de consumo/GOV (`epic flext-ssnc7`, ADR-015, consumption-law.md, GOVERNANCE.md). Nada do outro arquivo foi reescrito; a fusão vive AQUI como mapa único, e o decreto §13 deles (§10.4) governa as duas sessões.
+
+### 10.1 Duas cadeias de gate, uma sequência (sinergia central)
+
+| Fase | Cadeia flext-gov (ssnc7) | Cadeia conformance sweep (este doc) | Acoplamento |
+|------|--------------------------|--------------------------------------|-------------|
+| Pre-code | Decree §13: revalidar TODO↔bd + merge-base --is-ancestor + fetch antes de ANY efeito | §5 remontagem TODO ↔ bd ↔ plan-index (mesmo método) | idêntica mecânica — revalidar AMBOS os TODOs |
+| Landing | **A1 approval**: pousar as 3 lanes (`feat/consumer-import-grammar` @14c63121d core, `feat/consumer-gates` @c8a429d59 infra, `feat/flext-gov-consumption-law` @a853d3e599 super) com `--no-ff` → 0.12.0-dev | **A0.3**: PR `--no-ff` do hotfix sweep | **uma única fila de pousos** — A1 do gov ANTES do A0.3 do sweep evita re-push |
+| Grafo | **A2 approval**: crg build + daemon NOS TIPS INTEGRADOS (graphs ausentes nas lanes; doctor crítico) | §10 §6.1: `crg update` @built-at commit | A2 fecha a lacuna de grafo das duas sessões no MESMO ciclo |
+| Piloto | **A3 approval**: piloto RED→GREEN real consumer (ai-hub) + warn→hard | Piloto A6 §11.2 (ci_matrix 9 reds + make_environment B1/B2) | um só plano de homologação: RED→GREEN ambas as classes |
+| Fechamento | F5 (tags/AI_HUB_CONSUMER) abre só pós F1+F4 pousados + gates verdes | Cadeia 9.3: SLA-1→SLA-3→SLA-2→landing→piloto | mesma ordem lógica de dependência |
+
+### 10.2 Estado de acumulação entre as sessões (o que uma deixou para a outra)
+
+1. **Meus pushes moveram `origin/0.12.0-dev`** (`396b359a1e..9526645ea9`) — o §12 do handoff-gov exige `git fetch` + `merge-base --is-ancestor` nas 3 lanes ANTES do `--no-ff` (absorção obrigatória, hunk-a-hunk). As 3 lanes NÃO pousadas podem estar atrás do meu tip.
+2. **Pino comum**: core lane `uv.lock` = `flext-infra rev=0.12.0-dev#bff592284` — MESMO tip que esta sessão modificou com `3000b6bc0`/`bff592284`; o `bd show ssnc7.1` (F1 detector) deve absorver meu cleanup + o gate ci_matrix pós-fix.
+3. **Resíduo operativos da lane infra-gov**: generated surfaces do `make gen` NÃO commitadas (`M Makefile M README M docs/api-reference M pyproject.toml`) — receita: abrir lane, `make check`, commitar escopado ANTES do pouso; nunca lane nova. Alinha com meu A0.2 (triagem dirty).
+4. **Beads** (SSOT dupla): `bd list | grep -E 'ssnc7|3cabz|9wwed|vo335|gxgqp|cpkk'` — TODOs dos dois planos convergem no bd; §13 do gov + §5 deste handoff remontam a partir do MESMO fonte.
+5. **ENFORCE**: 099 única linha viva; 100/101 pendentes — não "deliverar"; meu SLA-3 (budget) é complementar ao ENFORCE-101 (R4) de F4 — mesmo domínio, beads distintos: cross-referenciar, não duplicar.
+6. **Autoridade**: ADR-015 + consumption-law.md + meu ADR-010 §verification contract (reconciliação §9) formam o tripé — nenhum vencendo o outro; divergência = bead, nunca narrativa.
+7. **agentsctl sync é delivery, não dono** — vale para os dois lados; arquivo canônico > réplica.
+
+### 10.3 Cadeia única de retomada (merge das duas ordens)
+
+1. Ler AMBOS os handoffs (§1-§9 aqui; §1-§13 lá) → revalidar TODO↔bd×2 (decree §13).
+2. Pedir **A1** ao operador → pousar 3 lanes gov com `--no-ff` (absorvendo meu tip 9526645ea9) + A0.3 do sweep em um PR por lane.
+3. Pedir **A2** → `crg update/build` nos tips integrados (fecha a lacuna de grafo das duas sessões).
+4. Executar **piloto A6 §11 + A3 §7-gov**: RED→GREEN ci_matrix/9wwed (esta cadeia) + RED→GREEN consumer (gov).
+5. Fechamento: beads das DUAS sessões fecham com 4 evidências cada; registro `bd remember` por transição de aprovação (protocolo END OF TURN do §13).
+
+### 10.4 Decreto de continuidade (vigência dupla — aplica-se a ambas as sessões)
+- Nunca mover texto de plano past reality; corrigir bead/status, não a narrativa.
+- bd é SSOT de execução; SKAs/git são evidência; narrativa nunca é.
+- Cada aprovação A1..A3 confirmação EXPLÍCITA do operador (nunca inferida).
+- Ao reiniciar: ler handoff → §decree → pedir aprovação → só então tocar código.
