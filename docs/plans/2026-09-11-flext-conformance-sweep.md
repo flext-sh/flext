@@ -81,31 +81,30 @@ Sweep não está "feito" quando minha Lane fica verde; está feito quando o ambi
 
 ---
 
-## 4. TODO — detalhado (dono · raio · aceite · referência)
+## 4. TODO — estado real (v3, alinhado aos status de beads verificados nesta sessão)
 
-### Meu escopo (próxima onda, nesta ordem)
-1. **`flext-2h0un` — fixed-point drift** *(bloqueia D1)*
-   Owner: `flext-infra/src/flext_infra/codegen/conform.py` (~1605 apply vs ~1864 verify), aux. `_docs_guides` já ok.
-   Passos: probe `project_new` + `conform --mode apply` ×2 num temp dir; diff 1ª linha divergente; unificar caminho de composição pyproject; **falhar alto** ausência de contexto e falha taplo (2 normalized-failures a exterminar, padrão do plano 2026-09-10).
-   Aceite: 9 testes ci_matrix verdes; probe idempotente; gen ×2 umbrella ponto fixo.
-   Citação: teste — `tests/unit/codegen/test_codegen_conform.py`, `_compose_project_artifact`.
-2. **`flext-9wwed` — budget de teste** *(D3; depende da lei `flext-38p39`)* — provisionamento cacheado entre testes, harness hostil reutilizável; RESPEITAR: otimizar teste, nunca limite.
-   Aceite: 0 timeout; suite ≤120s/membro; `make test` integral verde.
-3. **`flext-gxgqp` — regrowth gate + keep_backup** *(D2)*
-   Owner do exemplo de fixture: replicar guard a partir do teste de `persist_apply_backup` já deletado no PR #673 (história como referência).
-   Aceite: gate no registry; CI falha em fixture semeada; umbrella verde, 0 regrowth **provado pelo gate**, não por find manual.
-4. **Revisão humana dos 8 diffs de docs** (A2) antes de emitir os 2 commits docs pendentes do umbrella via PR (não direto — ver A5).
-5. **`flext-5k9r7`** — aceitação correta: gen ×2 ponto fixo num membro real (≤ leaf de ~32) com o guard corrigido; **jamais** inferir por grep literal (A7).
+**Fonte de verdade**: status de cada bead lido de `bd show` nesta sessão (§5 repete os status). Este §4 substitui o TODO da v2 — itens máximos com dono/link/critério; a v2 fica como histórico do raciocínio D1–D6 (§3).
 
-### Escopo do ator (aguardar/absorver — não invadir)
-6. namespace/loc-cap/dup/mypy/tier (D4) — epic `flext-1wjg1`; absorver pós-pouso de `z82dg-nsloc`.
-7. `flext-cpkk` (CI red pós wave-2) — dono: reforma gates.
+### Meu lane próximo (ordem executiva)
+| # | Item | Bead (status real) | Referências no plano | Aceite |
+|---|------|--------------------|----------------------|--------|
+| 1 | **Pouso do hotfix D1-D2** (reparar violações de pouso: PR `--no-ff` pós-verde, inventário de hunks, gates no SHA) | `flext-vo335` (OPEN P1) | §9.1 A0.3 | PR pós-verde; violações V1-V3 zeradas |
+| 2 | **Fixed-point drift** — unificar composição pyproject apply/verify em `conform.py`; codemod da regra nova no SSOT | `flext-2h0un` (OPEN P1, instância) ⇄ classe canônica `flext-3cabz` (OPEN P2) | §10 F1-F4, §11 Wave-P1 | probe ×2 byte-idêntico; 9 ci_matrix verdes |
+| 3 | **Budget de teste** (setup/hostile-env, ast-grep receipt) | `flext-9wwed` (OPEN P1; **dep** em `flext-38p39`); `flext-p8sjy` CLOSED→9wwed | §11 Wave-P2 | 0 timeout; <=120s |
+| 4 | **Gate de regrowth + keep_backup** | `flext-gxgqp` (OPEN P2) | §11 Wave-P3; §2 D2 | gate falha em fixture; gen ×2 |
+| 5 | **make setup** (uv re-resolve antes de install) | `flext-5k9r7` (**IN_PROGRESS** P1 — dono em execução; não duplicar) | §9.1 | regen de membros verde |
+| 6 | Revisão humana dos 8 diffs de docs APPLY (A2) antes de pousar os 2 commits docs locais via PR | — (autocrítica A2/A5) | §2, §12(d) | diffs revisados 1-a-1 |
+| 7 | Onda-P autorizada → executar §11.1 nas ondas P1-P3 | proposta §11/§12(a) | §10-§11 | aceites §11.3 |
 
-### Operador (decisões pendentes)
-8. A5: política para planos vivos (commit direto vs PR).
-9. Autorizar release v0.13.0 (D5) quando D1–D3 verdes.
+### Colaboração (dono: ator — não invadir)
+| Item | Bead | Nota |
+|------|------|------|
+| Reforma estrutural (namespace 83 / loc-cap 5 / duplication 57 / mypy 38 / tier-712) | `flext-1wjg1` (+filhas `flext-uuhc4`, `flext-y3qpq.*`) | absorver pós-pouso de `z82dg-nsloc` |
+| CI green pós wave-2 (check vermelho na raiz) | `flext-cpkk` (OPEN P0 — DONO do gate raiz) | minha revalidação cita este dono |
+| Dedup foundation / SonarQube / fleet green | `flext-uuhc4`, `flext-2wjm`, `flext-ywet` | fora do meu monotema |
 
----
+### Operador (pedidos §12)
+(a) Onda-P · (b) CRG padrão · (d) política de planos vivos · (e) débito propagate pós-pouso do ator no agents.
 
 ## 5. Beads — estado real (v2)
 
