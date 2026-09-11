@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.metadata
 from importlib.resources import files
 from pathlib import Path
+from typing import Any
 
 from flext_core import u
 from flext_tests import tm
@@ -30,9 +31,9 @@ class TestReleasePackaging:
         repository_root = Path(__file__).resolve().parents[2]
         loaded = u.config_load(repository_root / "pyproject.toml")
         tm.that(loaded.failure, eq=False)
-        payload = loaded.unwrap()
-        project = payload["project"]
-        version = project["version"]
+        payload: dict[str, Any] = loaded.unwrap()
+        project: dict[str, Any] = payload["project"]
+        version: str = project["version"]
         tm.that(importlib.metadata.version("flext"), eq=version)
 
     def test_root_distribution_is_bounded(self) -> None:
@@ -40,8 +41,8 @@ class TestReleasePackaging:
         repository_root = Path(__file__).resolve().parents[2]
         loaded = u.config_load(repository_root / "pyproject.toml")
         tm.that(loaded.failure, eq=False)
-        payload = loaded.unwrap()
-        targets = payload["tool"]["hatch"]["build"]["targets"]
+        payload: dict[str, Any] = loaded.unwrap()
+        targets: dict[str, Any] = payload["tool"]["hatch"]["build"]["targets"]
         expected_sdist_includes = ["README.md", "pyproject.toml", "src/flext"]
         expected_wheel_packages = ["src/flext"]
 

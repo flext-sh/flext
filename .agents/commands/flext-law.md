@@ -3,7 +3,7 @@
 Compose these exact authorities in order:
 
 1. `~/.agents/AGENTS.md`
-2. `~/.agents/skills/agent-wide/personal/make-check/SKILL.md`
+2. `~/.agents/skills/project-wide/shell/make-check/SKILL.md`
 3. `.agents/skills/flext-context-routing/SKILL.md`
 4. `.agents/skills/flext-law/SKILL.md`
 5. `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md` at each completion boundary

@@ -11,7 +11,7 @@ Read, in order:
 1. `~/.agents/AGENTS.md`
 2. `~/flext/AGENTS.md`
 3. `~/flext/.agents/skills/flext-law/SKILL.md`
-4. `~/.agents/skills/agent-wide/personal/make-check/SKILL.md`
+4. `~/.agents/skills/project-wide/shell/make-check/SKILL.md`
 5. `~/.agents/skills/agent-wide/verification/verification-loop/SKILL.md`
 
 ## Operating contract

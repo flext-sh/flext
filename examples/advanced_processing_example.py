@@ -158,9 +158,7 @@ class AdvancedProcessingExample:
                 if result.failure:
                     return result
                 current_data = result.value.data.values
-            payload = PipelinePayload.model_validate({
-                "values": current_data
-            })
+            payload = PipelinePayload.model_validate({"values": current_data})
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
         def _analyze_results(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
@@ -214,9 +212,7 @@ class AdvancedProcessingExample:
                 **data,
                 "analysis": analysis,
             })
-            payload = PipelinePayload.model_validate({
-                "values": result_data
-            })
+            payload = PipelinePayload.model_validate({"values": result_data})
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
         def _process_parallel(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
@@ -251,9 +247,7 @@ class AdvancedProcessingExample:
                 if items_to_process
                 else 0,
             })
-            payload = PipelinePayload.model_validate({
-                "values": result_data
-            })
+            payload = PipelinePayload.model_validate({"values": result_data})
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
         def _validate_batch(self, data: t.JsonMapping) -> p.Result[PipelineStageData]:
@@ -287,9 +281,7 @@ class AdvancedProcessingExample:
                 "valid_count": sum(1 for r in validation_results if r.valid),
                 "invalid_count": sum(1 for r in validation_results if not r.valid),
             })
-            payload = PipelinePayload.model_validate({
-                "values": result_data
-            })
+            payload = PipelinePayload.model_validate({"values": result_data})
             return r[PipelineStageData].ok(PipelineStageData(data=payload))
 
         def _validate_single_item(

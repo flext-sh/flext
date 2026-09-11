@@ -863,6 +863,7 @@ exclude_docs = [
 site_title = "FLEXT Workspace"
 
 [tool.flext.namespace]
+scan_dirs = ["src"]
 
 [tool.flext.project.budget.lint]
 time-seconds = 30

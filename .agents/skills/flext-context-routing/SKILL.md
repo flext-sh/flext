@@ -12,7 +12,7 @@ branch-matched FLEXT law without duplicating universal execution governance.
 
 1. Read `~/.agents/AGENTS.md`.
 2. Before build, generation, docs, checks, tests, or diagnosis, read
-   `~/.agents/skills/agent-wide/personal/make-check/SKILL.md`.
+   `~/.agents/skills/project-wide/shell/make-check/SKILL.md`.
 3. For every FLEXT task, read the exact local
    `.agents/skills/flext-law/SKILL.md`.
 4. At every completion boundary, read
