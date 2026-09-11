@@ -106,20 +106,18 @@ Sweep não está "feito" quando minha Lane fica verde; está feito quando o ambi
 ### Operador (pedidos §12)
 (a) Onda-P · (b) CRG padrão · (d) política de planos vivos · (e) débito propagate pós-pouso do ator no agents.
 
-## 5. Beads — estado real (v2)
+## 5. Beads — status REAL (lido de `bd show` nesta sessão; v3)
 
-| Bead | Título | Status | Dono/notas |
-|---|---|---|---|
-| `flext-2h0un` | pyproject fixed-point drift (9 testes) | **NOVA OPEN** | meu escopo (§4.1) |
-| `flext-9wwed` | budget violations (timeouts) | **NOVA OPEN** | depende de `flext-38p39` |
-| `flext-gxgqp` | regrowth CI gate + keep_backup | **NOVA OPEN** | meu escopo (§4.3) |
-| `flext-tldqe` / `flext-uw305` | `.bak` writer / requires_apply | **CLOSED** | 4 evidências cada |
-| `flext-3cabz` | reds do tip | OPEN (atualizada) | classe restante → `flext-2h0un` |
-| `flext-5k9r7` | make setup bug | OPEN | prova = gen ×2 (§4.5) |
-| `flext-1wjg1` + filhas (`y3qpq.*`, `uuhc4`, `cpkk`, `38p39`, `ywet`…) | EPIC reform | OPEN EM VOO | ator |
-| `flext-czzns` | cooldown | SUPERSEDED | — |
-
----
+| Bead | Status real | Papel |
+|------|-------------|-------|
+| `flext-vo335` | **OPEN P1** | pouso D1-D2 com violações a reparar (meu próximo passo #1) |
+| `flext-5k9r7` | **IN_PROGRESS P1** | dono em execução — não duplicar |
+| `flext-2h0un` | **OPEN P1** | instância fixed-point drift (raiz: classe `flext-3cabz`) |
+| `flext-3cabz` | **OPEN P2** | classe canônica (root-cause único) |
+| `flext-9wwed` | **OPEN P1** | budget de teste; dep em `flext-38p39`; absorveu `flext-p8sjy` (CLOSED superseded) |
+| `flext-gxgqp` | **OPEN P2** | gate de regrowth + keep_backup |
+| `flext-tldqe` / `flext-uw305` | **CLOSED** | 4 evidências — intocáveis |
+| `flext-1wjg1` + filhas (`y3qpq.*`, `uuhc4`, `cpkk` P0, `38p39`, `ywet`, `2wjm`) | **OPEN EM VOO** | ator |
 
 ## 6. Referências rápidas (arquivos de verdade)
 
